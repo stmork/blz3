@@ -26,8 +26,12 @@ find $BLZ3_HOME -name "*~"    -exec rm -f {} \;
 find $BLZ3_HOME -name ".#*"   -exec rm -f {} \;
 find $BLZ3_HOME -name DEADJOE -exec rm -f {} \;
 
-test -d $BLZ3_HOME/lib     && rm -rf $BLZ3_HOME/lib
-test -d $BLZ3_HOME/Debug   && rm -rf $BLZ3_HOME/Debug
-test -d $BLZ3_HOME/Release && rm -rf $BLZ3_HOME/Release
+test -d $BLZ3_HOME/lib          && rm -rf $BLZ3_HOME/lib
+test -d $BLZ3_HOME/Debug        && rm -rf $BLZ3_HOME/Debug
+test -d $BLZ3_HOME/Release      && rm -rf $BLZ3_HOME/Release
+test -d $BLZ3_HOME/Release-SSE  && rm -rf $BLZ3_HOME/Release-SSE
+test -d $BLZ3_HOME/Release-SSE2 && rm -rf $BLZ3_HOME/Release-SSE2
+
+find bin -name "AppLines*" -exec rm -f {} \;
 
 exit 0
