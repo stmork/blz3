@@ -2715,7 +2715,12 @@ BEGIN
     IDS_OP_LIGHT_ENABLE     "Lichtquelle ein-/ausschalten"
     IDS_OP_LIGHT_SPOT       "Spot ein-/ausschalten"
     IDS_OP_LIGHT_SOFT       "Weiche Schatten ein-/ausschalten"
-    IDS_OP_DROP             "Objekt verschieben"
+    IDS_OP_DROP             "Objekt hierarchisch verschieben"
+    IDS_OP_MOVE             "Objekte verschieben"
+    IDS_OP_ROTATE           "Objekte rotieren"
+    IDS_OP_CAMERA_CREATE    "Kamera erzeugen"
+    IDS_OP_CAMERA_DELETE    "Kamera löschen"
+    IDS_OP_CAMERA_ENABLE    "Kamera ein-/ausschalten"
 END
 
 #endif    // German (Germany) resources

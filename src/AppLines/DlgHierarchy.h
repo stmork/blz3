@@ -37,7 +37,7 @@ class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 {
 	CAppRenderDoc *m_pDoc;
 	HTREEITEM      m_DragItem,m_DropItem;
-	CB3ImageList	m_ImageList;
+	CB3ImageList   m_ImageList;
 
 // Construction
 public:

@@ -613,6 +613,11 @@
 #define IDS_OP_LIGHT_SPOT               61459
 #define IDS_OP_LIGHT_SOFT               61460
 #define IDS_OP_DROP                     61461
+#define IDS_OP_MOVE                     61462
+#define IDS_OP_ROTATE                   61463
+#define IDS_OP_CAMERA_CREATE            61464
+#define IDS_OP_CAMERA_DELETE            61465
+#define IDS_OP_CAMERA_ENABLE            61466
 
 // Next default values for new objects
 // 

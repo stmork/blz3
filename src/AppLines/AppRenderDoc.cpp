@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/01/12 19:21:37  sm
+**	- Some other undo/redo actions added (camera etc.)
+**
 **	Revision 1.13  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.12  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -217,6 +220,11 @@ void CAppRenderDoc::b3ComputeBounds()
 
 void CAppRenderDoc::b3InitTree()
 {
+}
+
+void CAppRenderDoc::b3SelectItem(b3Item *item)
+{
+	m_DlgHierarchy->b3SelectItem(item);
 }
 
 void CAppRenderDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)

@@ -82,11 +82,11 @@ protected:
 class b3OpObjectLoad : public b3OpObject
 {
 protected:
-	b3BBox         *bbox;
-	b3Base<b3Item> *base;
-	b3World         world;
-	b3_count        level;
-	b3BBox         *selected;
+	b3BBox         *m_BBox;
+	b3Base<b3Item> *m_Base;
+	b3World         m_World;
+	b3_count        m_Level;
+	b3BBox         *m_Selected;
 
 public:
 	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_LOAD_REGITEM);

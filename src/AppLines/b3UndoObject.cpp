@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/12 19:21:37  sm
+**	- Some other undo/redo actions added (camera etc.)
+**
 **	Revision 1.2  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
-**
+**	
 **	Revision 1.1  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -144,7 +147,7 @@ void b3OpObjectDelete::b3Delete()
 void b3OpObjectDelete::b3Undo()
 {
 	m_Base->b3Insert(m_Prev,m_Selected);
-	m_DlgHierarchy->b3SelectItem(m_Select);
+	m_DlgHierarchy->b3SelectItem(m_Selected);
 	m_Scene->b3BacktraceRecompute(m_Selected);
 }
 
@@ -173,14 +176,14 @@ b3OpObjectLoad::b3OpObjectLoad(
 	b3Path          filepath;
 	b3Path          result;
 
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	base     = (selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(selected));
-	suggest  = app->GetProfileString(CB3ClientString(),regitem,"");
+	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
+	m_Base     = (m_Selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(m_Selected));
+	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
 
 	b3Path::b3SplitFileName(suggest,filepath,null);
-	if (selected != null)
+	if (m_Selected != null)
 	{
-		result.b3LinkFileName(filepath,selected->b3GetName());
+		result.b3LinkFileName(filepath,m_Selected->b3GetName());
 		result.b3RemoveExt();
 		strcat((char *)result,".bod");
 	}
@@ -197,10 +200,10 @@ b3OpObjectLoad::b3OpObjectLoad(
 		{
 			b3File  file(result,B_READ);
 
-			if(world.b3Read(&file) == B3_WORLD_OK)
+			if(m_World.b3Read(&file) == B3_WORLD_OK)
 			{
-				bbox  = (b3BBox *)world.b3GetFirst();
-				level = bbox->b3GetClassType() & 0xffff;
+				m_BBox  = (b3BBox *)m_World.b3GetFirst();
+				m_Level = m_BBox->b3GetClassType() & 0xffff;
 				b3Initialize();
 				m_PrepareGeometry         = true;
 				m_PrepareChangedStructure = false;
@@ -223,33 +226,33 @@ b3OpObjectLoad::b3OpObjectLoad(
 
 void b3OpObjectLoad::b3Delete()
 {
-	if (!b3IsDone() && (bbox != null))
+	if (!b3IsDone() && (m_BBox != null))
 	{
-		delete bbox;
+		delete m_BBox;
 	}
 }
 
 void b3OpObjectLoad::b3Do()
 {
-	b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
+	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_Selected);
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	m_Scene->b3BacktraceRecompute(bbox);
-	m_DlgHierarchy->b3SelectItem(bbox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;
 }
 
 void b3OpObjectLoad::b3Undo()
 {
-	m_Scene->b3BacktraceRecompute(bbox);
-	base->b3Remove(bbox);
-	m_DlgHierarchy->b3SelectItem(selected);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_Base->b3Remove(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_Selected);
 }
 
 void b3OpObjectLoad::b3Redo()
 {
-	base->b3Insert(selected,bbox);
-	m_Scene->b3BacktraceRecompute(bbox);
-	m_DlgHierarchy->b3SelectItem(bbox);
+	m_Base->b3Insert(m_Selected,m_BBox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
 /*************************************************************************
@@ -267,36 +270,36 @@ b3OpObjectReplace::b3OpObjectReplace(
 
 void b3OpObjectReplace::b3Delete()
 {
-	if (b3IsDone() && (selected != null))
+	if (b3IsDone() && (m_Selected != null))
 	{
-		delete selected;
+		delete m_Selected;
 	}
 }
 
 void b3OpObjectReplace::b3Do()
 {
-	b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
-	base->b3Remove(selected);
+	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_Selected);
+	m_Base->b3Remove(m_Selected);
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	m_Scene->b3BacktraceRecompute(bbox);
-	m_DlgHierarchy->b3SelectItem(bbox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;
 }
 
 void b3OpObjectReplace::b3Undo()
 {
-	base->b3Insert(bbox,selected);
-	base->b3Remove(bbox);
-	m_Scene->b3BacktraceRecompute(selected);
-	m_DlgHierarchy->b3SelectItem(selected);
+	m_Base->b3Insert(m_BBox,m_Selected);
+	m_Base->b3Remove(m_BBox);
+	m_Scene->b3BacktraceRecompute(m_Selected);
+	m_DlgHierarchy->b3SelectItem(m_Selected);
 }
 
 void b3OpObjectReplace::b3Redo()
 {
-	base->b3Insert(selected,bbox);
-	base->b3Remove(selected);
-	m_Scene->b3BacktraceRecompute(bbox);
-	m_DlgHierarchy->b3SelectItem(bbox);
+	m_Base->b3Insert(m_Selected,m_BBox);
+	m_Base->b3Remove(m_Selected);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
 /*************************************************************************

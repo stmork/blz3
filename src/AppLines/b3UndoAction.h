@@ -63,4 +63,22 @@ protected:
 	}
 };
 
+class b3OpMove : public b3Operation
+{
+protected:
+	inline int  b3GetId()
+	{
+		return IDS_OP_MOVE;
+	}
+};
+
+class b3OpRotate : public b3Operation
+{
+protected:
+	inline int  b3GetId()
+	{
+		return IDS_OP_ROTATE;
+	}
+};
+
 #endif

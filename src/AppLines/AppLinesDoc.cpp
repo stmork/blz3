@@ -58,11 +58,14 @@
 
 /*
 **	$Log$
+**	Revision 1.79  2003/01/12 19:21:37  sm
+**	- Some other undo/redo actions added (camera etc.)
+**
 **	Revision 1.78  2003/01/12 10:26:52  sm
 **	- Undo/Redo of
 **	  o Cut & paste
 **	  o Drag & drop
-**
+**	
 **	Revision 1.77  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
@@ -634,6 +637,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
 		b3Prepare(true,false,true);
+		SetModifiedFlag(FALSE);
 		result = TRUE;
 	}
 	catch(b3ExceptionBase &e)
@@ -1564,6 +1568,10 @@ void CAppLinesDoc::OnObjectEdit()
 	{
 		B3_ASSERT(b3BBox::b3FindBBox(m_Scene->b3GetBBoxHead(),selected));
 		pDoc = app->b3CreateObjectDoc(this,selected);
+		if (pDoc != null)
+		{
+			m_UndoBuffer->b3Clear();
+		}
 	}
 }
 
@@ -1578,7 +1586,6 @@ void CAppLinesDoc::b3FinishEdit(
 		base = m_Scene->b3FindBBoxHead(original);
 		base->b3Insert(original,bbox);
 		base->b3Remove(original);
-		m_UndoBuffer->b3Clear();
 		SetModifiedFlag();
 	}
 }

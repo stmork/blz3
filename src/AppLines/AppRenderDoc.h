@@ -77,6 +77,7 @@ public:
 	virtual void       b3Prepare(b3_bool geometry_changed,b3_bool structure_changed,b3_bool reorg=false);
 	virtual void       b3ComputeBounds();
 	virtual void       b3InitTree();
+	virtual void       b3SelectItem(b3Item *item);
 	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	virtual void       b3ContextMenu(HTREEITEM item);
 

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2003/01/12 19:21:37  sm
+**	- Some other undo/redo actions added (camera etc.)
+**
 **	Revision 1.20  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.19  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -385,6 +388,11 @@ HTREEITEM CDlgHierarchy::b3SelectItem(b3Item *item)
 	if (treeitem != null)
 	{
 		m_Hierarchy.SelectItem(treeitem);
+	}
+
+	if (m_pDoc != null)
+	{
+		m_pDoc->m_Selected = (LPARAM)item;
 	}
 	return treeitem;
 }

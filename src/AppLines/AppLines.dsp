@@ -245,6 +245,10 @@ SOURCE=.\b3UndoAction.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3UndoCamera.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3UndoCutPaste.cpp
 # End Source File
 # Begin Source File
@@ -550,6 +554,10 @@ SOURCE=.\b3Undo.h
 # Begin Source File
 
 SOURCE=.\b3UndoAction.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoCamera.h
 # End Source File
 # Begin Source File
 
