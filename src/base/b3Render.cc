@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/08/17 04:16:43  sm
+**      - Using OpenGL NURBS zu render BSpline areas. But
+**        I think mi tessalation is faster.
+**
 **      Revision 1.10  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -131,6 +135,7 @@ void b3RenderContext::b3StartDrawing()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_AUTO_NORMAL);
 
 	// Enable light
 	glEnable(GL_LIGHTING);

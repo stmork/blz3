@@ -981,6 +981,9 @@ public:
 class b3SplineShape : public b3Shape
 {
 protected:
+#ifdef BLZ3_USE_OPENGL
+	GLUnurbsObj      *glNURBS;
+#endif
 	b3_line          Axis;             // for rotation shapes, unused
 	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
 	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
@@ -989,13 +992,17 @@ protected:
 protected:
 	b3SplineShape(b3_size class_size,b3_u32 class_type);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
+	void b3AllocVertices(b3RenderContext *context);
+	void b3FreeVertices();
+	void b3Draw();
 };
 
 class b3SplineArea : public b3SplineShape

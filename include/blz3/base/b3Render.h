@@ -52,7 +52,7 @@ protected:
 public:
 	virtual void     b3AllocVertices(b3RenderContext *context);
 	virtual void     b3FreeVertices();
-	        void     b3Draw();
+	virtual void     b3Draw();
 	        b3_bool  b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
 protected:

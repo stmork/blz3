@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/17 04:16:43  sm
+**      - Using OpenGL NURBS zu render BSpline areas. But
+**        I think mi tessalation is faster.
+**
 **      Revision 1.4  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -111,6 +115,25 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 	Spline[0].controls =
 	Spline[1].controls = Controls;
 	for (i = 0;i < control_count;i++) b3InitVector(&Controls[i]);
+}
+
+void b3SplineShape::b3AllocVertices(b3RenderContext *ctx)
+{
+	// Do default
+	b3RenderObject::b3AllocVertices(ctx);
+
+	// Alloc NURBS
+	glNURBS = gluNewNurbsRenderer();
+	gluNurbsProperty(glNURBS,GLU_DISPLAY_MODE,(GLfloat)GLU_FILL);
+}
+
+void b3SplineShape::b3FreeVertices()
+{
+	// Free NURBS
+	gluDeleteNurbsRenderer(glNURBS);
+
+	// Do default
+	b3RenderObject::b3FreeVertices();
 }
 
 void b3SplineShape::b3GetCount(
@@ -245,4 +268,28 @@ void b3SplineShape::b3ComputeIndices()
 		PrintF ("GridCount: %4ld\n",GridCount);
 	*/
 #endif
+}
+
+void b3SplineShape::b3Draw()
+{
+	if (!glSolid)
+	{
+		b3RenderObject::b3Draw();
+	}
+	else
+	{
+#ifdef BLZ3_USE_OPENGL
+		gluBeginSurface(glNURBS);
+		gluNurbsSurface(glNURBS,
+			Spline[0].knot_num,Spline[0].knots,
+			Spline[1].knot_num,Spline[1].knots,
+			Spline[0].offset * 3,
+			Spline[1].offset * 3,
+			(GLfloat *)Controls,
+			Spline[0].degree + 1,
+			Spline[1].degree + 1,
+			GL_MAP2_VERTEX_3);
+		gluEndSurface(glNURBS);
+#endif
+	}
 }
