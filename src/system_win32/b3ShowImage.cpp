@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.4  2001/12/16 11:07:45  sm
 **	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
 **	  These images are converted into B3_TX_VGA now
 **	- b3ScaleToGrey() fixed using correct palette
-**
+**	
 **	Revision 1.3  2001/12/02 16:30:39  sm
 **	- CDlgScene draw error fix
 **	
@@ -73,7 +78,17 @@ CB3ShowImage::CB3ShowImage()
 
 b3_bool CB3ShowImage::b3Load(const char *name)
 {
-	return m_Tx.b3LoadImage(name) == B3_OK;
+	b3_bool success = true;
+
+	if (name != null)
+	{
+		success = (m_Tx.b3LoadImage(name) == B3_OK);
+	}
+	else
+	{
+		m_Tx.b3FreeTx();
+	}
+	return success;
 }
 
 void CB3ShowImage::b3Aspect(

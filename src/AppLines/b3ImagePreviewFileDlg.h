@@ -44,7 +44,7 @@ public:
 // Attributes
 public:
 	BOOL         m_bPreview;
-	CB3ShowImage m_DIBStaticCtrl;
+	CB3ShowImage m_PreviewCtrl;
 
 protected:
 	//{{AFX_MSG(CB3ImagePreviewFileDlg)
@@ -56,15 +56,27 @@ protected:
 	//}}AFX_MSG
 	virtual void OnFileNameChange();
 	virtual void OnFolderChange();
+	virtual void b3LoadImage(const char *image_name);
 
 // Implementation
-#ifdef _DEBUG
-	virtual void Dump(CDumpContext& dc) const;
-#endif
 	DECLARE_MESSAGE_MAP()
 };
 
-//{{AFX_INSERT_LOCATION}}
-// Microsoft Developer Studio will insert additional declarations immediately before the previous line.
+
+class CB3ObjectPreviewFileDlg : public CB3ImagePreviewFileDlg
+{
+	DECLARE_DYNAMIC(CB3ObjectPreviewFileDlg)
+
+public:
+	CB3ObjectPreviewFileDlg(BOOL bOpenFileDialog, // TRUE for FileOpen, FALSE for FileSaveAs
+		LPCTSTR lpszDefExt = NULL,
+		LPCTSTR lpszFileName = NULL,
+		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		LPCTSTR lpszFilter = NULL,
+		CWnd* pParentWnd = NULL);
+protected:
+	virtual void b3LoadImage(const char *image_name);
+};
+
 
 #endif // !defined(AFX_PREVIEWFILEDLG_H__1D054314_0872_11D2_8A46_0000E81D3D27__INCLUDED_)

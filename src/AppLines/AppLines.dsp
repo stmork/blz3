@@ -144,6 +144,10 @@ SOURCE=.\b3ImagePreviewFileDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SelectObject.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectTexture.cpp
 # End Source File
 # Begin Source File

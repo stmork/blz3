@@ -61,10 +61,15 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.6  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
-**
+**	
 **	Revision 1.5  2001/12/16 11:07:45  sm
 **	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
 **	  These images are converted into B3_TX_VGA now
@@ -1266,7 +1271,15 @@ void b3Tx::b3VGAScaleToVGA(
 	b3_index     index=0;
 	b3_pkd_color rVal,gVal,bVal,value,color;
 
+#if 1
 	memcpy (palette,srcTx->b3GetPalette(),pSize * sizeof(b3_pkd_color));
+#else
+	b3_pkd_color *srcpal = srcTx->b3GetPalette();
+	for (int i = 0;i < pSize;i++)
+	{
+		palette[i] = srcpal[i];
+	}
+#endif
 	b3ColorGrid();
 	for (y = 0;y < ySize;y++)
 	{

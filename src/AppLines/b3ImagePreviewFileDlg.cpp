@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.2  2002/01/10 20:18:54  sm
 **	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
 **	  what to do...
-**
+**	
 **	Revision 1.1  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
@@ -80,13 +85,19 @@ CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(
 	m_bPreview = TRUE;
 }
 
+void CB3ImagePreviewFileDlg::b3LoadImage(const char *image_name)
+{
+	m_PreviewCtrl.b3Load(image_name);
+	m_PreviewCtrl.b3Update(true);
+}
+
 BOOL CB3ImagePreviewFileDlg::OnInitDialog() 
 {
 	CWnd *wnd;
 
 	CFileDialog::OnInitDialog();
 	
-	m_DIBStaticCtrl.SubclassDlgItem(IDC_IMAGE, this);
+	m_PreviewCtrl.SubclassDlgItem(IDC_IMAGE, this);
 	wnd = GetDlgItem(IDC_PREVIEW);
 	if (wnd != null)
 	{
@@ -102,15 +113,14 @@ void CB3ImagePreviewFileDlg::OnFileNameChange()
 	CFileDialog::OnFileNameChange();
 	if (m_bPreview)
 	{
-		m_DIBStaticCtrl.b3Load(GetPathName()); // the control will handle errors
-		m_DIBStaticCtrl.b3Update(true);
+		b3LoadImage(GetPathName()); // the control will handle errors
 	}
 }
 
 void CB3ImagePreviewFileDlg::OnFolderChange() 
 {
 	CFileDialog::OnFolderChange();
-	m_DIBStaticCtrl.b3Load(null);
+	b3LoadImage(null);
 }
 
 void CB3ImagePreviewFileDlg::OnPreview() 
@@ -118,40 +128,69 @@ void CB3ImagePreviewFileDlg::OnPreview()
 	m_bPreview = !m_bPreview;
 	if (!m_bPreview)
 	{
-		m_DIBStaticCtrl.b3Load(null); // no preview
+		b3LoadImage(null); // no preview
 	}
 	else
 	{
-		m_DIBStaticCtrl.b3Load(GetPathName()); // the control will handle errors
+		b3LoadImage(GetPathName()); // the control will handle errors
 	}
-	m_DIBStaticCtrl.b3Update(true);
 }
 
 BOOL CB3ImagePreviewFileDlg::OnQueryNewPalette() 
 {
-	m_DIBStaticCtrl.SendMessage(WM_QUERYNEWPALETTE);	// redo the palette if necessary
+	m_PreviewCtrl.SendMessage(WM_QUERYNEWPALETTE);	// redo the palette if necessary
 	return CFileDialog::OnQueryNewPalette();
 }
 
 void CB3ImagePreviewFileDlg::OnPaletteChanged(CWnd* pFocusWnd) 
 {
 	CFileDialog::OnPaletteChanged(pFocusWnd);
-	m_DIBStaticCtrl.SendMessage(WM_PALETTECHANGED, (WPARAM)pFocusWnd->GetSafeHwnd());	// redo the palette if necessary
+	m_PreviewCtrl.SendMessage(WM_PALETTECHANGED, (WPARAM)pFocusWnd->GetSafeHwnd());	// redo the palette if necessary
 }
 
 void CB3ImagePreviewFileDlg::OnSetFocus(CWnd* pOldWnd) 
 {
 	CFileDialog::OnSetFocus(pOldWnd);
-	m_DIBStaticCtrl.SendMessage(WM_QUERYNEWPALETTE);	// redo the palette if necessary
+	m_PreviewCtrl.SendMessage(WM_QUERYNEWPALETTE);	// redo the palette if necessary
+}
+/*************************************************************************
+**                                                                      **
+**                        CB3ObjectPreviewFileDlg implementation        **
+**                                                                      **
+*************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3ObjectPreviewFileDlg, CB3ImagePreviewFileDlg)
+
+CB3ObjectPreviewFileDlg::CB3ObjectPreviewFileDlg(
+	BOOL      bOpenFileDialog,
+	LPCTSTR   lpszDefExt,
+	LPCTSTR   lpszFileName,
+	DWORD     dwFlags,
+	LPCTSTR   lpszFilter,
+	CWnd     *pParentWnd) :
+		CB3ImagePreviewFileDlg(
+			bOpenFileDialog,
+			lpszDefExt,
+			lpszFileName,
+			dwFlags,
+			lpszFilter,
+			pParentWnd)
+{
 }
 
-#ifdef _DEBUG
-void CB3ImagePreviewFileDlg::Dump(CDumpContext& dc) const
+void CB3ObjectPreviewFileDlg::b3LoadImage(const char *image_name)
 {
-	CFileDialog::Dump(dc);
-	if (m_bPreview)
-		dc << "preview is enabled\n";
+	if (image_name != null)
+	{
+		b3Path thumbnail;
+
+		thumbnail.b3RemoveExt(image_name);
+		strcat((char *)thumbnail,".TGA");
+		m_PreviewCtrl.b3Load(thumbnail);
+	}
 	else
-		dc << "preview is disabled\n";
+	{
+		m_PreviewCtrl.b3Load(null);
+	}
+	m_PreviewCtrl.b3Update(false,false);
 }
-#endif //_DEBUG

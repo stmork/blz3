@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.38  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
 **	- Added image selection with image preview.
-**
+**	
 **	Revision 1.37  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -602,33 +607,6 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	return result;
 }
 
-void b3BBox::b3Activate(b3_bool activate)
-{
-	b3Item  *item;
-	b3Shape *shape;
-	b3BBox  *bbox;
-
-	if (activate) m_Type |=   BBF_ACTIVE;
-	else          m_Type &= (~BBF_ACTIVE);
-
-	B3_FOR_BASE(b3GetShapeHead(),item)
-	{
-		shape = (b3Shape *)item;
-		shape->b3Activate(activate);
-	}
-
-	B3_FOR_BASE(b3GetBBoxHead(),item)
-	{
-		bbox = (b3BBox *)item;
-		bbox->b3Activate(activate);
-	}
-}
-
-b3_bool b3BBox::b3IsActive()
-{
-	return (m_Type & BBF_ACTIVE) != 0;
-}
-
 b3_count b3BBox::b3Count()
 {
 	b3_count count = 1;
@@ -664,7 +642,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox   = (b3BBox *)item;
-		if(bbox->b3Transform(transformation))
+		if(bbox->b3Transform(transformation,force_action))
 		{
 			transformed = true;
 		}
@@ -672,13 +650,13 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 
 	if (force_action || b3IsActive())
 	{
-		b3MatrixMMul(&m_Matrix,&m_Matrix,transformation);
+		b3MatrixMMul(&m_Matrix,transformation,&m_Matrix);
 		transformed = true;
 	}
 
 	if (transformed)
 	{
-		b3RenderObject::b3Recompute();
+		b3Recompute();
 	}
 
 	return transformed;
@@ -750,6 +728,28 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	}
 }
 
+void b3BBox::b3Activate(b3_bool activate)
+{
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+
+	if (activate) m_Type |=   BBF_ACTIVE;
+	else          m_Type &= (~BBF_ACTIVE);
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3Activate(activate);
+	}
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Activate(activate);
+	}
+}
+
 void b3Scene::b3Activate(b3_bool activate)
 {
 	b3Item  *item;
@@ -760,6 +760,11 @@ void b3Scene::b3Activate(b3_bool activate)
 		bbox = (b3BBox *)item;
 		bbox->b3Activate(activate);
 	}
+}
+
+b3_bool b3BBox::b3IsActive()
+{
+	return (m_Type & BBF_ACTIVE) != 0;
 }
 
 void b3BBox::b3Expand(b3_bool expand)
@@ -835,7 +840,7 @@ b3Base<b3Item> *b3Scene::b3FindBBoxHead(b3BBox *bbox)
 	return null;
 }
 
-b3_bool b3BBox::b3Recompute(b3BBox *search)
+b3_bool b3BBox::b3BacktraceRecompute(b3BBox *search)
 {
 	b3Item         *item;
 	b3BBox         *bbox;
@@ -846,20 +851,20 @@ b3_bool b3BBox::b3Recompute(b3BBox *search)
 		bbox = (b3BBox *)item;
 		if (bbox == search)
 		{
-			bbox->b3RenderObject::b3Recompute();
+			b3Recompute();
 			return true;
 		}
 
-		if ((result = bbox->b3Recompute(search)) != null)
+		if ((result = bbox->b3BacktraceRecompute(search)) != null)
 		{
-			bbox->b3RenderObject::b3Recompute();
+			bbox->b3Recompute();
 			return result;
 		}
 	}
 	return false;
 }
 
-b3_bool b3Scene::b3Recompute(b3BBox *search)
+b3_bool b3Scene::b3BacktraceRecompute(b3BBox *search)
 {
 	b3Item         *item;
 	b3BBox         *bbox;
@@ -870,13 +875,13 @@ b3_bool b3Scene::b3Recompute(b3BBox *search)
 		bbox = (b3BBox *)item;
 		if (bbox == search)
 		{
-			bbox->b3RenderObject::b3Recompute();
+			bbox->b3Recompute();
 			return true;
 		}
 
-		if ((result = bbox->b3Recompute(search)) != null)
+		if ((result = bbox->b3BacktraceRecompute(search)) != null)
 		{
-			bbox->b3RenderObject::b3Recompute();
+			bbox->b3Recompute();
 			return result;
 		}
 	}

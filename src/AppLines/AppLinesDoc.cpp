@@ -40,6 +40,7 @@
 #include "DlgLDC.h"
 #include "DlgCreateItem.h"
 #include "DlgObjectCopy.h"
+#include "b3SelectObject.h"
 
 #include "b3ExampleScene.h"
 #include "blz3/system/b3Dir.h"
@@ -55,11 +56,16 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.47  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
 **	- Added image selection with image preview.
-**
+**	
 **	Revision 1.46  2002/01/09 17:47:53  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -1205,7 +1211,7 @@ void CAppLinesDoc::OnObjectDelete()
 		base = m_Scene->b3FindBBoxHead(selected);
 
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		m_Scene->b3Recompute(selected);
+		m_Scene->b3BacktraceRecompute(selected);
 		base->b3Remove(selected);
 		delete selected;
 
@@ -1289,7 +1295,7 @@ void CAppLinesDoc::OnEditCut()
 		base   = m_Scene->b3FindBBoxHead(bbox);
 		prev   = bbox->Prev;
 		select = (b3BBox *)(bbox->Succ != null ? bbox->Succ : bbox->Prev);
-		m_Scene->b3Recompute(bbox);
+		m_Scene->b3BacktraceRecompute(bbox);
 		base->b3Remove(bbox);
 		if(!b3PutClipboard(bbox))
 		{
@@ -1386,7 +1392,7 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 					m_Scene->b3AllocVertices(&m_Context);
 
 					main->b3SetStatusMessage(IDS_DOC_BOUND);
-					m_Scene->b3Recompute(bbox);
+					m_Scene->b3BacktraceRecompute(bbox);
 					b3ComputeBounds();
 
 					SetModifiedFlag();
@@ -1440,8 +1446,6 @@ void CAppLinesDoc::OnObjectLoad()
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
 	CString         suggest;
-	CString         ext;
-	CString         filter;
 	b3BBox         *selected;
 	b3BBox         *bbox;
 	b3Base<b3Item> *base;
@@ -1452,11 +1456,20 @@ void CAppLinesDoc::OnObjectLoad()
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	base     = (selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(selected));
 	suggest  = app->GetProfileString(CB3ClientString(),"Loaded object filename","");
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	suggest = filepath;
 
-	filter.LoadString(IDS_OBJECT_FILTER);
-	if (b3OpenDialog(suggest,ext,filter,result))
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	if (selected != null)
+	{
+		result.b3LinkFileName(filepath,selected->b3GetName());
+		result.b3RemoveExt();
+		strcat((char *)result,".bod");
+	}
+	else
+	{
+		strcpy((char *)result,suggest);
+	}
+	
+	if (CB3SelectObject::b3Select((char *)result))
 	{
 		app->WriteProfileString(CB3ClientString(),"Loaded object filename",result);
 		
@@ -1480,7 +1493,7 @@ void CAppLinesDoc::OnObjectLoad()
 				m_Scene->b3AllocVertices(&m_Context);
 
 				main->b3SetStatusMessage(IDS_DOC_BOUND);
-				m_Scene->b3Recompute(bbox);
+				m_Scene->b3BacktraceRecompute(bbox);
 				b3ComputeBounds();
 
 				SetModifiedFlag();
@@ -1587,26 +1600,24 @@ void CAppLinesDoc::OnObjectReplace()
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
 	CString         suggest;
-	CString         ext;
-	CString         filter;
 	b3BBox         *selected;
 	b3BBox         *bbox;
 	b3Base<b3Item> *base;
 	b3_count        level;
 	b3Path          filepath;
-	b3Path          filename;
 	b3Path          result;
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	B3_ASSERT(selected != null);
 	base     = m_Scene->b3FindBBoxHead(selected);
+
 	suggest  = app->GetProfileString(CB3ClientString(),"Replaced object filename","");
 	b3Path::b3SplitFileName(suggest,filepath,null);
-	b3Path::b3LinkFileName(filename,filepath,selected->b3GetName());
-	suggest = filename;
+	result.b3LinkFileName(filepath,selected->b3GetName());
+	result.b3RemoveExt();
+	strcat((char *)result,".bod");
 
-	filter.LoadString(IDS_OBJECT_FILTER);
-	if (b3OpenDialog(suggest,ext,filter,result))
+	if (CB3SelectObject::b3Select((char *)result))
 	{
 		app->WriteProfileString(CB3ClientString(),"Replaced object filename",result);
 		
@@ -1632,7 +1643,7 @@ void CAppLinesDoc::OnObjectReplace()
 				m_Scene->b3AllocVertices(&m_Context);
 
 				main->b3SetStatusMessage(IDS_DOC_BOUND);
-				m_Scene->b3Recompute(bbox);
+				m_Scene->b3BacktraceRecompute(bbox);
 				b3ComputeBounds();
 
 				SetModifiedFlag();
@@ -1690,7 +1701,7 @@ void CAppLinesDoc::OnObjectCopy()
 		m_Scene->b3AllocVertices(&m_Context);
 
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		m_Scene->b3Recompute(selected);
+		m_Scene->b3BacktraceRecompute(selected);
 		b3ComputeBounds();
 
 		SetModifiedFlag();

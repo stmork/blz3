@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3SelectTexture.cpp $
+**	$Filename:	b3SelectTexture.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Selecting an image or texture
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/11 16:14:39  sm
+**	- Fixed damaged b3Transform() by correcting used parameter vor
+**	  b3MatrixMMul and the b3BBox::m_Matrix meber.
+**	- Fixed Preview selection dialog.
+**
 **	Revision 1.9  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop
-**
+**	
 **	Revision 1.8  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -477,10 +482,10 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 			srcBase = m_Scene->b3FindBBoxHead(srcBBox);
 			dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
 
-			m_Scene->b3Recompute(srcBBox);
+			m_Scene->b3BacktraceRecompute(srcBBox);
 			srcBase->b3Remove(srcBBox);
 			dstBase->b3Append(srcBBox);
-			m_Scene->b3Recompute(srcBBox);
+			m_Scene->b3BacktraceRecompute(srcBBox);
 			b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 
 			m_pDoc->b3ComputeBounds();
