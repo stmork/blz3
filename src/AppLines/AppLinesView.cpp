@@ -39,10 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2002/07/26 10:22:37  sm
+**	- Some minor fixes
+**	- Texturing simply runs under Windows :-)
+**
 **	Revision 1.49  2002/07/22 12:46:08  sm
 **	- Added Windows Lines III support for textures
 **	- Fixed sphere computation
-**
+**	
 **	Revision 1.48  2002/02/13 20:13:13  sm
 **	- Added dashed line pattern support in class CB3DashPen
 **	
@@ -409,7 +413,7 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		b3_vector  look;
 		b3_f64     len;
 
-		m_Scene->b3SetLights(&pDoc->m_Context);
+//		m_Scene->b3SetLights(&pDoc->m_Context);
 
 		light = pDoc->m_Light;
 		len   = b3Vector::b3Length(&light->m_Direction);

@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2002/07/26 10:22:37  sm
+**      - Some minor fixes
+**      - Texturing simply runs under Windows :-)
+**
 **      Revision 1.38  2002/07/26 09:13:33  sm
 **      - Found alpha problem: the Linux OpenGL renderer didn't use the
 **        b3RenderContext::b3Init() method! Now everything function very well:-)
@@ -273,7 +277,7 @@ b3RenderContext::b3RenderContext()
 {
 	b3SetBGColor(0.9,0.9,0.9);
 	b3LightNum();
-	glUseSpotLight = true;
+	b3LightSpotEnable(false);
 }
 
 void b3RenderContext::b3Init()
@@ -921,9 +925,14 @@ void b3RenderObject::b3UpdateMaterial()
 		}
 		else
 		{
-			tx = b3GetTexture(glTextureTransX,glTextureTransY,glTextureScaleX,glTextureScaleY);
+			b3_f64 xScale = 1;
+			b3_f64 yScale = 1;
+
+			tx = b3GetTexture(glTextureTransX,glTextureTransY,xScale,yScale);
 			if (tx != null)
 			{
+				glTextureScaleX = 1.0 / xScale;
+				glTextureScaleY = 1.0 / yScale;
 				b3CopyTexture(null,tx);
 			}
 			else
@@ -1187,6 +1196,9 @@ void b3RenderObject::b3CreateTexture(
 				}
 				else
 				{
+					glBindTexture(GL_TEXTURE_2D,glTextureId);
+					B3_ASSERT(glIsTexture(glTextureId));
+
 					glTextureSize  =  size;
 					glTextureSizeX = xSize;
 					glTextureSizeY = ySize;
@@ -1219,7 +1231,7 @@ void b3RenderObject::b3CopyTexture(
 	b3Tx          scale;
 	b3_pkd_color *lPtr;
 #ifndef _DEBUG
-	b3_res        max  = 256;
+	b3_res        max  = 128;
 #else
 	b3_res        max  =   8;
 #endif
