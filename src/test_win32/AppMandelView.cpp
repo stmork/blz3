@@ -262,7 +262,7 @@ b3_u32 CAppMandelView::b3ComputingThread(void *ptr)
 	b3_u32          result = 0;
 	b3Display      *display;
 
-	display = new b3Display(pView);
+	display = new b3DisplayView(pView);
 	b3Mandel::b3Compute(display,
 		pView->m_rStart,
 		pView->m_rEnd,

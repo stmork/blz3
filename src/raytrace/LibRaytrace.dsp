@@ -221,10 +221,6 @@ SOURCE=.\b3SplineArea.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3SplineCurve.cc
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3SplineCylinder.cc
 # End Source File
 # Begin Source File

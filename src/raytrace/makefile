@@ -43,7 +43,6 @@ PRG_SOURCE		=\
 	b3Special.cc\
 	b3Sphere.cc\
 	b3SplineArea.cc\
-	b3SplineCurve.cc\
 	b3SplineCylinder.cc\
 	b3SplineRing.cc\
 	b3SplineRot.cc\
@@ -87,7 +86,6 @@ PRG_OBJ			=\
 	b3Special.o\
 	b3Sphere.o\
 	b3SplineArea.o\
-	b3SplineCurve.o\
 	b3SplineCylinder.o\
 	b3SplineRing.o\
 	b3SplineRot.o\

@@ -31,6 +31,11 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/10 13:55:15  sm
+**	- Added creation dialog for rotation shapes.
+**	- Cleaned up derivation of b3SplineRotShape.
+**	- Added support for foreign BLZ3_HOME directories.
+**
 **	Revision 1.2  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -38,7 +43,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **	Revision 1.1  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -86,6 +91,7 @@ END_MESSAGE_MAP()
 
 void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
 {
+	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)
 	{
 		pos = b3GetPos();

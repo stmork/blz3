@@ -31,6 +31,11 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/10 13:55:15  sm
+**	- Added creation dialog for rotation shapes.
+**	- Cleaned up derivation of b3SplineRotShape.
+**	- Added support for foreign BLZ3_HOME directories.
+**
 **	Revision 1.4  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -38,7 +43,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **	Revision 1.3  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -113,6 +118,7 @@ const char *CB3ProfileShapeDialog::b3GetSection()
 
 void CB3ProfileShapeDialog::b3Init()
 {
+	B3_ASSERT(m_Creation);
 	m_BaseGroup.b3Init(&m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
 	if (m_Creation)
 	{
@@ -123,6 +129,7 @@ void CB3ProfileShapeDialog::b3Init()
 
 BOOL CB3ProfileShapeDialog::OnInitDialog() 
 {
+	B3_ASSERT(m_Creation);
 	CB3ShapeDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -136,6 +143,7 @@ void CB3ProfileShapeDialog::b3PostProcess()
 	CB3App    *app = CB3GetApp();
 	b3_matrix  transform;
 
+	B3_ASSERT(m_Creation);
 	m_BaseGroup.b3Write(b3MakeSection("base"));
 	app->WriteProfileInt(CB3ClientString(),b3MakeSection("align"),m_Align);
 

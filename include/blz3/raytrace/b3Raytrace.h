@@ -1307,51 +1307,31 @@ public:
 	void   b3ComputeIndices();
 };
 
-// SPLINE, SPLINE_ROT
-class b3SplineCurve : public b3TriangleShape
+// SPLINE_ROT
+class b3SplineRotShape : public b3TriangleShape
 {
+	b3_count         m_xSubDiv;
+	b3_count         m_ySubDiv;
 public:
 	b3_line          m_Axis;                // for rotation shapes
-	b3Spline         m_Spline;              // spline curve
 	b3_s32           m_rSubDiv;             // sub division for rotation
+	b3Spline         m_Spline;              // spline curve
 	b3_f32           m_Knots[B3_MAX_KNOTS]; // one knot vector
 	b3_vector       *m_Controls;
 
-protected:
-	b3SplineCurve(b3_size class_size,b3_u32 class_type);
-
-public:
-	B3_ITEM_INIT(b3SplineCurve);
-	B3_ITEM_LOAD(b3SplineCurve);
-
-	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed);
-	void    b3StoreShape();
-	void    b3Transform(b3_matrix *transformation);
-	b3_bool b3Prepare();
-};
-
-class b3SplineCurveShape : b3SplineCurve
-{
-public:
-	B3_ITEM_INIT(b3SplineCurveShape);
-	B3_ITEM_LOAD(b3SplineCurveShape);
-
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-};
-
-class b3SplineRotShape : b3SplineCurve
-{
-	b3_count m_xSubDiv,m_ySubDiv;
 public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
 
+	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed,b3_count subdiv);
+	void    b3StoreShape();
+	void    b3Transform(b3_matrix *transformation);
+	b3_bool b3Prepare();
+
 protected:
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeIndices();
 };
 
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING

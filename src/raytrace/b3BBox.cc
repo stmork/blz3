@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2002/03/10 13:55:15  sm
+**	- Added creation dialog for rotation shapes.
+**	- Cleaned up derivation of b3SplineRotShape.
+**	- Added support for foreign BLZ3_HOME directories.
+**
 **	Revision 1.51  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **	Revision 1.50  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.

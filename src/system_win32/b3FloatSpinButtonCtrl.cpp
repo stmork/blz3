@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/10 13:55:15  sm
+**	- Added creation dialog for rotation shapes.
+**	- Cleaned up derivation of b3SplineRotShape.
+**	- Added support for foreign BLZ3_HOME directories.
+**
 **	Revision 1.4  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -44,7 +49,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.3  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -104,6 +109,7 @@ void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f32 &pos)
 
 void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
 {
+	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)
 	{
 		pos = b3GetPos();

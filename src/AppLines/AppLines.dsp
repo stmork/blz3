@@ -248,6 +248,10 @@ SOURCE=.\DlgCreateMaterial.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateRotShape.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCreateSplineShape.cpp
 # End Source File
 # Begin Source File
@@ -517,6 +521,10 @@ SOURCE=.\DlgCreateItem.h
 # Begin Source File
 
 SOURCE=.\DlgCreateMaterial.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateRotShape.h
 # End Source File
 # Begin Source File
 

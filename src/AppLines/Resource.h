@@ -102,6 +102,7 @@
 #define IDI_PROFILE_BEVELSTUMP_SPLINE   201
 #define IDD_PROFILE_BEVELSTUMP_SPLINE   202
 #define IDD_CREATE_SPLINESHAPE          203
+#define IDD_CREATE_ROTSHAPE             204
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -350,6 +351,9 @@
 #define IDC_YSIZE                       1239
 #define IDC_YSIZE_LEGEND                1240
 #define IDC_XSIZE_LEGEND                1241
+#define IDC_CLOSED                      1242
+#define IDC_SUBDIV                      1243
+#define IDC_SUBDIV_SPIN                 1244
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -534,9 +538,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        204
+#define _APS_NEXT_RESOURCE_VALUE        205
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1242
+#define _APS_NEXT_CONTROL_VALUE         1245
 #define _APS_NEXT_SYMED_VALUE           60081
 #endif
 #endif

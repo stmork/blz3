@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "DlgSelectProfile.h"
 #include "DlgCreateTriangles.h"
+#include "DlgCreateRotShape.h"
 #include "DlgCreateSplineShape.h"
 #include "b3Profile.h"
 
@@ -35,6 +36,11 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/10 13:55:15  sm
+**	- Added creation dialog for rotation shapes.
+**	- Cleaned up derivation of b3SplineRotShape.
+**	- Added support for foreign BLZ3_HOME directories.
+**
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -42,7 +48,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **	Revision 1.2  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -96,6 +102,7 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 {
 	CDlgSelectProfile      dlg;
 	CDlgCreateTriangles    dlg_triangles;
+	CDlgCreateRotShape     dlg_rot_shape;
 	CDlgCreateSplineShape  dlg_spline_shape;
 	CB3ShapeDialog        *page = null;
 	int                    result;
@@ -119,7 +126,7 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 					break;
 
 				case SPLINE_ROT:
-					page = null;
+					page = &dlg_rot_shape;
 					break;
 
 				case SPLINES_AREA:

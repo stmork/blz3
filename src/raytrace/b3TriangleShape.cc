@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/03/10 13:55:15  sm
+**      - Added creation dialog for rotation shapes.
+**      - Cleaned up derivation of b3SplineRotShape.
+**      - Added support for foreign BLZ3_HOME directories.
+**
 **      Revision 1.27  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.

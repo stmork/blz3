@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2002/03/10 13:55:15  sm
+**      - Added creation dialog for rotation shapes.
+**      - Cleaned up derivation of b3SplineRotShape.
+**      - Added support for foreign BLZ3_HOME directories.
+**
 **      Revision 1.31  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -197,179 +202,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Implementation                                **
-**                                                                      **
-*************************************************************************/
-
-b3SplineCurve::b3SplineCurve(b3_size class_size,b3_u32 class_type) :
-	b3TriangleShape(class_size, class_type)
-{
-	m_Controls = null;
-}
-
-b3SplineCurve::b3SplineCurve(b3_u32 class_type) :
-	b3TriangleShape(sizeof(b3SplineCurve), class_type)
-{
-	m_Controls = null;
-}
-
-b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
-{
-	b3_index i;
-
-	m_rSubDiv = b3InitInt();
-	for (i = 0;i < B3_MAX_KNOTS;i++)
-	{
-		m_Knots[i] = b3InitFloat();
-	}
-	b3InitSpline(&m_Spline,null,m_Knots);
-	b3InitVector(&m_Axis.pos);
-	b3InitVector(&m_Axis.dir);
-
-	m_Controls = (b3_vector *)b3Item::b3Alloc(m_Spline.control_max * sizeof(b3_vector));
-	m_Spline.controls = m_Controls;
-	for (i = 0;i < m_Spline.control_max;i++)
-	{
-		b3InitVector(&m_Controls[i]);
-	}
-	b3InitActivation();
-}
-
-void b3SplineCurve::b3StoreShape()
-{
-	b3_index i;
-
-	b3StoreInt(m_rSubDiv);
-	for (i = 0;i < B3_MAX_KNOTS;i++)
-	{
-		b3StoreFloat(m_Knots[i]);
-	}
-	b3StoreSpline(&m_Spline);
-	b3StoreVector(&m_Axis.pos);
-	b3StoreVector(&m_Axis.dir);
-	for (i = 0;i < m_Spline.control_max;i++)
-	{
-		b3StoreVector(&m_Controls[i]);
-	}
-}
-
-
-void b3SplineCurve::b3Init(
-	b3_count Degree,
-	b3_count ControlNum,
-	b3_bool  Closed)
-{
-	// Allocate controls
-	m_Controls      = (b3_vector *)b3Item::b3Alloc(m_Spline.control_max * sizeof(b3_vector));
-
-	// Init horizontal spline
-	m_Spline.knots    = m_Knots;
-	m_Spline.controls = m_Controls;
-	m_Spline.offset   = 1;
-	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
-}
-
-b3_bool b3SplineCurve::b3Prepare()
-{
-	b3Spline     MySpline;
-	b3_triangle *Triangle;
-	b3_matrix    Matrix;
-	b3_res       xSize,ySize,x,y;
-	b3_count     VertexCount,TriaCount;
-	b3_vector    Between[B3_MAX_CONTROLS+1];
-	b3_vector    VertexField[B3_MAX_SUBDIV+1];
-
-
-	// Create aux BSpline
-	MySpline          = m_Spline;
-	MySpline.controls = Between;
-
-	xSize       = m_rSubDiv;
-	ySize       = MySpline.subdiv;
-	TriaCount = xSize * ySize * 2;
-
-	if (!MySpline.closed) ySize++;
-	VertexCount = xSize * ySize;
-
-	// Reallocating new tria shape
-	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.subdiv))
-	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
-	}
-
-
-	// computing vertices
-	MySpline.offset = 1;
-	for (x = 0;x < xSize;x++)
-	{
-		b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2.0 * x / xSize);
-		for (y = 0;y < MySpline.control_num;y++)
-		{
-			b3MatrixVMul (&Matrix,&m_Controls[y],&Between[y],true);
-		}
-
-		MySpline.b3DeBoor (VertexField,0);
-		for (y = 0;y < ySize;y++)
-		{
-			m_Vertices[y * xSize + x].Point.x = VertexField[y].x;
-			m_Vertices[y * xSize + x].Point.y = VertexField[y].y;
-			m_Vertices[y * xSize + x].Point.z = VertexField[y].z;
-		}
-	}
-
-
-	// computing triangles
-	Triangle = m_Triangles;
-	for (y = 0;y < MySpline.subdiv;y++)
-	{
-		for (x = 0;x < xSize;x++)
-		{
-			Triangle->P1 =  x            + xSize *  y;
-			Triangle->P2 = (x+1) % xSize + xSize *  y;
-			Triangle->P3 =  x            + xSize * ((y+1) % ySize);
-			Triangle++;
-
-			Triangle->P1 = (x+1) % xSize + xSize * ((y+1) % ySize);
-			Triangle->P2 =  x            + xSize * ((y+1) % ySize);
-			Triangle->P3 = (x+1) % xSize + xSize *  y;
-			Triangle++;
-		}
-	}
-
-
-	/* initializing values */
-	m_xSize = xSize;
-	m_ySize = MySpline.subdiv;
-	m_Flags = PHONG;
-
-	return b3TriangleShape::b3Prepare();
-}
-
-void b3SplineCurve::b3Transform(b3_matrix *transformation)
-{
-	b3_vector *control;
-	b3_index   offset;
-	b3_index   x;
-
-	control = m_Spline.controls;
-	offset  = m_Spline.offset;
-
-	// Transform rotation axis
-	b3MatrixVMul (transformation,&m_Axis.pos,&m_Axis.pos,true);
-	b3MatrixVMul (transformation,&m_Axis.dir,&m_Axis.dir,false);
-
-	// Transform control points
-	for (x = 0;x < m_Spline.control_num;x++)
-	{
-		b3Vector::b3MatrixMul4D(transformation,control);
-		control += offset;
-	}
-	b3TriangleShape::b3Transform(transformation);
-}
-
-
-/*************************************************************************
-**                                                                      **
 **                        BSpline shapes                                **
 **                                                                      **
 *************************************************************************/
@@ -401,7 +233,7 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 
 	// Copy control points
 	control_count = m_Spline[0].control_max * m_Spline[1].control_max;
-	m_Controls      = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
+	m_Controls    = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	m_Spline[0].controls =
 	m_Spline[1].controls = m_Controls;
 	for (i = 0;i < control_count;i++)

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2002/03/10 13:55:15  sm
+**      - Added creation dialog for rotation shapes.
+**      - Cleaned up derivation of b3SplineRotShape.
+**      - Added support for foreign BLZ3_HOME directories.
+**
 **      Revision 1.43  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -272,7 +277,6 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3Box::b3StaticInit,              &b3Box::b3StaticInit,              BOX);
 	b3Item::b3Register(&b3Torus::b3StaticInit,            &b3Torus::b3StaticInit,            TORUS);
 	b3Item::b3Register(&b3Triangles::b3StaticInit,        &b3Triangles::b3StaticInit,        TRIANGLES);
-	b3Item::b3Register(&b3SplineCurveShape::b3StaticInit, &b3SplineCurveShape::b3StaticInit, SPLINE);
 	b3Item::b3Register(&b3SplineRotShape::b3StaticInit,   &b3SplineRotShape::b3StaticInit,   SPLINE_ROT);
 	b3Item::b3Register(&b3SplineArea::b3StaticInit,       &b3SplineArea::b3StaticInit,       SPLINES_AREA);
 	b3Item::b3Register(&b3SplineCylinder::b3StaticInit,   &b3SplineCylinder::b3StaticInit,   SPLINES_CYL);

@@ -1,8 +1,11 @@
 #!/bin/tcsh
 
-echo "Using Blizzard III"
+if ( ! $?BLZ3_HOME ) then
+  setenv BLZ3_HOME ~blz3
+endif
 
-setenv BLZ3_HOME     ~blz3
+echo "Using Blizzard III (Home: $BLZ3_HOME)"
+
 setenv BLZ3_INCLUDE  $BLZ3_HOME/include
 setenv BLZ3_DOC      $BLZ3_HOME/doc
 setenv BLZ3_MAN      $BLZ3_HOME/man
