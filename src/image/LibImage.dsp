@@ -142,6 +142,10 @@ SOURCE=b3TxLoadTIFF.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxMirror.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3TxPCX.cc
 # End Source File
 # Begin Source File
