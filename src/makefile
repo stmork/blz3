@@ -114,9 +114,11 @@ $(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB) lib_system lib_system_ind
 	$(RANLIB) $@
 
 $(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB) lib_raytrace
+	$(AR) $(ARFLAGS) $@ raytrace/libB3Raytrace.o
+	$(RANLIB) $@
 
-$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_base lib_image lib_tiff lib_jpeg lib_system lib_system_ind
-	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o system/*.o
+$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_jpeg lib_tiff lib_image lib_base lib_system lib_system_ind
+	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/libB3Image.o base/libB3Base.o system_unix/*.o system/*.o
 	$(RANLIB) $@
 
 lib_system:

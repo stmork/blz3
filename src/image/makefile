@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= libB3image.a
+LIBS			= libB3Image.o
 LIB_SOURCE		=\
 	b3Measure.cc\
 	b3Tx.cc\
@@ -69,9 +69,8 @@ depend:
 clean:
 	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
-libB3image.a:	$(LIB_OBJ)
+libB3Image.o:	$(LIB_OBJ)
 	rm -f core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	ld -Ur -o $@ $^
 
 -include .dep

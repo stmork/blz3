@@ -15,7 +15,7 @@ setenv BLZ3_LIB      "$BLZ3_HOME/lib/$OSTYPE"_"$CPUTYPE"
 setenv BLZ3_BIN      "$BLZ3_HOME/bin/$OSTYPE"_"$CPUTYPE"
 
 #setenv LIB_B3        "-lB3Raytrace -lB3Image -lB3System -lB3Base -lB3System -lB3Image -lB3jpeg -lB3tiff -lB3Base -lB3System"
-setenv LIB_B3        "-lB3Raytrace -lB3Base -lB3System"
+setenv LIB_B3        "-lB3Raytrace -lB3Base"
 setenv LIB_X3        "-lX11 -lXt"
 setenv LIB_S3        "-lm -lpthread"
 

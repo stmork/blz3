@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/09/01 15:33:36  sm
+**	- Updated makefiles
+**
 **	Revision 1.12  2002/08/28 15:31:00  sm
 **	- Added some help output to render and bimg3.
-**
+**	
 **	Revision 1.11  2002/08/11 11:22:33  sm
 **	- Adjusted some includes concerning b3DisplayView.
 **	
@@ -86,7 +89,6 @@
 */
 
 static b3TxPool texture_pool;
-static char     cvs_tag[] = "$Name$";
 
 class b3ImageRow : public b3Row
 {

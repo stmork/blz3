@@ -6,7 +6,7 @@
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 CXX			= g++
-LDLIBS			= -lB3System -lpthread
+LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 PRGS			= RemDepend RemCR RestoreExt CleanRes
 REMDEPEND_OBJS		= RemDepend.o
 REMCR_OBJS		= RemCR.o
@@ -26,17 +26,18 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 RemDepend:	$(REMDEPEND_OBJS)
-	$(LINK.cc) -o $@ $(REMDEPEND_OBJS) $(LDLIBS)
+	$(LINK.cc) -o $@ $(REMDEPEND_OBJS) -lB3System -lpthread
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
 RemCR:	$(REMCR_OBJS)
-	$(LINK.cc) -o $@ $(REMCR_OBJS) $(LDLIBS)
+	$(LINK.cc) -o $@ $(REMCR_OBJS) -lB3System -lpthread
+# $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
 RestoreExt:	$(RESTOREEXT_OBJS)
-	$(LINK.cc) -o $@ $(RESTOREEXT_OBJS) $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
+	$(LINK.cc) -o $@ $(RESTOREEXT_OBJS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 

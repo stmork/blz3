@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= libB3System.a
+LIBS			= libB3System.o
 LIB_SOURCE		=\
 	b3Config.cc\
 	b3Dir.cc\
@@ -26,7 +26,7 @@ LIB_OBJ			=\
 	b3Thread.o\
 	b3Time.o
 
-all:	lib
+all:	$(LIB_OBJ)
 
 depend:
 #	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
@@ -34,12 +34,5 @@ depend:
 
 clean:
 	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
-
-lib:	$(LIBS)
- 
-$(LIBS):	$(LIB_OBJ)
-	rm -f $@ core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
 
 -include .dep

@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= $(BLZ3_LIB)/libB3Raytrace.a
+LIBS			= libB3Raytrace.o
 PRG_SOURCE		=\
 	b3Animation.cc\
 	b3AnimElement.cc\
@@ -100,7 +100,7 @@ PRG_OBJ			=\
 	b3Triangles.o\
 	b3TriangleShape.o
 
-all:	lib
+all:	$(LIBS)
 
 depend:
 #	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
@@ -109,11 +109,8 @@ depend:
 clean:
 	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
-lib:	$(LIBS)
-
-$(LIBS):	$(PRG_OBJ)
+libB3Raytrace.o:	$(PRG_OBJ)
 	rm -f $@ core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	ld -Ur -o $@ $^
 
 -include .dep
