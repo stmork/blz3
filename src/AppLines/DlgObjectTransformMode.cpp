@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/28 15:32:06  sm
+**	- Corrected class wizard file
+**
 **	Revision 1.1  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
-**	
+**		
 **
 */
 
@@ -95,6 +98,11 @@ void CDlgObjectTransformMode::OnCancel()
 **                                                                      **
 *************************************************************************/
 
+BEGIN_MESSAGE_MAP(CDlgObjectTransformReplace, CDlgObjectTransformMode)
+	//{{AFX_MSG_MAP(CDlgObjectTransformReplace)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
 CDlgObjectTransformReplace::CDlgObjectTransformReplace(CWnd* pParent /*=NULL*/)
 	: CDlgObjectTransformMode(
 		"transform.object replace mode", 
@@ -110,6 +118,11 @@ CDlgObjectTransformReplace::CDlgObjectTransformReplace(CWnd* pParent /*=NULL*/)
 **                        CDlgObjectTransformReplace implementation     **
 **                                                                      **
 *************************************************************************/
+
+BEGIN_MESSAGE_MAP(CDlgObjectTransformLoad, CDlgObjectTransformMode)
+	//{{AFX_MSG_MAP(CDlgObjectTransformLoad)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
 
 CDlgObjectTransformLoad::CDlgObjectTransformLoad(CWnd* pParent /*=NULL*/)
 	: CDlgObjectTransformMode(

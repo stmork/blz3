@@ -773,11 +773,12 @@ BEGIN
     "A",            ID_ALL_DEACTIVATE,      VIRTKEY, ALT, NOINVERT
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_ORIGINAL,       VIRTKEY, CONTROL, NOINVERT
+    "K",            ID_CAMERA_PROPERTIES,   VIRTKEY, CONTROL, NOINVERT
+    "L",            ID_LIGHT_PROPERTIES,    VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
     "R",            ID_RAYTRACE,            VIRTKEY, CONTROL, NOINVERT
-    "R",            ID_DEACTIVATE_REST,     VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
     VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT

@@ -92,6 +92,14 @@ public:
 
 		return dlg.b3GetMode();
 	}
+
+// Implementation
+protected:
+
+	// Generated message map functions
+	//{{AFX_MSG(CDlgObjectTransformReplace)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 };
 
 class CDlgObjectTransformLoad : public CDlgObjectTransformMode
@@ -110,6 +118,14 @@ public:
 
 		return dlg.b3GetMode();
 	}
+
+// Implementation
+protected:
+
+	// Generated message map functions
+	//{{AFX_MSG(CDlgObjectTransformLoad)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

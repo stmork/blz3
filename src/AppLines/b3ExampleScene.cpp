@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2004/05/28 15:32:06  sm
+**	- Corrected class wizard file
+**
 **	Revision 1.19  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.18  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -370,7 +373,7 @@ b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead)
 	
 	big->b3GetMaterialHead()->b3Append(chess);
 
-	mat->m_Reflection = 0.2;
+	mat->m_Reflection = 0.2f;
 	mat->m_Diffuse    = b3_pkd_color(0x886644);
 	mat->m_Ambient    = mat->m_Diffuse * 0.2;
 	area->b3GetMaterialHead()->b3Append(mat);
