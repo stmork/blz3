@@ -395,10 +395,13 @@ public:
 
 class B3_PLUGIN b3MatCarPaint : public b3Material
 {
+	b3_f64            m_MetallicScaleHalf;
+
 public:
 	b3_material       m_Parallel;
 	b3_material       m_Perpendicular;
 	b3_u32            m_Flags;
+	b3_f64            m_MetallicScale;
 
 public:
 	B3_ITEM_INIT(b3MatCarPaint);
@@ -412,6 +415,8 @@ public:
 protected:
 	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
 };
+
+#define B3_MAT_CP_METALLIC 1
 
 // THIN_FILM
 class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3Scaling

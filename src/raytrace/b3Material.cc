@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.96  2004/09/29 08:46:00  sm
+**      - Added metallic effect on car paint.
+**
 **      Revision 1.95  2004/09/28 16:04:43  sm
 **      - Fixed material ponter problem inside all shader.
 **
@@ -1721,7 +1724,8 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPain
 
 	m_Perpendicular = m_Parallel;
 
-	m_Flags = 0;
+	m_Flags         = B3_MAT_CP_METALLIC;
+	m_MetallicScale = 0.015;
 }
 
 b3MatCarPaint::b3MatCarPaint(b3_u32 *src) : b3Material(src)
@@ -1743,6 +1747,16 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 *src) : b3Material(src)
 	m_Perpendicular.m_SpecularExp = b3InitFloat();
 
 	m_Flags       = b3InitInt();
+
+	if (B3_PARSE_INDEX_VALID)
+	{
+		m_MetallicScale = b3InitFloat();
+	}
+	else
+	{
+		m_Flags |= B3_MAT_CP_METALLIC;
+		m_MetallicScale = 0.018;
+	}
 }
 
 void b3MatCarPaint::b3Write()
@@ -1764,18 +1778,35 @@ void b3MatCarPaint::b3Write()
 	b3StoreFloat(m_Perpendicular.m_SpecularExp);
 
 	b3StoreInt(m_Flags);
+	b3StoreFloat(m_MetallicScale);
 }
 
 b3_bool b3MatCarPaint::b3Prepare()
 {
+	m_MetallicScaleHalf = m_MetallicScale * 0.5;
 	return true;
 }
 
 b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 {
-	b3_f64 Factor = fabs(b3Vector::b3SMul(&surface->incoming->normal,&surface->incoming->dir));
+	b3_ray    *ray = surface->incoming;
+	b3_vector  normal;
+	b3_f64     ni;
 
-	b3Mix(surface,&m_Parallel,&m_Perpendicular, Factor);
+	if (m_Flags & B3_MAT_CP_METALLIC)
+	{
+		normal.x = ray->normal.x + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+		normal.y = ray->normal.y + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+		normal.z = ray->normal.z + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+		b3Vector::b3Normalize(&normal);
+
+		ni = fabs(b3Vector::b3SMul(&normal,&ray->dir));
+	}
+	else
+	{
+		ni = fabs(b3Vector::b3SMul(&ray->normal,&ray->dir));
+	}
+	b3Mix(surface,&m_Parallel,&m_Perpendicular, ni);
 
 	return true;
 }
@@ -1786,14 +1817,29 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	{
 		b3_ray      *ray = surface->incoming;
 		b3_vector64  L;
+		b3_vector64  refl_dir;
+		b3_f64       nl;
+		b3_f64       rl;
 
 		B3_ASSERT(ray != null);	
 
 		b3Vector::b3Init(&L,&jit->dir);
 		b3Vector::b3Normalize(&L);
 
-		b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
-		b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+		nl = b3Vector::b3SMul(&ray->normal,&L);
+
+		if (m_Flags & B3_MAT_CP_METALLIC)  
+		{
+			refl_dir.x = surface->refl_ray.dir.x + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+			refl_dir.y = surface->refl_ray.dir.y + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+			refl_dir.z = surface->refl_ray.dir.z + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
+			b3Vector::b3Normalize(&refl_dir);
+			rl = b3Vector::b3SMul(&refl_dir,&L);
+		}
+		else
+		{
+			rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+		}
 
 		jit->m_DiffuseSum  += surface->m_Diffuse * nl * jit->m_LightFrac;
 		jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)surface->m_SpecularExp);
