@@ -35,8 +35,8 @@ public:
 	int     b3ReadInt      (const char *client,const char *,int         value);
 	void   *b3ReadBinary   (const char *client,const char *,b3_size     &size);
 
-private:
-	HKEY  b3GetSectionKey(const char *section_name);
+protected:
+	HKEY    b3GetSectionKey(const char *section_name);
 };
 
 #endif

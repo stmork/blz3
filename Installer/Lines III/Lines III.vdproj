@@ -15,86 +15,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3DD2051AD8484AC088278A2F0C023455"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_671F850255EE4E5B92DF101B09A579E0"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -119,42 +47,6 @@
         {
         "MsmKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -253,49 +145,9 @@
         }
         "File"
         {
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_32EAF5B7A9AB4398B1D16FEF025764F0"
-            {
-            "SourcePath" = "8:comdlg32.dll"
-            "TargetName" = "8:comdlg32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_355116D83D60003486FCBCA5B9E28235"
-            {
-            "SourcePath" = "8:VERSION.dll"
-            "TargetName" = "8:VERSION.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_3DD2051AD8484AC088278A2F0C023455"
             {
-            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\AppLines.ico"
+            "SourcePath" = "8:\\\\Scorpius\\blz3\\src\\AppLines\\res\\AppLines.ico"
             "TargetName" = "8:AppLines.ico"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -315,7 +167,7 @@
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_671F850255EE4E5B92DF101B09A579E0"
             {
-            "SourcePath" = "8:..\\..\\Releasenotes.txt"
+            "SourcePath" = "8:\\\\Scorpius\\blz3\\Releasenotes.txt"
             "TargetName" = "8:Releasenotes.txt"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -331,26 +183,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
-            {
-            "SourcePath" = "8:OPENGL32.dll"
-            "TargetName" = "8:OPENGL32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_70DB3051E57C4FBC9EC2E140D1AF8432"
@@ -373,29 +205,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_B4EB950B8F5D985ADB70AED0CF66B92C"
-            {
-            "SourcePath" = "8:GLU32.dll"
-            "TargetName" = "8:GLU32.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_EE3AD3DD477243E39C739F92CB9CE958"
             {
-            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\splash.bmp"
+            "SourcePath" = "8:\\\\Scorpius\\blz3\\src\\AppLines\\res\\splash.bmp"
             "TargetName" = "8:splash.bmp"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -563,6 +375,17 @@
                         {
                         }
                     }
+                    "{F27BD5C5-A65D-4608-96D4-7C5DA1F76302}:_FE3E5B4B764A45B088088976A4421339"
+                    {
+                    "Name" = "8:Plugins"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_80E8440836BF40E4AE2F879B755EC686"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{78BAF5CE-F2E5-45BE-83BC-DB6AF387E941}:_44827182F8ED4A7BBD92B5B75D95DDDA"
@@ -724,6 +547,56 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_C1A8D97472C040E1A6F28D6C488D629D"
+                                    {
+                                    "Name" = "8:[ProductName]"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_65704AF7E2404259A37395E5B658278C"
+                                            {
+                                            "Name" = "8:Plugins"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
+                                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_E4350132615D4EF2BE3E89C15F6E2F3D"
+                                            {
+                                            "Name" = "8:Lines III"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{35AE352C-BC79-4EF9-ABD8-61F467188583}:_9E6A5406F563472E87B9143FC11BA6B1"
+                                                    {
+                                                    "Name" = "8:texture search path"
+                                                    "Condition" = "8:"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
                                 }
                                 "Values"
                                 {
@@ -758,6 +631,42 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_EF29495EF7124C3DB2787062B25FC8B8"
+                                    {
+                                    "Name" = "8:[ProductName]"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_B6B3020B8C5941C2BCCE742C2DC49677"
+                                            {
+                                            "Name" = "8:Lines III"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{35AE352C-BC79-4EF9-ABD8-61F467188583}:_75A7D1087B164232BA4A6233092DD861"
+                                                    {
+                                                    "Name" = "8:texture search path"
+                                                    "Condition" = "8:"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
                                 }
                                 "Values"
                                 {
@@ -1438,40 +1347,12 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_5C76A0E4CAA44A8CBE9C23F273038F24"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_E162C0A180014BDEA0A98A6B9FBA24EC"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_70193B185E7443449F020FE02196C761"
             {
-            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse2\\AppLines.exe"
+            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i686\\sse2\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1499,7 +1380,7 @@
             }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_7D66FAF8D902439B906320101096BF40"
             {
-            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse\\AppLines.exe"
+            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i686\\sse\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1527,7 +1408,7 @@
             }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_9FFFCF9C4E9D409A871B06E88B069928"
             {
-            "SourcePath" = "8:..\\..\\bin\\win32_i386\\AppLines.exe"
+            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i386\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"

@@ -96,6 +96,7 @@ public:
 
 private:
 	void b3SetupSearchPath(b3SearchPath &search,CString &path);
+	void b3SetupPluginPaths(b3SearchPath &search);
 };
 
 #define CB3GetLinesApp()  ((CAppLinesApp *)AfxGetApp())

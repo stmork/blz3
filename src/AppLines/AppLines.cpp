@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.83  2005/01/09 15:04:30  sm
+**	- Added better search path support.
+**
 **	Revision 1.82  2004/12/23 22:22:41  sm
 **	- Adjusted further Visual C++ options
-**
+**	
 **	Revision 1.81  2004/12/22 21:36:36  sm
 **	- Changed development environment to Visual C++ .net 2003
 **	
@@ -601,11 +604,46 @@ void CAppLinesApp::b3SetupSearchPath(b3SearchPath &search,CString &path)
 	}
 }
 
+void CAppLinesApp::b3SetupPluginPaths(b3SearchPath &search)
+{
+	HKEY hSecKey = b3GetSectionKey("Plugins");
+
+	if (hSecKey)
+	{
+		FILETIME ftLastWriteTime;      // last write time 
+		CHAR     entry[MAX_PATH];
+		DWORD    entry_len = sizeof(entry);
+		char     value[MAX_PATH];
+
+		for (int i = 0;::RegEnumKeyEx(hSecKey, 
+                     i, 
+                     entry, 
+                     &entry_len,
+                     NULL, 
+                     NULL, 
+                     NULL, 
+                     &ftLastWriteTime) == ERROR_SUCCESS;i++)
+        {
+			unsigned long mode = 0,len = sizeof(value);
+
+			if (::RegQueryValueEx(hSecKey, entry, NULL, &mode, null, &len) == ERROR_SUCCESS)
+			{
+				if (mode == REG_SZ)
+				{
+					::RegQueryValueEx(hSecKey, entry, NULL, &mode, (unsigned char *)value, &len);
+					search.b3AddPath(value);
+				}
+			}
+        }
+    } 
+}
+
 BOOL CAppLinesApp::InitInstance()
 {
 	// Parse command line for standard shell commands, DDE, file open
 	CB3Version          version;
 	CB3ExceptionLogger  init_logging;
+	CString             path;
 	b3Loader           &plugins = b3Loader::b3GetLoader();
 	b3Date              today;
 
@@ -645,13 +683,22 @@ BOOL CAppLinesApp::InitInstance()
 	today.b3Y2K_Selftest();
 #endif
 
-	CString path = GetProfileString(b3ClientName(),"texture search path","");
+	// Default texture search path from HKEY_LOCAL_MACHINE
+//	path = b3ReadString(b3ClientName(),"texture search path","");
+//	b3SetupSearchPath(b3Scene::m_TexturePool,path);
+
+	// Default texture search path from HKEY_CURENT_USER
+	path = GetProfileString(b3ClientName(),"texture search path","");
 	b3SetupSearchPath(b3Scene::m_TexturePool,path);
 
+	// Add hard wired classes
 	b3RaytracingItems::b3Register();
 	b3StaticPluginInfoInit::b3Init();
+
+	// FIXME: This should be local computer wide.
 	path = GetProfileString(b3ClientName(),"plugin search path","");
 	b3SetupSearchPath(plugins,path);
+	b3SetupPluginPaths(plugins);
 	plugins.b3Load();
 
 	CDlgProperties::b3ReadConfig();
