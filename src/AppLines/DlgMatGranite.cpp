@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/03/14 16:18:26  sm
+**	- Added Windows support for granite.
+**
 **	Revision 1.1  2004/03/14 08:19:17  sm
 **	- Added granite material.
-**
+**	
 */
 
 /*************************************************************************
@@ -74,7 +77,7 @@ END_MESSAGE_MAP()
 
 void CDlgMatGranite::b3Register()
 {
-	b3Loader::b3AddClassType(WOOD,IDS_MAT_WOOD,IDI_MAT_WOOD,b3Edit,b3Edit);
+	b3Loader::b3AddClassType(GRANITE,IDS_MAT_GRANITE,IDI_MAT_GRANITE,b3Edit,b3Edit);
 }
 
 b3_bool CDlgMatGranite::b3Edit(b3Item *item)

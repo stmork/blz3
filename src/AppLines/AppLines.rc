@@ -120,6 +120,7 @@ IDI_MAT_SLIDE           ICON    DISCARDABLE     "res\\mat_slide.ico"
 IDI_MAT_TEXTURE         ICON    DISCARDABLE     "res\\mat_texture.ico"
 IDI_MAT_WRAP_TEXTURE    ICON    DISCARDABLE     "res\\mat_wrap_texture.ico"
 IDI_MAT_COOK_TORRANCE   ICON    DISCARDABLE     "res\\mat_cook_torrance.ico"
+IDI_MAT_GRANITE         ICON    DISCARDABLE     "res\\mat_granite.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3056,12 +3057,12 @@ BEGIN
     IDS_MAT_CHESS           "Schachbrett"
     IDS_MAT_MARBLE          "Marmor"
     IDS_MAT_WOOD            "Holz"
-    IDS_MAT_GRANITE         "Granit"
     IDS_MAT_SLIDE           "Farbverlauf"
     IDS_MAT_TEXTURE         "Textur"
     IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
     IDS_PRT_OBJECTNAME      "Objektname: %s"
     IDS_MAT_COOK_TORRANCE   "Cook & Torrance Material-Shader"
+    IDS_MAT_GRANITE         "Granit"
 END
 
 STRINGTABLE DISCARDABLE 

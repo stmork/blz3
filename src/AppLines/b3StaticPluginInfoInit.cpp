@@ -31,6 +31,7 @@
 #include "DlgMatTexture.h"
 #include "DlgMatWrapTexture.h"
 #include "DlgMatCookTorrance.h"
+#include "DlgMatGranite.h"
 
 /*************************************************************************
 **                                                                      **
@@ -40,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/03/14 16:18:26  sm
+**	- Added Windows support for granite.
+**
 **	Revision 1.3  2004/03/07 13:08:52  sm
 **	- Added dialog for Cook/Torrance material
-**
+**	
 **	Revision 1.2  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -88,6 +92,7 @@ void b3StaticPluginInfoInit::b3Init()
 	CDlgMatTexture::b3Register();
 	CDlgMatWrapTexture::b3Register();
 	CDlgMatCookTorrance::b3Register();
+	CDlgMatGranite::b3Register();
 }
 
 const char *b3StaticPluginInfoInit::b3GetClassName(b3_u32 class_id)

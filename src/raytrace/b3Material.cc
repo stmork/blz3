@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2004/03/14 16:18:26  sm
+**      - Added Windows support for granite.
+**
 **      Revision 1.38  2004/03/14 08:19:17  sm
 **      - Added granite material.
 **
@@ -1117,6 +1120,17 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
+	m_Dark      = b3Color(0.25,0.25,0.25);
+	m_Light     = b3Color(0.8, 0.3, 0.2);
+	m_DiffColor = b3Color(0.8, 0.8, 0.8);
+	m_AmbColor  = b3Color(0.1, 0.1, 0.1);
+	m_DiffColor = b3Color(0.8, 0.8, 0.8);
+	b3Vector::b3Init(&m_Scale,1.0,1.0,1.0);
+	m_Reflection = 0.0;
+	m_Refraction = 0.0;
+	m_RefrValue  = 1.0;
+	m_HighLight  = 100.0;
+	m_Flags      = 0;
 }
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
@@ -1151,7 +1165,7 @@ b3_bool b3MatGranite::b3GetColors(
 	b3Color  &ambient,
 	b3Color  &specular)
 {
-	b3Color   mask;
+	b3Color   mask = 1;
 	b3_vector d;
 	b3_loop   i;
 	b3_f64    sum = 0;
@@ -1164,13 +1178,25 @@ b3_bool b3MatGranite::b3GetColors(
 	for (i = 0;i < 6;i++)
 	{
 		sum += fabs(0.5 - b3Noise::b3NoiseVector(
-			4 * freq *d.x,
-			4 * freq *d.y,
-			4 * freq *d.z)) / freq;
-			freq += freq; // = freq *= 2;
+			4 * freq * d.x,
+			4 * freq * d.y,
+			4 * freq * d.z)) / freq;
+		freq += freq; // = freq *= 2;
+	}
+	if (sum < 0)
+	{
+		mask = m_Dark;
+	}
+	else if (sum > 1)
+	{
+		mask = m_Light;
+	}
+	else
+	{
+		mask.b3Mix(m_Dark,m_Light,sum);
 	}
 	
-	diffuse  = m_DiffColor * mask * sum;
+	diffuse  = m_DiffColor * mask;
 	ambient  = m_AmbColor  * mask;
 	specular = m_SpecColor * mask;
 

@@ -157,6 +157,16 @@ public:
 		return color;
 	}
 
+	inline void b3Mix(const b3Color &a,const b3Color &b,b3_f64 mix)
+	{
+		b3_f64 amix = 1 - mix;
+
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			v[i] = a.v[i] * amix + b.v[i] * mix;
+		}
+	}
+
 	inline b3Color &operator+=(const b3Color &a)
 	{
 		for (b3_loop i = 0;i < 4;i++)

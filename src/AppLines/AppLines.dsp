@@ -373,6 +373,10 @@ SOURCE=.\DlgMatCookTorrance.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatGranite.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatMarble.cpp
 # End Source File
 # Begin Source File
@@ -745,6 +749,14 @@ SOURCE=.\DlgMatChess.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatCookTorrance.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatGranite.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatMarble.h
 # End Source File
 # Begin Source File
@@ -974,6 +986,10 @@ SOURCE=.\res\mat_chess.ico
 # Begin Source File
 
 SOURCE=.\res\mat_cook_torrance.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_granite.ico
 # End Source File
 # Begin Source File
 
