@@ -1,13 +1,12 @@
 /*
 **
-**	$Filename:	b3TxTool.cc $
+**	$Filename:	b3Endian.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
-**	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - some big/little endian support
+**	Blizzard III - Endian specific access routines
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -23,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Endian.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,20 +32,9 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.1  2001/10/12 18:43:21  sm
+**	- Endian conversion added
 **
-**	Revision 1.3  2000/09/21 10:22:27  smork
-**	- Setting Blizzard III projects to warning level 3: Found
-**	  some uninitialized variables.
-**	- changed b3Mutex from CMutex to CRITICAL_SECTION (thread
-**	  synchronization only)
-**	- introduced b3IPCMutex for process synchronization
-**	
-**	Revision 1.2  2000/08/14 11:11:23  smork
-**	- Inserted change log
-**	- Inserted author tag
-**	- Cleaned up file header
 **	
 */
 
@@ -56,37 +44,43 @@
 **                                                                      **
 *************************************************************************/
 
-b3_u16 GetShort(void *Ptr)
+b3_u16 b3Endian::b3Get16(void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u16  Value;
 
-#	if THISPROCESSOR == INTEL
-		Value =                (b3_u16)Pointer[1];
-		Value = (Value << 8) | (b3_u16)Pointer[0];
-#	else 
-		Value =                (b3_u16)Pointer[0];
-		Value = (Value << 8) | (b3_u16)Pointer[1];
-#	endif
+	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	{
+		Value =                (long)Pointer[1];
+		Value = (Value << 8) | (long)Pointer[0];
+	}
+	else
+	{
+		Value =                (long)Pointer[0];
+		Value = (Value << 8) | (long)Pointer[1];
+	}
 	return Value;
 }
 
-b3_u32 GetLong (void *Ptr)
+b3_u32 b3Endian::b3Get32 (void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u32  Value;
 
-#	if THISPROCESSOR == INTEL
+	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
+	{
 		Value =                (b3_u32)Pointer[3];
 		Value = (Value << 8) | (b3_u32)Pointer[2];
 		Value = (Value << 8) | (b3_u32)Pointer[1];
 		Value = (Value << 8) | (b3_u32)Pointer[0];
-#	else 
+	}
+	else 
+	{
 		Value =                (b3_u32)Pointer[0];
 		Value = (Value << 8) | (b3_u32)Pointer[1];
 		Value = (Value << 8) | (b3_u32)Pointer[2];
 		Value = (Value << 8) | (b3_u32)Pointer[3];
-#	endif
+	}
 	return Value;
 }
 
@@ -96,7 +90,7 @@ b3_u32 GetLong (void *Ptr)
 **                                                                      **
 *************************************************************************/
 
-b3_u16 GetMotShort(void *Ptr)
+b3_u16 b3Endian::b3GetMot16(void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u16  Value;
@@ -104,10 +98,10 @@ b3_u16 GetMotShort(void *Ptr)
 	Value =                (b3_u16)Pointer[0];
 	Value = (Value << 8) | (b3_u16)Pointer[1];
 
-	return (Value);
+	return Value;
 }
 
-b3_u32 GetMotLong (void *Ptr)
+b3_u32 b3Endian::b3GetMot32 (void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u32  Value;
@@ -117,7 +111,7 @@ b3_u32 GetMotLong (void *Ptr)
 	Value = (Value << 8) | (b3_u32)Pointer[2];
 	Value = (Value << 8) | (b3_u32)Pointer[3];
 
-	return (Value);
+	return Value;
 }
 
 /*************************************************************************
@@ -126,7 +120,7 @@ b3_u32 GetMotLong (void *Ptr)
 **                                                                      **
 *************************************************************************/
 
-b3_u16 GetIntelShort(void *Ptr)
+b3_u16 b3Endian::b3GetIntel16(void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u16  Value;
@@ -134,20 +128,20 @@ b3_u16 GetIntelShort(void *Ptr)
 	Value =                (b3_u16)Pointer[1];
 	Value = (Value << 8) | (b3_u16)Pointer[0];
 
-	return (Value);
+	return Value;
 }
 
-b3_u32 GetIntelLong (void *Ptr)
+b3_u32 b3Endian::b3GetIntel32 (void *Ptr)
 {
 	b3_u08 *Pointer = (b3_u08 *)Ptr;
 	b3_u32  Value;
 
-	Value =                (unsigned long)Pointer[3];
-	Value = (Value << 8) | (unsigned long)Pointer[2];
-	Value = (Value << 8) | (unsigned long)Pointer[1];
-	Value = (Value << 8) | (unsigned long)Pointer[0];
+	Value =                (b3_u32)Pointer[3];
+	Value = (Value << 8) | (b3_u32)Pointer[2];
+	Value = (Value << 8) | (b3_u32)Pointer[1];
+	Value = (Value << 8) | (b3_u32)Pointer[0];
 
-	return (Value);
+	return Value;
 }
 
 /*************************************************************************
@@ -156,26 +150,19 @@ b3_u32 GetIntelLong (void *Ptr)
 **                                                                      **
 *************************************************************************/
 
-b3_size ChangeWord (void *Ptr)
+b3_size b3Endian::b3ChangeEndian16 (void *Ptr)
 {
-	b3_u16 *Pointer = (b3_u16 *)Ptr;
-	b3_u16	Value;
+	b3_u08 *Pointer = (b3_u08 *)Ptr;
 
-	Value = Pointer[0];
-	Pointer[0] = (b3_u16)(((Value & 0xff00) >> 8) | ((Value & 0xff) << 8));
-	return sizeof(b3_u16);
+	B3_SWAP(Pointer[0],Pointer[1]);
+	return 2;
 }
 
-b3_size ChangeLong (void *Ptr)
+b3_size b3Endian::b3ChangeEndian32 (void *Ptr)
 {
-	b3_u32 *Pointer = (b3_u32 *)Ptr;
-	b3_u32  Value;
+	b3_u08 *Pointer = (b3_u08 *)Ptr;
 
-	Value = Pointer[0];
-	Pointer[0] =
-		((Value & 0xff000000) >> 24) |
-		((Value & 0x00ff0000) >>  8) |
-		((Value & 0x0000ff00) <<  8) |
-		((Value & 0x000000ff) << 24);
-	return sizeof(b3_u32);
+	B3_SWAP(Pointer[0],Pointer[3]);
+	B3_SWAP(Pointer[1],Pointer[2]);
+	return 4;
 }
