@@ -68,6 +68,7 @@ protected:
 	b3_bool b3IsMouseActionAllowed();
 	b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
 	void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void    b3DrawLegend(CDC *pDC);
 
 // Generated message map functions
 protected:

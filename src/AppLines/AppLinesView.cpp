@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2002/02/05 20:04:12  sm
+**	- Added legend to print hard copy.
+**
 **	Revision 1.43  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
-**
+**	
 **	Revision 1.42  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
@@ -413,6 +416,35 @@ void CAppLinesView::b3Draw(
 		m_CameraVolume.b3Draw();
 	}
 	pDoc->b3DrawFulcrum();
+}
+
+void CAppLinesView::b3DrawLegend(CDC *pDC)
+{
+	CString         text;
+	b3ModellerInfo *info = GetDocument()->m_Info;
+	time_t          timecode;
+
+	text.LoadString(IDS_PRT_LEGEND);
+	b3DrawText(pDC,text);
+
+	text.Format(IDS_PRT_FILENAME,m_Scene->b3GetName());
+	b3DrawText(pDC,text);
+
+	if (m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		text.Format(IDS_PRT_VIEWNAME,m_Camera->b3GetName());
+		b3DrawText(pDC,text);
+	}
+
+	time(&timecode);
+	text.Format(IDS_PRT_DATE,asctime(localtime(&timecode)));
+	b3DrawText(pDC,text);
+
+	text.Format(IDS_PRT_MEASURE,info->b3GetMeasure(false));
+	b3DrawText(pDC,text);
+
+	text.Format(IDS_PRT_UNIT,info->b3GetUnitDescr());
+	b3DrawText(pDC,text);
 }
 
 void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2002/02/05 20:04:12  sm
+**      - Added legend to print hard copy.
+**
 **      Revision 1.41  2002/02/04 17:18:01  sm
 **      - Added Measurement to modeller info.
 **
@@ -456,7 +459,7 @@ char *b3CameraPart::b3GetName()
 **                                                                      **
 *************************************************************************/
 
-static b3_f64 unit_scale[B3_UNIT_MAX] =
+static const b3_f64 unit_scale[B3_UNIT_MAX] =
 {
 	1.0,   // B3_UNIT_MM
 	10.0,  // B3_UNIT_CM
@@ -466,7 +469,12 @@ static b3_f64 unit_scale[B3_UNIT_MAX] =
 	1000.0 // B3_UNIT_M
 };
 
-static b3_u32 measure[B3_MEASURE_MAX - 1] =
+static const char *unit_descr[] =
+{
+	"mm","cm","in","dm","ft","m"
+};
+
+static const b3_u32 measure[B3_MEASURE_MAX - 1] =
 {
 	1,10,20,50,100,200,500,1000
 };
@@ -571,6 +579,11 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
 {
 	return unit_scale[m_Flags & B3_UNIT_MASK];
+}
+
+const char *b3ModellerInfo::b3GetUnitDescr()
+{
+	return unit_descr[b3GetUnit()];
 }
 
 b3_unit b3ModellerInfo::b3GetUnit()

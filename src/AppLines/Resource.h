@@ -353,6 +353,12 @@
 #define IDS_NAME_EXISTS                 61481
 #define IDS_EMPTY_NAME                  61482
 #define IDS_ASK_DELETE_LIGHT            61483
+#define IDS_PRT_LEGEND                  61484
+#define IDS_PRT_MEASURE                 61485
+#define IDS_PRT_FILENAME                61486
+#define IDS_PRT_VIEWNAME                61487
+#define IDS_PRT_UNIT                    61488
+#define IDS_PRT_DATE                    61489
 
 // Next default values for new objects
 // 

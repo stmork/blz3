@@ -55,6 +55,9 @@ class CAppLinesApp : public CB3App
 	CMultiDocTemplate *pObjectTemplate;
 
 public:
+	b3_size         m_PrintBufferSize;
+
+public:
 	CAppLinesApp();
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);

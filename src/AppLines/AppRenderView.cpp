@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/02/05 20:04:12  sm
+**	- Added legend to print hard copy.
+**
 **	Revision 1.11  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
-**
+**	
 **	Revision 1.10  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
@@ -477,6 +480,27 @@ void CAppRenderView::b3DrawRect(
 	dc->LineTo(x1,y1);
 }
 
+void CAppRenderView::b3DrawText(CDC *pDC,const char *text)
+{
+	CBrush    bg(RGB(255,255,255));
+	b3_coord  x1,y1,x2,y2;
+
+	x1 = 0;              y1 = m_prtLineNum * m_prtLineHeight;
+	x2 = m_prtLineWidth; y2 = y1 + m_prtLineHeight;
+	pDC->FillSolidRect(x1,y1,m_prtLineWidth,m_prtLineHeight,RGB(255,255,255));
+	pDC->MoveTo(x1,y1);
+	pDC->LineTo(x2,y1);
+	pDC->LineTo(x2,y2);
+	pDC->LineTo(x1,y2);
+	pDC->LineTo(x1,y1);
+	pDC->TextOut(3,y1 + 3,text);
+	m_prtLineNum++;
+}
+
+void CAppRenderView::b3DrawLegend(CDC *pDC)
+{
+}
+
 b3_bool CAppRenderView::b3IsMouseActionAllowed()
 {
 	return true;
@@ -529,7 +553,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	void       *buffer = null;
 	int         PixelFormatIndex = -1;
 	b3_res      mmWidth,mmHeight;
-	b3_size     limit = 32;
+	b3_size     limit = CB3GetLinesApp()->m_PrintBufferSize;
 	b3_size     denom;
 
 	CScrollView::OnBeginPrinting(pDC, pInfo);
@@ -578,11 +602,11 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	pInfo->SetMaxPage(m_prtCountWidth * m_prtCountHeight);
 
 	memset (&info,0,sizeof(info));
-	info.bmiHeader.biSize     = sizeof(BITMAPINFOHEADER);
-	info.bmiHeader.biWidth    = m_prtPageWidth;
-	info.bmiHeader.biHeight   = m_prtPageHeight;
-	info.bmiHeader.biPlanes   =  1;
-	info.bmiHeader.biBitCount = 24;
+	info.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
+	info.bmiHeader.biWidth       = m_prtPageWidth;
+	info.bmiHeader.biHeight      = m_prtPageHeight;
+	info.bmiHeader.biPlanes      =  1;
+	info.bmiHeader.biBitCount    = 24;
 	info.bmiHeader.biCompression = BI_RGB;
 	info.bmiHeader.biSizeImage   = info.bmiHeader.biWidth * info.bmiHeader.biHeight * 3;
 
@@ -622,6 +646,57 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 		m_prtLogOffsetX * ((pInfo->m_nCurPage - 1) % m_prtCountWidth),
 		m_prtLogOffsetY * ((pInfo->GetMaxPage() - pInfo->m_nCurPage) / m_prtCountWidth));
 	glFinish();
+
+	// Draw legend
+	if (pInfo->m_nCurPage == 1)
+	{
+		CDC  *dc = CDC::FromHandle(m_prtDC);
+		CPen  black(PS_SOLID,1,RGB(0,0,0));
+		CPen *old_pen;
+		CString  text;
+		b3_coord x1,y1,x2,y2;
+		b3_u32   cm,cmMax,diff;
+		b3_f64   factor;
+
+		m_prtLineWidth  = 500;
+		m_prtLineHeight =  20;
+		m_prtLineNum    =   0;
+		old_pen = dc->SelectObject(&black);
+		b3DrawLegend(dc);
+
+		// Draw measure ruler
+		if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
+		{
+			diff   =  2;
+			cmMax  = diff * 5;
+			factor = 10.0 * m_prtPageWidth / (b3_f64)pDC->GetDeviceCaps(HORZSIZE);
+			x1     =  0;
+			y1     = m_prtLineNum * m_prtLineHeight + (m_prtLineHeight >> 1);
+			x2     = cmMax * factor;
+			y2     = y1 + (m_prtLineHeight >> 1);
+
+			// Draw marks
+			for (cm = 0;cm <= cmMax;cm += diff)
+			{
+				text.Format("%1.1lf",(double)(cm * m_prtScale));
+				dc->TextOut((b3_coord)(cm * factor),y2 + 3,text);
+			}
+
+			// Draw ruler
+			for (cm = 0;cm <= cmMax;cm += (diff + diff))
+			{
+				dc->FillSolidRect(
+					(b3_coord)(cm   * factor),y1,
+					(b3_coord)(diff * factor),m_prtLineHeight >> 1,RGB(0,0,0));
+			}
+			dc->MoveTo(x1,y1);
+			dc->LineTo(x2,y1);
+			dc->MoveTo(x1,y2);
+			dc->LineTo(x2,y2);
+		}
+
+		dc->SelectObject(old_pen);
+	}
 
 	// Done and copy into destination DC
 	pDC->SetMapMode(MM_TEXT);

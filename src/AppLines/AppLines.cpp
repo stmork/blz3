@@ -45,10 +45,13 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/02/05 20:04:12  sm
+**	- Added legend to print hard copy.
+**
 **	Revision 1.26  2002/01/31 19:30:31  sm
 **	- Some OpenGL print optimizations done.
 **	- Object renaming inside hierarchy tree added.
-**
+**	
 **	Revision 1.25  2002/01/30 19:46:41  sm
 **	- Trying to print in debug mode (and want to see anything)
 **	
@@ -292,13 +295,14 @@ BOOL CAppLinesApp::InitInstance()
 
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
 	CString sub;
-
 	while(!path.IsEmpty())
 	{
 		sub = path.SpanExcluding(";");
 		texture_pool.b3AddPath(sub);
 		path = path.Right(path.GetLength() - sub.GetLength() - 1);
 	}
+
+	m_PrintBufferSize = GetProfileInt(b3ClientName(),"print buffer size",32);
 
 	pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,

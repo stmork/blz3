@@ -1417,6 +1417,10 @@ BEGIN
     IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
     IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
     IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
+    IDS_PRT_LEGEND          "Legende:"
+    IDS_PRT_MEASURE         "Maßstab: 1:%d"
+    IDS_PRT_FILENAME        "Dateiname: %s"
+    IDS_PRT_VIEWNAME        "Ansicht: %s"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -1715,6 +1719,12 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
     ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PRT_UNIT            "Einheit: %s"
+    IDS_PRT_DATE            "Datum: %s"
 END
 
 #endif    // German (Germany) resources

@@ -80,6 +80,9 @@ class CAppRenderView : public CScrollView
 	b3_res          m_prtHardCopyHeight;
 	b3_count        m_prtCountWidth;
 	b3_count        m_prtCountHeight;
+	b3_res          m_prtLineWidth;
+	b3_res          m_prtLineHeight;
+	b3_count        m_prtLineNum;
 
 protected:
 	// OpenGL window display values
@@ -137,6 +140,8 @@ protected:
 	virtual b3_bool b3IsMouseActionAllowed();
 	virtual b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
 	virtual void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	virtual void    b3DrawLegend(CDC *pDC);
+	        void    b3DrawText(CDC *pDC,const char *text);
 
 // Generated message map functions
 protected:
