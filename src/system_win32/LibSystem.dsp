@@ -246,6 +246,10 @@ SOURCE=..\..\include_win32\blz3\system\b3File.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3FileDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3floatedit.h
 # End Source File
 # Begin Source File
@@ -255,6 +259,10 @@ SOURCE=..\..\include_win32\blz3\system\b3FloatSpinButtonCtrl.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3ImageButton.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3IntSpinButtonCtrl.h
 # End Source File
 # Begin Source File
 

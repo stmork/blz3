@@ -40,6 +40,9 @@ struct OPENFILENAMEEX : public OPENFILENAME
 class CB3FileDialog : public CFileDialog
 {
 	DECLARE_DYNAMIC(CB3FileDialog)
+
+	bool m_Win2K;
+
 protected:
 	OPENFILENAMEEX m_ofnEx;
 

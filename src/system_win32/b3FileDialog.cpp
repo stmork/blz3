@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/04/09 07:24:19  sm
+**	- Some bugs fixed concerning Windows NT and CB3FileDialog
+**
 **	Revision 1.1  2002/04/07 12:59:38  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
 **	- Image buttons changed to draw disabled state correctly using
 **	  CDC::DrawState()
-**
+**	
 **
 */
 
@@ -65,11 +68,12 @@ CB3FileDialog::CB3FileDialog(
 	CWnd     *pParentWnd) :
 		CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
 {
+	m_Win2K = IS_WIN2K;
 }
 
 int CB3FileDialog::DoModal()
 {
-	if (!IS_WIN2K)
+	if (!m_Win2K)
 	{
 		// Less than Windows 2000
 		return CFileDialog::DoModal();
@@ -140,8 +144,11 @@ int CB3FileDialog::DoModal()
 BOOL CB3FileDialog::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	memcpy(&m_ofn,&m_ofnEx,sizeof(m_ofn));
-	m_ofn.lStructSize = sizeof(m_ofn);
+	if (m_Win2K)
+	{
+		memcpy(&m_ofn,&m_ofnEx,sizeof(m_ofn));
+		m_ofn.lStructSize = sizeof(m_ofn);
+	}
 	return CFileDialog::OnNotify(wParam, lParam, pResult);
 }
 
