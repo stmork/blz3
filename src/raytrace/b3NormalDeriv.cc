@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/12 15:41:50  sm
+**	- Right computation of normal derivation.
+**
 **	Revision 1.1  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	
 */
 
@@ -45,6 +48,30 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
+
+b3_bool b3Shape::b3NormalDeriv(b3_ray *ray)
+{
+	b3Vector::b3CrossProduct(&ray->dir,&ray->normal,&ray->xDeriv);
+	b3Vector::b3CrossProduct(&ray->normal,&ray->xDeriv,&ray->yDeriv);
+	return true;
+}
+
+b3_bool b3Sphere::b3NormalDeriv(b3_ray *ray)
+{
+	if ((ray->normal.x == 0) && (ray->normal.y == 0))
+	{
+		// Gimble lock
+		return b3Shape::b3NormalDeriv(ray);
+	}
+	else
+	{
+		ray->xDeriv.x = -ray->normal.y;
+		ray->xDeriv.y =  ray->normal.x;
+		ray->xDeriv.z =  0;
+		b3Vector::b3CrossProduct(&ray->normal,&ray->xDeriv,&ray->yDeriv);
+	}
+	return true;
+}
 
 b3_bool b3ShapeBaseTrans::b3NormalDeriv(b3_ray *ray)
 {
@@ -61,41 +88,6 @@ b3_bool b3ShapeBaseTrans::b3NormalDeriv(b3_ray *ray)
 	else
 	{
 		b3Vector::b3CrossProduct(&EquaNormal,&ray->xDeriv,&ray->yDeriv);
-	}
-	return true;
-}
-
-b3_bool b3TriangleShape::b3NormalDeriv(b3_ray *ray)
-{
-	b3_vertex   *V1,*V2,*V3;
-	b3_triangle *Triangle;
-
-	Triangle = &m_Triangles[ray->TriaIndex];
-	V1       = &m_Vertices[Triangle->P1];
-	V2       = &m_Vertices[Triangle->P2];
-	V3       = &m_Vertices[Triangle->P3];
-
-	if (ray->TriaIndex & 1)			/* odd triangle number */
-	{
-		// Odd triangle
-		ray->xDeriv.x = V1->Point.x - V2->Point.x;
-		ray->xDeriv.y = V1->Point.y - V2->Point.y;
-		ray->xDeriv.z = V1->Point.z - V2->Point.z;
-
-		ray->yDeriv.x = V1->Point.x - V3->Point.x;
-		ray->yDeriv.y = V1->Point.y - V3->Point.y;
-		ray->yDeriv.z = V1->Point.z - V3->Point.z;
-	}
-	else
-	{
-		// Even triangle
-		ray->xDeriv.x = V2->Point.x - V1->Point.x;
-		ray->xDeriv.y = V2->Point.y - V1->Point.y;
-		ray->xDeriv.z = V2->Point.z - V1->Point.z;
-
-		ray->yDeriv.x = V3->Point.x - V1->Point.x;
-		ray->yDeriv.y = V3->Point.y - V1->Point.y;
-		ray->yDeriv.z = V3->Point.z - V1->Point.z;
 	}
 	return true;
 }

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2004/04/12 15:41:50  sm
+**      - Right computation of normal derivation.
+**
 **      Revision 1.58  2004/04/11 19:04:21  sm
 **      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **
@@ -587,11 +590,6 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 			{
 				deriv_ok       = b3NormalDeriv(ray);
 				deriv_computed = true;
-				if (deriv_ok)
-				{
-					b3Vector::b3Normalize(&ray->xDeriv);
-					b3Vector::b3Normalize(&ray->yDeriv);
-				}
 			}
 			if (deriv_ok)
 			{

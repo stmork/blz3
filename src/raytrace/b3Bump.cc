@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/04/12 15:41:50  sm
+**	- Right computation of normal derivation.
+**
 **	Revision 1.17  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -42,7 +45,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.16  2004/04/08 09:57:20  sm
 **	- Added bump wood.
 **	
@@ -150,16 +153,10 @@ b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
 {
 }
 
-b3_bool b3Bump::b3Prepare()
-{
-	return true;
-}
+b3_f64 b3Bump::m_TimePoint = 0;
 
-void b3Bump::b3BumpNormal(b3_ray *ray)
-{
-}
-
-static b3_f64 timePoint = 0;
+#define BUMP_dX 0.02
+#define BUMP_dY 0.02
 
 /*************************************************************************
 **                                                                      **
@@ -265,11 +262,6 @@ b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture),c
 {
 }
 
-b3_bool b3BumpTexture::b3NeedDeriv()
-{
-	return true;
-}
-
 b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 {
 	m_xStart    = b3InitFloat();
@@ -356,8 +348,8 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 		b3Vector::b3Normalize(&ray->normal);
 		b3Vector::b3Scale(&Deriv,m_Intensity);
 
-		x = (m_xScale < 0 ? Deriv.x : -Deriv.x);
-		y = (m_yScale < 0 ? Deriv.y : -Deriv.y);
+		x = (m_xScale < 0 ? Deriv.x : -Deriv.x) / b3Vector::b3Length(xDeriv);
+		y = (m_yScale < 0 ? Deriv.y : -Deriv.y) / b3Vector::b3Length(yDeriv);
 		ray->normal.x += (x * xDeriv->x + y * yDeriv->x);
 		ray->normal.y += (x * xDeriv->y + y * yDeriv->y);
 		ray->normal.z += (x * xDeriv->z + y * yDeriv->z);
@@ -407,7 +399,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	b3_vector point,ox,oy,n;
 	b3_f64    Denom,r,time,water;
 
-	time = (m_ScaleTime < 0.0001 ? 0 : timePoint / m_ScaleTime);
+	time = (m_ScaleTime < 0.0001 ? 0 : m_TimePoint / m_ScaleTime);
 	if (m_ScaleFlag & BUMP_IPOINT)
 	{
 		point.x = ray->ipoint.x * m_ScaleIPoint.x;
@@ -704,34 +696,32 @@ void b3BumpWood::b3Write()
 void b3BumpWood::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector point,n;
-	b3_vector64 dX,dY;
 	b3_vector64 xTest,yTest;
 	b3_vector xWood,yWood;
-	b3_f64    Denom,wood,dU,dV;
+	b3_f64    Denom,wood,dX,dY,x,y;
 
 //	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
 	wood = b3Wood::b3ComputeWood(&point);
 
-	b3Vector::b3CrossProduct(&ray->dir,&ray->normal,&dX);
-	b3Vector::b3Normalize(&dX,m_Amplitude);
-	xTest.x = dX.x + ray->ipoint.x;
-	xTest.y = dX.y + ray->ipoint.y;
-	xTest.z = dX.z + ray->ipoint.z;
+	// Note: xDeriv and yDeriv are not normalized!
+	x       = BUMP_dX / b3Vector::b3Length(&ray->xDeriv);
+	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
+	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
+	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
-	dU = b3Wood::b3ComputeWood (&xWood) - wood;
+	dX = (b3Wood::b3ComputeWood (&xWood) - wood) / BUMP_dX;
 
-	b3Vector::b3CrossProduct(&ray->normal,&dX,&dY);
-	b3Vector::b3Normalize(&dY,m_Amplitude);
-	yTest.x = dY.x + ray->ipoint.x;
-	yTest.y = dY.y + ray->ipoint.y;
-	yTest.z = dY.z + ray->ipoint.z;
+	y       = BUMP_dY / b3Vector::b3Length(&ray->yDeriv);
+	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
+	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
+	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
-	dV = b3Wood::b3ComputeWood (&yWood) - wood;
+	dY = (b3Wood::b3ComputeWood (&yWood) - wood) / BUMP_dY;
 
-	n.x = dX.x * dU - dY.z * dV;
-	n.y = dX.y * dU - dY.x * dV;
-	n.z = dX.z * dU - dY.y * dV;
+	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
+	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
+	n.z = ray->xDeriv.z * dX - ray->yDeriv.y * dY;
 
 	Denom =
 		ray->normal.x * ray->normal.x +

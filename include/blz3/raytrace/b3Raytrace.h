@@ -445,6 +445,9 @@ public:
 class B3_PLUGIN b3Bump : public b3Item
 {
 protected:
+	static b3_f64 m_TimePoint;
+
+protected:
 	b3Bump(b3_size class_size,b3_u32 classtype);
 
 public:
@@ -452,8 +455,13 @@ public:
 	B3_ITEM_LOAD(b3Bump);
 
 	static         void    b3Register();
-	virtual        b3_bool b3Prepare();
-	virtual        void    b3BumpNormal(b3_ray *ray);
+	virtual        b3_bool b3Prepare()
+	{
+		return true;
+	}
+	virtual inline void    b3BumpNormal(b3_ray *ray)
+	{
+	}
 	virtual inline b3_bool b3NeedDeriv()
 	{
 		return false;
@@ -503,10 +511,13 @@ public:
 	B3_ITEM_INIT(b3BumpTexture);
 	B3_ITEM_LOAD(b3BumpTexture);
 
-	void    b3Write();
-	b3_bool b3Prepare();
-	void    b3BumpNormal(b3_ray *ray);
-	b3_bool b3NeedDeriv();
+	       void    b3Write();
+	       b3_bool b3Prepare();
+	       void    b3BumpNormal(b3_ray *ray);
+	inline b3_bool b3NeedDeriv()
+	{
+		return true;
+	}
 
 private:
 	b3_bool b3GetNormalDeriv(b3_f64 lx,b3_f64 ly,b3_vector *deriv);
@@ -1056,10 +1067,7 @@ public:
 		return &m_Heads[2];
 	}
 
-	virtual inline b3_bool b3NormalDeriv(b3_ray *ray)
-	{
-		return false;
-	}
+	virtual b3_bool        b3NormalDeriv(b3_ray *ray);
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
@@ -1160,6 +1168,7 @@ public:
 	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void    b3Normal(b3_ray *ray);
+	b3_bool b3NormalDeriv(b3_ray *ray);
 	void    b3SetupPicking(b3PickInfo *pick_info);
 
 	b3_bool b3Prepare();
@@ -1376,7 +1385,6 @@ public:
 	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count,b3_res xSize,b3_res ySize);
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
-	        b3_bool b3NormalDeriv(b3_ray *ray);
 	virtual b3_bool b3Prepare();
 	virtual void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 
