@@ -5,6 +5,7 @@
 **	$Revision$
 **	$Date$
 **	$Author$
+**	$Id$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Lines application
@@ -41,9 +42,12 @@
 
 /*
 **	$Log$
-**	Revision 1.11  2001/12/09 13:03:29  sm
+**	Revision 1.12  2001/12/09 13:06:56  sm
 **	- Added tag name
 **
+**	Revision 1.11  2001/12/09 13:03:29  sm
+**	- Added tag name
+**	
 **	Revision 1.10  2001/12/09 13:00:58  sm
 **	- Added tag name
 **	
