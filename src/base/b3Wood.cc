@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.5  2004/04/19 10:13:37  sm
 **	- Adjusted oak plank.
-**
+**	
 **	Revision 1.4  2004/04/18 09:13:50  sm
 **	- Removed hardwired values.
 **	- Now we have congruent material and bump oakpank structure.
@@ -64,7 +67,7 @@
 
 void b3Wood::b3InitWood()
 {
-	b3Vector::b3Init(&m_Scale,40,40,40);
+//	b3Vector::b3Init(&m_Scale,40,40,40);
 	m_yRot                   = (b3_f32)(  0.5 * M_PI );
 	m_zRot                   = (b3_f32)( -0.5 * M_PI );
 	m_Ringy                  =   1;
@@ -81,10 +84,10 @@ void b3Wood::b3InitWood()
 	m_AngularWobbleFrequency =   0.9f;
 }
 
-void b3Wood::b3PrepareWood()
+void b3Wood::b3PrepareWood(b3_vector *scale)
 {
 	b3Matrix::b3Move   (null,   &m_Warp,-0.5,-0.5,-0.5);
-	b3Matrix::b3Scale  (&m_Warp,&m_Warp,null,m_Scale.x * M_PI,m_Scale.y * M_PI,m_Scale.z * M_PI);
+	b3Matrix::b3Scale  (&m_Warp,&m_Warp,null,scale->x * M_PI,scale->y * M_PI,scale->z * M_PI);
 	b3Matrix::b3RotateZ(&m_Warp,&m_Warp,null,m_zRot);
 	b3Matrix::b3RotateY(&m_Warp,&m_Warp,null,m_yRot);
 }
@@ -160,7 +163,6 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 
 void b3Wood::b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy)
 {
-	m_Scale                  = wood->m_Scale;
 	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx,0,0) * wobble * 7;
 	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0,fy,0) * wobble * 5;
 	m_Ringy                  = wood->m_Ringy;
@@ -209,12 +211,12 @@ void b3OakPlank::b3InitOakPlank()
 	m_Wobble  = 0.1f;
 }
 
-void b3OakPlank::b3PrepareOakPlank()
+void b3OakPlank::b3PrepareOakPlank(b3_vector *scale)
 {
 	b3_count x,y;
 	b3_index index;
 
-	b3PrepareWood();
+	b3PrepareWood(scale);
 	if (m_Planks != null)
 	{
 		delete [] m_Planks;
@@ -232,7 +234,7 @@ void b3OakPlank::b3PrepareOakPlank()
 		{
 			index = y * m_xTimes + x;
 			m_Planks[index].b3CopyWobbled(this,m_Wobble,(b3_f64)x * m_rxTimes,(b3_f64)y * m_ryTimes);
-			m_Planks[index].b3PrepareWood();
+			m_Planks[index].b3PrepareWood(scale);
 		}
 	}
 }

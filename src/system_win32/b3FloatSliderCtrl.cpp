@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.5  2004/04/10 15:59:51  sm
 **	- Added control units as base class for
 **	  o CB3FloatSliderCtrl
 **	  o CB3FloatSpinButtonCtrl
-**
+**	
 **	Revision 1.4  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
 **	
@@ -66,6 +69,8 @@ CB3FloatSliderCtrl::CB3FloatSliderCtrl()
 {
 	m_Min = 0;
 	m_Max = 1;
+	m_SliderMin = CB3_FSC_MIN;
+	m_SliderMax = CB3_FSC_MAX;
 }
 
 CB3FloatSliderCtrl::~CB3FloatSliderCtrl()
@@ -127,6 +132,19 @@ b3_f64 CB3FloatSliderCtrl::b3SetRange(b3_f64 min, b3_f64 max)
 {
 	m_Min = min;
 	m_Max = max;
+
+	// Define internal tick range
+	m_SliderMin = 0;
+	if (b3GetUnit() == b3ControlUnits::B3_UNIT_ABS)
+	{
+		m_SliderMax = CB3_FSC_MAX;
+	}
+	else
+	{
+		m_SliderMax = (int)floor(b3GetUnitScale() * 10 * (m_Max - m_Min) + 0.5);
+	}
+
+	// Suggest page size and ticks
 	b3SetTicks((m_Max - m_Min) / 10.0,(m_Max - m_Min) / 10.0);
 	return b3GetPos();
 }
@@ -157,11 +175,12 @@ b3_f64 CB3FloatSliderCtrl::b3SetPos(b3_f64 pos)
 {
 	m_Pos = b3Math::b3Limit(pos,m_Min,m_Max);
 
+	// Adjust values
 	if (::IsWindow(*this))
 	{
 		int index = b3ConvertPos(m_Pos);
-	
-		SetRange(CB3_FSC_MIN,CB3_FSC_MAX);
+
+		SetRange(m_SliderMin,m_SliderMax);
 		SetPageSize(m_PageSize);
 		SetTicFreq(m_TicFrequence);
 		SetPos(index);
@@ -171,26 +190,26 @@ b3_f64 CB3FloatSliderCtrl::b3SetPos(b3_f64 pos)
 
 b3_f64 CB3FloatSliderCtrl::b3ConvertPos(int pos)
 {
-	return (b3_f64)(pos - CB3_FSC_MIN) * (m_Max - m_Min) /
-			(CB3_FSC_MAX - CB3_FSC_MIN) + m_Min;
+	return (b3_f64)(pos - m_SliderMin) * (m_Max - m_Min) /
+			(m_SliderMax - m_SliderMin) + m_Min;
 }
 
 int CB3FloatSliderCtrl::b3ConvertPos(b3_f64 pos)
 {
 	return
-		(pos   - m_Min) * (CB3_FSC_MAX - CB3_FSC_MIN) /
-		(m_Max - m_Min) + CB3_FSC_MIN;
+		(pos   - m_Min) * (m_SliderMax - m_SliderMin) /
+		(m_Max - m_Min) + m_SliderMin;
 }
 
 b3_f64 CB3FloatSliderCtrl::b3ConvertRel(int rel)
 {
 	return rel * (m_Max - m_Min) /
-			(CB3_FSC_MAX - CB3_FSC_MIN);
+			(m_SliderMax - m_SliderMin);
 }
 
 int CB3FloatSliderCtrl::b3ConvertRel(b3_f64 rel)
 {
 	return
-		rel * (CB3_FSC_MAX - CB3_FSC_MIN) /
+		rel * (m_SliderMax - m_SliderMin) /
 		(m_Max - m_Min);
 }

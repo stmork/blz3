@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.9  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.8  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -90,6 +93,7 @@ CDlgBumpOakPlank::CDlgBumpOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_PageBump.m_Bump         = m_Bump;
 	m_PageOakPlank.m_OakPlank = m_Bump;
 	m_PageWood.m_Wood         = m_Bump;
+	m_PageScaling.m_Scaling   = m_Bump;
 	//{{AFX_DATA_INIT(CDlgBumpOakPlank)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -135,9 +139,10 @@ void CDlgBumpOakPlank::b3InitDialog()
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
 	m_BumpSampler->b3SetBump(m_Bump);
 
-	m_PropertySheet.AddPage(&m_PageBump);
-	m_PropertySheet.AddPage(&m_PageWood);
-	m_PropertySheet.AddPage(&m_PageOakPlank);
+	m_PageBump.b3AddToSheet(&m_PropertySheet);
+	m_PageWood.b3AddToSheet(&m_PropertySheet);
+	m_PageOakPlank.b3AddToSheet(&m_PropertySheet);
+	m_PageScaling.b3AddToSheet(&m_PropertySheet);
 }
 
 void CDlgBumpOakPlank::b3UpdateUI()

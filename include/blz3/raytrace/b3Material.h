@@ -111,22 +111,20 @@ public:
 };
 
 // MARBLE
-class B3_PLUGIN b3MatMarble : public b3Material, public b3_material
+class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling, public b3_material
 {
-	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes;
-public:
-	b3_vector         m_Scale;
 
 public:
 	B3_ITEM_INIT(b3MatMarble);
 	B3_ITEM_LOAD(b3MatMarble);
 
 	void    b3Write();
+	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
-class B3_PLUGIN b3MaterialWooden : public b3Material
+class B3_PLUGIN b3MaterialWooden : public b3Material, public b3Scaling
 {
 public:
 	b3_material       m_DarkMaterial;
@@ -283,13 +281,11 @@ public:
 };
 
 // GRANITE
-class B3_PLUGIN b3MatGranite : public b3Material
+class B3_PLUGIN b3MatGranite : public b3Material, public b3Scaling
 {
 public:
 	b3_material       m_DarkMaterial;
 	b3_material       m_LightMaterial;
-	b3_vector         m_Scale;
-	b3_u32            m_Flags;
 	b3_count          m_Overtone;
 
 public:
@@ -297,6 +293,7 @@ public:
 	B3_ITEM_LOAD(b3MatGranite);
 
 	void    b3Write();
+	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 

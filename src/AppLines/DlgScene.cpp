@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.16  2004/04/03 14:07:18  sm
 **	- Resolved internal compiler error problem of VC++
-**
+**	
 **	Revision 1.15  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -146,7 +149,7 @@ CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
 
 void CDlgScene::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgScene)
 	DDX_Radio(pDX, IDC_BG_LIGHT, m_BackgroundMode);
 	DDX_Control(pDX, IDC_YRES_SPIN, m_yResSpin);
@@ -163,7 +166,7 @@ void CDlgScene::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgScene, CDialog)
+BEGIN_MESSAGE_MAP(CDlgScene, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgScene)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BG_LIGHT, OnBgModeChanged)
@@ -186,7 +189,7 @@ BOOL CDlgScene::OnInitDialog()
 	m_GfxValid = (m_Scene->m_Flags & TP_NO_GFX) == 0;
 	m_BackgroundMode = scene_to_dialog[m_Scene->m_BackgroundType];
 
-	CDialog::OnInitDialog();
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_PreviewScene = b3ExampleScene::b3CreateGlobal();
@@ -228,12 +231,12 @@ BOOL CDlgScene::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: Add your specialized code here and/or call the base class
 	b3PrintLegend();
-	return CDialog::PreTranslateMessage(pMsg);
+	return CPropertyPage::PreTranslateMessage(pMsg);
 }
 
 void CDlgScene::OnDestroy() 
 {
-	CDialog::OnDestroy();
+	CPropertyPage::OnDestroy();
 	
 	// TODO: Add your message handler code here
 	delete m_PreviewScene;

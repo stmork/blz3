@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.70  2004/05/08 17:36:39  sm
+**      - Unified scaling for materials and bumps.
+**
 **      Revision 1.69  2004/05/07 16:30:33  sm
 **      - Bug #13 fixed. The BBox hierarchy is recounted on every
 **        object edit finish.
@@ -882,10 +885,8 @@ b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),cla
 	m_Refraction  =    0;
 	m_Ior         =    1;
 	m_SpecularExp = 1000;
-	m_Flags       =    0;
 	m_xTimes      =    0;
 	m_yTimes      =    0;
-	b3Vector::b3Init(&m_Scale,20,20,20);
 }
 
 b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
@@ -898,7 +899,7 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 	m_Refraction  = b3InitFloat();
 	m_Ior         = b3InitFloat();
 	m_SpecularExp = b3InitFloat();
-	m_Flags       = b3InitInt();
+	m_ScaleFlags  = b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 }
@@ -913,9 +914,15 @@ void b3MatMarble::b3Write()
 	b3StoreFloat(m_Refraction);
 	b3StoreFloat(m_Ior);
 	b3StoreFloat(m_SpecularExp);
-	b3StoreInt  (m_Flags);
+	b3StoreInt  (m_ScaleFlags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
+}
+
+b3_bool b3MatMarble::b3Prepare()
+{
+	b3PrepareScaling();
+	return true;
 }
 
 b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
@@ -923,9 +930,7 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	b3Color   mask;
 	b3_vector d;
 
-	d.x = ray->polar.m_BoxPolar.x * m_Scale.x * M_PI;
-	d.y = ray->polar.m_BoxPolar.y * m_Scale.y * M_PI;
-	d.z = ray->polar.m_BoxPolar.z * m_Scale.z * M_PI;
+	b3Scale(ray,&m_Scale,&d);
 
 	b3Noise::b3Marble(&d,mask);
 
@@ -1002,7 +1007,7 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 	m_DarkMaterial.m_Refraction  = b3InitFloat();
 	m_DarkMaterial.m_Ior         = b3InitFloat();
 	m_DarkMaterial.m_SpecularExp = b3InitFloat();
-	m_Flags       = b3InitInt();
+	m_ScaleFlags  = b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 	m_LightMaterial = m_DarkMaterial;
@@ -1053,7 +1058,6 @@ void b3MatWood::b3Init()
 	b3MaterialWooden::b3Init();
 
 	// Basic parameters
-	m_Flags  =   0;
 	m_xTimes =   0; // unused
 	m_yTimes =   0; // unused
 	b3InitWood();
@@ -1069,7 +1073,7 @@ void b3MatWood::b3Write()
 	b3StoreFloat(m_DarkMaterial.m_Refraction);
 	b3StoreFloat(m_DarkMaterial.m_Ior);
 	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
-	b3StoreInt  (m_Flags);
+	b3StoreInt  (m_ScaleFlags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
 	
@@ -1101,7 +1105,8 @@ void b3MatWood::b3Write()
 
 b3_bool b3MatWood::b3Prepare()
 {
-	b3PrepareWood();
+	b3PrepareWood(&m_Scale);
+	b3PrepareScaling();
 	return true;
 }
 
@@ -1110,9 +1115,7 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	b3_vector point;
 	b3_f64    mix;
 
-//	b3Vector::b3Init(&point,&ray->ipoint);
-	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
-	
+	b3Scale(ray,null,&point);
 	mix = b3ComputeWood(&point);
 
 	surface->m_Diffuse  = b3Color::b3Mix(m_LightMaterial.m_Diffuse, m_DarkMaterial.m_Diffuse, mix);
@@ -1159,7 +1162,7 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 	m_LightMaterial = m_DarkMaterial;
 
 	// Oak plank values
-	m_Flags       = b3InitInt();
+	m_ScaleFlags  = b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 	m_xOffset     = b3InitFloat();
@@ -1219,7 +1222,6 @@ void b3MatOakPlank::b3Init()
 	b3MaterialWooden::b3Init();
 
 	// Basic parameters
-	m_Flags      =   0;
 	b3InitOakPlank();
 }
 
@@ -1236,7 +1238,7 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
 
 	// Oak plank values
-	b3StoreInt  (m_Flags);
+	b3StoreInt  (m_ScaleFlags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
 	b3StoreFloat(m_xOffset);
@@ -1277,7 +1279,8 @@ b3_bool b3MatOakPlank::b3Prepare()
 	b3_index x,y,index = 0;
 	b3_f64   fx,fy;
 
-	b3PrepareOakPlank();
+	b3PrepareOakPlank(&m_Scale);
+	b3PrepareScaling();
 	
 	if (m_DarkMaterials != null)
 	{
@@ -1328,8 +1331,12 @@ b3_bool b3MatOakPlank::b3Prepare()
 
 b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	b3_index index;
-	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_BoxPolar,index);
+	b3_index  index;
+	b3_vector point;
+	b3_f64    mix;
+
+	b3Scale(ray,null,&point);
+	mix = b3ComputeOakPlank(&point,index);
 
 	surface->m_Diffuse  = b3Color::b3Mix(m_LightMaterials[index].m_Diffuse, m_DarkMaterials[index].m_Diffuse, mix);
 	surface->m_Ambient  = b3Color::b3Mix(m_LightMaterials[index].m_Ambient, m_DarkMaterials[index].m_Ambient, mix);
@@ -1485,8 +1492,6 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_DarkMaterial.m_SpecularExp  =
 	m_LightMaterial.m_SpecularExp = 100.0;
 	m_Overtone    =   2;
-	m_Flags       =   0;
-	b3Vector::b3Init(&m_Scale,10,10,10);
 }
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
@@ -1506,7 +1511,7 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 	m_LightMaterial.m_Ior         = b3InitFloat();
 	m_LightMaterial.m_SpecularExp = b3InitFloat();
 	b3InitVector(&m_Scale);
-	m_Flags       = b3InitInt();
+	m_ScaleFlags  = b3InitInt();
 	m_Overtone    = b3InitCount();
 }
 
@@ -1529,8 +1534,14 @@ void b3MatGranite::b3Write()
 	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 
 	b3StoreVector(&m_Scale);
-	b3StoreInt  (m_Flags);
+	b3StoreInt  (m_ScaleFlags);
 	b3StoreCount(m_Overtone);
+}
+
+b3_bool b3MatGranite::b3Prepare()
+{
+	b3PrepareScaling();
+	return true;
 }
 
 b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)

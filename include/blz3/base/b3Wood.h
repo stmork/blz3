@@ -26,7 +26,6 @@ protected:
 	b3_matrix         m_Warp;
 
 public:
-	b3_vector         m_Scale;
 	b3_f32            m_yRot;
 	b3_f32            m_zRot;
 	b3_f32            m_RingSpacing;
@@ -40,12 +39,11 @@ public:
 	b3_f32            m_GrainFrequency;
 	b3_f32            m_Grainy;
 	b3_f32            m_Ringy;
-	b3_u32            m_Flags;
 
 public:
 	b3_f64 b3ComputeWood(b3_vector *polar);
 	void   b3InitWood();
-	void   b3PrepareWood();
+	void   b3PrepareWood(b3_vector *scale);
 	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
 };
 
@@ -72,7 +70,7 @@ public:
 	virtual ~b3OakPlank();
 	b3_f64   b3ComputeOakPlank(b3_vector *polar,b3_index &index);
 	void     b3InitOakPlank();
-	void     b3PrepareOakPlank();
+	void     b3PrepareOakPlank(b3_vector *scale);
 };
 
 #endif

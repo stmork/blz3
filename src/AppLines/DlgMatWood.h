@@ -29,6 +29,7 @@
 #include "b3ShowSample.h"
 #include "PageMaterial.h"
 #include "PageWood.h"
+#include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatWood dialog
@@ -41,6 +42,8 @@ class CDlgMatWood : public CB3SimplePropertyPreviewDialog
 	CPageMaterial      m_PageDark;
 	CPageMaterial      m_PageLight;
 	CPageWood          m_PageWood;
+	CPageScaling       m_PageScaling;
+
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);

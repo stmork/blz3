@@ -58,6 +58,7 @@ public:
 	void     b3SetAccel(b3_f64 increment = B3_FSBC_DEFAULT_ACCEL,int secs = 2);
 	b3_f64   b3GetPos();
 	b3_f64   b3GetAccel();
+	void     b3SetUnit(b3_unit unit);
 
 public:
 // Overrides

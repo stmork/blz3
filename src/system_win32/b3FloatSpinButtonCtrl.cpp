@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.11  2004/05/06 18:13:52  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.10  2004/04/10 15:59:51  sm
 **	- Added control units as base class for
 **	  o CB3FloatSliderCtrl
@@ -151,7 +154,7 @@ void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 	
 	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);
-	b3SetPos(atof(value) / b3GetUnit() + (b3_f64)pNMUpDown->iDelta * m_Increment);
+	b3SetPos(atof(value) / b3GetUnitScale() + (b3_f64)pNMUpDown->iDelta * m_Increment);
 	*pResult = 1;
 }
 
@@ -217,6 +220,25 @@ void CB3FloatSpinButtonCtrl::b3SetDigits(int pre,int post)
 	snprintf(m_Format,sizeof(m_Format),"%%%s%slf",pre_digit,post_digit);
 }
 
+void CB3FloatSpinButtonCtrl::b3SetUnit(b3_unit unit)
+{
+	b3ControlUnits::b3SetUnit(unit);
+	switch(unit)
+	{
+	case B3_UNIT_PERCENT:
+		b3SetRange(0.0,1.0);
+		b3SetIncrement(0.01);
+		b3SetDigits(3,1);
+		break;
+
+	case B3_UNIT_PERMILLE:
+		b3SetRange(0.0,1.0);
+		b3SetIncrement(0.001);
+		b3SetDigits(4,1);
+		break;
+	}
+}
+
 b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 {
 	CWnd    *edit;
@@ -229,7 +251,7 @@ b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 		edit = GetBuddy();
 		B3_ASSERT(edit != null);
 		edit->GetWindowText(value);
-		m_Pos = pos = atof(value) / b3GetUnit();
+		m_Pos = pos = atof(value) / b3GetUnitScale();
 		B3_LIMIT(m_Pos,m_Min,m_Max);
 		if (m_Pos != pos)
 		{
@@ -260,7 +282,7 @@ b3_f64 CB3FloatSpinButtonCtrl::b3SetPos(b3_f64 pos)
 	// Set position
 	m_Pos = pos;
 	B3_LIMIT(m_Pos,m_Min,m_Max);
-	value.Format(m_Format,m_Pos * b3GetUnit());
+	value.Format(m_Format,m_Pos * b3GetUnitScale());
 	edit->SetWindowText(value);
 	SetPos(B3_VAL_TO_RANGE(m_Pos));
 	return m_Pos;

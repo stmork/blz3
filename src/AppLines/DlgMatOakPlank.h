@@ -30,6 +30,7 @@
 #include "PageMaterial.h"
 #include "PageWood.h"
 #include "PageOakPlank.h"
+#include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatOakPlank dialog
@@ -43,6 +44,8 @@ class CDlgMatOakPlank : public CB3SimplePropertyPreviewDialog
 	CPageMaterial      m_PageLight;
 	CPageWood          m_PageWood;
 	CPageOakPlank      m_PageOakPlank;
+	CPageScaling       m_PageScaling;
+
 	// Construction
 public:
 	static b3_bool b3Edit(b3Item *item);

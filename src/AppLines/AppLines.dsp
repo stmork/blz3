@@ -525,6 +525,10 @@ SOURCE=.\PageOakPlank.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PageScaling.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PageWood.cpp
 # End Source File
 # End Group
@@ -942,6 +946,10 @@ SOURCE=.\PageMaterial.h
 # Begin Source File
 
 SOURCE=.\PageOakPlank.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageScaling.h
 # End Source File
 # Begin Source File
 

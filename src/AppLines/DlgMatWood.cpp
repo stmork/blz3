@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.15  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -40,7 +43,7 @@
 **	  material. Changes were also made in Lines.
 **	- Introduced shape property copy including all materials,
 **	  bumps and conditions. Multiple copy modes are possible.
-**
+**	
 **	Revision 1.14  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -109,9 +112,10 @@ CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatWood::IDD, pParent)
 {
 	m_Material = (b3MatWood *)item;
-	m_PageDark.m_Material  = &m_Material->m_DarkMaterial;
-	m_PageLight.m_Material = &m_Material->m_LightMaterial;
-	m_PageWood.m_Wood      = m_Material;
+	m_PageDark.m_Material   = &m_Material->m_DarkMaterial;
+	m_PageLight.m_Material  = &m_Material->m_LightMaterial;
+	m_PageWood.m_Wood       =  m_Material;
+	m_PageScaling.m_Scaling =  m_Material;
 	//{{AFX_DATA_INIT(CDlgMatWood)
 	//}}AFX_DATA_INIT
 }
@@ -161,6 +165,7 @@ void CDlgMatWood::b3InitDialog()
 	m_PageDark.b3AddToSheet(&m_PropertySheet);
 	m_PageLight.b3AddToSheet(&m_PropertySheet);
 	m_PageWood.b3AddToSheet(&m_PropertySheet);
+	m_PageScaling.b3AddToSheet(&m_PropertySheet);
 }
 
 void CDlgMatWood::b3UpdateUI()

@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.5  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.4  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
@@ -67,10 +70,11 @@
 CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatGranite::IDD, pParent)
 {
-	m_Material             = (b3MatGranite *)item;
-	m_PageDark.m_Material  = &m_Material->m_DarkMaterial;
-	m_PageLight.m_Material = &m_Material->m_LightMaterial;
-	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_Material              = (b3MatGranite *)item;
+	m_PageDark.m_Material   = &m_Material->m_DarkMaterial;
+	m_PageLight.m_Material  = &m_Material->m_LightMaterial;
+	m_PageScaling.m_Scaling =  m_Material;
+	m_MatScene              = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatGranite)
 		// NOTE: the ClassWizard will add member initialization here
@@ -88,19 +92,12 @@ void CDlgMatGranite::DoDataExchange(CDataExchange* pDX)
 	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatGranite)
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
-	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
-	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
-	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
 	//}}AFX_DATA_MAP
-	m_ScaleCtrl.b3DDX(pDX);
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgMatGranite, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatGranite)
-	ON_EN_KILLFOCUS(IDC_SCALE_X, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SCALE_Y, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SCALE_Z, OnEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -123,6 +120,7 @@ void CDlgMatGranite::b3InitDialog()
 {
 	m_PageDark.b3AddToSheet(&m_PropertySheet);
 	m_PageLight.b3AddToSheet(&m_PropertySheet);
+	m_PageScaling.b3AddToSheet(&m_PropertySheet);
 	m_PageDark.b3SetCaption(IDS_TITLE_DARK);
 	m_PageLight.b3SetCaption(IDS_TITLE_LIGHT);
 }
@@ -130,16 +128,4 @@ void CDlgMatGranite::b3InitDialog()
 void CDlgMatGranite::b3UpdateUI()
 {
 	m_PreviewMaterialCtrl.b3Update(m_MatScene);
-}
-
-BOOL CDlgMatGranite::OnInitDialog() 
-{
-	m_ScaleCtrl.b3Init(&m_Material->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
-
-	CB3SimplePropertyPreviewDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }

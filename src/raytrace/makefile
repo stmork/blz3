@@ -12,6 +12,7 @@ PRG_SOURCE		=\
 	b3Animation.cc\
 	b3AnimElement.cc\
 	b3Area.cc\
+	b3Base.cc\
 	b3BBox.cc\
 	b3Box.cc\
 	b3Bump.cc\
@@ -63,6 +64,7 @@ PRG_OBJ			=\
 	b3Animation.o\
 	b3AnimElement.o\
 	b3Area.o\
+	b3Base.o\
 	b3BBox.o\
 	b3Box.o\
 	b3Bump.o\

@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.5  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.4  2004/04/26 14:28:10  sm
 **	- Added marble dialog
 **	- Resorted controls
@@ -73,15 +76,8 @@ CDlgMatMarble::CDlgMatMarble(b3Item *item,CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgMatMarble)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_ReflectionCtrl.b3SetRange(0.0,1.0);
-	m_ReflectionCtrl.b3SetIncrement(0.01);
 	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_ReflectionCtrl.b3SetDigits(3,1);
-
-	m_RefractionCtrl.b3SetRange(0.0,1.0);
-	m_RefractionCtrl.b3SetIncrement(0.01);
 	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetDigits(3,1);
 	
 	m_IorCtrl.b3SetRange(-5.0,5.0);
 	m_IorCtrl.b3SetDigits(0,2);

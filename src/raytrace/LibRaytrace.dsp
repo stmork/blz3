@@ -98,6 +98,10 @@ SOURCE=.\b3Area.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Base.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3BBox.cc
 # End Source File
 # Begin Source File

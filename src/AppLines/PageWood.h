@@ -28,15 +28,12 @@
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSliderCtrl.h"
 #include "blz3/base/b3Wood.h"
-#include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood dialog
 
 class CPageWood : public CB3PropertyPage
 {
-	CB3PosGroup        m_ScaleCtrl;
-
 	// Construction
 public:
 	CPageWood();
@@ -47,6 +44,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CPageWood)
 	enum { IDD = IDD_PAGE_WOOD };
+	CStatic	m_zRotLegend;
+	CStatic	m_yRotLegend;
 	CB3FloatSliderCtrl	m_RotZCtrl;
 	CB3FloatSliderCtrl	m_RotYCtrl;
 	CB3FloatSpinButtonCtrl	m_RingyCtrl;
@@ -60,15 +59,14 @@ public:
 	CB3FloatSpinButtonCtrl	m_TrunkWobbleFrequencyCtrl;
 	CB3FloatSpinButtonCtrl	m_AngularWobbleCtrl;
 	CB3FloatSpinButtonCtrl	m_AngularWobbleFrequencyCtrl;
-	CB3FloatEdit	m_xScaleCtrl;
-	CB3FloatEdit	m_yScaleCtrl;
-	CB3FloatEdit	m_zScaleCtrl;
 	//}}AFX_DATA
 
 
 // Overrides
 	// ClassWizard generate virtual function overrides
 	//{{AFX_VIRTUAL(CPageWood)
+	public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -80,6 +78,9 @@ protected:
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3PrintLegend();
 };
 
 //{{AFX_INSERT_LOCATION}}

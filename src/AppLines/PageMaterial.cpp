@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.6  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
-**
+**	
 **	Revision 1.5  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
 **	
@@ -68,15 +71,8 @@ CPageMaterial::CPageMaterial() : CB3PropertyPage(CPageMaterial::IDD)
 	//{{AFX_DATA_INIT(CPageMaterial)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_ReflectionCtrl.b3SetRange(0.0,1.0);
-	m_ReflectionCtrl.b3SetIncrement(0.01);
 	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_ReflectionCtrl.b3SetDigits(3,1);
-	
-	m_RefractionCtrl.b3SetRange(0.0,1.0);
-	m_RefractionCtrl.b3SetIncrement(0.01);
 	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetDigits(3,1);
 	
 	m_IorCtrl.b3SetRange(-5.0,5.0);
 	m_IorCtrl.b3SetDigits(0,2);

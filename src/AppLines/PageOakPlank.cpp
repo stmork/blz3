@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.3  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.2  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
 **	
@@ -56,17 +59,14 @@ CPageOakPlank::CPageOakPlank() : CB3PropertyPage(CPageOakPlank::IDD)
 {
 	//{{AFX_DATA_INIT(CPageOakPlank)
 	//}}AFX_DATA_INIT
-	m_xScaleCtrl.b3SetRange(0.0,10.0);
-	m_xScaleCtrl.b3SetIncrement(0.01);
 	m_xScaleCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_xScaleCtrl.b3SetRange(0.0,10.0);
 
-	m_yScaleCtrl.b3SetRange(0.0,10.0);
-	m_yScaleCtrl.b3SetIncrement(0.01);
 	m_yScaleCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_yScaleCtrl.b3SetRange(0.0,10.0);
 	
-	m_xOffsetCtrl.b3SetRange(0.0,10.0);
-	m_xOffsetCtrl.b3SetIncrement(0.01);
 	m_xOffsetCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_xOffsetCtrl.b3SetRange(0.0,10.0);
 	
 	m_xTimesCtrl.b3SetRange(1,10);
 	m_yTimesCtrl.b3SetRange(1,10);

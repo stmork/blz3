@@ -88,6 +88,7 @@
 #define IDD_SUPER_SAMPLE                657
 #define IDD_TORUS                       658
 #define IDD_UNDO_REDO                   659
+#define IDD_PAGE_SCALING                660
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -641,7 +642,9 @@
 #define IDC_COND_SHAPE_EQUAL            32380
 #define IDC_MAT_ACTIVE                  32381
 #define IDC_BUMP_ACTIVE                 32382
+#define IDC_LEGEND_YROT                 32382
 #define IDC_COND_ACTIVE                 32383
+#define IDC_LEGEND_ZROT                 32383
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -834,6 +837,8 @@
 #define IDS_TITLE_LIGHT                 61447
 #define IDS_TITLE_BLACK                 61448
 #define IDS_TITLE_WHITE                 61449
+#define IDS_TITLE_YROT                  61450
+#define IDS_TITLE_ZROT                  61451
 
 // Next default values for new objects
 // 
@@ -842,7 +847,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10124
-#define _APS_NEXT_CONTROL_VALUE         32382
+#define _APS_NEXT_CONTROL_VALUE         32383
 #define _APS_NEXT_SYMED_VALUE           60186
 #endif
 #endif

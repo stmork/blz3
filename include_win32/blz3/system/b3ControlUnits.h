@@ -22,9 +22,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-// b3FloatSpinButtonCtrl.h : header file
-//
-
 #include "blz3/b3Config.h"
 
 class b3ControlUnits
@@ -48,13 +45,18 @@ protected:
 		m_Unit = B3_UNIT_ABS;
 	}
 
+	inline b3_unit b3GetUnit()
+	{
+		return m_Unit;
+	}
+
 public:
-	inline void     b3SetUnit(b3_unit unit)
+	virtual inline void b3SetUnit(b3_unit unit)
 	{
 		m_Unit = unit;
 	}
 
-	inline b3_f64   b3GetUnit()
+	inline b3_f64   b3GetUnitScale()
 	{
 		return m_UnitScale[m_Unit];
 	}

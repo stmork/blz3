@@ -29,6 +29,7 @@
 #include "b3ShowSample.h"
 #include "PageBump.h"
 #include "PageWood.h"
+#include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgBumpWood dialog
@@ -40,7 +41,9 @@ class CDlgBumpWood : public CB3SimplePropertyPreviewDialog
 
 	CPageBump          m_PageBump;
 	CPageWood          m_PageWood;
-// Construction
+	CPageScaling       m_PageScaling;
+
+	// Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();

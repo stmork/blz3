@@ -28,8 +28,8 @@
 #include "blz3/system/b3FloatEdit.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowRaytrace.h"
-#include "b3VectorEdit.h"
 #include "PageMaterial.h"
+#include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatGranite dialog
@@ -42,8 +42,8 @@ class CDlgMatGranite : public CB3SimplePropertyPreviewDialog
 
 	CPageMaterial      m_PageDark;
 	CPageMaterial      m_PageLight;
+	CPageScaling       m_PageScaling;
 
-	CB3PosGroup        m_ScaleCtrl;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
@@ -55,9 +55,6 @@ public:
 	//{{AFX_DATA(CDlgMatGranite)
 	enum { IDD = IDD_MAT_GRANITE };
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
-	CB3FloatEdit	m_xScaleCtrl;
-	CB3FloatEdit	m_yScaleCtrl;
-	CB3FloatEdit	m_zScaleCtrl;
 	//}}AFX_DATA
 
 
@@ -73,7 +70,6 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatGranite)
-	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

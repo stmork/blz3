@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/05/08 17:36:39  sm
+**	- Unified scaling for materials and bumps.
+**
 **	Revision 1.10  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -40,7 +43,7 @@
 **	  material. Changes were also made in Lines.
 **	- Introduced shape property copy including all materials,
 **	  bumps and conditions. Multiple copy modes are possible.
-**
+**	
 **	Revision 1.9  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -97,6 +100,7 @@ CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_PageLight.m_Material    = &m_Material->m_LightMaterial;
 	m_PageWood.m_Wood         = m_Material;
 	m_PageOakPlank.m_OakPlank = m_Material;
+	m_PageScaling.m_Scaling   = m_Material;
 	//{{AFX_DATA_INIT(CDlgMatOakPlank)
 	//}}AFX_DATA_INIT
 }

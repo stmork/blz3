@@ -40,6 +40,8 @@ class CB3FloatSliderCtrl : public CSliderCtrl, public b3ControlUnits
 	b3_f64 m_Min;
 	b3_f64 m_Max;
 	b3_f64 m_Pos;
+	int    m_SliderMin;
+	int    m_SliderMax;
 	int    m_PageSize;
 	int    m_TicFrequence;
 

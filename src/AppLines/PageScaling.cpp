@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	PageMaterial.cpp $
+**	$Filename:	PageScaling.cpp $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wooden material properties
+**	Blizzard III - Scaling properties
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "PageBump.h"
+#include "PageScaling.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,65 +32,61 @@
 
 /*
 **	$Log$
-**	Revision 1.6  2004/05/08 17:36:39  sm
+**	Revision 1.1  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **
-**	Revision 1.5  2004/04/24 20:15:51  sm
-**	- Further slide material dialog development
-**	
-**	Revision 1.4  2004/04/24 08:54:20  sm
-**	- Simplified property sheets inside dialogs.
-**	
-**	Revision 1.3  2004/04/23 16:51:09  sm
-**	- Color renaming finished.
-**	- Bug #18 fixed: The bump amplitude is read out correctly now.
-**	
-**	Revision 1.2  2004/04/23 08:23:14  sm
-**	- Adjusted wood dialog.
-**	- Updated copyright in splash window.
-**	
-**	Revision 1.1  2004/04/18 16:58:14  sm
-**	- Changed definitions for base classes of raytracing objects.
-**	- Put wood material and wood bump dialogs into property
-**	  pages.
-**	
 **	
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CPageBump implementation                      **
+**                        CPageScaling implementation                   **
 **                                                                      **
 *************************************************************************/
 
-CPageBump::CPageBump() : CB3PropertyPage(CPageBump::IDD)
+
+CPageScaling::CPageScaling() : CB3PropertyPage(CPageScaling::IDD)
 {
-	//{{AFX_DATA_INIT(CPageBump)
+	//{{AFX_DATA_INIT(CPageScaling)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
 }
 
-CPageBump::~CPageBump()
+CPageScaling::~CPageScaling()
 {
 }
 
-void CPageBump::DoDataExchange(CDataExchange* pDX)
+void CPageScaling::DoDataExchange(CDataExchange* pDX)
 {
 	CB3PropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPageBump)
-	DDX_Control(pDX, IDC_SPIN_AMPLITUDE, m_AmplitudeCtrl);
+	//{{AFX_DATA_MAP(CPageScaling)
+	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
 	//}}AFX_DATA_MAP
-	m_AmplitudeCtrl.b3DDX(pDX,m_Bump->m_Amplitude);
+	m_ScaleCtrl.b3DDX(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CPageBump, CB3PropertyPage)
-	//{{AFX_MSG_MAP(CPageBump)
-	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnSpin)
+BEGIN_MESSAGE_MAP(CPageScaling, CB3PropertyPage)
+	//{{AFX_MSG_MAP(CPageScaling)
+	ON_EN_KILLFOCUS(IDC_SCALE_X, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Y, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Z, OnEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CPageBump message handlers
+// CPageScaling message handlers
+
+BOOL CPageScaling::OnInitDialog() 
+{
+	m_ScaleCtrl.b3Init(&m_Scaling->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
+
+	CB3PropertyPage::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
