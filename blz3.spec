@@ -14,7 +14,7 @@ This is a very fast raytracer developed since the early 1990s.
 %setup -q -n %{name}
 ./configure\
 	--prefix=$RPM_BUILD_ROOT\
-	--exec-prefix=$RPM_BUILD_ROOT/usr/local\
+	--exec-prefix=$RPM_BUILD_ROOT/usr\
 	--datadir=$RPM_BUILD_ROOT/usr/share/blizzard
 
 %build
@@ -23,7 +23,7 @@ make -j 3 RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/usr/local/bin
+mkdir -p $RPM_BUILD_ROOT/usr/bin
 mkdir -p $RPM_BUILD_ROOT/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT/usr/share/blizzard
 
