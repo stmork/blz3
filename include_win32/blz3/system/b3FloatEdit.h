@@ -68,6 +68,7 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CB3FloatEdit)
+	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

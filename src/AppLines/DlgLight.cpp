@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/21 16:46:16  sm
+**	- New dialog for camera properties
+**	- Done some bugfixes concerning CB3FloatEdit
+**
 **	Revision 1.7  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
-**
+**	
 **	Revision 1.6  2001/12/06 19:45:06  sm
 **	- Minor bug fixes in DlgLight
 **	
@@ -155,7 +159,7 @@ BOOL CDlgLight::OnInitDialog()
 	m_yDirCtrl.b3SetDigits(5,2);
 	m_zDirCtrl.b3SetDigits(5,2);
 	m_DistanceCtrl.b3SetDigits(5,2);
-	m_DistanceCtrl.b3SetMax(epsilon);
+	m_DistanceCtrl.b3SetMin(epsilon);
 	m_SoftSizeCtrl.b3SetDigits(5,2);
 	m_SoftSizeCtrl.b3SetMin(epsilon);
 	b3RefreshList();

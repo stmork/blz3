@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2001/12/21 16:46:16  sm
+**      - New dialog for camera properties
+**      - Done some bugfixes concerning CB3FloatEdit
+**
 **      Revision 1.26  2001/12/08 21:37:38  sm
 **      - Added "No Gfx" support
 **
@@ -248,6 +252,23 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3InitVector(&m_ViewPoint);
 	m_Flags = b3InitInt();
 	b3InitString(m_CameraName,B3_CAMERANAMELEN);
+}
+
+b3_bool b3CameraPart::b3IsActive()
+{
+	return (m_Flags & CAMERA_ACTIVE) != 0;
+}
+
+void b3CameraPart::b3Activate(b3_bool activate)
+{
+	if (activate)
+	{
+		m_Flags |= CAMERA_ACTIVE;
+	}
+	else
+	{
+		m_Flags &= (~CAMERA_ACTIVE);
+	}
 }
 
 void b3CameraPart::b3ComputeFocalLength(b3_f64 focal_length)

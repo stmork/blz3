@@ -152,6 +152,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCamera.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCreateItem.cpp
 # End Source File
 # Begin Source File
@@ -245,6 +249,10 @@ SOURCE=.\b3Fulcrum.h
 # Begin Source File
 
 SOURCE=.\ChildFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCamera.h
 # End Source File
 # Begin Source File
 

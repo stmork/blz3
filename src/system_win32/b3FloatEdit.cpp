@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/21 16:46:16  sm
+**	- New dialog for camera properties
+**	- Done some bugfixes concerning CB3FloatEdit
+**
 **	Revision 1.2  2001/12/02 16:30:39  sm
 **	- CDlgScene draw error fix
-**
+**	
 **	Revision 1.1  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
@@ -63,6 +67,7 @@ CB3FloatEdit::~CB3FloatEdit()
 
 BEGIN_MESSAGE_MAP(CB3FloatEdit, CEdit)
 	//{{AFX_MSG_MAP(CB3FloatEdit)
+	ON_WM_KILLFOCUS()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -139,4 +144,10 @@ b3_bool CB3FloatEdit::b3Check()
 	}
 
 	return result;
+}
+
+void CB3FloatEdit::OnKillFocus(CWnd* pNewWnd) 
+{
+	b3Check();
+	CEdit::OnKillFocus(pNewWnd);
 }

@@ -1814,10 +1814,12 @@ public:
 	B3_ITEM_INIT(b3CameraPart);
 	B3_ITEM_LOAD(b3CameraPart);
 
-	void  b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
-	void  b3ComputeFocalLength(b3_f64 length);
-	void  b3Transform(b3_matrix *transformation);
-	char *b3GetName();
+	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
+	void     b3ComputeFocalLength(b3_f64 length);
+	void     b3Transform(b3_matrix *transformation);
+	char    *b3GetName();
+	b3_bool  b3IsActive();
+	void     b3Activate(b3_bool activate = true);
 };
 
 #define CAMERA_TITLE  1

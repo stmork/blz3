@@ -29,6 +29,7 @@
 #include <sys/timeb.h>
 
 #include "DlgCreateItem.h"
+#include "DlgCamera.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,11 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2001/12/21 16:46:16  sm
+**	- New dialog for camera properties
+**	- Done some bugfixes concerning CB3FloatEdit
+**
 **	Revision 1.21  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **	Revision 1.20  2001/11/30 18:08:00  sm
 **	- View to fulcrum implemented
 **	- Some menus updated
@@ -1056,7 +1061,19 @@ void CAppLinesView::OnCameraDelete()
 void CAppLinesView::OnCameraProperties() 
 {
 	// TODO: Add your command handler code here
-	
+	CMainFrame *main;
+	CDlgCamera  dlg;
+
+	dlg.m_Scene  = m_Scene;
+	dlg.m_Camera = m_Camera;
+	if (dlg.DoModal() == IDOK)
+	{
+		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		GetDocument()->SetModifiedFlag();
+		m_Camera = dlg.m_Camera;
+		main->b3UpdateCameraBox(m_Scene,m_Camera);
+		OnUpdate(this,B3_UPDATE_CAMERA,0);
+	}
 }
 
 void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 

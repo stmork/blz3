@@ -33,6 +33,7 @@
 #define IDI_BBOX_WORLD                  148
 #define IDD_LIGHT                       148
 #define IDI_BBOX_SUB                    149
+#define IDD_CAMERA                      149
 #define IDI_BBOX_SHAPES                 150
 #define IDI_BBOX_SHAPES_SUB             151
 #define IDI_BBOX_S_SHAPES_SUB           152
@@ -135,11 +136,25 @@
 #define IDC_PATH_PREV                   1060
 #define IDC_VERSION                     1060
 #define IDC_PATH_SUCC                   1061
+#define IDC_CAMERA_LIST                 1061
 #define IDC_PATH_LAST                   1062
+#define IDC_CAMERA_NEW                  1062
 #define IDC_PATH_NEW                    1063
+#define IDC_CAMERA_DELETE               1063
 #define IDC_PATH_DELETE                 1064
+#define IDC_CAMERA_POS_X                1064
 #define IDC_PATH_LIST                   1065
+#define IDC_CAMERA_POS_Y                1065
 #define IDC_PATH_EDIT                   1066
+#define IDC_CAMERA_POS_Z                1066
+#define IDC_CAMERA_FOCAL_LENGTH         1067
+#define IDC_CAMERA_WIDTH                1068
+#define IDC_CAMERA_HEIGHT               1069
+#define IDC_CAMERA_TYPES                1070
+#define IDC_CAMERA_VIEW_X               1071
+#define IDC_CAMERA_VIEW_Y               1072
+#define IDC_CAMERA_VIEW_Z               1073
+#define IDC_CAMERA_ACTIVATION           1074
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -241,9 +256,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        149
+#define _APS_NEXT_RESOURCE_VALUE        151
 #define _APS_NEXT_COMMAND_VALUE         32840
-#define _APS_NEXT_CONTROL_VALUE         1061
+#define _APS_NEXT_CONTROL_VALUE         1075
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

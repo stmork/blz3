@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CAboutDlg
+LastClass=CB3FloatEdit
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=21
+ClassCount=22
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -21,38 +21,40 @@ Class9=CDlgHierarchy
 Class10=CDlgScene
 Class11=CMainFrame
 
-ResourceCount=21
-Resource1=IDR_DISPLAYTYPE
+ResourceCount=22
+Resource1=IDR_BLZ3TYPE
 Resource2=IDR_MAINFRAME
-Resource3=IDR_TOOLBAR_OBJECT
-Resource4=IDD_HIERARCHY
-Resource5=IDD_ABOUTBOX
-Resource6=IDD_MODELLER_INFO
-Resource7=IDD_SUPER_SAMPLE
-Resource8=IDR_TOOLBAR_LIGHT
-Resource9=IDD_LIGHT
-Resource10=IDD_NEW_ITEM
-Resource11=IDD_SEARCH_PATH_LIST
-Resource12=IDD_LENS_FLARE
-Resource13=IDD_NEBULAR
+Resource3=IDR_TOOLBAR_ACTION
+Resource4=IDD_SCENE
+Resource5=IDD_HIERARCHY
+Resource6=IDD_NEW_ITEM
+Resource7=IDD_NEBULAR
+Resource8=IDR_TOOLBAR_CAMERA
+Resource9=IDD_ABOUTBOX
+Resource10=IDD_LDC
+Resource11=IDD_LIGHT
+Resource12=IDD_MODELLER_INFO
+Resource13=IDD_DISTRIBUTED
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_TOOLBAR_CAMERA
+Resource14=IDR_TOOLBAR_DISPLAY
 Class17=CDlgModellerInfo
-Resource15=IDD_SCENE
-Resource16=IDD_DISTRIBUTED
-Resource17=IDR_BLZ3TYPE
-Resource18=IDR_TOOLBAR_VIEW
+Resource15=IDD_SUPER_SAMPLE
+Resource16=IDD_SEARCH_PATH_LIST
+Resource17=IDR_DISPLAYTYPE
+Resource18=IDR_TOOLBAR_LIGHT
 Class18=CDlgCreateItem
-Resource19=IDR_TOOLBAR_DISPLAY
+Resource19=IDR_TOOLBAR_OBJECT
 Class19=CDlgLight
 Class20=CB3ControlLDC
-Resource20=IDR_TOOLBAR_ACTION
+Resource20=IDR_TOOLBAR_VIEW
 Class21=CDlgLDC
-Resource21=IDD_LDC
+Resource21=IDD_LENS_FLARE
+Class22=CDlgCamera
+Resource22=IDD_CAMERA
 
 [CLS:CAppLinesApp]
 Type=0
@@ -672,7 +674,7 @@ ImplementationFile=DlgLight.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
-LastObject=CDlgLight
+LastObject=IDC_LIGHT_COLOR
 
 [CLS:CB3ControlLDC]
 Type=0
@@ -700,4 +702,45 @@ BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
 LastObject=CDlgLDC
+
+[DLG:IDD_CAMERA]
+Type=1
+Class=CDlgCamera
+ControlCount=27
+Control1=IDC_CAMERA_LIST,combobox,1344340289
+Control2=IDC_CAMERA_POS_X,edit,1350631552
+Control3=IDC_CAMERA_POS_Y,edit,1350631552
+Control4=IDC_CAMERA_POS_Z,edit,1350631552
+Control5=IDC_CAMERA_VIEW_X,edit,1350631552
+Control6=IDC_CAMERA_VIEW_Y,edit,1350631552
+Control7=IDC_CAMERA_VIEW_Z,edit,1350631552
+Control8=IDC_CAMERA_FOCAL_LENGTH,edit,1350631552
+Control9=IDC_CAMERA_TYPES,combobox,1344339971
+Control10=IDC_CAMERA_WIDTH,edit,1350631552
+Control11=IDC_CAMERA_HEIGHT,edit,1350631552
+Control12=IDC_CAMERA_ACTIVATION,button,1342242819
+Control13=IDC_CAMERA_NEW,button,1342242816
+Control14=IDC_CAMERA_DELETE,button,1342242816
+Control15=IDOK,button,1342242817
+Control16=IDC_STATIC,button,1342177287
+Control17=IDC_STATIC,button,1342177287
+Control18=IDC_STATIC,static,1342308352
+Control19=IDC_STATIC,static,1342308352
+Control20=IDC_STATIC,static,1342308352
+Control21=IDC_STATIC,button,1342177287
+Control22=IDC_STATIC,static,1342308352
+Control23=IDC_STATIC,static,1342308352
+Control24=IDC_STATIC,static,1342308352
+Control25=IDC_STATIC,static,1342308352
+Control26=IDC_STATIC,static,1342308352
+Control27=IDC_STATIC,static,1342308352
+
+[CLS:CDlgCamera]
+Type=0
+HeaderFile=DlgCamera.h
+ImplementationFile=DlgCamera.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=CDlgCamera
+VirtualFilter=dWC
 
