@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2003/07/20 09:25:11  sm
+**      - Init light name in every case
+**
 **      Revision 1.33  2003/07/12 17:44:47  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -245,6 +248,10 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	if (m_ItemOffset > 0)
 	{
 		b3InitString(m_Name,m_ItemSize - (m_ParseIndex << 2));
+	}
+	else
+	{
+		m_Name[0] = 0;
 	}
 
 	if (m_LightActive)
