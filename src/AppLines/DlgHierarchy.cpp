@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/02 17:05:19  sm
+**	- Minor bug fixes done: recurse the CDlgHierarchy::b3FindBBox() correctly
+**
 **	Revision 1.6  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
-**
+**	
 **	Revision 1.5  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -183,17 +186,27 @@ void CDlgHierarchy::b3InitTree()
 
 HTREEITEM CDlgHierarchy::b3FindBBox(HTREEITEM parent,b3BBox *BBox)
 {
-	HTREEITEM item;
+	HTREEITEM  item,result;
 
 	for(item  = m_Hierarchy.GetNextItem(parent,TVGN_CHILD);
 	    item != NULL;
 		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
 	{
+#ifdef _DEBUG
+		b3PrintF(B3LOG_FULL,"BBox: %s\n",((b3BBox *)(m_Hierarchy.GetItemData(item)))->b3GetName());
+#endif
 		if (BBox == (b3BBox *)m_Hierarchy.GetItemData(item))
 		{
+			// Found! Done...
 			return item;
 		}
-		b3Traverse(item);
+
+		// Fast way out!
+		result = b3FindBBox(item,BBox);
+		if (result != null)
+		{
+			return result;
+		}
 	}
 	return NULL;
 }
@@ -221,8 +234,11 @@ void CDlgHierarchy::b3GetData()
 	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
 	b3Traverse(m_Hierarchy.GetRootItem());
 
-	m_Hierarchy.DeleteAllItems();
-	b3Free();
+	if (m_Scene == null)
+	{
+		m_Hierarchy.DeleteAllItems();
+		b3Free();
+	}
 }
 
 void CDlgHierarchy::b3SetData()
