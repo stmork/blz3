@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/25 10:34:51  sm
+**	- Completed Cook/Torrance dialog
+**
 **	Revision 1.4  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.3  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
@@ -67,8 +70,8 @@ CDlgMatSlide::CDlgMatSlide(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatSlide)
 	//}}AFX_DATA_INIT
-		m_SlideMode = m_Material->m_ModeFlag & 1;
-		m_CutOff = (m_Material->m_ModeFlag & 2) != null;
+	m_SlideMode = m_Material->m_ModeFlag & 1;
+	m_CutOff = (m_Material->m_ModeFlag & 2) != null;
 }
 
 CDlgMatSlide::~CDlgMatSlide()

@@ -26,11 +26,12 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3PropertyPage.h"
+#include "b3SimplePreviewDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3SimplePropertyPreviewDialog dialog
 
-class CB3SimplePropertyPreviewDialog : public CDialog
+class CB3SimplePropertyPreviewDialog : public CB3SimplePreviewDialog
 {
 protected:
 	CPropertySheet     m_PropertySheet;
@@ -40,7 +41,6 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CB3SimplePropertyPreviewDialog)
-	BOOL	m_AutoRefresh;
 	//}}AFX_DATA
 
 
@@ -56,19 +56,9 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3SimplePropertyPreviewDialog)
-	afx_msg void OnPreview(WPARAM wParam,LPARAM lParam);
-	afx_msg void OnAutoRefresh();
-	afx_msg void OnRefresh();
 	virtual BOOL OnInitDialog();
-	afx_msg void OnEdit();
-	afx_msg void OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-protected:
-	virtual void b3InitDialog() = 0;
-	virtual void b3UpdateUI() = 0;
-	        void b3Preview();
 };
 
 //{{AFX_INSERT_LOCATION}}

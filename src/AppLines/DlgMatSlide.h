@@ -35,9 +35,9 @@
 
 class CDlgMatSlide : public CB3SimplePropertyPreviewDialog
 {
-	b3Scene        *m_MatScene;
-	b3Base<b3Item> *m_MatHead;
-	b3MatSlide     *m_Material;
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
+	b3MatSlide        *m_Material;
 
 	CPageMaterial      m_PageLeft;
 	CPageMaterial      m_PageRight;

@@ -24,17 +24,19 @@
 // DlgMatCookTorrance.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3ShowImage.h"
+#include "b3SimplePreviewDialog.h"
 #include "b3SelectColor.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatCookTorrance dialog
 
-class CDlgMatCookTorrance : public CDialog
+class CDlgMatCookTorrance : public CB3SimplePreviewDialog
 {
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
 	b3MatCookTorrance *m_Material;
 
 // Construction
@@ -42,13 +44,14 @@ public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgMatCookTorrance(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatCookTorrance();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatCookTorrance)
 	enum { IDD = IDD_MAT_COOK_TORRANCE };
-	CB3ColorFieldSelector	m_SpecCtrl;
-	CB3ColorFieldSelector	m_DiffCtrl;
-	CB3ColorFieldSelector	m_AmbCtrl;
+	CB3ColorFieldSelector	m_AmbientCtrl;
+	CB3ColorFieldSelector	m_DiffuseCtrl;
+	CB3ColorFieldSelector	m_SpecularCtrl;
 	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
 	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
 	CB3FloatSpinButtonCtrl	m_IorCtrl;
@@ -73,9 +76,16 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatCookTorrance)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
+	afx_msg void OnColorAmbient();
+	afx_msg void OnColorDiffuse();
+	afx_msg void OnColorSpecular();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

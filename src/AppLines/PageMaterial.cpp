@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/25 10:34:51  sm
+**	- Completed Cook/Torrance dialog
+**
 **	Revision 1.5  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.4  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
@@ -68,14 +71,17 @@ CPageMaterial::CPageMaterial() : CB3PropertyPage(CPageMaterial::IDD)
 	m_ReflectionCtrl.b3SetRange(0.0,1.0);
 	m_ReflectionCtrl.b3SetIncrement(0.01);
 	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_ReflectionCtrl.b3SetDigits(2,1);
+	m_ReflectionCtrl.b3SetDigits(3,1);
+	
 	m_RefractionCtrl.b3SetRange(0.0,1.0);
 	m_RefractionCtrl.b3SetIncrement(0.01);
 	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetDigits(2,1);
+	m_RefractionCtrl.b3SetDigits(3,1);
+	
 	m_IorCtrl.b3SetRange(-5.0,5.0);
 	m_IorCtrl.b3SetDigits(0,2);
 	m_IorCtrl.b3SetIncrement(0.01);
+
 	m_SpecularExpCtrl.b3SetRange(1.0,100000);
 	m_SpecularExpCtrl.b3SetDigits(0,1);
 	m_SpecularExpCtrl.b3SetIncrement(10.0);
