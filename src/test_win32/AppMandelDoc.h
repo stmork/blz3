@@ -9,8 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "blz3/system/b3Document.h"
 
-class CAppMandelDoc : public CDocument
+class CAppMandelDoc : public CDocument, public b3Document
 {
 protected: // create from serialization only
 	CAppMandelDoc();
@@ -43,10 +44,23 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppMandelDoc)
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
+	afx_msg void OnReset();
+	afx_msg void OnCompute();
+	afx_msg void OnUpdateMandel(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	b3_f64    m_rStart;
+	b3_f64    m_rEnd;
+	b3_f64    m_iStart;
+	b3_f64    m_iEnd;
+	int       m_size;
+	char     *m_args[6];
+	char      m_text[4][32];
+	b3Thread *m_MandelThread;
+
+	static b3_u32 b3ComputingThread(void *ptr);
 };
 
 /////////////////////////////////////////////////////////////////////////////

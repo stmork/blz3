@@ -13,6 +13,7 @@
 #endif
 
 #include "resource.h"       // main symbols
+#include "blz3/system/b3Thread.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppMandelApp:
@@ -34,7 +35,6 @@ public:
 // Implementation
 	//{{AFX_MSG(CAppMandelApp)
 	afx_msg void OnAppAbout();
-	afx_msg void OnCompute();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

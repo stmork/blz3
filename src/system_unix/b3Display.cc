@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/system/b3Log.h"
+#include "bz3/base/b3Aux.h"
 
 #define no_SYNC
 #define no_DEBUG
@@ -38,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/08 12:56:43  sm
+**	- Now displaying Mandelbrot set. It's like switching all light on together.
+**
 **	Revision 1.2  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	
 */
 
@@ -426,13 +430,10 @@ void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
 
 void b3Display::b3PutRow(b3Row *row)
 {
-	b3_pkd_color *ptr;
 	b3_pkd_color  pixel,Color;
-	b3_coord      x;
 	b3_coord      y = row->y;
 
-	ptr = &m_Buffer[y * m_xs];
-	memcpy(ptr,row->buffer,sizeof(b3_pkd_color) * m_xs);
+	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
 	if (m_Opened)
 	{
 		m_Mutex.b3Lock();

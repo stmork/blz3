@@ -35,13 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/08 12:56:43  sm
+**	- Now displaying Mandelbrot set. It's like switching all light on together.
+**
 **	Revision 1.2  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
+**	
 **	
 **	
 */
@@ -52,7 +56,10 @@
 **                                                                      **
 *************************************************************************/
 
-void b3LongMemSet(b3_u32 *data,b3_count max,b3_u32 value)
+void b3LongMemSet(
+	b3_u32   *data,
+	b3_count  max,
+	b3_u32    value)
 {
 	b3_index  i;
 	b3_count  long_max,short_max;
@@ -86,6 +93,46 @@ void b3LongMemSet(b3_u32 *data,b3_count max,b3_u32 value)
 	for (i = 0;i < short_max;i++)
 	{
 		*data++ = value;
+	}
+}
+
+void b3LongMemCopy(
+	b3_u32   *dst,
+	b3_u32   *src,
+	b3_count  max)
+{
+	b3_index  i;
+	b3_count  long_max,short_max;
+
+	// Compute loop sizes
+	long_max  = max >> LOOP_B;
+	short_max = max &  LOOP_MASK;
+
+	// Long copy
+	for (i = 0;i < long_max;i++)
+	{
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+		*dst++ = *src++;
+	}
+
+	// Copy rest
+	for (i = 0;i < short_max;i++)
+	{
+		*dst++ = *src++;
 	}
 }
 

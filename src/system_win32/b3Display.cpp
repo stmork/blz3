@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
-#include "blz3/system/b3Log.h"
+#include "blz3/base/b3Aux.h"
 
 #define no_SYNC
 #define no_DEBUG
@@ -73,6 +72,7 @@ void b3Display::b3Init()
 			if (view->IsKindOf(RUNTIME_CLASS(CB3ScrollView)))
 			{
 				m_View         = (CB3ScrollView *)view;
+				m_Doc          = m_View->b3GetDocument();
 				single_display = this;
 			}
 			else
@@ -82,7 +82,7 @@ void b3Display::b3Init()
 		}
 	}
 
-	ASSERT_VALID(m_View);
+	ASSERT(m_View != null);
 }
 
 void b3Display::b3Open(b3_res xSize,b3_res ySize)
@@ -91,13 +91,18 @@ void b3Display::b3Open(b3_res xSize,b3_res ySize)
 	// about us.
 	b3Init();
 
-	m_xs = m_xMax = xSize;
-	m_ys = m_yMax = ySize;
+	m_xs = xSize;
+	m_ys = ySize;
 #ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",xSize);
-	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",ySize);
-	b3PrintF (B3LOG_NORMAL,"dep:    %4ld\n",m_depth);
+	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xs);
+	b3PrintF (B3LOG_NORMAL,"ySize: %4ld\n",m_ys);
+	b3PrintF (B3LOG_NORMAL,"dep:   %4ld\n",m_depth);
 #endif
+
+	b3Tx *tx = m_Doc->m_Tx;
+
+	tx->b3AllocTx(m_xs,m_ys,24);
+	m_Buffer = (b3_pkd_color *)tx->b3GetData();
 }
 
 void b3Display::b3Close()
@@ -150,10 +155,20 @@ void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
 
 void b3Display::b3PutRow(b3Row *row)
 {
+	b3_coord y = row->y;
+
+	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
+	if ((row->y & 0x1f) == 0)
+	{
+		m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
+	}
 }
 
 void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
 {
+	if ((x < 0) || (x >= m_xs)) return;
+	if ((y < 0) || (y >= m_ys)) return;
+	m_Buffer[y * m_xs + x] = Color;
 }
 
 b3_pkd_color  b3Display::b3GetPixel(b3_coord x,b3_coord y)
@@ -170,4 +185,5 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 
 void b3Display::b3Wait()
 {
+	m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
 }

@@ -8,8 +8,6 @@
 #include "AppMandelDoc.h"
 #include "AppMandelView.h"
 
-#include "blz3/b3Main.h"
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -22,7 +20,6 @@ static char THIS_FILE[] = __FILE__;
 BEGIN_MESSAGE_MAP(CAppMandelApp, CWinApp)
 	//{{AFX_MSG_MAP(CAppMandelApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
-	ON_COMMAND(ID_COMPUTE, OnCompute)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
@@ -150,20 +147,3 @@ void CAppMandelApp::OnAppAbout()
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppMandelApp message handlers
-
-
-void CAppMandelApp::OnCompute() 
-{
-	// TODO: Add your command handler code here
-		char *args[6];
-
-		args[0] = (char *)AfxGetAppName();
-		args[1] = "-1";
-		args[2] = "2.2";
-		args[3] = "-1";
-		args[4] = "1";
-		args[5] = "256";
-
-		// TODO: code your application's behavior here.
-		_Blizzard3Main(sizeof(args)/sizeof(char *),args);
-}

@@ -23,6 +23,7 @@ public:
 
 // Operations
 public:
+	void b3BestFit();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -37,6 +38,8 @@ public:
 // Implementation
 public:
 	virtual ~CAppMandelView();
+	virtual b3Document *b3GetDocument();
+
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -47,8 +50,26 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppMandelView)
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code !
+	//{{AFX_MSG(CMauiImageView)
+	afx_msg void OnUnfiltered();
+	afx_msg void OnFiltered();
+	afx_msg void OnOriginal();
+	afx_msg void OnWidth();
+	afx_msg void OnHeight();
+	afx_msg void OnFull();
+	afx_msg void OnMore();
+	afx_msg void OnLess();
+	afx_msg void OnMagnify();
+	afx_msg void OnUpdateUnfiltered(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFiltered(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateOriginal(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWidth(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateHeight(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFull(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
+	//}}AFX_MSG
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

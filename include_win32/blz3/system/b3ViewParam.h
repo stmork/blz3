@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3List.h"
 
-enum b3_viewmode
+enum b3_view_mode
 {
 	B3_VIEWMODE_FIT_BEST     = 0,
 	B3_VIEWMODE_FIT_WIDTH    = 1,
@@ -35,16 +35,19 @@ enum b3_viewmode
 #define VIEW_PARAM_NAME_LEN 32
 
 // Window modes
-#define VIEW_MINIMIZED      -1
-#define VIEW_NORMAL          0
-#define VIEW_MAXIMIZED       1
+enum b3_window_mode
+{
+	VIEW_MINIMIZED = -1,
+	VIEW_NORMAL    =  0,
+	VIEW_MAXIMIZED =  1
+};
 
 class CB3ViewParam : public b3Link<CB3ViewParam>
 {
 	char name[VIEW_PARAM_NAME_LEN];
 public:
 	// Direct view mode
-	b3_viewmode     m_Mode;
+	b3_view_mode    m_Mode;
 	b3_bool         m_Filtered;
 
 	// Part of image
@@ -54,7 +57,7 @@ public:
 	// Position of window
 	b3_coord        m_xWinPos,m_yWinPos;
 	b3_res          m_xWinSize,m_yWinSize;
-	long            m_WinMode;
+	b3_window_mode  m_WinMode;
 public:
 	                CB3ViewParam(const char *param_name);
 	char           *b3GetName();

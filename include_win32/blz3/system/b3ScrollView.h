@@ -63,7 +63,7 @@ protected: // create from serialization only
 	b3_bool        m_ViewScan;
 	b3_bool        m_ScaleGrey;
 	b3_bool        m_Filtered;
-	b3_viewmode    m_Mode;
+	b3_view_mode   m_Mode;
 
 public:
 	HCURSOR        m_Cursor;
@@ -108,16 +108,16 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 	virtual void          b3Activate(b3_bool was_deactive=true);
+	virtual b3Document   *b3GetDocument();
 
 protected:
 	virtual void          b3ViewParamChanged();
 	virtual b3_bool       b3IsMagnifying();
 	virtual void          b3SetMagnifying(b3_bool DoMagnify=true);
-	virtual b3Document   *b3GetDocument();
 	        void          b3ShowView();
 	        void          b3ScaleGrey();
 	        void          b3ScaleBW();
-	        void          b3ViewMode(b3_viewmode mode);
+	        void          b3ViewMode(b3_view_mode mode);
 			void          b3FilterMode(b3_bool filter_enable);
 			void          b3Scale(b3_f64 xScale,b3_f64 yScale);
 	        void          b3MagnifyMore();

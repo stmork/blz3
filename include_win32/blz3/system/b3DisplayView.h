@@ -66,13 +66,11 @@ class b3Row;
 
 class b3Display : public b3Mem
 {
-	b3_res              m_xMax,m_yMax; // This is the max. visible size
 	b3_res              m_depth;
 	char               *m_Title;
 
 	// Some position values
 	b3_res              m_xs,m_ys; // This is the size we really use
-	b3_pkd_color       *m_Buffer;
 
 	// Some X values
 	b3_bool             m_Opened;
@@ -80,6 +78,8 @@ class b3Display : public b3Mem
 	b3Mutex             m_Mutex;
 
 	CB3ScrollView      *m_View;
+	b3Document         *m_Doc;
+	b3_pkd_color       *m_Buffer;
 
 public:
 	                    b3Display(const char *title = null);

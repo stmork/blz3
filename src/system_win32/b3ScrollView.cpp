@@ -39,10 +39,13 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/08 12:56:43  sm
+**	- Now displaying Mandelbrot set. It's like switching all light on together.
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 
@@ -204,10 +207,10 @@ void CB3ScrollView::b3Activate(b3_bool was_deactive)
 
 void CB3ScrollView::b3GetViewParam(CB3ViewParam *param,CWnd *client)
 {
-	CFrameWnd *parent;
-	CRect      rect;
-	CPoint     point;
-	long       win_mode = VIEW_NORMAL;
+	CFrameWnd      *parent;
+	CRect           rect;
+	CPoint          point;
+	b3_window_mode  win_mode = VIEW_NORMAL;
 
 	// Copy global of Blizzard III values
 	point = GetScrollPosition();
@@ -756,7 +759,7 @@ b3_bool CB3ScrollView::b3IsMagnifying()
 	return m_DoMagnify;
 }
 
-void CB3ScrollView::b3ViewMode(b3_viewmode mode)
+void CB3ScrollView::b3ViewMode(b3_view_mode mode)
 {
 	// TODO: Add your command handler code here
 	if (m_Mode != mode)

@@ -83,6 +83,19 @@ IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
 
 IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
 BEGIN
+    BUTTON      ID_B3_UNFILTERED
+    BUTTON      ID_B3_FILTERED
+    SEPARATOR
+    BUTTON      ID_B3_ORIGINAL
+    BUTTON      ID_B3_WIDTH
+    BUTTON      ID_B3_HEIGHT
+    BUTTON      ID_B3_FULL
+    SEPARATOR
+    BUTTON      ID_B3_MORE
+    BUTTON      ID_B3_LESS
+    BUTTON      ID_B3_MAGNIFY
+    SEPARATOR
+    BUTTON      ID_RESET
     BUTTON      ID_COMPUTE
     SEPARATOR
     BUTTON      ID_APP_ABOUT
@@ -343,6 +356,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_COMPUTE              "Mandelbrot berechnen\nBerechnet die Mandelbrot-Menge"
+    ID_RESET                "Größe zurücksetzen\nSetzt die Größe des Rechenausschnitts zurück"
 END
 
 #endif    // German (Germany) resources
