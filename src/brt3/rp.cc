@@ -1,8 +1,53 @@
+/*
+**
+**	$Filename:	rp.cc $
+**	$Release:	Dortmund 2004 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
+**
+**	Blizzard III - Converting tool for Utah teapot import
+**
+**      (C) Copyright 2004  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
+#define no_DEBUG_VIEW
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+  
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Shape.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.3  2004/05/08 11:41:59  sm
+**	- Now have a Utah spoon, a Utah Teacup and the Utah teapot!!!
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
 
 struct b3_patch
 {
@@ -100,36 +145,39 @@ public:
 		}
 	}
 
-	void b3CreateObject()
+	~b3Patch()
 	{
-		b3SplineShape *shape;
-		b3_count       i,x,y;
-		b3_index       index,pos;
-
-		m_BBox = new b3BBox(BBOX);
-		for (i = 0;i < m_Patches.b3GetCount();i++)
+		if (m_BBox != null)
 		{
-			shape = new b3SplineShape(SPLINES_AREA);
-			shape->b3Init(3,3,4,4);
-			shape->m_Spline[0].b3ToBezier();
-			shape->m_Spline[1].b3ToBezier();
-
-			index = 0;
-			pos   = 0;
-			for (y = 0;y < shape->m_Spline[1].control_num;y++)
-			{
-				for (x = 0;x < shape->m_Spline[0].control_num;x += shape->m_Spline[0].offset)
-				{
-					shape->m_Controls[x + index] = m_Vertices[m_Patches[i].m_Indices[pos++] - 1];
-				}
-				index += shape->m_Spline[1].offset;
-			}
-			m_BBox->b3GetShapeHead()->b3Append(shape);
+			delete m_BBox;
 		}
+	}
+
+	void b3Create()
+	{
+		b3_matrix transform;
+
+		b3PrintF(B3LOG_NORMAL,"Creating Blizzard objects...\n");
+
+#if 1
+		if ((m_Patches.b3GetCount() == 32) && (m_Vertices.b3GetCount() == 306))
+		{
+			b3CreateTeapot();
+		}
+		else
+#endif
+		{
+			b3CreateObject();
+		}
+		
+		b3Matrix::b3Scale(null,&transform,null,20,20,20);
+		m_BBox->b3Transform(&transform,true,true);
 	}
 
 	void b3SaveObject(const char *filename)
 	{
+		b3PrintF(B3LOG_NORMAL,"Saving Blizzard object %s...\n",filename);
+
 		b3Dir::b3SplitFileName(filename,null,m_BBox->m_BoxName);
 		b3Dir::b3RemoveExt(m_BBox->m_BoxName);
 
@@ -151,6 +199,122 @@ private:
 		line[0] = 0;
 		return fgets(line,size,in) != null;
 	}
+
+	void b3CreateTeapot()
+	{
+		b3SplineShape *shape;
+		b3_count       i,xi,xo,xp,x;
+		b3_index       index = 0,pos;
+
+		b3PrintF(B3LOG_NORMAL,"Creating teapot...\n");
+		m_BBox = new b3BBox(BBOX);
+		strcpy (m_BBox->m_BoxName,"Teapot");
+
+		//// Body
+		shape = new b3SplineShape(SPLINES_CYL);
+		shape->b3Init(3,3,12,13);
+		m_BBox->b3GetShapeHead()->b3Append(shape);
+		b3CreateControls(shape,0,12,4);
+		b3CreateControls(shape,28,32,4,9,true);
+
+		//// Handle
+		shape = new b3SplineShape(SPLINES_CYL);
+		shape->b3Init(3,3,6,7);
+		m_BBox->b3GetShapeHead()->b3Append(shape);
+		b3CreateControls(shape,12,16,2);
+
+		//// Spout
+		shape = new b3SplineShape(SPLINES_CYL);
+		shape->b3Init(3,3,6,7);
+		m_BBox->b3GetShapeHead()->b3Append(shape);
+		b3CreateControls(shape,16,20,2);
+
+		//// Lid
+		shape = new b3SplineShape(SPLINES_CYL);
+		shape->b3Init(3,3,12,7);
+		m_BBox->b3GetShapeHead()->b3Append(shape);
+		b3CreateControls(shape,20,28,4);
+	}
+
+	void b3CreateControls(
+		b3SplineShape *shape,
+		b3_count       start,
+		b3_count       end,
+		b3_count       step,
+		b3_index       index  = 0,
+		b3_bool        invert = false)
+	{
+		b3_count xp,xo,xi,x,i;
+		b3_index pos;
+
+		for (i = 0;i < shape->m_Spline[0].knot_num;i++)
+		{
+			shape->m_Spline[0].knots[i] = i / shape->m_Spline[0].degree;
+		}
+
+		for (i = 0;i < shape->m_Spline[1].knot_num;i++)
+		{
+			shape->m_Spline[1].knots[i] = (i - 1) / shape->m_Spline[1].degree;
+		}
+		shape->m_Spline[1].knots[i-1] = shape->m_Spline[1].knots[i-2];
+
+		index *= shape->m_Spline[1].offset;
+		for (i = start;i < end;i += step)
+		{
+			for (xp = 0;xp < 4;xp++)
+			{
+				x = 0;
+				for (xo = 0;xo < 4;xo++)
+				{
+					for (xi = 1;xi < 4;xi++)
+					{
+						pos = xp * 4 + xi;
+						if (invert)
+						{
+							shape->m_Controls[x + index] = m_Vertices[m_Patches[i-xo+3].m_Indices[15-pos] - 1];
+						}
+						else
+						{
+							shape->m_Controls[x + index] = m_Vertices[m_Patches[i+xo].m_Indices[pos] - 1];
+						}
+						x++;
+					}
+				}
+				index += shape->m_Spline[1].offset;
+			}
+			index -= shape->m_Spline[1].offset;
+		}
+	}
+
+	void b3CreateObject()
+	{
+		b3SplineShape *shape;
+		b3_count       i,x,y;
+		b3_index       index,pos;
+
+		m_BBox = new b3BBox(BBOX);
+
+		b3PrintF(B3LOG_NORMAL,"Creating object...\n");
+		for (i = 0;i < m_Patches.b3GetCount();i++)
+		{
+			shape = new b3SplineShape(SPLINES_AREA);
+			shape->b3Init(3,3,4,4);
+			shape->m_Spline[0].b3ToBezier();
+			shape->m_Spline[1].b3ToBezier();
+			m_BBox->b3GetShapeHead()->b3Append(shape);
+
+			index = 0;
+			pos   = 0;
+			for (y = 0;y < shape->m_Spline[1].control_num;y++)
+			{
+				for (x = 0;x < shape->m_Spline[0].control_num;x += shape->m_Spline[0].offset)
+				{
+					shape->m_Controls[x + index] = m_Vertices[m_Patches[i].m_Indices[pos++] - 1];
+				}
+				index += shape->m_Spline[1].offset;
+			}
+		}
+	}
 };
 
 int main(int argc,char *argv[])
@@ -159,7 +323,7 @@ int main(int argc,char *argv[])
 	{
 		b3Patch patch = argv[1];
 
-		patch.b3CreateObject();
+		patch.b3Create();
 		patch.b3SaveObject(argv[2]);
 	}
 	else
