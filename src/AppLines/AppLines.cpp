@@ -45,9 +45,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2002/01/30 19:46:41  sm
+**	- Trying to print in debug mode (and want to see anything)
+**
 **	Revision 1.24  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
-**
+**	
 **	Revision 1.23  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
@@ -162,10 +165,7 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
-	// Standard file based document commands
-	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 /*************************************************************************
@@ -549,10 +549,4 @@ void CAppLinesApp::OnFileNew()
 	// TODO: Add your command handler code here
 	// Force creating new geometry!
 	pSceneTemplate->OpenDocumentFile(NULL);
-}
-
-void CAppLinesApp::OnFileOpen() 
-{
-	// TODO: Add your command handler code here
-	CWinApp::OnFileOpen();
 }

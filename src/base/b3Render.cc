@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/01/30 19:46:41  sm
+**      - Trying to print in debug mode (and want to see anything)
+**
 **      Revision 1.24  2002/01/21 16:56:46  sm
 **      - Showing splash dialog only in release version.
 **      - Prepared shape icons.
@@ -181,6 +184,7 @@ static GLfloat light0[] =
 
 b3RenderContext::b3RenderContext()
 {
+	b3SetBGColor(0.9,0.9,0.9);
 }
 
 void b3RenderContext::b3Init()
@@ -210,10 +214,23 @@ void b3RenderContext::b3Init()
 #endif
 }
 
+void b3RenderContext::b3SetBGColor(b3_color *color)
+{
+	glBGColor = *color;
+}
+
+void b3RenderContext::b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b)
+{
+	glBGColor.a = 0;
+	glBGColor.r = r;
+	glBGColor.g = g;
+	glBGColor.b = b;
+}
+
 void b3RenderContext::b3StartDrawing()
 {
 #ifdef BLZ3_USE_OPENGL
-	glClearColor(0.9f,0.9f,0.9f,1.0f);
+	glClearColor(glBGColor.r,glBGColor.g,glBGColor.b,1.0 - glBGColor.a);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 #endif
 }

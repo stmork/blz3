@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/30 19:46:41  sm
+**	- Trying to print in debug mode (and want to see anything)
+**
 **	Revision 1.6  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
-**
+**	
 **	Revision 1.5  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -86,31 +89,13 @@ static PIXELFORMATDESCRIPTOR print_pixelformat =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),
 	1,
-	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DEPTH_DONTCARE,
+	PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
 	PFD_TYPE_RGBA,
 	24,
-	0,0,0,0,0,0,
+	8,0,8,0,8,0,
 	0,0,
 	0,0,0,0,0,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,0,0
-};
-
-static PIXELFORMATDESCRIPTOR preview_pixelformat =
-{
-	sizeof(PIXELFORMATDESCRIPTOR),
-	1,
-	PFD_SUPPORT_OPENGL,
-	PFD_TYPE_RGBA,
-	24,
-	0,0,0,0,0,0,
-	0,0,
-	0,0,0,0,0,
-	32,
+	16,
 	0,
 	0,
 	0,
@@ -177,6 +162,9 @@ CAppRenderView::CAppRenderView()
 	// TODO: add construction code here
 	b3_index i;
 
+	m_prtGC     = 0;
+	m_prtDC     = 0;
+	m_prtBitmap = 0;
 	m_PreviousMode =
 	m_SelectMode   = B3_OBJECT_SELECT;
 	for (i = 0;i < B3_MODE_MAX;i++)
@@ -235,7 +223,7 @@ void CAppRenderView::OnPaint()
 	long           sDiff,mDiff;
 
 	// Init Drawing
-	wglMakeCurrent(m_DC,m_GC);
+	wglMakeCurrent(m_glDC,m_glGC);
 	GetClientRect(&rect);
 
 	_ftime(&start);
@@ -243,7 +231,7 @@ void CAppRenderView::OnPaint()
 	_ftime(&stop);
 
 	// Done...
-	SwapBuffers(m_DC);
+	SwapBuffers(m_glDC);
 	ValidateRect(NULL);
 
 	// Compute time spent for drawing
@@ -265,28 +253,16 @@ void CAppRenderView::OnPaint()
 	}
 }
 
-void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo) 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	wglMakeCurrent(pDC->GetSafeHdc(),m_PC);
-	b3Draw(pDC->GetDeviceCaps(HORZRES),pDC->GetDeviceCaps(VERTRES));
-
-	// Done...
-	glFinish();
-	wglMakeCurrent(NULL,NULL);
-//	ValidateRect(NULL);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CAppRenderView printing
 
 BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// default preparation
-	CWinApp    *app = AfxGetApp();
-	CRect       rect;
-	PRINTDLG   *prtDlg;
-	DEVMODE    *DevMode;
+	CAppLinesApp *app = CB3GetLinesApp();
+	CRect         rect;
+	PRINTDLG     *prtDlg;
+	DEVMODE      *DevMode;
 
 	// Set printer orientation by images dimensions
 	prtDlg = &pInfo->m_pPD->m_pd;
@@ -301,6 +277,7 @@ BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
 			::GlobalUnlock(prtDlg->hDevMode);
 		}
 	}
+	prtDlg->Flags |= (PD_NOPAGENUMS | PD_NOSELECTION);
 
 	return DoPreparePrinting(pInfo);
 }
@@ -308,26 +285,81 @@ BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
 void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 {
 	// TODO: add extra initialization before printing
-	HDC glDC = pDC->GetSafeHdc();
 	int PixelFormatIndex = -1;
+	void       *bits;
+	BITMAPINFO  info;
 
 	CScrollView::OnBeginPrinting(pDC, pInfo);
-	pInfo->SetMinPage(1);
-	pInfo->SetMaxPage(1);
+//	pInfo->SetMinPage(1);
+//	pInfo->SetMaxPage(1);
 
 	// Init Drawing
-	PixelFormatIndex = ChoosePixelFormat(glDC,
-		pInfo->m_bPreview ? &preview_pixelformat : &print_pixelformat);
-	SetPixelFormat(glDC,PixelFormatIndex,&print_pixelformat);
-	m_PC = wglCreateContext(glDC);
+	m_prtWidth  = pDC->GetDeviceCaps(HORZRES) >> 2;
+	m_prtHeight = pDC->GetDeviceCaps(VERTRES) >> 2;
+	m_prtDC     = ::CreateCompatibleDC(NULL);
+	memset (&info,0,sizeof(info));
+	info.bmiHeader.biSize   = sizeof(BITMAPINFOHEADER);
+	info.bmiHeader.biWidth  = m_prtWidth;
+	info.bmiHeader.biHeight = m_prtHeight;
+	info.bmiHeader.biPlanes = 1;
+	info.bmiHeader.biBitCount = 24;
+	info.bmiHeader.biCompression = BI_RGB;
+	m_prtBitmap    = ::CreateDIBSection(m_prtDC,&info, DIB_RGB_COLORS,&bits,NULL,0);
+	m_prtOldBitmap = ::SelectObject(m_prtDC,m_prtBitmap);
+	PixelFormatIndex = ChoosePixelFormat(m_prtDC,&print_pixelformat);
+	SetPixelFormat(m_prtDC,PixelFormatIndex,&print_pixelformat);
+	m_prtGC = wglCreateContext(m_prtDC);
+}
+
+void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	CWaitCursor wait;
+
+	// Define current resources
+	wglMakeCurrent(m_prtDC,m_prtGC);
+
+	// Do it!
+//	GetDocument()->m_Context.b3SetBGColor(1,0,1);
+	b3Draw(m_prtWidth,m_prtHeight);
+//	b3Draw(300,300);
+//	glFinish();
+
+	// Done and copy into destination DC
+	pDC->StretchBlt(
+		0,0,pDC->GetDeviceCaps(HORZRES),pDC->GetDeviceCaps(VERTRES),
+		CDC::FromHandle(m_prtDC),
+		0,0,m_prtWidth,m_prtHeight,SRCCOPY);
+	wglMakeCurrent(NULL,NULL);
+	ValidateRect(NULL);
 }
 
 void CAppRenderView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo)
 {
 	// TODO: add cleanup after printing
 	CScrollView::OnEndPrinting(pDC, pInfo);
-	wglDeleteContext(m_PC);
-	m_PC = 0;
+	
+	if (m_prtGC != 0)
+	{
+		wglDeleteContext(m_prtGC);
+		m_prtGC = 0;
+
+		if (m_prtDC != 0)
+		{
+			if (m_prtOldBitmap != 0)
+			{
+				::SelectObject(m_prtDC,m_prtOldBitmap);
+			}
+			::DeleteDC(m_prtDC);
+			m_prtDC = 0;
+
+			if (m_prtBitmap != 0)
+			{
+				::DeleteObject(m_prtBitmap);
+				m_prtBitmap = 0;
+			}
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -360,24 +392,24 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 	
 	// TODO: Add your specialized creation code here
-	m_DC = GetDC()->m_hDC;
+	m_glDC = GetDC()->GetSafeHdc();
 #ifdef _DEBUG
 	int                   max,i;
 	PIXELFORMATDESCRIPTOR format;
 
 	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	max = DescribePixelFormat(m_DC,1,0,NULL);
+	max = DescribePixelFormat(m_glDC,1,0,NULL);
 	for (i = 1;i <= max;i++)
 	{
-		DescribePixelFormat(m_DC,i,format.nSize,&format);
+		DescribePixelFormat(m_glDC,i,format.nSize,&format);
 		b3PrintF(B3LOG_DEBUG,"%3ld: %8lx %8lx %2ld %2ld %2ld\n",i,
 			format.dwFlags,format.iPixelType,
 			format.cColorBits,format.cDepthBits,format.cAccumBits);
 	}
 #endif
-	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&window_pixelformat);
-	SetPixelFormat(m_DC,m_PixelFormatIndex,&window_pixelformat);
-	m_GC = wglCreateContext(m_DC);
+	m_glPixelFormatIndex = ChoosePixelFormat(m_glDC,&window_pixelformat);
+	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&window_pixelformat);
+	m_glGC = wglCreateContext(m_glDC);
 
 	return 0;
 }
@@ -396,8 +428,8 @@ void CAppRenderView::OnDestroy()
 	CScrollView::OnDestroy();
 	
 	// TODO: Add your message handler code here
-	wglMakeCurrent(m_DC,NULL);
-	wglDeleteContext(m_GC);
+	wglMakeCurrent(m_glDC,NULL);
+	wglDeleteContext(m_glGC);
 }
 
 void CAppRenderView::OnInitialUpdate()
@@ -405,7 +437,7 @@ void CAppRenderView::OnInitialUpdate()
 	// Do necessary Blizzard III stuff!
 	CAppRenderDoc *pDoc = GetDocument();
 
-	wglMakeCurrent(m_DC,m_GC);
+	wglMakeCurrent(m_glDC,m_glGC);
 	pDoc->m_Context.b3Init();
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
@@ -497,7 +529,7 @@ void CAppRenderView::b3DrawRect(
 	b3_coord x2,
 	b3_coord y2)
 {
-	CDC *dc = CDC::FromHandle(m_DC);
+	CDC *dc = CDC::FromHandle(m_glDC);
 	CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
 
 	dc->SetROP2(R2_NOTXORPEN);

@@ -61,12 +61,18 @@ class CB3Action;
 
 class CAppRenderView : public CScrollView
 {
+	HGLRC           m_prtGC;
+	HDC             m_prtDC;
+	HBITMAP         m_prtBitmap;
+	HGDIOBJ         m_prtOldBitmap;
+	b3_res          m_prtWidth;
+	b3_res          m_prtHeight;
+
 protected:
 	// OpenGL values
-	HDC             m_DC;
-	HGLRC           m_GC;
-	HGLRC           m_PC;
-	int             m_PixelFormatIndex;
+	HDC             m_glDC;
+	HGLRC           m_glGC;
+	int             m_glPixelFormatIndex;
 
 	// Acting modes
 	b3_select_mode  m_PreviousMode;

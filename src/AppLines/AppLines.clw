@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CAppObjectView
+LastClass=CAppRenderView
 LastTemplate=CTreeCtrl
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,35 +54,35 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=29
-Resource1=IDD_STEP_ROTATE
-Resource2=IDR_TOOLBAR_LIGHT
-Resource3=IDR_BLZ3TYPE
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
-Resource6=IDR_TOOLBAR_DISPLAY
-Resource7=IDR_TOOLBAR_CAMERA
-Resource8=IDR_MAINFRAME
+Resource1=IDD_ABOUTBOX
+Resource2=IDR_TOOLBAR_OBJECT
+Resource3=IDD_LENS_FLARE
+Resource4=IDR_TOOLBAR_CAMERA
+Resource5=IDR_TOOLBAR_LIGHT
+Resource6=IDR_TOOLBAR_VIEW
+Resource7=IDR_TOOLBAR_ACTION
+Resource8=IDD_SCENE
 Resource9=IDR_DISPLAYTYPE
-Resource10=IDD_OBJECT_COPY
-Resource11=IDR_OBJECT
-Resource12=IDR_TOOLBAR_VIEW
-Resource13=IDR_CONTEXT_SCENE
-Resource14=IDD_ABOUTBOX
-Resource15=IDD_HIERARCHY
-Resource16=IDD_LENS_FLARE
-Resource17=IDD_SUPER_SAMPLE
-Resource18=IDD_NEBULAR
-Resource19=IDD_DISTRIBUTED
-Resource20=IDD_MODELLER_INFO
-Resource21=IDD_SEARCH_PATH_LIST
-Resource22=IDD_NEW_ITEM
-Resource23=IDD_LIGHT
-Resource24=IDD_LDC
-Resource25=IDD_CAMERA
-Resource26=IDD_FULCRUM
-Resource27=IDD_STEP_MOVE
+Resource10=IDD_HIERARCHY
+Resource11=IDD_SUPER_SAMPLE
+Resource12=IDR_TOOLBAR_DISPLAY
+Resource13=IDD_NEBULAR
+Resource14=IDD_DISTRIBUTED
+Resource15=IDD_MODELLER_INFO
+Resource16=IDD_LDC
+Resource17=IDD_NEW_ITEM
+Resource18=IDD_LIGHT
+Resource19=IDD_CAMERA
+Resource20=IDD_FULCRUM
+Resource21=IDD_STEP_MOVE
+Resource22=IDD_STEP_ROTATE
+Resource23=IDD_OBJECT_COPY
+Resource24=IDR_MAINFRAME
+Resource25=IDR_OBJECT
+Resource26=IDR_CONTEXT_SCENE
+Resource27=IDR_BLZ3TYPE
 Class44=CB3TreeCtrl
-Resource28=IDD_SCENE
+Resource28=IDD_SEARCH_PATH_LIST
 Resource29=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
@@ -173,10 +173,12 @@ LastObject=CB3Dialogbar
 
 [CLS:CAppLinesApp]
 Type=0
-BaseClass=CWinApp
+BaseClass=CB3App
 HeaderFile=AppLines.h
 ImplementationFile=AppLines.cpp
-LastObject=CAppLinesApp
+LastObject=ID_FILE_NEW
+Filter=N
+VirtualFilter=AC
 
 [CLS:CAboutDlg]
 Type=0

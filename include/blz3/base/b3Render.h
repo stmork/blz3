@@ -42,11 +42,14 @@ public:
 	b3_count         glVertexCount;
 	b3_count         glPolyCount;
 	b3_count         glGridCount;
+	b3_color         glBGColor;
 
 public:
 	                 b3RenderContext();
 	virtual void     b3Init();
 	virtual void     b3StartDrawing();
+	        void     b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b);
+			void     b3SetBGColor(b3_color *color);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
