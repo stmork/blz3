@@ -63,7 +63,7 @@ public:
 		{
 			return 0;
 		}
-		if (value > 1)
+		else if (value > 1)
 		{
 			return 1;
 		}
@@ -71,6 +71,19 @@ public:
 	}
 
 	static inline b3_f64 b3Limit(b3_f64 value,const b3_f64 min,const b3_f64 max)
+	{
+		if (value < min)
+		{
+			value = min;
+		}
+		else if (value > max)
+		{
+			value = max;
+		}
+		return value;
+	}
+
+	static inline b3_s32 b3Limit(b3_s32 value,const b3_s32 min,const b3_s32 max)
 	{
 		if (value < min)
 		{

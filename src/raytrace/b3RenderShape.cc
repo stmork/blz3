@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.82  2004/12/04 11:31:03  sm
+**      - Removed unreferenced variables.
+**
 **      Revision 1.81  2004/12/03 12:34:10  smork
 **      - Grid and polygon count computation added for torus and ellipsoid.
 **
@@ -1572,7 +1575,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 void b3Shape::b3GetEllipsoidIndexCount(b3_count &gridCount,b3_count &polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_index i,j,s,ys,ye;
+	b3_index ys,ye;
 	b3_f64   y1,y2;
 
 	b3ComputeBound(&m_Limit);
@@ -1621,7 +1624,7 @@ void b3Shape::b3GetEllipsoidIndexCount(b3_count &gridCount,b3_count &polyCount)
 void b3Shape::b3ComputeEllipsoidIndices()
 {
 	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_index       i,j,s,ys,ye;
+	b3_index       i,j,s;
 	b3_gl_line    *gPtr = *glGridElements;
 	b3_gl_polygon *pPtr = *glPolygonElements;
 	b3_f64         y1,y2;
@@ -1951,7 +1954,7 @@ void b3Shape::b3GetTorusIndexCount(b3_count &gridCount,b3_count &polyCount)
 
 void b3Shape::b3ComputeTorusIndices()
 {
-	b3_index       i,j,s,ys,ye;
+	b3_index       i,j,s;
 	b3_gl_line    *gPtr = *glGridElements;
 	b3_gl_polygon *pPtr = *glPolygonElements;
 
