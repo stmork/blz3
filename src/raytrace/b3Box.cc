@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.11  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -101,7 +108,7 @@ void b3Box::b3AllocVertices(b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 	glVertices = box_vertices;
 	glNormals  = box_normals;
-	glTexCoord = box_texcoord;
+	glTexCoord = null;
 
 	glVertexCount = 24;
 	glGridCount   = 12;

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.32  2002/03/10 13:55:15  sm
 **      - Added creation dialog for rotation shapes.
 **      - Cleaned up derivation of b3SplineRotShape.
@@ -343,7 +350,6 @@ void b3SplineShape::b3ComputeGridVertices()
 	m_Spline[0].knots    = &m_Knots[0][0];
 	m_Spline[1].knots    = &m_Knots[1][0];
 
-
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
 	b3Spline::b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],Between);
@@ -379,8 +385,11 @@ void b3SplineShape::b3ComputeSolidVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3Spline   MySpline;
 	b3_index   x,y;
+	b3_f64     fx,fxStep;
+	b3_f64     fy,fyStep;
 	b3_count   SubDiv,index,count;
 	b3_vector *Vector;
+	GLfloat   *Tex;
 
 	// Building horizontal BSplines
 	Vector = Between;
@@ -396,12 +405,25 @@ void b3SplineShape::b3ComputeSolidVertices()
 	MySpline.controls = Between;
 
 	Vector = (b3_vector *)&glVertices[m_GridVertexCount * 3];
+	Tex    = &glTexCoord[m_GridVertexCount * 2];
 	index  = 0;
+	fy     = 0;
+	fyStep = 1.0 / (b3_f64)m_ySubDiv;
 	for (y = 0;y < m_ySubDiv;y++)
 	{
 		count   = MySpline.b3DeBoor (Vector,y);
 		Vector += count;
 		index  += count;
+
+		fx = 0;
+		fxStep = 1.0 / (b3_f64)count;
+		for (x = 0;x < count;x++)
+		{
+			*Tex++ = fx;
+			*Tex++ = fy;
+			fx += fxStep;
+		}
+		fy += fyStep;
 	}
 	B3_ASSERT(index <= m_SolidVertexCount);
 #endif

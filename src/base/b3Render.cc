@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.29  2002/07/21 21:09:37  sm
 **      - Now having texture mapping! Texture mapping is only applied to
 **        areas and cylinders.
@@ -750,7 +757,9 @@ b3_f64 b3RenderObject::b3GetColors(
 
 b3_bool b3RenderObject::b3GetChess(
 	b3_color *bColor,
-	b3_color *wColor)
+	b3_color *wColor,
+	b3_res   &xRepeat,
+	b3_res   &yRepeat)
 {
 	return false;
 }
@@ -778,14 +787,23 @@ void b3RenderObject::b3UpdateTexture()
 {
 	b3_color black,white;
 
-	if (b3GetChess(&black,&white))
+	if (b3GetChess(&black,&white,glTextureRepeatX,glTextureRepeatY))
 	{
 		b3CreateChess(null,&black,&white);
 	}
-
-	if (b3GetImage(&glTextureBuffer))
+	else
 	{
-		b3CreateImage(null,&glTextureBuffer);
+		glTextureRepeatX = 2;
+		glTextureRepeatY = 2;
+		if (b3GetImage(&glTextureBuffer))
+		{
+			b3CreateImage(null,&glTextureBuffer);
+		}
+		else
+		{
+			// Free memory
+			b3CreateTexture(null,0);
+		}
 	}
 }
 
@@ -928,32 +946,31 @@ void b3RenderObject::b3Draw()
 		{
 			GLfloat color[4];
 
-			B3_ASSERT(glTexCoord != null);
-			glVertexPointer(  3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(     GL_FLOAT, 0, glNormals);
-			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
-
 			glEnable(GL_LIGHTING);
 			shininess = b3GetColors(&ambient,&diffuse,&specular);
+
 			if (glTextureSize > 0)
 			{
-				b3Color::b3Init(&blend,   0xff000000);
 				b3Color::b3Init(&ambient, B3_WHITE);
 				b3Color::b3Init(&diffuse, B3_WHITE);
 				b3Color::b3Init(&specular,B3_WHITE);
 
-				b3RenderContext::b3ColorToGL(&blend,color);
 				glBindTexture(  GL_TEXTURE_2D,glTextureId);
-				glTexEnvi(GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,GL_DECAL);
-				glTexEnvfv(GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR,color);
+				glEnable(       GL_TEXTURE_2D);
+				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,GL_DECAL);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 				glTexImage2D(   GL_TEXTURE_2D,
 					0,GL_RGBA,glTextureSize,glTextureSize,
 					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
-				glEnable(GL_TEXTURE_2D);
+
+				// Set repitition of chess fields by scaling texture
+				// coordinates.
+				glMatrixMode(GL_TEXTURE);
+				glPushMatrix();
+				glScalef(0.5 * glTextureRepeatX,0.5 * glTextureRepeatY,1);
 			}
 			else
 			{
@@ -973,7 +990,18 @@ void b3RenderObject::b3Draw()
 			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,color);
 			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,shininess);
 
+			// Put geometry :-)
+			B3_ASSERT(glTexCoord != null);
+			glVertexPointer(  3, GL_FLOAT, 0, glVertices);
+			glNormalPointer(     GL_FLOAT, 0, glNormals);
+			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+
+			if (glTextureSize > 0)
+			{
+				glPopMatrix();
+				glMatrixMode(GL_MODELVIEW);
+			}
 		}
 		break;
 
@@ -1034,7 +1062,7 @@ void b3RenderObject::b3CreateImage(
 {
 	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
 #ifndef _DEBUG
-	b3_res        max  = 256;
+	b3_res        max  = 128;
 #else
 	b3_res        max  =   8;
 #endif

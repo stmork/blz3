@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.13  2002/03/13 19:01:59  sm
 **      - Fixed some GCC warnings.
 **
@@ -294,7 +301,11 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3Spline   AuxSpline;
 	b3_vector  AuxControls[B3_MAX_CONTROLS + 1];
 	b3_vector *Vector;
-	b3_index   i,a;
+	GLfloat   *Tex;
+	b3_index   i,a,x;
+	b3_count   count;
+	b3_f64     fx,fxStep;
+	b3_f64     fy,fyStep;
 
 	// Build rotation matrix
 	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
@@ -308,10 +319,24 @@ void b3SplineRotShape::b3ComputeVertices()
 	}
 
 	Vector = (b3_vector *)glVertices;
+	Tex    = glTexCoord;
+	fy     = 0;
+	fyStep = 1.0 / (b3_f64)m_rSubDiv;
 	for (a = 0;a < m_rSubDiv;a++)
 	{
 		// Compute curve
-		Vector += AuxSpline.b3DeBoor(Vector,0);
+		count   = AuxSpline.b3DeBoor(Vector,0);
+		Vector += count;
+
+		fx = 0;
+		fxStep = 1.0 / (b3_f64)count;
+		for (x = 0;x < count;x++)
+		{
+			*Tex++ = fx;
+			*Tex++ = fy;
+			fx += fxStep;
+		}
+		fy += fyStep;
 
 		// Rotate control points
 		for (i = 0;i < AuxSpline.control_num;i++)

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.19  2002/07/21 21:09:37  sm
 **      - Now having texture mapping! Texture mapping is only applied to
 **        areas and cylinders.
@@ -142,6 +149,15 @@ static GLushort area_polygons[] =
 	0,3,1,
 	2,1,3
 };
+
+static GLfloat area_texcoord[] =
+{
+	0,0,
+	0,1,
+	1,1,
+	1,0
+};
+
 #endif
 
 b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
@@ -207,20 +223,6 @@ void b3Area::b3ComputeVertices()
 	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
 	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
 	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
-
-	// Setup texture coordinates
-	Vector    = glTexCoord;
-	*Vector++ = 0;
-	*Vector++ = 0;
-
-	*Vector++ = 0;
-	*Vector++ = 1;
-
-	*Vector++ = 1;
-	*Vector++ = 1;
-
-	*Vector++ = 1;
-	*Vector++ = 0;
 
 	xSize = 1;
 	ySize = 1;

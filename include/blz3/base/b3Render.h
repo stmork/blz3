@@ -106,15 +106,19 @@ protected:
 	b3_count         glGridCount;
 	b3_count         glPolyCount;
 #ifdef BLZ3_USE_OPENGL
+	b3_bool          glComputed;
 	GLfloat         *glVertices;
 	GLfloat         *glNormals;
 	GLfloat         *glTexCoord;
 	GLushort        *glGrids;
 	GLushort        *glPolygons;
+
+	// Some texture values
 	GLuint           glTextureId;
 	GLubyte         *glTextureData;
 	b3_res           glTextureSize;
-	b3_bool          glComputed;
+	b3_res           glTextureRepeatX;
+	b3_res           glTextureRepeatY;
 #endif
 
 protected:
@@ -143,7 +147,7 @@ protected:
 	virtual void            b3GetGridColor(b3_color *color);
 	virtual void            b3GetDiffuseColor(b3_color *diffuse);
 	virtual b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
-	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor);
+	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
 	virtual b3_bool         b3GetImage(b3Tx *image);
 	        void            b3TransformVertices(b3_matrix *transformation);
 

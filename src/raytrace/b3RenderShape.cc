@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.34  2002/07/21 21:09:37  sm
 **      - Now having texture mapping! Texture mapping is only applied to
 **        areas and cylinders.
@@ -280,6 +287,14 @@ static GLushort box_polygons[] =
 	18,17,21, // left
 	22,21,17
 };
+
+static GLfloat box_texcoord[] =
+{
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
+	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
+};
+
 #endif
 
 /*************************************************************************
@@ -571,7 +586,11 @@ void b3ShapeRenderObject::b3GetGridColor(b3_color *color)
 	b3Color::b3Init(color, 0.2f, 0.2f, 0.2f);
 }
 
-b3_bool b3ShapeRenderObject::b3GetChess(b3_color *black,b3_color *white)
+b3_bool b3ShapeRenderObject::b3GetChess(
+	b3_color *black,
+	b3_color *white,
+	b3_res   &xRepeat,
+	b3_res   &yRepeat)
 {
 	b3Item  *item;
 	b3_bool  result = false;
@@ -585,8 +604,10 @@ b3_bool b3ShapeRenderObject::b3GetChess(b3_color *black,b3_color *white)
 			if (result)
 			{
 				b3MatChess *chess = (b3MatChess *)item;
-				*black = chess->m_DiffColor[0];
-				*white = chess->m_DiffColor[1];
+				*black  = chess->m_DiffColor[0];
+				*white  = chess->m_DiffColor[1];
+				xRepeat = chess->m_xTimes;
+				yRepeat = chess->m_yTimes;
 			}
 		}
 	}
@@ -791,8 +812,8 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat   *Tex;
 	b3_vector *Vector;
+	GLfloat   *Tex;
 	b3_f64     sx,sy,b,h,start,end;
 	b3_index   i;
 	b3_count   iMax;
@@ -854,13 +875,14 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
 
+		Tex[0]  =
+		Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+		Tex[1]  = 0;
+		Tex[3]  = 1;
+		Tex    += 4;
+
 		glVertexCount += 2;
 		xSize++;
-
-		Tex[0] = Tex[2] = (double)i / SinCosSteps - Limit.x1;
-		Tex[1] = 0;
-		Tex[3] = 1;
-		Tex += 4;
 	}
 
 	if ((end - iMax) > epsilon)
@@ -927,12 +949,14 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
+	GLfloat   *Tex;
 	b3_f64     sx,sy,b,h,d,a,start,end;
 	b3_index   i;
 	b3_count   iMax;
 	b3_vector  Bottom;
 
 	Vector   = (b3_vector *)glVertices;
+	Tex      = glTexCoord;
 
 	d        = Limit.y2 - Limit.y1;
 	b        = Limit.y1;
@@ -945,8 +969,8 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 	end    = Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	xSize = 0;
-	ySize = 1;
+	xSize  = 0;
+	ySize  = 1;
 	glVertexCount = 0;
 
 	if (Limit.y2 < 1)
@@ -969,6 +993,11 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
 
+			*Tex++ = 0;
+			*Tex++ = 0;
+			*Tex++ = 0;
+			*Tex++ = 1;
+
 			glVertexCount += 2;
 			xSize++;
 		}
@@ -988,6 +1017,12 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
+
+			Tex[0]  =
+			Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Tex[1]  = 0;
+			Tex[3]  = 1;
+			Tex    += 4;
 
 			glVertexCount += 2;
 			xSize++;
@@ -1010,6 +1045,11 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 
+			*Tex++ = 1;
+			*Tex++ = 0;
+			*Tex++ = 1;
+			*Tex++ = 1;
+
 			glVertexCount += 2;
 			xSize++;
 		}
@@ -1022,6 +1062,9 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 		Vector++;
 		glVertexCount++;
 
+		*Tex++ = 0.5;
+		*Tex++ = 1;
+
 		if ((i - start) > epsilon)
 		{
 			a  = Limit.x1 * M_PI * 2;
@@ -1032,6 +1075,9 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
+
+			*Tex++ = 0;
+			*Tex++ = 0;
 
 			glVertexCount++;
 			xSize++;
@@ -1046,6 +1092,9 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
+			*Tex++ = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			*Tex++ = 0;
+
 			glVertexCount++;
 			xSize++;
 		}
@@ -1059,6 +1108,9 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
 			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+
+			*Tex++ = 1;
+			*Tex++ = 0;
 
 			glVertexCount++;
 			xSize++;
@@ -1350,7 +1402,8 @@ void b3ShapeRenderObject::b3ComputeBoxVertices(
 	b3_vector  Aux;
 	b3_index   i;
 
-	Vector = (b3_vector *)glVertices;
+	Vector     = (b3_vector *)glVertices;
+	glTexCoord = box_texcoord;
 
 	*Vector = Aux = Base;
 

@@ -964,7 +964,7 @@ protected:
 	void            b3GetGridColor(b3_color *color);
 	void            b3GetDiffuseColor(b3_color *color);
 	b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
-	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor);
+	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
 	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
 
@@ -1092,7 +1092,6 @@ class b3Area : public b3Shape2
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  area_vertices[4 * 3];
 	GLfloat  area_normals[4 * 3];
-	GLfloat  area_texcoord[4 * 3];
 #endif
 
 public:
@@ -1183,7 +1182,6 @@ class b3Box : public b3Shape3
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  box_vertices[8 * 3 * 3];
 	GLfloat  box_normals[8 * 3 * 3];
-	GLfloat  box_texcoord[8 * 3 * 3];
 #endif
 
 public:

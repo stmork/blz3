@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2002/07/22 10:52:16  sm
+**      - Added correct chess support
+**      - Added texture support for following shapes:
+**        o Box
+**        o Cone
+**        o Spline shapes including rotation shapes
+**
 **      Revision 1.17  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -159,13 +166,15 @@ void b3Disk::b3GetCount(
 
 void b3Disk::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
+	GLfloat   *Tex;
 	b3_f64     sx,sy,b,a,h,start,end;
 	b3_index   i;
 	b3_count   iMax;
 
-#ifdef BLZ3_USE_OPENGL
 	Vector = (b3_vector *)glVertices;
+	Tex    = glTexCoord;
 	h = Limit.y2;
 	b = Limit.y1;
 
@@ -198,6 +207,11 @@ void b3Disk::b3ComputeVertices()
 			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 			Vector++;
 
+			*Tex++ = 0;
+			*Tex++ = 0;
+			*Tex++ = 0;
+			*Tex++ = 1;
+
 			glVertexCount += 2;
 			xSize++;
 		}
@@ -219,6 +233,12 @@ void b3Disk::b3ComputeVertices()
 			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
+			Tex[0]  =
+			Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Tex[1]  = 0;
+			Tex[3]  = 1;
+			Tex    += 4;
+
 			glVertexCount += 2;
 			xSize++;
 		}
@@ -239,6 +259,11 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
 			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 
+			*Tex++ = 1;
+			*Tex++ = 0;
+			*Tex++ = 1;
+			*Tex++ = 1;
+
 			glVertexCount += 2;
 			xSize++;
 		}
@@ -247,6 +272,8 @@ void b3Disk::b3ComputeVertices()
 	{
 		// Position center first
 		*Vector++ = m_Base;
+		*Tex++    = 0.5;
+		*Tex++    = 0;
 		glVertexCount++;
 
 		// First fractional disk part if any
@@ -260,6 +287,9 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
 			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
+
+			*Tex++ = 0;
+			*Tex++ = 1;
 
 			glVertexCount++;
 			xSize++;
@@ -275,6 +305,9 @@ void b3Disk::b3ComputeVertices()
 			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
+			*Tex++ = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			*Tex++ = 1;
+
 			glVertexCount++;
 			xSize++;
 		}
@@ -289,6 +322,9 @@ void b3Disk::b3ComputeVertices()
 			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
 			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
 			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+
+			*Tex++ = 1;
+			*Tex++ = 1;
 
 			glVertexCount++;
 			xSize++;
