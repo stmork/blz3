@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.3  2001/08/11 16:29:08  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -76,6 +79,7 @@ void b3SplineRotShape::b3GetCount(
 
 void b3SplineRotShape::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_matrix  Matrix;
 	b3_spline  AuxSpline;
 	b3_vector  AuxControls[B3_MAX_CONTROLS + 1];
@@ -104,10 +108,12 @@ void b3SplineRotShape::b3ComputeVertices()
 
 	xSize  = SinCosSteps;
 	ySize  = AuxSpline.subdiv;
+#endif
 }
 
 void b3SplineRotShape::b3ComputeIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort *Index;
 	b3_count   SubDiv,sdStep,scStep;
 	b3_index   i,a,b;
@@ -162,6 +168,7 @@ void b3SplineRotShape::b3ComputeIndices()
 		PrintF ("scStep: %4ld\n",scStep);
 		PrintF ("sStep:  %2.2lf\n",sStep);
 	*/
+#endif
 }
 
 void b3SplineRotShape::b3Intersect()

@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3Light.cc $
+**	$Filename:	simple.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Raytracing light sources
+**	Blizzard III - simple OpenGL testing
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -14,6 +14,8 @@
 **
 **
 */
+
+#ifdef BLZ3_USE_OPENGL
 
 #include <GL/glut.h>
 
@@ -25,6 +27,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.2  2001/08/02 15:37:17  sm
 **      - Now we are able to draw Blizzard Scenes with OpenGL.
 **              
@@ -244,3 +249,15 @@ int main(int argc,char *argv[])
 	glutMainLoop();
 	return 0;
 }
+
+#else
+
+#include <stdio.h>
+
+int main(int argc,char *argv[])
+{
+	fprintf(stderr,"This platform has got no OpenGL support!\n");
+	return 0;
+}
+
+#endif

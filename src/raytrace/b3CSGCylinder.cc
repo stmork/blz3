@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.6  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -95,7 +98,9 @@ void b3CSGCylinder::b3AllocVertices(b3RenderContext *ctx)
 	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
 
 	b3RenderObject::b3AllocVertices(context);
+#ifdef BLZ3_USE_OPENGL
 	glGrids = context->b3GetCylinderIndices();
+#endif
 }
 
 void b3CSGCylinder::b3ComputeVertices()

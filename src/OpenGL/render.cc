@@ -15,8 +15,6 @@
 **
 */
 
-#include <GL/glut.h>
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -35,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.8  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -67,6 +68,7 @@
 **
 */
 
+#ifdef BLZ3_USE_OPENGL
 static b3World      *world = null;
 static b3RenderView  view;
 
@@ -111,7 +113,6 @@ int main(int argc,char *argv[])
 	{
 		b3InitRaytrace::b3Init();
 
-//		b3Log_SetLevel(B3LOG_FULL);
 		world = new b3World();
 		world->b3Read(argv[1]);
 		for (item  = world->b3GetFirst();
@@ -139,3 +140,13 @@ int main(int argc,char *argv[])
 	}
 	return 0;
 }
+
+#else
+
+int main(int argc,char *argv[])
+{
+	b3PrintF(B3LOG_NORMAL,"This platform has got no OpenGL support!\n");
+	return 0;
+}
+
+#endif

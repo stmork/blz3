@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.6  2001/08/11 16:29:08  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -131,6 +134,7 @@ void b3TriangleShape::b3GetCount(
 
 void b3TriangleShape::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_vertex *Vertex;
 	b3_index   i;
@@ -146,10 +150,12 @@ void b3TriangleShape::b3ComputeVertices()
 		Vertex++;
 		Vector++;
 	}
+#endif
 }
 
 void b3TriangleShape::b3ComputeIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort    *Index;
 	b3_triangle *Triangle;
 	b3_vertex   *Vertex;
@@ -170,6 +176,7 @@ void b3TriangleShape::b3ComputeIndices()
 		*Index++ = (short)Triangle->P1;
 		Triangle++;
 	}
+#endif
 }
 
 void b3TriangleShape::b3Intersect()

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.7  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -108,6 +111,7 @@ void b3Disk::b3ComputeVertices()
 	b3_index   i;
 	b3_count   iMax;
 
+#ifdef BLZ3_USE_OPENGL
 	Vector = (b3_vector *)glVertices;
 	h = Limit.y2;
 	b = Limit.y1;
@@ -226,10 +230,12 @@ void b3Disk::b3ComputeVertices()
 			xSize++;
 		}
 	}
+#endif
 }
 
 void b3Disk::b3ComputeIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort *Index;
 	b3_bool   EndLines = false;
 	b3_index  i,Number = 0;
@@ -302,6 +308,7 @@ void b3Disk::b3ComputeIndices()
 		PrintF ("Overhead: %ld\n",Overhead);
 		PrintF ("n:        %ld\n",GridCount);
 	*/
+#endif
 }
 
 void b3Disk::b3Intersect()

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.5  2001/08/14 13:34:40  sm
 **      - Corredted aspect ratio handling when doing somethiing with
 **        the view
@@ -109,6 +112,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENGL
 static GLushort box_grids[] =
 {
 	0,1,
@@ -130,6 +134,7 @@ static GLushort box_polygons[] =
 	0,1,3,
 	2,3,1
 };
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -139,8 +144,10 @@ static GLushort box_polygons[] =
 
 b3RenderShapeContext::b3RenderShapeContext(b3_count new_subdiv)
 {
+#ifdef BLZ3_USE_OPENGL
 	CylinderIndices = null;
 	ConeIndices     = null;
+#endif
 	Between         = null;
 	b3InitSubdiv(new_subdiv);
 }
@@ -319,6 +326,7 @@ void b3RenderShape::b3ComputeSphereVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_index   i,j;
 	b3_count   Circles;
@@ -369,7 +377,8 @@ void b3RenderShape::b3ComputeSphereVertices(
 		PrintF ("Points: %3ld\n",Points);
 		PrintF ("Circles:%3ld\n",Circles);
 	*/
-}
+#endif
+ }
 
 void b3RenderShape::b3ComputeCylinderVertices(
 	b3_vector   &Base,
@@ -377,6 +386,7 @@ void b3RenderShape::b3ComputeCylinderVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_f64     sx,sy,b,h,start,end;
 	b3_index   i;
@@ -449,10 +459,12 @@ void b3RenderShape::b3ComputeCylinderVertices(
 		Vector++;
 		xSize++;
 	}
+#endif
 }
 
 void b3RenderShape::b3ComputeCylinderIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
 
 	b3ComputeBound(&Limit);
@@ -467,6 +479,7 @@ void b3RenderShape::b3ComputeCylinderIndices()
 		GridCount = 0;
 	}
 	GridCount += Overhead * 3;
+#endif
 }
 
 void b3RenderShape::b3ComputeConeVertices(
@@ -475,6 +488,7 @@ void b3RenderShape::b3ComputeConeVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_f64     sx,sy,b,a,h,start,end;
 	b3_index   i;
@@ -597,10 +611,12 @@ void b3RenderShape::b3ComputeConeVertices(
 			xSize++;
 		}
 	}
+#endif
 }
 
 void b3RenderShape::b3ComputeConeIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
 
 	b3ComputeBound(&Limit);
@@ -624,6 +640,7 @@ void b3RenderShape::b3ComputeConeIndices()
 		glGrids    = GridsCone;
 		GridCount += Overhead * 2;
 	}
+#endif
 }
 
 void b3RenderShape::b3ComputeEllipsoidVertices(
@@ -632,6 +649,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_index   i,j;
 	b3_count   iMax,Circles = 0;
@@ -734,10 +752,12 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 		PrintF ("Points: %3ld\n",Points);
 		PrintF ("Circles:%3ld\n",Circles);
 	*/
+#endif
 }
 
 void b3RenderShape::b3ComputeEllipsoidIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort *Index;
 	b3_bool   EndLine = false;
 	b3_index  i,j,Number,s,ys,ye;
@@ -821,6 +841,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 		PrintF ("Overhead: %ld\n",Overhead);
 		PrintF ("n:        %ld\n",n);
 	*/
+#endif
 }
 
 void b3RenderShape::b3ComputeBoxVertices(
@@ -829,6 +850,7 @@ void b3RenderShape::b3ComputeBoxVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_vector  Aux;
 	b3_index   i;
@@ -878,12 +900,15 @@ void b3RenderShape::b3ComputeBoxVertices(
 	{
 		Vector[i +  8] = Vector[i + 16] = Vector[i];
 	}
+#endif
 }
 
 void b3RenderShape::b3ComputeBoxIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	glGrids    = box_grids;
 	glPolygons = box_polygons;
+#endif
 }
 
 void b3RenderShape::b3ComputeTorusVertices(
@@ -894,6 +919,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 	b3_f64       aRad,
 	b3_f64       bRad)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
 	b3_f64     RadX,RadY,sx,sy,start,end,a;
 	b3_f64     LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
@@ -1005,10 +1031,12 @@ void b3RenderShape::b3ComputeTorusVertices(
 		PrintF ("Points: %3ld\n",Points);
 		PrintF ("Circles:%3ld\n",Circles);
 	*/
+#endif
 }
 
 void b3RenderShape::b3ComputeTorusIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort *Index;
 	b3_bool   EndLine = false,EndCol = false;
 	b3_index  i,j,Number,s,ys,ye;
@@ -1087,4 +1115,5 @@ void b3RenderShape::b3ComputeTorusIndices()
 		PrintF ("Overhead: %ld\n",Overhead);
 		PrintF ("n:        %ld\n",n);
 	*/
+#endif
 }

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.8  2001/08/14 13:34:40  sm
 **      - Corredted aspect ratio handling when doing somethiing with
 **        the view

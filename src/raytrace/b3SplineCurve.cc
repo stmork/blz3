@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.2  2001/08/11 16:29:08  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -67,14 +70,17 @@ void b3SplineCurveShape::b3GetCount(
 
 void b3SplineCurveShape::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3DeBoor (&Spline,(b3_vector *)glVertices,0L);
 
 	xSize  = Spline.subdiv;
 	ySize  = 0;
+#endif
 }
 
 void b3SplineCurveShape::b3ComputeIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLushort  *Index;
 	b3_count   SubDiv;
 	b3_index   i;
@@ -98,6 +104,7 @@ void b3SplineCurveShape::b3ComputeIndices()
 	{
 		GridCount = 0;
 	}
+#endif
 }
 
 void b3SplineCurveShape::b3Intersect()

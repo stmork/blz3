@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.12  2001/08/12 19:47:48  sm
 **      - Now having correct orthogonal projection incl. aspect ratio
 **
@@ -213,10 +216,12 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	GridCount   = 12;
 	PolyCount   =  0;
 
+#ifdef BLZ3_USE_OPENGL
 	glVertices = vertices;
 	glNormals  = null;
 	glGrids    = indices;
 	glPolygons = null;
+#endif
 
 	B3_FOR_BASE(&heads[1],item)
 	{
@@ -237,9 +242,12 @@ void b3BBox::b3FreeVertices()
 	b3BBox         *bbox;
 	b3Shape        *shape;
 
+#ifdef BLZ3_USE_OPENGL
 	glVertices = null;
+	glNormals  = null;
 	glGrids    = null;
 	glPolygons = null;
+#endif
 
 	B3_FOR_BASE(&heads[0],item)
 	{
@@ -292,8 +300,9 @@ void b3BBox::b3ComputeVertices()
 	vertices[i++] = Base.x + Size.x;
 	vertices[i++] = Base.y + Size.y;
 	vertices[i++] = Base.z;
-#endif
+
 	glComputed = true;
+#endif
 }
 
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)

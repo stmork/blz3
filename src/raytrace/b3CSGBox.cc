@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.4  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -66,20 +69,24 @@ b3CSGBox::b3CSGBox(b3_u32 *src) : b3CSGShape3(src)
 
 void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 	glVertices = box_vertices;
 	glNormals  = box_normals;
 
 	VertexCount = 24;
 	GridCount   = 12;
 	PolyCount   = 12;
+#endif
 }
 
 void b3CSGBox::b3FreeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	glVertices = null;
 	glNormals  = null;
 	glGrids    = null;
 	glPolygons = null;
+#endif
 	b3Shape::b3FreeVertices();
 }
 

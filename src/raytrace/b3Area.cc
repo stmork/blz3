@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.8  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -79,6 +82,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENGL
 static GLushort area_grids[] =
 {
 	0,1,
@@ -92,6 +96,7 @@ static GLushort area_polygons[] =
 	0,1,3,
 	2,3,1
 };
+#endif
 
 b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 {
@@ -103,6 +108,7 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 
 void b3Area::b3AllocVertices(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 	glVertices = area_vertices;
 	glNormals  = area_normals;
 	glGrids    = area_grids;
@@ -111,19 +117,23 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 	VertexCount = 4;
 	GridCount   = 4;
 	PolyCount   = 2;
+#endif
 }
 
 void b3Area::b3FreeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	glVertices = null;
 	glNormals  = null;
 	glGrids    = null;
 	glPolygons = null;
+#endif
 	b3Shape::b3FreeVertices();
 }
 
 void b3Area::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLfloat     *Vector;
 	b3_f32       x1,y1,x2,y2;
 
@@ -151,6 +161,7 @@ void b3Area::b3ComputeVertices()
 
 	xSize = 1;
 	ySize = 1;
+#endif
 }
 
 void b3Area::b3ComputeIndices()

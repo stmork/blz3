@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
 **      Revision 1.5  2001/08/12 19:47:47  sm
 **      - Now having correct orthogonal projection incl. aspect ratio
 **
@@ -84,18 +87,22 @@
 
 b3RenderContext::b3RenderContext()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3PrintF(B3LOG_DEBUG,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
 	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
 	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
 	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
+#endif
 }
 
 void b3RenderContext::b3StartDrawing()
 {
+#ifdef BLZ3_USE_OPENGL
 	glClearColor(0.8f,0.8f,0.8f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnableClientState(GL_VERTEX_ARRAY);
+#endif
 }
 
 /*************************************************************************
