@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2003/08/31 08:56:23  sm
+**	- Windows support for the snprintf functions
+**
 **	Revision 1.26  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.25  2003/03/04 20:37:37  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -266,7 +269,7 @@ static void b3TIFFWarnHandler(
 	const char *fmt,
 	va_list     args)
 {
-	char    message[512];
+	char message[512];
 
 	vsnprintf (message,sizeof(message),fmt,args);
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);

@@ -31,12 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/08/31 08:56:23  sm
+**	- Windows support for the snprintf functions
+**
 **	Revision 1.10  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.9  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -169,9 +172,10 @@ void CB3FloatEdit::b3SetDigits(int pre, int post)
 	char pre_digit[16];
 	char post_digit[16];
 	
-	m_PreDigits  = pre;
-	m_PostDigits = post;
-	pre_digit[0] = post_digit[0] = 0;
+	m_PreDigits   = pre;
+	m_PostDigits  = post;
+	pre_digit[0]  =
+	post_digit[0] = 0;
 
 	if (pre >= 0)
 	{

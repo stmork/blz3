@@ -242,6 +242,13 @@
 #define ID_VIEW_TOP                     10116
 #define ID_VIEW_TO_FULCRUM              10117
 #define ID_EDIT_MATERIAL                10118
+#define ID_BUTTON10119                  10119
+#define ID_BUTTON10120                  10120
+#define ID_BUTTON10121                  10121
+#define ID_BUTTON10122                  10122
+#define ID_BUTTON10123                  10123
+#define ID_BUTTON10124                  10124
+#define ID_BUTTON10125                  10125
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -719,7 +726,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         10119
+#define _APS_NEXT_COMMAND_VALUE         10126
 #define _APS_NEXT_CONTROL_VALUE         32292
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif

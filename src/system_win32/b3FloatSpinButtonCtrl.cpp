@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/08/31 08:56:23  sm
+**	- Windows support for the snprintf functions
+**
 **	Revision 1.7  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.6  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -190,7 +193,8 @@ void CB3FloatSpinButtonCtrl::b3SetDigits(int pre,int post)
 	
 	B3_ASSERT((post >= 0) && (post < 6));
 
-	pre_digit[0] = post_digit[0] = 0;
+	pre_digit[0]  =
+	post_digit[0] = 0;
 
 	if (pre >= 0)
 	{
