@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2002/07/20 10:49:34  sm
+**      - Added custom light support (not finished yet)
+**      - Added b3Light::b3IsActive() for compatibility.
+**      - Added texture search path support like in brt3.
+**
 **      Revision 1.28  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -349,6 +354,11 @@ b3_bool b3Light::b3Prepare()
 		}
 	}
 	return true;
+}
+
+b3_bool b3Light::b3IsActive()
+{
+	return m_LightActive;
 }
 
 char *b3Light::b3GetName()

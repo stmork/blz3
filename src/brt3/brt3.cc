@@ -36,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/07/20 10:49:34  sm
+**	- Added custom light support (not finished yet)
+**	- Added b3Light::b3IsActive() for compatibility.
+**	- Added texture search path support like in brt3.
+**
 **	Revision 1.21  2002/05/08 14:44:46  sm
 **	- Insert Tag names
-**
+**	
 **	Revision 1.20  2002/05/08 14:37:56  sm
 **	- Output some information when not specifying data files.
 **	
@@ -200,8 +205,8 @@ int main(int argc,char *argv[])
 	b3CameraPart *camera;
 	b3Display    *display;
 	char         *picture_home = getenv("BLZ3_PICTURES");
+	char         *HOME         = getenv("HOME");
 	b3_index      i;
-	char         *HOME = getenv("HOME");
 	b3Path        textures;
 	b3Path        pictures;
 	b3Path        data;
@@ -314,7 +319,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s {Bllizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"%s {Blizzard World Data files}\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"Compile name: %s\n",cvs_tag);

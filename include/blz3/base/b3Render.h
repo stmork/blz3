@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3Render.h $ 
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Rendering class definitions
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -38,6 +38,8 @@ typedef enum
 
 class b3RenderContext : protected b3Mem
 {
+	b3_index         glLightNum;
+
 public:
 	b3_count         glVertexCount;
 	b3_count         glPolyCount;
@@ -50,6 +52,10 @@ public:
 	virtual void     b3StartDrawing();
 	        void     b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b);
 			void     b3SetBGColor(b3_color *color);
+	static  void     b3LightReset();
+			void     b3LightNum(b3_index light_num = 0);
+	static  void     b3LightSet(b3_vector *pos,b3_color *diffuse = null,b3_color *ambient = null,b3_index light_num = 0);
+			void     b3LightAdd(b3_vector *pos,b3_color *diffuse = null,b3_color *ambient = null);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);

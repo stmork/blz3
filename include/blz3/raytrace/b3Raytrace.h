@@ -1792,6 +1792,7 @@ public:
 	void     b3Write();
 	b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface);
 	b3_bool  b3Prepare();
+	b3_bool  b3IsActive();
 	char    *b3GetName();
 
 private:

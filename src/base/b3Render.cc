@@ -1,14 +1,14 @@
-#/*
+/*
 **
 **      $Filename:      b3Render.cc $
-**      $Release:       Dortmund 2001 $
+**      $Release:       Dortmund 2001, 2002 $
 **      $Revision$
 **      $Date$
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Rendering some objects
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001, 2002  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/07/20 10:49:34  sm
+**      - Added custom light support (not finished yet)
+**      - Added b3Light::b3IsActive() for compatibility.
+**      - Added texture search path support like in brt3.
+**
 **      Revision 1.26  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -169,26 +174,42 @@
 **                                                                      **
 *************************************************************************/
 
+static b3_color light0_ambient =
+{
+	0.0f,0.25f,0.25f,0.25f
+};
+
+static b3_color light0_diffuse =
+{
+	0.0f,0.8f,0.8f,0.8f
+};
+
+static b3_vector light0_position =
+{
+	1000.0f,-2500.0f,2000.0f
+};
+
 #ifdef BLZ3_USE_OPENGL
-static GLfloat ambient[] =
+static GLint light_num[] =
 {
-	0.25f,0.25f,0.25f,1.0f
+	GL_LIGHT0,
+	GL_LIGHT1,
+	GL_LIGHT2,
+	GL_LIGHT3,
+	GL_LIGHT4,
+	GL_LIGHT5,
+	GL_LIGHT6,
+	GL_LIGHT7
 };
 
-static GLfloat diffuse[] =
-{
-	0.8f,0.8f,0.8f,1.0f
-};
+#define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && ((num) < (sizeof(light_num) / sizeof(GLint))))
 
-static GLfloat light0[] =
-{
-	1000.0f,-2500.0f,2000.0f,1.0f
-};
 #endif
 
 b3RenderContext::b3RenderContext()
 {
 	b3SetBGColor(0.9,0.9,0.9);
+	b3LightNum();
 }
 
 void b3RenderContext::b3Init()
@@ -204,11 +225,8 @@ void b3RenderContext::b3Init()
 	glEnable(GL_AUTO_NORMAL);
 
 	// Enable light
-	glEnable(GL_LIGHT0);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
-	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
-	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
-	glLightfv(GL_LIGHT0,GL_POSITION,light0);
+	b3LightReset();
+	b3LightSet(&light0_position);
 
 	// Some material settings
 //	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
@@ -216,6 +234,88 @@ void b3RenderContext::b3Init()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
 #endif
+}
+
+void b3RenderContext::b3LightReset()
+{
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
+
+	// Disable all other lights
+	for (int i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
+	{
+		glDisable(light_num[i]);
+	}
+}
+
+void b3RenderContext::b3LightNum(b3_index num)
+{
+	if (VALIDATE_LIGHT_NUM(num))
+	{
+		glLightNum = num;
+	}
+}
+
+void b3RenderContext::b3LightAdd(
+	b3_vector *b3_position,
+	b3_color  *b3_diffuse,
+	b3_color  *b3_ambient)
+{
+	b3PrintF(B3LOG_DEBUG,"b3LightAdd(%d)\n",glLightNum);
+
+	if (VALIDATE_LIGHT_NUM(glLightNum))
+	{
+		b3LightSet(b3_position,b3_ambient,b3_diffuse,glLightNum++);
+	}
+}
+
+void b3RenderContext::b3LightSet(
+	b3_vector *b3_position,
+	b3_color  *b3_diffuse,
+	b3_color  *b3_ambient,
+	b3_index   num)
+{
+	GLfloat gl_position[4];
+	GLfloat gl_ambient[4];
+	GLfloat gl_diffuse[4];
+	GLint   light;
+
+	if (VALIDATE_LIGHT_NUM(num))
+	{
+		b3PrintF(B3LOG_DEBUG,"b3LightSet(%d)\n",num);
+
+		light = light_num[num];
+
+		gl_position[0] = b3_position->x;
+		gl_position[1] = b3_position->y;
+		gl_position[2] = b3_position->z;
+		gl_position[3] = 1;
+
+		if (b3_ambient == null)
+		{
+			b3_ambient = &light0_ambient;
+		}
+		gl_ambient[0]  =        b3_ambient->r;
+		gl_ambient[1]  =        b3_ambient->g;
+		gl_ambient[2]  =        b3_ambient->b;
+		gl_ambient[3]  = 1.0f - b3_ambient->a;
+
+		if (b3_diffuse == null)
+		{
+			b3_diffuse = &light0_diffuse;
+		}
+		gl_diffuse[0]  =        b3_diffuse->r;
+		gl_diffuse[1]  =        b3_diffuse->g;
+		gl_diffuse[2]  =        b3_diffuse->b;
+		gl_diffuse[3]  = 1.0f - b3_diffuse->a;
+
+		b3PrintF(B3LOG_NORMAL,"Light %d: %3.2f %3.2f %3.2f\n",
+			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
+
+		glEnable( light);
+		glLightfv(light,GL_AMBIENT, gl_ambient);
+		glLightfv(light,GL_DIFFUSE, gl_diffuse);
+		glLightfv(light,GL_POSITION,gl_position);
+	}
 }
 
 void b3RenderContext::b3SetBGColor(b3_color *color)
