@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/11/25 11:09:37  smork
+**	- Added b3_f96 checking in TestIo.
+**	- Corrected linking in test_unix.
+**
 **	Revision 1.14  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
-**
+**	
 **	Revision 1.13  2003/10/15 13:12:19  sm
 **	- Making 64 bit sure. I've got running the brt3 in 64 bit mode on
 **	  a sun ultra sparc sucessfully!!
@@ -126,8 +130,9 @@ int main(int argc,char *argv[])
 	b3PrintF (B3LOG_NORMAL,"64 bit: %3d  %3d (should be 8)\n",sizeof(b3_u64),sizeof(b3_s64));
 	b3PrintF (B3LOG_NORMAL,"bool:   %3d      (should be 4)\n",sizeof(b3_bool));
 	b3PrintF (B3LOG_NORMAL,"Float:\n");
-	b3PrintF (B3LOG_NORMAL,"32 bit: %3d      (should be 4)\n",sizeof(b3_f32));
-	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be 8)\n",sizeof(b3_f64));
+	b3PrintF (B3LOG_NORMAL,"32 bit: %3d      (should be  4)\n",sizeof(b3_f32));
+	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be  8)\n",sizeof(b3_f64));
+	b3PrintF (B3LOG_NORMAL,"96 bit: %3d      (should be 12)\n",sizeof(b3_f96));
 	b3PrintF (B3LOG_NORMAL,"\n");
 
 	v1 = 1; v2 = 2;

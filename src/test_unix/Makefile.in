@@ -50,7 +50,7 @@ depend:
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
-TestIo:	$(TESTIO_OBJS) $(B3_LIB_BASE)
+TestIo:	$(TESTIO_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 TestData:	$(TESTDATA_OBJS) $(B3_LIB_BASE)
