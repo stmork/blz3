@@ -27,10 +27,8 @@ clean:
 
 lib:	$(LIBS)
  
-libB3System.a:	$(LIB_OBJ)
+libB3xxx.o:	$(LIB_OBJ)
 	rm -f $@ core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
+	ld -r -o $@ $^
 
 -include .dep

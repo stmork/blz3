@@ -6,7 +6,7 @@ CPPFLAGS        = $(STDINC) -I$(BLZ3_INCLUDE)
 
 DOCDIR		= $(BLZ3_DOC)
 MANDIR		= $(BLZ3_MAN)
-LIBS		= libB3jpeg.a
+LIBS		= libB3jpeg.o
 
 LIB_SRCS	= jcapimin.c jcapistd.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c \
 	jcinit.c jcmainct.c jcmarker.c jcmaster.c jcomapi.c jcparam.c \
@@ -37,14 +37,8 @@ depend:	$(LIB_SRCS)
 clean:
 	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS)
 
-re:
-	$(AR) $(ARXFLAGS) $(BLZ3_LIB)/libB3tiff.a
-
-lib:	$(LIBS)
-
-$(LIBS):	$(LIB_OBJS)
+libB3jpeg.o:	$(LIB_OBJS)
 	rm -f core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	ld -r -o $@ $^
 
 -include .dep

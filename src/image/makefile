@@ -71,6 +71,6 @@ clean:
 
 libB3Image.o:	$(LIB_OBJ)
 	rm -f core
-	ld -Ur -o $@ $^
+	ld -r -o $@ $^
 
 -include .dep

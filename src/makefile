@@ -19,16 +19,14 @@ SUB_DIRS +=\
 	base\
 	image\
 	raytrace\
-	test_unix\
 	OpenGL\
 	brt3\
-	check
+	test_unix
 
 PRGS	=\
-	test_unix\
 	OpenGL\
 	brt3\
-	check
+	test_unix
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 	+@for i in $(PRGS); do \
@@ -39,8 +37,9 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 
 clean:	remdepend
 	echo "Cleaning up..."
+	find  $(BLZ3_LIB)  -name "*.a"   -exec rm {} \;
 	find  $(BLZ3_HOME) -name "*.log" -exec rm {} \;
-	find  $(BLZ3_HOME) -name "core*"  -exec rm {} \;
+	find  $(BLZ3_HOME) -name "core*" -exec rm {} \;
 
 	+@for i in $(SUB_DIRS); do \
 		echo ""; \
@@ -63,6 +62,9 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		echo ""; \
 		make -C $$i depend; \
 	done
+
+install:	all
+	@$(BLZ3_HOME)/bin/install.sh
 
 resource.h:	$(BLZ3_BIN)/CleanRes
 	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h
@@ -118,7 +120,7 @@ $(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB) lib_raytrace
 	$(RANLIB) $@
 
 $(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_jpeg lib_tiff lib_image lib_base lib_system lib_system_ind
-	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/libB3Image.o base/libB3Base.o system_unix/*.o system/*.o
+	$(AR) $(ARFLAGS) $@ Bjpeg/libB3jpeg.o Btiff/libB3tiff.o image/libB3Image.o base/libB3Base.o system_unix/*.o system/*.o
 	$(RANLIB) $@
 
 lib_system:
@@ -143,6 +145,3 @@ lib_jpeg:
 	+@make -C Bjpeg
 
 libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Raytrace.a $(BLZ3_LIB)/libB3Base.a
-
-install:	all
-	@$(BLZ3_HOME)/bin/install.sh

@@ -6,7 +6,7 @@ CPPFLAGS        = $(STDINC) -I$(BLZ3_INCLUDE)
 
 DOCDIR		= $(BLZ3_DOC)
 MANDIR		= $(BLZ3_MAN)
-LIBS		= libB3tiff.a
+LIBS		= libB3tiff.o
 PRGS		= mkversion mkg3states
 AUTO		= tif_fax3sm.c version.h
 
@@ -86,7 +86,7 @@ LIB_OBJ	= \
 
 # Ziele
 
-all:	lib
+all:	$(LIBS)
 
 depend:	$(AUTO)
 #	makedepend -- $(CPPFLAGS) -- $(SRCS)
@@ -95,12 +95,9 @@ depend:	$(AUTO)
 clean:
 	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS) $(LIBS) $(AUTO) ALL QUIET version.h
 
-lib:	$(LIBS)
-
-$(LIBS): $(LIB_OBJ)
+libB3tiff.o: $(LIB_OBJ)
 	rm -f core
-	$(AR)     $(ARFLAGS) $@ $^
-	$(RANLIB) $@
+	ld -r -o $@ $^
 
 tif_fax3sm.c:	mkg3states
 	mkg3states -c const tif_fax3sm.c

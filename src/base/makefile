@@ -57,6 +57,6 @@ clean:
 
 libB3Base.o:	$(LIB_OBJ)
 	rm -f core
-	ld -Ur -o $@ $^
+	ld -r -o $@ $^
 
 -include .dep
