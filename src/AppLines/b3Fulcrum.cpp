@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2003/02/26 16:36:16  sm
+**      - Sorted drawing colors and added configuration support
+**        to dialog.
+**
 **      Revision 1.8  2003/01/11 12:30:30  sm
 **      - Some additional undo/redo actions
 **
@@ -114,6 +118,11 @@ static b3_gl_line FulcrumIndices[B3_FULCRUM_INDEX_COUNT] =
 	{ 17,19 },   { 19,16 },   { 16,18 }                             // z
 };
 
+b3_color b3Fulcrum::m_GridColor =
+{
+	0,1.0f,0.1f,0.25f
+};
+
 b3Fulcrum::b3Fulcrum()
 {
 	m_Scale      = 1.0;
@@ -155,14 +164,6 @@ void b3Fulcrum::b3ComputeVertices()
 	}
 	glVertexCount = B3_FULCRUM_VERTEX_COUNT;
 	glGridCount   = B3_FULCRUM_INDEX_COUNT;
-}
-
-void b3Fulcrum::b3GetGridColor(b3_color *color)
-{
-	color->r = 1.0f;
-	color->g = 0.1f;
-	color->b = 0.4f;
-	color->a = 0.0f;
 }
 
 void b3Fulcrum::b3Draw(b3RenderContext *context)

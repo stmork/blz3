@@ -25,6 +25,7 @@
 //
 
 #include "blz3/system/b3IntSpinButtonCtrl.h"
+#include "b3SelectColor.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProperties dialog
@@ -32,6 +33,14 @@
 class CDlgProperties : public CDialog
 {
 	CAppLinesApp *m_App;
+	b3_color      m_ColorBg;
+	b3_color      m_ColorCamera;
+	b3_color      m_ColorFulcrum;
+	b3_color      m_ColorObject;
+	b3_color      m_ColorShape;
+	b3_color      m_ColorSelected;
+	b3_color      m_ColorGrid;
+	b3_color      m_ColorPick;
 // Construction
 public:
 	CDlgProperties(CWnd* pParent = NULL);   // standard constructor
@@ -39,6 +48,14 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgProperties)
 	enum { IDD = IDD_PROPERTIES };
+	CB3ColorFieldSelector	m_CtrlColorShape;
+	CB3ColorFieldSelector	m_CtrlColorSelected;
+	CB3ColorFieldSelector	m_CtrlColorPick;
+	CB3ColorFieldSelector	m_CtrlColorObject;
+	CB3ColorFieldSelector	m_CtrlColorGrid;
+	CB3ColorFieldSelector	m_CtrlColorFulcrum;
+	CB3ColorFieldSelector	m_CtrlColorCamera;
+	CB3ColorFieldSelector	m_CtrlColorBg;
 	CSliderCtrl	m_RowRefreshCtrl;
 	CB3IntSpinButtonCtrl	m_PrtBufferCtrl;
 	//}}AFX_DATA
@@ -58,8 +75,19 @@ protected:
 	//{{AFX_MSG(CDlgProperties)
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
+	afx_msg void OnChangeBg();
+	afx_msg void OnChangeCamera();
+	afx_msg void OnChangeFulcrum();
+	afx_msg void OnChangeGrid();
+	afx_msg void OnChangeObject();
+	afx_msg void OnChangePick();
+	afx_msg void OnChangeSelected();
+	afx_msg void OnChangeShape();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+public:
+	static void b3ReadConfig();
 };
 
 //{{AFX_INSERT_LOCATION}}

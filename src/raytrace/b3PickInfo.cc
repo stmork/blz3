@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.5  2003/02/25 19:26:07  sm
 **	- Fixed missing grid update on pick move
-**
+**	
 **	Revision 1.4  2003/02/25 15:56:21  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -57,6 +61,11 @@
 **                        b3PickInfo implementation                     **
 **                                                                      **
 *************************************************************************/
+
+b3_color b3PickInfo::m_GridColor =
+{
+	0,0.7f,0.7f,0.7f
+};
 
 b3PickInfo::b3PickInfo()
 {
@@ -146,5 +155,5 @@ void b3PickInfo::b3ComputeIndices()
 
 void b3PickInfo::b3GetGridColor(b3_color *color)
 {
-	b3Color::b3Init(color,0.7,0.7,0.7);
+	*color = m_GridColor;
 }

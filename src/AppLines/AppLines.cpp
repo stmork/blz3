@@ -57,11 +57,15 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.51  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
 **	- Restructured b3PickInfo
-**
+**	
 **	Revision 1.50  2003/02/22 17:21:31  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -525,9 +529,7 @@ BOOL CAppLinesApp::InitInstance()
 		path = path.Right(path.GetLength() - sub.GetLength() - 1);
 	}
 
-	m_PrintBufferSize = GetProfileInt(b3ClientName(),"print buffer size",32);
-	m_RowRefreshCount = GetProfileInt(b3ClientName(),"row refresh count",B3_DISPLAY_ROWREFRESHCOUNT);
-
+	CDlgProperties::b3ReadConfig();
 	if (m_pDocManager == NULL)
 	{
 		// Add custom doc manager

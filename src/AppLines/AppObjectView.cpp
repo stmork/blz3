@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.15  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
 **	- Restructured b3PickInfo
-**
+**	
 **	Revision 1.14  2003/02/24 17:32:38  sm
 **	- Added further picking support.
 **	- Fixed geometry update delay.
@@ -266,7 +270,7 @@ void CAppObjectView::b3DrawDC(
 	// Set attributes to DC
 	old = dc->SelectObject(&m_RedDash);
 	dc->SetROP2(R2_COPYPEN);
-	dc->SetTextColor(RGB(0xff,0x11,0x44));
+	dc->SetTextColor(b3PickPoint::m_PickColor);
 	dc->SetBkMode(TRANSPARENT);
 
 	// Draw pick points

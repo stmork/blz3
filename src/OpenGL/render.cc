@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3SearchPath.h"
 
 /*************************************************************************
@@ -34,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2003/02/26 16:36:16  sm
+**      - Sorted drawing colors and added configuration support
+**        to dialog.
+**
 **      Revision 1.33  2003/02/22 19:39:34  sm
 **      - Fixed some GCC compile errors in b3TIFF stuff.
 **
@@ -286,7 +291,7 @@ static void b3NextCamera(b3Scene *scene)
 
 static void b3SetupRC()
 {
-	context.b3SetBGColor(0.7,0.7,1.0);
+	b3Color::b3Init(&context.glBgColor,0.7f,0.7f,1.0f);
 	context.b3Init();
 	b3SetLights();
 }

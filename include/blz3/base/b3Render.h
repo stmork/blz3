@@ -50,16 +50,14 @@ public:
 	b3_count         glPolyCount;
 	b3_count         glGridCount;
 	b3_count         glTextureSize;
-	b3_color         glBGColor;
 	b3_bool          glUseSpotLight;
 	b3_bool          glDrawCachedTextures;
+	b3_color         glBgColor;
 
 public:
 	                 b3RenderContext();
 	static  void     b3Init();
 	virtual void     b3StartDrawing();
-	        void     b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b);
-			void     b3SetBGColor(b3_color *color);
 	static  void     b3SetAmbient(b3_color *ambient);
 	static  void     b3LightReset();
 	        void     b3LightDefault();
@@ -196,6 +194,10 @@ protected:
 	b3_f64           glTextureScaleY;
 #endif
 
+public:
+	static b3_color  m_GridColor;
+	static b3_color  m_SelectedColor;
+
 protected:
 
 	                        b3RenderObject();
@@ -219,10 +221,23 @@ protected:
 	        void            b3RecomputeMaterial();
 
 	// Some render overridables
-	virtual b3_render_mode  b3GetRenderMode();
-	virtual void            b3GetGridColor(b3_color *color);
-	virtual void            b3GetSelectedColor(b3_color *color);
+	virtual inline b3_render_mode  b3GetRenderMode()
+	{
+		return B3_RENDER_LINE;
+	}
+
+	virtual inline void b3GetGridColor(b3_color *color)
+	{
+		*color = m_GridColor;
+	}
+
+	virtual inline void b3GetSelectedColor(b3_color *color)
+	{
+		*color = m_SelectedColor;
+	}
+
 	virtual void            b3GetDiffuseColor(b3_color *diffuse);
+
 	virtual b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
 	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
 	virtual b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);

@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.64  2003/02/26 16:36:16  sm
+**      - Sorted drawing colors and added configuration support
+**        to dialog.
+**
 **      Revision 1.63  2003/02/24 19:18:06  sm
 **      - spline control grid drawing completed.
 **
@@ -420,11 +424,11 @@ static GLint light_num[] =
 b3RenderContext::b3RenderContext()
 {
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3RenderContext()\n");
-	b3SetBGColor(0.9,0.9,0.9);
 	b3LightNum();
 	b3LightSpotEnable(false);
 	glDrawCachedTextures = true;
 	glSelectedObject     = null;
+	b3Color::b3Init(&glBgColor,0.8,0.8,0.8);
 }
 
 void b3RenderContext::b3Init()
@@ -599,29 +603,16 @@ b3_bool b3RenderContext::b3LightSet(
 	return result;
 }
 
-void b3RenderContext::b3SetBGColor(b3_color *color)
-{
-	glBGColor = *color;
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetBGColor(%08lx)\n",
-		b3Color::b3GetColor(&glBGColor));
-}
-
-void b3RenderContext::b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b)
-{
-	glBGColor.a = 0;
-	glBGColor.r = r;
-	glBGColor.g = g;
-	glBGColor.b = b;
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetBGColor(%08lx)\n",
-		b3Color::b3GetColor(&glBGColor));
-}
 
 void b3RenderContext::b3StartDrawing()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3StartDrawing()\n");
 
-	glClearColor(glBGColor.r,glBGColor.g,glBGColor.b,1.0 - glBGColor.a);
+	glClearColor(
+		glBgColor.r,
+		glBgColor.g,
+		glBgColor.b,1.0 - glBgColor.a);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 #endif
 }
@@ -986,21 +977,21 @@ void b3RenderObject::b3TransformVertices(
 static b3Tx    glTextureBuffer;
 static b3Mutex glTextureMutex;
 
+b3_color b3RenderObject::m_GridColor =
+{
+	0,0.2f,0.2f,0.2f
+};
+
+b3_color b3RenderObject::m_SelectedColor =
+{
+	0,1.0f,0.1f,0.25f
+};
+
 void b3RenderObject::b3RecomputeMaterial()
 {
 #ifdef BLZ3_USE_OPENGL
 	glMaterialComputed = false;
 #endif
-}
-
-void b3RenderObject::b3GetGridColor(b3_color *color)
-{
-	b3Color::b3Init(color,  0.2f, 0.2f, 0.2f);
-}
-
-void b3RenderObject::b3GetSelectedColor(b3_color *color)
-{
-	b3Color::b3Init(color,  1.0f, 0.1f, 0.25f);
 }
 
 void b3RenderObject::b3GetDiffuseColor(b3_color *diffuse)
@@ -1036,11 +1027,6 @@ b3Tx *b3RenderObject::b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,
 b3_bool b3RenderObject::b3GetImage(b3Tx *image)
 {
 	return false;
-}
-
-b3_render_mode b3RenderObject::b3GetRenderMode()
-{
-	return B3_RENDER_LINE;
 }
 
 void b3RenderObject::b3DefineTexture()

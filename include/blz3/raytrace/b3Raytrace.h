@@ -990,7 +990,6 @@ public:
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void            b3GetGridColor(b3_color *color);
 	void            b3GetDiffuseColor(b3_color *color);
 	b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
 	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
@@ -1672,7 +1671,10 @@ public:
 	char             m_BoxName[B3_BOXSTRINGLEN];   // object name
 	char             m_BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
-	b3_gl_vertex    bbox_vertex[8];
+	b3_gl_vertex     m_BBoxVertex[8];
+
+	static b3_color  m_GridColor;
+	static b3_bool   m_GridVisible;
 
 public:
 	B3_ITEM_INIT(b3BBox);
@@ -1723,7 +1725,15 @@ public:
 	}
 
 protected:
-	       void            b3GetGridColor(b3_color *color);
+	inline void            b3GetGridColor(b3_color *color)
+	{
+		*color = m_GridColor;
+	}
+
+	inline b3_render_mode  b3GetRenderMode()
+	{
+		return b3IsActive() ? B3_RENDER_LINE : B3_RENDER_NOTHING;
+	}
 };
 
 #define BBB_HTML         0

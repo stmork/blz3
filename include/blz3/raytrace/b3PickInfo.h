@@ -42,6 +42,7 @@ protected:
 
 public:
 	b3_pick_mode     m_AllowedMode;
+	static b3_color  m_GridColor;
 
 public:
 	                 b3PickInfo();

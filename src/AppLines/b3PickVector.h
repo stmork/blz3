@@ -1,3 +1,4 @@
+
 /*
 **
 **	$Filename:	b3PickVector.h $
@@ -32,6 +33,9 @@ class b3PickPoint : public b3Pick
 protected:
 	b3RenderView   *m_RenderView;
 	b3_vector       m_StartVector;
+
+public:
+	static COLORREF m_PickColor;
 
 public:
 	b3PickPoint(

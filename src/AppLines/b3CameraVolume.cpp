@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2003/02/26 16:36:16  sm
+**      - Sorted drawing colors and added configuration support
+**        to dialog.
+**
 **      Revision 1.9  2003/01/11 12:30:30  sm
 **      - Some additional undo/redo actions
 **
@@ -92,6 +96,11 @@ static b3_gl_line VolumeIndices[B3_CV_INDEX_COUNT] =
 	{ 0, 1 }, { 1, 2 }, { 2, 3}, { 3, 0 },  // border
 	{ 4, 5 },                               // view axis
 	{ 4, 6 }, { 4, 7 }, { 4, 8}, { 4, 9 }   // camera edges
+};
+
+b3_color b3CameraVolume::m_GridColor =
+{
+	0,1.0f,0.1f,0.25f
 };
 
 b3CameraVolume::b3CameraVolume()
@@ -166,14 +175,6 @@ void b3CameraVolume::b3FreeVertices()
 	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
-}
-
-void b3CameraVolume::b3GetGridColor(b3_color *color)
-{
-	color->r = 1.0f;
-	color->g = 0.1f;
-	color->b = 0.4f;
-	color->a = 0.0f;
 }
 
 void b3CameraVolume::b3Draw(b3RenderContext *context)

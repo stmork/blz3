@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.62  2003/02/26 16:36:16  sm
+**      - Sorted drawing colors and added configuration support
+**        to dialog.
+**
 **      Revision 1.61  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -628,11 +632,6 @@ b3_f64 b3Shape::b3GetColors(
 	}
 
 	return b3RenderObject::b3GetColors(ambient,diffuse,specular);
-}
-
-void b3Shape::b3GetGridColor(b3_color *color)
-{
-	b3Color::b3Init(color, 0.2f, 0.2f, 0.2f);
 }
 
 b3_bool b3Shape::b3GetChess(

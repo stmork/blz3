@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.5  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 **	Revision 1.4  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
 **	
@@ -61,6 +65,8 @@
 **                                                                      **
 *************************************************************************/
 
+COLORREF b3PickPoint::m_PickColor = RGB(0xff,0x11,0x44);
+
 b3PickPoint::b3PickPoint(
 	b3RenderView   *renderview,
 	b3_vector      *pos,
@@ -84,7 +90,7 @@ void b3PickPoint::b3Draw(b3DrawContext *dc)
 		m_y - b3PickBase::m_PickSize,
 		b3PickBase::m_PickSize * 2 + 1,
 		b3PickBase::m_PickSize * 2 + 1,
-		RGB(255,16,64));
+		m_PickColor);
 	dc->TextOut(m_x + 3,m_y - 4,m_Text);
 }
 

@@ -35,13 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.21  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.20  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -146,6 +150,11 @@ BEGIN_MESSAGE_MAP(CAppRenderDoc, CB3LinesDocument)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_REDO, OnUpdateEditRedo)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+b3_color CAppRenderDoc::m_BgColor =
+{
+	0,0.9f,0.9f,0.9f
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppRenderDoc construction/destruction

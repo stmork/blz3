@@ -35,12 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.81  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.80  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.79  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -429,7 +433,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_gl_line bbox_indices[12 * 2] =
+static b3_gl_line m_BBoxIndices[12 * 2] =
 {
 	{ 0,1 },
 	{ 1,2 },
@@ -444,6 +448,13 @@ static b3_gl_line bbox_indices[12 * 2] =
 	{ 2,6 },
 	{ 3,7 }
 };
+
+b3_color b3BBox::m_GridColor =
+{
+	0,0.4f,0.4f,0.4f
+};
+
+b3_bool b3BBox::m_GridVisible = true;
 
 void b3InitBBox::b3Init()
 {
@@ -673,8 +684,8 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	glGridCount   = 12;
 	glPolyCount   =  0;
 
-	glVertex   = bbox_vertex;
-	glGrids    = bbox_indices;
+	glVertex   = m_BBoxVertex;
+	glGrids    = m_BBoxIndices;
 	glPolygons = null;
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
@@ -718,37 +729,37 @@ void b3BBox::b3FreeVertices()
 
 void b3BBox::b3ComputeVertices()
 {
-	bbox_vertex[0].v.x = m_DimBase.x;
-	bbox_vertex[0].v.y = m_DimBase.y;
-	bbox_vertex[0].v.z = m_DimBase.z;
+	m_BBoxVertex[0].v.x = m_DimBase.x;
+	m_BBoxVertex[0].v.y = m_DimBase.y;
+	m_BBoxVertex[0].v.z = m_DimBase.z;
 
-	bbox_vertex[1].v.x = m_DimBase.x;
-	bbox_vertex[1].v.y = m_DimBase.y;
-	bbox_vertex[1].v.z = m_DimBase.z + m_DimSize.z;
+	m_BBoxVertex[1].v.x = m_DimBase.x;
+	m_BBoxVertex[1].v.y = m_DimBase.y;
+	m_BBoxVertex[1].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertex[2].v.x = m_DimBase.x + m_DimSize.x;
-	bbox_vertex[2].v.y = m_DimBase.y;
-	bbox_vertex[2].v.z = m_DimBase.z + m_DimSize.z;
+	m_BBoxVertex[2].v.x = m_DimBase.x + m_DimSize.x;
+	m_BBoxVertex[2].v.y = m_DimBase.y;
+	m_BBoxVertex[2].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertex[3].v.x = m_DimBase.x + m_DimSize.x;
-	bbox_vertex[3].v.y = m_DimBase.y;
-	bbox_vertex[3].v.z = m_DimBase.z;
+	m_BBoxVertex[3].v.x = m_DimBase.x + m_DimSize.x;
+	m_BBoxVertex[3].v.y = m_DimBase.y;
+	m_BBoxVertex[3].v.z = m_DimBase.z;
 
-	bbox_vertex[4].v.x = m_DimBase.x;
-	bbox_vertex[4].v.y = m_DimBase.y + m_DimSize.y;
-	bbox_vertex[4].v.z = m_DimBase.z;
+	m_BBoxVertex[4].v.x = m_DimBase.x;
+	m_BBoxVertex[4].v.y = m_DimBase.y + m_DimSize.y;
+	m_BBoxVertex[4].v.z = m_DimBase.z;
 
-	bbox_vertex[5].v.x = m_DimBase.x;
-	bbox_vertex[5].v.y = m_DimBase.y + m_DimSize.y;
-	bbox_vertex[5].v.z = m_DimBase.z + m_DimSize.z;
+	m_BBoxVertex[5].v.x = m_DimBase.x;
+	m_BBoxVertex[5].v.y = m_DimBase.y + m_DimSize.y;
+	m_BBoxVertex[5].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertex[6].v.x = m_DimBase.x + m_DimSize.x;
-	bbox_vertex[6].v.y = m_DimBase.y + m_DimSize.y;
-	bbox_vertex[6].v.z = m_DimBase.z + m_DimSize.z;
+	m_BBoxVertex[6].v.x = m_DimBase.x + m_DimSize.x;
+	m_BBoxVertex[6].v.y = m_DimBase.y + m_DimSize.y;
+	m_BBoxVertex[6].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertex[7].v.x = m_DimBase.x + m_DimSize.x;
-	bbox_vertex[7].v.y = m_DimBase.y + m_DimSize.y;
-	bbox_vertex[7].v.z = m_DimBase.z;
+	m_BBoxVertex[7].v.x = m_DimBase.x + m_DimSize.x;
+	m_BBoxVertex[7].v.y = m_DimBase.y + m_DimSize.y;
+	m_BBoxVertex[7].v.z = m_DimBase.z;
 
 	glVertexCount = 8;
 	glComputed    = true;
@@ -756,11 +767,6 @@ void b3BBox::b3ComputeVertices()
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)
 {
-}
-
-void b3BBox::b3GetGridColor(b3_color *color)
-{
-	b3Color::b3Init(color,0.5,0.5,0.5);
 }
 
 void b3BBox::b3Draw(b3RenderContext *context)

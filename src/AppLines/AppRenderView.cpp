@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2003/02/26 16:36:16  sm
+**	- Sorted drawing colors and added configuration support
+**	  to dialog.
+**
 **	Revision 1.24  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
 **	- Restructured b3PickInfo
-**
+**	
 **	Revision 1.23  2003/01/28 16:49:09  sm
 **	- Added undo/redo picking
 **	- Fixed pick drawing problem with nVidia hardware
@@ -438,7 +442,7 @@ void CAppRenderView::OnPaint()
 
 	// Init Drawing
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
-	pDoc->m_Context.b3SetBGColor(0.8,0.8,0.8);
+	pDoc->m_Context.glBgColor = CAppRenderDoc::m_BgColor;
 	pDoc->m_Context.glDrawCachedTextures = true;
 
 	GetClientRect(&rect);
@@ -636,7 +640,7 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 
 	// Do it!
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
-	pDoc->m_Context.b3SetBGColor(1,1,1);
+	b3Color::b3Init(&pDoc->m_Context.glBgColor,1,1,1);
 	pDoc->m_Context.glDrawCachedTextures = false;
 
 	// The pages are enumerated from [1..max]

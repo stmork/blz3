@@ -30,6 +30,9 @@ class b3Fulcrum : public b3RenderObject
 	b3_gl_vertex  m_Vertex[B3_FULCRUM_VERTEX_COUNT];
 
 public:
+	static b3_color m_GridColor;
+ 
+public:
 	         b3Fulcrum();
 	void     b3Update(b3_vector *fulcrum);
 	void     b3AllocVertices(b3RenderContext *context);
@@ -37,8 +40,12 @@ public:
 	void     b3Draw(b3RenderContext *context);
 
 protected:
-	void     b3GetGridColor(b3_color *color);
 	void     b3ComputeVertices();
+
+	inline void b3GetGridColor(b3_color *color)
+	{
+		*color = m_GridColor;
+	}
 };
 
 #endif

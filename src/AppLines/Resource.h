@@ -346,11 +346,17 @@
 #define IDC_MOVE_UP                     32120
 #define IDC_NEB_COLOR                   32121
 #define IDC_NEB_DISTANCE                32122
+#define IDC_COLOR_CAMERA                32122
 #define IDC_NEB_PREVIEW                 32123
+#define IDC_COLOR_OBJECT                32123
 #define IDC_NEW_ITEM_NAME               32124
+#define IDC_COLOR_GRID                  32124
 #define IDC_NUM_COPIES                  32125
+#define IDC_COLOR_PICK                  32125
 #define IDC_NUM_COPYIES_SPIN            32126
+#define IDC_COLOR_SELECTED              32126
 #define IDC_OBJECTLIST                  32127
+#define IDC_COLOR_SHAPE                 32127
 #define IDC_OBLIQUE                     32128
 #define IDC_OBLIQUE_SPIN                32129
 #define IDC_OFFSET_X                    32130
@@ -484,6 +490,16 @@
 #define IDC_Y_START_LEGEND              32258
 #define IDC_Y_START_SPIN                32259
 #define IDC_UNDO_REDO_LIST              32260
+#define IDC_COLOR_BG                    32263
+#define IDC_COLOR_FULCRUM               32264
+#define IDC_CHANGE_BG                   32265
+#define IDC_CHANGE_CAMERA               32266
+#define IDC_CHANGE_FULCRUM              32267
+#define IDC_CHANGE_OBJECT               32268
+#define IDC_CHANGE_SHAPE                32269
+#define IDC_CHANGE_SELECTED             32270
+#define IDC_CHANGE_PICK                 32271
+#define IDC_CHANGE_GRID                 32272
 #define IDS_ASK_DELETE_CAMERA           60000
 #define IDS_ASK_DELETE_LIGHT            60001
 #define IDS_ASK_DELETE_OBJECT           60002
@@ -648,7 +664,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10118
-#define _APS_NEXT_CONTROL_VALUE         32263
+#define _APS_NEXT_CONTROL_VALUE         32266
 #define _APS_NEXT_SYMED_VALUE           60145
 #endif
 #endif
