@@ -517,7 +517,7 @@ public:
 		   void  b3RemoveIFW (b3Base<b3TIFF_Entry> *);
 		   long  b3OrgTags   (long);
 		   long  b3OrgStrips (long);
-	friend int   b3SortTags  (b3TIFF_Entry *a,b3TIFF_Entry *b,const void *ptr);
+	static int   b3SortTags  (b3TIFF_Entry *a,b3TIFF_Entry *b,const void *ptr);
 
 public:
 	class b3Error {};
@@ -586,7 +586,7 @@ public:
 
 typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
 
-extern void          b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr = null);
+// void          b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr = null);
 
 // b3Node classes
 #define CLASS_TIFF_HEAD  0x40000

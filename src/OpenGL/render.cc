@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2003/02/22 19:39:34  sm
+**      - Fixed some GCC compile errors in b3TIFF stuff.
+**
 **      Revision 1.32  2003/02/20 16:34:47  sm
 **      - Some logging cleanup
 **      - New base class for b3CPU (b3CPUBase)
@@ -421,8 +424,8 @@ int main(int argc,char *argv[])
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 
-		texture_pool.b3AddPath(textures);
-		texture_pool.b3AddPath(pictures);
+		b3Scene::m_TexturePool.b3AddPath(textures);
+		b3Scene::m_TexturePool.b3AddPath(pictures);
 
 		filename = (const char *)argv[1];
 		world = new b3World();

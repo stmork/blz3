@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2003/02/22 19:39:34  sm
+**	- Fixed some GCC compile errors in b3TIFF stuff.
+**
 **	Revision 1.38  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.37  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -314,8 +317,8 @@ int main(int argc,char *argv[])
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
-		texture_pool.b3AddPath(textures);
-		texture_pool.b3AddPath(pictures);
+		b3Scene::m_TexturePool.b3AddPath(textures);
+		b3Scene::m_TexturePool.b3AddPath(pictures);
 		world = new b3World();
 		world->b3AddPath(data);
 

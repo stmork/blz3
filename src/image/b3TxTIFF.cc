@@ -36,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/22 19:39:34  sm
+**	- Fixed some GCC compile errors in b3TIFF stuff.
+**
 **	Revision 1.7  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.6  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
@@ -479,7 +482,7 @@ long b3TIFF_Dir::b3OrgTags(long act_offset)
 		num++;
 	}
 
-	tags.b3Sort (b3SortTags,null);
+	tags.b3Sort (b3TIFF_Entry::b3SortTags,null);
 	act_offset += (sizeof(short) + sizeof(long));
 	b3LogTIFF ("  Dir:   %6ld # %ld tags, %ld strips\n",
 		offset,num,stripNum);
@@ -1135,7 +1138,7 @@ static long WriteIFW (
 }
 #endif
 
-static int b3SortTags (
+int b3TIFF_Entry::b3SortTags (
 	      b3TIFF_Entry *a,
 	      b3TIFF_Entry *b,
 	const void         *ptr)
