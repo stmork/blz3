@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2004/04/23 18:46:17  sm
+**	- Fixed bump sampler: Now using initialized derivativs
+**
 **	Revision 1.26  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	Revision 1.25  2004/04/18 09:13:50  sm
 **	- Removed hardwired values.
 **	- Now we have congruent material and bump oakpank structure.
@@ -699,7 +702,7 @@ b3BumpWooden::b3BumpWooden(b3_u32 *src) : b3Bump(src)
 b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood),class_type)
 {
 	m_Flags = 0;
-	m_Amplitude = 0.3f;
+	m_Amplitude = 0.003f;
 	m_dX = 1.0 / BUMP_dX;
 	m_dY = 1.0 / BUMP_dY;
 

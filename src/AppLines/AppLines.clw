@@ -175,9 +175,9 @@ Class95=CPageWood
 Class96=CPageMaterial
 Resource67=IDD_PAGE_BUMP
 Class97=CPageBump
-Resource68=IDR_MAINFRAME
+Resource68=IDD_PAGE_MAT_WOOD
 Class98=CPageMatWood
-Resource69=IDD_PAGE_MAT_WOOD
+Resource69=IDR_MAINFRAME
 
 [CLS:CB3App]
 Type=0

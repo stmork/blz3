@@ -23,7 +23,6 @@
 
 #include "AppLines.h"
 #include "DlgMatWood.h"
-#include "b3ExampleScene.h"
 #include "blz3/system/b3Plugin.h"
 
 /*************************************************************************
@@ -34,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/04/23 18:46:17  sm
+**	- Fixed bump sampler: Now using initialized derivativs
+**
 **	Revision 1.9  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
-**
+**	
 **	Revision 1.8  2004/04/22 20:23:56  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.

@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/23 18:46:17  sm
+**	- Fixed bump sampler: Now using initialized derivativs
+**
 **	Revision 1.3  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler
-**
+**	
 **	Revision 1.2  2004/04/19 17:52:00  sm
 **	- Compile fix for Intel compiler.
 **	
@@ -109,6 +112,7 @@ void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 	b3_pkd_color *data = info->m_Data;
 
 	ray.bbox = &bbox;
+	b3Vector::b3Init(&ray.xDeriv,1.0,0.0,0.0);
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;
@@ -130,6 +134,7 @@ void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 			ray.normal.y = -BUMP_SLOPE * ix;
 			ray.normal.z = sqrt(1 - ray.normal.y * ray.normal.y);
 
+			b3Vector::b3Init(&ray.yDeriv,0,-ray.normal.z,ray.normal.x);
 			bump->b3BumpNormal(&ray);
 			b3Vector::b3Init(&normal,&ray.normal);
 			angle   = b3Vector::b3AngleOfVectors(&m_Light,&normal);

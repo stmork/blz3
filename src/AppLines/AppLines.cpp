@@ -57,11 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2004/04/23 18:46:17  sm
+**	- Fixed bump sampler: Now using initialized derivativs
+**
 **	Revision 1.63  2004/04/22 20:23:55  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
 **	- Expand root item of tree view in object editor
-**
+**	
 **	Revision 1.62  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler
@@ -1048,16 +1051,16 @@ BOOL CAboutDlg::OnInitDialog()
 #endif
 
 #ifdef DLG_TEST
-#include "DlgMatWood.h"
+#include "DlgBumpWood.h"
 #endif
 
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3MatWood material = WOOD;
+	b3BumpWood bump = BUMP_WOOD;
 
-	CDlgMatWood::b3Edit(&material);
+	CDlgBumpWood::b3Edit(&bump);
 #else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
