@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2003/07/22 19:12:34  sm
+**	- Raytracing items should be registered in Lines, too!
+**
 **	Revision 1.56  2003/07/12 17:44:46  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.55  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
 **	
@@ -552,6 +555,7 @@ BOOL CAppLinesApp::InitInstance()
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
 	b3SetupSearchPath(b3Scene::m_TexturePool,path);
 
+	b3RaytracingItems::b3Register();
 	b3StaticPluginInfoInit::b3Init();
 	path = GetProfileString(b3ClientName(),"plugin search path","");
 	b3SetupSearchPath(plugins,path);
