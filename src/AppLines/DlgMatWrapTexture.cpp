@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.7  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.6  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
@@ -206,7 +209,7 @@ void CDlgMatWrapTexture::OnUnitChanged()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	b3UpdateUI();
+	b3Preview();
 }
 
 void CDlgMatWrapTexture::OnLimitChanged() 
@@ -225,7 +228,11 @@ void CDlgMatWrapTexture::OnChangeTexturePath()
 	// TODO: Add your command handler code here
 	if (CB3SelectLoadTexture::b3Select(&m_Material->m_Texture,m_Material->m_Name))
 	{
-		((b3Tx *)m_PreviewTexture)->b3Copy(m_Material->m_Texture);
-		b3UpdateUI();
+		if (!m_AutoRefresh)
+		{
+			m_PreviewTexture.b3Copy(m_Material->m_Texture);
+			m_PreviewTexture.b3Update(true,true);
+		}
+		b3Preview();
 	}
 }

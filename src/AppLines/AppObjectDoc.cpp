@@ -40,6 +40,9 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.37  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -47,7 +50,7 @@
 **	- Check for empty textures inside OpenGL subsystem. May this
 **	  be ticket no. 21?
 **	- Animation values initialization fix.
-**
+**	
 **	Revision 1.36  2004/06/20 15:33:10  sm
 **	- Update material when edited.
 **	
@@ -1071,51 +1074,86 @@ void CAppObjectDoc::b3CopyMaterialToBump()
 		return;
 	}
 
-	if (shape->b3GetMaterialHead()->b3GetCount() != 1)
+	shape->b3GetBumpHead()->b3Free();
+	B3_FOR_BASE(shape->b3GetMaterialHead(),src)
 	{
-		return;
-	}
+		switch(src->b3GetClassType())
+		{
+		case TEXTURE:
+			dst = b3World::b3AllocNode(BUMP_TEXTURE);
+			if (dst != null)
+			{
+				b3MatTexture  *material = (b3MatTexture *)src;
+				b3BumpTexture *bump     = (b3BumpTexture *)dst;
+				
+				bump->m_xStart = material->m_xStart;
+				bump->m_yStart = material->m_yStart;
+				bump->m_xScale = material->m_xScale;
+				bump->m_yScale = material->m_yScale;
+				bump->m_xTimes = material->m_xTimes;
+				bump->m_yTimes = material->m_yTimes;
+				bump->m_Flags  = material->m_Flags;
+				strcpy(bump->m_Name,material->m_Name);
+			}
+			break;
 
-	src = shape->b3GetMaterialHead()->First;
-	switch(src->b3GetClassType())
-	{
-	case WOOD:
-		dst = b3EnsureSingleItem(shape->b3GetBumpHead(),BUMP_WOOD);
+		case MARBLE:
+			dst = b3World::b3AllocNode(BUMP_MARBLE);
+			if (dst != null)
+			{
+				b3MatMarble  *material   = (b3MatMarble *)src;
+				b3BumpMarble *bump       = (b3BumpMarble *)dst;
+				b3Scaling    *srcScaling = material;
+				b3Scaling    *dstScaling = bump;
+
+				*dstScaling  = *srcScaling;
+			}
+			break;
+
+		case WOOD:
+			dst = b3World::b3AllocNode(BUMP_WOOD);
+			if (dst != null)
+			{
+				b3MatWood  *material   = (b3MatWood *)src;
+				b3BumpWood *bump       = (b3BumpWood *)dst;
+				b3Wood     *srcWood    = material;
+				b3Scaling  *srcScaling = material;
+				b3Wood     *dstWood    = bump;
+				b3Scaling  *dstScaling = bump;
+
+				*dstWood     = *srcWood;
+				*dstScaling  = *srcScaling;
+			}
+			break;
+
+		case OAKPLANK:
+			dst = b3World::b3AllocNode(BUMP_OAKPLANK);
+			if (dst != null)
+			{
+				b3MatOakPlank  *material    = (b3MatOakPlank *)src;
+				b3BumpOakPlank *bump        = (b3BumpOakPlank *)dst;
+				b3Wood         *srcWood     = material;
+				b3OakPlank     *srcOakPlank = material;
+				b3Scaling      *srcScaling  = material;
+				b3Wood         *dstWood     = bump;
+				b3OakPlank     *dstOakPlank = bump;
+				b3Scaling      *dstScaling  = bump;
+
+				*dstWood     = *srcWood;
+				*dstOakPlank = *srcOakPlank;
+				*dstScaling  = *srcScaling;
+			}
+			break;
+
+		default:
+			dst = null;
+			break;
+		}
+
 		if (dst != null)
 		{
-			b3MatWood  *material   = (b3MatWood *)src;
-			b3BumpWood *bump       = (b3BumpWood *)dst;
-			b3Wood     *srcWood    = material;
-			b3Scaling  *srcScaling = material;
-			b3Wood     *dstWood    = bump;
-			b3Scaling  *dstScaling = bump;
-
-			*dstWood     = *srcWood;
-			*dstScaling  = *srcScaling;
+			shape->b3GetBumpHead()->b3Append(dst);
 		}
-		break;
-
-	case OAKPLANK:
-		dst = b3EnsureSingleItem(shape->b3GetBumpHead(),BUMP_OAKPLANK);
-		if (dst != null)
-		{
-			b3MatOakPlank  *material    = (b3MatOakPlank *)src;
-			b3BumpOakPlank *bump        = (b3BumpOakPlank *)dst;
-			b3Wood         *srcWood     = material;
-			b3OakPlank     *srcOakPlank = material;
-			b3Scaling      *srcScaling  = material;
-			b3Wood         *dstWood     = bump;
-			b3OakPlank     *dstOakPlank = bump;
-			b3Scaling      *dstScaling  = bump;
-
-			*dstWood     = *srcWood;
-            *dstOakPlank = *srcOakPlank;
-			*dstScaling  = *srcScaling;
-		}
-		break;
-
-	default:
-		break;
 	}
 }
 
@@ -1129,14 +1167,17 @@ void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	b3Shape *shape = b3GetSelectedShape();
+	b3Item  *item;
 	b3_bool  enabled = false;
 
 	if (shape != null)
 	{
-		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
+		B3_FOR_BASE (shape->b3GetMaterialHead(),item)
 		{
-			switch(shape->b3GetMaterialHead()->First->b3GetClassType())
+			switch(item->b3GetClassType())
 			{
+			case TEXTURE:
+			case MARBLE:
 			case WOOD:
 			case OAKPLANK:
 				enabled = true;

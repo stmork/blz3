@@ -2189,6 +2189,8 @@ BEGIN
     CONTROL         "Spin2",IDC_Y_TIMES_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
                     UDS_ARROWKEYS | UDS_NOTHOUSANDS,335,70,11,14
+    LTEXT           "x Wiederholung",IDC_STATIC,295,30,50,8
+    LTEXT           "y Wiederholung",IDC_STATIC,295,60,50,8
 END
 
 IDD_MAT_MARBLE DIALOG DISCARDABLE  0, 0, 417, 255
@@ -2760,6 +2762,8 @@ BEGIN
     CONTROL         "Spin1",IDC_SPIN_AMPLITUDE,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,50,20,11,14
+    LTEXT           "x Wiederholung",IDC_STATIC,295,30,50,8
+    LTEXT           "y Wiederholung",IDC_STATIC,295,60,50,8
 END
 
 IDD_BUMP_GLOSSY DIALOG DISCARDABLE  0, 0, 142, 221
@@ -3720,7 +3724,7 @@ BEGIN
     IDS_STENCIL_END_UNIT    "rel. Maximum"
     IDS_STENCIL_LEN_ANGLE   "Winkel"
     IDS_STENCIL_LEN_LENGTH  "Länge"
-    IDS_STENCIL_LEN_UNIT    "re. Länge"
+    IDS_STENCIL_LEN_UNIT    "rel. Länge"
     IDS_STENCIL_START_ANGLE "Startwinkel"
     IDS_STENCIL_START_LENGTH "Startlänge"
     IDS_STENCIL_START_UNIT  "rel. Minimum"

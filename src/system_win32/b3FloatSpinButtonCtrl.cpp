@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.13  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.12  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -252,6 +255,12 @@ void CB3FloatSpinButtonCtrl::b3SetUnit(b3_unit unit)
 		b3SetRange(1.0,100000);
 		b3SetIncrement(10.0);
 		b3SetDigits(0,1);
+		break;
+
+	case B3_UNIT_BUMP:
+		b3SetRange(0.0,5.0);
+		b3SetIncrement(0.001);
+		b3SetDigits(4,1);
 		break;
 	}
 }

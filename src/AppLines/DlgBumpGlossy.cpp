@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.3  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.2  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	
@@ -73,7 +76,7 @@ CDlgBumpGlossy::CDlgBumpGlossy(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent 
 	//{{AFX_DATA_INIT(CDlgBumpGlossy)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
+	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_BUMP);
 }
 
 CDlgBumpGlossy::~CDlgBumpGlossy()

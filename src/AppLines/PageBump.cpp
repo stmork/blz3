@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.5  2004/04/24 20:15:51  sm
 **	- Further slide material dialog development
 **	
@@ -68,7 +71,7 @@ CPageBump::CPageBump() : CB3PropertyPage(CPageBump::IDD)
 	//{{AFX_DATA_INIT(CPageBump)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
+	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_BUMP);
 }
 
 CPageBump::~CPageBump()

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.3  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.2  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	
@@ -75,7 +78,7 @@ CDlgBumpTexture::CDlgBumpTexture(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent
 	//{{AFX_DATA_INIT(CDlgBumpTexture)
 	m_Unit = 1;
 	//}}AFX_DATA_INIT
-	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
+	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_BUMP);
 	m_xTimesCtrl.b3SetRange(1,100);
 	m_yTimesCtrl.b3SetRange(1,100);
 }
@@ -151,9 +154,9 @@ BOOL CDlgBumpTexture::OnInitDialog()
 {
 	// Init legends
 	m_xStart.b3Init(&m_xStartCtrl, &m_xStartLegend, &m_Bound.xInfo,B3_COND_CTRL_START);
-	m_xScale.b3Init(&m_xScaleCtrl, &m_xScaleLegend, &m_Bound.xInfo,B3_COND_CTRL_LEN);
+	m_xScale.b3Init(&m_xScaleCtrl, &m_xScaleLegend, &m_Bound.xInfo,B3_COND_CTRL_DIR);
 	m_yStart.b3Init(&m_yStartCtrl, &m_yStartLegend, &m_Bound.yInfo,B3_COND_CTRL_START);
-	m_yScale.b3Init(&m_yScaleCtrl, &m_yScaleLegend, &m_Bound.yInfo,B3_COND_CTRL_LEN);
+	m_yScale.b3Init(&m_yScaleCtrl, &m_yScaleLegend, &m_Bound.yInfo,B3_COND_CTRL_DIR);
 
 	CB3SimplePreviewDialog::OnInitDialog();
 	
@@ -188,7 +191,7 @@ void CDlgBumpTexture::OnUnitChanged()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	b3UpdateUI();
+	b3Preview();
 }
 
 void CDlgBumpTexture::OnLimitChanged() 
@@ -208,6 +211,6 @@ void CDlgBumpTexture::OnChangeTexturePath()
 	if (CB3SelectLoadTexture::b3Select(&m_Bump->m_Texture,m_Bump->m_Name))
 	{
 		((b3Tx *)m_PreviewTexture)->b3Copy(m_Bump->m_Texture);
-		b3UpdateUI();
+		b3Preview();
 	}
 }

@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.3  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -39,7 +42,7 @@
 **	- Check for empty textures inside OpenGL subsystem. May this
 **	  be ticket no. 21?
 **	- Animation values initialization fix.
-**
+**	
 **	Revision 1.2  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
@@ -156,14 +159,15 @@ void b3ConditionControl::b3SetPos(
 		max = m_Info->max;
 		break;
 
-	case B3_COND_CTRL_DIR:
-		min =  -10;
-		max =   10;
+	case B3_COND_CTRL_LEN:
+		min =    0;
+		max =  100;
 		break;
 
+	case B3_COND_CTRL_DIR:
 	default:
-		min = -100;
-		max =  100;
+		min =  -100;
+		max =   100;
 		break;
 	}
 

@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/06/28 18:42:34  sm
+**	- Corrected some input types of texture dialogs.
+**
 **	Revision 1.9  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -42,7 +45,7 @@
 **	- Check for empty textures inside OpenGL subsystem. May this
 **	  be ticket no. 21?
 **	- Animation values initialization fix.
-**
+**	
 **	Revision 1.8  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -225,7 +228,7 @@ void CDlgMatTexture::OnUnitChanged()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	b3UpdateUI();
+	b3Preview();
 }
 
 void CDlgMatTexture::OnLimitChanged() 
@@ -245,6 +248,6 @@ void CDlgMatTexture::OnChangeTexturePath()
 	if (CB3SelectLoadTexture::b3Select(&m_Material->m_Texture,m_Material->m_Name))
 	{
 		((b3Tx *)m_PreviewTexture)->b3Copy(m_Material->m_Texture);
-		b3UpdateUI();
+		b3Preview();
 	}
 }
