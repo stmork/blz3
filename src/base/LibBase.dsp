@@ -129,6 +129,10 @@ SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Pick.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Procedure.cc
 # End Source File
 # Begin Source File
@@ -165,6 +169,10 @@ SOURCE=..\..\include\blz3\base\b3Cubic.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Display.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Endian.h
 # End Source File
 # Begin Source File
@@ -185,11 +193,19 @@ SOURCE=..\..\include\blz3\base\b3Nurbs.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Pick.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Procedure.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Render.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3SearchPath.h
 # End Source File
 # Begin Source File
 

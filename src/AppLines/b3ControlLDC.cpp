@@ -25,6 +25,7 @@
 
 #define SEGMENTS 6
 #define LINES_PER_SEGMENT 3
+#define B3_PICK_SIZE 1
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/04 18:23:25  sm
+**	- Drawing LDC correctly
+**	- Added pick point support.
+**
 **	Revision 1.1  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
-**
+**	
 **	
 */
 
@@ -46,51 +51,93 @@
 **                                                                      **
 *************************************************************************/
 
+class b3PickLDC : public b3Pick
+{
+	b3_vector *m_Control;
+	b3_res     m_xMax;
+	b3_res     m_yMax;
+public:
+	b3PickLDC(b3_vector *control,b3_res xMax,b3_res yMax) : b3Pick(0,0)
+	{
+		m_Control = control;
+		m_xMax = xMax;
+		m_yMax = yMax;
+		m_x    = m_xMax * (0.5 + m_Control->x * 0.5);
+		m_y    = m_yMax * (1.0 - m_Control->y);
+	}
+
+	void b3Draw(b3DrawContext *dc)
+	{
+		dc->FillSolidRect(
+			m_x - B3_PICK_SIZE,m_y - B3_PICK_SIZE,
+			B3_PICK_SIZE * 2 + 1,B3_PICK_SIZE * 2 + 1,
+			RGB(255,16,64));
+	}
+};
+
 CB3ControlLDC::CB3ControlLDC()
 {
 	m_LDC   = null;
 	m_Curve = null;
+	m_xMax  = 0;
+	m_yMax  = 0;
 }
 
 CB3ControlLDC::~CB3ControlLDC()
 {
+	m_PickBase.b3Free();
 }
 
 
 BEGIN_MESSAGE_MAP(CB3ControlLDC, CStatic)
 	//{{AFX_MSG_MAP(CB3ControlLDC)
 	ON_WM_PAINT()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ControlLDC message handlers
 
+void CB3ControlLDC::b3Init(b3Light *light)
+{
+	b3PickLDC *pick;
+	b3_index   i;
+	CRect      rect;
+
+	m_LDC = &light->m_Spline;
+	if (::IsWindow(m_hWnd))
+	{
+		GetClientRect(&rect);
+		m_xMax = rect.Width();
+		m_yMax = rect.Width();
+		Invalidate();
+	}
+	for (i = 0;i < m_LDC->control_num;i++)
+	{
+		pick = new b3PickLDC(&m_LDC->controls[i],m_xMax,m_yMax);
+		m_PickBase.b3Append(pick);
+	}
+}
+
 void CB3ControlLDC::OnPaint() 
 {
 	CPaintDC  dc(this); // device context for painting
-	CRect     rect;
 	CPen      pen(PS_SOLID,1,RGB(0,0,0));
 	CPen      legend(PS_SOLID,1,RGB(120,120,120));
 	CPen     *oldPen;
+	b3_index  i;
+	b3_coord  x,y;
+	b3_res    xHalf;
 	
 	// TODO: Add your message handler code here
-	b3_index i;
-	b3_coord x,y;
-	b3_res   xHalf,xMax,yMax;
-
 	CStatic::OnPaint();
-	GetClientRect(&rect);
-	dc.FillSolidRect(&rect,RGB(255,255,255));
-	if (m_LDC == null)
-	{
-		// Do nothing!
-		return;
-	}
+	B3_ASSERT((m_xMax > 0) && (m_yMax > 0) && (m_LDC != null));
+	dc.FillSolidRect(0,0,m_xMax,m_yMax,RGB(255,255,255));
 
-	xHalf = rect.Width() >> 1;
-	xMax  = rect.Width();
-	yMax  = rect.Width();
+	xHalf = m_xMax >> 1;
 
 	// Draw horizontal legend
 	oldPen = dc.SelectObject(&legend);
@@ -98,43 +145,44 @@ void CB3ControlLDC::OnPaint()
 	{
 		x = i * xHalf / SEGMENTS;
 		dc.MoveTo(xHalf - x,0);
-		dc.LineTo(xHalf - x,yMax - 1);
+		dc.LineTo(xHalf - x,m_yMax);
 		dc.MoveTo(xHalf + x,0);
-		dc.LineTo(xHalf + x,yMax - 1);
+		dc.LineTo(xHalf + x,m_yMax);
 	}
 	for (i = 0;i <= 4;i++)
 	{
-		y = i * (yMax - 1) / 4;
+		y = i * m_yMax / 4;
 		dc.MoveTo(0,y);
-		dc.LineTo(xMax-1,y);
+		dc.LineTo(m_xMax,y);
 	}
 	dc.SelectObject(oldPen);
 
 	// Init curve
-	x = xHalf - m_Curve[m_LDC->subdiv].x * xHalf;
-	y = yMax  - m_Curve[m_LDC->subdiv].y * yMax - 1;
+	x = m_xMax * (0.5 - m_Curve[m_LDC->subdiv].x * 0.5);
+	y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv].y);
 	oldPen = dc.SelectObject(&pen);
 	dc.MoveTo(x,y);
 
 	// Draw left side
 	for (i = 0;i < m_LDC->subdiv;i++)
 	{
-		x = xHalf - m_Curve[m_LDC->subdiv - i].x * xHalf;
-		y = yMax  - m_Curve[m_LDC->subdiv - i].y * yMax - 1;
+		x = m_xMax * (0.5 - m_Curve[m_LDC->subdiv - i].x * 0.5);
+		y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv - i].y);
 		dc.LineTo(x,y);
 	}
 
 	// Draw right side
 	while(i >= 0)
 	{
-		x = xHalf + m_Curve[m_LDC->subdiv - i].x * xHalf;
-		y = yMax -  m_Curve[m_LDC->subdiv - i].y * yMax - 1;
+		x = m_xMax * (0.5 + m_Curve[m_LDC->subdiv - i].x * 0.5);
+		y = m_yMax * (1.0 - m_Curve[m_LDC->subdiv - i].y);
 		dc.LineTo(x,y);
 		i--;
 	}
 	dc.SelectObject(oldPen);
 
-	// Do not call CStatic::OnPaint() for painting messages
+	// Draw handles
+	m_PickBase.b3Draw(&dc);
 }
 
 void CB3ControlLDC::b3Update(b3_bool refresh)
@@ -151,4 +199,30 @@ void CB3ControlLDC::b3Update(b3_bool refresh)
 	{
 		Invalidate();
 	}
+}
+
+void CB3ControlLDC::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	m_PickBase.b3Down(point.x,point.y);
+	CStatic::OnLButtonDown(nFlags, point);
+}
+
+void CB3ControlLDC::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (m_PickBase.b3Move(point.x,point.y))
+	{
+		Invalidate();
+	}
+	CStatic::OnMouseMove(nFlags, point);
+}
+
+void CB3ControlLDC::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (m_PickBase.b3Up(point.x,point.y))
+	{
+	}
+	CStatic::OnLButtonUp(nFlags, point);
 }

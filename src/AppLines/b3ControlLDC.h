@@ -25,9 +25,12 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Pick.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ControlLDC window
+
+typedef CDC b3DrawContext;
 
 class CB3ControlLDC : public CStatic, protected b3Mem
 {
@@ -48,6 +51,7 @@ public:
 
 // Implementation
 public:
+	void b3Init(b3Light *light);
 	void b3Update(b3_bool refresh = true);
 	b3Spline * m_LDC;
 	virtual ~CB3ControlLDC();
@@ -56,11 +60,17 @@ public:
 protected:
 	//{{AFX_MSG(CB3ControlLDC)
 	afx_msg void OnPaint();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
 private:
+	b3_res m_yMax;
+	b3_res m_xMax;
 	b3_vector * m_Curve;
+	b3PickBase  m_PickBase;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/04 18:23:25  sm
+**	- Drawing LDC correctly
+**	- Added pick point support.
+**
 **	Revision 1.2  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
-**
+**	
 **	Revision 1.1  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -121,6 +125,7 @@ BOOL CDlgLight::OnInitDialog()
 	m_DistanceCtrl.b3SetMax(epsilon);
 	m_SoftSizeCtrl.b3SetDigits(5,2);
 	m_SoftSizeCtrl.b3SetMin(epsilon);
+	m_CtrlLDC.b3Init(m_Light);
 	b3RefreshList();
 	b3GetLight();
 	b3UpdateUI();
@@ -282,7 +287,6 @@ void CDlgLight::b3GetLight()
 	m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
-	m_CtrlLDC.m_LDC = &m_Light->m_Spline;
 	m_CtrlLDC.b3Update();
 	UpdateData(FALSE);
 }

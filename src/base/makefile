@@ -19,6 +19,7 @@ PRG_SOURCE =\
 	b3ItemRegisterEntry.cc\
 	b3Matrix.cc\
 	b3Node.cc\
+	b3Pick.cc\
 	b3Procedure.cc\
 	b3Render.cc\
 	b3Row.cc\
@@ -37,6 +38,7 @@ PRG_OBJ	=\
 	b3ItemRegisterEntry.o\
 	b3Matrix.o\
 	b3Node.o\
+	b3Pick.o\
 	b3Procedure.o\
 	b3Render.o\
 	b3Row.o\

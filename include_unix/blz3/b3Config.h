@@ -58,6 +58,8 @@
 #define B3_ASSERT(a)
 #endif
 
+typedef unsigned long b3DrawContext;
+
 static inline int stricmp(const char *a,const char *b)
 {
 	int diff,i = 0;

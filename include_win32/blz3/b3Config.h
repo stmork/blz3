@@ -73,6 +73,8 @@
 #define IS_WIN32S    (IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion())) < 4)))
 #define IS_WIN95     ((BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32)
 
+typedef CDC b3DrawContext;
+
 // Ah! Blizzard III
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
@@ -85,11 +87,15 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/12/04 18:23:25  sm
+**	- Drawing LDC correctly
+**	- Added pick point support.
+**
 **	Revision 1.18  2001/11/11 11:51:19  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.17  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
