@@ -13,7 +13,6 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src clean
-	rm -f data.tar.gz
 
 configure:	configure.ac
 	autoconf
@@ -25,11 +24,6 @@ config:	configure
 clobber:
 	bin/clobber.sh $(PWD)
 
-tar:	clobber autoconf
+tar:	clobber configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
-
-tar-rpm:	clobber configure data.tar.gz
-	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
-
-data.tar.gz:
-	test -d $(HOME)/Blizzard && tar cf - -C $(HOME)/Blizzard Data Objects Materials Bumps Conditions Textures|gzip -9 >data.tar.gz
+	cp blz3.spec /tmp/

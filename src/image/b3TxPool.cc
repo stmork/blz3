@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/08/24 08:50:39  sm
+**	- Adjusting JPG loading.
+**	- New RPM package blz3-data split from blz3 base package.
+**
 **	Revision 1.23  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
-**
+**	
 **	Revision 1.22  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -174,7 +178,7 @@ b3Base<b3Tx> *b3TxPool::b3GetTxHead()
 	return &m_Pool;
 }
 
-b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
+b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name)
 {
 	b3Path    FullName;
 	b3_bool   result = false;
@@ -184,14 +188,14 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 *
 	// Check result of texture load
 	if (result)
 	{
-		Texture->b3LoadImage(FullName);
-		b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" loaded.\n",
-			Texture->b3Name());
+		result = (Texture->b3LoadImage(FullName) == B3_OK);
+		b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" %sloaded.\n",
+			Texture->b3Name(),result ? "" : "not ");
 	}
 	else
 	{
 		Texture->b3Name(Name);
-		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" not available!\n",
+		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" available!\n",
 			Texture->b3Name());
 	}
 	return result;

@@ -14,7 +14,6 @@ endif
 test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h
 test -f configure      && rm  -f configure
 test -d autom4te.cache && rm -rf autom4te.cache
-test -f data.tar.gz    && rm  -f data.tar.gz
 
 echo "Removing temp files..."
 find $BLZ3_HOME -name "*.log" -exec rm -f {} \;

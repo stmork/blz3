@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/08/24 08:50:39  sm
+**	- Adjusting JPG loading.
+**	- New RPM package blz3-data split from blz3 base package.
+**
 **	Revision 1.16  2004/08/22 18:29:31  sm
 **	- Fixed prototype error.
-**
+**	
 **	Revision 1.15  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
@@ -158,7 +162,10 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
-			if (strstr((const char *)&buffer[i],"JFIF") != null)
+			const char *jpg_start = (const char *)&buffer[i+6];
+			      char *result    = strstr(jpg_start,"JFIF");
+
+			if (result != null)
 			{
 				return b3ParseJPEG(&buffer[i],buffer_size - i);
 			}
@@ -337,8 +344,11 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 		b3Name(name);
 		buffer     = file.b3ReadBuffer(name,size);
 		error_code = b3LoadImage(buffer,size);
+		if (error_code != B3_OK)
+		{
+			B3_THROW(b3TxException,B3_TX_ERROR);
+		}
 		b3Name(name);
-		error_code = B3_OK;
 	}
 	catch (b3FileException &e)
 	{
@@ -360,8 +370,7 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 	}
 	catch(...)
 	{
-		b3PrintF(B3LOG_NORMAL,"Unknown error parsing %s\n",
-			name);
+		b3PrintF(B3LOG_NORMAL,"Unknown error parsing %s\n",name);
 		if (throw_exception)
 		{
 			throw;

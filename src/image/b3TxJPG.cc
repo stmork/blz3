@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/08/24 08:50:39  sm
+**	- Adjusting JPG loading.
+**	- New RPM package blz3-data split from blz3 base package.
+**
 **	Revision 1.12  2003/09/26 07:23:16  sm
 **	- New JPEG library
-**
+**	
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -166,12 +170,12 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 
 	cinfo.err           = jpeg_std_error(&jerr.pub);
 	jerr.pub.error_exit = my_error_exit;
-	if (setjmp(jerr.setjmp_buffer))
+	if (setjmp(jerr.setjmp_buffer) != 0)
 	{
 		jpeg_destroy_decompress(&cinfo);
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error configuring JPEG decoder:\n");
-		B3_THROW(b3TxException,B3_TX_ERROR);
+		return B3_ERROR;
 	}
 	jpeg_create_decompress(&cinfo);
 
