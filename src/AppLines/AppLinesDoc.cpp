@@ -30,6 +30,7 @@
 
 #include "DlgHierarchy.h"
 #include "DlgScene.h"
+#include "b3ExampleScene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -39,9 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.18  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	Revision 1.17  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -186,12 +191,21 @@ CAppLinesDoc::~CAppLinesDoc()
 
 BOOL CAppLinesDoc::OnNewDocument()
 {
+	CString filename;
+
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
-	m_Scene = null;//new b3Scene(TRACEPHOTO_MORK);
+	filename.LoadString(IDS_SCENE_NEW);
+	m_Scene = b3ExampleScene::b3CreateNew(filename);
+	m_Scene->b3Reorg();
+	m_Scene->b3Prepare(0,0);
+	m_Scene->b3AllocVertices(&m_Context);
+	m_Info = m_Scene->b3GetModellerInfo();
+	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+	b3ComputeBounds();
 	return TRUE;
 }
 

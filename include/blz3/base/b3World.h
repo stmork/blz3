@@ -117,6 +117,7 @@ public:
 	virtual void            b3Write();
 	virtual void            b3Dump(b3_count level);
 	        void            b3DumpSimple(b3_count level = 0,b3_log_level log_level = B3LOG_NORMAL);
+			b3_bool         b3AllocHeads(b3_count head_count);
 
 	        b3_world_error  b3ParseLinkuage(b3Item **array,b3_count node_count,b3_u32 class_limit,b3_count level = 0);
 

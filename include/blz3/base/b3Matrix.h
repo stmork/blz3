@@ -26,6 +26,24 @@
 class b3Vector
 {
 public:
+	static inline b3_vector *b3Init(b3_vector *vec,b3_f64 x=0,b3_f64 y=0,b3_f64 z=0)
+	{
+		vec->x = x;
+		vec->y = y;
+		vec->z = z;
+
+		return vec;
+	}
+
+	static inline b3_vector64 *b3Init(b3_vector64 *vec,b3_f64 x=0,b3_f64 y=0,b3_f64 z=0)
+	{
+		vec->x = x;
+		vec->y = y;
+		vec->z = z;
+
+		return vec;
+	}
+
 	static inline b3_f64 b3Normalize(
 		b3_vector *vector,
 		b3_f64     length = 1.0)
@@ -63,6 +81,42 @@ public:
 			vector->y = y * denom;
 			vector->z = z * denom;
 		}
+		return result;
+	}
+
+	static inline b3_vector *b3Add(b3_vector *a,b3_vector *result)
+	{
+		result->x += a->x;
+		result->y += a->y;
+		result->z += a->z;
+
+		return result;
+	}
+
+	static inline b3_vector *b3Add(b3_vector *a,b3_vector *b,b3_vector *result)
+	{
+		result->x = a->x + b->x;
+		result->y = a->y + b->y;
+		result->z = a->z + b->z;
+
+		return result;
+	}
+
+	static inline b3_vector *b3Sub(b3_vector *a,b3_vector *result)
+	{
+		result->x -= a->x;
+		result->y -= a->y;
+		result->z -= a->z;
+
+		return result;
+	}
+
+	static inline b3_vector *b3Sub(b3_vector *a,b3_vector *b,b3_vector *result)
+	{
+		result->x = a->x - b->x;
+		result->y = a->y - b->y;
+		result->z = a->z - b->z;
+
 		return result;
 	}
 

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/11/05 16:57:39  sm
+**      - Creating demo scenes.
+**      - Initializing some b3Item derived objects
+**
 **      Revision 1.15  2001/11/03 16:24:16  sm
 **      - Added scene property dialog
 **      - Added raytrace view title
@@ -169,6 +174,12 @@ b3SuperSample::b3SuperSample(b3_u32 *src) :
 b3CameraPart::b3CameraPart(b3_u32 class_type) :
 	b3Special(sizeof(b3CameraPart),class_type)
 {
+	b3Vector::b3Init(&m_EyePoint, 0,-200,  0);
+	b3Vector::b3Init(&m_ViewPoint,0,-100,  0);
+	b3Vector::b3Init(&m_Width,   50,   0,  0);
+	b3Vector::b3Init(&m_Height,   0,  37.5,0);
+	m_Flags = CAMERA_ACTIVE;
+	m_CameraName[0] = 0;
 }
 
 b3CameraPart::b3CameraPart(b3_u32 *src) :
@@ -182,6 +193,26 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3InitString(m_CameraName,B3_CAMERANAMELEN);
 }
 
+void b3CameraPart::b3Orientate(
+	b3_vector *eye,
+	b3_vector *view,
+	b3_f64     focal_length,
+	b3_f64     width,
+	b3_f64     height)
+{
+	b3_vector  up;
+	b3_vector  dir;
+
+	m_EyePoint = *eye;
+	b3Vector::b3Sub(view,eye,&dir);
+	b3Vector::b3Normalize(&dir,focal_length);
+	b3Vector::b3Add(eye,&dir,&m_ViewPoint);
+	b3Vector::b3Init(&up,0,0,1);
+	b3Vector::b3CrossProduct(&dir,&up,&m_Width);
+	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
+	b3Vector::b3Normalize(&m_Width,width);
+	b3Vector::b3Normalize(&m_Height,height);
+}
 
 /*************************************************************************
 **                                                                      **

@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/11/05 16:57:39  sm
+**      - Creating demo scenes.
+**      - Initializing some b3Item derived objects
+**
 **      Revision 1.10  2001/10/19 14:46:56  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -108,6 +112,7 @@ b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
 	m_Buffer     = null;
 	head_count   = 0;
 	heads        = null;
+	m_ParseIndex = 0;
 }
 
 b3Item::b3Item(
@@ -120,6 +125,7 @@ b3Item::b3Item(
 	m_Buffer     = null;
 	head_count   = 0;
 	heads        = null;
+	m_ParseIndex = 0;
 }
 
 b3Item::b3Item(b3_u32 *src) :
@@ -171,12 +177,24 @@ b3Item::~b3Item()
 
 	for (i = 0;i < head_count;i++)
 	{
-		while ((item = heads[i].First) != null)
+		B3_DELETE_BASE(&heads[i],item);
+	}
+}
+
+b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
+{
+	b3_index  i;
+
+	heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
+	if (heads != null)
+	{
+		head_count = new_head_count;
+		for (i = 0;i < head_count;i++)
 		{
-			heads[i].b3Remove(item);
-			delete item;
+			heads[i].b3InitBase();
 		}
 	}
+	return heads != null;
 }
 
 void b3Item::b3Read()

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.1  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	
 */
 
@@ -84,7 +88,6 @@ void CB3ShowRaytrace::b3Update(b3Scene *scene)
 			m_Display = new b3Display(&m_Tx);
 		}
 	}
-	scene->b3Prepare(m_xSize,m_ySize);
 	scene->b3Raytrace(m_Display);
 	dc = GetDC();
 	m_DDB.b3InitImage(&m_Tx,dc);

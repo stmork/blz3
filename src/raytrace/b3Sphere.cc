@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.13  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.12  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -109,6 +113,12 @@
 
 b3Sphere::b3Sphere(b3_u32 class_type) : b3RenderShape(sizeof(b3Sphere), class_type)
 {
+	m_Base.x =  0;
+	m_Base.y =  0;
+	m_Base.z =  0;
+	m_Dir.x  = 50;
+	m_Dir.y  =  0;
+	m_Dir.z  =  0;
 }
 
 b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.20  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.19  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -145,11 +149,63 @@ void b3InitScene::b3Init()
 b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
+
+	b3AllocHeads(3);
+	heads[0].b3InitBase(CLASS_BBOX);
+	heads[1].b3InitBase(CLASS_LIGHT);
+	heads[2].b3InitBase(CLASS_SPECIAL);
+
+	m_TopColor.a = 0;
+	m_TopColor.r = 0.5;
+	m_TopColor.g = 0;
+	m_TopColor.b = 1;
+	m_BottomColor.a = 0;
+	m_BottomColor.r = 0;
+	m_BottomColor.g = 0;
+	m_BottomColor.b = 1;
+
+	m_xAngle           = 0;
+	m_yAngle           = 0;
+	m_BBoxOverSize     = 0.02f;
+	m_BackgroundType   = TP_NOTHING;
+	m_TraceDepth       = 5;
+	m_Flags            = TP_SIZEVALID;
+	m_ShadowBrightness = 0.5f;
+	m_Epsilon          = 0.001f;
+	m_xSize            = 200;
+	m_ySize            = 150;
+	m_BackTexture      = null;
 }
 
 b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
+
+	b3AllocHeads(3);
+	heads[0].b3InitBase(CLASS_BBOX);
+	heads[1].b3InitBase(CLASS_LIGHT);
+	heads[2].b3InitBase(CLASS_SPECIAL);
+
+	m_TopColor.a = 0;
+	m_TopColor.r = 0.5;
+	m_TopColor.g = 0;
+	m_TopColor.b = 1;
+	m_BottomColor.a = 0;
+	m_BottomColor.r = 0;
+	m_BottomColor.g = 0;
+	m_BottomColor.b = 1;
+
+	m_xAngle           = 0;
+	m_yAngle           = 0;
+	m_BBoxOverSize     = 0.02f;
+	m_BackgroundType   = TP_NOTHING;
+	m_TraceDepth       = 5;
+	m_Flags            = TP_SIZEVALID;
+	m_ShadowBrightness = 0.5f;
+	m_Epsilon          = 0.001f;
+	m_xSize            = 200;
+	m_ySize            = 150;
+	m_BackTexture      = null;
 }
 
 b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
@@ -193,12 +249,27 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 	return (m_Flags & TP_SIZEVALID) != 0;
 }
 
+b3Base<b3Item> *b3Scene::b3GetBBoxHead()
+{
+	return &heads[0];
+}
+
+b3Base<b3Item> *b3Scene::b3GetLightHead()
+{
+	return &heads[1];
+}
+
+b3Base<b3Item> *b3Scene::b3GetSpecialHead()
+{
+	return &heads[2];
+}
+
 b3ModellerInfo *b3Scene::b3GetModellerInfo()
 {
 	b3ModellerInfo *info;
 	b3Item         *item;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
 		if (item->b3GetClassType() == LINES_INFO)
 		{
@@ -216,7 +287,7 @@ b3Nebular *b3Scene::b3GetNebular()
 	b3Nebular *nebular;
 	b3Item    *item;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
 		if (item->b3GetClassType() == NEBULAR)
 		{
@@ -233,7 +304,7 @@ b3SuperSample *b3Scene::b3GetSuperSample()
 {
 	b3Item *item;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
 		if (item->b3GetClassType() == SUPERSAMPLE4)
 		{
@@ -247,7 +318,7 @@ b3LensFlare *b3Scene::b3GetLensFlare()
 {
 	b3Item *item;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
 		if (item->b3GetClassType() == LENSFLARE)
 		{
@@ -262,7 +333,7 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 	b3CameraPart *camera,*first = null;
 	b3Item       *item;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
 		if (item->b3GetClassType() == CAMERA)
 		{
@@ -345,7 +416,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	b3Light *light;
 	b3Item  *item;
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetLightHead(),item)
 	{
 		light = (b3Light *)item;
 		if ((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
@@ -354,7 +425,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 		}
 	}
 
-	if ((light = (b3Light *)heads[1].First) == null)
+	if ((light = (b3Light *)b3GetLightHead()->First) == null)
 	{
 		light = new b3Light(SPOT_LIGHT);
 		strcpy(light->m_Name,"Light");
@@ -366,5 +437,5 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 
 b3BBox *b3Scene::b3GetFirstBBox()
 {
-	return (b3BBox *)heads[0].First;
+	return (b3BBox *)b3GetBBoxHead()->First;
 }

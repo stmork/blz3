@@ -57,24 +57,40 @@ public:
 	}
 };
 
+#define B3_WHITE  ((b3_pkd_color)0xffffff)
+#define B3_GREY   ((b3_pkd_color)0x808080)
+#define B3_BLACK  ((b3_pkd_color)0x000000)
+#define B3_RED    ((b3_pkd_color)0xff0000)
+#define B3_GREEN  ((b3_pkd_color)0x00ff00)
+#define B3_BLUE   ((b3_pkd_color)0x0000ff)
+#define B3_YELLOW ((b3_pkd_color)0xffff00)
+
 class b3Color
 {
 public:
+	static inline b3_color *b3Init(b3_color *col,b3_f64 a=0,b3_f64 r=0,b3_f64 g=0,b3_f64 b=0)
+	{
+		col->a = a;
+		col->r = r;
+		col->g = g;
+		col->b = b;
+
+		return col;
+	}
+
 	static inline b3_pkd_color b3GetColor(b3_color *color)
 	{
-		register b3_pkd_color r,g,b;
-
-		r = (b3_pkd_color)(color->r * 255);
-		g = (b3_pkd_color)(color->g * 255);
-		b = (b3_pkd_color)(color->b * 255);
-		return (r << 16) | (g << 8) | b;
+		return
+			((b3_pkd_color)(color->r * 255) << 16) |
+			((b3_pkd_color)(color->g * 255) <<  8) |
+			 (b3_pkd_color)(color->b * 255);
 	}
 
 	static inline b3_pkd_color b3GetSatColor(const b3_color *color)
 	{
 		return
-			((b3_pkd_color)(color->r > 1.0 ? 255 : (b3_u08)(color->r * 255)) << 16) ||
-			((b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)) <<  8) ||
+			((b3_pkd_color)(color->r > 1.0 ? 255 : (b3_u08)(color->r * 255)) << 16) |
+			((b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)) <<  8) |
 			 (b3_pkd_color)(color->b > 1.0 ? 255 : (b3_u08)(color->b * 255));
 	}
 

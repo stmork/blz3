@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/11/05 16:57:39  sm
+**      - Creating demo scenes.
+**      - Initializing some b3Item derived objects
+**
 **      Revision 1.16  2001/11/01 09:43:11  sm
 **      - Some image logging cleanups.
 **      - Texture preparing now in b3Prepare().
@@ -178,6 +182,14 @@ b3_f64 b3Material::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),class_type)
 {
+	b3Color::b3Init(&m_AmbColor);
+	b3Color::b3Init(&m_DiffColor);
+	b3Color::b3Init(&m_SpecColor);
+	m_Reflection =    0;
+	m_Refraction =    0;
+	m_RefrValue  =    1;
+	m_HighLight  = 1000;
+	m_Flags      =    0;
 }
 
 b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
@@ -232,6 +244,22 @@ b3_f64 b3MatNormal::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_type) 
 {
+	b3Color::b3GetColor(&m_AmbColor[0], B3_GREY);
+	b3Color::b3GetColor(&m_DiffColor[0],B3_BLACK);
+	b3Color::b3GetColor(&m_SpecColor[0],B3_GREY);
+	
+	b3Color::b3GetColor(&m_AmbColor[1], B3_GREY);
+	b3Color::b3GetColor(&m_DiffColor[1],B3_WHITE);
+	b3Color::b3GetColor(&m_SpecColor[1],B3_GREY);
+
+	m_Reflection[0] = m_Reflection[1] =    0;
+	m_Refraction[0] = m_Refraction[1] =    0;
+	m_RefrValue[0]  = m_RefrValue[1]  =    1;
+	m_HighLight[0]  = m_HighLight[1]  = 1000;
+
+	m_Flags         =    0;
+	m_xTimes        =    8;
+	m_yTimes        =    8;
 }
 
 b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)

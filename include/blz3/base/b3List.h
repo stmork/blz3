@@ -119,7 +119,7 @@ public:
 };
 
 #define B3_FOR_BASE(b,n) for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
-#define B3_DELETE_BASE(b,n) while (((n) = (b)->First) != null) { (b)->b3Remove(n); delete (n); }
+#define B3_DELETE_BASE(b,n) while (((n) = (b)->b3RemoveFirst()) != null) { delete (n); }
 
 template <class T> class b3Base
 {
@@ -179,6 +179,7 @@ public:
 
 	inline void b3Append  (T *ptr)
 	{
+		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{
@@ -201,6 +202,7 @@ public:
 
 	inline void b3First   (T *ptr)
 	{
+		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{
@@ -255,10 +257,43 @@ public:
 		ptr->Prev = null;
 	}
 
+	inline T *b3RemoveFirst()
+	{
+		T *removed = First;
+
+		if (removed != null)
+		{
+			First = removed->Succ;
+			if (First != null)
+			{
+				First->Prev = null;
+			}
+			removed->Succ = null;
+		}
+		return removed;
+	}
+
+	inline T *b3RemoveLast()
+	{
+		T *removed = Last;
+
+		if (removed != null)
+		{
+			Last = removed->Prev;
+			if (Last != null)
+			{
+				Last->Prev = null;
+			}
+			removed->Prev = null;
+		}
+		return removed;
+	}
+
 	inline void b3Insert  (T *pre,T *ptr)
 	{
 		T *succ;
 
+		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null));
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
 		{

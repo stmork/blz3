@@ -39,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/11/05 16:57:39  sm
+**      - Creating demo scenes.
+**      - Initializing some b3Item derived objects
+**
 **      Revision 1.14  2001/10/29 19:34:02  sm
 **      - Added new define B3_DELETE_BASE.
 **      - Added support to abort raytrace processing.
@@ -344,9 +348,7 @@ b3_world_error b3World::b3Parse()
 #endif
 		for (i = 0;i < node_count;i++)
 		{
-			node = node_list.First;
-			array[i] = node;
-			node_list.b3Remove(node);
+			array[i] = node_list.b3RemoveFirst();
 		}
 		m_Start = (b3FirstItem *)array[0];
 		result  = m_Start->b3ParseLinkuage(array,node_count,0x7fff0000);

@@ -536,6 +536,7 @@ public:
 // MATERIAL or MAT_NORMAL
 class b3MatNormal : public b3Material
 {
+public:
 	b3_color          m_DiffColor;
 	b3_color          m_AmbColor;
 	b3_color          m_SpecColor;
@@ -563,6 +564,7 @@ public:
 // CHESS
 class b3MatChess : public b3Material 
 {
+public:
 	b3_color m_DiffColor[2];
 	b3_color m_AmbColor[2];
 	b3_color m_SpecColor[2];
@@ -855,9 +857,6 @@ protected:
 protected:
 	                    b3Shape(b3_size class_size,b3_u32 class_type);
 	b3_bool             b3CheckStencil(b3_polar *polar);
-	b3Base<b3Item>     *b3GetBumpHead();
-	b3Base<b3Item>     *b3GetConditionHead();
-	b3Base<b3Item>     *b3GetMaterialHead();
 
 public:
 	B3_ITEM_INIT(b3Shape);
@@ -871,6 +870,9 @@ public:
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation);
 	virtual b3_bool     b3Prepare();
+	b3Base<b3Item>     *b3GetBumpHead();
+	b3Base<b3Item>     *b3GetConditionHead();
+	b3Base<b3Item>     *b3GetMaterialHead();
 
 	virtual inline b3_bool b3NormalDeriv(b3_ray *ray)
 	{
@@ -994,10 +996,12 @@ public:
 class b3Shape2 : public b3Shape
 {
 protected:
-	b3_vector           m_Base;           // basis of area, disk
-	b3_vector           m_Dir1,m_Dir2;    // direction vectors
 	b3_vector           m_Normal;
 	b3_f64              m_NormalLength;   // normal length
+
+public:
+	b3_vector           m_Base;           // basis of area, disk
+	b3_vector           m_Dir1,m_Dir2;    // direction vectors
 
 protected:
 	b3Shape2(b3_size class_size,b3_u32 class_type);
@@ -1820,6 +1824,8 @@ public:
 public:
 	B3_ITEM_INIT(b3CameraPart);
 	B3_ITEM_LOAD(b3CameraPart);
+
+	void b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
 };
 
 #define CAMERA_TITLE  1
@@ -2051,6 +2057,9 @@ public:
 		    void            b3FreeVertices();
 	        void            b3Draw();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+			b3Base<b3Item> *b3GetBBoxHead();
+			b3Base<b3Item> *b3GetLightHead();
+			b3Base<b3Item> *b3GetSpecialHead();
 		    b3ModellerInfo *b3GetModellerInfo();
 		    b3Nebular      *b3GetNebular();
 		    b3SuperSample  *b3GetSuperSample();

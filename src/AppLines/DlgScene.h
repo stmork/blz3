@@ -74,6 +74,7 @@ protected:
 	afx_msg void OnResValid();
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
+	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

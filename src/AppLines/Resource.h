@@ -109,6 +109,7 @@
 #define IDS_FRAME_RATE                  61450
 #define IDS_RAYTRACE_TITLE              61451
 #define IDS_RAYDEPTH                    61452
+#define IDS_SCENE_NEW                   61453
 
 // Next default values for new objects
 // 

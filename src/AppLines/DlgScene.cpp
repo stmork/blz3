@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.2  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -108,6 +112,7 @@ BEGIN_MESSAGE_MAP(CDlgScene, CDialog)
 	ON_BN_CLICKED(IDC_BG_COLOR, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_SKY, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_IMAGE, OnBgModeChanged)
+	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -133,8 +138,12 @@ BOOL CDlgScene::OnInitDialog()
 	m_RayDepth.SetPos      (m_Scene->m_TraceDepth);
 	b3UpdateUI();
 	b3PrintRayDepth();
-	m_PreviewScene = b3ExampleScene::b3GetNull();
-	m_PreviewSceneCtrl.b3Update(m_PreviewScene = m_Scene);
+	m_PreviewScene = b3ExampleScene::b3CreateGlobal();
+	m_PreviewScene->m_BackgroundType = m_Scene->m_BackgroundType;
+	m_PreviewScene->m_TopColor       = m_Scene->m_TopColor;
+	m_PreviewScene->m_BottomColor    = m_Scene->m_BottomColor;
+	strcpy(m_PreviewScene->m_TextureName,m_Scene->m_TextureName);
+	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -147,11 +156,19 @@ BOOL CDlgScene::PreTranslateMessage(MSG* pMsg)
 	return CDialog::PreTranslateMessage(pMsg);
 }
 
+void CDlgScene::OnDestroy() 
+{
+	CDialog::OnDestroy();
+	
+	// TODO: Add your message handler code here
+	delete m_PreviewScene;
+}
+
 void CDlgScene::OnBgModeChanged() 
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	m_Scene->m_BackgroundType = dialog_to_scene[m_BackgroundMode];
+	m_PreviewScene->m_BackgroundType = dialog_to_scene[m_BackgroundMode];
 	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	b3UpdateUI();
 }

@@ -703,6 +703,7 @@ BEGIN
     IDS_FRAME_RATE          "%3.2f frames/sec."
     IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
     IDS_RAYDEPTH            "Raytrace-Tiefe: %d"
+    IDS_SCENE_NEW           "Unbenannt"
 END
 
 STRINGTABLE DISCARDABLE 

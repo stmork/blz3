@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 #include <float.h>
 
 /*************************************************************************
@@ -32,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/11/05 16:57:39  sm
+**	- Creating demo scenes.
+**	- Initializing some b3Item derived objects
+**
 **	Revision 1.20  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.19  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -143,6 +148,20 @@ void b3InitBBox::b3Init()
                                                                                                                      
 b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 {
+	b3AllocHeads(2);
+	heads[0].b3InitBase(CLASS_SHAPE);
+	heads[1].b3InitBase(CLASS_BBOX);
+
+	b3MatrixUnit(&m_Matrix);
+	m_Type       = 0;
+	m_DimBase.x  = 0;
+	m_DimBase.y  = 0;
+	m_DimBase.z  = 0;
+	m_DimSize.x  = 0;
+	m_DimSize.y  = 0;
+	m_DimSize.z  = 0;
+	m_BoxName[0] = 0;
+	m_BoxURL[0]  = 0;
 }
 
 b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
@@ -167,6 +186,16 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
 	}
 
+}
+
+b3Base<b3Item> *b3BBox::b3GetShapeHead()
+{
+	return &heads[0];
+}
+
+b3Base<b3Item> *b3BBox::b3GetBBoxHead()
+{
+	return &heads[1];
 }
 
 b3_bool b3BBox::b3Prepare()
@@ -440,16 +469,6 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	}
 
 	return result;
-}
-
-b3Base<b3Item> *b3BBox::b3GetShapeHead()
-{
-	return &heads[0];
-}
-
-b3Base<b3Item> *b3BBox::b3GetBBoxHead()
-{
-	return &heads[1];
 }
 
 void b3BBox::b3Activate(b3_bool activate)

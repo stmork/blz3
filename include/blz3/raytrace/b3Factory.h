@@ -29,6 +29,12 @@ public:
 	{
 		return null;
 	}
+	static        b3Scene *b3CreateNew(const char *filename);
+	static        b3Scene *b3CreateGlobal();
+	static        b3Scene *b3CreateMaterial();
+
+private:
+	static        void     b3Consolidate(b3Scene *scene);
 };
 
 #endif

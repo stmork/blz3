@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2001/11/05 16:57:39  sm
+**      - Creating demo scenes.
+**      - Initializing some b3Item derived objects
+**
 **      Revision 1.28  2001/11/01 09:43:11  sm
 **      - Some image logging cleanups.
 **      - Texture preparing now in b3Prepare().
@@ -210,10 +214,18 @@ void b3InitShape::b3Init()
 
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
+	b3AllocHeads(3);
+	heads[0].b3InitBase(CLASS_BUMP);
+	heads[1].b3InitBase(CLASS_CONDITION);
+	heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
+	b3AllocHeads(3);
+	heads[0].b3InitBase(CLASS_BUMP);
+	heads[1].b3InitBase(CLASS_CONDITION);
+	heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -434,10 +446,28 @@ void b3Shape::b3Transform(b3_matrix *transformation)
 
 b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
 {
+	m_Base.x =  0;
+	m_Base.y =  0;
+	m_Base.z =  0;
+	m_Dir1.x = 50;
+	m_Dir1.y =  0;
+	m_Dir1.z =  0;
+	m_Dir2.x =  0;
+	m_Dir2.y = 50;
+	m_Dir2.z =  0;
 }
 
 b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
 {
+	m_Base.x =  0;
+	m_Base.y =  0;
+	m_Base.z =  0;
+	m_Dir1.x = 50;
+	m_Dir1.y =  0;
+	m_Dir1.z =  0;
+	m_Dir2.x =  0;
+	m_Dir2.y = 50;
+	m_Dir2.z =  0;
 }
 
 b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CB3ShowRaytrace
+LastClass=CDlgScene
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,15 +22,15 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=10
-Resource1=IDR_MAINFRAME
-Resource2=IDR_TOOLBAR_VIEW
-Resource3=IDR_TOOLBAR_ACTION
-Resource4=IDR_TOOLBAR_OBJECT
-Resource5=IDR_TOOLBAR_DISPLAY
-Resource6=IDR_BLZ3TYPE
-Resource7=IDR_DISPLAYTYPE
-Resource8=IDD_ABOUTBOX
-Resource9=IDD_HIERARCHY
+Resource1=IDD_ABOUTBOX
+Resource2=IDR_TOOLBAR_ACTION
+Resource3=IDR_TOOLBAR_OBJECT
+Resource4=IDR_TOOLBAR_DISPLAY
+Resource5=IDR_TOOLBAR_VIEW
+Resource6=IDR_DISPLAYTYPE
+Resource7=IDR_BLZ3TYPE
+Resource8=IDD_HIERARCHY
+Resource9=IDR_MAINFRAME
 Resource10=IDD_SCENE
 
 [CLS:CAppLinesApp]
@@ -94,6 +94,9 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgScene.h
 ImplementationFile=DlgScene.cpp
+LastObject=CDlgScene
+Filter=D
+VirtualFilter=dWC
 
 [CLS:CMainFrame]
 Type=0
