@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2003/03/20 21:04:58  sm
+**	- Made some triangle intersection optimizations.
+**
 **	Revision 1.26  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.25  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
@@ -154,7 +157,7 @@ b3_matrix b3Matrix::m_UnitMatrix =
 
 b3_vector b3Matrix::m_EmptyVector =
 {
-	0,0,0,1
+	0,0,0
 };
 
 typedef b3_f32 b3_matrix_array[4][4];

@@ -36,7 +36,6 @@ public:
 		vec->x   = (b3_f32)x;
 		vec->y   = (b3_f32)y;
 		vec->z   = (b3_f32)z;
-		vec->pad = 0;
 
 		return vec;
 	}
@@ -50,7 +49,6 @@ public:
 		vec->x   = x;
 		vec->y   = y;
 		vec->z   = z;
-		vec->pad = 0;
 
 		return vec;
 	}
@@ -62,7 +60,6 @@ public:
 		vec->x   = (b3_f32)src->x;
 		vec->y   = (b3_f32)src->y;
 		vec->z   = (b3_f32)src->z;
-		vec->pad = 0;
 
 		return vec;
 	}
@@ -82,7 +79,6 @@ public:
 		negate->x   = -negate->x;
 		negate->y   = -negate->y;
 		negate->z   = -negate->z;
-		negate->pad = -negate->pad;
 		return negate;
 	}
 
@@ -354,9 +350,9 @@ public:
 		const b3_vector *b,
 		      b3_vector64 *result)
 	{
-		result->x = a->y * b->z - a->z * b->y;
-		result->y = a->z * b->x - a->x * b->z;
-		result->z = a->x * b->y - a->y * b->x;
+		result->x = (b3_f64)a->y * (b3_f64)b->z - (b3_f64)a->z * (b3_f64)b->y;
+		result->y = (b3_f64)a->z * (b3_f64)b->x - (b3_f64)a->x * (b3_f64)b->z;
+		result->z = (b3_f64)a->x * (b3_f64)b->y - (b3_f64)a->y * (b3_f64)b->x;
 
 		return result;
 	}

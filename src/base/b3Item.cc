@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2003/03/20 21:04:58  sm
+**      - Made some triangle intersection optimizations.
+**
 **      Revision 1.30  2003/03/04 20:37:36  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -421,7 +424,6 @@ void b3Item::b3InitVector(b3_vector *vec)
 		vec->x   = *ptr++;
 		vec->y   = *ptr++;
 		vec->z   = *ptr++;
-		vec->pad = 0;
 	}
 	m_ParseIndex += 3;
 }

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2003/03/20 21:04:58  sm
+**	- Made some triangle intersection optimizations.
+**
 **	Revision 1.33  2003/03/19 20:33:07  sm
 **	- Triangles intersection optimized.
-**
+**	
 **	Revision 1.32  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -955,9 +958,13 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_index       *buffer;
 	b3_triainfo    *infos,*info;
 	b3_res          dxSize;
-	b3_vector32     aux,product,dir,pos;
-	b3_f32          Denom,aValue,bValue;
-	b3_f32          q = ray->Q,e = b3Scene::epsilon;
+	b3_vector32     aux,product;
+	b3_vector32     dir,pos;
+	b3_f32          denominator;
+	b3_f32          nominator;
+	b3_f32          aValue,bValue;
+	b3_f32          e = b3Scene::epsilon;
+	b3_f32          q = ray->Q - e;
 	b3_f32          OldValue = -1,lValue;
 
 	 xSize   = m_xSize;
@@ -980,30 +987,29 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 		Triangle = &m_Triangles[Index];
 		info     = &infos[Index];
 
-		Denom = 
-			info->N.x * dir.x +
-			info->N.y * dir.y +
-			info->N.z * dir.z;
-		if (Denom != 0)
+		nominator = 
+			info->Normal.x * ray->dir.x +
+			info->Normal.y * ray->dir.y +
+			info->Normal.z * ray->dir.z;
+		if (nominator != 0)
 		{
-			Denom = -1.0 / Denom;
-			lValue = Denom * (
-				info->N.x * (aux.x = pos.x - info->O.x) +
-				info->N.y * (aux.y = pos.y - info->O.y) +
-				info->N.z * (aux.z = pos.z - info->O.z));
+			lValue = (denominator = -1.0 / nominator) * (
+				info->Normal.x * (aux.x = pos.x - info->O.x) +
+				info->Normal.y * (aux.y = pos.y - info->O.y) +
+				info->Normal.z * (aux.z = pos.z - info->O.z));
 			if ((lValue >= e) && (lValue < q))
 			{
-				aValue = Denom * (
+				aValue = denominator * (
 					info->R2.x * (product.x = aux.y * dir.z - aux.z * dir.y) +
 					info->R2.y * (product.y = aux.z * dir.x - aux.x * dir.z) +
 					info->R2.z * (product.z = aux.x * dir.y - aux.y * dir.x));
 				if (aValue >= 0)
 				{
-					bValue = -Denom * (
+					bValue = -denominator * (
 						info->R1.x * product.x +
 						info->R1.y * product.y +
 						info->R1.z * product.z);
-					if ((bValue >= 0) && ((aValue+bValue) <= 1))
+					if ((bValue >= 0) && ((aValue + bValue) <= 1))
 					{
 						if (Index & 1)
 						{

@@ -1263,7 +1263,8 @@ public:
 
 struct b3_triainfo
 {
-	b3_vector O,R1,R2,N;
+	b3_vector32 O,R1,R2;
+	b3_vector32 Normal;
 };
 
 class b3TriangleShape : public b3SimpleShape

@@ -85,18 +85,16 @@ typedef long                b3_coord;
 // Some vectors
 typedef struct B3_ALIGN_16 b3_vector32_3D
 {
-	b3_f32    x;
-	b3_f32    y;
-	b3_f32    z;
-	b3_f32    pad;
+	b3_f32 B3_ALIGN_16 x;
+	b3_f32             y;
+	b3_f32             z;
 } b3_vector32, b3_vector;
 
 typedef struct B3_ALIGN_32 b3_vector64_3D
 {
-	b3_f64    x;
-	b3_f64    y;
-	b3_f64    z;
-	b3_f64    pad;
+	b3_f64 B3_ALIGN_16 x;
+	b3_f64             y;
+	b3_f64             z;
 } b3_vector64;
 
 typedef struct B3_ALIGN_16 b3_vector32_4D
@@ -117,10 +115,11 @@ typedef struct B3_ALIGN_32 b3_vector64_4D
 
 typedef struct B3_ALIGN_64 b3_matrix32_4D
 {
-	b3_f32    m11,m12,m13,m14;
-	b3_f32    m21,m22,m23,m24;
-	b3_f32    m31,m32,m33,m34;
-	b3_f32    m41,m42,m43,m44;
+	b3_f32 B3_ALIGN_16 m11;
+	b3_f32                 m12,m13,m14;
+	b3_f32             m21,m22,m23,m24;
+	b3_f32             m31,m32,m33,m34;
+	b3_f32             m41,m42,m43,m44;
 } b3_matrix;
 
 typedef struct B3_ALIGN_64 b3_matrix64_4D

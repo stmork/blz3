@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2003/03/20 21:04:58  sm
+**      - Made some triangle intersection optimizations.
+**
 **      Revision 1.39  2003/03/19 20:33:07  sm
 **      - Triangles intersection optimized.
 **
@@ -469,12 +472,14 @@ b3_bool b3TriangleShape::b3Prepare()
 		info.O  = m_Vertices[P1].Point;
 		b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point,&info.R1);
 		b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point,&info.R2);
-		b3Vector::b3CrossProduct(&info.R1,&info.R2,&info.N);
+		b3Vector::b3CrossProduct(&info.R1,&info.R2,&info.Normal);
 		m_TriaInfos.b3Add(info);
 
 		if ((m_Flags & NORMAL_FACE_VALID)==0)
 		{
-			disp = m_Triangles[i].Normal = info.N;
+			disp.x = m_Triangles[i].Normal.x = info.Normal.x;
+			disp.y = m_Triangles[i].Normal.y = info.Normal.y;
+			disp.z = m_Triangles[i].Normal.z = info.Normal.z;
 			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 			{
 #ifdef NORMAL_NORMALIZED
