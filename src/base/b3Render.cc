@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/14 19:07:43  sm
+**      - Minor changes on resources.
+**
 **      Revision 1.6  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -101,6 +104,7 @@ void b3RenderContext::b3StartDrawing()
 	glClearColor(0.8f,0.8f,0.8f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnable(GL_DEPTH_TEST);
 	glEnableClientState(GL_VERTEX_ARRAY);
 #endif
 }

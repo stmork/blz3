@@ -210,8 +210,8 @@ BEGIN
         MENUITEM "Ver&größern",                 ID_VIEW_BIGGER
         MENUITEM "Ver&kleinern",                ID_VIEW_SMALLER
         MENUITEM "Aus&schnitt",                 ID_VIEW_SELECT
-        MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
         MENUITEM "&Verheriger Ausschnitt",      ID_VIEW_POP
+        MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
     END
     POPUP "&Fenster"
     BEGIN
@@ -283,8 +283,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 3,0,0,1
+ PRODUCTVERSION 3,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -297,17 +297,20 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040704B0"
+        BLOCK "040704b0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "MFC-Anwendung AppLines\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "Blizzard Development Group\0"
+            VALUE "FileDescription", "Lines III - Managing Blizzard geometry\0"
+            VALUE "FileVersion", "3, 0, 0, 1\0"
             VALUE "InternalName", "AppLines\0"
             VALUE "LegalCopyright", "Copyright (C) 2001\0"
-            VALUE "LegalTrademarks", "\0"
+            VALUE "LegalTrademarks", "Steffen A. Mork\0"
             VALUE "OriginalFilename", "AppLines.EXE\0"
-            VALUE "ProductName", "Anwendung AppLines\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Lines III\0"
+            VALUE "ProductVersion", "3, 0, 0, 1\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"
