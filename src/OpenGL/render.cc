@@ -1,12 +1,12 @@
 /*
 **
-**      $Filename:      render.cc $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	render.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Show scene with OpenGL
+**	Blizzard III - Show scene with OpenGL
 **
 **      (C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -17,11 +17,30 @@
 
 #include <GL/glut.h>
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+  
 #include "blz3/b3Config.h" 
 #include "blz3/base/b3World.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
-static b3World world;
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**      $Log$
+**      Revision 1.2  2001/08/02 15:38:42  sm
+**      - Some minor changes
+**
+*/
+
+static b3World *world = null;
 
 void RenderScene()
 {
@@ -32,7 +51,7 @@ void RenderScene()
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	scene = (b3Scene *)world.b3GetFirst();
+	scene = (b3Scene *)world->b3GetFirst();
 	scene->b3Draw();
 
 	glutSwapBuffers();
@@ -41,18 +60,9 @@ void RenderScene()
 void ChangeSize(GLsizei xSize,GLsizei ySize)
 {
 	b3Scene  *scene;
-	GLfloat  aspect = (GLfloat)xSize / (GLfloat)ySize;
 
-	scene = (b3Scene *)world.b3GetFirst();
-//	scene->b3SetView((b3_res)xSize,(b3_res)ySize);
-	glViewport(0,0,xSize,ySize);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective (160.0f, aspect, 0.1f,10000.0f);	
-//	glTranslated(0.0,0.0,-500.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	scene = (b3Scene *)world->b3GetFirst();
+	scene->b3SetView((b3_res)xSize,(b3_res)ySize);
 }
 
 void SetupRC()
@@ -70,8 +80,10 @@ int main(int argc,char *argv[])
 	{
 		b3InitRaytrace::b3Init();
 
-		world.b3Read(argv[1]);
-		for (item  = world.b3GetFirst();
+//		b3Log_SetLevel(B3LOG_FULL);
+		world = new b3World();
+		world->b3Read(argv[1]);
+		for (item  = world->b3GetFirst();
 		     item != null;
 		     item  = scene->Succ)
 		{
@@ -81,7 +93,6 @@ int main(int argc,char *argv[])
 
 		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 		glutCreateWindow("Greetinxx");
-sleep(3);
 		glutDisplayFunc(RenderScene);
 		glutReshapeFunc(ChangeSize);
 
