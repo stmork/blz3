@@ -34,6 +34,12 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2004/06/19 12:11:01  sm
+**      - Fixed animation problem by using a thrid dress vector
+**        which points up. This is a hack because rotating vectors
+**        inside the xy plane are undefined.
+**      - Added material/bump save support.
+**
 **      Revision 1.20  2004/06/18 14:49:05  sm
 **      - Some probes concerning the anim rotation problem. Should I use
 **        quaternions?
@@ -365,6 +371,7 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 	b3_matrix      resetMatrix;
 	b3_f64         tClipped;
 
+	t = b3Math::b3Round(t,b3AnimElement::epsilon);
 	b3PrintF(B3LOG_FULL,"<-- TIME POINT %3.3f -->\n",t);
 	m_Time         = t; /* this is the time point you wish */
 	m_FrameIndex   = b3AnimFrameIndex(t);

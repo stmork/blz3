@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/06/19 12:11:01  sm
+**	- Fixed animation problem by using a thrid dress vector
+**	  which points up. This is a hack because rotating vectors
+**	  inside the xy plane are undefined.
+**	- Added material/bump save support.
+**
 **	Revision 1.29  2004/06/18 14:49:05  sm
 **	- Some probes concerning the anim rotation problem. Should I use
 **	  quaternions?
-**
+**	
 **	Revision 1.28  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
@@ -906,50 +912,60 @@ b3_matrix * b3Matrix::b3Dress (
 	b3_matrix *prev,
 	b3_matrix *transform,
 	b3_vector *center,
-	b3_vector *dir1,
-	b3_vector *dir2,
-	b3_bool    negate)
+	b3_vector *lookTo,
+	b3_vector *oldLook,
+	b3_bool    future)
 {
-	b3_matrix lookTo;
-	b3_vector normal;
+	b3_matrix orientation;
+	b3_vector axis;
 
 	// dress vector is x axis
-	lookTo.m11 = dir1->x;
-	lookTo.m21 = dir1->y;
-	lookTo.m31 = dir1->z;
-	lookTo.m41 = 0;
-	b3NormalizeCol (&lookTo,0);
+	orientation.m11 = lookTo->x;
+	orientation.m21 = lookTo->y;
+	orientation.m31 = lookTo->z;
+	orientation.m41 = 0;
+	b3NormalizeCol (&orientation,0);
 
 	// now compute z axis from dress vector and direction vector
-	normal.x = dir1->y * dir2->z - dir1->z * dir2->y; 
-	normal.y = dir1->z * dir2->x - dir1->x * dir2->z; 
-	normal.z = dir1->x * dir2->y - dir1->y * dir2->x; 
-
-	if (negate)
+	if (future)
 	{
-		b3Vector::b3Negate(&normal);
+		b3Vector::b3CrossProduct(lookTo,oldLook,&axis);
 	}
-	lookTo.m13 = normal.x;
-	lookTo.m23 = normal.y;
-	lookTo.m33 = normal.z;
-	lookTo.m43 = 0;
-	b3NormalizeCol (&lookTo,2);
+	else
+	{
+		b3Vector::b3CrossProduct(oldLook,lookTo,&axis);
+	}
+	if (b3Vector::b3Normalize(&axis))
+	{
+		if (axis.z < 0)
+		{
+			b3Vector::b3Negate(&axis);
+		}
+		orientation.m13 = axis.x;
+		orientation.m23 = axis.y;
+		orientation.m33 = axis.z;
+		orientation.m43 = 0;
 
-	// now compute y axis from x and z axis
-	lookTo.m12 = dir1->y * lookTo.m33 - dir1->z * lookTo.m23; 
-	lookTo.m22 = dir1->z * lookTo.m13 - dir1->x * lookTo.m33; 
-	lookTo.m32 = dir1->x * lookTo.m23 - dir1->y * lookTo.m13; 
-	lookTo.m42 = 0;
-	b3NormalizeCol (&lookTo,1);
+		// now compute y axis from x and z axis
+		orientation.m12 = lookTo->y * axis.z - lookTo->z * axis.y; 
+		orientation.m22 = lookTo->z * axis.x - lookTo->x * axis.z; 
+		orientation.m32 = lookTo->x * axis.y - lookTo->y * axis.x; 
+		orientation.m42 = 0;
+		b3NormalizeCol (&orientation,1);
+	}
+	else
+	{
+		b3Unit(&orientation);
+	}
 
 	// reposition object
-	lookTo.m14 = center->x;
-	lookTo.m24 = center->y;
-	lookTo.m34 = center->z;
-	lookTo.m44 = 1;
+	orientation.m14 = center->x;
+	orientation.m24 = center->y;
+	orientation.m34 = center->z;
+	orientation.m44 = 1;
 
 	// "undo" from transformation, "do" to transformation
-	b3MMul (prev,&lookTo,transform);
+	b3MMul (prev,&orientation,transform);
 	return transform;
 }
 

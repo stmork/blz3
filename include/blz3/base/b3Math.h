@@ -70,24 +70,25 @@ public:
 		return value;
 	}
 
-	static inline b3_f64 b3Limit(const b3_f64 value,const b3_f64 min,const b3_f64 max)
+	static inline b3_f64 b3Limit(b3_f64 value,const b3_f64 min,const b3_f64 max)
 	{
 		if (value < min)
 		{
-			return min;
+			value = min;
 		}
-		if (value > max)
+		else if (value > max)
 		{
-			return max;
+			value = max;
 		}
 		return value;
 	}
 
 	static inline b3_f64 b3Round(b3_f64 x,b3_f64 rnd)
 	{
-		b3_f64 mul = floor(0.5 / rnd + 0.5);
+		b3_f64 mul    = floor(0.5 / rnd + 0.5);
+		b3_f64 result = floor(x * mul + 0.5) / mul;
 
-		return floor(x * mul + 0.5) / mul;
+		return result;
 	}
 
 	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)

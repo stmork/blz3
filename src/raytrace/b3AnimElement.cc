@@ -35,6 +35,12 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2004/06/19 12:11:01  sm
+**      - Fixed animation problem by using a thrid dress vector
+**        which points up. This is a hack because rotating vectors
+**        inside the xy plane are undefined.
+**      - Added material/bump save support.
+**
 **      Revision 1.10  2004/06/18 14:49:05  sm
 **      - Some probes concerning the anim rotation problem. Should I use
 **        quaternions?
@@ -92,7 +98,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3AnimElement::epsilon = 0.0005;
+b3_f64 b3AnimElement::epsilon = 1.0 / 2048;
 
 #define ANIM_STEP (2.0 * b3AnimElement::epsilon)
 
@@ -306,44 +312,41 @@ void b3AnimElement::b3AnimateMove(
 void b3AnimElement::b3AnimateRotate(
 	b3Animation *AnimRoot,
 	b3_matrix   *transform,
-	b3_f64       tParam)
+	b3_f64       t)
 {
-	b3_f64     t1,t2,t = b3Round(tParam);
-	b3_bool    negate;
+	b3_f64     t1,t2,tRef;
 	b3_vector  lookTo;
-	b3_vector  oldDir;
-	b3_vector  oldCenter;
+	b3_vector  refDir;
+	b3_vector  refCenter;
+	b3_bool    future;
 
-	t1 = b3Round(b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End));
-	t2 = b3Round(b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End));
+	t1 = b3Math::b3Round(b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End),epsilon);
+	t2 = b3Math::b3Round(b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End),epsilon);
 	if (t1 != t2)
 	{
+		// Compute present orientation
 		b3GetPosition (&lookTo, t);
-		if (t != t1)
-		{
-			AnimRoot->b3RecomputeCenter (this,&oldCenter,t1);
-			b3GetPosition     (&oldDir,t1);
-			negate = false;
-		}
-		else
-		{
-			AnimRoot->b3RecomputeCenter (this,&oldCenter,t2);
-			b3GetPosition     (&oldDir,t2);
-			negate = true;
-		}
-
 		lookTo.x -= m_Center.x;
 		lookTo.y -= m_Center.y;
 		lookTo.z -= m_Center.z;
-		oldDir.x -= oldCenter.x;
-		oldDir.y -= oldCenter.y;
-		oldDir.z -= oldCenter.z;
+
+		// Which reference to use.
+		future = (t == t1);
+
+		// Use future or past reference time?
+		tRef = future ? t2 : t1;
+
+		// Compute reference
+		AnimRoot->b3RecomputeCenter (this,&refCenter,tRef);
+		b3GetPosition (&refDir,tRef);
+
+		refDir.x -= refCenter.x;
+		refDir.y -= refCenter.y;
+		refDir.z -= refCenter.z;
+
+		// Orientate
 		b3Matrix::b3Dress (&m_NeutralInverse,transform,
-			&m_Center,&lookTo,&oldDir,negate);
-		if (fabs(b3Matrix::b3Det4(transform)) < b3Scene::epsilon)
-		{
-			b3Matrix::b3Unit (transform);
-		}
+			&m_Center,&lookTo,&refDir,future);
 	}
 	else
 	{

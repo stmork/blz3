@@ -129,17 +129,13 @@ public:
 
 	       b3_bool         b3SelectAnimElement (b3Scene *scene);
 	       void            b3SelectObjects (b3BBox *BBox);
+
 private:
 	       void            b3AnimateMove  (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 	       void            b3AnimateRotate(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 	       void            b3AnimateScale (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 
-private:
-	static inline b3_f64 b3Round(b3_f64 x)
-	{
-		return b3Math::b3Round(x,epsilon);
-	}
-
+public:
 	static b3_f64 epsilon;
 };
 

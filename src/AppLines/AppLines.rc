@@ -216,8 +216,8 @@ BEGIN
     BUTTON      ID_PICK_PREV
     BUTTON      ID_PICK_SUCK
     SEPARATOR
-    BUTTON      ID_EDIT_MATERIAL
-    BUTTON      ID_EDIT_BUMP
+    BUTTON      ID_EDIT_MATERIAL_DIRECT
+    BUTTON      ID_EDIT_BUMP_DIRECT
     BUTTON      ID_COPY_PROPERTIES
 END
 
@@ -609,7 +609,6 @@ BEGIN
         MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
         MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
-        MENUITEM "&Bild speichern unter...\tStrg+S", ID_IMG_SAVE
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -641,6 +640,7 @@ BEGIN
     BEGIN
         MENUITEM "&Verwalten...",               ID_EDIT_MATERIAL
         MENUITEM "&Editieren",                  ID_EDIT_MATERIAL_DIRECT
+        MENUITEM "&Speichern...",               ID_SAVE_MATERIALS
         MENUITEM "Werte in Oberflächenstruktur kopieren", 
                                                 ID_COPY_MATERIAL_TO_BUMP
     END
@@ -648,6 +648,7 @@ BEGIN
     BEGIN
         MENUITEM "&Verwalten...",               ID_EDIT_BUMP
         MENUITEM "&Editieren",                  ID_EDIT_BUMP_DIRECT
+        MENUITEM "&Speichern...",               ID_SAVE_BUMPS
     END
     POPUP "&Ansicht"
     BEGIN
@@ -746,10 +747,8 @@ BEGIN
     POPUP "Szene"
     BEGIN
         MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
-        MENUITEM "Um&benennen",                 ID_RENAME
-        MENUITEM SEPARATOR
-        MENUITEM "&Material...",                ID_EDIT_MATERIAL
-        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
+        MENUITEM "Einzelnes &Material editieren...", ID_EDIT_MATERIAL_DIRECT
+        MENUITEM "Einzelne Bum&p Map editieren...", ID_EDIT_BUMP_DIRECT
         MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
@@ -759,6 +758,7 @@ BEGIN
         MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
         MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
         MENUITEM SEPARATOR
+        MENUITEM "Um&benennen",                 ID_RENAME
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
@@ -1976,7 +1976,7 @@ END
 
 IDD_ITEM_MAINTAIN DIALOGEX 0, 0, 387, 261
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_ITEM_LIST,"SysListView32",LVS_SINGLESEL | 
                     LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
@@ -3947,6 +3947,8 @@ BEGIN
     ID_EDIT_MATERIAL_DIRECT "Einzelnes Material direkt ändern.\nMaterial direkt ändern"
     ID_COPY_MATERIAL_TO_BUMP 
                             "Kopiert die Materialwerte in Strukturwerte um.\nMaterial in Struktur anpassen"
+    ID_SAVE_MATERIALS       "Speichert die Materialien eines Körpers.\nMaterialien speichern."
+    ID_SAVE_BUMPS           "Speichert die Oberflächenstrukturen eines Körpers.\nOberflächenstrukturen speichern."
 END
 
 STRINGTABLE DISCARDABLE 
