@@ -87,7 +87,6 @@ typedef B3_ALIGN_16 struct b3_vector32_3D
 	b3_f32    x;
 	b3_f32    y;
 	b3_f32    z;
-	b3_f32    pad;
 } b3_vector32, b3_vector;
 
 typedef B3_ALIGN_32 struct b3_vector64_3D
@@ -95,7 +94,6 @@ typedef B3_ALIGN_32 struct b3_vector64_3D
 	b3_f64    x;
 	b3_f64    y;
 	b3_f64    z;
-	b3_f64    pad;
 } b3_vector64;
 
 typedef B3_ALIGN_16 struct b3_vector32_4D
