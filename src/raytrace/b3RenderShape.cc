@@ -33,10 +33,8 @@
 
 /*
 **      $Log$
-**      Revision 1.38  2002/07/22 18:45:16  sm
-**      - Further probing of texture stencil via alpha channel.
-**      - Why does Mesa loose the first texture?
-**      - Nasty uncr.
+**      Revision 1.39  2002/07/22 18:46:22  sm
+**      - Missing to commit...
 **
 **      Revision 1.37  2002/07/22 16:27:45  sm
 **      - Fixed some errors concerning texture stencil
@@ -675,8 +673,7 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 				{
 					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
-#if 1
-						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
+#if 1						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
 						color     = b3Color::b3GetColor(&diffuse);
 #else
 						color = b3CheckStencil(&polar) ?
