@@ -78,7 +78,7 @@ protected:
 private:
 	b3Item *b3GetSelectedItem();
 	void    b3UpdateUI();
-	void    b3UpdateList(b3Item *select = null);
+	void    b3UpdateList(b3Item *select = null,b3_bool set_focus = false);
 	void    b3InitItemList();
 	
 	static void b3Store(b3Item *item);

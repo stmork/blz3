@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.67  2004/04/26 12:27:43  sm
+**      - Added following dialogs:
+**        o granite
+**        o chess
+**      - Added scaling to wood properties
+**
 **      Revision 1.66  2004/04/25 16:22:40  sm
 **      - Added some colors for convenience.
 **      - Added some initial values to materials.
@@ -1374,15 +1380,20 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
-	m_DarkColor   = b3Color(B3_BLACK);
-	m_LightColor  = b3Color(b3_pkd_color(0xd0dde0));
-	m_Diffuse     = b3Color(0.8, 0.8, 0.8);
-	m_Ambient     = b3Color(0.1, 0.1, 0.1);
-	m_Diffuse     = b3Color(0.8, 0.8, 0.8);
-	m_Reflection  =   0.0;
-	m_Refraction  =   0.0;
-	m_Ior         =   1.0;
-	m_SpecularExp = 100.0;
+	m_DarkMaterial.m_Diffuse      = B3_BLACK;
+	m_LightMaterial.m_Diffuse     = b3_pkd_color(0xd0dde0);
+	m_DarkMaterial.m_Ambient      = m_DarkMaterial.m_Diffuse * 0.2;
+	m_LightMaterial.m_Ambient     = m_LightMaterial.m_Diffuse * 0.2;
+	m_DarkMaterial.m_Specular     = B3_GREY;
+	m_LightMaterial.m_Specular    = B3_GREY;
+	m_DarkMaterial.m_Reflection   =
+	m_DarkMaterial.m_Reflection   =   0.0;
+	m_DarkMaterial.m_Refraction   =
+	m_LightMaterial.m_Refraction  =   0.0;
+	m_DarkMaterial.m_Ior          =
+	m_LightMaterial.m_Ior         =   1.0;
+	m_DarkMaterial.m_SpecularExp  =
+	m_LightMaterial.m_SpecularExp = 100.0;
 	m_Overtone    =   2;
 	m_Flags       =   0;
 	b3Vector::b3Init(&m_Scale,10,10,10);
@@ -1390,39 +1401,50 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_DarkColor);
-	b3InitColor(m_LightColor);
-	b3InitColor(m_Diffuse);
-	b3InitColor(m_Ambient);
-	b3InitColor(m_Specular);
+	b3InitColor(m_DarkMaterial.m_Ambient);
+	b3InitColor(m_DarkMaterial.m_Diffuse);
+	b3InitColor(m_DarkMaterial.m_Specular);
+	b3InitColor(m_LightMaterial.m_Ambient);
+	b3InitColor(m_LightMaterial.m_Diffuse);
+	b3InitColor(m_LightMaterial.m_Specular);
+	m_DarkMaterial.m_Reflection  = b3InitFloat();
+	m_DarkMaterial.m_Refraction  = b3InitFloat();
+	m_DarkMaterial.m_Ior         = b3InitFloat();
+	m_DarkMaterial.m_SpecularExp = b3InitFloat();
+	m_LightMaterial.m_Reflection  = b3InitFloat();
+	m_LightMaterial.m_Refraction  = b3InitFloat();
+	m_LightMaterial.m_Ior         = b3InitFloat();
+	m_LightMaterial.m_SpecularExp = b3InitFloat();
 	b3InitVector(&m_Scale);
-	m_Reflection  = b3InitFloat();
-	m_Refraction  = b3InitFloat();
-	m_Ior         = b3InitFloat();
-	m_SpecularExp = b3InitFloat();
 	m_Flags       = b3InitInt();
 	m_Overtone    = b3InitCount();
 }
 
 void b3MatGranite::b3Write()
 {
-	b3StoreColor(m_DarkColor);
-	b3StoreColor(m_LightColor);
-	b3StoreColor(m_Diffuse);
-	b3StoreColor(m_Ambient);
-	b3StoreColor(m_Specular);
+	b3StoreColor(m_DarkMaterial.m_Ambient);
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Specular);
+	b3StoreColor(m_LightMaterial.m_Ambient);
+	b3StoreColor(m_LightMaterial.m_Diffuse);
+	b3StoreColor(m_LightMaterial.m_Specular);
+	
+	b3StoreFloat(m_DarkMaterial.m_Reflection);
+	b3StoreFloat(m_DarkMaterial.m_Refraction);
+	b3StoreFloat(m_DarkMaterial.m_Ior);
+	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
+	b3StoreFloat(m_LightMaterial.m_Reflection);
+	b3StoreFloat(m_LightMaterial.m_Refraction);
+	b3StoreFloat(m_LightMaterial.m_Ior);
+	b3StoreFloat(m_LightMaterial.m_SpecularExp);
+
 	b3StoreVector(&m_Scale);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_Ior);
-	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_Overtone);
 }
 
 b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	b3Color   mask;
 	b3_vector d;
 	b3_loop   i;
 	b3_f64    sum = 0;
@@ -1440,28 +1462,16 @@ b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 			4 * freq * d.z) / freq;
 		freq += freq; // = freq *= 2;
 	}
-
-	if (sum < 0)
-	{
-		mask = m_DarkColor;
-	}
-	else if (sum > 1)
-	{
-		mask = m_LightColor;
-	}
-	else
-	{
-		mask = b3Color::b3Mix(m_DarkColor,m_LightColor,sum);
-	}
+	b3Math::b3Limit(sum,0,1);
 	
-	surface->m_Diffuse  = m_Diffuse  * mask;
-	surface->m_Ambient  = m_Ambient  * mask;
-	surface->m_Specular = m_Specular * mask;
+	surface->m_Ambient     = b3Color::b3Mix(m_DarkMaterial.m_Ambient, m_LightMaterial.m_Ambient, sum);
+	surface->m_Diffuse     = b3Color::b3Mix(m_DarkMaterial.m_Diffuse, m_LightMaterial.m_Diffuse, sum);
+	surface->m_Specular    = b3Color::b3Mix(m_DarkMaterial.m_Specular,m_LightMaterial.m_Specular,sum);
 
-	surface->m_Reflection  = m_Reflection;
-	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_Ior;
-	surface->m_SpecularExp = m_SpecularExp;
+	surface->m_Reflection  = b3Math::b3Mix(m_DarkMaterial.m_Reflection,  m_LightMaterial.m_Reflection, sum);
+	surface->m_Refraction  = b3Math::b3Mix(m_DarkMaterial.m_Refraction,  m_LightMaterial.m_Refraction, sum);
+	surface->m_Ior         = b3Math::b3Mix(m_DarkMaterial.m_Ior,         m_LightMaterial.m_Ior, sum);
+	surface->m_SpecularExp = b3Math::b3Mix(m_DarkMaterial.m_SpecularExp, m_LightMaterial.m_SpecularExp, sum);
 
 	return true;
 }

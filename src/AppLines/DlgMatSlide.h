@@ -24,7 +24,7 @@
 // DlgMatSlide.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Material.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowRaytrace.h"

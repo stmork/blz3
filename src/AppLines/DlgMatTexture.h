@@ -24,7 +24,7 @@
 // DlgMatTexture.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Material.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatTexture dialog

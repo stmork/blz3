@@ -27,13 +27,16 @@
 #include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSliderCtrl.h"
+#include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood dialog
 
 class CPageWood : public CB3PropertyPage
 {
-// Construction
+	CB3PosGroup        m_ScaleCtrl;
+
+	// Construction
 public:
 	CPageWood();
 	~CPageWood();
@@ -56,6 +59,9 @@ public:
 	CB3FloatSpinButtonCtrl	m_TrunkWobbleFrequencyCtrl;
 	CB3FloatSpinButtonCtrl	m_AngularWobbleCtrl;
 	CB3FloatSpinButtonCtrl	m_AngularWobbleFrequencyCtrl;
+	CB3FloatEdit	m_xScaleCtrl;
+	CB3FloatEdit	m_yScaleCtrl;
+	CB3FloatEdit	m_zScaleCtrl;
 	//}}AFX_DATA
 
 
@@ -70,6 +76,7 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageWood)
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

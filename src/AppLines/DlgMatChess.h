@@ -24,25 +24,36 @@
 // DlgMatChess.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
+#include "b3SimplePropertyPreviewDialog.h"
+#include "b3ShowRaytrace.h"
+#include "PageMaterial.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatChess dialog
 
-class CDlgMatChess : public CDialog
+class CDlgMatChess : public CB3SimplePropertyPreviewDialog
 {
-	b3MatChess *m_Material;
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
+	b3MatChess        *m_Material;
 
+	CPageMaterial      m_PageBlack;
+	CPageMaterial      m_PageWhite;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgMatChess(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatChess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatChess)
 	enum { IDD = IDD_MAT_CHESS };
-		// NOTE: the ClassWizard will add data members here
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
+	CB3IntSpinButtonCtrl	m_xTimesCtrl;
+	CB3IntSpinButtonCtrl	m_yTimesCtrl;
 	//}}AFX_DATA
 
 
@@ -61,6 +72,10 @@ protected:
 		// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

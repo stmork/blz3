@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/26 12:27:43  sm
+**	- Added following dialogs:
+**	  o granite
+**	  o chess
+**	- Added scaling to wood properties
+**
 **	Revision 1.3  2004/04/24 20:15:52  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.2  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
 **	
@@ -97,6 +103,9 @@ void CPageWood::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SPIN_TRUNK_WOBBLE_FREQUENCY, m_TrunkWobbleFrequencyCtrl);
 	DDX_Control(pDX, IDC_SPIN_ANGULAR_WOBBLE, m_AngularWobbleCtrl);
 	DDX_Control(pDX, IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY, m_AngularWobbleFrequencyCtrl);
+	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
 	//}}AFX_DATA_MAP
 	m_RotYCtrl.b3DDX(pDX, m_Wood->m_yRot);
 	m_RotZCtrl.b3DDX(pDX, m_Wood->m_zRot);
@@ -111,6 +120,7 @@ void CPageWood::DoDataExchange(CDataExchange* pDX)
 	m_TrunkWobbleFrequencyCtrl.b3DDX(pDX, m_Wood->m_TrunkWobbleFrequency);
 	m_AngularWobbleCtrl.b3DDX(pDX, m_Wood->m_AngularWobble);
 	m_AngularWobbleFrequencyCtrl.b3DDX(pDX, m_Wood->m_AngularWobbleFrequency);
+	m_ScaleCtrl.b3DDX(pDX);
 }
 
 
@@ -127,6 +137,9 @@ BEGIN_MESSAGE_MAP(CPageWood, CB3PropertyPage)
 	ON_EN_KILLFOCUS(IDC_EDIT_TRUNK_WOBBLE_FREQUENCY, OnEdit)
 	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE, OnEdit)
 	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_X, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Y, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Z, OnEdit)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Y, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Z, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RINGY, OnSpin)
@@ -145,3 +158,15 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood message handlers
+
+BOOL CPageWood::OnInitDialog() 
+{
+	m_ScaleCtrl.b3Init(&m_Wood->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
+
+	CB3PropertyPage::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}

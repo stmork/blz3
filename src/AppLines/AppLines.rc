@@ -1939,7 +1939,7 @@ END
 
 IDD_ITEM_MAINTAIN DIALOGEX 0, 0, 387, 261
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,235,50,15
     PUSHBUTTON      "Neu",IDC_ITEM_NEW,130,170,50,15
@@ -1954,9 +1954,10 @@ BEGIN
                     LVS_AUTOARRANGE | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
                     WS_BORDER | WS_TABSTOP,10,20,105,205,WS_EX_CLIENTEDGE
     CONTROL         "List1",IDC_CLASS_LIST,"SysListView32",LVS_SINGLESEL | 
-                    LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
-                    LVS_AUTOARRANGE | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
-                    WS_BORDER | WS_TABSTOP,195,20,180,205,WS_EX_CLIENTEDGE
+                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | 
+                    LVS_SHAREIMAGELISTS | LVS_AUTOARRANGE | 
+                    LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,195,20,180,205,WS_EX_CLIENTEDGE
     LTEXT           "Verfügbarkeitsliste:",IDC_STATIC,195,10,60,8
     LTEXT           "Bearbeitungsliste:",IDC_STATIC,10,10,56,8
 END
@@ -2022,13 +2023,29 @@ BEGIN
     PUSHBUTTON      "Aktualisieren",IDC_REFRESH,165,155,50,14
 END
 
-IDD_MAT_CHESS DIALOG DISCARDABLE  0, 0, 186, 95
+IDD_MAT_CHESS DIALOG DISCARDABLE  0, 0, 417, 241
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Schachmuster"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,215,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,215,50,14
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,290,125,50,14
+    LTEXT           "Breite",IDC_STATIC,290,150,19,8
+    EDITTEXT        IDC_EDIT_XTIMES,290,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_XTIMES,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,325,160,11,15
+    LTEXT           "Höhe",IDC_STATIC,290,175,18,8
+    EDITTEXT        IDC_EDIT_YTIMES,290,185,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_YTIMES,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,325,185,11,15
 END
 
 IDD_MAT_SLIDE DIALOG DISCARDABLE  0, 0, 417, 241
@@ -2251,62 +2268,26 @@ BEGIN
     PUSHBUTTON      "Aktualisieren",IDC_REFRESH,220,155,50,14
 END
 
-IDD_MAT_GRANITE DIALOG DISCARDABLE  0, 0, 427, 233
+IDD_MAT_GRANITE DIALOG DISCARDABLE  0, 0, 417, 255
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Granit"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,212,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,370,212,50,14
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,90,30,60,15
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,90,65,60,15
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,90,100,60,15
-    LTEXT           "",IDC_COLOR_AMBIENT,20,30,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "",IDC_COLOR_DIFFUSE,20,65,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "",IDC_COLOR_SPECULAR,20,100,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "Ambient",IDC_STATIC,20,20,26,8
-    LTEXT           "Diffuse",IDC_STATIC,20,55,23,8
-    LTEXT           "Specular",IDC_STATIC,20,90,29,8
-    GROUPBOX        "Farben:",IDC_STATIC,10,5,160,120
-    EDITTEXT        IDC_REFLECTANCE,195,30,45,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,240,30,11,15
-    EDITTEXT        IDC_REFRACTANCE,195,60,45,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,240,60,11,15
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,260,30,45,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,305,30,11,15
-    EDITTEXT        IDC_SPEC_EXPONENT,260,60,45,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,305,60,11,15
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,200,100,105,95
-    LTEXT           "Verspiegelung",IDC_STATIC,195,20,46,8
-    GROUPBOX        "Materialwerte",IDC_STATIC,185,5,135,80
-    LTEXT           "Verglasung",IDC_STATIC,195,50,36,8
-    LTEXT           "Brechungsindex",IDC_STATIC,260,20,52,8
-    LTEXT           "Spek. Exponent",IDC_STATIC,260,50,52,8
-    EDITTEXT        IDC_YDEGREE,345,124,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin4",IDC_YDEGREE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,385,124,11,14
-    LTEXT           "Spline-Grad",IDC_STATIC,345,115,38,8
-    EDITTEXT        IDC_BASE_X,355,25,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
-    EDITTEXT        IDC_BASE_Y,355,45,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
-    EDITTEXT        IDC_BASE_Z,355,65,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
-    GROUPBOX        " Basis: ",IDC_STATIC,335,10,80,75
-    LTEXT           "x:",IDC_STATIC,345,25,10,8,NOT WS_GROUP
-    LTEXT           "y:",IDC_STATIC,345,45,10,8,NOT WS_GROUP
-    LTEXT           "z:",IDC_STATIC,345,65,10,8,NOT WS_GROUP
-    GROUPBOX        "Static",IDC_STATIC,10,135,160,75
+                    SS_SUNKEN,290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    EDITTEXT        IDC_SCALE_X,345,161,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_SCALE_Y,345,180,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_SCALE_Z,345,201,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    GROUPBOX        "Skalierung",IDC_STATIC,325,145,80,75
+    LTEXT           "x:",IDC_STATIC,335,161,10,8,NOT WS_GROUP
+    LTEXT           "y:",IDC_STATIC,335,180,10,8,NOT WS_GROUP
+    LTEXT           "z:",IDC_STATIC,335,201,10,8,NOT WS_GROUP
 END
 
 IDD_MAT_OAKPLANK DIALOG DISCARDABLE  0, 0, 567, 271
@@ -2358,12 +2339,12 @@ BEGIN
     GROUPBOX        "Verteilung:",IDC_STATIC,95,10,75,75
 END
 
-IDD_PAGE_WOOD DIALOG DISCARDABLE  0, 0, 292, 175
+IDD_PAGE_WOOD DIALOG DISCARDABLE  0, 0, 302, 206
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Holz"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Faserung",IDC_STATIC,10,10,130,40
+    GROUPBOX        "Faserung",IDC_STATIC,10,10,140,40
     LTEXT           "Gewichtung",IDC_STATIC,20,20,39,8
     EDITTEXT        IDC_EDIT_GRAINY,20,30,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_GRAINY,"msctls_updown32",UDS_ALIGNRIGHT | 
@@ -2374,62 +2355,69 @@ BEGIN
     CONTROL         "Spin1",IDC_SPIN_GRAIN_FREQUENCY,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,120,30,10,15
-    GROUPBOX        "Ringsteuerung",IDC_STATIC,10,55,130,85
+    GROUPBOX        "Ringsteuerung",IDC_STATIC,10,55,70,105
     LTEXT           "Gewichtung",IDC_STATIC,20,65,52,8
     EDITTEXT        IDC_EDIT_RINGY,20,75,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_RINGY,"msctls_updown32",UDS_ALIGNRIGHT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,75,10,
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,75,11,
                     15
-    LTEXT           "Frequenz",IDC_STATIC,80,65,43,8
-    EDITTEXT        IDC_EDIT_RING_FREQUENCY,80,75,40,12,ES_AUTOHSCROLL
+    LTEXT           "Frequenz",IDC_STATIC,20,125,43,8
+    EDITTEXT        IDC_EDIT_RING_FREQUENCY,20,135,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_RING_FREQUENCY,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,120,75,10,15
-    LTEXT           "Abstandsschwankung",IDC_STATIC,20,95,90,8
+                    UDS_NOTHOUSANDS,60,135,11,15
+    LTEXT           "Schwankung",IDC_STATIC,20,95,40,8
     EDITTEXT        IDC_EDIT_RING_SPACING,20,105,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_RING_SPACING,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,60,105,10,15
-    GROUPBOX        "Ringrauschen",IDC_STATIC,150,10,130,40
-    LTEXT           "Stärke",IDC_STATIC,160,20,22,8
-    EDITTEXT        IDC_EDIT_RING_NOISE,160,30,40,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,60,105,11,15
+    GROUPBOX        "Ringrauschen",IDC_STATIC,160,10,130,40
+    LTEXT           "Stärke",IDC_STATIC,170,20,22,8
+    EDITTEXT        IDC_EDIT_RING_NOISE,170,30,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_RING_NOISE,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,200,30,10,15
-    LTEXT           "Frequenz",IDC_STATIC,220,20,30,8
-    EDITTEXT        IDC_EDIT_RING_NOISE_FREQUENCY,220,30,40,12,
+                    UDS_NOTHOUSANDS,210,30,11,15
+    LTEXT           "Frequenz",IDC_STATIC,230,20,30,8
+    EDITTEXT        IDC_EDIT_RING_NOISE_FREQUENCY,230,30,40,12,
                     ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_RING_NOISE_FREQUENCY,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,260,30,10,15
-    GROUPBOX        "Astschwankung",IDC_STATIC,150,55,130,40
-    LTEXT           "Stärke",IDC_STATIC,160,65,52,8
-    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE,160,74,40,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,270,30,11,15
+    GROUPBOX        "Astschwankung",IDC_STATIC,160,55,130,40
+    LTEXT           "Stärke",IDC_STATIC,170,65,52,8
+    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE,170,74,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_TRUNK_WOBBLE,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,200,74,10,15
-    LTEXT           "Frequenz",IDC_STATIC,220,65,35,8
-    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE_FREQUENCY,220,74,40,12,
+                    UDS_NOTHOUSANDS,210,74,11,15
+    LTEXT           "Frequenz",IDC_STATIC,230,65,35,8
+    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE_FREQUENCY,230,74,40,12,
                     ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_TRUNK_WOBBLE_FREQUENCY,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,260,74,10,15
-    GROUPBOX        "Astverzerrung",IDC_STATIC,150,100,130,40
-    LTEXT           "Stärke",IDC_STATIC,160,110,44,8
-    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE,160,119,40,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,270,74,11,15
+    GROUPBOX        "Astverzerrung",IDC_STATIC,160,100,130,40
+    LTEXT           "Stärke",IDC_STATIC,170,110,44,8
+    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE,170,119,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_ANGULAR_WOBBLE,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,200,119,10,15
-    LTEXT           "Frequenz",IDC_STATIC,220,110,35,8
-    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY,220,119,40,12,
+                    UDS_NOTHOUSANDS,210,119,11,15
+    LTEXT           "Frequenz",IDC_STATIC,230,110,35,8
+    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY,230,119,40,12,
                     ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY,
                     "msctls_updown32",UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,260,119,10,15
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,270,119,11,15
     CONTROL         "Slider2",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,10,145,130,25
+                    TBS_TOP | WS_TABSTOP,160,145,130,25
     CONTROL         "Slider1",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,150,145,130,25
+                    TBS_TOP | WS_TABSTOP,160,175,130,25
+    EDITTEXT        IDC_SCALE_X,95,75,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_SCALE_Y,95,105,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_SCALE_Z,95,135,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    GROUPBOX        "Skalierung",IDC_STATIC,85,55,65,105
+    LTEXT           "x:",IDC_STATIC,95,65,10,8,NOT WS_GROUP
+    LTEXT           "y:",IDC_STATIC,95,95,10,8,NOT WS_GROUP
+    LTEXT           "z:",IDC_STATIC,95,125,10,8,NOT WS_GROUP
 END
 
 IDD_PAGE_MATERIAL DIALOG DISCARDABLE  0, 0, 232, 166
@@ -2500,34 +2488,34 @@ BEGIN
     PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
 END
 
-IDD_BUMP_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
+IDD_BUMP_WOOD DIALOG DISCARDABLE  0, 0, 572, 271
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Holzstruktur"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,511,245,50,14
     CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
-                    320,10,235,200
+                    325,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
     CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
-    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,325,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,511,220,50,14
 END
 
-IDD_MAT_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
+IDD_MAT_WOOD DIALOG DISCARDABLE  0, 0, 572, 271
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Holz"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,511,245,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,320,10,235,200
+                    SS_SUNKEN,325,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
     CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
-    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,325,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,511,220,50,14
 END
 
 IDD_PAGE_MAT_WOOD DIALOG DISCARDABLE  0, 0, 167, 170
@@ -2942,9 +2930,9 @@ BEGIN
     IDD_MAT_CHESS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 410
         TOPMARGIN, 7
-        BOTTOMMARGIN, 88
+        BOTTOMMARGIN, 234
     END
 
     IDD_MAT_SLIDE, DIALOG
@@ -2990,9 +2978,9 @@ BEGIN
     IDD_MAT_GRANITE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 420
+        RIGHTMARGIN, 410
         TOPMARGIN, 7
-        BOTTOMMARGIN, 226
+        BOTTOMMARGIN, 248
     END
 
     IDD_MAT_OAKPLANK, DIALOG
@@ -3014,9 +3002,9 @@ BEGIN
     IDD_PAGE_WOOD, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 285
+        RIGHTMARGIN, 295
         TOPMARGIN, 7
-        BOTTOMMARGIN, 168
+        BOTTOMMARGIN, 199
     END
 
     IDD_PAGE_MATERIAL, DIALOG
@@ -3046,7 +3034,7 @@ BEGIN
     IDD_BUMP_WOOD, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 560
+        RIGHTMARGIN, 565
         TOPMARGIN, 7
         BOTTOMMARGIN, 264
     END
@@ -3054,7 +3042,7 @@ BEGIN
     IDD_MAT_WOOD, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 560
+        RIGHTMARGIN, 565
         TOPMARGIN, 7
         BOTTOMMARGIN, 264
     END
@@ -3153,10 +3141,13 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_ARCON_FILTER        "ArCon-Geometrie (*.tgf)|*.tgf|Alle Dateien (*.*)|*.*||"
     IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
+    IDS_ASK_DELETE_ITEM     "Sollen diese Daten gelöscht werden?"
     IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
     IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
     IDS_ASK_DELETE_SHAPE    "Soll der aktuelle Körper wirklich gelöscht werden?"
     IDS_BBOX                "Objekt"
+    IDS_BUMP_OAKPLANK       "Parkettstruktur"
+    IDS_BUMP_WOOD           "Holzstruktur"
     IDS_CAMERA_UNIT         "Maßeinheit: %s"
     IDS_CLASSDESC_BUMP      "Oberflächenstrukturen"
     IDS_CLASSDESC_CONDITION "Ausstanzungen"
@@ -3164,13 +3155,13 @@ BEGIN
     IDS_CLASSDESC_MATERIAL  "Materialien"
     IDS_CLASSDESC_SPECIAL   "Szenenweite Einstellungen"
     IDS_COB_FILTER          "Caligari Objekt (*.cob)|*.cob|Alle Dateien (*.*)|*.*||"
-    IDS_CSG_BOX             "CSG Quader (%s)"
-    IDS_CSG_CONE            "CSG Kegel (%s)"
-    IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_CSG_BOX             "CSG Quader (%s)"
+    IDS_CSG_CONE            "CSG Kegel (%s)"
+    IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
     IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
     IDS_CSG_MODE_INTERSECT  "Schnittmenge"
     IDS_CSG_MODE_NONE       " "
@@ -3184,13 +3175,35 @@ BEGIN
     IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
     IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
     IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
-    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
-    IDS_DOC_READ            "Datei %s wird geladen..."
-    IDS_DOC_REORG           "Die Objekthierarchien werden rekonstruiert..."
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
+    IDS_DOC_READ            "Datei %s wird geladen..."
+    IDS_DOC_REORG           "Die Objekthierarchien werden rekonstruiert..."
+    IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
+    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
+    IDS_ERR_CLASSTYPE_UNKNOWN 
+                            "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
+    IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
+    IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
+    IDS_ERR_FILE_NOT_FOUND  "Die Datei konnte nicht geöffnet werden!"
+    IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
+    IDS_ERR_FILE_NOT_WRITTEN 
+                            "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
+    IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
+    IDS_ERR_IMPORT          "Die Datei konnte nicht importiert werden!"
+    IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
+    IDS_ERR_NOT_FOUND       "Die Textur konnte nicht gefunden werden."
+    IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
+    IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
+    IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
     IDS_ERR_PACKING         "Das Bild enthält gepackte Daten im unbekanntem Format!"
     IDS_ERR_PARSE           "Die Blizzard-Datei ist nicht im richtigen Format!"
     IDS_ERR_READ            "Die Blizzard Datei ließ sich nicht lesen!"
@@ -3200,20 +3213,35 @@ BEGIN
     IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
     IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
     IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
+    IDS_FROM                "Anfang"
     IDS_ITEMDESC_ANIMATION  "Animation"
     IDS_ITEMDESC_CAMERA     "Kameraeinstellung"
     IDS_ITEMDESC_CAUSTIC    "Kaustiken (experimentell)"
-    IDS_ITEMDESC_DISTRIBUTE "Distributed Raytracing"
-    IDS_ITEMDESC_LENSFLARE  "Lensflare-Definition"
-    IDS_ITEMDESC_LINES_INFO "Modellierhilfe"
-    IDS_ITEMDESC_NEBULAR    "Nebel"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_ITEMDESC_DISTRIBUTE "Distributed Raytracing"
+    IDS_ITEMDESC_LENSFLARE  "Lensflare-Definition"
+    IDS_ITEMDESC_LINES_INFO "Modellierhilfe"
+    IDS_ITEMDESC_NEBULAR    "Nebel"
     IDS_ITEMDESC_SUPERSAMPLE4 "Supersampling"
     IDS_LENGTH              "Länge:"
     IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
+    IDS_MAT_CHESS           "Schachbrett"
+    IDS_MAT_COOK_TORRANCE   "Cook & Torrance Material-Shader"
+    IDS_MAT_GRANITE         "Granit"
+    IDS_MAT_MARBLE          "Marmor"
+    IDS_MAT_NORMAL          "Normales Material"
+    IDS_MAT_OAKPLANK        "Holzplanken"
+    IDS_MAT_SLIDE           "Farbverlauf"
+    IDS_MAT_TEXTURE         "Textur"
+    IDS_MAT_WOOD            "Holz"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
     IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
     IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
     IDS_NEW_CAMERA_NAME     "Kamera"
@@ -3227,12 +3255,12 @@ BEGIN
     IDS_OP_CAMERA_DELETE    "Kamera löschen"
     IDS_OP_CAMERA_ENABLE    "Kamera ein-/ausschalten"
     IDS_OP_CAMERA_ORIENTATE "Kamera ausrichten"
+    IDS_OP_COB_LOAD         "Caligari Objekt laden"
+    IDS_OP_CUT              "Ausschneiden"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_OP_COB_LOAD         "Caligari Objekt laden"
-    IDS_OP_CUT              "Ausschneiden"
     IDS_OP_DROP             "Objekt hierarchisch verschieben"
     IDS_OP_LIGHT_CREATE     "Lichtquelle erzeugen"
     IDS_OP_LIGHT_DELETE     "Lichtquelle löschen"
@@ -3247,12 +3275,12 @@ BEGIN
     IDS_OP_OBJECT_LOAD      "Objekt laden"
     IDS_OP_OBJECT_REPLACE   "Objekt ersetzen"
     IDS_OP_PASTE            "Einfügen"
+    IDS_OP_PICK_DIR         "Richtung verschieben"
+    IDS_OP_PICK_POINT       "Punkt verschieben"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_OP_PICK_DIR         "Richtung verschieben"
-    IDS_OP_PICK_POINT       "Punkt verschieben"
     IDS_OP_REPLACE          "Objekt ersetzen"
     IDS_OP_ROTATE           "Objekte rotieren"
     IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
@@ -3275,13 +3303,13 @@ BEGIN
     IDS_PRGERR_HASH_DUPLICATE_KEY 
                             "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
     IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
+    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
+    IDS_PRGERR_ILLEGAL_DATEMODE 
+                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
-    IDS_PRGERR_ILLEGAL_DATEMODE 
-                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
     IDS_PRGERR_INVALID_INCREMENT 
                             "Programmfehler!\nEin Speichervergrößerungswert ist ungültig!"
     IDS_PROFILE             "Profil"
@@ -3293,32 +3321,12 @@ BEGIN
     IDS_PRT_FILENAME        "Dateiname: %s"
     IDS_PRT_LEGEND          "Legende:"
     IDS_PRT_MEASURE         "Maßstab: 1:%d"
+    IDS_PRT_OBJECTNAME      "Objektname: %s"
     IDS_PRT_UNIT            "Einheit: %s"
     IDS_PRT_VIEWNAME        "Ansicht: %s"
     IDS_RADIUS              "Radius:"
     IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
-    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
-    IDS_ERR_CLASSTYPE_UNKNOWN 
-                            "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
-    IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
-    IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
-    IDS_ERR_FILE_NOT_FOUND  "Die Datei konnte nicht geöffnet werden!"
-    IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
-    IDS_ERR_FILE_NOT_WRITTEN 
-                            "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
-    IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
-    IDS_ERR_IMPORT          "Die Datei konnte nicht importiert werden!"
-    IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
-    IDS_ERR_NOT_FOUND       "Die Textur konnte nicht gefunden werden."
-    IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
-    IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
-    IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
-    IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
+    IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -3337,6 +3345,8 @@ BEGIN
     ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
     ID_DRAWING_PERF         "#####################################"
+    ID_EDIT_BUMP            "Editiert die Oberflächenstruktur.\nOberflächenstruktur editieren"
+    ID_EDIT_MATERIAL        "Editiert das Körpermaterial.\nMaterial editieren"
     ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
     ID_FRONT                "Frontansicht (Aufriß)"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nAktivierung zeigen"
@@ -3348,12 +3358,12 @@ BEGIN
     ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
     ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
     ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
-    ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
-    ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
+    ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
     ID_MODELLER_INFO        "Modellierhilfen einstellen\nModellierhilfen"
     ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
@@ -3366,12 +3376,12 @@ BEGIN
     ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
     ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
     ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
-    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
-    ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
+    ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
     ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
     ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
@@ -3386,12 +3396,12 @@ BEGIN
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
     ID_REDO                 "\nRedo"
     ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
-    ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\nArCon-Objekt importieren"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
+    ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\nArCon-Objekt importieren"
     ID_UNDO                 "\nUndo"
     ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
     ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
@@ -3402,8 +3412,18 @@ BEGIN
     ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
     ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
     ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
     ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
+    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
+    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
+    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
+    ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
+    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
+    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -3447,18 +3467,6 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
-    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
-    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
-    ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
-    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
-    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_EDIT_MATERIAL        "Editiert das Körpermaterial.\nMaterial editieren"
-    ID_EDIT_BUMP            "Editiert die Oberflächenstruktur.\nOberflächenstruktur editieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
     IDM_BAR_ANIM            "Blendet die Animations-Symbolleiste ein oder aus.\nAnimations-Symbolleiste ein-/ausschalten"
     IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
@@ -3473,7 +3481,6 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
     IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
     IDS_SCENE_NEW           "Unbenannt"
     IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
@@ -3489,11 +3496,11 @@ BEGIN
     IDS_SHAPE_DISK          "Scheibe"
     IDS_SHAPE_ELLIPSOID     "Ellipsoid"
     IDS_SHAPE_SPHERE        "Kugel"
+    IDS_SHAPE_TORUS         "Torus"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_SHAPE_TORUS         "Torus"
     IDS_SHAPE_TRIANGLES     "Dreiecke"
     IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
     IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
@@ -3509,11 +3516,12 @@ BEGIN
     IDS_TITLE_EDIT          "%s ändern"
     IDS_TITLE_REDO          "Wiederherstellen"
     IDS_TITLE_SCENE         "Sceneneigenschaften"
+    IDS_TITLE_UNDO          "Rückgängig machen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_TITLE_UNDO          "Rückgängig machen"
+    IDS_TO                  "Ende"
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_ANIMATION   "Animationssymbolleiste"
     IDS_TOOLBAR_CAMERA      "Kamera..."
@@ -3644,31 +3652,11 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
-    IDS_MAT_NORMAL          "Normales Material"
-    IDS_MAT_CHESS           "Schachbrett"
-    IDS_MAT_MARBLE          "Marmor"
-    IDS_MAT_WOOD            "Holz"
-    IDS_MAT_SLIDE           "Farbverlauf"
-    IDS_MAT_TEXTURE         "Textur"
-    IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
-    IDS_PRT_OBJECTNAME      "Objektname: %s"
-    IDS_MAT_COOK_TORRANCE   "Cook & Torrance Material-Shader"
-    IDS_MAT_GRANITE         "Granit"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_MAT_OAKPLANK        "Holzplanken"
-    IDS_BUMP_WOOD           "Holzstruktur"
-    IDS_BUMP_OAKPLANK       "Parkettstruktur"
-    IDS_FROM                "Anfang"
-    IDS_TO                  "Ende"
-    IDS_ASK_DELETE_ITEM     "Sollen diese Daten gelöscht werden?"
 END
 
 #endif    // German (Germany) resources

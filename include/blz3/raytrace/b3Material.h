@@ -282,11 +282,11 @@ public:
 };
 
 // GRANITE
-class B3_PLUGIN b3MatGranite : public b3Material, public b3_material
+class B3_PLUGIN b3MatGranite : public b3Material
 {
 public:
-	b3Color           m_DarkColor;
-	b3Color           m_LightColor;
+	b3_material       m_DarkMaterial;
+	b3_material       m_LightMaterial;
 	b3_vector         m_Scale;
 	b3_u32            m_Flags;
 	b3_count          m_Overtone;

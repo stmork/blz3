@@ -34,12 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/26 12:27:43  sm
+**	- Added following dialogs:
+**	  o granite
+**	  o chess
+**	- Added scaling to wood properties
+**
 **	Revision 1.6  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.5  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -69,10 +75,10 @@
 CDlgMatSlide::CDlgMatSlide(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(CDlgMatSlide::IDD, pParent)
 {
-	m_Material = (b3MatSlide *)item;
+	m_Material             = (b3MatSlide *)item;
 	m_PageLeft.m_Material  = &m_Material->m_Material[0];
 	m_PageRight.m_Material = &m_Material->m_Material[1];
-	m_MatScene   = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatSlide)
 	//}}AFX_DATA_INIT

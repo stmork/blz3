@@ -42,10 +42,10 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CPageOakPlank)
 	enum { IDD = IDD_PAGE_OAKPLANK };
-	CB3IntSpinButtonCtrl	m_yTimesCtrl;
 	CB3IntSpinButtonCtrl	m_xTimesCtrl;
-	CB3FloatSpinButtonCtrl	m_yScaleCtrl;
+	CB3IntSpinButtonCtrl	m_yTimesCtrl;
 	CB3FloatSpinButtonCtrl	m_xScaleCtrl;
+	CB3FloatSpinButtonCtrl	m_yScaleCtrl;
 	CB3FloatSpinButtonCtrl	m_xOffsetCtrl;
 	//}}AFX_DATA
 

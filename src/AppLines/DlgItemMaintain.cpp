@@ -35,9 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/04/26 12:27:43  sm
+**	- Added following dialogs:
+**	  o granite
+**	  o chess
+**	- Added scaling to wood properties
+**
 **	Revision 1.10  2004/04/25 19:52:31  sm
 **	- Added safety message box for item deletion.
-**
+**	
 **	Revision 1.9  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
@@ -131,7 +137,7 @@ BOOL CDlgItemMaintain::OnInitDialog()
 	b3InitItemList();
 
 	SetWindowText(b3StaticPluginInfoInit::b3GetClassName(m_Head->b3GetClass()));
-	b3UpdateList(m_Head->First);
+	b3UpdateList(m_Head->First,true);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -189,7 +195,7 @@ void CDlgItemMaintain::b3InitItemList()
 	}
 }
 
-void CDlgItemMaintain::b3UpdateList(b3Item *select)
+void CDlgItemMaintain::b3UpdateList(b3Item *select,b3_bool set_focus)
 {
 	b3_plugin_info *info;
 	CString     unknown;
@@ -239,6 +245,10 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 	}
 
 	b3UpdateUI();
+	if (set_focus)
+	{
+		m_ItemListCtrl.SetFocus();
+	}
 }
 
 void CDlgItemMaintain::b3UpdateUI()
@@ -307,7 +317,7 @@ void CDlgItemMaintain::OnItemNew()
 		if (item != null)
 		{
 			m_Head->b3Insert(selected,item);
-			b3UpdateList(item);
+			b3UpdateList(item,true);
 			m_Changed = true;
 		}
 	}
@@ -329,7 +339,7 @@ void CDlgItemMaintain::OnItemEdit()
 			m_Head->b3Remove(item);
 			delete item;
 
-			b3UpdateList(edit);
+			b3UpdateList(edit,true);
 			m_Changed = true;
 		}
 		else
@@ -380,7 +390,7 @@ void CDlgItemMaintain::OnItemDelete()
 			
 			m_Head->b3Remove(item);
 			delete item;
-			b3UpdateList(select);
+			b3UpdateList(select,true);
 			m_Changed = true;
 		}
 	}

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "b3ExampleScene.h"
 #include "DlgMatGranite.h"
 #include "blz3/system/b3Plugin.h"
 
@@ -33,12 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/26 12:27:43  sm
+**	- Added following dialogs:
+**	  o granite
+**	  o chess
+**	- Added scaling to wood properties
+**
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.2  2004/03/14 16:18:26  sm
 **	- Added Windows support for granite.
 **	
@@ -54,27 +61,42 @@
 *************************************************************************/
 
 CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgMatGranite::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(CDlgMatGranite::IDD, pParent)
 {
-	m_Material = (b3MatGranite *)item;
+	m_Material             = (b3MatGranite *)item;
+	m_PageDark.m_Material  = &m_Material->m_DarkMaterial;
+	m_PageLight.m_Material = &m_Material->m_LightMaterial;
+	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatGranite)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
+CDlgMatGranite::~CDlgMatGranite()
+{
+	m_MatHead->b3RemoveAll();
+	delete m_MatScene;
+}
 
 void CDlgMatGranite::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatGranite)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
+	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
+	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
 	//}}AFX_DATA_MAP
+	m_ScaleCtrl.b3DDX(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgMatGranite, CDialog)
+BEGIN_MESSAGE_MAP(CDlgMatGranite, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatGranite)
-		// NOTE: the ClassWizard will add message map macros here
+	ON_EN_KILLFOCUS(IDC_SCALE_X, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Y, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SCALE_Z, OnEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -91,4 +113,29 @@ b3_bool CDlgMatGranite::b3Edit(b3Item *item)
 	CDlgMatGranite dlg(item);
 
 	return dlg.DoModal() == IDOK;
+}
+
+void CDlgMatGranite::b3InitDialog()
+{
+	m_PageDark.b3SetCaption(IDS_FROM);
+	m_PageLight.b3SetCaption(IDS_TO);
+	m_PropertySheet.AddPage(&m_PageDark);
+	m_PropertySheet.AddPage(&m_PageLight);
+}
+
+void CDlgMatGranite::b3UpdateUI()
+{
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
+BOOL CDlgMatGranite::OnInitDialog() 
+{
+	m_ScaleCtrl.b3Init(&m_Material->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
+
+	CB3SimplePropertyPreviewDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
 }

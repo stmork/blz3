@@ -24,25 +24,40 @@
 // DlgMatGranite.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/system/b3FloatEdit.h"
+#include "b3SimplePropertyPreviewDialog.h"
+#include "b3ShowRaytrace.h"
+#include "b3VectorEdit.h"
+#include "PageMaterial.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatGranite dialog
 
-class CDlgMatGranite : public CDialog
+class CDlgMatGranite : public CB3SimplePropertyPreviewDialog
 {
-	b3MatGranite *m_Material;
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
+	b3MatGranite      *m_Material;
 
+	CPageMaterial      m_PageDark;
+	CPageMaterial      m_PageLight;
+
+	CB3PosGroup        m_ScaleCtrl;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgMatGranite(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatGranite();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatGranite)
 	enum { IDD = IDD_MAT_GRANITE };
-		// NOTE: the ClassWizard will add data members here
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
+	CB3FloatEdit	m_xScaleCtrl;
+	CB3FloatEdit	m_yScaleCtrl;
+	CB3FloatEdit	m_zScaleCtrl;
 	//}}AFX_DATA
 
 
@@ -58,9 +73,13 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatGranite)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}
