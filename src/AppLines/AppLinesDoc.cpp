@@ -56,6 +56,10 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2002/01/24 15:55:57  sm
+**	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
+**	- Added support for conext menu depending on scene/object edit.
+**
 **	Revision 1.55  2002/01/19 19:57:55  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -63,7 +67,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.54  2002/01/18 16:49:34  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -688,6 +692,25 @@ void CAppLinesDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
 	dstBase->b3Append(srcBBox);
 	m_Scene->b3BacktraceRecompute(srcBBox);
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+}
+
+void CAppLinesDoc::b3ContextMenu(HTREEITEM item)
+{
+	CMenu          menu;
+	CMenu         *submenu;
+	CPoint point;
+
+	if (menu.LoadMenu(IDR_CONTEXT_SCENE))
+	{
+		submenu = menu.GetSubMenu(0);
+		ASSERT(submenu != NULL);
+
+		m_DlgHierarchy->m_Hierarchy.SelectItem(item);
+		::GetCursorPos(&point);
+		submenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
+			point.x, point.y,
+			CB3GetMainFrame()); // use main window for cmds
+	}
 }
 
 /*************************************************************************

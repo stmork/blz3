@@ -178,6 +178,10 @@ SOURCE=.\b3Tracker.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TreeCtrl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3View.cpp
 # End Source File
 # Begin Source File
@@ -223,6 +227,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Document.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3File.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3floatedit.h
 # End Source File
 # Begin Source File
 
@@ -275,6 +283,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Toolbar.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3Tracker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3TreeCtrl.h
 # End Source File
 # Begin Source File
 

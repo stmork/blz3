@@ -123,6 +123,7 @@ public:
 	void           b3FinishEdit(b3BBox *original = null,b3BBox *bbox = null);
 	void           b3InitTree();
 	void           b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	void           b3ContextMenu(HTREEITEM item);
 
 private:
 	b3_bool        b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);

@@ -301,6 +301,7 @@ BEGIN
     POPUP "&Bearbeiten"
     BEGIN
         MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
+        MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
         MENUITEM SEPARATOR
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
@@ -575,6 +576,31 @@ BEGIN
     END
 END
 
+IDR_CONTEXT_SCENE MENU DISCARDABLE 
+BEGIN
+    POPUP "Szene"
+    BEGIN
+        MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "E&infügen als &Unterobjekt",  ID_EDIT_PASTE_SUB
+        MENUITEM SEPARATOR
+        MENUITEM "Erzeugen...",                 ID_OBJECT_NEW
+        MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
+        MENUITEM "Löschen\tEntf",               ID_OBJECT_DELETE
+        MENUITEM "Kopieren...",                 ID_OBJECT_COPY
+        MENUITEM SEPARATOR
+        MENUITEM "Ak&tivieren",                 ID_ACTIVATE
+        MENUITEM "&Deaktivieren",               ID_DEACTIVATE
+        MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
+        MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
+        MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
+        MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -613,6 +639,7 @@ END
 
 IDR_BLZ3TYPE ACCELERATORS DISCARDABLE 
 BEGIN
+    "E",            ID_OBJECT_EDIT,         VIRTKEY, CONTROL, NOINVERT
     "N",            ID_WINDOW_NEW,          VIRTKEY, CONTROL, NOINVERT
     VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
     VK_DELETE,      ID_OBJECT_DELETE,       VIRTKEY, NOINVERT

@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Toolbar.h $  
-**	$Release:	Dortmund 2000 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$

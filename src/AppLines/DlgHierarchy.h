@@ -27,6 +27,8 @@
 // DlgHierarchy.h : header file
 //
 
+#include "blz3/system/b3TreeCtrl.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CDlgHierarchy dialog
 
@@ -43,7 +45,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgHierarchy)
 	enum { IDD = IDD_HIERARCHY };
-	CTreeCtrl	m_Hierarchy;
+	CB3TreeCtrl	m_Hierarchy;
 	//}}AFX_DATA
 
 
@@ -63,9 +65,9 @@ protected:
 	afx_msg void OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnReturnHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -70,6 +70,7 @@ public:
 	virtual void       b3ComputeBounds();
 	virtual void       b3InitTree();
 	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	virtual void       b3ContextMenu(HTREEITEM item);
 
 	virtual   ~CAppRenderDoc();
 #ifdef _DEBUG

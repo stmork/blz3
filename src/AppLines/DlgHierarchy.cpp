@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/01/24 15:55:58  sm
+**	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
+**	- Added support for conext menu depending on scene/object edit.
+**
 **	Revision 1.11  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -41,7 +45,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.10  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -120,9 +124,9 @@ BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	ON_NOTIFY(TVN_ENDLABELEDIT, IDC_HIERARCHY, OnEndLabelEditHierarchy)
 	ON_NOTIFY(TVN_BEGINLABELEDIT, IDC_HIERARCHY, OnBeginlabeleditHierarchy)
 	ON_NOTIFY(TVN_BEGINDRAG, IDC_HIERARCHY, OnBeginDrag)
-	ON_NOTIFY(NM_RETURN, IDC_HIERARCHY, OnReturnHierarchy)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
+	ON_NOTIFY(NM_RCLICK, IDC_HIERARCHY, OnContextMenu)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -391,18 +395,6 @@ void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 }
 
-void CDlgHierarchy::OnReturnHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	// TODO: Add your control notification handler code here
-	CEdit *edit;
-
-	edit = m_Hierarchy.GetEditControl();
-	if (edit != null)
-	{
-	}
-	*pResult = (edit != null);
-}
-
 void CDlgHierarchy::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
@@ -466,4 +458,17 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 		m_DragItem = null;
 	}
 	CB3Dialogbar::OnLButtonUp(nFlags, point);
+}
+
+void CDlgHierarchy::OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	CPoint point;
+
+	if ((m_pDoc != null) && GetCursorPos(&point))
+	{
+		m_Hierarchy.ScreenToClient(&point);
+		m_pDoc->b3ContextMenu(m_Hierarchy.HitTest(point));
+	}
+	*pResult = 0;
 }

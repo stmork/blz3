@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/24 15:55:57  sm
+**	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
+**	- Added support for conext menu depending on scene/object edit.
+**
 **	Revision 1.5  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -41,7 +45,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.4  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -163,6 +167,10 @@ void CAppRenderDoc::b3InitTree()
 }
 
 void CAppRenderDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
+{
+}
+
+void CAppRenderDoc::b3ContextMenu(HTREEITEM item)
 {
 }
 

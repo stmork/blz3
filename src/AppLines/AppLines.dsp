@@ -316,10 +316,6 @@ SOURCE=.\b3ExampleScene.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include_win32\blz3\system\b3floatedit.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File
@@ -497,6 +493,10 @@ SOURCE=.\res\rot_left.ico
 # Begin Source File
 
 SOURCE=.\res\rot_right.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\splash.bmp
 # End Source File
 # Begin Source File
 
