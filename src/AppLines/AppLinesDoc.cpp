@@ -40,10 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/11/09 18:58:52  sm
+**	- Fixed JPEG handling
+**
 **	Revision 1.19  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
-**
+**	
 **	Revision 1.18  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	
@@ -203,6 +206,9 @@ BOOL CAppLinesDoc::OnNewDocument()
 	m_Scene->b3Reorg();
 	m_Scene->b3Prepare(0,0);
 	m_Scene->b3AllocVertices(&m_Context);
+	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 	b3ComputeBounds();
@@ -221,6 +227,9 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_Scene->b3Reorg();
 	m_Scene->b3Prepare(0,0);
 	m_Scene->b3AllocVertices(&m_Context);
+	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 	b3ComputeBounds();

@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/11/09 18:58:53  sm
+**	- Fixed JPEG handling
+**
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.6  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
@@ -144,10 +147,10 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	{
 		jpeg_destroy_decompress(&cinfo);
 		b3FreeTx();
-		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error configuring JPEG decoder:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw new b3TxException(B3_TX_ERROR);
 	}
 	jpeg_create_decompress(&cinfo);
 

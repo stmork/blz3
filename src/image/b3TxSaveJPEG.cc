@@ -30,11 +30,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/09 18:58:53  sm
+**	- Fixed JPEG handling
+**
 **	Revision 1.3  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.2  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -62,11 +65,10 @@ extern "C"
 #	include "jinclude.h"
 #	include "jpeglib.h"
 #	include "jerror.h"
-#	include <jpeglib.h>
 #	include <setjmp.h>
 }
 
-#define JPEG_ROWS 8
+#define JPEG_ROWS           8
 #define OUTPUT_BUF_SIZE  4096	/* choose an efficiently fwrite'able size */
 
 

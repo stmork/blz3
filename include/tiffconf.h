@@ -119,12 +119,15 @@
  * support for the colorimetry and YCbCr-related tags.
  */
 #ifdef JPEG_SUPPORT
-#ifndef YCBCR_SUPPORT
-#define	YCBCR_SUPPORT
-#endif
-#ifndef COLORIMETRY_SUPPORT
-#define	COLORIMETRY_SUPPORT
-#endif
+#	ifndef HAVE_BOOLEAN
+#		define HAVE_BOOLEAN
+#	endif
+#	ifndef YCBCR_SUPPORT
+#		define	YCBCR_SUPPORT
+#	endif
+#	ifndef COLORIMETRY_SUPPORT
+#		define	COLORIMETRY_SUPPORT
+#	endif
 #endif /* JPEG_SUPPORT */
 
 /*
