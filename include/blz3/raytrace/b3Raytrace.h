@@ -553,6 +553,7 @@ protected:
 // same structure entries for all shapes
 class b3Shape : public b3Item
 {
+protected:
 	b3_vector        Normal;
 	b3_polar         Polar;
 	b3_count         VertexCount;
@@ -564,6 +565,8 @@ class b3Shape : public b3Item
 	GLushort        *Polygons;
 #endif
 
+	b3_count         xSize,ySize;
+
 protected:
 	b3Shape(b3_size class_size,b3_u32 class_type);
 
@@ -571,15 +574,15 @@ public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
-	        void b3ComputeBound();
+	        void b3ComputeBound(b3CondLimit *limit);
 	        void b3GetColor();
 	        void b3GetNormal();
-	        void b3AllocVertices();
-	        void b3FreeVertices();
-	        void b3Draw();
+	virtual void b3AllocVertices();
+	virtual void b3FreeVertices();
 	virtual void b3ComputeVertices();
 	virtual void b3ComputeIndices();
 	virtual void b3Intersect();
+	        void b3Draw();
 };
 
 // SPHERE
@@ -601,6 +604,7 @@ public:
 // AREA, DISK
 class b3Shape2 : public b3Shape
 {
+protected:
 	b3_vector           Base;           // basis of area, disk
 	b3_vector           Dir1,Dir2;      // direction vectors
 	b3_f32              NormalLength;     // normal length
@@ -612,10 +616,16 @@ public:
 
 class b3Area : public b3Shape2
 {
+#ifdef BLZ3_USE_OPENGL
+	GLfloat  area_vertices[4 * 3];
+#endif
+
 public:
 	B3_ITEM_INIT(b3Area);
 	B3_ITEM_LOAD(b3Area);
 
+	void b3AllocVertices();
+	void b3FreeVertices();
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -635,6 +645,7 @@ public:
 // CYLINDER, CONE, ELLIPSOID, BOX
 class b3Shape3 : public b3Shape
 {
+protected:
 	b3_vector         Normals[3];       // cross products
 	b3_vector         Base;             // size
 	b3_vector         Dir1,Dir2,Dir3;
@@ -694,6 +705,7 @@ public:
 // DOUGHNUT, TORUS
 class b3Torus : public b3Shape
 {
+protected:
 	b3_vector         Normals[3];       // cross products, unused
 	b3_vector         Base;             // size
 	b3_vector         Dir1,Dir2,Dir3;
@@ -744,6 +756,7 @@ public:
 // SPLINE, SPLINE_ROT
 class b3SplineCurve : public b3Shape
 {
+protected:
 	b3_s32           rSubDiv;          // sub division for rotation
 	b3_f32           Knots[B3_MAX_KNOTS]; // one knot vector
 	b3_spline        Spline;           // spline curve
@@ -757,6 +770,7 @@ public:
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
 class b3SplineShape : public b3Shape
 {
+protected:
 	b3_line          Axis;             // for rotation shapes, unused
 	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
 	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
@@ -842,6 +856,7 @@ typedef struct
 // CSG_SPHERE
 class b3CSGSphere : public b3Shape
 {
+protected:
 	b3_vector         Base;             // mid of sphere
 	b3_vector         Dir;              // direction
 	b3_f32            QuadRadius;       // squared radius
@@ -861,6 +876,7 @@ public:
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
 class b3CSGShape3 : public b3Shape
 {
+protected:
 	b3_vector          Normals[3];       // cross products
 	b3_vector          Base;             // size
 	b3_vector          Dir1,Dir2,Dir3;
@@ -928,6 +944,7 @@ public:
 // CSG_TORUS
 class b3CSGTorus : public b3Shape
 {
+protected:
 	b3_vector          Normals[3];       // cross products, unused
 	b3_vector          Base;             // size
 	b3_vector          Dir1,Dir2,Dir3;

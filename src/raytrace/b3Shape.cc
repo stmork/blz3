@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/06 16:35:35  sm
+**      - Drawing first area
+**
 **      Revision 1.4  2001/08/06 15:26:00  sm
 **      - Splitted shapes into their own files
 **      - Some preparations for shapde drawing.
@@ -90,6 +93,9 @@ b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 	Grids    = null;
 	Polygons = null;
 #endif
+
+	b3AllocVertices();
+	b3ComputeVertices();
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
@@ -102,6 +108,9 @@ b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 	Grids    = null;
 	Polygons = null;
 #endif
+
+	b3AllocVertices();
+	b3ComputeVertices();
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -111,6 +120,14 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitVector(); // This is Polar.ObjectPolar
 	b3InitVector(); // This is Polar.BoxPolar
 	b3InitNOP();    // This is Custom
+}
+
+void b3Shape::b3ComputeBound(b3CondLimit *limit)
+{
+	limit->x1 = -1;
+	limit->y1 = -1;
+	limit->x2 =  1;
+	limit->y2 =  1;
 }
 
 void b3Shape::b3AllocVertices()
@@ -161,7 +178,8 @@ void b3Shape::b3Intersect()
 void b3Shape::b3Draw()
 {
 #ifdef BLZ3_USE_OPENGL
-	
+	glVertexPointer(3, GL_FLOAT, 0, Vertices);
+	glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,Grids);
 #endif
 }
 

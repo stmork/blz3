@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/06 16:35:35  sm
+**      - Drawing first area
+**
 **      Revision 1.4  2001/08/02 15:37:17  sm
 **      - Now we are able to draw Blizzard Scenes with OpenGL.
 **
@@ -186,6 +189,7 @@ void b3BBox::b3Draw()
 {
 	b3Item         *item;
 	b3BBox         *bbox;
+	b3Shape        *shape;
 
 #ifdef BLZ3_USE_OPENGL
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
@@ -195,6 +199,12 @@ void b3BBox::b3Draw()
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
+
+	}
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3Draw();
 	}
 }
 
