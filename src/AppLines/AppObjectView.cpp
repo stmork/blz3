@@ -35,13 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/01 15:02:56  sm
+**	- Found texture missing bug when printing. There weren't any
+**	  selected textures inside an other OpenGL rendering context.
+**	  Now fixed!
+**
 **	Revision 1.9  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
 **	- Added support for units in b3ModellerInfo
 **	- Cleaned up some accelerators. Now arrow keys are working
 **	  again. The del key is working correctly inside edit controls again.
-**
+**	
 **	Revision 1.8  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
 **	
@@ -208,7 +213,7 @@ void CAppObjectView::b3Draw(
 		m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
 		// Then draw objects
-		m_BBox->b3Draw();
+		m_BBox->b3Draw(&pDoc->m_Context);
 		pDoc->b3DrawFulcrum();
 	}
 	else

@@ -35,12 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/08/01 15:02:56  sm
+**	- Found texture missing bug when printing. There weren't any
+**	  selected textures inside an other OpenGL rendering context.
+**	  Now fixed!
+**
 **	Revision 1.18  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
 **	  every OnPaint(). This is configurable depending on the
 **	  hostname.
-**
+**	
 **	Revision 1.17  2002/07/31 08:53:22  sm
 **	- Added simplified pixel format selection
 **	- Some problems with normal computation occured
@@ -238,6 +243,73 @@ CAppRenderView::~CAppRenderView()
 {
 }
 
+BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
+{
+	// TODO: Modify the Window class or styles here by modifying
+	//  the CREATESTRUCT cs
+	cs.style |= CS_OWNDC;
+	cs.style |= WS_MAXIMIZE;
+	return CScrollView::PreCreateWindow(cs);
+}
+
+int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+{
+	if (CScrollView::OnCreate(lpCreateStruct) == -1)
+	{
+		return -1;
+	}
+	
+	// TODO: Add your specialized creation code here
+	m_glDC = GetDC()->GetSafeHdc();
+	m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
+	return 0;
+}
+
+void CAppRenderView::OnDestroy() 
+{
+	b3_index i;
+
+	for (i = 0;i < B3_MODE_MAX;i++)
+	{
+		if (m_Action[i] != null)
+		{
+			delete m_Action[i];
+		}
+	}
+	CScrollView::OnDestroy();
+	
+	// TODO: Add your message handler code here
+	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,NULL);
+	wglDeleteContext(m_glGC);
+}
+
+void CAppRenderView::b3UnsetMagnification()
+{
+	if (m_SelectMode == B3_SELECT_MAGNIFICATION)
+	{
+		m_SelectMode = m_PreviousMode;
+	}
+}
+
+void CAppRenderView::b3SetMagnification()
+{
+	if (m_SelectMode != B3_SELECT_MAGNIFICATION)
+	{
+		m_PreviousMode = m_SelectMode;
+		m_SelectMode   = B3_SELECT_MAGNIFICATION;
+	}
+	else
+	{
+		m_SelectMode = m_PreviousMode;
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        OpenGL pixel format computation               **
+**                                                                      **
+*************************************************************************/
+
 #define B3_PF_PIXELTYPE    16
 #define B3_PF_ACCELERATE    8
 #define B3_PF_DOUBLEBUFFER  4
@@ -301,14 +373,14 @@ int CAppRenderView::b3PixelFormatSorter(
 	return result;
 }
 
-int CAppRenderView::b3WindowPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b)
+int CAppRenderView::b3WindowPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b)
 {
-	return b3PixelFormatSorter(a,b,&window_pixelformat);
+	return b3PixelFormatSorter(&a->desc,&b->desc,&window_pixelformat);
 }
 
-int CAppRenderView::b3PrinterPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b)
+int CAppRenderView::b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b)
 {
-	return b3PixelFormatSorter(a,b,&print_pixelformat);
+	return b3PixelFormatSorter(&a->desc,&b->desc,&print_pixelformat);
 }
 
 void CAppRenderView::b3FlagsString(CString &desc,int flags)
@@ -331,149 +403,75 @@ void CAppRenderView::b3FlagsString(CString &desc,int flags)
 	if (flags & PFD_SUPPORT_DIRECTDRAW)  desc += " PFD_SUPPORT_DIRECTDRAW";
 }
 
-int CAppRenderView::b3GetPixelFormat(HDC dc,b3PixelFormatSortFunc func)
+HGLRC CAppRenderView::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
 {
-	int                   max,i;
-	PIXELFORMATDESCRIPTOR format;
-	CString               flags;
+	CB3PixelFormatDescriptor format;
+	CString                  flags;
+	HGLRC                    gc;
+	int                      PixelFormatIndex,max,i,value;
 
+	// Retrieve all pixel formats
 	max = DescribePixelFormat(dc,1,0,NULL);
-	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	format.desc.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	m_glPixelFormat.b3Clear();
 	for (i = 1;i <= max;i++)
 	{
-		DescribePixelFormat(dc,i,format.nSize,&format);
+		format.index = i;
+		DescribePixelFormat(dc,i,format.desc.nSize,&format.desc);
 		m_glPixelFormat.b3Add(format);
 	}
+
+	// List and sort pixel formats depending on our requirements.
+	b3ListPixelFormats(dc,"Known OpenGL pixel formats:");
 	m_glPixelFormat.b3Sort(func);
-#ifdef _DEBUG
-	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
-	b3PrintF(B3LOG_DEBUG,"Sorted OpenGL pixel formats:\n");
-	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
-	for (i = 0;i < m_glPixelFormat.b3GetCount();i++)
-	{
-		b3FlagsString(flags,m_glPixelFormat[i].dwFlags);
-		b3PrintF(B3LOG_DEBUG,
-			"%3x: %8lx %8lx %2ld %2ld %2ld%s\n",i,
-			m_glPixelFormat[i].dwFlags,
-			m_glPixelFormat[i].iPixelType,
-			m_glPixelFormat[i].cColorBits,
-			m_glPixelFormat[i].cDepthBits,
-			m_glPixelFormat[i].cAccumBits,flags);
-	}
-	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
-#endif
-	return ChoosePixelFormat(dc,&m_glPixelFormat[0]);
-}
+	b3ListPixelFormats(dc,"Sorted OpenGL pixel formats:");
 
-void CAppRenderView::b3ListPixelFormats(HDC dc)
-{
-#ifdef _DEBUG
-	int                   max,i;
-	PIXELFORMATDESCRIPTOR format;
-	CString               flags;
+	// What we found...
+	PixelFormatIndex = m_glPixelFormat[0].index;
+	SetPixelFormat(dc,PixelFormatIndex,&m_glPixelFormat[0].desc);
+	gc = wglCreateContext(dc);
 
-	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	max = DescribePixelFormat(dc,1,0,NULL);
-
-	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
-	b3PrintF(B3LOG_DEBUG,"Known OpenGL pixel formats:\n");
-	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
-	for (i = 1;i <= max;i++)
-	{
-		DescribePixelFormat(dc,i,format.nSize,&format);
-		b3FlagsString(flags,format.dwFlags);
-
-		b3PrintF(B3LOG_DEBUG,
-			"%3x: %8lx %8lx %2ld %2ld %2ld%s\n",i,
-			format.dwFlags,
-			format.iPixelType,
-			format.cColorBits,
-			format.cDepthBits,
-			format.cAccumBits,flags);
-	}
-	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
-#endif
-}
-
-int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
-{
-	if (CScrollView::OnCreate(lpCreateStruct) == -1)
-	{
-		return -1;
-	}
-	
-	// TODO: Add your specialized creation code here
-	m_glDC = GetDC()->GetSafeHdc();
-#ifdef _DEBUG
-	b3ListPixelFormats(m_glDC);
-#endif
-	m_glPixelFormatIndex = b3GetPixelFormat(m_glDC,&b3WindowPixelFormatSorter);
-	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&m_glPixelFormat[0]);
-	m_glGC = wglCreateContext(m_glDC);
-
-#ifdef _DEBUG
-	int value;
+	CB3GetLinesApp()->b3SelectRenderContext(dc,gc);
 
 	b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
-		m_glPixelFormatIndex);
-	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
+		PixelFormatIndex);
+	
+	b3RenderContext::b3Init();
 	glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
 	glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
 	glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);
 	glGetIntegerv(GL_ALPHA_BITS,&value); b3PrintF(B3LOG_DEBUG,"A: %2d\n",value);
 	glGetIntegerv(GL_DEPTH_BITS,&value); b3PrintF(B3LOG_DEBUG,"Z: %2d\n",value);
+
+	return gc;
+}
+
+void CAppRenderView::b3ListPixelFormats(HDC dc,const char *title)
+{
+#ifdef _DEBUG
+	int                   max,i;
+	PIXELFORMATDESCRIPTOR format;
+	CString               flags;
+
+	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	max = DescribePixelFormat(dc,1,0,NULL);
+
+	b3PrintF(B3LOG_DEBUG,"========================================= %s\n",title);
+	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
+	for (i = 0;i < m_glPixelFormat.b3GetCount();i++)
+	{
+		b3FlagsString(flags,m_glPixelFormat[i].desc.dwFlags);
+		b3PrintF(B3LOG_DEBUG,
+			"%3d: %8lx %8lx %2ld %2ld %2ld%s\n",
+			m_glPixelFormat[i].index,
+			m_glPixelFormat[i].desc.dwFlags,
+			m_glPixelFormat[i].desc.iPixelType,
+			m_glPixelFormat[i].desc.cColorBits,
+			m_glPixelFormat[i].desc.cDepthBits,
+			m_glPixelFormat[i].desc.cAccumBits,flags);
+	}
+	b3PrintF(B3LOG_DEBUG,"=========================================\n");
 #endif
-
-	return 0;
-}
-
-void CAppRenderView::OnDestroy() 
-{
-	b3_index i;
-
-	for (i = 0;i < B3_MODE_MAX;i++)
-	{
-		if (m_Action[i] != null)
-		{
-			delete m_Action[i];
-		}
-	}
-	CScrollView::OnDestroy();
-	
-	// TODO: Add your message handler code here
-	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,NULL);
-	wglDeleteContext(m_glGC);
-}
-
-BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
-{
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-	cs.style |= CS_OWNDC;
-	cs.style |= WS_MAXIMIZE;
-	return CScrollView::PreCreateWindow(cs);
-}
-
-void CAppRenderView::b3UnsetMagnification()
-{
-	if (m_SelectMode == B3_SELECT_MAGNIFICATION)
-	{
-		m_SelectMode = m_PreviousMode;
-	}
-}
-
-void CAppRenderView::b3SetMagnification()
-{
-	if (m_SelectMode != B3_SELECT_MAGNIFICATION)
-	{
-		m_PreviousMode = m_SelectMode;
-		m_SelectMode   = B3_SELECT_MAGNIFICATION;
-	}
-	else
-	{
-		m_SelectMode = m_PreviousMode;
-	}
 }
 
 /*************************************************************************
@@ -488,8 +486,6 @@ void CAppRenderView::OnInitialUpdate()
 	CAppRenderDoc *pDoc = GetDocument();
 
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
-	pDoc->m_Context.b3Init();
-	pDoc->m_Context.b3SetBGColor(0.8,0.8,0.8);
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
@@ -616,14 +612,17 @@ void CAppRenderView::OnPaint()
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
+	CAppRenderDoc *pDoc = GetDocument();
 	CRect          rect;
 	struct _timeb  start,stop;
 	long           sDiff,mDiff;
 
 	// Init Drawing
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
-	GetClientRect(&rect);
+	pDoc->m_Context.b3SetBGColor(0.8,0.8,0.8);
+	pDoc->m_Context.glDrawCachedTextures = true;
 
+	GetClientRect(&rect);
 	_ftime(&start);
 	b3Draw(rect.Width(),rect.Height());
 	_ftime(&stop);
@@ -814,28 +813,20 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	m_prtOldBitmap = ::SelectObject(m_prtDC,m_prtBitmap);
 
 	// Prepare pixel format and create OpenGL render context
-#ifdef _DEBUG
-	b3ListPixelFormats(m_glDC);
-#endif
-
-	PixelFormatIndex = b3GetPixelFormat(m_glDC,&b3PrinterPixelFormatSorter);
-	SetPixelFormat(m_prtDC,PixelFormatIndex,&m_glPixelFormat[0]);
-	m_prtGC = wglCreateContext(m_prtDC);
-	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
-
-	// Make initialization to this (dummy) Blizzad III context
-	b3RenderContext::b3Init();
+	m_prtGC = b3CreateContext(m_prtDC,&b3PrinterPixelFormatSorter);
 }
 
 void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	CWaitCursor wait;
-	b3_f64      xOffset,yOffset;
+	CWaitCursor    wait;
+	CAppRenderDoc *pDoc = GetDocument();
+	b3_f64         xOffset,yOffset;
 
 	// Do it!
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
-	GetDocument()->m_Context.b3SetBGColor(1,1,1);
+	pDoc->m_Context.b3SetBGColor(1,1,1);
+	pDoc->m_Context.glDrawCachedTextures = false;
 
 	// The pages are enumerated from [1..max]
 	// The offset 0/0 maps to the lower left.

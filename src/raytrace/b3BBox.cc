@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2002/08/01 15:02:56  sm
+**	- Found texture missing bug when printing. There weren't any
+**	  selected textures inside an other OpenGL rendering context.
+**	  Now fixed!
+**
 **	Revision 1.56  2002/07/27 18:51:31  sm
 **	- Drawing changed to glInterleavedArrays(). This means that
 **	  extra normal and texture arrays are omitted. This simplifies
 **	  correct programming, too.
-**
+**	
 **	Revision 1.55  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
@@ -631,27 +636,27 @@ void b3BBox::b3GetGridColor(b3_color *color)
 	color->a = 0.0;
 }
 
-void b3BBox::b3Draw()
+void b3BBox::b3Draw(b3RenderContext *context)
 {
 	b3Item              *item;
 	b3BBox              *bbox;
 	b3ShapeRenderObject *shape;
 
 	// Draw this
-	b3RenderObject::b3Draw();
+	b3RenderObject::b3Draw(context);
 
 	// Draw our shapes
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3ShapeRenderObject *)item;
-		shape->b3Draw();
+		shape->b3Draw(context);
 	}
 
 	// Draw subsequent BBoxes
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3Draw();
+		bbox->b3Draw(context);
 	}
 }
 
@@ -801,7 +806,7 @@ char *b3Scene::b3GetName()
 	return m_Filename;
 }
 
-void b3Scene::b3Draw()
+void b3Scene::b3Draw(b3RenderContext *context)
 {
 	b3Item *item;
 	b3BBox *bbox;
@@ -810,7 +815,7 @@ void b3Scene::b3Draw()
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3Draw();
+		bbox->b3Draw(context);
 	}
 	b3PrintT("OpenGL - Drawing end");
 }

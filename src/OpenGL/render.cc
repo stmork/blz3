@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/08/01 15:02:56  sm
+**      - Found texture missing bug when printing. There weren't any
+**        selected textures inside an other OpenGL rendering context.
+**        Now fixed!
+**
 **      Revision 1.21  2002/07/26 09:13:32  sm
 **      - Found alpha problem: the Linux OpenGL renderer didn't use the
 **        b3RenderContext::b3Init() method! Now everything function very well:-)
@@ -134,7 +139,7 @@ void RenderScene()
 
 	context.b3StartDrawing();
 	scene = (b3Scene *)world->b3GetFirst();
-	scene->b3Draw();
+	scene->b3Draw(&context);
 
 	glutSwapBuffers();
 }

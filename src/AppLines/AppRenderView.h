@@ -60,7 +60,13 @@ typedef enum b3SelectMode
 
 class CB3Action;
 
-typedef int (*b3PixelFormatSortFunc)(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
+struct CB3PixelFormatDescriptor
+{
+	 PIXELFORMATDESCRIPTOR desc;
+	 b3_index              index;
+};
+
+typedef int (*b3PixelFormatSortFunc)(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
 
 class CAppRenderView : public CScrollView
 {
@@ -87,13 +93,12 @@ class CAppRenderView : public CScrollView
 	b3_res          m_prtLineHeight;
 	b3_count        m_prtLineNum;
 	
-	b3Array<PIXELFORMATDESCRIPTOR> m_glPixelFormat;
+	b3Array<CB3PixelFormatDescriptor> m_glPixelFormat;
 
 protected:
 	// OpenGL window display values
 	HDC             m_glDC;
 	HGLRC           m_glGC;
-	int             m_glPixelFormatIndex;
 
 	// Acting modes
 	b3_select_mode  m_PreviousMode;
@@ -202,13 +207,13 @@ protected:
 	void b3UnsetMagnification();
 
 private:
-	       void  b3ListPixelFormats(HDC dc);
-	       int   b3GetPixelFormat(HDC dc,b3PixelFormatSortFunc func);
+	       void  b3ListPixelFormats(HDC dc,const char *title = "");
+		   HGLRC b3CreateContext(HDC dc,b3PixelFormatSortFunc func);
 	static void  b3FlagsString(CString &desc,int flags);
 	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR *input,const PIXELFORMATDESCRIPTOR *templ);
 	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);
-	static int   b3WindowPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
-	static int   b3PrinterPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
+	static int   b3WindowPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
+	static int   b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
 
 	friend class CB3Action;
 	friend class CB3MoveAction;

@@ -52,9 +52,14 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/08/01 15:02:55  sm
+**	- Found texture missing bug when printing. There weren't any
+**	  selected textures inside an other OpenGL rendering context.
+**	  Now fixed!
+**
 **	Revision 1.36  2002/07/31 16:29:40  sm
 **	- Minor changes
-**
+**	
 **	Revision 1.35  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
@@ -717,7 +722,7 @@ void CAppLinesApp::b3SelectRenderContext(HDC dc,HGLRC gc)
 {
 	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0) || (m_UncheckedContextSwitch))
 	{
-		b3PrintF(B3LOG_FULL,"########################################## CAppLinesApp::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
+		b3PrintF(B3LOG_FULL,"######################################### CAppLinesApp::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
 			dc,gc);
 		wglMakeCurrent(dc,gc);
 		m_lastDC = dc;

@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/01 15:02:56  sm
+**	- Found texture missing bug when printing. There weren't any
+**	  selected textures inside an other OpenGL rendering context.
+**	  Now fixed!
+**
 **	Revision 1.10  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.9  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -183,7 +188,7 @@ b3_vector *CAppRenderDoc::b3GetStepRotate()
 
 void CAppRenderDoc::b3DrawFulcrum()
 {
-	m_Fulcrum.b3Draw();
+	m_Fulcrum.b3Draw(&m_Context);
 }
 
 void CAppRenderDoc::b3ComputeBounds()

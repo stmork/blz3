@@ -48,6 +48,7 @@ public:
 	b3_count         glGridCount;
 	b3_color         glBGColor;
 	b3_bool          glUseSpotLight;
+	b3_bool          glDrawCachedTextures;
 
 public:
 	                 b3RenderContext();
@@ -174,7 +175,7 @@ public:
 	        void            b3AddCount(b3RenderContext *context);
 	virtual void            b3AllocVertices(b3RenderContext *context);
 	virtual void            b3FreeVertices();
-	virtual void            b3Draw();
+	virtual void            b3Draw(b3RenderContext *context);
 	        void            b3Recompute();
 	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
@@ -197,6 +198,7 @@ protected:
 	        void            b3TransformVertices(b3_matrix *transformation);
 
 private:
+	        void            b3DefineTexture();
 	        void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0);
 	        void            b3CreateChess(  b3RenderContext *context,b3_color *bColor,b3_color *wColor);
 	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);

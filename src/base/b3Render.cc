@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2002/08/01 15:02:56  sm
+**      - Found texture missing bug when printing. There weren't any
+**        selected textures inside an other OpenGL rendering context.
+**        Now fixed!
+**
 **      Revision 1.46  2002/07/31 13:46:02  sm
 **      - I have to spend more brain into correct shading of quadrics...
 **
@@ -319,6 +324,7 @@ b3RenderContext::b3RenderContext()
 	b3SetBGColor(0.9,0.9,0.9);
 	b3LightNum();
 	b3LightSpotEnable(false);
+	glDrawCachedTextures = true;
 }
 
 void b3RenderContext::b3Init()
@@ -909,6 +915,24 @@ void b3RenderObject::b3RecomputeMaterial()
 #endif
 }
 
+void b3RenderObject::b3DefineTexture()
+{
+	GLfloat blend[4];
+
+	b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
+
+	// Set texture parameter
+	glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
+	glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
+	glTexImage2D(   GL_TEXTURE_2D,
+		0,GL_RGBA,glTextureSizeX,glTextureSizeY,
+		0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
+}
+
 void b3RenderObject::b3UpdateMaterial()
 {
 #ifdef BLZ3_USE_OPENGL
@@ -958,21 +982,8 @@ void b3RenderObject::b3UpdateMaterial()
 
 		if (glTextureSize > 0)
 		{
-			GLfloat blend[4];
-
-			b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
-
-			// Set texture parameter
 			glBindTexture(  GL_TEXTURE_2D,glTextureId);
-			glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
-			glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
-			glTexImage2D(   GL_TEXTURE_2D,
-				0,GL_RGBA,glTextureSizeX,glTextureSizeY,
-				0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
+			b3DefineTexture();
 
 			// Set material parameter
 			b3RenderContext::b3PkdColorToGL(B3_WHITE,glAmbient);
@@ -1012,7 +1023,7 @@ void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 #endif
 }
 
-void b3RenderObject::b3Draw()
+void b3RenderObject::b3Draw(b3RenderContext *context)
 {
 	b3_render_mode render_mode = b3GetRenderMode();
 	b3_color       diffuse;
@@ -1108,9 +1119,16 @@ void b3RenderObject::b3Draw()
 			glEnable(GL_LIGHTING);
 			if (glTextureSize > 0)
 			{
-
-				B3_ASSERT(glIsTexture(glTextureId));
-				glBindTexture(GL_TEXTURE_2D,glTextureId);
+				if (context->glDrawCachedTextures)
+				{
+					B3_ASSERT(glIsTexture(glTextureId));
+					glBindTexture(GL_TEXTURE_2D,glTextureId);
+				}
+				else
+				{
+					glBindTexture(GL_TEXTURE_2D,0);
+					b3DefineTexture();
+				}
 				glEnable(     GL_TEXTURE_2D);
 
 				// Set repitition of chess fields by scaling texture

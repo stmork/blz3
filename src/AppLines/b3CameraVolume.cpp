@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2002/08/01 15:02:56  sm
+**      - Found texture missing bug when printing. There weren't any
+**        selected textures inside an other OpenGL rendering context.
+**        Now fixed!
+**
 **      Revision 1.6  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -165,7 +170,7 @@ void b3CameraVolume::b3GetGridColor(b3_color *color)
 	color->a = 0.0f;
 }
 
-void b3CameraVolume::b3Draw()
+void b3CameraVolume::b3Draw(b3RenderContext *context)
 {
 	int func;
 
@@ -173,7 +178,7 @@ void b3CameraVolume::b3Draw()
 	glGetIntegerv(GL_DEPTH_FUNC,&func);
 	glDepthFunc(GL_ALWAYS);
 //	glDepthMask(GL_FALSE);
-	b3RenderObject::b3Draw();
+	b3RenderObject::b3Draw(context);
 //	glDepthMask(GL_TRUE);
 	glDepthFunc(func);
 	glEnable(GL_DEPTH_TEST);

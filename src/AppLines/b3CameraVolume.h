@@ -33,7 +33,7 @@ public:
 	void     b3Update(b3CameraPart *camera);
 	void     b3AllocVertices(b3RenderContext *context);
 	void     b3FreeVertices();
-	void     b3Draw();
+	void     b3Draw(b3RenderContext *context);
 
 protected:
 	void     b3GetGridColor(b3_color *color);
