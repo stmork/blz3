@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/04/10 18:43:30  sm
+**	- Changed simple material creation dialog to reflect units in
+**	  some controls
+**
 **	Revision 1.13  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.12  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -141,8 +145,14 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_MatTexture->b3SetTexture(app->GetProfileString(CB3ClientString(),"material.texture",""));
 	b3Scene::b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
 
-	m_ReflectionCtrl.b3SetRange(0.0,100.0);
-	m_RefractionCtrl.b3SetRange(0.0,100.0);
+	m_ReflectionCtrl.b3SetRange(0.0,1.0);
+	m_ReflectionCtrl.b3SetIncrement(0.01);
+	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_ReflectionCtrl.b3SetDigits(2,1);
+	m_RefractionCtrl.b3SetRange(0.0,1.0);
+	m_RefractionCtrl.b3SetIncrement(0.01);
+	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_RefractionCtrl.b3SetDigits(2,1);
 	m_RefrValueCtrl.b3SetRange(-5.0,5.0);
 	m_RefrValueCtrl.b3SetDigits(0,2);
 	m_RefrValueCtrl.b3SetIncrement(0.01);
@@ -216,8 +226,8 @@ BOOL CDlgCreateMaterial::OnInitDialog()
 	m_DiffCtrl.b3Init(&m_MatNormal->m_DiffColor,this);
 	m_SpecCtrl.b3Init(&m_MatNormal->m_SpecColor,this);
 
-	m_ReflectionCtrl.b3SetAccel(1.0);
-	m_RefractionCtrl.b3SetAccel(1.0);
+	m_ReflectionCtrl.b3SetAccel(0.01);
+	m_RefractionCtrl.b3SetAccel(0.01);
 	m_RefrValueCtrl.b3SetAccel(0.1);
 	m_HighLightCtrl.b3SetAccel(50.0);
 
@@ -238,12 +248,12 @@ void CDlgCreateMaterial::b3UpdateUI()
 	GetDlgItem(IDC_TEXTURE_SELECT)->EnableWindow(m_UseTexture);
 
 	// Copy surface values into dummy materials
-	m_MatNormal->m_Reflection  = m_Reflection / 100.0;
-	m_MatNormal->m_Refraction  = m_Refraction / 100.0;
+	m_MatNormal->m_Reflection  = m_Reflection;
+	m_MatNormal->m_Refraction  = m_Refraction;
 	m_MatNormal->m_RefrValue   = m_RefrValue;
 	m_MatNormal->m_HighLight   = m_HighLight;
-	m_MatTexture->m_Reflection = m_Reflection / 100.0;
-	m_MatTexture->m_Refraction = m_Refraction / 100.0;
+	m_MatTexture->m_Reflection = m_Reflection;
+	m_MatTexture->m_Refraction = m_Refraction;
 	m_MatTexture->m_RefrValue  = m_RefrValue;
 	m_MatTexture->m_HighLight  = m_HighLight;
 
@@ -325,8 +335,8 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 		{
 			m_Material =
 			texture = new b3MatTexture(TEXTURE);
-			texture->m_Reflection = m_Reflection / 100.0;
-			texture->m_Refraction = m_Refraction / 100.0;
+			texture->m_Reflection = m_Reflection;
+			texture->m_Refraction = m_Refraction;
 			texture->m_RefrValue  = m_RefrValue;
 			texture->m_HighLight  = m_HighLight;
 			texture->b3SetTexture(m_MatTexture->m_Name);
@@ -345,8 +355,8 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 		{
             m_Material =
 			normal = new b3MatNormal(MATERIAL);
-			normal->m_Reflection = m_Reflection / 100.0;
-			normal->m_Refraction = m_Refraction / 100.0;
+			normal->m_Reflection = m_Reflection;
+			normal->m_Refraction = m_Refraction;
 			normal->m_RefrValue  = m_RefrValue;
 			normal->m_HighLight  = m_HighLight;
 			normal->m_AmbColor   = m_MatNormal->m_AmbColor;
