@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2002/07/21 17:02:36  sm
+**	- Finished advanced color mix support (correct Phong/Mork shading)
+**	- Added first texture mapping support. Further development on
+**	  Windows now...
+**
 **	Revision 1.53  2002/03/13 19:01:59  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.52  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
@@ -516,6 +521,7 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 	glVertices = bbox_vertices;
 	glNormals  = bbox_normals;
+	glTexCoord = bbox_texcoord;
 	glGrids    = bbox_indices;
 	glPolygons = null;
 #endif
@@ -543,6 +549,7 @@ void b3BBox::b3FreeVertices()
 #ifdef BLZ3_USE_OPENGL
 	glVertices = null;
 	glNormals  = null;
+	glTexCoord = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif

@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/07/21 17:02:36  sm
+**	- Finished advanced color mix support (correct Phong/Mork shading)
+**	- Added first texture mapping support. Further development on
+**	  Windows now...
+**
 **	Revision 1.12  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -40,7 +46,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.11  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -142,8 +148,6 @@ void b3SceneMork::b3Illuminate(
 	// No shadow => surface in light
 	if (Jit->shape == null)
 	{
-
-
 		// specular high light
 		if ((ShapeAngle =
 			surface->incoming->normal.x * Jit->dir.x +
@@ -417,4 +421,32 @@ b3_bool b3SceneMork::b3Shade(
 	}
 
 	return result;
+}
+
+void b3SceneMork::b3SetLights(b3RenderContext *context)
+{
+	b3Item   *item;
+	b3Light  *light;
+	b3_color  ambient;
+	b3_color  diffuse;
+	b3_color  black;
+
+	b3Color::b3Init(&black,0,0,0);
+	b3Color::b3Init(&ambient,m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
+
+	context->b3SetAmbient(&ambient);
+	B3_FOR_BASE(b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		if (light->b3IsActive())
+		{
+			// Use the same color for diffuse and specular
+			b3Color::b3Scale(&light->m_Color,0.5,&diffuse);
+			context->b3LightAdd(
+				&light->m_Position,
+				&diffuse,
+				&black,
+				&diffuse);
+		}
+	}
 }

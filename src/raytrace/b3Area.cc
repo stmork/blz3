@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.17  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -148,6 +153,7 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 	glVertices = area_vertices;
 	glNormals  = area_normals;
+	glTexCoord = area_texcoord;
 	glGrids    = area_grids;
 	glPolygons = area_polygons;
 
@@ -162,6 +168,7 @@ void b3Area::b3FreeVertices()
 #ifdef BLZ3_USE_OPENGL
 	glVertices = null;
 	glNormals  = null;
+	glTexCoord = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif
@@ -174,12 +181,13 @@ void b3Area::b3ComputeVertices()
 	GLfloat     *Vector;
 	b3_f32       x1,y1,x2,y2;
 
-	Vector = glVertices;
 	x1     = Limit.x1;
 	y1     = Limit.y1;
 	x2     = Limit.x2;
 	y2     = Limit.y2;
 
+	// Setup world coordinates
+	Vector    = glVertices;
 	*Vector++ = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
 	*Vector++ = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
 	*Vector++ = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
@@ -195,6 +203,20 @@ void b3Area::b3ComputeVertices()
 	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
 	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
 	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
+
+	// Setup texture coordinates
+	Vector    = glTexCoord;
+	*Vector++ = 0;
+	*Vector++ = 0;
+
+	*Vector++ = 0;
+	*Vector++ = 1;
+
+	*Vector++ = 1;
+	*Vector++ = 1;
+
+	*Vector++ = 1;
+	*Vector++ = 0;
 
 	xSize = 1;
 	ySize = 1;

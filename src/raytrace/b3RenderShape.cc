@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.32  2002/03/10 21:14:40  sm
 **      - Fixed rotation shapes with custom subdivision for rotation.
 **
@@ -533,17 +539,121 @@ void b3ShapeRenderObject::b3GetDiffuseColor(b3_color *color)
 	}
 }
 
-b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
+b3_f64 b3ShapeRenderObject::b3GetColors(
+	b3_color *ambient,
+	b3_color *diffuse,
+	b3_color *specular)
 {
-	return b3IsActive() ? B3_RENDER_FILLED : B3_RENDER_LINE;
+	b3Item     *item;
+	b3Material *material;
+	b3_polar    polar;
+
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetColors(&polar,diffuse,ambient,specular))
+		{
+			return material->b3GetSpecularExponent(&polar);
+		}
+	}
+
+	return b3RenderObject::b3GetColors(ambient,diffuse,specular);
 }
 
 void b3ShapeRenderObject::b3GetGridColor(b3_color *color)
 {
-	color->r = 0.2f;
-	color->g = 0.2f;
-	color->b = 0.2f;
-	color->a = 0.0f;
+	b3Color::b3Init(color, 0.2f, 0.2f, 0.2f);
+}
+
+b3_bool b3ShapeRenderObject::b3GetChess(b3_color *black,b3_color *white)
+{
+	b3Item  *item;
+	b3_bool  result = false;
+
+	if (b3GetClassType() == AREA)
+	{
+		item   = b3GetMaterialHead()->First;
+		if (item != null)
+		{
+			result = item->b3GetClassType() == CHESS;
+			if (result)
+			{
+				b3MatChess *chess = (b3MatChess *)item;
+				*black = chess->m_DiffColor[0];
+				*white = chess->m_DiffColor[1];
+			}
+		}
+	}
+	return result;
+}
+
+b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
+{
+	b3Item       *item;
+	b3_bool       result = false;
+	b3_u32        type;
+
+	if (b3GetClassType() != AREA)
+	{
+		return false;
+	}
+
+	for( item  = b3GetMaterialHead()->First;
+	    (item != null) && (!result);
+	     item  = item->Succ)
+	{
+		type   = item->b3GetClassType();
+		result = ((type != MAT_NORMAL) && (type != CHESS));
+	}
+
+	if (result)
+	{
+		b3Item           *item;
+		b3Material       *material;
+		b3_stencil_bound  info;
+		b3_polar          polar;
+		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
+		b3_color          diffuse;
+		b3_color          ambient;
+		b3_color          specular;
+		b3_coord          x,y;
+		b3_f64            fx,fxStep;
+		b3_f64            fy,fyStep;
+
+		b3GetStencilBoundInfo(&info);
+		fxStep = (info.xMax - info.xMin) / (image->xSize - 1);
+		fyStep = (info.yMax - info.yMin) / (image->ySize - 1);
+		fy     = info.yMin;
+		
+		for (y = 0;y < image->ySize;y++)
+		{
+			fx = info.xMin;
+			for (x = 0;x < image->xSize;x++)
+			{
+				b3Vector::b3Init(&polar.box_polar,   fx,fy);
+				b3Vector::b3Init(&polar.object_polar,fx,fy);
+				b3Vector::b3Init(&polar.polar,       fx,fy);
+
+				B3_FOR_BASE(b3GetMaterialHead(),item)
+				{
+					material = (b3Material *)item;
+					if (material->b3GetColors(&polar,
+						&diffuse,&ambient,&specular))
+					{
+						*lPtr++ = b3Color::b3GetColor(&diffuse);
+					}
+				}
+				fx += fxStep;
+			}
+			fy += fyStep;
+		}
+	}
+	return result;
+}
+
+b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
+{
+	return b3IsActive() ? B3_RENDER_FILLED : B3_RENDER_LINE;
 }
 
 /*************************************************************************

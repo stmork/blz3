@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
@@ -33,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/07/21 17:02:36  sm
+**	- Finished advanced color mix support (correct Phong/Mork shading)
+**	- Added first texture mapping support. Further development on
+**	  Windows now...
+**
 **	Revision 1.34  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.33  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
 **	
@@ -593,4 +599,30 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 b3BBox *b3Scene::b3GetFirstBBox()
 {
 	return (b3BBox *)b3GetBBoxHead()->First;
+}
+
+void b3Scene::b3SetLights(b3RenderContext *context)
+{
+	b3Item   *item;
+	b3Light  *light;
+	b3_color  ambient;
+
+	b3Color::b3Init(&ambient,
+		m_ShadowBrightness,
+		m_ShadowBrightness,
+		m_ShadowBrightness);
+
+	B3_FOR_BASE(b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		if (light->b3IsActive())
+		{
+			// Use the same color for diffuse and specular
+			context->b3LightAdd(
+				&light->m_Position,
+				&light->m_Color,
+				&ambient,
+				&light->m_Color);
+		}
+	}
 }

@@ -24,6 +24,7 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
+#include "blz3/base/b3Aux.h"
 
 #define not_VERBOSE
 
@@ -35,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.27  2002/07/20 10:49:34  sm
 **      - Added custom light support (not finished yet)
 **      - Added b3Light::b3IsActive() for compatibility.
@@ -184,6 +190,11 @@ static b3_color light0_diffuse =
 	0.0f,0.8f,0.8f,0.8f
 };
 
+static b3_color light0_specular =
+{
+	0.0f,1.0f,1.0f,1.0f
+};
+
 static b3_vector light0_position =
 {
 	1000.0f,-2500.0f,2000.0f
@@ -229,22 +240,34 @@ void b3RenderContext::b3Init()
 	b3LightSet(&light0_position);
 
 	// Some material settings
-//	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+#endif
+}
+
+void b3RenderContext::b3SetAmbient(b3_color *ambient)
+{
+#ifdef BLZ3_USE_OPENGL
+	GLfloat gl_ambient[4];
+
+	b3ColorToGL(ambient,gl_ambient);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
 #endif
 }
 
 void b3RenderContext::b3LightReset()
 {
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
+#ifdef BLZ3_USE_OPENGL
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 
 	// Disable all other lights
 	for (int i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
 	{
 		glDisable(light_num[i]);
 	}
+#endif
 }
 
 void b3RenderContext::b3LightNum(b3_index num)
@@ -258,13 +281,16 @@ void b3RenderContext::b3LightNum(b3_index num)
 void b3RenderContext::b3LightAdd(
 	b3_vector *b3_position,
 	b3_color  *b3_diffuse,
-	b3_color  *b3_ambient)
+	b3_color  *b3_ambient,
+	b3_color  *b3_specular)
 {
+#ifdef _DEBUG
 	b3PrintF(B3LOG_DEBUG,"b3LightAdd(%d)\n",glLightNum);
+#endif
 
 	if (VALIDATE_LIGHT_NUM(glLightNum))
 	{
-		b3LightSet(b3_position,b3_ambient,b3_diffuse,glLightNum++);
+		b3LightSet(b3_position,b3_diffuse,b3_ambient,b3_specular,glLightNum++);
 	}
 }
 
@@ -272,50 +298,48 @@ void b3RenderContext::b3LightSet(
 	b3_vector *b3_position,
 	b3_color  *b3_diffuse,
 	b3_color  *b3_ambient,
+	b3_color  *b3_specular,
 	b3_index   num)
 {
+#ifdef BLZ3_USE_OPENGL
 	GLfloat gl_position[4];
 	GLfloat gl_ambient[4];
 	GLfloat gl_diffuse[4];
+	GLfloat gl_specular[4];
 	GLint   light;
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{
+#ifdef _DEBUG
 		b3PrintF(B3LOG_DEBUG,"b3LightSet(%d)\n",num);
+#endif
 
 		light = light_num[num];
 
-		gl_position[0] = b3_position->x;
-		gl_position[1] = b3_position->y;
-		gl_position[2] = b3_position->z;
-		gl_position[3] = 1;
+		b3VectorToGL(b3_position,gl_position);
 
-		if (b3_ambient == null)
-		{
-			b3_ambient = &light0_ambient;
-		}
-		gl_ambient[0]  =        b3_ambient->r;
-		gl_ambient[1]  =        b3_ambient->g;
-		gl_ambient[2]  =        b3_ambient->b;
-		gl_ambient[3]  = 1.0f - b3_ambient->a;
+		b3ColorToGL(b3_ambient  != null ? b3_ambient  : &light0_ambient, gl_ambient);
+		b3ColorToGL(b3_diffuse  != null ? b3_diffuse  : &light0_diffuse, gl_diffuse);
+		b3ColorToGL(b3_specular != null ? b3_specular : &light0_specular,gl_specular);
 
-		if (b3_diffuse == null)
-		{
-			b3_diffuse = &light0_diffuse;
-		}
-		gl_diffuse[0]  =        b3_diffuse->r;
-		gl_diffuse[1]  =        b3_diffuse->g;
-		gl_diffuse[2]  =        b3_diffuse->b;
-		gl_diffuse[3]  = 1.0f - b3_diffuse->a;
-
-		b3PrintF(B3LOG_NORMAL,"Light %d: %3.2f %3.2f %3.2f\n",
+#ifdef _DEBUG
+		b3PrintF(B3LOG_FULL,"Light %d: %3.2f %3.2f %3.2f\n",
 			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
+#endif
 
 		glEnable( light);
+
 		glLightfv(light,GL_AMBIENT, gl_ambient);
 		glLightfv(light,GL_DIFFUSE, gl_diffuse);
+		glLightfv(light,GL_SPECULAR,gl_specular);
 		glLightfv(light,GL_POSITION,gl_position);
+
+		// Influence on ambient light
+		glLightf (light,GL_CONSTANT_ATTENUATION,  1.0);
+		glLightf (light,GL_LINEAR_ATTENUATION,    0.0);
+		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
 	}
+#endif
 }
 
 void b3RenderContext::b3SetBGColor(b3_color *color)
@@ -456,16 +480,21 @@ b3RenderObject::b3RenderObject()
 	glPolyCount   = 0;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertices = null;
-	glNormals  = null;
-	glGrids    = null;
-	glPolygons = null;
-	glComputed = false;
+	glVertices    = null;
+	glNormals     = null;
+	glTexCoord    = null;
+	glGrids       = null;
+	glPolygons    = null;
+	glComputed    = false;
+	glTextureId   = 0;
+	glTextureData = null;
+	glTextureSize = null;
 #endif
 }
 
 b3RenderObject::~b3RenderObject()
 {
+	b3CreateTexture(null,0);
 }
 
 void b3RenderObject::b3GetCount(
@@ -499,14 +528,17 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 	{
 		b3Free(glVertices);
 		b3Free(glNormals);
+		b3Free(glTexCoord);
 		glVertices = null;
 		glNormals  = null;
+		glTexCoord = null;
 		glVertexCount = new_vertCount;
 
 		if (glVertexCount > 0)
 		{
 			glVertices =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
 			glNormals  =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
+			glTexCoord =  (GLfloat *)b3Alloc(glVertexCount * 2 * sizeof(GLfloat));
 		}
 		glComputed = false;
 	}
@@ -544,10 +576,12 @@ void b3RenderObject::b3FreeVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3Free(glVertices);
 	b3Free(glNormals);
+	b3Free(glTexCoord);
 	b3Free(glGrids);
 	b3Free(glPolygons);
 	glVertices = null;
 	glNormals  = null;
+	glTexCoord = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif
@@ -691,18 +725,35 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 
 void b3RenderObject::b3GetGridColor(b3_color *color)
 {
-	color->r = 0.2f;
-	color->g = 0.2f;
-	color->b = 0.2f;
-	color->a = 0.0f;
+	b3Color::b3Init(color,  0.2f, 0.2f, 0.2f);
 }
 
-void b3RenderObject::b3GetDiffuseColor(b3_color *color)
+void b3RenderObject::b3GetDiffuseColor(b3_color *diffuse)
 {
-	color->r = 0.0f;
-	color->g = 0.5f;
-	color->b = 1.0f;
-	color->a = 0.0f;
+	b3Color::b3Init(diffuse,0.0f, 0.5f, 1.0f);
+}
+
+b3_f64 b3RenderObject::b3GetColors(
+	b3_color *ambient,
+	b3_color *diffuse,
+	b3_color *specular)
+{
+	b3Color::b3Init(ambient,  0.5, 0.5, 0.5);
+	b3Color::b3Init(diffuse,  0.0, 0.5, 1.0);
+	b3Color::b3Init(specular, 1.0, 1.0, 1.0);
+	return 1.0;
+}
+
+b3_bool b3RenderObject::b3GetChess(
+	b3_color *bColor,
+	b3_color *wColor)
+{
+	return false;
+}
+
+b3_bool b3RenderObject::b3GetImage(b3Tx *image)
+{
+	return false;
 }
 
 b3_render_mode b3RenderObject::b3GetRenderMode()
@@ -717,15 +768,29 @@ void b3RenderObject::b3Recompute()
 #endif
 }
 
+static b3Tx glTextureBuffer;
+
 void b3RenderObject::b3Update()
 {
 #ifdef BLZ3_USE_OPENGL
+	b3_color black,white;
+
 	if (!glComputed)
 	{
 		b3ComputeIndices();
 		b3ComputeVertices();
 		b3ComputeNormals();
 		glComputed = true;
+	}
+
+	if (b3GetChess(&black,&white))
+	{
+		b3CreateChess(null,&black,&white);
+	}
+
+	if (b3GetImage(&glTextureBuffer))
+	{
+		b3CreateImage(null,&glTextureBuffer);
 	}
 #endif
 }
@@ -759,7 +824,10 @@ void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 void b3RenderObject::b3Draw()
 {
 	b3_render_mode render_mode = b3GetRenderMode();
-	b3_color       color;
+	b3_color       ambient;
+	b3_color       diffuse;
+	b3_color       specular;
+	b3_f64         shininess;
 
 #ifdef BLZ3_USE_OPENGL
 	b3Update();
@@ -832,13 +900,16 @@ void b3RenderObject::b3Draw()
 	case B3_RENDER_LINE:
 		if (glGridCount > 0)
 		{
-			glVertexPointer(3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(GL_FLOAT,    0, glNormals);
+			B3_ASSERT(glTexCoord != null);
+			glVertexPointer( 3,  GL_FLOAT, 0, glVertices);
+			glNormalPointer(     GL_FLOAT, 0, glNormals);
+			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
 
-			b3GetGridColor(&color);
 			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
-			glColor3f(color.r,color.g,color.b);
+
+			b3GetGridColor(&diffuse);
+			glColor3f(diffuse.r,diffuse.g,diffuse.b);
 			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 		}
 		break;
@@ -846,13 +917,41 @@ void b3RenderObject::b3Draw()
 	case B3_RENDER_FILLED:
 		if (glPolyCount > 0)
 		{
-			glVertexPointer(3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(GL_FLOAT,    0, glNormals);
+			GLfloat color[4];
 
-			b3GetDiffuseColor(&color);
+			B3_ASSERT(glTexCoord != null);
+			glVertexPointer(  3, GL_FLOAT, 0, glVertices);
+			glNormalPointer(     GL_FLOAT, 0, glNormals);
+			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
+
 			glEnable(GL_LIGHTING);
-			glEnable(GL_COLOR_MATERIAL);
-			glColor3f(color.r,color.g,color.b);
+			shininess = b3GetColors(&ambient,&diffuse,&specular);
+#if 1
+			ambient = specular = diffuse;
+#endif
+			b3RenderContext::b3ColorToGL(&ambient,color);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,color);
+
+			if (glTextureSize > 0)
+			{
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D,glTextureId);
+				glTexImage2D(GL_TEXTURE_2D,
+					0,GL_RGBA,glTextureSize,
+					0,GL_RGBA,glTextureSize,
+					GL_UNSIGNED_BYTE,glTextureData);
+			}
+			else
+			{
+				b3RenderContext::b3ColorToGL(&diffuse,color);
+				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
+			}
+
+			b3RenderContext::b3ColorToGL(&specular,color);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,color);
+			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,shininess);
+
+
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 		}
 		break;
@@ -862,4 +961,83 @@ void b3RenderObject::b3Draw()
 		break;
 	}
 #endif
+}
+
+void b3RenderObject::b3CreateTexture(
+	b3RenderContext *context,
+	b3_res           size)
+{
+	b3PrintF(B3LOG_DEBUG,"b3RenderObject::b3CreateTexture(%p,%d)\n",context,size);
+
+	if (size != glTextureSize)
+	{
+		if (glTextureData != null)
+		{
+			glDeleteTextures(1,&glTextureId);
+			b3Free(glTextureData);
+			glTextureData = null;
+			glTextureSize = 0;
+		}
+
+		if (size > 0)
+		{
+			glTextureData = (GLubyte *)b3Alloc(size * size * 4);
+			if (glTextureData != null)
+			{
+				glTextureSize = size;
+				glGenTextures(1,&glTextureId);
+			}
+		}
+	}
+}
+
+void b3RenderObject::b3CreateChess(
+	b3RenderContext *context,
+	b3_color        *bColor,
+	b3_color        *wColor)
+{
+	b3_pkd_color  black,white;
+	GLubyte      *ptr = glTextureData;
+
+	b3CreateTexture(null,2);
+	black = b3Color::b3GetColor(bColor);
+	white = b3Color::b3GetColor(wColor);
+
+	b3RenderContext::b3PkdColorToGL(black,&glTextureData[ 0]);
+	b3RenderContext::b3PkdColorToGL(white,&glTextureData[ 4]);
+	b3RenderContext::b3PkdColorToGL(white,&glTextureData[ 8]);
+	b3RenderContext::b3PkdColorToGL(black,&glTextureData[12]);
+}
+
+void b3RenderObject::b3CreateImage(
+	b3RenderContext *context,
+	b3Tx            *input)
+{
+	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
+#ifndef _DEBUG
+	b3_res        max  = 128;
+#else
+	b3_res        max  =   8;
+#endif
+	b3_coord      x,y,i = 0;
+
+	B3_ASSERT(input != null);
+	if (lPtr == null)
+	{
+		input->b3AllocTx(max,max,24);
+		lPtr = (b3_pkd_color *)input->b3GetData();
+	}
+
+	B3_ASSERT((input->xSize == max) && (input->ySize == max));
+	b3CreateTexture(context,max);
+	for (y = 0;y < max;y++)
+	{
+		for (x = 0;x < max;x++)
+		{
+b3PrintF(B3LOG_NORMAL,"%06x ",*lPtr);
+			b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i]);
+			i += 4;
+		}
+b3PrintF(B3LOG_NORMAL,"\n");
+	}
 }

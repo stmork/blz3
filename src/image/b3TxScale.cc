@@ -61,12 +61,17 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.14  2002/07/21 17:02:36  sm
+**	- Finished advanced color mix support (correct Phong/Mork shading)
+**	- Added first texture mapping support. Further development on
+**	  Windows now...
+**
 **	Revision 1.13  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
 **	  a new shape.
 **	- Some minor fixes done.
-**
+**	
 **	Revision 1.12  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
 **	
@@ -1774,8 +1779,10 @@ void b3Tx::b3VGAScale(
 	}
 }
 
-
-inline b3_index b3Tx::b3ILBMPlaneValue (
+#ifndef _DEBUG
+inline
+#endif
+b3_index b3Tx::b3ILBMPlaneValue (
 	b3_coord x,
 	b3_coord y)
 {

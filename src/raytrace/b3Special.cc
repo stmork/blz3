@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.48  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -661,7 +666,7 @@ b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)
 {
 	m_NebularVal = -100.0;
-	b3Color::b3Init(&m_NebularColor,0,0.8f,0.9f,1.0f);
+	b3Color::b3Init(&m_NebularColor,0.8f,0.9f,1.0f);
 }
 
 b3Nebular::b3Nebular(b3_u32 *src) :

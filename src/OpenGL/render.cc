@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.18  2002/07/20 10:49:34  sm
 **      - Added custom light support (not finished yet)
 **      - Added b3Light::b3IsActive() for compatibility.
@@ -134,18 +139,9 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 void SetLights()
 {
 	b3Scene  *scene;
-	b3Item   *item;
-	b3Light  *light;
 
 	scene = (b3Scene *)world->b3GetFirst();
-	B3_FOR_BASE(scene->b3GetLightHead(),item)
-	{
-		light = (b3Light *)item;
-		if (light->b3IsActive())
-		{
-			context.b3LightAdd(&light->m_Position,&light->m_Color);
-		}
-	}
+	scene->b3SetLights(&context);
 }
 
 void SetupRC()
@@ -209,7 +205,7 @@ int main(int argc,char *argv[])
 		glutReshapeFunc(ChangeSize);
 
 		context.b3Init();
-//		SetLights();
+		SetLights();
 		glutMainLoop();
 	}
 	return 0;

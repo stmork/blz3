@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/07/21 17:02:36  sm
+**      - Finished advanced color mix support (correct Phong/Mork shading)
+**      - Added first texture mapping support. Further development on
+**        Windows now...
+**
 **      Revision 1.12  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -107,6 +112,7 @@ void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 	glVertices = box_vertices;
 	glNormals  = box_normals;
+	glTexCoord = box_texcoord;
 
 	glVertexCount = 24;
 	glGridCount   = 12;
@@ -119,6 +125,7 @@ void b3CSGBox::b3FreeVertices()
 #ifdef BLZ3_USE_OPENGL
 	glVertices = null;
 	glNormals  = null;
+	glTexCoord = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif

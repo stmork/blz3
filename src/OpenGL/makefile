@@ -5,9 +5,7 @@
 # Optionen
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
-LIBS			= libB3xxx.a
-PRGS			= simple render matrix_test
+
 SIMPLE_OBJ		= simple.o
 SIMPLE_SRC		= simple.cc
 RENDER_OBJ		= render.o
@@ -15,6 +13,10 @@ RENDER_SRC		= render.cc
 MATRIX_TEST_SRC		= matrix_test.cc
 MATRIX_TEST_OBJ		= matrix_test.o
 PRG_SOURCE		= $(SIMPLE_SRC) $(RENDER_SRC) $(MATRIX_TEST_SRC)
+
+LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
+
+PRGS			= simple render matrix_test
 
 all:	$(PRGS)
 
@@ -25,7 +27,7 @@ depend:
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
-render:	$(RENDER_OBJ)
+render:	$(RENDER_OBJ) $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a
 	$(LINK.cc) -o $@ $(RENDER_OBJ) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
