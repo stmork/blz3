@@ -8,12 +8,12 @@ CFG=LibSystemInd - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "LibSystemInd.mak".
+!MESSAGE NMAKE /f "LibSystemIndependend.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "LibSystemInd.mak" CFG="LibSystemInd - Win32 Debug"
+!MESSAGE NMAKE /f "LibSystemIndependend.mak" CFG="LibSystemInd - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -88,15 +88,25 @@ LIB32=link.exe -lib
 
 SOURCE=.\b3Exception.cc
 # End Source File
-# Begin Source File
+# End Group
+# Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\blz3\system\b3DateAbstract.h
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\system\b3Exception.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\system\b3FileAbstract.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\system\b3Memory.h
 # End Source File
 # End Group
 # End Target

@@ -18,7 +18,7 @@
 #ifndef B3_EXCEPTION_LOGGER_H
 #define B3_EXCEPTION_LOGGER_H
 
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Hash.h"
 
 class CB3ExceptionLogger

@@ -102,10 +102,6 @@ SOURCE=.\b3Endian.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Exception.cc
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File

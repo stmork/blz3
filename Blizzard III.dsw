@@ -173,6 +173,21 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name LibSmartGUI
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name LibSystemInd
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "LibSystemInd"=.\src\system_independend\LibSystemIndependend.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################

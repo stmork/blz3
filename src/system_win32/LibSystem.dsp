@@ -110,10 +110,6 @@ SOURCE=.\b3DashPen.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Date.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3Dir.cpp
 # End Source File
 # Begin Source File
@@ -227,10 +223,6 @@ SOURCE=..\..\include_win32\blz3\b3Config.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3DashPen.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include_win32\blz3\system\b3Date.h
 # End Source File
 # Begin Source File
 
