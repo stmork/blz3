@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/10/21 16:55:20  sm
+**	- Introducing lens flares.
+**	- Introducing different modes of background computation.
+**	- Introducing different types of row sampling.
+**
 **	Revision 1.17  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.16  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -164,8 +169,8 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
 	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
-	m_BackTexture = (m_Flags & TP_TEXTURE ? texture_pool.b3LoadTexture(m_TextureName) : null);
-	m_Nebular     = null;
+	m_BackTexture = (m_BackgroundType & TP_TEXTURE ?
+		texture_pool.b3LoadTexture(m_TextureName) : null);
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
@@ -209,6 +214,34 @@ b3Nebular *b3Scene::b3GetNebular()
 	nebular = new b3Nebular(NEBULAR);
 	heads[2].b3Append(nebular);
 	return nebular;
+}
+
+b3SuperSample *b3Scene::b3GetSuperSample()
+{
+	b3Item *item;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		if (item->b3GetClassType() == SUPERSAMPLE4)
+		{
+			return (b3SuperSample *)item;
+		}
+	}
+	return null;
+}
+
+b3LensFlare *b3Scene::b3GetLensFlare()
+{
+	b3Item *item;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		if (item->b3GetClassType() == LENSFLARE)
+		{
+			return (b3LensFlare *)item;
+		}
+	}
+	return null;
 }
 
 b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/10/21 16:55:21  sm
+**      - Introducing lens flares.
+**      - Introducing different modes of background computation.
+**      - Introducing different types of row sampling.
+**
 **      Revision 1.11  2001/10/05 20:30:46  sm
 **      - Introducing Mork and Phong shading.
 **      - Using light source when shading
@@ -102,6 +107,12 @@ void b3InitSpecial::b3Init()
 	b3Item::b3Register(&b3LensFlare::b3Init,    &b3LensFlare::b3Init,    LENSFLARE );
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Special base class                            **
+**                                                                      **
+*************************************************************************/
+
 b3Special::b3Special(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)
 {
 }
@@ -115,6 +126,12 @@ b3Special::b3Special(b3_u32 *src) : b3Item(src)
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Super sampling                                **
+**                                                                      **
+*************************************************************************/
+
 b3SuperSample::b3SuperSample(b3_u32 class_type) :
 	b3Special(sizeof(b3SuperSample),class_type)
 {
@@ -123,9 +140,15 @@ b3SuperSample::b3SuperSample(b3_u32 class_type) :
 b3SuperSample::b3SuperSample(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitColor(&Limit);
+	b3InitColor(&m_Limit);
 }
 
+
+/*************************************************************************
+**                                                                      **
+**                        Camera description                            **
+**                                                                      **
+*************************************************************************/
 
 b3CameraPart::b3CameraPart(b3_u32 class_type) :
 	b3Special(sizeof(b3CameraPart),class_type)
@@ -143,6 +166,12 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3InitString(CameraName,B3_CAMERANAMELEN);
 }
 
+
+/*************************************************************************
+**                                                                      **
+**                        Some infos for Lines III                      **
+**                                                                      **
+*************************************************************************/
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
@@ -195,6 +224,13 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 	}
 }
 
+
+/*************************************************************************
+**                                                                      **
+**                        Nebular                                       **
+**                                                                      **
+*************************************************************************/
+
 b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)
 {
@@ -232,6 +268,12 @@ void b3Nebular::b3ComputeNebular(
 	result->b = NebularIndex * input->b + NebularDenom * m_NebularColor.b;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Animation root definition                     **
+**                                                                      **
+*************************************************************************/
+
 b3Animation::b3Animation(b3_u32 class_type) :
 	b3Special(sizeof(b3Animation),class_type)
 {
@@ -258,6 +300,12 @@ b3Animation::b3Animation(b3_u32 *src) :
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Distributed raytracing                        **
+**                                                                      **
+*************************************************************************/
+
 b3Distribute::b3Distribute(b3_u32 class_type) :
 	b3Special(sizeof(b3Distribute),class_type)
 {
@@ -278,6 +326,12 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Lens flares                                   **
+**                                                                      **
+*************************************************************************/
+
 b3LensFlare::b3LensFlare(b3_u32 class_type) :
 	b3Special(sizeof(b3LensFlare),class_type)
 {
@@ -286,7 +340,7 @@ b3LensFlare::b3LensFlare(b3_u32 class_type) :
 b3LensFlare::b3LensFlare(b3_u32 *src) :
 	b3Special(src)
 {
-	Flags = b3InitInt();
-	b3InitColor(&Color);
-	Expon = b3InitFloat();
+	m_Flags = b3InitInt();
+	b3InitColor(&m_Color);
+	m_Expon = b3InitFloat();
 }

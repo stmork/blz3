@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/21 16:55:20  sm
+**	- Introducing lens flares.
+**	- Introducing different modes of background computation.
+**	- Introducing different types of row sampling.
+**
 **	Revision 1.4  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.3  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -171,7 +176,7 @@ b3_bool b3ScenePhong::b3Shade(
 			refr = surface.refr;
 			if (!b3Shade(&surface.refr_ray,depth_count + 1))
 			{
-				b3GetInfiniteColor(&surface.refr_ray.color);
+				b3GetInfiniteColor(&surface.refr_ray);
 			}
 			formula |= 1;
 		}
@@ -185,7 +190,7 @@ b3_bool b3ScenePhong::b3Shade(
 		{
 			if (!b3Shade(&surface.refl_ray,depth_count + 1))
 			{
-				b3GetInfiniteColor(&surface.refl_ray.color);
+				b3GetInfiniteColor(&surface.refl_ray);
 			}
 			formula |= 2;
 		}

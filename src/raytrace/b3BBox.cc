@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/10/21 16:55:20  sm
+**	- Introducing lens flares.
+**	- Introducing different modes of background computation.
+**	- Introducing different types of row sampling.
+**
 **	Revision 1.19  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.18  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -162,6 +167,33 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
 	}
 
+}
+
+b3_bool b3BBox::b3Prepare()
+{
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		if (!bbox->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		if (!shape->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void b3BBox::b3Dump(b3_count level)

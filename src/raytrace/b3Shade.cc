@@ -23,7 +23,9 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Procedure.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/21 16:55:20  sm
+**	- Introducing lens flares.
+**	- Introducing different modes of background computation.
+**	- Introducing different types of row sampling.
+**
 **	Revision 1.12  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.11  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -94,6 +101,200 @@
 **	
 **
 */
+
+/*************************************************************************
+**                                                                      **
+**                        Lens flare routine and data                   **
+**                                                                      **
+*************************************************************************/
+
+#define LENSFLARE_LOOP 6
+#define LENSFLARE_RING 2
+
+static b3_f64 LensFlare_Distance[LENSFLARE_LOOP] =
+{
+	0.55,0.0,0.0,0.25,0.45,0.55
+};
+
+static b3_f64 LensFlare_ResultWeight[LENSFLARE_LOOP] =
+{
+	0.9,0.95,0.95,0.6,0.6,0.6
+};
+
+static b3_f64 LensFlare_Expon[LENSFLARE_LOOP] =
+{
+	2.4,1.5,1.5,2.0,7.0,4.0
+};
+
+void b3Scene::b3MixLensFlare(b3_ray_info *ray)
+{
+	b3Light   *light;
+	b3_vector  view,central,toLight,nLight,nView;
+	b3_color   result;
+	b3_f64     factor,distance,weight = 0.6;
+	b3_count   i;
+
+	view.x = m_ViewPoint.x - m_EyePoint.x;
+	view.y = m_ViewPoint.y - m_EyePoint.y;
+	view.z = m_ViewPoint.z - m_EyePoint.z;
+	factor = b3Vector::b3Length (&view);
+	nView.x = view.y * ray->dir.z - view.z * ray->dir.y;
+	nView.y = view.z * ray->dir.x - view.x * ray->dir.z;
+	nView.z = view.x * ray->dir.y - view.y * ray->dir.x;
+
+	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
+	{
+		toLight.x = light->m_Position.x - m_ViewPoint.x;
+		toLight.y = light->m_Position.y - m_ViewPoint.y;
+		toLight.z = light->m_Position.z - m_ViewPoint.z;
+		distance  = b3Vector::b3Length (&toLight) / factor;
+		central.x = distance * view.x;
+		central.y = distance * view.y;
+		central.z = distance * view.z;
+
+		b3Vector::b3CrossProduct (&view,&toLight,&nLight);
+
+		for (i = 0;i < LENSFLARE_LOOP;i++)
+		{
+			b3_f64    cWeight,lWeight,angle,reverse,beta;
+#ifdef TX_DISTURB
+			b3_vector diff;
+#endif
+
+			cWeight  = LensFlare_Distance[i];
+			lWeight  = 1.0 - cWeight;
+			nLight.x = cWeight * central.x + lWeight * toLight.x;
+			nLight.y = cWeight * central.y + lWeight * toLight.y;
+			nLight.z = cWeight * central.z + lWeight * toLight.z;
+
+			beta     = (
+//	b3AngleOfVectors(&nLight,&ray->dir);
+				nLight.x * ray->dir.x +
+				nLight.y * ray->dir.y +
+				nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
+			angle    = pow(beta,m_LensFlare->m_Expon * LensFlare_Expon[i]);
+			if (i < LENSFLARE_RING)
+			{
+				if ((angle > 0.5) && (angle < 0.55)) angle = 0.3;
+				else angle = 0;
+			}
+			else
+			{
+				if (angle > 0.9)  angle  = 0.9;
+				else
+				{
+					if (angle > 0.89) angle = 0.95;
+					else angle *= LensFlare_ResultWeight[i];
+				}
+				angle *= weight;
+			}
+
+#ifdef TX_DISTURB
+			// disturbe lens flare
+			diff.y  = beta;
+			diff.x  = sqrt (1.0 - beta * beta);
+			diff.z  = 0;
+			diff.x *= 20;
+			diff.y *= 20;
+			if (angle < 0.95)
+			{
+				angle += ((Turbulence(&diff) - 0.5) * 0.1);
+			}
+#endif
+
+			reverse  = 1.0 - angle;
+			if (i < LENSFLARE_RING)
+			{
+				
+				result.r = angle * light->m_Color.r * m_LensFlare->m_Color.r + reverse * ray->color.r;
+				result.g =         ray->color.g;
+				result.b =         ray->color.b;
+			}
+			else
+			{
+				result.r = angle * light->m_Color.r * m_LensFlare->m_Color.r + reverse * ray->color.r;
+				result.g = angle * light->m_Color.g * m_LensFlare->m_Color.g + reverse * ray->color.g;
+				result.b = angle * light->m_Color.b * m_LensFlare->m_Color.b + reverse * ray->color.b;
+			}
+			ray->color = result;
+		}
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Some global shading helpers                   **
+**                                                                      **
+*************************************************************************/
+
+void b3Scene::b3GetBackgroundColor(
+	b3_ray_info *ray,
+	b3_f64       lx,
+	b3_f64       ly)
+{
+	b3_coord     x,y;
+	b3_pkd_color color;
+
+	switch (m_BackgroundType)
+	{
+		case TP_TEXTURE :
+			x = (b3_coord)(((lx + 1) * 0.5 * (m_BackTexture->xSize - 1)));
+			y = (b3_coord)(((1 - ly) * 0.5 * (m_BackTexture->ySize - 1)));
+			if (x < 0)                     x = 0;
+			if (x >= m_BackTexture->xSize) x = m_BackTexture->xSize - 1;
+			if (y < 0)                     y = 0;
+			if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
+
+			b3Color::b3GetColor(&ray->color,m_BackTexture->b3GetValue(x,y));
+			break;
+
+		case TP_SKY_N_HELL :
+			b3_vector dir;
+			dir.x = ray->dir.x;
+			dir.y = ray->dir.y;
+			dir.z = ray->dir.z;
+			noise_procedures.b3Clouds (&dir,&ray->color);
+#ifdef SKY_SLIDE
+			ly = ray->color.r * 2.0 - 1.0;
+#else
+			break;
+#endif
+		case TP_SLIDE :
+			ray->color.a = 0;
+			ray->color.r = m_AvrgColor.r + ly * m_DiffColor.r;
+			ray->color.g = m_AvrgColor.g + ly * m_DiffColor.g;
+			ray->color.b = m_AvrgColor.b + ly * m_DiffColor.b;
+			break;
+
+		default:
+			ray->color.a = 0;
+			ray->color.r =
+			ray->color.g =
+			ray->color.b = m_ShadowBrightness;
+			break;
+	}
+
+	if (m_LensFlare != null)
+	{
+		b3MixLensFlare (ray);
+	}
+}
+
+void b3Scene::b3GetInfiniteColor(b3_ray_info *ray)
+{
+	b3_f64 ly,lx;
+
+	ly =
+		ray->dir.x * m_NormHeight.x +
+		ray->dir.y * m_NormHeight.y +
+		ray->dir.z * m_NormHeight.z;
+	lx =
+		ray->dir.x * m_NormWidth.x +
+		ray->dir.y * m_NormWidth.y +
+		ray->dir.z * m_NormWidth.z;
+
+	b3GetBackgroundColor (ray,lx,ly);
+}
 
 b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 {
@@ -169,6 +370,12 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 	return transparent;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Default shader                                **
+**                                                                      **
+*************************************************************************/
+
 void b3Scene::b3Illuminate(
 	b3Light         *light,
 	b3_light_info   *Jit,
@@ -186,22 +393,6 @@ void b3Scene::b3Illuminate(
 		result->g += ShapeAngle * surface->diffuse.g * light->m_Color.g;
 		result->b += ShapeAngle * surface->diffuse.b * light->m_Color.b;
 	}
-}
-
-void b3Scene::b3GetBackgroundColor(b3_color *bg)
-{
-	bg->r = (m_TopColor.r + m_BottomColor.r) * 0.5;
-	bg->g = (m_TopColor.g + m_BottomColor.g) * 0.5;
-	bg->b = (m_TopColor.b + m_BottomColor.b) * 0.5;
-	bg->a = (m_TopColor.a + m_BottomColor.a) * 0.5;
-}
-
-void b3Scene::b3GetInfiniteColor(b3_color *inf)
-{
-	inf->r = 0.5f;
-	inf->g = 0.5f;
-	inf->b = 0.5f;
-	inf->a = 0.0f;
 }
 
 b3_bool b3Scene::b3Shade(
@@ -260,7 +451,7 @@ b3_bool b3Scene::b3Shade(
 			refr = surface.refr;
 			if (!b3Shade(&surface.refr_ray,depth_count + 1))
 			{
-				b3GetInfiniteColor(&surface.refr_ray.color);
+				b3GetInfiniteColor(&surface.refr_ray);
 			}
 			formula |= 1;
 		}
@@ -274,7 +465,7 @@ b3_bool b3Scene::b3Shade(
 		{
 			if (!b3Shade(&surface.refl_ray,depth_count + 1))
 			{
-				b3GetInfiniteColor(&surface.refl_ray.color);
+				b3GetInfiniteColor(&surface.refl_ray);
 			}
 			formula |= 2;
 		}

@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/21 16:55:20  sm
+**	- Introducing lens flares.
+**	- Introducing different modes of background computation.
+**	- Introducing different types of row sampling.
+**
 **	Revision 1.6  2001/10/19 19:43:15  sm
 **	- Searching for 5 percent performance lost...
-**
+**	
 **	Revision 1.5  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -289,7 +294,7 @@ b3_bool b3SceneMork::b3Shade(
 				refl = surface.refl;
 				if (!b3Shade(&surface.refl_ray,depth_count + 1))
 				{
-					b3GetInfiniteColor(&surface.refl_ray.color);
+					b3GetInfiniteColor(&surface.refl_ray);
 				}
 			}
 			else
@@ -301,7 +306,7 @@ b3_bool b3SceneMork::b3Shade(
 			{
 				if (!b3Shade(&surface.refr_ray,depth_count + 1))
 				{
-					b3GetInfiniteColor(&surface.refr_ray.color);
+					b3GetInfiniteColor(&surface.refr_ray);
 				}
 			}
 		}
