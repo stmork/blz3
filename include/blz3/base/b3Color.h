@@ -38,6 +38,9 @@ class b3Color
 {
 	b3_f32 B3_ALIGN_16 v[4];
 
+	static b3_f32 B3_ALIGN_16 m_Limit_m255[4];
+	static b3_f32 B3_ALIGN_16 m_Limit_d255[4];
+
 public:
 	enum b3_color_index
 	{
@@ -89,19 +92,14 @@ public:
 
 	inline b3Color(const b3_pkd_color input)
 	{
-		       b3_pkd_color       mask  = 0xff000000;
-		       int                shift = 24,i;
-		       b3_s16 B3_ALIGN_16 c[4];
-		static b3_f32 B3_ALIGN_16 f[4]  = 
-		{
-			0.0039215686f,0.0039215686f,0.0039215686f,0.0039215686f
-		};
+		b3_pkd_color       color = input;
+		b3_s32 B3_ALIGN_16 c[4];
+		int                i;
 
 		for (i = 0;i < 4;i++)
 		{
-			c[i]   = ((input & mask) >> shift);
-			mask >>= 8;
-			shift -= 8;
+			c[3-i] = color & 0xff;
+			color  = color >> 8;
 		}
 
 		for (i = 0;i < 4;i++)
@@ -111,7 +109,7 @@ public:
 
 		for (i = 0;i < 4;i++)
 		{
-			v[i] *= f[i];
+			v[i] *= m_Limit_d255[i];
 		}
 	}
 
@@ -342,27 +340,23 @@ public:
 
 	inline operator b3_pkd_color()
 	{
-		       b3_pkd_color       result = 0;
-		       int                i;
-		       b3_s16 B3_ALIGN_16 c[4];
-		       b3_f32 B3_ALIGN_16 sat[4];
-		static b3_f32 B3_ALIGN_16 limit[4] = 
-		{
-			255,255,255,255
-		};
+		b3_pkd_color       result = 0;
+		int                i;
+		b3_s32 B3_ALIGN_16 c[4];
+		b3_f32 B3_ALIGN_16 sat[4];
 
 		for (i = 0;i < 4;i++)
 		{
-			sat[i] = v[i] * limit[i];
-			if (sat[i] > limit[i])
+			sat[i] = v[i] * m_Limit_m255[i];
+			if (sat[i] > m_Limit_m255[i])
 			{
-				sat[i] = limit[i];
+				sat[i] = m_Limit_m255[i];
 			}
 		}
 
 		for (i = 0;i < 4;i++)
 		{
-			c[i] = (b3_s16)sat[i];
+			c[i] = (b3_s32)sat[i];
 		}
 
 		for (i = 0;i < 4;i++)

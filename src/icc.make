@@ -22,7 +22,7 @@ setenv PROF_FILES "Test.bwd AlleObjekte.bwd Vase.bwd Wassersockel.bwd AllShapes.
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
-setenv ASMFLAGS "-O3 -w -march=pentiumiii"
+setenv ASMFLAGS "-O3 -w -march=pentium4"
 make -C Btiff -j 4 libB3tiff.a
 make -C Bjpeg -j 4 libB3jpeg.a
 

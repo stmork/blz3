@@ -31,13 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/03/08 16:08:14  sm
+**	- Optimized b3_pkd_color <-> b3Color conversion.
+**
 **	Revision 1.6  2002/08/10 14:36:31  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling
 **	  b3Recomute() the shapes disoccured.
 **	- Some methods moved as static methods into the
 **	  b3Mem class.
-**
+**	
 **	Revision 1.5  2001/10/31 14:46:35  sm
 **	- Filling b3IsCancelled() with sense.
 **	- Inlining b3RGB
@@ -59,12 +62,6 @@
 **	
 **	
 */
-
-/*************************************************************************
-**                                                                      **
-**                        routines                                      **
-**                                                                      **
-*************************************************************************/
 
 /*************************************************************************
 **                                                                      **

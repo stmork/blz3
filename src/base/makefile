@@ -10,6 +10,7 @@ PRGS			=
 LIBS			= libB3Base.o
 LIB_SOURCE =\
 	b3Aux.cc\
+	b3Color.cc\
 	b3Cubic.cc\
 	b3Endian.cc\
 	b3FileList.cc\
@@ -30,6 +31,7 @@ LIB_SOURCE =\
 
 LIB_OBJ	=\
 	b3Aux.o\
+	b3Color.o\
 	b3Cubic.o\
 	b3Endian.o\
 	b3FileList.o\
