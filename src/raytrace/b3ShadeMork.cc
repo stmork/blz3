@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.24  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.23  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -170,27 +174,31 @@
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        b3ShaderMork implementation                   **
+**                                                                      **
+*************************************************************************/
 
-b3SceneMork::b3SceneMork(b3_u32 class_type) : b3Scene(sizeof(b3SceneMork), class_type)
+b3ShaderMork::b3ShaderMork(b3Scene *scene) : b3Shader(scene)
 {
-	b3PrintF(B3LOG_DEBUG,"Using Mork shading...\n");
 }
 
-b3SceneMork::b3SceneMork(b3_u32 *src) : b3Scene(src)
+void b3ShaderMork::b3Prepare()
 {
-	b3PrintF(B3LOG_DEBUG,"Using Mork shading...\n");
+	b3Shader::b3Prepare();
+	m_ShadowFactor = m_Scene->m_ShadowBrightness / m_Scene->b3GetLightCount();
 }
 
-void b3SceneMork::b3Illuminate(
+void b3ShaderMork::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3Color       &result,
-	b3Material    *material)
+	b3Color       &result)
 {
 	b3Color aux = b3Color(0,0,0);
 
-	if ((material != null) && material->b3Illuminate(surface,Jit,aux))
+	if ((surface->material != null) && surface->material->b3Illuminate(surface,Jit,aux))
 	{
 		result += aux * 2.0;
 	}
@@ -240,8 +248,92 @@ void b3SceneMork::b3Illuminate(
 	}
 }
 
+void b3ShaderMork::b3ShadeSurface(
+	b3_ray_fork &surface,
+	b3_ray_info *ray,
+	b3_count     depth_count)
+{
+	b3Item  *item;
+	b3Light *light;
+	b3_f64   refl,refr,factor;
 
-b3_bool b3SceneMork::b3IsPointLightBackground (
+	ray->color.b3Init();
+	if (surface.transparent)
+	{
+		if (surface.m_Ior == 1)
+		{
+			surface.refr_ray.inside = false;
+			surface.refl_ray.inside = false;
+		}
+		refr = surface.m_Refraction;
+	}
+	else
+	{
+		refr = 0;
+	}
+	memset(&surface.refr_ray.color,0,sizeof(surface.refr_ray.color));
+
+	if (depth_count <= m_TraceDepth)
+	{
+		// Reflection
+		if (((!ray->inside) || (!surface.transparent)) && (surface.m_Reflection > 0))
+		{
+			refl = surface.m_Reflection;
+			if (!b3Shade(&surface.refl_ray,depth_count + 1))
+			{
+				m_Scene->b3GetInfiniteColor(&surface.refl_ray);
+			}
+		}
+		else
+		{
+			refl = 0;
+		}
+
+		if (surface.transparent)
+		{
+			if (!b3Shade(&surface.refr_ray,depth_count + 1))
+			{
+				m_Scene->b3GetInfiniteColor(&surface.refr_ray);
+			}
+		}
+	}
+	else
+	{
+		refl = 0;
+	}
+
+	// For each light source
+	surface.m_SpecularSum.b3Init();
+	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		light->b3Illuminate(this,&surface);
+	}
+
+	// Mix colors
+	factor = (1.0 - refl - refr) * 0.5;
+	if (factor > 0)
+	{
+		ray->color *= factor;
+	}
+	else
+	{
+		ray->color.b3Init();
+	}
+
+	if (refl > 0)
+	{
+		ray->color += (surface.refl_ray.color * refl);
+	}
+	if (refr > 0)
+	{
+		ray->color += (surface.refr_ray.color * refr);
+	}
+
+	ray->color += surface.m_SpecularSum;
+}
+
+b3_bool b3ShaderMork::b3IsPointLightBackground (
 	b3Light     *Light,
 	b3_ray_info *Ray)
 {
@@ -279,20 +371,20 @@ b3_bool b3SceneMork::b3IsPointLightBackground (
 	return true;
 }
 
-void b3SceneMork::b3LightFlare (b3_ray_info *Ray)
+void b3ShaderMork::b3LightFlare (b3_ray_info *Ray)
 {
 	b3Item    *item;
 	b3Light   *Light;
 	b3_vector  toLight;
 	b3_f64     angle,reverse;
 
-	B3_FOR_BASE(b3GetLightHead(),item)
+	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 	{
 		Light = (b3Light *)item;
 
-		toLight.x = Light->m_Position.x - m_EyePoint.x;
-		toLight.y = Light->m_Position.y - m_EyePoint.y;
-		toLight.z = Light->m_Position.z - m_EyePoint.z;
+		toLight.x = Light->m_Position.x - m_Scene->m_EyePoint.x;
+		toLight.y = Light->m_Position.y - m_Scene->m_EyePoint.y;
+		toLight.z = Light->m_Position.z - m_Scene->m_EyePoint.z;
 
 		// Ray->dir is already normalized so only
 		// toLight is to be normalized for angle
@@ -312,193 +404,5 @@ void b3SceneMork::b3LightFlare (b3_ray_info *Ray)
 
 		reverse    = 1.0 - angle;
 		Ray->color = Light->m_Color * angle + Ray->color * reverse;
-	}
-}
-
-b3_bool b3SceneMork::b3Shade(
-	b3_ray_info *ray,
-	b3_count     depth_count)
-{
-	b3Item      *item;
-	b3Light     *light;
-	b3BBox      *bbox;
-	b3Shape     *shape;
-	b3_ray_fork  surface;
-	b3_f64       refl,refr,factor;
-	b3_bool      transparent;
-	b3_bool      result = false;
-
-	surface.m_SpecularSum.b3Init();
-	ray->color.b3Init();
-
-	// Normalize incoming ray
-	if (b3Vector::b3Normalize(&ray->dir) == 0)
-	{
-		return false;
-	}
-
-	if (b3Intersect(ray))
-	{
-		b3Material *material = null;
-
-		// Initialize some values
-		// Compute intersection point "ipoint"
-		// Get hit material
-		// Compute normal at ipoint and bump normal
-		// Get material values
-		bbox  = ray->bbox;
-		shape = ray->shape;
-		surface.incoming = ray;
-
-		// Compute intersection point
-		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
-		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
-		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-
-		// Compute rel. box coordinates
-		bbox->b3ComputeBoxPolar(ray);
-
-		// Compute surface values
-		material = shape->b3GetSurfaceValues(ray,&surface);
-		shape->b3BumpNormal(ray);
-
-		// Where to shoot subsequent rays...
-		transparent = b3ComputeOutputRays(&surface);
-		if (transparent)
-		{
-			if (surface.m_Ior == 1)
-			{
-				surface.refr_ray.inside = false;
-				surface.refl_ray.inside = false;
-			}
-			refr = surface.m_Refraction;
-		}
-		else
-		{
-			refr = 0;
-		}
-		memset(&surface.refr_ray.color,0,sizeof(surface.refr_ray.color));
-
-		if (depth_count <= m_TraceDepth)
-		{
-			// Reflection
-			if (((!ray->inside) || (!transparent)) && (surface.m_Reflection > 0))
-			{
-				refl = surface.m_Reflection;
-				if (!b3Shade(&surface.refl_ray,depth_count + 1))
-				{
-					b3GetInfiniteColor(&surface.refl_ray);
-				}
-			}
-			else
-			{
-				refl = 0;
-			}
-
-			if (transparent)
-			{
-				if (!b3Shade(&surface.refr_ray,depth_count + 1))
-				{
-					b3GetInfiniteColor(&surface.refr_ray);
-				}
-			}
-		}
-		else
-		{
-			refl = 0;
-		}
-
-		// For each light source
-		B3_FOR_BASE(b3GetLightHead(),item)
-		{
-			light = (b3Light *)item;
-			light->b3Illuminate(this,&surface,material);
-		}
-
-		// Mix colors
-		factor = (1.0 - refl - refr) * 0.5;
-		if (factor > 0)
-		{
-			ray->color *= factor;
-		}
-		else
-		{
-			ray->color.b3Init();
-		}
-
-		if (refl > 0)
-		{
-			ray->color += (surface.refl_ray.color * refl);
-		}
-		if (refr > 0)
-		{
-			ray->color += (surface.refr_ray.color * refr);
-		}
-
-		ray->color += surface.m_SpecularSum;
-
-		if (m_Nebular != null)
-		{
-			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
-		}
-		result = true;
-	}
-	else
-	{
-		if (m_Nebular != null)
-		{
-			m_Nebular->b3GetNebularColor(ray->color);
-			result = true;
-		}
-		else
-		{
-			B3_FOR_BASE(b3GetLightHead(),item)
-			{
-				b3IsPointLightBackground((b3Light *)item,ray);
-			}
-			result = false;
-		}
-	}
-
-	return result;
-}
-
-void b3SceneMork::b3SetLights(b3RenderContext *context)
-{
-	b3Item   *item;
-	b3Light  *light;
-	b3Color   ambient;
-	b3Color   diffuse;
-	b3Color   black;
-	b3_count  count = 0;
-
-	black.b3Init();
-	ambient.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
-
-	context->b3LightNum();
-	context->b3LightReset();
-	B3_FOR_BASE(b3GetLightHead(),item)
-	{
-		light = (b3Light *)item;
-		if (light->b3IsActive())
-		{
-			// Use the same color for diffuse and specular
-			diffuse = light->m_Color * 0.5;
-			if (context->b3LightAdd(
-				&light->m_Position,
-				light->m_SpotActive ? &light->m_Direction : null,
-				b3ComputeSpotExponent(light),
-				&diffuse,
-				&black,
-				&diffuse))
-			{
-				count++;
-			}
-		}
-	}
-	if (count > 0)
-	{
-		ambient = ambient / count;
-		context->b3SetAmbient(ambient);
 	}
 }

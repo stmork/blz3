@@ -55,6 +55,7 @@ public:
 	BOOL	m_ResValid;
 	BOOL	m_GfxValid;
 	int		m_Resolution;
+	int		m_Shading;
 	//}}AFX_DATA
 
 
@@ -90,6 +91,7 @@ private:
 	void    b3PrintLegend();
 	void    b3UpdateUI();
 	b3_bool b3SetResolution(b3_res xRes,b3_res yRes);
+	void    b3SetShading();
 };
 
 //{{AFX_INSERT_LOCATION}}

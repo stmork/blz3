@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.7  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
-**
+**	
 **	Revision 1.6  2004/01/18 13:51:57  sm
 **	- Done further security issues.
 **	
@@ -530,7 +534,7 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 
 b3Scene *b3TGFReader::b3ReadTGFScene(const char *tgffile)
 {
-	b3Scene     *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene     *scene = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox      *bbox;
 	b3TGFReader  reader;
 	b3File       file;

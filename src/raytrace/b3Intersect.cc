@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.38  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.37  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -1845,23 +1849,6 @@ b3Shape *b3Scene::b3Intersect(
 	return ResultShape;
 }
 
-b3_bool b3Scene::b3Intersect(b3_ray_info *ray,b3_f64 max)
-{
-	b3BBox  *bbox;
-	b3_bool  found;
-
-	ray->Q     = max;
-	ray->shape = b3Intersect(b3GetFirstBBox(),ray);
-
-	found = (ray->shape != null);
-	if (found)
-	{
-		bbox = ray->bbox;
-	}
-
-	return found;
-}
-
 b3Shape *b3Scene::b3IsObscured(
 	b3BBox      *BBox,
 	b3_ray_info *ray)
@@ -1923,18 +1910,6 @@ b3Shape *b3Scene::b3IsObscured(
 		BBox = (b3BBox *)BBox->Succ;
 	}
 	return null;
-}
-
-b3_bool b3Scene::b3IsObscured(b3_ray_info *ray,b3_f64 max)
-{
-	ray->Q     = max;
-	ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
-	return ray->shape != null;
-}
-
-b3_bool b3Scene::b3FindObscurer(b3_ray_info *ray,b3_f64 max)
-{
-	return b3Intersect(ray,max);
 }
 
 /*************************************************************************

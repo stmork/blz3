@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.8  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.7  2003/03/06 15:39:36  sm
 **	- Optimized b3Color for integer conversion
 **	
@@ -86,6 +90,7 @@ b3RayRow::b3RayRow(
 	b3_res     ySize) : b3Row(y,xSize)
 {
 	m_Scene   = scene;
+	m_Shader  = scene->b3GetShader();
 	m_Display = display;
 	m_y       = y;
 	m_xSize   = xSize;
@@ -121,7 +126,7 @@ void b3RayRow::b3Raytrace()
 		ray.inside = false;
 		ray.t      = m_t;
 
-		if (!m_Scene->b3Shade(&ray))
+		if (!m_Shader->b3Shade(&ray))
 		{
 			m_Scene->b3GetBackgroundColor(&ray,fx,m_fy);
 		}
@@ -203,7 +208,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 		ray.inside = false;
 		ray.t      = m_t;
 
-		if (!m_Scene->b3Shade(&ray))
+		if (!m_Shader->b3Shade(&ray))
 		{
 			m_Scene->b3GetBackgroundColor(&ray,fxRight,m_fy);
 		}
@@ -332,7 +337,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z += m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Scene->b3Shade(&ray))
+			if (!m_Shader->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxRight,fyUp);
 			}
@@ -343,7 +348,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z -= m_Scene->m_xHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Scene->b3Shade(&ray))
+			if (!m_Shader->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyUp);
 			}
@@ -354,7 +359,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z -= m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Scene->b3Shade(&ray))
+			if (!m_Shader->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
 			}
@@ -453,7 +458,7 @@ void b3DistributedRayRow::b3Raytrace()
 			ray.inside = false;
 			ray.t      = m_t;
 
-			if (!m_Scene->b3Shade(&ray))
+			if (!m_Shader->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
 			}
@@ -547,7 +552,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 				ray.inside = false;
 				ray.t      = m_t;
 
-				if (!m_Scene->b3Shade(&ray))
+				if (!m_Shader->b3Shade(&ray))
 				{
 					m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
 				}

@@ -862,15 +862,15 @@ BEGIN
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,115,156,
                     11,15
     CONTROL         "Slider1",IDC_RAYDEPTH,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,225,130,120,25
+                    WS_TABSTOP,155,130,120,25
     CONTROL         "Slider1",IDC_SHADOW_BRIGHTNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,225,175,120,25
+                    TBS_AUTOTICKS | WS_TABSTOP,155,175,120,25
     CONTROL         "",IDC_PREVIEW_RAYTRACE,"Static",SS_BLACKFRAME | 
                     SS_NOTIFY | SS_SUNKEN,25,30,100,65
     CONTROL         "",IDC_PREVIEW_BGIMAGE,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,235,30,100,66
-    LTEXT           "Rekursionstiefe:",IDC_RAYDEPTH_LEGEND,231,115,115,8
-    LTEXT           "Ambienter Faktor:",IDC_SHADOW_BRIGHTNESS_LEGEND,231,160,
+    LTEXT           "Rekursionstiefe:",IDC_RAYDEPTH_LEGEND,161,115,115,8
+    LTEXT           "Ambienter Faktor:",IDC_SHADOW_BRIGHTNESS_LEGEND,161,160,
                     115,8
     GROUPBOX        "Hintergrundverarbeitung:",IDC_STATIC,15,15,200,90
     GROUPBOX        "Hintergrundbild",IDC_STATIC,225,15,190,90
@@ -878,6 +878,10 @@ BEGIN
     LTEXT           "Höhe:",IDC_STATIC,80,145,20,8
     COMBOBOX        IDC_RES,25,175,90,165,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
+    CONTROL         "Phong-Shading",IDC_SHADING_PHONG,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,290,110,65,10
+    CONTROL         "Mork-Shading",IDC_SHADING_MORK,"Button",
+                    BS_AUTORADIOBUTTON,290,125,60,10
 END
 
 IDD_SUPER_SAMPLE DIALOG DISCARDABLE  0, 0, 128, 151

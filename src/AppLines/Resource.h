@@ -693,6 +693,8 @@
 #define IDC_SPIN_SCALE_TIME             32405
 #define IDC_OBJ_KEEP                    32405
 #define IDC_OBJ_RESET                   32406
+#define IDC_SHADING_PHONG               32407
+#define IDC_SHADING_MORK                32408
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -907,9 +909,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        126
 #define _APS_NEXT_COMMAND_VALUE         10122
-#define _APS_NEXT_CONTROL_VALUE         32407
+#define _APS_NEXT_CONTROL_VALUE         32408
 #define _APS_NEXT_SYMED_VALUE           60207
 #endif
 #endif

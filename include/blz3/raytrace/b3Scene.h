@@ -73,6 +73,7 @@ class b3CameraPart;
 class b3CloudBackground;
 
 class b3RayRow;
+class b3Shader;
 
 class B3_PLUGIN b3Scene : public b3Item
 {
@@ -82,6 +83,8 @@ class B3_PLUGIN b3Scene : public b3Item
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
 	b3Path           m_SceneName;
+
+	b3Shader        *m_Shader;
 
 protected:
 	b3Path           m_Filename;
@@ -94,7 +97,7 @@ protected:
 	b3LensFlare     *m_LensFlare;
 	b3CameraPart    *m_ActualCamera;
 	b3Clouds        *m_Clouds;
-	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
+	//b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 	b3Color          m_AvrgColor;
 	b3Color          m_DiffColor;
 	b3_vector64      m_xHalfDir;
@@ -129,42 +132,82 @@ public:
 	static b3TxPool  m_TexturePool;
 	static b3_f64    epsilon;
 
-protected:
-	B3_ITEM_BASE(b3Scene);
-
 public:
 	B3_ITEM_INIT(b3Scene);
 	B3_ITEM_LOAD(b3Scene);
 
-	static  void            b3Register();
-	        void            b3Write();
-	        void            b3Reorg();
-	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
-	        char           *b3GetName();
+	virtual ~b3Scene();
+
+	static  void             b3Register();
+	        void             b3Write();
+	        b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 
 			// Drawing routines
-		    void            b3AllocVertices(b3RenderContext *context);
-		    void            b3FreeVertices();
-	virtual void            b3SetLights(b3RenderContext *context);
-	        void            b3Draw(b3RenderContext *context);
+		    void             b3AllocVertices(b3RenderContext *context);
+		    void             b3FreeVertices();
+	        void             b3Draw(b3RenderContext *context);
+			void             b3Update();
 
-			char           *b3GetFilename();
-			void            b3SetFilename(const char *filename);
-			void            b3SetTexture(const char *name);
+			// Filename handling
+	        char            *b3GetName();
+			char            *b3GetFilename();
+			void             b3SetFilename(const char *filename);
+			void             b3SetTexture(const char *name);
+
+			// Scene handling
+		    b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
+		    void             b3Raytrace(b3Display *display);
+		    void             b3AbortRaytrace();
+		    inline b3_bool   b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX)
+			{
+				ray->Q     = max;
+				ray->shape = b3Intersect(b3GetFirstBBox(),ray);
+
+				return ray->shape != null;
+			}
+			b3_bool          b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX)
+			{
+				ray->Q     = max;
+				ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
+				return ray->shape != null;
+			}
+	
+			// shading
+			inline b3Shader *b3GetShader()
+			{
+				return m_Shader;
+			}
+			void             b3SetShading(b3_u32 class_type);
+		    void             b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
+		    void             b3MixLensFlare(b3_ray_info *ray);
+		    b3_f64           b3ComputeSpotExponent(b3Light *light);
+		    void             b3GetInfiniteColor(b3_ray_info *ray);
+
+			// object methods
+			inline b3Base<b3Item> *b3GetBBoxHead()
+			{
+				return &m_Heads[0];
+			}
+
+			inline b3BBox  *b3GetFirstBBox()
+			{
+				return (b3BBox *)b3GetBBoxHead()->First;
+			}
+
 			void            b3Recount();
-			void            b3Update();
+	        void            b3Reorg();
+		    b3_count        b3GetBBoxCount();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
 		    b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
 		    b3BBox         *b3FindParentBBox(b3Shape *shape);
-			b3Animation    *b3GetAnimation(b3_bool force = false);
-			b3_f64          b3GetTimePoint();
-		    b3ModellerInfo *b3GetModellerInfo();
-			b3Distribute   *b3GetDistributed(b3_bool force = true);
-		    b3Nebular      *b3GetNebular    (b3_bool force = true);
-		    b3SuperSample  *b3GetSuperSample(b3_bool force = true);
-		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
-			b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
+	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
+	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
+			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
+		    void            b3Activate(b3_bool activate=true);
+		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
+
+			// camera methods
 		    b3CameraPart   *b3GetFirstCamera(b3_bool must_active = false);
 	        b3CameraPart   *b3GetActualCamera();
 			b3CameraPart   *b3GetCameraByName(const char *camera_name);
@@ -172,55 +215,43 @@ public:
 		    b3CameraPart   *b3UpdateCamera();
 			b3_bool         b3GetTitle(char *title,size_t size);
 			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
-		    b3Light        *b3GetLight(b3_bool must_active = false);
+	
+			// light methods
+			inline b3Base<b3Item> *b3GetLightHead()
+			{
+				return &m_Heads[1];
+			}
+	        void            b3SetLights(b3RenderContext *context);
+			b3Light        *b3GetLight(b3_bool must_active = false);
 			b3Light        *b3GetLightByName(const char *light_name);
-		    b3BBox         *b3GetFirstBBox();
-		    b3_count        b3GetBBoxCount();
-		    void            b3Activate(b3_bool activate=true);
-		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
-		    b3_bool         b3PrepareScene(b3_res xSize,b3_res ySize);
-		    void            b3Raytrace(b3Display *display);
-		    void            b3AbortRaytrace();
-		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
-			b3_bool         b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX);
-	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
-	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
-	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
-	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
-		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
+			b3_count        b3GetLightCount();
 
+			// Special access methods
+			inline b3Base<b3Item> *b3GetSpecialHead()
+			{
+				return &m_Heads[2];
+			}
+			b3Animation       *b3GetAnimation(b3_bool force = false);
+		    b3ModellerInfo    *b3GetModellerInfo();
+			b3Distribute      *b3GetDistributed(b3_bool force = true);
+		    b3Nebular         *b3GetNebular    (b3_bool force = true);
+		    b3SuperSample     *b3GetSuperSample(b3_bool force = true);
+		    b3LensFlare       *b3GetLensFlare  (b3_bool force = false);
+			b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
+
+			// Animation
 			void            b3SetAnimation (b3_f64 t);
+			b3_f64          b3GetTimePoint();
 	        void            b3ResetAnimation();
 			void            b3Animate(b3Activation::b3_anim_activation activation);
 
-			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
 	static  b3Scene        *b3ReadTGF(const char *filename);
-
-	inline b3Base<b3Item> *b3GetBBoxHead()
-	{
-		return &m_Heads[0];
-	}
-
-	inline b3Base<b3Item> *b3GetLightHead()
-	{
-		return &m_Heads[1];
-	}
-
-	inline b3Base<b3Item> *b3GetSpecialHead()
-	{
-		return &m_Heads[2];
-	}
-
-	static b3_bool   b3CheckTexture(b3Tx **tx,const char *name);
-	static b3_bool   b3CutTextureName(const char *full_name,char *short_name);
-
-protected:
-		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
-		    b3_f64          b3ComputeSpotExponent(b3Light *light);
-		    void            b3GetInfiniteColor(b3_ray_info *ray);
+	static  b3_bool         b3CheckTexture(b3Tx **tx,const char *name);
+	static  b3_bool         b3CutTextureName(const char *full_name,char *short_name);
 
 private:
+	        b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+			void            b3ReallocateShader();
 	        void            b3DoRaytrace(b3Display *display,b3_count CPUs);
 	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
@@ -228,35 +259,65 @@ private:
 	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray_info *ray);
-		    b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray_info *ray);
-		    void            b3MixLensFlare(b3_ray_info *ray);
+	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray_info *ray);
 
+	friend class b3Shader;
 	friend class b3RayRow;
 	friend class b3SupersamplingRayRow;
 	friend class b3DistributedRayRow;
 	friend class b3MotionBlurRayRow;
 };
 
-class B3_PLUGIN b3ScenePhong : public b3Scene
+class B3_PLUGIN b3Shader
 {
-public:
-	B3_ITEM_INIT(b3ScenePhong);
-	B3_ITEM_LOAD(b3ScenePhong);
+protected:
+	b3Scene                *m_Scene;
+	b3Nebular              *m_Nebular;
+	b3_count                m_TraceDepth;
 
-	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
-	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+public:
+	                        b3Shader(b3Scene *scene);
+
+	virtual void            b3Prepare();
+	        b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
+	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result) = 0;
+
+	inline  b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX)
+	{
+		return m_Scene->b3Intersect(ray,max);
+	}
+
+protected:
+	virtual void            b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth) = 0;
+
+	virtual b3_bool         b3IsPointLightBackground(b3Light *light,b3_ray_info *ray) = 0;
+
+protected:
+	void                    b3ComputeOutputRays(b3_ray_fork *surface);
 };
 
-class B3_PLUGIN b3SceneMork : public b3Scene
+class B3_PLUGIN b3ShaderPhong : public b3Shader
 {
 public:
-	B3_ITEM_INIT(b3SceneMork);
-	B3_ITEM_LOAD(b3SceneMork);
+	               b3ShaderPhong(b3Scene *scene);
+	       void    b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth);
+	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
+	inline b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray)
+	{
+		return false;
+	}
+};
 
-	virtual void     b3SetLights(b3RenderContext *context);
-	        b3_bool  b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
+class B3_PLUGIN b3ShaderMork : public b3Shader
+{
+	b3_f64 m_ShadowFactor;
+
+public:
+	         b3ShaderMork(b3Scene *scene);
+
+	void     b3Prepare();
+	void     b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth);
+	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
@@ -268,6 +329,7 @@ class B3_PLUGIN b3RayRow : public b3Row
 protected:
 	b3Display   *m_Display;
 	b3Scene     *m_Scene;
+	b3Shader    *m_Shader;
 	b3Color     *m_LastResult;
 	b3Color     *m_ThisResult;
 	b3_vector64  m_preDir;

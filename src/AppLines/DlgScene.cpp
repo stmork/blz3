@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.19  2004/05/16 09:21:11  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
-**
+**	
 **	Revision 1.18  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
@@ -159,6 +163,20 @@ resolution[] =
 	{  200,  150 }
 };
 
+static struct b3_shading
+{
+	b3_u32 class_type;
+	int    mode;
+}
+shading[] =
+{
+	{ TRACEPHOTO_PHONG, 0 },
+	{ TRACEANGLE_PHONG, 0 },
+	{ TRACEPHOTO_MORK, 1 },
+	{ TRACEANGLE_MORK, 1 },
+	{ GLOBAL_ILLUM, 1 }
+};
+
 CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgScene::IDD)
 {
@@ -169,6 +187,7 @@ CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
 	m_ResValid = false;
 	m_GfxValid = FALSE;
 	m_Resolution = 0;
+	m_Shading = 1;
 	//}}AFX_DATA_INIT
 	m_LastTraceDepth = -1;
 	m_LastShadowBrightness = -1;
@@ -191,6 +210,7 @@ void CDlgScene::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_RES_VALID, m_ResValid);
 	DDX_Check(pDX, IDC_OPEN_GFX, m_GfxValid);
 	DDX_CBIndex(pDX, IDC_RES, m_Resolution);
+	DDX_Radio(pDX, IDC_SHADING_PHONG, m_Shading);
 	//}}AFX_DATA_MAP
 }
 
@@ -221,6 +241,7 @@ BOOL CDlgScene::OnInitDialog()
 	m_GfxValid = (m_Scene->m_Flags & TP_NO_GFX) == 0;
 	m_BackgroundMode = scene_to_dialog[m_Scene->m_BackgroundType];
 	b3SetResolution(m_Scene->m_xSize,m_Scene->m_ySize);
+	b3SetShading();
 
 	CPropertyPage::OnInitDialog();
 	
@@ -370,6 +391,18 @@ void CDlgScene::OnOK()
 {
 	// TODO: Add extra validation here
 	CPropertyPage::OnOK();
+	switch(m_Shading)
+	{
+	case 0:
+		m_Scene->b3SetShading(TRACEPHOTO_PHONG);
+		break;
+	
+	case 1:
+		// Walk through!!!
+	default:
+		m_Scene->b3SetShading(TRACEPHOTO_MORK);
+		break;
+	}
 	m_Scene->m_BackgroundType   = m_PreviewScene->m_BackgroundType;
 	m_Scene->m_TopColor         = m_PreviewScene->m_TopColor;
 	m_Scene->m_BottomColor      = m_PreviewScene->m_BottomColor;
@@ -423,4 +456,19 @@ b3_bool CDlgScene::b3SetResolution(b3_res xRes,b3_res yRes)
 		changed = true;
 	}
 	return changed;
+}
+
+void CDlgScene::b3SetShading()
+{
+	b3_index i,max = sizeof(shading) / sizeof(b3_shading);
+
+	for (i = 0;i < max;i++)
+	{
+		if (shading[i].class_type == m_Scene->b3GetClassType())
+		{
+			m_Shading = shading[i].mode;
+			return;
+		}
+	}
+	m_Shading = 1;
 }

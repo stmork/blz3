@@ -92,11 +92,15 @@ struct b3_ray_info : public b3_ray
 	b3Color      color;
 };
 
+class b3Material;
+
 struct b3_ray_fork : public b3_surface
 {
 	b3_ray_info *incoming;
 	b3_ray_info  refl_ray;
 	b3_ray_info  refr_ray;
+	b3_bool      transparent;
+	b3Material  *material;
 };
 
 // aux. structure for JitterLight

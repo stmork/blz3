@@ -44,6 +44,7 @@
 
 // POINT_LIGHT
 class b3Material;
+class b3Shader;
 class b3Scene;
 class B3_PLUGIN b3Light : public b3Item
 {
@@ -74,7 +75,7 @@ public:
 	static void     b3Register();
 	       void     b3Write();
 		   void     b3Dump(b3_count level);
-	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface,b3Material *material);
+	       b3_bool  b3Illuminate(b3Shader *shader,b3_ray_fork *surface);
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();
 	       char    *b3GetName();
@@ -97,10 +98,10 @@ public:
 
 private:
 	void         b3InitValues();
-	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface,b3Material *material);
-	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_ray_fork *surface,b3Material *material);
-	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_ray_fork *surface,
-		b3_light_info *Jit,b3_coord x,b3_coord y,b3Material *material);
+	b3_bool      b3PointIllumination(b3Shader *shader,b3_ray_fork *surface);
+	b3_bool      b3AreaIllumination( b3Shader *shader,b3_ray_fork *surface);
+	b3Shape     *b3CheckSinglePoint (b3Shader *shader,b3_ray_fork *surface,
+		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
 #endif

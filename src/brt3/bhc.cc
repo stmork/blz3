@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.15  2004/05/16 09:21:50  sm
 **	- Corrected camera access methods.
-**
+**	
 **	Revision 1.14  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
 **	
@@ -174,7 +178,7 @@ void b3BHDParser::b3ParseHouse()
 	b3PrintF(B3LOG_DEBUG,"Creating house...\n");
 	b3CheckToken(TKN_HOUSE);
 	
-	m_Scene = new b3SceneMork(TRACEPHOTO_MORK);
+	m_Scene = new b3Scene(TRACEPHOTO_MORK);
 	if (sscanf(&m_Line[m_Pos],"%*s %s %lf\n",(char *)name,&m_Scale) < 1)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);

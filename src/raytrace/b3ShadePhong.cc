@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.20  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.19  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -150,36 +154,29 @@
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        b3ShaderMork implementation                   **
+**                                                                      **
+*************************************************************************/
 
-b3ScenePhong::b3ScenePhong(b3_u32 class_type) : b3Scene(sizeof(b3ScenePhong), class_type)
+b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 {
-	b3PrintF(B3LOG_DEBUG,"  using Phong shading...\n");
 }
 
-b3ScenePhong::b3ScenePhong(b3_u32 *src) : b3Scene(src)
-{
-	b3PrintF(B3LOG_DEBUG,"  using Phong shading...\n");
-}
+#define MIX_REFLECTION 1
+#define MIX_REFRACTION 2
+#define MIX_BOTH       (MIX_REFLECTION | MIX_REFRACTION)
 
-b3_bool b3ScenePhong::b3FindObscurer(b3_ray_info *ray,b3_f64 max)
-{
-#if 0
-	return b3Scene::b3IsObscured(ray,max);
-#else
-	return b3IsObscured(ray,max);
-#endif
-}
-
-void b3ScenePhong::b3Illuminate(
+void b3ShaderPhong::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3Color       &result,
-	b3Material    *material)
+	b3Color       &result)
 {
 	b3Color aux = b3Color(0,0,0);
 
-	if ((material != null) && material->b3Illuminate(surface,Jit,aux))
+	if ((surface->material != null) && surface->material->b3Illuminate(surface,Jit,aux))
 	{
 		result += aux * 2.0;
 	}
@@ -207,139 +204,71 @@ void b3ScenePhong::b3Illuminate(
 }
 
 
-b3_bool b3ScenePhong::b3Shade(
+void b3ShaderPhong::b3ShadeSurface(
+	b3_ray_fork &surface,
 	b3_ray_info *ray,
 	b3_count     depth_count)
 {
 	b3Item      *item;
 	b3Light     *light;
-	b3BBox      *bbox;
-	b3Shape     *shape;
-	b3_ray_fork  surface;
 	b3_f64       refl,refr,factor;
-	b3_f64       denom;
 	b3_index     formula = 0;
-	b3_bool      transparent;
-	b3_bool      result = false;
 
-	// If max raytrace depth is reached leave!
-	if (depth_count > m_TraceDepth)
+	ray->color = surface.m_Ambient;
+	if (surface.transparent)
 	{
-		ray->color.b3Init();
-		return false;
-	}
-
-	// Normalize incoming ray
-	denom =
-		ray->dir.x * ray->dir.x +
-		ray->dir.y * ray->dir.y +
-		ray->dir.z * ray->dir.z;
-	if (denom != 0)
-	{
-		denom       = 1.0 / sqrt(denom);
-		ray->dir.x *= denom;
-		ray->dir.y *= denom;
-		ray->dir.z *= denom;
+		if (surface.m_Ior == 1)
+		{
+			surface.refr_ray.inside = false;
+			surface.refl_ray.inside = false;
+		}
+		refr = surface.m_Refraction;
+		if (!b3Shade(&surface.refr_ray,depth_count + 1))
+		{
+			m_Scene->b3GetInfiniteColor(&surface.refr_ray);
+		}
+		formula |= MIX_REFRACTION;
 	}
 	else
 	{
-		ray->color.b3Init();
-		return false;
+		refr = 0;
 	}
 
-	if (b3Intersect(ray))
+	refl = surface.m_Reflection;
+	if (refl > 0)
 	{
-		b3Material *material;
-
-		bbox  = ray->bbox;
-		shape = ray->shape;
-		surface.incoming = ray;
-
-		// Compute intersection point
-		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
-		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
-		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-
-		// Compute rel. box coordinates
-		bbox->b3ComputeBoxPolar(ray);
-
-		// Compute surface values
-		material = shape->b3GetSurfaceValues(ray,&surface);
-		shape->b3BumpNormal(ray);
-
-		ray->color = surface.m_Ambient;
-
-		transparent = b3ComputeOutputRays(&surface);
-		if (transparent)
+		if (!b3Shade(&surface.refl_ray,depth_count + 1))
 		{
-			if (surface.m_Ior == 1)
-			{
-				surface.refr_ray.inside = false;
-				surface.refl_ray.inside = false;
-			}
-			refr = surface.m_Refraction;
-			if (!b3Shade(&surface.refr_ray,depth_count + 1))
-			{
-				b3GetInfiniteColor(&surface.refr_ray);
-			}
-			formula |= 1;
+			m_Scene->b3GetInfiniteColor(&surface.refl_ray);
 		}
-		else
-		{
-			refr = 0;
-		}
-
-		refl = surface.m_Reflection;
-		if (refl > 0)
-		{
-			if (!b3Shade(&surface.refl_ray,depth_count + 1))
-			{
-				b3GetInfiniteColor(&surface.refl_ray);
-			}
-			formula |= 2;
-		}
-
-		switch(formula)
-		{
-		case 1:
-			// Only refraction
-			factor = (1.0 - refr);
-			ray->color = surface.refr_ray.color * refr + ray->color * factor;
-			break;
-
-		case 2:
-			// Only reflection
-			factor = (1.0 - refr);
-			ray->color = surface.refl_ray.color * refl + ray->color * factor;
-			break;
-
-		case 3:
-			// Reflection and refraction
-			factor = (1.0 - refl - refr);
-			ray->color =
-				surface.refl_ray.color * refl +
-				surface.refr_ray.color * refr +
-				            ray->color * factor;
-			break;
-		}
-
-		B3_FOR_BASE(b3GetLightHead(),item)
-		{
-			light = (b3Light *)item;
-			light->b3Illuminate(this,&surface,material);
-		}
-
-		if (m_Nebular != null)
-		{
-			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
-		}
-		result = true;
+		formula |= MIX_REFLECTION;
 	}
 
-	if (m_Nebular != null)
+	switch(formula)
 	{
-		m_Nebular->b3GetNebularColor(ray->color);
-		result = true;
+	case MIX_REFRACTION:
+		// Only refraction
+		ray->color = b3Color::b3Mix(ray->color, surface.refr_ray.color, refr);
+		break;
+
+	case MIX_REFLECTION:
+		// Only reflection
+		ray->color = b3Color::b3Mix(ray->color, surface.refl_ray.color, refl);
+		break;
+
+	case MIX_BOTH:
+		// Reflection and refraction
+		factor = (1.0 - refl - refr);
+		ray->color =
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr +
+				        ray->color * factor;
+		break;
 	}
-	return result;
+
+	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		light->b3Illuminate(this,&surface);
+	}
 }

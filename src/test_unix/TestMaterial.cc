@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.5  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
-**
+**	
 **	Revision 1.4  2004/03/15 10:38:37  sm
 **	- Found good values for granite.
 **	
@@ -101,7 +105,7 @@ class b3TestMaterial
 public:
 	inline static b3Scene *b3CreateMaterial(b3Material *material,b3_vector *dim = null)
 	{
-		b3Scene          *scene = new b3SceneMork(TRACEPHOTO_MORK);
+		b3Scene          *scene = new b3Scene(TRACEPHOTO_MORK);
 		b3BBox           *bbox  = new b3BBox(BBOX);
 		b3SplineRotShape *big = new b3SplineRotShape(SPLINE_ROT);
 		b3Area           *area  = new b3Area(AREA);

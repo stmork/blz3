@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2004/05/20 19:10:30  sm
+**      - Separated shader from scene. this is easier
+**        to handle.
+**
 **      Revision 1.40  2004/05/19 15:35:03  sm
 **      - Hope of having fixed ticket no. 13.
 **
@@ -426,23 +430,21 @@ void b3Light::b3SetName(const char *name)
 }
 
 b3_bool b3Light::b3Illuminate(
-	b3Scene     *scene,
-	b3_ray_fork *surface,
-	b3Material  *material)
+	b3Shader    *shader,
+	b3_ray_fork *surface)
 {
 	if (!m_LightActive)
 	{
 		return false;
 	}
 	return (m_SoftShadow ?
-		b3AreaIllumination(scene,surface,material) :
-		b3PointIllumination(scene,surface,material));
+		b3AreaIllumination(shader,surface) :
+		b3PointIllumination(shader,surface));
 }
 
 inline b3_bool b3Light::b3PointIllumination(
-	b3Scene     *scene,
-	b3_ray_fork *surface,
-	b3Material  *material)
+	b3Shader    *shader,
+	b3_ray_fork *surface)
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -497,15 +499,14 @@ inline b3_bool b3Light::b3PointIllumination(
 	}
 	Jit.LightDist = LightDist;
 
-	scene->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
-	scene->b3Illuminate(this,&Jit,surface,surface->incoming->color,material);
+	shader->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
+	shader->b3ShadeLight(this,&Jit,surface,surface->incoming->color);
 	return true;
 }
 
 inline b3_bool b3Light::b3AreaIllumination (
-	b3Scene     *scene,
-	b3_ray_fork *surface,
-	b3Material  *material)
+	b3Shader    *shader,
+	b3_ray_fork *surface)
 {
 	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
@@ -579,8 +580,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 	xs    = 1;
 	for (x = xs;x <= Distr;x += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0,material) != null;
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x,material) != null;
+		Edge1 = b3CheckSinglePoint (shader,surface,&Jit,x,0) != null;
+		Edge2 =	b3CheckSinglePoint (shader,surface,&Jit,Distr,Distr - x) != null;
 
 		equal   &= (Edge1 == Edge2);
 		if ((x != xs) && (!first))
@@ -593,8 +594,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 
 	for (y = 2 - xs;y < Distr;y += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y,material) != null;
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y,material) != null;
+		Edge1 = b3CheckSinglePoint (shader,surface,&Jit,0,y) != null;
+		Edge2 =	b3CheckSinglePoint (shader,surface,&Jit,Distr,Distr - y) != null;
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;
@@ -611,8 +612,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 		// fill top and bottom outline
 		for (x = 1 - xs;x <= Distr;x += 2)
 		{
-			b3CheckSinglePoint (scene,surface,&Jit,x,0,material);
-			b3CheckSinglePoint (scene,surface,&Jit,x,Distr,material);
+			b3CheckSinglePoint (shader,surface,&Jit,x,0);
+			b3CheckSinglePoint (shader,surface,&Jit,x,Distr);
 		}
 
 		for (y = 1;y < Distr;y++)
@@ -620,7 +621,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 			max = Distr + ((Jit.Distr + xs) & 1);
 			for (x = xs;x < max;x++)
 			{
-				b3CheckSinglePoint (scene,surface,&Jit,x,y,material);
+				b3CheckSinglePoint (shader,surface,&Jit,x,y);
 			}
 			xs ^= 1;
 		}
@@ -633,12 +634,11 @@ inline b3_bool b3Light::b3AreaIllumination (
 }
 
 inline b3Shape *b3Light::b3CheckSinglePoint (
-	b3Scene       *scene,                                
+	b3Shader      *shader,
 	b3_ray_fork   *surface,
 	b3_light_info *Jit,
 	b3_coord       x,
-	b3_coord       y,
-	b3Material    *material)
+	b3_coord       y)
 {
 	b3_f64   jx,jy,UpperBound;
 
@@ -651,8 +651,8 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
-		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
-		scene->b3Illuminate(this,Jit,surface,Jit->Result,material);
+		shader->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
+		shader->b3ShadeLight(this,Jit,surface,Jit->Result);
 	}
 	else
 	{

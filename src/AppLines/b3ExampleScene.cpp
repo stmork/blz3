@@ -37,6 +37,10 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.18  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -51,7 +55,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.17  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
 **	
@@ -168,7 +172,7 @@ inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
 
 b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 {
-	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox       *bbox   = new b3BBox(BBOX);
 	b3Area       *area   = new b3Area(AREA);
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
@@ -197,7 +201,7 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 
 b3Scene *b3ExampleScene::b3CreateGlobal()
 {
-	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox       *bbox1  = new b3BBox(BBOX);
 	b3BBox       *bbox2  = new b3BBox(BBOX);
 	b3Sphere     *medium = new b3Sphere(SPHERE);
@@ -275,7 +279,7 @@ b3CameraPart *b3ExampleScene::b3CreateCamera(
 
 b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera)
 {
-	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart *camera;
@@ -310,7 +314,7 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *origin
 
 b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 {
-	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene      *scene = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox       *bbox  = new b3BBox(BBOX);
 	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
 	b3Area       *area  = new b3Area(AREA);
@@ -348,7 +352,7 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 
 b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead)
 {
-	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3Scene      *scene = new b3Scene(TRACEPHOTO_MORK);
 	b3BBox       *bbox  = new b3BBox(BBOX);
 	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
 	b3Area       *area  = new b3Area(AREA);

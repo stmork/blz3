@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.61  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.60  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
@@ -319,40 +323,12 @@
 void b3Scene::b3Register()
 {
 	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
-	b3Item::b3Register(&b3SceneMork::b3StaticInit, &b3SceneMork::b3StaticInit, TRACEANGLE_MORK);
-	b3Item::b3Register(&b3SceneMork::b3StaticInit, &b3SceneMork::b3StaticInit, TRACEPHOTO_MORK);
-	b3Item::b3Register(&b3ScenePhong::b3StaticInit,&b3ScenePhong::b3StaticInit,TRACEANGLE_PHONG);
-	b3Item::b3Register(&b3ScenePhong::b3StaticInit,&b3ScenePhong::b3StaticInit,TRACEPHOTO_PHONG);
-	b3Item::b3Register(&b3Scene::b3StaticInit,     &b3Scene::b3StaticInit,     TRACEPHOTO_ALBRECHT);
-	b3Item::b3Register(&b3Scene::b3StaticInit,     &b3Scene::b3StaticInit,     GLOBAL_ILLUM);
-}
-
-b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
-{
-	b3PrintF(B3LOG_DEBUG,"Blizzard III scene init.\n");
-
-	b3AllocHeads(3);
-	m_Heads[0].b3InitBase(CLASS_BBOX);
-	m_Heads[1].b3InitBase(CLASS_LIGHT);
-	m_Heads[2].b3InitBase(CLASS_SPECIAL);
-
-	m_TopColor.b3Init   (0.5f,0.0f,1.0f);
-	m_BottomColor.b3Init(0.0f,0.0f,1.0f);
-
-	m_xAngle           = 0;
-	m_yAngle           = 0;
-	m_BBoxOverSize     = 0.02f;
-	m_BackgroundType   = TP_NOTHING;
-	m_TraceDepth       = 5;
-	m_Flags            = TP_SIZEVALID;
-	m_ShadowBrightness = 0.5f;
-	m_Epsilon          = 0.001f;
-	m_xSize            = 200;
-	m_ySize            = 150;
-	m_BackTexture      = null;
-	m_ActualCamera     = null;
-
-	m_Filename.b3Empty();
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_MORK);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_MORK);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_PHONG);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_PHONG);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_ALBRECHT);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, GLOBAL_ILLUM);
 }
 
 b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
@@ -379,6 +355,10 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 	m_ySize            = 150;
 	m_BackTexture      = null;
 	m_ActualCamera     = null;
+	m_Shader           = null;
+	m_Filename.b3Empty();
+
+	b3ReallocateShader();
 }
 
 b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
@@ -413,6 +393,10 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_Nebular          = null;
 	m_LensFlare        = null;
 	m_SuperSample      = null;
+	m_Shader           = null;
+	m_Filename.b3Empty();
+
+	b3ReallocateShader();
 }
 
 void b3Scene::b3Write()
@@ -444,6 +428,57 @@ void b3Scene::b3Write()
 	b3StoreString(m_TextureName,B3_TEXSTRINGLEN);
 }
 
+b3Scene::~b3Scene()
+{
+	if (m_Shader != null)
+	{
+		delete m_Shader;
+	}
+}
+
+void b3Scene::b3SetShading(b3_u32 class_type)
+{
+	ClassType = class_type;
+	b3ReallocateShader();
+}
+
+void b3Scene::b3ReallocateShader()
+{
+	if (m_Shader != null)
+	{
+		delete m_Shader;
+	}
+	switch (b3GetClassType())
+	{
+	case TRACEPHOTO_MORK:
+	case TRACEANGLE_MORK:
+		m_Shader = new b3ShaderMork(this);
+		break;
+
+	case TRACEPHOTO_PHONG:
+	case TRACEANGLE_PHONG:
+		m_Shader = new b3ShaderPhong(this);
+		break;
+
+	default:
+		m_Shader = null;
+		break;
+	}
+}
+
+b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
+{
+	xSize = this->m_xSize;
+	ySize = this->m_ySize;
+	return (m_Flags & TP_SIZEVALID) != 0;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Filename handling                             **
+**                                                                      **
+*************************************************************************/
+
 char *b3Scene::b3GetName()
 {
 	m_Filename.b3SplitFileName(null,m_SceneName);
@@ -466,17 +501,11 @@ void b3Scene::b3SetTexture(const char *name)
 	b3Item::b3SetString(m_TextureName,sizeof(m_TextureName),name);
 }
 
-void b3Scene::b3Recount()
-{
-	b3BBox::b3Recount(b3GetBBoxHead());
-}
-
-b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
-{
-	xSize = this->m_xSize;
-	ySize = this->m_ySize;
-	return (m_Flags & TP_SIZEVALID) != 0;
-}
+/*************************************************************************
+**                                                                      **
+**                        Special handling                              **
+**                                                                      **
+*************************************************************************/
 
 b3Animation *b3Scene::b3GetAnimation(b3_bool force)
 {
@@ -655,6 +684,12 @@ b3CloudBackground*b3Scene::b3GetCloudBackground(b3_bool force)
 	return clouds;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Camera handling                               **
+**                                                                      **
+*************************************************************************/
+
 b3CameraPart *b3Scene::b3GetFirstCamera(b3_bool must_active)
 {
 	b3CameraPart *camera,*first = null;
@@ -786,6 +821,12 @@ b3_bool b3Scene::b3GetTitle(char *title,size_t size)
 	return strlen(title) > 0;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Light handling                                **
+**                                                                      **
+*************************************************************************/
+
 b3Light *b3Scene::b3GetLightByName(const char *light_name)
 {
 	b3Light *light;
@@ -800,6 +841,11 @@ b3Light *b3Scene::b3GetLightByName(const char *light_name)
 		}
 	}
 	return null;
+}
+
+b3_count b3Scene::b3GetLightCount()
+{
+	return m_LightCount;
 }
 
 b3Light *b3Scene::b3GetLight(b3_bool must_active)
@@ -826,31 +872,6 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	return light;
 }
 
-b3BBox *b3Scene::b3GetFirstBBox()
-{
-	return (b3BBox *)b3GetBBoxHead()->First;
-}
-
-b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
-{
-	b3_index i,max = 20;
-	b3_f64   p     = 0,angle;
-	b3_bool  loop  = true;
-
-	if (light->m_SpotActive)
-	{
-		for (i = 0;(i < max) && loop;i++)
-		{
-			angle = (double)i / (double)max;
-			loop  = light->b3GetSpotFactor(angle) > 0.25;
-		}
-		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
-		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f at lambda: %2.2f\n",
-			light->b3GetName(),
-			p,angle);
-	}
-	return p;
-}
 void b3Scene::b3SetLights(b3RenderContext *context)
 {
 	b3Item  *item;
@@ -881,7 +902,219 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 	}
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Object handling                               **
+**                                                                      **
+*************************************************************************/
+
+void b3Scene::b3Recount()
+{
+	b3BBox::b3Recount(b3GetBBoxHead());
+}
+
 b3Scene *b3Scene::b3ReadTGF(const char *filename)
 {
 	return b3TGFReader::b3ReadTGFScene(filename);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        shading                                       **
+**                                                                      **
+*************************************************************************/
+
+#define LENSFLARE_LOOP 6
+#define LENSFLARE_RING 2
+
+static b3_f64 LensFlare_Distance[LENSFLARE_LOOP] =
+{
+	0.55,0.0,0.0,0.25,0.45,0.55
+};
+
+static b3_f64 LensFlare_ResultWeight[LENSFLARE_LOOP] =
+{
+	0.9,0.95,0.95,0.6,0.6,0.6
+};
+
+static b3_f64 LensFlare_Expon[LENSFLARE_LOOP] =
+{
+	2.4,1.5,1.5,2.0,7.0,4.0
+};
+
+void b3Scene::b3MixLensFlare(b3_ray_info *ray)
+{
+	b3Item    *item;
+	b3Light   *light;
+	b3_vector  view,central,toLight,nLight,nView;
+	b3Color    result;
+	b3_f64     factor,distance,weight = 0.6;
+	b3_count   i;
+
+	view.x = m_ViewPoint.x - m_EyePoint.x;
+	view.y = m_ViewPoint.y - m_EyePoint.y;
+	view.z = m_ViewPoint.z - m_EyePoint.z;
+	factor = b3Vector::b3Length (&view);
+	nView.x = view.y * ray->dir.z - view.z * ray->dir.y;
+	nView.y = view.z * ray->dir.x - view.x * ray->dir.z;
+	nView.z = view.x * ray->dir.y - view.y * ray->dir.x;
+
+	B3_FOR_BASE(b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+
+		toLight.x = light->m_Position.x - m_ViewPoint.x;
+		toLight.y = light->m_Position.y - m_ViewPoint.y;
+		toLight.z = light->m_Position.z - m_ViewPoint.z;
+		distance  = b3Vector::b3Length (&toLight) / factor;
+		central.x = distance * view.x;
+		central.y = distance * view.y;
+		central.z = distance * view.z;
+
+		b3Vector::b3CrossProduct (&view,&toLight,&nLight);
+
+		for (i = 0;i < LENSFLARE_LOOP;i++)
+		{
+			b3_f64    cWeight,lWeight,angle,reverse,beta;
+#ifdef TX_DISTURB
+			b3_vector diff;
+#endif
+
+			cWeight  = LensFlare_Distance[i];
+			lWeight  = 1.0 - cWeight;
+			nLight.x = cWeight * central.x + lWeight * toLight.x;
+			nLight.y = cWeight * central.y + lWeight * toLight.y;
+			nLight.z = cWeight * central.z + lWeight * toLight.z;
+
+			beta     = (
+				nLight.x * ray->dir.x +
+				nLight.y * ray->dir.y +
+				nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
+			angle    = pow(beta,m_LensFlare->m_Expon * LensFlare_Expon[i]);
+			if (i < LENSFLARE_RING)
+			{
+				if ((angle > 0.5) && (angle < 0.55)) angle = 0.3;
+				else angle = 0;
+			}
+			else
+			{
+				if (angle > 0.9)  angle  = 0.9;
+				else
+				{
+					if (angle > 0.89) angle = 0.95;
+					else angle *= LensFlare_ResultWeight[i];
+				}
+				angle *= weight;
+			}
+
+#ifdef TX_DISTURB
+			// disturbe lens flare
+			diff.y  = beta;
+			diff.x  = sqrt (1.0 - beta * beta);
+			diff.z  = 0;
+			diff.x *= 20;
+			diff.y *= 20;
+			if (angle < 0.95)
+			{
+				angle += ((Turbulence(&diff) - 0.5) * 0.1);
+			}
+#endif
+
+			reverse  = 1.0 - angle;
+			if (i < LENSFLARE_RING)
+			{
+				result.b3Init(
+					ray->color[b3Color::R] * reverse + angle * light->m_Color[b3Color::R] * m_LensFlare->m_Color[b3Color::R],
+					ray->color[b3Color::G],
+					ray->color[b3Color::B]);
+			}
+			else
+			{
+				result = light->m_Color * m_LensFlare->m_Color * angle + ray->color * reverse;
+			}
+			ray->color = result;
+		}
+	}
+}
+
+void b3Scene::b3GetBackgroundColor(
+	b3_ray_info *ray,
+	b3_f64       lx,
+	b3_f64       ly)
+{
+	b3_coord  x,y;
+	b3_f64    r,sight;
+
+	switch (m_BackgroundType)
+	{
+		case TP_TEXTURE :
+			x = (b3_coord)(((lx + 1) * 0.5 * (m_BackTexture->xSize - 1)));
+			y = (b3_coord)(((1 - ly) * 0.5 * (m_BackTexture->ySize - 1)));
+			if (x < 0)                     x = 0;
+			if (x >= m_BackTexture->xSize) x = m_BackTexture->xSize - 1;
+			if (y < 0)                     y = 0;
+			if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
+
+			ray->color = b3Color(m_BackTexture->b3GetValue(x,y));
+			break;
+
+		case TP_SKY_N_HELL :
+ 			sight      = m_Clouds->b3ComputeClouds(ray,r,b3GetTimePoint());
+			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
+
+#ifdef SKY_SLIDE
+			ly = ray->color[b3Color::R] * 2.0 - 1.0;
+#else
+			break;
+#endif
+		case TP_SLIDE :
+			ray->color = m_AvrgColor + m_DiffColor * ly;
+			break;
+
+		default:
+			ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
+			break;
+	}
+
+	if (m_LensFlare != null)
+	{
+		b3MixLensFlare (ray);
+	}
+}
+
+void b3Scene::b3GetInfiniteColor(b3_ray_info *ray)
+{
+	b3_f64 ly,lx;
+
+	ly =
+		ray->dir.x * m_NormHeight.x +
+		ray->dir.y * m_NormHeight.y +
+		ray->dir.z * m_NormHeight.z;
+	lx =
+		ray->dir.x * m_NormWidth.x +
+		ray->dir.y * m_NormWidth.y +
+		ray->dir.z * m_NormWidth.z;
+
+	b3GetBackgroundColor (ray,lx,ly);
+}
+
+b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
+{
+	b3_index i,max = 20;
+	b3_f64   p     = 0,angle;
+	b3_bool  loop  = true;
+
+	if (light->m_SpotActive)
+	{
+		for (i = 0;(i < max) && loop;i++)
+		{
+			angle = (double)i / (double)max;
+			loop  = light->b3GetSpotFactor(angle) > 0.25;
+		}
+		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
+		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f at lambda: %2.2f\n",
+			light->b3GetName(),
+			p,angle);
+	}
+	return p;
 }

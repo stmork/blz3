@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2004/05/20 19:10:30  sm
+**	- Separated shader from scene. this is easier
+**	  to handle.
+**
 **	Revision 1.57  2004/05/15 07:51:02  sm
 **	- Some noise optimizations
-**
+**	
 **	Revision 1.56  2004/05/13 16:17:26  sm
 **	- Added background clouds as special item.
 **	
@@ -690,7 +694,6 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 			m_LightCount++;
 		}
 	}
-	m_ShadowFactor = (b3_f64)m_ShadowBrightness / (b3_f64)m_LightCount;
 
 	// Init geometry
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
@@ -700,6 +703,10 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
 	}
+
+	b3PrintF(B3LOG_FULL,"  preparing global shader...\n");
+	B3_ASSERT(m_Shader != null);
+	m_Shader->b3Prepare();
 
 	b3PrintF(B3LOG_FULL,"  preparing done...\n");
 
