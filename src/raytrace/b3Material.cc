@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.66  2004/04/25 16:22:40  sm
+**      - Added some colors for convenience.
+**      - Added some initial values to materials.
+**
 **      Revision 1.65  2004/04/24 20:15:52  sm
 **      - Further slide material dialog development
 **
@@ -340,6 +344,9 @@ b3_bool b3Material::b3Prepare()
 
 b3_bool b3Material::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
+	surface->m_Diffuse     = B3_LIGHT_BLUE;
+	surface->m_Ambient     = surface->m_Diffuse * 0.2;
+	surface->m_Specular    = B3_GREY;
 	surface->m_Reflection  =      0.0;
 	surface->m_Refraction  =      0.0;
 	surface->m_Ior         =      1.0;
@@ -390,9 +397,9 @@ void b3MatNormal::b3Write()
 
 void b3MatNormal::b3Init()
 {
-	m_Ambient.b3Init();
-	m_Diffuse.b3Init();
-	m_Specular.b3Init();
+	m_Diffuse     = B3_BLUE;
+	m_Ambient     = m_Diffuse * 0.2;
+	m_Specular    = B3_GREY;
 	m_Reflection  =    0;
 	m_Refraction  =    0;
 	m_Ior         =    1;
@@ -422,13 +429,13 @@ b3_bool b3MatNormal::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_type) 
 {
-	m_Material[0].m_Ambient  = b3Color(B3_GREY);
-	m_Material[0].m_Diffuse = b3Color(B3_BLACK);
-	m_Material[0].m_Specular = b3Color(B3_GREY);
+	m_Material[0].m_Ambient  = B3_GREY;
+	m_Material[0].m_Diffuse  = B3_BLACK;
+	m_Material[0].m_Specular = B3_GREY;
 
-	m_Material[1].m_Ambient  = b3Color(B3_GREY);
-	m_Material[1].m_Diffuse = b3Color(B3_WHITE);
-	m_Material[1].m_Specular = b3Color(B3_GREY);
+	m_Material[1].m_Ambient  = B3_GREY;
+	m_Material[1].m_Diffuse  = B3_WHITE;
+	m_Material[1].m_Specular = B3_GREY;
 	
 	m_Material[0].m_Reflection  = m_Material[1].m_Reflection  =    0;
 	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
@@ -850,6 +857,17 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),class_type) 
 {
+	m_Diffuse     = B3_LIGHT_GREY;
+	m_Ambient     = m_Diffuse * 0.2;
+	m_Specular    = B3_GREY;
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1;
+	m_SpecularExp = 1000;
+	m_Flags       =    0;
+	m_xTimes      =    0;
+	m_yTimes      =    0;
+	b3Vector::b3Init(&m_Scale,20,20,20);
 }
 
 b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
@@ -893,7 +911,7 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 	b3Noise::b3Marble(&d,mask);
 
-	surface->m_Diffuse  = m_Diffuse * mask;
+	surface->m_Diffuse  = m_Diffuse  * mask;
 	surface->m_Ambient  = m_Ambient  * mask;
 	surface->m_Specular = m_Specular * mask;
 

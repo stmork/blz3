@@ -33,6 +33,10 @@
 
 /*
 **  $Log$
+**  Revision 1.11  2004/04/25 16:22:40  sm
+**  - Added some colors for convenience.
+**  - Added some initial values to materials.
+**
 **  Revision 1.10  2004/04/19 10:13:37  sm
 **  - Adjusted oak plank.
 **
@@ -183,8 +187,8 @@ int main(int argc,char *argv[])
 		tx.b3AllocTx(xMax,yMax,24);
 		
 //		b3MatWoodSampler      sampler(&tx);
-		b3MatOakPlankSampler  sampler(&tx);
-//		b3BumpWoodSampler     sampler(&tx);
+//		b3MatOakPlankSampler  sampler(&tx);
+		b3BumpWoodSampler     sampler(&tx);
 //		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
