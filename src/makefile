@@ -49,7 +49,7 @@ clean:	remdepend $(BLZ3_LIB)
 		make -C $$i clean; \
 	done
 
-win:
+win:	$(BLZ3_BIN)/RemCR
 	make -C Btiff tif_fax3sm.c version.h
 	cp Btiff/tif_fax3sm.c system_win32
 

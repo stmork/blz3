@@ -107,6 +107,7 @@ tif_version.c:	version.h
 
 version.h:	mkversion
 	mkversion -v ${VERSION} -a ${ALPHA} version.h
+	RemCR version.h
 
 mkversion:	mkversion.o
 	$(LINK.c) -o $@ mkversion.o $(LIB_S)
