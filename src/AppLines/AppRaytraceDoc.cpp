@@ -41,9 +41,14 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.4  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.3  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
@@ -70,6 +75,7 @@ IMPLEMENT_DYNCREATE(CAppRaytraceDoc, CDocument)
 BEGIN_MESSAGE_MAP(CAppRaytraceDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppRaytraceDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -165,12 +171,6 @@ b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
 	return new b3Display(pView,title);
 }
 
-void CAppRaytraceDoc::OnRaytrace() 
-{
-	// TODO: Add your command handler code here
-	m_LinesDoc->b3Raytrace();
-}
-
 void CAppRaytraceDoc::b3ActivateView()
 {
 	CAppRaytraceView *pView;
@@ -179,4 +179,16 @@ void CAppRaytraceDoc::b3ActivateView()
 	pos   = GetFirstViewPosition();
 	pView = (CAppRaytraceView *)GetNextView(pos);
 	pView->GetParentFrame()->BringWindowToTop();
+}
+
+void CAppRaytraceDoc::OnRaytrace() 
+{
+	// TODO: Add your command handler code here
+	m_LinesDoc->b3ToggleRaytrace();
+}
+
+void CAppRaytraceDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_LinesDoc->b3IsRaytracing());
 }

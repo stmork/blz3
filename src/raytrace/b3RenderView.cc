@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.16  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.15  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
 **	
@@ -217,10 +222,10 @@ b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode)
 
 void b3RenderView::b3SetCamera(b3CameraPart *camera)
 {
-	m_EyePoint  = camera->EyePoint;
-	m_ViewPoint = camera->ViewPoint;
-	m_Width     = camera->Width;
-	m_Height    = camera->Height;
+	m_EyePoint  = camera->m_EyePoint;
+	m_ViewPoint = camera->m_ViewPoint;
+	m_Width     = camera->m_Width;
+	m_Height    = camera->m_Height;
 }
 
 void b3RenderView::b3SetCamera(b3Scene *scene)

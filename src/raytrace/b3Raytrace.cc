@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.24  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
-**
+**	
 **	Revision 1.23  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -626,7 +631,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		}
 	}
 
-	return (m_BackgroundType & TP_TEXTURE ?
+	return (m_BackgroundType == TP_TEXTURE ?
 		b3CheckTexture(&m_BackTexture,m_TextureName) :
 		true);
 }

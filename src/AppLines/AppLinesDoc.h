@@ -66,7 +66,11 @@ public:
 	void       b3DrawFulcrum();
 	void       b3ComputeBounds();
 	void       b3ClearRaytraceDoc();
-	void       b3Raytrace();
+	void       b3StartRaytrace();
+	void       b3StopRaytrace();
+	void       b3ToggleRaytrace();
+	b3_bool    b3IsRaytracing();
+
 	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
@@ -75,13 +79,14 @@ public:
 
 protected:
 	static b3_u32  b3RaytracingThread(void *ptr);
-	       b3_bool b3IsRaytracing();
 
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesDoc)
 	afx_msg void OnHierachy();
 	afx_msg void OnRaytrace();
+	afx_msg void OnDlgScene();
+	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

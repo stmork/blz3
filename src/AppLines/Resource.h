@@ -13,6 +13,7 @@
 #define IDR_TOOLBAR_OBJECT              134
 #define IDR_TOOLBAR_DISPLAY             137
 #define IDC_PANNING                     137
+#define IDD_SCENE                       138
 #define IDD_HIERARCHY                   145
 #define IDI_BBOX_WORLD                  148
 #define IDI_BBOX_SUB                    149
@@ -22,6 +23,20 @@
 #define IDI_BBOX_S_SHAPES               153
 #define IDI_BBOX_EMPTY                  155
 #define IDM_BAR_VIEW                    252
+#define IDC_PREVIEW_RAYTRACE            1000
+#define IDC_PREVIEW_BGIMAGE             1001
+#define IDC_BG_LIGHT                    1002
+#define IDC_BG_COLOR                    1003
+#define IDC_BG_IMAGE                    1004
+#define IDC_BG_SKY                      1005
+#define IDC_RES_VALID                   1006
+#define IDC_XRES                        1008
+#define IDC_YRES                        1009
+#define IDC_XRES_SPIN                   1010
+#define IDC_YRES_SPIN                   1011
+#define IDC_RAYDEPTH                    1012
+#define IDC_RAYDEPTH_LEGEND             1013
+#define IDC_BG_IMAGE_SELECT             1014
 #define IDC_SCAN_PARA                   1027
 #define IDC_HIERARCHY                   1050
 #define IDC_ACTIVATE                    1055
@@ -83,21 +98,26 @@
 #define ID_RAYTRACE                     32809
 #define ID_CUST_DISPLAY                 32810
 #define IDM_BAR_DISPLAY                 32812
+#define ID_DLG_SCENE                    32813
+#define IDM_BAR_SCENE                   32814
+#define ID_CUST_SCENE                   32815
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 #define IDS_TOOLBAR_ACTION              61447
 #define IDS_TOOLBAR_OBJECT              61448
 #define IDS_TOOLBAR_DISPLAY             61449
 #define IDS_FRAME_RATE                  61450
+#define IDS_RAYTRACE_TITLE              61451
+#define IDS_RAYDEPTH                    61452
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        138
-#define _APS_NEXT_COMMAND_VALUE         32813
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_COMMAND_VALUE         32816
+#define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/11/03 16:24:16  sm
+**      - Added scene property dialog
+**      - Added raytrace view title
+**      - Added raytrace abort on button press
+**
 **      Revision 1.2  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -69,47 +74,47 @@ void b3CameraVolume::b3Update(b3CameraPart *camera)
 {
 	b3_vector  view_dir;
 
-	view_dir.x = camera->ViewPoint.x - camera->EyePoint.x;
-	view_dir.y = camera->ViewPoint.y - camera->EyePoint.y;
-	view_dir.z = camera->ViewPoint.z - camera->EyePoint.z;
+	view_dir.x = camera->m_ViewPoint.x - camera->m_EyePoint.x;
+	view_dir.y = camera->m_ViewPoint.y - camera->m_EyePoint.y;
+	view_dir.z = camera->m_ViewPoint.z - camera->m_EyePoint.z;
 
-	m_Vertices[0].x = camera->EyePoint.x + view_dir.x + camera->Width.x + camera->Height.x;
-	m_Vertices[0].y = camera->EyePoint.y + view_dir.y + camera->Width.y + camera->Height.y;
-	m_Vertices[0].z = camera->EyePoint.z + view_dir.z + camera->Width.z + camera->Height.z;
+	m_Vertices[0].x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x + camera->m_Height.x;
+	m_Vertices[0].y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y + camera->m_Height.y;
+	m_Vertices[0].z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z + camera->m_Height.z;
 
-	m_Vertices[1].x = camera->EyePoint.x + view_dir.x - camera->Width.x + camera->Height.x;
-	m_Vertices[1].y = camera->EyePoint.y + view_dir.y - camera->Width.y + camera->Height.y;
-	m_Vertices[1].z = camera->EyePoint.z + view_dir.z - camera->Width.z + camera->Height.z;
+	m_Vertices[1].x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x + camera->m_Height.x;
+	m_Vertices[1].y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y + camera->m_Height.y;
+	m_Vertices[1].z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z + camera->m_Height.z;
 
-	m_Vertices[2].x = camera->EyePoint.x + view_dir.x - camera->Width.x - camera->Height.x;
-	m_Vertices[2].y = camera->EyePoint.y + view_dir.y - camera->Width.y - camera->Height.y;
-	m_Vertices[2].z = camera->EyePoint.z + view_dir.z - camera->Width.z - camera->Height.z;
+	m_Vertices[2].x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x - camera->m_Height.x;
+	m_Vertices[2].y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y - camera->m_Height.y;
+	m_Vertices[2].z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z - camera->m_Height.z;
 
-	m_Vertices[3].x = camera->EyePoint.x + view_dir.x + camera->Width.x - camera->Height.x;
-	m_Vertices[3].y = camera->EyePoint.y + view_dir.y + camera->Width.y - camera->Height.y;
-	m_Vertices[3].z = camera->EyePoint.z + view_dir.z + camera->Width.z - camera->Height.z;
+	m_Vertices[3].x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x - camera->m_Height.x;
+	m_Vertices[3].y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y - camera->m_Height.y;
+	m_Vertices[3].z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z - camera->m_Height.z;
 
-	m_Vertices[4]   = camera->EyePoint;
+	m_Vertices[4]   = camera->m_EyePoint;
 
-	m_Vertices[5].x = camera->EyePoint.x + view_dir.x * 2;
-	m_Vertices[5].y = camera->EyePoint.y + view_dir.y * 2;
-	m_Vertices[5].z = camera->EyePoint.z + view_dir.z * 2;
+	m_Vertices[5].x = camera->m_EyePoint.x + view_dir.x * 2;
+	m_Vertices[5].y = camera->m_EyePoint.y + view_dir.y * 2;
+	m_Vertices[5].z = camera->m_EyePoint.z + view_dir.z * 2;
 
-	m_Vertices[6].x = camera->EyePoint.x + view_dir.x * 1.5 + camera->Width.x * 1.5 + camera->Height.x * 1.5;
-	m_Vertices[6].y = camera->EyePoint.y + view_dir.y * 1.5 + camera->Width.y * 1.5 + camera->Height.y * 1.5;
-	m_Vertices[6].z = camera->EyePoint.z + view_dir.z * 1.5 + camera->Width.z * 1.5 + camera->Height.z * 1.5;
+	m_Vertices[6].x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
+	m_Vertices[6].y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
+	m_Vertices[6].z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
 
-	m_Vertices[7].x = camera->EyePoint.x + view_dir.x * 1.5 - camera->Width.x * 1.5 + camera->Height.x * 1.5;
-	m_Vertices[7].y = camera->EyePoint.y + view_dir.y * 1.5 - camera->Width.y * 1.5 + camera->Height.y * 1.5;
-	m_Vertices[7].z = camera->EyePoint.z + view_dir.z * 1.5 - camera->Width.z * 1.5 + camera->Height.z * 1.5;
+	m_Vertices[7].x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
+	m_Vertices[7].y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
+	m_Vertices[7].z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
 
-	m_Vertices[8].x = camera->EyePoint.x + view_dir.x * 1.5 - camera->Width.x * 1.5 - camera->Height.x * 1.5;
-	m_Vertices[8].y = camera->EyePoint.y + view_dir.y * 1.5 - camera->Width.y * 1.5 - camera->Height.y * 1.5;
-	m_Vertices[8].z = camera->EyePoint.z + view_dir.z * 1.5 - camera->Width.z * 1.5 - camera->Height.z * 1.5;
+	m_Vertices[8].x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
+	m_Vertices[8].y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
+	m_Vertices[8].z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
 
-	m_Vertices[9].x = camera->EyePoint.x + view_dir.x * 1.5 + camera->Width.x * 1.5 - camera->Height.x * 1.5;
-	m_Vertices[9].y = camera->EyePoint.y + view_dir.y * 1.5 + camera->Width.y * 1.5 - camera->Height.y * 1.5;
-	m_Vertices[9].z = camera->EyePoint.z + view_dir.z * 1.5 + camera->Width.z * 1.5 - camera->Height.z * 1.5;
+	m_Vertices[9].x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
+	m_Vertices[9].y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
+	m_Vertices[9].z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
 
 	glComputed = false;
 }

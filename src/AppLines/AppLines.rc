@@ -145,6 +145,7 @@ IDR_TOOLBAR_OBJECT TOOLBAR DISCARDABLE  16, 15
 BEGIN
     BUTTON      ID_HIERACHY
     BUTTON      ID_RAYTRACE
+    BUTTON      ID_DLG_SCENE
 END
 
 IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 17
@@ -192,6 +193,7 @@ BEGIN
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
+            MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
         POPUP "Symbolleisten &anpassen"
         BEGIN
@@ -199,6 +201,7 @@ BEGIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
+            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
     END
@@ -259,6 +262,7 @@ BEGIN
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
+            MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
         POPUP "S&ymbolleisten anpassen"
         BEGIN
@@ -266,6 +270,7 @@ BEGIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
+            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM "&Anti-Aliasing",              ID_VIEW_ANTIALIAS
@@ -282,6 +287,12 @@ BEGIN
         MENUITEM "Aus&schnitt",                 ID_VIEW_SELECT
         MENUITEM "&Verheriger Ausschnitt",      ID_VIEW_POP
         MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
+    END
+    POPUP "Extras"
+    BEGIN
+        MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
+        MENUITEM "&Objekthierarchie...",        ID_HIERACHY
+        MENUITEM "&Raytracing-Vorschau...",     ID_RAYTRACE
     END
     POPUP "&Fenster"
     BEGIN
@@ -326,6 +337,7 @@ BEGIN
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
+            MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
         POPUP "S&ymbolleisten anpassen"
         BEGIN
@@ -333,6 +345,7 @@ BEGIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
+            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM "B&riefmarkenansicht",         ID_VIEW_THUMB
@@ -424,6 +437,45 @@ BEGIN
     PUSHBUTTON      "alles deaktivieren",IDC_ALL_DEACTIVATE,70,230,55,15
 END
 
+IDD_SCENE DIALOG DISCARDABLE  0, 0, 232, 346
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Szeneneigenschaften"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,25,315,50,15
+    PUSHBUTTON      "Abbrechen",IDCANCEL,170,315,50,15
+    CONTROL         "Helligkeitsverlauf",IDC_BG_LIGHT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,135,30,69,10
+    CONTROL         "Farbverlauf",IDC_BG_COLOR,"Button",BS_AUTORADIOBUTTON,
+                    135,46,51,10
+    CONTROL         "Himmel",IDC_BG_SKY,"Button",BS_AUTORADIOBUTTON,135,60,
+                    39,10
+    CONTROL         "Hintergrundbild",IDC_BG_IMAGE,"Button",
+                    BS_AUTORADIOBUTTON,135,75,63,10
+    PUSHBUTTON      "Auswahl...",IDC_BG_IMAGE_SELECT,140,125,50,15
+    CONTROL         "Auflösung benutzen",IDC_RES_VALID,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,210,79,10
+    EDITTEXT        IDC_XRES,25,235,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_XRES_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,61,235,11,
+                    15
+    EDITTEXT        IDC_YRES,90,236,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_YRES_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,125,236,
+                    11,15
+    CONTROL         "Slider1",IDC_RAYDEPTH,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,20,280,120,25
+    CONTROL         "",IDC_PREVIEW_RAYTRACE,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,25,25,100,65
+    CONTROL         "",IDC_PREVIEW_BGIMAGE,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,25,125,100,66
+    LTEXT           "Rekursionstiefe:",IDC_RAYDEPTH_LEGEND,25,265,115,8
+    GROUPBOX        "Hintergrundbild",IDC_STATIC,15,110,200,90
+    LTEXT           "Breite:",IDC_STATIC,25,225,21,8
+    LTEXT           "Höhe:",IDC_STATIC,90,225,20,8
+    GROUPBOX        "Hintergrundverarbeitung:",IDC_STATIC,15,15,200,85
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -493,6 +545,14 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 243
+    END
+
+    IDD_SCENE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 225
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 339
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -641,6 +701,8 @@ BEGIN
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
     IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
     IDS_FRAME_RATE          "%3.2f frames/sec."
+    IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
+    IDS_RAYDEPTH            "Raytrace-Tiefe: %d"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -686,6 +748,7 @@ BEGIN
     ID_OBJ_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
+    ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
 END
 
 STRINGTABLE DISCARDABLE 

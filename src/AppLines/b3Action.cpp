@@ -31,9 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.9  2001/09/05 18:31:07  sm
 **	- Fix some minor bugs
-**
+**	
 **	Revision 1.8  2001/09/05 15:21:34  sm
 **	- Now object moving/rotating on perspective view.
 **	
@@ -329,16 +334,16 @@ void CB3ActionObjectMove::b3InitTranslation(b3_f64 xRel,b3_f64 yRel)
 		b3CameraPart *camera = m_View->m_Camera;
 		b3_f64        x,y,denom;
 
-		x        = camera->Width.x;
-		y        = camera->Width.y;
+		x        = camera->m_Width.x;
+		y        = camera->m_Width.y;
 		B3_ASSERT((x != 0.0) && (y != 0.0));
 		denom    = max / sqrt(x * x + y * y);
 		m_xDir.x = x * denom;
 		m_xDir.y = y * denom;
 		m_xDir.z = 0;
 
-		x        = camera->ViewPoint.x - camera->EyePoint.x;
-		y        = camera->ViewPoint.y - camera->EyePoint.y;
+		x        = camera->m_ViewPoint.x - camera->m_EyePoint.x;
+		y        = camera->m_ViewPoint.y - camera->m_EyePoint.y;
 		B3_ASSERT((x != 0.0) && (y != 0.0));
 		denom    = max / sqrt(x * x + y * y);
 		m_yDir.x = x * denom;

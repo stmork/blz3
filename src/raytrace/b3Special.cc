@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/11/03 16:24:16  sm
+**      - Added scene property dialog
+**      - Added raytrace view title
+**      - Added raytrace abort on button press
+**
 **      Revision 1.14  2001/11/02 19:05:36  sm
 **      - Introducing time mearuring.
 **      - Fixed wrong lens flare handling.
@@ -169,12 +174,12 @@ b3CameraPart::b3CameraPart(b3_u32 class_type) :
 b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitVector(&Width);
-	b3InitVector(&Height);
-	b3InitVector(&EyePoint);
-	b3InitVector(&ViewPoint);
-	Flags = b3InitInt();
-	b3InitString(CameraName,B3_CAMERANAMELEN);
+	b3InitVector(&m_Width);
+	b3InitVector(&m_Height);
+	b3InitVector(&m_EyePoint);
+	b3InitVector(&m_ViewPoint);
+	m_Flags = b3InitInt();
+	b3InitString(m_CameraName,B3_CAMERANAMELEN);
 }
 
 

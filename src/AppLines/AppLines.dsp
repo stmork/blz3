@@ -140,6 +140,10 @@ SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgScene.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MainFrm.cpp
 # End Source File
 # End Group
@@ -185,6 +189,10 @@ SOURCE=.\ChildFrm.h
 # Begin Source File
 
 SOURCE=.\DlgHierarchy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgScene.h
 # End Source File
 # Begin Source File
 

@@ -26,6 +26,8 @@
 #include "blz3/system/b3ComboBox.h"
 #include "../smart_gui/CoolMenu.h"
 
+#define WM_USER_UPDATE_CONTROLS (WM_USER + 1)
+
 class CMainFrame : public CMDIFrameWnd
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -76,14 +78,18 @@ protected:
 	afx_msg void OnCustView();
 	afx_msg void OnCustDisplay();
 	afx_msg void OnCustAction();
+	afx_msg void OnCustScene();
 	afx_msg void OnBarView();
 	afx_msg void OnBarDisplay();
 	afx_msg void OnBarAction();
+	afx_msg void OnBarScene();
 	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarDisplay(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarAction(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarScene(CCmdUI* pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
+	afx_msg void OnUpdateControls();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

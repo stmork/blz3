@@ -94,6 +94,10 @@ SOURCE=.\b3Bitmap.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ColorField.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ComboBox.cpp
 # End Source File
 # Begin Source File
@@ -143,6 +147,14 @@ SOURCE=.\b3Row.cc
 # Begin Source File
 
 SOURCE=.\b3ScrollView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ShowColor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ShowImage.cpp
 # End Source File
 # Begin Source File
 

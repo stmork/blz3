@@ -1810,12 +1810,12 @@ public:
 class b3CameraPart : public b3Special
 {
 public:
-	b3_vector        Width;
-	b3_vector        Height;
-	b3_vector        EyePoint;
-	b3_vector        ViewPoint;
-	b3_s32           Flags;
-	char             CameraName[B3_CAMERANAMELEN];
+	b3_vector        m_Width;
+	b3_vector        m_Height;
+	b3_vector        m_EyePoint;
+	b3_vector        m_ViewPoint;
+	b3_s32           m_Flags;
+	char             m_CameraName[B3_CAMERANAMELEN];
 
 public:
 	B3_ITEM_INIT(b3CameraPart);
@@ -1998,12 +1998,14 @@ class b3Scene : public b3Item
 	b3_vector        m_NormHeight;
 
 protected:
+	b3Path           m_Filename;
 	b3Mutex          m_PoolMutex;
 	b3Mutex          m_TrashMutex;
 	b3Mutex          m_SamplingMutex;
 	b3Nebular       *m_Nebular;
 	b3SuperSample   *m_SuperSample;
 	b3LensFlare     *m_LensFlare;
+	b3CameraPart    *m_ActualCamera;
 	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 	b3_color         m_AvrgColor;
 	b3_color         m_DiffColor;
@@ -2055,6 +2057,9 @@ public:
 		    b3LensFlare    *b3GetLensFlare();
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
+			void            b3SetFilename(const char *filename);
+			b3_bool         b3GetTitle(char *title);
+			void            b3SetCamera(b3CameraPart *camera);
 		    b3Light        *b3GetLight(b3_bool must_active = false);
 		    b3BBox         *b3GetFirstBBox();
 		    b3_count        b3GetBBoxCount();
@@ -2151,10 +2156,13 @@ private:
 	void    b3Convert();
 };
 
-#define TP_TEXTURE       1L            // Hintergrundbild
-#define TP_SLIDE         2L            // Hintergundfarbverlauf
-#define TP_SKY_N_HELL    3L            // Himmel & Hoelle
+// m_BackgroundType
+#define TP_NOTHING       0L            // Lightning background
+#define TP_TEXTURE       1L            // Background image
+#define TP_SLIDE         2L            // Background slide
+#define TP_SKY_N_HELL    3L            // Sky & hell
 
+// m_Flags
 #define TP_SIZEVALID     2L            // SizeX, SizeY gueltig
 #define TP_NO_GFX        4L            // no rgb output
 

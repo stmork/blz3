@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.19  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.18  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
@@ -175,6 +180,10 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_ySize            = b3InitInt();
 	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
 	m_BackTexture      = null;
+	m_ActualCamera     = null;
+	m_Nebular          = null;
+	m_LensFlare        = null;
+	m_SuperSample      = null;
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
@@ -262,7 +271,7 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 			{
 				first = camera;
 			}
-			if ((!must_active) || (camera->Flags & CAMERA_ACTIVE))
+			if ((!must_active) || (camera->m_Flags & CAMERA_ACTIVE))
 			{
 				return camera;
 			}
@@ -272,11 +281,12 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 	if (first == null)
 	{
 		camera = new b3CameraPart(CAMERA);
-		camera->EyePoint  = m_EyePoint;
-		camera->ViewPoint = m_ViewPoint;
-		camera->Width     = m_Width;
-		camera->Height    = m_Height;
-		strcpy(camera->CameraName,"Camera");
+		camera->m_EyePoint  = m_EyePoint;
+		camera->m_ViewPoint = m_ViewPoint;
+		camera->m_Width     = m_Width;
+		camera->m_Height    = m_Height;
+		camera->m_Flags     = CAMERA_ACTIVE;
+		strcpy(camera->m_CameraName,"Camera");
 		heads[2].b3Append(camera);
 	}
 	else
@@ -297,6 +307,37 @@ b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 		}
 	}
 	return null;
+}
+
+void b3Scene::b3SetCamera(b3CameraPart *camera)
+{
+	if (camera != null)
+	{
+		m_EyePoint 	= camera->m_EyePoint;
+		m_ViewPoint = camera->m_ViewPoint;
+		m_Width     = camera->m_Width;
+		m_Height    = camera->m_Height;
+	}
+	m_ActualCamera = camera;
+}
+
+void b3Scene::b3SetFilename(const char *filename)
+{
+	strcpy(m_Filename,filename);
+}
+
+b3_bool b3Scene::b3GetTitle(char *title)
+{
+	title[0] = 0;
+	if (m_ActualCamera != null)
+	{
+		strcpy(title,m_ActualCamera->m_CameraName);
+	}
+	else
+	{
+		b3Dir::b3SplitFileName(m_Filename,null,title);
+	}
+	return strlen(title) > 0;
 }
 
 b3Light *b3Scene::b3GetLight(b3_bool must_active)

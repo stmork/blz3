@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.9  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.8  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
 **	
@@ -95,14 +100,18 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_CUST_VIEW, OnCustView)
 	ON_COMMAND(ID_CUST_DISPLAY, OnCustDisplay)
 	ON_COMMAND(ID_CUST_ACTION, OnCustAction)
+	ON_COMMAND(ID_CUST_SCENE, OnCustScene)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
 	ON_COMMAND(IDM_BAR_DISPLAY, OnBarDisplay)
 	ON_COMMAND(IDM_BAR_ACTION, OnBarAction)
+	ON_COMMAND(IDM_BAR_SCENE, OnBarScene)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_DISPLAY, OnUpdateBarDisplay)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_ACTION, OnUpdateBarAction)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_SCENE, OnUpdateBarScene)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
+	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -229,6 +238,15 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
+void CMainFrame::OnDestroy() 
+{
+	// TODO: Add your message handler code here
+	CB3App *app = b3GetApp();
+
+	app->b3SetWindowMode(false);
+	CMDIFrameWnd::OnDestroy();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame diagnostics
 
@@ -245,18 +263,11 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 #endif //_DEBUG
 
-/////////////////////////////////////////////////////////////////////////////
-// CMainFrame message handlers
-
-
-void CMainFrame::OnDestroy() 
-{
-	// TODO: Add your message handler code here
-	CB3App *app = b3GetApp();
-
-	app->b3SetWindowMode(false);
-	CMDIFrameWnd::OnDestroy();
-}
+/*************************************************************************
+**                                                                      **
+**                        Toolbar customization                         **
+**                                                                      **
+*************************************************************************/
 
 void CMainFrame::OnCustMain() 
 {
@@ -282,6 +293,12 @@ void CMainFrame::OnCustAction()
 	m_wndActnBar.b3Customize();
 }
 
+void CMainFrame::OnCustScene() 
+{
+	// TODO: Add your command handler code here
+	m_wndObjtBar.b3Customize();
+}
+
 void CMainFrame::OnBarView() 
 {
 	// TODO: Add your command handler code here
@@ -298,6 +315,12 @@ void CMainFrame::OnBarAction()
 {
 	// TODO: Add your command handler code here
 	m_wndActnBar.b3ToggleVisibility();
+}
+
+void CMainFrame::OnBarScene() 
+{
+	// TODO: Add your command handler code here
+	m_wndObjtBar.b3ToggleVisibility();
 }
 
 void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI) 
@@ -318,6 +341,18 @@ void CMainFrame::OnUpdateBarAction(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck (m_wndActnBar.b3IsVisible());
 }
 
+void CMainFrame::OnUpdateBarScene(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndObjtBar.b3IsVisible());
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Some other handlings...                       **
+**                                                                      **
+*************************************************************************/
+
 void CMainFrame::OnWindowTileHorz() 
 {
 	// TODO: Add your command handler code here
@@ -334,6 +369,19 @@ void CMainFrame::OnWindowTileVert()
 	MDITile (MDITILE_VERTICAL);
 }
 
+void CMainFrame::OnUpdateControls()
+{
+	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
+
+	app->b3UpdateUI();
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Combobox handling                             **
+**                                                                      **
+*************************************************************************/
+
 void CMainFrame::b3Clear()
 {
 	m_cameraBox.b3Clear();
@@ -345,11 +393,13 @@ void CMainFrame::b3UpdateCameraBox(b3Scene *scene,b3CameraPart *act)
 	b3CameraPart *camera;
 
 	m_cameraBox.b3Clear();
-	for (camera = scene->b3GetCamera();camera != null;camera = scene->b3GetNextCamera(camera))
+	for (camera  = scene->b3GetCamera();
+	     camera != null;
+		 camera  = scene->b3GetNextCamera(camera))
 	{
-		m_cameraBox.b3AddString(camera->CameraName,camera);
+		m_cameraBox.b3AddString(camera->m_CameraName,camera);
 	}
-	m_cameraBox.b3SetString(act->CameraName);
+	m_cameraBox.b3SetString(act->m_CameraName);
 }
 
 b3CameraPart *CMainFrame::b3GetSelectedCamera()
@@ -377,6 +427,12 @@ b3Light *CMainFrame::b3GetSelectedLight()
 
 	return (b3Light *)m_lightBox.GetItemDataPtr(index);
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Statusbar handling                            **
+**                                                                      **
+*************************************************************************/
 
 void CMainFrame::b3SetPerformance(
 	CView *drawer,

@@ -36,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.15  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.14  2001/09/05 15:21:34  sm
 **	- Now object moving/rotating on perspective view.
 **	
@@ -810,30 +815,10 @@ void CAppLinesView::OnCamView()
 	m_SelectMode = B3_CAMERA_VIEW;
 }
 
-void CAppLinesView::OnCamSelect() 
-{
-	// TODO: Add your command handler code here
-	CMainFrame *main;
-
-	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
-	m_Camera = main->b3GetSelectedCamera();
-	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
-}
-
 void CAppLinesView::OnLightTurn() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_LIGHT_TURN;
-}
-
-void CAppLinesView::OnLightSelect() 
-{
-	// TODO: Add your command handler code here
-	CMainFrame *main;
-
-	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
-	m_Light = main->b3GetSelectedLight();
-	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
 
 void CAppLinesView::OnUpdateObjSelect(CCmdUI* pCmdUI) 
@@ -890,6 +875,27 @@ void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI)
 	pCmdUI->SetRadio(m_SelectMode == B3_LIGHT_TURN);
 }
 
+void CAppLinesView::OnCamSelect() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame *main;
+
+	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	m_Camera = main->b3GetSelectedCamera();
+	m_Scene->b3SetCamera(m_Camera);
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
+}
+
+void CAppLinesView::OnLightSelect() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame *main;
+
+	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	m_Light = main->b3GetSelectedLight();
+	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
+}
+
 void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
 {
 // TODO: Add your specialized code here and/or call the base class
@@ -902,6 +908,7 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	{
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
+		m_Scene->b3SetCamera(m_Camera);
 	}
 	else
 	{

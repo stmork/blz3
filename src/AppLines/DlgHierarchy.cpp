@@ -1,5 +1,25 @@
-// DlgHierarchy.cpp : implementation file
-//
+/*
+**
+**	$Filename:	DlgScene.cpp $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - CView part
+**
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Lines III includes                            **
+**                                                                      **
+*************************************************************************/
 
 #include "blz3/b3Config.h"
 #include "AppLines.h"
@@ -12,9 +32,27 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CDlgHierarchy dialog
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
 
+/*
+**	$Log$
+**	Revision 1.3  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        CDlgHierarchy implementation                  **
+**                                                                      **
+*************************************************************************/
 
 CDlgHierarchy::CDlgHierarchy(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgHierarchy::IDD, pParent)

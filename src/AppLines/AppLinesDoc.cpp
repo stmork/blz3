@@ -29,6 +29,7 @@
 #include "MainFrm.h"
 
 #include "DlgHierarchy.h"
+#include "DlgScene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,9 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/11/03 16:24:16  sm
+**	- Added scene property dialog
+**	- Added raytrace view title
+**	- Added raytrace abort on button press
+**
 **	Revision 1.16  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.15  2001/10/29 19:34:02  sm
 **	- Added new define B3_DELETE_BASE.
 **	- Added support to abort raytrace processing.
@@ -130,6 +136,8 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
 	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
+	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -192,6 +200,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	// TODO: Add your specialized creation code here
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
+	m_Scene->b3SetFilename(lpszPathName);
 	m_Scene->b3Reorg();
 	m_Scene->b3Prepare(0,0);
 	m_Scene->b3AllocVertices(&m_Context);
@@ -283,7 +292,7 @@ b3_bool CAppLinesDoc::b3IsRaytracing()
 	return m_Raytracer->b3IsRunning();
 }
 
-void CAppLinesDoc::OnRaytrace() 
+void CAppLinesDoc::OnRaytrace()
 {
 	// TODO: Add your command handler code here
 	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
@@ -297,13 +306,50 @@ void CAppLinesDoc::OnRaytrace()
 	{
 		m_RaytraceDoc->b3ActivateView();
 	}
-	b3Raytrace();
+	b3ToggleRaytrace();
 }
 
-void CAppLinesDoc::b3Raytrace()
+void CAppLinesDoc::b3ToggleRaytrace()
 {
+	if (!b3IsRaytracing())
+	{
+		b3StartRaytrace();
+	}
+	else
+	{
+		b3StopRaytrace();
+	}
+}
+
+b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
+{
+	CAppLinesDoc *pDoc = (CAppLinesDoc *)ptr;
+	CWinApp      *app  = AfxGetApp();
+
+	pDoc->m_Scene->b3Raytrace(pDoc->m_Display);
+
+	if (pDoc->m_Display != null)
+	{
+		// Wait to finish raytracing...
+		pDoc->m_Display->b3Wait();
+
+		// Delete display (= view reference)
+		delete pDoc->m_Display;
+		pDoc->m_Display = null;
+
+		// Update some controls...
+		app->m_pMainWnd->PostMessage(WM_USER_UPDATE_CONTROLS);
+	}
+
+	return 0;
+}
+
+void CAppLinesDoc::b3StartRaytrace()
+{
+	CString title;
 	b3_res  xSize,ySize;
 	b3_bool valid;
+	b3Path  name;
 
 	if (!b3IsRaytracing())
 	{
@@ -311,29 +357,18 @@ void CAppLinesDoc::b3Raytrace()
 		m_Display = valid ?
 			m_RaytraceDoc->b3GetDisplay(xSize,ySize,"Raytracing...") :
 			m_RaytraceDoc->b3GetDisplay("Raytracing...");
+
+		m_Scene->b3GetTitle(name);
+		title.Format(IDS_RAYTRACE_TITLE,(const char *)name,xSize,ySize);
+		m_RaytraceDoc->SetTitle(title);
 		m_Raytracer->b3Start(&b3RaytracingThread,this);
 	}
 }
 
-b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
-{
-	CAppLinesDoc *pDoc = (CAppLinesDoc *)ptr;
-
-	pDoc->m_Scene->b3Raytrace(pDoc->m_Display);
-
-	if (pDoc->m_Display != null)
-	{
-		pDoc->m_Display->b3Wait();
-		delete pDoc->m_Display;
-		pDoc->m_Display = null;
-	}
-
-	return 0;
-}
-
-void CAppLinesDoc::b3ClearRaytraceDoc()
+void CAppLinesDoc::b3StopRaytrace()
 {
 	b3Display *old_display;
+	CWinApp   *app  = AfxGetApp();
 
 	if (b3IsRaytracing())
 	{
@@ -354,6 +389,29 @@ void CAppLinesDoc::b3ClearRaytraceDoc()
 		// Nobody accesses the display now. So we
 		// can delete it without using critical sections.
 		delete old_display;
+
+		// Update some controls...
+		app->m_pMainWnd->PostMessage(WM_USER_UPDATE_CONTROLS);
 	}
+}
+
+void CAppLinesDoc::b3ClearRaytraceDoc()
+{
+	b3StopRaytrace();
 	m_RaytraceDoc = null;
+}
+
+void CAppLinesDoc::OnDlgScene() 
+{
+	// TODO: Add your command handler code here
+	CDlgScene dlg;
+
+	dlg.m_Scene = m_Scene;
+	dlg.DoModal();
+}
+
+void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(b3IsRaytracing());
 }
