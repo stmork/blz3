@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2005/01/13 20:52:05  sm
+**	- Fixed Lines III drawing problem.
+**
 **	Revision 1.42  2005/01/13 20:05:15  sm
 **	- Some Lines bugfixes
-**
+**	
 **	Revision 1.41  2005/01/12 18:52:35  sm
 **	- Fixed pointer problem.
 **	
@@ -326,7 +329,6 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_glDC = dc->GetSafeHdc();
 		m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
-		ReleaseDC(dc);
 	}
 	return 0;
 }
