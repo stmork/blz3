@@ -6,7 +6,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "resource.h"
+#include "Resource.h"
 
 
 #endif // !defined(AFX_CONTESTTHREAD_H__4F330329_6F17_11D5_A542_0050BF4EB3F3__INCLUDED_)
