@@ -22,7 +22,7 @@
 
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3Display.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Scene.h"
 
 class CB3ShowRaytrace : public CB3ShowImage
 {

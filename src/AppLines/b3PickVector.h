@@ -19,7 +19,7 @@
 #ifndef B3_PICK_VECTOR_H
 #define B3_PICK_VECTOR_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Pick.h"
 #include "b3UndoPick.h"

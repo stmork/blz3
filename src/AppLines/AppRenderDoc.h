@@ -22,7 +22,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "b3LinesDocument.h"
 #include "b3Fulcrum.h"
 #include "b3Undo.h"

@@ -19,7 +19,6 @@
 #define APPLINES_H
 
 #include "blz3/b3Config.h"
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3App.h"
 
 #ifndef BLZ3_USE_OPENGL

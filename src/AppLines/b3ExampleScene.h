@@ -20,7 +20,7 @@
 #ifndef B3_EXAMPLESCENE_H
 #define B3_EXAMPLESCENE_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Scene.h"
 
 class b3ExampleScene
 {

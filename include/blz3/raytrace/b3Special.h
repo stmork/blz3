@@ -198,6 +198,9 @@ public:
 #define B3_MEASURE_SHIFT             4
 #define B3_CUSTOM_MEASURE_SHIFT      8
 
+class b3AnimElement;
+class b3Scene;
+
 // ANIMATION
 class B3_PLUGIN b3Animation : public b3Special
 {

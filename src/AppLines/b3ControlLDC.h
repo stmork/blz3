@@ -24,7 +24,7 @@
 // b3ControlLDC.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Light.h"
 #include "blz3/base/b3Pick.h"
 
 /////////////////////////////////////////////////////////////////////////////

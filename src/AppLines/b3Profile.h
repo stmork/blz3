@@ -18,9 +18,9 @@
 #ifndef B3_PROFILE_H
 #define B3_PROFILE_H
 
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Compare.h"
+#include "blz3/base/b3Spline.h"
 #include "b3ProfileShapeDialog.h"
 
 class b3Profile : public b3Link<b3Profile>, public b3Comparator<b3Profile>

@@ -24,7 +24,7 @@
 // DlgScene.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "blz3/system/b3ShowImage.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "b3ShowRaytrace.h"

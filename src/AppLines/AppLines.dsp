@@ -713,10 +713,6 @@ SOURCE=.\b3VectorEdit.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3View.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ChildFrm.h
 # End Source File
 # Begin Source File
@@ -734,10 +730,6 @@ SOURCE=.\DlgBumpWood.h
 # Begin Source File
 
 SOURCE=.\DlgCamera.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\DlgCookTorrance.h
 # End Source File
 # Begin Source File
 
@@ -922,10 +914,6 @@ SOURCE=.\DlgStepRotate.h
 # Begin Source File
 
 SOURCE=.\DlgSuperSampling.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\DlgTexturePathList.h
 # End Source File
 # Begin Source File
 

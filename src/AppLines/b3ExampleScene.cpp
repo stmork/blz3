@@ -26,6 +26,7 @@
 #include "b3ExampleScene.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Render.h"
+#include "blz3/raytrace/b3Raytrace.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/05/06 08:38:33  sm
+**	- Demerged raytracing includes of Lines
+**
 **	Revision 1.15  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
-**
+**	
 **	Revision 1.14  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.

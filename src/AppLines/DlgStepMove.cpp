@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
+#include "blz3/raytrace/b3Special.h"
 #include "AppLines.h"
 #include "DlgStepMove.h"
 
@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/06 08:38:32  sm
+**	- Demerged raytracing includes of Lines
+**
 **	Revision 1.6  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.5  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.

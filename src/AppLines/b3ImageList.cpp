@@ -22,6 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Shape.h"
 #include "b3ImageList.h"
 #include "DlgShape1.h"
 #include "DlgShape2.h"
@@ -40,12 +42,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/06 08:38:33  sm
+**	- Demerged raytracing includes of Lines
+**
 **	Revision 1.6  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **	Revision 1.5  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.

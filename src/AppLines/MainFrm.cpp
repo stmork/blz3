@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "MainFrm.h"
 #include "b3Splash.h"
+#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/05/06 08:38:32  sm
+**	- Demerged raytracing includes of Lines
+**
 **	Revision 1.36  2003/02/19 18:27:27  sm
 **	- Release bug fix for logging
-**
+**	
 **	Revision 1.35  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	

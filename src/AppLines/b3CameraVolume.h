@@ -18,7 +18,7 @@
 #ifndef CAMERAVOLUME_H
 #define CAMERAVOLUME_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Special.h"
 #include "blz3/base/b3Render.h"
 
 #define B3_CV_VERTEX_COUNT 10

@@ -24,7 +24,7 @@
 // DlgLDC.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Light.h"
 #include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "b3ControlLDC.h"

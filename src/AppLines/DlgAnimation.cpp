@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgAnimation.h"
+#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/06 08:38:32  sm
+**	- Demerged raytracing includes of Lines
+**
 **	Revision 1.2  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.1  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.

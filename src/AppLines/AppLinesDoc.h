@@ -22,7 +22,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "AppRenderDoc.h"
 
 class CAppLinesDoc : public CAppRenderDoc

@@ -27,6 +27,7 @@
 #include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/base/b3Wood.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageOakPlank dialog

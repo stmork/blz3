@@ -18,7 +18,7 @@
 #ifndef B3_IMAGELIST_H
 #define B3_IMAGELIST_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3World.h"
 #include "b3ShapeDialog.h"
 
 class CB3ImageList : public CImageList

@@ -24,7 +24,7 @@
 // DlgAnimation.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Animation.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////

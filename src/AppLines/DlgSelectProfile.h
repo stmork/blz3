@@ -24,7 +24,7 @@
 // DlgSelectProfile.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
 #include "b3ProfileShapeDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////

@@ -24,7 +24,7 @@
 // DlgObjectCopy.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3BBox.h"
 #include "blz3/system/b3FloatEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////

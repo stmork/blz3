@@ -24,7 +24,7 @@
 // DlgCreateStencil.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Condition.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
