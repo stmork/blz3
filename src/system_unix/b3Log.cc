@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/06/19 13:56:55  sm
+**	- Changed log file location to /tmp.
+**
 **	Revision 1.12  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
-**
+**	
 **	Revision 1.11  2003/05/30 14:44:09  sm
 **	- Plugin support for Windows added. All exported classes got an
 **	  additional keyword: B3_PLUGIN
@@ -97,7 +100,7 @@
 **                                                                      **
 *************************************************************************/
 
-char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME]= "b3.log";
+char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME]= "/tmp/b3.log";
 
 b3Log b3Log::m_Log;
 
