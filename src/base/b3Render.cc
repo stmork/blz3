@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.101  2004/11/24 10:32:18  smork
+**      - Optimized VBO mapping.
+**
 **      Revision 1.100  2004/11/23 09:01:10  smork
 **      - Bump revision
 **      - Added non OpenGL compiling for VBOs.
@@ -619,14 +622,47 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
+#ifdef VERBOSE
+static void print_mapping(const char *text,b3_vbo_mapping map_mode)
+{
+	const char *mapping_text;
+
+	switch(map_mode)
+	{
+	case B3_MAP_VBO_R:
+		mapping_text = "B3_MAP_VBO_R";
+		break;
+
+	case B3_MAP_VBO_W:
+		mapping_text = "B3_MAP_VBO_W";
+		break;
+
+	case B3_MAP_VBO_RW:
+		mapping_text = "B3_MAP_VBO_RW";
+		break;
+
+	default:
+		mapping_text = "???";
+		break;
+	}
+	b3PrintF(B3LOG_FULL,"      %s(%s)\n",text,mapping_text);
+}
+#else
+#define print_mapping(t,m)
+#endif
+
 void b3RenderObject::b3MapIndices(b3_vbo_mapping map_mode)
 {
+	print_mapping(" b3MapIndices", map_mode);
+
 	glGridElements->b3Map(map_mode);
 	glPolygonElements->b3Map(map_mode);
 }
 
 void b3RenderObject::b3MapVertices(b3_vbo_mapping map_mode)
 {
+	print_mapping(" b3MapVertices", map_mode);
+
 	glVertexElements->b3Map(map_mode);
 }
 
@@ -746,16 +782,50 @@ void b3RenderObject::b3FreeVertexMemory()
 	glPolygonElements->b3FreeVertexMemory();
 }
 
+#define B3_UPDATE_INDICES  1
+#define B3_UPDATE_VERTICES 2
+
 void b3RenderObject::b3Update()
 {
+	int mode = 0;
+
+#ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update() this = %p\n",this);
+#endif
 	if ((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
 	{
+		mode |= B3_UPDATE_INDICES;
+	}
+	if (!glVertexElements->b3IsComputed())
+	{
+		mode |= B3_UPDATE_VERTICES;
+	}
+
+	switch (mode)
+	{
+	case B3_UPDATE_INDICES:
 		b3MapIndices(B3_MAP_VBO_W);
+		break;
+
+	case B3_UPDATE_VERTICES :
+		b3MapVertices(B3_MAP_VBO_RW);
+		b3MapIndices(B3_MAP_VBO_R);
+		break;
+
+	case B3_UPDATE_INDICES | B3_UPDATE_VERTICES:
+		b3MapVertices(B3_MAP_VBO_RW);
+		b3MapIndices(B3_MAP_VBO_RW);
+		break;
+	}
+
+	if (mode & B3_UPDATE_INDICES)
+	{
 #ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"      >b3RenderObject::b3UpdateIndices()\n");
+
 		b3_gl_line    *glGrids    = *glGridElements;
 		b3_gl_polygon *glPolygons = *glPolygonElements;
 		
-		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateIndices() this = %p\n",this);
 		b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
 			 glGridElements->b3GetCount(), glGrids,
 			 glGridElements->b3IsCustom() ? "custom" : "buffer");
@@ -769,24 +839,20 @@ void b3RenderObject::b3Update()
 		glGridElements->b3CustomData();
 		glPolygonElements->b3CustomData();
 
-		b3UnmapIndices();
-
 		glGridElements->b3Recomputed();
 		glPolygonElements->b3Recomputed();
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateIndices()\n");
+		b3PrintF(B3LOG_FULL,"      <b3RenderObject::b3UpdateIndices()\n");
 #endif
 	}
 
-	if (!glVertexElements->b3IsComputed())
+	if (mode & B3_UPDATE_VERTICES)
 	{
-		b3MapVertices(B3_MAP_VBO_W);
-		b3MapIndices(B3_MAP_VBO_R);
-
 #ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"      >b3RenderObject::b3UpdateVertices()\n");
+
 		b3_gl_vertex  *glVertex   = *glVertexElements;
 
-		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateVertices() this = %p\n",this);
 		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
 			 glVertexElements->b3GetCount(), glVertex,
 			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
@@ -795,15 +861,27 @@ void b3RenderObject::b3Update()
 		b3ComputeNormals();
 
 		glVertexElements->b3CustomData();
-
-		b3UnmapVertices();
-		b3UnmapIndices();
-
 		glVertexElements->b3Recomputed();
+
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateVertices()\n");
+		b3PrintF(B3LOG_FULL,"      <b3RenderObject::b3UpdateVertices()\n");
 #endif
 	}
+
+	switch (mode)
+	{
+	case B3_UPDATE_VERTICES | B3_UPDATE_INDICES:
+	case B3_UPDATE_VERTICES:
+		b3UnmapVertices();
+		// Walk Through !!
+	case B3_UPDATE_INDICES:
+		b3UnmapIndices();
+		break;
+	}
+
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Update()\n");
+#endif
 }
 
 void b3RenderObject::b3ComputeVertices()
@@ -816,6 +894,10 @@ void b3RenderObject::b3ComputeIndices()
 
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"        >b3RenderObject::b3ComputeNormals()\n");
+#endif
+
 	b3_gl_vector   normal;
 	b3_gl_vector   xDir,yDir;
 	b3_gl_vertex  *glVertex      = *glVertexElements;
@@ -837,7 +919,6 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
 		 glPolygonElements->b3GetCount(), glPolygons,
 		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
-	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3ComputeNormals() this = %p\n",this);
 #endif
 
 	// Clear normals
@@ -887,7 +968,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		}
 	}
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3ComputeNormals() this = %p\n",this);
+	b3PrintF(B3LOG_FULL,"        <b3RenderObject::b3ComputeNormals()\n");
 #endif
 }
 
@@ -1306,8 +1387,6 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 #ifdef BLZ3_USE_OPENGL
 #ifdef B3_DISPLAY_LIST
 
-	b3Update();
-
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Draw() this = %p\n",this);
 #endif
@@ -1357,6 +1436,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 #ifdef _DEBUG
 	b3CheckGeometry(context,render_mode);
 #endif
+
 	b3DrawGeometry(context,render_mode);
 #endif
 #endif

@@ -31,9 +31,8 @@
 
 /*
 **	$Log$
-**	Revision 1.3  2004/11/23 09:01:10  smork
-**	- Bump revision
-**	- Added non OpenGL compiling for VBOs.
+**	Revision 1.4  2004/11/24 10:32:18  smork
+**	- Optimized VBO mapping.
 **
 **	Revision 1.2  2004/11/21 14:56:58  sm
 **	- Merged VBO development into main trunk.
@@ -401,7 +400,7 @@ void b3VboGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count ne
 #ifdef BLZ3_USE_OPENGL
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-				glElementCount * sizeof(b3_gl_line), NULL, GL_STATIC_DRAW_ARB);
+				glElementCount * sizeof(b3_gl_line), NULL, GL_DYNAMIC_DRAW_ARB);
 #endif
 			glGrids = null;
 		}
@@ -497,7 +496,7 @@ void b3VboPolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_count
 #ifdef BLZ3_USE_OPENGL
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-				glElementCount * sizeof(b3_gl_polygon), NULL, GL_STATIC_DRAW_ARB);
+				glElementCount * sizeof(b3_gl_polygon), NULL, GL_DYNAMIC_DRAW_ARB);
 #endif
 			glPolygons = null;
 		}
