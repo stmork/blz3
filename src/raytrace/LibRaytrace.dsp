@@ -278,6 +278,10 @@ SOURCE=.\b3TriangleShape.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include\blz3\raytrace\b3MaterialSampler.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\raytrace\b3PickInfo.h
 # End Source File
 # Begin Source File

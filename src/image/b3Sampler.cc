@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2004/04/09 12:08:05  sm
+**  - New CStatic control introduced for material sampling.
+**
 **  Revision 1.2  2004/04/09 11:09:01  sm
 **  - Removed any display reference from sampler
 **
@@ -63,7 +66,7 @@ void b3Sampler::b3Sample()
 		span.b3Start();
 		for (i = 0;i < CPUs;i++)
 		{
-			threads[i].b3Start(&b3SampleThread,&info[i]);
+			threads[i].b3Start(b3SampleThread,&info[i]);
 		}
 		for (i = 0;i < CPUs;i++)
 		{

@@ -233,6 +233,10 @@ SOURCE=.\b3ShowRaytrace.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ShowSample.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SpanningShapeDialog.cpp
 # End Source File
 # Begin Source File
@@ -606,6 +610,10 @@ SOURCE=.\b3ShapeDialog.h
 # Begin Source File
 
 SOURCE=.\b3ShowRaytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ShowSample.h
 # End Source File
 # Begin Source File
 

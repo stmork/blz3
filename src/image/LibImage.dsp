@@ -90,6 +90,10 @@ SOURCE=.\b3Measure.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Sampler.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Tx.cc
 # End Source File
 # Begin Source File
@@ -184,6 +188,10 @@ SOURCE=b3TxTIFF.cc
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\blz3\image\b3Sampler.h
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\image\b3Tx.h

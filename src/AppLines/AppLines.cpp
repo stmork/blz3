@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2004/04/09 12:08:05  sm
+**	- New CStatic control introduced for material sampling.
+**
 **	Revision 1.58  2004/04/04 19:28:25  sm
 **	- New wood dialog
-**
+**	
 **	Revision 1.57  2003/07/22 19:12:34  sm
 **	- Raytracing items should be registered in Lines, too!
 **	
@@ -1030,8 +1033,8 @@ BOOL CAboutDlg::OnInitDialog()
 }
 
 #ifdef _DEBUG
-#define DLG_TEST
 #endif
+#define DLG_TEST
 
 #ifdef DLG_TEST
 #include "DlgMatWood.h"

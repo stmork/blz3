@@ -24,21 +24,21 @@
 // DlgMatWood.h : header file
 //
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3MaterialSampler.h"
 #include "blz3/system/b3FloatSliderCtrl.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3ShowImage.h"
 #include "b3SelectColor.h"
-#include "b3ShowRaytrace.h"
+#include "b3ShowSample.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatWood dialog
 
 class CDlgMatWood : public CDialog
 {
-	b3MatWood      *m_Material;
-	b3Scene        *m_MatScene;
-	b3Base<b3Item> *m_MatHead;
+	b3MatWood         *m_Material;
+	b3MaterialSampler *m_MatSampler;
+	b3Base<b3Item>     m_MatHead;
 
 // Construction
 public:
@@ -69,7 +69,7 @@ public:
 	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
 	CB3ColorFieldSelector	m_LightCtrl;
 	CB3ColorFieldSelector	m_DarkCtrl;
-	CB3ShowRaytrace	m_PreviewMaterialCtrl;
+	CB3ShowSample	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 

@@ -52,7 +52,7 @@ public:
 
 	// Generated message map functions
 protected:
-	//{{AFX_MSG(CB3FloatSpinButtonCtrl)
+	//{{AFX_MSG(CB3FloatSliderCtrl)
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

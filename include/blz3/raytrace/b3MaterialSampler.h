@@ -32,27 +32,33 @@ class b3MaterialSampler : public b3Sampler
 {
 protected:
 	b3Tx       *m_Tx;
-
-public:
 	b3Material *m_Material;
 
 public:
 	b3MaterialSampler(b3Tx *tx)
 	{
 		// Init texture
-		m_Tx = tx;
-		m_xMax = m_Tx->xSize;
-		m_yMax = m_Tx->ySize;
-		m_Data = (b3_pkd_color *)m_Tx->b3GetData();
+		m_Material = null;
+		m_Tx       = tx;
+		m_xMax     = m_Tx->xSize;
+		m_yMax     = m_Tx->ySize;
+		m_Data     = (b3_pkd_color *)m_Tx->b3GetData();
 	}
 	
+	void b3SetMaterial(b3Material *material)
+	{
+		m_Material = material;
+	}
+
 protected:
 	b3SampleInfo * b3SampleInit(b3_count CPUs)
 	{
 		b3MaterialSampleInfo *info = new b3MaterialSampleInfo[CPUs];
-		b3_loop           i;
-		b3_res            yStart,yEnd;
+		b3_loop               i;
+		b3_res                yStart,yEnd;
 
+		B3_ASSERT(m_Material != null);
+		m_Material->b3Prepare();
 		yStart = 0;
 		for (i = 0;i < CPUs;i++)
 		{

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/09 12:08:05  sm
+**	- New CStatic control introduced for material sampling.
+**
 **	Revision 1.3  2004/04/04 19:28:25  sm
 **	- New wood dialog
-**
+**	
 **	Revision 1.2  2003/07/12 10:20:16  sm
 **	- Fixed ticketno. 12 (memory leak in b3ItemRegistry)
 **	
@@ -56,9 +59,8 @@
 CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgMatWood::IDD, pParent)
 {
-	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_Material = (b3MatWood *)item;
-	m_MatHead->b3Append(m_Material);
+	m_MatHead.b3Append(m_Material);
 
 	//{{AFX_DATA_INIT(CDlgMatWood)
 		// NOTE: the ClassWizard will add member initialization here
@@ -90,8 +92,8 @@ CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 
 CDlgMatWood::~CDlgMatWood()
 {
-	m_MatHead->b3RemoveAll();
-	delete m_MatScene;
+	m_MatHead.b3RemoveAll();
+	delete m_MatSampler;
 }
 
 void CDlgMatWood::DoDataExchange(CDataExchange* pDX)
@@ -191,6 +193,10 @@ BOOL CDlgMatWood::OnInitDialog()
 	m_DarkCtrl.b3Init(&m_Material->m_DarkWood,this);
 
 	// TODO: Add extra initialization here
+	m_PreviewMaterialCtrl.b3Init();
+	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl);
+	m_MatSampler->b3SetMaterial(m_Material);
+
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -201,7 +207,7 @@ void CDlgMatWood::OnColorLight()
 	// TODO: Add your control notification handler code here
 	if (m_LightCtrl.b3Select())
 	{
-		m_PreviewMaterialCtrl.b3Update(m_MatScene);
+		m_PreviewMaterialCtrl.b3Update(m_MatSampler);
 	}
 }
 
@@ -210,7 +216,7 @@ void CDlgMatWood::OnColorDark()
 	// TODO: Add your control notification handler code here
 	if (m_DarkCtrl.b3Select())
 	{
-		m_PreviewMaterialCtrl.b3Update(m_MatScene);
+		m_PreviewMaterialCtrl.b3Update(m_MatSampler);
 	}
 }
 
@@ -230,5 +236,5 @@ void CDlgMatWood::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CDlgMatWood::b3UpdateUI()
 {
-	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+	m_PreviewMaterialCtrl.b3Update(m_MatSampler);
 }
