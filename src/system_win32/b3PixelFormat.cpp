@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3PixelFormat.h"
+#include "blz3/system/b3PixelFormat.h"
 #include "blz3/system/b3App.h"
 #include "blz3/base/b3Render.h"
 
@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/25 17:07:43  sm
+**	- Fixed wrong include
+**
 **	Revision 1.1  2003/02/25 15:56:21  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
 **	- Restructured b3PickInfo
-**
+**	
 */
 
 /*************************************************************************
