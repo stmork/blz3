@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.93  2004/09/27 16:56:48  sm
+**      - Minor changes
+**
 **      Revision 1.92  2004/09/27 15:24:23  sm
 **      - Added car paint as material shader
 **
@@ -1721,10 +1724,10 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPain
 	m_Parallel.m_Diffuse     = B3_BLUE;
 	m_Parallel.m_Specular    = B3_GREY;
 	m_Parallel.m_Ambient     = m_Parallel.m_Diffuse * 0.2;
-	m_Parallel.m_Reflection  =   0.8;
+	m_Parallel.m_Reflection  =   0.16;
 	m_Parallel.m_Refraction  =   0.0;
 	m_Parallel.m_Ior         =   1.56;
-	m_Parallel.m_SpecularExp = 200.0;
+	m_Parallel.m_SpecularExp = 300.0;
 
 	m_Perpendicular = m_Parallel;
 
@@ -1748,11 +1751,6 @@ b3MatCarPaint::b3MatCarPaint(b3_u32 *src) : b3Material(src)
 	m_Perpendicular.m_Refraction  = b3InitFloat();
 	m_Perpendicular.m_Ior         = b3InitFloat();
 	m_Perpendicular.m_SpecularExp = b3InitFloat();
-
-	// FIXMEE!!
-	m_Parallel.m_Diffuse.b3Init(0.0,0.55f,1.0);
-	m_Parallel.m_Specular    = B3_GREY;
-	m_Parallel.m_Ambient     = m_Parallel.m_Diffuse * 0.2;
 
 	m_Flags       = b3InitInt();
 }
@@ -1805,8 +1803,8 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
 	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
 
-	jit->m_AmbientSum  += surface->m_Ambient;
-	jit->m_DiffuseSum  += surface->m_Diffuse * nl;
+//	jit->m_AmbientSum  += surface->m_Ambient;
+//	jit->m_DiffuseSum  += surface->m_Diffuse * nl;
 	jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)surface->m_SpecularExp);
 	
 	return true;
