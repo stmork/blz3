@@ -65,11 +65,11 @@ public:
 #endif
 
 protected:
+	void b3Draw(b3_res xSize,b3_res ySize);
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppObjectView)
-	afx_msg void OnPaint();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -50,7 +50,6 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesView)
-	public:
 	protected:
 	virtual void OnInitialUpdate(); // called first time after construct
 	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
@@ -67,11 +66,11 @@ public:
 
 protected:
 	b3_bool b3IsMouseActionAllowed();
+	void    b3Draw(b3_res xSize,b3_res ySize);
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesView)
-	afx_msg void OnPaint();
 	afx_msg void OnObjSelect();
 	afx_msg void OnObjMove();
 	afx_msg void OnObjRotate();

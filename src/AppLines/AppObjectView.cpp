@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/25 16:34:46  sm
+**	- Added printer support (not running yet)
+**
 **	Revision 1.7  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -42,7 +45,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.6  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -77,7 +80,6 @@ IMPLEMENT_DYNCREATE(CAppObjectView, CAppRenderView)
 
 BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppObjectView)
-	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -181,55 +183,22 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
-void CAppObjectView::OnPaint() 
+void CAppObjectView::b3Draw(b3_res xSize,b3_res ySize) 
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
 	CAppObjectDoc *pDoc = GetDocument();
-	CRect          rect;
-	CPoint         pos;
-	struct _timeb  start,stop;
-	long           sDiff,mDiff;
 
 	if (m_BBox != null)
 	{
-		_ftime(&start);
-
-		// Init Drawing
-		wglMakeCurrent(m_DC,m_GC);
 		pDoc->m_Context.b3StartDrawing();
 
-		pos = GetScrollPosition();
-		GetClientRect(&rect);
-
 		// Setup view first
-		m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
+		m_RenderView.b3UpdateView(0,0,xSize,ySize);
 
 		// Then draw objects
 		m_BBox->b3Draw();
 		pDoc->b3DrawFulcrum();
-		_ftime(&stop);
-
-		// Done...
-		SwapBuffers(m_DC);
-		ValidateRect(NULL);
-
-		mDiff = stop.millitm - start.millitm;
-		sDiff = stop.time    - start.time;
-		if (mDiff < 0)
-		{
-			mDiff += 1000;
-			sDiff -=    1;
-		}
-		mDiff += (sDiff * 1000);
-		sDiff  = 0;
-
-		if (mDiff > 0)
-		{
-			CMainFrame *main = CB3GetMainFrame();
-		
-			main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
-		}
 	}
 	else
 	{

@@ -65,6 +65,7 @@ protected:
 	// OpenGL values
 	HDC             m_DC;
 	HGLRC           m_GC;
+	HGLRC           m_PC;
 	int             m_PixelFormatIndex;
 
 	// Acting modes
@@ -102,6 +103,7 @@ public:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+	virtual void OnPrint(CDC* pDC, CPrintInfo* pInfo);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -114,6 +116,7 @@ public:
 
 protected:
 	virtual b3_bool b3IsMouseActionAllowed();
+	virtual void    b3Draw(b3_res xSize,b3_res ySize);
 
 // Generated message map functions
 protected:
@@ -154,6 +157,7 @@ protected:
 	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
+	afx_msg void OnPaint();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgHierarchy
+LastClass=CAppObjectView
 LastTemplate=CTreeCtrl
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,36 +54,36 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=29
-Resource1=IDD_NEW_ITEM
-Resource2=IDR_TOOLBAR_OBJECT
-Resource3=IDD_STEP_MOVE
-Resource4=IDR_TOOLBAR_CAMERA
-Resource5=IDR_TOOLBAR_LIGHT
-Resource6=IDR_TOOLBAR_VIEW
-Resource7=IDR_TOOLBAR_ACTION
-Resource8=IDD_LDC
+Resource1=IDD_STEP_ROTATE
+Resource2=IDR_TOOLBAR_LIGHT
+Resource3=IDR_BLZ3TYPE
+Resource4=IDR_TOOLBAR_ACTION
+Resource5=IDR_TOOLBAR_OBJECT
+Resource6=IDR_TOOLBAR_DISPLAY
+Resource7=IDR_TOOLBAR_CAMERA
+Resource8=IDR_MAINFRAME
 Resource9=IDR_DISPLAYTYPE
-Resource10=IDD_LIGHT
-Resource11=IDD_CAMERA
-Resource12=IDR_TOOLBAR_DISPLAY
-Resource13=IDD_FULCRUM
-Resource14=IDD_STEP_ROTATE
-Resource15=IDD_OBJECT_COPY
-Resource16=IDR_MAINFRAME
-Resource17=IDR_OBJECT
-Resource18=IDR_CONTEXT_SCENE
-Resource19=IDD_ABOUTBOX
-Resource20=IDD_HIERARCHY
-Resource21=IDD_SCENE
-Resource22=IDD_SUPER_SAMPLE
-Resource23=IDD_NEBULAR
-Resource24=IDD_LENS_FLARE
-Resource25=IDD_DISTRIBUTED
-Resource26=IDD_MODELLER_INFO
-Resource27=IDD_SEARCH_PATH_LIST
+Resource10=IDD_OBJECT_COPY
+Resource11=IDR_OBJECT
+Resource12=IDR_TOOLBAR_VIEW
+Resource13=IDR_CONTEXT_SCENE
+Resource14=IDD_ABOUTBOX
+Resource15=IDD_HIERARCHY
+Resource16=IDD_LENS_FLARE
+Resource17=IDD_SUPER_SAMPLE
+Resource18=IDD_NEBULAR
+Resource19=IDD_DISTRIBUTED
+Resource20=IDD_MODELLER_INFO
+Resource21=IDD_SEARCH_PATH_LIST
+Resource22=IDD_NEW_ITEM
+Resource23=IDD_LIGHT
+Resource24=IDD_LDC
+Resource25=IDD_CAMERA
+Resource26=IDD_FULCRUM
+Resource27=IDD_STEP_MOVE
 Class44=CB3TreeCtrl
-Resource28=IDD_FILEOPENPREVIEW
-Resource29=IDR_BLZ3TYPE
+Resource28=IDD_SCENE
+Resource29=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
 Type=0
@@ -199,6 +199,9 @@ Type=0
 BaseClass=CAppRenderView
 HeaderFile=AppLinesView.h
 ImplementationFile=AppLinesView.cpp
+Filter=C
+VirtualFilter=VWC
+LastObject=CAppLinesView
 
 [CLS:CAppObjectDoc]
 Type=0
@@ -215,6 +218,8 @@ BaseClass=CAppRenderView
 HeaderFile=AppObjectView.h
 ImplementationFile=AppObjectView.cpp
 LastObject=CAppObjectView
+Filter=C
+VirtualFilter=VWC
 
 [CLS:CAppRaytraceDoc]
 Type=0
@@ -249,6 +254,8 @@ BaseClass=CScrollView
 HeaderFile=AppRenderView.h
 ImplementationFile=AppRenderView.cpp
 LastObject=CAppRenderView
+Filter=C
+VirtualFilter=VWC
 
 [CLS:CB3ControlLDC]
 Type=0
@@ -1096,6 +1103,7 @@ LastObject=CB3TreeCtrl
 
 [MNU:IDR_CONTEXT_SCENE]
 Type=1
+Class=?
 Command1=ID_OBJECT_EDIT
 Command2=ID_EDIT_CUT
 Command3=ID_EDIT_COPY

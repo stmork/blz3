@@ -39,6 +39,9 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2002/01/25 16:34:46  sm
+**	- Added printer support (not running yet)
+**
 **	Revision 1.39  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -46,7 +49,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.38  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -231,7 +234,6 @@ IMPLEMENT_DYNCREATE(CAppLinesView, CAppRenderView)
 
 BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppLinesView)
-	ON_WM_PAINT()
 	ON_COMMAND(ID_OBJECT_SELECT, OnObjSelect)
 	ON_COMMAND(ID_OBJECT_MOVE, OnObjMove)
 	ON_COMMAND(ID_OBJECT_ROTATE, OnObjRotate)
@@ -240,8 +242,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_COMMAND(ID_CAMERA_TURN, OnCamTurn)
 	ON_COMMAND(ID_CAMERA_ROTATE, OnCamRotate)
 	ON_COMMAND(ID_CAMERA_VIEW, OnCamView)
-	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
 	ON_CBN_SELCHANGE(ID_CAMERA_SELECT, OnCamSelect)
+	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
 	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_SELECT, OnUpdateObjSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_MOVE, OnUpdateObjMove)
@@ -256,8 +258,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
 	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
-	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
+	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
 	ON_BN_CLICKED(IDC_MOVE_LEFT, OnMoveLeft)
 	ON_BN_CLICKED(IDC_MOVE_RIGHT, OnMoveRight)
@@ -356,27 +358,14 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
-void CAppLinesView::OnPaint() 
+void CAppLinesView::b3Draw(b3_res xSize,b3_res ySize)
 {
-	// We have already an HDC, you remember?
-	// So we don't need OnDraw();
 	CAppLinesDoc *pDoc = GetDocument();
-	CRect         rect;
-	CPoint        pos;
-	struct _timeb start,stop;
-	long          sDiff,mDiff;
 
-	_ftime(&start);
-
-	// Init Drawing
-	wglMakeCurrent(m_DC,m_GC);
 	pDoc->m_Context.b3StartDrawing();
 
-	pos = GetScrollPosition();
-	GetClientRect(&rect);
-
 	// Setup view first
-	m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
+	m_RenderView.b3UpdateView(0,0,xSize,ySize);
 
 	// Then draw objects
 	m_Scene->b3Draw();
@@ -385,28 +374,6 @@ void CAppLinesView::OnPaint()
 		m_CameraVolume.b3Draw();
 	}
 	pDoc->b3DrawFulcrum();
-	_ftime(&stop);
-
-	// Done...
-	SwapBuffers(m_DC);
-	ValidateRect(NULL);
-
-	mDiff = stop.millitm - start.millitm;
-	sDiff = stop.time    - start.time;
-	if (mDiff < 0)
-	{
-		mDiff += 1000;
-		sDiff -=    1;
-	}
-	mDiff += (sDiff * 1000);
-	sDiff  = 0;
-
-	if (mDiff > 0)
-	{
-		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	
-		main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
-	}
 }
 
 void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 

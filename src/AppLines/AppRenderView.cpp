@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/25 16:34:46  sm
+**	- Added printer support (not running yet)
+**
 **	Revision 1.5  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.4  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -61,13 +64,49 @@
 **                                                                      **
 *************************************************************************/
 
-static PIXELFORMATDESCRIPTOR pixelformat =
+static PIXELFORMATDESCRIPTOR window_pixelformat =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),
 	1,
 	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
 	PFD_TYPE_RGBA,
 	32,
+	0,0,0,0,0,0,
+	0,0,
+	0,0,0,0,0,
+	32,
+	0,
+	0,
+	0,
+	0,
+	0,0,0
+};
+
+static PIXELFORMATDESCRIPTOR print_pixelformat =
+{
+	sizeof(PIXELFORMATDESCRIPTOR),
+	1,
+	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DEPTH_DONTCARE,
+	PFD_TYPE_RGBA,
+	24,
+	0,0,0,0,0,0,
+	0,0,
+	0,0,0,0,0,
+	32,
+	0,
+	0,
+	0,
+	0,
+	0,0,0
+};
+
+static PIXELFORMATDESCRIPTOR preview_pixelformat =
+{
+	sizeof(PIXELFORMATDESCRIPTOR),
+	1,
+	PFD_SUPPORT_OPENGL,
+	PFD_TYPE_RGBA,
+	24,
 	0,0,0,0,0,0,
 	0,0,
 	0,0,0,0,0,
@@ -102,11 +141,11 @@ BEGIN_MESSAGE_MAP(CAppRenderView, CScrollView)
 	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
 	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
 	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
+	ON_COMMAND(ID_VIEW_POP, OnViewPop)
 	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
 	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
 	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
 	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
-	ON_COMMAND(ID_VIEW_POP, OnViewPop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PERSPECTIVE, OnUpdateViewPerspective)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TOP, OnUpdateViewTop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_FRONT, OnUpdateViewFront)
@@ -117,11 +156,12 @@ BEGIN_MESSAGE_MAP(CAppRenderView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SELECT, OnUpdateViewSelect)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BIGGER, OnUpdateViewBigger)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
+	ON_WM_PAINT()
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -182,23 +222,112 @@ BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
 /////////////////////////////////////////////////////////////////////////////
 // CAppRenderView drawing
 
+void CAppRenderView::b3Draw(b3_res xSize,b3_res ySize)
+{
+}
+
+void CAppRenderView::OnPaint() 
+{
+	// We have already an HDC, you remember?
+	// So we don't need OnDraw();
+	CRect          rect;
+	struct _timeb  start,stop;
+	long           sDiff,mDiff;
+
+	// Init Drawing
+	wglMakeCurrent(m_DC,m_GC);
+	GetClientRect(&rect);
+
+	_ftime(&start);
+	b3Draw(rect.Width(),rect.Height());
+	_ftime(&stop);
+
+	// Done...
+	SwapBuffers(m_DC);
+	ValidateRect(NULL);
+
+	// Compute time spent for drawing
+	mDiff = stop.millitm - start.millitm;
+	sDiff = stop.time    - start.time;
+	if (mDiff < 0)
+	{
+		mDiff += 1000;
+		sDiff -=    1;
+	}
+	mDiff += (sDiff * 1000);
+	sDiff  = 0;
+
+	if (mDiff > 0)
+	{
+		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	
+		main->b3SetPerformance(this,mDiff,GetDocument()->m_Context.glPolyCount);
+	}
+}
+
+void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	wglMakeCurrent(pDC->GetSafeHdc(),m_PC);
+	b3Draw(pDC->GetDeviceCaps(HORZRES),pDC->GetDeviceCaps(VERTRES));
+
+	// Done...
+	glFinish();
+	wglMakeCurrent(NULL,NULL);
+//	ValidateRect(NULL);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CAppRenderView printing
 
 BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
 {
 	// default preparation
+	CWinApp    *app = AfxGetApp();
+	CRect       rect;
+	PRINTDLG   *prtDlg;
+	DEVMODE    *DevMode;
+
+	// Set printer orientation by images dimensions
+	prtDlg = &pInfo->m_pPD->m_pd;
+	if (app->GetPrinterDeviceDefaults(prtDlg))
+	{
+		DevMode = (DEVMODE *)::GlobalLock(prtDlg->hDevMode);
+		if (DevMode != null)
+		{
+			GetClientRect(&rect);
+			DevMode->dmOrientation =
+				(short)(rect.Height() > rect.Width() ? DMORIENT_PORTRAIT : DMORIENT_LANDSCAPE);
+			::GlobalUnlock(prtDlg->hDevMode);
+		}
+	}
+
 	return DoPreparePrinting(pInfo);
 }
 
-void CAppRenderView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 {
 	// TODO: add extra initialization before printing
+	HDC glDC = pDC->GetSafeHdc();
+	int PixelFormatIndex = -1;
+
+	CScrollView::OnBeginPrinting(pDC, pInfo);
+	pInfo->SetMinPage(1);
+	pInfo->SetMaxPage(1);
+
+	// Init Drawing
+	PixelFormatIndex = ChoosePixelFormat(glDC,
+		pInfo->m_bPreview ? &preview_pixelformat : &print_pixelformat);
+	SetPixelFormat(glDC,PixelFormatIndex,&print_pixelformat);
+	m_PC = wglCreateContext(glDC);
 }
 
-void CAppRenderView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+void CAppRenderView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo)
 {
 	// TODO: add cleanup after printing
+	CScrollView::OnEndPrinting(pDC, pInfo);
+	wglDeleteContext(m_PC);
+	m_PC = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -246,8 +375,8 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 			format.cColorBits,format.cDepthBits,format.cAccumBits);
 	}
 #endif
-	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&pixelformat);
-	SetPixelFormat(m_DC,m_PixelFormatIndex,&pixelformat);
+	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&window_pixelformat);
+	SetPixelFormat(m_DC,m_PixelFormatIndex,&window_pixelformat);
 	m_GC = wglCreateContext(m_DC);
 
 	return 0;

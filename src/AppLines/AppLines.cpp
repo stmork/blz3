@@ -45,10 +45,13 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/01/25 16:34:46  sm
+**	- Added printer support (not running yet)
+**
 **	Revision 1.23  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
-**
+**	
 **	Revision 1.22  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -162,6 +165,7 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
+	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 /*************************************************************************
