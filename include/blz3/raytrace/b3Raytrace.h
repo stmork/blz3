@@ -1582,7 +1582,7 @@ public:
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare();
 		   char           *b3GetName();
-		   b3_bool         b3Recompute(b3BBox *search);
+		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox *bbox);
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
@@ -2161,7 +2161,7 @@ public:
 	        void            b3Draw();
 			char           *b3GetName();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
-	        b3_bool         b3Recompute(b3BBox *search);
+	        b3_bool         b3BacktraceRecompute(b3BBox *search);
 		    b3Base<b3Item> *b3FindBBoxHead(b3BBox *bbox);
 			b3Base<b3Item> *b3GetBBoxHead();
 			b3Base<b3Item> *b3GetLightHead();
