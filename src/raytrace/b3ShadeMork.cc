@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2004/09/17 12:53:55  sm
+**	- Changed chader signatures to sum on different color
+**	  channels (ambient, diffuse and specular). I wanted
+**	  to do this for a long time, puh!
+**
 **	Revision 1.43  2004/07/24 13:55:12  sm
 **	- Changed triangle grid size computation.
 **	- Corrected Mork shading to its roots.
-**
+**	
 **	Revision 1.42  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
@@ -239,14 +244,14 @@ void b3ShaderMork::b3Prepare()
 void b3ShaderMork::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
-	b3_surface    *surface,
-	b3Color       &result)
+	b3_surface    *surface)
 {
 	b3_f64   ShapeAngle;
 	b3_f32   Factor;
+	b3Color  sum;
 
 	// Real absorption
-	result += (surface->m_Diffuse * m_ShadowFactor);
+	surface->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -270,7 +275,7 @@ void b3ShaderMork::b3ShadeLight(
 			// surface illumination (diffuse color)
 			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
 			{
-				result += (surface->m_Diffuse * light->m_Color * Factor);
+				surface->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * Factor);
 			}
 		}
 	}
@@ -280,11 +285,10 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_surface &surface,
 	b3_count    depth_count)
 {
-	b3Color   result;
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
-	b3_f64    refl,refr,factor;
+	b3_f32    refl,refr,factor;
 
 	// Refraction
 	if (surface.m_Transparent)
@@ -294,46 +298,50 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
-		refl = surface.m_Reflection;
 		refr = surface.m_Refraction;
-
 		b3Shade(&surface.refr_ray,depth_count);
-		result = (surface.refr_ray.color * refr);
 	}
 	else
 	{
-		refl = surface.m_Reflection;
 		refr = 0;
-		result.b3Init();
+		surface.refr_ray.color.b3Init();
 	}
 
 	// Reflection
+	refl = surface.m_Reflection;
 	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
 	{
 		b3Shade(&surface.refl_ray,depth_count);
-		result += (surface.refl_ray.color * refl);
 	}
 	else
 	{
 		refl = 0;
+		surface.refl_ray.color.b3Init();
 	}
 
-	// Mix colors
-	factor = (1.0 - refl - refr) * 0.5;
+	factor = 1.0 - refl - refr;
 	if (factor > 0)
 	{
-		// For each light source
-		ray->color.b3Init();
+		surface.m_AmbientSum.b3Init();
+		surface.m_DiffuseSum.b3Init();
 		surface.m_SpecularSum.b3Init();
+
+		// For each light source...
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color = ray->color * factor + result + surface.m_SpecularSum;
+		ray->color =
+			(surface.m_AmbientSum + surface.m_DiffuseSum) * factor * 0.5 +
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr +
+			surface.m_SpecularSum;
 	}
 	else
 	{
-		ray->color = result;
+		ray->color =
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr;
 	}
 }

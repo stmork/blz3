@@ -71,10 +71,12 @@ struct b3_material
 
 struct b3_surface : public b3_material
 {
+	b3Color      m_AmbientSum;
+	b3Color      m_DiffuseSum;
+	b3Color      m_SpecularSum;
 	b3_ray      *incoming;
 	b3_ray       refl_ray;
 	b3_ray       refr_ray;
-	b3Color      m_SpecularSum;
 	b3_bool      m_Transparent;
 	b3_f64       m_Fresnel;
 	b3_f64       m_IorComputed;
@@ -95,7 +97,7 @@ public:
 	static  void    b3Register();
 	virtual b3_bool b3Prepare();
 	
-	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit,b3Color &result)
+	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	{
 		return false;
 	}
@@ -339,7 +341,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit,b3Color &result);
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
 };
 
 // GRANITE

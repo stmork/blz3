@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.90  2004/09/17 12:53:55  sm
+**      - Changed chader signatures to sum on different color
+**        channels (ambient, diffuse and specular). I wanted
+**        to do this for a long time, puh!
+**
 **      Revision 1.89  2004/08/02 13:57:59  sm
 **      - Changed thin film animation to closed spline computation.
 **
@@ -1517,11 +1522,10 @@ b3_bool b3MatCookTorrance::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b3Color &acc)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 {
 	b3_ray      *ray = surface->incoming;
 	b3_vector64  L;
-	b3Color      result;
 
 	B3_ASSERT(ray != null);	
 
@@ -1579,15 +1583,17 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b
 	{
 		Rf.b3Init();
 	}
-	
-	result = m_Ra + m_Diffuse * nl * m_kd + Rf * m_ks;
+
+	surface->m_AmbientSum  += m_Ra;
+	surface->m_DiffuseSum  += m_Diffuse * nl * m_kd;
+	surface->m_SpecularSum += Rf * m_ks;
 #else
 	b3_f64 rl = b3Vector::b3SMul(&ray->refl_ray.dir,&L);
 
-	result = m_Ra + m_Diffuse * nl + m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
+	surface->m_AmbientSum  += m_Ra;
+	surface->m_DiffuseSum  += m_Diffuse * nl;
+	surface->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
 #endif
-
-	acc += result;
 
 	return true;
 }

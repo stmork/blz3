@@ -113,6 +113,16 @@ public:
 		return a * (1 - x) + b * x;
 	}
 
+	static inline b3_f64 b3Min(b3_f64 a,b3_f64 b)
+	{
+		return a < b ? a : b;
+	}
+
+	static inline b3_f64 b3Max(b3_f64 a,b3_f64 b)
+	{
+		return a > b ? a : b;
+	}
+
 	static inline b3_f64 b3Hermite(b3_f64 t1,b3_f64 s0,b3_f64 s1)
 	{
 		b3_f64 t2 = t1 * t1;

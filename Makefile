@@ -27,3 +27,4 @@ clobber:
 tar:	clobber configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
+# DO NOT DELETE

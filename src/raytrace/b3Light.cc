@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2004/09/17 12:53:55  sm
+**      - Changed chader signatures to sum on different color
+**        channels (ambient, diffuse and specular). I wanted
+**        to do this for a long time, puh!
+**
 **      Revision 1.44  2004/05/28 13:15:39  sm
 **      - Major optimizations inside shader. But why is the intel brt3
 **        5 minutes slower than the unoptimized version?
@@ -512,7 +517,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.m_LightDist = RecLightDist;
 
 	shader->b3FindObscurer(&Jit,LightDist - b3Scene::epsilon);
-	shader->b3Shade(this,&Jit,surface,surface->incoming->color);
+	shader->b3Shade(this,&Jit,surface);
 	return true;
 }
 
@@ -664,7 +669,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	if ((LightDist = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
 		shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
-		shader->b3Shade(this,Jit,surface,Jit->m_Result);
+		shader->b3Shade(this,Jit,surface);
 	}
 	else
 	{

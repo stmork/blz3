@@ -33,7 +33,7 @@ endif
 # Build image file libraries
 #setenv CFLAGS "-O3 -xM -w"
 #setenv ASMFLAGS "-O3 -w -march=pentiumiii"
-setenv ASMFLAGS "-O3 -w -march=pentium4 -ipo_S"
+setenv ASMFLAGS "-O3 -xN -ipo_S -w0 -vec_report0"
 
 # Build raytracer
 switch ( $1 )

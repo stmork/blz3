@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/09/17 12:53:55  sm
+**	- Changed chader signatures to sum on different color
+**	  channels (ambient, diffuse and specular). I wanted
+**	  to do this for a long time, puh!
+**
 **	Revision 1.8  2004/06/23 14:03:05  sm
 **	- Reversed transparent computation.
-**
+**	
 **	Revision 1.7  2004/06/23 13:58:07  sm
 **	- Changed Fresnel computation decision from real transparent
 **	  to real refractive to force Fresnel computation even on
@@ -82,8 +87,7 @@ void b3ShaderMork2::b3Prepare()
 void b3ShaderMork2::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
-	b3_surface    *surface,
-	b3Color       &result)
+	b3_surface    *surface)
 {
 	b3Color illumination;
 
@@ -117,10 +121,10 @@ void b3ShaderMork2::b3ShadeLight(
 		}
 	}
 
-	result += (surface->m_Diffuse * illumination);
+	surface->m_DiffuseSum += (surface->m_Diffuse * illumination);
 }
 
-void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
+void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
 {
     b3_f64 alpha    = b3Math::b3Acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
@@ -151,11 +155,10 @@ void b3ShaderMork2::b3ShadeSurface(
 	b3_surface &surface,
 	b3_count    depth_count)
 {
-	b3Color   result;
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
-	b3_f64    refl,refr,factor;
+	b3_f32    refl,refr,factor;
 
 	// Refraction
 	if (surface.m_Transparent)
@@ -168,7 +171,6 @@ void b3ShaderMork2::b3ShadeSurface(
 		b3ComputeFresnelCoeffs(&surface,refl,refr);
 
 		b3Shade(&surface.refr_ray,depth_count);
-		result = (surface.refr_ray.color * refr);
 	}
 	else
 	{
@@ -184,14 +186,12 @@ void b3ShaderMork2::b3ShadeSurface(
 			refl = surface.m_Reflection;
 		}
 		refr = 0;
-		result.b3Init();
 	}
 
 	// Reflection
 	if (refl > 0)
 	{
 		b3Shade(&surface.refl_ray,depth_count);
-		result += (surface.refl_ray.color * refl);
 	}
 	else
 	{
@@ -203,17 +203,25 @@ void b3ShaderMork2::b3ShadeSurface(
 	if (factor > 0)
 	{
 		// For each light source
-		ray->color.b3Init();
+		surface.m_AmbientSum.b3Init();
+		surface.m_DiffuseSum.b3Init();
 		surface.m_SpecularSum.b3Init();
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color = ray->color * factor + result + surface.m_SpecularSum;
+		ray->color =
+			surface.m_AmbientSum +
+			surface.m_DiffuseSum * factor +
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr +
+			surface.m_SpecularSum;
 	}
 	else
 	{
-		ray->color = result;
+		ray->color =
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr;
 	}
 }

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/09/17 12:53:55  sm
+**	- Changed chader signatures to sum on different color
+**	  channels (ambient, diffuse and specular). I wanted
+**	  to do this for a long time, puh!
+**
 **	Revision 1.32  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
-**
+**	
 **	Revision 1.31  2004/05/28 14:39:01  sm
 **	- Changed spacular exponent to integer value inside shader.
 **	
@@ -208,8 +213,7 @@ b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 void b3ShaderPhong::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
-	b3_surface    *surface,
-	b3Color       &result)
+	b3_surface    *surface)
 {
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -227,7 +231,7 @@ void b3ShaderPhong::b3ShadeLight(
 
 				surface->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
 			}
-			result += (surface->m_Diffuse * light->m_Color * ShapeAngle);
+			surface->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * ShapeAngle);
 		}
 	}
 }
@@ -240,9 +244,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	b3Light     *light;
 	b3_ray      *ray = surface.incoming;
 	b3_f32       refl,refr,factor;
-	b3_index     formula = 0;
 
-	ray->color = surface.m_Ambient;
 	if (surface.m_Transparent)
 	{
 		if (surface.m_Ior == 1)
@@ -252,7 +254,6 @@ void b3ShaderPhong::b3ShadeSurface(
 		}
 		refr = surface.m_Refraction;
 		b3Shade(&surface.refr_ray,depth_count);
-		formula |= MIX_REFRACTION;
 	}
 	else
 	{
@@ -263,9 +264,9 @@ void b3ShaderPhong::b3ShadeSurface(
 	if (refl > 0)
 	{
 		b3Shade(&surface.refl_ray,depth_count);
-		formula |= MIX_REFLECTION;
 	}
 
+	surface.m_DiffuseSum.b3Init();
 	surface.m_SpecularSum.b3Init();
 	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 	{
@@ -273,26 +274,11 @@ void b3ShaderPhong::b3ShadeSurface(
 		light->b3Illuminate(this,&surface);
 	}
 
-	switch(formula)
-	{
-	case MIX_REFLECTION:
-		// Only reflection
-		ray->color = b3Color::b3Mix(ray->color, surface.refl_ray.color, refl);
-		break;
-
-	case MIX_REFRACTION:
-		// Only refraction
-		ray->color = b3Color::b3Mix(ray->color, surface.refr_ray.color, refr);
-		break;
-
-	case MIX_BOTH:
-		// Reflection and refraction
-		factor = (1.0 - refl - refr);
-		ray->color =
-			surface.refl_ray.color * refl +
-			surface.refr_ray.color * refr +
-				        ray->color * factor;
-		break;
-	}
-	ray->color += surface.m_SpecularSum;
+	factor = (1.0 - refl - refr);
+	ray->color =
+		surface.m_Ambient +
+		surface.m_DiffuseSum * factor +
+		surface.refl_ray.color * refl +
+		surface.refr_ray.color * refr +
+		surface.m_SpecularSum;
 }

@@ -37,7 +37,7 @@ public:
 
 	virtual void            b3Prepare();
 	        b3_bool         b3Shade(b3_ray *ray,b3_count depth = 0);
-	        void            b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
+	        void            b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface);
 
 	inline  b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX)
 	{
@@ -46,7 +46,7 @@ public:
 
 protected:
 	virtual void            b3ShadeSurface(b3_surface &surface,b3_count depth) = 0;
-	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result) = 0;
+	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface) = 0;
 
 protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
@@ -63,7 +63,7 @@ public:
 
 protected:
 	       void    b3ShadeSurface(b3_surface &surface,b3_count depth);
-	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
+	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 };
 
 //////////////
@@ -80,7 +80,7 @@ public:
 
 protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
-	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
+	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 };
 
 ///////////////////////
@@ -97,10 +97,10 @@ public:
 
 protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
-	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
+	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 
 private:
-	void     b3ComputeFresnelCoeffs(b3_surface *surface, b3_f64 &refl, b3_f64 &refr);
+	void     b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr);
 };
 
 #endif

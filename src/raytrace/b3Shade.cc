@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2004/09/17 12:53:55  sm
+**	- Changed chader signatures to sum on different color
+**	  channels (ambient, diffuse and specular). I wanted
+**	  to do this for a long time, puh!
+**
 **	Revision 1.51  2004/07/27 16:33:50  sm
 **	- Added thin film material rendering
-**
+**	
 **	Revision 1.50  2004/06/23 13:58:07  sm
 **	- Changed Fresnel computation decision from real transparent
 **	  to real refractive to force Fresnel computation even on
@@ -450,12 +455,12 @@ b3_bool b3Shader::b3Shade(
 	return finite;
 }
 
-void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result)
+void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface)
 {
 	b3Material *material = surface->incoming->material;
 
-	if (!((material != null) && material->b3Illuminate(surface,jit,result)))
+	if (!((material != null) && material->b3Illuminate(surface,jit)))
 	{
-		b3ShadeLight(light, jit, surface, result);
+		b3ShadeLight(light, jit, surface);
 	}
 }
