@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2002/07/31 08:53:22  sm
+**      - Added simplified pixel format selection
+**      - Some problems with normal computation occured
+**
 **      Revision 1.48  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -790,6 +794,7 @@ b3_count b3ShapeRenderObject::b3GetIndexOverhead (
 #ifdef BLZ3_USE_OPENGL
 b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 {
+#if 0
 	b3_tnv_vertex *point;
 	b3_tnv_vertex *ptr = glVertex;
 	b3_index       i;
@@ -805,7 +810,7 @@ b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 	}
 
 	B3_ASSERT(false);
-
+#endif
 	return vertex;
 }
 #endif

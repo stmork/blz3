@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/07/31 08:53:22  sm
+**	- Added simplified pixel format selection
+**	- Some problems with normal computation occured
+**
 **	Revision 1.16  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
-**
+**	
 **	Revision 1.15  2002/07/29 12:32:56  sm
 **	- Full disk draws textures correctly now
 **	- Windows selects the correct pixel format for
@@ -228,38 +232,64 @@ CAppRenderView::~CAppRenderView()
 {
 }
 
+#define B3_PF_PIXELTYPE    16
+#define B3_PF_ACCELERATE    8
+#define B3_PF_DOUBLEBUFFER  4
+#define B3_PF_SWAP          2
+#define B3_PF_DESTINATION   1
 
-int CAppRenderView::b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat)
+int CAppRenderView::b3ComputePixelFormatMode(
+	const PIXELFORMATDESCRIPTOR *input,
+	const PIXELFORMATDESCRIPTOR *templ)
 {
-	int mask =  templFormat->dwFlags |  PFD_GENERIC_FORMAT;
-	int acc  = (templFormat->dwFlags & 	PFD_GENERIC_FORMAT) ^ PFD_GENERIC_FORMAT;
-	int dst;
-	int af,bf;
-	int result = 0;
+	int inputFlags = input->dwFlags;
+	int templFlags = templ->dwFlags;
+	int mode       = 0;
 
-	if (templFormat->dwFlags & PFD_DOUBLEBUFFER)
+	if (input->iPixelType == templ->iPixelType)
 	{
-		mask |= PFD_SWAP_EXCHANGE;
+		mode |= B3_PF_PIXELTYPE;
 	}
-	dst = (templFormat->dwFlags & PFD_DRAW_TO_BITMAP ? (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW) : 0);
 
-	result = a->iPixelType - b->iPixelType;
+	if ((inputFlags & PFD_GENERIC_FORMAT) == (templFlags & PFD_GENERIC_FORMAT))
+	{
+		mode |= B3_PF_ACCELERATE;
+	}
+	
+	if ((inputFlags & PFD_DOUBLEBUFFER) == (templFlags & PFD_DOUBLEBUFFER))
+	{
+		mode |= B3_PF_DOUBLEBUFFER;
+		if (inputFlags & PFD_SWAP_EXCHANGE)
+		{
+			mode |= B3_PF_SWAP;
+		}
+	}
+
+	if ((inputFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)) == (templFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)))
+	{
+		mode |= B3_PF_DESTINATION;
+	}
+	
+	return mode;
+}
+
+int CAppRenderView::b3PixelFormatSorter(
+	      PIXELFORMATDESCRIPTOR *a,
+	      PIXELFORMATDESCRIPTOR *b,
+	const PIXELFORMATDESCRIPTOR *templFormat)
+{
+	int result;
+
+	int aMode = b3ComputePixelFormatMode(a,templFormat);
+	int bMode = b3ComputePixelFormatMode(b,templFormat);
+
+	result = bMode - aMode;
 	if (result == 0)
 	{
-		result = ((b->dwFlags ^ acc) & mask) - ((a->dwFlags ^ acc) & mask);
+		result = b->cColorBits - a->cColorBits;
 		if (result == 0)
 		{
-			af = (a->dwFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)) ^ dst;
-			bf = (b->dwFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)) ^ dst;
-			result = (bf - af);
-			if (result == 0)
-			{
-				result = b->cColorBits - a->cColorBits;
-				if (result == 0)
-				{
-					result = b->cDepthBits - a->cDepthBits;
-				}
-			}
+			result = b->cDepthBits - a->cDepthBits;
 		}
 	}
 	return result;
@@ -782,13 +812,8 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	b3ListPixelFormats(m_glDC);
 #endif
 
-#if 1
 	PixelFormatIndex = b3GetPixelFormat(m_glDC,&b3PrinterPixelFormatSorter);
 	SetPixelFormat(m_prtDC,PixelFormatIndex,&m_glPixelFormat[0]);
-#else
-	PixelFormatIndex = ChoosePixelFormat(m_prtDC,&print_pixelformat);
-	SetPixelFormat(m_prtDC,PixelFormatIndex,&print_pixelformat);
-#endif
 	m_prtGC = wglCreateContext(m_prtDC);
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
 

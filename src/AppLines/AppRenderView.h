@@ -205,6 +205,7 @@ private:
 	       void  b3ListPixelFormats(HDC dc);
 	       int   b3GetPixelFormat(HDC dc,b3PixelFormatSortFunc func);
 	static void  b3FlagsString(CString &desc,int flags);
+	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR *input,const PIXELFORMATDESCRIPTOR *templ);
 	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);
 	static int   b3WindowPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
 	static int   b3PrinterPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
