@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/04/25 19:52:31  sm
+**	- Added safety message box for item deletion.
+**
 **	Revision 1.9  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
-**
+**	
 **	Revision 1.8  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -371,12 +374,15 @@ void CDlgItemMaintain::OnItemDelete()
 
 	if (item != null)
 	{
-		b3Item *select = m_Head->b3Reselect(item);
-		
-		m_Head->b3Remove(item);
-		delete item;
-		b3UpdateList(select);
-		m_Changed = true;
+		if (b3Runtime::b3MessageBox(IDS_ASK_DELETE_ITEM,B3_MSGBOX_YES_NO) == B3_MSG_YES)
+		{
+			b3Item *select = m_Head->b3Reselect(item);
+			
+			m_Head->b3Remove(item);
+			delete item;
+			b3UpdateList(select);
+			m_Changed = true;
+		}
 	}
 }
 

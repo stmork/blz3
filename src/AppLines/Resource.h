@@ -802,6 +802,7 @@
 #define IDS_BUMP_OAKPLANK               61458
 #define IDS_FROM                        61459
 #define IDS_TO                          61460
+#define IDS_ASK_DELETE_ITEM             61461
 
 // Next default values for new objects
 // 
