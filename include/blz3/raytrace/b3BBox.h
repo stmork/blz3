@@ -73,7 +73,7 @@ public:
 		   b3_bool         b3IsExpanded();
 		   void            b3Update();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
-		   void            b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar); 
+	       void            b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar); 
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare(b3_bool recursive = false);
 		   char           *b3GetName();
