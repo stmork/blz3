@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.69  2004/05/15 10:09:13  sm
+**      - Added b3CloudBackground to b3Special item list.
+**
 **      Revision 1.68  2004/05/13 16:17:26  sm
 **      - Added background clouds as special item.
 **
@@ -358,14 +361,15 @@ void b3Special::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering special features...\n");
 
-	b3Item::b3Register(&b3SuperSample::b3StaticInit,  &b3SuperSample::b3StaticInit,  SUPERSAMPLE4 );
-	b3Item::b3Register(&b3CameraPart::b3StaticInit,   &b3CameraPart::b3StaticInit,   CAMERA );
-	b3Item::b3Register(&b3Nebular::b3StaticInit,      &b3Nebular::b3StaticInit,      NEBULAR );
-	b3Item::b3Register(&b3ModellerInfo::b3StaticInit, &b3ModellerInfo::b3StaticInit, LINES_INFO );
-	b3Item::b3Register(&b3Animation::b3StaticInit,    &b3Animation::b3StaticInit,    ANIMATION );
-	b3Item::b3Register(&b3Distribute::b3StaticInit,   &b3Distribute::b3StaticInit,   DISTRIBUTE );
-	b3Item::b3Register(&b3LensFlare::b3StaticInit,    &b3LensFlare::b3StaticInit,    LENSFLARE );
-	b3Item::b3Register(&b3Caustic::b3StaticInit,      &b3Caustic::b3StaticInit,      CAUSTIC );
+	b3Item::b3Register(&b3SuperSample::b3StaticInit,     &b3SuperSample::b3StaticInit,     SUPERSAMPLE4 );
+	b3Item::b3Register(&b3CameraPart::b3StaticInit,      &b3CameraPart::b3StaticInit,      CAMERA );
+	b3Item::b3Register(&b3Nebular::b3StaticInit,         &b3Nebular::b3StaticInit,         NEBULAR );
+	b3Item::b3Register(&b3ModellerInfo::b3StaticInit,    &b3ModellerInfo::b3StaticInit,    LINES_INFO );
+	b3Item::b3Register(&b3Animation::b3StaticInit,       &b3Animation::b3StaticInit,       ANIMATION );
+	b3Item::b3Register(&b3Distribute::b3StaticInit,      &b3Distribute::b3StaticInit,      DISTRIBUTE );
+	b3Item::b3Register(&b3LensFlare::b3StaticInit,       &b3LensFlare::b3StaticInit,       LENSFLARE );
+	b3Item::b3Register(&b3Caustic::b3StaticInit,         &b3Caustic::b3StaticInit,         CAUSTIC );
+	b3Item::b3Register(&b3CloudBackground::b3StaticInit, &b3CloudBackground::b3StaticInit, CLOUDS );
 }
 
 /*************************************************************************
@@ -1266,7 +1270,7 @@ b3CloudBackground::b3CloudBackground(b3_u32 *src) :
 {
 	b3InitVector(&m_Anim);
 	b3InitVector(&m_PosScale);
-	m_Flags      = b3InitInt();
+	m_Flags       = b3InitInt();
 	m_EarthRadius = b3InitFloat();
 	m_CloudHeight = b3InitFloat();
 	m_Scaling     = b3InitFloat();

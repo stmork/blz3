@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/05/15 10:09:13  sm
+**	- Added b3CloudBackground to b3Special item list.
+**
 **	Revision 1.32  2004/05/15 07:51:02  sm
 **	- Some noise optimizations
-**
+**	
 **	Revision 1.31  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
@@ -708,6 +711,8 @@ b3Water::b3Water()
 **                        Cloud default values                          **
 **                                                                      **
 *************************************************************************/
+
+#define EARTH_RADIUS_KM 10.0
 
 b3Clouds::b3Clouds()
 {

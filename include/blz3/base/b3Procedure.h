@@ -93,7 +93,7 @@ public:
 	{
 		b3_f32 B3_ALIGN_16 v[4];
 		b3_f32 B3_ALIGN_16 factor[4];
-		b3_f64             sum = 0;
+		b3_f64             sum = 0,n;
 		b3_loop            i,k;
 
 		v[0] = 1;    // amplification
@@ -108,7 +108,8 @@ public:
 
 		for (i = 0;i < octaves;i++)
 		{
-			sum  += v[0] * b3NoiseVector(v[1],v[2],v[3]);
+			n = b3NoiseVector(v[1],v[2],v[3]);
+			sum  += (v[0] * n);
 			for (k = 0;k < 4;k++)
 			{
 				v[k] *= factor[k];
@@ -209,8 +210,6 @@ public:
 	}
 };
 
-#define EARTH_RADIUS_KM 10.0
-
 class b3Clouds
 {
 	b3_f64    m_EarthRadiusSqr;
@@ -220,10 +219,10 @@ public:
 	b3_vector m_Anim;     // x/y are wind direction, z is time scaling
 	b3_vector m_PosScale;
 	b3_u32    m_Flags;
-	b3_f64    m_EarthRadius;
-	b3_f64    m_CloudHeight;
-	b3_f64    m_Scaling;
-	b3_f64    m_Sharpness;
+	b3_f32    m_EarthRadius;
+	b3_f32    m_CloudHeight;
+	b3_f32    m_Scaling;
+	b3_f32    m_Sharpness;
 
 public:
 	     b3Clouds();
@@ -236,7 +235,7 @@ public:
 		if (ray->dir.z > 0)
 		{
 			b3_vector Dir;
-			b3_f64    p,D,len;
+			b3_f64    p,D,len,t;
 
 			p     = ray->dir.z * -m_EarthRadius;
 			D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;
@@ -245,7 +244,8 @@ public:
 			Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
 			Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
 
-			r = 1.0 - pow(b3Noise::b3Turbulence (&Dir),-m_Sharpness);
+			t = b3Noise::b3Turbulence (&Dir);
+			r = 1.0 - pow(t, -m_Sharpness);
 			if (r < 0)
 			{
 				r = 0;
@@ -254,7 +254,7 @@ public:
 		}
 		else
 		{
-			r = 1;
+			r     = 1;
 			sight = 0;
 		}
 		return sight;
