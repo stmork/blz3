@@ -35,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/22 14:47:38  sm
+**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**	  on Windows.
+**	- Some minor fixes.
+**
 **	Revision 1.13  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.12  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -233,7 +238,6 @@ void b3Scene::b3GetBackgroundColor(
 	b3_f64       ly)
 {
 	b3_coord     x,y;
-	b3_pkd_color color;
 
 	switch (m_BackgroundType)
 	{
@@ -298,12 +302,12 @@ void b3Scene::b3GetInfiniteColor(b3_ray_info *ray)
 
 b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 {
-	b3_dVector *Normal       = &surface->incoming->normal;
-	b3_dVector *incoming_dir = &surface->incoming->dir;
-	b3_dVector *refl_dir     = &surface->refl_ray.dir;
-	b3_dVector *refr_dir;
-	b3_f64      Factor,cos_a,d,ior;
-	b3_bool     transparent = false;
+	b3_vector64 *Normal       = &surface->incoming->normal;
+	b3_vector64 *incoming_dir = &surface->incoming->dir;
+	b3_vector64 *refl_dir     = &surface->refl_ray.dir;
+	b3_vector64 *refr_dir     = &surface->refr_ray.dir;
+	b3_f64       Factor,cos_a,d,ior;
+	b3_bool      transparent = false;
  
 	Factor = 2 * (cos_a =
 		incoming_dir->x * Normal->x +

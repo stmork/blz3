@@ -62,6 +62,7 @@ public:
 
 	static inline b3_color *b3GetColor(b3_color *color,b3_pkd_color input)
 	{
+		color->a = 0;
 		color->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;
 		color->g = (b3_f64)((input & 0x00ff00) >>  8) * 0.0039215686;
 		color->b = (b3_f64)((input & 0x0000ff))       * 0.0039215686;

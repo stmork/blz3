@@ -1766,7 +1766,8 @@ public:
 // SUPERSAMPLE4
 class b3SuperSample : public b3Special
 {
-	b3_color    Limit;
+public:
+	b3_color    m_Limit;
 
 public:
 	B3_ITEM_INIT(b3SuperSample);
@@ -1906,9 +1907,10 @@ public:
 // LENSFLARE
 class b3LensFlare : public b3Special
 {
-	b3_s32         Flags;
-	b3_color       Color;
-	b3_f32         Expon;
+public:
+	b3_s32         m_Flags;
+	b3_color       m_Color;
+	b3_f32         m_Expon;
 
 public:
 	B3_ITEM_INIT(b3LensFlare);
@@ -1948,21 +1950,27 @@ protected:
 	static void b3Init();
 };
 
-class b3RayRow : public b3Row
-{
-public:
-	b3_coord m_y;
-	b3_res   m_xSize;
-	b3_res   m_ySize;
-public:
-	              b3RayRow(b3_coord y,b3_res xSize,b3_res ySize);
-	b3_pkd_color *b3GetBuffer();
-};
+class b3RayRow;
 
 class b3Scene : public b3Item
 {
-	b3Base<b3RayRow> m_Rows;
+	b3Base<b3Row>    m_Rows;
 	b3Mutex          m_RowMutex;
+	b3_vector        m_NormWidth;
+	b3_vector        m_NormHeight;
+
+protected:
+	b3Nebular       *m_Nebular;
+	b3SuperSample   *m_SuperSample;
+	b3LensFlare     *m_LensFlare;
+	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
+	b3_color         m_AvrgColor;
+	b3_color         m_DiffColor;
+	b3_vector64      m_xHalfDir;
+	b3_vector64      m_yHalfDir;
+	b3_vector64      m_xStepDir;
+	b3_count         m_LightCount;
+
 public:
 	// Camera
 	b3_vector        m_EyePoint;
@@ -1981,17 +1989,11 @@ public:
 	b3_count         m_TraceDepth;          // Rekursionstiefe
 	b3_u32           m_Flags;               // beschreibt, welche Werte gueltig sind
 	b3_f32           m_ShadowBrightness;
-	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 
 	// Some limits
 	b3_f32           m_BBoxOverSize;        // BBox-Ueberziehung
 	b3_f32           m_Epsilon;             // Schwellenwert
 	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
-
-	b3_count         m_LightCount;
-
-protected:
-	b3Nebular       *m_Nebular;
 
 protected:
 	b3Scene(b3_size class_size,b3_u32  class_type);
@@ -2008,6 +2010,8 @@ public:
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 		    b3ModellerInfo *b3GetModellerInfo();
 		    b3Nebular      *b3GetNebular();
+		    b3SuperSample  *b3GetSuperSample();
+		    b3LensFlare    *b3GetLensFlare();
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		    b3Light        *b3GetLight(b3_bool must_active = false);
@@ -2015,22 +2019,24 @@ public:
 		    b3_count        b3GetBBoxCount();
 		    void            b3Activate(b3_bool activate=true);
 		    void            b3Transform(b3_matrix *transformation);
+		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
 		    void            b3Raytrace(b3Display *display);
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
 	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_illumination *surface);
-		    void            b3GetInfiniteColor(b3_color *infinite);
-		    void            b3GetBackgroundColor(b3_color *background);
+		    void            b3GetInfiniteColor(b3_ray_info *ray);
 
 private:
-	        void            b3RaytraceOneRow(b3RayRow *row);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
+		    void            b3MixLensFlare(b3_ray_info *ray);
 
 	friend class b3RayRow;
+	friend class b3SupersamplingRayRow;
 };
 
 class b3ScenePhong : public b3Scene
@@ -2055,6 +2061,30 @@ public:
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
 	void    b3LightFlare(b3_ray_info *ray);
+};
+
+class b3RayRow : public b3Row
+{
+protected:
+	b3Scene     *m_Scene;
+	b3_vector64  m_preDir;
+	b3_coord     m_y;
+	b3_res       m_xSize;
+	b3_res       m_ySize;
+	b3_f64       m_fxStep;
+	b3_f64       m_fy;
+
+public:
+	             b3RayRow(b3Scene *scene,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual void b3Raytrace();
+};
+
+class b3SupersamplingRayRow : public b3RayRow
+{
+	b3_color m_Limit;
+public:
+	             b3SupersamplingRayRow(b3Scene *scene,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual void b3Raytrace();
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

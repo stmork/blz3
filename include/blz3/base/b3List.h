@@ -97,22 +97,22 @@ public:
 	{
 	}
 
-	b3_u32 b3GetClass()
+	inline b3_u32 b3GetClass()
 	{
 		return ClassType & 0xffff0000;
 	}
 
-	b3_u32 b3GetType()
+	inline b3_u32 b3GetType()
 	{
 		return ClassType & 0x0000ffff;
 	}
 
-	b3_u32 b3GetClassType()
+	inline b3_u32 b3GetClassType()
 	{
 		return ClassType;
 	}
 
-	b3_size b3GetSize()
+	inline b3_size b3GetSize()
 	{
 		return Size;
 	}
@@ -137,19 +137,19 @@ public:
 	{
 	}
 
-	void b3InitBase(b3_u32 new_class = 0)
+	inline void b3InitBase(b3_u32 new_class = 0)
 	{
 		First = null;
 		Last  = null;
 		Class = new_class;
 	}
 
-	b3_u32 b3GetClass()
+	inline b3_u32 b3GetClass()
 	{
 		return Class;
 	}
 
-	void b3Free()
+	inline void b3Free()
 	{
 		T *node,*succ;
 
@@ -164,27 +164,22 @@ public:
 		Last  = null;
 	}
 
-	b3_count b3Count()
+	inline b3_count b3Count()
 	{
-		b3Link<T>  *node;
-		b3_count    count = 0;
+		T        *node;
+		b3_count  count = 0;
 
-		for (node  = (b3Link<T> *)First;
-		     node !=  null;
-		     node  = (b3Link<T> *)node->Succ)
+		for (node  = First;node != null;node  = node->Succ)
 		{
 			count++;
 		}
 		return count;
 	}
 
-	void b3Append  (T *ptr)
+	inline void b3Append  (T *ptr)
 	{
-		b3Link<T> *node = (b3Link<T> *)ptr;
-		b3Link<T> *last = (b3Link<T> *)Last;
-
 #ifndef B3_NO_CLASS_CHECK
-		if (node->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
@@ -196,20 +191,17 @@ public:
 		}
 		if (Last != null)
 		{
-			last->Succ = ptr;
+			Last->Succ = ptr;
 		}
-		node->Prev = Last;
-		node->Succ = null;
-		Last       = ptr;
+		ptr->Prev = Last;
+		ptr->Succ = null;
+		Last      = ptr;
 	}
 
-	void b3First   (T *ptr)
+	inline void b3First   (T *ptr)
 	{
-		b3Link<T> *node  = (b3Link<T> *)ptr;
-		b3Link<T> *first = (b3Link<T> *)First;
-
 #ifndef B3_NO_CLASS_CHECK
-		if (node->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
@@ -221,90 +213,82 @@ public:
 		}
 		if (First != null)
 		{
-			first->Prev = ptr;
+			First->Prev = ptr;
 		}
-		node->Prev = null;
-		node->Succ = First;
-		First      = ptr;
+		ptr->Prev = null;
+		ptr->Succ = First;
+		First     = ptr;
 	}
 
-	void b3Remove  (T *ptr)
+	inline void b3Remove  (T *ptr)
 	{
-		b3Link<T> *node = (b3Link<T> *)ptr;
-		b3Link<T> *prev;
-		b3Link<T> *succ;
-
 #ifndef B3_NO_CLASS_CHECK
-		if (node->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
 		// Relink backward link
-		if (node->Prev == null)
+		if (ptr->Prev == null)
 		{
-			First = node->Succ;
+			First = ptr->Succ;
 		}
 		else
 		{
-			prev = (b3Link<T> *)node->Prev;
-			prev->Succ = node->Succ;
+			ptr->Prev->Succ = ptr->Succ;
 		}
 
 		// Relink forward link
-		if (node->Succ==null)
+		if (ptr->Succ == null)
 		{
-			Last = node->Prev;
+			Last = ptr->Prev;
 		}
 		else
 		{
-			succ = (b3Link<T> *)node->Succ;
-			succ->Prev	= node->Prev;
+			ptr->Succ->Prev = ptr->Prev;
 		}
 
 		// Delete link itself
-		node->Succ = null;
-		node->Prev = null;
+		ptr->Succ = null;
+		ptr->Prev = null;
 	}
 
-	void b3Insert  (T *pre,T *ptr)
+	inline void b3Insert  (T *pre,T *ptr)
 	{
-		b3Link<T> *ins   = (b3Link<T> *)pre;
-		b3Link<T> *node  = (b3Link<T> *)ptr;
-		b3Link<T> *first = (b3Link<T> *)First;
-		b3Link<T> *succ;
+		T *succ;
 
 #ifndef B3_NO_CLASS_CHECK
-		if (node->b3GetClass() != Class)
+		if (ptr->b3GetClass() != Class)
 		{
 			return;
 		}
 #endif
 
-		node->Prev = pre;
-		if (ins == null)
+		ptr->Prev = pre;
+		if (pre == null)
 		{
 			// Like b3First(node)
-			node->Succ = First;
-			if (node->Succ == null)
+			ptr->Succ = First;
+			if (ptr->Succ == null)
 			{
 				// First element in list
 				Last = ptr;
 			}
 			else
 			{
-				first->Prev = ptr;
+				// First is != null!
+				First->Prev = ptr;
 			}
 			First = ptr;
 		}
 		else
 		{
-			succ = (b3Link<T> *)ins->Succ;
-			node->Succ = ins->Succ;
-			if (node->Succ == null)
+			succ = pre->Succ;
+			ptr->Succ = pre->Succ;
+			if (ptr->Succ == null)
 			{
-				// Found ins as last element in list
+				// Found "pre" as last element in list
 				// so correct Last
 				Last = ptr;
 			}
@@ -312,31 +296,30 @@ public:
 			{
 				succ->Prev = ptr;
 			}
-			ins->Succ = ptr;
+			pre->Succ = ptr;
 		}
 	}
 
-	long b3State   (T *ptr)
+	inline long b3State   (T *ptr)
 	{
-		b3Link<T> *node = (b3Link<T> *)ptr;
-		b3_u32     flags = 0;
+		b3_u32  flags = 0;
 
 		if (ptr == First)   flags |= B3_NODE_FIRST;
 		if (ptr == Last)    flags |= B3_NODE_LAST;
 		if (ptr == null)    flags |= B3_NODE_NULL;
 		else
 		{
-			if (node->Prev) flags |= B3_NODE_PREV;
-			if (node->Succ) flags |= B3_NODE_SUCC;
+			if (ptr->Prev) flags |= B3_NODE_PREV;
+			if (ptr->Succ) flags |= B3_NODE_SUCC;
 		}
 		return flags;
 	}
 
-	void b3Sort    (int (*func)(T *,T *,void *),void *Ptr)
+	inline void b3Sort    (int (*func)(T *,T *,void *),void *Ptr)
 	{
-		b3Base     Right;
-		b3Link<T> *start,*end;
-		b3_count   i = 0;
+		b3Base    Right;
+		T        *start,*end;
+		b3_count  i = 0;
 
 		// We don't need to sort one or zero element.
 		if (First == Last)
@@ -351,19 +334,19 @@ public:
 		// NOTE:
 		// This is the inefficient part of this algorithm
 		// because it is O(n).
-		start = (b3Link<T> *)First;
-		end   = (b3Link<T> *)Last;
-		while (start->Succ != (T *)end)
+		start = First;
+		end   = Last;
+		while (start->Succ != end)
 		{
 			if (i & 1)
 			{
 				// One backwards
-				end   = (b3Link<T> *)end->Prev;
+				end   = end->Prev;
 			}
 			else
 			{
 				// One forwards
-				start = (b3Link<T> *)start->Succ;
+				start = start->Succ;
 			}
 			i++;
 		}
@@ -373,9 +356,9 @@ public:
 		// NOTE:
 		// This is very efficient: O(1)
 		Right.Class = Class;
-		Right.First = (T *)end;
+		Right.First = end;
 		Right.Last  = Last;
-		Last        = (T *)start;
+		Last        = start;
 		end->Prev   = null;
 		start->Succ = null;
 
@@ -387,9 +370,9 @@ public:
 
 		// Now we have to merge two sorted list into
 		// one sorted list.
-		start = (b3Link<T> *)First;
-		end   = (b3Link<T> *)Right.First;
-		while (start && end)
+		start = First;
+		end   = Right.First;
+		while ((start != null) && (end != null))
 		{
 			// Here is the comparison function. If the node
 			// of the first list is lower we leave the node
@@ -398,13 +381,13 @@ public:
 			// an insert it before the node of the first list.
 			if (func((T *)start,(T *)end,Ptr) > 0)
 			{
-				Right.b3Remove ((T *)end);
-				b3Insert (start->Prev,(T *)end);
-				end   = (b3Link<T> *)Right.First;
+				Right.b3Remove (end);
+				b3Insert (start->Prev,end);
+				end   = Right.First;
 			}
 			else 
 			{
-				start = (b3Link<T> *)start->Succ;	/* start <= end */
+				start = start->Succ;	/* start <= end */
 			}
 		}
 
@@ -414,15 +397,15 @@ public:
 		// This is even more efficient: O(1)
 		if (end) /* append right list to left list */
 		{
-			start = (b3Link<T> *)Last;
-			end->Prev = (T *)start;
+			start = Last;
+			end->Prev = start;
 			if (start)
 			{
-				start->Succ = (T *)end;
+				start->Succ = end;
 			}
 			else
 			{
-				First = (T *)end;
+				First = end;
 			}
 			Last = Right.Last;
 		}

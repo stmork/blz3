@@ -85,9 +85,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/10/22 14:47:38  sm
+**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**	  on Windows.
+**	- Some minor fixes.
+**
 **	Revision 1.16  2001/10/20 16:25:07  sm
 **	- Windows compile check an minor fixes
-**
+**	
 **	Revision 1.15  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.

@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/10/22 14:47:38  sm
+**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**	  on Windows.
+**	- Some minor fixes.
+**
 **	Revision 1.18  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.17  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -148,8 +153,6 @@ b3RayRow::b3RayRow(
 	b3_res    xSize,
 	b3_res    ySize) : b3Row(y,xSize)
 {
-	b3_f64 fy;
-
 	m_Scene = scene;
 	m_y     = y;
 	m_xSize = xSize;
@@ -323,7 +326,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	{
 		// Enter critical section
 		scene->m_RowMutex.b3Lock();
-		if ((row = scene->m_Rows.First) != null)
+		if ((row = (b3RayRow *)scene->m_Rows.First) != null)
 		{
 			scene->m_Rows.b3Remove(row);
 		}
@@ -375,16 +378,18 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_Nebular     = (nebular->b3IsActive() ? nebular : null);
 	m_LensFlare   = b3GetLensFlare();
 	m_SuperSample = b3GetSuperSample();
+m_SuperSample = null;
+
 	if (m_SuperSample != null)
 	{
 		// Init half steps for super sampling
-		m_xHalfDir.x = m_Width.x  / (b3_f64)m_xSize;
-		m_xHalfDir.y = m_Width.y  / (b3_f64)m_xSize;
-		m_xHalfDir.z = m_Width.z  / (b3_f64)m_xSize;
+		m_xHalfDir.x = m_Width.x  / (b3_f64)xSize;
+		m_xHalfDir.y = m_Width.y  / (b3_f64)xSize;
+		m_xHalfDir.z = m_Width.z  / (b3_f64)xSize;
 
-		m_yHalfDir.x = m_Height.x / (b3_f64)m_ySize;
-		m_yHalfDir.y = m_Height.y / (b3_f64)m_ySize;
-		m_yHalfDir.z = m_Height.z / (b3_f64)m_ySize;
+		m_yHalfDir.x = m_Height.x / (b3_f64)ySize;
+		m_yHalfDir.y = m_Height.y / (b3_f64)ySize;
+		m_yHalfDir.z = m_Height.z / (b3_f64)ySize;
 
 		m_xStepDir.x = m_xHalfDir.x + m_xHalfDir.x;
 		m_xStepDir.y = m_xHalfDir.y + m_xHalfDir.y;
@@ -393,6 +398,9 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	}
 	else
 	{
+		m_xStepDir.x = m_Width.x * 2.0 / (b3_f64)xSize;
+		m_xStepDir.y = m_Width.y * 2.0 / (b3_f64)xSize;
+		m_xStepDir.z = m_Width.z * 2.0 / (b3_f64)xSize;
 		b3PrintF(B3LOG_NORMAL,"Using simple sampling.\n");
 	}
 

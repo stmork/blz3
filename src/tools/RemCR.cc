@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/22 14:47:38  sm
+**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**	  on Windows.
+**	- Some minor fixes.
+**
 **	Revision 1.1  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	
 */
 
@@ -53,7 +58,7 @@ static b3_bool DoRemCR(const char *filename)
 	b3File   in,out;
 	b3_size  size_in;
 	b3_size  size_out = 0;
-	char    *buffer,*pos;
+	char    *buffer;
 	b3_size  i;
 
 	buffer = (char *)in.b3ReadBuffer(filename,size_in);

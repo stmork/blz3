@@ -47,6 +47,11 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/22 14:47:38  sm
+**	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**	  on Windows.
+**	- Some minor fixes.
+**
 **	Revision 1.3  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -55,7 +60,7 @@ typedef struct
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.2  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -156,8 +161,8 @@ public:
 	}
 };
 
-static b3Base<b3MandelRow> rows;
-static b3Mutex             row_mutex;
+static b3Base<b3Row> rows;
+static b3Mutex       row_mutex;
 
 static b3_u32 compute(void *ptr)
 {
@@ -172,7 +177,7 @@ static b3_u32 compute(void *ptr)
 	{
 		// Enter critical section
 		row_mutex.b3Lock();
-		if ((row = rows.First) != null)
+		if ((row = (b3MandelRow *)rows.First) != null)
 		{
 			rows.b3Remove(row);
 		}

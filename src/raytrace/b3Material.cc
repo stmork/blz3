@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/10/22 14:47:38  sm
+**      - Type correction vor b3Base/b3Link. So fixed a bad behaviour
+**        on Windows.
+**      - Some minor fixes.
+**
 **      Revision 1.14  2001/10/20 16:25:07  sm
 **      - Windows compile check an minor fixes
 **
@@ -395,7 +400,6 @@ b3_bool b3MatWrapTexture::b3GetColors(
 	b3_color *ambient,
 	b3_color *specular)
 {
-	b3_pkd_color result = 0xffffff;
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
 
