@@ -38,10 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/29 19:34:02  sm
+**	- Added new define B3_DELETE_BASE.
+**	- Added support to abort raytrace processing.
+**	- Added search path to world loading.
+**	- Fixed super sampling.
+**	- Fixed memory leak in raytracing row processing.
+**
 **	Revision 1.14  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
-**
+**	
 **	Revision 1.13  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
 **	
@@ -306,14 +313,39 @@ b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
 
 	pDoc->m_Scene->b3Raytrace(pDoc->m_Display);
 
-	pDoc->m_Display->b3Wait();
-	delete pDoc->m_Display;
-	pDoc->m_Display = null;
+	if (pDoc->m_Display != null)
+	{
+		pDoc->m_Display->b3Wait();
+		delete pDoc->m_Display;
+		pDoc->m_Display = null;
+	}
 
 	return 0;
 }
 
 void CAppLinesDoc::b3ClearRaytraceDoc()
 {
+	b3Display *old_display;
+
+	if (b3IsRaytracing())
+	{
+		// Rember display
+		old_display = m_Display;
+
+		// The next command is atomic:
+		// Turn off output window waiting...
+		m_Display = null;
+
+		// Remove rows to compute
+		m_Scene->b3AbortRaytrace();
+
+		// Wait for pending rows then delete
+		// processed rows
+		m_Raytracer->b3Wait();
+
+		// Nobody accesses the display now. So we
+		// can delete it without using critical sections.
+		delete old_display;
+	}
 	m_RaytraceDoc = null;
 }

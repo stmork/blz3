@@ -88,6 +88,26 @@ public:
 		return result;
 	}
 
+	static inline b3_color *b3Sat(b3_color *input,b3_f64 sat = 1.0)
+	{
+		if (input->a > sat) input->a = sat;
+		if (input->r > sat) input->r = sat;
+		if (input->g > sat) input->g = sat;
+		if (input->b > sat) input->b = sat;
+
+		return input;
+	}
+
+	static inline b3_color *b3Sat(b3_color *input,b3_color *result,b3_f64 sat = 1.0)
+	{
+		result->a = (input->a > sat ? sat : input->a);
+		result->r = (input->r > sat ? sat : input->r);
+		result->g = (input->g > sat ? sat : input->g);
+		result->b = (input->b > sat ? sat : input->b);
+
+		return result;
+	}
+
 	static inline b3_color *b3Add(b3_color *input,b3_color *result)
 	{
 		result->a += input->a;

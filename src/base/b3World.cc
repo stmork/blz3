@@ -39,6 +39,13 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/10/29 19:34:02  sm
+**      - Added new define B3_DELETE_BASE.
+**      - Added support to abort raytrace processing.
+**      - Added search path to world loading.
+**      - Fixed super sampling.
+**      - Fixed memory leak in raytracing row processing.
+**
 **      Revision 1.13  2001/10/11 16:06:33  sm
 **      - Cleaning up b3BSpline with including isolated methods.
 **      - Cleaning up endian conversion routines and collecting into
@@ -352,14 +359,22 @@ b3_world_error b3World::b3Parse()
 	return result;
 }
 
-b3_bool b3World::b3Read(const char *world_name)
+b3_bool b3World::b3Read(const char *name)
 {
+	b3Path         world_name;
 	b3_world_error error;
 
-	error = b3ReadInternal(world_name);
-	if (error == B3_WORLD_OK)
+	if (!b3IsValid(name,world_name))
 	{
-		error = b3Parse();
+		error = B3_WORLD_OPEN;
+	}
+	else
+	{
+		error = b3ReadInternal(world_name);
+		if (error == B3_WORLD_OK)
+		{
+			error = b3Parse();
+		}
 	}
 
 	// Cleanup any occured error

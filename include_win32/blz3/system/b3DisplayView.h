@@ -106,7 +106,8 @@ protected:
 	b3_pkd_color *buffer;
 
 public:
-	b3Row(b3_coord y,b3_res xSize);
+	         b3Row(b3_coord y,b3_res xSize);
+	virtual ~b3Row() {}
 
 	friend void b3Display::b3PutRow(b3Row *row);
 };

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/29 19:34:02  sm
+**      - Added new define B3_DELETE_BASE.
+**      - Added support to abort raytrace processing.
+**      - Added search path to world loading.
+**      - Fixed super sampling.
+**      - Fixed memory leak in raytracing row processing.
+**
 **      Revision 1.12  2001/10/21 16:55:21  sm
 **      - Introducing lens flares.
 **      - Introducing different modes of background computation.
@@ -244,6 +251,15 @@ b3Nebular::b3Nebular(b3_u32 *src) :
 	m_NebularVal = b3InitFloat();
 }
 
+b3_bool b3Nebular::b3Prepare()
+{
+	if (m_NebularVal > 0)
+	{
+		m_NebularDenom = log(2.0) / m_NebularVal;
+	}
+	return true;
+}
+
 b3_bool b3Nebular::b3IsActive()
 {
 	return m_NebularVal > 0;
@@ -259,7 +275,7 @@ void b3Nebular::b3ComputeNebular(
 	b3_color *result,
 	b3_f64    distance)
 {
-	b3_f64 NebularIndex = exp (-distance * m_NebularVal);
+	b3_f64 NebularIndex = exp (-distance * m_NebularDenom);
 	b3_f64 NebularDenom = 1 - NebularIndex;
 
 	result->a = NebularIndex * input->a + NebularDenom * m_NebularColor.a;

@@ -34,6 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/29 19:34:02  sm
+**	- Added new define B3_DELETE_BASE.
+**	- Added support to abort raytrace processing.
+**	- Added search path to world loading.
+**	- Fixed super sampling.
+**	- Fixed memory leak in raytracing row processing.
+**
 **	Revision 1.6  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -41,7 +48,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.5  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
@@ -78,6 +85,7 @@ int main(int argc,char *argv[])
 	char      *HOME = getenv("HOME");
 	b3Path     textures;
 	b3Path     pictures;
+	b3Path     data;
 
 	if (argc > 1)
 	{
@@ -88,9 +96,12 @@ int main(int argc,char *argv[])
 //		b3Log_SetLevel(B3LOG_FULL);
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
+		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 		texture_pool.b3AddPath(textures);
 		texture_pool.b3AddPath(pictures);
 		world = new b3World();
+		world->b3AddPath(data);
+
 		for (i = 1;i < argc;i++)
 		{
 			world->b3Read(argv[1]);

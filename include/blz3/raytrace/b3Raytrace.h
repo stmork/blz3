@@ -1818,6 +1818,7 @@ public:
 // NEBULAR
 class b3Nebular : public b3Special
 {
+	b3_f64           m_NebularDenom;
 public:
 	b3_color         m_NebularColor;
 	b3_f32           m_NebularVal;
@@ -1827,6 +1828,7 @@ public:
 	B3_ITEM_LOAD(b3Nebular);
 
 	b3_bool b3IsActive();
+	b3_bool b3Prepare();
 	void    b3GetNebularColor(b3_color *result);
 	void    b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
 };
@@ -1976,12 +1978,15 @@ class b3RayRow;
 
 class b3Scene : public b3Item
 {
-	b3Base<b3Row>    m_Rows;
-	b3Mutex          m_RowMutex;
+	b3Base<b3Row>    m_RowPool;
+	b3Base<b3Row>    m_TrashPool;
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
 
 protected:
+	b3Mutex          m_PoolMutex;
+	b3Mutex          m_TrashMutex;
+	b3Mutex          m_SamplingMutex;
 	b3Nebular       *m_Nebular;
 	b3SuperSample   *m_SuperSample;
 	b3LensFlare     *m_LensFlare;
@@ -2043,6 +2048,7 @@ public:
 		    void            b3Transform(b3_matrix *transformation);
 		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
 		    void            b3Raytrace(b3Display *display);
+		    void            b3AbortRaytrace();
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
 	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
@@ -2088,7 +2094,10 @@ private:
 class b3RayRow : public b3Row
 {
 protected:
+	b3Display   *m_Display;
 	b3Scene     *m_Scene;
+	b3_color    *m_LastResult;
+	b3_color    *m_ThisResult;
 	b3_vector64  m_preDir;
 	b3_coord     m_y;
 	b3_res       m_xSize;
@@ -2097,16 +2106,35 @@ protected:
 	b3_f64       m_fy;
 
 public:
-	             b3RayRow(b3Scene *scene,b3_coord y,b3_res xSize,b3_res ySize);
-	virtual void b3Raytrace();
+	              b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual      ~b3RayRow() {}
+	virtual void  b3Raytrace();
+};
+
+enum b3_row_state
+{
+	B3_STATE_NOT_STARTED,
+	B3_STATE_COMPUTING,
+	B3_STATE_CHECK,
+	B3_STATE_REFINING,
+	B3_STATE_READY
 };
 
 class b3SupersamplingRayRow : public b3RayRow
 {
-	b3_color m_Limit;
+	b3SupersamplingRayRow *m_PrevRow;
+	b3SupersamplingRayRow *m_SuccRow;
+	b3_color              *m_Limit;
+	b3_row_state           m_RowState;
 public:
-	             b3SupersamplingRayRow(b3Scene *scene,b3_coord y,b3_res xSize,b3_res ySize);
-	virtual void b3Raytrace();
+	              b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
+	virtual      ~b3SupersamplingRayRow() {}
+	virtual void  b3Raytrace();
+
+private:
+	b3_bool b3Test(b3_res x);
+	void    b3Refine(b3_bool this_row);
+	void    b3Convert();
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

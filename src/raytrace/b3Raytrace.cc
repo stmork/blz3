@@ -26,6 +26,8 @@
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
 
+#define no_DEBUG_SS4
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -34,10 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/10/29 19:34:02  sm
+**	- Added new define B3_DELETE_BASE.
+**	- Added support to abort raytrace processing.
+**	- Added search path to world loading.
+**	- Fixed super sampling.
+**	- Fixed memory leak in raytracing row processing.
+**
 **	Revision 1.20  2001/10/28 21:22:52  sm
 **	- Added one level simple adaptive super sampling. It was
 **	  tricky to implement this on SMP machines but got it now.
-**
+**	
 **	Revision 1.19  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
@@ -244,10 +253,11 @@ void b3SupersamplingRayRow::b3Raytrace()
 {
 	b3_res        x;
 	b3_ray_info   ray;
-	b3_f64        fxRight;
+	b3_f64        fxRight = -1;
 	b3_vector64   dir;
 	b3_bool       do_convert = false;
 	b3_bool       do_refine  = false;
+	b3_bool       do_refine_succ = false;
 
 	// Init eye position
 	m_RowState = B3_STATE_COMPUTING;
@@ -276,7 +286,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 		b3Color::b3Sat(&ray.color,&m_ThisResult[x]);
 	}
 
-	m_Scene->m_RowMutex.b3Lock();
+	m_Scene->m_SamplingMutex.b3Lock();
 	m_RowState = B3_STATE_CHECK;
 
 	if (m_PrevRow == null)
@@ -284,6 +294,11 @@ void b3SupersamplingRayRow::b3Raytrace()
 		// This is the first row...
 		do_convert = true;
 		m_RowState = B3_STATE_READY;
+		if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
+		{
+			do_refine_succ = true;
+			m_SuccRow->m_RowState = B3_STATE_REFINING;
+		}
 	}
 	else
 	{
@@ -294,10 +309,11 @@ void b3SupersamplingRayRow::b3Raytrace()
 			m_RowState = B3_STATE_REFINING;
 		}
 	}
-	m_Scene->m_RowMutex.b3Unlock();
+	m_Scene->m_SamplingMutex.b3Unlock();
 
-	if (do_convert) b3Convert();
-	if (do_refine)  b3Refine(true);
+	if (do_convert)	b3Convert();
+	if (do_refine) b3Refine(true);
+	if (do_refine_succ) m_SuccRow->b3Refine(false);
 
 	if (m_RowState == B3_STATE_CHECK)
 	{
@@ -316,8 +332,6 @@ inline b3_bool b3SupersamplingRayRow::b3Test(b3_res x)
 	return false;
 }
 
-#define nDEBUG_SS4
-
 inline void b3SupersamplingRayRow::b3Convert()
 {
 	b3_res x;
@@ -330,6 +344,7 @@ inline void b3SupersamplingRayRow::b3Convert()
 		buffer[x] = 0x0000ff;
 #endif
 	}
+
 	m_Display->b3PutRow(this);
 }
 
@@ -432,14 +447,14 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 #endif
 	}
 
-	m_Scene->m_RowMutex.b3Lock();
+	m_Scene->m_SamplingMutex.b3Lock();
 	m_RowState = B3_STATE_READY;
-	if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK) && (m_RowState == B3_STATE_READY))
+	if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK))
 	{
 		do_refine_succ = true;
 		m_SuccRow->m_RowState = B3_STATE_REFINING;
 	}
-	m_Scene->m_RowMutex.b3Unlock();
+	m_Scene->m_SamplingMutex.b3Unlock();
 
 	if (do_refine_succ)
 	{
@@ -464,18 +479,22 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	do
 	{
 		// Enter critical section
-		scene->m_RowMutex.b3Lock();
-		if ((row = (b3RayRow *)scene->m_Rows.First) != null)
+		scene->m_PoolMutex.b3Lock();
+		if ((row = (b3RayRow *)scene->m_RowPool.First) != null)
 		{
-			scene->m_Rows.b3Remove(row);
+			scene->m_RowPool.b3Remove(row);
 		}
-		scene->m_RowMutex.b3Unlock();
+		scene->m_PoolMutex.b3Unlock();
 		// Leave critical section
 
 		if (row != null)
 		{
 			// We can handle the row for its own!
 			row->b3Raytrace();
+
+			scene->m_TrashMutex.b3Lock();
+			scene->m_TrashPool.b3Append(row);
+			scene->m_TrashMutex.b3Unlock();
 		}
 	}
 	while(row != null);
@@ -511,11 +530,22 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
 
-	nebular       = b3GetNebular();
-	m_Nebular     = (nebular->b3IsActive() ? nebular : null);
 	m_LensFlare   = b3GetLensFlare();
-	m_SuperSample = b3GetSuperSample();
 
+	nebular = b3GetNebular();
+	if (nebular->b3IsActive())
+	{
+		m_Nebular = nebular;
+		m_Nebular->b3Prepare();
+		b3PrintF(B3LOG_DEBUG,"Using nebular with %3.2f units distance to half value.\n",
+			m_Nebular->m_NebularVal);
+	}
+	else
+	{
+		m_Nebular = null;
+	}
+
+	m_SuperSample = b3GetSuperSample();
 	if (m_SuperSample != null)
 	{
 		// Init half steps for super sampling
@@ -568,12 +598,12 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 
 void b3Scene::b3Raytrace(b3Display *display)
 {
-	b3RayRow    *row;
-	b3Thread    *threads;
-	b3_res       xSize,ySize;
-	b3_count     CPUs,i;
-	b3_rt_info  *infos;
-	b3_f64       fy,fyStep;
+	b3Row      *row;
+	b3Thread   *threads;
+	b3_res      xSize,ySize;
+	b3_count    CPUs,i;
+	b3_rt_info *infos;
+	b3_f64      fy,fyStep;
 
 	try
 	{
@@ -599,19 +629,20 @@ void b3Scene::b3Raytrace(b3Display *display)
 		// add rows to list
 		fy     = 1.0;
 		fyStep = 2.0 / (double)ySize;
-		m_Rows.b3InitBase();
+		m_RowPool.b3InitBase();
+		m_TrashPool.b3InitBase();
 		for (i = 0;i < ySize;i++)
 		{
 			if (m_SuperSample != null)
 			{
 				row = new b3SupersamplingRayRow(this,display,i,xSize,ySize,
-					(b3SupersamplingRayRow *)m_Rows.Last);
+					(b3SupersamplingRayRow *)m_RowPool.Last);
 			}
 			else
 			{
 				row = new b3RayRow(this,display,i,xSize,ySize);
 			}
-			m_Rows.b3Append(row);
+			m_RowPool.b3Append(row);
 			fy -= fyStep;
 		}
 
@@ -634,10 +665,40 @@ void b3Scene::b3Raytrace(b3Display *display)
 		// Free what we have allocated.
 		delete [] threads;
 		delete [] infos;
+		m_TrashMutex.b3Lock();
+		B3_DELETE_BASE(&m_TrashPool,row);
+		m_TrashMutex.b3Unlock();
+
 		b3PrintF (B3LOG_NORMAL,"Done.\n");
 	}
 	catch(b3DisplayException *e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %d\n",e->b3GetError());
 	}
+}
+
+void b3Scene::b3AbortRaytrace()
+{
+	b3Row *row;
+
+	do
+	{
+		// Enter critical section
+		m_PoolMutex.b3Lock();
+		if ((row = m_RowPool.First) != null)
+		{
+			m_RowPool.b3Remove(row);
+		}
+		m_PoolMutex.b3Unlock();
+		// Leave critical section
+
+		if (row != null)
+		{
+			// We can handle the row for its own!
+			m_TrashMutex.b3Lock();
+			m_TrashPool.b3Append(row);
+			m_TrashMutex.b3Unlock();
+		}
+	}
+	while(row != null);
 }

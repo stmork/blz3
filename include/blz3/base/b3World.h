@@ -24,6 +24,7 @@
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Nurbs.h"
+#include "blz3/base/b3SearchPath.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Mem.h"
 
@@ -150,7 +151,7 @@ public:
 	b3Item *b3GetFirst();
 };
 
-class b3World : public b3Mem
+class b3World : public b3Mem, public b3SearchPath
 {
 	b3_u32         *m_Buffer;
 	b3_size         m_BufferSize;
