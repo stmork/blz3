@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/01/05 22:17:47  sm
+**	- Recomputing bounding boxes correctly
+**	- Found key input bug: The accelerator are the problem
+**	- Code cleanup
+**
 **	Revision 1.32  2002/01/04 17:53:54  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -40,7 +45,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.31  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
 **	
@@ -645,7 +650,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation)
 
 	if (transformed)
 	{
-		b3Recompute();
+		b3RenderObject::b3Recompute();
 	}
 
 	return transformed;
@@ -800,4 +805,52 @@ b3Base<b3Item> *b3Scene::b3FindBBoxHead(b3BBox *bbox)
 		}
 	}
 	return null;
+}
+
+b3_bool b3BBox::b3Recompute(b3BBox *search)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3_bool         result;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		if (bbox == search)
+		{
+			bbox->b3RenderObject::b3Recompute();
+			return true;
+		}
+
+		if (result = bbox->b3Recompute(search))
+		{
+			bbox->b3RenderObject::b3Recompute();
+			return result;
+		}
+	}
+	return false;
+}
+
+b3_bool b3Scene::b3Recompute(b3BBox *search)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3_bool         result;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		if (bbox == search)
+		{
+			bbox->b3RenderObject::b3Recompute();
+			return true;
+		}
+
+		if (result = bbox->b3Recompute(search))
+		{
+			bbox->b3RenderObject::b3Recompute();
+			return result;
+		}
+	}
+	return false;
 }

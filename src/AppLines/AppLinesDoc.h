@@ -26,6 +26,7 @@
 #include "b3Fulcrum.h"
 
 class CAppRaytraceDoc;
+class CDlgHierarchy;
 
 class CAppLinesDoc : public CDocument, public b3Document
 {
@@ -127,11 +128,12 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 private:
-	b3_bool b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
-	b3_bool b3WriteBBox(b3BBox *bbox,const char *filename);
-	b3_bool b3PutClipboard(b3BBox *bbox);
-	void    b3PasteClipboard(b3_bool insert_sub);
-	void    b3ObjectCreate(b3_bool insert_sub);
+	CDlgHierarchy *m_DlgHierarchy;
+	b3_bool        b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
+	b3_bool        b3WriteBBox(b3BBox *bbox,const char *filename);
+	b3_bool        b3PutClipboard(b3BBox *bbox);
+	void           b3PasteClipboard(b3_bool insert_sub);
+	void           b3ObjectCreate(b3_bool insert_sub);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -106,6 +106,9 @@ BEGIN
     BUTTON      ID_EDIT_COPY
     BUTTON      ID_EDIT_PASTE
     SEPARATOR
+    BUTTON      ID_OBJECT_NEW
+    BUTTON      ID_OBJECT_DELETE
+    SEPARATOR
     BUTTON      ID_FILE_PRINT
     SEPARATOR
     BUTTON      ID_APP_ABOUT
@@ -288,7 +291,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Erzeugen",                    ID_OBJECT_NEW
         MENUITEM "Erzeugen als Unterobjekt",    ID_OBJECT_NEW_SUB
-        MENUITEM "Löschen",                     ID_OBJECT_DELETE
+        MENUITEM "Löschen\tEntf",               ID_OBJECT_DELETE
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
         MENUITEM "&Deaktivieren",               ID_DEACTIVATE
@@ -487,18 +490,12 @@ BEGIN
     "R",            ID_DEACTIVATE_REST,     VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
     VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
     VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
-    VK_DOWN,        ID_VIEW_MOVE_BOTTOM,    VIRTKEY, NOINVERT
     VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
     VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
-    VK_LEFT,        ID_VIEW_MOVE_LEFT,      VIRTKEY, NOINVERT
-    VK_RIGHT,       ID_VIEW_MOVE_RIGHT,     VIRTKEY, NOINVERT
-    VK_SUBTRACT,    ID_VIEW_SMALLER,        VIRTKEY, NOINVERT
-    VK_UP,          ID_VIEW_MOVE_TOP,       VIRTKEY, NOINVERT
     "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
     "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
 END
@@ -513,6 +510,9 @@ END
 IDR_BLZ3TYPE ACCELERATORS DISCARDABLE 
 BEGIN
     "N",            ID_WINDOW_NEW,          VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
+    VK_DELETE,      ID_OBJECT_DELETE,       VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_VIEW_SMALLER,        VIRTKEY, NOINVERT
 END
 
 
@@ -539,6 +539,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Tree1",IDC_HIERARCHY,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | 
+                    TVS_SHOWSELALWAYS | TVS_TRACKSELECT | TVS_FULLROWSELECT | 
                     WS_TABSTOP,7,6,172,237
 END
 
@@ -836,7 +837,7 @@ BEGIN
 END
 
 IDD_FULCRUM DIALOG DISCARDABLE  0, 0, 186, 31
-STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_FULCRUM_X,15,15,40,12,ES_AUTOHSCROLL
@@ -1267,22 +1268,22 @@ BEGIN
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
     ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
-    ID_OBJECT_MOVE             "Bewegt aktivierte Objekte\nObjekte bewegen"
-    ID_OBJECT_ROTATE           "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
-    ID_OBJECT_SCALE            "Skaliert aktivierte Objekte\nObjekte skalieren"
-    ID_CAMERA_TURN             "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
-    ID_CAMERA_ROTATE           "Rotiert die Kamera um das Folkrum\nKamera rotieren"
-    ID_CAMERA_MOVE             "Bewegt die Kamera\nKamera bewegen"
+    ID_OBJECT_MOVE          "Bewegt aktivierte Objekte\nObjekte bewegen"
+    ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
+    ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
+    ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
+    ID_CAMERA_ROTATE        "Rotiert die Kamera um das Folkrum\nKamera rotieren"
+    ID_CAMERA_MOVE          "Bewegt die Kamera\nKamera bewegen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_CAMERA_SELECT           "Liste der Kameras\nKameras"
+    ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
     ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
-    ID_CAMERA_VIEW             "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
+    ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
     IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
-    ID_OBJECT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
+    ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
     IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"

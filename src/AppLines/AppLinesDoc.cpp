@@ -53,6 +53,11 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2002/01/05 22:17:47  sm
+**	- Recomputing bounding boxes correctly
+**	- Found key input bug: The accelerator are the problem
+**	- Code cleanup
+**
 **	Revision 1.39  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -60,7 +65,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.38  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
 **	
@@ -327,9 +332,10 @@ END_INTERFACE_MAP()
 CAppLinesDoc::CAppLinesDoc()
 {
 	// TODO: add one-time construction code here
-	m_Scene = null;
-	m_RaytraceDoc = null;
-	m_Raytracer   = new b3Thread("Raytracing master thread");
+	m_Scene        = null;
+	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
+	m_RaytraceDoc  = null;
+	m_Raytracer    = new b3Thread("Raytracing master thread");
 	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
@@ -449,6 +455,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);
 
 		// Write!
+		m_DlgHierarchy->b3GetData();
 		m_Scene->b3SetFilename(lpszPathName);
 		m_World.b3Write(filename);
 
@@ -488,7 +495,7 @@ void CAppLinesDoc::OnCloseDocument()
 		m_RaytraceDoc->OnCloseDocument();
 		m_RaytraceDoc = null;
 	}
-	CB3GetMainFrame()->b3UpdateHierarchy(null);
+	m_DlgHierarchy->b3InitTree(null,true);
 	CDocument::OnCloseDocument();
 }
 
@@ -963,16 +970,15 @@ void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnActivate() 
 {
 	// TODO: Add your control notification handler code here
-	CMainFrame *main = CB3GetMainFrame();
-	b3BBox     *BBox = main->b3GetSelectedBBox();
+	b3BBox *BBox = m_DlgHierarchy->b3GetSelectedBBox();
 
 	if (BBox != null)
 	{
 		BBox->b3Activate();
-		CB3GetMainFrame()->b3UpdateActivation();
+		m_DlgHierarchy->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
-			main->b3SelectBBox((b3BBox *)BBox->Succ);
+			m_DlgHierarchy->b3SelectBBox((b3BBox *)BBox->Succ);
 		}
 
 		SetModifiedFlag();
@@ -983,16 +989,15 @@ void CAppLinesDoc::OnActivate()
 void CAppLinesDoc::OnDeactivate() 
 {
 	// TODO: Add your control notification handler code here
-	CMainFrame *main = CB3GetMainFrame();
-	b3BBox     *BBox = main->b3GetSelectedBBox();
+	b3BBox *BBox = m_DlgHierarchy->b3GetSelectedBBox();
 
 	if (BBox != null)
 	{
 		BBox->b3Activate(false);
-		CB3GetMainFrame()->b3UpdateActivation();
+		m_DlgHierarchy->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
-			main->b3SelectBBox((b3BBox *)BBox->Succ);
+			m_DlgHierarchy->b3SelectBBox((b3BBox *)BBox->Succ);
 		}
 		
 		SetModifiedFlag();
@@ -1003,7 +1008,7 @@ void CAppLinesDoc::OnDeactivate()
 void CAppLinesDoc::OnDeactivateRest() 
 {
 	// TODO: Add your control notification handler code here
-	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+	b3BBox *BBox = m_DlgHierarchy->b3GetSelectedBBox();
 	b3BBox *aux;
 
 	if (BBox != null)
@@ -1017,7 +1022,7 @@ void CAppLinesDoc::OnDeactivateRest()
 		{
 			aux->b3Activate(false);
 		}
-		CB3GetMainFrame()->b3UpdateActivation();
+		m_DlgHierarchy->b3UpdateActivation();
 
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
@@ -1028,7 +1033,7 @@ void CAppLinesDoc::OnAllDeactivate()
 {
 	// TODO: Add your control notification handler code here
 	m_Scene->b3Activate(false);
-	CB3GetMainFrame()->b3UpdateActivation();
+	m_DlgHierarchy->b3UpdateActivation();
 	
 	SetModifiedFlag();
 	UpdateAllViews(null,B3_UPDATE_VIEW);
@@ -1038,7 +1043,7 @@ void CAppLinesDoc::OnAllActivate()
 {
 	// TODO: Add your control notification handler code here
 	m_Scene->b3Activate();
-	CB3GetMainFrame()->b3UpdateActivation();
+	m_DlgHierarchy->b3UpdateActivation();
 
 	SetModifiedFlag();
 	UpdateAllViews(null,B3_UPDATE_VIEW);
@@ -1047,13 +1052,13 @@ void CAppLinesDoc::OnAllActivate()
 void CAppLinesDoc::OnAllDeactivateRest() 
 {
 	// TODO: Add your command handler code here
-	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+	b3BBox *BBox = m_DlgHierarchy->b3GetSelectedBBox();
 
 	if (BBox != null)
 	{
 		m_Scene->b3Activate(false);
 		BBox->b3Activate(true);
-		CB3GetMainFrame()->b3UpdateActivation();
+		m_DlgHierarchy->b3UpdateActivation();
 
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
@@ -1062,7 +1067,7 @@ void CAppLinesDoc::OnAllDeactivateRest()
 
 void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI) 
 {
-	pCmdUI->Enable(CB3GetMainFrame()->b3GetSelectedBBox() != null);
+	pCmdUI->Enable(m_DlgHierarchy->b3GetSelectedBBox() != null);
 }
 
 /*************************************************************************
@@ -1081,7 +1086,7 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 	b3Item         *insert_after;
 	b3Base<b3Item> *base;
 
-	selected = main->b3GetSelectedBBox();
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	B3_ASSERT(selected != null);
 	if (insert_sub)
 	{
@@ -1121,7 +1126,7 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		main->b3UpdateHierarchy(this);
+		m_DlgHierarchy->b3InitTree(this,true);
 	}
 }
 
@@ -1146,18 +1151,20 @@ void CAppLinesDoc::OnObjectDelete()
 
 	if (AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO) == IDYES)
 	{
-		selected = main->b3GetSelectedBBox();
+		selected = m_DlgHierarchy->b3GetSelectedBBox();
 		B3_ASSERT(selected != null);
 		base = m_Scene->b3FindBBoxHead(selected);
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		m_Scene->b3Recompute(selected);
 		base->b3Remove(selected);
 		delete selected;
 
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
 
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		main->b3UpdateHierarchy(this);
+		m_DlgHierarchy->b3InitTree(this,true);
 	}
 }
 
@@ -1220,15 +1227,16 @@ b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
 void CAppLinesDoc::OnEditCut() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main = CB3GetMainFrame();
-	b3BBox         *bbox = main->b3GetSelectedBBox();
+	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
 	b3Item         *prev;
 	b3Base<b3Item> *base;
 
+	m_DlgHierarchy->b3GetData();
 	if (bbox != null)
 	{
 		base = m_Scene->b3FindBBoxHead(bbox);
 		prev = bbox->Prev;
+		m_Scene->b3Recompute(bbox);
 		base->b3Remove(bbox);
 		if(!b3PutClipboard(bbox))
 		{
@@ -1237,9 +1245,12 @@ void CAppLinesDoc::OnEditCut()
 		else
 		{
 			delete bbox;
+
+			CB3GetMainFrame()->b3SetStatusMessage(IDS_DOC_BOUND);
+			b3ComputeBounds();
 			SetModifiedFlag();
 			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			main->b3UpdateHierarchy(this);
+			m_DlgHierarchy->b3InitTree(this,true);
 		}
 	}
 }
@@ -1247,11 +1258,11 @@ void CAppLinesDoc::OnEditCut()
 void CAppLinesDoc::OnEditCopy() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main = CB3GetMainFrame();
-	b3BBox         *bbox = main->b3GetSelectedBBox();
+	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
 	b3Item         *prev;
 	b3Base<b3Item> *base;
 
+	m_DlgHierarchy->b3GetData();
 	if (bbox != null)
 	{
 		base = m_Scene->b3FindBBoxHead(bbox);
@@ -1277,7 +1288,7 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 	void           *ptr;
 	HANDLE          handle;
 
-	selected = main->b3GetSelectedBBox();
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	B3_ASSERT(selected != null);
 	if (insert_sub)
 	{
@@ -1313,7 +1324,6 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 					level = bbox->b3GetClassType() & 0xffff;
 					b3BBox::b3Reorg(world.b3GetHead(),base,level,1,insert_after);
 					b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-					selected->b3Recompute();
 
 					main->b3SetStatusMessage(IDS_DOC_PREPARE);
 					bbox->b3Prepare();
@@ -1325,12 +1335,13 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 					b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 
 					main->b3SetStatusMessage(IDS_DOC_BOUND);
+					m_Scene->b3Recompute(bbox);
 					b3ComputeBounds();
 
 					SetModifiedFlag();
 					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-					main->b3UpdateHierarchy(this);
-					main->b3SelectBBox(bbox);
+					m_DlgHierarchy->b3InitTree(this,true);
+					m_DlgHierarchy->b3SelectBBox(bbox);
 				}
 			}
 			catch(b3FileException *f)
@@ -1364,10 +1375,9 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	CAppLinesApp *app  = (CAppLinesApp *)AfxGetApp();
-	CMainFrame   *main = CB3GetMainFrame();
 
 	pCmdUI->Enable(
-		(main->b3GetSelectedBBox() != null) &&
+		(m_DlgHierarchy->b3GetSelectedBBox() != null) &&
 		(!b3IsRaytracing()) &&
 		(::IsClipboardFormatAvailable(app->m_ClipboardFormatForBlizzardObject)));
 }

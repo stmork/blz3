@@ -39,6 +39,11 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/01/05 22:17:47  sm
+**	- Recomputing bounding boxes correctly
+**	- Found key input bug: The accelerator are the problem
+**	- Code cleanup
+**
 **	Revision 1.31  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -46,7 +51,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.30  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
 **	
@@ -245,12 +250,12 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
 	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
 	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
-	ON_COMMAND(ID_VIEW_MOVE_TOP, OnViewMoveTop)
-	ON_COMMAND(ID_VIEW_MOVE_BOTTOM, OnViewMoveBottom)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMoveRight)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMoveLeft)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_TOP, OnUpdateViewMoveTop)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_BOTTOM, OnUpdateViewMoveBottom)
+	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
+	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
@@ -856,39 +861,21 @@ void CAppLinesView::OnViewMoveLeft()
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppLinesView::OnViewMoveTop() 
+void CAppLinesView::OnViewMoveUp() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(0.0,0.2);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppLinesView::OnViewMoveBottom() 
+void CAppLinesView::OnViewMoveDown() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(0.0,-0.2);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppLinesView::OnUpdateViewMoveRight(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewMoveLeft(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewMoveTop(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewMoveBottom(CCmdUI* pCmdUI) 
+void CAppLinesView::OnUpdateViewMove(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));

@@ -138,12 +138,9 @@ protected:
 	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
 	afx_msg void OnViewMoveRight();
 	afx_msg void OnViewMoveLeft();
-	afx_msg void OnViewMoveTop();
-	afx_msg void OnViewMoveBottom();
-	afx_msg void OnUpdateViewMoveRight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewMoveLeft(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewMoveTop(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewMoveBottom(CCmdUI* pCmdUI);
+	afx_msg void OnViewMoveUp();
+	afx_msg void OnViewMoveDown();
+	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);

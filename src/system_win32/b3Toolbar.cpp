@@ -40,9 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/05 22:17:48  sm
+**	- Recomputing bounding boxes correctly
+**	- Found key input bug: The accelerator are the problem
+**	- Code cleanup
+**
 **	Revision 1.8  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.7  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
@@ -863,8 +868,7 @@ b3_bool CB3Dialogbar::b3Create(CFrameWnd *parent)
 	m_MainFrame = parent;
 	result = Create(m_MainFrame,
 		m_ID,
-		WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
-		CBRS_ALIGN_ANY | CBRS_GRIPPER,
+		WS_CHILD | CBRS_ALIGN_ANY | CBRS_GRIPPER,
 		m_Bar); // You need this line if you want use LoadBarState()/SaveBarState()!!!!
 	if (result)
 	{
@@ -875,12 +879,11 @@ b3_bool CB3Dialogbar::b3Create(CFrameWnd *parent)
 
 BOOL CB3Dialogbar::Create(
 	CWnd    *pParentWnd,
-	LPCTSTR  lpszTemplateName,
+	UINT     nIDTemplate,
 	UINT     nStyle,
 	UINT     nID)
 {
-	nStyle = (nStyle | WS_CHILD) & (~WS_VISIBLE);
-	if (CDialogBar::Create(pParentWnd,lpszTemplateName,nStyle,nID))
+	if (CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID))
 	{
 		SetDlgCtrlID(nID);
 		if (OnInitDialog())
@@ -893,12 +896,11 @@ BOOL CB3Dialogbar::Create(
 
 BOOL CB3Dialogbar::Create(
 	CWnd    *pParentWnd,
-	UINT     nIDTemplate,
+	LPCTSTR  lpszTemplateName,
 	UINT     nStyle,
 	UINT     nID)
 {
-	nStyle = (nStyle | WS_CHILD) & (~WS_VISIBLE);
-	if (CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID))
+	if (CDialogBar::Create(pParentWnd,lpszTemplateName,nStyle,nID))
 	{
 		SetDlgCtrlID(nID);
 		if (OnInitDialog())

@@ -74,9 +74,11 @@ protected:  // control bar embedded members
 	CDlgFulcrum        m_dlgFulcrum;
 	CDlgStepMove       m_dlgStepMove;
 	CDlgStepRotate     m_dlgStepRotate;
-	CDlgHierarchy      m_dlgHierarchy;
 	CB3ComboBox        m_cameraBox;
 	CB3ComboBox        m_lightBox;
+
+public:
+	CDlgHierarchy      m_dlgHierarchy;
 
 // Generated message map functions
 protected:
@@ -129,10 +131,6 @@ public:
 	b3Light      *b3GetSelectedLight();
 	void          b3UpdateModellerInfo(CAppLinesDoc *pDoc = null);
 	void          b3UpdateFulcrum();
-	b3BBox       *b3GetSelectedBBox();
-	void          b3SelectBBox(b3BBox *BBox);
-	void          b3UpdateHierarchy(CAppLinesDoc *pDoc);
-	void          b3UpdateActivation();
 	void          b3SetStatusMessage(const char *message);
 	void          b3SetStatusMessage(const int message_id);
 	void          b3SetPosition(b3_vector *position);

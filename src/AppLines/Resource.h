@@ -198,8 +198,8 @@
 #define ID_VIEW_ORIGINAL                32787
 #define ID_VIEW_MOVE_RIGHT              32788
 #define ID_VIEW_MOVE_LEFT               32789
-#define ID_VIEW_MOVE_BOTTOM             32790
-#define ID_VIEW_MOVE_TOP                32791
+#define ID_VIEW_MOVE_DOWN               32790
+#define ID_VIEW_MOVE_UP                 32791
 #define ID_VIEW_POP                     32792
 #define ID_ACT_SELECT                   32793
 #define ID_OBJECT_MOVE                  32794
@@ -292,8 +292,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32854
-#define _APS_NEXT_CONTROL_VALUE         1082
+#define _APS_NEXT_COMMAND_VALUE         32857
+#define _APS_NEXT_CONTROL_VALUE         1084
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

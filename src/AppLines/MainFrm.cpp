@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/01/05 22:17:47  sm
+**	- Recomputing bounding boxes correctly
+**	- Found key input bug: The accelerator are the problem
+**	- Code cleanup
+**
 **	Revision 1.22  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -39,7 +44,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.21  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
 **	
@@ -609,26 +614,6 @@ void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
 void CMainFrame::b3UpdateFulcrum()
 {
 	m_dlgFulcrum.b3SetData();
-}
-
-b3BBox *CMainFrame::b3GetSelectedBBox()
-{
-	return m_dlgHierarchy.b3GetSelectedBBox();
-}
-
-void CMainFrame::b3SelectBBox(b3BBox *BBox)
-{
-	m_dlgHierarchy.b3SelectBBox(BBox);
-}
-
-void CMainFrame::b3UpdateHierarchy(CAppLinesDoc *pDoc)
-{
-	m_dlgHierarchy.b3InitTree(pDoc,true);
-}
-
-void CMainFrame::b3UpdateActivation()
-{
-	m_dlgHierarchy.b3UpdateActivation();
 }
 
 /*************************************************************************

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgHierarchy
+LastClass=CB3Dialogbar
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,32 +22,32 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=25
-Resource1=IDD_FULCRUM
-Resource2=IDD_LIGHT
-Resource3=IDD_MODELLER_INFO
-Resource4=IDD_LDC
-Resource5=IDD_CAMERA
-Resource6=IDD_LENS_FLARE
-Resource7=IDD_NEBULAR
-Resource8=IDD_SEARCH_PATH_LIST
+Resource1=IDD_LENS_FLARE
+Resource2=IDD_LDC
+Resource3=IDD_STEP_ROTATE
+Resource4=IDD_CAMERA
+Resource5=IDD_SUPER_SAMPLE
+Resource6=IDD_NEW_ITEM
+Resource7=IDD_ABOUTBOX
+Resource8=IDD_FULCRUM
 Resource9=IDR_TOOLBAR_VIEW
 Resource10=IDR_TOOLBAR_DISPLAY
-Resource11=IDD_DISTRIBUTED
+Resource11=IDD_MODELLER_INFO
 Resource12=IDR_TOOLBAR_OBJECT
-Resource13=IDR_MAINFRAME
+Resource13=IDD_STEP_MOVE
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDD_STEP_MOVE
+Resource14=IDD_HIERARCHY
 Class17=CDlgModellerInfo
 Resource15=IDR_TOOLBAR_LIGHT
-Resource16=IDD_SUPER_SAMPLE
-Resource17=IDD_ABOUTBOX
+Resource16=IDR_MAINFRAME
+Resource17=IDD_SEARCH_PATH_LIST
 Resource18=IDD_SCENE
 Class18=CDlgCreateItem
-Resource19=IDD_NEW_ITEM
+Resource19=IDD_NEBULAR
 Class19=CDlgLight
 Class20=CB3ControlLDC
 Resource20=IDR_TOOLBAR_ACTION
@@ -57,12 +57,12 @@ Class22=CDlgCamera
 Class23=CB3ShowImage
 Resource22=IDR_DISPLAYTYPE
 Class24=CDlgFulcrum
-Resource23=IDD_HIERARCHY
-Resource24=IDR_BLZ3TYPE
+Resource23=IDD_LIGHT
+Resource24=IDD_DISTRIBUTED
 Class25=CDlgStepRotate
 Class26=CDlgStepMove
 Class27=CB3Dialogbar
-Resource25=IDD_STEP_ROTATE
+Resource25=IDR_BLZ3TYPE
 
 [CLS:CAppLinesApp]
 Type=0
@@ -176,7 +176,7 @@ Control4=IDOK,button,1342373889
 Type=1
 Class=CDlgHierarchy
 ControlCount=1
-Control1=IDC_HIERARCHY,SysTreeView32,1342242831
+Control1=IDC_HIERARCHY,SysTreeView32,1342247471
 
 [DLG:IDD_SCENE]
 Type=1
@@ -215,9 +215,11 @@ Command3=ID_FILE_SAVE
 Command4=ID_EDIT_CUT
 Command5=ID_EDIT_COPY
 Command6=ID_EDIT_PASTE
-Command7=ID_FILE_PRINT
-Command8=ID_APP_ABOUT
-CommandCount=8
+Command7=ID_OBJECT_NEW
+Command8=ID_OBJECT_DELETE
+Command9=ID_FILE_PRINT
+Command10=ID_APP_ABOUT
+CommandCount=10
 
 [TB:IDR_TOOLBAR_VIEW]
 Type=1
@@ -466,21 +468,15 @@ Command8=ID_RAYTRACE
 Command9=ID_DEACTIVATE_REST
 Command10=ID_FILE_SAVE
 Command11=ID_EDIT_PASTE
-Command12=ID_VIEW_BIGGER
-Command13=ID_EDIT_UNDO
-Command14=ID_EDIT_CUT
-Command15=ID_VIEW_MOVE_BOTTOM
-Command16=ID_NEXT_PANE
-Command17=ID_PREV_PANE
-Command18=ID_EDIT_COPY
-Command19=ID_EDIT_PASTE
-Command20=ID_VIEW_MOVE_LEFT
-Command21=ID_VIEW_MOVE_RIGHT
-Command22=ID_VIEW_SMALLER
-Command23=ID_VIEW_MOVE_TOP
-Command24=ID_EDIT_CUT
-Command25=ID_EDIT_UNDO
-CommandCount=25
+Command12=ID_EDIT_UNDO
+Command13=ID_EDIT_CUT
+Command14=ID_NEXT_PANE
+Command15=ID_PREV_PANE
+Command16=ID_EDIT_COPY
+Command17=ID_EDIT_PASTE
+Command18=ID_EDIT_CUT
+Command19=ID_EDIT_UNDO
+CommandCount=19
 
 [DLG:IDD_LENS_FLARE]
 Type=1
@@ -876,7 +872,10 @@ CommandCount=3
 Type=1
 Class=?
 Command1=ID_WINDOW_NEW
-CommandCount=1
+Command2=ID_VIEW_BIGGER
+Command3=ID_OBJECT_DELETE
+Command4=ID_VIEW_SMALLER
+CommandCount=4
 
 [CLS:CB3Dialogbar]
 Type=0
