@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/13 13:44:27  sm
+**	- Replaced some divisions by multiplications of their reciprocals.
+**
 **	Revision 1.1  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
 **	  o b3MaterialSampler
 **	- Cleaneup
-**
+**	
 **
 */
 
@@ -207,14 +210,18 @@ void b3OakPlank::b3PrepareOakPlank()
 		delete [] m_Planks;
 	}
 	m_PlankCount = m_xTimes * m_yTimes;
-	m_Planks = new b3Wood[m_PlankCount];
+	m_Planks     = new b3Wood[m_PlankCount];
+	m_rxScale    = 1.0 / m_xScale;
+	m_ryScale    = 1.0 / m_yScale;
+	m_rxTimes    = 1.0 / m_xTimes;
+	m_ryTimes    = 1.0 / m_yTimes;
 
 	for (y = 0;y < m_yTimes;y++)
 	{
 		for (x = 0;x < m_xTimes;x++)
 		{
 			index = y * m_xTimes + x;
-			m_Planks[index].b3CopyWobbled(this,m_Wobble,(b3_f64)x / m_xTimes,(b3_f64)y / m_yTimes);
+			m_Planks[index].b3CopyWobbled(this,m_Wobble,(b3_f64)x * m_rxTimes,(b3_f64)y * m_ryTimes);
 			m_Planks[index].b3PrepareWood();
 		}
 	}
@@ -223,17 +230,19 @@ void b3OakPlank::b3PrepareOakPlank()
 b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar,b3_index &index)
 {
 	b3_vector surface;
-	b3_index ix,iy;
-	b3_f64   fx,fy;
+	b3_index  ix,iy;
+	b3_f64    fx,fy;
 
-	fy = polar->y / m_yScale;
-	fx = polar->x / m_xScale + m_xOffset * floor(fy);
+	fy = polar->y * m_ryScale;
+	fx = polar->x * m_rxScale + m_xOffset * floor(fy);
 	surface.x = fx;
 	surface.y = fy;
 	surface.z = 0;
 
-	ix = (b3_index)((fx / m_xTimes - floor(fx / m_xTimes)) * m_xTimes);
-	iy = (b3_index)((fy / m_yTimes - floor(fy / m_yTimes)) * m_yTimes);
+	fx *= m_rxTimes;
+	fy *= m_ryTimes;
+	ix  = (b3_index)((fx - floor(fx)) * m_xTimes);
+	iy  = (b3_index)((fy - floor(fy)) * m_yTimes);
 	index = ix * m_yTimes + iy;
 	return m_Planks[index].b3ComputeWood(&surface);
 }

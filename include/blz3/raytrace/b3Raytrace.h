@@ -590,6 +590,10 @@ public:
 // BUMP_WOOD
 class B3_PLUGIN b3BumpWood : public b3Bump, public b3Wood
 {
+	b3_f64      m_dX;
+	b3_f64      m_dY;
+
+public:
 	b3_f32      m_Amplitude;           // amplitude
 
 public:

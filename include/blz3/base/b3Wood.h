@@ -51,6 +51,11 @@ public:
 
 class b3OakPlank : public b3Wood
 {
+	b3_f64            m_rxScale;
+	b3_f64            m_ryScale;
+	b3_f64            m_rxTimes;
+	b3_f64            m_ryTimes;
+
 protected:
 	b3Wood           *m_Planks;
 	b3_count          m_PlankCount;

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/04/13 13:44:27  sm
+**	- Replaced some divisions by multiplications of their reciprocals.
+**
 **	Revision 1.18  2004/04/12 15:41:50  sm
 **	- Right computation of normal derivation.
-**
+**	
 **	Revision 1.17  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -644,6 +647,8 @@ b3BumpWood::b3BumpWood(b3_u32 class_type) : b3Bump(sizeof(b3BumpWood),class_type
 {
 	m_Flags = 0;
 	m_Amplitude = 0.3f;
+	m_dX = 1.0 / BUMP_dX;
+	m_dY = 1.0 / BUMP_dY;
 	b3InitWood();
 }
 
@@ -670,6 +675,10 @@ b3BumpWood::b3BumpWood(b3_u32 *src) : b3Bump(src)
 b3_bool b3BumpWood::b3Prepare()
 {
 	b3PrepareWood();
+
+	m_dX = 1.0 / BUMP_dX;
+	m_dY = 1.0 / BUMP_dY;
+
 	return true;
 }
 
@@ -705,31 +714,25 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	wood = b3Wood::b3ComputeWood(&point);
 
 	// Note: xDeriv and yDeriv are not normalized!
-	x       = BUMP_dX / b3Vector::b3Length(&ray->xDeriv);
+	x       = 1.0 / (b3Vector::b3Length(&ray->xDeriv) * m_dX);
 	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
 	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
 	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
-	dX = (b3Wood::b3ComputeWood (&xWood) - wood) / BUMP_dX;
+	dX = (b3Wood::b3ComputeWood (&xWood) - wood) * m_dX;
 
-	y       = BUMP_dY / b3Vector::b3Length(&ray->yDeriv);
+	y       = 1.0 / (b3Vector::b3Length(&ray->yDeriv) * m_dY);
 	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
 	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
 	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
-	dY = (b3Wood::b3ComputeWood (&yWood) - wood) / BUMP_dY;
+	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY;
 
 	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
 	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
 	n.z = ray->xDeriv.z * dX - ray->yDeriv.y * dY;
 
-	Denom =
-		ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if (Denom == 0) Denom = 1;
-	if (Denom != 1) Denom = 1.0 / sqrt(Denom);
-
+	Denom = b3Vector::b3Length(&ray->normal);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
