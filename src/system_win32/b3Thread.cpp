@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/10 21:14:41  sm
+**	- Fixed rotation shapes with custom subdivision for rotation.
+**
 **	Revision 1.6  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.5  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -67,7 +70,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3 IPC mutex                                  **
+**                        b3IPCMutex implementation                     **
 **                                                                      **
 *************************************************************************/
 
@@ -85,7 +88,7 @@ bool b3IPCMutex::b3Unlock()
 
 /*************************************************************************
 **                                                                      **
-**                        b3 thread mutex                               **
+**                        b3Mutex implementation                        **
 **                                                                      **
 *************************************************************************/
 
@@ -117,7 +120,7 @@ b3_bool b3Mutex::b3Unlock()
 
 /*************************************************************************
 **                                                                      **
-**                        b3 event                                    **
+**                        b3Event implementation                        **
 **                                                                      **
 *************************************************************************/
 
@@ -139,7 +142,7 @@ b3_bool b3Event::b3Wait()
 
 /*************************************************************************
 **                                                                      **
-**                        b3 thread                                   **
+**                        b3Thread implementation                       **
 **                                                                      **
 *************************************************************************/
 
@@ -303,7 +306,7 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 
 /*************************************************************************
 **                                                                      **
-**                        b3 count CPUs                               **
+**                        b3CPU implementation                          **
 **                                                                      **
 *************************************************************************/
 

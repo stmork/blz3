@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2002/03/10 21:14:40  sm
+**      - Fixed rotation shapes with custom subdivision for rotation.
+**
 **      Revision 1.31  2002/03/10 20:34:18  sm
 **      - Cleaned up and tested CB3ShapeDialgo derivates:
 **        o Ordered meaning of methods

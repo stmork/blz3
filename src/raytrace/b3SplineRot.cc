@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/03/10 21:14:41  sm
+**      - Fixed rotation shapes with custom subdivision for rotation.
+**
 **      Revision 1.11  2002/03/10 13:55:15  sm
 **      - Added creation dialog for rotation shapes.
 **      - Cleaned up derivation of b3SplineRotShape.
@@ -270,18 +273,17 @@ void b3SplineRotShape::b3GetCount(
 {
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
-	SinCosSteps = context->b3GetSubdiv();
-
+	SinCosSteps = m_rSubDiv;
 	m_ySubDiv   = m_Spline.subdiv;
-	m_xSubDiv   = SinCosSteps;
+	m_xSubDiv   = m_rSubDiv;
 	if (!m_Spline.closed)
 	{
 		m_ySubDiv++;
 	}
 
-	vertCount = (m_Spline.subdiv + 1) * SinCosSteps;
-	gridCount = SinCosSteps * (m_Spline.subdiv + m_ySubDiv);
-	polyCount = SinCosSteps *  m_Spline.subdiv * 2;
+	vertCount = (m_Spline.subdiv + 1) * m_rSubDiv;
+	gridCount = m_rSubDiv * (m_Spline.subdiv + m_ySubDiv);
+	polyCount = m_rSubDiv *  m_Spline.subdiv * 2;
 }
 
 void b3SplineRotShape::b3ComputeVertices()
@@ -294,7 +296,7 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3_index   i,a;
 
 	// Build rotation matrix
-	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / SinCosSteps);
+	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
 
 	// Copy BSpline
 	AuxSpline          = m_Spline;
@@ -305,7 +307,7 @@ void b3SplineRotShape::b3ComputeVertices()
 	}
 
 	Vector = (b3_vector *)glVertices;
-	for (a = 0;a < SinCosSteps;a++)
+	for (a = 0;a < m_rSubDiv;a++)
 	{
 		// Compute curve
 		Vector += AuxSpline.b3DeBoor(Vector,0);
@@ -317,7 +319,7 @@ void b3SplineRotShape::b3ComputeVertices()
 		}
 	}
 
-	xSize  = SinCosSteps;
+	xSize  = m_rSubDiv;
 	ySize  = AuxSpline.subdiv;
 #endif
 }
@@ -332,16 +334,16 @@ void b3SplineRotShape::b3ComputeIndices()
 	b3_f64     sStep;
 
 	yStep = m_Spline.subdiv + 1;
-	sStep = (b3_f64)m_Spline.subdiv / SinCosSteps;
+	sStep = (b3_f64)m_Spline.subdiv / m_rSubDiv;
 
 	gPtr  = glGrids;
 	pPtr  = glPolygons;
 	x1    = 0;
 	
 	// for each curve
-	for (a = 0;a < SinCosSteps;a++)
+	for (a = 0;a < m_rSubDiv;a++)
 	{
-		x2 = (a + 1) % SinCosSteps * yStep;
+		x2 = (a + 1) % m_rSubDiv * yStep;
 
 		// curve itself
 		for (y1 = 0;y1 < m_Spline.subdiv;y1++)
