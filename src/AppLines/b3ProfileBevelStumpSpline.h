@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ProfileBevelSpline.h $
+**	$Filename:	b3ProfileBevelStumpSpline.h $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -15,16 +15,16 @@
 **
 */
 
-#ifndef B3_PROFILE_BEVEL_SPLINE_H
-#define B3_PROFILE_BEVEL_SPLINE_H
+#ifndef B3_PROFILE_BEVELSTUMP_SPLINE_H
+#define B3_PROFILE_BEVELSTUMP_SPLINE_H
 
 #include "b3Profile.h"
-#include "DlgProfileBevelSpline.h"
+#include "DlgProfileBevelStumpSpline.h"
 
-class b3ProfileBevelSpline : public b3Profile
+class b3ProfileBevelStumpSpline : public b3Profile
 {
 public:
-	                               b3ProfileBevelSpline();
+	                               b3ProfileBevelStumpSpline();
 	virtual b3_bool                b3Create();
 	virtual b3_bool                b3MatchClassType(b3_u32 class_type);
 	virtual int                    b3AddImage(CImageList *images);

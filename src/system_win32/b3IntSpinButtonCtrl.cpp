@@ -31,6 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/09 19:48:14  sm
+**	- Added a second profile for spline cylinders.
+**	- BSpline shape creation dialog added.
+**	- Added some features to b3SplineTemplate class:
+**	  o call b3ThroughEndControl() for open splines
+**	  o optimize subdivision on b3InitCurve()
+**	- Fine tuing and fixed much minor bugs.
+**
 **	Revision 1.1  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -42,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **
 */
 
@@ -84,7 +92,7 @@ void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
 	}
 	else
 	{
-		b3SetPos(pos);
+		pos = b3SetPos(pos);
 	}
 }
 

@@ -235,13 +235,13 @@ public:
 		b3_f64   scale = 1)
 	{
 		B3_ASSERT(!closed);
-		return b3ArcLengthParamter(n,degree,control_num,scale);
+		return b3ArcLengthParameter(n,degree,control_num,scale);
 	}
 
 	static inline b3_f64 b3ArcLengthParameter(
 		b3_count n,
-		b3_count ControlNum,
 		b3_count Degree,
+		b3_count ControlNum,
 		b3_f64   scale = 1)
 	{
 		b3_f64 result;
@@ -278,6 +278,7 @@ public:
 	{
 		b3_index  i;
 
+		// Make some checks
 		if (ControlNum > control_max)
 		{
 			bspline_errno = BSPLINE_TOO_MUCH_CONTROLS;
@@ -295,6 +296,7 @@ public:
 		}
 		bspline_errno = BSPLINE_OK;
 
+		// Copy values
 		degree      = Degree;
 		control_num = ControlNum;
 		knot_num    = ControlNum + Degree + 1;
@@ -305,7 +307,30 @@ public:
 		{
 			knots[i] = (b3_f32)i;
 		}
+
+		// Addjust knot vector
+		if (!closed)
+		{
+			b3ThroughEndControl();
+		}
+
+		// Adjust sub division
+		b3OptimizeSubdivision();
+
 		return true;
+	}
+
+	void b3OptimizeSubdivision()
+	{
+		b3_count i,segments;
+
+		i = 8;
+		segments = b3GetSegmentCount();
+		do
+		{
+			subdiv = segments * i--;
+		}
+		while (subdiv > B3_MAX_SUBDIV);
 	}
 
 	void b3ClearControls(b3_index index = 0)

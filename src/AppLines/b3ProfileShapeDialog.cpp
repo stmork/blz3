@@ -31,6 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/09 19:48:14  sm
+**	- Added a second profile for spline cylinders.
+**	- BSpline shape creation dialog added.
+**	- Added some features to b3SplineTemplate class:
+**	  o call b3ThroughEndControl() for open splines
+**	  o optimize subdivision on b3InitCurve()
+**	- Fine tuing and fixed much minor bugs.
+**
 **	Revision 1.3  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -42,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.2  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -69,6 +77,7 @@ CB3ProfileShapeDialog::CB3ProfileShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
 	m_Align = 0;
 	//}}AFX_DATA_INIT
 	m_Profile = null;
+	b3Vector::b3Init(&m_Base);
 }
 
 
@@ -76,9 +85,9 @@ void CB3ProfileShapeDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CB3ShapeDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CB3ProfileShapeDialog)
-	DDX_Control(pDX, IDC_BASE_Z, m_xBaseCtrl);
+	DDX_Control(pDX, IDC_BASE_X, m_xBaseCtrl);
 	DDX_Control(pDX, IDC_BASE_Y, m_yBaseCtrl);
-	DDX_Control(pDX, IDC_BASE_X, m_zBaseCtrl);
+	DDX_Control(pDX, IDC_BASE_Z, m_zBaseCtrl);
 	DDX_Radio(pDX, IDC_ALIGN_UP, m_Align);
 	//}}AFX_DATA_MAP
 	m_BaseGroup.b3DDX(pDX);
@@ -105,8 +114,11 @@ const char *CB3ProfileShapeDialog::b3GetSection()
 void CB3ProfileShapeDialog::b3Init()
 {
 	m_BaseGroup.b3Init(&m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
-	m_BaseGroup.b3Read(b3MakeSection("base"));
-	m_Align = AfxGetApp()->GetProfileInt(CB3ClientString(),b3MakeSection("align"),m_Align);
+	if (m_Creation)
+	{
+		m_BaseGroup.b3Read(b3MakeSection("base"));
+		m_Align = AfxGetApp()->GetProfileInt(CB3ClientString(),b3MakeSection("align"),m_Align);
+	}
 }
 
 BOOL CB3ProfileShapeDialog::OnInitDialog() 

@@ -188,6 +188,10 @@ SOURCE=.\b3ProfileBevelSpline.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ProfileBevelStumpSpline.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ProfileShapeDialog.cpp
 # End Source File
 # Begin Source File
@@ -241,6 +245,10 @@ SOURCE=.\DlgCreateItem.cpp
 # Begin Source File
 
 SOURCE=.\DlgCreateMaterial.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateSplineShape.cpp
 # End Source File
 # Begin Source File
 
@@ -309,6 +317,10 @@ SOURCE=.\DlgObjectCopy.cpp
 # Begin Source File
 
 SOURCE=.\DlgProfileBevelSpline.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProfileBevelStumpSpline.cpp
 # End Source File
 # Begin Source File
 
@@ -444,6 +456,10 @@ SOURCE=.\b3ProfileBevelSpline.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ProfileBevelStumpSpline.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ProfileShapeDialog.h
 # End Source File
 # Begin Source File
@@ -501,6 +517,10 @@ SOURCE=.\DlgCreateItem.h
 # Begin Source File
 
 SOURCE=.\DlgCreateMaterial.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateSplineShape.h
 # End Source File
 # Begin Source File
 
@@ -569,6 +589,10 @@ SOURCE=.\DlgObjectCopy.h
 # Begin Source File
 
 SOURCE=.\DlgProfileBevelSpline.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProfileBevelStumpSpline.h
 # End Source File
 # Begin Source File
 
@@ -733,6 +757,10 @@ SOURCE=.\res\object.ico
 # Begin Source File
 
 SOURCE=.\res\profile_bevel_spline.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\profile_bevelstump_spline.ico
 # End Source File
 # Begin Source File
 

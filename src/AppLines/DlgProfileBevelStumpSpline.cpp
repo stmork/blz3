@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	DlgProfileBevelSpline.cpp $
+**	$Filename:	DlgProfileBevelStumpSpline.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "DlgProfileBevelSpline.h"
+#include "DlgProfileBevelStumpSpline.h"
 #include "b3Profile.h"
 
 /*************************************************************************
@@ -33,7 +33,7 @@
 
 /*
 **	$Log$
-**	Revision 1.3  2002/03/09 19:48:14  sm
+**	Revision 1.1  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
 **	- Added some features to b3SplineTemplate class:
@@ -41,55 +41,33 @@
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
 **
-**	Revision 1.2  2002/03/08 16:46:14  sm
-**	- Added new CB3IntSpinButtonCtrl. This is much
-**	  better than standard integer CSpinButtonCtrl.
-**	- Added a test control to test spin button controls
-**	  and float control.
-**	- Made spin button controls and float edit control
-**	  DDXable. The spin button controls need only
-**	  a simple edit field without any DDX CEdit reference
-**	  or value reference inside a dialog.
-**	- Changed dialogs to reflect new controls. This was a
-**	  major cleanup which shortens the code in an elegant way.
-**	
-**	Revision 1.1  2002/03/05 20:38:24  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CDlgProfileBevelSpline implementation         **
+**                        CDlgProfileBevelStumpSpline implementation    **
 **                                                                      **
 *************************************************************************/
 
-CDlgProfileBevelSpline::CDlgProfileBevelSpline(CWnd* pParent /*=NULL*/)
-	: CB3ProfileShapeDialog(CDlgProfileBevelSpline::IDD, pParent)
+CDlgProfileBevelStumpSpline::CDlgProfileBevelStumpSpline(CWnd* pParent /*=NULL*/)
+	: CB3ProfileShapeDialog(CDlgProfileBevelStumpSpline::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CDlgProfileBevelSpline)
+	//{{AFX_DATA_INIT(CDlgProfileBevelStumpSpline)
 	//}}AFX_DATA_INIT
 	m_xEdge     = 100.0;
 	m_yEdge     = 100.0;
 	m_Height    = 100.0;
 	m_Oblique   =  10.0;
-	m_yControls =   2;
-	m_yDegree   =   1;
 	b3Vector::b3Init(&m_Base);
 	B3_BSPLINE_GEOMETRY(&m_Spline,m_Controls,m_Knots);
 }
 
 
-void CDlgProfileBevelSpline::DoDataExchange(CDataExchange* pDX)
+void CDlgProfileBevelStumpSpline::DoDataExchange(CDataExchange* pDX)
 {
 	CB3ProfileShapeDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CDlgProfileBevelSpline)
-	DDX_Control(pDX, IDC_YCONTROLS_SPIN, m_yControlsCtrl);
-	DDX_Control(pDX, IDC_YDEGREE_SPIN, m_yDegreeCtrl);
+	//{{AFX_DATA_MAP(CDlgProfileBevelStumpSpline)
 	DDX_Control(pDX, IDC_PROFILE_PREVIEW, m_Preview);
 	DDX_Control(pDX, IDC_OBLIQUE_SPIN, m_ObliqueCtrl);
 	DDX_Control(pDX, IDC_HEIGHT_SPIN, m_HeightCtrl);
@@ -100,33 +78,29 @@ void CDlgProfileBevelSpline::DoDataExchange(CDataExchange* pDX)
 	m_yEdgeCtrl.b3DDX(pDX, m_yEdge);
 	m_HeightCtrl.b3DDX(pDX, m_Height);
 	m_ObliqueCtrl.b3DDX(pDX, m_Oblique);
-	m_yControlsCtrl.b3DDX(pDX, m_yControls);
-	m_yDegreeCtrl.b3DDX(pDX, m_yDegree);
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgProfileBevelSpline, CB3ProfileShapeDialog)
-	//{{AFX_MSG_MAP(CDlgProfileBevelSpline)
+BEGIN_MESSAGE_MAP(CDlgProfileBevelStumpSpline, CB3ProfileShapeDialog)
+	//{{AFX_MSG_MAP(CDlgProfileBevelStumpSpline)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_OBLIQUE_SPIN, OnObliqueSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_XEDGE_SPIN, OnEdgeSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_YEDGE_SPIN, OnEdgeSpin)
 	ON_EN_KILLFOCUS(IDC_OBLIQUE, OnObliqueEdit)
 	ON_EN_KILLFOCUS(IDC_XEDGE, OnEdgeEdit)
 	ON_EN_KILLFOCUS(IDC_YEDGE, OnEdgeEdit)
-	ON_NOTIFY(WM_LBUTTONUP, IDC_YDEGREE_SPIN, OnDegreeSpin)
-	ON_EN_KILLFOCUS(IDC_YDEGREE, OnDegreeEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProfileBevelSpline message handlers
 
-const char *CDlgProfileBevelSpline::b3GetSection()
+const char *CDlgProfileBevelStumpSpline::b3GetSection()
 {
-	return "profile bevel spline";
+	return "profile bevel stump spline";
 }
 
-void CDlgProfileBevelSpline::b3Init()
+void CDlgProfileBevelStumpSpline::b3Init()
 {
 	CB3App *app = CB3GetApp();
 
@@ -135,11 +109,9 @@ void CDlgProfileBevelSpline::b3Init()
 	m_xEdge     = app->b3ReadProfileFloat(b3MakeSection("y edge"), m_xEdge);
 	m_Oblique   = app->b3ReadProfileFloat(b3MakeSection("oblique"),m_Oblique);
 	m_Height    = app->b3ReadProfileFloat(b3MakeSection("height"), m_Height);
-	m_yDegree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("y degree"),m_yDegree);
-	m_yControls = app->GetProfileInt(CB3ClientString(),b3MakeSection("y controls"),m_yControls);
 }
 
-BOOL CDlgProfileBevelSpline::OnInitDialog() 
+BOOL CDlgProfileBevelStumpSpline::OnInitDialog() 
 {
 	b3UpdateUI();
 	CB3ProfileShapeDialog::OnInitDialog();
@@ -156,7 +128,7 @@ BOOL CDlgProfileBevelSpline::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgProfileBevelSpline::b3UpdateUI()
+void CDlgProfileBevelStumpSpline::b3UpdateUI()
 {
 	b3_f64 min;
 
@@ -166,36 +138,37 @@ void CDlgProfileBevelSpline::b3UpdateUI()
 	m_yEdgeCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
 
 	m_HeightCtrl.b3SetRange(0.1,DBL_MAX);
-	m_yDegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
-	m_yControlsCtrl.b3SetRange(m_yDegree + 1,B3_MAX_CONTROLS);
 }
 
-void CDlgProfileBevelSpline::OnObliqueEdit() 
+void CDlgProfileBevelStumpSpline::OnObliqueEdit() 
 {
 	// Get value manually
 	m_Oblique = m_ObliqueCtrl.b3GetPos();
 
 	// Adjust range and affected values
-	m_xEdge   = m_xEdgeCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
-	m_yEdge   = m_yEdgeCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
+	m_xEdge  = m_xEdgeCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
+	m_yEdge  = m_yEdgeCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
+	m_Height = m_HeightCtrl.b3SetRange(m_Oblique * 4,DBL_MAX);
 	
 	m_Profile->b3ComputeProfile(&m_Spline,m_xEdge,m_yEdge,m_Oblique);
 	m_Preview.b3Update(&m_Spline);
 }
 
-void CDlgProfileBevelSpline::OnObliqueSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+void CDlgProfileBevelStumpSpline::OnObliqueSpin(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	OnObliqueEdit();
 }
 
-void CDlgProfileBevelSpline::OnEdgeEdit() 
+void CDlgProfileBevelStumpSpline::OnEdgeEdit() 
 {
 	b3_f64 min;
 
 	// Get values manually
-	m_xEdge   = m_xEdgeCtrl.b3GetPos();
-	m_yEdge   = m_yEdgeCtrl.b3GetPos();
-	min       = B3_MIN(m_xEdge,m_yEdge);
+	m_xEdge  = m_xEdgeCtrl.b3GetPos();
+	m_yEdge  = m_yEdgeCtrl.b3GetPos();
+	m_Height = m_HeightCtrl.b3GetPos();
+	min      = B3_MIN(m_xEdge,m_yEdge);
+	min      = B3_MIN(min,m_Height);
 
 	// Adjust range and affected value
 	m_Oblique = m_ObliqueCtrl.b3SetRange(0.0,min * 0.25);
@@ -204,43 +177,24 @@ void CDlgProfileBevelSpline::OnEdgeEdit()
 	m_Preview.b3Update(&m_Spline);
 }
 
-void CDlgProfileBevelSpline::OnEdgeSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+void CDlgProfileBevelStumpSpline::OnEdgeSpin(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	OnEdgeEdit();
 }
 
-void CDlgProfileBevelSpline::OnDegreeEdit() 
-{
-	// Get value manually
-	m_yDegree   = m_yDegreeCtrl.b3GetPos();
-
-	// Adjust range and affected value
-	m_yControls = m_yControlsCtrl.b3SetRange(m_yDegree + 1,B3_MAX_DEGREE);
-}
-
-void CDlgProfileBevelSpline::OnDegreeSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	OnDegreeEdit();
-	*pResult = 0;
-}
-
-void CDlgProfileBevelSpline::b3PostProcess()
+void CDlgProfileBevelStumpSpline::b3PostProcess()
 {
 	CB3App        *app = CB3GetApp();
 
 	// Write values into registry for next creation
 	app->b3WriteProfileFloat(b3MakeSection("x edge"), m_xEdge);
-	app->b3WriteProfileFloat(b3MakeSection("y edge"), m_xEdge);
+	app->b3WriteProfileFloat(b3MakeSection("y edge"), m_yEdge);
 	app->b3WriteProfileFloat(b3MakeSection("oblique"),m_Oblique);
 	app->b3WriteProfileFloat(b3MakeSection("height"), m_Height);
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("y degree"),m_yDegree);
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("y controls"),m_yControls);
 
 	// Init spline
 	m_Profile->b3ComputeProfile(&m_Spline,m_xEdge,m_yEdge,m_Oblique);
-	m_Profile->b3ComputeShape(&m_Spline,m_Shape,m_xEdge,m_yEdge,m_Height,m_Oblique,m_yDegree,m_yControls);
+	m_Profile->b3ComputeShape(&m_Spline,m_Shape,m_xEdge,m_yEdge,m_Height,m_Oblique);
 
 	CB3ProfileShapeDialog::b3PostProcess();
 }

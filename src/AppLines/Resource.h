@@ -99,6 +99,9 @@
 #define IDD_PROFILE_BEVEL_SPLINE        199
 #define IDI_PROFILE_BEVEL_SPLINE        200
 #define IDD_SPINTEST                    201
+#define IDI_PROFILE_BEVELSTUMP_SPLINE   201
+#define IDD_PROFILE_BEVELSTUMP_SPLINE   202
+#define IDD_CREATE_SPLINESHAPE          203
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -247,6 +250,7 @@
 #define IDC_TRIA_XSIZE                  1144
 #define IDC_OBLIQUE                     1144
 #define IDC_FLOAT_EDIT                  1144
+#define IDC_XSIZE                       1144
 #define IDC_CUSTOM_MEASURE              1145
 #define IDC_PRT_BUFFER                  1146
 #define IDC_REFLECTANCE                 1147
@@ -326,19 +330,26 @@
 #define IDC_YEDGE_SPIN                  1218
 #define IDC_YDEGREE                     1219
 #define IDC_YDEGREE_SPIN                1220
-#define IDC_ALIGN_UP                    1221
-#define IDC_ALIGN_RIGHT                 1222
-#define IDC_ALIGN_FRONT                 1223
-#define IDC_ALIGN_LEFT                  1224
-#define IDC_ALIGN_BACK                  1225
-#define IDC_ALIGN_DOWN                  1226
-#define IDC_YCONTROLS                   1227
-#define IDC_YCONTROLS_SPIN              1228
-#define IDC_FLOAT_SPIN                  1229
-#define IDC_INT_EDIT                    1230
-#define IDC_INT_SPIN                    1231
-#define IDC_FLOAT_EDIT_MIN              1232
-#define IDC_FLOAT_EDIT_MAX              1233
+#define IDC_ALIGN_UP                    1222
+#define IDC_XDEGREE                     1223
+#define IDC_ALIGN_RIGHT                 1224
+#define IDC_XDEGREE_SPIN                1225
+#define IDC_ALIGN_FRONT                 1226
+#define IDC_ALIGN_LEFT                  1227
+#define IDC_ALIGN_BACK                  1228
+#define IDC_ALIGN_DOWN                  1229
+#define IDC_YCONTROLS                   1230
+#define IDC_YCONTROLS_SPIN              1231
+#define IDC_FLOAT_SPIN                  1232
+#define IDC_XCONTROLS                   1233
+#define IDC_INT_EDIT                    1234
+#define IDC_XCONTROLS_SPIN              1235
+#define IDC_INT_SPIN                    1236
+#define IDC_FLOAT_EDIT_MIN              1237
+#define IDC_FLOAT_EDIT_MAX              1238
+#define IDC_YSIZE                       1239
+#define IDC_YSIZE_LEGEND                1240
+#define IDC_XSIZE_LEGEND                1241
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -512,19 +523,20 @@
 #define IDS_STENCIL_END_LENGTH          60073
 #define IDS_STENCIL_START_ANGLE         60074
 #define IDS_STENCIL_END_ANGLE           60075
-#define IDS_PROFILE                     61446
-#define IDS_LENGTH                      61447
-#define IDS_RADIUS                      61448
-#define IDS_PROFILE_BEVEL_SPLINE        61449
+#define IDS_PROFILE                     60076
+#define IDS_LENGTH                      60077
+#define IDS_RADIUS                      60078
+#define IDS_PROFILE_BEVEL_SPLINE        60079
+#define IDS_PROFILE_BEVELSTUMP_SPLINE   60080
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        202
+#define _APS_NEXT_RESOURCE_VALUE        204
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1233
-#define _APS_NEXT_SYMED_VALUE           60076
+#define _APS_NEXT_CONTROL_VALUE         1242
+#define _APS_NEXT_SYMED_VALUE           60081
 #endif
 #endif

@@ -39,6 +39,7 @@ public:
 	virtual b3_bool                b3MatchClassType(b3_u32 class_type);
 	virtual int                    b3AddImage(CImageList *images);
 	virtual b3_bool                b3ComputeProfile(b3Spline *spline,...);
+	virtual b3_bool                b3ComputeShape(  b3Spline *spline,b3Shape *shape,...);
 	        const char            *b3GetTitle();
 	        CB3ProfileShapeDialog *b3GetCreateDialog();
 

@@ -154,6 +154,7 @@ struct b3_color
 #endif
 
 #define B3_ABS(a)           ((a) < 0 ? (-(a)) : (a))
+#define B3_SIGN(a)          (((a) == 0) ? 0 : ((a) < 0 ? -1 : 1))
 #define B3_MIN(a,b)         ((a) < (b) ? (a) : (b))
 #define B3_MAX(a,b)         ((a) < (b) ? (b) : (a))
 #define B3_LIMIT(v,min,max) { if ((v) < (min)) (v) = (min); if ((v) > (max)) (v) = (max); }

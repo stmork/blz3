@@ -31,6 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/09 19:48:14  sm
+**	- Added a second profile for spline cylinders.
+**	- BSpline shape creation dialog added.
+**	- Added some features to b3SplineTemplate class:
+**	  o call b3ThroughEndControl() for open splines
+**	  o optimize subdivision on b3InitCurve()
+**	- Fine tuing and fixed much minor bugs.
+**
 **	Revision 1.2  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -42,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.1  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -67,6 +75,10 @@ CB3PosGroup::CB3PosGroup()
 
 void CB3PosGroup::b3DDX(CDataExchange *pDX)
 {
+	B3_ASSERT(m_xCtrl  != null);
+	B3_ASSERT(m_yCtrl  != null);
+	B3_ASSERT(m_zCtrl  != null);
+	B3_ASSERT(m_Vector != null);
 	m_xCtrl->b3DDX(pDX,m_Vector->x);
 	m_yCtrl->b3DDX(pDX,m_Vector->y);
 	m_zCtrl->b3DDX(pDX,m_Vector->z);

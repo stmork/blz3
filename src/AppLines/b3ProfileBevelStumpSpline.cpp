@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ProfileBevelSpline.cpp $
+**	$Filename:	b3ProfileBevelStumpSpline.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -22,8 +22,8 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "b3ProfileBevelSpline.h"
-#include "DlgProfileBevelSpline.h"
+#include "b3ProfileBevelStumpSpline.h"
+#include "DlgProfileBevelStumpSpline.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,7 +33,7 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/03/09 19:48:14  sm
+**	Revision 1.1  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
 **	- Added some features to b3SplineTemplate class:
@@ -41,12 +41,6 @@
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
 **
-**	Revision 1.1  2002/03/05 20:38:25  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
 **
 */
 
@@ -56,30 +50,30 @@
 **                                                                      **
 *************************************************************************/
 
-b3ProfileBevelSpline static_profile_bevel_spline;
+b3ProfileBevelStumpSpline static_profile_bevel_stump_spline;
 
-b3ProfileBevelSpline::b3ProfileBevelSpline()
+b3ProfileBevelStumpSpline::b3ProfileBevelStumpSpline()
 {
 }
 
-b3_bool b3ProfileBevelSpline::b3Create()
+b3_bool b3ProfileBevelStumpSpline::b3Create()
 {
-	m_Dlg = new CDlgProfileBevelSpline;
-	m_Title.LoadString(IDS_PROFILE_BEVEL_SPLINE);
+	m_Dlg = new CDlgProfileBevelStumpSpline;
+	m_Title.LoadString(IDS_PROFILE_BEVELSTUMP_SPLINE);
 	return m_Dlg != null;
 }
 
-b3_bool b3ProfileBevelSpline::b3MatchClassType(b3_u32 class_type)
+b3_bool b3ProfileBevelStumpSpline::b3MatchClassType(b3_u32 class_type)
 {
 	return class_type == SPLINES_CYL;
 }
 
-int b3ProfileBevelSpline::b3AddImage(CImageList *images)
+int b3ProfileBevelStumpSpline::b3AddImage(CImageList *images)
 {
-	return images->Add(AfxGetApp()->LoadIcon(IDI_PROFILE_BEVEL_SPLINE));
+	return images->Add(AfxGetApp()->LoadIcon(IDI_PROFILE_BEVELSTUMP_SPLINE));
 }
 
-b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
+b3_bool b3ProfileBevelStumpSpline::b3ComputeProfile(b3Spline *spline,...)
 {
 	va_list    args;
 	b3_f64     xEdge;
@@ -122,43 +116,61 @@ b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
 	return true;
 }
 
-b3_bool b3ProfileBevelSpline::b3ComputeShape(b3Spline *spline,b3Shape *base_shape,...)
+b3_bool b3ProfileBevelStumpSpline::b3ComputeShape(b3Spline *spline,b3Shape *base_shape,...)
 {
 	va_list        args;
 	b3SplineShape *shape = (b3SplineShape *)base_shape;
-	b3_index       index,x,y;
+	b3_index       bIndex,tIndex,x,y;
 	b3_f64         z;
 	b3_f64         xEdge;
 	b3_f64         yEdge;
 	b3_f64         height;
 	b3_f64         oblique;
-	b3_count       yDegree;
-	b3_count       yControls;
 	b3_vector     *c = spline->controls;
 
 	B3_ASSERT(c != null);
 
 	va_start(args,base_shape);
-	xEdge     = va_arg(args,b3_f64);
-	yEdge     = va_arg(args,b3_f64);
-	height    = va_arg(args,b3_f64);
-	oblique   = va_arg(args,b3_f64);
-	yDegree   = va_arg(args,b3_count);
-	yControls = va_arg(args,b3_count);
+	xEdge   = va_arg(args,b3_f64);
+	yEdge   = va_arg(args,b3_f64);
+	height  = va_arg(args,b3_f64);
+	oblique = va_arg(args,b3_f64);
 	va_end(args);
 
-	shape->b3Init(spline->degree,yDegree,spline->control_num,yControls);
+	shape->b3Init(spline->degree,2,spline->control_num,6);
 
-	// Init control points
-	for (y = 0;y < shape->m_Spline[1].control_num;y++)
+	// Init bottom half of control points
+	for (y = 0;y < 3;y++)
 	{
-		index = y * shape->m_Spline[1].offset;
-		z     = b3Spline::b3ArcLengthParameter(y,yDegree,yControls,height);
+		bIndex = y * shape->m_Spline[1].offset;
+		z     = (y < 2 ? 0 : oblique * 2);
 		for (x = 0;x < shape->m_Spline[0].control_num;x++)
 		{
-			shape->m_Controls[index + x]   = c[x];
-			shape->m_Controls[index + x].z = z;
+			if (y == 0)
+			{
+				shape->m_Controls[bIndex + x].x = B3_SIGN(c[x].x) * (xEdge * 0.5 - oblique);
+				shape->m_Controls[bIndex + x].y = B3_SIGN(c[x].y) * (yEdge * 0.5 - oblique);
+			}
+			else
+			{
+				shape->m_Controls[bIndex + x] = c[x];
+			}
+			shape->m_Controls[bIndex + x].z = z;
 		}
 	}
+
+	// Mirror bottom to top
+	for (y = 0;y < 3;y++)
+	{
+		bIndex =      y  * shape->m_Spline[1].offset;
+		tIndex = (5 - y) * shape->m_Spline[1].offset;
+		z      = shape->m_Controls[bIndex].z;
+		for (x = 0;x < shape->m_Spline[0].control_num;x++)
+		{
+			shape->m_Controls[tIndex + x] =   shape->m_Controls[bIndex + x];
+			shape->m_Controls[tIndex + x].z = height - z;
+		}
+	}
+
 	return true;
 }
