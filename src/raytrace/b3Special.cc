@@ -33,6 +33,14 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2001/12/30 18:24:35  sm
+**      - Added missing b3AnimControl class
+**      - Some minor bug fixes done:
+**        o Missed some SetModifiedFlag()
+**        o b3Scene::b3SetCamera() calls added which now puts the
+**          selected camera in front of the b3Special list so that Lines III
+**          select it when reloading.
+**
 **      Revision 1.31  2001/12/30 14:16:58  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -602,6 +610,7 @@ void b3Distribute::b3Write()
 b3Animation::b3Animation(b3_u32 class_type) :
 	b3Special(sizeof(b3Animation),class_type)
 {
+	m_Heads[0].b3InitBase(CLASS_ANIMATION);
 }
 
 b3Animation::b3Animation(b3_u32 *src) :

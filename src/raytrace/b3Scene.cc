@@ -33,13 +33,21 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2001/12/30 18:24:35  sm
+**	- Added missing b3AnimControl class
+**	- Some minor bug fixes done:
+**	  o Missed some SetModifiedFlag()
+**	  o b3Scene::b3SetCamera() calls added which now puts the
+**	    selected camera in front of the b3Special list so that Lines III
+**	    select it when reloading.
+**
 **	Revision 1.28  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.27  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
@@ -506,6 +514,8 @@ void b3Scene::b3SetCamera(b3CameraPart *camera)
 		m_ViewPoint = camera->m_ViewPoint;
 		m_Width     = camera->m_Width;
 		m_Height    = camera->m_Height;
+		b3GetSpecialHead()->b3Remove(camera);
+		b3GetSpecialHead()->b3First(camera);
 	}
 	m_ActualCamera = camera;
 }

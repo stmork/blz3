@@ -1714,12 +1714,24 @@ private:
 \************************************************************************/
 
 #define CLASS_ANIMATION         0x75000000 // animation class
+#define CLASS_VERTEX            0x00010000
+#define CLASS_TRIANGLE	        0x00020000
 #define TYPE_MOVE               0x00000001
 #define TYPE_ROTATE             0x00000002
 #define TYPE_SCALE              0x00000003
+#define TYPE_VERTEXNODE         0x00000001
+#define TYPE_TRIA               0x00000001
+#define TYPE_TRIAREF            0x00000002
+#define TYPE_CPOINT_3D          0x00000003
+#define TYPE_CPOINT_4D          0x00000004
 #define ANIM_MOVE              (CLASS_ANIMATION|TYPE_MOVE)
 #define ANIM_ROTATE            (CLASS_ANIMATION|TYPE_ROTATE)
 #define ANIM_SCALE             (CLASS_ANIMATION|TYPE_SCALE)
+#define TRIANGLE               (CLASS_TRIANGLE|TYPE_TRIA)
+#define TRIANGLEREF            (CLASS_TRIANGLE|TYPE_TRIAREF)
+#define VERTEXNODE             (CLASS_VERTEX|TYPE_VERTEXNODE)
+#define CPOINT_3D              (CLASS_VERTEX|TYPE_CPOINT_3D)
+#define CPOINT_4D              (CLASS_VERTEX|TYPE_CPOINT_4D)
 
 #define ANIMFLAGB_X          0
 #define ANIMFLAGB_Y          1
@@ -1755,6 +1767,21 @@ class b3InitAnimation
 {
 protected:
 	static void b3Init();
+};
+
+class b3AnimControl : b3Item
+{
+public:
+	b3_size       m_Dimension;           // vector dimension
+	b3_count      m_Used;                // used number of vectors
+	b3_count      m_Max;                 // maximum number of vectors
+	b3_vector4D  *m_Controls;
+
+public:
+	B3_ITEM_INIT(b3AnimControl);
+	B3_ITEM_LOAD(b3AnimControl);
+
+	void b3Write();
 };
 
 class b3AnimElement : b3Item

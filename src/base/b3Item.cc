@@ -35,6 +35,14 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/12/30 18:24:35  sm
+**      - Added missing b3AnimControl class
+**      - Some minor bug fixes done:
+**        o Missed some SetModifiedFlag()
+**        o b3Scene::b3SetCamera() calls added which now puts the
+**          selected camera in front of the b3Special list so that Lines III
+**          select it when reloading.
+**
 **      Revision 1.16  2001/12/30 16:54:15  sm
 **      - Inserted safe b3Write() into Lines III
 **      - Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -249,7 +257,7 @@ void b3Item::b3Read()
 
 void b3Item::b3Write()
 {
-	b3PrintF(B3LOG_NORMAL,"ERROR: b3Item::b3Write() not implememnted:\n");
+	b3PrintF(B3LOG_NORMAL,"ERROR: b3Item::b3Write() not implemented:\n");
 	b3PrintF(B3LOG_NORMAL,"       CLASS TYPE: %08x\n",b3GetClassType());
 	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",Size);
 	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",Offset);

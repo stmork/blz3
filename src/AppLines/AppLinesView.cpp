@@ -39,6 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2001/12/30 18:24:35  sm
+**	- Added missing b3AnimControl class
+**	- Some minor bug fixes done:
+**	  o Missed some SetModifiedFlag()
+**	  o b3Scene::b3SetCamera() calls added which now puts the
+**	    selected camera in front of the b3Special list so that Lines III
+**	    select it when reloading.
+**
 **	Revision 1.28  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -47,7 +55,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.27  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
@@ -990,6 +998,7 @@ void CAppLinesView::OnCamSelect()
 
 	m_Camera = main->b3GetSelectedCamera();
 	m_Scene->b3SetCamera(m_Camera);
+	GetDocument()->SetModifiedFlag();
 	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
@@ -1076,6 +1085,7 @@ void CAppLinesView::OnCameraNew()
 		camera->m_Flags     = CAMERA_ACTIVE;
 		strcpy (camera->b3GetName(),dlg.m_NewName);
 		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
+		m_Scene->b3SetCamera(m_Camera);
 
 		GetDocument()->SetModifiedFlag();
 		main = CB3GetMainFrame();
@@ -1105,6 +1115,7 @@ void CAppLinesView::OnCameraDelete()
 
 		GetDocument()->SetModifiedFlag();
 		main->b3UpdateCameraBox(m_Scene,m_Camera = select);
+		m_Scene->b3SetCamera(m_Camera);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
 }
@@ -1123,6 +1134,7 @@ void CAppLinesView::OnCameraProperties()
 
 		GetDocument()->SetModifiedFlag();
 		m_Camera = dlg.m_Camera;
+		m_Scene->b3SetCamera(m_Camera);
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
@@ -1132,6 +1144,7 @@ void CAppLinesView::OnCameraEnable()
 {
 	// TODO: Add your command handler code here
 	m_Camera->b3Activate(!m_Camera->b3IsActive());
+	GetDocument()->SetModifiedFlag();
 }
 
 void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 

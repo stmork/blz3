@@ -50,6 +50,14 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2001/12/30 18:24:35  sm
+**	- Added missing b3AnimControl class
+**	- Some minor bug fixes done:
+**	  o Missed some SetModifiedFlag()
+**	  o b3Scene::b3SetCamera() calls added which now puts the
+**	    selected camera in front of the b3Special list so that Lines III
+**	    select it when reloading.
+**
 **	Revision 1.32  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -57,7 +65,7 @@
 **	- Extended b3Shape format with shape activation flag. Nice: The
 **	  new data structures don't confuse the old Lines II/Blizzard II and
 **	  even stores these new values.
-**
+**	
 **	Revision 1.31  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -393,6 +401,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);
 
 		// Write!
+		m_Scene->b3SetFilename(lpszPathName);
 		m_World.b3Write(filename);
 
 		// ...and rename to original name
@@ -411,6 +420,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	}
 	catch(b3WorldException *w)
 	{
+		remove(filename);
 		b3PrintF(B3LOG_NORMAL,"Blizzard III World saver: Error saving %s\n",lpszPathName);
 		b3PrintF(B3LOG_NORMAL,"Blizzard III World saver: Error code %d\n",w->b3GetError());
 	}
