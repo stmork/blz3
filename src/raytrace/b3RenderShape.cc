@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3Shape.cc $
+**      $Filename:      b3RenderShape.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2002/07/26 22:08:09  sm
+**      - Some b3RenderObject derived classed didn't initialize
+**        glTexCoord. It's time to use glInterleavedArrays() to
+**        avoid such hazards.
+**      - The nVidia driver seems to use only 16 bit for depth
+**        buffer:-(
+**
 **      Revision 1.44  2002/07/26 09:13:33  sm
 **      - Found alpha problem: the Linux OpenGL renderer didn't use the
 **        b3RenderContext::b3Init() method! Now everything function very well:-)

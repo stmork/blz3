@@ -28,6 +28,8 @@ class b3CameraVolume : public b3RenderObject
 {
 	b3_vector m_Vertices[B3_CV_VERTEX_COUNT];
 	b3_vector m_Normals[B3_CV_VERTEX_COUNT];
+	b3_vector m_TexCoord[B3_CV_VERTEX_COUNT];
+
 public:
 	         b3CameraVolume();
 	void     b3Update(b3CameraPart *camera);

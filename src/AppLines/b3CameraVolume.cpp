@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2002/07/26 22:08:09  sm
+**      - Some b3RenderObject derived classed didn't initialize
+**        glTexCoord. It's time to use glInterleavedArrays() to
+**        avoid such hazards.
+**      - The nVidia driver seems to use only 16 bit for depth
+**        buffer:-(
+**
 **      Revision 1.4  2001/12/01 17:48:42  sm
 **      - Added raytraced image saving
 **      - Added texture search path configuration
@@ -74,6 +81,7 @@ static GLushort VolumeIndices[B3_CV_INDEX_COUNT * 2] =
 b3CameraVolume::b3CameraVolume()
 {
 	glComputed = false;
+	memset(m_TexCoord,0,sizeof(m_TexCoord));
 }
 
 void b3CameraVolume::b3Update(b3CameraPart *camera)
@@ -129,6 +137,7 @@ void b3CameraVolume::b3AllocVertices(b3RenderContext *cts)
 {
 	glVertices = (GLfloat *)m_Vertices;
 	glNormals  = (GLfloat *)m_Normals;
+	glTexCoord = (GLfloat *)m_TexCoord;
 	glGrids    = VolumeIndices;
 	glPolygons = null;
 

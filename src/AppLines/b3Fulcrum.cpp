@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2002/07/26 22:08:09  sm
+**      - Some b3RenderObject derived classed didn't initialize
+**        glTexCoord. It's time to use glInterleavedArrays() to
+**        avoid such hazards.
+**      - The nVidia driver seems to use only 16 bit for depth
+**        buffer:-(
+**
 **      Revision 1.3  2001/12/01 17:48:42  sm
 **      - Added raytraced image saving
 **      - Added texture search path configuration
@@ -97,6 +104,7 @@ b3Fulcrum::b3Fulcrum()
 	m_Position.x = 0;
 	m_Position.y = 0;
 	m_Position.z = 0;
+	memset(m_TexCoord,0,sizeof(m_TexCoord));
 }
 
 void b3Fulcrum::b3Update(b3_vector *fulcrum)
@@ -109,6 +117,7 @@ void b3Fulcrum::b3AllocVertices(b3RenderContext *cts)
 {
 	glVertices = (GLfloat *)m_Vertices;
 	glNormals  = (GLfloat *)m_Normals;
+	glTexCoord = (GLfloat *)m_TexCoord;
 	glGrids    = FulcrumIndices;
 	glPolygons = null;
 }

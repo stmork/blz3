@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2002/07/26 22:08:09  sm
+**      - Some b3RenderObject derived classed didn't initialize
+**        glTexCoord. It's time to use glInterleavedArrays() to
+**        avoid such hazards.
+**      - The nVidia driver seems to use only 16 bit for depth
+**        buffer:-(
+**
 **      Revision 1.39  2002/07/26 10:22:37  sm
 **      - Some minor fixes
 **      - Texturing simply runs under Windows :-)
@@ -1091,15 +1098,17 @@ void b3RenderObject::b3Draw()
 	case B3_RENDER_LINE:
 		if (glGridCount > 0)
 		{
-			glVertexPointer( 3,  GL_FLOAT, 0, glVertices);
-			glNormalPointer(     GL_FLOAT, 0, glNormals);
-			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
-
 			glDisable(GL_LIGHTING);
 			glDisable(GL_TEXTURE_2D);
 
 			b3GetGridColor(&diffuse);
 			glColor3f(diffuse.r,diffuse.g,diffuse.b);
+
+			// Put geometry :-)
+			B3_ASSERT(glTexCoord != null);
+			glVertexPointer( 3,  GL_FLOAT, 0, glVertices);
+			glNormalPointer(     GL_FLOAT, 0, glNormals);
+			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
 			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 		}
 		break;

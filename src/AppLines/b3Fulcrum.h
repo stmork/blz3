@@ -29,6 +29,8 @@ class b3Fulcrum : public b3RenderObject
 	b3_vector m_Position;
 	b3_vector m_Vertices[B3_FULCRUM_VERTEX_COUNT];
 	b3_vector m_Normals[B3_FULCRUM_VERTEX_COUNT];
+	b3_vector m_TexCoord[B3_FULCRUM_VERTEX_COUNT];
+
 public:
 	         b3Fulcrum();
 	void     b3Update(b3_vector *fulcrum);
