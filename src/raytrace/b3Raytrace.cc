@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2001/10/31 14:46:35  sm
+**	- Filling b3IsCancelled() with sense.
+**	- Inlining b3RGB
+**
 **	Revision 1.21  2001/10/29 19:34:02  sm
 **	- Added new define B3_DELETE_BASE.
 **	- Added support to abort raytrace processing.
 **	- Added search path to world loading.
 **	- Fixed super sampling.
 **	- Fixed memory leak in raytracing row processing.
-**
+**	
 **	Revision 1.20  2001/10/28 21:22:52  sm
 **	- Added one level simple adaptive super sampling. It was
 **	  tricky to implement this on SMP machines but got it now.
@@ -214,6 +218,10 @@ void b3RayRow::b3Raytrace()
 		buffer[x] = b3Color::b3GetSatColor(&ray.color);
 	}
 	m_Display->b3PutRow(this);
+	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
+	{
+		m_Scene->b3AbortRaytrace();
+	}
 }
 
 /*************************************************************************
@@ -346,6 +354,10 @@ inline void b3SupersamplingRayRow::b3Convert()
 	}
 
 	m_Display->b3PutRow(this);
+	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
+	{
+		m_Scene->b3AbortRaytrace();
+	}
 }
 
 inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
@@ -462,6 +474,10 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 	}
 
 	m_Display->b3PutRow(this);
+	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
+	{
+		m_Scene->b3AbortRaytrace();
+	}
 }
 
 /*************************************************************************

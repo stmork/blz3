@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/base/b3SearchPath.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/31 14:46:35  sm
+**      - Filling b3IsCancelled() with sense.
+**      - Inlining b3RGB
+**
 **      Revision 1.12  2001/09/04 15:15:57  sm
 **      - Added rotating objects
 **
@@ -111,15 +116,23 @@ void SetupRC()
 
 int main(int argc,char *argv[])
 {
-	b3Item               *item;
-	b3Scene              *scene;
-	b3_res                xSize,ySize;
+	b3Item    *item;
+	b3Scene   *scene;
+	char      *HOME = getenv("HOME");
+	b3Path     data;
+	b3_res     xSize,ySize;
 
 	if (argc > 1)
 	{
 		b3InitRaytrace::b3Init();
+		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
+
+//		b3Log_SetLevel(B3LOG_NORMAL);
+		b3Log_SetLevel(B3LOG_DEBUG);
+//		b3Log_SetLevel(B3LOG_FULL);
 
 		world = new b3World();
+		world->b3AddPath(data);
 		world->b3Read(argv[1]);
 		for (item  = world->b3GetFirst();
 		     item != null;

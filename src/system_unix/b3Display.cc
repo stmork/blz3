@@ -29,7 +29,7 @@
 #define no_SYNC
 #define no_DEBUG
 
-#define READY 128
+#define READY 1
 
 /*************************************************************************
 **                                                                      **
@@ -39,10 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/31 14:46:35  sm
+**	- Filling b3IsCancelled() with sense.
+**	- Inlining b3RGB
+**
 **	Revision 1.7  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
-**
+**	
 **	Revision 1.6  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -553,7 +557,7 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 	}
 	else
 	{
-		count = READY;
+		count      = READY;
 		really_ask = true;
 	}
 	display_mutex.b3Unlock();
@@ -580,6 +584,10 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 				}
 				break;
 
+			case ButtonPress:
+				m_Closed = true;
+				break;
+
 			case KeyPress :
 				result   = true;
 				m_Closed = true;
@@ -599,7 +607,11 @@ void b3Display::b3Wait()
 	b3_bool	 loop = true;
 	XEvent	 report;
 
-	if (m_Closed) return;
+	if (m_Closed)
+	{
+		// If already marked as closed.
+		return;
+	}
 
 	do
 	{

@@ -29,9 +29,32 @@ public:
 	b3_u08 r,g,b;
 public:
 	              b3RGB();
-	b3_pkd_color  operator()();
-	              operator b3_pkd_color();
-	void          operator=(const b3_pkd_color &);
+	inline b3_pkd_color  operator()()
+	{
+		return (
+			((b3_pkd_color)r << 16) |
+			((b3_pkd_color)g <<  8) |
+			 (b3_pkd_color)b);
+	}
+	inline               operator b3_pkd_color()
+	{
+		return (
+			((b3_pkd_color)r << 16) |
+			((b3_pkd_color)g <<  8) |
+			 (b3_pkd_color)b);
+	}
+	inline 	void          operator=(const b3_pkd_color &color)
+	{
+		r = (b3_u08)((color & 0xff0000) >> 16);
+		g = (b3_u08)((color & 0x00ff00) >>  8);
+		b = (b3_u08)((color & 0x0000ff));
+	}
+	inline  void          operator=(const b3_color &color)
+	{
+		r = (color.r > 1.0 ? 255 : (b3_u08)(color.r * 255));
+		g = (color.g > 1.0 ? 255 : (b3_u08)(color.g * 255));
+		b = (color.b > 1.0 ? 255 : (b3_u08)(color.b * 255));
+	}
 };
 
 class b3Color
@@ -47,20 +70,15 @@ public:
 		return (r << 16) | (g << 8) | b;
 	}
 
-	static inline b3_pkd_color b3GetSatColor(b3_color *color)
+	static inline b3_pkd_color b3GetSatColor(const b3_color *color)
 	{
-		register b3_pkd_color r,g,b;
-
-		r = (b3_pkd_color)(color->r * 255);
-		g = (b3_pkd_color)(color->g * 255);
-		b = (b3_pkd_color)(color->b * 255);
 		return
-			((r > 255 ? 255 : r) << 16) |
-			((g > 255 ? 255 : g) <<  8) |
-			 (b > 255 ? 255 : b);
+			((b3_pkd_color)(color->r > 1.0 ? 255 : (b3_u08)(color->r * 255)) << 16) ||
+			((b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)) <<  8) ||
+			 (b3_pkd_color)(color->b > 1.0 ? 255 : (b3_u08)(color->b * 255));
 	}
 
-	static inline b3_color *b3GetColor(b3_color *color,b3_pkd_color input)
+	static inline b3_color *b3GetColor(b3_color *color,const b3_pkd_color input)
 	{
 		color->a = 0;
 		color->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;

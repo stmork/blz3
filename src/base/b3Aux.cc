@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/31 14:46:35  sm
+**	- Filling b3IsCancelled() with sense.
+**	- Inlining b3RGB
+**
 **	Revision 1.4  2001/07/08 13:02:19  sm
 **	- Merging with Windoze stuff.
-**
+**	
 **	Revision 1.3  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
 **	
@@ -150,29 +154,6 @@ b3RGB::b3RGB()
 	r = 0xff;
 	g = 0x11;
 	b = 0x44;
-}
-
-b3_pkd_color b3RGB::operator ()()
-{
-	return (
-		((b3_pkd_color)r << 16) |
-		((b3_pkd_color)g <<  8) |
-		 (b3_pkd_color)b);
-}
-
-b3RGB::operator b3_pkd_color()
-{
-	return (
-		((b3_pkd_color)r << 16) |
-		((b3_pkd_color)g <<  8) |
-		 (b3_pkd_color)b);
-}
-
-void b3RGB::operator=(const b3_pkd_color &color)
-{
-	r = (b3_u08)((color & 0xff0000) >> 16);
-	g = (b3_u08)((color & 0x00ff00) >>  8);
-	b = (b3_u08)((color & 0x0000ff));
 }
 
 /*************************************************************************
