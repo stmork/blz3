@@ -30,7 +30,7 @@ depend:
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 RemDepend:	$(REMDEPEND_OBJS)
 	$(LINK.cc) -o $@ $(REMDEPEND_OBJS) -lB3System -lpthread

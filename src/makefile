@@ -21,12 +21,14 @@ SUB_DIRS +=\
 	raytrace\
 	OpenGL\
 	brt3\
+	tools\
 	test_unix
 
 PRGS	=\
+	test_unix\
+	tools\
 	OpenGL\
-	brt3\
-	test_unix
+	brt3
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 	+@for i in $(PRGS); do \
@@ -72,7 +74,7 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-install:	all tools
+install:	all
 	@$(BLZ3_HOME)/bin/install.sh
 
 #########################################################

@@ -2,7 +2,6 @@
 
 cd $BLZ3_HOME
 
-make -C src remdepend
 make -C src clean
 
 echo "Setting groups..."

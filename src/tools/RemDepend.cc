@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/07/08 11:31:46  sm
+**	- Removed further compiler warnings.
+**
 **	Revision 1.3  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.2  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -57,7 +60,6 @@ static b3_bool DoRemDepend(const char *filename)
 	b3_size  size_in;
 	b3_size  size_out = 0;
 	char    *buffer,*pos;
-	b3_size  i;
 
 	buffer = (char *)in.b3ReadBuffer(filename,size_in);
 	if (buffer != null)
