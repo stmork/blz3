@@ -36,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2003/07/26 14:03:14  sm
+**	- Fixed ICC version: The b3Vector classes computed a wrong value
+**	  in b3Length() because of using the uninitialized fourth vector
+**	  component.
+**
 **	Revision 1.50  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.49  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
@@ -308,6 +313,7 @@ b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 	m_xSize            = 200;
 	m_ySize            = 150;
 	m_BackTexture      = null;
+	m_ActualCamera     = null;
 
 	m_Filename.b3Empty();
 }
@@ -335,6 +341,7 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 	m_xSize            = 200;
 	m_ySize            = 150;
 	m_BackTexture      = null;
+	m_ActualCamera     = null;
 }
 
 b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
@@ -644,6 +651,7 @@ b3CameraPart *b3Scene::b3UpdateCamera()
 {
 	if (m_ActualCamera != null)
 	{
+		b3PrintF(B3LOG_DEBUG,"Using camera %s\n",m_ActualCamera->b3GetName());
 		m_EyePoint 	= m_ActualCamera->m_EyePoint;
 		m_ViewPoint = m_ActualCamera->m_ViewPoint;
 		m_Width     = m_ActualCamera->m_Width;
@@ -654,19 +662,12 @@ b3CameraPart *b3Scene::b3UpdateCamera()
 
 void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 {
-	if ((m_ActualCamera != camera) && (camera != null))
-	{
-		b3PrintF(B3LOG_DEBUG,"Using camera %s\n",camera->b3GetName());
-	}
 	m_ActualCamera = camera;
-	if (camera != null)
+	b3UpdateCamera();
+	if ((camera != null) && (reorder))
 	{
-		b3UpdateCamera();
-		if (reorder)
-		{
-			b3GetSpecialHead()->b3Remove(camera);
-			b3GetSpecialHead()->b3First(camera);
-		}
+		b3GetSpecialHead()->b3Remove(camera);
+		b3GetSpecialHead()->b3First(camera);
 	}
 }
 

@@ -24,6 +24,8 @@
 #define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
 #define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * 180.0 / M_PI + ((v) < 0 ? 360.0 : 0))
 
+#define B3_SSE_DIM 4
+
 class b3Vector
 {
 public:
@@ -144,23 +146,10 @@ public:
 
 	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
 	{
-		b3_f64  result;
-#ifdef B3_SSE
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
-
-		result = 0;
-		for(int i = 0;i < 4;i++)
-		{
-			result += a[i] * b[i];
-		}
-#else
-		result =
+		return
 			aVec->x * bVec->x +
 			aVec->y * bVec->y +
 			aVec->z * bVec->z;
-#endif
-		return result;
 	}
 
 	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
@@ -169,7 +158,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] += a[i];
 		}
@@ -191,7 +180,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + b[i];
 		}
@@ -228,7 +217,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] -= a[i];
 		}
@@ -251,7 +240,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -280,7 +269,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] *= a[i];
 		}
@@ -302,7 +291,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] * b[i];
 		}
@@ -383,23 +372,18 @@ public:
 
 	static inline b3_f64 b3Length(const b3_vector *vector)
 	{
-#ifdef B3_SSE
-		b3_f32 *v = &vector->x;
-		b3_f64  r = 0;
-
-		for(int i = 0;i < 4;i++)
-		{
-			r += v[i] * v[i];
-		}
-		return sqrt(r);
-#else
-		return sqrt(b3QuadLength(vector));
-#endif
+		return sqrt(
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z);
 	}
 
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
-		return sqrt(b3QuadLength(vector));
+		return sqrt(
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z);
 	}
 
 	static inline b3_f64 b3QuadLength(const b3_vector *vector)
@@ -436,7 +420,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			v[i] *= f;
 		}
@@ -457,7 +441,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = v[i] * f;
 		}
@@ -474,7 +458,7 @@ public:
 #ifdef B3_SSE
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			v[i] *= factor;
 		}
@@ -494,7 +478,7 @@ public:
 		b3_f64 *r = &result->x;
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < 4;i++)
+		for(int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = v[i] * factor;
 		}
@@ -602,7 +586,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for (int i = 0;i < 4;i++)
+		for (int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + f * b[i];
 		}
@@ -642,7 +626,7 @@ public:
 		b3_f32  x = (b3_f32)xFactor;
 		b3_f32  y = (b3_f32)yFactor;
 
-		for (int i = 0;i < 4;i++)
+		for (int i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + xFactor * b[i] + yFactor * c[i];
 		}

@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2003/07/26 14:03:14  sm
+**	- Fixed ICC version: The b3Vector classes computed a wrong value
+**	  in b3Length() because of using the uninitialized fourth vector
+**	  component.
+**
 **	Revision 1.52  2003/06/09 08:53:48  sm
 **	- Added preparation support for all b3Item objects.
-**
+**	
 **	Revision 1.51  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -554,9 +559,18 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
 	m_DiffColor = (m_TopColor    - m_AvrgColor);
 
+	b3PrintF(B3LOG_FULL,"  preparing special items...\n");
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if(!item->b3Prepare())
+		{
+			B3_THROW(b3PrepareException,B3_PREPARE_ERROR);
+		}
+	}
+
 	xDenom = b3Vector::b3Length(&m_Width);
 	yDenom = b3Vector::b3Length(&m_Height);
-	if ((xDenom == 0) || (yDenom == 0))
+	if ((xDenom < epsilon) || (yDenom < epsilon))
 	{
 		b3PrintF(B3LOG_NORMAL,"Camera has got zero extend...\n");
 		return false;
@@ -567,15 +581,6 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	m_NormHeight.x = m_Height.x / yDenom;
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
-
-	b3PrintF(B3LOG_FULL,"  preparing special items...\n");
-	B3_FOR_BASE(b3GetSpecialHead(),item)
-	{
-		if(!item->b3Prepare())
-		{
-			B3_THROW(b3PrepareException,B3_PREPARE_ERROR);
-		}
-	}
 
 	b3PrintF(B3LOG_FULL,"  preparing lensflare...\n");
 	m_LensFlare = b3GetLensFlare();

@@ -18,7 +18,8 @@ setenv SRC       "image/*.cc base/*.cc raytrace/*.cc system/*.cc system_unix/*.c
 setenv LIBS      "$LIB_X3 $LIB_S3 $LIB_OGL3 -lB3tiff -lB3jpeg"
 setenv PROF_DIR   /tmp/profdir
 setenv PROF_FILES "../data/*.bwd GeoNebel.bwd AllShapes.bwd"
-setenv PROF_FILES "Test.bwd AlleObjekte.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
+setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
+setenv PROF_FILES "Test.bwd AlleObjekte.bwd ../data/Material.bwd ../data/Shapes.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"

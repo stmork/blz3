@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2003/07/26 14:03:14  sm
+**	- Fixed ICC version: The b3Vector classes computed a wrong value
+**	  in b3Length() because of using the uninitialized fourth vector
+**	  component.
+**
 **	Revision 1.45  2003/07/20 10:18:35  sm
 **	- Banner compilation problem fixed.
-**
+**	
 **	Revision 1.44  2003/07/20 10:11:55  sm
 **	- Added banner on -v command line option.
 **	
@@ -349,6 +354,8 @@ int main(int argc,char *argv[])
 	b3CameraPart         *camera;
 	b3Item               *item;
 	b3_vector             lower,upper;
+	char                 *BLZ3_DATA     = getenv("BLZ3_DATA");
+	char                 *BLZ3_TEXTURES = getenv("BLZ3_TEXTURES");
 	char                 *BLZ3_PICTURES = getenv("BLZ3_PICTURES");
 	char                 *BLZ3_PLUGINS  = getenv("BLZ3_PLUGINS");
 	char                 *BLZ3_BIN      = getenv("BLZ3_BIN");
@@ -372,7 +379,15 @@ int main(int argc,char *argv[])
 			b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 			b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 			b3Scene::m_TexturePool.b3AddPath(textures);
+			if (BLZ3_TEXTURES != null)
+			{
+				b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
+			}
 			b3Scene::m_TexturePool.b3AddPath(pictures);
+			if (BLZ3_DATA != null)
+			{
+				world->b3AddPath(BLZ3_DATA);
+			}
 			world->b3AddPath(data);
 		}
 
@@ -505,6 +520,7 @@ int main(int argc,char *argv[])
 						{
 							// Default camera without any camera
 							// in special list
+							b3PrintF(B3LOG_NORMAL,"Rendering default camera...\n");
 							scene->b3ComputeBounds(&lower,&upper);
 							scene->b3Raytrace(display);
 							b3SaveRaytracedImage(
