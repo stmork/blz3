@@ -1,15 +1,17 @@
 # Beispiel Makefile
 
+BLZ3_HOME	= @BLZ3_HOME@
 BLZ3_LIB	= @BLZ3_LIB@
 BLZ3_BIN	= @BLZ3_BIN@
-CC			= @CC@
+CC		= @CC@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3tiff.o
 PRGS		= mkversion mkg3states
-AUTO		= tif_fax3sm.c version.h
+AUTO		= tif_fax3sm.c $(BLZ3_HOME)/include_win32/version.h
 
 ALPHA	= tiff.alpha
 VERSION	= VERSION
+RELEASE = RELEASE-DATE
 
 LIB_SOURCE	= \
 	mkversion.c\
@@ -105,8 +107,11 @@ tif_fax3sm.c:	mkg3states
 
 tif_version.c:	version.h
 
+$(BLZ3_HOME)/include_win32/version.h:	version.h
+	cp $^ $@
+
 version.h:	mkversion
-	./mkversion -v ${VERSION} -a ${ALPHA} $@
+	./mkversion -v ${VERSION} -r ${RELEASE} -a ${ALPHA} $@
 
 mkversion:	mkversion.o
 	$(LINK.c) -o $@ $^
