@@ -28,6 +28,8 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/image/b3TxPool.h"
 
+#define no_DEBUG_COOK_TORRANCE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -36,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2004/03/01 19:52:00  sm
+**      - Some cleanup
+**
 **      Revision 1.33  2004/03/01 16:28:00  sm
 **      - Removed tempora Cook/Torrance for normal material.
 **
@@ -181,14 +186,20 @@
 void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
+#ifndef DEBUG_COOK_TORRANCE
 	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
+#endif
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
 	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);
 	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit,  &b3MatWrapTexture::b3StaticInit,  WRAPTEXTURE);
 	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
 	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
+#ifndef DEBUG_COOK_TORRANCE
 	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
+#else
+	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, MAT_NORMAL);
+#endif
 }
 
 /*************************************************************************
@@ -980,7 +991,8 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
-//	m_DiffColor = b3Color(0.79,0.5,0.2);
+#ifdef DEBUG_COOK_TORRANCE
+//	m_DiffColor = b3Color(0.79,0.54,0.2);
 	m_DiffColor = b3Color(0.7,0.32,0.2);
 	m_AmbColor = m_DiffColor;
 	m_ka   = 0.1;
@@ -989,6 +1001,8 @@ b3_bool b3MatCookTorrance::b3Prepare()
 	m_m    = 0.3;
 //	m_Reflection = 0;
 //	m_Refraction = 0;
+#endif
+
 	m_Ra   = m_AmbColor * m_ka;
 	m_Mu   = b3Color(
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
