@@ -30,11 +30,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/02/01 15:41:52  sm
+**	- Fixed saving TGA and RGB8 missing last line to save
+**
 **	Revision 1.2  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.1  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -73,7 +76,6 @@ void b3InfoRGB8::b3Write()
 
 	for (y = 0;y < m_Tx->ySize;y++)
 	{
-		m_SaveYPos = y;
 		m_Tx->b3GetRow(m_ThisRow,y);
 		for (x = 0;x < m_Tx->xSize;x++)
 		{
@@ -105,6 +107,9 @@ void b3InfoRGB8::b3Write()
 
 b3InfoRGB8::~b3InfoRGB8()
 {
+	B3_ASSERT(m_Tx->xSize >= 65535);
+	B3_ASSERT(m_Tx->ySize >= 65535);
+
 	m_SaveBuffer[0] = (OldValue & 0xff0000) >> 16;
 	m_SaveBuffer[1] = (OldValue & 0x00ff00) >>  8;
 	m_SaveBuffer[2] =  OldValue & 0x0000ff;
@@ -134,8 +139,8 @@ b3InfoRGB8::~b3InfoRGB8()
 	m_SaveBuffer[19] = 20;
 	m_SaveBuffer[20] = m_Tx->xSize >> 8;
 	m_SaveBuffer[21] = m_Tx->xSize & 255;
-	m_SaveBuffer[22] = m_SaveYPos >> 8;
-	m_SaveBuffer[23] = m_SaveYPos & 255;
+	m_SaveBuffer[22] = m_Tx->ySize >> 8;
+	m_SaveBuffer[23] = m_Tx->ySize & 255;
 	m_SaveBuffer[24] =
 	m_SaveBuffer[25] =
 	m_SaveBuffer[26] =

@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/01 15:41:52  sm
+**	- Fixed saving TGA and RGB8 missing last line to save
+**
 **	Revision 1.3  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.2  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -91,7 +94,6 @@ void b3InfoTGA::b3Write()
 
 	for (y = 0;y < m_Tx->ySize;y++)
 	{
-		m_SaveYPos = y;
 		m_Tx->b3GetRow(m_ThisRow,y);
 		t = 0;
 		while (t < m_Tx->xSize)
@@ -141,6 +143,9 @@ void b3InfoTGA::b3Write()
 
 b3InfoTGA::~b3InfoTGA()
 {
+	B3_ASSERT(m_Tx->xSize >= 65535);
+	B3_ASSERT(m_Tx->ySize >= 65535);
+
 	m_SaveData[ 0] =  0;
 	m_SaveData[ 1] =  0;
 	m_SaveData[ 2] = 10;								/* komprimiert */
@@ -155,8 +160,8 @@ b3InfoTGA::~b3InfoTGA()
 	m_SaveData[11] =  0;
 	m_SaveData[12] = m_Tx->xSize & 255;
 	m_SaveData[13] = m_Tx->xSize >> 8;
-	m_SaveData[14] = m_SaveYPos & 255;
-	m_SaveData[15] = m_SaveYPos >> 8;
+	m_SaveData[14] = m_Tx->ySize & 255;
+	m_SaveData[15] = m_Tx->ySize >> 8;
 	m_SaveData[16] = 24;								/* 24 Bit */
 	m_SaveData[17] = 0x20;							/* von oben nach unten */
 

@@ -30,7 +30,6 @@ protected:
 	b3Tx         *m_Tx;
 	b3_pkd_color *m_ThisRow;
 	b3_u08        m_SaveBuffer[128];
-	b3_coord      m_SaveYPos;
 
 public:
 	         b3TxSaveInfo(b3Tx *tx,const char *filename,const char *write_mode = null);

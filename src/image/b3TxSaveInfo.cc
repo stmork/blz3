@@ -30,11 +30,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/01 15:41:52  sm
+**	- Fixed saving TGA and RGB8 missing last line to save
+**
 **	Revision 1.1  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	
 */
 
@@ -48,7 +51,6 @@ b3TxSaveInfo::b3TxSaveInfo(b3Tx *tx,const char *filename,const char *write_mode)
 {
 	m_Tx = tx;
 	m_Tx->b3Name(filename);
-	m_SaveYPos = 0;
 	memset(m_SaveBuffer,0,sizeof(m_SaveBuffer));
 
 	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
