@@ -47,9 +47,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/10/16 08:54:23  sm
+**	- Simpler max date generation.
+**
 **	Revision 1.7  2003/10/16 08:46:44  sm
 **	- Adjusted most possible time_t value.
-**
+**	
 **	Revision 1.6  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -405,11 +408,7 @@ bool b3Date::b3Y2K_Selftest()
 		code & 128 ? '*' : '-',
 		code ==  0 ? "OK" : "ERROR");
 
-	time_code = 0;
-	for (int b = sizeof(time_t) * 8 - 1;b > 0;b--)
-	{
-		time_code = (time_code << 1) | 1;
-	}
+	time_code = -1 ^ ((time_t)1 << (sizeof(time_t) * 8 - 1));
 	b3GMTime();
 	b3PrintF (B3LOG_DEBUG,"### Y2K\n");
 	b3PrintF (B3LOG_DEBUG,"### Y2K - The last possible time code is at:\n");
