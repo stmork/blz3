@@ -26,7 +26,11 @@
 class b3Vector
 {
 public:
-	static inline b3_vector *b3Init(b3_vector *vec,b3_f64 x=0,b3_f64 y=0,b3_f64 z=0)
+	static inline b3_vector *b3Init(
+		      b3_vector *vec,
+		const b3_f64     x = 0,
+		const b3_f64     y = 0,
+		const b3_f64     z = 0)
 	{
 		vec->x = (b3_f32)x;
 		vec->y = (b3_f32)y;
@@ -35,7 +39,11 @@ public:
 		return vec;
 	}
 
-	static inline b3_vector64 *b3Init(b3_vector64 *vec,b3_f64 x=0,b3_f64 y=0,b3_f64 z=0)
+	static inline b3_vector64 *b3Init(
+		      b3_vector64 *vec,
+		const b3_f64       x = 0,
+		const b3_f64       y = 0,
+		const b3_f64       z = 0)
 	{
 		vec->x = x;
 		vec->y = y;
@@ -44,7 +52,9 @@ public:
 		return vec;
 	}
 
-	static inline b3_bool b3IsEqual(b3_vector *vec1,b3_vector *vec2)
+	static inline b3_bool b3IsEqual(
+		const b3_vector *vec1,
+		const b3_vector *vec2)
 	{
 		return
 			(vec1->x == vec2->x) &&
@@ -53,8 +63,8 @@ public:
 	}
 
 	static inline b3_f64 b3Normalize(
-		b3_vector *vector,
-		b3_f64     length = 1.0)
+		      b3_vector *vector,
+		const b3_f64     length = 1.0)
 	{
 		register b3_f64 x,y,z,denom,result = 0;
 
@@ -73,8 +83,8 @@ public:
 	}
 
 	static inline b3_f64 b3Normalize(
-		b3_vector64 *vector,
-		b3_f64       length = 1.0)
+		      b3_vector64 *vector,
+		const b3_f64       length = 1.0)
 	{
 		register b3_f64 x,y,z,denom,result = 0;
 
@@ -92,7 +102,7 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Add(b3_vector *a,b3_vector *result)
+	static inline b3_vector *b3Add(const b3_vector *a,b3_vector *result)
 	{
 		result->x += a->x;
 		result->y += a->y;
@@ -101,7 +111,10 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Add(b3_vector *a,b3_vector *b,b3_vector *result)
+	static inline b3_vector *b3Add(
+		const b3_vector *a,
+		const b3_vector *b,
+		      b3_vector *result)
 	{
 		result->x = a->x + b->x;
 		result->y = a->y + b->y;
@@ -110,7 +123,7 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Sub(b3_vector *a,b3_vector *result)
+	static inline b3_vector *b3Sub(const b3_vector *a,b3_vector *result)
 	{
 		result->x -= a->x;
 		result->y -= a->y;
@@ -119,7 +132,10 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Sub(b3_vector *a,b3_vector *b,b3_vector *result)
+	static inline b3_vector *b3Sub(
+		const b3_vector *a,
+		const b3_vector *b,
+		      b3_vector *result)
 	{
 		result->x = a->x - b->x;
 		result->y = a->y - b->y;
@@ -128,7 +144,10 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3CrossProduct(b3_vector *a,b3_vector *b,b3_vector *result)
+	static inline b3_vector *b3CrossProduct(
+		const b3_vector *a,
+		const b3_vector *b,
+		      b3_vector *result)
 	{
 		result->x = a->y * b->z - a->z * b->y;
 		result->y = a->z * b->x - a->x * b->z;
@@ -137,7 +156,10 @@ public:
 		return result;
 	}
 
-	static inline b3_vector64 *b3CrossProduct(b3_vector *a,b3_vector *b,b3_vector64 *result)
+	static inline b3_vector64 *b3CrossProduct(
+		const b3_vector *a,
+		const b3_vector *b,
+		      b3_vector64 *result)
 	{
 		result->x = a->y * b->z - a->z * b->y;
 		result->y = a->z * b->x - a->x * b->z;
@@ -146,7 +168,10 @@ public:
 		return result;
 	}
 
-	static inline b3_vector64 *b3CrossProduct(b3_vector64 *a,b3_vector64 *b,b3_vector64 *result)
+	static inline b3_vector64 *b3CrossProduct(
+		const b3_vector64 *a,
+		const b3_vector64 *b,
+		      b3_vector64 *result)
 	{
 		result->x = a->y * b->z - a->z * b->y;
 		result->y = a->z * b->x - a->x * b->z;
@@ -155,7 +180,7 @@ public:
 		return result;
 	}
 
-	static inline b3_f64 b3Length(b3_vector *vector)
+	static inline b3_f64 b3Length(const b3_vector *vector)
 	{
 		return sqrt(
 			vector->x * vector->x +
@@ -163,7 +188,7 @@ public:
 			vector->z * vector->z);
 	}
 
-	static inline b3_f64 b3Length(b3_vector64 *vector)
+	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
 		return sqrt(
 			vector->x * vector->x +
@@ -171,7 +196,7 @@ public:
 			vector->z * vector->z);
 	}
 
-	static inline b3_f64 b3QuadLength(b3_vector *vector)
+	static inline b3_f64 b3QuadLength(const b3_vector *vector)
 	{
 		return
 			vector->x * vector->x +
@@ -179,7 +204,9 @@ public:
 			vector->z * vector->z;
 	}
 
-	static inline b3_f64 b3Distance(b3_vector *from,b3_vector *to)
+	static inline b3_f64 b3Distance(
+		const b3_vector *from,
+		const b3_vector *to)
 	{
 		register b3_f64 x,y,z;
 
@@ -189,19 +216,11 @@ public:
 		return sqrt(x * x + y * y + z * z);
 	}
 
-	static inline void b3Scale(b3_vector *vector,b3_f64 factor)
+	static inline void b3Scale(b3_vector *vector,const b3_f64 factor)
 	{
 		vector->x = (b3_f32)(vector->x * factor);
 		vector->y = (b3_f32)(vector->y * factor);
 		vector->z = (b3_f32)(vector->z * factor);
-	}
-
-	static inline void b3Scale(b3_vector4D *vector,b3_f64 factor)
-	{
-		vector->x = (b3_f32)(vector->x * factor);
-		vector->y = (b3_f32)(vector->y * factor);
-		vector->z = (b3_f32)(vector->z * factor);
-		vector->w = (b3_f32)(vector->w * factor);
 	}
 
 	static inline void b3Scale(b3_vector64 *vector,const b3_f64 factor)
@@ -296,41 +315,28 @@ public:
 	}
 
 	static inline b3_vector *b3LinearCombine(
-		const b3_vector *pVec,
-		const b3_f64     a,
 		const b3_vector *aVec,
+		const b3_vector *bVec,
+		const b3_f64     b,
 		      b3_vector *result)
 	{
-		result->x = (b3_f32)(pVec->x + a * aVec->x);
-		result->y = (b3_f32)(pVec->y + a * aVec->y);
-		result->z = (b3_f32)(pVec->z + a * aVec->z);
-		return result;
-	}
-
-	static inline b3_vector4D *b3LinearCombine(
-		const b3_vector4D *pVec,
-		const b3_f64       a,
-		const b3_vector4D *aVec,
-		      b3_vector4D *result)
-	{
-		result->x = (b3_f32)(pVec->x + a * aVec->x);
-		result->y = (b3_f32)(pVec->y + a * aVec->y);
-		result->z = (b3_f32)(pVec->z + a * aVec->z);
-		result->w = (b3_f32)(pVec->w + a * aVec->w);
+		result->x = (b3_f32)(aVec->x + b * bVec->x);
+		result->y = (b3_f32)(aVec->y + b * bVec->y);
+		result->z = (b3_f32)(aVec->z + b * bVec->z);
 		return result;
 	}
 
 	static inline b3_vector *b3LinearCombine(
-		const b3_vector *coeff2,
-		const b3_vector *coeff1,
-		const b3_vector *coeff0,
-		const b3_f64     factor1,
-		const b3_f64     factor0,
+		const b3_vector *aVec,
+		const b3_vector *bVec,
+		const b3_vector *cVec,
+		const b3_f64     b,
+		const b3_f64     c,
 		      b3_vector *result)
 	{
-		result->x = (b3_f32)(coeff2->x + factor1 * coeff1->x + factor0 * coeff0->x);
-		result->y = (b3_f32)(coeff2->y + factor1 * coeff1->y + factor0 * coeff0->y);
-		result->z = (b3_f32)(coeff2->z + factor1 * coeff1->z + factor0 * coeff0->z);
+		result->x = (b3_f32)(aVec->x + b * bVec->x + c * cVec->x);
+		result->y = (b3_f32)(aVec->y + b * bVec->y + c * cVec->y);
+		result->z = (b3_f32)(aVec->z + b * bVec->z + c * cVec->z);
 		return result;
 	}
 

@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/02 19:19:09  sm
+**	- Heavily cleaned up BSplines. Now ready!
+**
 **	Revision 1.4  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
 **	  *** And now: Testing! Testing! Testing! ***
-**
+**	
 **	Revision 1.3  2001/10/11 16:06:32  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
@@ -567,8 +570,10 @@ b3_f64 b3Noise::b3PGauss()
 ** was coded some time ago...
 */
 
+/*
 #ifdef YESTURBO
 long WoodGrain ();
+
 #asm
 	public	_WoodGrain
 _WoodGrain:
@@ -636,5 +641,7 @@ register b3_f64 u,v,w;
 	else            return 0;
 }
 #endif
+*/
+
 #endif
 
