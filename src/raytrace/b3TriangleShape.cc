@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2003/01/18 14:13:49  sm
+**      - Added move/rotate stepper operations
+**      - Cleaned up resource IDs
+**
 **      Revision 1.35  2003/01/07 16:14:38  sm
 **      - Lines III: object editing didn't prepared any more. Fixed.
 **      - Some prepare optimizations.
@@ -181,6 +185,7 @@ b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
 	m_Vertices    = null;
 	m_Triangles   = null;
 	m_GridList    = null;
+	m_GridCount   = 0;
 	m_GridSize    = 0;
 	m_VertexCount = 0;
 	m_TriaCount   = 0;
@@ -195,6 +200,7 @@ b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 	m_Vertices    = null;
 	m_Triangles   = null;
 	m_GridList    = null;
+	m_GridCount   = 0;
 	m_GridSize    = 0;
 	m_VertexCount = 0;
 	m_TriaCount   = 0;
@@ -209,6 +215,7 @@ b3TriangleShape::b3TriangleShape(b3_u32 *src) :
 	m_Vertices    = null;
 	m_Triangles   = null;
 	m_GridList    = null;
+	m_GridCount   = 0;
 	m_GridSize    = 0;
 	m_VertexCount = 0;
 	m_TriaCount   = 0;
@@ -273,6 +280,7 @@ void b3TriangleShape::b3AddCubicItem (
 			return;
 		}
 	}
+	B3_ASSERT(trianum < m_GridCount);
 	m_GridList[trianum].b3Add(index);
 }
 
@@ -397,7 +405,8 @@ void b3TriangleShape::b3FreeTriaRefs()
 	if (m_GridList != null)
 	{
 		delete [] m_GridList;
-		m_GridList = null;
+		m_GridList  = null;
+		m_GridCount = 0;
 	}
 }
 
@@ -406,8 +415,6 @@ b3_bool b3TriangleShape::b3Prepare()
 	b3_vector Start,End,R1,R2,disp;
 	b3_index  P1,P2,P3,i,max;
 	b3_f64    Denom;
-
-	b3Vector::b3InitBound(&Start,&End);
 
 	if ((m_xSize < 1) || (m_ySize < 1))
 	{
@@ -438,6 +445,7 @@ b3_bool b3TriangleShape::b3Prepare()
 		}
 	}
 
+	b3Vector::b3InitBound(&Start,&End);
 	for (i = 0;i < m_VertexCount;i++)
 	{
 		b3Vector::b3AdjustBound(&m_Vertices[i].Point,&Start,&End);
@@ -479,13 +487,14 @@ b3_bool b3TriangleShape::b3Prepare()
 	b3Vector::b3SetMinimum(&m_Size,epsilon);
 
 	max = m_GridSize * m_GridSize * m_GridSize;
+	if (max != m_GridCount)
+	{
+		b3FreeTriaRefs();
+	}
 	if (m_GridList == null)
 	{
-		m_GridList = new b3Array<b3_index>[max];
-		if (m_GridList == null)
-		{
-			B3_THROW(b3WorldException,B3_WORLD_MEMORY);
-		}
+		m_GridList  = new b3Array<b3_index>[max];
+		m_GridCount = max;
 	}
 	else
 	{

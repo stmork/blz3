@@ -1247,6 +1247,7 @@ class b3TriangleShape : public b3SimpleShape
 protected:
 	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
 	b3_count               m_GridSize;       // num grid edges
+	b3_count               m_GridCount;      // array size of m_GridList;
 
 public:
 	b3_count               m_VertexCount;    // num of verteces and triangles

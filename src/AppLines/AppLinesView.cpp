@@ -41,10 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2003/01/18 14:13:49  sm
+**	- Added move/rotate stepper operations
+**	- Cleaned up resource IDs
+**
 **	Revision 1.58  2003/01/15 16:23:53  sm
 **	- Some other camera undo/redo operations added.
 **	- Fixed some undo(redo operations.
-**
+**	
 **	Revision 1.57  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
 **	
@@ -846,6 +850,12 @@ void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI)
 	pCmdUI->SetRadio(m_SelectMode == B3_LIGHT_TURN);
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Camera actions                                **
+**                                                                      **
+*************************************************************************/
+
 void CAppLinesView::OnCamSelect() 
 {
 	// TODO: Add your command handler code here
@@ -940,36 +950,33 @@ void CAppLinesView::OnUpdateCameraEnable(CCmdUI* pCmdUI)
 	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Object moving/rotating via                    **
+**                        separated buttons                             **
+**                                                                      **
+*************************************************************************/
+
 void CAppLinesView::b3Move(b3_action_mode mode)
 {
 	CAppLinesDoc *pDoc = GetDocument();
 	b3_vector     stepper;
-	b3_matrix     transformation;
 
 	m_RenderView.b3SetTranslationStepper(
 		pDoc->b3GetStepMove(),&stepper,mode);
-	b3MatrixMove(null,&transformation,&stepper);
-	m_Scene->b3Transform(&transformation);
-	pDoc->b3ComputeBounds();
-	pDoc->SetModifiedFlag();
-	pDoc->UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+	pDoc->b3AddOp(new b3OpMove(m_Scene,&stepper));
 }
 
 void CAppLinesView::b3Rotate(b3_action_mode mode)
 {
 	CAppLinesDoc *pDoc = GetDocument();
 	b3_line       axis;
-	b3_matrix     transformation;
 	b3_f64        angle;
 
 	axis.pos = *pDoc->b3GetFulcrum();
 	angle    = m_RenderView.b3SetRotationStepper(
 		pDoc->b3GetStepRotate(),&axis.dir,mode);
-	b3MatrixRotVec(null,&transformation,&axis,angle * M_PI / 180);
-	m_Scene->b3Transform(&transformation);
-	pDoc->b3ComputeBounds();
-	pDoc->SetModifiedFlag();
-	pDoc->UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+	pDoc->b3AddOp(new b3OpRotate(m_Scene,&axis,angle));
 }
 
 void CAppLinesView::OnMoveLeft() 

@@ -41,7 +41,7 @@ RestoreExt:	$(RESTOREEXT_OBJS)
 	cp $@ $(BLZ3_BIN)
 
 CleanRes:	$(CLEANRES_OBJS)
-	$(LINK.cc) -o $@ $(CLEANRES_OBJS) $(LDLIBS)
+	$(LINK.cc) -o $@ $(CLEANRES_OBJS) -lB3System -lpthread
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 

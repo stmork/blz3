@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2003/01/18 14:13:49  sm
+**	- Added move/rotate stepper operations
+**	- Cleaned up resource IDs
+**
 **	Revision 1.29  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
-**
+**	
 **	Revision 1.28  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
 **	
@@ -932,17 +936,18 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_polar_precompute   *polar,
 	b3_index               TriaField)
 {
-	b3_triangle   *Triangle;
-	b3_f64         Denom,lValue,aValue,bValue,OldValue = -1;
-	b3_index       Index,i,max;
+	b3_triangle    *Triangle;
+	b3_f64          Denom,lValue,aValue,bValue,OldValue = -1;
+	b3_index        Index,i,max;
 	const b3_index *buffer;
-	b3_res         dxSize;
-	b3_vector      Base,R1,R2,Dir,Product;
+	b3_res          dxSize;
+	b3_vector       Base,R1,R2,Dir,Product;
 
 	 xSize   = m_xSize;
 	 ySize   = m_ySize;
 	dxSize   = m_xSize << 1;
 
+	B3_ASSERT(TriaField < m_GridCount);
 	buffer = m_GridList[TriaField].b3GetBuffer();
 	max    = m_GridList[TriaField].b3GetCount();
 	for (i = 0;i < max;i++)

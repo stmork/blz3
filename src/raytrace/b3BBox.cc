@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2003/01/18 14:13:49  sm
+**	- Added move/rotate stepper operations
+**	- Cleaned up resource IDs
+**
 **	Revision 1.73  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.72  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
@@ -547,7 +551,10 @@ b3_bool b3BBox::b3Prepare(b3_bool recursive)
 		B3_FOR_BASE(b3GetBBoxHead(),item)
 		{
 			bbox = (b3BBox *)item;
-			bbox->b3Prepare(recursive);
+			if (!bbox->b3Prepare(recursive))
+			{
+				return false;
+			}
 		}
 	}
 

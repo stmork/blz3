@@ -58,9 +58,13 @@
 
 /*
 **	$Log$
+**	Revision 1.81  2003/01/18 14:13:49  sm
+**	- Added move/rotate stepper operations
+**	- Cleaned up resource IDs
+**
 **	Revision 1.80  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
-**
+**	
 **	Revision 1.79  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
 **	
@@ -789,15 +793,18 @@ void CAppLinesDoc::b3Prepare(
 	{
 		main->b3SetStatusMessage(IDS_DOC_VERTICES);
 		m_Scene->b3AllocVertices(&m_Context);
-
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_Scene->b3Prepare(0,0);
 	}
 
 	if (geometry_changed || structure_changed || reorg)
 	{
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
+	}
+
+	if (geometry_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_Scene->b3Prepare(0,0);
 	}
 
 	if (geometry_changed || structure_changed)

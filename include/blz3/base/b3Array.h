@@ -52,17 +52,21 @@ public:
 
 	inline void b3Add(T element)
 	{
+		T        *buffer;
+		b3_count  max = m_Max + m_Increment;
+
 		if (m_Index >= m_Max)
 		{
-			T        *buffer;
-			b3_count  max = m_Max + m_Increment;
-
 			buffer = (T *)b3Alloc(max * sizeof(T));
 			if (buffer != null)
 			{
 				// Copy old memory (should be done by realloc later!
-				memcpy (buffer,m_Buffer,m_Index * sizeof(T));
-				b3Free(m_Buffer);
+				if (m_Index > 0)
+				{
+					B3_ASSERT(m_Buffer != null);
+					memcpy (buffer,m_Buffer,m_Index * sizeof(T));
+					b3Free(m_Buffer);
+				}
 
 				// Setup new values
 				m_Buffer = buffer;

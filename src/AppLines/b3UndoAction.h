@@ -21,24 +21,62 @@
 #include "AppLines.h"
 #include "b3Undo.h"
 
-class b3OpObjectAction : public b3Operation
+class b3OpObjectTransformation : public b3Operation
 {
 	b3Array<b3BBox *>  m_Active;
+
+protected:
 	b3Scene           *m_Scene;
 	b3_matrix          m_UndoAction;
 	b3_matrix          m_RedoAction;
 
+protected:
+	     b3OpObjectTransformation(b3Scene *scene);
+	void b3Undo();
+	void b3Redo();
+
+private:
+	void b3Reactivate();
+};
+
+class b3OpObjectAction : public b3OpObjectTransformation
+{
 public:
 	     b3OpObjectAction(b3Scene *scene,b3_matrix *matrix);
 
 protected:
-	void b3Do();
-	void b3Undo();
-	void b3Redo();
+	inline void b3Do()
+	{
+		// Do nothing since action has already done it!
+	}
 
 	inline int  b3GetId()
 	{
 		return IDS_OP_ACTION;
+	}
+};
+
+class b3OpMove : public b3OpObjectTransformation
+{
+public:
+	b3OpMove(b3Scene *scene,b3_vector *stepper);
+
+protected:
+	inline int  b3GetId()
+	{
+		return IDS_OP_MOVE;
+	}
+};
+
+class b3OpRotate : public b3OpObjectTransformation
+{
+public:
+	b3OpRotate(b3Scene *scene,b3_line *axis,b3_f64 angle);
+
+protected:
+	inline int  b3GetId()
+	{
+		return IDS_OP_ROTATE;
 	}
 };
 
@@ -60,24 +98,6 @@ protected:
 	inline int  b3GetId()
 	{
 		return IDS_OP_ACTION;
-	}
-};
-
-class b3OpMove : public b3Operation
-{
-protected:
-	inline int  b3GetId()
-	{
-		return IDS_OP_MOVE;
-	}
-};
-
-class b3OpRotate : public b3Operation
-{
-protected:
-	inline int  b3GetId()
-	{
-		return IDS_OP_ROTATE;
 	}
 };
 
