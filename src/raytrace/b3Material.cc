@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2004/03/18 14:07:05  sm
+**      - Changed granite icons
+**
 **      Revision 1.43  2004/03/18 13:43:05  sm
 **      - Some better granite:
 **        o Introduced configurable overtones.
@@ -1161,11 +1164,6 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 	m_HighLight  = b3InitFloat();
 	m_Flags      = b3InitInt();
 	m_Overtone   = b3InitCount();
-
-	b3Vector::b3Init(&m_Scale,4.0,4.0,4.0);
-	m_DarkColor  = b3Color(B3_BLACK);
-	m_LightColor = b3Color(b3_pkd_color(0xd0dde0));
-	m_Overtone   = 2;
 }
 
 void b3MatGranite::b3Write()
