@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.57  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.56  2002/07/27 18:51:31  sm
 **	- Drawing changed to glInterleavedArrays(). This means that
 **	  extra normal and texture arrays are omitted. This simplifies
@@ -387,6 +394,20 @@ b3Base<b3Item> *b3BBox::b3GetBBoxHead()
 	return &m_Heads[1];
 }
 
+void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> &array)
+{
+	b3BBoxReference  reference(this);
+	b3Item          *item;
+	b3BBox          *bbox;
+	
+	array.b3Add(reference);
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3CollectBBoxes(array);
+	}
+}
+
 b3_bool b3BBox::b3Prepare()
 {
 	b3Item     *item;
@@ -394,6 +415,7 @@ b3_bool b3BBox::b3Prepare()
 	b3CSGShape *csgShape;
 	b3BBox     *bbox;
 
+/*
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
@@ -402,7 +424,7 @@ b3_bool b3BBox::b3Prepare()
 			return false;
 		}
 	}
-
+*/
 	m_ShapeCount = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{

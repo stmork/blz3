@@ -36,11 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.22  2002/07/20 10:49:34  sm
 **	- Added custom light support (not finished yet)
 **	- Added b3Light::b3IsActive() for compatibility.
 **	- Added texture search path support like in brt3.
-**
+**	
 **	Revision 1.21  2002/05/08 14:44:46  sm
 **	- Insert Tag names
 **	
@@ -217,9 +224,6 @@ int main(int argc,char *argv[])
 	{
 		b3InitRaytrace::b3Init();
 
-//		b3Log_SetLevel(B3LOG_NORMAL);
-//		b3Log_SetLevel(B3LOG_DEBUG);
-//		b3Log_SetLevel(B3LOG_FULL);
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
@@ -234,6 +238,12 @@ int main(int argc,char *argv[])
 			{
 				switch(argv[i][1])
 				{
+				case 'd' :
+					b3Log_SetLevel(B3LOG_DEBUG);
+					break;
+				case 'f' :
+					b3Log_SetLevel(B3LOG_FULL);
+					break;
 				case 'n' :
 					force_no_display = true;
 					b3PrintF(B3LOG_NORMAL,"Forcing no display output\n");

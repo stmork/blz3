@@ -92,7 +92,7 @@ public:
 		return m_Index;
 	}
 
-	inline T operator [](const int index)
+	inline T & operator [](const int index)
 	{
 		if ((index < 0) || (index >= m_Index))
 		{

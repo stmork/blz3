@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.21  2002/02/17 21:25:06  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.20  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -188,6 +195,16 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 *
 
 b3Tx *b3TxPool::b3FindTexture(const char *ParamName)
 {
+	b3Tx *tx;
+
+	m_Mutex.b3Lock();
+	tx = b3FindTextureUnsafe(ParamName);
+	m_Mutex.b3Unlock();
+	return tx;
+}
+
+b3Tx *b3TxPool::b3FindTextureUnsafe(const char *ParamName)
+{
 	b3Path      Name;
 	b3Tx       *tx;
 	const char *txName;
@@ -214,7 +231,9 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
 
 	// find existing texture
 	b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" to load.\n",Name);
-	tx = b3FindTexture(Name);
+
+	m_Mutex.b3Lock();
+	tx = b3FindTextureUnsafe(Name);
 	if (tx == null)
 	{
 		// OK, create new texture
@@ -222,15 +241,14 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
 
 		// load data and insert in internal list
 		b3ReloadTexture (tx,Name);
-		m_Mutex.b3Lock();
 		m_Pool.b3Append(tx);
-		m_Mutex.b3Unlock();
 	}
 	else
 	{
 		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" found.\n",
 			tx->b3Name());
 	}
+	m_Mutex.b3Unlock();
 
 	return tx;
 }

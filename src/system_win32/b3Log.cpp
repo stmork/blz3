@@ -45,6 +45,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.5  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -52,7 +59,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.4  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -100,7 +107,10 @@ static b3IPCMutex LogMutex;
 
 void b3Log_SetLevel(const b3_log_level debug_limit)
 {
+	b3_log_level oldLevel = logLevel;
+
 	logLevel = debug_limit;
+	return oldLevel;
 }
 
 b3_bool b3CheckLevel(const b3_log_level debug_limit)

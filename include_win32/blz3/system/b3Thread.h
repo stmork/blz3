@@ -70,7 +70,7 @@ public:
 	b3_bool       b3Start(b3ThreadProc,void *custom_ptr,b3_s32 pri=0);
 	b3_bool       b3IsRunning();
 	b3_bool       b3Stop();
-	void          b3Wait();
+	b3_u32        b3Wait();
 	void          b3AddTimeSpan(b3TimeSpan *span);
 
 private:

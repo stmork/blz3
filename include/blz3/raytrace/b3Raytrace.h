@@ -1638,6 +1638,18 @@ protected:
 	static void b3Init();
 };
 
+class b3BBox;
+
+class b3BBoxReference : public b3Link<b3BBoxReference>
+{
+public:
+	b3BBox *m_BBox;
+
+	b3BBoxReference(b3BBox *bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
+	{
+		m_BBox = bbox;
+	}
+};
 class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
@@ -1683,6 +1695,7 @@ public:
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
 		   b3CSGShape     *b3IntersectCSG(b3_ray *ray);
+		   void            b3CollectBBoxes(b3Array<b3BBoxReference> &array);
 		   void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
 		   void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 
@@ -2369,6 +2382,9 @@ protected:
 
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
+	static  b3_u32          b3PrepareThread(void *ptr);
+	static  b3_u32          b3AllocVerticesThread(void *ptr);
+	static  b3_u32          b3ComputeVerticesThread(void *ptr);
 		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
 		    b3Shape        *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);

@@ -23,6 +23,7 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3PrepareInfo.h"
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
 
@@ -36,10 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.34  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.33  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
@@ -577,14 +585,34 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	return 0;
 }
 
+
+b3_u32 b3Scene::b3PrepareThread(void *ptr)
+{
+	b3PrepareInfo   *info = (b3PrepareInfo *)ptr;
+	b3BBoxReference *reference;
+
+	while (reference = info->b3GetBBoxReference())
+	{
+		if (!reference->m_BBox->b3Prepare())
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
 b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 {
+	b3PrepareInfo  info(this);
 	b3Nebular     *nebular;
 	b3SuperSample *supersample;
 	b3Light       *light;
 	b3BBox        *bbox;
 	b3_f64         xDenom,yDenom;
 
+b3_log_level old = b3Log_SetLevel(B3LOG_FULL);
+	b3PrintF(B3LOG_FULL,"b3Scene::b3Prepare(%d,%d)\n",xSize,ySize);
+	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
 	m_AvrgColor.r = (m_BottomColor.r + m_TopColor.r) * 0.5;
 	m_AvrgColor.g = (m_BottomColor.g + m_TopColor.g) * 0.5;
 	m_AvrgColor.b = (m_BottomColor.b + m_TopColor.b) * 0.5;
@@ -605,6 +633,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
 
+	b3PrintF(B3LOG_FULL,"  preparing lensflare...\n");
 	m_LensFlare = b3GetLensFlare();
 	if (m_LensFlare != null)
 	{
@@ -614,6 +643,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		}
 	}
 
+	b3PrintF(B3LOG_FULL,"  preparing nebular...\n");
 	nebular = b3GetNebular();
 	if (nebular->b3IsActive())
 	{
@@ -627,6 +657,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		m_Nebular = null;
 	}
 
+	b3PrintF(B3LOG_FULL,"  preparing super sampling...\n");
 	supersample = b3GetSuperSample();
 	if (supersample->b3IsActive())
 	{
@@ -656,6 +687,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	}
 
 	// Init lights
+	b3PrintF(B3LOG_FULL,"  preparing lights...\n");
 	m_LightCount = 0;
 	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
 	{
@@ -671,14 +703,14 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_ShadowFactor = (b3_f64)m_ShadowBrightness / (b3_f64)m_LightCount;
 
 	// Init geometry
-	for(bbox = b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
+	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
+	if(!info.b3Prepare(b3PrepareThread))
 	{
-		if (!bbox->b3Prepare())
-		{
-			return false;
-		}
+		return false;
 	}
 
+	b3PrintF(B3LOG_FULL,"  preparing done...\n");
+b3Log_SetLevel(old);
 	return (m_BackgroundType == TP_TEXTURE ?
 		b3CheckTexture(&m_BackTexture,m_TextureName) :
 		true);

@@ -33,9 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.7  2002/03/10 21:14:41  sm
 **	- Fixed rotation shapes with custom subdivision for rotation.
-**
+**	
 **	Revision 1.6  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -239,7 +246,7 @@ b3_bool b3Thread::b3Start(
 	return thread != null;
 }
 
-void b3Thread::b3Wait()
+b3_u32 b3Thread::b3Wait()
 {
 	if (thread != null)
 	{
@@ -253,6 +260,7 @@ void b3Thread::b3Wait()
 		thread = null;
 		threadMutex.b3Unlock();
 	}
+#error "Ergebnis!"
 }
 
 b3_bool b3Thread::b3Stop()

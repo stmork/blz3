@@ -34,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/02 11:59:25  sm
+**	- b3Thread::b3Wait now returns thread result.
+**	- b3Log_SetLevel returns old log level.
+**	- Introduced b3PrepareInfo class for multithreaded initialization
+**	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
+**	- b3TxPool class is now thread safe.
+**
 **	Revision 1.6  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.5  2001/11/06 17:14:02  sm
 **	- Introducing JPEG saving
 **	- Made some library fine tunings on TIFF and JPEG
@@ -245,11 +252,13 @@ b3_bool b3Thread::b3Stop()
 	return was_running;
 }
 
-void b3Thread::b3Wait()
+b3_u32 b3Thread::b3Wait()
 {
-	void *ptr;
+	int   result;
+	void *ptr = &result;
 
 	pthread_join(m_Thread,&ptr);
+	return result;
 }
 
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
