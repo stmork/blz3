@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2004/04/04 12:57:52  sm
+**      - Fixed wood alignment.
+**
 **      Revision 1.46  2004/04/04 10:49:34  sm
 **      - Added further wood development.
 **
@@ -1015,12 +1018,10 @@ void b3MatWood::b3Init()
 
 b3_bool b3MatWood::b3Prepare()
 {
-	b3_matrix a,b;
-
-	b3Matrix::b3Move(null,&a,-0.5,-0.5,-0.5);
-	b3Matrix::b3Scale(&a,&b,null,m_Scale.x * M_PI,m_Scale.y * M_PI,m_Scale.z * M_PI);
-	b3Matrix::b3RotateY(&b,&a,     null,m_yRot);
-	b3Matrix::b3RotateZ(&a,&m_Warp,null,m_zRot);
+	b3Matrix::b3Move   (null,   &m_Warp,-0.5,-0.5,-0.5);
+	b3Matrix::b3Scale  (&m_Warp,&m_Warp,null,m_Scale.x * M_PI,m_Scale.y * M_PI,m_Scale.z * M_PI);
+	b3Matrix::b3RotateZ(&m_Warp,&m_Warp,null,m_zRot);
+	b3Matrix::b3RotateY(&m_Warp,&m_Warp,null,m_yRot);
 	
 	return true;
 }
