@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.1  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **
 */
 
@@ -110,5 +114,11 @@ void CDlgStepMove::b3SetData()
 		m_xCtrl.b3SetValue(m_Info->m_StepMove.x);
 		m_yCtrl.b3SetValue(m_Info->m_StepMove.y);
 		m_zCtrl.b3SetValue(m_Info->m_StepMove.z);
+	}
+	else
+	{
+		m_xCtrl.SetWindowText("");
+		m_yCtrl.SetWindowText("");
+		m_zCtrl.SetWindowText("");
 	}
 }

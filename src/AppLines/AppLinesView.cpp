@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.25  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
-**
+**	
 **	Revision 1.24  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -428,7 +432,6 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	if (lHint & B3_UPDATE_CAMERA)
 	{
 		m_RenderView.b3SetCamera(m_Camera);
-//		m_Scene->b3SetCamera(m_Camera);
 		m_CameraVolume.b3Update(m_Camera);
 		doInvalidate = true;
 	}
@@ -529,12 +532,12 @@ void CAppLinesView::OnPaint()
 		m_CameraVolume.b3Draw();
 	}
 	pDoc->b3DrawFulcrum();
+	_ftime(&stop);
 
 	// Done...
 	SwapBuffers(m_DC);
 	ValidateRect(NULL);
 
-	_ftime(&stop);
 	mDiff = stop.millitm - start.millitm;
 	sDiff = stop.time    - start.time;
 	if (mDiff < 0)

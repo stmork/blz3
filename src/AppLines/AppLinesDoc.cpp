@@ -49,10 +49,14 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2001/12/26 18:17:55  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.28  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **	Revision 1.27  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
 **	
@@ -205,6 +209,8 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
+	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateCamSelect)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -250,17 +256,26 @@ CAppLinesDoc::~CAppLinesDoc()
 
 BOOL CAppLinesDoc::OnNewDocument()
 {
-	CString filename;
+	CMainFrame *main = CB3GetMainFrame();
+	CString     filename;
 
 	if (!CDocument::OnNewDocument())
+	{
 		return FALSE;
+	}
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
 	filename.LoadString(IDS_SCENE_NEW);
 	m_Scene = b3ExampleScene::b3CreateNew(filename);
+	
+	main->b3SetStatusMessage(IDS_DOC_REORG);
 	m_Scene->b3Reorg();
+
+	main->b3SetStatusMessage(IDS_DOC_PREPARE);
 	m_Scene->b3Prepare(0,0);
+
+	main->b3SetStatusMessage(IDS_DOC_VERTICES);
 	m_Scene->b3AllocVertices(&m_Context);
 	m_World.b3SetFirst(m_Scene);
 	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
@@ -268,27 +283,44 @@ BOOL CAppLinesDoc::OnNewDocument()
 	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+
+	main->b3SetStatusMessage(IDS_DOC_BOUND);
 	b3ComputeBounds();
 	return TRUE;
 }
 
 BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName) 
 {
+	CMainFrame *main = CB3GetMainFrame();
+	CString     message;
+
 	if (!CDocument::OnOpenDocument(lpszPathName))
+	{
 		return FALSE;
+	}
 	
 	// TODO: Add your specialized creation code here
+	message.Format(IDS_DOC_READ,lpszPathName);
+	main->b3SetStatusMessage(message);
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3SetFilename(lpszPathName);
+
+	main->b3SetStatusMessage(IDS_DOC_REORG);
 	m_Scene->b3Reorg();
+
+	main->b3SetStatusMessage(IDS_DOC_PREPARE);
 	m_Scene->b3Prepare(0,0);
+
+	main->b3SetStatusMessage(IDS_DOC_VERTICES);
 	m_Scene->b3AllocVertices(&m_Context);
 	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+
+	main->b3SetStatusMessage(IDS_DOC_BOUND);
 	b3ComputeBounds();
 	return TRUE;
 }
@@ -723,4 +755,16 @@ void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI)
 	{
 		pCmdUI->Enable(FALSE);
 	}
+}
+
+void CAppLinesDoc::OnUpdateCamSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsRaytracing());
+}
+
+void CAppLinesDoc::OnUpdateLightSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsRaytracing());
 }

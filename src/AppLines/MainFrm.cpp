@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.16  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
-**
+**	
 **	Revision 1.15  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -134,27 +138,32 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(IDM_BAR_CAMERA, OnBarCamera)
 	ON_COMMAND(IDM_BAR_LIGHT, OnBarLight)
 	ON_COMMAND(IDM_BAR_SCENE, OnBarScene)
+	ON_COMMAND(IDM_BAR_FULCRUM, OnBarFulcrum)
+	ON_COMMAND(IDM_BAR_STEP_MOVE, OnBarStepMove)
+	ON_COMMAND(IDM_BAR_STEP_ROTATE, OnBarStepRotate)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_DISPLAY, OnUpdateBarDisplay)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_ACTION, OnUpdateBarAction)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_CAMERA, OnUpdateBarCamera)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_LIGHT, OnUpdateBarLight)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_SCENE, OnUpdateBarScene)
-	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
-	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
-	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
-	ON_COMMAND(IDM_BAR_FULCRUM, OnBarFulcrum)
-	ON_COMMAND(IDM_BAR_STEP_MOVE, OnBarStepMove)
-	ON_COMMAND(IDM_BAR_STEP_ROTATE, OnBarStepRotate)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_FULCRUM, OnUpdateBarFulcrum)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_MOVE, OnUpdateBarStepMove)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_ROTATE, OnUpdateBarStepRotate)
+	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
+	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
+	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
+	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateCamSelect)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // status line indicator
+	ID_COORD_X,
+	ID_COORD_Y,
+	ID_COORD_Z,
 	ID_DRAWING_PERF,
 	ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
@@ -257,7 +266,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-	m_wndStatusBar.SetPaneText(1,"");
+	b3SetPosition(null);
+	m_wndStatusBar.SetPaneText(4,"");
 
 	m_cameraBox.b3Create(&m_wndCamrBar,ID_CAM_SELECT);
 	m_lightBox.b3Create(&m_wndLghtBar,ID_LIGHT_SELECT);
@@ -562,6 +572,41 @@ void CMainFrame::b3UpdateFulcrum()
 **                                                                      **
 *************************************************************************/
 
+void CMainFrame::b3SetStatusMessage(const char *message)
+{
+	m_wndStatusBar.SetPaneText(0,message);
+	b3PrintF(B3LOG_FULL,"Status message: %s\n",message);
+}
+
+void CMainFrame::b3SetStatusMessage(const int message_id)
+{
+	CString message;
+
+	message.LoadString(message_id);
+	b3SetStatusMessage(message);
+}
+
+void CMainFrame::b3SetPosition(b3_vector *position)
+{
+	if (position == null)
+	{
+		m_wndStatusBar.SetPaneText(1,"x:");
+		m_wndStatusBar.SetPaneText(2,"y:");
+		m_wndStatusBar.SetPaneText(3,"z:");
+	}
+	else
+	{
+		CString x,y,z;
+
+		x.Format("x: %5.2f",position->x);
+		y.Format("y: %5.2f",position->y);
+		z.Format("z: %5.2f",position->z);
+		m_wndStatusBar.SetPaneText(1,x);
+		m_wndStatusBar.SetPaneText(2,y);
+		m_wndStatusBar.SetPaneText(3,z);
+	}
+}
+
 void CMainFrame::b3SetPerformance(
 	CView    *drawer,
 	long      millis,
@@ -576,6 +621,18 @@ void CMainFrame::b3SetPerformance(
 		frame_rate   = 1000.0 / (b3_f64)millis;
 		polygon_rate = poly_count * frame_rate;
 		text.Format(IDS_FRAME_RATE,frame_rate,polygon_rate);
-		m_wndStatusBar.SetPaneText(1,text);
+		m_wndStatusBar.SetPaneText(4,text);
 	}
+}
+
+void CMainFrame::OnUpdateCamSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(false);
+}
+
+void CMainFrame::OnUpdateLightSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(false);
 }

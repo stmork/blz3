@@ -266,6 +266,14 @@
 #define IDS_DIALOGBAR_FULCRUM           61463
 #define IDS_DIALOGBAR_STEP_MOVE         61464
 #define IDS_DIALOGBAR_STEP_ROTATE       61465
+#define IDS_DOC_READ                    61466
+#define IDS_DOC_REORG                   61467
+#define IDS_DOC_VERTICES                61468
+#define IDS_DOC_PREPARE                 61469
+#define IDS_DOC_BOUND                   61470
+#define ID_COORD_X                      61471
+#define ID_COORD_Y                      61472
+#define ID_COORD_Z                      61473
 
 // Next default values for new objects
 // 

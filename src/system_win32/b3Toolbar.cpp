@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3Toolbar.cpp $  
-**	$Release:	Dortmund 2000 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	B3 2000 - Toolbar handling
+**	Blizzard III - Toolbar handling
 **
-**	(C) Copyright 2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -19,7 +19,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        B3 2000 includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -30,19 +30,23 @@
 #include "afxpriv.h"
 #include "afxext.h"
 
-#define FLAT_TOOLBAR_HEIGHT 30
+#define FLAT_TOOLBAR_HEIGHT 28
 
 /*************************************************************************
 **                                                                      **
-**                        B3 development log                          **
+**                        Blizzard III development log                  **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.5  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
-**
+**	
 **	Revision 1.4  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid

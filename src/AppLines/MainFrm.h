@@ -47,6 +47,7 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CMainFrame)
+	public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
 
@@ -111,6 +112,8 @@ protected:
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
 	afx_msg void OnUpdateControls();
+	afx_msg void OnUpdateCamSelect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLightSelect(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -122,6 +125,9 @@ public:
 	b3Light      *b3GetSelectedLight();
 	void          b3UpdateModellerInfo(CAppLinesDoc *pDoc = null);
 	void          b3UpdateFulcrum();
+	void          b3SetStatusMessage(const char *message);
+	void          b3SetStatusMessage(const int message_id);
+	void          b3SetPosition(b3_vector *position);
 	void          b3SetPerformance(CView *drawing_window,long millis,b3_count poly_count);
 };
 

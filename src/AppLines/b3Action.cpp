@@ -22,6 +22,8 @@
 *************************************************************************/
 
 #include "b3Action.h"
+#include "AppLines.h"
+#include "MainFrm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.14  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **	Revision 1.13  2001/12/18 14:36:25  sm
 **	- Double click bug on camera acting found and fixed
 **	
@@ -100,26 +106,45 @@ CB3Action::CB3Action(CAppLinesView *window)
 
 void CB3Action::b3DispatchMouseMove  (b3_coord x,b3_coord y)
 {
-	if (((x != m_xLast) || (y != m_yLast)) && (::GetCapture() == m_View->m_hWnd))
+	if ((x != m_xLast) || (y != m_yLast))
 	{
-		switch (m_Button)
+		CMainFrame *main = CB3GetMainFrame();
+		b3_vector   position;
+		b3_f64      xRel,yRel;
+
+		if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 		{
-		case B3_MB_UP:
-			b3MouseMove(x,y);
-			break;
-		case B3_MB_LEFT:
-			b3LMove(x,y);
-			break;
-		case B3_MB_MIDDLE:
-			b3MMove(x,y);
-			break;
-		case B3_MB_RIGHT:
-			b3RMove(x,y);
-			break;
+			main->b3SetPosition(null);
 		}
-		m_xLast = x;
-		m_yLast = y;
-	}
+		else
+		{
+			b3Vector::b3Init(&position);
+			b3GetRelCoord(x,y,xRel,yRel);
+			m_View->m_RenderView.b3Unproject(xRel,yRel,&position);
+			main->b3SetPosition(&position);
+		}
+
+		if (::GetCapture() == m_View->m_hWnd)
+		{
+			switch (m_Button)
+			{
+			case B3_MB_UP:
+				b3MouseMove(x,y);
+				break;
+			case B3_MB_LEFT:
+				b3LMove(x,y);
+				break;
+			case B3_MB_MIDDLE:
+				b3MMove(x,y);
+				break;
+			case B3_MB_RIGHT:
+				b3RMove(x,y);
+				break;
+			}
+			m_xLast = x;
+			m_yLast = y;
+		}
+}
 }
 
 void CB3Action::b3DispatchLButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
@@ -442,6 +467,7 @@ void CB3MoveAction::b3LUp(b3_coord x,b3_coord y)
 		b3MatrixMove(null,&m_Transformation,&diff);
 		b3MatrixMMul(&inv,&m_Transformation,&activity);
 		b3Transform(&activity);
+		m_Doc->b3ComputeBounds();
 		m_Doc->SetModifiedFlag();
 	}
 }
@@ -529,6 +555,7 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 		b3MatrixMove(null,&m_Transformation,&diff);
 		b3MatrixMMul(&inv,&m_Transformation,&activity);
 		b3Transform(&activity);
+		m_Doc->b3ComputeBounds();
 		m_Doc->SetModifiedFlag();
 	}
 }
@@ -747,7 +774,6 @@ CB3ActionObjectMove::CB3ActionObjectMove(CAppLinesView *window) :
 void CB3ActionObjectMove::b3Transform(b3_matrix *transformation)
 {
 	m_Doc->m_Scene->b3Transform(transformation);
-	m_Doc->b3ComputeBounds();
 	m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 }
 
@@ -818,7 +844,6 @@ void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
 			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
 			b3MatrixMMul(&inv,&m_Transformation,&activity);
 			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
 	}

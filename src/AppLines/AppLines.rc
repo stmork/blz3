@@ -808,43 +808,43 @@ BEGIN
     GROUPBOX        "Projektionswerte:",IDC_STATIC,155,95,165,85
 END
 
-IDD_FULCRUM DIALOG DISCARDABLE  0, 0, 185, 41
+IDD_FULCRUM DIALOG DISCARDABLE  0, 0, 185, 31
 STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_FULCRUM_X,15,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_FULCRUM_Y,75,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_FULCRUM_Z,135,20,40,12,ES_AUTOHSCROLL
-    LTEXT           "x:",IDC_STATIC,5,22,8,8
-    LTEXT           "y:",IDC_STATIC,65,22,8,8
-    LTEXT           "z:",IDC_STATIC,125,22,8,8
-    LTEXT           "Drehkreuz-Position",IDC_STATIC,15,10,60,8
+    EDITTEXT        IDC_FULCRUM_X,15,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FULCRUM_Y,75,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FULCRUM_Z,135,15,40,12,ES_AUTOHSCROLL
+    LTEXT           "x:",IDC_STATIC,5,15,8,8
+    LTEXT           "y:",IDC_STATIC,65,15,8,8
+    LTEXT           "z:",IDC_STATIC,125,15,8,8
+    LTEXT           "Drehkreuz-Position",IDC_STATIC,15,5,60,8
 END
 
-IDD_STEP_MOVE DIALOG DISCARDABLE  0, 0, 185, 41
+IDD_STEP_MOVE DIALOG DISCARDABLE  0, 0, 185, 31
 STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_STEP_MOVE_X,15,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_STEP_MOVE_Y,75,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_STEP_MOVE_Z,135,20,40,12,ES_AUTOHSCROLL
-    LTEXT           "x:",IDC_STATIC,5,22,8,8
-    LTEXT           "y:",IDC_STATIC,65,22,8,8
-    LTEXT           "z:",IDC_STATIC,125,22,8,8
-    LTEXT           "Schrittlängen",IDC_STATIC,15,10,42,8
+    EDITTEXT        IDC_STEP_MOVE_X,15,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STEP_MOVE_Y,75,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STEP_MOVE_Z,135,15,40,12,ES_AUTOHSCROLL
+    LTEXT           "x:",IDC_STATIC,5,15,8,8
+    LTEXT           "y:",IDC_STATIC,65,15,8,8
+    LTEXT           "z:",IDC_STATIC,125,15,8,8
+    LTEXT           "Schrittlängen",IDC_STATIC,15,5,42,8
 END
 
-IDD_STEP_ROTATE DIALOG DISCARDABLE  0, 0, 185, 41
+IDD_STEP_ROTATE DIALOG DISCARDABLE  0, 0, 185, 31
 STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_STEP_ROT_X,15,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_STEP_ROT_Y,75,20,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_STEP_ROT_Z,135,20,40,12,ES_AUTOHSCROLL
-    LTEXT           "x:",IDC_STATIC,5,22,8,8
-    LTEXT           "y:",IDC_STATIC,65,22,8,8
-    LTEXT           "z:",IDC_STATIC,125,22,8,8
-    LTEXT           "Drehwinkelschritte",IDC_STATIC,15,10,59,8
+    EDITTEXT        IDC_STEP_ROT_X,15,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STEP_ROT_Y,75,15,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STEP_ROT_Z,135,15,40,12,ES_AUTOHSCROLL
+    LTEXT           "x:",IDC_STATIC,5,15,8,8
+    LTEXT           "y:",IDC_STATIC,65,15,8,8
+    LTEXT           "z:",IDC_STATIC,125,15,8,8
+    LTEXT           "Drehwinkelschritte",IDC_STATIC,15,5,59,8
 END
 
 
@@ -1011,7 +1011,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 178
         TOPMARGIN, 7
-        BOTTOMMARGIN, 34
+        BOTTOMMARGIN, 24
     END
 
     IDD_STEP_MOVE, DIALOG
@@ -1019,7 +1019,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 178
         TOPMARGIN, 7
-        BOTTOMMARGIN, 34
+        BOTTOMMARGIN, 24
     END
 
     IDD_STEP_ROTATE, DIALOG
@@ -1027,7 +1027,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 178
         TOPMARGIN, 7
-        BOTTOMMARGIN, 34
+        BOTTOMMARGIN, 24
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1206,7 +1206,7 @@ BEGIN
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
     IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
-    IDS_FRAME_RATE          "%3.2f frames/sec. %5.2f triangles/sec"
+    IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
     IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
     IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
     IDS_SCENE_NEW           "Unbenannt"
@@ -1304,6 +1304,12 @@ BEGIN
     IDS_DIALOGBAR_FULCRUM   "Drehkreuz"
     IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
     IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
+    IDS_DOC_READ            "Datei %s wird geladen..."
+    IDS_DOC_REORG           "Die Objekte werden angeordnet..."
+    IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
+    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
+    IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
+    ID_COORD_X              "x: 00000000.00"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1354,6 +1360,12 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
     ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_COORD_Y              "y: 00000000.00"
+    ID_COORD_Z              "z: 00000000.00"
 END
 
 #endif    // German (Germany) resources

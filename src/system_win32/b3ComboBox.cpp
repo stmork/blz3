@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/26 18:17:56  sm
+**	- More status bar information displayed (e.g. coordinates)
+**	- Some minor UI updates
+**
 **	Revision 1.1  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
 **	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
 **	- Some RenderObject redesignes
 **	- Color selecting bug fix in RenderObject
-**
+**	
 **	
 */
 
@@ -78,14 +82,12 @@ b3_bool CB3ComboBox::b3Create(CB3Toolbar *toolbar,b3_s32 id,b3_res width,b3_bool
 		{
 			style |= CBS_SORT;
 		}
-		if (!Create(style, rect, m_Toolbar, m_ID))
-		{
-			b3PrintF (B3LOG_NORMAL,"### CLASS: ComboBox # Failed to create combo-box!\n");
-		}
-		else
-		{
-			success = true;
-		}
+		success = Create(style, rect, m_Toolbar, m_ID);
+	}
+
+	if (!success)
+	{
+		b3PrintF (B3LOG_NORMAL,"### CLASS: ComboBox # Failed to create combo-box!\n");
 	}
 	return success;
 }
