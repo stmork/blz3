@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.86  2004/07/27 17:33:46  sm
+**      - Some thin film modifications
+**
 **      Revision 1.85  2004/07/27 16:33:50  sm
 **      - Added thin film material rendering
 **
@@ -1785,13 +1788,16 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 
 	// scale
 	b3Scale(surface->incoming,&m_Scale,&point);
-	wobble        = b3Noise::b3FilteredNoiseVector(point.x,point.y,point.z) * 2 - 1;
+	wobble =
+		b3Noise::b3SignedFilteredNoiseVector(point.x,    point.y,    point.z) +
+		b3Noise::b3SignedFilteredNoiseVector(point.x * 2,point.y * 2,point.z * 2) * 0.5 +
+		b3Noise::b3SignedFilteredNoiseVector(point.x * 4,point.y * 4,point.z * 4) * 0.25;
 
 	// compute refraction angle
 	cos_phi       = b3Vector::b3SMul(&surface->incoming->dir,normal);
 	sin_theta_sqr = (1.0 - cos_phi * cos_phi) / (m_Ior * m_Ior);
 	cos_theta = sqrt(1.0 - sin_theta_sqr);
-	quotient = 4000.0 * M_PI * m_Thickness * (0.5 + wobble) * cos_theta;
+	quotient = 4000.0 * M_PI * m_Thickness * (1.5 + 0.5 * wobble) * cos_theta;
 
 	// compute interferences
 	for (int i = b3Color::R;i <= b3Color::B;i++)
