@@ -224,6 +224,10 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM SEPARATOR
+            MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
+            MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
+            MENUITEM "&Winkelschritt-Dialog",       IDM_BAR_STEP_ROTATE
         END
         POPUP "Symbolleisten &anpassen"
         BEGIN
@@ -319,6 +323,10 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM SEPARATOR
+            MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
+            MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
+            MENUITEM "&Winkelschritt-Dialog",       IDM_BAR_STEP_ROTATE
         END
         POPUP "S&ymbolleisten anpassen"
         BEGIN
@@ -402,6 +410,10 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM SEPARATOR
+            MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
+            MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
+            MENUITEM "&Winkelschritt-Dialog",       IDM_BAR_STEP_ROTATE
         END
         POPUP "S&ymbolleisten anpassen"
         BEGIN
@@ -1322,6 +1334,9 @@ BEGIN
     ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
     ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
     ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
+    IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
+    IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
+    IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/12/26 12:00:36  sm
+**	- Fixed modeller info dialog
+**
 **	Revision 1.15  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **	Revision 1.14  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
 **	
@@ -140,6 +143,12 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
 	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
+	ON_COMMAND(IDM_BAR_FULCRUM, OnBarFulcrum)
+	ON_COMMAND(IDM_BAR_STEP_MOVE, OnBarStepMove)
+	ON_COMMAND(IDM_BAR_STEP_ROTATE, OnBarStepRotate)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_FULCRUM, OnUpdateBarFulcrum)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_MOVE, OnUpdateBarStepMove)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_ROTATE, OnUpdateBarStepRotate)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -227,11 +236,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
 	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
+	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
 	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
 	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
-	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
-	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
 	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
 	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
@@ -382,6 +391,24 @@ void CMainFrame::OnBarScene()
 	m_wndObjtBar.b3ToggleVisibility();
 }
 
+void CMainFrame::OnBarFulcrum() 
+{
+	// TODO: Add your command handler code here
+	m_dlgFulcrum.b3ToggleVisibility();
+}
+
+void CMainFrame::OnBarStepMove() 
+{
+	// TODO: Add your command handler code here
+	m_dlgStepMove.b3ToggleVisibility();
+}
+
+void CMainFrame::OnBarStepRotate() 
+{
+	// TODO: Add your command handler code here
+	m_dlgStepRotate.b3ToggleVisibility();
+}
+
 void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
@@ -416,6 +443,24 @@ void CMainFrame::OnUpdateBarScene(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndObjtBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarFulcrum(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_dlgFulcrum.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarStepMove(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_dlgStepMove.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarStepRotate(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_dlgStepRotate.b3IsVisible());
 }
 
 /*************************************************************************

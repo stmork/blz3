@@ -143,6 +143,9 @@ public:
 	        BOOL  Create(CWnd * pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	        BOOL  Create(CWnd * pParentWnd, LPCTSTR lpszTemplateName, UINT nStyle, UINT nID);
 	virtual BOOL  OnInitDialogBar();
+	b3_bool       b3ToggleVisibility();
+	b3_bool       b3SetVisibility(bool new_visibility=true);
+	b3_bool       b3IsVisible();
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3Dialogbar)
@@ -155,9 +158,6 @@ protected:
 protected:
 	friend class  CB3ToolbarState;
 
-	b3_bool       b3ToggleVisibility();
-	b3_bool       b3SetVisibility(bool new_visibility=true);
-	b3_bool       b3IsVisible();
 	void          b3SetID(long id_bitmap,long id_title,long id_bar);
 	b3_bool       b3Create(CFrameWnd *parent);
 	CControlBar  *b3DockRight(CControlBar *Left=null);
@@ -176,7 +176,7 @@ class CB3ToolbarState
 	b3_count              m_ToolCount;
 	char                  m_Code[128];
 public:
-	        CB3ToolbarState();
+	        CB3ToolbarState(const char *appName);
 	void    b3AddToolbar(CB3Toolbar *toolbar,long id_bitmap,long id_title);
 	void    b3AddMenubar(CB3Menubar *menubar,long id_menu);
 	void    b3AddDialogbar(CB3Dialogbar *dialogbar,long id_dialog,long id_title);

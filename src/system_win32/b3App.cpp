@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/26 12:00:36  sm
+**	- Fixed modeller info dialog
+**
 **	Revision 1.3  2001/08/16 14:41:24  sm
 **	- Some more shading shapes added (only BSPline shapes are missing)
-**
+**	
 **	Revision 1.2  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -65,7 +68,10 @@
 **                                                                      **
 *************************************************************************/
 
-CB3App::CB3App(const char *appName) : CWinApp(), CB3Reg(BLIZZARD3_REG_COMPANY,BLIZZARD3_REG_PRODUCT)
+CB3App::CB3App(const char *appName) : 
+	CWinApp(),
+	CB3Reg(BLIZZARD3_REG_COMPANY,BLIZZARD3_REG_PRODUCT),
+	CB3ToolbarState(appName)
 {
 	b3Path DebugFile;
 
@@ -83,6 +89,7 @@ CB3App::~CB3App()
 
 const char *CB3App::b3ClientName()
 {
+	B3_ASSERT(m_ClientName != null);
 	return m_ClientName;
 }
 

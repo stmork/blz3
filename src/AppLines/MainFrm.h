@@ -30,6 +30,7 @@
 #include "DlgStepRotate.h"
 
 #define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
+#define CB3GetMainFrame() ((CMainFrame *)AfxGetApp()->m_pMainWnd)
 
 class CMainFrame : public CMDIFrameWnd
 {
@@ -95,12 +96,18 @@ protected:
 	afx_msg void OnBarCamera();
 	afx_msg void OnBarLight();
 	afx_msg void OnBarScene();
+	afx_msg void OnBarFulcrum();
+	afx_msg void OnBarStepMove();
+	afx_msg void OnBarStepRotate();
 	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarDisplay(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarAction(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarCamera(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarLight(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarScene(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarFulcrum(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarStepMove(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarStepRotate(CCmdUI* pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
 	afx_msg void OnUpdateControls();

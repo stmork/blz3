@@ -41,10 +41,13 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/26 12:00:36  sm
+**	- Fixed modeller info dialog
+**
 **	Revision 1.2  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **	Revision 1.1  2001/11/28 19:54:03  sm
 **	- Adding modelling info dialog
 **	
@@ -183,5 +186,6 @@ void CDlgModellerInfo::OnOK()
 	m_ModellerInfo->m_Center.x    = m_xFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.y    = m_yFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.z    = m_zFulcrumCtrl.m_Value;
+	CB3GetApp()->b3SetData();
 	CDialog::OnOK();
 }

@@ -39,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2001/12/26 12:00:36  sm
+**	- Fixed modeller info dialog
+**
 **	Revision 1.24  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
-**
+**	
 **	Revision 1.23  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -957,9 +960,8 @@ void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI)
 void CAppLinesView::OnCamSelect() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame *main;
+	CMainFrame *main = CB3GetMainFrame();
 
-	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
 	m_Camera = main->b3GetSelectedCamera();
 	m_Scene->b3SetCamera(m_Camera);
 	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
@@ -968,9 +970,8 @@ void CAppLinesView::OnCamSelect()
 void CAppLinesView::OnLightSelect() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame *main;
+	CMainFrame *main = CB3GetMainFrame();
 
-	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
 	m_Light = main->b3GetSelectedLight();
 	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
@@ -984,7 +985,7 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 
 	app  = CB3GetApp();
-	main = (CMainFrame *)app->m_pMainWnd;
+	main = CB3GetMainFrame();
 
 	app->b3GetData();
 	if (bActivate)
@@ -1051,7 +1052,7 @@ void CAppLinesView::OnCameraNew()
 		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
 
 		GetDocument()->SetModifiedFlag();
-		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		main = CB3GetMainFrame();
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
@@ -1065,7 +1066,7 @@ void CAppLinesView::OnCameraDelete()
 
 	if (AfxMessageBox(IDS_ASK_DELETE_CAMERA,MB_ICONQUESTION|MB_YESNO) == IDYES)
 	{
-		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		main = CB3GetMainFrame();
 		
 		camera = main->b3GetSelectedCamera();
 		select = m_Scene->b3GetNextCamera(camera);
@@ -1092,7 +1093,8 @@ void CAppLinesView::OnCameraProperties()
 	dlg.m_Camera = m_Camera;
 	if (dlg.DoModal() == IDOK)
 	{
-		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		main = CB3GetMainFrame();
+
 		GetDocument()->SetModifiedFlag();
 		m_Camera = dlg.m_Camera;
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
