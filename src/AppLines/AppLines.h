@@ -65,6 +65,7 @@ public:
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);
 	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);
+	void             b3UpdateAllViews();
 
 	// Cut & paste operation
 	b3_bool          b3PutClipboard(b3BBox *bbox);

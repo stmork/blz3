@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2003/02/26 19:13:05  sm
+**	- Update scene/object views after color redefinition.
+**	- Beautofied the app properties dialog.
+**
 **	Revision 1.52  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.51  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -631,6 +635,26 @@ BOOL CAppLinesApp::InitInstance()
 CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 {
 	return (CAppRaytraceDoc *)pImageTemplate->OpenDocumentFile(NULL);
+}
+
+void CAppLinesApp::b3UpdateAllViews()
+{
+	CDocument *pDoc;
+	POSITION   pos;
+
+	pos = pSceneTemplate->GetFirstDocPosition();
+	while(pos != NULL)
+	{
+		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc->UpdateAllViews(NULL,B3_UPDATE_VIEW);
+	}
+
+	pos = pObjectTemplate->GetFirstDocPosition();
+	while(pos != NULL)
+	{
+		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc->UpdateAllViews(NULL,B3_UPDATE_VIEW);
+	}
 }
 
 CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(

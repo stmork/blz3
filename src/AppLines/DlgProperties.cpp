@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/26 19:13:05  sm
+**	- Update scene/object views after color redefinition.
+**	- Beautofied the app properties dialog.
+**
 **	Revision 1.5  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.4  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -216,6 +220,7 @@ void CDlgProperties::OnOK()
 	m_App->b3WriteProfileColor("default color.shape grid",&b3RenderObject::m_GridColor);
 	m_App->b3WriteProfileColor("default color.shape selection",&b3RenderObject::m_SelectedColor);
 	m_App->b3WriteProfileColor("default color.control grid",&b3PickInfo::m_GridColor);
+	m_App->b3UpdateAllViews();
 }
 
 void CDlgProperties::b3ReadConfig()
