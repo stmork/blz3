@@ -35,8 +35,8 @@
 
 /*
 **	$Log$
-**	Revision 1.17  2003/04/05 13:57:21  sm
-**	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
+**	Revision 1.18  2003/05/05 08:02:18  sm
+**	- Some comments added.
 **
 **	Revision 1.16  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
@@ -236,25 +236,19 @@ void CAppObjectView::b3Draw(
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
+	CAppObjectDoc   *pDoc    = GetDocument();
+	b3RenderContext *context = &pDoc->m_Context;
 
 	if (m_BBox != null)
 	{
-		CAppObjectDoc   *pDoc    = GetDocument();
-		b3RenderContext *context = &pDoc->m_Context;
+		context->b3StartDrawing();
 
 		// Setup view first
 		m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
-		// Clear buffer
-		context->b3StartDrawing();
-
 		// Then draw objects
 		m_BBox->b3Draw(context);
-
-		// Draw fulcrum
 		pDoc->b3DrawFulcrum();
-
-		// Draws pick controls
 		m_PickList.b3RenderObject::b3Draw(context);
 	}
 	else

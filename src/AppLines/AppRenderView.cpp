@@ -35,8 +35,8 @@
 
 /*
 **	$Log$
-**	Revision 1.27  2003/04/05 13:57:33  sm
-**	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
+**	Revision 1.28  2003/05/05 08:02:18  sm
+**	- Some comments added.
 **
 **	Revision 1.26  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
@@ -452,7 +452,6 @@ void CAppRenderView::OnPaint()
 	pDoc->m_Context.glBgColor = CAppRenderDoc::m_BgColor;
 	pDoc->m_Context.glDrawCachedTextures = true;
 
-	// Make OpenGL drawings
 	GetClientRect(&rect);
 	start.b3Now();
 	b3Draw(rect.Width(),rect.Height());
