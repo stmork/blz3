@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.104  2004/11/27 10:31:12  sm
+**	- Removed b3Mem heritage from VBO handlers
+**
 **	Revision 1.103  2004/11/21 14:56:58  sm
 **	- Merged VBO development into main trunk.
-**
+**	
 **	Revision 1.102  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
 **	
@@ -817,7 +820,7 @@ void b3BBox::b3GetCount(
 
 void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 {
-	if (b3HasVBO())
+	if (b3VectorBufferObjects::b3HasVBO())
 	{
 		b3RenderObject::b3AllocVertexMemory(context);
 	}

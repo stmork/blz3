@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.102  2004/11/27 10:31:12  sm
+**      - Removed b3Mem heritage from VBO handlers
+**
 **      Revision 1.101  2004/11/24 10:32:18  smork
 **      - Optimized VBO mapping.
 **
@@ -727,7 +730,7 @@ void b3RenderObject::b3PreAlloc()
 	if (!glInit)
 	{
 #ifdef BLZ3_USE_OPENGL
-		if (b3HasVBO())
+		if (b3VectorBufferObjects::b3HasVBO())
 		{
 			glVertexElements  = new b3VboVertexElements();
 			glGridElements    = new b3VboGridElements();

@@ -23,9 +23,9 @@
 #include "stdafx.h"
 #include "blz3/b3Types.h"
 
-class b3MemAccess
+class B3_PLUGIN b3MemAccess
 {
-protected:
+public:
 	static inline void *b3Alloc(b3_size size)
 	{
 		return ::GlobalAlloc(GPTR,size);

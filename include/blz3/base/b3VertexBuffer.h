@@ -19,7 +19,6 @@
 #define B3_BASE_VERTEXBUFFER_H
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Mem.h"
 #include "blz3/base/b3RenderTypes.h"
 #include "blz3/base/b3VectorBufferObjects.h"
 
@@ -45,7 +44,7 @@ enum b3_vbo_mapping
 
 class b3RenderContext;
 
-class B3_PLUGIN b3VertexBuffer : public b3Mem
+class B3_PLUGIN b3VertexBuffer
 {
 protected:
 	b3_count     glElementCount;
@@ -54,7 +53,13 @@ protected:
 	b3_bool      glCustom;
 
 public:
-	             b3VertexBuffer();
+	inline       b3VertexBuffer()
+	{
+		glElementCount = 0;
+		glBound        = false;
+		glComputed     = false;
+		glCustom       = false;
+	}
 
 	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
@@ -179,25 +184,25 @@ public:
 class B3_PLUGIN b3SimpleVertexElements : public b3VertexElements
 {
 public:
-	             b3SimpleVertexElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
+	virtual      ~b3SimpleVertexElements();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void  b3FreeVertexMemory();
 };
 
 class B3_PLUGIN b3SimpleGridElements : public b3GridElements
 {
 public:
-	             b3SimpleGridElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
+	virtual      ~b3SimpleGridElements();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void  b3FreeVertexMemory();
 };
 
 class B3_PLUGIN b3SimplePolygonElements : public b3PolygonElements
 {
 public:
-	             b3SimplePolygonElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
+	virtual      ~b3SimplePolygonElements();
+	virtual void  b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void  b3FreeVertexMemory();
 };
 
 /*************************************************************************

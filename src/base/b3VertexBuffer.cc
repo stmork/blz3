@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/base/b3VertexBuffer.h"
+#include "blz3/system/b3Mem.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/27 10:31:12  sm
+**	- Removed b3Mem heritage from VBO handlers
+**
 **	Revision 1.5  2004/11/24 10:58:02  smork
 **	- Added missing log entry
-**
+**	
 **	Revision 1.4  2004/11/24 10:32:18  smork
 **	- Optimized VBO mapping.
 **	
@@ -73,14 +77,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3VertexBuffer::b3VertexBuffer()
-{
-	glElementCount = 0;
-	glBound        = false;
-	glComputed     = false;
-	glCustom       = false;
-}
-
 void b3VertexBuffer::b3Map(b3_vbo_mapping map_mode)
 {
 	B3_ASSERT(!glBound);
@@ -107,22 +103,21 @@ void b3VertexBuffer::b3Draw()
 **                                                                      **
 *************************************************************************/
 
-b3SimpleVertexElements::b3SimpleVertexElements()
+b3SimpleVertexElements::~b3SimpleVertexElements()
 {
-	glVertex = null;
+	b3FreeVertexMemory();
 }
 
 void b3SimpleVertexElements::b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount)
 {
 	if (glElementCount != new_amount)
 	{
-		b3Free(glVertex);
-		glVertex       = null;
-		glElementCount = new_amount;
+		b3FreeVertexMemory();
 
-		if (glElementCount > 0)
+		if (new_amount > 0)
 		{
-			glVertex = (b3_gl_vertex *)b3Alloc(glElementCount * sizeof(b3_gl_vertex));
+			glElementCount = new_amount;
+			glVertex = (b3_gl_vertex *)b3MemAccess::b3Alloc(glElementCount * sizeof(b3_gl_vertex));
 		}
 		glComputed = false;
 	}
@@ -130,9 +125,12 @@ void b3SimpleVertexElements::b3AllocVertexMemory(b3RenderContext *context,b3_cou
 
 void b3SimpleVertexElements::b3FreeVertexMemory()
 {
-	b3Free(glVertex);
-	glVertex       = null;
-	glElementCount = 0;
+	if (glVertex != null)
+	{
+		b3MemAccess::b3Free(glVertex);
+		glVertex       = null;
+		glElementCount = 0;
+	}
 }
 
 /*************************************************************************
@@ -141,22 +139,21 @@ void b3SimpleVertexElements::b3FreeVertexMemory()
 **                                                                      **
 *************************************************************************/
 
-b3SimpleGridElements::b3SimpleGridElements()
+b3SimpleGridElements::~b3SimpleGridElements()
 {
-	glGrids = null;
+	b3FreeVertexMemory();
 }
 
 void b3SimpleGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount)
 {
 	if (glElementCount != new_amount)
 	{
-		b3Free(glGrids);
-		glGrids        = null;
-		glElementCount = new_amount;
+		b3FreeVertexMemory();
 
-		if (glElementCount > 0)
+		if (new_amount > 0)
 		{
-			glGrids = (b3_gl_line *)b3Alloc(glElementCount * sizeof(b3_gl_line));
+			glElementCount = new_amount;
+			glGrids = (b3_gl_line *)b3MemAccess::b3Alloc(glElementCount * sizeof(b3_gl_line));
 		}
 		glComputed = false;
 	}
@@ -164,9 +161,12 @@ void b3SimpleGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count
 
 void b3SimpleGridElements::b3FreeVertexMemory()
 {
-	b3Free(glGrids);
-	glGrids        = null;
-	glElementCount = 0;
+	if (glGrids != null)
+	{
+		b3MemAccess::b3Free(glGrids);
+		glGrids        = null;
+		glElementCount = 0;
+	}
 }
 
 /*************************************************************************
@@ -175,22 +175,21 @@ void b3SimpleGridElements::b3FreeVertexMemory()
 **                                                                      **
 *************************************************************************/
 
-b3SimplePolygonElements::b3SimplePolygonElements()
+b3SimplePolygonElements::~b3SimplePolygonElements()
 {
-	glPolygons = null;
+	b3FreeVertexMemory();
 }
 
 void b3SimplePolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount)
 {
 	if (glElementCount != new_amount)
 	{
-		b3Free(glPolygons);
-		glPolygons     = null;
-		glElementCount = new_amount;
+		b3FreeVertexMemory();
 
-		if (glElementCount > 0)
+		if (new_amount > 0)
 		{
-			glPolygons = (b3_gl_polygon *)b3Alloc(glElementCount * sizeof(b3_gl_polygon));
+			glElementCount = new_amount;
+			glPolygons = (b3_gl_polygon *)b3MemAccess::b3Alloc(glElementCount * sizeof(b3_gl_polygon));
 		}
 		glComputed = false;
 	}
@@ -198,9 +197,12 @@ void b3SimplePolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_co
 
 void b3SimplePolygonElements::b3FreeVertexMemory()
 {
-	b3Free(glPolygons);
-	glPolygons     = null;
-	glElementCount = 0;
+	if (glPolygons != null)
+	{
+		b3MemAccess::b3Free(glPolygons);
+		glPolygons     = null;
+		glElementCount = 0;
+	}
 }
 
 /*************************************************************************
@@ -267,7 +269,7 @@ void b3ArrayPolygonElements::b3Draw()
 
 /*************************************************************************
 **                                                                      **
-**                        b3VboVertexBuffer implementation               **
+**                        b3VboVertexBuffer implementation              **
 **                                                                      **
 *************************************************************************/
 
@@ -293,7 +295,6 @@ b3VBO::~b3VBO()
 
 b3VboVertexElements::b3VboVertexElements()
 {
-	glVertex = null;
 #ifdef BLZ3_USE_OPENGL
 	glEnableClientState(GL_VERTEX_ARRAY);
 #endif
@@ -305,7 +306,6 @@ void b3VboVertexElements::b3AllocVertexMemory(b3RenderContext *context,b3_count 
 	{
 		glVertex       = null;
 		glElementCount = new_amount;
-
 		if (glElementCount > 0)
 		{
 #ifdef BLZ3_USE_OPENGL
@@ -321,7 +321,6 @@ void b3VboVertexElements::b3AllocVertexMemory(b3RenderContext *context,b3_count 
 
 void b3VboVertexElements::b3FreeVertexMemory()
 {
-	b3Free(glVertex);
 	glVertex       = null;
 	glElementCount = 0;
 }
@@ -389,7 +388,6 @@ void b3VboVertexElements::b3Draw()
 
 b3VboGridElements::b3VboGridElements()
 {
-	glGrids = null;
 #ifdef BLZ3_USE_OPENGL
 	glEnableClientState(GL_INDEX_ARRAY);
 #endif
@@ -401,7 +399,6 @@ void b3VboGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count ne
 	{
 		glGrids        = null;
 		glElementCount = new_amount;
-
 		if (glElementCount > 0)
 		{
 #ifdef BLZ3_USE_OPENGL
@@ -417,7 +414,6 @@ void b3VboGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count ne
 
 void b3VboGridElements::b3FreeVertexMemory()
 {
-	b3Free(glGrids);
 	glGrids        = null;
 	glElementCount = 0;
 }
@@ -485,7 +481,6 @@ void b3VboGridElements::b3Draw()
 
 b3VboPolygonElements::b3VboPolygonElements()
 {
-	glPolygons = null;
 #ifdef BLZ3_USE_OPENGL
 	glEnableClientState(GL_INDEX_ARRAY);
 #endif
@@ -497,7 +492,6 @@ void b3VboPolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_count
 	{
 		glPolygons     = null;
 		glElementCount = new_amount;
-
 		if (glElementCount > 0)
 		{
 #ifdef BLZ3_USE_OPENGL
@@ -513,7 +507,6 @@ void b3VboPolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_count
 
 void b3VboPolygonElements::b3FreeVertexMemory()
 {
-	b3Free(glPolygons);
 	glPolygons     = null;
 	glElementCount = 0;
 }
