@@ -107,8 +107,15 @@ public:
 
 class CB3ActionObjectScale : public CB3Action
 {
+	b3_vector *m_Center;
+	b3_vector  m_StartPoint;
+	b3_vector  m_StartDiff;
 public:
 	CB3ActionObjectScale(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
+	void b3LMove(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
 };
 
 class CB3ActionCameraMove : public CB3Action

@@ -184,6 +184,8 @@ protected:
 	friend class CB3Action;
 	friend class CB3ActionMagnify;
 	friend class CB3ActionObjectMove;
+	friend class CB3ActionObjectRotate;
+	friend class CB3ActionObjectScale;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

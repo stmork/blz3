@@ -31,12 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/09/03 19:31:21  sm
+**	- Now able to scale active objects
+**
 **	Revision 1.4  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
 **	  are necessary.
 **	- It's really nice to see!
-**
+**	
 **	Revision 1.3  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
@@ -375,6 +378,131 @@ CB3ActionObjectRotate::CB3ActionObjectRotate(CAppLinesView *window) :
 CB3ActionObjectScale::CB3ActionObjectScale(CAppLinesView *window) :
 	CB3Action(window)
 {
+}
+
+void CB3ActionObjectScale::b3LDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	m_Center = m_Doc->b3GetFulcrum();
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_StartPoint = *m_Center;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
+		m_StartDiff.x = m_Center->x - m_StartPoint.x;
+		m_StartDiff.y = m_Center->y - m_StartPoint.y;
+		m_StartDiff.z = m_Center->z - m_StartPoint.z;
+	}
+}
+
+void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
+{
+	b3_vector diff,scale,point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		diff.x = m_Center->x - point.x;
+		if (m_StartDiff.x == 0)
+		{
+			scale.x = (diff.x == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.x = diff.x / m_StartDiff.x;
+		}
+		
+		diff.y = m_Center->y - point.y;
+		if (m_StartDiff.y == 0)
+		{
+			scale.y = (diff.y == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.y = diff.y / m_StartDiff.y;
+		}
+
+		diff.z = m_Center->z - point.z;
+		if (m_StartDiff.z == 0)
+		{
+			scale.z = (diff.z == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.z = diff.z / m_StartDiff.z;
+		}
+
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
+}
+
+void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
+{
+	b3_vector diff,scale,point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		diff.x = m_Center->x - point.x;
+		if (m_StartDiff.x == 0)
+		{
+			scale.x = (diff.x == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.x = diff.x / m_StartDiff.x;
+		}
+		
+		diff.y = m_Center->y - point.y;
+		if (m_StartDiff.y == 0)
+		{
+			scale.y = (diff.y == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.y = diff.y / m_StartDiff.y;
+		}
+
+		diff.z = m_Center->z - point.z;
+		if (m_StartDiff.z == 0)
+		{
+			scale.z = (diff.z == 0.0 ? 1.0 : 0.0);
+		}
+		else
+		{
+			scale.z = diff.z / m_StartDiff.z;
+		}
+
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
+			m_Doc->SetModifiedFlag();
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
 }
 
 /*************************************************************************
