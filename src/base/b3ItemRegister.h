@@ -20,7 +20,9 @@
 #ifndef B3_ITEMREGISTER_H
 #define B3_ITEMREGISTER_H
 
-class b3ItemRegisterEntry : public b3Link<b3ItemRegisterEntry>
+#include "blz3/b3PluginDef.h"
+
+class B3_PLUGIN b3ItemRegisterEntry : public b3Link<b3ItemRegisterEntry>
 {
 	b3_item_init_func init_func;
 	b3_item_load_func load_func;
@@ -39,7 +41,7 @@ public:
 	b3Item  *b3Load(b3_u32 *buffer);
 };
 
-class b3ItemRegister
+class B3_PLUGIN b3ItemRegister
 {
 	b3Base<b3ItemRegisterEntry> classes;
 public:

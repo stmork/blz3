@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/05/30 14:44:09  sm
+**	- Plugin support for Windows added. All exported classes got an
+**	  additional keyword: B3_PLUGIN
+**
 **	Revision 1.10  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.9  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -91,7 +95,9 @@
 
 char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME]= "b3.log";
 
-b3Log __logger;
+static b3Log __logger;
+
+b3LogBase *b3LogBase::m_Logger = &__logger;
 
 void b3Log::b3LogTime(const char *comment)
 {

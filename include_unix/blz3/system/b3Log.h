@@ -27,6 +27,4 @@ public:
 	void    b3LogFunction(const b3_log_level debug_level,const char *format,...);
 };
 
-extern b3Log __logger;
-
 #endif

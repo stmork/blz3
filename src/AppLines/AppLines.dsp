@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "BLZ3_USE_OPENGL" /YX /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "NDEBUG" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /D "_B3_EXPORT" /D "WIN32" /D "_MBCS" /D "_AFXDLL" /YX /FD /TP /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32_i386\AppLines.exe" /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /map /machine:I386 /out:"..\..\bin\win32_i386\AppLines.exe" /libpath:"..\..\lib\win32_i386"
 
 !ELSEIF  "$(CFG)" == "AppLines - Win32 Debug"
 
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /FA /FR /YX /FD /GZ /TP /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "_DEBUG" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /D "_B3_EXPORT" /D "WIN32" /D "_MBCS" /D "_AFXDLL" /FA /FR /YX /FD /GZ /TP /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
@@ -79,8 +79,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
-# ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
+# ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /opt:noref
+# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /map /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
 
 !ENDIF 
 

@@ -23,6 +23,8 @@
 #include <sys/types.h>
 #include <math.h>
 
+#include "blz3/b3PluginDef.h"
+
 #ifdef __ICC
 #	include <xmmintrin.h>
 #	define B3_SSE

@@ -37,6 +37,9 @@ class b3Mutex;
 
 class B3_PLUGIN b3LogBase
 {
+public:
+	static b3LogBase    *m_Logger;
+
 protected:
 	static FILE         *m_Out;
 	static b3_log_level  m_LogLevel;
@@ -68,7 +71,7 @@ public:
 	virtual void    b3LogFunction(const b3_log_level  debug_level,const char *format,...) = 0;
 };
 
-#define b3PrintT __logger.b3LogTime
-#define b3PrintF __logger.b3LogFunction
+#define b3PrintT b3LogBase::m_Logger->b3LogTime
+#define b3PrintF b3LogBase::m_Logger->b3LogFunction
 
 #endif

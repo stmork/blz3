@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "blz3/b3PluginDef.h"
 #include "blz3/system/b3Thread.h"
 
 #ifdef _DEBUG
@@ -87,10 +88,14 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.26  2003/05/30 14:44:09  sm
+**	- Plugin support for Windows added. All exported classes got an
+**	  additional keyword: B3_PLUGIN
+**
 **	Revision 1.25  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.24  2003/01/03 15:47:09  sm
 **	- Changed area light optimization.
 **	- Fixed some errors in the light dialog.
@@ -288,7 +293,7 @@ enum b3_msgbox_type
 #define B3_MAXHOSTNAMELEN ((MAX_COMPUTERNAME_LENGTH) + 1)
 #define B3_FILESTRINGLEN  (_MAX_PATH)
 
-class b3Runtime : public b3CPU
+class B3_PLUGIN b3Runtime : public b3CPU
 {
 public:
 	                     b3Runtime();

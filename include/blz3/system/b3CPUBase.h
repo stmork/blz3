@@ -21,7 +21,7 @@
 #include "blz3/b3Types.h"
 
 // Info about available CPUs
-enum b3_cpu_type
+enum B3_PLUGIN b3_cpu_type
 {
 	B3_UNKNOWN_ENDIAN = 0,
 	B3_BIG_ENDIAN     = 0x4d4d,

@@ -1,4 +1,4 @@
-#/*
+/*
 **
 **	$Filename:	b3TimeAbstract.h $
 **	$Release:	Dortmund 2002 $

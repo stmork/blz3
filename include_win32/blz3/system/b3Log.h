@@ -20,14 +20,12 @@
 
 #include "blz3/system/b3LogBase.h"
 
-class b3Log : public b3LogBase
+class B3_PLUGIN b3Log : public b3LogBase
 {
 public:
             b3Log();
 	void    b3LogTime    (const char         *comment = null);
 	void    b3LogFunction(const b3_log_level  debug_level,const char *format,...);
 };
-
-extern b3Log __logger;
 
 #endif
