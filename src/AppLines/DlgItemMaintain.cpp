@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/06/15 14:18:17  sm
+**	- Updated item maintain dialog to icons
+**	- Changed b3Log into a singleton
+**
 **	Revision 1.4  2003/06/15 09:24:21  sm
 **	- Added item creation dialog
-**
+**	
 **	Revision 1.3  2003/06/14 15:31:26  sm
 **	- First successful plugin test including dialog. Debug version
 **	  not working yet.
@@ -87,8 +91,8 @@ BEGIN_MESSAGE_MAP(CDlgItemMaintain, CDialog)
 	ON_BN_CLICKED(IDC_ITEM_UP, OnItemUp)
 	ON_BN_CLICKED(IDC_ITEM_DOWN, OnItemDown)
 	ON_BN_CLICKED(IDC_ITEM_LAST, OnItemLast)
-	ON_LBN_DBLCLK(IDC_ITEM_LIST, OnDblclkItemList)
-	ON_LBN_SELCHANGE(IDC_ITEM_LIST, OnSelectionChanged)
+	ON_NOTIFY(NM_DBLCLK, IDC_ITEM_LIST, OnDblclkItemList)
+	ON_NOTIFY(NM_CLICK, IDC_ITEM_LIST, OnClickItemList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -97,9 +101,31 @@ END_MESSAGE_MAP()
 
 BOOL CDlgItemMaintain::OnInitDialog() 
 {
+	b3Loader        &loader = b3Loader::b3GetLoader();
+	b3_plugin_info  *info;
+	b3Array<b3_u32>  class_types;
+	b3_u32           class_type;
+	b3_count         i;
+	b3_size          size = 48;
+	HICON            unknown = AfxGetApp()->LoadIcon(IDI_ITEM_UNKNOWN);
+
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
+	loader.b3GetClassTypes(class_types,m_Head->b3GetClass());
+	m_ImageList.Create(size,size,ILC_COLOR32,30,8);
+	m_ImageList.SetBkColor(m_ItemList.GetBkColor());
+	m_ImageList.Add(unknown);
+	for (i = 0;i < class_types.b3GetCount();i++)
+	{
+		class_type = class_types[i];
+		info = loader.b3FindInfo(class_type);
+		m_ImageList.Add(info->m_Icon != null ? info->m_Icon : unknown);
+		m_ClassTypesToImg.b3Add(class_type,i + 1);
+	}
+	m_ItemList.SetImageList(&m_ImageList,LVSIL_NORMAL);
+	m_ItemList.SetIconSpacing(128,64);
+
 	SetWindowText(b3StaticPluginInfoInit::b3GetClassName(m_Head->b3GetClass()));
 	b3UpdateList();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -114,13 +140,20 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 	const char *title;
 	const char *desc;
 	b3Item     *item;
-	int         index;
+	b3_u32      class_type;
+	int        *imgPtr;
+	LVITEM      listitem;
 
-	m_ItemList.ResetContent();
+	memset(&listitem,0,sizeof(listitem));
+	listitem.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
+	listitem.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
+
 	unknown.LoadString(IDS_UNKNOWN);
+	m_ItemList.DeleteAllItems();
 	B3_FOR_BASE(m_Head,item)
 	{
-		info = m_Plugins->b3FindInfo(item);
+		class_type = item->b3GetClassType();
+		info       = m_Plugins->b3FindInfo(item);
 		if (info != null)
 		{
 			desc = info->m_Description;
@@ -139,17 +172,15 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 		{
 			text = desc;
 		}
+		imgPtr = m_ClassTypesToImg.b3Find(class_type);
 
-		index = m_ItemList.AddString(text);
-		if (index != LB_ERR)
-		{
-			m_ItemList.SetItemDataPtr(index,item);
-			if (item == select)
-			{
-				m_ItemList.SetCurSel(index);
-			}
-		}
+		listitem.iImage  = imgPtr != null ? *imgPtr : 0;
+		listitem.lParam  = (LPARAM)item;
+		listitem.state   = item == select ? listitem.stateMask : 0;
+		listitem.pszText = info->m_Description;
+		m_ItemList.InsertItem(&listitem);
 	}
+
 	b3UpdateUI();
 }
 
@@ -170,13 +201,15 @@ void CDlgItemMaintain::b3UpdateUI()
 
 b3Item *CDlgItemMaintain::b3GetSelectedItem()
 {
-	b3Item *item = null;
-	int     index;
+	POSITION  pos;
+	int       index;
+	b3Item   *item = null;
 
-	index = m_ItemList.GetCurSel();
-	if (index != LB_ERR)
+	pos = m_ItemList.GetFirstSelectedItemPosition();
+	if (pos != 0)
 	{
-		item = (b3Item *)m_ItemList.GetItemDataPtr(index);
+		index = m_ItemList.GetNextSelectedItem(pos);
+		item  = (b3Item *)m_ItemList.GetItemData(index);
 	}
 	return item;
 }
@@ -208,16 +241,18 @@ void CDlgItemMaintain::OnItemEdit()
 	}
 }
 
-void CDlgItemMaintain::OnDblclkItemList() 
+void CDlgItemMaintain::OnDblclkItemList(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	// TODO: Add your control notification handler code here
 	OnItemEdit();
+	*pResult = 0;
 }
 
-void CDlgItemMaintain::OnSelectionChanged() 
+void CDlgItemMaintain::OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	// TODO: Add your control notification handler code here
 	b3UpdateUI();
+	*pResult = 0;
 }
 
 void CDlgItemMaintain::OnItemDelete() 

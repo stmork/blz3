@@ -61,7 +61,7 @@ public:
 	b3_plugin_info *b3FindInfo(b3_u32 class_type);
 	b3_count        b3GetClassTypes(b3Array<b3_u32> &array,b3_u32 class_id);
 
-	static b3Loader &b3GetLoader()
+	static inline b3Loader &b3GetLoader()
 	{
 		return m_Loader;
 	}
@@ -84,7 +84,7 @@ public:
 	b3_bool  b3Edit(b3Item *item);
 
 public:
-	static void    b3InitPluginInfo(b3_plugin_info *info,b3_bool clear = true)
+	static inline void b3InitPluginInfo(b3_plugin_info *info,b3_bool clear = true)
 	{
 		if (clear)
 		{
@@ -94,7 +94,7 @@ public:
 		info->m_Size    = sizeof(b3_plugin_info);
 	}
 
-	static void    b3SetChecksum(b3_plugin_info *info)
+	static inline void b3SetChecksum(b3_plugin_info *info)
 	{
 		b3_u32    checksum = 0;
 		b3_u08   *ptr = (b3_u08 *)info;
@@ -107,12 +107,12 @@ public:
 		info->m_CheckSum = checksum;
 	}
 
-	static b3_bool b3HasCreateFunc(b3_plugin_info *info)
+	static inline b3_bool b3HasCreateFunc(b3_plugin_info *info)
 	{
 		return info != null ? info->m_CreateFunc != null : false;
 	}
 
-	static b3_bool b3HasEditFunc(b3_plugin_info *info)
+	static inline b3_bool b3HasEditFunc(b3_plugin_info *info)
 	{
 		return info != null ? info->m_EditFunc != null : false;
 	}

@@ -22,8 +22,11 @@
 
 class B3_PLUGIN b3Log : public b3LogBase
 {
+	static b3Log m_Log;
+
+private:
+	        b3Log();
 public:
-            b3Log();
 	void    b3LogTime    (const char         *comment = null);
 	void    b3LogFunction(const b3_log_level  debug_level,const char *format,...);
 };

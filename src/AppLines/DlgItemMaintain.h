@@ -26,12 +26,15 @@
 // CDlgItemMaintain dialog
 
 #include "blz3/system/b3Plugin.h"
+#include "blz3/base/b3Hash.h"
 
 class CDlgItemMaintain : public CDialog
 {
 // Construction
-	b3Base<b3Item> *m_Head;
-	b3Loader       *m_Plugins;
+	b3Base<b3Item>        *m_Head;
+	b3HashMap<b3_u32,int>  m_ClassTypesToImg;
+	b3Loader              *m_Plugins;
+	CImageList             m_ImageList;
 
 public:
 	CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
@@ -39,7 +42,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgItemMaintain)
 	enum { IDD = IDD_ITEM_MAINTAIN };
-	CListBox	m_ItemList;
+	CListCtrl	m_ItemList;
 	//}}AFX_DATA
 
 
@@ -64,8 +67,8 @@ protected:
 	afx_msg void OnItemDown();
 	afx_msg void OnItemLast();
 	virtual void OnOK();
-	afx_msg void OnDblclkItemList();
-	afx_msg void OnSelectionChanged();
+	afx_msg void OnDblclkItemList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

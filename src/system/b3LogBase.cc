@@ -25,13 +25,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/06/15 14:18:18  sm
+**	- Updated item maintain dialog to icons
+**	- Changed b3Log into a singleton
+**
 **	Revision 1.3  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.2  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -55,9 +59,10 @@ b3_log_level  b3LogBase::m_LogLevel = B3LOG_NORMAL;	// normal version
 b3_log_level  b3LogBase::m_LogLevel = B3LOG_FULL;	// debug version
 #endif
 
-b3Mutex  b3LogBase::m_LogMutex;
-FILE    *b3LogBase::m_Out = null;
-char     b3LogBase::m_Message[B3_MAX_LOGSIZE];
+b3LogBase *b3LogBase::m_Logger;
+b3Mutex    b3LogBase::m_LogMutex;
+FILE      *b3LogBase::m_Out = null;
+char       b3LogBase::m_Message[B3_MAX_LOGSIZE];
 
 b3LogBase::b3LogBase()
 {

@@ -37,10 +37,8 @@ class b3Mutex;
 
 class B3_PLUGIN b3LogBase
 {
-public:
-	static b3LogBase    *m_Logger;
-
 protected:
+	static b3LogBase    *m_Logger;
 	static FILE         *m_Out;
 	static b3_log_level  m_LogLevel;
 	static b3Mutex       m_LogMutex;
@@ -64,14 +62,18 @@ public:
 		return (m_LogLevel >= 0) && (m_LogLevel >= debug_limit);
 	}
 
+	static  inline b3LogBase *b3GetLogger()
+	{
+		return m_Logger;
+	}
+
 	static  void    b3GetLogFile (      char         *debug_file);
 	static  b3_bool b3SetLogFile (const char         *debug_file);
-
 	virtual void    b3LogTime    (const char         *comment = 0) = 0;
 	virtual void    b3LogFunction(const b3_log_level  debug_level,const char *format,...) = 0;
 };
 
-#define b3PrintT b3LogBase::m_Logger->b3LogTime
-#define b3PrintF b3LogBase::m_Logger->b3LogFunction
+#define b3PrintT b3LogBase::b3GetLogger()->b3LogTime
+#define b3PrintF b3LogBase::b3GetLogger()->b3LogFunction
 
 #endif

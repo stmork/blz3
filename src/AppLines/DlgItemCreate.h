@@ -58,6 +58,7 @@ protected:
 	//{{AFX_MSG(CDlgItemCreate)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	afx_msg void OnDblclkItemlist(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

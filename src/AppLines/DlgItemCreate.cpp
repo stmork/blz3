@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/06/15 14:18:17  sm
+**	- Updated item maintain dialog to icons
+**	- Changed b3Log into a singleton
+**
 **	Revision 1.1  2003/06/15 09:24:21  sm
 **	- Added item creation dialog
-**
+**	
 */
 
 /*************************************************************************
@@ -67,6 +71,7 @@ void CDlgItemCreate::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgItemCreate, CDialog)
 	//{{AFX_MSG_MAP(CDlgItemCreate)
+	ON_NOTIFY(NM_DBLCLK, IDC_ITEMLIST, OnDblclkItemlist)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -87,7 +92,7 @@ BOOL CDlgItemCreate::OnInitDialog()
 	b3Array<b3_u32>  class_types;
 	b3_u32           class_type;
 	b3_count         i;
-	b3_size          size = 64;
+	b3_size          size = 48;
 	b3_index         img = 0;
 	HICON            unknown = AfxGetApp()->LoadIcon(IDI_ITEM_UNKNOWN);
 	LVITEM           listitem;
@@ -100,8 +105,9 @@ BOOL CDlgItemCreate::OnInitDialog()
 	// TODO: Add extra initialization here
 	loader.b3GetClassTypes(class_types,m_ClassId);
 	m_ImageList.Create(size,size,ILC_COLOR32,30,8);
+	m_ImageList.SetBkColor(m_ListCtrl.GetBkColor());
 	m_ListCtrl.SetImageList(&m_ImageList,LVSIL_NORMAL);
-	m_ListCtrl.SetIconSpacing(128,96);
+	m_ListCtrl.SetIconSpacing(128,64);
 	for (i = 0;i < class_types.b3GetCount();i++)
 	{
 		class_type = class_types[i];
@@ -120,6 +126,13 @@ BOOL CDlgItemCreate::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgItemCreate::OnDblclkItemlist(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	OnOK();
+	*pResult = 0;
 }
 
 void CDlgItemCreate::OnOK() 
