@@ -25,7 +25,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Array.h"
-#include "blz3/base/b3Color.h">
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3Tx.h"
 
@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/05/18 14:59:01  sm
+**	- Fixed predefined constat MAX
+**	- Fixed typo
+**
 **	Revision 1.1  2003/05/17 21:09:48  sm
 **	- Added feeder scanning calibration
-**
+**	
 */
 
 /*************************************************************************

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/05/18 14:59:01  sm
+**	- Fixed predefined constat MAX
+**	- Fixed typo
+**
 **	Revision 1.2  2003/01/19 15:14:09  sm
 **	- Bound checking in b3VectorXX and b3Array only in debug version.
 **	- Added operator [] in b3VectorXX
-**
+**	
 **	Revision 1.1  2002/12/31 15:11:03  sm
 **	- Fixed bound checking.
 **	- Added a vector test module.
@@ -51,7 +55,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define MAX 1000
+#define MAX_DIM   1000
 #define RAN_MAX   1024
 
 class b3VectorTestSuite
@@ -97,12 +101,12 @@ class b3VectorStruct : public b3VectorTestSuite
 {
 	friend class b3VectorArray;
 protected:
-	b3_vector m_Array[MAX];
+	b3_vector m_Array[MAX_DIM];
 
 public:
 	b3VectorStruct()
 	{
-		for (int i = 0;i < MAX;i++)
+		for (int i = 0;i < MAX_DIM;i++)
 		{
 			b3Vector::b3Init(&m_Array[i],b3Random(),b3Random(),b3Random());
 		}		b3Add("constructor");
@@ -116,7 +120,7 @@ public:
 	{
 		b3_f64 length = 0;
 
-		for (int i = 0;i < MAX;i++)
+		for (int i = 0;i < MAX_DIM;i++)
 		{
 			length += b3Vector::b3Length(&m_Array[i]);
 		}
@@ -161,21 +165,21 @@ public:
 		}
 		b3Add("distance/sMul/length");
 
-		for (k = 0;k < MAX;k++)
+		for (k = 0;k < MAX_DIM;k++)
 		{
 			b3Vector::b3SetMinimum(&m_Array[k],-RAN_MAX * 0.5);
 			b3Vector::b3SetMaximum(&m_Array[k], RAN_MAX * 0.5);
 		}
 		b3Add("minimum/maximum");
 
-		b3Vector::b3InitBound(&m_Array[MAX - 2],&m_Array[MAX - 1]);
-		for (k = 0;k < (MAX - 2);k++)
+		b3Vector::b3InitBound(&m_Array[MAX_DIM - 2],&m_Array[MAX_DIM - 1]);
+		for (k = 0;k < (MAX_DIM - 2);k++)
 		{
-			b3Vector::b3AdjustBound(&m_Array[k],&m_Array[MAX - 2],&m_Array[MAX - 1]);
+			b3Vector::b3AdjustBound(&m_Array[k],&m_Array[MAX_DIM - 2],&m_Array[MAX_DIM - 1]);
 		}
 		b3Add("check bound");
 
-		for (k = 0;k < MAX;k+=4)
+		for (k = 0;k < MAX_DIM;k+=4)
 		{
 			b3Vector::b3LinearCombine(
 				&m_Array[k + 1],
@@ -187,7 +191,7 @@ public:
 		}
 		b3Add("linear combination");
 
-		for (k = 0;k < MAX;k++)
+		for (k = 0;k < MAX_DIM;k++)
 		{
 			b3Vector::b3Normalize(&m_Array[k],k);
 		}
@@ -205,12 +209,12 @@ public:
 
 class b3VectorArray : public b3VectorTestSuite
 {
-	b3Vector32 m_Array[MAX];
+	b3Vector32 m_Array[MAX_DIM];
 
 public:
 	b3VectorArray(b3VectorStruct &vStruct)
 	{
-		for (int i = 0;i < MAX;i++)
+		for (int i = 0;i < MAX_DIM;i++)
 		{
 			m_Array[i] = b3Vector32(vStruct.m_Array[i]);
 		}
@@ -225,7 +229,7 @@ public:
 	{
 		b3_f64 length = 0;
 
-		for (int i = 0;i < MAX;i++)
+		for (int i = 0;i < MAX_DIM;i++)
 		{
 			length += m_Array[i].b3Length();
 		}
@@ -266,29 +270,29 @@ public:
 		}
 		b3Add("distance/sMul/length");
 
-		for (k = 0;k < MAX;k++)
+		for (k = 0;k < MAX_DIM;k++)
 		{
 			m_Array[k].b3SetMinimum(-RAN_MAX * 0.5);
 			m_Array[k].b3SetMaximum( RAN_MAX * 0.5);
 		}
 		b3Add("minimum/maximum");
 
-		b3Vector32::b3InitBound(m_Array[MAX - 2],m_Array[MAX - 1]);
-		for (k = 0;k < (MAX - 2);k++)
+		b3Vector32::b3InitBound(m_Array[MAX_DIM - 2],m_Array[MAX_DIM - 1]);
+		for (k = 0;k < (MAX_DIM - 2);k++)
 		{
-			m_Array[k].b3AdjustBound(m_Array[MAX - 2],m_Array[MAX - 1]);
+			m_Array[k].b3AdjustBound(m_Array[MAX_DIM - 2],m_Array[MAX_DIM - 1]);
 		}
-		m_Array[MAX - 2].b3Print("Lower:");
-		m_Array[MAX - 1].b3Print("Upper:");
+		m_Array[MAX_DIM - 2].b3Print("Lower:");
+		m_Array[MAX_DIM - 1].b3Print("Upper:");
 		b3Add("check bound");
 
-		for (k = 0;k < MAX;k+=4)
+		for (k = 0;k < MAX_DIM;k+=4)
 		{
 			m_Array[k] = m_Array[k + 1] + m_Array[k + 2] * m_Array[k][X] + m_Array[k + 3] * m_Array[k][Y];
 		}
 		b3Add("linear combination");
 
-		for (k = 0;k < MAX;k++)
+		for (k = 0;k < MAX_DIM;k++)
 		{
 			m_Array[k].b3Normalize(k);
 		}

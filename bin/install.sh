@@ -18,7 +18,7 @@ endif
 if ( $?INSTALL_DIR ) then
   echo "Installing into $INSTALL_DIR"
   foreach bin ( $INSTALL_BIN )
-    cp $BLZ3_BIN/$bin $INSTALL_DIR
+    cp -f $BLZ3_BIN/$bin $INSTALL_DIR
   end
   unsetenv INSTALL_DIR
 endif
