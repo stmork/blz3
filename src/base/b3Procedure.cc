@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/03/21 16:08:35  sm
+**	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
+**
 **	Revision 1.14  2004/02/28 13:51:53  sm
 **	- Added Cook/Torrance material. But this is not a material
 **	  it is a shader! Further reading is necessary to redesign
 **	  Blizzard III to use programmable shader.
-**
+**	
 **	Revision 1.13  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -174,7 +177,6 @@ static b3_u08 oM[4][8][3] =
 };
 
 b3_f64  b3Noise::epsilon = 0.005;
-b3_f64  b3Math::epsilon = 0.005;
 b3Noise noise_procedures;
 
 /*************************************************************************

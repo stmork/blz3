@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Cubic.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2004/03/21 16:08:35  sm
+**      - Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
+**
 **      Revision 1.41  2003/03/22 14:38:41  sm
 **      - Some optimizations continued concerning triangles.
 **
@@ -519,7 +522,7 @@ b3_bool b3TriangleShape::b3Prepare()
 	}
 
 #	ifndef ONE_GRID
-	m_GridSize = (b3_count)b3Cubic::b3Cbrt (0.125 * m_TriaCount);
+	m_GridSize = (b3_count)b3Math::b3Cbrt (0.125 * m_TriaCount);
 	if (m_GridSize < 1)
 	{
 		m_GridSize = 1;

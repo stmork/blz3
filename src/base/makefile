@@ -19,6 +19,7 @@ LIB_SOURCE =\
 	b3Item.cc\
 	b3ItemRegister.cc\
 	b3ItemRegisterEntry.cc\
+	b3Math.cc\
 	b3Matrix.cc\
 	b3Node.cc\
 	b3Pick.cc\
@@ -40,6 +41,7 @@ LIB_OBJ	=\
 	b3Item.o\
 	b3ItemRegister.o\
 	b3ItemRegisterEntry.o\
+	b3Math.o\
 	b3Matrix.o\
 	b3Node.o\
 	b3Pick.o\
