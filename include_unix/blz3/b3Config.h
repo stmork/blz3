@@ -132,15 +132,18 @@ static inline int stricmp(const char *a,const char *b)
 
 class B3_PLUGIN b3Runtime : public b3CPU
 {
-	static char        compiler[128];
+	static b3Runtime   m_Runtime;
+	static char        m_Compiler[128];
+
+	                   b3Runtime();
 
 public:
-	                   b3Runtime();
 	static void        b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
 	static void        b3Beep();
 	static b3_bool     b3Hostname(char *hostname,const b3_size buffer_size);
 	static b3_s32      b3Execute(const char *command, const b3_bool async);
 	static char       *b3GetCompiler();
+	static void       *b3GetOpenGLExtension(const char *procedure_name);
 };
 
 #endif

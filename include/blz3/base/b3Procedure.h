@@ -39,13 +39,14 @@ typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
 class b3Noise : public b3Mem
 {
+	static b3Noise       m_Noise;
 	static b3_noisetype *m_NoiseTable;
 	static b3_f64        epsilon;
 
-public:
 	               b3Noise();
 	              ~b3Noise();
 
+public:
 	static        b3_f64        b3NoiseScalar (b3_f64 x);
 	static inline b3_f64  b3SignedNoiseScalar (b3_f64 x)
 	{

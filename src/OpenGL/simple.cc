@@ -16,8 +16,6 @@
 */
 
 #include "blz3/b3Config.h"
-#include <dlfcn.h>
-#include <GL/glx.h>
 
 /*************************************************************************
 **                                                                      **
@@ -27,6 +25,11 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2004/09/23 09:31:33  sm
+**      - Changed b3Runtime into a real singleton.
+**      - Added functions for OpenGL extension.
+**      - Removed b3PrintF()s from singletons.
+**
 **      Revision 1.6  2004/09/22 18:56:22  sm
 **      - More fail safe procedure relocation.
 **
@@ -196,36 +199,16 @@ procUnmapBufferARB   glUnmapBufferARB;
 GLuint  vbo[2];
 b3_bool has_vbo;
 
-void *get_ext_proc(const char *procedure)
-{
-	void *func;
-	
-	func = glXGetProcAddressARB(procedure);
-	if (func == null)
-	{
-		void *handle;
-
-		handle = dlopen(null,RTLD_LAZY);
-		if (handle != null)
-		{
-			func = dlsym(handle,procedure);
-		}
-	}
-	return func;
-}
-
 void init_vbo()
 {
-	void *handle;
-
 	char *extensions = glGetString(GL_EXTENSIONS);
 	if (strstr(extensions,"GL_ARB_vertex_buffer_object") != 0)
 	{
-		glGenBuffersARB  = get_ext_proc("glGenBuffersARB");
-		glBindBufferARB  = get_ext_proc("glBindBufferARB");
-		glBufferDataARB  = get_ext_proc("glBufferDataARB");
-		glMapBufferARB   = get_ext_proc("glMapBufferARB");
-		glUnmapBufferARB = get_ext_proc("glUnmapBufferARB");
+		glGenBuffersARB  = b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
+		glBindBufferARB  = b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
+		glBufferDataARB  = b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
+		glMapBufferARB   = b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
+		glUnmapBufferARB = b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 		has_vbo =
 			(glGenBuffersARB != null) &&
@@ -233,7 +216,7 @@ void init_vbo()
 			(glBufferDataARB != null) &&
 			(glMapBufferARB  != null) &&
 			(glUnmapBufferARB != null);
-		if (!has_vbo)
+//		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n",glGenBuffersARB);
 			printf("glBindBufferARB  = %p\n",glBindBufferARB);

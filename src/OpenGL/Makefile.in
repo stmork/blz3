@@ -37,8 +37,8 @@ clean:
 render:	$(RENDER_OBJ) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-simple:	$(SIMPLE_OBJ)
-	$(LINK.cc) -o $@ $^  $(LIBS)
+simple:	$(SIMPLE_OBJ) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 matrix_test:	$(MATRIX_TEST_OBJ) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)

@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2004/09/23 09:31:33  sm
+**      - Changed b3Runtime into a real singleton.
+**      - Added functions for OpenGL extension.
+**      - Removed b3PrintF()s from singletons.
+**
 **      Revision 1.4  2003/07/20 09:21:18  sm
 **      - Added item register dump.
 **
@@ -85,10 +90,12 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	load_func  = new_load_func;
 	class_type = new_class_type;
 	is_class   = new_is_class;
+/*
 	b3PrintF (B3LOG_FULL," Registered class %04lx:%04lx%s.\n",
 		class_type >> 16,
 		class_type & 0xffff,
 		is_class ? " (class)" : "");
+*/
 }
 
 b3_bool b3ItemRegisterEntry::b3IsClassType(b3_u32 class_type_to_check)

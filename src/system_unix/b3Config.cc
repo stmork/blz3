@@ -22,8 +22,9 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-
+#include <string.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/09/23 09:31:33  sm
+**	- Changed b3Runtime into a real singleton.
+**	- Added functions for OpenGL extension.
+**	- Removed b3PrintF()s from singletons.
+**
 **	Revision 1.10  2004/06/22 11:12:20  sm
 **	- Added support for Intel C++ compiler V8
-**
+**	
 **	Revision 1.9  2004/01/18 13:51:58  sm
 **	- Done further security issues.
 **	
@@ -80,24 +86,23 @@
 **                                                                      **
 *************************************************************************/
 
-static b3Runtime static_runtime_environment;
-
-char        b3Runtime::compiler[128];
+b3Runtime b3Runtime::m_Runtime;
+char      b3Runtime::m_Compiler[128];
 
 b3Runtime::b3Runtime()
 {
 	b3_count bits = b3GetCPUBits();
 
 #ifdef __ICC
-	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d (%ld bit)",__ICC / 100,(__ICC / 10) % 10,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit)",__ICC / 100,(__ICC / 10) % 10,bits);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(compiler,sizeof(compiler),"GCC V%d.%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits);
 #	else
-	snprintf(compiler,sizeof(compiler),"GCC V%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,bits);
 #	endif
 #else
-	snprintf(compiler,sizeof(compiler),"Unknown compiler");
+	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler");
 #endif
 }
 
@@ -142,5 +147,10 @@ b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
 
 char *b3Runtime::b3GetCompiler()
 {
-	return compiler;
+	return m_Compiler;
+}
+
+void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
+{
+	return dlsym(RTLD_NEXT,procedure_name);
 }

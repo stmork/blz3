@@ -37,10 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/09/23 09:31:33  sm
+**	- Changed b3Runtime into a real singleton.
+**	- Added functions for OpenGL extension.
+**	- Removed b3PrintF()s from singletons.
+**
 **	Revision 1.41  2004/08/10 09:23:13  sm
 **	- Noise indexing optimized
 **	- Added b3Color::b3Pow() method.
-**
+**	
 **	Revision 1.40  2004/08/03 19:55:02  sm
 **	- Changed thin film animation parameter.
 **	
@@ -278,16 +283,15 @@ static b3_u08 oM[4][8][3] =
 	{{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}}
 };
 
-b3_f64  b3Noise::epsilon = 0.005;
-b3Noise noise_procedures;
-
 /*************************************************************************
 **                                                                      **
 **                        initialize Noise                              **
 **                                                                      **
 *************************************************************************/
 
+b3Noise       b3Noise::m_Noise;
 b3_noisetype *b3Noise::m_NoiseTable = null;
+b3_f64        b3Noise::epsilon = 0.005;
 
 b3Noise::b3Noise ()
 {
@@ -297,7 +301,6 @@ b3Noise::b3Noise ()
 
 	if (m_NoiseTable == null)
 	{
-		b3PrintF(B3LOG_DEBUG,"Initializing noise procedures...\n");
 		m_NoiseTable = (b3_noisetype *)b3Alloc(
 			NOISEDIM      *
 			NOISEMAXALLOC *

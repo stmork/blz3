@@ -38,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2004/09/23 09:31:33  sm
+**	- Changed b3Runtime into a real singleton.
+**	- Added functions for OpenGL extension.
+**	- Removed b3PrintF()s from singletons.
+**
 **	Revision 1.56  2004/05/31 08:42:58  sm
 **	- Changed animation from time point to frame index which
 **	  is more accurate.
-**
+**	
 **	Revision 1.55  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -389,7 +394,7 @@ static void b3Banner(const char *command)
 
 int main(int argc,char *argv[])
 {
-	b3ShapeRenderContext  context;
+	b3ShapeRenderContext  context; // ???
 	b3World              *world;
 	b3Display            *display;
 	b3Scene              *scene;
