@@ -295,7 +295,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
-				OutputFile="..\..\bin\win32_i686\AppLinesSSE2.exe"
+				OutputFile="..\..\bin\win32_i686\SSE2\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -375,7 +375,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib"
-				OutputFile="..\..\bin\win32_i686\AppLinesSSE.exe"
+				OutputFile="..\..\bin\win32_i686\SSE\AppLines.exe"
 				Version="3.0"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

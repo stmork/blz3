@@ -15,24 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
         "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
         "MsmSig" = "8:_UNDEFINED"
@@ -111,26 +93,26 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "MsmKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
         "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
         "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -154,6 +136,24 @@
         "Entry"
         {
         "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
+        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
         "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -309,7 +309,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:TRUE"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -1438,11 +1438,11 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_0A25077064F94DADB04D2E15B86EE7DC"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_93F8DDF5D60C4EC39E2E56B85341485B"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
@@ -1452,11 +1452,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_77DCA29E632647CBA28E01CFA7A06833"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_CA225CDD629743078C64E6D63D0C4D05"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
