@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/09/17 14:48:12  sm
+**	- I have forgotten the area lights. Now sampling is correct by moving
+**	  the color sum from surface to Jit (light info).
+**
 **	Revision 1.33  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
 **	  to do this for a long time, puh!
-**
+**	
 **	Revision 1.32  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
@@ -229,9 +233,9 @@ void b3ShaderPhong::b3ShadeLight(
 				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 				b3_f32 factor = b3Math::b3FastPow (lambda, spec_exp) * Jit->m_LightFrac;
 
-				surface->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
+				Jit->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
 			}
-			surface->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * ShapeAngle);
+			Jit->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * ShapeAngle);
 		}
 	}
 }

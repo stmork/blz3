@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2004/09/17 14:48:12  sm
+**      - I have forgotten the area lights. Now sampling is correct by moving
+**        the color sum from surface to Jit (light info).
+**
 **      Revision 1.45  2004/09/17 12:53:55  sm
 **      - Changed chader signatures to sum on different color
 **        channels (ambient, diffuse and specular). I wanted
@@ -516,8 +520,17 @@ inline b3_bool b3Light::b3PointIllumination(
 	}
 	Jit.m_LightDist = RecLightDist;
 
+	Jit.m_AmbientSum.b3Init();
+	Jit.m_DiffuseSum.b3Init();
+	Jit.m_SpecularSum.b3Init();
+
 	shader->b3FindObscurer(&Jit,LightDist - b3Scene::epsilon);
 	shader->b3Shade(this,&Jit,surface);
+
+	surface->m_AmbientSum  += Jit.m_AmbientSum;
+	surface->m_DiffuseSum  += Jit.m_DiffuseSum;
+	surface->m_SpecularSum += Jit.m_SpecularSum;
+
 	return true;
 }
 
@@ -536,8 +549,6 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
 
-	// computing light axis between ipoint and light
-	// Changed by SAM 9-04-1993
 	Jit.pos         = surface->incoming->ipoint;
 	Jit.m_LightView.x = m_Position.x - surface->incoming->ipoint.x;
 	Jit.m_LightView.y = m_Position.y - surface->incoming->ipoint.y;
@@ -553,7 +564,6 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_LightView.y *= denomLightDist;
 	Jit.m_LightView.z *= denomLightDist;
 
-	// inserted Nov. 1994, SAM
 	if (m_SpotActive)
 	{
 		Factor = -b3Vector::b3SMul(&Jit.m_LightView,&m_SpotDir);
@@ -587,7 +597,9 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_yDir.y *= Factor;
 	Jit.m_yDir.z *= Factor;
 
-	Jit.m_Result.b3Init();
+	Jit.m_AmbientSum.b3Init();
+	Jit.m_DiffuseSum.b3Init();
+	Jit.m_SpecularSum.b3Init();
 
 	// The following loops check every second point of the outline
 	// of the light raster. If every sample hits the same shape the
@@ -646,7 +658,10 @@ inline b3_bool b3Light::b3AreaIllumination (
 		Factor = m_FullJitter;
 	}
 
-	surface->incoming->color += Jit.m_Result * Factor;
+	surface->m_AmbientSum  += Jit.m_AmbientSum  * Factor;
+	surface->m_DiffuseSum  += Jit.m_DiffuseSum  * Factor;
+	surface->m_SpecularSum += Jit.m_SpecularSum * Factor;
+
 	return true;
 }
 

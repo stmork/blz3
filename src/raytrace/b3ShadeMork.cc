@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2004/09/17 14:48:12  sm
+**	- I have forgotten the area lights. Now sampling is correct by moving
+**	  the color sum from surface to Jit (light info).
+**
 **	Revision 1.44  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
 **	  to do this for a long time, puh!
-**
+**	
 **	Revision 1.43  2004/07/24 13:55:12  sm
 **	- Changed triangle grid size computation.
 **	- Corrected Mork shading to its roots.
@@ -251,7 +255,7 @@ void b3ShaderMork::b3ShadeLight(
 	b3Color  sum;
 
 	// Real absorption
-	surface->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
+	Jit->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -269,13 +273,13 @@ void b3ShaderMork::b3ShadeLight(
 			{
 				
 				Factor = b3Math::b3FastPow((lambda + 1.0) * 0.5, spec_exp) * Jit->m_LightFrac;
-				surface->m_SpecularSum += (light->m_Color * Factor);
+				Jit->m_SpecularSum += (light->m_Color * Factor);
 			}
 
 			// surface illumination (diffuse color)
 			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
 			{
-				surface->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * Factor);
+				Jit->m_DiffuseSum += (surface->m_Diffuse * light->m_Color * Factor);
 			}
 		}
 	}

@@ -46,7 +46,9 @@
 struct b3_light_info : public b3_ray
 {
 	b3_vector m_LightView,m_xDir,m_yDir;
-	b3Color   m_Result;
+	b3Color   m_AmbientSum;
+	b3Color   m_DiffuseSum;
+	b3Color   m_SpecularSum;
 	b3_f64    m_Size;
 	b3_f64    m_LightFrac;
 	b3_f64    m_LightDist;

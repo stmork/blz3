@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/09/17 14:48:12  sm
+**	- I have forgotten the area lights. Now sampling is correct by moving
+**	  the color sum from surface to Jit (light info).
+**
 **	Revision 1.9  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
 **	  to do this for a long time, puh!
-**
+**	
 **	Revision 1.8  2004/06/23 14:03:05  sm
 **	- Reversed transparent computation.
 **	
@@ -109,7 +113,7 @@ void b3ShaderMork2::b3ShadeLight(
 				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 				
 				factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
-				surface->m_SpecularSum += (light->m_Color * factor);
+				Jit->m_SpecularSum += (light->m_Color * factor);
 			}
 
 			// surface illumination (diffuse color)
@@ -121,7 +125,7 @@ void b3ShaderMork2::b3ShadeLight(
 		}
 	}
 
-	surface->m_DiffuseSum += (surface->m_Diffuse * illumination);
+	Jit->m_DiffuseSum += (surface->m_Diffuse * illumination);
 }
 
 void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
