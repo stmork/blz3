@@ -45,6 +45,9 @@
 
 /*
 **      $Log$
+**      Revision 1.93  2004/09/23 21:27:38  sm
+**      - VBOs still don't work.
+**
 **      Revision 1.92  2004/09/23 20:02:25  sm
 **      - Introduced VBOs on Windows - with success!
 **
@@ -580,16 +583,16 @@ void b3RenderObject::b3Bind()
 #ifdef BLZ3_USE_OPENGL
 	if (b3RenderContext::b3HasVBO())
 	{
-		if (!glCustomVert)
+		if ((!glCustomVert) && (glVertexCount > 0))
 		{
 			// Vertices
 			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
 			glVertex = (b3_gl_vertex *)b3RenderContext::glMapBufferARB(
-				GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+				GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
 			B3_ASSERT(glVertex != null);
 		}
 
-		if (!glCustomGrids)
+		if ((!glCustomGrids) && (glGridCount > 0))
 		{
 			// Grids
 			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
@@ -598,7 +601,7 @@ void b3RenderObject::b3Bind()
 			B3_ASSERT(glGrids != null);
 		}
 
-		if (!glCustomPolys)
+		if ((!glCustomPolys) && (glPolyCount > 0))
 		{
 			// Polygons
 			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/09/23 21:27:38  sm
+**	- VBOs still don't work.
+**
 **	Revision 1.3  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
-**
+**	
 **	Revision 1.2  2004/09/23 16:05:28  sm
 **	- Some BLZ3_USE_OPENGL caveats removed.
 **	
@@ -78,12 +81,12 @@ static GLenum light_num[] =
 	GL_LIGHT7
 };
 
-procGenBuffersARB    b3RenderContext::glGenBuffersARB;
-procDeleteBuffersARB b3RenderContext::glDeleteBuffersARB;
-procBindBufferARB    b3RenderContext::glBindBufferARB;
-procBufferDataARB    b3RenderContext::glBufferDataARB;
-procMapBufferARB     b3RenderContext::glMapBufferARB;
-procUnmapBufferARB   b3RenderContext::glUnmapBufferARB;
+PFNGLGENBUFFERSARBPROC    b3RenderContext::glGenBuffersARB;
+PFNGLDELETEBUFFERSARBPROC b3RenderContext::glDeleteBuffersARB;
+PFNGLBINDBUFFERARBPROC    b3RenderContext::glBindBufferARB;
+PFNGLBUFFERDATAARBPROC    b3RenderContext::glBufferDataARB;
+PFNGLMAPBUFFERARBPROC     b3RenderContext::glMapBufferARB;
+PFNGLUNMAPBUFFERARBPROC   b3RenderContext::glUnmapBufferARB;
 
 #define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(light_num) / sizeof(GLint))))
 
@@ -137,14 +140,14 @@ void b3RenderContext::b3Init()
 	}
 
 #ifdef BLZ3_USE_OPENGL
-	glGenBuffersARB    = (procGenBuffersARB)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-	glDeleteBuffersARB = (procDeleteBuffersARB)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
-	glBindBufferARB    = (procBindBufferARB)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-	glBufferDataARB    = (procBufferDataARB)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-	glMapBufferARB     = (procMapBufferARB)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-	glUnmapBufferARB   = (procUnmapBufferARB)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
+	glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
+	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
+	glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
+	glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
+	glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
+	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
-#if 0
+#if 1
 	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&

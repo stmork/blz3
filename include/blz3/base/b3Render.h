@@ -71,12 +71,12 @@ public:
 	b3Color                     glBgColor;
 
 #ifdef BLZ3_USE_OPENGL
-	static procBindBufferARB    glBindBufferARB;
-	static procDeleteBuffersARB glDeleteBuffersARB;
-	static procGenBuffersARB    glGenBuffersARB;
-	static procBufferDataARB    glBufferDataARB;
-	static procMapBufferARB     glMapBufferARB;
-	static procUnmapBufferARB   glUnmapBufferARB;
+	static PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
+	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+	static PFNGLBINDBUFFERARBPROC    glBindBufferARB;
+	static PFNGLBUFFERDATAARBPROC    glBufferDataARB;
+	static PFNGLMAPBUFFERARBPROC     glMapBufferARB;
+	static PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 #endif
 
 public:
@@ -196,9 +196,6 @@ struct b3_gl_polygon
 class b3RenderObject : public b3Mem
 {
 	b3_bool          glBound;
-	b3_bool          glCustomVert;
-	b3_bool          glCustomGrids;
-	b3_bool          glCustomPolys;
 
 protected:
 	b3_count         glVertexCount;
@@ -208,6 +205,9 @@ protected:
 	b3_gl_vertex    *glVertex;
 	b3_gl_line      *glGrids;
 	b3_gl_polygon   *glPolygons;
+	b3_bool          glCustomVert;
+	b3_bool          glCustomGrids;
+	b3_bool          glCustomPolys;
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint           glDisplayList;

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.97  2004/09/23 21:27:38  sm
+**	- VBOs still don't work.
+**
 **	Revision 1.96  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
 **	  run yet.
-**
+**	
 **	Revision 1.95  2004/08/20 08:09:27  sm
 **	- Optimized animation a little bit.
 **	
@@ -764,6 +767,10 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 		shape->b3AllocVertices(context);
 		shape->b3AddCount(context);
 	}
+
+	glCustomVert  = true;
+	glCustomGrids = true;
+	glCustomPolys = false;
 }
 
 void b3BBox::b3FreeVertices()
