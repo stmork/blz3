@@ -33,6 +33,16 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2002/08/24 13:22:02  sm
+**      - Extensive debugging on threading code done!
+**        o Cleaned up POSIX threads
+**        o Made safe thread handling available in raytracing code
+**        o b3PrepareInfo instantiates threads only once.
+**      - Added new thread options to gcc: "-D_REENTRAND -pthread"
+**        which I only can assume what they are doing;-)
+**      - Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**        and corrected upper time limit.
+**
 **      Revision 1.57  2002/08/23 11:35:23  sm
 **      - Added motion blur raytracing. The image creation looks very
 **        nice! The algorithm is not as efficient as it could be.
@@ -1067,7 +1077,7 @@ void b3Distribute::b3Prepare(b3_res xSize,b3Animation *animation)
 			for (i = 0;i <= m_SamplesPerFrame;i++)
 			{
 				t = (b3_f64)i * 2.0 / m_SamplesPerFrame - 1.0;
-				m_MotionBlur.b3Add(m_FilterFrame->b3InvIntegral(t) * factor);
+				m_MotionBlur.b3Add((m_FilterFrame->b3InvIntegral(t) + 1.0) * factor);
 			}
 
 			max = m_SPP * xSize;

@@ -37,10 +37,20 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2002/08/24 13:22:02  sm
+**	- Extensive debugging on threading code done!
+**	  o Cleaned up POSIX threads
+**	  o Made safe thread handling available in raytracing code
+**	  o b3PrepareInfo instantiates threads only once.
+**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
+**	  which I only can assume what they are doing;-)
+**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**	  and corrected upper time limit.
+**
 **	Revision 1.47  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.46  2002/08/23 13:40:28  sm
 **	- b3Event on Un*x platforms were broken.
 **	
@@ -384,7 +394,12 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = false;
 		infos[i].m_Num     = i;
 
-		threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
+		if (!threads[i].b3Start(b3RaytraceThread,&infos[i],-1))
+		{
+			delete [] threads;
+			delete [] infos;
+			B3_THROW(b3PrepareException,B3_PREPARE_NO_THREAD);
+		}
 	}
 
 	// Wait for completion
@@ -411,7 +426,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 	b3TimeSpan   span;
 	b3Thread    *threads;
 	b3Row       *row;
-	b3_vector    lower,upper;
 	b3_count     i,k;
 	b3_f64       t,base = anim->m_Time;
 
@@ -429,7 +443,12 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = true;
 		infos[i].m_Num     = i;
 
-		threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],-1);
+		if (!threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],-1))
+		{
+			delete [] threads;
+			delete [] infos;
+			B3_THROW(b3PrepareException,B3_PREPARE_NO_THREAD);
+		}
 	}
 	
 	span.b3Start();
@@ -438,8 +457,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 		// Animate!
 		t = base + m_Distributed->m_MotionBlur[k];
 		b3SetAnimation(t);
-		b3UpdateCamera();
-		b3ComputeBounds(&lower,&upper);
 
 		// We have to update the actual time point
 		B3_FOR_BASE(&m_RowPool,row)
@@ -479,8 +496,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 	// Do some cleanup during thread completion (They simply
 	// have to realize that there is nothing to do anymore...
 	b3SetAnimation(base);
-	b3UpdateCamera();
-	b3ComputeBounds(&lower,&upper);
 
 	// Wait for completion
 	b3PrintF (B3LOG_NORMAL,"Waiting for threads...\n");
@@ -532,6 +547,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	yDenom = b3Vector::b3Length(&m_Height);
 	if ((xDenom == 0) || (yDenom == 0))
 	{
+		b3PrintF(B3LOG_NORMAL,"Camera has got zero extend...\n");
 		return false;
 	}
 	m_NormWidth.x  = m_Width.x  / xDenom;
@@ -618,6 +634,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	{
 		if (!light->b3Prepare())
 		{
+			b3PrintF(B3LOG_NORMAL,"Lights doesn't initialize itself...\n");
 			return false;
 		}
 		if (light->m_LightActive)
@@ -632,6 +649,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_PrepareInfo.b3CollectBBoxes(this);
 	if(!m_PrepareInfo.b3Prepare(b3PrepareThread))
 	{
+		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
 	}
 
@@ -664,7 +682,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// Determine CPU count
 		CPUs = b3Runtime::b3GetNumCPUs();
-		b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
+		b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
 			CPUs,
 			CPUs > 1 ? "'s" : "");
 		
@@ -705,17 +723,25 @@ void b3Scene::b3Raytrace(b3Display *display)
 		{
 			b3DoRaytrace(display,CPUs);
 		}
-
-		m_TrashMutex.b3Lock();
-		B3_DELETE_BASE(&m_TrashPool,row);
-		m_TrashMutex.b3Unlock();
-
-		b3PrintF (B3LOG_NORMAL,"Done.\n");
+	}
+	catch(b3PrepareException &p)
+	{
+		b3PrintF(B3LOG_NORMAL,"### Problems preparing scene: %s\n",p.b3GetErrorMsg());
 	}
 	catch(b3DisplayException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}
+
+	m_PoolMutex.b3Lock();
+	B3_DELETE_BASE(&m_RowPool,row);
+	m_PoolMutex.b3Unlock();
+
+	m_TrashMutex.b3Lock();
+	B3_DELETE_BASE(&m_TrashPool,row);
+	m_TrashMutex.b3Unlock();
+
+	b3PrintF (B3LOG_NORMAL,"Done.\n");
 }
 
 void b3Scene::b3AbortRaytrace()

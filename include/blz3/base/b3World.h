@@ -60,7 +60,7 @@ enum b3_node_indices
 	B3_NODE_IDX_SIZE,
 	B3_NODE_IDX_OFFSET,
 	B3_NODE_IDX_FIRSTHEAD_CLASS,
-	B3_NODE_IDX_MIN // Should be 6 (including end of head marker)!
+	B3_NODE_IDX_MIN // Should be 6 (including end of node marker)!
 };
 
 enum b3_head_indices

@@ -33,6 +33,16 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2002/08/24 13:22:02  sm
+**      - Extensive debugging on threading code done!
+**        o Cleaned up POSIX threads
+**        o Made safe thread handling available in raytracing code
+**        o b3PrepareInfo instantiates threads only once.
+**      - Added new thread options to gcc: "-D_REENTRAND -pthread"
+**        which I only can assume what they are doing;-)
+**      - Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**        and corrected upper time limit.
+**
 **      Revision 1.56  2002/08/16 14:00:02  sm
 **      - Lines III adjustments to new vertex computation.
 **
@@ -1473,6 +1483,10 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 		glGridCount += Heights;
 	}
 
+	if (glGridCount > Number)
+	{
+		b3PrintF(B3LOG_NORMAL,"######## %d -> %d (%d)\n",glGridCount,Number,SinCosSteps);
+	}
 	B3_ASSERT(glGridCount <= Number);
 }
 

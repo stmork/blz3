@@ -36,6 +36,16 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2002/08/24 13:22:02  sm
+**      - Extensive debugging on threading code done!
+**        o Cleaned up POSIX threads
+**        o Made safe thread handling available in raytracing code
+**        o b3PrepareInfo instantiates threads only once.
+**      - Added new thread options to gcc: "-D_REENTRAND -pthread"
+**        which I only can assume what they are doing;-)
+**      - Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**        and corrected upper time limit.
+**
 **      Revision 1.56  2002/08/16 13:20:13  sm
 **      - Removed some unused methods.
 **      - Allocation bug found in brt3 - the Un*x version of the
@@ -862,9 +872,13 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		k++;
 
 		// Do some semantic checks
-		B3_ASSERT((start <= v1) && (v1 < end));
-		B3_ASSERT((start <= v2) && (v2 < end));
-		B3_ASSERT((start <= v3) && (v3 < end));
+		if ((v1 < start) || (v1 >= end) ||
+		    (v2 < start) || (v2 >= end) ||
+		    (v3 < start) || (v3 >= end))
+		{
+			b3PrintF(B3LOG_NORMAL,"###### %d: %d # %d %d %d # %d (%s:l.%d)\n",i,
+				start,v1,v2,v3,end,__FILE__,__LINE__);
+		}
 
 		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
 		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);

@@ -32,6 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/08/24 13:22:02  sm
+**      - Extensive debugging on threading code done!
+**        o Cleaned up POSIX threads
+**        o Made safe thread handling available in raytracing code
+**        o b3PrepareInfo instantiates threads only once.
+**      - Added new thread options to gcc: "-D_REENTRAND -pthread"
+**        which I only can assume what they are doing;-)
+**      - Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**        and corrected upper time limit.
+**
 **      Revision 1.19  2002/08/16 11:40:39  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -217,7 +227,6 @@ b3_bool b3SplineRotShape::b3Prepare()
 	b3_count     VertexCount,TriaCount;
 	b3_vector    Between[B3_MAX_CONTROLS+1];
 	b3_vector    VertexField[B3_MAX_SUBDIV+1];
-
 
 	// Create aux BSpline
 	MySpline          = m_Spline;

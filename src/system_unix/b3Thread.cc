@@ -23,8 +23,11 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/system/b3Log.h"
 
+#include <assert.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/24 13:22:02  sm
+**	- Extensive debugging on threading code done!
+**	  o Cleaned up POSIX threads
+**	  o Made safe thread handling available in raytracing code
+**	  o b3PrepareInfo instantiates threads only once.
+**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
+**	  which I only can assume what they are doing;-)
+**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**	  and corrected upper time limit.
+**
 **	Revision 1.8  2002/08/23 13:40:28  sm
 **	- b3Event on Un*x platforms were broken.
-**
+**	
 **	Revision 1.7  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -75,32 +88,50 @@
 
 /*************************************************************************
 **                                                                      **
+**                        pthread logging                               **
+**                                                                      **
+*************************************************************************/
+
+#if 1
+static b3_bool b3LogPThread(int error_code)
+{
+	if(error_code != 0)
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3PLog # errno: %d (%s)!\n",
+			error_code,strerror(error_code));
+	}
+	return error_code == 0;
+}
+#else
+#define b3LogPThread(error_code) (b3_bool)((error_code) == 0)
+#endif
+
+/*************************************************************************
+**                                                                      **
 **                        Blizzard III mutex                            **
 **                                                                      **
 *************************************************************************/
 
 b3Mutex::b3Mutex()
 {
-	pthread_mutex_init(&mutex,NULL);
+	b3LogPThread(pthread_mutex_init(&mutex,NULL));
 }
 
 b3Mutex::~b3Mutex()
 {
-	pthread_mutex_destroy(&mutex);
+	b3LogPThread(pthread_mutex_destroy(&mutex));
 }
 
 // Method for entering a critical code section
 b3_bool b3Mutex::b3Lock()
 {
-	pthread_mutex_lock(&mutex);
-	return true;
+	return b3LogPThread(pthread_mutex_lock(&mutex));
 }
 
 // Method for leaving a critical code section
 b3_bool b3Mutex::b3Unlock()
 {
-	pthread_mutex_unlock(&mutex);
-	return true;
+	return b3LogPThread(pthread_mutex_unlock(&mutex));
 }
 
 /*************************************************************************
@@ -112,26 +143,24 @@ b3_bool b3Mutex::b3Unlock()
 
 b3IPCMutex::b3IPCMutex()
 {
-	pthread_mutex_init(&mutex,NULL);
+	b3LogPThread(pthread_mutex_init(&mutex,NULL));
 }
 
 b3IPCMutex::~b3IPCMutex()
 {
-	pthread_mutex_destroy(&mutex);
+	b3LogPThread(pthread_mutex_destroy(&mutex));
 }
 
 // Method for entering a critical code section
 b3_bool b3IPCMutex::b3Lock()
 {
-	pthread_mutex_lock(&mutex);
-	return true;
+	return b3LogPThread(pthread_mutex_lock(&mutex));
 }
 
 // Method for leaving a critical code section
 b3_bool b3IPCMutex::b3Unlock()
 {
-	pthread_mutex_unlock(&mutex);
-	return true;
+	return b3LogPThread(pthread_mutex_unlock(&mutex));
 }
 
 /*************************************************************************
@@ -142,38 +171,40 @@ b3_bool b3IPCMutex::b3Unlock()
 
 b3Event::b3Event()
 {
-	pthread_cond_init(&event,NULL);
-	pthread_mutex_init(&mutex,NULL);
+	b3LogPThread(pthread_cond_init(&event,NULL));
+	b3LogPThread(pthread_mutex_init(&mutex,NULL));
 	pulse = false;
 }
 
 b3Event::~b3Event()
 {
-	pthread_mutex_destroy(&mutex);
-	pthread_cond_destroy(&event);
+	b3LogPThread(pthread_mutex_destroy(&mutex));
+	b3LogPThread(pthread_cond_destroy(&event));
 }
 
 // Signal another thread that there has happend something.
 void b3Event::b3Pulse()
 {
-	pthread_mutex_lock(&mutex);
+	b3LogPThread(pthread_mutex_lock(&mutex));
 	pulse = true;
-	pthread_cond_broadcast(&event);
-	pthread_mutex_unlock(&mutex);
+	b3LogPThread(pthread_cond_broadcast(&event));
+	b3LogPThread(pthread_mutex_unlock(&mutex));
 }
 
 // Wait for a signal from another thread.
 b3_bool b3Event::b3Wait()
 {
-	pthread_mutex_lock(&mutex);
+	b3_bool success = true;
+
+	success &= b3LogPThread(pthread_mutex_lock(&mutex));
 	if (!pulse)
 	{
-		pthread_cond_wait(&event,&mutex);
+		success &= b3LogPThread(pthread_cond_wait(&event,&mutex));
 	}
 	pulse = false;
-	pthread_mutex_unlock(&mutex);
+	success &= b3LogPThread(pthread_mutex_unlock(&mutex));
 
-	return true;
+	return success;
 }
 
 /*************************************************************************
@@ -184,17 +215,46 @@ b3_bool b3Event::b3Wait()
 
 static b3_count   threadCount;
 static b3IPCMutex threadMutex;
+static b3_count   threadSuccess;
+static b3_count   threadError;
 
 b3Thread::b3Thread(const char *task_name)
 {
 	m_Name      = task_name;
 	m_IsRunning = false;
 	m_Result    = 0;
+	m_Thread    = 0;
 }
 
 b3Thread::~b3Thread()
 {
 	b3Stop();
+}
+
+void b3Thread::b3Inc()
+{
+	m_Span.b3Start();
+
+	threadMutex.b3Lock();
+	if (!m_IsRunning)
+	{
+		m_IsRunning = true;
+		threadCount++;
+	}
+	threadMutex.b3Unlock();
+}
+
+void b3Thread::b3Dec()
+{
+	threadMutex.b3Lock();
+	if (m_IsRunning)
+	{
+		threadCount--;
+		m_IsRunning = false;
+	}
+	threadMutex.b3Unlock();
+
+	m_Span.b3Stop();
 }
 
 void b3Thread::b3Name(const char *task_name)
@@ -207,34 +267,49 @@ b3_bool b3Thread::b3Start(
 	void         *ptr,
 	b3_s32        priority)
 {
+	b3_bool success;
+	int     error_code;
+
 	b3Stop();
+	assert(!m_IsRunning);
 
 	m_CallProc = proc;
 	m_CallArg  = ptr;
-	pthread_create(&m_Thread,NULL,b3Trampoline,this);
-	return true;
+	m_Result   = 0;
+	m_Thread   = 0;
+
+	success = b3LogPThread(error_code = pthread_create(&m_Thread,NULL,&b3Trampoline,this));
+	if (success)
+	{
+		threadSuccess++;
+		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # started thread %02lX (%s).\n",
+			m_Thread,
+			m_Name != null ? m_Name : "no name");
+	}
+	else
+	{
+		threadMutex.b3Lock();
+		threadError++;
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread (%x) not started!\n",
+			m_Thread);
+		b3PrintF(B3LOG_NORMAL,"    OK/error count: %d/%d\n",
+			threadSuccess,threadError);
+		b3PrintF(B3LOG_NORMAL,"    thread count:   %d\n",
+			threadCount);
+		threadMutex.b3Unlock();
+	}
+	return success;
 }
 
 void * b3Thread::b3Trampoline(void *ptr)
 {
 	b3Thread *threadClass = (b3Thread *)ptr;
-	b3_u32   *result      = &threadClass->m_Result;
 
-	threadClass->m_Span.b3Start();
-	threadMutex.b3Lock();
-	threadCount++;
-	threadMutex.b3Unlock();
+	threadClass->b3Inc();
+	threadClass->m_Result = threadClass->m_CallProc((void *)threadClass->m_CallArg);
+	threadClass->b3Dec();
 
-	threadClass->m_IsRunning = true;
-	*result = threadClass->m_CallProc(threadClass->m_CallArg);
-	threadClass->m_IsRunning = false;
-
-	threadMutex.b3Lock();
-	threadCount--;
-	threadMutex.b3Unlock();
-	threadClass->m_Span.b3Stop();
-
-	return result;
+	return null;
 }
 
 b3_bool b3Thread::b3IsRunning()
@@ -244,22 +319,21 @@ b3_bool b3Thread::b3IsRunning()
 
 b3_bool b3Thread::b3Stop()
 {
-	b3_bool was_running = m_IsRunning;
+	b3_bool was_running;
 
-	if(m_IsRunning)
+	pthread_cancel(m_Thread);
+	was_running = m_IsRunning;
+	if (m_IsRunning)
 	{
-		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminating thread %02lX (%s).\n",
-			0,
+		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminated thread %02lX (%s).\n",
+			m_Thread,
 			m_Name != null ? m_Name : "no name");
-		m_IsRunning = false;
-		m_CallProc  = null;
-		m_CallArg   = 0;
-
-		threadMutex.b3Lock();
-		threadCount--;
-		threadMutex.b3Unlock();
-		m_Span.b3Stop();
 	}
+
+	b3Dec();
+	m_CallProc  = null;
+	m_CallArg   = 0;
+
 	return was_running;
 }
 
@@ -268,10 +342,7 @@ b3_u32 b3Thread::b3Wait()
 	int   result;
 	void *ptr = &result;
 
-	if (m_IsRunning)
-	{
-		pthread_join(m_Thread,&ptr);
-	}
+	b3LogPThread(pthread_join(m_Thread,&ptr));
 	return m_Result;
 }
 

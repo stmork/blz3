@@ -40,7 +40,7 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 clean:	remdepend
 	echo "Cleaning up..."
 	find  $(BLZ3_HOME) -name "*.log" -exec rm {} \;
-	find  $(BLZ3_HOME) -name "core"  -exec rm {} \;
+	find  $(BLZ3_HOME) -name "core*"  -exec rm {} \;
 
 	+@for i in $(SUB_DIRS); do \
 		echo ""; \

@@ -37,10 +37,20 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/08/24 13:22:02  sm
+**	- Extensive debugging on threading code done!
+**	  o Cleaned up POSIX threads
+**	  o Made safe thread handling available in raytracing code
+**	  o b3PrepareInfo instantiates threads only once.
+**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
+**	  which I only can assume what they are doing;-)
+**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**	  and corrected upper time limit.
+**
 **	Revision 1.31  2002/08/23 15:34:27  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.30  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
@@ -357,10 +367,9 @@ int main(int argc,char *argv[])
 
 										scene->b3ResetAnimation();
 										step = 1.0 / animation->m_FramesPerSecond;
-										for (t = animation->m_Start;t <= animation->m_End;t += step)
+										for (t = animation->m_Start;t < animation->m_End;t += step)
 										{
 											scene->b3SetAnimation(t);
-											scene->b3ComputeBounds(&lower,&upper);
 											scene->b3Raytrace(display);
 											sprintf((char *)img_name,"%s_%04ld",
 												camera->b3GetName(),count++);

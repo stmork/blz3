@@ -32,12 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2002/08/24 13:22:02  sm
+**	- Extensive debugging on threading code done!
+**	  o Cleaned up POSIX threads
+**	  o Made safe thread handling available in raytracing code
+**	  o b3PrepareInfo instantiates threads only once.
+**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
+**	  which I only can assume what they are doing;-)
+**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**	  and corrected upper time limit.
+**
 **	Revision 1.67  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.66  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
@@ -737,6 +747,19 @@ void b3BBox::b3Update()
 	}
 }
 
+b3_bool b3Scene::b3UpdateThread(b3BBox *bbox,void *ptr)
+{
+	bbox->b3Update();
+	return true;
+}
+
+void b3Scene::b3Update()
+{
+	b3PrintF(B3LOG_FULL,"    Updating geometry...\n");
+	m_PrepareInfo.b3CollectBBoxes(this);
+	m_PrepareInfo.b3Prepare(b3UpdateThread);
+}
+
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
 {
 	b3Item              *item;
@@ -798,18 +821,6 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	return result;
 }
 
-b3_bool b3Scene::b3UpdateThread(b3BBox *bbox,void *ptr)
-{
-	bbox->b3Update();
-	return true;
-}
-
-void b3Scene::b3Update()
-{
-	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateThread);
-}
-
 b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
 	b3Item  *item;
@@ -817,8 +828,9 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	b3_bool  result = false;
 
 	b3Update();
-	b3Vector::b3InitBound(lower,upper);
 
+	b3PrintF(B3LOG_FULL,"    Updating geometry dimensions...\n");
+	b3Vector::b3InitBound(lower,upper);
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox    = (b3BBox *)item;

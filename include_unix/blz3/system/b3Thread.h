@@ -44,9 +44,9 @@ public:
 
 class b3Event
 {
-	pthread_cond_t  event;
-	pthread_mutex_t mutex;
-	b3_bool         pulse;
+	         pthread_cond_t  event;
+	         pthread_mutex_t mutex;
+	volatile b3_bool         pulse;
 
 public:
 	         b3Event();
@@ -61,12 +61,14 @@ class b3Thread
 {
 	const char   *m_Name;
 	b3TimeSpan    m_Span;
+
 protected:
-	pthread_t     m_Thread;
-	b3_bool       m_IsRunning;
-	b3_u32        m_Result;
-	b3ThreadProc  m_CallProc;
-	void         *m_CallArg;
+	         pthread_t     m_Thread;
+	volatile b3_bool       m_IsRunning;
+	volatile b3_u32        m_Result;
+	volatile b3ThreadProc  m_CallProc;
+	volatile void         *m_CallArg;
+
 public:
 	         b3Thread(const char *task_name = null);
 	        ~b3Thread();
@@ -78,6 +80,8 @@ public:
 	void     b3AddTimeSpan(b3TimeSpan *span);
 private:
 	static void *b3Trampoline(void *thread);
+	       void  b3Inc();
+	       void  b3Dec();
 };
 
 // Info about available CPUs

@@ -31,12 +31,22 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/24 13:22:02  sm
+**	- Extensive debugging on threading code done!
+**	  o Cleaned up POSIX threads
+**	  o Made safe thread handling available in raytracing code
+**	  o b3PrepareInfo instantiates threads only once.
+**	- Added new thread options to gcc: "-D_REENTRAND -pthread"
+**	  which I only can assume what they are doing;-)
+**	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
+**	  and corrected upper time limit.
+**
 **	Revision 1.9  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.8  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
@@ -105,11 +115,21 @@ b3PrepareInfo::b3PrepareInfo()
 {
 	m_PrepareProc = null;
 	m_CPUs        = b3Runtime::b3GetNumCPUs();
+	m_Threads     = m_CPUs > 1 ? new b3Thread[m_CPUs] : null;
+
 #ifdef _DEBUG
 	m_MinBBoxesForThreading = 0;
 #else
 	m_MinBBoxesForThreading = B3_MIN_BBOXES_FOR_THREADING;
 #endif
+}
+
+b3PrepareInfo::~b3PrepareInfo()
+{
+	if (m_Threads != null)
+	{
+		delete [] m_Threads;
+	}
 }
 
 void b3PrepareInfo::b3CollectBBoxes(b3Scene *scene)
@@ -158,9 +178,13 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 	{
 		if (!info->m_PrepareProc(reference->m_BBox,info->m_Ptr))
 		{
+			b3PrintF(B3LOG_NORMAL,"      Object %s didn't prepare successfully!\n",
+				reference->m_BBox->b3GetName());
 			return 0;
 		}
 	}
+	b3PrintF(B3LOG_FULL,"      Objects prepared successfully!\n");
+
 	return 1;
 }
 
@@ -171,25 +195,29 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool th
 	m_PrepareProc = prepare_proc;
 	m_Ptr         = ptr;
 	B3_ASSERT(m_PrepareProc != null);
-	if ((m_CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
+
+	if ((m_Threads != null) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
 	{
-		b3Thread *threads = new b3Thread[m_CPUs];
-		int       i;
+		int i;
 
 		b3RebuildListFromArray();
 		b3PrintF(B3LOG_FULL,"    Starting %d prepare threads\n",m_CPUs);
 		for (i = 0;i < m_CPUs;i++)
 		{
-			threads[i].b3Start(b3PrepareThread,this);
+			if (!m_Threads[i].b3Start(b3PrepareThread,this))
+			{
+				B3_THROW(b3PrepareException,B3_PREPARE_NO_THREAD);
+			}
 		}
 
 		b3PrintF(B3LOG_FULL,"    Waiting for prepare threads...\n");
 		for (i = 0;i < m_CPUs;i++)
 		{
-			result &= (threads[i].b3Wait() != 0);
+			if(m_Threads[i].b3Wait() == 0)
+			{
+				result = false;
+			}
 		}
-
-		delete [] threads;
 	}
 	else
 	{
