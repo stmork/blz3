@@ -44,7 +44,8 @@ typedef enum
 	B3_DISPLAY_ERROR = -1,
 	B3_DISPLAY_OK    =  0,
 	B3_DISPLAY_MEMORY,
-	B3_DISPLAY_NO_COLORMAP
+	B3_DISPLAY_NO_COLORMAP,
+	B3_DISPLAY_OPEN
 } b3_display_error;
 
 class b3DisplayException
@@ -68,18 +69,20 @@ class b3Row;
 
 class b3Display : public b3Mem
 {
-	b3_res        m_xMax,m_yMax; // This is the max. visible size
-	b3_res        m_depth;
-	char         *m_Title;
+	b3_res              m_xMax,m_yMax; // This is the max. visible size
+	b3_res              m_depth;
+	char               *m_Title;
 
 	// Some position values
-	b3_res        m_xs,m_ys; // This is the size we really use
-	b3_pkd_color *m_Buffer;
+	b3_res              m_xs,m_ys; // This is the size we really use
+	b3_pkd_color       *m_Buffer;
 
 	// Some X values
-	b3_bool       m_Opened;
-	b3_bool       m_Closed;
-	b3Mutex       m_Mutex;
+	b3_bool             m_Opened;
+	b3_bool             m_Closed;
+	b3Mutex             m_Mutex;
+
+	CScrollView        *m_View;
 
 public:
 	                    b3Display(const char *title = null);
@@ -93,6 +96,7 @@ public:
 	void                b3Wait();
 
 private:
+	       void         b3Init();
 	       void         b3Open(b3_res xSize,b3_res ySize);
 	       void         b3Close();
 };
