@@ -79,8 +79,7 @@ static inline int stricmp(const char *a,const char *b)
 #define B3_IRAN(x)          ((long)((float)x * drand48()))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
 #define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
-
-#define B3_BEEP         b3Runtime::b3Beep()
+#define B3_BEEP             b3Runtime::b3Beep()
 
 #define B3_VERSION  3
 #define B3_REVISION 0
@@ -97,6 +96,8 @@ typedef enum
 	B3_BIG_ENDIAN    = 0x4d4d,
 	B3_LITTLE_ENDIAN = 0x4949
 } b3_cpu_type;
+
+#define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
 
 class b3Runtime : public b3CPU
 {

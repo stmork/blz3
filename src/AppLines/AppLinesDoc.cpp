@@ -57,6 +57,12 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2002/07/31 11:57:10  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.61  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -66,7 +72,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.60  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
 **	
@@ -931,7 +937,7 @@ void CAppLinesDoc::OnModellerInfo()
 	dlg.m_ModellerInfo = m_Info;
 	if (dlg.DoModal() == IDOK)
 	{
-		UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+		UpdateAllViews(NULL,B3_UPDATE_FULCRUM|B3_UPDATE_LIGHT);
 		SetModifiedFlag();
 	}
 }

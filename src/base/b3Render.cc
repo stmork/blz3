@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2002/07/31 11:57:11  sm
+**      - The nVidia OpenGL init bug fixed by using following work
+**        around: The wglMakeCurrent() method is invoked on
+**        every OnPaint(). This is configurable depending on the
+**        hostname.
+**
 **      Revision 1.44  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -306,6 +312,7 @@ static GLint light_num[] =
 
 b3RenderContext::b3RenderContext()
 {
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3RenderContext()\n");
 	b3SetBGColor(0.9,0.9,0.9);
 	b3LightNum();
 	b3LightSpotEnable(false);
@@ -314,11 +321,13 @@ b3RenderContext::b3RenderContext()
 void b3RenderContext::b3Init()
 {
 #ifdef BLZ3_USE_OPENGL
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3Init()\n");
 	b3PrintF(B3LOG_DEBUG,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
 	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
 	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
 	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
 
+	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
@@ -339,6 +348,8 @@ void b3RenderContext::b3SetAmbient(b3_color *ambient)
 #ifdef BLZ3_USE_OPENGL
 	GLfloat gl_ambient[4];
 
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetAmbient(%08lx)\n",
+		b3Color::b3GetColor(ambient));
 	b3ColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
 #endif
@@ -350,6 +361,7 @@ void b3RenderContext::b3LightReset()
 
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
 	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 #endif
@@ -480,6 +492,8 @@ b3_bool b3RenderContext::b3LightSet(
 void b3RenderContext::b3SetBGColor(b3_color *color)
 {
 	glBGColor = *color;
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetBGColor(%08lx)\n",
+		b3Color::b3GetColor(&glBGColor));
 }
 
 void b3RenderContext::b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b)
@@ -488,11 +502,15 @@ void b3RenderContext::b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b)
 	glBGColor.r = r;
 	glBGColor.g = g;
 	glBGColor.b = b;
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetBGColor(%08lx)\n",
+		b3Color::b3GetColor(&glBGColor));
 }
 
 void b3RenderContext::b3StartDrawing()
 {
 #ifdef BLZ3_USE_OPENGL
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3StartDrawing()\n");
+
 	glClearColor(glBGColor.r,glBGColor.g,glBGColor.b,1.0 - glBGColor.a);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 #endif

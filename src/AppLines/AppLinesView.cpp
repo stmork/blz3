@@ -39,13 +39,19 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2002/07/31 11:57:10  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.52  2002/07/29 14:48:10  sm
 **	- Circled shapes like cylinder, doughnuts etc. draw
 **	  textures correctly but renders shading a little bit
 **	  wrong at seam.
 **	- Added support for multiple lights. This should be
 **	  configurable inside a scene (via b3ModellerInfo?)
-**
+**	
 **	Revision 1.51  2002/07/29 12:32:56  sm
 **	- Full disk draws textures correctly now
 **	- Windows selects the correct pixel format for
@@ -408,13 +414,16 @@ void CAppLinesView::OnInitialUpdate()
 
 void CAppLinesView::b3UpdateLight()
 {
-	CAppLinesDoc *pDoc   = GetDocument();
+	CAppLinesDoc *pDoc = GetDocument();
 
-#if 1
-	m_Scene->b3SetLights(&pDoc->m_Context);
-#else
-	pDoc->m_Context.b3LightDefault();
-#endif
+	if (pDoc->m_Scene->b3GetModellerInfo()->m_UseSceneLights)
+	{
+		m_Scene->b3SetLights(&pDoc->m_Context);
+	}
+	else
+	{
+		pDoc->m_Context.b3LightDefault();
+	}
 }
 
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 

@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2002/07/31 11:57:11  sm
+**      - The nVidia OpenGL init bug fixed by using following work
+**        around: The wglMakeCurrent() method is invoked on
+**        every OnPaint(). This is configurable depending on the
+**        hostname.
+**
 **      Revision 1.49  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -530,22 +536,23 @@ static const b3_u32 measure[B3_MEASURE_MAX - 1] =
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
-	m_Center.x      = 0;
-	m_Center.y      = 0;
-	m_Center.z      = 0;
-	m_StepMove.x    =
-	m_StepMove.y    =
-	m_StepMove.z    = 10;
-	m_StepRotate.x  =
-	m_StepRotate.y  =
-	m_StepRotate.z  = 15;
-	m_Unit          = B3_UNIT_CM;
-	m_Measure       = B3_MEASURE_100;
-	m_CustomMeasure = 100;
-	m_GridMove      = 10;
-	m_GridRot       = 15;
-	m_GridActive    = true;
-	m_AngleActive   = true;
+	m_Center.x       = 0;
+	m_Center.y       = 0;
+	m_Center.z       = 0;
+	m_StepMove.x     =
+	m_StepMove.y     =
+	m_StepMove.z     = 10;
+	m_StepRotate.x   =
+	m_StepRotate.y   =
+	m_StepRotate.z   = 15;
+	m_Unit           = B3_UNIT_CM;
+	m_Measure        = B3_MEASURE_100;
+	m_CustomMeasure  = 100;
+	m_GridMove       = 10;
+	m_GridRot        = 15;
+	m_GridActive     = true;
+	m_AngleActive    = true;
+	m_UseSceneLights = false;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
@@ -577,9 +584,10 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 			m_AngleActive  = b3InitBool();
 		}
 	}
-	m_Unit          =    (b3_unit)((m_Flags & B3_UNIT_MASK)           >> B3_UNIT_SHIFT);
-	m_Measure       = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
-	m_CustomMeasure =              (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
+	m_Unit           =    (b3_unit)((m_Flags & B3_UNIT_MASK)           >> B3_UNIT_SHIFT);
+	m_Measure        = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
+	m_CustomMeasure  =              (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
+	m_UseSceneLights = (m_Flags & B3_USE_SCENE_LIGHTS) != 0;
 	
 	if (m_CustomMeasure == 0)
 	{
@@ -594,6 +602,11 @@ void b3ModellerInfo::b3Write()
 		(m_Unit << B3_UNIT_SHIFT) |
 		(m_Measure << B3_MEASURE_SHIFT) |
 		(m_CustomMeasure << B3_CUSTOM_MEASURE_SHIFT);
+	if (m_UseSceneLights)
+	{
+		m_Flags |= B3_USE_SCENE_LIGHTS;
+	}
+
 	b3StoreVector(&m_Center);
 	b3StoreFloat(m_GridMove  );
 	b3StoreFloat(m_GridRot   );

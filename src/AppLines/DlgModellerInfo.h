@@ -52,6 +52,7 @@ public:
 	int				m_Unit;
 	int				m_Measure;
 	b3_u32			m_CustomMeasure;
+	int		m_LightMode;
 	//}}AFX_DATA
 
 

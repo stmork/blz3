@@ -52,9 +52,15 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/07/31 11:57:10  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.34  2002/07/22 16:27:45  sm
 **	- Fixed some errors concerning texture stencil
-**
+**	
 **	Revision 1.33  2002/04/07 19:51:27  sm
 **	- Added new CB3DocManager to open new
 **	  CB3FileFialog...
@@ -235,8 +241,8 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 	m_ClipboardFormatForBlizzardObject = 0;
-	m_lastGC = 0;
-	m_lastDC = 0;
+	m_lastGC = (HGLRC)0xdeadbeef;
+	m_lastDC = (HDC)0xbadc0ded;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -515,6 +521,15 @@ BOOL CAppLinesApp::InitInstance()
 		}
 	}
 
+	m_UncheckedContextSwitch = false;
+	if (b3Runtime::b3Hostname(m_Hostname,sizeof(m_Hostname)))
+	{
+		CString key("GL unchecked context switch.");
+
+		key += m_Hostname;
+		m_UncheckedContextSwitch = b3ReadInt(b3ClientName(),key,m_UncheckedContextSwitch);
+		b3WriteInt(b3ClientName(),key,m_UncheckedContextSwitch);
+	}
 	return TRUE;
 }
 
@@ -702,8 +717,10 @@ void CAppLinesApp::OnChangeTexturePath()
 
 void CAppLinesApp::b3SelectRenderContext(HDC dc,HGLRC gc)
 {
-	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0))
+	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0) || (m_UncheckedContextSwitch))
 	{
+		b3PrintF(B3LOG_FULL,"########################################## CAppLinesApp::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
+			dc,gc);
 		wglMakeCurrent(dc,gc);
 		m_lastDC = dc;
 		m_lastGC = gc;

@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/07/31 11:57:10  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.17  2002/07/31 08:53:22  sm
 **	- Added simplified pixel format selection
 **	- Some problems with normal computation occured
-**
+**	
 **	Revision 1.16  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
@@ -483,6 +489,7 @@ void CAppRenderView::OnInitialUpdate()
 
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	pDoc->m_Context.b3Init();
+	pDoc->m_Context.b3SetBGColor(0.8,0.8,0.8);
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
@@ -616,7 +623,6 @@ void CAppRenderView::OnPaint()
 	// Init Drawing
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	GetClientRect(&rect);
-	GetDocument()->m_Context.b3SetBGColor(0.8,0.8,0.8);
 
 	_ftime(&start);
 	b3Draw(rect.Width(),rect.Height());

@@ -2078,6 +2078,7 @@ public:
 	b3_bool          m_GridActive;
 	b3_bool          m_AngleActive;
 	b3_bool          m_CameraActive;
+	b3_bool          m_UseSceneLights;
 	b3_unit          m_Unit;
 	b3_measure       m_Measure;
 	b3_u32           m_CustomMeasure;
@@ -2099,6 +2100,7 @@ public:
 #define B3_UNIT_MASK           0x0000f
 #define B3_MEASURE_MASK        0x000f0
 #define B3_CUSTOM_MEASURE_MASK 0x3ff00
+#define B3_USE_SCENE_LIGHTS    0x40000
 
 #define B3_UNIT_SHIFT                0
 #define B3_MEASURE_SHIFT             4

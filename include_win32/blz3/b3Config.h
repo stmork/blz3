@@ -41,7 +41,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include "blz3/system/b3Thread.h"
 
 #ifdef _DEBUG
@@ -88,12 +87,18 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.22  2002/07/31 11:57:08  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.21  2002/04/07 12:59:37  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
 **	- Image buttons changed to draw disabled state correctly using
 **	  CDC::DrawState()
-**
+**	
 **	Revision 1.20  2002/03/01 20:26:38  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -236,8 +241,7 @@ typedef CDC b3DrawContext;
 #define B3_IRAN(x)          ((long)((x) * (b3_f64)rand() / RAND_MAX))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
 #define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
-
-#define B3_BEEP         b3Runtime::b3Beep()
+#define B3_BEEP             b3Runtime::b3Beep()
 
 #define B3_VERSION  3
 #define B3_REVISION 0
@@ -273,6 +277,7 @@ enum b3_msgbox_type
 	B3_MSGBOX_INFO      = B3_MSGBOX_OK
 };
 
+#define B3_MAXHOSTNAMELEN ((MAX_COMPUTERNAME_LENGTH) + 1)
 
 class b3Runtime : public b3CPU
 {

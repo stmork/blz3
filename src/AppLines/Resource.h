@@ -358,6 +358,8 @@
 #define IDC_SUBDIV_SPIN                 1244
 #define IDC_YCOUNT                      1245
 #define IDC_YCOUNT_SPIN                 1246
+#define IDC_GL_LIGHTS_SIMPLE            1247
+#define IDC_GL_LIGHTS_SCENE             1248
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -547,7 +549,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        205
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1247
+#define _APS_NEXT_CONTROL_VALUE         1249
 #define _APS_NEXT_SYMED_VALUE           60081
 #endif
 #endif

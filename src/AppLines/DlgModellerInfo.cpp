@@ -32,6 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/07/31 11:57:10  sm
+**	- The nVidia OpenGL init bug fixed by using following work
+**	  around: The wglMakeCurrent() method is invoked on
+**	  every OnPaint(). This is configurable depending on the
+**	  hostname.
+**
 **	Revision 1.9  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -43,7 +49,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.8  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
@@ -93,6 +99,7 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 	m_Unit = B3_UNIT_CM;
 	m_Measure = B3_MEASURE_20;
 	m_CustomMeasure = 1;
+	m_LightMode = 0;
 	//}}AFX_DATA_INIT
 	m_SnapToGridCtrl.b3SetDigits(3,2);
 	m_SnapToGridCtrl.b3SetMin(epsilon);
@@ -115,6 +122,7 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_CBIndex(pDX, IDC_MEASURE, m_Measure);
 	DDX_Text(pDX, IDC_CUSTOM_MEASURE, m_CustomMeasure);
 	DDV_MinMaxInt(pDX, m_CustomMeasure, 1, 1000);
+	DDX_Radio(pDX, IDC_GL_LIGHTS_SIMPLE, m_LightMode);
 	//}}AFX_DATA_MAP
 	m_CenterCtrl.b3DDX(pDX);
 	m_SnapToGridCtrl.b3DDX (pDX,m_ModellerInfo->m_GridMove);
@@ -142,6 +150,7 @@ BOOL CDlgModellerInfo::OnInitDialog()
 	m_Unit          = m_ModellerInfo->m_Unit;
 	m_Measure       = m_ModellerInfo->m_Measure;
 	m_CustomMeasure = m_ModellerInfo->m_CustomMeasure;
+	m_LightMode     = m_ModellerInfo->m_UseSceneLights ? 1 : 0;
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -188,6 +197,7 @@ void CDlgModellerInfo::OnOK()
 	m_ModellerInfo->m_GridActive  = m_SnapToGrid;
 	m_ModellerInfo->m_AngleActive = m_SnapToAngle;
 	m_ModellerInfo->m_Unit        = (b3_unit)m_Unit;
+	m_ModellerInfo->m_UseSceneLights = m_LightMode == 1;
 	if (m_Measure != B3_MEASURE_CUSTOM)
 	{
 		m_ModellerInfo->b3SetMeasure((b3_measure)m_Measure);
