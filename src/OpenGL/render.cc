@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2004/07/15 12:12:20  sm
+**      - Some FSAA debugging- Some FSAA debugging.
+**
 **      Revision 1.40  2004/05/16 09:21:50  sm
 **      - Corrected camera access methods.
 **
@@ -444,6 +447,8 @@ int main(int argc,char *argv[])
 		exit(0);
 	}
 
+	glutInit(&argc,argv);
+
 	try
 	{
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
@@ -476,7 +481,7 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
-			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
+			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH|GLUT_ALPHA);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow("Greetinxx");
 			glutDisplayFunc (&b3RenderScene);

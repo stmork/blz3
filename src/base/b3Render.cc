@@ -43,6 +43,9 @@
 
 /*
 **      $Log$
+**      Revision 1.77  2004/07/15 12:12:20  sm
+**      - Some FSAA debugging- Some FSAA debugging.
+**
 **      Revision 1.76  2004/07/14 09:07:40  sm
 **      - Disabling FSAA = multi sampling
 **      - Some more b3Sampler initializations.
@@ -512,7 +515,12 @@ void b3RenderContext::b3Init()
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_COLOR_MATERIAL);
+GLboolean bVal;
+glGetBooleanv(GL_MULTISAMPLE,&bVal);
+printf("Multisample: %d, %d\n",bVal,glIsEnabled(GL_MULTISAMPLE));
 	glDisable(GL_MULTISAMPLE);
+	glDisable(GL_SAMPLE_BUFFERS_EXT);
+	glDisable(GL_SAMPLES_EXT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_BLEND);
