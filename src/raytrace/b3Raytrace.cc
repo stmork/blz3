@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.67  2005/01/14 14:22:45  smork
+**	- Corrected thread priority for motion blur raytracing.
+**
 **	Revision 1.66  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.65  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -528,7 +531,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = true;
 		infos[i].m_Num     = i;
 
-		if (!threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],-2))
+		if (!threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],m_RenderPriority))
 		{
 			delete [] threads;
 			delete [] infos;
