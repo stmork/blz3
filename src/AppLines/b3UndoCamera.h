@@ -19,17 +19,22 @@
 #define B3UNDOCAMERA_H
 
 #include "AppLines.h"
+#include "MainFrm.h"
 #include "b3Undo.h"
 
 class b3OpCamera : public b3Operation
 {
-public:
+protected:
+	CMainFrame   *m_Main;
+	b3Scene      *m_Scene;
 	b3CameraPart *m_Camera;
 
 protected:
-	inline b3OpCamera(b3CameraPart *camera)
+	inline b3OpCamera(b3Scene *scene,b3CameraPart *camera)
 	{
+		m_Scene  = scene;
 		m_Camera = camera;
+		m_Main   = CB3GetMainFrame();
 	}
 };
 
@@ -72,12 +77,38 @@ protected:
 	}
 };
 
+class b3OpCameraOrientate : public b3OpCamera
+{
+	b3CameraPart   *m_Prev;      // previous camera dimensions
+	b3CameraPart   *m_Computed;  // computed camera dimensions
+
+public:
+	b3OpCameraOrientate(
+		b3Scene      *scene,
+		b3CameraPart *camera,
+		b3_vector    *fulcrum);
+	
+protected:
+	void b3Delete();
+	void b3Undo();
+	void b3Redo();
+	void b3Prepare(CAppRenderDoc *pDoc);
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_CAMERA_ORIENTATE;
+	}
+
+private:
+	void b3Copy(const b3CameraPart *src);
+};
+
 class b3OpCameraEnable : public b3OpCamera
 {
 	b3_bool       m_Activation;
 
 public:
-	     b3OpCameraEnable(b3CameraPart *camera);
+	     b3OpCameraEnable(b3Scene *scene,b3CameraPart *camera);
 
 protected:
 	void b3Prepare(CAppRenderDoc *pDoc);

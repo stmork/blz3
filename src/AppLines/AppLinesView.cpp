@@ -41,9 +41,13 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2003/01/15 16:23:53  sm
+**	- Some other camera undo/redo operations added.
+**	- Fixed some undo(redo operations.
+**
 **	Revision 1.57  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
-**
+**	
 **	Revision 1.56  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
 **	
@@ -863,24 +867,13 @@ void CAppLinesView::OnViewToFulcrum()
 	// TODO: Add your command handler code here
 	CAppLinesDoc *pDoc = GetDocument();
 
-	m_Camera->b3Orientate(
-		&m_Camera->m_EyePoint,
-		pDoc->b3GetFulcrum(),
-		b3Vector::b3Distance(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint),
-		b3Vector::b3Length(&m_Camera->m_Width),
-		b3Vector::b3Length(&m_Camera->m_Height));
+	pDoc->b3AddOp(new b3OpCameraOrientate(m_Scene,m_Camera,pDoc->b3GetFulcrum()));
 	if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		m_RenderView.b3SetViewMode(B3_VIEW_3D);
 		b3UnsetMagnification();
-		OnUpdate(this,B3_UPDATE_VIEW|B3_UPDATE_CAMERA,0);
+		OnUpdate(this,B3_UPDATE_VIEW,0);
 	}
-	else
-	{
-
-		OnUpdate(this,B3_UPDATE_CAMERA,0);
-	}
-	pDoc->SetModifiedFlag();
 }
 
 void CAppLinesView::OnCameraNew() 
@@ -921,7 +914,7 @@ void CAppLinesView::OnCameraProperties()
 void CAppLinesView::OnCameraEnable() 
 {
 	// TODO: Add your command handler code here
-	GetDocument()->b3AddOp(new b3OpCameraEnable(m_Camera));
+	GetDocument()->b3AddOp(new b3OpCameraEnable(m_Scene,m_Camera));
 }
 
 void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 

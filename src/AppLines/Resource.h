@@ -618,6 +618,7 @@
 #define IDS_OP_CAMERA_CREATE            61464
 #define IDS_OP_CAMERA_DELETE            61465
 #define IDS_OP_CAMERA_ENABLE            61466
+#define IDS_OP_CAMERA_ORIENTATE         61467
 
 // Next default values for new objects
 // 

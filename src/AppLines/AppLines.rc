@@ -2721,6 +2721,7 @@ BEGIN
     IDS_OP_CAMERA_CREATE    "Kamera erzeugen"
     IDS_OP_CAMERA_DELETE    "Kamera löschen"
     IDS_OP_CAMERA_ENABLE    "Kamera ein-/ausschalten"
+    IDS_OP_CAMERA_ORIENTATE "Kamera ausrichten"
 END
 
 #endif    // German (Germany) resources
