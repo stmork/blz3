@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3Dir.h $
-**	$Release:	Dortmund 1998 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - directory routines (proto types)
+**	Blizzard III - directory routines (proto types)
 **
-**	(C) Copyright 1998-2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -83,14 +83,14 @@ private:
 	static void CorrectFilePath(char *path);
 };
 
-class mauiDirSystem
+class b3DirSystem
 {
 protected:
 	HANDLE           handle;	// handle of FindFirstFile
 	WIN32_FIND_DATA  entry;		// structure with file information
 };
 
-class b3Dir : public b3Mem, public b3Path, public mauiDirSystem
+class b3Dir : public b3Mem, public b3Path, public b3DirSystem
 {
 	b3_path_type  type;		// type like BExists()
 public:

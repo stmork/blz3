@@ -7,9 +7,9 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - Multithreading routines (for generating dead locks)
+**	Blizzard III - Multithreading routines (for generating dead locks)
 **
-**	(C) Copyright 1998, 1999, 2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

@@ -20,7 +20,7 @@
 
 #include <sys/timeb.h>
 
-#define MAX_MAUITIME_SLICE 100
+#define MAX_B3TIME_SLICE 100
 
 class b3Time
 {

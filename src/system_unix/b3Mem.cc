@@ -7,9 +7,9 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - memory routines
+**	Blizzard III - memory routines
 **
-**	(C) Copyright 1998-2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -19,7 +19,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui 2000 includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -29,17 +29,20 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui development log                          **
+**                        Blizzard III development log                  **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/02 19:52:03  sm
+**	- Cleaning up comments
+**
 **	Revision 1.2  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles
 **	- Cleaned up some CVS conflicts
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	

@@ -191,7 +191,7 @@ b3_bool b3Thread::b3Stop()
 
 	if(is_running)
 	{
-		b3PrintF (B3LOG_FULL,"### CLASS: mauiThrd # terminating thread %02lX (%s).\n",
+		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminating thread %02lX (%s).\n",
 			0,
 			name != null ? name : "no name");
 		is_running = false;

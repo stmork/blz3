@@ -48,10 +48,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/02 19:52:03  sm
+**	- Cleaning up comments
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
@@ -236,7 +239,7 @@ bool b3Date::b3Y2K_Selftest()
 	time_t actual  = time_code;
 	
 	b3PrintF (B3LOG_DEBUG,"\n");
-	b3PrintF (B3LOG_DEBUG,"### MAUI YEAR 2000 Check ###\n");
+	b3PrintF (B3LOG_DEBUG,"### Blizzard III YEAR 2000 Check ###\n");
 	b3PrintF (B3LOG_DEBUG,"###                   +--------- hour\n");
 	b3PrintF (B3LOG_DEBUG,"###                   |+-------- minute\n");
 	b3PrintF (B3LOG_DEBUG,"###                   ||+------- second\n");
@@ -397,7 +400,7 @@ bool b3Date::b3Y2K_Selftest()
 	}
 	else
 	{
-		b3PrintF (B3LOG_DEBUG,"### MAUI YEAR 2000 Check complete ###\n\n");
+		b3PrintF (B3LOG_DEBUG,"### Blizzard III YEAR 2000 Check complete ###\n\n");
 	}
 
 	return success;

@@ -19,7 +19,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui 2000 includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -39,16 +39,19 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui development log                          **
+**                        Blizzard III development log                  **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/02 19:52:03  sm
+**	- Cleaning up comments
+**
 **	Revision 1.2  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
-**
+**	
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -78,7 +81,7 @@ static b3IPCMutex LogMutex;
 
 /*************************************************************************
 **                                                                      **
-**                        The MAUI logging functions                    **
+**                        The Blizzard III logging functions            **
 **                                                                      **
 *************************************************************************/
 

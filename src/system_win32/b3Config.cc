@@ -1,21 +1,47 @@
 /*
 **
-**      $Filename:      b3Config.c $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3Config.c $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - basic platform configuration
+**	Blizzard III - basic platform configuration
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
 #include "blz3/b3Config.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/07/02 19:52:03  sm
+**	- Cleaning up comments
+**
+**	
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III runtime environment              **
+**                                                                      **
+*************************************************************************/
 
 static b3Runtime static_runtime_environment;
 

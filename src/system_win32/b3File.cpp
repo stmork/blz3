@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3File.c $
-**	$Release:	Dortmund 1998 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - file access routines
+**	Blizzard III - file access routines
 **
-**	(C) Copyright 1998-2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -17,7 +17,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui 2000 includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -30,16 +30,19 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui development log                          **
+**                        Blizzard III development log                  **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/02 19:52:03  sm
+**	- Cleaning up comments
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
