@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/01/31 21:20:19  sm
+**	- Changed FLT_MAX to MAX_FLOAT and removed values.h include.
+**
 **	Revision 1.15  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
-**
+**	
 **	Revision 1.14  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
 **	
@@ -1609,7 +1612,7 @@ b3_bool b3Tx::b3TxReduce(b3Tx *src)
 	count = xSize * ySize;
 	for (i = 0;i < count;i++)
 	{
-		b3_f32 dist_min = FLT_MAX;
+		b3_f32 dist_min = MAXFLOAT;
 
 		color = *srcPtr++;
 		index = pSize;

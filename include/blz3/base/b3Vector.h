@@ -364,8 +364,8 @@ public:
 		b3VectorTemplate<F,dim> &lower,
 		b3VectorTemplate<F,dim> &upper)
 	{
-		lower.b3Value( FLT_MAX);
-		upper.b3Value(-FLT_MAX);
+		lower.b3Value( MAXFLOAT);
+		upper.b3Value(-MAXFLOAT);
 	}
 
 	inline void b3SetMinimum(F min)

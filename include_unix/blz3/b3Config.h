@@ -30,7 +30,6 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
-#include <values.h>
 
 #include "blz3/autoconf.h"
 #include "blz3/b3Types.h"
