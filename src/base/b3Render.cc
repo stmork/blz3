@@ -23,7 +23,6 @@
 
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Color.h"
 
 #define not_VERBOSE
@@ -44,6 +43,11 @@
 
 /*
 **      $Log$
+**      Revision 1.90  2004/09/23 15:47:04  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.89  2004/09/19 15:36:18  sm
 **      - Changed polygon/grid index data type from short (Hey! Are we
 **        on Windows 3.11???) to long.
@@ -482,367 +486,6 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
-
-static b3_vector light0_position =
-{
-	1000.0f,-2500.0f,2000.0f
-};
-
-#ifdef BLZ3_USE_OPENGL
-static b3Color world_ambient(  0.25f,0.25f,0.25f);
-static b3Color light0_ambient( 0.25f,0.25f,0.25f);
-static b3Color light0_diffuse( 0.8f, 0.8f, 0.8f);
-static b3Color light0_specular(1.0f, 1.0f, 1.0f);
-
-static GLenum light_num[] =
-{
-	GL_LIGHT0,
-	GL_LIGHT1,
-	GL_LIGHT2,
-	GL_LIGHT3,
-	GL_LIGHT4,
-	GL_LIGHT5,
-	GL_LIGHT6,
-	GL_LIGHT7
-};
-
-#define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(light_num) / sizeof(GLint))))
-
-#endif
-
-b3RenderContext::b3RenderContext()
-{
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3RenderContext()\n");
-	b3LightNum();
-	b3LightSpotEnable(false);
-	glDrawCachedTextures = true;
-	glSelectedObject     = null;
-	glBgColor.b3Init(0.8f,0.8f,0.8f);
-}
-
-void b3RenderContext::b3Init()
-{
-#ifdef BLZ3_USE_OPENGL
-	const char *extensions = (const char *)glGetString(GL_EXTENSIONS);
-
-	b3PrintF(B3LOG_FULL,  "b3RenderContext::b3Init()\n");
-	b3PrintF(B3LOG_NORMAL,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
-	b3PrintF(B3LOG_NORMAL,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
-	b3PrintF(B3LOG_NORMAL,"OpenGL version:    %s\n",glGetString(GL_VERSION));
-	b3PrintF(B3LOG_DEBUG, "OpenGL extensions: %s\n",extensions);
-
-	if (strstr(extensions,"GL_ARB_vertex_program") != null)
-	{
-		b3PrintF(B3LOG_NORMAL,"Vertex shader low level support.\n");
-	}
-
-	if (strstr(extensions,"GL_ARB_fragment_program") != null)
-	{
-		b3PrintF(B3LOG_NORMAL,"Pixel shader low level support.\n");
-	}
-
-	if (strstr(extensions,"GL_ARB_vertex_shader") != null)
-	{
-		b3PrintF(B3LOG_NORMAL,"Vertex shader language support (nice).\n");
-	}
-
-	if (strstr(extensions,"GL_ARB_fragment_shader") != null)
-	{
-		b3PrintF(B3LOG_NORMAL,"Pixel shader language support (very fine).\n");
-	}
-
-	if (strstr(extensions,"GL_ARB_shading_language_100") != null)
-	{
-		b3PrintF(B3LOG_NORMAL,"Support for OpenGL shading language V1.00.\n");
-	}
-
-	glDrawBuffer(GL_BACK);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDisable(GL_COLOR_MATERIAL);
-//	GLboolean bVal;
-//	glGetBooleanv(GL_MULTISAMPLE,&bVal);
-//	printf("Multisample: %d, %d\n",bVal,glIsEnabled(GL_MULTISAMPLE));
-//	glDisable(GL_MULTISAMPLE);
-//	glDisable(GL_SAMPLE_BUFFERS_EXT);
-//	glDisable(GL_SAMPLES_EXT);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_AUTO_NORMAL);
-	glEnable(GL_BLEND);
-	glEnable(GL_ALPHA_TEST);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glAlphaFunc(GL_GREATER,0.5);
-
-	// Enable light
-	b3LightReset();
-	b3LightSet(&light0_position,null,1.0);
-#endif
-}
-
-void b3RenderContext::b3SetAmbient(b3Color &ambient)
-{
-#ifdef BLZ3_USE_OPENGL
-	GLfloat gl_ambient[4];
-
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetAmbient(%08lx)\n",
-		(b3_pkd_color)ambient);
-	b3ColorToGL(ambient,gl_ambient);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
-#endif
-}
-
-void b3RenderContext::b3LightReset()
-{
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightReset()\n");
-
-#ifdef BLZ3_USE_OPENGL
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
-#ifdef GL_LIGHT_MODEL_COLOR_CONTROL
-	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-#endif
-
-	// Disable all other lights
-	b3SetAmbient(world_ambient);
-	for (b3_size i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
-	{
-		glDisable(light_num[i]);
-	}
-#endif
-}
-
-void b3RenderContext::b3LightDefault()
-{
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightDefault()\n");
-
-	b3LightNum();
-	b3LightReset();
-	b3LightSet(&light0_position,null,0.0);
-}
-
-void b3RenderContext::b3LightSpotEnable(b3_bool enable)
-{
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSpotEnable(%s)\n",
-		enable ? "true" : "false");
-	glUseSpotLight = enable;
-}
-
-void b3RenderContext::b3LightNum(b3_index num)
-{
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightNum(%d)\n",num);
-
-#ifdef BLZ3_USE_OPENGL
-	if (VALIDATE_LIGHT_NUM(num))
-	{
-		glLightNum = num;
-	}
-#endif
-}
-
-b3_bool b3RenderContext::b3LightAdd(
-	b3_vector *b3_position,
-	b3_vector *b3_direction,
-	b3_f64     spot_exp,
-	b3Color   *b3_diffuse,
-	b3Color   *b3_ambient,
-	b3Color   *b3_specular)
-{
-	b3_bool  result = false;
-
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d)\n",
-		glLightNum);
-	result = b3LightSet(
-		b3_position,glUseSpotLight ? b3_direction : null,
-		spot_exp,
-		b3_diffuse,b3_ambient,b3_specular,glLightNum++);
-
-	return result;
-}
-
-b3_bool b3RenderContext::b3LightSet(
-	b3_vector *b3_position,
-	b3_vector *b3_direction,
-	b3_f64     spot_exp,
-	b3Color   *b3_diffuse,
-	b3Color   *b3_ambient,
-	b3Color   *b3_specular,
-	b3_index   num)
-{
-	b3_bool result = false;
-#ifdef BLZ3_USE_OPENGL
-	GLfloat gl_position[4];
-	GLfloat gl_direction[4];
-	GLfloat gl_ambient[4];
-	GLfloat gl_diffuse[4];
-	GLfloat gl_specular[4];
-	GLenum  light;
-
-	if (VALIDATE_LIGHT_NUM(num))
-	{
-		light = light_num[num];
-
-		b3VectorToGL(b3_position,gl_position);
-
-		b3ColorToGL(b3_ambient  != null ? *b3_ambient  : light0_ambient, gl_ambient);
-		b3ColorToGL(b3_diffuse  != null ? *b3_diffuse  : light0_diffuse, gl_diffuse);
-		b3ColorToGL(b3_specular != null ? *b3_specular : light0_specular,gl_specular);
-
-		glEnable( light);
-
-		glLightfv(light,GL_AMBIENT, gl_ambient);
-		glLightfv(light,GL_DIFFUSE, gl_diffuse);
-		glLightfv(light,GL_SPECULAR,gl_specular);
-		glLightfv(light,GL_POSITION,gl_position);
-
-		if (b3_direction != null)
-		{
-			b3VectorToGL(b3_direction,gl_direction);
-			glLightfv(light,GL_SPOT_DIRECTION,gl_direction);
-			glLightf (light,GL_SPOT_EXPONENT, spot_exp);
-			glLightf (light,GL_SPOT_CUTOFF,   90.0);
-		}
-		else
-		{
-			glLightf (light,GL_SPOT_EXPONENT,   0.0);
-			glLightf (light,GL_SPOT_CUTOFF,   180.0);
-		}
-
-		// Influence on ambient light
-		glLightf (light,GL_CONSTANT_ATTENUATION,  1.0);
-		glLightf (light,GL_LINEAR_ATTENUATION,    0.0);
-		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
-		result = true;
-	}
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet(%d) = %s\n",
-		num,result ? "true" : "false");
-#ifdef _DEBUG
-	if (result)
-	{
-		b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet() # Light %d: %3.2f %3.2f %3.2f\n",
-			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
-	}
-#endif
-#endif
-	return result;
-}
-
-
-void b3RenderContext::b3StartDrawing()
-{
-#ifdef BLZ3_USE_OPENGL
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3StartDrawing()\n");
-
-	glClearColor(
-		glBgColor[b3Color::R],
-		glBgColor[b3Color::G],
-		glBgColor[b3Color::B],
-		1.0 - glBgColor[b3Color::A]);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-#endif
-}
-
-b3_bool b3RenderContext::b3GetMatrix(
-	b3_matrix_mode  mode,
-	b3_matrix      *matrix)
-{
-#ifdef BLZ3_USE_OPENGL
-	b3_bool result = false;
-	GLfloat values[16];
-
-	switch(mode)
-	{
-	case B3_MATRIX_OBJECT:
-		glGetFloatv(GL_MODELVIEW_MATRIX,values);
-		result = true;
-		break;
-
-	case B3_MATRIX_PROJECTION:
-		glGetFloatv(GL_PROJECTION_MATRIX,values);
-		result = true;
-		break;
-
-	default:
-		result = false;
-		break;
-	}
-	if (result)
-	{
-		matrix->m11 = values[ 0];
-		matrix->m12 = values[ 4];
-		matrix->m13 = values[ 8];
-		matrix->m14 = values[12];
-
-		matrix->m21 = values[ 1];
-		matrix->m22 = values[ 5];
-		matrix->m23 = values[ 9];
-		matrix->m24 = values[13];
-
-		matrix->m31 = values[ 2];
-		matrix->m32 = values[ 6];
-		matrix->m33 = values[10];
-		matrix->m34 = values[14];
-
-		matrix->m41 = values[ 3];
-		matrix->m42 = values[ 7];
-		matrix->m43 = values[11];
-		matrix->m44 = values[15];
-	}
-	return result;
-#else
-	return false;
-#endif
-}
-
-b3_bool b3RenderContext::b3PutMatrix(
-	b3_matrix_mode  mode,
-	b3_matrix      *matrix)
-{
-#ifdef BLZ3_USE_OPENGL
-	b3_bool result = false;
-	GLfloat values[16];
-
-	values[ 0] = matrix->m11;
-	values[ 1] = matrix->m21;
-	values[ 2] = matrix->m31;
-	values[ 3] = matrix->m41;
-
-	values[ 4] = matrix->m12;
-	values[ 5] = matrix->m22;
-	values[ 6] = matrix->m32;
-	values[ 7] = matrix->m42;
-
-	values[ 8] = matrix->m13;
-	values[ 9] = matrix->m23;
-	values[10] = matrix->m33;
-	values[11] = matrix->m43;
-
-	values[12] = matrix->m14;
-	values[13] = matrix->m24;
-	values[14] = matrix->m34;
-	values[15] = matrix->m44;
-
-	switch(mode)
-	{
-	case B3_MATRIX_OBJECT:
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(values);
-		result = true;
-		break;
-
-	case B3_MATRIX_PROJECTION:
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(values);
-		result = true;
-		break;
-
-	default:
-		result = false;
-		break;
-	}
-	return result;
-#else
-	return false;
-#endif
-}
 	
 /*************************************************************************
 **                                                                      **
@@ -852,6 +495,11 @@ b3_bool b3RenderContext::b3PutMatrix(
 
 b3RenderObject::b3RenderObject()
 {
+	glBound       = false;
+	glCustomVert  = false;
+	glCustomGrids = false;
+	glCustomPolys = false;
+
 	glVertexCount = 0;
 	glGridCount   = 0;
 	glPolyCount   = 0;
@@ -914,6 +562,103 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
+void b3RenderObject::b3Bind()
+{
+	B3_ASSERT(!glBound);
+#ifdef BLZ3_USE_OPENGL
+	if (b3RenderContext::b3HasVBO())
+	{
+		if (!glCustomVert)
+		{
+			// Vertices
+			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+			glVertex   = b3RenderContext::glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			B3_ASSERT(glVertex != null);
+		}
+
+		if (!glCustomGrids)
+		{
+			// Grids
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glGrids    = b3RenderContext::glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			B3_ASSERT(glGrids != null);
+		}
+
+		if (!glCustomPolys)
+		{
+			// Polygons
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glPolygons = b3RenderContext::glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			B3_ASSERT(glPolygons != null);
+		}
+	}
+#endif
+	glBound = true;
+}
+
+void b3RenderObject::b3BindVertices()
+{
+	B3_ASSERT(!glBound);
+#ifdef BLZ3_USE_OPENGL
+	if (b3RenderContext::b3HasVBO() && (!glCustomVert))
+	{
+		// Vertices
+		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glVertex = b3RenderContext::glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
+	}
+#endif
+	glBound = true;
+}
+
+void b3RenderObject::b3Unbind()
+{
+	B3_ASSERT(glBound);
+#ifdef BLZ3_USE_OPENGL
+	if (b3RenderContext::b3HasVBO())
+	{
+		if ((!glCustomVert) && (glVBO[0] != 0) && (glVertex != null))
+		{
+			// Vertices
+			b3RenderContext::glBindBufferARB (GL_ARRAY_BUFFER_ARB, glVBO[0]);
+			b3RenderContext::glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+			glVertex = null;
+		}
+
+		if ((!glCustomGrids) && (glVBO[1] != 0) && (glGrids != null))
+		{
+			// Grids
+			b3RenderContext::glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			b3RenderContext::glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+			glGrids = null;
+		}
+
+		if ((!glCustomPolys) && (glVBO[2] != 0) && (glPolygons != null))
+		{
+			// Polygons
+			b3RenderContext::glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			b3RenderContext::glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+			glPolygons = null;
+		}
+	}
+#endif
+	glBound = false;
+}
+
+void b3RenderObject::b3UnbindVertices()
+{
+	B3_ASSERT(glBound);
+#ifdef BLZ3_USE_OPENGL
+	if (b3RenderContext::b3HasVBO() && (!glCustomVert) && (glVBO[0] != 0) && (glVertex != null))
+	{
+		// Vertices
+		b3RenderContext::glBindBufferARB (GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		b3RenderContext::glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+		glVertex = null;
+	}
+#endif
+	glBound = false;
+}
+
 void b3RenderObject::b3Recompute()
 {
 	glComputed = false;
@@ -923,11 +668,59 @@ void b3RenderObject::b3Update()
 {
 	if (!glComputed)
 	{
+		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update()\n");
+
+		b3Bind();
 		b3ComputeIndices();
+#ifdef BLZ3_USE_OPENGL
+		if (glCustomGrids)
+		{
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+				glGridCount * sizeof(b3_gl_line), glGrids, GL_STATIC_DRAW_ARB);
+		}
+		if (glCustomPolys)
+		{
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+				glPolyCount * sizeof(b3_gl_polygon), glPolygons, GL_STATIC_DRAW_ARB);
+		}
+
 		b3ComputeVertices();
+		if ((glCustomVert) && (glVertex != null) && (glVertexCount > 0))
+		{
+			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+			b3RenderContext::glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+				glVertexCount * sizeof(b3_gl_vertex), glVertex, GL_STATIC_DRAW_ARB);
+		}
+#endif
 		b3ComputeNormals();
+		b3Unbind();
+
 		glComputed = true;
+		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Update()\n");
 	}
+}
+
+void b3RenderObject::b3PreAlloc()
+{
+#ifdef BLZ3_USE_OPENGL
+	if (b3RenderContext::b3HasVBO())
+	{
+		if (glVBO[0] == 0)
+		{
+			b3RenderContext::glGenBuffersARB(1,&glVBO[0]);
+		}
+		if (glVBO[1] == 0)
+		{
+			b3RenderContext::glGenBuffersARB(1,&glVBO[1]);
+		}
+		if (glVBO[2] == 0)
+		{
+			b3RenderContext::glGenBuffersARB(1,&glVBO[2]);
+		}
+	}
+#endif
 }
 
 void b3RenderObject::b3AllocVertices(b3RenderContext *context)
@@ -938,15 +731,29 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 	b3GetCount(context,new_vertCount,new_gridCount,new_polyCount);
 
+	b3PreAlloc();
 	if (glVertexCount != new_vertCount)
 	{
 		b3Free(glVertex);
 		glVertex      = null;
 		glVertexCount = new_vertCount;
 
-		if (glVertexCount > 0)
+		glCustomVert = glVertexCount <= 0;
+		if (!glCustomVert)
 		{
-			glVertex = (b3_gl_vertex *)b3Alloc(glVertexCount * sizeof(b3_gl_vertex));
+			if (b3RenderContext::b3HasVBO())
+			{
+#ifdef BLZ3_USE_OPENGL
+				b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+				b3RenderContext::glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+					glVertexCount * sizeof(b3_gl_vertex), NULL, GL_DYNAMIC_DRAW_ARB);
+				glVertex = null;
+#endif
+			}
+			else
+			{
+				glVertex = (b3_gl_vertex *)b3Alloc(glVertexCount * sizeof(b3_gl_vertex));
+			}
 		}
 		glComputed = false;
 	}
@@ -957,9 +764,22 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 		glGrids     = null;
 		glGridCount = new_gridCount;
 
-		if (glGridCount > 0)
+		glCustomGrids = glGridCount <= 0;
+		if (!glCustomGrids)
 		{
-			glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
+			if (b3RenderContext::b3HasVBO())
+			{
+#ifdef BLZ3_USE_OPENGL
+				b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+				b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+					glGridCount * sizeof(b3_gl_line), NULL, GL_DYNAMIC_DRAW_ARB);
+				glGrids = null;
+#endif
+			}
+			else
+			{
+				glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
+			}
 		}
 		glComputed = false;
 	}
@@ -970,9 +790,22 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 		glPolygons  = null;
 		glPolyCount = new_polyCount;
 
-		if (glPolyCount > 0)
+		glCustomPolys = glPolyCount <= 0;
+		if (!glCustomPolys)
 		{
-			glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
+			if (b3RenderContext::b3HasVBO())
+			{
+#ifdef BLZ3_USE_OPENGL
+				b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+				b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+					glPolyCount * sizeof(b3_gl_polygon), NULL, GL_DYNAMIC_DRAW_ARB);
+				glPolygons = null;
+#endif
+			}
+			else
+			{
+				glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
+			}
 		}
 		glComputed = false;
 	}
@@ -1029,15 +862,17 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 			b3PrintF(B3LOG_NORMAL,"###### %d: %d # %d %d %d # %d # (V: %d  P: %d  G: %d) # (%s:l.%d)\n",i,
 				start,v1,v2,v3,end,glVertexCount,glPolyCount,glGridCount,__FILE__,__LINE__);
 		}
-
-		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
-		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
-		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
-		if (b3Vector::b3Normalize(&normal) > 1e-5)
+		else
 		{
-			b3Vector::b3Add(&normal,&glVertex[v1].n);
-			b3Vector::b3Add(&normal,&glVertex[v2].n);
-			b3Vector::b3Add(&normal,&glVertex[v3].n);
+			b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
+			b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
+			b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
+			if (b3Vector::b3Normalize(&normal) > 1e-5)
+			{
+				b3Vector::b3Add(&normal,&glVertex[v1].n);
+				b3Vector::b3Add(&normal,&glVertex[v2].n);
+				b3Vector::b3Add(&normal,&glVertex[v3].n);
+			}
 		}
 	}
 
@@ -1063,6 +898,8 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	b3_index  i,start,end;
 
 	b3Update();
+
+	b3BindVertices();
 	if (glComputed && (glVertex != null) && (glVertexCount > 0))
 	{
 		b3GetVertexRange(start,end);
@@ -1072,6 +909,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 		}
 		result = true;
 	}
+	b3UnbindVertices();
 
 	return result;
 }
@@ -1082,6 +920,7 @@ void b3RenderObject::b3TransformVertices(
 {
 	b3_count i;
 
+	b3BindVertices();
 	if (glVertex != null)
 	{
 		if (is_affine)
@@ -1101,6 +940,7 @@ void b3RenderObject::b3TransformVertices(
 			b3ComputeNormals();
 		}
 	}
+	b3UnbindVertices();
 }
 
 /*************************************************************************
@@ -1439,6 +1279,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 
 #ifdef BLZ3_USE_OPENGL
 #ifdef B3_DISPLAY_LIST
+
 	b3Update();
 	if ((!glMaterialComputed) || (glDisplayList == 0))
 	{
@@ -1498,69 +1339,74 @@ void b3RenderObject::b3CheckGeometry(
 #ifdef _DEBUG
 	b3_index       i;
 
-	switch (render_mode)
+	b3BindVertices();
+	if (glVertex != null)
 	{
-	case B3_RENDER_LINE:
-		// This loop collects access vialoations
-		// prior calling OpenGL routines. This
-		// makes it possible to catch to faulty
-		// index data. The access simply compute
-		// the length of the lines to be drawn.
-		for (i = 0;i < glGridCount;i++)
+		switch (render_mode)
 		{
-			b3_vector aPoint,bPoint;
-			b3_index  a,b;
-			b3_f64    len;
+		case B3_RENDER_LINE:
+			// This loop collects access vialoations
+			// prior calling OpenGL routines. This
+			// makes it possible to catch to faulty
+			// index data. The access simply compute
+			// the length of the lines to be drawn.
+			for (i = 0;i < glGridCount;i++)
+			{
+				b3_vector aPoint,bPoint;
+				b3_index  a,b;
+				b3_f64    len;
 
-			a = glGrids[i].a;
-			aPoint.x = glVertex[a].v.x;
-			aPoint.y = glVertex[a].v.y;
-			aPoint.z = glVertex[a].v.z;
+				a = glGrids[i].a;
+				aPoint.x = glVertex[a].v.x;
+				aPoint.y = glVertex[a].v.y;
+				aPoint.z = glVertex[a].v.z;
 
-			b = glGrids[i].b;
-			bPoint.x = glVertex[b].v.x;
-			bPoint.y = glVertex[b].v.y;
-			bPoint.z = glVertex[b].v.z;
+				b = glGrids[i].b;
+				bPoint.x = glVertex[b].v.x;
+				bPoint.y = glVertex[b].v.y;
+				bPoint.z = glVertex[b].v.z;
 
-			len = b3Vector::b3Distance(&aPoint,&bPoint);
+				len = b3Vector::b3Distance(&aPoint,&bPoint);
+			}
+			break;
+
+		case B3_RENDER_FILLED:
+			for (i = 0;i < glPolyCount;i++)
+			{
+				b3_vector aPoint,bPoint,cPoint;
+				b3_index  a,b,c;
+				b3_f64    aLen,bLen;
+
+				a = glPolygons[i].a;
+				aPoint.x = glVertex[a].v.x;
+				aPoint.y = glVertex[a].v.y;
+				aPoint.z = glVertex[a].v.z;
+
+				b = glPolygons[i].b;
+				bPoint.x = glVertex[b].v.x;
+				bPoint.y = glVertex[b].v.y;
+				bPoint.z = glVertex[b].v.z;
+
+				c = glPolygons[i].c;
+				cPoint.x = glVertex[c].v.x;
+				cPoint.y = glVertex[c].v.y;
+				cPoint.z = glVertex[c].v.z;
+
+				aLen = b3Vector::b3Distance(&aPoint,&bPoint);
+				bLen = b3Vector::b3Distance(&aPoint,&cPoint);
+			}
+			break;
+
+		case B3_RENDER_NOTHING:
+			// Nothing to do...
+			break;
+
+		default:
+			b3PrintF(B3LOG_NORMAL,"Illegal render mode selected.\n");
+			break;
 		}
-		break;
-
-	case B3_RENDER_FILLED:
-		for (i = 0;i < glPolyCount;i++)
-		{
-			b3_vector aPoint,bPoint,cPoint;
-			b3_index  a,b,c;
-			b3_f64    aLen,bLen;
-
-			a = glPolygons[i].a;
-			aPoint.x = glVertex[a].v.x;
-			aPoint.y = glVertex[a].v.y;
-			aPoint.z = glVertex[a].v.z;
-
-			b = glPolygons[i].b;
-			bPoint.x = glVertex[b].v.x;
-			bPoint.y = glVertex[b].v.y;
-			bPoint.z = glVertex[b].v.z;
-
-			c = glPolygons[i].c;
-			cPoint.x = glVertex[c].v.x;
-			cPoint.y = glVertex[c].v.y;
-			cPoint.z = glVertex[c].v.z;
-
-			aLen = b3Vector::b3Distance(&aPoint,&bPoint);
-			bLen = b3Vector::b3Distance(&aPoint,&cPoint);
-		}
-		break;
-
-	case B3_RENDER_NOTHING:
-		// Nothing to do...
-		break;
-
-	default:
-		b3PrintF(B3LOG_NORMAL,"Illegal render mode selected.\n");
-		break;
 	}
+	b3UnbindVertices();
 #endif
 }
 
@@ -1652,21 +1498,48 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
 
 void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
-	B3_ASSERT(glVertex != null);
-
 #ifndef _DEBUG
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+	if (b3RenderContext::b3HasVBO())
+	{
+		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
+
+		b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+		glDrawElements(GL_LINES,glGridCount * 2, GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+		glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+	}
 #else
 	b3PrintF(B3LOG_FULL,"### b3Draw lined:  %d vertices, %d lines\n",
 		glVertexCount,glGridCount);
 
 	GLenum error = glGetError();
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	if (b3RenderContext::b3HasVBO())
+	{
+		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, 0);
+	}
+	else
+	{
+		B3_ASSERT(glVertex != null);
+
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	}
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+		if (b3RenderContext::b3HasVBO())
+		{
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glDrawElements(GL_LINES,glGridCount * 2, GL_UNSIGNED_INT, 0);
+		}
+		else
+		{
+			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+		}
 		error = glGetError();
 	}
 #endif
@@ -1674,21 +1547,48 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 
 void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 {
-	B3_ASSERT(glVertex != null);
-
 #ifndef _DEBUG
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+	if (b3RenderContext::b3HasVBO())
+	{
+		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
+
+		b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+		glDrawElements(GL_TRIANGLES, glPolyCount * 3, GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+	}
 #else
 	b3PrintF(B3LOG_FULL,"### b3Draw filled: %d vertices, %d polygons\n",
 		glVertexCount,glPolyCount);
 
 	GLenum error = glGetError();
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	if (b3RenderContext::b3HasVBO())
+	{
+		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, 0);
+	}
+	else
+	{
+		B3_ASSERT(glVertex != null);
+
+		glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	}
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+		if (b3RenderContext::b3HasVBO())
+		{
+			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT, 0);
+		}
+		else
+		{
+			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+		}
 		error = glGetError();
 	}
 #endif

@@ -150,6 +150,10 @@ SOURCE=.\b3Render.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3RenderContext.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SearchPath.cc
 # End Source File
 # Begin Source File

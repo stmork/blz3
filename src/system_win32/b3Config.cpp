@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/09/23 15:47:04  sm
+**	- Splitted b3RenderContext into own file.
+**	- Added vertex buffer object support which does not
+**	  run yet.
+**
 **	Revision 1.2  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.1  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -64,7 +69,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3Runtime static_runtime_environment;
+b3Runtime b3Runtime::m_Runtime;
 
 b3Runtime::b3Runtime()
 {
@@ -192,4 +197,9 @@ b3_msg_result b3Runtime::b3MessageBox(
 			message_id);
 	}
 	return b3MessageBox(message,type,title);
+}
+
+void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
+{
+	return wglGetProcAddress(procedure_name);
 }

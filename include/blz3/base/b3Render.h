@@ -39,21 +39,43 @@ typedef enum
 	B3_MATRIX_PROJECTION
 } b3_matrix_mode;
 
+typedef void      (*procBindBufferARB)(GLenum target, GLuint buffer);
+typedef void      (*procDeleteBuffersARB)(GLsizei n, const GLuint *buffers);
+typedef void      (*procGenBuffersARB)(GLsizei n, GLuint *buffers);
+typedef GLboolean (*procIsBufferARB)(GLuint buffer);
+typedef void      (*procBufferDataARB)(GLenum target, GLsizei size, const GLvoid *data, GLenum usage);
+typedef void      (*procBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, const GLvoid *data);
+typedef void      (*procGetBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, GLvoid *data);
+typedef void *    (*procMapBufferARB)(GLenum target, GLenum access);
+typedef void      (*procUnmapBufferARB)(GLenum target);
+typedef void      (*procGetBufferParameterivARB)(GLenum target, GLenum pname, GLint *params);
+typedef void      (*procGetBufferPointervARB)(GLenum target, GLenum pname, void **params);
+
 class b3RenderObject;
 
 class b3RenderContext : protected b3Mem
 {
-	b3_index         glLightNum;
-	b3RenderObject  *glSelectedObject;
+	static b3_bool              glHasVBO;
+	       b3_index             glLightNum;
+	       b3RenderObject      *glSelectedObject;
 
 public:
-	b3_count         glVertexCount;
-	b3_count         glPolyCount;
-	b3_count         glGridCount;
-	b3_count         glTextureSize;
-	b3_bool          glUseSpotLight;
-	b3_bool          glDrawCachedTextures;
-	b3Color          glBgColor;
+	b3_count                    glVertexCount;
+	b3_count                    glPolyCount;
+	b3_count                    glGridCount;
+	b3_count                    glTextureSize;
+	b3_bool                     glUseSpotLight;
+	b3_bool                     glDrawCachedTextures;
+	b3Color                     glBgColor;
+
+#ifdef BLZ3_USE_OPENGL
+	static procBindBufferARB    glBindBufferARB;
+	static procDeleteBuffersARB glDeleteBuffersARB;
+	static procGenBuffersARB    glGenBuffersARB;
+	static procBufferDataARB    glBufferDataARB;
+	static procMapBufferARB     glMapBufferARB;
+	static procUnmapBufferARB   glUnmapBufferARB;
+#endif
 
 public:
 	                 b3RenderContext();
@@ -78,6 +100,11 @@ public:
 	inline void b3SetSelected(b3RenderObject *selected)
 	{
 		glSelectedObject = selected;
+	}
+
+	static inline b3_bool b3HasVBO()
+	{
+		return glHasVBO;
 	}
 
 #ifdef BLZ3_USE_OPENGL
@@ -166,6 +193,11 @@ struct b3_gl_polygon
 
 class b3RenderObject : public b3Mem
 {
+	b3_bool          glBound;
+	b3_bool          glCustomVert;
+	b3_bool          glCustomGrids;
+	b3_bool          glCustomPolys;
+
 protected:
 	b3_count         glVertexCount;
 	b3_count         glGridCount;
@@ -177,6 +209,7 @@ protected:
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint           glDisplayList;
+	GLuint           glVBO[3];
 
 	// Some material values
 	b3_bool          glMaterialComputed;
@@ -211,12 +244,13 @@ public:
 	virtual void            b3FreeVertices();
 	virtual void            b3Draw(b3RenderContext *context);
 	        void            b3Recompute();
+	        void            b3RecomputeMaterial();
 	        void            b3Update();
 	        void            b3UpdateMaterial();
 	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
-	        void            b3RecomputeMaterial();
 
 protected:
+	        void            b3PreAlloc();
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	virtual void            b3GetVertexRange(b3_index &start,b3_index &end);
 	virtual void            b3ComputeVertices();
@@ -263,6 +297,11 @@ private:
 	        void            b3SelectMaterialForFilledDrawing(b3RenderContext *context);
 	        void            b3DrawLinedGeometry(b3RenderContext *context);
 	        void            b3DrawFilledGeometry(b3RenderContext *context);
+
+			void            b3Bind();
+			void            b3BindVertices();
+			void            b3Unbind();
+			void            b3UnbindVertices();
 };
 
 #endif

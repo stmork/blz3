@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2004/09/23 15:47:04  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.20  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -150,6 +155,7 @@ b3CSGBox::b3CSGBox(b3_u32 *src) : b3CSGShape3(src)
 
 void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 {
+	b3PreAlloc();
 	glVertex      = box_vertex;
 
 	glVertexCount = 24;

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2004/09/23 15:47:04  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.26  2004/06/21 09:26:18  sm
 **      - Changed rendering: The constant sin/cos tables are now directly
 **        used from b3ShapeRenderContext.
@@ -199,6 +204,7 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 
 void b3Area::b3AllocVertices(b3RenderContext *context)
 {
+	b3PreAlloc();
 	glVertex   = area_vertex;
 	glGrids    = area_grids;
 	glPolygons = area_polygons;

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/09/23 15:47:04  sm
+**	- Splitted b3RenderContext into own file.
+**	- Added vertex buffer object support which does not
+**	  run yet.
+**
 **	Revision 1.8  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.7  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -141,6 +146,11 @@ void b3PickInfo::b3AddLine(b3_index a,b3_index b)
 
 void b3PickInfo::b3AllocVertices(b3RenderContext *context)
 {
+	b3PreAlloc();
+	glVertex      = m_Vertices.b3GetBuffer();
+	glVertexCount = m_Vertices.b3GetCount();
+	glGrids       = m_Grid.b3GetBuffer();
+	glGridCount   = m_Grid.b3GetCount();
 }
 
 void b3PickInfo::b3FreeVertices()
@@ -149,14 +159,10 @@ void b3PickInfo::b3FreeVertices()
 
 void b3PickInfo::b3ComputeVertices()
 {
-	glVertex      = m_Vertices.b3GetBuffer();
-	glVertexCount = m_Vertices.b3GetCount();
 }
 
 void b3PickInfo::b3ComputeIndices()
 {
-	glGrids     = m_Grid.b3GetBuffer();
-	glGridCount = m_Grid.b3GetCount();
 }
 
 void b3PickInfo::b3GetGridColor(b3Color &color)

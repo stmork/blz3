@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2004/09/23 15:47:03  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.44  2004/09/20 13:40:40  sm
 **      - Removed GLUT_ALPHA requirement.
 **
@@ -401,25 +406,13 @@ static void b3Keyboard(unsigned char key,int x,int y)
 	}
 }
 
-static void b3Prepare(b3Scene *scene)
+static void b3Update(b3Scene *scene)
 {
-	b3ModellerInfo *info;
 	b3_vector       lower,upper;
-	b3_res          xSize,ySize;
 
-	scene->b3Reorg();
-	scene->b3GetDisplaySize(xSize,ySize);
-	scene->b3SetCamera(scene->b3GetFirstCamera(false));
-	scene->b3PrepareScene(xSize,ySize);
 	scene->b3AllocVertices(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);
-
-	info = scene->b3GetModellerInfo();
-	if (info != null)
-	{
-		all_lights = info->m_UseSceneLights;
-	}
 			
 	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
@@ -427,7 +420,27 @@ static void b3Prepare(b3Scene *scene)
 	view.b3SetBounds(&lower,&upper);
 	view.b3SetCamera(scene);
 	view.b3SetViewMode(B3_VIEW_3D);
-	b3ChangeSize(xSize,ySize);
+	view.b3SetupView(xWinSize,yWinSize);
+}
+
+static void b3Prepare(b3Scene *scene)
+{
+	b3ModellerInfo *info;
+	b3_res          xSize,ySize;
+
+	scene->b3Reorg();
+	scene->b3GetDisplaySize(xSize,ySize);
+	scene->b3SetCamera(scene->b3GetFirstCamera(false));
+	scene->b3PrepareScene(xSize,ySize);
+
+	info = scene->b3GetModellerInfo();
+	if (info != null)
+	{
+		all_lights = info->m_UseSceneLights;
+	}
+	
+	xWinSize = xSize;
+	yWinSize = ySize;
 }
 
 int main(int argc,char *argv[])
@@ -490,6 +503,7 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
+
 			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow("Greetinxx");
@@ -498,6 +512,7 @@ int main(int argc,char *argv[])
 			glutReshapeFunc (&b3ChangeSize);
 
 			b3SetupRC();
+			b3Update (scene);
 			glutMainLoop();
 		}
 		delete world;

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2004/09/23 15:47:04  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.16  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -142,7 +147,7 @@ void b3Cylinder::b3GetCount(
 	b3_count        &polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	vertCount   = SinCosSteps + SinCosSteps + 6;
+	vertCount = SinCosSteps + SinCosSteps + 6;
 }
 
 void b3Cylinder::b3AllocVertices(b3RenderContext *ctx)

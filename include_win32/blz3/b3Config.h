@@ -90,9 +90,14 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.31  2004/09/23 15:47:03  sm
+**	- Splitted b3RenderContext into own file.
+**	- Added vertex buffer object support which does not
+**	  run yet.
+**
 **	Revision 1.30  2004/08/28 14:02:14  sm
 **	- Including correct FLT_MAX/DBL_MAX file.
-**
+**	
 **	Revision 1.29  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.
@@ -323,14 +328,18 @@ static inline char *strlcpy(char *dst,const char *src,size_t size)
 
 class B3_PLUGIN b3Runtime : public b3CPU
 {
-public:
+	static b3Runtime     m_Runtime;
+
 	                     b3Runtime();
-	static void          b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
-	static void          b3Beep();
-	static b3_bool       b3Hostname(char *hostname,const b3_size buffer_size);
-	static b3_s32        b3Execute(const char *command, const b3_bool async);
-	static b3_msg_result b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
-	static b3_msg_result b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
+
+public:
+	static void           b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
+	static void           b3Beep();
+	static b3_bool        b3Hostname(char *hostname,const b3_size buffer_size);
+	static b3_s32         b3Execute(const char *command, const b3_bool async);
+	static b3_msg_result  b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
+	static b3_msg_result  b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
+	static void          *b3GetOpenGLExtension(const char *procedure_name);
 };
 
 #endif

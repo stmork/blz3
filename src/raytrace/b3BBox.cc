@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.96  2004/09/23 15:47:04  sm
+**	- Splitted b3RenderContext into own file.
+**	- Added vertex buffer object support which does not
+**	  run yet.
+**
 **	Revision 1.95  2004/08/20 08:09:27  sm
 **	- Optimized animation a little bit.
-**
+**	
 **	Revision 1.94  2004/07/18 08:44:20  sm
 **	- Removed recomputation marker for transformations.
 **	
@@ -738,6 +743,7 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	b3BBox  *bbox;
 	b3Shape *shape;
 
+	b3PreAlloc();
 	glVertexCount =  8;
 	glGridCount   = 12;
 	glPolyCount   =  0;

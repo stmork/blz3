@@ -25,6 +25,11 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2004/09/23 15:47:04  sm
+**      - Splitted b3RenderContext into own file.
+**      - Added vertex buffer object support which does not
+**        run yet.
+**
 **      Revision 1.7  2004/09/23 09:31:33  sm
 **      - Changed b3Runtime into a real singleton.
 **      - Added functions for OpenGL extension.
@@ -202,7 +207,7 @@ b3_bool has_vbo;
 void init_vbo()
 {
 	char *extensions = glGetString(GL_EXTENSIONS);
-	if (strstr(extensions,"GL_ARB_vertex_buffer_object") != 0)
+	if (strstr(extensions,"ARB_vertex_buffer_object") != 0)
 	{
 		glGenBuffersARB  = b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 		glBindBufferARB  = b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
@@ -216,7 +221,7 @@ void init_vbo()
 			(glBufferDataARB != null) &&
 			(glMapBufferARB  != null) &&
 			(glUnmapBufferARB != null);
-//		if (!has_vbo)
+		if (!has_vbo)
 		{
 			printf("glGenBuffersARB  = %p\n",glGenBuffersARB);
 			printf("glBindBufferARB  = %p\n",glBindBufferARB);
