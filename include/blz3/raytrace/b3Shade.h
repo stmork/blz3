@@ -45,7 +45,7 @@ public:
 	}
 
 protected:
-	virtual void            b3ShadeSurface(b3_surface &surface,b3_count depth) = 0;
+	virtual void            b3ShadeSurface(b3_surface *surface,b3_count depth) = 0;
 	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface) = 0;
 
 protected:
@@ -62,7 +62,7 @@ public:
 	               b3ShaderPhong(b3Scene *scene);
 
 protected:
-	       void    b3ShadeSurface(b3_surface &surface,b3_count depth);
+	       void    b3ShadeSurface(b3_surface *surface,b3_count depth);
 	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 };
 
@@ -79,7 +79,7 @@ public:
 	void     b3Prepare();
 
 protected:
-	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
+	void     b3ShadeSurface(b3_surface *surface,b3_count depth);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 };
 
@@ -96,7 +96,7 @@ public:
 	void     b3Prepare();
 
 protected:
-	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
+	void     b3ShadeSurface(b3_surface *surface,b3_count depth);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface);
 
 private:

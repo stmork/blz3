@@ -928,6 +928,8 @@
 #define IDS_TOOLBAR_VIEW                60207
 #define IDS_UNKNOWN                     60208
 #define IDS_MAT_CAR_PAINT               61446
+#define IDS_TITLE_PARALLEL              61447
+#define IDS_TITLE_PERPENDICULAR         61448
 
 // Next default values for new objects
 // 

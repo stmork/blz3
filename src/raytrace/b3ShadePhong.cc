@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/09/28 15:07:41  sm
+**	- Support for car paint is complete.
+**	- Made some optimizations concerning light.
+**	- Added material dependend possibility for color
+**	  mixing instead of mixing inside shader.
+**
 **	Revision 1.34  2004/09/17 14:48:12  sm
 **	- I have forgotten the area lights. Now sampling is correct by moving
 **	  the color sum from surface to Jit (light info).
-**
+**	
 **	Revision 1.33  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
@@ -241,48 +247,51 @@ void b3ShaderPhong::b3ShadeLight(
 }
 
 void b3ShaderPhong::b3ShadeSurface(
-	b3_surface &surface,
+	b3_surface *surface,
 	b3_count    depth_count)
 {
 	b3Item      *item;
 	b3Light     *light;
-	b3_ray      *ray = surface.incoming;
+	b3_ray      *ray = surface->incoming;
 	b3_f32       refl,refr,factor;
 
-	if (surface.m_Transparent)
+	if (surface->m_Transparent)
 	{
-		if (surface.m_Ior == 1)
+		if (surface->m_Ior == 1)
 		{
-			surface.refr_ray.inside = false;
-			surface.refl_ray.inside = false;
+			surface->refr_ray.inside = false;
+			surface->refl_ray.inside = false;
 		}
-		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count);
+		refr = surface->m_Refraction;
+		b3Shade(&surface->refr_ray,depth_count);
 	}
 	else
 	{
 		refr = 0;
 	}
 
-	refl = surface.m_Reflection;
+	refl = surface->m_Reflection;
 	if (refl > 0)
 	{
-		b3Shade(&surface.refl_ray,depth_count);
+		b3Shade(&surface->refl_ray,depth_count);
 	}
 
-	surface.m_DiffuseSum.b3Init();
-	surface.m_SpecularSum.b3Init();
+	surface->m_DiffuseSum.b3Init();
+	surface->m_SpecularSum.b3Init();
 	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 	{
 		light = (b3Light *)item;
-		light->b3Illuminate(this,&surface);
+		light->b3Illuminate(this,surface);
 	}
 
-	factor = (1.0 - refl - refr);
-	ray->color =
-		surface.m_Ambient +
-		surface.m_DiffuseSum * factor +
-		surface.refl_ray.color * refl +
-		surface.refr_ray.color * refr +
-		surface.m_SpecularSum;
+	if (!ray->material->b3MixComponents(surface, refl, refr))
+	{
+		factor = (1.0 - refl - refr);
+		ray->color =
+			surface->m_Ambient +
+			surface->m_DiffuseSum * factor +
+			surface->refl_ray.color * refl +
+			surface->refr_ray.color * refr +
+			surface->m_SpecularSum;
+	}
 }

@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2004/09/28 15:07:40  sm
+**      - Support for car paint is complete.
+**      - Made some optimizations concerning light.
+**      - Added material dependend possibility for color
+**        mixing instead of mixing inside shader.
+**
 **      Revision 1.46  2004/09/17 14:48:12  sm
 **      - I have forgotten the area lights. Now sampling is correct by moving
 **        the color sum from surface to Jit (light info).
@@ -545,6 +551,11 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3_coord       x,y,xs;
 	b3_count       max,Distr;
 	b3_bool        equal;				
+
+	if (!m_LightActive)
+	{
+		return false;
+	}
 
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;

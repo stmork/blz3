@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2004/09/28 15:07:40  sm
+**	- Support for car paint is complete.
+**	- Made some optimizations concerning light.
+**	- Added material dependend possibility for color
+**	  mixing instead of mixing inside shader.
+**
 **	Revision 1.67  2004/09/11 13:30:50  sm
 **	- Corrected link libraries in makefiles.
 **	- Corrected GLint to GLenum for light control.
-**
+**	
 **	Revision 1.66  2004/06/22 12:35:42  sm
 **	- Fixed ticket no. 25: Rounding problems at shadow edges forces
 **	  black borders on objects. Now safe implementations of asin/acos
@@ -1091,13 +1097,12 @@ void b3Scene::b3GetBackgroundColor(
 
 		case TP_SKY_N_HELL :
  			sight      = m_Clouds->b3ComputeClouds(ray,r,b3GetTimePoint());
-			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
-
-#ifdef SKY_SLIDE
-			ly = ray->color[b3Color::R] * 2.0 - 1.0;
-#else
+			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(
+				B3_MAX(r,m_TopColor[b3Color::R]),
+				B3_MAX(r,m_TopColor[b3Color::G]),
+				B3_MAX(r,m_TopColor[b3Color::B])),sight);
 			break;
-#endif
+
 		case TP_SLIDE :
 			ray->color = m_AvrgColor + m_DiffColor * ly;
 			break;

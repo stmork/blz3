@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.94  2004/09/28 15:07:40  sm
+**      - Support for car paint is complete.
+**      - Made some optimizations concerning light.
+**      - Added material dependend possibility for color
+**        mixing instead of mixing inside shader.
+**
 **      Revision 1.93  2004/09/27 16:56:48  sm
 **      - Minor changes
 **
@@ -459,24 +465,6 @@ b3Material::b3Material(b3_u32 class_type) : b3Item(sizeof(b3Material),class_type
 
 b3Material::b3Material(b3_u32 *src) : b3Item(src)
 {
-}
-
-b3_bool b3Material::b3Prepare()
-{
-	return true;
-}
-
-b3_bool b3Material::b3GetSurfaceValues(b3_surface *surface)
-{
-	surface->m_Diffuse     = B3_LIGHT_BLUE;
-	surface->m_Ambient     = surface->m_Diffuse * 0.2;
-	surface->m_Specular    = B3_GREY;
-	surface->m_Reflection  =      0.0;
-	surface->m_Refraction  =      0.0;
-	surface->m_Ior         =      1.5;
-	surface->m_SpecularExp = 100000.0;
-
-	return false;
 }
 
 /*************************************************************************
@@ -1589,19 +1577,18 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 		}
 		Rf.b3SetAlpha(0);
 		Rf.b3Min();
+
+		jit->m_DiffuseSum  += m_Diffuse * nl * m_kd;
 	}
 	else
 	{
 		Rf.b3Init();
 	}
 
-	jit->m_AmbientSum  += m_Ra;
-	jit->m_DiffuseSum  += m_Diffuse * nl * m_kd;
 	jit->m_SpecularSum += Rf * m_ks;
 #else
 	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
 
-	jit->m_AmbientSum  += m_Ra;
 	jit->m_DiffuseSum  += m_Diffuse * nl;
 	jit->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
 #endif
@@ -1792,21 +1779,34 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 
 b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 {
-	b3_ray      *ray = surface->incoming;
-	b3_vector64  L;
+	if (jit->shape == null)
+	{
+		b3_ray      *ray = surface->incoming;
+		b3_vector64  L;
 
-	B3_ASSERT(ray != null);	
+		B3_ASSERT(ray != null);	
 
-	b3Vector::b3Init(&L,&jit->dir);
-	b3Vector::b3Normalize(&L);
+		b3Vector::b3Init(&L,&jit->dir);
+		b3Vector::b3Normalize(&L);
 
-	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
-	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+		b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
+		b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
 
-//	jit->m_AmbientSum  += surface->m_Ambient;
-//	jit->m_DiffuseSum  += surface->m_Diffuse * nl;
-	jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)surface->m_SpecularExp);
+		jit->m_DiffuseSum  += surface->m_Diffuse * nl * jit->m_LightFrac;
+		jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)surface->m_SpecularExp);
+	}
 	
+	return true;
+}
+
+b3_bool b3MatCarPaint::b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+{
+	surface->incoming->color =
+		surface->m_AmbientSum +
+		surface->m_DiffuseSum +
+		surface->m_SpecularSum +
+		surface->refr_ray.color * refraction +
+		surface->refl_ray.color * reflection;
 	return true;
 }
 

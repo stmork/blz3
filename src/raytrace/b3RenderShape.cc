@@ -35,6 +35,12 @@
 
 /*
 **      $Log$
+**      Revision 1.77  2004/09/28 15:07:40  sm
+**      - Support for car paint is complete.
+**      - Made some optimizations concerning light.
+**      - Added material dependend possibility for color
+**        mixing instead of mixing inside shader.
+**
 **      Revision 1.76  2004/07/14 09:07:40  sm
 **      - Disabling FSAA = multi sampling
 **      - Some more b3Sampler initializations.
@@ -687,6 +693,7 @@ b3_f64 b3Shape::b3GetColors(
 	b3_surface   surface;
 
 	surface.incoming = &ray;
+	b3Vector::b3Init(&surface.incoming->normal,0,0,1);
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;

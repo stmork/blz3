@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2004/09/28 15:07:40  sm
+**	- Support for car paint is complete.
+**	- Made some optimizations concerning light.
+**	- Added material dependend possibility for color
+**	  mixing instead of mixing inside shader.
+**
 **	Revision 1.46  2004/09/17 20:57:53  sm
 **	- Material shader add their color components to jit.
 **	- Grizzle fix to Mork 2 shader: The reflective and refractive color
 **	  is initialized when coefficents are zero.
-**
+**	
 **	Revision 1.45  2004/09/17 14:48:12  sm
 **	- I have forgotten the area lights. Now sampling is correct by moving
 **	  the color sum from surface to Jit (light info).
@@ -289,66 +295,72 @@ void b3ShaderMork::b3ShadeLight(
 }
 
 void b3ShaderMork::b3ShadeSurface(
-	b3_surface &surface,
+	b3_surface *surface,
 	b3_count    depth_count)
 {
 	b3Item   *item;
 	b3Light  *light;
-	b3_ray   *ray = surface.incoming;
+	b3_ray   *ray = surface->incoming;
 	b3_f32    refl,refr,factor;
 
 	// Refraction
-	if (surface.m_Transparent)
+	if (surface->m_Transparent)
 	{
-		if (surface.m_Ior == 1)
+		if (surface->m_Ior == 1)
 		{
-			surface.refr_ray.inside = false;
-			surface.refl_ray.inside = false;
+			surface->refr_ray.inside = false;
+			surface->refl_ray.inside = false;
 		}
-		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count);
+		refr = surface->m_Refraction;
+		b3Shade(&surface->refr_ray,depth_count);
 	}
 	else
 	{
 		refr = 0;
-		surface.refr_ray.color.b3Init();
+		surface->refr_ray.color.b3Init();
 	}
 
 	// Reflection
-	refl = surface.m_Reflection;
-	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
+	refl = surface->m_Reflection;
+	if (((!ray->inside) || (!surface->m_Transparent)) && (refl > 0))
 	{
-		b3Shade(&surface.refl_ray,depth_count);
+		b3Shade(&surface->refl_ray,depth_count);
 	}
 	else
 	{
 		refl = 0;
-		surface.refl_ray.color.b3Init();
+		surface->refl_ray.color.b3Init();
 	}
 
 	factor = 1.0 - refl - refr;
 	if (factor > 0)
 	{
-		surface.m_AmbientSum.b3Init();
-		surface.m_DiffuseSum.b3Init();
-		surface.m_SpecularSum.b3Init();
+		surface->m_AmbientSum.b3Init();
+		surface->m_DiffuseSum.b3Init();
+		surface->m_SpecularSum.b3Init();
 
 		// For each light source...
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
-			light->b3Illuminate(this,&surface);
+			light->b3Illuminate(this,surface);
 		}
-		ray->color =
-			(surface.m_AmbientSum + surface.m_DiffuseSum) * factor * 0.5 +
-			surface.refl_ray.color * refl +
-			surface.refr_ray.color * refr +
-			surface.m_SpecularSum;
+		if (!ray->material->b3MixComponents(surface, refl, refr))
+		{
+			ray->color =
+				(surface->m_AmbientSum + surface->m_DiffuseSum) * factor * 0.5 +
+				surface->refl_ray.color * refl +
+				surface->refr_ray.color * refr +
+				surface->m_SpecularSum;
+		}
 	}
 	else
 	{
-		ray->color =
-			surface.refl_ray.color * refl +
-			surface.refr_ray.color * refr;
+		if (!ray->material->b3MixComponents(surface, refl, refr))
+		{
+			ray->color =
+				surface->refl_ray.color * refl +
+				surface->refr_ray.color * refr;
+		}
 	}
 }

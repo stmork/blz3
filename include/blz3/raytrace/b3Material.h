@@ -95,14 +95,36 @@ public:
 	B3_ITEM_LOAD(b3Material);
 
 	static  void    b3Register();
-	virtual b3_bool b3Prepare();
+	
+	virtual inline b3_bool b3Prepare()
+	{
+		return true;
+	}
+
+	/********************** Shading pipeline ********************************/
+
+	virtual inline b3_bool b3GetSurfaceValues(b3_surface *surface)
+	{
+		surface->m_Diffuse     = B3_LIGHT_BLUE;
+		surface->m_Ambient     = surface->m_Diffuse * 0.2;
+		surface->m_Specular    = B3_GREY;
+		surface->m_Reflection  =      0.0;
+		surface->m_Refraction  =      0.0;
+		surface->m_Ior         =      1.5;
+		surface->m_SpecularExp = 100000.0;
+
+		return true;
+	}
 	
 	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	{
 		return false;
 	}
 
-	virtual b3_bool b3GetSurfaceValues(b3_surface *surface);
+	virtual inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	{
+		return false;
+	}
 
 	static inline void b3Mix(
 		      b3_surface  *surface,
@@ -378,6 +400,7 @@ public:
 	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
+	b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
 };
 
 // THIN_FILM

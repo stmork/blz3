@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/09/28 15:07:40  sm
+**	- Support for car paint is complete.
+**	- Made some optimizations concerning light.
+**	- Added material dependend possibility for color
+**	  mixing instead of mixing inside shader.
+**
 **	Revision 1.1  2004/09/27 11:08:54  sm
 **	- Added rudimental car paint material dialog.
-**
+**	
 **	
 */
 
@@ -47,8 +53,13 @@
 *************************************************************************/
 
 CDlgMatCarPaint::CDlgMatCarPaint(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
-	: CB3SimplePreviewDialog(item, CDlgMatCarPaint::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(item, CDlgMatCarPaint::IDD, pParent)
 {
+	m_Material = (b3MatCarPaint *)item;
+	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
+	m_MatHead->b3Append(m_Material);
+	m_PageParallel.m_Material      = &m_Material->m_Parallel;
+	m_PagePerpendicular.m_Material = &m_Material->m_Perpendicular;
 	//{{AFX_DATA_INIT(CDlgMatCarPaint)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -56,19 +67,21 @@ CDlgMatCarPaint::CDlgMatCarPaint(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParen
 
 CDlgMatCarPaint::~CDlgMatCarPaint()
 {
+	m_MatHead->b3RemoveAll();
+	delete m_MatScene;
 }
 
 
 void CDlgMatCarPaint::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatCarPaint)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgMatCarPaint, CDialog)
+BEGIN_MESSAGE_MAP(CDlgMatCarPaint, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatCarPaint)
 		// NOTE: the ClassWizard will add message map macros here
 	//}}AFX_MSG_MAP
@@ -91,9 +104,14 @@ b3_bool CDlgMatCarPaint::b3Edit(b3Item *item,void *ptr)
 
 void CDlgMatCarPaint::b3InitDialog()
 {
+	m_PagePerpendicular.b3SetCaption(IDS_TITLE_PERPENDICULAR);
+	m_PageParallel.b3SetCaption(IDS_TITLE_PARALLEL);
+
+	m_PagePerpendicular.b3AddToSheet(&m_PropertySheet);
+	m_PageParallel.b3AddToSheet(&m_PropertySheet);
 }
 
 void CDlgMatCarPaint::b3UpdateUI()
 {
-//	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
 }

@@ -24,17 +24,23 @@
 // DlgMatNormal.h : header file
 //
 
-#include "blz3/system/b3FloatSpinButtonCtrl.h"
-#include "blz3/raytrace/b3Material.h"
-#include "b3SimplePreviewDialog.h"
-#include "b3SelectColor.h"
+#include "b3SimplePropertyPreviewDialog.h"
+#include "b3ShowSample.h"
+#include "PageMaterial.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatCarPaint dialog
 
-class CDlgMatCarPaint : public CB3SimplePreviewDialog
+class CDlgMatCarPaint : public CB3SimplePropertyPreviewDialog
 {
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
+	b3MatCarPaint     *m_Material;
+
+	CPageMaterial      m_PageParallel;
+	CPageMaterial      m_PagePerpendicular;
+
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
@@ -45,7 +51,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgMatCarPaint)
 	enum { IDD = IDD_MAT_CAR_PAINT };
-		// NOTE: the ClassWizard will add data members here
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 

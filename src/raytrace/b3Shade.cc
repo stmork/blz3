@@ -35,11 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2004/09/28 15:07:40  sm
+**	- Support for car paint is complete.
+**	- Made some optimizations concerning light.
+**	- Added material dependend possibility for color
+**	  mixing instead of mixing inside shader.
+**
 **	Revision 1.53  2004/09/17 20:57:53  sm
 **	- Material shader add their color components to jit.
 **	- Grizzle fix to Mork 2 shader: The reflective and refractive color
 **	  is initialized when coefficents are zero.
-**
+**	
 **	Revision 1.52  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
@@ -430,7 +436,7 @@ b3_bool b3Shader::b3Shade(
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
-		b3ShadeSurface(surface,depth_count + 1);
+		b3ShadeSurface(&surface,depth_count + 1);
 
 		// Post process nebular
 		if (m_Nebular != null)
