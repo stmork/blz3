@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	DlgShape1.cpp $
+**	$Filename:	DlgCSG1.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Edit dialog for spheres
+**	Blizzard III - Edit dialog for CSG spheres
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "DlgShape1.h"
+#include "DlgCSG1.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,47 +32,37 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/02/24 17:45:31  sm
+**	Revision 1.1  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
 **
-**	Revision 1.1  2002/02/23 22:02:49  sm
-**	- Added shape/object edit.
-**	- Added shape/object deletion.
-**	- Added (de-)activation even for shapes.
-**	- Added create/change dialogs for following shapes:
-**	  o sphere
-**	  o area, disk
-**	  o cylinder, cone, ellipsoid, box
-**	- Changed hierarchy to reflect these changes.
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CDlgShape1 implementation                     **
+**                        CDlgShape3 implementation                     **
 **                                                                      **
 *************************************************************************/
 
-CDlgShape1::CDlgShape1(CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(CDlgShape1::IDD, pParent)
+CDlgCSG1::CDlgCSG1(CWnd* pParent /*=NULL*/)
+	: CB3CSGDialog(CDlgCSG1::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CDlgShape1)
+	//{{AFX_DATA_INIT(CDlgCSG1)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
-CDlgShape1::CDlgShape1(UINT IDD,CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(IDD, pParent)
+CDlgCSG1::CDlgCSG1(UINT IDD,CWnd* pParent /*=NULL*/)
+	: CB3CSGDialog(IDD, pParent)
 {
 }
 
 
-void CDlgShape1::DoDataExchange(CDataExchange* pDX)
+void CDlgCSG1::DoDataExchange(CDataExchange* pDX)
 {
-	CB3ShapeDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CDlgShape1)
+	CB3CSGDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CDlgCSG1)
 	DDX_Control(pDX, IDC_BASE_X,   m_xBaseCtrl);
 	DDX_Control(pDX, IDC_BASE_Y,   m_yBaseCtrl);
 	DDX_Control(pDX, IDC_BASE_Z,   m_zBaseCtrl);
@@ -84,8 +74,8 @@ void CDlgShape1::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgShape1, CB3ShapeDialog)
-	//{{AFX_MSG_MAP(CDlgShape1)
+BEGIN_MESSAGE_MAP(CDlgCSG1, CB3CSGDialog)
+	//{{AFX_MSG_MAP(CDlgCSG1)
 	ON_EN_KILLFOCUS(IDC_BASE_X, OnChangedBase)
 	ON_EN_KILLFOCUS(IDC_BASE_Y, OnChangedBase)
 	ON_EN_KILLFOCUS(IDC_BASE_Z, OnChangedBase)
@@ -97,29 +87,29 @@ BEGIN_MESSAGE_MAP(CDlgShape1, CB3ShapeDialog)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgShape1 message handlers
+// CDlgCSG1 message handlers
 
-int CDlgShape1::b3Edit(b3Item *item,b3_bool create)
+int CDlgCSG1::b3Edit(b3Item *item,b3_bool create)
 {
-	CDlgShape1 dlg;
+	CDlgCSG1 dlg;
 
 	dlg.m_Creation = create;
-	dlg.m_Shape    = (b3Sphere *)item;
+	dlg.m_Shape    = (b3CSGSphere *)item;
 	return dlg.DoModal();
 }
 
-const char *CDlgShape1::b3GetSection()
+const char *CDlgCSG1::b3GetSection()
 {
-	return "shape1";
+	return "csg1";
 }
 
-BOOL CDlgShape1::OnInitDialog() 
+BOOL CDlgCSG1::OnInitDialog() 
 {
-	b3Sphere *shape = (b3Sphere *)m_Shape;
+	b3CSGSphere *shape = (b3CSGSphere *)m_Shape;
 
 	m_Base.b3Init(&shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
 	m_Dir1.b3Init(&shape->m_Base,&shape->m_Dir,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
-	CB3ShapeDialog::OnInitDialog();
+	CB3CSGDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	if (m_Creation)
@@ -134,42 +124,42 @@ BOOL CDlgShape1::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgShape1::b3SetDirMode(int dirmode)
+void CDlgCSG1::b3SetDirMode(int dirmode)
 {
-	CB3ShapeDialog::b3SetDirMode(dirmode);
+	CB3CSGDialog::b3SetDirMode(dirmode);
 	m_Base.b3Set();
 	m_Dir1.b3Set(m_DirMode);
 }
 
-void CDlgShape1::b3UpdateBase()
+void CDlgCSG1::b3UpdateBase()
 {
-	CB3ShapeDialog::b3UpdateBase();
+	CB3CSGDialog::b3UpdateBase();
 	m_Dir1.b3Update(m_DirMode);
 }
 
-void CDlgShape1::OnChangedBase() 
+void CDlgCSG1::OnChangedBase() 
 {
 	// TODO: Add your control notification handler code here
 	m_Base.b3Update();
 	b3UpdateBase();
 }
 
-void CDlgShape1::OnChangedDir1() 
+void CDlgCSG1::OnChangedDir1() 
 {
 	// TODO: Add your control notification handler code here
 	m_Dir1.b3Update(m_DirMode);
 }
 
-void CDlgShape1::OnChangedLen1() 
+void CDlgCSG1::OnChangedLen1() 
 {
 	// TODO: Add your control notification handler code here
 	m_Dir1.b3UpdateLen(m_DirMode);
 }
 
-void CDlgShape1::OnOK() 
+void CDlgCSG1::OnOK() 
 {
 	// TODO: Add extra validation here
-	CB3ShapeDialog::OnOK();
+	CB3CSGDialog::OnOK();
 	if (m_Creation)
 	{
 		m_Base.b3Write(b3GetSection() + CString(".base"));

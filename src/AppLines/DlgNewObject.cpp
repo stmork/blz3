@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/02/24 17:45:31  sm
+**	- Added CSG edit dialogs
+**	- Corrected shape edit inheritance.
+**
 **	Revision 1.2  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -42,7 +46,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.1  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
@@ -56,13 +60,6 @@
 **                        CDlgNewObject implementation                  **
 **                                                                      **
 *************************************************************************/
-
-static b3_csg_operation csg_modes[] =
-{
-	B3_CSG_UNION,
-	B3_CSG_INTERSECT,
-	B3_CSG_SUB
-};
 
 CDlgNewObject::CDlgNewObject(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgNewObject::IDD, pParent)
@@ -223,31 +220,34 @@ void CDlgNewObject::OnOK()
 			m_NewItem = b3World::b3AllocNode(BBOX | ((m_BBox->b3GetClassType() & 0xffff) + 1));
 			bbox = (b3BBox *)m_NewItem;
 			strcpy (bbox->m_BoxName,dlg.m_NewName);
-			bboxes->b3Append(bbox);
+			m_Base = bboxes;
+			m_InsertAfter = bboxes->Last;
 		}
 		else
 		{
+			m_Base    = null;
 			m_NewItem = null;
 		}
 		break;
 
 	case CLASS_SHAPE:
+		m_Base    = shapes;
 		m_NewItem = b3World::b3AllocNode(ClassType);
 		shape = (b3SimpleShape *)m_NewItem;
-		shapes->b3Insert(m_InsertAfter,shape);
 		app->WriteProfileInt(CB3ClientString(),"new item.simple shape",ClassType);
 		break;
 
 	case CLASS_CSG:
+		m_Base    = shapes;
 		m_NewItem = b3World::b3AllocNode(ClassType);
 		csg = (b3CSGShape *)m_NewItem;
-		csg->m_Operation = csg_modes[m_ModeCSG];
-		shapes->b3Insert(m_InsertAfter,csg);
+		csg->m_Operation = csg->m_CSGMode[m_ModeCSG];
 		app->WriteProfileInt(CB3ClientString(),"new item.csg mode",m_ModeCSG);
 		app->WriteProfileInt(CB3ClientString(),"new item.csg shape",ClassType);
 		break;
 
 	default:
+		m_Base    = null;
 		m_NewItem = null;
 		break;
 	}

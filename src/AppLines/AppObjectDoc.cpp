@@ -38,6 +38,10 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2002/02/24 17:45:31  sm
+**	- Added CSG edit dialogs
+**	- Corrected shape edit inheritance.
+**
 **	Revision 1.13  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -47,7 +51,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.12  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
@@ -494,24 +498,34 @@ void CAppObjectDoc::OnObjectNew()
 	if (bbox != null)
 	{
 		dlg.m_InsertAfter = shape;
-		dlg.m_BBox = bbox;
-		if (dlg.DoModal() == IDOK)
+		dlg.m_BBox        = bbox;
+		if ((dlg.DoModal() == IDOK) && (dlg.m_NewItem != null))
 		{
 			// Open edit dialog if available
 			call   = CB3ImageList::b3GetEditCall(dlg.m_NewItem);
-			result = (call != null ? call(dlg.m_NewItem,false) : IDOK);
+			result = (call != null ? call(dlg.m_NewItem,true) : IDOK);
+			if (result == IDOK)
+			{
+				// Manually insert to prevent uninitialized redraw
+				// of new item.
+				dlg.m_Base->b3Insert(dlg.m_InsertAfter,dlg.m_NewItem);
 
-			// Init data
-			m_DlgHierarchy->b3GetData();
-			m_BBox->b3Prepare();
-			m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
-			m_BBox->b3BacktraceRecompute(bbox);
-			b3ComputeBounds();
+				// Init data
+				m_DlgHierarchy->b3GetData();
+				m_BBox->b3Prepare();
+				m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+				m_BBox->b3BacktraceRecompute(bbox);
+				b3ComputeBounds();
 
-			SetModifiedFlag();
-			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			m_DlgHierarchy->b3InitTree(this,true);
-			m_DlgHierarchy->b3SelectItem(dlg.m_NewItem);
+				SetModifiedFlag();
+				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+				m_DlgHierarchy->b3InitTree(this,true);
+				m_DlgHierarchy->b3SelectItem(dlg.m_NewItem);
+			}
+			else
+			{
+				delete dlg.m_NewItem;
+			}
 		}
 	}
 }

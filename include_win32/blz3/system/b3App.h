@@ -48,7 +48,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	//}}AFX_VIRTUAL
 
-	//{{AFX_MSG(CAppLinesApp)
+	//{{AFX_MSG(CB3App)
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

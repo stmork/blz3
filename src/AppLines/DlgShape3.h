@@ -25,40 +25,26 @@
 //
 
 #include "AppLines.h"
-#include "b3ShapeDialog.h"
+#include "DlgShape2.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgShape3 dialog
 
-class CDlgShape3 : public CB3ShapeDialog
+class CDlgShape3 : public CDlgShape2
 {
 // Construction
-	CB3PosGroup m_Base;
-	CB3DirGroup m_Dir1;
-	CB3DirGroup m_Dir2;
+protected:
 	CB3DirGroup m_Dir3;
 
 public:
-	b3Shape3 *m_Shape;
 	virtual void b3SetDirMode(int dirmode);
-	static int b3Edit(b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3Item *item,b3_bool create=true);
 
 	CDlgShape3(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgShape3)
 	enum { IDD = IDD_SHAPE3 };
-	CB3FloatEdit	m_xBaseCtrl;
-	CB3FloatEdit	m_yBaseCtrl;
-	CB3FloatEdit	m_zBaseCtrl;
-	CB3FloatEdit	m_xDir1Ctrl;
-	CB3FloatEdit	m_yDir1Ctrl;
-	CB3FloatEdit	m_zDir1Ctrl;
-	CB3FloatEdit	m_lenDir1Ctrl;
-	CB3FloatEdit	m_xDir2Ctrl;
-	CB3FloatEdit	m_yDir2Ctrl;
-	CB3FloatEdit	m_zDir2Ctrl;
-	CB3FloatEdit	m_lenDir2Ctrl;
 	CB3FloatEdit	m_xDir3Ctrl;
 	CB3FloatEdit	m_yDir3Ctrl;
 	CB3FloatEdit	m_zDir3Ctrl;
@@ -75,15 +61,13 @@ public:
 
 // Implementation
 protected:
+	virtual const char *b3GetSection();
+	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgShape3)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-	afx_msg void OnChangedDir1();
-	afx_msg void OnChangedLen1();
-	afx_msg void OnChangedDir2();
-	afx_msg void OnChangedLen2();
 	afx_msg void OnChangedDir3();
 	afx_msg void OnChangedLen3();
 	//}}AFX_MSG

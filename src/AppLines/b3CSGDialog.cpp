@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3ShapeDialog.cpp $
+**	$Filename:	b3CSGDialog.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Base class for simple shapes
+**	Blizzard III - Base class for CSG shapes
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "b3ShapeDialog.h"
+#include "b3CSGDialog.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,82 +32,78 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/02/24 17:45:32  sm
+**	Revision 1.1  2002/02/24 17:45:32  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
 **
-**	Revision 1.1  2002/02/23 22:02:49  sm
-**	- Added shape/object edit.
-**	- Added shape/object deletion.
-**	- Added (de-)activation even for shapes.
-**	- Added create/change dialogs for following shapes:
-**	  o sphere
-**	  o area, disk
-**	  o cylinder, cone, ellipsoid, box
-**	- Changed hierarchy to reflect these changes.
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ShapeDialog implementation                 **
+**                        CB3CSGDialog implementation                   **
 **                                                                      **
 *************************************************************************/
 
-CB3ShapeDialog::CB3ShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
-	: CDialog(IDD, pParent)
+CB3CSGDialog::CB3CSGDialog(UINT IDD,CWnd* pParent /*=NULL*/)
+	: CB3ShapeDialog(IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CB3ShapeDialog)
-	m_DirMode = 0;
+	//{{AFX_DATA_INIT(CB3CSGDialog)
+	m_CSGMode = 0;
 	//}}AFX_DATA_INIT
-	m_Shape = null;
 }
 
 
-void CB3ShapeDialog::DoDataExchange(CDataExchange* pDX)
+void CB3CSGDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CB3ShapeDialog)
-	DDX_Radio(pDX, IDC_DIRECTION, m_DirMode);
+	CB3ShapeDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CB3CSGDialog)
+	DDX_Radio(pDX, IDC_CSGMODE_UNION, m_CSGMode);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CB3ShapeDialog, CDialog)
-	//{{AFX_MSG_MAP(CB3ShapeDialog)
-	ON_BN_CLICKED(IDC_DIRECTION, OnDirModeChanged)
-	ON_BN_CLICKED(IDC_POSITION, OnDirModeChanged)
+BEGIN_MESSAGE_MAP(CB3CSGDialog, CB3ShapeDialog)
+	//{{AFX_MSG_MAP(CB3CSGDialog)
+	ON_BN_CLICKED(IDC_CSGMODE_UNION, OnCSGModeChanged)
+	ON_BN_CLICKED(IDC_CSGMODE_INTERSECT, OnCSGModeChanged)
+	ON_BN_CLICKED(IDC_CSGMODE_SUB, OnCSGModeChanged)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ShapeDialog message handlers
 
-const char *CB3ShapeDialog::b3GetSection()
+const char *CB3CSGDialog::b3GetSection()
 {
-	return "shape";
+	return "csg";
 }
 
-void CB3ShapeDialog::OnDirModeChanged() 
+void CB3CSGDialog::OnCSGModeChanged() 
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	b3SetDirMode(m_DirMode);
+	b3SetCSGMode(m_CSGMode);
 }
 
-void CB3ShapeDialog::b3SetDirMode(int dirmode)
+void CB3CSGDialog::b3SetCSGMode(int csgmode)
 {
 }
 
-void CB3ShapeDialog::b3UpdateBase()
+void CB3CSGDialog::b3UpdateBase()
 {
 }
 
-BOOL CB3ShapeDialog::OnInitDialog() 
+BOOL CB3CSGDialog::OnInitDialog() 
 {
-	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
-	CDialog::OnInitDialog();
+	b3CSGShape *shape = (b3CSGShape *)m_Shape;
+
+	m_CSGMode = shape->b3GetOperationIndex(shape->m_Operation);
+	CB3ShapeDialog::OnInitDialog();
+	if (m_Creation)
+	{
+		m_DirMode = shape->m_Operation;
+	}
 	
 	// TODO: Add extra initialization here
 	
@@ -115,10 +111,8 @@ BOOL CB3ShapeDialog::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CB3ShapeDialog::OnOK() 
+void CB3CSGDialog::OnOK() 
 {
 	// TODO: Add extra validation here
-	CDialog::OnOK();
-	AfxGetApp()->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
-	m_Shape->b3Recompute();
+	CB3ShapeDialog::OnOK();
 }

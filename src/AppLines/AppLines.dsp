@@ -160,6 +160,10 @@ SOURCE=.\b3ControlLDC.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3CSGDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ExampleScene.cpp
 # End Source File
 # Begin Source File
@@ -209,6 +213,14 @@ SOURCE=.\DlgCamera.cpp
 # Begin Source File
 
 SOURCE=.\DlgCreateItem.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSG1.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSG3.cpp
 # End Source File
 # Begin Source File
 
@@ -344,6 +356,10 @@ SOURCE=.\b3ControlLDC.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3CSGDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ExampleScene.h
 # End Source File
 # Begin Source File
@@ -397,6 +413,14 @@ SOURCE=.\DlgCamera.h
 # Begin Source File
 
 SOURCE=.\DlgCreateItem.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSG1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSG3.h
 # End Source File
 # Begin Source File
 

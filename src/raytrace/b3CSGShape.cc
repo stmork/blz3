@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2002/02/24 17:45:32  sm
+**      - Added CSG edit dialogs
+**      - Corrected shape edit inheritance.
+**
 **      Revision 1.5  2002/02/23 22:02:49  sm
 **      - Added shape/object edit.
 **      - Added shape/object deletion.
@@ -68,6 +72,13 @@
 **                                                                      **
 *************************************************************************/
 
+b3_csg_operation b3CSGShape::m_CSGMode[] =
+{
+	B3_CSG_UNION,
+	B3_CSG_INTERSECT,
+	B3_CSG_SUB
+};
+
 b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
 {
 	m_Operation = B3_CSG_UNION;
@@ -80,6 +91,20 @@ b3CSGShape::b3CSGShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3CSGShap
 
 b3CSGShape::b3CSGShape(b3_u32 *src) : b3ShapeRenderObject(src)
 {
+}
+
+int b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
+{
+	int i;
+
+	for (i = 0;i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation));i++)
+	{
+		if (m_CSGMode[i] == mode)
+		{
+			return i;
+		}
+	}
+	return 0;
 }
 
 void b3CSGShape::b3Operate(

@@ -26,6 +26,8 @@
 #include "DlgShape1.h"
 #include "DlgShape2.h"
 #include "DlgShape3.h"
+#include "DlgCSG1.h"
+#include "DlgCSG3.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,6 +37,10 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/02/24 17:45:32  sm
+**	- Added CSG edit dialogs
+**	- Corrected shape edit inheritance.
+**
 **	Revision 1.2  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -44,7 +50,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.1  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
@@ -195,11 +201,11 @@ b3ItemEditCall CB3ImageList::m_EditCalls[] =
 	null,
 
 	// CSG shapes
-	null,
-	null,
-	null,
-	null,
-	null,
+	CDlgCSG1::b3Edit,
+	CDlgCSG3::b3Edit,
+	CDlgCSG3::b3Edit,
+	CDlgCSG3::b3Edit,
+	CDlgCSG3::b3Edit,
 	null
 };
 

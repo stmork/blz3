@@ -33,15 +33,16 @@
 class CDlgShape1 : public CB3ShapeDialog
 {
 // Construction
+protected:
 	CB3PosGroup m_Base;
 	CB3DirGroup m_Dir1;
 
 public:
-	b3Sphere *m_Shape;
 	virtual void b3SetDirMode(int dirmode);
 	static int b3Edit(b3Item *item,b3_bool create=true);
 
 	CDlgShape1(CWnd* pParent = NULL);   // standard constructor
+	CDlgShape1(UINT id,CWnd* pParent = NULL);
 
 // Dialog Data
 	//{{AFX_DATA(CDlgShape1)
@@ -65,11 +66,14 @@ public:
 
 // Implementation
 protected:
+	virtual const char *b3GetSection();
+	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgShape1)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	afx_msg void OnChangedBase();
 	afx_msg void OnChangedDir1();
 	afx_msg void OnChangedLen1();
 	//}}AFX_MSG

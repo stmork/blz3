@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/24 17:45:31  sm
+**	- Added CSG edit dialogs
+**	- Corrected shape edit inheritance.
+**
 **	Revision 1.1  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -41,7 +45,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **
 */
 
@@ -52,7 +56,7 @@
 *************************************************************************/
 
 CDlgShape3::CDlgShape3(CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(CDlgShape3::IDD, pParent)
+	: CDlgShape2(CDlgShape3::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgShape3)
 		// NOTE: the ClassWizard will add member initialization here
@@ -62,19 +66,8 @@ CDlgShape3::CDlgShape3(CWnd* pParent /*=NULL*/)
 
 void CDlgShape3::DoDataExchange(CDataExchange* pDX)
 {
-	CB3ShapeDialog::DoDataExchange(pDX);
+	CDlgShape2::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgShape3)
-	DDX_Control(pDX, IDC_BASE_X,   m_xBaseCtrl);
-	DDX_Control(pDX, IDC_BASE_Y,   m_yBaseCtrl);
-	DDX_Control(pDX, IDC_BASE_Z,   m_zBaseCtrl);
-	DDX_Control(pDX, IDC_DIR1_X,   m_xDir1Ctrl);
-	DDX_Control(pDX, IDC_DIR1_Y,   m_yDir1Ctrl);
-	DDX_Control(pDX, IDC_DIR1_Z,   m_zDir1Ctrl);
-	DDX_Control(pDX, IDC_DIR1_LEN, m_lenDir1Ctrl);
-	DDX_Control(pDX, IDC_DIR2_X,   m_xDir2Ctrl);
-	DDX_Control(pDX, IDC_DIR2_Y,   m_yDir2Ctrl);
-	DDX_Control(pDX, IDC_DIR2_Z,   m_zDir2Ctrl);
-	DDX_Control(pDX, IDC_DIR2_LEN, m_lenDir2Ctrl);
 	DDX_Control(pDX, IDC_DIR3_X,   m_xDir3Ctrl);
 	DDX_Control(pDX, IDC_DIR3_Y,   m_yDir3Ctrl);
 	DDX_Control(pDX, IDC_DIR3_Z,   m_zDir3Ctrl);
@@ -83,16 +76,8 @@ void CDlgShape3::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgShape3, CB3ShapeDialog)
+BEGIN_MESSAGE_MAP(CDlgShape3, CDlgShape2)
 	//{{AFX_MSG_MAP(CDlgShape3)
-	ON_EN_KILLFOCUS(IDC_DIR1_X, OnChangedDir1)
-	ON_EN_KILLFOCUS(IDC_DIR1_Y, OnChangedDir1)
-	ON_EN_KILLFOCUS(IDC_DIR1_Z, OnChangedDir1)
-	ON_EN_KILLFOCUS(IDC_DIR1_LEN, OnChangedLen1)
-	ON_EN_KILLFOCUS(IDC_DIR2_X, OnChangedDir2)
-	ON_EN_KILLFOCUS(IDC_DIR2_Y, OnChangedDir2)
-	ON_EN_KILLFOCUS(IDC_DIR2_Z, OnChangedDir2)
-	ON_EN_KILLFOCUS(IDC_DIR2_LEN, OnChangedLen2)
 	ON_EN_KILLFOCUS(IDC_DIR3_X, OnChangedDir3)
 	ON_EN_KILLFOCUS(IDC_DIR3_Y, OnChangedDir3)
 	ON_EN_KILLFOCUS(IDC_DIR3_Z, OnChangedDir3)
@@ -112,27 +97,27 @@ int CDlgShape3::b3Edit(b3Item *item,b3_bool create)
 	return dlg.DoModal();
 }
 
+const char *CDlgShape3::b3GetSection()
+{
+	return "shape3";
+}
+
 BOOL CDlgShape3::OnInitDialog() 
 {
-	m_Base.b3Init(&m_Shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
-	m_Dir1.b3Init(&m_Shape->m_Base,&m_Shape->m_Dir1,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
-	m_Dir2.b3Init(&m_Shape->m_Base,&m_Shape->m_Dir2,&m_xDir2Ctrl,&m_yDir2Ctrl,&m_zDir2Ctrl,&m_lenDir2Ctrl);
-	m_Dir3.b3Init(&m_Shape->m_Base,&m_Shape->m_Dir3,&m_xDir3Ctrl,&m_yDir3Ctrl,&m_zDir3Ctrl,&m_lenDir3Ctrl);
-	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),"shape3.mode",m_DirMode);
-	CB3ShapeDialog::OnInitDialog();
+	b3Shape3 *shape = (b3Shape3 *)m_Shape;
+
+	m_Base.b3Init(&shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
+	m_Dir1.b3Init(&shape->m_Base,&shape->m_Dir1,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
+	m_Dir2.b3Init(&shape->m_Base,&shape->m_Dir2,&m_xDir2Ctrl,&m_yDir2Ctrl,&m_zDir2Ctrl,&m_lenDir2Ctrl);
+	m_Dir3.b3Init(&shape->m_Base,&shape->m_Dir3,&m_xDir3Ctrl,&m_yDir3Ctrl,&m_zDir3Ctrl,&m_lenDir3Ctrl);
+	CDlgShape2::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	if (m_Creation)
 	{
-		m_Base.b3Read("shape3.base");
-		m_Dir1.b3Read("shape3.dir1");
-		m_Dir2.b3Read("shape3.dir2");
-		m_Dir3.b3Read("shape3.dir3");
+		m_Dir3.b3Read(b3GetSection() + CString(".dir3"));
 	}
 
-	m_Base.b3Set(true);
-	m_Dir1.b3Set(m_DirMode,true);
-	m_Dir2.b3Set(m_DirMode,true);
 	m_Dir3.b3Set(m_DirMode,true);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -140,34 +125,14 @@ BOOL CDlgShape3::OnInitDialog()
 
 void CDlgShape3::b3SetDirMode(int dirmode)
 {
-	m_Base.b3Set();
-	m_Dir1.b3Set(m_DirMode);
-	m_Dir2.b3Set(m_DirMode);
+	CDlgShape2::b3SetDirMode(dirmode);
 	m_Dir3.b3Set(m_DirMode);
 }
 
-void CDlgShape3::OnChangedDir1() 
+void CDlgShape3::b3UpdateBase()
 {
-	// TODO: Add your control notification handler code here
-	m_Dir1.b3Update(m_DirMode);
-}
-
-void CDlgShape3::OnChangedLen1() 
-{
-	// TODO: Add your control notification handler code here
-	m_Dir1.b3UpdateLen(m_DirMode);
-}
-
-void CDlgShape3::OnChangedDir2() 
-{
-	// TODO: Add your control notification handler code here
+	CDlgShape2::b3UpdateBase();
 	m_Dir2.b3Update(m_DirMode);
-}
-
-void CDlgShape3::OnChangedLen2() 
-{
-	// TODO: Add your control notification handler code here
-	m_Dir2.b3UpdateLen(m_DirMode);
 }
 
 void CDlgShape3::OnChangedDir3() 
@@ -185,15 +150,9 @@ void CDlgShape3::OnChangedLen3()
 void CDlgShape3::OnOK() 
 {
 	// TODO: Add extra validation here
-	CB3ShapeDialog::OnOK();
-	m_Base.b3Update();
+	CDlgShape2::OnOK();
 	if (m_Creation)
 	{
-		m_Base.b3Write("shape3.base");
-		m_Dir1.b3Write("shape3.dir1");
-		m_Dir2.b3Write("shape3.dir2");
-		m_Dir3.b3Write("shape3.dir3");
+		m_Dir3.b3Write(b3GetSection() + CString(".dir3"));
 	}
-	AfxGetApp()->WriteProfileInt(CB3ClientString(),"shape3.mode",m_DirMode);
-	m_Shape->b3Recompute();
 }

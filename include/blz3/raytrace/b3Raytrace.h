@@ -1439,7 +1439,8 @@ protected:
 	b3_s32           m_Index;
 
 public:
-	b3_csg_operation m_Operation;
+	       b3_csg_operation m_Operation;
+	static b3_csg_operation m_CSGMode[];
 
 protected:
 	b3CSGShape(b3_size class_size,b3_u32 class_type);
@@ -1450,6 +1451,7 @@ public:
 
 public:
 	virtual b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
+	        int      b3GetOperationIndex(b3_csg_operation mode);
 	        void     b3Operate(b3_shape_intervals *local,b3_bbox_intervals *list,b3_bbox_intervals *result);
 	virtual void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	virtual b3_count b3GetMaxIntersections();

@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Edit dialog for quadric shapes
+**	Blizzard III - Base class for simple shapes
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -38,12 +38,23 @@ protected:
 	b3_vector    *m_Vector;
 
 public:
+	CB3PosGroup()
+	{
+		m_Vector = null;
+		m_xCtrl  = null;
+		m_yCtrl  = null;
+		m_zCtrl  = null;
+	}
+
 	void b3Init(b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl)
 	{
-		m_Vector = vector;
-		m_xCtrl  = xCtrl;
-		m_yCtrl  = yCtrl;
-		m_zCtrl  = zCtrl;
+		if (m_Vector == null)
+		{
+			m_Vector = vector;
+			m_xCtrl  = xCtrl;
+			m_yCtrl  = yCtrl;
+			m_zCtrl  = zCtrl;
+		}
 	}
 
 	void b3Read(const char *title)
@@ -123,11 +134,20 @@ public:
 	};
 
 public:
+	CB3DirGroup()
+	{
+		m_Base    = null;
+		m_lenCtrl = null;
+	}
+
 	void b3Init(b3_vector *base,b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl,CB3FloatEdit *lenCtrl)
 	{
 		CB3PosGroup::b3Init(vector,xCtrl,yCtrl,zCtrl);
-		m_lenCtrl = lenCtrl;
-		m_Base    = base;
+		if (m_Base == null)
+		{
+			m_lenCtrl = lenCtrl;
+			m_Base    = base;
+		}
 	}
 
 	void b3Set(int mode,b3_bool init=false)
@@ -199,7 +219,8 @@ class CB3ShapeDialog : public CDialog
 {
 // Construction
 public:
-	b3_bool   m_Creation;
+	b3ShapeRenderObject *m_Shape;
+	b3_bool  m_Creation;
 	CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -217,11 +238,15 @@ public:
 
 // Implementation
 protected:
-	virtual void b3SetDirMode(int dirmode);
+	virtual void        b3SetDirMode(int dirmode);
+	virtual const char *b3GetSection();
+	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ShapeDialog)
 	afx_msg void OnDirModeChanged();
+	virtual BOOL OnInitDialog();
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

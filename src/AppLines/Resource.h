@@ -87,6 +87,9 @@
 #define IDI_CSGMODE_UNION               188
 #define IDD_SHAPE1                      188
 #define IDD_SHAPE2                      189
+#define IDD_CSG1                        190
+#define IDD_CSG4                        191
+#define IDD_CSG3                        191
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
