@@ -38,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.15  2004/11/25 11:09:37  smork
 **	- Added b3_f96 checking in TestIo.
 **	- Corrected linking in test_unix.
-**
+**	
 **	Revision 1.14  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
 **	
@@ -259,5 +264,5 @@ int main(int argc,char *argv[])
 	}
 
 	B3_BEEP;
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.5  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -40,7 +45,7 @@
 **	  material. Changes were also made in Lines.
 **	- Introduced shape property copy including all materials,
 **	  bumps and conditions. Multiple copy modes are possible.
-**
+**	
 **	Revision 1.4  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -151,5 +156,5 @@ int main(int argc,char *argv[])
 		}
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -49,10 +49,15 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.5  2004/08/26 07:08:10  sm
 **	- Higher bitrate in DivX encoder.
 **	- Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
-**
+**	
 **	Revision 1.4  2004/08/17 08:35:37  sm
 **	- Correct make depend command
 **	- Correct install
@@ -98,7 +103,7 @@ int main(int argc,char *argv[])
 	if (out == NULL)
 	{
 		fprintf(stderr,"Cannot write %s\n",argv[1]);
-		exit (10);
+		exit (EXIT_FAILURE);
 	}
 #endif
 
@@ -192,5 +197,5 @@ int main(int argc,char *argv[])
 	AVI_close(out);
 #endif
 
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -32,6 +32,11 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2004/11/29 09:58:01  smork
+**  - Changed exit states to correct defines.
+**  - Added switch for disabling VBO in OpenGL renderer.
+**  - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **  Revision 1.4  2004/07/08 10:43:00  sm
 **  - Make some makefile cleanups.
 **  - Removed some compiler warnings.
@@ -270,5 +275,5 @@ int main(int argc,char *argv[])
 		}
 		defines.b3Free();
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

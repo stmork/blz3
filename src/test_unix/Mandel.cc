@@ -39,10 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.10  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.9  2002/08/11 11:22:33  sm
 **	- Adjusted some includes concerning b3DisplayView.
 **	
@@ -123,5 +128,5 @@ int main(int argc,char *argv[])
 			b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 		}
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

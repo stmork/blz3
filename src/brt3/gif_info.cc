@@ -33,6 +33,11 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2004/11/29 09:58:01  smork
+**  - Changed exit states to correct defines.
+**  - Added switch for disabling VBO in OpenGL renderer.
+**  - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **  Revision 1.3  2004/10/12 11:54:53  smork
 **  - Some minor GCC compiler errors.
 **
@@ -185,5 +190,5 @@ int main(int argc,char *argv[])
 	{
 		InfoGIF (argv[i]);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

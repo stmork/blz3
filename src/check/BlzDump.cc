@@ -53,5 +53,6 @@ int main(int argc,char *argv[])
 			b3PrintF(B3LOG_NORMAL,"  Error msg:  %s\n",e.b3GetErrorMsg());
 		}
 	}
-	return 0;
+
+	return EXIT_SUCCESS;
 }

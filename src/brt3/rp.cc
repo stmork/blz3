@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.5  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
 **	  editor (= transformed history) and object editor
 **	  (= original form)
-**
+**	
 **	Revision 1.4  2004/05/08 18:40:20  sm
 **	- Fixed minor compile warnings.
 **	
@@ -337,5 +342,5 @@ int main(int argc,char *argv[])
 	{
 		printf("USAGE:\n%s patchfile BOD-File\n",argv[0]);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/11/29 09:58:00  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.1  2001/11/06 17:14:02  sm
 **	- Introducing JPEG saving
 **	- Made some library fine tunings on TIFF and JPEG
@@ -39,7 +44,7 @@
 **	  o scaling
 **	  o filtering
 **	  o B/W conversion
-**
+**	
 **
 */
 
@@ -258,5 +263,5 @@ int main(int argc,char *argv[])
 		}
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }

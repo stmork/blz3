@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.6  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.5  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
 **	
@@ -218,5 +223,5 @@ int main(int argc,char *argv[])
 
 	b3SaveGranite();
 
-	return 0;
+	return EXIT_SUCCESS;
 }

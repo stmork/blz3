@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.2  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.1  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
@@ -73,5 +78,5 @@ int main(int argc,char *argv[])
 			gauss.b3Func(x),  gauss.b3Integral(x),  gauss.b3InvIntegral(x),
 			shutter.b3Func(x),shutter.b3Integral(x),shutter.b3InvIntegral(x));
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -37,6 +37,11 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2004/11/29 09:58:00  smork
+**      - Changed exit states to correct defines.
+**      - Added switch for disabling VBO in OpenGL renderer.
+**      - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **      Revision 1.49  2004/11/28 20:20:17  sm
 **      - Added support for switchable VBOs.
 **
@@ -420,7 +425,7 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 	case 'q':
 	case 'x':
 		b3PrintF(B3LOG_NORMAL,"Exit!\n");
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 
 	if (refresh)
@@ -474,6 +479,24 @@ static void b3Prepare(b3Scene *scene)
 	yWinSize = ySize;
 }
 
+static void b3Banner(const char *command)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v] BWD-file\n", command);
+		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -v  Disable vertex buffer objects\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+	}
+}
+
 int main(int argc,char *argv[])
 {
 	const char     *filename;
@@ -486,22 +509,35 @@ int main(int argc,char *argv[])
 	b3Path          pictures;
 	b3Path          data;
 	b3Loader        loader;
+	b3_index        i;
 
 	if (argc <= 1)
 	{
-		b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s BWD-file\n",argv[0]);
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
-		exit(0);
+		b3Banner(argv[0]);
+		exit(EXIT_SUCCESS);
 	}
 
-	// FIXME! Make switchable!
-	b3VectorBufferObjects::b3AllowVBO(false);
+	for (i = 1;(i < argc) && (argv[i][0] == '-');i++)
+	{
+		switch(argv[i][1])
+		{
+		case 'v' :
+			b3VectorBufferObjects::b3AllowVBO(false);
+			break;
+		case 'd' :
+			b3Log::b3SetLevel(B3LOG_DEBUG);
+			break;
+		case 'f' :
+			b3Log::b3SetLevel(B3LOG_FULL);
+			break;
+		}
+	}
+
+	if (i >= argc)
+	{
+		b3PrintF(B3LOG_NORMAL,"No filename given!\n");
+		exit(EXIT_FAILURE);
+	}
 
 	glutInit(&argc,argv);
 
@@ -515,7 +551,7 @@ int main(int argc,char *argv[])
 		b3Scene::m_TexturePool.b3AddPath(textures);
 		b3Scene::m_TexturePool.b3AddPath(pictures);
 
-		filename = (const char *)argv[1];
+		filename = (const char *)argv[i];
 		world = new b3World();
 		world->b3AddPath(data);
 
@@ -561,7 +597,7 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error occured processing %s\n",argv[1]);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #else
@@ -569,7 +605,8 @@ int main(int argc,char *argv[])
 int main(int argc,char *argv[])
 {
 	b3PrintF(B3LOG_NORMAL,"This platform has got no OpenGL support!\n");
-	return 0;
+
+	return EXIT_SUCCESS;
 }
 
 #endif

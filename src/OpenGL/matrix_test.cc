@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2004/11/29 09:58:00  smork
+**      - Changed exit states to correct defines.
+**      - Added switch for disabling VBO in OpenGL renderer.
+**      - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **      Revision 1.4  2004/08/18 07:15:33  sm
 **      - Done some GLUT updates.
 **
@@ -100,4 +105,6 @@ int main(int argc,char *argv[])
 #else
 	b3PrintF(B3LOG_NORMAL,"No OpenGL or GLUT support available.\n");
 #endif
+
+	return EXIT_SUCCESS;
 }

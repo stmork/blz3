@@ -31,6 +31,11 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2004/11/29 09:58:01  smork
+**  - Changed exit states to correct defines.
+**  - Added switch for disabling VBO in OpenGL renderer.
+**  - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **  Revision 1.1  2004/08/09 10:09:06  sm
 **  - Added color palette reduction and its tool.
 **
@@ -77,4 +82,6 @@ int main(int argc,char *argv[])
 			}
 		}
 	}
+
+	return EXIT_SUCCESS;
 }

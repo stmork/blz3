@@ -34,6 +34,11 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2004/11/29 09:58:01  smork
+**  - Changed exit states to correct defines.
+**  - Added switch for disabling VBO in OpenGL renderer.
+**  - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **  Revision 1.3  2004/05/18 13:34:50  sm
 **  - Cleaned up water animation
 **
@@ -167,5 +172,6 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}
-	return 0;
+
+	return EXIT_SUCCESS;
 }

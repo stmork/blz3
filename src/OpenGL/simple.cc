@@ -25,6 +25,11 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2004/11/29 09:58:00  smork
+**      - Changed exit states to correct defines.
+**      - Added switch for disabling VBO in OpenGL renderer.
+**      - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **      Revision 1.10  2004/11/21 14:56:57  sm
 **      - Merged VBO development into main trunk.
 **
@@ -378,7 +383,7 @@ int main(int argc,char *argv[])
 	SetupRC();
 	
 	glutMainLoop();
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #else
@@ -388,7 +393,8 @@ int main(int argc,char *argv[])
 int main(int argc,char *argv[])
 {
 	fprintf(stderr,"This platform has got no OpenGL support!\n");
-	return 0;
+
+	return EXIT_SUCCESS;
 }
 
 #endif

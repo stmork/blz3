@@ -32,6 +32,11 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2004/11/29 09:58:01  smork
+**  - Changed exit states to correct defines.
+**  - Added switch for disabling VBO in OpenGL renderer.
+**  - Added switches for logging level in OpenGL renderer as in brt3.
+**
 **  Revision 1.4  2003/08/28 14:44:27  sm
 **  - Further buffer overflow prevention:
 **    o added b3Path::b3Format
@@ -128,5 +133,5 @@ int main(int argc,char *argv[])
 	{
 		b3TestFile(argv[i]);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/11/29 09:58:00  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.18  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
-**
+**	
 **	Revision 1.17  2004/01/05 08:01:55  sm
 **	- Added new year.
 **	
@@ -207,5 +212,5 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

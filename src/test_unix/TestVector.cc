@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.3  2003/05/18 14:59:01  sm
 **	- Fixed predefined constat MAX
 **	- Fixed typo
-**
+**	
 **	Revision 1.2  2003/01/19 15:14:09  sm
 **	- Bound checking in b3VectorXX and b3Array only in debug version.
 **	- Added operator [] in b3VectorXX
@@ -316,5 +321,5 @@ int main(int argc,char *argv[])
 		vStruct.b3PrintResult();
 		vArray.b3PrintResult();
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

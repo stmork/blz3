@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.1  2004/03/03 10:35:03  sm
 **	- Added tool for patchworking a lot of small images
-**
+**	
 **
 */
 
@@ -52,14 +57,14 @@ int main (int argc,char *argv[])
 
 	if (argc < 4)
 	{
-		return 1;
+		return EXIT_FAILURE;
 	}
 
 	xMax = atoi(argv[2]);
 	yMax = atoi(argv[3]);
 	if (argc < (xMax * yMax + 4))
 	{
-		return 1;
+		return EXIT_FAILURE;
 	}
 	img.b3AllocTx(256 * xMax,256 * yMax,24);
 	for (int y = 0;y < yMax;y++)
@@ -79,4 +84,6 @@ int main (int argc,char *argv[])
 		}
 	}
 	img.b3SaveTGA(argv[1]);
+
+	return EXIT_SUCCESS;
 }

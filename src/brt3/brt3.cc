@@ -38,12 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.59  2004/11/07 12:20:56  sm
 **	- Added support for rendering priority. The brt3 command
 **	  uses the BLZ3_RENDER_PRIO environment variable for
 **	  setting the priority. Valid range is from -2 to 2 where
 **	  only root can use 1 to 2.
-**
+**	
 **	Revision 1.58  2004/09/28 18:03:19  sm
 **	- Search path correction: Home directory before environment.
 **	
@@ -639,5 +644,5 @@ int main(int argc,char *argv[])
 	{
 		b3Banner(argv[0]);
 	}
-	return 0;
+	return EXIT_SUCCESS;
 }

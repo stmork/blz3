@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/29 09:58:01  smork
+**	- Changed exit states to correct defines.
+**	- Added switch for disabling VBO in OpenGL renderer.
+**	- Added switches for logging level in OpenGL renderer as in brt3.
+**
 **	Revision 1.5  2002/08/24 13:06:17  sm
 **	- Enhanced test suite for threading.
-**
+**	
 **	Revision 1.4  2002/03/16 15:12:57  sm
 **	- Making b3Mem system independend using new system dependen b3MemAccess
 **	  class with static methods.
@@ -258,7 +263,7 @@ static void b3TestThreadStart1()
 		{
 			fprintf(stderr,"thread not created at attempt %d - errno: %d (%s)\n",i,
 				error_code,strerror(error_code));
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
@@ -305,5 +310,6 @@ int main(int argc,char *argv[])
 	ptr = new TestUnit();
 	ptr->test3();
 	delete ptr;
-	return 0;
+
+	return EXIT_SUCCESS;
 }
