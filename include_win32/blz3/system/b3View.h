@@ -66,7 +66,7 @@ typedef enum
 	B3_VIEW_PALETTE
 } b3_view_error;
 
-typedef b3Exception<b3_view_error> b3ViewException;
+typedef b3Exception<b3_view_error,'VWE'> b3ViewException;
 
 /*************************************************************************
 **                                                                      **

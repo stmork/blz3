@@ -44,6 +44,7 @@
 #include "DlgProperties.h"
 #include "b3Splash.h"
 #include "b3Profile.h"
+#include "b3ExceptionLogger.h"
 
 /*************************************************************************
 **                                                                      **
@@ -53,6 +54,10 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2002/08/07 14:26:23  sm
+**	- Introduced mapping from Blizzard III error codes to human
+**	  readable error messages supplied from Windows resources.
+**
 **	Revision 1.39  2002/08/05 16:04:54  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -67,7 +72,7 @@
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	Revision 1.38  2002/08/05 07:32:24  sm
 **	- Key word test
 **	
@@ -405,7 +410,8 @@ static const CLSID object_clsid =
 BOOL CAppLinesApp::InitInstance()
 {
 	// Parse command line for standard shell commands, DDE, file open
-	CB3Version version;
+	CB3Version         version;
+	CB3ExceptionLogger init_logging;
 
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);

@@ -541,6 +541,8 @@
 #define IDS_TITLE_CREATE                60081
 #define IDS_TITLE_EDIT                  60082
 #define IDS_PROFILE_BEVEL_TRIANGLES     60083
+#define IDS_ERR_UNKNOWN                 61446
+#define IDS_ERR_MEMORY                  61447
 
 // Next default values for new objects
 // 

@@ -57,6 +57,10 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2002/08/07 14:26:23  sm
+**	- Introduced mapping from Blizzard III error codes to human
+**	  readable error messages supplied from Windows resources.
+**
 **	Revision 1.64  2002/08/05 16:04:54  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -71,7 +75,7 @@
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	Revision 1.63  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
@@ -579,7 +583,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	catch(b3WorldException *e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: Error loading %s\n",lpszPathName);
-		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: Error code %d\n",e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: Error code %x\n",e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: %s\n",e->b3GetErrorMsg());
 	}
 	catch(...)
 	{

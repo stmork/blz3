@@ -102,6 +102,10 @@ SOURCE=.\b3Endian.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Exception.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
@@ -203,6 +207,10 @@ SOURCE=..\..\include\blz3\base\b3FileList.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3FileMem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Hash.h
 # End Source File
 # Begin Source File
 

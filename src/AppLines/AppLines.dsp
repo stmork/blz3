@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib  version.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32\AppLines.exe" /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32\AppLines.exe" /libpath:"..\..\lib\win32_i386"
 
 !ELSEIF  "$(CFG)" == "AppLines - Win32 Debug"
 
@@ -162,6 +162,10 @@ SOURCE=.\b3ControlLDC.cpp
 # Begin Source File
 
 SOURCE=.\b3ExampleScene.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ExceptionLogger.cpp
 # End Source File
 # Begin Source File
 
@@ -442,6 +446,10 @@ SOURCE=.\b3ControlLDC.h
 # Begin Source File
 
 SOURCE=.\b3ExampleScene.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ExceptionLogger.h
 # End Source File
 # Begin Source File
 

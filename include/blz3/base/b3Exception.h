@@ -23,10 +23,10 @@
 typedef unsigned int b3_errno;
 typedef unsigned int b3_excno;
 
-#define B3_MK_ERRNO(e,t) ((b3_errno)((e) && 0xff) | ((t) << 8))
+#define B3_MK_ERRNO(e,t) (((b3_errno)(e) & 0xff) | ((b3_errno)(t) << 8))
 
-typedef void         (*b3ExceptionLogger) (const b3_excno excno,const b3_errno errno);
-typedef const char * (*b3ExceptionMsgFunc)(const b3_errno errno);
+typedef void         (*b3ExceptionLogger)(const b3_excno ExcNo,const b3_errno ErrNo);
+typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
 class b3ExceptionBase
 {
@@ -36,9 +36,11 @@ protected:
 
 protected:
 	                   b3ExceptionBase();
-	static void        b3Log(const b3_excno excno,const b3_errno errno);
+	static void        b3Log(const b3_excno ExcNo,const b3_errno ErrNo);
+	static const char *b3GetMessage(const b3_errno ErrNo);
+
+public:
 	static void        b3SetLogger(b3ExceptionLogger logger = null);
-	static const char *b3GetMessage(b3_errno errno);
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 };
 
@@ -52,7 +54,7 @@ public:
 	b3Exception(const T error)
 	{
 		m_ExceptionType = C;
-		m_ErrorCode     = B3_MK_ERRNO(error,C);
+		m_ErrorCode     = B3_MK_ERRNO(error,m_ExceptionType);
 		m_Logger(m_ExceptionType,m_ErrorCode);	
 	}
 
@@ -63,7 +65,7 @@ public:
 
 	inline const char *b3GetErrorMsg()
 	{
-		m_GetMessage(errno);
+		return m_GetMessage(errno);
 	}
 };
 

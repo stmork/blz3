@@ -2388,6 +2388,8 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
+    IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
 END
 
 STRINGTABLE DISCARDABLE 

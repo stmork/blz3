@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2002/08/07 14:26:23  sm
+**      - Introduced mapping from Blizzard III error codes to human
+**        readable error messages supplied from Windows resources.
+**
 **      Revision 1.1  2002/08/07 12:38:43  sm
 **      - Modified exception definition. Exceptions are identified with
 **        a three character code to unify error codes. This is necessary
@@ -61,9 +65,9 @@ b3ExceptionBase::b3ExceptionBase()
 	if (m_GetMessage == null) b3SetMsgFunc(null);
 }
 
-void b3ExceptionBase::b3Log(const b3_excno excno,const b3_errno errno)
+void b3ExceptionBase::b3Log(const b3_excno ExcNo,const b3_errno ErrNo)
 {
-	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(errno));
+	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(ErrNo));
 }
 
 void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)
@@ -75,19 +79,19 @@ void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)
 	m_Logger = logger;
 }
 
-const char *b3ExceptionBase::b3GetMessage(b3_errno errno)
+const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 {
 	char a,b,c;
 
-	a = (errno >> 24) & 0xff;
-	b = (errno >> 16) & 0xff;
-	c = (errno >>  8) & 0xff;
+	a = (ErrNo >> 24) & 0xff;
+	b = (ErrNo >> 16) & 0xff;
+	c = (ErrNo >>  8) & 0xff;
 
 	sprintf(LocalMessageBuffer,"errno: %c%c%c:%02x",
 		isprint(a) ? a : '_',
 		isprint(b) ? b : '_',
 		isprint(c) ? c : '_',
-		errno        & 0xff);
+		ErrNo        & 0xff);
 	return LocalMessageBuffer;
 }
 
