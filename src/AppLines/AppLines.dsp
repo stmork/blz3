@@ -161,6 +161,10 @@ SOURCE=.\b3ConditionControl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ControlKnot.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ControlLDC.cpp
 # End Source File
 # Begin Source File
@@ -630,6 +634,10 @@ SOURCE=.\b3CameraVolume.h
 # Begin Source File
 
 SOURCE=.\b3ConditionControl.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ControlKnot.h
 # End Source File
 # Begin Source File
 

@@ -555,7 +555,7 @@ public:
 	b3_line          m_Axis;                // for rotation shapes
 	b3_s32           m_rSubDiv;             // sub division for rotation
 	b3Spline         m_Spline;              // spline curve
-	b3_f32           m_Knots[B3_MAX_KNOTS]; // one knot vector
+	b3_knot_vector   m_Knots; // one knot vector
 	b3_vector       *m_Controls;
 
 public:
@@ -586,7 +586,7 @@ protected:
 	
 public:
 	b3Spline         m_Spline[2];
-	b3_f32           m_Knots[2][B3_MAX_KNOTS];
+	b3_knot_vector   m_Knots[2];
 	b3_vector       *m_Controls;
 
 protected:

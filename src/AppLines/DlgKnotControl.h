@@ -25,6 +25,7 @@
 //
 
 #include "blz3/system/b3IntSpinButtonCtrl.h"
+#include "b3ControlKnot.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgKnotControl dialog
@@ -41,6 +42,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgKnotControl)
 	enum { IDD = IDD_BSPLINE_CTRL };
+	CB3ControlKnot	m_KnotDisplay;
 	CSliderCtrl	m_KnotCtrl;
 	CB3IntSpinButtonCtrl m_KnotNumCtrl;
 	//}}AFX_DATA

@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:	DlgMatChess.cpp $
-**	$Release:	Dortmund 2003 $
+**	$Filename:	DlgMatThinFilm.cpp $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Chess material
+**	Blizzard III - Thin film material
 **
-**	(C) Copyright 2003  Steffen A. Mork
+**	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/07/27 19:05:59  sm
+**	- Some typo cleanups.
+**
 **	Revision 1.1  2004/07/27 16:33:49  sm
 **	- Added thin film material rendering
-**
+**	
 **	
 */
 

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.87  2004/07/27 19:05:59  sm
+**      - Some typo cleanups.
+**
 **      Revision 1.86  2004/07/27 17:33:46  sm
 **      - Some thin film modifications
 **
@@ -1796,8 +1799,8 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 	// compute refraction angle
 	cos_phi       = b3Vector::b3SMul(&surface->incoming->dir,normal);
 	sin_theta_sqr = (1.0 - cos_phi * cos_phi) / (m_Ior * m_Ior);
-	cos_theta = sqrt(1.0 - sin_theta_sqr);
-	quotient = 4000.0 * M_PI * m_Thickness * (1.5 + 0.5 * wobble) * cos_theta;
+	cos_theta     = sqrt(1.0 - sin_theta_sqr);
+	quotient      = 4000.0 * M_PI * m_Thickness * (1.5 + 0.5 * wobble) * cos_theta;
 
 	// compute interferences
 	for (int i = b3Color::R;i <= b3Color::B;i++)

@@ -40,6 +40,7 @@ enum CB3LDCMode
 
 class CB3ControlLDC : public CStatic, protected b3Mem
 {
+	b3Spline * m_LDC;
 // Construction
 public:
 	CB3ControlLDC();
@@ -60,7 +61,6 @@ public:
 	void b3SetMode(CB3LDCMode mode);
 	void b3Init(b3Light *light);
 	void b3Update(b3_bool refresh = true);
-	b3Spline * m_LDC;
 	virtual ~CB3ControlLDC();
 
 	// Generated message map functions
