@@ -64,6 +64,10 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
+resource.h:	$(BLZ3_BIN)/CleanRes
+	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h
+	mv /tmp/Resource.h AppLines/Resource.h
+
 #########################################################
 #                                                       #
 #  Blizzard III tools                                   #
@@ -89,6 +93,9 @@ $(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
 
 $(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
 	+@make -C tools RemCR
+
+$(BLZ3_BIN)/CleanRes:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools CleanRes
 
 #########################################################
 #                                                       #

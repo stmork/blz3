@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3Animation.cc $
+**      $Filename:      b3AnimElement.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -24,6 +24,8 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
 
+#define ANIM_STEP 0.01
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -32,6 +34,12 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2002/08/19 16:50:39  sm
+**      - Now having animation running, running, running...
+**      - Activation handling modified to reflect animation
+**        and user transformation actions.
+**      - Made some architectual redesigns.
+**
 **      Revision 1.2  2002/08/18 13:05:17  sm
 **      - First try to animate. We have to relink the control points which
 **        are stored in separate Blizzard classes to the b3AnimElement
@@ -42,6 +50,71 @@
 **
 **
 */
+
+/*************************************************************************
+**                                                                      **
+**                        b3AnimControl implementation                  **
+**                                                                      **
+*************************************************************************/
+
+b3AnimControl::b3AnimControl(b3_u32 class_type) : b3Item(sizeof (b3AnimControl),CPOINT_4D)
+{
+	m_Dimension = 4;
+	m_Used      = 0;
+	m_Max       = B3_MAX_CONTROLS;
+	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
+}
+
+b3AnimControl::b3AnimControl(b3_u32 *src) : b3Item(src)
+{
+	b3_index i;
+
+	m_Dimension = b3InitInt();
+	m_Used      = b3InitInt();
+	m_Max       = b3InitInt();
+
+	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
+	if (m_Controls == null)
+	{
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+	}
+	for (i = 0;i < m_Max;i++)
+	{
+		m_Controls[i].x = b3InitFloat();
+		m_Controls[i].y = b3InitFloat();
+		m_Controls[i].z = b3InitFloat();
+		m_Controls[i].w = (m_Dimension == 4 ? b3InitFloat() : 1.0f);
+	}
+
+	// Force homogenous coordinates
+	ClassType   = CPOINT_4D;
+	m_Dimension = 4;
+}
+
+void b3AnimControl::b3Write()
+{
+	b3_index i;
+
+	b3StoreInt  (m_Dimension);
+	b3StoreCount(m_Used);
+	b3StoreCount(m_Max);
+
+	for (i = 0;i < m_Max;i++)
+	{
+		b3StoreVector4D(&m_Controls[i]);
+	}
+}
+
+void b3AnimControl::b3InitNurbs(b3Nurbs &nurbs)
+{
+	if (nurbs.controls == null)
+	{
+		nurbs.control_max = m_Max;
+		nurbs.controls    = m_Controls;
+	}
+
+	m_Used = nurbs.control_num;
+}
 
 /*************************************************************************
 **                                                                      **
@@ -117,6 +190,11 @@ void b3AnimElement::b3Write()
 	b3StoreString(m_Object,B3_BOXSTRINGLEN);
 }
 
+char *b3AnimElement::b3GetName()
+{
+	return m_Name;
+}
+
 /* This routine computes the point on a curve at a specified time point. */
 /* The time point must be valid to compute the curve point at the time */
 /* point. So use ClipValue() to clip at the time bounds. */
@@ -127,18 +205,25 @@ void b3AnimElement::b3Write()
 
 void b3AnimElement::b3GetPosition(b3_vector32_4D *position,b3_f64 t)
 {
-	b3_f64      q,qStart,ratio;
-	b3_index    pos;
-	b3_f64      coeffs[B3_MAX_DEGREE+1];
+	b3AnimControl *ctrl = (b3AnimControl *)m_Heads[0].First;
+	b3_f64         q,qStart,ratio;
+	b3_index       pos;
+	b3_f64         coeffs[B3_MAX_DEGREE+1];
 
-		/* compute predefined values */
-	qStart = m_Knots[m_Param.closed ? 0 : m_Param.degree];
-	q      = m_Knots[m_Param.control_num] - qStart;
+	if (ctrl != null)
+	{
+		// Init controls
+		ctrl->b3InitNurbs(m_Param);
 
-		/* compute position at time t */
-	ratio = (t - m_Start) / (m_End - m_Start);
-	pos = m_Param.b3Mansfield (coeffs,qStart + q * ratio);
-	m_Param.b3MansfieldVector(position,coeffs,pos,0L);
+		// compute predefined values
+		qStart = m_Knots[m_Param.closed ? 0 : m_Param.degree];
+		q      = m_Knots[m_Param.control_num] - qStart;
+
+		// compute position at time t
+		ratio = (t - m_Start) / (m_End - m_Start);
+		pos = m_Param.b3Mansfield (coeffs,qStart + q * ratio);
+		m_Param.b3MansfieldVector(position,coeffs,pos,0L);
+	}
 }
 
 void b3AnimElement::b3GetPosition(b3_vector *position,b3_f64 t)
@@ -149,4 +234,270 @@ void b3AnimElement::b3GetPosition(b3_vector *position,b3_f64 t)
 	position->x = dummy.x;
 	position->y = dummy.y;
 	position->z = dummy.z;
+}
+
+
+
+/* This routine computes the new position point for an animation. The */
+/* point is computed using a NURBS curve. */
+/* ------------------------------------------------------------------ */
+/* Element:   animation track */
+/* transform: tramsformation matrix to compute */
+/* t:         time point */
+
+void b3AnimElement::b3AnimateMove(
+	b3Animation *AnimRoot,
+	b3_matrix   *transform,
+	b3_f64       t)
+{
+	b3_vector move;
+
+	// now compute transformation
+	b3GetPosition (&move,t);
+	b3MatrixMove (&m_NeutralInverse,transform,&move);
+}
+
+
+/* This routine computes the new position point for an animation. The */
+/* point is computed using a NURBS curve. */
+/* ------------------------------------------------------------------ */
+/* Element:   animation track */
+/* transform: tramsformation matrix to compute */
+/* t:         time point */
+
+void b3AnimElement::b3AnimateRotate(
+	b3Animation *AnimRoot,
+	b3_matrix   *transform,
+	b3_f64       tParam)
+{
+	b3_f64     t1,t2,t = tParam;
+	b3_bool    negate;
+	b3_vector  lookTo;
+	b3_vector  oldDir;
+	b3_vector  oldCenter;
+
+	t1 = b3Animation::b3ClipTimePoint (t - ANIM_STEP,m_Start,m_End);
+	t2 = b3Animation::b3ClipTimePoint (t + ANIM_STEP,m_Start,m_End);
+	if (t1 != t2)
+	{
+		b3GetPosition (&lookTo, t);
+		if (t != t1)
+		{
+			AnimRoot->b3RecomputeCenter (this,&oldCenter,t1);
+			b3GetPosition     (&oldDir,t1);
+			negate = false;
+		}
+		else
+		{
+			AnimRoot->b3RecomputeCenter (this,&oldCenter,t2);
+			b3GetPosition     (&oldDir,t2);
+			negate = true;
+		}
+
+		lookTo.x -= m_Center.x;
+		lookTo.y -= m_Center.y;
+		lookTo.z -= m_Center.z;
+		oldDir.x -= oldCenter.x;
+		oldDir.y -= oldCenter.y;
+		oldDir.z -= oldCenter.z;
+		b3MatrixDress (&m_NeutralInverse,transform,
+			&m_Center,&lookTo,&oldDir,negate);
+		if (fabs(b3Det4(transform)) < epsilon)
+		{
+			b3MatrixUnit (transform);
+		}
+	}
+	else
+	{
+		*transform = m_NeutralInverse;
+	}
+}
+
+/* This routine computes the new position point for an animation. The */
+/* point is computed using a NURBS curve. */
+/* ------------------------------------------------------------------ */
+/* Element:   animation track */
+/* transform: tramsformation matrix to compute */
+/* t:         time point */
+
+void b3AnimElement::b3AnimateScale(
+	b3Animation *AnimRoot,
+	b3_matrix   *transform,
+	b3_f64       t)
+{
+	b3_vector scale;
+
+	b3GetPosition (&scale,t);
+	scale.x -= m_Center.x;
+	scale.y -= m_Center.y;
+	scale.z -= m_Center.z;
+	b3MatrixScale (&m_NeutralInverse,transform,&m_Center,&scale);
+}
+
+/* This routine computes the transformation matrix for one animation */
+/* element depending of its transformation type and the global time point. */
+/* ----------------------------------------------------------------------- */
+/* Anim:      animation element */
+/* transform: where to store the transformation matrix */
+/* t:         time point */
+
+void b3AnimElement::b3ComputeTransformationMatrix(
+	b3Animation *AnimRoot,
+	b3_matrix   *transform,
+	b3_f64       t)
+{
+	switch (b3GetClassType())
+	{
+		case ANIM_MOVE :
+			b3AnimateMove   (AnimRoot,transform,t);
+			break;
+
+		case ANIM_ROTATE :
+			b3AnimateRotate (AnimRoot,transform,t);
+			break;
+
+		case ANIM_SCALE :
+			b3AnimateScale  (AnimRoot,transform,t);
+			break;
+	}
+}
+
+void b3BBox::b3Animate(b3Activation::b3_anim_activation animate,b3_bool recurse)
+{
+	b3BBox *bbox;
+	b3Shape *shape;
+	b3Item  *item;
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3Animate(animate);
+	}
+
+	if (recurse)
+	{
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3Animate(animate,recurse);
+		}
+	}
+}
+
+void b3Scene::b3Animate(b3Activation::b3_anim_activation animate)
+{
+	b3BBox *bbox;
+	b3Item  *item;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Animate(animate,true);
+	}
+}
+
+void b3AnimElement::b3SelectObjects (b3BBox *bbox)
+{
+	while (bbox != null)
+	{
+		if (stricmp(bbox->b3GetName(),m_Object) == 0)
+		{
+			bbox->b3Animate(b3Activation::B3_ANIM_ACTIVE,(m_Flags & ANIMFLAGF_RECURSIVE) != 0);
+		}
+		b3SelectObjects((b3BBox *)bbox->b3GetBBoxHead()->First);
+		bbox = (b3BBox *)bbox->Succ;
+	}
+}
+
+/* This routine sets the activation state of a bounding box depending */
+/* of the box name. */
+/* ------------------------------------------------------------------ */
+/* Global:  geometry structure */
+/* Element: amimation track */
+
+b3_bool b3AnimElement::b3SelectAnimElement (b3Scene *scene)
+{
+	scene->b3Animate(b3Activation::B3_ANIM_DEACTIVE);
+	if (m_Flags & ANIMFLAGF_OBJECT)
+	{
+		b3SelectObjects(scene->b3GetFirstBBox());
+	}
+
+	return (m_Flags & ANIMFLAGF_OBJECT) != 0;
+}
+
+
+/* This routine takes a transformation matrix and applies them to an */
+/* animation elements. All possible destination objects */
+/* (lights, cameras and objects) are stored in the geometry structure. */
+/* ------------------------------------------------------------------- */
+/* Global:    geometry structure */
+/* Anim:      one animation element */
+/* transform: transformation matrix to apply */
+
+void b3Animation::b3ApplyTransformation (
+	b3Scene       *Global,
+	b3AnimElement *Anim,
+	b3_matrix     *transform,
+	b3_f64         t)
+{
+	b3Light      *Light;
+	b3CameraPart *Camera;
+	b3_f64        twirl,width,height,focal;
+	b3_vector     diff;
+
+	if (Anim->m_Flags & ANIMFLAGF_LIGHT)
+	{
+		Light = Global->b3GetLightByName(Anim->m_Object);
+		if (Light != null)
+		{
+			b3PrintF(B3LOG_FULL,"  ANIM light %s\n",Anim->m_Object);
+			Anim->b3GetPosition (&Light->m_Position,
+				b3ClipTimePoint(t,Anim->m_Start,Anim->m_End));
+			if ((Light->m_SpotActive) &&
+			    ( Anim->b3GetClassType() == ANIM_ROTATE))
+			{
+				Light->m_Direction.x = Anim->m_Center.x - Light->m_Position.x;
+				Light->m_Direction.y = Anim->m_Center.y - Light->m_Position.y;
+				Light->m_Direction.z = Anim->m_Center.z - Light->m_Position.z;
+			}
+		}
+	}
+
+	if (Anim->m_Flags & ANIMFLAGF_CAMERA)
+	{
+		Camera = Global->b3GetCameraByName(Anim->m_Object);
+		if ((Camera != null) && (t >= Anim->m_Start))
+		{
+			twirl  = Camera->b3GetTwirl ();
+			focal  = Camera->b3GetFocalLength();
+			width  = b3Vector::b3Length (&Camera->m_Width);
+			height = b3Vector::b3Length (&Camera->m_Height);
+			diff   = Camera->m_EyePoint;
+			Anim->b3GetPosition (&Camera->m_EyePoint,
+				b3ClipTimePoint(t,Anim->m_Start,Anim->m_End));
+
+			if (Anim->b3GetClassType() == ANIM_ROTATE)
+			{
+				b3PrintF(B3LOG_FULL,"  ANIM camera %s (rotate)\n",Anim->m_Object);
+				Camera->b3Orientate(&Camera->m_EyePoint,&Anim->m_Center,focal,width,height);
+				Camera->b3SetTwirl(twirl);
+			}
+			
+			if (Anim->b3GetClassType() == ANIM_MOVE)
+			{
+				b3PrintF(B3LOG_FULL,"  ANIM camera %s (move)\n",Anim->m_Object);
+				Camera->m_ViewPoint.x += (diff.x - Camera->m_EyePoint.x);
+				Camera->m_ViewPoint.y += (diff.y - Camera->m_EyePoint.y);
+				Camera->m_ViewPoint.z += (diff.z - Camera->m_EyePoint.z);
+			}
+		}
+	}
+
+	if (Anim->m_Flags & ANIMFLAGF_OBJECT)
+	{
+		b3PrintF(B3LOG_FULL,"  ANIM object %s (move)\n",Anim->m_Object);
+		Anim->b3SelectAnimElement (Global);
+		Global->b3Transform (transform,false);
+	}
 }

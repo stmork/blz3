@@ -47,4 +47,16 @@ private:
 	static char    *b3PrintTime(char *buffer,b3_s32 time_needed);
 };
 
+class b3TimeAbstract
+{
+public:
+	virtual void    b3Now() = 0;
+	virtual b3_f64  b3GetTime() = 0;
+	
+	operator b3_f64()
+	{
+		return b3GetTime();
+	}
+};
+
 #endif

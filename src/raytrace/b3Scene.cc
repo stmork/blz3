@@ -34,11 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.39  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
 **	  class.
-**
+**	
 **	Revision 1.38  2002/08/17 17:31:23  sm
 **	- Introduced animation support (Puh!)
 **	
@@ -559,9 +565,9 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 }
 
 
-b3CameraPart *b3Scene::b3GetCamera(const char *camera_name)
+b3CameraPart *b3Scene::b3GetCameraByName(const char *camera_name)
 {
-	b3CameraPart *camera,*first = null;
+	b3CameraPart *camera;
 	b3Item       *item;
 
 	B3_FOR_BASE(b3GetSpecialHead(),item)
@@ -626,7 +632,7 @@ b3_bool b3Scene::b3GetTitle(char *title)
 	return strlen(title) > 0;
 }
 
-b3Light *b3Scene::b3GetLight(const char *light_name)
+b3Light *b3Scene::b3GetLightByName(const char *light_name)
 {
 	b3Light *light;
 	b3Item  *item;

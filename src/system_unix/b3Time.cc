@@ -25,6 +25,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Time.h"
+#include <sys/time.h>
 
 /*************************************************************************
 **                                                                      **
@@ -34,13 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.4  2002/08/16 13:20:14  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
 **	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
 **	  rather than b3renderContext which doesn't initialize subdivision
 **	  for shapes.
-**
+**	
 **	Revision 1.3  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -105,4 +112,36 @@ void b3TimeSpan::b3Stop()
 		 real_stop.millitm        -
 		m_RealTime.time    * 1000 -
 		m_RealTime.millitm);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3Time routines                               **
+**                                                                      **
+*************************************************************************/
+
+b3Time::b3Time()
+{
+	b3Now();
+}
+
+b3Time::b3Time(b3Time &orig)
+{
+	m_TimePoint = orig.m_TimePoint;
+}
+
+void b3Time::b3Now()
+{
+	gettimeofday(&m_TimePoint,0);
+}
+
+b3_f64 b3Time::b3GetTime()
+{
+	return m_TimePoint.tv_sec + (double)m_TimePoint.tv_usec / 1000000.0;
+}
+
+b3Time &b3Time::operator=(b3Time &orig)
+{
+	m_TimePoint = orig.m_TimePoint;
+	return *this;
 }

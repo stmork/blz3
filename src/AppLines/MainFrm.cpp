@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.30  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.29  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
@@ -715,7 +721,7 @@ void CMainFrame::b3SetPosition(b3_vector *position)
 
 void CMainFrame::b3SetPerformance(
 	CView    *drawer,
-	long      millis,
+	b3_f64    time_diff,
 	b3_count  poly_count)
 {
 	b3_f64  frame_rate;
@@ -724,7 +730,7 @@ void CMainFrame::b3SetPerformance(
 
 	if (GetActiveFrame()->GetActiveView() == drawer)
 	{
-		frame_rate   = 1000.0 / (b3_f64)millis;
+		frame_rate   = 1.0 / time_diff;
 		polygon_rate = poly_count * frame_rate;
 		text.Format(IDS_FRAME_RATE,frame_rate,polygon_rate);
 		m_wndStatusBar.SetPaneText(4,text);

@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.67  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.66  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
 **	  class.
-**
+**	
 **	Revision 1.65  2002/08/16 11:40:38  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There
@@ -842,16 +848,17 @@ b3_bool b3BBox::b3Transform(
 	b3_bool    force_action)
 {
 	b3Item  *item;
-	b3Shape *shape;
+	b3ShapeRenderObject *shape;
 	b3BBox  *bbox;
 	b3_bool  transformed = false;
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3Shape *)item;
+		shape = (b3ShapeRenderObject *)item;
 		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation,is_affine);
+			shape->b3Recompute();
 			transformed = true;
 		}
 	}

@@ -29,6 +29,8 @@ class CAppLinesDoc : public CAppRenderDoc
 {
 	b3Array<b3BBox *>     m_HitBBoxes;
 	b3_bool               m_Playing;
+	b3_f64                m_TimePoint;
+	b3Time                m_Time,m_Last;
 
 protected:
 	b3World               m_World;
@@ -116,14 +118,18 @@ protected:
 	afx_msg void OnObjectEdit();
 	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
 	afx_msg void OnAnimStart();
+	afx_msg void OnAnimStepBack();
 	afx_msg void OnAnimStop();
 	afx_msg void OnAnimPlay();
 	afx_msg void OnAnimPause();
+	afx_msg void OnAnimStepForward();
 	afx_msg void OnAnimEnd();
 	afx_msg void OnUpdateAnimStart(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimStepBack(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimStop(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimPlay(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimPause(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimStepForward(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimEnd(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -158,6 +164,9 @@ private:
 	void           b3ObjectCreate(b3_bool insert_sub);
 	b3_bool        b3HasAnimation();
 	b3_bool        b3IsPlaying();
+	b3_bool        b3IsAnimClipped(b3_f64 t);
+	b3_f64         b3SetAnimation(b3_f64 t);
+	void           b3ContinuePlay();
 };
 
 /////////////////////////////////////////////////////////////////////////////

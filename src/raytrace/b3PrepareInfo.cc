@@ -31,11 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.8  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
 **	  class.
-**
+**	
 **	Revision 1.7  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -158,14 +164,14 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 	return 1;
 }
 
-b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr)
+b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr,b3_bool threaded)
 {
 	b3_bool  result = true;
 
 	m_PrepareProc = prepare_proc;
 	m_Ptr         = ptr;
 	B3_ASSERT(m_PrepareProc != null);
-	if ((m_CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading))
+	if ((m_CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading) && (threaded))
 	{
 		b3Thread *threads = new b3Thread[m_CPUs];
 		int       i;
@@ -187,7 +193,7 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr)
 	}
 	else
 	{
-		b3PrintF(B3LOG_FULL,"    Doing prepare thread...\n");
+		b3PrintF(B3LOG_FULL,"    Doing preparation...\n");
 		for (int i = 0;(i < m_BBoxRefArray.b3GetCount()) && result;i++)
 		{
 			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox,m_Ptr);

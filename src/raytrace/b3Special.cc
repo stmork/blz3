@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2002/08/19 16:50:39  sm
+**      - Now having animation running, running, running...
+**      - Activation handling modified to reflect animation
+**        and user transformation actions.
+**      - Made some architectual redesigns.
+**
 **      Revision 1.52  2002/08/18 13:05:17  sm
 **      - First try to animate. We have to relink the control points which
 **        are stored in separate Blizzard classes to the b3AnimElement
@@ -472,7 +478,6 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Add(eye,&dir,&m_ViewPoint);
 	if ((dir.x != 0) || (dir.y != 0))
 	{
-		B3_ASSERT(dir.z != 0);
 		b3Vector::b3Init(&up,0,0,1);
 	}
 	else

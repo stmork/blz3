@@ -52,7 +52,7 @@ public:
 	                 b3PrepareInfo();
 	void             b3CollectBBoxes(b3Scene *scene);
 	void             b3CollectBBoxes(b3BBox  *firstBBox);
-	b3_bool          b3Prepare(b3PrepareProc prepare_func,void *ptr = null);
+	b3_bool          b3Prepare(b3PrepareProc prepare_func,void *ptr = null,b3_bool threaded = true);
 
 private:
 	b3BBoxReference *b3GetBBoxReference();

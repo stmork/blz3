@@ -138,7 +138,7 @@ public:
 	void          b3SetStatusMessage(const char *message);
 	void          b3SetStatusMessage(const int message_id);
 	void          b3SetPosition(b3_vector *position);
-	void          b3SetPerformance(CView *drawing_window,long millis,b3_count poly_count);
+	void          b3SetPerformance(CView *drawing_window,b3_f64 time_diff,b3_count poly_count);
 };
 
 /////////////////////////////////////////////////////////////////////////////

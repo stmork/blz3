@@ -244,9 +244,11 @@ END
 IDR_TOOLBAR_ANIMATION TOOLBAR DISCARDABLE  16, 15
 BEGIN
     BUTTON      ID_ANIM_START
+    BUTTON      ID_ANIM_STEP_BACKWARD
     BUTTON      ID_ANIM_STOP
     BUTTON      ID_ANIM_PLAY
     BUTTON      ID_ANIM_PAUSE
+    BUTTON      ID_ANIM_STEP_FORWARD
     BUTTON      ID_ANIM_END
 END
 
@@ -2647,6 +2649,8 @@ BEGIN
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
+    ID_ANIM_STEP_BACKWARD   "Schaltet die Animation eine Sekunde zurück.\nRückwärts"
+    ID_ANIM_STEP_FORWARD    "Schaltet die Animation eine Sekunde vorwärts.\nVorwärts"
 END
 
 STRINGTABLE DISCARDABLE 

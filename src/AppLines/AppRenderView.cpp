@@ -35,11 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.19  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.18  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
@@ -608,14 +614,19 @@ void CAppRenderView::b3DrawDC(
 {
 }
 
+void CAppRenderView::b3Paint() 
+{
+	OnPaint();
+}
+
 void CAppRenderView::OnPaint() 
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
 	CAppRenderDoc *pDoc = GetDocument();
 	CRect          rect;
-	struct _timeb  start,stop;
-	long           sDiff,mDiff;
+	b3Time         start,stop;
+	b3_f64         time_diff;
 
 	// Init Drawing
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
@@ -623,9 +634,9 @@ void CAppRenderView::OnPaint()
 	pDoc->m_Context.glDrawCachedTextures = true;
 
 	GetClientRect(&rect);
-	_ftime(&start);
+	start.b3Now();
 	b3Draw(rect.Width(),rect.Height());
-	_ftime(&stop);
+	stop.b3Now();
 
 	// Flush OpenGL buffer to screen
 	SwapBuffers(m_glDC);
@@ -637,21 +648,12 @@ void CAppRenderView::OnPaint()
 	ValidateRect(NULL);
 
 	// Compute time spent for drawing
-	mDiff = stop.millitm - start.millitm;
-	sDiff = stop.time    - start.time;
-	if (mDiff < 0)
-	{
-		mDiff += 1000;
-		sDiff -=    1;
-	}
-	mDiff += (sDiff * 1000);
-	sDiff  = 0;
-
-	if (mDiff > 0)
+	time_diff = stop - start;
+	if (time_diff > 0)
 	{
 		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	
-		main->b3SetPerformance(this,mDiff,GetDocument()->m_Context.glPolyCount);
+		main->b3SetPerformance(this,time_diff,GetDocument()->m_Context.glPolyCount);
 	}
 }
 

@@ -34,13 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.9  2002/08/16 13:20:14  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
 **	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
 **	  rather than b3renderContext which doesn't initialize subdivision
 **	  for shapes.
-**
+**	
 **	Revision 1.8  2002/08/11 11:53:37  sm
 **	- It compiles!
 **	
@@ -266,3 +272,36 @@ b3_u32 b3TimeSpan::b3DiffDiv10000(FILETIME *first,FILETIME *last)
 	B3_ASSERT(highDiff == 0);
 	return lowDiff;
 }
+
+/*************************************************************************
+**                                                                      **
+**                        b3Time routines                               **
+**                                                                      **
+*************************************************************************/
+
+b3Time::b3Time()
+{
+	b3Now();
+}
+
+b3Time::b3Time(b3Time &orig)
+{
+	m_TimePoint = orig.m_TimePoint;
+}
+
+void b3Time::b3Now()
+{
+	ftime(&m_TimePoint);
+}
+
+b3_f64 b3Time::b3GetTime()
+{
+	return m_TimePoint.time + (double)m_TimePoint.millitm / 1000.0;
+}
+
+b3Time &b3Time::operator=(b3Time &orig)
+{
+	m_TimePoint = orig.m_TimePoint;
+	return *this;
+}
+

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2002/08/19 16:50:39  sm
+**      - Now having animation running, running, running...
+**      - Activation handling modified to reflect animation
+**        and user transformation actions.
+**      - Made some architectual redesigns.
+**
 **      Revision 1.47  2002/08/04 13:24:56  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -386,13 +392,55 @@ void b3ShapeBaseTrans::b3BaseTrans(
 
 /*************************************************************************
 **                                                                      **
+**                        b3Activation base class                       **
+**                                                                      **
+*************************************************************************/
+
+b3Activation::b3Activation()
+{
+	b3Activate(false);
+	b3Animate(B3_ANIM_DISABLED);
+}
+
+b3_bool b3Activation::b3IsActive()
+{
+	switch(m_AnimActive)
+	{
+	case B3_ANIM_DISABLED:
+		return m_Active;
+
+	case B3_ANIM_DEACTIVE:
+		return false;
+
+	case B3_ANIM_ACTIVE:
+		return true;
+	}
+	return false;
+}
+
+void b3Activation::b3Activate(b3_bool activate)
+{
+	m_Active = activate;
+}
+
+void b3Activation::b3Animate(b3_bool activate)
+{
+	m_AnimActive = activate ? B3_ANIM_ACTIVE : B3_ANIM_DEACTIVE;
+}
+
+void b3Activation::b3Animate(b3_anim_activation activate)
+{
+	m_AnimActive = activate;
+}
+
+/*************************************************************************
+**                                                                      **
 **                        shape base class                              **
 **                                                                      **
 *************************************************************************/
 
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
-	m_Activated = false;
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
 	m_Heads[1].b3InitBase(CLASS_CONDITION);
@@ -401,7 +449,6 @@ b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
-	m_Activated = false;
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
 	m_Heads[1].b3InitBase(CLASS_CONDITION);
@@ -410,22 +457,11 @@ b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 {
-	m_Activated = false;
 	b3InitVector(); // This is the normal
 	b3InitVector(); // This is Polar.Polar
 	b3InitVector(); // This is Polar.ObjectPolar
 	b3InitVector(); // This is Polar.BoxPolar
 	b3InitNOP();    // This is Custom
-}
-
-void b3Shape::b3Activate(b3_bool activate)
-{
-	m_Activated = activate;
-}
-											
-b3_bool b3Shape::b3IsActive()
-{
-	return m_Activated;
 }
 
 void b3Shape::b3InitActivation()

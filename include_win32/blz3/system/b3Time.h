@@ -51,4 +51,16 @@ private:
 	static b3_u32  b3DiffDiv10000(FILETIME *first,FILETIME *last);
 };
 
+class b3Time : public b3TimeAbstract
+{
+	struct timeb m_TimePoint;
+
+public:
+	        b3Time();
+			b3Time(b3Time &orig);
+	void    b3Now();
+	b3_f64  b3GetTime();
+	b3Time &operator=(b3Time &orig);
+};
+
 #endif

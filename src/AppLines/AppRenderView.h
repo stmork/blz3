@@ -201,6 +201,7 @@ protected:
 public:
 	void b3DrawRect(b3_coord x1,b3_coord y1,b3_coord x2,b3_coord y2);
 	void b3Update(b3_u32 update_mask);
+	void b3Paint();
 
 protected:
 	void b3SetMagnification();

@@ -57,11 +57,17 @@
 
 /*
 **	$Log$
+**	Revision 1.71  2002/08/19 16:50:39  sm
+**	- Now having animation running, running, running...
+**	- Activation handling modified to reflect animation
+**	  and user transformation actions.
+**	- Made some architectual redesigns.
+**
 **	Revision 1.70  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
 **	  class.
-**
+**	
 **	Revision 1.69  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
 **	
@@ -447,6 +453,13 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_COMMAND(ID_OBJECT_REPLACE, OnObjectReplace)
 	ON_COMMAND(ID_OBJECT_COPY, OnObjectCopy)
 	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
+	ON_COMMAND(ID_ANIM_START, OnAnimStart)
+	ON_COMMAND(ID_ANIM_STEP_BACKWARD, OnAnimStepBack)
+	ON_COMMAND(ID_ANIM_STOP, OnAnimStop)
+	ON_COMMAND(ID_ANIM_PLAY, OnAnimPlay)
+	ON_COMMAND(ID_ANIM_PAUSE, OnAnimPause)
+	ON_COMMAND(ID_ANIM_STEP_FORWARD, OnAnimStepForward)
+	ON_COMMAND(ID_ANIM_END, OnAnimEnd)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -471,15 +484,12 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_ANIM_START, OnAnimStart)
-	ON_COMMAND(ID_ANIM_STOP, OnAnimStop)
-	ON_COMMAND(ID_ANIM_PLAY, OnAnimPlay)
-	ON_COMMAND(ID_ANIM_PAUSE, OnAnimPause)
-	ON_COMMAND(ID_ANIM_END, OnAnimEnd)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_START, OnUpdateAnimStart)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_BACKWARD, OnUpdateAnimStepBack)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_STOP, OnUpdateAnimStop)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_PLAY, OnUpdateAnimPlay)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_PAUSE, OnUpdateAnimPause)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_FORWARD, OnUpdateAnimStepForward)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_END, OnUpdateAnimEnd)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -600,6 +610,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_World.b3Read(lpszPathName);
 		m_Scene = (b3Scene *)m_World.b3GetFirst();
 		m_Scene->b3SetFilename(lpszPathName);
+		m_Anim  = m_Scene->b3GetAnimation();
 		m_Info  = m_Scene->b3GetModellerInfo();
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
@@ -2009,18 +2020,61 @@ b3_bool CAppLinesDoc::b3HasAnimation()
 
 b3_bool CAppLinesDoc::b3IsPlaying()
 {
-	return b3HasAnimation() && m_Playing;
+	return m_Playing;
+}
+
+void CAppLinesDoc::b3ContinuePlay()
+{
+	if (b3IsPlaying())
+	{
+		POSITION position;
+
+		position = GetFirstViewPosition();
+		while(position != NULL)
+		{
+			CAppRenderView *view = (CAppRenderView *)GetNextView(position);
+
+			view->b3Paint();
+		}
+		b3PrintF(B3LOG_FULL,"Sending play continue request to main frame...\n");
+		AfxGetApp()->m_pMainWnd->PostMessage(WM_COMMAND,MAKELONG(ID_ANIM_PLAY,0),0);
+	}
+}
+
+b3_f64 CAppLinesDoc::b3SetAnimation(b3_f64 t)
+{
+	m_TimePoint = m_Anim->b3ClipTimePoint(t);
+
+	b3PrintF(B3LOG_FULL,"Animation to time point %.3lf...\n",m_TimePoint);
+	m_Scene->b3SetAnimation(m_TimePoint);
+	UpdateAllViews(NULL,B3_UPDATE_ALL);
+	b3PrintF(B3LOG_FULL,"Animation done...\n");
+	return m_TimePoint;
+}
+
+b3_bool CAppLinesDoc::b3IsAnimClipped(b3_f64 t)
+{
+	return t != m_Anim->b3ClipTimePoint(t);
 }
 
 void CAppLinesDoc::OnAnimStart() 
 {
 	// TODO: Add your command handler code here
-	if (b3HasAnimation != null)
+	if (b3HasAnimation())
 	{
 		m_Scene->b3ResetAnimation();
-		m_Scene->b3SetAnimation(m_Anim->m_Start);
-		UpdateAllViews(NULL,B3_UPDATE_ALL);
+		b3SetAnimation(m_Anim->m_Start);
 	}
+}
+
+void CAppLinesDoc::OnAnimStepBack() 
+{
+	// TODO: Add your command handler code here
+	if (b3HasAnimation())
+	{
+		b3SetAnimation(m_TimePoint - 0.5);
+	}
+	m_Playing = false;
 }
 
 void CAppLinesDoc::OnAnimStop() 
@@ -2032,12 +2086,44 @@ void CAppLinesDoc::OnAnimStop()
 void CAppLinesDoc::OnAnimPlay() 
 {
 	// TODO: Add your command handler code here
-	m_Playing = true;
+	if (b3HasAnimation())
+	{
+		b3_f64 t;
+		b3Time now;
+
+		if (!b3IsPlaying())
+		{
+			m_Time.b3Now();
+			t = m_Anim->m_Start;
+			m_Playing = true;
+		}
+		else
+		{
+			b3_f64 fps = 1.0 / (now - m_Last);
+
+			b3PrintF(B3LOG_FULL,"%2.3f frames/second.\n",fps);
+			t = now - m_Time + m_Anim->m_Start;
+			m_Playing = !b3IsAnimClipped(t);
+		}
+		m_Last = now;
+		b3SetAnimation(t);
+		b3ContinuePlay();
+	}
 }
 
 void CAppLinesDoc::OnAnimPause() 
 {
 	// TODO: Add your command handler code here
+	m_Playing = false;
+}
+
+void CAppLinesDoc::OnAnimStepForward() 
+{
+	// TODO: Add your command handler code here
+	if (b3HasAnimation())
+	{
+		b3SetAnimation(m_TimePoint + 0.5);
+	}
 	m_Playing = false;
 }
 
@@ -2047,37 +2133,48 @@ void CAppLinesDoc::OnAnimEnd()
 	if (b3HasAnimation != null)
 	{
 		m_Scene->b3ResetAnimation();
-		m_Scene->b3SetAnimation(m_Anim->m_Start);
-		UpdateAllViews(NULL,B3_UPDATE_ALL);
+		b3SetAnimation(m_Anim->m_End);
 	}
 }
 
 void CAppLinesDoc::OnUpdateAnimStart(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsPlaying());
+	pCmdUI->Enable(b3HasAnimation() && !b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimStepBack(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsAnimClipped(m_TimePoint - 0.5));
 }
 
 void CAppLinesDoc::OnUpdateAnimStop(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(b3IsPlaying());
+	pCmdUI->Enable(b3HasAnimation() && b3IsPlaying());
 }
 
 void CAppLinesDoc::OnUpdateAnimPlay(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsPlaying());
+	pCmdUI->SetCheck(b3IsPlaying());
 }
 
 void CAppLinesDoc::OnUpdateAnimPause(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(b3IsPlaying());
+	pCmdUI->Enable(b3HasAnimation() && b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimStepForward(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsAnimClipped(m_TimePoint + 0.5));
 }
 
 void CAppLinesDoc::OnUpdateAnimEnd(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsPlaying());
+	pCmdUI->Enable(b3HasAnimation() && !b3IsPlaying());
 }
