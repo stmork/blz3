@@ -21,6 +21,7 @@
 #define REALLY_FREE
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "blz3/b3Types.h"
 
 class b3MemAccess
@@ -39,18 +40,18 @@ protected:
 	}
 	
 	static inline void *b3Realloc(
-		void    *ptr,
+		void    *old_ptr,
 		b3_size  old_size,
 		b3_size  new_size)
 	{
 #if 0
-		return realloc(ptr,new_size);
+		return realloc(old_ptr,new_size);
 #else
 		void *new_ptr;
 
 		if (new_size == 0)
 		{
-			free(ptr);
+			free(old_ptr);
 			new_ptr = null;
 		}
 		else
@@ -58,8 +59,8 @@ protected:
 			new_ptr = calloc(new_size,1);
 			if (new_ptr != null)
 			{
-				memcpy(new_ptr,ptr,B3_MIN(old_size,new_size));
-				free(ptr);
+				memcpy(new_ptr,old_ptr,B3_MIN(old_size,new_size));
+				free(old_ptr);
 			}
 		}
 		return new_ptr;

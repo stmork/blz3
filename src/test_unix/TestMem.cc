@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/12/22 14:22:33  sm
+**	- Setup memory allocation alignment to 64
+**
 **	Revision 1.5  2002/08/11 06:38:54  sm
 **	- Started some library reorganizations: Moved folowing classes into
 **	  system lib. Introduced new system library which is platform
@@ -44,7 +47,7 @@
 **	  o b3Date
 **	  o b3Time
 **	  o b3Log
-**
+**	
 **	Revision 1.4  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -67,22 +70,23 @@
 **                                                                      **
 *************************************************************************/
 									   
-#define MEM_MIN       1000
-#define MEM_LOW_MULT     2
-#define MEM_HIGH_MULT  200
+#define MEM_MIN         1000
+#define MEM_LOW_MULT       2
+#define MEM_HIGH_MULT    200
 
 void b3TestMem()
 {
 	void     *ptr1,*ptr2;
 	b3Mem     mem;
 	b3_count  count = 0;
-	char      buffer[MEM_MIN];
-	int       i;
+	b3_u08    buffer[MEM_MIN];
+	int       i,v;
 
 	// Put some stuff into realloc buffer
 	for (i = 0;i < MEM_MIN;i++)
 	{
-		buffer[i] = B3_IRAN(255);
+		v         = B3_IRAN(256);
+		buffer[i] = (b3_u08)(v & 0xff);
 	}
 	ptr1 = mem.b3Alloc (MEM_MIN);
 	ptr2 = mem.b3Alloc (MEM_MIN);
@@ -111,13 +115,13 @@ void b3TestMem()
 		ptr1,ptr2,
 		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
 	b3PrintF (B3LOG_NORMAL,"   Memory buffer is %s\n",
-		memcmp(buffer,ptr1,MEM_MIN) == 0 ? "preserved" : "corrupted");
+		memcmp(buffer,ptr1,MEM_MIN) == 0 ? "preserved (OK)" : "corrupted (wrong)");
 	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)
 	{
 		count += ((char *)ptr1)[i];
 	}
 	b3PrintF (B3LOG_NORMAL,"   Rest memory buffer is %s\n",
-		count == 0 ? "zero initialized" : "garbled");
+		count == 0 ? "zero initialized (OK)" : "garbled (wrong)");
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",

@@ -26,6 +26,12 @@
 #define LOOP_INSIDE (1 << LOOP_B)
 #define LOOP_MASK   (LOOP_INSIDE - 1)
 
+#define B3_MEM_ALIGN 64
+#define B3_MEM_MASK  (-B3_MEM_ALIGN)
+
+#define B3_MEM_ALIGN_CHUNK(p)  (void *)(((int)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)
+#define B3_MEM_ASSERT(p)       B3_ASSERT((((int)(p)) % B3_MEM_ALIGN) == 0)
+
 struct b3MemNode
 {
 	b3MemNode *m_Succ;
@@ -67,7 +73,7 @@ public:
 		b3MemNode *node;
 
 		// allocate memory block
-		node = (b3MemNode *)b3MemAccess::b3Alloc(size + sizeof(b3MemNode));
+		node = (b3MemNode *)b3MemAccess::b3Alloc(size + sizeof(b3MemNode) + B3_MEM_ALIGN);
 		if (node == null)
 		{
 #ifndef _DEBUG
@@ -80,7 +86,8 @@ public:
 
 		// Set values
 		node->m_ChunkSize = size;
-		node->m_Chunk     = (void *)&node[1];
+		node->m_Chunk     = B3_MEM_ALIGN_CHUNK(&node[1]);
+		B3_MEM_ASSERT(node->m_Chunk);
 
 		// link into MemNode chain
 		m_Mutex.b3Lock();
@@ -125,12 +132,13 @@ public:
 				// After realloc node may be invalid
 				b3UnlinkChunk(node);
 				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,
-					node->m_ChunkSize + sizeof(b3MemNode),
-					new_size + sizeof(b3MemNode));
+					node->m_ChunkSize + sizeof(b3MemNode) + B3_MEM_ALIGN,
+					new_size          + sizeof(b3MemNode) + B3_MEM_ALIGN);
 				if (new_node != null)
 				{
 					new_node->m_ChunkSize = new_size;
-					new_node->m_Chunk     = (void *)&new_node[1];
+					new_node->m_Chunk     = B3_MEM_ALIGN_CHUNK(&new_node[1]);
+					B3_MEM_ASSERT(node->m_Chunk);
 					b3LinkChunk(new_node);
 				}
 				else
