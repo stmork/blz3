@@ -21,10 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Bump.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Procedure.h"
-#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.20  2004/04/15 08:57:00  sm
 **	- Added b3BumpAokPlank
-**
+**	
 **	Revision 1.19  2004/04/13 13:44:27  sm
 **	- Replaced some divisions by multiplications of their reciprocals.
 **	

@@ -21,9 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.68  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.67  2004/04/11 20:46:04  sm
 **      - Fixed problem getting diffuse color for OpenGL rendering.
 **

@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/image/b3TxPool.h"
+#include "blz3/raytrace/b3Condition.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.22  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -40,7 +44,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.21  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	

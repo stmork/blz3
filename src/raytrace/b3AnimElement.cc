@@ -21,8 +21,11 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Light.h"
+#include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 
 #define ANIM_STEP 0.01
 
@@ -34,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2004/04/17 09:40:54  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.6  2003/10/15 13:12:19  sm
 **      - Making 64 bit sure. I've got running the brt3 in 64 bit mode on
 **        a sun ultra sparc sucessfully!!

@@ -21,12 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Aux.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/image/b3TxPool.h"
 
 #define no_DEBUG_MATERIAL
 
@@ -38,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.58  2004/04/15 08:57:00  sm
 **      - Added b3BumpAokPlank
 **

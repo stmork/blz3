@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.44  2003/02/25 19:26:07  sm
 **      - Fixed missing grid update on pick move
 **

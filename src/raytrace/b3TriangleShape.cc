@@ -21,9 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Math.h"
-#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.42  2004/03/21 16:08:35  sm
 **      - Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
 **

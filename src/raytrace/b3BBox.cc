@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3BBox.h"
 #include "b3ReadCOB.h"
 #include "b3ReadTGF.h"
 
@@ -35,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.86  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.85  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -43,7 +45,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.84  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	

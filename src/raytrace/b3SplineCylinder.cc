@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.4  2001/09/22 16:19:53  sm
 **      - Adding basic shape intersection routines
 **

@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3Memory.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.18  2003/08/31 10:44:07  sm
 **      - Further buffer overflow avoidments.
 **

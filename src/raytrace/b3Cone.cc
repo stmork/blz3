@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.13  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There

@@ -20,10 +20,10 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Matrix.h"
+
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"  
+#include "blz3/raytrace/b3Scene.h"
 
 #define no_DEBUG_SS4
 
@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.7  2003/03/06 15:39:36  sm
 **	- Optimized b3Color for integer conversion
-**
+**	
 **	Revision 1.6  2003/03/05 19:08:18  sm
 **	- Trying to optimize b3Color...
 **	

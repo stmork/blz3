@@ -22,7 +22,8 @@
 *************************************************************************/
 
 #include "blz3/base/b3Aux.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3PickInfo.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.7  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.6  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.

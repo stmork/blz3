@@ -20,9 +20,13 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/b3Config.h" 
-#include "blz3/raytrace/b3Raytrace.h"
+
+#include "blz3/raytrace/b3Material.h"  
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.18  2004/04/11 19:04:21  sm
 **	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
-**
+**	
 **	Revision 1.17  2004/04/11 18:21:36  sm
 **	- Raytracer redesign:
 **	  o The complete set of surface values moved into

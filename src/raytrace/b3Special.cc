@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.66  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.65  2004/04/02 08:56:45  sm
 **      - Computed more realistic clouds.
 **

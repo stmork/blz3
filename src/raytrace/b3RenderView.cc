@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
-#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.36  2004/04/03 14:07:18  sm
 **	- Resolved internal compiler error problem of VC++
-**
+**	
 **	Revision 1.35  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!

@@ -21,11 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/image/b3TxPool.h"
-
+#include "blz3/raytrace/b3Scene.h"
 #include "b3ReadTGF.h"
 
 /*************************************************************************
@@ -36,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.54  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
 **	- Fixed camera name handling if camera name is empty.
-**
+**	
 **	Revision 1.53  2004/01/18 13:51:57  sm
 **	- Done further security issues.
 **	

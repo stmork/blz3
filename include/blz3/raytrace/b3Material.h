@@ -1,0 +1,335 @@
+/*
+**
+**	$Filename:	b3Material.h $ 
+**	$Release:	Dortmund 2004 $
+**	$Revision$
+**	$Date$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Raytracing class definitions for materials
+**
+**	(C) Copyright 2004  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+**
+*/
+
+#ifndef B3_RAYTRACE_MATERIAL_H
+#define B3_RAYTRACE_MATERIAL_H
+
+#include "blz3/raytrace/b3Base.h"
+#include "blz3/base/b3Wood.h"
+#include "blz3/image/b3Tx.h"
+
+/*************************************************************************
+**                                                                      **
+**                        materials                                     **
+**                                                                      **
+*************************************************************************/
+
+#define CLASS_MATERIAL         0x40000000
+#define TYPE_NORMMATERIAL      0x00000001
+#define TYPE_MAT_TEXTURE       0x00000002
+#define TYPE_MAT_CHESS         0x00000003
+#define TYPE_MAT_WRAPTEXTURE   0x00000004
+#define TYPE_MAT_MARBLE        0x00000005
+#define TYPE_MAT_SLIDE         0x00000006
+#define TYPE_MAT_WOOD          0x00000007
+#define TYPE_MAT_COOK_TORRANCE 0x00000008
+#define TYPE_MAT_GRANITE       0x00000009
+#define TYPE_MAT_OAKPLANK      0x0000000a
+
+// WARNING: GL uses define MATERIAL, too!
+#define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
+#define MATERIAL            (CLASS_MATERIAL|TYPE_NORMMATERIAL)
+#define TEXTURE             (CLASS_MATERIAL|TYPE_MAT_TEXTURE)
+#define CHESS               (CLASS_MATERIAL|TYPE_MAT_CHESS)
+#define WRAPTEXTURE         (CLASS_MATERIAL|TYPE_MAT_WRAPTEXTURE)
+#define MARBLE              (CLASS_MATERIAL|TYPE_MAT_MARBLE)
+#define SLIDE               (CLASS_MATERIAL|TYPE_MAT_SLIDE)
+#define WOOD                (CLASS_MATERIAL|TYPE_MAT_WOOD)
+#define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_MAT_COOK_TORRANCE)
+#define GRANITE             (CLASS_MATERIAL|TYPE_MAT_GRANITE)
+#define OAKPLANK            (CLASS_MATERIAL|TYPE_MAT_OAKPLANK)
+
+class B3_PLUGIN b3Material : public b3Item
+{
+protected:
+	b3Material(b3_size class_size,b3_u32 classtype);
+
+public:
+	B3_ITEM_INIT(b3Material);
+	B3_ITEM_LOAD(b3Material);
+
+	static  void    b3Register();
+	virtual b3_bool b3Prepare();
+	
+	virtual inline b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result)
+	{
+		return false;
+	}
+
+	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// MATERIAL or MAT_NORMAL
+class B3_PLUGIN b3MatNormal : public b3Material
+{
+public:
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3_f32            m_Reflection;          // self explaining
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
+
+protected:
+	     b3MatNormal(b3_size class_size,b3_u32 class_type);
+
+public:
+	B3_ITEM_INIT(b3MatNormal);
+	B3_ITEM_LOAD(b3MatNormal);
+
+	        void    b3Write();
+	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// CHESS
+class B3_PLUGIN b3MatChess : public b3Material 
+{
+public:
+	b3Color  m_DiffColor[2];
+	b3Color  m_AmbColor[2];
+	b3Color  m_SpecColor[2];
+	b3_f32   m_Reflection[2];         // same like NormMaterial, but
+	b3_f32   m_Refraction[2];
+	b3_f32   m_RefrValue[2];
+	b3_f32   m_HighLight[2];
+	b3_s32   m_Flags;
+	b3_s32   m_xTimes;
+	b3_s32   m_yTimes;
+
+public:
+	B3_ITEM_INIT(b3MatChess);
+	B3_ITEM_LOAD(b3MatChess);
+
+	void    b3Write();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// MARBLE
+class B3_PLUGIN b3MatMarble : public b3Material 
+{
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3_vector         m_Scale;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
+	b3_s32            m_xTimes,m_yTimes;
+
+public:
+	B3_ITEM_INIT(b3MatMarble);
+	B3_ITEM_LOAD(b3MatMarble);
+
+	void    b3Write();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// WOOD
+class B3_PLUGIN b3MatWood : public b3Material, public b3Wood
+{
+public:
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3Color           m_LightWood;
+	b3Color           m_DarkWood;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_xTimes,m_yTimes; // not used
+
+public:
+	B3_ITEM_INIT(b3MatWood);
+	B3_ITEM_LOAD(b3MatWood);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+
+private:
+	void    b3Init();
+};
+
+// OAKPLANK
+class B3_PLUGIN b3MatOakPlank : public b3Material, public b3OakPlank
+{
+	b3Color          *m_LightColors;
+	b3Color          *m_DarkColors;
+
+public:
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3Color           m_LightWood;
+	b3Color           m_DarkWood;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+
+
+public:
+	B3_ITEM_INIT(b3MatOakPlank);
+	B3_ITEM_LOAD(b3MatOakPlank);
+
+	virtual ~b3MatOakPlank();
+
+	void     b3Write();
+	b3_bool  b3Prepare();
+	b3_bool  b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+
+private:
+	void     b3Init();
+};
+
+// TEXTURE
+class B3_PLUGIN b3MatTexture : public b3Material 
+{
+public:
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_f32            m_xStart,m_yStart;    // surface coordinate start
+	b3_f32            m_xScale,m_yScale;    // texture scale
+	b3_s32            m_xTimes,m_yTimes;    // repetition in x- y-direction
+	b3_s32            m_Flags;
+	b3Path            m_Name;
+	b3Tx             *m_Texture;
+
+public:
+	B3_ITEM_INIT(b3MatTexture);
+	B3_ITEM_LOAD(b3MatTexture);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	void    b3SetTexture(const char *name);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// WRAPTEXTURE
+class B3_PLUGIN b3MatWrapTexture : public b3Material 
+{
+	b3Tx             *m_Texture;          // only one texture (compat. Dali)
+public:
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_f32            m_xStart,m_yStart;  // surface coordinate start
+	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
+	b3_s32            m_Flags;
+	b3Path            m_Name;
+
+public:
+	B3_ITEM_INIT(b3MatWrapTexture);
+	B3_ITEM_LOAD(b3MatWrapTexture);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+// SLIDE
+class B3_PLUGIN b3MatSlide : public b3Material 
+{
+	b3Color           m_Diffuse[2];        // colors for start/end
+	b3Color           m_Ambient[2];
+	b3Color           m_Specular[2];
+	b3_f32            m_From,m_To;           // rel. polar values of start, end
+	b3_f32            m_Reflection;          // normal material definitions
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_ModeFlag;            // direction and cut flags, see below
+
+public:
+	B3_ITEM_INIT(b3MatSlide);
+	B3_ITEM_LOAD(b3MatSlide);
+
+	void    b3Write();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+#define DIR_SLIDE_BIT       0
+#define CUT_SLIDE_BIT       1
+#define XINVERT_BIT         2
+#define YINVERT_BIT         3
+#define MAT_INSIDE_BIT      4
+
+#define SLIDE_CUT           (1 << CUT_SLIDE_BIT)
+#define MAT_XINVERT			(1 << XINVERT_BIT)
+#define MAT_YINVERT         (1 << YINVERT_BIT)
+#define MAT_INSIDE          (1 << MAT_INSIDE_BIT)
+
+#define XSLIDE              0x00000000
+#define YSLIDE              0x00000001
+#define XSLIDE_CUT          (XSLIDE|SLIDE_CUT)
+#define YSLIDE_CUT          (YSLIDE|SLIDE_CUT)
+
+// TYPE_COOK_TORRANCE
+class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
+{
+	b3Color     m_Ra;
+	b3Color     m_Mu;
+
+public:
+	b3_f64      m_ka;
+	b3_f64      m_ks;
+	b3_f64      m_kd;
+	b3_f64      m_m;
+
+public:
+	B3_ITEM_INIT(b3MatCookTorrance);
+	B3_ITEM_LOAD(b3MatCookTorrance);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result);
+};
+
+// GRANITE
+class B3_PLUGIN b3MatGranite : public b3Material 
+{
+public:
+	b3Color           m_DarkColor;
+	b3Color           m_LightColor;
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3_vector         m_Scale;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_u32            m_Flags;
+	b3_count          m_Overtone;
+
+public:
+	B3_ITEM_INIT(b3MatGranite);
+	B3_ITEM_LOAD(b3MatGranite);
+
+	void    b3Write();
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+};
+
+#endif

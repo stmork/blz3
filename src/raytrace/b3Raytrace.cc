@@ -20,12 +20,11 @@
 **                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
-  
-#include "blz3/b3Config.h" 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/raytrace/b3PrepareInfo.h"
-#include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Matrix.h"
+
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"  
+#include "blz3/raytrace/b3Scene.h"
 
 #define no_DEBUG_SS4
 
@@ -37,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.54  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
-**
+**	
 **	Revision 1.53  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector

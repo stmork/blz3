@@ -21,7 +21,9 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.10  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -40,7 +46,7 @@
 **	  which I only can assume what they are doing;-)
 **	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
 **	  and corrected upper time limit.
-**
+**	
 **	Revision 1.9  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation

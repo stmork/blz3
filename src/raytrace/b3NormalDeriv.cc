@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.2  2004/04/12 15:41:50  sm
 **	- Right computation of normal derivation.
-**
+**	
 **	Revision 1.1  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.

@@ -21,7 +21,15 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Condition.h"
+#include "blz3/raytrace/b3Bump.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Shape.h"   
+#include "blz3/raytrace/b3BBox.h"    
+#include "blz3/raytrace/b3Light.h"   
+#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Special.h"  
+#include "blz3/raytrace/b3Scene.h"    
    
 /*************************************************************************
 **                                                                      **
@@ -31,6 +39,10 @@
     
 /*
 **      $Log$
+**      Revision 1.10  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.9  2003/07/20 09:38:30  sm
 **      - Registering raytracing items manually.
 **

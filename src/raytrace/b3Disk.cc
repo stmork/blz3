@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2004/04/17 09:40:55  sm
+**      - Splitting b3Raytrace.h into their components for
+**        better oversightment.
+**
 **      Revision 1.24  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon

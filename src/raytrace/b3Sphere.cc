@@ -21,8 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/04/17 09:40:55  sm
+**	- Splitting b3Raytrace.h into their components for
+**	  better oversightment.
+**
 **	Revision 1.30  2003/02/24 17:32:38  sm
 **	- Added further picking support.
 **	- Fixed geometry update delay.
-**
+**	
 **	Revision 1.29  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
