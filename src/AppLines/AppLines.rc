@@ -250,6 +250,8 @@ BEGIN
     BUTTON      ID_ANIM_PAUSE
     BUTTON      ID_ANIM_STEP_FORWARD
     BUTTON      ID_ANIM_END
+    SEPARATOR
+    BUTTON      ID_ANIM_PROPERTIES
 END
 
 
@@ -400,12 +402,14 @@ BEGIN
     END
     POPUP "Ani&mation"
     BEGIN
+        MENUITEM "&Eigenschaften",              ID_ANIM_PROPERTIES
+        MENUITEM SEPARATOR
         MENUITEM "&Anfang",                     ID_ANIM_START
-        MENUITEM "R&ückwärts",                  ID_ANIM_STEP_BACKWARD
-        MENUITEM "&Stop",                       ID_ANIM_STOP
+        MENUITEM "Frame zu&rück",               ID_ANIM_STEP_BACKWARD
+        MENUITEM "S&top",                       ID_ANIM_STOP
         MENUITEM "Abs&pielen",                  ID_ANIM_PLAY
         MENUITEM "Pau&se",                      ID_ANIM_PAUSE
-        MENUITEM "&Vorwärts",                   ID_ANIM_STEP_FORWARD
+        MENUITEM "Frame &vorwärts",             ID_ANIM_STEP_FORWARD
         MENUITEM "&Ende",                       ID_ANIM_END
     END
     POPUP "&Ansicht"
@@ -479,7 +483,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
-        MENUITEM "&Bild speichern unter...\tStrg+S", ID_FILE_SAVE
+        MENUITEM "&Bild speichern unter...\tStrg+S", ID_IMG_SAVE
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -896,7 +900,7 @@ BEGIN
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,150,145,
                     11,15
     LTEXT           "Samples pro Pixel (2er Potenz)",IDC_STATIC,5,120,96,8
-    LTEXT           "Samples pro Frame",IDC_STATIC,5,145,61,8
+    LTEXT           "Samples pro Frame (2er Potenz)",IDC_STATIC,5,145,101,8
 END
 
 IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 201
@@ -1816,6 +1820,22 @@ BEGIN
     LTEXT           "Dreieckszahl:",-1,105,50,44,8
 END
 
+IDD_ANIMATION DIALOG DISCARDABLE  0, 0, 142, 90
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Animation"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,65,50,15
+    PUSHBUTTON      "Abbrechen",IDCANCEL,80,65,50,15
+    EDITTEXT        IDC_FPS,85,40,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_FPS_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,121,40,11,
+                    15
+    CONTROL         "Animation aktiviert",IDC_ANIM_ON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,10,73,10
+    LTEXT           "Frames pro Sekunde:",IDC_STATIC,10,40,68,8
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2150,6 +2170,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 239
     END
+
+    IDD_ANIMATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -2340,8 +2368,8 @@ BEGIN
     ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
     ID_ANIM_PLAY            "Spielt die Animation ab.\nAnimation abspielen"
     ID_ANIM_START           "Spult die Animation an den Anfang.\nZurückspulen"
-    ID_ANIM_STEP_BACKWARD   "Schaltet die Animation eine Sekunde zurück.\nRückwärts"
-    ID_ANIM_STEP_FORWARD    "Schaltet die Animation eine Sekunde vorwärts.\nVorwärts"
+    ID_ANIM_STEP_BACKWARD   "Schaltet die Animation ein Frame zurück.\nFrame rückwärts"
+    ID_ANIM_STEP_FORWARD    "Schaltet die Animation ein Frame vorwärts.\nFrame vorwärts"
     ID_ANIM_STOP            "Hält die Animation an.\nAnimation anhalten"
     ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
     ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
@@ -2396,6 +2424,7 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_ANIM_PROPERTIES      "Animationseigenschaften.\nAnimationseigenschaften"
 END
 
 STRINGTABLE DISCARDABLE 

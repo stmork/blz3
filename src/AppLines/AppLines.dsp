@@ -245,6 +245,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgAnimation.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCamera.cpp
 # End Source File
 # Begin Source File
@@ -530,6 +534,10 @@ SOURCE=.\b3View.h
 # Begin Source File
 
 SOURCE=.\ChildFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgAnimation.h
 # End Source File
 # Begin Source File
 

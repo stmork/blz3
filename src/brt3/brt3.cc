@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.29  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
 **	  real time raytracing: 8 fps for Animationtest.
-**
+**	
 **	Revision 1.28  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -344,7 +348,7 @@ int main(int argc,char *argv[])
 											scene->b3SetAnimation(t);
 											scene->b3ComputeBounds(&lower,&upper);
 											scene->b3Raytrace(display);
-											sprintf((char *)img_name,"%s_%04d",
+											sprintf((char *)img_name,"%s_%04ld",
 												camera->b3GetName(),count++);
 											b3SaveRaytracedImage(
 												display,

@@ -111,7 +111,7 @@ public:
 		return (First == null) && (Last == null);
 	}
 
-	inline void b3Move(T *from)
+	inline void b3Move(b3Base<T> *from)
 	{
 		B3_ASSERT(b3IsEmpty());
 
@@ -251,12 +251,7 @@ public:
 
 		if (removed != null)
 		{
-			First = removed->Succ;
-			if (First != null)
-			{
-				First->Prev = null;
-			}
-			removed->Succ = null;
+			b3Remove(removed);
 		}
 		return removed;
 	}
@@ -267,12 +262,7 @@ public:
 
 		if (removed != null)
 		{
-			Last = removed->Prev;
-			if (Last != null)
-			{
-				Last->Prev = null;
-			}
-			removed->Prev = null;
+			b3Remove(removed);
 		}
 		return removed;
 	}

@@ -34,13 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.41  2002/08/21 10:16:40  sm
 **	- Made some changes to the Un*x OpenGL renderer:
 **	  o Added animations
 **	  o Added camera switching
 **	  o Corrected far clipping plane computation.
 **	- Configure script tidied up.
-**
+**	
 **	Revision 1.40  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -398,8 +402,9 @@ b3Base<b3Item> *b3Scene::b3GetSpecialHead()
 	return &m_Heads[2];
 }
 
-b3Animation *b3Scene::b3GetAnimation()
+b3Animation *b3Scene::b3GetAnimation(b3_bool force)
 {
+	b3Animation *animation;
 	b3Item      *item;
 
 	B3_FOR_BASE(b3GetSpecialHead(),item)
@@ -409,7 +414,17 @@ b3Animation *b3Scene::b3GetAnimation()
 			return (b3Animation *)item;
 		}
 	}
-	return null;
+
+	if (force)
+	{
+		animation = new b3Animation(ANIMATION);
+		b3GetSpecialHead()->b3Append(animation);
+	}
+	else
+	{
+		animation = null;
+	}
+	return animation;
 }
 
 b3ModellerInfo *b3Scene::b3GetModellerInfo()

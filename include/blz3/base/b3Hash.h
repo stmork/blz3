@@ -170,7 +170,7 @@ public:
 
 		for (int i = 0;i < B3_MAX_HASH_INDEX;i++)
 		{
-			count += m_HashMap[i].b3Count();
+			count += m_HashMap[i].b3GetCount();
 		}
 		return count;
 	}

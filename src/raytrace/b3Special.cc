@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2002/08/23 11:35:23  sm
+**      - Added motion blur raytracing. The image creation looks very
+**        nice! The algorithm is not as efficient as it could be.
+**
 **      Revision 1.56  2002/08/22 14:06:32  sm
 **      - Corrected filter support and added test suite.
 **      - Added animation computing to brt3. Now we are near to
@@ -957,7 +961,7 @@ b3_bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3Prepare(b3_res xSize)
+void b3Distribute::b3Prepare(b3_res xSize,b3Animation *animation)
 {
 	b3_f32       *samples;
 	b3_f64        start,step;
@@ -1050,6 +1054,29 @@ void b3Distribute::b3Prepare(b3_res xSize)
 		}
 	}
 
+	m_MotionBlur.b3Clear();
+	m_TimeIndex.b3Clear();
+	if (animation != null)
+	{
+		if (animation->b3IsActive() && b3IsMotionBlur())
+		{
+			b3_index i,max;
+			b3_f64   t,factor;
+
+			factor = 0.5 / animation->m_FramesPerSecond;
+			for (i = 0;i <= m_SamplesPerFrame;i++)
+			{
+				t = (b3_f64)i * 2.0 / m_SamplesPerFrame - 1.0;
+				m_MotionBlur.b3Add(m_FilterFrame->b3InvIntegral(t) * factor);
+			}
+
+			max = m_SPP * xSize;
+			for (i = 0;i < max;i++)
+			{
+				m_TimeIndex.b3Add((b3_index)B3_IRAN(m_SamplesPerFrame));
+			}
+		}
+	}
 }
 
 /*************************************************************************

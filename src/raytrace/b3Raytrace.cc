@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.43  2002/08/23 07:52:12  sm
 **	- Added some b3List operations.
 **	- Made some preliminary discussions concerning motion blur raytracing.
-**
+**	
 **	Revision 1.42  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
@@ -368,7 +372,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	if (distributed->b3IsActive())
 	{
 		m_Distributed = distributed;
-		m_Distributed->b3Prepare(xSize);
+		m_Distributed->b3Prepare(xSize,b3GetAnimation());
 		m_SuperSample = null;
 	}
 	else
@@ -440,15 +444,107 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		true);
 }
 
+void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
+{
+	b3_rt_info *infos;
+	b3TimeSpan  span;
+	b3Thread   *threads;
+	b3_count    i;
+
+	// Allocate some instances
+	infos       = new b3_rt_info[CPUs];
+	threads     = new b3Thread[CPUs];
+
+	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
+	span.b3Start();
+	for (i = 0;i < CPUs;i++)
+	{
+		infos[i].m_Display = display;
+		infos[i].m_Scene   = this;
+
+		threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
+	}
+
+	// Wait for completion
+	b3PrintF (B3LOG_NORMAL,"Waiting for threads...\n");
+	for (i = 0;i < CPUs;i++)
+	{
+		threads[i].b3Wait();
+#if defined(__linux__) || defined(WIN32)
+		threads[i].b3AddTimeSpan(&span);
+#endif
+	}
+	span.b3Stop();
+	span.b3Print();
+
+	// Free what we have allocated.
+	delete [] threads;
+	delete [] infos;
+}
+
+void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
+{
+	b3_rt_info  *infos;
+	b3Animation *anim = b3GetAnimation();
+	b3TimeSpan   span;
+	b3Thread    *threads;
+	b3_vector    lower,upper;
+	b3_count     i,k;
+	b3_f64       t,base = anim->m_Time;
+
+	// Allocate some instances
+	infos       = new b3_rt_info[CPUs];
+	threads     = new b3Thread[CPUs];
+
+	b3PrintF(B3LOG_NORMAL,"Reference time point: %3.3lf FPS: %d\n",
+		base,anim->m_FramesPerSecond);
+	span.b3Start();
+	for (k = 0;k < m_Distributed->m_SamplesPerFrame;k++)
+	{
+		t = base + m_Distributed->m_MotionBlur[k];
+		b3SetAnimation(t);
+		b3UpdateCamera();
+		b3ComputeBounds(&lower,&upper);
+		b3PrintF (B3LOG_NORMAL,"Starting threads at index %d, time point %3.3lf...\n",k,t);
+		for (i = 0;i < CPUs;i++)
+		{
+			infos[i].m_Display = display;
+			infos[i].m_Scene   = this;
+
+			threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
+		}
+
+		// Wait for completion
+		b3PrintF (B3LOG_FULL,"Waiting for threads...\n");
+		for (i = 0;i < CPUs;i++)
+		{
+			threads[i].b3Wait();
+	#if defined(__linux__) || defined(WIN32)
+			threads[i].b3AddTimeSpan(&span);
+	#endif
+		}
+		m_RowPool.b3Move(&m_TrashPool);
+	}
+	b3SetAnimation(base);
+	b3UpdateCamera();
+	b3ComputeBounds(&lower,&upper);
+
+	m_TrashPool.b3Move(&m_RowPool);
+	span.b3Stop();
+	span.b3Print();
+
+	// Free what we have allocated.
+	delete [] threads;
+	delete [] infos;
+}
+
 void b3Scene::b3Raytrace(b3Display *display)
 {
 	b3Row      *row;
-	b3Thread   *threads;
-	b3TimeSpan  span;
 	b3_res      xSize,ySize;
 	b3_count    CPUs,i;
-	b3_rt_info *infos;
 	b3_f64      fy,fyStep;
+	b3_bool     isMotionBlur = false;
 
 	try
 	{
@@ -468,10 +564,6 @@ void b3Scene::b3Raytrace(b3Display *display)
 			CPUs,
 			CPUs > 1 ? "'s" : "");
 		
-		// Allocate some instances
-		infos       = new b3_rt_info[CPUs];
-		threads     = new b3Thread[CPUs];
-
 		// add rows to list
 		fy     = 1.0;
 		fyStep = 2.0 / (b3_f64)ySize;
@@ -480,7 +572,11 @@ void b3Scene::b3Raytrace(b3Display *display)
 			row = null;
 			if (m_Distributed != null)
 			{
-				row = new b3DistributedRayRow(this,display,i,xSize,ySize);
+				isMotionBlur = m_Distributed->b3IsMotionBlur();
+
+				row = isMotionBlur ?
+					new b3MotionBlurRayRow(this,display,i,xSize,ySize) :
+					new b3DistributedRayRow(this,display,i,xSize,ySize);
 			}
 			if (m_SuperSample != null)
 			{
@@ -497,31 +593,15 @@ void b3Scene::b3Raytrace(b3Display *display)
 			fy -= fyStep;
 		}
 
-		b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
-		span.b3Start();
-		for (i = 0;i < CPUs;i++)
+		if (isMotionBlur)
 		{
-			infos[i].m_Display = display;
-			infos[i].m_Scene   = this;
-
-			threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
+			b3DoRaytraceMotionBlur(display,CPUs);
+		}
+		else
+		{
+			b3DoRaytrace(display,CPUs);
 		}
 
-		// Wait for completion
-		b3PrintF (B3LOG_NORMAL,"Waiting for threads...\n");
-		for (i = 0;i < CPUs;i++)
-		{
-			threads[i].b3Wait();
-#if defined(__linux__) || defined(WIN32)
-			threads[i].b3AddTimeSpan(&span);
-#endif
-		}
-		span.b3Stop();
-		span.b3Print();
-
-		// Free what we have allocated.
-		delete [] threads;
-		delete [] infos;
 		m_TrashMutex.b3Lock();
 		B3_DELETE_BASE(&m_TrashPool,row);
 		m_TrashMutex.b3Unlock();
@@ -542,10 +622,7 @@ void b3Scene::b3AbortRaytrace()
 	{
 		// Enter critical section
 		m_PoolMutex.b3Lock();
-		if ((row = m_RowPool.First) != null)
-		{
-			m_RowPool.b3Remove(row);
-		}
+		row = m_RowPool.b3RemoveFirst();
 		m_PoolMutex.b3Unlock();
 		// Leave critical section
 

@@ -2195,16 +2195,18 @@ enum b3_sample
 class b3Distribute : public b3Special
 {
 public:
-	b3_u32           m_Type;
-	b3_count         m_SamplesPerPixel;
-	b3_count         m_SamplesPerFrame;
-	b3_f32           m_DepthOfField;
-	b3_filter        m_PixelAperture;
-	b3_filter        m_FrameAperture;
-	b3Filter        *m_FilterPixel;
-	b3Filter        *m_FilterFrame;
-	b3_f32          *m_Samples;
-	b3_count         m_SPP;
+	b3Array<b3_f64>    m_MotionBlur;
+	b3Array<b3_index>  m_TimeIndex;
+	b3_u32             m_Type;
+	b3_count           m_SamplesPerPixel;
+	b3_count           m_SamplesPerFrame;
+	b3_f32             m_DepthOfField;
+	b3_filter          m_PixelAperture;
+	b3_filter          m_FrameAperture;
+	b3Filter          *m_FilterPixel;
+	b3Filter          *m_FilterFrame;
+	b3_f32            *m_Samples;
+	b3_count           m_SPP;
 
 public:
 	B3_ITEM_INIT(b3Distribute);
@@ -2214,7 +2216,7 @@ public:
 	void     b3Write();
 	b3_bool  b3IsActive();
 	b3_bool  b3IsMotionBlur();
-	void     b3Prepare(b3_res xSize);
+	void     b3Prepare(b3_res xSize,b3Animation *animation=null);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -2387,7 +2389,7 @@ public:
 			b3Base<b3Item> *b3GetBBoxHead();
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
-			b3Animation    *b3GetAnimation();
+			b3Animation    *b3GetAnimation(b3_bool force = false);
 		    b3ModellerInfo *b3GetModellerInfo();
 			b3Distribute   *b3GetDistributed(b3_bool force = true);
 		    b3Nebular      *b3GetNebular    (b3_bool force = true);
@@ -2429,6 +2431,8 @@ protected:
 		    void            b3GetInfiniteColor(b3_ray_info *ray);
 
 private:
+	        void            b3DoRaytrace(b3Display *display,b3_count CPUs);
+	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
@@ -2439,6 +2443,7 @@ private:
 	friend class b3RayRow;
 	friend class b3SupersamplingRayRow;
 	friend class b3DistributedRayRow;
+	friend class b3MotionBlurRayRow;
 };
 
 class b3ScenePhong : public b3Scene
@@ -2515,6 +2520,7 @@ private:
 
 class b3DistributedRayRow : public b3RayRow
 {
+protected:
 	b3Distribute *m_Distr;
 	b3_count      m_SPP;
 	b3_count      m_SPF;
@@ -2525,6 +2531,21 @@ class b3DistributedRayRow : public b3RayRow
 public:
 	                b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
 	virtual        ~b3DistributedRayRow();
+	virtual void    b3Raytrace();
+};
+
+class b3MotionBlurRayRow : public b3DistributedRayRow
+{
+	b3_index       *m_TimeIndex;
+	b3_index        m_Index;
+	b3_index        m_Modulo;
+	b3_index        m_Start;
+	b3_color       *m_Color;
+	b3_vector64     m_BackupDir;
+
+public:
+	                b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual        ~b3MotionBlurRayRow();
 	virtual void    b3Raytrace();
 };
 

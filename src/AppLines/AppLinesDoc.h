@@ -131,6 +131,8 @@ protected:
 	afx_msg void OnUpdateAnimPause(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimStepForward(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateAnimEnd(CCmdUI* pCmdUI);
+	afx_msg void OnAnimProperties();
+	afx_msg void OnUpdateAnimProperties(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

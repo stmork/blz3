@@ -37,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/08/23 11:35:23  sm
+**      - Added motion blur raytracing. The image creation looks very
+**        nice! The algorithm is not as efficient as it could be.
+**
 **      Revision 1.27  2002/08/15 13:56:43  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -398,7 +402,7 @@ b3_world_error b3World::b3Parse()
 	if (array != null)
 	{
 #ifdef _DEBUG
-		b3_count counted = node_list.b3Count();
+		b3_count counted = node_list.b3GetCount();
 		B3_ASSERT(counted == node_count);
 #endif
 		for (i = 0;i < node_count;i++)

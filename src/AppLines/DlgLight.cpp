@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.10  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -45,7 +49,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.9  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
@@ -225,7 +229,7 @@ void CDlgLight::b3UpdateUI()
 	m_SoftSizeCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
 	m_SampleCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
 
-	GetDlgItem(IDC_LIGHT_DELETE)->EnableWindow(m_LightBase->b3Count() > 1);
+	GetDlgItem(IDC_LIGHT_DELETE)->EnableWindow(m_LightBase->b3GetCount() > 1);
 	b3UpdatePreview();
 }
 

@@ -28,6 +28,7 @@
 #include "AppRaytraceView.h"
 #include "MainFrm.h"
 
+#include "DlgAnimation.h"
 #include "DlgHierarchy.h"
 #include "DlgScene.h"
 #include "DlgSuperSampling.h"
@@ -57,12 +58,16 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.72  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **	Revision 1.71  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -466,6 +471,13 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_COMMAND(ID_ANIM_PAUSE, OnAnimPause)
 	ON_COMMAND(ID_ANIM_STEP_FORWARD, OnAnimStepForward)
 	ON_COMMAND(ID_ANIM_END, OnAnimEnd)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_START, OnUpdateAnimStart)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_BACKWARD, OnUpdateAnimStepBack)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STOP, OnUpdateAnimStop)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PLAY, OnUpdateAnimPlay)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PAUSE, OnUpdateAnimPause)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_FORWARD, OnUpdateAnimStepForward)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_END, OnUpdateAnimEnd)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -490,13 +502,8 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_START, OnUpdateAnimStart)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_BACKWARD, OnUpdateAnimStepBack)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_STOP, OnUpdateAnimStop)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_PLAY, OnUpdateAnimPlay)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_PAUSE, OnUpdateAnimPause)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_FORWARD, OnUpdateAnimStepForward)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_END, OnUpdateAnimEnd)
+	ON_COMMAND(ID_ANIM_PROPERTIES, OnAnimProperties)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PROPERTIES, OnUpdateAnimProperties)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1155,7 +1162,7 @@ void CAppLinesDoc::OnLightSelect()
 void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable((m_Scene->b3GetLightHead()->b3Count() > 1) && (!b3IsRaytracing()));
+	pCmdUI->Enable((m_Scene->b3GetLightHead()->b3GetCount() > 1) && (!b3IsRaytracing()));
 }
 
 void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
@@ -2078,7 +2085,7 @@ void CAppLinesDoc::OnAnimStepBack()
 	// TODO: Add your command handler code here
 	if (b3HasAnimation())
 	{
-		b3SetAnimation(m_TimePoint - 0.5);
+		b3SetAnimation(m_TimePoint - 1.0 / m_Anim->m_FramesPerSecond);
 	}
 	m_Playing = false;
 }
@@ -2128,7 +2135,7 @@ void CAppLinesDoc::OnAnimStepForward()
 	// TODO: Add your command handler code here
 	if (b3HasAnimation())
 	{
-		b3SetAnimation(m_TimePoint + 0.5);
+		b3SetAnimation(m_TimePoint + 1.0 / m_Anim->m_FramesPerSecond);
 	}
 	m_Playing = false;
 }
@@ -2152,7 +2159,7 @@ void CAppLinesDoc::OnUpdateAnimStart(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateAnimStepBack(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint - 0.5));
+	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint - 1.0 / m_Anim->m_FramesPerSecond));
 }
 
 void CAppLinesDoc::OnUpdateAnimStop(CCmdUI* pCmdUI) 
@@ -2176,11 +2183,29 @@ void CAppLinesDoc::OnUpdateAnimPause(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateAnimStepForward(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint + 0.5));
+	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint + 1.0 / m_Anim->m_FramesPerSecond));
 }
 
 void CAppLinesDoc::OnUpdateAnimEnd(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(b3HasAnimation() && !b3IsPlaying());
+}
+
+void CAppLinesDoc::OnAnimProperties() 
+{
+	// TODO: Add your command handler code here
+	CDlgAnimation dlg;
+
+	dlg.m_Animation = m_Anim = m_Scene->b3GetAnimation(true);
+	if (dlg.DoModal())
+	{
+		SetModifiedFlag();
+	}
+}
+
+void CAppLinesDoc::OnUpdateAnimProperties(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(b3HasAnimation());
 }

@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/23 11:35:23  sm
+**	- Added motion blur raytracing. The image creation looks very
+**	  nice! The algorithm is not as efficient as it could be.
+**
 **	Revision 1.2  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
 **	  real time raytracing: 8 fps for Animationtest.
-**
+**	
 **	Revision 1.1  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -68,7 +72,6 @@ b3RayRow::b3RayRow(
 	m_y       = y;
 	m_xSize   = xSize;
 	m_ySize   = ySize;
-
 
 	// Init direction
 	m_fy        =  1.0 - m_y * 2.0 / (b3_f64)m_ySize;
@@ -445,4 +448,95 @@ void b3DistributedRayRow::b3Raytrace()
 	{
 		m_Scene->b3AbortRaytrace();
 	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Compute a row with adaptive one level         **
+**                        super sampling                                **
+**                                                                      **
+*************************************************************************/
+
+b3MotionBlurRayRow::b3MotionBlurRayRow(
+	b3Scene   *scene,
+	b3Display *display,
+	b3_coord   y,
+	b3_res     xSize,
+	b3_res     ySize) :
+		b3DistributedRayRow(scene,display,y,xSize,ySize)
+{
+	m_Color = (b3_color *)b3Alloc(m_xSize * sizeof(b3_color));
+	if (m_Color == null)
+	{
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+	}
+
+	m_TimeIndex = &m_Distr->m_TimeIndex[0];
+	m_Index     = 0;
+	m_BackupDir = m_preDir;
+	m_Modulo    = m_xSize * m_SPP;
+	m_Start     = B3_IRAN(m_Modulo);
+}
+
+b3MotionBlurRayRow::~b3MotionBlurRayRow()
+{
+}
+
+void b3MotionBlurRayRow::b3Raytrace()
+{
+	b3_ray_info   ray;
+	b3_coord      x,s;
+	b3_color      result;
+	b3_f64        fx,sx,sy;
+	b3_f32       *samples = m_Samples;
+	b3_index      count = 0;
+
+	// Init eye position
+	ray.pos.x =  m_Scene->m_EyePoint.x;
+	ray.pos.y =  m_Scene->m_EyePoint.y;
+	ray.pos.z =  m_Scene->m_EyePoint.z;
+	fx        = -1;
+
+	m_preDir = m_BackupDir;
+	for (x = 0;x < m_xSize;x++)
+	{
+		for (s = 0;s < m_SPP;s++)
+		{
+			if (m_TimeIndex[(count++ + m_Start) % m_Modulo] == m_Index)
+			{
+				sx = *samples++;
+				sy = *samples++;
+
+				ray.dir.x  = m_preDir.x + sx * m_Scene->m_xHalfDir.x + sy * m_Scene->m_yHalfDir.x;
+				ray.dir.y  = m_preDir.y + sx * m_Scene->m_xHalfDir.y + sy * m_Scene->m_yHalfDir.y;
+				ray.dir.z  = m_preDir.z + sx * m_Scene->m_xHalfDir.z + sy * m_Scene->m_yHalfDir.z;
+				ray.inside = false;
+
+				if (!m_Scene->b3Shade(&ray))
+				{
+					m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
+				}
+
+				b3Color::b3Add(&ray.color,&m_Color[x]);
+				b3Color::b3Scale(&m_Color[x],1.0 / m_SPP,&result);
+				m_buffer[x] = b3Color::b3GetSatColor(&result);
+			}
+			else
+			{
+				samples += 2;
+			}
+		}
+
+		m_preDir.x += m_Scene->m_xStepDir.x;
+		m_preDir.y += m_Scene->m_xStepDir.y;
+		m_preDir.z += m_Scene->m_xStepDir.z;
+		fx         += m_fxStep;
+	}
+	m_Display->b3PutRow(this);
+	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
+	{
+		m_Scene->b3AbortRaytrace();
+	}
+
+	m_Index++;
 }
