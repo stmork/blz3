@@ -44,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.87  2004/08/26 07:08:10  sm
+**      - Higher bitrate in DivX encoder.
+**      - Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
+**
 **      Revision 1.86  2004/08/18 15:03:46  sm
 **      - Added render support for flat triangle field (no Phong interpolation)
 **
@@ -554,7 +558,7 @@ void b3RenderContext::b3Init()
 //	glDisable(GL_SAMPLE_BUFFERS_EXT);
 //	glDisable(GL_SAMPLES_EXT);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_AUTO_NORMAL);
+	glDisable(GL_AUTO_NORMAL);
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

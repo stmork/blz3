@@ -15,9 +15,7 @@
 **
 */
 
-#ifdef BLZ3_USE_OPENGL
-
-#include <GL/glut.h>
+#include "blz3/b3Config.h"
 
 /*************************************************************************
 **                                                                      **
@@ -27,6 +25,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2004/08/26 07:08:10  sm
+**      - Higher bitrate in DivX encoder.
+**      - Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
+**
 **      Revision 1.3  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -34,6 +36,14 @@
 **      - Now we are able to draw Blizzard Scenes with OpenGL.
 **              
 */
+
+/*************************************************************************
+**                                                                      **
+**                        Some static data                              **
+**                                                                      **
+*************************************************************************/
+
+#if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
 GLfloat points[] =
 {

@@ -28,6 +28,10 @@
 
 #ifdef BLZ3_USE_DIVX4LINUX
 #include "encore2.h"
+
+#define RATE_KBIT(kbit)   ((kbit) * 1024)
+#define RATE_KBYTE(kbyte) (RATE_KBIT((kbyte) * 8))
+
 #endif
 
 #ifdef BLZ3_USE_AVILIB
@@ -45,10 +49,14 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.5  2004/08/26 07:08:10  sm
+**	- Higher bitrate in DivX encoder.
+**	- Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
+**
 **	Revision 1.4  2004/08/17 08:35:37  sm
 **	- Correct make depend command
 **	- Correct install
-**
+**	
 **	Revision 1.3  2004/08/16 06:05:43  sm
 **	- Added divx define rules.
 **	
@@ -111,7 +119,7 @@ int main(int argc,char *argv[])
 			encoding.y_dim     = img.ySize;
 			encoding.framerate =      25.0;
 			encoding.quality   =       5;
-			encoding.bitrate   = 1600000;
+			encoding.bitrate   = RATE_KBYTE(500);
 
 			size               = img.xSize * img.ySize;
 			buffer             = (b3_u08 *)malloc(size * 3);
