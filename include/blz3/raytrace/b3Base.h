@@ -37,17 +37,13 @@
 **                                                                      **
 *************************************************************************/
 
-struct b3_polar_precompute
+struct b3_polar
 {
 	b3_vector64   m_Polar;        // surface coordinates of shape (transform invariant!)
 	b3_vector64   m_ObjectPolar;  // rel. shape coordinates (transform invariant!)
-	b3_index      m_NormalIndex;  // which triangle in case of triangle mesh
-};
-
-struct b3_polar : b3_polar_precompute
-{
 	b3_vector64   m_BoxPolar;     // rel. bbox coordinates which contains the shape (This is not transform invariant!)
 	b3_vector64   m_BBoxOriginal; // Coordinates in original coordinate space (transform invariant!)
+	b3_index      m_NormalIndex;  // which triangle in case of triangle mesh
 };
 
 class b3Shape;
@@ -55,18 +51,20 @@ class b3BBox;
 
 struct b3_ray : public b3_line64
 {
-	b3_vector64 ipoint;
-	b3_vector64 normal;
-	b3_vector64 xDeriv;
-	b3_vector64 yDeriv;
-	b3_polar    polar;
-	b3_f64      Q;
-	b3_bool     inside;
-	b3_index    TriaIndex;
-	b3_f64      aTriaValue,bTriaValue;
-	b3_f64      t;
-	b3Shape    *shape;
-	b3BBox     *bbox;
+	b3_vector64 ipoint;                // intersection point
+	b3_vector64 normal;                // normal at intersection point
+	b3_vector64 xDeriv;                // surface x derivative 
+	b3_vector64 yDeriv;                // surface y derivative
+	b3_polar    polar;                 // diverse polar coordinates
+	b3_f64      Q;                     // backward limit
+	b3_bool     inside;                // inside or outside flag
+	b3_index    TriaIndex;             // triangle index at intersection point
+	b3_f64      aTriaValue,bTriaValue; // polar coordinates of that triangle
+	b3_f64      t;                     // animation time point
+	b3_index    depth;                 // trace depth
+	b3Color     color;                 // result color
+	b3Shape    *shape;                 // intersected shape
+	b3BBox     *bbox;                  // bounding box which contains intersected shape
 };
 
 struct b3_material
@@ -80,31 +78,20 @@ struct b3_material
 	b3_f64      m_SpecularExp;
 };
 
-// aux. structure for computing illumination
-struct b3_surface : public b3_material
-{
-	b3Color     m_SpecularSum;
-};
-
-struct b3_ray_info : public b3_ray
-{
-	b3_index     depth;
-	b3Color      color;
-};
-
 class b3Material;
 
-struct b3_ray_fork : public b3_surface
+struct b3_surface : public b3_material
 {
-	b3_ray_info *incoming;
-	b3_ray_info  refl_ray;
-	b3_ray_info  refr_ray;
+	b3_ray      *incoming;
+	b3_ray       refl_ray;
+	b3_ray       refr_ray;
 	b3_bool      transparent;
 	b3Material  *material;
+	b3Color      m_SpecularSum;
 };
 
 // aux. structure for JitterLight
-struct b3_light_info : public b3_ray_info
+struct b3_light_info : public b3_ray
 {
 	b3_vector LightView,xDir,yDir;
 	b3Color   Result;

@@ -24,9 +24,10 @@
 #include "blz3/raytrace/b3Material.h"  
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.21  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.20  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -171,7 +176,7 @@ b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 void b3ShaderPhong::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
-	b3_ray_fork   *surface,
+	b3_surface    *surface,
 	b3Color       &result)
 {
 	b3Color aux = b3Color(0,0,0);
@@ -205,12 +210,12 @@ void b3ShaderPhong::b3ShadeLight(
 
 
 void b3ShaderPhong::b3ShadeSurface(
-	b3_ray_fork &surface,
-	b3_ray_info *ray,
-	b3_count     depth_count)
+	b3_surface &surface,
+	b3_count    depth_count)
 {
 	b3Item      *item;
 	b3Light     *light;
+	b3_ray      *ray = surface.incoming;
 	b3_f64       refl,refr,factor;
 	b3_index     formula = 0;
 

@@ -24,9 +24,10 @@
 #include "blz3/raytrace/b3Material.h"
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h" 
-#include "blz3/raytrace/b3Animation.h"
+#include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.25  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.24  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -193,7 +198,7 @@ void b3ShaderMork::b3Prepare()
 void b3ShaderMork::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
-	b3_ray_fork   *surface,
+	b3_surface    *surface,
 	b3Color       &result)
 {
 	b3Color aux = b3Color(0,0,0);
@@ -249,13 +254,13 @@ void b3ShaderMork::b3ShadeLight(
 }
 
 void b3ShaderMork::b3ShadeSurface(
-	b3_ray_fork &surface,
-	b3_ray_info *ray,
-	b3_count     depth_count)
+	b3_surface &surface,
+	b3_count    depth_count)
 {
-	b3Item  *item;
-	b3Light *light;
-	b3_f64   refl,refr,factor;
+	b3Item   *item;
+	b3Light  *light;
+	b3_ray   *ray = surface.incoming;
+	b3_f64    refl,refr,factor;
 
 	ray->color.b3Init();
 	if (surface.transparent)
@@ -334,8 +339,8 @@ void b3ShaderMork::b3ShadeSurface(
 }
 
 b3_bool b3ShaderMork::b3IsPointLightBackground (
-	b3Light     *Light,
-	b3_ray_info *Ray)
+	b3Light *Light,
+	b3_ray  *Ray)
 {
 	b3_vector LightDir;
 	b3_f64    LightDist,Factor,ReflexAngle;
@@ -371,7 +376,7 @@ b3_bool b3ShaderMork::b3IsPointLightBackground (
 	return true;
 }
 
-void b3ShaderMork::b3LightFlare (b3_ray_info *Ray)
+void b3ShaderMork::b3LightFlare (b3_ray *Ray)
 {
 	b3Item    *item;
 	b3Light   *Light;

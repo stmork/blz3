@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.62  2004/05/22 14:17:31  sm
+**      - Merging some basic raytracing structures and gave them some
+**        self explaining names. Also cleaned up some parameter lists.
+**
 **      Revision 1.61  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -633,9 +637,7 @@ void b3Shape::b3SetupGrid(b3PickInfo *info)
 {
 }
 
-b3Material *b3Shape::b3GetSurfaceValues(
-	b3_ray     *ray,
-	b3_surface *surface)
+b3Material *b3Shape::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3Item     *item;
 	b3Material *material;
@@ -643,7 +645,7 @@ b3Material *b3Shape::b3GetSurfaceValues(
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetSurfaceValues(ray,surface))
+		if (material->b3GetSurfaceValues(surface))
 		{
 			return material;
 		}
@@ -660,7 +662,7 @@ b3Material *b3Shape::b3GetSurfaceValues(
 	return null;
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 {
 	return true;
 }
@@ -701,7 +703,7 @@ b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3Shape(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
 {
 	b3Item      *item;
 	b3Condition *cond;

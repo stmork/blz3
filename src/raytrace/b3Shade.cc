@@ -23,10 +23,10 @@
 
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Animation.h"
-#include "blz3/raytrace/b3Special.h"  
+#include "blz3/raytrace/b3Light.h"
+#include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
-#include "blz3/base/b3Procedure.h"
+#include "blz3/raytrace/b3Shade.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.36  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.35  2004/05/13 16:17:26  sm
 **	- Added background clouds as special item.
 **	
@@ -227,7 +231,7 @@ void b3Shader::b3Prepare()
 	m_TraceDepth = m_Scene->m_TraceDepth;
 }
 
-void b3Shader::b3ComputeOutputRays(b3_ray_fork *surface)
+void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 {
 	b3_vector64 *Normal       = &surface->incoming->normal;
 	b3_vector64 *incoming_dir = &surface->incoming->dir;
@@ -305,12 +309,12 @@ void b3Shader::b3ComputeOutputRays(b3_ray_fork *surface)
 
 
 b3_bool b3Shader::b3Shade(
-	b3_ray_info *ray,
-	b3_count     depth_count)
+	b3_ray   *ray,
+	b3_count  depth_count)
 {
 	b3BBox      *bbox;
 	b3Shape     *shape;
-	b3_ray_fork  surface;
+	b3_surface   surface;
 	b3_f64       denom;
 	b3_bool      result = false;
 
@@ -354,13 +358,13 @@ b3_bool b3Shader::b3Shade(
 		bbox->b3ComputeBoxPolar(ray);
 
 		// Compute surface values
-		surface.material = shape->b3GetSurfaceValues(ray,&surface);
+		surface.material = shape->b3GetSurfaceValues(&surface);
 		shape->b3BumpNormal(ray);
 
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
-		b3ShadeSurface(surface,ray,depth_count);
+		b3ShadeSurface(surface,depth_count);
 
 		if (m_Nebular != null)
 		{

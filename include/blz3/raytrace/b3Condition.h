@@ -117,7 +117,7 @@ public:
 	static  void    b3Register();
 	virtual b3_bool b3Prepare();
 	virtual void    b3ComputeBound(b3_stencil_limit *limit);
-	virtual b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	virtual b3_bool b3CheckStencil(b3_polar *polar);
 	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
 
 protected:
@@ -139,7 +139,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 #define RCB_ACTIVE  0
@@ -172,7 +172,7 @@ public:
 	B3_ITEM_INIT(b3CondPara);
 	B3_ITEM_LOAD(b3CondPara);
 
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 class B3_PLUGIN b3CondTria : public b3Cond2
@@ -181,7 +181,7 @@ public:
 	B3_ITEM_INIT(b3CondTria);
 	B3_ITEM_LOAD(b3CondTria);
 
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 
@@ -197,7 +197,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_SEGMENT
@@ -214,7 +214,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_ELLIPSE
@@ -232,7 +232,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_TEXTURE
@@ -253,7 +253,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_WRAP_TEXTURE
@@ -273,7 +273,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3_stencil_limit *limit);
-	b3_bool b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 

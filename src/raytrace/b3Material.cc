@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.77  2004/05/22 14:17:31  sm
+**      - Merging some basic raytracing structures and gave them some
+**        self explaining names. Also cleaned up some parameter lists.
+**
 **      Revision 1.76  2004/05/12 14:13:28  sm
 **      - Added bump dialogs:
 **        o noise
@@ -402,7 +406,7 @@ b3_bool b3Material::b3Prepare()
 	return true;
 }
 
-b3_bool b3Material::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3Material::b3GetSurfaceValues(b3_surface *surface)
 {
 	surface->m_Diffuse     = B3_LIGHT_BLUE;
 	surface->m_Ambient     = surface->m_Diffuse * 0.2;
@@ -467,7 +471,7 @@ void b3MatNormal::b3Init()
 	m_Flags       =    0;
 }
 
-b3_bool b3MatNormal::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatNormal::b3GetSurfaceValues(b3_surface *surface)
 {
 	surface->m_Diffuse     = m_Diffuse;
 	surface->m_Ambient     = m_Ambient;
@@ -551,9 +555,9 @@ void b3MatChess::b3Write()
 
 #define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
 
-b3_bool b3MatChess::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatChess::b3GetSurfaceValues(b3_surface *surface)
 {
-	b3_index index = CHESS_INDEX(ray->polar.m_Polar.x,ray->polar.m_Polar.y);
+	b3_index index = CHESS_INDEX(surface->incoming->polar.m_Polar.x,surface->incoming->polar.m_Polar.y);
 
 	surface->m_Diffuse     = m_Material[index].m_Diffuse;
 	surface->m_Ambient     = m_Material[index].m_Ambient;
@@ -639,19 +643,19 @@ void b3MatTexture::b3SetTexture(const char *name)
 	m_Name.b3Format("%s",name);
 }
 
-b3_bool b3MatTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatTexture::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy;
 
-	fx = (ray->polar.m_Polar.x - m_xStart) / m_xScale;
+	fx = (surface->incoming->polar.m_Polar.x - m_xStart) / m_xScale;
 	if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
 	if ((fx < 0) || (fx >= m_xTimes))
 	{
 		return false;
 	}
 
-	fy = (ray->polar.m_Polar.y - m_yStart) / m_yScale;
+	fy = (surface->incoming->polar.m_Polar.y - m_yStart) / m_yScale;
 	if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 	if ((fy < 0) || (fy >= m_yTimes))
 	{
@@ -723,16 +727,16 @@ void b3MatWrapTexture::b3SetTexture(const char *name)
 	m_Name.b3Format("%s",name);
 }
 
-b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
 
-	if ((ray->polar.m_Polar.y >= m_yStart) && (ray->polar.m_Polar.y <= m_yEnd))
+	if ((surface->incoming->polar.m_Polar.y >= m_yStart) && (surface->incoming->polar.m_Polar.y <= m_yEnd))
 	{
 		xEnd	= m_xEnd;
-		xPolar	= ray->polar.m_Polar.x;
-		fy = (ray->polar.m_Polar.y - m_yStart) /
+		xPolar	= surface->incoming->polar.m_Polar.x;
+		fy = (surface->incoming->polar.m_Polar.y - m_yStart) /
 			(m_yEnd - m_yStart);
 		if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 		if ((fy < 0) || (fy > 1))
@@ -866,31 +870,31 @@ void b3MatSlide::b3Write()
 	b3StoreFloat(m_Material[1].m_SpecularExp);
 }
 
-b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatSlide::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_f64 Factor;
 
 	switch (m_ModeFlag)
 	{
 		case XSLIDE :
-			Factor = (ray->polar.m_Polar.x - m_From) / (m_To - m_From);
+			Factor = (surface->incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case YSLIDE :
-			Factor = (ray->polar.m_Polar.y - m_From) / (m_To - m_From);
+			Factor = (surface->incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case XSLIDE_CUT :
-			Factor = (ray->polar.m_Polar.x - m_From) / (m_To - m_From);
+			Factor = (surface->incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
 			}
 			break;
 		case YSLIDE_CUT :
-			Factor = (ray->polar.m_Polar.y - m_From) / (m_To - m_From);
+			Factor = (surface->incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
@@ -1003,11 +1007,11 @@ b3_bool b3MatMarble::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatMarble::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_vector point;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(surface->incoming,&m_Scale,&point);
 
 	b3_f64 mix = b3Noise::b3Marble(&point);
 
@@ -1182,12 +1186,12 @@ b3_bool b3MatWood::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatWood::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(ray,null,&point);
+	b3Scale(surface->incoming,null,&point);
 	mix = b3ComputeWood(&point);
 
 	b3Mix(surface,&m_DarkMaterial,&m_LightMaterial, mix);
@@ -1394,13 +1398,13 @@ b3_bool b3MatOakPlank::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_index  index;
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(ray,null,&point);
+	b3Scale(surface->incoming,null,&point);
 	mix = b3ComputeOakPlank(&point,index);
 
 	b3Mix(surface,&m_DarkMaterials[index],&m_LightMaterials[index], mix);
@@ -1455,7 +1459,7 @@ b3_bool b3MatCookTorrance::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &acc)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *ray,b3_light_info *jit,b3Color &acc)
 {
 	b3Color     result;
 	b3_vector64 L;
@@ -1617,12 +1621,12 @@ b3_bool b3MatGranite::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatGranite::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_vector point;
 	b3_f64    granite;
 
-	b3Scale(ray,&m_Scale,&point);
+	b3Scale(surface->incoming,&m_Scale,&point);
 
 	granite = b3Noise::b3Granite(&point,m_Octaves);
 	

@@ -147,10 +147,10 @@ public:
 	        void        b3Write();
 	virtual void        b3StoreShape();
 	        void        b3InitActivation();
-	        b3Material *b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+	        b3Material *b3GetSurfaceValues(b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
 	        void        b3ComputeBound(b3_stencil_limit *limit);
-	virtual b3_bool     b3CheckStencil(b3_polar_precompute *polar);
+	virtual b3_bool     b3CheckStencil(b3_polar *polar);
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
@@ -240,7 +240,7 @@ private:
 class B3_PLUGIN b3SimpleShape : public b3Shape
 {
 protected:
-	b3_bool             b3CheckStencil(b3_polar_precompute *polar);
+	b3_bool             b3CheckStencil(b3_polar *polar);
 
 protected:
 	B3_ITEM_BASE(b3SimpleShape);
@@ -250,7 +250,7 @@ public:
 	B3_ITEM_LOAD(b3SimpleShape);
 
 public:
-	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // SPHERE
@@ -272,7 +272,7 @@ public:
 	void    b3ComputeVertices();
 	void    b3ComputeNormals(b3_bool normalize=true);
 	void    b3ComputeIndices();
-	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	void    b3Normal(b3_ray *ray);
 	b3_bool b3NormalDeriv(b3_ray *ray);
 	void    b3SetupPicking(b3PickInfo *pick_info);
@@ -320,7 +320,7 @@ public:
 	        void   b3FreeVertices();
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class B3_PLUGIN b3Disk : public b3Shape2
@@ -333,7 +333,7 @@ public:
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
@@ -364,7 +364,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -378,7 +378,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -392,7 +392,7 @@ public:
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void   b3Normal(b3_ray *ray);
 };
 
@@ -410,7 +410,7 @@ public:
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize = true);
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void   b3Normal(b3_ray *ray);
 };
 
@@ -434,7 +434,7 @@ public:
 	        void    b3ComputeVertices();
 	        void    b3ComputeNormals(b3_bool normalize=true);
 	        void    b3ComputeIndices();
-	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
 	        void    b3SetupPicking(b3PickInfo *pick_info);
 
@@ -489,7 +489,7 @@ public:
 
 	               ~b3TriangleShape();
 	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count,b3_res xSize,b3_res ySize);
-	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
+	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
 	virtual b3_bool b3Prepare();
 	virtual void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
@@ -503,9 +503,9 @@ private:
 				b3_vector *P1,b3_vector *P2,b3_vector *P3,
 				b3_index   index,b3_index   rec,b3_count   MaxRec);
 	        b3_f64  b3IntersectTriangleList(
-				b3_ray                *ray,
-				b3_polar_precompute   *polar,
-				b3_index               index);
+				b3_ray    *ray,
+				b3_polar  *polar,
+				b3_index   index);
 };
 
 // index calculation of triangle grid

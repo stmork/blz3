@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 #include "b3ReadTGF.h"
 
 /*************************************************************************
@@ -32,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.63  2004/05/20 20:15:45  sm
 **	- Added missing Albrecht and gloabl illumination shader.
-**
+**	
 **	Revision 1.62  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -949,7 +954,7 @@ static b3_f64 LensFlare_Expon[LENSFLARE_LOOP] =
 	2.4,1.5,1.5,2.0,7.0,4.0
 };
 
-void b3Scene::b3MixLensFlare(b3_ray_info *ray)
+void b3Scene::b3MixLensFlare(b3_ray *ray)
 {
 	b3Item    *item;
 	b3Light   *light;
@@ -1045,9 +1050,9 @@ void b3Scene::b3MixLensFlare(b3_ray_info *ray)
 }
 
 void b3Scene::b3GetBackgroundColor(
-	b3_ray_info *ray,
-	b3_f64       lx,
-	b3_f64       ly)
+	b3_ray *ray,
+	b3_f64  lx,
+	b3_f64  ly)
 {
 	b3_coord  x,y;
 	b3_f64    r,sight;
@@ -1089,7 +1094,7 @@ void b3Scene::b3GetBackgroundColor(
 	}
 }
 
-void b3Scene::b3GetInfiniteColor(b3_ray_info *ray)
+void b3Scene::b3GetInfiniteColor(b3_ray *ray)
 {
 	b3_f64 ly,lx;
 

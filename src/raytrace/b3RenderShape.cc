@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.71  2004/05/22 14:17:31  sm
+**      - Merging some basic raytracing structures and gave them some
+**        self explaining names. Also cleaned up some parameter lists.
+**
 **      Revision 1.70  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -629,16 +633,17 @@ void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 
 void b3Shape::b3GetDiffuseColor(b3Color &color)
 {
-	b3Item     *item;
-	b3Material *material;
-	b3_ray      ray;
-	b3_surface  surface;
+	b3Item      *item;
+	b3Material  *material;
+	b3_ray       ray;
+	b3_surface   surface;
 
 	color.b3Init(0.1f,0.5f,1.0f,0.0f);
+	surface.incoming = &ray;
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetSurfaceValues(&ray,&surface))
+		if (material->b3GetSurfaceValues(&surface))
 		{
 			color = surface.m_Diffuse;
 			return;
@@ -651,15 +656,16 @@ b3_f64 b3Shape::b3GetColors(
 	b3Color  &diffuse,
 	b3Color  &specular)
 {
-	b3Item     *item;
-	b3Material *material;
-	b3_ray      ray;
-	b3_surface  surface;
+	b3Item      *item;
+	b3Material  *material;
+	b3_ray       ray;
+	b3_surface   surface;
 
+	surface.incoming = &ray;
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetSurfaceValues(&ray,&surface))
+		if (material->b3GetSurfaceValues(&surface))
 		{
 			ambient  = surface.m_Ambient;
 			diffuse  = surface.m_Diffuse;
@@ -762,6 +768,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / image->xSize;
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / image->ySize;
 
+		surface.incoming = &ray;
 		fy = limit.y1 + b3Scene::epsilon;
 		for (y = 0;y < image->ySize;y++)
 		{
@@ -777,7 +784,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
-					if (material->b3GetSurfaceValues(&ray,&surface))
+					if (material->b3GetSurfaceValues(&surface))
 					{
 						surface.m_Diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
 						color     = surface.m_Diffuse;

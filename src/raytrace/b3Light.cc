@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2004/05/22 14:17:31  sm
+**      - Merging some basic raytracing structures and gave them some
+**        self explaining names. Also cleaned up some parameter lists.
+**
 **      Revision 1.41  2004/05/20 19:10:30  sm
 **      - Separated shader from scene. this is easier
 **        to handle.
@@ -430,8 +435,8 @@ void b3Light::b3SetName(const char *name)
 }
 
 b3_bool b3Light::b3Illuminate(
-	b3Shader    *shader,
-	b3_ray_fork *surface)
+	b3Shader   *shader,
+	b3_surface *surface)
 {
 	if (!m_LightActive)
 	{
@@ -443,8 +448,8 @@ b3_bool b3Light::b3Illuminate(
 }
 
 inline b3_bool b3Light::b3PointIllumination(
-	b3Shader    *shader,
-	b3_ray_fork *surface)
+	b3Shader   *shader,
+	b3_surface *surface)
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -505,8 +510,8 @@ inline b3_bool b3Light::b3PointIllumination(
 }
 
 inline b3_bool b3Light::b3AreaIllumination (
-	b3Shader    *shader,
-	b3_ray_fork *surface)
+	b3Shader   *shader,
+	b3_surface *surface)
 {
 	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
@@ -635,7 +640,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 
 inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3Shader      *shader,
-	b3_ray_fork   *surface,
+	b3_surface    *surface,
 	b3_light_info *Jit,
 	b3_coord       x,
 	b3_coord       y)

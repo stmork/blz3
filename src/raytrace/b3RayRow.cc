@@ -24,6 +24,7 @@
 #include "blz3/raytrace/b3Animation.h"
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 
 #define no_DEBUG_SS4
 
@@ -35,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.9  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.8  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -107,9 +112,9 @@ b3RayRow::b3RayRow(
 
 void b3RayRow::b3Raytrace()
 {
-	b3_res        x;
-	b3_ray_info   ray;
-	b3_f64        fx;
+	b3_res   x;
+	b3_ray   ray;
+	b3_f64   fx;
 
 	// Init eye position
 	ray.pos.x =  m_Scene->m_EyePoint.x;
@@ -185,7 +190,7 @@ b3SupersamplingRayRow::~b3SupersamplingRayRow()
 void b3SupersamplingRayRow::b3Raytrace()
 {
 	b3_res        x;
-	b3_ray_info   ray;
+	b3_ray        ray;
 	b3_f64        fxRight = -1;
 	b3_vector64   dir;
 	b3_bool       do_convert = false;
@@ -284,7 +289,7 @@ inline void b3SupersamplingRayRow::b3Convert()
 
 inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 {
-	b3_ray_info   ray;
+	b3_ray        ray;
 	b3_res        x;
 	b3_bool       add;
 	b3_vector64   dir;
@@ -432,7 +437,7 @@ b3DistributedRayRow::~b3DistributedRayRow()
 
 void b3DistributedRayRow::b3Raytrace()
 {
-	b3_ray_info   ray;
+	b3_ray        ray;
 	b3_coord      x,s;
 	b3Color       result;
 	b3_f64        fx,sx,sy;
@@ -524,7 +529,7 @@ void b3MotionBlurRayRow::b3SetTimePoint(b3_f64 t)
 
 void b3MotionBlurRayRow::b3Raytrace()
 {
-	b3_ray_info   ray;
+	b3_ray        ray;
 	b3_coord      x,s;
 	b3_f64        fx,sx,sy;
 	b3_f32       *samples = m_Samples;

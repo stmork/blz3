@@ -25,6 +25,7 @@
 #include "blz3/raytrace/b3Animation.h"
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/raytrace/b3Shade.h"
 
 #define no_DEBUG_SS4
 
@@ -36,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.58  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.57  2004/05/15 07:51:02  sm
 **	- Some noise optimizations
 **	

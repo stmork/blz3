@@ -158,14 +158,14 @@ public:
 		    b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
 		    void             b3Raytrace(b3Display *display);
 		    void             b3AbortRaytrace();
-		    inline b3_bool   b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX)
+		    inline b3_bool   b3Intersect(b3_ray *ray,b3_f64 max = DBL_MAX)
 			{
 				ray->Q     = max;
 				ray->shape = b3Intersect(b3GetFirstBBox(),ray);
 
 				return ray->shape != null;
 			}
-			b3_bool          b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX)
+			b3_bool          b3IsObscured(b3_ray *ray,b3_f64 max = DBL_MAX)
 			{
 				ray->Q     = max;
 				ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
@@ -178,10 +178,10 @@ public:
 				return m_Shader;
 			}
 			void             b3SetShading(b3_u32 class_type);
-		    void             b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
-		    void             b3MixLensFlare(b3_ray_info *ray);
+		    void             b3GetBackgroundColor(b3_ray *ray,b3_f64 fx,b3_f64 fy);
+		    void             b3MixLensFlare(b3_ray *ray);
 		    b3_f64           b3ComputeSpotExponent(b3Light *light);
-		    void             b3GetInfiniteColor(b3_ray_info *ray);
+		    void             b3GetInfiniteColor(b3_ray *ray);
 
 			// object methods
 			inline b3Base<b3Item> *b3GetBBoxHead()
@@ -250,7 +250,7 @@ public:
 	static  b3_bool         b3CutTextureName(const char *full_name,char *short_name);
 
 private:
-	        b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+	        b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
 			void            b3ReallocateShader();
 	        void            b3DoRaytrace(b3Display *display,b3_count CPUs);
 	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
@@ -258,70 +258,14 @@ private:
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
 	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
-		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray_info *ray);
-	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray_info *ray);
+		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray);
+	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
 
 	friend class b3Shader;
 	friend class b3RayRow;
 	friend class b3SupersamplingRayRow;
 	friend class b3DistributedRayRow;
 	friend class b3MotionBlurRayRow;
-};
-
-class B3_PLUGIN b3Shader
-{
-protected:
-	b3Scene                *m_Scene;
-	b3Nebular              *m_Nebular;
-	b3_count                m_TraceDepth;
-
-public:
-	                        b3Shader(b3Scene *scene);
-
-	virtual void            b3Prepare();
-	        b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result) = 0;
-
-	inline  b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX)
-	{
-		return m_Scene->b3Intersect(ray,max);
-	}
-
-protected:
-	virtual void            b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth) = 0;
-
-	virtual b3_bool         b3IsPointLightBackground(b3Light *light,b3_ray_info *ray) = 0;
-
-protected:
-	void                    b3ComputeOutputRays(b3_ray_fork *surface);
-};
-
-class B3_PLUGIN b3ShaderPhong : public b3Shader
-{
-public:
-	               b3ShaderPhong(b3Scene *scene);
-	       void    b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth);
-	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
-	inline b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray)
-	{
-		return false;
-	}
-};
-
-class B3_PLUGIN b3ShaderMork : public b3Shader
-{
-	b3_f64 m_ShadowFactor;
-
-public:
-	         b3ShaderMork(b3Scene *scene);
-
-	void     b3Prepare();
-	void     b3ShadeSurface(b3_ray_fork &surface,b3_ray_info *ray,b3_count depth);
-	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
-
-private:
-	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
-	void    b3LightFlare(b3_ray_info *ray);
 };
 
 class B3_PLUGIN b3RayRow : public b3Row

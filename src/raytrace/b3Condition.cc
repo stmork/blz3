@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.23  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.22  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -219,7 +223,7 @@ void b3Condition::b3ComputeBound(b3_stencil_limit *Limit)
 {
 }
 
-b3_bool b3Condition::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3Condition::b3CheckStencil(b3_polar *polar)
 {
 	return true;
 }
@@ -349,7 +353,7 @@ void b3CondRectangle::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondRectangle::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
 {
 	if ((m_Flags & RCF_ACTIVE) == 0)
 	{
@@ -420,7 +424,7 @@ void b3CondCircle::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondCircle::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondCircle::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64 x,y;
 
@@ -483,7 +487,7 @@ void b3CondSegment::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondSegment::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64 x,y,angle,Rad;
 
@@ -608,7 +612,7 @@ b3CondPara::b3CondPara(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondPara::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondPara::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
@@ -641,7 +645,7 @@ b3CondTria::b3CondTria(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondTria::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondTria::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
@@ -734,7 +738,7 @@ void b3CondTexture::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondTexture::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondTexture::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64   fx,fy;
 	b3_coord x,y;
@@ -834,7 +838,7 @@ void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar *polar)
 {
 	b3_coord x,y;
 	b3_f64   fx,fy,xEnd,xPolar;
@@ -938,7 +942,7 @@ void b3CondEllipse::b3ComputeBound(b3_stencil_limit *Limit)
 	}
 }
 
-b3_bool b3CondEllipse::b3CheckStencil(b3_polar_precompute *polar)
+b3_bool b3CondEllipse::b3CheckStencil(b3_polar *polar)
 {
 	b3_f64 x,y,angle,AngleEnd,Rad;
 

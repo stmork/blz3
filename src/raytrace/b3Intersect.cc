@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/05/22 14:17:31  sm
+**	- Merging some basic raytracing structures and gave them some
+**	  self explaining names. Also cleaned up some parameter lists.
+**
 **	Revision 1.39  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.38  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -227,12 +231,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3SimpleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3SimpleShape::b3Intersect(b3_ray *ray, b3_polar *polar)
 {
 	return -1;
 }
 
-b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_f64    Denom,aValue,bValue,lValue,result = -1;
 	b3_vector Dir,Product;
@@ -277,7 +281,7 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return result;
 }
 
-b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_f64     Denom,aValue,bValue,lValue;
 	b3_vector  Dir,Product;
@@ -344,7 +348,7 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return b3CheckStencil(polar) ? lValue : -1;
 }
 
-b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_f64    l1,Discriminant,p,l2;
 	b3_f64    xDiff,yDiff,zDiff;
@@ -457,7 +461,7 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return l2;
 }
 
-b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_line64 BTLine;
 	b3_f64    l1,l2,z,Discriminant,a,p;
@@ -559,7 +563,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return l2;
 }
 
-b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_line64 BTLine;
 	b3_f64    l1,l2,z,Discriminant,a,p;
@@ -662,7 +666,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return l2;
 }
 
-b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_line64  BTLine;
 	b3_f64     l1,l2,z,Discriminant,a,p;
@@ -742,7 +746,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return l2;
 }
 
-b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_line64    BTLine;
 	b3_vector64  BasePoint,EndPoint;
@@ -901,7 +905,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	return l1;
 }
 
-b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_loop   NumOfX,i,k;
 	b3_f64    Val1,Val2,pQuad,dQuad,pdQuad;
@@ -973,9 +977,9 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 #define _TEST
 
 b3_f64 b3TriangleShape::b3IntersectTriangleList (
-	b3_ray                *ray,
-	b3_polar_precompute   *polar,
-	b3_index               TriaField)
+	b3_ray    *ray,
+	b3_polar  *polar,
+	b3_index   TriaField)
 {
 	b3_triangle    *Triangle;
 	b3_index        Index,i,max;
@@ -1065,7 +1069,7 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	return OldValue;
 }
 
-b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
+b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	b3_index     gx,gy,gz,sx,sy,sz,index;
 	b3_f64       start,end,tn,tf,m,result = -1;
@@ -1784,16 +1788,16 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 }
 
 b3Shape *b3Scene::b3Intersect(
-	b3BBox      *BBox,
-	b3_ray_info *ray)
+	b3BBox *BBox,
+	b3_ray *ray)
 {
-	b3Base<b3Item>      *Shapes;
-	b3Base<b3Item>      *BBoxes;
-	b3SimpleShape       *Shape;
-	b3Shape             *ResultShape = null,*aux;
-	b3Item              *item;
-	b3_polar_precompute  polar;
-	b3_f64               Result;
+	b3Base<b3Item> *Shapes;
+	b3Base<b3Item> *BBoxes;
+	b3SimpleShape  *Shape;
+	b3Shape        *ResultShape = null,*aux;
+	b3Item         *item;
+	b3_polar        polar;
+	b3_f64          Result;
 
 	while (BBox != null)
 	{
@@ -1825,7 +1829,7 @@ b3Shape *b3Scene::b3Intersect(
 						ray->bbox   = BBox;
 						ray->Q      = Result;
 
-						*((b3_polar_precompute *)&ray->polar) = polar;
+						*((b3_polar *)&ray->polar) = polar;
 					}
 				}
 				break;
@@ -1850,8 +1854,8 @@ b3Shape *b3Scene::b3Intersect(
 }
 
 b3Shape *b3Scene::b3IsObscured(
-	b3BBox      *BBox,
-	b3_ray_info *ray)
+	b3BBox *BBox,
+	b3_ray *ray)
 {
 	b3Base<b3Item> *Shapes;
 	b3Base<b3Item> *BBoxes;
