@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.66  2004/03/07 12:41:23  sm
+**      - Print shader support.
+**
 **      Revision 1.65  2003/03/04 20:37:37  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -424,11 +427,23 @@ b3RenderContext::b3RenderContext()
 void b3RenderContext::b3Init()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3Init()\n");
-	b3PrintF(B3LOG_DEBUG,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
-	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
-	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
-	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
+	char *extensions = glGetString(GL_EXTENSIONS);
+
+	b3PrintF(B3LOG_FULL,  "b3RenderContext::b3Init()\n");
+	b3PrintF(B3LOG_NORMAL,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
+	b3PrintF(B3LOG_NORMAL,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
+	b3PrintF(B3LOG_NORMAL,"OpenGL version:    %s\n",glGetString(GL_VERSION));
+	b3PrintF(B3LOG_DEBUG, "OpenGL extensions: %s\n",extensions);
+
+	if (strstr(extensions,"GL_ARB_vertex_program") != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"Vertex shader support (nice).\n");
+	}
+
+	if (strstr(extensions,"GL_ARB_fragment_program") != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"Pixel shader support (very fine).\n");
+	}
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
