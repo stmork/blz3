@@ -2648,6 +2648,16 @@ BEGIN
     GROUPBOX        "Static",IDC_STATIC,85,10,120,105
 END
 
+IDD_OBJECT_PREVIEW DIALOG DISCARDABLE  0, 0, 227, 226
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Objektvorschau"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,200,50,14
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,10,10,210,180
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -3165,6 +3175,14 @@ BEGIN
         RIGHTMARGIN, 210
         TOPMARGIN, 7
         BOTTOMMARGIN, 119
+    END
+
+    IDD_OBJECT_PREVIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 219
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -27,7 +27,7 @@ class b3ExampleScene
 public:
 	static b3Scene      *b3CreateNew(const char *filename);
 	static b3Scene      *b3CreateGlobal();
-	static b3Scene      *b3CreateBBox(b3BBox *original);
+	static b3Scene      *b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera = null);
 	static b3Scene      *b3CreateMaterial(b3Base<b3Item> **ptrMatHead);
 
 private:

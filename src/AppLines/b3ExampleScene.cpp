@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/05/11 09:58:25  sm
+**	- Added raytraced quick preview for bject editing.
+**
 **	Revision 1.16  2004/05/06 08:38:33  sm
 **	- Demerged raytracing includes of Lines
-**
+**	
 **	Revision 1.15  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
@@ -254,10 +257,10 @@ b3CameraPart *b3ExampleScene::b3CreateCamera(
 	return camera;
 }
 
-b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
+b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera)
 {
 	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
-	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original);
+	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart *camera;
 	b3_f64        rad;
@@ -272,7 +275,18 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
 	light->m_Distance   = 40.0 * rad;
 
 	b3Consolidate(scene);
-	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene));
+	if (original_camera != null)
+	{
+		b3_f64    xAngle,yAngle;
+
+		original_camera->b3ComputeAngles(xAngle,yAngle);
+		camera = b3CreateCamera(scene,xAngle * 180 / M_PI,yAngle * 180 / M_PI);
+	}
+	else
+	{
+		camera = b3CreateCamera(scene);
+	}
+	scene->b3GetSpecialHead()->b3Append(camera);
 	scene->b3SetCamera(camera);
 
 	return scene;

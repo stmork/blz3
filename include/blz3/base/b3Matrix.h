@@ -626,15 +626,7 @@ public:
 	{
 		b3_f64 Denom;
 
-		if ((Denom =
-			sqrt(
-				Vector1->x * Vector1->x  +
-				Vector1->y * Vector1->y  +
-				Vector1->z * Vector1->z) *
-			sqrt(
-				Vector2->x * Vector2->x  +
-				Vector2->y * Vector2->y  +
-				Vector2->z * Vector2->z)) != 0)
+		if ((Denom = b3Length(Vector1) * b3Length(Vector2)) != 0)
 		{
 			return (
 				Vector1->x * Vector2->x  +
@@ -651,7 +643,6 @@ public:
 		const b3_vector *point2)
 	{
 		b3_vector a,b;
-		b3_f64    denom,result;
 
 		a.x = point1->x - base->x;
 		a.y = point1->y - base->y;
@@ -661,21 +652,7 @@ public:
 		b.y = point2->y - base->y;
 		b.z = point2->z - base->z;
 
-		denom =
-			sqrt(a.x * a.x + a.y * a.y + a.z * a.z) *
-			sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
-		if (denom != 0.0)
-		{
-			result = (
-				a.x * b.x +
-				a.y * b.y +
-				a.z * b.z) / denom;
-		}
-		else
-		{
-			result = 0.0;
-		}
-		return result;
+		return b3AngleOfVectors(&a,&b);
 	}
 
 	static inline b3_vector *b3LinearCombine(

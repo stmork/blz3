@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.67  2004/05/11 09:58:25  sm
+**      - Added raytraced quick preview for bject editing.
+**
 **      Revision 1.66  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -543,6 +546,18 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
 	b3Vector::b3Normalize(&m_Width,width);
 	b3Vector::b3Normalize(&m_Height,height);
+}
+
+void b3CameraPart::b3ComputeAngles(b3_f64 &xAngle,b3_f64 &yAngle)
+{
+	xAngle = atan2 (
+		m_EyePoint.y - m_ViewPoint.y,
+		m_EyePoint.x - m_ViewPoint.x);
+
+	b3_f64 x = m_EyePoint.x - m_ViewPoint.x;
+	b3_f64 y = m_EyePoint.y - m_ViewPoint.y;
+	b3_f64 z = m_EyePoint.z - m_ViewPoint.z;
+	yAngle = atan2(z,sqrt(x * x + y * y));
 }
 
 void b3CameraPart::b3Overview(

@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "AppObjectView.h"
 #include "MainFrm.h"
+#include "DlgObjectPreview.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
 
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/05/11 09:58:25  sm
+**	- Added raytraced quick preview for bject editing.
+**
 **	Revision 1.21  2003/07/20 07:48:30  sm
 **	- Added legend to object printing
-**
+**	
 **	Revision 1.20  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
@@ -130,6 +134,8 @@ BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
+	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -449,4 +455,18 @@ void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		}
 		GetDocument()->b3ComputeBounds();
 	}
+}
+
+void CAppObjectView::OnRaytrace() 
+{
+	// TODO: Add your command handler code here
+	CDlgObjectPreview preview(m_BBox,m_Camera);
+
+	preview.DoModal();
+}
+
+void CAppObjectView::OnUpdateRaytrace(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable();
 }

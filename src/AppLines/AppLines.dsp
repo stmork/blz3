@@ -449,6 +449,10 @@ SOURCE=.\DlgObjectCopy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgObjectPreview.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgProfileBevelSpline.cpp
 # End Source File
 # Begin Source File
@@ -874,6 +878,10 @@ SOURCE=.\DlgNewObject.h
 # Begin Source File
 
 SOURCE=.\DlgObjectCopy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgObjectPreview.h
 # End Source File
 # Begin Source File
 

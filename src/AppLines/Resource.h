@@ -17,6 +17,7 @@
 #define IDR_TOOLBAR_OBJECT              121
 #define IDR_TOOLBAR_VIEW                122
 #define IDD_COPY_PROPERTIES             123
+#define IDD_OBJECT_PREVIEW              124
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -866,7 +867,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        124
+#define _APS_NEXT_RESOURCE_VALUE        125
 #define _APS_NEXT_COMMAND_VALUE         10124
 #define _APS_NEXT_CONTROL_VALUE         32393
 #define _APS_NEXT_SYMED_VALUE           60186

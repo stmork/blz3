@@ -40,11 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/05/11 09:58:25  sm
+**	- Added raytraced quick preview for bject editing.
+**
 **	Revision 1.30  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.29  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -206,13 +209,13 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL, OnUpdateEditMaterial)
 	ON_COMMAND(ID_EDIT_BUMP, OnEditBump)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP, OnUpdateEditBump)
+	ON_COMMAND(ID_COPY_PROPERTIES, OnCopyProperties)
+	ON_UPDATE_COMMAND_UI(ID_COPY_PROPERTIES, OnUpdateCopyProperties)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_COPY_PROPERTIES, OnCopyProperties)
-	ON_UPDATE_COMMAND_UI(ID_COPY_PROPERTIES, OnUpdateCopyProperties)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
