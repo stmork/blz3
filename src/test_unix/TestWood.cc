@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2004/04/09 11:09:01  sm
+**  - Removed any display reference from sampler
+**
 **  Revision 1.4  2004/04/09 08:49:16  sm
 **  - Splitted up sampler for Lines use and capable for
 **    using other metherials.
@@ -60,11 +63,16 @@
 class b3WoodSampler : public b3MaterialSampler
 {
 public:
-	b3WoodSampler(b3Display *display) : b3MaterialSampler(display)
+	b3WoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
 	{
 		// Init material
 		m_Material = new b3MatWood(WOOD);
 		m_Material->b3Prepare();
+	}
+	
+	virtual ~b3WoodSampler()
+	{
+		delete m_Material;
 	}
 };
 
@@ -75,14 +83,22 @@ int main(int argc,char *argv[])
 	b3RaytracingItems::b3Register();
 	try
 	{
+		b3Tx tx;
+		b3_res xMax,yMax;
+		
 		// Create display
 		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
-		b3WoodSampler sampler(display);
+		display->b3GetRes(xMax,yMax);
+		
+		tx.b3AllocTx(xMax,yMax,24);
+		
+		b3WoodSampler sampler(&tx);
 
 		sampler.b3Sample();
 
 		// We want to see the computed picture until we make input
 		// into the display window.
+		display->b3PutTx(&tx);
 		display->b3Wait();
 
 		// Delete Display

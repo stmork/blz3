@@ -31,25 +31,19 @@ struct b3MaterialSampleInfo : public b3SampleInfo
 class b3MaterialSampler : public b3Sampler
 {
 protected:
-	b3Material *m_Material;
-	b3Display  *m_Display;
-	b3Tx        m_Tx;
+	b3Tx       *m_Tx;
 
 public:
-	b3MaterialSampler(b3Display *display)
+	b3Material *m_Material;
+
+public:
+	b3MaterialSampler(b3Tx *tx)
 	{
-		// Init display
-		m_Display = display;
-		m_Display->b3GetRes(m_xMax,m_yMax);
-		
 		// Init texture
-		m_Tx.b3AllocTx(m_xMax,m_yMax,24);
-		m_Data = (b3_pkd_color *)m_Tx.b3GetData();
-	}
-	
-	virtual ~b3MaterialSampler()
-	{
-		delete m_Material;
+		m_Tx = tx;
+		m_xMax = m_Tx->xSize;
+		m_yMax = m_Tx->ySize;
+		m_Data = (b3_pkd_color *)m_Tx->b3GetData();
 	}
 	
 protected:
@@ -81,7 +75,6 @@ protected:
 		b3_coord      x,y;
 		b3_polar      polar;
 		b3Color       ambient,diffuse,specular;
-		b3Tx          tx;
 		b3_f64        fy;
 		b3_pkd_color *data = info->m_Data;
 
@@ -99,11 +92,6 @@ protected:
 				*data++ = diffuse;
 			}
 		}
-	}
-
-	void b3SampleDeinit()
-	{
-		m_Display->b3PutTx(&m_Tx);
 	}
 };
 

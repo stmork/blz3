@@ -44,7 +44,6 @@ public:
 protected:
 	virtual b3SampleInfo * b3SampleInit(b3_count CPUs) = 0;
 	virtual void           b3SampleTask(b3SampleInfo *info) = 0;
-	virtual void           b3SampleDeinit() = 0;
 
 private:
 	static b3_u32 b3SampleThread(void *ptr);

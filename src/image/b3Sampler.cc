@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2004/04/09 11:09:01  sm
+**  - Removed any display reference from sampler
+**
 **  Revision 1.1  2004/04/09 08:49:16  sm
 **  - Splitted up sampler for Lines use and capable for
 **    using other metherials.
@@ -80,8 +83,6 @@ void b3Sampler::b3Sample()
 	span.b3Print();
 
 	delete [] info;
-
-	b3SampleDeinit();
 }
 	
 b3_u32 b3Sampler::b3SampleThread(void *ptr)
