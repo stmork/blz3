@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/12/30 22:52:35  sm
+**      - Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **      Revision 1.3  2001/12/30 18:24:35  sm
 **      - Added missing b3AnimControl class
 **      - Some minor bug fixes done:

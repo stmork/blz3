@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2001/12/30 22:52:35  sm
+**	- Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **	Revision 1.29  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -40,7 +43,7 @@
 **	  o b3Scene::b3SetCamera() calls added which now puts the
 **	    selected camera in front of the b3Special list so that Lines III
 **	    select it when reloading.
-**
+**	
 **	Revision 1.28  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -506,7 +509,7 @@ b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 	return null;
 }
 
-void b3Scene::b3SetCamera(b3CameraPart *camera)
+void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 {
 	if (camera != null)
 	{
@@ -514,8 +517,11 @@ void b3Scene::b3SetCamera(b3CameraPart *camera)
 		m_ViewPoint = camera->m_ViewPoint;
 		m_Width     = camera->m_Width;
 		m_Height    = camera->m_Height;
-		b3GetSpecialHead()->b3Remove(camera);
-		b3GetSpecialHead()->b3First(camera);
+		if (reorder)
+		{
+			b3GetSpecialHead()->b3Remove(camera);
+			b3GetSpecialHead()->b3First(camera);
+		}
 	}
 	m_ActualCamera = camera;
 }

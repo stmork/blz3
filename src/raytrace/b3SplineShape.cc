@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2001/12/30 22:52:35  sm
+**      - Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **      Revision 1.19  2001/12/30 16:54:15  sm
 **      - Inserted safe b3Write() into Lines III
 **      - Fixed b3World saving: b3StoreXXX() methods must ensure

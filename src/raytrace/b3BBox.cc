@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2001/12/30 22:52:35  sm
+**	- Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **	Revision 1.27  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -40,7 +43,7 @@
 **	- Extended b3Shape format with shape activation flag. Nice: The
 **	  new data structures don't confuse the old Lines II/Blizzard II and
 **	  even stores these new values.
-**
+**	
 **	Revision 1.26  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes

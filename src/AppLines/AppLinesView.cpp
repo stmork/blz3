@@ -39,6 +39,9 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2001/12/30 22:52:35  sm
+**	- Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **	Revision 1.29  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -46,7 +49,7 @@
 **	  o b3Scene::b3SetCamera() calls added which now puts the
 **	    selected camera in front of the b3Special list so that Lines III
 **	    select it when reloading.
-**
+**	
 **	Revision 1.28  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -994,12 +997,17 @@ void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI)
 void CAppLinesView::OnCamSelect() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame *main = CB3GetMainFrame();
+	CMainFrame   *main = CB3GetMainFrame();
+	b3CameraPart *new_camera;
 
-	m_Camera = main->b3GetSelectedCamera();
-	m_Scene->b3SetCamera(m_Camera);
-	GetDocument()->SetModifiedFlag();
-	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
+	new_camera = main->b3GetSelectedCamera();
+	if (m_Camera != new_camera)
+	{
+		m_Camera = new_camera;
+		m_Scene->b3SetCamera(m_Camera,true);
+		GetDocument()->SetModifiedFlag();
+		OnUpdate(this,B3_UPDATE_CAMERA,NULL);
+	}
 }
 
 void CAppLinesView::OnLightSelect() 
@@ -1028,7 +1036,7 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
 		main->b3UpdateModellerInfo(GetDocument());
-		m_Scene->b3SetCamera(m_Camera);
+		m_Scene->b3SetCamera(m_Camera,true);
 	}
 	else
 	{
@@ -1085,7 +1093,7 @@ void CAppLinesView::OnCameraNew()
 		camera->m_Flags     = CAMERA_ACTIVE;
 		strcpy (camera->b3GetName(),dlg.m_NewName);
 		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
-		m_Scene->b3SetCamera(m_Camera);
+		m_Scene->b3SetCamera(m_Camera,true);
 
 		GetDocument()->SetModifiedFlag();
 		main = CB3GetMainFrame();
@@ -1115,7 +1123,7 @@ void CAppLinesView::OnCameraDelete()
 
 		GetDocument()->SetModifiedFlag();
 		main->b3UpdateCameraBox(m_Scene,m_Camera = select);
-		m_Scene->b3SetCamera(m_Camera);
+		m_Scene->b3SetCamera(m_Camera,true);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
 }
@@ -1134,7 +1142,7 @@ void CAppLinesView::OnCameraProperties()
 
 		GetDocument()->SetModifiedFlag();
 		m_Camera = dlg.m_Camera;
-		m_Scene->b3SetCamera(m_Camera);
+		m_Scene->b3SetCamera(m_Camera,true);
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}

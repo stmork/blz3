@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/12/30 22:52:35  sm
+**	- Made b3Scene::b3SetCamera() compatible to earlier versions.
+**
 **	Revision 1.15  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.14  2001/12/08 21:37:38  sm
 **	- Added "No Gfx" support
 **	
@@ -182,7 +185,6 @@ int main(int argc,char *argv[])
 								b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 									camera->m_CameraName);
 								scene->b3SetCamera(camera);
-
 								scene->b3Raytrace(display);
 							}
 							else
