@@ -92,6 +92,7 @@
 #define IDD_CSGMODE                     192
 #define IDD_CREATE_MATERIAL             193
 #define IDD_CREATE_STENCIL              194
+#define IDD_TORUS                       195
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002

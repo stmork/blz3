@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/02/28 16:58:46  sm
+**      - Added torus dialogs.
+**      - Fixed material and stencil handling when not activating
+**        sheet page.
+**      - Further cleanup of edit dialogs done.
+**      - Corrected shading of CSG cylinder and CSG cone (added
+**        shaded top and bottom plate).
+**
 **      Revision 1.25  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -340,8 +348,8 @@ char *b3Light::b3GetName()
 }
 
 b3_bool b3Light::b3Illuminate(
-	b3Scene         *scene,
-	b3_illumination *surface)
+	b3Scene     *scene,
+	b3_ray_fork *surface)
 {
 	if (!m_LightActive)
 	{
@@ -353,8 +361,8 @@ b3_bool b3Light::b3Illuminate(
 }
 
 inline b3_bool b3Light::b3PointIllumination(
-	b3Scene         *scene,
-	b3_illumination *surface)
+	b3Scene     *scene,
+	b3_ray_fork *surface)
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -418,8 +426,8 @@ inline b3_bool b3Light::b3PointIllumination(
 }
 
 inline b3_bool b3Light::b3AreaIllumination (
-	b3Scene         *scene,
-	b3_illumination *surface)
+	b3Scene     *scene,
+	b3_ray_fork *surface)
 {
 	b3Shape       *Edge1,*Edge2,*LastEdge = null;
 	b3_light_info  Jit;
@@ -550,11 +558,11 @@ inline b3_bool b3Light::b3AreaIllumination (
 }
 
 inline b3Shape *b3Light::b3CheckSinglePoint (
-	b3Scene         *scene,                                
-	b3_illumination *surface,
-	b3_light_info   *Jit,
-	b3_coord         x,
-	b3_coord         y)
+	b3Scene       *scene,                                
+	b3_ray_fork   *surface,
+	b3_light_info *Jit,
+	b3_coord       x,
+	b3_coord       y)
 {
 	b3_f64   jx,jy,UpperBound;
 

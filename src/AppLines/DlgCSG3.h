@@ -24,7 +24,6 @@
 // DlgShape3.h : header file
 //
 
-#include "AppLines.h"
 #include "DlgCSG1.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,12 +38,13 @@ protected:
 
 public:
 	CDlgCSG3(CWnd* pParent = NULL);   // standard constructor
-	virtual void b3SetDirMode(int dirmode);
-	static  int b3Edit(b3Item *item,b3_bool create=true);
+
+	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	virtual void b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCSG3)
-	enum { IDD = IDD_CSG3 };
+	enum { IDD = IDD_SHAPE3 };
 	CB3FloatEdit	m_xDir2Ctrl;
 	CB3FloatEdit	m_yDir2Ctrl;
 	CB3FloatEdit	m_zDir2Ctrl;
@@ -66,13 +66,13 @@ public:
 // Implementation
 protected:
 	virtual void        b3Init();
+	virtual void        b3SetDirMode(int dirmode);
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCSG3)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	afx_msg void OnChangedDir2();
 	afx_msg void OnChangedLen2();
 	afx_msg void OnChangedDir3();

@@ -33,11 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2002/02/28 16:58:46  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.24  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.23  2002/02/19 16:26:49  sm
 **	- Further CSG interval computing cleanup done.
 **	
@@ -1683,7 +1691,7 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 	b3_line64           lines[B3_MAX_CSG_SHAPES_PER_BBOX]; // This is a hack! To be fixed!
 	b3_shape_intervals  local;
 	b3_bbox_intervals   intervals[2];
-	b3_bbox_intervals  *result = null;
+	b3_bbox_intervals  *result = intervals;
 	b3_csg_point       *point;
 	b3_index            t = 0,index = 0;
 
@@ -1754,21 +1762,8 @@ b3Shape *b3Scene::b3Intersect(
 						ResultShape = Shape;
 						ray->bbox   = BBox;
 						ray->Q      = Result;
-//						ray->polar = polar;
 
-/*
-						b3_polar_precompute test;
-
-						test.object_polar = polar.object_polar;
-						test.polar        = polar.polar;
-						test.normal_index = polar.normal_index;
-*/
 						*((b3_polar_precompute *)&ray->polar) = polar;
-/*
-						ray->polar.object_polar  = polar.object_polar;
-						ray->polar.polar         = polar.polar;
-						ray->polar.normal_index  = polar.normal_index;
-*/
 					}
 				}
 				break;

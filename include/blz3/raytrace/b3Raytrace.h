@@ -872,7 +872,7 @@ protected:
 	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
 };
 
-class b3RenderShapeContext : public b3RenderContext
+class b3ShapeRenderContext : public b3RenderContext
 {
 	b3_count   m_SubDiv;
 	b3_f64     m_Sin[B3_MAX_RENDER_SUBDIV + 1];
@@ -886,7 +886,7 @@ class b3RenderShapeContext : public b3RenderContext
 #endif
 
 public:
-	           b3RenderShapeContext(b3_count subdiv = 16);
+	           b3ShapeRenderContext(b3_count subdiv = 16);
 	void       b3InitSubdiv(b3_count subdiv);
 	b3_count   b3GetSubdiv();
 	b3_f64    *b3GetCosTable();
@@ -1198,10 +1198,10 @@ class b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
 	b3_s32            m_lSize;
-	b3_f32            m_aQuad,m_bQuad;    // squared lengths of aRad, bRad
+	b3_f64            m_aQuad,m_bQuad;    // squared lengths of aRad, bRad
 
 public:
-	b3_f32            m_aRad, m_bRad;     // radiuses of torus
+	b3_f64            m_aRad, m_bRad;     // radiuses of torus
 
 public:
 	B3_ITEM_INIT(b3Torus);
@@ -1439,7 +1439,7 @@ enum b3_csg_index
 // structures for CSG use
 struct b3_csg_point
 {
-	b3_f32        m_Q;          // distance to intersection points
+	b3_f64        m_Q;          // distance to intersection points
 	b3CSGShape   *m_Shape;      // shape which delivers the intersection points
 	b3_line64    *m_BTLine;
 	b3_csg_index  m_Index;      // surface index
@@ -1483,7 +1483,7 @@ public:
 // CSG_SPHERE
 class b3CSGSphere : public b3CSGShape
 {
-	b3_f32            m_QuadRadius;       // squared radius
+	b3_f64            m_QuadRadius;       // squared radius
 
 public:
 	b3_vector         m_Base;             // mid of sphere
@@ -1530,7 +1530,6 @@ public:
 	B3_ITEM_LOAD(b3CSGCylinder);
 
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void     b3AllocVertices(b3RenderContext *context);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
@@ -1546,7 +1545,6 @@ public:
 	B3_ITEM_LOAD(b3CSGCone);
 
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void     b3AllocVertices(b3RenderContext *context);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
@@ -1594,8 +1592,10 @@ public:
 // CSG_TORUS
 class b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
 {
-	b3_f32             m_aRad, m_bRad;       // radiuses of torus
-	b3_f32             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
+	b3_f64             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
+
+public:
+	b3_f64             m_aRad, m_bRad;       // radiuses of torus
 
 public:
 	B3_ITEM_INIT(b3CSGTorus);
@@ -1743,7 +1743,7 @@ struct b3_ray_info : public b3_ray
 	b3BBox      *bbox;
 };
 
-struct b3_illumination : public b3_surface
+struct b3_ray_fork : public b3_surface
 {
 	b3_ray_info *incoming;
 	b3_ray_info  refl_ray;
@@ -1795,15 +1795,15 @@ public:
 	B3_ITEM_LOAD(b3Light);
 
 	void     b3Write();
-	b3_bool  b3Illuminate(b3Scene *scene,b3_illumination *surface);
+	b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface);
 	b3_bool  b3Prepare();
 	char    *b3GetName();
 
 private:
 	void         b3Init();
-	b3_bool      b3PointIllumination(b3Scene *scene,b3_illumination *surface);
-	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_illumination *surface);
-	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
+	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface);
+	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_ray_fork *surface);
+	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_ray_fork *surface,
 		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
@@ -2327,14 +2327,14 @@ public:
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 			b3_bool         b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
 	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
 
 protected:
-		    b3_bool         b3ComputeOutputRays(b3_illumination *surface);
+		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
 		    void            b3GetInfiniteColor(b3_ray_info *ray);
 
 private:
@@ -2354,7 +2354,7 @@ public:
 	B3_ITEM_LOAD(b3ScenePhong);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
 	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 };
 
@@ -2365,7 +2365,7 @@ public:
 	B3_ITEM_LOAD(b3SceneMork);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);

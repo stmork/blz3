@@ -38,8 +38,9 @@ protected:
 
 public:
 	CDlgShape3(CWnd* pParent = NULL);   // standard constructor
-	virtual void b3SetDirMode(int dirmode);
+
 	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	virtual void b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgShape3)
@@ -61,13 +62,13 @@ public:
 // Implementation
 protected:
 	virtual void        b3Init();
+	virtual void        b3SetDirMode(int dirmode);
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgShape3)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	afx_msg void OnChangedDir3();
 	afx_msg void OnChangedLen3();
 	//}}AFX_MSG

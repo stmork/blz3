@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/02/28 16:58:45  sm
+**      - Added torus dialogs.
+**      - Fixed material and stencil handling when not activating
+**        sheet page.
+**      - Further cleanup of edit dialogs done.
+**      - Corrected shading of CSG cylinder and CSG cone (added
+**        shaded top and bottom plate).
+**
 **      Revision 1.12  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -108,35 +116,65 @@ void b3CSGCone::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	SinCosSteps = context->b3GetSubdiv();
 	Cos         = context->b3GetCosTable();
 	Sin         = context->b3GetSinTable();
-	vertCount   = SinCosSteps + SinCosSteps + 6;
-}
-
-void b3CSGCone::b3AllocVertices(b3RenderContext *ctx)
-{
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
-
-	b3RenderObject::b3AllocVertices(context);
-#ifdef BLZ3_USE_OPENGL
-	GridsCyl  = context->b3GetCylinderIndices();
-	PolysCyl  = context->b3GetCylinderPolygons();
-	GridsCone = context->b3GetConeIndices();
-	PolysCone = context->b3GetConePolygons();
-#endif
+	vertCount   = SinCosSteps * 2 + 2;
+	gridCount   = SinCosSteps * 2;
+	polyCount   = SinCosSteps * 2;
 }
 
 void b3CSGCone::b3ComputeVertices()
 {
-	b3ComputeConeVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
+#ifdef BLZ3_USE_OPENGL
+	b3_index   i;
+	b3_vector *Vector;
+
+	Vector = (b3_vector *)glVertices;
+	for (i = 0;i < SinCosSteps;i++)
+	{
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[i]);
+		Vector[i + SinCosSteps] = Vector[i];
+	}
+	Vector += SinCosSteps;
+	Vector += SinCosSteps;
+
+	*Vector++ = m_Base;
+	b3Vector::b3Add(&m_Base,&m_Dir3,Vector);
+#endif
 }
 
 void b3CSGCone::b3ComputeIndices()
 {
-	b3ComputeConeIndices();
+#ifdef BLZ3_USE_OPENGL
+	GLushort *gPtr    = glGrids;
+	GLushort *pPtr    = glPolygons;
+	b3_index   offset = SinCosSteps * 2;
+	b3_index   i;
+
+	for (i = 0;i < SinCosSteps;i++)
+	{
+		// bottom line
+		*gPtr++ =  i;
+		*gPtr++ = (i + 1) % SinCosSteps;
+
+		// up line
+		*gPtr++ = i;
+		*gPtr++ = i + offset + 1;
+
+		// bottom face
+		*pPtr++ =  i;
+		*pPtr++ = (i + 1) % SinCosSteps;
+		*pPtr++ = offset;
+
+		// cylinder face lower left
+		*pPtr++ = SinCosSteps +  i;
+		*pPtr++ = SinCosSteps + (i + 1) % SinCosSteps;
+		*pPtr++ = offset + 1;
+	}
+#endif
 }
 
 void b3CSGCone::b3InverseMap(b3_ray *ray,b3_csg_point *point)

@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2002/02/28 16:58:46  sm
+**      - Added torus dialogs.
+**      - Fixed material and stencil handling when not activating
+**        sheet page.
+**      - Further cleanup of edit dialogs done.
+**      - Corrected shading of CSG cylinder and CSG cone (added
+**        shaded top and bottom plate).
+**
 **      Revision 1.28  2002/02/27 20:14:52  sm
 **      - Added stencil creation for creating simple shapes.
 **      - Fixed material creation.
@@ -256,7 +264,7 @@ static GLushort box_polygons[] =
 **                                                                      **
 *************************************************************************/
 
-b3RenderShapeContext::b3RenderShapeContext(b3_count new_subdiv)
+b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
 {
 #ifdef BLZ3_USE_OPENGL
 	m_CylinderIndices  = null;
@@ -268,7 +276,7 @@ b3RenderShapeContext::b3RenderShapeContext(b3_count new_subdiv)
 	b3InitSubdiv(new_subdiv);
 }
 
-void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
+void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 {
 	b3_f64   aux;
 	b3_index i;
@@ -373,22 +381,22 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 #endif
 }
 
-b3_count b3RenderShapeContext::b3GetSubdiv()
+b3_count b3ShapeRenderContext::b3GetSubdiv()
 {
 	return m_SubDiv;
 }
 
-b3_f64 *b3RenderShapeContext::b3GetSinTable()
+b3_f64 *b3ShapeRenderContext::b3GetSinTable()
 {
 	return m_Sin;
 }
 
-b3_f64 *b3RenderShapeContext::b3GetCosTable()
+b3_f64 *b3ShapeRenderContext::b3GetCosTable()
 {
 	return m_Cos;
 }
 
-b3_vector *b3RenderShapeContext::b3GetSplineAux()
+b3_vector *b3ShapeRenderContext::b3GetSplineAux()
 {
 	b3_count factor;
 
@@ -405,22 +413,22 @@ b3_vector *b3RenderShapeContext::b3GetSplineAux()
 }
 
 #ifdef BLZ3_USE_OPENGL
-GLushort *b3RenderShapeContext::b3GetCylinderIndices()
+GLushort *b3ShapeRenderContext::b3GetCylinderIndices()
 {
 	return m_CylinderIndices;
 }
 
-GLushort *b3RenderShapeContext::b3GetCylinderPolygons()
+GLushort *b3ShapeRenderContext::b3GetCylinderPolygons()
 {
 	return m_CylinderPolygons;
 }
 
-GLushort *b3RenderShapeContext::b3GetConeIndices()
+GLushort *b3ShapeRenderContext::b3GetConeIndices()
 {
 	return m_ConeIndices;
 }
 
-GLushort *b3RenderShapeContext::b3GetConePolygons()
+GLushort *b3ShapeRenderContext::b3GetConePolygons()
 {
 	return m_ConePolygons;
 }
@@ -429,7 +437,7 @@ GLushort *b3RenderShapeContext::b3GetConePolygons()
 
 /*************************************************************************
 **                                                                      **
-**                        Implementation                                **
+**                        b3ShapeRenderObject Implementation            **
 **                                                                      **
 *************************************************************************/
 
@@ -526,7 +534,7 @@ void b3ShapeRenderObject::b3GetGridColor(b3_color *color)
 
 /*************************************************************************
 **                                                                      **
-**                        Implementation                                **
+**                        Searching for equal indices                   **
 **                                                                      **
 *************************************************************************/
 
@@ -568,6 +576,12 @@ void b3ShapeRenderObject::b3CorrectIndices()
 	}
 #endif
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Sphere computation                            **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3ComputeSphereVertices(
 	b3_vector   &Base,
@@ -627,6 +641,12 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 	*/
 #endif
  }
+
+/*************************************************************************
+**                                                                      **
+**                        Cylinder computation                          **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Base,
@@ -739,6 +759,12 @@ void b3ShapeRenderObject::b3ComputeCylinderIndices()
 	glPolyCount  = Overhead * 2;
 #endif
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Cone computation                              **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3ComputeConeVertices(
 	b3_vector   &Base,
@@ -916,6 +942,12 @@ void b3ShapeRenderObject::b3ComputeConeIndices()
 	}
 #endif
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Ellipsoid computation                         **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 	b3_vector   &Base,
@@ -1144,6 +1176,12 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 #endif
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Box computation                               **
+**                                                                      **
+*************************************************************************/
+
 void b3ShapeRenderObject::b3ComputeBoxVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
@@ -1203,6 +1241,12 @@ void b3ShapeRenderObject::b3ComputeBoxIndices()
 	glPolygons = box_polygons;
 #endif
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Torus computation                             **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3ComputeTorusVertices(
 	b3_vector   &Base,

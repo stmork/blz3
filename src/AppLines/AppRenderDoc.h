@@ -40,7 +40,7 @@ public:
 	LPARAM                m_FirstVisible;
 	LPARAM                m_Selected;
 	b3ModellerInfo       *m_Info;
-	b3RenderShapeContext  m_Context;
+	b3ShapeRenderContext  m_Context;
 	b3Fulcrum             m_Fulcrum;
 	b3_vector             m_Lower;
 	b3_vector             m_Upper;

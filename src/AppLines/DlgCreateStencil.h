@@ -41,8 +41,11 @@ class CDlgCreateStencil : public CPropertyPage
 public:
 	b3Shape         *m_Shape;
 	b3CondRectangle *m_Stencil;
-	CDlgCreateStencil();
-	~CDlgCreateStencil();
+
+public:
+	              CDlgCreateStencil();
+	             ~CDlgCreateStencil();
+	void          b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCreateStencil)
@@ -74,7 +77,6 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateStencil)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	afx_msg void OnUnitChanged();
 	afx_msg void OnBoundChanged();
 	//}}AFX_MSG

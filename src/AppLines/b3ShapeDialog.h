@@ -41,11 +41,14 @@ class CB3ShapeDialog : public CPropertyPage
 public:
 	b3ShapeRenderObject *m_Shape;
 	b3_bool              m_Creation;
-	CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
+
+public:
+	     CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
+
+	virtual void b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CB3ShapeDialog)
-	int		m_DirMode;
 	//}}AFX_DATA
 
 
@@ -60,15 +63,10 @@ public:
 protected:
 	static  int         b3Edit(CB3ShapeDialog *page,b3Item *item,b3_bool create);
 	virtual void        b3Init();
-	virtual void        b3SetDirMode(int dirmode);
 	virtual const char *b3GetSection();
-	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ShapeDialog)
-	afx_msg void OnDirModeChanged();
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

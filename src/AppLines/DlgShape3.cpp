@@ -32,11 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.3  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -158,10 +166,9 @@ void CDlgShape3::OnChangedLen3()
 	m_Dir3.b3UpdateLen(m_DirMode);
 }
 
-void CDlgShape3::OnOK() 
+void CDlgShape3::b3PostProcess() 
 {
-	// TODO: Add extra validation here
-	CDlgShape2::OnOK();
+	CDlgShape2::b3PostProcess();
 	if (m_Creation)
 	{
 		m_Dir3.b3Write(b3GetSection() + CString(".dir3"));

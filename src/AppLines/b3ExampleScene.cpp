@@ -35,11 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.7  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.6  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -76,8 +84,8 @@
 
 inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
 {
-	b3RenderShapeContext context;
-	b3_vector       lower,upper;
+	b3ShapeRenderContext context;
+	b3_vector            lower,upper;
 
 	scene->b3AllocVertices(&context);
 	scene->b3ComputeBounds(&lower,&upper);

@@ -36,8 +36,12 @@ public:
 	b3CSGShape *m_Shape;
 	b3_bool     m_Creation;
 	const char *m_Section;
-	CDlgCSGMode();
-	~CDlgCSGMode();
+
+public:
+	      CDlgCSGMode();
+	     ~CDlgCSGMode();
+	void  b3PostProcess();
+	void  b3Init();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCSGMode)
@@ -59,7 +63,6 @@ protected:
 	//{{AFX_MSG(CDlgCSGMode)
 	afx_msg void OnCSGModeChanged();
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

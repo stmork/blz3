@@ -31,6 +31,14 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/02/28 16:58:46  sm
+**      - Added torus dialogs.
+**      - Fixed material and stencil handling when not activating
+**        sheet page.
+**      - Further cleanup of edit dialogs done.
+**      - Corrected shading of CSG cylinder and CSG cone (added
+**        shaded top and bottom plate).
+**
 **      Revision 1.12  2002/02/27 20:14:52  sm
 **      - Added stencil creation for creating simple shapes.
 **      - Fixed material creation.
@@ -115,7 +123,7 @@ void b3Ellipsoid::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	SinCosSteps = context->b3GetSubdiv();
 	Cos         = context->b3GetCosTable();

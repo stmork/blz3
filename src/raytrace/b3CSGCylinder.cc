@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/02/28 16:58:46  sm
+**      - Added torus dialogs.
+**      - Fixed material and stencil handling when not activating
+**        sheet page.
+**      - Further cleanup of edit dialogs done.
+**      - Corrected shading of CSG cylinder and CSG cone (added
+**        shaded top and bottom plate).
+**
 **      Revision 1.12  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -108,33 +116,88 @@ void b3CSGCylinder::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	SinCosSteps = context->b3GetSubdiv();
 	Cos         = context->b3GetCosTable();
 	Sin         = context->b3GetSinTable();
-	vertCount   = SinCosSteps + SinCosSteps + 6;
-}
-
-void b3CSGCylinder::b3AllocVertices(b3RenderContext *ctx)
-{
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
-
-	b3RenderObject::b3AllocVertices(context);
-#ifdef BLZ3_USE_OPENGL
-	glGrids    = context->b3GetCylinderIndices();
-	glPolygons = context->b3GetCylinderPolygons();
-#endif
+	vertCount   = SinCosSteps * 4 + 2;
+	gridCount   = SinCosSteps * 3;
+	polyCount   = SinCosSteps * 4;
 }
 
 void b3CSGCylinder::b3ComputeVertices()
 {
-	b3ComputeCylinderVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
+#ifdef BLZ3_USE_OPENGL
+	b3_index   i,offset = SinCosSteps * 2;
+	b3_vector *Vector;
+
+	Vector = (b3_vector *)glVertices;
+	for (i = 0;i < SinCosSteps;i++)
+	{
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],Vector);
+		b3Vector::b3Add(&Vector[0],&m_Dir3,&Vector[1]);
+		Vector += 2;
+	}
+
+	// Create copy
+	Vector = (b3_vector *)glVertices;
+	for (i = 0;i < offset;i++)
+	{
+		Vector[i + offset] = Vector[i];
+	}
+	Vector += offset;
+	Vector += offset;
+
+	*Vector++ = m_Base;
+	b3Vector::b3Add(&m_Base,&m_Dir3,Vector);
+#endif
 }
 
 void b3CSGCylinder::b3ComputeIndices()
 {
-	b3ComputeCylinderIndices();
+#ifdef BLZ3_USE_OPENGL
+	GLushort *gPtr    = glGrids;
+	GLushort *pPtr    = glPolygons;
+	b3_index   offset = SinCosSteps * 2;
+	b3_index   mid    = SinCosSteps * 4;
+	b3_index   i;
+
+	for (i = 0;i < offset;i+=2)
+	{
+		// bottom line
+		*gPtr++ =  i;
+		*gPtr++ = (i + 2) % offset;
+
+		// up line
+		*gPtr++ = i;
+		*gPtr++ = i + 1;
+
+		// top line
+		*gPtr++ =  i + 1;
+		*gPtr++ = (i + 3) % offset;
+
+		// bottom face
+		*pPtr++ = offset +  i;
+		*pPtr++ = offset + (i + 2) % offset;
+		*pPtr++ = mid;
+
+		// cylinder face lower left
+		*pPtr++ =  i;
+		*pPtr++ = (i + 2) % offset;
+		*pPtr++ =  i + 1;
+
+		// cylinder face upper right
+		*pPtr++ = (i + 3) % offset;
+		*pPtr++ =  i + 1;
+		*pPtr++ = (i + 2) % offset;
+
+		// top face
+		*pPtr++ = offset +  i + 1;
+		*pPtr++ = offset + (i + 3) % offset;
+		*pPtr++ = mid + 1;
+	}
+#endif
 }
 
 void b3CSGCylinder::b3InverseMap(b3_ray *ray,b3_csg_point *point)

@@ -44,8 +44,11 @@ class CDlgCreateMaterial : public CPropertyPage
 // Construction
 public:
 	b3Material   *m_Material;
-	CDlgCreateMaterial();
-	~CDlgCreateMaterial();
+
+public:
+	              CDlgCreateMaterial();
+	             ~CDlgCreateMaterial();
+	void          b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCreateMaterial)
@@ -79,14 +82,9 @@ protected:
 	afx_msg void OnChangeDiffuse();
 	afx_msg void OnChangeSpecular();
 	afx_msg void OnChangeTexturePath();
-	afx_msg void OnReallyCreate();
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	afx_msg void OnUseTexture();
-	afx_msg void OnKillfocusReflectance();
-	afx_msg void OnKillfocusRefractance();
-	afx_msg void OnKillfocusIndexOfRefraction();
-	afx_msg void OnKillfocusSpecExponent();
+	afx_msg void OnSurfaceValuesChanged();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

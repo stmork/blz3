@@ -33,11 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.3  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.2  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -56,7 +64,7 @@
 *************************************************************************/
 
 CDlgCSG1::CDlgCSG1(CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(CDlgCSG1::IDD, pParent)
+	: CB3SpanningShapeDialog(CDlgCSG1::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgCSG1)
 		// NOTE: the ClassWizard will add member initialization here
@@ -64,14 +72,14 @@ CDlgCSG1::CDlgCSG1(CWnd* pParent /*=NULL*/)
 }
 
 CDlgCSG1::CDlgCSG1(UINT IDD,CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(IDD, pParent)
+	: CB3SpanningShapeDialog(IDD, pParent)
 {
 }
 
 
 void CDlgCSG1::DoDataExchange(CDataExchange* pDX)
 {
-	CB3ShapeDialog::DoDataExchange(pDX);
+	CB3SpanningShapeDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgCSG1)
 	DDX_Control(pDX, IDC_BASE_X,   m_xBaseCtrl);
 	DDX_Control(pDX, IDC_BASE_Y,   m_yBaseCtrl);
@@ -84,7 +92,7 @@ void CDlgCSG1::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgCSG1, CB3ShapeDialog)
+BEGIN_MESSAGE_MAP(CDlgCSG1, CB3SpanningShapeDialog)
 	//{{AFX_MSG_MAP(CDlgCSG1)
 	ON_EN_KILLFOCUS(IDC_BASE_X, OnChangedBase)
 	ON_EN_KILLFOCUS(IDC_BASE_Y, OnChangedBase)
@@ -103,7 +111,7 @@ int CDlgCSG1::b3Edit(b3Item *item,b3_bool create)
 {
 	CDlgCSG1 dlg;
 
-	return CB3ShapeDialog::b3Edit(&dlg,item,create);
+	return CB3SpanningShapeDialog::b3Edit(&dlg,item,create);
 }
 
 const char *CDlgCSG1::b3GetSection()
@@ -121,7 +129,7 @@ void CDlgCSG1::b3Init()
 
 BOOL CDlgCSG1::OnInitDialog() 
 {
-	CB3ShapeDialog::OnInitDialog();
+	CB3SpanningShapeDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	if (m_Creation)
@@ -138,14 +146,14 @@ BOOL CDlgCSG1::OnInitDialog()
 
 void CDlgCSG1::b3SetDirMode(int dirmode)
 {
-	CB3ShapeDialog::b3SetDirMode(dirmode);
+	CB3SpanningShapeDialog::b3SetDirMode(dirmode);
 	m_Base.b3Set();
 	m_Dir1.b3Set(m_DirMode);
 }
 
 void CDlgCSG1::b3UpdateBase()
 {
-	CB3ShapeDialog::b3UpdateBase();
+	CB3SpanningShapeDialog::b3UpdateBase();
 	m_Dir1.b3Update(m_DirMode);
 }
 
@@ -168,10 +176,10 @@ void CDlgCSG1::OnChangedLen1()
 	m_Dir1.b3UpdateLen(m_DirMode);
 }
 
-void CDlgCSG1::OnOK() 
+void CDlgCSG1::b3PostProcess() 
 {
 	// TODO: Add extra validation here
-	CB3ShapeDialog::OnOK();
+	CB3SpanningShapeDialog::b3PostProcess();
 	if (m_Creation)
 	{
 		m_Base.b3Write(b3GetSection() + CString(".base"));

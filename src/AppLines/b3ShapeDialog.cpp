@@ -36,11 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.3  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -72,9 +80,9 @@ CB3ShapeDialog::CB3ShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
 	: CPropertyPage(IDD)
 {
 	//{{AFX_DATA_INIT(CB3ShapeDialog)
-	m_DirMode = 0;
 	//}}AFX_DATA_INIT
-	m_Shape = null;
+	m_Shape    = null;
+	m_Creation = false;
 }
 
 
@@ -82,15 +90,12 @@ void CB3ShapeDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CB3ShapeDialog)
-	DDX_Radio(pDX, IDC_DIRECTION, m_DirMode);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CB3ShapeDialog, CPropertyPage)
 	//{{AFX_MSG_MAP(CB3ShapeDialog)
-	ON_BN_CLICKED(IDC_DIRECTION, OnDirModeChanged)
-	ON_BN_CLICKED(IDC_POSITION, OnDirModeChanged)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -108,10 +113,11 @@ int CB3ShapeDialog::b3Edit(
 	CDlgCreateStencil   dlg_stencil;
 	CString             text;
 	b3Shape            *shape;
-	b3_bool             result;
+	int                 result;
 
 	page->m_Creation = create;
-	page->m_Shape    = (b3CSGShape *)item;
+	page->m_Shape    = (b3ShapeRenderObject *)item;
+	page->b3Init();
 	sheet.AddPage(page);
 
 	switch (item->b3GetClass())
@@ -121,6 +127,7 @@ int CB3ShapeDialog::b3Edit(
 		dlg_csg.m_Creation = create;
 		dlg_csg.m_Shape    = (b3CSGShape *)item;
 		dlg_csg.m_Section  = page->b3GetSection();
+		dlg_csg.b3Init();
 		sheet.AddPage(&dlg_csg);
 		if (create)
 		{
@@ -147,17 +154,24 @@ int CB3ShapeDialog::b3Edit(
 	sheet.SetTitle(text);
 	result = sheet.DoModal();
 
-	if (result && create && (shape != null))
+	if (result == IDOK)
 	{
-		if (dlg_material.m_Material != null)
+		page->b3PostProcess();
+		dlg_csg.b3PostProcess();
+		if (create && (shape != null))
 		{
-			shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
+			dlg_material.b3PostProcess();
+			dlg_stencil.b3PostProcess();
+			if (dlg_material.m_Material != null)
+			{
+				shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
+			}
+			if (dlg_stencil.m_Stencil != null)
+			{
+				shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);
+			}
+			shape->b3Activate();
 		}
-		if (dlg_stencil.m_Stencil != null)
-		{
-			shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);
-		}
-		shape->b3Activate();
 	}
 	return result;
 }
@@ -171,37 +185,7 @@ void CB3ShapeDialog::b3Init()
 {
 }
 
-void CB3ShapeDialog::OnDirModeChanged() 
+void CB3ShapeDialog::b3PostProcess() 
 {
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	b3SetDirMode(m_DirMode);
-}
-
-void CB3ShapeDialog::b3SetDirMode(int dirmode)
-{
-}
-
-void CB3ShapeDialog::b3UpdateBase()
-{
-}
-
-BOOL CB3ShapeDialog::OnInitDialog() 
-{
-	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
-	b3Init();
-	CPropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
-}
-
-void CB3ShapeDialog::OnOK() 
-{
-	// TODO: Add extra validation here
-	CPropertyPage::OnOK();
-	AfxGetApp()->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
 	m_Shape->b3Recompute();
 }

@@ -32,6 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/02/28 16:58:46  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.22  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -41,7 +49,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.21  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -191,7 +199,7 @@ void b3Sphere::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	SinCosSteps = context->b3GetSubdiv();
 	Cos         = context->b3GetCosTable();

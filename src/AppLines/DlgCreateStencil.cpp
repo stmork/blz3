@@ -32,11 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.1  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **
 */
 
@@ -210,17 +218,19 @@ void CDlgCreateStencil::b3UpdateUI()
 BOOL CDlgCreateStencil::OnSetActive() 
 {
 	// TODO: Add your specialized code here and/or call the base class
+
+	// Get new values in case the geometry page has changed some values
+	// which may affect scaling factors.
 	m_Shape->b3GetStencilBoundInfo(&m_Bound);
 	b3UpdateUI();
 	return CPropertyPage::OnSetActive();
 }
 
-void CDlgCreateStencil::OnOK() 
+void CDlgCreateStencil::b3PostProcess() 
 {
 	// TODO: Add extra validation here
 	CB3App *app = CB3GetApp();
 
-	CPropertyPage::OnOK();
 	if (m_ReallyCreate)
 	{
 		// Create stencil

@@ -24,13 +24,12 @@
 // DlgShape3.h : header file
 //
 
-#include "AppLines.h"
-#include "b3ShapeDialog.h"
+#include "b3SpanningShapeDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgShape3 dialog
 
-class CDlgShape1 : public CB3ShapeDialog
+class CDlgShape1 : public CB3SpanningShapeDialog
 {
 // Construction
 protected:
@@ -40,8 +39,9 @@ protected:
 public:
 	CDlgShape1(CWnd* pParent = NULL);   // standard constructor
 	CDlgShape1(UINT id,CWnd* pParent = NULL);
-	virtual void b3SetDirMode(int dirmode);
+
 	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	virtual void b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgShape1)
@@ -66,13 +66,13 @@ public:
 // Implementation
 protected:
 	virtual void        b3Init();
+	virtual void        b3SetDirMode(int dirmode);
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgShape1)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
 	afx_msg void OnChangedBase();
 	afx_msg void OnChangedDir1();
 	afx_msg void OnChangedLen1();

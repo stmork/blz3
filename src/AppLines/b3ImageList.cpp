@@ -26,8 +26,10 @@
 #include "DlgShape1.h"
 #include "DlgShape2.h"
 #include "DlgShape3.h"
+#include "DlgTorus.h"
 #include "DlgCSG1.h"
 #include "DlgCSG3.h"
+#include "DlgCSGTorus.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,10 +39,18 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.3  2002/02/24 17:45:32  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
-**
+**	
 **	Revision 1.2  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -193,7 +203,7 @@ b3ItemEditCall CB3ImageList::m_EditCalls[] =
 	CDlgShape3::b3Edit,
 	CDlgShape3::b3Edit,
 	CDlgShape3::b3Edit,
-	null,
+	CDlgTorus::b3Edit,
 	null,
 	null,
 	null,
@@ -206,7 +216,7 @@ b3ItemEditCall CB3ImageList::m_EditCalls[] =
 	CDlgCSG3::b3Edit,
 	CDlgCSG3::b3Edit,
 	CDlgCSG3::b3Edit,
-	null
+	CDlgCSGTorus::b3Edit
 };
 
 void CB3ImageList::b3Create(b3_res size)

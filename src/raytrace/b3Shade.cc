@@ -35,11 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/28 16:58:46  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.18  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.17  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -324,7 +332,7 @@ void b3Scene::b3GetInfiniteColor(b3_ray_info *ray)
 	b3GetBackgroundColor (ray,lx,ly);
 }
 
-b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
+b3_bool b3Scene::b3ComputeOutputRays(b3_ray_fork *surface)
 {
 	b3_vector64 *Normal       = &surface->incoming->normal;
 	b3_vector64 *incoming_dir = &surface->incoming->dir;
@@ -405,10 +413,10 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 *************************************************************************/
 
 void b3Scene::b3Illuminate(
-	b3Light         *light,
-	b3_light_info   *Jit,
-	b3_illumination *surface,
-	b3_color        *result)
+	b3Light       *light,
+	b3_light_info *Jit,
+	b3_ray_fork   *surface,
+	b3_color      *result)
 {
 	b3_f64 ShapeAngle;
 
@@ -425,14 +433,14 @@ void b3Scene::b3Illuminate(
 
 b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 {
-	b3Item          *item;
-	b3Light         *light;
-	b3Shape         *shape;
-	b3_illumination  surface;
-	b3_f64           refl,refr,factor;
-	b3_index         formula = 0;
-	b3_bool          transparent;
-	b3_bool          result = false;
+	b3Item      *item;
+	b3Light     *light;
+	b3Shape     *shape;
+	b3_ray_fork  surface;
+	b3_f64       refl,refr,factor;
+	b3_index     formula = 0;
+	b3_bool      transparent;
+	b3_bool      result = false;
 
 	// If max raytrace depth is reached leave!
 	if (depth_count > m_TraceDepth)

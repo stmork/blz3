@@ -33,10 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/28 16:58:45  sm
+**	- Added torus dialogs.
+**	- Fixed material and stencil handling when not activating
+**	  sheet page.
+**	- Further cleanup of edit dialogs done.
+**	- Corrected shading of CSG cylinder and CSG cone (added
+**	  shaded top and bottom plate).
+**
 **	Revision 1.1  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **
 */
 
@@ -53,7 +61,9 @@ CDlgCSGMode::CDlgCSGMode() : CPropertyPage(CDlgCSGMode::IDD)
 	//{{AFX_DATA_INIT(CDlgCSGMode)
 	m_CSGMode = 0;
 	//}}AFX_DATA_INIT
-	m_Section = "csg";
+	m_Section  = "csg";
+	m_Shape    = null;
+	m_Creation = false;
 }
 
 CDlgCSGMode::~CDlgCSGMode()
@@ -80,11 +90,18 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCSGMode message handlers
 
+void CDlgCSGMode::b3Init()
+{
+	if (m_Shape != null)
+	{
+		m_CSGMode = m_Creation ?
+			AfxGetApp()->GetProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode) :
+			m_Shape->b3GetOperationIndex(m_Shape->m_Operation);
+	}
+}
+
 BOOL CDlgCSGMode::OnInitDialog() 
 {
-	m_CSGMode = m_Creation ?
-		AfxGetApp()->GetProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode) :
-		m_Shape->b3GetOperationIndex(m_Shape->m_Operation);
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -105,13 +122,15 @@ void CDlgCSGMode::OnCSGModeChanged()
 	sheet->SetTitle(text);
 }
 
-void CDlgCSGMode::OnOK() 
+void CDlgCSGMode::b3PostProcess() 
 {
 	// TODO: Add extra validation here
-	CPropertyPage::OnOK();
-	if (m_Creation)
+	if (m_Shape != null)
 	{
-		AfxGetApp()->WriteProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode);
+		if (m_Creation)
+		{
+			AfxGetApp()->WriteProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode);
+		}
+		m_Shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
 	}
-	m_Shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
 }

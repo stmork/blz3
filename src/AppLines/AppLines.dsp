@@ -160,10 +160,6 @@ SOURCE=.\b3ControlLDC.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3CSGDialog.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3ExampleScene.cpp
 # End Source File
 # Begin Source File
@@ -204,6 +200,10 @@ SOURCE=.\b3ShowRaytrace.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SpanningShapeDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Splash.cpp
 # End Source File
 # Begin Source File
@@ -241,6 +241,10 @@ SOURCE=.\DlgCSG3.cpp
 # Begin Source File
 
 SOURCE=.\DlgCSGMode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSGTorus.cpp
 # End Source File
 # Begin Source File
 
@@ -376,10 +380,6 @@ SOURCE=.\b3ControlLDC.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3CSGDialog.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3ExampleScene.h
 # End Source File
 # Begin Source File
@@ -417,6 +417,10 @@ SOURCE=.\b3ShapeDialog.h
 # Begin Source File
 
 SOURCE=.\b3ShowRaytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SpanningShapeDialog.h
 # End Source File
 # Begin Source File
 
