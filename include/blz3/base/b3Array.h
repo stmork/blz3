@@ -29,7 +29,8 @@ enum b3_array_error
 	B3_ARRAY_ERROR = -1,
 	B3_ARRAY_OK    =  0,
 	B3_ARRAY_NO_MEMORY,
-	B3_ARRAY_OUT_OF_BOUNDS
+	B3_ARRAY_OUT_OF_BOUNDS,
+	B3_ARRAY_INVALID_INCREMENT
 };
 
 typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
@@ -42,8 +43,12 @@ template <class T> class B3_PLUGIN b3Array : protected b3Mem
 	T        *m_Buffer;
 
 public:
-	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
+	inline b3Array(b3_count increment = B3_ARRAY_INVALID_INCREMENT)
 	{
+		if (increment <= 0)
+		{
+			B3_THROW(b3ArrayException,B3_ARRAY_NO_MEMORY);
+		}
 		m_Increment = increment;
 		m_Index     = 0;
 		m_Max       = 0;

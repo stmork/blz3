@@ -662,6 +662,7 @@
 #define IDS_NEW_CAMERA_NAME             61449
 #define IDS_NEW_LIGHT_NAME              61450
 #define IDS_NEW_OBJECT_NAME             61451
+#define IDS_PRGERR_INVALID_INCREMENT    61452
 
 // Next default values for new objects
 // 

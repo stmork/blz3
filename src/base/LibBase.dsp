@@ -122,10 +122,6 @@ SOURCE=.\b3ItemRegister.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3ItemRegister.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3ItemRegisterEntry.cc
 # End Source File
 # Begin Source File
@@ -207,6 +203,10 @@ SOURCE=..\..\include\blz3\base\b3Filter.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Hash.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ItemRegister.h
 # End Source File
 # Begin Source File
 
