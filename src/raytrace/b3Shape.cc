@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/06 20:49:39  sm
+**      - Some conflicts solved
+**
 **      Revision 1.6  2001/08/06 19:58:59  sm
 **      - Drawing area - the first shape we can see with OpenGL
 **
@@ -127,7 +130,6 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	Vertices = null;
 	Grids    = null;
 	Polygons = null;
-	Computed = false;
 #endif
 }
 

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/06 20:49:39  sm
+**      - Some conflicts solved
+**
 **      Revision 1.3  2001/08/06 19:58:58  sm
 **      - Drawing area - the first shape we can see with OpenGL
 **
