@@ -36,31 +36,30 @@ typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
 class b3Noise : public b3Mem
 {
-	b3_noisetype *NoiseTable;
+	static b3_noisetype *NoiseTable;
 
 public:
-	        b3Noise();
-	       ~b3Noise();
+	               b3Noise();
+	              ~b3Noise();
 
-	b3_f64  b3Turbulence (b3_vector *P);
-	b3_f64  b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
-	void    b3NoiseDeriv (b3_f64  dx,b3_f64  dy,b3_f64  dz,b3_vector *RVec);
-	void    b3Marble(b3_vector *d,b3_color *mask);
-	void    b3OldMarble (b3_vector *P,b3_color *Color);
-	void    b3Wood(b3_vector *d,b3_color *mask);
-	void    b3Hell (b3_vector *P,b3_color *Color);
-	void    b3Clouds (b3_vector *P,b3_color *Color);
-	b3_f64  b3Wave(b3_vector *point);
-	b3_f64  b3Water(b3_vector *point,b3_f64 time);
-	b3_f64  b3PGauss();
+	static b3_f64  b3Turbulence  (b3_vector *P);
+	static b3_f64  b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+	static void    b3NoiseDeriv  (b3_f64  dx,b3_f64  dy,b3_f64  dz,b3_vector *RVec);
+
+	static void    b3Marble      (b3_vector *d,b3_color *mask);
+	static void    b3Wood        (b3_vector *d,b3_color *mask);
+	static void    b3Hell        (b3_vector *P,b3_color *Color);
+	static void    b3Clouds      (b3_vector *P,b3_color *Color);
+	static b3_f64  b3Wave        (b3_vector *point);
+	static b3_f64  b3Water       (b3_vector *point,b3_f64 time);
+	static b3_f64  b3PGauss      ();
 
 private:
-	void         b3InitCurve();
-	b3_f64       b3Frac(b3_f64 a,b3_f64 b);
-	b3_noisetype b3GetDiff(b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
-	b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
-};
+	static b3_f64       b3Frac      (b3_f64 a,b3_f64 b);
+	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
+	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
-extern b3Noise noise_procedures;
+	static void    b3OldMarble   (b3_vector *P,b3_color *Color);
+};
 
 #endif

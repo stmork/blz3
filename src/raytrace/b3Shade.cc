@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/12/11 14:47:58  sm
+**	- Changed noise handling to static
+**	- Fixed some error cases when image not loaded.
+**	- Added some brt3 flags
+**
 **	Revision 1.20  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.19  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -293,7 +298,7 @@ void b3Scene::b3GetBackgroundColor(
 			dir.x = ray->dir.x;
 			dir.y = ray->dir.y;
 			dir.z = ray->dir.z;
-			noise_procedures.b3Clouds (&dir,&ray->color);
+			b3Noise::b3Clouds (&dir,&ray->color);
 #ifdef SKY_SLIDE
 			ly = ray->color.r * 2.0 - 1.0;
 #else

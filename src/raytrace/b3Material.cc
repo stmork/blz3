@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/12/11 14:47:58  sm
+**      - Changed noise handling to static
+**      - Fixed some error cases when image not loaded.
+**      - Added some brt3 flags
+**
 **      Revision 1.22  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -802,7 +807,7 @@ b3_bool b3MatMarble::b3GetColors(
 	d.y = polar->box_polar.y * m_Scale.y * M_PI;
 	d.z = polar->box_polar.z * m_Scale.z * M_PI;
 
-	noise_procedures.b3Marble (&d,&mask);
+	b3Noise::b3Marble (&d,&mask);
 
 	diffuse->a  = 0;
 	diffuse->r  = m_DiffColor.r * mask.r;
@@ -895,7 +900,7 @@ b3_bool b3MatWood::b3GetColors(
 	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
 	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
 
-	noise_procedures.b3Wood (&d,&mask);
+	b3Noise::b3Wood (&d,&mask);
 
 	diffuse->a  = 0;
 	diffuse->r  = m_DiffColor.r * mask.r;

@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/12/11 14:47:58  sm
+**	- Changed noise handling to static
+**	- Fixed some error cases when image not loaded.
+**	- Added some brt3 flags
+**
 **	Revision 1.34  2002/12/10 20:14:59  sm
 **	- Added some new brt3 features:
 **	  o no wait after display output
 **	  o disable animation
 **	- Fixed some image exceptions
-**
+**	
 **	Revision 1.33  2002/10/06 14:58:18  sm
 **	- Done some finetuning on setup
 **	- Output of GCC version under Un*x
@@ -357,7 +362,7 @@ int main(int argc,char *argv[])
 						animation = scene->b3GetAnimation();
 						if (animation != null)
 						{
-							if (!animation->b3IsActive())
+							if ((!animation->b3IsActive()) || (force_no_anim))
 							{
 								b3PrintF(B3LOG_DEBUG,"Animation deactivated...\n");
 								animation = null;
@@ -379,7 +384,7 @@ int main(int argc,char *argv[])
 									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 										camera->m_CameraName);
 									scene->b3SetCamera(camera);
-									if ((animation != null) && (!force_no_anim))
+									if (animation != null)
 									{
 										b3_f64   t,step;
 										b3Path   img_name;

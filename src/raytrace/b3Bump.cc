@@ -34,10 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/12/11 14:47:58  sm
+**	- Changed noise handling to static
+**	- Fixed some error cases when image not loaded.
+**	- Added some brt3 flags
+**
+**	Revision 1.12  2002/12/11 14:31:01  sm
+**	- Parse order fixed for water bump mapping
+**	
 **	Revision 1.11  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.10  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
@@ -169,7 +177,7 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 	if (Denom == 0) return;
 	if (Denom != 1) Denom = 1/sqrt(Denom);  
 
-	noise_procedures.b3NoiseDeriv (u,v,w,&n);
+	b3Noise::b3NoiseDeriv (u,v,w,&n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Size;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Size;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Size;
@@ -207,18 +215,18 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 
 	b3Vector::b3Normalize(&ray->normal);
 
-	d  = (u+15000.0) * 0.02 + 7.0 * noise_procedures.b3NoiseVector(u*0.01,v*0.005,w*0.005);
+	d  = (u+15000.0) * 0.02 + 7.0 * b3Noise::b3NoiseVector(u*0.01,v*0.005,w*0.005);
 	dd = (long)d % 17;
-	if (dd < 4) i = 0.7 + 0.2   * noise_procedures.b3NoiseVector(u/70.0,v*0.02,w*0.02);
+	if (dd < 4) i = 0.7 + 0.2   * b3Noise::b3NoiseVector(u/70.0,v*0.02,w*0.02);
 	else
 	{
 		if ((dd < 9) || (dd >= 12))
 		{
 			d = fabs (d-(long)(d / 17.0) * 17.0 - 10.5) * 0.1538462;
-			i = 0.4 + 0.3 * d + 0.2 * noise_procedures.b3NoiseVector
+			i = 0.4 + 0.3 * d + 0.2 * b3Noise::b3NoiseVector
 				(u * 0.01,v * 0.01,w * 0.01);
 		}
-		else i = 0.2 + 0.2 * noise_procedures.b3NoiseVector (u * 0.01,v * 0.01,w * 0.01);
+		else i = 0.2 + 0.2 * b3Noise::b3NoiseVector (u * 0.01,v * 0.01,w * 0.01);
 	}
 	i         *= m_Size;
 	ray->normal.x += i;
@@ -347,12 +355,21 @@ b3BumpWater::b3BumpWater(b3_u32 class_type) : b3Bump(sizeof(b3BumpWater),class_t
 
 b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 {
-	m_ScaleFlag   = b3InitInt();
-	b3InitVector(&m_ScaleIPoint);
-	m_ScaleRad    = b3InitFloat();
+	m_ScaleFlag = b3InitInt();
+	m_ScaleRad  = b3InitFloat();
 	if (B3_PARSE_INDEX_VALID)
 	{
-		m_ScaleTime   = b3InitFloat();
+		m_ScaleIPoint.x = m_ScaleRad;
+		m_ScaleIPoint.y = b3InitFloat();
+		m_ScaleIPoint.z = b3InitFloat();
+		m_ScaleRad  = b3InitFloat();
+		m_ScaleTime = b3InitFloat();
+	}
+	else
+	{
+		m_ScaleFlag = BUMP_IPOINT;
+		b3Vector::b3Init(&m_ScaleIPoint,1.0,1.0,1.0);
+		m_ScaleTime = 1;
 	}
 }
 
@@ -383,7 +400,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 		point.z = ray->polar.box_polar.z * m_ScaleIPoint.z;
 	}
 
-	water = noise_procedures.b3Water(&point,ray->t);
+	water = b3Noise::b3Water(&point,ray->t);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = (m_ScaleFlag & BUMP_U_SUPPRESS_WAVE ? 0 : water);
@@ -392,11 +409,11 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z     = (m_ScaleFlag & BUMP_V_SUPPRESS_WAVE ? 0 : water);
 
 	point.x += ox.x;
-	ox.z    -= noise_procedures.b3Water (&point,time);
+	ox.z    -= b3Noise::b3Water (&point,time);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= noise_procedures.b3Water (&point,time);
+	oy.z    -= b3Noise::b3Water (&point,time);
 
 	r   = m_ScaleRad;
 	n.x = ox.y * oy.z - ox.z - oy.y;
@@ -457,7 +474,7 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 		point.z = ray->polar.box_polar.z * m_Scale.z;
 	}
 
-	wave     = noise_procedures.b3Wave(&point);
+	wave     = b3Noise::b3Wave(&point);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = (m_Flags & BUMP_U_SUPPRESS_WAVE ? 0 : wave);
@@ -466,11 +483,11 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	oy.z     = (m_Flags & BUMP_V_SUPPRESS_WAVE ? 0 : wave);
 
 	point.x += ox.x;
-	ox.z    -= noise_procedures.b3Wave (&point);
+	ox.z    -= b3Noise::b3Wave (&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= noise_procedures.b3Wave (&point);
+	oy.z    -= b3Noise::b3Wave (&point);
 
 	r   = m_Amplitude;
 	n.x = ox.y * oy.z - ox.z - oy.y;
@@ -524,7 +541,7 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	point.y = 
 	point.z = 0;
 
-	groove   = noise_procedures.b3Wave(&point);
+	groove   = b3Noise::b3Wave(&point);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = groove;
@@ -533,11 +550,11 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	oy.z     = groove;
 
 	point.x += ox.x;
-	ox.z    -= noise_procedures.b3Wave (&point);
+	ox.z    -= b3Noise::b3Wave (&point);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= noise_procedures.b3Wave (&point);
+	oy.z    -= b3Noise::b3Wave (&point);
 
 	r   = m_Amplitude;
 	n.x = ox.y * oy.z - ox.z - oy.y;
