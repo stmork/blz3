@@ -100,7 +100,7 @@ protected:
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 private:
-	void     b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr);
+	void     b3ComputeFresnelCoeffs(b3_surface *surface, b3_f64 &refl, b3_f64 &refr);
 };
 
 #endif

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/06/23 13:50:49  sm
+**	- Fixed ticket no. 26: Now the Fresnel coefficients were mixed correctly.
+**
 **	Revision 1.5  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
-**
+**	
 **	Revision 1.4  2004/06/05 08:07:05  sm
 **	- Corrected b3Color for multiplying colors as filter.
 **	
@@ -109,7 +112,7 @@ void b3ShaderMork2::b3ShadeLight(
 	result += (surface->m_Diffuse * illumination);
 }
 
-void b3ShaderMork2::b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
+void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
 {
     b3_f64 alpha    = acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
@@ -144,7 +147,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
-	b3_f32    refl,refr,factor;
+	b3_f64    refl,refr,factor;
 
 	// Refraction
 	if (surface.m_Transparent)
@@ -154,7 +157,7 @@ void b3ShaderMork2::b3ShadeSurface(
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
-		b3ComputeInt(&surface,refl,refr);
+		b3ComputeFresnelCoeffs(&surface,refl,refr);
 
 		b3Shade(&surface.refr_ray,depth_count);
 		result = (surface.refr_ray.color * refr);
@@ -165,10 +168,7 @@ void b3ShaderMork2::b3ShadeSurface(
 		{
 			// simulate dielectric metal
 			b3ComputeFresnel(&surface);
-			refl = b3Math::b3Mix(
-				surface.m_Fresnel,
-				surface.m_Reflection,
-				surface.m_Reflection);
+			refl = surface.m_Reflection * (1 - surface.m_Reflection + surface.m_Fresnel);
 		}
 		else
 		{
