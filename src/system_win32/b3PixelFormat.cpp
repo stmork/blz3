@@ -33,11 +33,20 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.3  2004/10/12 19:54:19  sm
 **	- Some camera/light resort. We have to draw the
 **	  light just after the camera to ensure a proper
 **	  view matrix as part of the model view matrix.
-**
+**	
 **	Revision 1.2  2003/02/25 17:07:43  sm
 **	- Fixed wrong include
 **	
@@ -54,7 +63,7 @@
 **                                                                      **
 *************************************************************************/
 
-static PIXELFORMATDESCRIPTOR window_pixelformat =
+const PIXELFORMATDESCRIPTOR CB3PixelFormat::m_WindowPixelformat =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),
 	1,
@@ -72,7 +81,7 @@ static PIXELFORMATDESCRIPTOR window_pixelformat =
 	0,0,0        // layer/visible/damage mask
 };
 
-static PIXELFORMATDESCRIPTOR print_pixelformat =
+const PIXELFORMATDESCRIPTOR CB3PixelFormat::m_PrintPixelformat =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),
 	1,
@@ -155,12 +164,12 @@ int CB3PixelFormat::b3PixelFormatSorter(
 
 int CB3PixelFormat::b3WindowPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b)
 {
-	return b3PixelFormatSorter(&a->desc,&b->desc,&window_pixelformat);
+	return b3PixelFormatSorter(&a->desc,&b->desc,&m_WindowPixelformat);
 }
 
 int CB3PixelFormat::b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b)
 {
-	return b3PixelFormatSorter(&a->desc,&b->desc,&print_pixelformat);
+	return b3PixelFormatSorter(&a->desc,&b->desc,&m_PrintPixelformat);
 }
 
 void CB3PixelFormat::b3FlagsString(CString &desc,int flags)

@@ -33,9 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.16  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
-**
+**	
 **	Revision 1.15  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -180,8 +189,8 @@ b3_bool b3Event::b3Wait()
 **                                                                      **
 *************************************************************************/
 
-static b3_count    threadCount;
-static b3IPCMutex  threadMutex;
+b3_count    b3Thread::m_ThreadCount;
+b3IPCMutex  b3Thread::m_ThreadMutex;
 
 b3Thread::b3Thread(const char *task_name)
 {
@@ -197,22 +206,22 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Inc()
 {
-	threadMutex.b3Lock();
+	m_ThreadMutex.b3Lock();
 	if (!m_IsRunning)
 	{
 		m_Span.b3Start();
 		m_IsRunning = true;
-		threadCount++;
+		m_ThreadCount++;
 	}
-	threadMutex.b3Unlock();
+	m_ThreadMutex.b3Unlock();
 }
 
 void b3Thread::b3Dec(b3_bool incl_delete)
 {
-	threadMutex.b3Lock();
+	m_ThreadMutex.b3Lock();
 	if (m_IsRunning)
 	{
-		threadCount--;
+		m_ThreadCount--;
 		m_IsRunning = false;
 		m_Span.b3Stop();
 	}
@@ -221,7 +230,7 @@ void b3Thread::b3Dec(b3_bool incl_delete)
 		delete m_Thread;
 		m_Thread = null;
 	}
-	threadMutex.b3Unlock();
+	m_ThreadMutex.b3Unlock();
 
 }
 
@@ -304,10 +313,10 @@ b3_u32 b3Thread::b3Wait()
 			m_Name != null ? m_Name : "no name");
 		::WaitForSingleObject (m_Thread->m_hThread,INFINITE);
 
-		threadMutex.b3Lock();
+		m_ThreadMutex.b3Lock();
 		delete m_Thread;
 		m_Thread = null;
-		threadMutex.b3Unlock();
+		m_ThreadMutex.b3Unlock();
 	}
 	else
 	{
@@ -372,15 +381,15 @@ b3_count b3CPU::b3GetNumThreads()
 {
 	b3_count resuming;
 
-	threadMutex.b3Lock();
-	if (cpu_count > threadCount)
+	b3Thread::m_ThreadMutex.b3Lock();
+	if (cpu_count > b3Thread::m_ThreadCount)
 	{
-		resuming = cpu_count - threadCount;
+		resuming = cpu_count - b3Thread::m_ThreadCount;
 	}
 	else
 	{
 		resuming = 1;
 	}
-	threadMutex.b3Unlock();
+	b3Thread::m_ThreadMutex.b3Unlock();
 	return resuming;
 }

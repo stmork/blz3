@@ -31,11 +31,20 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	
 */
 
@@ -236,7 +245,7 @@ void CB3HSVField::b3SetHSV(
 	InvalidateRect (null);
 }
 
-b3_bool b3HSVtoRGB(
+b3_bool CB3HSVField::b3HSVtoRGB(
 	b3_f64  h,b3_f64  s,b3_f64  v,
 	b3_f64 &r,b3_f64 &g,b3_f64 &b)
 {
@@ -259,7 +268,7 @@ b3_bool b3HSVtoRGB(
 	return true;
 }
 
-static inline COLORREF b3ComputeColorHSV(b3_f64 angle,b3_f64 distance,b3_f64 volume)
+inline COLORREF CB3HSVField::b3ComputeColorHSV(b3_f64 angle,b3_f64 distance,b3_f64 volume)
 {
 	double r,g,b;
 

@@ -34,10 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.12  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
-**
+**	
 **	Revision 1.11  2002/11/16 15:18:02  sm
 **	- Adjusted b3TimeSpan to double
 **	
@@ -216,7 +225,7 @@ void b3TimeSpan::b3Stop()
 		m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
 }
 
-static inline void b3_64_div_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
+inline void b3TimeSpan::b3Div_64_By_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
 {
 #if 0
 	// This one is nice and fast

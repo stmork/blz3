@@ -25,6 +25,7 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Spline.h"
 
 typedef b3_f32 b3_noisetype;
 
@@ -39,6 +40,19 @@ typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
 class b3Noise : public b3Mem
 {
+	static       b3Spline      m_MarbleSpline;
+	static       b3_f32        m_MarbleKnots[16];
+	static       b3_vector     m_MarbleControls[8];
+	static       b3Spline      m_WoodSpline;
+	static       b3_f32        m_WoodKnots[16];
+	static       b3_vector     m_WoodControls[8];
+	static       b3Spline      m_WaveSpline;
+	static       b3_f32        m_WaveKnots[14];
+	static       b3_vector     m_WaveControls[10];
+	static const b3Color m_HellColors[4];
+	static const b3Color m_MarbleColors[4];
+	static const b3_u08  m_OM[4][8][3];
+
 	static b3Noise       m_Noise;
 	static b3_noisetype *m_NoiseTable;
 	static b3_f64        epsilon;
@@ -180,6 +194,7 @@ private:
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
+	static void         b3MarbleCurve (b3Spline *Spline,b3_vector *result,b3_f64 x);
 };
 
 class b3Water

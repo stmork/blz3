@@ -37,6 +37,15 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2004/12/30 16:27:38  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.54  2004/12/06 15:14:56  smork
 **      - Minor changes
 **
@@ -455,7 +464,7 @@ static void b3Update(b3Scene *scene)
 {
 	b3_vector       lower,upper;
 
-	scene->b3AllocVertices(&context);
+	scene->b3SetupVertexMemory(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);
 	scene->b3Prepare();

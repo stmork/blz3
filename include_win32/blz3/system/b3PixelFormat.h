@@ -31,6 +31,9 @@ typedef int (*b3PixelFormatSortFunc)(CB3PixelFormatDescriptor *a,CB3PixelFormatD
 
 class CB3PixelFormat
 {
+	static const PIXELFORMATDESCRIPTOR m_WindowPixelformat;
+	static const PIXELFORMATDESCRIPTOR m_PrintPixelformat;
+
 	b3Array<CB3PixelFormatDescriptor> m_glPixelFormat;
 
 protected:

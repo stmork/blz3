@@ -36,6 +36,15 @@
 
 /*
 **      $Log$
+**      Revision 1.102  2004/12/30 16:27:39  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.101  2004/10/09 06:56:07  sm
 **      - Cook/Torrance delivers surface values again.
 **
@@ -1808,14 +1817,6 @@ b3_bool b3MatCarPaint::b3Prepare()
 {
 	m_MetallicScaleHalf = m_MetallicScale * 0.5;
 	return true;
-}
-
-static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 scale,b3_f64 half)
-{
-	dst->x = src->x + B3_FRAN(scale) - half;
-	dst->y = src->y + B3_FRAN(scale) - half;
-	dst->z = src->z + B3_FRAN(scale) - half;
-	b3Vector::b3Normalize(dst);
 }
 
 b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)

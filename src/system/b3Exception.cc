@@ -34,6 +34,15 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2004/12/30 16:27:39  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.6  2003/08/27 14:54:23  sm
 **      - sprintf changed into snprintf to avoid buffer overflows.
 **
@@ -82,7 +91,7 @@
 **                                                                      **
 *************************************************************************/
 
-static char        LocalMessageBuffer[512];
+char               b3ExceptionBase::m_LocalMessageBuffer[512];
 b3ExceptionLogger  b3ExceptionBase::m_Logger;
 b3ExceptionMsgFunc b3ExceptionBase::m_GetMessage;
 
@@ -127,12 +136,12 @@ const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 	b = (ErrNo >> 16) & 0xff;
 	c = (ErrNo >>  8) & 0xff;
 
-	snprintf(LocalMessageBuffer,sizeof(LocalMessageBuffer),"errno: %c%c%c:%02x",
+	snprintf(m_LocalMessageBuffer,sizeof(m_LocalMessageBuffer),"errno: %c%c%c:%02x",
 		isprint(a) ? a : '_',
 		isprint(b) ? b : '_',
 		isprint(c) ? c : '_',
 		ErrNo        & 0xff);
-	return LocalMessageBuffer;
+	return m_LocalMessageBuffer;
 }
 
 void b3ExceptionBase::b3SetMsgFunc(b3ExceptionMsgFunc converter)

@@ -32,6 +32,7 @@ typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
 class B3_PLUGIN b3ExceptionBase
 {
+	static char                m_LocalMessageBuffer[512];
 	static b3ExceptionLogger   m_Logger;
 	static b3ExceptionMsgFunc  m_GetMessage;
 	       b3_excno            m_ExceptionType;

@@ -37,12 +37,21 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.64  2004/11/07 12:20:56  sm
 **	- Added support for rendering priority. The brt3 command
 **	  uses the BLZ3_RENDER_PRIO environment variable for
 **	  setting the priority. Valid range is from -2 to 2 where
 **	  only root can use 1 to 2.
-**
+**	
 **	Revision 1.63  2004/07/22 10:09:38  sm
 **	- Optimized triangle into grid insertion.
 **	
@@ -635,6 +644,10 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	m_NormHeight.x = m_Height.x / yDenom;
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
+	m_ViewAxis.x   = m_ViewPoint.x - m_EyePoint.x;
+	m_ViewAxis.y   = m_ViewPoint.y - m_EyePoint.y;
+	m_ViewAxis.z   = m_ViewPoint.z - m_EyePoint.z;
+	m_ViewAxisLen  = b3Vector::b3Length (&m_ViewAxis);
 
 	b3PrintF(B3LOG_FULL,"  preparing lensflare...\n");
 	m_LensFlare = b3GetLensFlare();

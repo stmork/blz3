@@ -62,13 +62,22 @@
 
 /*
 **	$Log$
+**	Revision 1.105  2004/12/30 16:27:38  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.104  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.103  2004/09/27 13:20:48  sm
 **	- Fixed uninitialized class type for preview in LDC dialog.
 **	
@@ -965,7 +974,7 @@ void CAppLinesDoc::b3Prepare(
 	if (geometry_changed)
 	{
 		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_Scene->b3AllocVertices(&m_Context);
+		m_Scene->b3SetupVertexMemory(&m_Context);
 	}
 
 	if (geometry_changed || structure_changed || reorg)

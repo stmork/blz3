@@ -32,13 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.4  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -163,7 +172,7 @@ void CB3BitmapDIB::b3InitDIB()
 	DIB.bmiHeader.biPlanes        =  1;
 	DIB.bmiHeader.biBitCount      = num;
 	DIB.bmiHeader.biCompression   = (depth <= 8 ? BI_RGB : BI_BITFIELDS);
-	DIB.bmiHeader.biSizeImage     = dSize;
+	DIB.bmiHeader.biSizeImage     = (DWORD)B3_MIN(dSize,0x7ffffff0);
 	DIB.bmiHeader.biXPelsPerMeter = 1;
 	DIB.bmiHeader.biYPelsPerMeter = 1;
 	DIB.bmiHeader.biClrUsed       = 0;
@@ -335,7 +344,7 @@ void CB3BitmapDIB::b3SetData(b3Tx *texture,b3_res yStart,b3_res yEnd)
 	}
 }
 
-static RGBQUAD paletteEGA[16] =
+const RGBQUAD CB3BitmapDIB::m_PaletteEGA[16] =
 {
 	{ 0x00,0x00,0x00,0 },
 	{ 0xff,0xff,0xff,0 },

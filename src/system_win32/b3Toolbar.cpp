@@ -40,9 +40,18 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.14  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.13  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -949,15 +958,14 @@ BOOL CB3Dialogbar::Create(
 	UINT     nStyle,
 	UINT     nID)
 {
-	if (CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID))
+	BOOL result;
+	
+	result = CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID);
+	if (result)
 	{
 		SetDlgCtrlID(nID);
-		if (OnInitDialog())
-		{
-			return TRUE;
-		}
 	}
-	return FALSE;
+	return result;
 }
 
 BOOL CB3Dialogbar::Create(

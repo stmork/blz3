@@ -101,8 +101,12 @@ struct b3_surface;
 
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
-	b3_bool  m_EndLine;
-	b3_count m_Overhead,m_Heights,m_Widths;
+	static const b3_gl_line    m_BoxGrids[];
+	static const b3_gl_polygon m_BoxPolygons[];
+	static const b3_f32        m_BoxTexcoord[];
+
+	             b3_bool       m_EndLine;
+	             b3_count      m_Overhead,m_Heights,m_Widths;
 
 protected:
 	b3_count           xSize,ySize;

@@ -33,9 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.109  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.108  2004/12/14 07:40:44  smork
 **	- Put scene/bbox traversion methods into their own source file.
-**
+**	
 **	Revision 1.107  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.
@@ -547,7 +556,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_gl_line m_BBoxIndices[12 * 2] =
+const b3_gl_line b3BBox::m_BBoxIndices[12 * 2] =
 {
 	{ 0,1 },
 	{ 1,2 },
@@ -717,7 +726,7 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 		glVertexElements->b3SetVertices(m_BBoxVertex);
 		glVertexElements->b3SetCount(8);
 	}
-	glGridElements->b3SetGrids(m_BBoxIndices);
+	glGridElements->b3SetGrids((b3_gl_line *)m_BBoxIndices);
 	glGridElements->b3SetCount(12);
 
 	glPolygonElements->b3SetPolygons(null);

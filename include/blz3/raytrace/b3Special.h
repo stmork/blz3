@@ -162,6 +162,10 @@ enum b3_measure
 
 class B3_PLUGIN b3ModellerInfo : public b3Special
 {
+	static const b3_f64 m_UnitScaleTable[B3_UNIT_MAX];
+	static const char * m_UnitDescrTable[B3_UNIT_MAX];
+	static const b3_u32 m_MeasureTable[B3_MEASURE_MAX - 1];
+
 	b3_u32           m_Flags;
 
 public:

@@ -37,6 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/12/30 16:27:38  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.22  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -44,7 +53,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.21  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -156,7 +165,7 @@ inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
 	b3ShapeRenderContext context;
 	b3_vector            lower,upper;
 
-	scene->b3AllocVertices(&context);
+	scene->b3SetupVertexMemory(&context);
 	scene->b3ComputeBounds(&lower,&upper);
 }
 

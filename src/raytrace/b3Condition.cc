@@ -32,10 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.24  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.23  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -154,7 +163,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_u32 logic_ops[] =
+const b3_u32 b3Condition::m_LogicOps[] =
 {
 	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
 };
@@ -165,9 +174,9 @@ void b3Condition::b3Register()
 	b3_size i;
 
 	b3PrintF(B3LOG_DEBUG,"Registering stencil classes...\n");
-	for (i = 0;i < (sizeof(logic_ops) / sizeof(b3_u32));i++)
+	for (i = 0;i < (sizeof(m_LogicOps) / sizeof(b3_u32));i++)
 	{
-		mode = logic_ops[i];
+		mode = m_LogicOps[i];
 
 		b3Item::b3Register(&b3CondRectangle::b3StaticInit,   &b3CondRectangle::b3StaticInit,  mode | COND_RECTANGLE);
 		b3Item::b3Register(&b3CondCircle::b3StaticInit,      &b3CondCircle::b3StaticInit,     mode | COND_CIRCLE);

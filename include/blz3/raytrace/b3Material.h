@@ -491,6 +491,15 @@ public:
 
 protected:
 	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
+
+private:
+	static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 scale,b3_f64 half)
+	{
+		dst->x = src->x + B3_FRAN(scale) - half;
+		dst->y = src->y + B3_FRAN(scale) - half;
+		dst->z = src->z + B3_FRAN(scale) - half;
+		b3Vector::b3Normalize(dst);
+	}
 };
 
 #define B3_MAT_CP_METALLIC 1

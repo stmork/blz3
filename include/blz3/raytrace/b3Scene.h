@@ -77,13 +77,22 @@ class b3CloudBackground;
 class b3RayRow;
 class b3Shader;
 
+#define LENSFLARE_LOOP 6
+#define LENSFLARE_RING 2
+
 class B3_PLUGIN b3Scene : public b3Item
 {
+	static const b3_f64 m_Distances[LENSFLARE_LOOP];
+	static const b3_f64 m_ResultWeights[LENSFLARE_LOOP];
+	static const b3_f64 m_Exponents[LENSFLARE_LOOP];
+
 	b3Base<b3Row>    m_RowPool;
 	b3Base<b3Row>    m_TrashPool;
 	b3PrepareInfo    m_PrepareInfo;
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
+	b3_vector        m_ViewAxis;
+	b3_f64           m_ViewAxisLen;
 	b3Path           m_SceneName;
 	b3Shader        *m_Shader;
 	b3Path           m_Filename;
@@ -142,7 +151,7 @@ public:
 	        b3_bool          b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 
 			// Drawing routines
-		    void             b3AllocVertices(b3RenderContext *context);
+		    void             b3SetupVertexMemory(b3RenderContext *context);
 		    void             b3FreeVertices();
 	        void             b3Draw(b3RenderContext *context);
 			void             b3Update();

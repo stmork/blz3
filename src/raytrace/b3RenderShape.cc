@@ -35,6 +35,15 @@
 
 /*
 **      $Log$
+**      Revision 1.83  2004/12/30 16:27:39  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.82  2004/12/04 11:31:03  sm
 **      - Removed unreferenced variables.
 **
@@ -487,7 +496,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_gl_line box_grids[] =
+const b3_gl_line b3Shape::m_BoxGrids[] =
 {
 	{ 0,1 },
 	{ 1,2 },
@@ -503,7 +512,7 @@ static b3_gl_line box_grids[] =
 	{ 3,4 }
 };
 
-static b3_gl_polygon box_polygons[] =
+const b3_gl_polygon b3Shape::m_BoxPolygons[] =
 {
 	{  6, 7, 5 }, // top
 	{  4, 5, 7 },
@@ -519,7 +528,7 @@ static b3_gl_polygon box_polygons[] =
 	{ 22,21,17 }
 };
 
-static b3_f32 box_texcoord[] =
+const b3_f32 b3Shape::m_BoxTexcoord[] =
 {
 	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
 	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
@@ -1692,7 +1701,7 @@ void b3Shape::b3ComputeBoxVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-	b3_f32    *tex_coord = box_texcoord;
+	const b3_f32    *tex_coord = m_BoxTexcoord;
 	b3_vector  Aux;
 	b3_index   i;
 	b3_gl_vertex *glVertex = *glVertexElements;
@@ -1756,8 +1765,8 @@ void b3Shape::b3ComputeBoxVertices(
 
 void b3Shape::b3ComputeBoxIndices()
 {
-	glGridElements->b3SetGrids(box_grids);
-	glPolygonElements->b3SetPolygons(box_polygons);
+	glGridElements->b3SetGrids((b3_gl_line *)m_BoxGrids);
+	glPolygonElements->b3SetPolygons((b3_gl_polygon *)m_BoxPolygons);
 }
 
 /*************************************************************************

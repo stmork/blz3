@@ -37,9 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2004/12/30 16:27:38  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.44  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.43  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
 **	
@@ -249,9 +258,9 @@
 **                                                                      **
 *************************************************************************/
 
-static b3Spline      marbleSpline;
-static b3_f32        marbleKnots[16];
-static b3_vector     marbleControls[8] =
+b3Spline      b3Noise::m_MarbleSpline;
+b3_f32        b3Noise::m_MarbleKnots[16];
+b3_vector     b3Noise::m_MarbleControls[8] =
 {
 	{ 0.0f,0.5f,0},
 	{ 1.0f,0.7f,0},
@@ -263,9 +272,9 @@ static b3_vector     marbleControls[8] =
 	{10.0f,0.5f,0}
 };
 
-static b3Spline      woodSpline;
-static b3_f32        woodKnots[16];
-static b3_vector     woodControls[8] =
+b3Spline      b3Noise::m_WoodSpline;
+b3_f32        b3Noise::m_WoodKnots[16];
+b3_vector     b3Noise::m_WoodControls[8] =
 {
 	{ 0.0f,0.4f,0},
 	{ 2.0f,0.9f,0},
@@ -277,11 +286,11 @@ static b3_vector     woodControls[8] =
 	{10.0f,0.4f,0}
 };
 
-static b3Spline      waveSpline;
-static b3_f32        waveKnots[14];
-static b3_vector     waveControls[10];
+b3Spline      b3Noise::m_WaveSpline;
+b3_f32        b3Noise::m_WaveKnots[14];
+b3_vector     b3Noise::m_WaveControls[10];
 
-static b3_u08 oM[4][8][3] =
+const b3_u08 b3Noise::m_OM[4][8][3] =
 {
 	{{1,0,0},{1,0,1},{1,1,0},{1,1,1},{2,0,0},{2,0,1},{2,1,0},{2,1,1}},
 	{{0,1,0},{0,1,1},{0,2,0},{0,2,1},{1,1,0},{1,1,1},{1,2,0},{1,2,1}},
@@ -327,35 +336,35 @@ b3Noise::b3Noise ()
 		}
 
 		// init marble spline
-		marbleSpline.knot_max    = sizeof(marbleKnots)    / sizeof(b3_f32);
-		marbleSpline.control_max = sizeof(marbleControls) / sizeof(b3_vector);
-		marbleSpline.offset      = 1;
-		marbleSpline.knots       = marbleKnots;
-		marbleSpline.controls    = marbleControls;
-		marbleSpline.b3InitCurve         (3,marbleSpline.control_max,false);
-		marbleSpline.b3ThroughEndControl ();
+		m_MarbleSpline.knot_max    = sizeof(m_MarbleKnots)    / sizeof(b3_f32);
+		m_MarbleSpline.control_max = sizeof(m_MarbleControls) / sizeof(b3_vector);
+		m_MarbleSpline.offset      = 1;
+		m_MarbleSpline.knots       = m_MarbleKnots;
+		m_MarbleSpline.controls    = m_MarbleControls;
+		m_MarbleSpline.b3InitCurve         (3,m_MarbleSpline.control_max,false);
+		m_MarbleSpline.b3ThroughEndControl ();
 
 		// init wood spline
-		woodSpline.knot_max     = sizeof(woodKnots)    / sizeof(b3_f32);
-		woodSpline.control_max  = sizeof(woodControls) / sizeof(b3_vector);
-		woodSpline.offset       = 1;
-		woodSpline.knots        = woodKnots;
-		woodSpline.controls     = woodControls;
-		woodSpline.b3InitCurve         (3,woodSpline.control_max,false);
-		woodSpline.b3ThroughEndControl ();
+		m_WoodSpline.knot_max     = sizeof(m_WoodKnots)    / sizeof(b3_f32);
+		m_WoodSpline.control_max  = sizeof(m_WoodControls) / sizeof(b3_vector);
+		m_WoodSpline.offset       = 1;
+		m_WoodSpline.knots        = m_WoodKnots;
+		m_WoodSpline.controls     = m_WoodControls;
+		m_WoodSpline.b3InitCurve         (3,m_WoodSpline.control_max,false);
+		m_WoodSpline.b3ThroughEndControl ();
 
 		// init wave spline
-		waveSpline.knot_max     = sizeof(waveKnots)    / sizeof(b3_f32);
-		waveSpline.control_max  = sizeof(waveControls) / sizeof(b3_vector);
-		waveSpline.offset       = 1;
-		waveSpline.knots        = waveKnots;
-		waveSpline.controls     = waveControls;
-		waveSpline.b3InitCurve(3,waveSpline.control_max,true);
-		for (i = 0;i < waveSpline.control_max;i++)
+		m_WaveSpline.knot_max     = sizeof(m_WaveKnots)    / sizeof(b3_f32);
+		m_WaveSpline.control_max  = sizeof(m_WaveControls) / sizeof(b3_vector);
+		m_WaveSpline.offset       = 1;
+		m_WaveSpline.knots        = m_WaveKnots;
+		m_WaveSpline.controls     = m_WaveControls;
+		m_WaveSpline.b3InitCurve(3,m_WaveSpline.control_max,true);
+		for (i = 0;i < m_WaveSpline.control_max;i++)
 		{
-			waveControls[i].x = cos(M_PI * 2.0 * i / waveSpline.control_max);
-			waveControls[i].y = sin(M_PI * 2.0 * i / waveSpline.control_max);
-			waveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
+			m_WaveControls[i].x = cos(M_PI * 2.0 * i / m_WaveSpline.control_max);
+			m_WaveControls[i].y = sin(M_PI * 2.0 * i / m_WaveSpline.control_max);
+			m_WaveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
 		}
 	}
 }
@@ -565,12 +574,12 @@ inline b3_noisetype b3Noise::b3GetDiff(
 	b3_index i)
 {
 	return (b3_noisetype)(
-		m_NoiseTable[INDEX3D(xs + oM[k][i][0],
-		                     ys + oM[k][i][1],
-		                     zs + oM[k][i][2])] -
-		m_NoiseTable[INDEX3D(xs + oM[3][i][0],
-		                     ys + oM[3][i][1],
-		                     zs + oM[3][i][2])]);
+		m_NoiseTable[INDEX3D(xs + m_OM[k][i][0],
+		                     ys + m_OM[k][i][1],
+		                     zs + m_OM[k][i][2])] -
+		m_NoiseTable[INDEX3D(xs + m_OM[3][i][0],
+		                     ys + m_OM[3][i][1],
+		                     zs + m_OM[3][i][2])]);
 }
 
 inline b3_f64 b3Noise::b3GradNoise (
@@ -638,7 +647,7 @@ void b3Noise::b3NoiseDeriv (
 **                                                                      **
 *************************************************************************/
 
-static b3Color MarbleColors[4] =
+const b3Color b3Noise::m_MarbleColors[4] =
 {
 	b3Color( 0.2f, 0.1f, 0.1f ),
 	b3Color( 0.1f, 0.8f, 0.2f ),
@@ -646,7 +655,7 @@ static b3Color MarbleColors[4] =
 	b3Color( 0.4f, 0.9f, 0.1f )
 };
 
-static inline void marbleCurve (
+inline void b3Noise::b3MarbleCurve (
 	b3Spline  *Spline,
 	b3_vector *result,
 	b3_f64     x)
@@ -664,7 +673,7 @@ b3_f64 b3Noise::b3Marble(b3_vector *d)
 {
 	b3_vector result;
 
-	marbleCurve(&marbleSpline,&result,
+	b3MarbleCurve(&m_MarbleSpline,&result,
 		mSin(d->x + 0.5 * d->y + 0.3 * d->z + b3Turbulence(d)));
 
 	return result.y;
@@ -686,7 +695,7 @@ void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
 	e        = (long)(t * 4 + 1) & 3;
 	frac     = t - s;
 
-	Color = b3Color::b3Mix(MarbleColors[e], MarbleColors[s], frac);
+	Color = b3Color::b3Mix(m_MarbleColors[e], m_MarbleColors[s], frac);
 }
 
 /*************************************************************************
@@ -701,7 +710,7 @@ void b3Noise::b3Wood(b3_vector *d,b3Color &mask)
 	b3_f64    s,r;
 
 	s   = 2 * sqrt(d->x * d->x + d->z * d->z) - 0.15 * d->y;
-	marbleCurve(&woodSpline,&result,mMod(s + b3Turbulence(d)));
+	b3MarbleCurve(&m_WoodSpline,&result,mMod(s + b3Turbulence(d)));
 
 	r = 1.0 - result.y;
 	mask.b3Init(r,r,r);
@@ -713,7 +722,7 @@ void b3Noise::b3Wood(b3_vector *d,b3Color &mask)
 **                                                                      **
 *************************************************************************/
 
-static b3Color HellColors[4] =
+const b3Color b3Noise::m_HellColors[4] =
 {
 	b3Color(0.8f, 0.2f, 0.1f),
 	b3Color(0.8f, 0.9f, 0.2f),
@@ -730,7 +739,7 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;
-	Color = HellColors[(int)(t * 4)];
+	Color = m_HellColors[(int)(t * 4)];
 }
 
 b3_f64 b3Noise::b3Wave(b3_vector *point)
@@ -739,8 +748,8 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 	b3_vector v;
 
 	n = b3NoiseVector(point->x * 0.5,point->y,point->z);
-	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
-	waveSpline.b3DeBoorClosed (&v,0,q);
+	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)m_WaveSpline.control_max);
+	m_WaveSpline.b3DeBoorClosed (&v,0,q);
 	return mSin(point->y * 10 + v.z * 2);
 }
 
@@ -748,9 +757,9 @@ void b3Noise::b3AnimThinFilm(b3_f64 t, b3_vector *result)
 {
 	b3_f64   q,div;
 
-	div = (b3_f64)waveSpline.control_num;
+	div = (b3_f64)m_WaveSpline.control_num;
 	q   = b3Math::b3Frac(t * 0.05f,div);
-	waveSpline.b3DeBoorClosed (result,0,q);
+	m_WaveSpline.b3DeBoorClosed (result,0,q);
 }
 
 b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)

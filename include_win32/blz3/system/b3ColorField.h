@@ -95,6 +95,13 @@ protected:
 	afx_msg void OnPaint();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	static inline COLORREF b3ComputeColorHSV(
+		b3_f64 angle,b3_f64 distance,b3_f64 volume);
+	static b3_bool b3HSVtoRGB(
+		b3_f64  h,b3_f64  s,b3_f64  v,
+		b3_f64 &r,b3_f64 &g,b3_f64 &b);
 };
 
 #endif

@@ -56,14 +56,18 @@ public:
 // Thread handling
 class b3Thread
 {
-	b3TimeSpan      m_Span;
-	const char     *m_Name;
-	b3_u32          m_Result;
+	static b3_count    m_ThreadCount;
+	static b3IPCMutex  m_ThreadMutex;
+
+	b3TimeSpan         m_Span;
+	const char        *m_Name;
+	b3_u32             m_Result;
+
 protected:
-	CWinThread     *m_Thread;
-	b3ThreadProc    m_CallProc;
-	void           *m_CallArg;
-	b3_bool         m_IsRunning;
+	CWinThread        *m_Thread;
+	b3ThreadProc       m_CallProc;
+	void              *m_CallArg;
+	b3_bool            m_IsRunning;
 
 public:
 	              b3Thread(const char *task_name=null);
@@ -79,6 +83,8 @@ private:
 	       void   b3Inc();
 		   void   b3Dec(b3_bool incl_delete = false);
 	static b3_u32 b3Trampoline(void *custom_ptr);
+
+	friend class b3CPU;
 };
 
 class b3CPU : public b3CPUBase

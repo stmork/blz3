@@ -173,6 +173,9 @@ public:
 
 class B3_PLUGIN b3RenderObject
 {
+	static b3Tx        glTextureBuffer;
+	static b3Mutex     glTextureMutex;
+
 	b3_bool            glMaterialComputed;
 	b3_bool            glInit;
 
@@ -276,6 +279,7 @@ private:
 			void            b3MapVertices(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 			void            b3UnmapIndices();
 			void            b3UnmapVertices();
+	static  void            b3PrintMapping(const char *text,b3_vbo_mapping map_mode);
 };
 
 #endif

@@ -76,6 +76,8 @@ typedef b3Exception<b3_view_error,'VWE'> b3ViewException;
 
 class CB3BitmapDIB : public b3Mem
 {
+	static const RGBQUAD CB3BitmapDIB::m_PaletteEGA[16];
+
 protected:
 	unsigned long    m_Mode;
 	b3_res           xSize;

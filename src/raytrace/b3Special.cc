@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.71  2004/12/30 16:27:39  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.70  2004/06/27 11:36:54  sm
 **      - Changed texture dialog for editing negative direction in
 **        contrast to length.
@@ -707,7 +716,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 **                                                                      **
 *************************************************************************/
 
-static const b3_f64 unit_scale[B3_UNIT_MAX] =
+const b3_f64 b3ModellerInfo::m_UnitScaleTable[B3_UNIT_MAX] =
 {
 	1.0,   // B3_UNIT_MM
 	10.0,  // B3_UNIT_CM
@@ -717,12 +726,12 @@ static const b3_f64 unit_scale[B3_UNIT_MAX] =
 	1000.0 // B3_UNIT_M
 };
 
-static const char *unit_descr[] =
+const char *b3ModellerInfo::m_UnitDescrTable[B3_UNIT_MAX] =
 {
 	"mm","cm","in","dm","ft","m"
 };
 
-static const b3_u32 measure[B3_MEASURE_MAX - 1] =
+const b3_u32 b3ModellerInfo::m_MeasureTable[B3_MEASURE_MAX - 1] =
 {
 	1,10,20,50,100,200,500,1000
 };
@@ -838,18 +847,18 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 
 b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
 {
-	return unit_scale[m_Unit];
+	return m_UnitScaleTable[m_Unit];
 }
 
 const char *b3ModellerInfo::b3GetUnitDescr()
 {
-	return unit_descr[m_Unit];
+	return m_UnitDescrTable[m_Unit];
 }
 
 b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value)
 {
 	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
-		m_CustomMeasure : measure[m_Measure];
+		m_CustomMeasure : m_MeasureTable[m_Measure];
 }
 
 void b3ModellerInfo::b3SetMeasure(b3_measure measure)

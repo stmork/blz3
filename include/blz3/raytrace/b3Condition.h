@@ -106,6 +106,8 @@ struct b3_stencil_bound
 
 class B3_PLUGIN b3Condition : public b3Item
 {
+	static const b3_u32 m_LogicOps[];
+
 protected:
 	B3_ITEM_BASE(b3Condition);
 

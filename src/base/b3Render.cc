@@ -46,6 +46,15 @@
 
 /*
 **      $Log$
+**      Revision 1.109  2004/12/30 16:27:39  sm
+**      - Removed assertion problem when starting Lines III: The
+**        image list were initialized twice due to double calling
+**        OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**        calls OnInitDialog() automatically sinde MFC 7
+**      - Removed many global references from raytrace and base lib
+**      - Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**        method checks the vertex maintainer against a null pointer.
+**
 **      Revision 1.108  2004/12/11 17:05:01  sm
 **      - Fixed update/draw problem in object editor
 **
@@ -643,8 +652,7 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
-#ifdef VERBOSE
-static void print_mapping(const char *text,b3_vbo_mapping map_mode)
+void b3RenderObject::b3PrintMapping(const char *text,b3_vbo_mapping map_mode)
 {
 	const char *mapping_text;
 
@@ -668,6 +676,9 @@ static void print_mapping(const char *text,b3_vbo_mapping map_mode)
 	}
 	b3PrintF(B3LOG_FULL,"      %s(%s)\n",text,mapping_text);
 }
+
+#ifdef VERBOSE
+#define print_mapping(t,m) b3PrintMapping(t,m)
 #else
 #define print_mapping(t,m)
 #endif
@@ -684,29 +695,43 @@ void b3RenderObject::b3MapVertices(b3_vbo_mapping map_mode)
 {
 	print_mapping(" b3MapVertices", map_mode);
 
+	B3_ASSERT(glVertexElements != null);
 	glVertexElements->b3Map(map_mode);
 }
 
 void b3RenderObject::b3UnmapIndices()
 {
+	B3_ASSERT(glGridElements != null);
 	glGridElements->b3Unmap();
+
+	B3_ASSERT(glPolygonElements != null);
 	glPolygonElements->b3Unmap();
 }
 
 void b3RenderObject::b3UnmapVertices()
 {
+	B3_ASSERT(glVertexElements != null);
 	glVertexElements->b3Unmap();
 }
 
 void b3RenderObject::b3Recompute()
 {
-	glVertexElements->b3Recompute();
+	if (glVertexElements != null)
+	{
+		glVertexElements->b3Recompute();
+	}
 }
 
 void b3RenderObject::b3RecomputeIndices()
 {
-	glGridElements->b3Recompute();
-	glPolygonElements->b3Recompute();
+	if (glGridElements != null)
+	{
+		glGridElements->b3Recompute();
+	}
+	if (glPolygonElements != null)
+	{
+		glPolygonElements->b3Recompute();
+	}
 }
 
 void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
@@ -1084,9 +1109,8 @@ void b3RenderObject::b3TransformVertices(
 **                                                                      **
 *************************************************************************/
 
-static b3Tx    glTextureBuffer;
-static b3Mutex glTextureMutex;
-
+b3Tx    b3RenderObject::glTextureBuffer;
+b3Mutex b3RenderObject::glTextureMutex;
 b3Color b3RenderObject::m_GridColor(0.2f,0.2f,0.2f,0.0f);
 b3Color b3RenderObject::m_SelectedColor(1.0f,0.1f,0.25f,0.0f);
 

@@ -33,9 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2004/12/30 16:27:39  sm
+**	- Removed assertion problem when starting Lines III: The
+**	  image list were initialized twice due to double calling
+**	  OnInitDialog() of CDialogBar. The CDialogBar::Create()
+**	  calls OnInitDialog() automatically sinde MFC 7
+**	- Removed many global references from raytrace and base lib
+**	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
+**	  method checks the vertex maintainer against a null pointer.
+**
 **	Revision 1.72  2004/12/14 07:40:44  smork
 **	- Put scene/bbox traversion methods into their own source file.
-**
+**	
 **	Revision 1.71  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -943,20 +952,17 @@ b3Scene *b3Scene::b3ReadTGF(const char *filename)
 **                                                                      **
 *************************************************************************/
 
-#define LENSFLARE_LOOP 6
-#define LENSFLARE_RING 2
-
-static b3_f64 LensFlare_Distance[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Distances[LENSFLARE_LOOP] =
 {
 	0.55,0.0,0.0,0.25,0.45,0.55
 };
 
-static b3_f64 LensFlare_ResultWeight[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_ResultWeights[LENSFLARE_LOOP] =
 {
 	0.9,0.95,0.95,0.6,0.6,0.6
 };
 
-static b3_f64 LensFlare_Expon[LENSFLARE_LOOP] =
+const b3_f64 b3Scene::m_Exponents[LENSFLARE_LOOP] =
 {
 	2.4,1.5,1.5,2.0,7.0,4.0
 };
@@ -965,18 +971,14 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 {
 	b3Item    *item;
 	b3Light   *light;
-	b3_vector  view,central,toLight,nLight,nView;
+	b3_vector  central,toLight,nLight,nView;
 	b3Color    result;
-	b3_f64     factor,distance,weight = 0.6;
+	b3_f64     distance,weight = 0.6;
 	b3_count   i;
 
-	view.x = m_ViewPoint.x - m_EyePoint.x;
-	view.y = m_ViewPoint.y - m_EyePoint.y;
-	view.z = m_ViewPoint.z - m_EyePoint.z;
-	factor = b3Vector::b3Length (&view);
-	nView.x = view.y * ray->dir.z - view.z * ray->dir.y;
-	nView.y = view.z * ray->dir.x - view.x * ray->dir.z;
-	nView.z = view.x * ray->dir.y - view.y * ray->dir.x;
+	nView.x = m_ViewAxis.y * ray->dir.z - m_ViewAxis.z * ray->dir.y;
+	nView.y = m_ViewAxis.z * ray->dir.x - m_ViewAxis.x * ray->dir.z;
+	nView.z = m_ViewAxis.x * ray->dir.y - m_ViewAxis.y * ray->dir.x;
 
 	B3_FOR_BASE(b3GetLightHead(),item)
 	{
@@ -985,12 +987,12 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 		toLight.x = light->m_Position.x - m_ViewPoint.x;
 		toLight.y = light->m_Position.y - m_ViewPoint.y;
 		toLight.z = light->m_Position.z - m_ViewPoint.z;
-		distance  = b3Vector::b3Length (&toLight) / factor;
-		central.x = distance * view.x;
-		central.y = distance * view.y;
-		central.z = distance * view.z;
+		distance  = b3Vector::b3Length (&toLight) / m_ViewAxisLen;
+		central.x = distance * m_ViewAxis.x;
+		central.y = distance * m_ViewAxis.y;
+		central.z = distance * m_ViewAxis.z;
 
-		b3Vector::b3CrossProduct (&view,&toLight,&nLight);
+		b3Vector::b3CrossProduct (&m_ViewAxis,&toLight,&nLight);
 
 		for (i = 0;i < LENSFLARE_LOOP;i++)
 		{
@@ -999,7 +1001,7 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 			b3_vector diff;
 #endif
 
-			cWeight  = LensFlare_Distance[i];
+			cWeight  = m_Distances[i];
 			lWeight  = 1.0 - cWeight;
 			nLight.x = cWeight * central.x + lWeight * toLight.x;
 			nLight.y = cWeight * central.y + lWeight * toLight.y;
@@ -1009,7 +1011,7 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 				nLight.x * ray->dir.x +
 				nLight.y * ray->dir.y +
 				nLight.z * ray->dir.z) / b3Vector::b3Length(&nLight);
-			angle    = pow(beta,m_LensFlare->m_Expon * LensFlare_Expon[i]);
+			angle    = pow(beta,m_LensFlare->m_Expon * m_Exponents[i]);
 			if (i < LENSFLARE_RING)
 			{
 				if ((angle > 0.5) && (angle < 0.55)) angle = 0.3;
@@ -1021,23 +1023,10 @@ void b3Scene::b3MixLensFlare(b3_ray *ray)
 				else
 				{
 					if (angle > 0.89) angle = 0.95;
-					else angle *= LensFlare_ResultWeight[i];
+					else angle *= m_ResultWeights[i];
 				}
 				angle *= weight;
 			}
-
-#ifdef TX_DISTURB
-			// disturbe lens flare
-			diff.y  = beta;
-			diff.x  = sqrt (1.0 - beta * beta);
-			diff.z  = 0;
-			diff.x *= 20;
-			diff.y *= 20;
-			if (angle < 0.95)
-			{
-				angle += ((Turbulence(&diff) - 0.5) * 0.1);
-			}
-#endif
 
 			reverse  = 1.0 - angle;
 			if (i < LENSFLARE_RING)

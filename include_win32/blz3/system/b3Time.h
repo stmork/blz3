@@ -48,7 +48,8 @@ public:
 	       void    b3Stop();
 
 private:
-	static b3_f64  b3DiffDiv10000(FILETIME *first,FILETIME *last);
+	static b3_f64      b3DiffDiv10000(FILETIME *first,FILETIME *last);
+	static inline void b3Div_64_By_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor);
 };
 
 class b3Time : public b3TimeAbstract

@@ -35,6 +35,8 @@
 
 class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 {
+	static const b3_gl_line m_BBoxIndices[12 * 2];
+
 	// Inherited from Blizzard II
 	b3_u32           m_Type;               // texture type
 	b3_count         m_ShapeCount;
