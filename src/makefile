@@ -49,6 +49,13 @@ clean:	remdepend $(BLZ3_LIB)
 		make -C $$i clean; \
 	done
 
+remdepend:
+	find . -name ".dep" -exec rm {} \;
+
+tar:
+	@$(BLZ3_HOME)/bin/configure.sh
+	@cd $(BLZ3_HOME)/.. && tar cv blz3 | gzip > /tmp/blz3.tar.gz
+
 win:	$(BLZ3_BIN)/RemCR
 	make -C Btiff tif_fax3sm.c version.h
 	cp Btiff/tif_fax3sm.c system_win32
@@ -68,22 +75,11 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 install:	all
 	@$(BLZ3_HOME)/bin/install.sh
 
-resource.h:	$(BLZ3_BIN)/CleanRes
-	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h
-	mv /tmp/Resource.h AppLines/Resource.h
-
 #########################################################
 #                                                       #
 #  Blizzard III tools                                   #
 #                                                       #
 #########################################################
-
-remdepend:
-	find . -name ".dep" -exec rm {} \;
-
-tar:
-	@$(BLZ3_HOME)/bin/configure.sh
-	@cd $(BLZ3_HOME)/.. && tar cv blz3 | gzip > /tmp/blz3.tar.gz
 
 uncr:	$(BLZ3_BIN)/RemCR
 	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;
@@ -92,14 +88,16 @@ uncr:	$(BLZ3_BIN)/RemCR
 		find $$i -name "*.h" -exec RemCR {} \;;\
 	done
 
-$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemDepend
+$(BLZ3_BIN)/RemCR:	tools
 
-$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemCR
+resource.h:	$(BLZ3_BIN)/CleanRes tools
+	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h
+	mv /tmp/Resource.h AppLines/Resource.h
 
-$(BLZ3_BIN)/CleanRes:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools CleanRes
+$(BLZ3_BIN)/CleanRes:	tools
+
+tools:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools
 
 #########################################################
 #                                                       #
