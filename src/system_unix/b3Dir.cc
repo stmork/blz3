@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2003/09/28 20:33:20  sm
+**	- Ensure CPU count in image scaling methods.
+**
 **	Revision 1.16  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.15  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
@@ -294,14 +297,17 @@ void b3Path::b3LinkFileName(
 	snprintf(File,B3_FILESTRINGLEN,
 		"%s%s%s",
 		FilePath != null ? FilePath : "",
-		FilePath != null ? "/" : "",
+		FileName != null ? "/" : "",
 		FileName != null ? FileName : "");
 
 	// Convert Windows path to to something useful
 	len = strlen(File);
 	for (i = 0;i < len;i++)
 	{
-		if (File[i] == '\\') File[i] = '/';
+		if (File[i] == '\\')
+		{
+			File[i] = '/';
+		}
 	}
 }
 

@@ -61,13 +61,16 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.18  2003/09/28 20:33:20  sm
+**	- Ensure CPU count in image scaling methods.
+**
 **	Revision 1.17  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.16  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -177,6 +180,7 @@ struct b3_rect_info
 
 static b3_pkd_color quad256[512];
 static b3_bool      quadValid = false;
+static b3CPU        cpu;
 
 /*************************************************************************
 **                                                                      **
@@ -987,21 +991,21 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 	dstBytes =  RectInfo->xSizeDst;
 	dst      = &RectInfo->dst.lData[yMin * dstBytes];
 
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ColorScaleToGrey(%5ld - %5ld)\n",
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(%5ld - %5ld)\n",
 		yMin,yMax);
 
 	// Alloc some memory
 	TxRowCounter = (b3_count *)malloc(xDstSize * sizeof(b3_count) * 3);
 	if (TxRowCounter == null)
 	{
-		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3ColorScaleToGrey(): "
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
 			"Not enough memory for row counter\n");
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
 	{
-		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3MakeItGrey(): "
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3RGB8ScaleToRGB8(): "
 			"Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
 		B3_THROW(b3TxException,B3_TX_MEMORY);

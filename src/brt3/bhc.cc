@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/09/28 20:33:19  sm
+**	- Ensure CPU count in image scaling methods.
+**
 **	Revision 1.10  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.9  2003/07/20 09:38:30  sm
 **	- Registering raytracing items manually.
 **	
@@ -206,7 +209,7 @@ void b3BHDParser::b3ParseLevel(b3_f64 scale)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
-	b3PrintF(B3LOG_DEBUG,"  creating area (%s)...\n",level->m_BoxName);
+	b3PrintF(B3LOG_DEBUG,"  creating area %s scaling by %3.2f...\n",level->m_BoxName,scale);
 
 	b3CheckToken(TKN_BEGIN);
 	m_Points.b3Clear();
