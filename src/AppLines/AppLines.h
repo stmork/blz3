@@ -58,7 +58,7 @@ public:
 	b3_size         m_PrintBufferSize;
 
 public:
-	CAppLinesApp();
+	                 CAppLinesApp();
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);
 	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);

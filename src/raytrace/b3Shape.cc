@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.37  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -244,7 +249,6 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3SplineArea::b3Init,       &b3SplineArea::b3Init,       SPLINES_AREA);
 	b3Item::b3Register(&b3SplineCylinder::b3Init,   &b3SplineCylinder::b3Init,   SPLINES_CYL);
 	b3Item::b3Register(&b3SplineRing::b3Init,       &b3SplineRing::b3Init,       SPLINES_RING);
-	b3Item::b3Register(&b3Shape::b3Init,            &b3Shape::b3Init,            SHUTUP);
 	b3Item::b3Register(&b3CSGSphere::b3Init,        &b3CSGSphere::b3Init,        CSG_SPHERE);
 	b3Item::b3Register(&b3CSGCylinder::b3Init,      &b3CSGCylinder::b3Init,      CSG_CYLINDER);
 	b3Item::b3Register(&b3CSGCone::b3Init,          &b3CSGCone::b3Init,          CSG_CONE);
@@ -253,7 +257,7 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3CSGTorus::b3Init,         &b3CSGTorus::b3Init,         CSG_TORUS);
 }
 
-b3ShapeBase::b3ShapeBase(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
+b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	m_Activated = false;
 	b3AllocHeads(3);
@@ -262,7 +266,7 @@ b3ShapeBase::b3ShapeBase(b3_size class_size,b3_u32 class_type) : b3Item(class_si
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3ShapeBase::b3ShapeBase(b3_u32 class_type) : b3Item(sizeof(b3ShapeBase), class_type)
+b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
 	m_Activated = false;
 	b3AllocHeads(3);
@@ -271,7 +275,7 @@ b3ShapeBase::b3ShapeBase(b3_u32 class_type) : b3Item(sizeof(b3ShapeBase), class_
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3ShapeBase::b3ShapeBase(b3_u32 *src) : b3Item(src)
+b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 {
 	m_Activated = false;
 	b3InitVector(); // This is the normal
@@ -281,22 +285,22 @@ b3ShapeBase::b3ShapeBase(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
-void b3ShapeBase::b3Activate(b3_bool activate)
+void b3Shape::b3Activate(b3_bool activate)
 {
 	m_Activated = activate;
 }
 											
-b3_bool b3ShapeBase::b3IsActive()
+b3_bool b3Shape::b3IsActive()
 {
 	return m_Activated;
 }
 
-void b3ShapeBase::b3InitActivation()
+void b3Shape::b3InitActivation()
 {
 	b3Activate(B3_PARSE_INDEX_VALID ? b3InitBool() : false);
 }
 
-void b3ShapeBase::b3Write()
+void b3Shape::b3Write()
 {
 	b3StoreVector(); // This is the normal
 	b3StoreVector(); // This is Polar.Polar
@@ -311,41 +315,26 @@ void b3ShapeBase::b3Write()
 	b3StoreBool(b3IsActive());
 }
 
-void b3ShapeBase::b3StoreShape()
+void b3Shape::b3StoreShape()
 {
 }
 
-b3Base<b3Item> *b3ShapeBase::b3GetBumpHead()
+b3Base<b3Item> *b3Shape::b3GetBumpHead()
 {
 	return &m_Heads[0];
 }
 
-b3Base<b3Item> *b3ShapeBase::b3GetConditionHead()
+b3Base<b3Item> *b3Shape::b3GetConditionHead()
 {
 	return &m_Heads[1];
 }
 
-b3Base<b3Item> *b3ShapeBase::b3GetMaterialHead()
+b3Base<b3Item> *b3Shape::b3GetMaterialHead()
 {
 	return &m_Heads[2];
 }
 
-b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
-{
-	b3Item      *item;
-	b3Condition *cond;
-	b3_bool      result = true;
-
-	B3_FOR_BASE(b3GetConditionHead(),item)
-	{
-		cond   = (b3Condition *)item;
-		result = cond->b3Conditionate(
-			result,cond->b3CheckStencil(polar));
-	}
-	return result;
-}
-
-b3_bool b3ShapeBase::b3Prepare()
+b3_bool b3Shape::b3Prepare()
 {
 	b3Item      *item;
 	b3Condition *cond;
@@ -382,7 +371,7 @@ b3_bool b3ShapeBase::b3Prepare()
 	return true;
 }
 
-void b3ShapeBase::b3BumpNormal(b3_ray *ray)
+void b3Shape::b3BumpNormal(b3_ray *ray)
 {
 	b3Item  *item;
 	b3Bump  *bump;
@@ -430,7 +419,7 @@ void b3ShapeBase::b3BumpNormal(b3_ray *ray)
 	}
 }
 
-b3Material *b3ShapeBase::b3GetColors(
+b3Material *b3Shape::b3GetColors(
 	b3_ray     *ray,
 	b3_surface *surface)
 {
@@ -476,25 +465,40 @@ b3Material *b3ShapeBase::b3GetColors(
 	return null;
 }
 
-void b3ShapeBase::b3Transform(b3_matrix *transformation)
+void b3Shape::b3Transform(b3_matrix *transformation)
 {
 	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
 }
 
-b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
+b3SimpleShape::b3SimpleShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
 {
 }
 
-b3Shape::b3Shape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3Shape), class_type)
+b3SimpleShape::b3SimpleShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3SimpleShape), class_type)
 {
 }
 
-b3Shape::b3Shape(b3_u32 *src) : b3ShapeRenderObject(src)
+b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3ShapeRenderObject(src)
 {
 }
 
-b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
+{
+	b3Item      *item;
+	b3Condition *cond;
+	b3_bool      result = true;
+
+	B3_FOR_BASE(b3GetConditionHead(),item)
+	{
+		cond   = (b3Condition *)item;
+		result = cond->b3Conditionate(
+			result,cond->b3CheckStencil(polar));
+	}
+	return result;
+}
+
+b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
 	m_Base.x =  0;
 	m_Base.y =  0;
@@ -507,7 +511,7 @@ b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, c
 	m_Dir2.z =  0;
 }
 
-b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
+b3Shape2::b3Shape2(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape2), class_type)
 {
 	m_Base.x =  0;
 	m_Base.y =  0;
@@ -520,7 +524,7 @@ b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
 	m_Dir2.z =  0;
 }
 
-b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
+b3Shape2::b3Shape2(b3_u32 *src) : b3SimpleShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
@@ -553,15 +557,15 @@ void b3Shape2::b3Transform(b3_matrix *transformation)
 }
 
 
-b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
 }
 
-b3Shape3::b3Shape3(b3_u32 class_type) : b3Shape(sizeof(b3Shape3), class_type)
+b3Shape3::b3Shape3(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_type)
 {
 }
 
-b3Shape3::b3Shape3(b3_u32 *src) : b3Shape(src)
+b3Shape3::b3Shape3(b3_u32 *src) : b3SimpleShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -600,7 +604,7 @@ b3_bool b3Shape3::b3Prepare()
 
 	if (b3ShapeBaseTrans::b3Prepare())
 	{
-		result = b3ShapeBase::b3Prepare();
+		result = b3Shape::b3Prepare();
 	}
 	return result;
 }

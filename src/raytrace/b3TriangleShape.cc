@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.23  2002/02/17 21:25:07  sm
 **      - Introduced CSG
 **        o Heavily reorganized shape inheritance
@@ -116,7 +121,7 @@
 *************************************************************************/
 
 b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
-	b3Shape(class_size, class_type)
+	b3SimpleShape(class_size, class_type)
 {
 	m_Vertices  = null;
 	m_Triangles = null;
@@ -125,7 +130,7 @@ b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
-	b3Shape(sizeof(b3TriangleShape), class_type)
+	b3SimpleShape(sizeof(b3TriangleShape), class_type)
 {
 	m_Vertices  = null;
 	m_Triangles = null;
@@ -134,7 +139,7 @@ b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 *src) :
-	b3Shape(src)
+	b3SimpleShape(src)
 {
 	m_Vertices  = null;
 	m_Triangles = null;
@@ -449,5 +454,5 @@ b3_bool b3TriangleShape::b3Prepare()
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 	b3PrepareGridList();
-	return b3ShapeBase::b3Prepare();
+	return b3Shape::b3Prepare();
 }

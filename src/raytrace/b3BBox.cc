@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2002/02/18 17:50:31  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.44  2002/02/17 21:25:06  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.43  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
@@ -324,9 +329,9 @@ b3Base<b3Item> *b3BBox::b3GetBBoxHead()
 
 b3_bool b3BBox::b3Prepare()
 {
-	b3Item      *item;
-	b3ShapeBase *shape;
-	b3BBox      *bbox;
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
@@ -339,7 +344,7 @@ b3_bool b3BBox::b3Prepare()
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeBase *)item;
+		shape = (b3Shape *)item;
 		if (!shape->b3Prepare())
 		{
 			return false;
@@ -648,14 +653,14 @@ b3_count b3BBox::b3Count()
 
 b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 {
-	b3Item      *item;
-	b3ShapeBase *shape;
-	b3BBox      *bbox;
-	b3_bool      transformed = false;
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+	b3_bool  transformed = false;
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeBase *)item;
+		shape = (b3Shape *)item;
 		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation);
@@ -754,16 +759,16 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 
 void b3BBox::b3Activate(b3_bool activate)
 {
-	b3Item      *item;
-	b3ShapeBase *shape;
-	b3BBox      *bbox;
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
 
 	if (activate) m_Type |=   BBF_ACTIVE;
 	else          m_Type &= (~BBF_ACTIVE);
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeBase *)item;
+		shape = (b3Shape *)item;
 		shape->b3Activate(activate);
 	}
 

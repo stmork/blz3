@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/18 17:50:32  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.4  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.3  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -57,7 +62,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeBase::b3Normal(b3_ray *ray)
+void b3Shape::b3Normal(b3_ray *ray)
 {
 }
 

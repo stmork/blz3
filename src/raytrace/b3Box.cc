@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.7  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -96,7 +101,7 @@ void b3Box::b3FreeVertices()
 	glGrids    = null;
 	glPolygons = null;
 #endif
-	b3Shape::b3FreeVertices();
+	b3ShapeRenderObject::b3FreeVertices();
 }
 
 void b3Box::b3ComputeVertices()

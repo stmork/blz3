@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.13  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -228,7 +233,7 @@ b3_bool b3CSGTorus::b3Prepare()
 
 	if (b3ShapeBaseTrans::b3Prepare())
 	{
-		result = b3ShapeBase::b3Prepare();
+		result = b3Shape::b3Prepare();
 	}
 	return result;
 }

@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/02/18 17:50:32  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.10  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.9  2001/12/31 11:05:18  sm
 **	- Added TestData for testing Blizzard data structures for reading
 **	  and writing.
@@ -155,7 +160,7 @@ b3_bool b3ScenePhong::b3Shade(
 {
 	b3Item          *item;
 	b3Light         *light;
-	b3ShapeBase     *shape;
+	b3Shape         *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
 	b3_f64           denom;

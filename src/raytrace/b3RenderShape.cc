@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.25  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -421,21 +426,21 @@ GLushort *b3RenderShapeContext::b3GetConePolygons()
 *************************************************************************/
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_size class_size,b3_u32 class_type) :
-	b3ShapeBase(class_size, class_type)
+	b3Shape(class_size, class_type)
 {
-	Between     = null;
+	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 class_type) :
-	b3ShapeBase(sizeof(b3ShapeRenderObject), class_type)
+	b3Shape(sizeof(b3ShapeRenderObject), class_type)
 {
-	Between     = null;
+	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
-	b3ShapeBase(src)
+	b3Shape(src)
 {
-	Between     = null;
+	Between = null;
 }
 
 void b3ShapeRenderObject::b3ComputeBound(b3CondLimit *limit)

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.13  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -163,7 +168,7 @@ void b3CSGSphere::b3Transform(b3_matrix *transformation)
 b3_bool b3CSGSphere::b3Prepare()
 {
 	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
-	return b3ShapeBase::b3Prepare();
+	return b3Shape::b3Prepare();
 }
 
 void b3CSGSphere::b3InverseMap(b3_ray *ray,b3_csg_point *point)

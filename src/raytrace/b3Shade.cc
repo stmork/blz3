@@ -35,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/02/18 17:50:32  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.17  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.16  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -422,7 +427,7 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 {
 	b3Item          *item;
 	b3Light         *light;
-	b3ShapeBase     *shape;
+	b3Shape         *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
 	b3_index         formula = 0;

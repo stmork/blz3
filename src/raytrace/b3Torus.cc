@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/02/18 17:50:32  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.21  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.20  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -159,11 +164,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3Torus::b3Torus(b3_u32 class_type) : b3Shape(sizeof(b3Torus), class_type)
+b3Torus::b3Torus(b3_u32 class_type) : b3SimpleShape(sizeof(b3Torus), class_type)
 {
 }
 
-b3Torus::b3Torus(b3_u32 *src) : b3Shape(src)
+b3Torus::b3Torus(b3_u32 *src) : b3SimpleShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -234,7 +239,7 @@ b3_bool b3Torus::b3Prepare()
 
 	if (b3ShapeBaseTrans::b3Prepare())
 	{
-		result = b3ShapeBase::b3Prepare();
+		result = b3Shape::b3Prepare();
 	}
 	return result;
 }

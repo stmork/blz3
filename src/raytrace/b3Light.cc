@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.24  2002/02/17 21:25:07  sm
 **      - Introduced CSG
 **        o Heavily reorganized shape inheritance
@@ -416,7 +421,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3Scene         *scene,
 	b3_illumination *surface)
 {
-	b3ShapeBase   *Edge1,*Edge2,*LastEdge = null;
+	b3Shape       *Edge1,*Edge2,*LastEdge = null;
 	b3_light_info  Jit;
 	b3_vector      point;
 	b3_f64         Factor,denomLightDist,q;
@@ -544,7 +549,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	return true;
 }
 
-inline b3ShapeBase *b3Light::b3CheckSinglePoint (
+inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3Scene         *scene,                                
 	b3_illumination *surface,
 	b3_light_info   *Jit,

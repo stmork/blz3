@@ -34,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/02/18 17:50:31  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.16  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -41,7 +46,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.15  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
@@ -180,7 +185,15 @@ static int res_icon[] =
 	IDI_SHAPE_BSPLINE_ROT,
 	IDI_SHAPE_BSPLINE_AREA,
 	IDI_SHAPE_BSPLINE_CYLINDER,
-	IDI_SHAPE_BSPLINE_RING
+	IDI_SHAPE_BSPLINE_RING,
+
+	// CSG shapes
+	IDI_CSG_SPHERE,
+	IDI_CSG_CYLINDER,
+	IDI_CSG_CONE,
+	IDI_CSG_ELLIPSOID,
+	IDI_CSG_BOX,
+	IDI_CSG_TORUS
 };
 
 static int res_string[] =
@@ -207,7 +220,15 @@ static int res_string[] =
 	IDS_SHAPE_BSPLINE_ROT,
 	IDS_SHAPE_BSPLINE_AREA,
 	IDS_SHAPE_BSPLINE_CYLINDER,
-	IDS_SHAPE_BSPLINE_RING
+	IDS_SHAPE_BSPLINE_RING,
+
+	// CSG shapes
+	IDS_CSG_SPHERE,
+	IDS_CSG_CYLINDER,
+	IDS_CSG_CONE,
+	IDS_CSG_ELLIPSOID,
+	IDS_CSG_BOX,
+	IDS_CSG_TORUS
 };
 
 BOOL CDlgHierarchy::OnInitDialog() 
@@ -218,7 +239,7 @@ BOOL CDlgHierarchy::OnInitDialog()
 
 	CB3Dialogbar::OnInitDialog();
 	
-	m_ImageList.Create(16,16,ILC_COLOR8,24,8);
+	m_ImageList.Create(16,16,ILC_COLOR8,30,8);
 	for (i = 0;i < (sizeof(res_icon) / sizeof(int));i++)
 	{
 		m_ImageList.Add(app->LoadIcon(res_icon[i]));
@@ -247,7 +268,29 @@ long CDlgHierarchy::b3ComputeImgNum(b3BBox *BBox)
 
 long CDlgHierarchy::b3ComputeImgNum(b3Shape *Shape,CString &text)
 {
-	long imgnum;
+	CString mode;
+	long    imgnum;
+
+	if (Shape->b3GetClass() == CLASS_CSG)
+	{
+		b3CSGShape *csg = (b3CSGShape *)Shape;
+		switch(csg->m_Operation)
+		{
+		case B3_CSG_UNION:
+			mode.LoadString(IDS_CSG_MODE_UNION);
+			break;
+		case B3_CSG_INTERSECT:
+			mode.LoadString(IDS_CSG_MODE_INTERSECT);
+			break;
+		case B3_CSG_SUB:
+			mode.LoadString(IDS_CSG_MODE_SUB);
+			break;
+		}
+	}
+	else
+	{
+		mode.LoadString(IDS_CSG_MODE_NONE);
+	}
 
 	switch(Shape->b3GetClassType())
 	{
@@ -290,12 +333,32 @@ long CDlgHierarchy::b3ComputeImgNum(b3Shape *Shape,CString &text)
 	case SPLINES_RING:
 		imgnum = 22;
 		break;
+
+	case CSG_SPHERE:
+		imgnum = 23;
+		break;
+	case CSG_CYLINDER:
+		imgnum = 24;
+		break;
+	case CSG_CONE:
+		imgnum = 25;
+		break;
+	case CSG_ELLIPSOID:
+		imgnum = 26;
+		break;
+	case CSG_BOX:
+		imgnum = 27;
+		break;
+	case CSG_TORUS:
+		imgnum = 28;
+		break;
+
 	default:
 		imgnum = 0;
 		break;
 	}
 
-	text.LoadString(res_string[imgnum]);
+	text.Format(res_string[imgnum],(const char *)mode);
 	return imgnum;
 }
 
@@ -342,7 +405,7 @@ void CDlgHierarchy::b3AddBBoxes (
 		{
 			B3_FOR_BASE(BBox->b3GetShapeHead(),item)
 			{
-				shape = (b3Shape *)item;
+				shape = (b3Shape     *)item;
 
 				imgNum = b3ComputeImgNum(shape,shape_title);
 				insert.hParent      = new_treeitem;

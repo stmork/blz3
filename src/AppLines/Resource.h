@@ -73,6 +73,12 @@
 #define IDI_SHAPE_BSPLINE_AREA          177
 #define IDI_SHAPE_BSPLINE_CYLINDER      178
 #define IDI_SHAPE_BSPLINE_RING          179
+#define IDI_CSG_TORUS                   180
+#define IDI_CSG_BOX                     181
+#define IDI_CSG_ELLIPSOID               182
+#define IDI_CSG_CONE                    183
+#define IDI_CSG_CYLINDER                184
+#define IDI_CSG_SPHERE                  185
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -379,6 +385,16 @@
 #define IDS_SHAPE_BSPLINE_RING          61502
 #define IDS_SHAPE_TRIANGLES             61503
 #define IDS_CAMERA_UNIT                 61504
+#define IDS_CSG_SPHERE                  61505
+#define IDS_CSG_CYLINDER                61506
+#define IDS_CSG_CONE                    61507
+#define IDS_CSG_ELLIPSOID               61508
+#define IDS_CSG_BOX                     61509
+#define IDS_CSG_TORUS                   61510
+#define IDS_CSG_MODE_NONE               61511
+#define IDS_CSG_MODE_UNION              61512
+#define IDS_CSG_MODE_INTERSECT          61513
+#define IDS_CSG_MODE_SUB                61514
 
 // Next default values for new objects
 // 

@@ -848,15 +848,15 @@ public:
 };
 
 // same structure entries for all shapes
-class b3ShapeBase : public b3Item
+class b3Shape : public b3Item
 {
 	b3_bool             m_Activated;
 protected:
-	                    b3ShapeBase(b3_size class_size,b3_u32 class_type);
+	                    b3Shape(b3_size class_size,b3_u32 class_type);
 
 public:
-	B3_ITEM_INIT(b3ShapeBase);
-	B3_ITEM_LOAD(b3ShapeBase);
+	B3_ITEM_INIT(b3Shape);
+	B3_ITEM_LOAD(b3Shape);
 
 	        void        b3Write();
 	virtual void        b3StoreShape();
@@ -878,7 +878,7 @@ public:
 	}
 };
 
-class b3ShapeRenderObject : public b3ShapeBase, public b3RenderObject
+class b3ShapeRenderObject : public b3Shape, public b3RenderObject
 {
 protected:
 	b3_count        xSize,ySize;
@@ -963,24 +963,24 @@ private:
 	void            b3CorrectIndices();
 };
 
-class b3Shape : public b3ShapeRenderObject
+class b3SimpleShape : public b3ShapeRenderObject
 {
 protected:
 	b3_bool             b3CheckStencil(b3_polar *polar);
 
 protected:
-	b3Shape(b3_size class_size,b3_u32 class_type);
+	b3SimpleShape(b3_size class_size,b3_u32 class_type);
 
 public:
-	B3_ITEM_INIT(b3Shape);
-	B3_ITEM_LOAD(b3Shape);
+	B3_ITEM_INIT(b3SimpleShape);
+	B3_ITEM_LOAD(b3SimpleShape);
 
 public:
 	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // SPHERE
-class b3Sphere : public b3Shape    // Kugel
+class b3Sphere : public b3SimpleShape    // Kugel
 {
 	b3_f64               m_QuadRadius;   // Quadrat vom Radius
 
@@ -1004,7 +1004,7 @@ public:
 };
 
 // AREA, DISK
-class b3Shape2 : public b3Shape
+class b3Shape2 : public b3SimpleShape
 {
 protected:
 	b3_vector           m_Normal;
@@ -1059,7 +1059,7 @@ public:
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
-class b3Shape3 : public b3Shape, public b3ShapeBaseTrans
+class b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
 	     b3Shape3(b3_size class_size,b3_u32 class_type);
@@ -1134,7 +1134,7 @@ public:
 };
 
 // DOUGHNUT, TORUS
-class b3Torus : public b3Shape, public b3ShapeBaseTrans
+class b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
 	b3_s32            m_lSize;
@@ -1200,7 +1200,7 @@ public:
 	}
 };
 
-class b3TriangleShape : public b3Shape
+class b3TriangleShape : public b3SimpleShape
 {
 public:
 	b3Base<b3TriangleRef> *m_GridList;              // list of grids
@@ -1386,9 +1386,9 @@ class b3CSGShape;
 
 enum b3_csg_operation
 {
-	B3_CSG_SUB = MODE_NOT,
-	B3_CSG_AND = MODE_AND,
-	B3_CSG_OR  = MODE_OR
+	B3_CSG_UNION     = MODE_OR,
+	B3_CSG_INTERSECT = MODE_AND,
+	B3_CSG_SUB       = MODE_NOT
 };
 
 enum b3_csg_index
@@ -1690,10 +1690,10 @@ protected:
 
 struct b3_ray_info : public b3_ray
 {
-	b3_index       depth;
-	b3_color       color;
-	b3ShapeBase   *shape;
-	b3BBox        *bbox;
+	b3_index     depth;
+	b3_color     color;
+	b3Shape     *shape;
+	b3BBox      *bbox;
 };
 
 struct b3_illumination : public b3_surface
@@ -1756,7 +1756,7 @@ private:
 	void         b3Init();
 	b3_bool      b3PointIllumination(b3Scene *scene,b3_illumination *surface);
 	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_illumination *surface);
-	b3ShapeBase *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
+	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
 		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
@@ -2281,8 +2281,8 @@ protected:
 
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
-		    b3ShapeBase    *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
-		    b3ShapeBase    *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
+		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
+		    b3Shape        *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);
 
 	friend class b3RayRow;

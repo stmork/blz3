@@ -99,6 +99,12 @@ IDI_SHAPE_BSPLINE_ROT   ICON    DISCARDABLE     "res\\shape_bspline_rot.ico"
 IDI_SHAPE_BSPLINE_AREA  ICON    DISCARDABLE     "res\\shape_bspline_area.ico"
 IDI_SHAPE_BSPLINE_CYLINDER ICON    DISCARDABLE     "res\\shape_bspline_cylinder.ico"
 IDI_SHAPE_BSPLINE_RING  ICON    DISCARDABLE     "res\\shape_bspline_ring.ico"
+IDI_CSG_TORUS           ICON    DISCARDABLE     "res\\csg_torus.ico"
+IDI_CSG_BOX             ICON    DISCARDABLE     "res\\csg_box.ico"
+IDI_CSG_ELLIPSOID       ICON    DISCARDABLE     "res\\csg_ellipsoid.ico"
+IDI_CSG_CONE            ICON    DISCARDABLE     "res\\csg_cone.ico"
+IDI_CSG_CYLINDER        ICON    DISCARDABLE     "res\\csg_cylinder.ico"
+IDI_CSG_SPHERE          ICON    DISCARDABLE     "res\\csg_sphere.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -684,7 +690,7 @@ END
 
 IDD_HIERARCHY DIALOGEX 0, 0, 186, 206
 STYLE DS_3DLOOK | WS_CHILD
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "Tree1",IDC_HIERARCHY,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | 
@@ -1772,6 +1778,16 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_CAMERA_UNIT         "Maﬂeinheit: %s"
+    IDS_CSG_SPHERE          "CSG Kugel (%s)"
+    IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
+    IDS_CSG_CONE            "CSG Kegel (%s)"
+    IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
+    IDS_CSG_BOX             "CSG Quader (%s)"
+    IDS_CSG_TORUS           "CSG Torus (%s)"
+    IDS_CSG_MODE_NONE       " "
+    IDS_CSG_MODE_UNION      "Vereinigung"
+    IDS_CSG_MODE_INTERSECT  "Schnittmenge"
+    IDS_CSG_MODE_SUB        "Abzug"
 END
 
 #endif    // German (Germany) resources

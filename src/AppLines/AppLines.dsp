@@ -484,6 +484,30 @@ SOURCE=.\res\bbox_world.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\csg_box.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csg_cone.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csg_cylinder.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csg_ellipsoid.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csg_sphere.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csg_torus.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\down.ico
 # End Source File
 # Begin Source File

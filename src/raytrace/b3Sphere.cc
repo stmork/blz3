@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/02/18 17:50:32  sm
+**	- Corrected some intersection problems concerning CSG
+**	- Added CSG shape icons
+**	- renamed classes appropriate.
+**
 **	Revision 1.20  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.19  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -143,7 +148,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3Sphere::b3Sphere(b3_u32 class_type) : b3Shape(sizeof(b3Sphere), class_type)
+b3Sphere::b3Sphere(b3_u32 class_type) : b3SimpleShape(sizeof(b3Sphere), class_type)
 {
 	m_Base.x =  0;
 	m_Base.y =  0;
@@ -153,7 +158,7 @@ b3Sphere::b3Sphere(b3_u32 class_type) : b3Shape(sizeof(b3Sphere), class_type)
 	m_Dir.z  =  0;
 }
 
-b3Sphere::b3Sphere(b3_u32 *src) : b3Shape(src)
+b3Sphere::b3Sphere(b3_u32 *src) : b3SimpleShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2002/02/18 17:50:32  sm
+**      - Corrected some intersection problems concerning CSG
+**      - Added CSG shape icons
+**      - renamed classes appropriate.
+**
 **      Revision 1.2  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -54,7 +59,7 @@ b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObje
 {
 }
 
-b3CSGShape::b3CSGShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3Shape), class_type)
+b3CSGShape::b3CSGShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3CSGShape), class_type)
 {
 }
 
@@ -65,14 +70,15 @@ b3CSGShape::b3CSGShape(b3_u32 *src) : b3ShapeRenderObject(src)
 void b3CSGShape::b3Operate(b3_csg_tree *intervals)
 {
 	b3_csg_point    *Point,*PointA,*PointB;
-	b3_csg_interval *result,*aux;
+	b3_csg_interval *result,*source;
 	b3_count         aCount,bCount;
 	b3_bool          stat,aStat,bStat,cStat;
 
 	// pointer to result interval
+	source          = intervals->ThisBox1;
 	result          = intervals->ThisBox2;
 	result->m_Count = 0;
-	aStat = bStat = cStat = false;
+	aStat = bStat = cStat = stat = false;
 
 	// these are the intervals to compute (A and B)
 	aCount = intervals->ThisBox1->m_Count;
@@ -120,16 +126,19 @@ void b3CSGShape::b3Operate(b3_csg_tree *intervals)
 		// Do compute boolean operation!
 		switch(m_Operation)
 		{
-		case B3_CSG_OR:
-			stat = aStat || bStat;
+		case B3_CSG_UNION:
+			stat = (aStat || bStat);
 			break;
-		case B3_CSG_AND:
-			stat = aStat && bStat;
+		case B3_CSG_INTERSECT:
+			stat = (aStat && bStat);
 			break;
 		case B3_CSG_SUB:
-			stat = (aStat ? !bStat : false);
+			stat = (aStat ? (!bStat) : false);
 			break;
 		}
+		
+		// Store only points which state (inside/outside)
+		// are changed.
 		if (stat != cStat)
 		{
 			// insert result
@@ -138,10 +147,9 @@ void b3CSGShape::b3Operate(b3_csg_tree *intervals)
 		}
 	}
 
-	// ThisBox1 is result
-	aux                 = intervals->ThisBox1;
-	intervals->ThisBox1 = intervals->ThisBox2;
-	intervals->ThisBox2 = aux;
+	// Turn for next round...
+	intervals->ThisBox1 = result;
+	intervals->ThisBox2 = source;
 }
 
 void b3CSGShape::b3InverseMap(b3_ray *ray,b3_csg_point *point)
@@ -216,7 +224,7 @@ b3_bool b3CSGShape3::b3Prepare()
 
 	if (b3ShapeBaseTrans::b3Prepare())
 	{
-		result = b3ShapeBase::b3Prepare();
+		result = b3Shape::b3Prepare();
 	}
 	return result;
 }
