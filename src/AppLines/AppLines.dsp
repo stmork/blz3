@@ -164,6 +164,10 @@ SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgLDC.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgLensFlare.cpp
 # End Source File
 # Begin Source File
@@ -253,6 +257,10 @@ SOURCE=.\DlgDistributed.h
 # Begin Source File
 
 SOURCE=.\DlgHierarchy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgLDC.h
 # End Source File
 # Begin Source File
 

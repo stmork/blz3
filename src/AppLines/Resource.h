@@ -40,6 +40,7 @@
 #define IDI_BBOX_EMPTY                  155
 #define IDM_BAR_VIEW                    252
 #define IDD_SEARCH_PATH_LIST            509
+#define IDD_LDC                         510
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -212,6 +213,7 @@
 #define ID_CAMERA_DELETE                32832
 #define ID_CAMERA_PROPERTIES            32833
 #define ID_LIGHT_LDC                    32834
+#define ID_LIGHT_SPOT                   32835
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -238,7 +240,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
-#define _APS_NEXT_COMMAND_VALUE         32835
+#define _APS_NEXT_COMMAND_VALUE         32840
 #define _APS_NEXT_CONTROL_VALUE         1059
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

@@ -178,9 +178,11 @@ BEGIN
     BUTTON      ID_LIGHT_NEW
     BUTTON      ID_LIGHT_DELETE
     BUTTON      ID_LIGHT_PROPERTIES
+    BUTTON      ID_LIGHT_LDC
+    SEPARATOR
     BUTTON      ID_LIGHT_ENABLE
     BUTTON      ID_LIGHT_SOFT
-    BUTTON      ID_LIGHT_LDC
+    BUTTON      ID_LIGHT_SPOT
     BUTTON      ID_LIGHT_SELECT
 END
 
@@ -283,6 +285,24 @@ BEGIN
         MENUITEM "Ansicht auf Drehkreuz richten", ID_VIEW_TO_FULCRUM
         MENUITEM SEPARATOR
         MENUITEM "Licht&quelle ausrichten",     ID_LIGHT_TURN
+    END
+    POPUP "Kamera"
+    BEGIN
+        MENUITEM "Erzeuge&n...",                ID_CAMERA_NEW
+        MENUITEM "&Löschen",                    ID_CAMERA_DELETE
+        MENUITEM "&Eigenschaften...",           ID_CAMERA_PROPERTIES
+        MENUITEM "&Auf Drehkreuz ausrichten",   ID_VIEW_TO_FULCRUM
+    END
+    POPUP "Lichtquelle"
+    BEGIN
+        MENUITEM "Erzeuge&n...",                ID_LIGHT_NEW
+        MENUITEM "&Löschen",                    ID_LIGHT_DELETE
+        MENUITEM "&Eigenschaften...",           ID_LIGHT_PROPERTIES
+        MENUITEM "Lichtstärke&verteilungskurve...", ID_LIGHT_LDC
+        MENUITEM SEPARATOR
+        MENUITEM "Einge&schaltet",              ID_LIGHT_ENABLE
+        MENUITEM "&Weiche Schatten",            ID_LIGHT_SOFT
+        MENUITEM "Spotlicht",                   ID_LIGHT_SPOT
     END
     POPUP "&Ansicht"
     BEGIN
@@ -720,6 +740,20 @@ BEGIN
                     SS_NOTIFY | SS_SUNKEN,330,100,80,65
 END
 
+IDD_LDC DIALOG DISCARDABLE  0, 0, 362, 201
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Lichtstärkeverteilungskurve"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,15,175,50,14
+    CONTROL         "",IDC_LIGHT_LDC_CONTROL,"Static",SS_BLACKFRAME | 
+                    SS_NOTIFY | SS_SUNKEN,15,10,210,155
+    CONTROL         "",IDC_LIGHT_PREVIEW,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    240,85,110,80
+    CONTROL         "",IDC_LIGHT_LDC_DIAGRAM,"Static",SS_BLACKFRAME | 
+                    SS_NOTIFY | SS_SUNKEN,240,10,110,60
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -861,6 +895,14 @@ BEGIN
         RIGHTMARGIN, 415
         TOPMARGIN, 7
         BOTTOMMARGIN, 264
+    END
+
+    IDD_LDC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 355
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 194
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1137,7 +1179,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
     ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
-    ID_LIGHT_LDC            "Schaltet Nutzung der Lichtstärkeverteilungskurve ein oder aus.\nLichtstärkeverteilungskurve ein-/ausschalten"
+    ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
+    ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
 END
 
 #endif    // German (Germany) resources

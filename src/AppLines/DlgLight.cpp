@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/07 16:36:12  sm
+**	- Added simple LDC editing dialog.
+**
 **	Revision 1.6  2001/12/06 19:45:06  sm
 **	- Minor bug fixes in DlgLight
-**
+**	
 **	Revision 1.5  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
 **	
@@ -129,6 +132,7 @@ BOOL CDlgLight::OnInitDialog()
 	m_LightScene = b3ExampleScene::b3CreateGlobal();
 	light = m_LightScene->b3GetLight();
 	B3_ASSERT(light != null);
+	m_LightScene->m_ShadowBrightness = 0.1f;
 	light->m_Position.x  =   0;
 	light->m_Position.y  =   0;
 	light->m_Position.z  = 100;

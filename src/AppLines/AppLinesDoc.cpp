@@ -37,6 +37,7 @@
 #include "DlgDistributed.h"
 #include "DlgCreateItem.h"
 #include "DlgLight.h"
+#include "DlgLDC.h"
 
 #include "b3ExampleScene.h"
 
@@ -48,9 +49,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2001/12/07 16:36:12  sm
+**	- Added simple LDC editing dialog.
+**
 **	Revision 1.26  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
-**
+**	
 **	Revision 1.25  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -195,6 +199,8 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SOFT, OnUpdateLightSoft)
 	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
+	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -590,6 +596,22 @@ void CAppLinesDoc::OnLightProperties()
 	}
 }
 
+void CAppLinesDoc::OnLightLDC() 
+{
+	// TODO: Add your command handler code here
+	CDlgLDC     dlg;
+	CMainFrame *main;
+
+	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	dlg.m_Light     = main->b3GetSelectedLight();
+	if (dlg.DoModal() == IDOK)
+	{
+		SetModifiedFlag();
+		main->b3UpdateLightBox(m_Scene,dlg.m_Light);
+		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
+	}
+}
+
 void CAppLinesDoc::OnLightEnable() 
 {
 	// TODO: Add your command handler code here
@@ -614,7 +636,7 @@ void CAppLinesDoc::OnLightSoft()
 	SetModifiedFlag();
 }
 
-void CAppLinesDoc::OnLightLDC() 
+void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
 	CMainFrame     *main;
@@ -662,7 +684,7 @@ void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI)
 	}
 }
 
-void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
+void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	CMainFrame     *main;
@@ -674,6 +696,24 @@ void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI)
 	{
 		pCmdUI->Enable(light->m_LightActive);
 		pCmdUI->SetCheck(light->m_SpotActive);
+	}
+	else
+	{
+		pCmdUI->Enable(FALSE);
+	}
+}
+
+void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	if (light != null)
+	{
+		pCmdUI->Enable(light->m_LightActive && light->m_SpotActive);
 	}
 	else
 	{

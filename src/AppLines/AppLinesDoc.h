@@ -98,6 +98,8 @@ protected:
 	afx_msg void OnUpdateLightSoft(CCmdUI* pCmdUI);
 	afx_msg void OnLightLDC();
 	afx_msg void OnUpdateLightLDC(CCmdUI* pCmdUI);
+	afx_msg void OnLightSpot();
+	afx_msg void OnUpdateLightSpot(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/12/07 16:36:12  sm
+**	- Added simple LDC editing dialog.
+**
 **	Revision 1.4  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
-**
+**	
 **	Revision 1.3  2001/12/06 07:08:55  sm
 **	- Further control programming
 **	
@@ -143,16 +146,6 @@ void CB3ControlLDC::b3Init(b3Light *light)
 		m_Curve = (b3_vector *)b3Alloc(sizeof(b3_vector) * (m_LDC->subdiv + 1));
 	}
 
-	if (m_Mode == LDC_EDIT)
-	{
-		m_PickBase.b3Free();
-		for (i = 0;i < m_LDC->control_num;i++)
-		{
-			pick = new b3PickLDC(&m_LDC->controls[i],m_xMax,m_yMax);
-			m_PickBase.b3Append(pick);
-		}
-	}
-
 	if ((!m_Init) && ::IsWindow(m_hWnd))
 	{
 		GetClientRect(&rect);
@@ -165,6 +158,16 @@ void CB3ControlLDC::b3Init(b3Light *light)
 		ReleaseDC(dc);
 		b3Update();
 		m_Init = true;
+	}
+
+	if (m_Mode == LDC_EDIT)
+	{
+		m_PickBase.b3Free();
+		for (i = 0;i < m_LDC->control_num;i++)
+		{
+			pick = new b3PickLDC(&m_LDC->controls[i],m_xMax,m_yMax);
+			m_PickBase.b3Append(pick);
+		}
 	}
 }
 
