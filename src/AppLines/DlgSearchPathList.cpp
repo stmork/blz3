@@ -26,12 +26,6 @@
 #include "DlgSearchPathList.h"
 #include "blz3/system/b3Dir.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzatd III development log                  **
@@ -40,9 +34,12 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.7  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.6  2004/12/23 22:22:42  sm
 **	- Adjusted further Visual C++ options
-**
+**	
 **	Revision 1.5  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
 **	

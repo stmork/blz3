@@ -45,11 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.45  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.44  2005/01/02 19:15:24  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -306,9 +309,9 @@ END_DISPATCH_MAP()
 //  from VBA.  This IID must match the GUID that is attached to the 
 //  dispinterface in the .ODL file.
 
-// {72D6951A-8984-11D5-A54F-0050BF4EB3F3}
+// {592D13F9-C0EC-40d9-9F57-0E7A3C700E44}
 static const IID IID_IAppObject =
-{ 0x72d6951a, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
+{ 0x592d13f9, 0xc0ec, 0x40d9, { 0x9f, 0x57, 0xe, 0x7a, 0x3c, 0x70, 0xe, 0x44 } };
 
 BEGIN_INTERFACE_MAP(CAppObjectDoc, CAppRenderDoc)
 	INTERFACE_PART(CAppObjectDoc, IID_IAppObject, Dispatch)

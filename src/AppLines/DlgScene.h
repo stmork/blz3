@@ -32,8 +32,24 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgScene dialog
 
+struct b3_resolution
+{
+	b3_res xRes,yRes;
+};
+
+struct b3_shading
+{
+	b3_u32 class_type;
+	int    mode;
+};
+
 class CDlgScene : public CPropertyPage
 {
+	static int           m_SceneToDialog[4];
+	static b3_bg_type    m_DialogToScene[4];
+	static b3_resolution m_ResolutionTable[];
+	static b3_shading    m_ShadingTable[];
+
 // Construction
 public:
 	b3_u32   m_ShadingClassType;

@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.41  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.40  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
 **	
@@ -268,7 +271,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-static UINT indicators[] =
+UINT CMainFrame::m_Indicators[] =
 {
 	ID_SEPARATOR,           // status line indicator
 	ID_COORD_X,
@@ -280,7 +283,7 @@ static UINT indicators[] =
 	ID_INDICATOR_SCRL,
 };
 
-static UINT toolbar_bitmaps[] =
+UINT CMainFrame::m_ToolbarBitmaps[] =
 {
 	IDR_MAINFRAME,
 	IDR_TOOLBAR_VIEW,
@@ -375,8 +378,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndToolBar.b3AddArrow(ID_EDIT_REDO);
 
 	if (!m_wndStatusBar.Create(this) ||
-		!m_wndStatusBar.SetIndicators(indicators,
-		  sizeof(indicators)/sizeof(UINT)))
+		!m_wndStatusBar.SetIndicators(m_Indicators,
+		  sizeof(m_Indicators)/sizeof(UINT)))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
@@ -393,7 +396,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// install/load cool menus
 	m_menuManager.Install(this);
-	m_menuManager.LoadToolbars(toolbar_bitmaps,sizeof(toolbar_bitmaps) / sizeof(UINT));
+	m_menuManager.LoadToolbars(m_ToolbarBitmaps,sizeof(m_ToolbarBitmaps) / sizeof(UINT));
 
 #ifndef _DEBUG
 	CSplashWnd::ShowSplashScreen(this);

@@ -23,6 +23,8 @@
 
 class b3ProfileBevelTriangles : public b3Profile
 {
+	static b3ProfileBevelTriangles m_RegisterProfile;
+
 public:
 	                               b3ProfileBevelTriangles();
 	virtual b3_bool                b3Create();

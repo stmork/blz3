@@ -52,13 +52,16 @@ class b3SearchPath;
 class CAppLinesApp : public CB3App
 {
 	// Last view parameter
-	b3_bool          m_Filtered;
-	b3_display_mode  m_Mode;
+	b3_bool            m_Filtered;
+	b3_display_mode    m_Mode;
 
 	// Document templates (we can handle many file types!)
-	CMultiDocTemplate *pImageTemplate;
-	CMultiDocTemplate *pSceneTemplate;
-	CMultiDocTemplate *pObjectTemplate;
+	CMultiDocTemplate *m_pImageTemplate;
+	CMultiDocTemplate *m_pSceneTemplate;
+	CMultiDocTemplate *m_pObjectTemplate;
+
+	static const CLSID m_SceneClsID;
+	static const CLSID m_ObjectClsID;
 
 public:
 	b3_count           m_RowRefreshCount;

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.23  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.22  2004/05/28 20:54:02  sm
 **	- Fixed scene dialog concerning new Mork shading
 **	
@@ -138,7 +141,7 @@
 **                                                                      **
 *************************************************************************/
 
-static int scene_to_dialog[4] =
+int CDlgScene::m_SceneToDialog[4] =
 {
 	0, // TP_NOTHING
 	3, // TP_TEXTURE
@@ -146,7 +149,7 @@ static int scene_to_dialog[4] =
 	2  // TP_SKY_N_HELL
 };
 
-static b3_bg_type dialog_to_scene[4] =
+b3_bg_type CDlgScene::m_DialogToScene[4] =
 {
 	TP_NOTHING,
 	TP_SLIDE,
@@ -154,11 +157,7 @@ static b3_bg_type dialog_to_scene[4] =
 	TP_TEXTURE
 };
 
-static struct b3_resolution
-{
-	b3_res xRes,yRes;
-}
-resolution[] =
+b3_resolution CDlgScene::m_ResolutionTable[] =
 {
 	{    0,    0 },
 	{  768,  576 },
@@ -173,12 +172,7 @@ resolution[] =
 	{  200,  150 }
 };
 
-static struct b3_shading
-{
-	b3_u32 class_type;
-	int    mode;
-}
-shading[] =
+b3_shading CDlgScene::m_ShadingTable[] =
 {
 	{ TRACEPHOTO_PHONG, 0 },
 	{ TRACEANGLE_PHONG, 0 },
@@ -254,7 +248,7 @@ BOOL CDlgScene::OnInitDialog()
 {
 	m_ResValid = (m_Scene->m_Flags & TP_SIZEVALID) != 0;
 	m_GfxValid = (m_Scene->m_Flags & TP_NO_GFX) == 0;
-	m_BackgroundMode = scene_to_dialog[m_Scene->m_BackgroundType];
+	m_BackgroundMode = m_SceneToDialog[m_Scene->m_BackgroundType];
 	b3SetResolution(m_Scene->m_xSize,m_Scene->m_ySize);
 	b3SetShading();
 
@@ -315,7 +309,7 @@ void CDlgScene::OnBgModeChanged()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
-	m_PreviewScene->m_BackgroundType = dialog_to_scene[m_BackgroundMode];
+	m_PreviewScene->m_BackgroundType = m_DialogToScene[m_BackgroundMode];
 	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	b3UpdateUI();
 }
@@ -424,8 +418,8 @@ void CDlgScene::OnChangedResolution()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	m_xResSpin.b3SetPos(resolution[m_Resolution].xRes);
-	m_yResSpin.b3SetPos(resolution[m_Resolution].yRes);
+	m_xResSpin.b3SetPos(m_ResolutionTable[m_Resolution].xRes);
+	m_yResSpin.b3SetPos(m_ResolutionTable[m_Resolution].yRes);
 }
 
 void CDlgScene::OnEditedResolution() 
@@ -442,13 +436,13 @@ void CDlgScene::OnEditedResolution()
 
 b3_bool CDlgScene::b3SetResolution(b3_res xRes,b3_res yRes)
 {
-	b3_index i,max = sizeof(resolution) / sizeof(b3_resolution);
+	b3_index i,max = sizeof(m_ResolutionTable) / sizeof(b3_resolution);
 	b3_index pos = 0;
 	b3_bool  changed = false;
 
 	for (i = 1;i < max;i++)
 	{
-		if ((resolution[i].xRes == xRes) && (resolution[i].yRes == yRes))
+		if ((m_ResolutionTable[i].xRes == xRes) && (m_ResolutionTable[i].yRes == yRes))
 		{
 			pos = i;
 			break;
@@ -464,13 +458,13 @@ b3_bool CDlgScene::b3SetResolution(b3_res xRes,b3_res yRes)
 
 void CDlgScene::b3SetShading()
 {
-	b3_index i,max = sizeof(shading) / sizeof(b3_shading);
+	b3_index i,max = sizeof(m_ShadingTable) / sizeof(b3_shading);
 
 	for (i = 0;i < max;i++)
 	{
-		if (shading[i].class_type == m_Scene->b3GetClassType())
+		if (m_ShadingTable[i].class_type == m_Scene->b3GetClassType())
 		{
-			m_Shading = shading[i].mode;
+			m_Shading = m_ShadingTable[i].mode;
 			return;
 		}
 	}

@@ -62,9 +62,12 @@
 
 /*
 **	$Log$
+**	Revision 1.107  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.106  2005/01/16 17:30:23  sm
 **	- Minor changes
-**
+**	
 **	Revision 1.105  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -681,9 +684,9 @@ END_DISPATCH_MAP()
 //  from VBA.  This IID must match the GUID that is attached to the 
 //  dispinterface in the .ODL file.
 
-// {72D69519-8984-11D5-A54F-0050BF4EB3F3}
+// {B495FF74-0DA8-4580-8358-6D6A89F7C721}
 static const IID IID_IAppLines =
-{ 0x72d69519, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
+{ 0xb495ff74, 0xda8, 0x4580, { 0x83, 0x58, 0x6d, 0x6a, 0x89, 0xf7, 0xc7, 0x21 } };
 
 BEGIN_INTERFACE_MAP(CAppLinesDoc, CAppRenderDoc)
 	INTERFACE_PART(CAppLinesDoc, IID_IAppLines, Dispatch)

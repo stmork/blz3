@@ -12,7 +12,7 @@ library AppLines
 
 	//  Primary dispatch interface for CAppLinesDoc
 	
-	[ uuid(72D69519-8984-11D5-A54F-0050BF4EB3F3) ]
+	[ uuid(B495FF74-0DA8-4580-8358-6D6A89F7C721) ]
 	dispinterface IAppLines
 	{
 		properties:
@@ -31,7 +31,7 @@ library AppLines
 
 	//  Class information for CAppLinesDoc
 	
-	[ uuid(72D69517-8984-11D5-A54F-0050BF4EB3F3) ]
+	[ uuid(113483C9-2379-4163-9991-BB9FC8F2E60E) ]
 	coclass Document
 	{
 		[default] dispinterface IAppLines;

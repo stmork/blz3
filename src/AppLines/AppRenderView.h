@@ -41,7 +41,7 @@
 
 #define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA|B3_UPDATE_LIGHT)
 
-typedef enum b3SelectMode
+enum b3_select_mode
 {
 	B3_SELECT_NOTHING = -1,
 	B3_SELECT_MAGNIFICATION = 0,
@@ -62,7 +62,7 @@ typedef enum b3SelectMode
 	B3_SHAPE_MIRROR_AXIS,
 	B3_SHAPE_MIRROR_AREA,
 	B3_MODE_MAX
-} b3_select_mode;
+};
 
 class CB3Action;
 

@@ -23,6 +23,10 @@
 
 class CB3ExceptionLogger
 {
+	static CString                        m_LocalMessageString;
+	static b3HashMap<b3_errno,UINT>       m_LocalMessageMap;
+	static b3HashContainer<b3_errno,UINT> m_LocalMessages[];
+
 public:
 	CB3ExceptionLogger();
 	static const char *b3GetMessage(const b3_errno ErrNo);

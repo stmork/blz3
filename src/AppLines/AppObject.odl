@@ -12,7 +12,7 @@ library AppObject
 
 	//  Primary dispatch interface for CAppObjectDoc
 	
-	[ uuid(72D6951A-8984-11D5-A54F-0050BF4EB3F3) ]
+	[ uuid(592D13F9-C0EC-40d9-9F57-0E7A3C700E44) ]
 	dispinterface IAppObject
 	{
 		properties:
@@ -30,8 +30,8 @@ library AppObject
 	};
 
 	//  Class information for CAppObjectDoc
-	
-	[ uuid(72D6951B-8984-11D5-A54F-0050BF4EB3F3) ]
+
+	[ uuid(05EFACB9-8957-48aa-956D-5331CEBC6C9A) ]
 	coclass Document
 	{
 		[default] dispinterface IAppObject;

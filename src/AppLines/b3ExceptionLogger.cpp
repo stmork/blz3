@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.10  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 **	Revision 1.9  2003/06/01 12:35:43  sm
 **	- added invalid increment exception to b3Array
 **	
@@ -89,9 +92,9 @@
 **                                                                      **
 *************************************************************************/
 
-static CString                        LocalMessageString;
-static b3HashMap<b3_errno,UINT>       LocalMessageMap;
-static b3HashContainer<b3_errno,UINT> LocalMessages[] =
+CString                        CB3ExceptionLogger::m_LocalMessageString;
+b3HashMap<b3_errno,UINT>       CB3ExceptionLogger::m_LocalMessageMap;
+b3HashContainer<b3_errno,UINT> CB3ExceptionLogger::m_LocalMessages[] =
 {
 	{ B3_MK_ERRNO(B3_MEM_MEMORY,                    'MEM'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_DISPLAY_MEMORY,                'DSP'), IDS_ERR_MEMORY },
@@ -140,21 +143,21 @@ static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 
 CB3ExceptionLogger::CB3ExceptionLogger()
 {
-	LocalMessageMap.b3Init(LocalMessages,sizeof(LocalMessages) / sizeof(b3HashContainer<b3_errno,UINT>));
+	m_LocalMessageMap.b3Init(m_LocalMessages,sizeof(m_LocalMessages) / sizeof(b3HashContainer<b3_errno,UINT>));
 	b3ExceptionBase::b3SetMsgFunc(&b3GetMessage);
 }
 
 const char *CB3ExceptionLogger::b3GetMessage(const b3_errno ErrNo)
 {
-	UINT *MsgID = LocalMessageMap.b3Find(ErrNo);
+	UINT *MsgID = m_LocalMessageMap.b3Find(ErrNo);
 
 	if (MsgID != null)
 	{
-		LocalMessageString.LoadString(*MsgID);
+		m_LocalMessageString.LoadString(*MsgID);
 	}
 	else
 	{
-		LocalMessageString.Format(IDS_ERR_UNKNOWN,ErrNo);
+		m_LocalMessageString.Format(IDS_ERR_UNKNOWN,ErrNo);
 	}
-	return LocalMessageString;
+	return m_LocalMessageString;
 }

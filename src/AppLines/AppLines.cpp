@@ -49,6 +49,8 @@
 #include "b3Profile.h"
 #include "b3ExceptionLogger.h"
 #include "b3SelectObject.h"
+#include "b3DocManager.h"
+#include "b3ImageMultiDocTemplate.h"
 
 /*************************************************************************
 **                                                                      **
@@ -58,9 +60,12 @@
 
 /*
 **	$Log$
+**	Revision 1.86  2005/01/23 20:57:21  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.85  2005/01/13 20:05:15  sm
 **	- Some Lines bugfixes
-**
+**	
 **	Revision 1.84  2005/01/09 19:58:30  sm
 **	- Added more convenient plugin path maintainance
 **	
@@ -473,124 +478,20 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 
 CAppLinesApp theApp;
 
-class CB3DocManager : public CDocManager
-{
-	DECLARE_DYNAMIC(CB3DocManager)
-
-public:
-	virtual BOOL DoPromptFileName(
-		CString      &fileName,
-		UINT          nIDSTitle,
-		DWORD         lFlags,
-		BOOL          bOpenFileDialog,
-		CDocTemplate *pTemplate)
-	{
-#if 0
-		return CDocManager::DoPromptFileName(fileName,nIDSTitle,lFlags,bOpenFileDialog,pTemplate);
-#else
-		CString title;
-		CString strFilter;
-		CString strDefault;
-		CString suggest = fileName;
-		CString allFilter;
-		BOOL    result;
-
-		VERIFY(title.LoadString(nIDSTitle));
-
-		if (pTemplate != NULL)
-		{
-			CString filterName,filterExt;
-
-			ASSERT_VALID(pTemplate);
-			pTemplate->GetDocString(filterName,CDocTemplate::filterName);
-			pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
-			strFilter += (filterName + "|*" + filterExt + "|");
-		}
-		else
-		{
-			// do for all doc template
-			POSITION pos = m_templateList.GetHeadPosition();
-			CString filterName,filterExt;
-
-			while (pos != NULL)
-			{
-				CDocTemplate* pTemplate = (CDocTemplate*)m_templateList.GetNext(pos);
-
-				ASSERT_VALID(pTemplate);
-				pTemplate->GetDocString(filterName,CDocTemplate::filterName);
-				pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
-				strFilter += (filterName + "|*" + filterExt + "|");
-			}
-		}
-
-		// append the "*.*" all files filter
-		allFilter.LoadString(AFX_IDS_ALLFILTER);
-		strFilter += (allFilter + "|*.*||");
-
-		CB3FileDialog dlgFile(bOpenFileDialog,"",suggest,OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | lFlags,strFilter);
-		dlgFile.m_ofn.lpstrTitle = title;
-
-		result = dlgFile.DoModal() == IDOK;
-		if (result)
-		{
-			fileName = dlgFile.GetPathName();
-		}
-		return result;
-#endif
-	}
-};
-
 IMPLEMENT_DYNAMIC(CB3DocManager,CDocManager)
-
-
-class CImageMultiDocTemplate : public CMultiDocTemplate
-{
-	DECLARE_DYNAMIC(CImageMultiDocTemplate)
-
-// Constructors
-public:
-	CImageMultiDocTemplate(
-		UINT           nIDResource,
-		CRuntimeClass *pDocClass,
-		CRuntimeClass *pFrameClass,
-		CRuntimeClass *pViewClass) :
-			CMultiDocTemplate(nIDResource,pDocClass,pFrameClass,pViewClass)
-	{
-	}
-	
-	virtual Confidence MatchDocType(
-		LPCTSTR lpszPathName,
-		CDocument*& rpDocMatch)
-	{
-		Confidence result;
-		
-		result = CMultiDocTemplate::MatchDocType(lpszPathName,rpDocMatch);
-		if(result == yesAttemptForeign)
-		{
-			b3Path ext;
-
-			ext.b3ExtractExt(lpszPathName);
-			if (b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
-			{
-				result = yesAttemptNative;
-			}
-		}
-		return result;
-	}
-};
 
 IMPLEMENT_DYNAMIC(CImageMultiDocTemplate,CMultiDocTemplate)
 
 // This identifier was generated to be statistically unique for your app.
 // You may change it if you prefer to choose a specific identifier.
 
-// {72D69517-8984-11D5-A54F-0050BF4EB3F3}
-static const CLSID scene_clsid =
-{ 0x72d69517, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
+// {F1E8F37D-3D18-4028-9E52-5A2D141EB769}
+const CLSID CAppLinesApp::m_SceneClsID =
+{ 0xf1e8f37d, 0x3d18, 0x4028, { 0x9e, 0x52, 0x5a, 0x2d, 0x14, 0x1e, 0xb7, 0x69 } };
 
-// {72D6951B-8984-11D5-A54F-0050BF4EB3F3}
-static const CLSID object_clsid =
-{ 0x72d6951b, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
+// {F346F6D2-0E7B-4b15-B887-D7A9B215EB62}
+const CLSID CAppLinesApp::m_ObjectClsID =
+{ 0xf346f6d2, 0xe7b, 0x4b15, { 0xb8, 0x87, 0xd7, 0xa9, 0xb2, 0x15, 0xeb, 0x62 } };
 
 /*************************************************************************
 **                                                                      **
@@ -712,33 +613,33 @@ BOOL CAppLinesApp::InitInstance()
 		m_pDocManager = new CB3DocManager;
 	}
 
-	pSceneTemplate = new CMultiDocTemplate(
+	m_pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,
 		RUNTIME_CLASS(CAppLinesDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAppLinesView));
-	AddDocTemplate(pSceneTemplate);
+	AddDocTemplate(m_pSceneTemplate);
 
-	pImageTemplate = new CImageMultiDocTemplate(
+	m_pImageTemplate = new CImageMultiDocTemplate(
 		IDR_DISPLAYTYPE,
 		RUNTIME_CLASS(CAppRaytraceDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAppRaytraceView));
-	AddDocTemplate(pImageTemplate);
+	AddDocTemplate(m_pImageTemplate);
 
-	pObjectTemplate = new CMultiDocTemplate(
+	m_pObjectTemplate = new CMultiDocTemplate(
 		IDR_OBJECT,
 		RUNTIME_CLASS(CAppObjectDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAppObjectView));
-	AddDocTemplate(pObjectTemplate);
+	AddDocTemplate(m_pObjectTemplate);
 
 	// Connect the COleTemplateServer to the document template.
 	//  The COleTemplateServer creates new documents on behalf
 	//  of requesting OLE containers by using information
 	//  specified in the document template.
-	m_SceneServer.ConnectTemplate( scene_clsid,  pSceneTemplate,  FALSE);
-	m_ObjectServer.ConnectTemplate(object_clsid, pObjectTemplate, FALSE);
+	m_SceneServer.ConnectTemplate( m_SceneClsID,  m_pSceneTemplate,  FALSE);
+	m_ObjectServer.ConnectTemplate(m_ObjectClsID, m_pObjectTemplate, FALSE);
 
 	// Register all OLE server factories as running.  This enables the
 	//  OLE libraries to create objects from other applications.
@@ -791,7 +692,7 @@ BOOL CAppLinesApp::InitInstance()
 
 	b3Profile *profile;
 
-	B3_FOR_BASE(&LinesProfileBase,profile)
+	B3_FOR_BASE(&b3Profile::m_LinesProfileBase,profile)
 	{
 		if (!profile->b3Create())
 		{
@@ -816,7 +717,7 @@ int CAppLinesApp::ExitInstance()
 
 CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 {
-	return (CAppRaytraceDoc *)pImageTemplate->OpenDocumentFile(NULL);
+	return (CAppRaytraceDoc *)m_pImageTemplate->OpenDocumentFile(NULL);
 }
 
 void CAppLinesApp::b3UpdateAllViews()
@@ -824,17 +725,17 @@ void CAppLinesApp::b3UpdateAllViews()
 	CDocument *pDoc;
 	POSITION   pos;
 
-	pos = pSceneTemplate->GetFirstDocPosition();
+	pos = m_pSceneTemplate->GetFirstDocPosition();
 	while(pos != NULL)
 	{
-		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc = (CAppObjectDoc *)m_pObjectTemplate->GetNextDoc(pos);
 		pDoc->UpdateAllViews(NULL,B3_UPDATE_VIEW);
 	}
 
-	pos = pObjectTemplate->GetFirstDocPosition();
+	pos = m_pObjectTemplate->GetFirstDocPosition();
 	while(pos != NULL)
 	{
-		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc = (CAppObjectDoc *)m_pObjectTemplate->GetNextDoc(pos);
 		pDoc->UpdateAllViews(NULL,B3_UPDATE_VIEW);
 	}
 }
@@ -848,10 +749,10 @@ CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(
 	POSITION       pos;
 
 	// Look if there is any open object edit -> use it.
-	pos = pObjectTemplate->GetFirstDocPosition();
+	pos = m_pObjectTemplate->GetFirstDocPosition();
 	while(pos != NULL)
 	{
-		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc = (CAppObjectDoc *)m_pObjectTemplate->GetNextDoc(pos);
 		if (pDoc->b3IsObjectAlreadyOpen(LinesDoc,bbox))
 		{
 			pos = pDoc->GetFirstViewPosition();
@@ -861,7 +762,7 @@ CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(
 	}
 
 	// We didn't found the appropriate document -> create new one.
-	pDoc = (CAppObjectDoc *)pObjectTemplate->OpenDocumentFile(NULL);
+	pDoc = (CAppObjectDoc *)m_pObjectTemplate->OpenDocumentFile(NULL);
 	if (pDoc != null)
 	{
 		pDoc->b3EditBBox(LinesDoc,bbox);
@@ -874,10 +775,10 @@ void CAppLinesApp::b3CloseObjectDoc(CAppLinesDoc *LinesDoc)
 	POSITION       pos;
 	CAppObjectDoc *pDoc;
 
-	pos = pObjectTemplate->GetFirstDocPosition();
+	pos = m_pObjectTemplate->GetFirstDocPosition();
 	while(pos != NULL)
 	{
-		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		pDoc = (CAppObjectDoc *)m_pObjectTemplate->GetNextDoc(pos);
 		if (pDoc->b3IsLinesDoc(LinesDoc))
 		{
 			if (pDoc->IsModified())
@@ -914,7 +815,7 @@ void CAppLinesApp::OnFileNew()
 {
 	// TODO: Add your command handler code here
 	// Force creating new geometry!
-	pSceneTemplate->OpenDocumentFile(NULL);
+	m_pSceneTemplate->OpenDocumentFile(NULL);
 }
 
 void CAppLinesApp::OnImportArcon() 
@@ -928,11 +829,11 @@ void CAppLinesApp::OnImportArcon()
 
 	if (CB3SelectLoadArcon::b3Select(result))
 	{
-		pDoc = (CAppLinesDoc *)pSceneTemplate->CreateNewDocument();
+		pDoc = (CAppLinesDoc *)m_pSceneTemplate->CreateNewDocument();
 		if (pDoc->OnImportArcon(result))
 		{
-			frame = pSceneTemplate->CreateNewFrame(pDoc,NULL);
-			pSceneTemplate->InitialUpdateFrame(frame,pDoc);
+			frame = m_pSceneTemplate->CreateNewFrame(pDoc,NULL);
+			m_pSceneTemplate->InitialUpdateFrame(frame,pDoc);
 		}
 	}
 }
@@ -957,13 +858,13 @@ void CAppLinesApp::OnFileOpen()
 	CString  filter_img;
 
 	// Build scene filter
-	pSceneTemplate->GetDocString(bwdFilterName,CDocTemplate::filterName);
-	pSceneTemplate->GetDocString(bwdFilterExt,CDocTemplate::filterExt);
+	m_pSceneTemplate->GetDocString(bwdFilterName,CDocTemplate::filterName);
+	m_pSceneTemplate->GetDocString(bwdFilterExt,CDocTemplate::filterExt);
 	filter_bwd = bwdFilterName + "|*" + bwdFilterExt + "|";
 
 	// Build object filter
-	pObjectTemplate->GetDocString(bodFilterName,CDocTemplate::filterName);
-	pObjectTemplate->GetDocString(bodFilterExt,CDocTemplate::filterExt);
+	m_pObjectTemplate->GetDocString(bodFilterName,CDocTemplate::filterName);
+	m_pObjectTemplate->GetDocString(bodFilterExt,CDocTemplate::filterExt);
 	filter_bod = bodFilterName + "|*" + bodFilterExt + "|";
 
 	// Build image filter
@@ -1114,11 +1015,10 @@ b3_bool CAppLinesApp::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
 **                                                                      **
 *************************************************************************/
 
-const char AppLinesVersionString[] = "$Revision$";
-const char AppLinesNameString[] = "$Name$";
-
 class CAboutDlg : public CDialog
 {
+	static const char m_AppLinesVersionString[];
+	static const char m_AppLinesNameString[];
 public:
 	CAboutDlg();
 
@@ -1142,6 +1042,9 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
+
+const char CAboutDlg::m_AppLinesVersionString[] = "$Revision$";
+const char CAboutDlg::m_AppLinesNameString[] = "$Name$";
 
 CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {

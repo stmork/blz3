@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.11  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.10  2004/05/16 09:21:10  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
@@ -160,12 +163,7 @@ BEGIN_MESSAGE_MAP(CDlgCamera, CDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-static struct b3_predefined_camera
-{
-	b3_f64 m_FocalLength;
-	b3_f64 m_Width;
-	b3_f64 m_Height;
-} camera_definition[] =
+b3_predefined_camera CDlgCamera::m_CameraDefinition[] =
 {
 	{  10.0, 34, 22.5 },
 	{  35.0, 34, 22.5 },
@@ -174,7 +172,7 @@ static struct b3_predefined_camera
 	{ 200.0, 34, 22.5 }
 };
 
-#define MAX_CAMERA_TYPES (sizeof(camera_definition) / sizeof(b3_predefined_camera))
+#define MAX_CAMERA_TYPES (sizeof(m_CameraDefinition) / sizeof(b3_predefined_camera))
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCamera message handlers
@@ -372,9 +370,9 @@ int CDlgCamera::b3GetCameraType()
 
 	for (i = 0;i < MAX_CAMERA_TYPES;i++)
 	{
-		if ((fabs(camera_definition[i].m_FocalLength / m_UnitFactor - m_FocalLengthCtrl.m_Value) < b3Scene::epsilon) &&
-		    (fabs(camera_definition[i].m_Width       / m_UnitFactor - m_WidthCtrl.m_Value)       < b3Scene::epsilon) &&
-		    (fabs(camera_definition[i].m_Height      / m_UnitFactor - m_HeightCtrl.m_Value)      < b3Scene::epsilon))
+		if ((fabs(m_CameraDefinition[i].m_FocalLength / m_UnitFactor - m_FocalLengthCtrl.m_Value) < b3Scene::epsilon) &&
+		    (fabs(m_CameraDefinition[i].m_Width       / m_UnitFactor - m_WidthCtrl.m_Value)       < b3Scene::epsilon) &&
+		    (fabs(m_CameraDefinition[i].m_Height      / m_UnitFactor - m_HeightCtrl.m_Value)      < b3Scene::epsilon))
 		{
 			return i;
 		}
@@ -442,8 +440,8 @@ void CDlgCamera::OnSelchangeCameraTypes()
 	index = m_TypeCtrl.GetCurSel();
 	if ((index != CB_ERR) && (index < MAX_CAMERA_TYPES))
 	{
-		m_FocalLengthCtrl.b3SetPos(camera_definition[index].m_FocalLength / m_UnitFactor);
-		m_WidthCtrl.b3SetPos(camera_definition[index].m_Width             / m_UnitFactor);
-		m_HeightCtrl.b3SetPos(camera_definition[index].m_Height           / m_UnitFactor);
+		m_FocalLengthCtrl.b3SetPos(m_CameraDefinition[index].m_FocalLength / m_UnitFactor);
+		m_WidthCtrl.b3SetPos(      m_CameraDefinition[index].m_Width       / m_UnitFactor);
+		m_HeightCtrl.b3SetPos(     m_CameraDefinition[index].m_Height      / m_UnitFactor);
 	}
 }

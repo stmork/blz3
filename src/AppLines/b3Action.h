@@ -25,13 +25,13 @@
 #include "AppLinesView.h"
 #include "AppObjectView.h"
 
-typedef enum
+enum b3_mouse_button
 {
 	B3_MB_UP,
 	B3_MB_LEFT,
 	B3_MB_MIDDLE,
 	B3_MB_RIGHT
-} b3_mouse_button;
+};
 
 /*************************************************************************
 **                                                                      **

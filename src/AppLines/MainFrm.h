@@ -35,6 +35,9 @@
 
 class CMainFrame : public CMDIFrameWnd
 {
+	static UINT m_Indicators[];
+	static UINT m_ToolbarBitmaps[];
+
 	DECLARE_DYNAMIC(CMainFrame)
 public:
 	CMainFrame();

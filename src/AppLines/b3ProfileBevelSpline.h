@@ -23,6 +23,8 @@
 
 class b3ProfileBevelSpline : public b3Profile
 {
+	static b3ProfileBevelSpline    m_RegisterProfile;
+
 public:
 	                               b3ProfileBevelSpline();
 	virtual b3_bool                b3Create();

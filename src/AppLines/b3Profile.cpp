@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.5  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.4  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
@@ -66,12 +69,12 @@
 **                                                                      **
 *************************************************************************/
 
-b3Base<b3Profile> LinesProfileBase;
+b3Base<b3Profile> b3Profile::m_LinesProfileBase;
 
 b3Profile::b3Profile() : b3Link<b3Profile>(sizeof(b3Profile))
 {
 	m_Dlg = null;
-	LinesProfileBase.b3Append(this);
+	m_LinesProfileBase.b3Append(this);
 }
 
 b3Profile::~b3Profile()

@@ -6632,6 +6632,9 @@
 				RelativePath="b3ControlLDC.h">
 			</File>
 			<File
+				RelativePath=".\b3DocManager.h">
+			</File>
+			<File
 				RelativePath="b3ExampleScene.h">
 			</File>
 			<File
@@ -6642,6 +6645,9 @@
 			</File>
 			<File
 				RelativePath="b3ImageList.h">
+			</File>
+			<File
+				RelativePath=".\b3ImageMultiDocTemplate.h">
 			</File>
 			<File
 				RelativePath="b3ImagePreviewFileDlg.h">

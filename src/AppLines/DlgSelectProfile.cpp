@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/01/23 20:57:22  sm
+**	- Moved some global static variables into class static ones.
+**
 **	Revision 1.9  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -208,8 +211,8 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	memset(&item,0,sizeof(item));
 	item.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
 	item.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
-	LinesProfileBase.b3Sort(b3Profile::b3Sort);
-	B3_FOR_BASE(&LinesProfileBase,profile)
+	b3Profile::m_LinesProfileBase.b3Sort(b3Profile::b3Sort);
+	B3_FOR_BASE(&b3Profile::m_LinesProfileBase,profile)
 	{
 		if (profile->b3MatchClassType(class_type))
 		{

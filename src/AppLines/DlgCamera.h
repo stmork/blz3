@@ -30,13 +30,22 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCamera dialog
 
+struct b3_predefined_camera
+{
+	b3_f64 m_FocalLength;
+	b3_f64 m_Width;
+	b3_f64 m_Height;
+};
+
 class CDlgCamera : public CDialog
 {
-	b3_f64        m_UnitFactor;
+	static b3_predefined_camera  m_CameraDefinition[];
+	       b3_f64                m_UnitFactor;
 // Construction
 public:
-	b3Scene      *m_Scene;
-	b3CameraPart *m_Camera;
+	       b3Scene              *m_Scene;
+	       b3CameraPart         *m_Camera;
+
 	CDlgCamera(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

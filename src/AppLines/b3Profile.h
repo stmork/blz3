@@ -26,12 +26,14 @@
 class b3Profile : public b3Link<b3Profile>, public b3Comparator<b3Profile>
 {
 protected:
-	CB3ProfileShapeDialog *m_Dlg;
-	CString                m_Title;
+	CB3ProfileShapeDialog    *m_Dlg;
+	CString                   m_Title;
 
 public:
-	b3_bool                m_Closed;
-	b3Array<b3_vector>     m_Controls;
+	static b3Base<b3Profile>  m_LinesProfileBase;
+
+	b3_bool                   m_Closed;
+	b3Array<b3_vector>        m_Controls;
 
 public:
 	                               b3Profile();
@@ -46,7 +48,5 @@ public:
 
 	        int                    b3Cmp(b3Profile *b);
 };
-
-extern b3Base<b3Profile> LinesProfileBase;
 
 #endif
