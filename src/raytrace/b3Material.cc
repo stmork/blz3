@@ -31,8 +31,11 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -66,6 +69,13 @@ b3Material::b3Material(b3_u32 *src) : b3Item(src)
 {
 }
 
+b3_bool b3Material::b3GetColors(
+	b3_color *diffuse,
+	b3_color *ambient,
+	b3_color *specular)
+{
+	return false;
+}
 
 b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),class_type)
 {
@@ -81,6 +91,17 @@ b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 	RefrValue  = b3InitFloat();
 	HighLight  = b3InitFloat();
 	Flags      = b3InitInt();
+}
+
+b3_bool b3MatNormal::b3GetColors(
+	b3_color *diffuse,
+	b3_color *ambient,
+	b3_color *specular)
+{
+	*diffuse  = DiffColor;
+	*ambient  = AmbColor;
+	*specular = SpecColor;
+	return true;
 }
 
 

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
 **      Revision 1.11  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -146,6 +149,27 @@ void b3Shape::b3ComputeBound(b3CondLimit *limit)
 	{
 		cond = (b3Condition *)item;
 		cond->b3ComputeBound(limit);
+	}
+}
+
+void b3Shape::b3GetDiffuseColor(b3_color *color)
+{
+	b3Item     *item;
+	b3Material *material;
+	b3_color    ambient,specular;
+
+	color->r = 0.1f;
+	color->g = 0.5f;
+	color->b = 1.0f;
+	color->a = 0.0f;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetColors(color,&ambient,&specular))
+		{
+			return;
+		}
 	}
 }
 

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
 **      Revision 1.9  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -115,7 +118,7 @@ b3RenderView::b3RenderView()
 	b3_index          i;
 
 	m_ViewMode    = B3_VIEW_3D;
-	m_AntiAliased = true;
+	m_AntiAliased = false;
 	m_AspectRatio = true;
 
 	for (i = 0;i < B3_VIEW_MAX;i++)

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
 **      Revision 1.6  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -131,8 +134,18 @@ static GLushort box_grids[] =
 
 static GLushort box_polygons[] =
 {
-	0,1,3,
-	2,3,1
+	 0, 1, 3, // front
+	 2, 3, 1,
+	 6, 7, 5, // back
+	 4, 5, 7,
+	 9,14,10, // right
+	13,10,14,
+	 7, 8,12, // left
+	11,12, 8,
+	19,18,20, // top
+	21,20,18,
+	17,16,22, // bottom
+	23, 6,16
 };
 #endif
 

@@ -414,6 +414,11 @@ protected:
 public:
 	B3_ITEM_INIT(b3Material);
 	B3_ITEM_LOAD(b3Material);
+
+	virtual b3_bool b3GetColors(
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // MATERIAL or MAT_NORMAL
@@ -429,6 +434,11 @@ class b3MatNormal : public b3Material
 public:
 	B3_ITEM_INIT(b3MatNormal);
 	B3_ITEM_LOAD(b3MatNormal);
+
+	b3_bool b3GetColors(
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // CHESS
@@ -644,20 +654,18 @@ class b3Shape : public b3Item, public b3RenderShapeObject
 protected:
 	b3_vector        Normal;
 	b3_polar         Polar;
-	b3_count         VertexCount;
 
 	b3_count         xSize,ySize;
 
 protected:
-	b3Shape(b3_size class_size,b3_u32 class_type);
+	     b3Shape(b3_size class_size,b3_u32 class_type);
+	void b3GetDiffuseColor(b3_color *color);
 
 public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
 	        void b3ComputeBound(b3CondLimit *limit);
-	        void b3GetColor();
-	        void b3GetNormal();
 	virtual void b3Intersect();
 };
 

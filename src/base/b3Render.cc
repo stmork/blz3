@@ -25,6 +25,8 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
 **      Revision 1.7  2001/08/14 19:07:43  sm
 **      - Minor changes on resources.
 **
@@ -88,6 +93,21 @@
 **                                                                      **
 *************************************************************************/
 
+static GLfloat ambient[] =
+{
+	1.0f,1.0f,1.0f,1.0f
+};
+
+static GLfloat diffuse[] =
+{
+	1.0f,1.0f,0.95f,1.0f
+};
+
+static GLfloat light0[] =
+{
+	1000.0f,1500.0f,2000.0f,1.0f
+};
+
 b3RenderContext::b3RenderContext()
 {
 #ifdef BLZ3_USE_OPENGL
@@ -101,11 +121,19 @@ b3RenderContext::b3RenderContext()
 void b3RenderContext::b3StartDrawing()
 {
 #ifdef BLZ3_USE_OPENGL
-	glClearColor(0.8f,0.8f,0.8f,1.0f);
+	glClearColor(0.9f,0.9f,0.9f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
+
+	// Enable light
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
+	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
+	glLightfv(GL_LIGHT0,GL_POSITION,light0);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 #endif
 }
 
@@ -126,6 +154,7 @@ b3RenderObject::b3RenderObject()
 	glNormals  = null;
 	glGrids    = null;
 	glPolygons = null;
+	glSolid    = false;
 	glComputed = false;
 #endif
 }
@@ -244,55 +273,87 @@ void b3RenderObject::b3FreeVertices()
 	PolyCount   = 0;
 }
 
-void b3RenderObject::b3Draw()
-{
-#ifdef BLZ3_USE_OPENGL
-	if (!glComputed)
-	{
-			b3ComputeIndices();
-			b3ComputeVertices();
-			glComputed = true;
-	}
-
-	if (GridCount > 0)
-	{
-#ifdef _DEBUG
-		// This loop collects access vialoations
-		// prior calling OpenGL routines. This
-		// makes it possible to catch to faulty
-		// index data. The access simply compute
-		// the length of the lines to be drawn.
-		for (b3_index i = 0;i < GridCount;i++)
-		{
-			b3_vector aPoint,bPoint;
-			b3_index  a,b;
-			b3_f64    len;
-
-			a = glGrids[i + i]     * 3;
-			aPoint.x = glVertices[a++];
-			aPoint.y = glVertices[a++];
-			aPoint.z = glVertices[a++];
-
-			b = glGrids[i + i + 1] * 3;
-			bPoint.x = glVertices[b++];
-			bPoint.y = glVertices[b++];
-			bPoint.z = glVertices[b++];
-
-			len = b3Distance(&aPoint,&bPoint);
-		}
-#endif
-		glVertexPointer(3, GL_FLOAT, 0, glVertices);
-		glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
-	}
-#endif
-}
-
 void b3RenderObject::b3ComputeVertices()
 {
 }
 
 void b3RenderObject::b3ComputeIndices()
 {
+}
+
+void b3RenderObject::b3ComputeNormals()
+{
+	b3_vector *nPtr = (b3_vector *)glNormals;
+	b3_vector *vPtr = (b3_vector *)glVertices;
+	GLushort  *pPtr = glPolygons;
+	b3_vector  normal;
+	b3_vector  xDir,yDir;
+	b3_f64     len;
+	b3_index   i,p1,p2,p3;
+
+	if ((PolyCount > 0) && (nPtr != null))
+	{
+		for (i = 0;i < VertexCount;i++)
+		{
+			nPtr[i].x = 0;
+			nPtr[i].y = 0;
+			nPtr[i].z = 0;
+		}
+
+		for (i = 0;i < PolyCount;i++)
+		{
+			p1 = *pPtr++;
+			p2 = *pPtr++;
+			p3 = *pPtr++;
+
+			// Do some semantic checks
+			B3_ASSERT(p1 < VertexCount);
+			B3_ASSERT(p2 < VertexCount);
+			B3_ASSERT(p3 < VertexCount);
+
+			xDir.x = vPtr[p2].x - vPtr[p1].x;
+			xDir.y = vPtr[p2].y - vPtr[p1].y;
+			xDir.z = vPtr[p2].z - vPtr[p1].z;
+
+			yDir.x = vPtr[p3].x - vPtr[p1].x;
+			yDir.y = vPtr[p3].y - vPtr[p1].y;
+			yDir.z = vPtr[p3].z - vPtr[p1].z;
+
+			normal.x = xDir.y * yDir.z - xDir.z * yDir.y;
+			normal.y = xDir.z * yDir.x - xDir.x * yDir.z;
+			normal.z = xDir.x * yDir.y - xDir.y * yDir.x;
+			len = b3Length(&normal);
+			if (len > 0)
+			{
+				normal.x /= len;
+				normal.y /= len;
+				normal.z /= len;
+
+				nPtr[p1].x += normal.x;
+				nPtr[p1].y += normal.y;
+				nPtr[p1].z += normal.z;
+
+				nPtr[p2].x += normal.x;
+				nPtr[p2].y += normal.y;
+				nPtr[p2].z += normal.z;
+
+				nPtr[p3].x += normal.x;
+				nPtr[p3].y += normal.y;
+				nPtr[p3].z += normal.z;
+			}
+		}
+
+		for (i = 0;i < VertexCount;i++)
+		{
+			len = b3Length(&nPtr[i]);
+			if (len > 0)
+			{
+				nPtr[i].x /= len;
+				nPtr[i].y /= len;
+				nPtr[i].z /= len;
+			}
+		}
+	}
 }
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
@@ -321,4 +382,86 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	}
 #endif
 	return result;
+}
+
+void b3RenderObject::b3GetDiffuseColor(b3_color *color)
+{
+	color->r = 1.0f;
+	color->g = 0.1f;
+	color->b = 0.4f;
+	color->a = 0.0f;
+}
+
+void b3RenderObject::b3Draw()
+{
+#ifdef BLZ3_USE_OPENGL
+	if (!glComputed)
+	{
+			b3ComputeIndices();
+			b3ComputeVertices();
+			b3ComputeNormals();
+			glComputed = true;
+	}
+
+	if (GridCount > 0)
+	{
+		b3_color color;
+
+#ifdef _DEBUG
+		// This loop collects access vialoations
+		// prior calling OpenGL routines. This
+		// makes it possible to catch to faulty
+		// index data. The access simply compute
+		// the length of the lines to be drawn.
+		for (b3_index i = 0;i < GridCount;i++)
+		{
+			b3_vector aPoint,bPoint;
+			b3_index  a,b;
+			b3_f64    len;
+
+			a = glGrids[i + i]     * 3;
+			aPoint.x = glVertices[a++];
+			aPoint.y = glVertices[a++];
+			aPoint.z = glVertices[a++];
+
+			b = glGrids[i + i + 1] * 3;
+			bPoint.x = glVertices[b++];
+			bPoint.y = glVertices[b++];
+			bPoint.z = glVertices[b++];
+
+			len = b3Distance(&aPoint,&bPoint);
+		}
+#endif
+		b3GetDiffuseColor(&color);
+		glVertexPointer(3, GL_FLOAT, 0, glVertices);
+		glNormalPointer(GL_FLOAT, 0, glNormals);
+		if (glSolid)
+		{
+#ifdef VERBOSE
+			b3PrintF(B3LOG_FULL,"---------- OpenGL start solid drawing\n");
+#endif
+			glEnable(GL_LIGHTING);
+			glEnable(GL_COLOR_MATERIAL);
+			glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+			glColor3f(color.r,color.g,color.b);
+			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+#ifdef VERBOSE
+			b3PrintF(B3LOG_FULL,"---------- OpenGL stop solid drawing\n");
+#endif
+		}
+		else
+		{
+#ifdef VERBOSE
+			b3PrintF(B3LOG_FULL,"---------- OpenGL start line drawing\n");
+#endif
+			glDisable(GL_LIGHTING);
+			glDisable(GL_COLOR_MATERIAL);
+			glColor3f(0.2f,0.2f,0.2f);
+			glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
+#ifdef VERBOSE
+			b3PrintF(B3LOG_FULL,"---------- OpenGL stop line drawing\n");
+#endif
+		}
+	}
+#endif
 }

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/15 19:52:57  sm
+**      - First polygon rendering with Blizzard III (areas only)
+**
 **      Revision 1.9  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -104,6 +107,7 @@ b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 
 b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
+	glSolid = true;
 }
 
 void b3Area::b3AllocVertices(b3RenderContext *context)

@@ -41,6 +41,7 @@ protected:
 	GLfloat         *glNormals;
 	GLushort        *glGrids;
 	GLushort        *glPolygons;
+	b3_bool          glSolid;
 	b3_bool          glComputed;
 #endif
 
@@ -49,13 +50,17 @@ protected:
 	                 b3RenderObject();
 	                ~b3RenderObject();
 public:
-	virtual void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	virtual void     b3AllocVertices(b3RenderContext *context);
 	virtual void     b3FreeVertices();
-	virtual void     b3ComputeVertices();
-	virtual void     b3ComputeIndices();
 	        void     b3Draw();
 	        b3_bool  b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+
+protected:
+	virtual void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	virtual void     b3GetDiffuseColor(b3_color *color);
+	virtual void     b3ComputeVertices();
+	virtual void     b3ComputeIndices();
+	virtual void     b3ComputeNormals();
 };
 
 #endif
