@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.68  2004/05/13 16:17:26  sm
+**      - Added background clouds as special item.
+**
 **      Revision 1.67  2004/05/11 09:58:25  sm
 **      - Added raytraced quick preview for bject editing.
 **
@@ -1245,4 +1248,44 @@ void b3Caustic::b3Write()
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_NumPhotons);
 	b3StoreCount(m_TraceDepth);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3Caustic definition                          **
+**                                                                      **
+*************************************************************************/
+
+b3CloudBackground::b3CloudBackground(b3_u32 class_type) :
+	b3Special(sizeof(b3Caustic),class_type)
+{
+}
+
+b3CloudBackground::b3CloudBackground(b3_u32 *src) :
+	b3Special(src)
+{
+	b3InitVector(&m_Anim);
+	b3InitVector(&m_PosScale);
+	m_Flags      = b3InitInt();
+	m_EarthRadius = b3InitFloat();
+	m_CloudHeight = b3InitFloat();
+	m_Scaling     = b3InitFloat();
+	m_Sharpness   = b3InitFloat();
+}
+
+void b3CloudBackground::b3Write()
+{
+	b3StoreVector(&m_Anim);
+	b3StoreVector(&m_PosScale);
+	b3StoreInt  (m_Flags);
+	b3StoreFloat(m_EarthRadius);
+	b3StoreFloat(m_CloudHeight);
+	b3StoreFloat(m_Scaling);
+	b3StoreFloat(m_Sharpness);
+}
+
+b3_bool b3CloudBackground::b3Prepare()
+{
+	b3PrepareClouds();
+	return true;
 }

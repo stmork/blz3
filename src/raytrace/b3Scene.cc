@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2004/05/13 16:17:26  sm
+**	- Added background clouds as special item.
+**
 **	Revision 1.58  2004/05/12 16:28:16  sm
 **	- Beautified bump icons
 **	- Missing return type for b3Material::b3Mix added
 **	- Fixed bug 23 concerning camera title cropping.
-**
+**	
 **	Revision 1.57  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -612,6 +615,32 @@ b3LensFlare *b3Scene::b3GetLensFlare(b3_bool force)
 	}
 
 	return lensflare;
+}
+
+b3CloudBackground*b3Scene::b3GetCloudBackground(b3_bool force)
+{
+	b3CloudBackground *clouds;
+	b3Item            *item;
+
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if (item->b3GetClassType() == CLOUDS)
+		{
+			return (b3CloudBackground *)item;
+		}
+	}
+
+	if (force)
+	{
+		clouds = new b3CloudBackground(CLOUDS);
+		b3GetSpecialHead()->b3Append(clouds);
+	}
+	else
+	{
+		clouds = null;
+	}
+
+	return clouds;
 }
 
 b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)

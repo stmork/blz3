@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxPool.h"
@@ -69,6 +70,7 @@ class b3Nebular;
 class b3SuperSample;
 class b3LensFlare;
 class b3CameraPart;
+class b3CloudBackground;
 
 class b3RayRow;
 
@@ -91,6 +93,7 @@ protected:
 	b3SuperSample   *m_SuperSample;
 	b3LensFlare     *m_LensFlare;
 	b3CameraPart    *m_ActualCamera;
+	b3Clouds        *m_Clouds;
 	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 	b3Color          m_AvrgColor;
 	b3Color          m_DiffColor;
@@ -160,6 +163,7 @@ public:
 		    b3Nebular      *b3GetNebular    (b3_bool force = true);
 		    b3SuperSample  *b3GetSuperSample(b3_bool force = true);
 		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
+			b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 	        b3CameraPart   *b3GetActualCamera();
 			b3CameraPart   *b3GetCameraByName(const char *camera_name);

@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2004/05/13 16:17:26  sm
+**	- Added background clouds as special item.
+**
 **	Revision 1.55  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.54  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
@@ -554,12 +557,12 @@ b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 
 b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 {
-	b3Item        *item;
-	b3Nebular     *nebular;
-	b3Distribute  *distributed;
-	b3SuperSample *supersample;
-	b3Light       *light;
-	b3_f64         xDenom,yDenom;
+	b3Item            *item;
+	b3Nebular         *nebular;
+	b3Distribute      *distributed;
+	b3SuperSample     *supersample;
+	b3Light           *light;
+	b3_f64             xDenom,yDenom;
 
 	b3PrintF(B3LOG_FULL,"b3Scene::b3PrepareScene(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
@@ -610,6 +613,16 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	else
 	{
 		m_Nebular = null;
+	}
+
+	if (m_BackgroundType == TP_SKY_N_HELL)
+	{
+		b3PrintF(B3LOG_FULL,"  preparing clouds...\n");
+		m_Clouds = b3GetCloudBackground(true);
+	}
+	else
+	{
+		m_Clouds = null;
 	}
 
 	b3PrintF(B3LOG_FULL,"  preparing distributed raytracing...\n");

@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Filter.h"
+#include "blz3/base/b3Procedure.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,6 +38,7 @@
 #define TYPE_DISTRIBUTE         0x00000006
 #define TYPE_LENSFLARE          0x00000007
 #define TYPE_CAUSTIC            0x00000008
+#define TYPE_CLOUDS             0x00000009
 #define SUPERSAMPLE4            (CLASS_SPECIAL|TYPE_SUPERSAMPLE4)
 #define NEBULAR                 (CLASS_SPECIAL|TYPE_NEBULAR)
 #define CAMERA                  (CLASS_SPECIAL|TYPE_CAMERA)
@@ -45,6 +47,7 @@
 #define DISTRIBUTE              (CLASS_SPECIAL|TYPE_DISTRIBUTE)
 #define LENSFLARE               (CLASS_SPECIAL|TYPE_LENSFLARE)
 #define CAUSTIC                 (CLASS_SPECIAL|TYPE_CAUSTIC)
+#define CLOUDS                  (CLASS_SPECIAL|TYPE_CLOUDS)
 
 class B3_PLUGIN b3Special : public b3Item
 {
@@ -347,5 +350,16 @@ public:
 
 #define CAUSTIC_ENABLE_B 0
 #define CAUSTIC_ENABLE   (1 << CAUSTIC_ENABLE_B)
+
+// CLOUDS
+class b3CloudBackground : public b3Special, public b3Clouds
+{
+public:
+	B3_ITEM_INIT(b3CloudBackground);
+	B3_ITEM_LOAD(b3CloudBackground);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+};
 
 #endif

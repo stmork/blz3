@@ -37,8 +37,6 @@ enum b3_noise_error
 
 typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
-#define EARTH_RADIUS_KM 10.0
-
 class b3Noise : public b3Mem
 {
 	static b3_noisetype *NoiseTable;
@@ -148,46 +146,6 @@ public:
 		}
 	}
 
-	static inline b3_f64 b3Clouds (b3_line64 *ray,b3_f64 &r,b3_f64 time)
-	{
-		b3_vector Dir;
-		b3_vector Anim;
-		b3_vector PosScale;
-		b3_f64    scaling   =   5.0;
-		b3_f64    R         = EARTH_RADIUS_KM;
-		b3_f64    sharpness =  10.2;
-		b3_f64    sight;
-
-		b3Vector::b3Init(&Anim, 0.1, 0.1, 0.05);
-		b3Vector::b3Init(&PosScale,0.01f,0.01f,0.01f);
-		if (ray->dir.z > 0)
-		{
-			b3_f64 Rc,p,D,len;
-
-			Rc = R + 1;
-
-			p     = ray->dir.z * -R;
-			D     = p * p + Rc * Rc - R * R;
-			len   = (-p - sqrt(D)) * scaling;
-			Dir.x = ray->pos.x * PosScale.x + ray->dir.x * len + Anim.x * time;
-			Dir.y = ray->pos.y * PosScale.y + ray->dir.y * len + Anim.y * time;
-			Dir.z = ray->pos.z * PosScale.z + ray->dir.z * len + Anim.z * time;
-
-			r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
-			if (r < 0)
-			{
-				r = 0;
-			}
-			sight = ray->dir.z;
-		}
-		else
-		{
-			r = 1;
-			sight = 0;
-		}
-		return sight;
-	}
-
 	static b3_f64  b3Marble      (b3_vector *d);
 	static void    b3Wood        (b3_vector *d,b3Color &mask);
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
@@ -203,6 +161,75 @@ private:
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
+};
+
+#define EARTH_RADIUS_KM 10.0
+
+class b3Clouds
+{
+	b3_f64    m_EarthRadiusSqr;
+	b3_f64    m_CloudRadiusSqr;
+
+public:
+	b3_vector m_Anim;     // x/y are wind direction, z is time scaling
+	b3_vector m_PosScale;
+	b3_u32    m_Flags;
+	b3_f64    m_EarthRadius;
+	b3_f64    m_CloudHeight;
+	b3_f64    m_Scaling;
+	b3_f64    m_Sharpness;
+
+public:
+	b3Clouds()
+	{
+		b3Vector::b3Init(&m_Anim, 0.1, 0.1, 0.05);
+		b3Vector::b3Init(&m_PosScale,0.01f,0.01f,0.01f);
+		m_EarthRadius = EARTH_RADIUS_KM;
+		m_CloudHeight =   1.0f;
+		m_Scaling     =   5.0f;
+		m_Sharpness   =  10.2f;
+		m_Flags       =   0;
+		b3PrepareClouds();
+	}
+
+	inline void b3PrepareClouds()
+	{
+		b3_f64 Rc = m_EarthRadius + m_CloudHeight;
+
+		m_EarthRadiusSqr = m_EarthRadius * m_EarthRadius;
+		m_CloudRadiusSqr = Rc * Rc;
+	}
+
+	inline b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
+	{
+		b3_f64    sight;
+
+		if (ray->dir.z > 0)
+		{
+			b3_vector Dir;
+			b3_f64    p,D,len;
+
+			p     = ray->dir.z * -m_EarthRadius;
+			D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;
+			len   = (-p - sqrt(D)) * m_Scaling;
+			Dir.x = ray->pos.x * m_PosScale.x + ray->dir.x * len + m_Anim.x * time;
+			Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
+			Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
+
+			r = 1.0 - pow(b3Noise::b3Turbulence (&Dir),-m_Sharpness);
+			if (r < 0)
+			{
+				r = 0;
+			}
+			sight = ray->dir.z;
+		}
+		else
+		{
+			r = 1;
+			sight = 0;
+		}
+		return sight;
+	}
 };
 
 #endif
