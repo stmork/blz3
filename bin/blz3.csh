@@ -1,6 +1,11 @@
 #!/bin/csh
 
-set blz3data=/usr/share/blizzard
+if ( -d $HOME/Blizzard ) then
+  set blz3data=$HOME/Blizzard
+else
+  set blz3data=/usr/share/blizzard
+endif
+
 if ( -d $blz3data ) then
   setenv BLZ3_DATA     $blz3data/Data
   setenv BLZ3_TEXTURES $blz3data/Textures

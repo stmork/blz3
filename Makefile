@@ -28,7 +28,7 @@ clobber:
 tar:	clobber autoconf
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 
-tar-rpm:	clobber autoconf data.tar.gz
+tar-rpm:	clobber configure data.tar.gz
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 
 data.tar.gz:
