@@ -72,7 +72,7 @@ switch ( $1 )
        brt3/brt3 -a -w -n    AlleObjekte.bwd
        brt3/brt3 -w -a -n    Chair.bwd Planks.bwd Blockkugel.bwd Wassersockel.bwd
 #       brt3/brt3 -w -a -n    Band.bwd
-#       brt3/brt3 -w -a -n g Skyart.bwd Doku/Glas.bwd
+#       brt3/brt3 -w -a -n -g Skyart.bwd Doku/Glas.bwd
        brt3/brt3 -w -a -n -g $PROF_FILES
        brt3/brt3 -w    -n -g ../data/Animationstest.bwd
        brt3/brt3 -w -a    -g GeoNebel.bwd VarioNebel.bwd
