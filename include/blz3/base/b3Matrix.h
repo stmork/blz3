@@ -278,6 +278,65 @@ public:
 		return result;
 	}
 
+	static inline b3_vector *b3Mul(const b3_vector *aVec,b3_vector *result)
+	{
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+
+		for(int i = 0;i < 4;i++)
+		{
+			r[i] *= a[i];
+		}
+#else
+		result->x *= aVec->x;
+		result->y *= aVec->y;
+		result->z *= aVec->z;
+#endif
+		return result;
+	}
+
+	static inline b3_vector *b3Mul(
+		const b3_vector *aVec,
+		const b3_vector *bVec,
+		      b3_vector *result)
+	{
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+
+		for(int i = 0;i < 4;i++)
+		{
+			r[i] = a[i] * b[i];
+		}
+#else
+		result->x = aVec->x * bVec->x;
+		result->y = aVec->y * bVec->y;
+		result->z = aVec->z * bVec->z;
+#endif
+		return result;
+	}
+
+	static inline b3_gl_vector *b3Mul(const b3_gl_vector *aVec,b3_gl_vector *result)
+	{
+		result->x *= aVec->x;
+		result->y *= aVec->y;
+		result->z *= aVec->z;
+		return result;
+	}
+
+	static inline b3_gl_vector *b3Mul(
+		const b3_gl_vector *aVec,
+		const b3_gl_vector *bVec,
+		      b3_gl_vector *result)
+	{
+		result->x = aVec->x * bVec->x;
+		result->y = aVec->y * bVec->y;
+		result->z = aVec->z * bVec->z;
+		return result;
+	}
+
 	static inline b3_vector *b3CrossProduct(
 		const b3_vector *a,
 		const b3_vector *b,
@@ -338,22 +397,24 @@ public:
 		}
 		return sqrt(r);
 #else
-		return sqrt(
-			vector->x * vector->x +
-			vector->y * vector->y +
-			vector->z * vector->z);
+		return sqrt(b3QuadLength(vector));
 #endif
 	}
 
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
-		return sqrt(
-			vector->x * vector->x +
-			vector->y * vector->y +
-			vector->z * vector->z);
+		return sqrt(b3QuadLength(vector));
 	}
 
 	static inline b3_f64 b3QuadLength(const b3_vector *vector)
+	{
+		return
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z;
+	}
+
+	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
 		return
 			vector->x * vector->x +
@@ -674,20 +735,54 @@ public:
 		if (vector->z < m) vector->z = m;
 	}
 
-	static inline void b3AdjustBound(
-		b3_vector *point,
-		b3_vector *lower,
-		b3_vector *upper)
+	static inline void b3CheckLowerBound(
+		      b3_vector *lower,
+		const b3_vector *point)
 	{
-		// Check lower bound
 		if (point->x < lower->x) lower->x = point->x;
 		if (point->y < lower->y) lower->y = point->y;
 		if (point->z < lower->z) lower->z = point->z;
-												  
-		// Check upper bound					  
+	}
+
+	static inline void b3SetMaximum(
+		b3_vector *vector,
+		b3_f64     max)
+	{
+		b3_f32 m = (b3_f32)max;
+
+		if (vector->x > m) vector->x = m;
+		if (vector->y > m) vector->y = m;
+		if (vector->z > m) vector->z = m;
+	}
+
+	static inline void b3CheckUpperBound(
+		      b3_vector *upper,
+		const b3_vector *point)
+	{
 		if (point->x > upper->x) upper->x = point->x;
 		if (point->y > upper->y) upper->y = point->y;
 		if (point->z > upper->z) upper->z = point->z;
+	}
+
+	static inline void b3AdjustBound(
+		const b3_vector *point,
+		      b3_vector *lower,
+		      b3_vector *upper)
+	{
+		b3CheckLowerBound(lower,point);
+		b3CheckUpperBound(upper,point);
+	}
+
+	static inline void b3AdjustBound(
+		const b3_gl_vector *point,
+		      b3_vector    *lower,
+		      b3_vector    *upper)
+	{
+		b3_vector test;
+
+		b3Vector::b3Init(&test,point->x,point->y,point->z);
+		b3CheckLowerBound(lower,&test);
+		b3CheckUpperBound(upper,&test);
 	}
 };
 

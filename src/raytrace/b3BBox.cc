@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2002/12/31 15:11:03  sm
+**	- Fixed bound checking.
+**	- Added a vector test module.
+**
 **	Revision 1.69  2002/12/22 11:52:22  sm
 **	- Ensure minimum volume for bounding boxes even for plain areas.
-**
+**	
 **	Revision 1.68  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -795,21 +799,15 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	}
 
 	// Check lower bound
-	if (subLower.x < lower->x) lower->x = subLower.x;
-	if (subLower.y < lower->y) lower->y = subLower.y;
-	if (subLower.z < lower->z) lower->z = subLower.z;
+	b3Vector::b3CheckLowerBound(lower,&subLower);
 
 	// Check upper bound
-	if (subUpper.x > upper->x) upper->x = subUpper.x;
-	if (subUpper.y > upper->y) upper->y = subUpper.y;
-	if (subUpper.z > upper->z) upper->z = subUpper.z;
+	b3Vector::b3CheckUpperBound(upper,&subUpper);
 
 	// Compute bounds of this BBox
 	if (result)
 	{
-		m_DimSize.x = subUpper.x - subLower.x;
-		m_DimSize.y = subUpper.y - subLower.y;
-		m_DimSize.z = subUpper.z - subLower.z;
+		b3Vector::b3Sub(&subUpper,&subLower,&m_DimSize);
 		m_DimBase   = subLower;
 
 		b3Recompute();

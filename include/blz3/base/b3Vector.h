@@ -267,7 +267,8 @@ public:
 		return result;
 	}
 
-	inline F b3SMul(const b3VectorTemplate<F,dim> &a)
+	inline F b3SMul(
+		const b3VectorTemplate<F,dim> &a)
 	{
 		F result = 0;
 
@@ -285,7 +286,8 @@ public:
 			a.v[X] * b.v[Y] - a.v[Y] * b.v[X],(F)0.0);
 	}
 
-	inline b3VectorTemplate<F,dim> b3CrossProduct(const b3VectorTemplate<F,dim> &b)
+	inline b3VectorTemplate<F,dim> b3CrossProduct(
+		const b3VectorTemplate<F,dim> &b)
 	{
 		return b3VectorTemplate<F,dim>(
 			v[Y] * b.v[Z] - v[Z] * b.v[Y],
@@ -340,15 +342,23 @@ public:
 		}
 	}
 
-	inline void b3CheckLower(const b3VectorTemplate<F,dim> &lower)
+	inline void b3CheckLowerBound(const b3VectorTemplate<F,dim> &lower)
 	{
 		for (int i = 0;i < dim;i++)
 		{
-			if (v[i] < lower.v[i]) v[i] = lower.v[i];
+			if (v[i] > lower.v[i]) v[i] = lower.v[i];
 		}
 	}
 
-	inline void b3CheckUpper(const b3VectorTemplate<F,dim> &upper)
+	inline void b3SetMaximum(F max)
+	{
+		for (int i = 0;i < dim;i++)
+		{
+			if (v[i] > max) v[i] = max;
+		}
+	}
+
+	inline void b3CheckUpperBound(const b3VectorTemplate<F,dim> &upper)
 	{
 		for (int i = 0;i < dim;i++)
 		{
@@ -368,6 +378,14 @@ public:
 
 		}
 		return 0;
+	}
+
+	inline void b3AdjustBound(
+		b3VectorTemplate<F,dim> &lower,
+		b3VectorTemplate<F,dim> &upper)
+	{
+		lower.b3CheckLowerBound(*this);
+		upper.b3CheckUpperBound(*this);
 	}
 
 	inline void b3MatrixVMul(const b3_matrix *Mat,const b3_bool Use4D)

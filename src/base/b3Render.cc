@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2002/12/31 15:11:03  sm
+**      - Fixed bound checking.
+**      - Added a vector test module.
+**
 **      Revision 1.58  2002/12/27 12:55:38  sm
 **      - Trying to optimize vectorization for ICC.
 **
@@ -914,8 +918,8 @@ void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
-	b3_bool  result = false;
-	b3_index i,start,end;
+	b3_bool   result = false;
+	b3_index  i,start,end;
 
 	b3Update();
 	if (glComputed && (glVertex != null) && (glVertexCount > 0))
@@ -923,15 +927,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 		b3GetVertexRange(start,end);
 		for (i = start;i < end;i++)
 		{
-			// Check lower bound
-			if (glVertex[i].v.x < lower->x) lower->x = glVertex[i].v.x;
-			if (glVertex[i].v.y < lower->y) lower->y = glVertex[i].v.y;
-			if (glVertex[i].v.z < lower->z) lower->z = glVertex[i].v.z;
-					     
-			// Check up  per bound
-			if (glVertex[i].v.x > upper->x) upper->x = glVertex[i].v.x;
-			if (glVertex[i].v.y > upper->y) upper->y = glVertex[i].v.y;
-			if (glVertex[i].v.z > upper->z) upper->z = glVertex[i].v.z;
+			b3Vector::b3AdjustBound(&glVertex[i].v,lower,upper);
 		}
 		result = true;
 	}
