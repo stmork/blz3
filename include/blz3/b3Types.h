@@ -84,7 +84,12 @@ typedef long                b3_res;
 typedef b3_u32              b3_pkd_color;
 typedef long                b3_coord;
 typedef int                 b3_loop;
+
+#ifdef WIN32
+typedef __w64               b3_ptr;
+#else
 typedef unsigned long       b3_ptr;
+#endif
 
 // Some vectors
 typedef struct B3_ALIGN_16 b3_vector32_3D
