@@ -81,9 +81,11 @@ template <class T> class b3Base
 {
 protected:
 	b3_u32  Class;
+
 public:
 	T      *First;
 	T      *Last;
+
 public:
 	b3Base(b3_u32 new_class = 0)
 	{
@@ -113,13 +115,29 @@ public:
 
 	inline void b3Move(b3Base<T> *from)
 	{
-		B3_ASSERT(b3IsEmpty());
-
-		Class = from->Class;
-		First = from->First;
-		Last  = from->Last;
-		
-		from->b3InitBase(Class);
+#ifndef B3_NO_CLASS_CHECK
+		if (from->b3GetClass() != Class)
+		{
+			return;
+		}
+#endif
+		if (!from->b3IsEmpty())
+		{
+			if(b3IsEmpty())
+			{
+				// Simple move
+				First = from->First;
+				Last  = from->Last;
+			}
+			else
+			{
+				Last->Succ = from->First;
+				from->First->Prev = Last;
+				Last = from->Last;
+			}
+			
+			from->b3InitBase(Class);
+		}
 	}
 
 	inline void b3Free()

@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/05 18:42:21  sm
+**	- Changed TGF to scene/bbox import
+**	- Resorted some menus
+**	- Added TGF import to Un*x makefile
+**
 **	Revision 1.4  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
-**
+**	
 **	Revision 1.3  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
 **	
@@ -393,6 +398,102 @@ void b3OpObjectLoadCob::b3Undo()
 }
 
 void b3OpObjectLoadCob::b3Redo()
+{
+	m_Base->b3Insert(m_Selected,m_BBox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Undo/Redo ArCon object import                 **
+**                                                                      **
+*************************************************************************/
+
+b3OpObjectLoadTgf::b3OpObjectLoadTgf(
+	b3Scene       *scene,
+	CDlgHierarchy *hierarchy,
+	const char    *regitem) : b3OpObject(scene,hierarchy)
+{
+	CAppLinesApp   *app  = CB3GetLinesApp();
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	CString         suggest;
+	b3Path          filepath;
+	b3Path          result;
+
+	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
+	m_Base     = (m_Selected == null ?
+		m_Scene->b3GetBBoxHead() :
+		m_Scene->b3FindBBoxHead(m_Selected));
+	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
+
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	if (m_Selected != null)
+	{
+		result.b3LinkFileName(filepath,m_Selected->b3GetName());
+		result.b3RemoveExt();
+		strcat((char *)result,".tgf");
+	}
+	else
+	{
+		strcpy((char *)result,suggest);
+	}
+	
+	if (CB3SelectArcon::b3Select((char *)result))
+	{
+		app->WriteProfileString(CB3ClientString(),regitem,result);
+		
+		try
+		{
+			m_BBox = b3BBox::b3ReadTGF(result);
+			if (m_BBox != null)
+			{
+				b3Initialize();
+				m_PrepareGeometry         = true;
+				m_PrepareChangedStructure = false;
+			}
+		}
+		catch(b3FileException &f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading ArCon object from file %s (code: %d)\n",
+				(const char *)result,f.b3GetError());
+			B3_MSG_ERROR(f);
+		}
+		catch(b3WorldException &w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: reading ArCon object from file %s (code: %d)\n",
+				(const char *)result,w.b3GetError());
+			B3_MSG_ERROR(w);
+		}
+	}
+}
+
+void b3OpObjectLoadTgf::b3Delete()
+{
+	if (!b3IsDone() && (m_BBox != null))
+	{
+		delete m_BBox;
+	}
+}
+
+void b3OpObjectLoadTgf::b3Do()
+{
+	m_Base->b3Insert(m_Selected,m_BBox);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
+	m_PrepareChangedStructure = true;
+}
+
+void b3OpObjectLoadTgf::b3Undo()
+{
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_Base->b3Remove(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_Selected);
+}
+
+void b3OpObjectLoadTgf::b3Redo()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
 	m_Scene->b3BacktraceRecompute(m_BBox);

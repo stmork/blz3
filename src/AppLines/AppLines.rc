@@ -141,7 +141,10 @@ BEGIN
     BUTTON      ID_OBJECT_LOAD
     BUTTON      ID_OBJECT_SAVE
     BUTTON      ID_OBJECT_REPLACE
+    SEPARATOR
     BUTTON      ID_COB_LOAD
+    BUTTON      ID_TGF_LOAD
+    SEPARATOR
     BUTTON      ID_OBJECT_NEW
     BUTTON      ID_OBJECT_DELETE
     BUTTON      ID_OBJECT_COPY
@@ -325,7 +328,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu",                        ID_FILE_NEW
         MENUITEM "÷&ffnen...\tStrg+O",          ID_FILE_OPEN
-        MENUITEM "ArCon-Datei importieren...",  ID_IMPORT_ARCON
+        MENUITEM "ArCon-Szene importieren...",  ID_IMPORT_ARCON
         MENUITEM "Schlieﬂen",                   ID_FILE_CLOSE
         MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
         MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
@@ -333,7 +336,11 @@ BEGIN
         MENUITEM "Objekt laden...",             ID_OBJECT_LOAD
         MENUITEM "Objekt speichern...",         ID_OBJECT_SAVE
         MENUITEM "Objekt e&rsetzen...",         ID_OBJECT_REPLACE
-        MENUITEM "Caligari-Objekt importieren...", ID_COB_LOAD
+        POPUP "Objekt &importieren"
+        BEGIN
+            MENUITEM "Caligari-Objekt importieren...", ID_COB_LOAD
+            MENUITEM "ArCon-Objekt importieren...", ID_TGF_LOAD
+        END
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -678,6 +685,11 @@ BEGIN
         MENUITEM "Objekt laden...",             ID_OBJECT_LOAD
         MENUITEM "Objekt speichern...",         ID_OBJECT_SAVE
         MENUITEM "Objekt e&rsetzen...",         ID_OBJECT_REPLACE
+        POPUP "Objekt &importieren"
+        BEGIN
+            MENUITEM "Caligari-Objekt importieren...", ID_COB_LOAD
+            MENUITEM "ArCon-Objekt importieren...", ID_TGF_LOAD
+        END
     END
 END
 
@@ -2503,6 +2515,7 @@ BEGIN
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_COB_LOAD             "Importiert ein Caligari-Objekt.\nCaligari-Objekt importieren"
     ID_IMPORT_ARCON         "Importiert eine ArCon-Datei.\nArCon-Datei importieren..."
+    ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\\mArCon-Objekt importieren"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -24,6 +24,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
 #include "b3ReadCOB.h"
+#include "b3ReadTGF.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.76  2003/02/05 18:42:32  sm
+**	- Changed TGF to scene/bbox import
+**	- Resorted some menus
+**	- Added TGF import to Un*x makefile
+**
 **	Revision 1.75  2003/01/26 11:53:26  sm
 **	- Added support for Caligari object loading.
-**
+**	
 **	Revision 1.74  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
@@ -1264,4 +1270,9 @@ b3_bool b3Scene::b3BacktraceRecompute(b3BBox *search)
 b3BBox *b3BBox::b3ReadCOB(const char *filename)
 {
 	return b3COBReader::b3ReadCOB(filename);
+}
+
+b3BBox *b3BBox::b3ReadTGF(const char *filename)
+{
+	return b3TGFReader::b3ReadTGFBBox(filename);
 }

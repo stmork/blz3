@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/05 18:42:32  sm
+**	- Changed TGF to scene/bbox import
+**	- Resorted some menus
+**	- Added TGF import to Un*x makefile
+**
 **	Revision 1.1  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
-**
+**	
 */
 
 /*************************************************************************
@@ -48,6 +53,18 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
+
+b3TGFReader::b3TGFReader()
+{
+	m_CameraBase.b3InitBase(CLASS_SPECIAL);
+	m_LightBase.b3InitBase(CLASS_LIGHT);
+}
+
+b3TGFReader::~b3TGFReader()
+{
+	m_CameraBase.b3Free();
+	m_LightBase.b3Free();
+}
 
 b3_size b3TGFReader::b3StrCpy(
 	      char *dst,
@@ -69,7 +86,7 @@ b3_size b3TGFReader::b3StrCpy(
 	return strlen(dst);
 }
 
-b3_bool b3TGFReader::b3ParseCamera(b3Scene *scene,char *ptr)
+b3_bool b3TGFReader::b3ParseCamera(char *ptr)
 {
 	b3CameraPart *camera = new b3CameraPart(CAMERA);
 	b3_vector     view;
@@ -98,11 +115,11 @@ b3_bool b3TGFReader::b3ParseCamera(b3Scene *scene,char *ptr)
 	b3Vector::b3Sub(&camera->m_ViewPoint,&camera->m_EyePoint,&view);
 	b3Vector::b3CrossProduct(&view,&camera->m_Height,&camera->m_Width);
 
-	scene->b3GetSpecialHead()->b3Append(camera);
+	m_CameraBase.b3Append(camera);
 	return true;
 }
 
-b3_bool b3TGFReader::b3ParseLight(b3Scene *scene,char *ptr)
+b3_bool b3TGFReader::b3ParseLight(char *ptr)
 {
 	b3Light     *light = new b3Light(SPOT_LIGHT);
 	b3_vector64  pos,dir;
@@ -150,7 +167,7 @@ b3_bool b3TGFReader::b3ParseLight(b3Scene *scene,char *ptr)
 	default:
 		break;
 	}
-	scene->b3GetLightHead()->b3Append(light);
+	m_LightBase.b3Append(light);
 	return true;
 }
 
@@ -253,9 +270,8 @@ b3_bool b3TGFReader::b3ParseShapes(
 	return true;
 }
 
-b3_bool b3TGFReader::b3ParseGeometry(b3Scene *scene, char *ptr)
+b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 {
-	b3BBox                  *bbox  = new b3BBox(BBOX);
 	b3Array<b3_vertex>       vertices;
 	b3Array<b3_tgf_facette>  facettes;
 	b3_vertex                vertex;
@@ -270,7 +286,6 @@ b3_bool b3TGFReader::b3ParseGeometry(b3Scene *scene, char *ptr)
 	b3_u32                  *lPtr;
 	b3_u16                  *sPtr;
 	b3_count                 faces = 0,face = 0;
-	b3_bool                  result;
 
 	numVert = b3Endian::b3GetIntel32(&ptr[ 0]);
 	numAttr = b3Endian::b3GetIntel32(&ptr[ 4]);
@@ -366,17 +381,7 @@ b3_bool b3TGFReader::b3ParseGeometry(b3Scene *scene, char *ptr)
 	ptr  += skip;
 	pos  += skip;
 
-	result = b3ParseShapes(bbox,vertices,facettes);
-	if (result)
-	{
-		strcpy (bbox->m_BoxName,"TGF-Angelegenheit");
-		scene->b3GetBBoxHead()->b3Append(bbox);
-	}
-	else
-	{
-		delete bbox;
-	}
-	return result;
+	return b3ParseShapes(bbox,vertices,facettes);
 }
 
 b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
@@ -397,9 +402,9 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 	return true;
 }
 
-b3Scene *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
+b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 {
-	b3Scene    *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox     *bbox  = new b3BBox(BBOX);
 	b3_count    cameras = 0;
 	b3_size     pos = 0;
 	b3_tgf_tag  tag;
@@ -432,7 +437,7 @@ b3Scene *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 			break;
 
 		case TGF_GEOMETRY_TAG:
-			error = !b3ParseGeometry(scene,ptr);
+			error = !b3ParseGeometry(bbox,ptr);
 			break;
 
 		case TGF_TRANSFORM_TAG:
@@ -442,11 +447,11 @@ b3Scene *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 			break;
 
 		case TGF_LIGHT_TAG:
-			error = !b3ParseLight(scene,ptr);
+			error = !b3ParseLight(ptr);
 			break;
 
 		case TGF_CAMERA_TAG:
-			error = !b3ParseCamera(scene,ptr);
+			error = !b3ParseCamera(ptr);
 			cameras++;
 			break;
 
@@ -490,41 +495,73 @@ b3Scene *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 		pos += tagSize;
 	}
 
-	if (error)
+	if (!error)
 	{
-		delete scene;
-		scene = null;
-		B3_THROW(b3WorldException,B3_WORLD_IMPORT);
+		strcpy (bbox->m_BoxName,"TGF-Angelegenheit");
 	}
 	else
 	{
-		b3ModellerInfo *info = scene->b3GetModellerInfo();
-
-		if (cameras == 0)
-		{
-			b3CameraPart *camera = new b3CameraPart(CAMERA);
-			scene->b3GetSpecialHead()->b3Append(camera);
-		}
-		scene->b3SetFilename(filename);
-		info->m_Unit = B3_UNIT_MM;
-		info->m_AngleActive = false;
+		delete bbox;
+		bbox = null;
+		B3_THROW(b3WorldException,B3_WORLD_IMPORT);
 	}
-	return scene;
+	return bbox;
 }
 
-b3Scene *b3TGFReader::b3ReadTGF(const char *tgffile)
+b3Scene *b3TGFReader::b3ReadTGFScene(const char *tgffile)
 {
+	b3Scene     *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox      *bbox;
 	b3TGFReader  reader;
-	b3Scene     *scene = null;
 	b3File       file;
-	char *buffer;
+	char        *buffer;
 	b3_size      size;
 
 	b3PrintF(B3LOG_NORMAL,"Reading TGF %s\n",tgffile);
 	buffer = (char *)file.b3ReadBuffer(tgffile,size);
 	if(buffer != null)
 	{
-		scene = reader.b3Parse(buffer,size,tgffile);
+		bbox = reader.b3Parse(buffer,size,tgffile);
+		if (bbox != null)
+		{
+			b3ModellerInfo *info;
+
+			// Setup at least one camera
+			if (reader.m_CameraBase.b3IsEmpty())
+			{
+				b3CameraPart *camera = new b3CameraPart(CAMERA);
+
+				reader.m_CameraBase.b3Append(camera);
+			}
+
+			// Setup some Lines info
+			info = scene->b3GetModellerInfo();
+			info->m_Unit = B3_UNIT_MM;
+			info->m_AngleActive = false;
+
+			// Setup class hierarchy
+			scene->b3GetBBoxHead()->b3Append(bbox);
+			scene->b3GetSpecialHead()->b3Move(&reader.m_CameraBase);
+			scene->b3GetLightHead()->b3Move(&reader.m_LightBase);
+			scene->b3SetFilename(tgffile);
+		}
 	}
 	return scene;
+}
+
+b3BBox *b3TGFReader::b3ReadTGFBBox(const char *tgffile)
+{
+	b3TGFReader  reader;
+	b3BBox      *bbox = null;
+	b3File       file;
+	char        *buffer;
+	b3_size      size;
+
+	b3PrintF(B3LOG_NORMAL,"Reading TGF %s\n",tgffile);
+	buffer = (char *)file.b3ReadBuffer(tgffile,size);
+	if(buffer != null)
+	{
+		bbox = reader.b3Parse(buffer,size,tgffile);
+	}
+	return bbox;
 }

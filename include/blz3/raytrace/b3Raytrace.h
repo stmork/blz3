@@ -1683,6 +1683,7 @@ public:
 	static void            b3Recount(b3Base<b3Item> *base,b3_count level = 1);
 	static b3_bool         b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
 	static b3BBox         *b3ReadCOB(const char *filename);
+	static b3BBox         *b3ReadTGF(const char *filename);
 
 protected:
 	       void            b3GetGridColor(b3_color *color);
@@ -2419,7 +2420,7 @@ public:
 			void            b3Animate(b3Activation::b3_anim_activation activation);
 
 			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
-	static  b3Scene        *b3ImportArcon(const char *filename);
+	static  b3Scene        *b3ReadTGF(const char *filename);
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);

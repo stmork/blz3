@@ -36,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2003/02/05 18:42:32  sm
+**	- Changed TGF to scene/bbox import
+**	- Resorted some menus
+**	- Added TGF import to Un*x makefile
+**
 **	Revision 1.45  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
-**
+**	
 **	Revision 1.44  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
@@ -791,7 +796,7 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 	}
 }
 
-b3Scene *b3Scene::b3ImportArcon(const char *filename)
+b3Scene *b3Scene::b3ReadTGF(const char *filename)
 {
-	return b3TGFReader::b3ReadTGF(filename);
+	return b3TGFReader::b3ReadTGFScene(filename);
 }

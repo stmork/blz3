@@ -146,6 +146,30 @@ protected:
 	}
 };
 
+#define B3_OBJECT_ARCON_REGITEM "Loaded arcon object filename"
+
+class b3OpObjectLoadTgf : public b3OpObject
+{
+protected:
+	b3BBox         *m_Selected;
+	b3BBox         *m_BBox;
+	b3Base<b3Item> *m_Base;
+
+public:
+	         b3OpObjectLoadTgf(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_CALIGARI_REGITEM);
+
+protected:
+	virtual void b3Do();
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_COB_LOAD;
+	}
+};
+
 class b3OpObjectCopy : public b3OpObject
 {
 	b3BBox            *m_Selected;

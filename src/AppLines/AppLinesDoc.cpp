@@ -58,9 +58,14 @@
 
 /*
 **	$Log$
+**	Revision 1.84  2003/02/05 18:42:20  sm
+**	- Changed TGF to scene/bbox import
+**	- Resorted some menus
+**	- Added TGF import to Un*x makefile
+**
 **	Revision 1.83  2003/02/02 14:22:31  sm
 **	- Added TGF import facility.
-**
+**	
 **	Revision 1.82  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
 **	
@@ -540,6 +545,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
+	ON_COMMAND(ID_TGF_LOAD, OnTgfLoad)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -680,7 +686,7 @@ BOOL CAppLinesDoc::OnImportArcon(LPCTSTR lpszPathName)
 	{
 		message.Format(IDS_DOC_READ,lpszPathName);
 		main->b3SetStatusMessage(message);
-		m_Scene = b3Scene::b3ImportArcon(lpszPathName);
+		m_Scene = b3Scene::b3ReadTGF(lpszPathName);
 		m_Anim  = m_Scene->b3GetAnimation();
 		m_Info  = m_Scene->b3GetModellerInfo();
 		m_Light = m_Scene->b3GetLight(true);
@@ -1604,11 +1610,16 @@ void CAppLinesDoc::OnObjectReplace()
 	b3AddOp(new b3OpObjectReplace(m_Scene,m_DlgHierarchy));
 }
 
-
 void CAppLinesDoc::OnCobLoad() 
 {
 	// TODO: Add your command handler code here
 	b3AddOp(new b3OpObjectLoadCob(m_Scene,m_DlgHierarchy));
+}
+
+void CAppLinesDoc::OnTgfLoad() 
+{
+	// TODO: Add your command handler code here
+	b3AddOp(new b3OpObjectLoadTgf(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectCopy() 
