@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2004/03/07 19:22:30  sm
+**      - Shadow added to Cook/Torrance material
+**
 **      Revision 1.36  2004/03/05 13:20:20  sm
 **      - Some additional test materials added.
 **
@@ -1038,7 +1041,7 @@ b3_bool b3MatCookTorrance::b3Prepare()
 
 b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &acc)
 {
-	b3Color result;
+	b3Color     result;
 	b3_vector64 L;
 
 	B3_ASSERT(ray->incoming != null);	
@@ -1047,48 +1050,54 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 	b3Vector::b3Normalize(&L);
 
 	b3_f64 nl = b3Vector::b3SMul(&ray->incoming->normal,&L);
+
 #if 1
-	b3_vector64 H;
-
-	H.x = L.x - ray->incoming->dir.x;
-	H.y = L.y - ray->incoming->dir.y;
-	H.z = L.z - ray->incoming->dir.z;
-	b3Vector::b3Normalize(&H);
-
-	b3_f64 nh =  b3Vector::b3SMul(&ray->incoming->normal,&H);
-	b3_f64 nv = -b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
-	b3_f64 vh = -b3Vector::b3SMul(&ray->incoming->dir,&H);
-
-	b3_f64 Gm = 2 * nh * nv / vh;
-	b3_f64 Gs = 2 * nh * nl / vh;
-	b3_f64 G = Gs < Gm ? Gs : Gm;
-
-	G = 1;
-	if (Gm < G)
-	{
-		G = Gm;
-	}
-	if (Gs < G)
-	{
-		G = Gs;
-	}
-	G = b3Math::b3Limit(G,0,1);
-
-	b3_f64 alpha = acos(nh);
-	b3_f64 nh_q  = nh * nh;
-	b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh_q * nh_q);
-	b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
-
-	b3_f64 phi = asin(nl);
-
 	b3Color Rf;
-	for (int i = 0;i < 4;i++)
+	if (jit->shape == null)
 	{
-		b3Color::b3_color_index l = (b3Color::b3_color_index)i;
+		b3_vector64 H;
 
-		Rf[l] = b3Math::b3GetFresnel(phi,m_Mu[l]) * Rs;
+		H.x = L.x - ray->incoming->dir.x;
+		H.y = L.y - ray->incoming->dir.y;
+		H.z = L.z - ray->incoming->dir.z;
+		b3Vector::b3Normalize(&H);
+
+		b3_f64 nh =  b3Vector::b3SMul(&ray->incoming->normal,&H);
+		b3_f64 nv = -b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
+		b3_f64 vh = -b3Vector::b3SMul(&ray->incoming->dir,&H);
+
+		b3_f64 Gm = 2 * nh * nv / vh;
+		b3_f64 Gs = 2 * nh * nl / vh;
+
+		b3_f64 G = 1;
+		if (Gm < G)
+		{
+			G = Gm;
+		}
+		if (Gs < G)
+		{
+			G = Gs;
+		}
+		G = b3Math::b3Limit(G,0,1);
+
+		b3_f64 alpha = acos(nh);
+		b3_f64 nh_q  = nh * nh;
+		b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh_q * nh_q);
+		b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
+
+		b3_f64 phi = asin(nl);
+		for (int i = 0;i < 4;i++)
+		{
+			b3Color::b3_color_index l = (b3Color::b3_color_index)i;
+
+			Rf[l] = b3Math::b3GetFresnel(phi,m_Mu[l]) * Rs;
+		}
+		Rf.b3Min();
 	}
-	Rf.b3Min();
+	else
+	{
+		Rf = 0;
+	}
 	
 	result = m_Ra + m_DiffColor * nl * m_kd + Rf * m_ks;
 #else

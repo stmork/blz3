@@ -56,6 +56,14 @@ public:
 	{
 	}
 
+	inline b3Color(const int init)
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			v[i] = init;
+		}
+	}
+
 	inline b3Color(const b3_f32 init)
 	{
 		for (b3_loop i = 0;i < 4;i++)
