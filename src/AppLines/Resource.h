@@ -153,6 +153,7 @@
 #define IDM_BAR_SCENE                   32814
 #define ID_CUST_SCENE                   32815
 #define ID_MODELLER_INFO                32816
+#define ID_VIEW_TO_FULCRUM              32817
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -175,7 +176,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32817
+#define _APS_NEXT_COMMAND_VALUE         32818
 #define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

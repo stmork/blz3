@@ -171,6 +171,7 @@ protected:
 	afx_msg void OnUpdateLightTurn(CCmdUI* pCmdUI);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnViewToFulcrum();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

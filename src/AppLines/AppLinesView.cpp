@@ -36,12 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/11/30 18:08:00  sm
+**	- View to fulcrum implemented
+**	- Some menus updated
+**
 **	Revision 1.19  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
 **	  o Camera turn around itself
 **	  o Camera rotate around fulcrum
-**
+**	
 **	Revision 1.18  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -212,6 +216,7 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
+	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -955,5 +960,29 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	else
 	{
 		main->b3Clear();
+	}
+}
+
+void CAppLinesView::OnViewToFulcrum() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesDoc *pDoc = GetDocument();
+
+	m_Camera->b3Orientate(
+		&m_Camera->m_EyePoint,
+		pDoc->b3GetFulcrum(),
+		b3Vector::b3Distance(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint),
+		b3Vector::b3Length(&m_Camera->m_Width),
+		b3Vector::b3Length(&m_Camera->m_Height));
+	if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_RenderView.b3SetViewMode(B3_VIEW_3D);
+		b3UnsetMagnification();
+		pDoc->UpdateAllViews(this,B3_UPDATE_VIEW|B3_UPDATE_CAMERA);
+	}
+	else
+	{
+
+		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
 }

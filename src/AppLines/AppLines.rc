@@ -135,6 +135,8 @@ BEGIN
     BUTTON      ID_CAM_TURN
     BUTTON      ID_CAM_ROTATE
     BUTTON      ID_CAM_VIEW
+    SEPARATOR
+    BUTTON      ID_VIEW_TO_FULCRUM
     BUTTON      ID_CAM_SELECT
     SEPARATOR
     BUTTON      ID_LIGHT_TURN
@@ -252,6 +254,7 @@ BEGIN
         MENUITEM "Kamera sch&wenken",           ID_CAM_TURN
         MENUITEM "Kamera ro&tieren",            ID_CAM_ROTATE
         MENUITEM "Kamera&projektion",           ID_CAM_VIEW
+        MENUITEM "Ansicht auf Drehkreuz richten", ID_VIEW_TO_FULCRUM
         MENUITEM SEPARATOR
         MENUITEM "Licht&quelle ausrichten",     ID_LIGHT_TURN
     END
@@ -294,6 +297,7 @@ BEGIN
         MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
         MENUITEM "&Objekthierarchie...",        ID_HIERACHY
         MENUITEM "&Raytracing-Vorschau...",     ID_RAYTRACE
+        MENUITEM "&Modellierhilfen...",         ID_MODELLER_INFO
     END
     POPUP "&Fenster"
     BEGIN
@@ -956,6 +960,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_MODELLER_INFO        "Geometry-Werte setzen\nGeometrie-Werte setzen"
+    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
 END
 
 #endif    // German (Germany) resources
