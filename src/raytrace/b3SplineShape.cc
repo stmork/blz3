@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/01/06 21:38:18  sm
+**      - Nasty Un CR/LF
+**      - b3Dir fix. Not tested, yet!
+**      - make count/make count_all update
+**
 **      Revision 1.23  2002/01/06 16:30:47  sm
 **      - Added Load/Save/Replace object
 **      - Enhanced "New world"

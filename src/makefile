@@ -46,10 +46,10 @@ win:
 	cp Btiff/tif_fax3sm.c system_win32
 
 count_all:
-	wc -l `find $(BLZ3_HOME)/include* -name "*.h";find $(BLZ3_HOME)/src -name "*.cc";find $(BLZ3_HOME)/src -name "*.cpp"`
+	wc -l `find $(BLZ3_HOME) -name "*.h";find $(BLZ3_HOME)/src -name "*.c";find $(BLZ3_HOME)/src -name "*.cc";find $(BLZ3_HOME)/src -name "*.cpp"`
 
 count:
-	wc -l `find $(BLZ3_HOME)/include* -name "*.h";ls $(BLZ3_HOME)/src/base/*.[c\|h]* $(BLZ3_HOME)/src/image/*.[c\|h]* $(BLZ3_HOME)/src/raytrace/*.[c\|h]* $(BLZ3_HOME)/src/AppLines/*.h $(BLZ3_HOME)/src/AppLines/*.cpp $(BLZ3_HOME)/src/system*/*.[c\|h]*`
+	wc -l `find $(BLZ3_HOME)/include* -name "*.h";ls $(BLZ3_HOME)/src/base/*.[c\|h]* $(BLZ3_HOME)/src/image/*.[c\|h]* $(BLZ3_HOME)/src/raytrace/*.[c\|h]* $(BLZ3_HOME)/src/AppLines/*.h $(BLZ3_HOME)/src/AppLines/*.cpp $(BLZ3_HOME)/src/system*/*.[c\|h]* $(BLZ3_HOME)/src/test*/*.[c\|h]*`
 
 depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 	@for i in $(SUB_DIRS); do \

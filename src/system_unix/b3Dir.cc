@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>	
 #include <unistd.h>
+#include <assert.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,13 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/06 21:38:18  sm
+**	- Nasty Un CR/LF
+**	- b3Dir fix. Not tested, yet!
+**	- make count/make count_all update
+**
 **	Revision 1.8  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
 **	- Added some non static methods to b3Dir (Un*x untested, yet!)
 **	- Fixed missing sphere/ellipsoid south pole triangles
 **	- Fixed Spline cylinder/ring triangle indexing
-**
+**	
 **	Revision 1.7  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
@@ -225,9 +231,9 @@ void b3Path::b3Correct(const char *input,char *output)
 	len = strlen(input);
 	for (i = 0;i < len;i++)
 	{
-		output = (input[i] == '\\' ? '/' : input[i]);
+		output[i] = (input[i] == '\\' ? '/' : input[i]);
 	}
-	output = 0;
+	output[i] = 0;
 }
 
 // Non static one...

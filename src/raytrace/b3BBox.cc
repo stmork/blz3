@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/01/06 21:38:18  sm
+**	- Nasty Un CR/LF
+**	- b3Dir fix. Not tested, yet!
+**	- make count/make count_all update
+**
 **	Revision 1.33  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
 **	- Code cleanup
-**
+**	
 **	Revision 1.32  2002/01/04 17:53:54  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
