@@ -58,13 +58,16 @@
 
 /*
 **	$Log$
+**	Revision 1.81  2004/12/22 21:36:36  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.80  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.79  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.
@@ -624,9 +627,9 @@ BOOL CAppLinesApp::InitInstance()
 	//  the specific initialization routines you do not need.
 
 #ifdef _AFXDLL
-	Enable3dControls();			// Call this when using MFC in a shared DLL
+//	Enable3dControls();			// Call this when using MFC in a shared DLL
 #else
-	Enable3dControlsStatic();	// Call this when linking to MFC statically
+//	Enable3dControlsStatic();	// Call this when linking to MFC statically
 #endif
 
 	// Change the registry key under which our settings are stored.

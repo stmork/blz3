@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2004/12/22 21:36:37  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.43  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
-**
+**	
 **	Revision 1.42  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
@@ -848,7 +851,8 @@ b3_f64 b3Clouds::b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
 	if (ray->dir.z > 0)
 	{
 		b3_vector Dir;
-		b3_f64    p,D,len,t;
+		b3_f64    p,D,len;
+		b3_f32    t;
 
 		p     = ray->dir.z * -m_EarthRadius;
 		D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;

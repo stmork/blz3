@@ -106,7 +106,20 @@ protected:
 	// Get button index for given command ID, or -1 if not found
 	int  GetButtonIndex(WORD nID) {
 		void* val;
-		return m_mapIDtoImage.Lookup(nID, val) ? (int)val : -1;
+		BOOL lookup = m_mapIDtoImage.Lookup(nID, val);
+		int result;
+
+		if (lookup)
+		{
+			long int liVal = (long int)val;
+
+			result = (int)(liVal & 0xffffffff);
+		}
+		else
+		{
+			result = -1;
+		}
+		return result;
 	}
 
 	// Get ACCEL structure associated with a given command ID

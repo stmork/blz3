@@ -59,7 +59,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3SimplePreviewDialog)
-	afx_msg void OnPreview(WPARAM wParam,LPARAM lParam);
+	afx_msg LRESULT OnPreview(WPARAM wParam,LPARAM lParam);
 	afx_msg void OnAutoRefresh();
 	afx_msg void OnRefresh();
 	virtual BOOL OnInitDialog();

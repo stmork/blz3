@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/12/22 21:36:36  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.16  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.15  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -172,7 +175,7 @@ BOOL CAppRaytraceDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	catch(b3ExceptionBase &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"ERROR: Opening image %s (code: %d)\n",
-			(const char *)result,e.b3GetError());
+			result ? "True" : "False",e.b3GetError());
 		B3_MSG_ERROR(e);
 	}
 	return result;

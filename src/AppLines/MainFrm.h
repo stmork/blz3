@@ -85,7 +85,7 @@ public:
 protected:
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnToolbarDropDown(NMTOOLBAR* pnmh, LRESULT* plRes);
+	afx_msg void OnToolbarDropDown(NMHDR* pnmh, LRESULT* plRes);
 	afx_msg void OnDestroy();
 	afx_msg void OnPrefSave();
 	afx_msg void OnPrefAutosave();
@@ -120,7 +120,7 @@ protected:
 	afx_msg void OnUpdateBarStepRotate(CCmdUI* pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
-	afx_msg void OnUpdateControls();
+	afx_msg LRESULT OnUpdateControls(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnUpdateCamSelect(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightSelect(CCmdUI* pCmdUI);
 	afx_msg void OnHierachy();

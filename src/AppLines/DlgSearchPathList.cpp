@@ -40,9 +40,12 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.5  2004/12/22 21:36:37  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.4  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.3  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
@@ -297,7 +300,7 @@ void CDlgSearchPathList::OnSelchangePath()
 	if (m_Index >= 0)
 	{
 		m_PathEntry = (b3PathEntry *)m_List.GetItemDataPtr(m_Index);
-		if ((unsigned long)m_PathEntry == 0xffffffff)
+		if ((long int)m_PathEntry == -1)
 		{
 			m_PathEntry = null;
 		}

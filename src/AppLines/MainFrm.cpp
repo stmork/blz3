@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/12/22 21:36:37  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.39  2004/05/16 09:21:11  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
-**
+**	
 **	Revision 1.38  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
@@ -432,8 +435,9 @@ void CMainFrame::Dump(CDumpContext& dc) const
 **                                                                      **
 *************************************************************************/
 
-void CMainFrame::OnToolbarDropDown(NMTOOLBAR* pnmtb, LRESULT *plr)
+void CMainFrame::OnToolbarDropDown(NMHDR* pNmHdr, LRESULT *plr)
 {
+	NMTOOLBAR     *pnmtb = (NMTOOLBAR *)pNmHdr;
 	CView         *view = GetActiveFrame()->GetActiveView();
 	CAppRenderDoc *pDoc = (CAppRenderDoc *)view->GetDocument();
 	CRect          rect;
@@ -668,11 +672,12 @@ void CMainFrame::OnWindowTileVert()
 	MDITile (MDITILE_VERTICAL);
 }
 
-void CMainFrame::OnUpdateControls()
+LRESULT CMainFrame::OnUpdateControls(WPARAM wParam,LPARAM lParam)
 {
 	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
 
 	app->b3UpdateUI();
+	return 0;
 }
 
 /*************************************************************************

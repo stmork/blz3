@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/12/22 21:36:37  sm
+**	- Changed development environment to Visual C++ .net 2003
+**
 **	Revision 1.4  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.3  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -129,10 +132,11 @@ void CB3SimplePreviewDialog::OnSpin(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
-void CB3SimplePreviewDialog::OnPreview(WPARAM wParam,LPARAM lParam)
+LRESULT CB3SimplePreviewDialog::OnPreview(WPARAM wParam,LPARAM lParam)
 {
 	// TODO: Add your control notification handler code here
 	b3Preview();
+	return 0;
 }
 
 void CB3SimplePreviewDialog::b3Preview()
