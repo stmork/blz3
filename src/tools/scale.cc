@@ -1,0 +1,247 @@
+/*
+**
+**      $Filename:      b3RemDepend.cc $
+**      $Release:       Dortmund 2001 $
+**      $Revision$
+**      $Date$
+**      $Author$
+**      $Developer:     Steffen A. Mork $
+**
+**      Blizzard III - removing dependencies from makefile
+**
+**      (C) Copyright 2001  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
+#include "blz3/b3Config.h"
+#include "blz3/system/b3Dir.h"
+#include "blz3/system/b3File.h"
+#include "blz3/base/b3Array.h"
+#include "blz3/base/b3FileList.h"
+#include "blz3/image/b3Tx.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.1  2003/03/24 16:15:58  sm
+**	- Added a scale tool for examples.
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
+
+#define DEST_IMG_SIZE 100.0f
+
+class b3Site
+{
+	char         *m_Title;
+	b3Path        m_Source;
+	b3Path        m_Dest;
+	b3Path        m_Small;
+	b3Path        m_Normal;
+	b3FileList    m_List;
+	int           m_Num;
+
+public:
+	b3Site(const char *source,const char *dest)
+		: m_Source(source),m_Dest(dest)
+	{
+		b3Dir::b3LinkFileName(m_Small, dest,"small");
+		b3Dir::b3LinkFileName(m_Normal,dest,"normal");
+
+		b3Dir::b3MkDir(m_Dest);
+		b3Dir::b3MkDir(m_Small);
+		b3Dir::b3MkDir(m_Normal);
+
+		m_List.b3CreateList(source);
+		m_List.b3Sort();
+
+		m_Num = 0;
+		m_Title = "Isabella";
+	}
+
+	void b3Dump()
+	{
+		b3FileEntry *entry;
+		b3Path       index,name;
+		FILE        *file;
+		b3_bool      row;
+
+		for (entry = m_List.b3First();entry != null;entry = entry->Succ)
+		{
+			b3LoadImage(entry);
+		}
+
+		b3Path::b3LinkFileName(index,m_Dest,"index.html");
+
+		file = fopen(index,"wt");
+		if (file != null)
+		{
+			b3PrintF(B3LOG_NORMAL,"Writing %s\n",(const char *)index);
+			fprintf(file,
+				"<html>\n"
+				"<head>\n"
+				"<title>%s</title>\n"
+				"</head>\n"
+				"\n"
+				"<body background=\"/sm/pictures/MORKNetBack.JPG\">\n",m_Title);
+			fprintf(file,
+				"</body>\n"
+				"</html>\n");
+			fprintf(file,
+				"<table><tr>\n"
+				"<td width=\"200\" valign=\"top\">\n"
+				"<img SRC=\"/sm/pictures/HOME.gif\" ALT=\"[MORKNet Logo]\" HEIGHT=\"150\" WIDTH=\"150\">\n"
+				"</td>\n"
+				"\n"
+				"<td width=\"500\" valign=\"top\">\n");
+
+			fprintf(file,"<table>\n");
+			for (int i = 0;i < m_Num;i++)
+			{
+				row = (i % 4) == 0;
+				b3ImgName(name,i);
+				if (row)
+				{
+					if (i > 0)
+					{
+						fprintf(file,"</tr>\n");
+					}
+					fprintf(file,"<tr>\n");
+				}
+				fprintf(file,
+					"<td>\n"
+					"  <a href=\"normal/%s\"><img src=\"small/%s\"></a>\n"
+					"</td>\n",
+					(const char *)name,(const char *)name);
+			}
+			fprintf(file,"</tr>\n</table>\n");
+
+			fprintf(file,
+				"</td></tr></table>\n");
+			fclose(file);
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Cannot write %s\n",(const char *)index);
+		}
+	}
+
+private:
+	static inline void b3ImgName(char *name,int num)
+	{
+		sprintf(name,"img_%04d.%s",num,b3Tx::b3GetExt(FT_JPEG));
+	}
+
+	b3_bool b3LoadImage(b3FileEntry *entry)
+	{
+		b3Path  source(m_Source);
+		b3Tx    normal,small;
+		b3Path  name,full_small,full_normal;
+		b3_res  xSize,ySize;
+		b3_f64  scale;
+		b3_bool result = false;
+
+		source.b3LinkFileName(entry->b3Name(),null);
+		b3PrintF(B3LOG_NORMAL,"F: %s\n",(const char *)source);
+		if (normal.b3LoadImage(source) == B3_OK)
+		{
+			b3ImgName(name,m_Num);
+			b3Path::b3LinkFileName(full_normal,m_Normal,name);
+			b3PrintF(B3LOG_NORMAL,"   %s\n",(const char *)full_normal);
+			if (b3Tx::b3GetFileType(entry->b3Name()) == FT_JPEG)
+			{
+				b3File  src;
+				b3_u08 *buffer;
+				b3_size size;
+
+				buffer = src.b3ReadBuffer(source,size);
+				if (buffer != null)
+				{
+					b3File  dst(full_normal,B_WRITE);
+
+					dst.b3Write(buffer,size);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if (normal.b3SaveJPEG(full_normal) != B3_OK)
+				{
+					return false;
+				}
+			}
+
+			b3Path::b3LinkFileName(full_small,m_Small,name);
+			scale = DEST_IMG_SIZE / (normal.xSize < normal.ySize ?
+				normal.ySize :
+				normal.xSize);
+			xSize = (b3_res)(scale * normal.xSize);
+			ySize = (b3_res)(scale * normal.ySize);
+
+			b3PrintF(B3LOG_NORMAL,"   %s - %dx%d - %3.3f\n",(const char *)full_small,xSize,ySize,scale);
+			if (small.b3AllocTx(xSize,ySize,24))
+			{
+				try
+				{
+					small.b3ScaleToGrey(&normal);
+					result = small.b3SaveJPEG(full_small) == B3_OK;
+				}
+				catch(b3TxException &t)
+				{
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
+				}
+			}
+		}
+
+		if (result)
+		{
+			m_Num++;
+		}
+		else
+		{
+			remove(full_small);
+			remove(full_normal);
+		}
+		return result;
+	}
+};
+
+int main(int argc,char *argv[])
+{
+	b3Path       dir;
+
+	if (argc > 1)
+	{
+		dir = argv[1];
+	}
+	else
+	{
+		dir = ".";
+	}
+	b3Site site(dir,"/tmp/im");
+
+	site.b3Dump();
+	return 0;
+}

@@ -6,12 +6,14 @@
 
 CPPFLAGS		= $(STDINC)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
-PRGS			= RemDepend RemCR RestoreExt CleanRes
+PRGS			= RemDepend RemCR RestoreExt CleanRes scale
 REMDEPEND_OBJS		= RemDepend.o
 REMCR_OBJS		= RemCR.o
 RESTOREEXT_OBJS		= RestoreExt.o
 CLEANRES_OBJS		= CleanRes.o
-PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc
+SCALE_OBJS		= scale.o
+
+PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc
 PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS)
 #PRG_SOURCE		= ${PRG_OBJS:.o=.cc}
 
@@ -42,6 +44,11 @@ RestoreExt:	$(RESTOREEXT_OBJS)
 
 CleanRes:	$(CLEANRES_OBJS)
 	$(LINK.cc) -o $@ $(CLEANRES_OBJS) -lB3System -lpthread
+	chmod 775 $@
+	cp $@ $(BLZ3_BIN)
+
+scale:	$(SCALE_OBJS)
+	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 

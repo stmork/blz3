@@ -413,7 +413,7 @@ private:
 	// b3TxLoadTIFF.cc
 	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
 	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
-	long           nauiTIFFAlloc  ();
+	long           b3TIFFAlloc  ();
 
 	// b3TxSaveTIFF.cc
 	void           b3GetSampleValues  (long &BitsPerPixel,long &SamplesPerPixel);
