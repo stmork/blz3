@@ -25,8 +25,8 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "b3SelectColor.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ public:
 	enum { IDD = IDD_NEBULAR };
 	CB3ShowRaytrace	m_NebularPreviewCtrl;
 	CB3FloatEdit	m_NebularDistanceCtrl;
-	CB3ColorField	m_NebularColorCtrl;
+	CB3ColorFieldSelector	m_NebularColorCtrl;
 	BOOL	m_ActNebular;
 	//}}AFX_DATA
 

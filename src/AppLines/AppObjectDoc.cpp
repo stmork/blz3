@@ -38,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.14  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
-**
+**	
 **	Revision 1.13  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -475,8 +479,15 @@ void CAppObjectDoc::OnObjectEdit()
 		{
 			if (call(selected,false) == IDOK)
 			{
+				// Init data
+				m_DlgHierarchy->b3GetData();
+				m_BBox->b3BacktraceRecompute(m_BBox->b3FindParentBBox((b3Shape *)selected));
+				b3ComputeBounds();
+
 				SetModifiedFlag();
 				UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+				m_DlgHierarchy->b3InitTree(this,true);
+				m_DlgHierarchy->b3SelectItem(selected);
 			}
 		}
 	}

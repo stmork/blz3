@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3CSGDialog.cpp $
+**	$Filename:	DlgCSGMode.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Base class for CSG shapes
+**	Blizzard III - Change CSG operation mode
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -22,7 +22,8 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "b3CSGDialog.h"
+#include "b3ImageList.h"
+#include "DlgCSGMode.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,43 +33,44 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/02/26 20:43:28  sm
+**	Revision 1.1  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
 **
-**	Revision 1.1  2002/02/24 17:45:32  sm
-**	- Added CSG edit dialogs
-**	- Corrected shape edit inheritance.
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CB3CSGDialog implementation                   **
+**                        CDlgCSGMode implementation                    **
 **                                                                      **
 *************************************************************************/
 
-CB3CSGDialog::CB3CSGDialog(UINT IDD,CWnd* pParent /*=NULL*/)
-	: CB3ShapeDialog(IDD, pParent)
+IMPLEMENT_DYNCREATE(CDlgCSGMode, CPropertyPage)
+
+CDlgCSGMode::CDlgCSGMode() : CPropertyPage(CDlgCSGMode::IDD)
 {
-	//{{AFX_DATA_INIT(CB3CSGDialog)
+	//{{AFX_DATA_INIT(CDlgCSGMode)
 	m_CSGMode = 0;
 	//}}AFX_DATA_INIT
+	m_Section = "csg";
 }
 
-
-void CB3CSGDialog::DoDataExchange(CDataExchange* pDX)
+CDlgCSGMode::~CDlgCSGMode()
 {
-	CB3ShapeDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CB3CSGDialog)
+}
+
+void CDlgCSGMode::DoDataExchange(CDataExchange* pDX)
+{
+	CPropertyPage::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CDlgCSGMode)
 	DDX_Radio(pDX, IDC_CSGMODE_UNION, m_CSGMode);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CB3CSGDialog, CB3ShapeDialog)
-	//{{AFX_MSG_MAP(CB3CSGDialog)
+BEGIN_MESSAGE_MAP(CDlgCSGMode, CPropertyPage)
+	//{{AFX_MSG_MAP(CDlgCSGMode)
 	ON_BN_CLICKED(IDC_CSGMODE_UNION, OnCSGModeChanged)
 	ON_BN_CLICKED(IDC_CSGMODE_INTERSECT, OnCSGModeChanged)
 	ON_BN_CLICKED(IDC_CSGMODE_SUB, OnCSGModeChanged)
@@ -76,51 +78,40 @@ BEGIN_MESSAGE_MAP(CB3CSGDialog, CB3ShapeDialog)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CB3ShapeDialog message handlers
+// CDlgCSGMode message handlers
 
-const char *CB3CSGDialog::b3GetSection()
+BOOL CDlgCSGMode::OnInitDialog() 
 {
-	return "csg";
-}
-
-void CB3CSGDialog::OnCSGModeChanged() 
-{
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	b3SetCSGMode(m_CSGMode);
-}
-
-void CB3CSGDialog::b3SetCSGMode(int csgmode)
-{
-}
-
-void CB3CSGDialog::b3UpdateBase()
-{
-}
-
-BOOL CB3CSGDialog::OnInitDialog() 
-{
-	b3CSGShape *shape = (b3CSGShape *)m_Shape;
-
 	m_CSGMode = m_Creation ?
-		AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".csg"),m_CSGMode) :
-		shape->b3GetOperationIndex(shape->m_Operation);
-	CB3ShapeDialog::OnInitDialog();
+		AfxGetApp()->GetProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode) :
+		m_Shape->b3GetOperationIndex(m_Shape->m_Operation);
+	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CB3CSGDialog::OnOK() 
+void CDlgCSGMode::OnCSGModeChanged()
+{
+	CPropertySheet *sheet;
+	CString         text;
+
+	UpdateData();
+	m_Shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
+	CB3ImageList::b3ComputeText(m_Shape,text);
+	sheet = (CPropertySheet *)GetParent();
+	sheet->SetTitle(text);
+}
+
+void CDlgCSGMode::OnOK() 
 {
 	// TODO: Add extra validation here
-	b3CSGShape *shape = (b3CSGShape *)m_Shape;
-
-	CB3ShapeDialog::OnOK();
+	CPropertyPage::OnOK();
 	if (m_Creation)
 	{
-		AfxGetApp()->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".csg"),m_CSGMode);
+		AfxGetApp()->WriteProfileInt(CB3ClientString(),m_Section + CString(".csg"),m_CSGMode);
 	}
-	shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
+	m_Shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
 }

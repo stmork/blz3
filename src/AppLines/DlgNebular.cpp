@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.3  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
 **	- DlgLensFlare implemented
 **	- Adjusting far clipping plane inside b3RenderView
-**
+**	
 **	Revision 1.2  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	
@@ -109,7 +113,7 @@ BOOL CDlgNebular::OnInitDialog()
 	m_NebularDistanceCtrl.b3SetDigits(3,0);
 	m_NebularDistanceCtrl.b3SetValue(fabs(m_Nebular->m_NebularVal));
 	m_NebularPreviewCtrl.b3Update(m_NebularScene);
-	m_NebularColorCtrl.b3SetColor(b3Color::b3GetColor(&m_EditNebular->m_NebularColor));
+	m_NebularColorCtrl.b3Init(&m_EditNebular->m_NebularColor,this);
 	b3UpdateUI();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -127,12 +131,8 @@ void CDlgNebular::OnDestroy()
 void CDlgNebular::OnNebularColorChange() 
 {
 	// TODO: Add your control notification handler code here
-	CColorDialog dlg(b3Color::b3GetColorref(&m_EditNebular->m_NebularColor),CC_FULLOPEN,this);
-
-	if (dlg.DoModal() == IDOK)
+	if (m_NebularColorCtrl.b3Select())
 	{
-		b3Color::b3GetColorref(&m_EditNebular->m_NebularColor,dlg.GetColor());
-		m_NebularColorCtrl.b3SetColor(b3Color::b3GetColor(&m_EditNebular->m_NebularColor));
 		m_NebularPreviewCtrl.b3Update(m_NebularScene);
 	}
 }

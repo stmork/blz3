@@ -31,10 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.6  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.5  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -100,6 +104,14 @@ void CB3FloatEdit::b3SetMin(b3_f64 min)
 void CB3FloatEdit::b3SetMax(b3_f64 max)
 {
 	m_Max = max;
+	m_MaxActive = true;
+}
+
+void CB3FloatEdit::b3SetRange(b3_f64 min,b3_f64 max)
+{
+	m_Min       = min;
+	m_MinActive = true;
+	m_Max       = max;
 	m_MaxActive = true;
 }
 

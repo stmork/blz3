@@ -184,6 +184,10 @@ SOURCE=.\b3PickVector.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SelectColor.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectObject.cpp
 # End Source File
 # Begin Source File
@@ -216,11 +220,19 @@ SOURCE=.\DlgCreateItem.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateMaterial.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCSG1.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\DlgCSG3.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSGMode.cpp
 # End Source File
 # Begin Source File
 
@@ -380,6 +392,10 @@ SOURCE=.\b3PickVector.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SelectColor.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectObject.h
 # End Source File
 # Begin Source File
@@ -416,11 +432,19 @@ SOURCE=.\DlgCreateItem.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateMaterial.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCSG1.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\DlgCSG3.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCSGMode.h
 # End Source File
 # Begin Source File
 

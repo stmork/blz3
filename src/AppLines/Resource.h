@@ -88,8 +88,9 @@
 #define IDD_SHAPE1                      188
 #define IDD_SHAPE2                      189
 #define IDD_CSG1                        190
-#define IDD_CSG4                        191
 #define IDD_CSG3                        191
+#define IDD_CSGMODE                     192
+#define IDD_CREATE_MATERIAL             193
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -242,13 +243,28 @@
 #define IDC_EDIT1                       1112
 #define IDC_CUSTOM_MEASURE              1112
 #define IDC_PRT_BUFFER                  1112
+#define IDC_REFLECTANCE                 1112
 #define IDC_MEASURE                     1113
 #define IDC_PRT_BUFFER_SPIN             1114
 #define IDC_CAMERA_UNIT                 1115
 #define IDC_OBJECTLIST                  1116
 #define IDC_CSGMODE_UNION               1117
 #define IDC_CSGMODE_INTERSECT           1118
+#define IDC_COLOR_AMBIENT               1118
 #define IDC_CSGMODE_SUB                 1119
+#define IDC_COLOR_DIFFUSE               1119
+#define IDC_COLOR_SPECULAR              1120
+#define IDC_PREVIEW_MATERIAL            1121
+#define IDC_REALLY_CREATE               1122
+#define ID_CHANGE_AMBIENT               1123
+#define ID_CHANGE_DIFFUSE               1124
+#define ID_CHANGE_SPECULAR              1125
+#define IDC_REFRACTANCE                 1126
+#define IDC_INDEX_OF_REFRACTION         1127
+#define IDC_SPEC_EXPONENT               1128
+#define IDC_TEXTURE_SELECT              1129
+#define IDC_PREVIEW_TEXTURE             1130
+#define IDC_TEXTURE                     1131
 #define IDC_DIRECTION                   3000
 #define IDC_POSITION                    3001
 #define IDC_BASE_X                      3002
@@ -435,9 +451,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        188
+#define _APS_NEXT_RESOURCE_VALUE        194
 #define _APS_NEXT_COMMAND_VALUE         32867
-#define _APS_NEXT_CONTROL_VALUE         1118
+#define _APS_NEXT_CONTROL_VALUE         1132
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

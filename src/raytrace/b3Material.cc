@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/02/26 20:43:28  sm
+**      - Moved creation dialogs into property sheets
+**      - Added material creation dialog
+**
 **      Revision 1.19  2001/12/30 14:16:58  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -374,6 +378,24 @@ b3_f64 b3MatChess::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture),class_type) 
 {
+	// Init material values
+	m_Reflection =    0;
+	m_Refraction =    0;
+	m_RefrValue  =    1;
+	m_HighLight  = 1000;
+
+	// Init texture repetition values
+	m_xStart     =  0;
+	m_yStart     =  1;
+	m_xScale     =  1;
+	m_yScale     = -1;
+	m_xTimes     =  2;
+	m_yTimes     =  2;
+
+	// Init texture
+	m_Name.b3Empty();
+	m_Texture = null;
+	m_Flags   = 0;
 }
 
 b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)

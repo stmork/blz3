@@ -689,6 +689,7 @@ public:
 // TEXTURE
 class b3MatTexture : public b3Material 
 {
+public:
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
@@ -696,9 +697,9 @@ class b3MatTexture : public b3Material
 	b3_f32            m_xStart,m_yStart;    // surface coordinate start
 	b3_f32            m_xScale,m_yScale;    // texture scale
 	b3_s32            m_xTimes,m_yTimes;    // repetition in x- y-direction
-	b3Tx             *m_Texture;
 	b3_s32            m_Flags;
 	b3Path            m_Name;
+	b3Tx             *m_Texture;
 
 public:
 	B3_ITEM_INIT(b3MatTexture);
@@ -720,13 +721,14 @@ public:
 // WRAPTEXTURE
 class b3MatWrapTexture : public b3Material 
 {
+	b3Tx             *m_Texture;          // only one texture (compat. Dali)
+public:
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
 	b3_f32            m_xStart,m_yStart;  // surface coordinate start
 	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
-	b3Tx             *m_Texture;          // only one texture (compat. Dali)
 	b3_s32            m_Flags;
 	b3Path            m_Name;
 

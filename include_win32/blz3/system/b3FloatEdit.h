@@ -54,6 +54,7 @@ public:
 	b3_bool b3Check();
 	void    b3SetMin(b3_f64 min);
 	void    b3SetMax(b3_f64 max);
+	void    b3SetRange(b3_f64 min,b3_f64 max);
 	void    b3DisableBound();
 	void    b3SetDigits(int pre,int post);
 	void    b3SetValue(b3_f64 value);

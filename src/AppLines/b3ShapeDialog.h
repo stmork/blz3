@@ -215,12 +215,12 @@ typedef int (*b3ItemEditCall)(b3Item *item,b3_bool create);
 /////////////////////////////////////////////////////////////////////////////
 // CB3ShapeDialog dialog
 
-class CB3ShapeDialog : public CDialog
+class CB3ShapeDialog : public CPropertyPage
 {
 // Construction
 public:
 	b3ShapeRenderObject *m_Shape;
-	b3_bool  m_Creation;
+	b3_bool              m_Creation;
 	CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -238,6 +238,7 @@ public:
 
 // Implementation
 protected:
+	static  int         b3Edit(CB3ShapeDialog *page,b3Item *item,b3_bool create);
 	virtual void        b3SetDirMode(int dirmode);
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();

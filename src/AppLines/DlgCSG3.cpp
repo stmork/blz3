@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.1  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
-**
+**	
 **
 */
 
@@ -90,9 +94,7 @@ int CDlgCSG3::b3Edit(b3Item *item,b3_bool create)
 {
 	CDlgCSG3 dlg;
 
-	dlg.m_Creation = create;
-	dlg.m_Shape    = (b3CSGShape *)item;
-	return dlg.DoModal();
+	return CB3ShapeDialog::b3Edit(&dlg,item,create);
 }
 
 const char *CDlgCSG3::b3GetSection()
@@ -172,5 +174,4 @@ void CDlgCSG3::OnOK()
 		m_Dir2.b3Write(b3GetSection() + CString(".dir2"));
 		m_Dir3.b3Write(b3GetSection() + CString(".dir3"));
 	}
-	shape->m_Operation = b3CSGShape::m_CSGMode[m_CSGMode];
 }

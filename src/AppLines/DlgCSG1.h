@@ -30,7 +30,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCSG1 dialog
 
-class CDlgCSG1 : public CB3CSGDialog
+class CDlgCSG1 : public CB3ShapeDialog
 {
 // Construction
 protected:

@@ -25,8 +25,8 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "b3SelectColor.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ public:
 	enum { IDD = IDD_LENS_FLARE };
 	CB3ShowRaytrace	m_LensFlarePreviewCtrl;
 	CB3FloatEdit	m_LensFlareExponCtrl;
-	CB3ColorField	m_LensFlareColorCtrl;
+	CB3ColorFieldSelector	m_LensFlareColorCtrl;
 	BOOL	m_ActLensFlare;
 	//}}AFX_DATA
 

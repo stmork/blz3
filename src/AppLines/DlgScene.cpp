@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "DlgScene.h"
 #include "b3ExampleScene.h"
+#include "b3SelectColor.h"
 #include "b3SelectTexture.h"
 
 /*************************************************************************
@@ -34,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.7  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.6  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
@@ -230,11 +235,8 @@ void CDlgScene::OnBgImageSelect()
 void CDlgScene::OnTopColor() 
 {
 	// TODO: Add your control notification handler code here
-	CColorDialog dlg(b3Color::b3GetColorref(&m_PreviewScene->m_TopColor),CC_FULLOPEN,this);
-
-	if (dlg.DoModal() == IDOK)
+	if (CB3ColorFieldSelector::b3Select(&m_PreviewScene->m_TopColor,this))
 	{
-		b3Color::b3GetColorref(&m_PreviewScene->m_TopColor,dlg.GetColor());
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	}
 }
@@ -242,11 +244,8 @@ void CDlgScene::OnTopColor()
 void CDlgScene::OnBottomColor() 
 {
 	// TODO: Add your control notification handler code here
-	CColorDialog dlg(b3Color::b3GetColorref(&m_PreviewScene->m_BottomColor),CC_FULLOPEN,this);
-
-	if (dlg.DoModal() == IDOK)
+	if (CB3ColorFieldSelector::b3Select(&m_PreviewScene->m_BottomColor,this))
 	{
-		b3Color::b3GetColorref(&m_PreviewScene->m_BottomColor,dlg.GetColor());
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	}
 }

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/26 20:43:28  sm
+**	- Moved creation dialogs into property sheets
+**	- Added material creation dialog
+**
 **	Revision 1.4  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.3  2002/01/10 20:18:54  sm
 **	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
 **	  what to do...
@@ -70,7 +74,14 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 	CString   default_ext;
 
 	// Make filename ready for use...
-	suggest.b3Correct((*tx)->b3Name());
+	if ((*tx) != null)
+	{
+		suggest.b3Correct((*tx)->b3Name());
+	}
+	else
+	{
+		suggest.b3Empty();
+	}
 	file_filter.LoadString(IDS_TEXTURE_FILTER);
 
 #if 1
