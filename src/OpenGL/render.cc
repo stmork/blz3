@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h" 
 #include "blz3/system/b3Plugin.h"
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3RenderLight.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3SearchPath.h"
@@ -36,6 +37,13 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2004/10/16 17:00:52  sm
+**      - Moved lighting into own class to ensure light setup
+**        after view setup.
+**      - Fixed lighting for scene and simple overview
+**      - Fixed Light cutoff exponent deadloop.
+**      - Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **      Revision 1.47  2004/10/13 15:33:14  smork
 **      - Optimized OpenGL lights.
 **
@@ -226,6 +234,7 @@
 
 static b3ShapeRenderContext  context;
 static b3World              *world = null;
+static b3RenderLight         lights;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
 static b3_bool               spot_light = true;
@@ -233,20 +242,19 @@ static b3_res                xWinSize,yWinSize;
 
 static void b3SetLights()
 {
-	context.b3LightSpotEnable(spot_light);
+	context.b3LightReset();
 	if (all_lights)
 	{
-		b3Scene  *scene;
-
 		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
 			spot_light ? "" : "out");
-		scene = (b3Scene *)world->b3GetFirst();
-		scene->b3SetLights(&context);
+
+		lights.b3SetScene((b3Scene *)world->b3GetFirst());
+		lights.b3SetLightMode(spot_light ? B3_LIGHT_SCENE_SPOT : B3_LIGHT_SCENE);
 	}
 	else
 	{
 		b3PrintF(B3LOG_DEBUG,"Using one light...\n");
-		context.b3LightDefault();
+		lights.b3SetLightMode(B3_LIGHT_SIMPLE);
 	}
 }
 
@@ -254,7 +262,7 @@ static void b3ReshapeFunc(GLsizei xSize,GLsizei ySize)
 {
 	b3PrintF(B3LOG_FULL,">b3ReshapeFunc(%d, %d );\n",xSize, ySize);
 	view.b3SetupView(xWinSize = xSize,yWinSize = ySize);
-	b3SetLights();
+	lights.b3SetupLight(&context);
 	b3PrintF(B3LOG_FULL,"<b3ReshapeFunc()\n");
 }
 
@@ -354,13 +362,13 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 	{
 	case 'l':
 		all_lights = !all_lights;
-		b3ReshapeFunc(xWinSize,yWinSize);
+		b3SetLights();
 		refresh = true;
 		break;
 
 	case 's':
 		spot_light = !spot_light;
-		b3ReshapeFunc(xWinSize,yWinSize);
+		b3SetLights();
 		refresh = true;
 		break;
 
@@ -401,6 +409,7 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 		break;
 
 	case 'r':
+		b3PrintF(B3LOG_FULL,"Refreshing...\n");
 		refresh = true;
 		break;
 
@@ -413,6 +422,7 @@ static void b3KeyboardFunc(unsigned char key,int x,int y)
 
 	if (refresh)
 	{
+		b3ReshapeFunc(xWinSize,yWinSize);
 		glutPostRedisplay();
 	}
 }
@@ -429,9 +439,15 @@ static void b3Update(b3Scene *scene)
 	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
+
+	// Setup view
 	view.b3SetBounds(&lower,&upper);
 	view.b3SetCamera(scene);
 	view.b3SetViewMode(B3_VIEW_3D);
+
+	// then setup light(s)
+	b3SetLights();
+
 	glutPostRedisplay();
 }
 
@@ -450,7 +466,7 @@ static void b3Prepare(b3Scene *scene)
 	{
 		all_lights = info->m_UseSceneLights;
 	}
-	
+
 	xWinSize = xSize;
 	yWinSize = ySize;
 }

@@ -24,7 +24,6 @@
 
 #include "AppObjectDoc.h"
 #include "AppRenderView.h"
-#include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 #include "b3PickInfoObject.h"
 

@@ -25,7 +25,7 @@
 #define B3_WHITE       ((b3_pkd_color)0x00ffffff)
 #define B3_LIGHT_GREY  ((b3_pkd_color)0x00c0c0c0)
 #define B3_GREY        ((b3_pkd_color)0x00808080)
-#define B3_DARKGREY    ((b3_pkd_color)0x00404040)
+#define B3_DARK_GREY   ((b3_pkd_color)0x00404040)
 #define B3_BLACK       ((b3_pkd_color)0x00000000)
 #define B3_DARK_RED    ((b3_pkd_color)0x00800000)
 #define B3_RED         ((b3_pkd_color)0x00ff0000)

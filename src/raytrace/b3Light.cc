@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2004/10/16 17:00:52  sm
+**      - Moved lighting into own class to ensure light setup
+**        after view setup.
+**      - Fixed lighting for scene and simple overview
+**      - Fixed Light cutoff exponent deadloop.
+**      - Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **      Revision 1.49  2004/10/13 15:33:14  smork
 **      - Optimized OpenGL lights.
 **
@@ -721,12 +728,9 @@ b3_f64 b3Light::b3ComputeSpotExponent()
 	{
 		i = 0;
 
-// FIXME!!
-return 200;
-
 		do
 		{
-			angle = (double)i / (double)max;
+			angle = (double)i++ / (double)max;
 			loop  = b3GetSpotFactor(angle) > 0.25;
 		}
 		while ((i < max) && loop);

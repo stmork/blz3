@@ -42,10 +42,17 @@
 
 /*
 **	$Log$
+**	Revision 1.71  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.70  2004/05/16 09:21:10  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
-**
+**	
 **	Revision 1.69  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
@@ -480,13 +487,15 @@ void CAppLinesView::b3UpdateLight()
 {
 	CAppLinesDoc *pDoc = GetDocument();
 
+	pDoc->m_Context.b3LightReset();
 	if (pDoc->m_Scene->b3GetModellerInfo()->m_UseSceneLights)
 	{
-		m_Scene->b3SetLights(&pDoc->m_Context);
+		m_RenderLight.b3SetScene(pDoc->m_Scene);
+		m_RenderLight.b3SetLightMode(B3_LIGHT_SCENE_SPOT);
 	}
 	else
 	{
-		pDoc->m_Context.b3LightDefault();
+		m_RenderLight.b3SetLightMode(B3_LIGHT_SIMPLE);
 	}
 }
 
@@ -672,6 +681,9 @@ void CAppLinesView::b3Draw(
 
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+
+	// then setup light(s)
+	m_RenderLight.b3SetupLight(&pDoc->m_Context);
 
 	// Clear buffer
 	pDoc->m_Context.b3StartDrawing();

@@ -23,11 +23,12 @@
 
 #include "AppLines.h"
 #include "AppLinesView.h"
-#include "blz3/raytrace/b3PickInfo.h"
 #include "DlgProperties.h"
 #include "b3CameraVolume.h"
 #include "b3Fulcrum.h"
 #include "b3PickVector.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3PickInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,10 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/10/16 17:00:52  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.8  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.7  2003/02/27 19:39:05  sm
 **	- Added two grid colors for configuration.
 **	- Beautified properties dialog.

@@ -27,6 +27,7 @@
 #include "DlgObjectPreview.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
+#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -36,6 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.23  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -43,7 +51,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.22  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
 **	
@@ -287,6 +295,9 @@ void CAppObjectView::b3Draw(
 
 		// Setup view first
 		m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+
+		// then setup light(s)
+		m_RenderLight.b3SetupLight(&pDoc->m_Context);
 
 		// Clear buffer
 		context->b3StartDrawing();

@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3RenderView.cc $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3RenderView.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - Render view mode handling
+**	Blizzard III - Render view mode handling
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/10/16 17:00:52  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.41  2004/09/23 16:05:28  sm
 **	- Some BLZ3_USE_OPENGL caveats removed.
-**
+**	
 **	Revision 1.40  2004/09/19 15:36:18  sm
 **	- Changed polygon/grid index data type from short (Hey! Are we
 **	  on Windows 3.11???) to long.
@@ -975,6 +983,10 @@ void b3RenderView::b3SetupView(
 	GLfloat   min = 0.1f;
 	b3_vector up;
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,">b3RenderView::b3SetupView() # %d\n",m_ViewMode);
+#endif
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -1158,6 +1170,9 @@ void b3RenderView::b3SetupView(
 		glLineWidth(1.0f);
 	}
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"<b3RenderView::b3SetupView()\n");
+#endif
 #endif
 }
 

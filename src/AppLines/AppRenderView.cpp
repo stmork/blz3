@@ -35,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.33  2004/10/12 19:54:19  sm
 **	- Some camera/light resort. We have to draw the
 **	  light just after the camera to ensure a proper
 **	  view matrix as part of the model view matrix.
-**
+**	
 **	Revision 1.32  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
@@ -342,7 +349,7 @@ void CAppRenderView::OnInitialUpdate()
 
 void CAppRenderView::b3UpdateLight()
 {
-	GetDocument()->m_Context.b3LightDefault();
+	m_RenderLight.b3SetLightMode(B3_LIGHT_SIMPLE);
 }
 
 void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 

@@ -32,6 +32,9 @@
 #include "DlgNewObject.h"
 
 #include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Bump.h"
+#include "blz3/raytrace/b3Material.h"
 
 /*************************************************************************
 **                                                                      **
@@ -41,10 +44,17 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.41  2004/09/24 13:45:35  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
-**
+**	
 **	Revision 1.40  2004/07/03 13:49:30  sm
 **	- Added spline knot control dialog which is not completed yet.
 **	

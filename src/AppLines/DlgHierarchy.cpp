@@ -25,6 +25,7 @@
 #include "AppLines.h"
 #include "AppLinesView.h"
 #include "DlgHierarchy.h"
+#include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/10/16 17:00:52  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.24  2004/04/22 20:23:55  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
 **	- Expand root item of tree view in object editor
-**
+**	
 **	Revision 1.23  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	

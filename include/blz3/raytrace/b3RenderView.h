@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Raytracing Structure Definitions
+**	Blizzard III - Render view mode handling
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -19,7 +19,8 @@
 #define B3_RAYTRACE_RENDERVIEW_H
 
 #include "blz3/b3Config.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3List.h"
+#include "blz3/raytrace/b3Special.h"
 
 enum b3_view_mode
 {

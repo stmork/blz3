@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/10/16 17:00:52  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.4  2004/09/24 20:22:05  sm
 **	- Some VBO adjustments.
-**
+**	
 **	Revision 1.3  2004/09/24 19:07:27  sm
 **	- VBOs on ATI running - or better: crawling.
 **	
@@ -58,6 +65,7 @@
 
 b3_bool                   b3VectorBufferObjects::glHasVBO;
 
+#ifdef BLZ3_USE_OPENGL
 PFNGLGENBUFFERSARBPROC    b3VectorBufferObjects::glGenBuffersARB;
 PFNGLDELETEBUFFERSARBPROC b3VectorBufferObjects::glDeleteBuffersARB;
 PFNGLBINDBUFFERARBPROC    b3VectorBufferObjects::glBindBufferARB;
@@ -65,6 +73,7 @@ PFNGLBUFFERDATAARBPROC    b3VectorBufferObjects::glBufferDataARB;
 PFNGLBUFFERSUBDATAARBPROC b3VectorBufferObjects::glBufferSubDataARB;
 PFNGLMAPBUFFERARBPROC     b3VectorBufferObjects::glMapBufferARB;
 PFNGLUNMAPBUFFERARBPROC   b3VectorBufferObjects::glUnmapBufferARB;
+#endif
 
 void b3VectorBufferObjects::b3Init(const char *extensions)
 {
@@ -76,7 +85,6 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 	glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)b3Runtime::b3GetOpenGLExtension("glBufferSubDataARB");
 	glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
-#endif
 
 #ifdef USE_VBOS
 	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
@@ -98,5 +106,6 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 
 #else // USE_VBOS
 	glHasVBO = false;
+#endif
 #endif
 }

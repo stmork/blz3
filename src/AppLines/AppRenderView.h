@@ -26,6 +26,7 @@
 #include "blz3/system/b3DashPen.h"
 #include "blz3/system/b3PixelFormat.h"
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/raytrace/b3RenderLight.h"
 #include "blz3/base/b3Array.h"
 #include "b3CameraVolume.h"
 
@@ -102,6 +103,7 @@ protected:
 
 	// camera data
 	b3RenderView    m_RenderView;
+	b3RenderLight   m_RenderLight;
 	b3CameraPart   *m_Camera;
 	b3CameraVolume  m_CameraVolume;
 

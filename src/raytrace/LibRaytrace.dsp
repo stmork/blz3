@@ -214,6 +214,10 @@ SOURCE=.\b3ReadTGF.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3RenderLight.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3RenderShape.cc
 # End Source File
 # Begin Source File
@@ -347,6 +351,10 @@ SOURCE=.\b3ReadCOB.h
 # Begin Source File
 
 SOURCE=.\b3ReadTGF.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3RenderLight.h
 # End Source File
 # Begin Source File
 

@@ -41,17 +41,43 @@ typedef enum
 
 class b3RenderObject;
 
+struct b3_render_light_info
+{
+#ifdef BLZ3_USE_OPENGL
+	GLfloat gl_position[4];
+	GLfloat gl_direction[4];
+	GLfloat gl_ambient[4];
+	GLfloat gl_diffuse[4];
+	GLfloat gl_specular[4];
+
+	// Spot values
+	GLfloat gl_spot_exp;
+	GLfloat gl_spot_cutoff;
+
+	// Attenuation
+	GLfloat gl_Ac;
+	GLfloat gl_Al;
+	GLfloat gl_Aq;
+#endif
+};
+
 class b3RenderContext : protected b3Mem
 {
-	       b3_index             glLightNum;
+	       b3_index             glLightCount;
 	       b3RenderObject      *glSelectedObject;
+
+	static b3_vector            glSimpleLightPosition;
+	static b3_vector            glSimpleLightDirection;
+	
+#ifdef BLZ3_USE_OPENGL
+	static GLenum               glLightNum[];
+#endif
 
 public:
 	b3_count                    glVertexCount;
 	b3_count                    glPolyCount;
 	b3_count                    glGridCount;
 	b3_count                    glTextureSize;
-	b3_bool                     glUseSpotLight;
 	b3_bool                     glDrawCachedTextures;
 	b3Color                     glBgColor;
 
@@ -59,13 +85,14 @@ public:
 	                 b3RenderContext();
 	static  void     b3Init();
 	virtual void     b3StartDrawing();
-	static  void     b3SetAmbient(b3Color &ambient);
+	static  void     b3SetAmbient(b3_pkd_color  ambient);
+	static  void     b3SetAmbient(b3Color      &ambient);
 	static  void     b3LightReset();
 	        void     b3LightDefault();
 			void     b3LightNum(b3_index light_num = 0);
-	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_f64 rel_dist = 1000.0,b3_index light_num = 0);
-			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_f64 rel_dist = 1000.0);
-			void     b3LightSpotEnable(b3_bool enable = true);
+
+	        b3_bool  b3LightAdd(b3_render_light_info *info);
+	static  void     b3LightSet(b3_index light_num,b3_render_light_info *info);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);

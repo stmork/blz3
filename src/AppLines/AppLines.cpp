@@ -39,6 +39,7 @@
 #include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/base/b3FileMem.h"
+#include "blz3/raytrace/b3BBox.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
@@ -57,10 +58,17 @@
 
 /*
 **	$Log$
+**	Revision 1.80  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.79  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.
-**
+**	
 **	Revision 1.78  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -1126,6 +1134,7 @@ BOOL CAboutDlg::OnInitDialog()
 
 #ifdef DLG_TEST
 #include "DlgItemMaintain.h"
+#include "blz3/raytrace/b3Material.h"
 #endif
 
 // App command to run the dialog

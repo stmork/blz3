@@ -38,6 +38,7 @@ PRG_SOURCE		=\
 	b3Raytrace.cc\
 	b3ReadCOB.cc\
 	b3ReadTGF.cc\
+	b3RenderLight.cc\
 	b3RenderShape.cc\
 	b3RenderView.cc\
 	b3Scaling.cc\
@@ -91,6 +92,7 @@ PRG_OBJ			=\
 	b3Raytrace.o\
 	b3ReadCOB.o\
 	b3ReadTGF.o\
+	b3RenderLight.o\
 	b3RenderShape.o\
 	b3RenderView.o\
 	b3Scaling.o\

@@ -51,6 +51,7 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
@@ -61,9 +62,16 @@
 
 /*
 **	$Log$
+**	Revision 1.104  2004/10/16 17:00:51  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.103  2004/09/27 13:20:48  sm
 **	- Fixed uninitialized class type for preview in LDC dialog.
-**
+**	
 **	Revision 1.102  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow

@@ -33,9 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.71  2004/10/16 17:00:52  sm
+**	- Moved lighting into own class to ensure light setup
+**	  after view setup.
+**	- Fixed lighting for scene and simple overview
+**	- Fixed Light cutoff exponent deadloop.
+**	- Corrected OpenGL define (BLZ3_USE_OPENGL)
+**
 **	Revision 1.70  2004/10/13 15:33:14  smork
 **	- Optimized OpenGL lights.
-**
+**	
 **	Revision 1.69  2004/10/12 09:15:46  smork
 **	- Some more debug information.
 **	- Moved light init after camera init.
@@ -914,45 +921,6 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	}
 
 	return light;
-}
-
-void b3Scene::b3SetLights(b3RenderContext *context)
-{
-	b3Item  *item;
-	b3Light *light;
-	b3Color  ambient;
-
-	ambient.b3Init(
-		m_ShadowBrightness,
-		m_ShadowBrightness,
-		m_ShadowBrightness);
-
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,">b3Scene::b3SetLights()\n");
-#endif
-
-	context->b3LightNum();
-	context->b3LightReset();
-	B3_FOR_BASE(b3GetLightHead(),item)
-	{
-		light = (b3Light *)item;
-		if (light->b3IsActive())
-		{
-			// Use the same color for diffuse and specular
-			context->b3LightAdd(
-				&light->m_Position,
-				light->m_SpotActive ? &light->m_Direction : null,
-				light->b3ComputeSpotExponent(),
-				&light->m_Color,
-				&ambient,
-				&light->m_Color,
-				light->m_Distance );
-		}
-	}
-
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"<b3Scene::b3SetLights()\n");
-#endif
 }
 
 /*************************************************************************

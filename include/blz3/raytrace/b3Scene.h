@@ -220,7 +220,6 @@ public:
 			{
 				return &m_Heads[1];
 			}
-	        void            b3SetLights(b3RenderContext *context);
 			b3Light        *b3GetLight(b3_bool must_active = false);
 			b3Light        *b3GetLightByName(const char *light_name);
 			b3_count        b3GetLightCount();
