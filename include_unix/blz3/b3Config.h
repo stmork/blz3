@@ -51,6 +51,10 @@
 #define no_USE_MOTIF
 #endif
 
+#ifndef __GNUC_PATCHLEVEL__
+#define __GNUC_PATCHLEVEL__ 0
+#endif
+
 #ifdef _DEBUG
 #include <assert.h>
 

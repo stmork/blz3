@@ -31,20 +31,23 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/11/18 17:30:01  sm
+**	- GCC patch level define fix.
+**
 **	Revision 1.1  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
-**
+**	
 **
 */
 
 #define MAX   1000000
-#if 0
-#	define DIM   31
-#	define FTYPE double
+#if 1
+#	define DIM   4
+#	define FTYPE b3_f32
 #else
-#	define DIM   63
-#	define FTYPE float
+#	define DIM   2
+#	define FTYPE b3_f64
 #endif
 
 
@@ -192,7 +195,7 @@ public:
 				a.mult(c);
 			}
 		}
-		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) / 1000000;
+		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) * max / 1000000;
 		test->m_Result = a.result(0);
 		return 0;
 	}
@@ -211,7 +214,7 @@ public:
 
 			a.combx(b,c,MAX);
 		}
-		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) / 1000000;
+		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) * max / 1000000;
 		test->m_Result = a.result(0);
 		return 0;
 	}
@@ -232,7 +235,28 @@ public:
 				a.comb8(b,c);
 			}
 		}
-		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) / 1000000;
+		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) * max / 1000000;
+		test->m_Result = a.result(0);
+		return 0;
+	}
+
+	static b3_u32 run_test_d(void *ptr)
+	{
+		b3Test             *test = (b3Test *)ptr;
+		vector<b3_f64,DIM>  a,b,c;
+		b3_count            max = test->m_Max;
+
+		for (int k = 0;k < max;k++)
+		{
+			a.init(0.1);
+			b.init(0.0005);
+			c.init(1.00005);
+			for (int i = 0;i < (MAX / 8);i++)
+			{
+				a.comb8(b,c);
+			}
+		}
+		test->m_MFlop  = (b3_f64)(MAX * DIM * 4 + 3 * DIM) * max / 1000000;
 		test->m_Result = a.result(0);
 		return 0;
 	}
@@ -291,11 +315,15 @@ int main(int argc,char *argv[])
 {
 	if (argc > 1)
 	{
-		b3Suite suite(atoi(argv[1]));
+		b3_count max = 1;
+		sscanf(argv[1],"%d",&max);
+
+		b3Suite suite(max);
 		
 		suite.b3Execute(b3Test::run_test_a);
 		suite.b3Execute(b3Test::run_test_b);
 		suite.b3Execute(b3Test::run_test_c);
+		suite.b3Execute(b3Test::run_test_d);
 	}
 
 	return 0;
