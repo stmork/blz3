@@ -868,6 +868,7 @@ public:
 	B3_ITEM_INIT(b3MatCookTorrance);
 	B3_ITEM_LOAD(b3MatCookTorrance);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result);
 };

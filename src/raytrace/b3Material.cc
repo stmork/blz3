@@ -38,6 +38,11 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2004/03/02 09:07:17  sm
+**      - Added read/write support for Cook/Torrance material.
+**      - Added test module for Cook/Torrance reflection model.
+**      - Fixed camera name handling if camera name is empty.
+**
 **      Revision 1.34  2004/03/01 19:52:00  sm
 **      - Some cleanup
 **
@@ -983,24 +988,40 @@ b3_f64 b3MatWood::b3GetSpecularExponent(b3_polar *polar)
 b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	b3MatNormal(sizeof(b3MatCookTorrance),class_type)
 {
+	m_DiffColor = b3Color(0.79,0.54,0.2);
+//	m_DiffColor = b3Color(0.7,0.32,0.2);
+	m_SpecColor = b3Color(0.8,0.8,0.8);
+	m_AmbColor  = m_DiffColor * 0.2;
+	m_ka   = 0.1;
+	m_ks   = 0.6;
+	m_kd   = 0.6;
+	m_m    = 0.3;
 }
 
 b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
 {
+	m_ka = b3InitFloat();
+	m_kd = b3InitFloat();
+	m_ks = b3InitFloat();
+	m_m  = b3InitFloat();
+}
+
+void b3MatCookTorrance::b3Write()
+{
+	b3MatNormal::b3Write();
+
+	b3StoreFloat(m_ka);
+	b3StoreFloat(m_kd);
+	b3StoreFloat(m_ks);
+	b3StoreFloat(m_m);
 }
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
 #ifdef DEBUG_COOK_TORRANCE
-//	m_DiffColor = b3Color(0.79,0.54,0.2);
-	m_DiffColor = b3Color(0.7,0.32,0.2);
-	m_AmbColor = m_DiffColor;
-	m_ka   = 0.1;
-	m_ks   = 0.6;
-	m_kd   = 0.6;
-	m_m    = 0.3;
 //	m_Reflection = 0;
 //	m_Refraction = 0;
+	m_AmbColor = m_DiffColor;
 #endif
 
 	m_Ra   = m_AmbColor * m_ka;
@@ -1008,6 +1029,7 @@ b3_bool b3MatCookTorrance::b3Prepare()
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::B]));
+
 	return true;
 }
 

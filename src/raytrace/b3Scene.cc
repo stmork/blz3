@@ -36,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2004/03/02 09:07:17  sm
+**	- Added read/write support for Cook/Torrance material.
+**	- Added test module for Cook/Torrance reflection model.
+**	- Fixed camera name handling if camera name is empty.
+**
 **	Revision 1.53  2004/01/18 13:51:57  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.52  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -685,10 +690,18 @@ void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 {
 	m_ActualCamera = camera;
 	b3UpdateCamera();
-	if ((camera != null) && (reorder))
+	if (camera != null)
 	{
-		b3GetSpecialHead()->b3Remove(camera);
-		b3GetSpecialHead()->b3First(camera);
+		if (reorder)
+		{
+			b3GetSpecialHead()->b3Remove(camera);
+			b3GetSpecialHead()->b3First(camera);
+		}
+
+		if (strlen(camera->m_CameraName) == 0)
+		{
+			b3Dir::b3SplitFileName(m_Filename,null,camera->m_CameraName);
+		}
 	}
 }
 
@@ -697,7 +710,10 @@ b3_bool b3Scene::b3GetTitle(char *title)
 	title[0] = 0;
 	if (m_ActualCamera != null)
 	{
-		strlcpy(title,m_ActualCamera->m_CameraName,sizeof(title));
+		if (strlen(m_ActualCamera->m_CameraName) > 0)
+		{
+			strlcpy(title,m_ActualCamera->m_CameraName,sizeof(title));
+		}
 	}
 	else
 	{

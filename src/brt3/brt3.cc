@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2004/03/02 09:07:17  sm
+**	- Added read/write support for Cook/Torrance material.
+**	- Added test module for Cook/Torrance reflection model.
+**	- Fixed camera name handling if camera name is empty.
+**
 **	Revision 1.52  2004/01/18 13:51:57  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.51  2004/01/05 08:01:55  sm
 **	- Added new year.
 **	
@@ -386,7 +391,6 @@ int main(int argc,char *argv[])
 	b3Path                textures;
 	b3Path                pictures;
 	b3Path                data;
-	b3Path                camera_name;
 	b3Loader              loader;
 	b3_bool               force_no_anim    = false;
 	b3_bool               force_no_display = false;
@@ -504,12 +508,12 @@ int main(int argc,char *argv[])
 						{
 							do
 							{
-								scene->b3GetTitle(camera_name);
 								if (camera->m_Flags & CAMERA_ACTIVE)
 								{
+									scene->b3SetCamera(camera);
 									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 										camera->m_CameraName);
-									scene->b3SetCamera(camera);
+
 									if (animation != null)
 									{
 										b3_f64   t,step;
@@ -537,7 +541,7 @@ int main(int argc,char *argv[])
 										b3SaveRaytracedImage(
 											display,
 											BLZ3_PICTURES,camera->b3GetName());
-										}
+									}
 								}
 								else
 								{

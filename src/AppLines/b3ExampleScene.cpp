@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/03/02 09:07:17  sm
+**	- Added read/write support for Cook/Torrance material.
+**	- Added test module for Cook/Torrance reflection model.
+**	- Fixed camera name handling if camera name is empty.
+**
 **	Revision 1.13  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.12  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -289,7 +294,7 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 	b3Matrix::b3Move(&transform,&transform,0,0,20);
 	big->b3Transform(&transform,true);
 
-	// Elarge whole scene
+	// Enlarge whole scene
 	b3Matrix::b3Scale(null,&transform,null,5,5,5);
 	bbox->b3Transform(&transform,true,true);
 
