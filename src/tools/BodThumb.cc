@@ -34,11 +34,14 @@
   
 /*
 **	$Log$
+**	Revision 1.2  2005/01/16 09:17:46  sm
+**	- Added super sampling to object thumb nails.
+**
 **	Revision 1.1  2005/01/07 12:38:51  smork
 **	- Bump release.
 **	- Added tool to create object/bbox thumb nails.
 **	- Moved scene factory from Lines to raytrace lib.
-**
+**	
 **
 */
   
@@ -84,6 +87,7 @@ public:
 			b3BBox::b3Reorg(depot,&base,level,1);
 
 			m_Scene = b3Factory::b3CreateBBox(m_BBox,TRACEPHOTO_MORK);
+			m_Scene->b3GetSuperSample();
 		}
 	}
 
