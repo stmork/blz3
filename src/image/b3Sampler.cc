@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	TestWood.cc $
+**	$Filename:	b3Sampler.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Displaying Wood
+**	Blizzard III - Sample something
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -21,8 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3DisplayView.h"
-#include "blz3/raytrace/b3MaterialSampler.h"
+#include "blz3/image/b3Sampler.h"
+#include "blz3/image/b3Tx.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,65 +32,63 @@
 
 /*
 **  $Log$
-**  Revision 1.4  2004/04/09 08:49:16  sm
+**  Revision 1.1  2004/04/09 08:49:16  sm
 **  - Splitted up sampler for Lines use and capable for
 **    using other metherials.
-**
-**  Revision 1.3  2004/04/08 14:34:42  sm
-**  - Multithreading support for wood example.
-**
-**  Revision 1.2  2004/04/06 12:17:46  sm
-**  - Optimized some noise methods.
-**
-**  Revision 1.1  2004/04/05 09:16:03  sm
-**  - Added test wood for Lines wood dialog
-**  - Optimized noise a little bit.
 **
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        b3TestWood implementation                     **
+**                        b3Sampler implementation                      **
 **                                                                      **
 *************************************************************************/
 
-#define WOOD_RES   200
-
-class b3WoodSampler : public b3MaterialSampler
+void b3Sampler::b3Sample()
 {
-public:
-	b3WoodSampler(b3Display *display) : b3MaterialSampler(display)
-	{
-		// Init material
-		m_Material = new b3MatWood(WOOD);
-		m_Material->b3Prepare();
-	}
-};
+	b3_count          CPUs = b3Runtime::b3GetNumCPUs();
+	b3_loop           i;
+	b3TimeSpan        span;
+	b3SampleInfo     *info;
 
-int main(int argc,char *argv[])
+	info = b3SampleInit(CPUs);
+	if (CPUs > 1)
+	{
+		b3Thread *threads = new b3Thread[CPUs];
+
+		span.b3Start();
+		for (i = 0;i < CPUs;i++)
+		{
+			threads[i].b3Start(&b3SampleThread,&info[i]);
+		}
+		for (i = 0;i < CPUs;i++)
+		{
+			threads[i].b3Wait();
+		}
+		span.b3Stop();
+			
+		delete [] threads;
+	}
+	else
+	{
+		span.b3Start();
+		b3SampleThread(&info[0]);
+		span.b3Stop();
+	}
+
+	span.b3Print();
+
+	delete [] info;
+
+	b3SampleDeinit();
+}
+	
+b3_u32 b3Sampler::b3SampleThread(void *ptr)
 {
-	b3Display   *display;
-
-	b3RaytracingItems::b3Register();
-	try
-	{
-		// Create display
-		display = new b3DisplayView(WOOD_RES,WOOD_RES,"Wood");
-		b3WoodSampler sampler(display);
-
-		sampler.b3Sample();
-
-		// We want to see the computed picture until we make input
-		// into the display window.
-		display->b3Wait();
-
-		// Delete Display
-		delete display;
-	}
-	catch(b3DisplayException &e)
-	{
-		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
-	}
+	b3SampleInfo *info = (b3SampleInfo *)ptr;
+	
+	info->m_Sampler->b3SampleTask(info);
 	return 0;
 }
+

@@ -10,6 +10,7 @@ PRGS			=
 LIBS			= libB3Image.o
 LIB_SOURCE		=\
 	b3Measure.cc\
+	b3Sampler.cc\
 	b3Tx.cc\
 	b3TxBlit.cc\
 	b3TxDeskew.cc\
@@ -36,6 +37,7 @@ LIB_SOURCE		=\
 
 LIB_OBJ			=\
 	b3Measure.o\
+	b3Sampler.o\
 	b3Tx.o\
 	b3TxBlit.o\
 	b3TxDeskew.o\
