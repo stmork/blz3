@@ -855,15 +855,12 @@ public:
 // TYPE_COOK_TORRANCE
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
-	b3_f64      m_Il;
-	b3_f64      m_dw;
+	b3_f64      m_ka;
 	b3_f64      m_ks;
 	b3_f64      m_kd;
 	b3_f64      m_m;
-	b3_f64      m_Ia;
 	b3Color     m_Ra;
 	b3Color     m_Mu;
-	b3_vector64 m_V;
 
 public:
 	B3_ITEM_INIT(b3MatCookTorrance);
@@ -1854,7 +1851,7 @@ public:
 
 	static void     b3Register();
 	       void     b3Write();
-	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface,b3Material *material = null);
+	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface,b3Material *material);
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();
 	       char    *b3GetName();

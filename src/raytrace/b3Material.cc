@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2004/03/01 14:00:32  sm
+**      - Ready to go for Cook/Torrance reflectance model.
+**
 **      Revision 1.31  2004/03/01 11:05:24  sm
 **      - Further Cook/Torrance development.
 **
@@ -175,14 +178,14 @@
 void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
-	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
+//	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
 	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);
 	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit,  &b3MatWrapTexture::b3StaticInit,  WRAPTEXTURE);
 	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
 	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
-//	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, MAT_NORMAL);
+	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, MAT_NORMAL);
 }
 
 /*************************************************************************
@@ -974,15 +977,11 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
-	m_DiffColor = b3Color(0.755,0.49,0.095);
-	m_Il   = 650000;
-	m_dw   = 0.0001;
-	m_ks   = 1.0;
-	m_kd   = 0.0;
+	m_ka   = 0.1;
+	m_ks   = 0.9;
+	m_kd   = 0.6;
 	m_m    = 0.3;
-	m_Ia   = 0.00001 * m_Il;
-	m_Ra   = m_DiffColor * M_PI * m_Ia;
-	m_Ra   = m_AmbColor * 0.1;
+	m_Ra   = m_AmbColor * m_ka;
 	m_Mu   = b3Color(
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
@@ -993,28 +992,26 @@ b3_bool b3MatCookTorrance::b3Prepare()
 b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &acc)
 {
 	b3Color result;
-	b3_vector64 N,L,H,V,R;
+	b3_vector64 L;
 
 	B3_ASSERT(ray->incoming != null);	
-	b3Vector::b3Init(&N,&ray->incoming->normal);
-	b3Vector::b3Init(&V,&ray->incoming->dir);
-	b3Vector::b3Negate(&V);
 
 	b3Vector::b3Init(&L,&jit->dir);
 	b3Vector::b3Normalize(&L);
-	b3Vector::b3Negate(&V);
-	
-	b3Vector::b3Add(&L,&V,&H);
+
+	b3_f64 nl = b3Vector::b3SMul(&ray->incoming->normal,&L);
+#if 1
+	b3_vector64 H;
+
+	H.x = L.x - ray->incoming->dir.x;
+	H.y = L.y - ray->incoming->dir.y;
+	H.z = L.z - ray->incoming->dir.z;
 	b3Vector::b3Normalize(&H);
 
-	b3Vector::b3Init(&R,&ray->refl_ray.dir);
-	b3_f64 nh = b3Vector::b3SMul(&N,&H);
-	b3_f64 nl = b3Vector::b3SMul(&N,&L);
-	b3_f64 nv = b3Vector::b3SMul(&N,&V);
-	b3_f64 vh = b3Vector::b3SMul(&V,&H);
-	b3_f64 rl = b3Vector::b3SMul(&R,&L);
+	b3_f64 nh =  b3Vector::b3SMul(&ray->incoming->normal,&H);
+	b3_f64 nv = -b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
+	b3_f64 vh = -b3Vector::b3SMul(&ray->incoming->dir,&H);
 
-#if 1
 	b3_f64 Gm = 2 * nh * nv / vh;
 	b3_f64 Gs = 2 * nh * nl / vh;
 	b3_f64 G = Gs < Gm ? Gs : Gm;
@@ -1028,21 +1025,24 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 	{
 		G = Gs;
 	}
-//	G = b3Math::b3Limit(G,0,1);
+	G = b3Math::b3Limit(G,0,1);
 
 	b3_f64 alpha = acos(nh);
-	b3_f64 D = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh * nh * nh * nh);
+	b3_f64 nh_q  = nh * nh;
+	b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh_q * nh_q);
+	b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
 
-	b3_f64 Rs = (D * G) / (M_PI * nv * nl);
-
-	b3_f64 phi = acos(nl);
+	b3_f64 phi = asin(nl);
 	b3Color Rf(
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::R]) * Rs,
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::G]) * Rs,
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::B]) * Rs);
-
-	result = m_Ra + (m_DiffColor * m_kd + Rf * m_ks) * m_Il * nl * m_dw;
+	Rf.b3Min();
+	
+	result = m_Ra + m_DiffColor * nl * m_kd + Rf * m_ks;
 #else
+	b3_f64 rl = b3Vector::b3SMul(&ray->refl_ray.dir,&L);
+
 	result = m_Ra + m_DiffColor * nl + m_SpecColor * pow(fabs(rl),m_HighLight);
 #endif
 

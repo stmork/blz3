@@ -393,6 +393,17 @@ public:
 		}
 	}
 
+	inline void b3Min(b3_f32 min = 0.0)
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			if (v[i] < min)
+			{
+				v[i] = min;
+			}
+		}
+	}
+
 #ifdef WIN32
 	inline COLORREF b3GetColorref()
 	{

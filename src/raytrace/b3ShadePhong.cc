@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/03/01 14:00:32  sm
+**	- Ready to go for Cook/Torrance reflectance model.
+**
 **	Revision 1.14  2004/02/28 19:10:13  sm
 **	- Cook/Torrance is applicable by use through material
 **	  shader.
-**
+**	
 **	Revision 1.13  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -142,22 +145,31 @@ void b3ScenePhong::b3Illuminate(
 	b3Color       &result,
 	b3Material    *material)
 {
-	b3_f64 ShapeAngle,Factor;
+	b3Color aux = b3Color(0,0,0);
 
-	if (Jit->shape == null)
+	if ((material != null) && material->b3Illuminate(surface,Jit,aux))
 	{
-		if ((ShapeAngle =
-			surface->incoming->normal.x * Jit->dir.x +
-			surface->incoming->normal.y * Jit->dir.y +
-			surface->incoming->normal.z * Jit->dir.z) >= 0)
-		{
-			Factor = log ((
-				surface->refl_ray.dir.x * Jit->dir.x +
-				surface->refl_ray.dir.y * Jit->dir.y +
-				surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
-			Factor = exp(Factor * surface->se) * Jit->LightFrac;
+		result += aux * 2.0;
+	}
+	else
+	{
+		b3_f64 ShapeAngle,Factor;
 
-			result += (surface->specular * Factor +	surface->diffuse * ShapeAngle) * light->m_Color;
+		if (Jit->shape == null)
+		{
+			if ((ShapeAngle =
+				surface->incoming->normal.x * Jit->dir.x +
+				surface->incoming->normal.y * Jit->dir.y +
+				surface->incoming->normal.z * Jit->dir.z) >= 0)
+			{
+				Factor = log ((
+					surface->refl_ray.dir.x * Jit->dir.x +
+					surface->refl_ray.dir.y * Jit->dir.y +
+					surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+				Factor = exp(Factor * surface->se) * Jit->LightFrac;
+
+				result += (surface->specular * Factor +	surface->diffuse * ShapeAngle) * light->m_Color;
+			}
 		}
 	}
 }
@@ -204,12 +216,14 @@ b3_bool b3ScenePhong::b3Shade(
 
 	if (b3Intersect(ray))
 	{
+		b3Material *material;
+
 		shape = ray->shape;
 		surface.incoming = ray;
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
 		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-		shape->b3GetColors(ray,&surface);
+		material = shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 
 		ray->color = surface.ambient;
@@ -271,7 +285,7 @@ b3_bool b3ScenePhong::b3Shade(
 		B3_FOR_BASE(b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
-			light->b3Illuminate(this,&surface);
+			light->b3Illuminate(this,&surface,material);
 		}
 
 		if (m_Nebular != null)
