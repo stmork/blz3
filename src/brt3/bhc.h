@@ -66,7 +66,8 @@ private:
 	void            b3ParseLevel();
 	void            b3ParsePoint();
 	void            b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height);
-	void            b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b);
+	void            b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b);
+	void            b3AddWall(b3BBox *room);
 	void            b3ParseDoor();
 	void            b3ParseWindow();
 

@@ -32,8 +32,8 @@
 
 /*
 **	$Log$
-**	Revision 1.4  2003/07/09 18:54:10  sm
-**	- Added doors and windows.
+**	Revision 1.5  2003/07/09 19:04:22  sm
+**	- Added white walls and ceils
 **
 **	Revision 1.3  2003/07/09 16:15:06  sm
 **	- Fixed empty line bug.
@@ -299,24 +299,6 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 		room->b3GetShapeHead()->b3Append(area);
 	}
 
-	// floor
-	area = new b3Area(AREA);
-	area->m_Base.x = xMin;
-	area->m_Base.y = yMin;
-	area->m_Base.z = base;
-	area->m_Dir1.x = xMax - xMin;
-	area->m_Dir2.y = yMax - yMin;
-	room->b3GetShapeHead()->b3Append(area);
-
-	// ceil
-	area = new b3Area(AREA);
-	area->m_Base.x = xMin;
-	area->m_Base.y = yMin;
-	area->m_Base.z = base + height;
-	area->m_Dir1.x = xMax - xMin;
-	area->m_Dir2.y = yMax - yMin;
-	room->b3GetShapeHead()->b3Append(area);
-
 	B3_FOR_BASE(room->b3GetShapeHead(),item)
 	{
 		area = (b3Area *)item;
@@ -334,9 +316,59 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 		b3CheckOpenings(room,area,index[i],index[i+1]);
 		area = (b3Area *)area->Succ;
 	}
+
+	// ceil
+	area = new b3Area(AREA);
+	area->m_Base.x = xMin;
+	area->m_Base.y = yMin;
+	area->m_Base.z = base + height;
+	area->m_Dir1.x = xMax - xMin;
+	area->m_Dir2.y = yMax - yMin;
+	room->b3GetShapeHead()->b3Append(area);
+
+	cond = new b3CondRectangle(COND_ARECTANGLE);
+	cond->m_xStart = 0;
+	cond->m_yStart = 0;
+	cond->m_xEnd   = 1;
+	cond->m_yEnd   = 1;
+	area->b3GetConditionHead()->b3Append(cond);
+	b3AddWall(room);
+
+	// floor
+	area = new b3Area(AREA);
+	area->m_Base.x = xMin;
+	area->m_Base.y = yMin;
+	area->m_Base.z = base;
+	area->m_Dir1.x = xMax - xMin;
+	area->m_Dir2.y = yMax - yMin;
+	room->b3GetShapeHead()->b3Append(area);
+
+	cond = new b3CondRectangle(COND_ARECTANGLE);
+	cond->m_xStart = 0;
+	cond->m_yStart = 0;
+	cond->m_xEnd   = 1;
+	cond->m_yEnd   = 1;
+	area->b3GetConditionHead()->b3Append(cond);
 }
 
-void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
+void b3BHDParser::b3AddWall(b3BBox *room)
+{
+	b3Item      *item;
+	b3Shape     *shape;
+	b3MatNormal *material;
+
+	B3_FOR_BASE(room->b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		material = new b3MatNormal(MATERIAL);
+		material->m_DiffColor.b3Init(1,1,1);
+		material->m_AmbColor.b3Init(0.2,0.2,0.2);
+		material->m_SpecColor.b3Init(1,1,1);
+		shape->b3GetMaterialHead()->b3Append(material);
+	}
+}
+
+void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b)
 {
 	b3Area          *left,*right,*top,*bottom;
 	b3CondRectangle *cond;
@@ -368,7 +400,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
 			left->m_Dir2.x = 0;
 			left->m_Dir2.y = 0;
 			left->m_Dir2.z = m_Openings[i].height;
-			bbox->b3GetShapeHead()->b3Append(left);
+			room->b3GetShapeHead()->b3Append(left);
 
 			right = new b3Area(AREA);
 			right->m_Base.x = m_Points[a].x + area->m_Dir1.x * cond->m_xEnd;
@@ -378,7 +410,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
 			right->m_Dir2.x = 0;
 			right->m_Dir2.y = 0;
 			right->m_Dir2.z = m_Openings[i].height;
-			bbox->b3GetShapeHead()->b3Append(right);
+			room->b3GetShapeHead()->b3Append(right);
 
 			top = new b3Area(AREA);
 			top->m_Base.x = (left->m_Base.x + right->m_Base.x) * 0.5;
@@ -388,7 +420,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
 			top->m_Dir1.x = (right->m_Base.x - left->m_Base.x) * 0.5;
 			top->m_Dir1.y = (right->m_Base.y - left->m_Base.y) * 0.5;
 			top->m_Dir1.z = 0;
-			bbox->b3GetShapeHead()->b3Append(top);
+			room->b3GetShapeHead()->b3Append(top);
 
 			if (m_Openings[i].type == b3_door::BHC_WINDOW)
 			{
@@ -397,7 +429,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
 				bottom->m_Base.z = area->m_Base.z + m_Openings[i].base;
 				bottom->m_Dir1   = top->m_Dir1;
 				bottom->m_Dir2   = top->m_Dir2;
-				bbox->b3GetShapeHead()->b3Append(bottom);
+				room->b3GetShapeHead()->b3Append(bottom);
 			}
 
 			cond = new b3CondRectangle(COND_ARECTANGLE);
