@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/01/05 13:01:25  smork
+**	- Fixed 64 bit problem.
+**
 **	Revision 1.17  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.16  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -147,6 +150,7 @@ int main(int argc,char *argv[])
 	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",
 		sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
+	b3PrintF (B3LOG_NORMAL,"\n");
 	v1 = 1; v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);
 	B3_SWAP (v1,v2);
