@@ -26,9 +26,11 @@
 
 class b3Fulcrum : public b3RenderObject
 {
-	b3_f64        m_Scale;
-	b3_vector     m_Position;
-	b3_gl_vertex  m_Vertex[B3_FULCRUM_VERTEX_COUNT];
+	       b3_f64       m_Scale;
+	       b3_vector    m_Position;
+	       b3_gl_vertex m_Vertex[B3_FULCRUM_VERTEX_COUNT];
+	static b3_vector    m_Fulcrum[B3_FULCRUM_VERTEX_COUNT];
+	static b3_gl_line   m_FulcrumIndices[B3_FULCRUM_INDEX_COUNT];
 
 public:
 	static b3Color m_GridColor;
@@ -40,10 +42,8 @@ public:
 	void     b3Draw(b3RenderContext *context);
 
 protected:
-	void     b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys);
 	void     b3AllocVertexMemory(b3RenderContext *context);
 	void     b3ComputeVertices();
-	void     b3ComputeIndices();
 
 	inline void b3GetGridColor(b3Color &color)
 	{

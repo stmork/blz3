@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2004/09/25 11:52:30  sm
+**      - Smoke run test without VBOs successful
+**
 **      Revision 1.12  2004/09/25 08:56:53  sm
 **      - Removed VBOs from source.
 **
@@ -96,7 +99,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_vector fulcrum[B3_FULCRUM_VERTEX_COUNT] =
+b3_vector b3Fulcrum::m_Fulcrum[B3_FULCRUM_VERTEX_COUNT] =
 {
 	{  10,  0,  0},			/* x-Achse */
 	{ -10,  0,  0},
@@ -120,7 +123,7 @@ static b3_vector fulcrum[B3_FULCRUM_VERTEX_COUNT] =
 	{   2,  0, 18}
 };
 
-static b3_gl_line FulcrumIndices[B3_FULCRUM_INDEX_COUNT] =
+b3_gl_line b3Fulcrum::m_FulcrumIndices[B3_FULCRUM_INDEX_COUNT] =
 {
 	{  0, 1 },   {  2, 3 },   {  4, 5 },                            // Achsen
 	{  6, 7 },   {  8, 9 },                                         // x
@@ -145,22 +148,15 @@ void b3Fulcrum::b3Update(b3_vector *fulcrum)
 	b3Recompute();
 }
 
-void b3Fulcrum::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
-{
-	verts = B3_FULCRUM_VERTEX_COUNT;
-}
-
 void b3Fulcrum::b3AllocVertexMemory(b3RenderContext *cts)
 {
-	if (b3HasVBO())
-	{
-		b3RenderObject::b3AllocVertexMemory(cts);
-	}
-	else
-	{
-		glVertex   = m_Vertex;
-		glVertexCount = B3_FULCRUM_VERTEX_COUNT;
-	}
+	glVertex      = m_Vertex;
+	glGrids       = m_FulcrumIndices;
+	glPolygons    = null;
+
+	glVertexCount = B3_FULCRUM_VERTEX_COUNT;
+	glGridCount   = B3_FULCRUM_INDEX_COUNT;
+	glPolyCount   = 0;
 }
 
 void b3Fulcrum::b3FreeVertexMemory()
@@ -176,18 +172,10 @@ void b3Fulcrum::b3ComputeVertices()
 
 	for (i = 0;i < B3_FULCRUM_VERTEX_COUNT;i++)
 	{
-		glVertex[i].v.x = fulcrum[i].x * m_Scale + m_Position.x;
-		glVertex[i].v.y = fulcrum[i].y * m_Scale + m_Position.y;
-		glVertex[i].v.z = fulcrum[i].z * m_Scale + m_Position.z;
+		glVertex[i].v.x = m_Fulcrum[i].x * m_Scale + m_Position.x;
+		glVertex[i].v.y = m_Fulcrum[i].y * m_Scale + m_Position.y;
+		glVertex[i].v.z = m_Fulcrum[i].z * m_Scale + m_Position.z;
 	}
-}
-
-void b3Fulcrum::b3ComputeIndices()
-{
-	glGrids     = null;
-	glPolygons  = null;
-	glGridCount = B3_FULCRUM_INDEX_COUNT;
-	glPolyCount = 0;
 }
 
 void b3Fulcrum::b3Draw(b3RenderContext *context)

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2004/09/25 11:52:30  sm
+**      - Smoke run test without VBOs successful
+**
 **      Revision 1.12  2004/09/24 20:22:05  sm
 **      - Some VBO adjustments.
 **
@@ -98,7 +101,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_gl_line VolumeIndices[B3_CV_INDEX_COUNT] =
+b3_gl_line b3CameraVolume::m_VolumeIndices[B3_CV_INDEX_COUNT] =
 {
 	{ 0, 1 }, { 1, 2 }, { 2, 3}, { 3, 0 },  // border
 	{ 4, 5 },                               // view axis
@@ -167,7 +170,7 @@ void b3CameraVolume::b3Update(b3CameraPart *camera)
 void b3CameraVolume::b3AllocVertexMemory(b3RenderContext *cts)
 {
 	glVertex   = m_Vertex;
-	glGrids    = VolumeIndices;
+	glGrids    = m_VolumeIndices;
 	glPolygons = null;
 
 	glVertexCount = B3_CV_VERTEX_COUNT;
