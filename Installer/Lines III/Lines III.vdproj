@@ -94,7 +94,7 @@
         {
         "DisplayName" = "8:Release SSE"
         "IsDebugOnly" = "11:FALSE"
-        "IsReleaseOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:TRUE"
         "OutputFilename" = "8:Release SSE\\Lines III.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
@@ -110,7 +110,7 @@
         {
         "DisplayName" = "8:Release SSE2"
         "IsDebugOnly" = "11:FALSE"
-        "IsReleaseOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:TRUE"
         "OutputFilename" = "8:Release SSE2\\Lines III.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
@@ -147,7 +147,7 @@
         {
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_3DD2051AD8484AC088278A2F0C023455"
             {
-            "SourcePath" = "8:\\\\Scorpius\\blz3\\src\\AppLines\\res\\AppLines.ico"
+            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\AppLines.ico"
             "TargetName" = "8:AppLines.ico"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -167,7 +167,7 @@
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_671F850255EE4E5B92DF101B09A579E0"
             {
-            "SourcePath" = "8:\\\\Scorpius\\blz3\\Releasenotes.txt"
+            "SourcePath" = "8:..\\..\\Releasenotes.txt"
             "TargetName" = "8:Releasenotes.txt"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -207,7 +207,7 @@
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_EE3AD3DD477243E39C739F92CB9CE958"
             {
-            "SourcePath" = "8:\\\\Scorpius\\blz3\\src\\AppLines\\res\\splash.bmp"
+            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\splash.bmp"
             "TargetName" = "8:splash.bmp"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1352,7 +1352,7 @@
         {
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_70193B185E7443449F020FE02196C761"
             {
-            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i686\\sse2\\AppLines.exe"
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse2\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1380,7 +1380,7 @@
             }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_7D66FAF8D902439B906320101096BF40"
             {
-            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i686\\sse\\AppLines.exe"
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1408,7 +1408,7 @@
             }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_9FFFCF9C4E9D409A871B06E88B069928"
             {
-            "SourcePath" = "8:\\\\scorpius\\blz3\\bin\\win32_i386\\AppLines.exe"
+            "SourcePath" = "8:..\\..\\bin\\win32_i386\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
