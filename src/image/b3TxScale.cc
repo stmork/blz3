@@ -29,14 +29,14 @@
 #include <math.h>
 #include <malloc.h>
 
-typedef struct
+struct b3_rect_info
 {
 	b3_index     *rIndex;
 	b3_index     *cIndex;
+	b3_pkd_color *new_palette;
 	b3_res        yMin,yMax;
 	b3_coord      xSizeSrc,xSizeDst;
 	b3_coord      ySizeSrc,ySizeDst;
-	b3_pkd_color  pal[2];
 	b3_tx_type    dstType;
 	union
 	{
@@ -48,7 +48,7 @@ typedef struct
 		b3_u08       *cData;
 		b3_pkd_color *lData;
 	}                  dst;
-} b3RectInfo;
+};
 
 #define CPU_MAX      4
 #define TX_PRIO      0
@@ -61,6 +61,11 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.5  2001/12/16 11:07:45  sm
+**	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
+**	  These images are converted into B3_TX_VGA now
+**	- b3ScaleToGrey() fixed using correct palette
+**
 **	Revision 1.4  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -69,7 +74,7 @@ typedef struct
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.3  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -468,11 +473,12 @@ static void b3ComputeLineSmaller(
 
 static unsigned int b3ScaleBW2Grey(void *ptr)
 {
-	b3RectInfo   *RectInfo;
+	b3_rect_info *RectInfo;
 	b3_tx_type    dstType;
 	b3_u08       *src;
 	b3_u08       *cDst;
 	b3_pkd_color *lDst;
+	b3_pkd_color *pal;
 	b3_count     *rIndex;
 	b3_count     *cIndex;
 	b3_count     *TxRowCounter;
@@ -494,7 +500,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 	BitCount();
 
 	// ... and some values
-	RectInfo = (b3RectInfo *)ptr;
+	RectInfo = (b3_rect_info *)ptr;
 
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
@@ -510,6 +516,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 	dstBytes =  RectInfo->xSizeDst;
 	cDst     = &RectInfo->dst.cData[yMin * dstBytes];
 	lDst     = &RectInfo->dst.lData[yMin * dstBytes];
+	pal      =  RectInfo->new_palette;
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
 		yMin,yMax);
@@ -560,7 +567,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 				{
 					if (TxRowCells[xDst] > 0)
 					{
-						*cDst = (b3_u08)(255 - B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]));
+						*cDst = (b3_u08)B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]);
 					}
 					cDst++;
 				}
@@ -571,10 +578,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 				{
 					if (TxRowCells[xDst] > 0)
 					{
-						b3_u08 value;
-
-						value = (b3_u08)(255 - B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]));
-						*lDst = 0x010101 * value;
+						*lDst = pal[B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst])];
 					}
 					lDst++;
 				}
@@ -608,7 +612,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 				{
 					if (TxRowCells[xDst] > 0)
 					{
-						*cDst = (b3_u08)(255 - B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]));
+						*cDst = (b3_u08)B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]);
 					}
 					cDst++;
 				}
@@ -619,10 +623,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 				{
 					if (TxRowCells[xDst] > 0)
 					{
-						b3_u08 value;
-
-						value = (b3_u08)(255 - B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst]));
-						*lDst = 0x010101 * value;
+						*lDst = pal[B3_TX_MUL255_DIV(TxRowCounter[xDst],TxRowCells[xDst])];
 					}
 					lDst++;
 				}
@@ -650,11 +651,10 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 
 static unsigned int b3ScaleBW2Grey(void *ptr)
 {
-	b3RectInfo   *RectInfo;
+	b3_rect_info *RectInfo;
 	b3_count     *rIndex;
 	b3_count     *cIndex;
 	b3_pkd_color *tx_pal;
-	b3_pkd_color  pal[2];
 	b3_u08       *src,*dst,byte;
 	b3_u08        bit;
 	b3_count      srcBytes,dstBytes;
@@ -672,8 +672,6 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 	yMin     = RectInfo->yMin;
 	yMax     = RectInfo->yMax;
 	xSize    = RectInfo->xSizeDst;
-	pal[0]   = RectInfo->pal[0];
-	pal[1]   = RectInfo->pal[1];
 	srcBytes = TX_BWA(RectInfo->xSizeSrc);
 	dstBytes = RectInfo->xSizeDst;
 
@@ -740,13 +738,14 @@ void b3Tx::b3MonoScaleToGrey(
 	b3_count *rIndex,
 	b3_count *cIndex)
 {
-	b3RectInfo    RectInfo[CPU_MAX];
 	b3Thread      tx_thread[CPU_MAX];
-	b3_pkd_color  pal[2];
+	b3_rect_info  RectInfo[CPU_MAX];
+	b3_pkd_color *new_palette,true_color_palette[256];
 	b3_pkd_color *tx_pal,color;
 	b3_index      i;
 	b3_count      NumCPUs;
-	b3_f64        r,g,b;
+	b3_f64        r0,g0,b0,c0;
+	b3_f64        r1,g1,b1,c1;
 
 #if 1
 	NumCPUs = b3Runtime::b3GetNumCPUs();
@@ -760,19 +759,26 @@ void b3Tx::b3MonoScaleToGrey(
 
 	// compute new palette
 	tx_pal = Tx->b3GetPalette();
+	new_palette = (palette != null ? palette : true_color_palette);
 
 	color  = tx_pal[0];
-	r      = (color & 0xff0000) >> 16;
-	g      = (color & 0x00ff00) >>  8;
-	b      = (color & 0x0000ff);
-	pal[0] = (b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14);
+	r0 = (color & 0xff0000) >> 16;
+	g0 = (color & 0x00ff00) >>  8;
+	b0 = (color & 0x0000ff);
 
-	// Compute new palette
 	color  = tx_pal[1];
-	r      = (color & 0xff0000) >> 16;
-	g      = (color & 0x00ff00) >>  8;
-	b      = (color & 0x0000ff);
-	pal[1] = (b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14);
+	r1 = (color & 0xff0000) >> 16;
+	g1 = (color & 0x00ff00) >>  8;
+	b1 = (color & 0x0000ff);
+	for (i = 0;i < 256;i++)
+	{
+		c1 = (double)i / 255.0;
+		c0 = 1.0 - c1;
+		new_palette[i] =
+			((b3_pkd_color)(r0 * c0 + r1 * c1) << 16 ) |
+			((b3_pkd_color)(g0 * c0 + g1 * c1) <<  8 ) |
+			 (b3_pkd_color)(b0 * c0 + b1 * c1);
+	}
 
 	// It doesn't worth multi threading
 	// if the image is too small
@@ -784,19 +790,18 @@ void b3Tx::b3MonoScaleToGrey(
 	// Init rect infos
 	for (i = 0;i < NumCPUs;i++)
 	{
-		RectInfo[i].dstType   = type;
-		RectInfo[i].rIndex    = rIndex;
-		RectInfo[i].cIndex    = cIndex;
-		RectInfo[i].src.cData = Tx->data;
-		RectInfo[i].dst.cData = data;
-		RectInfo[i].xSizeSrc  = Tx->xSize;
-		RectInfo[i].xSizeDst  = xSize;
-		RectInfo[i].ySizeSrc  = Tx->ySize;
-		RectInfo[i].ySizeDst  = ySize;
-		RectInfo[i].yMin      = ySize *  i      / NumCPUs;
-		RectInfo[i].yMax      = ySize * (i + 1) / NumCPUs;
-		RectInfo[i].pal[0]    = pal[0];
-		RectInfo[i].pal[1]    = pal[1];
+		RectInfo[i].dstType     = type;
+		RectInfo[i].rIndex      = rIndex;
+		RectInfo[i].cIndex      = cIndex;
+		RectInfo[i].src.cData   = Tx->data;
+		RectInfo[i].dst.cData   = data;
+		RectInfo[i].xSizeSrc    = Tx->xSize;
+		RectInfo[i].xSizeDst    = xSize;
+		RectInfo[i].ySizeSrc    = Tx->ySize;
+		RectInfo[i].ySizeDst    = ySize;
+		RectInfo[i].yMin        = ySize *  i      / NumCPUs;
+		RectInfo[i].yMax        = ySize * (i + 1) / NumCPUs;
+		RectInfo[i].new_palette = new_palette;
 	}
 	if (NumCPUs > 1)
 	{
@@ -880,8 +885,8 @@ static void b3RGB8ComputeLineSmaller(
 
 static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 {
-	b3RectInfo  *RectInfo;
-	b3_tx_type  dstType;
+	b3_rect_info *RectInfo;
+	b3_tx_type    dstType;
 	b3_pkd_color *src;
 	b3_pkd_color *dst;
 	b3_count     *rIndex;
@@ -905,7 +910,7 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 		b3_res        dstSize);
 
 	// ... and some values
-	RectInfo = (b3RectInfo *)ptr;
+	RectInfo = (b3_rect_info *)ptr;
 
 	dstType  =  RectInfo->dstType;
 	rIndex   =  RectInfo->rIndex;
@@ -1101,10 +1106,11 @@ void b3Tx::b3ColorScaleToGrey(
 	b3_count *rIndex,
 	b3_count *cIndex)
 {
-	b3RectInfo RectInfo[CPU_MAX];
-	b3Thread   tx_thread[CPU_MAX];
-	b3_index   i;
-	b3_count   NumCPUs;
+	b3Thread     tx_thread[CPU_MAX];
+	b3_rect_info RectInfo[CPU_MAX];
+	b3_pkd_color new_palette[256];
+	b3_index     i;
+	b3_count     NumCPUs;
 
 #if 1
 	NumCPUs = b3Runtime::b3GetNumCPUs();
@@ -1126,19 +1132,18 @@ void b3Tx::b3ColorScaleToGrey(
 	// Init rect infos
 	for (i = 0;i < NumCPUs;i++)
 	{
-		RectInfo[i].dstType   = type;
-		RectInfo[i].rIndex    = rIndex;
-		RectInfo[i].cIndex    = cIndex;
-		RectInfo[i].src.lData = (b3_pkd_color *)srcTx->data;
-		RectInfo[i].dst.lData = (b3_pkd_color *)data;
-		RectInfo[i].xSizeSrc  = srcTx->xSize;
-		RectInfo[i].xSizeDst  = xSize;
-		RectInfo[i].ySizeSrc  = srcTx->ySize;
-		RectInfo[i].ySizeDst  = ySize;
-		RectInfo[i].yMin      = ySize *  i      / NumCPUs;
-		RectInfo[i].yMax      = ySize * (i + 1) / NumCPUs;
-		RectInfo[i].pal[0]    = 0;
-		RectInfo[i].pal[1]    = 0;
+		RectInfo[i].dstType     = type;
+		RectInfo[i].rIndex      = rIndex;
+		RectInfo[i].cIndex      = cIndex;
+		RectInfo[i].src.lData   = (b3_pkd_color *)srcTx->data;
+		RectInfo[i].dst.lData   = (b3_pkd_color *)data;
+		RectInfo[i].xSizeSrc    = srcTx->xSize;
+		RectInfo[i].xSizeDst    = xSize;
+		RectInfo[i].ySizeSrc    = srcTx->ySize;
+		RectInfo[i].ySizeDst    = ySize;
+		RectInfo[i].yMin        = ySize *  i      / NumCPUs;
+		RectInfo[i].yMax        = ySize * (i + 1) / NumCPUs;
+		RectInfo[i].new_palette = new_palette;
 	}
 
 	if (NumCPUs > 1)
@@ -1464,18 +1469,18 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 
 static unsigned int b3ScaleBW2BW(void *ptr)
 {
-	b3RectInfo  *RectInfo;
-	b3_count    *rIndex;
-	b3_count    *cIndex;
-	b3_u08      *src,*dst;
-	b3_coord    x,y,rx;
-	b3_res      yMin,yMax,xSize;
-	b3_u32      dstBit,srcBit;
-	b3_u08      dstByte;
-	b3_count    dstBytes,srcBytes,num;
-	b3_index    index;
+	b3_rect_info *RectInfo;
+	b3_count     *rIndex;
+	b3_count     *cIndex;
+	b3_u08       *src,*dst;
+	b3_coord     x,y,rx;
+	b3_res       yMin,yMax,xSize;
+	b3_u32       dstBit,srcBit;
+	b3_u08       dstByte;
+	b3_count     dstBytes,srcBytes,num;
+	b3_index     index;
 
-	RectInfo = (b3RectInfo *)ptr;
+	RectInfo = (b3_rect_info *)ptr;
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
@@ -1535,10 +1540,10 @@ void b3Tx::b3MonoScale(
 	b3_pkd_color *tx_pal,color;
 	b3_u08       *cData,bit;
 	b3_pkd_color *lData;
-	b3_f64         r,g,b;
-	b3RectInfo     RectInfo[CPU_MAX];
-	b3_index       i;
-	b3_count       NumCPUs;
+	b3_f64        r,g,b;
+	b3_rect_info  RectInfo[CPU_MAX];
+	b3_index      i;
+	b3_count      NumCPUs;
 
 #if 1
 	NumCPUs = b3Runtime::b3GetNumCPUs();

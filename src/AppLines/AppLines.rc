@@ -696,7 +696,7 @@ BEGIN
     CONTROL         "aktiviert",IDC_LIGHT_ENABLE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,25,25,41,10
     CONTROL         "Weiche Schatten",IDC_LIGHT_SOFT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,25,41,71,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,40,71,10
     CONTROL         "Lichtstärkeverteilungskurve",IDC_LIGHT_LDC,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,25,55,103,10
     EDITTEXT        IDC_LIGHT_POS_X,175,25,40,12,ES_AUTOHSCROLL

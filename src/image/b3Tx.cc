@@ -36,12 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/12/16 11:07:45  sm
+**	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
+**	  These images are converted into B3_TX_VGA now
+**	- b3ScaleToGrey() fixed using correct palette
+**
 **	Revision 1.12  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.11  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -368,6 +373,102 @@ b3_bool b3Tx::b3IsGreyPalette()
 	return true;
 }
 
+inline void b3Tx::b3CopyILBMtoVGA (
+	b3_u08   *row,
+	b3_coord  y)
+{
+	b3_u08   *Data;
+	b3_u08    dstBit = 1,Bit;
+	b3_coord  x,d;
+	b3_count  xBytes,xRest,index,BytesPerLine;
+
+	BytesPerLine = TX_BWA(xSize);
+	if ((palette != null) && (depth < 8))
+	{
+		xBytes = xSize >> 3;
+		xRest  = xSize  & 7;
+		Data = &data[y * BytesPerLine * depth];
+		for (d = 0;d < depth;d++)
+		{
+			index = 0;
+
+			// Check complete source bytes
+			for (x = 0;x < xBytes;x++)
+			{
+				if (Data[x] != 0)
+				{
+					if (Data[x] & 0x80) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x40) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x20) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x10) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x08) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x04) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x02) row[index] |= dstBit;
+					index++;
+					if (Data[x] & 0x01) row[index] |= dstBit;
+					index++;
+				}
+				else
+				{
+					index += 8;
+				}
+			}
+
+			// Compute rest bits of last byte
+			for (x = 0;x < xRest;x++)
+			{
+				Bit = 128;
+				if (Data[xBytes] & Bit) row[index] |= dstBit;
+				index++;
+			}
+
+			// Do we have reached end of line correctly?
+			B3_ASSERT(index <= xSize);
+
+			// Bump indices
+			dstBit <<= 1;
+			Data    += BytesPerLine;
+		}
+	}
+}
+
+inline void b3Tx::b3CopyILBMtoRGB8 (
+	b3_pkd_color *row,
+	b3_coord      y)
+{
+	b3_u08       *Data;
+	b3_coord      x,d,BytesPerLine;
+	b3_pkd_color  Color,Bit;
+
+	BytesPerLine = TX_BWA(xSize);
+	if (palette == null)
+	{
+		for (x = 0;x < xSize;x++)
+		{
+			Data   = data;
+			Data  += ((y+1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
+			Color  = 0;
+			Bit    = 128 >> (x & 7);
+			for (d = 0;d < depth;d++)
+			{
+				Color *= 2;
+				if (Data[0] & Bit) Color |= 1;
+				Data -= BytesPerLine;
+			}
+			row[x] =
+				((Color & 0x0000ff) << 16) |
+				((Color & 0x00ff00)) |
+				((Color & 0xff0000) >> 16);
+		}
+	}
+}
+
 void b3Tx::b3Copy(b3Tx *srcTx)
 {
 	type = B3_TX_UNDEFINED;
@@ -382,7 +483,46 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 		b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Copy(): ");
 		if (data != null)
 		{
-			memcpy (data,   srcTx->b3GetData(),   dSize);
+			if (srcTx->type == B3_TX_ILBM)
+			{
+				b3_u08       *cPtr;
+				b3_pkd_color *lPtr;
+				b3_coord      y;
+
+				switch (type)
+				{
+				case B3_TX_VGA:
+					cPtr = (b3_u08 *)data;
+					for (y = 0;y < ySize;y++)
+					{
+						srcTx->b3CopyILBMtoVGA(cPtr,y);
+						cPtr += xSize;
+					}
+					break;
+
+				case B3_TX_RGB8:
+					lPtr = (b3_pkd_color *)data;;
+					for (y = 0;y < ySize;y++)
+					{
+						srcTx->b3CopyILBMtoRGB8(lPtr,y);
+						lPtr += xSize;
+					}
+					break;
+
+				case B3_TX_ILBM:
+					// Never created
+					memcpy (data,   srcTx->b3GetData(),   dSize);
+					break;
+
+				default:
+				case B3_TX_RGB4:
+					b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3Copy(): unsupported destination format!\n");
+				}
+			}
+			else
+			{
+				memcpy (data,   srcTx->b3GetData(),   dSize);
+			}
 			b3PrintF(B3LOG_FULL," [data - %ld]",dSize);
 		}
 		if (palette != null)
@@ -652,8 +792,8 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 *************************************************************************/
 
 inline void b3Tx::b3GetILBM (
-	b3_pkd_color  *ColorLine,
-	b3_coord   y)
+	b3_pkd_color *ColorLine,
+	b3_coord      y)
 {
 	b3_u08       *Data;
 	b3_coord      x,d,BytesPerLine;

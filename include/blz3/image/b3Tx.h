@@ -382,7 +382,8 @@ private:
 	b3_pkd_color   b3RGB4Value(b3_coord x,b3_coord y);
 	b3_pkd_color   b3RGB8Value(b3_coord x,b3_coord y);
 	b3_pkd_color   b3VGAValue (b3_coord x,b3_coord y);
-
+	void           b3CopyILBMtoVGA (b3_u08       *row,b3_coord y);
+	void           b3CopyILBMtoRGB8(b3_pkd_color *row,b3_coord y);
 	// b3Tx.cc
 	void           b3GetILBM  (b3_pkd_color *row,b3_coord y);
 	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y);

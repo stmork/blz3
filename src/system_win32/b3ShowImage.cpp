@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/16 11:07:45  sm
+**	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
+**	  These images are converted into B3_TX_VGA now
+**	- b3ScaleToGrey() fixed using correct palette
+**
 **	Revision 1.3  2001/12/02 16:30:39  sm
 **	- CDlgScene draw error fix
-**
+**	
 **	Revision 1.2  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	
@@ -132,7 +137,13 @@ b3_bool CB3ShowImage::b3Update(
 	{
 		if (filtered)
 		{
+#if 1
+			// Use optimal color depth
 			scaled.b3AllocTx(m_xSize,m_ySize,depth <= 8 ? 8 : depth);
+#else
+			// Force true color
+			scaled.b3AllocTx(m_xSize,m_ySize,24);
+#endif
 			scaled.b3ScaleToGrey(&m_Tx);
 		}
 		else
