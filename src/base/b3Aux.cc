@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/07/08 13:02:19  sm
+**	- Merging with Windoze stuff.
+**
 **	Revision 1.3  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
-**
+**	
 **	Revision 1.2  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
