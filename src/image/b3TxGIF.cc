@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/06/29 19:17:16  sm
+**	- GIF decoder doesn't use malloc/free any more.
+**	- All image types are the default for image selection.
+**
 **	Revision 1.9  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.8  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -155,9 +159,11 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	b3_pkd_color   t;
 	b3_u08        *pPtr = buffer;
 	b3_u08        *out;
-	b3_u08        *sp,*suffix,*charstack;
+	b3_u08        *sp;
+	b3_u08         suffix[4096];
+	b3_u08         charstack[4096];
 	b3_u08         fc;
-	b3_u32        *prefix;
+	b3_u32         prefix[4096];
 	b3_coord       xk,yk;
 	b3_res         xNewSize,yNewSize,NewDepth;
 	b3_u32         status,code, oldcode,clearcode;
@@ -238,19 +244,6 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	}
 
 	/* Speicher für temporären Stack und Tabellen anfordern */
-	charstack = (b3_u08 *)b3Alloc ((
-		sizeof(b3_u08) +
-		sizeof(b3_u08) +
-		sizeof(b3_u32)) * 4096);
-	if (charstack==null)
-	{
-		b3FreeTx();
-		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
-		B3_THROW(b3TxException,B3_TX_MEMORY);
-	}
-	suffix =           &charstack[4096]; // pixel byte
-	prefix = (b3_u32 *)&charstack[8192]; // predecessor
-
 	size = *buffer++; // get code size
 	if ((size<2) || (9<size))
 	{
@@ -363,7 +356,6 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 
 	}
 
-	b3Free(charstack);
 	FileType = FT_GIF;
 	return B3_OK;
 }

@@ -3728,7 +3728,7 @@ BEGIN
     IDS_STENCIL_START_ANGLE "Startwinkel"
     IDS_STENCIL_START_LENGTH "Startlänge"
     IDS_STENCIL_START_UNIT  "rel. Minimum"
-    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
+    IDS_TEXTURE_FILTER      "Alle Dateien (*.*)|*.*|BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff||"
     IDS_TITLE_BLACK         "Schwarz"
     IDS_TITLE_CREATE        "%s anlegen"
     IDS_TITLE_DARK          "Dunkel"
