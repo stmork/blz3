@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/22 20:23:55  sm
+**	- Fixed wrong ON_MESSAGE signature on call function.
+**	- Reordered context menu of object editor.
+**	- Expand root item of tree view in object editor
+**
 **	Revision 1.3  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
-**
+**	
 **	Revision 1.2  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
@@ -90,7 +95,7 @@ END_MESSAGE_MAP()
 
 void CDlgBumpOakPlank::b3Register()
 {
-	b3Loader::b3AddClassType(BUMP_OAKPLANK,IDS_BUMP_OAKPLANK,IDI_MAT_WOOD,b3Edit,b3Edit);
+	b3Loader::b3AddClassType(BUMP_OAKPLANK,IDS_BUMP_OAKPLANK,IDI_MAT_OAKPLANK,b3Edit,b3Edit);
 }
 
 b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item)
@@ -134,7 +139,7 @@ void CDlgBumpOakPlank::b3UpdateUI()
 	m_PreviewBumpCtrl.b3Update(m_BumpSampler);
 }
 
-void CDlgBumpOakPlank::OnPreviewBump() 
+void CDlgBumpOakPlank::OnPreviewBump(WPARAM wParam,LPARAM lParam)
 {
 	// TODO: Add your control notification handler code here
 	b3UpdateUI();

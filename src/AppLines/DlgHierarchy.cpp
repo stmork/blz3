@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/04/22 20:23:55  sm
+**	- Fixed wrong ON_MESSAGE signature on call function.
+**	- Reordered context menu of object editor.
+**	- Expand root item of tree view in object editor
+**
 **	Revision 1.23  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.22  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -243,6 +248,7 @@ void CDlgHierarchy::b3AddBBoxes (
 				m_Hierarchy.Expand(new_treeitem,TVE_EXPAND);
 			}
 		}
+
 		if (AddShapes)
 		{
 			B3_FOR_BASE(BBox->b3GetShapeHead(),item)
@@ -259,6 +265,10 @@ void CDlgHierarchy::b3AddBBoxes (
 				insert.item.iImage         = imgNum;
 				insert.item.iSelectedImage = imgNum;
 				m_Hierarchy.InsertItem (&insert);
+			}
+			if (parent == TVI_ROOT)
+			{
+				m_Hierarchy.Expand(new_treeitem,TVE_EXPAND);
 			}
 		}
 

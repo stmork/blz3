@@ -67,7 +67,7 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatWood)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnPreviewMaterial();
+	afx_msg void OnPreviewMaterial(WPARAM wParam,LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -57,10 +57,15 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2004/04/22 20:23:55  sm
+**	- Fixed wrong ON_MESSAGE signature on call function.
+**	- Reordered context menu of object editor.
+**	- Expand root item of tree view in object editor
+**
 **	Revision 1.62  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler
-**
+**	
 **	Revision 1.61  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
 **	
@@ -1043,16 +1048,16 @@ BOOL CAboutDlg::OnInitDialog()
 #endif
 
 #ifdef DLG_TEST
-#include "DlgMatOakPlank.h"
+#include "DlgMatWood.h"
 #endif
 
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3MatOakPlank material = OAKPLANK;
+	b3MatWood material = WOOD;
 
-	CDlgMatOakPlank::b3Edit(&material);
+	CDlgMatWood::b3Edit(&material);
 #else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();

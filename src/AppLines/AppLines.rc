@@ -721,6 +721,16 @@ BEGIN
         MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
         MENUITEM "Um&benennen",                 ID_RENAME
         MENUITEM SEPARATOR
+        MENUITEM "&Material...",                ID_EDIT_MATERIAL
+        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
+        MENUITEM SEPARATOR
+        MENUITEM "Ak&tivieren",                 ID_ACTIVATE
+        MENUITEM "&Deaktivieren",               ID_DEACTIVATE
+        MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
+        MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
+        MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
+        MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
+        MENUITEM SEPARATOR
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
@@ -730,16 +740,6 @@ BEGIN
         MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
         MENUITEM "Löschen",                     ID_OBJECT_DELETE
         MENUITEM "Kopieren...",                 ID_OBJECT_COPY
-        MENUITEM SEPARATOR
-        MENUITEM "Ak&tivieren",                 ID_ACTIVATE
-        MENUITEM "&Deaktivieren",               ID_DEACTIVATE
-        MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
-        MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
-        MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
-        MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
-        MENUITEM SEPARATOR
-        MENUITEM "&Material...",                ID_EDIT_MATERIAL
-        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
     END
 END
 
@@ -2190,7 +2190,7 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,320,10,235,225
-    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "",IDC_PROPERTY,"Static",SS_BLACKFRAME,10,10,175,125
 END
 
 IDD_PAGE_OAKPLANK DIALOG DISCARDABLE  0, 0, 177, 130
@@ -2227,7 +2227,7 @@ BEGIN
     GROUPBOX        "Verteilung:",IDC_STATIC,90,15,75,75
 END
 
-IDD_PAGE_WOOD DIALOG DISCARDABLE  0, 0, 302, 191
+IDD_PAGE_WOOD DIALOG DISCARDABLE  0, 0, 284, 191
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Holz"
 FONT 8, "MS Sans Serif"
@@ -2244,7 +2244,7 @@ BEGIN
     LTEXT           "Ringgewichtung",IDC_STATIC,15,7,52,8
     LTEXT           "Astverzerrungsfrequenz",IDC_STATIC,190,35,75,8
     CONTROL         "Slider1",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,125,110,158,21
+                    TBS_TOP | WS_TABSTOP,83,113,158,21
     CONTROL         "Slider2",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
                     TBS_TOP | WS_TABSTOP,120,75,141,30
     EDITTEXT        IDC_EDIT_RINGY,13,18,40,14,ES_AUTOHSCROLL
@@ -2828,7 +2828,7 @@ BEGIN
     IDD_PAGE_WOOD, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 295
+        RIGHTMARGIN, 277
         TOPMARGIN, 7
         BOTTOMMARGIN, 184
     END

@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/22 20:23:56  sm
+**	- Fixed wrong ON_MESSAGE signature on call function.
+**	- Reordered context menu of object editor.
+**	- Expand root item of tree view in object editor
+**
 **	Revision 1.3  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	Revision 1.2  2004/04/10 15:59:51  sm
 **	- Added control units as base class for
 **	  o CB3FloatSliderCtrl
@@ -137,7 +142,7 @@ void CDlgMatOakPlank::b3UpdateUI()
 	m_PreviewMaterialCtrl.b3Update(m_MatSampler);
 }
 
-void CDlgMatOakPlank::OnPreviewMaterial() 
+void CDlgMatOakPlank::OnPreviewMaterial(WPARAM wParam,LPARAM lParam) 
 {
 	// TODO: Add your control notification handler code here
 	b3UpdateUI();

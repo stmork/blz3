@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "NDEBUG" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /D "_B3_EXPORT" /D "WIN32" /D "_MBCS" /D "_AFXDLL" /YX /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /Zi /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "NDEBUG" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /D "_B3_EXPORT" /D "WIN32" /D "_MBCS" /D "_AFXDLL" /YX /FD /TP /c
 # SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
