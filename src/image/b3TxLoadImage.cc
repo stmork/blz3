@@ -37,9 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/07 12:38:43  sm
+**	- Modified exception definition. Exceptions are identified with
+**	  a three character code to unify error codes. This is necessary
+**	  to convert error codes into error messages inside applications.
+**	- Added some additional b3Hash methods.
+**	- Added -Wall compiler option to all C++ files.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.8  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.7  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
 **	
@@ -86,7 +94,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	b3_pkd_color *LongData;
 	HeaderTIFF   *TIFF;
 	HeaderSGI    *HeaderSGI;
-	b3_offset     pos;
+	int           pos;
 	b3_coord      x,y;
 	b3_s32        ppm_type;
 	b3_index      i;

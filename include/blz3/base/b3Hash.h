@@ -37,7 +37,7 @@
 	B3_HASH_INVALID
 };
 
-typedef b3Exception<b3_hash_error> b3HashException;
+typedef b3Exception<b3_hash_error,'HSH'> b3HashException;
 
 /*************************************************************************
 **                                                                      **
@@ -47,19 +47,30 @@ typedef b3Exception<b3_hash_error> b3HashException;
 
 template <class Key,class Object> class b3HashMap;
 
+template <class Key,class Object> struct b3HashContainer
+{
+	Key    m_Key;
+	Object m_Object;
+};
+
 template <class Key,class Object> class b3HashPair :
-	public b3Link<b3HashPair<Key,Object> >
+	public b3Link<b3HashPair<Key,Object> >,
+	protected b3HashContainer<Key,Object>
 {
 	friend class b3HashMap<Key,Object>;
 
-protected:
-	Key    m_Key;
-	Object m_Object;
-
 	b3HashPair(const Key &key,const Object &object) :
-		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>)),
-		m_Key(key), m_Object(object)
+		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
 	{
+		m_Key    = key;
+		m_Object = object;
+	}
+
+	b3HashPair(const b3HashContainer<Key,Object> &container) :
+		b3Link<b3HashPair<Key,Object> >(sizeof(b3HashPair<Key,Object>))
+	{
+		m_Key    = container.m_Key;
+		m_Object = container.m_Object;
 	}
 
 	inline void b3SetObject(const Object &object)
@@ -97,6 +108,14 @@ public:
 	inline void b3SetHashFunc(b3_hash (*func)(const Key &key))
 	{
 		m_HashFunc = func;
+	}
+
+	inline void b3Init(b3HashContainer<Key,Object> *container,b3_count num)
+	{
+		for (int i = 0;i < num;i++)
+		{
+			b3Add(container[i].m_Key,container[i].m_Object);
+		}
 	}
 
 	inline void b3Add(const Key &key,const Object &object)

@@ -13,6 +13,7 @@ LIB_SOURCE =\
 	b3Cubic.cc\
 	b3Display.cc\
 	b3Endian.cc\
+	b3Exception.cc\
 	b3FileList.cc\
 	b3FileMem.cc\
 	b3Item.cc\
@@ -33,6 +34,7 @@ LIB_OBJ	=\
 	b3Cubic.o\
 	b3Display.o\
 	b3Endian.o\
+	b3Exception.o\
 	b3FileList.o\
 	b3FileMem.o\
 	b3Item.o\

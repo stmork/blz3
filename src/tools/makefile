@@ -6,7 +6,7 @@
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 CXX			= g++
-LDLIBS			= -lB3System -lpthread
+LDLIBS			= -lB3System -lB3Base -lpthread
 PRGS			= RemDepend RemCR
 REMDEPEND_OBJS	= RemDepend.o
 REMCR_OBJS		= RemCR.o

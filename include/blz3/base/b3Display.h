@@ -45,7 +45,7 @@ typedef enum
 	B3_DISPLAY_OPEN
 } b3_display_error;
 
-typedef b3Exception<b3_display_error> b3DisplayException;
+typedef b3Exception<b3_display_error,'DSP'> b3DisplayException;
 
 class b3Row;
 

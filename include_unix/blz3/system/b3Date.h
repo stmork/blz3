@@ -56,7 +56,7 @@ typedef enum
 	B3_DATE_ILLEGAL_MODE
 } b3_date_error;
 
-typedef b3Exception<b3_date_error> b3DateException;
+typedef b3Exception<b3_date_error,'DAT'> b3DateException;
 
 class b3Date
 {

@@ -91,7 +91,7 @@ enum b3_world_error
 	B3_WORLD_CLASSTYPE_UNKNOWN
 };
 
-typedef b3Exception<b3_world_error> b3WorldException; 
+typedef b3Exception<b3_world_error,'BLZ'> b3WorldException; 
 
 /*************************************************************************
 **                                                                      **

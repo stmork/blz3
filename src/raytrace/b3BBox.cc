@@ -32,6 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2002/08/07 12:38:43  sm
+**	- Modified exception definition. Exceptions are identified with
+**	  a three character code to unify error codes. This is necessary
+**	  to convert error codes into error messages inside applications.
+**	- Added some additional b3Hash methods.
+**	- Added -Wall compiler option to all C++ files.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.62  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -46,7 +54,7 @@
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	Revision 1.61  2002/08/04 13:24:56  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
@@ -628,8 +636,6 @@ void b3BBox::b3FreeVertices()
 void b3BBox::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_index        i = 0;
-
 	bbox_vertex[0].v.x = m_DimBase.x;
 	bbox_vertex[0].v.y = m_DimBase.y;
 	bbox_vertex[0].v.z = m_DimBase.z;

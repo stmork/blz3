@@ -44,7 +44,7 @@ typedef enum
 	B3_DIR_NOT_FOUND
 } b3_dir_error;
 
-typedef b3Exception<b3_dir_error> b3DirException;
+typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 
 class b3Path
 {

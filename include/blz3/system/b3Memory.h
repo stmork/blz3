@@ -38,7 +38,7 @@ typedef enum
 	B3_MEM_UNKNOWN_PTR
 } b3_mem_error;
 
-typedef b3Exception<b3_mem_error> b3MemException;
+typedef b3Exception<b3_mem_error,'MEM'> b3MemException;
 
 class b3Mem : protected b3MemNode, protected b3MemAccess
 {

@@ -31,9 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/07 12:38:43  sm
+**	- Modified exception definition. Exceptions are identified with
+**	  a three character code to unify error codes. This is necessary
+**	  to convert error codes into error messages inside applications.
+**	- Added some additional b3Hash methods.
+**	- Added -Wall compiler option to all C++ files.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.2  2002/08/06 16:16:59  sm
 **	- Added support for custom hash functions.
-**
+**	
 **	Revision 1.1  2002/08/06 15:54:12  sm
 **	- Introduced b3HashMap<key,object> class incl. test prog.
 **	- Found some source files without header.
@@ -129,5 +137,16 @@ int main(int argc,char *argv[])
 	hash.b3Clear();
 	b3Dump(hash,"Clear");
 
+	b3HashContainer<int,char *> *container = new b3HashContainer<int,char *>[argc];
+
+	for (i = 0;i < argc;i++)
+	{
+		container[i].m_Key    = i;
+		container[i].m_Object = argv[i];
+	}	
+	hash.b3Init(container,argc);
+	b3Dump(hash,"Container init");
+
+	delete [] container;
 	return 0;
 }

@@ -36,6 +36,14 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2002/08/07 12:38:43  sm
+**      - Modified exception definition. Exceptions are identified with
+**        a three character code to unify error codes. This is necessary
+**        to convert error codes into error messages inside applications.
+**      - Added some additional b3Hash methods.
+**      - Added -Wall compiler option to all C++ files.
+**      - Removed some compiler warnings.
+**
 **      Revision 1.51  2002/08/05 17:46:41  sm
 **      - Some merges...
 **
@@ -344,7 +352,7 @@ static GLint light_num[] =
 	GL_LIGHT7
 };
 
-#define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && ((num) < (sizeof(light_num) / sizeof(GLint))))
+#define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(light_num) / sizeof(GLint))))
 
 #endif
 
@@ -407,7 +415,7 @@ void b3RenderContext::b3LightReset()
 
 	// Disable all other lights
 	b3SetAmbient(&world_ambient);
-	for (int i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
+	for (b3_size i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
 	{
 		glDisable(light_num[i]);
 	}
@@ -451,7 +459,6 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_color  *b3_specular)
 {
 	b3_bool  result = false;
-	b3_index num    = glLightNum;
 
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d)\n",
 		glLightNum);
@@ -1193,8 +1200,6 @@ void b3RenderObject::b3CreateChess(
 	b3_color        *wColor)
 {
 #ifdef BLZ3_USE_OPENGL
-	GLubyte *ptr = glTextureData;
-
 	b3CreateTexture(null,2);
 
 	b3RenderContext::b3ColorToGL(wColor,&glTextureData[ 0]);

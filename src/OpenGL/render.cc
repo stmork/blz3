@@ -34,6 +34,14 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/08/07 12:38:43  sm
+**      - Modified exception definition. Exceptions are identified with
+**        a three character code to unify error codes. This is necessary
+**        to convert error codes into error messages inside applications.
+**      - Added some additional b3Hash methods.
+**      - Added -Wall compiler option to all C++ files.
+**      - Removed some compiler warnings.
+**
 **      Revision 1.22  2002/08/01 15:02:56  sm
 **      - Found texture missing bug when printing. There weren't any
 **        selected textures inside an other OpenGL rendering context.
@@ -246,7 +254,6 @@ int main(int argc,char *argv[])
 {
 	b3Item    *item;
 	b3Scene   *scene;
-	char      *picture_home = getenv("BLZ3_PICTURES");
 	char      *HOME         = getenv("HOME");
 	b3Path     textures;
 	b3Path     pictures;

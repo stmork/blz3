@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2002/08/07 12:38:43  sm
+**      - Modified exception definition. Exceptions are identified with
+**        a three character code to unify error codes. This is necessary
+**        to convert error codes into error messages inside applications.
+**      - Added some additional b3Hash methods.
+**      - Added -Wall compiler option to all C++ files.
+**      - Removed some compiler warnings.
+**
 **      Revision 1.37  2002/08/04 13:24:56  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -328,8 +336,6 @@ void b3SplineShape::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
-	
 	// Compute number of grid vertices
 #ifdef BLZ3_USE_OPENGL
 	m_GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);

@@ -32,7 +32,7 @@ enum b3_array_error
 	B3_ARRAY_OUT_OF_BOUNDS
 };
 
-typedef b3Exception<b3_array_error> b3ArrayException;
+typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
 
 template <class T> class b3Array : protected b3Mem
 {

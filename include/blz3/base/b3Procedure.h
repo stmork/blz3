@@ -32,7 +32,7 @@ enum b3_noise_error
 	B3_NOISE_MEMORY
 };
 
-typedef b3Exception<b3_noise_error> b3NoiseException;
+typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
 class b3Noise : public b3Mem
 {

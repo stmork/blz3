@@ -47,7 +47,8 @@ public:
 		Offset    = 0;
 		ClassType = new_class;
 	}
-	~b3Link()
+
+	virtual ~b3Link()
 	{
 	}
 

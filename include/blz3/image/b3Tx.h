@@ -179,7 +179,7 @@ enum b3_tx_error
 	B3_TX_UNKNOWN_DATATYPE
 };
 
-typedef b3Exception<b3_tx_error> b3TxException;
+typedef b3Exception<b3_tx_error,'TX'> b3TxException;
 
 /*************************************************************************
 **                                                                      **
