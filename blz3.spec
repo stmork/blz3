@@ -71,6 +71,6 @@ cp -a lib/lib*.a $RPM_BUILD_ROOT/usr/lib
 %config /etc/profile.d/blz3.csh
 
 %clean
-rm -rf $RPM_BUILD_ROOT /tmp/blz3-*-file-list
+rm -rf $RPM_BUILD_ROOT /tmp/blz3*-file-list
 
 %changelog
