@@ -1,0 +1,39 @@
+# Beispiel Makefile
+
+BLZ3_LIB		= @BLZ3_LIB@
+BLZ3_BIN		= @BLZ3_BIN@
+CC				= @CC@
+CXX				= @CXX@
+CPPFLAGS		= @CPPFLAGS@
+LDFLAGS			= @LDFLAGS@
+LIBS			= @LIBS@
+prefix			= @prefix@
+exec_prefix		= @exec_prefix@
+
+PRG_SOURCE		= bench.cc
+
+BENCH_OBJS		= bench.o
+
+B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
+B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
+B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
+
+PRGS			= bench
+
+all:	$(PRGS)
+
+install:	$(PRGS)
+	cp $^ @bindir@
+	(cd @bindir@; chmod 755 $^;)
+
+depend:
+	@CPP@ -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
+
+clean:
+	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+	(cd $(BLZ3_BIN); rm -f $(PRGS); )
+
+bench:	$(BENCH_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+-include .dep

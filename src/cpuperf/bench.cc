@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III -Banchmarker 
+**	Blizzard III - Benchmarker 
 **
 **      (C) Copyright 2002  Steffen A. Mork
 **          All Rights Reserved
@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/11/23 08:13:32  smork
+**	- Added configure support.
+**
 **	Revision 1.3  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**
+**	
 **	Revision 1.2  2002/11/18 17:30:01  sm
 **	- GCC patch level define fix.
 **	
@@ -332,6 +335,11 @@ int main(int argc,char *argv[])
 		suite.b3Execute(b3Test::run_test_b);
 		suite.b3Execute(b3Test::run_test_c);
 		suite.b3Execute(b3Test::run_test_d);
+	}
+	else
+	{
+		printf("USAGE:\n");
+		printf("%s loopcount\n",argv[0]);
 	}
 
 	return 0;
