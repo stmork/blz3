@@ -34,10 +34,9 @@
 
 /*
 **	$Log$
-**	Revision 1.12  2002/12/11 14:47:58  sm
-**	- Changed noise handling to static
-**	- Fixed some error cases when image not loaded.
-**	- Added some brt3 flags
+**	Revision 1.13  2002/12/11 14:53:39  sm
+**	- Made some comments
+**	- Changed b3Noise class to s static one.
 **
 **	Revision 1.12  2002/12/11 14:31:01  sm
 **	- Parse order fixed for water bump mapping

@@ -35,13 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/12/11 14:53:39  sm
+**	- Made some comments
+**	- Changed b3Noise class to s static one.
+**
 **	Revision 1.9  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.8  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -160,9 +164,7 @@ b3Noise noise_procedures;
 **                                                                      **
 *************************************************************************/
 
-void b3Noise::b3InitCurve()
-{
-}
+b3_noisetype *b3Noise::NoiseTable = null;
 
 b3Noise::b3Noise ()
 {
@@ -170,56 +172,60 @@ b3Noise::b3Noise ()
 	b3_coord      x,y,z;
 	b3_count      i;
 
-	b3PrintF(B3LOG_DEBUG,"Initializing noise procedures...\n");
-	NoiseTable = Table = (b3_noisetype *)b3Alloc(
-		NOISEMAXALLOC *
-		NOISEMAXALLOC *
-		NOISEMAXALLOC * sizeof(b3_noisetype));
 	if (NoiseTable == null)
 	{
-		B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
-	}
+		b3PrintF(B3LOG_DEBUG,"Initializing noise procedures...\n");
+		NoiseTable = Table = (b3_noisetype *)b3Alloc(
+			NOISEMAXALLOC *
+			NOISEMAXALLOC *
+			NOISEMAXALLOC * sizeof(b3_noisetype));
+		if (NoiseTable == null)
+		{
+			B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
+		}
 
-	for (x = 0;x < NOISEMAX;x++)
-	for (y = 0;y < NOISEMAX;y++)
-	for (z = 0;z < NOISEMAX;z++)
-		Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL);
+		for (x = 0;x < NOISEMAX;x++)
+		for (y = 0;y < NOISEMAX;y++)
+		for (z = 0;z < NOISEMAX;z++)
+			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL);
 
-	// init marble spline
-	marbleSpline.knot_max    = sizeof(marbleKnots)    / sizeof(b3_f32);
-	marbleSpline.control_max = sizeof(marbleControls) / sizeof(b3_vector);
-	marbleSpline.offset      = 1;
-	marbleSpline.knots       = marbleKnots;
-	marbleSpline.controls    = marbleControls;
-	marbleSpline.b3InitCurve         (3,marbleSpline.control_max,false);
-	marbleSpline.b3ThroughEndControl ();
+		// init marble spline
+		marbleSpline.knot_max    = sizeof(marbleKnots)    / sizeof(b3_f32);
+		marbleSpline.control_max = sizeof(marbleControls) / sizeof(b3_vector);
+		marbleSpline.offset      = 1;
+		marbleSpline.knots       = marbleKnots;
+		marbleSpline.controls    = marbleControls;
+		marbleSpline.b3InitCurve         (3,marbleSpline.control_max,false);
+		marbleSpline.b3ThroughEndControl ();
 
-	// init wood spline
-	woodSpline.knot_max     = sizeof(woodKnots)    / sizeof(b3_f32);
-	woodSpline.control_max  = sizeof(woodControls) / sizeof(b3_vector);
-	woodSpline.offset       = 1;
-	woodSpline.knots        = woodKnots;
-	woodSpline.controls     = woodControls;
-	woodSpline.b3InitCurve         (3,woodSpline.control_max,false);
-	woodSpline.b3ThroughEndControl ();
+		// init wood spline
+		woodSpline.knot_max     = sizeof(woodKnots)    / sizeof(b3_f32);
+		woodSpline.control_max  = sizeof(woodControls) / sizeof(b3_vector);
+		woodSpline.offset       = 1;
+		woodSpline.knots        = woodKnots;
+		woodSpline.controls     = woodControls;
+		woodSpline.b3InitCurve         (3,woodSpline.control_max,false);
+		woodSpline.b3ThroughEndControl ();
 
-	// init wave spline
-	waveSpline.knot_max     = sizeof(waveKnots)    / sizeof(b3_f32);
-	waveSpline.control_max  = sizeof(waveControls) / sizeof(b3_vector);
-	waveSpline.offset       = 1;
-	waveSpline.knots        = waveKnots;
-	waveSpline.controls     = waveControls;
-	waveSpline.b3InitCurve(3,waveSpline.control_max,true);
-	for (i = 0;i < waveSpline.control_max;i++)
-	{
-		waveControls[i].x = cos(M_PI * 2.0 * i / waveSpline.control_max);
-		waveControls[i].y = sin(M_PI * 2.0 * i / waveSpline.control_max);
-		waveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
+		// init wave spline
+		waveSpline.knot_max     = sizeof(waveKnots)    / sizeof(b3_f32);
+		waveSpline.control_max  = sizeof(waveControls) / sizeof(b3_vector);
+		waveSpline.offset       = 1;
+		waveSpline.knots        = waveKnots;
+		waveSpline.controls     = waveControls;
+		waveSpline.b3InitCurve(3,waveSpline.control_max,true);
+		for (i = 0;i < waveSpline.control_max;i++)
+		{
+			waveControls[i].x = cos(M_PI * 2.0 * i / waveSpline.control_max);
+			waveControls[i].y = sin(M_PI * 2.0 * i / waveSpline.control_max);
+			waveControls[i].z = B3_FRAN(M_PI * 2.0) - M_PI;
+		}
 	}
 }
 
 b3Noise::~b3Noise ()
 {
+	NoiseTable = null;
 }
 
 /*************************************************************************
@@ -281,8 +287,8 @@ b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	iz = (long)(z = fabs(z + 15000)); oz = FRAC(z);
 
 
-		/* trilinear interpolation */
-		/* first dimension */
+		// trilinear interpolation
+		// first dimension
 	  n =                NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
 	n00 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy  ,iz  )] - n);
 	  n =                NoiseTable[INDEX3D(ix  ,iy  ,iz+1)];
@@ -293,16 +299,16 @@ b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	n11 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy+1,iz+1)] - n);
 
 
-		/* second dimension */
+	// second dimension
 	n0  =    n00 + oy * (n10 - n00);
 	n1  =    n01 + oy * (n11 - n01);
 
 
-		/* third and last dimension */
+	// third and last dimension
 	return ((n0  + oz * (n1  - n0)) * nscal);
 }
 
-b3_noisetype b3Noise::b3GetDiff(
+inline b3_noisetype b3Noise::b3GetDiff(
 	b3_index xs,
 	b3_index ys,
 	b3_index zs,
@@ -318,7 +324,7 @@ b3_noisetype b3Noise::b3GetDiff(
 		                   zs + oM[3][i][2])]);
 }
 
-b3_f64 b3Noise::b3GradNoise (
+inline b3_f64 b3Noise::b3GradNoise (
 	b3_f64    x,
 	b3_f64    y,
 	b3_f64    z,
@@ -336,8 +342,8 @@ b3_f64 b3Noise::b3GradNoise (
 	iz = (long)z; oz = FRAC(z);
 
 
-		/* trilinear interpolation */
-		/* first dimension */
+		// trilinear interpolation
+		// first dimension
 	  n =                b3GetDiff(ix,iy,iz,i,0);
 	n00 =    n   + ox * (b3GetDiff(ix,iy,iz,i,4) - n);
 	  n =                b3GetDiff(ix,iy,iz,i,1);
@@ -348,12 +354,11 @@ b3_f64 b3Noise::b3GradNoise (
 	n11 =    n   + ox * (b3GetDiff(ix,iy,iz,i,7) - n);
 
 
-		/* second dimension */
+	// second dimension
 	n0  =    n00 + oy * (n10 - n00);
 	n1  =    n01 + oy * (n11 - n01);
 
-
-		/* third and last dimension */
+	// third and last dimension
 	return ((n0 + oz * (n1 - n0)) * nscal * 2 - 1);
 }
 
@@ -407,7 +412,7 @@ static b3_color MarbleColors[4] =
 	{ 0, 0.4f, 0.9f, 0.1f }
 };
 
-static void marbleCurve (
+static inline void marbleCurve (
 	b3Spline  *Spline,
 	b3_vector *result,
 	b3_f64  x)
@@ -517,7 +522,7 @@ void b3Noise::b3Clouds (b3_vector *P,b3_color *Color)
 	Color->b = 1;
 }
 
-b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)
+inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)
 {
 	b3_s32 n;
 
