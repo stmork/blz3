@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.5  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
 **	- Correcting path following behaviour.
-**
+**	
 **	Revision 1.4  2001/10/15 14:45:08  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -60,7 +65,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
+b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 {
 	b3_pkd_color *srcPtr;
 	b3_count      DataSize,depth1,depth2;
@@ -183,7 +188,8 @@ b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 	}
 	else
 	{
-		FileType = FT_ERR_MEM;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
-	return type;
+	return B3_OK;
 }

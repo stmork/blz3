@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.3  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
 **	- Correcting path following behaviour.
-**
+**	
 **	Revision 1.2  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
 **	
@@ -53,7 +58,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParsePCX8 (b3_u08 *buffer)
+b3_result b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 {
 	b3_u08       *srcPtr;
 	b3_u08       *dstPtr,Col;
@@ -102,12 +107,13 @@ b3_tx_type b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 	}
 	else
 	{
-		FileType = FT_ERR_MEM;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
-	return type;
+	return B3_OK;
 }
 
-b3_tx_type b3Tx::b3ParsePCX4 (b3_u08 *buffer)
+b3_result b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 {
 	b3_u08       *srcPtr;
 	b3_u08       *dstPtr,Col;
@@ -166,7 +172,7 @@ b3_tx_type b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 	else
 	{
 		b3FreeTx();
-		FileType = FT_ERR_MEM;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
-	return type;
+	return B3_OK;
 }

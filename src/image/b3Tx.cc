@@ -36,6 +36,11 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.10  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -43,7 +48,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.9  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -189,6 +194,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx))
 	histogramme = null;
 	grid        = null;
 	type        = B3_TX_UNDEFINED;
+	FileType    = FT_UNKNOWN;
 	dSize       = 0;
 	pSize       = 0;
 
@@ -417,6 +423,7 @@ void b3Tx::b3FreeTx()
 	}
 	b3EndHist();
 	type      = B3_TX_UNDEFINED;
+	FileType  = FT_UNKNOWN;
 	xSize     = 0;
 	ySize     = 0;
 	depth     = 0;
@@ -521,7 +528,7 @@ b3_pkd_color b3Tx::b3GetValue (
 	return 0;
 }
 
-b3_pkd_color b3Tx::b3ILBMValue (
+inline b3_pkd_color b3Tx::b3ILBMValue (
 	b3_coord x,
 	b3_coord y)
 {
@@ -553,7 +560,7 @@ b3_pkd_color b3Tx::b3ILBMValue (
 	return PlaneValue;
 }
 
-b3_pkd_color b3Tx::b3RGB4Value (
+inline b3_pkd_color b3Tx::b3RGB4Value (
 	b3_coord x,
 	b3_coord y)
 {
@@ -569,7 +576,7 @@ b3_pkd_color b3Tx::b3RGB4Value (
 	return Result;
 }
 
-b3_pkd_color b3Tx::b3RGB8Value (
+inline b3_pkd_color b3Tx::b3RGB8Value (
 	b3_coord x,
 	b3_coord y)
 {
@@ -579,7 +586,7 @@ b3_pkd_color b3Tx::b3RGB8Value (
 	return Address[y * xSize + x];
 }
 
-b3_pkd_color b3Tx::b3VGAValue (
+inline b3_pkd_color b3Tx::b3VGAValue (
 	b3_coord x,
 	b3_coord y)
 {

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/image/b3TxPool.h"
 
@@ -33,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.6  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.5  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -162,17 +168,7 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 	v = ray->polar.box_polar.y * m_Scale.y * 1024;
 	w = ray->polar.box_polar.z * m_Scale.z * 1024;
 
-	i =	ray->normal.x * ray->normal.x +
-		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if (i == 0) return;
-	if (i != 1)
-	{ 
-		i = 1/sqrt(i);
-		ray->normal.x *= i;
-		ray->normal.y *= i;
-		ray->normal.z *= i;
-	}
+	b3Vector::b3Normalize(&ray->normal);
 
 	d  = (u+15000.0) * 0.02 + 7.0 * noise_procedures.b3NoiseVector(u*0.01,v*0.005,w*0.005);
 	dd = (long)d % 17;
@@ -203,6 +199,11 @@ b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture),c
 {
 }
 
+b3_bool b3BumpTexture::b3NeedDeriv()
+{
+	return true;
+}
+
 b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 {
 	m_xStart    = b3InitFloat();
@@ -218,8 +219,65 @@ b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 	m_Texture   = texture_pool.b3LoadTexture(m_Name);
 }
 
+inline b3_bool b3BumpTexture::b3GetNormalDeriv(
+	b3_f64     lx,
+	b3_f64     ly,
+	b3_vector *Deriv)
+{
+	b3_pkd_color p1,p2,p3;
+	b3_coord     x,y;
+
+	if (!m_Texture->b3IsLoaded())
+	{
+		return false;
+	}
+
+	lx = (lx - m_xStart) / m_xScale;
+	ly = (ly - m_yStart) / m_yScale;
+
+	if ((ly < 0) || (ly >= m_yTimes) || (lx < 0) || (lx >= m_xTimes))
+	{
+		return false;
+	}
+
+	x = (b3_coord)((lx - (b3_coord)lx) * m_Texture->xSize);
+	y = (b3_coord)((ly - (b3_coord)ly) * m_Texture->ySize);
+
+	p1 = m_Texture->b3GetValue(x,y);
+	p2 = m_Texture->b3GetValue((x+1) % m_Texture->xSize,y);
+	p3 = m_Texture->b3GetValue(x,(y+1) % m_Texture->ySize);
+
+	// extract blue values
+	p1 &= 0xff;	/* corner */
+	p2 &= 0xff;	/* right */
+	p3 &= 0xff;	/* down */
+
+	Deriv->x = ((b3_s32)p2 - (b3_s32)p1) * 0.0039215686;
+	Deriv->y = ((b3_s32)p3 - (b3_s32)p1) * 0.0039215686;
+	Deriv->z =  (b3_s32)p1               * 0.0039215686;
+
+	return true;
+}
 void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 {
+	b3_vector64 *xDeriv = &ray->xDeriv;
+	b3_vector64 *yDeriv = &ray->yDeriv;
+	b3_vector    Deriv;
+	b3_f64       x,y;
+
+	if (b3GetNormalDeriv (
+		ray->polar.polar.x,
+		ray->polar.polar.y,&Deriv))
+	{
+		b3Vector::b3Normalize(&ray->normal);
+		b3Vector::b3Scale(&Deriv,m_Intensity);
+
+		x = (m_xScale < 0 ? Deriv.x : -Deriv.x);
+		y = (m_yScale < 0 ? Deriv.y : -Deriv.y);
+		ray->normal.x += (x * xDeriv->x + y * yDeriv->x);
+		ray->normal.y += (x * xDeriv->y + y * yDeriv->y);
+		ray->normal.z += (x * xDeriv->z + y * yDeriv->z);
+	}
 }
 
 /*************************************************************************

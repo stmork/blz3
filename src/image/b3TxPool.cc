@@ -37,11 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.13  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
 **	- Correcting path following behaviour.
-**
+**	
 **	Revision 1.12  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -160,7 +165,7 @@ b3Base<b3Tx> *b3TxPool::b3GetTxHead()
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_pkd_color *LongData;
 	HeaderTIFF   *TIFF;
@@ -174,7 +179,8 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	LongData = (b3_pkd_color *)buffer;
 	if (buffer_size < 4)
 	{
-		return type = B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	// schon mal irgend ein IFF
@@ -182,11 +188,13 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	{
 		switch (b3Endian::b3GetMot32(&LongData[2]))
 		{
-			case IFF_ILBM : return type = b3ParseIFF_ILBM(buffer,buffer_size);
-			case IFF_RGB8 :	return type = b3ParseIFF_RGB8(buffer,buffer_size);
-			case IFF_RGBN : return type = b3ParseIFF_RGB4(buffer,buffer_size);
-			case IFF_YUVN : return type = b3ParseIFF_YUVN(buffer,buffer_size);
-			default :		return type = B3_TX_UNDEFINED;
+			case IFF_ILBM : return b3ParseIFF_ILBM(buffer,buffer_size);
+			case IFF_RGB8 :	return b3ParseIFF_RGB8(buffer,buffer_size);
+			case IFF_RGBN : return b3ParseIFF_RGB4(buffer,buffer_size);
+			case IFF_YUVN : return b3ParseIFF_YUVN(buffer,buffer_size);
+			default :
+				b3FreeTx();
+				throw new b3TxException(B3_TX_ERR_HEADER);
 		}
 	}
 
@@ -198,7 +206,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		{
 			if (strncmp ((const char *)&buffer[i+6],"JFIF",4) == 0)
 			{
-				return type = b3ParseJPEG(&buffer[i],buffer_size - i);
+				return b3ParseJPEG(&buffer[i],buffer_size - i);
 			}
 		}
 	}
@@ -207,7 +215,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	// GIF
 	if (strncmp((const char *)buffer,"GIF",3) == 0)
 	{
-		return type = b3ParseGIF (buffer);
+		return b3ParseGIF (buffer);
 	}
 
 
@@ -222,11 +230,10 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		}
 		if (TIFF->VersionTIFF == 0x002a)
 		{
-			return type = b3ParseTIFF(TIFF,buffer_size);
+			return b3ParseTIFF(TIFF,buffer_size);
 		}
 #else
-		b3LoadTIFF(b3Name(),buffer,buffer_size);
-		return type;
+		return b3LoadTIFF(b3Name(),buffer,buffer_size);
 #endif
 	}
 
@@ -244,7 +251,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 				{
 					pos = buffer_size - ((x + 7) >> 3) * y;
 					FileType = FT_PBM;
-					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
+					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 
@@ -253,7 +260,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 				{
 					pos = buffer_size - x * y;
 					FileType = FT_PGM;
-					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
+					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 				
@@ -262,7 +269,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 				{
 					pos = buffer_size - 3 * x * y;
 					FileType = FT_PPM;
-					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
+					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 
@@ -270,8 +277,8 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 			case 2 :
 			case 3 :
 			default :
-				FileType = FT_ERR_UNSUPP;
-				break;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_UNSUPP);
 		}
 	}
 
@@ -281,7 +288,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	    (buffer[1] == 'M') &&
 	    (b3Endian::b3GetIntel32(&buffer[2]) == buffer_size))
 	{
-		return type = b3ParseBMP(buffer);
+		return b3ParseBMP(buffer);
 	}
 
 
@@ -294,7 +301,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 			if ((b3_size)(x * y * 3 + pos) == buffer_size)
 			{
 				FileType = FT_MTV;
-				return type = b3ParseRAW (&buffer[pos],x,y,6);
+				return b3ParseRAW (&buffer[pos],x,y,6);
 			}
 		}
 	}
@@ -317,26 +324,26 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	}
 	if ((b3_size)(x * y * i + 16) == buffer_size)
 	{
-		return type = b3ParseBMF(buffer,buffer_size);
+		return b3ParseBMF(buffer,buffer_size);
 	}
 	
 	// SGI RLE
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
 	{
-		return type = b3ParseSGI(buffer);
+		return b3ParseSGI(buffer);
 	}
 
 
 	// Targa
 	if ((buffer[2] == 2) || (buffer[2] == 10))
 	{
-		if ((b3Endian::b3Get32(&buffer[4])  ==  0) &&
+		if ((b3Endian::b3Get32(&buffer[4]) == 0) &&
 		    (b3Endian::b3Get32(&buffer[8]) == 0))
 		{
 			if ((buffer[16]==32) || (buffer[16]==24))
 			{
-				return type = b3ParseTGA(buffer);
+				return b3ParseTGA(buffer);
 			}
 		}
 	}
@@ -347,25 +354,53 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	{
 		switch (buffer[3])			/* Bits pro Pixel */
 		{
-			case 8  : return type = b3ParsePCX8(buffer);
-			case 1 	: return type = b3ParsePCX4(buffer);
-			default : return type = B3_TX_UNDEFINED;
+			case 8  : return b3ParsePCX8(buffer);
+			case 1 	: return b3ParsePCX4(buffer);
+			default :
+				b3FreeTx();
+				throw new b3TxException(B3_TX_UNSUPP);
 		}
 	}
 
 
 	// really unknown
-	return type = B3_TX_UNDEFINED;
+	b3FreeTx();
+	throw new b3TxException(B3_TX_UNSUPP);
 }
 
-void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
+b3_result b3Tx::b3LoadImage(const char *name)
+{
+	b3File     file;
+	b3_u08    *buffer;
+	b3_size    size;
+	b3_result  error_code = B3_ERROR;
+
+	try
+	{
+		buffer     = file.b3ReadBuffer(name,size);
+		error_code = b3LoadImage(buffer,size);
+		b3Name(name);
+		error_code = B3_OK;
+	}
+	catch (b3FileException *e)
+	{
+		b3PrintF(B3LOG_NORMAL,"Error loading %s (error code: %d)\n",
+			name,e->b3GetError());
+	}
+	catch(b3TxException *e)
+	{
+		b3PrintF(B3LOG_NORMAL,"Error parsing %s (error code: %d)\n",
+			name,e->b3GetError());
+	}
+	return error_code;
+}
+
+b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 {
 	b3TxPath *path;
-	b3File    TextureFile;
 	b3Path    FullName;
-	b3_u08   *Data = null;
-	b3_size   FileSize;
-	b3_bool   found = false;
+	b3_bool   found  = false;
+	b3_bool   result = false;
 
 	if ((Name != null) && (strlen(Name) > 0))
 	{
@@ -391,21 +426,9 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 			found = true;
 		}
 
-		try
+		if (found)
 		{
-			if (found)
-			{
-				Data = TextureFile.b3ReadBuffer(FullName,FileSize);
-				Texture->b3Name(FullName);
-				Texture->b3ParseTexture(Data,FileSize);
-				b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
-					Texture->b3Name(),Data,FileSize);
-			}
-		}
-		catch(b3FileException *f)
-		{
-			// An exception we expected.
-			b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
+			result = (Texture->b3LoadImage(FullName) == B3_OK);
 		}
 	}
 	else
@@ -414,11 +437,19 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	}
 
 	// Check result of texture load
-	if (Data == null)
+	if (result)
+	{
+		Texture->b3Name(FullName);
+		b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded.\n",
+			Texture->b3Name());
+	}
+	else
 	{
 		Texture->b3Name(Name);
-		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",Texture->b3Name());
+		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",
+			Texture->b3Name());
 	}
+	return result;
 }
 
 b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */

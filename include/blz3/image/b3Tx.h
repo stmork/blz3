@@ -96,35 +96,29 @@ enum b3_tx_type
 
 enum b3_tx_filetype
 {
-	FT_ERR_UNSUPP   =  -6,			/* errors, loading textures */
-	FT_ERR_PACKING	=  -5,
-	FT_ERR_OPEN		=  -4,
-	FT_ERR_UNCOMPL	=  -3,
-	FT_ERR_HEADER	=  -2,
-	FT_ERR_MEM		=  -1,
-	FT_UNKNOWN		=   1,
-	FT_PCX4			=   2,			/* original file types */
-	FT_PCX8			=   3,
-	FT_ILBM			=   4,
-	FT_ILBM_HAM		=   5,
-	FT_ILBM_EHB		=   6,
-	FT_ILBM_24		=   7,
-	FT_RGB8			=   8,
-	FT_RGB4			=   9,
-	FT_MTV			=  10,
-	FT_YUV			=  11,
-	FT_TIFF			=  12,
-	FT_ILBM_HAM8	=  13,
-	FT_TGA          =  14,
-	FT_GIF			=  15,
-	FT_PPM6			=  16,	// old fashioned representation, now FT_PPM
-	FT_BMP			=  17,
-	FT_SGI_RLE		=  18,
-	FT_PPM			=  16,
-	FT_PGM			=  19,
-	FT_PBM			=  20,
-	FT_JPEG			=  21,
-	FT_BMF          =  22
+	FT_UNKNOWN		=   0,
+	FT_PCX4,
+	FT_PCX8,
+	FT_ILBM,
+	FT_ILBM_HAM,
+	FT_ILBM_EHB,
+	FT_ILBM_24,
+	FT_RGB8,
+	FT_RGB4,
+	FT_MTV,
+	FT_YUV,
+	FT_TIFF,
+	FT_ILBM_HAM8,
+	FT_TGA,
+	FT_GIF,
+	FT_PPM6,
+	FT_BMP,
+	FT_SGI_RLE,
+	FT_PPM,
+	FT_PGM,
+	FT_PBM,
+	FT_JPEG,
+	FT_BMF
 };
 
 enum b3_tx_threshold
@@ -205,7 +199,11 @@ typedef enum
 	B3_TX_OK    =  0,
 	B3_TX_MEMORY,
 	B3_TX_NOT_FOUND,
-	B3_TX_NOT_SAVED
+	B3_TX_NOT_SAVED,
+	B3_TX_UNSUPP,
+	B3_TX_ERR_PACKING,
+	B3_TX_UNCOMPL,
+	B3_TX_ERR_HEADER
 } b3_tx_error;
 
 class b3TxException
@@ -320,13 +318,8 @@ public:
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
-	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
-	b3_tx_type     b3ParseTexture(b3_u08 *buffer,b3_size size);
-	b3_result      b3Save       (const char *ImageName);
-	b3_result      b3LoadTIFF   (const char *ImageName);
-	b3_result      b3LoadTIFF   (const char *ImageName,
-		const b3_u08 *ImageBuffer,
-		b3_size       BufferSize);
+	b3_result      b3LoadImage(const char *ImageName);
+	b3_result      b3LoadImage(b3_u08 *buffer,b3_size size);
 
 	// b3TxScale.cc
 	void           b3TransToGrey();
@@ -335,6 +328,14 @@ public:
 
 	// b3TxDeskew.cc
 	void           b3Deskew     ();
+
+	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
+	b3_result      b3SaveTIFF (const char *ImageName);
+	b3_result      b3LoadTIFF (const char *ImageName);
+	b3_result      b3LoadTIFF (const char *ImageName,
+		const b3_u08  *ImageBuffer,
+		const b3_size  BufferSize);
+
 
 private:
 	// b3TxTurn.cc
@@ -399,37 +400,37 @@ private:
 	void           b3DeskewVGA();
 
 	// b3TxEasy.cc
-	b3_tx_type     b3ParseRAW (b3_u08 *buffer,b3_res x,b3_res y,b3_s32 type);
-	b3_tx_type     b3ParseBMP (b3_u08 *buffer);
-	b3_tx_type     b3ParseMTV (b3_u08 *buffer);
-	b3_tx_type     b3ParseBMF (b3_u08 *buffer,b3_size buffer_size);
+	b3_result      b3ParseRAW (b3_u08 *buffer,b3_res x,b3_res y,b3_s32 type);
+	b3_result      b3ParseBMP (b3_u08 *buffer);
+	b3_result      b3ParseMTV (b3_u08 *buffer);
+	b3_result      b3ParseBMF (b3_u08 *buffer,b3_size buffer_size);
 
 	// b3TxIFF.cc
-	b3_tx_type     b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size);
-	b3_tx_type     b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size);
-	b3_tx_type     b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size);
-	b3_tx_type     b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size);
-	b3_tx_type     b3EHBPalette();
+	b3_result      b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size);
+	b3_result      b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size);
+	b3_result      b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size);
+	b3_result      b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size);
+	void           b3EHBPalette();
 	void           b3ConvertILBMLine (b3_u08 *Line,b3_u08 *Interleave,b3_res xMax,b3_count Planes);
-	b3_tx_type     b3HamPalette (b3_bool HAM8);
+	void           b3HamPalette (b3_bool HAM8);
 	b3_bool        b3CalcYUVTable();
 
 	// b3TxGIF.cc
-	b3_tx_type     b3ParseGIF  (b3_u08 *buffer);
+	b3_result      b3ParseGIF  (b3_u08 *buffer);
 
 	// b3TxPCX.cc
-	b3_tx_type     b3ParsePCX4 (b3_u08 *buffer);
-	b3_tx_type     b3ParsePCX8 (b3_u08 *buffer);
+	b3_result      b3ParsePCX4 (b3_u08 *buffer);
+	b3_result      b3ParsePCX8 (b3_u08 *buffer);
 
 	// b3TxIMG.cc
-	b3_tx_type     b3ParseSGI  (b3_u08 *buffer);
+	b3_result      b3ParseSGI  (b3_u08 *buffer);
 	void           b3ParseSGI3 (HeaderSGI *HeaderSGI,b3_u08 *Data);
 
 	// b3TxTGA.cc
-	b3_tx_type     b3ParseTGA  (b3_u08 *buffer);
+	b3_result      b3ParseTGA  (b3_u08 *buffer);
 
 	// b3TxJPG.cc
-	b3_tx_type     b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size);
+	b3_result      b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size);
 };
 
 extern b3_f64        b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
@@ -553,15 +554,6 @@ public:
 };
 
 typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
-
-extern b3_u16  GetIntelShort (void *);
-extern b3_u32  GetIntelLong  (void *);
-extern b3_u16  GetMotShort   (void *);
-extern b3_u32  GetMotLong    (void *);
-extern b3_size ChangeWord    (void *);
-extern b3_size ChangeLong    (void *);
-extern b3_u16  GetShort      (void *);
-extern b3_u32  GetLong       (void *);
 
 extern void          b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr = null);
 

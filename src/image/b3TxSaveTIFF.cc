@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.4  2000/09/25 06:42:48  smork
 **	- Excessive usage of enum b3_result to prevent type conflicts.
 **	
@@ -286,7 +291,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	return B3_OK;
 }
 
-b3_result b3Tx::b3Save(const char *nameTx)
+b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 {
 	TIFF        *tiff;
 	b3_tx_error  result = B3_TX_OK;

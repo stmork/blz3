@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.4  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
-**
+**	
 **	Revision 1.3  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -117,7 +122,7 @@ public:
 	}
 };
 
-b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
+b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 {
 	b3_index       i;
 	b3_count       Colors;
@@ -153,7 +158,8 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 
 		default :
 			 // Error or end of GIF dataset */
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	// Compute image resolution
@@ -161,7 +167,8 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 	     yNewSize  = b3Endian::b3GetIntel16(&buffer[7]) - b3Endian::b3GetIntel16(&buffer[3]);
 	if (!b3AllocTx(xNewSize,yNewSize,8))
 	{
-		return type;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	out = (b3_u08 *)data;
 
@@ -207,7 +214,8 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 		sizeof(b3_u32)) * 4096);
 	if (charstack==null)
 	{
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	suffix =           &charstack[4096]; // pixel byte
 	prefix = (b3_u32 *)&charstack[8192]; // predecessor
@@ -216,7 +224,8 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 	if ((size<2) || (9<size))
 	{
 		b3Free (charstack);
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	currsize    = size + 1;
@@ -324,5 +333,5 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 
 	b3Free(charstack);
 	FileType = FT_GIF;
-	return B3_TX_VGA;
+	return B3_OK;
 }

@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.4  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.3  2001/10/13 09:56:44  sm
 **	- Minor corrections
 **	
@@ -109,7 +114,7 @@ static void JPEGterm_source (j_decompress_ptr cinfo)
 {
 }
 
-b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
 	struct jpeg_decompress_struct  cinfo;
 	struct my_error_mgr            jerr;
@@ -126,8 +131,8 @@ b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	if (setjmp(jerr.setjmp_buffer))
 	{
 		jpeg_destroy_decompress(&cinfo);
-		FileType = FT_ERR_MEM;
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	jpeg_create_decompress(&cinfo);
 
@@ -156,10 +161,10 @@ b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 		out = (b3_pkd_color *)b3Alloc(Max * sizeof(b3_pkd_color));
 		if (out == null)
 		{
-			FileType = FT_ERR_MEM;
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 		data = (b3_u08 *)out;
 
@@ -184,19 +189,19 @@ b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 		line = (b3_u08 *)b3Alloc(Max);
 		if (line == null)
 		{
-			FileType = FT_ERR_MEM;
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 
 		out = (b3_pkd_color *)b3Alloc(Max * sizeof(b3_pkd_color));
 		if (out == null)
 		{
-			FileType = FT_ERR_MEM;
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 		for (x = 0;x < 256;x++)
 		{
@@ -219,15 +224,15 @@ b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	jpeg_destroy_decompress(&cinfo);
 
 	FileType = FT_JPEG;
-	return type;
+	return B3_OK;
 }
 
 #else
 
-b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
-	return B3_TX_UNDEFINED;
+	b3FreeTx();
+	throw new b3TxException(B3_TX_UNSUPP);
 }
 
 #endif
-

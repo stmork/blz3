@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.11  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.10  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -184,6 +189,12 @@ void b3Condition::b3CheckOuterBound(
 	if (object->y2 > limit->y2) limit->y2 = object->y2;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Rectangular stencil                           **
+**                                                                      **
+*************************************************************************/
+
 b3CondRectangle::b3CondRectangle(b3_u32 class_type) : b3Condition(sizeof(b3CondRectangle), class_type)
 {
 }
@@ -284,6 +295,11 @@ b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
 	return false;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Circular stencil                              **
+**                                                                      **
+*************************************************************************/
 
 b3CondCircle::b3CondCircle(b3_u32 class_type) :
 	b3Condition(sizeof(b3CondCircle), class_type)
@@ -331,6 +347,11 @@ b3_bool b3CondCircle::b3CheckStencil(b3_polar *polar)
 	return ((x * x + y * y) < (m_Radius * m_Radius));
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Segment stencil                               **
+**                                                                      **
+*************************************************************************/
 
 b3CondSegment::b3CondSegment(b3_u32 class_type) : b3Condition(sizeof(b3CondSegment), class_type)
 {
@@ -405,6 +426,13 @@ b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for parallelogramme and            **
+**                        triangular stencil                            **
+**                                                                      **
+*************************************************************************/
+
 b3Cond2::b3Cond2(b3_size class_size,b3_u32 class_type) : b3Condition(class_size, class_type)
 {
 }
@@ -458,6 +486,11 @@ void b3Cond2::b3ComputeBound(b3CondLimit *Limit)
 	}
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Parallelogramme stencil                       **
+**                                                                      **
+*************************************************************************/
 
 b3CondPara::b3CondPara(b3_u32 class_type) : b3Cond2(sizeof(b3CondPara), class_type)
 {
@@ -486,6 +519,11 @@ b3_bool b3CondPara::b3CheckStencil(b3_polar *polar)
 	return true;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Triangular stencil                            **
+**                                                                      **
+*************************************************************************/
 
 b3CondTria::b3CondTria(b3_u32 class_type) : b3Cond2(sizeof(b3CondTria), class_type)
 {
@@ -521,6 +559,11 @@ b3_bool b3CondTria::b3CheckStencil(b3_polar *polar)
 	return true;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Stencil mapping                               **
+**                                                                      **
+*************************************************************************/
 
 b3CondTexture::b3CondTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondTexture), class_type)
 {
@@ -588,6 +631,12 @@ b3_bool b3CondTexture::b3CheckStencil(b3_polar *polar)
 
 	return m_Texture->b3IsBackground(x,y);
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Wrap around stencil mapping                   **
+**                                                                      **
+*************************************************************************/
 
 b3CondWrapTexture::b3CondWrapTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondWrapTexture), class_type)
 {
@@ -690,6 +739,12 @@ b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar *polar)
 
 	return m_Texture->b3IsBackground(x,y);
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Ellipse stencil                               **
+**                                                                      **
+*************************************************************************/
 
 b3CondEllipse::b3CondEllipse(b3_u32 class_type) : b3Condition(sizeof(b3CondEllipse), class_type)
 {

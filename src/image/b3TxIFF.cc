@@ -35,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -66,7 +71,7 @@ static b3_u08 ConvertBits[8] =
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_u08 *CharData;
 	b3_u32 *Set;
@@ -74,7 +79,6 @@ b3_tx_type b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 	b3_u32  Amount,k,Colour,Pos = 12,Max,i=0;
 
 	palette	 = null;
-	FileType = FT_RGB8;
 	while (Pos < buffer_size)
 	{
 		LongData = (b3_u32 *)&buffer[Pos];
@@ -92,8 +96,8 @@ b3_tx_type b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 				data = (b3_u08 *)b3Alloc(Max * 4);
 				if (data==null)
 				{
-					FileType = FT_ERR_MEM;
-					return B3_TX_UNDEFINED;
+					b3FreeTx();
+					throw new b3TxException(B3_TX_MEMORY);
 				}
 				Set = (b3_u32 *)data;
                 
@@ -105,7 +109,10 @@ b3_tx_type b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 					Colour += (long)CharData[0];
 					CharData++;
 					Amount  = CharData[0] & 0x7f;
-					if ((CharData[0] & 0x80L)==0) Colour |= 0xff000000;
+					if ((CharData[0] & 0x80) == 0)
+					{
+						Colour |= 0xff000000;
+					}
 					CharData++;
 
 					if (Amount == 0)
@@ -130,10 +137,12 @@ b3_tx_type b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 		Pos += (b3Endian::b3GetMot32 (&LongData[1])+8);
 		if (Pos & 1) Pos++;
 	}
-	return B3_TX_RGB8;
+	type     = B3_TX_RGB8;
+	FileType = FT_RGB8;
+	return B3_OK;
 }
 
-b3_tx_type b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_u08  *CharData;
 	b3_u32  *LongData;
@@ -159,8 +168,8 @@ b3_tx_type b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 				data = (b3_u08 *)b3Alloc(Max * 2);
 				if (data==null)
 				{
-					FileType = FT_ERR_MEM;
-					return B3_TX_UNDEFINED;
+					b3FreeTx();
+					throw new b3TxException(B3_TX_MEMORY);
 				}
 				Set = (b3_u16 *)data;
                 
@@ -193,9 +202,10 @@ b3_tx_type b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 				break;
 		}
 		Pos += (b3Endian::b3GetMot32 (&LongData[1])+8);
-		if (Pos & 1L) Pos++;
+		if (Pos & 1) Pos++;
 	}
-	return B3_TX_RGB4;
+	type = B3_TX_RGB4;
+	return B3_OK;
 }
 
 /*************************************************************************
@@ -204,17 +214,18 @@ b3_tx_type b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3EHBPalette ()
+void b3Tx::b3EHBPalette ()
 {
 	b3_u32 *OldPalette;
 	b3_u32 *NewPalette,i,Color;
 
 	FileType = FT_ILBM_EHB;
-	NewPalette = (b3_u32 *)b3Alloc(64 * sizeof(b3_u32));
+	pSize    = 64;
+	NewPalette = (b3_u32 *)b3Alloc(pSize * sizeof(b3_u32));
 	if (NewPalette==null)
 	{
-		FileType = FT_ERR_MEM;
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	OldPalette = palette;
 	for (i = 0;i < 32;i++)
@@ -226,7 +237,7 @@ b3_tx_type b3Tx::b3EHBPalette ()
 	}
 	b3Free (OldPalette);
 	palette = NewPalette;
-	return B3_TX_ILBM;
+	type    = B3_TX_ILBM;
 }
 
 void b3Tx::b3ConvertILBMLine (
@@ -256,7 +267,7 @@ void b3Tx::b3ConvertILBMLine (
 	}
 }
 
-b3_tx_type b3Tx::b3HamPalette (b3_bool HAM8)
+void b3Tx::b3HamPalette (b3_bool HAM8)
 {
 	b3_u32    *LData;
 	b3_u08    *OldData;
@@ -279,15 +290,15 @@ b3_tx_type b3Tx::b3HamPalette (b3_bool HAM8)
 	}
 	if (NewData == null)
 	{
-		FileType = FT_ERR_MEM;
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	Line    = (b3_u08 *)b3Alloc(xSize);
 	if (Line==null)
 	{
 		b3Free (NewData);
-		FileType = FT_ERR_MEM;
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	OldData = data;
 	sData   = NewData;
@@ -364,10 +375,10 @@ b3_tx_type b3Tx::b3HamPalette (b3_bool HAM8)
 	data    = (b3_u08 *)sData;
 	palette = null;
 
-	return HAM8 ? B3_TX_RGB8 : B3_TX_RGB4;
+	type = (HAM8 ? B3_TX_RGB8 : B3_TX_RGB4);
 }
 
-b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_u08  *Copy;
 	b3_u08  *CharData;
@@ -377,8 +388,8 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 	b3_u32  *LongData;
 	b3_bool  Compressed=false,Ham=false,EHB=false,Ham8=false;
 
-	palette	= null;
-	FileType	= FT_ILBM;
+	palette	 = null;
+	FileType = FT_ILBM;
 	while (Pos < buffer_size)
 	{
 		LongData  = (b3_u32 *)&buffer[Pos];
@@ -389,15 +400,17 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 				xSize	= b3Endian::b3GetMot16 (&CharData[ 8]);
 				ySize	= b3Endian::b3GetMot16 (&CharData[10]);
 				depth	= CharData[16];
-				if (depth >= 24L)
+				if (depth >= 24)
+				{
 					FileType = FT_ILBM_24;
+				}
 				switch (CharData[18])
 				{
 					case 0 : Compressed = false; break;
 					case 1 : Compressed = true;  break;
 					default :
-						FileType = FT_ERR_PACKING;
-						return B3_TX_UNDEFINED;
+						b3FreeTx();
+						throw new b3TxException(B3_TX_ERR_PACKING);
 				}
 				break;
 			case IFF_CMAP :
@@ -405,8 +418,8 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 				palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 				if (palette==null)
 				{
-					FileType = FT_ERR_MEM;
-					return B3_TX_UNDEFINED;
+					b3FreeTx();
+					throw new b3TxException(B3_TX_MEMORY);
 				}
 				Set = (b3_u32 *)palette;
 				CharData += 8;
@@ -445,8 +458,8 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 					data = (b3_u08 *)b3Alloc(Max + ySize + Max);
 					if (data==null)
 					{
-						FileType = FT_ERR_MEM;
-						return B3_TX_UNDEFINED;
+						b3FreeTx();
+						throw new b3TxException(B3_TX_MEMORY);
 					}
 
 					Copy = (b3_u08 *)data;
@@ -484,8 +497,8 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 					data = (b3_u08 *)b3Alloc(Max);
 					if (data==null)
 					{
-						FileType = FT_ERR_MEM;
-						return B3_TX_UNDEFINED;
+						b3FreeTx();
+						throw new b3TxException(B3_TX_MEMORY);
 					}
 					Copy = (b3_u08 *)data;
 					CharData += 8;
@@ -497,9 +510,16 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 		Pos += (b3Endian::b3GetMot32(LongData) + 8);
 		if (Pos & 1) Pos++;
 	}
-	if (EHB) return (b3EHBPalette ());
-	if (Ham) return (b3HamPalette (Ham8));
-	return B3_TX_ILBM;
+	if (EHB)
+	{
+		b3EHBPalette ();
+	}
+	if (Ham)
+	{
+		b3HamPalette (Ham8);
+	}
+	type = B3_TX_ILBM;
+	return B3_OK;
 }
 
 /*************************************************************************
@@ -552,7 +572,7 @@ b3_bool b3Tx::b3CalcYUVTable ()
 	return true;
 }
 
-static b3_u32 b3ShiftCount(b3_count Count)
+static inline b3_u32 b3ShiftCount(b3_count Count)
 {
 	b3_u32 Shift = 0;
 
@@ -564,7 +584,7 @@ static b3_u32 b3ShiftCount(b3_count Count)
 	return Shift;
 }
 
-b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_u08 *Y = null;
 	b3_u08 *U = null;
@@ -594,8 +614,8 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 						break;
 
 					default :
-						FileType	= FT_ERR_PACKING;
-						return B3_TX_UNDEFINED;
+						b3FreeTx();
+						throw new b3TxException(B3_TX_ERR_PACKING);
 				}
 				switch (CharData[24])
 				{
@@ -612,19 +632,19 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 					case YCHD_MODE_422 :
 					case YCHD_MODE_211 :
 						Count = 2;
-						if (xSize & 1L)
+						if (xSize & 1)
 						{
-							FileType = FT_ERR_HEADER;
-							return B3_TX_UNDEFINED;
+							b3FreeTx();
+							throw new b3TxException(B3_TX_ERR_HEADER);
 						}
 						break;
 
 					case YCHD_MODE_411 :
-						Count = 4L;
-						if (xSize & 3L)
+						Count = 4;
+						if (xSize & 3)
 						{
-							FileType = FT_ERR_HEADER;
-							return B3_TX_UNDEFINED;
+							b3FreeTx();
+							throw new b3TxException(B3_TX_ERR_HEADER);
 						}
 						break;
 
@@ -645,8 +665,8 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 				break;
 
 		}
-		Pos			+= ((b3Endian::b3GetMot32(&LongData[1])+9L) & 0xfffffffe);
-		CharData	+= ((b3Endian::b3GetMot32(&LongData[1])+9L) & 0xfffffffe);
+		Pos			+= ((b3Endian::b3GetMot32(&LongData[1]) + 9) & 0xfffffffe);
+		CharData	+= ((b3Endian::b3GetMot32(&LongData[1]) + 9) & 0xfffffffe);
 	}
 	Max = xSize * ySize;
 
@@ -654,36 +674,40 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 	{
 		if (Y == null)
 		{
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_ERR_HEADER);
 		}
 		LongData = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 		if (LongData == null)
 		{
-			FileType = FT_ERR_MEM;
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 		data = (b3_u08 *)LongData;
 
 		for (k = 0;k < Max;k++)
 		{
-			LongData[0] = (Y[0] << 16) | (Y[0] << 8) | Y[0];
 			LongData++;
 			Y++;
 		}
 	}
 	else					/* bunt */
 	{
-		if ((Y==null)||(U==null)||(V==null)) return B3_TX_UNDEFINED;
+		if ((Y==null) || (U==null) || (V==null))
+		{
+			b3FreeTx();
+			throw new b3TxException(B3_TX_ERR_HEADER);
+		}
 		if (!b3CalcYUVTable())
 		{
-			FileType = FT_ERR_MEM;
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 		LongData = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 		if (LongData==null)
 		{
-			FileType = FT_ERR_MEM;
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 		data = (b3_u08 *)LongData;
 
@@ -702,7 +726,7 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 				u = Uprop >> Shift;
 				v = Vprop >> Shift;
 				LongData[0] =
-					mult_yuv_table.MultR[y +                   mult_yuv_table.MultRV[v]] |
+					mult_yuv_table.MultR[y + mult_yuv_table.MultRV[v]] |
 					mult_yuv_table.MultG[y + mult_yuv_table.MultGU[u] + mult_yuv_table.MultGV[v]] |
 					mult_yuv_table.MultB[y + mult_yuv_table.MultBU[u]];
 
@@ -717,5 +741,5 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			Vprev  = *V++;
 		}
 	}
-	return B3_TX_RGB8;
+	return B3_OK;
 }

@@ -26,7 +26,9 @@
 class b3Vector
 {
 public:
-	static inline b3_f64 b3Normalize(b3_vector *vector)
+	static inline b3_f64 b3Normalize(
+		b3_vector *vector,
+		b3_f64     length = 1.0)
 	{
 		register b3_f64 x,y,z,denom,result = 0;
 
@@ -36,7 +38,7 @@ public:
 		denom = x * x + y * y + z * z;
 		if (denom > 0)
 		{
-			denom = 1.0 / (result = sqrt(denom));
+			denom     = length / (result = sqrt(denom));
 			vector->x = x * denom;
 			vector->y = y * denom;
 			vector->z = z * denom;
@@ -44,7 +46,9 @@ public:
 		return result;
 	}
 
-	static inline b3_f64 b3Normalize(b3_vector64 *vector)
+	static inline b3_f64 b3Normalize(
+		b3_vector64 *vector,
+		b3_f64       length = 1.0)
 	{
 		register b3_f64 x,y,z,denom,result = 0;
 
@@ -54,7 +58,7 @@ public:
 		denom = x * x + y * y + z * z;
 		if (denom > 0)
 		{
-			denom = 1.0 / (result = sqrt(denom));
+			denom     = length / (result = sqrt(denom));
 			vector->x = x * denom;
 			vector->y = y * denom;
 			vector->z = z * denom;
@@ -63,6 +67,24 @@ public:
 	}
 
 	static inline b3_vector *b3CrossProduct(b3_vector *a,b3_vector *b,b3_vector *result)
+	{
+		result->x = a->y * b->z - a->z * b->y;
+		result->y = a->z * b->x - a->x * b->z;
+		result->z = a->x * b->y - a->y * b->x;
+
+		return result;
+	}
+
+	static inline b3_vector64 *b3CrossProduct(b3_vector *a,b3_vector *b,b3_vector64 *result)
+	{
+		result->x = a->y * b->z - a->z * b->y;
+		result->y = a->z * b->x - a->x * b->z;
+		result->z = a->x * b->y - a->y * b->x;
+
+		return result;
+	}
+
+	static inline b3_vector64 *b3CrossProduct(b3_vector64 *a,b3_vector64 *b,b3_vector64 *result)
 	{
 		result->x = a->y * b->z - a->z * b->y;
 		result->y = a->z * b->x - a->x * b->z;
@@ -103,6 +125,20 @@ public:
 		y = to->y - from->y;
 		z = to->z - from->z;
 		return sqrt(x * x + y * y + z * z);
+	}
+
+	static inline void b3Scale(b3_vector *vector,b3_f64 factor)
+	{
+		vector->x *= factor;
+		vector->y *= factor;
+		vector->z *= factor;
+	}
+
+	static inline void b3Scale(b3_vector64 *vector,b3_f64 factor)
+	{
+		vector->x *= factor;
+		vector->y *= factor;
+		vector->z *= factor;
 	}
 };
 

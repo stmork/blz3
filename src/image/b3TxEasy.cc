@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.5  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.4  2001/10/13 15:48:53  sm
 **	- Minor image loading corrections
 **	
@@ -58,7 +63,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseRAW (
+b3_result b3Tx::b3ParseRAW (
 	b3_u08 *buffer,
 	b3_res  x,
 	b3_res  y,
@@ -88,9 +93,10 @@ b3_tx_type b3Tx::b3ParseRAW (
 			}
 			else
 			{
-				FileType = FT_ERR_MEM;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_MEMORY);
 			}
-			return type;
+			break;
 
 		case 5 : /* grey */
 			if (b3AllocTx(x,y,8))
@@ -99,9 +105,10 @@ b3_tx_type b3Tx::b3ParseRAW (
 			}
 			else
 			{
-				FileType = FT_ERR_MEM;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_MEMORY);
 			}
-			return type;
+			break;
 
 		case 6 : /* 24 Bit */
 			if(b3AllocTx(x,y,24))
@@ -117,13 +124,16 @@ b3_tx_type b3Tx::b3ParseRAW (
 			}
 			else
 			{
-				FileType = FT_ERR_MEM;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_MEMORY);
 			}
-			return type;
+			break;
 
 		default :
-			return B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_UNSUPP);
 	}
+	return B3_OK;
 }
 
 /*************************************************************************
@@ -132,7 +142,7 @@ b3_tx_type b3Tx::b3ParseRAW (
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
+b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 {
 	b3_pkd_color *Long;
 	b3_u08       *cPtr;
@@ -143,8 +153,8 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 
 	if (b3Endian::b3GetIntel32(&buffer[30]) != 0)
 	{
-		FileType = FT_ERR_PACKING;
-		return B3_TX_UNDEFINED;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_ERR_PACKING);
 	}
 	xNewSize  = b3Endian::b3GetIntel16(&buffer[18]);
 	yNewSize  = b3Endian::b3GetIntel16(&buffer[22]);
@@ -157,8 +167,8 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 
 	if (!b3AllocTx(xNewSize,yNewSize,numPlanes))
 	{
-		FileType = FT_ERR_MEM;
-		return type;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	FileType = FT_BMP;
 
@@ -203,7 +213,7 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 				}
 				cPtr -= offset;
 			}
-			return type;
+			break;
 
 		case  4 :
 			offset = (xSize + 7) >> 3;
@@ -236,7 +246,7 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 					buffer++;
 				}
 			}
-			return type;
+			break;
 
 		case  8 :
 			cPtr = data + dSize;
@@ -246,7 +256,7 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 				memcpy (cPtr,buffer,xSize);
 				buffer += xSize;
 			}
-			return type;
+			break;
 
 		case 24 :
 			offset = xSize & 3;
@@ -265,11 +275,14 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 				Long   -= xSize;
 				buffer += offset;
 			}
-			return type;
+			break;
+
+		default:
+			b3FreeTx();
+			throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
-	b3PrintF (B3LOG_FULL,"that's it\n");
-	return type;
+	return B3_OK;
 }
 
 /*************************************************************************
@@ -278,7 +291,7 @@ b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 **                                                                      **
 *************************************************************************/
 
-b3_tx_type b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
+b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3_pkd_color *pixel;
 	b3_u08       *gray;
@@ -305,7 +318,8 @@ b3_tx_type b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 			}
 			else
 			{
-				FileType = FT_ERR_MEM;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
 
@@ -329,9 +343,10 @@ b3_tx_type b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 			}
 			else
 			{
-				FileType = FT_ERR_MEM;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
 	}
-	return type;
+	return B3_OK;
 }

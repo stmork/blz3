@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.3  2001/10/13 15:48:53  sm
 **	- Minor image loading corrections
-**
+**	
 **	Revision 1.2  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
 **	
@@ -51,7 +56,7 @@
 **                                                                      **
 *************************************************************************/
 
-static void UnpackSGI (
+static inline void UnpackSGI (
 	b3_u08    *buffer,
 	void      *inPtr,
 	b3_count   count,
@@ -129,7 +134,7 @@ static void UnpackSGI (
 	}
 }
 
-static void ConvertSGILine(
+static inline void ConvertSGILine(
 	b3_u16    *buffer,
 	b3_offset  offset,
 	b3_size    size,
@@ -145,7 +150,7 @@ static void ConvertSGILine(
 	}
 }
 
-void b3Tx::b3ParseSGI3(
+inline void b3Tx::b3ParseSGI3(
 	HeaderSGI *HeaderSGI,
 	b3_u08    *buffer)
 {
@@ -165,8 +170,8 @@ void b3Tx::b3ParseSGI3(
 	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
 	if (line == null)
 	{
-		type = B3_TX_UNDEFINED;
-		return;
+		b3FreeTx();
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 
@@ -235,13 +240,14 @@ void b3Tx::b3ParseSGI3(
 			break;
 
 		default :
-			type = B3_TX_UNDEFINED;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_UNSUPP);
 			break;
 	}
 	b3Free(line);
 }
 
-b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
+b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 {
 	HeaderSGI *HeaderSGI;
 	b3_bool    success = false;
@@ -281,7 +287,8 @@ b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 					break;
 
 				default :
-					FileType = FT_ERR_UNSUPP;
+					b3FreeTx();
+					throw new b3TxException(B3_TX_UNSUPP);
 					break;
 			}
 			break;
@@ -301,7 +308,8 @@ b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 			break;
 
 		default :
-			FileType = FT_ERR_UNSUPP;
+			b3FreeTx();
+			throw new b3TxException(B3_TX_UNSUPP);
 			break;
 	}
 	if (success)
@@ -310,16 +318,14 @@ b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 		switch (HeaderSGI->dim)
 		{
 			case 3 :
-				FileType = FT_ERR_MEM; /* default */
 				b3ParseSGI3(HeaderSGI,buffer);
 				break;
 
 			case 1 :
 			case 2 :
 			default :
-				FileType = FT_ERR_PACKING;
-				type     = B3_TX_UNDEFINED;
-				break;
+				b3FreeTx();
+				throw new b3TxException(B3_TX_ERR_PACKING);
 		}
 
 		// Success
@@ -330,7 +336,8 @@ b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 		else
 		{
 			b3FreeTx();
+			throw new b3TxException(B3_TX_MEMORY);
 		}
 	}
-	return type;
+	return B3_OK;
 }

@@ -24,6 +24,7 @@
 *************************************************************************/
 
 #include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Endian.h"
 #include "blz3/system/b3Log.h"
 
 /*************************************************************************
@@ -34,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -106,45 +112,45 @@ static void ChangeTag (
 	register long  *Long;
 	register long   i,TagSize;
 
-	ChangeWord	(&DataTag->Code);
-	ChangeWord	(&DataTag->Type);
-	ChangeLong	(&DataTag->Data[0]);
-	TagSize = GetLong (&DataTag->Data[0]);
+	b3Endian::b3ChangeEndian16	(&DataTag->Code);
+	b3Endian::b3ChangeEndian16	(&DataTag->Type);
+	b3Endian::b3ChangeEndian32	(&DataTag->Data[0]);
+	TagSize = b3Endian::b3Get32 (&DataTag->Data[0]);
 	switch (DataTag->Type)
 	{
 		case MODE_BYTE :					/* Char */
-			if (TagSize > GetTIFFSize (DataTag)) ChangeLong (&DataTag->Data[1]);
+			if (TagSize > GetTIFFSize (DataTag)) b3Endian::b3ChangeEndian32 (&DataTag->Data[1]);
 			break;
 
 		case MODE_SHORT :					/* Short */
 			if (TagSize > GetTIFFSize (DataTag))
 			{
-				ChangeLong (&DataTag->Data[1]);
+				b3Endian::b3ChangeEndian32 (&DataTag->Data[1]);
 				TIFF += DataTag->Data[1];
 				Short = (short *)TIFF;
 				for (i=0L;i<TagSize;i++)
 				{
-					ChangeWord (Short);
+					b3Endian::b3ChangeEndian16 (Short);
 					Short++;
 				}
 			}
 			else
 			{
 				Short = (short *)&DataTag->Data[1];
-				ChangeWord (&Short[0]);
-				ChangeWord (&Short[1]);
+				b3Endian::b3ChangeEndian16 (&Short[0]);
+				b3Endian::b3ChangeEndian16 (&Short[1]);
 			}
 			break;
 
 		case MODE_LONG :					/* Long */
-			ChangeLong (&DataTag->Data[1]);
+			b3Endian::b3ChangeEndian32 (&DataTag->Data[1]);
 			if (TagSize > GetTIFFSize (DataTag))
 			{
 				TIFF += DataTag->Data[1];
 				Long = (long *)TIFF;
 				for (i=0;i<TagSize;i++)
 				{
-					ChangeLong (Long);
+					b3Endian::b3ChangeEndian32 (Long);
 					(long *)Long++;
 				}
 			}
@@ -152,7 +158,7 @@ static void ChangeTag (
 
 		case MODE_ASCII :					/* ASCII */
 		case MODE_RATIONAL :				/* Fractional */
-			ChangeLong (&DataTag->Data[1]);
+			b3Endian::b3ChangeEndian32 (&DataTag->Data[1]);
 			break;
 	}
 }
@@ -164,16 +170,16 @@ void ChangeTIFF (struct HeaderTIFF *TIFF)
 	         b3_u16 *Shorts;
 	         unsigned long  *Longs;
 
-	ChangeWord (&TIFF->VersionTIFF);
-	ChangeLong (&TIFF->FirstTag);
+	b3Endian::b3ChangeEndian16 (&TIFF->VersionTIFF);
+	b3Endian::b3ChangeEndian32 (&TIFF->FirstTag);
 	offset = TIFF->FirstTag;
 	while (offset != 0)
 	{
 		Data   = (b3_u08 *)TIFF;
 		Data  += offset;
-		ChangeWord (Data);
+		b3Endian::b3ChangeEndian16 (Data);
 		Shorts = (b3_u16 *)Data;
-		Tags   = GetShort (Shorts);
+		Tags   = b3Endian::b3Get16 (Shorts);
 		Data  += 2;
 		for (i = 0;i<Tags;i++)
 		{
@@ -181,8 +187,8 @@ void ChangeTIFF (struct HeaderTIFF *TIFF)
 			Data += sizeof(struct TagTIFF);
 		}
 		Longs = (unsigned long *)Data;
-		ChangeLong (Longs);
-		offset = GetLong (Longs);
+		b3Endian::b3ChangeEndian32 (Longs);
+		offset = b3Endian::b3Get32 (Longs);
 	}
 }
 
@@ -200,39 +206,39 @@ static long GetTIFFValue (
 	{
 		case MODE_BYTE :					/* char, ASCII */
 		case MODE_ASCII :
-			if ((b3_s32)GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)b3Endian::b3Get32 (&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
-				TIFF += GetLong (&DataTag->Data[1]);
+				TIFF += b3Endian::b3Get32 (&DataTag->Data[1]);
 				Char  = TIFF;
 			}
 			else Char = (b3_u08 *)&DataTag->Data[1];
 			Char += Index;
 			return (Char[0]);
 		case MODE_SHORT :					/* short */
-			if ((b3_s32)GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)b3Endian::b3Get32 (&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
-				TIFF += GetLong (&DataTag->Data[1]);
+				TIFF += b3Endian::b3Get32 (&DataTag->Data[1]);
 				Short = (b3_u16 *)TIFF;
 			}
 			else Short = (b3_u16 *)&DataTag->Data[1];
 			Short += Index;
-			return (GetShort(Short));
+			return (b3Endian::b3Get16(Short));
 		case MODE_LONG :					/* long */
-			if ((b3_s32)GetLong(&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)b3Endian::b3Get32(&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
-				TIFF += GetLong (&DataTag->Data[1]);
+				TIFF += b3Endian::b3Get32 (&DataTag->Data[1]);
 				Long  = (b3_u32 *)TIFF;
 			}
 			else Long = (b3_u32 *)&DataTag->Data[1];
 			Long += Index;
-			return (GetLong(Long));
+			return (b3Endian::b3Get32(Long));
 		case MODE_RATIONAL :
-			TIFF += GetLong (&DataTag->Data[1]);
+			TIFF += b3Endian::b3Get32 (&DataTag->Data[1]);
 			Long  = (b3_u32 *)TIFF;
 			Long += (Index * 2);
-			value = GetLong(Long);
+			value = b3Endian::b3Get32(Long);
 			Long++;
-			return value / GetLong(Long);
+			return value / b3Endian::b3Get32(Long);
 			break;
 	}
 	return (0L);
@@ -518,7 +524,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 	ptr      = null;
 
 	tag  = *ThisTag;
-	size = GetLong (&ThisTag->Data[0]) * tag_size;
+	size = b3Endian::b3Get32 (&ThisTag->Data[0]) * tag_size;
 	b3LogTIFF ("%4x %4x %08lx %08lx\n",
 		tag.Code & 0xffffL,
 		tag.Type & 0xffffL,
@@ -527,12 +533,12 @@ b3TIFF_Entry::b3TIFF_Entry(
 
 	if (tag_size > 0)
 	{
-		long tag_num  = GetLong(&tag.Data[0]);
+		long tag_num  = b3Endian::b3Get32(&tag.Data[0]);
 		long tag_size = GetTIFFSize(&tag);
 
 		if (tag_num > tag_size)
 		{
-			buffer = GetLong (&ThisTag->Data[1]) + TIFF;
+			buffer = b3Endian::b3Get32 (&ThisTag->Data[1]) + TIFF;
 //			b3LogTIFF ("### %ld - %ld (%lx)###\n",TIFF,buffer,(long)buffer - (long)TIFF);
 		}
 	}
@@ -540,7 +546,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 	// getting strip offsets
 	if (ThisTag->Code == TIFF_STRIPS)
 	{
-		num = GetLong (&ThisTag->Data[0]);
+		num = b3Endian::b3Get32 (&ThisTag->Data[0]);
 		tag.Type = MODE_LONG;
 		if (num > 1)
 		{
@@ -583,7 +589,7 @@ b3TIFF_Entry::b3TIFF_Entry(
 	// getting strip length
 	if (ThisTag->Code == TIFF_STRIPBYTES)
 	{
-		num      = GetLong (&ThisTag->Data[0]);
+		num      = b3Endian::b3Get32 (&ThisTag->Data[0]);
 		tag.Type = MODE_LONG;
 
 		// Get strips itself
@@ -825,7 +831,7 @@ b3TIFF::b3TIFF(struct HeaderTIFF *TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF),CLASS_TI
 		Data   = (b3_u08 *)TIFF;
 		Data  += offset;
 		Shorts = (b3_u16 *)Data;
-		Tags   = GetShort (Shorts);
+		Tags   = b3Endian::b3Get16 (Shorts);
 		Data  += 2;
 
 		// Allocate b3TIFF_Dir class
@@ -845,7 +851,7 @@ b3TIFF::b3TIFF(struct HeaderTIFF *TIFF) : b3Link<b3TIFF>(sizeof(b3TIFF),CLASS_TI
 		dirs.b3Append (dirTIFF);
 
 		Data   += (sizeof(struct TagTIFF) * Tags);
-		offset  = GetLong (Data);
+		offset  = b3Endian::b3Get32 (Data);
 	}
 }
 
@@ -952,8 +958,8 @@ static b3_bool GetIFW (
 	         time_t  tPoint;
 	         char    text[12];
 
-	size  = GetLong (&DataTag->Data[0]);
-	Char += GetLong (&DataTag->Data[1]);
+	size  = b3Endian::b3Get32 (&DataTag->Data[0]);
+	Char += b3Endian::b3Get32 (&DataTag->Data[1]);
 	value = GetIntelLong (&Char[4]);
 
 	b3LogTIFF ("Imaging for Windows - additional tags\n");
@@ -1098,7 +1104,7 @@ static long WriteIFW (
 	long  count,size;
 
 	count = out->b3Write (tag,sizeof(struct TagTIFF));
-	size  = GetLong (&tag->Data[0]);
+	size  = b3Endian::b3Get32 (&tag->Data[0]);
 	if (size > GetTIFFSize (tag))
 	{
 		data  += tag->Data[1];
@@ -1307,7 +1313,7 @@ long b3Write (
 #ifdef USE_TAF
 		len = TAF_MAGIC_LEN(buffer_taf) + sizeof(long);
 		buffer_taf += len;
-		while ((code = GetLong(buffer_taf)) != TAF_END)
+		while ((code = b3Endian::b3Get32(buffer_taf)) != TAF_END)
 		{
 				// select new dir entry?
 			if (code == TAF_SEPARATOR)
@@ -1411,7 +1417,7 @@ static b3_bool GetTIFFPalette (
 	register unsigned long *Palette;
 	register long           Colors,i,Index = 0;
 
-	Colors  = GetLong (&ColorTag->Data[0]) / 3;
+	Colors  = b3Endian::b3Get32 (&ColorTag->Data[0]) / 3;
 	Palette = Texture->Palette = (unsigned long *)AllocTextureMem (Texture,Colors*4);
 	if (Palette==null)
 	{
@@ -1463,7 +1469,7 @@ static long UnCodeTIFF (
 		return (0L);
 	}
 	Texture->Data = Data;
-	OffsetSize    = GetLong (&OffsetTag->Data[0]);
+	OffsetSize    = b3Endian::b3Get32 (&OffsetTag->Data[0]);
 
 	switch (PixelSamples)
 	{
@@ -1589,7 +1595,7 @@ long ParseTIFF (
 		Data   = (b3_u08 *)TIFF;
 		Data  += offset;
 		Shorts = (b3_u16 *)Data;
-		Tags   = GetShort (Shorts);
+		Tags   = b3Endian::b3Get16 (Shorts);
 		Data  += 2;
 
 		b3LogTIFF ("%ld Tags at $%lx\n",Tags,Shorts);
@@ -1619,7 +1625,7 @@ long ParseTIFF (
 			Data += sizeof(struct TagTIFF);
 		}
 
-		offset = GetLong (Data);
+		offset = b3Endian::b3Get32 (Data);
 	}
 	return 0;
 }

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2001/10/25 17:41:32  sm
+**      - Documenting stencils
+**      - Cleaning up image parsing routines with using exceptions.
+**      - Added bump mapping
+**
 **      Revision 1.26  2001/10/20 16:14:59  sm
 **      - Some runtime environment cleanups. The CPU count is determined
 **        only once.
@@ -269,15 +274,37 @@ b3_bool b3Shape::b3Prepare()
 
 void b3Shape::b3BumpNormal(b3_ray *ray)
 {
-	b3Item *item;
-	b3Bump *bump;
-	b3_f64  denom;
+	b3Item  *item;
+	b3Bump  *bump;
+	b3_f64   denom;
+	b3_bool  deriv_computed = false;
+	b3_bool  deriv_ok       = false;
 
 	b3Normal(ray);
 	B3_FOR_BASE(b3GetBumpHead(),item)
 	{
 		bump = (b3Bump *)item;
-		bump->b3BumpNormal(ray);
+		if (bump->b3NeedDeriv())
+		{
+			if (!deriv_computed)
+			{
+				deriv_ok       = b3NormalDeriv(ray);
+				deriv_computed = true;
+				if (deriv_ok)
+				{
+					b3Vector::b3Normalize(&ray->xDeriv);
+					b3Vector::b3Normalize(&ray->yDeriv);
+				}
+			}
+			if (deriv_ok)
+			{
+				bump->b3BumpNormal(ray);
+			}
+		}
+		else
+		{
+			bump->b3BumpNormal(ray);
+		}
 	}
 
 	denom =

@@ -64,10 +64,14 @@ struct b3_polar
 	b3_index  normal_index;
 };
 
+class b3Shape;
+
 struct b3_ray : public b3_line64
 {
-	b3_vector64 normal;
 	b3_vector64 ipoint;
+	b3_vector64 normal;
+	b3_vector64 xDeriv;
+	b3_vector64 yDeriv;
 	b3_polar    polar;
 	b3_f64      Q;
 	b3_bool     inside;
@@ -353,7 +357,11 @@ public:
 	B3_ITEM_INIT(b3Bump);
 	B3_ITEM_LOAD(b3Bump);
 
-	virtual void b3BumpNormal(b3_ray *ray);
+	virtual        void    b3BumpNormal(b3_ray *ray);
+	virtual inline b3_bool b3NeedDeriv()
+	{
+		return false;
+	}
 };
 
 // BUMP_NOISE
@@ -397,7 +405,11 @@ public:
 	B3_ITEM_INIT(b3BumpTexture);
 	B3_ITEM_LOAD(b3BumpTexture);
 
-	void b3BumpNormal(b3_ray *ray);
+	void    b3BumpNormal(b3_ray *ray);
+	b3_bool b3NeedDeriv();
+
+private:
+	b3_bool b3GetNormalDeriv(b3_f64 lx,b3_f64 ly,b3_vector *deriv);
 };
 
 // BUMP_WATER
@@ -412,7 +424,7 @@ public:
 	B3_ITEM_INIT(b3BumpWater);
 	B3_ITEM_LOAD(b3BumpWater);
 
-	void b3BumpNormal(b3_ray *ray);
+	void    b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_WAVE
@@ -849,6 +861,11 @@ public:
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation);
 	virtual b3_bool     b3Prepare();
+
+	virtual inline b3_bool b3NormalDeriv(b3_ray *ray)
+	{
+		return false;
+	}
 };
 
 class b3RenderShape : public b3Shape
@@ -932,6 +949,9 @@ protected:
 	b3_f64            m_Denom;            // denominator of lin. system
 	b3_f64            m_DirLen[3];        // length of direction vectors
 
+public:
+	b3_bool b3NormalDeriv(b3_ray *ray);
+
 protected:
 	b3_bool b3Prepare();
 	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
@@ -979,6 +999,7 @@ public:
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 	void    b3Normal(b3_ray *ray);
+	b3_bool b3NormalDeriv(b3_ray *ray);
 };
 
 class b3Area : public b3Shape2
@@ -1173,6 +1194,7 @@ public:
 	               ~b3TriangleShape();
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
+	        b3_bool b3NormalDeriv(b3_ray *ray);
 	virtual b3_bool b3Prepare();
 	virtual void    b3Transform(b3_matrix *transformation);
 

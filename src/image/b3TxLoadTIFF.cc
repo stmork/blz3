@@ -44,6 +44,11 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/25 17:41:32  sm
+**	- Documenting stencils
+**	- Cleaning up image parsing routines with using exceptions.
+**	- Added bump mapping
+**
 **	Revision 1.5  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -53,7 +58,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.4  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
 **	
@@ -515,10 +520,7 @@ b3_result b3Tx::b3LoadTIFF(
 
 	if (type == B3_TX_UNDEFINED)
 	{
-		b3Free (palette);
-		b3Free (data);
-		palette  = null;
-		data     = null;
+		b3FreeTx();
 		throw new b3TxException(B3_TX_NOT_FOUND);
 	}
 
