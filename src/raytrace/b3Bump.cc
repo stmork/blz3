@@ -1,4 +1,4 @@
-/*
+	/*
 **
 **      $Filename:      b3Bump.cc $
 **      $Release:       Dortmund 2001 $
@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/04/08 09:57:20  sm
+**	- Added bump wood.
+**
 **	Revision 1.15  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.14  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -623,6 +626,106 @@ void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
 		ray->normal.z * ray->normal.z;
 	if (Denom == 0) Denom = 1;
 	if (Denom != 1) Denom = 1 / sqrt(Denom);
+
+	ray->normal.x = ray->normal.x * Denom + n.x * r;
+	ray->normal.y = ray->normal.y * Denom + n.y * r;
+	ray->normal.z = ray->normal.z * Denom + n.z * r;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Wood bump                                     **
+**                                                                      **
+*************************************************************************/
+
+b3BumpWood::b3BumpWood(b3_u32 class_type) : b3Bump(sizeof(b3BumpWood),class_type)
+{
+	m_Flags = 0;
+	m_Amplitude = 0.3f;
+	b3InitWood();
+}
+
+b3BumpWood::b3BumpWood(b3_u32 *src) : b3Bump(src)
+{
+	m_Flags     = b3InitInt();
+	b3InitVector(&m_Scale);
+	m_Amplitude              = b3InitFloat();
+	m_yRot                   = b3InitFloat();
+	m_zRot                   = b3InitFloat();
+	m_RingSpacing            = b3InitFloat();
+	m_RingFrequency          = b3InitFloat();
+	m_RingNoise              = b3InitFloat();
+	m_RingNoiseFrequency     = b3InitFloat();
+	m_TrunkWobble            = b3InitFloat();
+	m_TrunkWobbleFrequency   = b3InitFloat();
+	m_AngularWobble          = b3InitFloat();
+	m_AngularWobbleFrequency = b3InitFloat();
+	m_GrainFrequency         = b3InitFloat();
+	m_Grainy                 = b3InitFloat();
+	m_Ringy                  = b3InitFloat();
+}
+
+b3_bool b3BumpWood::b3Prepare()
+{
+	b3PrepareWood();
+	return true;
+}
+
+void b3BumpWood::b3Write()
+{
+	b3StoreInt(m_Flags);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Amplitude);
+	b3StoreFloat(m_yRot);
+	b3StoreFloat(m_zRot);
+	b3StoreFloat(m_RingSpacing);
+	b3StoreFloat(m_RingFrequency);
+	b3StoreFloat(m_RingNoise);
+	b3StoreFloat(m_RingNoiseFrequency);
+	b3StoreFloat(m_TrunkWobble);
+	b3StoreFloat(m_TrunkWobbleFrequency);
+	b3StoreFloat(m_AngularWobble);
+	b3StoreFloat(m_AngularWobbleFrequency);
+	b3StoreFloat(m_GrainFrequency);
+	b3StoreFloat(m_Grainy);
+	b3StoreFloat(m_Ringy);
+}
+
+void b3BumpWood::b3BumpNormal(b3_ray *ray)
+{
+	b3_vector point,ox,oy,n;
+	b3_f64    Denom,r,wood;
+
+	point.x = ray->polar.object_polar.x;
+	point.y = ray->polar.object_polar.y;
+	point.z = 0;
+
+	wood = b3Wood::b3ComputeWood(&point);
+	ox.x = 0.125;
+	ox.y = 0;
+	ox.z = wood;
+	oy.x = 0;
+	oy.y = 0.125;
+	oy.z = wood;
+
+	point.x += ox.x;
+	ox.z    -= b3Wood::b3ComputeWood (&point);
+	point.x -= ox.x;
+
+	point.y += oy.y;
+	oy.z    -= b3Wood::b3ComputeWood (&point);
+
+	r   = m_Amplitude;
+	n.x = ox.y * oy.z - ox.z - oy.y;
+	n.y = ox.z * oy.x - ox.x - oy.z;
+	n.z = ox.x * oy.y - ox.y - oy.x;
+
+	Denom =
+		ray->normal.x * ray->normal.x +
+		ray->normal.y * ray->normal.y +
+		ray->normal.z * ray->normal.z;
+	if (Denom == 0) Denom = 1;
+	if (Denom != 1) Denom = 1.0 / sqrt(Denom);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;

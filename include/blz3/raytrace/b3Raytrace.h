@@ -423,6 +423,7 @@ public:
 #define TYPE_WAVE           0x00000005
 #define TYPE_GLOSSY         0x00000006
 #define TYPE_GROOVE         0x00000007
+#define TYPE_BUMPWOOD       0x00000008
 #define BUMP_NOISE          (CLASS_BUMP|TYPE_NOISE)
 #define BUMP_MARBLE         (CLASS_BUMP|TYPE_MARBLE)
 #define BUMP_TEXTURE        (CLASS_BUMP|TYPE_TEXTURE)
@@ -430,6 +431,7 @@ public:
 #define BUMP_WAVE           (CLASS_BUMP|TYPE_WAVE)
 #define BUMP_GLOSSY         (CLASS_BUMP|TYPE_GLOSSY)
 #define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
+#define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMPWOOD);
 
 class B3_PLUGIN b3Bump : public b3Item
 {
@@ -504,6 +506,7 @@ private:
 // BUMP_WATER
 class B3_PLUGIN b3BumpWater : public b3Bump
 {
+public:
 	b3_s32      m_ScaleFlag;           // use BBox coords or direct coord
 	b3_vector   m_ScaleIPoint;         // intersection point scalar
 	b3_f32      m_ScaleRad;            // radius scalar
@@ -520,6 +523,7 @@ public:
 // BUMP_WAVE
 class B3_PLUGIN b3BumpWave : public b3Bump
 {
+public:
 	b3_s32      m_Flags;               // use BBox coords or direct coord
 	b3_vector   m_Scale;               // point scalar
 	b3_f32      m_Amplitude;           // amplitude
@@ -535,6 +539,7 @@ public:
 // BUMP_GROOVE
 class B3_PLUGIN b3BumpGroove : public b3Bump
 {
+public:
 	b3_s32      m_Flags;               // use BBox coords or direct coord
 	b3_vector   m_Scale;               // point scalar
 	b3_f32      m_Amplitude;           // amplitude
@@ -550,6 +555,7 @@ public:
 // BUMP_GLOSSY */
 class B3_PLUGIN b3BumpGlossy : public b3Bump
 {
+public:
 	b3_s32      m_Flags;
 	b3_f32      m_Intensity;
 
@@ -559,6 +565,21 @@ public:
 
 	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
+};
+
+// BUMP_WOOD
+class B3_PLUGIN b3BumpWood : public b3Bump, public b3Wood
+{
+	b3_s32      m_Flags;               // use BBox coords or direct coord
+	b3_f32      m_Amplitude;           // amplitude
+
+public:
+	B3_ITEM_INIT(b3BumpWood);
+	B3_ITEM_LOAD(b3BumpWood);
+
+	b3_bool b3Prepare();
+	void    b3Write();
+	void    b3BumpNormal(b3_ray *ray);
 };
 
 
