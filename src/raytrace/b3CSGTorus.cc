@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/02/19 16:26:49  sm
+**      - Further CSG interval computing cleanup done.
+**
 **      Revision 1.14  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -254,4 +257,9 @@ void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	polar->polar.x = b3RelAngleOfScalars(aQuad,bQuad);
 	polar->polar.y = b3RelAngleOfScalars (val,polar->object_polar.z);
 	polar->polar.z = 0;
+}
+
+b3_count b3CSGTorus::b3GetMaxIntersections()
+{
+	return 4;
 }

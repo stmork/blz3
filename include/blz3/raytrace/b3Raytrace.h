@@ -1384,6 +1384,9 @@ public:
 
 class b3CSGShape;
 
+#define B3_MAX_CSG_SHAPES_PER_BBOX         80
+#define B3_MAX_CSG_INTERSECTIONS_PER_BBOX 240
+
 enum b3_csg_operation
 {
 	B3_CSG_UNION     = MODE_OR,
@@ -1411,17 +1414,14 @@ struct b3_csg_point
 
 
 // interval of intersection points
-struct b3_csg_interval
+template<int count> struct b3_csg_intervals
 {
 	b3_count      m_Count;
-	b3_csg_point  m_x[4];
-	b3_line64    *m_BTLine;
+	b3_csg_point  m_x[count];
 };
 
-struct b3_csg_tree
-{
-	b3_csg_interval *local,*ThisBox1,*ThisBox2;
-};
+typedef b3_csg_intervals<4>                                 b3_shape_intervals;
+typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 
 class b3CSGShape : public b3ShapeRenderObject
 {
@@ -1439,9 +1439,10 @@ public:
 	B3_ITEM_LOAD(b3CSGShape);
 
 public:
-	virtual b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
-	        void     b3Operate(b3_csg_tree *intervals);
+	virtual b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
+	        void     b3Operate(b3_shape_intervals *local,b3_bbox_intervals *list,b3_bbox_intervals *result);
 	virtual void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	virtual b3_count b3GetMaxIntersections();
 };
 
 // CSG_SPHERE
@@ -1461,8 +1462,9 @@ public:
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	b3_count b3GetMaxIntersections();
 	void     b3Normal(b3_ray *ray);
 	b3_bool  b3Prepare();
 	void     b3Transform(b3_matrix *transformation);
@@ -1478,9 +1480,10 @@ public:
 	B3_ITEM_INIT(b3CSGShape3);
 	B3_ITEM_LOAD(b3CSGShape3);
 
-	void    b3StoreShape();
-	b3_bool b3Prepare();
-	void    b3Transform(b3_matrix *transformation);
+	void     b3StoreShape();
+	b3_bool  b3Prepare();
+	void     b3Transform(b3_matrix *transformation);
+	b3_count b3GetMaxIntersections();
 };
 
 class b3CSGCylinder : public b3CSGShape3
@@ -1494,7 +1497,7 @@ public:
 	void     b3AllocVertices(b3RenderContext *context);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
 };
@@ -1510,7 +1513,7 @@ public:
 	void     b3AllocVertices(b3RenderContext *context);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
 };
@@ -1525,7 +1528,7 @@ public:
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
 };
@@ -1545,7 +1548,7 @@ public:
 	void     b3FreeVertices();
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
 };
@@ -1564,8 +1567,9 @@ public:
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
-	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	b3_count b3GetMaxIntersections();
 	void     b3Normal(b3_ray *ray);
 
 	b3_bool  b3Prepare();
@@ -1591,6 +1595,9 @@ class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
 	b3_u32           m_Type;               // texture type
+	b3_count         m_ShapeCount;
+	b3_count         m_CSGIntersectionCount;
+
 public:
 	b3_vector        m_DimBase;
 	b3_vector        m_DimSize;

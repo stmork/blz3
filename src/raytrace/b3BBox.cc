@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2002/02/19 16:26:49  sm
+**	- Further CSG interval computing cleanup done.
+**
 **	Revision 1.45  2002/02/18 17:50:31  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.44  2002/02/17 21:25:06  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -280,6 +283,9 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 	m_DimSize.z  = 0;
 	m_BoxName[0] = 0;
 	m_BoxURL[0]  = 0;
+
+	m_CSGIntersectionCount = 0;
+	m_ShapeCount           = 0;
 }
 
 b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
@@ -303,6 +309,9 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 		b3InitString(m_BoxName,B3_BOXSTRINGLEN);
 		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
 	}
+
+	m_CSGIntersectionCount = 0;
+	m_ShapeCount           = 0;
 }
 
 void b3BBox::b3Write()
@@ -329,9 +338,10 @@ b3Base<b3Item> *b3BBox::b3GetBBoxHead()
 
 b3_bool b3BBox::b3Prepare()
 {
-	b3Item  *item;
-	b3Shape *shape;
-	b3BBox  *bbox;
+	b3Item     *item;
+	b3Shape    *shape;
+	b3CSGShape *csgShape;
+	b3BBox     *bbox;
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
@@ -342,14 +352,41 @@ b3_bool b3BBox::b3Prepare()
 		}
 	}
 
+	m_ShapeCount = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		if (!shape->b3Prepare())
 		{
+			b3PrintF(B3LOG_NORMAL,
+				"Shape not initialized [%s].\n",
+				b3GetName());
 			return false;
 		}
+
+		m_ShapeCount++;
 	}
+
+	m_CSGIntersectionCount = 0;
+	if (b3GetShapeHead()->b3GetClass() == CLASS_CSG)
+	{
+		B3_FOR_BASE(b3GetShapeHead(),item)
+		{
+			csgShape = (b3CSGShape *)item;
+			m_CSGIntersectionCount += csgShape->b3GetMaxIntersections();
+		}
+		if ((m_CSGIntersectionCount >= B3_MAX_CSG_INTERSECTIONS_PER_BBOX) ||
+		    (m_ShapeCount >= B3_MAX_CSG_SHAPES_PER_BBOX))
+		{
+			b3PrintF(B3LOG_NORMAL,
+				"Not enough static memory for CSG computation [%s].\n",
+				b3GetName());
+			b3PrintF(B3LOG_NORMAL,
+				"Found %d shapes with %d max. possible intersections.\n",
+				m_ShapeCount,m_CSGIntersectionCount);
+    		return false;
+    	}
+    }
 
 	return true;
 }

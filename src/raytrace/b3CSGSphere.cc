@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/02/19 16:26:49  sm
+**      - Further CSG interval computing cleanup done.
+**
 **      Revision 1.14  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -173,4 +176,9 @@ b3_bool b3CSGSphere::b3Prepare()
 
 void b3CSGSphere::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 {
+}
+
+b3_count b3CSGSphere::b3GetMaxIntersections()
+{
+	return 2;
 }

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/02/19 16:26:49  sm
+**	- Further CSG interval computing cleanup done.
+**
 **	Revision 1.22  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.21  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
@@ -1165,12 +1168,18 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3CSGShape::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGShape::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
 	return false;
 }
 
-b3_bool b3CSGSphere::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGSphere::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
 	b3_f64 Discriminant,p;
 	b3_f64 xDiff,yDiff,zDiff;
@@ -1198,11 +1207,13 @@ b3_bool b3CSGSphere::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGCylinder::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGCylinder::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
-	b3_line64 *BTLine = interval->m_BTLine;
-	register double l1,l2,z,Discriminant,a,p,x,y;
-	register bool   check;
+	register   double l1,l2,z,Discriminant,a,p,x,y;
+	register   bool   check;
 
 	interval->m_Count = 0;
 
@@ -1299,12 +1310,12 @@ b3_bool b3CSGCylinder::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
 }
 
 b3_bool b3CSGCone::b3Intersect(
-	b3_ray          *ray,
-	b3_csg_interval *interval)
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
 	b3_f64     l1,l2,z1,z2,Discriminant,a,p,x,y;
 	b3_index   Index = 0;
-	b3_line64 *BTLine = interval->m_BTLine;
 
 	interval->m_Count = 0;
 	b3BaseTrans (ray,BTLine);
@@ -1375,10 +1386,12 @@ b3_bool b3CSGCone::b3Intersect(
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGEllipsoid::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGEllipsoid::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
-	b3_f64     z,Discriminant,a,p;
-	b3_line64 *BTLine = interval->m_BTLine;
+	b3_f64  z,Discriminant,a,p;
 
 	interval->m_Count = 0;
 	b3BaseTrans (ray,BTLine);
@@ -1410,10 +1423,12 @@ b3_bool b3CSGEllipsoid::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGBox::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGBox::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
 	b3_vector64   BasePoint,EndPoint;
-	b3_line64    *BTLine = interval->m_BTLine;
 	b3_f64        l[2];
 	b3_csg_index  n[2];
 	b3_f64        x,y,z,m;
@@ -1538,9 +1553,11 @@ b3_bool b3CSGBox::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
 	return interval->m_Count > 0;
 }
 
-b3_bool b3CSGTorus::b3Intersect(b3_ray *ray,b3_csg_interval *interval)
+b3_bool b3CSGTorus::b3Intersect(
+	b3_ray             *ray,
+	b3_shape_intervals *interval,
+	b3_line64          *BTLine)
 {
-	b3_line64    *BTLine = interval->m_BTLine;
 	b3_count      NumOfX;
 	b3_index      i,k,t = 0;
 	b3_f64        Val1,Val2,pQuad,dQuad,pdQuad;
@@ -1653,30 +1670,28 @@ b3_bool b3BBox::b3Intersect(b3_ray *ray)
 
 b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 {
-	b3Item           *item;
-	b3CSGShape       *shape;
-	b3_line64         lines[1024]; // This is a hack! To be fixed!
-	b3_csg_interval   local;
-	b3_csg_interval   set1[1024]; // This is a hack! To be fixed!
-	b3_csg_interval   set2[1024]; // This is a hack! To be fixed!
-	b3_csg_tree       intervals;
-	b3_csg_point     *point;
-	b3_index          t = 0;
+	b3Item             *item;
+	b3CSGShape         *shape;
+	b3_line64           lines[B3_MAX_CSG_SHAPES_PER_BBOX]; // This is a hack! To be fixed!
+	b3_shape_intervals  local;
+	b3_bbox_intervals   intervals[2];
+	b3_bbox_intervals  *result = null;
+	b3_csg_point       *point;
+	b3_index            t = 0,index = 0;
 
-	intervals.local    = &local;
-	intervals.ThisBox1 = set1;
-	intervals.ThisBox2 = set2;
-	intervals.ThisBox1->m_Count = 0;
+	intervals[0].m_Count = 0;
+	intervals[1].m_Count = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
+		result    = &intervals[index];
+		index    ^= 1;
 		shape     = (b3CSGShape *)item;
-		local.m_BTLine = &lines[t++];
-		shape->b3Intersect(ray,&local);
-		shape->b3Operate(&intervals);
+		shape->b3Intersect(ray,&local,&lines[t++]);
+		shape->b3Operate(&local,&intervals[index],result);
 	}
 
-	point = intervals.ThisBox1->m_x;
-	for (t = 0; t < intervals.ThisBox1->m_Count; t++)
+	point = result->m_x;
+	for (t = 0; t < result->m_Count; t++)
 	{
 		if ((point->m_Q >= epsilon) && (point->m_Q <= ray->Q))
 		{

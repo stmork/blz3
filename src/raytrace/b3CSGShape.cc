@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2002/02/19 16:26:49  sm
+**      - Further CSG interval computing cleanup done.
+**
 **      Revision 1.3  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -67,24 +70,24 @@ b3CSGShape::b3CSGShape(b3_u32 *src) : b3ShapeRenderObject(src)
 {
 }
 
-void b3CSGShape::b3Operate(b3_csg_tree *intervals)
+void b3CSGShape::b3Operate(
+	b3_shape_intervals *local,
+	b3_bbox_intervals  *source,
+	b3_bbox_intervals  *result)
 {
-	b3_csg_point    *Point,*PointA,*PointB;
-	b3_csg_interval *result,*source;
-	b3_count         aCount,bCount;
-	b3_bool          stat,aStat,bStat,cStat;
+	b3_csg_point      *Point,*PointA,*PointB;
+	b3_count           aCount,bCount;
+	b3_bool            stat,aStat,bStat,cStat;
 
 	// pointer to result interval
-	source          = intervals->ThisBox1;
-	result          = intervals->ThisBox2;
 	result->m_Count = 0;
 	aStat = bStat = cStat = stat = false;
 
 	// these are the intervals to compute (A and B)
-	aCount = intervals->ThisBox1->m_Count;
-	PointA = intervals->ThisBox1->m_x;
-	bCount = intervals->local->m_Count;
-	PointB = intervals->local->m_x;
+	aCount = source->m_Count;
+	PointA = source->m_x;
+	bCount = local->m_Count;
+	PointB = local->m_x;
 
 	// while both intervals are not empty.
 	while ((aCount != 0) || (bCount != 0))
@@ -146,14 +149,15 @@ void b3CSGShape::b3Operate(b3_csg_tree *intervals)
 			cStat = stat;
 		}
 	}
-
-	// Turn for next round...
-	intervals->ThisBox1 = result;
-	intervals->ThisBox2 = source;
 }
 
 void b3CSGShape::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 {
+}
+
+b3_count b3CSGShape::b3GetMaxIntersections()
+{
+	return 0;
 }
 
 b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3CSGShape(class_size, class_type)
@@ -227,4 +231,9 @@ b3_bool b3CSGShape3::b3Prepare()
 		result = b3Shape::b3Prepare();
 	}
 	return result;
+}
+
+b3_count b3CSGShape3::b3GetMaxIntersections()
+{
+	return 2;
 }
