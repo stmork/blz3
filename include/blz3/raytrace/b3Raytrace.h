@@ -966,15 +966,17 @@ public:
 
 class b3SplineRotShape : b3SplineCurve
 {
-
+	b3_count xSubDiv,ySubDiv;
 public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
 
+	void b3Intersect();
+
+protected:
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
-	void b3Intersect();
 };
 
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
@@ -982,9 +984,6 @@ class b3SplineShape : public b3Shape
 {
 protected:
 #ifdef BLZ3_USE_OPENGL
-#ifdef GLU_NURBS
-	GLUnurbsObj     *glNURBS;
-#endif
 	b3_count         GridVertexCount;
 	b3_count         SolidVertexCount;
 	b3_count         xSubDiv,ySubDiv;
@@ -995,7 +994,7 @@ protected:
 	b3_vector       *Controls;
 
 protected:
-	b3SplineShape(b3_size class_size,b3_u32 class_type);
+	     b3SplineShape(b3_size class_size,b3_u32 class_type);
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
@@ -1004,12 +1003,6 @@ protected:
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
-
-#ifdef GLU_NURBS
-	void b3AllocVertices(b3RenderContext *context);
-	void b3FreeVertices();
-	void b3Draw();
-#endif
 
 private:
 	void b3ComputeGridVertices();

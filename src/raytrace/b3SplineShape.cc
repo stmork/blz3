@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/17 19:28:54  sm
+**      - Now able to draw every shape by lines or shaded.
+**        It's great!
+**
 **      Revision 1.6  2001/08/17 14:08:34  sm
 **      - Now trying to draw BSPline surfaces with own routines.
 **
@@ -109,10 +113,11 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 	b3InitSpline(&Spline[0],null,Knots[0]);
 	b3InitSpline(&Spline[1],null,Knots[1]);
 
-	// FIX ME: Is the order right?
+	// Copy knots
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[0][i] = b3InitFloat();
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
 
+	// Copy control points
 	control_count = Spline[0].control_max * Spline[1].control_max;
 	Controls = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	Spline[0].controls =
@@ -129,7 +134,6 @@ void b3SplineShape::b3GetCount(
 	b3_count        &polyCount)
 {
 	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
-
 	Between   = context->b3GetSplineAux();
 
 	// Compute number of grid vertices
@@ -142,7 +146,7 @@ void b3SplineShape::b3GetCount(
 
 	if (!Spline[0].closed) xSubDiv++;
 	if (!Spline[1].closed) ySubDiv++;
-	SolidVertexCount = xSubDiv * ySubDiv;
+	SolidVertexCount = (xSubDiv + 1) * (ySubDiv * 1);
 
 	// Get enough memory
 	vertCount = GridVertexCount + SolidVertexCount;
@@ -151,27 +155,6 @@ void b3SplineShape::b3GetCount(
 		B3_BSPLINE_SEGMENTKNOTS(&Spline[0]) * Spline[1].subdiv;
 	polyCount = Spline[0].subdiv * Spline[1].subdiv * 2;
 }
-
-#ifdef GLU_NURBS
-void b3SplineShape::b3AllocVertices(b3RenderContext *ctx)
-{
-	// Do default
-	b3RenderObject::b3AllocVertices(ctx);
-
-	// Alloc NURBS
-	glNURBS = gluNewNurbsRenderer();
-	gluNurbsProperty(glNURBS,GLU_DISPLAY_MODE,(GLfloat)GLU_FILL);
-}
-
-void b3SplineShape::b3FreeVertices()
-{
-	// Free NURBS
-	gluDeleteNurbsRenderer(glNURBS);
-
-	// Do default
-	b3RenderObject::b3FreeVertices();
-}
-#endif
 
 void b3SplineShape::b3ComputeGridVertices()
 {
@@ -230,8 +213,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 {
 	b3_spline  MySpline;
 	b3_index   x,y;
-	b3_count   SubDiv,Counter = 0;
-	b3_f64     surface = 0;
+	b3_count   SubDiv,index;
 	b3_vector *Vector;
 
 	// Building horizontal BSplines
@@ -247,18 +229,20 @@ void b3SplineShape::b3ComputeSolidVertices()
 	MySpline.offset   = Spline[1].subdiv + 1;
 	MySpline.controls = Between;
 
-	Vector = (b3_vector *)&glVertices[GridVertexCount];
+	Vector = (b3_vector *)&glVertices[GridVertexCount * 3];
+	index  = 0;
 	for (y = 0;y < ySubDiv;y++)
 	{
-		b3DeBoor (&MySpline,Vector,y);
+		index += b3DeBoor (&MySpline,Vector,y);
 		Vector += xSubDiv;
 	}
+	B3_ASSERT(index <= SolidVertexCount);
 }
 
 void b3SplineShape::b3ComputeVertices()
 {
-	b3ComputeGridVertices();
-	b3ComputeSolidVertices();
+	if (GridVertexCount  > 0) b3ComputeGridVertices();
+	if (SolidVertexCount > 0) b3ComputeSolidVertices();
 }
 
 void b3SplineShape::b3ComputeGridIndices()
@@ -333,8 +317,8 @@ void b3SplineShape::b3ComputeSolidIndices()
 
 void b3SplineShape::b3ComputeIndices()
 {
-	b3ComputeGridIndices();
-	b3ComputeSolidIndices();
+	if (GridCount > 0) b3ComputeGridIndices();
+	if (PolyCount > 0) b3ComputeSolidIndices();
 }
 
 #ifdef GLU_NURBS

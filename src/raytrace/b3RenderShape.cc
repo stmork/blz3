@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/08/17 19:28:54  sm
+**      - Now able to draw every shape by lines or shaded.
+**        It's great!
+**
 **      Revision 1.10  2001/08/17 14:08:34  sm
 **      - Now trying to draw BSPline surfaces with own routines.
 **
@@ -302,9 +306,11 @@ b3_f64 *b3RenderShapeContext::b3GetCosTable()
 
 b3_vector *b3RenderShapeContext::b3GetSplineAux()
 {
-	b3_count factor = B3_MAX(B3_MAX_CONTROLS,B3_MAX_SUBDIV);
+	b3_count factor;
+
 	if (Between == null)
 	{
+		factor  = B3_MAX(B3_MAX_CONTROLS,B3_MAX_SUBDIV) + 1;
 		Between = (b3_vector *)b3Alloc(factor * factor * sizeof(b3_vector));
 	}
 	return Between;
@@ -1162,13 +1168,6 @@ void b3RenderShape::b3ComputeTorusIndices()
 		{
 			*gPtr++ = s + j;
 			*gPtr++ = s + j + 1;
-		}
-		GridCount += Heights;
-
-		for (j = 0;j < Widths;j++)
-		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + Heights + 1;
 
 			*pPtr++ = s + j;
 			*pPtr++ = s + j + 1;
@@ -1177,6 +1176,13 @@ void b3RenderShape::b3ComputeTorusIndices()
 			*pPtr++ = s + j + Heights + 2;
 			*pPtr++ = s + j + Heights + 1;
 			*pPtr++ = s + j + 1;
+		}
+		GridCount += Heights;
+
+		for (j = 0;j < Widths;j++)
+		{
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + Heights + 1;
 
 			PolyCount += 2;
 		}
@@ -1194,14 +1200,5 @@ void b3RenderShape::b3ComputeTorusIndices()
 		}
 		GridCount += Heights;
 	}
-
-	/*
-		PrintF ("\n");
-		PrintF ("Heights:  %ld\n",Heights);
-		PrintF ("Widths:   %ld\n",Widths);
-		PrintF ("Number:   %ld\n",Number);
-		PrintF ("Overhead: %ld\n",Overhead);
-		PrintF ("n:        %ld\n",n);
-	*/
 #endif
 }

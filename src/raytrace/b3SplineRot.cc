@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/17 19:28:54  sm
+**      - Now able to draw every shape by lines or shaded.
+**        It's great!
+**
 **      Revision 1.4  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -63,6 +67,7 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 class_type) :
 
 b3SplineRotShape::b3SplineRotShape(b3_u32 *src) : b3SplineCurve(src)
 {
+	glSolid = true;
 }
 
 void b3SplineRotShape::b3GetCount(
@@ -74,7 +79,14 @@ void b3SplineRotShape::b3GetCount(
 	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
 
 	SinCosSteps = context->b3GetSubdiv();
-	vertCount   = (B3_MAX_SUBDIV + 1) * SinCosSteps;
+
+	ySubDiv   = Spline.subdiv;
+	xSubDiv   = SinCosSteps;
+	if (!Spline.closed) ySubDiv++;
+
+	vertCount = (Spline.subdiv + 1) * SinCosSteps;
+	gridCount = SinCosSteps * (Spline.subdiv + ySubDiv);
+	polyCount = SinCosSteps *  Spline.subdiv * 2;
 }
 
 void b3SplineRotShape::b3ComputeVertices()
@@ -85,9 +97,11 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3_vector  AuxControls[B3_MAX_CONTROLS + 1];
 	b3_vector *Vector;
 	b3_index   i,a;
-	b3_count   Points = 0;
 
+	// Build rotation matrix
 	b3MatrixRotVec (null,&Matrix,&Axis,M_PI * 2 / SinCosSteps);
+
+	// Copy BSpline
 	AuxSpline          = Spline;
 	AuxSpline.controls = AuxControls;
 	for (i = 0;i < AuxSpline.control_num;i++)
@@ -98,12 +112,14 @@ void b3SplineRotShape::b3ComputeVertices()
 	Vector = (b3_vector *)glVertices;
 	for (a = 0;a < SinCosSteps;a++)
 	{
-		Points = b3DeBoor (&AuxSpline,Vector,0);
+		// Compute curve
+		Vector += b3DeBoor (&AuxSpline,Vector,0);
+
+		// Rotate control points
 		for (i = 0;i < AuxSpline.control_num;i++)
 		{
 			b3MatrixVMul (&Matrix,&AuxControls[i],&AuxControls[i],true);
 		}
-		Vector += Points;
 	}
 
 	xSize  = SinCosSteps;
@@ -114,60 +130,49 @@ void b3SplineRotShape::b3ComputeVertices()
 void b3SplineRotShape::b3ComputeIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort *Index;
-	b3_count   SubDiv,sdStep,scStep;
-	b3_index   i,a,b;
+	GLushort *gPtr;
+	GLushort *pPtr;
+	b3_index   a,x1,x2,y1,y2;
+	b3_count   yStep;
 	b3_f64     sStep;
 
-	SubDiv   = Spline.subdiv;
-	sdStep   = SubDiv + 1;
-	scStep   = (SinCosSteps < SubDiv ? SinCosSteps : SubDiv);
-	sStep    = (b3_f64)SubDiv / scStep;
-	if (!Spline.closed) scStep++;
+	yStep = Spline.subdiv + 1;
+	sStep = (b3_f64)Spline.subdiv / SinCosSteps;
 
-	Index    = (GLushort *)b3RenderObject::b3Alloc(
-		SinCosSteps * (SubDiv + scStep) * 2 * sizeof(GLushort));
-	glGrids = Index;
-	if (Index)
+	gPtr  = glGrids;
+	pPtr  = glPolygons;
+	x1    = 0;
+	
+	// for each curve
+	for (a = 0;a < SinCosSteps;a++)
 	{
-		b = 0;
-			/* for each curve */
-#ifdef SPLINE_ROT_PROFILE_ONLY
-		GridCount = SubDiv;
-#else
-		GridCount = SinCosSteps * (SubDiv + scStep);
-		for (a = 0;a < SinCosSteps;a++)
+		x2 = (a + 1) % SinCosSteps * yStep;
+
+		// curve itself
+		for (y1 = 0;y1 < Spline.subdiv;y1++)
 		{
-#endif
-				/* curve itself */
-			for (i = 0;i < SubDiv;i++)
-			{
-				*Index++ = b + i;
-				*Index++ = b + i + 1;
-			}
+			y2 = (y1 + 1) % ySubDiv;
 
-#ifndef SPLINE_ROT_PROFILE_ONLY
-				/* lines between curves */
-			for (i = 0;i < scStep;i++)
-			{
-				*Index++ = (GLushort)(  b                              + i * sStep);
-				*Index++ = (GLushort)(((a + 1) % SinCosSteps) * sdStep + i * sStep);
-			}
-			b += sdStep;
+			*gPtr++ = x1 + y1;
+			*gPtr++ = x1 + y2;
+
+			*pPtr++ = x1 + y1;
+			*pPtr++ = x2 + y1;
+			*pPtr++ = x1 + y2;
+
+			*pPtr++ = x2 + y2;
+			*pPtr++ = x1 + y2;
+			*pPtr++ = x2 + y1;
 		}
-#endif
-	}
-	else
-	{
-		GridCount = 0;
-	}
 
-	/*
-		PrintF ("lines:  %4ld\n",GridCount);
-		PrintF ("sdStep: %4ld\n",sdStep);
-		PrintF ("scStep: %4ld\n",scStep);
-		PrintF ("sStep:  %2.2lf\n",sStep);
-	*/
+		// lines between curves
+		for (y1 = 0;y1 < ySubDiv;y1++)
+		{
+			*gPtr++ = x1 + y1;
+			*gPtr++ = x2 + y1;
+		}
+		x1 += yStep;
+	}
 #endif
 }
 
