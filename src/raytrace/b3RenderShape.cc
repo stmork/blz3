@@ -25,6 +25,7 @@
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3ShapeRenderContext.h"
 #include "blz3/raytrace/b3Scene.h"
+#include "blz3/image/b3Sampler.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.75  2004/07/05 12:15:53  sm
+**      - Added multi threaded sampler for OpenGL image creation.
+**
 **      Revision 1.74  2004/07/02 19:28:04  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -754,6 +758,105 @@ b3Tx *b3Shape::b3GetTexture(
 	return tx;
 }
 
+class b3RenderImageSampler : public b3Sampler
+{
+	b3Shape *m_Shape;
+	b3Tx    *m_Tx;
+
+public:
+	b3RenderImageSampler(b3Shape *shape,b3Tx *tx)
+	{
+		m_Shape = shape;
+		m_Tx    = tx;
+		m_xMax  = tx->xSize;
+		m_yMax  = tx->ySize;
+		m_Data  = (b3_pkd_color *)tx->b3GetData();
+	}
+
+private:
+	b3SampleInfo *b3SampleInit(b3_count CPUs)
+	{
+		b3SampleInfo *info = new b3SampleInfo[CPUs];
+		b3_loop       i;
+		b3_res        yStart,yEnd;
+
+		yStart = 0;
+		for (i = 0;i < CPUs;i++)
+		{
+			yEnd = m_yMax * (i + 1) / CPUs;
+			info[i].m_Sampler = this;
+			info[i].m_Ptr     = m_Shape;
+			info[i].m_xMax    = m_xMax;
+			info[i].m_yMax    = m_yMax;
+			info[i].m_yStart  = yStart;
+			info[i].m_yEnd    = yEnd;
+			info[i].m_Data    = &m_Data[yStart * m_xMax];
+			yStart = yEnd;
+		}
+		return info;
+	}
+
+	void b3SampleTask(b3SampleInfo *info)
+	{
+		b3Material       *material;
+		b3_ray            ray;
+		b3_surface        surface;
+		b3_stencil_limit  limit;
+		b3_pkd_color     *data = info->m_Data;
+		b3_pkd_color      color;
+		b3_coord          x,y;
+		b3_f64            fx,fxStep;
+		b3_f64            fy,fyStep;
+		b3_bool           loop;
+				
+		m_Shape->b3ComputeBound(&limit);
+		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / info->m_xMax;
+		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
+
+		surface.incoming = &ray;
+		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
+		ray.polar.m_BoxPolar.z =
+		ray.polar.m_ObjectPolar.z =
+		ray.polar.m_Polar.z =
+		ray.polar.m_BBoxOriginal.z =
+		ray.ipoint.z = 0;
+		for (y = info->m_yStart;y < info->m_yEnd;y++)
+		{
+			ray.polar.m_BoxPolar.y =
+			ray.polar.m_ObjectPolar.y =
+			ray.polar.m_Polar.y =
+			ray.polar.m_BBoxOriginal.y =
+			ray.ipoint.y = fy;
+			
+			fx = limit.x1 + b3Scene::epsilon;
+			for (x = 0;x < info->m_xMax;x++)
+			{
+				ray.polar.m_BoxPolar.x =
+				ray.polar.m_ObjectPolar.x =
+				ray.polar.m_Polar.x =
+				ray.polar.m_BBoxOriginal.x =
+				ray.ipoint.x = fx;
+
+				color = B3_BLACK;
+				for(material  = (b3Material *)m_Shape->b3GetMaterialHead()->First,loop = true;
+				   (material != null) && loop;
+				    material  = (b3Material *)material->Succ)
+				{
+					if (material->b3GetSurfaceValues(&surface))
+					{
+						surface.m_Diffuse.b3SetAlpha(m_Shape->b3CheckStencil(&ray.polar) ? 0 : 1);
+						color     = surface.m_Diffuse;
+						loop      = false;
+					}
+				}
+				*data++ = color;
+				fx += fxStep;
+			}
+			fy += fyStep;
+		}
+	}
+};
+
 b3_bool b3Shape::b3GetImage(b3Tx *image)
 {
 	b3Item       *item;
@@ -770,63 +873,10 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 
 	if (result)
 	{
-		b3Material       *material;
-		b3_stencil_limit  limit;
-		b3_ray            ray;
-		b3_surface        surface;
-		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
-		b3_pkd_color      color;
-		b3_coord          x,y;
-		b3_f64            fx,fxStep;
-		b3_f64            fy,fyStep;
-		b3_bool           loop;
-
 		b3PrintT(">b3GetImage()");
-		b3ComputeBound(&limit);
-		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / image->xSize;
-		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / image->ySize;
+		b3RenderImageSampler sampler(this,image);
 
-		surface.incoming = &ray;
-		fy = limit.y1 + b3Scene::epsilon;
-		ray.polar.m_BoxPolar.z =
-		ray.polar.m_ObjectPolar.z =
-		ray.polar.m_Polar.z =
-		ray.polar.m_BBoxOriginal.z =
-		ray.ipoint.z = 0;
-		for (y = 0;y < image->ySize;y++)
-		{
-			ray.polar.m_BoxPolar.y =
-			ray.polar.m_ObjectPolar.y =
-			ray.polar.m_Polar.y =
-			ray.polar.m_BBoxOriginal.y =
-			ray.ipoint.y = fy;
-			
-			fx = limit.x1 + b3Scene::epsilon;
-			for (x = 0;x < image->xSize;x++)
-			{
-				ray.polar.m_BoxPolar.x =
-				ray.polar.m_ObjectPolar.x =
-				ray.polar.m_Polar.x =
-				ray.polar.m_BBoxOriginal.x =
-				ray.ipoint.x = fx;
-
-				color = B3_BLACK;
-				for(material  = (b3Material *)b3GetMaterialHead()->First,loop = true;
-				   (material != null) && loop;
-				    material  = (b3Material *)material->Succ)
-				{
-					if (material->b3GetSurfaceValues(&surface))
-					{
-						surface.m_Diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
-						color     = surface.m_Diffuse;
-						loop      = false;
-					}
-				}
-				*lPtr++ = color;
-				fx += fxStep;
-			}
-			fy += fyStep;
-		}
+		sampler.b3Sample();
 		b3PrintT("<b3GetImage()");
 	}
 	return result;

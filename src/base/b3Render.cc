@@ -30,7 +30,7 @@
 #define not_VERBOSE
 
 #ifndef _DEBUG
-#define B3_MAX_TX_SIZE  64
+#define B3_MAX_TX_SIZE 128
 #else
 #define B3_MAX_TX_SIZE   8
 #endif
@@ -43,6 +43,9 @@
 
 /*
 **      $Log$
+**      Revision 1.75  2004/07/05 12:15:53  sm
+**      - Added multi threaded sampler for OpenGL image creation.
+**
 **      Revision 1.74  2004/07/03 13:49:30  sm
 **      - Added spline knot control dialog which is not completed yet.
 **
