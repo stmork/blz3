@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2005/01/21 14:58:07  smork
+**	- Small adjustments.
+**
 **	Revision 1.45  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
-**
+**	
 **	Revision 1.44  2005/01/14 19:49:05  sm
 **	- Switchable device context for OpenGL rendering
 **	
@@ -556,12 +559,10 @@ void CAppRenderView::OnPaint()
 
 	// Flush OpenGL buffer to screen
 	glFinish();
-	if (m_DoubleBuffered)
+	if (!SwapBuffers(dc))
 	{
-		if (!SwapBuffers(dc))
-		{
-			b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
-		}
+		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
+		B3PrintF(B3LOG_NORMAL," Error code: %ld\n",GetlastError());
 	}
 
 	// Do post drawings using Windows DC
