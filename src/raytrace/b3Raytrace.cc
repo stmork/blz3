@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/02 16:01:58  sm
+**	- Moving b3Polar into b3Ray but that's not right at all. The
+**	  result must be placed there but a simple result from one
+**	  intersection must be placed into a temp instance. The same
+**	  must be done for surface normals as they result from using
+**	  the b3Polar class.
+**
 **	Revision 1.6  2001/09/30 16:27:48  sm
 **	- Raytracing with diffuse color without shading
 **	- Sphere intersection fixed (now using normalized rays)
-**
+**	
 **	Revision 1.5  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
 **	
@@ -60,7 +67,7 @@
 **
 */
 
-struct b3_ray_info
+struct b3_rt_info
 {
 	b3Display *display;
 	b3Scene   *scene;
@@ -84,7 +91,7 @@ b3_pkd_color *b3RayRow::b3GetBuffer()
 void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 {
 	b3_res        x,xSize;
-	b3_ray        ray;
+	b3_ray_info   ray;
 	b3_dVector    preDir;
 	b3_f64        fx,fxStep;
 	b3_f64        fy;
@@ -98,9 +105,9 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	fxStep =  2.0 / (double)xSize;
 
 	// Init eye position
-	ray.ray.pos.x =  m_EyePoint.x;
-	ray.ray.pos.y =  m_EyePoint.y;
-	ray.ray.pos.z =  m_EyePoint.z;
+	ray.pos.x =  m_EyePoint.x;
+	ray.pos.y =  m_EyePoint.y;
+	ray.pos.z =  m_EyePoint.z;
 
 	// Init height of ray
 	preDir.x  = (m_ViewPoint.x - m_EyePoint.x) + fy * m_Height.x;
@@ -110,17 +117,17 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	// Loop one row...
 	for (x = 0;x < xSize;x++)
 	{
-		ray.ray.dir.x = preDir.x + fx * m_Width.x;
-		ray.ray.dir.y = preDir.y + fx * m_Width.y;
-		ray.ray.dir.z = preDir.z + fx * m_Width.z;
+		ray.dir.x = preDir.x + fx * m_Width.x;
+		ray.dir.y = preDir.y + fx * m_Width.y;
+		ray.dir.z = preDir.z + fx * m_Width.z;
 
 		denom = sqrt(
-			ray.ray.dir.x * ray.ray.dir.x +
-			ray.ray.dir.y * ray.ray.dir.y +
-			ray.ray.dir.z * ray.ray.dir.z);
-		ray.ray.dir.x /= denom;
-		ray.ray.dir.y /= denom;
-		ray.ray.dir.z /= denom;
+			ray.dir.x * ray.dir.x +
+			ray.dir.y * ray.dir.y +
+			ray.dir.z * ray.dir.z);
+		ray.dir.x /= denom;
+		ray.dir.y /= denom;
+		ray.dir.z /= denom;
 
 		b3Shade(&ray);
 		r = (b3_pkd_color)(ray.color.r * 255.0);
@@ -134,9 +141,9 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 
 b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 {
-	b3_ray_info *info  = (b3_ray_info *)ptr;
-	b3Scene     *scene = info->scene;
-	b3RayRow    *row;
+	b3_rt_info *info  = (b3_rt_info *)ptr;
+	b3Scene    *scene = info->scene;
+	b3RayRow   *row;
 
 	do
 	{
@@ -169,7 +176,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 	b3Thread    *threads;
 	b3_res       xSize,ySize;
 	b3_count     CPUs,i;
-	b3_ray_info *infos;
+	b3_rt_info  *infos;
 
 	b3_f64       fy,fyStep;
 
@@ -185,7 +192,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 			CPUs > 1 ? "'s" : "");
 
 		// Allocate some instances
-		infos       = new b3_ray_info[CPUs];
+		infos       = new b3_rt_info[CPUs];
 		threads     = new b3Thread[CPUs];
 
 		// add rows to list

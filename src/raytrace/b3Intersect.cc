@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/02 16:01:58  sm
+**	- Moving b3Polar into b3Ray but that's not right at all. The
+**	  result must be placed there but a simple result from one
+**	  intersection must be placed into a temp instance. The same
+**	  must be done for surface normals as they result from using
+**	  the b3Polar class.
+**
 **	Revision 1.6  2001/09/30 16:27:48  sm
 **	- Raytracing with diffuse color without shading
 **	- Sphere intersection fixed (now using normalized rays)
-**
+**	
 **	Revision 1.5  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
 **	
@@ -64,12 +71,12 @@
 
 static b3_f64 epsilon = 0.001;
 
-b3_f64 b3Shape::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Shape::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3Area::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Area::b3Intersect(b3_ray *ray)
 {
 	b3_f64    Denom,aValue,bValue,lValue;
 	b3_vector Dir,Product;
@@ -92,7 +99,7 @@ b3_f64 b3Area::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 		return -1;
 	}
 
-	if (lValue > Q)
+	if (lValue > ray->Q)
 	{
 		return -1;
 	}
@@ -116,14 +123,14 @@ b3_f64 b3Area::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 		return -1;
 	}
 
-	m_Polar.polar.x = m_Polar.object_polar.x = aValue;
-	m_Polar.polar.y = m_Polar.object_polar.y = bValue;
-	m_Polar.polar.z = m_Polar.object_polar.z = 0;
+	ray->polar.polar.x = ray->polar.object_polar.x = aValue;
+	ray->polar.polar.y = ray->polar.object_polar.y = bValue;
+	ray->polar.polar.z = ray->polar.object_polar.z = 0;
 
-	return b3CheckStencil() ? lValue : -1;
+	return b3CheckStencil(&ray->polar) ? lValue : -1;
 }
 
-b3_f64 b3Disk::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Disk::b3Intersect(b3_ray *ray)
 {
 	b3_f64     Denom,aValue,bValue,lValue;
 	b3_vector  Dir,Product;
@@ -146,7 +153,7 @@ b3_f64 b3Disk::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	{
 		return -1;
 	}
-	if (lValue > Q)
+	if (lValue > ray->Q)
 	{
 		return -1;
 	}
@@ -180,17 +187,17 @@ b3_f64 b3Disk::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	}
 
 	// compute surface coordinates
-	m_Polar.polar.x	= b3RelAngleOfScalars(aValue,bValue);
-	m_Polar.polar.y	= sqrt (Denom);
-	m_Polar.polar.z	= 0;
-	m_Polar.object_polar.x = aValue;
-	m_Polar.object_polar.y = bValue;
-	m_Polar.object_polar.z = 0;
+	ray->polar.polar.x	= b3RelAngleOfScalars(aValue,bValue);
+	ray->polar.polar.y	= sqrt (Denom);
+	ray->polar.polar.z	= 0;
+	ray->polar.object_polar.x = aValue;
+	ray->polar.object_polar.y = bValue;
+	ray->polar.object_polar.z = 0;
 
-	return b3CheckStencil() ? lValue : -1;
+	return b3CheckStencil(&ray->polar) ? lValue : -1;
 }
 
-b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Sphere::b3Intersect(b3_ray *ray)
 {
 	b3_f64    l1,Discriminant,p,l2;
 	b3_f64    xDiff,yDiff,zDiff;
@@ -244,7 +251,7 @@ b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l1 > 0)
 	{
-		if (l1 > Q)
+		if (l1 > ray->Q)
 		{
 			return -2;
 		}
@@ -253,48 +260,51 @@ b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 		n.z = ray->pos.z + l1 * ray->dir.z - m_Base.z;
 
 		p = acos(-b3AngleOfVectors(&n,&pole));
-		m_Polar.polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
+		ray->polar.polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
 			sin(p)) * 0.5 / M_PI;
-		m_Polar.polar.y = p * 2.0 / M_PI - 1.0;
-		m_Polar.polar.z = 0;
+		ray->polar.polar.y = p * 2.0 / M_PI - 1.0;
+		ray->polar.polar.z = 0;
 		if (b3AngleOfVectors(&aux,&n) < 0)
 		{
-			m_Polar.polar.x = 1.0 - m_Polar.polar.x;
+			ray->polar.polar.x = 1.0 - ray->polar.polar.x;
 		}
 
-		if (b3CheckStencil ())
+		if (b3CheckStencil(&ray->polar))
 		{
 			p = sqrt(m_QuadRadius);
-			m_Polar.object_polar.x = n.x / p;
-			m_Polar.object_polar.y = n.y / p;
-			m_Polar.object_polar.z = n.z / p;
+			ray->polar.object_polar.x = n.x / p;
+			ray->polar.object_polar.y = n.y / p;
+			ray->polar.object_polar.z = n.z / p;
 			return l1;
 		}
 	}
 
 	if (l2 > 0)
 	{
-		if (l2 > Q) return -1;
+		if (l2 > ray->Q)
+		{
+			return -1;
+		}
 		n.x = ray->pos.x + l2 * ray->dir.x - m_Base.x;
 		n.y = ray->pos.y + l2 * ray->dir.y - m_Base.y;
 		n.z = ray->pos.z + l2 * ray->dir.z - m_Base.z;
 
 		p = acos(-b3AngleOfVectors(&n,&pole));
-		m_Polar.polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
+		ray->polar.polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
 			sin(p)) * 0.5 / M_PI;
-		m_Polar.polar.y = p * 2.0 / M_PI - 1.0;
-		m_Polar.polar.z = 0;
+		ray->polar.polar.y = p * 2.0 / M_PI - 1.0;
+		ray->polar.polar.z = 0;
 		if (b3AngleOfVectors(&aux,&n) < 0)
 		{
-			m_Polar.polar.x = 1.0 - m_Polar.polar.x;
+			ray->polar.polar.x = 1.0 - ray->polar.polar.x;
 		}
 
-		if (b3CheckStencil ())
+		if (b3CheckStencil(&ray->polar))
 		{
 			p = sqrt(m_QuadRadius);
-			m_Polar.object_polar.x = n.x / p;
-			m_Polar.object_polar.y = n.y / p;
-			m_Polar.object_polar.z = n.z / p;
+			ray->polar.object_polar.x = n.x / p;
+			ray->polar.object_polar.y = n.y / p;
+			ray->polar.object_polar.z = n.z / p;
 			return l2;
 		}
 	}
@@ -302,7 +312,7 @@ b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	return l2;
 }
 
-b3_f64 b3Cylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Cylinder::b3Intersect(b3_ray *ray)
 {
 	b3_dLine BTLine;
 	b3_f64   l1,l2,z,Discriminant,a,p;
@@ -357,20 +367,20 @@ b3_f64 b3Cylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l1 > 0)
 	{
-		if (l1 > Q)
+		if (l1 > ray->Q)
 		{
 			return -2;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
+		ray->polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
 
-		m_Polar.polar.x = b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y = m_Polar.object_polar.z;
-		m_Polar.polar.z = 0;
-		if (b3CheckStencil())
+		ray->polar.polar.x = b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y = ray->polar.object_polar.z;
+		ray->polar.polar.z = 0;
+		if (b3CheckStencil(&ray->polar))
 		{
 			return l1;
 		}
@@ -378,20 +388,20 @@ b3_f64 b3Cylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l2 > 0)
 	{
-		if (l2 > Q)
+		if (l2 > ray->Q)
 		{
 			return -1;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
+		ray->polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
 
-		m_Polar.polar.x	= b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y	= m_Polar.object_polar.z;
-		m_Polar.polar.z	= 0;
-		if (!b3CheckStencil())
+		ray->polar.polar.x	= b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y	= ray->polar.object_polar.z;
+		ray->polar.polar.z	= 0;
+		if (!b3CheckStencil(&ray->polar))
 		{
 			l2 = -1;
 		}
@@ -399,7 +409,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	return l2;
 }
 
-b3_f64 b3Cone::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Cone::b3Intersect(b3_ray *ray)
 {
 	b3_dLine BTLine;
 	b3_f64   l1,l2,z,Discriminant,a,p;
@@ -460,20 +470,20 @@ b3_f64 b3Cone::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l1 > 0)
 	{
-		if (l1 > Q)
+		if (l1 > ray->Q)
 		{
 			return -2;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
+		ray->polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
 
-		m_Polar.polar.x	= b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y	= m_Polar.object_polar.z;
-		m_Polar.polar.z	= 0;
-		if (b3CheckStencil ())
+		ray->polar.polar.x	= b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y	= ray->polar.object_polar.z;
+		ray->polar.polar.z	= 0;
+		if (b3CheckStencil(&ray->polar))
 		{
 			return l1;
 		}
@@ -481,19 +491,19 @@ b3_f64 b3Cone::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l2 > 0)
 	{
-		if (l2 > Q)
+		if (l2 > ray->Q)
 		{
 			return -1;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
-		m_Polar.polar.x	= b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y	= m_Polar.object_polar.z;
-		m_Polar.polar.z	= 0;
-		if (!b3CheckStencil())
+		ray->polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
+		ray->polar.polar.x	= b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y	= ray->polar.object_polar.z;
+		ray->polar.polar.z	= 0;
+		if (!b3CheckStencil(&ray->polar))
 		{
 			l2 = -1;
 		}
@@ -501,7 +511,7 @@ b3_f64 b3Cone::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	return l2;
 }
 
-b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray)
 {
 	b3_dLine  BTLine;
 	b3_f64    l1,l2,z,Discriminant,a,p;
@@ -536,20 +546,20 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l1 > 0)
 	{
-		if (l1 > Q)
+		if (l1 > ray->Q)
 		{
 			return -2;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
+		ray->polar.object_polar.x = BTLine.pos.x + l1 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l1 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
 
-		m_Polar.polar.x	= b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y	= asin(m_Polar.object_polar.z) * 2.0 / M_PI;
-		m_Polar.polar.z	= 0;
-		if (b3CheckStencil())
+		ray->polar.polar.x	= b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y	= asin(ray->polar.object_polar.z) * 2.0 / M_PI;
+		ray->polar.polar.z	= 0;
+		if (b3CheckStencil(&ray->polar))
 		{
 			return l1;
 		}
@@ -557,20 +567,20 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l2 > 0)
 	{
-		if (l2 > Q)
+		if (l2 > ray->Q)
 		{
 			return -1;
 		}
-		m_Polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
-		m_Polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
-		m_Polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
+		ray->polar.object_polar.x = BTLine.pos.x + l2 * BTLine.dir.x;
+		ray->polar.object_polar.y = BTLine.pos.y + l2 * BTLine.dir.y;
+		ray->polar.object_polar.z = BTLine.pos.z + l2 * BTLine.dir.z;
 
-		m_Polar.polar.x	= b3RelAngleOfScalars(
-			m_Polar.object_polar.x,
-			m_Polar.object_polar.y);
-		m_Polar.polar.y	= asin(m_Polar.object_polar.z) * 2.0 / M_PI;
-		m_Polar.polar.z	= 0;
-		if (!b3CheckStencil())
+		ray->polar.polar.x	= b3RelAngleOfScalars(
+			ray->polar.object_polar.x,
+			ray->polar.object_polar.y);
+		ray->polar.polar.y	= asin(ray->polar.object_polar.z) * 2.0 / M_PI;
+		ray->polar.polar.z	= 0;
+		if (!b3CheckStencil(&ray->polar))
 		{
 			l2 = -1;
 		}
@@ -578,7 +588,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	return l2;
 }
 
-b3_f64 b3Box::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Box::b3Intersect(b3_ray *ray)
 {
 	b3_dLine   BTLine;
 	b3_dVector BasePoint,EndPoint;
@@ -719,80 +729,80 @@ b3_f64 b3Box::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	if (y < 0)               y = 0;
 	else if (y >= 0.9999999) y = 0.9999999;
 
-	m_Polar.polar.x = m_Polar.object_polar.x = x;
-	m_Polar.polar.y = m_Polar.object_polar.y = y;
-	m_Polar.polar.z = m_Polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
+	ray->polar.polar.x = ray->polar.object_polar.x = x;
+	ray->polar.polar.y = ray->polar.object_polar.y = y;
+	ray->polar.polar.z = ray->polar.object_polar.z = BTLine.pos.z + l1 * BTLine.dir.z;
 
-	m_Normal = m_Normals[n[0]];
+	ray->normal = m_Normals[n[0]];
 	return l1;
 }
 
-b3_f64 b3Torus::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3Torus::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3TriangleShape::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3SplineArea::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3SplineArea::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3SplineCylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3SplineCylinder::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3SplineRing::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3SplineRing::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3SplineCurveShape::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3SplineCurveShape::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3SplineRotShape::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3SplineRotShape::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGSphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGSphere::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGCylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGCylinder::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGCone::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGCone::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGEllipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGEllipsoid::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGBox::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGBox::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_f64 b3CSGTorus::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_f64 b3CSGTorus::b3Intersect(b3_ray *ray)
 {
 	return -1;
 }
 
-b3_bool b3BBox::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+b3_bool b3BBox::b3Intersect(b3_ray *ray)
 {
 	b3_f64 start,end,t_near,t_far,m,pos;
 
@@ -838,16 +848,15 @@ b3_bool b3BBox::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	if (t_far  < end)   end   = t_far;
 	if (start  > end) return false;
 
-	if (end   < 0)   return false;
-	if (start > Q)   return false;
+	if (end   < 0)      return false;
+	if (start > ray->Q) return false;
 	return true;
 }
 
 
 b3Shape *b3Scene::b3Intersect(
-	b3BBox   *BBox,
-	b3_dLine *ray,
-	b3_f64   &Q)
+	b3BBox      *BBox,
+	b3_ray_info *ray)
 {
 	b3Base<b3Item> *Shapes;
 	b3Base<b3Item> *BBoxes;
@@ -859,11 +868,11 @@ b3Shape *b3Scene::b3Intersect(
 	{
 		Shapes = BBox->b3GetShapeHead();
 		BBoxes = BBox->b3GetBBoxHead();
-		if (BBox->b3Intersect(ray,Q))
+		if (BBox->b3Intersect(ray))
 		{
 			if (BBoxes->First)
 			{
-				Found = b3Intersect ((b3BBox *)BBoxes->First,ray,Q);
+				Found = b3Intersect ((b3BBox *)BBoxes->First,ray);
 				if (Found != null)
 				{
 					BackShape = Found;
@@ -875,12 +884,12 @@ b3Shape *b3Scene::b3Intersect(
 				B3_FOR_BASE(Shapes,item)
 				{
 					Shape  = (b3Shape *)item;
-					Result = Shape->b3Intersect(ray,Q);
-					if ((Result > 0) && (Result <= Q))
+					Result = Shape->b3Intersect(ray);
+					if ((Result > 0) && (Result <= ray->Q))
 					{
 						BackShape  = Shape;
 //						GlobalBBox = BBox;
-						Q          = Result;
+						ray->Q     = Result;
 					}
 				} /* for shape*/
 			}     /* if CLASS_SHAPE */
@@ -899,10 +908,10 @@ b3Shape *b3Scene::b3Intersect(
 	return BackShape;
 }
 
-b3_bool b3Scene::b3Intersect(b3_ray *ray,b3_f64 max)
+b3_bool b3Scene::b3Intersect(b3_ray_info *ray,b3_f64 max)
 {
 	ray->Q     = max;
-	ray->shape = b3Intersect(b3GetFirstBBox(),&ray->ray,ray->Q);
+	ray->shape = b3Intersect(b3GetFirstBBox(),ray);
 
 	return ray->shape != null;
 }

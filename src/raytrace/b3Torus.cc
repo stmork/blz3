@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/02 16:01:58  sm
+**	- Moving b3Polar into b3Ray but that's not right at all. The
+**	  result must be placed there but a simple result from one
+**	  intersection must be placed into a temp instance. The same
+**	  must be done for surface normals as they result from using
+**	  the b3Polar class.
+**
 **	Revision 1.11  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
 **	  yet. Next step: shading!
-**
+**	
 **	Revision 1.10  2001/09/22 16:19:53  sm
 **	- Adding basic shape intersection routines
 **
@@ -150,12 +157,12 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	m_aRad *= (scale * 0.5);
 
 	denom = b3Length (&m_Dir3);
-	if (denom != 0)
+	if ((denom != 1) && (denom != 0))
 	{
-		m_bRad    = denom;
-		m_Dir3.x /= denom;
-		m_Dir3.y /= denom;
-		m_Dir3.z /= denom;
+//		m_bRad    = denom;
+		m_Dir3.x /= m_bRad;
+		m_Dir3.y /= m_bRad;
+		m_Dir3.z /= m_bRad;
 	}
 
 	m_aQuad = m_aRad * m_aRad;

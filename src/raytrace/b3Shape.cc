@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/10/02 16:01:58  sm
+**      - Moving b3Polar into b3Ray but that's not right at all. The
+**        result must be placed there but a simple result from one
+**        intersection must be placed into a temp instance. The same
+**        must be done for surface normals as they result from using
+**        the b3Polar class.
+**
 **      Revision 1.16  2001/09/23 18:50:27  sm
 **      - Created first raytracing image with Blizzard III. It shows
 **        simply "hit" or "no hit". Spheres and boxes aren't running
@@ -170,7 +177,7 @@ void b3Shape::b3ComputeBound(b3CondLimit *limit)
 	}
 }
 
-b3_bool b3Shape::b3CheckStencil()
+b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 {
 	b3Item      *item;
 	b3Condition *cond;
@@ -178,7 +185,7 @@ b3_bool b3Shape::b3CheckStencil()
 	B3_FOR_BASE(&heads[1],item)
 	{
 		cond = (b3Condition *)item;
-		cond->b3CheckStencil(&m_Polar);
+		cond->b3CheckStencil(polar);
 	}
 	return true;
 }
