@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/06/23 14:03:05  sm
+**	- Reversed transparent computation.
+**
 **	Revision 1.7  2004/06/23 13:58:07  sm
 **	- Changed Fresnel computation decision from real transparent
 **	  to real refractive to force Fresnel computation even on
 **	  total reflection.
-**
+**	
 **	Revision 1.6  2004/06/23 13:50:49  sm
 **	- Fixed ticket no. 26: Now the Fresnel coefficients were mixed correctly.
 **	
@@ -155,7 +158,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	b3_f64    refl,refr,factor;
 
 	// Refraction
-	if (surface.m_Refraction > 0)
+	if (surface.m_Transparent)
 	{
 		if (surface.m_Ior == 1)
 		{
