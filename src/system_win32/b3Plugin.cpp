@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/06/01 13:36:03  sm
+**	- Added define for exported plugin methods.
+**
 **	Revision 1.6  2003/06/01 13:03:45  sm
 **	- Is this the final plugin version?
-**
+**	
 **	Revision 1.5  2003/06/01 12:17:31  sm
 **	- Some plugin movements
 **	
@@ -88,14 +91,6 @@ b3_bool b3Loader::b3Edit(b3Item *item)
 **                        The Blizzard III plugin functions             **
 **                                                                      **
 *************************************************************************/
-
-void b3Plugin::b3Load()
-{
-}
-
-void b3Plugin::b3Unload()
-{
-}
 
 b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 {

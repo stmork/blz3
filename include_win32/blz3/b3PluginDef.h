@@ -29,4 +29,8 @@
 #	endif
 #endif
 
+#ifndef B3_PLUGIN_EXPORT
+#define B3_PLUGIN_EXPORT __declspec(dllexport)
+#endif
+
 #endif
