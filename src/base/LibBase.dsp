@@ -113,6 +113,10 @@ SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Render.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Spline.cc
 # End Source File
 # Begin Source File

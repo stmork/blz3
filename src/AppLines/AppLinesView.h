@@ -22,6 +22,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "blz3/raytrace/b3RenderView.h"
+
 #define B3_UPDATE_DRAW 1
 #define B3_UPDATE_VIEW 2
 #define B3_UPDATE_ALL  (B3_UPDATE_DRAW|B3_UPDATE_VIEW)
@@ -31,6 +33,7 @@ class CAppLinesView : public CScrollView
 	HDC    m_DC;
 	HGLRC  m_GC;
 	int    m_PixelFormatIndex;
+	b3RenderView m_RenderView;
 protected: // create from serialization only
 	CAppLinesView();
 	DECLARE_DYNCREATE(CAppLinesView)
@@ -74,6 +77,18 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnViewPerspective();
+	afx_msg void OnViewTop();
+	afx_msg void OnViewFront();
+	afx_msg void OnViewRight();
+	afx_msg void OnViewLeft();
+	afx_msg void OnViewBack();
+	afx_msg void OnUpdateViewPerspective(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewTop(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewFront(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

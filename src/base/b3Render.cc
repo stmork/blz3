@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Render.h"
+#include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
 
@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.1  2001/08/11 15:59:58  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.3  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -63,139 +68,25 @@
 **                                                                      **
 *************************************************************************/
 
-b3RenderContext::b3RenderContext(b3_count new_subdiv)
+b3RenderContext::b3RenderContext()
 {
-	CylinderIndices = null;
-	ConeIndices     = null;
-	Between         = null;
-	b3InitSubdiv(new_subdiv);
+	b3PrintF(B3LOG_DEBUG,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
+	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
+	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
+	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
 }
 
-void b3RenderContext::b3InitSubdiv(b3_count new_subdiv)
-{
-	b3_f64   aux;
-	b3_index i;
-
-	subdiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
-	if (subdiv < 8)
-	{
-		subdiv = 8;
-	}
-
-	for (i = 0;i <= subdiv;i++)
-	{
-		aux    = i * M_PI * 2 / subdiv;
-		Sin[i] = sin(aux);
-		Cos[i] = cos(aux);
-	}
-
-#ifdef BLZ3_USE_OPENGL
-	GLushort *ptr;
-	b3_index  a;
-
-	if (CylinderIndices != null)
-	{
-		b3Free(CylinderIndices);
-	}
-	if (ConeIndices != null)
-	{
-		b3Free(ConeIndices);
-	}
-
-	CylinderIndices = (GLushort *)b3Alloc
-			((subdiv + 1) * 3 * 2 * sizeof(GLushort));
-	if (CylinderIndices != null)
-	{
-		ptr = CylinderIndices;
-		a = 0;
-		for (i = 0;i <= subdiv;i++)
-		{
-			// Conactinate vertices in this ascending order:
-			//
-			//   (c)
-			// 1-----3
-			// |
-			// |(a)
-			// |
-			// 0-----2
-			//   (b)
-
-			// (a)
-			*ptr++ = a;
-			*ptr++ = a + 1;
-
-			// (b)
-			*ptr++ = a;
-			*ptr++ = a + 2;
-
-			// (c)
-			*ptr++ = a + 1;
-			*ptr++ = a + 3;
-			a += 2;
-		}
-	}
-
-	ConeIndices = (GLushort *)b3Alloc
-		((subdiv + 1) * 2 * 2 * sizeof(GLushort));
-	if (ConeIndices != null)
-	{
-		ptr = ConeIndices;
-		for (i = 0;i <= subdiv;i++)
-		{
-			*ptr++ = 0;
-			*ptr++ = i+1;
-
-			*ptr++ = i+1;
-			*ptr++ = i+2;
-		}
-	}
-#endif
-}
-
-b3_count b3RenderContext::b3GetSubdiv()
-{
-	return subdiv;
-}
-
-b3_f64 *b3RenderContext::b3GetSinTable()
-{
-	return Sin;
-}
-
-b3_f64 *b3RenderContext::b3GetCosTable()
-{
-	return Cos;
-}
-
-b3_vector *b3RenderContext::b3GetSplineAux()
-{
-	if (Between == null)
-	{
-		Between = (b3_vector *)b3Alloc(
-			B3_MAX_CONTROLS * B3_MAX_CONTROLS * sizeof(b3_vector));
-	}
-	return Between;
-}
-
-#ifdef BLZ3_USE_OPENGL
-GLushort *b3RenderContext::b3GetCylinderIndices()
-{
-	return CylinderIndices;
-}
-
-GLushort *b3RenderContext::b3GetConeIndices()
-{
-	return ConeIndices;
-}
-#endif
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
 
 b3RenderObject::b3RenderObject()
 {
 	VertexCount = 0;
 	GridCount   = 0;
 	PolyCount   = 0;
-	Epsilon     = 0.001;
-	Between     = null;
 
 #ifdef BLZ3_USE_OPENGL
 	glVertices = null;
@@ -318,27 +209,6 @@ void b3RenderObject::b3FreeVertices()
 	VertexCount = 0;
 	GridCount   = 0;
 	PolyCount   = 0;
-}
-
-b3_count b3RenderObject::b3GetIndexOverhead (
-	b3_f64 xLeft,
-	b3_f64 yLeft)
-{
-	b3_count Overhead;
-	b3_index xs,xe;
-	b3_f64   x1,x2;
-
-	if  (Limit.x1 < xLeft) Limit.x1 = xLeft;
-	if  (Limit.y1 < yLeft) Limit.y1 = yLeft;
-	x1 = Limit.x1 * SinCosSteps;
-	x2 = Limit.x2 * SinCosSteps;
-	xs = (b3_index)ceil(x1);
-	xe = (b3_index)floor(x2);
-	Overhead = xe - xs;
-	if ((xs - x1) > Epsilon) Overhead++;
-	if ((x2 - xe) > Epsilon) Overhead++;
-
-	return ((xs > 0)||(xe < SinCosSteps)) ? -Overhead : Overhead;
 }
 
 void b3RenderObject::b3Draw()

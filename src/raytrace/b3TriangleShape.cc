@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.4  2001/08/10 15:14:37  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -115,8 +120,6 @@ void b3TriangleShape::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3_count SinCosSteps = context->b3GetSubdiv();
-
 	vertCount = VertexCount;
 	gridCount = TriaCount * 3;
 	polyCount = TriaCount;

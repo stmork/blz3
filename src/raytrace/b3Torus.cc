@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.4  2001/08/10 15:14:37  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -88,11 +93,13 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 }
 
 void b3Torus::b3GetCount(
-	b3RenderContext *context,
+	b3RenderContext *ctx,
 	b3_count        &vertCount,
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
+	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+
 	SinCosSteps = context->b3GetSubdiv();
 	Cos         = context->b3GetCosTable();
 	Sin         = context->b3GetSinTable();

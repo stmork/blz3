@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="LibSystem" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="LibSmartGUI" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=LibSystem - Win32 Debug
+CFG=LibSmartGUI - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "LibSystem.mak".
+!MESSAGE NMAKE /f "LibSmartGUI.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "LibSystem.mak" CFG="LibSystem - Win32 Debug"
+!MESSAGE NMAKE /f "LibSmartGUI.mak" CFG="LibSmartGUI - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "LibSystem - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "LibSystem - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "LibSmartGUI - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "LibSmartGUI - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=LibSystem - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "LibSystem - Win32 Release"
+!IF  "$(CFG)" == "LibSmartGUI - Win32 Release"
 
 # PROP BASE Use_MFC 2
 # PROP BASE Use_Debug_Libraries 0
@@ -50,9 +50,9 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSystem.lib"
+# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSmartGUI.lib"
 
-!ELSEIF  "$(CFG)" == "LibSystem - Win32 Debug"
+!ELSEIF  "$(CFG)" == "LibSmartGUI - Win32 Debug"
 
 # PROP BASE Use_MFC 2
 # PROP BASE Use_Debug_Libraries 1
@@ -73,101 +73,41 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSystem_dbg.lib"
+# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSmartGUI_dbg.lib"
 
 !ENDIF 
 
 # Begin Target
 
-# Name "LibSystem - Win32 Release"
-# Name "LibSystem - Win32 Debug"
+# Name "LibSmartGUI - Win32 Release"
+# Name "LibSmartGUI - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\b3App.cpp
+SOURCE=.\CJFlatComboBox.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Bitmap.cpp
+SOURCE=.\CoolControlsManager.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Config.cc
+SOURCE=.\CoolMenu.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Date.cpp
+SOURCE=.\MenuBar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Dir.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Display.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Document.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3File.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Log.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Mem.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Print.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Reg.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Row.cc
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3ScrollView.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Thread.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Time.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Toolbar.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Tracker.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3View.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3ViewParam.cpp
+SOURCE=.\Subclass.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\b3Config.h
@@ -231,6 +171,26 @@ SOURCE=..\..\include_win32\blz3\system\b3View.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3ViewParam.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CJFlatComboBox.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CoolControlsManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CoolMenu.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MenuBar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Subclass.h
 # End Source File
 # End Group
 # End Target

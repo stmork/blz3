@@ -47,7 +47,7 @@ public:
 
 // Implementation
 public:
-	b3RenderContext m_Context;
+	b3RenderShapeContext m_Context;
 	b3Scene * b3GetScene();
 	virtual ~CAppLinesDoc();
 #ifdef _DEBUG

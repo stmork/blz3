@@ -22,6 +22,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "blz3/system/b3Toolbar.h"
+#include "../smart_gui/CoolMenu.h"
+
 class CMainFrame : public CMDIFrameWnd
 {
 	DECLARE_DYNAMIC(CMainFrame)
@@ -49,15 +52,24 @@ public:
 #endif
 
 protected:  // control bar embedded members
-	CStatusBar  m_wndStatusBar;
-	CToolBar    m_wndToolBar;
+	CStatusBar         m_wndStatusBar;
+	CCoolMenuManager   m_menuManager;		// cool (bitmap button) menus
+	CB3Menubar         m_wndMenuBar;
+	CB3Toolbar         m_wndToolBar;
+	CB3Toolbar         m_wndViewBar;
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-		// NOTE - the ClassWizard will add and remove member functions here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
+	afx_msg void OnDestroy();
+	afx_msg void OnPrefSave();
+	afx_msg void OnPrefAutosave();
+	afx_msg void OnUpdatePrefAutosave(CCmdUI* pCmdUI);
+	afx_msg void OnCustMain();
+	afx_msg void OnCustView();
+	afx_msg void OnBarView();
+	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.2  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -125,8 +130,8 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	CameraActive = b3InitBool();
 	if ((parseIndex << 2) < (b3_index)size)
 	{
-		Flags        = b3InitInt();
-		Unit         = b3InitFloat();	
+		Flags    = b3InitInt();
+		Unit     = b3InitFloat();	
 	}
 }
 
@@ -181,9 +186,12 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 	Type            = b3InitInt();
 	SamplesPerPixel = b3InitInt();
 	SamplesPerFrame = b3InitInt();
-	DepthOfField    = b3InitFloat();
-	PixelAperture   = b3InitInt();
-	FrameAperture   = b3InitInt();
+	if ((parseIndex << 2) < (b3_index)size)
+	{
+		DepthOfField    = b3InitFloat();
+		PixelAperture   = b3InitInt();
+		FrameAperture   = b3InitInt();
+	}
 }
 
 

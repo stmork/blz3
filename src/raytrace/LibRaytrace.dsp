@@ -161,11 +161,11 @@ SOURCE=b3Material.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Render.cc
+SOURCE=.\b3RenderShape.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3RenderShape.cc
+SOURCE=.\b3RenderView.cc
 # End Source File
 # Begin Source File
 

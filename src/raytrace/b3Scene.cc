@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.5  2001/08/05 09:23:22  sm
 **      - Introducing vectors, matrices, Splines and NURBS
 **
@@ -117,33 +122,4 @@ void b3Scene::b3GetView(b3_res &xSize,b3_res &ySize)
 
 void b3Scene::b3SetView(b3_res xSize,b3_res ySize)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_f64  width,height,distance,factor,relation;
-	GLfloat aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
-	GLfloat aspectCamera;
-	GLfloat min = 0.1f;
-
-	distance = b3Distance(&ViewPoint,&EyePoint);
-	factor   = min / distance;
-	width    = factor * b3Length(&Width);
-	height   = factor * b3Length(&Height);
-
-	aspectCamera = (GLfloat)(width / height);
-	relation     = aspectCamera / aspectWindow;
-	if (relation > 1) height *= relation;
-	else              width  /= relation;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glViewport(0,0,xSize,ySize);
-	glFrustum(-width,width,-height,height,min,10000.0f);
-	gluLookAt(
-		EyePoint.x, EyePoint.y, EyePoint.z,
-		ViewPoint.x,ViewPoint.y,ViewPoint.z,
-		Height.x,   Height.y,   Height.z);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();	
-#endif
 }

@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/08/11 15:59:58  sm
+**	- Rendering cleaned up
+**	- CWinApp/CMainFrm derived from Blizzard III classes
+**	  supporting more effective GUI.
+**
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **
 */
 
@@ -64,7 +69,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp construction
 
-CAppLinesApp::CAppLinesApp()
+CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
@@ -110,7 +115,7 @@ BOOL CAppLinesApp::InitInstance()
 	// Change the registry key under which our settings are stored.
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization.
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T(BLIZZARD3_REG_COMPANY));
 
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
@@ -173,8 +178,10 @@ BOOL CAppLinesApp::InitInstance()
 	COleObjectFactory::UpdateRegistryAll();
 
 	// Dispatch commands specified on the command line
+#if 0
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
+#endif
 
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
 **      Revision 1.1  2001/08/10 15:14:37  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -102,11 +107,13 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 }
 
 void b3SplineShape::b3GetCount(
-	b3RenderContext *context,
+	b3RenderContext *ctx,
 	b3_count        &vertCount,
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
+	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
+
 	Between   = context->b3GetSplineAux();
 	vertCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
 }

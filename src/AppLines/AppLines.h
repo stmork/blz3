@@ -19,6 +19,7 @@
 #define APPLINES_H
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3App.h"
 
 #ifndef BLZ3_USE_OPENGL
 #error	"We need the use of OpenGL"
@@ -39,7 +40,7 @@
 // See AppLines.cpp for the implementation of this class
 //
 
-class CAppLinesApp : public CWinApp
+class CAppLinesApp : public CB3App
 {
 public:
 	CAppLinesApp();

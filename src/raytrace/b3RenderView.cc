@@ -1,12 +1,12 @@
 /*
 **
-**      $Filename:      b3Sphere.cc $
+**      $Filename:      b3RenderView.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Raytracing sphere
+**      Blizzard III - Render view mode handling
 **
 **      (C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -22,7 +22,9 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Matrix.h"
+#include <assert.h>
 
 /*************************************************************************
 **                                                                      **
@@ -32,24 +34,10 @@
 
 /*
 **      $Log$
-**      Revision 1.4  2001/08/11 15:59:59  sm
+**      Revision 1.1  2001/08/11 15:59:59  sm
 **      - Rendering cleaned up
 **      - CWinApp/CMainFrm derived from Blizzard III classes
 **        supporting more effective GUI.
-**
-**      Revision 1.3  2001/08/10 15:14:36  sm
-**      - Now having all shapes implemented for drawing lines.
-**
-**      Revision 1.2  2001/08/08 20:12:59  sm
-**      - Fixing some makefiles
-**      - introducing check/BlzDump (BlzDump moved from tools)
-**      - Some further line drawing added
-**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
-**        b3RenderObject.
-**
-**      Revision 1.1  2001/08/06 15:26:00  sm
-**      - Splitted shapes into their own files
-**      - Some preparations for shapde drawing.
 **
 **
 */
@@ -60,40 +48,61 @@
 **                                                                      **
 *************************************************************************/
 
-b3Sphere::b3Sphere(b3_u32 class_type) : b3RenderShape(sizeof(b3Sphere), class_type)
+void b3RenderView::b3SetViewMode(b3_view_mode mode)
 {
+	m_ViewMode = mode;
 }
 
-b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
+b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode)
 {
-	b3InitVector(&Base);
-	b3InitVector(&Dir);
+	return m_ViewMode == mode;
 }
 
-void b3Sphere::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+void b3RenderView::b3GetCamera(b3CameraPart *camera)
 {
-	b3RenderShapeContext *context = (b3RenderShapeContext *)ctx;
-
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
-	vertCount   = ((SinCosSteps >> 1) + 1) * (SinCosSteps + 1);
+	m_EyePoint  = camera->EyePoint;
+	m_ViewPoint = camera->ViewPoint;
+	m_Width     = camera->Width;
+	m_Height    = camera->Height;
 }
 
-void b3Sphere::b3ComputeVertices()
+void b3RenderView::b3GetCamera(b3Scene *scene)
 {
-	b3ComputeSphereVertices(Base,Dir);
+	m_EyePoint  = scene->EyePoint;
+	m_ViewPoint = scene->ViewPoint;
+	m_Width     = scene->Width;
+	m_Height    = scene->Height;
 }
 
-void b3Sphere::b3ComputeIndices()
+void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 {
-	b3ComputeEllipsoidIndices();
-}
+#ifdef BLZ3_USE_OPENGL
+	b3_f64  width,height,distance,factor,relation;
+	GLfloat aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
+	GLfloat aspectCamera;
+	GLfloat min = 0.1f;
 
-void b3Sphere::b3Intersect()
-{
+	distance = b3Distance(&m_ViewPoint,&m_EyePoint);
+	factor   = min / distance;
+	width    = factor * b3Length(&m_Width);
+	height   = factor * b3Length(&m_Height);
+
+	aspectCamera = (GLfloat)(width / height);
+	relation     = aspectCamera / aspectWindow;
+	if (relation > 1) height *= relation;
+	else              width  /= relation;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glViewport(0,0,xSize,ySize);
+	glFrustum(-width,width,-height,height,min,10000.0f);
+	gluLookAt(
+		m_EyePoint.x, m_EyePoint.y, m_EyePoint.z,
+		m_ViewPoint.x,m_ViewPoint.y,m_ViewPoint.z,
+		m_Height.x,   m_Height.y,   m_Height.z);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();	
+#endif
 }

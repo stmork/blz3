@@ -22,7 +22,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
-#include "blz3/raytrace/b3Render.h"
+#include "blz3/base/b3Render.h"
 
 #define B3_TEXSTRINGLEN  128
 #define B3_BOXSTRINGLEN   96
@@ -111,6 +111,11 @@ public:
 #define COND_ATEXTUREWRAP       (CLASS_CONDITION|MODE_AND|TYPE_CTEXTUREWRAP)
 #define COND_AELLIPSE           (CLASS_CONDITION|MODE_AND|TYPE_ELLIPSE)
 
+
+typedef struct b3_cond_limit
+{
+	b3_f32 x1,y1,x2,y2;
+} b3CondLimit;
 
 class b3InitCondition
 {
@@ -584,6 +589,49 @@ public:
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
+class b3RenderShapeContext : public b3RenderContext
+{
+	b3_count   subdiv;
+	b3_f64     Sin[B3_MAX_RENDER_SUBDIV + 1];
+	b3_f64     Cos[B3_MAX_RENDER_SUBDIV + 1];
+	b3_vector *Between;
+#ifdef BLZ3_USE_OPENGL
+	GLushort  *CylinderIndices;
+	GLushort  *ConeIndices;
+#endif
+
+public:
+	           b3RenderShapeContext(b3_count subdiv = 16);
+	void       b3InitSubdiv(b3_count subdiv);
+	b3_count   b3GetSubdiv();
+	b3_f64    *b3GetCosTable();
+	b3_f64    *b3GetSinTable();
+	b3_vector *b3GetSplineAux();
+
+#ifdef BLZ3_USE_OPENGL
+	GLushort  *b3GetCylinderIndices();
+	GLushort  *b3GetConeIndices();
+#endif
+};
+
+class b3RenderShapeObject : public b3RenderObject
+{
+protected:
+	b3_count         SinCosSteps;
+	b3_vector       *Between;
+	b3_f64          *Cos;
+	b3_f64          *Sin;
+	b3_f64           Epsilon;
+
+	b3CondLimit      Limit;
+
+public:
+	         b3RenderShapeObject();
+
+protected:
+	b3_count b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
+};
+
 class b3InitShape
 {
 protected:
@@ -591,7 +639,7 @@ protected:
 };
 
 // same structure entries for all shapes
-class b3Shape : public b3Item, public b3RenderObject
+class b3Shape : public b3Item, public b3RenderShapeObject
 {
 protected:
 	b3_vector        Normal;
@@ -1382,6 +1430,7 @@ public:
 // CAMERA
 class b3CameraPart : public b3Special
 {
+public:
 	b3_vector        Width;
 	b3_vector        Height;
 	b3_vector        EyePoint;
@@ -1546,6 +1595,7 @@ protected:
 
 class b3Scene : public b3Item
 {
+public:
 	// Camera
 	b3_vector        EyePoint;
 	b3_vector        ViewPoint;
