@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2004/09/08 06:48:08  sm
+**      - Triangle building corrected.
+**
 **      Revision 1.46  2004/07/24 13:55:12  sm
 **      - Changed triangle grid size computation.
 **      - Corrected Mork shading to its roots.
@@ -455,7 +458,7 @@ void b3TriangleShape::b3PrepareGridList ()
 
 	max    = m_GridSize * m_GridSize * m_GridSize;
 #ifdef USE_NEW_GRID
-	MaxRec = b3IntLog2(m_GridSize);
+	MaxRec = b3IntLog2(m_GridSize) << 1;
 #else
 	MaxRec = b3IntLog3(m_GridSize) << 1;
 #endif
