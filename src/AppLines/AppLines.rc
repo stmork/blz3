@@ -1344,8 +1344,6 @@ BEGIN
     PUSHBUTTON      "Ändern...",IDC_CHANGE_MOVE,85,105,50,15
     LTEXT           "Maßeinheit",IDC_STATIC,20,65,36,8
     LTEXT           "Schrittweite",IDC_STATIC,20,95,38,8
-    CONTROL         "VBO erlauben (OpenGL)",IDC_ALLOW_VBO,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,165,280,93,10
 END
 
 IDD_NEW_OBJECT DIALOGEX 0, 0, 382, 255

@@ -35,6 +35,10 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/12/11 18:39:44  sm
+**	- Fixed modified object problem in Lines when returning
+**	  to scene editor.
+**
 **	Revision 1.35  2004/11/21 16:44:46  sm
 **	- Corrected fulcrum drawing problem: The fulcrum was
 **	  updated before first initialization. And even the initialization
@@ -43,7 +47,7 @@
 **	  The vertex array drawing cannot be combined with
 **	  VBOs due to binding problems. Its likely that any VBO
 **	  is bound so a simple vertex array call should go wrong.
-**
+**	
 **	Revision 1.34  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -272,6 +276,7 @@ CAppRenderView::CAppRenderView()
 		m_Action[i] = null;
 	}
 	m_RedDash.b3CreateDashPen(RGB(0xff,0x11,0x44));
+	b3VectorBufferObjects::glAllowVBO = false;
 }
 
 CAppRenderView::~CAppRenderView()

@@ -394,6 +394,7 @@ public:
 protected:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3AllocVertexMemory(b3RenderContext *context);
+	void   b3FreeVertexMemory();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
 };

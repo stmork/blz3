@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2004/12/11 18:39:44  sm
+**      - Fixed modified object problem in Lines when returning
+**        to scene editor.
+**
 **      Revision 1.19  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -169,6 +173,11 @@ void b3Cylinder::b3AllocVertexMemory(b3RenderContext *ctx)
 	b3RenderObject::b3AllocVertexMemory(context);
 	glGridElements->b3SetGrids(context->b3GetCylinderIndices());
 	glPolygonElements->b3SetPolygons(context->b3GetCylinderPolygons());
+}
+
+void b3Cylinder::b3FreeVertexMemory()
+{
+	glVertexElements->b3FreeVertexMemory();
 }
 
 void b3Cylinder::b3ComputeVertices()

@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/12/11 18:39:44  sm
+**	- Fixed modified object problem in Lines when returning
+**	  to scene editor.
+**
 **	Revision 1.8  2004/11/30 10:16:14  smork
 **	- Added a working VBO version which computes vertices/indices
 **	  completely in CPU memory and only updates the results into
 **	  GPU memory finally. It's faster than computing directly
 **	  in GPU memory but the fastest version is still the common
 **	  vertex array version.
-**
+**	
 **	Revision 1.7  2004/11/29 16:35:02  smork
 **	- Added additional VBO version which recomputes in host memory
 **	  and only transfers recomputed data to GPU.
@@ -136,7 +140,7 @@ void b3SimpleVertexElements::b3AllocVertexMemory(b3RenderContext *context,b3_cou
 
 void b3SimpleVertexElements::b3FreeVertexMemory()
 {
-	if (glVertex != null)
+	if ((glVertex != null) && (!glCustom))
 	{
 		b3MemAccess::b3Free(glVertex);
 		glVertex       = null;
@@ -172,7 +176,7 @@ void b3SimpleGridElements::b3AllocVertexMemory(b3RenderContext *context,b3_count
 
 void b3SimpleGridElements::b3FreeVertexMemory()
 {
-	if (glGrids != null)
+	if ((glGrids != null) && (!glCustom))
 	{
 		b3MemAccess::b3Free(glGrids);
 		glGrids        = null;
@@ -208,7 +212,7 @@ void b3SimplePolygonElements::b3AllocVertexMemory(b3RenderContext *context,b3_co
 
 void b3SimplePolygonElements::b3FreeVertexMemory()
 {
-	if (glPolygons != null)
+	if ((glPolygons != null) && (!glCustom))
 	{
 		b3MemAccess::b3Free(glPolygons);
 		glPolygons     = null;

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.107  2004/12/11 18:39:44  sm
+**	- Fixed modified object problem in Lines when returning
+**	  to scene editor.
+**
 **	Revision 1.106  2004/12/11 17:05:02  sm
 **	- Fixed update/draw problem in object editor
-**
+**	
 **	Revision 1.105  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
 **	
@@ -835,6 +839,11 @@ void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 		glVertexElements->b3SetVertices(m_BBoxVertex);
 		glVertexElements->b3SetCount(8);
 	}
+	glGridElements->b3SetGrids(m_BBoxIndices);
+	glGridElements->b3SetCount(12);
+
+	glPolygonElements->b3SetPolygons(null);
+	glPolygonElements->b3SetCount(0);
 }
 
 void b3BBox::b3FreeVertexMemory()
@@ -854,8 +863,6 @@ void b3BBox::b3FreeVertexMemory()
 		bbox->b3FreeVertexMemory();
 
 	}
-
-	b3RenderObject::b3FreeVertexMemory();
 }
 
 void b3BBox::b3ComputeVertices()
@@ -903,11 +910,6 @@ void b3BBox::b3ComputeNormals(b3_bool normalize)
 
 void b3BBox::b3ComputeIndices()
 {
-	glGridElements->b3SetGrids(m_BBoxIndices);
-	glGridElements->b3SetCount(12);
-
-	glPolygonElements->b3SetPolygons(null);
-	glPolygonElements->b3SetCount(0);
 }
 
 void b3BBox::b3Draw(b3RenderContext *context)

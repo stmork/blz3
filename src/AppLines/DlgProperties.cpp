@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/12/11 18:39:44  sm
+**	- Fixed modified object problem in Lines when returning
+**	  to scene editor.
+**
 **	Revision 1.11  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
-**
+**	
 **	Revision 1.10  2004/11/30 19:30:26  sm
 **	- Added VBO support settings in properties dialog.
 **	
@@ -100,7 +104,6 @@ CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CDlgProperties)
 	m_BBoxVisible = FALSE;
-	m_AllowVBO = FALSE;
 	//}}AFX_DATA_INIT
 	m_App = CB3GetLinesApp();
 }
@@ -124,7 +127,6 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ROW_REFRESH, m_RowRefreshCtrl);
 	DDX_Control(pDX, IDC_PRT_BUFFER_SPIN, m_PrtBufferCtrl);
 	DDX_Check(pDX, IDC_BBOX_VISIBLE, m_BBoxVisible);
-	DDX_Check(pDX, IDC_ALLOW_VBO, m_AllowVBO);
 	//}}AFX_DATA_MAP
 }
 
@@ -150,7 +152,6 @@ END_MESSAGE_MAP()
 BOOL CDlgProperties::OnInitDialog() 
 {
 	m_BBoxVisible = b3BBox::m_GridVisible;
-	m_AllowVBO    = b3VectorBufferObjects::glAllowVBO;
 
 	CDialog::OnInitDialog();
 	
@@ -186,7 +187,7 @@ BOOL CDlgProperties::OnInitDialog()
 	m_PickSizeCtrl.SetRange(1,4);
 	m_PickSizeCtrl.SetPos(b3PickInfo::m_PickSize);
 
-	GetDlgItem(IDC_ALLOW_VBO)->EnableWindow(b3VectorBufferObjects::b3HasVBO());
+//	GetDlgItem(IDC_ALLOW_VBO)->EnableWindow(b3VectorBufferObjects::b3HasVBO());
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -268,7 +269,6 @@ void CDlgProperties::OnOK()
 	b3PickInfo::m_GridColor           = m_ColorGrid;
 	b3PickInfo::m_PickSize            = m_PickSizeCtrl.GetPos();
 	b3PickPoint::m_PickColor          = m_ColorPick.b3GetColorref();
-	b3VectorBufferObjects::glAllowVBO = m_AllowVBO;
 
 	m_App->m_PrintBufferSize = m_PrtBufferCtrl.b3GetPos();
 	m_App->m_RowRefreshCount = m_RowRefreshCtrl.GetPos();
