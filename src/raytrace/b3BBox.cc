@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.95  2004/08/20 08:09:27  sm
+**	- Optimized animation a little bit.
+**
 **	Revision 1.94  2004/07/18 08:44:20  sm
 **	- Removed recomputation marker for transformations.
-**
+**	
 **	Revision 1.93  2004/07/18 08:28:44  sm
 **	- Added transformation optimazation: We don't need to recompute
 **	  vertices on unit matrix transformation. This simple test makes
@@ -1115,11 +1118,6 @@ b3_bool b3BBox::b3Transform(
 		transformed = true;
 	}
 
-	if (transformed)
-	{
-		b3Recompute();
-	}
-
 	return transformed;
 }
 
@@ -1128,11 +1126,11 @@ void b3Scene::b3Transform(
 	b3_bool    is_affine,
 	b3_bool    force_action)
 {
-	b3Item *item;
-	b3BBox *bbox;
-
 	if (!b3Matrix::b3IsUnitMatrix(transformation))
 	{
+		b3Item *item;
+		b3BBox *bbox;
+
 		B3_FOR_BASE(b3GetBBoxHead(),item)
 		{
 			bbox = (b3BBox *)item;

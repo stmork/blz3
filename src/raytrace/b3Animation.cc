@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2004/08/20 08:09:27  sm
+**      - Optimized animation a little bit.
+**
 **      Revision 1.22  2004/08/19 10:12:23  sm
 **      - Test if one animation run is enough - but is not.
 **      - Using gluUnProject for ticket no. 7.
@@ -381,7 +384,6 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 	m_FrameIndex   = b3AnimFrameIndex(t);
 	b3Vector::b3Init(&m_AnimCenter);
 
-#if 1
 	// reset tracks backwards
 	B3_FOR_BASE_BACK(b3GetAnimElementHead(),item)
 	{
@@ -414,31 +416,6 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 			}
 		}
 	}
-#else
-	B3_FOR_BASE_BACK(b3GetAnimElementHead(),item)
-	{
-		Anim = (b3AnimElement *)item;
-		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
-		{
-			if (b3Matrix::b3Inverse  (&Anim->m_Actual,&resetMatrix))
-			{
-				b3ApplyTransformation(Global,Anim,&resetMatrix,m_Neutral);
-			}
-			b3Matrix::b3Unit (&Anim->m_Actual);
-
-			Anim->m_Center = m_AnimCenter;
-			tClipped = b3Math::b3Limit(t,Anim->m_Start,Anim->m_End);
-			Anim->b3ComputeTransformationMatrix (this,&Anim->m_Actual,tClipped);
-			b3ApplyTransformation (Global,Anim,&Anim->m_Actual,t);
-
-			// set center position
-			if (Anim->m_Flags & ANIMFLAGF_CENTER)
-			{
-				Anim->b3GetPosition(&m_AnimCenter,tClipped);
-			}
-		}
-	}
-#endif
 
 	Global->b3ComputeBounds(&lower,&upper);
 }

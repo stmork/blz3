@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2004/08/20 08:09:27  sm
+**      - Optimized animation a little bit.
+**
 **      Revision 1.11  2004/06/19 12:11:01  sm
 **      - Fixed animation problem by using a thrid dress vector
 **        which points up. This is a hack because rotating vectors
@@ -537,8 +540,9 @@ void b3Animation::b3ApplyTransformation (
 
 	if (Anim->m_Flags & ANIMFLAGF_OBJECT)
 	{
-		b3PrintF(B3LOG_FULL,"  ANIM object %s (move)\n",Anim->m_Object);
 		Anim->b3SelectAnimElement (Global);
+
+		b3PrintF(B3LOG_FULL,"  ANIM object %s (move)\n",Anim->m_Object);
 		Global->b3Transform (transform,false);
 	}
 }

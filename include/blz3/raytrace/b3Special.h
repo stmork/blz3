@@ -220,12 +220,12 @@ class B3_PLUGIN b3Animation : public b3Special
 	b3_vector       m_AnimCenter;
 
 public:
-	b3_f64   m_Start;           // start time (one unit per frame)
-	b3_f64   m_End;             // end time (one unit per frame)
-	b3_f64   m_Time;            // time point
-	b3_f64   m_Neutral;         // neutral point
-	b3_count m_FramesPerSecond;
-	b3_u32   m_Flags;
+	b3_f64          m_Start;           // start time (one unit per frame)
+	b3_f64          m_End;             // end time (one unit per frame)
+	b3_f64          m_Time;            // time point
+	b3_f64          m_Neutral;         // neutral point
+	b3_count        m_FramesPerSecond;
+	b3_u32          m_Flags;
 
 public:
 	B3_ITEM_INIT(b3Animation);
