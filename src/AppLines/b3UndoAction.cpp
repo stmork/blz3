@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/11/30 18:51:39  sm
+**	- Corrected affine transformations and scaling which is
+**	  not affine.
+**
 **	Revision 1.6  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.5  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -86,13 +90,13 @@ void b3OpObjectTransformation::b3Reactivate()
 void b3OpObjectTransformation::b3Undo()
 {
 	b3Reactivate();
-	m_Scene->b3Transform(&m_UndoAction);
+	m_Scene->b3Transform(&m_UndoAction, false);
 }
 
 void b3OpObjectTransformation::b3Redo()
 {
 	b3Reactivate();
-	m_Scene->b3Transform(&m_RedoAction);
+	m_Scene->b3Transform(&m_RedoAction, false);
 }
 
 /*************************************************************************

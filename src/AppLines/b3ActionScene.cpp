@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/11/30 18:51:38  sm
+**	- Corrected affine transformations and scaling which is
+**	  not affine.
+**
 **	Revision 1.9  2004/08/19 19:25:55  sm
 **	- Fixed ticket no. 7. The perspective unprojection is
 **	  correct now.
-**
+**	
 **	Revision 1.8  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -227,7 +231,7 @@ void CB3ActionObjectMove::b3Transform(b3_matrix *transformation)
 {
 	CAppLinesDoc *pDoc = m_LinesView->GetDocument();
 	
-	pDoc->m_Scene->b3Transform(transformation);
+	pDoc->m_Scene->b3Transform(transformation, true);
 	pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 }
 
@@ -298,7 +302,7 @@ void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
 			m_LastAngle = angle;
 			b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
 			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
-			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity);
+			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity, true);
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
 	}
@@ -330,7 +334,7 @@ void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
 	{
 		b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
 		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
-		m_LinesView->GetDocument()->m_Scene->b3Transform(&activity);
+		m_LinesView->GetDocument()->m_Scene->b3Transform(&activity, true);
 		m_Doc->b3ComputeBounds();
 		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
@@ -385,7 +389,7 @@ void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
 		{
 			b3Matrix::b3Scale(null,&m_Transformation,m_Center,&scale);
 			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
-			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity,false);
+			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity, false);
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
 	}
@@ -404,7 +408,7 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 
 			b3Matrix::b3Scale(null,&m_Transformation,m_Center,&scale);
 			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
-			pDoc->m_Scene->b3Transform(&activity,false);
+			pDoc->m_Scene->b3Transform(&activity, false);
 			pDoc->b3ComputeBounds();
 			pDoc->SetModifiedFlag();
 			pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
