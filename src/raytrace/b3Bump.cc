@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.36  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
-**
+**	
 **	Revision 1.35  2004/05/18 10:44:52  sm
 **	- Fine tuning animated water.
 **	
@@ -734,7 +738,7 @@ b3BumpGlossy::b3BumpGlossy(b3_u32 class_type) : b3Bump(sizeof(b3BumpGlossy),clas
 b3BumpGlossy::b3BumpGlossy(b3_u32 *src) : b3Bump(src)
 {
 	m_Flags     = b3InitInt();
-	m_Amplitude = b3Math::b3Limit(b3InitFloat(),0,1);
+	m_Amplitude = b3Math::b3Limit(b3InitFloat());
 }
 
 void b3BumpGlossy::b3Write()

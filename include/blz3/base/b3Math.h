@@ -57,13 +57,26 @@ public:
 		return 0.5 * (a / b + c / d);
 	}
 
+	static inline b3_f64 b3Limit(const b3_f64 value)
+	{
+		if (value < 0)
+		{
+			return 0;
+		}
+		if (value > 1)
+		{
+			return 1;
+		}
+		return value;
+	}
+
 	static inline b3_f64 b3Limit(const b3_f64 value,const b3_f64 min,const b3_f64 max)
 	{
 		if (value < min)
 		{
 			return min;
 		}
-		else if (value > max)
+		if (value > max)
 		{
 			return max;
 		}
@@ -139,9 +152,25 @@ public:
 		return b3SmoothPulse(e0,e1,e2,e3,fmod(x,period));
 	}
 
+	static inline b3_f64 b3FastPow(b3_f64 x,b3_u32 exponent)
+	{
+		b3_f64 result = 1;
+		b3_f64 factor = x;
+
+		while (exponent != 0)
+		{
+			if (exponent & 1)
+			{
+				result *= factor;
+			}
+			exponent = exponent >> 1;
+			factor *= factor;
+		}
+		return result;
+	}
+
 #ifndef CBRT_SYS
 #ifdef  CBRT_SLOW
-
 	static inline b3_f64 b3Cbrt(b3_f64 x)
 	{
 		if (x > 0) return ( exp(log( x) / 3));

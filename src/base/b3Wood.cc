@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.8  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
-**
+**	
 **	Revision 1.7  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
@@ -149,7 +153,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x,Pgrain.y,Pgrain.z);
 
 			g *= (0.3 + 0.7 * inring);
-			g  = b3Math::b3Limit(0.8 - g,0,1);
+			g  = b3Math::b3Limit(0.8 - g);
 			g *= g;
 			g  = m_Grainy * b3Math::b3Smoothstep(0.5,1,g);
 			if (i == 0)

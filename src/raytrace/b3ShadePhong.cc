@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.25  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
-**
+**	
 **	Revision 1.24  2004/05/23 15:04:19  sm
 **	- Some optimizations
 **	
@@ -203,12 +207,10 @@ void b3ShaderPhong::b3ShadeLight(
 			surface->incoming->normal.y * Jit->dir.y +
 			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			Factor = log ((
-				surface->refl_ray.dir.x * Jit->dir.x +
-				surface->refl_ray.dir.y * Jit->dir.y +
-			surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 
-			Factor = exp(Factor * surface->m_SpecularExp) * Jit->LightFrac;
+			Factor = b3Math::b3FastPow ((lambda + 1) * 0.5, (b3_u32)surface->m_SpecularExp) * Jit->LightFrac;
+
 			result += (surface->m_Specular * Factor + surface->m_Diffuse * ShapeAngle) * light->m_Color;
 		}
 	}
@@ -234,7 +236,7 @@ void b3ShaderPhong::b3ShadeSurface(
 			surface.refl_ray.inside = false;
 		}
 		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count + 1);
+		b3Shade(&surface.refr_ray,depth_count);
 		formula |= MIX_REFRACTION;
 	}
 	else
@@ -245,7 +247,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	refl = surface.m_Reflection;
 	if (refl > 0)
 	{
-		b3Shade(&surface.refl_ray,depth_count + 1);
+		b3Shade(&surface.refl_ray,depth_count);
 		formula |= MIX_REFLECTION;
 	}
 

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.33  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
-**
+**	
 **	Revision 1.32  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
@@ -247,14 +251,11 @@ void b3ShaderMork::b3ShadeLight(
 			surface->incoming->normal.y * Jit->dir.y +
 			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			if (surface->m_SpecularExp < 100000)
-			{
-				Factor = log ((
-						surface->refl_ray.dir.x * Jit->dir.x +
-						surface->refl_ray.dir.y * Jit->dir.y +
-						surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 
-				Factor = exp (Factor * surface->m_SpecularExp) * Jit->LightFrac;
+			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
+			{
+				Factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->LightFrac;
 				surface->m_SpecularSum += (light->m_Color * Factor);
 			}
 		}
@@ -277,26 +278,15 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_surface &surface,
 	b3_count    depth_count)
 {
+	b3Color   result;
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
 	b3_f64    refl,refr,factor;
 
 	b3ComputeFresnel(&surface);
-	if (surface.m_Transparent)
-	{
-		surface.m_Reflection *=        surface.m_Fresnel;
-		surface.m_Refraction *= (1.0 - surface.m_Fresnel);
-	}
-	else if (surface.m_Ior != 1.0)
-	{
-		surface.m_Reflection = b3Math::b3Mix(
-			surface.m_Fresnel,
-			surface.m_Reflection,
-			surface.m_Reflection);
-		surface.m_Refraction = 0;
-	}
 
+	// Refraction
 	if (surface.m_Transparent)
 	{
 		if (surface.m_Ior == 1)
@@ -304,19 +294,33 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
-		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count + 1);
+		refl = surface.m_Reflection *        surface.m_Fresnel;
+		refr = surface.m_Refraction * (1.0 - surface.m_Fresnel);
+		b3Shade(&surface.refr_ray,depth_count);
+		result = (surface.refr_ray.color * refr);
 	}
 	else
 	{
+		if (surface.m_Ior != 1.0)
+		{
+			refl = b3Math::b3Mix(
+				surface.m_Fresnel,
+				surface.m_Reflection,
+				surface.m_Reflection);
+		}
+		else
+		{
+			refl = surface.m_Reflection;
+		}
 		refr = 0;
+		result.b3Init();
 	}
 
 	// Reflection
-	if (((!ray->inside) || (!surface.m_Transparent)) && (surface.m_Reflection > 0))
+	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
 	{
-		refl = surface.m_Reflection;
-		b3Shade(&surface.refl_ray,depth_count + 1);
+		b3Shade(&surface.refl_ray,depth_count);
+		result += (surface.refl_ray.color * refl);
 	}
 	else
 	{
@@ -324,30 +328,24 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
-	ray->color.b3Init();
 	factor = (1.0 - refl - refr) * 0.5;
 	if (factor > 0)
 	{
 		// For each light source
+		ray->color.b3Init();
 		surface.m_SpecularSum.b3Init();
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-
 		ray->color =
 			ray->color * factor +
+			result +
 			surface.m_SpecularSum;
 	}
-
-	if (refr > 0)
+	else
 	{
-		ray->color += (surface.refr_ray.color * refr);
-	}
-
-	if (refl > 0)
-	{
-		ray->color += (surface.refl_ray.color * refl);
+		ray->color = result;
 	}
 }

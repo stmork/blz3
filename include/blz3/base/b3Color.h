@@ -140,10 +140,26 @@ public:
 		return v[index];
 	}
 
+	inline void b3Init()
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			v[i] = 0;
+		}
+	}
+
+	inline void b3Init(b3_f64 rgb, b3_f64 a = 0)
+	{
+		v[R] =
+		v[G] =
+		v[B] = (b3_f32)rgb;
+		v[A] = (b3_f32)a;
+	}
+
 	inline void b3Init(
-		b3_f64 r = 0,
-		b3_f64 g = 0,
-		b3_f64 b = 0,
+		b3_f64 r,
+		b3_f64 g,
+		b3_f64 b,
 		b3_f64 a = 0)
 	{
 		v[R] = (b3_f32)r;

@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.79  2004/05/26 12:47:20  sm
+**      - Optimized recursive shading
+**      - Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **      Revision 1.78  2004/05/23 20:52:34  sm
 **      - Done some Fresnel formula experiments.
 **
@@ -1451,7 +1455,7 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	m_Ior         =    1.5;
 	m_SpecularExp = 1000.0;
 
-	// Cook & torrance values
+	// Cook & Torrance values
 	m_ka   = 0.1;
 	m_ks   = 0.6;
 	m_kd   = 0.6;
@@ -1487,17 +1491,18 @@ b3_bool b3MatCookTorrance::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *ray,b3_light_info *jit,b3Color &acc)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b3Color &acc)
 {
-	b3Color     result;
-	b3_vector64 L;
+	b3_ray      *ray = surface->incoming;
+	b3_vector64  L;
+	b3Color      result;
 
-	B3_ASSERT(ray->incoming != null);	
+	B3_ASSERT(ray != null);	
 
 	b3Vector::b3Init(&L,&jit->dir);
 	b3Vector::b3Normalize(&L);
 
-	b3_f64 nl = b3Vector::b3SMul(&ray->incoming->normal,&L);
+	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
 
 #if 1
 	b3Color Rf;
@@ -1505,14 +1510,14 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *ray,b3_light_info *jit,b3Col
 	{
 		b3_vector64 H;
 
-		H.x = L.x - ray->incoming->dir.x;
-		H.y = L.y - ray->incoming->dir.y;
-		H.z = L.z - ray->incoming->dir.z;
+		H.x = L.x - ray->dir.x;
+		H.y = L.y - ray->dir.y;
+		H.z = L.z - ray->dir.z;
 		b3Vector::b3Normalize(&H);
 
-		b3_f64 nh =  b3Vector::b3SMul(&ray->incoming->normal,&H);
-		b3_f64 nv = -b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
-		b3_f64 vh = -b3Vector::b3SMul(&ray->incoming->dir,&H);
+		b3_f64 nh =  b3Vector::b3SMul(&ray->normal,&H);
+		b3_f64 nv = -b3Vector::b3SMul(&ray->normal,&ray->dir);
+		b3_f64 vh = -b3Vector::b3SMul(&ray->dir,&H);
 
 		b3_f64 Gm = 2 * nh * nv / vh;
 		b3_f64 Gs = 2 * nh * nl / vh;
@@ -1526,7 +1531,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *ray,b3_light_info *jit,b3Col
 		{
 			G = Gs;
 		}
-		G = b3Math::b3Limit(G,0,1);
+		G = b3Math::b3Limit(G);
 
 		b3_f64 alpha = acos(nh);
 		b3_f64 nh_q  = nh * nh;
@@ -1551,7 +1556,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *ray,b3_light_info *jit,b3Col
 #else
 	b3_f64 rl = b3Vector::b3SMul(&ray->refl_ray.dir,&L);
 
-	result = m_Ra + m_Diffuse * nl + m_Specular * pow(fabs(rl),m_SpecularExp);
+	result = m_Ra + m_Diffuse * nl + m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
 #endif
 
 	acc += result;

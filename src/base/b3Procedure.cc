@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.37  2004/05/18 16:31:01  sm
 **	- Simple valud adjustment.
-**
+**	
 **	Revision 1.36  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
 **	
@@ -752,7 +756,7 @@ b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)
 		z    += z;
 		freq += freq; // = freq *= 2;
 	}
-	return b3Math::b3Limit(sum,0,1);
+	return b3Math::b3Limit(sum);
 }
 
 /*************************************************************************

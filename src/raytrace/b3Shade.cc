@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2004/05/26 12:47:20  sm
+**	- Optimized recursive shading
+**	- Optimized pow to an integer version (b3Math::b3FastPow)
+**
 **	Revision 1.45  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
-**
+**	
 **	Revision 1.44  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
@@ -395,7 +399,7 @@ b3_bool b3Shader::b3Shade(
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
-		b3ShadeSurface(surface,depth_count);
+		b3ShadeSurface(surface,depth_count + 1);
 
 		// Post process nebular
 		if (m_Nebular != null)
