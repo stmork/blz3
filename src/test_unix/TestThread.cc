@@ -1,5 +1,52 @@
+/*
+**
+**	$Filename:	TestThread.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Testing the effects of accessing variables from
+**	               multiple threads.
+**
+**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Thread.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.4  2002/03/16 15:12:57  sm
+**	- Making b3Mem system independend using new system dependen b3MemAccess
+**	  class with static methods.
+**	- Adjusting TestThread with volatile keyword to avoid the compiler
+**	  optimizeing access to the test counter.
+**
+**	
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        routines                                      **
+**                                                                      **
+*************************************************************************/
 
 #define TEST_NUM_THREADS 5
 #define TEST_LOOP        500000
@@ -9,19 +56,19 @@ class TestUnit;
 class TestInfo
 {
 public:
-	TestUnit *thisClass;
-	b3_u32   *counter;
-	int       num;
+	         TestUnit *thisClass;
+	volatile b3_u32   *counter;
+	         int       num;
 };
 
 class TestUnit
 {
-	b3Mutex    tMutex;
-	b3IPCMutex iMutex;
-	b3Thread   thread[TEST_NUM_THREADS];
-	b3_u32     counter;
-	b3_u32     single_counter[TEST_NUM_THREADS];
-	TestInfo   info[TEST_NUM_THREADS];
+	         b3Mutex    tMutex;
+	         b3IPCMutex iMutex;
+	         b3Thread   thread[TEST_NUM_THREADS];
+	volatile b3_u32     counter;
+	volatile b3_u32     single_counter[TEST_NUM_THREADS];
+	         TestInfo   info[TEST_NUM_THREADS];
 
 public:
 	TestUnit()
@@ -67,16 +114,14 @@ public:
 	{
 		TestInfo *info = (TestInfo *)ptr;
 		TestUnit *thisClass = info->thisClass;
-		b3_u32    old;
 		int       i,num;
 
 		num = info->num;
 		b3PrintF (B3LOG_NORMAL,"Thread %d started.\n",num + 1);
 		for (i = 0;i < TEST_LOOP;i++)
 		{
-			old = thisClass->counter;
+			thisClass->counter++;
 			info->counter[num]++;
-			thisClass->counter = old + 1;
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
 		return 0;
@@ -86,7 +131,6 @@ public:
 	{
 		TestInfo *info = (TestInfo *)ptr;
 		TestUnit *thisClass = info->thisClass;
-		b3_u32    old;
 		int       i,num;
 
 		num = info->num;
@@ -94,9 +138,8 @@ public:
 		for (i = 0;i < TEST_LOOP;i++)
 		{
 			thisClass->tMutex.b3Lock();
-			old = thisClass->counter;
 			info->counter[num]++;
-			thisClass->counter = old + 1;
+			thisClass->counter++;
 			thisClass->tMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
@@ -107,7 +150,6 @@ public:
 	{
 		TestInfo *info = (TestInfo *)ptr;
 		TestUnit *thisClass = info->thisClass;
-		b3_u32    old;
 		int       i,num;
 
 		num = info->num;
@@ -115,9 +157,8 @@ public:
 		for (i = 0;i < TEST_LOOP;i++)
 		{
 			thisClass->iMutex.b3Lock();
-			old = thisClass->counter;
 			info->counter[num]++;
-			thisClass->counter = old + 1;
+			thisClass->counter++;
 			thisClass->iMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);

@@ -18,55 +18,31 @@
 #ifndef B3_SYSTEM_MEM_H
 #define B3_SYSTEM_MEM_H
 
-#include "blz3/b3Types.h"
-#include "blz3/system/b3Thread.h"
+#define REALLY_FREE
 
-struct b3MemNode
-{
-	b3MemNode *ChunkNext;
-	b3MemNode *ChunkLast;
-	void      *Chunk;
-	b3_size    ChunkSize;
-};
+#include <stdlib.h>
 
-typedef enum
-{
-	B3_MEM_ERROR = -1,
-	B3_MEM_OK    =  0,
-	B3_MEM_MEMORY,
-	B3_MEM_UNKNOWN_PTR
-} b3_mem_error;
-
-class b3MemException
+class b3MemAccess
 {
 protected:
-	b3_mem_error error;
+	static inline void *b3Alloc(b3_size size)
+	{
+		return calloc(size,1);
+	}
+
+	static inline void b3Free(void *ptr)
+	{
+#ifdef REALLY_FREE
+		free(ptr);
+#endif
+	}
 	
-public:
-	b3MemException(b3_mem_error error = B3_MEM_ERROR)
+	static inline void *b3Realloc(void *ptr,b3_size size)
 	{
-		this->error = error;
-	}
-
-	b3_mem_error b3GetError()
-	{
-		return error;
+		return realloc(ptr,size);
 	}
 };
 
-class b3Mem : public b3MemNode
-{
-protected:
-	b3Mutex    mutex;
-
-public:
-	           b3Mem();
-	virtual   ~b3Mem();
-	void      *b3Alloc(const b3_size new_size);
-	void      *b3Realloc(const void *old_ptr,const b3_size new_size);
-	b3_bool    b3Free(const void *ptr);
-	b3_bool    b3Free();
-	void       b3Dump();
-};
+#include "blz3/system/b3Memory.h"
 
 #endif
