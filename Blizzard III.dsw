@@ -3,6 +3,63 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "ConMandel"=.\src\test_unix\ConMandel.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibSystem
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name LibBase
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ConTestIo"=.\src\test_unix\ConTestIo.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibSystem
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name LibBase
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name LibRaytrace
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ConTestThread"=.\src\test_unix\ConTestThread.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LibSystem
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ConTestIo
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "LibBase"=.\src\base\LibBase.dsp - Package Owner=<4>
 
 Package=<5>

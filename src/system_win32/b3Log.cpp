@@ -45,10 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/02 19:28:25  sm
+**	- Applying console application on Windows 32
+**	- Added further Windows environment
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
@@ -81,6 +85,11 @@ static b3IPCMutex LogMutex;
 void b3Log_SetLevel(const b3_log_level debug_limit)
 {
 	logLevel = debug_limit;
+}
+
+b3_bool b3CheckLevel(const b3_log_level debug_limit)
+{
+	return logLevel >= debug_limit;
 }
 
 void b3Log_GetFile(char *DebugFile)

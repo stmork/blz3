@@ -124,4 +124,5 @@ int main(int argc,char *argv[])
 	}
 
 	B3_BEEP;
+	return 0;
 }

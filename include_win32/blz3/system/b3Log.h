@@ -18,7 +18,7 @@
 #ifndef B3_SYSTEM_LOG_H
 #define B3_SYSTEM_LOG_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 
 typedef enum
 {

@@ -37,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/07/02 19:28:25  sm
+**      - Applying console application on Windows 32
+**      - Added further Windows environment
+**
 **      Revision 1.3  2001/07/02 16:09:46  sm
 **      - Added bounding box reorganization.
 **
@@ -114,6 +118,17 @@ static class b3ItemRegister
 {
 	b3Base<b3ItemRegisterEntry> classes;
 public:
+	~b3ItemRegister()
+	{
+		b3ItemRegisterEntry *item;
+
+		while(item = classes.First)
+		{
+			classes.b3Remove(item);
+			delete item;
+		}
+	}
+
 	void b3Append(b3ItemRegisterEntry *new_entry)
 	{
 		classes.b3Append(new_entry);
@@ -121,7 +136,7 @@ public:
 
 	b3_bool b3IsEmpty()
 	{
-		classes.First == null;
+		return classes.First == null;
 	}
 
 	b3ItemRegisterEntry *b3Find(b3_u32 class_type)

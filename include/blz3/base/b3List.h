@@ -18,7 +18,7 @@
 #ifndef B3_BASE_LIST_H
 #define B3_BASE_LIST_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 
 #define B3_NODE_FIRST   1
 #define B3_NODE_PREV    2

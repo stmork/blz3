@@ -20,7 +20,7 @@
 
 #include <sys/timeb.h>
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 
 #define MAX_B3TIME_SLICE 100
 

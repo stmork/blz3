@@ -38,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/02 19:28:25  sm
+**	- Applying console application on Windows 32
+**	- Added further Windows environment
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
@@ -284,6 +288,11 @@ void b3Dir::b3CloseDir ()
 **                        routines                                      **
 **                                                                      **
 *************************************************************************/
+
+void b3Path::b3Empty()
+{
+	path[0] = 0;
+}
 
 void b3Path::CorrectFilePath(char *name)
 {

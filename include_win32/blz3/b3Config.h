@@ -21,6 +21,8 @@
 #define BLIZZARD3_REG_COMPANY  "Steffen A. Mork"
 #define BLIZZARD3_REG_PRODUCT  "Blizzard 3"
 
+#define main(argc,argv) _Blizzard3Main(argc,argv)
+
 #include "stdafx.h"
 
 #include <ctype.h>
@@ -33,6 +35,17 @@
 #include <string.h>
 #include <time.h>
 
+#if defined (WIN32)
+#	define IS_WIN32      TRUE
+#	define THISPROCESSOR INTEL
+#	ifndef _WINDOWS
+#		define _WINDOWS
+#	endif
+#else
+#	define IS_WIN32      FALSE
+#	error "We need at least 32 Bit! Do you understand?"
+#endif // WIN32
+
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
 
@@ -44,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/02 19:28:25  sm
+**	- Applying console application on Windows 32
+**	- Added further Windows environment
+**
 **	Revision 1.2  2001/07/01 19:14:23  sm
 **	- Include of JPEG and TIFF libraries
-**
+**	
 **	Revision 1.1  2001/07/01 16:31:51  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -81,17 +98,11 @@
 		// Either leave at 0x200 or 0x1000
 #		pragma comment(linker,"/FILEALIGN:0x200")
 #	endif // _MSC_VER >= 1000
-#endif
+#endif // _DEBUG
 
 #define INTEL    0x4949
 #define MOTOROLA 0x4d4d
 
-#if defined (WIN32)
-#	define IS_WIN32      TRUE
-#	define THISPROCESSOR INTEL
-#else
-#	define IS_WIN32      FALSE
-#endif
 #define IS_NT             (IS_WIN32 && (BOOL)(GetVersion() < 0x80000000))
 #define IS_WIN32S         (IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion())) < 4)))
 #define IS_WIN95	         ((BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32)
@@ -100,13 +111,6 @@
 #	define new DEBUG_NEW
 #endif
 
-#define WM_MAUI_BARCODE         (WM_USER + 10)
-#define WM_MAUI_PAGECOUNT       (WM_USER + 11)
-#define WM_MAUI_SETTITLE        (WM_USER + 12)
-#define WM_MAUI_UPDATE_CONTROLS (WM_USER + 13)
-#define WM_MAUI_SCAN_READY      (WM_USER + 14)
-#define WM_MAUI_SCAN_RATE       (WM_USER + 15)
-
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
  
@@ -114,7 +118,7 @@
 #define USE_TIFFLIB_SAVE
   
 #ifndef __linux__
-#define no_USE_MOTIF
+#	define no_USE_MOTIF
 #endif
 
 #define B3_FRAN(x)      ((float)x        * drand48())

@@ -103,7 +103,6 @@ static b3_u32 compute(void *ptr)
 	mandel_info *info = (mandel_info *)ptr;
 	b3MandelRow *row;
 	b3_res       xSize;
-	b3_coord     x,y;
 	b3_count     iter;
 
 	xSize = info->xSize;

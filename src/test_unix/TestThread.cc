@@ -79,6 +79,7 @@ public:
 			thisClass->counter = old + 1;
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		return 0;
 	}
 
 	static b3_u32 task_thread(void *ptr)
@@ -99,6 +100,7 @@ public:
 			thisClass->tMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		return 0;
 	}
 
 	static b3_u32 task_ipc(void *ptr)
@@ -119,6 +121,7 @@ public:
 			thisClass->iMutex.b3Unlock();
 		}
 		b3PrintF (B3LOG_NORMAL,"Thread %d stopped.\n",num + 1);
+		return 0;
 	}
 
 	void test1()
@@ -161,7 +164,7 @@ public:
 	}
 };
 
-void main(int argc,char *argv[])
+int main(int argc,char *argv[])
 {
 	TestUnit *ptr;
 

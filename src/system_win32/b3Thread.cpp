@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/02 19:28:25  sm
+**	- Applying console application on Windows 32
+**	- Added further Windows environment
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
@@ -147,13 +151,13 @@ unsigned int b3Thread::b3Trampoline(void *ptr)
 
 	threadMutex.b3Lock();
 	threadCount++;
+	threadClass->is_running = true;
 	threadMutex.b3Unlock();
 	
-	threadClass->is_running = true;
 	result = threadClass->callProc(threadClass->callArg);
-	threadClass->is_running = false;
 
 	threadMutex.b3Lock();
+	threadClass->is_running = false;
 	threadCount--;
 	threadMutex.b3Unlock();
 
@@ -197,7 +201,7 @@ b3_bool b3Thread::b3Start(
 	// Start new thread
 	callProc = proc;
 	callArg  = ptr;
-	thread = AfxBeginThread(b3Trampoline,this,priority,0,CREATE_SUSPENDED);
+	thread = ::AfxBeginThread(b3Trampoline,this,priority,0,CREATE_SUSPENDED);
 	if (thread != null)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # starting thread %02lX with prio %ld (%s).\n",
@@ -211,6 +215,7 @@ b3_bool b3Thread::b3Start(
 
 void b3Thread::b3Wait()
 {
+	threadMutex.b3Lock();
 	if (thread != null)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # waiting for thread %02lX to stop (%s).\n",
@@ -220,12 +225,14 @@ void b3Thread::b3Wait()
 		delete thread;
 		thread = null;
 	}
+	threadMutex.b3Unlock();
 }
 
 b3_bool b3Thread::b3Stop()
 {
 	b3_bool was_running;
 
+	threadMutex.b3Lock();
 	was_running = is_running;
 	if (thread != null) 
 	{
@@ -242,6 +249,7 @@ b3_bool b3Thread::b3Stop()
 		threadCount--;
 		threadMutex.b3Unlock();
 	}
+	threadMutex.b3Unlock();
 	return was_running;
 }
 

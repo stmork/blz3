@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSytem_dbg.lib"
+# ADD LIB32 /nologo /out:"..\..\lib\win32_i386\LibSystem_dbg.lib"
 
 !ENDIF 
 
@@ -83,6 +83,10 @@ LIB32=link.exe -lib
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\b3Config.cc
+# End Source File
 # Begin Source File
 
 SOURCE=.\b3Date.cpp
