@@ -70,13 +70,13 @@ protected:
 
 	                        b3RenderObject();
 	virtual                ~b3RenderObject();
-	        void            b3Recompute();
 	        void            b3Update();
 public:
 	        void            b3AddCount(b3RenderContext *context);
 	virtual void            b3AllocVertices(b3RenderContext *context);
 	virtual void            b3FreeVertices();
 	virtual void            b3Draw();
+	        void            b3Recompute();
 	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
 protected:

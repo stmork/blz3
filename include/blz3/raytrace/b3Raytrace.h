@@ -1575,6 +1575,7 @@ public:
 	       void            b3Draw();
 		   b3_bool         b3Transform(b3_matrix *transformation);
 		   void            b3Activate(b3_bool activate=true);
+		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
 		   b3_bool         b3IsExpanded();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);

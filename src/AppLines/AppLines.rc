@@ -129,15 +129,15 @@ END
 
 IDR_TOOLBAR_ACTION TOOLBAR DISCARDABLE  16, 15
 BEGIN
-    BUTTON      ID_OBJ_SELECT
-    BUTTON      ID_OBJ_MOVE
-    BUTTON      ID_OBJ_ROTATE
-    BUTTON      ID_OBJ_SCALE
+    BUTTON      ID_OBJECT_SELECT
+    BUTTON      ID_OBJECT_MOVE
+    BUTTON      ID_OBJECT_ROTATE
+    BUTTON      ID_OBJECT_SCALE
     SEPARATOR
-    BUTTON      ID_CAM_MOVE
-    BUTTON      ID_CAM_TURN
-    BUTTON      ID_CAM_ROTATE
-    BUTTON      ID_CAM_VIEW
+    BUTTON      ID_CAMERA_MOVE
+    BUTTON      ID_CAMERA_TURN
+    BUTTON      ID_CAMERA_ROTATE
+    BUTTON      ID_CAMERA_VIEW
     SEPARATOR
     BUTTON      ID_LIGHT_TURN
 END
@@ -154,6 +154,7 @@ BEGIN
     BUTTON      ID_DEACTIVATE_REST
     BUTTON      ID_ALL_ACTIVATE
     BUTTON      ID_ALL_DEACTIVATE
+    BUTTON      ID_ALL_DEACTIVATE_REST
 END
 
 IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 15
@@ -179,7 +180,7 @@ BEGIN
     BUTTON      ID_VIEW_TO_FULCRUM
     SEPARATOR
     BUTTON      ID_CAMERA_ENABLE
-    BUTTON      ID_CAM_SELECT
+    BUTTON      ID_CAMERA_SELECT
 END
 
 IDR_TOOLBAR_LIGHT TOOLBAR DISCARDABLE  16, 15
@@ -283,24 +284,30 @@ BEGIN
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "E&infügen als &Unterobjekt",  ID_EDIT_PASTE_SUB
+        MENUITEM SEPARATOR
+        MENUITEM "Erzeugen",                    ID_OBJECT_NEW
+        MENUITEM "Erzeugen als Unterobjekt",    ID_OBJECT_NEW_SUB
+        MENUITEM "Löschen",                     ID_OBJECT_DELETE
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
         MENUITEM "&Deaktivieren",               ID_DEACTIVATE
         MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
         MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
         MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
+        MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
     END
     POPUP "Betriebsmodus"
     BEGIN
-        MENUITEM "Objekt &selektieren",         ID_OBJ_SELECT
-        MENUITEM "Objekt &bewegen",             ID_OBJ_MOVE
-        MENUITEM "Objekt &rotieren",            ID_OBJ_ROTATE
-        MENUITEM "Objekt s&kalieren",           ID_OBJ_SCALE
+        MENUITEM "Objekt &selektieren",         ID_OBJECT_SELECT
+        MENUITEM "Objekt &bewegen",             ID_OBJECT_MOVE
+        MENUITEM "Objekt &rotieren",            ID_OBJECT_ROTATE
+        MENUITEM "Objekt s&kalieren",           ID_OBJECT_SCALE
         MENUITEM SEPARATOR
-        MENUITEM "&Kamera bewegen",             ID_CAM_MOVE
-        MENUITEM "Kamera sch&wenken",           ID_CAM_TURN
-        MENUITEM "Kamera ro&tieren",            ID_CAM_ROTATE
-        MENUITEM "Kamera&projektion",           ID_CAM_VIEW
+        MENUITEM "&Kamera bewegen",             ID_CAMERA_MOVE
+        MENUITEM "Kamera sch&wenken",           ID_CAMERA_TURN
+        MENUITEM "Kamera ro&tieren",            ID_CAMERA_ROTATE
+        MENUITEM "Kamera&projektion",           ID_CAMERA_VIEW
         MENUITEM "Ansicht auf Drehkreuz richten", ID_VIEW_TO_FULCRUM
         MENUITEM SEPARATOR
         MENUITEM "Licht&quelle ausrichten",     ID_LIGHT_TURN
@@ -526,14 +533,13 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,35,60,50,14,WS_GROUP
 END
 
-IDD_HIERARCHY DIALOGEX 0, 0, 186, 250
+IDD_HIERARCHY DIALOG DISCARDABLE  0, 0, 186, 250
 STYLE DS_3DLOOK | WS_CHILD
-EXSTYLE WS_EX_NOPARENTNOTIFY
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Tree1",IDC_HIERARCHY,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | 
-                    WS_TABSTOP,7,7,172,236
+                    WS_TABSTOP,7,6,172,237
 END
 
 IDD_SCENE DIALOG DISCARDABLE  0, 0, 297, 321
@@ -935,7 +941,7 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 179
-        TOPMARGIN, 7
+        TOPMARGIN, 6
         BOTTOMMARGIN, 243
     END
 
@@ -1261,22 +1267,22 @@ BEGIN
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
     ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
-    ID_OBJ_MOVE             "Bewegt aktivierte Objekte\nObjekte bewegen"
-    ID_OBJ_ROTATE           "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
-    ID_OBJ_SCALE            "Skaliert aktivierte Objekte\nObjekte skalieren"
-    ID_CAM_TURN             "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
-    ID_CAM_ROTATE           "Rotiert die Kamera um das Folkrum\nKamera rotieren"
-    ID_CAM_MOVE             "Bewegt die Kamera\nKamera bewegen"
+    ID_OBJECT_MOVE             "Bewegt aktivierte Objekte\nObjekte bewegen"
+    ID_OBJECT_ROTATE           "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
+    ID_OBJECT_SCALE            "Skaliert aktivierte Objekte\nObjekte skalieren"
+    ID_CAMERA_TURN             "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
+    ID_CAMERA_ROTATE           "Rotiert die Kamera um das Folkrum\nKamera rotieren"
+    ID_CAMERA_MOVE             "Bewegt die Kamera\nKamera bewegen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_CAM_SELECT           "Liste der Kameras\nKameras"
+    ID_CAMERA_SELECT           "Liste der Kameras\nKameras"
     ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
-    ID_CAM_VIEW             "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
+    ID_CAMERA_VIEW             "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
     IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
-    ID_OBJ_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
+    ID_OBJECT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
     IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
@@ -1389,6 +1395,8 @@ BEGIN
     ID_COORD_Y              "y: 00000000.00"
     ID_COORD_Z              "z: 00000000.00"
     IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
+    IDS_NEW_OBJECT          "Neues Objekt"
+    IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1401,6 +1409,15 @@ BEGIN
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
     ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
+    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
+    ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
+    ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
+    ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
 END
 
 #endif    // German (Germany) resources

@@ -39,9 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/01/04 17:53:53  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.30  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
-**
+**	
 **	Revision 1.29  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -248,25 +256,25 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_WM_LBUTTONUP()
 	ON_COMMAND(ID_VIEW_POP, OnViewPop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
-	ON_COMMAND(ID_OBJ_SELECT, OnObjSelect)
-	ON_COMMAND(ID_OBJ_MOVE, OnObjMove)
-	ON_COMMAND(ID_OBJ_ROTATE, OnObjRotate)
-	ON_COMMAND(ID_OBJ_SCALE, OnObjScale)
-	ON_COMMAND(ID_CAM_MOVE, OnCamMove)
-	ON_COMMAND(ID_CAM_TURN, OnCamTurn)
-	ON_COMMAND(ID_CAM_ROTATE, OnCamRotate)
-	ON_COMMAND(ID_CAM_VIEW, OnCamView)
-	ON_CBN_SELCHANGE(ID_CAM_SELECT, OnCamSelect)
+	ON_COMMAND(ID_OBJECT_SELECT, OnObjSelect)
+	ON_COMMAND(ID_OBJECT_MOVE, OnObjMove)
+	ON_COMMAND(ID_OBJECT_ROTATE, OnObjRotate)
+	ON_COMMAND(ID_OBJECT_SCALE, OnObjScale)
+	ON_COMMAND(ID_CAMERA_MOVE, OnCamMove)
+	ON_COMMAND(ID_CAMERA_TURN, OnCamTurn)
+	ON_COMMAND(ID_CAMERA_ROTATE, OnCamRotate)
+	ON_COMMAND(ID_CAMERA_VIEW, OnCamView)
+	ON_CBN_SELCHANGE(ID_CAMERA_SELECT, OnCamSelect)
 	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
 	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
-	ON_UPDATE_COMMAND_UI(ID_OBJ_SELECT, OnUpdateObjSelect)
-	ON_UPDATE_COMMAND_UI(ID_OBJ_MOVE, OnUpdateObjMove)
-	ON_UPDATE_COMMAND_UI(ID_OBJ_ROTATE, OnUpdateObjRotate)
-	ON_UPDATE_COMMAND_UI(ID_OBJ_SCALE, OnUpdateObjScale)
-	ON_UPDATE_COMMAND_UI(ID_CAM_MOVE, OnUpdateCamMove)
-	ON_UPDATE_COMMAND_UI(ID_CAM_TURN, OnUpdateCamTurn)
-	ON_UPDATE_COMMAND_UI(ID_CAM_ROTATE, OnUpdateCamRotate)
-	ON_UPDATE_COMMAND_UI(ID_CAM_VIEW, OnUpdateCamView)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_SELECT, OnUpdateObjSelect)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_MOVE, OnUpdateObjMove)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_ROTATE, OnUpdateObjRotate)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_SCALE, OnUpdateObjScale)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_MOVE, OnUpdateCamMove)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_TURN, OnUpdateCamTurn)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_ROTATE, OnUpdateCamRotate)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_VIEW, OnUpdateCamView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
@@ -1021,29 +1029,32 @@ void CAppLinesView::OnLightSelect()
 
 void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
 {
-// TODO: Add your specialized code here and/or call the base class
-	CMainFrame *main;
-	CB3App     *app;
+	// TODO: Add your specialized code here and/or call the base class
+	CB3App     *app  = CB3GetApp();
+	CMainFrame *main = CB3GetMainFrame();
 
 	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 
-	app  = CB3GetApp();
-	main = CB3GetMainFrame();
-
-	app->b3GetData();
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"CAppLinesView::OnActivateView(%s,%p,%p)\n",
+		bActivate ? "TRUE " : "FALSE",
+		pActivateView, pDeactiveView);
+#endif
+	
 	if (bActivate)
 	{
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
 		main->b3UpdateModellerInfo(GetDocument());
 		m_Scene->b3SetCamera(m_Camera,true);
+		app->b3SetData();
 	}
 	else
 	{
+		app->b3GetData();
 		main->b3Clear();
 		main->b3UpdateModellerInfo();
 	}
-	app->b3SetData();
 }
 
 void CAppLinesView::OnViewToFulcrum() 

@@ -34,11 +34,12 @@ class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 {
 // Construction
 public:
-	b3BBox *b3GetSelectedBBox();
-	void    b3SelectBBox(b3BBox *BBox);
-	void    b3GetData();
-	void    b3SetData();
-	CAppLinesDoc *m_pDoc;
+	b3_bool  b3InitTree(CAppLinesDoc *pDoc,b3_bool force_refresh = false);
+	void     b3UpdateActivation();
+	b3BBox  *b3GetSelectedBBox();
+	void     b3SelectBBox(b3BBox *BBox);
+	void     b3GetData();
+	void     b3SetData();
 	 ~CDlgHierarchy();
 	CDlgHierarchy(CWnd* pParent = NULL);   // standard constructor
 
@@ -63,15 +64,18 @@ protected:
 	//{{AFX_MSG(CDlgHierarchy)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	CImageList  m_ImageList;
-	b3Scene    *m_Scene;
-	void        b3InitTree ();
-	void        b3AddBBoxes(HTREEITEM parent,b3BBox *BBox);
-	b3_count    b3Traverse (HTREEITEM parent);
-	HTREEITEM   b3FindBBox (HTREEITEM parent,b3BBox *BBox);
+	CAppLinesDoc *m_pDoc;
+	CImageList    m_ImageList;
+	b3Scene      *m_Scene;
+	long          b3ComputeImgNum(b3BBox *BBox);
+	void          b3AddBBoxes(HTREEITEM parent,b3BBox *BBox);
+	b3_count      b3Traverse (HTREEITEM parent);
+	HTREEITEM     b3FindBBox (HTREEITEM parent,b3BBox *BBox);
+	void          b3UpdateIcons(HTREEITEM parent);
 };
 
 //{{AFX_INSERT_LOCATION}}

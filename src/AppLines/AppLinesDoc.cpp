@@ -38,6 +38,7 @@
 #include "DlgCreateItem.h"
 #include "DlgLight.h"
 #include "DlgLDC.h"
+#include "DlgCreateItem.h"
 
 #include "b3ExampleScene.h"
 #include "blz3/system/b3Dir.h"
@@ -52,9 +53,17 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/01/04 17:53:53  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.38  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
-**
+**	
 **	Revision 1.37  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
 **	
@@ -241,7 +250,6 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
-	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
 	ON_COMMAND(ID_LIGHT_NEW, OnLightNew)
 	ON_COMMAND(ID_LIGHT_DELETE, OnLightDelete)
@@ -255,31 +263,42 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
 	ON_COMMAND(ID_ACTIVATE, OnActivate)
 	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
 	ON_COMMAND(ID_DEACTIVATE_REST, OnDeactivateRest)
 	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
 	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
-	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateSelectedBBox)
+	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
+	ON_COMMAND(ID_OBJECT_NEW_SUB, OnObjectNewSub)
+	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
+	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
+	ON_COMMAND(ID_EDIT_PASTE_SUB, OnEditPasteSub)
+	ON_COMMAND(ID_ALL_DEACTIVATE_REST, OnAllDeactivateRest)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE_SUB, OnUpdateEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_NEW, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_PROPERTIES, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TO_FULCRUM, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_SELECT, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
-	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
-	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateSelectedBBox)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateSelectedBBox)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
+	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -469,6 +488,7 @@ void CAppLinesDoc::OnCloseDocument()
 		m_RaytraceDoc->OnCloseDocument();
 		m_RaytraceDoc = null;
 	}
+	CB3GetMainFrame()->b3UpdateHierarchy(null);
 	CDocument::OnCloseDocument();
 }
 
@@ -949,10 +969,12 @@ void CAppLinesDoc::OnActivate()
 	if (BBox != null)
 	{
 		BBox->b3Activate();
+		CB3GetMainFrame()->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
 			main->b3SelectBBox((b3BBox *)BBox->Succ);
 		}
+
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}
@@ -967,10 +989,12 @@ void CAppLinesDoc::OnDeactivate()
 	if (BBox != null)
 	{
 		BBox->b3Activate(false);
+		CB3GetMainFrame()->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
 			main->b3SelectBBox((b3BBox *)BBox->Succ);
 		}
+		
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}
@@ -993,6 +1017,7 @@ void CAppLinesDoc::OnDeactivateRest()
 		{
 			aux->b3Activate(false);
 		}
+		CB3GetMainFrame()->b3UpdateActivation();
 
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
@@ -1003,6 +1028,8 @@ void CAppLinesDoc::OnAllDeactivate()
 {
 	// TODO: Add your control notification handler code here
 	m_Scene->b3Activate(false);
+	CB3GetMainFrame()->b3UpdateActivation();
+	
 	SetModifiedFlag();
 	UpdateAllViews(null,B3_UPDATE_VIEW);
 }
@@ -1011,7 +1038,26 @@ void CAppLinesDoc::OnAllActivate()
 {
 	// TODO: Add your control notification handler code here
 	m_Scene->b3Activate();
+	CB3GetMainFrame()->b3UpdateActivation();
+
+	SetModifiedFlag();
 	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppLinesDoc::OnAllDeactivateRest() 
+{
+	// TODO: Add your command handler code here
+	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+
+	if (BBox != null)
+	{
+		m_Scene->b3Activate(false);
+		BBox->b3Activate(true);
+		CB3GetMainFrame()->b3UpdateActivation();
+
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
 }
 
 void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI) 
@@ -1024,6 +1070,96 @@ void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI)
 **                        Copy/paste commands                           **
 **                                                                      **
 *************************************************************************/
+
+void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
+{
+	CAppLinesApp   *app     = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main    = CB3GetMainFrame();
+	CDlgCreateItem  dlg;
+	b3BBox         *selected;
+	b3BBox         *bbox;
+	b3Item         *insert_after;
+	b3Base<b3Item> *base;
+
+	selected = main->b3GetSelectedBBox();
+	B3_ASSERT(selected != null);
+	if (insert_sub)
+	{
+		base = selected->b3GetBBoxHead();
+		insert_after = base->Last;
+	}
+	else
+	{
+		base = m_Scene->b3FindBBoxHead(selected);
+		insert_after = selected;
+	}
+	B3_ASSERT(base != null);
+
+	dlg.m_ClassType   = CLASS_BBOX;
+	dlg.m_MaxNameLen  = B3_BOXSTRINGLEN;
+	dlg.m_ItemBase    = base;
+	dlg.m_NoNameCheck = true;
+	dlg.m_Suggest.LoadString(IDS_NEW_OBJECT);
+	if (dlg.DoModal() == IDOK)
+	{
+		bbox = new b3BBox(BBOX);
+		strcpy (bbox->m_BoxName,dlg.m_NewName);
+		base->b3Insert(insert_after,bbox);
+		b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		bbox->b3Prepare();
+
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_Scene->b3AllocVertices(&m_Context);
+		b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
+		b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
+		b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		main->b3UpdateHierarchy(this);
+	}
+}
+
+void CAppLinesDoc::OnObjectNew() 
+{
+	// TODO: Add your command handler code here
+	b3ObjectCreate(false);
+}
+
+void CAppLinesDoc::OnObjectNewSub() 
+{
+	// TODO: Add your command handler code here
+	b3ObjectCreate(true);
+}
+
+void CAppLinesDoc::OnObjectDelete() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main    = CB3GetMainFrame();
+	b3Base<b3Item> *base;
+	b3BBox         *selected;
+
+	if (AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO) == IDYES)
+	{
+		selected = main->b3GetSelectedBBox();
+		B3_ASSERT(selected != null);
+		base = m_Scene->b3FindBBoxHead(selected);
+		base->b3Remove(selected);
+		delete selected;
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		main->b3UpdateHierarchy(this);
+	}
+}
 
 b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
 {
@@ -1103,7 +1239,7 @@ void CAppLinesDoc::OnEditCut()
 			delete bbox;
 			SetModifiedFlag();
 			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			main->b3UpdateHierarchy();
+			main->b3UpdateHierarchy(this);
 		}
 	}
 }
@@ -1126,7 +1262,7 @@ void CAppLinesDoc::OnEditCopy()
 	}
 }
 
-void CAppLinesDoc::OnEditPaste() 
+void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub) 
 {
 	// TODO: Add your command handler code here
 	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
@@ -1134,6 +1270,7 @@ void CAppLinesDoc::OnEditPaste()
 	CWaitCursor     wait;
 	b3BBox         *selected;
 	b3BBox         *bbox;
+	b3Item         *insert_after;
 	b3Base<b3Item> *base;
 	b3_size         size;
 	b3_count        level;
@@ -1141,7 +1278,19 @@ void CAppLinesDoc::OnEditPaste()
 	HANDLE          handle;
 
 	selected = main->b3GetSelectedBBox();
-	base = m_Scene->b3FindBBoxHead(selected);
+	B3_ASSERT(selected != null);
+	if (insert_sub)
+	{
+		base = selected->b3GetBBoxHead();
+		insert_after = base->Last;
+	}
+	else
+	{
+		base = m_Scene->b3FindBBoxHead(selected);
+		insert_after = selected;
+	}
+	B3_ASSERT(base != null);
+
 	if (main->OpenClipboard())
 	{
 		handle = ::GetClipboardData(app->m_ClipboardFormatForBlizzardObject);
@@ -1162,8 +1311,9 @@ void CAppLinesDoc::OnEditPaste()
 					main->b3SetStatusMessage(IDS_DOC_REORG);
 					bbox  = (b3BBox *)world.b3GetFirst();
 					level = bbox->b3GetClassType() & 0xffff;
-					b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
+					b3BBox::b3Reorg(world.b3GetHead(),base,level,1,insert_after);
 					b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+					selected->b3Recompute();
 
 					main->b3SetStatusMessage(IDS_DOC_PREPARE);
 					bbox->b3Prepare();
@@ -1179,7 +1329,7 @@ void CAppLinesDoc::OnEditPaste()
 
 					SetModifiedFlag();
 					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-					main->b3UpdateHierarchy();
+					main->b3UpdateHierarchy(this);
 					main->b3SelectBBox(bbox);
 				}
 			}
@@ -1197,6 +1347,17 @@ void CAppLinesDoc::OnEditPaste()
 		}
 		::CloseClipboard();
 	}
+}
+
+void CAppLinesDoc::OnEditPaste() 
+{
+	b3PasteClipboard(false);
+}
+
+void CAppLinesDoc::OnEditPasteSub() 
+{
+	// TODO: Add your command handler code here
+	b3PasteClipboard(true);
 }
 
 void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI) 

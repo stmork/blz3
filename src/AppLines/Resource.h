@@ -197,24 +197,24 @@
 #define ID_VIEW_SELECT                  32784
 #define ID_VIEW_ORIGINAL                32787
 #define ID_VIEW_MOVE_RIGHT              32788
-#define ID_VIEW_MOVE_LEFT               -32747
-#define ID_VIEW_MOVE_BOTTOM             -32746
-#define ID_VIEW_MOVE_TOP                -32745
+#define ID_VIEW_MOVE_LEFT               32789
+#define ID_VIEW_MOVE_BOTTOM             32790
+#define ID_VIEW_MOVE_TOP                32791
 #define ID_VIEW_POP                     32792
 #define ID_ACT_SELECT                   32793
-#define ID_OBJ_MOVE                     32794
-#define ID_OBJ_ROTATE                   32795
-#define ID_OBJ_SCALE                    32796
-#define ID_CAM_TURN                     32797
-#define ID_CAM_ROTATE                   32798
-#define ID_CAM_MOVE                     32799
-#define ID_CAM_SELECT                   32800
+#define ID_OBJECT_MOVE                  32794
+#define ID_OBJECT_ROTATE                32795
+#define ID_OBJECT_SCALE                 32796
+#define ID_CAMERA_TURN                  32797
+#define ID_CAMERA_ROTATE                32798
+#define ID_CAMERA_MOVE                  32799
+#define ID_CAMERA_SELECT                32800
 #define ID_LIGHT_SELECT                 32801
 #define ID_LIGHT_TURN                   32802
-#define ID_CAM_VIEW                     32803
+#define ID_CAMERA_VIEW                  32803
 #define ID_CUST_ACTION                  32804
 #define IDM_BAR_ACTION                  32805
-#define ID_OBJ_SELECT                   32806
+#define ID_OBJECT_SELECT                32806
 #define ID_HIERACHY                     32808
 #define ID_RAYTRACE                     32809
 #define ID_CUST_DISPLAY                 32810
@@ -247,6 +247,11 @@
 #define ID_DEACTIVATE_REST              32845
 #define ID_ACTIVATE_ALL                 32846
 #define ID_DEACTIVATE_ALL               32847
+#define ID_EDIT_PASTE_SUB               32849
+#define ID_ALL_DEACTIVATE_REST          32850
+#define ID_OBJECT_DELETE                32851
+#define ID_OBJECT_NEW                   32852
+#define ID_OBJECT_NEW_SUB               32853
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -278,6 +283,8 @@
 #define ID_COORD_Y                      61472
 #define ID_COORD_Z                      61473
 #define IDS_DIALOGBAR_HIERARCHY         61474
+#define IDS_NEW_OBJECT                  61475
+#define IDS_ASK_DELETE_OBJECT           61476
 
 // Next default values for new objects
 // 
@@ -285,7 +292,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32848
+#define _APS_NEXT_COMMAND_VALUE         32854
 #define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

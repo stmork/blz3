@@ -36,7 +36,8 @@ public:
 	b3Base<b3Item> *m_ItemBase;
 	b3_u32          m_ClassType;
 	b3_count        m_MaxNameLen;
-	char           *m_Suggest;
+	b3_bool         m_NoNameCheck;
+	CString         m_Suggest;
 	CDlgCreateItem(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

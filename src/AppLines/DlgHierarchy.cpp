@@ -34,9 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/04 17:53:53  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.7  2002/01/02 17:05:19  sm
 **	- Minor bug fixes done: recurse the CDlgHierarchy::b3FindBBox() correctly
-**
+**	
 **	Revision 1.6  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
 **	
@@ -92,6 +100,7 @@ void CDlgHierarchy::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	//{{AFX_MSG_MAP(CDlgHierarchy)
 	ON_NOTIFY(TVN_ENDLABELEDIT, IDC_HIERARCHY, OnEndLabelEditHierarchy)
+	ON_NOTIFY(TVN_BEGINLABELEDIT, IDC_HIERARCHY, OnBeginlabeleditHierarchy)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -121,22 +130,33 @@ BOOL CDlgHierarchy::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
+long CDlgHierarchy::b3ComputeImgNum(b3BBox *BBox)
+{
+	b3BBox *sub;
+	long    imgNum = 0;
+
+	sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
+	if ((sub != null) || (BBox->b3GetShapeHead()->First != null))
+	{
+		if (sub != null)        imgNum += 1;
+		imgNum += 2;
+		if (BBox->b3IsActive()) imgNum += 5;
+	}
+	return imgNum;
+}
+
 void CDlgHierarchy::b3AddBBoxes (
 	HTREEITEM  parent,
 	b3BBox    *BBox)
 {
-	TV_INSERTSTRUCT insert;
-	HTREEITEM       item;
-	long            imgNum;
-	b3BBox         *sub;
+	TV_INSERTSTRUCT  insert;
+	HTREEITEM        item;
+	b3BBox          *sub;
+	long             imgNum;
 
 	while (BBox != null)
 	{
-		imgNum = 0;
-		sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
-		if (sub                           != null) imgNum += 1;
-		if (BBox->b3GetShapeHead()->First != null) imgNum += 2;
-
+		imgNum = b3ComputeImgNum(BBox);
 		insert.hParent      = parent;
 		insert.hInsertAfter = TVI_LAST;
 		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
@@ -144,9 +164,10 @@ void CDlgHierarchy::b3AddBBoxes (
 		insert.item.cchTextMax     = B3_BOXSTRINGLEN;
 		insert.item.lParam         = (long)BBox;
 		insert.item.iImage         = imgNum;
-		insert.item.iSelectedImage = imgNum + 5;
+		insert.item.iSelectedImage = imgNum;
 
 		item = m_Hierarchy.InsertItem (&insert);
+		sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
 		if (sub != null)
 		{
 			b3AddBBoxes (item,sub);
@@ -160,14 +181,23 @@ void CDlgHierarchy::b3AddBBoxes (
 	}
 }
 
-void CDlgHierarchy::b3InitTree()
+b3_bool CDlgHierarchy::b3InitTree(CAppLinesDoc *pDoc,b3_bool force_refresh)
 {
 	TV_INSERTSTRUCT insert;
 	HTREEITEM       root;
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_NORMAL,"CDlgHierarchy::b3InitTree(%p) [%p]\n",pDoc,m_pDoc);
+#endif
+	
+	if ((m_pDoc == pDoc) && (!force_refresh))
+	{
+		return false;
+	}
+	m_pDoc  = pDoc;
+	m_Scene = (m_pDoc != null ? m_pDoc->m_Scene : null);
 	m_Hierarchy.DeleteAllItems();
 	b3Free();
-
 	if (m_Scene != null)
 	{
 		insert.hParent      = TVI_ROOT;
@@ -181,6 +211,37 @@ void CDlgHierarchy::b3InitTree()
 
 		b3AddBBoxes (root,m_Scene->b3GetFirstBBox());
 		m_Hierarchy.Expand(root,TVE_EXPAND);
+	}
+	return true;
+}
+
+void CDlgHierarchy::b3UpdateIcons(HTREEITEM parent)
+{
+	HTREEITEM item;
+	TVITEM    info;
+	long      imgnum;
+
+	memset(&info,0,sizeof(info));
+	info.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+	for(item  = m_Hierarchy.GetNextItem(parent,TVGN_CHILD);
+	    item != NULL;
+		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
+	{
+		imgnum = b3ComputeImgNum((b3BBox *)m_Hierarchy.GetItemData(item));
+		info.hItem          = item;
+		info.iImage         = imgnum;
+		info.iSelectedImage = imgnum;
+		m_Hierarchy.SetItem(&info);
+
+		b3UpdateIcons(item);
+	}
+}
+
+void CDlgHierarchy::b3UpdateActivation()
+{
+	if (m_Scene != null)
+	{
+		b3UpdateIcons(m_Hierarchy.GetRootItem());
 	}
 }
 
@@ -232,20 +293,21 @@ b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
 void CDlgHierarchy::b3GetData()
 {
 	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
-	b3Traverse(m_Hierarchy.GetRootItem());
 
 	if (m_Scene == null)
 	{
 		m_Hierarchy.DeleteAllItems();
 		b3Free();
 	}
+	else
+	{
+		b3Traverse(m_Hierarchy.GetRootItem());
+	}
 }
 
 void CDlgHierarchy::b3SetData()
 {
-	UpdateData(FALSE);
 	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
-	b3InitTree ();
 }
 
 void CDlgHierarchy::b3SelectBBox(b3BBox *BBox)
@@ -275,16 +337,36 @@ b3BBox *CDlgHierarchy::b3GetSelectedBBox()
 	return BBox;
 }
 
+void CDlgHierarchy::OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	TV_DISPINFO* pTVDispInfo = (TV_DISPINFO*)pNMHDR;
+	b3BBox      *BBox;
+
+	// TODO: Add your control notification handler code here
+	BBox = (b3BBox *)pTVDispInfo->item.lParam;
+	if (BBox != null)
+	{
+		m_Hierarchy.GetEditControl()->LimitText(B3_BOXSTRINGLEN);
+		*pResult = 0;
+	}
+	else
+	{
+		*pResult = 1;
+	}
+}
+
 void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	TV_DISPINFO *pTVDispInfo = (TV_DISPINFO*)pNMHDR;
 	b3BBox      *BBox;
+
 	// TODO: Add your control notification handler code here
 	
-	if (BBox->m_BoxName,pTVDispInfo->item.pszText)
+	BBox = (b3BBox *)pTVDispInfo->item.lParam;
+	if ((BBox != null) && (pTVDispInfo->item.pszText))
 	{
-		BBox = (b3BBox *)pTVDispInfo->item.lParam;
 		strcpy (BBox->m_BoxName,pTVDispInfo->item.pszText);
+		
 		m_pDoc->SetModifiedFlag();
 		m_pDoc->UpdateAllViews(null,B3_UPDATE_VIEW);
 		*pResult = 1;

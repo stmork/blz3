@@ -39,6 +39,14 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/01/04 17:53:53  sm
+**      - Added new/delete object.
+**      - Added deactive rest of all scene objects.
+**      - Changed icons to reflect object activation.
+**      - Sub object insertion added.
+**      - Fixed update routines to reflect correct state in hierarchy.
+**      - Better hierarchy update coded.
+**
 **      Revision 1.19  2002/01/03 19:07:27  sm
 **      - Cleaned up cut/paste
 **

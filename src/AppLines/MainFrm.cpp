@@ -32,9 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/01/04 17:53:53  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.21  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
-**
+**	
 **	Revision 1.20  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
 **	
@@ -171,7 +179,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
 	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
-	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateCamSelect)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_SELECT, OnUpdateCamSelect)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
 	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateHierachy)
@@ -290,7 +298,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	b3SetPosition(null);
 	m_wndStatusBar.SetPaneText(4,"");
 
-	m_cameraBox.b3Create(&m_wndCamrBar,ID_CAM_SELECT);
+	m_cameraBox.b3Create(&m_wndCamrBar,ID_CAMERA_SELECT);
 	m_lightBox.b3Create(&m_wndLghtBar,ID_LIGHT_SELECT);
 
 	// Set docking mode
@@ -592,7 +600,10 @@ void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
 	m_dlgFulcrum.m_pDoc    = pDoc;
 	m_dlgStepMove.m_Info   = pDoc != null ? pDoc->m_Info : null;
 	m_dlgStepRotate.m_Info = pDoc != null ? pDoc->m_Info : null;
-	m_dlgHierarchy.m_pDoc  = pDoc;
+	if (pDoc != null)
+	{
+		m_dlgHierarchy.b3InitTree(pDoc);
+	}
 }
 
 void CMainFrame::b3UpdateFulcrum()
@@ -610,9 +621,14 @@ void CMainFrame::b3SelectBBox(b3BBox *BBox)
 	m_dlgHierarchy.b3SelectBBox(BBox);
 }
 
-void CMainFrame::b3UpdateHierarchy()
+void CMainFrame::b3UpdateHierarchy(CAppLinesDoc *pDoc)
 {
-	m_dlgHierarchy.b3SetData();
+	m_dlgHierarchy.b3InitTree(pDoc,true);
+}
+
+void CMainFrame::b3UpdateActivation()
+{
+	m_dlgHierarchy.b3UpdateActivation();
 }
 
 /*************************************************************************

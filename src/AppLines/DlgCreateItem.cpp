@@ -32,13 +32,21 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/04 17:53:53  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.2  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
 **	- Toolbars got adjusted and beautified
 **	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
 **	- Found and fixed some minor bugs
-**
+**	
 **	Revision 1.1  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -61,10 +69,11 @@ CDlgCreateItem::CDlgCreateItem(CWnd* pParent /*=NULL*/)
 	m_NewName = _T("");
 	//}}AFX_DATA_INIT
 
-	m_ClassType  = 0;
-	m_ItemBase   = null;
-	m_MaxNameLen = 0;
-	m_Suggest    = "";
+	m_ClassType   = 0;
+	m_ItemBase    = null;
+	m_MaxNameLen  = 0;
+	m_Suggest     = "";
+	m_NoNameCheck = false;
 }
 
 
@@ -108,26 +117,29 @@ b3_bool CDlgCreateItem::b3IsNameOK(const char *suggest)
 {
 	b3Item *item;
 
-	if(m_ClassType != 0)
+	if (!m_NoNameCheck)
 	{
-		B3_FOR_BASE(m_ItemBase,item)
+		if(m_ClassType != 0)
 		{
-			if (item->b3GetClassType() == m_ClassType)
+			B3_FOR_BASE(m_ItemBase,item)
+			{
+				if (item->b3GetClassType() == m_ClassType)
+				{
+					if (stricmp(suggest,item->b3GetName()) == 0)
+					{
+						return false;
+					}
+				}
+			}
+		}
+		else
+		{
+			B3_FOR_BASE(m_ItemBase,item)
 			{
 				if (stricmp(suggest,item->b3GetName()) == 0)
 				{
 					return false;
 				}
-			}
-		}
-	}
-	else
-	{
-		B3_FOR_BASE(m_ItemBase,item)
-		{
-			if (stricmp(suggest,item->b3GetName()) == 0)
-			{
-				return false;
 			}
 		}
 	}

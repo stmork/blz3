@@ -33,9 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/01/04 17:53:54  sm
+**	- Added new/delete object.
+**	- Added deactive rest of all scene objects.
+**	- Changed icons to reflect object activation.
+**	- Sub object insertion added.
+**	- Fixed update routines to reflect correct state in hierarchy.
+**	- Better hierarchy update coded.
+**
 **	Revision 1.31  2002/01/03 19:07:27  sm
 **	- Cleaned up cut/paste
-**
+**	
 **	Revision 1.30  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
 **	
@@ -587,6 +595,11 @@ void b3BBox::b3Activate(b3_bool activate)
 		bbox = (b3BBox *)item;
 		bbox->b3Activate(activate);
 	}
+}
+
+b3_bool b3BBox::b3IsActive()
+{
+	return (m_Type & BBF_ACTIVE) != 0;
 }
 
 b3_count b3BBox::b3Count()
