@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/01/21 10:28:59  smork
+**	- Corrected exe banner.
+**
 **	Revision 1.19  2004/11/29 09:58:00  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.18  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
@@ -204,7 +207,7 @@ int main(int argc,char *argv[])
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Simple image viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);

@@ -32,11 +32,14 @@
   
 /*
 **	$Log$
+**	Revision 1.5  2005/01/21 10:28:59  smork
+**	- Corrected exe banner.
+**
 **	Revision 1.4  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.3  2004/10/12 11:54:53  smork
 **	- Some minor GCC compiler errors.
 **	
@@ -199,13 +202,35 @@ static void MovieGIF(char *name)
 	out.b3Close();
 }
 
+static void b3Banner(const char *command)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III GIF movie maker\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s {GIF-Files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
+	}
+	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+}
+
 int main(int argc,char *argv[])
 {
-	int i;
-
-	for (i = 1; i < argc; i++)
+	if (argc > 1) 
 	{
-		MovieGIF (argv[i]);
+		int i;
+
+		for (i = 1; i < argc; i++)
+		{
+			MovieGIF (argv[i]);
+		}
+	}
+	else
+	{
+		b3Banner(argv[0]);
 	}
 	return EXIT_SUCCESS;
 }

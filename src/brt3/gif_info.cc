@@ -33,6 +33,9 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2005/01/21 10:28:59  smork
+**  - Corrected exe banner.
+**
 **  Revision 1.4  2004/11/29 09:58:01  smork
 **  - Changed exit states to correct defines.
 **  - Added switch for disabling VBO in OpenGL renderer.
@@ -182,13 +185,35 @@ static void InfoGIF(char *name)
 	while (loop);
 }
 
+static void b3Banner(const char *command)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III GIF info viewer\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s {GIF-Files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
+	}
+	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+}
+
 int main(int argc,char *argv[])
 {
-	int i;
-
-	for (i = 1; i < argc; i++)
+	if (argc > 1)
 	{
-		InfoGIF (argv[i]);
+		int i;
+
+		for (i = 1; i < argc; i++)
+		{
+			InfoGIF (argv[i]);
+		}
+	}
+	else
+	{
+		b3Banner(argv[0]);
 	}
 	return EXIT_SUCCESS;
 }

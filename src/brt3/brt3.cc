@@ -38,6 +38,9 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2005/01/21 10:28:59  smork
+**	- Corrected exe banner.
+**
 **	Revision 1.61  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -46,7 +49,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.60  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -394,7 +397,7 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{
