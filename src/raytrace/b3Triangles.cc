@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2004/08/18 15:03:46  sm
+**      - Added render support for flat triangle field (no Phong interpolation)
+**
 **      Revision 1.11  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -254,7 +257,7 @@ void b3Triangles::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	vertCount = m_VertexCount;
+	vertCount = m_Flags & PHONG ? m_VertexCount : (m_TriaCount * 3);
 	gridCount = m_TriaCount * 3;
 	polyCount = m_TriaCount;
 }
@@ -267,37 +270,110 @@ void b3Triangles::b3ComputeVertices()
 
 	Vertex        = m_Vertices;
 	Vector        = glVertex;
-	glVertexCount = m_VertexCount;
-	for (i = 0;i < m_VertexCount;i++)
+	
+	if (m_Flags & PHONG)
 	{
-		Vector->v.x = Vertex->Point.x;
-		Vector->v.y = Vertex->Point.y;
-		Vector->v.z = Vertex->Point.z;
-		Vertex++;
-		Vector++;
-	}
-
-	if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize + 1) * (m_ySize + 1) == m_VertexCount))
-	{
-		b3_index x,y;
-		b3_f64   fx,fxStep;
-		b3_f64   fy,fyStep;
-
-		Vector = glVertex;
-		fy     = 0;
-		fxStep = 1.0 / m_xSize;
-		fyStep = 1.0 / m_ySize;
-		for (y = 0;y <= m_ySize;y++)
+		for (i = 0;i < m_VertexCount;i++)
 		{
-			fx = 0;
-			for (x = 0;x <= m_xSize;x++)
+			Vector->v.x = Vertex->Point.x;
+			Vector->v.y = Vertex->Point.y;
+			Vector->v.z = Vertex->Point.z;
+			Vertex++;
+			Vector++;
+		}
+
+		if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize + 1) * (m_ySize + 1) == m_VertexCount))
+		{
+			b3_index x,y;
+			b3_f64   fx,fxStep;
+			b3_f64   fy,fyStep;
+
+			Vector = glVertex;
+			fy     = 0;
+			fxStep = 1.0 / m_xSize;
+			fyStep = 1.0 / m_ySize;
+			for (y = 0;y <= m_ySize;y++)
 			{
-				Vector->t.s = fx;
-				Vector->t.t = fy;
-				Vector++;
-				fx += fxStep;
+				fx = 0;
+				for (x = 0;x <= m_xSize;x++)
+				{
+					Vector->t.s = fx;
+					Vector->t.t = fy;
+					Vector++;
+					fx += fxStep;
+				}
+				fy += fyStep;
 			}
-			fy += fyStep;
+		}
+	}
+	else
+	{
+		for (i = 0;i < m_TriaCount;i++)
+		{
+			Vertex = &m_Vertices[m_Triangles[i].P1];
+			Vector->v.x = Vertex->Point.x;
+			Vector->v.y = Vertex->Point.y;
+			Vector->v.z = Vertex->Point.z;
+			Vector++;
+
+			Vertex = &m_Vertices[m_Triangles[i].P2];
+			Vector->v.x = Vertex->Point.x;
+			Vector->v.y = Vertex->Point.y;
+			Vector->v.z = Vertex->Point.z;
+			Vector++;
+
+			Vertex = &m_Vertices[m_Triangles[i].P3];
+			Vector->v.x = Vertex->Point.x;
+			Vector->v.y = Vertex->Point.y;
+			Vector->v.z = Vertex->Point.z;
+			Vector++;
+		}
+
+		if ((m_xSize > 0) && (m_ySize > 0) && (m_xSize * m_ySize * 2 == m_TriaCount))
+		{
+			b3_index x,y;
+			b3_f64   fx,fxStep;
+			b3_f64   fy,fyStep;
+
+			Vector = glVertex;
+			fy     = 0;
+			fxStep = 1.0 / m_xSize;
+			fyStep = 1.0 / m_ySize;
+			for (y = 0;y < m_ySize;y++)
+			{
+				fx = 0;
+				for (x = 0;x < m_xSize;x++)
+				{
+					// First quad triangle
+					Vector->t.s = fx;
+					Vector->t.t = fy;
+					Vector++;
+
+					Vector->t.s = fx + fxStep;
+					Vector->t.t = fy;
+					Vector++;
+
+					Vector->t.s = fx + fyStep;
+					Vector->t.t = fy;
+					Vector++;
+
+					// Second quad triangle
+					Vector->t.s = fx + fxStep;
+					Vector->t.t = fy + fyStep;
+					Vector++;
+
+					Vector->t.s = fx;
+					Vector->t.t = fy + fyStep;
+					Vector++;
+
+					Vector->t.s = fx + fyStep;
+					Vector->t.t = fy;
+					Vector++;
+
+					fx += fxStep;
+				}
+				fy += fyStep;
+			}
 		}
 	}
 }
@@ -320,21 +396,43 @@ void b3Triangles::b3ComputeIndices()
 	Triangle = m_Triangles;
 	gPtr     = glGrids;
 	pPtr     = glPolygons;
-	for (i = 0;i < m_TriaCount;i++)
+
+	if (m_Flags & PHONG)
 	{
-		p1 = (b3_u16)Triangle->P1;
-		p2 = (b3_u16)Triangle->P2;
-		p3 = (b3_u16)Triangle->P3;
-		Triangle++;
+		for (i = 0;i < m_TriaCount;i++)
+		{
+			p1 = (b3_u16)Triangle->P1;
+			p2 = (b3_u16)Triangle->P2;
+			p3 = (b3_u16)Triangle->P3;
+			Triangle++;
 		
-		B3_GL_LINIT(gPtr,p1,p2);
-		B3_GL_LINIT(gPtr,p2,p3);
-		B3_GL_LINIT(gPtr,p3,p1);
+			B3_GL_LINIT(gPtr,p1,p2);
+			B3_GL_LINIT(gPtr,p2,p3);
+			B3_GL_LINIT(gPtr,p3,p1);
 		
-		B3_GL_PINIT(pPtr,p1,p2,p3);
+			B3_GL_PINIT(pPtr,p1,p2,p3);
+		}
+		glGridCount = m_TriaCount * 3;
+		glPolyCount = m_TriaCount;
 	}
-	glGridCount = m_TriaCount * 3;
-	glPolyCount = m_TriaCount;
+	else
+	{
+		for (i = 0;i < m_TriaCount;i++)
+		{
+			p1 = i * 3;
+			p2 = p1 + 1;
+			p3 = p2 + 1;
+			Triangle++;
+		
+			B3_GL_LINIT(gPtr,p1,p2);
+			B3_GL_LINIT(gPtr,p2,p3);
+			B3_GL_LINIT(gPtr,p3,p1);
+		
+			B3_GL_PINIT(pPtr,p1,p2,p3);
+		}
+		glGridCount = m_TriaCount * 3;
+		glPolyCount = m_TriaCount;
+	}
 }
 
 void b3Triangles::b3SetupPicking(b3PickInfo *info)

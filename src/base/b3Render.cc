@@ -44,6 +44,9 @@
 
 /*
 **      $Log$
+**      Revision 1.86  2004/08/18 15:03:46  sm
+**      - Added render support for flat triangle field (no Phong interpolation)
+**
 **      Revision 1.85  2004/08/14 15:06:22  sm
 **      - Revert max array determiniation.
 **
@@ -1011,8 +1014,8 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		    (v2 < start) || (v2 >= end) ||
 		    (v3 < start) || (v3 >= end))
 		{
-			b3PrintF(B3LOG_NORMAL,"###### %d: %d # %d %d %d # %d (%s:l.%d)\n",i,
-				start,v1,v2,v3,end,__FILE__,__LINE__);
+			b3PrintF(B3LOG_NORMAL,"###### %d: %d # %d %d %d # %d # (V: %d  P: %d  G: %d) # (%s:l.%d)\n",i,
+				start,v1,v2,v3,end,glVertexCount,glPolyCount,glGridCount,__FILE__,__LINE__);
 		}
 
 		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
