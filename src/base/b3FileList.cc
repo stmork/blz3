@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/16 13:20:13  sm
+**	- Removed some unused methods.
+**	- Allocation bug found in brt3 - the Un*x version of the
+**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**	  rather than b3renderContext which doesn't initialize subdivision
+**	  for shapes.
+**
 **	Revision 1.4  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
-**
+**	
 **	Revision 1.3  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -76,14 +83,6 @@ const char *b3FileEntry::b3Name()
 **                        Blizzard III b3FileList                       **
 **                                                                      **
 *************************************************************************/
-
-static int b3SortFiles (
-	b3FileEntry *a,
-	b3FileEntry *b,
-	const void        *ptr)
-{
-	return a->b3Cmp(b);
-}
 
 b3FileList::b3FileList()
 {

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2002/08/16 13:20:14  sm
+**      - Removed some unused methods.
+**      - Allocation bug found in brt3 - the Un*x version of the
+**        Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**        rather than b3renderContext which doesn't initialize subdivision
+**        for shapes.
+**
 **      Revision 1.31  2002/08/15 13:56:44  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -331,19 +338,7 @@ void b3TriangleShape::b3SearchCubicItem (
 	}
 }
 
-static b3_s32 IntLog2 (b3_u32 value)
-{
-	b3_s32 Log = -1;
-
-	while (value > 0)
-	{
-		value = value >> 1;
-		Log++;
-	}
-	return Log;
-}
-
-static b3_s32 IntLog3 (b3_u32 value)
+static b3_s32 b3IntLog3 (b3_u32 value)
 {
 	b3_s32 Log = -1;
 
@@ -364,7 +359,7 @@ void b3TriangleShape::b3PrepareGridList ()
 	b3_count  degenerated = 0;
 #endif
 
-	MaxRec = IntLog3(m_GridSize) << 1;
+	MaxRec = b3IntLog3(m_GridSize) << 1;
 	max    = m_GridSize * m_GridSize * m_GridSize;
 
 	for (i = 0;i < max;i++)

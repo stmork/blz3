@@ -15,6 +15,8 @@
 **
 */
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -32,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/16 13:20:14  sm
+**	- Removed some unused methods.
+**	- Allocation bug found in brt3 - the Un*x version of the
+**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**	  rather than b3renderContext which doesn't initialize subdivision
+**	  for shapes.
+**
 **	Revision 1.3  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.2  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -59,8 +68,8 @@ void b3TimeSpan::b3Start()
 {
 	ftime(&m_RealTime);
 	getrusage(RUSAGE_SELF,&m_UsageTime);
-#ifdef _DEBUG
-	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+#ifdef _VERBOSE
+	b3PrintF(B3LOG_NORMAL,"Thread time start: %9d,%06d\n",
 		m_UsageTime.ru_utime.tv_sec,
 		m_UsageTime.ru_utime.tv_usec);
 #endif
@@ -73,8 +82,8 @@ void b3TimeSpan::b3Stop()
 
 	getrusage(RUSAGE_SELF,&usage_stop);
 	ftime(&real_stop);
-#ifdef _DEBUG
-	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+#ifdef _VERBOSE
+	b3PrintF(B3LOG_NORMAL,"Thread time stop:  %9d,%06d\n",
 		usage_stop.ru_utime.tv_sec,
 		usage_stop.ru_utime.tv_usec);
 #endif

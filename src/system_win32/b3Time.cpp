@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/16 13:20:14  sm
+**	- Removed some unused methods.
+**	- Allocation bug found in brt3 - the Un*x version of the
+**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**	  rather than b3renderContext which doesn't initialize subdivision
+**	  for shapes.
+**
 **	Revision 1.8  2002/08/11 11:53:37  sm
 **	- It compiles!
-**
+**	
 **	Revision 1.7  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -167,7 +174,7 @@ void b3TimeSpan::b3Start()
 		&m_sStart,&m_uStart);
 	ftime(&m_RealTime);
 #ifdef _VERBOSE
-	b3PrintF(B3LOG_NORMAL,"Thread time: %d,%d\n",
+	b3PrintF(B3LOG_NORMAL,"Thread time start: %9d,%06d\n",
 		m_uStart.dwLowDateTime,
 		m_uStart.dwHighDateTime);
 #endif
@@ -184,7 +191,7 @@ void b3TimeSpan::b3Stop()
 		&system_usage,&user_usage);
 	ftime(&real_stop);
 #ifdef _VERBOSE
-	b3PrintF(B3LOG_NORMAL,"Thread time: %d,%d\n",
+	b3PrintF(B3LOG_NORMAL,"Thread time stop:  %9d,%06d\n",
 		user_usage.dwLowDateTime,
 		user_usage.dwHighDateTime);
 #endif

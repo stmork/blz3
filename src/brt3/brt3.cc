@@ -36,13 +36,20 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/08/16 13:20:13  sm
+**	- Removed some unused methods.
+**	- Allocation bug found in brt3 - the Un*x version of the
+**	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**	  rather than b3renderContext which doesn't initialize subdivision
+**	  for shapes.
+**
 **	Revision 1.26  2002/08/16 11:40:38  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There
 **	  are still some problems so we have to work further on Windows for
 **	  better debugging.
 **	- b3ExtractExt searches from right instead from left.
-**
+**	
 **	Revision 1.25  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -171,16 +178,18 @@ static void b3SaveRaytracedImage(
 	const char *camera_name)
 {
 	b3Path imagename;
+	b3Path filename;
 
+	filename.b3RemoveExt(camera_name);
 	if (picture_home != null)
 	{
-		imagename.b3LinkFileName(picture_home,camera_name);
+		imagename.b3LinkFileName(picture_home,filename);
 		strcat((char *)imagename,BLZ3_EXTENSION);
 	}
 	else
 	{	
 		sprintf((char *)imagename,"%s%s",
-			camera_name,BLZ3_EXTENSION);
+			(const char *)filename,BLZ3_EXTENSION);
 	}
 	display->b3SaveImage(imagename);
 }
@@ -222,21 +231,21 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 
 int main(int argc,char *argv[])
 {
-	b3Item       *item;
-	b3World      *world;
-	b3Scene      *scene;
-	b3CameraPart *camera;
-	b3Display    *display;
-	b3RenderContext  context;
-	b3_vector        lower,upper;
-	char         *picture_home = getenv("BLZ3_PICTURES");
-	char         *HOME         = getenv("HOME");
-	b3_index      i;
-	b3Path        textures;
-	b3Path        pictures;
-	b3Path        data;
-	b3Path        camera_name;
-	b3_bool       force_no_display = false;
+	b3ShapeRenderContext  context;
+	b3World              *world;
+	b3Display            *display;
+	b3Scene              *scene;
+	b3CameraPart         *camera;
+	b3Item               *item;
+	b3_vector             lower,upper;
+	char                 *picture_home = getenv("BLZ3_PICTURES");
+	char                 *HOME         = getenv("HOME");
+	b3Path                textures;
+	b3Path                pictures;
+	b3Path                data;
+	b3Path                camera_name;
+	b3_bool               force_no_display = false;
+	b3_index              i;
 
 	if (argc > 1)
 	{
@@ -315,8 +324,8 @@ int main(int argc,char *argv[])
 						{
 							scene->b3Raytrace(display);
 							b3SaveRaytracedImage(
-							display,
-							picture_home,scene->b3GetName());
+								display,
+								picture_home,scene->b3GetName());
 						}
 	
 						display->b3Wait();

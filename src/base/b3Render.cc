@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2002/08/16 13:20:13  sm
+**      - Removed some unused methods.
+**      - Allocation bug found in brt3 - the Un*x version of the
+**        Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
+**        rather than b3renderContext which doesn't initialize subdivision
+**        for shapes.
+**
 **      Revision 1.55  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -1307,12 +1314,12 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 			b3_index  a,b;
 			b3_f64    len;
 
-			a = glGrids[i + i];
+			a = glGrids[i].a;
 			aPoint.x = glVertex[a].v.x;
 			aPoint.y = glVertex[a].v.y;
 			aPoint.z = glVertex[a].v.z;
 
-			b = glGrids[i + i + 1];
+			b = glGrids[i].b;
 			bPoint.x = glVertex[b].v.x;
 			bPoint.y = glVertex[b].v.y;
 			bPoint.z = glVertex[b].v.z;
@@ -1328,17 +1335,17 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 			b3_index  a,b,c;
 			b3_f64    aLen,bLen;
 
-			a = glPolygons[i * 3];
+			a = glPolygons[i].a;
 			aPoint.x = glVertex[a].v.x;
 			aPoint.y = glVertex[a].v.y;
 			aPoint.z = glVertex[a].v.z;
 
-			b = glPolygons[i * 3 + 1];
+			b = glPolygons[i].b;
 			bPoint.x = glVertex[b].v.x;
 			bPoint.y = glVertex[b].v.y;
 			bPoint.z = glVertex[b].v.z;
 
-			c = glPolygons[i * 3 + 2];
+			c = glPolygons[i].c;
 			cPoint.x = glVertex[c].v.x;
 			cPoint.y = glVertex[c].v.y;
 			cPoint.z = glVertex[c].v.z;
@@ -1346,6 +1353,10 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 			aLen = b3Vector::b3Distance(&aPoint,&bPoint);
 			bLen = b3Vector::b3Distance(&aPoint,&cPoint);
 		}
+		break;
+
+	default:
+		// Nothing to do...
 		break;
 	}
 #endif
