@@ -31,6 +31,17 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -84,7 +95,6 @@ void b3Disk::b3ComputeVertices()
 	b3_count   iMax;
 
 	Vector = (b3_vector *)Vertices;
-
 	h = Limit.y2;
 	b = Limit.y1;
 
@@ -98,9 +108,11 @@ void b3Disk::b3ComputeVertices()
 	if (b > 0)
 	{
 		ySize++;
+		// This is a ring formed disk
 		if ((i - start) > Epsilon)
 		{
-			a = Limit.x1 * M_PI * 2;
+			//compute front fractional disk ring
+			a  = Limit.x1 * M_PI * 2;
 			sx = cos(a);
 			sy = sin(a);
 
@@ -119,6 +131,7 @@ void b3Disk::b3ComputeVertices()
 
 		for (;i<=iMax;i++)
 		{
+			// compute ordered position of ring disk
 			sx = h * Cos[i % SinCosSteps];
 			sy = h * Sin[i % SinCosSteps];
 			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
@@ -131,12 +144,14 @@ void b3Disk::b3ComputeVertices()
 			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
 			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector++;
 			xSize++;
 		}
 
 		if ((end - iMax) > Epsilon)
 		{
-			a = Limit.x2 * M_PI * 2;
+			// compute rest fractional ring disk
+			a  = Limit.x2 * M_PI * 2;
 			sx = cos(a);
 			sy = sin(a);
 
@@ -154,12 +169,13 @@ void b3Disk::b3ComputeVertices()
 	}
 	else
 	{
-		*Vector = Base;
-		Vector++;
+		// Position center first
+		*Vector++ = Base;
 
+		// First fractional disk part if any
 		if ((i - start) > Epsilon)
 		{
-			a = Limit.x1 * M_PI * 2;
+			a  = Limit.x1 * M_PI * 2;
 			sx = h * cos(a);
 			sy = h * sin(a);
 
@@ -170,6 +186,7 @@ void b3Disk::b3ComputeVertices()
 			xSize++;
 		}
 
+		// ordered parts of disk
 		for (;i<=iMax;i++)
 		{
 			sx = h * Cos[i % SinCosSteps];
@@ -181,9 +198,10 @@ void b3Disk::b3ComputeVertices()
 			xSize++;
 		}
 
+		// Last part as fracvtional disk
 		if ((end - iMax) > Epsilon)
 		{
-			a = Limit.x2 * M_PI * 2;
+			a  = Limit.x2 * M_PI * 2;
 			sx = h * cos(a);
 			sy = h * sin(a);
 
@@ -198,6 +216,78 @@ void b3Disk::b3ComputeVertices()
 
 void b3Disk::b3ComputeIndices()
 {
+	GLushort *Index;
+	b3_bool   EndLines = false;
+	b3_index  i,Number = 0;
+	b3_count  Overhead;
+
+	b3ComputeBound(&Limit);
+	Overhead = b3GetIndexOverhead (0.0,0.0);
+	if (Overhead < 0)
+	{
+		EndLines = true;
+		Overhead = -Overhead;
+		Number   = 2;
+	}
+	Number += Overhead;
+	if (Limit.y1 > 0) Number += Overhead;
+
+	Grids = Index = (GLushort *)b3RenderObject::b3Alloc
+		(Number * 2 * sizeof(GLushort));
+	if (Index == null)
+	{
+		GridCount = 0;
+		return;
+	}
+	else
+	{
+		GridCount = Number;
+	}
+
+	if (Limit.y1 > 0)
+	{
+		b3_index pos;
+
+		for (i = 0;i < Overhead;i++)
+		{
+			pos = i + i;
+			*Index++ = pos;
+			*Index++ = pos + 2;
+
+			*Index++ = pos + 1;
+			*Index++ = pos + 3;
+		}
+		if (EndLines)
+		{
+			*Index++ = 0;
+			*Index++ = 1;
+
+			*Index++ = Overhead + Overhead;
+			*Index++ = Overhead + Overhead + 1;
+		}
+	}
+	else
+	{
+		for (i = 1;i <= Overhead;i++)
+		{
+			*Index++ = i;
+			*Index++ = i + 1;
+		}
+		if (EndLines)
+		{
+			*Index++ = 0;
+			*Index++ = 1;
+
+			*Index++ = 0;
+			*Index++ = Overhead + 1;
+		}
+	}
+	/*
+		PrintF ("\n");
+		PrintF ("Number:   %ld\n",Number);
+		PrintF ("Overhead: %ld\n",Overhead);
+		PrintF ("n:        %ld\n",GridCount);
+	*/
 }
 
 void b3Disk::b3Intersect()

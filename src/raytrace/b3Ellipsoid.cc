@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include <assert.h>
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,17 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -85,12 +97,11 @@ void b3Ellipsoid::b3ComputeVertices()
 	b3_f64     LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
 	b3_f32     start,end,a;
 
-	Vector				= (b3_vector *)Vertices;
-
-	start = (Limit.y1 + 1) * SinCosSteps * 0.25;
-	end   = (Limit.y2 + 1) * SinCosSteps * 0.25;
-	i     = (b3_index)ceil(start);
-	iMax  = (b3_count)floor(end);
+	Vector = (b3_vector *)Vertices;
+	start  = (Limit.y1 + 1) * SinCosSteps * 0.25;
+	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
+	i      = (b3_index)ceil(start);
+	iMax   = (b3_count)floor(end);
 	if ((i - start) > Epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = Limit.y1;
@@ -185,6 +196,89 @@ void b3Ellipsoid::b3ComputeVertices()
 
 void b3Ellipsoid::b3ComputeIndices()
 {
+	GLushort *Index;
+	b3_bool   EndLine = false;
+	b3_index  i,j,Number,s,ys,ye;
+	b3_count  Heights,Widths,Overhead;
+	b3_f64    y1,y2;
+
+	GridCount = 0;
+	b3ComputeBound(&Limit);
+	Overhead  = b3GetIndexOverhead (0.0,-1.0);
+	if (Overhead < 0)
+	{
+		EndLine  = true;
+		Overhead = -Overhead;
+	}
+
+	y1 = (Limit.y1 + 1) * SinCosSteps * 0.25;
+	y2 = (Limit.y2 + 1) * SinCosSteps * 0.25;
+	ys = (b3_index)ceil(y1);
+	ye = (b3_index)floor(y2);
+	Heights = ye - ys;
+	if ((ys - y1) > Epsilon) Heights++;
+	if ((y2 - ye) > Epsilon) Heights++;
+
+	Widths = Heights - 1;
+	if ((SinCosSteps * 0.5 - y2) > Epsilon) Widths++;
+	if (                     y1  > Epsilon) Widths++;
+
+	if (EndLine) Number = (Widths + Heights) * Overhead + Heights;
+	else         Number = (Widths + Heights) * Overhead;
+	Grids = Index = (GLushort *)b3RenderObject::b3Alloc
+		(Number * 2 * sizeof(GLushort));
+	if (Index == null)
+	{
+		return;
+	}
+
+	s = 0;
+	for (i = 0;i < Overhead;i++)
+	{
+		for (j = 0;j < Heights;j++)
+		{
+			*Index++ = s + j;
+			*Index++ = s + j + 1;
+		}
+		GridCount += Heights;
+
+		if (y1 <= Epsilon) j = 1;
+		else               j = 0;
+		if ((SinCosSteps * 0.5 - y2) <= Epsilon) while (j < Heights)
+		{
+			*Index++ = s + j;
+			*Index++ = s + j + Heights + 1;
+			GridCount++;
+			j++;
+		}
+		else  while (j <= Heights)
+		{
+			*Index++ = s + j;
+			*Index++ = s + j + Heights + 1;
+			GridCount++;
+			j++;
+		}
+		s += (Heights + 1);
+	}
+
+	if (EndLine)
+	{
+		for (j = 0;j < Heights;j++)
+		{
+			*Index++ = s + j;
+			*Index++ = s + j + 1;
+		}
+		GridCount += Heights;
+	}
+	assert(GridCount <= Number);
+	/*
+		PrintF ("\n");
+		PrintF ("Heights:  %ld\n",Heights);
+		PrintF ("Widths:   %ld\n",Widths);
+		PrintF ("Number:   %ld\n",Number);
+		PrintF ("Overhead: %ld\n",Overhead);
+		PrintF ("n:        %ld\n",n);
+	*/
 }
 
 void b3Ellipsoid::b3Intersect()

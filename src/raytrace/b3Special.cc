@@ -31,8 +31,19 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -112,8 +123,11 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	BBoxTitles   = b3InitBool();
 	GridActive   = b3InitBool();
 	CameraActive = b3InitBool();
-	Flags        = b3InitInt();
-	Unit         = b3InitFloat();	
+	if ((parseIndex << 2) < (b3_index)size)
+	{
+		Flags        = b3InitInt();
+		Unit         = b3InitFloat();	
+	}
 }
 
 

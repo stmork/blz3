@@ -31,6 +31,17 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -76,6 +87,13 @@ void b3Cone::b3GetCount(
 	vertCount   = SinCosSteps + SinCosSteps + 6;
 }
 
+void b3Cone::b3AllocVertices(b3RenderContext *context)
+{
+	b3RenderObject::b3AllocVertices(context);
+	GridsCyl  = context->b3GetCylinderIndices();
+	GridsCone = context->b3GetConeIndices();
+}
+
 void b3Cone::b3ComputeVertices()
 {
 	b3_vector *Vector;
@@ -84,10 +102,10 @@ void b3Cone::b3ComputeVertices()
 	b3_count   iMax;
 	b3_vector  Bottom;
 
-	Vector				= (b3_vector *)Vertices;
+	Vector   = (b3_vector *)Vertices;
 
-	h = Limit.y2 - Limit.y1;
-	b = Limit.y1;
+	h        = Limit.y2 - Limit.y1;
+	b        = Limit.y1;
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
 	Bottom.z = Base.z + b * Dir3.z;
@@ -120,7 +138,7 @@ void b3Cone::b3ComputeVertices()
 			xSize++;
 		}
 
-		for (;i<=iMax;i++)
+		for (;i <= iMax;i++)
 		{
 			sx = (1-b) * Cos[i % SinCosSteps];
 			sy = (1-b) * Sin[i % SinCosSteps];
@@ -158,9 +176,9 @@ void b3Cone::b3ComputeVertices()
 	}
 	else
 	{
-		Vector->x = Bottom.x +  Dir3.x;
-		Vector->y = Bottom.y +  Dir3.y;
-		Vector->z = Bottom.z +  Dir3.z;
+		Vector->x = Base.x + Dir3.x;
+		Vector->y = Base.y + Dir3.y;
+		Vector->z = Base.z + Dir3.z;
 		Vector++;
 
 		if ((i - start) > Epsilon)
@@ -176,7 +194,7 @@ void b3Cone::b3ComputeVertices()
 			xSize++;
 		}
 
-		for (;i<=iMax;i++)
+		for (;i <= iMax;i++)
 		{
 			sx = (1-b) * Cos[i % SinCosSteps];
 			sy = (1-b) * Sin[i % SinCosSteps];
@@ -189,7 +207,7 @@ void b3Cone::b3ComputeVertices()
 
 		if ((end - iMax) > Epsilon)
 		{
-			a = Limit.x2 * M_PI * 2;
+			a  = Limit.x2 * M_PI * 2;
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 
@@ -204,6 +222,29 @@ void b3Cone::b3ComputeVertices()
 
 void b3Cone::b3ComputeIndices()
 {
+	b3_count Overhead;
+
+	b3ComputeBound(&Limit);
+	Overhead = b3GetIndexOverhead (0.0,0.0);
+	if (Overhead < 0)
+	{
+		GridCount = 1;
+		Overhead  = -Overhead;
+	}
+	else
+	{
+		GridCount = 0;
+	}
+	if (Limit.y2 < 1)
+	{
+		Grids      = GridsCyl;
+		GridCount += Overhead * 3;
+	}
+	else
+	{
+		Grids      = GridsCone;
+		GridCount += Overhead * 2;
+	}
 }
 
 void b3Cone::b3Intersect()

@@ -76,9 +76,20 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/08/09 15:27:34  sm
+**	- Following shapes are newly supported now:
+**	  o disk
+**	  o cylinder
+**	  o cone
+**	  o ellipsoid
+**	  o torus
+**	  o triangles
+**	- Done some makefile fixes
+**	- Everything is Windozable
+**
 **	Revision 1.7  2001/08/05 19:53:43  sm
 **	- Removing some nasty CR/LF
-**
+**	
 **	Revision 1.6  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -117,6 +128,7 @@
 // Some unessessary warnings in level 4 we have to disable first
 #pragma warning(disable : 4100)
 #pragma warning(disable : 4711)
+#pragma warning(disable : 4244)
 
 // Some linker optimazations
 #ifndef _DEBUG

@@ -9,10 +9,10 @@ LDLIBS			= $(LIB_OGL3) $(LIB_B3) $(LIB_X3) $(LIB_S3)
 LIBS			= libB3xxx.a
 PRGS			= simple render
 SIMPLE_OBJ		= simple.o
-SIMPLE_SOURCE		= simple.cc
+SIMPLE_SRC		= simple.cc
 RENDER_OBJ		= render.o
-RENDER_SOURCE		= render.cc
-PRG_SOURCE		= $(SIMPLE_SOURCE) $(RENDER_SRC)
+RENDER_SRC		= render.cc
+PRG_SOURCE		= $(SIMPLE_SRC) $(RENDER_SRC)
 
 all:	$(PRGS)
 

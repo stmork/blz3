@@ -21,6 +21,7 @@
 #define B3_TYPES_H
 
 #include <sys/types.h>
+#include <math.h>
 
 // Some error codes
 typedef enum
@@ -114,30 +115,47 @@ typedef struct
 	b3_f64    m31,m32,m33,m34;
 	b3_f64    m41,m42,m43,m44;
 } b3_matrix64;                                                                                                          
+
+typedef struct b3Triangle
+{
+	b3_u32 P1;
+	b3_u32 P2;
+	b3_u32 P3;
+} b3_triangle;
+
+typedef struct b3Vertex
+{
+	b3_f32 x;
+	b3_f32 y;
+	b3_f32 z;
+	b3_f32 nx;
+	b3_f32 ny;
+	b3_f32 nz;
+} b3_vertex;
                                                                  
-typedef struct
+typedef struct b3Line
 {
 	b3_vector pos,dir;
 } b3_line;
 
-typedef struct
+typedef struct b3Pos
 {
 	b3_s32    x,y;
 } b3_pos;
 
-typedef struct
+typedef struct b3ColorARGB
 {
 	b3_f32    a,r,g,b;
 } b3_color;
 
-typedef struct
+typedef struct b3Polar
 {
 	b3_vector polar;
 	b3_vector object_polar;
 	b3_vector box_polar;
 } b3_polar;
 
-typedef struct
+typedef struct b3Ray
 {
 	b3_line   ray;
 	b3_color  color;
@@ -154,6 +172,10 @@ typedef struct
 
 #ifndef true
 #define true  1
+#endif
+
+#ifndef M_PI
+#define M_PI 3.14159265
 #endif
 
 #endif

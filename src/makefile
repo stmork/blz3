@@ -2,7 +2,7 @@
 # basic makefile to create Blizzard II
 #
 
-CFLAGS		= $(DFLAGS)
+CFLAGS		= $(OFLAGS)
 CXXFLAGS	= $(CFLAGS)
 
 ifeq ($(HOSTTYPE),m68k-amiga)
@@ -29,12 +29,11 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i; \
 	done
 
-clean:
+clean:	remdepend
 	echo "Cleaning up..."
 	find   $(BLZ3_HOME) -name "*.log" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.ncb" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.plg" -exec rm {} \;
-	find   $(BLZ3_HOME) -name  ".dep" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.mak" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.bak" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*~"    -exec rm {} \;
@@ -61,7 +60,7 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-remdepend:	clean
+remdepend:
 	find . -name ".dep" -exec rm {} \;
 
 tar:

@@ -31,6 +31,17 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.6  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -114,7 +125,6 @@ void b3Area::b3ComputeVertices()
 	b3_f32       x1,y1,x2,y2;
 
 	Vector = Vertices;
-	b3ComputeBound(&Limit);
 	x1     = Limit.x1;
 	y1     = Limit.y1;
 	x2     = Limit.x2;
@@ -142,6 +152,7 @@ void b3Area::b3ComputeVertices()
 
 void b3Area::b3ComputeIndices()
 {
+	b3ComputeBound(&Limit);
 }
 
 void b3Area::b3Intersect()

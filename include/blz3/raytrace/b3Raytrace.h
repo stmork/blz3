@@ -710,11 +710,17 @@ public:
 
 class b3Cone : public b3Shape3
 {
+#ifdef BLZ3_USE_OPENGL
+	GLushort *GridsCyl;
+	GLushort *GridsCone;
+#endif
+
 public:
 	B3_ITEM_INIT(b3Cone);
 	B3_ITEM_LOAD(b3Cone);
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3AllocVertices(b3RenderContext *context);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -770,15 +776,17 @@ public:
 // TRIANGLES
 class b3TriangleShape : public b3Shape
 {
-	struct BHead    *GridList;           // list of grids
-	b3_vector           Base,Size;       // size of bounding box of all triangles
-	b3_s32             GridSize;         // num grid edges
-	b3_s32             Triangles,Vertices;   // num of verteces and triangles
-	b3_s32             xSize,ySize;      // triangle order
-	b3_s32             Flags;            // interpolation flags
-	b3_s32             IndexHit;         // index of hit triangle
-	b3_f32            aValue,bValue;     // polarcoord. of triangles
+	struct BHead *GridList;              // list of grids
+	b3_vector     Base,Size;             // size of bounding box of all triangles
+	b3_count      GridSize;              // num grid edges
+	b3_count      TriaCount,VertexCount; // num of verteces and triangles
+//	b3_s32        xSize,ySize;           // triangle order
+	b3_u32        Flags;                 // interpolation flags
+	b3_index      IndexHit;              // index of hit triangle
+	b3_f64        aValue,bValue;         // polarcoord. of triangles
 
+	b3_triangle  *triangles;
+	b3_vertex    *vertices;
 public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);

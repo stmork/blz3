@@ -31,8 +31,19 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -105,7 +116,10 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 	ScaleFlag   = b3InitInt();
 	b3InitVector(&ScaleIPoint);
 	ScaleRad    = b3InitFloat();
-	ScaleTime   = b3InitFloat();
+	if ((parseIndex << 2) < (b3_index)size)
+	{
+		ScaleTime   = b3InitFloat();
+	}
 }
 
 

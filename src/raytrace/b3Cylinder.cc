@@ -31,6 +31,17 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -90,10 +101,9 @@ void b3Cylinder::b3ComputeVertices()
 	b3_count   iMax;
 	b3_vector  Bottom;
 
-	Vector				= (b3_vector *)Vertices;
-
-	h = Limit.y2 - Limit.y1;
-	b = Limit.y1;
+	Vector = (b3_vector *)Vertices;
+	h      = Limit.y2 - Limit.y1;
+	b      = Limit.y1;
 
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
@@ -154,7 +164,7 @@ void b3Cylinder::b3ComputeVertices()
 		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
 		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
 		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
-
+		Vector++;
 		xSize++;
 	}
 }
@@ -163,6 +173,7 @@ void b3Cylinder::b3ComputeIndices()
 {
 	b3_count Overhead;
 
+	b3ComputeBound(&Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
 	if (Overhead < 0)
 	{

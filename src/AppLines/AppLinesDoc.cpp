@@ -32,9 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/09 15:27:34  sm
+**	- Following shapes are newly supported now:
+**	  o disk
+**	  o cylinder
+**	  o cone
+**	  o ellipsoid
+**	  o torus
+**	  o triangles
+**	- Done some makefile fixes
+**	- Everything is Windozable
+**
 **	Revision 1.2  2001/08/06 19:58:58  sm
 **	- Drawing area - the first shape we can see with OpenGL
-**
+**	
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -112,7 +123,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	// TODO: Add your specialized creation code here
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
-	m_Scene->b3AllocVertices();
+	m_Scene->b3AllocVertices(&m_Context);
 	return TRUE;
 }
 

@@ -165,6 +165,10 @@ SOURCE=..\base\b3Matrix.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Render.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Scene.cc
 # End Source File
 # Begin Source File
@@ -207,6 +211,10 @@ SOURCE=.\b3TriangleShape.cc
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\b3Main.h
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h

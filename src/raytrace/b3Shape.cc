@@ -31,6 +31,17 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
 **      Revision 1.9  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -249,8 +260,8 @@ void b3SplineShape::b3ComputeVertices()
 	ySpline->knots    = &Knots[1][0];
 
 
-		/* building horizontal splines */
-		/* first create controls for segments of vertical spline... */
+	// building horizontal splines
+	// first create controls for segments of vertical spline...
 	b3DeBoorSurfaceControl (xSpline,ySpline,Between);
 	MySpline          = *xSpline;
 	MySpline.offset   =  CurveNum = B3_BSPLINE_SEGMENTKNOTS(ySpline);
