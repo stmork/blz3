@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/11/03 16:36:29  sm
+**	- Added some b3Scene changes
+**
 **	Revision 1.9  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
-**
+**	
 **	Revision 1.8  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -116,7 +119,7 @@ int main(int argc,char *argv[])
 
 		for (i = 1;i < argc;i++)
 		{
-			world->b3Read(argv[1]);
+			world->b3Read(argv[i]);
 			for (item  = world->b3GetFirst();
 			     item != null;
 			     item  = scene->Succ)
@@ -125,6 +128,7 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_OPENGL
 				scene->b3Reorg();
 #endif
+				scene->b3SetFilename(argv[i]);
 				if (scene->b3GetDisplaySize(xSize,ySize))
 				{
 					display = new b3Display(xSize,ySize);
@@ -138,14 +142,14 @@ int main(int argc,char *argv[])
 				{
 					do
 					{
-						if (camera->Flags & CAMERA_ACTIVE)
+						b3Path camera_name;
+
+						scene->b3GetTitle(camera_name);
+						if (camera->m_Flags & CAMERA_ACTIVE)
 						{
 							b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
-								camera->CameraName);
-							scene->m_Width     = camera->Width;
-							scene->m_Height    = camera->Height;
-							scene->m_EyePoint  = camera->EyePoint;
-							scene->m_ViewPoint = camera->ViewPoint;
+								camera_name);
+							scene->b3SetCamera(camera);
 
 							span.b3Start();
 							scene->b3Raytrace(display);
@@ -155,7 +159,7 @@ int main(int argc,char *argv[])
 						else
 						{
 							b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
-								camera->CameraName);
+								camera_name);
 						}
 						camera = scene->b3GetNextCamera(camera);
 					}
