@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3ShowColor.cpp $  
-**	$Release:	Dortmund 2000 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - displaying an HSV color cycle
+**	Blizzard III - displaying an HSV color cycle
 **
-**	(C) Copyright 2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/03 18:37:51  sm
+**	- Added light distribution curve control.
+**
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	
 */
 

@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CB3FloatEdit
-LastTemplate=CDialog
+LastClass=CB3ControlLDC
+LastTemplate=CStatic
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=19
+ClassCount=20
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -22,19 +22,19 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=20
-Resource1=IDD_SEARCH_PATH_LIST
-Resource2=IDD_SUPER_SAMPLE
-Resource3=IDR_TOOLBAR_DISPLAY
-Resource4=IDD_NEBULAR
-Resource5=IDR_TOOLBAR_OBJECT
+Resource1=IDD_DISTRIBUTED
+Resource2=IDD_HIERARCHY
+Resource3=IDR_TOOLBAR_ACTION
+Resource4=IDD_SCENE
+Resource5=IDR_TOOLBAR_VIEW
 Resource6=IDR_DISPLAYTYPE
-Resource7=IDD_MODELLER_INFO
-Resource8=IDR_TOOLBAR_VIEW
-Resource9=IDR_TOOLBAR_CAMERA
-Resource10=IDD_SCENE
-Resource11=IDD_ABOUTBOX
-Resource12=IDR_MAINFRAME
-Resource13=IDR_TOOLBAR_LIGHT
+Resource7=IDD_LENS_FLARE
+Resource8=IDR_TOOLBAR_CAMERA
+Resource9=IDR_TOOLBAR_OBJECT
+Resource10=IDD_ABOUTBOX
+Resource11=IDD_NEW_ITEM
+Resource12=IDD_SEARCH_PATH_LIST
+Resource13=IDR_TOOLBAR_DISPLAY
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
@@ -42,13 +42,14 @@ Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
 Resource14=IDR_BLZ3TYPE
 Class17=CDlgModellerInfo
-Resource15=IDD_DISTRIBUTED
-Resource16=IDD_LENS_FLARE
-Resource17=IDD_NEW_ITEM
-Resource18=IDR_TOOLBAR_ACTION
+Resource15=IDD_NEBULAR
+Resource16=IDD_SUPER_SAMPLE
+Resource17=IDD_MODELLER_INFO
+Resource18=IDR_TOOLBAR_LIGHT
 Class18=CDlgCreateItem
-Resource19=IDD_HIERARCHY
+Resource19=IDR_MAINFRAME
 Class19=CDlgLight
+Class20=CB3ControlLDC
 Resource20=IDD_LIGHT
 
 [CLS:CAppLinesApp]
@@ -610,7 +611,7 @@ LastObject=CDlgCreateItem
 [DLG:IDD_LIGHT]
 Type=1
 Class=CDlgLight
-ControlCount=33
+ControlCount=34
 Control1=IDC_LIGHT_ENABLE,button,1342242819
 Control2=IDC_LIGHT_SOFT,button,1342242819
 Control3=IDC_LIGHT_LDC,button,1342242819
@@ -644,6 +645,7 @@ Control30=IDC_STATIC,button,1342177287
 Control31=IDC_STATIC,button,1342177287
 Control32=IDC_STATIC,static,1342308352
 Control33=IDC_LIGHT_SAMPLE_LABEL,static,1342308352
+Control34=IDC_LIGHT_LDC_CONTROL,static,1342181383
 
 [CLS:CDlgLight]
 Type=0
@@ -653,4 +655,13 @@ BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
 LastObject=CDlgLight
+
+[CLS:CB3ControlLDC]
+Type=0
+HeaderFile=b3ControlLDC.h
+ImplementationFile=b3ControlLDC.cpp
+BaseClass=CStatic
+Filter=W
+VirtualFilter=WC
+LastObject=CB3ControlLDC
 

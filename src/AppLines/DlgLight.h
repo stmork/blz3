@@ -27,6 +27,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "b3ControlLDC.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLight dialog
@@ -42,6 +43,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgLight)
 	enum { IDD = IDD_LIGHT };
+	CB3ControlLDC	m_CtrlLDC;
 	CComboBox	m_LightListCtrl;
 	CB3FloatEdit	m_SoftSizeCtrl;
 	CSliderCtrl	m_SampleCtrl;

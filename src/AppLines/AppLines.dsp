@@ -128,6 +128,10 @@ SOURCE=.\b3CameraVolume.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ControlLDC.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ExampleScene.cpp
 # End Source File
 # Begin Source File
@@ -221,6 +225,10 @@ SOURCE=.\b3Action.h
 # Begin Source File
 
 SOURCE=.\b3CameraVolume.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ControlLDC.h
 # End Source File
 # Begin Source File
 

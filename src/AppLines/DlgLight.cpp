@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/03 18:37:51  sm
+**	- Added light distribution curve control.
+**
 **	Revision 1.1  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **
 */
 
@@ -63,6 +66,7 @@ void CDlgLight::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgLight)
+	DDX_Control(pDX, IDC_LIGHT_LDC_CONTROL, m_CtrlLDC);
 	DDX_Control(pDX, IDC_LIGHT_LIST, m_LightListCtrl);
 	DDX_Control(pDX, IDC_LIGHT_SOFT_SIZE, m_SoftSizeCtrl);
 	DDX_Control(pDX, IDC_LIGHT_DISTR, m_SampleCtrl);
@@ -277,6 +281,9 @@ void CDlgLight::b3GetLight()
 	m_SoftSizeCtrl.b3SetValue(m_Light->m_Size);
 	m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
+
+	m_CtrlLDC.m_LDC = &m_Light->m_Spline;
+	m_CtrlLDC.b3Update();
 	UpdateData(FALSE);
 }
 

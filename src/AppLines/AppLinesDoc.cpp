@@ -48,11 +48,14 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2001/12/03 18:37:51  sm
+**	- Added light distribution curve control.
+**
 **	Revision 1.25  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **	Revision 1.24  2001/11/28 16:54:55  sm
 **	- Dialog for modeller info.
 **	
@@ -637,7 +640,7 @@ void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI)
 
 	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
-	pCmdUI->SetCheck(light->m_LightActive);
+	pCmdUI->SetCheck(light != null ? light->m_LightActive : FALSE);
 }
 
 void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI) 
@@ -648,8 +651,15 @@ void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI)
 
 	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
-	pCmdUI->Enable(light->m_LightActive);
-	pCmdUI->SetCheck(light->m_SoftShadow);
+	if (light != null)
+	{
+		pCmdUI->Enable(light->m_LightActive);
+		pCmdUI->SetCheck(light->m_SoftShadow);
+	}
+	else
+	{
+		pCmdUI->Enable(FALSE);
+	}
 }
 
 void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
@@ -660,6 +670,13 @@ void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI)
 
 	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
-	pCmdUI->Enable(light->m_LightActive);
-	pCmdUI->SetCheck(light->m_SpotActive);
+	if (light != null)
+	{
+		pCmdUI->Enable(light->m_LightActive);
+		pCmdUI->SetCheck(light->m_SpotActive);
+	}
+	else
+	{
+		pCmdUI->Enable(FALSE);
+	}
 }

@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/03 18:37:51  sm
+**	- Added light distribution curve control.
+**
 **	Revision 1.13  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **	Revision 1.12  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -467,7 +470,7 @@ b3CameraPart *CMainFrame::b3GetSelectedCamera()
 {
 	b3_s32 index = m_cameraBox.GetCurSel();
 
-	return (b3CameraPart *)m_cameraBox.GetItemDataPtr(index);
+	return index != CB_ERR ? (b3CameraPart *)m_cameraBox.GetItemDataPtr(index) : null;
 }
 
 void CMainFrame::b3UpdateLightBox(b3Scene *scene,b3Light *act)
@@ -486,7 +489,7 @@ b3Light *CMainFrame::b3GetSelectedLight()
 {
 	b3_s32 index = m_lightBox.GetCurSel();
 
-	return (b3Light *)m_lightBox.GetItemDataPtr(index);
+	return index != CB_ERR ? (b3Light *)m_lightBox.GetItemDataPtr(index) : null;
 }
 
 /*************************************************************************
