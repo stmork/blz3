@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/11 17:16:15  sm
+**	- Object handling with undo/redo
+**	- Light handling with undo/redo
+**
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **
 */
 
@@ -108,7 +112,7 @@ b3OpPaste::b3OpPaste(
 				if(world.b3Read(&file) == B3_WORLD_OK)
 				{
 					bbox  = (b3BBox *)world.b3GetFirst();
-					m_Initialized = true;
+					b3Initialize();
 				}
 			}
 			catch(b3FileException &f)

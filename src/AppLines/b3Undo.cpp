@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 17:16:15  sm
+**	- Object handling with undo/redo
+**	- Light handling with undo/redo
+**
 **	Revision 1.2  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -74,6 +78,7 @@ b3_bool b3UndoBuffer::b3Do(b3Operation *op)
 	if (result)
 	{
 		op->b3Do();
+		op->b3Done(true);
 		op->b3Prepare(m_Doc);
 		m_RedoBuffer.b3Free();
 		m_UndoBuffer.b3Append(op);
@@ -92,6 +97,7 @@ void b3UndoBuffer::b3Undo()
 	if (op != null)
 	{
 		op->b3Undo();
+		op->b3Done(false);
 		op->b3Prepare(m_Doc);
 		m_RedoBuffer.b3First(op);
 	}
@@ -104,6 +110,7 @@ void b3UndoBuffer::b3Redo()
 	if (op != null)
 	{
 		op->b3Redo();
+		op->b3Done(true);
 		op->b3Prepare(m_Doc);
 		m_UndoBuffer.b3Append(op);
 	}
@@ -127,10 +134,21 @@ b3_bool b3UndoBuffer::b3HasRedo()
 
 b3Operation::b3Operation() : b3Link<b3Operation>(sizeof(b3Operation))
 {
-	m_Initialized = false;
+	m_Initialized             = false;
+	m_Done                    = false;
+	m_PrepareGeometry         = true;
+	m_PrepareChangedStructure = false;
 }
 
 b3Operation::~b3Operation()
+{
+	if (b3IsInitialized())
+	{
+		b3Delete();
+	}
+}
+
+void b3Operation::b3Delete()
 {
 }
 
@@ -157,10 +175,7 @@ void b3Operation::b3Redo()
 
 void b3Operation::b3Prepare(CAppRenderDoc *pDoc)
 {
-	pDoc->b3Prepare(true,false);
-}
-
-b3_bool b3Operation::b3IsInitialized()
-{
-	return m_Initialized;
+	pDoc->b3Prepare(
+		m_PrepareGeometry,
+		m_PrepareChangedStructure);
 }

@@ -36,15 +36,12 @@
 #include "DlgLensFlare.h"
 #include "DlgModellerInfo.h"
 #include "DlgDistributed.h"
-#include "DlgCreateItem.h"
 #include "DlgLight.h"
 #include "DlgLDC.h"
-#include "DlgCreateItem.h"
-#include "DlgObjectCopy.h"
-#include "b3SelectObject.h"
 #include "b3UndoCutPaste.h"
 #include "b3UndoAction.h"
 #include "b3UndoObject.h"
+#include "b3UndoLight.h"
 #include "b3ExampleScene.h"
 #include "b3Action.h"
 
@@ -62,9 +59,13 @@
 
 /*
 **	$Log$
+**	Revision 1.77  2003/01/11 17:16:15  sm
+**	- Object handling with undo/redo
+**	- Light handling with undo/redo
+**
 **	Revision 1.76  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.75  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
@@ -1102,51 +1103,13 @@ void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnLightNew() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpLightNew(...));
-
-	CDlgCreateItem  dlg;
-
-	dlg.m_Label.LoadString(IDS_NEW_LIGHT);
-	dlg.m_ItemBase   = m_Scene->b3GetLightHead();
-	dlg.m_MaxNameLen = B3_BOXSTRINGLEN;
-	dlg.m_Suggest    = m_Light->b3GetName();
-	if (dlg.DoModal() == IDOK)
-	{
-		m_Light = new b3Light(AREA_LIGHT);
-		strcpy (m_Light->b3GetName(),dlg.m_NewName);
-		m_Scene->b3GetLightHead()->b3Append(m_Light);
-
-		SetModifiedFlag();
-		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
-		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
-	}
+	m_UndoBuffer->b3Do(new b3OpLightCreate(m_Scene,m_Light));
 }
 
 void CAppLinesDoc::OnLightDelete() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpLightDelete(...));
-	b3Light *select;
-
-	if (AfxMessageBox(IDS_ASK_DELETE_LIGHT,MB_ICONQUESTION|MB_YESNO) == IDYES)
-	{
-		// Determine new light
-		select = (b3Light *)m_Light->Prev;
-		if (select == null)
-		{
-			select = (b3Light *)m_Light->Succ;
-		}
-		m_Scene->b3GetLightHead()->b3Remove(m_Light);
-		delete m_Light;
-
-		// Select new light
-		m_Light = select;
-		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
-
-		// Set document to right state
-		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
-	}
+	m_UndoBuffer->b3Do(new b3OpLightDelete(m_Scene,m_Light));
 }
 
 void CAppLinesDoc::OnLightProperties() 
@@ -1185,27 +1148,19 @@ void CAppLinesDoc::OnLightLDC()
 void CAppLinesDoc::OnLightEnable() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpLightEnable(...));
-	m_Light->m_LightActive = !m_Light->m_LightActive;
-	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
-	SetModifiedFlag();
+	m_UndoBuffer->b3Do(new b3OpLightEnable(m_Light));
 }
 
 void CAppLinesDoc::OnLightSoft() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpLightSoft(...));
-	m_Light->m_SoftShadow = !m_Light->m_SoftShadow;
-	SetModifiedFlag();
+	m_UndoBuffer->b3Do(new b3OpLightSoft(m_Light));
 }
 
 void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpLightSpot(...));
-	m_Light->m_SpotActive = !m_Light->m_SpotActive;
-	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
-	SetModifiedFlag();
+	m_UndoBuffer->b3Do(new b3OpLightSpot(m_Light));
 }
 
 void CAppLinesDoc::OnLightSelect() 
@@ -1460,43 +1415,7 @@ void CAppLinesDoc::b3Select(
 
 void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 {
-	// m_UndoBuffer->b3Do(new b3OpObjectCreate(...));
-	CAppLinesApp   *app  = CB3GetLinesApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CDlgCreateItem  dlg;
-	b3BBox         *selected;
-	b3BBox         *bbox;
-	b3Item         *insert_after;
-	b3Base<b3Item> *base;
-
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	B3_ASSERT(selected != null);
-	if (insert_sub)
-	{
-		base = selected->b3GetBBoxHead();
-		insert_after = base->Last;
-	}
-	else
-	{
-		base = m_Scene->b3FindBBoxHead(selected);
-		insert_after = selected;
-	}
-	B3_ASSERT(base != null);
-
-	dlg.m_ClassType   = CLASS_BBOX;
-	dlg.m_MaxNameLen  = B3_BOXSTRINGLEN;
-	dlg.m_ItemBase    = base;
-	dlg.m_NoNameCheck = true;
-	dlg.m_Suggest.LoadString(IDS_NEW_OBJECT);
-	if (dlg.DoModal() == IDOK)
-	{
-		bbox = new b3BBox(BBOX);
-		strcpy (bbox->m_BoxName,dlg.m_NewName);
-		base->b3Insert(insert_after,bbox);
-		b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-		m_DlgHierarchy->b3SelectItem(bbox);
-		b3Prepare(false,true);
-	}
+	m_UndoBuffer->b3Do(new b3OpObjectCreate(m_Scene,m_DlgHierarchy,insert_sub));
 }
 
 void CAppLinesDoc::OnObjectNew() 
@@ -1514,24 +1433,7 @@ void CAppLinesDoc::OnObjectNewSub()
 void CAppLinesDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpObjectDelete(...));
-	b3Base<b3Item> *base;
-	b3Item         *select;
-	b3BBox         *selected;
-
-	if (AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO) == IDYES)
-	{
-		selected = m_DlgHierarchy->b3GetSelectedBBox();
-		select   = (selected->Succ != null ? selected->Succ : selected->Prev);
-		B3_ASSERT(selected != null);
-		base = m_Scene->b3FindBBoxHead(selected);
-
-		m_Scene->b3BacktraceRecompute(selected);
-		base->b3Remove(selected);
-		delete selected;
-		m_DlgHierarchy->b3SelectItem(select);
-		b3Prepare(false,true);
-	}
+	m_UndoBuffer->b3Do(new b3OpObjectDelete(m_Scene,m_DlgHierarchy));
 }
 
 b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
@@ -1671,68 +1573,7 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnObjectLoad() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpObjectLoad(...));
-	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
-	CString         suggest;
-	b3BBox         *selected;
-	b3BBox         *bbox;
-	b3Base<b3Item> *base;
-	b3_count        level;
-	b3Path          filepath;
-	b3Path          result;
-
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	base     = (selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(selected));
-	suggest  = app->GetProfileString(CB3ClientString(),"Loaded object filename","");
-
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	if (selected != null)
-	{
-		result.b3LinkFileName(filepath,selected->b3GetName());
-		result.b3RemoveExt();
-		strcat((char *)result,".bod");
-	}
-	else
-	{
-		strcpy((char *)result,suggest);
-	}
-	
-	if (CB3SelectObject::b3Select((char *)result))
-	{
-		app->WriteProfileString(CB3ClientString(),"Loaded object filename",result);
-		
-		try
-		{
-			b3File  file(result,B_READ);
-			b3World world;
-
-			if(world.b3Read(&file) == B3_WORLD_OK)
-			{
-				main->b3SetStatusMessage(IDS_DOC_REORG);
-				bbox  = (b3BBox *)world.b3GetFirst();
-				level = bbox->b3GetClassType() & 0xffff;
-				b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
-				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-				m_Scene->b3BacktraceRecompute(bbox);
-				m_DlgHierarchy->b3SelectItem(bbox);
-				b3Prepare(true,true);
-			}
-		}
-		catch(b3FileException &f)
-		{
-			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
-				(const char *)result,f.b3GetError());
-			B3_MSG_ERROR(f);
-		}
-		catch(b3WorldException &w)
-		{
-			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
-				(const char *)result,w.b3GetError());
-			B3_MSG_ERROR(w);
-		}
-	}
+	m_UndoBuffer->b3Do(new b3OpObjectLoad(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectSave() 
@@ -1820,100 +1661,13 @@ void CAppLinesDoc::OnObjectSave()
 void CAppLinesDoc::OnObjectReplace() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpObjectReplace(...));
-	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
-	CString         suggest;
-	b3BBox         *selected;
-	b3BBox         *bbox;
-	b3Base<b3Item> *base;
-	b3_count        level;
-	b3Path          filepath;
-	b3Path          result;
-
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	B3_ASSERT(selected != null);
-	base     = m_Scene->b3FindBBoxHead(selected);
-
-	suggest  = app->GetProfileString(CB3ClientString(),"Replaced object filename","");
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	result.b3LinkFileName(filepath,selected->b3GetName());
-	result.b3RemoveExt();
-	strcat((char *)result,".bod");
-
-	if (CB3SelectObject::b3Select((char *)result))
-	{
-		app->WriteProfileString(CB3ClientString(),"Replaced object filename",result);
-		
-		try
-		{
-			b3File  file(result,B_READ);
-			b3World world;
-
-			if(world.b3Read(&file) == B3_WORLD_OK)
-			{
-				main->b3SetStatusMessage(IDS_DOC_REORG);
-				bbox  = (b3BBox *)world.b3GetFirst();
-				level = bbox->b3GetClassType() & 0xffff;
-				b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
-				base->b3Remove(selected);
-				delete selected;
-				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-				m_Scene->b3BacktraceRecompute(bbox);
-				m_DlgHierarchy->b3SelectItem(bbox);
-				b3Prepare(true,true);
-			}
-		}
-		catch(b3FileException &f)
-		{
-			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
-				(const char *)result,f.b3GetError());
-			B3_MSG_ERROR(f);
-		}
-		catch(b3WorldException &w)
-		{
-			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
-				(const char *)result,w.b3GetError());
-			B3_MSG_ERROR(w);
-		}
-	}
+	m_UndoBuffer->b3Do(new b3OpObjectReplace(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectCopy() 
 {
 	// TODO: Add your command handler code here
-	// m_UndoBuffer->b3Do(new b3OpObjectCopy(...));
-	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CDlgObjectCopy  dlg;
-	b3BBox         *selected;
-	b3BBox         *bbox;
-	b3BBox         *cloned;
-	b3Base<b3Item> *base;
-	b3_count        i;
-
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	B3_ASSERT(selected != null);
-	base     = m_Scene->b3FindBBoxHead(selected);
-	dlg.m_OrigBBox = selected;
-	dlg.m_Center   = b3GetFulcrum();
-	if (dlg.DoModal() == IDOK)
-	{
-		CWaitCursor     wait;
-	
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		bbox = selected;
-		for (i = 0;i < dlg.m_NumCopies;i++)
-		{
-			cloned = (b3BBox *)b3World::b3Clone(bbox);
-			cloned->b3Transform(&dlg.m_Transformation,true,true);
-			cloned->b3Prepare();
-			base->b3Insert(bbox,cloned);
-			bbox = cloned;
-		}
-		b3Prepare(false,false);
-	}
+	m_UndoBuffer->b3Do(new b3OpObjectCopy(m_Scene,m_DlgHierarchy,b3GetFulcrum()));
 }
 
 void CAppLinesDoc::OnObjectEdit() 

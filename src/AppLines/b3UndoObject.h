@@ -21,13 +21,34 @@
 #include "AppLines.h"
 #include "b3Undo.h"
 
-class b3OpObjectCreate : public b3Operation
+class b3OpObject : public b3Operation
 {
-public:
-	b3OpObjectCreate();
+protected:
+	b3Scene       *m_Scene;
+	CDlgHierarchy *m_DlgHierarchy;
 
 protected:
-	void b3Do();
+	inline b3OpObject(b3Scene *scene,CDlgHierarchy *hierarchy)
+	{
+		m_Scene        = scene;
+		m_DlgHierarchy = hierarchy;
+	}
+};
+
+class b3OpObjectCreate : public b3OpObject
+{
+	b3BBox         *m_Selected;
+	b3BBox         *m_BBox;
+	b3Item         *m_InsertAfter;
+	b3Base<b3Item> *m_Base;
+
+public:
+	         b3OpObjectCreate(b3Scene *scene,CDlgHierarchy *hierarchy,b3_bool insert_sub);
+
+protected:
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
 
 	inline int  b3GetId()
 	{
@@ -35,13 +56,20 @@ protected:
 	}
 };
 
-class b3OpObjectDelete : public b3Operation
+class b3OpObjectDelete : public b3OpObject
 {
+	b3Base<b3Item> *m_Base;
+	b3Item         *m_Prev;
+	b3Item         *m_Select;
+	b3BBox         *m_Selected;
+
 public:
-	b3OpObjectDelete();
+	         b3OpObjectDelete(b3Scene *scene,CDlgHierarchy *hierarchy);
 
 protected:
-	void b3Do();
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
 
 	inline int  b3GetId()
 	{
@@ -49,13 +77,25 @@ protected:
 	}
 };
 
-class b3OpObjectLoad : public b3Operation
+#define B3_OBJECT_LOAD_REGITEM "Loaded object filename"
+
+class b3OpObjectLoad : public b3OpObject
 {
+protected:
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+	b3World         world;
+	b3_count        level;
+	b3BBox         *selected;
+
 public:
-	b3OpObjectLoad();
+	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_LOAD_REGITEM);
 
 protected:
-	void b3Do();
+	virtual void b3Do();
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
 
 	inline int  b3GetId()
 	{
@@ -63,13 +103,18 @@ protected:
 	}
 };
 
-class b3OpObjectReplace : public b3Operation
+#define B3_OBJECT_REPLACE_REGITEM "Replaced object filename"
+
+class b3OpObjectReplace : public b3OpObjectLoad
 {
 public:
-	b3OpObjectReplace();
+	         b3OpObjectReplace(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_REPLACE_REGITEM);
 
 protected:
 	void b3Do();
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
 
 	inline int  b3GetId()
 	{
@@ -77,13 +122,19 @@ protected:
 	}
 };
 
-class b3OpObjectCopy : public b3Operation
+class b3OpObjectCopy : public b3OpObject
 {
+	b3BBox            *m_Selected;
+	b3Base<b3Item>    *m_Base;
+	b3Array<b3BBox *>  m_ClonedBBoxes;
+
 public:
-	b3OpObjectCopy();
+	         b3OpObjectCopy(b3Scene *scene,CDlgHierarchy *hierarchy,b3_vector *fulcrum);
 
 protected:
-	void b3Do();
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
 
 	inline int  b3GetId()
 	{

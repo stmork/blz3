@@ -249,6 +249,14 @@ SOURCE=.\b3UndoCutPaste.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3UndoLight.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoObject.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3VectorEdit.cpp
 # End Source File
 # Begin Source File
@@ -534,6 +542,22 @@ SOURCE=.\b3Splash.h
 # Begin Source File
 
 SOURCE=.\b3SplinePreview.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Undo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoAction.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoCutPaste.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoObject.h
 # End Source File
 # Begin Source File
 

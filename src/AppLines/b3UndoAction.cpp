@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 17:16:15  sm
+**	- Object handling with undo/redo
+**	- Light handling with undo/redo
+**
 **	Revision 1.2  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -53,7 +57,7 @@ b3OpObjectAction::b3OpObjectAction(b3Scene *scene,b3_matrix *action)
 	m_Scene       = scene;
 	m_Scene->b3CollectActiveBBoxes(&m_Active,true);
 	m_RedoAction  = *action;
-	m_Initialized = b3MatrixInv(action,&m_UndoAction) != null;
+	b3Initialize(b3MatrixInv(action,&m_UndoAction) != null);
 }
 
 void b3OpObjectAction::b3Do()
@@ -91,7 +95,7 @@ b3OpCameraAction::b3OpCameraAction(b3CameraPart *camera,b3_matrix *action)
 {
 	m_Camera      = camera;
 	m_RedoAction  = *action;
-	m_Initialized = b3MatrixInv(action,&m_UndoAction) != null;
+	b3Initialize(b3MatrixInv(action,&m_UndoAction) != null);
 }
 
 void b3OpCameraAction::b3Do()

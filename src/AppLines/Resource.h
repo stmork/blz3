@@ -607,6 +607,11 @@
 #define IDS_OP_OBJECT_LOAD              61453
 #define IDS_OP_OBJECT_REPLACE           61454
 #define IDS_OP_OBJECT_COPY              61455
+#define IDS_OP_LIGHT_CREATE             61456
+#define IDS_OP_LIGHT_DELETE             61457
+#define IDS_OP_LIGHT_ENABLE             61458
+#define IDS_OP_LIGHT_SPOT               61459
+#define IDS_OP_LIGHT_SOFT               61460
 
 // Next default values for new objects
 // 

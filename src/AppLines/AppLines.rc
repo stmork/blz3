@@ -668,6 +668,10 @@ BEGIN
         MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
         MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
         MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
+        MENUITEM SEPARATOR
+        MENUITEM "Objekt laden...",             ID_OBJECT_LOAD
+        MENUITEM "Objekt speichern...",         ID_OBJECT_SAVE
+        MENUITEM "Objekt e&rsetzen...",         ID_OBJECT_REPLACE
     END
 END
 
@@ -2702,6 +2706,15 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_OP_LIGHT_CREATE     "Lichtquelle erzeugen"
+    IDS_OP_LIGHT_DELETE     "Lichtquelle löschen"
+    IDS_OP_LIGHT_ENABLE     "Lichtquelle ein-/ausschalten"
+    IDS_OP_LIGHT_SPOT       "Spot ein-/ausschalten"
+    IDS_OP_LIGHT_SOFT       "Weiche Schatten ein-/ausschalten"
 END
 
 #endif    // German (Germany) resources
