@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2004/04/04 19:28:25  sm
+**      - New wood dialog
+**
 **      Revision 1.48  2004/04/04 13:50:38  sm
 **      - Optimized noise
 **      - Added filtered noise
@@ -993,6 +996,7 @@ void b3MatWood::b3Init()
 	m_AmbColor.b3Init(0.2,0.2,0.2);
 	m_DiffColor.b3Init(0.1,0.2,0.9);
 	m_SpecColor.b3Init(0.8,0.8,0.8);
+	b3Vector::b3Init(&m_Scale,40,40,40);
 	m_Reflection =   0;
 	m_Refraction =   0;
 	m_RefrValue  =   1;

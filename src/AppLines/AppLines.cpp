@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2004/04/04 19:28:25  sm
+**	- New wood dialog
+**
 **	Revision 1.57  2003/07/22 19:12:34  sm
 **	- Raytracing items should be registered in Lines, too!
-**
+**	
 **	Revision 1.56  2003/07/12 17:44:46  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -1026,9 +1029,23 @@ BOOL CAboutDlg::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
+#ifdef _DEBUG
+#define DLG_TEST
+#endif
+
+#ifdef DLG_TEST
+#include "DlgMatWood.h"
+#endif
+
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
+#ifdef DLG_TEST
+	b3MatWood material = WOOD;
+
+	CDlgMatWood::b3Edit(&material);
+#else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
+#endif
 }

@@ -25,24 +25,51 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3FloatSliderCtrl.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3ShowImage.h"
+#include "b3SelectColor.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatWood dialog
 
 class CDlgMatWood : public CDialog
 {
-	b3MatWood *m_Material;
+	b3MatWood      *m_Material;
+	b3Scene        *m_MatScene;
+	b3Base<b3Item> *m_MatHead;
 
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgMatWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatWood();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatWood)
 	enum { IDD = IDD_MAT_WOOD };
-		// NOTE: the ClassWizard will add data members here
+	CB3FloatSliderCtrl	m_TrunkWobbleFrequencyCtrl;
+	CB3FloatSliderCtrl	m_TrunkWobbleCtrl;
+	CB3FloatSliderCtrl	m_RotZCtrl;
+	CB3FloatSliderCtrl	m_RotYCtrl;
+	CB3FloatSliderCtrl	m_RingyCtrl;
+	CB3FloatSliderCtrl	m_RingSpacingCtrl;
+	CB3FloatSliderCtrl	m_RingNoiseFrequencyCtrl;
+	CB3FloatSliderCtrl	m_RingNoiseCtrl;
+	CB3FloatSliderCtrl	m_RingFrequencyCtrl;
+	CB3FloatSliderCtrl	m_GrainyCtrl;
+	CB3FloatSliderCtrl	m_GrainFrequencyCtrl;
+	CB3FloatSliderCtrl	m_AngularWobbleCtrl;
+	CB3FloatSliderCtrl	m_AngularWobbleFrequencyCtrl;
+	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefrValueCtrl;
+	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
+	CB3ColorFieldSelector	m_LightCtrl;
+	CB3ColorFieldSelector	m_DarkCtrl;
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
@@ -58,9 +85,16 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatWood)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
+	afx_msg void OnColorLight();
+	afx_msg void OnColorDark();
+	afx_msg void OnSurfaceEdit();
+	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

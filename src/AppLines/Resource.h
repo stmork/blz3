@@ -553,6 +553,21 @@
 #define IDC_Y_START_LEGEND              32289
 #define IDC_Y_START_SPIN                32290
 #define IDC_ITEMLIST                    32291
+#define IDC_COLOR_LIGHT                 32292
+#define IDC_CHANGE_LIGHT                32293
+#define IDC_CHANGE_DARK                 32294
+#define IDC_COLOR_DARK                  32295
+#define IDC_RING_SPACING                32298
+#define IDC_RING_FREQUENCY              32299
+#define IDC_RING_NOISE                  32300
+#define IDC_RING_NOISE_FREQUENCY        32301
+#define IDC_TRUNK_WOBBLE_FREQUENCY      32302
+#define IDC_TRUNK_WOBBLE                32303
+#define IDC_ANGULAR_WOBBLE              32304
+#define IDC_GRAIN_FREQUENCY             32305
+#define IDC_GRAINY                      32306
+#define IDC_RINGY                       32307
+#define IDC_ANGULAR_WOBBLE_FREQUENCY    32308
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_LIGHT            60002
@@ -741,7 +756,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         10126
-#define _APS_NEXT_CONTROL_VALUE         32292
+#define _APS_NEXT_CONTROL_VALUE         32299
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif
 #endif
