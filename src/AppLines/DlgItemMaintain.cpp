@@ -33,9 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/06/14 15:31:26  sm
+**	- First successful plugin test including dialog. Debug version
+**	  not working yet.
+**
+**	Revision 1.3  2003/06/14 14:44:59  sm
+**	- Erster Plugintest mit Dialog und Raytracing
+**	
 **	Revision 1.2  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 **	Revision 1.1  2003/06/08 18:57:02  sm
 **	- Added list editing to Lines
 **	
@@ -173,7 +180,14 @@ b3Item *CDlgItemMaintain::b3GetSelectedItem()
 void CDlgItemMaintain::OnItemNew() 
 {
 	// TODO: Add your control notification handler code here
-	
+	b3Item *selected = b3GetSelectedItem();
+	b3Item *item = b3Loader::b3GetLoader().b3Create(0x7f000100);
+
+	if (item != null)
+	{
+		m_Head->b3Insert(selected,item);
+		b3UpdateList(item);
+	}
 }
 
 void CDlgItemMaintain::OnItemEdit() 
@@ -183,6 +197,8 @@ void CDlgItemMaintain::OnItemEdit()
 
 	if (item != null)
 	{
+		b3Loader::b3GetLoader().b3Edit(item);
+		b3UpdateList(item);
 	}
 }
 
@@ -207,6 +223,7 @@ void CDlgItemMaintain::OnItemDelete()
 	{
 		m_Head->b3Remove(item);
 		delete item;
+		b3UpdateList(item);
 	}
 }
 

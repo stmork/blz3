@@ -24,11 +24,14 @@
 
 #define B3_PLUGIN_INIT_FUNC "b3Init"
 #define B3_PLUGIN_INFO_FUNC "b3Info"
-typedef b3_bool          (*b3_plugin_create_func)(b3Item *item);
-typedef b3_bool          (*b3_plugin_edit_func)(b3Item *item);
 
 #define B3_PLUGIN_INFO_VERSION   1
 #define B3_PLUGIN_DESC_LEN     128
+
+#define B3_PLUGIN_RANGE_CHECK(i,max) (((i) >= 0) && ((i) < (max)))
+
+typedef b3_bool          (*b3_plugin_create_func)(b3Item *item);
+typedef b3_bool          (*b3_plugin_edit_func)(b3Item *item);
 
 struct b3_plugin_info
 {
@@ -80,9 +83,12 @@ public:
 	b3_bool  b3Edit(b3Item *item);
 
 public:
-	static void    b3InitPluginInfo(b3_plugin_info *info)
+	static void    b3InitPluginInfo(b3_plugin_info *info,b3_bool clear = true)
 	{
-		memset(info,0,sizeof(b3_plugin_info));
+		if (clear)
+		{
+			memset(info,0,sizeof(b3_plugin_info));
+		}
 		info->m_Version = B3_PLUGIN_INFO_VERSION;
 		info->m_Size    = sizeof(b3_plugin_info);
 	}
