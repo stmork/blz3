@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/11/16 15:18:02  sm
+**	- Adjusted b3TimeSpan to double
+**
 **	Revision 1.10  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.9  2002/08/16 13:20:14  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
@@ -205,10 +208,8 @@ void b3TimeSpan::b3Stop()
 	m_uTime += b3DiffDiv10000(&m_uStart,&user_usage);
 	m_sTime += b3DiffDiv10000(&m_sStart,&system_usage);
 	m_rTime += (
-		 real_stop.time    * 1000 + 
-		 real_stop.millitm        -
-		m_RealTime.time    * 1000 -
-		m_RealTime.millitm);
+		 real_stop.time + (b3_f64)real_stop.millitm  / 1000.0 -
+		m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
 }
 
 static inline void b3_64_div_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
@@ -250,27 +251,15 @@ static inline void b3_64_div_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
 #endif
 }
 
-b3_u32 b3TimeSpan::b3DiffDiv10000(FILETIME *first,FILETIME *last)
+b3_f64 b3TimeSpan::b3DiffDiv10000(FILETIME *first,FILETIME *last)
 {
-	b3_u32 highDiff,lowDiff;
+	b3_f64 start,stop;
 
 	// Make difference
-	lowDiff  = last->dwLowDateTime  - first->dwLowDateTime;
-	highDiff = last->dwHighDateTime - first->dwHighDateTime;
+	start = ldexp((double)first->dwHighDateTime,32) + first->dwLowDateTime;
+	stop  = ldexp((double) last->dwHighDateTime,32) +  last->dwLowDateTime;
 
-	// Check carry
-	if (last->dwLowDateTime < first->dwLowDateTime)
-	{
-		highDiff--;
-	}
-
-	// Divide by 10,000
-	b3_64_div_16(highDiff,lowDiff,10000);
-
-	// highDiff is greater 0 when 49 days time span are measured.
-	// I think debugging a session would not take at least 49 days...
-	B3_ASSERT(highDiff == 0);
-	return lowDiff;
+	return (stop - start) / 10000000; // Correct: 10 million
 }
 
 /*************************************************************************
