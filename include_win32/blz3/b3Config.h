@@ -34,6 +34,7 @@
 // Include some standard C
 #include <ctype.h>
 #include <fcntl.h>
+#include <float.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -89,10 +90,13 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.30  2004/08/28 14:02:14  sm
+**	- Including correct FLT_MAX/DBL_MAX file.
+**
 **	Revision 1.29  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.
-**
+**	
 **	Revision 1.28  2004/01/18 14:29:26  sm
 **	- Added Windows security changes
 **	

@@ -242,6 +242,10 @@ SOURCE=..\..\include_win32\blz3\system\b3ComboBox.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\b3Config.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3ControlUnits.h
 # End Source File
 # Begin Source File
