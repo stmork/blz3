@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2003/01/04 14:24:29  sm
+**      - Some cleanups inside new b3Vector classes
+**
 **      Revision 1.27  2002/12/27 12:55:38  sm
 **      - Trying to optimize vectorization for ICC.
 **
@@ -415,6 +418,16 @@ void b3Item::b3InitVector(b3_vector *vec)
 	m_ParseIndex += 3;
 }
 
+void b3Item::b3InitVector(b3Vector32 &vec)
+{
+	B3_ASSERT_INDEX;
+
+	b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
+
+	vec.b3Init(ptr[0],ptr[1],ptr[2]);
+	m_ParseIndex += 3;
+}
+
 void b3Item::b3InitVector4D(b3_vector4D *vec)
 {
 	B3_ASSERT_INDEX;
@@ -428,6 +441,16 @@ void b3Item::b3InitVector4D(b3_vector4D *vec)
 		vec->w = *ptr++;
 	}
 	m_ParseIndex += 4;
+}
+
+void b3Item::b3InitVector4D(b3Vector32 &vec)
+{
+	B3_ASSERT_INDEX;
+
+	b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
+
+	vec.b3Init(ptr[0],ptr[1],ptr[2],ptr[3]);
+	m_ParseIndex += 3;
 }
 
 void b3Item::b3InitMatrix(b3_matrix *mat)
@@ -760,6 +783,19 @@ void b3Item::b3StoreVector(const b3_vector *vec)
 	m_StoreIndex += 3;
 }
 
+void b3Item::b3StoreVector(const b3Vector32 &vec)
+{
+	b3EnsureStoreBuffer(3);
+
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+
+	*ptr++ = vec.v[X];
+	*ptr++ = vec.v[Y];
+	*ptr++ = vec.v[Z];
+	
+	m_StoreIndex += 3;
+}
+
 void b3Item::b3StoreVector4D(const b3_vector4D *vec)
 {
 	b3EnsureStoreBuffer(4);
@@ -779,6 +815,20 @@ void b3Item::b3StoreVector4D(const b3_vector4D *vec)
 		*ptr++ = 0;
 		*ptr++ = 0;
 	}
+	m_StoreIndex += 4;
+}
+
+void b3Item::b3StoreVector4D(const b3Vector32 &vec)
+{
+	b3EnsureStoreBuffer(4);
+
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+	
+	*ptr++ = vec.v[X];
+	*ptr++ = vec.v[Y];
+	*ptr++ = vec.v[Z];
+	*ptr++ = vec.v[W];
+	
 	m_StoreIndex += 4;
 }
 

@@ -75,27 +75,27 @@ public:
 		for (int i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
-	inline b3VectorTemplate::b3VectorTemplate(const b3_vector32 &vec)
+	inline b3VectorTemplate(const b3_vector32 &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
-	inline b3VectorTemplate::b3VectorTemplate(const b3_gl_vector &vec)
+	inline b3VectorTemplate(const b3_gl_vector &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
-	inline b3VectorTemplate::b3VectorTemplate(const b3_vector64 &vec)
+	inline b3VectorTemplate(const b3_vector64 &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
-	inline b3VectorTemplate::b3VectorTemplate(const b3_vector32_4D &vec)
+	inline b3VectorTemplate(const b3_vector32_4D &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z,vec.w);
 	}
 
-	inline b3VectorTemplate::b3VectorTemplate(const b3_vector64_4D &vec)
+	inline b3VectorTemplate(const b3_vector64_4D &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z,vec.w);
 	}
@@ -184,6 +184,14 @@ public:
 		b3VectorTemplate<F,dim> result;
 
 		for (int i = 0;i < dim;i++) result.v[i] = v[i] - (F)a.v[i];
+		return result;
+	}
+
+	inline b3VectorTemplate<F,dim> operator-()
+	{
+		b3VectorTemplate<F,dim> result;
+
+		for (int i = 0;i < dim;i++) result.v[i] = -v[i];
 		return result;
 	}
 

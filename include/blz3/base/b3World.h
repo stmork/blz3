@@ -35,6 +35,7 @@
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Nurbs.h"
 #include "blz3/base/b3SearchPath.h"
+#include "blz3/base/b3Vector.h"
 
 /*************************************************************************
 **                                                                      **
@@ -202,7 +203,9 @@ protected:
 	b3_f32   b3InitFloat();
 	b3_bool  b3InitBool();
 	void     b3InitVector  (b3_vector   *vec = null);
+	void     b3InitVector  (b3Vector32  &vec);
 	void     b3InitVector4D(b3_vector4D *vec = null);
+	void     b3InitVector4D(b3Vector32  &vec);
 	void     b3InitMatrix  (b3_matrix   *mat);
 	void     b3InitColor   (b3_color    *col);
 	void     b3InitSpline  (b3_spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
@@ -221,7 +224,9 @@ protected:
 	void     b3StoreBool    (const b3_bool      value);
 	void     b3StorePtr     (const void        *ptr);
 	void     b3StoreVector  (const b3_vector   *vec = null);
+	void     b3StoreVector  (const b3Vector32  &vec);
 	void     b3StoreVector4D(const b3_vector4D *vec = null);
+	void     b3StoreVector4D(const b3Vector32  &vec);
 	void     b3StoreMatrix  (const b3_matrix   *mat);
 	void     b3StoreColor   (const b3_color    *col);
 	void     b3StoreSpline  (const b3_spline   *spline);
