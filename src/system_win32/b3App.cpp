@@ -43,10 +43,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/02/25 15:56:21  sm
+**	- Added SplineRot to control grid drawing.
+**	- Added support for pixel format selection in dialog items
+**	- Restructured b3PickInfo
+**
 **	Revision 1.8  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.7  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
@@ -108,6 +113,8 @@ CB3App::CB3App(const char *appName) :
 	m_RunAutomated       = false;
 	m_AutoSave           = true;
 	m_ClientName         = appName;
+	m_lastGC             = (HGLRC)0xdeadbeef;
+	m_lastDC             = (HDC)0xbadc0ded;
 	b3Log::b3GetLogFile(DebugFile);
 	b3ReadString("Settings","DebugFile",DebugFile);
 	b3Log::b3SetLogFile(DebugFile);
@@ -115,6 +122,19 @@ CB3App::CB3App(const char *appName) :
 
 CB3App::~CB3App()
 {
+}
+
+
+void CB3App::b3SelectRenderContext(HDC dc,HGLRC gc)
+{
+	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0) || (m_UncheckedContextSwitch))
+	{
+		b3PrintF(B3LOG_FULL,"######################################### CB3App::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
+			dc,gc);
+		wglMakeCurrent(dc,gc);
+		m_lastDC = dc;
+		m_lastGC = gc;
+	}
 }
 
 const char *CB3App::b3ClientName()
@@ -125,9 +145,13 @@ const char *CB3App::b3ClientName()
 
 bool CB3App::b3InitInstance()
 {
+	CString key("GL unchecked context switch");
+
 #ifdef USE_COOL_CONTROLS
 	GetCtrlManager().InstallHook();
 #endif
+	m_UncheckedContextSwitch = b3ReadInt(b3ClientName(),key,0) != 0;
+	b3WriteInt(b3ClientName(),key,m_UncheckedContextSwitch);
 	return true;
 }
 

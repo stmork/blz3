@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2003/02/25 15:56:21  sm
+**      - Added SplineRot to control grid drawing.
+**      - Added support for pixel format selection in dialog items
+**      - Restructured b3PickInfo
+**
 **      Revision 1.42  2003/02/24 17:32:38  sm
 **      - Added further picking support.
 **      - Fixed geometry update delay.
@@ -628,8 +633,6 @@ void b3SplineShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 
 void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 {
-	b3_gl_vertex  vertex;
-	b3_gl_line    line;
 	b3_vector    *control;
 	b3_index      offset;
 	b3_index      x,y,start;
@@ -643,11 +646,8 @@ void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 		control  = &m_Spline[0].controls[y * m_Spline[1].offset];
 		for (x = 0;x < m_Spline[0].control_num;x++)
 		{
-			vertex.v.x = control->x;
-			vertex.v.y = control->y;
-			vertex.v.z = control->z;
+			info->b3AddVertex(control);
 
-			info->m_Grid.m_Vertices.b3Add(vertex);
 			info->b3AddPickPoint(control);
 			control += offset;
 		}
@@ -659,14 +659,13 @@ void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 		start = y * m_Spline[0].control_num;
 		for (x = 1;x < m_Spline[0].control_num;x++)
 		{
-			line.a = start + x - 1;
-			line.b = start + x;
-			info->m_Grid.m_Grid.b3Add(line);
+			info->b3AddLine(
+				start + x - 1,
+				start + x);
 		}
 		if (m_Spline[0].closed)
 		{
-			line.a = start;
-			line.b = start + m_Spline[0].control_num - 1;
+			info->b3AddLine(start,start + m_Spline[0].control_num - 1);
 		}
 	}
 
@@ -676,17 +675,15 @@ void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 	{
 		for (y = 1;y < m_Spline[1].control_num;y++)
 		{
-			line.a = x + (y - 1) * offset;
-			line.b = x +  y      * offset;
-			info->m_Grid.m_Grid.b3Add(line);
+			info->b3AddLine(
+				x + (y - 1) * offset,
+				x +  y      * offset);
 		}
 		if (m_Spline[1].closed)
 		{
-			line.a = x + (m_Spline[1].control_num - 1) * offset;
-			line.b = x;
+			info->b3AddLine(x,x + (m_Spline[1].control_num - 1) * offset);
 		}
 	}
-	info->m_Grid.b3Recompute();
 }
 
 b3_bool b3SplineShape::b3Prepare()

@@ -23,6 +23,11 @@
 
 class CB3App : public CWinApp, public CB3Reg, public CB3ToolbarState
 {
+	// OpenGL general values
+	HGLRC         m_lastGC;
+	HDC           m_lastDC;
+	b3_bool       m_UncheckedContextSwitch;
+
 	const char   *m_ClientName;
 public:
 	bool          m_RunAutomated;
@@ -39,6 +44,7 @@ public:
 	virtual void        b3SetWindowMode(bool ForceSave);
 			void        b3MoveWindow(CWnd *wnd);
 			void        b3CoolEnable(bool enable=true);
+	        void        b3SelectRenderContext(HDC dc,HGLRC gc);
 	        b3_f64      b3ReadProfileFloat(const char *title,b3_f64 default_value);
 	        b3_bool     b3WriteProfileFloat(const char *title,b3_f64 default_value);
 	        void        b3ReadProfileVector(const char *title,b3_vector *default_vector);

@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/02/25 15:56:20  sm
+**	- Added SplineRot to control grid drawing.
+**	- Added support for pixel format selection in dialog items
+**	- Restructured b3PickInfo
+**
 **	Revision 1.14  2003/02/24 17:32:38  sm
 **	- Added further picking support.
 **	- Fixed geometry update delay.
-**
+**	
 **	Revision 1.13  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	
@@ -224,19 +229,20 @@ void CAppObjectView::b3Draw(
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppObjectDoc   *pDoc    = GetDocument();
+	b3RenderContext *context = &pDoc->m_Context;
 
 	if (m_BBox != null)
 	{
-		pDoc->m_Context.b3StartDrawing();
+		context->b3StartDrawing();
 
 		// Setup view first
 		m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
 		// Then draw objects
-		m_BBox->b3Draw(&pDoc->m_Context);
+		m_BBox->b3Draw(context);
 		pDoc->b3DrawFulcrum();
-		m_PickList.m_Grid.b3Draw(&pDoc->m_Context);
+		m_PickList.b3RenderObject::b3Draw(context);
 	}
 	else
 	{
@@ -251,8 +257,8 @@ void CAppObjectView::b3DrawDC(
 	b3_f64 xOffset,
 	b3_f64 yOffset)
 {
-	CDC        *dc = CDC::FromHandle(hDC);
-	CPen       *old;
+	CDC   *dc = CDC::FromHandle(hDC);
+	CPen  *old;
 
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
@@ -264,7 +270,7 @@ void CAppObjectView::b3DrawDC(
 	dc->SetBkMode(TRANSPARENT);
 
 	// Draw pick points
-	m_PickList.b3Draw(dc);
+	m_PickList.b3PickBase::b3Draw(dc);
 
 	// Puhh! And only to draw stippled lines...
 	dc->SelectObject(old);
@@ -368,5 +374,6 @@ void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			GetDocument()->b3AddOp(op);
 		}
+		GetDocument()->b3ComputeBounds();
 	}
 }

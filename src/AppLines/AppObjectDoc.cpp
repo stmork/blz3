@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2003/02/25 15:56:20  sm
+**	- Added SplineRot to control grid drawing.
+**	- Added support for pixel format selection in dialog items
+**	- Restructured b3PickInfo
+**
 **	Revision 1.23  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 **	Revision 1.22  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -425,13 +430,7 @@ void CAppObjectDoc::Dump(CDumpContext& dc) const
 
 void CAppObjectDoc::b3ComputeBounds()
 {
-	m_Lower.x =  FLT_MAX;
-	m_Lower.y =  FLT_MAX;
-	m_Lower.z =  FLT_MAX;
-	m_Upper.x = -FLT_MAX;
-	m_Upper.y = -FLT_MAX;
-	m_Upper.z = -FLT_MAX;
-
+	b3Vector::b3InitBound(&m_Lower,&m_Upper);
 	m_BBox->b3ComputeBounds(&m_Lower,&m_Upper,0.02);
 }
 

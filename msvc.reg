@@ -11,3 +11,6 @@ REGEDIT4
 
 [HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (ALPHA)\Tools\C/C++ Compiler for Alpha]
 "Input_Spec"="*.c;*.cpp;*.cxx;*.cc"
+
+[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Text Editor\Tabs/Language Settings\C/C++]
+"FileExtensions"="cpp;cxx;c;h;hxx;hpp;inl;tlh;tli;rc;rc2;cc"

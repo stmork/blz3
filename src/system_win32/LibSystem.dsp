@@ -150,6 +150,10 @@ SOURCE=.\b3Log.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PixelFormat.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Print.cpp
 # End Source File
 # Begin Source File
@@ -263,6 +267,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Log.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3Mem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3PixelFormat.h
 # End Source File
 # Begin Source File
 

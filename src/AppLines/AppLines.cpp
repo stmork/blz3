@@ -57,12 +57,17 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2003/02/25 15:56:20  sm
+**	- Added SplineRot to control grid drawing.
+**	- Added support for pixel format selection in dialog items
+**	- Restructured b3PickInfo
+**
 **	Revision 1.50  2003/02/22 17:21:31  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.49  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -323,8 +328,6 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 	m_ClipboardFormatForBlizzardObject = 0;
-	m_lastGC = (HGLRC)0xdeadbeef;
-	m_lastDC = (HDC)0xbadc0ded;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -617,11 +620,7 @@ BOOL CAppLinesApp::InitInstance()
 		}
 	}
 
-	CString key("GL unchecked context switch");
-
-	m_UncheckedContextSwitch = b3ReadInt(b3ClientName(),key,0) != 0;
-	b3WriteInt(b3ClientName(),key,m_UncheckedContextSwitch);
-	return TRUE;
+	return CB3App::InitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -701,18 +700,6 @@ void CAppLinesApp::OnChangeTexturePath()
 		path += ((const char *)*entry);
 	}
 	WriteProfileString(b3ClientName(),"texture search path",path);
-}
-
-void CAppLinesApp::b3SelectRenderContext(HDC dc,HGLRC gc)
-{
-	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0) || (m_UncheckedContextSwitch))
-	{
-		b3PrintF(B3LOG_FULL,"######################################### CAppLinesApp::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
-			dc,gc);
-		wglMakeCurrent(dc,gc);
-		m_lastDC = dc;
-		m_lastGC = gc;
-	}
 }
 
 void CAppLinesApp::OnFileNew() 

@@ -24,6 +24,7 @@
 
 #include "AppRenderDoc.h"
 #include "blz3/system/b3DashPen.h"
+#include "blz3/system/b3PixelFormat.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Array.h"
 #include "b3CameraVolume.h"
@@ -64,15 +65,7 @@ typedef enum b3SelectMode
 
 class CB3Action;
 
-struct CB3PixelFormatDescriptor
-{
-	 PIXELFORMATDESCRIPTOR desc;
-	 b3_index              index;
-};
-
-typedef int (*b3PixelFormatSortFunc)(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
-
-class CAppRenderView : public CScrollView
+class CAppRenderView : public CScrollView, public CB3PixelFormat
 {
 	// OpenGL printing values
 	HGLRC           m_prtGC;
@@ -97,14 +90,8 @@ class CAppRenderView : public CScrollView
 	b3_res          m_prtLineHeight;
 	b3_count        m_prtLineNum;
 	
-	b3Array<CB3PixelFormatDescriptor> m_glPixelFormat;
-
 protected:
 	CB3DashPen      m_RedDash;
-
-	// OpenGL window display values
-	HDC             m_glDC;
-	HGLRC           m_glGC;
 
 	// Acting modes
 	b3_select_mode  m_PreviousMode;
@@ -212,15 +199,6 @@ public:
 protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
-
-private:
-	       void  b3ListPixelFormats(HDC dc,const char *title = "");
-		   HGLRC b3CreateContext(HDC dc,b3PixelFormatSortFunc func);
-	static void  b3FlagsString(CString &desc,int flags);
-	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR *input,const PIXELFORMATDESCRIPTOR *templ);
-	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);
-	static int   b3WindowPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
-	static int   b3PrinterPixelFormatSorter(CB3PixelFormatDescriptor *a,CB3PixelFormatDescriptor *b);
 
 	friend class CB3Action;
 	friend class CB3MoveAction;

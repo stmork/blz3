@@ -46,12 +46,6 @@
 
 class CAppLinesApp : public CB3App
 {
-	b3_bool         m_UncheckedContextSwitch;
-
-	// OpenGL general values
-	HGLRC           m_lastGC;
-	HDC             m_lastDC;
-
 	// Last view parameter
 	b3_bool          m_Filtered;
 	b3_display_mode  m_Mode;
@@ -71,7 +65,6 @@ public:
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);
 	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);
-	void             b3SelectRenderContext(HDC dc,HGLRC gc);
 
 	// Cut & paste operation
 	b3_bool          b3PutClipboard(b3BBox *bbox);

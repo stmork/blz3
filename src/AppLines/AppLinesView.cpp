@@ -42,9 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2003/02/25 15:56:20  sm
+**	- Added SplineRot to control grid drawing.
+**	- Added support for pixel format selection in dialog items
+**	- Restructured b3PickInfo
+**
 **	Revision 1.61  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.60  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
 **	
@@ -379,7 +384,6 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
-	m_RedDash.b3CreateDashPen(RGB(0xff,0x11,0x44));
 }
 
 CAppLinesView::~CAppLinesView()
