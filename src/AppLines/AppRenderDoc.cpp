@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.12  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **	Revision 1.11  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
@@ -200,7 +204,10 @@ void CAppRenderDoc::b3DrawFulcrum()
 	m_Fulcrum.b3Draw(&m_Context);
 }
 
-void CAppRenderDoc::b3Prepare(b3_bool update)
+void CAppRenderDoc::b3Prepare(
+	b3_bool geometry_changed,
+	b3_bool structure_changed,
+	b3_bool reorg)
 {
 }
 

@@ -55,6 +55,7 @@ protected:
 	void b3Do();
 	void b3Undo();
 	void b3Redo();
+	void b3Prepare(CAppRenderDoc *pDoc);
 
 	inline int  b3GetId()
 	{

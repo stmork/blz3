@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2003/01/07 16:14:38  sm
+**      - Lines III: object editing didn't prepared any more. Fixed.
+**      - Some prepare optimizations.
+**
 **      Revision 1.58  2002/12/27 12:55:38  sm
 **      - Trying to optimize vectorization for ICC.
 **
@@ -686,19 +690,20 @@ b3Tx *b3ShapeRenderObject::b3GetTexture(
 		b3_f64            xLocSize;
 		b3_f64            yLocSize;
 
-		B3_ASSERT(mat->m_Texture != null);
+		tx     = mat->m_Texture;
+		B3_ASSERT (tx != null);
+
 		b3ComputeBound(&limit);
 		xLocSize = limit.x2 - limit.x1;
 		yLocSize = limit.y2 - limit.y1;
 
-		tx     = mat->m_Texture;
 		xTrans = (mat->m_xStart - limit.x1) / xLocSize;
 		yTrans = (mat->m_yStart - limit.y1) / yLocSize;
 		xScale =  mat->m_xScale / xLocSize;
 		yScale =  mat->m_yScale / yLocSize;
 
 		b3PrintF(B3LOG_FULL,"b3ShapeRenderObject::b3GetTexture(%2.2f,%2.2f,%2.2f,%2.2f) = %s\n",
-			xTrans,yTrans,xScale,yScale,tx->b3Name());
+		xTrans,yTrans,xScale,yScale,tx->b3Name());
 	}
 	return tx;
 }

@@ -1664,7 +1664,7 @@ public:
 		   void            b3Update();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
-		   b3_bool         b3Prepare();
+		   b3_bool         b3Prepare(b3_bool recursive = false);
 		   char           *b3GetName();
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);

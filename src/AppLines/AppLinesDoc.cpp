@@ -61,9 +61,13 @@
 
 /*
 **	$Log$
+**	Revision 1.75  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.74  2003/01/05 16:13:23  sm
 **	- First undo/redo implementations
-**
+**	
 **	Revision 1.73  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
@@ -583,7 +587,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 		m_World.b3SetFirst(m_Scene);
-		b3Prepare(false);
+		b3Prepare(true,false);
 		SetPathName(filename);
 		result = TRUE;
 	}
@@ -620,7 +624,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
-		b3Prepare(false);
+		b3Prepare(true,false,true);
 		result = TRUE;
 	}
 	catch(b3ExceptionBase &e)
@@ -752,26 +756,42 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 **                                                                      **
 *************************************************************************/
 
-void CAppLinesDoc::b3Prepare(b3_bool update)
+void CAppLinesDoc::b3Prepare(
+	b3_bool geometry_changed,
+	b3_bool structure_changed,
+	b3_bool reorg)
 {
 	CMainFrame *main = CB3GetMainFrame();
 
-	main->b3SetStatusMessage(IDS_DOC_REORG);
-	m_Scene->b3Reorg();
+	if (reorg)
+	{
+		main->b3SetStatusMessage(IDS_DOC_REORG);
+		m_Scene->b3Reorg();
+	}
 
-	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	m_Scene->b3Prepare(0,0);
+	if (geometry_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_Scene->b3AllocVertices(&m_Context);
 
-	main->b3SetStatusMessage(IDS_DOC_VERTICES);
-	m_Scene->b3AllocVertices(&m_Context);
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_Scene->b3Prepare(0,0);
+	}
 
-	main->b3SetStatusMessage(IDS_DOC_BOUND);
-	b3ComputeBounds();
+	if (geometry_changed || structure_changed || reorg)
+	{
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+	}
 
-	if (update)
+	if (geometry_changed || structure_changed)
 	{
 		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY|B3_UPDATE_CAMERA);
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+	}
+
+	if (structure_changed)
+	{
 		m_DlgHierarchy->b3InitTree(this,true);
 	}
 
@@ -892,7 +912,7 @@ void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
 
 	// Some recomputations...
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	b3Prepare();
+	b3Prepare(false,true);
 }
 
 void CAppLinesDoc::b3AddUndoAction(CB3Action *action)
@@ -1459,7 +1479,7 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 		base->b3Insert(insert_after,bbox);
 		b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 		m_DlgHierarchy->b3SelectItem(bbox);
-		b3Prepare();
+		b3Prepare(false,true);
 	}
 }
 
@@ -1478,7 +1498,6 @@ void CAppLinesDoc::OnObjectNewSub()
 void CAppLinesDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main    = CB3GetMainFrame();
 	b3Base<b3Item> *base;
 	b3Item         *select;
 	b3BBox         *selected;
@@ -1490,18 +1509,11 @@ void CAppLinesDoc::OnObjectDelete()
 		B3_ASSERT(selected != null);
 		base = m_Scene->b3FindBBoxHead(selected);
 
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		m_Scene->b3BacktraceRecompute(selected);
 		base->b3Remove(selected);
 		delete selected;
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		b3ComputeBounds();
-
-		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		m_DlgHierarchy->b3InitTree(this,true);
 		m_DlgHierarchy->b3SelectItem(select);
+		b3Prepare(false,true);
 	}
 }
 
@@ -1587,12 +1599,8 @@ void CAppLinesDoc::OnEditCut()
 		{
 			delete bbox;
 
-			CB3GetMainFrame()->b3SetStatusMessage(IDS_DOC_BOUND);
-			b3ComputeBounds();
-			SetModifiedFlag();
-			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			m_DlgHierarchy->b3InitTree(this,true);
 			m_DlgHierarchy->b3SelectItem(select);
+			b3Prepare(false,true);
 		}
 	}
 }
@@ -1691,7 +1699,7 @@ void CAppLinesDoc::OnObjectLoad()
 				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 				m_Scene->b3BacktraceRecompute(bbox);
 				m_DlgHierarchy->b3SelectItem(bbox);
-				b3Prepare();
+				b3Prepare(true,true);
 			}
 		}
 		catch(b3FileException &f)
@@ -1835,7 +1843,7 @@ void CAppLinesDoc::OnObjectReplace()
 				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 				m_Scene->b3BacktraceRecompute(bbox);
 				m_DlgHierarchy->b3SelectItem(bbox);
-				b3Prepare();
+				b3Prepare(true,true);
 			}
 		}
 		catch(b3FileException &f)
@@ -1884,7 +1892,7 @@ void CAppLinesDoc::OnObjectCopy()
 			base->b3Insert(bbox,cloned);
 			bbox = cloned;
 		}
-		b3Prepare();
+		b3Prepare(false,false);
 	}
 }
 

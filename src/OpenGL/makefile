@@ -28,11 +28,14 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 render:	$(RENDER_OBJ) $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a
-	$(LINK.cc) -o $@ $(RENDER_OBJ) $(LDLIBS)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
+simple:	$(SIMPLE_OBJ)
+	$(LINK.cc) -o $@ $^  $(LDLIBS)
+
 matrix_test:	$(MATRIX_TEST_OBJ)
-	$(LINK.cc) -o $@ $(MATRIX_TEST_OBJ) $(LDLIBS)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
 
 -include .dep

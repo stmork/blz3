@@ -38,6 +38,7 @@ protected:
 	virtual void     b3Do();
 	virtual void     b3Undo();
 	virtual void     b3Redo();
+	virtual void     b3Prepare(CAppRenderDoc *pDoc);
 	virtual int      b3GetId() = 0;
 	        b3_bool  b3IsInitialized();
 };

@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **
 */
 
@@ -103,4 +107,10 @@ void b3OpCameraAction::b3Undo()
 void b3OpCameraAction::b3Redo()
 {
 	m_Camera->b3Transform(&m_RedoAction);
+}
+
+void b3OpCameraAction::b3Prepare(CAppRenderDoc *pDoc)
+{
+	pDoc->SetModifiedFlag();
+	pDoc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 }

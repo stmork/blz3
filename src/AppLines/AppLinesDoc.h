@@ -62,7 +62,7 @@ public:
 
 // Implementation
 public:
-	void       b3Prepare(b3_bool update = true);
+	void       b3Prepare(b3_bool geometry_changed,b3_bool structure_changed,b3_bool reorg=false);
 	void       b3ComputeBounds();
 	void       b3StartRaytrace();
 	void       b3StopRaytrace();

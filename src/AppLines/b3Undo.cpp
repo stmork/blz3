@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **
 */
 
@@ -70,6 +74,7 @@ b3_bool b3UndoBuffer::b3Do(b3Operation *op)
 	if (result)
 	{
 		op->b3Do();
+		op->b3Prepare(m_Doc);
 		m_RedoBuffer.b3Free();
 		m_UndoBuffer.b3Append(op);
 	}
@@ -87,9 +92,8 @@ void b3UndoBuffer::b3Undo()
 	if (op != null)
 	{
 		op->b3Undo();
+		op->b3Prepare(m_Doc);
 		m_RedoBuffer.b3First(op);
-
-		m_Doc->b3Prepare();
 	}
 }
 
@@ -100,9 +104,8 @@ void b3UndoBuffer::b3Redo()
 	if (op != null)
 	{
 		op->b3Redo();
+		op->b3Prepare(m_Doc);
 		m_UndoBuffer.b3Append(op);
-
-		m_Doc->b3Prepare();
 	}
 }
 
@@ -150,6 +153,11 @@ void b3Operation::b3Redo()
 
 	desc.LoadString(b3GetId());
 	b3PrintF(B3LOG_NORMAL,"Redo-Operation for %s not overloaded.\n",desc);
+}
+
+void b3Operation::b3Prepare(CAppRenderDoc *pDoc)
+{
+	pDoc->b3Prepare(true,false);
 }
 
 b3_bool b3Operation::b3IsInitialized()

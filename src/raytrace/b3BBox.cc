@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.72  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
-**
+**	
 **	Revision 1.71  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -495,11 +499,12 @@ void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> &array)
 	}
 }
 
-b3_bool b3BBox::b3Prepare()
+b3_bool b3BBox::b3Prepare(b3_bool recursive)
 {
 	b3Item     *item;
 	b3Shape    *shape;
 	b3CSGShape *csgShape;
+	b3BBox     *bbox;
 
 	m_ShapeCount = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
@@ -536,6 +541,15 @@ b3_bool b3BBox::b3Prepare()
     		return false;
     	}
     }
+
+	if (recursive)
+	{
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3Prepare(recursive);
+		}
+	}
 
 	return true;
 }

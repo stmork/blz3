@@ -38,12 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2003/01/07 16:14:38  sm
+**	- Lines III: object editing didn't prepared any more. Fixed.
+**	- Some prepare optimizations.
+**
 **	Revision 1.18  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.17  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
@@ -228,11 +232,11 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 		bbox->b3GetBBoxHead(),
 		bbox->b3GetClassType() & 0xffff);
 
-	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	bbox->b3Prepare();
-
 	main->b3SetStatusMessage(IDS_DOC_VERTICES);
 	bbox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+
+	main->b3SetStatusMessage(IDS_DOC_PREPARE);
+	bbox->b3Prepare(true);
 
 	m_OriginalPosition = bbox->m_Matrix;
 	b3MatrixInv(&bbox->m_Matrix,&inverse);
@@ -541,7 +545,7 @@ void CAppObjectDoc::OnObjectNew()
 
 				// Init data
 				m_DlgHierarchy->b3GetData();
-				m_BBox->b3Prepare();
+				m_BBox->b3Prepare(true);
 				m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 				m_BBox->b3BacktraceRecompute(bbox);
 				b3ComputeBounds();

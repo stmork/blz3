@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2003/01/07 16:14:38  sm
+**      - Lines III: object editing didn't prepared any more. Fixed.
+**      - Some prepare optimizations.
+**
 **      Revision 1.34  2003/01/06 19:16:03  sm
 **      - Removed use of b3TriangleRef into an b3Array<b3_index>.
 **      - Camera transformations are now matrix transformations.
@@ -399,16 +403,11 @@ void b3TriangleShape::b3FreeTriaRefs()
 
 b3_bool b3TriangleShape::b3Prepare()
 {
-	b3_vector Start,End,R1,R2;
-	b3_index  P1,P2,P3,i;
-	b3_f64    x,y,z,Denom;
+	b3_vector Start,End,R1,R2,disp;
+	b3_index  P1,P2,P3,i,max;
+	b3_f64    Denom;
 
-	Start.x =  FLT_MAX;
-	Start.y =  FLT_MAX;
-	Start.z =  FLT_MAX;
-	End.x	= -FLT_MAX;
-	End.y	= -FLT_MAX;
-	End.z	= -FLT_MAX;
+	b3Vector::b3InitBound(&Start,&End);
 
 	if ((m_xSize < 1) || (m_ySize < 1))
 	{
@@ -421,52 +420,27 @@ b3_bool b3TriangleShape::b3Prepare()
 		P1 = m_Triangles[i].P1;		/* Base */
 		P2 = m_Triangles[i].P2;		/* Dir1 */
 		P3 = m_Triangles[i].P3;		/* Dir2 */
-		R1.x = m_Vertices[P2].Point.x - m_Vertices[P1].Point.x;
-		R1.y = m_Vertices[P2].Point.y - m_Vertices[P1].Point.y;
-		R1.z = m_Vertices[P2].Point.z - m_Vertices[P1].Point.z;
-		R2.x = m_Vertices[P3].Point.x - m_Vertices[P1].Point.x;
-		R2.y = m_Vertices[P3].Point.y - m_Vertices[P1].Point.y;
-		R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
+		b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point,&R1);
+		b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point,&R2);
 		if ((m_Flags & NORMAL_FACE_VALID)==0)
 		{
 			b3Vector::b3CrossProduct(&R1,&R2,&m_Triangles[i].Normal);
-			x = m_Triangles[i].Normal.x;
-			y = m_Triangles[i].Normal.y;
-			z = m_Triangles[i].Normal.z;
+			disp = m_Triangles[i].Normal;
 			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 			{
-			
 #ifdef NORMAL_NORMALIZED
-				Denom = x * x + y * y + z * z;
-				if (Denom != 0)
-				{
-					Denom = 1 / sqrt(Denom);
-					x *= Denom;
-					y *= Denom;
-					z *= Denom;
-				}
+				b3Vector::b3Normalize(&disp);
 #endif
-				m_Vertices[P1].Normal.x += x;
-				m_Vertices[P1].Normal.y += y;
-				m_Vertices[P1].Normal.z += z;
-				m_Vertices[P2].Normal.x += x;
-				m_Vertices[P2].Normal.y += y;
-				m_Vertices[P2].Normal.z += z;
-				m_Vertices[P3].Normal.x += x;
-				m_Vertices[P3].Normal.y += y;
-				m_Vertices[P3].Normal.z += z;
+				b3Vector::b3Add(&disp,&m_Vertices[P1].Normal);
+				b3Vector::b3Add(&disp,&m_Vertices[P2].Normal);
+				b3Vector::b3Add(&disp,&m_Vertices[P3].Normal);
 			}
 		}
 	}
 
 	for (i = 0;i < m_VertexCount;i++)
 	{
-		if (m_Vertices[i].Point.x < Start.x) Start.x = m_Vertices[i].Point.x;
-		if (m_Vertices[i].Point.x > End.x)   End.x   = m_Vertices[i].Point.x;
-		if (m_Vertices[i].Point.y < Start.y) Start.y = m_Vertices[i].Point.y;
-		if (m_Vertices[i].Point.y > End.y)   End.y   = m_Vertices[i].Point.y;
-		if (m_Vertices[i].Point.z < Start.z) Start.z = m_Vertices[i].Point.z;
-		if (m_Vertices[i].Point.z > End.z)   End.z   = m_Vertices[i].Point.z;
+		b3Vector::b3AdjustBound(&m_Vertices[i].Point,&Start,&End);
 
 		if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 		{
@@ -484,9 +458,12 @@ b3_bool b3TriangleShape::b3Prepare()
 	m_GridSize = 1;
 #	endif
 
-	if ((End.x - Start.x) < 0.1) m_GridSize = 1;
-	if ((End.y - Start.y) < 0.1) m_GridSize = 1;
-	if ((End.z - Start.z) < 0.1) m_GridSize = 1;
+	if (((End.x - Start.x) < 0.1) ||
+	    ((End.y - Start.y) < 0.1) ||
+	    ((End.z - Start.z) < 0.1))
+	{
+		m_GridSize = 1;
+	}
 	Start.x -= 0.1f;
 	Start.y -= 0.1f;
 	Start.z -= 0.1f;
@@ -501,11 +478,21 @@ b3_bool b3TriangleShape::b3Prepare()
 	m_Size.z = (End.z - Start.z) * Denom;
 	b3Vector::b3SetMinimum(&m_Size,epsilon);
 
-	b3FreeTriaRefs();
-	m_GridList = new b3Array<b3_index>[m_GridSize * m_GridSize * m_GridSize];
+	max = m_GridSize * m_GridSize * m_GridSize;
 	if (m_GridList == null)
 	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+		m_GridList = new b3Array<b3_index>[max];
+		if (m_GridList == null)
+		{
+			B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+		}
+	}
+	else
+	{
+		for (i = 0;i < max;i++)
+		{
+			m_GridList[i].b3Clear();
+		}
 	}
 	b3PrepareGridList();
 	return b3Shape::b3Prepare();
