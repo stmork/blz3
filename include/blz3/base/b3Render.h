@@ -41,6 +41,14 @@ typedef enum
 
 class b3RenderObject;
 
+struct b3_render_view_info
+{
+	b3_bool   perspective;
+	b3_f64    near_cp,far_cp;
+	b3_f64    width,height;
+	b3_vector eye,look,up,offset;
+};
+
 struct b3_render_light_info
 {
 #ifdef BLZ3_USE_OPENGL
@@ -85,6 +93,10 @@ public:
 	                 b3RenderContext();
 	static  void     b3Init();
 	virtual void     b3StartDrawing();
+
+	static  void     b3SetAntiAliasing(b3_bool enable = false);
+	static  void     b3ViewSet(b3_render_view_info *info);
+
 	static  void     b3SetAmbient(b3_pkd_color  ambient);
 	static  void     b3SetAmbient(b3Color      &ambient);
 	static  void     b3LightReset();

@@ -20,6 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3List.h"
+#include "blz3/base/b3Render.h"
 #include "blz3/raytrace/b3Special.h"
 
 enum b3_view_mode
@@ -72,11 +73,7 @@ class b3RenderView
 	b3_vector                 m_Upper;
 
 	// View volume dimensions (from mid point to border)
-	b3_f64                    m_vvWidth;
-	b3_f64                    m_vvHeight;
-	b3_vector                 m_vvEye;
-	b3_vector                 m_vvLook;
-	b3_vector                 m_vvOffset;
+	b3_render_view_info       m_ViewInfo;
 
 	b3Base<b3RenderViewItem>  m_ViewStack[B3_VIEW_MAX];
 	b3Base<b3RenderViewItem>  m_Depot;

@@ -37,13 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/10/17 09:08:41  sm
+**	- Moved camera setup into b3RenderContext.
+**	- Moved Antialiasing setup into b3RenderContext.
+**
 **	Revision 1.13  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.12  2004/10/13 15:33:14  smork
 **	- Optimized OpenGL lights.
 **	
@@ -196,6 +200,82 @@ void b3RenderContext::b3Init()
 #endif
 }
 
+void b3RenderContext::b3StartDrawing()
+{
+#ifdef BLZ3_USE_OPENGL
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL," b3RenderContext::b3StartDrawing()\n");
+#endif
+
+	glClearColor(
+		glBgColor[b3Color::R],
+		glBgColor[b3Color::G],
+		glBgColor[b3Color::B],
+		1.0 - glBgColor[b3Color::A]);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+#endif
+}
+
+void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
+{
+	if (enable)
+	{
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glHint(GL_LINE_SMOOTH_HINT,GL_DONT_CARE);
+		glLineWidth(1.2f);
+	}
+	else
+	{
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_BLEND);
+		glLineWidth(1.0f);
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        View setup                                    **
+**                                                                      **
+*************************************************************************/
+
+void b3RenderContext::b3ViewSet(b3_render_view_info *info)
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (info->perspective)
+	{
+		glFrustum(
+			-info->width,   info->width,
+			-info->height,  info->height,
+			 info->near_cp, info->far_cp);
+	}
+	else
+	{
+		glOrtho(
+			-info->width,   info->width,
+			-info->height,  info->height,
+			 info->near_cp, info->far_cp);
+	}
+	gluLookAt(
+		info->eye.x,    info->eye.y,    info->eye.z,
+		info->look.x,   info->look.y,   info->look.z,
+		info->up.x,     info->up.y,     info->up.z);
+	glTranslatef(
+		info->offset.x, info->offset.y, info->offset.z);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();	
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Light setup                                   **
+**                                                                      **
+*************************************************************************/
+
 void b3RenderContext::b3SetAmbient(b3_pkd_color ambient)
 {
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3SetAmbient(%08lx)\n",
@@ -335,22 +415,11 @@ void b3RenderContext::b3LightSet(
 #endif
 }
 
-
-void b3RenderContext::b3StartDrawing()
-{
-#ifdef BLZ3_USE_OPENGL
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL," b3RenderContext::b3StartDrawing()\n");
-#endif
-
-	glClearColor(
-		glBgColor[b3Color::R],
-		glBgColor[b3Color::G],
-		glBgColor[b3Color::B],
-		1.0 - glBgColor[b3Color::A]);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-#endif
-}
+/*************************************************************************
+**                                                                      **
+**                        Some helper                                   **
+**                                                                      **
+*************************************************************************/
 
 b3_bool b3RenderContext::b3GetMatrix(
 	b3_matrix_mode  mode,
