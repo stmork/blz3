@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/04/09 17:30:31  sm
+**	- Wood dialog fine tuning.
+**
 **	Revision 1.23  2004/04/07 16:07:17  sm
 **	- Moved wood computing outside b3MatWood for use in its own bump map.
-**
+**	
 **	Revision 1.22  2004/04/07 11:38:25  sm
 **	- Minor bugfix
 **	
@@ -675,6 +678,10 @@ void b3Wood::b3InitWood()
 	b3Vector::b3Init(&m_Scale,40,40,40);
 	m_yRot                   = (b3_f32)(  0.5 * M_PI );
 	m_zRot                   = (b3_f32)( -0.5 * M_PI );
+	m_Ringy                  =   1;
+	m_Grainy                 =   1;
+	m_GrainFrequency         =  25;
+
 	m_RingSpacing            =   0.2f;
 	m_RingFrequency          =   0.2f;
 	m_RingNoise              =   0.2f;
@@ -683,9 +690,6 @@ void b3Wood::b3InitWood()
 	m_TrunkWobbleFrequency   =   0.025f;
 	m_AngularWobble          =   0.1f;
 	m_AngularWobbleFrequency =   0.9f;
-	m_GrainFrequency         =  25;
-	m_Grainy                 =   1;
-	m_Ringy                  =   1;
 }
 
 void b3Wood::b3PrepareWood()

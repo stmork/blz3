@@ -39,6 +39,8 @@ class CB3FloatSliderCtrl : public CSliderCtrl
 	b3_f64 m_Min;
 	b3_f64 m_Max;
 	b3_f64 m_Pos;
+	int    m_PageSize;
+	int    m_TicFrequence;
 
 public:
 	         CB3FloatSliderCtrl();
@@ -48,6 +50,7 @@ public:
 	void     b3DDX(CDataExchange *pDX,b3_f64 &pos);
 	b3_f64   b3SetPos(b3_f64 pos);
 	b3_f64   b3SetRange(b3_f64 min,b3_f64 max);
+	void     b3SetTicks(b3_f64 page,b3_f64 ticks);
 	b3_f64   b3GetPos();
 
 	// Generated message map functions
@@ -56,6 +59,12 @@ protected:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	b3_f64 b3ConvertPos(int pos);
+	int    b3ConvertPos(b3_f64 pos);
+	b3_f64 b3ConvertRel(int pos);
+	int    b3ConvertRel(b3_f64 pos);
 };
 
 #endif

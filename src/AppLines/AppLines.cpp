@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2004/04/09 17:30:31  sm
+**	- Wood dialog fine tuning.
+**
 **	Revision 1.59  2004/04/09 12:08:05  sm
 **	- New CStatic control introduced for material sampling.
-**
+**	
 **	Revision 1.58  2004/04/04 19:28:25  sm
 **	- New wood dialog
 **	
@@ -1033,8 +1036,8 @@ BOOL CAboutDlg::OnInitDialog()
 }
 
 #ifdef _DEBUG
-#endif
 #define DLG_TEST
+#endif
 
 #ifdef DLG_TEST
 #include "DlgMatWood.h"

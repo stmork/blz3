@@ -25,7 +25,7 @@
 #include "blz3/base/b3Math.h"
 
 #define CB3_FSC_MIN  0
-#define CB3_FSC_MAX (1 << 24)
+#define CB3_FSC_MAX (1 << 12)
 
 /*************************************************************************
 **                                                                      **
@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/09 17:30:31  sm
+**	- Wood dialog fine tuning.
+**
 **	Revision 1.2  2004/04/09 14:09:36  sm
 **	- Wood sampling corrected.
 **	- b3FloatSliderCtrls range computation corrected.
-**
+**	
 **	Revision 1.1  2004/04/04 19:28:25  sm
 **	- New wood dialog
 **	
@@ -117,7 +120,14 @@ b3_f64 CB3FloatSliderCtrl::b3SetRange(b3_f64 min, b3_f64 max)
 {
 	m_Min = min;
 	m_Max = max;
+	b3SetTicks((m_Max - m_Min) / 10.0,(m_Max - m_Min) / 10.0);
 	return b3GetPos();
+}
+
+void CB3FloatSliderCtrl::b3SetTicks(b3_f64 page,b3_f64 ticks)
+{
+	m_PageSize     = b3ConvertRel(page);
+	m_TicFrequence = b3ConvertRel(ticks);
 }
 
 b3_f64 CB3FloatSliderCtrl::b3GetPos()
@@ -127,9 +137,7 @@ b3_f64 CB3FloatSliderCtrl::b3GetPos()
 		// Get value
 		int pos = GetPos();
 		
-		m_Pos = b3Math::b3Limit(
-			(b3_f64)(pos - CB3_FSC_MIN) * (m_Max - m_Min) /
-			(CB3_FSC_MAX - CB3_FSC_MIN + m_Min),m_Min,m_Max);
+		m_Pos = b3Math::b3Limit(b3ConvertPos(pos),m_Min,m_Max);
 	}
 	else
 	{
@@ -141,11 +149,41 @@ b3_f64 CB3FloatSliderCtrl::b3GetPos()
 b3_f64 CB3FloatSliderCtrl::b3SetPos(b3_f64 pos)
 {
 	m_Pos = b3Math::b3Limit(pos,m_Min,m_Max);
-	int index =
-		(m_Pos - m_Min) * (CB3_FSC_MAX - CB3_FSC_MIN) /
-		(m_Max - m_Min) + CB3_FSC_MIN;
 
-	SetRange(CB3_FSC_MIN,CB3_FSC_MAX);
-	SetPos(index);
+	if (::IsWindow(*this))
+	{
+		int index = b3ConvertPos(m_Pos);
+	
+		SetRange(CB3_FSC_MIN,CB3_FSC_MAX);
+		SetPageSize(m_PageSize);
+		SetTicFreq(m_TicFrequence);
+		SetPos(index);
+	}
 	return m_Pos;
+}
+
+b3_f64 CB3FloatSliderCtrl::b3ConvertPos(int pos)
+{
+	return (b3_f64)(pos - CB3_FSC_MIN) * (m_Max - m_Min) /
+			(CB3_FSC_MAX - CB3_FSC_MIN) + m_Min;
+}
+
+int CB3FloatSliderCtrl::b3ConvertPos(b3_f64 pos)
+{
+	return
+		(pos   - m_Min) * (CB3_FSC_MAX - CB3_FSC_MIN) /
+		(m_Max - m_Min) + CB3_FSC_MIN;
+}
+
+b3_f64 CB3FloatSliderCtrl::b3ConvertRel(int rel)
+{
+	return rel * (m_Max - m_Min) /
+			(CB3_FSC_MAX - CB3_FSC_MIN);
+}
+
+int CB3FloatSliderCtrl::b3ConvertRel(b3_f64 rel)
+{
+	return
+		rel * (CB3_FSC_MAX - CB3_FSC_MIN) /
+		(m_Max - m_Min);
 }

@@ -38,7 +38,6 @@ class CDlgMatWood : public CDialog
 {
 	b3MatWood         *m_Material;
 	b3MaterialSampler *m_MatSampler;
-	b3Base<b3Item>     m_MatHead;
 
 // Construction
 public:

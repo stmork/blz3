@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.6  2004/04/09 17:30:31  sm
+**  - Wood dialog fine tuning.
+**
 **  Revision 1.5  2004/04/09 14:11:58  sm
 **  - Removed CRs
 **
@@ -62,7 +65,6 @@ void b3Sampler::b3Sample()
 {
 	b3_count          CPUs = b3Runtime::b3GetNumCPUs();
 	b3_loop           i;
-	b3TimeSpan        span;
 	b3SampleInfo     *info;
 
 	info = b3SampleInit(CPUs);
@@ -70,7 +72,6 @@ void b3Sampler::b3Sample()
 	{
 		b3Thread *threads = new b3Thread[CPUs];
 
-		span.b3Start();
 		for (i = 0;i < CPUs;i++)
 		{
 			threads[i].b3Start(b3SampleThread,&info[i]);
@@ -79,18 +80,13 @@ void b3Sampler::b3Sample()
 		{
 			threads[i].b3Wait();
 		}
-		span.b3Stop();
 			
 		delete [] threads;
 	}
 	else
 	{
-		span.b3Start();
 		b3SampleThread(&info[0]);
-		span.b3Stop();
 	}
-
-	span.b3Print();
 
 	delete [] info;
 }

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/09 17:30:31  sm
+**	- Wood dialog fine tuning.
+**
 **	Revision 1.4  2004/04/09 12:08:05  sm
 **	- New CStatic control introduced for material sampling.
-**
+**	
 **	Revision 1.3  2004/04/04 19:28:25  sm
 **	- New wood dialog
 **	
@@ -60,7 +63,6 @@ CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgMatWood::IDD, pParent)
 {
 	m_Material = (b3MatWood *)item;
-	m_MatHead.b3Append(m_Material);
 
 	//{{AFX_DATA_INIT(CDlgMatWood)
 		// NOTE: the ClassWizard will add member initialization here
@@ -75,24 +77,25 @@ CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_HighLightCtrl.b3SetIncrement(10.0);
 
     m_RotYCtrl.b3SetRange(-0.5 * M_PI,0.5 * M_PI);
+	m_RotYCtrl.b3SetTicks(M_PI / 18,M_PI / 9);
 	m_RotZCtrl.b3SetRange(-0.5 * M_PI,0.5 * M_PI);
+	m_RotZCtrl.b3SetTicks(M_PI / 18,M_PI / 9);
 	m_RingyCtrl.b3SetRange(0,1);
 	m_GrainyCtrl.b3SetRange(0,1);
-	m_GrainFrequencyCtrl.b3SetRange(0,100);
+	m_GrainFrequencyCtrl.b3SetRange(0,50);
 
-	m_RingSpacingCtrl.b3SetRange(0,1);
-	m_RingFrequencyCtrl.b3SetRange(0,1);
-	m_RingNoiseCtrl.b3SetRange(0,1);
-	m_RingNoiseFrequencyCtrl.b3SetRange(0,1);
-	m_TrunkWobbleCtrl.b3SetRange(0,1);
-	m_TrunkWobbleFrequencyCtrl.b3SetRange(0,1);
+	m_RingSpacingCtrl.b3SetRange(0,2);
+	m_RingFrequencyCtrl.b3SetRange(0,2);
+	m_RingNoiseCtrl.b3SetRange(0,2);
+	m_RingNoiseFrequencyCtrl.b3SetRange(0,2);
+	m_TrunkWobbleCtrl.b3SetRange(0,2);
+	m_TrunkWobbleFrequencyCtrl.b3SetRange(0,0.025);
 	m_AngularWobbleCtrl.b3SetRange(0,1);
 	m_AngularWobbleFrequencyCtrl.b3SetRange(0,1);
 }
 
 CDlgMatWood::~CDlgMatWood()
 {
-	m_MatHead.b3RemoveAll();
 	delete m_MatSampler;
 }
 
