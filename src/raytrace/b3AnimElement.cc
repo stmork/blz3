@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.3  2002/08/19 16:50:39  sm
 **      - Now having animation running, running, running...
 **      - Activation handling modified to reflect animation
@@ -144,7 +148,7 @@ b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 	{
 		b3Vector::b3Init(&m_Center);
 		b3InitMatrix(&m_Actual);
-		b3MatrixUnit(&m_NeutralInverse);
+		b3Matrix::b3Unit(&m_NeutralInverse);
 	}
 	m_Ratio      = b3InitFloat();
 	m_Empty      = b3InitInt();
@@ -254,7 +258,7 @@ void b3AnimElement::b3AnimateMove(
 
 	// now compute transformation
 	b3GetPosition (&move,t);
-	b3MatrixMove (&m_NeutralInverse,transform,&move);
+	b3Matrix::b3Move (&m_NeutralInverse,transform,&move);
 }
 
 
@@ -300,11 +304,11 @@ void b3AnimElement::b3AnimateRotate(
 		oldDir.x -= oldCenter.x;
 		oldDir.y -= oldCenter.y;
 		oldDir.z -= oldCenter.z;
-		b3MatrixDress (&m_NeutralInverse,transform,
+		b3Matrix::b3Dress (&m_NeutralInverse,transform,
 			&m_Center,&lookTo,&oldDir,negate);
-		if (fabs(b3Det4(transform)) < epsilon)
+		if (fabs(b3Matrix::b3Det4(transform)) < epsilon)
 		{
-			b3MatrixUnit (transform);
+			b3Matrix::b3Unit (transform);
 		}
 	}
 	else
@@ -331,7 +335,7 @@ void b3AnimElement::b3AnimateScale(
 	scale.x -= m_Center.x;
 	scale.y -= m_Center.y;
 	scale.z -= m_Center.z;
-	b3MatrixScale (&m_NeutralInverse,transform,&m_Center,&scale);
+	b3Matrix::b3Scale (&m_NeutralInverse,transform,&m_Center,&scale);
 }
 
 /* This routine computes the transformation matrix for one animation */

@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.4  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
-**
+**	
 **	Revision 1.3  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
@@ -92,7 +96,7 @@ void b3OpObjectTransformation::b3Redo()
 b3OpObjectAction::b3OpObjectAction(b3Scene *scene,b3_matrix *action) : b3OpObjectTransformation(scene)
 {
 	m_RedoAction  = *action;
-	b3Initialize(b3MatrixInv(action,&m_UndoAction) != null);
+	b3Initialize(b3Matrix::b3Inverse(action,&m_UndoAction) != null);
 }
 
 /*************************************************************************
@@ -105,8 +109,8 @@ b3OpMove::b3OpMove(
 	b3Scene   *scene,
 	b3_vector *stepper) : b3OpObjectTransformation(scene)
 {
-	b3MatrixMove(null,&m_RedoAction,stepper);
-	b3Initialize(b3MatrixInv(&m_RedoAction,&m_UndoAction) != null);
+	b3Matrix::b3Move(null,&m_RedoAction,stepper);
+	b3Initialize(b3Matrix::b3Inverse(&m_RedoAction,&m_UndoAction) != null);
 }
 
 /*************************************************************************
@@ -120,8 +124,8 @@ b3OpRotate::b3OpRotate(
 	b3_line *axis,
 	b3_f64   angle) : b3OpObjectTransformation(scene)
 {
-	b3MatrixRotVec(null,&m_RedoAction,axis,angle * M_PI / 180);
-	b3Initialize(b3MatrixInv(&m_RedoAction,&m_UndoAction) != null);
+	b3Matrix::b3RotateVector(null,&m_RedoAction,axis,angle * M_PI / 180);
+	b3Initialize(b3Matrix::b3Inverse(&m_RedoAction,&m_UndoAction) != null);
 }
 
 /*************************************************************************
@@ -134,7 +138,7 @@ b3OpCameraAction::b3OpCameraAction(b3CameraPart *camera,b3_matrix *action)
 {
 	m_Camera      = camera;
 	m_RedoAction  = *action;
-	b3Initialize(b3MatrixInv(action,&m_UndoAction) != null);
+	b3Initialize(b3Matrix::b3Inverse(action,&m_UndoAction) != null);
 }
 
 void b3OpCameraAction::b3Do()

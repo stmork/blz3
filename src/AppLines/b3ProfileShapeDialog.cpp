@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.7  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
@@ -155,36 +159,36 @@ void CB3ProfileShapeDialog::b3PostProcess()
 	{
 	case 0:
 		// default
-		b3MatrixUnit(&transform);
+		b3Matrix::b3Unit(&transform);
 		break;
 
 	case 1:
 		// Align right
-		b3MatrixRotY(null,&transform,null,B3_RAD(90));
+		b3Matrix::b3RotateY(null,&transform,null,B3_RAD(90));
 		break;
 
 	case 2:
 		// Align front
-		b3MatrixRotX(null,&transform,null,B3_RAD(90));
+		b3Matrix::b3RotateX(null,&transform,null,B3_RAD(90));
 		break;
 
 	case 3:
 		// Align left
-		b3MatrixRotY(null,&transform,null,B3_RAD(-90));
+		b3Matrix::b3RotateY(null,&transform,null,B3_RAD(-90));
 		break;
 
 	case 4:
 		// Align back
-		b3MatrixRotX(null,&transform,null,B3_RAD(-90));
+		b3Matrix::b3RotateX(null,&transform,null,B3_RAD(-90));
 		break;
 
 	case 5:
 		// Align down
-		b3MatrixScale(null,&transform,null,0,0,-1);
+		b3Matrix::b3Scale(null,&transform,null,0,0,-1);
 		break;
 	}
 
 	// Respect base
-	b3MatrixMove(&transform,&transform,&m_Base);
+	b3Matrix::b3Move(&transform,&transform,&m_Base);
 	m_Shape->b3Transform(&transform,true);
 }

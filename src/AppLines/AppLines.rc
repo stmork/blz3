@@ -2744,6 +2744,9 @@ BEGIN
     IDS_OP_COB_LOAD         "Caligari Objekt laden"
     IDS_TITLE_UNDO          "Rückgängig machen"
     IDS_TITLE_REDO          "Wiederherstellen"
+    IDS_NEW_CAMERA_NAME     "Kamera"
+    IDS_NEW_LIGHT_NAME      "Lichtquelle"
+    IDS_NEW_OBJECT_NAME     "Boden"
 END
 
 STRINGTABLE DISCARDABLE 

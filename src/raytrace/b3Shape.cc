@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.49  2003/02/17 16:57:46  sm
 **      - Inlining head pointer computation.
 **
@@ -323,7 +327,7 @@ b3_bool b3ShapeBaseTrans::b3Prepare()
 {
 	b3_f64 denom;
 
-	denom = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
+	denom = b3Matrix::b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
 	if (denom != 0)
 	{
 		m_Denom        = 1.0 / denom;
@@ -724,9 +728,9 @@ b3_bool b3Shape2::b3Prepare()
 
 void b3Shape2::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
-	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
-	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
+	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3TransformVertices(transformation,is_affine);
 }
 
@@ -816,9 +820,9 @@ void b3Shape3::b3ComputeNormals(b3_bool normalize)
 
 void b3Shape3::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
-	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
-	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
+	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
+	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation,is_affine);
 }

@@ -37,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.2  2002/08/03 18:05:10  sm
 **      - Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **      - Moved b3PrepareInfo into b3Scene class as member. This
@@ -83,7 +87,7 @@ int main(int argc,char *argv[])
 #endif
 
 	b3RenderContext::b3GetMatrix(B3_MATRIX_OBJECT,&gl);
-	b3MatrixMove(null,&b3,&move);
+	b3Matrix::b3Move(null,&b3,&move);
 
 	b3PrintF(B3LOG_NORMAL,"GL Matrix\n");
 	b3PrintMatrix(&gl.m11);

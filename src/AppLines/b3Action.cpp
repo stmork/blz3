@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.23  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.22  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -206,7 +210,7 @@ void CB3Action::b3DispatchLButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 	m_Button       = B3_MB_LEFT;
 	m_xStart       = m_xLast = x;
 	m_yStart       = m_yLast = y;
-	b3MatrixUnit(&m_Transformation);
+	b3Matrix::b3Unit(&m_Transformation);
 	b3LDown(x,y);
 }
 
@@ -228,7 +232,7 @@ void CB3Action::b3DispatchMButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 	m_Button       = B3_MB_MIDDLE;
 	m_xStart       = m_xLast = x;
 	m_yStart       = m_yLast = y;
-	b3MatrixUnit(&m_Transformation);
+	b3Matrix::b3Unit(&m_Transformation);
 	b3MDown(x,y);
 }
 
@@ -250,7 +254,7 @@ void CB3Action::b3DispatchRButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 	m_Button       = B3_MB_RIGHT;
 	m_xStart       = m_xLast = x;
 	m_yStart       = m_yLast = y;
-	b3MatrixUnit(&m_Transformation);
+	b3Matrix::b3Unit(&m_Transformation);
 	b3RDown(x,y);
 }
 
@@ -471,11 +475,11 @@ void CB3MoveAction::b3LMove(b3_coord x,b3_coord y)
 	m_Doc->m_Info->b3SnapToGrid(&diff);
 	if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
 	{
-		if (b3MatrixInv(&m_Transformation,&inv))
+		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 		{
 			m_LastDiff = diff;
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Matrix::b3Move(null,&m_Transformation,&diff);
+			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 			b3Transform(&activity);
 		}
 	}
@@ -512,11 +516,11 @@ void CB3MoveAction::b3LUp(b3_coord x,b3_coord y)
 	}
 
 	// Do action!
-	if (b3MatrixInv(&m_Transformation,&inv))
+	if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 	{
 		m_Doc->m_Info->b3SnapToGrid(&diff);
-		b3MatrixMove(null,&m_Transformation,&diff);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Matrix::b3Move(null,&m_Transformation,&diff);
+		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 		b3Transform(&activity);
 		m_Doc->b3ComputeBounds();
 		m_Doc->SetModifiedFlag();
@@ -567,11 +571,11 @@ void CB3MoveAction::b3RMove(b3_coord x,b3_coord y)
 	m_Doc->m_Info->b3SnapToGrid(&diff);
 	if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
 	{
-		if (b3MatrixInv(&m_Transformation,&inv))
+		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 		{
 			m_LastDiff = diff;
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Matrix::b3Move(null,&m_Transformation,&diff);
+			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 			b3Transform(&activity);
 		}
 	}
@@ -601,10 +605,10 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 	diff.y = xFactor * m_xDir.y + yFactor * m_zDir.y;
 	diff.z = xFactor * m_xDir.z + yFactor * m_zDir.z;
 
-	if (b3MatrixInv(&m_Transformation,&inv))
+	if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 	{
-		b3MatrixMove(null,&m_Transformation,&diff);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Matrix::b3Move(null,&m_Transformation,&diff);
+		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 		b3Transform(&activity);
 		m_Doc->b3ComputeBounds();
 		m_Doc->SetModifiedFlag();
@@ -683,10 +687,10 @@ void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
 		m_Doc->m_Info->b3SnapToAngle(angle);
 		if (angle != m_xLastAngle)
 		{
-			if (b3MatrixInv(&m_Transformation,&inv))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 			{
 				m_xLastAngle = angle;
-				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
 				compute = true;
 			}
 		}
@@ -699,12 +703,12 @@ void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
 		m_Doc->m_Info->b3SnapToAngle(yAngle);
 		if ((xAngle != m_xLastAngle) || (yAngle != m_yLastAngle))
 		{
-			if (b3MatrixInv(&m_Transformation,&inv))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 			{
 				m_xLastAngle = xAngle;
 				m_yLastAngle = yAngle;
-				b3MatrixRotVec(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
-				b3MatrixRotVec(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
+				b3Matrix::b3RotateVector(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
+				b3Matrix::b3RotateVector(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
 				compute = true;
 			}
 		}
@@ -712,7 +716,7 @@ void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
 
 	if (compute)
 	{
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 		m_Camera->b3Transform(&activity);
 		m_Doc->UpdateAllViews(NULL,m_UpdateHint);
 	}
@@ -735,7 +739,7 @@ void CB3CameraRotateAction::b3LUp(b3_coord x,b3_coord y)
 
 		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
 		m_Doc->m_Info->b3SnapToAngle(angle);
-		b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+		b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
 	}
 	else
 	{
@@ -743,13 +747,13 @@ void CB3CameraRotateAction::b3LUp(b3_coord x,b3_coord y)
 		yAngle = (yRel - m_yRelStart) * M_PI * 2;
 		m_Doc->m_Info->b3SnapToAngle(xAngle);
 		m_Doc->m_Info->b3SnapToAngle(yAngle);
-		b3MatrixRotVec(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
-		b3MatrixRotVec(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
+		b3Matrix::b3RotateVector(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
+		b3Matrix::b3RotateVector(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
 	}
 
-	if (b3MatrixInv(&m_Transformation,&inv))
+	if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 	{
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 		m_Camera->b3Transform(&activity);
 		m_Doc->UpdateAllViews(NULL,m_UpdateHint);
 		m_Doc->SetModifiedFlag();

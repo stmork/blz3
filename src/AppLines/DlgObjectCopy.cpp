@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -44,7 +48,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.3  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -87,7 +91,7 @@ CDlgObjectCopy::CDlgObjectCopy(CWnd* pParent /*=NULL*/)
 	m_Rotate.y = atof(app->GetProfileString(CB3ClientString(),"rotate object y", "0.0"));
 	m_Rotate.z = atof(app->GetProfileString(CB3ClientString(),"rotate object z","90.0"));
 
-	b3MatrixUnit(&m_Transformation);
+	b3Matrix::b3Unit(&m_Transformation);
 }
 
 
@@ -287,7 +291,7 @@ void CDlgObjectCopy::OnOK()
 	b3WriteProfileFloat("move object x", move.x);
 	b3WriteProfileFloat("move object y", move.y);
 	b3WriteProfileFloat("move object z", move.z);
-	b3MatrixMove(null,&m_Transformation,&move);
+	b3Matrix::b3Move(null,&m_Transformation,&move);
 
 	center.x = m_xCtrlCenter.m_Value;
 	center.y = m_yCtrlCenter.m_Value;
@@ -301,7 +305,7 @@ void CDlgObjectCopy::OnOK()
 	if (m_xUseRot)
 	{
 		b3WriteProfileFloat("rotate object x",rotate.x);
-		b3MatrixRotX(
+		b3Matrix::b3RotateX(
 			&m_Transformation,&m_Transformation,
 			&center,rotate.x * M_PI / 180);
 	}
@@ -310,7 +314,7 @@ void CDlgObjectCopy::OnOK()
 	if (m_yUseRot)
 	{
 		b3WriteProfileFloat("rotate object y",rotate.y);
-		b3MatrixRotY(
+		b3Matrix::b3RotateY(
 			&m_Transformation,&m_Transformation,
 			&center,rotate.y * M_PI / 180);
 	}
@@ -319,7 +323,7 @@ void CDlgObjectCopy::OnOK()
 	if (m_zUseRot)
 	{
 		b3WriteProfileFloat("rotate object z",rotate.z);
-		b3MatrixRotZ(
+		b3Matrix::b3RotateZ(
 			&m_Transformation,&m_Transformation,
 			&center,rotate.z * M_PI / 180);
 	}

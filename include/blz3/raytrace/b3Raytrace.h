@@ -34,6 +34,7 @@
 
 #define B3_BOXSTRINGLEN  128
 #define B3_TEXSTRINGLEN   96
+#define B3_LIGHTNAMELEN  B3_BOXSTRINGLEN
 #define B3_CAMERANAMELEN  96
 
 extern b3_f64 epsilon;
@@ -1788,7 +1789,6 @@ protected:
 	static void b3Init();
 };
 
-
 // POINT_LIGHT
 class b3Scene;
 class b3Light : public b3Item
@@ -1811,7 +1811,7 @@ public:
 	b3_bool          m_LightActive;
 	b3_bool          m_SoftShadow;
 	b3_bool          m_SpotActive;
-	char             m_Name[B3_BOXSTRINGLEN]; // Lampenname
+	char             m_Name[B3_LIGHTNAMELEN]; // Lampenname
 
 public:
 	B3_ITEM_INIT(b3Light);

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.20  2002/08/24 13:22:02  sm
 **      - Extensive debugging on threading code done!
 **        o Cleaned up POSIX threads
@@ -250,10 +254,10 @@ b3_bool b3SplineRotShape::b3Prepare()
 	MySpline.offset = 1;
 	for (x = 0;x < xSize;x++)
 	{
-		b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2.0 * x / xSize);
+		b3Matrix::b3RotateVector (null,&Matrix,&m_Axis,M_PI * 2.0 * x / xSize);
 		for (y = 0;y < MySpline.control_num;y++)
 		{
-			b3MatrixVMul (&Matrix,&m_Controls[y],&Between[y],true);
+			b3Matrix::b3VMul (&Matrix,&m_Controls[y],&Between[y],true);
 		}
 
 		MySpline.b3DeBoor (VertexField,0);
@@ -303,8 +307,8 @@ void b3SplineRotShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	offset  = m_Spline.offset;
 
 	// Transform rotation axis
-	b3MatrixVMul (transformation,&m_Axis.pos,&m_Axis.pos,true);
-	b3MatrixVMul (transformation,&m_Axis.dir,&m_Axis.dir,false);
+	b3Matrix::b3VMul (transformation,&m_Axis.pos,&m_Axis.pos,true);
+	b3Matrix::b3VMul (transformation,&m_Axis.dir,&m_Axis.dir,false);
 
 	// Transform control points
 	for (x = 0;x < m_Spline.control_num;x++)
@@ -347,7 +351,7 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3_f64        fy,fyStep;
 
 	// Build rotation matrix
-	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
+	b3Matrix::b3RotateVector (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
 
 	// Copy BSpline
 	AuxSpline          = m_Spline;
@@ -382,7 +386,7 @@ void b3SplineRotShape::b3ComputeVertices()
 		// Rotate control points
 		for (i = 0;i < AuxSpline.control_num;i++)
 		{
-			b3MatrixVMul (&Matrix,&AuxControls[i],&AuxControls[i],true);
+			b3Matrix::b3VMul (&Matrix,&AuxControls[i],&AuxControls[i],true);
 		}
 	}
 

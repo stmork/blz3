@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.7  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.6  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
@@ -293,11 +297,11 @@ void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
 	m_Doc->m_Info->b3SnapToAngle(angle);
 	if (angle != m_LastAngle)
 	{
-		if (b3MatrixInv(&m_Transformation,&inv))
+		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 		{
 			m_LastAngle = angle;
-			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
+			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity);
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
@@ -326,10 +330,10 @@ void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
 	}
 
 	m_Doc->m_Info->b3SnapToAngle(angle);
-	if (b3MatrixInv(&m_Transformation,&inv))
+	if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 	{
-		b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
+		b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 		m_LinesView->GetDocument()->m_Scene->b3Transform(&activity);
 		m_Doc->b3ComputeBounds();
 		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
@@ -363,53 +367,28 @@ void CB3ActionObjectScale::b3LDown(b3_coord x,b3_coord y)
 		m_StartDiff.y = m_Center->y - m_StartPoint.y;
 		m_StartDiff.z = m_Center->z - m_StartPoint.z;
 	}
+	else
+	{
+		CRect rect;
+
+		m_LastScale = 1.0;
+		m_View->GetClientRect(&rect);
+		m_ySize  = rect.Height();
+		m_yStart = y;
+	}
 }
 
 void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
 {
-	b3_vector diff,scale,point;
+	b3_vector scale;
 	b3_matrix inv,activity;
 
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	if (b3ComputeScaling(x,y,scale))
 	{
-		point = *m_Center;
-
-		m_View->m_RenderView.b3Unproject(x,y,&point);
-
-		diff.x = m_Center->x - point.x;
-		if (m_StartDiff.x == 0)
+		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 		{
-			scale.x = (diff.x == 0.0 ? 1.0 : 0.0);
-		}
-		else
-		{
-			scale.x = diff.x / m_StartDiff.x;
-		}
-		
-		diff.y = m_Center->y - point.y;
-		if (m_StartDiff.y == 0)
-		{
-			scale.y = (diff.y == 0.0 ? 1.0 : 0.0);
-		}
-		else
-		{
-			scale.y = diff.y / m_StartDiff.y;
-		}
-
-		diff.z = m_Center->z - point.z;
-		if (m_StartDiff.z == 0)
-		{
-			scale.z = (diff.z == 0.0 ? 1.0 : 0.0);
-		}
-		else
-		{
-			scale.z = diff.z / m_StartDiff.z;
-		}
-
-		if (b3MatrixInv(&m_Transformation,&inv))
-		{
-			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Matrix::b3Scale(null,&m_Transformation,m_Center,&scale);
+			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity,false);
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
@@ -418,18 +397,66 @@ void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
 
 void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 {
-	b3_vector diff,scale,point;
+	b3_vector scale;
 	b3_matrix inv,activity;
+
+	if (b3ComputeScaling(x,y,scale))
+	{
+		if (b3Matrix::b3Inverse(&m_Transformation,&inv))
+		{
+			CAppLinesDoc *pDoc = m_LinesView->GetDocument();
+
+			b3Matrix::b3Scale(null,&m_Transformation,m_Center,&scale);
+			b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
+			pDoc->m_Scene->b3Transform(&activity,false);
+			pDoc->b3ComputeBounds();
+			pDoc->SetModifiedFlag();
+			pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
+}
+
+b3_bool CB3ActionObjectScale::b3ComputeScaling(b3_coord x,b3_coord y,b3_vector &scale)
+{
+	b3_vector diff,point;
 	b3_f64    xRel,yRel;
 
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
-		point = *m_Center;
+		if (m_PressedCtrl || m_PressedShift)
+		{
+			b3_f64  factor = pow(2.0,(double)(m_yStart - y) / (double)m_ySize);
+			b3_bool changed;
 
-		b3GetRelCoord(x,y,xRel,yRel);
-		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+			changed = factor != m_LastScale;
+			if (changed)
+			{
+				scale.x =
+				scale.y =
+				scale.z = factor;
+				m_LastScale = factor;
+			}
+			return changed;
+		}
+		return false;
+	}
 
-		diff.x = m_Center->x - point.x;
+	point = *m_Center;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+	b3Vector::b3Sub(m_Center,&point,&diff);
+
+	if (m_PressedCtrl || m_PressedShift)
+	{
+		scale.x =
+		scale.y =
+		scale.z =
+			b3Vector::b3Length(&diff) /
+			b3Vector::b3Length(&m_StartDiff);
+	}
+	else
+	{
 		if (m_StartDiff.x == 0)
 		{
 			scale.x = (diff.x == 0.0 ? 1.0 : 0.0);
@@ -439,7 +466,6 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 			scale.x = diff.x / m_StartDiff.x;
 		}
 		
-		diff.y = m_Center->y - point.y;
 		if (m_StartDiff.y == 0)
 		{
 			scale.y = (diff.y == 0.0 ? 1.0 : 0.0);
@@ -449,7 +475,6 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 			scale.y = diff.y / m_StartDiff.y;
 		}
 
-		diff.z = m_Center->z - point.z;
 		if (m_StartDiff.z == 0)
 		{
 			scale.z = (diff.z == 0.0 ? 1.0 : 0.0);
@@ -458,19 +483,8 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 		{
 			scale.z = diff.z / m_StartDiff.z;
 		}
-
-		if (b3MatrixInv(&m_Transformation,&inv))
-		{
-			CAppLinesDoc *pDoc = m_LinesView->GetDocument();
-
-			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			pDoc->m_Scene->b3Transform(&activity,false);
-			pDoc->b3ComputeBounds();
-			pDoc->SetModifiedFlag();
-			pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		}
 	}
+	return true;
 }
 
 /*************************************************************************
@@ -605,13 +619,14 @@ void CB3ActionCameraView::b3LMove(b3_coord x,b3_coord y)
 
 		if (scale != m_LastScale)
 		{
-			b3MatrixAlign(&align,&m_Axis);
+			b3Matrix::b3Align(&align,&m_Axis);
 			m_LastScale = scale;
-			if (b3MatrixInv(&m_Transformation,&inv) && b3MatrixInv(&align,&invalign))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv) &&
+				b3Matrix::b3Inverse(&align,&invalign))
 			{
-				b3MatrixScale(&invalign,&activity,&m_Axis.pos,scale);
-				b3MatrixMMul(&activity,&align,&m_Transformation);
-				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				b3Matrix::b3Scale(&invalign,&activity,&m_Axis.pos,scale);
+				b3Matrix::b3MMul(&activity,&align,&m_Transformation);
+				b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 				m_Camera->b3Transform(&activity);
 				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 			}
@@ -633,13 +648,14 @@ void CB3ActionCameraView::b3LUp(b3_coord x,b3_coord y)
 
 		if (scale != m_LastScale)
 		{
-			b3MatrixAlign(&align,&m_Axis);
+			b3Matrix::b3Align(&align,&m_Axis);
 			m_LastScale = scale;
-			if (b3MatrixInv(&m_Transformation,&inv) && b3MatrixInv(&align,&invalign))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv) &&
+				b3Matrix::b3Inverse(&align,&invalign))
 			{
-				b3MatrixScale(&invalign,&activity,null,scale);
-				b3MatrixMMul(&activity,&align,&m_Transformation);
-				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				b3Matrix::b3Scale(&invalign,&activity,null,scale);
+				b3Matrix::b3MMul(&activity,&align,&m_Transformation);
+				b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 				m_Camera->b3Transform(&activity);
 				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 				m_Doc->SetModifiedFlag();
@@ -688,11 +704,11 @@ void CB3ActionCameraView::b3RMove(b3_coord x,b3_coord y)
 		m_Doc->m_Info->b3SnapToAngle(angle);
 		if (angle != m_LastAngle)
 		{
-			if (b3MatrixInv(&m_Transformation,&inv))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 			{
 				m_LastAngle = angle;
-				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
+				b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 				m_Camera->b3Transform(&activity);
 				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 			}
@@ -716,11 +732,11 @@ void CB3ActionCameraView::b3RUp(b3_coord x,b3_coord y)
 		m_Doc->m_Info->b3SnapToAngle(angle);
 		if (angle != m_LastAngle)
 		{
-			if (b3MatrixInv(&m_Transformation,&inv))
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
 			{
 				m_LastAngle = angle;
-				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				b3Matrix::b3RotateVector(null,&m_Transformation,&m_Axis,angle);
+				b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
 				m_Camera->b3Transform(&activity);
 				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 				m_Doc->SetModifiedFlag();

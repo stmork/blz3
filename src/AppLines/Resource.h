@@ -632,6 +632,9 @@
 #define IDS_OP_COB_LOAD                 61446
 #define IDS_TITLE_UNDO                  61447
 #define IDS_TITLE_REDO                  61448
+#define IDS_NEW_CAMERA_NAME             61449
+#define IDS_NEW_LIGHT_NAME              61450
+#define IDS_NEW_OBJECT_NAME             61451
 
 // Next default values for new objects
 // 

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.15  2003/02/17 16:57:46  sm
 **      - Inlining head pointer computation.
 **
@@ -240,9 +244,9 @@ void b3Animation::b3RecomputeNeutralInverse (b3AnimElement *Element)
 		if (Anim == Element)
 		{
 			t = b3ClipTimePoint(m_Neutral,Anim->m_Start,Anim->m_End);
-			b3MatrixUnit (&Anim->m_NeutralInverse);
+			b3Matrix::b3Unit (&Anim->m_NeutralInverse);
 			Anim->b3ComputeTransformationMatrix (this,&resetMatrix,t);
-			b3MatrixInv (&resetMatrix,&Anim->m_NeutralInverse);
+			b3Matrix::b3Inverse (&resetMatrix,&Anim->m_NeutralInverse);
 			return;
 		}
 
@@ -295,9 +299,9 @@ void b3Animation::b3ResetAnimation (b3Scene *Global)
 	B3_FOR_BASE_BACK(b3GetAnimElementHead(),item)
 	{
 		Anim = (b3AnimElement *)item;
-		b3MatrixInv  (&Anim->m_Actual,&resetMatrix);
+		b3Matrix::b3Inverse  (&Anim->m_Actual,&resetMatrix);
 		b3ApplyTransformation(Global,Anim,&resetMatrix,m_Neutral);
-		b3MatrixUnit (&Anim->m_Actual);
+		b3Matrix::b3Unit (&Anim->m_Actual);
 	}
 
 	// compute number of frames
@@ -350,11 +354,11 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 		Anim = (b3AnimElement *)item;
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
-			if (b3MatrixInv  (&Anim->m_Actual,&resetMatrix))
+			if (b3Matrix::b3Inverse  (&Anim->m_Actual,&resetMatrix))
 			{
 				b3ApplyTransformation(Global,Anim,&resetMatrix,m_Neutral);
 			}
-			b3MatrixUnit (&Anim->m_Actual);
+			b3Matrix::b3Unit (&Anim->m_Actual);
 		}
 	}
 

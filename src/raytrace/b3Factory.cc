@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.11  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.10  2002/12/31 15:13:07  sm
 **	- Some minor fixes.
 **	
@@ -103,6 +107,30 @@ inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
 	scene->b3ComputeBounds(&lower,&upper);
 }
 
+inline void b3ExampleScene::b3SetCameraName(b3CameraPart *camera,int id)
+{
+	CString name;
+
+	name.LoadString(id);
+	strcpy(camera->m_CameraName,name);
+}
+
+inline void b3ExampleScene::b3SetLightName(b3Light *light,int id)
+{
+	CString name;
+
+	name.LoadString(id);
+	strcpy(light->m_Name,name);
+}
+
+inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
+{
+	CString name;
+
+	name.LoadString(id);
+	strcpy(bbox->m_BoxName,name);
+}
+
 b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 {
 	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
@@ -111,6 +139,10 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart *camera = new b3CameraPart(CAMERA);
 	b3_vector     eye,view;
+
+	b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
+	b3SetLightName(light,IDS_NEW_LIGHT_NAME);
+	b3SetObjectName(bbox,IDS_NEW_OBJECT_NAME);
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
@@ -250,12 +282,12 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 	area->b3GetMaterialHead()->b3Append(chess);
 
 	// Transform ellipsoid
-	b3MatrixScale(null,&transform,null,0.4,0.4,0.4);
-	b3MatrixMove(&transform,&transform,0,0,20);
+	b3Matrix::b3Scale(null,&transform,null,0.4,0.4,0.4);
+	b3Matrix::b3Move(&transform,&transform,0,0,20);
 	big->b3Transform(&transform,true);
 
 	// Elarge whole scene
-	b3MatrixScale(null,&transform,null,5,5,5);
+	b3Matrix::b3Scale(null,&transform,null,5,5,5);
 	bbox->b3Transform(&transform,true,true);
 
 	// Create camera

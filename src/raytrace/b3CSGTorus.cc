@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.21  2002/08/04 13:24:56  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -253,10 +257,10 @@ void b3CSGTorus::b3ComputeIndices()
 
 void b3CSGTorus::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
-	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
-	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
+	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
+	b3Matrix::b3VMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation,is_affine);
 }
 

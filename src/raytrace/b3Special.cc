@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.59  2003/02/18 16:52:57  sm
+**      - Fixed no name error on new scenes (ticket no. 4).
+**      - Introduced new b3Matrix class and renamed methods.
+**
 **      Revision 1.58  2002/08/24 13:22:02  sm
 **      - Extensive debugging on threading code done!
 **        o Cleaned up POSIX threads
@@ -538,10 +542,10 @@ void b3CameraPart::b3Overview(
 
 void b3CameraPart::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul(transformation,&m_EyePoint, &m_EyePoint, true);
-	b3MatrixVMul(transformation,&m_ViewPoint,&m_ViewPoint,true);
-	b3MatrixVMul(transformation,&m_Width,    &m_Width,    false);
-	b3MatrixVMul(transformation,&m_Height,   &m_Height,   false);
+	b3Matrix::b3VMul(transformation,&m_EyePoint, &m_EyePoint, true);
+	b3Matrix::b3VMul(transformation,&m_ViewPoint,&m_ViewPoint,true);
+	b3Matrix::b3VMul(transformation,&m_Width,    &m_Width,    false);
+	b3Matrix::b3VMul(transformation,&m_Height,   &m_Height,   false);
 }
 
 char *b3CameraPart::b3GetName()
@@ -625,9 +629,9 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	// set to the old twirl
 	if (twirl != 0.0)
 	{
-		b3MatrixRotVec (null,&RotMatrix,&RotLine,-twirl);
-		b3MatrixVMul   (&RotMatrix,&m_Width, &m_Width, false);
-		b3MatrixVMul   (&RotMatrix,&m_Height,&m_Height,false);
+		b3Matrix::b3RotateVector (null,&RotMatrix,&RotLine,-twirl);
+		b3Matrix::b3VMul   (&RotMatrix,&m_Width, &m_Width, false);
+		b3Matrix::b3VMul   (&RotMatrix,&m_Height,&m_Height,false);
 	}
 }
 

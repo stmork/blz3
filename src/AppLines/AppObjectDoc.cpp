@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.20  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.19  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
@@ -190,7 +194,7 @@ CAppObjectDoc::CAppObjectDoc()
 	m_LinesDoc = null;
 	m_BBox     = null;
 	m_Original = null;
-	b3MatrixUnit(&m_OriginalPosition);
+	b3Matrix::b3Unit(&m_OriginalPosition);
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -247,7 +251,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 	bbox->b3Prepare(true);
 
 	m_OriginalPosition = bbox->m_Matrix;
-	b3MatrixInv(&bbox->m_Matrix,&inverse);
+	b3Matrix::b3Inverse(&bbox->m_Matrix,&inverse);
 	bbox->b3Transform(&inverse,true,true);
 
 	// Now everything necessary is initialized. So we can mark this

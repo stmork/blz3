@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3Matrix.h            
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2003 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork
 **
 **	Blizzard III - vector and matrix calculation proto types
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2003  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -786,37 +786,60 @@ public:
 	}
 };
 
-b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
-b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
-b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);
-b3_f64     b3Det3               (b3_vector *left,b3_vector *mid,b3_vector *right);
-b3_f64     b3Det4               (b3_matrix *Matrix);
-
-b3_matrix *b3MatrixUnit         (b3_matrix *Dst);
-b3_matrix *b3MatrixInv          (b3_matrix *Src,b3_matrix *Dst);
-b3_matrix *b3MatrixTrans        (b3_matrix *Src,b3_matrix *Dst);
-b3_matrix *b3MatrixMove         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Move);
-b3_matrix *b3MatrixMove         (b3_matrix *Src,b3_matrix *Dst,b3_f64 x,b3_f64 y,b3_f64 z);
-b3_matrix *b3MatrixMoveNeg      (b3_matrix *Src,b3_matrix *Dst,b3_vector *MoveNeg);
-b3_matrix *b3MatrixScale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Scale);
-b3_matrix *b3MatrixScale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 x = 1.0,b3_f64 y = 1.0,b3_f64 z = 1.0);
-b3_matrix *b3MatrixRotX         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
-b3_matrix *b3MatrixRotY         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
-b3_matrix *b3MatrixRotZ         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
-b3_matrix *b3MatrixMirrorPoint  (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 scale);
-b3_matrix *b3MatrixMirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 scale);
-b3_matrix *b3MatrixMirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *base,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
-b3_matrix *b3MatrixMMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
-b3_matrix *b3MatrixSMul         (b3_matrix *Src,b3_matrix *Dst,b3_f64     factor);
-b3_matrix *b3MatrixMAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
-b3_matrix *b3MatrixAlign        (b3_matrix *Dst,const b3_line *axis);
-b3_matrix *b3MatrixRotVec       (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);
-b3_matrix *b3MatrixDress        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Dir1,b3_vector *Dir2,b3_bool negate);
-
-inline b3_vector *b3MatrixVMul  (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
+class b3Matrix
 {
-	*Dst = *Src;
-	return (Use4D ? b3Vector::b3MatrixMul4D(Mat,Dst) : b3Vector::b3MatrixMul3D(Mat,Dst));
-}
+	static b3_matrix m_UnitMatrix;
+	static b3_vector m_EmptyVector;
+
+public:
+	static b3_bool    b3NormalizeCol (b3_matrix *Dst,b3_index col_num);
+	static b3_bool    b3NormalizeRow (b3_matrix *Dst,b3_index row_num);
+	static b3_f64     b3Det4         (b3_matrix *Matrix);
+
+	static b3_matrix *b3Unit         (b3_matrix *Dst);
+	static b3_matrix *b3Inverse      (b3_matrix *Src,b3_matrix *Dst);
+	static b3_matrix *b3Transport    (b3_matrix *Src,b3_matrix *Dst);
+	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Move);
+	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_f64 x,b3_f64 y,b3_f64 z);
+	static b3_matrix *b3MoveNegative (b3_matrix *Src,b3_matrix *Dst,b3_vector *MoveNeg);
+	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Scale);
+	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 x = 1.0,b3_f64 y = 1.0,b3_f64 z = 1.0);
+	static b3_matrix *b3RotateX      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+	static b3_matrix *b3RotateY      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+	static b3_matrix *b3RotateZ      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+	static b3_matrix *b3MirrorPoint  (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 scale);
+	static b3_matrix *b3MirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 scale);
+	static b3_matrix *b3MirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *base,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
+	static b3_matrix *b3MMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
+	static b3_matrix *b3SMul         (b3_matrix *Src,b3_matrix *Dst,b3_f64     factor);
+	static b3_matrix *b3MAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
+	static b3_matrix *b3Align        (b3_matrix *Dst,const b3_line *axis);
+	static b3_matrix *b3RotateVector (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);
+	static b3_matrix *b3Dress        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Dir1,b3_vector *Dir2,b3_bool negate);
+
+	static inline b3_f64     b3Det2  (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d)
+	{
+		return a * d - b * c;
+	}
+
+	static inline b3_f64     b3Det3  (b3_vector *a,b3_vector *b,b3_vector *c)
+	{
+		return
+			a->x * b->y * c->z -
+			c->x * b->y * a->z +
+			b->x * c->y * a->z -
+			b->x * a->y * c->z +
+			c->x * a->y * b->z -
+			a->x * c->y * b->z;
+	}
+
+	static inline b3_vector *b3VMul  (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
+	{
+		*Dst = *Src;
+		return (Use4D ?
+			b3Vector::b3MatrixMul4D(Mat,Dst) :
+			b3Vector::b3MatrixMul3D(Mat,Dst));
+	}
+};
 
 #endif

@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.78  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.77  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
-**
+**	
 **	Revision 1.76  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
@@ -439,7 +443,7 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 	m_Heads[0].b3InitBase(CLASS_SHAPE);
 	m_Heads[1].b3InitBase(CLASS_BBOX);
 
-	b3MatrixUnit(&m_Matrix);
+	b3Matrix::b3Unit(&m_Matrix);
 	m_Type       = 0;
 	m_DimBase.x  = 0;
 	m_DimBase.y  = 0;
@@ -913,7 +917,7 @@ b3_bool b3BBox::b3Transform(
 
 	if (force_action || b3IsActive())
 	{
-		b3MatrixMMul(&m_Matrix,transformation,&m_Matrix);
+		b3Matrix::b3MMul(&m_Matrix,transformation,&m_Matrix);
 		transformed = true;
 	}
 

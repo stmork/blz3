@@ -230,6 +230,9 @@ class CB3ActionObjectScale : public CB3Action
 	b3_vector     *m_Center;
 	b3_vector      m_StartPoint;
 	b3_vector      m_StartDiff;
+	b3_f64         m_LastScale;
+	b3_res         m_ySize;
+
 public:
 	CB3ActionObjectScale(CAppLinesView *window);
 
@@ -241,6 +244,9 @@ public:
 	{
 		return true;
 	}
+
+private:
+	b3_bool b3ComputeScaling(b3_coord x,b3_coord y,b3_vector &scale);
 };
 
 /*************************************************************************

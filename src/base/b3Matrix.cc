@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.25  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
-**
+**	
 **	Revision 1.24  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
 **	
@@ -140,7 +144,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_matrix UnitMatrix =
+b3_matrix b3Matrix::m_UnitMatrix =
 {
 	1,0,0,0,
 	0,1,0,0,
@@ -148,14 +152,14 @@ static b3_matrix UnitMatrix =
 	0,0,0,1
 };
 
-static b3_vector EmptyVector =
+b3_vector b3Matrix::m_EmptyVector =
 {
-	0,0,0
+	0,0,0,1
 };
 
 typedef b3_f32 b3_matrix_array[4][4];
 
-b3_bool b3NormalizeCol (
+b3_bool b3Matrix::b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
 {
@@ -190,7 +194,7 @@ b3_bool b3NormalizeCol (
 	}
 }
 
-b3_bool b3NormalizeRow (
+b3_bool b3Matrix::b3NormalizeRow (
 	b3_matrix *Matrix,
 	b3_count   row)
 {
@@ -231,30 +235,7 @@ b3_bool b3NormalizeRow (
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3Det2(
-	b3_f64 a,
-	b3_f64 b,
-	b3_f64 c,
-	b3_f64 d)
-{
-	return a * d - b * c;
-}
-
-b3_f64 b3Det3(
-	b3_vector *a,
-	b3_vector *b,
-	b3_vector *c)
-{
-	return
-		a->x * b->y * c->z -
-		c->x * b->y * a->z +
-		b->x * c->y * a->z -
-		b->x * a->y * c->z +
-		c->x * a->y * b->z -
-		a->x * c->y * b->z;
-}
-
-b3_f64 b3Det4(b3_matrix *Matrix)
+b3_f64 b3Matrix::b3Det4(b3_matrix *Matrix)
 {
 	b3_vector Row1,Row2,Row3,Row4;
 	b3_f64    Result;
@@ -283,13 +264,13 @@ b3_f64 b3Det4(b3_matrix *Matrix)
 	return (Result);
 }
 
-b3_matrix * b3MatrixUnit (b3_matrix *Matrix)
+b3_matrix * b3Matrix::b3Unit (b3_matrix *Matrix)
 {
-	memcpy(Matrix,&UnitMatrix,16 * sizeof(b3_f32));
+	memcpy(Matrix,&m_UnitMatrix,sizeof(b3_matrix));
 	return Matrix;
 }
 
-b3_matrix * b3MatrixTrans (
+b3_matrix * b3Matrix::b3Transport (
 	b3_matrix *From,
 	b3_matrix *To)
 {
@@ -301,7 +282,7 @@ b3_matrix * b3MatrixTrans (
 	return (To);
 }
 
-b3_matrix * b3MatrixInv (
+b3_matrix * b3Matrix::b3Inverse (
 	b3_matrix *From,
 	b3_matrix *To)
 {
@@ -376,7 +357,10 @@ b3_matrix * b3MatrixInv (
 		Row3.z  = From->m33;
 
 		Denom = Det3 (&Row1,&Row2,&Row3);
-		if (Denom == 0) return (null);
+		if (Denom == 0)
+		{
+			return null;
+		}
 		Denom = 1 / Denom;
 
 		To->m11 =  (b3_f32)(b3Det2 (From->m22,From->m23,From->m32,From->m33) * Denom);
@@ -403,7 +387,7 @@ b3_matrix * b3MatrixInv (
 	return (To);
 }
 
-b3_matrix * b3MatrixMMul (
+b3_matrix * b3Matrix::b3MMul (
 	b3_matrix	*B,
 	b3_matrix	*A,
 	b3_matrix	*C)
@@ -434,7 +418,7 @@ b3_matrix * b3MatrixMMul (
 	return (C);
 }
 
-b3_matrix * b3MatrixSMul (
+b3_matrix * b3Matrix::b3SMul (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_f64     Value)
@@ -462,7 +446,7 @@ b3_matrix * b3MatrixSMul (
 	return (B);
 }
 
-b3_matrix * b3MatrixMAdd (
+b3_matrix * b3Matrix::b3MAdd (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_matrix *C)
@@ -490,7 +474,7 @@ b3_matrix * b3MatrixMAdd (
 	return C;
 }
 
-b3_matrix * b3MatrixMove (
+b3_matrix * b3Matrix::b3Move (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_f64     x,
@@ -500,44 +484,50 @@ b3_matrix * b3MatrixMove (
 	b3_vector move;
 
 	b3Vector::b3Init(&move,x,y,z);
-	return b3MatrixMove(A,B,&move);
+	return b3Move(A,B,&move);
 }
 
-b3_matrix * b3MatrixMove (
+b3_matrix * b3Matrix::b3Move (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Translation)
 {
 	b3_matrix Move;
 
-	if (A == null) A = &UnitMatrix;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
 
-	Move     =  UnitMatrix;
+	Move     =  m_UnitMatrix;
 	Move.m14 =  Translation->x;
 	Move.m24 =  Translation->y;
 	Move.m34 =  Translation->z;
 
-	return b3MatrixMMul (A,&Move,B);
+	return b3MMul (A,&Move,B);
 }
 
-b3_matrix * b3MatrixMoveNeg (
+b3_matrix * b3Matrix::b3MoveNegative (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Translation)
 {
 	b3_matrix Move;
 
-	if (A == null) A = &UnitMatrix;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
 
-	Move     =   UnitMatrix;
+	Move     =   m_UnitMatrix;
 	Move.m14 = - (Translation->x);
 	Move.m24 = - (Translation->y);
 	Move.m34 = - (Translation->z);
 
-	return b3MatrixMMul (A,&Move,B);
+	return b3MMul (A,&Move,B);
 }
 
-b3_matrix * b3MatrixScale (
+b3_matrix * b3Matrix::b3Scale (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -548,10 +538,10 @@ b3_matrix * b3MatrixScale (
 	b3_vector scale;
 
 	b3Vector::b3Init(&scale,x,y,z);
-	return b3MatrixScale(A,B,Center,&scale);
+	return b3Scale(A,B,Center,&scale);
 }
 
-b3_matrix * b3MatrixScale (
+b3_matrix * b3Matrix::b3Scale (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -559,20 +549,23 @@ b3_matrix * b3MatrixScale (
 {
 	b3_matrix Operator;
 
-	if (Center == null) Center = &EmptyVector;
+	if (Center == null)
+	{
+		Center = &m_EmptyVector;
+	}
 
-	Operator     = UnitMatrix;
+	Operator     = m_UnitMatrix;
 	Operator.m11 = Scale->x;
 	Operator.m22 = Scale->y;
 	Operator.m33 = Scale->z;
 
-	b3MatrixMoveNeg (A,B,Center);
-	b3MatrixMMul    (B,&Operator,B);
+	b3MoveNegative (A,B,Center);
+	b3MMul    (B,&Operator,B);
 
-	return b3MatrixMove (B,B,Center);
+	return b3Move (B,B,Center);
 }
 
-b3_matrix * b3MatrixRotX (
+b3_matrix * b3Matrix::b3RotateX (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -581,23 +574,29 @@ b3_matrix * b3MatrixRotX (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
-	if (A == null) A = &UnitMatrix;
-	if (Center == null) Center = &EmptyVector;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
+	if (Center == null)
+	{
+		Center = &m_EmptyVector;
+	}
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
-	Result     =  UnitMatrix;
+	Result     =  m_UnitMatrix;
 	Result.m22 =  Cos;
 	Result.m32 =  Sin;
 	Result.m23 = -Sin;
 	Result.m33 =  Cos;
 
-	b3MatrixMoveNeg (A,&CenterMatrix,Center);
-	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return b3MatrixMove (&Result,B,Center);
+	b3MoveNegative (A,&CenterMatrix,Center);
+	b3MMul    (&CenterMatrix,&Result,&Result);
+	return b3Move (&Result,B,Center);
 }
 
-b3_matrix * b3MatrixRotY (
+b3_matrix * b3Matrix::b3RotateY (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -606,23 +605,29 @@ b3_matrix * b3MatrixRotY (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
-	if (A == null) A = &UnitMatrix;
-	if (Center == null) Center = &EmptyVector;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
+	if (Center == null)
+	{
+		Center = &m_EmptyVector;
+	}
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
-	Result     =  UnitMatrix;
+	Result     =  m_UnitMatrix;
 	Result.m11 =  Cos;
 	Result.m31 = -Sin;
 	Result.m13 =  Sin;
 	Result.m33 =  Cos;
 
-	b3MatrixMoveNeg (A,&CenterMatrix,Center);
-	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return b3MatrixMove (&Result,B,Center);
+	b3MoveNegative (A,&CenterMatrix,Center);
+	b3MMul    (&CenterMatrix,&Result,&Result);
+	return b3Move (&Result,B,Center);
 }
 
-b3_matrix *b3MatrixRotZ (
+b3_matrix *b3Matrix::b3RotateZ (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -631,23 +636,29 @@ b3_matrix *b3MatrixRotZ (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
-	if (A == null) A = &UnitMatrix;
-	if (Center == null) Center = &EmptyVector;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
+	if (Center == null)
+	{
+		Center = &m_EmptyVector;
+	}
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
-	Result     =  UnitMatrix;
+	Result     =  m_UnitMatrix;
 	Result.m11 =  Cos;
 	Result.m21 =  Sin;
 	Result.m12 = -Sin;
 	Result.m22 =  Cos;
 
-	b3MatrixMoveNeg (A,&CenterMatrix,Center);
-	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return b3MatrixMove (&Result,B,Center);
+	b3MoveNegative (A,&CenterMatrix,Center);
+	b3MMul    (&CenterMatrix,&Result,&Result);
+	return b3Move (&Result,B,Center);
 }
 
-b3_matrix *b3MatrixAlign (
+b3_matrix *b3Matrix::b3Align (
 	b3_matrix     *result,
 	const b3_line *Axis)
 {
@@ -656,7 +667,7 @@ b3_matrix *b3MatrixAlign (
 	result->m31 = Axis->dir.z;
 	result->m41 = 0;
 
-	if (Axis->dir.x == 0 && Axis->dir.y == 0)
+	if ((Axis->dir.x == 0) && (Axis->dir.y == 0))
 	{
 		result->m12 = 0;
 		result->m22 = Axis->dir.z;
@@ -687,7 +698,7 @@ b3_matrix *b3MatrixAlign (
 	return result;
 }
 
-b3_matrix *b3MatrixRotVec (
+b3_matrix *b3Matrix::b3RotateVector (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_line   *Axis,
@@ -698,14 +709,14 @@ b3_matrix *b3MatrixRotVec (
 
 	if (A == null)
 	{
-		A = &UnitMatrix;
+		A = &m_UnitMatrix;
 	}
 
-	b3MatrixAlign(&System,Axis);
+	b3Align(&System,Axis);
 
-	if (b3MatrixInv (&System,&InvSystem))
+	if (b3Inverse (&System,&InvSystem))
 	{
-		Rotate     =  UnitMatrix;
+		Rotate     =  m_UnitMatrix;
 		Cos        =  (b3_f32)cos(Angle);
 		Sin        =  (b3_f32)sin(Angle);
 		Rotate.m22 =  Cos;
@@ -713,9 +724,9 @@ b3_matrix *b3MatrixRotVec (
 		Rotate.m23 = -Sin;
 		Rotate.m33 =  Cos;
 
-		b3MatrixMMul (A,      &InvSystem, B);
-		b3MatrixMMul (B,      &Rotate,   &Result);
-		b3MatrixMMul (&Result,&System,    B);
+		b3MMul (A,      &InvSystem, B);
+		b3MMul (B,      &Rotate,   &Result);
+		b3MMul (&Result,&System,    B);
 	}
 	else
 	{
@@ -725,7 +736,7 @@ b3_matrix *b3MatrixRotVec (
 	return B;
 }
 
-b3_matrix *b3MatrixMirrorPoint (
+b3_matrix *b3Matrix::b3MirrorPoint (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
@@ -733,22 +744,28 @@ b3_matrix *b3MatrixMirrorPoint (
 {
 	b3_matrix Mirror,Mirrored;
 
-	if (A == null) A = &UnitMatrix;
-	if (Center == null) Center = &EmptyVector;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
+	if (Center == null)
+	{
+		Center = &m_EmptyVector;
+	}
 
-	b3MatrixMoveNeg (A,B,Center);
+	b3MoveNegative (A,B,Center);
 
-	Mirror     = UnitMatrix;
+	Mirror     = m_UnitMatrix;
 	Mirror.m11 = -(b3_f32)a;
 	Mirror.m22 = -(b3_f32)a;
 	Mirror.m33 = -(b3_f32)a;
-	b3MatrixMMul (B,&Mirror,&Mirrored);
-	b3MatrixMove (&Mirrored,B,Center);
+	b3MMul (B,&Mirror,&Mirrored);
+	b3Move (&Mirrored,B,Center);
 
 	return B;
 }
 
-b3_matrix *b3MatrixMirrorAxis (
+b3_matrix *b3Matrix::b3MirrorAxis (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_line   *Axis,
@@ -757,14 +774,17 @@ b3_matrix *b3MatrixMirrorAxis (
 	b3_matrix Mirror,Mirrored,Result;
 	b3_matrix System,InvSystem;
 
-	if (A == null) A = &UnitMatrix;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
 
 	System.m11 = Axis->dir.x;
 	System.m21 = Axis->dir.y;
 	System.m31 = Axis->dir.z;
 	System.m41 = 0;
 
-	if (Axis->dir.x == 0 && Axis->dir.y == 0)
+	if ((Axis->dir.x == 0) && (Axis->dir.y == 0))
 	{
 		System.m12 = 0;
 		System.m22 = Axis->dir.z;
@@ -792,19 +812,22 @@ b3_matrix *b3MatrixMirrorAxis (
 	System.m34 = Axis->pos.z;
 	System.m44 = 1;
 
-	if (!b3MatrixInv (&System,&InvSystem)) return null;
+	if (!b3Inverse (&System,&InvSystem))
+	{
+		return null;
+	}
 
-	Mirror = UnitMatrix;
+	Mirror = m_UnitMatrix;
 	Mirror.m22 = -(b3_f32)a;
 	Mirror.m33 = -(b3_f32)a;
 
-	b3MatrixMMul (A,        &InvSystem,&Result);
-	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
-	b3MatrixMMul (&Mirrored,&System,    B);
+	b3MMul (A,        &InvSystem,&Result);
+	b3MMul (&Result,  &Mirror,   &Mirrored);
+	b3MMul (&Mirrored,&System,    B);
 	return B;
 }
 
-b3_matrix *b3MatrixMirrorPlane (
+b3_matrix *b3Matrix::b3MirrorPlane (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Base,
@@ -815,7 +838,10 @@ b3_matrix *b3MatrixMirrorPlane (
 	b3_matrix Mirror,Mirrored,Result;
 	b3_matrix System,InvSystem;
 
-	if (A == null) A = &UnitMatrix;
+	if (A == null)
+	{
+		A = &m_UnitMatrix;
+	}
 
 	System.m11 = Dir1->x;
 	System.m21 = Dir1->y;
@@ -840,14 +866,17 @@ b3_matrix *b3MatrixMirrorPlane (
 	System.m34 = Base->z;
 	System.m44 = 1;
 
-	if (!b3MatrixInv (&System,&InvSystem)) return null;
+	if (!b3Inverse (&System,&InvSystem))
+	{
+		return null;
+	}
 
-	Mirror     = UnitMatrix;
+	Mirror     = m_UnitMatrix;
 	Mirror.m33 = -(b3_f32)a;
 
-	b3MatrixMMul (A,        &InvSystem,&Result);
-	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
-	b3MatrixMMul (&Mirrored,&System,   B);
+	b3MMul (A,        &InvSystem,&Result);
+	b3MMul (&Result,  &Mirror,   &Mirrored);
+	b3MMul (&Mirrored,&System,   B);
 	return B;
 }
 
@@ -862,7 +891,7 @@ b3_matrix *b3MatrixMirrorPlane (
 /* center:    the base of the orthonormal basis */
 /* dir:       equal to the new x axis. */
 
-b3_matrix * b3MatrixDress (
+b3_matrix * b3Matrix::b3Dress (
 	b3_matrix *prev,
 	b3_matrix *transform,
 	b3_vector *center,
@@ -909,6 +938,6 @@ b3_matrix * b3MatrixDress (
 	lookTo.m44 = 1;
 
 	// "undo" from transformation, "do" to transformation
-	b3MatrixMMul (prev,&lookTo,transform);
+	b3MMul (prev,&lookTo,transform);
 	return transform;
 }

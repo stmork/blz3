@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/18 16:52:57  sm
+**	- Fixed no name error on new scenes (ticket no. 4).
+**	- Introduced new b3Matrix class and renamed methods.
+**
 **	Revision 1.4  2003/01/26 19:56:22  sm
 **	- Some defines cleared up.
-**
+**	
 **	Revision 1.3  2003/01/26 19:45:39  sm
 **	- OpenGL drawing problem of Caligari imported objects fixed.
 **	
@@ -434,7 +438,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #endif
 
 	size += len;
-	b3MatrixUnit (&transform);
+	b3Matrix::b3Unit (&transform);
 	for (i = len + 1;i < size;i += (len+1))
 	{
 		len = b3COB_GetLine (line,&buffer[i],sizeof(line));
@@ -512,7 +516,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			{
 				len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 				sscanf (line,"%f %f %f",&pos.x,&pos.y,&pos.z);
-				b3MatrixVMul (&transform,&pos,&vert[count].Point,true);
+				b3Matrix::b3VMul (&transform,&pos,&vert[count].Point,true);
 				i += (len+1);
 			}
 
