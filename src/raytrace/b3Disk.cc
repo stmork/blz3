@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2002/03/02 19:52:39  sm
+**      - Nasty UnCR
+**      - Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **      Revision 1.16  2002/02/28 16:58:46  sm
 **      - Added torus dialogs.
 **      - Fixed material and stencil handling when not activating

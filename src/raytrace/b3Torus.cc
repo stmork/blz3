@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/03/02 19:52:40  sm
+**	- Nasty UnCR
+**	- Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **	Revision 1.25  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -39,7 +43,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.24  2002/02/27 20:14:52  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.

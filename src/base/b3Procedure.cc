@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/03/02 19:52:39  sm
+**	- Nasty UnCR
+**	- Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **	Revision 1.5  2002/03/02 19:19:09  sm
 **	- Heavily cleaned up BSplines. Now ready!
-**
+**	
 **	Revision 1.4  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.

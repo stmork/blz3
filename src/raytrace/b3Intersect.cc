@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/03/02 19:52:39  sm
+**	- Nasty UnCR
+**	- Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **	Revision 1.25  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -40,7 +44,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.24  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.

@@ -143,7 +143,7 @@ public:
 		vector->w = (b3_f32)(vector->w + factor * offset->w);
 	}
 
-	static inline b3LinearCombine(
+	static inline void b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f64     b,
@@ -154,7 +154,7 @@ public:
 		result->z = (b3_f32)(aVec->z + b * bVec->z);
 	}
 
-	static inline b3LinearCombine(
+	static inline void b3LinearCombine(
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f64       b,
@@ -166,7 +166,7 @@ public:
 		result->w = (b3_f32)(aVec->w + b * bVec->w);
 	}
 
-	static inline b3Weight(b3_vector *result,
+	static inline void b3Weight(b3_vector *result,
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f64     r)
@@ -176,7 +176,7 @@ public:
 		result->z = (b3_f32)((1-r) * aVec->z + r * bVec->z);
 	}
 
-	static inline b3Weight(b3_vector4D *result,
+	static inline void b3Weight(b3_vector4D *result,
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f64       r)

@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/03/02 19:52:40  sm
+**      - Nasty UnCR
+**      - Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **      Revision 1.25  2002/03/02 16:47:50  sm
 **      - Further cleanup of spline shapes and triangle shapes.
 **      - Some cleanups of b3ControlLDC done: Now sending

@@ -1233,6 +1233,11 @@ public:
 	}
 };
 
+// normal interpolation defines
+#define PHONG                   (1 << b3TriangleShape::B3_PHONG_B)     // use Phong interpolation
+#define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
+#define NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
+
 class b3TriangleShape : public b3SimpleShape
 {
 	b3Base<b3TriangleRef> *m_GridList;       // list of grids
@@ -1254,6 +1259,7 @@ public:
 		B3_NORMAL_VERTEX_VALID_B = 1,
 		B3_NORMAL_FACE_VALID_B   = 2
 	};
+
 
 protected:
 	b3TriangleShape(b3_size class_size,b3_u32 class_type);
@@ -1286,11 +1292,6 @@ private:
 
 // index calculation of triangle grid
 #define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
-
-// normal interpolation defines
-#define PHONG                   (1 << b3TriangleShape::b3_triangle_flag::B3_PHONG_B)     // use Phong interpolation
-#define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::b3_triangle_flag::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
-#define NORMAL_FACE_VALID       (1 << b3TriangleShape::b3_triangle_flag::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
 
 // TRIANGLES
 class b3Triangles : public b3TriangleShape

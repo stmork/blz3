@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/03/02 19:52:39  sm
+**	- Nasty UnCR
+**	- Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **	Revision 1.20  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.19  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!

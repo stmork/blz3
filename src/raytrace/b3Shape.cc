@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2002/03/02 19:52:40  sm
+**      - Nasty UnCR
+**      - Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **      Revision 1.41  2002/02/27 20:14:52  sm
 **      - Added stencil creation for creating simple shapes.
 **      - Fixed material creation.

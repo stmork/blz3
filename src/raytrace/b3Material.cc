@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/03/02 19:52:39  sm
+**      - Nasty UnCR
+**      - Fixed some compile bugs due to incompatibilities to Visual C++
+**
 **      Revision 1.20  2002/02/26 20:43:28  sm
 **      - Moved creation dialogs into property sheets
 **      - Added material creation dialog
