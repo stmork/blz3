@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/07/09 16:15:06  sm
+**	- Fixed empty line bug.
+**
 **	Revision 1.2  2003/07/09 12:57:18  sm
 **	- Further house buiding...
-**
+**	
 **	Revision 1.1  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
@@ -83,10 +86,10 @@ b3BHDParser::b3_bhd_token b3BHDParser::b3ReadLine()
 	b3_size  max = sizeof(m_TokenNames) / sizeof(const char *);
 	b3_size  i,len;
 
-	m_Line[0] = 0;
-	m_Pos     = 0;
 	while(!feof(m_BHD))
 	{
+		m_Line[0] = 0;
+		m_Pos     = 0;
 		if (fgets(m_Line,sizeof(m_Line),m_BHD) != null)
 		{
 			len = strlen(m_Line);
