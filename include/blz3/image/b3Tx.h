@@ -408,6 +408,7 @@ private:
 	// b3TxImage.cc
 	b3_count       b3BuildRLE (b3_count *row,b3_u08 *rle);
 	void           b3BuildRow (b3_count *row,b3_u08 *rle,b3_count codeNum,b3_count byteNum);
+	static b3_f64  b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
 
 	// b3TxLoadTIFF.cc
 	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
@@ -464,7 +465,6 @@ private:
 	b3_result      b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size);
 };
 
-extern b3_f64        b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
 
 /*************************************************************************
 **                                                                      **

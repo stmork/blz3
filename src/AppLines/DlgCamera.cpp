@@ -34,6 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -45,7 +51,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.3  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
@@ -155,11 +161,11 @@ BOOL CDlgCamera::OnInitDialog()
 	m_yViewCtrl.b3SetDigits(5,2);
 	m_zViewCtrl.b3SetDigits(5,2);
 	m_FocalLengthCtrl.b3SetDigits(5,2);
-	m_FocalLengthCtrl.b3SetMin(epsilon);
+	m_FocalLengthCtrl.b3SetMin(b3Scene::epsilon);
 	m_WidthCtrl.b3SetDigits(5,2);
-	m_WidthCtrl.b3SetMin(epsilon);
+	m_WidthCtrl.b3SetMin(b3Scene::epsilon);
 	m_HeightCtrl.b3SetDigits(5,2);
-	m_HeightCtrl.b3SetMin(epsilon);
+	m_HeightCtrl.b3SetMin(b3Scene::epsilon);
 	
 	b3RefreshList();
 	b3GetCamera();
@@ -302,9 +308,9 @@ int CDlgCamera::b3GetCameraType()
 
 	for (i = 0;i < MAX_CAMERA_TYPES;i++)
 	{
-		if ((fabs(camera_definition[i].m_FocalLength / m_UnitFactor - m_FocalLengthCtrl.m_Value) < epsilon) &&
-		    (fabs(camera_definition[i].m_Width       / m_UnitFactor - m_WidthCtrl.m_Value)       < epsilon) &&
-		    (fabs(camera_definition[i].m_Height      / m_UnitFactor - m_HeightCtrl.m_Value)      < epsilon))
+		if ((fabs(camera_definition[i].m_FocalLength / m_UnitFactor - m_FocalLengthCtrl.m_Value) < b3Scene::epsilon) &&
+		    (fabs(camera_definition[i].m_Width       / m_UnitFactor - m_WidthCtrl.m_Value)       < b3Scene::epsilon) &&
+		    (fabs(camera_definition[i].m_Height      / m_UnitFactor - m_HeightCtrl.m_Value)      < b3Scene::epsilon))
 		{
 			return i;
 		}

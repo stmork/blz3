@@ -34,6 +34,12 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.23  2002/12/11 14:47:58  sm
 **      - Changed noise handling to static
 **      - Fixed some error cases when image not loaded.
@@ -447,7 +453,7 @@ void b3MatTexture::b3Write()
 
 b3_bool b3MatTexture::b3Prepare()
 {
-	return b3CheckTexture(&m_Texture,m_Name);
+	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
 b3_bool b3MatTexture::b3GetColors(
@@ -549,7 +555,7 @@ void b3MatWrapTexture::b3Write()
 
 b3_bool b3MatWrapTexture::b3Prepare()
 {
-	return b3CheckTexture(&m_Texture,m_Name);
+	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
 b3_bool b3MatWrapTexture::b3GetColors(

@@ -35,13 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.80  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.79  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.78  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -827,7 +833,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	{
 		// Use fresh data
 		b3Vector::b3Scale(b3Vector::b3Sub(&subUpper,&subLower,&m_DimSize),tolerance * 0.5);
-		b3Vector::b3SetMinimum(&m_DimSize,epsilon);
+		b3Vector::b3SetMinimum(&m_DimSize,b3Scene::epsilon);
 		b3Vector::b3Sub(&m_DimSize,&subLower);
 		b3Vector::b3Add(&m_DimSize,&subUpper);
 	}

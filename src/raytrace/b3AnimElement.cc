@@ -34,6 +34,12 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.4  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -306,7 +312,7 @@ void b3AnimElement::b3AnimateRotate(
 		oldDir.z -= oldCenter.z;
 		b3Matrix::b3Dress (&m_NeutralInverse,transform,
 			&m_Center,&lookTo,&oldDir,negate);
-		if (fabs(b3Matrix::b3Det4(transform)) < epsilon)
+		if (fabs(b3Matrix::b3Det4(transform)) < b3Scene::epsilon)
 		{
 			b3Matrix::b3Unit (transform);
 		}

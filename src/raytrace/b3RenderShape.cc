@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.61  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.60  2003/02/22 15:17:18  sm
 **      - Added support for selected shapes in object modeller
 **      - Glued b3Shape and b3ShapeRenderObject. There was no
@@ -719,13 +725,13 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 		b3_bool           loop;
 
 		b3ComputeBound(&limit);
-		fxStep = (limit.x2 - limit.x1 - 2 * epsilon) / image->xSize;
-		fyStep = (limit.y2 - limit.y1 - 2 * epsilon) / image->ySize;
+		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / image->xSize;
+		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / image->ySize;
 
-		fy = limit.y1 + epsilon;
+		fy = limit.y1 + b3Scene::epsilon;
 		for (y = 0;y < image->ySize;y++)
 		{
-			fx = limit.x1 + epsilon;
+			fx = limit.x1 + b3Scene::epsilon;
 			for (x = 0;x < image->xSize;x++)
 			{
 				b3Vector::b3Init(&polar.box_polar,   fx,fy);
@@ -780,8 +786,8 @@ b3_count b3Shape::b3GetIndexOverhead (
 	xs = (b3_index)ceil(x1);
 	xe = (b3_index)floor(x2);
 	Overhead = xe - xs;
-	if ((xs - x1) > epsilon) Overhead++;
-	if ((x2 - xe) > epsilon) Overhead++;
+	if ((xs - x1) > b3Scene::epsilon) Overhead++;
+	if ((x2 - xe) > b3Scene::epsilon) Overhead++;
 
 	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
@@ -972,7 +978,7 @@ void b3Shape::b3ComputeCylinderVertices(
 	ySize    = 2;
 	glVertexCount = 0;
 
-	if ((i - start) > epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		b  = Limit.x1 * M_PI * 2;
 		sx = cos(b);
@@ -1021,7 +1027,7 @@ void b3Shape::b3ComputeCylinderVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		b = Limit.x2 * M_PI * 2;
 		sx = cos(b);
@@ -1101,7 +1107,7 @@ void b3Shape::b3ComputeConeVertices(
 	if (Limit.y2 < 1)
 	{
 		ySize++;
-		if ((i - start) > epsilon)
+		if ((i - start) > b3Scene::epsilon)
 		{
 			a = Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
@@ -1152,7 +1158,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > epsilon)
+		if ((end - iMax) > b3Scene::epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
 
@@ -1187,7 +1193,7 @@ void b3Shape::b3ComputeConeVertices(
 		Vector++;
 		glVertexCount++;
 
-		if ((i - start) > epsilon)
+		if ((i - start) > b3Scene::epsilon)
 		{
 			a  = Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
@@ -1220,7 +1226,7 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > epsilon)
+		if ((end - iMax) > b3Scene::epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
 			sx = (1-b) * cos(a);
@@ -1292,7 +1298,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > epsilon)	/* underflow */
+	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = Limit.y1;
 		Circles++;
@@ -1303,7 +1309,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > epsilon)	/* Overflow */
+	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
 		LocalSin[Circles] = Limit.y2;
 		Circles++;
@@ -1323,7 +1329,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	ySize = Circles;
 	glVertexCount = 0;
 
-	if ((i - start) > epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		a  = Limit.x1 * M_PI * 2;
 		sx = cos(a);
@@ -1366,7 +1372,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		a  = Limit.x2 * M_PI * 2;
 		sx = cos(a);
@@ -1413,12 +1419,12 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;
-	if ((ys - y1) > epsilon) Heights++;
-	if ((y2 - ye) > epsilon) Heights++;
+	if ((ys - y1) > b3Scene::epsilon) Heights++;
+	if ((y2 - ye) > b3Scene::epsilon) Heights++;
 
 	Widths = Heights - 1;
-	if ((SinCosSteps * 0.5 - y2) > epsilon) Widths++;
-	if (                     y1  > epsilon) Widths++;
+	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon) Widths++;
+	if (                     y1  > b3Scene::epsilon) Widths++;
 
 	if (EndLine) Number = (Widths + Heights + 1) * Overhead + Heights;
 	else         Number = (Widths + Heights + 1) * Overhead;
@@ -1445,7 +1451,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		}
 		glGridCount += Heights;
 
-		if (y1 <= epsilon)
+		if (y1 <= b3Scene::epsilon)
 		{
 			// NOTE: j = 0 substitution
 			B3_GL_PINIT(pPtr,s + Heights + 2,s + Heights + 1,s + 1);
@@ -1467,7 +1473,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			j++;
 		}
 
-		if ((SinCosSteps * 0.5 - y2) > epsilon)
+		if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
 			glGridCount++;
@@ -1600,7 +1606,7 @@ void b3Shape::b3ComputeTorusVertices(
 	end    = Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > epsilon)	/* underflow */
+	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
 		relTex[Circles]   = 0;
 		LocalSin[Circles] = Limit.y1;
@@ -1613,7 +1619,7 @@ void b3Shape::b3ComputeTorusVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > epsilon)	/* Overflow */
+	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
 		relTex[Circles]   = 1;
 		LocalSin[Circles] = Limit.y2;
@@ -1634,7 +1640,7 @@ void b3Shape::b3ComputeTorusVertices(
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 
-	if ((i - start) > epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		a     = Limit.x1 * M_PI * 2;
 		sx    = cos(a);
@@ -1683,7 +1689,7 @@ void b3Shape::b3ComputeTorusVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		a     = Limit.x2 * M_PI * 2;
 		sx    = cos(a);
@@ -1739,8 +1745,8 @@ void b3Shape::b3ComputeTorusIndices()
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;
-	if ((ys - y1) > epsilon) Heights++;
-	if ((y2 - ye) > epsilon) Heights++;
+	if ((ys - y1) > b3Scene::epsilon) Heights++;
+	if ((y2 - ye) > b3Scene::epsilon) Heights++;
 	if ((ys > 0) || (ye < SinCosSteps))
 	{
 		EndCol = true;

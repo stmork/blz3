@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.32  2002/08/21 10:16:40  sm
 **	- Made some changes to the Un*x OpenGL renderer:
 **	  o Added animations
 **	  o Added camera switching
 **	  o Corrected far clipping plane computation.
 **	- Configure script tidied up.
-**
+**	
 **	Revision 1.31  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
@@ -866,7 +872,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	b3_f64    farCP = 1,denom,l;
 	b3_vector edge,look,cross;
 
-	B3_ASSERT(b3Vector::b3Distance(&m_Lower,&m_Upper) > epsilon);
+	B3_ASSERT(b3Vector::b3Distance(&m_Lower,&m_Upper) > b3Scene::epsilon);
 	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&look);
 	b3Vector::b3CrossProduct(&m_Width,&m_Height,&cross);
 	denom = b3Vector::b3Length(&look) / (cross.x * look.x + cross.y * look.y + cross.z * look.z);

@@ -33,6 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.5  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -44,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.4  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -82,9 +88,9 @@ CDlgStepRotate::CDlgStepRotate(CWnd* pParent /*=NULL*/)
 	m_pDoc = null;
 
 	// Init float edit controls
-	m_xCtrl.b3SetMin(epsilon);
-	m_yCtrl.b3SetMin(epsilon);
-	m_zCtrl.b3SetMin(epsilon);
+	m_xCtrl.b3SetMin(b3Scene::epsilon);
+	m_yCtrl.b3SetMin(b3Scene::epsilon);
+	m_zCtrl.b3SetMin(b3Scene::epsilon);
 	m_xCtrl.b3SetMax(180);
 	m_yCtrl.b3SetMax(180);
 	m_zCtrl.b3SetMax(180);

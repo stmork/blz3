@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.3  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.2  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
@@ -130,12 +136,12 @@ void CDlgCreateSplineShape::b3Init()
 
 	m_xDegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
 	m_xControlsCtrl.b3SetRange(m_xDegree + 1,B3_MAX_CONTROLS);
-	m_xSizeCtrl.b3SetMin(epsilon);
+	m_xSizeCtrl.b3SetMin(b3Scene::epsilon);
 	m_xSizeCtrl.b3SetDigits(5,2);
 
 	m_yDegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
 	m_yControlsCtrl.b3SetRange(m_yDegree + 1,B3_MAX_CONTROLS);
-	m_ySizeCtrl.b3SetMin(epsilon);
+	m_ySizeCtrl.b3SetMin(b3Scene::epsilon);
 	m_ySizeCtrl.b3SetDigits(5,2);
 }
 

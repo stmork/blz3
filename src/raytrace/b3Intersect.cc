@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.31  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
-**
+**	
 **	Revision 1.30  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
@@ -211,7 +217,7 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 			m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
 			m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-				* Denom) >= epsilon) && (lValue < ray->Q))
+				* Denom) >= b3Scene::epsilon) && (lValue < ray->Q))
 		{
 			aValue = (
 				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
@@ -260,7 +266,7 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 		m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 		m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
 		m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-			* Denom) < epsilon)
+			* Denom) < b3Scene::epsilon)
 	{
 		return -1;
 	}
@@ -332,8 +338,8 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	l2 = -p + Discriminant;
 
 	// check against limit
-	if (l1  < epsilon) l1 = -2;
-	if (l2  < epsilon) l2 = -1;
+	if (l1  < b3Scene::epsilon) l1 = -2;
+	if (l2  < b3Scene::epsilon) l2 = -1;
 	if ((l1 < 0) && (l2 < 0))
 	{
 		return -3;
@@ -448,7 +454,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	l1 = -p - z;
 	l2 = -p + z;
 
-	if (l1 < epsilon)
+	if (l1 < b3Scene::epsilon)
 	{
 		l1 = -2;
 	}
@@ -460,7 +466,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			l1 = -2;
 		}
  	}
-	if (l2 < epsilon)
+	if (l2 < b3Scene::epsilon)
 	{
 		l2 = -1;
 	}
@@ -554,7 +560,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	l2 = -p + z;
 
 
-	if (l1 < epsilon)
+	if (l1 < b3Scene::epsilon)
 	{
 		l1 = -2;
 	}
@@ -566,7 +572,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			l1 = -2;
 		}
  	}
-	if (l2 < epsilon)
+	if (l2 < b3Scene::epsilon)
 	{
 		l2 = -1;
 	}
@@ -655,8 +661,8 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	l1 = -z - p;
 	l2 =  z - p;
 
-	if (l1  < epsilon) l1 = -2;
-	if (l2  < epsilon) l2 = -1;
+	if (l1  < b3Scene::epsilon) l1 = -2;
+	if (l2  < b3Scene::epsilon) l2 = -1;
 	if ((l1 < 0) && (l2 < 0))
 	{
 		return -3;
@@ -724,7 +730,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 	if (BTLine.dir.x != 0)
 	{
-		if ((m = BasePoint.x / BTLine.dir.x) >= epsilon)
+		if ((m = BasePoint.x / BTLine.dir.x) >= b3Scene::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
@@ -739,7 +745,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			}
 		}
 
-		if ((m = EndPoint.x / BTLine.dir.x) >= epsilon)
+		if ((m = EndPoint.x / BTLine.dir.x) >= b3Scene::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			z = m * BTLine.dir.z;
@@ -757,7 +763,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 	if (BTLine.dir.y != 0)
 	{
-		if ((m = BasePoint.y / BTLine.dir.y) >= epsilon)
+		if ((m = BasePoint.y / BTLine.dir.y) >= b3Scene::epsilon)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
@@ -772,7 +778,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			}
 		}
 
-		if ((m = EndPoint.y / BTLine.dir.y) >= epsilon)
+		if ((m = EndPoint.y / BTLine.dir.y) >= b3Scene::epsilon)
 		{
 			x = m * BTLine.dir.x;
 			z = m * BTLine.dir.z;
@@ -790,7 +796,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 	if (BTLine.dir.z != 0)
 	{
-		if ((m = BasePoint.z / BTLine.dir.z) >= epsilon)
+		if ((m = BasePoint.z / BTLine.dir.z) >= b3Scene::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
@@ -805,7 +811,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 			}
 		}
 
-		if ((m = EndPoint.z / BTLine.dir.z) >= epsilon)
+		if ((m = EndPoint.z / BTLine.dir.z) >= b3Scene::epsilon)
 		{
 			y = m * BTLine.dir.y;
 			x = m * BTLine.dir.x;
@@ -894,7 +900,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	}
 	for (i = 0;i < NumOfX;)
 	{
-		if ((x[i] > epsilon) && (x[i] < ray->Q)) i++;
+		if ((x[i] > b3Scene::epsilon) && (x[i] < ray->Q)) i++;
 		else x[i] = x[--NumOfX];
 	}
 
@@ -977,7 +983,7 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 				Triangle->Normal.x * (Dir.x = ray->pos.x-Base.x) +
 				Triangle->Normal.y * (Dir.y = ray->pos.y-Base.y) +
 				Triangle->Normal.z * (Dir.z = ray->pos.z-Base.z))
-					* Denom) >= epsilon)
+					* Denom) >= b3Scene::epsilon)
 			{
 				if (lValue < ray->Q)
 				{
@@ -1076,7 +1082,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	if (start > ray->Q) return result;
 
 	if (start < 0)   start = 0;
-	end    -= epsilon;
+	end    -= b3Scene::epsilon;
 	if (ray->Q < end) end = ray->Q;
 
 
@@ -1102,7 +1108,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 
 	// correct start point
-	if (d.x > epsilon)
+	if (d.x > b3Scene::epsilon)
 	{
 		if (ray->dir.x >= 0) d.x = (1.0 - d.x) * dmax.x;
 		else                 d.x *= dmax.x;
@@ -1112,7 +1118,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 		d.x = dmax.x;
 		if (gx == m_GridSize) gx--;
 	}
-	if (d.y > epsilon)
+	if (d.y > b3Scene::epsilon)
 	{
 		if (ray->dir.y >= 0) d.y = (1.0 - d.y) * dmax.y;
 		else                  d.y *= dmax.y;
@@ -1122,7 +1128,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 		d.y = dmax.y;
 		if (gy == m_GridSize) gy--;
 	}
-	if (d.z > epsilon)
+	if (d.z > b3Scene::epsilon)
 	{
 		if (ray->dir.z >= 0) d.z = (1.0 - d.z) * dmax.z;
 		else                  d.z *= dmax.z;
@@ -1732,7 +1738,7 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 	point = result->m_x;
 	for (t = 0; t < result->m_Count; t++)
 	{
-		if ((point->m_Q >= epsilon) && (point->m_Q <= ray->Q))
+		if ((point->m_Q >= b3Scene::epsilon) && (point->m_Q <= ray->Q))
 		{
 			ray->Q = point->m_Q;
 			shape  = point->m_Shape;

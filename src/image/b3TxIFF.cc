@@ -35,13 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -97,8 +103,8 @@
 **                                                                      **
 *************************************************************************/
 
-b3_yuv_table   mult_yuv_table;
-static b3_bool mult_yuv_table_loaded = false;
+static b3_yuv_table mult_yuv_table;
+static b3_bool      mult_yuv_table_loaded = false;
 
 static b3_u08 ConvertBits[8] =
 {

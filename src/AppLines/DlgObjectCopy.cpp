@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.5  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -153,9 +159,9 @@ BOOL CDlgObjectCopy::OnInitDialog()
 	m_yCtrlOffset.b3SetPos(m_yUseOffset ? m_OrigBBox->m_DimSize.y : m_Move.y);
 	m_zCtrlOffset.b3SetPos(m_zUseOffset ? m_OrigBBox->m_DimSize.z : m_Move.z);
 
-	m_xCtrlRot.b3SetMin(epsilon);
-	m_yCtrlRot.b3SetMin(epsilon);
-	m_zCtrlRot.b3SetMin(epsilon);
+	m_xCtrlRot.b3SetMin(b3Scene::epsilon);
+	m_yCtrlRot.b3SetMin(b3Scene::epsilon);
+	m_zCtrlRot.b3SetMin(b3Scene::epsilon);
 	m_xCtrlRot.b3SetMax(180);
 	m_yCtrlRot.b3SetMax(180);
 	m_zCtrlRot.b3SetMax(180);

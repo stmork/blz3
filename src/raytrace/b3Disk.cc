@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.23  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -215,7 +221,7 @@ void b3Disk::b3ComputeVertices()
 
 	glVertexCount = 0;
 	// This is a ring formed disk
-	if ((i - start) > epsilon)
+	if ((i - start) > b3Scene::epsilon)
 	{
 		//compute front fractional disk ring
 		a  = Limit.x1 * M_PI * 2;
@@ -267,7 +273,7 @@ void b3Disk::b3ComputeVertices()
 		xSize++;
 	}
 
-	if ((end - iMax) > epsilon)
+	if ((end - iMax) > b3Scene::epsilon)
 	{
 		// compute rest fractional ring disk
 		a  = Limit.x2 * M_PI * 2;

@@ -38,10 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.5  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.4  2003/01/26 19:56:22  sm
 **	- Some defines cleared up.
 **	
@@ -683,7 +689,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		{
 			b3Tx *texture;
 
-			texture = texture_pool.b3LoadTexture(name);
+			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
 			if (texture != null)
 			{
 				b3COB_ComputeAvrgColor (texture,&Mat->m_DiffColor);

@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.10  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.9  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -126,7 +132,7 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"material.really create",TRUE);
 	m_UseTexture   = app->GetProfileInt(CB3ClientString(),"material.use texture",  FALSE);
 	strcpy(m_MatTexture->m_Name,app->GetProfileString(CB3ClientString(),"material.texture",""));
-	b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
+	b3Scene::b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
 
 	m_ReflectionCtrl.b3SetRange(0.0,100.0);
 	m_RefractionCtrl.b3SetRange(0.0,100.0);

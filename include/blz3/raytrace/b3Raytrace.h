@@ -37,8 +37,6 @@
 #define B3_LIGHTNAMELEN  B3_BOXSTRINGLEN
 #define B3_CAMERANAMELEN  96
 
-extern b3_f64 epsilon;
-
 /*************************************************************************
 **                                                                      **
 **                        Surface descriptions for intersections        **
@@ -2382,6 +2380,9 @@ public:
 	b3_f32           m_Epsilon;             // Schwellenwert
 	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
 
+	static b3TxPool  m_TexturePool;
+	static b3_f64    epsilon;
+
 protected:
 	b3Scene(b3_size class_size,b3_u32  class_type);
 
@@ -2459,6 +2460,9 @@ public:
 	{
 		return &m_Heads[2];
 	}
+
+	static b3_bool   b3CheckTexture(b3Tx **tx,const char *name);
+	static b3_bool   b3CutTextureName(const char *full_name,char *short_name);
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
@@ -2613,9 +2617,5 @@ class b3InitRaytrace :
 public:
 	static void b3Init();
 };
-
-extern b3TxPool  texture_pool;
-extern b3_bool   b3CheckTexture(b3Tx **tx,const char *name);
-extern b3_bool   b3CutTextureName(const char *full_name,char *short_name);
 
 #endif

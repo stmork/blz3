@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.13  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.12  2003/01/03 15:47:09  sm
 **	- Changed area light optimization.
 **	- Fixed some errors in the light dialog.
@@ -116,9 +122,9 @@ CDlgLight::CDlgLight(CWnd* pParent /*=NULL*/)
 	m_yDirCtrl.b3SetDigits(5,2);
 	m_zDirCtrl.b3SetDigits(5,2);
 	m_DistanceCtrl.b3SetDigits(5,2);
-	m_DistanceCtrl.b3SetMin(epsilon);
+	m_DistanceCtrl.b3SetMin(b3Scene::epsilon);
 	m_SoftSizeCtrl.b3SetDigits(5,3);
-	m_SoftSizeCtrl.b3SetMin(epsilon);
+	m_SoftSizeCtrl.b3SetMin(b3Scene::epsilon);
 }
 
 

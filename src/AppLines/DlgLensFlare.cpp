@@ -33,6 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.5  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -44,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.4  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -129,7 +135,7 @@ BOOL CDlgLensFlare::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_LensFlareExponCtrl.b3SetMin(epsilon);
+	m_LensFlareExponCtrl.b3SetMin(b3Scene::epsilon);
 	m_LensFlareExponCtrl.b3SetDigits(3,0);
 	m_LensFlareExponCtrl.b3SetPos(fabs(m_LensFlare->m_Expon));
 	m_LensFlarePreviewCtrl.b3Update(m_LensFlareScene);

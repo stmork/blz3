@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.30  2003/01/03 15:47:09  sm
 **      - Changed area light optimization.
 **      - Fixed some errors in the light dialog.
@@ -315,7 +321,7 @@ void b3Light::b3Init()
 			(b3_f64)(i - INIT_DEGREE) /
 			(b3_f64)(INIT_CONTROL_MAX - INIT_DEGREE);
 	}
-	m_Knots[INIT_CONTROL_MAX] += epsilon;
+	m_Knots[INIT_CONTROL_MAX] += b3Scene::epsilon;
 	m_Spline.b3ThroughEndControl ();
 
 	strcpy(m_Name,"Light");
@@ -424,11 +430,11 @@ inline b3_bool b3Light::b3PointIllumination(
 			Jit.dir.z * m_SpotDir.z);
 		if (LightFrac <= 0)
 		{
-			q = 1.0 - epsilon;
+			q = 1.0 - b3Scene::epsilon;
 		}
 		else
 		{
-			q = (LightFrac >= 1 ? epsilon : acos(LightFrac) * 2.0 / M_PI);
+			q = (LightFrac >= 1 ? b3Scene::epsilon : acos(LightFrac) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
@@ -440,7 +446,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	}
 	Jit.LightDist = LightDist;
 
-	scene->b3FindObscurer(&Jit,UpperBound - epsilon);
+	scene->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
 	scene->b3Illuminate(this,&Jit,surface,&surface->incoming->color);
 	return true;
 }
@@ -483,11 +489,11 @@ inline b3_bool b3Light::b3AreaIllumination (
 		Factor = -b3Vector::b3SMul(&Jit.LightView,&m_SpotDir);
 		if (Factor <= 0)
 		{
-			q = 1.0 - epsilon;
+			q = 1.0 - b3Scene::epsilon;
 		}
 		else
 		{
-			q = (Factor >= 1 ? epsilon : acos(Factor) * 2.0 / M_PI);
+			q = (Factor >= 1 ? b3Scene::epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
@@ -597,7 +603,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
-		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - epsilon);
+		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
 		scene->b3Illuminate(this,Jit,surface,&Jit->Result);
 	}
 	else

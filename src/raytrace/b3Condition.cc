@@ -32,10 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.18  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.17  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -673,7 +679,7 @@ void b3CondTexture::b3Write()
 
 b3_bool b3CondTexture::b3Prepare()
 {
-	return b3CheckTexture(&m_Texture,m_Name);
+	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
 void b3CondTexture::b3ComputeBound(b3_stencil_limit *Limit)
@@ -759,7 +765,7 @@ void b3CondWrapTexture::b3Write()
 
 b3_bool b3CondWrapTexture::b3Prepare()
 {
-	return b3CheckTexture(&m_Texture,m_Name);
+	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
 void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit *Limit)

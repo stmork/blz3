@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.6  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.5  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -123,8 +129,8 @@ b3_bool CB3SelectLoadTexture::b3Select(b3Tx **tx,char *name)
 	{
 		strcpy(fullname,filedlg.GetPathName());
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,fullname);
-		texture_pool.b3CutName(fullname,name);
-		b3CheckTexture(tx,name);
+		b3Scene::m_TexturePool.b3CutName(fullname,name);
+		b3Scene::b3CheckTexture(tx,name);
 	}
 	return result;
 }

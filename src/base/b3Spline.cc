@@ -32,10 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/22 17:21:33  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.11  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
-**
+**	
 **	Revision 1.10  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
@@ -81,4 +87,5 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bspline_error bspline_errno = B3_BSPLINE_OK;
+b3_bspline_error b3SplineTemplate<b3_vector>::bspline_errno = B3_BSPLINE_OK;
+b3_bspline_error b3SplineTemplate<b3_vector4D>::bspline_errno = B3_BSPLINE_OK;

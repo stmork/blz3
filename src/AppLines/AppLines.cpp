@@ -57,10 +57,16 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2003/02/22 17:21:31  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.49  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.48  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -512,7 +518,7 @@ BOOL CAppLinesApp::InitInstance()
 	while(!path.IsEmpty())
 	{
 		sub = path.SpanExcluding(";");
-		texture_pool.b3AddPath(sub);
+		b3Scene::m_TexturePool.b3AddPath(sub);
 		path = path.Right(path.GetLength() - sub.GetLength() - 1);
 	}
 
@@ -684,9 +690,9 @@ void CAppLinesApp::OnChangeTexturePath()
 	b3PathEntry        *entry;
 	b3_count            count = 0;
 
-	dlg.m_SearchPath = &texture_pool;
+	dlg.m_SearchPath = &b3Scene::m_TexturePool;
 	dlg.DoModal();
-	B3_FOR_BASE(&texture_pool.m_SearchPath,entry)
+	B3_FOR_BASE(&b3Scene::m_TexturePool.m_SearchPath,entry)
 	{
 		if (count++ > 0)
 		{

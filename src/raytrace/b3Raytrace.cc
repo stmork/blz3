@@ -37,10 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.49  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
-**
+**	
 **	Revision 1.48  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -288,8 +294,6 @@
 **
 */
 
-b3_f64 epsilon = 0.0005;
-
 struct b3_rt_info
 {
 	b3Display *m_Display;
@@ -299,6 +303,9 @@ struct b3_rt_info
 	b3Event    m_WaitForAnimation;
 	b3Event    m_WaitForCompletion;
 };
+
+b3TxPool b3Scene::m_TexturePool;
+b3_f64   b3Scene::epsilon = 0.0005;
 
 /*************************************************************************
 **                                                                      **

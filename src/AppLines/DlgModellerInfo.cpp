@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/22 17:21:32  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.11  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.10  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
@@ -105,9 +111,9 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 	m_LightMode = 0;
 	//}}AFX_DATA_INIT
 	m_SnapToGridCtrl.b3SetDigits(3,2);
-	m_SnapToGridCtrl.b3SetMin(epsilon);
+	m_SnapToGridCtrl.b3SetMin(b3Scene::epsilon);
 	m_SnapToAngleCtrl.b3SetDigits(3,0);
-	m_SnapToAngleCtrl.b3SetMin(epsilon);
+	m_SnapToAngleCtrl.b3SetMin(b3Scene::epsilon);
 }
 
 void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)

@@ -31,6 +31,12 @@
     
 /*
 **      $Log$
+**      Revision 1.7  2003/02/22 17:21:34  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.6  2001/11/12 16:50:29  sm
 **      - Scene properties dialog coding
 **
@@ -62,8 +68,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3TxPool texture_pool;
-
 void b3InitRaytrace::b3Init()
 {
 	b3InitScene::b3Init();
@@ -77,7 +81,7 @@ void b3InitRaytrace::b3Init()
 	b3InitCondition::b3Init();
 }
 
-b3_bool b3CheckTexture(b3Tx **tx,const char *name)
+b3_bool b3Scene::b3CheckTexture(b3Tx **tx,const char *name)
 {
 	const char *txName;
 	b3_size     txLen,nameLen,diff;
@@ -90,19 +94,19 @@ b3_bool b3CheckTexture(b3Tx **tx,const char *name)
 		diff    = txLen - nameLen;
 		if (strcmp(&txName[diff >= 0 ? diff : 0],name) != 0)
 		{
-			*tx = texture_pool.b3FindTexture(name);
+			*tx = m_TexturePool.b3FindTexture(name);
 		}
 	}
 
 	if (*tx == null)
 	{
-		*tx = texture_pool.b3LoadTexture(name);
+		*tx = m_TexturePool.b3LoadTexture(name);
 	}
 
 	return *tx != null;
 }
 
-b3_bool b3CutTextureName(const char *full_name,char *short_name)
+b3_bool b3Scene::b3CutTextureName(const char *full_name,char *short_name)
 {
-	return texture_pool.b3CutName(full_name,short_name);
+	return m_TexturePool.b3CutName(full_name,short_name);
 }

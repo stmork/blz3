@@ -36,10 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/02/22 17:21:34  sm
+**	- Changed some global variables into static class members:
+**	  o b3Scene::epsilon
+**	  o b3Scene::m_TexturePool et. al.
+**	  o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **	Revision 1.6  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
-**
+**	
 **	Revision 1.5  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
 **	
@@ -178,7 +184,7 @@ static void ChangeTag (
 	}
 }
 
-void ChangeTIFF (struct HeaderTIFF *TIFF)
+static void ChangeTIFF (struct HeaderTIFF *TIFF)
 {
 	register long            offset,i,Tags;
 	register b3_u08  *Data;
@@ -295,10 +301,10 @@ static long TAFwriteGap (
 **                                                                      **
 *************************************************************************/
 
-static void            *b3LogFuncPtr  = null;
+static void          *b3LogFuncPtr  = null;
 static b3LogTiffFunc  b3LogFuncTIFF = null;
 
-void b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr)
+static void b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr)
 {
 	b3LogFuncTIFF = log_func;
 	b3LogFuncPtr  = ptr;
@@ -1129,7 +1135,7 @@ static long WriteIFW (
 }
 #endif
 
-int b3SortTags (
+static int b3SortTags (
 	      b3TIFF_Entry *a,
 	      b3TIFF_Entry *b,
 	const void         *ptr)

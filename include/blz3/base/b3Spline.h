@@ -59,8 +59,6 @@ enum b3_bspline_error
 	B3_BSPLINE_TOO_LOW_MULTIPLICATION
 };
 
-extern b3_bspline_error bspline_errno;
-
 /*************************************************************************
 **                                                                      **
 **                        Simple data structure containing              **
@@ -246,6 +244,8 @@ typedef b3_spline_template<b3_vector4D> b3_nurbs;
 
 template<class VECTOR> class b3SplineTemplate : public b3_spline_template<VECTOR>
 {
+public:
+	static b3_bspline_error bspline_errno;
 
 public:
 	b3SplineTemplate<VECTOR>()

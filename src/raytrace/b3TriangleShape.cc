@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2003/02/22 17:21:35  sm
+**      - Changed some global variables into static class members:
+**        o b3Scene::epsilon
+**        o b3Scene::m_TexturePool et. al.
+**        o b3SplineTemplate<class VECTOR>::bspline_errno
+**
 **      Revision 1.37  2003/02/02 14:22:32  sm
 **      - Added TGF import facility.
 **
@@ -389,7 +395,7 @@ void b3TriangleShape::b3PrepareGridList ()
 			P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
 			P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
 			P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
-			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
 			{
 				b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
 			}
@@ -405,7 +411,7 @@ void b3TriangleShape::b3PrepareGridList ()
 	{
 		for (i = 0;i < m_TriaCount;i++)
 		{
-			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
 			{
 				b3AddCubicItem(0,i);
 			}
@@ -510,7 +516,7 @@ b3_bool b3TriangleShape::b3Prepare()
 	m_Size.x = (End.x - Start.x) * Denom;
 	m_Size.y = (End.y - Start.y) * Denom;
 	m_Size.z = (End.z - Start.z) * Denom;
-	b3Vector::b3SetMinimum(&m_Size,epsilon);
+	b3Vector::b3SetMinimum(&m_Size,b3Scene::epsilon);
 
 	max = m_GridSize * m_GridSize * m_GridSize;
 	if (max != m_GridCount)
