@@ -32,4 +32,10 @@ public:
 	static b3_bool b3Select(char *name);
 };
 
+class CB3SelectArcon
+{
+public:
+	static b3_bool b3Select(char *name);
+};
+
 #endif

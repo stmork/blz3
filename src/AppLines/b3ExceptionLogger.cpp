@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/02 14:22:32  sm
+**	- Added TGF import facility.
+**
 **	Revision 1.7  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.6  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -97,6 +100,7 @@ static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 	{ B3_MK_ERRNO(B3_WORLD_STORAGE_NOT_IMPLEMENTED, 'BLZ'), IDS_ERR_STORAGE },
 	{ B3_MK_ERRNO(B3_WORLD_OUT_OF_ORDER,            'BLZ'), IDS_ERR_ORDER },
 	{ B3_MK_ERRNO(B3_WORLD_CLASSTYPE_UNKNOWN,       'BLZ'), IDS_ERR_CLASSTYPE_UNKNOWN },
+	{ B3_MK_ERRNO(B3_WORLD_IMPORT,                  'BLZ'), IDS_ERR_IMPORT },
 	{ B3_MK_ERRNO(B3_TX_MEMORY,                      'TX'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_TX_NOT_FOUND,					 'TX'), IDS_ERR_NOT_FOUND },
 	{ B3_MK_ERRNO(B3_TX_NOT_SAVED,					 'TX'), IDS_ERR_NOT_SAVED },

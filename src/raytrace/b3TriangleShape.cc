@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2003/02/02 14:22:32  sm
+**      - Added TGF import facility.
+**
 **      Revision 1.36  2003/01/18 14:13:49  sm
 **      - Added move/rotate stepper operations
 **      - Cleaned up resource IDs
@@ -268,20 +271,23 @@ void b3TriangleShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 }
 
 void b3TriangleShape::b3AddCubicItem (
-	b3_count trianum,
-	b3_index index)
+	b3_count grid,
+	b3_index triangle)
 {
-	b3_index max = m_GridList[trianum].b3GetCount();
+	b3_index max;
 
-	if (max > 0)
+	if((grid >= 0) && (grid < m_GridCount))
 	{
-		if (m_GridList[trianum][max - 1] == index)
+		max = m_GridList[grid].b3GetCount();
+		if (max > 0)
 		{
-			return;
+			if (m_GridList[grid][max - 1] == triangle)
+			{
+				return;
+			}
 		}
+		m_GridList[grid].b3Add(triangle);
 	}
-	B3_ASSERT(trianum < m_GridCount);
-	m_GridList[trianum].b3Add(index);
 }
 
 void b3TriangleShape::b3SearchCubicItem (
@@ -370,28 +376,48 @@ void b3TriangleShape::b3PrepareGridList ()
 	MaxRec = b3IntLog3(m_GridSize) << 1;
 	max    = m_GridSize * m_GridSize * m_GridSize;
 
-	for (i = 0;i < m_TriaCount;i++)
+	if (max > 1)
 	{
-		P1.x = (m_Vertices[m_Triangles[i].P1].Point.x - m_Base.x) / m_Size.x;
-		P1.y = (m_Vertices[m_Triangles[i].P1].Point.y - m_Base.y) / m_Size.y;
-		P1.z = (m_Vertices[m_Triangles[i].P1].Point.z - m_Base.z) / m_Size.z;
-		P2.x = (m_Vertices[m_Triangles[i].P2].Point.x - m_Base.x) / m_Size.x;
-		P2.y = (m_Vertices[m_Triangles[i].P2].Point.y - m_Base.y) / m_Size.y;
-		P2.z = (m_Vertices[m_Triangles[i].P2].Point.z - m_Base.z) / m_Size.z;
-		P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
-		P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
-		P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
-		if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
+		for (i = 0;i < m_TriaCount;i++)
 		{
-			b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
-		}
+			P1.x = (m_Vertices[m_Triangles[i].P1].Point.x - m_Base.x) / m_Size.x;
+			P1.y = (m_Vertices[m_Triangles[i].P1].Point.y - m_Base.y) / m_Size.y;
+			P1.z = (m_Vertices[m_Triangles[i].P1].Point.z - m_Base.z) / m_Size.z;
+			P2.x = (m_Vertices[m_Triangles[i].P2].Point.x - m_Base.x) / m_Size.x;
+			P2.y = (m_Vertices[m_Triangles[i].P2].Point.y - m_Base.y) / m_Size.y;
+			P2.z = (m_Vertices[m_Triangles[i].P2].Point.z - m_Base.z) / m_Size.z;
+			P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
+			P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
+			P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
+			{
+				b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
+			}
 #ifdef _DEBUG
-		else
-		{
-			degenerated++;
-		}
+			else
+			{
+				degenerated++;
+			}
 #endif
+		}
 	}
+	else
+	{
+		for (i = 0;i < m_TriaCount;i++)
+		{
+			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
+			{
+				b3AddCubicItem(0,i);
+			}
+#ifdef _DEBUG
+			else
+			{
+				degenerated++;
+			}
+#endif
+		}
+	}
+
 #ifdef _DEBUG
 	if (degenerated > 0)
 	{

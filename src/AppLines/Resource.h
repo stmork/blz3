@@ -216,6 +216,7 @@
 #define ID_VIEW_TOP                     10107
 #define ID_VIEW_TO_FULCRUM              10108
 #define ID_COB_LOAD                     10109
+#define ID_IMPORT_ARCON                 10110
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -570,6 +571,7 @@
 #define IDS_PRGERR_ILLEGAL_DATE         60090
 #define IDS_PRGERR_ILLEGAL_DATEMODE     60091
 #define IDS_PRGERR_OUT_OF_BOUNDS        60092
+#define IDS_ERR_IMPORT                  60092
 #define IDS_PROFILE                     60093
 #define IDS_PROFILE_BEVELSTUMP_SPLINE   60094
 #define IDS_PROFILE_BEVEL_SPLINE        60095
@@ -625,6 +627,7 @@
 #define IDS_COB_FILTER                  60145
 #define IDS_OP_PICK_POINT               60146
 #define IDS_OP_PICK_DIR                 60147
+#define IDS_ARCON_FILTER                60148
 #define IDS_OP_COB_LOAD                 61446
 #define IDS_TITLE_UNDO                  61447
 #define IDS_TITLE_REDO                  61448
@@ -635,7 +638,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
-#define _APS_NEXT_COMMAND_VALUE         10110
+#define _APS_NEXT_COMMAND_VALUE         10111
 #define _APS_NEXT_CONTROL_VALUE         32263
 #define _APS_NEXT_SYMED_VALUE           60145
 #endif

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/02/02 14:22:32  sm
+**	- Added TGF import facility.
+**
 **	Revision 1.3  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
-**
+**	
 **	Revision 1.2  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -93,6 +96,35 @@ b3_bool CB3SelectCOB::b3Select(char *name)
 	// Make filename ready for use...
 	strcpy((char *)suggest,name);
 	file_filter.LoadString(IDS_COB_FILTER);
+
+	CB3FileDialog   filedlg(
+		true, // Use file save dialog
+		default_ext, // default extension
+		suggest, // file name suggestion to save
+		OFN_HIDEREADONLY,	// flags
+		file_filter, // File extension filter
+		app->m_pMainWnd); // parent
+
+	// Ask for name...
+	result = (filedlg.DoModal() == IDOK);
+	if (result)
+	{
+		strcpy(name,filedlg.GetPathName());
+	}
+	return result;
+}
+
+b3_bool CB3SelectArcon::b3Select(char *name)
+{
+	b3Path    suggest;
+	b3_bool   result;
+	CWinApp  *app = AfxGetApp();
+	CString   file_filter;
+	CString   default_ext;
+
+	// Make filename ready for use...
+	strcpy((char *)suggest,name);
+	file_filter.LoadString(IDS_ARCON_FILTER);
 
 	CB3FileDialog   filedlg(
 		true, // Use file save dialog

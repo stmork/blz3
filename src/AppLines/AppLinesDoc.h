@@ -66,6 +66,7 @@ public:
 	void       b3ComputeBounds();
 	void       b3StartRaytrace();
 	void       b3StopRaytrace();
+	BOOL       OnImportArcon(LPCTSTR lpszPathName) ;
 
 	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG

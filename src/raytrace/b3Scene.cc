@@ -26,6 +26,8 @@
 #include "blz3/base/b3Aux.h"
 #include "blz3/image/b3TxPool.h"
 
+#include "b3ReadTGF.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -34,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2003/02/02 14:22:32  sm
+**	- Added TGF import facility.
+**
 **	Revision 1.44  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.43  2002/08/23 12:37:11  sm
 **	- Optimized motion blur raytracing using their own thread methods...
 **	
@@ -784,4 +789,9 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 				&light->m_Color);
 		}
 	}
+}
+
+b3Scene *b3Scene::b3ImportArcon(const char *filename)
+{
+	return b3TGFReader::b3ReadTGF(filename);
 }

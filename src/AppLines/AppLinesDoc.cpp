@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.83  2003/02/02 14:22:31  sm
+**	- Added TGF import facility.
+**
 **	Revision 1.82  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
-**
+**	
 **	Revision 1.81  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
@@ -647,6 +650,43 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
+		b3Prepare(true,false,true);
+		SetModifiedFlag(FALSE);
+		result = TRUE;
+	}
+	catch(b3ExceptionBase &e)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"                       %s\n",e.b3GetErrorMsg());
+		B3_MSG_ERROR(e);
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+	}
+
+	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
+	return result;
+}
+
+BOOL CAppLinesDoc::OnImportArcon(LPCTSTR lpszPathName)
+{
+	CMainFrame *main = CB3GetMainFrame();
+	CString     message;
+	BOOL        result = FALSE;
+
+	// TODO: Add your specialized creation code here
+	try
+	{
+		message.Format(IDS_DOC_READ,lpszPathName);
+		main->b3SetStatusMessage(message);
+		m_Scene = b3Scene::b3ImportArcon(lpszPathName);
+		m_Anim  = m_Scene->b3GetAnimation();
+		m_Info  = m_Scene->b3GetModellerInfo();
+		m_Light = m_Scene->b3GetLight(true);
+		m_Fulcrum.b3Update(b3GetFulcrum());
+
+		m_World.b3SetFirst(m_Scene);
 		b3Prepare(true,false,true);
 		SetModifiedFlag(FALSE);
 		result = TRUE;

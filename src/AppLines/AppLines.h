@@ -96,6 +96,7 @@ public:
 	afx_msg void OnFileNew();
 	afx_msg void OnProperties();
 	afx_msg void OnFileOpen();
+	afx_msg void OnImportArcon();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -269,6 +269,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "ArCon-Datei importieren...",  ID_IMPORT_ARCON
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -324,6 +325,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu",                        ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "ArCon-Datei importieren...",  ID_IMPORT_ARCON
         MENUITEM "Schließen",                   ID_FILE_CLOSE
         MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
         MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
@@ -1850,7 +1852,7 @@ END
 IDD_UNDO_REDO DIALOGEX 0, 0, 130, 63
 STYLE WS_POPUP | WS_CAPTION
 EXSTYLE WS_EX_TOOLWINDOW
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     LISTBOX         IDC_UNDO_REDO_LIST,7,7,116,49,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
@@ -2372,8 +2374,7 @@ BEGIN
     IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
     IDS_PRGERR_ILLEGAL_DATEMODE 
                             "Programmfehler!\nDer Datgumsmodus ist falsch!"
-    IDS_PRGERR_OUT_OF_BOUNDS 
-                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
+    IDS_ERR_IMPORT          "Die Datei konnte nicht importiert werden!"
     IDS_PROFILE             "Profil"
     IDS_PROFILE_BEVELSTUMP_SPLINE 
                             "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
@@ -2500,7 +2501,8 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_COB_LOAD             "Lädt ein Caligari-Objekt.\nCaligari-Objekt laden"
+    ID_COB_LOAD             "Importiert ein Caligari-Objekt.\nCaligari-Objekt importieren"
+    ID_IMPORT_ARCON         "Importiert eine ArCon-Datei.\nArCon-Datei importieren..."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2583,6 +2585,7 @@ BEGIN
     IDS_COB_FILTER          "Caligari Objekt (*.cob)|*.cob|Alle Dateien (*.*)|*.*||"
     IDS_OP_PICK_POINT       "Punkt verschieben"
     IDS_OP_PICK_DIR         "Richtung verschieben"
+    IDS_ARCON_FILTER        "ArCon-Geometrie (*.tgf)|*.tgf|Alle Dateien (*.*)|*.*||"
 END
 
 STRINGTABLE DISCARDABLE 

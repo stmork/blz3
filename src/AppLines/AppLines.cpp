@@ -47,6 +47,7 @@
 #include "b3Splash.h"
 #include "b3Profile.h"
 #include "b3ExceptionLogger.h"
+#include "b3SelectObject.h"
 
 /*************************************************************************
 **                                                                      **
@@ -56,11 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2003/02/02 14:22:31  sm
+**	- Added TGF import facility.
+**
 **	Revision 1.46  2003/01/12 10:26:52  sm
 **	- Undo/Redo of
 **	  o Cut & paste
 **	  o Drag & drop
-**
+**	
 **	Revision 1.45  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -291,6 +295,7 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 	ON_COMMAND(ID_PROPERTIES, OnProperties)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
+	ON_COMMAND(ID_IMPORT_ARCON, OnImportArcon)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -704,6 +709,29 @@ void CAppLinesApp::OnFileNew()
 	pSceneTemplate->OpenDocumentFile(NULL);
 }
 
+void CAppLinesApp::OnImportArcon() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesDoc *pDoc;
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	CFrameWnd     *frame;
+	CString         regitem = "arcon geometry";
+	b3Path          result;
+
+	strcpy(result,GetProfileString(CB3ClientString(),regitem,""));
+	if (CB3SelectArcon::b3Select((char *)result))
+	{
+		WriteProfileString(CB3ClientString(),regitem,result);
+		pDoc = (CAppLinesDoc *)pSceneTemplate->CreateNewDocument();
+		if (pDoc->OnImportArcon(result))
+		{
+			frame = pSceneTemplate->CreateNewFrame(pDoc,NULL);
+			pSceneTemplate->InitialUpdateFrame(frame,pDoc);
+		}
+	}
+}
+
 void CAppLinesApp::OnProperties() 
 {
 	// TODO: Add your command handler code here
@@ -946,4 +974,3 @@ void CAppLinesApp::OnAppAbout()
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
-

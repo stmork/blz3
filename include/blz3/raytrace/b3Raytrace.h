@@ -2419,6 +2419,8 @@ public:
 			void            b3Animate(b3Activation::b3_anim_activation activation);
 
 			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
+	static  b3Scene        *b3ImportArcon(const char *filename);
+
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
 		    b3_f64          b3ComputeSpotExponent(b3Light *light);
@@ -2458,9 +2460,9 @@ public:
 	B3_ITEM_INIT(b3SceneMork);
 	B3_ITEM_LOAD(b3SceneMork);
 
-	virtual void    b3SetLights(b3RenderContext *context);
-	        b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	        void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
+	virtual void     b3SetLights(b3RenderContext *context);
+	        b3_bool  b3Shade(b3_ray_info *ray,b3_count depth = 0);
+	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
