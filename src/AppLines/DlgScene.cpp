@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/05/16 09:21:11  sm
+**	- Fixed ticket no. 22: Camera deletions are handled
+**	  correctly now
+**
 **	Revision 1.18  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.17  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -143,6 +147,7 @@ static struct b3_resolution
 resolution[] =
 {
 	{    0,    0 },
+	{  768,  576 },
 	{  704,  576 },
 	{  352,  288 },
 	{ 2048, 1536 },

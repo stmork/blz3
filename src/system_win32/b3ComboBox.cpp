@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/16 09:21:11  sm
+**	- Fixed ticket no. 22: Camera deletions are handled
+**	  correctly now
+**
 **	Revision 1.3  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.2  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -118,7 +122,7 @@ b3_s32 CB3ComboBox::b3FindString(const char *text)
 	return FindStringExact(-1,text);
 }
 
-b3_s32 CB3ComboBox::b3SetString(const char *text)
+b3_s32 CB3ComboBox::b3SetString(const char *text,b3_bool notify_parent)
 {
 	b3_s32 index;
 
@@ -134,5 +138,16 @@ b3_s32 CB3ComboBox::b3SetString(const char *text)
 	}
 	b3PrintF (B3LOG_FULL,"### CLASS: b3CBox # b3SetString(%s) = %d\n",
 		text,index);
+
+	if (notify_parent)
+	{
+		CWnd *parent = GetParentOwner();
+		int   id     = GetDlgCtrlID();
+		
+		parent->SendMessage(
+			WM_COMMAND,
+			MAKELONG(id,CBN_SELCHANGE),
+			(LPARAM)m_hWnd);
+	}
 	return index;
 }

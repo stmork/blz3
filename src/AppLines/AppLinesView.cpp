@@ -42,10 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2004/05/16 09:21:10  sm
+**	- Fixed ticket no. 22: Camera deletions are handled
+**	  correctly now
+**
 **	Revision 1.69  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.68  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
 **	
@@ -940,35 +944,35 @@ void CAppLinesView::OnViewToFulcrum()
 void CAppLinesView::OnCameraNew() 
 {
 	// TODO: Add your command handler code here
-	GetDocument()->b3AddOp(new b3OpCameraCreate(m_Scene,m_Camera));
+	CAppLinesDoc    *pDoc = GetDocument();
+	b3UndoOperation *op = new b3OpCameraCreate(m_Scene,m_Camera);
+
+	pDoc->b3AddOp(op);
 }
 
 void CAppLinesView::OnCameraDelete() 
 {
 	// TODO: Add your command handler code here
+	CAppLinesDoc    *pDoc = GetDocument();
 	b3UndoOperation *op = new b3OpCameraDelete(m_Scene,m_Camera);
 
-	GetDocument()->b3AddOp(op);
+	pDoc->b3AddOp(op);
 }
 
 void CAppLinesView::OnCameraProperties() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame    *main;
 	CDlgCamera     dlg;
-	CAppRenderDoc *pDoc;
 
 	dlg.m_Scene  = m_Scene;
 	dlg.m_Camera = m_Camera;
 	if (dlg.DoModal() == IDOK)
 	{
-		main = CB3GetMainFrame();
-		pDoc = GetDocument();
+		CMainFrame    *main = CB3GetMainFrame();
+		CAppRenderDoc *pDoc = GetDocument();
 
-		pDoc->SetModifiedFlag();
 		pDoc->b3ClearOp();
-		m_Camera = dlg.m_Camera;
-		m_Scene->b3SetCamera(m_Camera,true);
+		pDoc->SetModifiedFlag();
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/16 09:21:10  sm
+**	- Fixed ticket no. 22: Camera deletions are handled
+**	  correctly now
+**
 **	Revision 1.9  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.8  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -284,6 +288,7 @@ void CDlgCamera::b3RefreshList()
 		index = 0;
 	}
 	m_CameraListCtrl.SetCurSel(index);
+	OnSelchangeCamera();
 }
 
 void CDlgCamera::OnSelchangeCamera() 
@@ -292,25 +297,34 @@ void CDlgCamera::OnSelchangeCamera()
 	int           index;
 
 	index = m_CameraListCtrl.GetCurSel();
-	if (index != CB_ERR)
+	B3_ASSERT (index != CB_ERR);
+	camera = (b3CameraPart *)m_CameraListCtrl.GetItemDataPtr(index);
+	if (camera != m_Camera)
 	{
-		camera = (b3CameraPart *)m_CameraListCtrl.GetItemDataPtr(index);
-		if (camera != m_Camera)
-		{
-			b3SetCamera();
-			m_Camera = camera;
-			b3GetCamera();
-		}
+		b3SetCamera();
+		m_Camera = camera;
+		m_Scene->b3SetCamera(m_Camera);
+		b3GetCamera();
 	}
 }
 
 void CDlgCamera::OnKillfocusCamera() 
 {
-	CString title;
+	b3CameraPart *found;
+	CString       title;
 
 	m_CameraListCtrl.GetWindowText(title);
-	m_Camera->b3SetName(title);
-	b3RefreshList();
+	found = m_Scene->b3GetCameraByName(title);
+	if ((found != null) && (found != m_Camera))
+	{
+		B3_BEEP;
+		m_CameraListCtrl.SetFocus();
+	}
+	else
+	{
+		m_Camera->b3SetName(title);
+		b3RefreshList();
+	}
 }
 
 void CDlgCamera::OnCameraState() 

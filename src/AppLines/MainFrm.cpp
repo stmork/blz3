@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/05/16 09:21:11  sm
+**	- Fixed ticket no. 22: Camera deletions are handled
+**	  correctly now
+**
 **	Revision 1.38  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.37  2004/05/06 08:38:32  sm
 **	- Demerged raytracing includes of Lines
 **	
@@ -694,7 +698,7 @@ void CMainFrame::b3UpdateCameraBox(b3Scene *scene,b3CameraPart *act)
 	{
 		m_cameraBox.b3AddString(camera->m_CameraName,camera);
 	}
-	m_cameraBox.b3SetString(act->m_CameraName);
+	m_cameraBox.b3SetString(act->m_CameraName,true);
 }
 
 b3CameraPart *CMainFrame::b3GetSelectedCamera()
@@ -713,7 +717,7 @@ void CMainFrame::b3UpdateLightBox(b3Scene *scene,b3Light *act)
 	{
 		m_lightBox.b3AddString(light->m_Name,light);
 	}
-	m_lightBox.b3SetString(act->m_Name);
+	m_lightBox.b3SetString(act->m_Name,true);
 }
 
 b3Light *CMainFrame::b3GetSelectedLight()

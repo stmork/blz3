@@ -38,7 +38,7 @@ public:
 	void    b3Clear     ();
 	b3_s32  b3AddString (const char    *text,void *ptr);
 	b3_s32  b3FindString(const char    *text);
-	b3_s32  b3SetString (const char    *text);
+	b3_s32  b3SetString (const char    *text,b3_bool notify);
 	void    b3Sort      (const b3_bool  sort=true);
 };
 
