@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.16  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.15  2004/11/25 11:09:37  smork
 **	- Added b3_f96 checking in TestIo.
 **	- Corrected linking in test_unix.
@@ -107,10 +110,11 @@ int main(int argc,char *argv[])
 	b3Item       *item;
 	b3Scene      *scene;
 	b3_path_type  code;
+	void         *ptr;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
-
 	b3PrintF (B3LOG_NORMAL,"%d-Bit-CPU\n",b3Runtime::b3GetCPUBits());
+
 	switch(b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
@@ -139,6 +143,9 @@ int main(int argc,char *argv[])
 	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be  8)\n",sizeof(b3_f64));
 	b3PrintF (B3LOG_NORMAL,"96 bit: %3d      (should be 12)\n",sizeof(b3_f96));
 	b3PrintF (B3LOG_NORMAL,"\n");
+	b3PrintF (B3LOG_NORMAL,"Pointer size:                     %d bytes.\n",sizeof(ptr));
+	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",
+		sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
 	v1 = 1; v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);

@@ -19,6 +19,7 @@
 #define B3_SYSTEM_LOGBASE_H
 
 #include <stdio.h>
+#include <assert.h>
 
 #include "blz3/b3Types.h"
 #include "blz3/b3PluginDef.h"
@@ -65,6 +66,7 @@ public:
 
 	static  inline b3LogBase *b3GetLogger()
 	{
+		assert(m_Logger != null);
 		return m_Logger;
 	}
 

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.12  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.11  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -1366,7 +1369,7 @@ b3_bool b3Tx::b3TxGauss(
 	b3_coord      y,yHalf;
 	b3_pkd_color *srcPtr,srcColor;
 	b3_pkd_color *dstPtr,dstColor;
-	b3_diff       r,g,b,sub;
+	b3_s32        r,g,b,sub;
 	b3_f64        radius,xDiff,yDiff;
 	b3_f64        value,level,denom;
 

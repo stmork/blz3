@@ -133,7 +133,7 @@ static inline int stricmp(const char *a,const char *b)
 class B3_PLUGIN b3Runtime : public b3CPU
 {
 	static b3Runtime   m_Runtime;
-	static char        m_Compiler[128];
+	static char        m_Compiler[256];
 
 	                   b3Runtime();
 

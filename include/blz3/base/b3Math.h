@@ -35,7 +35,7 @@ public:
 		return value * value;
 	}
 
-	static inline b3_bool b3IsEqual(b3_f64 a,b3_f64 b)
+	static inline b3_bool b3IsEqual(b3_f64 a,const b3_f64 b)
 	{
 #ifndef FINE_MATH
 		return b3NearZero(a - b);

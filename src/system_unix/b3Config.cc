@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.12  2004/11/13 19:47:15  sm
 **	- Corrected some OpenGL exclusions.
-**
+**	
 **	Revision 1.11  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
@@ -90,7 +93,7 @@
 *************************************************************************/
 
 b3Runtime b3Runtime::m_Runtime;
-char      b3Runtime::m_Compiler[128];
+char      b3Runtime::m_Compiler[256];
 
 b3Runtime::b3Runtime()
 {

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.7  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.6  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -74,7 +77,7 @@ class b3TestMaterial
 		b3ShapeRenderContext context;
 		b3_vector            lower,upper;
 
-		scene->b3AllocVertices(&context);
+		scene->b3SetupVertexMemory(&context);
 		scene->b3ComputeBounds(&lower,&upper);
 	}
 

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.7  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.6  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -243,7 +246,11 @@ b3_size b3FileMem::b3Seek (
 			break;
 
 		case B3_SEEK_END :
-			new_pos  = (b3_offset)m_BufferSize + offset;
+			new_pos = (b3_offset)m_BufferSize + offset;
+			break;
+
+		default:
+			new_pos = offset;
 			break;
 	}
 

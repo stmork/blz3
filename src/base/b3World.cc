@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2005/01/04 15:13:59  smork
+**      - Changed some data types.
+**
 **      Revision 1.33  2005/01/02 19:15:25  sm
 **      - Fixed signed/unsigned warnings
 **
@@ -724,7 +727,7 @@ b3_world_error b3World::b3Write(b3FileAbstract *file)
 	return error;
 }
 
-b3_size b3World::b3Length()
+b3_u32 b3World::b3Length()
 {
 	return 0;
 }

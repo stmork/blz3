@@ -61,10 +61,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.20  2005/01/04 15:13:59  smork
+**	- Changed some data types.
+**
 **	Revision 1.19  2003/11/23 13:14:13  sm
 **	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
 **	  bit wide integers.
-**
+**	
 **	Revision 1.18  2003/09/28 20:33:20  sm
 **	- Ensure CPU count in image scaling methods.
 **	
@@ -184,7 +187,6 @@ struct b3_rect_info
 
 static b3_pkd_color quad256[512];
 static b3_bool      quadValid = false;
-static b3CPU        cpu;
 
 /*************************************************************************
 **                                                                      **

@@ -1699,9 +1699,18 @@ extern "C" {
 #endif
 
 #ifndef GL_SUN_triangle_list
+#ifndef GL_RESTART_SUN
 #define GL_RESTART_SUN                    0x0001
+#endif
+
+#ifndef GL_REPLACE_MIDDLE_SUN
 #define GL_REPLACE_MIDDLE_SUN             0x0002
+#endif
+
+#ifndef GL_REPLACE_OLDEST_SUN
 #define GL_REPLACE_OLDEST_SUN             0x0003
+#endif
+
 #define GL_TRIANGLE_LIST_SUN              0x81D7
 #define GL_REPLACEMENT_CODE_SUN           0x81D8
 #define GL_REPLACEMENT_CODE_ARRAY_SUN     0x85C0
