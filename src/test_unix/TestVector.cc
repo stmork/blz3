@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/19 15:14:09  sm
+**	- Bound checking in b3VectorXX and b3Array only in debug version.
+**	- Added operator [] in b3VectorXX
+**
 **	Revision 1.1  2002/12/31 15:11:03  sm
 **	- Fixed bound checking.
 **	- Added a vector test module.
-**
+**	
 **
 */
 
@@ -280,7 +284,7 @@ public:
 
 		for (k = 0;k < MAX;k+=4)
 		{
-			m_Array[k] = m_Array[k + 1] + m_Array[k + 2] * m_Array[k].v[X] + m_Array[k + 3] * m_Array[k].v[Y];
+			m_Array[k] = m_Array[k + 1] + m_Array[k + 2] * m_Array[k][X] + m_Array[k + 3] * m_Array[k][Y];
 		}
 		b3Add("linear combination");
 

@@ -103,10 +103,12 @@ public:
 
 	inline T & operator [](const int index)
 	{
+#ifdef _DEBUG
 		if ((index < 0) || (index >= m_Index))
 		{
 			B3_THROW(b3ArrayException,B3_ARRAY_OUT_OF_BOUNDS);
 		}
+#endif
 		return m_Buffer[index];
 	}
 

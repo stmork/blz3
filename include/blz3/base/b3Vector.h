@@ -22,6 +22,7 @@
 
 #include "blz3/b3Types.h"
 #include <float.h>
+#include "blz3/system/b3Exception.h"
 
 enum b3_vector_index
 {
@@ -32,9 +33,17 @@ enum b3_vector_index
 	B3_MAX_DIM
 };
 
+enum b3_vector_error
+{
+	B3_VECTOR_ERROR = -1,
+	B3_VECTOR_OK    =  0,
+	B3_VECTOR_OUT_OF_BOUNDS
+};
+
+typedef b3Exception<b3_vector_error,'VEC'> b3VectorException;
+
 template<class F,int dim> class b3VectorTemplate
 {
-public:
 	F B3_ALIGN_16 v[dim];
 
 public:
@@ -157,6 +166,17 @@ public:
 		result.z = (b3_f64)v[Z];
 		result.pad = 0;
 		return result;
+	}
+
+	inline F operator [](const b3_vector_index index)
+	{
+#ifdef _DEBUG
+		if ((index < 0) || (index >= dim))
+		{
+			B3_THROW(b3VectorException,B3_VECTOR_OUT_OF_BOUNDS);
+		}
+#endif
+		return v[index];
 	}
 
 	inline b3VectorTemplate<F,dim> &operator+=(const b3VectorTemplate<F,dim> &a)

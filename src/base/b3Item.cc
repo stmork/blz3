@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2003/01/19 15:14:08  sm
+**      - Bound checking in b3VectorXX and b3Array only in debug version.
+**      - Added operator [] in b3VectorXX
+**
 **      Revision 1.28  2003/01/04 14:24:29  sm
 **      - Some cleanups inside new b3Vector classes
 **
@@ -783,15 +787,15 @@ void b3Item::b3StoreVector(const b3_vector *vec)
 	m_StoreIndex += 3;
 }
 
-void b3Item::b3StoreVector(const b3Vector32 &vec)
+void b3Item::b3StoreVector(b3Vector32 &vec)
 {
 	b3EnsureStoreBuffer(3);
 
 	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 
-	*ptr++ = vec.v[X];
-	*ptr++ = vec.v[Y];
-	*ptr++ = vec.v[Z];
+	*ptr++ = vec[X];
+	*ptr++ = vec[Y];
+	*ptr++ = vec[Z];
 	
 	m_StoreIndex += 3;
 }
@@ -818,16 +822,16 @@ void b3Item::b3StoreVector4D(const b3_vector4D *vec)
 	m_StoreIndex += 4;
 }
 
-void b3Item::b3StoreVector4D(const b3Vector32 &vec)
+void b3Item::b3StoreVector4D(b3Vector32 &vec)
 {
 	b3EnsureStoreBuffer(4);
 
 	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 	
-	*ptr++ = vec.v[X];
-	*ptr++ = vec.v[Y];
-	*ptr++ = vec.v[Z];
-	*ptr++ = vec.v[W];
+	*ptr++ = vec[X];
+	*ptr++ = vec[Y];
+	*ptr++ = vec[Z];
+	*ptr++ = vec[W];
 	
 	m_StoreIndex += 4;
 }

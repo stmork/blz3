@@ -224,9 +224,9 @@ protected:
 	void     b3StoreBool    (const b3_bool      value);
 	void     b3StorePtr     (const void        *ptr);
 	void     b3StoreVector  (const b3_vector   *vec = null);
-	void     b3StoreVector  (const b3Vector32  &vec);
+	void     b3StoreVector  (      b3Vector32  &vec);
 	void     b3StoreVector4D(const b3_vector4D *vec = null);
-	void     b3StoreVector4D(const b3Vector32  &vec);
+	void     b3StoreVector4D(      b3Vector32  &vec);
 	void     b3StoreMatrix  (const b3_matrix   *mat);
 	void     b3StoreColor   (const b3_color    *col);
 	void     b3StoreSpline  (const b3_spline   *spline);
