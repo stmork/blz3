@@ -2,7 +2,7 @@
 # basic makefile to create Blizzard II
 #
 
-CFLAGS		= $(OFLAGS)
+CFLAGS		= $(DFLAGS)
 CXXFLAGS	= $(CFLAGS)
 
 ifeq ($(HOSTTYPE),m68k-amiga)
@@ -19,7 +19,8 @@ SUB_DIRS +=\
 	image\
 	raytrace\
 	test_unix\
-	OpenGL
+	OpenGL\
+	check
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN)
 	+@for i in $(SUB_DIRS); do \
@@ -33,7 +34,7 @@ clean:
 	find   $(BLZ3_HOME) -name "*.log" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.ncb" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.plg" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*.dep" -exec rm {} \;
+	find   $(BLZ3_HOME) -name  ".dep" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.mak" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*.bak" -exec rm {} \;
 	find   $(BLZ3_HOME) -name "*~"    -exec rm {} \;

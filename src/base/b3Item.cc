@@ -43,6 +43,13 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.3  2001/08/05 19:53:43  sm
 **      - Removing some nasty CR/LF
 **
@@ -297,6 +304,7 @@ void b3Item::b3InitSpline(
 	spline->subdiv      = b3InitInt();
 	spline->control_max = b3InitInt();
 	spline->knot_max    = b3InitInt();
+	spline->offset      = b3InitInt();
 	spline->closed      = b3InitBool();
 	spline->controls    = new_controls;
 	spline->knots       = new_knots;

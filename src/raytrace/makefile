@@ -19,7 +19,7 @@ PRG_SOURCE		= b3Init.cc\
 	b3CSGSphere.cc b3CSGTorus.cc\
 	b3CSGCylinder.cc b3CSGCone.cc b3CSGEllipsoid.cc b3CSGBox.cc\
 	b3Animation.cc b3Light.cc b3Special.cc\
-	b3Scene.cc
+	b3Scene.cc b3Render.cc
 PRG_OBJ			= b3Init.o\
 	b3Condition.o b3Bump.o b3Material.o\
 	b3Shape.o b3BBox.o\
@@ -31,7 +31,7 @@ PRG_OBJ			= b3Init.o\
 	b3CSGSphere.o b3CSGTorus.o\
 	b3CSGCylinder.o b3CSGCone.o b3CSGEllipsoid.o b3CSGBox.o\
 	b3Animation.o b3Light.o b3Special.o\
-	b3Scene.o
+	b3Scene.o b3Render.o
 
 all:	lib
 

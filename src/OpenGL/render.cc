@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.4  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -81,9 +88,10 @@ void SetupRC()
 
 int main(int argc,char *argv[])
 {
-	b3Item   *item;
-	b3Scene  *scene;
-	b3_res    xSize,ySize;
+	b3Item          *item;
+	b3Scene         *scene;
+	b3_res           xSize,ySize;
+	b3RenderContext  context;
 
 	if (argc > 1)
 	{
@@ -98,7 +106,7 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
-			scene->b3AllocVertices();
+			scene->b3AllocVertices(&context);
 			scene->b3GetView(xSize,ySize);
 		}
 

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.2  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -54,14 +61,6 @@ b3SplineArea::b3SplineArea(b3_u32 class_type) : b3SplineShape(sizeof(b3SplineAre
 }
 
 b3SplineArea::b3SplineArea(b3_u32 *src) : b3SplineShape(src)
-{
-}
-
-void b3SplineArea::b3ComputeVertices()
-{
-}
-
-void b3SplineArea::b3ComputeIndices()
 {
 }
 

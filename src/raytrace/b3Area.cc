@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.5  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -80,9 +87,10 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3AllocVertices()
+void b3Area::b3AllocVertices(b3RenderContext *context)
 {
 	Vertices = area_vertices;
+	Normals  = area_normals;
 	Grids    = area_grids;
 	Polygons = area_polygons;
 
@@ -94,6 +102,7 @@ void b3Area::b3AllocVertices()
 void b3Area::b3FreeVertices()
 {
 	Vertices = null;
+	Normals  = null;
 	Grids    = null;
 	Polygons = null;
 	b3Shape::b3FreeVertices();
@@ -102,15 +111,14 @@ void b3Area::b3FreeVertices()
 void b3Area::b3ComputeVertices()
 {
 	GLfloat     *Vector;
-	b3CondLimit  limit;
 	b3_f32       x1,y1,x2,y2;
 
 	Vector = Vertices;
-	b3ComputeBound(&limit);
-	x1     = limit.x1;
-	y1     = limit.y1;
-	x2     = limit.x2;
-	y2     = limit.y2;
+	b3ComputeBound(&Limit);
+	x1     = Limit.x1;
+	y1     = Limit.y1;
+	x2     = Limit.x2;
+	y2     = Limit.y2;
 
 	*Vector++ = (GLfloat)(Base.x + x1 * Dir1.x + y1 * Dir2.x);
 	*Vector++ = (GLfloat)(Base.y + x1 * Dir1.y + y1 * Dir2.y);

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.7  2001/08/06 20:52:56  sm
 **      - Some CR/LF removal
 **
@@ -61,7 +68,7 @@
 *************************************************************************/
 
 #ifdef BLZ3_USE_OPENGL
-static GLubyte indices[12 * 2] =
+static GLushort indices[12 * 2] =
 {
 	0,1,
 	1,2,
@@ -110,41 +117,6 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 		b3InitString(BoxURL, B3_BOXSTRINGLEN);
 	}
 
-#ifdef BLZ3_USE_OPENGL
-	b3_index        i = 0;
-
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z;
-
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z + Size.z;
-
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z + Size.z;
-
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z;
-
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z;
-
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z + Size.z;
-
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z + Size.z;
-
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z;
-#endif
 }
 
 void b3BBox::b3Dump(b3_count level)
@@ -198,8 +170,7 @@ void b3BBox::b3Draw()
 	b3Shape        *shape;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE,indices);
+	b3RenderObject::b3Draw();
 #endif
 	B3_FOR_BASE(&heads[1],item)
 	{
@@ -214,24 +185,99 @@ void b3BBox::b3Draw()
 	}
 }
 
-void b3BBox::b3AllocVertices()
+void b3BBox::b3AllocVertices(b3RenderContext *context)
 {
 	b3Item         *item;
 	b3BBox         *bbox;
 	b3Shape        *shape;
 
+	VertexCount =  8;
+	GridCount   = 12;
+	PolyCount   =  0;
+
+	Vertices = vertices;
+	Normals  = null;
+	Grids    = indices;
+	Polygons = null;
+
 	B3_FOR_BASE(&heads[1],item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3AllocVertices();
+		bbox->b3AllocVertices(context);
 
 	}
 	B3_FOR_BASE(&heads[0],item)
 	{
 		shape = (b3Shape *)item;
-		shape->b3AllocVertices();
+		shape->b3AllocVertices(context);
 	}
 }
+
+void b3BBox::b3FreeVertices()
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3Shape        *shape;
+
+	Vertices = null;
+	Grids    = null;
+	Polygons = null;
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3FreeVertices();
+
+	}
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3FreeVertices();
+	}
+
+	b3RenderObject::b3FreeVertices();
+}
+
+void b3BBox::b3ComputeVertices()
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_index        i = 0;
+
+	vertices[i++] = Base.x;
+	vertices[i++] = Base.y;
+	vertices[i++] = Base.z;
+
+	vertices[i++] = Base.x;
+	vertices[i++] = Base.y;
+	vertices[i++] = Base.z + Size.z;
+
+	vertices[i++] = Base.x + Size.x;
+	vertices[i++] = Base.y;
+	vertices[i++] = Base.z + Size.z;
+
+	vertices[i++] = Base.x + Size.x;
+	vertices[i++] = Base.y;
+	vertices[i++] = Base.z;
+
+	vertices[i++] = Base.x;
+	vertices[i++] = Base.y + Size.y;
+	vertices[i++] = Base.z;
+
+	vertices[i++] = Base.x;
+	vertices[i++] = Base.y + Size.y;
+	vertices[i++] = Base.z + Size.z;
+
+	vertices[i++] = Base.x + Size.x;
+	vertices[i++] = Base.y + Size.y;
+	vertices[i++] = Base.z + Size.z;
+
+	vertices[i++] = Base.x + Size.x;
+	vertices[i++] = Base.y + Size.y;
+	vertices[i++] = Base.z;
+#endif
+	Computed = true;
+}
+
 
 void b3Scene::b3Reorg()
 {
@@ -272,7 +318,7 @@ void b3Scene::b3Draw()
 #endif
 }
 
-void b3Scene::b3AllocVertices()
+void b3Scene::b3AllocVertices(b3RenderContext *context)
 {
 	b3Item  *item;
 	b3BBox  *bbox;
@@ -280,6 +326,7 @@ void b3Scene::b3AllocVertices()
 	B3_FOR_BASE(&heads[0],item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3AllocVertices();
+		bbox->b3AllocVertices(context);
 	}
 }
+ 

@@ -35,10 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/08/08 20:12:59  sm
+**	- Fixing some makefiles
+**	- introducing check/BlzDump (BlzDump moved from tools)
+**	- Some further line drawing added
+**	- b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**	  b3RenderObject.
+**
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
@@ -137,6 +144,7 @@ b3_bool b3Mem::b3Free()
 }
 
 // This routine is like "free()"
+// Return true if ptr was found!
 b3_bool b3Mem::b3Free(const void *ptr)
 {
 	register struct b3MemNode *act,*next;

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
 **      Revision 1.8  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -87,37 +94,19 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3SplineRing::b3Init,    &b3SplineRing::b3Init,    SPLINES_RING);
 	b3Item::b3Register(&b3Shape::b3Init,         &b3Shape::b3Init,         SHUTUP);
 	b3Item::b3Register(&b3CSGSphere::b3Init,     &b3CSGSphere::b3Init,     CSG_SPHERE);
-	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_CYLINDER);
-	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_CONE);
-	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_ELLIPSOID);
-	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_BOX);
+	b3Item::b3Register(&b3CSGCylinder::b3Init,   &b3CSGCylinder::b3Init,   CSG_CYLINDER);
+	b3Item::b3Register(&b3CSGCone::b3Init,       &b3CSGCone::b3Init,       CSG_CONE);
+	b3Item::b3Register(&b3CSGEllipsoid::b3Init,  &b3CSGEllipsoid::b3Init,  CSG_ELLIPSOID);
+	b3Item::b3Register(&b3CSGBox::b3Init,        &b3CSGBox::b3Init,        CSG_BOX);
 	b3Item::b3Register(&b3CSGTorus::b3Init,      &b3CSGTorus::b3Init,      CSG_TORUS);
 }
 
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
-#ifdef BLZ3_USE_OPENGL
-	Vertices = null;
-	Grids    = null;
-	Polygons = null;
-	Computed = false;
-#endif
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
-#ifdef BLZ3_USE_OPENGL
-	Vertices = null;
-	Grids    = null;
-	Polygons = null;
-	Computed = false;
-#endif
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -127,16 +116,6 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitVector(); // This is Polar.ObjectPolar
 	b3InitVector(); // This is Polar.BoxPolar
 	b3InitNOP();    // This is Custom
-
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
-#ifdef BLZ3_USE_OPENGL
-	Vertices = null;
-	Grids    = null;
-	Polygons = null;
-	Computed = false;
-#endif
 }
 
 void b3Shape::b3ComputeBound(b3CondLimit *limit)
@@ -156,63 +135,8 @@ void b3Shape::b3ComputeBound(b3CondLimit *limit)
 	}
 }
 
-void b3Shape::b3AllocVertices()
-{
-#ifdef BLZ3_USE_OPENGL
-	Vertices =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
-	Grids    = (GLushort *)b3Alloc(GridCount   * 2 * sizeof(GLushort));
-	Polygons = (GLushort *)b3Alloc(PolyCount   * 3 * sizeof(GLushort));
-#endif
-}
-
-void b3Shape::b3FreeVertices()
-{
-#ifdef BLZ3_USE_OPENGL
-	if (Vertices != null)
-	{
-		b3Free(Vertices);
-		Vertices = null;
-	}
-	if (Grids != null)
-	{
-		b3Free(Grids);
-		Grids = null;
-	}
-	if (Polygons != null)
-	{
-		b3Free(Polygons);
-		Polygons = null;
-	}
-#endif
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
-}
-
-void b3Shape::b3ComputeVertices()
-{
-}
-
-void b3Shape::b3ComputeIndices()
-{
-}
-
 void b3Shape::b3Intersect()
 {
-}
-
-void b3Shape::b3Draw()
-{
-#ifdef BLZ3_USE_OPENGL
-	if (!Computed)
-	{
-			b3ComputeVertices();
-			b3ComputeIndices();
-			Computed = true;
-	}
-	glVertexPointer(3, GL_FLOAT, 0, Vertices);
-	glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,Grids);
-#endif
 }
 
 
@@ -277,6 +201,7 @@ b3SplineShape::b3SplineShape(b3_u32 class_type) : b3Shape(sizeof(b3SplineShape),
 b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 {				 
 	b3_index i;
+	b3_count control_count;
 
 	b3InitVector(&Axis.pos);
 	b3InitVector(&Axis.dir);
@@ -286,6 +211,86 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 	// FIX ME: Is the order right?
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[0][i] = b3InitFloat();
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
+
+	control_count = Spline[0].control_max * Spline[1].control_max;
+	Controls = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
+	Spline[0].controls =
+	Spline[1].controls = Controls;
+	for (i = 0;i < control_count;i++) b3InitVector(&Controls[i]);
+}
+
+void b3SplineShape::b3GetCount(
+	b3RenderContext *context,
+	b3_count        &vertCount,
+	b3_count        &gridCount,
+	b3_count        &polyCount)
+{
+	Between   = context->b3GetSplineAux();
+	vertCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
+}
+
+void b3SplineShape::b3ComputeVertices()
+{
+	b3_vector *Vector;
+	b3_spline *xSpline,*ySpline;
+	b3_count   CurveNum,Points;
+	b3_index   x,y;
+	b3_spline  MySpline;
+
+	Points  = 0;
+	Vector  = (b3_vector *)Vertices;
+
+	xSpline           = &Spline[0];
+	ySpline           = &Spline[1];
+
+	xSpline->controls =  Controls;
+	ySpline->controls =  Controls;
+	xSpline->knots    = &Knots[0][0];
+	ySpline->knots    = &Knots[1][0];
+
+
+		/* building horizontal splines */
+		/* first create controls for segments of vertical spline... */
+	b3DeBoorSurfaceControl (xSpline,ySpline,Between);
+	MySpline          = *xSpline;
+	MySpline.offset   =  CurveNum = B3_BSPLINE_SEGMENTKNOTS(ySpline);
+	MySpline.controls =  Between;
+
+		/* ... then create real horizontal spline curve. */
+	for (y = 0;y < CurveNum;y++)
+	{
+		Points  = b3DeBoor (&MySpline,Vector,y);
+		Vector += Points;
+		Points += Points;
+	}
+
+	// building vertical splines
+	// first create controls for segments of horizontal spline...
+	b3DeBoorSurfaceControl (ySpline,xSpline,Between);
+	MySpline          = *ySpline;
+	MySpline.offset   =  CurveNum = B3_BSPLINE_SEGMENTKNOTS(xSpline);
+	MySpline.controls =  Between;
+
+		/* ... then create real vertical spline curve. */
+	for (x = 0;x < CurveNum;x++)
+	{
+		Points  = b3DeBoor (&MySpline,Vector,x);
+		Vector += Points;
+		Points += Points;
+	}
+
+	xSize  = B3_BSPLINE_SEGMENTS(xSpline);
+	ySize  = B3_BSPLINE_SEGMENTS(ySpline);
+
+	/*
+		PrintF ("Points: %4ld\n",Points);
+		PrintF ("xSize:  %4ld\n",xSize);
+		PrintF ("ySize:  %4ld\n",ySize);
+	*/
+}
+
+void b3SplineShape::b3ComputeIndices()
+{
 }
 
 
