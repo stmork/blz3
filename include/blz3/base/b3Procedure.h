@@ -1,8 +1,27 @@
+/*
+**
+**	$Filename:	b3Procedure.h $
+**	$Release:	Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - some procedure proto types for pseudo random noise
+**	               functions.
+**
+**	(C) Copyright 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #ifndef B3_BASE_NOISE_H
 #define B3_BASE_NOISE_H
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Mem.h"
+#include "blz3/base/b3Exception.h"
 
 typedef unsigned char b3_noisetype;
 
@@ -13,22 +32,7 @@ enum b3_noise_error
 	B3_NOISE_MEMORY
 };
 
-class b3NoiseException
-{
-protected:
-	b3_noise_error error;
-
-public:
-	b3NoiseException(b3_noise_error error = B3_NOISE_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_noise_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_noise_error> b3NoiseException;
 
 class b3Noise : public b3Mem
 {

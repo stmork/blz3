@@ -19,6 +19,7 @@
 #define B3_BASE_ARRAY_H
 
 #include "blz3/system/b3Mem.h"
+#include "blz3/base/b3Exception.h"
 
 #define B3_ARRAY_DEFAULT_INCREMENT 128
 
@@ -30,22 +31,7 @@ enum b3_array_error
 	B3_ARRAY_OUT_OF_BOUNDS
 };
 
-class b3ArrayException
-{
-protected:
-	b3_array_error error;
-
-public:
-	b3ArrayException(b3_array_error error)
-	{
-		this->error = error;
-	}
-
-	b3_array_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_array_error> b3ArrayException;
 
 template <class T> class b3Array : protected b3Mem
 {

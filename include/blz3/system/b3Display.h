@@ -26,6 +26,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Mem.h"
+#include "blz3/base/b3Exception.h"
 #include "blz3/base/b3List.h"
 #include "blz3/image/b3Tx.h"
 
@@ -44,22 +45,7 @@ typedef enum
 	B3_DISPLAY_OPEN
 } b3_display_error;
 
-class b3DisplayException
-{
-protected:
-	b3_display_error error;
-
-public:
-	b3DisplayException(b3_display_error error)
-	{
-		this->error = error;
-	}
-
-	b3_display_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_display_error> b3DisplayException;
 
 class b3Row;
 

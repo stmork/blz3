@@ -19,6 +19,7 @@
 #define B3_BASE_FILEABSTRACT_H
 
 #include "blz3/b3Types.h"
+#include "blz3/base/b3Exception.h"
 
 /*************************************************************************
 **                                                                      **
@@ -94,22 +95,7 @@ typedef enum
 	B3_FILE_NOT_OPEN
 } b3_file_error;
 
-class b3FileException
-{
-protected:
-	b3_file_error error;
-
-public:
-	b3FileException(b3_file_error error = B3_FILE_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_file_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_file_error> b3FileException;
 
 /*************************************************************************
 **                                                                      **

@@ -19,6 +19,7 @@
 #define B3_SYSTEM_DATE_H
 
 #include <time.h>
+#include "blz3/base/b3Exception.h"
 
 // week days
 #define B3_MONDAY     1
@@ -55,22 +56,7 @@ typedef enum
 	B3_DATE_ILLEGAL_MODE
 } b3_date_error;
 
-class b3DateException
-{
-protected:
-	b3_date_error error;
-
-public:
-	b3DateException(b3_date_error error = B3_DATE_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_date_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_date_error> b3DateException;
 
 class b3Date
 {

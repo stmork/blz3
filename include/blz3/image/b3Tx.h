@@ -22,6 +22,7 @@
 #include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3FileAbstract.h"
+#include "blz3/base/b3Exception.h"
 
 #include "tiff.h"
 #include "tiffio.h"
@@ -177,22 +178,7 @@ enum b3_tx_error
 	B3_TX_UNKNOWN_FILETYPE
 };
 
-class b3TxException
-{
-protected:
-	b3_tx_error error;
-
-public:
-	b3TxException(b3_tx_error error)
-	{
-		this->error = error;
-	}
-
-	b3_tx_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_tx_error> b3TxException;
 
 /*************************************************************************
 **                                                                      **

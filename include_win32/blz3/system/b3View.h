@@ -20,6 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/base/b3Exception.h"
 #include "blz3/image/b3Tx.h"
 
 /*************************************************************************
@@ -65,22 +66,7 @@ typedef enum
 	B3_VIEW_PALETTE
 } b3_view_error;
 
-class b3ViewException
-{
-protected:
-	b3_view_error error;
-
-public:
-	b3ViewException(b3_view_error error)
-	{
-		this->error = error;
-	}
-
-	b3_view_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_view_error> b3ViewException;
 
 /*************************************************************************
 **                                                                      **

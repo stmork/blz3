@@ -20,6 +20,7 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Thread.h"
+#include "blz3/base/b3Exception.h"
 
 struct b3MemNode
 {
@@ -37,22 +38,7 @@ typedef enum
 	B3_MEM_UNKNOWN_PTR
 } b3_mem_error;
 
-class b3MemException
-{
-protected:
-	b3_mem_error error;
-	
-public:
-	b3MemException(b3_mem_error error = B3_MEM_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_mem_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_mem_error> b3MemException;
 
 class b3Mem : protected b3MemNode, protected b3MemAccess
 {

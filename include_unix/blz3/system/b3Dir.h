@@ -20,6 +20,7 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Mem.h"
+#include "blz3/base/b3Exception.h"
 
 #include <string.h>
 #include <unistd.h>
@@ -43,22 +44,7 @@ typedef enum
 	B3_DIR_NOT_FOUND
 } b3_dir_error;
 
-class b3DirException
-{
-protected:
-	b3_dir_error error;
-
-public:
-	b3DirException(b3_dir_error error = B3_DIR_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_dir_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_dir_error> b3DirException;
 
 class b3Path
 {

@@ -5,7 +5,7 @@
 # Optionen
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-LDLIBS			= $(LIB_OGL3) $(LIB_B3) $(LIB_X3) $(LIB_S3)
+LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
 PRGS			= simple render matrix_test
 SIMPLE_OBJ		= simple.o

@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3World.h $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3World.h $
+**	$Release:       Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - world loading
+**	Blizzard III - world loading
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -27,6 +27,7 @@
 *************************************************************************/
 
 #include "blz3/b3Types.h"
+#include "blz3/base/b3Exception.h"
 #include "blz3/base/b3FileAbstract.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
@@ -93,22 +94,7 @@ typedef enum
 	B3_WORLD_CLASSTYPE_UNKNOWN
 } b3_world_error;
 
-class b3WorldException
-{
-protected:
-	b3_world_error error;
-
-public:
-	b3WorldException(b3_world_error error = B3_WORLD_ERROR)
-	{
-		this->error = error;
-	}
-
-	b3_world_error b3GetError()
-	{
-		return error;
-	}
-};
+typedef b3Exception<b3_world_error> b3WorldException; 
 
 /*************************************************************************
 **                                                                      **
