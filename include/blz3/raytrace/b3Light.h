@@ -73,6 +73,7 @@ public:
 
 	static void     b3Register();
 	       void     b3Write();
+		   void     b3Dump(b3_count level);
 	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface,b3Material *material);
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();

@@ -60,11 +60,14 @@
 
 /*
 **	$Log$
+**	Revision 1.99  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.98  2004/05/12 16:28:16  sm
 **	- Beautified bump icons
 **	- Missing return type for b3Material::b3Mix added
 **	- Fixed bug 23 concerning camera title cropping.
-**
+**	
 **	Revision 1.97  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
@@ -740,6 +743,10 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		b3Prepare(true,false,true);
 		SetModifiedFlag(FALSE);
 		result = TRUE;
+
+#ifdef _DEBUG
+		m_Scene->b3Dump(1);
+#endif
 	}
 	catch(b3ExceptionBase &e)
 	{
@@ -823,7 +830,11 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 
 		// Write!
 		m_DlgHierarchy->b3GetData();
+		m_Scene->b3Recount();
 		m_Scene->b3SetFilename(lpszPathName);
+#ifdef _DEBUG
+		m_Scene->b3Dump(1);
+#endif
 		m_World.b3Write(filename);
 
 		// ...and rename to original name
@@ -1728,7 +1739,7 @@ void CAppLinesDoc::b3FinishEdit(
 		base = m_Scene->b3FindBBoxHead(original);
 		base->b3Insert(original,bbox);
 		base->b3Remove(original);
-		b3BBox::b3Recount(base);
+		m_Scene->b3Recount();
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}

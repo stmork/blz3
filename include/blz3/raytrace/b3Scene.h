@@ -151,6 +151,7 @@ public:
 			char           *b3GetFilename();
 			void            b3SetFilename(const char *filename);
 			void            b3SetTexture(const char *name);
+			void            b3Recount();
 			void            b3Update();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);

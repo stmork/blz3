@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.9  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
-**
+**	
 **	Revision 1.8  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
@@ -133,7 +136,7 @@ void b3OpObjectCreate::b3Undo()
 void b3OpObjectCreate::b3Redo()
 {
 	m_Base->b3Insert(m_InsertAfter,m_BBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
@@ -282,7 +285,7 @@ void b3OpObjectLoad::b3Delete()
 void b3OpObjectLoad::b3Do()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;
@@ -355,7 +358,7 @@ void b3OpObjectReplace::b3Do()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
 	m_Base->b3Remove(m_Selected);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;
@@ -438,7 +441,7 @@ void b3OpObjectLoadCob::b3Delete()
 void b3OpObjectLoadCob::b3Do()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;
@@ -516,7 +519,7 @@ void b3OpObjectLoadTgf::b3Delete()
 void b3OpObjectLoadTgf::b3Do()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 	m_PrepareChangedStructure = true;

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.91  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.90  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
-**
+**	
 **	Revision 1.89  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
@@ -637,7 +640,7 @@ void b3BBox::b3Dump(b3_count level)
 {
 	b3Item *bbox;
 
-	level = b3GetClassType() & 0xffff;
+	level = b3GetType();
 	b3DumpSpace(level);
 	b3PrintF(B3LOG_NORMAL,"Object %s (level %d)\n",m_BoxName,level);
 

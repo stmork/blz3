@@ -40,12 +40,15 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.32  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
 **	  editor (= transformed history) and object editor
 **	  (= original form)
-**
+**	
 **	Revision 1.31  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
 **	
@@ -351,7 +354,7 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 			m_World.b3Read(lpszPathName);
 			first  = m_World.b3GetFirst();
-			level  = first->b3GetClassType() & 0xffff;
+			level  = first->b3GetType();
 			b3BBox::b3Reorg(m_World.b3GetHead(),&base,level,1);
 			b3SetBBox((b3BBox *)first);
 		}
@@ -536,7 +539,7 @@ void CAppObjectDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
 	dstBase->b3Append(srcBBox);
 	b3BBox::b3Recount(
 		m_BBox->b3GetBBoxHead(),
-		m_BBox->b3GetClassType() & 0xffff);
+		m_BBox->b3GetType());
 }
 
 b3_bool CAppObjectDoc::b3IsLinesDoc(CAppLinesDoc *LinesDoc)

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.3  2003/01/12 10:26:53  sm
 **	- Undo/Redo of
 **	  o Cut & paste
 **	  o Drag & drop
-**
+**	
 **	Revision 1.2  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
@@ -65,7 +68,7 @@ b3OpDrop::b3OpDrop(b3Scene *scene,b3BBox *src,b3BBox *dstBBox)
 	m_DstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
 
 	b3Initialize();
-	m_PrepareGeometry = true;
+	m_PrepareGeometry = false;
 	m_PrepareChangedStructure = true;
 }
 
@@ -79,8 +82,8 @@ void b3OpDrop::b3Undo()
 	m_SrcBase->b3Insert(m_Prev,m_SrcBBox);
 
 	// Mark every ancestor after relink as changed
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_SrcBBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 }
 
 void b3OpDrop::b3Redo()
@@ -93,8 +96,8 @@ void b3OpDrop::b3Redo()
 	m_DstBase->b3Append(m_SrcBBox);
 
 	// Mark every ancestor after relink as changed
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_SrcBBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 }
 
 /*************************************************************************
@@ -201,7 +204,7 @@ void b3OpPaste::b3Delete()
 void b3OpPaste::b3Do()
 {
 	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_InsertAfter);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3Recount();
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 }

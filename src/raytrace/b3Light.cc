@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2004/05/19 15:35:03  sm
+**      - Hope of having fixed ticket no. 13.
+**
 **      Revision 1.39  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -399,6 +402,12 @@ b3_bool b3Light::b3Prepare()
 		}
 	}
 	return true;
+}
+
+void b3Light::b3Dump(b3_count level)
+{
+	b3DumpSpace(level);
+	b3PrintF(B3LOG_NORMAL,"Light %s, switched %s\n",b3GetName(),b3IsActive() ? "on" : "off");
 }
 
 b3_bool b3Light::b3IsActive()

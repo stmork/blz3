@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2004/05/19 15:35:03  sm
+**	- Hope of having fixed ticket no. 13.
+**
 **	Revision 1.60  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.59  2004/05/13 16:17:26  sm
 **	- Added background clouds as special item.
 **	
@@ -461,6 +464,11 @@ void b3Scene::b3SetFilename(const char *filename)
 void b3Scene::b3SetTexture(const char *name)
 {
 	b3Item::b3SetString(m_TextureName,sizeof(m_TextureName),name);
+}
+
+void b3Scene::b3Recount()
+{
+	b3BBox::b3Recount(b3GetBBoxHead());
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
