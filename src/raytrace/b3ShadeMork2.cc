@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/28 20:33:05  sm
+**	- Backported Mork shader
+**
 **	Revision 1.1  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
-**
+**	
 **
 */
 
@@ -170,11 +173,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	}
 
 	// Reflection
-#if 0
-	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
-#else
 	if (refl > 0)
-#endif
 	{
 		b3Shade(&surface.refl_ray,depth_count + 1);
 		result += (surface.refl_ray.color * refl);

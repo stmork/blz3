@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2004/05/28 20:33:05  sm
+**	- Backported Mork shader
+**
 **	Revision 1.40  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
-**
+**	
 **	Revision 1.35  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
@@ -231,13 +234,11 @@ void b3ShaderMork::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3_f64   ShapeAngle,Factor;
-	b3Color  filter;
+	b3_f64   ShapeAngle;
+	b3_f32   Factor;
 
 	// Real absorption
 	result += (surface->m_Diffuse * m_ShadowFactor);
-
-	filter.b3Init();
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -248,27 +249,22 @@ void b3ShaderMork::b3ShadeLight(
 			surface->incoming->normal.y * Jit->dir.y +
 			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+			b3_f64 lambda   = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
-			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
+			if ((spec_exp < 100000) && (lambda > 0))
 			{
-				Factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
+				Factor = b3Math::b3FastPow((lambda + 1.0) * 0.5, spec_exp) * Jit->m_LightFrac;
 				surface->m_SpecularSum += (light->m_Color * Factor);
 			}
-		}
-		else
-		{
-			ShapeAngle = 0;
-		}
 
-		// surface illumination (diffuse color)
-		if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
-		{
-			filter = light->m_Color * Factor;
+			// surface illumination (diffuse color)
+			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
+			{
+				result += (surface->m_Diffuse * light->m_Color * Factor);
+			}
 		}
 	}
-
-	result += (surface->m_Diffuse * filter);
 }
 
 void b3ShaderMork::b3ShadeSurface(
@@ -303,11 +299,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Reflection
-#if 0
 	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
-#else
-	if (refl > 0)
-#endif
 	{
 		b3Shade(&surface.refl_ray,depth_count + 1);
 		result += (surface.refl_ray.color * refl);
