@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/10 17:05:37  sm
+**	- Added texture material dialog. Now we have completed all
+**	  material dialogs. I Continue completing bump mapping dialogs.
+**
 **	Revision 1.1  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **
 */
 
@@ -134,16 +138,37 @@ void b3ConditionControl::b3SetPos(
 	b3_bool absolute,
 	b3_f64  pos)
 {
+	b3_f64 min,max;
+
+	switch (m_Info->unit)
+	{
+	case B3_COND_CTRL_START:
+	case B3_COND_CTRL_END:
+		min = m_Info->min;
+		max = m_Info->max;
+		break;
+
+	case B3_COND_CTRL_DIR:
+		min =  -10;
+		max =   10;
+		break;
+
+	default:
+		min = -100;
+		max =  100;
+		break;
+	}
+
 	if (absolute)
 	{
-		m_Ctrl->b3SetRange(m_Info->min,m_Info->max);
+		m_Ctrl->b3SetRange(min,max);
 		m_Ctrl->b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
 		m_Ctrl->b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
 		m_Ctrl->b3SetPos(pos);
 	}
 	else
 	{
-		m_Ctrl->b3SetRange(m_Info->min * m_Info->factor,m_Info->max * m_Info->factor);
+		m_Ctrl->b3SetRange(min * m_Info->factor,max * m_Info->factor);
 		m_Ctrl->b3SetDigits(0,m_Digits[m_Info->unit]);
 		m_Ctrl->b3SetIncrement(m_Increments[m_Info->unit]);
 		m_Ctrl->b3SetPos(pos * m_Info->factor);
@@ -152,8 +177,16 @@ void b3ConditionControl::b3SetPos(
 
 b3_f64 b3ConditionControl::b3GetPos(b3_bool absolute)
 {
-	b3_f64 pos = m_Ctrl->b3GetPos();
+	b3_f64 pos;
 
-	return absolute ? pos : pos / m_Info->factor;
+	if (absolute)
+	{
+		pos = m_Ctrl->b3GetPos();
+	}
+	else
+	{
+		pos = m_Ctrl->b3GetPos() / m_Info->factor;
+	}
+
+	return pos;
 }
-

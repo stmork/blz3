@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/10 17:05:37  sm
+**	- Added texture material dialog. Now we have completed all
+**	  material dialogs. I Continue completing bump mapping dialogs.
+**
 **	Revision 1.4  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -97,10 +101,10 @@ void CDlgMatWrapTexture::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_X_END_SPIN, m_xEndCtrl);
 	DDX_Control(pDX, IDC_Y_START_SPIN, m_yStartCtrl);
 	DDX_Control(pDX, IDC_Y_END_SPIN, m_yEndCtrl);
-	DDX_Text(pDX, IDC_Y_END_LEGEND, m_yEndLegend);
-	DDX_Text(pDX, IDC_Y_START_LEGEND, m_yStartLegend);
-	DDX_Text(pDX, IDC_X_END_LEGEND, m_xEndLegend);
 	DDX_Text(pDX, IDC_X_START_LEGEND, m_xStartLegend);
+	DDX_Text(pDX, IDC_X_END_LEGEND, m_xEndLegend);
+	DDX_Text(pDX, IDC_Y_START_LEGEND, m_yStartLegend);
+	DDX_Text(pDX, IDC_Y_END_LEGEND, m_yEndLegend);
 	DDX_Radio(pDX, IDC_RELATIVE, m_Unit);
 	DDX_Control(pDX, IDC_REFLECTANCE_SPIN, m_ReflectionCtrl);
 	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
@@ -129,10 +133,10 @@ BEGIN_MESSAGE_MAP(CDlgMatWrapTexture, CB3SimplePreviewDialog)
 	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnEdit)
 	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnEdit)
 	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_X_START, OnSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_X_END, OnSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_START, OnSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_END, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_X_START_SPIN, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_X_END_SPIN, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_START_SPIN, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_END_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnSpin)

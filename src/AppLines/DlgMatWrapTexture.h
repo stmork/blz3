@@ -47,7 +47,6 @@ class CDlgMatWrapTexture : public CB3SimplePreviewDialog
 	b3ConditionControl m_yStart;
 	b3ConditionControl m_yEnd;
 
-
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);

@@ -25,7 +25,9 @@
 //
 
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/raytrace/b3Material.h"
+#include "b3ConditionControl.h"
 #include "b3SimplePreviewDialog.h"
 #include "b3ShowRaytrace.h"
 
@@ -34,23 +36,44 @@
 
 class CDlgMatTexture : public CB3SimplePreviewDialog
 {
+	b3_stencil_bound   m_Bound;
+	b3BBox            *m_BBox;
+	b3Shape           *m_Shape;
 	b3Scene           *m_MatScene;
 	b3Base<b3Item>    *m_MatHead;
 	b3MatTexture      *m_Material;
+
+	b3ConditionControl m_xStart;
+	b3ConditionControl m_xScale;
+	b3ConditionControl m_yStart;
+	b3ConditionControl m_yScale;
 
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
-	CDlgMatTexture(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgMatTexture(CAppObjectDoc *pDoc,b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatTexture();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatTexture)
 	enum { IDD = IDD_MAT_TEXTURE };
+	CB3FloatSpinButtonCtrl	m_xStartCtrl;
+	CB3FloatSpinButtonCtrl	m_xScaleCtrl;
+	CB3IntSpinButtonCtrl	m_xTimesCtrl;
+	CB3FloatSpinButtonCtrl	m_yStartCtrl;
+	CB3FloatSpinButtonCtrl	m_yScaleCtrl;
+	CB3IntSpinButtonCtrl	m_yTimesCtrl;
+	CString	m_yScaleLegend;
+	CString	m_yStartLegend;
+	CString	m_xScaleLegend;
+	CString	m_xStartLegend;
+	int		m_Unit;
 	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
 	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
 	CB3FloatSpinButtonCtrl	m_IorCtrl;
 	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
+	CB3ShowImage	m_PreviewTexture;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
@@ -67,7 +90,10 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatTexture)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
+	afx_msg void OnUnitChanged();
+	afx_msg void OnLimitChanged();
+	afx_msg void OnChangeTexturePath();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

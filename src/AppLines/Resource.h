@@ -358,6 +358,7 @@
 #define IDC_DIR3_Z                      32096
 #define IDC_DIRECTION                   32097
 #define IDC_EDIT1                       32098
+#define IDC_X_TIMES                     32098
 #define IDC_EDIT_AMPLITUDE              32099
 #define IDC_EDIT_ANGULAR_WOBBLE         32100
 #define IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY 32101
@@ -647,9 +648,18 @@
 #define IDC_LEGEND_ZROT                 32383
 #define IDC_SCALE_BOX_POLAR             32383
 #define IDC_SCALE_IPOINT                32384
+#define IDC_X_TIMES_SPIN                32384
 #define IDC_SCALE_POLAR                 32385
+#define IDC_Y_TIMES                     32385
 #define IDC_SCALE_OBJECT_POLAR          32386
+#define IDC_Y_TIMES_SPIN                32386
 #define IDC_SCALE_BBOX_ORIGNAL          32387
+#define IDC_X_SCALE                     32387
+#define IDC_Y_SCALE                     32388
+#define IDC_X_SCALE_SPIN                32389
+#define IDC_Y_SCALE_SPIN                32390
+#define IDC_X_SCALE_LEGEND              32391
+#define IDC_Y_SCALE_LEGEND              32392
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -858,7 +868,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10124
-#define _APS_NEXT_CONTROL_VALUE         32384
+#define _APS_NEXT_CONTROL_VALUE         32393
 #define _APS_NEXT_SYMED_VALUE           60186
 #endif
 #endif

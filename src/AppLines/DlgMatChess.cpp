@@ -34,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/10 17:05:37  sm
+**	- Added texture material dialog. Now we have completed all
+**	  material dialogs. I Continue completing bump mapping dialogs.
+**
 **	Revision 1.6  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.5  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -82,9 +86,9 @@ CDlgMatChess::CDlgMatChess(b3Item *item,CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgMatChess)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	
-	m_xTimesCtrl.b3SetRange(1,10);
-	m_yTimesCtrl.b3SetRange(1,10);
+
+	m_xTimesCtrl.b3SetRange(1,100);
+	m_yTimesCtrl.b3SetRange(1,100);
 }
 
 CDlgMatChess::~CDlgMatChess()
