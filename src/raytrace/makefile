@@ -47,6 +47,7 @@ PRG_SOURCE		=\
 	b3SplineRot.cc\
 	b3SplineShape.cc\
 	b3Torus.cc\
+	b3Triangles.cc\
 	b3TriangleShape.cc
 
 PRG_OBJ			=\
@@ -88,6 +89,7 @@ PRG_OBJ			=\
 	b3SplineRot.o\
 	b3SplineShape.o\
 	b3Torus.o\
+	b3Triangles.o\
 	b3TriangleShape.o
 
 all:	lib

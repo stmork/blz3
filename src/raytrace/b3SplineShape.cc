@@ -32,6 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/10/17 14:46:02  sm
+**      - Adding triangle support.
+**      - Renaming b3TriangleShape into b3Triangles and introducing
+**        new b3TriangleShape as base class. This results in
+**        source file renaming, too.
+**      - Fixing soft shadow bug.
+**      - Only scene loading background image when activated.
+**      - Fixing LDC spline initialization.
+**      - Converting Windows paths into right paths on Un*x
+**
 **      Revision 1.13  2001/10/11 16:06:33  sm
 **      - Cleaning up b3BSpline with including isolated methods.
 **      - Cleaning up endian conversion routines and collecting into
@@ -97,15 +107,16 @@
 *************************************************************************/
 
 b3SplineCurve::b3SplineCurve(b3_size class_size,b3_u32 class_type) :
-	b3Shape(class_size, class_type)
+	b3TriangleShape(class_size, class_type)
 {
 }
 
-b3SplineCurve::b3SplineCurve(b3_u32 class_type) : b3Shape(sizeof(b3SplineCurve), class_type)
+b3SplineCurve::b3SplineCurve(b3_u32 class_type) :
+	b3TriangleShape(sizeof(b3SplineCurve), class_type)
 {
 }
 
-b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3Shape(src)
+b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
 {
 	b3_index i;
 
@@ -147,15 +158,15 @@ void b3SplineCurve::b3Transform(b3_matrix *transformation)
 
 
 b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) :
-	b3Shape(class_size, class_type)
+	b3TriangleShape(class_size, class_type)
 {
 }
 
-b3SplineShape::b3SplineShape(b3_u32 class_type) : b3Shape(sizeof(b3SplineShape), class_type)
+b3SplineShape::b3SplineShape(b3_u32 class_type) : b3TriangleShape(sizeof(b3SplineShape), class_type)
 {
 }
 
-b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
+b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 {				 
 	b3_index i;
 	b3_count control_count;

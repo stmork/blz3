@@ -237,6 +237,10 @@ SOURCE=.\b3Torus.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Triangles.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3TriangleShape.cc
 # End Source File
 # End Group

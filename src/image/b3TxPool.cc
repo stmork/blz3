@@ -37,10 +37,20 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.9  2001/10/15 14:45:08  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.8  2001/10/13 15:48:53  sm
 **	- Minor image loading corrections
 **	
@@ -333,33 +343,33 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 
 	if ((Name != null) && (strlen(Name) > 0))
 	{
-		try
-		{
-			strcpy(FullName,Name);
-			b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(char *)FullName);
-			Data = TextureFile.b3ReadBuffer(FullName,FileSize);
-		}
-		catch(...)
+		b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(char *)Name);
+		if (b3Dir::b3Exists(Name) != B3_TYPE_FILE)
 		{
 			B3_FOR_BASE(&m_SearchPath,path)
 			{
-				try
+				b3Path::b3LinkFileName(
+					(char *)FullName,
+					(const char *)*path,Name);
+				b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
+				if (b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
 				{
-					b3Path::b3LinkFileName(
-						(char *)FullName,
-						(const char *)*path,Name);
-					b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
-					Data = TextureFile.b3ReadBuffer(FullName,FileSize);
-
-					// OK! Texture loaded -> leave search loop!
+					try
+					{
+						Data = TextureFile.b3ReadBuffer(FullName,FileSize);
+					}
+					catch(b3FileException *f)
+					{
+						// An exception we expected.
+						b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
+					}
 					break;
 				}
-				catch(b3FileException *f)
-				{
-					// An exception we expected.
-					b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
-				}
 			}
+		}
+		else
+		{
+			strcpy(FullName,Name);
 		}
 	}
 	else

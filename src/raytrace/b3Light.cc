@@ -31,6 +31,16 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/17 14:46:02  sm
+**      - Adding triangle support.
+**      - Renaming b3TriangleShape into b3Triangles and introducing
+**        new b3TriangleShape as base class. This results in
+**        source file renaming, too.
+**      - Fixing soft shadow bug.
+**      - Only scene loading background image when activated.
+**      - Fixing LDC spline initialization.
+**      - Converting Windows paths into right paths on Un*x
+**
 **      Revision 1.12  2001/10/15 19:07:12  sm
 **      - Experimenting with soft shadows.
 **
@@ -170,9 +180,11 @@ void b3Light::b3Init()
 	m_Direction.y =    100.0;
 	m_Direction.z =   -100.0;
 
-	m_Spline.offset    = 1;
-	m_Spline.knots     = m_Knots;
-	m_Spline.controls  = m_Controls;
+	m_Spline.offset      = 1;
+	m_Spline.knots       = m_Knots;
+	m_Spline.controls    = m_Controls;
+	m_Spline.control_max = sizeof(m_Controls) / sizeof(m_Controls[0]);
+	m_Spline.knot_max    = sizeof(m_Knots)    / sizeof(m_Knots[0]);
 	b3BSplineInitCurve (&m_Spline,INIT_DEGREE,INIT_CONTROL_MAX,false);
 	for (i = 0;i < INIT_CONTROL_MAX;i++)
 	{
@@ -284,7 +296,7 @@ b3_bool b3Light::b3AreaIllumination (
 	b3Shape       *Edge1,*Edge2,*LastEdge = null;
 	b3_light_info  Jit;
 	b3_vector      point;
-	b3_f64         Factor,LightDist,q;
+	b3_f64         Factor,denomLightDist,q;
 	b3_coord       x,y,xs;
 	b3_count       max,Distr;
 	b3_bool        equal;				
@@ -298,20 +310,20 @@ b3_bool b3Light::b3AreaIllumination (
 	Jit.LightView.x = m_Position.x - surface->incoming->ipoint.x;
 	Jit.LightView.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
-	LightDist =
+	denomLightDist =
 		Jit.LightView.x * Jit.LightView.x +
 		Jit.LightView.y * Jit.LightView.y +
 		Jit.LightView.z * Jit.LightView.z;
-	if (LightDist == 0)
+	if (denomLightDist == 0)
 	{
 		return false;
 	}
 
 	// normalizing light axis
-	LightDist = 1.0 / sqrt(LightDist);
-	Jit.LightView.x	*= LightDist;
-	Jit.LightView.y	*= LightDist;
-	Jit.LightView.z	*= LightDist;
+	denomLightDist = 1.0 / (Jit.LightDist = sqrt(denomLightDist));
+	Jit.LightView.x	*= denomLightDist;
+	Jit.LightView.y	*= denomLightDist;
+	Jit.LightView.z	*= denomLightDist;
 
 
 	// inserted Nov. 1994, SAM
@@ -328,15 +340,14 @@ b3_bool b3Light::b3AreaIllumination (
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
-		Jit.LightFrac  = LightDist * m_Distance * point.y;
+		Jit.LightFrac  = denomLightDist * m_Distance * point.y;
 	}
 	else
 	{
-		Jit.LightFrac = LightDist * m_Distance;
+		Jit.LightFrac = denomLightDist * m_Distance;
 	}
-	Jit.LightDist = LightDist;
 
-	Factor = LightDist / sqrt(
+	Factor = denomLightDist / sqrt(
 		Jit.LightView.x * Jit.LightView.x +
 		Jit.LightView.y * Jit.LightView.y);
 	Jit.xDir.x	= -Jit.LightView.y * Factor;
@@ -346,7 +357,7 @@ b3_bool b3Light::b3AreaIllumination (
 	Jit.yDir.x	=  Jit.LightView.y * Jit.xDir.z - Jit.LightView.z * Jit.xDir.y;
 	Jit.yDir.y	=  Jit.LightView.z * Jit.xDir.x - Jit.LightView.x * Jit.xDir.z;
 	Jit.yDir.z	=  Jit.LightView.x * Jit.xDir.y - Jit.LightView.y * Jit.xDir.x;
-	Factor = LightDist / sqrt(
+	Factor = denomLightDist / sqrt(
 		Jit.yDir.x * Jit.yDir.x +
 		Jit.yDir.y * Jit.yDir.y +
 		Jit.yDir.z * Jit.yDir.z);
@@ -443,11 +454,14 @@ b3Shape *b3Light::b3CheckSinglePoint (
 		Jit->dir.x *= LightDist;
 		Jit->dir.y *= LightDist;
 		Jit->dir.z *= LightDist;
-	}
-	Jit->LightDist = LightDist;
 
-	scene->b3Intersect(Jit,UpperBound - epsilon);
-	scene->b3Illuminate(this,Jit,surface,&Jit->Result);
+		scene->b3Intersect(Jit,LightDist * Jit->LightDist - epsilon);
+		scene->b3Illuminate(this,Jit,surface,&Jit->Result);
+	}
+	else
+	{
+		Jit->shape = null;
+	}
 
 	return Jit->shape;
 }

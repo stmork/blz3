@@ -33,9 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.15  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.14  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -149,7 +159,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
 	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
-	m_BackTexture = texture_pool.b3LoadTexture(m_TextureName);
+	m_BackTexture = (m_Flags & TP_TEXTURE ? texture_pool.b3LoadTexture(m_TextureName) : null);
 	m_Nebular     = null;
 }
 

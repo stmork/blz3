@@ -1,0 +1,224 @@
+/*
+**
+**      $Filename:      b3Triangles.cc $
+**      $Release:       Dortmund 2001 $
+**      $Revision$
+**      $Date$
+**      $Developer:     Steffen A. Mork $
+**
+**      Blizzard III - Raytracing triangle shape
+**
+**      (C) Copyright 2001  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
+#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**      $Log$
+**      Revision 1.1  2001/10/17 14:46:02  sm
+**      - Adding triangle support.
+**      - Renaming b3TriangleShape into b3Triangles and introducing
+**        new b3TriangleShape as base class. This results in
+**        source file renaming, too.
+**      - Fixing soft shadow bug.
+**      - Only scene loading background image when activated.
+**      - Fixing LDC spline initialization.
+**      - Converting Windows paths into right paths on Un*x
+**
+**      Revision 1.11  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
+**      Revision 1.10  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
+**      Revision 1.9  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
+**      Revision 1.8  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
+**      Revision 1.7  2001/08/14 15:37:50  sm
+**      - Made some cleanups when OpenGL isn't available.
+**
+**      Revision 1.6  2001/08/11 16:29:08  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
+**      Revision 1.5  2001/08/11 15:59:59  sm
+**      - Rendering cleaned up
+**      - CWinApp/CMainFrm derived from Blizzard III classes
+**        supporting more effective GUI.
+**
+**      Revision 1.4  2001/08/10 15:14:37  sm
+**      - Now having all shapes implemented for drawing lines.
+**
+**      Revision 1.3  2001/08/09 15:27:34  sm
+**      - Following shapes are newly supported now:
+**        o disk
+**        o cylinder
+**        o cone
+**        o ellipsoid
+**        o torus
+**        o triangles
+**      - Done some makefile fixes
+**      - Everything is Windozable
+**
+**      Revision 1.2  2001/08/08 20:12:59  sm
+**      - Fixing some makefiles
+**      - introducing check/BlzDump (BlzDump moved from tools)
+**      - Some further line drawing added
+**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**        b3RenderObject.
+**
+**      Revision 1.1  2001/08/06 15:26:00  sm
+**      - Splitted shapes into their own files
+**      - Some preparations for shapde drawing.
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
+
+b3Triangles::b3Triangles(b3_u32 class_type) :
+	b3TriangleShape(class_type)
+{
+}
+
+b3Triangles::b3Triangles(b3_u32 *src) : b3TriangleShape(src)
+{
+	b3_index i;
+
+	b3InitNOP();
+	b3InitVector(&Base);
+	b3InitVector(&Size);
+	GridSize    = b3InitInt();
+	TriaCount   = b3InitInt() << 1;
+	VertexCount = b3InitInt();
+	xSize       = b3InitInt();
+	ySize       = b3InitInt();
+	Flags       = b3InitInt();
+	b3InitNOP();
+	b3InitNOP();
+	b3InitNOP();
+
+	vertices  = (b3_vertex *)b3Item::b3Alloc(VertexCount * sizeof(b3_vertex));
+	triangles = (b3_triangle *)b3Item::b3Alloc(TriaCount * sizeof(b3_triangle));
+
+	for (i = 0;i < VertexCount;i++)
+	{
+		vertices[i].x  = b3InitFloat();
+		vertices[i].y  = b3InitFloat();
+		vertices[i].z  = b3InitFloat();
+		vertices[i].nx = b3InitFloat();
+		vertices[i].ny = b3InitFloat();
+		vertices[i].nz = b3InitFloat();
+	}
+
+	for (i = 0;i < TriaCount;i++)
+	{
+		triangles[i].P1 = b3InitInt();
+		triangles[i].P2 = b3InitInt();
+		triangles[i].P3 = b3InitInt();
+	}
+}
+
+void b3Triangles::b3GetCount(
+	b3RenderContext *context,
+	b3_count        &vertCount,
+	b3_count        &gridCount,
+	b3_count        &polyCount)
+{
+	vertCount = VertexCount;
+	gridCount = TriaCount * 3;
+	polyCount = TriaCount;
+}
+
+void b3Triangles::b3ComputeVertices()
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_vector *Vector;
+	b3_vertex *Vertex;
+	b3_index   i;
+
+	Vertex   = (b3_vertex *)vertices;
+	Vector   = (b3_vector *)glVertices;
+
+	glVertexCount = VertexCount;
+	for (i = 0;i < VertexCount;i++)
+	{
+		Vector->x = Vertex->x;
+		Vector->y = Vertex->y;
+		Vector->z = Vertex->z;
+		Vertex++;
+		Vector++;
+	}
+#endif
+}
+
+void b3Triangles::b3ComputeNormals(b3_bool normalize)
+{
+	b3RenderObject::b3ComputeNormals(normalize);
+}
+
+void b3Triangles::b3ComputeIndices()
+{
+#ifdef BLZ3_USE_OPENGL
+	GLushort    *gPtr;
+	GLushort    *pPtr;
+	b3_triangle *Triangle;
+	b3_vertex   *Vertex;
+	b3_count     i;
+
+	Vertex   = vertices;
+	Triangle = triangles;
+	gPtr     = glGrids;
+	pPtr     = glPolygons;
+	for (i = 0;i < TriaCount;i++)
+	{
+		*gPtr++ = (unsigned short)Triangle->P1;
+		*gPtr++ = (unsigned short)Triangle->P2;
+
+		*gPtr++ = (unsigned short)Triangle->P2;
+		*gPtr++ = (unsigned short)Triangle->P3;
+
+		*gPtr++ = (unsigned short)Triangle->P3;
+		*gPtr++ = (unsigned short)Triangle->P1;
+
+		*pPtr++ = (unsigned short)Triangle->P1;
+		*pPtr++ = (unsigned short)Triangle->P2;
+		*pPtr++ = (unsigned short)Triangle->P3;
+
+		Triangle++;
+	}
+	glGridCount = TriaCount * 3;
+	glPolyCount = TriaCount;
+#endif
+}

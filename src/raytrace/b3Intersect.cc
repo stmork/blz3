@@ -33,12 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.12  2001/10/11 16:06:33  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
 **	  b3Endian
 **	- Cleaning up some datatypes for proper display in Together.
-**
+**	
 **	Revision 1.11  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -835,31 +845,6 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 }
 
 b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
-{
-	return -1;
-}
-
-b3_f64 b3SplineArea::b3Intersect(b3_ray *ray,b3_polar *polar)
-{
-	return -1;
-}
-
-b3_f64 b3SplineCylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
-{
-	return -1;
-}
-
-b3_f64 b3SplineRing::b3Intersect(b3_ray *ray,b3_polar *polar)
-{
-	return -1;
-}
-
-b3_f64 b3SplineCurveShape::b3Intersect(b3_ray *ray,b3_polar *polar)
-{
-	return -1;
-}
-
-b3_f64 b3SplineRotShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
 	return -1;
 }

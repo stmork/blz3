@@ -33,12 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.11  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.10  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -83,7 +93,7 @@
 **
 */
 
-b3_f64 epsilon = 0.001;
+b3_f64 epsilon = 0.0001;
 
 struct b3_rt_info
 {

@@ -44,9 +44,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.4  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.3  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -464,7 +474,7 @@ b3_result b3Tx::b3LoadTIFF(
 		throw new b3TxException(B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
-	b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3LoadTIFF(%s)\n",name);
+	b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3LoadTIFF(%s)\n",(const char *)name);
 
 	TIFFGetField (tiff,TIFFTAG_IMAGEWIDTH,      &xSize);
 	TIFFGetField (tiff,TIFFTAG_IMAGELENGTH,     &ySize);

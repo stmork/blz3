@@ -33,10 +33,20 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/17 14:46:03  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.3  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	
 */
 
@@ -173,13 +183,22 @@ void b3Path::b3LinkFileName(
 	const char *FilePath,
 	const char *FileName)
 {
+	b3_size i,len;
+
 	if (File==null) return;
 	File[0] = 0;
-	if (FilePath) strcpy (File,FilePath);
-	if (FileName)
+	if (FilePath != null) strcpy (File,FilePath);
+	if (FileName != null)
 	{
-		if (File[0]) strcat (File,"/");
+		if (File[0] != 0) strcat (File,"/");
 		strcat (File,FileName);
+	}
+
+	// Convert Windows path to to something useful
+	len = strlen(File);
+	for (i = 0;i < len;i++)
+	{
+		if (File[i] == '\\') File[i] = '/';
 	}
 }
 

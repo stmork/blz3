@@ -36,9 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/10/17 14:46:02  sm
+**	- Adding triangle support.
+**	- Renaming b3TriangleShape into b3Triangles and introducing
+**	  new b3TriangleShape as base class. This results in
+**	  source file renaming, too.
+**	- Fixing soft shadow bug.
+**	- Only scene loading background image when activated.
+**	- Fixing LDC spline initialization.
+**	- Converting Windows paths into right paths on Un*x
+**
 **	Revision 1.8  2001/10/16 15:21:24  sm
 **	- Minor changes to compile with GCC 3.x
-**
+**	
 **	Revision 1.7  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -142,25 +152,23 @@ static b3_bool errorHandlerInstalled = false;
 **                                                                      **
 *************************************************************************/
 
-void b3TIFFErrorHandler(
+static void b3TIFFErrorHandler(
 	const char *module,
 	const char *fmt,
-	void       *va)
+	va_list     args)
 {
-	char    message[512];
-	va_list args = va;
+	char message[512];
 
 	vsprintf (message,fmt,args);
 	b3PrintF(B3LOG_NORMAL,"ERROR: %s %s\n",module,message);
 }
 
-void b3TIFFWarnHandler(
+static void b3TIFFWarnHandler(
 	const char *module,
 	const char *fmt,
-	void       *va)
+	va_list     args)
 {
 	char    message[512];
-	va_list args = va;
 
 	vsprintf (message,fmt,args);
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);

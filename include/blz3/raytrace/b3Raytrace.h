@@ -1099,30 +1099,44 @@ public:
 	void   b3Transform(b3_matrix *transformation);
 };
 
-// TRIANGLES
 class b3TriangleShape : public b3Shape
 {
+public:
 	struct BHead *GridList;              // list of grids
 	b3_vector     Base,Size;             // size of bounding box of all triangles
 	b3_count      GridSize;              // num grid edges
 	b3_count      TriaCount,VertexCount; // num of verteces and triangles
-//	b3_s32        xSize,ySize;           // triangle order
-	b3_u32        Flags;                 // interpolation flags
-	b3_index      IndexHit;              // index of hit triangle
-	b3_f64        aValue,bValue;         // polarcoord. of triangles
-
 	b3_triangle  *triangles;
 	b3_vertex    *vertices;
+
+//	b3_index      IndexHit;              // index of hit triangle
+//	b3_f64        aValue,bValue;         // polarcoord. of triangles
+//	b3_s32        xSize,ySize;           // triangle order
+
+protected:
+	b3TriangleShape(b3_size class_size,b3_u32 class_type);
+
 public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeNormals(b3_bool normalize=true);
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	void   b3Transform(b3_matrix *transformation);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	virtual void   b3Transform(b3_matrix *transformation);
+};
+
+// TRIANGLES
+class b3Triangles : public b3TriangleShape
+{
+	b3_u32        Flags;                 // interpolation flags
+
+public:
+	B3_ITEM_INIT(b3Triangles);
+	B3_ITEM_LOAD(b3Triangles);
+
+	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void   b3ComputeVertices();
+	        void   b3ComputeNormals(b3_bool normalize=true);
+	        void   b3ComputeIndices();
 };
 
 // index calculation of triangle grid
@@ -1134,7 +1148,7 @@ public:
 #define NORMAL_FACE_VALID       4L     // normals of triangles valid, no auto computation
 
 // SPLINE, SPLINE_ROT
-class b3SplineCurve : public b3Shape
+class b3SplineCurve : public b3TriangleShape
 {
 protected:
 	b3_line          Axis;                // for rotation shapes
@@ -1162,7 +1176,6 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineRotShape : b3SplineCurve
@@ -1172,8 +1185,6 @@ public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
 
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-
 protected:
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
@@ -1181,7 +1192,7 @@ protected:
 };
 
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
-class b3SplineShape : public b3Shape
+class b3SplineShape : public b3TriangleShape
 {
 protected:
 #ifdef BLZ3_USE_OPENGL
@@ -1220,8 +1231,6 @@ class b3SplineArea : public b3SplineShape
 public:
 	B3_ITEM_INIT(b3SplineArea);
 	B3_ITEM_LOAD(b3SplineArea);
-
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineCylinder : public b3SplineShape 
@@ -1229,8 +1238,6 @@ class b3SplineCylinder : public b3SplineShape
 public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
-
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineRing : public b3SplineShape 
@@ -1238,8 +1245,6 @@ class b3SplineRing : public b3SplineShape
 public:
 	B3_ITEM_INIT(b3SplineRing);
 	B3_ITEM_LOAD(b3SplineRing);
-
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 /*************************************************************************
