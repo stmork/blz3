@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/12/31 15:13:07  sm
+**	- Some minor fixes.
+**
 **	Revision 1.9  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.8  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -113,7 +116,7 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 	
 	// Init camera
 	b3Vector::b3Init(&eye, 0,-350,75);
-	b3Vector::b3Init(&view,0);
+	b3Vector::b3Init(&view);
 	camera->b3Orientate(&eye,&view,100.0,50.0,50.0);
 	scene->b3SetCamera(camera);
 	scene->b3GetSpecialHead()->b3Append(camera);
