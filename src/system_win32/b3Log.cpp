@@ -45,9 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/11 11:51:21  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
-**
+**	
 **	Revision 1.2  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
@@ -154,7 +159,7 @@ void b3PrintF (
 		}
 
 		// Open the file
-		if (bout == null) bout = fopen (B3_OUT,TAPPEND);
+		if (bout == null) bout = fopen (B3_OUT,B3_TAPPEND);
 		if (bout == null) bout = stderr;
 
 		// Make start message if necessary

@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/11 11:51:21  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.1  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
 **	  their own area.
 **	- Fixed JPEG to support b3Tx::b3AllocTx()
-**
+**	
 **	
 */
 
@@ -110,5 +115,31 @@ b3_bool b3SearchPath::b3IsValid(const char *Name,char *FullName)
 		}
 	}
 
+	return false;
+}
+
+b3_bool b3SearchPath::b3CutName(const char *fullname,char *result)
+{
+	b3PathEntry *path;
+	b3_size      fullLen,shortLen,diff;
+
+	B3_FOR_BASE(&m_SearchPath,path)
+	{
+		fullLen  = strlen(fullname);
+		shortLen = strlen(*path);
+		diff    = fullLen - shortLen;
+		if (strncmp(fullname,*path,shortLen) == 0)
+		{
+			while(((fullname[shortLen] == '/') ||
+				   (fullname[shortLen] == '\\')) &&
+				   (fullname[shortLen] != 0))
+			{
+				shortLen++;
+			}
+			strcpy (result,&fullname[shortLen]);
+			return true;
+		}
+	}
+	strcpy (result,fullname);
 	return false;
 }

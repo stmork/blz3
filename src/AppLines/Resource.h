@@ -37,6 +37,11 @@
 #define IDC_RAYDEPTH                    1012
 #define IDC_RAYDEPTH_LEGEND             1013
 #define IDC_BG_IMAGE_SELECT             1014
+#define IDC_BG_TOP_SELECT               1015
+#define IDC_BG_BOTTOM_SELECT            1016
+#define IDC_OPEN_GFX                    1017
+#define IDC_SHADOW_BRIGHTNESS           1018
+#define IDC_SHADOW_BRIGHTNESS_LEGEND    1019
 #define IDC_SCAN_PARA                   1027
 #define IDC_HIERARCHY                   1050
 #define IDC_ACTIVATE                    1055
@@ -101,6 +106,7 @@
 #define ID_DLG_SCENE                    32813
 #define IDM_BAR_SCENE                   32814
 #define ID_CUST_SCENE                   32815
+#define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 #define IDS_TOOLBAR_ACTION              61447
@@ -110,6 +116,7 @@
 #define IDS_RAYTRACE_TITLE              61451
 #define IDS_RAYDEPTH                    61452
 #define IDS_SCENE_NEW                   61453
+#define IDS_SHADOW_BRIGHTNESS           61454
 
 // Next default values for new objects
 // 
@@ -118,7 +125,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32816
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_CONTROL_VALUE         1018
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -57,24 +57,24 @@ public:
 
 class b3Path
 {
-public:
+protected:
 	char path[B3_FILESTRINGLEN];
 
 public:
+	       void b3Empty();
+	       void b3Correct      (const char *path = null);
 	static void b3LinkFileName (char *full,const char *path,const char *name);
 	static void b3SplitFileName(const char *full,char *path,char *name);
 	static void b3ParentName   (const char *path,char *parent);
 	static void b3ParentName   (char *parent);
 	static void b3RemoveExt    (char *filename);
 
-	       void b3Empty();
-
-	operator char * ()
+	inline operator char * ()
 	{
 		return path;
 	}
 
-	operator const char *()
+	inline operator const char *()
 	{
 		return path;
 	}

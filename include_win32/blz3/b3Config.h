@@ -85,11 +85,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/11/11 11:51:19  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.17  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.16  2001/10/20 16:25:07  sm
 **	- Windows compile check an minor fixes
 **	
@@ -223,12 +228,12 @@
 #define B3_VERSION  3
 #define B3_REVISION 0
 
-#define BREAD      "r"
-#define BWRITE     "w"
-#define BAPPEND    "a"
-#define TREAD      "r"
-#define TWRITE     "w"  
-#define TAPPEND    "a"
+#define B3_BREAD      "r"
+#define B3_BWRITE     "w"
+#define B3_BAPPEND    "a"
+#define B3_TREAD      "r"
+#define B3_TWRITE     "w"  
+#define B3_TAPPEND    "a"
 
 typedef enum
 {

@@ -42,16 +42,19 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgScene)
 	enum { IDD = IDD_SCENE };
-	CSpinButtonCtrl	m_yResSpin;
-	CSpinButtonCtrl	m_xResSpin;
-	CSliderCtrl	m_RayDepth;
 	CB3ShowRaytrace	m_PreviewSceneCtrl;
 	CB3ShowImage	m_PreviewImageCtrl;
-	BOOL	m_ResValid;
+	CSliderCtrl	m_RayDepthCtrl;
+	CSliderCtrl	m_ShadowBrightnessCtrl;
 	CString	m_RayDepthLegend;
+	CString	m_ShadowBrightnessLegend;
+	CSpinButtonCtrl	m_yResSpin;
+	CSpinButtonCtrl	m_xResSpin;
 	int		m_BackgroundMode;
 	int		m_xRes;
 	int		m_yRes;
+	BOOL	m_ResValid;
+	BOOL	m_GfxValid;
 	//}}AFX_DATA
 
 
@@ -75,11 +78,14 @@ protected:
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
+	afx_msg void OnTopColor();
+	afx_msg void OnBottomColor();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	int m_LastTraceDepth;
-	void b3PrintRayDepth();
+	int m_LastShadowBrightness;
+	void b3PrintLegend();
 	void b3UpdateUI();
 };
 

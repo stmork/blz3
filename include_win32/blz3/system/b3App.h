@@ -45,7 +45,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
-#define b3GetApp()       ((CB3App *)AfxGetApp())
-#define b3ClientString() (b3GetApp()->b3ClientName())
+#define CB3GetApp()       ((CB3App *)AfxGetApp())
+#define CB3ClientString() (CB3GetApp()->b3ClientName())
 
 #endif

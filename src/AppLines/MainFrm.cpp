@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/11/11 11:51:20  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.11  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.10  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -144,7 +149,7 @@ static UINT toolbar_bitmaps[] =
 CMainFrame::CMainFrame()
 {
 	// TODO: add member initialization code here
-	CB3App       *app   = b3GetApp();
+	CB3App       *app   = CB3GetApp();
 #ifndef _DEBUG
 	b3_log_level  level = B3LOG_NORMAL;
 #endif
@@ -166,7 +171,7 @@ void CMainFrame::OnPrefSave()
 {
 	// TODO: Add your command handler code here
 	// Write mainframe dimensions to registry
-	CB3App *app = b3GetApp();
+	CB3App *app = CB3GetApp();
 
 	app->b3SetWindowMode(true);
 }
@@ -174,7 +179,7 @@ void CMainFrame::OnPrefSave()
 void CMainFrame::OnPrefAutosave() 
 {
 	// TODO: Add your command handler code here
-	CB3App *app = b3GetApp();
+	CB3App *app = CB3GetApp();
 
 	app->m_AutoSave = !app->m_AutoSave;
 }
@@ -182,14 +187,14 @@ void CMainFrame::OnPrefAutosave()
 void CMainFrame::OnUpdatePrefAutosave(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CB3App *app = b3GetApp();
+	CB3App *app = CB3GetApp();
 
 	pCmdUI->SetCheck(app->m_AutoSave);
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	CB3App       *app   = b3GetApp();
+	CB3App *app = CB3GetApp();
 
 	if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1)
 	{
@@ -246,7 +251,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 void CMainFrame::OnDestroy() 
 {
 	// TODO: Add your message handler code here
-	CB3App *app = b3GetApp();
+	CB3App *app = CB3GetApp();
 
 	app->b3SetWindowMode(false);
 	CMDIFrameWnd::OnDestroy();

@@ -55,6 +55,21 @@ public:
 		g = (color.g > 1.0 ? 255 : (b3_u08)(color.g * 255));
 		b = (color.b > 1.0 ? 255 : (b3_u08)(color.b * 255));
 	}
+#ifdef WIN32
+	// Problem: COLORREF and b3_pkd_color are of the same type ???
+/*
+	inline COLORREF       operator()()
+	{
+		return RGB(r,g,b);
+	}
+	inline void           operator=(const COLORREF &color)
+	{
+		r = (color & 0x0000ff);
+		g = (color & 0x00ff00) >>  8;
+		b = (color & 0xff0000) >> 16;
+	}
+*/
+#endif
 };
 
 #define B3_WHITE  ((b3_pkd_color)0xffffff)
@@ -86,6 +101,16 @@ public:
 			 (b3_pkd_color)(color->b * 255);
 	}
 
+#ifdef WIN32
+	static inline COLORREF b3GetColorref(b3_color *color)
+	{
+		return RGB(
+			(b3_pkd_color)(color->r * 255),
+			(b3_pkd_color)(color->g * 255),
+			(b3_pkd_color)(color->b * 255));
+	}
+#endif
+
 	static inline b3_pkd_color b3GetSatColor(const b3_color *color)
 	{
 		return
@@ -93,6 +118,16 @@ public:
 			((b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)) <<  8) |
 			 (b3_pkd_color)(color->b > 1.0 ? 255 : (b3_u08)(color->b * 255));
 	}
+
+#ifdef WIN32
+	static inline COLORREF b3GetSatColorref(b3_color *color)
+	{
+		return RGB(
+			(b3_pkd_color)(color->r > 1.0 ? 255 : (b3_u08)(color->r * 255)),
+			(b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)),
+			(b3_pkd_color)(color->b > 1.0 ? 255 : (b3_u08)(color->b * 255)));
+	}
+#endif
 
 	static inline b3_color *b3GetColor(b3_color *color,const b3_pkd_color input)
 	{
@@ -103,6 +138,18 @@ public:
 
 		return color;
 	}
+
+#ifdef WIN32
+	static inline b3_color *b3GetColorref(b3_color *input,COLORREF value)
+	{
+		input->a = 0;
+		input->r = (b3_f64)((value & 0x0000ff))       * 0.0039215686;
+		input->g = (b3_f64)((value & 0x00ff00) >>  8) * 0.0039215686;
+		input->b = (b3_f64)((value & 0xff0000) >> 16) * 0.0039215686;
+
+		return input;
+	}
+#endif
 
 	static inline b3_color *b3Scale(b3_color *color,b3_f64 factor)
 	{

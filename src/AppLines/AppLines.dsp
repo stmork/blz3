@@ -136,6 +136,10 @@ SOURCE=.\b3Fulcrum.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SelectTexture.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ShowRaytrace.cpp
 # End Source File
 # Begin Source File

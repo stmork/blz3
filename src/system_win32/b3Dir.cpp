@@ -38,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/11 11:51:21  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.2  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
-**
+**	
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -292,6 +297,23 @@ void b3Dir::b3CloseDir ()
 void b3Path::b3Empty()
 {
 	path[0] = 0;
+}
+
+void b3Path::b3Correct(const char *input)
+{
+	b3_index i,len;
+
+	if (input == null)
+	{
+		input = path;
+	}
+
+	len = strlen(input);
+	for (i = 0;i < len;i++)
+	{
+		path[i] = (input[i] == '/' ? '\\' : input[i]);
+	}
+	path[len] = 0;
 }
 
 void b3Path::CorrectFilePath(char *name)

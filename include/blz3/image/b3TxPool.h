@@ -24,6 +24,7 @@
 
 class b3TxPool : public b3Mem, public b3SearchPath
 {
+	b3Mutex          m_Mutex;
 	b3Base<b3Tx>     m_Pool;
 public:
 	                     b3TxPool();

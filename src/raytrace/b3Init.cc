@@ -31,6 +31,11 @@
     
 /*
 **      $Log$
+**      Revision 1.5  2001/11/11 11:51:21  sm
+**      - Added image select feature
+**      - Cleaned up scene dialog (Now ready to improve it)
+**      - some b3Path fixes
+**
 **      Revision 1.4  2001/11/02 19:05:36  sm
 **      - Introducing time mearuring.
 **      - Fixed wrong lens flare handling.
@@ -92,4 +97,9 @@ b3_bool b3CheckTexture(b3Tx **tx,const char *name)
 	}
 
 	return *tx != null;
+}
+
+b3_bool b3CutTextureName(const char *full_name,char *short_name)
+{
+	return texture_pool.b3CutName(full_name,short_name);
 }

@@ -2200,5 +2200,6 @@ public:
 
 extern b3TxPool  texture_pool;
 extern b3_bool   b3CheckTexture(b3Tx **tx,const char *name);
+extern b3_bool   b3CutTextureName(const char *full_name,char *short_name);
 
 #endif

@@ -39,12 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/11 11:51:21  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.2  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -64,7 +69,7 @@ CB3ToolbarState::CB3ToolbarState()
 	m_ToolbarMain = null;
 	m_MenuCount   = 0;
 	m_ToolCount   = 0;
-	sprintf (m_Code,"_ToolbarState of %s",b3ClientString());
+	sprintf (m_Code,"_ToolbarState of %s",CB3ClientString());
 }
 
 void CB3ToolbarState::b3AddToolbar(
@@ -264,7 +269,7 @@ CB3Toolbar::CB3Toolbar() : b3Link<CB3Toolbar>(sizeof(CB3Toolbar))
 	m_Key.Format("Software\\%s\\%s\\%s",
 		BLIZZARD3_REG_COMPANY,
 		BLIZZARD3_REG_PRODUCT,
-		b3ClientString());
+		CB3ClientString());
 }
 
 CB3Toolbar::~CB3Toolbar()

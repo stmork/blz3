@@ -437,7 +437,7 @@ BEGIN
     PUSHBUTTON      "alles deaktivieren",IDC_ALL_DEACTIVATE,70,230,55,15
 END
 
-IDD_SCENE DIALOG DISCARDABLE  0, 0, 232, 346
+IDD_SCENE DIALOG DISCARDABLE  0, 0, 327, 346
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Szeneneigenschaften"
 FONT 8, "MS Sans Serif"
@@ -474,6 +474,14 @@ BEGIN
     LTEXT           "Breite:",IDC_STATIC,25,225,21,8
     LTEXT           "Höhe:",IDC_STATIC,90,225,20,8
     GROUPBOX        "Hintergrundverarbeitung:",IDC_STATIC,15,15,200,85
+    PUSHBUTTON      "Obere Farbe...",IDC_BG_TOP_SELECT,140,150,50,14
+    PUSHBUTTON      "Untere Farbe...",IDC_BG_BOTTOM_SELECT,140,175,50,14
+    CONTROL         "Grafik beim Raytracen anzeigen",IDC_OPEN_GFX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,110,210,117,10
+    CONTROL         "Slider1",IDC_SHADOW_BRIGHTNESS,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_TABSTOP,165,280,120,25
+    LTEXT           "Ambienter Faktor:",IDC_SHADOW_BRIGHTNESS_LEGEND,171,265,
+                    115,8
 END
 
 
@@ -550,7 +558,7 @@ BEGIN
     IDD_SCENE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 225
+        RIGHTMARGIN, 320
         TOPMARGIN, 7
         BOTTOMMARGIN, 339
     END
@@ -702,8 +710,9 @@ BEGIN
     IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
     IDS_FRAME_RATE          "%3.2f frames/sec. %5.2f triangles/sec"
     IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
-    IDS_RAYDEPTH            "Raytrace-Tiefe: %d"
+    IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
     IDS_SCENE_NEW           "Unbenannt"
+    IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -774,6 +783,11 @@ BEGIN
     ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
     ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
     ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TEXTURE_FILTER      "Alle Dateien (*.*)|*.*|BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff||"
 END
 
 #endif    // German (Germany) resources

@@ -37,7 +37,8 @@ public:
 	virtual ~b3SearchPath();
 	void     b3AddPath(const char *path);
 	void     b3Empty();
-	b3_bool  b3IsValid(const char *name,char *result);
+	b3_bool  b3IsValid(const char *short_name,char *result_as_full_name);
+	b3_bool  b3CutName(const char *file_name,char *result_as_short_name);
 };
 
 #endif

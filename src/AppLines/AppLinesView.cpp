@@ -36,11 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/11/11 11:51:20  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.17  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.16  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -885,7 +890,7 @@ void CAppLinesView::OnCamSelect()
 	// TODO: Add your command handler code here
 	CMainFrame *main;
 
-	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
 	m_Camera = main->b3GetSelectedCamera();
 	m_Scene->b3SetCamera(m_Camera);
 	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
@@ -896,7 +901,7 @@ void CAppLinesView::OnLightSelect()
 	// TODO: Add your command handler code here
 	CMainFrame *main;
 
-	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
 	m_Light = main->b3GetSelectedLight();
 	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
@@ -908,7 +913,7 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 
 	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 
-	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
 	if (bActivate)
 	{
 		main->b3UpdateCameraBox(m_Scene,m_Camera);

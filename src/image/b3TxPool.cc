@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/11/11 11:51:21  sm
+**	- Added image select feature
+**	- Cleaned up scene dialog (Now ready to improve it)
+**	- some b3Path fixes
+**
 **	Revision 1.16  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.15  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
@@ -129,7 +134,9 @@ b3TxPool::~b3TxPool()
 {
 	b3Tx     *tx;
 
+	m_Mutex.b3Lock();
 	B3_DELETE_BASE(&m_Pool,tx);
+	m_Mutex.b3Unlock();
 }
 
 b3Base<b3Tx> *b3TxPool::b3GetTxHead()
@@ -193,7 +200,9 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
 
 		// load data and insert in internal list
 		b3ReloadTexture (tx,Name);
+		m_Mutex.b3Lock();
 		m_Pool.b3Append(tx);
+		m_Mutex.b3Unlock();
 	}
 	else
 	{
