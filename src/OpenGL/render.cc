@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/11 20:17:22  sm
+**      - Updated OpenGL on Un*x platform.
+**      - This was a great day!
+**
 **      Revision 1.6  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -82,7 +86,6 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 	b3Scene  *scene;
 
 	scene = (b3Scene *)world->b3GetFirst();
-	scene->b3SetView((b3_res)xSize,(b3_res)ySize);
 	view.b3SetCamera(scene);
 	view.b3UpdateView(xSize,ySize);
 }
@@ -114,6 +117,7 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
 			scene->b3AllocVertices(&context);
+			scene->b3GetDisplaySize(xSize,ySize);
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
 			view.b3UpdateView(xSize,ySize);
@@ -125,7 +129,7 @@ int main(int argc,char *argv[])
 		glutDisplayFunc(RenderScene);
 		glutReshapeFunc(ChangeSize);
 
-		SetupRC();
+		context.b3StartDrawing();
 	
 		glutMainLoop();
 	}

@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/11 20:17:22  sm
+**      - Updated OpenGL on Un*x platform.
+**      - This was a great day!
+**
 **      Revision 1.3  2001/08/11 19:59:15  sm
 **      - Added orthogonal projection
 **
