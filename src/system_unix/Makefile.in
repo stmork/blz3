@@ -11,6 +11,7 @@ LIB_SOURCE		=\
 	b3Config.cc\
 	b3Dir.cc\
 	b3DisplayView.cc\
+	b3Error.cc\
 	b3File.cc\
 	b3Log.cc\
 	b3Plugin.cc\
@@ -21,6 +22,7 @@ LIB_OBJ			=\
 	b3Config.o\
 	b3Dir.o\
 	b3DisplayView.o\
+	b3Error.o\
 	b3File.o\
 	b3Log.o\
 	b3Plugin.o\

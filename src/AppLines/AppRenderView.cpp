@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2005/01/21 15:41:06  smork
+**	- Added error code/text preparation.
+**
 **	Revision 1.46  2005/01/21 14:58:07  smork
 **	- Small adjustments.
-**
+**	
 **	Revision 1.45  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
 **	
@@ -561,8 +564,10 @@ void CAppRenderView::OnPaint()
 	glFinish();
 	if (!SwapBuffers(dc))
 	{
+		b3Error error;
+
 		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
-		B3PrintF(B3LOG_NORMAL," Error code: %ld\n",GetlastError());
+		B3PrintF(B3LOG_NORMAL," Error code: %ld (%s)\n",error.b3GetError(),error.b3GetErrorText());
 	}
 
 	// Do post drawings using Windows DC
