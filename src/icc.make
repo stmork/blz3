@@ -23,7 +23,7 @@ setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd ../data/Lichttest.bwd
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
 #setenv ASMFLAGS "-O3 -w -march=pentiumiii"
-setenv ASMFLAGS "-O3 -w -march=pentium4"
+setenv ASMFLAGS "-O3 -w -march=pentium4 -ipo_S"
 
 # Build raytracer
 switch ( $1 )
@@ -40,7 +40,7 @@ switch ( $1 )
        make clean
        echo "Build options: $ASMFLAGS"
        echo "Building with -ipo..."
-       $CXX -ipo $ASMFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -S
+       $CXX $ASMFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc
        breaksw
 
    case "pgo" :

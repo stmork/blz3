@@ -469,7 +469,18 @@ public:
 		return result;
 	}
 
-	inline void b3Sat(b3_f32 sat = 1.0)
+	inline void b3Sat()
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			if (v[i] > m_Limit_m001[i])
+			{
+				v[i] = m_Limit_m001[i];
+			}
+		}
+	}
+
+	inline void b3Sat(b3_f32 sat)
 	{
 		for (b3_loop i = 0;i < 4;i++)
 		{
@@ -480,7 +491,18 @@ public:
 		}
 	}
 
-	inline void b3Min(b3_f32 min = 0.0)
+	inline void b3Min()
+	{
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			if (v[i] < m_Limit_m000[i])
+			{
+				v[i] = m_Limit_m000[i];
+			}
+		}
+	}
+
+	inline void b3Min(b3_f32 min)
 	{
 		for (b3_loop i = 0;i < 4;i++)
 		{

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.82  2004/06/18 12:03:12  sm
+**      - Removed default values from some b3Color methods.
+**
 **      Revision 1.81  2004/05/29 13:38:11  sm
 **      - Made shading model visible to material an bump dialogs.
 **
@@ -486,14 +489,9 @@ void b3MatNormal::b3Init()
 
 b3_bool b3MatNormal::b3GetSurfaceValues(b3_surface *surface)
 {
-	surface->m_Diffuse     = m_Diffuse;
-	surface->m_Ambient     = m_Ambient;
-	surface->m_Specular    = m_Specular;
-
-	surface->m_Reflection  = m_Reflection;
-	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_Ior;
-	surface->m_SpecularExp = m_SpecularExp;
+	b3_material *dst = surface;
+	
+	*dst = *this;
 
 	return true;
 }
@@ -570,16 +568,10 @@ void b3MatChess::b3Write()
 
 b3_bool b3MatChess::b3GetSurfaceValues(b3_surface *surface)
 {
-	b3_index index = CHESS_INDEX(surface->incoming->polar.m_Polar.x,surface->incoming->polar.m_Polar.y);
-
-	surface->m_Diffuse     = m_Material[index].m_Diffuse;
-	surface->m_Ambient     = m_Material[index].m_Ambient;
-	surface->m_Specular    = m_Material[index].m_Specular;
+	b3_material *dst = surface;
+	b3_index     index = CHESS_INDEX(surface->incoming->polar.m_Polar.x,surface->incoming->polar.m_Polar.y);
 	
-	surface->m_Reflection  = m_Material[index].m_Reflection;
-	surface->m_Refraction  = m_Material[index].m_Refraction;
-	surface->m_Ior         = m_Material[index].m_Ior;
-	surface->m_SpecularExp = m_Material[index].m_SpecularExp;
+	*dst = m_Material[index];
 
 	return true;
 }

@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/06/18 12:03:12  sm
+**	- Removed default values from some b3Color methods.
+**
 **	Revision 1.12  2004/06/05 12:00:02  sm
 **	- Some minor optimizations.
-**
+**	
 **	Revision 1.11  2004/05/28 13:15:39  sm
 **	- Major optimizations inside shader. But why is the intel brt3
 **	  5 minutes slower than the unoptimized version?
@@ -681,14 +684,18 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 
 		for (i = len+1;i < size;i += (len+1))
 		{
+			b3_f32 exp,ior;
+
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf(line,"rgb %f , %f , %f",&r,&g,&b);
-			sscanf(line,"alpha %f ka %f ks %f exp %lf ior %lf",
+			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
 				&alpha,
 				&ambient,
 				&specular,
-				&Mat->m_SpecularExp,
-				&Mat->m_Ior);
+				&exp,
+				&ior);
+			Mat->m_SpecularExp = exp;
+			Mat->m_Ior         = ior;
 			sscanf(line,"texture: %s",name);
 			Mat->m_Diffuse.b3Init(r,g,b);
 		}
