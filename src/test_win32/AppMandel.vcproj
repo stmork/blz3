@@ -167,8 +167,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release SSE2|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory=".\..\..\Release-SSE2"
+			IntermediateDirectory=".\..\..\Release-SSE2"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -243,8 +243,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release SSE|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory=".\..\..\Release-SSE"
+			IntermediateDirectory=".\..\..\Release-SSE"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"

@@ -57,6 +57,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
+        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5C76A0E4CAA44A8CBE9C23F273038F24"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_671F850255EE4E5B92DF101B09A579E0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -99,24 +117,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_93F8DDF5D60C4EC39E2E56B85341485B"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -141,19 +141,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
+        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
         "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
+        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA225CDD629743078C64E6D63D0C4D05"
+        "MsmKey" = "8:_E162C0A180014BDEA0A98A6B9FBA24EC"
         "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -680,7 +680,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Blizzard III"
         "ProductCode" = "8:{6D72BD35-E286-4602-8B39-D2BB927620F2}"
-        "PackageCode" = "8:{C3C8FD62-6AFA-43FE-B42F-D4DDC9473AAE}"
+        "PackageCode" = "8:{2631959A-0377-419D-951B-C46FE3D52EDA}"
         "UpgradeCode" = "8:{0158E6F0-AD9F-4CE8-9B37-E9E3FA270279}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1056,8 +1056,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:Copyright (C) Steffen A. Mork. Dieses Programm ist urheberschutzrechtlich geschützt."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1160,8 +1160,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:Copyright (C) Steffen A. Mork. Dieses Programm ist urheberschutzrechtlich geschützt."
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1438,11 +1438,11 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_93F8DDF5D60C4EC39E2E56B85341485B"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_5C76A0E4CAA44A8CBE9C23F273038F24"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
@@ -1452,11 +1452,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_CA225CDD629743078C64E6D63D0C4D05"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_E162C0A180014BDEA0A98A6B9FBA24EC"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
