@@ -4,7 +4,7 @@ BLZ3_LIB		= @BLZ3_LIB@
 BLZ3_BIN		= @BLZ3_BIN@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
-LIBS			= @LIBS@
+LIBS			= @LIBS@ @GLUTLIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 

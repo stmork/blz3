@@ -15,17 +15,18 @@ AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_RANLIB
 AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 
-AC_ARG_VAR(BLZ3_HOME, [This home directory of Blizzard III])
-AC_ARG_VAR(BLZ3_SYSINC, [The system dependend include path])
-AC_ARG_VAR(BLZ3_INCLUDE, [The system independend include path])
-AC_ARG_VAR(BLZ3_LIB, [Ths Blizzard III library directory])
-AC_ARG_VAR(BLZ3_BIN, [Ths Blizzard III exutable directory])
+if test "$GCC" = yes
+then
+  LDFLAGS="-Ur -Wl,-E"
+fi
 
-BLZ3_HOME="$PWD"
-BLZ3_SYSINC="$BLZ3_HOME/include_unix"
-BLZ3_INCLUDE="$BLZ3_HOME/include"
-BLZ3_LIB="$BLZ3_HOME/lib"
-BLZ3_BIN="$BLZ3_HOME/bin"
+AC_SUBST(BLZ3_HOME, "$PWD", [This home directory of Blizzard III])
+AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The system dependend include path])
+AC_SUBST(BLZ3_INCLUDE, "$BLZ3_HOME/include", [The system independend include path])
+AC_SUBST(BLZ3_LIB, "$BLZ3_HOME/lib", [Ths Blizzard III library directory])
+AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [Ths Blizzard III exutable directory])
+AC_SUBST(GLUTLIBS)
+AC_SUBST(DIVXLIBS)
 
 AC_PATH_XTRA
 
@@ -38,18 +39,19 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h s
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 
-AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lglut -lGLU -lGL"])
+AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_OPENGL]) GLUTLIBS="$LIBS -lglut"])
+AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG]) LIBS="$LIBS -lCgGL"])
-AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) LIBS="$LIBS -lavi"])
-AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) LIBS="$LIBS -ldivxencore"])
+AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) DIVXLIBS="$DIVXLIBS -lavi"])
+AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])
 
-OS_NAME=`uname -s`
-if test "$OS_NAME" = "Linux"; then
-  AC_DEFINE([BLZ3_IS_LINUX])
-fi
+AC_MSG_CHECKING([wether we compile on Linux])
+AC_TRY_LINK([#include <stdio.h>],[
+#ifndef __linux__
+#error "This is not Linux!"
+#endif
+],[AC_DEFINE([BLZ3_IS_LINUX]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
-# FIXME!
-#LDFLAGS="-Ur -Wl,-E"
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"
 ARFLAGS="rs"
@@ -76,7 +78,8 @@ AC_FUNC_STAT
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
 
-AC_CONFIG_FILES([src/Makefile
+AC_CONFIG_FILES([
+	src/Makefile
 	src/system_unix/Makefile
 	src/system/Makefile
 	src/Btiff/Makefile

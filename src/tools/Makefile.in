@@ -50,7 +50,7 @@ pw:	$(PW_OBJS)
 	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
 
 divx:	$(DIVX_OBJS)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS) @DIVXLIBS@
 
 testimg:	$(TESTIMG_OBJS)
 	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
