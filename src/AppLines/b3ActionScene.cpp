@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/08/19 19:25:55  sm
+**	- Fixed ticket no. 7. The perspective unprojection is
+**	  correct now.
+**
 **	Revision 1.8  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.7  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -127,19 +131,10 @@ void CB3ActionObjectSelect::b3ComputeSelectionDir(
 		b3CameraPart *camera = m_View->m_Camera;
 		b3_vector     view;
 
-		// Adjust relations to camera values (0,0) in the middle
-		xRel =       xRel * 2.0 - 1.0;
-		yRel = 1.0 - yRel * 2.0;
-
 		// Compute selection direction
 		selection_dir->pos = camera->m_EyePoint;
-		b3Vector::b3Sub(&camera->m_ViewPoint,&camera->m_EyePoint,&view);
-		b3Vector::b3LinearCombine(
-			&view,
-			&camera->m_Width,
-			&camera->m_Height,
-			xRel,yRel,
-			&selection_dir->dir);
+		m_View->m_RenderView.b3Unproject(x,y,&view);
+		b3Vector::b3Sub(&view,&camera->m_EyePoint,&selection_dir->dir);
 	}
 	else
 	{
@@ -147,6 +142,7 @@ void CB3ActionObjectSelect::b3ComputeSelectionDir(
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&selection_dir->pos);
 		m_View->m_RenderView.b3GetViewDirection(&selection_dir->dir);
 	}
+	b3Vector::b3Normalize(&selection_dir->dir);
 }
 
 void CB3ActionObjectSelect::b3LMove(b3_coord x,b3_coord y)
