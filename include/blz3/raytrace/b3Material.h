@@ -376,12 +376,13 @@ public:
 // THIN_FILM
 class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3Scaling
 {
-	static b3Color m_WaveLength;
+	static b3Color   m_WaveLength;
+	static b3_vector m_ScaleTime;
 
 public:
-	b3_s32         m_Flags;
-	b3_f32         m_Thickness; // in micro meter
-	b3Color        m_Intensity;
+	b3_s32           m_Flags;
+	b3_f32           m_Thickness; // in micro meter
+	b3Color          m_Intensity;
 
 public:
 	B3_ITEM_INIT(b3MatThinFilm);

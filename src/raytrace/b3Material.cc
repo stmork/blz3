@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.88  2004/08/01 12:47:39  sm
+**      - Animated thin film material.
+**
 **      Revision 1.87  2004/07/27 19:05:59  sm
 **      - Some typo cleanups.
 **
@@ -1724,7 +1727,11 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 **                                                                      **
 *************************************************************************/
 
-b3Color b3MatThinFilm::m_WaveLength(700.0,510,485.0,0); // in nano meter
+b3Color   b3MatThinFilm::m_WaveLength(700.0,510,485.0,0); // in nano meter
+b3_vector b3MatThinFilm::m_ScaleTime =
+{
+	0.01f,-0.02f,0.9f
+};
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm),class_type) 
 {
@@ -1791,6 +1798,11 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 
 	// scale
 	b3Scale(surface->incoming,&m_Scale,&point);
+
+	point.x += m_ScaleTime.x * surface->incoming->t;
+	point.y += m_ScaleTime.y * surface->incoming->t;
+	point.z += m_ScaleTime.z * surface->incoming->t;
+
 	wobble =
 		b3Noise::b3SignedFilteredNoiseVector(point.x,    point.y,    point.z) +
 		b3Noise::b3SignedFilteredNoiseVector(point.x * 2,point.y * 2,point.z * 2) * 0.5 +

@@ -53,9 +53,6 @@
 
 class B3_PLUGIN b3Bump : public b3Item
 {
-protected:
-	static b3_f64 m_TimePoint;
-
 public:
 	b3_f32        m_Amplitude;           // amplitude
 

@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/08/01 12:47:39  sm
+**	- Animated thin film material.
+**
 **	Revision 1.37  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.36  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
 **	
@@ -245,8 +248,6 @@ b3Bump::b3Bump(b3_u32 class_type) : b3Item(sizeof(b3Bump),class_type)
 b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
 {
 }
-
-b3_f64 b3Bump::m_TimePoint = 0;
 
 /*************************************************************************
 **                                                                      **
@@ -543,7 +544,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	b3_vector point,ox,oy,n;
 	b3_f64    Denom,r,time,water;
 
-	time = (m_ScaleTime < 0.0001 ? 0 : m_TimePoint / m_ScaleTime);
+	time = (m_ScaleTime < 0.0001 ? 0 : ray->t / m_ScaleTime);
 	b3Scale(ray,&m_Scale,&point);
 
 	water = b3ComputeWater(&point,ray->t);
