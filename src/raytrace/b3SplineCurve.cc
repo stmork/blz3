@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.4  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -111,8 +114,4 @@ void b3SplineCurveShape::b3ComputeIndices()
 		glGridCount = 0;
 	}
 #endif
-}
-
-void b3SplineCurveShape::b3Intersect()
-{
 }

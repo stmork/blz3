@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/09/22 16:19:51  sm
+**	- Adding basic shape intersection routines
+**
 **	Revision 1.9  2001/09/04 20:37:53  sm
 **	- Some minor updates
-**
+**	
 **	Revision 1.8  2001/09/04 15:15:57  sm
 **	- Added rotating objects
 **	
@@ -175,6 +178,31 @@ b3_f64 b3Distance(b3_vector *from,b3_vector *to)
 	z = to->z - from->z;
 
 	return sqrt(x * x + y * y + z * z);
+}
+
+b3_f64 b3AngleOfVectors(
+	b3_vector *Vector1,
+	b3_vector *Vector2)
+{
+	b3_f64 Denom;
+
+	if ((Denom =
+		sqrt(
+			Vector1->x * Vector1->x  +
+			Vector1->y * Vector1->y  +
+			Vector1->z * Vector1->z) *
+		sqrt(
+			Vector2->x * Vector2->x  +
+			Vector2->y * Vector2->y  +
+			Vector2->z * Vector2->z)) != 0)
+	{
+		return (
+			Vector1->x * Vector2->x  +
+			Vector1->y * Vector2->y  +
+			Vector1->z * Vector2->z) / Denom;
+
+	}
+	return 0.0;
 }
 
 b3_f64 b3AngleOfPoints(

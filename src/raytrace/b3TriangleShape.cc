@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.10  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -207,10 +210,6 @@ void b3TriangleShape::b3ComputeIndices()
 	glGridCount = TriaCount * 3;
 	glPolyCount = TriaCount;
 #endif
-}
-
-void b3TriangleShape::b3Intersect()
-{
 }
 
 void b3TriangleShape::b3Transform(b3_matrix *transformation)

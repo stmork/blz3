@@ -132,11 +132,16 @@ typedef struct b3Vertex
 	b3_f32 ny;
 	b3_f32 nz;
 } b3_vertex;
-                                                                 
+
 typedef struct b3Line
 {
 	b3_vector pos,dir;
 } b3_line;
+
+typedef struct b3DLine
+{
+	b3_dVector pos,dir;
+} b3_dLine;
 
 typedef struct b3Pos
 {

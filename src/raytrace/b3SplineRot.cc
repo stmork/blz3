@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.6  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -180,8 +183,4 @@ void b3SplineRotShape::b3ComputeIndices()
 		x1 += yStep;
 	}
 #endif
-}
-
-void b3SplineRotShape::b3Intersect()
-{
 }

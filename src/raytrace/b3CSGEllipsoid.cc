@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.6  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -98,8 +101,4 @@ void b3CSGEllipsoid::b3ComputeVertices()
 void b3CSGEllipsoid::b3ComputeIndices()
 {
 	b3ComputeEllipsoidIndices();
-}
-
-void b3CSGEllipsoid::b3Intersect()
-{
 }

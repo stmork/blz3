@@ -19,8 +19,13 @@
 
 #include "blz3/b3Types.h"
 
+#define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)              + ((v) < 0 ? (M_PI * 2.0) : 0))
+#define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) * 2.0 / M_PI + ((v) < 0 ?   1.0 : 0))
+#define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * pim180 + ((v) < 0 ? 360.0 : 0))
+
 b3_f64     b3Length             (b3_vector *vec);
 b3_f64     b3Distance           (b3_vector *from,b3_vector *to);
+b3_f64     b3AngleOfVectors     (b3_vector *dir1,b3_vector *dir2);
 b3_f64     b3AngleOfPoints      (b3_vector *base,b3_vector *dir1,b3_vector *dir2);
 b3_bool    b3IsEqual            (b3_vector *vec1,b3_vector *vec2);
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
@@ -28,6 +33,7 @@ b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
 b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);
 b3_f64     b3Det3               (b3_vector *left,b3_vector *mid,b3_vector *right);
 b3_f64     b3Det4               (b3_matrix *Matrix);
+
 b3_matrix *b3MatrixUnit         (b3_matrix *Dst);
 b3_matrix *b3MatrixInv          (b3_matrix *Src,b3_matrix *Dst);
 b3_matrix *b3MatrixTrans        (b3_matrix *Src,b3_matrix *Dst);

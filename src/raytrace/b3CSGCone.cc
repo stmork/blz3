@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.8  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -117,8 +120,4 @@ void b3CSGCone::b3ComputeVertices()
 void b3CSGCone::b3ComputeIndices()
 {
 	b3ComputeConeIndices();
-}
-
-void b3CSGCone::b3Intersect()
-{
 }

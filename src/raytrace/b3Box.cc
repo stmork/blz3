@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.6  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -98,14 +101,10 @@ void b3Box::b3FreeVertices()
 
 void b3Box::b3ComputeVertices()
 {
-	b3ComputeBoxVertices(Base,Dir1,Dir2,Dir3);
+	b3ComputeBoxVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
 }
 
 void b3Box::b3ComputeIndices()
 {
 	b3ComputeBoxIndices();
-}
-
-void b3Box::b3Intersect()
-{
 }

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/09/22 16:19:52  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.14  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -162,6 +165,19 @@ void b3Shape::b3ComputeBound(b3CondLimit *limit)
 	}
 }
 
+b3_bool b3Shape::b3CheckStencil()
+{
+	b3Item      *item;
+	b3Condition *cond;
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		cond = (b3Condition *)item;
+		cond->b3CheckStencil(&m_Polar);
+	}
+	return true;
+}
+
 void b3Shape::b3GetDiffuseColor(b3_color *color)
 {
 	b3Item     *item;
@@ -183,10 +199,6 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 	}
 }
 
-void b3Shape::b3Intersect()
-{
-}
-
 void b3Shape::b3Transform(b3_matrix *transformation)
 {
 	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
@@ -204,16 +216,21 @@ b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
 
 b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 {
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir1);
+	b3InitVector(&m_Dir2);
+
+	m_Normal.x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y;
+	m_Normal.y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z;
+	m_Normal.z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x;
+	m_NormalLength = b3Length(&m_Normal);
 }
 
 void b3Shape2::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
-	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3Recompute();
 }
 
@@ -231,18 +248,74 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector();  // This is Base[0]
 	b3InitVector();  // This is Base[1]
 	b3InitVector();  // This is Base[2]
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
-	b3InitVector(&Dir3);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir1);
+	b3InitVector(&m_Dir2);
+	b3InitVector(&m_Dir3);
+
+	m_Normals[0].x = m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y;
+	m_Normals[0].y = m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z;
+	m_Normals[0].z = m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x;
+
+	m_Normals[1].x = m_Dir1.y * m_Dir3.z - m_Dir1.z * m_Dir3.y;
+	m_Normals[1].y = m_Dir1.z * m_Dir3.x - m_Dir1.x * m_Dir3.z;
+	m_Normals[1].z = m_Dir1.x * m_Dir3.y - m_Dir1.y * m_Dir3.x;
+
+	m_Normals[2].x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y;
+	m_Normals[2].y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z;
+	m_Normals[2].z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x;
+
+	m_DirLen[0] = b3Length(&m_Dir1);
+	m_DirLen[1] = b3Length(&m_Dir2);
+	m_DirLen[2] = b3Length(&m_Dir3);
+}
+
+void b3Shape3::b3BaseTrans(
+	b3_dLine *in,
+	b3_dLine *out)
+{
+	b3_dVector *RVector;
+	b3_f64      xLineBase,yLineBase,zLineBase;
+
+	RVector = &in->dir;
+
+	xLineBase  = in->pos.x - m_Base.x;
+	yLineBase  = in->pos.y - m_Base.y;
+	zLineBase  = in->pos.z - m_Base.z;
+
+	out->pos.x =
+		xLineBase * m_Normals[0].x +
+		yLineBase * m_Normals[0].y +
+		zLineBase * m_Normals[0].z;
+	out->pos.y =
+		xLineBase * m_Normals[1].x +
+		yLineBase * m_Normals[1].y +
+		zLineBase * m_Normals[1].z;
+	out->pos.z =
+		xLineBase * m_Normals[2].x +
+		yLineBase * m_Normals[2].y +
+		zLineBase * m_Normals[2].z;
+
+	out->dir.x =
+		RVector->x * m_Normals[0].x +
+		RVector->y * m_Normals[0].y +
+		RVector->z * m_Normals[0].z;
+	out->dir.y =
+		RVector->x * m_Normals[1].x +
+		RVector->y * m_Normals[1].y +
+		RVector->z * m_Normals[1].z;
+	out->dir.z =
+		RVector->x * m_Normals[2].x +
+		RVector->y * m_Normals[2].y +
+		RVector->z * m_Normals[2].z;
 }
 
 void b3Shape3::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
-	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
-	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3Recompute();
 }
 

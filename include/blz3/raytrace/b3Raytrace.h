@@ -134,6 +134,7 @@ public:
 	B3_ITEM_LOAD(b3Condition);
 
 	virtual void b3ComputeBound(b3CondLimit *limit);
+	virtual b3_bool b3CheckStencil(b3_polar *polar);
 protected:
 	static void b3CheckInnerBound(b3CondLimit *limit,b3CondLimit *object);
 	static void b3CheckOuterBound(b3CondLimit *limit,b3CondLimit *object);
@@ -661,22 +662,23 @@ protected:
 class b3Shape : public b3Item, public b3RenderShapeObject
 {
 protected:
-	b3_vector        Normal;
-	b3_polar         Polar;
+	b3_vector        m_Normal;
+	b3_polar         m_Polar;
 
 	b3_count         xSize,ySize;
 
 protected:
-	     b3Shape(b3_size class_size,b3_u32 class_type);
-	void b3GetDiffuseColor(b3_color *color);
+	        b3Shape(b3_size class_size,b3_u32 class_type);
+	void    b3GetDiffuseColor(b3_color *color);
+	b3_bool b3CheckStencil();
 
 public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
-	        void b3ComputeBound(b3CondLimit *limit);
-	virtual void b3Intersect();
-	virtual void b3Transform(b3_matrix *transformation);
+	        void   b3ComputeBound(b3CondLimit *limit);
+	virtual b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
+	virtual void   b3Transform(b3_matrix *transformation);
 };
 
 class b3RenderShape : public b3Shape
@@ -751,20 +753,20 @@ private:
 
 
 // SPHERE
-class b3Sphere : public b3RenderShape        // Kugel
+class b3Sphere : public b3RenderShape    // Kugel
 {
-	b3_vector       	 Base;         // Mittelpunkt
-	b3_vector       	 Dir;          // Radius
-	b3_f32               QuadRadius;       // Quadrat vom Radius
+	b3_vector       	 m_Base;         // Mittelpunkt
+	b3_vector       	 m_Dir;          // Radius
+	b3_f64               m_QuadRadius;   // Quadrat vom Radius
 
 public:
 	B3_ITEM_INIT(b3Sphere);
 	B3_ITEM_LOAD(b3Sphere);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 
 	void b3Transform(b3_matrix *transformation);
 };
@@ -773,9 +775,9 @@ public:
 class b3Shape2 : public b3Shape
 {
 protected:
-	b3_vector           Base;           // basis of area, disk
-	b3_vector           Dir1,Dir2;      // direction vectors
-	b3_f32              NormalLength;     // normal length
+	b3_vector           m_Base;           // basis of area, disk
+	b3_vector           m_Dir1,m_Dir2;    // direction vectors
+	b3_f64              m_NormalLength;   // normal length
 
 protected:
 	b3Shape2(b3_size class_size,b3_u32 class_type);
@@ -798,11 +800,11 @@ public:
 	B3_ITEM_INIT(b3Area);
 	B3_ITEM_LOAD(b3Area);
 
-	void b3AllocVertices(b3RenderContext *context);
-	void b3FreeVertices();
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3FreeVertices();
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3Disk : public b3Shape2
@@ -811,25 +813,26 @@ public:
 	B3_ITEM_INIT(b3Disk);
 	B3_ITEM_LOAD(b3Disk);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
 class b3Shape3 : public b3RenderShape
 {
 protected:
-	b3_vector         Normals[3];       // cross products
-	b3_vector         Base;             // size
-	b3_vector         Dir1,Dir2,Dir3;
-	b3_s32            lSize;
-	b3_f32            Denom;            // denominator of lin. system
-	b3_f32            DirLen[3];        // length of direction vectors
+	b3_vector         m_Normals[3];       // cross products
+	b3_vector         m_Base;             // size
+	b3_vector         m_Dir1,m_Dir2,m_Dir3;
+	b3_s32            m_lSize;
+	b3_f32            m_Denom;            // denominator of lin. system
+	b3_f32            m_DirLen[3];        // length of direction vectors
 
 protected:
-	b3Shape3(b3_size class_size,b3_u32 class_type);
+	     b3Shape3(b3_size class_size,b3_u32 class_type);
+	void b3BaseTrans(b3_dLine *in,b3_dLine *out);
 
 public:
 	B3_ITEM_INIT(b3Shape3);
@@ -844,11 +847,11 @@ public:
 	B3_ITEM_INIT(b3Cylinder);
 	B3_ITEM_LOAD(b3Cylinder);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3AllocVertices(b3RenderContext *context);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3Cone : public b3Shape3
@@ -857,11 +860,11 @@ public:
 	B3_ITEM_INIT(b3Cone);
 	B3_ITEM_LOAD(b3Cone);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3AllocVertices(b3RenderContext *context);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3Ellipsoid : public b3Shape3
@@ -870,10 +873,10 @@ public:
 	B3_ITEM_INIT(b3Ellipsoid);
 	B3_ITEM_LOAD(b3Ellipsoid);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3Box : public b3Shape3
@@ -887,11 +890,11 @@ public:
 	B3_ITEM_INIT(b3Box);
 	B3_ITEM_LOAD(b3Box);
 
-	void b3AllocVertices(b3RenderContext *context);
-	void b3FreeVertices();
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3FreeVertices();
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 // DOUGHNUT, TORUS
@@ -911,11 +914,11 @@ public:
 	B3_ITEM_INIT(b3Torus);
 	B3_ITEM_LOAD(b3Torus);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
-	void b3Transform(b3_matrix *transformation);
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
+	void   b3Transform(b3_matrix *transformation);
 };
 
 // TRIANGLES
@@ -936,12 +939,12 @@ public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeNormals(b3_bool normalize=true);
-	void b3ComputeIndices();
-	void b3Intersect();
-	void b3Transform(b3_matrix *transformation);
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeNormals(b3_bool normalize=true);
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
+	void   b3Transform(b3_matrix *transformation);
 };
 
 // index calculation of triangle grid
@@ -978,10 +981,10 @@ public:
 	B3_ITEM_INIT(b3SplineCurveShape);
 	B3_ITEM_LOAD(b3SplineCurveShape);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3SplineRotShape : b3SplineCurve
@@ -991,7 +994,7 @@ public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
 
-	void b3Intersect();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 
 protected:
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -1040,7 +1043,7 @@ public:
 	B3_ITEM_INIT(b3SplineArea);
 	B3_ITEM_LOAD(b3SplineArea);
 
-	void b3Intersect();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3SplineCylinder : public b3SplineShape 
@@ -1049,7 +1052,7 @@ public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
 
-	void b3Intersect();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3SplineRing : public b3SplineShape 
@@ -1058,7 +1061,7 @@ public:
 	B3_ITEM_INIT(b3SplineRing);
 	B3_ITEM_LOAD(b3SplineRing);
 
-	void b3Intersect();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 /*************************************************************************
@@ -1116,11 +1119,11 @@ public:
 	B3_ITEM_INIT(b3CSGSphere);
 	B3_ITEM_LOAD(b3CSGSphere);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
-	void b3Transform(b3_matrix *transformation);
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
+	void   b3Transform(b3_matrix *transformation);
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -1136,7 +1139,7 @@ protected:
 
 	b3_s32             Index;
 	b3_s32             Operation;
-	b3_line            BTLine;
+	b3_dLine            BTLine;
 
 protected:
 	b3CSGShape3(b3_size class_size,b3_u32 class_type);
@@ -1155,11 +1158,11 @@ public:
 	B3_ITEM_INIT(b3CSGCylinder);
 	B3_ITEM_LOAD(b3CSGCylinder);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3AllocVertices(b3RenderContext *context);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3CSGCone : public b3CSGShape3
@@ -1169,11 +1172,11 @@ public:
 	B3_ITEM_INIT(b3CSGCone);
 	B3_ITEM_LOAD(b3CSGCone);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3AllocVertices(b3RenderContext *context);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3CSGEllipsoid : public b3CSGShape3
@@ -1183,10 +1186,10 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid);
 	B3_ITEM_LOAD(b3CSGEllipsoid);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 class b3CSGBox : public b3CSGShape3
@@ -1200,11 +1203,11 @@ public:
 	B3_ITEM_INIT(b3CSGBox);
 	B3_ITEM_LOAD(b3CSGBox);
 
-	void b3AllocVertices(b3RenderContext *context);
-	void b3FreeVertices();
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	void   b3AllocVertices(b3RenderContext *context);
+	void   b3FreeVertices();
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 };
 
 // CSG_TORUS
@@ -1222,17 +1225,17 @@ protected:
 
 	b3_s32             Index;
 	b3_s32             Operation;
-	b3_line            BTLine;
+	b3_dLine            BTLine;
 
 public:
 	B3_ITEM_INIT(b3CSGTorus);
 	B3_ITEM_LOAD(b3CSGTorus);
 
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
-	void b3Transform(b3_matrix *transformation);
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
+	b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
+	void   b3Transform(b3_matrix *transformation);
 };
 
 /*************************************************************************

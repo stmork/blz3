@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.5  2001/08/17 14:08:34  sm
 **      - Now trying to draw BSPline surfaces with own routines.
 **
@@ -68,9 +71,5 @@ b3SplineArea::b3SplineArea(b3_u32 class_type) : b3SplineShape(sizeof(b3SplineAre
 }
 
 b3SplineArea::b3SplineArea(b3_u32 *src) : b3SplineShape(src)
-{
-}
-
-void b3SplineArea::b3Intersect()
 {
 }

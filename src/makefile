@@ -58,7 +58,7 @@ remdepend:
 
 tar:
 	@$(BLZ3_HOME)/bin/configure.sh
-	@cd $(BLZ3_HOME)/.. && tar cvf /tmp/blz3.tar blz3 && gzip -f /tmp/blz3.tar
+	@cd $(BLZ3_HOME)/.. && tar cv blz3 | gzip > /tmp/blz3.tar.gz
 
 uncr:	$(BLZ3_BIN)/RemCR
 	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;

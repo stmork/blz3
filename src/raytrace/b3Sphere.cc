@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.8  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -86,8 +89,9 @@ b3Sphere::b3Sphere(b3_u32 class_type) : b3RenderShape(sizeof(b3Sphere), class_ty
 
 b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
-	b3InitVector(&Base);
-	b3InitVector(&Dir);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir);
+	m_QuadRadius = m_Dir.x * m_Dir.x + m_Dir.y * m_Dir.y + m_Dir.z * m_Dir.z;
 }
 
 void b3Sphere::b3GetCount(
@@ -106,7 +110,7 @@ void b3Sphere::b3GetCount(
 
 void b3Sphere::b3ComputeVertices()
 {
-	b3ComputeSphereVertices(Base,Dir);
+	b3ComputeSphereVertices(m_Base,m_Dir);
 }
 
 void b3Sphere::b3ComputeIndices()
@@ -114,13 +118,9 @@ void b3Sphere::b3ComputeIndices()
 	b3ComputeEllipsoidIndices();
 }
 
-void b3Sphere::b3Intersect()
-{
-}
-
 void b3Sphere::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir, &Dir, false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir, &m_Dir, false);
 	b3Recompute();
 }

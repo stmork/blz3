@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -61,9 +64,5 @@ b3SplineCylinder::b3SplineCylinder(b3_u32 class_type) : b3SplineShape(sizeof(b3S
 }
 
 b3SplineCylinder::b3SplineCylinder(b3_u32 *src) : b3SplineShape(src)
-{
-}
-
-void b3SplineCylinder::b3Intersect()
 {
 }

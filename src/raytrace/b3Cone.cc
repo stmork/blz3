@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/22 16:19:52  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.10  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -129,14 +132,10 @@ void b3Cone::b3AllocVertices(b3RenderContext *ctx)
 
 void b3Cone::b3ComputeVertices()
 {
-	b3ComputeConeVertices(Base,Dir1,Dir2,Dir3);
+	b3ComputeConeVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
 }
 
 void b3Cone::b3ComputeIndices()
 {
 	b3ComputeConeIndices();
-}
-
-void b3Cone::b3Intersect()
-{
 }

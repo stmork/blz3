@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/09/22 16:19:53  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.9  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -135,10 +138,6 @@ void b3Torus::b3ComputeVertices()
 void b3Torus::b3ComputeIndices()
 {
 	b3ComputeTorusIndices();
-}
-
-void b3Torus::b3Intersect()
-{
 }
 
 void b3Torus::b3Transform(b3_matrix *transformation)

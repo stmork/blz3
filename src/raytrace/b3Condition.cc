@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.5  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects
@@ -100,6 +103,10 @@ void b3Condition::b3ComputeBound(b3CondLimit *Limit)
 {
 }
 
+b3_bool b3Condition::b3CheckStencil(b3_polar *polar)
+{
+	return true;
+}
 
 void b3Condition::b3CheckInnerBound(
 	b3CondLimit *limit,

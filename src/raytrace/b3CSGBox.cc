@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.6  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -104,8 +107,4 @@ void b3CSGBox::b3ComputeVertices()
 void b3CSGBox::b3ComputeIndices()
 {
 	b3ComputeBoxIndices();
-}
-
-void b3CSGBox::b3Intersect()
-{
 }

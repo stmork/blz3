@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/09/22 16:19:52  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.11  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -151,14 +154,14 @@ void b3Disk::b3ComputeVertices()
 			sx = cos(a);
 			sy = sin(a);
 
-			Vector->x = Base.x + h * sx * Dir1.x + h * sy * Dir2.x;
-			Vector->y = Base.y + h * sx * Dir1.y + h * sy * Dir2.y;
-			Vector->z = Base.z + h * sx * Dir1.z + h * sy * Dir2.z;
+			Vector->x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+			Vector->y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+			Vector->z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
 			Vector++;
 
-			Vector->x = Base.x + b * sx * Dir1.x + b * sy * Dir2.x;
-			Vector->y = Base.y + b * sx * Dir1.y + b * sy * Dir2.y;
-			Vector->z = Base.z + b * sx * Dir1.z + b * sy * Dir2.z;
+			Vector->x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+			Vector->y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 			Vector++;
 
 			glVertexCount += 2;
@@ -170,16 +173,16 @@ void b3Disk::b3ComputeVertices()
 			// compute ordered position of ring disk
 			sx = h * Cos[i % SinCosSteps];
 			sy = h * Sin[i % SinCosSteps];
-			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
 			sx = b * Cos[i % SinCosSteps];
 			sy = b * Sin[i % SinCosSteps];
-			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
 			glVertexCount += 2;
@@ -193,14 +196,14 @@ void b3Disk::b3ComputeVertices()
 			sx = cos(a);
 			sy = sin(a);
 
-			Vector->x = Base.x + h * sx * Dir1.x + h * sy * Dir2.x;
-			Vector->y = Base.y + h * sx * Dir1.y + h * sy * Dir2.y;
-			Vector->z = Base.z + h * sx * Dir1.z + h * sy * Dir2.z;
+			Vector->x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+			Vector->y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+			Vector->z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
 			Vector++;
 
-			Vector->x = Base.x + b * sx * Dir1.x + b * sy * Dir2.x;
-			Vector->y = Base.y + b * sx * Dir1.y + b * sy * Dir2.y;
-			Vector->z = Base.z + b * sx * Dir1.z + b * sy * Dir2.z;
+			Vector->x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+			Vector->y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 
 			glVertexCount += 2;
 			xSize++;
@@ -209,7 +212,7 @@ void b3Disk::b3ComputeVertices()
 	else
 	{
 		// Position center first
-		*Vector++ = Base;
+		*Vector++ = m_Base;
 		glVertexCount++;
 
 		// First fractional disk part if any
@@ -219,9 +222,9 @@ void b3Disk::b3ComputeVertices()
 			sx = h * cos(a);
 			sy = h * sin(a);
 
-			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
 			glVertexCount++;
@@ -233,9 +236,9 @@ void b3Disk::b3ComputeVertices()
 		{
 			sx = h * Cos[i % SinCosSteps];
 			sy = h * Sin[i % SinCosSteps];
-			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
 			glVertexCount++;
@@ -249,9 +252,9 @@ void b3Disk::b3ComputeVertices()
 			sx = h * cos(a);
 			sy = h * sin(a);
 
-			Vector->x = Base.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 
 			glVertexCount++;
 			xSize++;
@@ -354,8 +357,4 @@ void b3Disk::b3ComputeIndices()
 		}
 	}
 #endif
-}
-
-void b3Disk::b3Intersect()
-{
 }

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/09/22 16:19:51  sm
+**      - Adding basic shape intersection routines
+**
 **      Revision 1.13  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -162,21 +165,21 @@ void b3Area::b3ComputeVertices()
 	x2     = Limit.x2;
 	y2     = Limit.y2;
 
-	*Vector++ = (GLfloat)(Base.x + x1 * Dir1.x + y1 * Dir2.x);
-	*Vector++ = (GLfloat)(Base.y + x1 * Dir1.y + y1 * Dir2.y);
-	*Vector++ = (GLfloat)(Base.z + x1 * Dir1.z + y1 * Dir2.z);
+	*Vector++ = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
+	*Vector++ = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
+	*Vector++ = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
 															 
-	*Vector++ = (GLfloat)(Base.x + x1 * Dir1.x + y2 * Dir2.x);
-	*Vector++ = (GLfloat)(Base.y + x1 * Dir1.y + y2 * Dir2.y);
-	*Vector++ = (GLfloat)(Base.z + x1 * Dir1.z + y2 * Dir2.z);
+	*Vector++ = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
+	*Vector++ = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
+	*Vector++ = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
 															 
-	*Vector++ = (GLfloat)(Base.x + x2 * Dir1.x + y2 * Dir2.x);
-	*Vector++ = (GLfloat)(Base.y + x2 * Dir1.y + y2 * Dir2.y);
-	*Vector++ = (GLfloat)(Base.z + x2 * Dir1.z + y2 * Dir2.z);
+	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
+	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
+	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
 															 
-	*Vector++ = (GLfloat)(Base.x + x2 * Dir1.x + y1 * Dir2.x);
-	*Vector++ = (GLfloat)(Base.y + x2 * Dir1.y + y1 * Dir2.y);
-	*Vector++ = (GLfloat)(Base.z + x2 * Dir1.z + y1 * Dir2.z);
+	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
+	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
+	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
 
 	xSize = 1;
 	ySize = 1;
@@ -186,8 +189,4 @@ void b3Area::b3ComputeVertices()
 void b3Area::b3ComputeIndices()
 {
 	b3ComputeBound(&Limit);
-}
-
-void b3Area::b3Intersect()
-{
 }
