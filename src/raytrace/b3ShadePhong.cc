@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/06/23 11:02:54  sm
+**	- Fixed material shader problem in Mork shading model: The half factor
+**	  moved into the lighting method.
+**
 **	Revision 1.31  2004/05/28 14:39:01  sm
 **	- Changed spacular exponent to integer value inside shader.
-**
+**	
 **	Revision 1.30  2004/05/28 14:06:29  sm
 **	- Minor optimizations in shader
 **	
@@ -247,7 +251,7 @@ void b3ShaderPhong::b3ShadeSurface(
 			surface.refl_ray.inside = false;
 		}
 		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count + 1);
+		b3Shade(&surface.refr_ray,depth_count);
 		formula |= MIX_REFRACTION;
 	}
 	else
@@ -258,7 +262,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	refl = surface.m_Reflection;
 	if (refl > 0)
 	{
-		b3Shade(&surface.refl_ray,depth_count + 1);
+		b3Shade(&surface.refl_ray,depth_count);
 		formula |= MIX_REFLECTION;
 	}
 

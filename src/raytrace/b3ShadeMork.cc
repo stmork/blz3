@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/06/23 11:02:54  sm
+**	- Fixed material shader problem in Mork shading model: The half factor
+**	  moved into the lighting method.
+**
 **	Revision 1.41  2004/05/28 20:33:05  sm
 **	- Backported Mork shader
-**
+**	
 **	Revision 1.40  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
 **	
@@ -259,7 +263,7 @@ void b3ShaderMork::b3ShadeLight(
 			}
 
 			// surface illumination (diffuse color)
-			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
+			if ((Factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor) > 0)
 			{
 				result += (surface->m_Diffuse * light->m_Color * Factor);
 			}
@@ -288,7 +292,7 @@ void b3ShaderMork::b3ShadeSurface(
 		refl = surface.m_Reflection;
 		refr = surface.m_Refraction;
 
-		b3Shade(&surface.refr_ray,depth_count + 1);
+		b3Shade(&surface.refr_ray,depth_count);
 		result = (surface.refr_ray.color * refr);
 	}
 	else
@@ -301,7 +305,7 @@ void b3ShaderMork::b3ShadeSurface(
 	// Reflection
 	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
 	{
-		b3Shade(&surface.refl_ray,depth_count + 1);
+		b3Shade(&surface.refl_ray,depth_count);
 		result += (surface.refl_ray.color * refl);
 	}
 	else
@@ -310,7 +314,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
-	factor = (1.0 - refl - refr) * 0.5;
+	factor = 1.0 - refl - refr;
 	if (factor > 0)
 	{
 		// For each light source
@@ -321,10 +325,7 @@ void b3ShaderMork::b3ShadeSurface(
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color =
-			ray->color * factor +
-			result +
-			surface.m_SpecularSum;
+		ray->color = ray->color * factor + result + surface.m_SpecularSum;
 	}
 	else
 	{

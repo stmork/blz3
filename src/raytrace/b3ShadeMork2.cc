@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/06/23 11:02:54  sm
+**	- Fixed material shader problem in Mork shading model: The half factor
+**	  moved into the lighting method.
+**
 **	Revision 1.4  2004/06/05 08:07:05  sm
 **	- Corrected b3Color for multiplying colors as filter.
-**
+**	
 **	Revision 1.3  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -113,8 +117,8 @@ void b3ShaderMork2::b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr
 	b3_f64 apb      = alpha + beta;
 	b3_f64 amb      = alpha - beta;
 	b3_f64 s_apb    = sin(apb);
-	b3_f64 s_amb    = sin(amb);
 	b3_f64 c_apb    = cos(apb);
+	b3_f64 s_amb    = sin(amb);
 	b3_f64 c_amb    = cos(amb);
 
 	// compute perpendicular (s = senkrecht) component of polarized light
@@ -152,7 +156,7 @@ void b3ShaderMork2::b3ShadeSurface(
 		}
 		b3ComputeInt(&surface,refl,refr);
 
-		b3Shade(&surface.refr_ray,depth_count + 1);
+		b3Shade(&surface.refr_ray,depth_count);
 		result = (surface.refr_ray.color * refr);
 	}
 	else
@@ -178,7 +182,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	// Reflection
 	if (refl > 0)
 	{
-		b3Shade(&surface.refl_ray,depth_count + 1);
+		b3Shade(&surface.refl_ray,depth_count);
 		result += (surface.refl_ray.color * refl);
 	}
 	else

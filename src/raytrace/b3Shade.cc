@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2004/06/23 11:02:54  sm
+**	- Fixed material shader problem in Mork shading model: The half factor
+**	  moved into the lighting method.
+**
 **	Revision 1.48  2004/05/27 13:13:56  sm
 **	- Optimized Mork shader
 **	- Removed b3ShadePostMaterial
 **	- Removed m_SpecularSum
-**
+**	
 **	Revision 1.47  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
@@ -408,7 +412,7 @@ b3_bool b3Shader::b3Shade(
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
-		b3ShadeSurface(surface,depth_count);
+		b3ShadeSurface(surface,depth_count + 1);
 
 		// Post process nebular
 		if (m_Nebular != null)
