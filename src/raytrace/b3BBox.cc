@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.77  2003/02/17 16:57:46  sm
+**	- Inlining head pointer computation.
+**
 **	Revision 1.76  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
 **	- Added TGF import to Un*x makefile
-**
+**	
 **	Revision 1.75  2003/01/26 11:53:26  sm
 **	- Added support for Caligari object loading.
 **	
@@ -487,16 +490,6 @@ void b3BBox::b3Write()
 
 	b3StoreString(m_BoxName,B3_BOXSTRINGLEN);
 	b3StoreString(m_BoxURL, B3_BOXSTRINGLEN);
-}
-
-b3Base<b3Item> *b3BBox::b3GetShapeHead()
-{
-	return &m_Heads[0];
-}
-
-b3Base<b3Item> *b3BBox::b3GetBBoxHead()
-{
-	return &m_Heads[1];
 }
 
 void b3BBox::b3CollectBBoxes(b3Array<b3BBoxReference> &array)

@@ -940,9 +940,21 @@ public:
 	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
-	b3Base<b3Item>     *b3GetBumpHead();
-	b3Base<b3Item>     *b3GetConditionHead();
-	b3Base<b3Item>     *b3GetMaterialHead();
+
+	inline b3Base<b3Item> *b3GetBumpHead()
+	{
+		return &m_Heads[0];
+	}
+
+	inline b3Base<b3Item> *b3GetConditionHead()
+	{
+		return &m_Heads[1];
+	}
+
+	inline b3Base<b3Item> *b3GetMaterialHead()
+	{
+		return &m_Heads[2];
+	}
 
 	virtual inline b3_bool b3NormalDeriv(b3_ray *ray)
 	{
@@ -1670,8 +1682,6 @@ public:
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
 		   b3BBox         *b3FindParentBBox(b3Shape *shape);
-		   b3Base<b3Item> *b3GetShapeHead();
-		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
 		   b3CSGShape     *b3IntersectCSG(b3_ray *ray);
 		   void            b3CollectBBoxes(b3Array<b3BBoxReference> &array);
@@ -1684,6 +1694,16 @@ public:
 	static b3_bool         b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
 	static b3BBox         *b3ReadCOB(const char *filename);
 	static b3BBox         *b3ReadTGF(const char *filename);
+
+	inline b3Base<b3Item> *b3GetShapeHead()
+	{
+		return &m_Heads[0];
+	}
+
+	inline b3Base<b3Item> *b3GetBBoxHead()
+	{
+		return &m_Heads[1];
+	}
 
 protected:
 	       void            b3GetGridColor(b3_color *color);
@@ -2149,7 +2169,6 @@ public:
 	       void            b3Write();
 
 public:
-	       b3Base<b3Item> *b3GetAnimElementHead();
 	       void            b3SetAnimElement (b3AnimElement *Element);
 	       b3_bool         b3IsActive();
 	       void            b3Activate(b3_bool activate = true);
@@ -2162,6 +2181,11 @@ public:
 	static b3_f64          b3ClipTimePoint(b3_f64 val,b3_f64 min,b3_f64 max);
 	       b3_f64          b3ClipTimePoint(b3_f64);
 		   void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+
+	inline b3Base<b3Item> *b3GetAnimElementHead()
+	{
+		return &m_Heads[0];
+	}
 
 private:
 	       void            b3RecomputeNeutralInverse (b3AnimElement *Element);
@@ -2379,9 +2403,6 @@ public:
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
 		    b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
 		    b3BBox         *b3FindParentBBox(b3Shape *shape);
-			b3Base<b3Item> *b3GetBBoxHead();
-			b3Base<b3Item> *b3GetLightHead();
-			b3Base<b3Item> *b3GetSpecialHead();
 			b3Animation    *b3GetAnimation(b3_bool force = false);
 			b3_f64          b3GetTimePoint();
 		    b3ModellerInfo *b3GetModellerInfo();
@@ -2421,6 +2442,21 @@ public:
 
 			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
 	static  b3Scene        *b3ReadTGF(const char *filename);
+
+	inline b3Base<b3Item> *b3GetBBoxHead()
+	{
+		return &m_Heads[0];
+	}
+
+	inline b3Base<b3Item> *b3GetLightHead()
+	{
+		return &m_Heads[1];
+	}
+
+	inline b3Base<b3Item> *b3GetSpecialHead()
+	{
+		return &m_Heads[2];
+	}
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);

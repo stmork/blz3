@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2003/02/17 16:57:46  sm
+**	- Inlining head pointer computation.
+**
 **	Revision 1.30  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
-**
+**	
 **	Revision 1.29  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
@@ -1035,12 +1038,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	b3_count     GridMax;
 #endif
 
-#ifdef _DEBUG
-	if (m_GridList == null)
-	{
-		return -1;
-	}
-#endif
+	B3_ASSERT (m_GridList != null);
 
 	if (m_GridSize <= 1)
 	{

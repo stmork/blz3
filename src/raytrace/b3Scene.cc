@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2003/02/17 16:57:46  sm
+**	- Inlining head pointer computation.
+**
 **	Revision 1.46  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
 **	- Added TGF import to Un*x makefile
-**
+**	
 **	Revision 1.45  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
 **	
@@ -402,21 +405,6 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 	xSize = this->m_xSize;
 	ySize = this->m_ySize;
 	return (m_Flags & TP_SIZEVALID) != 0;
-}
-
-b3Base<b3Item> *b3Scene::b3GetBBoxHead()
-{
-	return &m_Heads[0];
-}
-
-b3Base<b3Item> *b3Scene::b3GetLightHead()
-{
-	return &m_Heads[1];
-}
-
-b3Base<b3Item> *b3Scene::b3GetSpecialHead()
-{
-	return &m_Heads[2];
 }
 
 b3Animation *b3Scene::b3GetAnimation(b3_bool force)

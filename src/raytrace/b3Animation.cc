@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2003/02/17 16:57:46  sm
+**      - Inlining head pointer computation.
+**
 **      Revision 1.14  2002/08/21 10:16:40  sm
 **      - Made some changes to the Un*x OpenGL renderer:
 **        o Added animations
@@ -133,11 +136,6 @@ void b3InitAnimation::b3Init()
 **                        b3Animation implementation                    **
 **                                                                      **
 *************************************************************************/
-
-b3Base<b3Item> *b3Animation::b3GetAnimElementHead()
-{
-	return &m_Heads[0];
-}
 
 /* This routine sets the actual element for special use in the geometry */
 /* editor. This has got no effect on computing the animation. */

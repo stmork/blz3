@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2003/02/17 16:57:46  sm
+**      - Inlining head pointer computation.
+**
 **      Revision 1.48  2002/08/19 16:50:39  sm
 **      - Now having animation running, running, running...
 **      - Activation handling modified to reflect animation
@@ -486,21 +489,6 @@ void b3Shape::b3Write()
 
 void b3Shape::b3StoreShape()
 {
-}
-
-b3Base<b3Item> *b3Shape::b3GetBumpHead()
-{
-	return &m_Heads[0];
-}
-
-b3Base<b3Item> *b3Shape::b3GetConditionHead()
-{
-	return &m_Heads[1];
-}
-
-b3Base<b3Item> *b3Shape::b3GetMaterialHead()
-{
-	return &m_Heads[2];
 }
 
 b3_bool b3Shape::b3Prepare()
