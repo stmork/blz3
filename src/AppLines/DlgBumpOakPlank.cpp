@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.11  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.10  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -141,7 +144,7 @@ b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item,void *ptr)
 void CDlgBumpOakPlank::b3InitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
 	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PageBump.b3AddToSheet(&m_PropertySheet);

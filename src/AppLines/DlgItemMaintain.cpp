@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.13  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.12  2004/04/26 19:45:56  sm
 **	- Item maintain dialog: The return key enters the
 **	  property dialog or creates a new item
@@ -321,11 +324,11 @@ void CDlgItemMaintain::OnItemNew()
 		buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
 		if (buffer != null)
 		{
-			item = b3Loader::b3GetLoader().b3Create(buffer,false);
+			item = b3Loader::b3GetLoader().b3Create(buffer,m_pDoc,false);
 		}
 		else
 		{
-			item = b3Loader::b3GetLoader().b3Create(class_type,false);
+			item = b3Loader::b3GetLoader().b3Create(class_type,m_pDoc,false);
 		}
 
 		if (item != null)

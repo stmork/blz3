@@ -37,6 +37,8 @@
 class CDlgBumpTexture : public CB3SimplePreviewDialog
 {
 	b3_stencil_bound    m_Bound;
+	b3BBox             *m_BBox;
+	b3Shape            *m_Shape;
 	b3BumpTexture      *m_Bump;
 	b3BumpSampler      *m_BumpSampler;
 
@@ -49,7 +51,7 @@ class CDlgBumpTexture : public CB3SimplePreviewDialog
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void    b3Register();
-	CDlgBumpTexture(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpTexture(CAppObjectDoc *pDoc,b3Item *item,CWnd* pParent = NULL);   // standard constructor
 	~CDlgBumpTexture();
 
 // Dialog Data

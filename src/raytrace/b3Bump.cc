@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.31  2004/05/12 14:13:28  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -49,7 +52,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.30  2004/05/09 18:59:52  sm
 **	- Fixed bump water.
 **	
@@ -346,6 +349,18 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 
 b3BumpTexture::b3BumpTexture(b3_u32 class_type) : b3Bump(sizeof(b3BumpTexture),class_type)
 {
+	// Init texture repetition values
+	m_xStart =  0;
+	m_yStart =  1;
+	m_xScale =  1;
+	m_yScale = -1;
+	m_xTimes =  2;
+	m_yTimes =  2;
+
+	// Init texture
+	m_Name.b3Empty();
+	m_Texture = null;
+	m_Flags   = 0;
 }
 
 b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)

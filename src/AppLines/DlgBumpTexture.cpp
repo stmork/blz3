@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.1  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -48,7 +51,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	
 */
 
@@ -58,12 +61,20 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpTexture::CDlgBumpTexture(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpTexture::CDlgBumpTexture(CAppObjectDoc *pDoc,b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item, CDlgBumpTexture::IDD, pParent)
 {
+	m_BBox     = pDoc->m_BBox;
+	m_Shape    = pDoc->b3GetSelectedShape();
+	m_Shape->b3GetStencilBoundInfo(&m_Bound);
+	m_Bump = (b3BumpTexture *)item;
+	b3Scene::b3CheckTexture(&m_Bump->m_Texture,m_Bump->m_Name);
 	//{{AFX_DATA_INIT(CDlgBumpTexture)
-		// NOTE: the ClassWizard will add member initialization here
+	m_Unit = 1;
 	//}}AFX_DATA_INIT
+	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
+	m_xTimesCtrl.b3SetRange(1,100);
+	m_yTimesCtrl.b3SetRange(1,100);
 }
 
 CDlgBumpTexture::~CDlgBumpTexture()
@@ -92,6 +103,7 @@ void CDlgBumpTexture::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 	m_xTimesCtrl.b3DDX(pDX,m_Bump->m_xTimes);
 	m_yTimesCtrl.b3DDX(pDX,m_Bump->m_yTimes);
+	m_AmplitudeCtrl.b3DDX(pDX,m_Bump->m_Amplitude);
 }
 
 
@@ -122,12 +134,12 @@ END_MESSAGE_MAP()
 
 void CDlgBumpTexture::b3Register()
 {
-	b3Loader::b3AddClassType(BUMP_TEXTURE,IDS_BUMP_WOOD,IDI_BUMP_TEXTURE,b3Edit,b3Edit);
+	b3Loader::b3AddClassType(BUMP_TEXTURE,IDS_BUMP_TEXTURE,IDI_BUMP_TEXTURE,b3Edit,b3Edit);
 }
 
 b3_bool CDlgBumpTexture::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpTexture dlg(item);
+	CDlgBumpTexture dlg((CAppObjectDoc *)ptr,item);
 
 	return dlg.DoModal() == IDOK;
 }
@@ -151,7 +163,7 @@ BOOL CDlgBumpTexture::OnInitDialog()
 void CDlgBumpTexture::b3InitDialog() 
 {
 	m_PreviewBumpCtrl.b3Init();
-	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl,1);
 	m_BumpSampler->b3SetBump(m_Bump);
 }
 

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.13  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.12  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
@@ -153,7 +156,7 @@ b3_bool CDlgMatOakPlank::b3Edit(b3Item *item,void *ptr)
 void CDlgMatOakPlank::b3InitDialog() 
 {
 	m_PreviewMaterialCtrl.b3Init();
-	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl);
+	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl,1);
 	m_MatSampler->b3SetMaterial(m_Material);
 
 	m_PageDark.b3SetCaption(IDS_TITLE_DARK);

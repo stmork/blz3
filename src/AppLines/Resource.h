@@ -883,6 +883,7 @@
 #define IDS_TOOLBAR_OBJECT              60204
 #define IDS_TOOLBAR_VIEW                60205
 #define IDS_UNKNOWN                     60206
+#define IDS_BUMP_TEXTURE                61446
 
 // Next default values for new objects
 // 

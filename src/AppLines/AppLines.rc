@@ -4025,6 +4025,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_BUMP_TEXTURE        "Bump Mapping"
 END
 
 STRINGTABLE DISCARDABLE 

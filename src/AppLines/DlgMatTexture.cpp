@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/12 19:10:50  sm
+**	- Completed bump mapping dialog.
+**
 **	Revision 1.5  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
-**
+**	
 **	Revision 1.4  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -69,9 +72,9 @@
 CDlgMatTexture::CDlgMatTexture(CAppObjectDoc *pDoc,b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item,CDlgMatTexture::IDD, pParent)
 {
+	m_BBox     = pDoc->m_BBox;
 	m_Shape    = pDoc->b3GetSelectedShape();
 	m_Shape->b3GetStencilBoundInfo(&m_Bound);
-	m_BBox     = pDoc->m_BBox;
 	m_Material = (b3MatTexture *)item;
 	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_MatHead->b3Append(m_Material);
