@@ -44,6 +44,9 @@
 
 /*
 **      $Log$
+**      Revision 1.82  2004/08/09 10:09:05  sm
+**      - Added color palette reduction and its tool.
+**
 **      Revision 1.81  2004/08/09 07:43:12  sm
 **      - Some display list optimizations.
 **
@@ -527,6 +530,9 @@ void b3RenderContext::b3Init()
 	{
 		b3PrintF(B3LOG_NORMAL,"Support for OpenGL shading language V1.00.\n");
 	}
+
+	glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &glMaxVertices);
+	glGetIntegerv(GL_MAX_ELEMENTS_INDICES,  &glMaxIndices);
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1604,6 +1610,10 @@ void b3RenderObject::b3DrawIntoDisplayList(
 
 			// Put geometry :-)
 			B3_ASSERT(glVertex != null);
+			if ((glPolyCount * 3) > context->glMaxIndices)
+			{
+				b3PrintF(B3LOG_NORMAL,"Warning!!!\n");
+			}
 #ifndef _DEBUG
 			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);

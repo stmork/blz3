@@ -321,6 +321,7 @@ public:
 		b3_pkd_color *gTable,
 		b3_pkd_color *bTable,
 		b3Tx         *srcTx = null);
+	b3_bool        b3TxReduce(b3Tx *src);
 
 	// b3TxHist.cc
 	b3_bool        b3Histogramme();

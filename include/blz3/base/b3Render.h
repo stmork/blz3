@@ -47,6 +47,11 @@ class b3RenderContext : protected b3Mem
 	b3RenderObject  *glSelectedObject;
 
 public:
+#ifdef BLZ3_USE_OPENGL
+	GLint            glMaxVertices;
+	GLint            glMaxIndices;
+#endif
+
 	b3_count         glVertexCount;
 	b3_count         glPolyCount;
 	b3_count         glGridCount;
@@ -57,7 +62,7 @@ public:
 
 public:
 	                 b3RenderContext();
-	static  void     b3Init();
+	        void     b3Init();
 	virtual void     b3StartDrawing();
 	static  void     b3SetAmbient(b3Color &ambient);
 	static  void     b3LightReset();

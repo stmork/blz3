@@ -23,6 +23,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/base/b3Color.h"
 
 #include <math.h>
 
@@ -37,12 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/08/09 10:09:05  sm
+**	- Added color palette reduction and its tool.
+**
 **	Revision 1.7  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.6  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -1539,4 +1543,55 @@ b3_bool b3Tx::b3TxContrast(
 		correction_table,
 		correction_table,
 		correction_table,src);
+}
+
+b3_bool b3Tx::b3TxReduce(b3Tx *src)
+{
+	b3_index      i,p,count,index;
+	b3_pkd_color *srcPtr = (b3_pkd_color *)src->b3GetData(),color;
+	b3_u08       *dstPtr = (b3_u08 *)b3GetData();
+
+	if (!src->b3IsTrueColor())
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3TxReduce(): source image is no true color image!\n");
+		return false;
+	}
+
+	if (!b3IsPalette())
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3TxReduce(): destination image has no palette!\n");
+		return false;
+	}
+
+	if ((src->xSize != xSize) || (src->ySize != ySize))
+	{
+		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3TxReduce(): Both images have different resolution!\n");
+		return false;
+	}
+
+	count = xSize * ySize;
+	for (i = 0;i < count;i++)
+	{
+		b3_f32 dist_min = 1e38;
+
+		color = *srcPtr++;
+		index = pSize;
+		for (p = 0;p < pSize;p++)
+		{
+			b3Color srcColor(color);
+			b3Color palColor(palette[p]);
+			b3Color diff = srcColor - palColor;
+
+			diff *= diff;
+
+			b3_f32 dist = sqrt(diff[b3Color::R] + diff[b3Color::G] + diff[b3Color::B]);
+			if (dist < dist_min)
+			{
+				dist_min = dist;
+				index = p;
+			}
+		}
+		*dstPtr++ = index;
+	}
+	return true;
 }
