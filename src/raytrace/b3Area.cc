@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.20  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -171,24 +176,22 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 void b3Area::b3AllocVertices(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
-	glVertices = area_vertices;
-	glNormals  = area_normals;
-	glTexCoord = area_texcoord;
+	glVertex   = area_vertex;
 	glGrids    = area_grids;
 	glPolygons = area_polygons;
 
 	glVertexCount = 4;
 	glGridCount   = 4;
 	glPolyCount   = 2;
+
+	memset(area_vertex,0,sizeof(area_vertex));
 #endif
 }
 
 void b3Area::b3FreeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	glVertices = null;
-	glNormals  = null;
-	glTexCoord = null;
+	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif
@@ -198,31 +201,41 @@ void b3Area::b3FreeVertices()
 void b3Area::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat     *Vector;
-	b3_f32       x1,y1,x2,y2;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_f32         x1,y1,x2,y2;
 
-	x1     = Limit.x1;
-	y1     = Limit.y1;
-	x2     = Limit.x2;
-	y2     = Limit.y2;
+	x1 = Limit.x1;
+	y1 = Limit.y1;
+	x2 = Limit.x2;
+	y2 = Limit.y2;
 
 	// Setup world coordinates
-	Vector    = glVertices;
-	*Vector++ = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
-	*Vector++ = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
-	*Vector++ = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
+	Vector->t.s = area_texcoord[0];
+	Vector->t.t = area_texcoord[1];
+	Vector->v.x = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
+	Vector->v.y = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
+	Vector->v.z = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
+	Vector++;
 															 
-	*Vector++ = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
-	*Vector++ = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
-	*Vector++ = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
-															 
-	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
-	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
-	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
-															 
-	*Vector++ = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
-	*Vector++ = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
-	*Vector++ = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
+	Vector->t.s = area_texcoord[2];
+	Vector->t.t = area_texcoord[3];
+	Vector->v.x = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
+	Vector->v.y = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
+	Vector->v.z = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
+	Vector++;
+	
+	Vector->t.s = area_texcoord[4];
+	Vector->t.t = area_texcoord[5];
+	Vector->v.x = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
+	Vector->v.y = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
+	Vector->v.z = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
+	Vector++;
+
+	Vector->t.s = area_texcoord[6];
+	Vector->t.t = area_texcoord[7];
+	Vector->v.x = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
+	Vector->v.y = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
+	Vector->v.z = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
 
 	xSize = 1;
 	ySize = 1;

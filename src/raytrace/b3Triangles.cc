@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.6  2001/12/30 22:52:36  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -236,19 +241,19 @@ void b3Triangles::b3GetCount(
 void b3Triangles::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	b3_vertex *Vertex;
-	b3_index   i;
+	b3_tnv_vertex *Vector;
+	b3_vertex     *Vertex;
+	b3_index       i;
 
 	Vertex   = (b3_vertex *)m_Vertices;
-	Vector   = (b3_vector *)glVertices;
+	Vector   = glVertex;
 
 	glVertexCount = m_VertexCount;
 	for (i = 0;i < m_VertexCount;i++)
 	{
-		Vector->x = Vertex->Point.x;
-		Vector->y = Vertex->Point.y;
-		Vector->z = Vertex->Point.z;
+		Vector->v.x = Vertex->Point.x;
+		Vector->v.y = Vertex->Point.y;
+		Vector->v.z = Vertex->Point.z;
 		Vertex++;
 		Vector++;
 	}

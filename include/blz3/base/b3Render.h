@@ -118,6 +118,27 @@ public:
 #endif
 };
 
+#ifdef BLZ3_USE_OPENGL
+/*
+** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));
+*/
+struct b3_tnv_vertex
+{
+	struct
+	{
+		GLfloat s,t;
+	} t;
+	struct
+	{
+		GLfloat x,y,z;
+	} n;
+	struct
+	{
+		GLfloat x,y,z;
+	} v;
+};
+#endif
+
 class b3RenderObject : public b3Mem
 {
 protected:
@@ -126,9 +147,7 @@ protected:
 	b3_count         glPolyCount;
 #ifdef BLZ3_USE_OPENGL
 	b3_bool          glComputed;
-	GLfloat         *glVertices;
-	GLfloat         *glNormals;
-	GLfloat         *glTexCoord;
+	b3_tnv_vertex   *glVertex;
 	GLushort        *glGrids;
 	GLushort        *glPolygons;
 

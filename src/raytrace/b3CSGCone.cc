@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.14  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -133,20 +138,21 @@ void b3CSGCone::b3GetCount(
 void b3CSGCone::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_index   i;
-	b3_vector *Vector;
+	b3_index       i;
+	b3_tnv_vertex *Vector;
 
-	Vector = (b3_vector *)glVertices;
+	Vector = (b3_tnv_vertex *)glVertex;
 	for (i = 0;i < SinCosSteps;i++)
 	{
-		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[i]);
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],(b3_vector *)&Vector[i].v);
 		Vector[i + SinCosSteps] = Vector[i];
 	}
 	Vector += SinCosSteps;
 	Vector += SinCosSteps;
 
-	*Vector++ = m_Base;
-	b3Vector::b3Add(&m_Base,&m_Dir3,Vector);
+	Vector[1].v.x = (Vector[0].v.x = m_Base.x) + m_Base.x;
+	Vector[1].v.y = (Vector[0].v.y = m_Base.y) + m_Base.y;
+	Vector[1].v.z = (Vector[0].v.z = m_Base.z) + m_Base.z;
 #endif
 }
 

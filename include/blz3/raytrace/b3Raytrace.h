@@ -1092,8 +1092,7 @@ public:
 class b3Area : public b3Shape2
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat  area_vertices[4 * 3];
-	GLfloat  area_normals[4 * 3];
+	b3_tnv_vertex  area_vertex[4];
 #endif
 
 public:
@@ -1182,8 +1181,7 @@ public:
 class b3Box : public b3Shape3
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat  box_vertices[8 * 3 * 3];
-	GLfloat  box_normals[8 * 3 * 3];
+	b3_tnv_vertex  box_vertex[8 * 3];
 #endif
 
 public:
@@ -1573,9 +1571,7 @@ public:
 class b3CSGBox : public b3CSGShape3
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat  box_vertices[8 * 3 * 3];
-	GLfloat  box_normals[8 * 3 * 3];
-	GLfloat  box_texcoord[8 * 3 * 3];
+	b3_tnv_vertex  box_vertex[8 * 3];
 #endif
 
 public:
@@ -1648,9 +1644,7 @@ public:
 	char             m_BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
 #ifdef BLZ3_USE_OPENGL
-	GLfloat          bbox_vertices[8 * 3];
-	GLfloat          bbox_normals[8 * 3];
-	GLfloat          bbox_texcoord[8 * 3];
+	b3_tnv_vertex    bbox_vertex[8];
 #endif
 
 public:

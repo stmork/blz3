@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2002/07/27 18:51:31  sm
+**	- Drawing changed to glInterleavedArrays(). This means that
+**	  extra normal and texture arrays are omitted. This simplifies
+**	  correct programming, too.
+**
 **	Revision 1.55  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
 **	- Further try of stencil maps
-**
+**	
 **	Revision 1.54  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
@@ -524,11 +529,11 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	glPolyCount   =  0;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertices = bbox_vertices;
-	glNormals  = bbox_normals;
-	glTexCoord = bbox_texcoord;
+	glVertex   = bbox_vertex;
 	glGrids    = bbox_indices;
 	glPolygons = null;
+
+	memset(bbox_vertex,0,sizeof(bbox_vertex));
 #endif
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
@@ -552,9 +557,7 @@ void b3BBox::b3FreeVertices()
 	b3ShapeRenderObject *shape;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertices = null;
-	glNormals  = null;
-	glTexCoord = null;
+	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif
@@ -579,37 +582,37 @@ void b3BBox::b3ComputeVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3_index        i = 0;
 
-	bbox_vertices[i++] = m_DimBase.x;
-	bbox_vertices[i++] = m_DimBase.y;
-	bbox_vertices[i++] = m_DimBase.z;
+	bbox_vertex[0].v.x = m_DimBase.x;
+	bbox_vertex[0].v.y = m_DimBase.y;
+	bbox_vertex[0].v.z = m_DimBase.z;
 
-	bbox_vertices[i++] = m_DimBase.x;
-	bbox_vertices[i++] = m_DimBase.y;
-	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
+	bbox_vertex[1].v.x = m_DimBase.x;
+	bbox_vertex[1].v.y = m_DimBase.y;
+	bbox_vertex[1].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
-	bbox_vertices[i++] = m_DimBase.y;
-	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
+	bbox_vertex[2].v.x = m_DimBase.x + m_DimSize.x;
+	bbox_vertex[2].v.y = m_DimBase.y;
+	bbox_vertex[2].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
-	bbox_vertices[i++] = m_DimBase.y;
-	bbox_vertices[i++] = m_DimBase.z;
+	bbox_vertex[3].v.x = m_DimBase.x + m_DimSize.x;
+	bbox_vertex[3].v.y = m_DimBase.y;
+	bbox_vertex[3].v.z = m_DimBase.z;
 
-	bbox_vertices[i++] = m_DimBase.x;
-	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
-	bbox_vertices[i++] = m_DimBase.z;
+	bbox_vertex[4].v.x = m_DimBase.x;
+	bbox_vertex[4].v.y = m_DimBase.y + m_DimSize.y;
+	bbox_vertex[4].v.z = m_DimBase.z;
 
-	bbox_vertices[i++] = m_DimBase.x;
-	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
-	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
+	bbox_vertex[5].v.x = m_DimBase.x;
+	bbox_vertex[5].v.y = m_DimBase.y + m_DimSize.y;
+	bbox_vertex[5].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
-	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
-	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
+	bbox_vertex[6].v.x = m_DimBase.x + m_DimSize.x;
+	bbox_vertex[6].v.y = m_DimBase.y + m_DimSize.y;
+	bbox_vertex[6].v.z = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
-	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
-	bbox_vertices[i++] = m_DimBase.z;
+	bbox_vertex[7].v.x = m_DimBase.x + m_DimSize.x;
+	bbox_vertex[7].v.y = m_DimBase.y + m_DimSize.y;
+	bbox_vertex[7].v.z = m_DimBase.z;
 
 	glVertexCount = 8;
 	glComputed    = true;

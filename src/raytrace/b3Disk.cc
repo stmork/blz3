@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.18  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -167,14 +172,11 @@ void b3Disk::b3GetCount(
 void b3Disk::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	GLfloat   *Tex;
-	b3_f64     sx,sy,b,a,h,start,end;
-	b3_index   i;
-	b3_count   iMax;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_f64         sx,sy,b,a,h,start,end;
+	b3_index       i;
+	b3_count       iMax;
 
-	Vector = (b3_vector *)glVertices;
-	Tex    = glTexCoord;
 	h = Limit.y2;
 	b = Limit.y1;
 
@@ -197,20 +199,19 @@ void b3Disk::b3ComputeVertices()
 			sx = cos(a);
 			sy = sin(a);
 
-			Vector->x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
-			Vector->y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
-			Vector->z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
 			Vector++;
 
-			Vector->x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
-			Vector->y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
-			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
+			Vector->t.s = 0;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 			Vector++;
-
-			*Tex++ = 0;
-			*Tex++ = 0;
-			*Tex++ = 0;
-			*Tex++ = 1;
 
 			glVertexCount += 2;
 			xSize++;
@@ -218,26 +219,26 @@ void b3Disk::b3ComputeVertices()
 
 		for (;i<=iMax;i++)
 		{
+			b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+
 			// compute ordered position of ring disk
 			sx = h * Cos[i % SinCosSteps];
 			sy = h * Sin[i % SinCosSteps];
-			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+			Vector->t.s = s;
+			Vector->t.t = 0;
+			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
 
 			sx = b * Cos[i % SinCosSteps];
 			sy = b * Sin[i % SinCosSteps];
-			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+			Vector->t.s = s;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
-
-			Tex[0]  =
-			Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			Tex[1]  = 0;
-			Tex[3]  = 1;
-			Tex    += 4;
 
 			glVertexCount += 2;
 			xSize++;
@@ -250,19 +251,18 @@ void b3Disk::b3ComputeVertices()
 			sx = cos(a);
 			sy = sin(a);
 
-			Vector->x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
-			Vector->y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
-			Vector->z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
+			Vector->t.s = 1;
+			Vector->t.t = 0;
+			Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
 			Vector++;
 
-			Vector->x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
-			Vector->y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
-			Vector->z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
-
-			*Tex++ = 1;
-			*Tex++ = 0;
-			*Tex++ = 1;
-			*Tex++ = 1;
+			Vector->t.s = 1;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 
 			glVertexCount += 2;
 			xSize++;
@@ -271,9 +271,12 @@ void b3Disk::b3ComputeVertices()
 	else
 	{
 		// Position center first
-		*Vector++ = m_Base;
-		*Tex++    = 0.5;
-		*Tex++    = 0;
+		Vector->t.s = 0.5;
+		Vector->t.t = 0;
+		Vector->v.x = m_Base.x;
+		Vector->v.y = m_Base.y;
+		Vector->v.z = m_Base.z;
+		Vector++;
 		glVertexCount++;
 
 		// First fractional disk part if any
@@ -283,13 +286,12 @@ void b3Disk::b3ComputeVertices()
 			sx = h * cos(a);
 			sy = h * sin(a);
 
-			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+			Vector->t.s = 0;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
-
-			*Tex++ = 0;
-			*Tex++ = 1;
 
 			glVertexCount++;
 			xSize++;
@@ -300,13 +302,12 @@ void b3Disk::b3ComputeVertices()
 		{
 			sx = h * Cos[i % SinCosSteps];
 			sy = h * Sin[i % SinCosSteps];
-			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 			Vector++;
-
-			*Tex++ = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			*Tex++ = 1;
 
 			glVertexCount++;
 			xSize++;
@@ -319,12 +320,11 @@ void b3Disk::b3ComputeVertices()
 			sx = h * cos(a);
 			sy = h * sin(a);
 
-			Vector->x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
-
-			*Tex++ = 1;
-			*Tex++ = 1;
+			Vector->t.s = 1;
+			Vector->t.t = 1;
+			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 
 			glVertexCount++;
 			xSize++;

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.33  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -337,13 +342,11 @@ void b3SplineShape::b3GetCount(
 void b3SplineShape::b3ComputeGridVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	b3_count   CurveNum,Points;
-	b3_index   x,y;
-	b3Spline   MySpline;
-
-	Points        = 0;
-	Vector        = (b3_vector *)glVertices;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
+	b3_count       CurveNum,Points = 0;
+	b3_index       x,y,t;
+	b3Spline       MySpline;
 
 	m_Spline[0].controls =  m_Controls;
 	m_Spline[1].controls =  m_Controls;
@@ -360,8 +363,14 @@ void b3SplineShape::b3ComputeGridVertices()
 	// ... then create real horizontal spline curve.
 	for (y = 0;y < CurveNum;y++)
 	{
-		Points         = MySpline.b3DeBoor (Vector,y);
-		Vector        += Points;
+		Points = MySpline.b3DeBoor (SplVector,y);
+		for (t = 0;t < Points;t++)
+		{
+			Vector->v.x = SplVector[t].x;
+			Vector->v.y = SplVector[t].y;
+			Vector->v.z = SplVector[t].z;
+			Vector++;
+		}
 	}
 
 	// building vertical splines
@@ -374,8 +383,14 @@ void b3SplineShape::b3ComputeGridVertices()
 	// ... then create real vertical spline curve.
 	for (x = 0;x < CurveNum;x++)
 	{
-		Points         = MySpline.b3DeBoor (Vector,x);
-		Vector        += Points;
+		Points = MySpline.b3DeBoor (SplVector,x);
+		for (t = 0;t < Points;t++)
+		{
+			Vector->v.x = SplVector[t].x;
+			Vector->v.y = SplVector[t].y;
+			Vector->v.z = SplVector[t].z;
+			Vector++;
+		}
 	}
 #endif
 }
@@ -383,20 +398,21 @@ void b3SplineShape::b3ComputeGridVertices()
 void b3SplineShape::b3ComputeSolidVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Spline   MySpline;
-	b3_index   x,y;
-	b3_f64     fx,fxStep;
-	b3_f64     fy,fyStep;
-	b3_count   SubDiv,index,count;
-	b3_vector *Vector;
-	GLfloat   *Tex;
+	b3Spline       MySpline;
+	b3_index       x,y;
+	b3_f64         fx,fxStep;
+	b3_f64         fy,fyStep;
+	b3_count       SubDiv,index,count;
+	b3_tnv_vertex *Vector;
+	b3_vector     *Aux;
+	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
 
 	// Building horizontal BSplines
-	Vector = Between;
+	Aux    = Between;
 	SubDiv = m_Spline[0].subdiv + 1;
 	for (x = 0;x < SubDiv;x++)
 	{
-		Vector += m_Spline[1].b3DeBoor (Vector,x * m_Spline[0].offset);
+		Aux += m_Spline[1].b3DeBoor (Aux,x * m_Spline[0].offset);
 	}
 
 	// Create aux BSpline
@@ -404,23 +420,25 @@ void b3SplineShape::b3ComputeSolidVertices()
 	MySpline.offset   = m_Spline[1].subdiv + 1;
 	MySpline.controls = Between;
 
-	Vector = (b3_vector *)&glVertices[m_GridVertexCount * 3];
-	Tex    = &glTexCoord[m_GridVertexCount * 2];
+	Vector = &glVertex[m_GridVertexCount];
 	index  = 0;
 	fy     = 0;
 	fyStep = 1.0 / (b3_f64)m_ySubDiv;
 	for (y = 0;y < m_ySubDiv;y++)
 	{
-		count   = MySpline.b3DeBoor (Vector,y);
-		Vector += count;
+		count   = MySpline.b3DeBoor (SplVector,y);
 		index  += count;
 
 		fx = 0;
 		fxStep = 1.0 / (b3_f64)count;
 		for (x = 0;x < count;x++)
 		{
-			*Tex++ = fx;
-			*Tex++ = fy;
+			Vector->t.s = fx;
+			Vector->t.t = fy;
+			Vector->v.x = SplVector[x].x;
+			Vector->v.y = SplVector[x].y;
+			Vector->v.z = SplVector[x].z;
+			Vector++;
 			fx += fxStep;
 		}
 		fy += fyStep;

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.14  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -133,19 +138,19 @@ void b3CSGCylinder::b3GetCount(
 void b3CSGCylinder::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_index   i,offset = SinCosSteps * 2;
-	b3_vector *Vector;
+	b3_index       i,offset = SinCosSteps * 2;
+	b3_tnv_vertex *Vector;
 
-	Vector = (b3_vector *)glVertices;
+	Vector = (b3_tnv_vertex *)glVertex;
 	for (i = 0;i < SinCosSteps;i++)
 	{
-		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],Vector);
-		b3Vector::b3Add(&Vector[0],&m_Dir3,&Vector[1]);
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],(b3_vector *)&Vector[0].v);
+		b3Vector::b3Add((b3_vector *)&Vector[0].v,&m_Dir3,(b3_vector *)&Vector[1].v);
 		Vector += 2;
 	}
 
 	// Create copy
-	Vector = (b3_vector *)glVertices;
+	Vector = (b3_tnv_vertex *)glVertex;
 	for (i = 0;i < offset;i++)
 	{
 		Vector[i + offset] = Vector[i];
@@ -153,8 +158,9 @@ void b3CSGCylinder::b3ComputeVertices()
 	Vector += offset;
 	Vector += offset;
 
-	*Vector++ = m_Base;
-	b3Vector::b3Add(&m_Base,&m_Dir3,Vector);
+	Vector[1].v.x = (Vector[0].v.x = m_Base.x) + m_Dir3.x;
+	Vector[1].v.y = (Vector[0].v.y = m_Base.y) + m_Dir3.y;
+	Vector[1].v.z = (Vector[0].v.z = m_Base.z) + m_Dir3.z;
 #endif
 }
 

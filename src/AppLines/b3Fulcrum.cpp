@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.4  2002/07/26 22:08:09  sm
 **      - Some b3RenderObject derived classed didn't initialize
 **        glTexCoord. It's time to use glInterleavedArrays() to
@@ -104,7 +109,7 @@ b3Fulcrum::b3Fulcrum()
 	m_Position.x = 0;
 	m_Position.y = 0;
 	m_Position.z = 0;
-	memset(m_TexCoord,0,sizeof(m_TexCoord));
+	memset(m_Vertex,0,sizeof(m_Vertex));
 }
 
 void b3Fulcrum::b3Update(b3_vector *fulcrum)
@@ -115,16 +120,14 @@ void b3Fulcrum::b3Update(b3_vector *fulcrum)
 
 void b3Fulcrum::b3AllocVertices(b3RenderContext *cts)
 {
-	glVertices = (GLfloat *)m_Vertices;
-	glNormals  = (GLfloat *)m_Normals;
-	glTexCoord = (GLfloat *)m_TexCoord;
+	glVertex   = m_Vertex;
 	glGrids    = FulcrumIndices;
 	glPolygons = null;
 }
 
 void b3Fulcrum::b3FreeVertices()
 {
-	glVertices = null;
+	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
 }
@@ -135,9 +138,9 @@ void b3Fulcrum::b3ComputeVertices()
 
 	for (i = 0;i < B3_FULCRUM_VERTEX_COUNT;i++)
 	{
-		m_Vertices[i].x = fulcrum[i].x * m_Scale + m_Position.x;
-		m_Vertices[i].y = fulcrum[i].y * m_Scale + m_Position.y;
-		m_Vertices[i].z = fulcrum[i].z * m_Scale + m_Position.z;
+		glVertex[i].v.x = fulcrum[i].x * m_Scale + m_Position.x;
+		glVertex[i].v.y = fulcrum[i].y * m_Scale + m_Position.y;
+		glVertex[i].v.z = fulcrum[i].z * m_Scale + m_Position.z;
 	}
 	glVertexCount = B3_FULCRUM_VERTEX_COUNT;
 	glGridCount   = B3_FULCRUM_INDEX_COUNT;

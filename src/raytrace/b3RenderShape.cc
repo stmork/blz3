@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.45  2002/07/26 22:08:09  sm
 **      - Some b3RenderObject derived classed didn't initialize
 **        glTexCoord. It's time to use glInterleavedArrays() to
@@ -767,14 +772,14 @@ b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
 #ifdef BLZ3_USE_OPENGL
 b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 {
-	b3_vector *point;
-	b3_vector *ptr = (b3_vector *)glVertices;
-	b3_index   i;
+	b3_tnv_vertex *point;
+	b3_tnv_vertex *ptr = glVertex;
+	b3_index       i;
 
 	point = &ptr[vertex];
 	for (i = 0;i < glVertexCount;i++)
 	{
-		if (b3Vector::b3Distance(point,ptr) < epsilon)
+		if (b3Vector::b3Distance((b3_vector *)&point->v,(b3_vector *)&ptr->v) < epsilon)
 		{
 			return i;
 		}
@@ -814,15 +819,15 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 	b3_vector   &Dir)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	b3_index   i,j;
-	b3_count   Circles;
-	b3_f64     cx,sx,cy,sy,a;
-	b3_f64     LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f32     Rad;
-	b3_vector  Aux,Dir1,Dir2,Dir3;
+	b3_tnv_vertex *Vector;
+	b3_index       i,j;
+	b3_count       Circles;
+	b3_f64         cx,sx,cy,sy,a;
+	b3_f64         LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f32         Rad;
+	b3_vector      Aux,Dir1,Dir2,Dir3;
 
-	Vector = (b3_vector *)glVertices;
+	Vector = glVertex;
 	Aux    = Base;
 	Dir1.x = Rad = b3Vector::b3Length (&Dir);
 	Dir1.y = 0;
@@ -853,18 +858,15 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 			cy = LocalCos[j];
 			sy = LocalSin[j];
 
-			Vector->x = Base.x + cx * sy * Dir1.x + sx * sy * Dir2.x + cy * Dir3.x;
-			Vector->y = Base.y + cx * sy * Dir1.y + sx * sy * Dir2.y + cy * Dir3.y;
-			Vector->z = Base.z + cx * sy * Dir1.z + sx * sy * Dir2.z + cy * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Base.x + cx * sy * Dir1.x + sx * sy * Dir2.x + cy * Dir3.x;
+			Vector->v.y = Base.y + cx * sy * Dir1.y + sx * sy * Dir2.y + cy * Dir3.y;
+			Vector->v.z = Base.z + cx * sy * Dir1.z + sx * sy * Dir2.z + cy * Dir3.z;
 			Vector++;
 		}
 	}
 	b3CorrectIndices();
-	/*
-		PrintF ("\n");
-		PrintF ("Points: %3ld\n",Points);
-		PrintF ("Circles:%3ld\n",Circles);
-	*/
 #endif
  }
 
@@ -881,27 +883,23 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	GLfloat   *Tex;
-	b3_f64     sx,sy,b,h,start,end;
-	b3_index   i;
-	b3_count   iMax;
-	b3_vector  Bottom;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_f64         sx,sy,b,h,start,end;
+	b3_index       i;
+	b3_count       iMax;
+	b3_vector      Bottom;
 
-	Vector = (b3_vector *)glVertices;
-	Tex    = glTexCoord;
-	h      = Limit.y2 - Limit.y1;
-	b      = Limit.y1;
-
+	h        = Limit.y2 - Limit.y1;
+	b        = Limit.y1;
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
 	Bottom.z = Base.z + b * Dir3.z;
-	start  = Limit.x1 * SinCosSteps;
-	end    = Limit.x2 * SinCosSteps;
-	i      = (b3_index)ceil(start);
-	iMax   = (b3_count)floor(end);
-	xSize = 0;
-	ySize = 2;
+	start    = Limit.x1 * SinCosSteps;
+	end      = Limit.x2 * SinCosSteps;
+	i        = (b3_index)ceil(start);
+	iMax     = (b3_count)floor(end);
+	xSize    = 0;
+	ySize    = 2;
 	glVertexCount = 0;
 
 	if ((i - start) > epsilon)
@@ -910,20 +908,19 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		sx = cos(b);
 		sy = sin(b);
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+		Vector->t.s = 0;
+		Vector->t.t = 0;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 		Vector++;
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
+		Vector->t.s = 0;
+		Vector->t.t = 1;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
-
-		*Tex++ = 0;
-		*Tex++ = 0;
-		*Tex++ = 0;
-		*Tex++ = 1;
 
 		glVertexCount += 2;
 		xSize++;
@@ -931,24 +928,24 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 
 	for (;i<=iMax;i++)
 	{
+		b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+
 		sx = Cos[i % SinCosSteps];
 		sy = Sin[i % SinCosSteps];
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+		Vector->t.s = s;
+		Vector->t.t = 0;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 		Vector++;
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
+		Vector->t.s = s;
+		Vector->t.t = 1;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
-
-		Tex[0]  =
-		Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-		Tex[1]  = 0;
-		Tex[3]  = 1;
-		Tex    += 4;
 
 		glVertexCount += 2;
 		xSize++;
@@ -960,20 +957,19 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		sx = cos(b);
 		sy = sin(b);
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+		Vector->t.s = 1;
+		Vector->t.t = 0;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 		Vector++;
 
-		Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
-		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
-		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
+		Vector->t.s = 1;
+		Vector->t.t = 1;
+		Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
+		Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
+		Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
-
-		*Tex++ = 1;
-		*Tex++ = 0;
-		*Tex++ = 1;
-		*Tex++ = 1;
 
 		glVertexCount += 2;
 		xSize++;
@@ -1017,15 +1013,11 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	GLfloat   *Tex;
-	b3_f64     sx,sy,b,h,d,a,start,end;
-	b3_index   i;
-	b3_count   iMax;
-	b3_vector  Bottom;
-
-	Vector   = (b3_vector *)glVertices;
-	Tex      = glTexCoord;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_f64         sx,sy,b,h,d,a,start,end;
+	b3_index       i;
+	b3_count       iMax;
+	b3_vector      Bottom;
 
 	d        = Limit.y2 - Limit.y1;
 	b        = Limit.y1;
@@ -1050,22 +1042,21 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			a = Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
 			sx = (1-h) * cos(a);
 			sy = (1-h) * sin(a);
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = 1;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
-
-			*Tex++ = 0;
-			*Tex++ = 0;
-			*Tex++ = 0;
-			*Tex++ = 1;
 
 			glVertexCount += 2;
 			xSize++;
@@ -1073,25 +1064,25 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 
 		for (;i <= iMax;i++)
 		{
+			b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+
 			sx = (1-b) * Cos[i % SinCosSteps];
 			sy = (1-b) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->t.s = s;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
 			sx = (1-h) * Cos[i % SinCosSteps];
 			sy = (1-h) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
+			Vector->t.s = s;
+			Vector->t.t = 1;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
-
-			Tex[0]  =
-			Tex[2]  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			Tex[1]  = 0;
-			Tex[3]  = 1;
-			Tex    += 4;
 
 			glVertexCount += 2;
 			xSize++;
@@ -1103,21 +1094,20 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->t.s = 1;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
 			sx = (1-h) * cos(a);
 			sy = (1-h) * sin(a);
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
-
-			*Tex++ = 1;
-			*Tex++ = 0;
-			*Tex++ = 1;
-			*Tex++ = 1;
+			Vector->t.s = 1;
+			Vector->t.t = 1;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 
 			glVertexCount += 2;
 			xSize++;
@@ -1125,14 +1115,13 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 	}
 	else
 	{
-		Vector->x = Base.x + Dir3.x;
-		Vector->y = Base.y + Dir3.y;
-		Vector->z = Base.z + Dir3.z;
+		Vector->t.s = 0.5;
+		Vector->t.t = 1;
+		Vector->v.x = Base.x + Dir3.x;
+		Vector->v.y = Base.y + Dir3.y;
+		Vector->v.z = Base.z + Dir3.z;
 		Vector++;
 		glVertexCount++;
-
-		*Tex++ = 0.5;
-		*Tex++ = 1;
 
 		if ((i - start) > epsilon)
 		{
@@ -1140,13 +1129,12 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
-
-			*Tex++ = 0;
-			*Tex++ = 0;
 
 			glVertexCount++;
 			xSize++;
@@ -1156,13 +1144,13 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 		{
 			sx = (1-b) * Cos[i % SinCosSteps];
 			sy = (1-b) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-			Vector++;
 
-			*Tex++ = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			*Tex++ = 0;
+			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
+			Vector++;
 
 			glVertexCount++;
 			xSize++;
@@ -1174,12 +1162,11 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-
-			*Tex++ = 1;
-			*Tex++ = 0;
+			Vector->t.s = 1;
+			Vector->t.t = 0;
+			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 
 			glVertexCount++;
 			xSize++;
@@ -1234,14 +1221,13 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	b3_index   i,j;
-	b3_count   iMax,Circles = 0;
-	b3_f64     RadX,RadY,sx,sy;
-	b3_f64     LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f32     start,end,a;
+	b3_tnv_vertex *Vector = glVertex;
+	b3_index       i,j;
+	b3_count       iMax,Circles = 0;
+	b3_f64         RadX,RadY,sx,sy;
+	b3_f64         LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f32         start,end,a;
 
-	Vector = (b3_vector *)glVertices;
 	start  = (Limit.y1 + 1) * SinCosSteps * 0.25;
 	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
@@ -1288,9 +1274,11 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1307,9 +1295,11 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1327,9 +1317,11 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = 0;
+			Vector->v.x = Base.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Base.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Base.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1467,48 +1459,64 @@ void b3ShapeRenderObject::b3ComputeBoxVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
+	GLfloat   *tex_coord = box_texcoord;
 	b3_vector  Aux;
 	b3_index   i;
 
-	Vector     = (b3_vector *)glVertices;
-	glTexCoord = box_texcoord;
+	glVertex[0].t.s = *tex_coord++;
+	glVertex[0].t.t = *tex_coord++;
+	glVertex[0].v.x = Aux.x = Base.x;
+	glVertex[0].v.y = Aux.y = Base.y;
+	glVertex[0].v.z = Aux.z = Base.z;
 
-	*Vector = Aux = Base;
+	glVertex[1].t.s = *tex_coord++;
+	glVertex[1].t.t = *tex_coord++;
+	glVertex[1].v.x = (Aux.x += Dir1.x);
+	glVertex[1].v.y = (Aux.y += Dir1.y);
+	glVertex[1].v.z = (Aux.z += Dir1.z);
 
-	Vector[1].x = (Aux.x += Dir1.x);
-	Vector[1].y = (Aux.y += Dir1.y);
-	Vector[1].z = (Aux.z += Dir1.z);
+	glVertex[2].t.s = *tex_coord++;
+	glVertex[2].t.t = *tex_coord++;
+	glVertex[2].v.x = (Aux.x += Dir2.x);
+	glVertex[2].v.y = (Aux.y += Dir2.y);
+	glVertex[2].v.z = (Aux.z += Dir2.z);
+	        
+	glVertex[3].t.s = *tex_coord++;
+	glVertex[3].t.t = *tex_coord++;
+	glVertex[3].v.x = (Aux.x -= Dir1.x);
+	glVertex[3].v.y = (Aux.y -= Dir1.y);
+	glVertex[3].v.z = (Aux.z -= Dir1.z);
 
-	Vector[2].x = (Aux.x += Dir2.x);
-	Vector[2].y = (Aux.y += Dir2.y);
-	Vector[2].z = (Aux.z += Dir2.z);
+	glVertex[4].t.s = *tex_coord++;
+	glVertex[4].t.t = *tex_coord++;
+	glVertex[4].v.x = (Aux.x += Dir3.x);
+	glVertex[4].v.y = (Aux.y += Dir3.y);
+	glVertex[4].v.z = (Aux.z += Dir3.z);
+	        
+	glVertex[5].t.s = *tex_coord++;
+	glVertex[5].t.t = *tex_coord++;
+	glVertex[5].v.x = (Aux.x += Dir1.x);
+	glVertex[5].v.y = (Aux.y += Dir1.y);
+	glVertex[5].v.z = (Aux.z += Dir1.z);
 
-	Vector[3].x = (Aux.x -= Dir1.x);
-	Vector[3].y = (Aux.y -= Dir1.y);
-	Vector[3].z = (Aux.z -= Dir1.z);
-
-	Vector[4].x = (Aux.x += Dir3.x);
-	Vector[4].y = (Aux.y += Dir3.y);
-	Vector[4].z = (Aux.z += Dir3.z);
-
-	Vector[5].x = (Aux.x += Dir1.x);
-	Vector[5].y = (Aux.y += Dir1.y);
-	Vector[5].z = (Aux.z += Dir1.z);
-
-	Vector[6].x = (Aux.x -= Dir2.x);
-	Vector[6].y = (Aux.y -= Dir2.y);
-	Vector[6].z = (Aux.z -= Dir2.z);
-
-	Vector[7].x = (Aux.x -= Dir1.x);
-	Vector[7].y = (Aux.y -= Dir1.y);
-	Vector[7].z = (Aux.z -= Dir1.z);
+	glVertex[6].t.s = *tex_coord++;
+	glVertex[6].t.t = *tex_coord++;
+	glVertex[6].v.x = (Aux.x -= Dir2.x);
+	glVertex[6].v.y = (Aux.y -= Dir2.y);
+	glVertex[6].v.z = (Aux.z -= Dir2.z);
+	        
+	glVertex[7].t.s = *tex_coord++;
+	glVertex[7].t.t = *tex_coord++;
+	glVertex[7].v.x = (Aux.x -= Dir1.x);
+	glVertex[7].v.y = (Aux.y -= Dir1.y);
+	glVertex[7].v.z = (Aux.z -= Dir1.z);
 
 	xSize = ySize = 1;
 
 	for (i = 0;i < 8;i++)
 	{
-		Vector[i + 8] = Vector[i + 16] = Vector[i];
+		glVertex[i +  8] =
+		glVertex[i + 16] = glVertex[i];
 	}
 #endif
 }
@@ -1536,18 +1544,16 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 	b3_f64       bRad)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *Vector;
-	GLfloat   *Tex;
-	b3_f64     start,end,a;
-	b3_f64     sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
-	b3_f64     sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f64     relTex[B3_MAX_RENDER_SUBDIV+1];
-	b3_index   i,j;
-	b3_count   iMax,Circles=0;
-	b3_vector  Aux;
+	b3_tnv_vertex *Vector;
+	b3_f64         start,end,a;
+	b3_f64         sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64         sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64         relTex[B3_MAX_RENDER_SUBDIV+1];
+	b3_index       i,j;
+	b3_count       iMax,Circles=0;
+	b3_vector      Aux;
 
-	Vector = (b3_vector *)glVertices;
-	Tex    = glTexCoord;
+	Vector = glVertex;
 	start  = Limit.y1 * SinCosSteps;
 	end    = Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
@@ -1600,13 +1606,12 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = 0;
+			Vector->t.t = relTex[j];
+			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
-
-			*Tex++  = 0;
-			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;
@@ -1625,13 +1630,12 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Vector->t.t = relTex[j];
+			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
-
-			*Tex++  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;
@@ -1651,13 +1655,12 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			Vector->t.s = 1;
+			Vector->t.t = relTex[j];
+			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
+			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
+			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
-
-			*Tex++  = 1;
-			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;

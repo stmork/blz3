@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.13  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -110,22 +115,20 @@ b3CSGBox::b3CSGBox(b3_u32 *src) : b3CSGShape3(src)
 void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
-	glVertices = box_vertices;
-	glNormals  = box_normals;
-	glTexCoord = box_texcoord;
+	glVertex      = box_vertex;
 
 	glVertexCount = 24;
 	glGridCount   = 12;
 	glPolyCount   = 12;
+
+	memset(box_vertex,0,sizeof(box_vertex));
 #endif
 }
 
 void b3CSGBox::b3FreeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	glVertices = null;
-	glNormals  = null;
-	glTexCoord = null;
+	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif

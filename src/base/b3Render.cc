@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.40  2002/07/26 22:08:09  sm
 **      - Some b3RenderObject derived classed didn't initialize
 **        glTexCoord. It's time to use glInterleavedArrays() to
@@ -589,9 +594,7 @@ b3RenderObject::b3RenderObject()
 	glPolyCount   = 0;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertices    = null;
-	glNormals     = null;
-	glTexCoord    = null;
+	glVertex      = null;
 	glGrids       = null;
 	glPolygons    = null;
 
@@ -640,19 +643,13 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 	if (glVertexCount != new_vertCount)
 	{
-		b3Free(glVertices);
-		b3Free(glNormals);
-		b3Free(glTexCoord);
-		glVertices = null;
-		glNormals  = null;
-		glTexCoord = null;
+		b3Free(glVertex);
+		glVertex      = null;
 		glVertexCount = new_vertCount;
 
 		if (glVertexCount > 0)
 		{
-			glVertices =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
-			glNormals  =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
-			glTexCoord =  (GLfloat *)b3Alloc(glVertexCount * 2 * sizeof(GLfloat));
+			glVertex = (b3_tnv_vertex *)b3Alloc(glVertexCount * sizeof(b3_tnv_vertex));
 		}
 		glComputed = false;
 	}
@@ -688,14 +685,10 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 void b3RenderObject::b3FreeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3Free(glVertices);
-	b3Free(glNormals);
-	b3Free(glTexCoord);
+	b3Free(glVertex);
 	b3Free(glGrids);
 	b3Free(glPolygons);
-	glVertices = null;
-	glNormals  = null;
-	glTexCoord = null;
+	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
 #endif
@@ -715,13 +708,13 @@ void b3RenderObject::b3ComputeIndices()
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *nPtr = (b3_vector *)glNormals;
-	b3_vector *vPtr = (b3_vector *)glVertices;
-	GLushort  *pPtr = glPolygons;
-	b3_vector  normal;
-	b3_vector  xDir,yDir;
-	b3_f64     len;
-	b3_index   i,p1,p2,p3,start,end;
+	b3_tnv_vertex *nPtr = (b3_tnv_vertex *)glVertex;
+	b3_tnv_vertex *vPtr = (b3_tnv_vertex *)glVertex;
+	GLushort      *pPtr = glPolygons;
+	b3_vector      normal;
+	b3_vector      xDir,yDir;
+	b3_f64         len;
+	b3_index       i,p1,p2,p3,start,end;
 
 	if (nPtr == null)
 	{
@@ -733,9 +726,9 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3GetVertexRange(start,end);
 	for (i = start;i < end;i++)
 	{
-		nPtr[i].x = 0;
-		nPtr[i].y = 0;
-		nPtr[i].z = 0;
+		nPtr[i].n.x = 0;
+		nPtr[i].n.y = 0;
+		nPtr[i].n.z = 0;
 	}
 
 	// Collect normals
@@ -750,17 +743,15 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		B3_ASSERT((start <= p2) && (p2 < end));
 		B3_ASSERT((start <= p3) && (p3 < end));
 
-		xDir.x = vPtr[p2].x - vPtr[p1].x;
-		xDir.y = vPtr[p2].y - vPtr[p1].y;
-		xDir.z = vPtr[p2].z - vPtr[p1].z;
+		xDir.x = vPtr[p2].v.x - vPtr[p1].v.x;
+		xDir.y = vPtr[p2].v.y - vPtr[p1].v.y;
+		xDir.z = vPtr[p2].v.z - vPtr[p1].v.z;
 
-		yDir.x = vPtr[p3].x - vPtr[p1].x;
-		yDir.y = vPtr[p3].y - vPtr[p1].y;
-		yDir.z = vPtr[p3].z - vPtr[p1].z;
+		yDir.x = vPtr[p3].v.x - vPtr[p1].v.x;
+		yDir.y = vPtr[p3].v.y - vPtr[p1].v.y;
+		yDir.z = vPtr[p3].v.z - vPtr[p1].v.z;
 
-		normal.x = xDir.y * yDir.z - xDir.z * yDir.y;
-		normal.y = xDir.z * yDir.x - xDir.x * yDir.z;
-		normal.z = xDir.x * yDir.y - xDir.y * yDir.x;
+		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
 		len = b3Vector::b3Length(&normal);
 		if (len > 0)
 		{
@@ -768,17 +759,17 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 			normal.y /= len;
 			normal.z /= len;
 
-			nPtr[p1].x += normal.x;
-			nPtr[p1].y += normal.y;
-			nPtr[p1].z += normal.z;
+			nPtr[p1].n.x += normal.x;
+			nPtr[p1].n.y += normal.y;
+			nPtr[p1].n.z += normal.z;
 
-			nPtr[p2].x += normal.x;
-			nPtr[p2].y += normal.y;
-			nPtr[p2].z += normal.z;
+			nPtr[p2].n.x += normal.x;
+			nPtr[p2].n.y += normal.y;
+			nPtr[p2].n.z += normal.z;
 
-			nPtr[p3].x += normal.x;
-			nPtr[p3].y += normal.y;
-			nPtr[p3].z += normal.z;
+			nPtr[p3].n.x += normal.x;
+			nPtr[p3].n.y += normal.y;
+			nPtr[p3].n.z += normal.z;
 		}
 	}
 
@@ -787,12 +778,12 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	{
 		for (i = 0;i < glVertexCount;i++)
 		{
-			len = b3Vector::b3Length(&nPtr[i]);
+			len = b3Vector::b3Length((b3_vector *)&nPtr[i].n);
 			if (len > 0)
 			{
-				nPtr[i].x /= len;
-				nPtr[i].y /= len;
-				nPtr[i].z /= len;
+				nPtr[i].n.x /= len;
+				nPtr[i].n.y /= len;
+				nPtr[i].n.z /= len;
 			}
 		}
 	}
@@ -809,27 +800,27 @@ void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
-	b3_vector *ptr;
-	b3_bool    result = false;
-	b3_index   i,start,end;
+	b3_tnv_vertex *ptr;
+	b3_bool        result = false;
+	b3_index       i,start,end;
 
 #ifdef BLZ3_USE_OPENGL
 	b3Update();
-	if (glComputed && (glVertices != null) && (glVertexCount > 0))
+	if (glComputed && (glVertex != null) && (glVertexCount > 0))
 	{
-		ptr = (b3_vector *)glVertices;
+		ptr = (b3_tnv_vertex *)glVertex;
 		b3GetVertexRange(start,end);
 		for (i = start;i < end;i++)
 		{
 			// Check lower bound
-			if (ptr[i].x < lower->x) lower->x = ptr[i].x;
-			if (ptr[i].y < lower->y) lower->y = ptr[i].y;
-			if (ptr[i].z < lower->z) lower->z = ptr[i].z;
-
-			// Check upper bound
-			if (ptr[i].x > upper->x) upper->x = ptr[i].x;
-			if (ptr[i].y > upper->y) upper->y = ptr[i].y;
-			if (ptr[i].z > upper->z) upper->z = ptr[i].z;
+			if (ptr[i].v.x < lower->x) lower->x = ptr[i].v.x;
+			if (ptr[i].v.y < lower->y) lower->y = ptr[i].v.y;
+			if (ptr[i].v.z < lower->z) lower->z = ptr[i].v.z;
+					     
+			// Check up  per bound
+			if (ptr[i].v.x > upper->x) upper->x = ptr[i].v.x;
+			if (ptr[i].v.y > upper->y) upper->y = ptr[i].v.y;
+			if (ptr[i].v.z > upper->z) upper->z = ptr[i].v.z;
 		}
 		result = true;
 	}
@@ -998,24 +989,17 @@ void b3RenderObject::b3UpdateMaterial()
 void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_vector *ptr;
-	b3_count   i;
+	b3_tnv_vertex *ptr;
+	b3_count       i;
 
-	if (glVertices != null)
+	if (glVertex != null)
 	{
-		ptr = (b3_vector *)glVertices;
+		ptr = (b3_tnv_vertex *)glVertex;
 		for (i = 0;i < glVertexCount;i++)
 		{
-			b3Vector::b3MatrixMul4D(transformation,ptr++);
-		}
-	}
-
-	if (glNormals != null)
-	{
-		ptr = (b3_vector *)glNormals;
-		for (i = 0;i < glVertexCount;i++)
-		{
-			b3Vector::b3MatrixMul3D(transformation,ptr++);
+			b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&ptr->v);
+			b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&ptr->n);
+			ptr++;
 		}
 	}
 #endif
@@ -1040,50 +1024,50 @@ void b3RenderObject::b3Draw()
 		// makes it possible to catch to faulty
 		// index data. The access simply compute
 		// the length of the lines to be drawn.
-		for (i = 0;i < glPolyCount;i++)
-		{
-			b3_vector aPoint,bPoint,cPoint;
-			b3_index  a,b,c;
-			b3_f64    aLen,bLen;
-
-			a = glPolygons[i * 3]     * 3;
-			aPoint.x = glVertices[a++];
-			aPoint.y = glVertices[a++];
-			aPoint.z = glVertices[a++];
-
-			b = glPolygons[i * 3] * 3;
-			bPoint.x = glVertices[b++];
-			bPoint.y = glVertices[b++];
-			bPoint.z = glVertices[b++];
-
-			c = glPolygons[i * 3] * 3;
-			cPoint.x = glVertices[c++];
-			cPoint.y = glVertices[c++];
-			cPoint.z = glVertices[c++];
-
-			aLen = b3Vector::b3Distance(&aPoint,&bPoint);
-			bLen = b3Vector::b3Distance(&aPoint,&cPoint);
-		}
-		break;
-
-	case B3_RENDER_FILLED:
 		for (i = 0;i < glGridCount;i++)
 		{
 			b3_vector aPoint,bPoint;
 			b3_index  a,b;
 			b3_f64    len;
 
-			a = glGrids[i + i]     * 3;
-			aPoint.x = glVertices[a++];
-			aPoint.y = glVertices[a++];
-			aPoint.z = glVertices[a++];
+			a = glGrids[i + i];
+			aPoint.x = glVertex[a].v.x;
+			aPoint.y = glVertex[a].v.y;
+			aPoint.z = glVertex[a].v.z;
 
-			b = glGrids[i + i + 1] * 3;
-			bPoint.x = glVertices[b++];
-			bPoint.y = glVertices[b++];
-			bPoint.z = glVertices[b++];
+			b = glGrids[i + i + 1];
+			bPoint.x = glVertex[b].v.x;
+			bPoint.y = glVertex[b].v.y;
+			bPoint.z = glVertex[b].v.z;
 
 			len = b3Vector::b3Distance(&aPoint,&bPoint);
+		}
+		break;
+
+	case B3_RENDER_FILLED:
+		for (i = 0;i < glPolyCount;i++)
+		{
+			b3_vector aPoint,bPoint,cPoint;
+			b3_index  a,b,c;
+			b3_f64    aLen,bLen;
+
+			a = glPolygons[i * 3];
+			aPoint.x = glVertex[a].v.x;
+			aPoint.y = glVertex[a].v.y;
+			aPoint.z = glVertex[a].v.z;
+
+			b = glPolygons[i * 3 + 1];
+			bPoint.x = glVertex[b].v.x;
+			bPoint.y = glVertex[b].v.y;
+			bPoint.z = glVertex[b].v.z;
+
+			c = glPolygons[i * 3 + 2];
+			cPoint.x = glVertex[c].v.x;
+			cPoint.y = glVertex[c].v.y;
+			cPoint.z = glVertex[c].v.z;
+
+			aLen = b3Vector::b3Distance(&aPoint,&bPoint);
+			bLen = b3Vector::b3Distance(&aPoint,&cPoint);
 		}
 		break;
 	}
@@ -1105,10 +1089,8 @@ void b3RenderObject::b3Draw()
 			glColor3f(diffuse.r,diffuse.g,diffuse.b);
 
 			// Put geometry :-)
-			B3_ASSERT(glTexCoord != null);
-			glVertexPointer( 3,  GL_FLOAT, 0, glVertices);
-			glNormalPointer(     GL_FLOAT, 0, glNormals);
-			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
+			B3_ASSERT(glVertex != null);
+			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 		}
 		break;
@@ -1143,10 +1125,8 @@ void b3RenderObject::b3Draw()
 			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,glShininess);
 
 			// Put geometry :-)
-			B3_ASSERT(glTexCoord != null);
-			glVertexPointer(  3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(     GL_FLOAT, 0, glNormals);
-			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
+			B3_ASSERT(glVertex != null);
+			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 		}
 		break;

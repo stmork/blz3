@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/07/27 18:51:31  sm
+**      - Drawing changed to glInterleavedArrays(). This means that
+**        extra normal and texture arrays are omitted. This simplifies
+**        correct programming, too.
+**
 **      Revision 1.14  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -297,15 +302,15 @@ void b3SplineRotShape::b3GetCount(
 void b3SplineRotShape::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_matrix  Matrix;
-	b3Spline   AuxSpline;
-	b3_vector  AuxControls[B3_MAX_CONTROLS + 1];
-	b3_vector *Vector;
-	GLfloat   *Tex;
-	b3_index   i,a,x;
-	b3_count   count;
-	b3_f64     fx,fxStep;
-	b3_f64     fy,fyStep;
+	b3_matrix      Matrix;
+	b3Spline       AuxSpline;
+	b3_vector      AuxControls[B3_MAX_CONTROLS + 1];
+	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
+	b3_tnv_vertex *Vector;
+	b3_index       i,a,x;
+	b3_count       count;
+	b3_f64         fx,fxStep;
+	b3_f64         fy,fyStep;
 
 	// Build rotation matrix
 	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
@@ -318,22 +323,24 @@ void b3SplineRotShape::b3ComputeVertices()
 		AuxControls[i] = m_Controls[i];
 	}
 
-	Vector = (b3_vector *)glVertices;
-	Tex    = glTexCoord;
+	Vector = glVertex;
 	fy     = 0;
 	fyStep = 1.0 / (b3_f64)m_rSubDiv;
 	for (a = 0;a < m_rSubDiv;a++)
 	{
 		// Compute curve
-		count   = AuxSpline.b3DeBoor(Vector,0);
-		Vector += count;
-
-		fx = 0;
+		count  = AuxSpline.b3DeBoor(SplVector,0);
+		fx     = 0;
 		fxStep = 1.0 / (b3_f64)count;
 		for (x = 0;x < count;x++)
 		{
-			*Tex++ = fx;
-			*Tex++ = fy;
+			Vector->t.s = fx;
+			Vector->t.t = fy;
+			Vector->v.x = SplVector[x].x;
+			Vector->v.y = SplVector[x].y;
+			Vector->v.z = SplVector[x].z;
+			Vector++;
+
 			fx += fxStep;
 		}
 		fy += fyStep;
