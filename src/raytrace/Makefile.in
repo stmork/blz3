@@ -1,6 +1,6 @@
 # Beispiel Makefile
 
-CPPFLAGS = @CPPFLAGS@
+CPPFLAGS	= @CPPFLAGS@
 
 LIBS			= libB3Raytrace.o
 PRG_SOURCE		=\
@@ -120,6 +120,5 @@ clean:
 libB3Raytrace.o:	$(PRG_OBJ)
 	rm -f $@ core
 	$(LD) -r -o $@ $^
-
 
 -include .dep

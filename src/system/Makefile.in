@@ -23,12 +23,16 @@ LIB_OBJ	=\
 	b3Row.o\
 	b3TimeAbstract.o
 
-all:	$(LIB_OBJ)
+all:	$(LIBS)
 
 depend:
 	@CPP@ -M $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+
+libB3System_ind.o:	$(LIB_OBJ)
+	rm -f $@ core
+	$(LD) -r -o $@ $^
 
 -include .dep

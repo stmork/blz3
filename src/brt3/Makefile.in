@@ -16,6 +16,9 @@ BCONV3_OBJS		= bconv3.o
 BHC_OBJS		= bhc.o
 RP_OBJS			= rp.o
 
+B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
+B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
+
 PRGS			= brt3 bimg3 bconv3 bhc rp
 
 all:	$(PRGS)
@@ -31,19 +34,19 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
-brt3:	$(BRT3_OBJS)
+brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ -lB3Raytrace -lB3Base $(LIBS)
 
-bimg3:	$(BIMG3_OBJS)
+bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
 
-bconv3:	$(BCONV3_OBJS)
+bconv3:	$(BCONV3_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
 
-bhc:	$(BHC_OBJS)
+bhc:	$(BHC_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ -lB3Raytrace -lB3Base $(LIBS)
 
-rp:	$(RP_OBJS)
+rp:	$(RP_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ -lB3Raytrace -lB3Base $(LIBS)
 
 -include .dep
