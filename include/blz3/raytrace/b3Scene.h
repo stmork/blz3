@@ -129,6 +129,7 @@ public:
 
 	static b3TxPool  m_TexturePool;
 	static b3_f64    epsilon;
+	static b3_s32    m_RenderPriority;
 
 public:
 	B3_ITEM_INIT(b3Scene);

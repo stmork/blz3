@@ -38,9 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2004/11/07 12:20:56  sm
+**	- Added support for rendering priority. The brt3 command
+**	  uses the BLZ3_RENDER_PRIO environment variable for
+**	  setting the priority. Valid range is from -2 to 2 where
+**	  only root can use 1 to 2.
+**
 **	Revision 1.58  2004/09/28 18:03:19  sm
 **	- Search path correction: Home directory before environment.
-**
+**	
 **	Revision 1.57  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
@@ -405,12 +411,13 @@ int main(int argc,char *argv[])
 	b3CameraPart         *camera;
 	b3Item               *item;
 	b3_vector             lower,upper;
-	char                 *BLZ3_DATA     = getenv("BLZ3_DATA");
-	char                 *BLZ3_TEXTURES = getenv("BLZ3_TEXTURES");
-	char                 *BLZ3_PICTURES = getenv("BLZ3_PICTURES");
-	char                 *BLZ3_PLUGINS  = getenv("BLZ3_PLUGINS");
-	char                 *BLZ3_BIN      = getenv("BLZ3_BIN");
-	char                 *HOME          = getenv("HOME");
+	char                 *BLZ3_DATA        = getenv("BLZ3_DATA");
+	char                 *BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
+	char                 *BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
+	char                 *BLZ3_PLUGINS     = getenv("BLZ3_PLUGINS");
+	char                 *BLZ3_BIN         = getenv("BLZ3_BIN");
+	char                 *BLZ3_RENDER_PRIO = getenv("BLZ3_RENDER_PRIO");
+	char                 *HOME             = getenv("HOME");
 	b3Path                textures;
 	b3Path                pictures;
 	b3Path                data;
@@ -452,6 +459,11 @@ int main(int argc,char *argv[])
 			loader.b3AddPath(BLZ3_PLUGINS);
 		}
 		loader.b3Load();
+
+		if (BLZ3_RENDER_PRIO != null)
+		{
+			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO),-2 ,2);
+		}
 
 		for (i = 1;i < argc;i++)
 		{

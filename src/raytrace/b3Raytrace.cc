@@ -37,9 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2004/11/07 12:20:56  sm
+**	- Added support for rendering priority. The brt3 command
+**	  uses the BLZ3_RENDER_PRIO environment variable for
+**	  setting the priority. Valid range is from -2 to 2 where
+**	  only root can use 1 to 2.
+**
 **	Revision 1.63  2004/07/22 10:09:38  sm
 **	- Optimized triangle into grid insertion.
-**
+**	
 **	Revision 1.62  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -362,6 +368,7 @@ struct b3_rt_info
 };
 
 b3TxPool b3Scene::m_TexturePool;
+b3_s32   b3Scene::m_RenderPriority = -2;
 b3_f64   b3Scene::epsilon = 0.0005;
 
 /*************************************************************************
@@ -462,7 +469,7 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = false;
 		infos[i].m_Num     = i;
 
-		if (!threads[i].b3Start(b3RaytraceThread,&infos[i],-2))
+		if (!threads[i].b3Start(b3RaytraceThread,&infos[i],m_RenderPriority))
 		{
 			delete [] threads;
 			delete [] infos;
