@@ -29,8 +29,8 @@
 #define B3_MEM_ALIGN 64
 #define B3_MEM_MASK  (-B3_MEM_ALIGN)
 
-#define B3_MEM_ALIGN_CHUNK(p)  (void *)(((int)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)
-#define B3_MEM_ASSERT(p)       B3_ASSERT((((int)(p)) % B3_MEM_ALIGN) == 0)
+#define B3_MEM_ALIGN_CHUNK(p)  (void *)(((size_t)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)
+#define B3_MEM_ASSERT(p)       B3_ASSERT((((size_t)(p)) % B3_MEM_ALIGN) == 0)
 
 struct b3MemNode
 {

@@ -117,7 +117,7 @@ clean:
 
 libB3Raytrace.o:	$(PRG_OBJ)
 	rm -f $@ core
-	ld -r -o $@ $^
+	$(LD) -r -o $@ $^
 
 
 -include .dep

@@ -1912,7 +1912,7 @@ private:
 
 class B3_PLUGIN b3AnimControl : public b3Item
 {
-	b3_size       m_Dimension;           // vector dimension
+	b3_count      m_Dimension;           // vector dimension
 	b3_count      m_Used;                // used number of vectors
 	b3_count      m_Max;                 // maximum number of vectors
 	b3_vector4D  *m_Controls;

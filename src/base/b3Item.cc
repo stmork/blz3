@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2003/10/15 13:12:19  sm
+**      - Making 64 bit sure. I've got running the brt3 in 64 bit mode on
+**        a sun ultra sparc sucessfully!!
+**
 **      Revision 1.36  2003/07/24 16:21:51  sm
 **      - Fixed Ticketno. 15: A simple point light wasn't initialized
 **        properly.
@@ -791,8 +795,8 @@ void b3Item::b3StoreCount(const b3_count value)
 {
 	b3EnsureStoreBuffer(1);
 
-	b3_count *ptr = (b3_count *)&m_StoreBuffer[m_StoreIndex++];
-	*ptr = value;
+	b3_s32 *ptr = (b3_s32 *)&m_StoreBuffer[m_StoreIndex++];
+	*ptr = (b3_s32)value;
 }
 
 void b3Item::b3StoreIndex(const b3_index value)

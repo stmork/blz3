@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2003/10/15 13:12:19  sm
+**      - Making 64 bit sure. I've got running the brt3 in 64 bit mode on
+**        a sun ultra sparc sucessfully!!
+**
 **      Revision 1.5  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -105,7 +109,7 @@ void b3AnimControl::b3Write()
 {
 	b3_index i;
 
-	b3StoreInt  (m_Dimension);
+	b3StoreCount(m_Dimension);
 	b3StoreCount(m_Used);
 	b3StoreCount(m_Max);
 

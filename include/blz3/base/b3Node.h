@@ -32,7 +32,7 @@ protected:
 	b3_size      Size;
 	b3_offset    Offset;
 public:
-	               b3Node(b3_u32 size,b3_u32 new_class = 0);
+	               b3Node(b3_size size,b3_u32 new_class = 0);
 	              ~b3Node();
 
 	unsigned long  b3ClassType();

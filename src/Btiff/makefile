@@ -94,7 +94,7 @@ clean:
 
 libB3tiff.o: $(LIB_OBJ)
 	rm -f core
-	ld -r -o $@ $^
+	$(LD) -r -o $@ $^
 
 libB3tiff.a:	$(LIB_OBJ)
 	$(AR) $(ARFLAGS) $@ $^

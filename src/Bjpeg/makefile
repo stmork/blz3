@@ -39,7 +39,7 @@ clean:
 
 libB3jpeg.o:	$(LIB_OBJS)
 	rm -f core
-	ld -r -o $@ $^
+	$(LD) -r -o $@ $^
 
 libB3jpeg.a:	$(LIB_OBJS)
 	$(AR) $(ARFLAGS) $@ $^
