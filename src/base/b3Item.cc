@@ -27,6 +27,14 @@
 #include "blz3/base/b3World.h"
 #include "b3ItemRegister.h"
 
+#ifdef _DEBUG
+#include <assert.h>
+
+#define	ASSERT_INDEX	assert((parseIndex << 2) < (b3_index)size)
+#else
+#define ASSERT_INDEX
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,6 +43,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/05 19:51:56  sm
+**      - Now having OpenGL software for Windows NT and created
+**        new Lines III.
+**
 **      Revision 1.1  2001/08/05 12:46:06  sm
 **      - Splitting b3ItemXXX routines
 **
@@ -123,6 +135,17 @@ b3Item::b3Item(b3_u32 *src) :
 
 b3Item::~b3Item()
 {
+	b3_index  i;
+	b3Item   *item;
+
+	for (i = 0;i < head_count;i++)
+	{
+		while (item = heads[i].First)
+		{
+			heads[i].b3Remove(item);
+			delete item;
+		}
+	}
 }
 
 void b3Item::b3Read()
@@ -179,14 +202,6 @@ void b3Item::b3Init()
 {
 	parseIndex = B3_NODE_IDX_MIN + head_count * B3_HEAD_SIZE;
 }
-
-#ifdef _DEBUG
-#include <assert.h>
-
-#define	ASSERT_INDEX	assert((parseIndex << 2) < size)
-#else
-#define ASSERT_INDEX
-#endif
 
 b3_s32 b3Item::b3InitInt()
 {

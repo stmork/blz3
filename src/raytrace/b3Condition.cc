@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/05 19:51:56  sm
+**      - Now having OpenGL software for Windows NT and created
+**        new Lines III.
+**
 **      Revision 1.2  2001/08/02 15:37:17  sm
 **      - Now we are able to draw Blizzard Scenes with OpenGL.
 **
@@ -94,7 +98,7 @@ b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)
 	yStart = b3InitFloat();
 	xEnd   = b3InitFloat();
 	yEnd   = b3InitFloat();
-	if ((parseIndex << 2) < size)
+	if ((parseIndex << 2) < (b3_index)size)
 	{
 		Flags  = b3InitInt();
 	}

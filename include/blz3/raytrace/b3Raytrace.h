@@ -24,11 +24,6 @@
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 
-#ifdef BLZ3_USE_OPENGL
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
 #define B3_TEXSTRINGLEN  128
 #define B3_BOXSTRINGLEN   96
 #define B3_CAMERANAMELEN  96

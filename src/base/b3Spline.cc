@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Spline.c $
+**	$Filename:	b3Spline.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision: 2.02 
 **	$Date$
@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/05 19:51:56  sm
+**	- Now having OpenGL software for Windows NT and created
+**	  new Lines III.
+**
 **	Revision 1.2  2001/08/05 09:23:22  sm
 **	- Introducing vectors, matrices, Splines and NURBS
-**
+**	
 **	
 */
 
@@ -185,9 +189,9 @@ void b3MansfieldVector(
 		j = i;
 		for (l = degree;l >= 0;l--)
 		{
-			point->x += it[l] * Spline->controls[j * Spline->offset + index].x;
-			point->y += it[l] * Spline->controls[j * Spline->offset + index].y;
-			point->z += it[l] * Spline->controls[j * Spline->offset + index].z;
+			point->x += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].x);
+			point->y += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].y);
+			point->z += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].z);
 			if (--j < 0) j += m;
 		}
 	}
@@ -196,9 +200,9 @@ void b3MansfieldVector(
 		controls = &Spline->controls[i * Spline->offset + index];
 		for (l = degree;l >= 0;l--)
 		{
-			point->x += it[l] * controls->x;
-			point->y += it[l] * controls->y;
-			point->z += it[l] * controls->z;
+			point->x += (b3_f32)(it[l] * controls->x);
+			point->y += (b3_f32)(it[l] * controls->y);
+			point->z += (b3_f32)(it[l] * controls->z);
 			controls -= Spline->offset;
 		}
 	}
@@ -241,10 +245,10 @@ void b3MansfieldNurbsVector(
 		j = i;
 		for (l = degree;l >= 0;l--)
 		{
-			result.x += it[l] * Nurbs->controls[j * Nurbs->offset + index].x;
-			result.y += it[l] * Nurbs->controls[j * Nurbs->offset + index].y;
-			result.z += it[l] * Nurbs->controls[j * Nurbs->offset + index].z;
-			result.w += it[l] * Nurbs->controls[j * Nurbs->offset + index].w;
+			result.x += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].x);
+			result.y += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].y);
+			result.z += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].z);
+			result.w += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].w);
 			if (--j < 0) j += m;
 		}
 	}
@@ -253,18 +257,18 @@ void b3MansfieldNurbsVector(
 		controls = &Nurbs->controls[i * Nurbs->offset + index];
 		for (l = degree;l >= 0;l--)
 		{
-			result.x += it[l] * controls->x;
-			result.y += it[l] * controls->y;
-			result.z += it[l] * controls->z;
-			result.w += it[l] * controls->w;
+			result.x += (b3_f32)(it[l] * controls->x);
+			result.y += (b3_f32)(it[l] * controls->y);
+			result.z += (b3_f32)(it[l] * controls->z);
+			result.w += (b3_f32)(it[l] * controls->w);
 			controls -= Nurbs->offset;
 		}
 	}
 
 	denom = 1.0 / result.w;
-	point->x = result.x * denom;
-	point->y = result.y * denom;
-	point->z = result.z * denom;
+	point->x = (b3_f32)(result.x * denom);
+	point->y = (b3_f32)(result.y * denom);
+	point->z = (b3_f32)(result.z * denom);
 }
 
 
@@ -320,10 +324,10 @@ static b3_index b3InsertDeBoorOpened(
 		Denom =   (knots[j+degree] - knots[j]);
 		if (Denom != 0) r =     (q - knots[j]) / Denom;
 		else            r =      0;
-		it[l].x = (1-r) * it[l+1].x + r * it[l].x;
-		it[l].y = (1-r) * it[l+1].y + r * it[l].y;
-		it[l].z = (1-r) * it[l+1].z + r * it[l].z;
-		it[l].w = (1-r) * it[l+1].w + r * it[l].w;
+		it[l].x = (b3_f32)((1-r) * it[l+1].x + r * it[l].x);
+		it[l].y = (b3_f32)((1-r) * it[l+1].y + r * it[l].y);
+		it[l].z = (b3_f32)((1-r) * it[l+1].z + r * it[l].z);
+		it[l].w = (b3_f32)((1-r) * it[l+1].w + r * it[l].w);
 		*ins--  = it[l];
 		j--;
 	}
@@ -378,17 +382,17 @@ b3_index b3DeBoorOpened (
 	j = i * Spline->offset + index;
 	for (l = degree;l >= 0;l--)
 	{
-		point->x += it[l] * Spline->controls[j].x;
-		point->y += it[l] * Spline->controls[j].y;
-		point->z += it[l] * Spline->controls[j].z;
+		point->x += (b3_f32)(it[l] * Spline->controls[j].x);
+		point->y += (b3_f32)(it[l] * Spline->controls[j].y);
+		point->z += (b3_f32)(it[l] * Spline->controls[j].z);
 		j -= Spline->offset;
 	}
 
 #	ifdef BSPLINE_DEBUG
-		PrintF ("x: % 3.5f\n",point->x);
-		PrintF ("y: % 3.5f\n",point->y);
-		PrintF ("z: % 3.5f\n",point->z);
-		PrintF ("\n");
+		b3PrintF (B3LOG_FULL,"x: % 3.5f\n",point->x);
+		b3PrintF (B3LOG_FULL,"y: % 3.5f\n",point->y);
+		b3PrintF (B3LOG_FULL,"z: % 3.5f\n",point->z);
+		b3PrintF (B3LOG_FULL,"\n");
 #	endif
 
 	return i;
@@ -453,10 +457,10 @@ static b3_index b3InsertDeBoorClosed (
 		Denom =   (knots[j+degree] - knots[j]);
 		if (Denom != 0) r =     (q - knots[j]) / Denom;
 		else            r =      0;
-		it[l].x = (1-r) * it[l+1].x + r * it[l].x;
-		it[l].y = (1-r) * it[l+1].y + r * it[l].y;
-		it[l].z = (1-r) * it[l+1].z + r * it[l].z;
-		it[l].w = (1-r) * it[l+1].w + r * it[l].w;
+		it[l].x = (b3_f32)((1-r) * it[l+1].x + r * it[l].x);
+		it[l].y = (b3_f32)((1-r) * it[l+1].y + r * it[l].y);
+		it[l].z = (b3_f32)((1-r) * it[l+1].z + r * it[l].z);
+		it[l].w = (b3_f32)((1-r) * it[l+1].w + r * it[l].w);
 		*ins--  = it[l];
 		if (--j < 0) /* j = i-l; */
 		{
@@ -526,17 +530,17 @@ b3_index b3DeBoorClosed (
 	j = i;
 	for (l = degree;l >= 0;l--)
 	{
-		point->x += it[l] * Spline->controls[j * Spline->offset + index].x;
-		point->y += it[l] * Spline->controls[j * Spline->offset + index].y;
-		point->z += it[l] * Spline->controls[j * Spline->offset + index].z;
+		point->x += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].x);
+		point->y += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].y);
+		point->z += (b3_f32)(it[l] * Spline->controls[j * Spline->offset + index].z);
 		if (--j < 0) j += m;
 	}
 
 #	ifdef BSPLINE_DEBUG
-		PrintF ("x: % 3.5f\n",point->x);
-		PrintF ("y: % 3.5f\n",point->y);
-		PrintF ("z: % 3.5f\n",point->z);
-		PrintF ("\n");
+		b3PrintF (B3LOG_FULL,"x: % 3.5f\n",point->x);
+		b3PrintF (B3LOG_FULL,"y: % 3.5f\n",point->y);
+		b3PrintF (B3LOG_FULL,"z: % 3.5f\n",point->z);
+		b3PrintF (B3LOG_FULL,"\n");
 #	endif
 
 	return i;
@@ -595,8 +599,8 @@ b3_bool b3BSplineThroughEndControl (b3_spline *Spline)
 
 	for (i = 0;i < degree;i++)
 	{
-		knots[i]                  = start;
-		knots[ControlNum + i + 1] = end;
+		knots[i]                  = (b3_f32)start;
+		knots[ControlNum + i + 1] = (b3_f32)end;
 	}
 	Spline->knot_num = KnotNum;
 	return true;
@@ -713,10 +717,13 @@ static b3_bool b3InternalInsertControl (
 
 			/* insert new knot */
 		for (l = KnotNum;l > i;l--) knots[l] = knots[l-1];
-		knots[i+1]         =   q;
+		knots[i+1]          = (b3_f32)q;
 		Spline->knot_num    = ++KnotNum;
 		Spline->control_num = ++m;
-		for (l=0;l<=degree;l++) knots[l+m] = knots[l] - start + end;
+		for (l = 0;l <= degree;l++)
+		{
+			knots[l+m] = (b3_f32)(knots[l] - start + end);
+		}
 
 			/* insert o[x] into control points */
 		if (!useNurbs)
@@ -750,8 +757,8 @@ static b3_bool b3InternalInsertControl (
 
 			/* insert new knot */
 		for (l=KnotNum;l > i;l--) knots[l+1] = knots[l];
-		knots[i+1]         =   q;
-		Spline->knot_num    = ++KnotNum;
+		knots[i+1]       = (b3_f32)q;
+		Spline->knot_num = ++KnotNum;
 
 			/* insert o[x] into control points */
 		if (!useNurbs)
@@ -885,10 +892,13 @@ b3_bool b3InternalSurfaceInsertControl(
 		}
 			/* insert new knot */
 		for (l = KnotNum;l > i;l--) knots[l] = knots[l-1];
-		knots[i+1]         =   q;
-		Spline->knot_num    = ++KnotNum;
+		knots[i+1]       = (b3_f32)q;
+		Spline->knot_num = ++KnotNum;
 		Spline->control_num = ++m;
-		for (l=0;l<=degree;l++) knots[l+m] = knots[l] - start + end;
+		for (l=0;l<=degree;l++)
+		{
+			knots[l+m] = (b3_f32)(knots[l] - start + end);
+		}
 	}
 	else for (Count = 0;Count < Mult;Count++)
 	{
@@ -926,7 +936,7 @@ b3_bool b3InternalSurfaceInsertControl(
 
 			/* insert new knot */
 		for (l = KnotNum;l > i;l--) knots[l+1] = knots[l];
-		knots[i+1]         =   q;
+		knots[i+1]          = (b3_f32)q;
 		Spline->knot_num    = ++KnotNum;
 		Spline->control_num = ++m;
 	}
@@ -997,7 +1007,10 @@ static b3_bool b3InternalAppendControl(
 	if (append)
 	{
 		if (q <= knots[KnotNum-1]) return false;
-		for (i = 0;i < Mult;i++) knots[KnotNum + i] = q;
+		for (i = 0;i < Mult;i++)
+		{
+			knots[KnotNum + i] = (b3_f32)q;
+		}
 
 		if (!useNurbs)
 		{
@@ -1054,7 +1067,7 @@ static b3_bool b3InternalAppendControl(
 
 			for (i=0;i<Mult;i++)
 			{
-				knots[i] = q;
+				knots[i] = (b3_f32)q;
 				Controls[i * offset].x = start.x + (Mult - i) * diff.x;
 				Controls[i * offset].y = start.y + (Mult - i) * diff.y;
 				Controls[i * offset].z = start.z + (Mult - i) * diff.z;
@@ -1077,7 +1090,7 @@ static b3_bool b3InternalAppendControl(
 
 			for (i=0;i<Mult;i++)
 			{
-				knots[i] = q;
+				knots[i] = (b3_f32)q;
 				Controls4D[i * offset].x = start.x + (Mult - i) * diff.x;
 				Controls4D[i * offset].y = start.y + (Mult - i) * diff.y;
 				Controls4D[i * offset].z = start.z + (Mult - i) * diff.z;
@@ -1153,7 +1166,10 @@ static b3_bool b3InternalSurfaceAppendControl(
 	if (append)
 	{
 		if (q <= knots[KnotNum-1]) return false;
-		for (i=0;i<Mult;i++) knots[KnotNum + i] = q;
+		for (i=0;i<Mult;i++)
+		{
+			knots[KnotNum + i] = (b3_f32)q;
+		}
 
 		if (!useNurbs)
 		{
@@ -1201,7 +1217,10 @@ static b3_bool b3InternalSurfaceAppendControl(
 		if (q >= knots[0]) return false;
 
 		for (i = KnotNum-1;i >= 0;   i--) knots[i+Mult] = knots[i];
-		for (i = 0;i <  Mult;i++)         knots[i] = q;
+		for (i = 0;i <  Mult;i++)
+		{
+			knots[i] = (b3_f32)q;
+		}
 
 		if (!useNurbs)
 		{

@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3World.cc $
+**      $Filename:      b3ItemRegister.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -40,6 +40,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/05 19:51:56  sm
+**      - Now having OpenGL software for Windows NT and created
+**        new Lines III.
+**
 **      Revision 1.1  2001/08/05 12:46:06  sm
 **      - Splitting b3ItemXXX routines
 **
@@ -108,3 +112,5 @@ b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 	b3PrintF (B3LOG_NORMAL,"%08lx not found.\n",class_type);
 	return null;
 }
+
+b3ItemRegister b3_item_register;

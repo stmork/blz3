@@ -113,6 +113,10 @@ SOURCE=b3Material.cc
 # End Source File
 # Begin Source File
 
+SOURCE=..\base\b3Matrix.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Scene.cc
 # End Source File
 # Begin Source File
@@ -123,10 +127,18 @@ SOURCE=b3Shape.cc
 
 SOURCE=b3Special.cc
 # End Source File
+# Begin Source File
+
+SOURCE=..\base\b3Spline.cc
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h
+# End Source File
 # End Group
 # End Target
 # End Project

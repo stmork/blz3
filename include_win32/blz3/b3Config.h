@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Config.h $
-**	$Release:	Dortmund 1998 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -19,12 +19,19 @@
 #define B3_CONFIG_H
 
 #define BLIZZARD3_REG_COMPANY  "Steffen A. Mork"
-#define BLIZZARD3_REG_PRODUCT  "Blizzard 3"
+#define BLIZZARD3_REG_PRODUCT  "Blizzard III"
 
 #define main(argc,argv) _Blizzard3Main(argc,argv)
 
+// Include MFC stuff
 #include "stdafx.h"
 
+// Make memory leaks debuggable
+#ifdef _DEBUG
+#	define new DEBUG_NEW
+#endif
+
+// Include some standard C
 #include <ctype.h>
 #include <fcntl.h>
 #include <math.h>
@@ -35,6 +42,13 @@
 #include <string.h>
 #include <time.h>
 
+// OpenGL is nice...
+#ifdef BLZ3_USE_OPENGL
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
+// Some defines for getting to know who we are
 #if defined (WIN32)
 #	define IS_WIN32      TRUE
 #	define THISPROCESSOR INTEL
@@ -46,6 +60,11 @@
 #	error "We need at least 32 Bit! Do you understand?"
 #endif // WIN32
 
+#define IS_NT        (IS_WIN32 && (BOOL)(GetVersion() < 0x80000000))
+#define IS_WIN32S    (IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion())) < 4)))
+#define IS_WIN95     ((BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32)
+
+// Ah! Blizzard III
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
 
@@ -57,10 +76,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/08/05 19:51:56  sm
+**	- Now having OpenGL software for Windows NT and created
+**	  new Lines III.
+**
 **	Revision 1.5  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.4  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
@@ -111,14 +134,6 @@
 #define INTEL    0x4949
 #define MOTOROLA 0x4d4d
 
-#define IS_NT             (IS_WIN32 && (BOOL)(GetVersion() < 0x80000000))
-#define IS_WIN32S         (IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion())) < 4)))
-#define IS_WIN95	         ((BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32)
-
-#ifdef _DEBUG
-#	define new DEBUG_NEW
-#endif
-
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
  
@@ -156,10 +171,10 @@ typedef enum
 
 enum b3_msg_result
 {
-	B3_MSG_OK      = 0,
-	B3_MSG_YES	    = 1,
-	B3_MSG_NO		= 2,
-	B3_MSG_CANCEL	= 3
+	B3_MSG_OK     = 0,
+	B3_MSG_YES    = 1,
+	B3_MSG_NO     = 2,
+	B3_MSG_CANCEL = 3
 };
 
 enum b3_msgbox_type

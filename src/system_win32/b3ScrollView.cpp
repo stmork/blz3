@@ -25,12 +25,6 @@
 #include "blz3/system/b3Display.h"
 #include "blz3/system/b3Tracker.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -39,9 +33,13 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/05 19:51:56  sm
+**	- Now having OpenGL software for Windows NT and created
+**	  new Lines III.
+**
 **	Revision 1.2  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.

@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="AppMandel" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="AppLines" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=AppMandel - Win32 Debug
+CFG=AppLines - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "AppMandel.mak".
+!MESSAGE NMAKE /f "AppLines.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "AppMandel.mak" CFG="AppMandel - Win32 Debug"
+!MESSAGE NMAKE /f "AppLines.mak" CFG="AppLines - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "AppMandel - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "AppMandel - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "AppLines - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "AppLines - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "AppMandel - Win32 Release"
+!IF  "$(CFG)" == "AppLines - Win32 Release"
 
 # PROP BASE Use_MFC 6
 # PROP BASE Use_Debug_Libraries 0
@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "BLZ3_USE_OPENGL" /FD /TP /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
@@ -53,9 +53,9 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 LibSystem.lib LibBase.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32\AppLines.exe" /libpath:"..\..\lib\win32_i386"
 
-!ELSEIF  "$(CFG)" == "AppMandel - Win32 Debug"
+!ELSEIF  "$(CFG)" == "AppLines - Win32 Debug"
 
 # PROP BASE Use_MFC 6
 # PROP BASE Use_Debug_Libraries 1
@@ -68,8 +68,8 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_WINDOWS" /FR /FD /GZ /TP /c
+# ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ  /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_WINDOWS" /D "BLZ3_USE_OPENGL" /FR /FD /GZ /TP /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
@@ -79,40 +79,44 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib opengl32.lib /nologo /version:3.0 /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib  LibRaytrace_dbg.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
 
 !ENDIF 
 
 # Begin Target
 
-# Name "AppMandel - Win32 Release"
-# Name "AppMandel - Win32 Debug"
+# Name "AppLines - Win32 Release"
+# Name "AppLines - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\AppMandel.cpp
+SOURCE=.\AppLines.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\AppMandel.rc
+SOURCE=.\AppLines.odl
 # End Source File
 # Begin Source File
 
-SOURCE=.\AppMandelDoc.cpp
+SOURCE=.\AppLines.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\AppMandelView.cpp
+SOURCE=.\AppLinesDoc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppLinesView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\MainFrm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\test_unix\Mandel.cc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -120,15 +124,19 @@ SOURCE=..\test_unix\Mandel.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\AppMandel.h
+SOURCE=.\AppLines.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\AppMandelDoc.h
+SOURCE=.\AppLinesDoc.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\AppMandelView.h
+SOURCE=.\AppLinesView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ChildFrm.h
 # End Source File
 # Begin Source File
 
@@ -138,30 +146,34 @@ SOURCE=.\MainFrm.h
 
 SOURCE=.\Resource.h
 # End Source File
-# Begin Source File
-
-SOURCE=.\StdAfx.h
-# End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\res\AppMandel.ico
+SOURCE=.\res\AppLines.ico
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\AppMandel.rc2
+SOURCE=.\res\AppLines.rc2
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\AppMandelDoc.ico
+SOURCE=.\res\AppLinesDoc.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\Toolbar.bmp
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\AppLines.reg
+# End Source File
+# Begin Source File
+
+SOURCE=.\ReadMe.txt
+# End Source File
 # End Target
 # End Project

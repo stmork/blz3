@@ -17,6 +17,8 @@
 **
 */
 
+#define no_DEBUG_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -30,6 +32,10 @@
 
 #ifdef _DEBUG
 #include <assert.h>
+
+#define	ASSERT_INDEX	assert((parseIndex << 2) < (b3_index)size)
+#else
+#define ASSERT_INDEX
 #endif
 
 /*************************************************************************
@@ -40,6 +46,10 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/05 19:51:56  sm
+**      - Now having OpenGL software for Windows NT and created
+**        new Lines III.
+**
 **      Revision 1.7  2001/08/05 12:46:06  sm
 **      - Splitting b3ItemXXX routines
 **
@@ -107,6 +117,10 @@ b3World::b3World(const char *world_name)
 
 b3World::~b3World()
 {
+	if (start != null)
+	{
+		delete start;
+	}
 }
 
 void b3World::b3EndianSwap32(b3_u32 *uPtr)
@@ -196,21 +210,21 @@ b3_world_error b3Item::b3ParseLinkuage(
 	b3_u32    act_class;
 	b3_u32    cmp_class;
 
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 	b3Space(level);
 	b3PrintF (B3LOG_FULL,"---- %08lx %08lx Start\n",b3GetClass(),my_class_limit);
 #endif
 	for (i = 0;i < head_count;i++)
 	{
 		cmp_class = heads[i].b3GetClass();
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 		b3Space(level);
 		b3PrintF (B3LOG_FULL,"       %08lx\n",cmp_class);
 #endif
 		pos = 1;
 		while ((pos < node_count) && ((act_class = array[pos]->b3GetClass()) < my_class_limit))
 		{
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 			b3Space(level);
 			b3PrintF (B3LOG_FULL,"         %08lx %08lx %p",
 				act_class,
@@ -220,21 +234,21 @@ b3_world_error b3Item::b3ParseLinkuage(
 			if (act_class == cmp_class)
 			{
 				heads[i].b3Append(array[pos]);
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 				b3PrintF (B3LOG_FULL," appended.\n");
 #endif
 				array[pos]->b3ParseLinkuage(&array[pos],node_count - pos,cmp_class,level + 1);
 			}
 			else
 			{
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 				b3PrintF (B3LOG_FULL," ignored.\n");
 #endif
 			}
 			pos++;
 		}
 	}
-#ifdef _DEBUG
+#ifdef _DEBUG_VERBOSE
 	b3Space(level);
 	b3PrintF (B3LOG_FULL,"---- %08lx %08lx End\n",b3GetClass(),my_class_limit);
 #endif

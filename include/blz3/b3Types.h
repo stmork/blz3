@@ -102,16 +102,16 @@ typedef struct
 typedef struct
 {
 	b3_f32    m11,m12,m13,m14;
-        b3_f32    m21,m22,m23,m24;
-        b3_f32    m31,m32,m33,m34;
+	b3_f32    m21,m22,m23,m24;
+	b3_f32    m31,m32,m33,m34;
 	b3_f32    m41,m42,m43,m44;
 } b3_matrix, b3_matrix32;
 
 typedef struct
 {
 	b3_f64    m11,m12,m13,m14;
-        b3_f64    m21,m22,m23,m24;
-        b3_f64    m31,m32,m33,m34;
+	b3_f64    m21,m22,m23,m24;
+	b3_f64    m31,m32,m33,m34;
 	b3_f64    m41,m42,m43,m44;
 } b3_matrix64;                                                                                                          
                                                                  

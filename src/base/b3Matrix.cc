@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/b3Config.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Aux.h"
 
@@ -34,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/08/05 19:51:56  sm
+**	- Now having OpenGL software for Windows NT and created
+**	  new Lines III.
+**
 **	Revision 1.4  2001/08/05 09:23:22  sm
 **	- Introducing vectors, matrices, Splines and NURBS
-**
+**	
 **
 */
 
@@ -57,23 +62,26 @@ static b3_matrix UnitMatrix =
 typedef b3_f32 b3_matrix_array[4][4];
 
 static b3_bool b3NormalizeCol (
-	b3_matrix_array Matrix,
-	b3_count        col)
+	b3_matrix *Matrix,
+	b3_count   col)
 {
+	b3_f32  *column;
 	b3_f64   Denom;
-	b3_index i;
+	b3_index i,index = col << 2;
 
-	Denom = 0;
+	column  = &Matrix->m11;
+	column += index;
+	Denom   = 0;
 	for (i = 0;i < 4;i++)
 	{
-		Denom += (Matrix[i][col] * Matrix[i][col]);
+		Denom += (column[i] * column[i]);
 	}
 	
 	if (Denom == 0) return (false);
 	Denom = 1 / sqrt(Denom);
 	for (i = 0;i < 4;i++)
 	{
-		Matrix[i][col] *= Denom;
+		column[i] = (b3_f32)(column[i] * Denom);
 	}
 	return true;
 }
@@ -117,12 +125,13 @@ b3_f64 b3Det3(
 	b3_vector *b,
 	b3_vector *c)
 {
-	return (a->x * b->y * c->z -
-			c->x * b->y * a->z +
-			b->x * c->y * a->z -
-			b->x * a->y * c->z +
-			c->x * a->y * b->z -
-			a->x * c->y * b->z);
+	return
+		a->x * b->y * c->z -
+		c->x * b->y * a->z +
+		b->x * c->y * a->z -
+		b->x * a->y * c->z +
+		c->x * a->y * b->z -
+		a->x * c->y * b->z;
 }
 
 b3_f64 Det4(b3_matrix *Matrix)
@@ -193,40 +202,40 @@ b3_matrix * b3MatrixInv (
 		Row3.z  = From->m34;	Row4.z  = From->m44;
   
 		/* inverting first line */
-		To->m11 =   b3Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m12 = - b3Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m13 =   b3Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m14 = - b3Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m11 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+		To->m12 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+		To->m13 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+		To->m14 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
 		/* inverting second line */
 		Row1.x  =   From->m11;
 		Row2.x  =   From->m21;
 		Row3.x  =   From->m31;
 		Row4.x  =   From->m41;
-		To->m21 = - b3Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m22 =   b3Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m23 = - b3Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m24 =   b3Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m21 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+		To->m22 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+		To->m23 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+		To->m24 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
 		/* inverting third line */
 		Row1.y  =   From->m12;
 		Row2.y  =   From->m22;
 		Row3.y  =   From->m32;
 		Row4.y  =   From->m42;
-		To->m31 =   b3Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m32 = - b3Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m33 =   b3Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m34 = - b3Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m31 =   (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+		To->m32 = - (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+		To->m33 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+		To->m34 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 
 		/* inverting third fourth */
 		Row1.z  =   From->m13;
 		Row2.z  =   From->m23;
 		Row3.z  =   From->m33;
 		Row4.z  =   From->m43;
-		To->m41 = - b3Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m42 =   b3Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m43 = - b3Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m44 =   b3Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m41 = - (b3_f32)(b3Det3 (&Row2,&Row3,&Row4) * Denom);
+		To->m42 =   (b3_f32)(b3Det3 (&Row1,&Row3,&Row4) * Denom);
+		To->m43 = - (b3_f32)(b3Det3 (&Row1,&Row2,&Row4) * Denom);
+		To->m44 =   (b3_f32)(b3Det3 (&Row1,&Row2,&Row3) * Denom);
 #	else
 		b3_f64    Denom;
 		b3_vector Row1,Row2,Row3;
@@ -247,19 +256,19 @@ b3_matrix * b3MatrixInv (
 		if (Denom == 0) return (null);
 		Denom = 1 / Denom;
 
-		To->m11 =  b3Det2 (From->m22,From->m23,From->m32,From->m33) * Denom;
-		To->m12 = -b3Det2 (From->m12,From->m13,From->m32,From->m33) * Denom;
-		To->m13 =  b3Det2 (From->m12,From->m13,From->m22,From->m23) * Denom;
+		To->m11 =  (b3_f32)(b3Det2 (From->m22,From->m23,From->m32,From->m33) * Denom);
+		To->m12 = -(b3_f32)(b3Det2 (From->m12,From->m13,From->m32,From->m33) * Denom);
+		To->m13 =  (b3_f32)(b3Det2 (From->m12,From->m13,From->m22,From->m23) * Denom);
 		To->m14 = -From->m14;
 
-		To->m21 = -b3Det2 (From->m21,From->m23,From->m31,From->m33) * Denom;
-		To->m22 =  b3Det2 (From->m11,From->m13,From->m31,From->m33) * Denom;
-		To->m23 = -b3Det2 (From->m11,From->m13,From->m21,From->m23) * Denom;
+		To->m21 = -(b3_f32)(b3Det2 (From->m21,From->m23,From->m31,From->m33) * Denom);
+		To->m22 =  (b3_f32)(b3Det2 (From->m11,From->m13,From->m31,From->m33) * Denom);
+		To->m23 = -(b3_f32)(b3Det2 (From->m11,From->m13,From->m21,From->m23) * Denom);
 		To->m24 = -From->m24;
 
-		To->m31 =  b3Det2 (From->m21,From->m22,From->m31,From->m32) * Denom;
-		To->m32 = -b3Det2 (From->m11,From->m12,From->m31,From->m32) * Denom;
-		To->m33 =  b3Det2 (From->m11,From->m12,From->m21,From->m22) * Denom;
+		To->m31 =  (b3_f32)(b3Det2 (From->m21,From->m22,From->m31,From->m32) * Denom);
+		To->m32 = -(b3_f32)(b3Det2 (From->m11,From->m12,From->m31,From->m32) * Denom);
+		To->m33 =  (b3_f32)(b3Det2 (From->m11,From->m12,From->m21,From->m22) * Denom);
 		To->m34 = -From->m34;
 
 		To->m41 =
@@ -307,25 +316,25 @@ b3_matrix * b3MatrixSMul (
 	b3_matrix *B,
 	b3_f64     Value)
 {
-	B->m11 = A->m11 * Value;
-	B->m12 = A->m12 * Value;
-	B->m13 = A->m13 * Value;
-	B->m14 = A->m14 * Value;
+	B->m11 = (b3_f32)(A->m11 * Value);
+	B->m12 = (b3_f32)(A->m12 * Value);
+	B->m13 = (b3_f32)(A->m13 * Value);
+	B->m14 = (b3_f32)(A->m14 * Value);
 
-	B->m21 = A->m21 * Value;
-	B->m22 = A->m22 * Value;
-	B->m23 = A->m23 * Value;
-	B->m24 = A->m24 * Value;
+	B->m21 = (b3_f32)(A->m21 * Value);
+	B->m22 = (b3_f32)(A->m22 * Value);
+	B->m23 = (b3_f32)(A->m23 * Value);
+	B->m24 = (b3_f32)(A->m24 * Value);
 
-	B->m31 = A->m31 * Value;
-	B->m32 = A->m32 * Value;
-	B->m33 = A->m33 * Value;
-	B->m34 = A->m34 * Value;
+	B->m31 = (b3_f32)(A->m31 * Value);
+	B->m32 = (b3_f32)(A->m32 * Value);
+	B->m33 = (b3_f32)(A->m33 * Value);
+	B->m34 = (b3_f32)(A->m34 * Value);
 
-	B->m41 = A->m41 * Value;
-	B->m42 = A->m42 * Value;
-	B->m43 = A->m43 * Value;
-	B->m44 = A->m44 * Value;
+	B->m41 = (b3_f32)(A->m41 * Value);
+	B->m42 = (b3_f32)(A->m42 * Value);
+	B->m43 = (b3_f32)(A->m43 * Value);
+	B->m44 = (b3_f32)(A->m44 * Value);
 
 	return (B);
 }
@@ -445,8 +454,8 @@ b3_matrix * b3MatrixRotX (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
-	Cos = cos(Angle);
-	Sin = sin(Angle);
+	Cos = (b3_f32)cos(Angle);
+	Sin = (b3_f32)sin(Angle);
 
 	Result     =  UnitMatrix;
 	Result.m22 =  Cos;
@@ -468,8 +477,8 @@ b3_matrix * b3MatrixRotY (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
-	Cos = cos(Angle);
-	Sin = sin(Angle);
+	Cos = (b3_f32)cos(Angle);
+	Sin = (b3_f32)sin(Angle);
 
 	Result     =  UnitMatrix;
 	Result.m11 =  Cos;
@@ -492,8 +501,8 @@ b3_matrix *b3MatrixRotZ (
 	b3_f32    Cos,Sin;
 
 	if (A == null) A = &UnitMatrix;
-	Cos = cos(Angle);
-	Sin = sin(Angle);
+	Cos = (b3_f32)cos(Angle);
+	Sin = (b3_f32)sin(Angle);
 
 	Result     =  UnitMatrix;
 	Result.m11 =  Cos;
@@ -512,7 +521,7 @@ b3_matrix *b3MatrixRotVec (
 	b3_line   *Axis,
 	b3_f64     Angle)
 {
-	b3_f64    Cos,Sin;
+	b3_f32    Cos,Sin;
 	b3_matrix System,InvSystem,Result,Rotate;
 
 	if (A == null) A = &UnitMatrix;
@@ -537,8 +546,8 @@ b3_matrix *b3MatrixRotVec (
 		System.m42 =  0;
 	}
 
-	b3NormalizeCol ((b3_matrix_array)&System,0);
-	b3NormalizeCol ((b3_matrix_array)&System,1);
+	b3NormalizeCol (&System,0);
+	b3NormalizeCol (&System,1);
 
 	System.m13 =  System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 =  System.m31 * System.m12 - System.m11 * System.m32;
@@ -553,8 +562,10 @@ b3_matrix *b3MatrixRotVec (
 	if (!b3MatrixInv (&System,&InvSystem)) return (null);
 
 	Rotate     =  UnitMatrix;
-	Rotate.m22 =  Cos = cos(Angle);
-	Rotate.m32 =  Sin = sin(Angle);
+	Cos        =  (b3_f32)cos(Angle);
+	Sin        =  (b3_f32)sin(Angle);
+	Rotate.m22 =  Cos;
+	Rotate.m32 =  Sin;
 	Rotate.m23 = -Sin;
 	Rotate.m33 =  Cos;
 
@@ -578,9 +589,9 @@ b3_matrix *b3MatrixMirrorPoint (
 	b3MatrixMoveNeg (A,B,Center);
 
 	Mirror     = UnitMatrix;
-	Mirror.m11 = -a;
-	Mirror.m22 = -a;
-	Mirror.m33 = -a;
+	Mirror.m11 = -(b3_f32)a;
+	Mirror.m22 = -(b3_f32)a;
+	Mirror.m33 = -(b3_f32)a;
 	b3MatrixMMul (B,&Mirror,&Mirrored);
 	b3MatrixMove (&Mirrored,B,Center);
 
@@ -618,8 +629,8 @@ b3_matrix *b3MatrixMirrorAxis (
 		System.m42 =  0;
 	}
 
-	b3NormalizeCol ((b3_matrix_array)&System,0);
-	b3NormalizeCol ((b3_matrix_array)&System,1);
+	b3NormalizeCol (&System,0);
+	b3NormalizeCol (&System,1);
 
 	System.m13 = System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 = System.m31 * System.m12 - System.m11 * System.m32;
@@ -634,8 +645,8 @@ b3_matrix *b3MatrixMirrorAxis (
 	if (!b3MatrixInv (&System,&InvSystem)) return null;
 
 	Mirror = UnitMatrix;
-	Mirror.m22 = -a;
-	Mirror.m33 = -a;
+	Mirror.m22 = -(b3_f32)a;
+	Mirror.m33 = -(b3_f32)a;
 
 	b3MatrixMMul (A,        &InvSystem,&Result);
 	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
@@ -666,8 +677,8 @@ b3_matrix *b3MatrixMirrorPlane (
 	System.m32 = Dir2->z;
 	System.m42 = 0;
 
-	b3NormalizeCol ((b3_matrix_array)&System,0);
-	b3NormalizeCol ((b3_matrix_array)&System,1);
+	b3NormalizeCol (&System,0);
+	b3NormalizeCol (&System,1);
 
 	System.m13 = System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 = System.m31 * System.m12 - System.m11 * System.m32;
@@ -682,7 +693,7 @@ b3_matrix *b3MatrixMirrorPlane (
 	if (!b3MatrixInv (&System,&InvSystem)) return null;
 
 	Mirror     = UnitMatrix;
-	Mirror.m33 = -a;
+	Mirror.m33 = -(b3_f32)a;
 
 	b3MatrixMMul (A,        &InvSystem,&Result);
 	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);

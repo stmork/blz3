@@ -93,6 +93,18 @@ SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Item.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ItemRegister.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ItemRegisterEntry.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File
@@ -103,6 +115,34 @@ SOURCE=.\b3World.cc
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3FileList.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3List.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Matrix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Nurbs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Spline.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3World.h
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/05 19:51:56  sm
+**      - Now having OpenGL software for Windows NT and created
+**        new Lines III.
+**
 **      Revision 1.1  2001/08/05 12:46:06  sm
 **      - Splitting b3ItemXXX routines
 **
@@ -51,7 +55,7 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	b3_item_init_func new_init_func,
 	b3_item_load_func new_load_func,
 	b3_u32            new_class_type,
-	b3_bool           new_is_class = false) :
+	b3_bool           new_is_class) :
 		b3Link<b3ItemRegisterEntry>(sizeof(b3ItemRegisterEntry))
 {
 	if (new_is_class)
