@@ -31,10 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/08/28 13:55:33  sm
+**	- Added some mirror methods.
+**	- Cleanup job.
+**
 **	Revision 1.1  2004/08/03 10:46:26  sm
 **	- Added simgle frame to DivX/AVI conversion tool
 **	- Added image mirror (not completely implemented yet)
-**
+**	
 **
 */
 
@@ -46,8 +50,62 @@
 
 void b3Tx::b3MirrorHorizontal()
 {
+	b3_coord      x,y,xMax = xSize >> 1;
+	b3_pkd_color *ltPtr,*lbPtr,lColor;
+	b3_u16       *stPtr,*sbPtr,sColor;
+	b3_u08       *ctPtr,*cbPtr,cColor;
+
+	// Untested, yet.
 	switch(type)
 	{
+	case B3_TX_RGB8:
+		lbPtr = (b3_pkd_color *)data;
+		ltPtr = &lbPtr[xSize];
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xMax;x++)
+			{
+				ltPtr--;
+				 lColor   = *ltPtr;
+				*ltPtr    =  lbPtr[x];
+				 lbPtr[x] =  lColor;
+			}
+			lbPtr += xSize;
+		}
+		break;
+
+	case B3_TX_RGB4:
+		sbPtr = (b3_u16 *)data;
+		stPtr = &sbPtr[xSize];
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xMax;x++)
+			{
+				stPtr--;
+				 sColor   = *stPtr;
+				*stPtr    =  sbPtr[x];
+				 sbPtr[x] =  sColor;
+			}
+			sbPtr += xSize;
+		}
+		break;
+
+	case B3_TX_VGA:
+		cbPtr = (b3_u08 *)data;
+		ctPtr = &cbPtr[xSize];
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xMax;x++)
+			{
+				ctPtr--;
+				 cColor   = *ctPtr;
+				*ctPtr    =  cbPtr[x];
+				 cbPtr[x] =  cColor;
+			}
+			cbPtr += xSize;
+		}
+		break;
+
 	default:
 		B3_THROW(b3TxException,B3_TX_UNSUPP);
 	}

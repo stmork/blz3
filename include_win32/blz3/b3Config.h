@@ -41,6 +41,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 #include "blz3/b3PluginDef.h"
 #include "blz3/system/b3Thread.h"
 
@@ -88,9 +89,13 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.29  2004/08/28 13:55:33  sm
+**	- Added some mirror methods.
+**	- Cleanup job.
+**
 **	Revision 1.28  2004/01/18 14:29:26  sm
 **	- Added Windows security changes
-**
+**	
 **	Revision 1.27  2003/08/31 08:56:21  sm
 **	- Windows support for the snprintf functions
 **	

@@ -25,8 +25,6 @@
 #include "blz3/system/b3Log.h"
 #include "blz3/base/b3Color.h"
 
-#include <math.h>
-
 #define not_SLOW_N_UGLY
 #define not_VERY_VERBOSE
 
@@ -38,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/08/28 13:55:33  sm
+**	- Added some mirror methods.
+**	- Cleanup job.
+**
 **	Revision 1.8  2004/08/09 10:09:05  sm
 **	- Added color palette reduction and its tool.
-**
+**	
 **	Revision 1.7  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -1572,7 +1574,7 @@ b3_bool b3Tx::b3TxReduce(b3Tx *src)
 	count = xSize * ySize;
 	for (i = 0;i < count;i++)
 	{
-		b3_f32 dist_min = 1e38;
+		b3_f32 dist_min = FLT_MAX;
 
 		color = *srcPtr++;
 		index = pSize;

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgMatThinFilm
+LastClass=CAppLinesDoc
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -346,6 +346,7 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
+LastObject=CAppLinesDoc
 
 [CLS:CAppLinesView]
 Type=0
@@ -749,6 +750,7 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgNewObject.h
 ImplementationFile=DlgNewObject.cpp
+LastObject=CDlgNewObject
 
 [CLS:CDlgObjectCopy]
 Type=0
