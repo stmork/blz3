@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2002/07/29 14:48:11  sm
+**      - Circled shapes like cylinder, doughnuts etc. draw
+**        textures correctly but renders shading a little bit
+**        wrong at seam.
+**      - Added support for multiple lights. This should be
+**        configurable inside a scene (via b3ModellerInfo?)
+**
 **      Revision 1.42  2002/07/29 12:32:56  sm
 **      - Full disk draws textures correctly now
 **      - Windows selects the correct pixel format for
@@ -385,17 +392,16 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_color  *b3_ambient,
 	b3_color  *b3_specular)
 {
-	b3_bool result = false;
+	b3_bool  result = false;
+	b3_index num    = glLightNum;
 
-	if (VALIDATE_LIGHT_NUM(glLightNum))
-	{
-		result = b3LightSet(
-			b3_position,glUseSpotLight ? b3_direction : null,
-			spot_exp,
-			b3_diffuse,b3_ambient,b3_specular,glLightNum++);
-	}
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d) = %s\n",
-		glLightNum,result ? "true" : "false");
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d)\n",
+		glLightNum);
+	result = b3LightSet(
+		b3_position,glUseSpotLight ? b3_direction : null,
+		spot_exp,
+		b3_diffuse,b3_ambient,b3_specular,glLightNum++);
+
 	return result;
 }
 
@@ -419,7 +425,6 @@ b3_bool b3RenderContext::b3LightSet(
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{
-
 		light = light_num[num];
 
 		b3VectorToGL(b3_position,gl_position);
@@ -427,11 +432,6 @@ b3_bool b3RenderContext::b3LightSet(
 		b3ColorToGL(b3_ambient  != null ? b3_ambient  : &light0_ambient, gl_ambient);
 		b3ColorToGL(b3_diffuse  != null ? b3_diffuse  : &light0_diffuse, gl_diffuse);
 		b3ColorToGL(b3_specular != null ? b3_specular : &light0_specular,gl_specular);
-
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"Light %d: %3.2f %3.2f %3.2f\n",
-			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
-#endif
 
 		glEnable( light);
 
@@ -459,8 +459,15 @@ b3_bool b3RenderContext::b3LightSet(
 		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
 		result = true;
 	}
-	b3PrintF(B3LOG_FULL,"b3LightSet(%d) = %s\n",
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet(%d) = %s\n",
 		num,result ? "true" : "false");
+#ifdef _DEBUG
+	if (result)
+	{
+		b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet() # Light %d: %3.2f %3.2f %3.2f\n",
+			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
+	}
+#endif
 #endif
 	return result;
 }

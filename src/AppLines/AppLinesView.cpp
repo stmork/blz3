@@ -39,13 +39,20 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2002/07/29 14:48:10  sm
+**	- Circled shapes like cylinder, doughnuts etc. draw
+**	  textures correctly but renders shading a little bit
+**	  wrong at seam.
+**	- Added support for multiple lights. This should be
+**	  configurable inside a scene (via b3ModellerInfo?)
+**
 **	Revision 1.51  2002/07/29 12:32:56  sm
 **	- Full disk draws textures correctly now
 **	- Windows selects the correct pixel format for
 **	  the nVidia driver.
 **	- Some problems concerning first drawing and lighting
 **	  aren't fixed, yet. This seems to be a nVidia problem
-**
+**	
 **	Revision 1.50  2002/07/26 10:22:37  sm
 **	- Some minor fixes
 **	- Texturing simply runs under Windows :-)
@@ -403,7 +410,7 @@ void CAppLinesView::b3UpdateLight()
 {
 	CAppLinesDoc *pDoc   = GetDocument();
 
-#if 0
+#if 1
 	m_Scene->b3SetLights(&pDoc->m_Context);
 #else
 	pDoc->m_Context.b3LightDefault();

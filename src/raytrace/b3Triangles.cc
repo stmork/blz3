@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2002/07/29 14:48:11  sm
+**      - Circled shapes like cylinder, doughnuts etc. draw
+**        textures correctly but renders shading a little bit
+**        wrong at seam.
+**      - Added support for multiple lights. This should be
+**        configurable inside a scene (via b3ModellerInfo?)
+**
 **      Revision 1.7  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -245,9 +252,8 @@ void b3Triangles::b3ComputeVertices()
 	b3_vertex     *Vertex;
 	b3_index       i;
 
-	Vertex   = (b3_vertex *)m_Vertices;
-	Vector   = glVertex;
-
+	Vertex        = m_Vertices;
+	Vector        = glVertex;
 	glVertexCount = m_VertexCount;
 	for (i = 0;i < m_VertexCount;i++)
 	{
@@ -256,6 +262,30 @@ void b3Triangles::b3ComputeVertices()
 		Vector->v.z = Vertex->Point.z;
 		Vertex++;
 		Vector++;
+	}
+
+	if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize + 1) * (m_ySize + 1) == m_VertexCount))
+	{
+		b3_index x,y;
+		b3_f64   fx,fxStep;
+		b3_f64   fy,fyStep;
+
+		Vector = glVertex;
+		fy     = 0;
+		fxStep = 1.0 / m_xSize;
+		fyStep = 1.0 / m_ySize;
+		for (y = 0;y <= m_ySize;y++)
+		{
+			fx = 0;
+			for (x = 0;x <= m_xSize;x++)
+			{
+				Vector->t.s = fx;
+				Vector->t.t = fy;
+				Vector++;
+				fx += fxStep;
+			}
+			fy += fyStep;
+		}
 	}
 #endif
 }
