@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/18 15:16:28  sm
+**	- Testing with an appropriate system - and it's good!
+**
 **	Revision 1.13  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -40,7 +43,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.12  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -296,7 +299,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 			infos[i].display = display;
 			infos[i].scene   = this;
 
-			threads[i].b3Start(b3RaytraceThread,&infos[i]);
+			threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
 		}
 
 		// Wait for completion
