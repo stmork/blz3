@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2003/07/20 09:21:18  sm
+**      - Added item register dump.
+**
 **      Revision 1.29  2003/06/26 08:15:43  sm
 **      - Cleaned up b3ItemRegister
 **      - Added writing support for unregistered b3Item instances.
@@ -353,9 +356,12 @@ b3_world_error b3World::b3Parse()
 
 	if (b3ItemRegister::b3Find(B3_CLASS_MAX) == null)
 	{
-		b3PrintF(B3LOG_FULL,"Initializing item registry...\n");
-		b3Item::b3Register(&b3FirstItem::b3StaticInit,&b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
+		b3PrintF(B3LOG_NORMAL,"Item registry not initialized!\n");
+		return B3_WORLD_PARSE;
 	}
+#ifdef _DEBUG
+	b3ItemRegister::b3Dump();
+#endif
 
 	b3PrintF(B3LOG_FULL,"Parsing...\n");
 

@@ -39,6 +39,7 @@ public:
 	b3_bool  b3IsClassType(b3_u32 class_type_to_check);
 	b3Item  *b3Init();
 	b3Item  *b3Load(b3_u32 *buffer);
+	void     b3Dump();
 };
 
 class B3_PLUGIN b3ItemRegister : b3Base<b3ItemRegisterEntry>
@@ -49,6 +50,7 @@ public:
 	                            b3ItemRegister();
 	                           ~b3ItemRegister();
 	static b3ItemRegisterEntry *b3Find(b3_u32 class_type);
+	static void                 b3Dump();
 
 	static inline void          b3Append(b3ItemRegisterEntry *new_entry)
 	{

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2003/07/20 09:21:18  sm
+**      - Added item register dump.
+**
 **      Revision 1.8  2003/07/12 10:20:16  sm
 **      - Fixed ticketno. 12 (memory leak in b3ItemRegistry)
 **
@@ -166,4 +169,15 @@ b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 	}
 	b3PrintF (B3LOG_DEBUG,"b3ItemRegister::b3Find(%08lx) not found.\n",class_type);
 	return null;
+}
+
+void b3ItemRegister::b3Dump()
+{
+	b3ItemRegisterEntry *entry;
+
+	b3PrintF(B3LOG_FULL,"Item register contains following classes:\n");
+	B3_FOR_BASE(&m_Register.m_Entries,entry)
+	{
+		entry->b3Dump();
+	}
 }

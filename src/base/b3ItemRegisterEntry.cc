@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2003/07/20 09:21:18  sm
+**      - Added item register dump.
+**
 **      Revision 1.3  2002/08/05 16:04:55  sm
 **      - Found first texture init bug. This wasn't an OpenGL bug. This
 **        couldn't be because every implementation had got the same
@@ -110,4 +113,10 @@ b3Item *b3ItemRegisterEntry::b3Init()
 b3Item *b3ItemRegisterEntry::b3Load(b3_u32 *buffer)
 {
 	return load_func(buffer);
+}
+
+void b3ItemRegisterEntry::b3Dump()
+{
+	b3PrintF(B3LOG_FULL,"  class %04lx:%04lx%s.\n",
+		class_type >> 16,class_type & 0xffff,is_class ? " (class)" : "");
 }
