@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	PageMaterial.cpp $
+**	$Filename:	PageMatWood.cpp $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Simple material properties
+**	Blizzard III - Wooden material properties
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "PageMaterial.h"
+#include "PageMatWood.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,29 +32,24 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2004/04/23 13:17:17  sm
+**	Revision 1.1  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
 **
-**	Revision 1.1  2004/04/18 16:58:14  sm
-**	- Changed definitions for base classes of raytracing objects.
-**	- Put wood material and wood bump dialogs into property
-**	  pages.
-**	
 **	
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CPageMaterial implementation                  **
+**                        CPageMatWood implementation                   **
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CPageMaterial, CPropertyPage)
+IMPLEMENT_DYNCREATE(CPageMatWood, CPropertyPage)
 
-CPageMaterial::CPageMaterial() : CPropertyPage(CPageMaterial::IDD)
+CPageMatWood::CPageMatWood() : CPropertyPage(CPageMatWood::IDD)
 {
-	//{{AFX_DATA_INIT(CPageMaterial)
+	//{{AFX_DATA_INIT(CPageMatWood)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_ReflectionCtrl.b3SetRange(0.0,1.0);
@@ -73,21 +68,20 @@ CPageMaterial::CPageMaterial() : CPropertyPage(CPageMaterial::IDD)
 	m_SpecularExpCtrl.b3SetIncrement(10.0);
 }
 
-CPageMaterial::~CPageMaterial()
+CPageMatWood::~CPageMatWood()
 {
 }
 
-void CPageMaterial::DoDataExchange(CDataExchange* pDX)
+void CPageMatWood::DoDataExchange(CDataExchange* pDX)
 {
 	CPropertyPage::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CPageMaterial)
+	//{{AFX_DATA_MAP(CPageMatWood)
 	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
 	DDX_Control(pDX, IDC_REFLECTANCE_SPIN, m_ReflectionCtrl);
 	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_IorCtrl);
-	DDX_Control(pDX, IDC_COLOR_LIGHT, m_AmbientCtrl);
-	DDX_Control(pDX, IDC_COLOR_DARK, m_DiffuseCtrl);
-	DDX_Control(pDX, IDC_COLOR_DARK, m_SpecularCtrl);
+	DDX_Control(pDX, IDC_COLOR_LIGHT, m_LightCtrl);
+	DDX_Control(pDX, IDC_COLOR_DARK, m_DarkCtrl);
 	//}}AFX_DATA_MAP
 	m_ReflectionCtrl.b3DDX(pDX,m_Material->m_Reflection);
 	m_RefractionCtrl.b3DDX(pDX,m_Material->m_Refraction);
@@ -96,11 +90,10 @@ void CPageMaterial::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPageMaterial, CPropertyPage)
-	//{{AFX_MSG_MAP(CPageMaterial)
-	ON_BN_CLICKED(IDC_CHANGE_AMBIENT, OnColorAmbient)
-	ON_BN_CLICKED(IDC_CHANGE_DIFFUSE, OnColorDiffuse)
-	ON_BN_CLICKED(IDC_CHANGE_SPECULAR, OnColorSpecular)
+BEGIN_MESSAGE_MAP(CPageMatWood, CPropertyPage)
+	//{{AFX_MSG_MAP(CPageMatWood)
+	ON_BN_CLICKED(IDC_CHANGE_LIGHT, OnColorLight)
+	ON_BN_CLICKED(IDC_CHANGE_DARK, OnColorDark)
 	ON_EN_KILLFOCUS(IDC_REFLECTANCE, OnSurfaceEdit)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnSurfaceSpin)
 	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnSurfaceEdit)
@@ -113,55 +106,45 @@ BEGIN_MESSAGE_MAP(CPageMaterial, CPropertyPage)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CPageMaterial message handlers
+// CPageMatWood message handlers
 
-BOOL CPageMaterial::OnInitDialog() 
+BOOL CPageMatWood::OnInitDialog() 
 {
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_AmbientCtrl.b3Init(&m_Material->m_Ambient,this);
-	m_DiffuseCtrl.b3Init(&m_Material->m_Diffuse,this);
-	m_SpecularCtrl.b3Init(&m_Material->m_Specular,this);
+	m_LightCtrl.b3Init(&m_Material->m_LightWood,this);
+	m_DarkCtrl.b3Init(&m_Material->m_DarkWood,this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CPageMaterial::OnColorAmbient() 
+void CPageMatWood::OnColorLight() 
 {
 	// TODO: Add your control notification handler code here
-	if (m_AmbientCtrl.b3Select())
+	if (m_LightCtrl.b3Select())
 	{
 		b3UpdateUI();
 	}
 }
 
-void CPageMaterial::OnColorDiffuse() 
+void CPageMatWood::OnColorDark() 
 {
 	// TODO: Add your control notification handler code here
-	if (m_DiffuseCtrl.b3Select())
+	if (m_DarkCtrl.b3Select())
 	{
 		b3UpdateUI();
 	}
 }
 
-void CPageMaterial::OnColorSpecular() 
-{
-	// TODO: Add your control notification handler code here
-	if (m_SpecularCtrl.b3Select())
-	{
-		b3UpdateUI();
-	}
-}
-
-void CPageMaterial::OnSurfaceEdit()
+void CPageMatWood::OnSurfaceEdit()
 {
 	UpdateData();
 	b3UpdateUI();
 }
 
-void CPageMaterial::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+void CPageMatWood::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
 	// TODO: Add your control notification handler code here
@@ -169,7 +152,7 @@ void CPageMaterial::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
-void CPageMaterial::b3UpdateUI()
+void CPageMatWood::b3UpdateUI()
 {
 	CWnd *parent = GetParent();
 

@@ -51,8 +51,8 @@ public:
 	CB3ColorFieldSelector	m_AmbCtrl;
 	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
 	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
-	CB3FloatSpinButtonCtrl	m_RefrValueCtrl;
-	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
+	CB3FloatSpinButtonCtrl	m_IorCtrl;
+	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
 	CB3FloatSpinButtonCtrl	m_KaCtrl;
 	CB3FloatSpinButtonCtrl	m_KdCtrl;
 	CB3FloatSpinButtonCtrl	m_KsCtrl;

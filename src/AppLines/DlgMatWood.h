@@ -26,7 +26,7 @@
 
 #include "blz3/raytrace/b3MaterialSampler.h"
 #include "b3ShowSample.h"
-#include "PageMaterial.h"
+#include "PageMatWood.h"
 #include "PageWood.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ class CDlgMatWood : public CDialog
 	b3MaterialSampler *m_MatSampler;
 
 	CPropertySheet     m_PropertySheet;
-	CPageMaterial      m_PageMaterial;
+	CPageMatWood       m_PageMatWood;
 	CPageWood          m_PageWood;
 // Construction
 public:

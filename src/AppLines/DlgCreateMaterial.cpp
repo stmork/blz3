@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/04/23 13:17:17  sm
+**	- Added simple material page and renamed wood material page.
+**	- Reflect material member renaming.
+**
 **	Revision 1.14  2004/04/10 18:43:30  sm
 **	- Changed simple material creation dialog to reflect units in
 **	  some controls
-**
+**	
 **	Revision 1.13  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -138,8 +142,8 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	app->b3ReadProfileColor("material.specular", m_MatNormal->m_SpecColor);
 	m_Reflection   = app->b3ReadProfileFloat("material.reflection",   0);
 	m_Refraction   = app->b3ReadProfileFloat("material.refraction",   0);
-	m_RefrValue    = app->b3ReadProfileFloat("material.ior",          1);
-	m_HighLight    = app->b3ReadProfileFloat("material.exponent",  1000);
+	m_Ior          = app->b3ReadProfileFloat("material.ior",          1);
+	m_SpecularExp  = app->b3ReadProfileFloat("material.exponent",  1000);
 	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"material.really create",TRUE);
 	m_UseTexture   = app->GetProfileInt(CB3ClientString(),"material.use texture",  FALSE);
 	m_MatTexture->b3SetTexture(app->GetProfileString(CB3ClientString(),"material.texture",""));
@@ -153,12 +157,12 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_RefractionCtrl.b3SetIncrement(0.01);
 	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
 	m_RefractionCtrl.b3SetDigits(2,1);
-	m_RefrValueCtrl.b3SetRange(-5.0,5.0);
-	m_RefrValueCtrl.b3SetDigits(0,2);
-	m_RefrValueCtrl.b3SetIncrement(0.01);
-	m_HighLightCtrl.b3SetRange(1.0,100000);
-	m_HighLightCtrl.b3SetDigits(0,1);
-	m_HighLightCtrl.b3SetIncrement(10.0);
+	m_IorCtrl.b3SetRange(-5.0,5.0);
+	m_IorCtrl.b3SetDigits(0,2);
+	m_IorCtrl.b3SetIncrement(0.01);
+	m_SpecularExpCtrl.b3SetRange(1.0,100000);
+	m_SpecularExpCtrl.b3SetDigits(0,1);
+	m_SpecularExpCtrl.b3SetIncrement(10.0);
 }
 
 CDlgCreateMaterial::~CDlgCreateMaterial()
@@ -173,10 +177,10 @@ void CDlgCreateMaterial::DoDataExchange(CDataExchange* pDX)
 {
 	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgCreateMaterial)
-	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_HighLightCtrl);
+	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
 	DDX_Control(pDX, IDC_REFLECTANCE_SPIN, m_ReflectionCtrl);
-	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_RefrValueCtrl);
+	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_IorCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_TEXTURE, m_PreviewTexture);
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	DDX_Control(pDX, IDC_COLOR_SPECULAR, m_SpecCtrl);
@@ -187,8 +191,8 @@ void CDlgCreateMaterial::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 	m_ReflectionCtrl.b3DDX(pDX,m_Reflection);
 	m_RefractionCtrl.b3DDX(pDX,m_Refraction);
-	m_RefrValueCtrl.b3DDX(pDX,m_RefrValue);
-	m_HighLightCtrl.b3DDX(pDX,m_HighLight);
+	m_IorCtrl.b3DDX(pDX,m_Ior);
+	m_SpecularExpCtrl.b3DDX(pDX,m_SpecularExp);
 }
 
 
@@ -228,8 +232,8 @@ BOOL CDlgCreateMaterial::OnInitDialog()
 
 	m_ReflectionCtrl.b3SetAccel(0.01);
 	m_RefractionCtrl.b3SetAccel(0.01);
-	m_RefrValueCtrl.b3SetAccel(0.1);
-	m_HighLightCtrl.b3SetAccel(50.0);
+	m_IorCtrl.b3SetAccel(0.1);
+	m_SpecularExpCtrl.b3SetAccel(50.0);
 
 	m_PreviewTexture.b3Copy(m_MatTexture->m_Texture);
 	m_PreviewTexture.b3Update(true,true);
@@ -248,14 +252,14 @@ void CDlgCreateMaterial::b3UpdateUI()
 	GetDlgItem(IDC_TEXTURE_SELECT)->EnableWindow(m_UseTexture);
 
 	// Copy surface values into dummy materials
-	m_MatNormal->m_Reflection  = m_Reflection;
-	m_MatNormal->m_Refraction  = m_Refraction;
-	m_MatNormal->m_RefrValue   = m_RefrValue;
-	m_MatNormal->m_HighLight   = m_HighLight;
-	m_MatTexture->m_Reflection = m_Reflection;
-	m_MatTexture->m_Refraction = m_Refraction;
-	m_MatTexture->m_RefrValue  = m_RefrValue;
-	m_MatTexture->m_HighLight  = m_HighLight;
+	m_MatNormal->m_Reflection   = m_Reflection;
+	m_MatNormal->m_Refraction   = m_Refraction;
+	m_MatNormal->m_Ior          = m_Ior;
+	m_MatNormal->m_SpecularExp  = m_SpecularExp;
+	m_MatTexture->m_Reflection  = m_Reflection;
+	m_MatTexture->m_Refraction  = m_Refraction;
+	m_MatTexture->m_Ior         = m_Ior;
+	m_MatTexture->m_SpecularExp = m_SpecularExp;
 
 	// Update material preview
 	m_MatHead->b3RemoveAll();
@@ -335,10 +339,10 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 		{
 			m_Material =
 			texture = new b3MatTexture(TEXTURE);
-			texture->m_Reflection = m_Reflection;
-			texture->m_Refraction = m_Refraction;
-			texture->m_RefrValue  = m_RefrValue;
-			texture->m_HighLight  = m_HighLight;
+			texture->m_Reflection  = m_Reflection;
+			texture->m_Refraction  = m_Refraction;
+			texture->m_Ior         = m_Ior;
+			texture->m_SpecularExp = m_SpecularExp;
 			texture->b3SetTexture(m_MatTexture->m_Name);
 			app->WriteProfileString(CB3ClientString(),"material.texture",m_MatTexture->m_Name);
 
@@ -355,24 +359,24 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 		{
             m_Material =
 			normal = new b3MatNormal(MATERIAL);
-			normal->m_Reflection = m_Reflection;
-			normal->m_Refraction = m_Refraction;
-			normal->m_RefrValue  = m_RefrValue;
-			normal->m_HighLight  = m_HighLight;
-			normal->m_AmbColor   = m_MatNormal->m_AmbColor;
-			normal->m_DiffColor  = m_MatNormal->m_DiffColor;
-			normal->m_SpecColor  = m_MatNormal->m_SpecColor;
+			normal->m_Reflection  = m_Reflection;
+			normal->m_Refraction  = m_Refraction;
+			normal->m_Ior         = m_Ior;
+			normal->m_SpecularExp = m_SpecularExp;
+			normal->m_AmbColor    = m_MatNormal->m_AmbColor;
+			normal->m_DiffColor   = m_MatNormal->m_DiffColor;
+			normal->m_SpecColor   = m_MatNormal->m_SpecColor;
 			app->b3WriteProfileColor("material.ambient", m_MatNormal->m_AmbColor);
 			app->b3WriteProfileColor("material.diffuse", m_MatNormal->m_DiffColor);
 			app->b3WriteProfileColor("material.specular",m_MatNormal->m_SpecColor);
 		}
 
-		B3_ASSERT((m_MatNormal->m_RefrValue != 0) && (m_MatNormal->m_HighLight != 0));
+		B3_ASSERT((m_MatNormal->m_Ior != 0) && (m_MatNormal->m_SpecularExp != 0));
 
 		app->b3WriteProfileFloat("material.reflection",m_Reflection);
 		app->b3WriteProfileFloat("material.refraction",m_Refraction);
-		app->b3WriteProfileFloat("material.ior",       m_RefrValue);
-		app->b3WriteProfileFloat("material.exponent",  m_HighLight);
+		app->b3WriteProfileFloat("material.ior",       m_Ior);
+		app->b3WriteProfileFloat("material.exponent",  m_SpecularExp);
 		app->WriteProfileInt(CB3ClientString(),"material.use texture",  m_UseTexture);
 	}
 	app->WriteProfileInt(CB3ClientString(),"material.really create",m_ReallyCreate);

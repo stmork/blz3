@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/04/23 13:17:17  sm
+**	- Added simple material page and renamed wood material page.
+**	- Reflect material member renaming.
+**
 **	Revision 1.14  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
 **	- Fixed camera name handling if camera name is empty.
-**
+**	
 **	Revision 1.13  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -220,7 +224,7 @@ b3Scene *b3ExampleScene::b3CreateGlobal()
 	// Init mirror sphere
 	glass->m_Reflection = 0.1f;
 	glass->m_Refraction = 0.8f;
-	glass->m_RefrValue  = 1.53f;
+	glass->m_Ior  = 1.53f;
 
 	b3Consolidate(scene);
 	return scene;

@@ -39,10 +39,10 @@ class CDlgCreateMaterial : public CPropertyPage
 	b3MatTexture   *m_MatTexture;
 	b3Scene        *m_MatScene;
 	b3Base<b3Item> *m_MatHead;
-	b3_f64          m_RefrValue;
+	b3_f64          m_Ior;
 	b3_f64          m_Reflection;
 	b3_f64          m_Refraction;
-	b3_f64          m_HighLight;
+	b3_f64          m_SpecularExp;
 
 	DECLARE_DYNCREATE(CDlgCreateMaterial)
 
@@ -64,8 +64,8 @@ public:
 	CB3ColorFieldSelector	m_AmbCtrl;
 	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
 	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
-	CB3FloatSpinButtonCtrl	m_RefrValueCtrl;
-	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
+	CB3FloatSpinButtonCtrl	m_IorCtrl;
+	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
 	CB3ShowImage	m_PreviewTexture;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	BOOL	m_ReallyCreate;

@@ -96,6 +96,7 @@
 #define IDD_BUMP_OAKPLANK               651
 #define IDD_PAGE_WOOD                   652
 #define IDD_PAGE_BUMP                   653
+#define IDD_PAGE_MAT_WOOD               654
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003

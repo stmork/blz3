@@ -509,6 +509,10 @@ SOURCE=.\PageMaterial.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PageMatWood.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PageOakPlank.cpp
 # End Source File
 # Begin Source File
@@ -926,6 +930,10 @@ SOURCE=.\PageBump.h
 # Begin Source File
 
 SOURCE=.\PageMaterial.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageMatWood.h
 # End Source File
 # Begin Source File
 
