@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/05/28 14:06:29  sm
+**	- Minor optimizations in shader
+**
 **	Revision 1.37  2004/05/28 13:15:39  sm
 **	- Major optimizations inside shader. But why is the intel brt3
 **	  5 minutes slower than the unoptimized version?
-**
+**	
 **	Revision 1.36  2004/05/27 13:13:56  sm
 **	- Optimized Mork shader
 **	- Removed b3ShadePostMaterial
@@ -237,26 +240,21 @@ void b3ShaderMork::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3_f64  ShapeAngle;
-	b3_f32  factor;
-	b3Color illumination;
-
-	// ambient term
-	illumination.b3Init(m_ShadowFactor);
+	b3Color illumination = m_ShadowFactor;
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
 	{
-		// specular high light
-		if ((ShapeAngle =
-			surface->incoming->normal.x * Jit->dir.x +
-			surface->incoming->normal.y * Jit->dir.y +
-			surface->incoming->normal.z * Jit->dir.z) >= 0)
-		{
-			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+		b3_f32 ShapeAngle = b3Vector::b3SMul(&surface->incoming->normal, &Jit->dir);
+		b3_f32 factor;
 
-			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
+		// specular high light
+		if (ShapeAngle >= 0)
+		{
+			if (surface->m_SpecularExp < 100000)
 			{
+				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+				
 				factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
 				surface->m_SpecularSum += (light->m_Color * factor);
 			}

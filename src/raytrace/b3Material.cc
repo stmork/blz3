@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.80  2004/05/28 14:06:29  sm
+**      - Minor optimizations in shader
+**
 **      Revision 1.79  2004/05/26 12:47:20  sm
 **      - Optimized recursive shading
 **      - Optimized pow to an integer version (b3Math::b3FastPow)
@@ -1065,13 +1068,13 @@ b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
 
 void b3MaterialWooden::b3Init()
 {
-	m_LightMaterial.m_Diffuse.b3Init(0.5,0.2,0.067);
+	m_LightMaterial.m_Diffuse.b3Init(0.5f,0.2f,0.067f);
 	m_LightMaterial.m_Ambient = m_LightMaterial.m_Diffuse * 0.2;
-	m_LightMaterial.m_Specular.b3Init(0.8,0.8,0.8);
+	m_LightMaterial.m_Specular.b3Init(0.8f,0.8f,0.8f);
 
 	m_DarkMaterial.m_Diffuse = m_LightMaterial.m_Diffuse * 0.7;
 	m_DarkMaterial.m_Ambient = m_DarkMaterial.m_Diffuse * 0.2;
-	m_DarkMaterial.m_Specular.b3Init(0.8,0.8,0.8);
+	m_DarkMaterial.m_Specular.b3Init(0.8f,0.8f,0.8f);
 
 	m_DarkMaterial.m_Reflection  =   0;
 	m_DarkMaterial.m_Refraction  =   0;
@@ -1445,8 +1448,8 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	b3MatNormal(sizeof(b3MatCookTorrance),class_type)
 {
 	// Colors
-	m_Diffuse  = b3Color(0.79,0.54,0.2);
-	m_Specular = b3Color(0.8,0.8,0.8);
+	m_Diffuse  = b3Color(0.79f, 0.54f, 0.2f);
+	m_Specular = b3Color(0.8f,  0.8f,  0.8f);
 	m_Ambient  = m_Diffuse * 0.2;
 
 	// Material values

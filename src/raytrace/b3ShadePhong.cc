@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/05/28 14:06:29  sm
+**	- Minor optimizations in shader
+**
 **	Revision 1.29  2004/05/28 13:15:39  sm
 **	- Major optimizations inside shader. But why is the intel brt3
 **	  5 minutes slower than the unoptimized version?
-**
+**	
 **	Revision 1.28  2004/05/27 13:13:56  sm
 **	- Optimized Mork shader
 **	- Removed b3ShadePostMaterial
@@ -201,24 +204,24 @@ void b3ShaderPhong::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3_f32 ShapeAngle,Factor;
-
 	if (Jit->shape == null)
 	{
-		if ((ShapeAngle =
-			surface->incoming->normal.x * Jit->dir.x +
-			surface->incoming->normal.y * Jit->dir.y +
-			surface->incoming->normal.z * Jit->dir.z) >= 0)
+		b3_f32 ShapeAngle = b3Vector::b3SMul(&surface->incoming->normal, &Jit->dir);
+
+		if (ShapeAngle >= 0) // test for far side to light
 		{
-			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+			result += (surface->m_Diffuse * light->m_Color * ShapeAngle);
 
-			Factor = b3Math::b3FastPow (lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
+			if (surface->m_SpecularExp < 100000) // test if surface if rough
+			{
+				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+				b3_f32 factor = b3Math::b3FastPow (lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
 
-			result += (surface->m_Specular * Factor + surface->m_Diffuse * ShapeAngle) * light->m_Color;
+				surface->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
+			}
 		}
 	}
 }
-
 
 void b3ShaderPhong::b3ShadeSurface(
 	b3_surface &surface,
@@ -254,6 +257,13 @@ void b3ShaderPhong::b3ShadeSurface(
 		formula |= MIX_REFLECTION;
 	}
 
+	surface.m_SpecularSum.b3Init();
+	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		light->b3Illuminate(this,&surface);
+	}
+
 	switch(formula)
 	{
 	case MIX_REFLECTION:
@@ -275,10 +285,5 @@ void b3ShaderPhong::b3ShadeSurface(
 				        ray->color * factor;
 		break;
 	}
-
-	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
-	{
-		light = (b3Light *)item;
-		light->b3Illuminate(this,&surface);
-	}
+	ray->color += surface.m_SpecularSum;
 }

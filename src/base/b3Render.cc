@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.68  2004/05/28 14:06:29  sm
+**      - Minor optimizations in shader
+**
 **      Revision 1.67  2004/03/07 13:08:52  sm
 **      - Added dialog for Cook/Torrance material
 **
@@ -424,7 +427,7 @@ b3RenderContext::b3RenderContext()
 	b3LightSpotEnable(false);
 	glDrawCachedTextures = true;
 	glSelectedObject     = null;
-	glBgColor.b3Init(0.8,0.8,0.8);
+	glBgColor.b3Init(0.8f,0.8f,0.8f);
 }
 
 void b3RenderContext::b3Init()
