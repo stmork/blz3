@@ -35,6 +35,7 @@
 #include "blz3/system/b3Date.h"
 
 #include "DlgSearchPathList.h"
+#include "DlgProperties.h"
 #include "b3Splash.h"
 
 /*************************************************************************
@@ -45,9 +46,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/02/08 15:53:37  sm
+**	- Cleaned up makefiles for Un*x
+**	- New dialog for print buffer size.
+**
 **	Revision 1.27  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
-**
+**	
 **	Revision 1.26  2002/01/31 19:30:31  sm
 **	- Some OpenGL print optimizations done.
 **	- Object renaming inside hierarchy tree added.
@@ -172,6 +177,7 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
+	ON_COMMAND(ID_PROPERTIES, OnProperties)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -569,4 +575,12 @@ void CAppLinesApp::OnFileNew()
 	// TODO: Add your command handler code here
 	// Force creating new geometry!
 	pSceneTemplate->OpenDocumentFile(NULL);
+}
+
+void CAppLinesApp::OnProperties() 
+{
+	// TODO: Add your command handler code here
+	CDlgProperties dlg;
+
+	dlg.DoModal();
 }

@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= libB3System.a
+LIBS			= $(BLZ3_LIB)/libB3System.a
 LIB_SOURCE		=\
 	b3Config.cc\
 	b3Date.cc\
@@ -37,14 +37,13 @@ depend:
 	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 lib:	$(LIBS)
  
-libB3System.a:	$(LIB_OBJ)
+$(LIBS):	$(LIB_OBJ)
 	rm -f $@ core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
 
 -include .dep

@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= libB3Raytrace.a
+LIBS			= $(BLZ3_LIB)/libB3Raytrace.a
 PRG_SOURCE		=\
 	b3Animation.cc\
 	b3Area.cc\
@@ -101,14 +101,13 @@ depend:
 	gcc -M $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 lib:	$(LIBS)
 
-libB3Raytrace.a:	$(PRG_OBJ)
+$(LIBS):	$(PRG_OBJ)
 	rm -f $@ core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
 
 -include .dep

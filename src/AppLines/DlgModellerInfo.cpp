@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/02/08 15:53:37  sm
+**	- Cleaned up makefiles for Un*x
+**	- New dialog for print buffer size.
+**
 **	Revision 1.6  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
-**
+**	
 **	Revision 1.5  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
@@ -87,8 +91,8 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FULCRUM_X, m_xFulcrumCtrl);
 	DDX_Check(pDX, IDC_SNAP_TO_ANGLE, m_SnapToAngle);
 	DDX_Check(pDX, IDC_SNAP_TO_GRID, m_SnapToGrid);
-	DDX_CBIndex(pDX, IDC_UNIT, (int &)m_Unit);
-	DDX_CBIndex(pDX, IDC_MEASURE, (int &)m_Measure);
+	DDX_CBIndex(pDX, IDC_UNIT, m_Unit);
+	DDX_CBIndex(pDX, IDC_MEASURE, m_Measure);
 	DDX_Text(pDX, IDC_CUSTOM_MEASURE, m_CustomMeasure);
 	DDV_MinMaxInt(pDX, m_CustomMeasure, 1, 1000);
 	//}}AFX_DATA_MAP
@@ -218,10 +222,10 @@ void CDlgModellerInfo::OnOK()
 	m_ModellerInfo->m_Center.x    = m_xFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.y    = m_yFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.z    = m_zFulcrumCtrl.m_Value;
-	m_ModellerInfo->b3SetUnit(m_Unit);
+	m_ModellerInfo->b3SetUnit((b3_unit)m_Unit);
 	if (m_Measure != B3_MEASURE_CUSTOM)
 	{
-		m_ModellerInfo->b3SetMeasure(m_Measure);
+		m_ModellerInfo->b3SetMeasure((b3_measure)m_Measure);
 	}
 	else
 	{

@@ -7,8 +7,8 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= libB3Base.a
-PRG_SOURCE =\
+LIBS			= libB3base.a
+LIB_SOURCE =\
 	b3Aux.cc\
 	b3Cubic.cc\
 	b3Display.cc\
@@ -28,7 +28,7 @@ PRG_SOURCE =\
 	b3Spline.cc\
 	b3World.cc
 
-PRG_OBJ	=\
+LIB_OBJ	=\
 	b3Aux.o\
 	b3Cubic.o\
 	b3Display.o\
@@ -51,18 +51,17 @@ PRG_OBJ	=\
 all:	lib
 
 depend:
-#	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
-	gcc -M $(PRG_SOURCE) $(CPPFLAGS) >.dep
+#	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
+	gcc -M $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 lib:	$(LIBS)
 
-libB3Base.a:	$(PRG_OBJ)
-	rm -f $@ core
+$(LIBS):	$(LIB_OBJ)
+	rm -f core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
 
 -include .dep

@@ -246,7 +246,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
-        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Suchpfade für Te&xturen...",  ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Einstellungen...",            ID_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -308,6 +309,7 @@ BEGIN
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
         MENUITEM "Suchpfade für Te&xturen...",  ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Einstellungen...",            ID_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -448,7 +450,8 @@ BEGIN
         MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
-        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Suchpfade für Te&xturen...",  ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Einstellungen...",            ID_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -525,7 +528,8 @@ BEGIN
         MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
-        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Suchpfade für Te&xturen...",  ID_CHANGE_TEXTURE_PATH
+        MENUITEM "Einstellungen...",            ID_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -1105,6 +1109,20 @@ BEGIN
     LTEXT           "",1119,0,0,2,133
 END
 
+IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 152, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Einstellungen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,55,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,90,55,50,14
+    EDITTEXT        IDC_PRT_BUFFER,10,20,35,15,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_PRT_BUFFER_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,45,20,10,15
+    LTEXT           "Druckpuffer",IDC_STATIC,10,10,38,8
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1302,6 +1320,14 @@ BEGIN
         RIGHTMARGIN, 65
         TOPMARGIN, 12
         BOTTOMMARGIN, 122
+    END
+
+    IDD_PROPERTIES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 145
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1719,6 +1745,7 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
     ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
+    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
 END
 
 STRINGTABLE DISCARDABLE 

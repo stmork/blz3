@@ -67,6 +67,7 @@
 #define IDD_PRINTDIALOG                 172
 #define IDI_SHAPE_BOX                   173
 #define IDI_SHAPE_TORUS                 174
+#define IDD_PROPERTIES                  174
 #define IDI_SHAPE_TRIANGLES             175
 #define IDI_SHAPE_BSPLINE_ROT           176
 #define IDI_SHAPE_BSPLINE_AREA          177
@@ -223,7 +224,9 @@
 #define IDC_PRTDLG_MEASURE              1111
 #define IDC_EDIT1                       1112
 #define IDC_CUSTOM_MEASURE              1112
+#define IDC_PRT_BUFFER                  1112
 #define IDC_MEASURE                     1113
+#define IDC_PRT_BUFFER_SPIN             1114
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -313,6 +316,7 @@
 #define ID_OBJECT_EDIT                  32863
 #define ID_OBJECT_RENAME                32864
 #define ID_RENAME                       32865
+#define ID_PROPERTIES                   32866
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -365,9 +369,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        174
-#define _APS_NEXT_COMMAND_VALUE         32866
-#define _APS_NEXT_CONTROL_VALUE         1114
+#define _APS_NEXT_RESOURCE_VALUE        175
+#define _APS_NEXT_COMMAND_VALUE         32867
+#define _APS_NEXT_CONTROL_VALUE         1115
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

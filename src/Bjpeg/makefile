@@ -35,17 +35,16 @@ depend:	$(LIB_SRCS)
 	gcc -M  $(LIB_SRCS) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core libB*.a $(PRGS)
+	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS)
 
 re:
 	$(AR) $(ARXFLAGS) $(BLZ3_LIB)/libB3tiff.a
 
 lib:	$(LIBS)
 
-libB3jpeg.a:	$(LIB_OBJS)
-	rm -f $@ core
+$(LIBS):	$(LIB_OBJS)
+	rm -f core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
 
 -include .dep

@@ -1,5 +1,5 @@
 #
-# basic makefile to create Blizzard II
+# basic makefile to create Blizzard III
 #
 
 CFLAGS		= $(OFLAGS) -D__$(OSTYPE)__
@@ -23,8 +23,14 @@ SUB_DIRS +=\
 	brt3\
 	check
 
-all:	$(BLZ3_LIB) $(BLZ3_BIN)
-	+@for i in $(SUB_DIRS); do \
+PRGS	=\
+	test_unix\
+	OpenGL\
+	brt3\
+	check
+
+all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
+	+@for i in $(PRGS); do \
 		echo ""; \
 		echo "Building "$$i"..."; \
 		make -C $$i; \
@@ -57,6 +63,12 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
+#########################################################
+#                                                       #
+#  Blizzard III tools                                   #
+#                                                       #
+#########################################################
+
 remdepend:
 	find . -name ".dep" -exec rm {} \;
 
@@ -71,6 +83,18 @@ uncr:	$(BLZ3_BIN)/RemCR
 		find $$i -name "*.h" -exec RemCR {} \;;\
 	done
 
+$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemDepend
+
+$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemCR
+
+#########################################################
+#                                                       #
+#  Blizzard III libraries                               #
+#                                                       #
+#########################################################
+
 $(BLZ3_LIB):
 	mkdir -p $@
 
@@ -80,8 +104,23 @@ $(BLZ3_BIN):
 $(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
 	+@make -C system_unix
 
-$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemDepend
+$(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB)
+	+@make -C raytrace
 
-$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemCR
+base/libB3base.a:
+	+@make -C base
+
+image/libB3image.a:
+	+@make -C image
+
+Btiff/libB3tiff.a:
+	+@make -C Btiff
+
+Bjpeg/libB3jpeg.a:
+	+@make -C Bjpeg
+
+$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) $(BLZ3_TMP) base/libB3base.a image/libB3image.a Btiff/libB3tiff.a Bjpeg/libB3jpeg.a $(BLZ3_LIB)/libB3System.a
+	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o
+	$(RANLIB) $@
+
+libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Raytrace.a $(BLZ3_LIB)/libB3Base.a

@@ -13,7 +13,7 @@ AUTO		= tif_fax3sm.c version.h
 ALPHA	= tiff.alpha
 VERSION	= VERSION
 
-SRCS	= \
+LIB_SOURCE	= \
 	mkversion.c\
 	mkg3states.c\
 	tif_aux.c \
@@ -49,7 +49,7 @@ SRCS	= \
 	tif_write.c \
 	tif_zip.c
 
-OBJS	= \
+LIB_OBJ	= \
 	tif_aux.o \
 	tif_close.o \
 	tif_codec.o \
@@ -88,23 +88,19 @@ OBJS	= \
 
 all:	lib
 
-depend:	$(SRCS)
+depend:	$(AUTO)
 #	makedepend -- $(CPPFLAGS) -- $(SRCS)
-	gcc -M  $(SRCS) $(CPPFLAGS) >.dep
+	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core libB*.a $(PRGS) $(AUTO) version.h
-
-re:
-	$(AR) $(ARXFLAGS) $(BLZ3_LIB)/libB3tiff.a
+	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS) $(LIBS) $(AUTO) ALL QUIET version.h
 
 lib:	$(LIBS)
 
-libB3tiff.a: $(OBJS)
-	rm -f $@ core
+$(LIBS): $(LIB_OBJ)
+	rm -f core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
-	cp $@ $(BLZ3_LIB)
 
 tif_fax3sm.c:	mkg3states
 	mkg3states -c const tif_fax3sm.c

@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/02/08 15:53:38  sm
+**      - Cleaned up makefiles for Un*x
+**      - New dialog for print buffer size.
+**
 **      Revision 1.15  2001/11/09 16:15:35  sm
 **      - Image file encoder
 **      - Performance meter for triangles / second added.
@@ -115,7 +119,7 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 
 	scene = (b3Scene *)world->b3GetFirst();
 	view.b3SetCamera(scene);
-	view.b3UpdateView(0,0,xSize,ySize);
+	view.b3SetupView(xSize,ySize);
 }
 
 void SetupRC()
@@ -160,7 +164,7 @@ int main(int argc,char *argv[])
 			b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
-			view.b3UpdateView(0,0,xSize,ySize);
+			view.b3SetupView(xSize,ySize);
 		}
 
 		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
