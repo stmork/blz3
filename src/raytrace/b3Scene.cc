@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/05 20:30:46  sm
+**	- Introducing Mork and Phong shading.
+**	- Using light source when shading
+**
 **	Revision 1.12  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
-**
+**	
 **	Revision 1.11  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -89,12 +93,17 @@
 void b3InitScene::b3Init()
 {
 	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,TRACEANGLE_MORK);
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,TRACEPHOTO_MORK);
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,TRACEANGLE_PHONG);
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,TRACEPHOTO_PHONG);
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,TRACEPHOTO_ALBRECHT);
-	b3Item::b3Register(&b3Scene::b3Init,&b3Scene::b3Init,GLOBAL_ILLUM);
+	b3Item::b3Register(&b3SceneMork::b3Init, &b3SceneMork::b3Init, TRACEANGLE_MORK);
+	b3Item::b3Register(&b3SceneMork::b3Init, &b3SceneMork::b3Init, TRACEPHOTO_MORK);
+	b3Item::b3Register(&b3ScenePhong::b3Init,&b3ScenePhong::b3Init,TRACEANGLE_PHONG);
+	b3Item::b3Register(&b3ScenePhong::b3Init,&b3ScenePhong::b3Init,TRACEPHOTO_PHONG);
+	b3Item::b3Register(&b3Scene::b3Init,     &b3Scene::b3Init,     TRACEPHOTO_ALBRECHT);
+	b3Item::b3Register(&b3Scene::b3Init,     &b3Scene::b3Init,     GLOBAL_ILLUM);
+}
+
+b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
 }
 
 b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
@@ -129,16 +138,6 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
 	m_Nebular          = null;
-}
-
-b3Item *b3Scene::b3Init(b3_u32 class_type)
-{
-	return new b3Scene(class_type);
-}
-
-b3Item *b3Scene::b3Init(b3_u32 *src)
-{
-	return new b3Scene(src);
 }
 
 void b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)

@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/10/05 20:30:46  sm
+**      - Introducing Mork and Phong shading.
+**      - Using light source when shading
+**
 **      Revision 1.5  2001/10/03 20:17:55  sm
 **      - Minor bugfixes
 **

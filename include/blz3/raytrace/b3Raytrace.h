@@ -77,7 +77,7 @@ struct b3_ray : public b3_dLine
 // aux. structure for computing illumination
 struct b3_surface
 {
-	b3_color  diffuse,ambient,specular;
+	b3_color  diffuse,ambient,specular,specular_sum;
 	b3_f64    refl,refr,ior,se;
 };
 
@@ -162,26 +162,29 @@ public:
 	B3_ITEM_INIT(b3Condition);
 	B3_ITEM_LOAD(b3Condition);
 
-	virtual void b3ComputeBound(b3CondLimit *limit);
+	virtual void    b3ComputeBound(b3CondLimit *limit);
 	virtual b3_bool b3CheckStencil(b3_polar *polar);
+	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
+
 protected:
-	static void b3CheckInnerBound(b3CondLimit *limit,b3CondLimit *object);
-	static void b3CheckOuterBound(b3CondLimit *limit,b3CondLimit *object);
+	static  void    b3CheckInnerBound(b3CondLimit *limit,b3CondLimit *object);
+	static  void    b3CheckOuterBound(b3CondLimit *limit,b3CondLimit *object);
 };
 
 // TYPE_RECTANGLE
 class b3CondRectangle : public b3Condition
 {
 protected:
-	b3_f32  xStart,yStart;    // rel. start coordinates
-	b3_f32  xEnd,yEnd;        // rel. end koordinates
-	b3_s32  Flags;
+	b3_f32  m_xStart,m_yStart;    // rel. start coordinates
+	b3_f32  m_xEnd,  m_yEnd;      // rel. end koordinates
+	b3_s32  m_Flags;
 
 public:
 	B3_ITEM_INIT(b3CondRectangle);
 	B3_ITEM_LOAD(b3CondRectangle);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 #define RCB_ACTIVE  0
@@ -1416,13 +1419,38 @@ protected:
 #define LIGHT_NAMELEN(Node) (BINDEX_OFFSET(Node) > 0 ? \
 	BINDEX_LENGTH(Node) - BINDEX_OFFSET(Node) : 0)
 
+
+struct b3_ray_info : public b3_ray
+{
+	b3_color   color;
+	b3Shape   *shape;
+	b3BBox    *BBox;
+};
+
+struct b3_illumination : public b3_surface
+{
+	b3_ray_info *incoming;
+	b3_ray_info  refl_ray;
+	b3_ray_info  refr_ray;
+};
+
+// aux. structure for JitterLight
+struct b3_light_info : public b3_ray_info
+{
+	b3_vector LightView,xDir,yDir;
+	b3_f64    Size,LightFrac,LightDist;
+	b3_s32    Distr;
+};
+
 class b3InitLight
 {
 protected:
 	static void b3Init();
 };
 
+
 // POINT_LIGHT
+class b3Scene;
 class b3Light : public b3Item
 {
 public:
@@ -1436,21 +1464,20 @@ public:
 	b3_spline        m_Spline;       // Spline Kurve
 	b3_f32           m_Knots[B3_MAX_KNOTS];
 	b3_vector        m_Controls[B3_MAX_CONTROLS];
+	b3_bool          m_LightActive;
+	b3_bool          m_SoftShadow;
+	b3_bool          m_SpotActive;
 	char             m_Name[B3_BOXSTRINGLEN]; // Lampenname
 
 public:
 	B3_ITEM_INIT(b3Light);
 	B3_ITEM_LOAD(b3Light);
-};
 
-// aux. structure for JitterLight
-typedef struct
-{
-	b3_line         LightDir;
-	b3_vector       LightView,xDir,yDir;
-	b3_f32          Size,LightFrac,LightDist,Q;
-	b3_s32          Distr;
-} b3JitterPrep;
+	b3_bool b3Illuminate(b3Scene *scene,b3_illumination *surface);
+
+private:
+	void    b3Init();
+};
 
 /************************************************************************\
 **                                                                      **
@@ -1758,20 +1785,6 @@ public:
 	b3_pkd_color *b3GetBuffer();
 };
 
-struct b3_ray_info : public b3_ray
-{
-	b3_color   color;
-	b3Shape   *shape;
-	b3BBox    *BBox;
-};
-
-struct b3_illumination : public b3_surface
-{
-	b3_ray_info *incoming;
-	b3_ray_info  refl_ray;
-	b3_ray_info  refr_ray;
-};
-
 class b3Scene : public b3Item
 {
 	b3CPU            m_CPU;
@@ -1804,44 +1817,68 @@ public:
 protected:
 	b3Nebular       *m_Nebular;
 
+protected:
+	b3Scene(b3_size class_size,b3_u32  class_type);
+
 public:
-	                       b3Scene(b3_u32  class_type);
-	                       b3Scene(b3_u32 *src);
+	B3_ITEM_INIT(b3Scene);
+	B3_ITEM_LOAD(b3Scene);
 
-	static b3Item         *b3Init(b3_u32  class_type);
-	static b3Item         *b3Init(b3_u32 *src);
-
-	       void            b3Reorg();
-	       void            b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
-		   void            b3AllocVertices(b3RenderContext *context);
-		   void            b3FreeVertices();
-	       void            b3Draw();
-		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
-		   b3ModellerInfo *b3GetModellerInfo();
-		   b3Nebular      *b3GetNebular();
-		   b3CameraPart   *b3GetCamera(b3_bool must_active = false);
-		   b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
-		   b3Light        *b3GetLight(b3_bool must_active = false);
-		   b3BBox         *b3GetFirstBBox();
-		   b3_count        b3GetBBoxCount();
-		   void            b3Activate(b3_bool activate=true);
-		   void            b3Transform(b3_matrix *transformation);
-		   void            b3Raytrace(b3Display *display);
-		   b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
-		   b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+	        void            b3Reorg();
+	        void            b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+		    void            b3AllocVertices(b3RenderContext *context);
+		    void            b3FreeVertices();
+	        void            b3Draw();
+		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+		    b3ModellerInfo *b3GetModellerInfo();
+		    b3Nebular      *b3GetNebular();
+		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
+		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
+		    b3Light        *b3GetLight(b3_bool must_active = false);
+		    b3BBox         *b3GetFirstBBox();
+		    b3_count        b3GetBBoxCount();
+		    void            b3Activate(b3_bool activate=true);
+		    void            b3Transform(b3_matrix *transformation);
+		    void            b3Raytrace(b3Display *display);
+		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
 
 protected:
-		   b3_bool         b3ComputeOutputRays(b3_illumination *surface);
-		   void            b3GetInfiniteColor(b3_color *infinite);
-		   void            b3GetBackgroundColor(b3_color *background);
+		    b3_bool         b3ComputeOutputRays(b3_illumination *surface);
+		    void            b3GetInfiniteColor(b3_color *infinite);
+		    void            b3GetBackgroundColor(b3_color *background);
 
 private:
-	       void            b3RaytraceOneRow(b3RayRow *row);
-	static b3_u32          b3RaytraceThread(void *ptr);
-		   b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
-		   void            b3Illuminate(b3Light *light,b3_color *result,b3_surface *surface);
+	        void            b3RaytraceOneRow(b3RayRow *row);
+	static  b3_u32          b3RaytraceThread(void *ptr);
+		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
 
 	friend class b3RayRow;
+};
+
+class b3ScenePhong : public b3Scene
+{
+public:
+	B3_ITEM_INIT(b3ScenePhong);
+	B3_ITEM_LOAD(b3ScenePhong);
+
+	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
+};
+
+class b3SceneMork : public b3Scene
+{
+public:
+	B3_ITEM_INIT(b3SceneMork);
+	B3_ITEM_LOAD(b3SceneMork);
+
+	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
+
+private:
+	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
+	void    b3LightFlare(b3_ray_info *ray);
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

@@ -19,9 +19,9 @@
 
 #include "blz3/b3Types.h"
 
-#define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)              + ((v) < 0 ? (M_PI * 2.0) : 0))
-#define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) * 2.0 / M_PI + ((v) < 0 ?   1.0 : 0))
-#define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * pim180 + ((v) < 0 ? 360.0 : 0))
+#define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)                + ((v) < 0 ? (M_PI * 2.0) : 0))
+#define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
+#define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * 180.0 / M_PI + ((v) < 0 ? 360.0 : 0))
 
 b3_f64     b3Length             (b3_vector *vec);
 b3_f64     b3Normalize          (b3_vector *vec);

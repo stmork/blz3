@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/05 20:30:45  sm
+**	- Introducing Mork and Phong shading.
+**	- Using light source when shading
+**
 **	Revision 1.12  2001/09/30 16:27:48  sm
 **	- Raytracing with diffuse color without shading
 **	- Sphere intersection fixed (now using normalized rays)
-**
+**	
 **	Revision 1.11  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running

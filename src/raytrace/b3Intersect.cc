@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/10/05 20:30:45  sm
+**	- Introducing Mork and Phong shading.
+**	- Using light source when shading
+**
 **	Revision 1.8  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
-**
+**	
 **	Revision 1.7  2001/10/02 16:01:58  sm
 **	- Moving b3Polar into b3Ray but that's not right at all. The
 **	  result must be placed there but a simple result from one

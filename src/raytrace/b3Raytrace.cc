@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/05 20:30:46  sm
+**	- Introducing Mork and Phong shading.
+**	- Using light source when shading
+**
 **	Revision 1.9  2001/10/03 20:17:56  sm
 **	- Minor bugfixes
-**
+**	
 **	Revision 1.8  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
 **	
@@ -134,7 +138,10 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 		r = (b3_pkd_color)(ray.color.r * 255.0);
 		g = (b3_pkd_color)(ray.color.g * 255.0);
 		b = (b3_pkd_color)(ray.color.b * 255.0);
-		buffer[x] = (r << 16) | (g << 8) | b;
+		buffer[x] =
+			((r > 255 ? 255 : r) << 16) |
+			((g > 255 ? 255 : g) <<  8) |
+			 (b > 255 ? 255 : b);
 
 		fx += fxStep;
 	}

@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3Shade.cc $
+**	$Filename:	b3ShadePhong.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - The default shader
+**	Blizzard III - Phong shader
 **
 **      (C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -32,146 +32,59 @@
 
 /*
 **	$Log$
-**	Revision 1.6  2001/10/05 20:30:46  sm
+**	Revision 1.1  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
 **
-**	Revision 1.5  2001/10/03 20:17:56  sm
-**	- Minor bugfixes
-**	
-**	Revision 1.4  2001/10/03 18:46:45  sm
-**	- Adding illumination and recursive raytracing
-**	
-**	Revision 1.3  2001/10/02 16:01:58  sm
-**	- Moving b3Polar into b3Ray but that's not right at all. The
-**	  result must be placed there but a simple result from one
-**	  intersection must be placed into a temp instance. The same
-**	  must be done for surface normals as they result from using
-**	  the b3Polar class.
-**	
-**	Revision 1.2  2001/09/30 16:27:48  sm
-**	- Raytracing with diffuse color without shading
-**	- Sphere intersection fixed (now using normalized rays)
-**	
-**	Revision 1.1  2001/09/23 14:11:18  sm
-**	- A new raytrace is born! But it isn't raytracing yet.
-**	
 **
 */
 
-b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
+
+b3ScenePhong::b3ScenePhong(b3_u32 class_type) : b3Scene(sizeof(b3ScenePhong), class_type)
 {
-	b3_vector  *Normal       = &surface->incoming->normal;
-	b3_dVector *incoming_dir = &surface->incoming->dir;
-	b3_dVector *refl_dir     = &surface->refl_ray.dir;
-	b3_dVector *refr_dir;
-	b3_f64      Factor,cos_a,d,ior;
-	b3_bool     transparent = false;
- 
-	Factor = 2 * (cos_a =
-		incoming_dir->x * Normal->x +
-		incoming_dir->y * Normal->y +
-		incoming_dir->z * Normal->z);
-	refl_dir->x = incoming_dir->x - Factor * Normal->x;
-	refl_dir->y = incoming_dir->y - Factor * Normal->y;
-	refl_dir->z = incoming_dir->z - Factor * Normal->z;
-	Factor = 1/sqrt(
-		refl_dir->x * refl_dir->x +
-		refl_dir->y * refl_dir->y +
-		refl_dir->z * refl_dir->z);
-	refl_dir->x *= Factor;
-	refl_dir->y *= Factor;
-	refl_dir->z *= Factor;
-	surface->refl_ray.pos    =  surface->incoming->pos;
-	surface->refl_ray.inside = !surface->incoming->inside;
-
-	//Use only sharp angles
-	if (cos_a >= 0)
-	{
-		Normal->x = -Normal->x;
-		Normal->y = -Normal->y;
-		Normal->z = -Normal->z;
-		cos_a     = -cos_a;
-	}
-
-	if (surface->refr > 0)
-	{
-		ior      = surface->incoming->inside ? 1.0 / surface->ior : surface->ior;
-		refr_dir = &surface->refr_ray.dir;
-
-		if (fabs(cos_a) < 1)
-		{
-			d = ior * ior;
-			Factor = 1 - d + d * cos_a * cos_a;
-			if (Factor >= 0)	/* Test auf Totalreflexion */
-			{
-				Factor = sqrt(Factor) + ior * cos_a;
-				refr_dir->x = Factor * Normal->x - incoming_dir->x * ior;
-				refr_dir->y = Factor * Normal->y - incoming_dir->y * ior;
-				refr_dir->z = Factor * Normal->z - incoming_dir->z * ior;
-
-				Factor = -1/sqrt(
-					refr_dir->x * refr_dir->x +
-					refr_dir->y * refr_dir->y +
-					refr_dir->z * refr_dir->z);
-				refr_dir->x *= Factor;
-				refr_dir->y *= Factor;
-				refr_dir->z *= Factor;
-
-				surface->refr_ray.pos    =  surface->incoming->pos;
-				surface->refr_ray.inside = !surface->incoming->inside;
-				transparent = true;
-			}
-		}
-		else					/* Einfall senkrecht -> Richtung bleibt */
-		{
-			surface->refr_ray.pos    =  surface->incoming->pos;
-			surface->refr_ray.dir    =  surface->incoming->dir;
-			surface->refr_ray.inside = !surface->incoming->inside;
-			transparent = true;
-		}
-	}
-	return transparent;
+	b3PrintF(B3LOG_NORMAL,"  using Phong shading...\n");
 }
 
-void b3Scene::b3Illuminate(
+b3ScenePhong::b3ScenePhong(b3_u32 *src) : b3Scene(src)
+{
+	b3PrintF(B3LOG_NORMAL,"  using Phong shading...\n");
+}
+
+void b3ScenePhong::b3Illuminate(
 	b3Light         *light,
 	b3_light_info   *Jit,
 	b3_illumination *surface)
 {
 	register double ShapeAngle,Factor;
 
-	if ((ShapeAngle =
-		surface->incoming->normal.x * Jit->dir.x +
-		surface->incoming->normal.y * Jit->dir.y +
-		surface->incoming->normal.z * Jit->dir.z) >= 0)
+	if (Jit->shape == null)
 	{
-		surface->incoming->color.r +=
-			ShapeAngle * surface->diffuse.r * light->m_Color.r;
-		surface->incoming->color.g +=
-			ShapeAngle * surface->diffuse.g * light->m_Color.g;
-		surface->incoming->color.b +=
-			ShapeAngle * surface->diffuse.b * light->m_Color.b;
+		if ((ShapeAngle =
+			surface->incoming->normal.x * Jit->dir.x +
+			surface->incoming->normal.y * Jit->dir.y +
+			surface->incoming->normal.z * Jit->dir.z) >= 0)
+		{
+			Factor = log ((
+				surface->refl_ray.dir.x * Jit->dir.x +
+				surface->refl_ray.dir.y * Jit->dir.y +
+				surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+			Factor = exp (Factor * surface->se) * Jit->LightFrac;
+
+			surface->incoming->color.r += (
+				Factor     * surface->specular.r +
+				ShapeAngle * surface->diffuse.r) * light->m_Color.r;
+			surface->incoming->color.g += (
+				Factor     * surface->specular.g +
+				ShapeAngle * surface->diffuse.g) * light->m_Color.g;
+			surface->incoming->color.b += (
+				Factor     * surface->specular.b +
+				ShapeAngle * surface->diffuse.b) * light->m_Color.b;
+		}
 	}
 }
 
-void b3Scene::b3GetBackgroundColor(b3_color *bg)
-{
-	bg->r = (m_TopColor.r + m_BottomColor.r) * 0.5;
-	bg->g = (m_TopColor.g + m_BottomColor.g) * 0.5;
-	bg->b = (m_TopColor.b + m_BottomColor.b) * 0.5;
-	bg->a = (m_TopColor.a + m_BottomColor.a) * 0.5;
-}
 
-void b3Scene::b3GetInfiniteColor(b3_color *inf)
-{
-	inf->r = 0.5f;
-	inf->g = 0.5f;
-	inf->b = 0.5f;
-	inf->a = 0.0f;
-}
-
-b3_bool b3Scene::b3Shade(
+b3_bool b3ScenePhong::b3Shade(
 	b3_ray_info *ray,
 	b3_count     depth_count)
 {

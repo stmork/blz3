@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/10/05 20:30:45  sm
+**      - Introducing Mork and Phong shading.
+**      - Using light source when shading
+**
 **      Revision 1.6  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -99,6 +103,27 @@ b3Condition::b3Condition(b3_u32 *src) : b3Item(src)
 {
 }
 
+b3_bool b3Condition::b3Conditionate(
+	b3_bool input,
+	b3_bool operation)
+{
+	switch(b3GetClassType() & MODE_MASK)
+	{
+	case MODE_OR:
+		return input ||  operation;
+
+	case MODE_NOT:
+		return input || (!operation);
+
+	case MODE_AND:
+		return input &&  operation;
+
+	case MODE_NAND:
+		return input && (!operation);
+	}
+	return input;
+}
+
 void b3Condition::b3ComputeBound(b3CondLimit *Limit)
 {
 }
@@ -140,17 +165,17 @@ b3CondRectangle::b3CondRectangle(b3_u32 class_type) : b3Condition(sizeof(b3CondR
 
 b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)
 {
-	xStart = b3InitFloat();
-	yStart = b3InitFloat();
-	xEnd   = b3InitFloat();
-	yEnd   = b3InitFloat();
+	m_xStart = b3InitFloat();
+	m_yStart = b3InitFloat();
+	m_xEnd   = b3InitFloat();
+	m_yEnd   = b3InitFloat();
 	if (B3_PARSE_INDEX_VALID)
 	{
-		Flags  = b3InitInt();
+		m_Flags  = b3InitInt();
 	}
 	else
 	{
-		Flags  = RCF_ACTIVE;
+		m_Flags  = RCF_ACTIVE;
 	}
 }
 
@@ -161,14 +186,14 @@ void b3CondRectangle::b3ComputeBound(b3CondLimit *Limit)
 	switch(ClassType & MODE_MASK)
 	{
 	case MODE_OR:
-		if (Flags & RCF_ACTIVE)
+		if (m_Flags & RCF_ACTIVE)
 		{
-			Bound.y1 = yStart;
-			Bound.y2 = yEnd;
-			if (xStart < xEnd)
+			Bound.y1 = m_yStart;
+			Bound.y2 = m_yEnd;
+			if (m_xStart < m_xEnd)
 			{
-				Bound.x1 = xStart;
-				Bound.x2 = xEnd;
+				Bound.x1 = m_xStart;
+				Bound.x2 = m_xEnd;
 			}
 			else
 			{
@@ -186,14 +211,14 @@ void b3CondRectangle::b3ComputeBound(b3CondLimit *Limit)
 		b3CheckOuterBound(Limit,&Bound);
 		break;
 	case MODE_AND:
-		if (Flags & RCF_ACTIVE)
+		if (m_Flags & RCF_ACTIVE)
 		{
-			Bound.y1 = yStart;
-			Bound.y2 = yEnd;
-			if (xStart < xEnd)
+			Bound.y1 = m_yStart;
+			Bound.y2 = m_yEnd;
+			if (m_xStart < m_xEnd)
 			{
-				Bound.x1 = xStart;
-				Bound.x2 = xEnd;
+				Bound.x1 = m_xStart;
+				Bound.x2 = m_xEnd;
 			}
 			else
 			{
@@ -211,6 +236,27 @@ void b3CondRectangle::b3ComputeBound(b3CondLimit *Limit)
 		b3CheckInnerBound(Limit,&Bound);
 		break;
 	}
+}
+
+b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
+{
+	if ((m_Flags & RCF_ACTIVE) == 0)
+	{
+		return true;
+	}
+
+	if ((m_yStart <= polar->polar.y) && (polar->polar.y <= m_yEnd))
+	{
+		if (m_xStart < m_xEnd)
+		{
+			return ((m_xStart <= polar->polar.x) && (polar->polar.x <= m_xEnd));
+		}
+		else
+		{
+			return ((polar->polar.x <= m_xEnd) || (m_xStart >= polar->polar.x));
+		}
+	}
+	return false;
 }
 
 

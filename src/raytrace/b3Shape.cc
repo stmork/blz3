@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2001/10/05 20:30:46  sm
+**      - Introducing Mork and Phong shading.
+**      - Using light source when shading
+**
 **      Revision 1.19  2001/10/03 20:17:56  sm
 **      - Minor bugfixes
 **
@@ -202,13 +206,15 @@ b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 {
 	b3Item      *item;
 	b3Condition *cond;
+	b3_bool      result = true;
 
 	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
-		cond = (b3Condition *)item;
-		cond->b3CheckStencil(polar);
+		cond   = (b3Condition *)item;
+		result = cond->b3Conditionate(
+			result,cond->b3CheckStencil(polar));
 	}
-	return true;
+	return result;
 }
 
 void b3Shape::b3BumpNormal(b3_ray *ray)
