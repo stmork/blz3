@@ -20,6 +20,16 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3View.h"
+#include "blz3/base/b3Exception.h"
+
+enum b3_print_error
+{
+	B3_PRINT_ERROR = -1,
+	B3_PRINT_OK    = 0,
+	B3_PRINT_NO_MEMORY
+};
+
+typedef b3Exception<b3_print_error,'PRT'> b3PrintException;
 
 class CB3Print
 {
@@ -59,10 +69,6 @@ public:
 	     ~CB3Print();
 	void  b3PrintPage(CDC *pDC,CPrintInfo *pInfo);
 	void  b3PrintPage(CDC *srcDC,CDC *pDC,CPrintInfo *pInfo,b3Tx *pTX);
-
-public:
-	class b3NoMemory{};
-	class b3Error{};
 };
 
 #endif

@@ -25,6 +25,8 @@
 #include "Resource.h"
 
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3Display.h"
+#include "blz3/system/b3Print.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/base/b3World.h"
 
@@ -36,12 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/09 14:05:51  sm
+**	- Minor bug fixes.
+**
 **	Revision 1.4  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.3  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
@@ -68,6 +73,9 @@ static b3HashMap<b3_errno,UINT>       LocalMessageMap;
 static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 {
 	{ B3_MK_ERRNO(B3_MEM_MEMORY,                    'MEM'), IDS_ERR_MEMORY },
+	{ B3_MK_ERRNO(B3_DISPLAY_MEMORY,                'DSP'), IDS_ERR_MEMORY },
+	{ B3_MK_ERRNO(B3_DISPLAY_NO_COLORMAP,           'DSP'), IDS_ERR_NO_COLORMAP },
+	{ B3_MK_ERRNO(B3_DISPLAY_OPEN,                  'DSP'), IDS_PRGERR_DISPLAY_OPEN },
 	{ B3_MK_ERRNO(B3_WORLD_OPEN,                    'BLZ'), IDS_ERR_OPEN },
 	{ B3_MK_ERRNO(B3_WORLD_READ,                    'BLZ'), IDS_ERR_READ },
 	{ B3_MK_ERRNO(B3_WORLD_MEMORY,                  'BLZ'), IDS_ERR_MEMORY },
@@ -85,6 +93,7 @@ static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 	{ B3_MK_ERRNO(B3_TX_ERR_HEADER,					 'TX'), IDS_ERR_HEADER },
 	{ B3_MK_ERRNO(B3_TX_UNKNOWN_FILETYPE,			 'TX'), IDS_ERR_FILETYPE },
 	{ B3_MK_ERRNO(B3_TX_UNKNOWN_DATATYPE,			 'TX'), IDS_PRGERR_DATATYPE },
+	{ B3_MK_ERRNO(B3_PRINT_NO_MEMORY,               'PRT'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_BSPLINE_TOO_MUCH_CONTROLS,		'SPL'), IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS },
 	{ B3_MK_ERRNO(B3_BSPLINE_TOO_FEW_CONTROLS,		'SPL'), IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS },
 	{ B3_MK_ERRNO(B3_BSPLINE_TOO_FEW_MAXKNOTS,		'SPL'), IDS_PRGERR_BSPLINE_TOO_FEW_MAXKNOTS },

@@ -36,14 +36,14 @@
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_display_error
 {
 	B3_DISPLAY_ERROR = -1,
 	B3_DISPLAY_OK    =  0,
 	B3_DISPLAY_MEMORY,
 	B3_DISPLAY_NO_COLORMAP,
 	B3_DISPLAY_OPEN
-} b3_display_error;
+};
 
 typedef b3Exception<b3_display_error,'DSP'> b3DisplayException;
 

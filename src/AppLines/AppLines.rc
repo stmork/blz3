@@ -2635,6 +2635,8 @@ BEGIN
     IDS_PRGERR_FILE_NOT_OPEN 
                             "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
     IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
+    IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
+    IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
 END
 
 #endif    // German (Germany) resources

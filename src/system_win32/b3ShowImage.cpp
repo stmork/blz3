@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/09 14:05:51  sm
+**	- Minor bug fixes.
+**
 **	Revision 1.6  2002/02/27 20:14:52  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.5  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -83,7 +86,7 @@ CB3ShowImage::CB3ShowImage()
 
 b3_bool CB3ShowImage::b3Load(const char *name)
 {
-	b3_bool success = true;
+	b3_bool success = false;
 
 	if (name != null)
 	{

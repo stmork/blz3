@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/09 14:05:51  sm
+**	- Minor bug fixes.
+**
 **	Revision 1.4  2002/04/07 12:59:38  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
 **	- Image buttons changed to draw disabled state correctly using
 **	  CDC::DrawState()
-**
+**	
 **	Revision 1.3  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -93,8 +96,10 @@ CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(
 
 void CB3ImagePreviewFileDlg::b3LoadImage(const char *image_name)
 {
-	m_PreviewCtrl.b3Load(image_name);
-	m_PreviewCtrl.b3Update(true);
+	if (m_PreviewCtrl.b3Load(image_name))
+	{
+		m_PreviewCtrl.b3Update(true);
+	}
 }
 
 BOOL CB3ImagePreviewFileDlg::OnInitDialog() 

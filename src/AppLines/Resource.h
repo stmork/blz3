@@ -573,6 +573,8 @@
 #define IDS_ERR_FILE_NOT_WRITTEN        61476
 #define IDS_PRGERR_FILE_NOT_OPEN        61477
 #define IDS_ERR_DIR_NOT_FOUND           61478
+#define IDS_ERR_NO_COLORMAP             61479
+#define IDS_PRGERR_DISPLAY_OPEN         61480
 
 // Next default values for new objects
 // 

@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/09 14:05:51  sm
+**	- Minor bug fixes.
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 
@@ -108,11 +111,11 @@ CB3Print::CB3Print(
 	}
 	catch (...)
 	{
-		throw b3NoMemory();
+		throw b3PrintException(B3_PRINT_NO_MEMORY);
 	}
 	if (!m_PrtLine->b3AllocTx(m_xSize,m_ySize,24))
 	{
-		throw b3NoMemory();
+		throw b3PrintException(B3_PRINT_NO_MEMORY);
 	}
 
 	// Do we need to rescale a strip?
@@ -185,7 +188,7 @@ CB3Print::CB3Print(
 	}
 	catch (...)
 	{
-		throw b3NoMemory();
+		throw b3PrintException(B3_PRINT_NO_MEMORY);
 	}
 
 	// Set page range

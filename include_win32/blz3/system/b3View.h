@@ -57,14 +57,14 @@ public:
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_view_error
 {
 	B3_VIEW_ERROR = -1,
 	B3_VIEW_OK    =  0,
 	B3_VIEW_MEMORY,
 	B3_VIEW_INIT_DIB,
 	B3_VIEW_PALETTE
-} b3_view_error;
+};
 
 typedef b3Exception<b3_view_error,'VWE'> b3ViewException;
 
