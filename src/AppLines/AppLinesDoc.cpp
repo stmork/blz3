@@ -56,10 +56,18 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2002/02/12 18:39:02  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.57  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
-**
+**	
 **	Revision 1.56  2002/01/24 15:55:57  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
@@ -683,21 +691,6 @@ void CAppLinesDoc::b3InitTree()
 	m_DlgHierarchy->m_Hierarchy.Expand(root,TVE_EXPAND);
 }
 
-void CAppLinesDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
-{
-	b3Base<b3Item> *srcBase;
-	b3Base<b3Item> *dstBase;
-
-	srcBase = m_Scene->b3FindBBoxHead(srcBBox);
-	dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
-
-	m_Scene->b3BacktraceRecompute(srcBBox);
-	srcBase->b3Remove(srcBBox);
-	dstBase->b3Append(srcBBox);
-	m_Scene->b3BacktraceRecompute(srcBBox);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-}
-
 void CAppLinesDoc::b3ContextMenu(HTREEITEM item)
 {
 	CMenu          menu;
@@ -715,6 +708,61 @@ void CAppLinesDoc::b3ContextMenu(HTREEITEM item)
 			point.x, point.y,
 			CB3GetMainFrame()); // use main window for cmds
 	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Hierarchy drag & drop operations              **
+**                                                                      **
+*************************************************************************/
+
+void CAppLinesDoc::b3DragBegin()
+{
+}
+
+HTREEITEM CAppLinesDoc::b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem)
+{
+	b3BBox         *srcBBox;
+	b3BBox         *dstBBox;
+
+	srcBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dragitem);
+	dstBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dropitem);
+	return
+		(b3BBox::b3FindBBox(srcBBox->b3GetBBoxHead(),dstBBox) ||
+		(srcBBox == dstBBox) ? null : dropitem);
+}
+
+void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
+{
+	b3BBox         *srcBBox;
+	b3BBox         *dstBBox;
+	b3Base<b3Item> *srcBase;
+	b3Base<b3Item> *dstBase;
+
+	// Get BBoxes an their bases
+	srcBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dragitem);
+	dstBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dropitem);
+	srcBase = m_Scene->b3FindBBoxHead(srcBBox);
+	dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
+
+	// Mark every ancestor before relink as changed
+	m_Scene->b3BacktraceRecompute(srcBBox);
+
+	// Relink BBox
+	srcBase->b3Remove(srcBBox);
+	dstBase->b3Append(srcBBox);
+
+	// Mark every ancestor after relink as changed
+	m_Scene->b3BacktraceRecompute(srcBBox);
+
+	// Some recomputations...
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	b3ComputeBounds();
+
+	// ... with some UI updates
+	UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+	SetModifiedFlag();
+	m_DlgHierarchy->b3InitTree(this,true);
 }
 
 /*************************************************************************
@@ -967,6 +1015,7 @@ void CAppLinesDoc::OnLightEnable()
 	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
 	light->m_LightActive = !light->m_LightActive;
+	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
 }
 
@@ -989,6 +1038,7 @@ void CAppLinesDoc::OnLightSpot()
 
 	light = CB3GetMainFrame()->b3GetSelectedLight();
 	light->m_SpotActive = !light->m_SpotActive;
+	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
 }
 

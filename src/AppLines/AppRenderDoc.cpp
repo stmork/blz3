@@ -34,13 +34,21 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/02/12 18:39:02  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.8  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
 **	  hierarchy dialog.
 **	- Some print cleanups done.
 **	- Fixed activation of b3SuperSample.
-**
+**	
 **	Revision 1.7  2002/01/31 19:30:31  sm
 **	- Some OpenGL print optimizations done.
 **	- Object renaming inside hierarchy tree added.
@@ -204,6 +212,19 @@ void CAppRenderDoc::OnUpdateRename(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(m_DlgHierarchy->m_Hierarchy.GetSelectedItem() != null);
+}
+
+void CAppRenderDoc::b3DragBegin()
+{
+}
+
+HTREEITEM CAppRenderDoc::b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem)
+{
+	return null;
+}
+
+void CAppRenderDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
+{
 }
 
 /*************************************************************************

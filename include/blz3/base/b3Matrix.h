@@ -44,6 +44,14 @@ public:
 		return vec;
 	}
 
+	static inline b3_bool b3IsEqual(b3_vector *vec1,b3_vector *vec2)
+	{
+		return
+			(vec1->x == vec2->x) &&
+			(vec1->y == vec2->y) &&
+			(vec1->z == vec2->z);
+	}
+
 	static inline b3_f64 b3Normalize(
 		b3_vector *vector,
 		b3_f64     length = 1.0)
@@ -220,11 +228,66 @@ public:
 		vector->z = x * A->m31 + y * A->m32 + z * A->m33 + A->m34;
 		return vector;
 	}
+
+	static inline b3_f64 b3AngleOfVectors(
+		b3_vector *Vector1,
+		b3_vector *Vector2)
+	{
+		b3_f64 Denom;
+
+		if ((Denom =
+			sqrt(
+				Vector1->x * Vector1->x  +
+				Vector1->y * Vector1->y  +
+				Vector1->z * Vector1->z) *
+			sqrt(
+				Vector2->x * Vector2->x  +
+				Vector2->y * Vector2->y  +
+				Vector2->z * Vector2->z)) != 0)
+		{
+			return (
+				Vector1->x * Vector2->x  +
+				Vector1->y * Vector2->y  +
+				Vector1->z * Vector2->z) / Denom;
+
+		}
+		return 0.0;
+	}
+
+	static inline b3_f64 b3AngleOfPoints(
+		b3_vector *base,
+		b3_vector *point1,
+		b3_vector *point2)
+	{
+		b3_vector a,b;
+		b3_f64    denom,result;
+
+		a.x = point1->x - base->x;
+		a.y = point1->y - base->y;
+		a.z = point1->z - base->z;
+
+		b.x = point2->x - base->x;
+		b.y = point2->y - base->y;
+		b.z = point2->z - base->z;
+
+		denom =
+			sqrt(a.x * a.x + a.y * a.y + a.z * a.z) *
+			sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
+		if (denom != 0.0)
+		{
+			result = (
+				a.x * b.x +
+				a.y * b.y +
+				a.z * b.z) / denom;
+		}
+		else
+		{
+			result = 0.0;
+		}
+		return result;
+	}
 };
 
-b3_f64     b3AngleOfVectors     (b3_vector *dir1,b3_vector *dir2);
-b3_f64     b3AngleOfPoints      (b3_vector *base,b3_vector *dir1,b3_vector *dir2);
-b3_bool    b3IsEqual            (b3_vector *vec1,b3_vector *vec2);
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
 b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
 b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);

@@ -34,10 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.15  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
-**
+**	
 **	Revision 1.14  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
@@ -578,6 +586,7 @@ void CDlgHierarchy::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		m_DragItem = pNMTreeView->itemNew.hItem;
 		SetCapture();
+		m_pDoc->b3DragBegin();
 	}
 	*pResult = (m_DragItem != null);
 }
@@ -585,9 +594,6 @@ void CDlgHierarchy::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult)
 void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	b3BBox         *srcBBox;
-	b3BBox         *dstBBox;
-
 	if (m_DragItem != null)
 	{
 		UINT      flags;
@@ -596,11 +602,7 @@ void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point)
 		item = m_Hierarchy.HitTest(point,&flags);
 		if (item != null)
 		{
-			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
-			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(item);
-			m_DropItem =
-				(b3BBox::b3FindBBox(srcBBox->b3GetBBoxHead(),dstBBox) ||
-				(srcBBox == dstBBox) ? null : item);
+			m_DropItem = m_pDoc->b3Dragging(m_DragItem,item);
 			m_Hierarchy.SelectDropTarget(m_DropItem);
 		}
 	}
@@ -610,9 +612,6 @@ void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point)
 void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	b3BBox *srcBBox;
-	b3BBox *dstBBox;
-	
 	if (m_DragItem != null)
 	{
 		::ReleaseCapture();
@@ -621,14 +620,7 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			b3GetData();
 
-			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
-			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DropItem);
-			m_pDoc->b3DropBBox(srcBBox,dstBBox);
-
-			m_pDoc->b3ComputeBounds();
-			m_pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			m_pDoc->SetModifiedFlag();
-			b3InitTree(m_pDoc,true);
+			m_pDoc->b3Drop(m_DragItem,m_DropItem);
 		}
 		m_DragItem = null;
 	}

@@ -33,10 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.17  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
-**
+**	
 **	Revision 1.16  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -303,12 +311,12 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 		n.y = ray->pos.y + l1 * ray->dir.y - m_Base.y;
 		n.z = ray->pos.z + l1 * ray->dir.z - m_Base.z;
 
-		p = acos(-b3AngleOfVectors(&n,&pole));
-		polar->polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
+		p = acos(-b3Vector::b3AngleOfVectors(&n,&pole));
+		polar->polar.x = acos(b3Vector::b3AngleOfVectors (&m_Dir,&n) /
 			sin(p)) * 0.5 / M_PI;
 		polar->polar.y = p * 2.0 / M_PI - 1.0;
 		polar->polar.z = 0;
-		if (b3AngleOfVectors(&aux,&n) < 0)
+		if (b3Vector::b3AngleOfVectors(&aux,&n) < 0)
 		{
 			polar->polar.x = 1.0 - polar->polar.x;
 		}
@@ -333,12 +341,12 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 		n.y = ray->pos.y + l2 * ray->dir.y - m_Base.y;
 		n.z = ray->pos.z + l2 * ray->dir.z - m_Base.z;
 
-		p = acos(-b3AngleOfVectors(&n,&pole));
-		polar->polar.x = acos(b3AngleOfVectors (&m_Dir,&n) /
+		p = acos(-b3Vector::b3AngleOfVectors(&n,&pole));
+		polar->polar.x = acos(b3Vector::b3AngleOfVectors (&m_Dir,&n) /
 			sin(p)) * 0.5 / M_PI;
 		polar->polar.y = p * 2.0 / M_PI - 1.0;
 		polar->polar.z = 0;
-		if (b3AngleOfVectors(&aux,&n) < 0)
+		if (b3Vector::b3AngleOfVectors(&aux,&n) < 0)
 		{
 			polar->polar.x = 1.0 - polar->polar.x;
 		}

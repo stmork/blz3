@@ -35,9 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/02/12 18:39:02  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.12  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
-**
+**	
 **	Revision 1.11  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
 **	
@@ -317,7 +325,7 @@ void CAppRenderView::OnInitialUpdate()
 	// Do necessary Blizzard III stuff!
 	CAppRenderDoc *pDoc = GetDocument();
 
-	wglMakeCurrent(m_glDC,m_glGC);
+	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	pDoc->m_Context.b3Init();
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
@@ -422,6 +430,15 @@ void CAppRenderView::b3Draw(
 {
 }
 
+void CAppRenderView::b3DrawDC(
+	HDC     hDC,
+	b3_res  xSize,
+	b3_res  ySize,
+	b3_f64  xOffset,
+	b3_f64  yOffset)
+{
+}
+
 void CAppRenderView::OnPaint() 
 {
 	// We have already an HDC, you remember?
@@ -439,8 +456,13 @@ void CAppRenderView::OnPaint()
 	b3Draw(rect.Width(),rect.Height());
 	_ftime(&stop);
 
-	// Done...
+	// Flush OpenGL buffer to screen
 	SwapBuffers(m_glDC);
+
+	// Do post drawings using Windows DC
+	b3DrawDC(m_glDC,rect.Width(),rect.Height());
+
+	// That's it! Mark valid.
 	ValidateRect(NULL);
 
 	// Compute time spent for drawing
@@ -468,16 +490,19 @@ void CAppRenderView::b3DrawRect(
 	b3_coord x2,
 	b3_coord y2)
 {
-	CDC *dc = CDC::FromHandle(m_glDC);
-	CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
+	CDC  *dc = CDC::FromHandle(m_glDC);
+	CPen *old,red(PS_SOLID,1,RGB(0xff,0x11,0x44));
+
+	old = dc->SelectObject(&red);
 
 	dc->SetROP2(R2_NOTXORPEN);
-	dc->SelectObject(&red);
+	dc->SetBkMode(OPAQUE);
 	dc->MoveTo(x1,y1);
 	dc->LineTo(x2,y1);
 	dc->LineTo(x2,y2);
 	dc->LineTo(x1,y2);
 	dc->LineTo(x1,y1);
+	dc->SelectObject(old);
 }
 
 void CAppRenderView::b3DrawText(CDC *pDC,const char *text)
@@ -487,6 +512,7 @@ void CAppRenderView::b3DrawText(CDC *pDC,const char *text)
 
 	x1 = 0;              y1 = m_prtLineNum * m_prtLineHeight;
 	x2 = m_prtLineWidth; y2 = y1 + m_prtLineHeight;
+	pDC->SetTextColor(RGB(0,0,0));
 	pDC->FillSolidRect(x1,y1,m_prtLineWidth,m_prtLineHeight,RGB(255,255,255));
 	pDC->MoveTo(x1,y1);
 	pDC->LineTo(x2,y1);
@@ -563,7 +589,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	m_prtPageHeight  = pDC->GetDeviceCaps(VERTRES);
 
 	// Use at least 1/3 size to give the printer driver the chance to dither appropriately.
-	for (denom = 3;((m_prtPageWidth * m_prtPageHeight * 3) / (denom * 1024 * 1024)) > limit;denom++);
+	for (denom = 3;((m_prtPageWidth * m_prtPageHeight * 3) / (denom << 20)) > limit;denom++);
 	m_prtPageWidth  /= denom;
 	m_prtPageHeight /= denom;
 
@@ -633,6 +659,7 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 {
 	// TODO: Add your specialized code here and/or call the base class
 	CWaitCursor wait;
+	b3_f64      xOffset,yOffset;
 
 	// Do it!
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
@@ -640,23 +667,27 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 
 	// The pages are enumerated from [1..max]
 	// The offset 0/0 maps to the lower left.
-	b3Draw(
-		m_prtLogWidth,
-		m_prtLogHeight,
-		m_prtLogOffsetX * ((pInfo->m_nCurPage - 1) % m_prtCountWidth),
-		m_prtLogOffsetY * ((pInfo->GetMaxPage() - pInfo->m_nCurPage) / m_prtCountWidth));
+	xOffset = m_prtLogOffsetX * ((pInfo->m_nCurPage - 1) % m_prtCountWidth);
+	yOffset = m_prtLogOffsetY * ((pInfo->GetMaxPage() - pInfo->m_nCurPage) / m_prtCountWidth);
+
+	// OpenGL drawing
+	b3Draw(m_prtLogWidth,m_prtLogHeight,xOffset,yOffset);
 	glFinish();
+
+	// Post OpenGL drawing
+	b3_f64 offset = m_prtLogOffsetY - fmod(m_prtHeight,m_prtLogOffsetY);
+	b3DrawDC(m_prtDC,m_prtLogWidth,m_prtLogHeight,xOffset,- m_prtLogOffsetY + m_prtHeight - yOffset);
 
 	// Draw legend
 	if (pInfo->m_nCurPage == 1)
 	{
-		CDC  *dc = CDC::FromHandle(m_prtDC);
-		CPen  black(PS_SOLID,1,RGB(0,0,0));
-		CPen *old_pen;
-		CString  text;
-		b3_coord x1,y1,x2,y2;
-		b3_u32   cm,cmMax,diff;
-		b3_f64   factor;
+		CDC      *dc = CDC::FromHandle(m_prtDC);
+		CPen      black(PS_SOLID,1,RGB(0,0,0));
+		CPen     *old_pen;
+		CString   text;
+		b3_coord  x1,y1,x2,y2;
+		b3_u32    cm,cmMax,diff;
+		b3_f64    factor;
 
 		m_prtLineWidth  = 500;
 		m_prtLineHeight =  20;

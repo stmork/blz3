@@ -70,15 +70,12 @@ class b3RenderView
 	b3_vector                 m_Lower;
 	b3_vector                 m_Upper;
 
-	// Viewport size
-	b3_res                    m_xRes;
-	b3_res                    m_yRes;
-
 	// View volume dimensions (from mid point to border)
 	b3_f64                    m_vvWidth;
 	b3_f64                    m_vvHeight;
 	b3_vector                 m_vvEye;
 	b3_vector                 m_vvLook;
+	b3_vector                 m_vvOffset;
 
 	b3Base<b3RenderViewItem>  m_ViewStack[B3_VIEW_MAX];
 	b3Base<b3RenderViewItem>  m_Depot;
@@ -87,6 +84,10 @@ class b3RenderView
 public:
 	b3_bool                   m_AntiAliased;
 	b3_bool                   m_AspectRatio;
+
+	// Viewport size
+	b3_res                    m_xRes;
+	b3_res                    m_yRes;
 
 public:
 	                  b3RenderView();
@@ -103,7 +104,10 @@ public:
 	void              b3Original();
 	void              b3Scale(b3_f64 scale);
 	void              b3Move(b3_f64 xDir,b3_f64 yDir);
-	void              b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point);
+	void              b3Project(b3_coord &x,b3_coord &y,const b3_vector *point);
+	void              b3Project(b3_f64 &xRel,b3_f64 &yRel,const b3_vector *point);
+	void              b3Unproject(const b3_coord x, const b3_coord y, b3_vector *point);
+	void              b3Unproject(const b3_f64 xRel,const b3_f64 yRel,b3_vector *point);
 	void              b3GetViewDirection(b3_vector *direction);
 	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *pos);
 	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);

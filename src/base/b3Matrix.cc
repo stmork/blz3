@@ -35,10 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.18  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
-**
+**	
 **	Revision 1.17  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
@@ -115,15 +123,6 @@ static b3_matrix UnitMatrix =
 
 typedef b3_f32 b3_matrix_array[4][4];
 
-b3_bool b3IsEqual(b3_vector *vec1,b3_vector *vec2)
-{
-	if (vec1->x != vec2->x) return false;
-	if (vec1->y != vec2->y) return false;
-	if (vec1->z != vec2->z) return false;
-
-	return true;
-}
-
 b3_bool b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
@@ -199,64 +198,6 @@ b3_bool b3NormalizeRow (
 **                           global part                                **
 **                                                                      **
 *************************************************************************/
-
-b3_f64 b3AngleOfVectors(
-	b3_vector *Vector1,
-	b3_vector *Vector2)
-{
-	b3_f64 Denom;
-
-	if ((Denom =
-		sqrt(
-			Vector1->x * Vector1->x  +
-			Vector1->y * Vector1->y  +
-			Vector1->z * Vector1->z) *
-		sqrt(
-			Vector2->x * Vector2->x  +
-			Vector2->y * Vector2->y  +
-			Vector2->z * Vector2->z)) != 0)
-	{
-		return (
-			Vector1->x * Vector2->x  +
-			Vector1->y * Vector2->y  +
-			Vector1->z * Vector2->z) / Denom;
-
-	}
-	return 0.0;
-}
-
-b3_f64 b3AngleOfPoints(
-	b3_vector *base,
-	b3_vector *point1,
-	b3_vector *point2)
-{
-	b3_vector a,b;
-	b3_f64    denom,result;
-
-	a.x = point1->x - base->x;
-	a.y = point1->y - base->y;
-	a.z = point1->z - base->z;
-
-	b.x = point2->x - base->x;
-	b.y = point2->y - base->y;
-	b.z = point2->z - base->z;
-
-	denom =
-		sqrt(a.x * a.x + a.y * a.y + a.z * a.z) *
-		sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
-	if (denom != 0.0)
-	{
-		result = (
-			a.x * b.x +
-			a.y * b.y +
-			a.z * b.z) / denom;
-	}
-	else
-	{
-		result = 0.0;
-	}
-	return result;
-}
 
 b3_f64 b3Det2(
 	b3_f64 a,

@@ -172,6 +172,10 @@ SOURCE=.\b3ImagePreviewFileDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PickVector.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectObject.cpp
 # End Source File
 # Begin Source File
@@ -328,6 +332,10 @@ SOURCE=.\b3ImagePreviewFileDlg.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PickVector.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectObject.h
 # End Source File
 # Begin Source File
@@ -337,6 +345,10 @@ SOURCE=.\b3SelectTexture.h
 # Begin Source File
 
 SOURCE=.\b3ShowRaytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Splash.h
 # End Source File
 # Begin Source File
 

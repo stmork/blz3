@@ -33,10 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.25  2002/02/10 20:03:19  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
-**
+**	
 **	Revision 1.24  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
@@ -659,33 +667,85 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 	return 0;
 }
 
-void b3RenderView::b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point)
+void b3RenderView::b3Project(b3_coord &x,b3_coord &y,const b3_vector *point)
+{
+	b3_f64 xRel,yRel;
+
+	b3Project(xRel,yRel,point);
+	x = xRel * m_xRes;
+	y = yRel * m_yRes;
+}
+
+void b3RenderView::b3Project(b3_f64 &xRel,b3_f64 &yRel,const b3_vector *point)
 {
 	if (m_ViewMode != B3_VIEW_3D)
 	{
-		xRel = (xRel - 0.5) / m_Actual->m_xRelation;
-		yRel = (yRel - 0.5) * m_Actual->m_yRelation;
 		switch(m_ViewMode)
 		{
 		case B3_VIEW_TOP:
-			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel;
-			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * yRel;
+			xRel =  (point->x - m_Actual->m_Mid.x - m_vvOffset.x) / m_Actual->m_Size.x;
+			yRel = -(point->y - m_Actual->m_Mid.y - m_vvOffset.y) / m_Actual->m_Size.y;
+			break;								                
+		case B3_VIEW_FRONT:						                
+			xRel =  (point->x - m_Actual->m_Mid.x - m_vvOffset.x) / m_Actual->m_Size.x;
+			yRel = -(point->z - m_Actual->m_Mid.z - m_vvOffset.z) / m_Actual->m_Size.z;
+			break;								                
+		case B3_VIEW_RIGHT:						                
+			xRel =  (point->y - m_Actual->m_Mid.y - m_vvOffset.y) / m_Actual->m_Size.y;
+			yRel = -(point->z - m_Actual->m_Mid.z - m_vvOffset.z) / m_Actual->m_Size.z;
+			break;								                
+		case B3_VIEW_LEFT:						                
+			xRel = -(point->y - m_Actual->m_Mid.y - m_vvOffset.y) / m_Actual->m_Size.y;
+			yRel = -(point->z - m_Actual->m_Mid.z - m_vvOffset.z) / m_Actual->m_Size.z;
+			break;								                
+		case B3_VIEW_BACK:						                
+			xRel = -(point->x - m_Actual->m_Mid.x - m_vvOffset.x) / m_Actual->m_Size.x;
+			yRel = -(point->z - m_Actual->m_Mid.z - m_vvOffset.z) / m_Actual->m_Size.z;
+			break;
+		default:
+			break;
+		}
+		xRel = xRel * m_Actual->m_xRelation + 0.5;
+		yRel = yRel / m_Actual->m_yRelation + 0.5;
+	}
+}
+
+void b3RenderView::b3Unproject(const b3_coord x,const b3_coord y,b3_vector *point)
+{
+	b3Unproject(
+		(double)x / (double)m_xRes,
+		(double)y / (double)m_yRes,
+		point);
+}
+
+void b3RenderView::b3Unproject(const b3_f64 xRelParam,const b3_f64 yRelParam,b3_vector *point)
+{
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		b3_f64 xRel = (xRelParam - 0.5) / m_Actual->m_xRelation;
+		b3_f64 yRel = (yRelParam - 0.5) * m_Actual->m_yRelation;
+		
+		switch(m_ViewMode)
+		{
+		case B3_VIEW_TOP:
+			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel + m_vvOffset.x;
+			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * yRel + m_vvOffset.y;
 			break;
 		case B3_VIEW_FRONT:
-			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel + m_vvOffset.x;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_vvOffset.z;
 			break;
 		case B3_VIEW_RIGHT:
-			point->y = m_Actual->m_Mid.y + m_Actual->m_Size.y * xRel;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			point->y = m_Actual->m_Mid.y + m_Actual->m_Size.y * xRel + m_vvOffset.y;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_vvOffset.z;
 			break;
 		case B3_VIEW_LEFT:
-			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * xRel;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * xRel + m_vvOffset.y;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_vvOffset.z;
 			break;
 		case B3_VIEW_BACK:
-			point->x = m_Actual->m_Mid.x - m_Actual->m_Size.x * xRel;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			point->x = m_Actual->m_Mid.x - m_Actual->m_Size.x * xRel + m_vvOffset.x;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_vvOffset.z;
 			break;
 		default:
 			break;
@@ -827,7 +887,6 @@ void b3RenderView::b3SetupView(
 	GLfloat   aspectCamera;
 	GLfloat   min = 0.1f;
 	b3_vector up;
-	b3_vector offset;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -837,7 +896,6 @@ void b3RenderView::b3SetupView(
 	B3_ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
 	glViewport(0,0,xSize,ySize);
 	b3Vector::b3Init(&up);
-	b3Vector::b3Init(&offset);
 	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
@@ -853,7 +911,10 @@ void b3RenderView::b3SetupView(
 		// Prepare gluLookAt() - it's simple
 		m_vvEye  = m_EyePoint;
 		m_vvLook = m_ViewPoint;
-		up   = m_Height;
+		up       = m_Height;
+
+		// Init Offset
+		b3Vector::b3Init(&m_vvOffset);
 		break;
 
 	case B3_VIEW_TOP:
@@ -867,11 +928,12 @@ void b3RenderView::b3SetupView(
 		m_vvEye     = m_vvLook = m_Actual->m_Mid;
 		m_vvEye.z   = m_Upper.z;
 		m_vvLook.z  = m_Lower.z;
-		up.y    = 1;
+		up.y        = 1;
 
 		// Prepare offset for print tiling
-		offset.x = -xOffset;
-		offset.y = -yOffset;
+		m_vvOffset.x = -xOffset;
+		m_vvOffset.y = -yOffset;
+		m_vvOffset.z =  0;
 		break;
 
 	case B3_VIEW_FRONT:
@@ -885,11 +947,12 @@ void b3RenderView::b3SetupView(
 		m_vvEye    = m_vvLook = m_Actual->m_Mid;
 		m_vvEye.y  = m_Lower.y;
 		m_vvLook.y = m_Upper.y;
-		up.z   = 1;
+		up.z       = 1;
 
 		// Prepare offset for print tiling
-		offset.x = -xOffset;
-		offset.z = -yOffset;
+		m_vvOffset.x = -xOffset;
+		m_vvOffset.y =  0;
+		m_vvOffset.z = -yOffset;
 		break;
 
 	case B3_VIEW_RIGHT:
@@ -903,11 +966,12 @@ void b3RenderView::b3SetupView(
 		m_vvEye    = m_vvLook = m_Actual->m_Mid;
 		m_vvEye.x  = m_Upper.x;
 		m_vvLook.x = m_Lower.x;
-		up.z   = 1;
+		up.z       = 1;
 
 		// Prepare offset for print tiling
-		offset.y = -xOffset;
-		offset.z = -yOffset;
+		m_vvOffset.x =  0;
+		m_vvOffset.y = -xOffset;
+		m_vvOffset.z = -yOffset;
 		break;
 
 	case B3_VIEW_LEFT:
@@ -921,11 +985,12 @@ void b3RenderView::b3SetupView(
 		m_vvEye    = m_vvLook = m_Actual->m_Mid;
 		m_vvEye.x  = m_Lower.x;
 		m_vvLook.x = m_Upper.x;
-		up.z   = 1;
+		up.z       = 1;
 
 		// Prepare offset for print tiling
-		offset.y = -yOffset;
-		offset.z = -yOffset;
+		m_vvOffset.x =  0;
+		m_vvOffset.y = -xOffset;
+		m_vvOffset.z = -yOffset;
 		break;
 
 	case B3_VIEW_BACK:
@@ -939,11 +1004,12 @@ void b3RenderView::b3SetupView(
 		m_vvEye    = m_vvLook = m_Actual->m_Mid;
 		m_vvEye.y  = m_Upper.y;
 		m_vvLook.y = m_Lower.y;
-		up.z   = 1;
+		up.z       = 1;
 
 		// Prepare offset for print tiling
-		offset.x =  xOffset;
-		offset.z = -yOffset;
+		m_vvOffset.x =  xOffset;
+		m_vvOffset.y =  0;
+		m_vvOffset.z = -yOffset;
 		break;
 	}
 
@@ -985,7 +1051,7 @@ void b3RenderView::b3SetupView(
 		m_vvEye.x, m_vvEye.y, m_vvEye.z,
 		m_vvLook.x,m_vvLook.y,m_vvLook.z,
 		up.x,  up.y,  up.z);
-	glTranslatef(offset.x,offset.y,offset.z);
+	glTranslatef(m_vvOffset.x,m_vvOffset.y,m_vvOffset.z);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
@@ -1127,7 +1193,8 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
 
 	xCount  = B3_RASTER_COUNT(xStart,xEnd,grid);
 	yCount  = B3_RASTER_COUNT(yStart,yEnd,grid);
-	if (((m_xRes / xCount) >= B3_RASTER_MINDIST) && ((m_yRes / yCount) >= B3_RASTER_MINDIST))
+	if ((xCount == 0 ? true : (m_xRes / xCount) >= B3_RASTER_MINDIST) &&
+	    (yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
 	{
 		glBegin(GL_LINES);
 		glColor3f(intensity,intensity,intensity);

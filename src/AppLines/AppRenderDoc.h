@@ -74,6 +74,11 @@ public:
 	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	virtual void       b3ContextMenu(HTREEITEM item);
 
+	// Drag & drop operations
+	virtual void       b3DragBegin();
+	virtual HTREEITEM  b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem);
+	virtual void       b3Drop    (HTREEITEM dragitem,HTREEITEM dropitem);
+
 	virtual   ~CAppRenderDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;

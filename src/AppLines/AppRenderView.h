@@ -32,7 +32,7 @@
 #define B3_UPDATE_LIGHT     8
 #define B3_UPDATE_FULCRUM  16
 
-#define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
+#define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA|B3_UPDATE_LIGHT)
 
 typedef enum b3SelectMode
 {
@@ -137,11 +137,12 @@ public:
 #endif
 
 protected:
-	virtual b3_bool b3IsMouseActionAllowed();
-	virtual b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
-	virtual void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
-	virtual void    b3DrawLegend(CDC *pDC);
-	        void    b3DrawText(CDC *pDC,const char *text);
+	virtual b3_bool   b3IsMouseActionAllowed();
+	virtual b3_bool   b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
+	virtual void      b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	virtual void      b3DrawDC(HDC hDC,b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	virtual void      b3DrawLegend(CDC *pDC);
+	        void      b3DrawText(CDC *pDC,const char *text);
 
 // Generated message map functions
 protected:

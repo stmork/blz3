@@ -34,9 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.5  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
-**
+**	
 **	Revision 1.4  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
 **	
@@ -55,7 +63,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ControlLDC implementation                  **
+**                        b3PickLDC implementation                      **
 **                                                                      **
 *************************************************************************/
 
@@ -103,6 +111,12 @@ public:
 		return result;
 	}
 };
+
+/*************************************************************************
+**                                                                      **
+**                        CB3ControlLDC implementation                  **
+**                                                                      **
+*************************************************************************/
 
 CB3ControlLDC::CB3ControlLDC()
 {

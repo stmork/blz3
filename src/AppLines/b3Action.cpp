@@ -33,9 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/12 18:39:03  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.18  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.17  2002/01/13 19:24:12  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	
@@ -285,7 +293,7 @@ void CB3Action::b3RMove(b3_coord x,b3_coord y)
 		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
 		m_Doc->m_Info->b3SnapToGrid(&diff);
-		if (!b3IsEqual(&diff,point))
+		if (!b3Vector::b3IsEqual(&diff,point))
 		{
 			*point = diff;
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
@@ -304,7 +312,7 @@ void CB3Action::b3RUp(b3_coord x,b3_coord y)
 		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,point);
 		m_Doc->m_Info->b3SnapToGrid(&diff);
-		if (!b3IsEqual(&diff,point))
+		if (!b3Vector::b3IsEqual(&diff,point))
 		{
 			*point = diff;
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
@@ -431,7 +439,7 @@ void CB3MoveAction::b3LMove(b3_coord x,b3_coord y)
 
 	// Do action!
 	m_Doc->m_Info->b3SnapToGrid(&diff);
-	if (!b3IsEqual(&diff,&m_LastDiff))
+	if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
 	{
 		if (b3MatrixInv(&m_Transformation,&inv))
 		{
@@ -527,7 +535,7 @@ void CB3MoveAction::b3RMove(b3_coord x,b3_coord y)
 
 	// Do action!
 	m_Doc->m_Info->b3SnapToGrid(&diff);
-	if (!b3IsEqual(&diff,&m_LastDiff))
+	if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
 	{
 		if (b3MatrixInv(&m_Transformation,&inv))
 		{

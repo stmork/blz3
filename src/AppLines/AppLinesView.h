@@ -25,13 +25,21 @@
 #include "AppLinesDoc.h"
 
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Pick.h"
+#include "blz3/base/b3Render.h"
 #include "b3CameraVolume.h"
+#include "b3PickVector.h"
 #include "AppRenderView.h"
+
+#define B3_UPDATE_PICK 256
 
 class CB3Action;
 
 class CAppLinesView : public CAppRenderView
 {
+	b3PickBase      m_PickBaseLight;
+
 protected:
 	b3Scene        *m_Scene;
 	b3Light        *m_Light;
@@ -65,10 +73,11 @@ public:
 #endif
 
 protected:
-	b3_bool b3IsMouseActionAllowed();
-	b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
-	void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
-	void    b3DrawLegend(CDC *pDC);
+	b3_bool   b3IsMouseActionAllowed();
+	b3_bool   b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
+	void      b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void      b3DrawDC(HDC hDC,b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void      b3DrawLegend(CDC *pDC);
 
 // Generated message map functions
 protected:
@@ -107,6 +116,9 @@ protected:
 	afx_msg void OnRotateLeft();
 	afx_msg void OnRotateRight();
 	afx_msg void OnUpdateMovement(CCmdUI* pCmdUI);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

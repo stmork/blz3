@@ -39,10 +39,18 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2002/02/12 18:39:02  sm
+**	- Some b3ModellerInfo cleanups concerning measurement.
+**	- Added raster drawing via OpenGL. Nice!
+**	- Added pick points for light sources.
+**	- Added support for post OpenGL rendering for Win DC. This
+**	  is needed for drawing pick points. Note that there is a
+**	  slight offset when drawing pick points into a printer DC.
+**
 **	Revision 1.45  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
-**
+**	
 **	Revision 1.44  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
 **	
@@ -293,6 +301,9 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_RIGHT, OnUpdateMovement)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_UP, OnUpdateMovement)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_DOWN, OnUpdateMovement)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -306,6 +317,7 @@ CAppLinesView::CAppLinesView()
 
 CAppLinesView::~CAppLinesView()
 {
+	m_PickBaseLight.b3Free();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -332,8 +344,11 @@ CAppLinesDoc* CAppLinesView::GetDocument() // non-debug version is inline
 }
 #endif //_DEBUG
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppLinesView message handlers
+/*************************************************************************
+**                                                                      **
+**                        Update handling                               **
+**                                                                      **
+*************************************************************************/
 
 void CAppLinesView::OnInitialUpdate()
 {
@@ -366,18 +381,114 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	// TODO: Add your specialized code here and/or call the base class
 	CAppLinesDoc *pDoc         = GetDocument();
+	b3Item       *item;
+	b3Light      *light;
+	b3Pick       *pick;
 	b3_bool       doInvalidate = false;
 
-	if (lHint & B3_UPDATE_LIGHT)
+	if (lHint & B3_UPDATE_PICK)
 	{
+		m_PickBaseLight.b3Update();
+		doInvalidate = true;
+	}
+
+	CAppRenderView::OnUpdate(pSender,lHint,pHint);
+
+	if ((lHint & (B3_UPDATE_LIGHT | B3_UPDATE_VIEW)) != 0)
+	{
+		// Update on changed light _or_ view!
+		m_PickBaseLight.b3Free();
+		if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
+		{
+			B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+			{
+				light = (b3Light *)item;
+				if (light->m_LightActive)
+				{
+					pick = new b3PickPoint(
+						&m_RenderView,
+						&light->m_Position,light->b3GetName(),
+						pDoc->m_Info);
+					m_PickBaseLight.b3Append(pick);
+
+					if (light->m_SpotActive)
+					{
+						pick = new b3PickDir(
+							&m_RenderView,
+							&light->m_Position,&light->m_Direction,null,
+							pDoc->m_Info);
+						m_PickBaseLight.b3Append(pick);
+					}
+				}
+			}
+		}
+		doInvalidate = true;
 	}
 
 	if (doInvalidate)
 	{
 		Invalidate();
 	}
+}
 
-	CAppRenderView::OnUpdate(pSender,lHint,pHint);
+/*************************************************************************
+**                                                                      **
+**                        Handle picking                                **
+**                                                                      **
+*************************************************************************/
+
+void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!m_PickBaseLight.b3Down(point.x,point.y))
+	{
+		// Do standard action
+		CAppRenderView::OnLButtonDown(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		SetCapture();
+		CScrollView::OnLButtonDown(nFlags, point);
+	}
+}
+
+void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!m_PickBaseLight.b3IsActive())
+	{
+		// Do standard action
+		CAppRenderView::OnMouseMove(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		if (m_PickBaseLight.b3Move(point.x,point.y))
+		{
+			CAppLinesDoc *pDoc = GetDocument();
+
+			pDoc->UpdateAllViews(NULL,B3_UPDATE_PICK);
+			pDoc->SetModifiedFlag();
+		}
+		CScrollView::OnMouseMove(nFlags, point);
+	}
+}
+
+void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!m_PickBaseLight.b3Up(point.x,point.y))
+	{
+		// Do standard action
+		CAppRenderView::OnLButtonUp(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		::ReleaseCapture();
+		CScrollView::OnLButtonUp(nFlags, point);
+	}
 }
 
 b3_bool CAppLinesView::b3GetDimension(
@@ -425,6 +536,46 @@ void CAppLinesView::b3Draw(
 		m_CameraVolume.b3Draw();
 	}
 	pDoc->b3DrawFulcrum();
+}
+
+void CAppLinesView::b3DrawDC(
+	HDC    hDC,
+	b3_res xSize,
+	b3_res ySize,
+	b3_f64 xOffset,
+	b3_f64 yOffset)
+{
+	CDC      *dc = CDC::FromHandle(hDC);
+	CPen     *old,red;
+	LOGBRUSH  logbrush;
+	DWORD     stipple[2];
+
+	// Setup view first
+	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+
+	// Create pen fpr dashed line (pattern: **..**..**)
+	stipple[0] = 1; // Set 2 pixel (2 - 1)
+	stipple[1] = 3; // Unset 2 pixel (2 + 1) - and so on
+
+	// Create brush entry for color
+	logbrush.lbColor = RGB(0xff,0x11,0x44);
+	logbrush.lbHatch = 0;
+	logbrush.lbStyle = BS_SOLID;
+
+	// Create pen from brush and pattern (I don't know what is Windows is doing here...)
+	red.CreatePen(PS_USERSTYLE|PS_SOLID|PS_GEOMETRIC,1,&logbrush,2,stipple);
+
+	// Set attributes to DC
+	old = dc->SelectObject(&red);
+	dc->SetROP2(R2_COPYPEN);
+	dc->SetTextColor(RGB(0xff,0x11,0x44));
+	dc->SetBkMode(TRANSPARENT);
+
+	// Draw pick points
+	m_PickBaseLight.b3Draw(dc);
+
+	// Puhh! And only to draw stippled lines...
+	dc->SelectObject(old);
 }
 
 void CAppLinesView::b3DrawLegend(CDC *pDC)
