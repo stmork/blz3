@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/04/10 14:33:25  sm
+**	- Added oak plank support.
+**
 **	Revision 1.8  2003/08/31 08:56:23  sm
 **	- Windows support for the snprintf functions
-**
+**	
 **	Revision 1.7  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
@@ -89,7 +92,7 @@
 CB3FloatSpinButtonCtrl::CB3FloatSpinButtonCtrl()
 {
 	m_Min   = 0;
-	m_Max   = 0;
+	m_Max   = 1;
 	m_Pos   = 0;
 	m_Accel = B3_FSBC_DEFAULT_ACCEL;
 	b3SetIncrement();
@@ -121,7 +124,6 @@ void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f32 &pos)
 
 void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
 {
-	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)
 	{
 		pos = b3GetPos();

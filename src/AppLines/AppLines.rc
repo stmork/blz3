@@ -121,6 +121,7 @@ IDI_MAT_TEXTURE         ICON    DISCARDABLE     "res\\mat_texture.ico"
 IDI_MAT_WRAP_TEXTURE    ICON    DISCARDABLE     "res\\mat_wrap_texture.ico"
 IDI_MAT_COOK_TORRANCE   ICON    DISCARDABLE     "res\\mat_cook_torrance.ico"
 IDI_MAT_GRANITE         ICON    DISCARDABLE     "res\\mat_granite.ico"
+IDI_MAT_OAKPLANK        ICON    DISCARDABLE     "res\\mat_oakplank.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2270,6 +2271,89 @@ BEGIN
     GROUPBOX        "Static",IDC_STATIC,10,135,160,75
 END
 
+IDD_MAT_OAKPLANK DIALOGEX 0, 0, 597, 306
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Holzplanken"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,20,280,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,525,280,50,14
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,337,30,211,201
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_LIGHT,90,30,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DARK,90,65,60,15
+    LTEXT           "",IDC_COLOR_LIGHT,20,30,60,15,SS_SUNKEN | NOT WS_GROUP
+    LTEXT           "",IDC_COLOR_DARK,20,65,60,15,SS_SUNKEN | NOT WS_GROUP
+    LTEXT           "Hell",IDC_STATIC,20,20,13,8
+    LTEXT           "Dunkel",IDC_STATIC,20,55,24,8
+    EDITTEXT        IDC_REFLECTANCE,30,116,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,65,116,11,15
+    EDITTEXT        IDC_REFRACTANCE,30,146,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,65,146,11,15
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,101,116,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,135,116,11,15
+    EDITTEXT        IDC_SPEC_EXPONENT,101,146,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,135,146,11,15
+    LTEXT           "Verspiegelung",IDC_STATIC,30,106,46,8
+    GROUPBOX        "Materialwerte",IDC_STATIC,20,91,146,80
+    LTEXT           "Verglasung",IDC_STATIC,30,137,36,8
+    LTEXT           "Brechungsindex",IDC_STATIC,100,106,52,8
+    LTEXT           "Spek. Exponent",IDC_STATIC,100,137,52,8
+    CONTROL         "Slider1",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,335,244,210,21
+    CONTROL         "Slider2",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_VERT | TBS_TOP | WS_TABSTOP,559,31,31,193
+    CONTROL         "Slider3",IDC_RING_SPACING,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,44,136,21,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_RING_FREQUENCY,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,74,136,21,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_RING_NOISE,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,104,136,21,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_RING_NOISE_FREQUENCY,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,134,136,21,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_TRUNK_WOBBLE_FREQUENCY,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,195,136,20,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_TRUNK_WOBBLE,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,165,136,21,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,225,136,20,
+                    WS_EX_TRANSPARENT
+    CONTROL         "Slider3",IDC_GRAIN_FREQUENCY,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,20,255,136,20
+    CONTROL         "Slider3",IDC_GRAINY,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,20,225,136,20
+    CONTROL         "Slider3",IDC_RINGY,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,20,195,136,20
+    LTEXT           "Ringabstandsschwankung",IDC_STATIC,190,35,135,8
+    LTEXT           "Ringfrequenz",IDC_STATIC,190,64,43,8
+    LTEXT           "Ringrauschen",IDC_STATIC,190,94,45,8
+    LTEXT           "Ringrauschfrequenz",IDC_STATIC,190,124,64,8
+    LTEXT           "Astschwankung",IDC_STATIC,190,159,52,8
+    LTEXT           "Astschwankungsfrequenz",IDC_STATIC,190,185,82,8
+    LTEXT           "Astverzerrung",IDC_STATIC,190,215,44,8
+    LTEXT           "Faserung",IDC_STATIC,20,245,30,8
+    LTEXT           "Faserungsgewichtung",IDC_STATIC,20,215,70,8
+    LTEXT           "Ringgewichtung",IDC_STATIC,20,185,52,8
+    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE_FREQUENCY,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,255,136,20,
+                    WS_EX_TRANSPARENT
+    LTEXT           "Astverzerrungsfrequenz",IDC_STATIC,190,245,75,8
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2707,6 +2791,14 @@ BEGIN
         RIGHTMARGIN, 420
         TOPMARGIN, 7
         BOTTOMMARGIN, 226
+    END
+
+    IDD_MAT_OAKPLANK, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 590
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 299
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -3300,6 +3392,11 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MAT_OAKPLANK        "Holzplanken"
 END
 
 #endif    // German (Germany) resources

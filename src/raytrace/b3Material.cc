@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2004/04/10 14:33:25  sm
+**      - Added oak plank support.
+**
 **      Revision 1.52  2004/04/10 13:45:30  sm
 **      - Added wooden oak planks.
 **
@@ -1103,6 +1106,8 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 	b3OakPlank()
 {
 	b3Init();
+	m_DarkColors  = null;
+	m_LightColors = null;
 }
 
 b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3Material(src), b3OakPlank()
@@ -1141,6 +1146,9 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3Material(src), b3OakPlank()
 	m_GrainFrequency         = b3InitFloat();
 	m_Grainy                 = b3InitFloat();
 	m_Ringy                  = b3InitFloat();
+
+	m_DarkColors  = null;
+	m_LightColors = null;
 }
 
 b3MatOakPlank::~b3MatOakPlank()

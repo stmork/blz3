@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/10 14:33:25  sm
+**	- Added oak plank support.
+**
 **	Revision 1.3  2004/04/09 17:30:31  sm
 **	- Wood dialog fine tuning.
-**
+**	
 **	Revision 1.2  2004/04/09 14:09:36  sm
 **	- Wood sampling corrected.
 **	- b3FloatSliderCtrls range computation corrected.
@@ -57,7 +60,7 @@
 CB3FloatSliderCtrl::CB3FloatSliderCtrl()
 {
 	m_Min = 0;
-	m_Max = 0;
+	m_Max = 1;
 }
 
 CB3FloatSliderCtrl::~CB3FloatSliderCtrl()
@@ -81,7 +84,6 @@ void CB3FloatSliderCtrl::b3DDX(CDataExchange *pDX,b3_f32 &pos)
 
 void CB3FloatSliderCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
 {
-	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)
 	{
 		pos = b3GetPos();

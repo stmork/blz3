@@ -89,6 +89,7 @@
 #define IDD_MAT_WRAP_TEXTURE            647
 #define IDD_MAT_COOK_TORRANCE           648
 #define IDD_MAT_GRANITE                 649
+#define IDD_MAT_OAKPLANK                650
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -127,6 +128,7 @@
 #define IDI_SHAPE_TORUS                 1036
 #define IDI_SHAPE_TRIANGLES             1037
 #define IDI_UP                          1038
+#define IDI_MAT_OAKPLANK                1039
 #define ID_ACTIVATE                     10000
 #define ID_ACTIVATE_ALL                 10001
 #define ID_ACT_SELECT                   10002
@@ -748,6 +750,7 @@
 #define IDS_PRT_OBJECTNAME              61453
 #define IDS_MAT_COOK_TORRANCE           61454
 #define IDS_MAT_GRANITE                 61455
+#define IDS_MAT_OAKPLANK                61456
 
 // Next default values for new objects
 // 

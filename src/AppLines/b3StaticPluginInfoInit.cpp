@@ -32,6 +32,7 @@
 #include "DlgMatWrapTexture.h"
 #include "DlgMatCookTorrance.h"
 #include "DlgMatGranite.h"
+#include "DlgMatOakPlank.h"
 
 /*************************************************************************
 **                                                                      **
@@ -41,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/10 14:33:25  sm
+**	- Added oak plank support.
+**
 **	Revision 1.4  2004/03/14 16:18:26  sm
 **	- Added Windows support for granite.
-**
+**	
 **	Revision 1.3  2004/03/07 13:08:52  sm
 **	- Added dialog for Cook/Torrance material
 **	
@@ -93,6 +97,7 @@ void b3StaticPluginInfoInit::b3Init()
 	CDlgMatWrapTexture::b3Register();
 	CDlgMatCookTorrance::b3Register();
 	CDlgMatGranite::b3Register();
+	CDlgMatOakPlank::b3Register();
 }
 
 const char *b3StaticPluginInfoInit::b3GetClassName(b3_u32 class_id)

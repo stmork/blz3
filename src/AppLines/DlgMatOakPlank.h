@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	DlgMatWood.h $
+**	$Filename:	DlgMatOakPlank.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wood material
+**	Blizzard III - Wooden oak plank material
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -15,13 +15,13 @@
 **
 */
 
-#if !defined(AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)
-#define AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_
+#if !defined(AFX_DLGMATOAKPLANK_H__88D2E295_7DA8_4731_88DB_1DAB45D7C601__INCLUDED_)
+#define AFX_DLGMATOAKPLANK_H__88D2E295_7DA8_4731_88DB_1DAB45D7C601__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-// DlgMatWood.h : header file
+// DlgMatOakPlank.h : header file
 //
 
 #include "blz3/raytrace/b3MaterialSampler.h"
@@ -32,23 +32,23 @@
 #include "b3ShowSample.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgMatWood dialog
+// CDlgMatOakPlank dialog
 
-class CDlgMatWood : public CDialog
+class CDlgMatOakPlank : public CDialog
 {
-	b3MatWood         *m_Material;
+	b3MatOakPlank     *m_Material;
 	b3MaterialSampler *m_MatSampler;
 
-// Construction
+	// Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
-	CDlgMatWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
-	~CDlgMatWood();
+	CDlgMatOakPlank(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatOakPlank();
 
 // Dialog Data
-	//{{AFX_DATA(CDlgMatWood)
-	enum { IDD = IDD_MAT_WOOD };
+	//{{AFX_DATA(CDlgMatOakPlank)
+	enum { IDD = IDD_MAT_OAKPLANK };
 	CB3FloatSliderCtrl	m_TrunkWobbleFrequencyCtrl;
 	CB3FloatSliderCtrl	m_TrunkWobbleCtrl;
 	CB3FloatSliderCtrl	m_RotZCtrl;
@@ -74,7 +74,7 @@ public:
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDlgMatWood)
+	//{{AFX_VIRTUAL(CDlgMatOakPlank)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -83,7 +83,7 @@ public:
 protected:
 
 	// Generated message map functions
-	//{{AFX_MSG(CDlgMatWood)
+	//{{AFX_MSG(CDlgMatOakPlank)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnColorLight();
 	afx_msg void OnColorDark();
@@ -99,4 +99,4 @@ private:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)
+#endif // !defined(AFX_DLGMATOAKPLANK_H__88D2E295_7DA8_4731_88DB_1DAB45D7C601__INCLUDED_)

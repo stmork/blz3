@@ -389,6 +389,10 @@ SOURCE=.\DlgMatNormal.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatOakPlank.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatSlide.cpp
 # End Source File
 # Begin Source File
@@ -777,6 +781,10 @@ SOURCE=.\DlgMatNormal.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatOakPlank.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatSlide.h
 # End Source File
 # Begin Source File
@@ -1010,6 +1018,10 @@ SOURCE=.\res\mat_marble.ico
 # Begin Source File
 
 SOURCE=.\res\mat_normal.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_oakplank.ico
 # End Source File
 # Begin Source File
 

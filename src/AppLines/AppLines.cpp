@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2004/04/10 14:33:25  sm
+**	- Added oak plank support.
+**
 **	Revision 1.60  2004/04/09 17:30:31  sm
 **	- Wood dialog fine tuning.
-**
+**	
 **	Revision 1.59  2004/04/09 12:08:05  sm
 **	- New CStatic control introduced for material sampling.
 **	
@@ -1040,16 +1043,16 @@ BOOL CAboutDlg::OnInitDialog()
 #endif
 
 #ifdef DLG_TEST
-#include "DlgMatWood.h"
+#include "DlgMatOakPlank.h"
 #endif
 
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3MatWood material = WOOD;
+	b3MatOakPlank material = OAKPLANK;
 
-	CDlgMatWood::b3Edit(&material);
+	CDlgMatOakPlank::b3Edit(&material);
 #else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
