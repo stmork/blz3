@@ -16,9 +16,9 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CAppMandelView
 
-IMPLEMENT_DYNCREATE(CAppMandelView, CScrollView)
+IMPLEMENT_DYNCREATE(CAppMandelView, CB3ScrollView)
 
-BEGIN_MESSAGE_MAP(CAppMandelView, CScrollView)
+BEGIN_MESSAGE_MAP(CAppMandelView, CB3ScrollView)
 	//{{AFX_MSG_MAP(CAppMandelView)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 		//    DO NOT EDIT what you see in these blocks of generated code!

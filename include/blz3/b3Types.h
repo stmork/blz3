@@ -34,10 +34,10 @@ typedef unsigned char       b3_u08;
 typedef unsigned short      b3_u16;
 typedef unsigned int        b3_u32;
 
-#ifndef _WINDOWS
-typedef unsigned long long  b3_u64;
+#ifdef WIN32
+typedef unsigned long int   b3_u64;
 #else
-typedef unsigned long       b3_u64;
+typedef unsigned long long  b3_u64;
 #endif
 
 // Signed integer
@@ -45,10 +45,10 @@ typedef   signed char       b3_s08;
 typedef   signed short      b3_s16;
 typedef   signed int        b3_s32;
 
-#ifndef _WINDOWS
-typedef   signed long long  b3_s64;
+#ifdef WIN32
+typedef   signed long int   b3_s64;
 #else
-typedef   signed long       b3_s64;
+typedef   signed long long  b3_s64;
 #endif
 
 // Boolean
@@ -64,6 +64,9 @@ typedef size_t              b3_size;
 typedef off_t               b3_offset;
 typedef long                b3_index;
 typedef long                b3_count;
+typedef long                b3_res;
+typedef b3_u32              b3_pkd_color;
+typedef long                b3_coord;
 
 // Some vectors
 typedef struct

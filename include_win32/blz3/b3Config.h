@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/07/07 21:21:15  sm
+**	- OK! Imported some display stuff using the CScrollView. After getting linked today
+**	  it should possible to display real things tomorrow.
+**
 **	Revision 1.3  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
-**
+**	
 **	Revision 1.2  2001/07/01 19:14:23  sm
 **	- Include of JPEG and TIFF libraries
 **	
@@ -146,16 +150,37 @@ typedef enum
 	B3_LITTLE_ENDIAN = 0x4949
 } b3_cpu_type;
 
+enum b3_msg_result
+{
+	B3_MSG_OK      = 0,
+	B3_MSG_YES	    = 1,
+	B3_MSG_NO		= 2,
+	B3_MSG_CANCEL	= 3
+};
+
+enum b3_msgbox_type
+{
+	B3_MSGBOX_OK        = 0,
+	B3_MSGBOX_YES_NO    = 1,
+	B3_MSGBOX_OK_CANCEL = 2,
+	B3_MSGBOX_WARN      = 3,
+	B3_MSGBOX_ERROR     = 4,
+	B3_MSGBOX_INFO      = B3_MSGBOX_OK
+};
+
+
 class b3Runtime
 {
 	b3_cpu_type        cpu_type;
 public:
-	                   b3Runtime();
-	static void        b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
-	static void        b3Beep();
-	static b3_bool     b3Hostname(char *hostname,const b3_size buffer_size);
-	static b3_s32      b3Execute(const char *command, const b3_bool async);
-	static b3_cpu_type b3GetCPUType();
+	                     b3Runtime();
+	static void          b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
+	static void          b3Beep();
+	static b3_bool       b3Hostname(char *hostname,const b3_size buffer_size);
+	static b3_s32        b3Execute(const char *command, const b3_bool async);
+	static b3_cpu_type   b3GetCPUType();
+	static b3_msg_result b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
+	static b3_msg_result b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
 };
 
 #endif

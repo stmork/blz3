@@ -30,11 +30,12 @@ extern void b3TestThread();
 
 int main(int argc,char *argv[])
 {
-	b3_u32   i,k;
-	b3Date   date;
-	b3World  world;
-	b3Item  *item;
-	b3Scene *scene;
+	b3_index  i;
+	b3_u32    v1,v2;
+	b3Date    date;
+	b3World   world;
+	b3Item   *item;
+	b3Scene  *scene;
 
 	b3Log_SetLevel(B3LOG_FULL);
 	b3InitRaytrace::b3Init();
@@ -53,6 +54,7 @@ int main(int argc,char *argv[])
 		b3PrintF (B3LOG_NORMAL,"Endian type unknown!\n");
 		break;
 	}
+
 	b3PrintF (B3LOG_NORMAL,"size of some basic data types:\n");
 	b3PrintF (B3LOG_NORMAL,"8 bit:  uns. sgn.\n");
 	b3PrintF (B3LOG_NORMAL,"Integer:\n");
@@ -66,14 +68,14 @@ int main(int argc,char *argv[])
 	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be 8)\n",sizeof(b3_f64));
 	b3PrintF (B3LOG_NORMAL,"\n");
 
-	i = 1; k = 2;
-	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",i,k);
-	B3_SWAP (i,k);
-	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",i,k);
-	i = 1; k = 2;
-	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",i,k);
-	B3_PSWAP (&i,&k);
-	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",i,k);
+	v1 = 1; v2 = 2;
+	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);
+	B3_SWAP (v1,v2);
+	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
+	v1 = 1; v2 = 2;
+	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",v1,v2);
+	B3_PSWAP (&v1,&v2);
+	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
 
 	b3PrintF (B3LOG_NORMAL,"\ntesting 'Bio.c'...\n");
 

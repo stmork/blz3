@@ -19,8 +19,8 @@
 #define B3_IMAGE_TX_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3Display.h"
 #include "blz3/system/b3File.h"
 
 #include "tiff.h"
@@ -103,7 +103,7 @@ public:
 	b3_count  num;
 public:
 	     b3Measure();
-	void b3Init(unsigned long,unsigned long,unsigned long);
+	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
 	void b3Print();
 };
 

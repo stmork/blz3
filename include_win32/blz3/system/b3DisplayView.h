@@ -28,16 +28,13 @@
 #include "blz3/b3Types.h"
 #include "blz3/base/b3List.h"
 #include "blz3/system/b3Mem.h"
+#include "blz3/system/b3ScrollView.h"
 
 /*************************************************************************
 **                                                                      **
 **                        typedefs...                                   **
 **                                                                      **
 *************************************************************************/
-
-typedef long          b3_res;
-typedef b3_u32        b3_pkd_color;
-typedef long          b3_coord;
 
 typedef enum
 {
@@ -82,7 +79,7 @@ class b3Display : public b3Mem
 	b3_bool             m_Closed;
 	b3Mutex             m_Mutex;
 
-	CScrollView        *m_View;
+	CB3ScrollView      *m_View;
 
 public:
 	                    b3Display(const char *title = null);

@@ -41,7 +41,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /YX /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_AFXDLL" /D "_LIB" /YX /FD /TP /c
+# SUBTRACT CPP /Fr
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -64,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "_AFXDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /FR /YX /FD /GZ /TP /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_LIB" /FR /YX /FD /GZ /TP /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -85,6 +86,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\b3Bitmap.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Config.cc
 # End Source File
 # Begin Source File
@@ -101,6 +106,10 @@ SOURCE=.\b3Display.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Document.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3File.cpp
 # End Source File
 # Begin Source File
@@ -113,7 +122,15 @@ SOURCE=.\b3Mem.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Print.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Row.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ScrollView.cpp
 # End Source File
 # Begin Source File
 
@@ -122,6 +139,18 @@ SOURCE=.\b3Thread.cpp
 # Begin Source File
 
 SOURCE=.\b3Time.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Tracker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3View.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ViewParam.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"

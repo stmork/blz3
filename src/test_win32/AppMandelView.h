@@ -9,8 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "blz3/system/b3ScrollView.h"
 
-class CAppMandelView : public CScrollView
+class CAppMandelView : public CB3ScrollView
 {
 protected: // create from serialization only
 	CAppMandelView();
