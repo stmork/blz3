@@ -747,9 +747,16 @@ BEGIN
     POPUP "Szene"
     BEGIN
         MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
-        MENUITEM "Einzelnes &Material editieren...", ID_EDIT_MATERIAL_DIRECT
-        MENUITEM "Einzelne Bum&p Map editieren...", ID_EDIT_BUMP_DIRECT
-        MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
+        POPUP "Eigenschaften"
+        BEGIN
+            MENUITEM "Material verwalten...",       ID_EDIT_MATERIAL
+            MENUITEM "Bump Map verwalten...",       ID_EDIT_BUMP
+            MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
+            MENUITEM "Werte in Oberflächenstruktur kopieren", 
+                                                    ID_COPY_MATERIAL_TO_BUMP
+        END
+        MENUITEM "&Material editieren...",      ID_EDIT_MATERIAL_DIRECT
+        MENUITEM "Bum&p Map editieren...",      ID_EDIT_BUMP_DIRECT
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
         MENUITEM "&Deaktivieren",               ID_DEACTIVATE

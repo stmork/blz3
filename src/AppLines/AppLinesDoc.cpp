@@ -47,10 +47,11 @@
 #include "b3ExampleScene.h"
 #include "b3Action.h"
 
-#include "blz3/system/b3Dir.h"
 #include "blz3/base/b3Array.h"
-#include "blz3/system/b3File.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/system/b3Dir.h"
+#include "blz3/system/b3File.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -60,6 +61,13 @@
 
 /*
 **	$Log$
+**	Revision 1.102  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.101  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -67,7 +75,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.100  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -1751,6 +1759,8 @@ void CAppLinesDoc::b3FinishEdit(
 		base->b3Insert(original,bbox);
 		base->b3Remove(original);
 		m_Scene->b3Recount();
+//	Brute force! Try without it.
+		m_Scene->b3RecomputeMaterial();
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}

@@ -25,6 +25,8 @@
 #include "b3ProfileBevelStumpSpline.h"
 #include "DlgProfileBevelStumpSpline.h"
 
+#include "blz3/raytrace/b3Shape.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,6 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.1  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -40,7 +49,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **
 */
 

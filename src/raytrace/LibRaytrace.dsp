@@ -370,6 +370,10 @@ SOURCE=..\..\include\blz3\raytrace\b3Shape.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\raytrace\b3ShapeRenderContext.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\raytrace\b3Special.h
 # End Source File
 # End Group

@@ -40,9 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.38  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.37  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -877,6 +884,24 @@ void CAppObjectDoc::OnDeactivate()
 	}
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Material maintainance                         **
+**                                                                      **
+*************************************************************************/
+
+void CAppObjectDoc::b3UpdateSurface(b3Shape *shape)
+{
+	if (shape != null)
+	{
+		SetModifiedFlag();
+		shape->b3Prepare();
+		shape->b3RecomputeMaterial();
+		shape->b3UpdateMaterial();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+	}
+}
+
 void CAppObjectDoc::OnEditMaterial() 
 {
 	// TODO: Add your command handler code here
@@ -886,8 +911,144 @@ void CAppObjectDoc::OnEditMaterial()
 	{
 		CDlgItemMaintain dlg(this,shape->b3GetMaterialHead());
 
-		dlg.DoModal();
-		SetModifiedFlag();
+		if (dlg.DoModal() == IDOK)
+		{
+			b3UpdateSurface(shape);
+		}
+	}
+}
+
+void CAppObjectDoc::OnEditMaterialDirect() 
+{
+	// TODO: Add your command handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3Item   *item;
+
+	if (shape != null)
+	{
+		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
+		{
+			item = shape->b3GetMaterialHead()->First;
+			if (b3Loader::b3GetLoader().b3Edit(item,this))
+			{
+				b3UpdateSurface(shape);
+			}
+		}
+		else
+		{
+			OnEditMaterial();
+		}
+	}
+}
+
+b3_bool CAppObjectDoc::b3CopyMaterialToBump()
+{
+	b3Shape *shape = b3GetSelectedShape();
+	b3Item  *src;
+	b3Item  *dst;
+	b3_bool  changed = false;
+
+	if (shape != null)
+	{
+		shape->b3GetBumpHead()->b3Free();
+		B3_FOR_BASE(shape->b3GetMaterialHead(),src)
+		{
+			switch(src->b3GetClassType())
+			{
+			case TEXTURE:
+				dst = b3World::b3AllocNode(BUMP_TEXTURE);
+				if (dst != null)
+				{
+					b3MatTexture  *material = (b3MatTexture *)src;
+					b3BumpTexture *bump     = (b3BumpTexture *)dst;
+					
+					bump->m_xStart = material->m_xStart;
+					bump->m_yStart = material->m_yStart;
+					bump->m_xScale = material->m_xScale;
+					bump->m_yScale = material->m_yScale;
+					bump->m_xTimes = material->m_xTimes;
+					bump->m_yTimes = material->m_yTimes;
+					bump->m_Flags  = material->m_Flags;
+					strcpy(bump->m_Name,material->m_Name);
+
+					changed = true;
+				}
+				break;
+
+			case MARBLE:
+				dst = b3World::b3AllocNode(BUMP_MARBLE);
+				if (dst != null)
+				{
+					b3MatMarble  *material   = (b3MatMarble *)src;
+					b3BumpMarble *bump       = (b3BumpMarble *)dst;
+					b3Scaling    *srcScaling = material;
+					b3Scaling    *dstScaling = bump;
+
+					*dstScaling  = *srcScaling;
+
+					changed = true;
+				}
+				break;
+
+			case WOOD:
+				dst = b3World::b3AllocNode(BUMP_WOOD);
+				if (dst != null)
+				{
+					b3MatWood  *material   = (b3MatWood *)src;
+					b3BumpWood *bump       = (b3BumpWood *)dst;
+					b3Wood     *srcWood    = material;
+					b3Scaling  *srcScaling = material;
+					b3Wood     *dstWood    = bump;
+					b3Scaling  *dstScaling = bump;
+
+					*dstWood     = *srcWood;
+					*dstScaling  = *srcScaling;
+
+					changed = true;
+				}
+				break;
+
+			case OAKPLANK:
+				dst = b3World::b3AllocNode(BUMP_OAKPLANK);
+				if (dst != null)
+				{
+					b3MatOakPlank  *material    = (b3MatOakPlank *)src;
+					b3BumpOakPlank *bump        = (b3BumpOakPlank *)dst;
+					b3Wood         *srcWood     = material;
+					b3OakPlank     *srcOakPlank = material;
+					b3Scaling      *srcScaling  = material;
+					b3Wood         *dstWood     = bump;
+					b3OakPlank     *dstOakPlank = bump;
+					b3Scaling      *dstScaling  = bump;
+
+					*dstWood     = *srcWood;
+					*dstOakPlank = *srcOakPlank;
+					*dstScaling  = *srcScaling;
+
+					changed = true;
+				}
+				break;
+
+			default:
+				dst = null;
+				break;
+			}
+
+			if (dst != null)
+			{
+				shape->b3GetBumpHead()->b3Append(dst);
+			}
+		}
+	}
+	return changed;
+}
+
+void CAppObjectDoc::OnCopyMaterialToBump() 
+{
+	// TODO: Add your command handler code here
+	if (b3CopyMaterialToBump())
+	{
+		b3UpdateSurface(b3GetSelectedShape());
 	}
 }
 
@@ -899,6 +1060,45 @@ void CAppObjectDoc::OnUpdateEditMaterial(CCmdUI* pCmdUI)
 	pCmdUI->Enable(shape != null);
 }
 
+void CAppObjectDoc::OnUpdateEditMaterialDirect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	pCmdUI->Enable(shape != null);
+}
+
+void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = b3GetSelectedShape();
+	b3Item  *item;
+	b3_bool  enabled = false;
+
+	if (shape != null)
+	{
+		B3_FOR_BASE (shape->b3GetMaterialHead(),item)
+		{
+			switch(item->b3GetClassType())
+			{
+			case TEXTURE:
+			case MARBLE:
+			case WOOD:
+			case OAKPLANK:
+				enabled = true;
+				break;
+			}
+		}
+	}
+	pCmdUI->Enable(enabled);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Bump map maintainance                         **
+**                                                                      **
+*************************************************************************/
+
 void CAppObjectDoc::OnEditBump() 
 {
 	// TODO: Add your command handler code here
@@ -908,8 +1108,33 @@ void CAppObjectDoc::OnEditBump()
 	{
 		CDlgItemMaintain dlg(this,shape->b3GetBumpHead());
 
-		dlg.DoModal();
-		SetModifiedFlag();
+		if (dlg.DoModal() == IDOK)
+		{
+			b3UpdateSurface(shape);
+		}
+	}
+}
+
+void CAppObjectDoc::OnEditBumpDirect() 
+{
+	// TODO: Add your command handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3Item   *item;
+
+	if (shape != null)
+	{
+		if (shape->b3GetBumpHead()->b3GetCount() == 1)
+		{
+			item = shape->b3GetBumpHead()->First;
+			if (b3Loader::b3GetLoader().b3Edit(item,this))
+			{
+				b3UpdateSurface(shape);
+			}
+		}
+		else
+		{
+			OnEditBump();
+		}
 	}
 }
 
@@ -920,6 +1145,20 @@ void CAppObjectDoc::OnUpdateEditBump(CCmdUI* pCmdUI)
 
 	pCmdUI->Enable(shape != null);
 }
+
+void CAppObjectDoc::OnUpdateEditBumpDirect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	pCmdUI->Enable(shape != null);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Surface properties maintainance               **
+**                                                                      **
+*************************************************************************/
 
 void CAppObjectDoc::OnCopyProperties() 
 {
@@ -934,7 +1173,7 @@ void CAppObjectDoc::OnCopyProperties()
 		{
 			if (dlg.b3CopyProperties(m_BBox,shape))
 			{
-				SetModifiedFlag();
+				b3UpdateSurface(shape);
 			}
 		}
 	}
@@ -957,76 +1196,6 @@ void CAppObjectDoc::OnDeleteTransformHistory()
 		m_BBox->b3ResetTransformation();
 		SetModifiedFlag();
 	}
-}
-
-void CAppObjectDoc::OnEditMaterialDirect() 
-{
-	// TODO: Add your command handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3Item   *item;
-
-	if (shape != null)
-	{
-		item = shape->b3GetMaterialHead()->First;
-		if (item != null)
-		{
-			if (b3Loader::b3GetLoader().b3Edit(item,this))
-			{
-				shape->b3RecomputeMaterial();
-				shape->b3UpdateMaterial();
-				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-				SetModifiedFlag();
-			}
-		}
-	}
-}
-
-void CAppObjectDoc::OnEditBumpDirect() 
-{
-	// TODO: Add your command handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3Item   *item;
-
-	if (shape != null)
-	{
-		item = shape->b3GetBumpHead()->First;
-		if (item != null)
-		{
-			if (b3Loader::b3GetLoader().b3Edit(item,this))
-			{
-				shape->b3RecomputeMaterial();
-				shape->b3UpdateMaterial();
-				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-				SetModifiedFlag();
-			}
-		}
-	}
-}
-
-void CAppObjectDoc::OnUpdateEditMaterialDirect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3_count  count = 0;
-
-	if (shape != null)
-	{
-		count = shape->b3GetMaterialHead()->b3GetCount();
-	}
-	pCmdUI->Enable(count == 1);
-}
-
-void CAppObjectDoc::OnUpdateEditBumpDirect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3_count  count = 0;
-
-	if (shape != null)
-	{
-		count = shape->b3GetBumpHead()->b3GetCount();
-	}
-	pCmdUI->Enable(count == 1);
 }
 
 b3Item *CAppObjectDoc::b3FindItem(b3Base<b3Item> *head,b3_u32 class_type)
@@ -1061,129 +1230,4 @@ b3Item *CAppObjectDoc::b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type
 		head->b3Append(item);
 	}
 	return item;
-}
-
-void CAppObjectDoc::b3CopyMaterialToBump()
-{
-	b3Shape *shape = b3GetSelectedShape();
-	b3Item  *src;
-	b3Item  *dst;
-
-	if (shape == null)
-	{
-		return;
-	}
-
-	shape->b3GetBumpHead()->b3Free();
-	B3_FOR_BASE(shape->b3GetMaterialHead(),src)
-	{
-		switch(src->b3GetClassType())
-		{
-		case TEXTURE:
-			dst = b3World::b3AllocNode(BUMP_TEXTURE);
-			if (dst != null)
-			{
-				b3MatTexture  *material = (b3MatTexture *)src;
-				b3BumpTexture *bump     = (b3BumpTexture *)dst;
-				
-				bump->m_xStart = material->m_xStart;
-				bump->m_yStart = material->m_yStart;
-				bump->m_xScale = material->m_xScale;
-				bump->m_yScale = material->m_yScale;
-				bump->m_xTimes = material->m_xTimes;
-				bump->m_yTimes = material->m_yTimes;
-				bump->m_Flags  = material->m_Flags;
-				strcpy(bump->m_Name,material->m_Name);
-			}
-			break;
-
-		case MARBLE:
-			dst = b3World::b3AllocNode(BUMP_MARBLE);
-			if (dst != null)
-			{
-				b3MatMarble  *material   = (b3MatMarble *)src;
-				b3BumpMarble *bump       = (b3BumpMarble *)dst;
-				b3Scaling    *srcScaling = material;
-				b3Scaling    *dstScaling = bump;
-
-				*dstScaling  = *srcScaling;
-			}
-			break;
-
-		case WOOD:
-			dst = b3World::b3AllocNode(BUMP_WOOD);
-			if (dst != null)
-			{
-				b3MatWood  *material   = (b3MatWood *)src;
-				b3BumpWood *bump       = (b3BumpWood *)dst;
-				b3Wood     *srcWood    = material;
-				b3Scaling  *srcScaling = material;
-				b3Wood     *dstWood    = bump;
-				b3Scaling  *dstScaling = bump;
-
-				*dstWood     = *srcWood;
-				*dstScaling  = *srcScaling;
-			}
-			break;
-
-		case OAKPLANK:
-			dst = b3World::b3AllocNode(BUMP_OAKPLANK);
-			if (dst != null)
-			{
-				b3MatOakPlank  *material    = (b3MatOakPlank *)src;
-				b3BumpOakPlank *bump        = (b3BumpOakPlank *)dst;
-				b3Wood         *srcWood     = material;
-				b3OakPlank     *srcOakPlank = material;
-				b3Scaling      *srcScaling  = material;
-				b3Wood         *dstWood     = bump;
-				b3OakPlank     *dstOakPlank = bump;
-				b3Scaling      *dstScaling  = bump;
-
-				*dstWood     = *srcWood;
-				*dstOakPlank = *srcOakPlank;
-				*dstScaling  = *srcScaling;
-			}
-			break;
-
-		default:
-			dst = null;
-			break;
-		}
-
-		if (dst != null)
-		{
-			shape->b3GetBumpHead()->b3Append(dst);
-		}
-	}
-}
-
-void CAppObjectDoc::OnCopyMaterialToBump() 
-{
-	// TODO: Add your command handler code here
-	b3CopyMaterialToBump();
-}
-
-void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	b3Shape *shape = b3GetSelectedShape();
-	b3Item  *item;
-	b3_bool  enabled = false;
-
-	if (shape != null)
-	{
-		B3_FOR_BASE (shape->b3GetMaterialHead(),item)
-		{
-			switch(item->b3GetClassType())
-			{
-			case TEXTURE:
-			case MARBLE:
-			case WOOD:
-			case OAKPLANK:
-				enabled = true;
-				break;
-			}
-		}
-	}
-	pCmdUI->Enable(enabled);
 }

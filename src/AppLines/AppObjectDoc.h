@@ -22,7 +22,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "blz3/raytrace/b3BBox.h"
 #include "AppRenderDoc.h"
 
 class CDlgHierarchy;
@@ -120,12 +119,13 @@ public:
 	b3_u32      b3GetParentShading();
 
 private:
-	void    b3SetBBox(b3BBox *bbox);
-	void    b3ActivateItem(b3Item *item,b3_bool activate=true);
-	b3Item *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
-	b3Item *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
-	void    b3CopyMaterialToBump();
-	void    b3CopyBumpToMaterial();
+	void        b3SetBBox(b3BBox *bbox);
+	void        b3ActivateItem(b3Item *item,b3_bool activate=true);
+	b3Item     *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
+	b3Item     *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
+	b3_bool     b3CopyMaterialToBump();
+	b3_bool     b3CopyBumpToMaterial();
+	void        b3UpdateSurface(b3Shape *shape);
 };
 
 /////////////////////////////////////////////////////////////////////////////

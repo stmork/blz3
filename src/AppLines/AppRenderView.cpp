@@ -35,10 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.30  2004/06/29 12:43:25  sm
 **	- Fixed uninitialized data inside OpenGL texture creation. This
 **	  speeds up initial data scene load.
-**
+**	
 **	Revision 1.29  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
 **	
@@ -483,7 +490,9 @@ void CAppRenderView::OnPaint()
 	
 		main->b3SetPerformance(this,time_diff,GetDocument()->m_Context.glPolyCount);
 	}
+#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"Draw time: %2.4fs\n",time_diff);
+#endif
 }
 
 void CAppRenderView::b3DrawRect(

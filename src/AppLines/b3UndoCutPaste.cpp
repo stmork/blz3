@@ -21,9 +21,12 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3UndoCutPaste.h"
-#include "blz3/base/b3FileMem.h"
 #include "MainFrm.h"
+#include "b3UndoCutPaste.h"
+
+#include "blz3/base/b3FileMem.h"
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Shape.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.4  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.3  2003/01/12 10:26:53  sm
 **	- Undo/Redo of
 **	  o Cut & paste
@@ -187,7 +197,7 @@ b3OpPaste::b3OpPaste(
 	m_BBox = app->b3PasteClipboard(&m_World);
 	if (m_BBox != null)
 	{
-		m_Level = m_BBox->b3GetClassType() & 0xffff;
+		m_Level = m_BBox->b3GetType();
 		b3Initialize();
 		m_PrepareChangedStructure = true;
 	}

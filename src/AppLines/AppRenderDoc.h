@@ -22,8 +22,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3Scene.h"
+#include "blz3/system/b3Display.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "blz3/base/b3World.h"
+
 #include "b3LinesDocument.h"
 #include "b3Fulcrum.h"
 #include "b3Undo.h"
@@ -31,6 +33,9 @@
 class CAppRaytraceDoc;
 class CDlgHierarchy;
 class CB3Action;
+
+class b3ModellerInfo;
+class b3BBox;
 
 class CAppRenderDoc : public CB3LinesDocument
 {

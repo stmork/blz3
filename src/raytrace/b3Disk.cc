@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 #include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
@@ -32,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2004/07/02 19:28:03  sm
+**      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**      - Recoupled b3Scene include from CApp*Doc header files to allow
+**        faster compilation.
+**      - Removed intersection counter completely because of a mysterious
+**        destruction problem of b3Mutex.
+**
 **      Revision 1.29  2004/06/21 18:10:53  sm
 **      - Fixed disk drawing problem. The Problem occured in
 **        conjunction with optimizing code with the Visual C++

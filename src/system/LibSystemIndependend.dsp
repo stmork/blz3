@@ -122,6 +122,10 @@ SOURCE=.\b3TimeAbstract.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include\blz3\system\b3Atomic.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\system\b3CPUBase.h
 # End Source File
 # Begin Source File

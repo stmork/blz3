@@ -30,9 +30,9 @@
 #define not_VERBOSE
 
 #ifndef _DEBUG
-#define B3_MAX_TX_SIZE 128
+#define B3_MAX_TX_SIZE  64
 #else
-#define B3_MAX_TX_SIZE   8
+#define B3_MAX_TX_SIZE 128
 #endif
 
 /*************************************************************************
@@ -43,6 +43,13 @@
 
 /*
 **      $Log$
+**      Revision 1.73  2004/07/02 19:28:03  sm
+**      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**      - Recoupled b3Scene include from CApp*Doc header files to allow
+**        faster compilation.
+**      - Removed intersection counter completely because of a mysterious
+**        destruction problem of b3Mutex.
+**
 **      Revision 1.72  2004/06/29 12:49:12  sm
 **      - Added some OpenGL shader comments.
 **

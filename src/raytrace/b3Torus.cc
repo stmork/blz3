@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/07/02 19:28:04  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.33  2004/06/21 09:26:19  sm
 **	- Changed rendering: The constant sin/cos tables are now directly
 **	  used from b3ShapeRenderContext.
 **	- Memory allocation for polygons/grid removed from disks.
-**
+**	
 **	Revision 1.32  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.

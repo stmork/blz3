@@ -22,8 +22,15 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "blz3/raytrace/b3Scene.h"
 #include "AppRenderDoc.h"
+
+#include "blz3/system/b3Time.h"
+#include "blz3/base/b3Array.h"
+
+class b3Animation;
+class b3Scene;
+class b3Light;
+class b3CameraPart;
 
 class CAppLinesDoc : public CAppRenderDoc
 {

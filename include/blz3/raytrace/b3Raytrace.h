@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/raytrace/b3Bump.h"
 #include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Light.h"

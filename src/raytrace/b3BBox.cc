@@ -33,9 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.92  2004/07/02 19:28:03  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.91  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.90  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
@@ -857,6 +864,48 @@ void b3Scene::b3Update()
 	b3PrintF(B3LOG_FULL,"    Updating geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
 	m_PrepareInfo.b3Prepare(b3UpdateThread);
+}
+
+b3_bool b3Scene::b3UpdateMaterialThread(b3BBox *bbox,void *ptr)
+{
+	b3Item  *item;
+	b3Shape *shape;
+
+	bbox->b3UpdateMaterial();
+	B3_FOR_BASE(bbox->b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3UpdateMaterial();
+	}
+	return true;
+}
+
+void b3Scene::b3UpdateMaterial()
+{
+	b3PrintF(B3LOG_FULL,"    Updating materials...\n");
+	m_PrepareInfo.b3CollectBBoxes(this);
+	m_PrepareInfo.b3Prepare(b3UpdateMaterialThread);
+}
+
+b3_bool b3Scene::b3RecomputeMaterialThread(b3BBox *bbox,void *ptr)
+{
+	b3Item  *item;
+	b3Shape *shape;
+
+	bbox->b3RecomputeMaterial();
+	B3_FOR_BASE(bbox->b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3RecomputeMaterial();
+	}
+	return true;
+}
+
+void b3Scene::b3RecomputeMaterial()
+{
+	b3PrintF(B3LOG_FULL,"    Invalidating materials...\n");
+	m_PrepareInfo.b3CollectBBoxes(this);
+	m_PrepareInfo.b3Prepare(b3RecomputeMaterialThread);
 }
 
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)

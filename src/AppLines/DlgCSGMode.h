@@ -27,6 +27,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCSGMode dialog
 
+class b3CSGShape;
+
 class CDlgCSGMode : public CPropertyPage
 {
 	DECLARE_DYNCREATE(CDlgCSGMode)

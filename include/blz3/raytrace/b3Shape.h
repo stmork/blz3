@@ -21,7 +21,6 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/raytrace/b3PickInfo.h"
-#include "blz3/base/b3Render.h"
 
 /*************************************************************************
 **                                                                      **
@@ -79,28 +78,6 @@ public:
 protected:
 	b3_bool b3Prepare();
 	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
-};
-
-class B3_PLUGIN b3ShapeRenderContext : public b3RenderContext
-{
-	b3_vector       *m_Between;
-	b3_gl_line      *m_CylinderIndices;
-	b3_gl_polygon   *m_CylinderPolygons;
-	b3_gl_line      *m_ConeIndices;
-	b3_gl_polygon   *m_ConePolygons;
-
-public:
-	static b3_f64    m_Sin[B3_MAX_RENDER_SUBDIV + 1];
-	static b3_f64    m_Cos[B3_MAX_RENDER_SUBDIV + 1];
-	static b3_count  m_SubDiv;
-
-public:
-	                 b3ShapeRenderContext(b3_count subdiv = 16);
-	void             b3InitSubdiv(b3_count subdiv);
-	b3_gl_line      *b3GetCylinderIndices();
-	b3_gl_polygon   *b3GetCylinderPolygons();
-	b3_gl_line      *b3GetConeIndices();
-	b3_gl_polygon   *b3GetConePolygons();
 };
 
 class b3Material;

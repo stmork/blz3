@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Material.h"
 #include "blz3/raytrace/b3Shape.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
 #include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
@@ -33,6 +34,13 @@
 
 /*
 **      $Log$
+**      Revision 1.74  2004/07/02 19:28:04  sm
+**      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**      - Recoupled b3Scene include from CApp*Doc header files to allow
+**        faster compilation.
+**      - Removed intersection counter completely because of a mysterious
+**        destruction problem of b3Mutex.
+**
 **      Revision 1.73  2004/06/29 12:43:26  sm
 **      - Fixed uninitialized data inside OpenGL texture creation. This
 **        speeds up initial data scene load.
@@ -773,21 +781,34 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 		b3_f64            fy,fyStep;
 		b3_bool           loop;
 
+		b3PrintT(">b3GetImage()");
 		b3ComputeBound(&limit);
 		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / image->xSize;
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / image->ySize;
 
 		surface.incoming = &ray;
 		fy = limit.y1 + b3Scene::epsilon;
+		ray.polar.m_BoxPolar.z =
+		ray.polar.m_ObjectPolar.z =
+		ray.polar.m_Polar.z =
+		ray.polar.m_BBoxOriginal.z =
+		ray.ipoint.z = 0;
 		for (y = 0;y < image->ySize;y++)
 		{
+			ray.polar.m_BoxPolar.y =
+			ray.polar.m_ObjectPolar.y =
+			ray.polar.m_Polar.y =
+			ray.polar.m_BBoxOriginal.y =
+			ray.ipoint.y = fy;
+			
 			fx = limit.x1 + b3Scene::epsilon;
 			for (x = 0;x < image->xSize;x++)
 			{
-				b3Vector::b3Init(&ray.polar.m_BoxPolar,     fx,fy);
-				b3Vector::b3Init(&ray.polar.m_ObjectPolar,  fx,fy);
-				b3Vector::b3Init(&ray.polar.m_Polar,        fx,fy);
-				b3Vector::b3Init(&ray.polar.m_BBoxOriginal, fx,fy);
+				ray.polar.m_BoxPolar.x =
+				ray.polar.m_ObjectPolar.x =
+				ray.polar.m_Polar.x =
+				ray.polar.m_BBoxOriginal.x =
+				ray.ipoint.x = fx;
 
 				color = B3_BLACK;
 				for(material  = (b3Material *)b3GetMaterialHead()->First,loop = true;
@@ -806,7 +827,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 			}
 			fy += fyStep;
 		}
-		b3PrintF(B3LOG_FULL,"b3ShapeRenderObject::b3GetImage()\n");
+		b3PrintT("<b3GetImage()");
 	}
 	return result;
 }

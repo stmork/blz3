@@ -20,9 +20,10 @@
 
 #include "blz3/system/b3Thread.h"
 
-class b3AtomicCounter : protected b3Mutex
+class b3AtomicCounter
 {
-	b3_u64 m_Counter;
+	b3Mutex m_Mutex;
+	b3_u64  m_Counter;
 
 public:
 	b3AtomicCounter(int init)
@@ -37,24 +38,24 @@ public:
 
 	inline void b3Inc()
 	{
-		b3Lock();
+		m_Mutex.b3Lock();
 		m_Counter++;
-		b3Unlock();
+		m_Mutex.b3Unlock();
 	}
 
 	inline b3_u64 b3Add(b3_u64 summand)
 	{
-		b3Lock();
+		m_Mutex.b3Lock();
 		m_Counter += summand;
-		b3Unlock();
+		m_Mutex.b3Unlock();
 		return m_Counter;
 	}
 
 	inline b3_u64 operator++(int dummy)
 	{
-		b3Lock();
+		m_Mutex.b3Lock();
 		m_Counter++;
-		b3Unlock();
+		m_Mutex.b3Unlock();
 		
 		return m_Counter;
 	}

@@ -34,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/07/02 19:28:04  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.41  2004/06/30 13:18:13  sm
 **	- Add statistics support for intersection counting but the thread
 **	  safe counting is to expensive. So added b3AtomicCount class but
 **	  commented out counting itself.
-**
+**	
 **	Revision 1.40  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -1775,7 +1782,6 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 		shape     = (b3CSGShape *)item;
 		shape->b3Intersect(ray,&local,&lines[t++]);
 		shape->b3Operate(&local,&intervals[index],result);
-//		b3Scene::m_IntersectShape++;
 	}
 
 	point = result->m_x;
@@ -1786,7 +1792,6 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 			ray->Q = point->m_Q;
 			shape  = point->m_Shape;
 			shape->b3InverseMap(ray,point);
-//			b3Scene::m_IntersectShapeSuccess++;
 			return shape;
 		}
 		point++;
@@ -1808,10 +1813,8 @@ b3Shape *b3Scene::b3Intersect(
 
 	while (BBox != null)
 	{
-//		m_IntersectBBox++;
 		if (BBox->b3Intersect(ray))
 		{
-//			m_IntersectBBoxSuccess++;
 			//Check recursively
 			BBoxes = BBox->b3GetBBoxHead();
 			if (BBoxes->First)
@@ -1830,12 +1833,10 @@ b3Shape *b3Scene::b3Intersect(
 			case CLASS_SHAPE:
 				B3_FOR_BASE(Shapes,item)
 				{
-//					m_IntersectShape++;
 					Shape  = (b3SimpleShape *)item;
 					Result = Shape->b3Intersect(ray,&polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
-//						m_IntersectShapeSuccess++;
 
 						ResultShape = Shape;
 						ray->bbox   = BBox;
@@ -1879,22 +1880,18 @@ b3Shape *b3Scene::b3IsObscured(
 
 	while (BBox != null)
 	{
-//		m_IntersectBBox++;
 		if (BBox->b3Intersect(ray))
 		{
-//			m_IntersectBBoxSuccess++;
 			Shapes = BBox->b3GetShapeHead();
 			switch (Shapes->b3GetClass())
 			{
 			case CLASS_SHAPE:
 				B3_FOR_BASE(Shapes,item)
 				{
-//					m_IntersectShape++;
 					Shape  = (b3SimpleShape *)item;
 					Result = Shape->b3Intersect(ray,&polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
-//						m_IntersectShapeSuccess++;
 						return Shape;
 					}
 				}

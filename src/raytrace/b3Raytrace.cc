@@ -37,11 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2004/07/02 19:28:04  sm
+**	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
+**	- Recoupled b3Scene include from CApp*Doc header files to allow
+**	  faster compilation.
+**	- Removed intersection counter completely because of a mysterious
+**	  destruction problem of b3Mutex.
+**
 **	Revision 1.61  2004/06/30 13:18:13  sm
 **	- Add statistics support for intersection counting but the thread
 **	  safe counting is to expensive. So added b3AtomicCount class but
 **	  commented out counting itself.
-**
+**	
 **	Revision 1.60  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -351,12 +358,8 @@ struct b3_rt_info
 	b3Event    m_WaitForCompletion;
 };
 
-b3TxPool        b3Scene::m_TexturePool;
-b3_f64          b3Scene::epsilon                  = 0.0005;
-b3AtomicCounter b3Scene::m_IntersectBBox          = 0;
-b3AtomicCounter b3Scene::m_IntersectBBoxSuccess   = 0;
-b3AtomicCounter b3Scene::m_IntersectShape         = 0;
-b3AtomicCounter b3Scene::m_IntersectShapeSuccess  = 0;
+b3TxPool b3Scene::m_TexturePool;
+b3_f64   b3Scene::epsilon = 0.0005;
 
 /*************************************************************************
 **                                                                      **
@@ -448,10 +451,6 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 	threads     = new b3Thread[CPUs];
 
 	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
-	m_IntersectBBox = 0;
-	m_IntersectBBoxSuccess = 0;
-	m_IntersectShape = 0;
-	m_IntersectShapeSuccess = 0;
 	span.b3Start();
 	for (i = 0;i < CPUs;i++)
 	{
@@ -477,14 +476,6 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 	}
 	span.b3Stop();
 	span.b3Print();
-/*
-	b3_f64 sucess_object = 100.0 * m_IntersectBBoxSuccess  / m_IntersectBBox;
-	b3_f64 sucess_shape  = 100.0 * m_IntersectShapeSuccess / m_IntersectShape;
-
-	b3PrintF(B3LOG_NORMAL,"\nIntersection statistics:\n");
-	b3PrintF(B3LOG_NORMAL," Objects: %9llu success: %2.3f%%\n",(b3_u64)m_IntersectBBox,sucess_object);
-	b3PrintF(B3LOG_NORMAL," Shapes:  %9llu success: %2.3f%%\n",(b3_u64)m_IntersectShape,sucess_shape);
-*/
 
 	// Free what we have allocated.
 	delete [] threads;

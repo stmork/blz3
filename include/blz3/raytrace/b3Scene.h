@@ -26,7 +26,6 @@
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Display.h"
-#include "blz3/system/b3Atomic.h"
 
 /*************************************************************************
 **                                                                      **
@@ -135,13 +134,6 @@ public:
 	static b3_f64    epsilon;
 
 public:
-	// Some counters
-	static b3AtomicCounter    m_IntersectBBox;
-	static b3AtomicCounter    m_IntersectBBoxSuccess;
-	static b3AtomicCounter    m_IntersectShape;
-	static b3AtomicCounter    m_IntersectShapeSuccess;
-
-public:
 	B3_ITEM_INIT(b3Scene);
 	B3_ITEM_LOAD(b3Scene);
 
@@ -156,6 +148,8 @@ public:
 		    void             b3FreeVertices();
 	        void             b3Draw(b3RenderContext *context);
 			void             b3Update();
+			void             b3RecomputeMaterial();
+			void             b3UpdateMaterial();
 
 			// Filename handling
 	        char            *b3GetName();
@@ -265,8 +259,10 @@ private:
 	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
-	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
-	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
+	static  b3_u32          b3PrepareThread(          b3BBox *bbox,void *ptr);
+	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
+	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
+	static  b3_u32          b3UpdateMaterialThread(   b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray);
 	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
 
