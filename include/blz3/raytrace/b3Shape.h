@@ -61,6 +61,13 @@
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for all 3D shapes with base        **
+**                        transformation.                               **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3ShapeBaseTrans
 {
 protected:
@@ -86,7 +93,12 @@ class b3Bump;
 
 struct b3_surface;
 
-// same structure entries for all shapes
+/*************************************************************************
+**                                                                      **
+**                        Base class for all shapes                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
 protected:
@@ -199,6 +211,12 @@ private:
 	b3_index        b3FindVertex(b3_index vIndex);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for all non CSG shapes             **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3SimpleShape : public b3Shape
 {
 protected:
@@ -215,7 +233,12 @@ public:
 	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
-// SPHERE
+/*************************************************************************
+**                                                                      **
+**                        Sphere                                        **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Sphere : public b3SimpleShape    // Kugel
 {
 	b3_f64               m_QuadRadius;   // Quadrat vom Radius
@@ -245,7 +268,12 @@ protected:
 	void    b3ComputeIndices();
 };
 
-// AREA, DISK
+/*************************************************************************
+**                                                                      **
+**                        2D shapes                                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Shape2 : public b3SimpleShape
 {
 protected:
@@ -271,6 +299,12 @@ public:
 			void    b3SetupPicking(b3PickInfo *pick_info);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Area                                          **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Area : public b3Shape2
 {
 	       b3_gl_vertex  m_AreaVertex[4];
@@ -291,6 +325,12 @@ protected:
 	        void   b3ComputeIndices();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Disk                                          **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Disk : public b3Shape2
 {
 public:
@@ -306,7 +346,12 @@ protected:
 	        void   b3ComputeIndices();
 };
 
-// CYLINDER, CONE, ELLIPSOID, BOX
+/*************************************************************************
+**                                                                      **
+**                        3D shapes                                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
@@ -326,6 +371,12 @@ protected:
 	virtual void    b3ComputeNormals(b3_bool normalize = true);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Cylinder                                      **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Cylinder : public b3Shape3
 {
 public:
@@ -341,6 +392,12 @@ protected:
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Cone                                          **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3Cone : public b3Shape3
 {
@@ -358,6 +415,12 @@ protected:
 	void   b3ComputeIndices();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Ellipsoid                                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Ellipsoid : public b3Shape3
 {
 public:
@@ -373,6 +436,12 @@ protected:
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Box                                           **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3Box : public b3Shape3
 {
@@ -393,7 +462,12 @@ protected:
 	        void   b3ComputeIndices();
 };
 
-// DOUGHNUT, TORUS
+/*************************************************************************
+**                                                                      **
+**                        Torus (doughnut)                              **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
@@ -423,6 +497,12 @@ protected:
 	        void    b3ComputeNormals(b3_bool normalize=true);
 	        void    b3ComputeIndices();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Shape containing triangles                    **
+**                                                                      **
+*************************************************************************/
 
 // normal interpolation defines
 #define PHONG                   (1 << b3TriangleShape::B3_PHONG_B)     // use Phong interpolation
@@ -544,7 +624,12 @@ private:
 			static b3_count b3IntLog3(b3_count value);
 };
 
-// TRIANGLES
+/*************************************************************************
+**                                                                      **
+**                        Triangle mesh                                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Triangles : public b3TriangleShape
 {
 public:
@@ -561,7 +646,12 @@ protected:
 	void   b3ComputeIndices();
 };
 
-// SPLINE_ROT
+/*************************************************************************
+**                                                                      **
+**                        Rotating spline profile shape                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3SplineRotShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv;
@@ -590,7 +680,12 @@ protected:
 	void    b3ComputeIndices();
 };
 
-// SPLINES_AREA, SPLINES_CYL, SPLINES_RING
+/*************************************************************************
+**                                                                      **
+**                        2D spline shape                               **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3SplineShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv,m_ySubDiv;
@@ -632,6 +727,12 @@ private:
 	b3_bool b3Prepare();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Spline area                                   **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3SplineArea : public b3SplineShape
 {
 public:
@@ -639,12 +740,24 @@ public:
 	B3_ITEM_LOAD(b3SplineArea);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Spline tubus                                  **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3SplineCylinder : public b3SplineShape 
 {
 public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Spline ring                                   **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3SplineRing : public b3SplineShape 
 {
@@ -655,7 +768,7 @@ public:
 
 /*************************************************************************
 **                                                                      **
-**                        csg shapes                                    **
+**                        CSG shapes                                    **
 **                                                                      **
 *************************************************************************/
 
@@ -708,6 +821,12 @@ template<int count> struct b3_csg_intervals
 typedef b3_csg_intervals<4>                                 b3_shape_intervals;
 typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for all CSG shapes                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGShape : public b3Shape
 {
 protected:
@@ -732,7 +851,12 @@ public:
 	virtual b3_count b3GetMaxIntersections();
 };
 
-// CSG_SPHERE
+/*************************************************************************
+**                                                                      **
+**                        CSG sphere                                    **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGSphere : public b3CSGShape
 {
 	b3_f64            m_QuadRadius;       // squared radius
@@ -762,7 +886,12 @@ protected:
 	void     b3ComputeIndices();
 };
 
-// CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
+/*************************************************************************
+**                                                                      **
+**                        3D CSG shapes                                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
 {
 protected:
@@ -783,6 +912,12 @@ protected:
 	virtual void     b3ComputeNormals(b3_bool normalize = true);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        CSG cylinder                                  **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
 {
 public:
@@ -798,6 +933,12 @@ protected:
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        CSG cone                                      **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3CSGCone : public b3CSGShape3
 {
@@ -816,6 +957,12 @@ protected:
 	void     b3ComputeIndices();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        CSG ellipsoid                                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGEllipsoid : public b3CSGShape3
 {
 
@@ -833,6 +980,12 @@ protected:
 	        void     b3ComputeVertices();
 	        void     b3ComputeIndices();
 };
+
+/*************************************************************************
+**                                                                      **
+**                        CSG box                                       **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3CSGBox : public b3CSGShape3
 {
@@ -854,7 +1007,12 @@ protected:
 	        void    b3ComputeIndices();
 };
 
-// CSG_TORUS
+/*************************************************************************
+**                                                                      **
+**                        CSG torus                                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
 {
 	b3_f64             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
