@@ -3056,6 +3056,7 @@ BEGIN
     IDS_MAT_CHESS           "Schachbrett"
     IDS_MAT_MARBLE          "Marmor"
     IDS_MAT_WOOD            "Holz"
+    IDS_MAT_GRANITE         "Granit"
     IDS_MAT_SLIDE           "Farbverlauf"
     IDS_MAT_TEXTURE         "Textur"
     IDS_MAT_WRAP_TEXTURE    "Wickeltextur"

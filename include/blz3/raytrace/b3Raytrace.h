@@ -581,6 +581,7 @@ public:
 #define TYPE_SLIDE          0x00000006
 #define TYPE_WOOD           0x00000007
 #define TYPE_COOK_TORRANCE  0x00000008
+#define TYPE_GRANITE        0x00000009
 
 // WARNING: GL uses define MATERIAL, too!
 #define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
@@ -592,6 +593,7 @@ public:
 #define SLIDE               (CLASS_MATERIAL|TYPE_SLIDE)
 #define WOOD                (CLASS_MATERIAL|TYPE_WOOD)
 #define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_COOK_TORRANCE)
+#define GRANITE             (CLASS_MATERIAL|TYPE_GRANITE)
 
 class B3_PLUGIN b3Material : public b3Item
 {
@@ -725,7 +727,7 @@ class B3_PLUGIN b3MatWood : public b3Material
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
-	b3_s32            m_xTimes,m_yTimes;
+	b3_s32            m_xTimes,m_yTimes; // not used
 
 public:
 	B3_ITEM_INIT(b3MatWood);
@@ -871,6 +873,35 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result);
+};
+
+// GRANITE
+class B3_PLUGIN b3MatGranite : public b3Material 
+{
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3_vector         m_Scale;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
+
+public:
+	B3_ITEM_INIT(b3MatGranite);
+	B3_ITEM_LOAD(b3MatGranite);
+
+	void    b3Write();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar  *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 /*************************************************************************

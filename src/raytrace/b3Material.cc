@@ -28,7 +28,7 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/image/b3TxPool.h"
 
-#define no_DEBUG_COOK_TORRANCE
+#define no_DEBUG_MATERIAL
 
 /*************************************************************************
 **                                                                      **
@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2004/03/14 08:19:17  sm
+**      - Added granite material.
+**
 **      Revision 1.37  2004/03/07 19:22:30  sm
 **      - Shadow added to Cook/Torrance material
 **
@@ -197,7 +200,7 @@
 void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
-#ifndef DEBUG_COOK_TORRANCE
+#ifndef DEBUG_MATERIAL
 	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
 #endif
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
@@ -206,10 +209,11 @@ void b3Material::b3Register()
 	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
 	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
-#ifndef DEBUG_COOK_TORRANCE
 	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
+#ifndef DEBUG_MATERIAL
+	b3Item::b3Register(&b3MatGranite::b3StaticInit,      &b3MatGranite::b3StaticInit,      GRANITE);
 #else
-	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, MAT_NORMAL);
+	b3Item::b3Register(&b3MatGranite::b3StaticInit,      &b3MatGranite::b3StaticInit,      MAT_NORMAL);
 #endif
 }
 
@@ -1024,12 +1028,6 @@ void b3MatCookTorrance::b3Write()
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
-#ifdef DEBUG_COOK_TORRANCE
-//	m_Reflection = 0;
-//	m_Refraction = 0;
-	m_AmbColor = m_DiffColor;
-#endif
-
 	m_Ra   = m_AmbColor * m_ka;
 	m_Mu   = b3Color(
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
@@ -1109,4 +1107,92 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 	acc += result;
 
 	return true;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Granite material                              **
+**                                                                      **
+*************************************************************************/
+
+b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
+{
+}
+
+b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
+{
+	b3InitColor(m_DiffColor);
+	b3InitColor(m_AmbColor);
+	b3InitColor(m_SpecColor);
+	b3InitVector(&m_Scale);
+	m_Reflection = b3InitFloat();
+	m_Refraction = b3InitFloat();
+	m_RefrValue  = b3InitFloat();
+	m_HighLight  = b3InitFloat();
+	m_Flags      = b3InitInt();
+}
+
+void b3MatGranite::b3Write()
+{
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+}
+
+b3_bool b3MatGranite::b3GetColors(
+	b3_polar *polar,
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
+{
+	b3Color   mask;
+	b3_vector d;
+	b3_loop   i;
+	b3_f64    sum = 0;
+	b3_f64    freq = 1.0;
+
+	d.x = ((polar->box_polar.x - 0.5) * m_Scale.x * M_PI);
+	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
+	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
+
+	for (i = 0;i < 6;i++)
+	{
+		sum += fabs(0.5 - b3Noise::b3NoiseVector(
+			4 * freq *d.x,
+			4 * freq *d.y,
+			4 * freq *d.z)) / freq;
+			freq += freq; // = freq *= 2;
+	}
+	
+	diffuse  = m_DiffColor * mask * sum;
+	ambient  = m_AmbColor  * mask;
+	specular = m_SpecColor * mask;
+
+	return true;
+}
+
+b3_f64 b3MatGranite::b3GetReflection(b3_polar *polar)
+{
+	return m_Reflection;
+}
+
+b3_f64 b3MatGranite::b3GetRefraction(b3_polar *polar)
+{
+	return m_Refraction;
+}
+
+b3_f64 b3MatGranite::b3GetIndexOfRefraction(b3_polar *polar)
+{
+	return m_RefrValue;
+}
+
+b3_f64 b3MatGranite::b3GetSpecularExponent(b3_polar *polar)
+{
+	return m_HighLight;
 }
