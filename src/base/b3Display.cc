@@ -6,6 +6,7 @@
 **      $Date$
 **      $Author$
 **      $Developer:     Steffen A. Mork $
+**      $Id$
 **
 **      Blizzard III - Controlling a color display
 **
@@ -41,9 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/04 12:15:15  sm
+**	- Renaming some attributes...
+**	- Taking account to redesign of b3Display
+**
 **	Revision 1.1  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
-**
+**	
 **	
 */
 
@@ -106,10 +111,16 @@ void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
 
 void b3Display::b3PutRow(b3Row *row)
 {
-	b3_coord y = row->y;
+	b3_coord      y = row->m_y;
+	b3_pkd_color *src,*dst;
 
 	B3_ASSERT(m_Buffer != null);
-	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
+	src = row->m_buffer;
+	dst = &m_Buffer[y * m_xs];
+	if (src != dst)
+	{
+		b3LongMemCopy(dst,src,m_xs);
+	}
 }
 
 void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)

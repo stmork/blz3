@@ -36,11 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2001/11/04 12:15:15  sm
+**	- Renaming some attributes...
+**	- Taking account to redesign of b3Display
+**
 **	Revision 1.25  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.24  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
@@ -213,7 +217,7 @@ void b3RayRow::b3Raytrace()
 	fx        = -1;
 
 	// Loop one row...
-	for (x = 0;x < xSize;x++)
+	for (x = 0;x < m_xSize;x++)
 	{
 		ray.dir.x  = m_preDir.x;
 		ray.dir.y  = m_preDir.y;
@@ -229,7 +233,7 @@ void b3RayRow::b3Raytrace()
 		m_preDir.z += m_Scene->m_xStepDir.z;
 		fx         += m_fxStep;
 
-		buffer[x] = b3Color::b3GetSatColor(&ray.color);
+		m_buffer[x] = b3Color::b3GetSatColor(&ray.color);
 	}
 	m_Display->b3PutRow(this);
 	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
@@ -289,7 +293,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 	dir        =  m_preDir;
 
 	// Loop one row...
-	for (x = 0;x < xSize;x++)
+	for (x = 0;x < m_xSize;x++)
 	{
 		ray.dir.x  = dir.x;
 		ray.dir.y  = dir.y;
@@ -361,9 +365,9 @@ inline void b3SupersamplingRayRow::b3Convert()
 	for (x = 0;x < m_xSize;x++)
 	{
 #ifndef DEBUG_SS4
-		buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+		m_buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
 #else
-		buffer[x] = 0x0000ff;
+		m_buffer[x] = 0x0000ff;
 #endif
 	}
 
@@ -467,9 +471,9 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		fxLeft    += m_fxStep;
 
 #ifndef DEBUG_SS4
-		buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+		m_buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
 #else
-		buffer[x] = result;
+		m_buffer[x] = result;
 #endif
 	}
 

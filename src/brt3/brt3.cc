@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/11/04 12:15:15  sm
+**	- Renaming some attributes...
+**	- Taking account to redesign of b3Display
+**
 **	Revision 1.11  2001/11/03 16:43:04  sm
 **	- Fixed brt3
-**
+**	
 **	Revision 1.9  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
@@ -132,11 +136,11 @@ int main(int argc,char *argv[])
 				scene->b3SetFilename(argv[i]);
 				if (scene->b3GetDisplaySize(xSize,ySize))
 				{
-					display = new b3Display(xSize,ySize);
+					display = new b3DisplayView(xSize,ySize);
 				}
 				else
 				{
-					display = new b3Display();
+					display = new b3DisplayView();
 				}
 
 				if ((camera = scene->b3GetCamera(false)) != null)

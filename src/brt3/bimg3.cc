@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/04 12:15:15  sm
+**	- Renaming some attributes...
+**	- Taking account to redesign of b3Display
+**
 **	Revision 1.5  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.4  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
@@ -70,8 +74,8 @@ public:
 
 	void b3SetRow(b3Tx *tx,b3_coord y)
 	{
-		this->y = y;
-		tx->b3GetRow(buffer,y);
+		m_y = y;
+		tx->b3GetRow(m_buffer,y);
 	}
 };
 
@@ -85,7 +89,7 @@ static void display(b3Tx *tx)
 	{
 		b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
 			tx->b3Name(),tx->xSize,tx->ySize);
-		display = new b3Display(tx->xSize,tx->ySize,tx->b3Name());
+		display = new b3DisplayView(tx->xSize,tx->ySize,tx->b3Name());
 		row     = new b3ImageRow(tx->xSize);
 		for (y = 0;y < tx->ySize;y++)
 		{

@@ -12,11 +12,10 @@ LIB_SOURCE		=\
 	b3Config.cc\
 	b3Date.cc\
 	b3Dir.cc\
-	b3Display.cc\
+	b3DisplayView.cc\
 	b3File.cc\
 	b3Log.cc\
 	b3Mem.cc\
-	b3Row.cc\
 	b3Thread.cc\
 	b3Time.cc
 
@@ -24,11 +23,10 @@ LIB_OBJ			=\
 	b3Config.o\
 	b3Date.o\
 	b3Dir.o\
-	b3Display.o\
+	b3DisplayView.o\
 	b3File.o\
 	b3Log.o\
 	b3Mem.o\
-	b3Row.o\
 	b3Thread.o\
 	b3Time.o
 

@@ -91,15 +91,16 @@ private:
 class b3Row : public b3Link<b3Row>, public b3Mem
 {
 protected:
-	b3_coord      y;
-	b3_res        xSize;
-	b3_pkd_color *buffer;
+	b3_res        m_xSize;
+
+public:
+	b3_coord      m_y;
+	b3_pkd_color *m_buffer;
 
 public:
 	         b3Row(b3_coord y,b3_res xSize);
+	         b3Row(b3_coord y,b3_res xSize,b3_pkd_color *buffer);
 	virtual ~b3Row() {}
-
-	friend void b3Display::b3PutRow(b3Row *row);
 };
 
 #endif

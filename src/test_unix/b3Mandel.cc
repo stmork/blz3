@@ -47,11 +47,15 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/04 12:15:15  sm
+**	- Renaming some attributes...
+**	- Taking account to redesign of b3Display
+**
 **	Revision 1.4  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.3  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -109,7 +113,7 @@ public:
 		b3_f64       Xval,Yval,Xquad,Yquad;
 		b3_pkd_color color = 0;
 
-		for (x = 0;x < xSize;x++)
+		for (x = 0;x < m_xSize;x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
@@ -155,7 +159,7 @@ public:
 			}
 
 			// Fill in color
-			buffer[x] = color;
+			m_buffer[x] = color;
 			fx += xStep;
 		}
 	}

@@ -11,6 +11,7 @@ LIBS			= libB3Base.a
 PRG_SOURCE =\
 	b3Aux.cc\
 	b3Cubic.cc\
+	b3Display.cc\
 	b3Endian.cc\
 	b3FileList.cc\
 	b3Item.cc\
@@ -20,6 +21,7 @@ PRG_SOURCE =\
 	b3Node.cc\
 	b3Procedure.cc\
 	b3Render.cc\
+	b3Row.cc\
 	b3SearchPath.cc\
 	b3Spline.cc\
 	b3World.cc
@@ -27,6 +29,7 @@ PRG_SOURCE =\
 PRG_OBJ	=\
 	b3Aux.o\
 	b3Cubic.o\
+	b3Display.o\
 	b3Endian.o\
 	b3FileList.o\
 	b3Item.o\
@@ -36,6 +39,7 @@ PRG_OBJ	=\
 	b3Node.o\
 	b3Procedure.o\
 	b3Render.o\
+	b3Row.o\
 	b3SearchPath.o\
 	b3Spline.o\
 	b3World.o
