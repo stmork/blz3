@@ -21,6 +21,7 @@
 #define REALLY_FREE
 
 #include <stdlib.h>
+#include "blz3/b3Types.h"
 
 class b3MemAccess
 {

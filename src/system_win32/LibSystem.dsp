@@ -150,10 +150,6 @@ SOURCE=.\b3Log.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Mem.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3Print.cpp
 # End Source File
 # Begin Source File
