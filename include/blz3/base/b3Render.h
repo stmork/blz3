@@ -26,7 +26,8 @@
 class b3RenderContext : protected b3Mem
 {
 public:
-	b3RenderContext();
+	                 b3RenderContext();
+	virtual void     b3StartDrawing();
 };
 
 class b3RenderObject : public b3Mem

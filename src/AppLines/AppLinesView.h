@@ -89,6 +89,8 @@ protected:
 	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
+	afx_msg void OnViewAntialias();
+	afx_msg void OnUpdateViewAntialias(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/08/11 19:59:15  sm
+**	- Added orthogonal projection
+**
 **	Revision 1.4  2001/08/11 16:29:07  sm
 **	- Nasty UnCR done
 **	- Compiling but not running OpenGL under Unix
-**
+**	
 **	Revision 1.3  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -98,6 +101,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_RIGHT, OnUpdateViewRight)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_LEFT, OnUpdateViewLeft)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BACK, OnUpdateViewBack)
+	ON_COMMAND(ID_VIEW_ANTIALIAS, OnViewAntialias)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_ANTIALIAS, OnUpdateViewAntialias)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -239,11 +244,7 @@ void CAppLinesView::OnPaint()
 	{
 		wglMakeCurrent(m_DC,m_GC);
 
-		glClearColor(0.7f,0.7f,1.0f,1.0f);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glEnableClientState(GL_VERTEX_ARRAY);
-
+		pDoc->m_Context.b3StartDrawing();
 		scene->b3Draw();
 		SwapBuffers(m_DC);
 		ValidateRect(NULL);
@@ -364,4 +365,17 @@ void CAppLinesView::OnUpdateViewBack(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_BACK));
+}
+
+void CAppLinesView::OnViewAntialias() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.m_AntiAliased = !m_RenderView.m_AntiAliased;
+	OnUpdate(this,B3_UPDATE_VIEW,0);
+}
+
+void CAppLinesView::OnUpdateViewAntialias(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_RenderView.m_AntiAliased);
 }

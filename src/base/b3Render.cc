@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/11 19:59:15  sm
+**      - Added orthogonal projection
+**
 **      Revision 1.2  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -78,6 +81,14 @@ b3RenderContext::b3RenderContext()
 	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
 	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
 	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
+}
+
+void b3RenderContext::b3StartDrawing()
+{
+	glClearColor(0.8f,0.8f,0.8f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glEnableClientState(GL_VERTEX_ARRAY);
 }
 
 /*************************************************************************

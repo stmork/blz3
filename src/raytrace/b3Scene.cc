@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/11 19:59:16  sm
+**      - Added orthogonal projection
+**
 **      Revision 1.6  2001/08/11 15:59:59  sm
 **      - Rendering cleaned up
 **      - CWinApp/CMainFrm derived from Blizzard III classes
@@ -114,12 +117,8 @@ b3Item *b3Scene::b3Init(b3_u32 *src)
 	return new b3Scene(src);
 }
 
-void b3Scene::b3GetView(b3_res &xSize,b3_res &ySize)
+void b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
 	xSize = this->xSize;
 	ySize = this->ySize;
-}
-
-void b3Scene::b3SetView(b3_res xSize,b3_res ySize)
-{
 }

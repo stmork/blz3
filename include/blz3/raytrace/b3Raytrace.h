@@ -1627,8 +1627,7 @@ public:
 	static b3Item  *b3Init(b3_u32 *src);
 
 	       void     b3Reorg();
-	       void     b3SetView(b3_res  xSize,b3_res  ySize);
-	       void     b3GetView(b3_res &xSize,b3_res &ySize);
+	       void     b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 		   void     b3AllocVertices(b3RenderContext *context);
 		   void     b3FreeVertices();
 	       void     b3Draw();

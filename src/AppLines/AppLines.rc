@@ -192,6 +192,7 @@ BEGIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+        MENUITEM "An&ti-Aliasing",              ID_VIEW_ANTIALIAS
     END
     POPUP "&Fenster"
     BEGIN
@@ -453,6 +454,7 @@ BEGIN
     ID_VIEW_PERSPECTIVE     "Perspektivische Ansicht"
     ID_VIEW_FRONT           "Ansicht von vorne (Aufriﬂ)"
     ID_VIEW_RIGHT           "Ansicht von rechts (Seitenriﬂ)"
+    ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/11 19:59:16  sm
+**      - Added orthogonal projection
+**
 **      Revision 1.9  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
 **
@@ -173,6 +176,7 @@ void b3BBox::b3Draw()
 	b3Shape        *shape;
 
 #ifdef BLZ3_USE_OPENGL
+	glColor3f(0.5f,0.5f,0.5f);
 	b3RenderObject::b3Draw();
 #endif
 	B3_FOR_BASE(&heads[1],item)
@@ -181,6 +185,9 @@ void b3BBox::b3Draw()
 		bbox->b3Draw();
 
 	}
+#ifdef BLZ3_USE_OPENGL
+	glColor3f(0.2f,0.2f,0.2f);
+#endif
 	B3_FOR_BASE(&heads[0],item)
 	{
 		shape = (b3Shape *)item;
@@ -307,8 +314,6 @@ void b3Scene::b3Draw()
 	glPushMatrix();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT); 
 	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glColor3f(1.0f,1.0f,1.0f);
 #endif
 
 	B3_FOR_BASE(&heads[0],item)

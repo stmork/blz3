@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/11 19:59:15  sm
+**	- Added orthogonal projection
+**
 **	Revision 1.2  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -117,7 +120,7 @@ BOOL CAppLinesApp::InitInstance()
 	// such as the name of your company or organization.
 	SetRegistryKey(_T(BLIZZARD3_REG_COMPANY));
 
-	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
+	LoadStdProfileSettings(10);  // Load standard INI file options (including MRU)
 
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views.

@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/11 19:59:16  sm
+**      - Added orthogonal projection
+**
 **      Revision 1.2  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -51,6 +54,12 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
+
+b3RenderView::b3RenderView()
+{
+	m_ViewMode    = B3_VIEW_3D;
+	m_AntiAliased = true;
+}
 
 void b3RenderView::b3SetViewMode(b3_view_mode mode)
 {
@@ -86,6 +95,21 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 	GLfloat aspectCamera;
 	GLfloat min = 0.1f;
 
+	if (m_AntiAliased)
+	{
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glHint(GL_LINE_SMOOTH_HINT,GL_DONT_CARE);
+		glLineWidth(1.2f);
+	}
+	else
+	{
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_BLEND);
+		glLineWidth(1.0f);
+	}
+
 	distance = b3Distance(&m_ViewPoint,&m_EyePoint);
 	factor   = min / distance;
 	width    = factor * b3Length(&m_Width);
@@ -100,11 +124,43 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 	glLoadIdentity();
 
 	glViewport(0,0,xSize,ySize);
-	glFrustum(-width,width,-height,height,min,10000.0f);
-	gluLookAt(
-		m_EyePoint.x, m_EyePoint.y, m_EyePoint.z,
-		m_ViewPoint.x,m_ViewPoint.y,m_ViewPoint.z,
-		m_Height.x,   m_Height.y,   m_Height.z);
+	switch (m_ViewMode)
+	{
+	case B3_VIEW_3D:
+	default:
+		glFrustum(-width,width,-height,height,min,10000.0f);
+		gluLookAt(
+			m_EyePoint.x, m_EyePoint.y, m_EyePoint.z,
+			m_ViewPoint.x,m_ViewPoint.y,m_ViewPoint.z,
+			m_Height.x,   m_Height.y,   m_Height.z);
+		break;
+	case B3_VIEW_TOP:
+		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
+		break;
+
+	case B3_VIEW_FRONT:
+		glRotated(90.0,1.0,0.0,0.0);
+		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
+		break;
+
+	case B3_VIEW_RIGHT:
+		glRotated( 90.0,1.0,0.0,0.0);
+		glRotated(-90.0,0.0,0.0,1.0);
+		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
+		break;
+
+	case B3_VIEW_LEFT:
+		glRotated(90.0,1.0,0.0,0.0);
+		glRotated(90.0,0.0,0.0,1.0);
+		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
+		break;
+
+	case B3_VIEW_BACK:
+		glRotated( 90.0,1.0,0.0,0.0);
+		glRotated(180.0,0.0,0.0,1.0);
+		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
+		break;
+	}
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	

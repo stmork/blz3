@@ -39,6 +39,10 @@ class b3RenderView
 	b3_vector    m_Height;
 
 public:
+	b3_bool          m_AntiAliased;
+
+public:
+	        b3RenderView();
 	void    b3SetViewMode(b3_view_mode mode);
 	b3_bool b3IsViewMode(b3_view_mode mode);
 	void    b3SetCamera(b3CameraPart *camera);

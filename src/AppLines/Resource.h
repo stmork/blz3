@@ -19,6 +19,7 @@
 #define ID_VIEW_PERSPECTIVE             32778
 #define ID_VIEW_FRONT                   32779
 #define ID_VIEW_RIGHT                   32780
+#define ID_VIEW_ANTIALIAS               32781
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 
@@ -28,7 +29,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        132
-#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_COMMAND_VALUE         32782
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
