@@ -35,6 +35,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2004/04/08 14:34:42  sm
+**  - Multithreading support for wood example.
+**
 **  Revision 1.2  2004/04/06 12:17:46  sm
 **  - Optimized some noise methods.
 **
@@ -54,15 +57,21 @@
 #define WOOD_RES   800
 #define WOOD_TILES   3
 
+struct b3WoodSampleInfo
+{
+	b3MatWood    *m_Material;
+	b3_res        m_yStart,m_yEnd;
+	b3_res        m_xMax;
+	b3_res        m_yMax;
+	b3_pkd_color *m_Data;
+};
+
 class b3WoodSampler
 {
 	b3MatWood *m_Material;
 	b3Display *m_Display;
 	b3_res     m_xMax;
 	b3_res     m_yMax;
-	b3_vector  m_Start;
-	b3_vector  m_End;
-	b3_vector  m_Step;
 
 public:
 	b3WoodSampler(b3Display *display)
@@ -74,13 +83,6 @@ public:
 		// Init material
 		m_Material = new b3MatWood(WOOD);
 		m_Material->b3Prepare();
-		
-		// Init box polar bound
-		b3Vector::b3Init(&m_Start, 0.0, 1.0, 0.5);
-		b3Vector::b3Init(&m_End,   1.0, 0.0, 0.8);
-		m_Step.x = (m_End.x - m_Start.x) / m_xMax;
-		m_Step.y = (m_End.y - m_Start.y) / m_yMax;
-		m_Step.z = (m_End.z - m_Start.z) / m_yMax;
 	}
 
 	~b3WoodSampler()
@@ -90,36 +92,87 @@ public:
 
 	void b3Sample()
 	{
+		b3_count          CPUs = b3Runtime::b3GetNumCPUs();
+		b3_loop           i;
+		b3_res            yStart,yEnd;
+		b3Tx              tx;
+		b3_pkd_color     *data;
+		b3TimeSpan        span;
+		b3WoodSampleInfo *info;
+
+		tx.b3AllocTx(m_xMax,m_yMax,24);
+		data = (b3_pkd_color *)tx.b3GetData();
+		info = new b3WoodSampleInfo[CPUs];
+
+		yStart = 0;
+		for (i = 0;i < CPUs;i++)
+		{
+			yEnd = m_yMax * (i + 1) / CPUs;
+			info[i].m_Material = m_Material;
+			info[i].m_xMax   = m_xMax;
+			info[i].m_yMax   = m_yMax;
+			info[i].m_yStart = yStart;
+			info[i].m_yEnd   = yEnd;
+			info[i].m_Data = &data[yStart * m_xMax];
+			yStart = yEnd;
+		}
+
+		if (CPUs > 1)
+		{
+			b3Thread *threads = new b3Thread[CPUs];
+
+			span.b3Start();
+			for (i = 0;i < CPUs;i++)
+			{
+				threads[i].b3Start(&b3SampleThread,&info[i]);
+			}
+			for (i = 0;i < CPUs;i++)
+			{
+				threads[i].b3Wait();
+			}
+			span.b3Stop();
+			
+			delete [] threads;
+		}
+		else
+		{
+			span.b3Start();
+			b3SampleThread(&info[0]);
+			span.b3Stop();
+		}
+
+		span.b3Print();
+
+		delete [] info;
+		m_Display->b3PutTx(&tx);
+	}
+private:
+	static b3_u32 b3SampleThread(void *ptr)
+	{
+		b3WoodSampleInfo *info = (b3WoodSampleInfo *)ptr;
+
 		b3_coord      x,y;
 		b3_polar      polar;
 		b3Color       ambient,diffuse,specular;
 		b3Tx          tx;
 		b3_f64        fy;
-		b3_pkd_color *data;
-		b3TimeSpan    span;
+		b3_pkd_color *data = info->m_Data;
 
-		tx.b3AllocTx(m_xMax,m_yMax,24);
-		data = (b3_pkd_color *)tx.b3GetData();
-
-		span.b3Start();
-		for (y = 0;y < m_yMax;y++)
+		for (y = info->m_yStart;y < info->m_yEnd;y++)
 		{
-			fy = (b3_f64)y / m_yMax;
-			for (x = 0;x < m_xMax;x++)
+			fy = (b3_f64)y / info->m_yMax;
+			for (x = 0;x < info->m_xMax;x++)
 			{
-				int ix = (WOOD_TILES * x) / m_xMax;
-				polar.box_polar.x = fmod((b3_f64)x * WOOD_TILES / m_xMax,1.0);
+				int ix = (WOOD_TILES * x) / info->m_xMax;
+				polar.box_polar.x = fmod((b3_f64)x * WOOD_TILES / info->m_xMax,1.0);
 				polar.box_polar.y = 1.0 - fy;
 				polar.box_polar.z = 1.0 - fy * 0.15 * ix;
 
-				m_Material->b3GetColors(&polar,diffuse,ambient,specular);
+				info->m_Material->b3GetColors(&polar,diffuse,ambient,specular);
 				*data++ = diffuse;
 			}
 		}
-		span.b3Stop();
-		span.b3Print();
-
-		m_Display->b3PutTx(&tx);
+		return 0;
 	}
 };
 
