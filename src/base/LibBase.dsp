@@ -214,6 +214,10 @@ SOURCE=..\..\include\blz3\base\b3List.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Math.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Matrix.h
 # End Source File
 # Begin Source File

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2004/02/29 18:44:55  sm
+**      - Further shader development
+**
 **      Revision 1.29  2004/02/28 19:10:13  sm
 **      - Cook/Torrance is applicable by use through material
 **        shader.
@@ -968,14 +971,15 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
+	m_DiffColor = b3Color(0.755,0.49,0.095);
 	m_Il   = 650000;
 	m_dw   = 0.0001;
 	m_ks   = 1.0;
 	m_kd   = 0.0;
 	m_m    = 0.3;
 	m_Ia   = 0.00001 * m_Il;
-	m_Ra   = m_DiffColor * M_PI;
-	m_Mu = b3Color(
+	m_Ra   = m_DiffColor * M_PI * m_Ia;
+	m_Mu   = b3Color(
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::B]));
@@ -983,32 +987,53 @@ b3_bool b3MatCookTorrance::b3Prepare()
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &result)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &acc)
 {
-	b3_f64 nh = b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
-	b3_f64 nl = b3Vector::b3SMul(&ray->incoming->normal,&jit->LightView);
-	b3_f64 nv = b3Vector::b3SMul(&ray->incoming->normal,&m_V);
-	b3_f64 vh = b3Vector::b3SMul(&m_V,&ray->incoming->dir);
+	b3Color result;
+	b3_vector64 N,L,H,V,R;
+	
+	b3Vector::b3Init(&N,&ray->incoming->normal);
+	b3Vector::b3Init(&V,&ray->incoming->dir);
 
-	b3_f64 Gs = 2 * nh * nv / vh;
-	b3_f64 Gm = 2 * nh * nl / vh;
+	b3Vector::b3Init(&L,&jit->LightView);
+	b3Vector::b3Normalize(&L,-1.0);
+	
+	b3Vector::b3Init(&H,
+		0.5 * (L.x - V.x),
+		0.5 * (L.y - V.y),
+		0.5 * (L.z - V.z));
+	b3Vector::b3Normalize(&H);
+
+	b3Vector::b3Init(&R,&ray->refl_ray.dir);
+	b3_f64 nh = b3Vector::b3SMul(&N,&H);
+	b3_f64 nl = b3Vector::b3SMul(&N,&L);
+	b3_f64 nv = b3Vector::b3SMul(&N,&V);
+	b3_f64 vh = b3Vector::b3SMul(&V,&H);
+	b3_f64 rl = b3Vector::b3SMul(&R,&L);
+
+	b3_f64 Gm = 2 * nh * nv / vh;
+	b3_f64 Gs = 2 * nh * nl / vh;
 	b3_f64 alpha = acos(nh);
+	b3_f64 ca = cos(alpha);
 
-	b3_f64 D = 1/b3Math::b3Sqr(m_m) / b3Math::b3Sqr(b3Math::b3Sqr(cos(alpha))) * exp(-b3Math::b3Sqr(tan(alpha)) / b3Math::b3Sqr(m_m));
+	b3_f64 D = 1.0 / (m_m * m_m * ca * ca * ca * ca) * exp(-b3Math::b3Sqr(tan(alpha)) / (m_m * m_m));
 	if (alpha > (0.5 * M_PI))
 	{
 		D = 0;
 	}
 	b3_f64 G = Gs < Gm ? Gs : Gm;
 	G = b3Math::b3Limit(G,0,1);
-	b3_f64 Rs = (D * G * nl) / (M_PI * nv);
+	b3_f64 Rs = (D * G) / (M_PI * nv * nl);
 	b3_f64 phi = acos(nl);
-	b3Color R(
+	b3Color Rf(
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::R]) * Rs,
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::G]) * Rs,
 		b3Math::b3GetFresnel(phi,m_Mu[b3Color::B]) * Rs);
 
-	result += (m_Ra * m_Ia + (m_Rd * m_kd + R * m_ks) * m_Il * nl * m_dw);
+	result = (m_Ra + (m_DiffColor * m_kd + Rf * m_ks) * m_Il * nl * m_dw);
 
+//	result = m_DiffColor * nl + m_SpecColor * pow(rl,m_HighLight);
+
+	acc += result;
 	return true;
 }

@@ -64,6 +64,14 @@ public:
 		return vec;
 	}
 
+	static inline b3_vector	*b3Init(
+		      b3_vector   *vec,
+		const b3_vector   *src)
+	{
+		*vec = *src;
+		return vec;
+	}
+
 	static inline b3_vector *b3Init(
 		      b3_vector   *vec,
 		const b3_vector64 *src)
@@ -72,6 +80,25 @@ public:
 		vec->y   = (b3_f32)src->y;
 		vec->z   = (b3_f32)src->z;
 
+		return vec;
+	}
+
+	static inline b3_vector64 *b3Init(
+		      b3_vector64 *vec,
+		const b3_vector   *src)
+	{
+		vec->x = src->x;
+		vec->y = src->y;
+		vec->z = src->z;
+
+		return vec;
+	}
+
+	static inline b3_vector64 *b3Init(
+		      b3_vector64 *vec,
+		const b3_vector64 *src)
+	{
+		*vec = *src;
 		return vec;
 	}
 

@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/02/29 18:44:55  sm
+**	- Further shader development
+**
 **	Revision 1.18  2004/02/28 19:10:13  sm
 **	- Cook/Torrance is applicable by use through material
 **	  shader.
-**
+**	
 **	Revision 1.17  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -156,7 +159,13 @@ void b3SceneMork::b3Illuminate(
 	b3Color       &result,
 	b3Material    *material)
 {
-	if (!material->b3Illuminate(surface,Jit,result))
+	b3Color aux = b3Color(0,0,0);
+
+	if ((material != null) && material->b3Illuminate(surface,Jit,aux))
+	{
+		result += aux * 2.0;
+	}
+	else
 	{
 		b3_f64   ShapeAngle,Factor;
 		b3Color  filter;

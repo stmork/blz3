@@ -862,7 +862,6 @@ class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 	b3_f64      m_m;
 	b3_f64      m_Ia;
 	b3Color     m_Ra;
-	b3Color     m_Rd;
 	b3Color     m_Mu;
 	b3_vector64 m_V;
 
