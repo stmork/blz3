@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/09 14:09:36  sm
+**	- Wood sampling corrected.
+**	- b3FloatSliderCtrls range computation corrected.
+**
 **	Revision 1.1  2004/04/04 19:28:25  sm
 **	- New wood dialog
-**
+**	
 **
 */
 
@@ -123,7 +127,9 @@ b3_f64 CB3FloatSliderCtrl::b3GetPos()
 		// Get value
 		int pos = GetPos();
 		
-		m_Pos = b3Math::b3Limit((b3_f64)(pos - CB3_FSC_MIN) / (CB3_FSC_MAX - CB3_FSC_MIN),m_Min,m_Max);
+		m_Pos = b3Math::b3Limit(
+			(b3_f64)(pos - CB3_FSC_MIN) * (m_Max - m_Min) /
+			(CB3_FSC_MAX - CB3_FSC_MIN + m_Min),m_Min,m_Max);
 	}
 	else
 	{
@@ -135,8 +141,11 @@ b3_f64 CB3FloatSliderCtrl::b3GetPos()
 b3_f64 CB3FloatSliderCtrl::b3SetPos(b3_f64 pos)
 {
 	m_Pos = b3Math::b3Limit(pos,m_Min,m_Max);
+	int index =
+		(m_Pos - m_Min) * (CB3_FSC_MAX - CB3_FSC_MIN) /
+		(m_Max - m_Min) + CB3_FSC_MIN;
 
 	SetRange(CB3_FSC_MIN,CB3_FSC_MAX);
-	SetPos(m_Pos * (CB3_FSC_MAX - CB3_FSC_MIN) + CB3_FSC_MIN);
+	SetPos(index);
 	return m_Pos;
 }

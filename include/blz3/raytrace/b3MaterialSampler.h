@@ -23,11 +23,6 @@
 
 #define MATERIAL_TILES 3
 
-struct b3MaterialSampleInfo : public b3SampleInfo
-{
-	b3Material *m_Material;
-};
-
 class b3MaterialSampler : public b3Sampler
 {
 protected:
@@ -53,9 +48,9 @@ public:
 protected:
 	b3SampleInfo * b3SampleInit(b3_count CPUs)
 	{
-		b3MaterialSampleInfo *info = new b3MaterialSampleInfo[CPUs];
-		b3_loop               i;
-		b3_res                yStart,yEnd;
+		b3SampleInfo *info = new b3SampleInfo[CPUs];
+		b3_loop       i;
+		b3_res        yStart,yEnd;
 
 		B3_ASSERT(m_Material != null);
 		m_Material->b3Prepare();
@@ -63,26 +58,26 @@ protected:
 		for (i = 0;i < CPUs;i++)
 		{
 			yEnd = m_yMax * (i + 1) / CPUs;
-			info[i].m_Sampler  = this;
-			info[i].m_Material = m_Material;
-			info[i].m_xMax     = m_xMax;
-			info[i].m_yMax     = m_yMax;
-			info[i].m_yStart   = yStart;
-			info[i].m_yEnd     = yEnd;
-			info[i].m_Data     = &m_Data[yStart * m_xMax];
+			info[i].m_Sampler = this;
+			info[i].m_Ptr     = m_Material;
+			info[i].m_xMax    = m_xMax;
+			info[i].m_yMax    = m_yMax;
+			info[i].m_yStart  = yStart;
+			info[i].m_yEnd    = yEnd;
+			info[i].m_Data    = &m_Data[yStart * m_xMax];
 			yStart = yEnd;
 		}
 		return info;
 	}
 
-	void b3SampleTask(b3SampleInfo *ptr)
+	void b3SampleTask(b3SampleInfo *info)
 	{
-		b3MaterialSampleInfo * info = (b3MaterialSampleInfo *)ptr;
-		b3_coord      x,y;
-		b3_polar      polar;
-		b3Color       ambient,diffuse,specular;
-		b3_f64        fy;
-		b3_pkd_color *data = info->m_Data;
+		b3Material *material = (b3Material *)info->m_Ptr;
+		b3_coord              x,y;
+		b3_polar              polar;
+		b3Color               ambient,diffuse,specular;
+		b3_f64                fy;
+		b3_pkd_color         *data = info->m_Data;
 
 		for (y = info->m_yStart;y < info->m_yEnd;y++)
 		{
@@ -94,7 +89,7 @@ protected:
 				polar.box_polar.y = 1.0 - fy;
 				polar.box_polar.z = 1.0 - fy * 0.15 * ix;
 
-				info->m_Material->b3GetColors(&polar,diffuse,ambient,specular);
+				material->b3GetColors(&polar,diffuse,ambient,specular);
 				*data++ = diffuse;
 			}
 		}

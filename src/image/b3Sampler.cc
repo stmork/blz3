@@ -32,6 +32,10 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2004/04/09 14:09:36  sm
+**  - Wood sampling corrected.
+**  - b3FloatSliderCtrls range computation corrected.
+**
 **  Revision 1.3  2004/04/09 12:08:05  sm
 **  - New CStatic control introduced for material sampling.
 **
@@ -90,9 +94,9 @@ void b3Sampler::b3Sample()
 	
 b3_u32 b3Sampler::b3SampleThread(void *ptr)
 {
-	b3SampleInfo *info = (b3SampleInfo *)ptr;
-	
-	info->m_Sampler->b3SampleTask(info);
+	b3SampleInfo *info    = (b3SampleInfo *)ptr;
+	b3Sampler    *sampler = info->m_Sampler;
+
+	sampler->b3SampleTask(info);
 	return 0;
 }
-

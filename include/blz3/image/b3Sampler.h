@@ -29,6 +29,7 @@ struct b3SampleInfo
 	b3_res        m_xMax;
 	b3_res        m_yMax;
 	b3_pkd_color *m_Data;
+	void         *m_Ptr;
 };
 
 class b3Sampler
