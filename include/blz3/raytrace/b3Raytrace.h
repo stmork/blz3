@@ -555,6 +555,14 @@ class b3Shape : public b3Item
 {
 	b3_vector        Normal;
 	b3_polar         Polar;
+	b3_count         VertexCount;
+	b3_count         GridCount;
+	b3_count         PolyCount;
+#ifdef BLZ3_USE_OPENGL
+	GLfloat         *Vertices;
+	GLushort        *Grids;
+	GLushort        *Polygons;
+#endif
 
 protected:
 	b3Shape(b3_size class_size,b3_u32 class_type);
@@ -562,18 +570,32 @@ protected:
 public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
+
+	        void b3ComputeBound();
+	        void b3GetColor();
+	        void b3GetNormal();
+	        void b3AllocVertices();
+	        void b3FreeVertices();
+	        void b3Draw();
+	virtual void b3ComputeVertices();
+	virtual void b3ComputeIndices();
+	virtual void b3Intersect();
 };
 
 // SPHERE
-class b3Shape1 : public b3Shape        // Kugel
+class b3Sphere : public b3Shape        // Kugel
 {
 	b3_vector       	 Base;         // Mittelpunkt
 	b3_vector       	 Dir;          // Radius
-	b3_f32			 QuadRadius;       // Quadrat vom Radius
+	b3_f32               QuadRadius;       // Quadrat vom Radius
 
 public:
-	B3_ITEM_INIT(b3Shape1);
-	B3_ITEM_LOAD(b3Shape1);
+	B3_ITEM_INIT(b3Sphere);
+	B3_ITEM_LOAD(b3Sphere);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // AREA, DISK
@@ -581,11 +603,33 @@ class b3Shape2 : public b3Shape
 {
 	b3_vector           Base;           // basis of area, disk
 	b3_vector           Dir1,Dir2;      // direction vectors
-	b3_f32            NormalLength;     // normal length
+	b3_f32              NormalLength;     // normal length
 
 public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
+};
+
+class b3Area : public b3Shape2
+{
+public:
+	B3_ITEM_INIT(b3Area);
+	B3_ITEM_LOAD(b3Area);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3Disk : public b3Shape2
+{
+public:
+	B3_ITEM_INIT(b3Disk);
+	B3_ITEM_LOAD(b3Disk);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
@@ -603,8 +647,52 @@ public:
 	B3_ITEM_LOAD(b3Shape3);
 };
 
+class b3Cylinder : public b3Shape3
+{
+public:
+	B3_ITEM_INIT(b3Cylinder);
+	B3_ITEM_LOAD(b3Cylinder);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3Cone : public b3Shape3
+{
+public:
+	B3_ITEM_INIT(b3Cone);
+	B3_ITEM_LOAD(b3Cone);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3Ellipsoid : public b3Shape3
+{
+public:
+	B3_ITEM_INIT(b3Ellipsoid);
+	B3_ITEM_LOAD(b3Ellipsoid);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3Box : public b3Shape3
+{
+public:
+	B3_ITEM_INIT(b3Box);
+	B3_ITEM_LOAD(b3Box);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
 // DOUGHNUT, TORUS
-class b3Shape4 : public b3Shape
+class b3Torus : public b3Shape
 {
 	b3_vector         Normals[3];       // cross products, unused
 	b3_vector         Base;             // size
@@ -616,8 +704,12 @@ class b3Shape4 : public b3Shape
 	b3_f32            aQuad,bQuad;      // squared lengths of aRad, bRad
 
 public:
-	B3_ITEM_INIT(b3Shape4);
-	B3_ITEM_LOAD(b3Shape4);
+	B3_ITEM_INIT(b3Torus);
+	B3_ITEM_LOAD(b3Torus);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // TRIANGLES
@@ -635,6 +727,10 @@ class b3TriangleShape : public b3Shape
 public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // index calculation of triangle grid
@@ -668,6 +764,39 @@ class b3SplineShape : public b3Shape
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
+};
+
+class b3SplineArea : public b3SplineShape
+{
+public:
+	B3_ITEM_INIT(b3SplineArea);
+	B3_ITEM_LOAD(b3SplineArea);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3SplineCylinder : public b3SplineShape 
+{
+public:
+	B3_ITEM_INIT(b3SplineCylinder);
+	B3_ITEM_LOAD(b3SplineCylinder);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3SplineRing : public b3SplineShape 
+{
+public:
+	B3_ITEM_INIT(b3SplineRing);
+	B3_ITEM_LOAD(b3SplineRing);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 /*************************************************************************
@@ -711,7 +840,7 @@ typedef struct
 
 
 // CSG_SPHERE
-class b3CSGShape1 : public b3Shape
+class b3CSGSphere : public b3Shape
 {
 	b3_vector         Base;             // mid of sphere
 	b3_vector         Dir;              // direction
@@ -721,8 +850,12 @@ class b3CSGShape1 : public b3Shape
 	b3_s32            Operation;
 
 public:
-	B3_ITEM_INIT(b3CSGShape1);
-	B3_ITEM_LOAD(b3CSGShape1);
+	B3_ITEM_INIT(b3CSGSphere);
+	B3_ITEM_LOAD(b3CSGSphere);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -744,8 +877,56 @@ public:
 	B3_ITEM_LOAD(b3CSGShape3);
 };
 
+class b3CSGCylinder : public b3CSGShape3
+{
+
+public:
+	B3_ITEM_INIT(b3CSGCylinder);
+	B3_ITEM_LOAD(b3CSGCylinder);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3CSGCone : public b3CSGShape3
+{
+
+public:
+	B3_ITEM_INIT(b3CSGCone);
+	B3_ITEM_LOAD(b3CSGCone);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3CSGEllipsoid : public b3CSGShape3
+{
+
+public:
+	B3_ITEM_INIT(b3CSGEllipsoid);
+	B3_ITEM_LOAD(b3CSGEllipsoid);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3CSGBox : public b3CSGShape3
+{
+
+public:
+	B3_ITEM_INIT(b3CSGBox);
+	B3_ITEM_LOAD(b3CSGBox);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
 // CSG_TORUS
-class b3CSGShape4 : public b3Shape
+class b3CSGTorus : public b3Shape
 {
 	b3_vector          Normals[3];       // cross products, unused
 	b3_vector          Base;             // size
@@ -761,8 +942,12 @@ class b3CSGShape4 : public b3Shape
 	b3_line            BTLine;
 
 public:
-	B3_ITEM_INIT(b3CSGShape4);
-	B3_ITEM_LOAD(b3CSGShape4);
+	B3_ITEM_INIT(b3CSGTorus);
+	B3_ITEM_LOAD(b3CSGTorus);
+
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 /*************************************************************************

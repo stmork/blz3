@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/06 15:26:00  sm
+**      - Splitted shapes into their own files
+**      - Some preparations for shapde drawing.
+**
 **      Revision 1.3  2001/07/08 12:30:06  sm
 **      - New tool to remove nasty CR/LF from Windoze.
 **      - Removing some nasty CR/LF with that new tool.
@@ -53,35 +57,51 @@
 void b3InitShape::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering shapes...\n");
-	b3Item::b3Register(&b3Shape1::b3Init,        &b3Shape1::b3Init,        SPHERE);
-	b3Item::b3Register(&b3Shape2::b3Init,        &b3Shape2::b3Init,        AREA);
-	b3Item::b3Register(&b3Shape2::b3Init,        &b3Shape2::b3Init,        DISK);
-	b3Item::b3Register(&b3Shape3::b3Init,        &b3Shape3::b3Init,        CYLINDER);
-	b3Item::b3Register(&b3Shape3::b3Init,        &b3Shape3::b3Init,        CONE);
-	b3Item::b3Register(&b3Shape3::b3Init,        &b3Shape3::b3Init,        ELLIPSOID);
-	b3Item::b3Register(&b3Shape3::b3Init,        &b3Shape3::b3Init,        BOX);
-	b3Item::b3Register(&b3Shape4::b3Init,        &b3Shape4::b3Init,        TORUS);
+	b3Item::b3Register(&b3Sphere::b3Init,        &b3Sphere::b3Init,        SPHERE);
+	b3Item::b3Register(&b3Area::b3Init,          &b3Area::b3Init,          AREA);
+	b3Item::b3Register(&b3Disk::b3Init,          &b3Disk::b3Init,          DISK);
+	b3Item::b3Register(&b3Cylinder::b3Init,      &b3Cylinder::b3Init,      CYLINDER);
+	b3Item::b3Register(&b3Cone::b3Init,          &b3Cone::b3Init,          CONE);
+	b3Item::b3Register(&b3Ellipsoid::b3Init,     &b3Ellipsoid::b3Init,     ELLIPSOID);
+	b3Item::b3Register(&b3Box::b3Init,           &b3Box::b3Init,           BOX);
+	b3Item::b3Register(&b3Torus::b3Init,         &b3Torus::b3Init,         TORUS);
 	b3Item::b3Register(&b3TriangleShape::b3Init, &b3TriangleShape::b3Init, TRIANGLES);
 	b3Item::b3Register(&b3SplineCurve::b3Init,   &b3SplineCurve::b3Init,   SPLINE);
 	b3Item::b3Register(&b3SplineCurve::b3Init,   &b3SplineCurve::b3Init,   SPLINE_ROT);
-	b3Item::b3Register(&b3SplineShape::b3Init,   &b3SplineShape::b3Init,   SPLINES_AREA);
-	b3Item::b3Register(&b3SplineShape::b3Init,   &b3SplineShape::b3Init,   SPLINES_CYL);
-	b3Item::b3Register(&b3SplineShape::b3Init,   &b3SplineShape::b3Init,   SPLINES_RING);
+	b3Item::b3Register(&b3SplineArea::b3Init,    &b3SplineArea::b3Init,    SPLINES_AREA);
+	b3Item::b3Register(&b3SplineCylinder::b3Init,&b3SplineCylinder::b3Init,SPLINES_CYL);
+	b3Item::b3Register(&b3SplineRing::b3Init,    &b3SplineRing::b3Init,    SPLINES_RING);
 	b3Item::b3Register(&b3Shape::b3Init,         &b3Shape::b3Init,         SHUTUP);
-	b3Item::b3Register(&b3CSGShape1::b3Init,     &b3CSGShape1::b3Init,     CSG_SPHERE);
+	b3Item::b3Register(&b3CSGSphere::b3Init,     &b3CSGSphere::b3Init,     CSG_SPHERE);
 	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_CYLINDER);
 	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_CONE);
 	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_ELLIPSOID);
 	b3Item::b3Register(&b3CSGShape3::b3Init,     &b3CSGShape3::b3Init,     CSG_BOX);
-	b3Item::b3Register(&b3CSGShape4::b3Init,     &b3CSGShape4::b3Init,     CSG_TORUS);
+	b3Item::b3Register(&b3CSGTorus::b3Init,      &b3CSGTorus::b3Init,      CSG_TORUS);
 }
 
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
+	VertexCount = 0;
+	GridCount   = 0;
+	PolyCount   = 0;
+#ifdef BLZ3_USE_OPENGL
+	Vertices = null;
+	Grids    = null;
+	Polygons = null;
+#endif
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
+	VertexCount = 0;
+	GridCount   = 0;
+	PolyCount   = 0;
+#ifdef BLZ3_USE_OPENGL
+	Vertices = null;
+	Grids    = null;
+	Polygons = null;
+#endif
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -93,14 +113,56 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
-b3Shape1::b3Shape1(b3_u32 class_type) : b3Shape(sizeof(b3Shape1), class_type)
+void b3Shape::b3AllocVertices()
+{
+#ifdef BLZ3_USE_OPENGL
+	Vertices =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
+	Grids    = (GLushort *)b3Alloc(GridCount   * 2 * sizeof(GLushort));
+	Polygons = (GLushort *)b3Alloc(PolyCount   * 3 * sizeof(GLushort));
+#endif
+}
+
+void b3Shape::b3FreeVertices()
+{
+#ifdef BLZ3_USE_OPENGL
+	if (Vertices != null)
+	{
+		b3Free(Vertices);
+		Vertices = null;
+	}
+	if (Grids != null)
+	{
+		b3Free(Grids);
+		Grids = null;
+	}
+	if (Polygons != null)
+	{
+		b3Free(Polygons);
+		Polygons = null;
+	}
+#endif
+	VertexCount = 0;
+	GridCount   = 0;
+	PolyCount   = 0;
+}
+
+void b3Shape::b3ComputeVertices()
 {
 }
 
-b3Shape1::b3Shape1(b3_u32 *src) : b3Shape(src)
+void b3Shape::b3ComputeIndices()
 {
-	b3InitVector(&Base);
-	b3InitVector(&Dir);
+}
+
+void b3Shape::b3Intersect()
+{
+}
+
+void b3Shape::b3Draw()
+{
+#ifdef BLZ3_USE_OPENGL
+	
+#endif
 }
 
 b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
@@ -127,47 +189,6 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&Dir1);
 	b3InitVector(&Dir2);
 	b3InitVector(&Dir3);
-}
-
-b3Shape4::b3Shape4(b3_u32 class_type) : b3Shape(sizeof(b3Shape4), class_type)
-{
-}
-
-b3Shape4::b3Shape4(b3_u32 *src) : b3Shape(src)
-{
-	b3InitVector();  // This is Normals[0]
-	b3InitVector();  // This is Normals[1]
-	b3InitVector();  // This is Normals[2]
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
-	b3InitVector(&Dir3);
-	b3InitFloat(); // This is lSize
-	b3InitFloat(); // This is Denom
-	b3InitFloat(); // This is DirLen[0]
-	b3InitFloat(); // This is DirLen[1]
-	b3InitFloat(); // This is DirLen[2]
-	aRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir1 and Dir2
-	bRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir3
-}
-
-b3TriangleShape::b3TriangleShape(b3_u32 class_type) : b3Shape(sizeof(b3TriangleShape), class_type)
-{
-}
-
-b3TriangleShape::b3TriangleShape(b3_u32 *src) : b3Shape(src)
-{
-	b3InitNOP();
-	b3InitVector(&Base);
-	b3InitVector(&Size);
-	GridSize  = b3InitInt();
-	Triangles = b3InitInt();
-	Vertices  = b3InitInt();
-	xSize     = b3InitInt();
-	ySize     = b3InitInt();
-
-	// FIX ME: We have to convert the indices and vertices to
-	//         and have to initialize the grid!
 }
 
 b3SplineCurve::b3SplineCurve(b3_u32 class_type) : b3Shape(sizeof(b3SplineCurve), class_type)
@@ -201,21 +222,6 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
 }
 
-b3CSGShape1::b3CSGShape1(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape1), class_type)
-{
-}
-
-b3CSGShape1::b3CSGShape1(b3_u32 *src) : b3Shape(src)
-{
-	b3InitVector(&Base);
-	b3InitVector(&Dir);
-
-	b3InitFloat(); // This is QuadRadius
-	b3InitInt();   // This is Index
-
-	Operation = b3InitInt();
-}
-
 b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape3), class_type)
 {
 }
@@ -236,36 +242,6 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3Shape(src)
 	b3InitFloat(); // This is DirLen[1]
 	b3InitFloat(); // This is DirLen[2]
 
-	b3InitInt();   // This Index
-
-	Operation = b3InitInt();
-}
-
-b3CSGShape4::b3CSGShape4(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape4), class_type)
-{
-}
-
-b3CSGShape4::b3CSGShape4(b3_u32 *src) : b3Shape(src)
-{
-	b3InitVector();  // This is Normals[0]
-	b3InitVector();  // This is Normals[1]
-	b3InitVector();  // This is Normals[2]
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
-	b3InitVector(&Dir3);
-
-	b3InitFloat(); // This is lSize
-	b3InitFloat(); // This is Denom
-	b3InitFloat(); // This is DirLen[0]
-	b3InitFloat(); // This is DirLen[1]
-	b3InitFloat(); // This is DirLen[2]
-
-	aRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir1 and Dir2
-	bRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir3
-
-	b3InitFloat(); // This is aQuad
-	b3InitFloat(); // This is bQuad
 	b3InitInt();   // This Index
 
 	Operation = b3InitInt();

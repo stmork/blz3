@@ -33,6 +33,10 @@
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
 
+#ifdef BLZ3_USE_OPENGL
+#include <GL/glut.h>
+#endif
+
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
  
