@@ -32,9 +32,12 @@
   
 /*
 **	$Log$
+**	Revision 1.3  2004/10/12 11:54:53  smork
+**	- Some minor GCC compiler errors.
+**
 **	Revision 1.2  2004/10/07 10:33:08  sm
 **	- Added some GIF tools and made them usable with Blizzard III.
-**
+**	
 **
 */
   
@@ -66,7 +69,7 @@ static void MovieGIF(char *name)
 	}
 	data = buffer;
 
-	if (strncmp(buffer,"GIF8",4) != 0)
+	if (strncmp((const char *)buffer,"GIF8",4) != 0)
 	{
 		b3PrintF (B3LOG_NORMAL, "not a GIF image!\n");
 		return;
