@@ -44,6 +44,9 @@
 
 /*
 **      $Log$
+**      Revision 1.85  2004/08/14 15:06:22  sm
+**      - Revert max array determiniation.
+**
 **      Revision 1.84  2004/08/11 08:41:34  sm
 **      - Using Display list for setting shaded materials. Geometry
 **        and lined materials are set conventionally.
@@ -537,9 +540,6 @@ void b3RenderContext::b3Init()
 	{
 		b3PrintF(B3LOG_NORMAL,"Support for OpenGL shading language V1.00.\n");
 	}
-
-	glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &glMaxVertices);
-	glGetIntegerv(GL_MAX_ELEMENTS_INDICES,  &glMaxIndices);
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
