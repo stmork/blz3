@@ -1586,7 +1586,8 @@ public:
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
 
- 	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
+ 	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
+	static void            b3Recount(b3Base<b3Item> *base,b3_count level = 1);
 protected:
 	       void            b3GetGridColor(b3_color *color);
 };

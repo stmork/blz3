@@ -131,6 +131,7 @@ public:
 	void          b3UpdateFulcrum();
 	b3BBox       *b3GetSelectedBBox();
 	void          b3SelectBBox(b3BBox *BBox);
+	void          b3UpdateHierarchy();
 	void          b3SetStatusMessage(const char *message);
 	void          b3SetStatusMessage(const int message_id);
 	void          b3SetPosition(b3_vector *position);

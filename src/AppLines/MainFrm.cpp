@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/01/03 19:07:27  sm
+**	- Cleaned up cut/paste
+**
 **	Revision 1.20  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
-**
+**	
 **	Revision 1.19  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -605,6 +608,11 @@ b3BBox *CMainFrame::b3GetSelectedBBox()
 void CMainFrame::b3SelectBBox(b3BBox *BBox)
 {
 	m_dlgHierarchy.b3SelectBBox(BBox);
+}
+
+void CMainFrame::b3UpdateHierarchy()
+{
+	m_dlgHierarchy.b3SetData();
 }
 
 /*************************************************************************

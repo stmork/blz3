@@ -52,9 +52,12 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/01/03 19:07:27  sm
+**	- Cleaned up cut/paste
+**
 **	Revision 1.37  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
-**
+**	
 **	Revision 1.36  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
 **	
@@ -1099,6 +1102,8 @@ void CAppLinesDoc::OnEditCut()
 		{
 			delete bbox;
 			SetModifiedFlag();
+			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			main->b3UpdateHierarchy();
 		}
 	}
 }
@@ -1124,13 +1129,14 @@ void CAppLinesDoc::OnEditCopy()
 void CAppLinesDoc::OnEditPaste() 
 {
 	// TODO: Add your command handler code here
-	CAppLinesApp   *app     = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main    = CB3GetMainFrame();
+	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
 	b3BBox         *selected;
 	b3BBox         *bbox;
 	b3Base<b3Item> *base;
 	b3_size         size;
+	b3_count        level;
 	void           *ptr;
 	HANDLE          handle;
 
@@ -1153,17 +1159,17 @@ void CAppLinesDoc::OnEditPaste()
 
 				if(world.b3Read(&file) == B3_WORLD_OK)
 				{
-					bbox = (b3BBox *)world.b3RemoveFirst();
-					base->b3Insert(selected,bbox);
-
 					main->b3SetStatusMessage(IDS_DOC_REORG);
-					m_Scene->b3Reorg();
+					bbox  = (b3BBox *)world.b3GetFirst();
+					level = bbox->b3GetClassType() & 0xffff;
+					b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
+					b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 
 					main->b3SetStatusMessage(IDS_DOC_PREPARE);
 					bbox->b3Prepare();
 
 					main->b3SetStatusMessage(IDS_DOC_VERTICES);
-					bbox->b3AllocVertices(&m_Context);
+					m_Scene->b3AllocVertices(&m_Context);
 					b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
 					b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
 					b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
@@ -1173,6 +1179,7 @@ void CAppLinesDoc::OnEditPaste()
 
 					SetModifiedFlag();
 					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+					main->b3UpdateHierarchy();
 					main->b3SelectBBox(bbox);
 				}
 			}
@@ -1200,5 +1207,6 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 
 	pCmdUI->Enable(
 		(main->b3GetSelectedBBox() != null) &&
+		(!b3IsRaytracing()) &&
 		(::IsClipboardFormatAvailable(app->m_ClipboardFormatForBlizzardObject)));
 }

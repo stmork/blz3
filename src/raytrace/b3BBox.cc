@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/01/03 19:07:27  sm
+**	- Cleaned up cut/paste
+**
 **	Revision 1.30  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
-**
+**	
 **	Revision 1.29  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
 **	
@@ -304,7 +307,8 @@ void b3BBox::b3Reorg(
 	b3Base<b3Item> *depot,
 	b3Base<b3Item> *base,
 	b3_count        level,
-	b3_count        rec)
+	b3_count        rec,
+	b3Item         *insert_after)
 {
 	b3_count        new_level;
 	b3BBox         *bbox;
@@ -320,7 +324,7 @@ void b3BBox::b3Reorg(
 		if (new_level == level)
 		{
 			depot->b3Remove(bbox);
-			base->b3Append(bbox);
+			insert_after != null ? base->b3Insert(insert_after,bbox) : base->b3Append(bbox);
 			sub_base = bbox->b3GetBBoxHead();
 		}
 		else
@@ -329,6 +333,36 @@ void b3BBox::b3Reorg(
 			b3Reorg(depot,sub_base,new_level,rec + 1);
 		}
 	}
+}
+
+void b3BBox::b3Recount(b3Base<b3Item> *base,b3_count level)
+{
+	b3Item *item;
+	b3BBox *bbox;
+
+	B3_FOR_BASE(base,item)
+	{
+		bbox = (b3BBox *)item;
+		b3Recount(bbox->b3GetBBoxHead(),level + 1);
+		bbox->ClassType &= 0xffff0000;
+		bbox->ClassType |= level;
+	}
+}
+
+void b3Scene::b3Reorg()
+{
+	b3Base<b3Item>  depot;
+	b3Link<b3Item> *first;
+	b3_count        level;
+
+	depot = *b3GetBBoxHead();
+	b3GetBBoxHead()->b3InitBase(CLASS_BBOX);
+	if ((first = depot.First) != null)
+	{
+		level = first->b3GetClassType() & 0xffff;
+		b3BBox::b3Reorg(&depot,b3GetBBoxHead(),level,1);
+	}
+	b3BBox::b3Recount(b3GetBBoxHead());
 }
 
 void b3BBox::b3AllocVertices(b3RenderContext *context)
@@ -602,21 +636,6 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation)
 	}
 
 	return transformed;
-}
-
-void b3Scene::b3Reorg()
-{
-	b3Base<b3Item>  depot;
-	b3Link<b3Item> *first;
-	b3_count        level;
-
-	depot = *b3GetBBoxHead();
-	b3GetBBoxHead()->b3InitBase(CLASS_BBOX);
-	if ((first = depot.First) != null)
-	{
-		level = first->b3GetClassType() & 0xffff;
-		b3BBox::b3Reorg(&depot,b3GetBBoxHead(),level,1);
-	}
 }
 
 char *b3Scene::b3GetName()

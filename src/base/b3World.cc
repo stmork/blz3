@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2002/01/03 19:07:27  sm
+**      - Cleaned up cut/paste
+**
 **      Revision 1.18  2002/01/03 15:50:14  sm
 **      - Added cut/copy/paste
 **
@@ -125,45 +128,20 @@
 b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem),class_type)
 {
 	b3AllocHeads(1);
-	b3InitBase();
+	m_Heads[0].b3InitBase();
 }
 
 b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
 {
 }
 
-void b3FirstItem::b3InitBase(b3_u32 class_value)
-{
-	m_Heads[0].b3InitBase(class_value);
-}
-
 void b3FirstItem::b3Write()
 {
 }
 
-void b3FirstItem::b3First(b3Item *item)
+b3Base<b3Item> *b3FirstItem::b3GetHead()
 {
-	m_Heads[0].b3First(item);
-}
-
-void b3FirstItem::b3Append(b3Item *item)
-{
-	m_Heads[0].b3Append(item);
-}
-
-void b3FirstItem::b3RemoveAll()
-{
-	m_Heads[0].b3RemoveAll();
-}
-
-b3Item *b3FirstItem::b3RemoveFirst()
-{
-	return m_Heads[0].b3RemoveFirst();
-}
-
-b3Item *b3FirstItem::b3GetFirst()
-{
-	return m_Heads[0].First;
+	return &m_Heads[0];
 }
 
 /*************************************************************************
@@ -194,7 +172,7 @@ b3World::~b3World()
 	{
 		if (!m_AutoDelete)
 		{
-			m_Start->b3RemoveAll();
+			m_Start->b3GetHead()->b3RemoveAll();
 		}
 		delete m_Start;
 	}
@@ -654,12 +632,12 @@ void b3World::b3Dump()
 
 b3Item *b3World::b3RemoveFirst()
 {
-	return m_Start != null ? m_Start->b3RemoveFirst() : null;
+	return m_Start != null ? m_Start->b3GetHead()->b3RemoveFirst() : null;
 }
 
 b3Item *b3World::b3GetFirst()
 {
-	return m_Start != null ? m_Start->b3GetFirst() : null;
+	return m_Start != null ? m_Start->b3GetHead()->First : null;
 }
 
 void b3World::b3SetFirst(b3Item *item)
@@ -667,7 +645,23 @@ void b3World::b3SetFirst(b3Item *item)
 	if (m_Start == null)
 	{
 		m_Start = new b3FirstItem(B3_CLASS_MAX);
-		m_Start->b3InitBase(item->b3GetClass());
+		m_Start->b3GetHead()->b3InitBase(item->b3GetClass());
 	}
-	m_Start->b3First(item);
+	m_Start->b3GetHead()->b3First(item);
 }
+
+b3Base<b3Item> *b3World::b3GetHead(b3_u32 class_value)
+{
+	b3Base<b3Item> *base = null;
+
+	if (m_Start != null)
+	{
+		base = m_Start->b3GetHead();
+		if ((class_value != 0) && (base->b3GetClass() != class_value))
+		{
+			base = null;
+		}
+	}
+	return base;
+}
+

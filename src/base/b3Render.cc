@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/01/03 19:07:27  sm
+**      - Cleaned up cut/paste
+**
 **      Revision 1.21  2002/01/01 13:50:21  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -590,10 +593,10 @@ void b3RenderObject::b3Update()
 #ifdef BLZ3_USE_OPENGL
 	if (!glComputed)
 	{
-			b3ComputeIndices();
-			b3ComputeVertices();
-			b3ComputeNormals();
-			glComputed = true;
+		b3ComputeIndices();
+		b3ComputeVertices();
+		b3ComputeNormals();
+		glComputed = true;
 	}
 #endif
 }

@@ -208,20 +208,7 @@ private:
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new item_class(class_type); }
 #define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new item_class(src); }
 
-class b3FirstItem : public b3Item
-{
-public:
-	B3_ITEM_INIT(b3FirstItem);
-	B3_ITEM_LOAD(b3FirstItem);
-
-	void    b3Write();
-	b3Item *b3GetFirst();
-	b3Item *b3RemoveFirst();
-	void    b3InitBase(b3_u32 class_value = 0);
-	void    b3First(b3Item *item);
-	void    b3Append(b3Item *item);
-	void    b3RemoveAll();
-};
+class b3FirstItem;
 
 class b3World : public b3Mem, public b3SearchPath
 {
@@ -251,10 +238,26 @@ public:
 	b3Item         *b3RemoveFirst();
 	b3Item         *b3GetFirst();
 	void            b3SetFirst(b3Item *item);
+	b3Base<b3Item> *b3GetHead(b3_u32 class_value = 0);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
 	b3_world_error  b3Parse();
+};
+
+class b3FirstItem : public b3Item
+{
+public:
+	B3_ITEM_INIT(b3FirstItem);
+	B3_ITEM_LOAD(b3FirstItem);
+
+	void    b3Write();
+
+protected:
+	b3Base<b3Item> *b3GetHead();
+	void            b3InitBase(b3_u32 class_value = 0);
+
+	friend class b3World;
 };
 
 #endif
