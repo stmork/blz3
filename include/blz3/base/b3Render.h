@@ -259,8 +259,15 @@ private:
 	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
 	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
 	        void            b3DeleteDisplayList();
-	        void            b3DrawIntoDisplayList(b3RenderContext *context,b3_render_mode render_mode);
-	        b3_bool         b3IsUpToDate();
+
+	        void            b3CheckGeometry(b3RenderContext *context,b3_render_mode render_mode);
+	        void            b3DrawGeometry(b3RenderContext *context,b3_render_mode render_mode);
+
+			// Selecting material and drawing geometry in different modes
+	        void            b3SelectMaterialForLineDrawing(b3RenderContext *context);
+	        void            b3SelectMaterialForFilledDrawing(b3RenderContext *context);
+	        void            b3DrawLinedGeometry(b3RenderContext *context);
+	        void            b3DrawFilledGeometry(b3RenderContext *context);
 };
 
 #endif

@@ -27,7 +27,8 @@
 #include "blz3/base/b3Color.h"
 
 #define not_VERBOSE
-#define no_B3_DISPLAY_LIST
+#define B3_DISPLAY_LIST
+#define B3_DISPLAY_LIST_COUNT 1
 
 #ifndef _DEBUG
 #define B3_MAX_TX_SIZE 128
@@ -43,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.84  2004/08/11 08:41:34  sm
+**      - Using Display list for setting shaded materials. Geometry
+**        and lined materials are set conventionally.
+**
 **      Revision 1.83  2004/08/10 09:25:20  sm
 **      - Merging
 **
@@ -864,7 +869,7 @@ void b3RenderObject::b3DeleteDisplayList()
 #ifdef B3_DISPLAY_LIST
 	if (glDisplayList != 0)
 	{
-		glDeleteLists(glDisplayList,2);
+		glDeleteLists(glDisplayList,B3_DISPLAY_LIST_COUNT);
 		glDisplayList = 0;
 	}
 #endif
@@ -897,7 +902,6 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 void b3RenderObject::b3Recompute()
 {
 	glComputed = false;
-	b3DeleteDisplayList();
 }
 
 void b3RenderObject::b3Update()
@@ -1065,7 +1069,6 @@ void b3RenderObject::b3TransformVertices(
 
 	if (glVertex != null)
 	{
-		b3DeleteDisplayList();
 		if (is_affine)
 		{
 			for (i = 0;i < glVertexCount;i++)
@@ -1101,7 +1104,6 @@ void b3RenderObject::b3RecomputeMaterial()
 {
 #ifdef BLZ3_USE_OPENGL
 	glMaterialComputed = false;
-	b3DeleteDisplayList();
 #endif
 }
 
@@ -1169,6 +1171,8 @@ void b3RenderObject::b3UpdateMaterial()
 		b3Color  black,white;
 		b3Color  ambient,diffuse,specular;
 		b3_res   xRep,yRep;
+
+		b3DeleteDisplayList();
 
 		glShininess = b3GetColors(ambient,diffuse,specular);
 		glTextureTransX = 0;
@@ -1420,66 +1424,62 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 
 #ifdef BLZ3_USE_OPENGL
 #ifdef B3_DISPLAY_LIST
-	if (!b3IsUpToDate())
+	b3Update();
+	if ((!glMaterialComputed) || (glDisplayList == 0))
 	{
-		b3Update();
 		b3UpdateMaterial();
-		glDisplayList = glGenLists(2);
+		glDisplayList = glGenLists(B3_DISPLAY_LIST_COUNT);
 
-		glNewList(glDisplayList,render_mode == B3_RENDER_LINE ? GL_COMPILE_AND_EXECUTE : GL_COMPILE);
-		b3DrawIntoDisplayList(context,B3_RENDER_LINE);
-		glEndList();
-
-		glNewList(glDisplayList + 1,render_mode == B3_RENDER_FILLED ? GL_COMPILE_AND_EXECUTE : GL_COMPILE);
-		b3DrawIntoDisplayList(context,B3_RENDER_FILLED);
+		glNewList(glDisplayList,GL_COMPILE);
+		b3SelectMaterialForFilledDrawing(context);
 		glEndList();
 	}
-	else
+
+#ifdef _DEBUG
+	b3CheckGeometry(context,render_mode);
+#endif
+
+	switch (render_mode)
 	{
-		switch (render_mode)
+	case B3_RENDER_LINE:
+		if (glGridCount > 0)
 		{
-		case B3_RENDER_LINE:
-			glCallList(glDisplayList);
-			break;
-
-		case B3_RENDER_FILLED:
-			glCallList(glDisplayList + 1);
-			break;
-
-		default:
-			// Do nothing!
-			break;
+			b3SelectMaterialForLineDrawing(context);
+			b3DrawLinedGeometry(context);
 		}
+		break;
+
+	case B3_RENDER_FILLED:
+		if (glGridCount > 0)
+		{
+			glCallList(glDisplayList);
+			b3DrawFilledGeometry(context);
+		}
+		break;
+
+	default:
+		// Do nothing!
+		break;
 	}
 #else
-	if (!b3IsUpToDate())
+	if ((!glComputed) || (!glMaterialComputed))
 	{
 		b3Update();
 		b3UpdateMaterial();
 	}
-	
-	b3DrawIntoDisplayList(context,render_mode);
+
+#ifdef _DEBUG
+	b3CheckGeometry(context,render_mode);
+#endif
+	b3DrawGeometry(context,render_mode);
 #endif
 #endif
 }
 
-b3_bool b3RenderObject::b3IsUpToDate()
-{
-#ifdef B3_DISPLAY_LIST
-	return glComputed && glMaterialComputed && (glDisplayList != 0);
-#else
-	return glComputed && glMaterialComputed;
-#endif
-}
-
-void b3RenderObject::b3DrawIntoDisplayList(
+void b3RenderObject::b3CheckGeometry(
 	b3RenderContext *context,
 	b3_render_mode   render_mode)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3Color        diffuse;
-#endif
-
 #ifdef _DEBUG
 	b3_index       i;
 
@@ -1538,103 +1538,126 @@ void b3RenderObject::b3DrawIntoDisplayList(
 		}
 		break;
 
-	default:
+	case B3_RENDER_NOTHING:
 		// Nothing to do...
+		break;
+
+	default:
+		b3PrintF(B3LOG_NORMAL,"Illegal render mode selected.\n");
 		break;
 	}
 #endif
+}
 
+void b3RenderObject::b3DrawGeometry(
+	b3RenderContext *context,
+	b3_render_mode   render_mode)
+{    
 #ifdef BLZ3_USE_OPENGL
 	switch (render_mode)
 	{
-	case B3_RENDER_NOTHING:
-		// Do nothing!
-		break;
-
 	case B3_RENDER_LINE:
 		if (glGridCount > 0)
 		{
-			glDisable(GL_LIGHTING);
-			glDisable(GL_TEXTURE_2D);
-
-			if (context->b3GetSelected() == this)
-			{
-				b3GetSelectedColor(diffuse);
-			}
-			else
-			{
-				b3GetGridColor(diffuse);
-			}
-			glColor3f(diffuse[b3Color::R],diffuse[b3Color::G],diffuse[b3Color::B]);
-
-			// Put geometry :-)
-			B3_ASSERT(glVertex != null);
-			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
+			b3SelectMaterialForLineDrawing(context);
+			b3DrawLinedGeometry(context);
 		}
 		break;
 
 	case B3_RENDER_FILLED:
 		if (glPolyCount > 0)
 		{
-			glEnable(GL_LIGHTING);
-			if (glTextureSize > 0)
-			{
-				if (context->glDrawCachedTextures)
-				{
-					B3_ASSERT(glIsTexture(glTextureId));
-					glBindTexture(GL_TEXTURE_2D,glTextureId);
-				}
-				else
-				{
-					glBindTexture(GL_TEXTURE_2D,0);
-					b3DefineTexture();
-				}
-				glEnable(     GL_TEXTURE_2D);
-
-				// Set repitition of chess fields by scaling texture
-				// coordinates.
-				glMatrixMode(GL_TEXTURE);
-				glLoadIdentity();
-				glTranslatef(glTextureTransX,glTextureTransY,0.0);
-				glScalef(    glTextureScaleX,glTextureScaleY,1.0);
-			}
-			else
-			{
-				glDisable(GL_TEXTURE_2D);
-			}
-
-			// Set material
-			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,  glAmbient);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,  glDiffuse);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, glSpecular);
-			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,glShininess);
-
-			// Put geometry :-)
-			B3_ASSERT(glVertex != null);
-			if ((glPolyCount * 3) > context->glMaxIndices)
-			{
-				b3PrintF(B3LOG_NORMAL,"Warning!!!\n");
-			}
-#ifndef _DEBUG
-			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
-#else
-			GLenum error = glGetError();
-			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-			error = glGetError();
-			if (error == GL_NO_ERROR)
-			{
-				glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
-				error = glGetError();
-			}
-#endif
+			b3SelectMaterialForFilledDrawing(context);
+			b3DrawFilledGeometry(context);
 		}
 		break;
 
 	default:
-		b3PrintF(B3LOG_NORMAL,"Illegal render mode selected.\n");
+		// Do nothing!
 		break;
+	}
+#endif
+}
+
+void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
+{
+#ifdef BLZ3_USE_OPENGL
+	b3Color        diffuse;
+#endif
+
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+	if (context->b3GetSelected() == this)
+	{
+		b3GetSelectedColor(diffuse);
+	}
+	else
+	{
+		b3GetGridColor(diffuse);
+	}
+	glColor3f(diffuse[b3Color::R],diffuse[b3Color::G],diffuse[b3Color::B]);
+}
+
+void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
+{
+	glEnable(GL_LIGHTING);
+	if (glTextureSize > 0)
+	{
+		if (context->glDrawCachedTextures)
+		{
+			B3_ASSERT(glIsTexture(glTextureId));
+			glBindTexture(GL_TEXTURE_2D,glTextureId);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D,0);
+			b3DefineTexture();
+		}
+		glEnable(     GL_TEXTURE_2D);
+
+		// Set repitition of chess fields by scaling texture
+		// coordinates.
+		glMatrixMode(GL_TEXTURE);
+		glLoadIdentity();
+		glTranslatef(glTextureTransX,glTextureTransY,0.0);
+		glScalef(    glTextureScaleX,glTextureScaleY,1.0);
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	// Set material
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,  glAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,  glDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, glSpecular);
+	glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,glShininess);
+}
+
+void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
+{
+	B3_ASSERT(glVertex != null);
+
+	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
+}
+
+void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
+{
+	B3_ASSERT(glVertex != null);
+
+#ifndef _DEBUG
+	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+#else
+	GLenum error = glGetError();
+	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	error = glGetError();
+	if (error == GL_NO_ERROR)
+	{
+		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+		error = glGetError();
 	}
 #endif
 }
