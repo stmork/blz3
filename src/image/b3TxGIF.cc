@@ -22,7 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include <blz3/image/b3Tx.h>
+#include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Endian.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/24 14:59:08  sm
+**	- Some GIG bug fixes
+**	- An image viewing bug fixed in bimg3
+**
 **	Revision 1.3  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.2  2001/10/13 09:56:44  sm
 **	- Minor corrections
 **	
@@ -116,45 +121,29 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 {
 	b3_index       i;
 	b3_count       Colors;
-	b3_size        DataSize, currsize;
+	b3_size        currsize;
 	b3_pkd_color   t;
+	b3_u08        *pPtr = buffer;
 	b3_u08        *out;
 	b3_u08        *sp,*suffix,*charstack;
 	b3_u08         fc;
 	b3_u32        *prefix;
 	b3_coord       xk,yk;
+	b3_res         xNewSize,yNewSize,NewDepth;
 	b3_u32         status,code, oldcode,clearcode;
 	b3_u32         endcode,newcodes,maxcode,codecnt,c,size;
 	b3_bool        interlaced;
 	b3GifDecoder   decoder;
 
-	FileType          = FT_GIF;
-	depth             = (buffer[10] & 0x07) + 1;
-	Colors            = (1 << depth);
+	NewDepth = (pPtr[10] & 0x07) + 1;
+	Colors   = (1 << NewDepth);
+	buffer  += (13 + (Colors * 3));
 
-	// Allocate memory for palette
-	palette = (b3_pkd_color *)b3Alloc (sizeof(b3_pkd_color) * 256);
-	if (palette==null)
-	{
-		return B3_TX_UNDEFINED;
-	}
-
-	// Pointer to global color map
-	buffer += 13;
-	for (i = 0;i < Colors; i++)
-	{
-		
-		t  = ((b3_pkd_color) *buffer++ << 16);
-		t += ((b3_pkd_color) *buffer++ <<  8);
-		t +=  (b3_pkd_color) *buffer++;
-		palette[i] = t;
-	}
-
-
-		/* auf Image seperator warten */
+	// Wait for image separator
 	while (buffer[0] != ',') switch (*buffer++)
 	{
-		case '!':                /* GIF Extension Block überlesen */
+		case '!':
+			// Overread extension block
 			buffer++;
 			while ((t = *buffer++) != 0)
 			{
@@ -162,22 +151,43 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 			}
 			break; /* untested */
 
-		default :				 /* Fehler oder Ende des GIF dataset */
+		default :
+			 // Error or end of GIF dataset */
 			return B3_TX_UNDEFINED;
 	}
 
-	xk = xSize = (buffer[5] + (buffer[6]<<8)) - (buffer[1] + (buffer[2]<<8));
-	     ySize = (buffer[7] + (buffer[8]<<8)) - (buffer[3] + (buffer[4]<<8));
+	// Compute image resolution
+	xk = xNewSize  = b3Endian::b3GetIntel16(&buffer[5]) - b3Endian::b3GetIntel16(&buffer[1]);
+	     yNewSize  = b3Endian::b3GetIntel16(&buffer[7]) - b3Endian::b3GetIntel16(&buffer[3]);
+	if (!b3AllocTx(xNewSize,yNewSize,8))
+	{
+		return type;
+	}
+	out = (b3_u08 *)data;
+
+	// Pointer to global color map
+	pPtr     += 13;
+	for (i = 0;i < Colors; i++)
+	{
+		
+		t  = ((b3_pkd_color) *pPtr++ << 16);
+		t += ((b3_pkd_color) *pPtr++ <<  8);
+		t +=  (b3_pkd_color) *pPtr++;
+		palette[i] = t;
+	}
+
+
+
 	interlaced = ((buffer[9] & 0x40) == 0x40);
 	status = 0;
 
 	/* auf Local-Color-Map testen*/
 	if (buffer[9] & 0x80)
 	{
-		depth = (buffer[9] & 0x07) + 1;
-		Colors = (1 << depth);
+		depth   = (buffer[9] & 0x07) + 1;
+		Colors  = (1 << depth);
 		buffer += 10;
-		for (i=0; i<Colors; i++)
+		for (i = 0;i < Colors; i++)
 		{
 			t  = ((unsigned long) *buffer++ << 16);
 			t += ((unsigned long) *buffer++ <<  8);
@@ -185,30 +195,24 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 			palette[i] = t;
 		}
 	}
-	else buffer += 10;
-
-    /* Speicher fuer entpacktes Bild */
-	DataSize = xSize * ySize;
-	out      = (b3_u08 *)b3Alloc(DataSize);
-	data = (b3_u08 *)out;
-	if (out==null)
+	else
 	{
-		return B3_TX_UNDEFINED;
+		buffer += 10;
 	}
 
 	/* Speicher für temporären Stack und Tabellen anfordern */
-	charstack = (unsigned char *)b3Alloc (
-		(sizeof(unsigned char) +
-		 sizeof(unsigned char) +
-		 sizeof(unsigned long)) * 4096);
+	charstack = (b3_u08 *)b3Alloc ((
+		sizeof(b3_u08) +
+		sizeof(b3_u08) +
+		sizeof(b3_u32)) * 4096);
 	if (charstack==null)
 	{
 		return B3_TX_UNDEFINED;
 	}
-	suffix = (charstack + 4096);					/* Pixelbyte */
-	prefix = (b3_u32 *)(suffix + 4096);		/* Vorgaenger */
+	suffix =           &charstack[4096]; // pixel byte
+	prefix = (b3_u32 *)&charstack[8192]; // predecessor
 
-	size = *buffer++;								/* Codesize holen */
+	size = *buffer++; // get code size
 	if ((size<2) || (9<size))
 	{
 		b3Free (charstack);
@@ -319,5 +323,6 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 	}
 
 	b3Free(charstack);
+	FileType = FT_GIF;
 	return B3_TX_VGA;
 }

@@ -41,9 +41,13 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/24 14:59:08  sm
+**	- Some GIG bug fixes
+**	- An image viewing bug fixed in bimg3
+**
 **	Revision 1.2  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
-**
+**	
 **	Revision 1.1  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -146,6 +150,16 @@ b3Display *CAppRaytraceDoc::b3GetDisplay(b3_res xSize,b3_res ySize,const char *t
 	pos   = GetFirstViewPosition();
 	pView = (CAppRaytraceView *)GetNextView(pos);
 	return new b3Display(pView,xSize,ySize,title);
+}
+
+b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
+{
+	CAppRaytraceView *pView;
+	POSITION          pos;
+
+	pos   = GetFirstViewPosition();
+	pView = (CAppRaytraceView *)GetNextView(pos);
+	return new b3Display(pView,title);
 }
 
 void CAppRaytraceDoc::OnRaytrace() 

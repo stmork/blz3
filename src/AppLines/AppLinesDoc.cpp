@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/24 14:59:08  sm
+**	- Some GIG bug fixes
+**	- An image viewing bug fixed in bimg3
+**
 **	Revision 1.13  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
-**
+**	
 **	Revision 1.12  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -283,12 +287,15 @@ void CAppLinesDoc::OnRaytrace()
 
 void CAppLinesDoc::b3Raytrace()
 {
-	b3_res        xSize,ySize;
+	b3_res  xSize,ySize;
+	b3_bool valid;
 
 	if (!b3IsRaytracing())
 	{
-		m_Scene->b3GetDisplaySize(xSize,ySize);
-		m_Display = m_RaytraceDoc->b3GetDisplay(xSize,ySize,"Raytracing...");
+		valid = m_Scene->b3GetDisplaySize(xSize,ySize);
+		m_Display = valid ?
+			m_RaytraceDoc->b3GetDisplay(xSize,ySize,"Raytracing...") :
+			m_RaytraceDoc->b3GetDisplay("Raytracing...");
 		m_Raytracer->b3Start(&b3RaytracingThread,this);
 	}
 }

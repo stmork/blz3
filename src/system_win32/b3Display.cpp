@@ -27,6 +27,10 @@
 #define no_SYNC
 #define no_DEBUG
 
+#ifdef _DEBUG
+#define LOW_RES
+#endif
+
 #define READY 128
 
 /*************************************************************************

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/24 14:59:08  sm
+**	- Some GIG bug fixes
+**	- An image viewing bug fixed in bimg3
+**
 **	Revision 1.3  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
 **	- Correcting path following behaviour.
-**
+**	
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -70,18 +74,26 @@ static void display(b3Tx *tx)
 	b3ImageRow  *row;
 	b3_coord     y;
 
-	b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
-		tx->b3Name(),tx->xSize,tx->ySize);
-	display = new b3Display(tx->xSize,tx->ySize,tx->b3Name());
-	row     = new b3ImageRow(tx->xSize);
-	for (y = 0;y < tx->ySize;y++)
+	if (tx->b3IsLoaded())
 	{
-		row->b3SetRow(tx,y);
-		display->b3PutRow(row);
+		b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
+			tx->b3Name(),tx->xSize,tx->ySize);
+		display = new b3Display(tx->xSize,tx->ySize,tx->b3Name());
+		row     = new b3ImageRow(tx->xSize);
+		for (y = 0;y < tx->ySize;y++)
+		{
+			row->b3SetRow(tx,y);
+			display->b3PutRow(row);
+		}
+		delete row;
+		display->b3Wait();
+		delete display;
 	}
-	delete row;
-	display->b3Wait();
-	delete display;
+	else
+	{
+		 b3PrintF(B3LOG_NORMAL,"%s not displayed\n",
+		 	tx->b3Name());
+	}
 }
 
 int main(int argc,char *argv[])

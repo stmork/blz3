@@ -39,11 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/24 14:59:08  sm
+**	- Some GIG bug fixes
+**	- An image viewing bug fixed in bimg3
+**
 **	Revision 1.6  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.5  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -174,7 +178,7 @@ static unsigned long dithermask[8] =
 	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
 };
 
-b3_bool b3Display::b3Dither (
+inline b3_bool b3Display::b3Dither (
 	b3_pkd_color Byte,
 	b3_count     shift,
 	b3_coord     x,
@@ -188,35 +192,35 @@ b3_bool b3Display::b3Dither (
 	return (((Byte >> (shift - 4)) & 15) >= (dithermatrix[x & 3][y & 3]));
 }
 
-b3_bool b3Display::b3Dither2 (b3_pkd_color Byte,b3_coord x,b3_coord y)
+inline b3_bool b3Display::b3Dither2 (b3_pkd_color Byte,b3_coord x,b3_coord y)
 {
 	Byte &= 0xff;
 	if ((Byte & MASK2) >= MASK2) return false;
 	return (((Byte << 2) & 15) >= (dithermatrix[x & 3][y & 3]));
 }
 
-b3_bool b3Display::b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y)
+inline b3_bool b3Display::b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y)
 {
 	Byte &= 0xff;
 	if ((Byte & MASK3) >= MASK3) return false;
 	return (((Byte << 1) & 15) >= (dithermatrix[x & 3][y & 3]));
 }
 
-b3_bool b3Display::b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y)
+inline b3_bool b3Display::b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y)
 {
 	Byte &= 0xff;
 	if ((Byte & MASK5) >= MASK5) return false;
 	return (((Byte >> 1) & 15) >= (dithermatrix[x & 3][y & 3]));
 }
 
-b3_bool b3Display::b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y)
+inline b3_bool b3Display::b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y)
 {
 	Byte &= 0xff;
 	if ((Byte & MASK6) >= MASK6) return false;
 	return (((Byte >> 2) & 15) >= (dithermatrix[x & 3][y & 3]));
 }
 
-b3_pkd_color b3Display::b3ARGBtoPIXEL_08 (
+inline b3_pkd_color b3Display::b3ARGBtoPIXEL_08 (
 	b3_pkd_color ARGB,
 	b3_coord     x,
 	b3_coord     y)
@@ -234,7 +238,7 @@ b3_pkd_color b3Display::b3ARGBtoPIXEL_08 (
 	return ((r >> 16) | (g >> 11) | (b >>  6));
 }
 
-b3_pkd_color b3Display::b3ARGBtoPIXEL_15 (
+inline b3_pkd_color b3Display::b3ARGBtoPIXEL_15 (
 	b3_pkd_color ARGB,
 	b3_coord     x,
 	b3_coord     y)
@@ -252,7 +256,7 @@ b3_pkd_color b3Display::b3ARGBtoPIXEL_15 (
         return ((r >> 9) | (g >> 6) | (b >>  3));
 }
 
-b3_pkd_color b3Display::b3ARGBtoPIXEL_16 (
+inline b3_pkd_color b3Display::b3ARGBtoPIXEL_16 (
 	b3_pkd_color ARGB,
 	b3_coord     x,
 	b3_coord     y)
@@ -445,6 +449,11 @@ void b3Display::b3PutRow(b3Row *row)
 	b3_pkd_color *ptr = row->buffer;
 	b3_pkd_color  pixel;
 	b3_coord      x,y = row->y;
+
+	if (y >= m_ys)
+	{
+		return;
+	}
 
 	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
 	if (m_Opened)
