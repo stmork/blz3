@@ -40,10 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/27 21:33:35  sm
+**	- Further docking handling done
+**	- CDocument cleanups done
+**
 **	Revision 1.6  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.5  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
 **	
@@ -116,7 +120,7 @@ void CB3ToolbarState::b3AddDialogbar(
 	if (dialogbar != null)
 	{
 		m_Dialogbars.b3Append(dialogbar);
-		dialogbar->b3SetID(id_dialog,id_title,m_ToolCount == 0 ? AFX_IDW_TOOLBAR : id_dialog);
+		dialogbar->b3SetID(id_dialog,id_title,m_ToolCount == 0 ? AFX_IDW_DIALOGBAR : id_dialog);
 	}
 }
 
@@ -767,7 +771,7 @@ void CB3Toolbar::b3Print(CRect &rect,long dw)
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III toolbar base class               **
+**                        Blizzard III Menubar base class               **
 **                                                                      **
 *************************************************************************/
 
@@ -825,7 +829,7 @@ b3_bool CB3Menubar::b3SetVisibility(bool new_visibility)
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III toolbar base class               **
+**                        Blizzard III Dialogbar base class             **
 **                                                                      **
 *************************************************************************/
 
@@ -838,6 +842,23 @@ CB3Dialogbar::CB3Dialogbar() : b3Link<CB3Dialogbar>(sizeof(CB3Dialogbar))
 		BLIZZARD3_REG_COMPANY,
 		BLIZZARD3_REG_PRODUCT,
 		CB3ClientString());
+}
+
+b3_bool CB3Dialogbar::b3Create(CFrameWnd *parent)
+{
+	b3_bool result;
+
+	m_MainFrame = parent;
+	result = Create(m_MainFrame,
+		m_ID,
+		WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
+		CBRS_ALIGN_ANY | CBRS_GRIPPER,
+		m_Bar); // You need this line if you want use LoadBarState()/SaveBarState()!!!!
+	if (result)
+	{
+		SetWindowText(m_Title);
+	}
+	return result;
 }
 
 BOOL CB3Dialogbar::Create(
@@ -888,23 +909,6 @@ void CB3Dialogbar::DoDataExchange(CDataExchange *pDX)
 {
 	ASSERT(pDX);
 	CDialogBar::DoDataExchange(pDX);
-}
-
-b3_bool CB3Dialogbar::b3Create(CFrameWnd *parent)
-{
-	b3_bool result;
-
-	m_MainFrame = parent;
-	result = Create(m_MainFrame,
-		m_ID,
-		CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_GRIPPER | CBRS_RAISEDBORDER | CBRS_ALIGN_ANY |
-		CBRS_BORDER_LEFT | CBRS_BORDER_RIGHT | CBRS_BORDER_TOP | CBRS_BORDER_BOTTOM,
-		m_Bar); // You need this line if you want use LoadBarState()/SaveBarState()!!!!
-	if (result)
-	{
-		SetWindowText(m_Title);
-	}
-	return result;
 }
 
 void CB3Dialogbar::b3SetID(

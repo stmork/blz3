@@ -100,8 +100,7 @@ protected:
 	afx_msg void OnUpdateLightLDC(CCmdUI* pCmdUI);
 	afx_msg void OnLightSpot();
 	afx_msg void OnUpdateLightSpot(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateCamSelect(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateLightSelect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateGlobal(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

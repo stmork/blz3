@@ -808,8 +808,8 @@ BEGIN
     GROUPBOX        "Projektionswerte:",IDC_STATIC,155,95,165,85
 END
 
-IDD_FULCRUM DIALOG DISCARDABLE  0, 0, 185, 31
-STYLE DS_3DLOOK | WS_CHILD
+IDD_FULCRUM DIALOG DISCARDABLE  0, 0, 186, 31
+STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_FULCRUM_X,15,15,40,12,ES_AUTOHSCROLL
@@ -821,7 +821,7 @@ BEGIN
     LTEXT           "Drehkreuz-Position",IDC_STATIC,15,5,60,8
 END
 
-IDD_STEP_MOVE DIALOG DISCARDABLE  0, 0, 185, 31
+IDD_STEP_MOVE DIALOG DISCARDABLE  0, 0, 186, 31
 STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -834,7 +834,7 @@ BEGIN
     LTEXT           "Schrittlängen",IDC_STATIC,15,5,42,8
 END
 
-IDD_STEP_ROTATE DIALOG DISCARDABLE  0, 0, 185, 31
+IDD_STEP_ROTATE DIALOG DISCARDABLE  0, 0, 186, 31
 STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -1009,7 +1009,7 @@ BEGIN
     IDD_FULCRUM, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 178
+        RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 24
     END
@@ -1017,7 +1017,7 @@ BEGIN
     IDD_STEP_MOVE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 178
+        RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 24
     END
@@ -1025,7 +1025,7 @@ BEGIN
     IDD_STEP_ROTATE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 178
+        RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 24
     END
@@ -1085,7 +1085,7 @@ END
 STRINGTABLE PRELOAD DISCARDABLE 
 BEGIN
     IDR_MAINFRAME           "Lines III"
-    IDR_BLZ3TYPE            "\nBLZ3\nBLZ3\nBlizzard III Geometrie (*.bwd)\n.bwd\nBlizzard3.Document\nBlizzard III Dokument"
+    IDR_BLZ3TYPE            "Blizzard III Lines\nUnbenannt\nBlizzard III Geometrie\nBlizzard III Geometrie (*.bwd)\n.bwd\nBlizzard3.Document\nBlizzard III Dokument"
     IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nBerechnetes Bild\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
 END
 

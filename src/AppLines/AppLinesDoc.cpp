@@ -49,10 +49,14 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2001/12/27 21:33:35  sm
+**	- Further docking handling done
+**	- CDocument cleanups done
+**
 **	Revision 1.29  2001/12/26 18:17:55  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.28  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -209,8 +213,18 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
-	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateCamSelect)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
+	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_NEW, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_PROPERTIES, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_TO_FULCRUM, OnUpdateGlobal)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -293,36 +307,50 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
 	CMainFrame *main = CB3GetMainFrame();
 	CString     message;
+	BOOL        result = FALSE;
 
 	if (!CDocument::OnOpenDocument(lpszPathName))
 	{
 		return FALSE;
 	}
-	
+
 	// TODO: Add your specialized creation code here
-	message.Format(IDS_DOC_READ,lpszPathName);
-	main->b3SetStatusMessage(message);
-	m_World.b3Read(lpszPathName);
-	m_Scene = (b3Scene *)m_World.b3GetFirst();
-	m_Scene->b3SetFilename(lpszPathName);
+	try
+	{
+		message.Format(IDS_DOC_READ,lpszPathName);
+		main->b3SetStatusMessage(message);
+		m_World.b3Read(lpszPathName);
+		m_Scene = (b3Scene *)m_World.b3GetFirst();
+		m_Scene->b3SetFilename(lpszPathName);
 
-	main->b3SetStatusMessage(IDS_DOC_REORG);
-	m_Scene->b3Reorg();
+		main->b3SetStatusMessage(IDS_DOC_REORG);
+		m_Scene->b3Reorg();
 
-	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	m_Scene->b3Prepare(0,0);
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_Scene->b3Prepare(0,0);
 
-	main->b3SetStatusMessage(IDS_DOC_VERTICES);
-	m_Scene->b3AllocVertices(&m_Context);
-	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
-	m_Info = m_Scene->b3GetModellerInfo();
-	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_Scene->b3AllocVertices(&m_Context);
+		b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
+		b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
+		b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
+		m_Info = m_Scene->b3GetModellerInfo();
+		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 
-	main->b3SetStatusMessage(IDS_DOC_BOUND);
-	b3ComputeBounds();
-	return TRUE;
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+		result = TRUE;
+	}
+	catch(b3WorldException *e)
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: Error loading %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World loader: Error code %d\n",e->b3GetError());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+	}
+	return result;
 }
 
 void CAppLinesDoc::OnCloseDocument() 
@@ -368,8 +396,11 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppLinesDoc commands
+/*************************************************************************
+**                                                                      **
+**                        General scene commands               **
+**                                                                      **
+*************************************************************************/
 
 b3_vector *CAppLinesDoc::b3GetFulcrum()
 {
@@ -388,47 +419,28 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	return false;
 }
 
-void CAppLinesDoc::OnHierachy() 
-{
-	// TODO: Add your command handler code here
-	CDlgHierarchy dlg;
-
-	dlg.m_Doc   = this;
-	dlg.DoModal();
-}
-
 void CAppLinesDoc::b3ComputeBounds()
 {
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 }
+
+void CAppLinesDoc::OnUpdateGlobal(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsRaytracing());
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Raytracing methods                            **
+**                                                                      **
+*************************************************************************/
 
 b3_bool CAppLinesDoc::b3IsRaytracing()
 {
 	return m_Raytracer->b3IsRunning();
 }
 
-void CAppLinesDoc::OnRaytrace()
-{
-	// TODO: Add your command handler code here
-	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
-
-	if (m_RaytraceDoc == null)
-	{
-		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
-		m_RaytraceDoc->b3SetLinesDoc(this);
-	}
-	else
-	{
-		m_RaytraceDoc->b3ActivateView();
-	}
-	b3ToggleRaytrace();
-}
-
-void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(b3IsRaytracing());
-}
 
 void CAppLinesDoc::b3ToggleRaytrace()
 {
@@ -522,6 +534,38 @@ void CAppLinesDoc::b3ClearRaytraceDoc()
 	m_RaytraceDoc = null;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Scene commands                                **
+**                                                                      **
+*************************************************************************/
+
+void CAppLinesDoc::OnHierachy() 
+{
+	// TODO: Add your command handler code here
+	CDlgHierarchy dlg;
+
+	dlg.m_Doc   = this;
+	dlg.DoModal();
+}
+
+void CAppLinesDoc::OnRaytrace()
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
+
+	if (m_RaytraceDoc == null)
+	{
+		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
+		m_RaytraceDoc->b3SetLinesDoc(this);
+	}
+	else
+	{
+		m_RaytraceDoc->b3ActivateView();
+	}
+	b3ToggleRaytrace();
+}
+
 void CAppLinesDoc::OnDlgScene() 
 {
 	// TODO: Add your command handler code here
@@ -565,6 +609,18 @@ void CAppLinesDoc::OnModellerInfo()
 		SetModifiedFlag();
 	}
 }
+
+void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(b3IsRaytracing());
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Light commands                                **
+**                                                                      **
+*************************************************************************/
 
 void CAppLinesDoc::OnLightNew() 
 {
@@ -687,7 +743,25 @@ void CAppLinesDoc::OnLightSpot()
 void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(m_Scene->b3GetLightHead()->b3Count() > 1);
+	pCmdUI->Enable((m_Scene->b3GetLightHead()->b3Count() > 1) && (!b3IsRaytracing()));
+}
+
+void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	if (light != null)
+	{
+		pCmdUI->Enable(light->m_LightActive && light->m_SpotActive && (!b3IsRaytracing()));
+	}
+	else
+	{
+		pCmdUI->Enable(FALSE);
+	}
 }
 
 void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI) 
@@ -698,6 +772,7 @@ void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI)
 
 	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
+	pCmdUI->Enable(!b3IsRaytracing());
 	pCmdUI->SetCheck(light != null ? light->m_LightActive : FALSE);
 }
 
@@ -711,7 +786,7 @@ void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI)
 	light = main->b3GetSelectedLight();
 	if (light != null)
 	{
-		pCmdUI->Enable(light->m_LightActive);
+		pCmdUI->Enable(light->m_LightActive && (!b3IsRaytracing()));
 		pCmdUI->SetCheck(light->m_SoftShadow);
 	}
 	else
@@ -730,41 +805,11 @@ void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI)
 	light = main->b3GetSelectedLight();
 	if (light != null)
 	{
-		pCmdUI->Enable(light->m_LightActive);
+		pCmdUI->Enable(light->m_LightActive && (!b3IsRaytracing()));
 		pCmdUI->SetCheck(light->m_SpotActive);
 	}
 	else
 	{
 		pCmdUI->Enable(FALSE);
 	}
-}
-
-void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	CMainFrame     *main;
-	b3Light        *light;
-
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
-	if (light != null)
-	{
-		pCmdUI->Enable(light->m_LightActive && light->m_SpotActive);
-	}
-	else
-	{
-		pCmdUI->Enable(FALSE);
-	}
-}
-
-void CAppLinesDoc::OnUpdateCamSelect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsRaytracing());
-}
-
-void CAppLinesDoc::OnUpdateLightSelect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsRaytracing());
 }

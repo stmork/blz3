@@ -42,9 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/27 21:33:35  sm
+**	- Further docking handling done
+**	- CDocument cleanups done
+**
 **	Revision 1.13  2001/12/09 13:16:21  sm
 **	- Added tag name
-**
+**	
 **	Revision 1.12  2001/12/09 13:06:56  sm
 **	- Added tag name
 **	
@@ -105,6 +109,8 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CWinApp)
 	//{{AFX_MSG_MAP(CAppLinesApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
+	ON_COMMAND(ID_FILE_NEW, OnFileNew)
+	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
@@ -351,14 +357,7 @@ void CAppLinesApp::OnAppAbout()
 
 CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 {
-	CAppRaytraceDoc *pDoc;
-	CFrameWnd       *frame;
-
-	pDoc = (CAppRaytraceDoc *)pImageTemplate->CreateNewDocument();
-	frame = pImageTemplate->CreateNewFrame(pDoc,(CFrameWnd *)NULL);
-	pImageTemplate->InitialUpdateFrame(frame,pDoc);
-
-	return pDoc;
+	return (CAppRaytraceDoc *)pImageTemplate->OpenDocumentFile(NULL);
 }
 
 void CAppLinesApp::OnChangeTexturePath() 
@@ -380,4 +379,17 @@ void CAppLinesApp::OnChangeTexturePath()
 		path += ((const char *)((b3Path *)entry));
 	}
 	WriteProfileString(b3ClientName(),"texture search path",path);
+}
+
+void CAppLinesApp::OnFileNew() 
+{
+	// TODO: Add your command handler code here
+	// Force creating new geometry!
+	pSceneTemplate->OpenDocumentFile(NULL);
+}
+
+void CAppLinesApp::OnFileOpen() 
+{
+	// TODO: Add your command handler code here
+	CWinApp::OnFileOpen();
 }

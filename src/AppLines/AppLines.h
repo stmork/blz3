@@ -64,6 +64,8 @@ public:
 	//{{AFX_MSG(CAppLinesApp)
 	afx_msg void OnAppAbout();
 	afx_msg void OnChangeTexturePath();
+	afx_msg void OnFileNew();
+	afx_msg void OnFileOpen();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -39,10 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2001/12/27 21:33:35  sm
+**	- Further docking handling done
+**	- CDocument cleanups done
+**
 **	Revision 1.26  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.25  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
 **	
@@ -246,12 +250,12 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
-	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
 	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
 	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
-	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
+	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
@@ -266,8 +270,14 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
+	b3_index i;
+
 	m_PreviousMode =
 	m_SelectMode   = B3_OBJECT_SELECT;
+	for (i = 0;i < B3_MODE_MAX;i++)
+	{
+		m_Action[i] = null;
+	}
 }
 
 CAppLinesView::~CAppLinesView()
@@ -384,7 +394,10 @@ void CAppLinesView::OnDestroy()
 
 	for (i = 0;i < B3_MODE_MAX;i++)
 	{
-		delete m_Action[i];
+		if (m_Action[i] != null)
+		{
+			delete m_Action[i];
+		}
 	}
 	CScrollView::OnDestroy();
 	
@@ -1124,11 +1137,12 @@ void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI)
 			count++;
 		}
 	}
-	pCmdUI->Enable(count > 1);
+	pCmdUI->Enable((count > 1) && (!GetDocument()->b3IsRaytracing()));
 }
 
 void CAppLinesView::OnUpdateCameraEnable(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck(m_Camera->b3IsActive());
+	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
 }
