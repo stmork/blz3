@@ -32,7 +32,8 @@ LIB_OBJS	= jcapimin.o jcapistd.o jctrans.o jcparam.o jdatadst.o jcinit.o \
 all:	$(LIBS)
 
 depend:	$(LIB_SRCS)
-	makedepend -- $(CPPFLAGS) -- $(LIB_SRCS)
+#	makedepend -- $(CPPFLAGS) -- $(LIB_SRCS)
+	gcc -M  $(LIB_SRCS) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core libB*.a $(PRGS)
@@ -47,3 +48,5 @@ libB3jpeg.a:	$(LIB_OBJS)
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 	cp $@ $(BLZ3_LIB)
+
+-include .dep

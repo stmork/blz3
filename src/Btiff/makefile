@@ -90,7 +90,8 @@ OBJS	= \
 all:	lib
 
 depend:	$(SRCS)
-	makedepend -- $(CPPFLAGS) -- $(SRCS)
+#	makedepend -- $(CPPFLAGS) -- $(SRCS)
+	gcc -M  $(SRCS) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core libB*.a $(PRGS) $(AUTO) version.h
@@ -123,3 +124,5 @@ mkg3states:	mkg3states.o
 	$(LINK.c) -o $@ mkg3states.o $(LIB_S)
 	chmod 775 mkg3states
 	cp mkg3states $(BLZ3_BIN)
+
+-include .dep

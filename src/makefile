@@ -24,23 +24,18 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i; \
 	done
 
-$(BLZ3_LIB):
-	mkdir -p $@
-
-$(BLZ3_BIN):
-	mkdir -p $@
-
 clean:
 	echo "Cleaning up..."
-	@find . -name "*.log" -exec rm {} \;
-	@find . -name "*.ncb" -exec rm {} \;
-	@find . -name "*.plg" -exec rm {} \;
-	@find . -name "*.dep" -exec rm {} \;
-	@find . -name "*.mak" -exec rm {} \;
-	@find . -name "*.bak" -exec rm {} \;
-	@find . -name "*~"    -exec rm {} \;
-	@find . -name "core"  -exec rm {} \;
-	@rm -rf */Debug */Release
+	@find   $(BLZ3_HOME) -name "*.log" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*.ncb" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*.plg" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*.dep" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*.mak" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*.bak" -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "*~"    -exec rm {} \;
+	@find   $(BLZ3_HOME) -name ".#*"   -exec rm {} \;
+	@find   $(BLZ3_HOME) -name "core"  -exec rm {} \;
+	@rm -rf $(BLZ3_HOME)/Debug $(BLZ3_HOME)/Release
 
 	+@for i in $(SUB_DIRS); do \
 		echo ""; \
@@ -50,7 +45,7 @@ clean:
 
 win:
 	make -C Btiff tif_fax3sm.c version.h
-#	make -C BRaytrace version.h
+	cp Btiff/tif_fax3sm.c system_win32
 
 count:
 	wc -l `find $(BLZ3_HOME)/include* -name "*.h";find $(BLZ3_HOME)/src -name "*.cc"`
@@ -61,17 +56,8 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemDepend
-
-$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB)/libB3System.a
-	+@make -C tools RemCR
-
-$(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
-	+@make -C system_unix
-
-remdepend:	$(BLZ3_BIN)/RemDepend clean
-	RemDepend */makefile
+remdepend:	clean
+	find . -name ".dep" -exec rm {} \;
 
 tar:
 	@$(BLZ3_HOME)/bin/configure.sh
@@ -80,3 +66,18 @@ tar:
 uncr:	$(BLZ3_BIN)/RemCR
 	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;
 	find $(BLZ3_HOME) -name "*.h"  -exec RemCR {} \;
+
+$(BLZ3_LIB):
+	mkdir -p $@
+
+$(BLZ3_BIN):
+	mkdir -p $@
+
+$(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
+	+@make -C system_unix
+
+$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemDepend
+
+$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemCR

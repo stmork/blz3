@@ -35,7 +35,8 @@ LIB_OBJ			=\
 all:	lib
 
 depend:
-	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
+#	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
+	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
@@ -47,3 +48,5 @@ libB3System.a:	$(LIB_OBJ)
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 	cp $@ $(BLZ3_LIB)
+
+-include .dep

@@ -21,7 +21,8 @@ PRG_OBJS		= $(TESTIO_OBJS) $(TESTTHREAD_OBJS) $(MANDEL_OBJS)
 all:	$(PRGS)
 
 depend:
-	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
+#	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
+	gcc -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
@@ -34,3 +35,5 @@ TestThread:	$(TESTTHREAD_OBJS)
 
 Mandel:	$(MANDEL_OBJS)
 	$(LINK.cc) -o $@ $(MANDEL_OBJS) $(LDLIBS)
+
+-include .dep

@@ -16,7 +16,8 @@ PRG_OBJ			= b3Aux.o  b3FileList.o  b3Node.o  b3World.o
 all:	lib
 
 depend:
-	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
+#	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
+	gcc -M $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
@@ -28,3 +29,5 @@ libB3Base.a:	$(PRG_OBJ)
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 	cp $@ $(BLZ3_LIB)
+
+-include .dep
