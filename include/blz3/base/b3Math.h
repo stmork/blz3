@@ -91,6 +91,23 @@ public:
 		return result;
 	}
 
+	static inline b3_f64 b3Frac(b3_f64 a,b3_f64 b)
+	{
+		b3_s32 n;
+
+		if (a < 0)
+		{
+			a = -a;
+			n = (b3_s32)(a / b);
+			return b - a + n * b;
+		}
+		else
+		{
+			n = (b3_s32)(a / b);
+			return a - n * b;
+		}
+	}
+
 	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)
 	{
 		return a * (1 - x) + b * x;

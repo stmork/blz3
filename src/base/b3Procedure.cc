@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/08/02 13:57:59  sm
+**	- Changed thin film animation to closed spline computation.
+**
 **	Revision 1.38  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.37  2004/05/18 16:31:01  sm
 **	- Simple valud adjustment.
 **	
@@ -710,32 +713,24 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	Color = HellColors[(int)(t * 4)];
 }
 
-inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)
-{
-	b3_s32 n;
-
-	if (a < 0)
-	{
-		a = -a;
-		n = (b3_s32)(a / b);
-		return b - a + n * b;
-	}
-	else
-	{
-		n = (b3_s32)(a / b);
-		return a - n * b;
-	}
-}
-
 b3_f64 b3Noise::b3Wave(b3_vector *point)
 {
 	b3_f64 n,q;
 	b3_vector v;
 
 	n = b3NoiseVector(point->x * 0.5,point->y,point->z);
-	q = b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
+	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
 	waveSpline.b3DeBoorClosed (&v,0,q);
 	return mSin(point->y * 10 + v.z * 2);
+}
+
+void b3Noise::b3AnimThinFilm(b3_f64 t, b3_vector *result)
+{
+	b3_f64   q,div;
+
+	div = (b3_f64)waveSpline.control_max;
+	q   = b3Math::b3Frac(t * 0.25 / div,div);
+	waveSpline.b3DeBoorClosed (result,0,q);
 }
 
 b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)

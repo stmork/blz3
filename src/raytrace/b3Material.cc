@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.89  2004/08/02 13:57:59  sm
+**      - Changed thin film animation to closed spline computation.
+**
 **      Revision 1.88  2004/08/01 12:47:39  sm
 **      - Animated thin film material.
 **
@@ -1730,7 +1733,7 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 b3Color   b3MatThinFilm::m_WaveLength(700.0,510,485.0,0); // in nano meter
 b3_vector b3MatThinFilm::m_ScaleTime =
 {
-	0.01f,-0.02f,0.9f
+	10,10,10
 };
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm),class_type) 
@@ -1790,6 +1793,7 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3Color      factor;
 	b3_vector    point;
+	b3_vector    shift;
 	b3_vector64 *normal = &surface->incoming->normal;
 	b3_f64       quotient;
 	b3_f64       cos_phi;
@@ -1799,9 +1803,11 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 	// scale
 	b3Scale(surface->incoming,&m_Scale,&point);
 
-	point.x += m_ScaleTime.x * surface->incoming->t;
-	point.y += m_ScaleTime.y * surface->incoming->t;
-	point.z += m_ScaleTime.z * surface->incoming->t;
+	// Compute animation
+	b3Noise::b3AnimThinFilm(surface->incoming->t,&shift);
+	point.x += m_ScaleTime.x * shift.x;
+	point.y += m_ScaleTime.y * shift.y;
+	point.z += m_ScaleTime.z * shift.z;
 
 	wobble =
 		b3Noise::b3SignedFilteredNoiseVector(point.x,    point.y,    point.z) +

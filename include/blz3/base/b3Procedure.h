@@ -169,10 +169,10 @@ public:
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
 	static b3_f64  b3Wave        (b3_vector *point);
 	static b3_f64  b3Granite     (b3_vector *point,b3_count octaves);
+	static void    b3AnimThinFilm(b3_f64 t, b3_vector *result);
 	static b3_f64  b3PGauss      ();
 
 private:
-	static b3_f64       b3Frac      (b3_f64 a,b3_f64 b);
 	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
 	static b3_f64       b3Interpolate(b3_index ix,b3_index iy,b3_index iz,b3_f32 fx,b3_f32 fy,b3_f32 fz,b3_index d=0);
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
