@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2003/01/06 19:16:03  sm
+**	- Removed use of b3TriangleRef into an b3Array<b3_index>.
+**	- Camera transformations are now matrix transformations.
+**
 **	Revision 1.71  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **	Revision 1.70  2002/12/31 15:11:03  sm
 **	- Fixed bound checking.
 **	- Added a vector test module.

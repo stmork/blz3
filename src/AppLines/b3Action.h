@@ -301,6 +301,7 @@ class CB3ActionCameraView : public CB3Action
 	b3CameraPart  *m_Camera;
 	b3_line        m_Axis;
 	b3_f64         m_xRelStart;
+	b3_f64         m_LastScale;
 	b3_f64         m_LastAngle;
 	b3_f64         m_Distance;
 	b3_res         m_ySize;

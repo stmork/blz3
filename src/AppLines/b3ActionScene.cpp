@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/01/06 19:16:03  sm
+**	- Removed use of b3TriangleRef into an b3Array<b3_index>.
+**	- Camera transformations are now matrix transformations.
+**
 **	Revision 1.5  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -569,8 +573,14 @@ void CB3ActionCameraView::b3LDown(b3_coord x,b3_coord y)
 	}
 	else
 	{
-		m_Camera   = m_View->m_Camera;
-		m_Distance = b3Vector::b3Distance(&m_Camera->m_EyePoint,&m_Camera->m_ViewPoint);
+		m_Camera    = m_View->m_Camera;
+		m_LastScale = 1.0;
+		m_Distance  = b3Vector::b3Distance(&m_Camera->m_EyePoint,&m_Camera->m_ViewPoint);
+		m_Axis.pos  = m_Camera->m_EyePoint;
+		b3Vector::b3Sub(
+			&m_Camera->m_ViewPoint,
+			&m_Camera->m_EyePoint,
+			&m_Axis.dir);
 
 		m_View->GetClientRect(&rect);
 		m_ySize  = rect.Height();
@@ -580,28 +590,58 @@ void CB3ActionCameraView::b3LDown(b3_coord x,b3_coord y)
 
 void CB3ActionCameraView::b3LMove(b3_coord x,b3_coord y)
 {
+	b3_matrix align,invalign,activity,inv;
+
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		CB3Action::b3LMove(x,y);
 	}
 	else
 	{
-		m_Camera->b3ComputeFocalLength(m_Distance * pow(2.0,(double)(m_yStart - y) / (double)m_ySize));
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+		b3_f64 scale = pow(2.0,(double)(m_yStart - y) / (double)m_ySize);
+
+		if (scale != m_LastScale)
+		{
+			b3MatrixAlign(&align,&m_Axis);
+			m_LastScale = scale;
+			if (b3MatrixInv(&m_Transformation,&inv) && b3MatrixInv(&align,&invalign))
+			{
+				b3MatrixScale(&invalign,&activity,&m_Axis.pos,scale);
+				b3MatrixMMul(&activity,&align,&m_Transformation);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Camera->b3Transform(&activity);
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+			}
+		}
 	}
 }
 
 void CB3ActionCameraView::b3LUp(b3_coord x,b3_coord y)
 {
+	b3_matrix align,invalign,activity,inv;
+
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		CB3Action::b3LUp(x,y);
 	}
 	else
 	{
-		m_Camera->b3ComputeFocalLength(m_Distance * pow(2.0,(double)(m_yStart - y) / (double)m_ySize));
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
-		m_Doc->SetModifiedFlag();
+		b3_f64 scale = pow(2.0,(double)(m_yStart - y) / (double)m_ySize);
+
+		if (scale != m_LastScale)
+		{
+			b3MatrixAlign(&align,&m_Axis);
+			m_LastScale = scale;
+			if (b3MatrixInv(&m_Transformation,&inv) && b3MatrixInv(&align,&invalign))
+			{
+				b3MatrixScale(&invalign,&activity,null,scale);
+				b3MatrixMMul(&activity,&align,&m_Transformation);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Camera->b3Transform(&activity);
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+				m_Doc->SetModifiedFlag();
+			}
+		}
 	}
 	m_Camera = null;
 }

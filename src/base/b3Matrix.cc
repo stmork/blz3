@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2003/01/06 19:16:03  sm
+**	- Removed use of b3TriangleRef into an b3Array<b3_index>.
+**	- Camera transformations are now matrix transformations.
+**
 **	Revision 1.24  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.23  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
@@ -643,6 +647,46 @@ b3_matrix *b3MatrixRotZ (
 	return b3MatrixMove (&Result,B,Center);
 }
 
+b3_matrix *b3MatrixAlign (
+	b3_matrix     *result,
+	const b3_line *Axis)
+{
+	result->m11 = Axis->dir.x;
+	result->m21 = Axis->dir.y;
+	result->m31 = Axis->dir.z;
+	result->m41 = 0;
+
+	if (Axis->dir.x == 0 && Axis->dir.y == 0)
+	{
+		result->m12 = 0;
+		result->m22 = Axis->dir.z;
+		result->m32 = 0;
+		result->m42 = 0;
+	}
+	else
+	{
+		result->m12 = -Axis->dir.y;
+		result->m22 =  Axis->dir.x;
+		result->m32 =  0;
+		result->m42 =  0;
+	}
+
+	b3NormalizeCol (result,0);
+	b3NormalizeCol (result,1);
+
+	result->m13 =  result->m21 * result->m32 - result->m31 * result->m22;
+	result->m23 =  result->m31 * result->m12 - result->m11 * result->m32;
+	result->m33 =  result->m11 * result->m22 - result->m21 * result->m12;
+	result->m43 =  0;
+
+	result->m14 =  Axis->pos.x;
+	result->m24 =  Axis->pos.y;
+	result->m34 =  Axis->pos.z;
+	result->m44 =  1;
+
+	return result;
+}
+
 b3_matrix *b3MatrixRotVec (
 	b3_matrix *A,
 	b3_matrix *B,
@@ -652,54 +696,31 @@ b3_matrix *b3MatrixRotVec (
 	b3_f32    Cos,Sin;
 	b3_matrix System,InvSystem,Result,Rotate;
 
-	if (A == null) A = &UnitMatrix;
-
-	System.m11 = Axis->dir.x;
-	System.m21 = Axis->dir.y;
-	System.m31 = Axis->dir.z;
-	System.m41 = 0;
-
-	if (Axis->dir.x == 0 && Axis->dir.y == 0)
+	if (A == null)
 	{
-		System.m12 = 0;
-		System.m22 = Axis->dir.z;
-		System.m32 = 0;
-		System.m42 = 0;
+		A = &UnitMatrix;
+	}
+
+	b3MatrixAlign(&System,Axis);
+
+	if (b3MatrixInv (&System,&InvSystem))
+	{
+		Rotate     =  UnitMatrix;
+		Cos        =  (b3_f32)cos(Angle);
+		Sin        =  (b3_f32)sin(Angle);
+		Rotate.m22 =  Cos;
+		Rotate.m32 =  Sin;
+		Rotate.m23 = -Sin;
+		Rotate.m33 =  Cos;
+
+		b3MatrixMMul (A,      &InvSystem, B);
+		b3MatrixMMul (B,      &Rotate,   &Result);
+		b3MatrixMMul (&Result,&System,    B);
 	}
 	else
 	{
-		System.m12 = -Axis->dir.y;
-		System.m22 =  Axis->dir.x;
-		System.m32 =  0;
-		System.m42 =  0;
+		B = null;
 	}
-
-	b3NormalizeCol (&System,0);
-	b3NormalizeCol (&System,1);
-
-	System.m13 =  System.m21 * System.m32 - System.m31 * System.m22;
-	System.m23 =  System.m31 * System.m12 - System.m11 * System.m32;
-	System.m33 =  System.m11 * System.m22 - System.m21 * System.m12;
-	System.m43 =  0;
-
-	System.m14 =  Axis->pos.x;
-	System.m24 =  Axis->pos.y;
-	System.m34 =  Axis->pos.z;
-	System.m44 =  1;
-
-	if (!b3MatrixInv (&System,&InvSystem)) return (null);
-
-	Rotate     =  UnitMatrix;
-	Cos        =  (b3_f32)cos(Angle);
-	Sin        =  (b3_f32)sin(Angle);
-	Rotate.m22 =  Cos;
-	Rotate.m32 =  Sin;
-	Rotate.m23 = -Sin;
-	Rotate.m33 =  Cos;
-
-	b3MatrixMMul (A,      &InvSystem, B);
-	b3MatrixMMul (B,      &Rotate,   &Result);
-	b3MatrixMMul (&Result,&System,    B);
 
 	return B;
 }

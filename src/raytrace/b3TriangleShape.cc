@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2003/01/06 19:16:03  sm
+**      - Removed use of b3TriangleRef into an b3Array<b3_index>.
+**      - Camera transformations are now matrix transformations.
+**
 **      Revision 1.33  2002/12/20 15:32:55  sm
 **      - Made some ICC optimazations :-)
 **
@@ -252,31 +256,20 @@ void b3TriangleShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3TransformVertices(transformation,is_affine);
 }
 
-b3_bool b3TriangleShape::b3AddCubicItem (
+void b3TriangleShape::b3AddCubicItem (
 	b3_count trianum,
 	b3_index index)
 {
-	b3Base<b3TriangleRef> *GridList;
-	b3TriangleRef         *TriaInfo;
+	b3_index max = m_GridList[trianum].b3GetCount();
 
-	GridList = &m_GridList[trianum];
-	TriaInfo = GridList->First;
-	if (TriaInfo != null)
+	if (max > 0)
 	{
-		if (TriaInfo->m_Index == index)
+		if (m_GridList[trianum][max - 1] == index)
 		{
-			return true;
+			return;
 		}
 	}
-
-	TriaInfo = new b3TriangleRef(index);
-	if (TriaInfo==null)
-	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
-	}
-
-	GridList->b3First(TriaInfo);
-	return true;
+	m_GridList[trianum].b3Add(index);
 }
 
 void b3TriangleShape::b3SearchCubicItem (
@@ -365,10 +358,6 @@ void b3TriangleShape::b3PrepareGridList ()
 	MaxRec = b3IntLog3(m_GridSize) << 1;
 	max    = m_GridSize * m_GridSize * m_GridSize;
 
-	for (i = 0;i < max;i++)
-	{
-		m_GridList[i].b3InitBase(CLASS_TRIANGLE);
-	}
 	for (i = 0;i < m_TriaCount;i++)
 	{
 		P1.x = (m_Vertices[m_Triangles[i].P1].Point.x - m_Base.x) / m_Size.x;
@@ -401,16 +390,9 @@ void b3TriangleShape::b3PrepareGridList ()
 
 void b3TriangleShape::b3FreeTriaRefs()
 {
-	b3_count i,CubeSize;
-
 	if (m_GridList != null)
 	{
-		CubeSize = m_GridSize * m_GridSize * m_GridSize;
-		for (i = 0;i < CubeSize;i++)
-		{
-			m_GridList[i].b3Free();
-		}
-		b3Item::b3Free(m_GridList);
+		delete [] m_GridList;
 		m_GridList = null;
 	}
 }
@@ -517,13 +499,10 @@ b3_bool b3TriangleShape::b3Prepare()
 	m_Size.x = (End.x - Start.x) * Denom;
 	m_Size.y = (End.y - Start.y) * Denom;
 	m_Size.z = (End.z - Start.z) * Denom;
-	if (m_Size.x < epsilon) m_Size.x = epsilon;
-	if (m_Size.y < epsilon) m_Size.y = epsilon;
-	if (m_Size.z < epsilon) m_Size.z = epsilon;
+	b3Vector::b3SetMinimum(&m_Size,epsilon);
 
 	b3FreeTriaRefs();
-	m_GridList = (b3Base<b3TriangleRef> *)b3Item::b3Alloc
-		(m_GridSize * m_GridSize * m_GridSize * sizeof(b3Base<b3TriangleRef>));
+	m_GridList = new b3Array<b3_index>[m_GridSize * m_GridSize * m_GridSize];
 	if (m_GridList == null)
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);

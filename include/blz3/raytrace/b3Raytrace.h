@@ -1236,19 +1236,6 @@ public:
 	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
-class b3TriangleRef : public b3Link<b3TriangleRef>
-{
-public:
-	b3_index m_Index;
-
-public:
-	b3TriangleRef(b3_index index) :
-		b3Link<b3TriangleRef>(sizeof(b3TriangleRef),TRIANGLEREF)
-	{
-		m_Index = index;
-	}
-};
-
 // normal interpolation defines
 #define PHONG                   (1 << b3TriangleShape::B3_PHONG_B)     // use Phong interpolation
 #define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
@@ -1256,7 +1243,7 @@ public:
 
 class b3TriangleShape : public b3SimpleShape
 {
-	b3Base<b3TriangleRef> *m_GridList;       // list of grids
+	b3Array<b3_index>     *m_GridList;       // list of grids
 protected:
 	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
 	b3_count               m_GridSize;       // num grid edges
@@ -1296,14 +1283,14 @@ protected:
 	        void    b3FreeTriaRefs();
 private:
 	        void    b3PrepareGridList();
-	        b3_bool b3AddCubicItem(b3_count trianum,b3_index index);
+	        void    b3AddCubicItem(b3_count trianum,b3_index index);
 	        void    b3SearchCubicItem(
 				b3_vector *P1,b3_vector *P2,b3_vector *P3,
 				b3_index   index,b3_index   rec,b3_count   MaxRec);
 	        b3_f64  b3IntersectTriangleList(
 				b3_ray                *ray,
 				b3_polar_precompute   *polar,
-				b3Base<b3TriangleRef> *list);
+				b3_index               index);
 };
 
 // index calculation of triangle grid

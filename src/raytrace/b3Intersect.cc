@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2003/01/06 19:16:03  sm
+**	- Removed use of b3TriangleRef into an b3Array<b3_index>.
+**	- Camera transformations are now matrix transformations.
+**
 **	Revision 1.28  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**
+**	
 **	Revision 1.27  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
@@ -926,12 +930,12 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_ray                *ray,
 	b3_polar_precompute   *polar,
-	b3Base<b3TriangleRef> *TriaField)
+	b3_index               TriaField)
 {
-	b3TriangleRef *TRef;
 	b3_triangle   *Triangle;
 	b3_f64         Denom,lValue,aValue,bValue,OldValue = -1;
-	b3_index       Index;
+	b3_index       Index,i,max;
+	const b3_index *buffer;
 	b3_res         dxSize;
 	b3_vector      Base,R1,R2,Dir,Product;
 
@@ -939,9 +943,11 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	 ySize   = m_ySize;
 	dxSize   = m_xSize << 1;
 
-	B3_FOR_BASE(TriaField,TRef)
+	buffer = m_GridList[TriaField].b3GetBuffer();
+	max    = m_GridList[TriaField].b3GetCount();
+	for (i = 0;i < max;i++)
 	{
-		Index    = TRef->m_Index;
+		Index    = buffer[i];
 		Triangle = &m_Triangles[Index];
 		Base.x   = m_Vertices[Triangle->P1].Point.x;
 		Base.y   = m_Vertices[Triangle->P1].Point.y;
@@ -1033,7 +1039,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 	if (m_GridSize <= 1)
 	{
-		return b3IntersectTriangleList (ray,polar,m_GridList);
+		return b3IntersectTriangleList (ray,polar,0);
 	}
 #ifdef _DEBUG
 	GridMax = m_GridSize * m_GridSize * m_GridSize;
@@ -1142,9 +1148,9 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 		else
 #endif
 		{
-			if (m_GridList[index].First)
+			if (m_GridList[index].b3GetCount() > 0)
 			{
-				m = b3IntersectTriangleList (ray,polar,&m_GridList[index]);
+				m = b3IntersectTriangleList (ray,polar,index);
 				if (m > 0)
 				{
 					result = m;  /* ray->Q is modified by IntersectTriangleList */

@@ -92,6 +92,11 @@ public:
 		return m_Index;
 	}
 
+	inline const T *b3GetBuffer()
+	{
+		return m_Buffer;
+	}
+
 	inline T & operator [](const int index)
 	{
 		if ((index < 0) || (index >= m_Index))
