@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2003/03/26 14:50:55  sm
+**	- Ticket no. 5 fixed.
+**
 **	Revision 1.24  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.23  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -653,7 +656,6 @@ void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
 		b3Vector::b3Sub(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint,&view);
 		if ((view.x != 0) || (view.y != 0))
 		{
-			B3_ASSERT(view.z != 0);
 			b3Vector::b3Init(&m_Axis.dir,0,0,1);
 		}
 		else

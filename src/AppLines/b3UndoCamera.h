@@ -40,7 +40,6 @@ protected:
 
 class b3OpCameraCreate : public b3OpCamera
 {
-	b3Scene      *m_Scene;
 	b3CameraPart *m_Selected;
 
 public:
@@ -60,7 +59,6 @@ protected:
 
 class b3OpCameraDelete : public b3OpCamera
 {
-	b3Scene      *m_Scene;
 	b3CameraPart *m_Selected;
 
 public:
