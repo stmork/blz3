@@ -57,6 +57,7 @@ class b3Thread
 {
 	b3TimeSpan      m_Span;
 	const char     *name;
+	b3_u32          result;
 protected:
 	CWinThread     *thread;
 	b3ThreadProc    callProc;

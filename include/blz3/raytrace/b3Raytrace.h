@@ -1684,6 +1684,7 @@ public:
 		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
 		   b3_bool         b3IsExpanded();
+		   void            b3Update();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare();
@@ -2341,6 +2342,7 @@ public:
 	        void            b3Draw(b3RenderContext *context);
 
 			char           *b3GetName();
+			void            b3Update();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
 		    b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
@@ -2382,11 +2384,10 @@ protected:
 
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
-	static  b3_u32          b3PrepareThread(void *ptr);
-	static  b3_u32          b3AllocVerticesThread(void *ptr);
-	static  b3_u32          b3ComputeVerticesThread(void *ptr);
-		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
-		    b3Shape        *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
+	static  b3_u32          b3PrepareThread(b3BBox *bbox);
+	static  b3_u32          b3UpdateThread( b3BBox *bbox);
+		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray_info *ray);
+		    b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);
 
 	friend class b3RayRow;

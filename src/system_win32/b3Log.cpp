@@ -45,13 +45,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/02 14:52:13  sm
+**	- Vertex/normal computation is now multithreaded, too.
+**	- Minor changes on b3PrepareInfo class.
+**	- Last changes to Windows port.
+**
 **	Revision 1.6  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.5  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -89,12 +94,12 @@ static FILE *bout;
 #define B3_DEFAULT_FILE "C:\\temp\\b3.log"
 
 static char  B3_OUT[B3_FILESTRINGLEN] = B3_DEFAULT_FILE;
-static bool  alreadyOpen             = false;
+static bool  alreadyOpen              = false;
 
 #ifndef _DEBUG
-static long  logLevel    = B3LOG_NORMAL;	// normal version
+static b3_log_level logLevel          = B3LOG_NORMAL;	// normal version
 #else
-static long  logLevel    = B3LOG_FULL;	// debug version
+static b3_log_level logLevel          = B3LOG_FULL;	// debug version
 #endif
 
 static b3IPCMutex LogMutex;
@@ -105,7 +110,7 @@ static b3IPCMutex LogMutex;
 **                                                                      **
 *************************************************************************/
 
-void b3Log_SetLevel(const b3_log_level debug_limit)
+b3_log_level b3Log_SetLevel(const b3_log_level debug_limit)
 {
 	b3_log_level oldLevel = logLevel;
 

@@ -33,13 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/02 14:52:13  sm
+**	- Vertex/normal computation is now multithreaded, too.
+**	- Minor changes on b3PrepareInfo class.
+**	- Last changes to Windows port.
+**
 **	Revision 1.8  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.7  2002/03/10 21:14:41  sm
 **	- Fixed rotation shapes with custom subdivision for rotation.
 **	
@@ -173,10 +178,9 @@ void b3Thread::b3Name(const char *task_name)
 	name = task_name;
 }
 
-unsigned int b3Thread::b3Trampoline(void *ptr)
+b3_u32 b3Thread::b3Trampoline(void *ptr)
 {
 	b3Thread *threadClass;
-	b3_u32    result;
 
 	threadClass = (b3Thread *)ptr;
 
@@ -186,7 +190,7 @@ unsigned int b3Thread::b3Trampoline(void *ptr)
 	threadClass->is_running = true;
 	threadMutex.b3Unlock();
 	
-	result = threadClass->callProc(threadClass->callArg);
+	threadClass->result = threadClass->callProc(threadClass->callArg);
 
 	threadMutex.b3Lock();
 	threadClass->is_running = false;
@@ -194,7 +198,7 @@ unsigned int b3Thread::b3Trampoline(void *ptr)
 	threadMutex.b3Unlock();
 	threadClass->m_Span.b3Stop();
 
-	return result;
+	return threadClass->result;
 }
 
 b3_bool b3Thread::b3Start(
@@ -260,7 +264,11 @@ b3_u32 b3Thread::b3Wait()
 		thread = null;
 		threadMutex.b3Unlock();
 	}
-#error "Ergebnis!"
+	else
+	{
+		result = null;
+	}
+	return result;
 }
 
 b3_bool b3Thread::b3Stop()

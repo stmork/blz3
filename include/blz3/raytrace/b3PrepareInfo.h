@@ -20,9 +20,15 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 
+typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
+
+#define B3_MIN_BBOXES_FOR_THREADING 50
+
 class b3PrepareInfo
 {
 	friend class b3Scene;
+
+	b3PrepareProc            m_PrepareProc;
 
 protected:
 	b3Base<b3BBoxReference>  m_BBoxRefList;
@@ -31,9 +37,12 @@ protected:
 
 public:
 	                 b3PrepareInfo(b3Scene *scene);
+	b3_bool          b3Prepare(b3PrepareProc prepare_func);
+
+private:
 	b3BBoxReference *b3GetBBoxReference();
 	void             b3RebuildListFromArray();
-	b3_bool          b3Prepare(b3ThreadProc prepare_func);
+	static b3_u32    b3PrepareThread(void *ptr);
 };
 
 #endif

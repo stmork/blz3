@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3PrepareInfo.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -32,13 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2002/08/02 14:52:12  sm
+**	- Vertex/normal computation is now multithreaded, too.
+**	- Minor changes on b3PrepareInfo class.
+**	- Last changes to Windows port.
+**
 **	Revision 1.58  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.57  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
@@ -413,18 +419,7 @@ b3_bool b3BBox::b3Prepare()
 	b3Item     *item;
 	b3Shape    *shape;
 	b3CSGShape *csgShape;
-	b3BBox     *bbox;
 
-/*
-	B3_FOR_BASE(b3GetBBoxHead(),item)
-	{
-		bbox = (b3BBox *)item;
-		if (!bbox->b3Prepare())
-		{
-			return false;
-		}
-	}
-*/
 	m_ShapeCount = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
@@ -682,6 +677,19 @@ void b3BBox::b3Draw(b3RenderContext *context)
 	}
 }
 
+void b3BBox::b3Update()
+{
+	b3Item              *item;
+	b3ShapeRenderObject *shape;
+
+	b3RenderObject::b3Update();
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3ShapeRenderObject *)item;
+		shape->b3Update();
+	}
+}
+
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
 {
 	b3Item              *item;
@@ -740,12 +748,26 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	return result;
 }
 
+b3_bool b3Scene::b3UpdateThread(b3BBox *bbox)
+{
+	bbox->b3Update();
+	return true;
+}
+
+void b3Scene::b3Update()
+{
+	b3PrepareInfo info(this);
+
+	info.b3Prepare(b3UpdateThread);
+}
+
 b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
 	b3Item  *item;
 	b3BBox  *bbox;
 	b3_bool  result = false;
 
+	b3Update();
 	b3Vector::b3InitBound(lower,upper);
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)

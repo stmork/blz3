@@ -37,13 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/08/02 14:52:13  sm
+**	- Vertex/normal computation is now multithreaded, too.
+**	- Minor changes on b3PrepareInfo class.
+**	- Last changes to Windows port.
+**
 **	Revision 1.35  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.34  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
@@ -585,20 +590,9 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	return 0;
 }
 
-
-b3_u32 b3Scene::b3PrepareThread(void *ptr)
+b3_bool b3Scene::b3PrepareThread(b3BBox *bbox)
 {
-	b3PrepareInfo   *info = (b3PrepareInfo *)ptr;
-	b3BBoxReference *reference;
-
-	while (reference = info->b3GetBBoxReference())
-	{
-		if (!reference->m_BBox->b3Prepare())
-		{
-			return 0;
-		}
-	}
-	return 1;
+	return bbox->b3Prepare();
 }
 
 b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
@@ -607,10 +601,8 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	b3Nebular     *nebular;
 	b3SuperSample *supersample;
 	b3Light       *light;
-	b3BBox        *bbox;
 	b3_f64         xDenom,yDenom;
 
-b3_log_level old = b3Log_SetLevel(B3LOG_FULL);
 	b3PrintF(B3LOG_FULL,"b3Scene::b3Prepare(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
 	m_AvrgColor.r = (m_BottomColor.r + m_TopColor.r) * 0.5;
@@ -710,7 +702,7 @@ b3_log_level old = b3Log_SetLevel(B3LOG_FULL);
 	}
 
 	b3PrintF(B3LOG_FULL,"  preparing done...\n");
-b3Log_SetLevel(old);
+
 	return (m_BackgroundType == TP_TEXTURE ?
 		b3CheckTexture(&m_BackTexture,m_TextureName) :
 		true);

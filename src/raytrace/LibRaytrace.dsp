@@ -177,6 +177,10 @@ SOURCE=.\b3NormalDeriv.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PrepareInfo.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Raytrace.cc
 # End Source File
 # Begin Source File
@@ -253,15 +257,7 @@ SOURCE=.\b3TriangleShape.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\include\blz3\base\b3Aux.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\blz3\base\b3FileList.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include_win32\blz3\b3Main.h
+SOURCE=..\..\include\blz3\raytrace\b3PrepareInfo.h
 # End Source File
 # Begin Source File
 
@@ -270,10 +266,6 @@ SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3RenderView.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\blz3\b3Types.h
 # End Source File
 # End Group
 # End Target
