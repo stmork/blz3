@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.105  2004/11/30 16:44:28  smork
+**      - Some formatting
+**
 **      Revision 1.104  2004/11/30 10:16:14  smork
 **      - Added a working VBO version which computes vertices/indices
 **        completely in CPU memory and only updates the results into
@@ -552,12 +555,6 @@
 **
 */
 
-/*************************************************************************
-**                                                                      **
-**                        Implementation                                **
-**                                                                      **
-*************************************************************************/
-	
 /*************************************************************************
 **                                                                      **
 **                        b3RenderObject implementation                 **
@@ -1414,22 +1411,23 @@ void b3RenderObject::b3CreateImage(
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENGL
+#ifdef B3_DISPLAY_LIST
+
 void b3RenderObject::b3Draw(b3RenderContext *context)
 {
 	b3_render_mode render_mode = b3GetRenderMode();
 
-#ifdef BLZ3_USE_OPENGL
-#ifdef B3_DISPLAY_LIST
-
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Draw() this = %p\n",this);
 #endif
+
 	if ((!glMaterialComputed) || (glDisplayList == 0))
 	{
 		b3UpdateMaterial();
 		glDisplayList = glGenLists(B3_DISPLAY_LIST_COUNT);
 
-		glNewList(glDisplayList,GL_COMPILE);
+		glNewList(glDisplayList, GL_COMPILE);
 		b3SelectMaterialForFilledDrawing(context);
 		glEndList();
 	}
@@ -1460,8 +1458,27 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 		// Do nothing!
 		break;
 	}
+
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Draw()\n");
+#endif
+}
+
 #else
-	if ((!glVerticesComputed) || (!glIndicesComputed) || (!glMaterialComputed))
+
+void b3RenderObject::b3Draw(b3RenderContext *context)
+{
+	b3_render_mode render_mode = b3GetRenderMode();
+
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Draw() this = %p\n",this);
+#endif
+
+	if (
+		(!glVertexElements->b3IsComputed()) ||
+		(!glGridElements->b3IsComputed()) ||
+		(!glPolygonElements->b3IsComputed()) ||
+		(!glMaterialComputed))
 	{
 		b3Update();
 		b3UpdateMaterial();
@@ -1472,18 +1489,29 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 #endif
 
 	b3DrawGeometry(context,render_mode);
-#endif
-#endif
+
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Draw()\n");
 #endif
 }
 
+#endif
+#else
+
+// No drawing without OpenGL
+void b3RenderObject::b3Draw(b3RenderContext *context)
+{
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"#####  b3RenderObject::b3Draw()\n");
+#endif
+}
+
+#endif
+
 void b3RenderObject::b3CheckGeometry(
 	b3RenderContext *context,
 	b3_render_mode   render_mode)
 {
-#ifdef _DEBUG
 	b3MapVertices(B3_MAP_VBO_R);
 	b3MapIndices(B3_MAP_VBO_R);
 
@@ -1572,14 +1600,12 @@ void b3RenderObject::b3CheckGeometry(
 	}
 	b3UnmapVertices();
 	b3UnmapIndices();
-#endif
 }
 
 void b3RenderObject::b3DrawGeometry(
 	b3RenderContext *context,
 	b3_render_mode   render_mode)
 {    
-#ifdef BLZ3_USE_OPENGL
 	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
@@ -1602,7 +1628,6 @@ void b3RenderObject::b3DrawGeometry(
 		// Do nothing!
 		break;
 	}
-#endif
 }
 
 void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
@@ -1663,13 +1688,25 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
 #endif
 }
 
+#ifndef _DEBUG
+
+void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
+{
+	glVertexElements->b3Draw();
+	glGridElements->b3Draw();
+}
+ 
+void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
+{
+	glVertexElements->b3Draw(); 
+	glPolygonElements->b3Draw();
+}
+
+#else
+
 void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
-#ifndef _DEBUG
-	glVertexElements->b3Draw();
-	glGridElements->b3Draw();
-#else
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw lined:  %d vertices, %d lines\n",
 		glVertexElements->b3GetCount(),
@@ -1685,16 +1722,11 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 		error = glGetError();
 	}
 #endif
-#endif
 }
 
 void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
-#ifndef _DEBUG
-	glVertexElements->b3Draw();
-	glPolygonElements->b3Draw();
-#else
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw filled: %d vertices, %d polygons\n",
 		glVertexElements->b3GetCount(),
@@ -1711,5 +1743,6 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 		error = glGetError();
 	}
 #endif
-#endif
 }
+
+#endif
