@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/05/16 18:50:59  sm
+**	- Added new simple image sampler.
+**	- We need better water!
+**
 **	Revision 1.33  2004/05/15 10:09:13  sm
 **	- Added b3CloudBackground to b3Special item list.
-**
+**	
 **	Revision 1.32  2004/05/15 07:51:02  sm
 **	- Some noise optimizations
 **	
@@ -189,11 +193,14 @@
 #define NOISEMAX         (1 << (NOISEBITS))
 #define NOISEMAXALLOC    (NOISEMAX)
 #define NOISEMASK        ((NOISEMAX) - 1)
+#define NOISEDIM         3
 
 #define INDEX3D(x,y,z)   ((((\
 	((x) & NOISEMASK)  << NOISEBITS) +\
 	((y) & NOISEMASK)) << NOISEBITS) +\
 	((z) & NOISEMASK))
+
+#define DIMSIZE          (NOISEMAXALLOC * NOISEMAXALLOC * NOISEMAXALLOC)
 
 #define MAXVAL           255
 #define mul4b(a,b,c,d)   ((a)*(b)*(c)*(d))
@@ -257,30 +264,33 @@ b3Noise noise_procedures;
 **                                                                      **
 *************************************************************************/
 
-b3_noisetype *b3Noise::NoiseTable = null;
+b3_noisetype *b3Noise::m_NoiseTable = null;
 
 b3Noise::b3Noise ()
 {
 	b3_noisetype *Table;
-	b3_coord      x,y,z;
+	b3_coord      x,y,z,d;
 	b3_count      i;
 
-	if (NoiseTable == null)
+	if (m_NoiseTable == null)
 	{
 		b3PrintF(B3LOG_DEBUG,"Initializing noise procedures...\n");
-		NoiseTable = Table = (b3_noisetype *)b3Alloc(
+		m_NoiseTable = (b3_noisetype *)b3Alloc(
+			NOISEDIM      *
 			NOISEMAXALLOC *
 			NOISEMAXALLOC *
 			NOISEMAXALLOC * sizeof(b3_noisetype));
-		if (NoiseTable == null)
+		if (m_NoiseTable == null)
 		{
 			B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
 		}
 
+		for (d = 0;d < NOISEDIM;d++)
 		for (x = 0;x < NOISEMAX;x++)
 		for (y = 0;y < NOISEMAX;y++)
 		for (z = 0;z < NOISEMAX;z++)
 		{
+			Table = &m_NoiseTable[d * DIMSIZE];
 			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
 		}
 
@@ -320,7 +330,7 @@ b3Noise::b3Noise ()
 
 b3Noise::~b3Noise ()
 {
-	NoiseTable = null;
+	m_NoiseTable = null;
 }
 
 /*************************************************************************
@@ -337,8 +347,8 @@ b3_f64 b3Noise::b3NoiseScalar(b3_f64 x)
 	ix = (b3_index)floor(x);
 	fx = (b3_f32)x - ix;
 
-	a = NoiseTable[INDEX3D(ix  ,0,0  )];
-	b = NoiseTable[INDEX3D(ix+1,0,0  )];
+	a = m_NoiseTable[INDEX3D(ix  ,0,0  )];
+	b = m_NoiseTable[INDEX3D(ix+1,0,0  )];
 
 	return a * (1.0 - fx) + b * fx;
 }
@@ -351,8 +361,8 @@ b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
 	ix = (b3_index)floor(x);
 	fx = b3Math::b3Smoothstep(x - ix);
 
-	a = NoiseTable[INDEX3D(ix  ,0,0  )];
-	b = NoiseTable[INDEX3D(ix+1,0,0  )];
+	a = m_NoiseTable[INDEX3D(ix  ,0,0  )];
+	b = m_NoiseTable[INDEX3D(ix+1,0,0  )];
 
 	return a * (1.0 - fx) + b * fx;
 }
@@ -424,19 +434,65 @@ b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 		(b3_f32)(b3Math::b3Smoothstep(z - iz)));
 }
 
+void b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result)
+{
+	b3_index ix,iy,iz;
+
+	ix = (b3_index)floor(x);
+	iy = (b3_index)floor(y);
+	iz = (b3_index)floor(z);
+
+	result->x = b3Interpolate(ix,iy,iz,
+		(b3_f32)x - ix,
+		(b3_f32)y - iy,
+		(b3_f32)z - iz,0);
+	result->y = b3Interpolate(ix,iy,iz,
+		(b3_f32)x - ix,
+		(b3_f32)y - iy,
+		(b3_f32)z - iz,1);
+	result->z = b3Interpolate(ix,iy,iz,
+		(b3_f32)x - ix,
+		(b3_f32)y - iy,
+		(b3_f32)z - iz,2);
+}
+
+void b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result)
+{
+	b3_index ix,iy,iz;
+
+	ix = (b3_index)floor(x);
+	iy = (b3_index)floor(y);
+	iz = (b3_index)floor(z);
+
+	result->x = b3Interpolate(ix,iy,iz,
+		(b3_f32)(b3Math::b3Smoothstep(x - ix)),
+		(b3_f32)(b3Math::b3Smoothstep(y - iy)),
+		(b3_f32)(b3Math::b3Smoothstep(z - iz)),0);
+	result->y = b3Interpolate(ix,iy,iz,
+		(b3_f32)(b3Math::b3Smoothstep(x - ix)),
+		(b3_f32)(b3Math::b3Smoothstep(y - iy)),
+		(b3_f32)(b3Math::b3Smoothstep(z - iz)),1);
+	result->z = b3Interpolate(ix,iy,iz,
+		(b3_f32)(b3Math::b3Smoothstep(x - ix)),
+		(b3_f32)(b3Math::b3Smoothstep(y - iy)),
+		(b3_f32)(b3Math::b3Smoothstep(z - iz)),2);
+}
+
 inline b3_f64 b3Noise::b3Interpolate(
 	b3_index ix,
 	b3_index iy,
 	b3_index iz,
 	b3_f32   fx,
 	b3_f32   fy,
-	b3_f32   fz)
+	b3_f32   fz,
+	b3_index d)
 {
-	b3_f32  B3_ALIGN_16 a[4],b[4],c[4];
-	b3_f32  rx = 1.0 - fx;
-	b3_f32  ry = 1.0 - fy;
-	b3_f32  rz = 1.0 - fz;
-	b3_loop i;
+	b3_noisetype *NoiseTable = &m_NoiseTable[d *DIMSIZE];
+	b3_f32        B3_ALIGN_16 a[4],b[4],c[4];
+	b3_f32        rx = 1.0 - fx;
+	b3_f32        ry = 1.0 - fy;
+	b3_f32        rz = 1.0 - fz;
+	b3_loop       i;
 
 	a[0] = NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
 	b[0] = NoiseTable[INDEX3D(ix+1,iy  ,iz  )];
@@ -473,12 +529,12 @@ inline b3_noisetype b3Noise::b3GetDiff(
 	b3_index i)
 {
 	return (b3_noisetype)(
-		NoiseTable[INDEX3D(xs + oM[k][i][0],
-		                   ys + oM[k][i][1],
-		                   zs + oM[k][i][2])] -
-		NoiseTable[INDEX3D(xs + oM[3][i][0],
-		                   ys + oM[3][i][1],
-		                   zs + oM[3][i][2])]);
+		m_NoiseTable[INDEX3D(xs + oM[k][i][0],
+		                     ys + oM[k][i][1],
+		                     zs + oM[k][i][2])] -
+		m_NoiseTable[INDEX3D(xs + oM[3][i][0],
+		                     ys + oM[3][i][1],
+		                     zs + oM[3][i][2])]);
 }
 
 inline b3_f64 b3Noise::b3GradNoise (

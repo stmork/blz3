@@ -33,6 +33,10 @@
 
 /*
 **  $Log$
+**  Revision 1.13  2004/05/16 18:50:59  sm
+**  - Added new simple image sampler.
+**  - We need better water!
+**
 **  Revision 1.12  2004/05/13 17:11:35  sm
 **  - Fixed make tar bug
 **
@@ -88,7 +92,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WOOD_RES   800
+#define WOOD_RES   400
 #define no_CREATE_ICON
 
 class b3MatWoodSampler : public b3MaterialSampler
@@ -139,10 +143,10 @@ public:
 class b3BumpWoodSampler : public b3BumpSampler
 {
 public:
-	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx)
+	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx,1)
 	{
 		// Init material
-		m_Bump = new b3BumpWood(BUMP_WOOD);
+		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
 		m_Bump->b3Prepare();
 	}
 	
@@ -189,9 +193,9 @@ int main(int argc,char *argv[])
 		
 		tx.b3AllocTx(xMax,yMax,24);
 		
-		b3MatWoodSampler      sampler(&tx);
+//		b3MatWoodSampler      sampler(&tx);
 //		b3MatOakPlankSampler  sampler(&tx);
-//		b3BumpWoodSampler     sampler(&tx);
+		b3BumpWoodSampler     sampler(&tx);
 //		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/16 18:50:59  sm
+**	- Added new simple image sampler.
+**	- We need better water!
+**
 **	Revision 1.7  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
-**
+**	
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -112,9 +116,9 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 	b3Matrix::b3VMul(&m_Warp,polar,&d,true);
 	b3Noise::b3FractionalBrownianMotion(&d,2,4,0.5,&offset);
 
-	b3Noise::b3SignedNoiseDeriv(0,0,d.z * m_TrunkWobbleFrequency,&aux);
-	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * aux.x;
-	Pring.y = d.y + m_RingNoise * offset.y + m_TrunkWobble * aux.y;
+	b3Noise::b3NoiseVector(0,0,d.z * m_TrunkWobbleFrequency,&aux);
+	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * (aux.x * 2 - 1);
+	Pring.y = d.y + m_RingNoise * offset.y + m_TrunkWobble * (aux.y * 2 - 1);
 	Pring.z = d.z + m_RingNoise * offset.z;
 
 	// Calculate radius from center

@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/05/16 18:50:59  sm
+**	- Added new simple image sampler.
+**	- We need better water!
+**
 **	Revision 1.33  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
-**
+**	
 **	Revision 1.32  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	
@@ -281,7 +285,7 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 	if (Denom == 0) return;
 	if (Denom != 1) Denom = 1/sqrt(Denom);  
 
-	b3Noise::b3NoiseDeriv (point.x,point.y,point.z,&n);
+	b3Noise::b3NoiseVector (point.x,point.y,point.z,&n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;

@@ -7,9 +7,10 @@
 CPPFLAGS		= $(STDINC)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= TestIo TestThread Mandel TestData TestUtil TestFilter TestVector TestMaterial TestWood
+PRGS			= TestIo TestThread Mandel TestData TestUtil TestFilter TestVector TestMaterial TestWood TestWater
 TESTDATA_OBJS		= TestData.o
 TESTMATERIAL_OBJS	= TestMaterial.o
+TESTWATER_OBJS		= TestWater.o
 TESTWOOD_OBJS		= TestWood.o
 TESTFILTER_OBJS		= TestFilter.o
 TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
@@ -30,6 +31,7 @@ PRG_SOURCE		=\
 	TestUtil.cc\
 	TestVector.cc\
 	TestMaterial.cc\
+	TestWater.cc\
 	TestWood.cc
 
 all:	$(PRGS)
@@ -60,6 +62,9 @@ TestThread:	$(TESTTHREAD_OBJS) $(BLZ3_LIB)/libB3System.a
 	$(LINK.cc) -o $@ $(TESTTHREAD_OBJS) $(LDLIBS)
 
 TestMaterial:	$(TESTMATERIAL_OBJS)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
+
+TestWater:	$(TESTWATER_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDLIBS)
 
 TestWood:	$(TESTWOOD_OBJS)
