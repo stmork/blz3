@@ -345,6 +345,10 @@ SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgItemCreate.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgItemMaintain.cpp
 # End Source File
 # Begin Source File
@@ -681,6 +685,10 @@ SOURCE=.\DlgHierarchy.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgItemCreate.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgItemMaintain.h
 # End Source File
 # Begin Source File
@@ -882,6 +890,14 @@ SOURCE=.\res\H_move.cur
 # Begin Source File
 
 SOURCE=.\res\ico00001.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\icon1.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\item_unknown.ico
 # End Source File
 # Begin Source File
 

@@ -34,6 +34,9 @@
 #define B3_NODE_NOT_SUCC   256
 #define B3_NODE_NOT_LAST   512
 
+#define B3_CLASS_MASK 0xffff0000
+#define B3_TYPE_MASK  0x0000ffff
+
 template <class T> class B3_PLUGIN b3Link
 {
 public:
@@ -59,12 +62,12 @@ public:
 
 	inline b3_u32 b3GetClass()
 	{
-		return ClassType & 0xffff0000;
+		return ClassType & B3_CLASS_MASK;
 	}
 
 	inline b3_u32 b3GetType()
 	{
-		return ClassType & 0x0000ffff;
+		return ClassType & B3_TYPE_MASK;
 	}
 
 	inline b3_u32 b3GetClassType()

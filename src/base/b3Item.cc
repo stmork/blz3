@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2003/06/15 09:24:21  sm
+**      - Added item creation dialog
+**
 **      Revision 1.32  2003/06/09 08:53:48  sm
 **      - Added preparation support for all b3Item objects.
 **
@@ -295,6 +298,16 @@ b3Item::~b3Item()
 	{
 		m_Heads[i].b3Free();
 	}
+}
+
+b3_bool b3Item::b3IsClass(b3_u32 class_type,b3_u32 class_id)
+{
+	return (class_type & B3_CLASS_MASK) == class_id;
+}
+
+b3_bool b3Item::b3IsClass(b3_u32 class_id)
+{
+	return b3IsClass(b3GetClassType(),class_id);
 }
 
 b3_bool b3Item::b3AllocHeads(b3_count new_head_count)

@@ -59,6 +59,7 @@ public:
 	b3_bool         b3AddPluginInfo(b3_plugin_info *info);
 	b3_plugin_info *b3FindInfo(b3Item *item);
 	b3_plugin_info *b3FindInfo(b3_u32 class_type);
+	b3_count        b3GetClassTypes(b3Array<b3_u32> &array,b3_u32 class_id);
 
 	static b3Loader &b3GetLoader()
 	{

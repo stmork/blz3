@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/06/15 09:24:25  sm
+**	- Added item creation dialog
+**
 **	Revision 1.9  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 **	Revision 1.8  2003/06/07 11:40:10  sm
 **	- Changed plugin interface:
 **	  o Added icons
@@ -154,6 +157,21 @@ b3_plugin_info *b3Loader::b3FindInfo(b3_u32 class_type)
 	return null;
 }
 
+b3_count b3Loader::b3GetClassTypes(b3Array<b3_u32> &array,b3_u32 class_id)
+{
+	b3_count i;
+
+	array.b3Clear();
+	for (i = 0;i < m_InfoArray.b3GetCount();i++)
+	{
+		if (b3Item::b3IsClass(m_InfoArray[i].m_ClassType,class_id))
+		{
+			array.b3Add(m_InfoArray[i].m_ClassType);
+		}
+	}
+	return array.b3GetCount();
+}
+
 b3_bool b3Loader::b3AddPluginInfo(b3_plugin_info *info)
 {
 	b3_bool result = false;
@@ -163,11 +181,12 @@ b3_bool b3Loader::b3AddPluginInfo(b3_plugin_info *info)
 		if (b3Plugin::b3IsValid(info))
 		{
 			m_InfoArray.b3Add(*info);
-			b3PrintF(B3LOG_DEBUG,"  class: %08x V%d \"%s\" %s edit option\n",
+			b3PrintF(B3LOG_DEBUG,"  class: %08x V%d \"%s\" %s create option and %s edit option\n",
 				info->m_ClassType,
 				info->m_Version,
 				info->m_Description == null ? "(unnamed)" : info->m_Description,
-				info->m_EditFunc != null ? "with" : "without");
+				info->m_CreateFunc != null ? "with" : "without",
+				info->m_EditFunc   != null ? "with" : "without");
 			result = true;
 		}
 		else

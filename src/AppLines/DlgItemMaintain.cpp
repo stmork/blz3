@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgItemMaintain.h"
+#include "DlgItemCreate.h"
 #include "b3StaticPluginInfoInit.h"
 
 /*************************************************************************
@@ -33,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/06/15 09:24:21  sm
+**	- Added item creation dialog
+**
 **	Revision 1.3  2003/06/14 15:31:26  sm
 **	- First successful plugin test including dialog. Debug version
 **	  not working yet.
-**
+**	
 **	Revision 1.3  2003/06/14 14:44:59  sm
 **	- Erster Plugintest mit Dialog und Raytracing
 **	
@@ -181,7 +185,7 @@ void CDlgItemMaintain::OnItemNew()
 {
 	// TODO: Add your control notification handler code here
 	b3Item *selected = b3GetSelectedItem();
-	b3Item *item = b3Loader::b3GetLoader().b3Create(0x7f000100);
+	b3Item *item = CDlgItemCreate::b3Create(m_Head->b3GetClass());
 
 	if (item != null)
 	{
@@ -197,8 +201,10 @@ void CDlgItemMaintain::OnItemEdit()
 
 	if (item != null)
 	{
-		b3Loader::b3GetLoader().b3Edit(item);
-		b3UpdateList(item);
+		if (b3Loader::b3GetLoader().b3Edit(item))
+		{
+			b3UpdateList(item);
+		}
 	}
 }
 

@@ -197,6 +197,8 @@ public:
 	        b3_size         b3Store();
 	        b3_world_error  b3StoreFile(b3FileAbstract *file);
 
+	static  b3_bool         b3IsClass(b3_u32 class_type,b3_u32 class_id);
+	        b3_bool         b3IsClass(b3_u32 class_id);
 protected:
 	// Parsing routines
 	void     b3Init();

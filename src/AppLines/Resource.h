@@ -16,6 +16,8 @@
 #define IDR_TOOLBAR_LIGHT               120
 #define IDR_TOOLBAR_OBJECT              121
 #define IDR_TOOLBAR_VIEW                122
+#define IDD_ITEM_CREATE                 123
+#define IDI_ITEM_UNKNOWN                124
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -516,6 +518,7 @@
 #define IDC_Y_START                     32288
 #define IDC_Y_START_LEGEND              32289
 #define IDC_Y_START_SPIN                32290
+#define IDC_ITEMLIST                    32291
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_LIGHT            60002
@@ -692,9 +695,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        123
+#define _APS_NEXT_RESOURCE_VALUE        125
 #define _APS_NEXT_COMMAND_VALUE         10118
-#define _APS_NEXT_CONTROL_VALUE         32291
+#define _APS_NEXT_CONTROL_VALUE         32292
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif
 #endif
