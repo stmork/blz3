@@ -119,6 +119,7 @@ protected:
 	afx_msg void OnObjectLoad();
 	afx_msg void OnObjectSave();
 	afx_msg void OnObjectReplace();
+	afx_msg void OnObjectCopy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

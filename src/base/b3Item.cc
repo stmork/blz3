@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/07 16:18:51  sm
+**      - Added b3Item clone
+**      - Added Drag & Drop
+**
 **      Revision 1.20  2002/01/01 13:50:21  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes

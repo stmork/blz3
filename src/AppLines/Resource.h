@@ -255,6 +255,7 @@
 #define ID_OBJECT_LOAD                  32857
 #define ID_OBJECT_SAVE                  32858
 #define ID_OBJECT_REPLACE               32859
+#define ID_OBJECT_COPY                  32861
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -296,7 +297,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32861
+#define _APS_NEXT_COMMAND_VALUE         32862
 #define _APS_NEXT_CONTROL_VALUE         1084
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

@@ -44,6 +44,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3FileMem.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -53,13 +54,17 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/01/07 16:18:51  sm
+**	- Added b3Item clone
+**	- Added Drag & Drop
+**
 **	Revision 1.41  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
 **	- Added some non static methods to b3Dir (Un*x untested, yet!)
 **	- Fixed missing sphere/ellipsoid south pole triangles
 **	- Fixed Spline cylinder/ring triangle indexing
-**
+**	
 **	Revision 1.40  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
@@ -292,12 +297,14 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
 	ON_COMMAND(ID_OBJECT_NEW_SUB, OnObjectNewSub)
 	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
+	ON_COMMAND(ID_OBJECT_COPY, OnObjectCopy)
 	ON_COMMAND(ID_OBJECT_LOAD, OnObjectLoad)
 	ON_COMMAND(ID_OBJECT_SAVE, OnObjectSave)
 	ON_COMMAND(ID_OBJECT_REPLACE, OnObjectReplace)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_COPY, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_LOAD, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_SAVE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_REPLACE, OnUpdateSelectedBBox)
@@ -1581,5 +1588,50 @@ void CAppLinesDoc::OnObjectReplace()
 			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
 				(const char *)result,w->b3GetError());
 		}
+	}
+}
+
+void CAppLinesDoc::OnObjectCopy() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	b3BBox         *selected;
+	b3BBox         *bbox;
+	b3BBox         *cloned;
+	b3Base<b3Item> *base;
+	b3_matrix       transformation;
+	b3_vector       move;
+	b3_count        i,max = 3;
+
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
+	B3_ASSERT(selected != null);
+	base     = m_Scene->b3FindBBoxHead(selected);
+	if (true)
+	{
+		b3Vector::b3Init(&move,100);
+		b3MatrixMove(null,&transformation,&move);
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		bbox = selected;
+		for (i = 0;i < max;i++)
+		{
+			cloned = (b3BBox *)b3World::b3Clone(bbox);
+			cloned->b3Transform(&transformation);
+			cloned->b3Prepare();
+			base->b3Insert(bbox,cloned);
+			bbox = cloned;
+		}
+
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_Scene->b3AllocVertices(&m_Context);
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		m_Scene->b3Recompute(selected);
+		b3ComputeBounds();
+
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		m_DlgHierarchy->b3InitTree(this,true);
 	}
 }

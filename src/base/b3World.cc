@@ -39,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/07 16:18:51  sm
+**      - Added b3Item clone
+**      - Added Drag & Drop
+**
 **      Revision 1.20  2002/01/04 17:53:53  sm
 **      - Added new/delete object.
 **      - Added deactive rest of all scene objects.
@@ -557,6 +561,59 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 		throw new b3WorldException(error);
 	}
 	return error == B3_WORLD_OK;
+}
+
+void b3World::b3CloneBase(
+	b3Base<b3Item> *srcBase,
+	b3Base<b3Item> *dstBase)
+{
+	b3ItemRegisterEntry *entry;
+	b3Item              *srcItem;
+	b3Item              *dstItem;
+	b3_index             i;
+
+	B3_FOR_BASE(srcBase,srcItem)
+	{
+		entry = b3_item_register.b3Find(srcItem->b3GetClassType());
+		if (entry != null)
+		{
+			dstItem = entry->b3Load(srcItem->m_StoreBuffer);
+			dstBase->b3Append(dstItem);
+			for(i = 0;i < srcItem->m_HeadCount;i++)
+			{
+				b3CloneBase(&srcItem->m_Heads[i],&dstItem->m_Heads[i]);
+			}
+			srcItem->b3Free(srcItem->m_StoreBuffer);
+		}
+		else
+		{
+			throw new b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
+		}
+	}
+}
+
+b3Item *b3World::b3Clone(b3Item *original)
+{
+	b3ItemRegisterEntry *entry;
+	b3Item              *item;
+	b3_index             i;
+
+	original->b3Store();
+	entry = b3_item_register.b3Find(original->b3GetClassType());
+	if (entry != null)
+	{
+		item = entry->b3Load(original->m_StoreBuffer);
+		for(i = 0;i < original->m_HeadCount;i++)
+		{
+			b3CloneBase(&original->m_Heads[i],&item->m_Heads[i]);
+		}
+		original->b3Free(original->m_StoreBuffer);
+	}
+	else
+	{
+		throw new b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
+	}
+	return item;
 }
 
 b3_bool b3World::b3Write(const char *filename)

@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/07 16:18:51  sm
+**	- Added b3Item clone
+**	- Added Drag & Drop
+**
 **	Revision 1.8  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -41,7 +45,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.7  2002/01/02 17:05:19  sm
 **	- Minor bug fixes done: recurse the CDlgHierarchy::b3FindBBox() correctly
 **	
@@ -79,8 +83,9 @@ CDlgHierarchy::CDlgHierarchy(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgHierarchy)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_pDoc  = null;
-	m_Scene = null;
+	m_pDoc     = null;
+	m_Scene    = null;
+	m_DragItem = null;
 }
 
 CDlgHierarchy::~CDlgHierarchy()
@@ -101,6 +106,10 @@ BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	//{{AFX_MSG_MAP(CDlgHierarchy)
 	ON_NOTIFY(TVN_ENDLABELEDIT, IDC_HIERARCHY, OnEndLabelEditHierarchy)
 	ON_NOTIFY(TVN_BEGINLABELEDIT, IDC_HIERARCHY, OnBeginlabeleditHierarchy)
+	ON_NOTIFY(TVN_BEGINDRAG, IDC_HIERARCHY, OnBeginDrag)
+	ON_NOTIFY(NM_RETURN, IDC_HIERARCHY, OnReturnHierarchy)
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -375,4 +384,111 @@ void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		*pResult = 0;
 	}
+}
+
+void CDlgHierarchy::OnReturnHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	CEdit *edit;
+
+	edit = m_Hierarchy.GetEditControl();
+	if (edit != null)
+	{
+	}
+	*pResult = (edit != null);
+}
+
+void CDlgHierarchy::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+	// TODO: Add your control notification handler code here
+	
+	if ((pNMTreeView->itemNew.hItem != null) && (pNMTreeView->itemNew.lParam))
+	{
+		m_DragItem = pNMTreeView->itemNew.hItem;
+		SetCapture();
+	}
+	*pResult = (m_DragItem != null);
+}
+
+b3_bool CDlgHierarchy::b3FindBBox(b3Base<b3Item> *base,b3BBox *search)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(base,item)
+	{
+		bbox = (b3BBox *)item;
+		if (bbox == search)
+		{
+			return true;
+		}
+		if (b3FindBBox(bbox->b3GetBBoxHead(),search))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	b3BBox         *srcBBox;
+	b3BBox         *dstBBox;
+
+	if (m_DragItem != null)
+	{
+		UINT      flags;
+		HTREEITEM item;
+
+		item = m_Hierarchy.HitTest(point,&flags);
+		if (item != null)
+		{
+			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
+			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(item);
+			m_DropItem =
+				(b3FindBBox(srcBBox->b3GetBBoxHead(),dstBBox) ||
+				(srcBBox == dstBBox) ? null : item);
+			m_Hierarchy.SelectDropTarget(m_DropItem);
+		}
+	}
+	CB3Dialogbar::OnMouseMove(nFlags, point);
+}
+
+void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	b3BBox         *srcBBox;
+	b3BBox         *dstBBox;
+	b3Base<b3Item> *srcBase;
+	b3Base<b3Item> *dstBase;
+
+	if (m_DragItem != null)
+	{
+		::ReleaseCapture();
+		m_Hierarchy.SelectDropTarget(NULL);
+		if (m_DropItem != null)
+		{
+			b3GetData();
+
+			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
+			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DropItem);
+			srcBase = m_Scene->b3FindBBoxHead(srcBBox);
+			dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
+
+			m_Scene->b3Recompute(srcBBox);
+			srcBase->b3Remove(srcBBox);
+			dstBase->b3Append(srcBBox);
+			m_Scene->b3Recompute(srcBBox);
+			b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+
+			m_pDoc->b3ComputeBounds();
+			m_pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			m_pDoc->SetModifiedFlag();
+			b3InitTree(m_pDoc,true);
+		}
+		m_DragItem = null;
+	}
+	CB3Dialogbar::OnLButtonUp(nFlags, point);
 }

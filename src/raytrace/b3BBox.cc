@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/01/07 16:18:51  sm
+**	- Added b3Item clone
+**	- Added Drag & Drop
+**
 **	Revision 1.34  2002/01/06 21:38:18  sm
 **	- Nasty Un CR/LF
 **	- b3Dir fix. Not tested, yet!
 **	- make count/make count_all update
-**
+**	
 **	Revision 1.33  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
@@ -827,7 +831,7 @@ b3_bool b3BBox::b3Recompute(b3BBox *search)
 			return true;
 		}
 
-		if (result = bbox->b3Recompute(search))
+		if ((result = bbox->b3Recompute(search)) != null)
 		{
 			bbox->b3RenderObject::b3Recompute();
 			return result;
@@ -851,7 +855,7 @@ b3_bool b3Scene::b3Recompute(b3BBox *search)
 			return true;
 		}
 
-		if (result = bbox->b3Recompute(search))
+		if ((result = bbox->b3Recompute(search)) != null)
 		{
 			bbox->b3RenderObject::b3Recompute();
 			return result;

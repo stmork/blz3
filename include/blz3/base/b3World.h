@@ -89,7 +89,8 @@ typedef enum
 	B3_WORLD_PARSE,
 	B3_WORLD_WRITE,
 	B3_WORLD_STORAGE_NOT_IMPLEMENTED,
-	B3_WORLD_OUT_OF_ORDER
+	B3_WORLD_OUT_OF_ORDER,
+	B3_WORLD_CLASSTYPE_UNKNOWN
 } b3_world_error;
 
 class b3WorldException
@@ -111,25 +112,77 @@ public:
 
 /*************************************************************************
 **                                                                      **
-**                        The b3Item class itself                       **
+**                        The b3World class                             **
 **                                                                      **
 *************************************************************************/
 
 class b3Item;
+class b3FirstItem;
+
+class b3World : public b3Mem, public b3SearchPath
+{
+	b3_u32         *m_Buffer;
+	b3_size         m_BufferSize;
+	b3_bool         m_NeedEndianChange;
+	b3FirstItem    *m_Start;
+
+public:
+	b3_bool         m_AutoDelete;
+
+public:
+	                b3World();
+	                b3World(const char *world_name);
+	virtual        ~b3World(); 
+
+	static b3Item  *b3AllocNode(b3_u32 class_value);
+	static b3Item  *b3AllocNode(b3_u32 *buffer);
+
+	b3_bool         b3Read (const char *world_name);
+	b3_bool         b3Write(const char *world_name);
+	b3_world_error  b3Read (b3FileAbstract *file_handle);
+	b3_world_error  b3Write(b3FileAbstract *file_handle);
+	b3_bool         b3ReadDump(const char *world_name);
+	b3_size         b3Length();
+	void            b3Dump();
+	b3Item         *b3RemoveFirst();
+	b3Item         *b3GetFirst();
+	void            b3SetFirst(b3Item *item);
+	b3Base<b3Item> *b3GetHead(b3_u32 class_value = 0);
+
+	static  b3Item *b3Clone(b3Item *original);
+
+private:
+	b3_world_error  b3EndianSwapWorld();
+	b3_world_error  b3Parse();
+
+	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        The b3Item class itself                       **
+**                                                                      **
+*************************************************************************/
 
 typedef b3Item * (*b3_item_init_func)(b3_u32  class_type);
 typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
+
+#define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new item_class(class_type); }
+#define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new item_class(src); }
 
 class b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
 	b3_size         m_ItemSize;
 	b3_size         m_ItemOffset;
-	b3_u32         *m_Buffer;
 	b3Base<b3Item> *m_Heads;
 	b3_index        m_HeadCount;
 
+	// Attributes for parsing
+	b3_u32         *m_Buffer;
 	b3_index        m_ParseIndex;
+
+	// Attributes for writing
 	b3_index        m_StoreIndex;
 	b3_index        m_StoreOffset;
 	b3_size         m_StoreSize;
@@ -197,6 +250,8 @@ protected:
 
 private:
 	void     b3EnsureStoreBuffer(b3_index needed,b3_bool is_data=true);
+
+	friend class b3World;
 };
 
 /*************************************************************************
@@ -204,46 +259,6 @@ private:
 **                        Entry point for item file                     **
 **                                                                      **
 *************************************************************************/
-
-#define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new item_class(class_type); }
-#define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new item_class(src); }
-
-class b3FirstItem;
-
-class b3World : public b3Mem, public b3SearchPath
-{
-	b3_u32         *m_Buffer;
-	b3_size         m_BufferSize;
-	b3_bool         m_NeedEndianChange;
-	b3FirstItem    *m_Start;
-
-public:
-	b3_bool         m_AutoDelete;
-
-public:
-	                b3World();
-	                b3World(const char *world_name);
-	virtual        ~b3World(); 
-
-	static b3Item  *b3AllocNode(b3_u32 class_value);
-	static b3Item  *b3AllocNode(b3_u32 *buffer);
-
-	b3_bool         b3Read (const char *world_name);
-	b3_bool         b3Write(const char *world_name);
-	b3_world_error  b3Read (b3FileAbstract *file_handle);
-	b3_world_error  b3Write(b3FileAbstract *file_handle);
-	b3_bool         b3ReadDump(const char *world_name);
-	b3_size         b3Length();
-	void            b3Dump();
-	b3Item         *b3RemoveFirst();
-	b3Item         *b3GetFirst();
-	void            b3SetFirst(b3Item *item);
-	b3Base<b3Item> *b3GetHead(b3_u32 class_value = 0);
-
-private:
-	b3_world_error  b3EndianSwapWorld();
-	b3_world_error  b3Parse();
-};
 
 class b3FirstItem : public b3Item
 {

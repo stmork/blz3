@@ -65,16 +65,22 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnReturnHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	CAppLinesDoc *m_pDoc;
 	CImageList    m_ImageList;
 	b3Scene      *m_Scene;
+	HTREEITEM     m_DragItem,m_DropItem;
 	long          b3ComputeImgNum(b3BBox *BBox);
 	void          b3AddBBoxes(HTREEITEM parent,b3BBox *BBox);
 	b3_count      b3Traverse (HTREEITEM parent);
 	HTREEITEM     b3FindBBox (HTREEITEM parent,b3BBox *BBox);
+	b3_bool       b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
 	void          b3UpdateIcons(HTREEITEM parent);
 };
 
