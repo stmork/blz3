@@ -226,10 +226,6 @@ SOURCE=..\..\include_win32\blz3\system\b3Dir.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include_win32\blz3\system\b3Display.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\include_win32\blz3\system\b3DisplayView.h
 # End Source File
 # Begin Source File
