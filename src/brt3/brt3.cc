@@ -8,7 +8,7 @@
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001, 2002, 2003  Steffen A. Mork
+**      (C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2004/01/05 08:01:55  sm
+**	- Added new year.
+**
 **	Revision 1.50  2004/01/01 12:46:43  sm
 **	- Fixed RGB8 image writing
 **	- Added RGB8 image saving to brt3 and display all command line options.
-**
+**	
 **	Revision 1.49  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
@@ -340,7 +343,7 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
-	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
 	if (command != null)
 	{

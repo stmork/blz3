@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2004/01/05 08:01:55  sm
+**      - Added new year.
+**
 **      Revision 1.38  2003/07/20 09:38:30  sm
 **      - Registering raytracing items manually.
 **
@@ -428,7 +431,7 @@ int main(int argc,char *argv[])
 	if (argc <= 1)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s BWD-file\n",argv[0]);
