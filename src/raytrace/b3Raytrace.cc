@@ -37,13 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2004/07/22 10:09:38  sm
+**	- Optimized triangle into grid insertion.
+**
 **	Revision 1.62  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.61  2004/06/30 13:18:13  sm
 **	- Add statistics support for intersection counting but the thread
 **	  safe counting is to expensive. So added b3AtomicCount class but
@@ -593,9 +596,11 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	b3Nebular         *nebular;
 	b3Distribute      *distributed;
 	b3SuperSample     *supersample;
+	b3Time             timepoint;
 	b3Light           *light;
-	b3_f64             xDenom,yDenom;
+	b3_f64             xDenom,yDenom,tStart,tEnd;
 
+	tStart = timepoint;
 	b3PrintF(B3LOG_FULL,"b3Scene::b3PrepareScene(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
 	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
@@ -735,7 +740,9 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	B3_ASSERT(m_Shader != null);
 	m_Shader->b3Prepare();
 
-	b3PrintF(B3LOG_FULL,"  preparing done...\n");
+	timepoint.b3Now();
+	tEnd = timepoint;
+	b3PrintF(B3LOG_NORMAL,"Preparing took %3.3fs.\n",tEnd - tStart);
 
 	return (m_BackgroundType == TP_TEXTURE ?
 		b3CheckTexture(&m_BackTexture,m_TextureName) :

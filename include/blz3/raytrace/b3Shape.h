@@ -410,6 +410,9 @@ public:
 #define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
 #define NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
 
+// index calculation of triangle grid
+#define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
+
 struct b3_triainfo
 {
 	b3_vector32 O,R1,R2;
@@ -460,20 +463,50 @@ public:
 protected:
 	        void    b3FreeTriaRefs();
 private:
-	        void    b3Clear();
-	        void    b3PrepareGridList();
-	        void    b3AddCubicItem(b3_count trianum,b3_index index);
-	        void    b3SearchCubicItem(
-				b3_vector *P1,b3_vector *P2,b3_vector *P3,
-				b3_index   index,b3_index   rec,b3_count   MaxRec);
-	        b3_f64  b3IntersectTriangleList(
+	        b3_f64   b3IntersectTriangleList(
 				b3_ray    *ray,
 				b3_polar  *polar,
 				b3_index   index);
-};
 
-// index calculation of triangle grid
-#define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
+	        void     b3Clear();
+	        void     b3PrepareGridList();
+			void b3SubdivideIntoGrid(
+			    b3_vector *P1,
+			    b3_vector *P2,
+			    b3_vector *P3,
+			    b3_index   triangle,
+			    b3_count   max);
+
+			inline void b3ToGridSpace(const b3_vector *point,b3_vector *result)
+			{
+				result->x = (point->x - m_Base.x) / m_Size.x;
+				result->y = (point->y - m_Base.y) / m_Size.y;
+				result->z = (point->z - m_Base.z) / m_Size.z;
+			}
+
+			inline b3_index b3GetGrid(b3_vector *p)
+			{
+				return GRID_INDEX((b3_index)p->x,(b3_index)p->y,(b3_index)p->z,m_GridSize);
+			}
+			
+	        inline void b3AddTriangleToGrid(b3_index triangle,b3_index grid)
+	        {
+	        	if((grid >= 0) && (grid < m_GridCount))
+	        	{
+					b3_index max = m_GridList[grid].b3GetCount();
+
+					if (max > 0)
+					{
+						if (m_GridList[grid][max - 1] != triangle)
+						{
+	 						m_GridList[grid].b3Add(triangle);
+	 					}
+	 				}
+	 			}
+	        }
+
+			static b3_count b3IntLog2(b3_count value);
+};
 
 // TRIANGLES
 class B3_PLUGIN b3Triangles : public b3TriangleShape

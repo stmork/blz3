@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2004/07/22 10:09:38  sm
+**      - Optimized triangle into grid insertion.
+**
 **      Revision 1.44  2004/07/11 11:05:15  sm
 **      - Triangle preparation optimized to build grid only if new or
 **        transformed.
@@ -285,98 +288,77 @@ void b3TriangleShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3TransformVertices(transformation,is_affine);
 }
 
-void b3TriangleShape::b3AddCubicItem (
-	b3_count grid,
-	b3_index triangle)
+b3_count b3TriangleShape::b3IntLog2(b3_count value)
 {
-	b3_index max;
+	b3_count result = -1;
 
-	if((grid >= 0) && (grid < m_GridCount))
+	while (value != 0)
 	{
-		max = m_GridList[grid].b3GetCount();
-		if (max > 0)
-		{
-			if (m_GridList[grid][max - 1] == triangle)
-			{
-				return;
-			}
-		}
-		m_GridList[grid].b3Add(triangle);
+		value = value >> 1;
+		result++;
 	}
+	return result;
 }
 
-void b3TriangleShape::b3SearchCubicItem (
+void b3TriangleShape::b3SubdivideIntoGrid(
 	b3_vector *P1,
 	b3_vector *P2,
 	b3_vector *P3,
-	b3_index   index,
-	b3_index   rec,
-	b3_count   MaxRec)
+	b3_index   triangle,
+	b3_count   max)
 {
-	b3_index  I1,I2,I3;
-	b3_index  x1,y1,z1;
-	b3_index  x2,y2,z2;
-	b3_index  x3,y3,z3;
-	b3_vector P4;
+	b3_index i1 = b3GetGrid(P1);
+	b3_index i2 = b3GetGrid(P2);
+	b3_index i3 = b3GetGrid(P3);
 
-	if (rec > MaxRec)
+	if ((i1 == i2) && (i2 == i3))
 	{
-		return;
-	}
-
-	P4.x = (P1->x + P2->x + P3->x) / 3.0;
-	P4.y = (P1->y + P2->y + P3->y) / 3.0;
-	P4.z = (P1->z + P2->z + P3->z) / 3.0;
-
-	x1 = (b3_index)P1->x; y1 = (b3_index)P1->y; z1 = (b3_index)P1->z;
-	x2 = (b3_index)P2->x; y2 = (b3_index)P2->y; z2 = (b3_index)P2->z;
-	x3 = (b3_index)P3->x; y3 = (b3_index)P3->y; z3 = (b3_index)P3->z;
-
-	I1 = B3_ABS(x1 - x2) + B3_ABS(y1 - y2) + B3_ABS(z1 - z2);
-	I2 = B3_ABS(x2 - x3) + B3_ABS(y2 - y3) + B3_ABS(z2 - z3);
-	I3 = B3_ABS(x3 - x1) + B3_ABS(y3 - y1) + B3_ABS(z3 - z1);
-
-	if (I1 <= 1)
-	{
-		b3AddCubicItem (GRID_INDEX(x1,y1,z1,m_GridSize),index);
-		b3AddCubicItem (GRID_INDEX(x2,y2,z2,m_GridSize),index);
+		// Entire triangle is in a single voxel
+		b3AddTriangleToGrid(i1,triangle);
 	}
 	else
 	{
-		b3SearchCubicItem (P1,P2,&P4,index,rec+1,MaxRec);
-	}
+		b3_index dSum = B3_ABS(i2 - i1) + B3_ABS(i3 - i2) + B3_ABS(i1 - i3);
 
-	if (I2 <= 1)
-	{
-		b3AddCubicItem (GRID_INDEX(x2,y2,z2,m_GridSize),index);
-		b3AddCubicItem (GRID_INDEX(x3,y3,z3,m_GridSize),index);
-	}
-	else
-	{
-		b3SearchCubicItem (P2,P3,&P4,index,rec+1,MaxRec);
-	}
+		if (dSum == 1)
+		{
+			// triangles span over two nieghboured grid voxels.
+			b3AddTriangleToGrid(i1,triangle);
+			b3AddTriangleToGrid(i2,triangle);
+			b3AddTriangleToGrid(i3,triangle);
+		}
+		else if (max > 0)
+		{
+			b3_vector P12h;
+			b3_vector P23h;
+			b3_vector P31h;
 
-	if (I3 <= 1)
-	{
-		b3AddCubicItem (GRID_INDEX(x3,y3,z3,m_GridSize),index);
-		b3AddCubicItem (GRID_INDEX(x1,y1,z1,m_GridSize),index);
-	}
-	else
-	{
-		b3SearchCubicItem (P3,P1,&P4,index,rec+1,MaxRec);
-	}
-}
+			P12h.x = (P1->x + P2->x) * 0.5;
+			P12h.y = (P1->y + P2->y) * 0.5;
+			P12h.z = (P1->z + P2->z) * 0.5;
 
-static b3_s32 b3IntLog3 (b3_u32 value)
-{
-	b3_s32 Log = -1;
+			P23h.x = (P2->x + P3->x) * 0.5;
+			P23h.y = (P2->y + P3->y) * 0.5;
+			P23h.z = (P2->z + P3->z) * 0.5;
 
-	while (value > 0)
-	{
-		value = (value + value) / 3;
-		Log++;
+			P31h.x = (P3->x + P1->x) * 0.5;
+			P31h.y = (P3->y + P1->y) * 0.5;
+			P31h.z = (P3->z + P1->z) * 0.5;
+
+			// Further subdivision
+			b3SubdivideIntoGrid( P1,  &P12h,&P31h,triangle,max-1);
+			b3SubdivideIntoGrid( P2,  &P23h,&P12h,triangle,max-1);
+			b3SubdivideIntoGrid( P3,  &P31h,&P23h,triangle,max-1);
+			b3SubdivideIntoGrid(&P12h,&P23h,&P31h,triangle,max-1);
+		}
+		else
+		{
+			// End!
+			b3AddTriangleToGrid(i1,triangle);
+			b3AddTriangleToGrid(i2,triangle);
+			b3AddTriangleToGrid(i3,triangle);
+		}
 	}
-	return Log;
 }
 
 void b3TriangleShape::b3PrepareGridList ()
@@ -388,25 +370,19 @@ void b3TriangleShape::b3PrepareGridList ()
 	b3_count  degenerated = 0;
 #endif
 
-	MaxRec = b3IntLog3(m_GridSize) << 1;
 	max    = m_GridSize * m_GridSize * m_GridSize;
-
+	MaxRec = b3IntLog2(m_GridSize);
 	if (max > 1)
 	{
 		for (i = 0;i < m_TriaCount;i++)
 		{
-			P1.x = (m_Vertices[m_Triangles[i].P1].Point.x - m_Base.x) / m_Size.x;
-			P1.y = (m_Vertices[m_Triangles[i].P1].Point.y - m_Base.y) / m_Size.y;
-			P1.z = (m_Vertices[m_Triangles[i].P1].Point.z - m_Base.z) / m_Size.z;
-			P2.x = (m_Vertices[m_Triangles[i].P2].Point.x - m_Base.x) / m_Size.x;
-			P2.y = (m_Vertices[m_Triangles[i].P2].Point.y - m_Base.y) / m_Size.y;
-			P2.z = (m_Vertices[m_Triangles[i].P2].Point.z - m_Base.z) / m_Size.z;
-			P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
-			P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
-			P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
 			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
 			{
-				b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
+				b3ToGridSpace(&m_Vertices[m_Triangles[i].P1].Point,&P1);
+				b3ToGridSpace(&m_Vertices[m_Triangles[i].P2].Point,&P2);
+				b3ToGridSpace(&m_Vertices[m_Triangles[i].P3].Point,&P3);
+
+				b3SubdivideIntoGrid(&P1,&P2,&P3,i,MaxRec);
 			}
 #ifdef _DEBUG
 			else
@@ -422,7 +398,7 @@ void b3TriangleShape::b3PrepareGridList ()
 		{
 			if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (b3Scene::epsilon * b3Scene::epsilon))
 			{
-				b3AddCubicItem(0,i);
+				m_GridList[0].b3Add(i);
 			}
 #ifdef _DEBUG
 			else
