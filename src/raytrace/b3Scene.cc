@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2004/05/20 20:15:45  sm
+**	- Added missing Albrecht and gloabl illumination shader.
+**
 **	Revision 1.62  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.61  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -450,6 +453,10 @@ void b3Scene::b3ReallocateShader()
 	}
 	switch (b3GetClassType())
 	{
+	case TRACEPHOTO_ALBRECHT:
+	case GLOBAL_ILLUM:
+		b3PrintF(B3LOG_NORMAL,"Warning: Scene type %08lx not implemented yet...\n",b3GetClassType());
+		// Walk through!!!
 	case TRACEPHOTO_MORK:
 	case TRACEANGLE_MORK:
 		m_Shader = new b3ShaderMork(this);
