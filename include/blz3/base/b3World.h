@@ -32,6 +32,14 @@
 
 #define B3_CLASS_MAX 0x7fff0000
 
+#ifdef _DEBUG
+#define	B3_ASSERT_INDEX	B3_ASSERT((b3_size)(b3Item::m_ParseIndex << 2) < b3Item::m_ItemSize)
+#else
+#define B3_ASSERT_INDEX
+#endif
+
+#define B3_PARSE_INDEX_VALID ((b3_size)(b3Item::m_ParseIndex << 2) < b3Item::m_ItemSize)
+
 typedef enum
 {
 	B3_NODE_IDX_SUCC = 0,
@@ -86,12 +94,13 @@ typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 class b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
-	b3_size         size;
-	b3_u32         *buffer;
+	b3_size         m_ItemSize;
+	b3_size         m_ItemOffset;
+	b3_u32         *m_Buffer;
 	b3Base<b3Item> *heads;
 	b3_index        head_count;
 
-	b3_index        parseIndex;
+	b3_index        m_ParseIndex;
 public:
 	                        b3Item();
 	                        b3Item(b3_size class_size,b3_u32 class_type);
@@ -143,10 +152,10 @@ public:
 
 class b3World : public b3Mem
 {
-	b3_u32         *buffer;
-	b3_size         size;
-	b3_bool         need_endian_change;
-	b3FirstItem    *start;
+	b3_u32         *m_Buffer;
+	b3_size         m_BufferSize;
+	b3_bool         m_NeedEndianChange;
+	b3FirstItem    *m_Start;
 
 public:
 	 b3World();

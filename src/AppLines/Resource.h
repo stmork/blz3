@@ -8,7 +8,21 @@
 #define IDR_BLZ3TYPE                    129
 #define IDR_TOOLBAR_VIEW                130
 #define IDR_TOOLBAR_ACTION              132
+#define IDR_TOOLBAR_OBJECT              134
+#define IDD_HIERARCHY                   145
+#define IDI_BBOX_WORLD                  148
+#define IDI_BBOX_SUB                    149
+#define IDI_BBOX_SHAPES                 150
+#define IDI_BBOX_SHAPES_SUB             151
+#define IDI_BBOX_S_SHAPES_SUB           152
+#define IDI_BBOX_S_SHAPES               153
+#define IDI_BBOX_EMPTY                  155
 #define IDM_BAR_VIEW                    252
+#define IDC_HIERARCHY                   1050
+#define IDC_ACTIVATE                    1055
+#define IDC_DEACTIVATE                  1056
+#define IDC_ALL_ACTIVATE                1057
+#define IDC_ALL_DEACTIVATE              1058
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -44,17 +58,19 @@
 #define ID_CUST_ACTION                  32804
 #define IDM_BAR_ACTION                  32805
 #define ID_OBJ_SELECT                   32806
+#define ID_HIERACHY                     32808
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 #define IDS_TOOLBAR_ACTION              61447
+#define IDS_TOOLBAR_OBJECT              61448
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32808
+#define _APS_NEXT_RESOURCE_VALUE        136
+#define _APS_NEXT_COMMAND_VALUE         32809
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -27,12 +27,6 @@
 #include "blz3/base/b3World.h"
 #include "b3ItemRegister.h"
 
-#ifdef _DEBUG
-#define	ASSERT_INDEX	B3_ASSERT((parseIndex << 2) < (b3_index)size)
-#else
-#define ASSERT_INDEX
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -41,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.7  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -97,10 +95,11 @@ void b3Item::b3Register(
 
 b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
 {
-	size       = 0;
-	buffer     = null;
-	head_count = 0;
-	heads      = null;
+	m_ItemSize   = 0;
+	m_ItemOffset = 0;
+	m_Buffer     = null;
+	head_count   = 0;
+	heads        = null;
 }
 
 b3Item::b3Item(
@@ -108,10 +107,11 @@ b3Item::b3Item(
 	b3_u32 class_type) :
 		b3Link<b3Item>(class_size,class_type)
 {
-	size       = 0;
-	buffer     = null;
-	head_count = 0;
-	heads      = null;
+	m_ItemSize   = 0;
+	m_ItemOffset = 0;
+	m_Buffer     = null;
+	head_count   = 0;
+	heads        = null;
 }
 
 b3Item::b3Item(b3_u32 *src) :
@@ -121,13 +121,16 @@ b3Item::b3Item(b3_u32 *src) :
 {
 	b3_index i,k;
 
-	size       = src[B3_NODE_IDX_SIZE];
-	buffer     = (b3_u32 *)b3Alloc(size);
-	head_count = 0;
-	memcpy (buffer,src,size);
+	m_ItemSize   = src[B3_NODE_IDX_SIZE];
+	m_ItemOffset = src[B3_NODE_IDX_OFFSET];
+	m_Buffer     = (b3_u32 *)b3Alloc(m_ItemSize);
+	head_count   = 0;
+	memcpy (m_Buffer,src,m_ItemSize);
 
 	// Count heads
-	for (i = B3_NODE_IDX_FIRSTHEAD_CLASS;buffer[i + B3_HEAD_IDX_CLASS] != 0;i += B3_HEAD_SIZE)
+	for (i = B3_NODE_IDX_FIRSTHEAD_CLASS;
+	     m_Buffer[i + B3_HEAD_IDX_CLASS] != 0;
+		 i += B3_HEAD_SIZE)
 	{
 		head_count++;
 	}
@@ -141,7 +144,7 @@ b3Item::b3Item(b3_u32 *src) :
 			k = B3_NODE_IDX_FIRSTHEAD_CLASS + B3_HEAD_IDX_CLASS;
 			for (i = 0;i < head_count;i++)
 			{
-				heads[i].b3InitBase(buffer[k]);
+				heads[i].b3InitBase(m_Buffer[k]);
 				k += B3_HEAD_SIZE;
 			}
 		}
@@ -220,63 +223,63 @@ void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 
 void b3Item::b3Init()
 {
-	parseIndex = B3_NODE_IDX_MIN + head_count * B3_HEAD_SIZE;
+	m_ParseIndex = B3_NODE_IDX_MIN + head_count * B3_HEAD_SIZE;
 }
 
 b3_s32 b3Item::b3InitInt()
 {
-	ASSERT_INDEX;
-	return buffer[parseIndex++];
+	B3_ASSERT_INDEX;
+	return m_Buffer[m_ParseIndex++];
 }
 
 b3_f32 b3Item::b3InitFloat()
 {
-	ASSERT_INDEX;
-	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex++];
+	B3_ASSERT_INDEX;
+	b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex++];
 
 	return *ptr;
 }
 
 b3_bool b3Item::b3InitBool()
 {
-	ASSERT_INDEX;
-	return buffer[parseIndex++] != 0;
+	B3_ASSERT_INDEX;
+	return m_Buffer[m_ParseIndex++] != 0;
 }
 
 void b3Item::b3InitVector(b3_vector *vec)
 {
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 	if (vec != null)
 	{
-		b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
+		b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
 		vec->x = *ptr++;
 		vec->y = *ptr++;
 		vec->z = *ptr++;
 	}
-	parseIndex += 3;
+	m_ParseIndex += 3;
 }
 
 void b3Item::b3InitVector4D(b3_vector4D *vec)
 {
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 	if (vec != null)
 	{
-		b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
+		b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
 		vec->x = *ptr++;
 		vec->y = *ptr++;
 		vec->z = *ptr++;
 		vec->w = *ptr++;
 	}
-	parseIndex += 4;
+	m_ParseIndex += 4;
 }
 
 void b3Item::b3InitMatrix(b3_matrix *mat)
 {
-	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
+	b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 
 	mat->m11 = *ptr++;
 	mat->m12 = *ptr++;
@@ -298,7 +301,7 @@ void b3Item::b3InitMatrix(b3_matrix *mat)
 	mat->m43 = *ptr++;
 	mat->m44 = *ptr++;
 
-	parseIndex += 16;
+	m_ParseIndex += 16;
 }
 
 void b3Item::b3InitSpline(
@@ -306,7 +309,7 @@ void b3Item::b3InitSpline(
 	b3_vector *new_controls,
 	b3_f32    *new_knots)
 {
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 
 	spline->control_num = b3InitInt();
 	spline->knot_num    = b3InitInt();
@@ -319,7 +322,7 @@ void b3Item::b3InitSpline(
 	spline->controls    = new_controls;
 	spline->knots       = new_knots;
 
-	parseIndex += 2;
+	m_ParseIndex += 2;
 }
 
 void b3Item::b3InitNurbs(
@@ -327,7 +330,7 @@ void b3Item::b3InitNurbs(
 	b3_vector4D *new_controls,
 	b3_f32      *new_knots)
 {
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 
 	nurbs->control_num = b3InitInt();
 	nurbs->knot_num    = b3InitInt();
@@ -339,43 +342,50 @@ void b3Item::b3InitNurbs(
 	nurbs->controls    = new_controls;
 	nurbs->knots       = new_knots;
 
-	parseIndex += 2;
+	m_ParseIndex += 2;
 }
 
 void b3Item::b3InitColor(b3_color *col)
 {
-	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
+	b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
-	ASSERT_INDEX;
+	B3_ASSERT_INDEX;
 
 	col->a = *ptr++;
 	col->r = *ptr++;
 	col->g = *ptr++;
 	col->b = *ptr++;
-	parseIndex += 4;
+	m_ParseIndex += 4;
 }
 
 void b3Item::b3InitString(char *name,b3_size len)
 {
-	b3_index pos = parseIndex << 2;
+	b3_index pos = m_ParseIndex << 2;
+	b3_size  new_size;
 
-	ASSERT_INDEX;
-	memcpy(name,&buffer[parseIndex],pos + len > size ? size - pos : len);
-	parseIndex += ((len + 3) >> 2);
+	B3_ASSERT_INDEX;
+
+	new_size = pos + len > m_ItemSize ? m_ItemSize - pos : len;
+	memcpy(name,&m_Buffer[m_ParseIndex],new_size);
+	if (new_size < len)
+	{
+		name[new_size] = 0;
+	}
+	m_ParseIndex += ((len + 3) >> 2);
 }
 
 void *b3Item::b3InitNull()
 {
-	ASSERT_INDEX;
-	parseIndex++;
+	B3_ASSERT_INDEX;
+	m_ParseIndex++;
 
 	return null;
 }
 
 void b3Item::b3InitNOP()
 {
-	ASSERT_INDEX;
-	parseIndex++;
+	B3_ASSERT_INDEX;
+	m_ParseIndex++;
 }
 
 

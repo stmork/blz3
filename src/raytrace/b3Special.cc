@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.5  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -142,7 +146,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	BBoxTitles   = b3InitBool();
 	GridActive   = b3InitBool();
 	CameraActive = b3InitBool();
-	if ((parseIndex << 2) < (b3_index)size)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		Flags    = b3InitInt();
 		Unit     = b3InitFloat();	
@@ -204,7 +208,7 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 	Type            = b3InitInt();
 	SamplesPerPixel = b3InitInt();
 	SamplesPerFrame = b3InitInt();
-	if ((parseIndex << 2) < (b3_index)size)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		DepthOfField    = b3InitFloat();
 		PixelAperture   = b3InitInt();

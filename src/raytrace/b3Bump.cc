@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.2  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -116,7 +120,7 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 	ScaleFlag   = b3InitInt();
 	b3InitVector(&ScaleIPoint);
 	ScaleRad    = b3InitFloat();
-	if ((parseIndex << 2) < (b3_index)size)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		ScaleTime   = b3InitFloat();
 	}

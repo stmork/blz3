@@ -30,12 +30,6 @@
 #include "blz3/system/b3File.h"
 #include "b3ItemRegister.h"
 
-#ifdef _DEBUG
-#define	ASSERT_INDEX	B3_ASSERT((parseIndex << 2) < (b3_index)size)
-#else
-#define ASSERT_INDEX
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -44,6 +38,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.10  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -110,9 +108,9 @@ b3Item *b3FirstItem::b3GetFirst()
 b3World::b3World()
 {
 	b3Free();
-	buffer = null;
-	size   = 0;
-	start  = null;
+	m_Buffer     = null;
+	m_BufferSize = 0;
+	m_Start      = null;
 }
 
 b3World::b3World(const char *world_name)
@@ -122,9 +120,9 @@ b3World::b3World(const char *world_name)
 
 b3World::~b3World()
 {
-	if (start != null)
+	if (m_Start != null)
 	{
-		delete start;
+		delete m_Start;
 	}
 }
 
@@ -144,22 +142,22 @@ b3_world_error b3World::b3EndianSwapWorld()
 	b3PrintF(B3LOG_FULL,"Converting endian type.\n");
 
 	i        = 0;
-	max_file = size >> 2;
+	max_file = m_BufferSize >> 2;
 	while (i < max_file)
 	{
 		// Convert node itself
-		for (k = 0;k < 5;k++) b3World::b3EndianSwap32(&buffer[i+k]);
+		for (k = 0;k < 5;k++) b3World::b3EndianSwap32(&m_Buffer[i+k]);
 
 		// Extract size information
-		max_node   = buffer[i + B3_NODE_IDX_SIZE] >> 2;
-		max_offset = buffer[i + B3_NODE_IDX_OFFSET] >> 2;
+		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
+		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
 		if (max_offset == 0) max_offset = max_node;
 
 		// Make some consistence checking
 		if (max_node < B3_NODE_IDX_MIN) return B3_WORLD_PARSE;
 
 		// Convert header an custom area without appending strings
-		for (k = 5;k < max_offset;k++) b3World::b3EndianSwap32(&buffer[i+k]);
+		for (k = 5;k < max_offset;k++) b3World::b3EndianSwap32(&m_Buffer[i+k]);
 
 		i += max_node;
 	}
@@ -270,7 +268,7 @@ b3_world_error b3World::b3Parse()
 	b3Item         *node;
 	b3Item       **array;
 
-	result = (need_endian_change ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
+	result = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
 	if (result != B3_WORLD_OK)
 	{
 		return result;
@@ -285,12 +283,12 @@ b3_world_error b3World::b3Parse()
 	b3PrintF(B3LOG_FULL,"Parsing...\n");
 
 	i        = 0;
-	max_file = size >> 2;
+	max_file = m_BufferSize >> 2;
 	while (i < max_file)
 	{
 		// Extract size information
-		max_node   = buffer[i + B3_NODE_IDX_SIZE] >> 2;
-		max_offset = buffer[i + B3_NODE_IDX_OFFSET] >> 2;
+		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
+		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
 		if (max_offset == 0) max_offset = max_node;
 
 		// Make some consistence checking
@@ -301,7 +299,7 @@ b3_world_error b3World::b3Parse()
 		}
 
 		// Create node
-		node = b3AllocNode(&buffer[i]);
+		node = b3AllocNode(&m_Buffer[i]);
 		if (node != null)
 		{
 			node_list.b3Append(node);
@@ -338,8 +336,8 @@ b3_world_error b3World::b3Parse()
 			array[i] = node;
 			node_list.b3Remove(node);
 		}
-		start  = (b3FirstItem *)array[0];
-		result = start->b3ParseLinkuage(array,node_count,0x7fff0000);
+		m_Start = (b3FirstItem *)array[0];
+		result  = m_Start->b3ParseLinkuage(array,node_count,0x7fff0000);
 		b3Free(array);
 	}
 	else
@@ -362,12 +360,12 @@ b3_bool b3World::b3Read(const char *world_name)
 	// Cleanup any occured error
 	if (error != B3_WORLD_OK)
 	{
-		size = 0;
+		m_BufferSize = 0;
 		throw new b3WorldException(error);
 	}
 
-	b3Free(buffer);
-	buffer = null;
+	b3Free(m_Buffer);
+	m_Buffer = null;
 
 	return true;
 }
@@ -381,36 +379,36 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 	error = b3ReadInternal(world_name);
 	if (error == B3_WORLD_OK)
 	{
-		error = (need_endian_change ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
+		error = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
 	}
 
 	// Cleanup any occured error
 	if (error != B3_WORLD_OK)
 	{
-		size = 0;
+		m_BufferSize = 0;
 		throw new b3WorldException(error);
 	}
 
 	i        = 0;
-	max_file = size >> 2;
+	max_file = m_BufferSize >> 2;
 	while (i < max_file)
 	{
 		// Extract size information
-		max_node   = buffer[i + B3_NODE_IDX_SIZE] >> 2;
-		max_offset = buffer[i + B3_NODE_IDX_OFFSET] >> 2;
+		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
+		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
 		if (max_offset == 0) max_offset = max_node;
 
 		// Print node class/type
 		b3PrintF(B3LOG_NORMAL,"%04lx:%04lx s:%6lu o:%6lu # ",
-			buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
-			buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
-			buffer[i + B3_NODE_IDX_SIZE],
-			buffer[i + B3_NODE_IDX_OFFSET]);
+			m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
+			m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
+			m_Buffer[i + B3_NODE_IDX_SIZE],
+			m_Buffer[i + B3_NODE_IDX_OFFSET]);
 
 		// Print heads
-		for (k = B3_NODE_IDX_MIN;buffer[i+k] != null;k += 3)
+		for (k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
 		{
-			b3PrintF(B3LOG_NORMAL,"%08lx ",buffer[i+k]);
+			b3PrintF(B3LOG_NORMAL,"%08lx ",m_Buffer[i+k]);
 		}
 		k++;
 		b3PrintF(B3LOG_NORMAL,"\n");
@@ -420,8 +418,8 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 		i += max_node;
 	}
 	
-	b3Free(buffer);
-	buffer = null;
+	b3Free(m_Buffer);
+	m_Buffer = null;
 
 	return true;
 }
@@ -433,9 +431,9 @@ b3_world_error b3World::b3ReadInternal(const char *world_name)
 	b3_world_error error = B3_WORLD_ERROR;
 
 	b3Free();
-	buffer = null;
-	size   = 0;
-	start  = null;
+	m_Buffer     = null;
+	m_BufferSize = 0;
+	m_Start      = null;
 
 	// Read specified file into buffer
 	if (file.b3Open(world_name,B_READ))
@@ -445,11 +443,11 @@ b3_world_error b3World::b3ReadInternal(const char *world_name)
 			switch(header[0])
 			{
 			case B3_BLiZ:
-				need_endian_change = false;
+				m_NeedEndianChange = false;
 				break;
 
 			case B3_ZiLB:
-				need_endian_change = true;
+				m_NeedEndianChange = true;
 				b3EndianSwap32(&header[0]);
 				b3EndianSwap32(&header[1]);
 				break;
@@ -461,19 +459,19 @@ b3_world_error b3World::b3ReadInternal(const char *world_name)
 
 			if (error != B3_WORLD_PARSE)
 			{
-				size   = header[1];
-				buffer = (b3_u32 *)b3Alloc(size);
-				if (buffer != null)
+				m_BufferSize = header[1];
+				m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
+				if (m_Buffer != null)
 				{
-					if (file.b3Read(buffer,size) == size)
+					if (file.b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
 					{
 						error = B3_WORLD_OK;
 					}
 					else
 					{
 						error = B3_WORLD_READ;
-						b3Free(buffer);
-						buffer = null;
+						b3Free(m_Buffer);
+						m_Buffer = null;
 					}
 				}
 				else
@@ -503,15 +501,15 @@ b3_size b3World::b3Length()
 
 void b3World::b3Dump()
 {
-	if (start != null)
+	if (m_Start != null)
 	{
 		b3PrintF(B3LOG_FULL,"--- World dump:\n");
-		start->b3Dump(0);
+		m_Start->b3Dump(0);
 		b3PrintF(B3LOG_FULL,"--- World dump complete.\n");
 	}
 }
 
 b3Item *b3World::b3GetFirst()
 {
-	return start->b3GetFirst();
+	return m_Start->b3GetFirst();
 }

@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/09/01 15:54:53  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
+**
 **	Revision 1.2  2001/08/21 18:01:11  sm
 **	- Minor updates
-**
+**	
 **
 */
 
@@ -214,6 +218,28 @@ void CB3ActionMagnify::b3LUp(b3_coord x,b3_coord y)
 CB3ActionObjectSelect::CB3ActionObjectSelect(CAppLinesView *window) :
 	CB3Action(window)
 {
+}
+
+void CB3ActionObjectSelect::b3LMove(b3_coord x,b3_coord y)
+{
+	m_View->b3DrawRect(m_xStart,m_yStart,m_xLast,m_yLast);
+	m_View->b3DrawRect(m_xStart,m_yStart,x,y);
+}
+
+void CB3ActionObjectSelect::b3LUp(b3_coord x,b3_coord y)
+{
+	m_View->b3Update(B3_UPDATE_VIEW);
+}
+
+void CB3ActionObjectSelect::b3RMove(b3_coord x,b3_coord y)
+{
+	m_View->b3DrawRect(m_xStart,m_yStart,m_xLast,m_yLast);
+	m_View->b3DrawRect(m_xStart,m_yStart,x,y);
+}
+
+void CB3ActionObjectSelect::b3RUp(b3_coord x,b3_coord y)
+{
+	m_View->b3Update(B3_UPDATE_VIEW);
 }
 
 /*************************************************************************

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.13  2001/08/20 19:35:08  sm
 **      - Index correction introduced (This is a hack!)
 **      - Some OpenGL cleanups
@@ -360,6 +364,7 @@ b3RenderShapeObject::b3RenderShapeObject()
 {
 	Epsilon     = 0.001;
 	Between     = null;
+	m_Activated = false;
 }
 
 b3_count b3RenderShapeObject::b3GetIndexOverhead (
@@ -383,9 +388,14 @@ b3_count b3RenderShapeObject::b3GetIndexOverhead (
 	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
 
+void b3RenderShapeObject::b3Activate(b3_bool activate)
+{
+	m_Activated = activate;
+}
+
 b3_render_mode b3RenderShapeObject::b3GetRenderMode()
 {
-	return B3_RENDER_FILLED;
+	return m_Activated ? B3_RENDER_FILLED : B3_RENDER_LINE;
 }
 
 void b3RenderShapeObject::b3GetGridColor(b3_color *color)

@@ -128,6 +128,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgHierarchy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MainFrm.cpp
 # End Source File
 # End Group
@@ -188,6 +192,34 @@ SOURCE=.\res\AppLinesDoc.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bbox_s_s.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bbox_sha.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bbox_sub.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bboxworld.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\ico00001.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\ico00002.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\ico00003.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\Toolbar.bmp
 # End Source File
 # Begin Source File
@@ -197,6 +229,10 @@ SOURCE=.\res\toolbar1.bmp
 # Begin Source File
 
 SOURCE=.\res\toolbar_action.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\toolbar_object.bmp
 # End Source File
 # End Group
 # Begin Source File

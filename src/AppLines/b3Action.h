@@ -77,6 +77,12 @@ class CB3ActionObjectSelect : public CB3Action
 {
 public:
 	CB3ActionObjectSelect(CAppLinesView *window);
+
+	void b3LMove(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
+
+	void b3RMove(b3_coord x,b3_coord y);
+	void b3RUp(b3_coord x,b3_coord y);
 };
 
 class CB3ActionObjectMove : public CB3Action

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.15  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -124,16 +128,16 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 
 b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 {
-	b3_index diff;
+	b3_size diff;
 
 	Type = b3InitInt();
-	b3InitVector(&Base);
-	b3InitVector(&Size);
+	b3InitVector(&DimBase);
+	b3InitVector(&DimSize);
 	b3InitNOP();
 	b3InitMatrix(&Matrix);
 
-	diff = (size >> 2) - parseIndex;
-	if (diff < (B3_BOXSTRINGLEN >> 2))
+	diff = m_ItemSize - (b3_size)(m_ParseIndex << 2);
+	if (diff < B3_BOXSTRINGLEN)
 	{
 		b3InitString(BoxName,diff);
 		BoxURL[0] = 0;
@@ -253,37 +257,37 @@ void b3BBox::b3ComputeVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3_index        i = 0;
 
-	bbox_vertices[i++] = Base.x;
-	bbox_vertices[i++] = Base.y;
-	bbox_vertices[i++] = Base.z;
+	bbox_vertices[i++] = DimBase.x;
+	bbox_vertices[i++] = DimBase.y;
+	bbox_vertices[i++] = DimBase.z;
 
-	bbox_vertices[i++] = Base.x;
-	bbox_vertices[i++] = Base.y;
-	bbox_vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = DimBase.x;
+	bbox_vertices[i++] = DimBase.y;
+	bbox_vertices[i++] = DimBase.z + DimSize.z;
 
-	bbox_vertices[i++] = Base.x + Size.x;
-	bbox_vertices[i++] = Base.y;
-	bbox_vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = DimBase.x + DimSize.x;
+	bbox_vertices[i++] = DimBase.y;
+	bbox_vertices[i++] = DimBase.z + DimSize.z;
 
-	bbox_vertices[i++] = Base.x + Size.x;
-	bbox_vertices[i++] = Base.y;
-	bbox_vertices[i++] = Base.z;
+	bbox_vertices[i++] = DimBase.x + DimSize.x;
+	bbox_vertices[i++] = DimBase.y;
+	bbox_vertices[i++] = DimBase.z;
 
-	bbox_vertices[i++] = Base.x;
-	bbox_vertices[i++] = Base.y + Size.y;
-	bbox_vertices[i++] = Base.z;
+	bbox_vertices[i++] = DimBase.x;
+	bbox_vertices[i++] = DimBase.y + DimSize.y;
+	bbox_vertices[i++] = DimBase.z;
 
-	bbox_vertices[i++] = Base.x;
-	bbox_vertices[i++] = Base.y + Size.y;
-	bbox_vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = DimBase.x;
+	bbox_vertices[i++] = DimBase.y + DimSize.y;
+	bbox_vertices[i++] = DimBase.z + DimSize.z;
 
-	bbox_vertices[i++] = Base.x + Size.x;
-	bbox_vertices[i++] = Base.y + Size.y;
-	bbox_vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = DimBase.x + DimSize.x;
+	bbox_vertices[i++] = DimBase.y + DimSize.y;
+	bbox_vertices[i++] = DimBase.z + DimSize.z;
 
-	bbox_vertices[i++] = Base.x + Size.x;
-	bbox_vertices[i++] = Base.y + Size.y;
-	bbox_vertices[i++] = Base.z;
+	bbox_vertices[i++] = DimBase.x + DimSize.x;
+	bbox_vertices[i++] = DimBase.y + DimSize.y;
+	bbox_vertices[i++] = DimBase.z;
 
 	glComputed = true;
 #endif
@@ -307,14 +311,14 @@ void b3BBox::b3Draw()
 	b3RenderObject::b3Draw();
 
 	// Draw our shapes
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3Draw();
 	}
 
 	// Draw subsequent BBoxes
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
@@ -338,7 +342,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	subUpper.y = -FLT_MAX;
 	subUpper.z = -FLT_MAX;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape   = (b3Shape *)item;
 		result |= shape->b3ComputeBounds(&subLower,&subUpper);
@@ -347,27 +351,27 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	if (result)
 	{
 		// Use fresh data
-		Size.x      = (subUpper.x - subLower.x) * tolerance * 0.5;
-		Size.y      = (subUpper.y - subLower.y) * tolerance * 0.5;
-		Size.z      = (subUpper.z - subLower.z) * tolerance * 0.5;
-		subLower.x -= Size.x;
-		subLower.y -= Size.y;
-		subLower.z -= Size.z;
-		subUpper.x += Size.x;
-		subUpper.y += Size.y;
-		subUpper.z += Size.z;
+		DimSize.x   = (subUpper.x - subLower.x) * tolerance * 0.5;
+		DimSize.y   = (subUpper.y - subLower.y) * tolerance * 0.5;
+		DimSize.z   = (subUpper.z - subLower.z) * tolerance * 0.5;
+		subLower.x -= DimSize.x;
+		subLower.y -= DimSize.y;
+		subLower.z -= DimSize.z;
+		subUpper.x += DimSize.x;
+		subUpper.y += DimSize.y;
+		subUpper.z += DimSize.z;
 	}
 	else
 	{
 		// Use predefined data
-		subLower   = Base;
-		subUpper.x = Base.x + Size.x;
-		subUpper.y = Base.y + Size.y;
-		subUpper.z = Base.z + Size.z;
+		subLower   = DimBase;
+		subUpper.x = DimBase.x + DimSize.x;
+		subUpper.y = DimBase.y + DimSize.y;
+		subUpper.z = DimBase.z + DimSize.z;
 		result     = true;
 	}
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox    = (b3BBox *)item;
 		result |= bbox->b3ComputeBounds(&subLower,&subUpper,tolerance);
@@ -386,13 +390,57 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	// Compute bounds of thos BBox
 	if (result)
 	{
-		Size.x = subUpper.x - subLower.x;
-		Size.y = subUpper.y - subLower.y;
-		Size.z = subUpper.z - subLower.z;
-		Base   = subLower;
+		DimSize.x = subUpper.x - subLower.x;
+		DimSize.y = subUpper.y - subLower.y;
+		DimSize.z = subUpper.z - subLower.z;
+		DimBase   = subLower;
 	}
 
 	return result;
+}
+
+b3Base<b3Item> *b3BBox::b3GetShapeHead()
+{
+	return &heads[0];
+}
+
+b3Base<b3Item> *b3BBox::b3GetBBoxHead()
+{
+	return &heads[1];
+}
+
+void b3BBox::b3Activate(b3_bool activate)
+{
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3Activate(activate);
+	}
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Activate(activate);
+	}
+}
+
+b3_count b3BBox::b3Count()
+{
+	b3_count count = 1;
+
+	b3Item *item;
+	b3BBox *bbox;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox   = (b3BBox *)item;
+		count += bbox->b3Count();
+	}
+	return count;
 }
 
 void b3Scene::b3Reorg()
@@ -454,4 +502,34 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 		bbox->b3AllocVertices(context);
 	}
 }
- 
+
+void b3Scene::b3Activate(b3_bool activate)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Activate(activate);
+	}
+}
+
+b3_count b3Scene::b3GetBBoxCount()
+{
+	b3Item   *item;
+	b3BBox   *bbox;
+	b3_count  count = 0;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		bbox = (b3BBox *)item;
+		count += bbox->b3Count();
+	}
+	return count;
+}
+
+b3BBox *b3Scene::b3GetFirstBBox()
+{
+	return (b3BBox *)heads[0].First;
+}

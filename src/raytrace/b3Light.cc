@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.3  2001/08/20 14:16:48  sm
 **      - Putting data into cmaera and light combobox.
 **      - Selecting camera and light.
@@ -64,11 +68,10 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	b3InitColor(&Color);
 	Distance = b3InitFloat();
 	Flags    = b3InitInt();
-Name[0] = 0;
-return;
+
 	if (b3GetClassType() >= AREA_LIGHT)
 	{
-		Size     = b3InitFloat();
+		Size       = b3InitFloat();
 		JitterEdge = b3InitInt();
 		if (b3GetClassType() >= SPOT_LIGHT)
 		{
@@ -80,13 +83,14 @@ return;
 		}
 	}
 
-	if (Offset > 0)
+	if (m_ItemOffset > 0)
 	{
-		b3InitString(Name,size - (parseIndex << 2));
-		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n","Scheisse");
+		b3InitString(Name,m_ItemSize - (m_ParseIndex << 2));
+		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n",Name);
 	}
 	else
 	{
+		strcpy(Name,"Light");
 		b3PrintF(B3LOG_DEBUG,"Unnamed light loaded.\n");
 	}
 }

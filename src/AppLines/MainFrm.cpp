@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/09/01 15:54:53  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
+**
 **	Revision 1.5  2001/08/20 14:16:48  sm
 **	- Putting data into cmaera and light combobox.
 **	- Selecting camera and light.
-**
+**	
 **	Revision 1.4  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
@@ -100,7 +104,8 @@ static UINT toolbar_bitmaps[] =
 {
 	IDR_MAINFRAME,
 	IDR_TOOLBAR_VIEW,
-	IDR_TOOLBAR_ACTION
+	IDR_TOOLBAR_ACTION,
+	IDR_TOOLBAR_OBJECT
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -168,6 +173,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,     IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,  IDS_TOOLBAR_VIEW);
 	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION,IDS_TOOLBAR_ACTION);
+	app->b3AddToolbar(&m_wndObjtBar,IDR_TOOLBAR_OBJECT,IDS_TOOLBAR_OBJECT);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");

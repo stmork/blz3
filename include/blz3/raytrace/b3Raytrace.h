@@ -24,8 +24,8 @@
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
 
-#define B3_TEXSTRINGLEN  128
-#define B3_BOXSTRINGLEN   96
+#define B3_BOXSTRINGLEN  128
+#define B3_TEXSTRINGLEN   96
 #define B3_CAMERANAMELEN  96
 
 /*************************************************************************
@@ -632,6 +632,7 @@ class b3RenderShapeObject : public b3RenderObject
 {
 protected:
 	b3_count         SinCosSteps;
+	b3_bool          m_Activated;
 	b3_vector       *Between;
 	b3_f64          *Cos;
 	b3_f64          *Sin;
@@ -641,6 +642,7 @@ protected:
 
 public:
 	                b3RenderShapeObject();
+	void            b3Activate(b3_bool activate=true);
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
@@ -1233,8 +1235,9 @@ class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
 	b3_u32           Type;               // texture type
-	b3_vector        Base;
-	b3_vector        Size;
+public:
+	b3_vector        DimBase;
+	b3_vector        DimSize;
 	b3_matrix        Matrix;             // all composed transformations
 	char             BoxName[B3_BOXSTRINGLEN];   // object name
 	char             BoxURL[B3_BOXSTRINGLEN]; // HTML link
@@ -1248,12 +1251,16 @@ public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
-	       void    b3Dump(b3_count level);
-	       void    b3AllocVertices(b3RenderContext *context);
-	       void    b3FreeVertices();
-	       void    b3ComputeVertices();
-	       void    b3Draw();
-		   b3_bool b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
+	       void            b3Dump(b3_count level);
+	       void            b3AllocVertices(b3RenderContext *context);
+	       void            b3FreeVertices();
+	       void            b3ComputeVertices();
+	       void            b3Draw();
+		   void            b3Activate(b3_bool activate=true);
+		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
+		   b3_count        b3Count();
+		   b3Base<b3Item> *b3GetShapeHead();
+		   b3Base<b3Item> *b3GetBBoxHead();
  	static void    b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 protected:
 	       void    b3GetGridColor(b3_color *color);
@@ -1677,6 +1684,9 @@ public:
 		   b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		   b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		   b3Light        *b3GetLight(b3_bool must_active = false);
+		   b3BBox         *b3GetFirstBBox();
+		   b3_count        b3GetBBoxCount();
+		   void            b3Activate(b3_bool activate=true);
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

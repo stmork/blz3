@@ -25,6 +25,8 @@
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
 
+#include "DlgHierarchy.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,13 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/09/01 15:54:53  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
+**
 **	Revision 1.8  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
 **	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
 **	- Some RenderObject redesignes
 **	- Color selecting bug fix in RenderObject
-**
+**	
 **	Revision 1.7  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -87,8 +93,7 @@ IMPLEMENT_DYNCREATE(CAppLinesDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
+	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -148,6 +153,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	// TODO: Add your specialized creation code here
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
+	m_Scene->b3Reorg();
 	m_Scene->b3AllocVertices(&m_Context);
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 	m_Info = m_Scene->b3GetModellerInfo();
@@ -205,4 +211,13 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	// TODO: Add your specialized code here and/or call the base class
 	::AfxMessageBox("Lines III kann noch nicht speichern!",MB_ICONSTOP);
 	return false;
+}
+
+void CAppLinesDoc::OnHierachy() 
+{
+	// TODO: Add your command handler code here
+	CDlgHierarchy dlg;
+
+	dlg.m_Doc   = this;
+	dlg.DoModal();
 }

@@ -59,6 +59,7 @@ protected:  // control bar embedded members
 	CB3Toolbar         m_wndToolBar;
 	CB3Toolbar         m_wndViewBar;
 	CB3Toolbar         m_wndActnBar;
+	CB3Toolbar         m_wndObjtBar;
 	CB3ComboBox        m_cameraBox;
 	CB3ComboBox        m_lightBox;
 

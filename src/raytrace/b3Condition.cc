@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/09/01 15:54:54  sm
+**      - Tidy up Size confusion in b3Item/b3World and derived classes
+**      - Made (de-)activation of objects
+**
 **      Revision 1.4  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -133,7 +137,7 @@ b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)
 	yStart = b3InitFloat();
 	xEnd   = b3InitFloat();
 	yEnd   = b3InitFloat();
-	if ((parseIndex << 2) < (b3_index)size)
+	if (B3_PARSE_INDEX_VALID)
 	{
 		Flags  = b3InitInt();
 	}
