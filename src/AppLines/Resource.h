@@ -28,6 +28,7 @@
 #define IDD_MAT_NORMAL                  132
 #define IDI_MAT_COOK_TORRANCE           133
 #define IDI_MAT_GRANITE                 134
+#define IDD_BUMP_WOOD                   134
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -248,14 +249,7 @@
 #define ID_VIEW_TOP                     10116
 #define ID_VIEW_TO_FULCRUM              10117
 #define ID_EDIT_MATERIAL                10118
-#define ID_BUTTON10119                  10119
-#define ID_BUTTON10120                  10120
-#define ID_BUTTON10121                  10121
-#define ID_BUTTON10122                  10122
-#define ID_BUTTON10123                  10123
-#define ID_BUTTON10124                  10124
-#define ID_BUTTON10125                  10125
-#define ID_EDIT_BUMP                    10126
+#define ID_EDIT_BUMP                    10119
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -752,14 +746,15 @@
 #define IDS_MAT_COOK_TORRANCE           61454
 #define IDS_MAT_GRANITE                 61455
 #define IDS_MAT_OAKPLANK                61456
+#define IDS_BUMP_WOOD                   61457
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         10127
+#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_COMMAND_VALUE         10120
 #define _APS_NEXT_CONTROL_VALUE         32299
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif

@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.17  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -178,10 +187,10 @@ void b3CSGBox::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	if (y < 0)               y = 0;
 	else if (y >= 0.9999999) y = 0.9999999;
 
-	polar->polar.x = polar->object_polar.x = x;
-	polar->polar.y = polar->object_polar.y = y;
-	polar->polar.z = polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
-	polar->normal_index = point->m_Index;
+	polar->m_Polar.x = polar->m_ObjectPolar.x = x;
+	polar->m_Polar.y = polar->m_ObjectPolar.y = y;
+	polar->m_Polar.z = polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	polar->m_NormalIndex = point->m_Index;
 }
 
 void b3CSGBox::b3GetStencilBoundInfo(b3_stencil_bound *info)

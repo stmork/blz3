@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.55  2003/07/12 17:44:47  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -619,15 +628,15 @@ b3Material *b3Shape::b3GetColors(
 	{
 		material = (b3Material *)item;
 		if (material->b3GetColors(
-			&ray->polar,
+			ray,
 			surface->diffuse,
 			surface->ambient,
-			surface->specular))
+			surface->specular,
+			surface->refl,
+			surface->refr,
+			surface->ior,
+			surface->se))
 		{
-			surface->refl = material->b3GetReflection(&ray->polar);
-			surface->refr = material->b3GetRefraction(&ray->polar);
-			surface->ior  = material->b3GetIndexOfRefraction(&ray->polar);
-			surface->se   = material->b3GetSpecularExponent(&ray->polar);
 			return material;
 		}
 	}

@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "b3StaticPluginInfoInit.h"
+#include "DlgBumpWood.h"
 #include "DlgMatNormal.h"
 #include "DlgMatChess.h"
 #include "DlgMatMarble.h"
@@ -42,9 +43,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.5  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
-**
+**	
 **	Revision 1.4  2004/03/14 16:18:26  sm
 **	- Added Windows support for granite.
 **	
@@ -87,6 +97,8 @@ void b3StaticPluginInfoInit::b3Init()
 	b3Loader::b3AddClassType(DISTRIBUTE,   IDS_ITEMDESC_DISTRIBUTE);
 	b3Loader::b3AddClassType(LENSFLARE,    IDS_ITEMDESC_LENSFLARE);
 	b3Loader::b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
+
+	CDlgBumpWood::b3Register();
 
 	CDlgMatNormal::b3Register();
 	CDlgMatChess::b3Register();

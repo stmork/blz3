@@ -33,6 +33,15 @@
 
 /*
 **      $Log$
+**      Revision 1.64  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.63  2003/03/04 20:37:38  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -600,13 +609,17 @@ void b3Shape::b3GetDiffuseColor(b3Color &color)
 	b3Item     *item;
 	b3Material *material;
 	b3Color     ambient,specular;
-	b3_polar    polar;
+	b3_ray      ray;
+	b3_f64      reflection;
+	b3_f64      refraction;
+	b3_f64      ior;
+	b3_f64      spec_exp;
 
 	color.b3Init(0.1f,0.5f,1.0f,0.0f);
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(&polar,color,ambient,specular))
+		if (material->b3GetColors(&ray,color,ambient,specular,reflection,refraction,ior,spec_exp))
 		{
 			return;
 		}
@@ -620,14 +633,18 @@ b3_f64 b3Shape::b3GetColors(
 {
 	b3Item     *item;
 	b3Material *material;
-	b3_polar    polar;
+	b3_ray      ray;
+	b3_f64      reflection;
+	b3_f64      refraction;
+	b3_f64      ior;
+	b3_f64      spec_exp;
 
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(&polar,diffuse,ambient,specular))
+		if (material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp))
 		{
-			return material->b3GetSpecularExponent(&polar);
+			return spec_exp;
 		}
 	}
 
@@ -712,12 +729,16 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 	{
 		b3Material       *material;
 		b3_stencil_limit  limit;
-		b3_polar          polar;
+		b3_ray            ray;
 		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
 		b3_pkd_color      color;
 		b3Color           diffuse;
 		b3Color           ambient;
 		b3Color           specular;
+		b3_f64            reflection;
+		b3_f64            refraction;
+		b3_f64            ior;
+		b3_f64            spec_exp;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
@@ -733,18 +754,18 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 			fx = limit.x1 + b3Scene::epsilon;
 			for (x = 0;x < image->xSize;x++)
 			{
-				b3Vector::b3Init(&polar.box_polar,   fx,fy);
-				b3Vector::b3Init(&polar.object_polar,fx,fy);
-				b3Vector::b3Init(&polar.polar,       fx,fy);
+				b3Vector::b3Init(&ray.polar.m_BoxPolar,   fx,fy);
+				b3Vector::b3Init(&ray.polar.m_ObjectPolar,fx,fy);
+				b3Vector::b3Init(&ray.polar.m_Polar,      fx,fy);
 
 				color = B3_BLACK;
 				for(material  = (b3Material *)b3GetMaterialHead()->First,loop = true;
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
-					if (material->b3GetColors(&polar,diffuse,ambient,specular))
+					if (material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp))
 					{
-						diffuse.b3SetAlpha(b3CheckStencil(&polar) ? 0 : 1);
+						diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
 						color     = diffuse;
 						loop      = false;
 					}

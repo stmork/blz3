@@ -32,6 +32,15 @@
 
 /*
 **  $Log$
+**  Revision 1.8  2004/04/11 14:05:11  sm
+**  - Raytracer redesign:
+**    o The reflection/refraction/ior/specular exponent getter
+**      are removed. The values are copied via the b3GetColors()
+**      method.
+**    o The polar members are renamed.
+**    o The shape/bbox pointers moved into the ray structure
+**  - Introduced wood bump mapping.
+**
 **  Revision 1.7  2004/04/10 13:45:30  sm
 **  - Added wooden oak planks.
 **
@@ -128,8 +137,8 @@ int main(int argc,char *argv[])
 		
 		tx.b3AllocTx(xMax,yMax,24);
 		
-//		b3WoodSampler sampler(&tx);
-		b3OakPlankSampler sampler(&tx);
+		b3WoodSampler sampler(&tx);
+//		b3OakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
 

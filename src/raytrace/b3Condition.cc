@@ -32,9 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.21  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.20  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
@@ -343,15 +352,15 @@ b3_bool b3CondRectangle::b3CheckStencil(b3_polar_precompute *polar)
 		return true;
 	}
 
-	if ((m_yStart <= polar->polar.y) && (polar->polar.y <= m_yEnd))
+	if ((m_yStart <= polar->m_Polar.y) && (polar->m_Polar.y <= m_yEnd))
 	{
 		if (m_xStart <= m_xEnd)
 		{
-			return ((m_xStart <= polar->polar.x) && (polar->polar.x <= m_xEnd));
+			return ((m_xStart <= polar->m_Polar.x) && (polar->m_Polar.x <= m_xEnd));
 		}
 		else
 		{
-			return (polar->polar.x <= m_xEnd) || (polar->polar.x >= m_xStart);
+			return (polar->m_Polar.x <= m_xEnd) || (polar->m_Polar.x >= m_xStart);
 		}
 	}
 	return false;
@@ -411,8 +420,8 @@ b3_bool b3CondCircle::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y;
 
-	x = polar->polar.x - m_xCenter;
-	y = polar->polar.y - m_yCenter;
+	x = polar->m_Polar.x - m_xCenter;
+	y = polar->m_Polar.y - m_yCenter;
 	return ((x * x + y * y) < (m_Radius * m_Radius));
 }
 
@@ -474,8 +483,8 @@ b3_bool b3CondSegment::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y,angle,Rad;
 
-	x = polar->polar.x - m_xCenter;
-	y = polar->polar.y - m_yCenter;
+	x = polar->m_Polar.x - m_xCenter;
+	y = polar->m_Polar.y - m_yCenter;
 	Rad = sqrt(x * x + y * y);
 	if ((Rad < m_RadStart)||(Rad > m_RadEnd))
 	{
@@ -599,8 +608,8 @@ b3_bool b3CondPara::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
-	Dx = polar->polar.x - m_xPos;
-	Dy = polar->polar.y - m_yPos;
+	Dx = polar->m_Polar.x - m_xPos;
+	Dy = polar->m_Polar.y - m_yPos;
 	if (m_Denom == 0)
 	{
 		return false;
@@ -632,8 +641,8 @@ b3_bool b3CondTria::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
-	Dx = polar->polar.x - m_xPos;
-	Dy = polar->polar.y - m_yPos;
+	Dx = polar->m_Polar.x - m_xPos;
+	Dy = polar->m_Polar.y - m_yPos;
 	if (m_Denom==0)
 	{
 		return false;
@@ -726,13 +735,13 @@ b3_bool b3CondTexture::b3CheckStencil(b3_polar_precompute *polar)
 	b3_f64   fx,fy;
 	b3_coord x,y;
 
-	fx = (polar->polar.x - m_xStart) / m_xScale;
+	fx = (polar->m_Polar.x - m_xStart) / m_xScale;
 	if ((fx < 0) || (fx >= m_xTimes))
 	{
 		return false;
 	}
 
-	fy = (polar->polar.y - m_yStart) / m_yScale;
+	fy = (polar->m_Polar.y - m_yStart) / m_yScale;
 	if ((fy < 0) || (fy >= m_yTimes))
 	{
 		return false;
@@ -826,11 +835,11 @@ b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar_precompute *polar)
 	b3_coord x,y;
 	b3_f64   fx,fy,xEnd,xPolar;
 
-	if ((polar->polar.y >= m_yStart) && (polar->polar.y <= m_yEnd))
+	if ((polar->m_Polar.y >= m_yStart) && (polar->m_Polar.y <= m_yEnd))
 	{
 		xEnd	= m_xEnd;
-		xPolar	= polar->polar.x;
-		fy = (polar->polar.y - m_yStart) /
+		xPolar	= polar->m_Polar.x;
+		fy = (polar->m_Polar.y - m_yStart) /
 			(m_yEnd - m_yStart);
 		if ((fy < 0) || (fy > 1))
 		{
@@ -929,8 +938,8 @@ b3_bool b3CondEllipse::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y,angle,AngleEnd,Rad;
 
-	x = (polar->polar.x - m_xCenter) / m_xRadius;
-	y = (polar->polar.y - m_yCenter) / m_yRadius;
+	x = (polar->m_Polar.x - m_xCenter) / m_xRadius;
+	y = (polar->m_Polar.y - m_yCenter) / m_yRadius;
 	Rad = sqrt(x * x + y * y);
 	if ((Rad < m_RadStart) || (Rad > m_RadEnd))
 	{

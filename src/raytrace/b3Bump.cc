@@ -1,4 +1,4 @@
-	/*
+/*
 **
 **      $Filename:      b3Bump.cc $
 **      $Release:       Dortmund 2001 $
@@ -34,9 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.16  2004/04/08 09:57:20  sm
 **	- Added bump wood.
-**
+**	
 **	Revision 1.15  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -126,6 +135,7 @@ void b3Bump::b3Register()
 	b3Item::b3Register(&b3BumpWave::b3StaticInit,    &b3BumpWave::b3StaticInit,    BUMP_WAVE);
 	b3Item::b3Register(&b3BumpGroove::b3StaticInit,  &b3BumpGroove::b3StaticInit,  BUMP_GROOVE);
 	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,  &b3BumpGlossy::b3StaticInit,  BUMP_GLOSSY);
+	b3Item::b3Register(&b3BumpWood::b3StaticInit,    &b3BumpWood::b3StaticInit,    BUMP_WOOD);
 }
 
 b3Bump::b3Bump(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)
@@ -178,9 +188,9 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 	b3_vector n;
 	b3_f64    u,v,w,Denom;
 
-	u = ray->polar.box_polar.x * m_Scale.x * 1024;
-	v = ray->polar.box_polar.y * m_Scale.y * 1024;
-	w = ray->polar.box_polar.z * m_Scale.z * 1024;
+	u = ray->polar.m_BoxPolar.x * m_Scale.x * 1024;
+	v = ray->polar.m_BoxPolar.y * m_Scale.y * 1024;
+	w = ray->polar.m_BoxPolar.z * m_Scale.z * 1024;
 
 	Denom =	ray->normal.x * ray->normal.x +
 			ray->normal.y * ray->normal.y +
@@ -220,9 +230,9 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 {
 	b3_f64 u,v,w,i,d,dd;
 
-	u = ray->polar.box_polar.x * m_Scale.x * 1024;
-	v = ray->polar.box_polar.y * m_Scale.y * 1024;
-	w = ray->polar.box_polar.z * m_Scale.z * 1024;
+	u = ray->polar.m_BoxPolar.x * m_Scale.x * 1024;
+	v = ray->polar.m_BoxPolar.y * m_Scale.y * 1024;
+	w = ray->polar.m_BoxPolar.z * m_Scale.z * 1024;
 
 	b3Vector::b3Normalize(&ray->normal);
 
@@ -340,8 +350,8 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 	b3_f64       x,y;
 
 	if (b3GetNormalDeriv (
-		ray->polar.polar.x,
-		ray->polar.polar.y,&Deriv))
+		ray->polar.m_Polar.x,
+		ray->polar.m_Polar.y,&Deriv))
 	{
 		b3Vector::b3Normalize(&ray->normal);
 		b3Vector::b3Scale(&Deriv,m_Intensity);
@@ -406,9 +416,9 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	}
 	else
 	{
-		point.x = ray->polar.box_polar.x * m_ScaleIPoint.x;
-		point.y = ray->polar.box_polar.y * m_ScaleIPoint.y;
-		point.z = ray->polar.box_polar.z * m_ScaleIPoint.z;
+		point.x = ray->polar.m_BoxPolar.x * m_ScaleIPoint.x;
+		point.y = ray->polar.m_BoxPolar.y * m_ScaleIPoint.y;
+		point.z = ray->polar.m_BoxPolar.z * m_ScaleIPoint.z;
 	}
 
 	water = b3Noise::b3Water(&point,ray->t);
@@ -480,9 +490,9 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	}
 	else
 	{
-		point.x = ray->polar.box_polar.x * m_Scale.x;
-		point.y = ray->polar.box_polar.y * m_Scale.y;
-		point.z = ray->polar.box_polar.z * m_Scale.z;
+		point.x = ray->polar.m_BoxPolar.x * m_Scale.x;
+		point.y = ray->polar.m_BoxPolar.y * m_Scale.y;
+		point.z = ray->polar.m_BoxPolar.z * m_Scale.z;
 	}
 
 	wave     = b3Noise::b3Wave(&point);
@@ -547,8 +557,8 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	b3_f64    Denom,r,groove;
 
 	point.x = 
-		ray->polar.object_polar.x * m_Scale.x +
-		ray->polar.object_polar.y * m_Scale.y;
+		ray->polar.m_ObjectPolar.x * m_Scale.x +
+		ray->polar.m_ObjectPolar.y * m_Scale.y;
 	point.y = 
 	point.z = 0;
 
@@ -693,32 +703,35 @@ void b3BumpWood::b3Write()
 
 void b3BumpWood::b3BumpNormal(b3_ray *ray)
 {
-	b3_vector point,ox,oy,n;
-	b3_f64    Denom,r,wood;
+	b3_vector point,n;
+	b3_vector64 dX,dY;
+	b3_vector64 xTest,yTest;
+	b3_vector xWood,yWood;
+	b3_f64    Denom,wood,dU,dV;
 
-	point.x = ray->polar.object_polar.x;
-	point.y = ray->polar.object_polar.y;
-	point.z = 0;
-
+//	b3Vector::b3Init(&point,&ray->ipoint);
+	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
 	wood = b3Wood::b3ComputeWood(&point);
-	ox.x = 0.125;
-	ox.y = 0;
-	ox.z = wood;
-	oy.x = 0;
-	oy.y = 0.125;
-	oy.z = wood;
 
-	point.x += ox.x;
-	ox.z    -= b3Wood::b3ComputeWood (&point);
-	point.x -= ox.x;
+	b3Vector::b3CrossProduct(&ray->dir,&ray->normal,&dX);
+	b3Vector::b3Normalize(&dX,m_Amplitude);
+	xTest.x = dX.x + ray->ipoint.x;
+	xTest.y = dX.y + ray->ipoint.y;
+	xTest.z = dX.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
+	dU = b3Wood::b3ComputeWood (&xWood) - wood;
 
-	point.y += oy.y;
-	oy.z    -= b3Wood::b3ComputeWood (&point);
+	b3Vector::b3CrossProduct(&ray->normal,&dX,&dY);
+	b3Vector::b3Normalize(&dY,m_Amplitude);
+	yTest.x = dY.x + ray->ipoint.x;
+	yTest.y = dY.y + ray->ipoint.y;
+	yTest.z = dY.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
+	dV = b3Wood::b3ComputeWood (&yWood) - wood;
 
-	r   = m_Amplitude;
-	n.x = ox.y * oy.z - ox.z - oy.y;
-	n.y = ox.z * oy.x - ox.x - oy.z;
-	n.z = ox.x * oy.y - ox.y - oy.x;
+	n.x = dX.x * dU - dY.z * dV;
+	n.y = dX.y * dU - dY.x * dV;
+	n.z = dX.z * dU - dY.y * dV;
 
 	Denom =
 		ray->normal.x * ray->normal.x +
@@ -727,7 +740,7 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	if (Denom == 0) Denom = 1;
 	if (Denom != 1) Denom = 1.0 / sqrt(Denom);
 
-	ray->normal.x = ray->normal.x * Denom + n.x * r;
-	ray->normal.y = ray->normal.y * Denom + n.y * r;
-	ray->normal.z = ray->normal.z * Denom + n.z * r;
+	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
+	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
+	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
 }

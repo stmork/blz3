@@ -35,9 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.85  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.84  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.83  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -891,6 +900,13 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 		result |= bbox->b3ComputeBounds(lower,upper,m_BBoxOverSize);
 	}
 	return result;
+}
+
+void b3BBox::b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar)
+{
+	box_polar->x = (ipoint->x - m_DimBase.x) / m_DimSize.x;
+	box_polar->y = (ipoint->y - m_DimBase.y) / m_DimSize.y;
+	box_polar->z = (ipoint->z - m_DimBase.z) / m_DimSize.z;
 }
 
 b3_count b3BBox::b3Count()

@@ -31,12 +31,21 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.1  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
 **	  o b3MaterialSampler
 **	- Cleaneup
-**
+**	
 **
 */
 
@@ -90,8 +99,12 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 {
 	b3Material *material = (b3Material *)info->m_Ptr;
 	b3_coord              x,y;
-	b3_polar              polar;
+	b3_ray                ray;
 	b3Color               ambient,diffuse,specular;
+	b3_f64                reflection;
+	b3_f64                refraction;
+	b3_f64                ior;
+	b3_f64                spec_exp;
 	b3_f64                fy;
 	b3_pkd_color         *data = info->m_Data;
 
@@ -101,13 +114,18 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 		for (x = 0;x < info->m_xMax;x++)
 		{
 			int ix = (m_Tiles * x) / info->m_xMax;
-			polar.box_polar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
-			polar.box_polar.y = 1.0 - fy;
-			polar.box_polar.z = 1.0 - fy * 0.15 * ix;
-			polar.object_polar.x = polar.box_polar.x * 2 - 1;
-			polar.object_polar.y = polar.box_polar.y * 2 - 1;
-			polar.object_polar.z = 0;
-			material->b3GetColors(&polar,diffuse,ambient,specular);
+			
+			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
+			ray.polar.m_BoxPolar.y = 1.0 - fy;
+			ray.polar.m_BoxPolar.z = 1.0 - fy * 0.15 * ix;
+			ray.polar.m_ObjectPolar.x = ray.polar.m_BoxPolar.x * 2 - 1;
+			ray.polar.m_ObjectPolar.y = ray.polar.m_BoxPolar.y * 2 - 1;
+			ray.polar.m_ObjectPolar.z = 0;
+			ray.polar.m_Polar = ray.polar.m_ObjectPolar;
+			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
+			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
+			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
+			material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp);
 
 			*data++ = diffuse;
 		}

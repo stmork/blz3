@@ -1,14 +1,14 @@
 /*
 **
 **      $Filename:      b3Material.cc $
-**      $Release:       Dortmund 2001 $
+**      $Release:       Dortmund 2001, 2002, 2003, 2004 $
 **      $Revision$
 **      $Date$
 **      $Developer:     Steffen A. Mork $
 **
 **      Blizzard III - Raytracing materials
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -38,6 +38,15 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.54  2004/04/10 19:12:46  sm
 **      - Splitted up some header/source files:
 **        o b3Wood/b3OakPlank
@@ -296,32 +305,21 @@ b3_bool b3Material::b3Prepare()
 }
 
 b3_bool b3Material::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
+	reflection = 0.0;
+	refraction = 0.0;
+	index_of_refraction = 1.0;
+	specular_exponent = 100000.0;
+
 	return false;
-}
-
-b3_f64 b3Material::b3GetReflection(b3_polar *polar)
-{
-	return 0.0;
-}
-
-b3_f64 b3Material::b3GetRefraction(b3_polar *polar)
-{
-	return 0.0;
-}
-
-b3_f64 b3Material::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return 1.0;
-}
-
-b3_f64 b3Material::b3GetSpecularExponent(b3_polar *polar)
-{
-	return 100000.0;
 }
 
 /*************************************************************************
@@ -379,35 +377,25 @@ void b3MatNormal::b3Write()
 }
 
 b3_bool b3MatNormal::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	diffuse  = m_DiffColor;
 	ambient  = m_AmbColor;
 	specular = m_SpecColor;
+
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatNormal::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatNormal::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatNormal::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatNormal::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -481,39 +469,28 @@ void b3MatChess::b3Write()
 #define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
 
 b3_bool b3MatChess::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3_index index;
 
-	index = CHESS_INDEX(polar->polar.x,polar->polar.y);
+	index    = CHESS_INDEX(ray->polar.m_Polar.x,ray->polar.m_Polar.y);
 	diffuse  = m_DiffColor[index];
 	ambient  = m_AmbColor[index];
 	specular = m_SpecColor[index];
+	
+	reflection          = m_Reflection[index];
+	refraction          = m_Refraction[index];
+	index_of_refraction = m_RefrValue[index];
+	specular_exponent   = m_HighLight[index];
 
 	return true;
-}
-
-b3_f64 b3MatChess::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection[CHESS_INDEX(polar->polar.x,polar->polar.y)];
-}
-
-b3_f64 b3MatChess::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction[CHESS_INDEX(polar->polar.x,polar->polar.y)];
-}
-
-b3_f64 b3MatChess::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue[CHESS_INDEX(polar->polar.x,polar->polar.y)];
-}
-
-b3_f64 b3MatChess::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight[CHESS_INDEX(polar->polar.x,polar->polar.y)];
 }
 
 /*************************************************************************
@@ -589,22 +566,26 @@ void b3MatTexture::b3SetTexture(const char *name)
 }
 
 b3_bool b3MatTexture::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy;
 
-	fx = (polar->polar.x - m_xStart) / m_xScale;
+	fx = (ray->polar.m_Polar.x - m_xStart) / m_xScale;
 	if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
 	if ((fx < 0) || (fx >= m_xTimes))
 	{
 		return false;
 	}
 
-	fy = (polar->polar.y - m_yStart) / m_yScale;
+	fy = (ray->polar.m_Polar.y - m_yStart) / m_yScale;
 	if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 	if ((fy < 0) || (fy >= m_yTimes))
 	{
@@ -617,27 +598,12 @@ b3_bool b3MatTexture::b3GetColors(
 	ambient = diffuse * 0.3;
 	specular.b3Init(0.7f,0.7f,0.7f);
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatTexture::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatTexture::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatTexture::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatTexture::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -687,19 +653,23 @@ b3_bool b3MatWrapTexture::b3Prepare()
 }
 
 b3_bool b3MatWrapTexture::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
 
-	if ((polar->polar.y >= m_yStart) && (polar->polar.y <= m_yEnd))
+	if ((ray->polar.m_Polar.y >= m_yStart) && (ray->polar.m_Polar.y <= m_yEnd))
 	{
 		xEnd	= m_xEnd;
-		xPolar	= polar->polar.x;
-		fy = (polar->polar.y - m_yStart) /
+		xPolar	= ray->polar.m_Polar.x;
+		fy = (ray->polar.m_Polar.y - m_yStart) /
 			(m_yEnd - m_yStart);
 		if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 		if ((fy < 0) || (fy > 1))
@@ -746,27 +716,12 @@ b3_bool b3MatWrapTexture::b3GetColors(
 	ambient = diffuse * 0.3;
 	specular.b3Init(0.7f,0.7f,0.7f);
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatWrapTexture::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatWrapTexture::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatWrapTexture::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatWrapTexture::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -814,34 +769,38 @@ void b3MatSlide::b3Write()
 }
 
 b3_bool b3MatSlide::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3_f64 Factor;
 
 	switch (m_ModeFlag)
 	{
 		case XSLIDE :
-			Factor = (polar->polar.x - m_From) / (m_To - m_From);
+			Factor = (ray->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case YSLIDE :
-			Factor = (polar->polar.y - m_From) / (m_To - m_From);
+			Factor = (ray->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case XSLIDE_CUT :
-			Factor = (polar->polar.x - m_From) / (m_To - m_From);
+			Factor = (ray->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
 			}
 			break;
 		case YSLIDE_CUT :
-			Factor = (polar->polar.y - m_From) / (m_To - m_From);
+			Factor = (ray->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
@@ -857,27 +816,12 @@ b3_bool b3MatSlide::b3GetColors(
 	ambient  = m_Ambient[0]  + (m_Ambient[1]  - m_Ambient[0]) * Factor;
 	specular = m_Specular[0] + (m_Specular[1] - m_Specular[0]) * Factor;
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatSlide::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatSlide::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatSlide::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatSlide::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -921,17 +865,21 @@ void b3MatMarble::b3Write()
 }
 
 b3_bool b3MatMarble::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3Color   mask;
 	b3_vector d;
 
-	d.x = polar->box_polar.x * m_Scale.x * M_PI;
-	d.y = polar->box_polar.y * m_Scale.y * M_PI;
-	d.z = polar->box_polar.z * m_Scale.z * M_PI;
+	d.x = ray->polar.m_BoxPolar.x * m_Scale.x * M_PI;
+	d.y = ray->polar.m_BoxPolar.y * m_Scale.y * M_PI;
+	d.z = ray->polar.m_BoxPolar.z * m_Scale.z * M_PI;
 
 	b3Noise::b3Marble(&d,mask);
 
@@ -939,27 +887,12 @@ b3_bool b3MatMarble::b3GetColors(
 	ambient  = m_AmbColor  * mask;
 	specular = m_SpecColor * mask;
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatMarble::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatMarble::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatMarble::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatMarble::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -1067,38 +1000,33 @@ void b3MatWood::b3Write()
 }
 
 b3_bool b3MatWood::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
-	b3_f64  mix = b3ComputeWood(&polar->box_polar);
+	b3_vector point;
+	b3_f64    mix;
+
+//	b3Vector::b3Init(&point,&ray->ipoint);
+	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
+	
+	mix = b3ComputeWood(&point);
 
 	diffuse  = b3Color::b3Mix(m_LightWood,m_DarkWood,mix);
 	ambient  = m_AmbColor;
 	specular = m_SpecColor;
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatWood::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatWood::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatWood::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatWood::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -1267,39 +1195,28 @@ void b3MatOakPlank::b3Write()
 }
 
 b3_bool b3MatOakPlank::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3_index index;
-	b3_f64   mix = b3ComputeOakPlank(&polar->object_polar,index);
+	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_ObjectPolar,index);
 
 	diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
 	ambient  = m_AmbColor;
 	specular = m_SpecColor;
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatOakPlank::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatOakPlank::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatOakPlank::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatOakPlank::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }
 
 /*************************************************************************
@@ -1477,10 +1394,14 @@ void b3MatGranite::b3Write()
 }
 
 b3_bool b3MatGranite::b3GetColors(
-	b3_polar *polar,
+	b3_ray   *ray,
 	b3Color  &diffuse,
 	b3Color  &ambient,
-	b3Color  &specular)
+	b3Color  &specular,
+	b3_f64   &reflection,
+	b3_f64   &refraction,
+	b3_f64   &index_of_refraction,
+	b3_f64   &specular_exponent)
 {
 	b3Color   mask;
 	b3_vector d;
@@ -1488,9 +1409,9 @@ b3_bool b3MatGranite::b3GetColors(
 	b3_f64    sum = 0;
 	b3_f64    freq = 1.0;
 
-	d.x = ((polar->box_polar.x - 0.5) * m_Scale.x * M_PI);
-	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
-	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
+	d.x = ((ray->polar.m_BoxPolar.x - 0.5) * m_Scale.x * M_PI);
+	d.y = ((ray->polar.m_BoxPolar.y - 0.5) * m_Scale.y * M_PI);
+	d.z = ((ray->polar.m_BoxPolar.z - 0.5) * m_Scale.z * M_PI);
 
 	for (i = 0;i < m_Overtone;i++)
 	{
@@ -1518,25 +1439,10 @@ b3_bool b3MatGranite::b3GetColors(
 	ambient  = m_AmbColor  * mask;
 	specular = m_SpecColor * mask;
 
+	reflection          = m_Reflection;
+	refraction          = m_Refraction;
+	index_of_refraction = m_RefrValue;
+	specular_exponent   = m_HighLight;
+
 	return true;
-}
-
-b3_f64 b3MatGranite::b3GetReflection(b3_polar *polar)
-{
-	return m_Reflection;
-}
-
-b3_f64 b3MatGranite::b3GetRefraction(b3_polar *polar)
-{
-	return m_Refraction;
-}
-
-b3_f64 b3MatGranite::b3GetIndexOfRefraction(b3_polar *polar)
-{
-	return m_RefrValue;
-}
-
-b3_f64 b3MatGranite::b3GetSpecularExponent(b3_polar *polar)
-{
-	return m_HighLight;
 }

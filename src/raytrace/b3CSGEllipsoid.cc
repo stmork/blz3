@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.13  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -143,15 +152,15 @@ void b3CSGEllipsoid::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	b3_line64 *BTLine = point->m_BTLine;
 	b3_f64     Q      = ray->Q;
 	
-	polar->object_polar.x = BTLine->pos.x + Q * BTLine->dir.x;
-	polar->object_polar.y = BTLine->pos.y + Q * BTLine->dir.y;
-	polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
+	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
+	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 
-	polar->polar.x = b3RelAngleOfScalars(
-		polar->object_polar.x,
-		polar->object_polar.y);
-	polar->polar.y = asin(polar->object_polar.z) * 2.0 / M_PI;
-	polar->polar.z = 0;
+	polar->m_Polar.x = b3RelAngleOfScalars(
+		polar->m_ObjectPolar.x,
+		polar->m_ObjectPolar.y);
+	polar->m_Polar.y = asin(polar->m_ObjectPolar.z) * 2.0 / M_PI;
+	polar->m_Polar.z = 0;
 }
 
 void b3CSGEllipsoid::b3GetStencilBoundInfo(b3_stencil_bound *info)

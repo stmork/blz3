@@ -32,9 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.6  2002/12/22 11:52:22  sm
 **	- Ensure minimum volume for bounding boxes even for plain areas.
-**
+**	
 **	Revision 1.5  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -87,8 +96,8 @@ void b3Cylinder::b3Normal(b3_ray *ray)
 {
 	register double	x,y;
 
-	x = m_DirLen[1] * ray->polar.object_polar.x;
-	y = m_DirLen[0] * ray->polar.object_polar.y;
+	x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
+	y = m_DirLen[0] * ray->polar.m_ObjectPolar.y;
 	ray->normal.x = x * m_Dir1.x + y * m_Dir2.x;
 	ray->normal.y = x * m_Dir1.y + y * m_Dir2.y;
 	ray->normal.z = x * m_Dir1.z + y * m_Dir2.z;
@@ -99,8 +108,8 @@ void b3Cone::b3Normal(b3_ray *ray)
 	b3_f64      x,y,Factor;
 	b3_vector64 n1,z3;
 
-	x     = ray->polar.object_polar.x;
-	y     = ray->polar.object_polar.y;
+	x     = ray->polar.m_ObjectPolar.x;
+	y     = ray->polar.m_ObjectPolar.y;
 	z3.x  = x * m_Dir1.x + y * m_Dir2.x;
 	z3.y  = x * m_Dir1.y + y * m_Dir2.y;
 	z3.z  = x * m_Dir1.z + y * m_Dir2.z;
@@ -129,9 +138,9 @@ void b3Ellipsoid::b3Normal(b3_ray *ray)
 {
 	b3_f64	x,y,z;
 
-	x = m_DirLen[1] * m_DirLen[2] * ray->polar.object_polar.x;
-	y = m_DirLen[0] * m_DirLen[2] * ray->polar.object_polar.y;
-	z = m_DirLen[0] * m_DirLen[1] * ray->polar.object_polar.z;
+	x = m_DirLen[1] * m_DirLen[2] * ray->polar.m_ObjectPolar.x;
+	y = m_DirLen[0] * m_DirLen[2] * ray->polar.m_ObjectPolar.y;
+	z = m_DirLen[0] * m_DirLen[1] * ray->polar.m_ObjectPolar.z;
 	ray->normal.x = x * m_Dir1.x + y * m_Dir2.x + z * m_Dir3.x;
 	ray->normal.y = x * m_Dir1.y + y * m_Dir2.y + z * m_Dir3.y;
 	ray->normal.z = x * m_Dir1.z + y * m_Dir2.z + z * m_Dir3.z;
@@ -139,18 +148,18 @@ void b3Ellipsoid::b3Normal(b3_ray *ray)
 
 void b3Box::b3Normal(b3_ray *ray)
 {
-	ray->normal.x = m_Normals[ray->polar.normal_index].x;
-	ray->normal.y = m_Normals[ray->polar.normal_index].y;
-	ray->normal.z = m_Normals[ray->polar.normal_index].z;
+	ray->normal.x = m_Normals[ray->polar.m_NormalIndex].x;
+	ray->normal.y = m_Normals[ray->polar.m_NormalIndex].y;
+	ray->normal.z = m_Normals[ray->polar.m_NormalIndex].z;
 }
 
 void b3Torus::b3Normal(b3_ray *ray)
 {
 	b3_f64 Dist,x,y,z;
 
-	x     = ray->polar.object_polar.x;
-	y     = ray->polar.object_polar.y;
-	z     = ray->polar.object_polar.z;
+	x     = ray->polar.m_ObjectPolar.x;
+	y     = ray->polar.m_ObjectPolar.y;
+	z     = ray->polar.m_ObjectPolar.z;
 
 	Dist  = sqrt (x * x + y * y);
 	x    -= (m_aRad * x / Dist);
@@ -202,11 +211,11 @@ void b3CSGCylinder::b3Normal(b3_ray *ray)
 {
 	b3_f64 x,y;
 
-	switch(ray->polar.normal_index)
+	switch(ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
-		x = m_DirLen[1] * ray->polar.object_polar.x;
-		y = m_DirLen[0] * ray->polar.object_polar.y;
+		x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
+		y = m_DirLen[0] * ray->polar.m_ObjectPolar.y;
 		ray->normal.x = x * m_Dir1.x + y * m_Dir2.x;
 		ray->normal.y = x * m_Dir1.y + y * m_Dir2.y;
 		ray->normal.z = x * m_Dir1.z + y * m_Dir2.z;
@@ -230,11 +239,11 @@ void b3CSGCone::b3Normal(b3_ray *ray)
 	b3_f64      x,y,Factor;
 	b3_vector64 n1,z3;
 
-	switch(ray->polar.normal_index)
+	switch(ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
-		x     = ray->polar.object_polar.x;
-		y     = ray->polar.object_polar.y;
+		x     = ray->polar.m_ObjectPolar.x;
+		y     = ray->polar.m_ObjectPolar.y;
 		z3.x  = x * m_Dir1.x + y * m_Dir2.x;
 		z3.y  = x * m_Dir1.y + y * m_Dir2.y;
 		z3.z  = x * m_Dir1.z + y * m_Dir2.z;
@@ -275,9 +284,9 @@ void b3CSGEllipsoid::b3Normal(b3_ray *ray)
 {
 	b3_f64	x,y,z;
 
-	x = m_DirLen[1] * m_DirLen[2] * ray->polar.object_polar.x;
-	y = m_DirLen[0] * m_DirLen[2] * ray->polar.object_polar.y;
-	z = m_DirLen[0] * m_DirLen[1] * ray->polar.object_polar.z;
+	x = m_DirLen[1] * m_DirLen[2] * ray->polar.m_ObjectPolar.x;
+	y = m_DirLen[0] * m_DirLen[2] * ray->polar.m_ObjectPolar.y;
+	z = m_DirLen[0] * m_DirLen[1] * ray->polar.m_ObjectPolar.z;
 	ray->normal.x = x * m_Dir1.x + y * m_Dir2.x + z * m_Dir3.x;
 	ray->normal.y = x * m_Dir1.y + y * m_Dir2.y + z * m_Dir3.y;
 	ray->normal.z = x * m_Dir1.z + y * m_Dir2.z + z * m_Dir3.z;
@@ -285,18 +294,18 @@ void b3CSGEllipsoid::b3Normal(b3_ray *ray)
 
 void b3CSGBox::b3Normal(b3_ray *ray)
 {
-	ray->normal.x = m_Normals[ray->polar.normal_index].x;
-	ray->normal.y = m_Normals[ray->polar.normal_index].y;
-	ray->normal.z = m_Normals[ray->polar.normal_index].z;
+	ray->normal.x = m_Normals[ray->polar.m_NormalIndex].x;
+	ray->normal.y = m_Normals[ray->polar.m_NormalIndex].y;
+	ray->normal.z = m_Normals[ray->polar.m_NormalIndex].z;
 }
 
 void b3CSGTorus::b3Normal(b3_ray *ray)
 {
 	b3_f64 Dist,x,y,z;
 
-	x     = ray->polar.object_polar.x;
-	y     = ray->polar.object_polar.y;
-	z     = ray->polar.object_polar.z;
+	x     = ray->polar.m_ObjectPolar.x;
+	y     = ray->polar.m_ObjectPolar.y;
+	z     = ray->polar.m_ObjectPolar.z;
 
 	Dist  = sqrt (x * x + y * y);
 	x    -= (m_aRad * x / Dist);

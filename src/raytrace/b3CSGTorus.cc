@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.23  2003/02/24 17:32:38  sm
 **      - Added further picking support.
 **      - Fixed geometry update delay.
@@ -315,15 +324,15 @@ void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	b3_f64     Q      = ray->Q;
 	b3_f64     aQuad,bQuad,val;
 
-	aQuad = polar->object_polar.x = BTLine->pos.x + Q * BTLine->dir.x;
-	bQuad = polar->object_polar.y = BTLine->pos.y + Q * BTLine->dir.y;
-	        polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	aQuad = polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
+	bQuad = polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
+	        polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
 
 	val = m_aRad - m_aQuad / sqrt(aQuad * aQuad + bQuad * bQuad);
 
-	polar->polar.x = b3RelAngleOfScalars(aQuad,bQuad);
-	polar->polar.y = b3RelAngleOfScalars (val,polar->object_polar.z);
-	polar->polar.z = 0;
+	polar->m_Polar.x = b3RelAngleOfScalars(aQuad,bQuad);
+	polar->m_Polar.y = b3RelAngleOfScalars (val,polar->m_ObjectPolar.z);
+	polar->m_Polar.z = 0;
 }
 
 b3_count b3CSGTorus::b3GetMaxIntersections()

@@ -35,9 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2004/04/11 14:05:11  sm
+**	- Raytracer redesign:
+**	  o The reflection/refraction/ior/specular exponent getter
+**	    are removed. The values are copied via the b3GetColors()
+**	    method.
+**	  o The polar members are renamed.
+**	  o The shape/bbox pointers moved into the ray structure
+**	- Introduced wood bump mapping.
+**
 **	Revision 1.19  2004/02/29 18:44:55  sm
 **	- Further shader development
-**
+**	
 **	Revision 1.18  2004/02/28 19:10:13  sm
 **	- Cook/Torrance is applicable by use through material
 **	  shader.
@@ -292,6 +301,7 @@ b3_bool b3SceneMork::b3Shade(
 {
 	b3Item      *item;
 	b3Light     *light;
+	b3BBox      *bbox;
 	b3Shape     *shape;
 	b3_ray_fork  surface;
 	b3_f64       refl,refr,factor;
@@ -316,11 +326,19 @@ b3_bool b3SceneMork::b3Shade(
 		// Get hit material
 		// Compute normal at ipoint and bump normal
 		// Get material values
+		bbox  = ray->bbox;
 		shape = ray->shape;
 		surface.incoming = ray;
+
+		// Compute intersection point
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
 		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
+
+		// Compute rel. box coordinates
+		bbox->b3ComputeBoxPolar(&ray->ipoint,&ray->polar.m_BoxPolar);
+
+		// Compute surface values
 		material = shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 

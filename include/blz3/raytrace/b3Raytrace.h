@@ -48,14 +48,14 @@
 
 struct b3_polar_precompute
 {
-	b3_vector polar;
-	b3_vector object_polar;
-	b3_index  normal_index;
+	b3_vector m_Polar; // surface coordinates of shape
+	b3_vector m_ObjectPolar; // rel. shape coordinates
+	b3_index  m_NormalIndex; // which triangle in case of triangle mesh
 };
 
 struct b3_polar : b3_polar_precompute
 {
-	b3_vector box_polar;
+	b3_vector m_BoxPolar; // rel. bbox coordinates which contains the shape
 };
 
 struct b3_ray : public b3_line64
@@ -70,6 +70,8 @@ struct b3_ray : public b3_line64
 	b3_index    TriaIndex;
 	b3_f64      aTriaValue,bTriaValue;
 	b3_f64      t;
+	b3Shape    *shape;
+	b3BBox     *bbox;
 };
 
 // aux. structure for computing illumination
@@ -83,8 +85,6 @@ struct b3_ray_info : public b3_ray
 {
 	b3_index     depth;
 	b3Color      color;
-	b3Shape     *shape;
-	b3BBox      *bbox;
 };
 
 struct b3_ray_fork : public b3_surface
@@ -579,6 +579,11 @@ public:
 	B3_ITEM_INIT(b3BumpWood);
 	B3_ITEM_LOAD(b3BumpWood);
 
+	inline b3_bool b3NeedDeriv()
+	{
+		return true;
+	}
+
 	b3_bool b3Prepare();
 	void    b3Write();
 	void    b3BumpNormal(b3_ray *ray);
@@ -631,20 +636,21 @@ public:
 
 	static  void    b3Register();
 	virtual b3_bool b3Prepare();
-	virtual b3_f64  b3GetReflection(b3_polar *polar);
-	virtual b3_f64  b3GetRefraction(b3_polar *polar);
-	virtual b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	virtual b3_f64  b3GetSpecularExponent(b3_polar *polar);
-	virtual b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result)
+	
+	virtual inline b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result)
 	{
 		return false;
 	}
 
 	virtual b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // MATERIAL or MAT_NORMAL
@@ -668,15 +674,15 @@ public:
 	B3_ITEM_LOAD(b3MatNormal);
 
 	        void    b3Write();
-	        b3_f64  b3GetReflection(b3_polar *polar);
-	        b3_f64  b3GetRefraction(b3_polar *polar);
-	        b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	        b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	virtual b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // CHESS
@@ -699,15 +705,15 @@ public:
 	B3_ITEM_LOAD(b3MatChess);
 
 	void    b3Write();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // MARBLE
@@ -729,15 +735,15 @@ public:
 	B3_ITEM_LOAD(b3MatMarble);
 
 	void    b3Write();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // WOOD
@@ -761,15 +767,15 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 
 private:
 	void    b3Init();
@@ -801,15 +807,15 @@ public:
 
 	void     b3Write();
 	b3_bool  b3Prepare();
-	b3_f64   b3GetReflection(b3_polar *polar);
-	b3_f64   b3GetRefraction(b3_polar *polar);
-	b3_f64   b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64   b3GetSpecularExponent(b3_polar *polar);
 	b3_bool  b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 
 private:
 	void     b3Init();
@@ -837,15 +843,15 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3SetTexture(const char *name);
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // WRAPTEXTURE
@@ -868,15 +874,15 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 // SLIDE
@@ -897,15 +903,15 @@ public:
 	B3_ITEM_LOAD(b3MatSlide);
 
 	void    b3Write();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 #define DIR_SLIDE_BIT       0
@@ -967,15 +973,15 @@ public:
 	B3_ITEM_LOAD(b3MatGranite);
 
 	void    b3Write();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar  *polar);
 	b3_bool b3GetColors(
-		b3_polar *polar,
+		b3_ray   *ray,
 		b3Color  &diff,
 		b3Color  &amb,
-		b3Color  &spec);
+		b3Color  &spec,
+		b3_f64   &reflection,
+		b3_f64   &refraction,
+		b3_f64   &index_of_refraction,
+		b3_f64   &specular_exponent);
 };
 
 /*************************************************************************
@@ -1840,6 +1846,7 @@ public:
 		   b3_bool         b3IsExpanded();
 		   void            b3Update();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
+		   void            b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar); 
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare(b3_bool recursive = false);
 		   char           *b3GetName();

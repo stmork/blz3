@@ -293,6 +293,10 @@ SOURCE=.\DlgAnimation.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgBumpWood.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCamera.cpp
 # End Source File
 # Begin Source File
@@ -678,6 +682,10 @@ SOURCE=.\ChildFrm.h
 # Begin Source File
 
 SOURCE=.\DlgAnimation.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpWood.h
 # End Source File
 # Begin Source File
 

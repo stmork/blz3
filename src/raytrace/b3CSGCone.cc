@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2004/04/11 14:05:11  sm
+**      - Raytracer redesign:
+**        o The reflection/refraction/ior/specular exponent getter
+**          are removed. The values are copied via the b3GetColors()
+**          method.
+**        o The polar members are renamed.
+**        o The shape/bbox pointers moved into the ray structure
+**      - Introduced wood bump mapping.
+**
 **      Revision 1.17  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -188,13 +197,13 @@ void b3CSGCone::b3InverseMap(b3_ray *ray,b3_csg_point *point)
 	b3_line64 *BTLine = point->m_BTLine;
 	b3_f64     Q      = ray->Q;
 
-	polar->object_polar.x = BTLine->pos.x + Q * BTLine->dir.x;
-	polar->object_polar.y = BTLine->pos.y + Q * BTLine->dir.y;
-	polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
-	polar->polar.x	= b3RelAngleOfScalars(
-		polar->object_polar.x,
-		polar->object_polar.y);
-	polar->polar.y	= polar->object_polar.z;
-	polar->polar.z	= 0;
-	polar->normal_index = point->m_Index;
+	polar->m_ObjectPolar.x = BTLine->pos.x + Q * BTLine->dir.x;
+	polar->m_ObjectPolar.y = BTLine->pos.y + Q * BTLine->dir.y;
+	polar->m_ObjectPolar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	polar->m_Polar.x	= b3RelAngleOfScalars(
+		polar->m_ObjectPolar.x,
+		polar->m_ObjectPolar.y);
+	polar->m_Polar.y     = polar->m_ObjectPolar.z;
+	polar->m_Polar.z     = 0;
+	polar->m_NormalIndex = point->m_Index;
 }
