@@ -38,12 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.9  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.8  2002/01/03 15:50:15  sm
 **	- Added cut/copy/paste
 **	
@@ -80,7 +84,7 @@ int main(int argc,char *argv[])
 	b3Scene      *scene;
 	b3_path_type  code;
 
-	b3Log_SetLevel(B3LOG_FULL);
+	b3Log::b3SetLevel(B3LOG_FULL);
 	b3InitRaytrace::b3Init();
 
 	switch(b3Runtime::b3GetCPUType())

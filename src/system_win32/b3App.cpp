@@ -43,12 +43,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.7  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
 **	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
 **	  to avoid thousands point.
-**
+**	
 **	Revision 1.6  2002/02/27 20:14:52  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -104,9 +108,9 @@ CB3App::CB3App(const char *appName) :
 	m_RunAutomated       = false;
 	m_AutoSave           = true;
 	m_ClientName         = appName;
-	b3Log_GetFile(DebugFile);
+	b3Log::b3GetLogFile(DebugFile);
 	b3ReadString("Settings","DebugFile",DebugFile);
-	b3Log_SetFile(DebugFile);
+	b3Log::b3SetLogFile(DebugFile);
 }
 
 CB3App::~CB3App()

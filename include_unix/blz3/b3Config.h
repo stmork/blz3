@@ -92,18 +92,11 @@ static inline int stricmp(const char *a,const char *b)
 #define B3_TWRITE     "w"  
 #define B3_TAPPEND    "a"
 
-typedef enum
-{
-	B3_BIG_ENDIAN    = 0x4d4d,
-	B3_LITTLE_ENDIAN = 0x4949
-} b3_cpu_type;
-
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
 #define B3_FILESTRINGLEN  (MAXNAMLEN)
 
 class b3Runtime : public b3CPU
 {
-	static b3_cpu_type cpu_type;
 	static char        compiler[128];
 
 public:
@@ -112,9 +105,6 @@ public:
 	static void        b3Beep();
 	static b3_bool     b3Hostname(char *hostname,const b3_size buffer_size);
 	static b3_s32      b3Execute(const char *command, const b3_bool async);
-	static b3_cpu_type b3GetCPUType();
-	static b3_count    b3GetNumThreads();
-	static b3_count    b3GetNumCPUs();
 	static char       *b3GetCompiler();
 };
 

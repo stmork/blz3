@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.9  2002/08/11 11:22:33  sm
 **	- Adjusted some includes concerning b3DisplayView.
-**
+**	
 **	Revision 1.8  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -79,7 +83,7 @@ int main(int argc,char *argv[])
 	b3_count     iter;
 	b3Display   *display;
 
-	b3Log_SetLevel(B3LOG_FULL);
+	b3Log::b3SetLevel(B3LOG_FULL);
 	if (argc != 6)
 	{
 		printf("USAGE:\n");

@@ -87,10 +87,14 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.25  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.24  2003/01/03 15:47:09  sm
 **	- Changed area light optimization.
 **	- Fixed some errors in the light dialog.
-**
+**	
 **	Revision 1.23  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -263,12 +267,6 @@ typedef CDC b3DrawContext;
 #define B3_TWRITE     "w"  
 #define B3_TAPPEND    "a"
 
-typedef enum
-{
-	B3_BIG_ENDIAN    = 0x4d4d,
-	B3_LITTLE_ENDIAN = 0x4949
-} b3_cpu_type;
-
 enum b3_msg_result
 {
 	B3_MSG_OK     = 0,
@@ -292,18 +290,14 @@ enum b3_msgbox_type
 
 class b3Runtime : public b3CPU
 {
-	b3_cpu_type        cpu_type;
 public:
 	                     b3Runtime();
 	static void          b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
 	static void          b3Beep();
 	static b3_bool       b3Hostname(char *hostname,const b3_size buffer_size);
 	static b3_s32        b3Execute(const char *command, const b3_bool async);
-	static b3_cpu_type   b3GetCPUType();
 	static b3_msg_result b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
 	static b3_msg_result b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
-	static b3_count      b3GetNumThreads();
-	static b3_count      b3GetNumCPUs();
 };
 
 #endif

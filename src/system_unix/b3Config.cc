@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.4  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**
+**	
 **	Revision 1.3  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -60,15 +64,10 @@
 
 static b3Runtime static_runtime_environment;
 
-b3_cpu_type b3Runtime::cpu_type;
 char        b3Runtime::compiler[128];
 
 b3Runtime::b3Runtime()
 {
-	b3_u32  value = 0x01020304;
-	b3_u08 *ptr   = (b3_u08 *)&value;
-
-	cpu_type = (ptr[0] == 0x01 ? B3_BIG_ENDIAN : B3_LITTLE_ENDIAN);
 #ifdef __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
 	sprintf(compiler,"GCC V%d.%d.%d",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
@@ -80,11 +79,6 @@ b3Runtime::b3Runtime()
 #else
 	sprintf(compiler,"Unknown compiler");
 #endif
-}
-
-b3_cpu_type b3Runtime::b3GetCPUType()
-{
-	return static_runtime_environment.cpu_type;
 }
 
 void b3Runtime::b3PSwap(
@@ -123,17 +117,6 @@ b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
 
 	return result;
 }
-
-b3_count b3Runtime::b3GetNumThreads()
-{
-	return static_runtime_environment.b3CPU::b3GetNumThreads();
-}
-
-b3_count b3Runtime::b3GetNumCPUs()
-{
-	return static_runtime_environment.b3CPU::b3GetNumCPUs();
-}
-
 
 char *b3Runtime::b3GetCompiler()
 {

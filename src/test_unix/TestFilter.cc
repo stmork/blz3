@@ -31,11 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.1  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
 **	  real time raytracing: 8 fps for Animationtest.
-**
+**	
 **	
 */
 
@@ -51,7 +55,8 @@
 
 int main(int argc,char *argv[])
 {
-	b3Log_SetLevel(B3LOG_FULL);
+	b3Log::b3SetLevel(B3LOG_FULL);
+
 	b3BoxFilter     box;
 	b3GaussFilter   gauss;
 	b3ShutterFilter shutter;

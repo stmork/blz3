@@ -81,14 +81,30 @@ private:
 };
 
 // Info about available CPUs
+enum b3_cpu_type
+{
+	B3_BIG_ENDIAN    = 0x4d4d,
+	B3_LITTLE_ENDIAN = 0x4949
+};
+
 class b3CPU
 {
-	b3_count num;
+	static b3_count    num;
+	static b3_cpu_type cpu_type;
+
 public:
-	         b3CPU();
-	b3_count b3GetCPU();
-	b3_count b3GetNumThreads();
-	b3_count b3GetNumCPUs();
+	                b3CPU();
+	static b3_count b3GetNumThreads();
+
+	static inline b3_count b3GetNumCPUs()
+	{
+		return num;
+	}
+
+	static inline b3_cpu_type b3GetCPUType()
+	{
+		return cpu_type;
+	}
 };
 
 #endif

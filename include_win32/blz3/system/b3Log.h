@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Log.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2003 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - logging routines (proto types)
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2003  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -18,21 +18,16 @@
 #ifndef B3_SYSTEM_LOG_H
 #define B3_SYSTEM_LOG_H
 
-#include "blz3/b3Types.h"
+#include "blz3/system/b3LogBase.h"
 
-typedef enum
+class b3Log : public b3LogBase
 {
-	B3LOG_NONE   =  0,
-	B3LOG_NORMAL = 10,
-	B3LOG_DEBUG  = 20,
-	B3LOG_FULL   = 30 
-} b3_log_level;
+public:
+            b3Log();
+	void    b3LogTime    (const char         *comment = null);
+	void    b3LogFunction(const b3_log_level  debug_level,const char *format,...);
+};
 
-b3_log_level b3Log_SetLevel(const b3_log_level  debug_limit);
-b3_bool      b3CheckLevel  (const b3_log_level  debug_limit);
-void         b3Log_GetFile (      char         *debug_file);
-b3_bool      b3Log_SetFile (const char         *debug_file);
-void         b3PrintT      (const char         *comment = 0);
-void         b3PrintF      (const b3_log_level  debug_level,const char *format,...);
+extern b3Log __logger;
 
 #endif

@@ -57,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.48  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.47  2003/02/02 14:22:31  sm
 **	- Added TGF import facility.
 **	
@@ -490,7 +494,7 @@ BOOL CAppLinesApp::InitInstance()
 	// Register the application's document templates.  Document templates
 	//  serve as the connection between documents, frame windows and views.
 #ifdef _DEBUG
-	b3Log_SetLevel(B3LOG_FULL);
+	b3Log::b3SetLevel(B3LOG_FULL);
 #endif
 	b3PrintF(B3LOG_NORMAL,"%s %s\n%s\n\n",
 		b3ClientName(),

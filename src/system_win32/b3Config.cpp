@@ -31,6 +31,10 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.1  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -39,7 +43,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.4  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -64,25 +68,6 @@ static b3Runtime static_runtime_environment;
 
 b3Runtime::b3Runtime()
 {
-	b3_u32  value = 0x01020304;
-	b3_u08 *ptr   = (b3_u08 *)&value;
-
-	cpu_type = (ptr[0] == 0x01 ? B3_BIG_ENDIAN : B3_LITTLE_ENDIAN);
-}
-
-b3_cpu_type b3Runtime::b3GetCPUType()
-{
-	return static_runtime_environment.cpu_type;
-}
-
-b3_count b3Runtime::b3GetNumThreads()
-{
-	return static_runtime_environment.b3CPU::b3GetNumThreads();
-}
-
-b3_count b3Runtime::b3GetNumCPUs()
-{
-	return static_runtime_environment.b3CPU::b3GetNumCPUs();
 }
 
 void b3Runtime::b3PSwap(

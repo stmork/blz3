@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2003/02/19 16:52:53  sm
+**      - Cleaned up logging
+**      - Clean up b3CPU/b3Runtime
+**
 **      Revision 1.30  2003/02/08 21:42:13  sm
 **      - Removed some unused variables.
 **
@@ -312,17 +316,17 @@ static void b3Keyboard(unsigned char key,int x,int y)
 		break;
 
 	case 'c':
-		b3Log_SetLevel(B3LOG_NORMAL);
+		b3Log::b3SetLevel(B3LOG_NORMAL);
 		b3PrintF(B3LOG_NORMAL,"Normal logging...\n");
 		break;
 
 	case 'd':
-		b3Log_SetLevel(B3LOG_DEBUG);
+		b3Log::b3SetLevel(B3LOG_DEBUG);
 		b3PrintF(B3LOG_NORMAL,"Debug logging...\n");
 		break;
 
 	case 'f':
-		b3Log_SetLevel(B3LOG_FULL);
+		b3Log::b3SetLevel(B3LOG_FULL);
 		b3PrintF(B3LOG_NORMAL,"Full logging...\n");
 		break;
 
@@ -411,12 +415,6 @@ int main(int argc,char *argv[])
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
-
-#ifndef _DEBUG
-		b3Log_SetLevel(B3LOG_NORMAL);
-#else
-		b3Log_SetLevel(B3LOG_FULL);
-#endif
 
 		texture_pool.b3AddPath(textures);
 		texture_pool.b3AddPath(pictures);

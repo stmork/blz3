@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2003/02/19 16:52:53  sm
+**	- Cleaned up logging
+**	- Clean up b3CPU/b3Runtime
+**
 **	Revision 1.36  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**
+**	
 **	Revision 1.35  2002/12/11 14:47:58  sm
 **	- Changed noise handling to static
 **	- Fixed some error cases when image not loaded.
@@ -317,10 +321,10 @@ int main(int argc,char *argv[])
 				switch(argv[i][1])
 				{
 				case 'd' :
-					b3Log_SetLevel(B3LOG_DEBUG);
+					b3Log::b3SetLevel(B3LOG_DEBUG);
 					break;
 				case 'f' :
-					b3Log_SetLevel(B3LOG_FULL);
+					b3Log::b3SetLevel(B3LOG_FULL);
 					break;
 				case 'a' :
 					force_no_anim = true;

@@ -32,6 +32,10 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2003/02/19 16:52:53  sm
+**  - Cleaned up logging
+**  - Clean up b3CPU/b3Runtime
+**
 **  Revision 1.1  2002/08/25 13:03:02  sm
 **  - Added a tool to restore correct file extensions.
 **  - b3Tx can determine the image types' file extension.
@@ -111,7 +115,7 @@ int main(int argc,char *argv[])
 	int i;
 
 	b3InitRaytrace::b3Init();
-//	b3Log_SetLevel(B3LOG_FULL);
+//	b3Log::b3SetLevel(B3LOG_FULL);
 	for (i = 1;i < argc;i++)
 	{
 		b3TestFile(argv[i]);
