@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.67  2004/04/11 20:46:04  sm
+**      - Fixed problem getting diffuse color for OpenGL rendering.
+**
 **      Revision 1.66  2004/04/11 19:04:21  sm
 **      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **
@@ -611,6 +614,50 @@ void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 **                        Retrieving material properties                **
 **                                                                      **
 *************************************************************************/
+
+void b3Shape::b3GetDiffuseColor(b3Color &color)
+{
+	b3Item     *item;
+	b3Material *material;
+	b3_ray      ray;
+	b3_surface  surface;
+
+	color.b3Init(0.1f,0.5f,1.0f,0.0f);
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetSurfaceValues(&ray,&surface))
+		{
+			color = surface.m_Diffuse;
+			return;
+		}
+	}
+}
+
+b3_f64 b3Shape::b3GetColors(
+	b3Color  &ambient,
+	b3Color  &diffuse,
+	b3Color  &specular)
+{
+	b3Item     *item;
+	b3Material *material;
+	b3_ray      ray;
+	b3_surface  surface;
+
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetSurfaceValues(&ray,&surface))
+		{
+			ambient  = surface.m_Ambient;
+			diffuse  = surface.m_Diffuse;
+			specular = surface.m_Specular;
+			return surface.m_SpecularExp;
+		}
+	}
+
+	return b3RenderObject::b3GetColors(ambient,diffuse,specular);
+}
 
 b3_bool b3Shape::b3GetChess(
 	b3Color  &black,
