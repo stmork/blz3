@@ -86,6 +86,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\b3Date.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Exception.cc
 # End Source File
 # End Group
@@ -94,7 +98,11 @@ SOURCE=.\b3Exception.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\..\include\blz3\system\b3DateAbstract.h
+SOURCE=..\..\include\blz3\system\b3Date.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\system\b3DirAbstract.h
 # End Source File
 # Begin Source File
 
