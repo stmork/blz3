@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.10  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
-**
+**	
 **	Revision 1.9  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.
@@ -1360,7 +1363,7 @@ b3_bool b3Tx::b3TxGauss(
 	b3_coord      y,yHalf;
 	b3_pkd_color *srcPtr,srcColor;
 	b3_pkd_color *dstPtr,dstColor;
-	b3_pkd_color  r,g,b,sub;
+	b3_diff       r,g,b,sub;
 	b3_f64        radius,xDiff,yDiff;
 	b3_f64        value,level,denom;
 

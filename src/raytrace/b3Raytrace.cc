@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.65  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -45,7 +48,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.64  2004/11/07 12:20:56  sm
 **	- Added support for rendering priority. The brt3 command
 **	  uses the BLZ3_RENDER_PRIO environment variable for
@@ -603,7 +606,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 
 b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 {
-	return bbox->b3Prepare();
+	return bbox->b3PrepareBBox();
 }
 
 b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)

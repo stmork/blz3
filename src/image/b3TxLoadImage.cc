@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.17  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
-**
+**	
 **	Revision 1.16  2004/08/22 18:29:31  sm
 **	- Fixed prototype error.
 **	
@@ -380,7 +383,7 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 	return error_code;
 }
 
-const b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
+b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
 {
 	if (stricmp(ext,"tif")  == 0) return FT_TIFF;
 	if (stricmp(ext,"tiff") == 0) return FT_TIFF;

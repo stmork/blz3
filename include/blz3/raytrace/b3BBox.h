@@ -80,7 +80,7 @@ public:
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 	       void            b3ComputeBoxPolar(b3_ray *ray); 
 		   b3_count        b3Count();
-		   b3_bool         b3Prepare(b3_bool recursive = false);
+		   b3_bool         b3PrepareBBox(b3_bool recursive = false);
 		   char           *b3GetName();
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);

@@ -46,7 +46,7 @@ protected:
 	static const char *b3GetMessage(const b3_errno ErrNo);
 
 public:
-	inline const b3_errno b3GetError()
+	inline b3_errno b3GetError()
 	{
 		return m_ErrorCode;
 	}

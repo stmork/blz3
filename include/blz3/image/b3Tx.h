@@ -340,7 +340,7 @@ public:
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
-	static const b3_tx_filetype  b3GetFileType(const char *extension);
+	static       b3_tx_filetype  b3GetFileType(const char *extension);
 	static const char           *b3GetExt(b3_tx_filetype type);
 	       const char           *b3GetExt();
 	       b3_result             b3LoadImage(const char *ImageName,b3_bool throw_exception = false);

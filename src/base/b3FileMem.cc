@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.5  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.4  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -223,26 +226,33 @@ b3_size b3FileMem::b3Seek (
 	const b3_seek_type SeekMode)
 {
 	b3_offset old_pos;
+	b3_diff   new_pos;
 
 	old_pos = m_BufferPos;
 	switch (SeekMode)
 	{
 		case B3_SEEK_START :
-			m_BufferPos = offset;
+			new_pos = offset;
 			break;
 
 		case B3_SEEK_CURRENT :
-			m_BufferPos += offset;
+			new_pos = m_BufferPos + offset;
 			break;
 
 		case B3_SEEK_END :
-			m_BufferPos  = m_BufferSize + offset;
+			new_pos  = m_BufferSize + offset;
 			break;
 	}
 
-	if (m_BufferPos < 0) m_BufferPos = 0;
-	b3EnsureBufferSize(m_BufferPos);
-	if (m_BufferPos > m_BufferSize) m_BufferSize = m_BufferPos;
+	if (new_pos < 0)
+	{
+		new_pos = 0;
+	}
+	b3EnsureBufferSize(m_BufferPos = new_pos);
+	if (m_BufferPos > m_BufferSize)
+	{
+		m_BufferSize = m_BufferPos;
+	}
 	return old_pos;
 }
 

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.24  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
-**
+**	
 **	Revision 1.23  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
@@ -216,7 +219,8 @@ b3Tx *b3TxPool::b3FindTextureUnsafe(const char *ParamName)
 	b3Path      Name;
 	b3Tx       *tx;
 	const char *txName;
-	b3_size     txLen,nameLen,diff;
+	b3_size     txLen,nameLen;
+	b3_diff     diff;
 
 	Name.b3Correct(ParamName);
 	B3_FOR_BASE(&m_Pool,tx)

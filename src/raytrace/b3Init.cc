@@ -39,6 +39,9 @@
     
 /*
 **      $Log$
+**      Revision 1.11  2005/01/01 16:43:19  sm
+**      - Fixed some aliasing warnings.
+**
 **      Revision 1.10  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -102,7 +105,8 @@ void b3RaytracingItems::b3Register()
 b3_bool b3Scene::b3CheckTexture(b3Tx **tx,const char *name)
 {
 	const char *txName;
-	b3_size     txLen,nameLen,diff;
+	b3_size     txLen,nameLen;
+	b3_diff     diff;
 
 	if (*tx != null)
 	{

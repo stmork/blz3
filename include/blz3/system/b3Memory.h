@@ -22,11 +22,11 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/system/b3Exception.h"
 
-#define LOOP_B       4
+#define LOOP_B       4u
 #define LOOP_INSIDE (1 << LOOP_B)
 #define LOOP_MASK   (LOOP_INSIDE - 1)
 
-#define B3_MEM_ALIGN 64
+#define B3_MEM_ALIGN 64u
 #define B3_MEM_MASK  (-B3_MEM_ALIGN)
 
 #define B3_MEM_ALIGN_CHUNK(p)  (void *)(((size_t)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)

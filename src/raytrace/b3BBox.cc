@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.110  2005/01/01 16:43:19  sm
+**	- Fixed some aliasing warnings.
+**
 **	Revision 1.109  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -41,7 +44,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.108  2004/12/14 07:40:44  smork
 **	- Put scene/bbox traversion methods into their own source file.
 **	
@@ -636,7 +639,7 @@ void b3BBox::b3Write()
 	b3StoreString(m_BoxURL, B3_BOXSTRINGLEN);
 }
 
-b3_bool b3BBox::b3Prepare(b3_bool recursive)
+b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 {
 	b3Item     *item;
 	b3Shape    *shape;
@@ -685,7 +688,7 @@ b3_bool b3BBox::b3Prepare(b3_bool recursive)
 		B3_FOR_BASE(b3GetBBoxHead(),item)
 		{
 			bbox = (b3BBox *)item;
-			if (!bbox->b3Prepare(recursive))
+			if (!bbox->b3PrepareBBox(recursive))
 			{
 				return false;
 			}
