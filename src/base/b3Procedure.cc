@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/04/07 11:38:25  sm
+**	- Minor bugfix
+**
 **	Revision 1.21  2004/04/06 12:17:46  sm
 **	- Optimized some noise methods.
-**
+**	
 **	Revision 1.20  2004/04/05 09:47:58  sm
 **	- Some noise optimization
 **	
@@ -420,10 +423,10 @@ inline b3_f64 b3Noise::b3GradNoise (
 
 	a[0] = b3GetDiff(ix,iy,iz,i,0);
 	b[0] = b3GetDiff(ix,iy,iz,i,4);
-	a[1] = b3GetDiff(ix,iy,iz,i,1);
-	b[1] = b3GetDiff(ix,iy,iz,i,5);
-	a[2] = b3GetDiff(ix,iy,iz,i,2);
-	b[2] = b3GetDiff(ix,iy,iz,i,6);
+	a[1] = b3GetDiff(ix,iy,iz,i,2);
+	b[1] = b3GetDiff(ix,iy,iz,i,6);
+	a[2] = b3GetDiff(ix,iy,iz,i,1);
+	b[2] = b3GetDiff(ix,iy,iz,i,5);
 	a[3] = b3GetDiff(ix,iy,iz,i,3);
 	b[3] = b3GetDiff(ix,iy,iz,i,7);
 
