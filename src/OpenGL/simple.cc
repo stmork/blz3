@@ -25,6 +25,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2004/09/24 11:42:13  sm
+**      - First VBO run under Linux.
+**
 **      Revision 1.8  2004/09/23 15:47:04  sm
 **      - Splitted b3RenderContext into own file.
 **      - Added vertex buffer object support which does not
@@ -182,38 +185,27 @@ GLfloat light0[] =
 	10.0,15.0,20.0,1.0
 };
 
-typedef void      (*procBindBufferARB)(GLenum target, GLuint buffer);
-typedef void      (*procDeleteBuffersARB)(GLsizei n, const GLuint *buffers);
-typedef void      (*procGenBuffersARB)(GLsizei n, GLuint *buffers);
-typedef GLboolean (*procIsBufferARB)(GLuint buffer);
-typedef void      (*procBufferDataARB)(GLenum target, GLsizei size, const GLvoid *data, GLenum usage);
-typedef void      (*procBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, const GLvoid *data);
-typedef void      (*procGetBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, GLvoid *data);
-typedef void *    (*procMapBufferARB)(GLenum target, GLenum access);
-typedef void      (*procUnmapBufferARB)(GLenum target);
-typedef void      (*procGetBufferParameterivARB)(GLenum target, GLenum pname, GLint *params);
-typedef void      (*procGetBufferPointervARB)(GLenum target, GLenum pname, void **params);
-
-procBindBufferARB    glBindBufferARB;
-procDeleteBuffersARB glDeleteBuffersARB;
-procGenBuffersARB    glGenBuffersARB;
-procBufferDataARB    glBufferDataARB;
-procMapBufferARB     glMapBufferARB;
-procUnmapBufferARB   glUnmapBufferARB;
+PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
+PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+PFNGLBINDBUFFERARBPROC    glBindBufferARB;
+PFNGLBUFFERDATAARBPROC    glBufferDataARB;
+PFNGLMAPBUFFERARBPROC     glMapBufferARB;
+PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 
 GLuint  vbo[2];
 b3_bool has_vbo;
 
 void init_vbo()
 {
-	char *extensions = glGetString(GL_EXTENSIONS);
+	char *extensions = (char *)glGetString(GL_EXTENSIONS);
 	if (strstr(extensions,"ARB_vertex_buffer_object") != 0)
 	{
-		glGenBuffersARB  = b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-		glBindBufferARB  = b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-		glBufferDataARB  = b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-		glMapBufferARB   = b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-		glUnmapBufferARB = b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
+		glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
+		glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
+		glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
+		glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
+		glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
+		glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 		has_vbo =
 			(glGenBuffersARB != null) &&

@@ -39,20 +39,6 @@ typedef enum
 	B3_MATRIX_PROJECTION
 } b3_matrix_mode;
 
-#ifdef BLZ3_USE_OPENGL
-typedef void      (*procBindBufferARB)(GLenum target, GLuint buffer);
-typedef void      (*procDeleteBuffersARB)(GLsizei n, const GLuint *buffers);
-typedef void      (*procGenBuffersARB)(GLsizei n, GLuint *buffers);
-typedef GLboolean (*procIsBufferARB)(GLuint buffer);
-typedef void      (*procBufferDataARB)(GLenum target, GLsizei size, const GLvoid *data, GLenum usage);
-typedef void      (*procBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, const GLvoid *data);
-typedef void      (*procGetBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, GLvoid *data);
-typedef void *    (*procMapBufferARB)(GLenum target, GLenum access);
-typedef void      (*procUnmapBufferARB)(GLenum target);
-typedef void      (*procGetBufferParameterivARB)(GLenum target, GLenum pname, GLint *params);
-typedef void      (*procGetBufferPointervARB)(GLenum target, GLenum pname, void **params);
-#endif
-
 class b3RenderObject;
 
 class b3RenderContext : protected b3Mem
@@ -75,6 +61,7 @@ public:
 	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
 	static PFNGLBINDBUFFERARBPROC    glBindBufferARB;
 	static PFNGLBUFFERDATAARBPROC    glBufferDataARB;
+	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;
 	static PFNGLMAPBUFFERARBPROC     glMapBufferARB;
 	static PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
 #endif
@@ -242,8 +229,8 @@ protected:
 	virtual                ~b3RenderObject();
 public:
 	        void            b3AddCount(b3RenderContext *context);
-	virtual void            b3AllocVertices(b3RenderContext *context);
-	virtual void            b3FreeVertices();
+	virtual void            b3SetupVertexMemory(b3RenderContext *context);
+	virtual void            b3FreeVertexMemory();
 	virtual void            b3Draw(b3RenderContext *context);
 	        void            b3Recompute();
 	        void            b3RecomputeMaterial();
@@ -252,9 +239,10 @@ public:
 	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
 protected:
-	        void            b3PreAlloc();
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	virtual void            b3GetVertexRange(b3_index &start,b3_index &end);
+	        void            b3PreAlloc();
+	virtual void            b3AllocVertexMemory(b3RenderContext *context);
 	virtual void            b3ComputeVertices();
 	virtual void            b3ComputeIndices();
 	virtual void            b3ComputeNormals(b3_bool normalize=true);

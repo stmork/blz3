@@ -229,11 +229,7 @@ public:
 	B3_ITEM_LOAD(b3Sphere);
 
 	void    b3StoreShape();
-	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	void    b3ComputeVertices();
-	void    b3ComputeNormals(b3_bool normalize=true);
-	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	void    b3Normal(b3_ray *ray);
 	b3_bool b3NormalDeriv(b3_ray *ray);
@@ -241,6 +237,12 @@ public:
 
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+
+protected:
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeNormals(b3_bool normalize=true);
+	void    b3ComputeIndices();
 };
 
 // AREA, DISK
@@ -278,11 +280,12 @@ public:
 	B3_ITEM_LOAD(b3Area);
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void   b3AllocVertices(b3RenderContext *context);
-	        void   b3FreeVertices();
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+
+protected:
+	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class B3_PLUGIN b3Disk : public b3Shape2
@@ -292,10 +295,12 @@ public:
 	B3_ITEM_LOAD(b3Disk);
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+
+protected:
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
@@ -311,9 +316,11 @@ public:
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	virtual void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 			void    b3SetupPicking(b3PickInfo *pick_info);
+
+protected:
+	virtual void    b3ComputeNormals(b3_bool normalize = true);
 };
 
 class B3_PLUGIN b3Cylinder : public b3Shape3
@@ -322,12 +329,14 @@ public:
 	B3_ITEM_INIT(b3Cylinder);
 	B3_ITEM_LOAD(b3Cylinder);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3AllocVertices(b3RenderContext *context);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
 	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
+
+protected:
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertexMemory(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
 };
 
 class B3_PLUGIN b3Cone : public b3Shape3
@@ -336,12 +345,14 @@ public:
 	B3_ITEM_INIT(b3Cone);
 	B3_ITEM_LOAD(b3Cone);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3AllocVertices(b3RenderContext *context);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
 	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Normal(b3_ray *ray);
+
+protected:
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3AllocVertexMemory(b3RenderContext *context);
+	void   b3ComputeVertices();
+	void   b3ComputeIndices();
 };
 
 class B3_PLUGIN b3Ellipsoid : public b3Shape3
@@ -351,29 +362,32 @@ public:
 	B3_ITEM_LOAD(b3Ellipsoid);
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	        void   b3Normal(b3_ray *ray);
+
+protected:
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void   b3Normal(b3_ray *ray);
 };
 
 class B3_PLUGIN b3Box : public b3Shape3
 {
-	b3_gl_vertex  box_vertex[8 * 3];
+	b3_gl_vertex   m_BoxVertex[8 * 3];
 
 public:
 	B3_ITEM_INIT(b3Box);
 	B3_ITEM_LOAD(b3Box);
 
 	virtual void   b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void   b3AllocVertices(b3RenderContext *context);
-	        void   b3FreeVertices();
+	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	        void   b3Normal(b3_ray *ray);
+
+protected:
+	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize = true);
 	        void   b3ComputeIndices();
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void   b3Normal(b3_ray *ray);
 };
 
 // DOUGHNUT, TORUS
@@ -392,10 +406,6 @@ public:
 
 	        void    b3StoreShape();
 
-	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void    b3ComputeVertices();
-	        void    b3ComputeNormals(b3_bool normalize=true);
-	        void    b3ComputeIndices();
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	        void    b3Normal(b3_ray *ray);
 	        void    b3SetupPicking(b3PickInfo *pick_info);
@@ -403,6 +413,12 @@ public:
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+
+protected:
+	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void    b3ComputeVertices();
+	        void    b3ComputeNormals(b3_bool normalize=true);
+	        void    b3ComputeIndices();
 };
 
 // normal interpolation defines
@@ -533,11 +549,13 @@ public:
 	B3_ITEM_LOAD(b3Triangles);
 
 	void   b3StoreShape();
+	void   b3SetupPicking(b3PickInfo *pick_info);
+
+protected:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeNormals(b3_bool normalize=true);
 	void   b3ComputeIndices();
-	void   b3SetupPicking(b3PickInfo *pick_info);
 };
 
 // SPLINE_ROT
@@ -725,11 +743,7 @@ public:
 	B3_ITEM_LOAD(b3CSGSphere);
 
 	void     b3StoreShape();
-	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	void     b3ComputeVertices();
-	void     b3ComputeNormals(b3_bool normalize=true);
-	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	b3_count b3GetMaxIntersections();
@@ -737,6 +751,12 @@ public:
 	b3_bool  b3Prepare();
 	void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	void     b3SetupPicking(b3PickInfo *pick_info);
+
+protected:
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeNormals(b3_bool normalize=true);
+	void     b3ComputeIndices();
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -752,10 +772,12 @@ public:
 	        void     b3StoreShape();
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	virtual void     b3ComputeNormals(b3_bool normalize = true);
 	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	        void     b3SetupPicking(b3PickInfo *pick_info);
 	        b3_count b3GetMaxIntersections();
+
+protected:
+	virtual void     b3ComputeNormals(b3_bool normalize = true);
 };
 
 class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
@@ -764,12 +786,14 @@ public:
 	B3_ITEM_INIT(b3CSGCylinder);
 	B3_ITEM_LOAD(b3CSGCylinder);
 
-	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void     b3ComputeVertices();
-	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
+
+protected:
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
 };
 
 class B3_PLUGIN b3CSGCone : public b3CSGShape3
@@ -779,12 +803,14 @@ public:
 	B3_ITEM_INIT(b3CSGCone);
 	B3_ITEM_LOAD(b3CSGCone);
 
-	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void     b3ComputeVertices();
-	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	void     b3Normal(b3_ray *ray);
+
+protected:
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
 };
 
 class B3_PLUGIN b3CSGEllipsoid : public b3CSGShape3
@@ -794,32 +820,35 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid);
 	B3_ITEM_LOAD(b3CSGEllipsoid);
 
-	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void     b3ComputeVertices();
-	        void     b3ComputeIndices();
 	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	        void     b3Normal(b3_ray *ray);
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
+
+protected:
+	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void     b3ComputeVertices();
+	        void     b3ComputeIndices();
 };
 
 class B3_PLUGIN b3CSGBox : public b3CSGShape3
 {
-	b3_gl_vertex  box_vertex[8 * 3];
+	b3_gl_vertex    m_BoxVertex[8 * 3];
 
 public:
 	B3_ITEM_INIT(b3CSGBox);
 	B3_ITEM_LOAD(b3CSGBox);
 
-	        void    b3AllocVertices(b3RenderContext *context);
-	        void    b3FreeVertices();
-	        void    b3ComputeVertices();
-	        void    b3ComputeNormals(b3_bool normalize = true);
-	        void    b3ComputeIndices();
 	        b3_bool b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void    b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	        void    b3Normal(b3_ray *ray);
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
+
+protected:
+	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void    b3ComputeVertices();
+	        void    b3ComputeNormals(b3_bool normalize = true);
+	        void    b3ComputeIndices();
 };
 
 // CSG_TORUS
@@ -835,10 +864,6 @@ public:
 	B3_ITEM_LOAD(b3CSGTorus);
 
 	        void     b3StoreShape();
-	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void     b3ComputeVertices();
-	        void     b3ComputeNormals(b3_bool normalize=true);
-	        void     b3ComputeIndices();
 	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	        b3_count b3GetMaxIntersections();
@@ -848,6 +873,12 @@ public:
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
+
+protected:
+	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void     b3ComputeVertices();
+	        void     b3ComputeNormals(b3_bool normalize=true);
+	        void     b3ComputeIndices();
 };
 
 #endif

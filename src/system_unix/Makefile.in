@@ -1,6 +1,8 @@
 # Beispiel Makefile
 
-CPPFLAGS	= @CPPFLAGS@
+CC				= @CC@
+CXX				= @CXX@
+CPPFLAGS		= @CPPFLAGS@
 
 # Optionen
 

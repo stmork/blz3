@@ -25,6 +25,8 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Color.h"
 
+#define USE_VBOS 1
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/09/24 11:42:14  sm
+**	- First VBO run under Linux.
+**
 **	Revision 1.4  2004/09/23 21:27:38  sm
 **	- VBOs still don't work.
-**
+**	
 **	Revision 1.3  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
 **	
@@ -85,6 +90,7 @@ PFNGLGENBUFFERSARBPROC    b3RenderContext::glGenBuffersARB;
 PFNGLDELETEBUFFERSARBPROC b3RenderContext::glDeleteBuffersARB;
 PFNGLBINDBUFFERARBPROC    b3RenderContext::glBindBufferARB;
 PFNGLBUFFERDATAARBPROC    b3RenderContext::glBufferDataARB;
+PFNGLBUFFERSUBDATAARBPROC b3RenderContext::glBufferSubDataARB;
 PFNGLMAPBUFFERARBPROC     b3RenderContext::glMapBufferARB;
 PFNGLUNMAPBUFFERARBPROC   b3RenderContext::glUnmapBufferARB;
 
@@ -144,10 +150,11 @@ void b3RenderContext::b3Init()
 	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
 	glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
 	glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
+	glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)b3Runtime::b3GetOpenGLExtension("glBufferSubDataARB");
 	glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
-#if 1
+#ifdef USE_VBOS
 	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2004/09/24 11:42:14  sm
+**      - First VBO run under Linux.
+**
 **      Revision 1.16  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -144,11 +147,11 @@ void b3Cone::b3GetCount(
 	vertCount = (b3ShapeRenderContext::m_SubDiv << 1) + 6;
 }
 
-void b3Cone::b3AllocVertices(b3RenderContext *ctx)
+void b3Cone::b3AllocVertexMemory(b3RenderContext *ctx)
 {
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
-	b3RenderObject::b3AllocVertices(context);
+	b3RenderObject::b3AllocVertexMemory(context);
 	GridsCyl  = context->b3GetCylinderIndices();
 	PolysCyl  = context->b3GetCylinderPolygons();
 	GridsCone = context->b3GetConeIndices();

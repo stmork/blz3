@@ -2,6 +2,8 @@
 
 BLZ3_LIB		= @BLZ3_LIB@
 BLZ3_BIN		= @BLZ3_BIN@
+CC				= @CC@
+CXX				= @CXX@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2004/09/24 11:42:14  sm
+**      - First VBO run under Linux.
+**
 **      Revision 1.17  2004/09/23 15:47:04  sm
 **      - Splitted b3RenderContext into own file.
 **      - Added vertex buffer object support which does not
@@ -147,14 +150,15 @@ void b3Cylinder::b3GetCount(
 	b3_count        &polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+
 	vertCount = SinCosSteps + SinCosSteps + 6;
 }
 
-void b3Cylinder::b3AllocVertices(b3RenderContext *ctx)
+void b3Cylinder::b3AllocVertexMemory(b3RenderContext *ctx)
 {
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
-	b3RenderObject::b3AllocVertices(context);
+	b3RenderObject::b3AllocVertexMemory(context);
 	glGrids    = context->b3GetCylinderIndices();
 	glPolygons = context->b3GetCylinderPolygons();
 }

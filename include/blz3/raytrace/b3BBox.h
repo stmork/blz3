@@ -61,10 +61,8 @@ public:
 	       void            b3Write();
 	       void            b3Dump(b3_count level);
 		   void            b3SetName(const char *name);
-	       void            b3AllocVertices(b3RenderContext *context);
-	       void            b3FreeVertices();
-	       void            b3ComputeVertices();
-		   void            b3ComputeNormals(b3_bool normalize = true);
+		   void            b3SetupVertexMemory(b3RenderContext *context);
+	       void            b3FreeVertexMemory();
 	       void            b3Draw(b3RenderContext *context);
 		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
 		   b3_bool         b3Inverse(b3_matrix *);
@@ -117,6 +115,12 @@ protected:
 	{
 		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}
+
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3AllocVertexMemory(b3RenderContext *context);
+	void    b3ComputeVertices();
+	void    b3ComputeNormals(b3_bool normalize = true);
+	void    b3ComputeIndices();
 };
 
 #define BBB_HTML         0

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.98  2004/09/24 11:42:14  sm
+**	- First VBO run under Linux.
+**
 **	Revision 1.97  2004/09/23 21:27:38  sm
 **	- VBOs still don't work.
-**
+**	
 **	Revision 1.96  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
@@ -740,97 +743,121 @@ void b3Scene::b3Reorg()
 	b3BBox::b3Recount(base);
 }
 
-void b3BBox::b3AllocVertices(b3RenderContext *context)
+void b3BBox::b3SetupVertexMemory(b3RenderContext *context)
 {
 	b3Item  *item;
 	b3BBox  *bbox;
 	b3Shape *shape;
 
-	b3PreAlloc();
-	glVertexCount =  8;
-	glGridCount   = 12;
-	glPolyCount   =  0;
-
-	glVertex   = m_BBoxVertex;
-	glGrids    = m_BBoxIndices;
-	glPolygons = null;
+	b3RenderObject::b3SetupVertexMemory(context);
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3AllocVertices(context);
+		bbox->b3SetupVertexMemory(context);
 		bbox->b3AddCount(context);
 	}
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
-		shape->b3AllocVertices(context);
+		shape->b3SetupVertexMemory(context);
 		shape->b3AddCount(context);
 	}
-
-	glCustomVert  = true;
-	glCustomGrids = true;
-	glCustomPolys = false;
 }
 
-void b3BBox::b3FreeVertices()
+void b3Scene::b3AllocVertices(b3RenderContext *context)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	context->glVertexCount = 0;
+	context->glPolyCount   = 0;
+	context->glGridCount   = 0;
+	context->glTextureSize = 0;
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3SetupVertexMemory(context);
+		bbox->b3AddCount(context);
+	}
+}
+
+void b3BBox::b3GetCount(
+	b3RenderContext *ctx,
+	b3_count        &vertCount,
+	b3_count        &gridCount,
+	b3_count        &polyCount)
+{
+	vertCount = 8;
+}
+
+void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
+{
+	if (context->b3HasVBO())
+	{
+		b3RenderObject::b3AllocVertexMemory(context);
+	}
+	else
+	{
+		glVertex = m_BBoxVertex;
+		glVertexCount = 8;
+	}
+}
+
+void b3BBox::b3FreeVertexMemory()
 {
 	b3Item  *item;
 	b3BBox  *bbox;
 	b3Shape *shape;
 
-	glVertex   = null;
-	glGrids    = null;
-	glPolygons = null;
-
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
-		shape->b3FreeVertices();
+		shape->b3FreeVertexMemory();
 	}
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3FreeVertices();
+		bbox->b3FreeVertexMemory();
 
 	}
 
-	b3RenderObject::b3FreeVertices();
+	b3RenderObject::b3FreeVertexMemory();
 }
 
 void b3BBox::b3ComputeVertices()
 {
-	m_BBoxVertex[0].v.x = m_DimBase.x;
-	m_BBoxVertex[0].v.y = m_DimBase.y;
-	m_BBoxVertex[0].v.z = m_DimBase.z;
+	glVertex[0].v.x = m_DimBase.x;
+	glVertex[0].v.y = m_DimBase.y;
+	glVertex[0].v.z = m_DimBase.z;
 
-	m_BBoxVertex[1].v.x = m_DimBase.x;
-	m_BBoxVertex[1].v.y = m_DimBase.y;
-	m_BBoxVertex[1].v.z = m_DimBase.z + m_DimSize.z;
+	glVertex[1].v.x = m_DimBase.x;
+	glVertex[1].v.y = m_DimBase.y;
+	glVertex[1].v.z = m_DimBase.z + m_DimSize.z;
 
-	m_BBoxVertex[2].v.x = m_DimBase.x + m_DimSize.x;
-	m_BBoxVertex[2].v.y = m_DimBase.y;
-	m_BBoxVertex[2].v.z = m_DimBase.z + m_DimSize.z;
+	glVertex[2].v.x = m_DimBase.x + m_DimSize.x;
+	glVertex[2].v.y = m_DimBase.y;
+	glVertex[2].v.z = m_DimBase.z + m_DimSize.z;
 
-	m_BBoxVertex[3].v.x = m_DimBase.x + m_DimSize.x;
-	m_BBoxVertex[3].v.y = m_DimBase.y;
-	m_BBoxVertex[3].v.z = m_DimBase.z;
+	glVertex[3].v.x = m_DimBase.x + m_DimSize.x;
+	glVertex[3].v.y = m_DimBase.y;
+	glVertex[3].v.z = m_DimBase.z;
 
-	m_BBoxVertex[4].v.x = m_DimBase.x;
-	m_BBoxVertex[4].v.y = m_DimBase.y + m_DimSize.y;
-	m_BBoxVertex[4].v.z = m_DimBase.z;
+	glVertex[4].v.x = m_DimBase.x;
+	glVertex[4].v.y = m_DimBase.y + m_DimSize.y;
+	glVertex[4].v.z = m_DimBase.z;
 
-	m_BBoxVertex[5].v.x = m_DimBase.x;
-	m_BBoxVertex[5].v.y = m_DimBase.y + m_DimSize.y;
-	m_BBoxVertex[5].v.z = m_DimBase.z + m_DimSize.z;
+	glVertex[5].v.x = m_DimBase.x;
+	glVertex[5].v.y = m_DimBase.y + m_DimSize.y;
+	glVertex[5].v.z = m_DimBase.z + m_DimSize.z;
 
-	m_BBoxVertex[6].v.x = m_DimBase.x + m_DimSize.x;
-	m_BBoxVertex[6].v.y = m_DimBase.y + m_DimSize.y;
-	m_BBoxVertex[6].v.z = m_DimBase.z + m_DimSize.z;
+	glVertex[6].v.x = m_DimBase.x + m_DimSize.x;
+	glVertex[6].v.y = m_DimBase.y + m_DimSize.y;
+	glVertex[6].v.z = m_DimBase.z + m_DimSize.z;
 
-	m_BBoxVertex[7].v.x = m_DimBase.x + m_DimSize.x;
-	m_BBoxVertex[7].v.y = m_DimBase.y + m_DimSize.y;
-	m_BBoxVertex[7].v.z = m_DimBase.z;
+	glVertex[7].v.x = m_DimBase.x + m_DimSize.x;
+	glVertex[7].v.y = m_DimBase.y + m_DimSize.y;
+	glVertex[7].v.z = m_DimBase.z;
 
 	glVertexCount = 8;
 	glComputed    = true;
@@ -838,6 +865,15 @@ void b3BBox::b3ComputeVertices()
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)
 {
+}
+
+void b3BBox::b3ComputeIndices()
+{
+	glGridCount   = 12;
+	glPolyCount   =  0;
+
+	glGrids    = m_BBoxIndices;
+	glPolygons = null;
 }
 
 void b3BBox::b3Draw(b3RenderContext *context)
@@ -1164,23 +1200,6 @@ void b3Scene::b3Draw(b3RenderContext *context)
 		bbox->b3Draw(context);
 	}
 	b3PrintT("OpenGL - Drawing end");
-}
-
-void b3Scene::b3AllocVertices(b3RenderContext *context)
-{
-	b3Item  *item;
-	b3BBox  *bbox;
-
-	context->glVertexCount = 0;
-	context->glPolyCount   = 0;
-	context->glGridCount   = 0;
-	context->glTextureSize = 0;
-	B3_FOR_BASE(b3GetBBoxHead(),item)
-	{
-		bbox = (b3BBox *)item;
-		bbox->b3AllocVertices(context);
-		bbox->b3AddCount(context);
-	}
 }
 
 void b3BBox::b3Activate(b3_bool activate,b3_bool recurse)

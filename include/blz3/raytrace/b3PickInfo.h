@@ -56,8 +56,8 @@ public:
 	        void     b3AddLine(b3_index a,b3_index b);
 
 protected:
-	        void     b3AllocVertices(b3RenderContext *context);
-	        void     b3FreeVertices();
+	        void     b3AllocVertexMemory(b3RenderContext *context);
+	        void     b3FreeVertexMemory();
 	        void     b3ComputeVertices();
 	        void     b3ComputeIndices();
 	        void     b3GetGridColor(b3Color &color);

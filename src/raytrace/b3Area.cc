@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2004/09/24 11:42:14  sm
+**      - First VBO run under Linux.
+**
 **      Revision 1.27  2004/09/23 15:47:04  sm
 **      - Splitted b3RenderContext into own file.
 **      - Added vertex buffer object support which does not
@@ -202,24 +205,9 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3AllocVertices(b3RenderContext *context)
+void b3Area::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
 {
-	b3PreAlloc();
-	glVertex   = area_vertex;
-	glGrids    = area_grids;
-	glPolygons = area_polygons;
-
-	glVertexCount = 4;
-	glGridCount   = 4;
-	glPolyCount   = 2;
-}
-
-void b3Area::b3FreeVertices()
-{
-	glVertex   = null;
-	glGrids    = null;
-	glPolygons = null;
-	b3FreeVertices();
+	verts = 4;
 }
 
 void b3Area::b3ComputeVertices()
@@ -266,6 +254,12 @@ void b3Area::b3ComputeVertices()
 
 void b3Area::b3ComputeIndices()
 {
+	glGrids    = area_grids;
+	glPolygons = area_polygons;
+
+	glGridCount   = 4;
+	glPolyCount   = 2;
+
 	b3ComputeBound(&m_Limit);
 }
 

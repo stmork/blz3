@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/09/24 11:42:14  sm
+**	- First VBO run under Linux.
+**
 **	Revision 1.9  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
 **	  run yet.
-**
+**	
 **	Revision 1.8  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -144,16 +147,19 @@ void b3PickInfo::b3AddLine(b3_index a,b3_index b)
 	m_Grid.b3Add(line);
 }
 
-void b3PickInfo::b3AllocVertices(b3RenderContext *context)
+void b3PickInfo::b3AllocVertexMemory(b3RenderContext *context)
 {
-	b3PreAlloc();
 	glVertex      = m_Vertices.b3GetBuffer();
 	glVertexCount = m_Vertices.b3GetCount();
 	glGrids       = m_Grid.b3GetBuffer();
 	glGridCount   = m_Grid.b3GetCount();
+
+	glCustomVert  = true;
+	glCustomGrids = true;
+	glCustomPolys = true;
 }
 
-void b3PickInfo::b3FreeVertices()
+void b3PickInfo::b3FreeVertexMemory()
 {
 }
 

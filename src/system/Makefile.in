@@ -1,5 +1,7 @@
 # Beispiel Makefile
 
+CC			= @CC@
+CXX			= @CXX@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3System_ind.o
 

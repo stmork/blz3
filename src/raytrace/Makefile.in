@@ -1,6 +1,8 @@
 # Beispiel Makefile
 
-CPPFLAGS	= @CPPFLAGS@
+CC				= @CC@
+CXX				= @CXX@
+CPPFLAGS		= @CPPFLAGS@
 
 LIBS			= libB3Raytrace.o
 PRG_SOURCE		=\
