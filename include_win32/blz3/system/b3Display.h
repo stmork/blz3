@@ -92,6 +92,9 @@ public:
 	b3_bool             b3IsCancelled(b3_coord x,b3_coord y);
 	void                b3Wait();
 
+private:
+	       void         b3Open(b3_res xSize,b3_res ySize);
+	       void         b3Close();
 };
 
 class b3Row : public b3Link<b3Row>, public b3Mem

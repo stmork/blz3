@@ -30,8 +30,17 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	}
 	else
 	{
+		char *args[6];
+
+		args[0] = argv[0];
+		args[1] = "-1";
+		args[2] = "2.2";
+		args[3] = "-1";
+		args[4] = "1";
+		args[5] = "256";
+
 		// TODO: code your application's behavior here.
-		nRetCode = _Blizzard3Main(argc,argv);
+		nRetCode = _Blizzard3Main(sizeof(args)/sizeof(char *),args);
 	}
 
 	return nRetCode;

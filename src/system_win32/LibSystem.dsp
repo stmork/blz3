@@ -97,6 +97,10 @@ SOURCE=.\b3Dir.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Display.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3File.cpp
 # End Source File
 # Begin Source File

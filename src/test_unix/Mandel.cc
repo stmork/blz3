@@ -219,6 +219,7 @@ int main(int argc,char *argv[])
 		}
 		catch(b3DisplayException *e)
 		{
+			b3PrintF(B3LOG_NORMAL,"### Error occured: %d\n",e->b3GetError());
 		}
 	}
 	return 0;
