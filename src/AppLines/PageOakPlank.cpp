@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/24 20:15:51  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.2  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
@@ -93,16 +96,16 @@ void CPageOakPlank::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPageOakPlank, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageOakPlank)
-	ON_EN_KILLFOCUS(IDC_SPIN_XSCALE, OnPropertyPageEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YSCALE, OnPropertyPageEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XOFFSET, OnPropertyPageEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XTIMES, OnPropertyPageEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YTIMES, OnPropertyPageEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XSCALE, OnPropertyPageSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YSCALE, OnPropertyPageSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XOFFSET, OnPropertyPageSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XTIMES, OnPropertyPageSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YTIMES, OnPropertyPageSpin)
+	ON_EN_KILLFOCUS(IDC_SPIN_XSCALE, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_YSCALE, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_XOFFSET,OnEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_XTIMES, OnEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_YTIMES, OnEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XSCALE, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YSCALE, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XOFFSET,OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XTIMES, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YTIMES, OnSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 

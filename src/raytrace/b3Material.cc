@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.65  2004/04/24 20:15:52  sm
+**      - Further slide material dialog development
+**
 **      Revision 1.64  2004/04/24 15:40:12  sm
 **      - Started slide material dialog implementation
 **      - Added simple property sheet/preview dialog template

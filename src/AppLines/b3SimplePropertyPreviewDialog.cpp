@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/24 20:15:52  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.1  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
-**
+**	
 **	
 */
 
@@ -66,7 +69,7 @@ void CB3SimplePropertyPreviewDialog::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CB3SimplePropertyPreviewDialog, CDialog)
 	//{{AFX_MSG_MAP(CB3SimplePropertyPreviewDialog)
-	ON_MESSAGE(WM_USER,OnPreviewMaterial)
+	ON_MESSAGE(WM_USER,OnPreview)
 	ON_BN_CLICKED(IDC_AUTO_REFRESH, OnAutoRefresh)
 	ON_BN_CLICKED(IDC_REFRESH, OnRefresh)
 	//}}AFX_MSG_MAP
@@ -90,9 +93,28 @@ BOOL CB3SimplePropertyPreviewDialog::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CB3SimplePropertyPreviewDialog::OnPreviewMaterial(WPARAM wParam,LPARAM lParam)
+void CB3SimplePropertyPreviewDialog::OnEdit()
+{
+	UpdateData();
+    b3Preview();
+}
+
+void CB3SimplePropertyPreviewDialog::OnSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
+	// TODO: Add your control notification handler code here
+	OnEdit();
+	*pResult = 0;
+}
+
+void CB3SimplePropertyPreviewDialog::OnPreview(WPARAM wParam,LPARAM lParam)
 {
 	// TODO: Add your control notification handler code here
+	b3Preview();
+}
+
+void CB3SimplePropertyPreviewDialog::b3Preview()
+{
 	if (m_AutoRefresh)
 	{
 		b3UpdateUI();

@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/24 20:15:52  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.2  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
-**
+**	
 **	Revision 1.1  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
 **	
@@ -75,17 +78,27 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CB3PropertyPage message handlers
 
-void CB3PropertyPage::OnPropertyPageEdit()
+BOOL CB3PropertyPage::OnInitDialog() 
+{
+	SetWindowText(m_Caption);
+	CPropertyPage::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CB3PropertyPage::OnEdit()
 {
 	UpdateData();
 	b3UpdateUI();
 }
 
-void CB3PropertyPage::OnPropertyPageSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+void CB3PropertyPage::OnSpin(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
 	// TODO: Add your control notification handler code here
-	OnPropertyPageEdit();
+	OnEdit();
 	*pResult = 0;
 }
 
@@ -97,16 +110,6 @@ void CB3PropertyPage::b3UpdateUI()
 	{
 		parent->SendMessage(WM_USER);
 	}
-}
-
-BOOL CB3PropertyPage::OnInitDialog() 
-{
-	SetWindowText(m_Caption);
-	CPropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CB3PropertyPage::b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet,int id)

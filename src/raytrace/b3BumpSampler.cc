@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/24 20:15:52  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.4  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
-**
+**	
 **	Revision 1.3  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler

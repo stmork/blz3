@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/24 20:15:51  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.4  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.3  2004/04/23 16:51:09  sm
 **	- Color renaming finished.
 **	- Bug #18 fixed: The bump amplitude is read out correctly now.
@@ -83,8 +86,8 @@ void CPageBump::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPageBump, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageBump)
-	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnPropertyPageEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnPropertyPageSpin)
+	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 

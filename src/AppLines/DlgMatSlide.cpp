@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/24 20:15:51  sm
+**	- Further slide material dialog development
+**
 **	Revision 1.3  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
-**
+**	
 **	Revision 1.2  2003/07/12 10:20:16  sm
 **	- Fixed ticketno. 12 (memory leak in b3ItemRegistry)
 **	
@@ -64,8 +67,8 @@ CDlgMatSlide::CDlgMatSlide(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatSlide)
 	//}}AFX_DATA_INIT
-	m_SlideMode = m_Material->m_ModeFlag & 1;
-	m_CutOff = (m_Material->m_ModeFlag & 2) != null;
+		m_SlideMode = m_Material->m_ModeFlag & 1;
+		m_CutOff = (m_Material->m_ModeFlag & 2) != null;
 }
 
 CDlgMatSlide::~CDlgMatSlide()
@@ -78,10 +81,14 @@ void CDlgMatSlide::DoDataExchange(CDataExchange* pDX)
 {
 	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatSlide)
+	DDX_Control(pDX, IDC_SPIN_FROM, m_FromCtrl);
+	DDX_Control(pDX, IDC_SPIN_TO, m_ToCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	DDX_Check(pDX, IDC_CUTOFF, m_CutOff);
 	DDX_Radio(pDX, IDC_SLIDE_HORIZONTAL, m_SlideMode);
 	//}}AFX_DATA_MAP
+	m_FromCtrl.b3DDX(pDX,m_Material->m_From);
+	m_ToCtrl.b3DDX(pDX,m_Material->m_To);
 }
 
 
@@ -90,6 +97,10 @@ BEGIN_MESSAGE_MAP(CDlgMatSlide, CB3SimplePropertyPreviewDialog)
 	ON_BN_CLICKED(IDC_CUTOFF, OnSlideMode)
 	ON_BN_CLICKED(IDC_SLIDE_HORIZONTAL, OnSlideMode)
 	ON_BN_CLICKED(IDC_SLIDE_VERTICAL, OnSlideMode)
+	ON_EN_KILLFOCUS(IDC_EDIT_FROM, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_TO, OnEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_EDIT_FROM, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_EDIT_TO, OnSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -126,4 +137,6 @@ void CDlgMatSlide::OnSlideMode()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
+	m_Material->m_ModeFlag = m_SlideMode | (m_CutOff ? SLIDE_CUT : 0);
+	b3Preview();
 }

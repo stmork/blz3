@@ -56,8 +56,8 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CB3PropertyPage)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnPropertyPageEdit();
-	afx_msg void OnPropertyPageSpin(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnEdit();
+	afx_msg void OnSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

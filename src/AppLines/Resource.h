@@ -349,6 +349,7 @@
 #define IDC_EDIT_RINGY                  32089
 #define IDC_EDIT_XSCALE                 32089
 #define IDC_EDIT_AMPLITUDE              32089
+#define IDC_EDIT_FROM                   32089
 #define IDC_FLOAT_EDIT                  32090
 #define IDC_EDIT_GRAINY                 32090
 #define IDC_EDIT_YSCALE                 32090
@@ -611,7 +612,10 @@
 #define IDC_SPIN_TRUNK_WOBBLE_FREQUENCY 32309
 #define IDC_CUTOFF                      32309
 #define IDC_SPIN_ANGULAR_WOBBLE         32310
+#define IDC_SPIN_FROM                   32310
 #define IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY 32311
+#define IDC_EDIT_TO                     32311
+#define IDC_SPIN_TO                     32312
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_LIGHT            60002
@@ -805,7 +809,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         10120
-#define _APS_NEXT_CONTROL_VALUE         32310
+#define _APS_NEXT_CONTROL_VALUE         32313
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif
 #endif

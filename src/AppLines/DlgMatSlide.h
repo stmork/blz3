@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowRaytrace.h"
 #include "PageMaterial.h"
@@ -50,6 +51,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgMatSlide)
 	enum { IDD = IDD_MAT_SLIDE };
+	CB3FloatSpinButtonCtrl	m_FromCtrl;
+	CB3FloatSpinButtonCtrl	m_ToCtrl;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	BOOL	m_CutOff;
 	int		m_SlideMode;
