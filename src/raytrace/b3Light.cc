@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2001/12/23 09:43:26  sm
+**      - Inlining some methods.
+**
 **      Revision 1.20  2001/12/22 21:08:35  sm
 **      - Tidied up some dialogs
 **      - Designed new icons for document templates
@@ -298,7 +301,7 @@ b3_bool b3Light::b3Illuminate(
 		b3PointIllumination(scene,surface));
 }
 
-b3_bool b3Light::b3PointIllumination(
+inline b3_bool b3Light::b3PointIllumination(
 	b3Scene         *scene,
 	b3_illumination *surface)
 {
@@ -363,7 +366,7 @@ b3_bool b3Light::b3PointIllumination(
 	return true;
 }
 
-b3_bool b3Light::b3AreaIllumination (
+inline b3_bool b3Light::b3AreaIllumination (
 	b3Scene         *scene,
 	b3_illumination *surface)
 {
@@ -495,7 +498,7 @@ b3_bool b3Light::b3AreaIllumination (
 	return true;
 }
 
-b3Shape *b3Light::b3CheckSinglePoint (
+inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3Scene         *scene,                                
 	b3_illumination *surface,
 	b3_light_info   *Jit,
