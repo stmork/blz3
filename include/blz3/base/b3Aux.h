@@ -84,4 +84,17 @@ public:
 	b3_bool b3CheckBound(b3Rect *);
 };
 
+class B3_PLUGIN b3Point
+{
+public:
+	b3_f64 x,y;
+
+public:
+	inline b3Point(b3_f64 x = 0,b3_f64 y = 0)
+	{
+		this->x = x;
+		this->y = y;
+	}
+};
+
 #endif
