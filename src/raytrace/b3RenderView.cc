@@ -31,10 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/08/19 10:12:23  sm
+**	- Test if one animation run is enough - but is not.
+**	- Using gluUnProject for ticket no. 7.
+**
 **	Revision 1.37  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.36  2004/04/03 14:07:18  sm
 **	- Resolved internal compiler error problem of VC++
 **	
@@ -764,10 +768,37 @@ void b3RenderView::b3Project(
 
 void b3RenderView::b3Unproject(const b3_coord x,const b3_coord y,b3_vector *point)
 {
-	b3Unproject(
+#if 1
+	GLint    viewport[4];
+	GLdouble modelview[16];
+	GLdouble projection[16];
+	GLfloat  winX, winY, winZ;
+	GLdouble posX, posY, posZ;
+ 
+	glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+	glGetDoublev( GL_PROJECTION_MATRIX, projection );
+	glGetIntegerv( GL_VIEWPORT, viewport );
+ 
+	winX = (GLfloat)x;
+	winY = (GLfloat)viewport[3] - (GLfloat)y;
+#if 0
+	glReadPixels( winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+#else
+	// We need simply a reference point for generating a ray.
+	winZ = 0.5;
+#endif
+
+	gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+ 
+	point->x = (b3_f32)posX;
+	point->y = (b3_f32)posY;
+	point->z = (b3_f32)posZ;
+#else
+ 	b3Unproject(
 		(double)x / (double)m_xRes,
 		(double)y / (double)m_yRes,
 		point);
+#endif
 }
 
 void b3RenderView::b3Unproject(const b3_f64 xRelParam,const b3_f64 yRelParam,b3_vector *point)
