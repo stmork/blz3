@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/09/30 15:53:19  sm
+**	- Removing nasty CR/LF
+**
 **	Revision 1.4  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.3  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running

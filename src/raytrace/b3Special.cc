@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/09/30 15:53:19  sm
+**      - Removing nasty CR/LF
+**
 **      Revision 1.7  2001/09/04 15:15:57  sm
 **      - Added rotating objects
 **

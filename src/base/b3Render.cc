@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/09/30 15:53:19  sm
+**      - Removing nasty CR/LF
+**
 **      Revision 1.16  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/09/30 15:53:19  sm
+**	- Removing nasty CR/LF
+**
 **	Revision 1.14  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **	Revision 1.13  2001/09/05 15:21:34  sm
 **	- Now object moving/rotating on perspective view.
 **	   Revision 1.12  2001/09/04 15:15:57  sm

@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/09/30 15:53:19  sm
+**      - Removing nasty CR/LF
+**
 **      Revision 1.8  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects

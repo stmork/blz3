@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/30 15:53:20  sm
+**      - Removing nasty CR/LF
+**
 **      Revision 1.10  2001/09/04 20:37:53  sm
 **      - Some minor updates
 **
