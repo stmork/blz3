@@ -176,6 +176,8 @@ protected:
 	b3_gl_polygon   *glPolygons;
 
 #ifdef BLZ3_USE_OPENGL
+	GLuint           glDisplayList;
+
 	// Some material values
 	b3_bool          glMaterialComputed;
 	GLfloat          glAmbient[4];
@@ -251,6 +253,9 @@ private:
 	        void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
 	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
 	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
+	        void            b3DeleteDisplayList();
+	        void            b3DrawIntoDisplayList(b3RenderContext *context,b3_render_mode render_mode);
+	        b3_bool         b3IsUpToDate();
 };
 
 #endif

@@ -28,6 +28,7 @@
 #include "blz3/base/b3Color.h"
 
 #define not_VERBOSE
+#define no_B3_DISPLAY_LIST
 
 #ifndef _DEBUG
 #define B3_MAX_TX_SIZE 128
@@ -43,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.79  2004/08/07 07:13:32  sm
+**      - Added OpenGL display list support. The display lists under Linux
+**        are slower than the raw draw array variant.
+**
 **      Revision 1.78  2004/07/18 08:28:44  sm
 **      - Added transformation optimazation: We don't need to recompute
 **        vertices on unit matrix transformation. This simple test makes
@@ -825,6 +830,7 @@ b3RenderObject::b3RenderObject()
 	b3RecomputeMaterial();
 
 #ifdef BLZ3_USE_OPENGL
+	glDisplayList  = 0;
 	glTextureId    = 0;
 	glTextureData  = null;
 	glTextureSize  = 0;
@@ -836,6 +842,18 @@ b3RenderObject::b3RenderObject()
 b3RenderObject::~b3RenderObject()
 {
 	b3CreateTexture(null,0);
+	b3DeleteDisplayList();
+}
+
+void b3RenderObject::b3DeleteDisplayList()
+{
+#ifdef B3_DISPLAY_LIST
+	if (glDisplayList != 0)
+	{
+		glDeleteLists(glDisplayList,2);
+		glDisplayList = 0;
+	}
+#endif
 }
 
 void b3RenderObject::b3GetCount(
@@ -1032,6 +1050,7 @@ void b3RenderObject::b3TransformVertices(
 
 	if (glVertex != null)
 	{
+		b3DeleteDisplayList();
 		if (is_affine)
 		{
 			for (i = 0;i < glVertexCount;i++)
@@ -1381,13 +1400,61 @@ void b3RenderObject::b3CreateImage(
 
 void b3RenderObject::b3Draw(b3RenderContext *context)
 {
+#ifdef B3_DISPLAY_LIST
+	if (!b3IsUpToDate())
+	{
+		b3Update();
+		b3UpdateMaterial();
+		b3DeleteDisplayList();
+		glDisplayList = glGenLists(2);
+
+		glNewList(glDisplayList,GL_COMPILE);
+		b3DrawIntoDisplayList(context,B3_RENDER_LINE);
+		glEndList();
+
+		glNewList(glDisplayList + 1,GL_COMPILE);
+		b3DrawIntoDisplayList(context,B3_RENDER_FILLED);
+		glEndList();
+	}
+
+	switch (b3GetRenderMode())
+	{
+	case B3_RENDER_LINE:
+		glCallList(glDisplayList);
+		break;
+
+	case B3_RENDER_FILLED:
+		glCallList(glDisplayList + 1);
+		break;
+	}
+#else
+	if (!b3IsUpToDate())
+	{
+		b3Update();
+		b3UpdateMaterial();
+	}
+	
+	b3DrawIntoDisplayList(context,b3GetRenderMode());
+#endif
+}
+
+b3_bool b3RenderObject::b3IsUpToDate()
+{
+#ifdef B3_DISPLAY_LIST
+	return glComputed && glMaterialComputed && (glDisplayList != 0);
+#else
+	return glComputed && glMaterialComputed;
+#endif
+}
+
+void b3RenderObject::b3DrawIntoDisplayList(
+	b3RenderContext *context,
+	b3_render_mode   render_mode)
+{
 #ifdef BLZ3_USE_OPENGL
-	b3_render_mode render_mode = b3GetRenderMode();
 	b3Color        diffuse;
 #endif
 
-	b3Update();
-	b3UpdateMaterial();
 #ifdef _DEBUG
 	b3_index       i;
 

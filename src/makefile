@@ -101,6 +101,9 @@ $(BLZ3_BIN)/CleanRes:	tools
 tools:	$(BLZ3_BIN) $(BLZ3_LIB) libs
 	+@make -C tools
 
+divx:
+	+@make -C tools divx
+	
 #########################################################
 #                                                       #
 #  Blizzard III libraries                               #
