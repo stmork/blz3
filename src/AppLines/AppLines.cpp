@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2004/05/07 18:19:08  sm
+**	- Added some menu entries and toolbar buttons
+**	- Fixed missing default title of CB3PropertyPages
+**
 **	Revision 1.72  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.71  2004/04/26 14:28:10  sm
 **	- Added marble dialog
 **	- Resorted controls
@@ -1090,7 +1094,7 @@ void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
 	b3Base<b3Item> head;
-	b3Item        *item = b3World::b3AllocNode(SLIDE);
+	b3Item        *item = b3World::b3AllocNode(WOOD);
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);

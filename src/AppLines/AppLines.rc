@@ -208,6 +208,10 @@ BEGIN
     SEPARATOR
     BUTTON      ID_PICK_PREV
     BUTTON      ID_PICK_SUCK
+    SEPARATOR
+    BUTTON      ID_EDIT_MATERIAL
+    BUTTON      ID_EDIT_BUMP
+    BUTTON      ID_COPY_PROPERTIES
 END
 
 IDR_TOOLBAR_OBJECT TOOLBAR DISCARDABLE  16, 15
@@ -623,6 +627,8 @@ BEGIN
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
         MENUITEM SEPARATOR
         MENUITEM "&Material...",                ID_EDIT_MATERIAL
+        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
+        MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
     END
     POPUP "&Ansicht"
     BEGIN
