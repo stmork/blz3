@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/01/25 14:34:33  smork
+**	- Done some formatting.
+**
 **	Revision 1.14  2005/01/25 08:46:10  smork
 **	- Removed global static variables/functions from JPEG load code.
-**
+**	
 **	Revision 1.13  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
@@ -120,10 +123,16 @@ extern "C"
 #	include <setjmp.h>
 }
 
+/*************************************************************************
+**                                                                      **
+**                        b3JPEG class definition                       **
+**                                                                      **
+*************************************************************************/
+
 struct b3_jpeg_error_mgr
 {
-	struct jpeg_error_mgr m_ErrorMgr;
-	jmp_buf               m_SetjmpBuffer;
+	struct jpeg_error_mgr          m_ErrorMgr;
+	jmp_buf                        m_SetjmpBuffer;
 };
 
 class b3JPEG
@@ -133,128 +142,152 @@ class b3JPEG
 	struct b3_jpeg_error_mgr       m_Error;
 	JSAMPARRAY                     m_SampleArray;
 
-	static void b3ErrorHandler (j_common_ptr cinfo)
-	{
-		struct b3_jpeg_error_mgr *myerr = (struct b3_jpeg_error_mgr *) cinfo->err;
-
-		(*cinfo->err->output_message) (cinfo);
-		longjmp(myerr->m_SetjmpBuffer, 1);
-	}
-
-	static void b3JpegInitSource(j_decompress_ptr cinfo)
-	{
-	}
-
-	static boolean b3JpegFillInputBuffer (j_decompress_ptr cinfo)
-	{
-		return TRUE;
-	}
-
-	static void b3JpegSkipInputData (
-		j_decompress_ptr cinfo,
-		long             num_bytes)
-	{
-		struct jpeg_source_mgr *source = cinfo->src;
-
-		source->next_input_byte += (size_t)num_bytes;
-		source->bytes_in_buffer -= (size_t)num_bytes;
-	}
-
-	static void b3JpegTermSource (j_decompress_ptr cinfo)
-	{
-	}
-
 public:
-	b3JpegSourceMgr()
+	        b3JPEG();
+	b3_bool b3Init(b3_u08 *buffer,b3_size buffer_size);
+	b3_bool b3Decompress(b3Tx *tx);
+	void    b3Deinit();
+
+private:
+	static void b3ErrorHandler (j_common_ptr cinfo);
+	static void b3JpegInitSource(j_decompress_ptr cinfo);
+	static boolean b3JpegFillInputBuffer (j_decompress_ptr cinfo);
+	static void b3JpegSkipInputData (j_decompress_ptr cinfo,long num_bytes);
+	static void b3JpegTermSource (j_decompress_ptr cinfo);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        b3JPEG implementaion                          **
+**                                                                      **
+*************************************************************************/
+
+b3JPEG::b3JPEG()
+{
+	memset(&m_Decompress, 0, sizeof(m_Decompress));
+	memset(&m_SourceMgr,  0, sizeof(m_SourceMgr));
+}
+
+b3_bool b3JPEG::b3Init(b3_u08 *buffer,b3_size buffer_size)
+{
+	int row_stride;
+
+	m_Decompress.err                     = jpeg_std_error(&m_Error.m_ErrorMgr);
+	m_Error.m_ErrorMgr.error_exit = b3ErrorHandler;
+
+	if (setjmp(m_Error.m_SetjmpBuffer) != 0)
 	{
-		memset(&m_Decompress, 0, sizeof(m_Decompress));
-		memset(&m_SourceMgr,  0, sizeof(m_SourceMgr));
+		return false;
 	}
+	jpeg_create_decompress(&m_Decompress);
+	m_SourceMgr.init_source       = b3JpegInitSource;
+	m_SourceMgr.fill_input_buffer = b3JpegFillInputBuffer;
+	m_SourceMgr.skip_input_data   = b3JpegSkipInputData;
+	m_SourceMgr.term_source       = b3JpegTermSource;
+	m_SourceMgr.resync_to_restart = jpeg_resync_to_restart;
+	m_SourceMgr.next_input_byte   = buffer;
+	m_SourceMgr.bytes_in_buffer   = buffer_size;
 
-	b3_bool b3Init(b3_u08 *buffer,b3_size buffer_size)
+	m_Decompress.src  = &m_SourceMgr;
+	jpeg_read_header      (&m_Decompress, TRUE);
+	jpeg_start_decompress (&m_Decompress);
+	row_stride    = m_Decompress.output_width * m_Decompress.output_components;
+	m_SampleArray = (*m_Decompress.mem->alloc_sarray)
+		((j_common_ptr) &m_Decompress, JPOOL_IMAGE, row_stride, 1);
+	
+	return true;
+}
+
+b3_bool b3JPEG::b3Decompress(b3Tx *tx)
+{
+	b3_u08 *line;
+
+	if (m_Decompress.out_color_space != JCS_GRAYSCALE)
 	{
-		int row_stride;
+		b3_pkd_color *out;
 
-		m_Decompress.err                     = jpeg_std_error(&m_Error.m_ErrorMgr);
-		m_Error.m_ErrorMgr.error_exit = b3ErrorHandler;
-
-		if (setjmp(m_Error.m_SetjmpBuffer) != 0)
+		if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,24))
 		{
 			return false;
 		}
-		jpeg_create_decompress(&m_Decompress);
-		m_SourceMgr.init_source       = b3JpegInitSource;
-		m_SourceMgr.fill_input_buffer = b3JpegFillInputBuffer;
-		m_SourceMgr.skip_input_data   = b3JpegSkipInputData;
-		m_SourceMgr.term_source       = b3JpegTermSource;
-		m_SourceMgr.resync_to_restart = jpeg_resync_to_restart;
-		m_SourceMgr.next_input_byte   = buffer;
-		m_SourceMgr.bytes_in_buffer   = buffer_size;
+		out = (b3_pkd_color *)tx->b3GetData();
 
-		m_Decompress.src  = &m_SourceMgr;
-		jpeg_read_header      (&m_Decompress, TRUE);
-		jpeg_start_decompress (&m_Decompress);
-		row_stride    = m_Decompress.output_width * m_Decompress.output_components;
-		m_SampleArray = (*m_Decompress.mem->alloc_sarray)
-			((j_common_ptr) &m_Decompress, JPOOL_IMAGE, row_stride, 1);
-		
-		return true;
-	}
-
-	b3_bool b3Decompress(b3Tx *tx)
-	{
-		b3_u08 *line;
-
-		if (m_Decompress.out_color_space != JCS_GRAYSCALE)
+		while (m_Decompress.output_scanline < m_Decompress.output_height)
 		{
-			b3_pkd_color *out;
+			b3_coord x;
 
-			if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,24))
+			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
+			line = (b3_u08 *)m_SampleArray[0];
+			for (x = 0;x < (b3_coord)m_Decompress.output_width;x++)
 			{
-				return false;
-			}
-			out = (b3_pkd_color *)tx->b3GetData();
-
-			while (m_Decompress.output_scanline < m_Decompress.output_height)
-			{
-				b3_coord x;
-
-				jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
-				line = (b3_u08 *)m_SampleArray[0];
-				for (x = 0;x < (b3_coord)m_Decompress.output_width;x++)
-				{
-					*out++ =
-						((b3_pkd_color)line[0] << 16) |
-						((b3_pkd_color)line[1] <<  8) |
-						 (b3_pkd_color)line[2];
-					line += 3;
-				}
+				*out++ =
+					((b3_pkd_color)line[0] << 16) |
+					((b3_pkd_color)line[1] <<  8) |
+					 (b3_pkd_color)line[2];
+				line += 3;
 			}
 		}
-		else
-		{
-			if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,8))
-			{
-				return false;
-			}
-
-			line = (b3_u08 *)tx->b3GetData();
-			while (m_Decompress.output_scanline < m_Decompress.output_height)
-			{
-				jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
-				memcpy (line,m_SampleArray[0],m_Decompress.output_width);
-				line += m_Decompress.output_width;
-			}
-		}
-		return true;
 	}
-
-	void b3Deinit()
+	else
 	{
-		jpeg_finish_decompress (&m_Decompress);
-		jpeg_destroy_decompress(&m_Decompress);
+		if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,8))
+		{
+			return false;
+		}
+
+		line = (b3_u08 *)tx->b3GetData();
+		while (m_Decompress.output_scanline < m_Decompress.output_height)
+		{
+			jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
+			memcpy (line,m_SampleArray[0],m_Decompress.output_width);
+			line += m_Decompress.output_width;
+		}
 	}
-};
+	return true;
+}
+
+void b3JPEG::b3Deinit()
+{
+	jpeg_finish_decompress (&m_Decompress);
+	jpeg_destroy_decompress(&m_Decompress);
+}
+
+void b3JPEG::b3ErrorHandler (j_common_ptr cinfo)
+{
+	struct b3_jpeg_error_mgr *myerr = (struct b3_jpeg_error_mgr *) cinfo->err;
+
+	(*cinfo->err->output_message) (cinfo);
+	longjmp(myerr->m_SetjmpBuffer, 1);
+}
+
+void b3JPEG::b3JpegInitSource(j_decompress_ptr cinfo)
+{
+}
+
+boolean b3JPEG::b3JpegFillInputBuffer (j_decompress_ptr cinfo)
+{
+	return TRUE;
+}
+
+void b3JPEG::b3JpegSkipInputData (
+	j_decompress_ptr cinfo,
+	long             num_bytes)
+{
+	struct jpeg_source_mgr *source = cinfo->src;
+
+	source->next_input_byte += (size_t)num_bytes;
+	source->bytes_in_buffer -= (size_t)num_bytes;
+}
+
+void b3JPEG::b3JpegTermSource (j_decompress_ptr cinfo)
+{
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3Tx JPEG parsing                             **
+**                                                                      **
+*************************************************************************/
 
 b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
