@@ -64,28 +64,28 @@ class CB3Toolbar : public CToolBar, public b3Link<CB3Toolbar>
 	CString           m_Key;
 	CString           m_Value;
 	CB3ToolbarInfo   *m_ToolbarInfo;		// table of buttons and text
-	bool              m_Visible;
-	long              m_ID;
-	long              m_Bar;
-	long              m_ButtonCount;
+	b3_bool           m_Visible;
+	b3_index          m_ID;
+	b3_index          m_Bar;
+	b3_count          m_ButtonCount;
 public:
 	              CB3Toolbar();
 				 ~CB3Toolbar();
-	bool          b3ToggleVisibility();
-	bool          b3SetVisibility(bool new_visibility=true);
-	bool          b3IsVisible();	 
+	b3_bool       b3ToggleVisibility();
+	b3_bool       b3SetVisibility(bool new_visibility=true);
+	b3_bool       b3IsVisible();
 	void          b3Customize();
 
 protected:
 	friend class  CB3ToolbarState;
 
 	void          b3SetID(long id_bitmap,long id_title,long id_bar);
-	bool          b3Create(CFrameWnd *parent);
+	b3_bool       b3Create(CFrameWnd *parent);
 	void          b3SaveState();
 	CB3Toolbar   *b3DockRight(CB3Toolbar *Left=null);
 	void          b3DockSimple();
 	void          b3RestoreState();
-	bool          b3InitCustomization();
+	b3_bool       b3InitCustomization();
 
 protected:
 	//{{AFX_MSG(b3Toolbar)
@@ -111,21 +111,21 @@ private:
 class CB3Menubar : public CMenuBar, public b3Link<CB3Menubar>
 {
 	CFrameWnd    *m_MenubarMain;
-	long          m_ID;
-	long          m_Bar;
-	bool          m_Visible;
+	b3_index      m_ID;
+	b3_index      m_Bar;
+	b3_bool       m_Visible;
 
 public:
 	              CB3Menubar();
-	bool          b3ToggleVisibility();
-	bool          b3SetVisibility(bool new_visibility=true);
-	bool          b3IsVisible();	 
+	b3_bool       b3ToggleVisibility();
+	b3_bool       b3SetVisibility(bool new_visibility=true);
+	b3_bool       b3IsVisible();	 
 
 protected:
 	friend class  CB3ToolbarState;
 
 	void          b3SetID(long id_menu,long id_bar);
-	bool          b3Create(CFrameWnd *parent);
+	b3_bool       b3Create(CFrameWnd *parent);
 };
 
 class CB3ToolbarState
@@ -133,20 +133,20 @@ class CB3ToolbarState
 	b3Base<CB3Toolbar>  m_Toolbars;
 	b3Base<CB3Menubar>  m_Menubars;
 	CFrameWnd          *m_ToolbarMain;
-	long                m_MenuCount;
-	long                m_ToolCount;
+	b3_count            m_MenuCount;
+	b3_count            m_ToolCount;
 	char                m_Code[128];
 public:
-	     CB3ToolbarState();
-	void b3AddToolbar(CB3Toolbar *toolbar,long id_bitmap,long id_title);
-	void b3AddMenubar(CB3Menubar *menubar,long id_menu);
-	bool b3CreateToolbars(CFrameWnd *parent);
-	void b3UpdateUI();
-	void b3LoadState();
-	void b3SaveState();
+	        CB3ToolbarState();
+	void    b3AddToolbar(CB3Toolbar *toolbar,long id_bitmap,long id_title);
+	void    b3AddMenubar(CB3Menubar *menubar,long id_menu);
+	b3_bool b3CreateToolbars(CFrameWnd *parent);
+	void    b3UpdateUI();
+	void    b3LoadState();
+	void    b3SaveState();
 
 protected:
-	bool b3PreTranslateMsg(MSG *pMSG);
+	b3_bool b3PreTranslateMsg(MSG *pMSG);
 };
 
 #endif

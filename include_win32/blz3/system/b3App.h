@@ -39,6 +39,10 @@ public:
 	virtual void  b3SetWindowMode(bool ForceSave);
 			void  b3MoveWindow(CWnd *wnd);
 			void  b3CoolEnable(bool enable=true);
+
+// From CWinApp
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 #define b3GetApp()       ((CB3App *)AfxGetApp())

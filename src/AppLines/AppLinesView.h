@@ -30,14 +30,23 @@
 
 #define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
 
+typedef enum b3SelectMode
+{
+	B3_SELECT_NOTHING = 0,
+	B3_SELECT_MAGNIFICATION
+} b3_select_mode;
+
 class CAppLinesView : public CScrollView
 {
-	HDC    m_DC;
-	HGLRC  m_GC;
-	int    m_PixelFormatIndex;
-	b3RenderView m_RenderView;
-	b3_bool      m_Selecting;
-	CPoint       m_SelectStart;
+	HDC             m_DC;
+	HGLRC           m_GC;
+	int             m_PixelFormatIndex;
+	b3RenderView    m_RenderView;
+	b3_select_mode  m_PreviousMode;
+	b3_select_mode  m_SelectMode;
+	b3_bool         m_Selecting;
+	CPoint          m_SelectStart;
+	CPoint          m_SelectAct;
 protected: // create from serialization only
 	CAppLinesView();
 	DECLARE_DYNCREATE(CAppLinesView)
@@ -114,6 +123,8 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnViewPop();
+	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

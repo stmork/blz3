@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/14 13:34:40  sm
+**      - Corredted aspect ratio handling when doing somethiing with
+**        the view
+**      - New application icon
+**      - Minor GUI bug fixes.
+**
 **      Revision 1.7  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -97,6 +103,8 @@ void b3RenderViewItem::b3Set(
 	m_Size.x =  upper->x - lower->x;
 	m_Size.y =  upper->y - lower->y;
 	m_Size.z =  upper->z - lower->z;
+	m_xRelation = 1;
+	m_yRelation = 1;
 }
 
 b3RenderView::b3RenderView()
@@ -154,6 +162,8 @@ b3RenderViewItem *b3RenderView::b3NewRenderViewItem(
 	{
 		item->m_Mid  = last->m_Mid;
 		item->m_Size = last->m_Size;
+		item->m_xRelation = last->m_xRelation;
+		item->m_yRelation = last->m_yRelation;
 	}
 	else
 	{
@@ -216,6 +226,35 @@ void b3RenderView::b3SetBounds(b3_vector *lower,b3_vector *upper)
 	m_Upper = *upper;
 }
 
+b3_bool b3RenderView::b3ViewStackNotEmpty()
+{
+	b3_bool result = false;
+
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		result =
+			m_ViewStack[m_ViewMode].First != m_ViewStack[m_ViewMode].Last;
+	}
+	return result;
+}
+
+void b3RenderView::b3PopView()
+{
+	b3RenderViewItem *item;
+
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		item = m_ViewStack[m_ViewMode].Last;
+		B3_ASSERT(item != null);
+		if (item != m_ViewStack[m_ViewMode].First)
+		{
+			m_ViewStack[m_ViewMode].b3Remove(item);
+			m_Depot.b3Append(item);
+			m_Actual = m_ViewStack[m_ViewMode].Last;
+		}
+	}
+}
+
 void b3RenderView::b3Original()
 {
 	b3RenderViewItem *item;
@@ -245,37 +284,46 @@ void b3RenderView::b3Original()
 
 void b3RenderView::b3Scale(b3_f64 scale)
 {
-	B3_ASSERT(m_Actual != null);
-	m_Actual->m_Size.x *= scale;
-	m_Actual->m_Size.y *= scale;
-	m_Actual->m_Size.z *= scale;
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		B3_ASSERT(m_Actual != null);
+		m_Actual->m_Size.x *= scale;
+		m_Actual->m_Size.y *= scale;
+		m_Actual->m_Size.z *= scale;
+	}
 }
 
 void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 {
-	B3_ASSERT(m_Actual != null);
-	switch(m_ViewMode)
+	if (m_ViewMode != B3_VIEW_3D)
 	{
-	case B3_VIEW_TOP:
-		m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
-		m_Actual->m_Mid.y += (m_Actual->m_Size.y * yDir);
-		break;
-	case B3_VIEW_FRONT:
-		m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
-		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
-		break;
-	case B3_VIEW_RIGHT:
-		m_Actual->m_Mid.y += (m_Actual->m_Size.y * xDir);
-		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
-		break;
-	case B3_VIEW_BACK:
-		m_Actual->m_Mid.x -= (m_Actual->m_Size.x * xDir);
-		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
-		break;
-	case B3_VIEW_LEFT:
-		m_Actual->m_Mid.y -= (m_Actual->m_Size.y * xDir);
-		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
-		break;
+		B3_ASSERT(m_Actual != null);
+
+		xDir /= m_Actual->m_xRelation;
+		yDir *= m_Actual->m_yRelation;
+		switch(m_ViewMode)
+		{
+		case B3_VIEW_TOP:
+			m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
+			m_Actual->m_Mid.y += (m_Actual->m_Size.y * yDir);
+			break;
+		case B3_VIEW_FRONT:
+			m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
+			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+			break;
+		case B3_VIEW_RIGHT:
+			m_Actual->m_Mid.y += (m_Actual->m_Size.y * xDir);
+			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+			break;
+		case B3_VIEW_BACK:
+			m_Actual->m_Mid.x -= (m_Actual->m_Size.x * xDir);
+			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+			break;
+		case B3_VIEW_LEFT:
+			m_Actual->m_Mid.y -= (m_Actual->m_Size.y * xDir);
+			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+			break;
+		}
 	}
 }
 
@@ -297,6 +345,12 @@ void b3RenderView::b3Select(
 			// Push view item
 			m_ViewStack[m_ViewMode].b3Append(item);
 			m_Actual = item;
+
+			// Correct input due to aspect ratio
+			xStart = (xStart - 0.5) / m_Actual->m_xRelation + 0.5;
+			yStart = (yStart - 0.5) * m_Actual->m_yRelation + 0.5;
+			xEnd   = (xEnd   - 0.5) / m_Actual->m_xRelation + 0.5;
+			yEnd   = (yEnd   - 0.5) * m_Actual->m_yRelation + 0.5;
 
 			// Compute some values...
 			xDiff = (xStart < xEnd ? xEnd - xStart : xStart - xEnd);
@@ -460,8 +514,24 @@ void b3RenderView::b3UpdateView(
 	{
 		aspectCamera = (GLfloat)(width / height);
 		relation     = aspectCamera / aspectWindow;
-		if (relation > 1) height *= relation;
-		else              width  /= relation;
+		if (relation > 1)
+		{
+			if (m_ViewMode != B3_VIEW_3D)
+			{
+				m_Actual->m_xRelation = 1;
+				m_Actual->m_yRelation = relation;
+			}
+			height *= relation;
+		}
+		else
+		{
+			if (m_ViewMode != B3_VIEW_3D)
+			{
+				m_Actual->m_xRelation = relation;
+				m_Actual->m_yRelation = 1;
+			}
+			width /= relation;
+		}
 	}
 
 	// Now initialize view

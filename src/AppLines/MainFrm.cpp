@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/14 13:34:40  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.2  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -63,6 +69,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_CUST_VIEW, OnCustView)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
+	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
+	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -134,7 +142,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CB3App       *app   = b3GetApp();
 
 	if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 	
 	app->b3GfxType(this);
 	app->b3MoveWindow(this);
@@ -227,4 +237,20 @@ void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndViewBar.b3IsVisible());
+}
+
+void CMainFrame::OnWindowTileHorz() 
+{
+	// TODO: Add your command handler code here
+	CWaitCursor wait;
+
+	MDITile (MDITILE_HORIZONTAL);
+}
+
+void CMainFrame::OnWindowTileVert() 
+{
+	// TODO: Add your command handler code here
+	CWaitCursor wait;
+
+	MDITile (MDITILE_VERTICAL);
 }

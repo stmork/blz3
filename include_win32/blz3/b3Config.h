@@ -42,6 +42,13 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef _DEBUG
+#include <assert.h>
+#define B3_ASSERT(cond) ASSERT(cond)
+#else
+#define B3_ASSERT(cond)
+#endif
+
 // OpenGL is nice...
 #ifdef BLZ3_USE_OPENGL
 #include <GL/gl.h>
@@ -76,6 +83,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/08/14 13:34:39  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.8  2001/08/09 15:27:34  sm
 **	- Following shapes are newly supported now:
 **	  o disk
@@ -86,7 +99,7 @@
 **	  o triangles
 **	- Done some makefile fixes
 **	- Everything is Windozable
-**
+**	
 **	Revision 1.7  2001/08/05 19:53:43  sm
 **	- Removing some nasty CR/LF
 **	

@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/08/14 13:34:39  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.7  2001/08/13 15:05:01  sm
 **	- Now we can scale and move around with stacked views.
-**
+**	
 **	Revision 1.6  2001/08/12 19:47:47  sm
 **	- Now having correct orthogonal projection incl. aspect ratio
 **	
@@ -128,6 +134,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
+	ON_COMMAND(ID_VIEW_POP, OnViewPop)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -142,7 +150,8 @@ CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	m_Selecting = false;
+	m_SelectMode = B3_SELECT_NOTHING;
+	m_Selecting  = false;
 }
 
 CAppLinesView::~CAppLinesView()
@@ -340,11 +349,83 @@ void CAppLinesView::OnSize(UINT nType, int cx, int cy)
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
+void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CScrollView::OnLButtonDown(nFlags, point);
+	switch(m_SelectMode)
+	{
+	case B3_SELECT_MAGNIFICATION:
+		SetCapture();
+		m_SelectStart = point;
+		m_SelectAct   = point;
+		m_Selecting   = true;
+		break;
+	}
+}
+
+void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	
+	CScrollView::OnMouseMove(nFlags, point);
+
+	if ((m_Selecting) && (m_SelectStart != point)) switch(m_SelectMode)
+	{
+	case B3_SELECT_MAGNIFICATION:
+		CDC *dc = CDC::FromHandle(m_DC);
+		CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
+
+		dc->SetROP2(R2_NOTXORPEN);
+		dc->SelectObject(&red);
+		dc->MoveTo(m_SelectStart);
+		dc->LineTo(m_SelectStart.x,m_SelectAct.y);
+		dc->LineTo(m_SelectAct);
+		dc->LineTo(m_SelectAct.x,m_SelectStart.y);
+		dc->LineTo(m_SelectStart);
+
+		m_SelectAct = point;
+
+		dc->MoveTo(m_SelectStart);
+		dc->LineTo(m_SelectStart.x,m_SelectAct.y);
+		dc->LineTo(m_SelectAct);
+		dc->LineTo(m_SelectAct.x,m_SelectStart.y);
+		dc->LineTo(m_SelectStart);
+		break;
+	}
+}
+
+void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (m_Selecting) switch(m_SelectMode)
+	{
+	case B3_SELECT_MAGNIFICATION:
+		CRect  rect;
+		b3_f64 xSize,ySize;
+
+		GetClientRect(&rect);
+		xSize = rect.Width();
+		ySize = rect.Height();
+		m_RenderView.b3Select(
+			m_SelectStart.x / xSize,
+			m_SelectStart.y / ySize,
+			point.x / xSize,
+			point.y / ySize);
+		m_Selecting = false;
+		::ReleaseCapture();
+		OnUpdate(this,B3_UPDATE_VIEW,NULL);
+		m_SelectMode = m_PreviousMode;
+		break;
+	}
+	CScrollView::OnLButtonUp(nFlags, point);
+}
+
 void CAppLinesView::OnViewPerspective() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -352,7 +433,7 @@ void CAppLinesView::OnViewTop()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -360,7 +441,7 @@ void CAppLinesView::OnViewFront()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -368,7 +449,7 @@ void CAppLinesView::OnViewRight()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -376,7 +457,7 @@ void CAppLinesView::OnViewLeft()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -384,7 +465,7 @@ void CAppLinesView::OnViewBack()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -441,21 +522,30 @@ void CAppLinesView::OnViewSmaller()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(1.25);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewSelect() 
-{
-	// TODO: Add your command handler code here
-	m_Selecting = true;
 }
 
 void CAppLinesView::OnViewBigger() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(0.8);
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewSelect() 
+{
+	// TODO: Add your command handler code here
+	m_PreviousMode = m_SelectMode;
+	m_SelectMode   = B3_SELECT_MAGNIFICATION;
+}
+
+void CAppLinesView::OnViewPop() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3PopView();
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
@@ -463,7 +553,7 @@ void CAppLinesView::OnViewOptimal()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Original();
-	m_Selecting = false;
+	m_SelectMode = m_PreviousMode;
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
@@ -473,17 +563,23 @@ void CAppLinesView::OnUpdateViewSmaller(CCmdUI* pCmdUI)
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
-void CAppLinesView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-	pCmdUI->SetCheck(m_Selecting);
-}
-
 void CAppLinesView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+	pCmdUI->SetCheck(m_SelectMode == B3_SELECT_MAGNIFICATION);
+}
+
+void CAppLinesView::OnUpdateViewPop(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_RenderView.b3ViewStackNotEmpty());
 }
 
 void CAppLinesView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
@@ -542,45 +638,4 @@ void CAppLinesView::OnUpdateViewMoveBottom(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CScrollView::OnLButtonDown(nFlags, point);
-	if(m_Selecting)
-	{
-		SetCapture();
-		m_SelectStart = point;
-	}
-}
-
-void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	
-	CScrollView::OnMouseMove(nFlags, point);
-}
-
-void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	if (m_Selecting)
-	{
-		CRect  rect;
-		b3_f64 xSize,ySize;
-
-		GetClientRect(&rect);
-		xSize = rect.Width();
-		ySize = rect.Height();
-		m_RenderView.b3Select(
-			m_SelectStart.x / xSize,
-			m_SelectStart.y / ySize,
-			point.x / xSize,
-			point.y / ySize);
-		m_Selecting = false;
-		::ReleaseCapture();
-		OnUpdate(this,B3_UPDATE_VIEW,NULL);
-	}
-	CScrollView::OnLButtonUp(nFlags, point);
 }

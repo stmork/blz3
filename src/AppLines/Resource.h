@@ -28,6 +28,7 @@
 #define ID_VIEW_MOVE_LEFT               -32747
 #define ID_VIEW_MOVE_BOTTOM             -32746
 #define ID_VIEW_MOVE_TOP                -32745
+#define ID_VIEW_POP                     32792
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 
@@ -37,7 +38,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        132
-#define _APS_NEXT_COMMAND_VALUE         32792
+#define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

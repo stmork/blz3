@@ -39,11 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/08/14 13:34:40  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	
 */
 
@@ -85,7 +91,7 @@ void CB3ToolbarState::b3AddMenubar(
 	}
 }
 
-bool CB3ToolbarState::b3CreateToolbars(CFrameWnd *parent)
+b3_bool CB3ToolbarState::b3CreateToolbars(CFrameWnd *parent)
 {
 	CB3Menubar *mb;
 	CB3Toolbar *tb;
@@ -211,7 +217,7 @@ void CB3ToolbarState::b3SaveState()
 	}
 }
 
-bool CB3ToolbarState::b3PreTranslateMsg(MSG *pMSG)
+b3_bool CB3ToolbarState::b3PreTranslateMsg(MSG *pMSG)
 {
 	CB3Menubar *mb;
 
@@ -286,7 +292,7 @@ void CB3Toolbar::b3SetID(
 	m_Value.Format("Toolbar buttons of 0x%04x",m_Bar);
 }
 
-bool CB3Toolbar::b3Create(CFrameWnd *parent)
+b3_bool CB3Toolbar::b3Create(CFrameWnd *parent)
 {
 	m_ToolbarMain = parent;
 	if (CreateEx(m_ToolbarMain,
@@ -307,7 +313,7 @@ bool CB3Toolbar::b3Create(CFrameWnd *parent)
 	return false;
 }
 
-bool CB3Toolbar::b3InitCustomization()
+b3_bool CB3Toolbar::b3InitCustomization()
 {
 	CToolBarCtrl &ctrl = GetToolBarCtrl();
 	CString       button_text;
@@ -410,14 +416,14 @@ void CB3Toolbar::b3RestoreState()
 	b3AdjustComboboxes();
 }
 
-bool CB3Toolbar::b3IsVisible()
+b3_bool CB3Toolbar::b3IsVisible()
 {
 	m_Visible = (GetSafeHwnd() != 0 ? (GetStyle() & WS_VISIBLE) != 0 : false);
 
 	return m_Visible;
 }
 
-bool CB3Toolbar::b3ToggleVisibility()
+b3_bool CB3Toolbar::b3ToggleVisibility()
 {
 	m_Visible = !m_Visible;
 	m_ToolbarMain->ShowControlBar(this,m_Visible,FALSE);
@@ -425,7 +431,7 @@ bool CB3Toolbar::b3ToggleVisibility()
 	return m_Visible;
 }
 
-bool CB3Toolbar::b3SetVisibility(bool new_visibility)
+b3_bool CB3Toolbar::b3SetVisibility(bool new_visibility)
 {
 	m_Visible = new_visibility && (GetSafeHwnd() != 0);
 	m_ToolbarMain->ShowControlBar(this,m_Visible,FALSE);
@@ -688,7 +694,7 @@ void CB3Menubar::b3SetID(long id,long id_bar)
 	m_Bar = id_bar;
 }
 
-bool CB3Menubar::b3Create(CFrameWnd *parent)
+b3_bool CB3Menubar::b3Create(CFrameWnd *parent)
 {
 	m_MenubarMain = parent;
 	if (CreateEx(m_MenubarMain,
@@ -704,14 +710,14 @@ bool CB3Menubar::b3Create(CFrameWnd *parent)
 	return false;
 }
 
-bool CB3Menubar::b3IsVisible()
+b3_bool CB3Menubar::b3IsVisible()
 {
 	m_Visible = (GetSafeHwnd() != 0 ? (GetStyle() & WS_VISIBLE) != 0 : false);
 
 	return m_Visible;
 }
 
-bool CB3Menubar::b3ToggleVisibility()
+b3_bool CB3Menubar::b3ToggleVisibility()
 {
 	m_Visible = !m_Visible;
 	m_MenubarMain->ShowControlBar(this,m_Visible,FALSE);
@@ -719,7 +725,7 @@ bool CB3Menubar::b3ToggleVisibility()
 	return m_Visible;
 }
 
-bool CB3Menubar::b3SetVisibility(bool new_visibility)
+b3_bool CB3Menubar::b3SetVisibility(bool new_visibility)
 {
 	m_Visible = new_visibility && (GetSafeHwnd() != 0);
 	m_MenubarMain->ShowControlBar(this,m_Visible,FALSE);

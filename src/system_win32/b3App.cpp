@@ -42,11 +42,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/08/14 13:34:40  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	
 */
 
@@ -195,4 +201,14 @@ void CB3App::b3SetWindowMode(bool ForceSave)
 		WriteProfileInt (b3ClientName(),"ShowCmd",mode);
 		b3SaveState();
 	}
+}
+
+BOOL CB3App::PreTranslateMessage(MSG *pMSG)
+{
+	if (b3PreTranslateMsg(pMSG))
+	{
+		return true;
+	}
+
+	return CWinApp::PreTranslateMessage(pMSG);
 }

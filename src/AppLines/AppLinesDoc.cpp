@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/08/14 13:34:39  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
+**
 **	Revision 1.6  2001/08/13 15:05:01  sm
 **	- Now we can scale and move around with stacked views.
-**
+**	
 **	Revision 1.5  2001/08/12 19:47:47  sm
 **	- Now having correct orthogonal projection incl. aspect ratio
 **	
@@ -177,4 +183,11 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 b3Scene * CAppLinesDoc::b3GetScene()
 {
 	return m_Scene;
+}
+
+BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	::AfxMessageBox("Lines III kann noch nicht speichern!",MB_ICONSTOP);
+	return false;
 }

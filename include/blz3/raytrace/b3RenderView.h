@@ -37,6 +37,8 @@ class b3RenderViewItem : public b3Link<b3RenderViewItem>
 public:
 	b3_vector m_Size;
 	b3_vector m_Mid;
+	b3_f64    m_xRelation;
+	b3_f64    m_yRelation;
 
 public:
 	     b3RenderViewItem();
@@ -72,6 +74,8 @@ public:
 	void              b3SetCamera(b3Scene *scene);
 	b3_bool           b3SetBounds(b3Scene *scene);
 	void              b3SetBounds(b3_vector *lower,b3_vector *upper);
+	void              b3PopView();
+	b3_bool           b3ViewStackNotEmpty();
 	void              b3Original();
 	void              b3Scale(b3_f64 scale);
 	void              b3Move(b3_f64 xDir,b3_f64 yDir);

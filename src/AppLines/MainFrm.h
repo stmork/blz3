@@ -70,6 +70,8 @@ protected:
 	afx_msg void OnCustView();
 	afx_msg void OnBarView();
 	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
+	afx_msg void OnWindowTileHorz();
+	afx_msg void OnWindowTileVert();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/14 13:34:40  sm
+**      - Corredted aspect ratio handling when doing somethiing with
+**        the view
+**      - New application icon
+**      - Minor GUI bug fixes.
+**
 **      Revision 1.4  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.

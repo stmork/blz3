@@ -110,6 +110,7 @@ BEGIN
     BUTTON      ID_VIEW_BIGGER
     BUTTON      ID_VIEW_SMALLER
     BUTTON      ID_VIEW_SELECT
+    BUTTON      ID_VIEW_POP
     BUTTON      ID_VIEW_ORIGINAL
 END
 
@@ -210,12 +211,14 @@ BEGIN
         MENUITEM "Ver&kleinern",                ID_VIEW_SMALLER
         MENUITEM "Aus&schnitt",                 ID_VIEW_SELECT
         MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
+        MENUITEM "&Verheriger Ausschnitt",      ID_VIEW_POP
     END
     POPUP "&Fenster"
     BEGIN
         MENUITEM "Neues &Fenster",              ID_WINDOW_NEW
         MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
-        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_HORZ
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_VERT
+        MENUITEM "&Übereinander",               ID_WINDOW_TILE_HORZ
         MENUITEM "&Symbole anordnen",           ID_WINDOW_ARRANGE
     END
     POPUP "&?"
@@ -418,7 +421,7 @@ BEGIN
     ID_WINDOW_ARRANGE       "Ordnet die Symbole im unteren Bereich des Fensters an.\nSymbole anordnen"
     ID_WINDOW_CASCADE       "Ordnet die Fenster überlappend an.\nÜberlappende Fenster"
     ID_WINDOW_TILE_HORZ     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
-    ID_WINDOW_TILE_VERT     "Ordnet die Fenster nebeneinander an.\nFenster nebeneinander"
+    ID_WINDOW_TILE_VERT     "Ordnet die Fenster übereinander an.\nFenster übereinander"
     ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Ausschnitte.\nTeilen"
 END
 
@@ -492,6 +495,7 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
+    ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
 END
 
 #endif    // German (Germany) resources
