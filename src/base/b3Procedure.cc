@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/07 20:41:32  sm
+**	- Updating MSVC project status
+**
 **	Revision 1.1  2001/10/07 20:17:26  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **
 */
 
@@ -79,28 +82,28 @@ static b3_spline     marbleSpline;
 static b3_f32        marbleKnots[16];
 static b3_vector     marbleControls[8] =
 {
-	{ 0.0,0.5,0},
-	{ 1.0,0.7,0},
-	{ 4.7,0.9,0},
-	{ 4.9,0.0,0},
-	{ 5.1,0.0,0},
-	{ 5.3,0.8,0},
-	{ 9.0,0.7,0},
-	{10.0,0.5,0}
+	{ 0.0f,0.5f,0},
+	{ 1.0f,0.7f,0},
+	{ 4.7f,0.9f,0},
+	{ 4.9f,0.0f,0},
+	{ 5.1f,0.0f,0},
+	{ 5.3f,0.8f,0},
+	{ 9.0f,0.7f,0},
+	{10.0f,0.5f,0}
 };
 
 static b3_spline     woodSpline;
 static b3_f32        woodKnots[16];
 static b3_vector     woodControls[8] =
 {
-	{ 0.0,0.4,0},
-	{ 2.0,0.9,0},
-	{ 4.0,0.9,0},
-	{ 6.0,0.7,0},
-	{ 7.0,0.6,0},
-	{ 8.0,0.5,0},
-	{ 9.0,0.4,0},
-	{10.0,0.4,0}
+	{ 0.0f,0.4f,0},
+	{ 2.0f,0.9f,0},
+	{ 4.0f,0.9f,0},
+	{ 6.0f,0.7f,0},
+	{ 7.0f,0.6f,0},
+	{ 8.0f,0.5f,0},
+	{ 9.0f,0.4f,0},
+	{10.0f,0.4f,0}
 };
 
 static b3_spline     waveSpline;
@@ -364,10 +367,10 @@ b3_f64 b3Noise::b3Turbulence (b3_vector *P)
 
 static b3_color MarbleColors[4] =
 {
-	{ 0, 0.2, 0.1, 0.1 },
-	{ 0, 0.1, 0.8, 0.2 },
-	{ 0, 1.0, 0.9, 1.0 },
-	{ 0, 0.4, 0.9, 0.1 }
+	{ 0, 0.2f, 0.1f, 0.1f },
+	{ 0, 0.1f, 0.8f, 0.2f },
+	{ 0, 1.0f, 0.9f, 1.0f },
+	{ 0, 0.4f, 0.9f, 0.1f }
 };
 
 static void marbleCurve (
@@ -446,10 +449,10 @@ void b3Noise::b3Wood(b3_vector *d,b3_color *mask)
 
 static b3_color HellColors[4] =
 {
-	{ 0, 0.8, 0.2, 0.1 },
-	{ 0, 0.8, 0.9, 0.2 },
-	{ 0, 1.0, 0.9, 1.0 },
-	{ 0, 0.7, 0.2, 0.0 }
+	{ 0, 0.8f, 0.2f, 0.1f },
+	{ 0, 0.8f, 0.9f, 0.2f },
+	{ 0, 1.0f, 0.9f, 1.0f },
+	{ 0, 0.7f, 0.2f, 0.0f }
 };
 
 void b3Noise::b3Hell (b3_vector *P,b3_color *Color)

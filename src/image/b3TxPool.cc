@@ -52,12 +52,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/07 20:41:32  sm
+**	- Updating MSVC project status
+**
 **	Revision 1.1  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	
 */
 
@@ -411,7 +414,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	{
 		Data = TextureFile.b3ReadBuffer(Name,FileSize);
 	}
-	catch(b3FileException *f)
+	catch(...)
 	{
 		B3_FOR_BASE(&m_SearchPath,path)
 		{
@@ -423,7 +426,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 				// OK! Texture loaded -> leave search loop!
 				break;
 			}
-			catch(b3FileException *f)
+			catch(...)
 			{
 			// An exception we expected.
 			}
@@ -518,8 +521,7 @@ PrintF ("%s (%ld)\n%s (%ld)\n%s (%ld)\n",
 
 b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
 {
-	b3Tx    *Texture;
-	b3_size  len;
+	b3Tx *Texture;
 
 	// find existing texture
 	B3_FOR_BASE(&m_Pool,Texture)

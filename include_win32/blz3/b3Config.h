@@ -83,9 +83,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/07 20:41:32  sm
+**	- Updating MSVC project status
+**
 **	Revision 1.10  2001/08/16 04:28:29  sm
 **	- Solving conflicts
-**
+**	
 **	Revision 1.9  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -175,8 +178,8 @@
 #	define no_USE_MOTIF
 #endif
 
-#define B3_FRAN(x)      ((float)x        * drand48())
-#define B3_IRAN(x)      ((long)((float)x * drand48()))
+#define B3_FRAN(x)             ((x) * (b3_f64)rand() / RAND_MAX)
+#define B3_IRAN(x)      ((long)((x) * (b3_f64)rand() / RAND_MAX))
 #define B3_SWAP(a,b)    {(a)^=(b);(b)^=(a);(a)^=(b);}
 #define B3_PSWAP(a,b)   b3Runtime::b3PSwap(a,b)
 #define B3_MIN(a,b)     ((a) < (b) ? (a) : (b))

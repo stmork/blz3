@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/10/07 20:41:32  sm
+**      - Updating MSVC project status
+**
 **      Revision 1.9  2001/10/07 20:17:27  sm
 **      - Prepared texture support.
 **      - Noise procedures added.
@@ -271,7 +274,6 @@ b3_bool b3Light::b3AreaIllumination (
 {
 	b3Shape       *Edge1,*Edge2,*LastEdge = null;
 	b3_light_info  Jit;
-	b3_color       result;
 	b3_vector      point;
 	b3_f64         Factor,LightDist,q;
 	b3_coord       x,y,xs;

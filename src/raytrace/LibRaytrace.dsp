@@ -261,6 +261,10 @@ SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\raytrace\b3RenderView.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\b3Types.h
 # End Source File
 # End Group

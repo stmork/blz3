@@ -121,6 +121,10 @@ SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Procedure.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Render.cc
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE=..\..\include\blz3\base\b3Aux.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Cubic.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3FileList.h
 # End Source File
 # Begin Source File
@@ -154,6 +162,14 @@ SOURCE=..\..\include\blz3\base\b3Matrix.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Nurbs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Procedure.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Render.h
 # End Source File
 # Begin Source File
 

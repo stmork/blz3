@@ -113,6 +113,10 @@ SOURCE=b3TxLoadTIFF.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxPool.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxSaveTIFF.cc
 # End Source File
 # Begin Source File
@@ -134,6 +138,10 @@ SOURCE=b3TxTool.cc
 # Begin Source File
 
 SOURCE=..\..\include\blz3\image\b3Tx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\image\b3TxPool.h
 # End Source File
 # End Group
 # End Target

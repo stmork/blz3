@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/10/07 20:41:32  sm
+**      - Updating MSVC project status
+**
 **      Revision 1.8  2001/10/07 20:17:27  sm
 **      - Prepared texture support.
 **      - Noise procedures added.
@@ -297,7 +300,7 @@ b3_bool b3MatTexture::b3GetColors(
 	ambient->b  = diffuse->b * 0.3;
 	specular->r =
 	specular->g =
-	specular->b = 0.7;
+	specular->b = 0.7f;
 
 	return true;
 }
@@ -364,7 +367,7 @@ b3_bool b3MatWrapTexture::b3GetColors(
 	ambient->b  = diffuse->b * 0.3;
 	specular->r =
 	specular->g =
-	specular->b = 0.7;
+	specular->b = 0.7f;
 
 	return true;
 }
