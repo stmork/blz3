@@ -318,6 +318,9 @@
 				RelativePath="..\..\include\blz3\system\b3Display.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\system\b3ErrorAbstract.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\system\b3Exception.h">
 			</File>
 			<File

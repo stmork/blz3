@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/01/21 20:42:03  sm
+**	- Added error handling to Lines.
+**	- Try to use ChoosePixelFormat for OpenGL context selection.
+**
 **	Revision 1.1  2005/01/21 15:41:06  smork
 **	- Added error code/text preparation.
-**
+**	
 **
 */
 
@@ -50,7 +54,7 @@ b3Error::b3Error()
 	b3ConvertError();	
 }
 
-b3Error::b3Error()
+b3Error::~b3Error()
 {
 	if (m_ErrorText != NULL)
 	{
@@ -77,7 +81,7 @@ void b3Error::b3RetrieveError()
 
 void b3Error::b3ConvertError()
 {
-	if (m_ErrorText != null)
+	if (m_ErrorText != NULL)
 	{
 		LocalFree(m_ErrorText);
 		m_ErrorText = NULL;

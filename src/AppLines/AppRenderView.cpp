@@ -26,6 +26,7 @@
 #include "MainFrm.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
+#include "blz3/system/b3Error.h"
 
 #define USE_OWN_DC
 
@@ -37,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2005/01/21 20:42:02  sm
+**	- Added error handling to Lines.
+**	- Try to use ChoosePixelFormat for OpenGL context selection.
+**
 **	Revision 1.47  2005/01/21 15:41:06  smork
 **	- Added error code/text preparation.
-**
+**	
 **	Revision 1.46  2005/01/21 14:58:07  smork
 **	- Small adjustments.
 **	
@@ -567,7 +572,9 @@ void CAppRenderView::OnPaint()
 		b3Error error;
 
 		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
-		B3PrintF(B3LOG_NORMAL," Error code: %ld (%s)\n",error.b3GetError(),error.b3GetErrorText());
+		b3PrintF(B3LOG_NORMAL," Error code: %ld (%s)\n",
+			error.b3GetError(),
+			error.b3GetErrorText());
 	}
 
 	// Do post drawings using Windows DC
@@ -686,6 +693,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	b3_res      mmWidth,mmHeight;
 	b3_res      limit = CB3GetLinesApp()->m_PrintBufferSize;
 	b3_res      denom;
+	b3_bool     double_buffered;
 
 	CScrollView::OnBeginPrinting(pDC, pInfo);
 
@@ -747,7 +755,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	m_prtOldBitmap = ::SelectObject(m_prtDC,m_prtBitmap);
 
 	// Prepare pixel format and create OpenGL render context
-	m_prtGC = b3CreateContext(m_prtDC,&b3PrinterPixelFormatSorter);
+	m_prtGC = b3CreateContext(m_prtDC,&b3PrinterPixelFormatSorter,double_buffered);
 }
 
 void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo) 

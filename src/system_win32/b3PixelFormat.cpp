@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/21 20:42:03  sm
+**	- Added error handling to Lines.
+**	- Try to use ChoosePixelFormat for OpenGL context selection.
+**
 **	Revision 1.7  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
-**
+**	
 **	Revision 1.6  2005/01/18 11:09:49  smork
 **	- More informative pixel format.
 **	
@@ -204,18 +208,33 @@ void CB3PixelFormat::b3FlagsString(CString &desc,int flags)
 HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool &double_buffered)
 {
 	CB3PixelFormatDescriptor format;
-	CString                  flags;
 	HGLRC                    gc;
-	int                      PixelFormatIndex,max,i,value;
+	int                      PixelFormatIndex;
+#if 1
+	memset(&format.desc,0,sizeof(format.desc));
+	format.desc.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
+	format.desc.nVersion   = 1;
+	format.desc.dwFlags    = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_STEREO_DONTCARE;
+	format.desc.iPixelType = PFD_TYPE_RGBA;
+	format.desc.cColorBits = 32;
+	format.desc.cDepthBits = 32;
+	format.desc.iLayerType = PFD_MAIN_PLANE;
+
+	format.index = ChoosePixelFormat(dc,&format.desc);
+	DescribePixelFormat(dc,format.index,sizeof(PIXELFORMATDESCRIPTOR),&format.desc);
+	m_glPixelFormat.b3Add(format);
+	b3ListPixelFormats(dc, "Chosen pixel format:");
+#else
+	CString                  flags;
+	int                      max,i;
 
 	// Retrieve all pixel formats
 	max = DescribePixelFormat(dc,1,0,NULL);
-	format.desc.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	m_glPixelFormat.b3Clear();
 	for (i = 1;i <= max;i++)
 	{
 		format.index = i;
-		if (DescribePixelFormat(dc,i,format.desc.nSize,&format.desc) != 0)
+		if (DescribePixelFormat(dc,i,sizeof(PIXELFORMATDESCRIPTOR),&format.desc) != 0)
 		{
 			m_glPixelFormat.b3Add(format);
 		}
@@ -225,6 +244,7 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool 
 	b3ListPixelFormats(dc,"Known OpenGL pixel formats:");
 	m_glPixelFormat.b3Sort(func);
 	b3ListPixelFormats(dc,"Sorted OpenGL pixel formats:");
+#endif
 
 	// What we found...
 	PixelFormatIndex = m_glPixelFormat[0].index;
@@ -233,12 +253,14 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool 
 
 	if (gc != null)
 	{
+		int value;
+
 		CB3GetApp()->b3SelectRenderContext(dc,gc);
 
 		b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
 			PixelFormatIndex);
 		
-		double_buffered = (m_glPixelFormat[PixelFormatIndex].desc.dwFlags & PFD_DOUBLEBUFFER) != 0;
+		double_buffered = (m_glPixelFormat[0].desc.dwFlags & PFD_DOUBLEBUFFER) != 0;
 		b3RenderContext::b3Init(double_buffered);
 		glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
 		glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
@@ -266,12 +288,12 @@ void CB3PixelFormat::b3ListPixelFormats(HDC dc,const char *title)
 
 	b3PrintF(B3LOG_FULL ,"========================================= %s\n",title);
 	b3PrintF(B3LOG_FULL ,"                                   (  bits  )\n");
-	b3PrintF(B3LOG_FULL ,"(index) (flags)  (pixeltype) (color) (depth) (accum) (flags):\n");
+	b3PrintF(B3LOG_FULL ,"(index) (flags) (pixeltype) (color) (depth) (accum) (flags):\n");
 	for (i = 0;i < m_glPixelFormat.b3GetCount();i++)
 	{
 		b3FlagsString(flags,m_glPixelFormat[i].desc.dwFlags);
 		b3PrintF(B3LOG_FULL ,
-			"%3d:    %8lx %8lx    %2ld      %2ld      %2ld      %s\n",
+			"%3d:   %8lx    %8lx %7ld %7ld %7ld%s\n",
 			m_glPixelFormat[i].index,
 			m_glPixelFormat[i].desc.dwFlags,
 			m_glPixelFormat[i].desc.iPixelType,

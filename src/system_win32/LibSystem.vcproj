@@ -677,6 +677,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3Error.cpp">
+			</File>
+			<File
 				RelativePath="b3File.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1731,6 +1734,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3Document.h">
+			</File>
+			<File
+				RelativePath="..\..\include_win32\blz3\system\b3Error.h">
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3File.h">
