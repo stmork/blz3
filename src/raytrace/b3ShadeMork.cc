@@ -35,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2002/07/26 09:13:33  sm
+**	- Found alpha problem: the Linux OpenGL renderer didn't use the
+**	  b3RenderContext::b3Init() method! Now everything function very well:-)
+**	- The Un*x OpenGL renderer has got a key press interface now.
+**	- Corrected spot lights
+**	- Textures needn't to be square any more (some less memory usage)
+**
 **	Revision 1.14  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
 **	- Further try of stencil maps
-**
+**	
 **	Revision 1.13  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
@@ -438,9 +445,11 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 	b3_color  black;
 	b3_count  count = 0;
 
-	b3Color::b3Init(&black,0,0,0);
+	b3Color::b3Init(&black);
 	b3Color::b3Init(&ambient,m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
 
+	context->b3LightNum();
+	context->b3LightReset();
 	B3_FOR_BASE(b3GetLightHead(),item)
 	{
 		light = (b3Light *)item;

@@ -34,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/07/26 09:13:33  sm
+**	- Found alpha problem: the Linux OpenGL renderer didn't use the
+**	  b3RenderContext::b3Init() method! Now everything function very well:-)
+**	- The Un*x OpenGL renderer has got a key press interface now.
+**	- Corrected spot lights
+**	- Textures needn't to be square any more (some less memory usage)
+**
 **	Revision 1.36  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
 **	- Further try of stencil maps
-**
+**	
 **	Revision 1.35  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
@@ -620,10 +627,11 @@ b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
 			loop  = light->b3GetSpotFactor(angle) > 0.25;
 		}
 		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
-		b3PrintF(B3LOG_FULL,"Spot exponent: %3.2f at lambda: %2.2f\n",
+		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f at lambda: %2.2f\n",
+			light->b3GetName(),
 			p,angle);
 	}
-	return 0;
+	return p;
 }
 void b3Scene::b3SetLights(b3RenderContext *context)
 {
@@ -636,6 +644,8 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 		m_ShadowBrightness,
 		m_ShadowBrightness);
 
+	context->b3LightNum();
+	context->b3LightReset();
 	B3_FOR_BASE(b3GetLightHead(),item)
 	{
 		light = (b3Light *)item;

@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2002/07/26 09:13:33  sm
+**      - Found alpha problem: the Linux OpenGL renderer didn't use the
+**        b3RenderContext::b3Init() method! Now everything function very well:-)
+**      - The Un*x OpenGL renderer has got a key press interface now.
+**      - Corrected spot lights
+**      - Textures needn't to be square any more (some less memory usage)
+**
 **      Revision 1.37  2002/07/25 19:06:21  sm
 **      - Why does not alpha channel function?
 **
@@ -220,6 +227,11 @@
 **                                                                      **
 *************************************************************************/
 
+static b3_color world_ambient =
+{
+	0.0f,0.25f,0.25f,0.25f
+};
+
 static b3_color light0_ambient =
 {
 	0.0f,0.25f,0.25f,0.25f
@@ -261,7 +273,7 @@ b3RenderContext::b3RenderContext()
 {
 	b3SetBGColor(0.9,0.9,0.9);
 	b3LightNum();
-	glUseSpotLight = false;
+	glUseSpotLight = true;
 }
 
 void b3RenderContext::b3Init()
@@ -277,7 +289,9 @@ void b3RenderContext::b3Init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glAlphaFunc(GL_GREATER,0.5);
 
 	// Enable light
 	b3LightReset();
@@ -302,6 +316,7 @@ void b3RenderContext::b3SetAmbient(b3_color *ambient)
 
 void b3RenderContext::b3LightReset()
 {
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightReset()\n");
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
@@ -309,11 +324,26 @@ void b3RenderContext::b3LightReset()
 #endif
 
 	// Disable all other lights
+	b3SetAmbient(&world_ambient);
 	for (int i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
 	{
 		glDisable(light_num[i]);
 	}
 #endif
+}
+
+void b3RenderContext::b3LightDefault()
+{
+	b3LightNum();
+	b3LightReset();
+	b3LightSet(&light0_position,null,0.0);
+}
+
+void b3RenderContext::b3LightSpotEnable(b3_bool enable)
+{
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSpotEnable(%s)\n",
+		enable ? "true" : "false");
+	glUseSpotLight = enable;
 }
 
 void b3RenderContext::b3LightNum(b3_index num)
@@ -332,9 +362,7 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_color  *b3_ambient,
 	b3_color  *b3_specular)
 {
-#ifdef _DEBUG
-	b3PrintF(B3LOG_DEBUG,"b3LightAdd(%d)\n",glLightNum);
-#endif
+	b3PrintF(B3LOG_FULL,"b3LightAdd(%d)\n",glLightNum);
 	b3_bool result = false;
 
 	if (VALIDATE_LIGHT_NUM(glLightNum))
@@ -367,9 +395,7 @@ b3_bool b3RenderContext::b3LightSet(
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{
-#ifdef _DEBUG
-		b3PrintF(B3LOG_DEBUG,"b3LightSet(%d)\n",num);
-#endif
+		b3PrintF(B3LOG_FULL,"b3LightSet(%d)\n",num);
 
 		light = light_num[num];
 
@@ -561,9 +587,11 @@ b3RenderObject::b3RenderObject()
 	b3Recompute();
 	b3RecomputeMaterial();
 
-	glTextureId   = 0;
-	glTextureData = null;
-	glTextureSize = null;
+	glTextureId    = 0;
+	glTextureData  = null;
+	glTextureSize  = 0;
+	glTextureSizeX = 0;
+	glTextureSizeY = 0;
 #endif
 }
 
@@ -916,14 +944,20 @@ void b3RenderObject::b3UpdateMaterial()
 
 		if (glTextureSize > 0)
 		{
+			GLfloat blend[4];
+
+			b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
+
 			// Set texture parameter
 			glBindTexture(  GL_TEXTURE_2D,glTextureId);
+			glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
+			glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
 			glTexImage2D(   GL_TEXTURE_2D,
-				0,GL_RGBA,glTextureSize,glTextureSize,
+				0,GL_RGBA,glTextureSizeX,glTextureSizeY,
 				0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
 
 			// Set material parameter
@@ -1067,15 +1101,10 @@ void b3RenderObject::b3Draw()
 			glEnable(GL_LIGHTING);
 			if (glTextureSize > 0)
 			{
-				GLfloat blend[4];
-
-				b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
 
 				B3_ASSERT(glIsTexture(glTextureId));
 				glBindTexture(GL_TEXTURE_2D,glTextureId);
 				glEnable(     GL_TEXTURE_2D);
-				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
-				glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
 
 				// Set repitition of chess fields by scaling texture
 				// coordinates.
@@ -1113,28 +1142,38 @@ void b3RenderObject::b3Draw()
 
 void b3RenderObject::b3CreateTexture(
 	b3RenderContext *context,
-	b3_res           size)
+	b3_res           xSize,
+	b3_res           ySize)
 {
-	glGetError();
+	b3_res size;
+
+	if (ySize == 0)
+	{
+		ySize = xSize;
+	}
+	size = xSize * ySize;
 	if (size != glTextureSize)
 	{
-		b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d) # previous: %4d\n",
-			size,
+		b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d,%4d) # previous: %4d\n",
+			xSize,ySize,
 			glTextureSize);
 
+		glGetError();
 		if (glTextureData != null)
 		{
 			b3PrintF(B3LOG_FULL,"   Freeing texture id %d\n",glTextureId);
 			glDeleteTextures(1,&glTextureId);
 			b3Free(glTextureData);
-			glTextureData = null;
-			glTextureSize = 0;
-			glTextureId   = 0;
+			glTextureData  = null;
+			glTextureSize  = 0;
+			glTextureSizeX = 0;
+			glTextureSizeY = 0;
+			glTextureId    = 0;
 		}
 
 		if (size > 0)
 		{
-			glTextureData = (GLubyte *)b3Alloc(size * size * 4);
+			glTextureData = (GLubyte *)b3Alloc(size * 4);
 			if (glTextureData != null)
 			{
 				GLenum error;
@@ -1148,7 +1187,9 @@ void b3RenderObject::b3CreateTexture(
 				}
 				else
 				{
-					glTextureSize = size;
+					glTextureSize  =  size;
+					glTextureSizeX = xSize;
+					glTextureSizeY = ySize;
 					b3PrintF(B3LOG_FULL,"   Allocated texture id %d\n",glTextureId);
 				}
 			}
@@ -1182,38 +1223,31 @@ void b3RenderObject::b3CopyTexture(
 #else
 	b3_res        max  =   8;
 #endif
-	b3_res        size;
-	b3_coord      x,y,i = 0;
+	b3_res        xMax = max,yMax = max,size;
+	b3_coord      i = 0;
 
 	// Limit size
 	B3_ASSERT(input != null);
-	for (size = B3_MAX(input->xSize,input->ySize);max > size;max /= 2);
-	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CopyTexture(...) # size: %4d max: %4d\n",size,max);
-	scale.b3AllocTx(max,max,24);
+	while (xMax > input->xSize)
+	{
+		xMax /= 2;
+	}
+	while (yMax > input->ySize)
+	{
+		yMax /= 2;
+	}
+	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CopyTexture(...) # xSize: %4d ySize: %4d # xMax: %4d yMax: %4d\n",
+		input->xSize,input->ySize,xMax,yMax);
+	scale.b3AllocTx(xMax,yMax,24);
 	scale.b3Scale(input);
-	b3CreateTexture(context,max);
+	b3CreateTexture(context,xMax,yMax);
 
 	lPtr = (b3_pkd_color *)scale.b3GetData();
-	for (y = 0;y < max;y++)
+	size = xMax * yMax;
+	for (i = 0;i < size;i++)
 	{
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"   ");
-#endif
-		for (x = 0;x < max;x++)
-		{
-			b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i]);
-#ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,glTextureData[i+3] == 0xff ? "O" : "t");
-#endif
-			i += 4;
-		}
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"\n");
-#endif
+		b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i << 2]);
 	}
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"\n");
-#endif
 }
 
 void b3RenderObject::b3CreateImage(
@@ -1226,7 +1260,7 @@ void b3RenderObject::b3CreateImage(
 #else
 	b3_res        max  =   8;
 #endif
-	b3_coord      x,y,i = 0;
+	b3_coord      size,i = 0;
 
 	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateImage(...) # max: %4d\n",max);
 	B3_ASSERT(input != null);
@@ -1239,24 +1273,9 @@ void b3RenderObject::b3CreateImage(
 	B3_ASSERT(input->xSize == max);
 	B3_ASSERT(input->ySize == max);
 	b3CreateTexture(context,max);
-	for (y = 0;y < max;y++)
+	size = max * max;
+	for (i = 0;i < size;i++)
 	{
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"   ");
-#endif
-		for (x = 0;x < max;x++)
-		{
-			b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i]);
-#ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,glTextureData[i+3] == 0xff ? "O" : "t");
-#endif
-			i += 4;
-		}
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"\n");
-#endif
+		b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i << 2]);
 	}
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"\n");
-#endif
 }

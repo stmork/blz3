@@ -57,9 +57,11 @@ public:
 			void     b3SetBGColor(b3_color *color);
 	static  void     b3SetAmbient(b3_color *ambient);
 	static  void     b3LightReset();
+	        void     b3LightDefault();
 			void     b3LightNum(b3_index light_num = 0);
 	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null,b3_index light_num = 0);
 			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null);
+			void     b3LightSpotEnable(b3_bool enable = true);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
@@ -141,6 +143,8 @@ protected:
 	GLuint           glTextureId;
 	GLubyte         *glTextureData;
 	b3_res           glTextureSize;
+	b3_res           glTextureSizeX;
+	b3_res           glTextureSizeY;
 	b3_f64           glTextureTransX;
 	b3_f64           glTextureTransY;
 	b3_f64           glTextureScaleX;
@@ -180,7 +184,7 @@ protected:
 	        void            b3TransformVertices(b3_matrix *transformation);
 
 private:
-	        void            b3CreateTexture(b3RenderContext *context,b3_res size = 128);
+	        void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0);
 	        void            b3CreateChess(  b3RenderContext *context,b3_color *bColor,b3_color *wColor);
 	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
 	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);

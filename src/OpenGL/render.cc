@@ -34,6 +34,13 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/07/26 09:13:32  sm
+**      - Found alpha problem: the Linux OpenGL renderer didn't use the
+**        b3RenderContext::b3Init() method! Now everything function very well:-)
+**      - The Un*x OpenGL renderer has got a key press interface now.
+**      - Corrected spot lights
+**      - Textures needn't to be square any more (some less memory usage)
+**
 **      Revision 1.20  2002/07/25 19:06:21  sm
 **      - Why does not alpha channel function?
 **
@@ -118,6 +125,8 @@
 static b3ShapeRenderContext  context;
 static b3World              *world = null;
 static b3RenderView          view;
+static b3_bool               all_lights = true;
+static b3_bool               spot_light = false;
 
 void RenderScene()
 {
@@ -141,16 +150,91 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 
 void SetLights()
 {
-	b3Scene  *scene;
+	context.b3LightSpotEnable(spot_light);
+	if (all_lights)
+	{
+		b3Scene  *scene;
 
-	scene = (b3Scene *)world->b3GetFirst();
-	scene->b3SetLights(&context);
+		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
+			spot_light ? "" : "out");
+		scene = (b3Scene *)world->b3GetFirst();
+		scene->b3SetLights(&context);
+	}
+	else
+	{
+		b3PrintF(B3LOG_DEBUG,"Using one light...\n");
+		context.b3LightDefault();
+	}
 }
 
 void SetupRC()
 {
-	glClearColor(0.7f,0.7f,1.0f,1.0f);
-	glEnable(GL_DEPTH_TEST);
+	context.b3SetBGColor(0.7,0.7,1.0);
+	context.b3Init();
+}
+
+void Keyboard(unsigned char key,int x,int y)
+{
+	b3Scene  *scene;
+	b3_bool   refresh = false;
+
+	scene = (b3Scene *)world->b3GetFirst();
+	switch (key)
+	{
+	case 'l':
+		all_lights = !all_lights;
+		SetLights();
+		refresh = true;
+		break;
+
+	case 's':
+		spot_light = !spot_light;
+		SetLights();
+		refresh = true;
+		break;
+
+	case 'a':
+		scene->b3Activate();
+		refresh = true;
+		b3PrintF(B3LOG_DEBUG,"Activating all...\n");
+		break;
+
+	case 'e':
+		scene->b3Activate(false);
+		refresh = true;
+		b3PrintF(B3LOG_DEBUG,"Deactivating all...\n");
+		break;
+
+	case 'n':
+		b3Log_SetLevel(B3LOG_NORMAL);
+		b3PrintF(B3LOG_NORMAL,"Normal logging...\n");
+		break;
+
+	case 'd':
+		b3Log_SetLevel(B3LOG_DEBUG);
+		b3PrintF(B3LOG_NORMAL,"Debug logging...\n");
+		break;
+
+	case 'f':
+		b3Log_SetLevel(B3LOG_FULL);
+		b3PrintF(B3LOG_NORMAL,"Full logging...\n");
+		break;
+
+	case 'r':
+		refresh = true;
+		break;
+
+	case 27: // ESC
+	case 'q':
+	case 'x':
+		b3PrintF(B3LOG_NORMAL,"Exit!\n");
+		exit(0);
+	}
+
+	if (refresh)
+	{
+		glutPostRedisplay();
+	}
 }
 
 int main(int argc,char *argv[])
@@ -191,7 +275,6 @@ int main(int argc,char *argv[])
 			scene->b3GetDisplaySize(xSize,ySize);
 			scene->b3Prepare(xSize,ySize);
 			scene->b3AllocVertices(&context);
-//			scene->b3Activate();
 
 			b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 			b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
@@ -201,10 +284,11 @@ int main(int argc,char *argv[])
 			view.b3SetupView(xSize,ySize);
 		}
 
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
+		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH|GLUT_ALPHA);
 		glutInitWindowSize(xSize,ySize);
 		glutCreateWindow("Greetinxx");
 		glutDisplayFunc(RenderScene);
+		glutKeyboardFunc(Keyboard);
 		glutReshapeFunc(ChangeSize);
 
 		context.b3Init();

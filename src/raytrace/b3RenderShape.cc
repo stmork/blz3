@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2002/07/26 09:13:33  sm
+**      - Found alpha problem: the Linux OpenGL renderer didn't use the
+**        b3RenderContext::b3Init() method! Now everything function very well:-)
+**      - The Un*x OpenGL renderer has got a key press interface now.
+**      - Corrected spot lights
+**      - Textures needn't to be square any more (some less memory usage)
+**
 **      Revision 1.43  2002/07/25 16:29:35  sm
 **      - Further developing of texturing
 **
@@ -724,14 +731,8 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 				{
 					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
-#if 0
 						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
 						color     = b3Color::b3GetColor(&diffuse);
-#else
-						color = b3CheckStencil(&polar) ?
-							b3Color::b3GetColor(&diffuse) :
-							(B3_TRANSPARENT | 0xff1144);
-#endif
 						loop      = false;
 					}
 				}
