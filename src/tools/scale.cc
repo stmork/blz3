@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3RemDepend.cc $
-**      $Release:       Dortmund 2001 $
+**      $Filename:      scale.cc $
+**      $Release:       Dortmund 2003 $
 **      $Revision$
 **      $Date$
 **      $Author$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - removing dependencies from makefile
+**      Blizzard III - Preparing images for home page gallery
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2003  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/05/17 21:09:48  sm
+**	- Added feeder scanning calibration
+**
 **	Revision 1.3  2003/03/30 13:31:19  sm
 **	- Added title support for image page scaler.
-**
+**	
 **	Revision 1.2  2003/03/24 18:38:53  sm
 **	- Scaling adjusted.
 **	

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/05/17 21:09:48  sm
+**	- Added feeder scanning calibration
+**
 **	Revision 1.1  2003/03/08 16:08:14  sm
 **	- Optimized b3_pkd_color <-> b3Color conversion.
-**
+**	
 */
 
 /*************************************************************************
@@ -41,6 +44,14 @@
 **                        color variables                               **
 **                                                                      **
 *************************************************************************/
+
+b3_f32 B3_ALIGN_16 b3Color::m_Limit_m000[4] =
+{
+	0.0f,
+	0.0f,
+	0.0f,
+	0.0f
+};
 
 b3_f32 B3_ALIGN_16 b3Color::m_Limit_m255[4] =
 {
