@@ -75,7 +75,6 @@ class b3CameraPart;
 class b3CloudBackground;
 
 class b3RayRow;
-class b3Shader;
 
 #define LENSFLARE_LOOP 6
 #define LENSFLARE_RING 2
@@ -295,12 +294,12 @@ protected:
 	b3_f64       m_t;
 
 public:
-	              b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
-	virtual      ~b3RayRow() {}
-	virtual void  b3Raytrace();
+	                 b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual         ~b3RayRow() {}
+	virtual void     b3Raytrace();
 
 protected:
-	        void  b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
+	        b3Color &b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
 };
 
 enum b3_row_state
