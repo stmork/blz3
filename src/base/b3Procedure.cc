@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/05/08 14:43:30  sm
+**	- Changed some output from B3LOG_NORMAL to B3LOG_DEBUG
+**
 **	Revision 1.6  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.5  2002/03/02 19:19:09  sm
 **	- Heavily cleaned up BSplines. Now ready!
 **	
@@ -154,7 +157,7 @@ b3Noise::b3Noise ()
 	b3_coord      x,y,z;
 	b3_count      i;
 
-	b3PrintF(B3LOG_NORMAL,"Initializing noise procedures...\n");
+	b3PrintF(B3LOG_DEBUG,"Initializing noise procedures...\n");
 	NoiseTable = Table = (b3_noisetype *)b3Alloc(
 		NOISEMAXALLOC *
 		NOISEMAXALLOC *
