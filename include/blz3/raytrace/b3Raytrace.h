@@ -25,6 +25,7 @@
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
+#include "blz3/image/b3TxPool.h"
 
 #include <float.h>
 
@@ -170,6 +171,7 @@ public:
 	B3_ITEM_INIT(b3Condition);
 	B3_ITEM_LOAD(b3Condition);
 
+	virtual b3_bool b3Prepare();
 	virtual void    b3ComputeBound(b3CondLimit *limit);
 	virtual b3_bool b3CheckStencil(b3_polar *polar);
 	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
@@ -214,6 +216,7 @@ public:
 	B3_ITEM_INIT(b3Cond2);
 	B3_ITEM_LOAD(b3Cond2);
 
+	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 };
 
@@ -298,6 +301,7 @@ public:
 	B3_ITEM_INIT(b3CondTexture);
 	B3_ITEM_LOAD(b3CondTexture);
 
+	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -316,6 +320,7 @@ public:
 	B3_ITEM_INIT(b3CondWrapTexture);
 	B3_ITEM_LOAD(b3CondWrapTexture);
 
+	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -357,6 +362,7 @@ public:
 	B3_ITEM_INIT(b3Bump);
 	B3_ITEM_LOAD(b3Bump);
 
+	virtual        b3_bool b3Prepare();
 	virtual        void    b3BumpNormal(b3_ray *ray);
 	virtual inline b3_bool b3NeedDeriv()
 	{
@@ -405,6 +411,7 @@ public:
 	B3_ITEM_INIT(b3BumpTexture);
 	B3_ITEM_LOAD(b3BumpTexture);
 
+	b3_bool b3Prepare();
 	void    b3BumpNormal(b3_ray *ray);
 	b3_bool b3NeedDeriv();
 
@@ -514,6 +521,7 @@ public:
 	B3_ITEM_INIT(b3Material);
 	B3_ITEM_LOAD(b3Material);
 
+	virtual b3_bool b3Prepare();
 	virtual b3_f64  b3GetReflection(b3_polar *polar);
 	virtual b3_f64  b3GetRefraction(b3_polar *polar);
 	virtual b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -657,6 +665,7 @@ public:
 	B3_ITEM_INIT(b3MatTexture);
 	B3_ITEM_LOAD(b3MatTexture);
 
+	b3_bool b3Prepare();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -685,6 +694,7 @@ public:
 	B3_ITEM_INIT(b3MatWrapTexture);
 	B3_ITEM_LOAD(b3MatWrapTexture);
 
+	b3_bool b3Prepare();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -2166,5 +2176,8 @@ class b3InitRaytrace :
 public:
 	static void b3Init();
 };
+
+extern b3TxPool  texture_pool;
+extern b3_bool   b3CheckTexture(b3Tx **tx,const char *name);
 
 #endif

@@ -29,11 +29,10 @@ public:
 	                     b3TxPool();
 	                    ~b3TxPool();
 	       b3Tx         *b3LoadTexture(const char *name);
+	       b3Tx         *b3FindTexture(const char *name);
 	       b3Base<b3Tx> *b3GetTxHead();
 private:
 	       b3_bool       b3ReloadTexture(b3Tx *texture,const char *name=null);
 };
-
-extern b3TxPool texture_pool;
 
 #endif
