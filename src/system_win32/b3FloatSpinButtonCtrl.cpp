@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/01 21:25:36  sm
+**	- Fixed a problem in create material dialog: Use the
+**	  correct function proto types depending on the
+**	  message type!
+**
 **	Revision 1.1  2002/03/01 20:26:41  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **
 */
 
@@ -75,6 +80,7 @@ void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 	CWnd    *edit = GetBuddy();
 	CString  value;
 	
+	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);
 	b3SetPos(atof(value) + (b3_f64)pNMUpDown->iDelta * m_Increment);
 	*pResult = 1;

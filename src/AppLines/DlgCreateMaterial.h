@@ -88,7 +88,8 @@ protected:
 	afx_msg void OnChangeTexturePath();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnUseTexture();
-	afx_msg void OnChangePreview(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnSurfaceEdit();
+	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
