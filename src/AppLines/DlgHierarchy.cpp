@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.22  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.21  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
 **	
@@ -485,7 +488,7 @@ void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult)
 	BBox = (b3BBox *)pTVDispInfo->item.lParam;
 	if ((BBox != null) && (pTVDispInfo->item.pszText != null))
 	{
-		strcpy (BBox->m_BoxName,pTVDispInfo->item.pszText);
+		BBox->b3SetName(pTVDispInfo->item.pszText);
 		
 		m_pDoc->SetModifiedFlag();
 		m_pDoc->UpdateAllViews(null,B3_UPDATE_VIEW);

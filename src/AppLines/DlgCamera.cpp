@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.6  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 **	Revision 1.5  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -199,7 +202,7 @@ void CDlgCamera::OnCameraNew()
 		camera->m_Width     = m_Camera->m_Width;
 		camera->m_Height    = m_Camera->m_Height;
 		camera->m_Flags     = CAMERA_ACTIVE;
-		strcpy (camera->b3GetName(),dlg.m_NewName);
+		camera->b3SetName(dlg.m_NewName);
 		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
 		
 		b3RefreshList();
@@ -273,7 +276,7 @@ void CDlgCamera::OnKillfocusCamera()
 	CString title;
 
 	m_CameraListCtrl.GetWindowText(title);
-	strcpy(m_Camera->b3GetName(),title);
+	m_Camera->b3SetName(title);
 	b3RefreshList();
 }
 

@@ -38,12 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.11  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.10  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -401,34 +404,51 @@ void b3Path::b3LinkFileName(
 	const char *name)
 {
 	char nDrive[_MAX_DRIVE];
-	char nFullPath[_MAX_DIR];
-	char nPath[_MAX_DIR];
-	char nName[_MAX_FNAME];
+	char nPathOfPath[_MAX_DIR];
+	char nNameOfPath[_MAX_FNAME];
 	char nExt[_MAX_EXT];
+	char nPathOfName[_MAX_DIR];
+	char nNameOfName[_MAX_FNAME];
+	char nFullPath[_MAX_DIR];
 	long i,len;
 
 	B3_ASSERT(full != null);
 
 	nFullPath[0] = 0;
-	if (path)
+	if (path != null)
 	{
-		_splitpath (path,nDrive,nFullPath,nName,nExt);
-		strcat (nFullPath,nName);
+		_splitpath (path,nDrive,nPathOfPath,nNameOfPath,nExt);
 	}
-	if (name) _splitpath (name,null,nPath,nName,nExt);
-	if (strlen(nPath) > 0)
+	else
 	{
-		strcat (nFullPath,"\\");
-		strcat (nFullPath,nPath);
+		nNameOfPath[0] = 0;
 	}
-	_makepath (full,nDrive,nFullPath,nName,nExt);
+
+	if (name != null)
+	{
+		_splitpath (name,null,nPathOfName,nNameOfName,nExt);
+	}
+
+	if (strlen(nPathOfName) > 0)
+	{
+		snprintf(nFullPath,sizeof(nFullPath),"%s%s\\%s",nPathOfPath,nNameOfPath,nPathOfName);
+	}
+	else
+	{
+		snprintf(nFullPath,sizeof(nFullPath),"%s%s",nPathOfPath,nNameOfPath);
+	}
+
+	_makepath (full,nDrive,nFullPath,nNameOfName,nExt);
 	b3RemoveDelimiter(full);
 
-		/* convert '/' to '\' */
+	// convert '/' to '\'
 	len = strlen(full);
 	for (i = 0;i < len;i++)
 	{
-		if (full[i] == '/') full[i] = '\\';
+		if (full[i] == '/')
+		{
+			full[i] = '\\';
+		}
 	}
 }
 
@@ -694,6 +714,7 @@ static b3_bool b3FileDialog(
 	char       *file_name,
 	bool        is_open)
 {
+	char      aux[B3_FILESTRINGLEN];
 	char      suggest[B3_FILESTRINGLEN];
 	b3_bool   result;
 	b3_index  i;
@@ -702,16 +723,24 @@ static b3_bool b3FileDialog(
 
 	// Make filename ready for use...
 	len = strlen(default_name);
+	if (len >= sizeof(aux))
+	{
+		len = sizeof(aux) - 1;
+	}
 	for (i = 0;i < len;i++)
 	{
-		suggest[i] = (default_name[i] == '/' ? '\\' : default_name[i]);
+		aux[i] = (default_name[i] == '/' ? '\\' : default_name[i]);
 	}
-	suggest[len] = 0;
+	aux[len] = 0;
 
-	if (b3Dir::b3Exists(suggest) == B3_TYPE_DIR)
+	if (b3Dir::b3Exists(aux) == B3_TYPE_DIR)
 	{
 		// Suggest directory pattern
-		strcat(suggest,"\\*.*");
+		snprintf(suggest,sizeof(suggest),"%s\\*.*",aux);
+	}
+	else
+	{
+		strcpy(suggest,aux);
 	}
 
 	CFileDialog   filedlg(
@@ -839,7 +868,7 @@ b3_bool b3Folder::b3SelectFolder(CString &param,const char *title,const char *ro
 	b3_index    i;
 	b3_count    len;
 
-	strcpy (m_Path,param);
+	b3Format("%s",param);
 	len = strlen(m_Path);
 	for (i = 0;i < len;i++)
 	{

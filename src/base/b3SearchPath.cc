@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.9  2002/11/16 15:24:17  sm
 **	- Include cleanups in RemCR
-**
+**	
 **	Revision 1.8  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
@@ -84,17 +87,17 @@
 
 b3PathEntry::b3PathEntry(const b3PathEntry &src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	strcpy(m_Path,src.m_Path);
+	snprintf(m_Path,sizeof(m_Path),"%s",src.m_Path);
 }
 
 b3PathEntry::b3PathEntry(const b3PathEntry *src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	strcpy(m_Path,src != null ? src->m_Path : "");
+	snprintf(m_Path,sizeof(m_Path),"%s",src != null ? src->m_Path : "");
 }
 
 b3PathEntry::b3PathEntry(const char *new_path) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	strcpy(m_Path,new_path != null ? new_path : "");
+	snprintf(m_Path,sizeof(m_Path),"%s",new_path != null ? new_path : "");
 }
 
 void b3SearchPath::b3AddPath(const char *path)

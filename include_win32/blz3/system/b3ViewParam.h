@@ -44,7 +44,8 @@ enum b3_window_mode
 
 class CB3ViewParam : public b3Link<CB3ViewParam>
 {
-	char name[VIEW_PARAM_NAME_LEN];
+	char m_Name[VIEW_PARAM_NAME_LEN];
+
 public:
 	// Direct view mode
 	b3_display_mode m_Mode;

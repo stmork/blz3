@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.12  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.11  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -112,7 +115,7 @@ inline void b3ExampleScene::b3SetCameraName(b3CameraPart *camera,int id)
 	CString name;
 
 	name.LoadString(id);
-	strcpy(camera->m_CameraName,name);
+	camera->b3SetName(name);
 }
 
 inline void b3ExampleScene::b3SetLightName(b3Light *light,int id)
@@ -120,7 +123,7 @@ inline void b3ExampleScene::b3SetLightName(b3Light *light,int id)
 	CString name;
 
 	name.LoadString(id);
-	strcpy(light->m_Name,name);
+	light->b3SetName(name);
 }
 
 inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
@@ -128,7 +131,7 @@ inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
 	CString name;
 
 	name.LoadString(id);
-	strcpy(bbox->m_BoxName,name);
+	bbox->b3SetName(name);
 }
 
 b3Scene *b3ExampleScene::b3CreateNew(const char *filename)

@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.15  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.14  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -287,7 +290,7 @@ void CDlgLight::OnLightNew()
 		b3SetLight();
 
 		m_Light = new b3Light(AREA_LIGHT);
-		strcpy (m_Light->b3GetName(),dlg.m_NewName);
+		m_Light->b3SetName(dlg.m_NewName);
 		m_LightBase->b3Append(m_Light);
 		
 		b3RefreshList();
@@ -371,7 +374,7 @@ void CDlgLight::OnKillfocusLight()
 	CString title;
 
 	m_LightListCtrl.GetWindowText(title);
-	strcpy(m_Light->b3GetName(),title);
+	m_Light->b3SetName(title);
 	b3RefreshList();
 }
 

@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.1  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
-**
+**	
 */
 
 /*************************************************************************
@@ -62,7 +65,7 @@ b3OpLightCreate::b3OpLightCreate(
 		m_Light = new b3Light(AREA_LIGHT);
 		m_Prev  = light;
 		m_Base  = m_Scene->b3GetLightHead();
-		strcpy (m_Light->b3GetName(),dlg.m_NewName);
+		m_Light->b3SetName(dlg.m_NewName);
 		b3Initialize();
 	}
 }

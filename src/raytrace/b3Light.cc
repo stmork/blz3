@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2003/08/31 10:44:07  sm
+**      - Further buffer overflow avoidments.
+**
 **      Revision 1.36  2003/07/25 07:24:04  sm
 **      - Classical refactoring error: The effects of ticket no. 15 are
 **        caused due to refactoring b3Light. An old method b3Init was
@@ -348,7 +351,7 @@ void b3Light::b3InitValues()
 	m_Knots[INIT_CONTROL_MAX] += b3Scene::epsilon;
 	m_Spline.b3ThroughEndControl ();
 
-	strcpy(m_Name,"Light");
+	b3SetName("Light");
 	m_LightActive = true;
 	m_SoftShadow  = false;
 	m_SpotActive  = false;
@@ -398,6 +401,11 @@ b3_bool b3Light::b3IsActive()
 char *b3Light::b3GetName()
 {
 	return m_Name;
+}
+
+void b3Light::b3SetName(const char *name)
+{
+	b3Item::b3SetString(m_Name,sizeof(m_Name),name);
 }
 
 b3_bool b3Light::b3Illuminate(

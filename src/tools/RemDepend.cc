@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.2  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	
 */
 
@@ -78,8 +81,8 @@ static b3_bool DoRemDepend(const char *filename)
 		}
 
 		// Append a line feed
-		buffer[size_out] = 0;
-		strcat(buffer,"\n");
+		buffer[size_out]     = '\n';
+		buffer[size_out + 1] = 0;
 		size_out = strlen(buffer);
 	}
 	else

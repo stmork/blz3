@@ -227,6 +227,16 @@ public:
 		m_Mutex.b3Unlock();
 	}
 
+	inline static void b3SetString(
+		char *buffer,size_t size,const char *src)
+	{
+		for (size_t i = 0;(i < size) && (src[i] != 0);i++)
+		{
+			*buffer++ = *src++;
+		}
+		*buffer = 0;
+	}
+
 	inline static void b3LongMemSet(
 		      b3_u32   *data,
 		const b3_count  max,

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.5  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.4  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
@@ -229,7 +232,7 @@ void CDlgNewObject::OnOK()
 		{
 			m_NewItem = b3World::b3AllocNode(BBOX | ((m_BBox->b3GetClassType() & 0xffff) + 1));
 			bbox = (b3BBox *)m_NewItem;
-			strcpy (bbox->m_BoxName,dlg.m_NewName);
+			bbox->b3SetName(dlg.m_NewName);
 			m_Base = bboxes;
 			m_InsertAfter = bboxes->Last;
 		}

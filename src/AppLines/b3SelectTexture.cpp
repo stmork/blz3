@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.7  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.6  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -105,8 +108,7 @@ b3_bool CB3SelectLoadTexture::b3Select(b3Tx **tx,char *name)
 	}
 	else
 	{
-
-		strcpy((char *)suggest,app->GetProfileString(CB3ClientString(),m_RegEntry,""));
+		suggest.b3Format("%s",app->GetProfileString(CB3ClientString(),m_RegEntry,""));
 	}
 
 	file_filter.LoadString(IDS_TEXTURE_FILTER);
@@ -127,7 +129,7 @@ b3_bool CB3SelectLoadTexture::b3Select(b3Tx **tx,char *name)
 	result = (filedlg.DoModal() == IDOK);
 	if (result)
 	{
-		strcpy(fullname,filedlg.GetPathName());
+		fullname.b3Format("%s",filedlg.GetPathName());
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,fullname);
 		b3Scene::m_TexturePool.b3CutName(fullname,name);
 		b3Scene::b3CheckTexture(tx,name);
@@ -161,7 +163,7 @@ b3_bool CB3SelectSaveTexture::b3Select(b3Path &name,const char *tx_name)
 		suggest = app->GetProfileString(CB3ClientString(),m_RegEntry,name);
 		registry = true;
 	}
-	strcpy((char *)name,suggest);
+	name.b3Format("%s",(const char *)suggest);
 	file_filter.LoadString(IDS_SAVE_IMAGE_FILTER);
 	result = b3SaveDialog(suggest,default_ext,file_filter,name);
 	if (result && registry)

@@ -731,6 +731,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
+	void    b3SetTexture(const char *name);
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -1666,6 +1667,7 @@ public:
 	static void            b3Register();
 	       void            b3Write();
 	       void            b3Dump(b3_count level);
+		   void            b3SetName(const char *name);
 	       void            b3AllocVertices(b3RenderContext *context);
 	       void            b3FreeVertices();
 	       void            b3ComputeVertices();
@@ -1827,6 +1829,7 @@ public:
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();
 	       char    *b3GetName();
+		   void     b3SetName(const char *name);
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{
@@ -2040,6 +2043,7 @@ public:
 	void     b3ScaleFocalLength(b3_f64 factor);
 	void     b3Transform(b3_matrix *transformation);
 	char    *b3GetName();
+	void     b3SetName(const char *name);
 	b3_bool  b3Prepare();
 	b3_bool  b3IsActive();
 	void     b3Activate(b3_bool activate = true);
@@ -2392,7 +2396,9 @@ public:
 	virtual void            b3SetLights(b3RenderContext *context);
 	        void            b3Draw(b3RenderContext *context);
 
-			char           *b3GetName();
+			char           *b3GetFilename();
+			void            b3SetFilename(const char *filename);
+			void            b3SetTexture(const char *name);
 			void            b3Update();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
@@ -2410,8 +2416,6 @@ public:
 			b3CameraPart   *b3GetCameraByName(const char *camera_name);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		    b3CameraPart   *b3UpdateCamera();
-			void            b3SetFilename(const char *filename);
-			const char     *b3GetFilename();
 			b3_bool         b3GetTitle(char *title);
 			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
 		    b3Light        *b3GetLight(b3_bool must_active = false);

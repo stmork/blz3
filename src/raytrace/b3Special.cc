@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.64  2003/08/31 10:44:07  sm
+**      - Further buffer overflow avoidments.
+**
 **      Revision 1.63  2003/07/12 17:44:47  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -564,6 +567,11 @@ void b3CameraPart::b3Transform(b3_matrix *transformation)
 char *b3CameraPart::b3GetName()
 {
 	return m_CameraName;
+}
+
+void b3CameraPart::b3SetName(const char *name)
+{
+	b3Mem::b3SetString(m_CameraName,sizeof(m_CameraName),name);
 }
 
 b3_bool b3CameraPart::b3Prepare()

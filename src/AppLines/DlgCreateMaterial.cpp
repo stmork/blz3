@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.12  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.11  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -135,7 +138,7 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_HighLight    = app->b3ReadProfileFloat("material.exponent",  1000);
 	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"material.really create",TRUE);
 	m_UseTexture   = app->GetProfileInt(CB3ClientString(),"material.use texture",  FALSE);
-	strcpy(m_MatTexture->m_Name,app->GetProfileString(CB3ClientString(),"material.texture",""));
+	m_MatTexture->b3SetTexture(app->GetProfileString(CB3ClientString(),"material.texture",""));
 	b3Scene::b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
 
 	m_ReflectionCtrl.b3SetRange(0.0,100.0);
@@ -326,7 +329,7 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 			texture->m_Refraction = m_Refraction / 100.0;
 			texture->m_RefrValue  = m_RefrValue;
 			texture->m_HighLight  = m_HighLight;
-			strcpy(texture->m_Name,m_MatTexture->m_Name);
+			texture->b3SetTexture(m_MatTexture->m_Name);
 			app->WriteProfileString(CB3ClientString(),"material.texture",m_MatTexture->m_Name);
 
 			// Scale texture to match stencil

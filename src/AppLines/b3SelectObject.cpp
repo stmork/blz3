@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.5  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.4  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
 **	
@@ -68,7 +71,7 @@ b3_bool CB3SelectLoadObject::b3Select(b3Path &name,const char *reg_entry)
 	CString   default_ext;
 
 	// Make filename ready for use...
-	strcpy(suggest,app->GetProfileString(CB3ClientString(),reg_entry,name));
+	suggest.b3Format("%s",app->GetProfileString(CB3ClientString(),reg_entry,name));
 	file_filter.LoadString(IDS_OBJECT_FILTER);
 
 	CB3ObjectPreviewFileDlg   filedlg(
@@ -83,7 +86,7 @@ b3_bool CB3SelectLoadObject::b3Select(b3Path &name,const char *reg_entry)
 	result = (filedlg.DoModal() == IDOK);
 	if (result)
 	{
-		strcpy(name,filedlg.GetPathName());
+		name.b3Format("%s",filedlg.GetPathName());
 		app->WriteProfileString(CB3ClientString(),reg_entry,name);
 	}
 	return result;
@@ -137,7 +140,7 @@ b3_bool CB3SelectLoadCOB::b3Select(b3Path &name)
 	CString   default_ext;
 
 	// Make filename ready for use...
-	strcpy(suggest,app->GetProfileString(CB3ClientString(),m_RegEntry,name));
+	suggest.b3Format("%s",app->GetProfileString(CB3ClientString(),m_RegEntry,name));
 	file_filter.LoadString(IDS_COB_FILTER);
 
 	CB3FileDialog   filedlg(
@@ -152,7 +155,7 @@ b3_bool CB3SelectLoadCOB::b3Select(b3Path &name)
 	result = (filedlg.DoModal() == IDOK);
 	if (result)
 	{
-		strcpy(name,filedlg.GetPathName());
+		name.b3Format("%s",filedlg.GetPathName());
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,name);
 	}
 	return result;
@@ -175,7 +178,7 @@ b3_bool CB3SelectLoadArcon::b3Select(b3Path &name)
 	CString   default_ext;
 
 	// Make filename ready for use...
-	strcpy(suggest,app->GetProfileString(CB3ClientString(),m_RegEntry,name));
+	suggest.b3Format("%s",app->GetProfileString(CB3ClientString(),m_RegEntry,name));
 	file_filter.LoadString(IDS_ARCON_FILTER);
 
 	CB3FileDialog   filedlg(
@@ -190,7 +193,7 @@ b3_bool CB3SelectLoadArcon::b3Select(b3Path &name)
 	result = (filedlg.DoModal() == IDOK);
 	if (result)
 	{
-		strcpy(name,filedlg.GetPathName());
+		name.b3Format("%s",filedlg.GetPathName());
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,name);
 	}
 	return result;

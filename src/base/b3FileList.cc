@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.6  2003/05/24 13:46:49  sm
 **	- Added plugin support
 **	- Fixed b3FileList on non existing directory.
-**
+**	
 **	Revision 1.5  2002/08/16 13:20:13  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
@@ -69,7 +72,7 @@
 b3FileEntry::b3FileEntry (const char *new_name) :
 	b3Link<b3FileEntry>(sizeof(b3FileEntry))
 {
-	strcpy (name,new_name);
+	name.b3Format("%s",new_name);
 }
 
 int b3FileEntry::b3Cmp(b3FileEntry *compare)

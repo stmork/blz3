@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.6  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.5  2003/02/05 18:42:21  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
@@ -97,7 +100,7 @@ b3OpObjectCreate::b3OpObjectCreate(
 	if (dlg.DoModal() == IDOK)
 	{
 		m_BBox = new b3BBox(BBOX);
-		strcpy (m_BBox->m_BoxName,dlg.m_NewName);
+		m_BBox->b3SetName(dlg.m_NewName);
 		b3Initialize();
 		m_PrepareGeometry         = false;
 		m_PrepareChangedStructure = true;
@@ -349,7 +352,7 @@ b3OpObjectLoadCob::b3OpObjectLoadCob(
 
 				result.b3SplitFileName(null,name);
 				name.b3RemoveExt();
-				strcpy (m_BBox->m_BoxName,name);
+				m_BBox->b3SetName(name);
 				b3Initialize();
 				m_PrepareGeometry         = true;
 				m_PrepareChangedStructure = false;

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.84  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.83  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.82  2003/03/04 20:37:37  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -962,11 +965,6 @@ void b3Scene::b3Transform(
 		bbox = (b3BBox *)item;
 		bbox->b3Transform(transformation,is_affine,force_action);
 	}
-}
-
-char *b3Scene::b3GetName()
-{
-	return m_Filename;
 }
 
 void b3Scene::b3Draw(b3RenderContext *context)

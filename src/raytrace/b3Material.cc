@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2003/08/31 10:44:07  sm
+**      - Further buffer overflow avoidments.
+**
 **      Revision 1.26  2003/07/12 17:44:47  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -461,6 +464,11 @@ void b3MatTexture::b3Write()
 b3_bool b3MatTexture::b3Prepare()
 {
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
+}
+
+void b3MatTexture::b3SetTexture(const char *name)
+{
+	m_Name.b3Format("%s",name);
 }
 
 b3_bool b3MatTexture::b3GetColors(

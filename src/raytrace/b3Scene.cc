@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.51  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector
 **	  component.
-**
+**	
 **	Revision 1.50  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -407,6 +410,21 @@ void b3Scene::b3Write()
 	b3StoreString(m_TextureName,B3_TEXSTRINGLEN);
 }
 
+char *b3Scene::b3GetFilename()
+{
+	return m_Filename;
+}
+
+void b3Scene::b3SetFilename(const char *filename)
+{
+	m_Filename.b3Format("%s",filename);
+}
+
+void b3Scene::b3SetTexture(const char *name)
+{
+	b3Item::b3SetString(m_TextureName,sizeof(m_TextureName),name);
+}
+
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
 	xSize = this->m_xSize;
@@ -669,16 +687,6 @@ void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 		b3GetSpecialHead()->b3Remove(camera);
 		b3GetSpecialHead()->b3First(camera);
 	}
-}
-
-void b3Scene::b3SetFilename(const char *filename)
-{
-	strcpy(m_Filename,filename);
-}
-
-const char *b3Scene::b3GetFilename()
-{
-	return m_Filename;
 }
 
 b3_bool b3Scene::b3GetTitle(char *title)

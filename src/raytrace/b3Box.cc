@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3Memory.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -32,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2003/08/31 10:44:07  sm
+**      - Further buffer overflow avoidments.
+**
 **      Revision 1.17  2003/02/22 15:17:18  sm
 **      - Added support for selected shapes in object modeller
 **      - Glued b3Shape and b3ShapeRenderObject. There was no
@@ -132,6 +136,11 @@ b3Box::b3Box(b3_u32 class_type) : b3Shape3(sizeof(b3Box),class_type)
 
 b3Box::b3Box(b3_u32 *src) : b3Shape3(src)
 {
+}
+
+void b3BBox::b3SetName(const char *name)
+{
+	b3Item::b3SetString(m_BoxName,sizeof(m_BoxName),name);
 }
 
 void b3Box::b3AllocVertices(b3RenderContext *context)

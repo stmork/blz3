@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 
@@ -46,12 +49,12 @@
 
 CB3ViewParam::CB3ViewParam(const char *param_name) : b3Link<CB3ViewParam>(sizeof(CB3ViewParam))
 {
-	strcpy (name,param_name);
+	snprintf(m_Name,sizeof(m_Name),"%s",param_name);
 }
 
 char *CB3ViewParam::b3GetName()
 {
-	return name;
+	return m_Name;
 }
 
 CB3ViewParamBase::~CB3ViewParamBase()

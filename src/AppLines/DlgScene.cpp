@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.14  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.13  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -188,7 +191,7 @@ BOOL CDlgScene::OnInitDialog()
 	m_PreviewScene->m_BackgroundType = m_Scene->m_BackgroundType;
 	m_PreviewScene->m_TopColor       = m_Scene->m_TopColor;
 	m_PreviewScene->m_BottomColor    = m_Scene->m_BottomColor;
-	strcpy(m_PreviewScene->m_TextureName,m_Scene->m_TextureName);
+	m_PreviewScene->b3SetTexture(m_Scene->m_TextureName);
 	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	b3Scene::b3CheckTexture(&m_PreviewScene->m_BackTexture,m_PreviewScene->m_TextureName);
 	m_PreviewImageCtrl.b3Copy(m_PreviewScene->m_BackTexture);
@@ -338,5 +341,5 @@ void CDlgScene::OnOK()
 	m_Scene->m_Flags            =
 		(m_ResValid ? TP_SIZEVALID : 0) |
 		(m_GfxValid ? 0 : TP_NO_GFX);
-	strcpy(m_Scene->m_TextureName,m_PreviewScene->m_TextureName);
+	m_Scene->b3SetTexture(m_PreviewScene->m_TextureName);
 }

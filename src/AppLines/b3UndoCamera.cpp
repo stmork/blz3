@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.3  2003/01/15 16:23:53  sm
 **	- Some other camera undo/redo operations added.
 **	- Fixed some undo(redo operations.
-**
+**	
 **	Revision 1.2  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
 **	
@@ -71,7 +74,7 @@ b3OpCameraCreate::b3OpCameraCreate(
 		m_Camera->m_Width     = selected->m_Width;
 		m_Camera->m_Height    = selected->m_Height;
 		m_Camera->m_Flags     = CAMERA_ACTIVE;
-		strcpy (m_Camera->b3GetName(),dlg.m_NewName);
+		m_Camera->b3SetName(dlg.m_NewName);
 		b3Initialize();
 	}
 }

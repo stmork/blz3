@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/08/31 10:44:07  sm
+**	- Further buffer overflow avoidments.
+**
 **	Revision 1.15  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.14  2003/05/26 11:20:52  sm
 **	- Used wrong data types for b3Path::b3ExtractExt() methods. Now using
 **	  signed versus unsigned int.
@@ -287,14 +290,12 @@ void b3Path::b3LinkFileName(
 {
 	b3_size i,len;
 
-	assert(File!=null);
-	File[0] = 0;
-	if (FilePath != null) strcpy (File,FilePath);
-	if (FileName != null)
-	{
-		if (File[0] != 0) strcat (File,"/");
-		strcat (File,FileName);
-	}
+	B3_ASSERT(File!=null);
+	snprintf(File,B3_FILESTRINGLEN,
+		"%s%s%s",
+		FilePath != null ? FilePath : "",
+		FilePath != null ? "/" : "",
+		FileName != null ? FileName : "");
 
 	// Convert Windows path to to something useful
 	len = strlen(File);
