@@ -12,14 +12,14 @@ install:
 	+make -C src install
 
 clean:
-	+make -C src clean
+	test -f src/Makefile && make -C src clean
 	test -f data.tar.gz && rm -f data.tar.gz
 
-autoconf:	
+configure:	configure.ac
 	autoconf
 	rm -rf autom4te.cache
 
-configure:	autoconf
+config:	configure
 	./configure --prefix=$(PWD)
 
 clobber:

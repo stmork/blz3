@@ -24,5 +24,6 @@
 #undef BLZ3_USE_CG
 #undef BLZ3_USE_AVILIB
 #undef BLZ3_USE_DIVX4LINUX
+#undef BLZ3_IS_LINUX
 
 #endif

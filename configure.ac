@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.53)
-AC_INIT(blz3, 2.99.1, blz3-dev@morknet.de.blz3.tar.gz)
+AC_INIT(blz3, 2.99.1, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -13,7 +13,7 @@ AC_CHECK_TOOL(LD, ld, :)
 AC_PROG_MAKE_SET
 AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_RANLIB
-AC_CHECK_TOOL(DOS2UNIX, dos2unix, AC_MSG_ERROR([dos2unix is not available!]))
+AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 
 AC_ARG_VAR(BLZ3_HOME, [This home directory of Blizzard III])
 AC_ARG_VAR(BLZ3_SYSINC, [The system dependend include path])
@@ -43,6 +43,13 @@ AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG]) LIBS="$LIBS -lCgGL"])
 AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) LIBS="$LIBS -lavi"])
 AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) LIBS="$LIBS -ldivxencore"])
 
+OS_NAME=`uname -s`
+if test "$OS_NAME" = "Linux"; then
+  AC_DEFINE([BLZ3_IS_LINUX])
+fi
+
+# FIXME!
+#LDFLAGS="-Ur -Wl,-E"
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"
 ARFLAGS="rs"

@@ -2,11 +2,13 @@
 
 set BLZ3_HOME=$1
 
+test $BLZ3_HOME || exit 1
+
 cd $BLZ3_HOME
 
 echo "Cleaning files..."
 if ( -f src/Makefile ) then
-  make clean
+  make -C src clean
   rm -rf `find src -name Makefile` config.*
 endif
 test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h
