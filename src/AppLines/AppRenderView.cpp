@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2005/01/12 14:37:10  smork
+**	- Added a painting DC to OpenGL drawing.
+**
 **	Revision 1.39  2005/01/12 14:25:38  smork
 **	- Added some ReleaseDC for wine.
-**
+**	
 **	Revision 1.38  2004/12/29 14:41:45  sm
 **	- Beautified Installation
 **	
@@ -495,12 +498,14 @@ void CAppRenderView::b3DrawDC(
 {
 }
 
-void CAppRenderView::b3Paint() 
+void CAppRenderView::OnPaint()
 {
-	OnPaint();
+	CPaintDC dc(this);
+
+	b3Paint();
 }
 
-void CAppRenderView::OnPaint() 
+void CAppRenderView::b3Paint()
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
