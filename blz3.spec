@@ -1,6 +1,6 @@
 %define name blz3
 %define ver 2.99.2
-%define rel 8
+%define rel 9
 
 Summary: A very fast raytracer named Blizzard III
 Name: %{name}
