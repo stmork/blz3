@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/07/08 12:30:06  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 

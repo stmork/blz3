@@ -1,13 +1,13 @@
 /*
 **
-**      $Filename:      b3Config.c $
+**      $Filename:      b3RemDepend.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
 **      $Author$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - basic platform configuration
+**      Blizzard III - removing dependencies from makefile
 **
 **      (C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -21,8 +21,10 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/b3Config.h"
-
+#include "blz3/system/b3File.h"
+#include <string.h>
+#include <ctype.h>
+#include <stdio.h>
 #include <unistd.h>
 
 /*************************************************************************
@@ -33,7 +35,7 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2001/07/08 12:30:06  sm
+**	Revision 1.1  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
 **
@@ -42,58 +44,59 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3Runtime static methods                      **
+**                        application routines                          **
 **                                                                      **
 *************************************************************************/
 
-static b3Runtime static_runtime_environment;
-
-b3Runtime::b3Runtime()
+static b3_bool DoRemCR(const char *filename)
 {
-	b3_u32  value = 0x01020304;
-	b3_u08 *ptr   = (b3_u08 *)&value;
+	b3File   in,out;
+	b3_size  size_in;
+	b3_size  size_out = 0;
+	char    *buffer,*pos;
+	b3_size  i;
 
-	cpu_type = (ptr[0] == 0x01 ? B3_BIG_ENDIAN : B3_LITTLE_ENDIAN);
-}
-
-b3_cpu_type b3Runtime::b3GetCPUType()
-{
-	return static_runtime_environment.cpu_type;
-}
-
-void b3Runtime::b3PSwap(
-	b3_u32 *uPtr1,
-	b3_u32 *uPtr2)
-{
-	b3_u32 aux;
-
-	aux    = *uPtr1;
-	*uPtr1 = *uPtr2;
-	*uPtr2 = aux;
-}
-
-void b3Runtime::b3Beep()
-{
-	putchar (7);
-	fflush (stdout);
-}
-
-b3_bool b3Runtime::b3Hostname(char *hostname,const b3_size buffer_size)
-{
-	return gethostname (hostname, buffer_size) == 0;
-}
-
-b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
-{
-	char   set[1024];
-	b3_s32 result = 127;
-
-	if (strlen(command) <= (sizeof(set) - 2))
+	buffer = (char *)in.b3ReadBuffer(filename,size_in);
+	if (buffer != null)
 	{
-		strcpy (set,command);
-		if (async) strcat(set," &");
-		result = system(set);
+		// Remove 0x0d
+		for (i = 0;i < size_in;i++)
+		{
+			if (buffer[i] != 13) buffer[size_out++] = buffer[i];
+		}
+
+		// If the new size is smaller there were some 0x0d's
+		if (size_out < size_in)
+		{
+			if (out.b3Open(filename,B_WRITE))
+			{
+				if (out.b3Write(buffer,size_out) < size_out)
+				{
+					fprintf (stderr,"Cannot write complete file %s.\n",filename);
+				}
+				out.b3Close();
+			}
+			else
+			{
+				fprintf (stderr,"Cannot open file for writing %s.\n",filename);
+			}
+		}
+	}
+	else
+	{
+		fprintf (stderr,"Cannot allocate buffer for %s.\n",filename);
 	}
 
-	return result;
+	return (buffer != null);
+}
+
+int main(int argc, char *argv[])
+{
+	b3_index i;
+
+	for (i = 1;i < argc;i++)
+	{
+		DoRemCR(argv[i]);
+	}
+	return 0;
 }

@@ -15,7 +15,28 @@
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
 #include "blz3/system/b3Display.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/07/08 12:30:07  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
+**	
+*/
 
 b3Row::b3Row(b3_coord y,b3_res xSize) :
 	b3Link<b3Row>(sizeof(b3Row))

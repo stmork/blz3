@@ -44,9 +44,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/08 12:30:06  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	

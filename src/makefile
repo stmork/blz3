@@ -61,10 +61,13 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-$(BLZ3_BIN)/RemDepend:	$(BLZ3_LIB)/libB3System.a
-	+@make -C tools
+$(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemDepend
 
-$(BLZ3_LIB)/libB3System.a:
+$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB)/libB3System.a
+	+@make -C tools RemCR
+
+$(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
 	+@make -C system_unix
 
 remdepend:	$(BLZ3_BIN)/RemDepend clean
@@ -73,3 +76,7 @@ remdepend:	$(BLZ3_BIN)/RemDepend clean
 tar:
 	@$(BLZ3_HOME)/bin/configure.sh
 	@cd $(BLZ3_HOME)/.. && tar cvf /tmp/blz3.tar blz3 && gzip -f /tmp/blz3.tar
+
+uncr:	$(BLZ3_BIN)/RemCR
+	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;
+	find $(BLZ3_HOME) -name "*.h"  -exec RemCR {} \;

@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/07/08 12:30:06  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
-**
+**	
 **	Revision 1.2  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles
@@ -50,7 +54,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3Mem routines                              **
+**                        b3Mem routines                                **
 **                                                                      **
 *************************************************************************/
 

@@ -1,9 +1,52 @@
+/*
+**
+**      $Filename:      b3RemDepend.cc $
+**      $Release:       Dortmund 2001 $
+**      $Revision$
+**      $Date$
+**      $Author$
+**      $Developer:     Steffen A. Mork $
+**
+**      Blizzard III - removing dependencies from makefile
+**
+**      (C) Copyright 2001  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
 
 #include "blz3/system/b3File.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <unistd.h>
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/07/08 12:30:07  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
+**	
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        application routines                          **
+**                                                                      **
+*************************************************************************/
 
 static b3_bool DoRemDepend(const char *filename)
 {

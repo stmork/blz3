@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/07/08 12:30:06  sm
+**	- New tool to remove nasty CR/LF from Windoze.
+**	- Removing some nasty CR/LF with that new tool.
+**
 **	Revision 1.3  2001/07/03 18:14:08  sm
 **	- Now having running threads. The system lib
 **	  needed the appropriate project options
-**
+**	
 **	Revision 1.2  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32

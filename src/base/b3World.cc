@@ -37,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/07/08 12:30:06  sm
+**      - New tool to remove nasty CR/LF from Windoze.
+**      - Removing some nasty CR/LF with that new tool.
+**
 **      Revision 1.4  2001/07/02 19:28:25  sm
 **      - Applying console application on Windows 32
 **      - Added further Windows environment
