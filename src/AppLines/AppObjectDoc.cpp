@@ -40,10 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/06/20 15:33:10  sm
+**	- Update material when edited.
+**
 **	Revision 1.35  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.
-**
+**	
 **	Revision 1.34  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
 **	
@@ -954,7 +957,12 @@ void CAppObjectDoc::OnEditMaterialDirect()
 		item = shape->b3GetMaterialHead()->First;
 		if (item != null)
 		{
-			b3Loader::b3GetLoader().b3Edit(item,this);
+			if (b3Loader::b3GetLoader().b3Edit(item,this))
+			{
+				shape->b3RecomputeMaterial();
+				shape->b3UpdateMaterial();
+				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }
@@ -970,7 +978,12 @@ void CAppObjectDoc::OnEditBumpDirect()
 		item = shape->b3GetBumpHead()->First;
 		if (item != null)
 		{
-			b3Loader::b3GetLoader().b3Edit(item,this);
+			if (b3Loader::b3GetLoader().b3Edit(item,this))
+			{
+				shape->b3RecomputeMaterial();
+				shape->b3UpdateMaterial();
+				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }

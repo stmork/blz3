@@ -212,6 +212,7 @@ public:
 	        void            b3Update();
 	        void            b3UpdateMaterial();
 	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+	        void            b3RecomputeMaterial();
 
 protected:
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -219,7 +220,6 @@ protected:
 	virtual void            b3ComputeVertices();
 	virtual void            b3ComputeIndices();
 	virtual void            b3ComputeNormals(b3_bool normalize=true);
-	        void            b3RecomputeMaterial();
 
 	// Some render overridables
 	virtual inline b3_render_mode  b3GetRenderMode()

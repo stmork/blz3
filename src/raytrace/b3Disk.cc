@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2004/06/20 15:33:10  sm
+**      - Update material when edited.
+**
 **      Revision 1.26  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -229,6 +232,7 @@ void b3Disk::b3ComputeVertices()
 	ySize = 1;
 
 	glVertexCount = 0;
+
 	// This is a ring formed disk
 	if ((i - start) > b3Scene::epsilon)
 	{
@@ -257,7 +261,8 @@ void b3Disk::b3ComputeVertices()
 
 	for (;i<=iMax;i++)
 	{
-		b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+		b3_f64 pos = (double)i / SinCosSteps;
+		b3_f64 s   = pos / (Limit.x2 - Limit.x1) - Limit.x1;
 
 		// compute ordered position of ring disk
 		sx = h * Cos[i % SinCosSteps];
