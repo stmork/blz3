@@ -1682,6 +1682,8 @@ public:
  	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
 	static void            b3Recount(b3Base<b3Item> *base,b3_count level = 1);
 	static b3_bool         b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
+	static b3BBox         *b3ReadCOB(const char *filename);
+
 protected:
 	       void            b3GetGridColor(b3_color *color);
 };

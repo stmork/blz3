@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "b3ReadCOB.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.75  2003/01/26 11:53:26  sm
+**	- Added support for Caligari object loading.
+**
 **	Revision 1.74  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
-**
+**	
 **	Revision 1.73  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
@@ -1255,4 +1259,9 @@ b3_bool b3Scene::b3BacktraceRecompute(b3BBox *search)
 		}
 	}
 	return false;
+}
+
+b3BBox *b3BBox::b3ReadCOB(const char *filename)
+{
+	return b3COBReader::b3ReadCOB(filename);
 }

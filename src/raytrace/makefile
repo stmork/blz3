@@ -36,6 +36,7 @@ PRG_SOURCE		=\
 	b3PrepareInfo.cc\
 	b3RayRow.cc\
 	b3Raytrace.cc\
+	b3ReadCOB.cc\
 	b3RenderShape.cc\
 	b3RenderView.cc\
 	b3Scene.cc\
@@ -82,6 +83,7 @@ PRG_OBJ			=\
 	b3PrepareInfo.o\
 	b3RayRow.o\
 	b3Raytrace.o\
+	b3ReadCOB.o\
 	b3RenderShape.o\
 	b3RenderView.o\
 	b3Scene.o\

@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2003/01/26 11:53:26  sm
+**      - Added support for Caligari object loading.
+**
 **      Revision 1.28  2002/12/20 15:32:55  sm
 **      - Made some ICC optimazations :-)
 **
@@ -346,17 +349,45 @@ static void b3Keyboard(unsigned char key,int x,int y)
 	}
 }
 
+static void b3Prepare(b3Scene *scene)
+{
+	b3ModellerInfo *info;
+	b3_vector       lower,upper;
+	b3_res          xSize,ySize;
+
+	scene->b3Reorg();
+	scene->b3GetDisplaySize(xSize,ySize);
+	scene->b3SetCamera(scene->b3GetCamera(false));
+	scene->b3Prepare(xSize,ySize);
+	scene->b3AllocVertices(&context);
+	scene->b3ResetAnimation();
+	scene->b3ComputeBounds(&lower,&upper);
+
+	info = scene->b3GetModellerInfo();
+	if (info != null)
+	{
+		all_lights = info->m_UseSceneLights;
+	}
+			
+	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
+	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
+	b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
+	view.b3SetBounds(&lower,&upper);
+	view.b3SetCamera(scene);
+	view.b3SetViewMode(B3_VIEW_3D);
+	b3ChangeSize(xSize,ySize);
+}
+
 int main(int argc,char *argv[])
 {
+	const char     *filename;
 	b3Item         *item;
 	b3Scene        *scene;
-	b3ModellerInfo *info;
 	char           *HOME = getenv("HOME");
 	b3Path          textures;
 	b3Path          pictures;
 	b3Path          data;
-	b3_vector       lower,upper;
-	b3_res          xSize,ySize;
+	b3Path          ext;
 
 	if (argc <= 1)
 	{
@@ -388,46 +419,27 @@ int main(int argc,char *argv[])
 		texture_pool.b3AddPath(textures);
 		texture_pool.b3AddPath(pictures);
 
+		filename = (const char *)argv[1];
 		world = new b3World();
 		world->b3AddPath(data);
-		world->b3Read(argv[1]);
+		world->b3Read(filename);
 		for (item  = world->b3GetFirst();
 		     item != null;
 		     item  = scene->Succ)
 		{
 			scene = (b3Scene *)item;
-			scene->b3Reorg();
-			scene->b3GetDisplaySize(xSize,ySize);
-			scene->b3SetCamera(scene->b3GetCamera(false));
-			scene->b3Prepare(xSize,ySize);
-			scene->b3AllocVertices(&context);
-			scene->b3ResetAnimation();
-			scene->b3ComputeBounds(&lower,&upper);
+			b3Prepare(scene);
+			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
+			glutInitWindowSize(xWinSize,yWinSize);
+			glutCreateWindow("Greetinxx");
+			glutDisplayFunc (&b3RenderScene);
+			glutKeyboardFunc(&b3Keyboard);
+			glutReshapeFunc (&b3ChangeSize);
 
-			info = scene->b3GetModellerInfo();
-			if (info != null)
-			{
-				all_lights = info->m_UseSceneLights;
-			}
-			
-			b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
-			b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
-			b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
-			view.b3SetBounds(&lower,&upper);
-			view.b3SetCamera(scene);
-			view.b3SetViewMode(B3_VIEW_3D);
-			b3ChangeSize(xSize,ySize);
+			b3SetupRC();
+			glutMainLoop();
 		}
-
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-		glutInitWindowSize(xWinSize,yWinSize);
-		glutCreateWindow("Greetinxx");
-		glutDisplayFunc (&b3RenderScene);
-		glutKeyboardFunc(&b3Keyboard);
-		glutReshapeFunc (&b3ChangeSize);
-
-		b3SetupRC();
-		glutMainLoop();
+		delete world;
 	}
 	catch(b3ExceptionBase &e)
 	{
