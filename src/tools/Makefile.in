@@ -8,10 +8,8 @@ LIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc divx.cc reduce.cc
+PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc divx.cc reduce.cc
 
-REMDEPEND_OBJS		= RemDepend.o
-REMCR_OBJS		= RemCR.o
 RESTOREEXT_OBJS		= RestoreExt.o
 CLEANRES_OBJS		= CleanRes.o
 SCALE_OBJS		= scale.o
@@ -22,7 +20,7 @@ PW_OBJS			= pw.o
 DIVX_OBJS		= divx.o
 REDUCE_OBJS		= reduce.o
 
-PRGS			= RemDepend RemCR RestoreExt CleanRes testimg scale calibrate half pw reduce divx
+PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce divx
 
 all:	$(PRGS)
 
@@ -35,12 +33,6 @@ depend:
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
-
-RemDepend:	$(REMDEPEND_OBJS)
-	$(LINK.cc) -o $@ $^ -lB3Base -lpthread
-
-RemCR:	$(REMCR_OBJS)
-	$(LINK.cc) -o $@ $^ -lB3System -lpthread
 
 RestoreExt:	$(RESTOREEXT_OBJS)
 	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)

@@ -13,13 +13,13 @@ AC_CHECK_TOOL(LD, ld, :)
 AC_PROG_MAKE_SET
 AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_RANLIB
-AC_CHECK_TOOL(DOS2UNIX, dos2unix, RemCR)
+AC_CHECK_TOOL(DOS2UNIX, dos2unix, AC_MSG_ERROR([dos2unix is not available!]))
 
-AC_ARG_VAR(BLZ3_HOME)
-AC_ARG_VAR(BLZ3_SYSINC)
-AC_ARG_VAR(BLZ3_INCLUDE)
-AC_ARG_VAR(BLZ3_LIB)
-AC_ARG_VAR(BLZ3_BIN)
+AC_ARG_VAR(BLZ3_HOME, [This home directory of Blizzard III])
+AC_ARG_VAR(BLZ3_SYSINC, [The system dependend include path])
+AC_ARG_VAR(BLZ3_INCLUDE, [The system independend include path])
+AC_ARG_VAR(BLZ3_LIB, [Ths Blizzard III library directory])
+AC_ARG_VAR(BLZ3_BIN, [Ths Blizzard III exutable directory])
 
 BLZ3_HOME="$PWD"
 BLZ3_SYSINC="$BLZ3_HOME/include_unix"

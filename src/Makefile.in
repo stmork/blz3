@@ -6,6 +6,7 @@ BLZ3_HOME	= @BLZ3_HOME@
 BLZ3_LIB	= @BLZ3_LIB@
 BLZ3_BIN	= @BLZ3_BIN@
 CPPFLAGS	= @CPPFLAGS@
+DOS2UNIX	= @DOS2UNIX@
 CFLAGS		= @CFLAGS@
 CXXFLAGS	= @CXXFLAGS@
 LDFLAGS		= @LDFLAGS@
@@ -54,7 +55,7 @@ clean:	remdepend $(BLZ3_LIB)
 remdepend:
 	find $(BLZ3_HOME)/src -name ".dep" -exec rm {} \;
 
-win:	$(BLZ3_BIN)/RemCR
+win:
 	make -C Btiff tif_fax3sm.c version.h
 	cp Btiff/tif_fax3sm.c system_win32
 
@@ -85,14 +86,12 @@ install-bin:
 #                                                       #
 #########################################################
 
-uncr:	$(BLZ3_BIN)/RemCR
-	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;
-	find $(BLZ3_HOME)/include $(BLZ3_HOME)/include_unix -name "*.h" -exec RemCR {} \;
+uncr:
+	find $(BLZ3_HOME) -name "*.cc" -exec $(DOS2UNIX) -k -q -o {} \;
+	find $(BLZ3_HOME)/include $(BLZ3_HOME)/include_unix -name "*.h" -exec $(DOS2UNIX) -k -q -o {} \;
 	@for i in $(SUB_DIRS); do \
-		find $$i -name "*.h" -exec RemCR {} \;;\
+		find $$i -name "*.h" -exec $(DOS2UNIX) -k -q -o {} \;;\
 	done
-
-$(BLZ3_BIN)/RemCR:	tools
 
 resource.h:	$(BLZ3_BIN)/CleanRes tools
 	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h

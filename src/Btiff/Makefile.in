@@ -107,8 +107,8 @@ tif_fax3sm.c:	mkg3states
 tif_version.c:	version.h
 
 version.h:	mkversion
-	./mkversion -v ${VERSION} -a ${ALPHA} version.h
-	$(DOS2UNIX) -o version.h version.h
+	./mkversion -v ${VERSION} -a ${ALPHA} $@
+	$(DOS2UNIX) -k -q -o $@
 
 mkversion:	mkversion.o
 	$(LINK.c) -o $@ $^
