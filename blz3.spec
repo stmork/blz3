@@ -19,7 +19,7 @@ This is a very fast raytracer developed since the early 1990s.
 
 %build
 make depend
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+make -j 3 RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
