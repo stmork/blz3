@@ -65,6 +65,7 @@ class b3Row;
 
 class b3Display : public b3Mem
 {
+	b3_bool               m_OwnTx;
 protected:
 	b3_res                m_xMax,m_yMax;
 	b3_res                m_depth;
@@ -85,6 +86,7 @@ public:
 	virtual void          b3PutTx(b3Tx *tx);
 	virtual b3_bool       b3IsCancelled(b3_coord x,b3_coord y);
 	virtual void          b3Wait();
+	virtual b3_bool       b3SaveImage(const char *filename);
 
 private:
 	        void          b3Init(b3_res xSize,b3_res ySize,const char *title);

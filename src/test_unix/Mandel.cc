@@ -23,6 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
 
 #include "b3Mandel.h"
@@ -38,10 +39,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/22 17:11:18  sm
+**	- brt3 is now able to save images. The selection of image type
+**	  is unsoved yet.
+**	- Better b3DisplayView in Un*x port.
+**	- Fixed stricmp() in Un*x port.
+**
 **	Revision 1.6  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.5  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/

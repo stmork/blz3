@@ -88,7 +88,6 @@ private:
 	static Bool         b3SetPredicate(Display *display,XEvent *event,char *buffer);
 	       void         b3FirstDrawing();
 	       void         b3RefreshAll();
-	       void         b3Close();
 };
 
 #endif

@@ -36,13 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/01/22 17:11:17  sm
+**	- brt3 is now able to save images. The selection of image type
+**	  is unsoved yet.
+**	- Better b3DisplayView in Un*x port.
+**	- Fixed stricmp() in Un*x port.
+**
 **	Revision 1.17  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.16  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
 **	
@@ -117,6 +123,28 @@
 **
 */
 
+#define BLZ3_EXTENSION ".jpg"
+
+static void b3SaveRaytracedImage(
+	b3Display  *display,
+	const char *picture_home,
+	const char *camera_name)
+{
+	b3Path imagename;
+
+	if (picture_home != null)
+	{
+		imagename.b3LinkFileName(picture_home,camera_name);
+		strcat((char *)imagename,BLZ3_EXTENSION);
+	}
+	else
+	{	
+		sprintf((char *)imagename,"%s%s",
+			camera_name,BLZ3_EXTENSION);
+	}
+	display->b3SaveImage(imagename);
+}
+
 int main(int argc,char *argv[])
 {
 	b3Item       *item;
@@ -124,6 +152,7 @@ int main(int argc,char *argv[])
 	b3Scene      *scene;
 	b3CameraPart *camera;
 	b3Display    *display;
+	char         *picture_home = getenv("BLZ3_PICTURES");
 	b3_res        xSize,ySize;
 	b3_index      i;
 	char         *HOME = getenv("HOME");
@@ -201,6 +230,9 @@ int main(int argc,char *argv[])
 									camera->m_CameraName);
 								scene->b3SetCamera(camera);
 								scene->b3Raytrace(display);
+								b3SaveRaytracedImage(
+									display,
+									picture_home,camera->b3GetName());
 							}
 							else
 							{
@@ -214,6 +246,9 @@ int main(int argc,char *argv[])
 					else
 					{
 						scene->b3Raytrace(display);
+						b3SaveRaytracedImage(
+						display,
+						picture_home,scene->b3GetName());
 					}
 
 					display->b3Wait();

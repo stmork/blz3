@@ -40,11 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/22 17:11:18  sm
+**	- brt3 is now able to save images. The selection of image type
+**	  is unsoved yet.
+**	- Better b3DisplayView in Un*x port.
+**	- Fixed stricmp() in Un*x port.
+**
 **	Revision 1.2  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
 **	- Accelerated ILBM access to image  pixel/row.
-**
+**	
 **	Revision 1.1  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
@@ -90,7 +96,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        colormap routines                             **
+**                        color display routines                        **
 **                                                                      **
 *************************************************************************/
 
@@ -98,6 +104,131 @@ static b3Mutex  display_mutex;
 static Colormap cmap;
 static b3_count cmap_count;
 static long     count = READY;
+
+b3DisplayView::b3DisplayView(const char *title) : b3Display(title)
+{
+	m_Title = (char *)title;
+	b3Open(m_xMax,m_yMax);
+	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
+		m_Title,
+		m_xs,m_ys);
+}
+
+b3DisplayView::b3DisplayView(
+	b3_res      xSize,
+	b3_res      ySize,
+	const char *title) : b3Display(xSize,ySize,title)
+{
+	m_Title = (char *)title;
+	b3Open(xSize,ySize);
+	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
+		m_Title,
+		m_xs,m_ys);
+}
+
+b3DisplayView::~b3DisplayView()
+{
+	b3FreeColormap();
+	XFreeGC       (m_Display,m_GC);
+	XFreePixmap   (m_Display,m_Image);
+	XDestroyWindow(m_Display,m_Window);
+	XCloseDisplay (m_Display);
+}
+
+void b3DisplayView::b3Open(
+	b3_res xSize,
+	b3_res ySize)
+{
+	XGCValues      Values;
+	XEvent         report;
+	b3_bool        Loop = true;
+	XTextProperty  CInfoName;
+	b3_res         xScr,yScr;
+
+	if (m_Title == null)
+	{
+		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
+	}
+
+	m_Display = XOpenDisplay(NULL);
+	m_Screen  = DefaultScreen (m_Display);
+	m_depth   = DefaultDepth  (m_Display,m_Screen);
+	m_xMax    = xSize;
+	m_yMax    = ySize;
+	xScr      = DisplayWidth  (m_Display,m_Screen) - 20;
+	yScr      = DisplayHeight (m_Display,m_Screen) - 15;
+
+	m_xs      = B3_MIN(m_xMax,xScr);
+	m_ys      = B3_MIN(m_yMax,yScr);
+	m_Opened  = false;
+	m_Closed  = false;
+
+	Values.plane_mask    = AllPlanes;
+	Values.function      = GXcopy;
+
+#ifdef _DEBUG
+	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",m_xMax);
+	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",m_yMax);
+	b3PrintF (B3LOG_NORMAL,"dep:    %4ld\n",m_depth);
+	b3PrintF (B3LOG_NORMAL,"planes: %4ld\n",DisplayPlanes (m_Display,m_Screen));
+#endif
+
+	m_Window = XCreateSimpleWindow (
+		m_Display,RootWindow (m_Display,m_Screen),
+		0,0,m_xs,m_ys,0,
+		WhitePixel (m_Display,m_Screen),
+		BlackPixel (m_Display,m_Screen));
+
+	XStringListToTextProperty(&m_Title,1,&CInfoName);
+	XSetWMName(m_Display,m_Window,&CInfoName);
+
+
+	m_Image = XCreatePixmap (m_Display,m_Window,m_xs,m_ys,m_depth);
+	if (m_Image == null)
+	{
+		b3Free (m_Buffer);
+		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
+		b3PrintF (B3LOG_NORMAL,"no memory for image buffer!\n");
+		throw new b3DisplayException(B3_DISPLAY_MEMORY);
+	}
+
+	if (!b3CreateColormap())
+	{
+		b3Free(m_Buffer);
+		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
+		b3PrintF (B3LOG_NORMAL,"no colormap available!\n");
+		XFreePixmap (m_Display,m_Image);
+
+		throw new b3DisplayException(B3_DISPLAY_NO_COLORMAP);
+	}
+
+	m_GC = XCreateGC (m_Display,m_Window,GCPlaneMask|GCFunction,&Values);
+
+	XMapWindow          (m_Display,m_Window);
+	XSetWindowColormap  (m_Display,m_Window,m_Colormap);
+	XSelectInput        (m_Display,m_Window,
+		ExposureMask|
+		ButtonPressMask|
+		KeyPressMask);
+
+
+	// wait for window */
+	do
+	{
+		XNextEvent (m_Display,&report);
+		switch (report.type)
+		{
+			case Expose :
+				if (report.xexpose.window == m_Window)
+				{
+					m_Opened = true;
+					Loop     = false;
+				}
+				break;
+		}
+	}
+	while (Loop);
+}
 
 b3_bool b3DisplayView::b3CreateColormap ()
 {
@@ -293,123 +424,6 @@ inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_16 (
 	return ((r >> 8) | (g >> 5) | (b >>  3));
 }
 
-/*************************************************************************
-**                                                                      **
-**                        color display routines                        **
-**                                                                      **
-*************************************************************************/
-
-void b3DisplayView::b3Open(b3_res xSize,b3_res ySize)
-{
-	XGCValues      Values;
-	XEvent         report;
-	b3_bool        Loop = true;
-	XTextProperty  CInfoName;
-	b3_res         xScr,yScr;
-
-	if (m_Title == null)
-	{
-		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
-	}
-
-	m_Display = XOpenDisplay(NULL);
-	m_Screen  = DefaultScreen (m_Display);
-	m_depth   = DefaultDepth  (m_Display,m_Screen);
-	m_xMax    = xSize;
-	m_yMax    = ySize;
-	xScr      = DisplayWidth  (m_Display,m_Screen) - 20;
-	yScr      = DisplayHeight (m_Display,m_Screen) - 15;
-
-	m_xs      = B3_MIN(m_xMax,xScr);
-	m_ys      = B3_MIN(m_yMax,yScr);
-	m_Opened  = false;
-	m_Closed  = false;
-
-	Values.plane_mask    = AllPlanes;
-	Values.function      = GXcopy;
-
-#ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",m_xMax);
-	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",m_yMax);
-	b3PrintF (B3LOG_NORMAL,"dep:    %4ld\n",m_depth);
-	b3PrintF (B3LOG_NORMAL,"planes: %4ld\n",DisplayPlanes (m_Display,m_Screen));
-#endif
-
-	m_Buffer = (b3_pkd_color *)b3Alloc(sizeof(b3_pkd_color) * m_xMax * m_yMax);
-	if (m_Buffer == null)
-	{
-		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
-		b3PrintF (B3LOG_NORMAL,"no memory for pixel buffer!\n");
-		throw new b3DisplayException(B3_DISPLAY_MEMORY);
-	}
-
-	m_Window = XCreateSimpleWindow (
-		m_Display,RootWindow (m_Display,m_Screen),
-		0,0,m_xs,m_ys,0,
-		WhitePixel (m_Display,m_Screen),
-		BlackPixel (m_Display,m_Screen));
-
-	XStringListToTextProperty(&m_Title,1,&CInfoName);
-	XSetWMName(m_Display,m_Window,&CInfoName);
-
-
-	m_Image = XCreatePixmap (m_Display,m_Window,m_xs,m_ys,m_depth);
-	if (m_Image == null)
-	{
-		b3Free (m_Buffer);
-		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
-		b3PrintF (B3LOG_NORMAL,"no memory for image buffer!\n");
-		throw new b3DisplayException(B3_DISPLAY_MEMORY);
-	}
-
-	if (!b3CreateColormap())
-	{
-		b3Free(m_Buffer);
-		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
-		b3PrintF (B3LOG_NORMAL,"no colormap available!\n");
-		XFreePixmap (m_Display,m_Image);
-
-		throw new b3DisplayException(B3_DISPLAY_NO_COLORMAP);
-	}
-
-	m_GC = XCreateGC (m_Display,m_Window,GCPlaneMask|GCFunction,&Values);
-
-	XMapWindow          (m_Display,m_Window);
-	XSetWindowColormap  (m_Display,m_Window,m_Colormap);
-	XSelectInput        (m_Display,m_Window,
-		ExposureMask|
-		ButtonPressMask|
-		KeyPressMask);
-
-
-	// wait for window */
-	do
-	{
-		XNextEvent (m_Display,&report);
-		switch (report.type)
-		{
-			case Expose :
-				if (report.xexpose.window == m_Window)
-				{
-					m_Opened = true;
-					Loop     = false;
-				}
-				break;
-		}
-	}
-	while (Loop);
-}
-
-void b3DisplayView::b3Close()
-{
-	if (m_Buffer != null) b3Free (m_Buffer);
-	b3FreeColormap();
-	XFreeGC       (m_Display,m_GC);
-	XFreePixmap   (m_Display,m_Image);
-	XDestroyWindow(m_Display,m_Window);
-	XCloseDisplay (m_Display);
-}
-
 inline void b3DisplayView::b3FirstDrawing ()
 {
 	m_Opened = true;
@@ -426,39 +440,6 @@ inline void b3DisplayView::b3RefreshAll ()
 			m_xs,m_ys,0,0);
 		m_Mutex.b3Unlock();
 	}
-}
-
-b3DisplayView::b3DisplayView(const char *title)
-{
-	b3_coord xSize;
-	b3_coord ySize;
-
-#ifdef LOW_RES
-	xSize = 240;
-	ySize = 180;
-#else
-	xSize = 768;
-	ySize = 576;
-#endif
-	m_Title = (char *)title;
-	b3Open(xSize,ySize);
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
-		m_Title,
-		m_xs,m_ys);
-}
-
-b3DisplayView::b3DisplayView(b3_res xSize,b3_res ySize,const char *title)
-{
-	m_Title = (char *)title;
-	b3Open(xSize,ySize);
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-		m_Title,
-		m_xs,m_ys);
-}
-
-b3DisplayView::~b3DisplayView()
-{
-	b3Close();
 }
 
 void b3DisplayView::b3PutRow(b3Row *row)

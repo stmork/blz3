@@ -42,11 +42,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/22 17:11:17  sm
+**	- brt3 is now able to save images. The selection of image type
+**	  is unsoved yet.
+**	- Better b3DisplayView in Un*x port.
+**	- Fixed stricmp() in Un*x port.
+**
 **	Revision 1.6  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
 **	- Accelerated ILBM access to image  pixel/row.
-**
+**	
 **	Revision 1.5  2001/12/08 21:37:38  sm
 **	- Added "No Gfx" support
 **	
@@ -74,21 +80,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3Display::b3Display()
-{
-#ifdef LOW_RES
-	m_xMax   = 240;
-	m_yMax   = 180;
-#else
-	m_xMax   = 768;
-	m_yMax   = 576;
-#endif
-	m_depth  = 24;
-	m_Tx     = new b3Tx();
-	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
-	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
-}
-
 b3Display::b3Display(b3Tx *tx)
 {
 	m_xMax   = tx->xSize;
@@ -96,6 +87,22 @@ b3Display::b3Display(b3Tx *tx)
 	m_depth  = tx->depth;
 	m_Buffer = (b3_pkd_color *)tx->b3GetData();
 	m_Tx     = tx;
+	m_OwnTx  = false;
+}
+
+b3Display::b3Display()
+{
+	b3_coord xSize;
+	b3_coord ySize;
+
+#ifdef LOW_RES
+	xSize = 240;
+	ySize = 180;
+#else
+	xSize = 768;
+	ySize = 576;
+#endif
+	b3Init(xSize,ySize,"");
 }
 
 b3Display::b3Display(const char *title)
@@ -123,6 +130,7 @@ void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 		title,
 		xSize,ySize);
+	m_OwnTx = true;
 	m_xMax  = xSize;
 	m_yMax  = ySize;
 	m_depth = 24;
@@ -134,6 +142,10 @@ void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 b3Display::~b3Display()
 {
 	b3PrintF(B3LOG_FULL,"Closing display...\n");
+	if ((m_OwnTx) && (m_Tx != null))
+	{
+		delete m_Tx;
+	}
 }
 
 
@@ -190,4 +202,9 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 
 void b3Display::b3Wait()
 {
+}
+
+b3_bool b3Display::b3SaveImage(const char *filename)
+{
+	return m_Tx->b3SaveImage(filename) == B3_OK;
 }

@@ -62,19 +62,16 @@ typedef unsigned long b3DrawContext;
 
 static inline int stricmp(const char *a,const char *b)
 {
-	int diff,i = 0;
+	int diff = 0,i;
 
-	do
+	for (i = 0;diff == 0;i++)
 	{
 		diff = tolower(a[i]) - tolower(b[i]);
 		if ((a[i] == 0) || (b[i] == 0))
 		{
 			return diff;
 		}
-		i++;
 	}
-	while (diff != 0);
-
 	return diff;
 }
 
