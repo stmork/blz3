@@ -17,6 +17,7 @@
 
 #include "blz3/b3Config.h"
 #include <dlfcn.h>
+#include <GL/glx.h>
 
 /*************************************************************************
 **                                                                      **
@@ -26,6 +27,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2004/09/22 18:56:22  sm
+**      - More fail safe procedure relocation.
+**
 **      Revision 1.5  2004/09/22 15:02:59  sm
 **      - Experimenting with OpenGL extensions. Especially the VBOs
 **        are interesting to avoid a data copy everytime when
@@ -192,27 +196,50 @@ procUnmapBufferARB   glUnmapBufferARB;
 GLuint  vbo[2];
 b3_bool has_vbo;
 
+void *get_ext_proc(const char *procedure)
+{
+	void *func;
+	
+	func = glXGetProcAddressARB(procedure);
+	if (func == null)
+	{
+		void *handle;
+
+		handle = dlopen(null,RTLD_LAZY);
+		if (handle != null)
+		{
+			func = dlsym(handle,procedure);
+		}
+	}
+	return func;
+}
+
 void init_vbo()
 {
 	void *handle;
 
 	char *extensions = glGetString(GL_EXTENSIONS);
-	if (strstr(extensions,"vertex_buffer_object") != 0)
+	if (strstr(extensions,"GL_ARB_vertex_buffer_object") != 0)
 	{
-		handle = dlopen("libGL.so",RTLD_LAZY);
-		if (handle != null)
-		{
-			glBindBufferARB  = dlsym(handle, "glBindBufferARB");
-			glGenBuffersARB  = dlsym(handle, "glGenBuffersARB");
-			glBufferDataARB  = dlsym(handle, "glBufferDataARB");
-			glMapBufferARB   = dlsym(handle, "glMapBufferARB");
-			glUnmapBufferARB = dlsym(handle, "glUnmapBufferARB");
+		glGenBuffersARB  = get_ext_proc("glGenBuffersARB");
+		glBindBufferARB  = get_ext_proc("glBindBufferARB");
+		glBufferDataARB  = get_ext_proc("glBufferDataARB");
+		glMapBufferARB   = get_ext_proc("glMapBufferARB");
+		glUnmapBufferARB = get_ext_proc("glUnmapBufferARB");
 
-			has_vbo = true;
-		}
-		else
+		has_vbo =
+			(glGenBuffersARB != null) &&
+			(glBindBufferARB != null) &&
+			(glBufferDataARB != null) &&
+			(glMapBufferARB  != null) &&
+			(glUnmapBufferARB != null);
+		if (!has_vbo)
 		{
-			has_vbo = false;
+			printf("glGenBuffersARB  = %p\n",glGenBuffersARB);
+			printf("glBindBufferARB  = %p\n",glBindBufferARB);
+			printf("glBufferDataARB  = %p\n",glBufferDataARB);
+			printf("glMapBufferARB   = %p\n",glMapBufferARB);
+			printf("glUnmapBufferARB = %p\n",glUnmapBufferARB);
 		}
 	}
 	else
@@ -250,6 +277,7 @@ void RenderScene()
 
 	if (has_vbo)
 	{
+		printf("drawing...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 
@@ -325,17 +353,21 @@ void SetupRC()
 		printf("Vertex buffer objects available.\n");
 		glGenBuffersARB(2,vbo);
 
+		printf("Setup vertices...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(boxVertices), NULL, GL_DYNAMIC_DRAW_ARB);
 		ptr = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		memcpy(ptr,boxVertices,sizeof(boxVertices));
 		glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
 
+		printf("Setup indices...\n");
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, sizeof(boxIndices), NULL, GL_DYNAMIC_DRAW_ARB);
 		ptr = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		memcpy(ptr,boxIndices,sizeof(boxIndices));
 		glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+
+		printf("Done.\n");
 	}
 	else
 	{
