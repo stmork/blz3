@@ -610,6 +610,30 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
+// BUMP_OAKPLANK
+class B3_PLUGIN b3BumpOakPlank : public b3Bump, public b3OakPlank
+{
+	b3Array<b3_f64> m_Amplitudes;
+	b3_f64          m_dX;
+	b3_f64          m_dY;
+
+public:
+	b3_f32          m_Amplitude;           // amplitude
+
+public:
+	B3_ITEM_INIT(b3BumpOakPlank);
+	B3_ITEM_LOAD(b3BumpOakPlank);
+
+	inline b3_bool b3NeedDeriv()
+	{
+		return true;
+	}
+
+	b3_bool b3Prepare();
+	void    b3Write();
+	void    b3BumpNormal(b3_ray *ray);
+};
+
 //flags for WaterBump, WaveBump
 #define BUMP_IPOINT          1
 #define BUMP_U_SUPPRESS_WAVE 2
@@ -788,7 +812,7 @@ public:
 
 	void     b3Write();
 	b3_bool  b3Prepare();
-	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+	b3_bool  b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 
 private:
 	void     b3Init();

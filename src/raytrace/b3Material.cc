@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2004/04/15 08:57:00  sm
+**      - Added b3BumpAokPlank
+**
 **      Revision 1.57  2004/04/11 19:04:20  sm
 **      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **
@@ -913,12 +916,6 @@ void b3MatWood::b3Init()
 	b3InitWood();
 }
 
-b3_bool b3MatWood::b3Prepare()
-{
-	b3PrepareWood();
-	return true;
-}
-
 void b3MatWood::b3Write()
 {
 	b3StoreColor(m_DiffColor);
@@ -949,6 +946,12 @@ void b3MatWood::b3Write()
 	b3StoreFloat(m_Ringy);
 	b3StoreColor(m_LightWood);
 	b3StoreColor(m_DarkWood);
+}
+
+b3_bool b3MatWood::b3Prepare()
+{
+	b3PrepareWood();
+	return true;
 }
 
 b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
@@ -1059,6 +1062,42 @@ void b3MatOakPlank::b3Init()
 	b3InitOakPlank();
 }
 
+void b3MatOakPlank::b3Write()
+{
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreFloat(m_xOffset);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreFloat(m_Wobble);
+	
+	// Store wood base definitions
+	b3StoreColor(m_LightWood);
+	b3StoreColor(m_DarkWood);
+	b3StoreFloat(m_yRot);
+	b3StoreFloat(m_zRot);
+	b3StoreFloat(m_RingSpacing);
+	b3StoreFloat(m_RingFrequency);
+	b3StoreFloat(m_RingNoise);
+	b3StoreFloat(m_RingNoiseFrequency);
+	b3StoreFloat(m_TrunkWobble);
+	b3StoreFloat(m_TrunkWobbleFrequency);
+	b3StoreFloat(m_AngularWobble);
+	b3StoreFloat(m_AngularWobbleFrequency);
+	b3StoreFloat(m_GrainFrequency);
+	b3StoreFloat(m_Grainy);
+	b3StoreFloat(m_Ringy);
+	}
+
 b3_bool b3MatOakPlank::b3Prepare()
 {
 	b3_index x,y,index = 0;
@@ -1100,42 +1139,6 @@ b3_bool b3MatOakPlank::b3Prepare()
 	}
 	
 	return true;
-}
-
-void b3MatOakPlank::b3Write()
-{
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
-	b3StoreVector(&m_Scale);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
-	b3StoreInt  (m_Flags);
-	b3StoreCount(m_xTimes);
-	b3StoreCount(m_yTimes);
-	b3StoreFloat(m_xOffset);
-	b3StoreFloat(m_xScale);
-	b3StoreFloat(m_yScale);
-	b3StoreFloat(m_Wobble);
-	
-	// Store wood base definitions
-	b3StoreColor(m_LightWood);
-	b3StoreColor(m_DarkWood);
-	b3StoreFloat(m_yRot);
-	b3StoreFloat(m_zRot);
-	b3StoreFloat(m_RingSpacing);
-	b3StoreFloat(m_RingFrequency);
-	b3StoreFloat(m_RingNoise);
-	b3StoreFloat(m_RingNoiseFrequency);
-	b3StoreFloat(m_TrunkWobble);
-	b3StoreFloat(m_TrunkWobbleFrequency);
-	b3StoreFloat(m_AngularWobble);
-	b3StoreFloat(m_AngularWobbleFrequency);
-	b3StoreFloat(m_GrainFrequency);
-	b3StoreFloat(m_Grainy);
-	b3StoreFloat(m_Ringy);
 }
 
 b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2004/04/15 08:57:00  sm
+**	- Added b3BumpAokPlank
+**
 **	Revision 1.19  2004/04/13 13:44:27  sm
 **	- Replaced some divisions by multiplications of their reciprocals.
-**
+**	
 **	Revision 1.18  2004/04/12 15:41:50  sm
 **	- Right computation of normal derivation.
 **	
@@ -672,21 +675,13 @@ b3BumpWood::b3BumpWood(b3_u32 *src) : b3Bump(src)
 	m_Ringy                  = b3InitFloat();
 }
 
-b3_bool b3BumpWood::b3Prepare()
-{
-	b3PrepareWood();
-
-	m_dX = 1.0 / BUMP_dX;
-	m_dY = 1.0 / BUMP_dY;
-
-	return true;
-}
-
 void b3BumpWood::b3Write()
 {
 	b3StoreInt(m_Flags);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Amplitude);
+
+	// Wood parameter
 	b3StoreFloat(m_yRot);
 	b3StoreFloat(m_zRot);
 	b3StoreFloat(m_RingSpacing);
@@ -702,12 +697,22 @@ void b3BumpWood::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
+b3_bool b3BumpWood::b3Prepare()
+{
+	b3PrepareWood();
+
+	m_dX = 1.0 / BUMP_dX;
+	m_dY = 1.0 / BUMP_dY;
+
+	return true;
+}
+
 void b3BumpWood::b3BumpNormal(b3_ray *ray)
 {
-	b3_vector point,n;
+	b3_vector   point,n;
 	b3_vector64 xTest,yTest;
-	b3_vector xWood,yWood;
-	b3_f64    Denom,wood,dX,dY,x,y;
+	b3_vector   xWood,yWood;
+	b3_f64      Denom,wood,dX,dY,x,y;
 
 //	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
@@ -727,6 +732,143 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
 	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY;
+
+	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
+	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
+	n.z = ray->xDeriv.z * dX - ray->yDeriv.y * dY;
+
+	Denom = b3Vector::b3Length(&ray->normal);
+	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
+	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
+	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Oak plank bump                                **
+**                                                                      **
+*************************************************************************/
+
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3Bump(sizeof(b3BumpOakPlank),class_type)
+{
+	m_Flags = 0;
+	m_Amplitude = 0.3f;
+	m_dX = 1.0 / BUMP_dX;
+	m_dY = 1.0 / BUMP_dY;
+	b3InitWood();
+}
+
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3Bump(src)
+{
+	// Bump parameter
+	m_Flags     = b3InitInt();
+	b3InitVector(&m_Scale);
+	m_Amplitude = b3InitFloat();
+
+	// Wood parameter
+	m_yRot                   = b3InitFloat();
+	m_zRot                   = b3InitFloat();
+	m_RingSpacing            = b3InitFloat();
+	m_RingFrequency          = b3InitFloat();
+	m_RingNoise              = b3InitFloat();
+	m_RingNoiseFrequency     = b3InitFloat();
+	m_TrunkWobble            = b3InitFloat();
+	m_TrunkWobbleFrequency   = b3InitFloat();
+	m_AngularWobble          = b3InitFloat();
+	m_AngularWobbleFrequency = b3InitFloat();
+	m_GrainFrequency         = b3InitFloat();
+	m_Grainy                 = b3InitFloat();
+	m_Ringy                  = b3InitFloat();
+
+	// Oak plank parameter
+	m_xTimes  = b3InitInt();
+	m_yTimes  = b3InitInt();
+	m_xOffset = b3InitFloat();
+	m_xScale  = b3InitFloat();
+	m_yScale  = b3InitFloat();
+	m_Wobble  = b3InitFloat();
+}
+
+void b3BumpOakPlank::b3Write()
+{
+	// Bump parameter
+	b3StoreFloat(m_Amplitude);
+	b3StoreVector(&m_Scale);
+	b3StoreInt(m_Flags);
+
+	// Wood parameter
+	b3StoreFloat(m_yRot);
+	b3StoreFloat(m_zRot);
+	b3StoreFloat(m_RingSpacing);
+	b3StoreFloat(m_RingFrequency);
+	b3StoreFloat(m_RingNoise);
+	b3StoreFloat(m_RingNoiseFrequency);
+	b3StoreFloat(m_TrunkWobble);
+	b3StoreFloat(m_TrunkWobbleFrequency);
+	b3StoreFloat(m_AngularWobble);
+	b3StoreFloat(m_AngularWobbleFrequency);
+	b3StoreFloat(m_GrainFrequency);
+	b3StoreFloat(m_Grainy);
+	b3StoreFloat(m_Ringy);
+
+	// Oak plank parameter
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreFloat(m_xOffset);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreFloat(m_Wobble);
+}
+
+b3_bool b3BumpOakPlank::b3Prepare()
+{
+	b3_index x,y;
+	b3_f64   fx,fy;
+	b3PrepareOakPlank();
+
+	m_dX = 1.0 / BUMP_dX;
+	m_dY = 1.0 / BUMP_dY;
+
+	m_Amplitudes.b3Clear();
+	for (y = 0;y < m_yTimes;y++)
+	{
+		fy = (b3_f64)y / m_yTimes;
+		for (x = 0;x < m_xTimes;x++)
+		{
+			fx = (b3_f64)x / m_xTimes;
+
+			m_Amplitudes.b3Add(m_Amplitude + b3Noise::b3SignedFilteredNoiseVector(fx,fy,0) * m_Amplitude * m_Wobble);
+		}
+	}
+
+	return true;
+}
+
+void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
+{
+	b3_vector   point,n;
+	b3_vector64 xTest,yTest;
+	b3_vector   xWood,yWood;
+	b3_f64      Denom,wood,dX,dY,x,y;
+
+//	b3Vector::b3Init(&point,&ray->ipoint);
+	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
+	wood = b3OakPlank::b3ComputeWood(&point);
+
+	// Note: xDeriv and yDeriv are not normalized!
+	x       = 1.0 / (b3Vector::b3Length(&ray->xDeriv) * m_dX);
+	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
+	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
+	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
+	dX = (b3OakPlank::b3ComputeWood (&xWood) - wood) * m_dX;
+
+	y       = 1.0 / (b3Vector::b3Length(&ray->yDeriv) * m_dY);
+	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
+	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
+	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
+	dY = (b3OakPlank::b3ComputeWood (&yWood) - wood) * m_dY;
 
 	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
 	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
