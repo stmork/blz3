@@ -25,7 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3FloatEdit.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3ShowImage.h"
 #include "b3SelectColor.h"
 #include "b3ShowRaytrace.h"
@@ -48,22 +48,26 @@ public:
 public:
 	              CDlgCreateMaterial();
 	             ~CDlgCreateMaterial();
-	void          b3PostProcess();
+	void          b3PostProcess(b3CondRectangle *stencil = null);
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCreateMaterial)
 	enum { IDD = IDD_CREATE_MATERIAL };
-	CB3ShowImage	m_PreviewTexture;
-	CB3ShowRaytrace	m_PreviewMaterialCtrl;
-	CB3FloatEdit	m_SpecExponentCtrl;
-	CB3FloatEdit	m_RefrCtrl;
-	CB3FloatEdit	m_ReflCtrl;
-	CB3FloatEdit	m_IORCtrl;
 	CB3ColorFieldSelector	m_SpecCtrl;
 	CB3ColorFieldSelector	m_DiffCtrl;
 	CB3ColorFieldSelector	m_AmbCtrl;
+	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefrValueCtrl;
+	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
+	CB3ShowImage	m_PreviewTexture;
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	BOOL	m_ReallyCreate;
 	BOOL	m_UseTexture;
+	double	m_RefrValue;
+	double	m_Reflection;
+	double	m_Refraction;
+	double	m_HighLight;
 	//}}AFX_DATA
 
 
@@ -84,7 +88,7 @@ protected:
 	afx_msg void OnChangeTexturePath();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnUseTexture();
-	afx_msg void OnSurfaceValuesChanged();
+	afx_msg void OnChangePreview(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

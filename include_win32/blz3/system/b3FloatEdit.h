@@ -15,8 +15,8 @@
 **
 */
 
-#if !defined(AFX_B3FLOATEDIT_H__9ECAE69B_DC04_11D5_89F4_00E018258F1A__INCLUDED_)
-#define AFX_B3FLOATEDIT_H__9ECAE69B_DC04_11D5_89F4_00E018258F1A__INCLUDED_
+#ifndef B3_SYSTEM_FLOATEDIT_H
+#define B3_SYSTEM_FLOATEDIT_H
 
 #if _MSC_VER > 1000
 #pragma once
@@ -83,4 +83,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_B3FLOATEDIT_H__9ECAE69B_DC04_11D5_89F4_00E018258F1A__INCLUDED_)
+#endif // !defined(B3_SYSTEM_FLOATEDIT_H)

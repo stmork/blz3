@@ -36,6 +36,10 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/03/01 20:26:40  sm
+**	- Added CB3FloatSpinButtonCtrl for conveniant input.
+**	- Made some minor changes and tests.
+**
 **	Revision 1.5  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -43,7 +47,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -160,12 +164,14 @@ int CB3ShapeDialog::b3Edit(
 		dlg_csg.b3PostProcess();
 		if (create && (shape != null))
 		{
-			dlg_material.b3PostProcess();
 			dlg_stencil.b3PostProcess();
+			dlg_material.b3PostProcess(dlg_stencil.m_Stencil);
+
 			if (dlg_material.m_Material != null)
 			{
 				shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
 			}
+
 			if (dlg_stencil.m_Stencil != null)
 			{
 				shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);

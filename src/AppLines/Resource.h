@@ -135,6 +135,7 @@
 #define IDC_SS4_BLUE_LEGEND             1038
 #define IDC_PFLTR_GAUSS                 1039
 #define IDC_SPP_SPIN                    1040
+#define IDC_FULCRUM_CLR                 1040
 #define IDC_SCAN_PARA                   1041
 #define IDC_SPF_SPIN                    1042
 #define IDC_SNAP_TO_GRID                1043
@@ -144,7 +145,6 @@
 #define IDC_FULCRUM_X                   1047
 #define IDC_FULCRUM_Y                   1048
 #define IDC_FULCRUM_Z                   1049
-#define IDC_FULCRUM_CLR                 1040
 #define IDC_NEW_ITEM_NAME               1051
 #define IDC_ITEM_CREATE_LABEL           1052
 #define IDC_ACT_LENS_FLARE              1053
@@ -289,6 +289,14 @@
 #define IDC_DIR1_LEN                    1192
 #define IDC_DIR2_LEN                    1193
 #define IDC_DIR3_LEN                    1194
+#define IDC_REFLECTANCE_SPIN            1197
+#define IDC_REFRACTANCE_SPIN            1198
+#define IDC_X_START_SPIN                1198
+#define IDC_INDEX_OF_REFRACTION_SPIN    1199
+#define IDC_X_END_SPIN                  1199
+#define IDC_SPEC_EXPONENT_SPIN          1200
+#define IDC_Y_START_SPIN                1200
+#define IDC_Y_END_SPIN                  1201
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -470,7 +478,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        197
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1196
+#define _APS_NEXT_CONTROL_VALUE         1199
 #define _APS_NEXT_SYMED_VALUE           60076
 #endif
 #endif

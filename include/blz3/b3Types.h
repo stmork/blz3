@@ -153,4 +153,11 @@ struct b3_color
 #define M_PI 3.14159265
 #endif
 
+#define B3_ABS(a)           ((a) < 0 ? (-(a)) : (a))
+#define B3_MIN(a,b)         ((a) < (b) ? (a) : (b))
+#define B3_MAX(a,b)         ((a) < (b) ? (b) : (a))
+#define B3_LIMIT(v,min,max) { if ((v) < (min)) (v) = (min); if ((v) > (max)) (v) = (max); }
+#define B3_RAD(a)           ((a) * M_PI / 180.0)
+#define B3_DEGREE(a)        ((a) * 180.0 / M_PI)
+
 #endif

@@ -710,7 +710,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Info über Lines III"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,21,20
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
     LTEXT           "AppLines Version 1.0",IDC_VERSION,40,10,119,8,
                     SS_NOPREFIX
     LTEXT           "Copyright (C) 2001",IDC_COPYRIGHT,40,25,119,25
@@ -802,7 +802,7 @@ BEGIN
     LTEXT           "",IDC_NEB_COLOR,10,10,60,20,SS_SUNKEN | NOT WS_GROUP
     CONTROL         "",IDC_NEB_PREVIEW,"Static",SS_BLACKFRAME | SS_SUNKEN,85,
                     10,145,100
-    EDITTEXT        IDC_NEB_DISTANCE,10,75,60,15,ES_AUTOHSCROLL
+    EDITTEXT        IDC_NEB_DISTANCE,10,75,60,12,ES_AUTOHSCROLL
     LTEXT           "Rel. Entfernung:",IDC_STATIC,10,65,52,8
 END
 
@@ -813,7 +813,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "aktiviert",IDC_ACT_LENS_FLARE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,100,41,10
-    EDITTEXT        IDC_LF_VALUE,10,75,60,15,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LF_VALUE,10,75,60,12,ES_AUTOHSCROLL
     PUSHBUTTON      "Farbe ändern...",IDC_LF_CHANGE,10,40,60,15
     LTEXT           "Flare-Stärke",IDC_STATIC,10,65,39,8
     LTEXT           "",IDC_LF_COLOR,10,10,60,20,SS_SUNKEN | NOT WS_GROUP
@@ -1317,13 +1317,25 @@ BEGIN
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,90,30,60,15
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,90,65,60,15
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,90,100,60,15
+    EDITTEXT        IDC_REFLECTANCE,195,30,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,240,30,11,15
+    EDITTEXT        IDC_REFRACTANCE,195,60,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,240,60,11,15
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,260,30,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,305,30,11,15
+    EDITTEXT        IDC_SPEC_EXPONENT,260,60,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,305,60,11,15
     CONTROL         "Textur verwenden",IDC_TEXTURE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,90,150,73,10
     PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,90,170,60,15
-    EDITTEXT        IDC_REFLECTANCE,195,30,45,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_REFRACTANCE,195,60,45,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,260,30,45,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_SPEC_EXPONENT,260,60,45,12,ES_AUTOHSCROLL
     CONTROL         "Material anlegen",IDC_REALLY_CREATE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,20,205,68,10
     LTEXT           "",IDC_COLOR_AMBIENT,20,30,60,15,SS_SUNKEN | NOT 
@@ -1354,9 +1366,21 @@ CAPTION "Ausschnitt"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_X_START,20,40,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,65,40,11,14
     EDITTEXT        IDC_X_END,75,40,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,120,40,
+                    11,14
     EDITTEXT        IDC_Y_START,20,100,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,65,100,11,14
     EDITTEXT        IDC_Y_END,75,100,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,120,100,
+                    11,14
     CONTROL         "Relativ",IDC_RELATIVE,"Button",BS_AUTORADIOBUTTON | 
                     WS_GROUP | WS_TABSTOP,140,20,38,10
     CONTROL         "Einheit",IDC_UNIT,"Button",BS_AUTORADIOBUTTON | 
@@ -1785,17 +1809,44 @@ BEGIN
     ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
     ID_DRAWING_PERF         "#####################################"
     ID_OBJECT_EDIT          "Editiert ein Objekt.\nObjekt editieren"
+    ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
+    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
+    ID_COORD_X              "x: 00000000.00"
     ID_COORD_Y              "y: 00000000.00"
     ID_COORD_Z              "z: 00000000.00"
+    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
+    ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
+    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
+    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
+    IDS_TOOLBAR_CAMERA      "Kamera..."
+    IDS_TOOLBAR_LIGHT       "Lichtquelle..."
+    IDS_DIALOGBAR_FULCRUM   "Drehkreuz"
+    IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
+    IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
+    IDS_DOC_READ            "Datei %s wird geladen..."
+    IDS_DOC_REORG           "Die Objekte werden angeordnet..."
+    IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
+    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
+    IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
     IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
     IDS_NEW_OBJECT          "Neues Objekt"
     IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
     IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
     IDS_DIALOGBAR_ACTION    "Bewegungen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
     IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
     IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
@@ -1805,6 +1856,13 @@ BEGIN
     IDS_PRT_MEASURE         "Maßstab: 1:%d"
     IDS_PRT_FILENAME        "Dateiname: %s"
     IDS_PRT_VIEWNAME        "Ansicht: %s"
+    IDS_PRT_UNIT            "Einheit: %s"
+    IDS_PRT_DATE            "Datum: %s"
+    IDS_UNKNOWN             "unbekannt"
+    IDS_SHAPE_AREA          "Fläche"
+    IDS_SHAPE_DISK          "Scheibe"
+    IDS_SHAPE_SPHERE        "Kugel"
+    IDS_SHAPE_CYLINDER      "Zylinder"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -1926,6 +1984,11 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TEXTURE_FILTER      "Alle Dateien (*.*)|*.*|BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff||"
     IDS_TOOLBAR_MAINFRAME   "Datei..."
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
@@ -1936,6 +1999,10 @@ BEGIN
     IDS_SCENE_NEW           "Unbenannt"
     IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
     IDS_TITLE_SCENE         "Sceneneigenschaften"
+    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
+    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
+    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
+    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1978,11 +2045,15 @@ BEGIN
     ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
     ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
-    IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
     ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2019,31 +2090,6 @@ BEGIN
     ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
     ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
     ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_TEXTURE_FILTER      "Alle Dateien (*.*)|*.*|BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff||"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
-    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
-    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
-    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
-    IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
-    IDS_TOOLBAR_CAMERA      "Kamera..."
-    IDS_TOOLBAR_LIGHT       "Lichtquelle..."
-    IDS_DIALOGBAR_FULCRUM   "Drehkreuz"
-    IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
-    IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
-    IDS_DOC_READ            "Datei %s wird geladen..."
-    IDS_DOC_REORG           "Die Objekte werden angeordnet..."
-    IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
-    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
-    IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
-    ID_COORD_X              "x: 00000000.00"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2089,32 +2135,6 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
-    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
-    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_PRT_UNIT            "Einheit: %s"
-    IDS_PRT_DATE            "Datum: %s"
-    IDS_UNKNOWN             "unbekannt"
-    IDS_SHAPE_AREA          "Fläche"
-    IDS_SHAPE_DISK          "Scheibe"
-    IDS_SHAPE_SPHERE        "Kugel"
-    IDS_SHAPE_CYLINDER      "Zylinder"
     IDS_SHAPE_CONE          "Kegel"
     IDS_SHAPE_ELLIPSOID     "Ellipsoid"
     IDS_SHAPE_BOX           "Quader"
@@ -2124,10 +2144,6 @@ BEGIN
     IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
     IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
     IDS_SHAPE_TRIANGLES     "Dreiecke"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_CAMERA_UNIT         "Maßeinheit: %s"
     IDS_CSG_SPHERE          "CSG Kugel (%s)"
     IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
@@ -2135,6 +2151,10 @@ BEGIN
     IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
     IDS_CSG_BOX             "CSG Quader (%s)"
     IDS_CSG_TORUS           "CSG Torus (%s)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_CSG_MODE_NONE       " "
     IDS_CSG_MODE_UNION      "Vereinigung"
     IDS_CSG_MODE_INTERSECT  "Schnittmenge"
@@ -2144,10 +2164,6 @@ BEGIN
     IDS_STENCIL_START_UNIT  "rel. Minimum"
     IDS_STENCIL_END_UNIT    "rel. Maximum"
     IDS_STENCIL_START_LENGTH "Startlänge"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_STENCIL_END_LENGTH  "Endlänge"
     IDS_STENCIL_START_ANGLE "Startwinkel"
     IDS_STENCIL_END_ANGLE   "Endwinkel"

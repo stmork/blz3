@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/03/01 20:26:40  sm
+**	- Added CB3FloatSpinButtonCtrl for conveniant input.
+**	- Made some minor changes and tests.
+**
 **	Revision 1.20  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
 **	  on example camera settings.
-**
+**	
 **	Revision 1.19  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -757,9 +761,6 @@ void CB3ShapeAction::b3LDown(b3_coord x,b3_coord y)
 		CB3Action::b3LDown(x,y);
 	}
 }
-
-#define B3_LIMIT(v,min,max) { if ((v) < (min)) (v) = (min); if ((v) > (max)) (v) = (max); }
-#define B3_RAD(a)    ((a) * M_PI / 180.0)
 
 void CB3ShapeAction::b3LMove(b3_coord x,b3_coord y)
 {

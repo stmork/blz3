@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/01 20:26:40  sm
+**	- Added CB3FloatSpinButtonCtrl for conveniant input.
+**	- Made some minor changes and tests.
+**
 **	Revision 1.2  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -39,7 +43,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.1  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -56,17 +60,45 @@
 
 IMPLEMENT_DYNCREATE(CDlgCreateStencil, CPropertyPage)
 
+b3_f64 CDlgCreateStencil::m_Increments[3] =
+{
+	0.1,1.0,1.0
+};
+
+b3_f64 CDlgCreateStencil::m_Accels[3] =
+{
+	0.25,5.0,15.0
+};
+
+int CDlgCreateStencil::m_Digits[3] =
+{
+	3,2,1
+};
+
 CDlgCreateStencil::CDlgCreateStencil() : CPropertyPage(CDlgCreateStencil::IDD)
 {
+	CB3App       *app = CB3GetApp();
+
 	//{{AFX_DATA_INIT(CDlgCreateStencil)
 	m_ReallyCreate = FALSE;
+	m_yEndLegend = _T("");
+	m_yStartLegend = _T("");
+	m_xEndLegend = _T("");
+	m_xStartLegend = _T("");
 	m_Unit = 1;
-	m_yEnd = _T("");
-	m_yStart = _T("");
-	m_xEnd = _T("");
-	m_xStart = _T("");
+	m_xEnd = 0.0;
+	m_xStart = 0.0;
+	m_yEnd = 0.0;
+	m_yStart = 0.0;
 	//}}AFX_DATA_INIT
 	m_Stencil = null;
+
+	m_Unit         = app->GetProfileInt(CB3ClientString(),"stencil.unit",1);
+	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"stencil.really create",1);
+	m_Limit.x1     = app->b3ReadProfileFloat("stencil.xMin",0);
+	m_Limit.x2     = app->b3ReadProfileFloat("stencil.xMax",1);
+	m_Limit.y1     = app->b3ReadProfileFloat("stencil.yMin",0);
+	m_Limit.y2     = app->b3ReadProfileFloat("stencil.yMax",1);
 }
 
 CDlgCreateStencil::~CDlgCreateStencil()
@@ -77,16 +109,20 @@ void CDlgCreateStencil::DoDataExchange(CDataExchange* pDX)
 {
 	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgCreateStencil)
-	DDX_Control(pDX, IDC_X_START, m_xStartCtrl);
-	DDX_Control(pDX, IDC_X_END, m_xEndCtrl);
-	DDX_Control(pDX, IDC_Y_START, m_yStartCtrl);
-	DDX_Control(pDX, IDC_Y_END, m_yEndCtrl);
+	DDX_Control(pDX, IDC_X_START_SPIN, m_xStartCtrl);
+	DDX_Control(pDX, IDC_X_END_SPIN, m_xEndCtrl);
+	DDX_Control(pDX, IDC_Y_START_SPIN, m_yStartCtrl);
+	DDX_Control(pDX, IDC_Y_END_SPIN, m_yEndCtrl);
 	DDX_Check(pDX, IDC_REALLY_CREATE, m_ReallyCreate);
-	DDX_Text(pDX, IDC_Y_END_LEGEND, m_yEnd);
-	DDX_Text(pDX, IDC_Y_START_LEGEND, m_yStart);
-	DDX_Text(pDX, IDC_X_END_LEGEND, m_xEnd);
-	DDX_Text(pDX, IDC_X_START_LEGEND, m_xStart);
+	DDX_Text(pDX, IDC_Y_END_LEGEND, m_yEndLegend);
+	DDX_Text(pDX, IDC_Y_START_LEGEND, m_yStartLegend);
+	DDX_Text(pDX, IDC_X_END_LEGEND, m_xEndLegend);
+	DDX_Text(pDX, IDC_X_START_LEGEND, m_xStartLegend);
 	DDX_Radio(pDX, IDC_RELATIVE, m_Unit);
+	DDX_Text(pDX, IDC_X_END, m_xEnd);
+	DDX_Text(pDX, IDC_X_START, m_xStart);
+	DDX_Text(pDX, IDC_Y_END, m_yEnd);
+	DDX_Text(pDX, IDC_Y_START, m_yStart);
 	//}}AFX_DATA_MAP
 }
 
@@ -95,10 +131,10 @@ BEGIN_MESSAGE_MAP(CDlgCreateStencil, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgCreateStencil)
 	ON_BN_CLICKED(IDC_UNIT, OnUnitChanged)
 	ON_BN_CLICKED(IDC_RELATIVE, OnUnitChanged)
-	ON_EN_KILLFOCUS(IDC_X_START, OnBoundChanged)
-	ON_EN_KILLFOCUS(IDC_X_END, OnBoundChanged)
-	ON_EN_KILLFOCUS(IDC_Y_START, OnBoundChanged)
-	ON_EN_KILLFOCUS(IDC_Y_END, OnBoundChanged)
+	ON_EN_KILLFOCUS(IDC_X_START, OnLimitChanged)
+	ON_EN_KILLFOCUS(IDC_X_END, OnLimitChanged)
+	ON_EN_KILLFOCUS(IDC_Y_START, OnLimitChanged)
+	ON_EN_KILLFOCUS(IDC_Y_END, OnLimitChanged)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -107,31 +143,22 @@ END_MESSAGE_MAP()
 
 BOOL CDlgCreateStencil::OnInitDialog() 
 {
-	CB3App       *app = CB3GetApp();
-
 	m_Shape->b3GetStencilBoundInfo(&m_Bound);
-
-	m_Unit         = app->GetProfileInt(CB3ClientString(),"stencil.unit",1);
-	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"stencil.really create",1);
-	m_Limit.x1 = app->b3ReadProfileFloat("stencil.xMin",m_Bound.xMin);
-	m_Limit.x2 = app->b3ReadProfileFloat("stencil.xMax",m_Bound.xMax);
-	m_Limit.y1 = app->b3ReadProfileFloat("stencil.yMin",m_Bound.yMin);
-	m_Limit.y2 = app->b3ReadProfileFloat("stencil.yMax",m_Bound.yMax);
 
 	// Init horizontal legend
 	switch(m_Bound.xUnit)
 	{
 	case B3_STENCIL_UNIT:
-		m_xStart.LoadString(IDS_STENCIL_START_UNIT);
-		m_xEnd.LoadString(IDS_STENCIL_END_UNIT);
+		m_xStartLegend.LoadString(IDS_STENCIL_START_UNIT);
+		m_xEndLegend.LoadString(IDS_STENCIL_END_UNIT);
 		break;
 	case B3_STENCIL_LENGTH:
-		m_xStart.LoadString(IDS_STENCIL_START_LENGTH);
-		m_xEnd.LoadString(IDS_STENCIL_END_LENGTH);
+		m_xStartLegend.LoadString(IDS_STENCIL_START_LENGTH);
+		m_xEndLegend.LoadString(IDS_STENCIL_END_LENGTH);
 		break;
 	case B3_STENCIL_ANGLE:
-		m_xStart.LoadString(IDS_STENCIL_START_ANGLE);
-		m_xEnd.LoadString(IDS_STENCIL_END_ANGLE);
+		m_xStartLegend.LoadString(IDS_STENCIL_START_ANGLE);
+		m_xEndLegend.LoadString(IDS_STENCIL_END_ANGLE);
 		break;
 	}
 
@@ -139,25 +166,21 @@ BOOL CDlgCreateStencil::OnInitDialog()
 	switch(m_Bound.yUnit)
 	{
 	case B3_STENCIL_UNIT:
-		m_yStart.LoadString(IDS_STENCIL_START_UNIT);
-		m_yEnd.LoadString(IDS_STENCIL_END_UNIT);
+		m_yStartLegend.LoadString(IDS_STENCIL_START_UNIT);
+		m_yEndLegend.LoadString(IDS_STENCIL_END_UNIT);
 		break;
 	case B3_STENCIL_LENGTH:
-		m_yStart.LoadString(IDS_STENCIL_START_LENGTH);
-		m_yEnd.LoadString(IDS_STENCIL_END_LENGTH);
+		m_yStartLegend.LoadString(IDS_STENCIL_START_LENGTH);
+		m_yEndLegend.LoadString(IDS_STENCIL_END_LENGTH);
 		break;
 	case B3_STENCIL_ANGLE:
-		m_yStart.LoadString(IDS_STENCIL_START_ANGLE);
-		m_yEnd.LoadString(IDS_STENCIL_END_ANGLE);
+		m_yStartLegend.LoadString(IDS_STENCIL_START_ANGLE);
+		m_yEndLegend.LoadString(IDS_STENCIL_END_ANGLE);
 		break;
 	}
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_xStartCtrl.b3SetDigits(3,2);
-	m_xEndCtrl.b3SetDigits(3,2);
-	m_yStartCtrl.b3SetDigits(3,2);
-	m_yEndCtrl.b3SetDigits(3,2);
 	b3UpdateUI();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -171,13 +194,13 @@ void CDlgCreateStencil::OnUnitChanged()
 	b3UpdateUI();
 }
 
-void CDlgCreateStencil::OnBoundChanged() 
+void CDlgCreateStencil::OnLimitChanged() 
 {
 	// TODO: Add your control notification handler code here
-	m_Limit.x1 = m_xStartCtrl.m_Value;
-	m_Limit.x2 = m_xEndCtrl.m_Value;
-	m_Limit.y1 = m_yStartCtrl.m_Value;
-	m_Limit.y2 = m_yEndCtrl.m_Value;
+	m_Limit.x1 = m_xStartCtrl.b3GetPos();
+	m_Limit.x2 = m_xEndCtrl.b3GetPos();
+	m_Limit.y1 = m_yStartCtrl.b3GetPos();
+	m_Limit.y2 = m_yEndCtrl.b3GetPos();
 
 	// Normalize values
 	if (m_Unit != 0)
@@ -193,25 +216,25 @@ void CDlgCreateStencil::b3UpdateUI()
 {
 	if (m_Unit == 0)
 	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin,m_Bound.xMax);
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin,m_Bound.xMax);
-		m_yStartCtrl.b3SetRange(m_Bound.yMin,m_Bound.yMax);
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin,m_Bound.yMax);
-		m_xStartCtrl.b3SetValue(m_Limit.x1);
-		m_xEndCtrl.b3SetValue(  m_Limit.x2);
-		m_yStartCtrl.b3SetValue(m_Limit.y1);
-		m_yEndCtrl.b3SetValue(  m_Limit.y2);
+		m_xStartCtrl.b3SetRange(m_Bound.xMin,m_Bound.xMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
+		m_xEndCtrl.b3SetRange(  m_Bound.xMin,m_Bound.xMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
+		m_yStartCtrl.b3SetRange(m_Bound.yMin,m_Bound.yMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
+		m_yEndCtrl.b3SetRange(  m_Bound.yMin,m_Bound.yMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
+		m_xStartCtrl.b3SetPos(m_Limit.x1);
+		m_xEndCtrl.b3SetPos(  m_Limit.x2);
+		m_yStartCtrl.b3SetPos(m_Limit.y1);
+		m_yEndCtrl.b3SetPos(  m_Limit.y2);
 	}
 	else
 	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
-		m_yStartCtrl.b3SetRange(m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
-		m_xStartCtrl.b3SetValue(m_Limit.x1 * m_Bound.xFactor);
-		m_xEndCtrl.b3SetValue(  m_Limit.x2 * m_Bound.xFactor);
-		m_yStartCtrl.b3SetValue(m_Limit.y1 * m_Bound.yFactor);
-		m_yEndCtrl.b3SetValue(  m_Limit.y2 * m_Bound.yFactor);
+		m_xStartCtrl.b3SetRange(m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor,m_Digits[m_Bound.xUnit],m_Increments[m_Bound.xUnit]);
+		m_xEndCtrl.b3SetRange(  m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor,m_Digits[m_Bound.xUnit],m_Increments[m_Bound.xUnit]);
+		m_yStartCtrl.b3SetRange(m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor,m_Digits[m_Bound.yUnit],m_Increments[m_Bound.yUnit]);
+		m_yEndCtrl.b3SetRange(  m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor,m_Digits[m_Bound.yUnit],m_Increments[m_Bound.yUnit]);
+		m_xStartCtrl.b3SetPos(m_Limit.x1 * m_Bound.xFactor);
+		m_xEndCtrl.b3SetPos(  m_Limit.x2 * m_Bound.xFactor);
+		m_yStartCtrl.b3SetPos(m_Limit.y1 * m_Bound.yFactor);
+		m_yEndCtrl.b3SetPos(  m_Limit.y2 * m_Bound.yFactor);
 	}
 }
 

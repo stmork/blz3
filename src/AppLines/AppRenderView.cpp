@@ -35,6 +35,10 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2002/03/01 20:26:40  sm
+**	- Added CB3FloatSpinButtonCtrl for conveniant input.
+**	- Made some minor changes and tests.
+**
 **	Revision 1.13  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -42,7 +46,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.12  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
 **	
@@ -252,7 +256,9 @@ void CAppRenderView::b3ListPixelFormats(HDC dc)
 int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
+	{
 		return -1;
+	}
 	
 	// TODO: Add your specialized creation code here
 	m_glDC = GetDC()->GetSafeHdc();
@@ -262,6 +268,18 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_glPixelFormatIndex = ChoosePixelFormat(m_glDC,&window_pixelformat);
 	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&window_pixelformat);
 	m_glGC = wglCreateContext(m_glDC);
+
+#ifdef _DEBUG
+	int value;
+
+	b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
+		m_glPixelFormatIndex);
+	glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
+	glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
+	glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);
+	glGetIntegerv(GL_ALPHA_BITS,&value); b3PrintF(B3LOG_DEBUG,"A: %2d\n",value);
+	glGetIntegerv(GL_DEPTH_BITS,&value); b3PrintF(B3LOG_DEBUG,"Z: %2d\n",value);
+#endif
 
 	return 0;
 }

@@ -75,13 +75,10 @@ static inline int stricmp(const char *a,const char *b)
 	return diff;
 }
 
-#define B3_FRAN(x)      ((float)x        * drand48())
-#define B3_IRAN(x)      ((long)((float)x * drand48()))
-#define B3_ABS(a)        ((a) < 0 ? (-(a)) : (a))
-#define B3_SWAP(a,b)    {(a)^=(b);(b)^=(a);(a)^=(b);}
-#define B3_PSWAP(a,b)   b3Runtime::b3PSwap(a,b)
-#define B3_MIN(a,b)     ((a) < (b) ? (a) : (b))
-#define B3_MAX(a,b)     ((a) < (b) ? (b) : (a))
+#define B3_FRAN(x)          ((float)x        * drand48())
+#define B3_IRAN(x)          ((long)((float)x * drand48()))
+#define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
+#define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
 
 #define B3_BEEP         b3Runtime::b3Beep()
 

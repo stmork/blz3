@@ -87,10 +87,14 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.20  2002/03/01 20:26:38  sm
+**	- Added CB3FloatSpinButtonCtrl for conveniant input.
+**	- Made some minor changes and tests.
+**
 **	Revision 1.19  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
-**
+**	
 **	Revision 1.18  2001/11/11 11:51:19  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -221,13 +225,10 @@ typedef CDC b3DrawContext;
 #	define no_USE_MOTIF
 #endif
 
-#define B3_FRAN(x)             ((x) * (b3_f64)rand() / RAND_MAX)
-#define B3_IRAN(x)      ((long)((x) * (b3_f64)rand() / RAND_MAX))
-#define B3_ABS(a)        ((a) < 0 ? (-(a)) : (a))
-#define B3_SWAP(a,b)    {(a)^=(b);(b)^=(a);(a)^=(b);}
-#define B3_PSWAP(a,b)   b3Runtime::b3PSwap(a,b)
-#define B3_MIN(a,b)     ((a) < (b) ? (a) : (b))
-#define B3_MAX(a,b)     ((a) < (b) ? (b) : (a))
+#define B3_FRAN(x)          ((x) * (b3_f64)rand() / RAND_MAX)
+#define B3_IRAN(x)          ((long)((x) * (b3_f64)rand() / RAND_MAX))
+#define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
+#define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
 
 #define B3_BEEP         b3Runtime::b3Beep()
 

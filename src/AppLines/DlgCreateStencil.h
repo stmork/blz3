@@ -25,7 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3FloatEdit.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateStencil dialog
@@ -34,6 +34,10 @@ class CDlgCreateStencil : public CPropertyPage
 {
 	b3_stencil_bound m_Bound;
 	b3_stencil_limit m_Limit;
+
+	static b3_f64 m_Increments[3];
+	static b3_f64 m_Accels[3];
+	static int    m_Digits[3];
 
 	DECLARE_DYNCREATE(CDlgCreateStencil)
 
@@ -50,16 +54,20 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgCreateStencil)
 	enum { IDD = IDD_CREATE_STENCIL };
-	CB3FloatEdit	m_xStartCtrl;
-	CB3FloatEdit	m_xEndCtrl;
-	CB3FloatEdit	m_yStartCtrl;
-	CB3FloatEdit	m_yEndCtrl;
+	CB3FloatSpinButtonCtrl	m_xStartCtrl;
+	CB3FloatSpinButtonCtrl	m_xEndCtrl;
+	CB3FloatSpinButtonCtrl	m_yStartCtrl;
+	CB3FloatSpinButtonCtrl	m_yEndCtrl;
 	BOOL	m_ReallyCreate;
-	CString	m_yEnd;
-	CString	m_yStart;
-	CString	m_xEnd;
-	CString	m_xStart;
+	CString	m_yEndLegend;
+	CString	m_yStartLegend;
+	CString	m_xEndLegend;
+	CString	m_xStartLegend;
 	int		m_Unit;
+	double	m_xEnd;
+	double	m_xStart;
+	double	m_yEnd;
+	double	m_yStart;
 	//}}AFX_DATA
 
 
@@ -78,7 +86,7 @@ protected:
 	//{{AFX_MSG(CDlgCreateStencil)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnUnitChanged();
-	afx_msg void OnBoundChanged();
+	afx_msg void OnLimitChanged();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
