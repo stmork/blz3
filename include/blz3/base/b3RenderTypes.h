@@ -22,19 +22,19 @@
 
 #define B3_MAX_RENDER_SUBDIV 48
 
-typedef enum
+enum b3_render_mode
 {
 	B3_RENDER_UNDIFINED = -1,
 	B3_RENDER_NOTHING   =  0,
 	B3_RENDER_LINE,
 	B3_RENDER_FILLED
-} b3_render_mode;
+};
 
-typedef enum
+enum b3_matrix_mode
 {
 	B3_MATRIX_OBJECT,
 	B3_MATRIX_PROJECTION
-} b3_matrix_mode;
+};
 
 /*
 ** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));

@@ -30,13 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/12/27 20:44:32  sm
+**	- Corrected some typedefs
+**
 **	Revision 1.6  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.5  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -86,13 +89,13 @@ extern "C"
 
 
 	/* Expanded data destination object for stdio output */
-typedef struct
+struct my_destination_mgr
 {
 	struct jpeg_destination_mgr pub; /* public fields */
 
 	b3File *outfile; // target stream
 	JOCTET *buffer;  // start of buffer
-} my_destination_mgr;
+};
 
 typedef my_destination_mgr * my_dest_ptr;
 

@@ -48,13 +48,13 @@
 #define B3_DT_LOCAL   1
 #define B3_DT_DIFF    2
 
-typedef enum
+enum b3_date_error
 {
 	B3_DATE_ERROR = -1,
 	B3_DATE_OK    =  0,
 	B3_DATE_ILLEGAL,
 	B3_DATE_ILLEGAL_MODE
-} b3_date_error;
+};
 
 typedef b3Exception<b3_date_error,'DAT'> b3DateException;
 
