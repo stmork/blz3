@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/02 15:48:37  sm
+**	- Added automated expand/collapse to hierarchy tree.
+**
 **	Revision 1.5  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.4  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -116,11 +119,11 @@ BOOL CDlgHierarchy::OnInitDialog()
 }
 
 void CDlgHierarchy::b3AddBBoxes (
-	b3BBox    *BBox,
-	HTREEITEM  parent)
+	HTREEITEM  parent,
+	b3BBox    *BBox)
 {
-	TV_INSERTSTRUCT item;
-	HTREEITEM       newItem;
+	TV_INSERTSTRUCT insert;
+	HTREEITEM       item;
 	long            imgNum;
 	b3BBox         *sub;
 
@@ -131,19 +134,23 @@ void CDlgHierarchy::b3AddBBoxes (
 		if (sub                           != null) imgNum += 1;
 		if (BBox->b3GetShapeHead()->First != null) imgNum += 2;
 
-		item.hParent      = parent;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-		item.item.pszText        = BBox->m_BoxName;
-		item.item.cchTextMax     = B3_BOXSTRINGLEN;
-		item.item.lParam         = (long)BBox;
-		item.item.iImage         = imgNum;
-		item.item.iSelectedImage = imgNum + 5;
+		insert.hParent      = parent;
+		insert.hInsertAfter = TVI_LAST;
+		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+		insert.item.pszText        = BBox->m_BoxName;
+		insert.item.cchTextMax     = B3_BOXSTRINGLEN;
+		insert.item.lParam         = (long)BBox;
+		insert.item.iImage         = imgNum;
+		insert.item.iSelectedImage = imgNum + 5;
 
-		newItem = m_Hierarchy.InsertItem (&item);
+		item = m_Hierarchy.InsertItem (&insert);
 		if (sub != null)
 		{
-			b3AddBBoxes (sub,newItem);
+			b3AddBBoxes (item,sub);
+			if (BBox->b3IsExpanded())
+			{
+				m_Hierarchy.Expand(item,TVE_EXPAND);
+			}
 		}
 
 		BBox = (b3BBox *)BBox->Succ;
@@ -152,47 +159,67 @@ void CDlgHierarchy::b3AddBBoxes (
 
 void CDlgHierarchy::b3InitTree()
 {
-	TV_INSERTSTRUCT item;
-	long            num;
+	TV_INSERTSTRUCT insert;
+	HTREEITEM       root;
 
 	m_Hierarchy.DeleteAllItems();
 	b3Free();
 
 	if (m_Scene != null)
 	{
-		num = m_Scene->b3GetBBoxCount();
-		m_TreeItems = (HTREEITEM *)b3Alloc(sizeof(HTREEITEM) * num);
-		if (m_TreeItems == null)
-		{
-			return;
-		}
+		insert.hParent      = TVI_ROOT;
+		insert.hInsertAfter = TVI_FIRST;
+		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+		insert.item.pszText = m_Scene->b3GetName();
+		insert.item.lParam  = 0;
+		insert.item.iImage         = 4;
+		insert.item.iSelectedImage = 9;
+		root = m_Hierarchy.InsertItem (&insert);
 
-		item.hParent      = TVI_ROOT;
-		item.hInsertAfter = TVI_FIRST;
-		item.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-		item.item.pszText = "Welt";
-		item.item.lParam  = 0;
-		item.item.iImage         = 4;
-		item.item.iSelectedImage = 9;
-		m_TreeItems[0]    = m_Hierarchy.InsertItem (&item);
-
-		b3AddBBoxes (m_Scene->b3GetFirstBBox(),m_TreeItems[0]);
+		b3AddBBoxes (root,m_Scene->b3GetFirstBBox());
+		m_Hierarchy.Expand(root,TVE_EXPAND);
 	}
+}
+
+HTREEITEM CDlgHierarchy::b3FindBBox(HTREEITEM parent,b3BBox *BBox)
+{
+	HTREEITEM item;
+
+	for(item  = m_Hierarchy.GetNextItem(parent,TVGN_CHILD);
+	    item != NULL;
+		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
+	{
+		if (BBox == (b3BBox *)m_Hierarchy.GetItemData(item))
+		{
+			return item;
+		}
+		b3Traverse(item);
+	}
+	return NULL;
+}
+
+b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
+{
+	HTREEITEM  item;
+	b3BBox    *BBox;
+	b3_count   index = 0;
+
+	for(item  = m_Hierarchy.GetNextItem(parent,TVGN_CHILD);
+	    item != NULL;
+		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
+	{
+		index += b3Traverse(item);
+		index++;
+		BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
+		BBox->b3Expand(m_Hierarchy.GetItemState(item,0) & TVIS_EXPANDED);
+	}
+	return index;
 }
 
 void CDlgHierarchy::b3GetData()
 {
-	b3_count   items,index = 0;
-	HTREEITEM  item = m_Hierarchy.GetSelectedItem();
-
 	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
-	items = m_Hierarchy.GetCount();
-	for(item  = m_Hierarchy.GetRootItem();
-	    item != NULL;
-		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
-	{
-		index++;
-	}
+	b3Traverse(m_Hierarchy.GetRootItem());
 
 	m_Hierarchy.DeleteAllItems();
 	b3Free();
@@ -203,6 +230,17 @@ void CDlgHierarchy::b3SetData()
 	UpdateData(FALSE);
 	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
 	b3InitTree ();
+}
+
+void CDlgHierarchy::b3SelectBBox(b3BBox *BBox)
+{
+	HTREEITEM item;
+
+	item = b3FindBBox(m_Hierarchy.GetRootItem(),BBox);
+	if (item != null)
+	{
+		m_Hierarchy.SelectItem(item);
+	}
 }
 
 b3BBox *CDlgHierarchy::b3GetSelectedBBox()

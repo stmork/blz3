@@ -35,6 +35,7 @@ class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 // Construction
 public:
 	b3BBox *b3GetSelectedBBox();
+	void    b3SelectBBox(b3BBox *BBox);
 	void    b3GetData();
 	void    b3SetData();
 	CAppLinesDoc *m_pDoc;
@@ -65,11 +66,12 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	HTREEITEM  *m_TreeItems;
 	CImageList  m_ImageList;
 	b3Scene    *m_Scene;
 	void        b3InitTree ();
-	void        b3AddBBoxes (b3BBox *bbox,HTREEITEM);
+	void        b3AddBBoxes(HTREEITEM parent,b3BBox *BBox);
+	b3_count    b3Traverse (HTREEITEM parent);
+	HTREEITEM   b3FindBBox (HTREEITEM parent,b3BBox *BBox);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -50,9 +50,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/01/02 15:48:37  sm
+**	- Added automated expand/collapse to hierarchy tree.
+**
 **	Revision 1.35  2002/01/01 19:14:53  sm
 **	- Added "rest deactivate"
-**
+**	
 **	Revision 1.34  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -889,11 +892,16 @@ void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnActivate() 
 {
 	// TODO: Add your control notification handler code here
-	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+	CMainFrame *main = CB3GetMainFrame();
+	b3BBox     *BBox = main->b3GetSelectedBBox();
 
 	if (BBox != null)
 	{
 		BBox->b3Activate();
+		if (BBox->Succ != null)
+		{
+			main->b3SelectBBox((b3BBox *)BBox->Succ);
+		}
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}
@@ -902,11 +910,16 @@ void CAppLinesDoc::OnActivate()
 void CAppLinesDoc::OnDeactivate() 
 {
 	// TODO: Add your control notification handler code here
-	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+	CMainFrame *main = CB3GetMainFrame();
+	b3BBox     *BBox = main->b3GetSelectedBBox();
 
 	if (BBox != null)
 	{
 		BBox->b3Activate(false);
+		if (BBox->Succ != null)
+		{
+			main->b3SelectBBox((b3BBox *)BBox->Succ);
+		}
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}

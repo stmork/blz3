@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2002/01/02 15:48:37  sm
+**	- Added automated expand/collapse to hierarchy tree.
+**
 **	Revision 1.28  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
-**
+**	
 **	Revision 1.27  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -689,6 +692,17 @@ void b3Scene::b3Activate(b3_bool activate)
 		bbox = (b3BBox *)item;
 		bbox->b3Activate(activate);
 	}
+}
+
+void b3BBox::b3Expand(b3_bool expand)
+{
+	if (expand) m_Type |=   BBF_EXPANDED;
+	else        m_Type &= (~BBF_EXPANDED);
+}
+
+b3_bool b3BBox::b3IsExpanded()
+{
+	return (m_Type & BBF_EXPANDED) != 0;
 }
 
 b3_count b3Scene::b3GetBBoxCount()

@@ -288,6 +288,7 @@ BEGIN
         MENUITEM "&Deaktivieren",               ID_DEACTIVATE
         MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
         MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
+        MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
     END
     POPUP "Betriebsmodus"
     BEGIN
@@ -468,9 +469,8 @@ END
 
 IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
 BEGIN
-    "A",            ID_ACTIVATE_ALL,        VIRTKEY, CONTROL, NOINVERT
-    "A",            ID_DEACTIVATE_ALL,      VIRTKEY, SHIFT, CONTROL, 
-                                                    NOINVERT
+    "A",            ID_ALL_ACTIVATE,        VIRTKEY, CONTROL, NOINVERT
+    "A",            ID_ALL_DEACTIVATE,      VIRTKEY, ALT, NOINVERT
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_ORIGINAL,       VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT

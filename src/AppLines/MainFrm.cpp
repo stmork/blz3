@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/01/02 15:48:37  sm
+**	- Added automated expand/collapse to hierarchy tree.
+**
 **	Revision 1.19  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.18  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -597,6 +600,11 @@ void CMainFrame::b3UpdateFulcrum()
 b3BBox *CMainFrame::b3GetSelectedBBox()
 {
 	return m_dlgHierarchy.b3GetSelectedBBox();
+}
+
+void CMainFrame::b3SelectBBox(b3BBox *BBox)
+{
+	m_dlgHierarchy.b3SelectBBox(BBox);
 }
 
 /*************************************************************************
