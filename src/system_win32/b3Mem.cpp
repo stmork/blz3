@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/03 15:50:15  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.2  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -42,7 +45,7 @@
 **	- Extended b3Shape format with shape activation flag. Nice: The
 **	  new data structures don't confuse the old Lines II/Blizzard II and
 **	  even stores these new values.
-**
+**	
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -160,12 +163,6 @@ b3_bool b3Mem::b3Free(const void *ptr)
 		}
 	}
 	mutex.b3Unlock();
-#ifdef _DEBUG
-	if (ptr != null)
-	{
-		throw new b3MemException(B3_MEM_UNKNOWN_PTR);
-	}
-#endif
 	return false;
 }
 

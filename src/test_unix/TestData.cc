@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/03 15:50:15  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.1  2001/12/31 11:05:18  sm
 **	- Added TestData for testing Blizzard data structures for reading
 **	  and writing.
@@ -41,7 +44,7 @@
 **	  o b3TriangleShape destructor handled unchecked m_GridList pointer
 **	- Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
 **	  B3LOG_NORMAL to B3LOG_DEBUG.
-**
+**	
 **
 */
 
@@ -54,8 +57,6 @@
 static void b3TestFile(const char *filename)
 {
 	b3World   world;
-	b3Item   *item;
-	b3Scene  *scene;
 	b3_count  stage = 0;
 
 	try

@@ -105,6 +105,10 @@ SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3FileMem.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Item.cc
 # End Source File
 # Begin Source File

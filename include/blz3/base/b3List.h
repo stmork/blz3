@@ -165,6 +165,24 @@ public:
 		Last  = null;
 	}
 
+	inline void b3RemoveAll()
+	{
+		T *node = First,*succ;
+
+		// Empty base
+		First = null;
+		Last  = null;
+
+		while(node != null)
+		{
+			// unlink every node
+			succ = node->Succ;
+			node->Succ = null;
+			node->Prev = null;
+			node = succ;
+		}
+	}
+
 	inline b3_count b3Count()
 	{
 		T        *node;

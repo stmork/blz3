@@ -216,8 +216,11 @@ public:
 
 	void    b3Write();
 	b3Item *b3GetFirst();
+	b3Item *b3RemoveFirst();
 	void    b3InitBase(b3_u32 class_value = 0);
+	void    b3First(b3Item *item);
 	void    b3Append(b3Item *item);
+	void    b3RemoveAll();
 };
 
 class b3World : public b3Mem, public b3SearchPath
@@ -226,6 +229,9 @@ class b3World : public b3Mem, public b3SearchPath
 	b3_size         m_BufferSize;
 	b3_bool         m_NeedEndianChange;
 	b3FirstItem    *m_Start;
+
+public:
+	b3_bool         m_AutoDelete;
 
 public:
 	                b3World();
@@ -242,6 +248,7 @@ public:
 	b3_bool         b3ReadDump(const char *world_name);
 	b3_size         b3Length();
 	void            b3Dump();
+	b3Item         *b3RemoveFirst();
 	b3Item         *b3GetFirst();
 	void            b3SetFirst(b3Item *item);
 

@@ -106,6 +106,10 @@ protected:
 	afx_msg void OnAllDeactivate();
 	afx_msg void OnAllActivate();
 	afx_msg void OnUpdateSelectedBBox(CCmdUI* pCmdUI);
+	afx_msg void OnEditCut();
+	afx_msg void OnEditCopy();
+	afx_msg void OnEditPaste();
+	afx_msg void OnUpdateEditPaste(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -116,6 +120,11 @@ protected:
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
+
+private:
+	b3_bool b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
+	b3_bool b3WriteBBox(b3BBox *bbox,const char *filename);
+	b3_bool b3PutClipboard(b3BBox *bbox);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2002/01/03 15:50:14  sm
+**      - Added cut/copy/paste
+**
 **      Revision 1.17  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -138,9 +141,24 @@ void b3FirstItem::b3Write()
 {
 }
 
+void b3FirstItem::b3First(b3Item *item)
+{
+	m_Heads[0].b3First(item);
+}
+
 void b3FirstItem::b3Append(b3Item *item)
 {
 	m_Heads[0].b3Append(item);
+}
+
+void b3FirstItem::b3RemoveAll()
+{
+	m_Heads[0].b3RemoveAll();
+}
+
+b3Item *b3FirstItem::b3RemoveFirst()
+{
+	return m_Heads[0].b3RemoveFirst();
 }
 
 b3Item *b3FirstItem::b3GetFirst()
@@ -161,10 +179,12 @@ b3World::b3World()
 	m_Buffer     = null;
 	m_BufferSize = 0;
 	m_Start      = null;
+	m_AutoDelete = true;
 }
 
 b3World::b3World(const char *world_name)
 {
+	m_AutoDelete = true;
 	b3Read(world_name);
 }
 
@@ -172,6 +192,10 @@ b3World::~b3World()
 {
 	if (m_Start != null)
 	{
+		if (!m_AutoDelete)
+		{
+			m_Start->b3RemoveAll();
+		}
 		delete m_Start;
 	}
 }
@@ -403,10 +427,6 @@ b3_bool b3World::b3Read(const char *name)
 		if (file.b3Open(world_name,B_READ))
 		{
 			error = b3Read(&file);
-			if (error == B3_WORLD_OK)
-			{
-				error = b3Parse();
-			}
 			file.b3Close();
 		}
 		else
@@ -426,6 +446,67 @@ b3_bool b3World::b3Read(const char *name)
 	m_Buffer = null;
 
 	return true;
+}
+
+b3_world_error b3World::b3Read(b3FileAbstract *file)
+{
+	b3_u32         header[2];
+	b3_world_error error = B3_WORLD_ERROR;
+
+	b3Free();
+	m_Buffer     = null;
+	m_BufferSize = 0;
+	m_Start      = null;
+
+	// Read specified file into buffer
+	if (file->b3Read(header,sizeof(header)) == sizeof(header))
+	{
+		switch(header[0])
+		{
+		case B3_BLiZ:
+			m_NeedEndianChange = false;
+			break;
+
+		case B3_ZiLB:
+			m_NeedEndianChange = true;
+			b3Endian::b3ChangeEndian32(&header[0]);
+			b3Endian::b3ChangeEndian32(&header[1]);
+			break;
+
+		default:
+			error = B3_WORLD_PARSE;
+			break;
+		}
+
+		if (error != B3_WORLD_PARSE)
+		{
+			m_BufferSize = header[1];
+			m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
+			if (m_Buffer != null)
+			{
+				if (file->b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
+				{
+					error = b3Parse();
+				}
+				else
+				{
+					error = B3_WORLD_READ;
+					b3Free(m_Buffer);
+					m_Buffer = null;
+				}
+			}
+			else
+			{
+				error = B3_WORLD_MEMORY;
+			}
+		}
+	}
+	else
+	{
+		error = B3_WORLD_READ;
+	}
+
+	return error;
 }
 
 b3_bool b3World::b3ReadDump(const char *world_name)
@@ -490,67 +571,6 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 		throw new b3WorldException(error);
 	}
 	return error == B3_WORLD_OK;
-}
-
-b3_world_error b3World::b3Read(b3FileAbstract *file)
-{
-	b3_u32         header[2];
-	b3_world_error error = B3_WORLD_ERROR;
-
-	b3Free();
-	m_Buffer     = null;
-	m_BufferSize = 0;
-	m_Start      = null;
-
-	// Read specified file into buffer
-	if (file->b3Read(header,sizeof(header)) == sizeof(header))
-	{
-		switch(header[0])
-		{
-		case B3_BLiZ:
-			m_NeedEndianChange = false;
-			break;
-
-		case B3_ZiLB:
-			m_NeedEndianChange = true;
-			b3Endian::b3ChangeEndian32(&header[0]);
-			b3Endian::b3ChangeEndian32(&header[1]);
-			break;
-
-		default:
-			error = B3_WORLD_PARSE;
-			break;
-		}
-
-		if (error != B3_WORLD_PARSE)
-		{
-			m_BufferSize = header[1];
-			m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
-			if (m_Buffer != null)
-			{
-				if (file->b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
-				{
-					error = B3_WORLD_OK;
-				}
-				else
-				{
-					error = B3_WORLD_READ;
-					b3Free(m_Buffer);
-					m_Buffer = null;
-				}
-			}
-			else
-			{
-				error = B3_WORLD_MEMORY;
-			}
-		}
-	}
-	else
-	{
-		error = B3_WORLD_READ;
-	}
-
-	return error;
 }
 
 b3_bool b3World::b3Write(const char *filename)
@@ -632,16 +652,22 @@ void b3World::b3Dump()
 	}
 }
 
+b3Item *b3World::b3RemoveFirst()
+{
+	return m_Start != null ? m_Start->b3RemoveFirst() : null;
+}
+
 b3Item *b3World::b3GetFirst()
 {
-	return m_Start->b3GetFirst();
+	return m_Start != null ? m_Start->b3GetFirst() : null;
 }
 
 void b3World::b3SetFirst(b3Item *item)
 {
-	b3FirstItem *first = new b3FirstItem(B3_CLASS_MAX);
-
-	first->b3InitBase(item->b3GetClass());
-	first->b3Append(item);
-	m_Start = first;
+	if (m_Start == null)
+	{
+		m_Start = new b3FirstItem(B3_CLASS_MAX);
+		m_Start->b3InitBase(item->b3GetClass());
+	}
+	m_Start->b3First(item);
 }

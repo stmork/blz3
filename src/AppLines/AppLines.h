@@ -46,12 +46,12 @@ class CAppLinesApp : public CB3App
 {
 	CMultiDocTemplate *pImageTemplate;
 	CMultiDocTemplate *pSceneTemplate;
-	UINT m_ClipboardFormatForBlizzardObject;
 
 public:
 	CAppLinesApp();
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 
+	UINT m_ClipboardFormatForBlizzardObject;
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesApp)

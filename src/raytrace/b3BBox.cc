@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/01/03 15:50:14  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.29  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
-**
+**	
 **	Revision 1.28  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
 **	
@@ -717,4 +720,52 @@ b3_count b3Scene::b3GetBBoxCount()
 		count += bbox->b3Count();
 	}
 	return count;
+}
+
+b3Base<b3Item> *b3BBox::b3FindBBoxHead(b3BBox *bbox)
+{
+	b3Item         *item;
+	b3BBox         *inc_bbox;
+	b3Base<b3Item> *base,*result;
+
+	base = b3GetBBoxHead();
+	B3_FOR_BASE(base,item)
+	{
+		if (item == bbox)
+		{
+			return base;
+		}
+
+		inc_bbox = (b3BBox *)item;
+		result   = inc_bbox->b3FindBBoxHead(bbox);
+		if (result != null)
+		{
+			return result;
+		}
+	}
+	return null;
+}
+
+b3Base<b3Item> *b3Scene::b3FindBBoxHead(b3BBox *bbox)
+{
+	b3Item         *item;
+	b3BBox         *inc_bbox;
+	b3Base<b3Item> *base,*result;
+
+	base = b3GetBBoxHead();
+	B3_FOR_BASE(base,item)
+	{
+		if (item == bbox)
+		{
+			return base;
+		}
+
+		inc_bbox = (b3BBox *)item;
+		result   = inc_bbox->b3FindBBoxHead(bbox);
+		if (result != null)
+		{
+			return result;
+		}
+	}
+	return null;
 }

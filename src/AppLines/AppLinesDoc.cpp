@@ -41,6 +41,8 @@
 
 #include "b3ExampleScene.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3File.h"
+#include "blz3/base/b3FileMem.h"
 
 /*************************************************************************
 **                                                                      **
@@ -50,9 +52,12 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/01/03 15:50:14  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.36  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
-**
+**	
 **	Revision 1.35  2002/01/01 19:14:53  sm
 **	- Added "rest deactivate"
 **	
@@ -248,6 +253,12 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
+	ON_COMMAND(ID_ACTIVATE, OnActivate)
+	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
+	ON_COMMAND(ID_DEACTIVATE_REST, OnDeactivateRest)
+	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
+	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
+	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
@@ -258,14 +269,14 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_PROPERTIES, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TO_FULCRUM, OnUpdateGlobal)
-	ON_COMMAND(ID_ACTIVATE, OnActivate)
-	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
-	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
-	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
-	ON_COMMAND(ID_DEACTIVATE_REST, OnDeactivateRest)
-	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
+	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -363,6 +374,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_World.b3Read(lpszPathName);
 		m_Scene = (b3Scene *)m_World.b3GetFirst();
 		m_Scene->b3SetFilename(lpszPathName);
+		m_Info = m_Scene->b3GetModellerInfo();
+		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 
 		main->b3SetStatusMessage(IDS_DOC_REORG);
 		m_Scene->b3Reorg();
@@ -375,8 +388,6 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
 		b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
 		b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
-		m_Info = m_Scene->b3GetModellerInfo();
-		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
@@ -509,6 +520,43 @@ void CAppLinesDoc::b3DrawFulcrum()
 void CAppLinesDoc::b3ComputeBounds()
 {
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
+}
+
+b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,const char *filename)
+{
+	b3_bool result = false;
+
+	try
+	{
+		b3File file(filename,B_WRITE);
+
+		result = b3WriteBBox(bbox,&file);
+	}
+	catch(b3FileException *f)
+	{
+		b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to file %s (code: %d)\n",
+			bbox->b3GetName(),filename,f->b3GetError());
+	}
+	catch(b3WorldException *w)
+	{
+		b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to file %s (code: %d)\n",
+			bbox->b3GetName(),filename,w->b3GetError());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to file %s\n",
+			bbox->b3GetName(),filename);
+	}
+	return result;
+}
+
+b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
+{
+	b3World  world;
+
+	world.m_AutoDelete = false;
+	world.b3SetFirst(bbox);
+	return (world.b3Write(file) == B3_WORLD_OK);
 }
 
 void CAppLinesDoc::OnUpdateGlobal(CCmdUI* pCmdUI) 
@@ -885,7 +933,7 @@ void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI)
 
 /*************************************************************************
 **                                                                      **
-**                        Light commands                                **
+**                        Activation commands                           **
 **                                                                      **
 *************************************************************************/
 
@@ -966,4 +1014,191 @@ void CAppLinesDoc::OnAllActivate()
 void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable(CB3GetMainFrame()->b3GetSelectedBBox() != null);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Copy/paste commands                           **
+**                                                                      **
+*************************************************************************/
+
+b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
+{
+	CAppLinesApp *app     = (CAppLinesApp *)AfxGetApp();
+	CMainFrame   *main    = CB3GetMainFrame();
+	b3_bool       success = false;
+	b3_size       size;
+	void         *ptr;
+	HANDLE        handle;
+
+	if (main->OpenClipboard())
+	{
+		try
+		{
+			b3FileMem  file(B_WRITE);
+
+			if (b3WriteBBox(bbox,&file))
+			{
+				size = file.b3Size();
+				handle = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,size);
+				if (handle != 0)
+				{
+					ptr = ::GlobalLock(handle);
+					if (ptr != null)
+					{
+						file.b3Seek(0,B3_SEEK_START);
+						if (file.b3Read(ptr,size) == size)
+						{
+							::GlobalUnlock(handle);
+							::EmptyClipboard();
+							::SetClipboardData(app->m_ClipboardFormatForBlizzardObject,handle);
+							success = true;
+						}
+					}
+				}
+			}
+		}
+		catch(b3FileException *f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to clipboard (code: %d)\n",
+				bbox->b3GetName(),f->b3GetError());
+		}
+		catch(b3WorldException *w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to clipboard (code: %d)\n",
+				bbox->b3GetName(),w->b3GetError());
+		}
+		catch(...)
+		{
+			b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to clipboard %s\n",
+				bbox->b3GetName());
+		}
+		::CloseClipboard();
+	}
+	return success;
+}
+
+void CAppLinesDoc::OnEditCut() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main = CB3GetMainFrame();
+	b3BBox         *bbox = main->b3GetSelectedBBox();
+	b3Item         *prev;
+	b3Base<b3Item> *base;
+
+	if (bbox != null)
+	{
+		base = m_Scene->b3FindBBoxHead(bbox);
+		prev = bbox->Prev;
+		base->b3Remove(bbox);
+		if(!b3PutClipboard(bbox))
+		{
+			base->b3Insert(prev,bbox);
+		}
+		else
+		{
+			delete bbox;
+			SetModifiedFlag();
+		}
+	}
+}
+
+void CAppLinesDoc::OnEditCopy() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main = CB3GetMainFrame();
+	b3BBox         *bbox = main->b3GetSelectedBBox();
+	b3Item         *prev;
+	b3Base<b3Item> *base;
+
+	if (bbox != null)
+	{
+		base = m_Scene->b3FindBBoxHead(bbox);
+		prev = bbox->Prev;
+		base->b3Remove(bbox);
+		b3PutClipboard(bbox);
+		base->b3Insert(prev,bbox);
+	}
+}
+
+void CAppLinesDoc::OnEditPaste() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp   *app     = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main    = CB3GetMainFrame();
+	CWaitCursor     wait;
+	b3BBox         *selected;
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+	b3_size         size;
+	void           *ptr;
+	HANDLE          handle;
+
+	selected = main->b3GetSelectedBBox();
+	base = m_Scene->b3FindBBoxHead(selected);
+	if (main->OpenClipboard())
+	{
+		handle = ::GetClipboardData(app->m_ClipboardFormatForBlizzardObject);
+		if (handle != 0)
+		{
+			size = ::GlobalSize(handle);
+			ptr  = ::GlobalLock(handle);
+			try
+			{
+				b3FileMem file(B_WRITE);
+				b3World   world;
+
+				file.b3Write(ptr,size);
+				file.b3Seek(0,B3_SEEK_START);
+
+				if(world.b3Read(&file) == B3_WORLD_OK)
+				{
+					bbox = (b3BBox *)world.b3RemoveFirst();
+					base->b3Insert(selected,bbox);
+
+					main->b3SetStatusMessage(IDS_DOC_REORG);
+					m_Scene->b3Reorg();
+
+					main->b3SetStatusMessage(IDS_DOC_PREPARE);
+					bbox->b3Prepare();
+
+					main->b3SetStatusMessage(IDS_DOC_VERTICES);
+					bbox->b3AllocVertices(&m_Context);
+					b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
+					b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
+					b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
+
+					main->b3SetStatusMessage(IDS_DOC_BOUND);
+					b3ComputeBounds();
+
+					SetModifiedFlag();
+					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+					main->b3SelectBBox(bbox);
+				}
+			}
+			catch(b3FileException *f)
+			{
+				b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from clipboard (code: %d)\n",
+					f->b3GetError());
+			}
+			catch(b3WorldException *w)
+			{
+				b3PrintF(B3LOG_NORMAL,"ERROR: reading object from clipboard (code: %d)\n",
+					w->b3GetError());
+			}
+			::GlobalUnlock(handle);
+		}
+		::CloseClipboard();
+	}
+}
+
+void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CAppLinesApp *app  = (CAppLinesApp *)AfxGetApp();
+	CMainFrame   *main = CB3GetMainFrame();
+
+	pCmdUI->Enable(
+		(main->b3GetSelectedBBox() != null) &&
+		(::IsClipboardFormatAvailable(app->m_ClipboardFormatForBlizzardObject)));
 }

@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/03 15:50:15  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.7  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **
 */
 
@@ -61,13 +64,15 @@ extern void b3TestThread();
 
 int main(int argc,char *argv[])
 {
-	b3_index  i;
-	b3_u32    v1,v2;
-	b3Date    date;
-	b3File    file;
-	b3World   world;
-	b3Item   *item;
-	b3Scene  *scene;
+	b3_index      i;
+	b3_u32        v1,v2;
+	b3Date        date;
+	b3File        file;
+	b3FileMem     filemem;
+	b3World       world;
+	b3Item       *item;
+	b3Scene      *scene;
+	b3_path_type  code;
 
 	b3Log_SetLevel(B3LOG_FULL);
 	b3InitRaytrace::b3Init();
@@ -113,9 +118,52 @@ int main(int argc,char *argv[])
 
 	date.b3Y2K_Selftest();
 
-	b3TestMem();
-	b3TestFile(file);
-	b3TestDir();
+	try
+	{
+		b3TestMem();
+		b3PrintF(B3LOG_NORMAL,"Disk file: --------------------\n");
+		if (file.b3Open("Config.tst",B_WRITE))
+		{
+			b3TestFile(file);
+		}
+
+		b3PrintF(B3LOG_NORMAL,"Memory file: ------------------\n");
+		if (filemem.b3Open(B_WRITE))
+		{
+			b3TestFile(filemem);
+		}
+
+		b3PrintF(B3LOG_NORMAL,"file operations: --------------\n");
+		if (remove ("Config.tst") == 0) b3PrintF (B3LOG_NORMAL,"File 'Config.tst' removed...\n");
+		else b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not removed...\n");
+
+		code = b3Dir::b3Exists ("Config.tst");
+		switch (code)
+		{
+			case B3_NOT_EXISTANT :
+				b3PrintF (B3LOG_NORMAL,"Config.tst is not existant... (all right)\n");
+				break;
+			case B3_TYPE_DIR :
+				b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
+				break;
+			case B3_TYPE_FILE :
+				b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
+				break;
+
+			default :
+				b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
+				break;
+		}
+		b3TestDir();
+	}
+	catch(b3FileException *f)
+	{
+		b3PrintF(B3LOG_NORMAL,"I/O Error - code %d\n",f->b3GetError());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"Unknown exception occured.\n");
+	}
 
 	for (i = 1;i < argc;i++)
 	{

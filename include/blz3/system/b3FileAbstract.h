@@ -90,7 +90,8 @@ typedef enum
 	B3_FILE_NOT_FOUND,
 	B3_FILE_NOT_READ,
 	B3_FILE_NOT_WRITTEN,
-	B3_FILE_MEMORY
+	B3_FILE_MEMORY,
+	B3_FILE_NOT_OPEN
 } b3_file_error;
 
 class b3FileException
@@ -121,8 +122,7 @@ class b3FileAbstract
 public:
 	virtual b3_bool  b3Open      (const char *file_name,const b3_access_mode mode) = 0;
 	virtual b3_size  b3Read      (void *read_buffer,const b3_size size) = 0;
-	virtual b3_u08  *b3ReadBuffer(const char *filename,b3_size &filesize) = 0;
-	virtual b3_size  b3Write     (const void * write_buffer,b3_size size) = 0;
+	virtual b3_size  b3Write     (const void * write_buffer,const b3_size size) = 0;
 	virtual b3_bool  b3Flush     () = 0;
 	virtual b3_size  b3Seek      (const b3_offset offset,const b3_seek_type type) = 0;
 	virtual b3_size  b3Size      () = 0;

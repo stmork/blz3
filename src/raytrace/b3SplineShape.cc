@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/01/03 15:50:14  sm
+**      - Added cut/copy/paste
+**
 **      Revision 1.21  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -541,9 +544,6 @@ void b3SplineShape::b3ComputeSolidIndices()
 #ifdef BLZ3_USE_OPENGL
 	GLushort   *pPtr;
 	b3_index    x,y;
-
-	// Is this correct? Rename variable!
-	b3_offset   xSubDiv = m_Spline[0].subdiv + 1;
 
 	pPtr = glPolygons;
 	for (y = 0;y < m_Spline[1].subdiv;y++)

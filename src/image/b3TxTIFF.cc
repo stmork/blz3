@@ -36,13 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/03 15:50:14  sm
+**	- Added cut/copy/paste
+**
 **	Revision 1.4  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.3  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -1234,7 +1237,7 @@ void b3TIFF::b3Write (char *name)
 	b3Base<b3TIFF>    root;
 	long              act_offset = 0;
 
-	// firt remove containing TAF tags
+	// first remove containing TAF tags
 	root.b3InitBase(CLASS_TIFF_HEAD);
 	root.b3Append(this);
 
