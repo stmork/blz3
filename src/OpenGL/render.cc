@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2004/08/17 15:19:13  sm
+**      - Some OpenGL include fixes.
+**
 **      Revision 1.42  2004/07/18 08:28:44  sm
 **      - Added transformation optimazation: We don't need to recompute
 **        vertices on unit matrix transformation. This simple test makes
@@ -204,7 +207,7 @@
 **
 */
 
-#ifdef BLZ3_USE_OPENGL
+#if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 
 static b3ShapeRenderContext  context;
 static b3World              *world = null;

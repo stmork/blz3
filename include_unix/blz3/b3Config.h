@@ -37,6 +37,10 @@
 #include "blz3/system/b3Thread.h"
 
 #ifdef BLZ3_USE_OPENGL
+#include <GL/glu.h>
+#endif
+
+#ifdef BLZ3_USE_GLUT
 #include <GL/glut.h>
 
 #define no_GLU_NURBS
