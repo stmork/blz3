@@ -88,9 +88,16 @@ private:
 
 class b3CPU : public b3CPUBase
 {
+	static b3_bool  m_CorrectRUsage;
+
 public:
 	                b3CPU();
 	static b3_count b3GetNumThreads();
+
+	inline static b3_bool  b3HasCorrectRUsage()
+	{
+		return m_CorrectRUsage;
+	}
 };
 
 #endif
