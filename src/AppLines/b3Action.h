@@ -118,11 +118,8 @@ class CB3ActionObjectRotate : public CB3Action
 	b3_vector *m_Center;
 	b3_vector  m_StartPoint;
 	b3_f64     m_StartAngle;
-<<<<<<< b3Action.h
 	b3_f64     m_xRelStart;
-=======
 	b3_f64     m_LastAngle;
->>>>>>> 1.7
 	b3_line    m_Axis;
 public:
 	CB3ActionObjectRotate(CAppLinesView *window);

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/09/05 18:31:07  sm
+**	- Fix some minor bugs
+**
 **	Revision 1.8  2001/09/05 15:21:34  sm
 **	- Now object moving/rotating on perspective view.
-**
+**	
 **	Revision 1.7  2001/09/04 20:37:53  sm
 **	- Some minor updates
 **	
@@ -499,14 +502,18 @@ void CB3ActionObjectMove::b3RMove(b3_coord x,b3_coord y)
 	diff.z = yFactor * m_zDir.z;
 
 	// Do action!
-	if (b3MatrixInv(&m_Transformation,&inv))
+	m_Doc->m_Info->b3SnapToGrid(&diff);
+	if (!b3IsEqual(&diff,&m_LastDiff))
 	{
-		m_Doc->m_Info->b3SnapToGrid(&diff);
-		b3MatrixMove(null,&m_Transformation,&diff);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
-		m_Doc->m_Scene->b3Transform(&activity);
-		m_Doc->b3ComputeBounds();
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			m_LastDiff = diff;
+			b3MatrixMove(null,&m_Transformation,&diff);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
 	}
 }
 
@@ -532,19 +539,14 @@ void CB3ActionObjectMove::b3RUp(b3_coord x,b3_coord y)
 	diff.y = yFactor * m_zDir.y;
 	diff.z = yFactor * m_zDir.z;
 
-	m_Doc->m_Info->b3SnapToGrid(&diff);
-	if (!b3IsEqual(&diff,&m_LastDiff))
+	if (b3MatrixInv(&m_Transformation,&inv))
 	{
-		if (b3MatrixInv(&m_Transformation,&inv))
-		{
-			m_LastDiff = diff;
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->SetModifiedFlag();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		}
+		b3MatrixMove(null,&m_Transformation,&diff);
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		m_Doc->m_Scene->b3Transform(&activity);
+		m_Doc->b3ComputeBounds();
+		m_Doc->SetModifiedFlag();
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
 }
 
@@ -628,28 +630,28 @@ void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
 	b3_f64    xRel,yRel;
 	b3_f64    angle;
 
+	b3GetRelCoord(x,y,xRel,yRel);
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		point = *m_Center;
 
-		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
 
 		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
-		m_Doc->m_Info->b3SnapToAngle(angle);
-		if (angle != m_LastAngle)
-		{
-			if (b3MatrixInv(&m_Transformation,&inv))
-			{
-				m_LastAngle = angle;
-				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-				b3MatrixMMul(&inv,&m_Transformation,&activity);
-				m_Doc->m_Scene->b3Transform(&activity);
-				m_Doc->b3ComputeBounds();
-				m_Doc->SetModifiedFlag();
-				m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			}
-		}
+	}
+	else
+	{
+		angle = (xRel - m_xRelStart) * M_PI * 2;
+	}
+
+	m_Doc->m_Info->b3SnapToAngle(angle);
+	if (b3MatrixInv(&m_Transformation,&inv))
+	{
+		b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		m_Doc->m_Scene->b3Transform(&activity);
+		m_Doc->b3ComputeBounds();
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
 }
 
