@@ -35,7 +35,7 @@ enum b3_log_level
 
 class b3Mutex;
 
-class b3LogBase
+class B3_PLUGIN b3LogBase
 {
 protected:
 	static FILE         *m_Out;

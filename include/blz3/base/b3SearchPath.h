@@ -22,7 +22,7 @@
 #include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
 
-class b3PathEntry : public b3Link<b3PathEntry>, public b3Path
+class B3_PLUGIN b3PathEntry : public b3Link<b3PathEntry>, public b3Path
 {
 public:
 	b3PathEntry(const b3PathEntry &src);
@@ -30,7 +30,7 @@ public:
 	b3PathEntry(const char *path);
 };
 
-class b3SearchPath
+class B3_PLUGIN b3SearchPath
 {
 public:
 	b3Base<b3PathEntry> m_SearchPath;

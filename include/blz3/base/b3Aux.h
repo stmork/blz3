@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 
-class b3RGB
+class B3_PLUGIN b3RGB
 {
 public:
 	b3_u08 r,g,b;
@@ -70,7 +70,7 @@ public:
 #endif
 };
 
-class b3Rect
+class B3_PLUGIN b3Rect
 {
 public:
 	b3_coord x1,y1;

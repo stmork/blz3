@@ -79,7 +79,7 @@ struct b3_surface
 	b3_f64    refl,refr,ior,se;
 };
 
-class b3Activation
+class B3_PLUGIN b3Activation
 {
 public:
 	enum b3_anim_activation
@@ -219,7 +219,7 @@ protected:
 	static void b3Init();
 };
 
-class b3Condition : public b3Item
+class B3_PLUGIN b3Condition : public b3Item
 {
 protected:
 	b3Condition(b3_size class_size,b3_u32  class_type);
@@ -240,7 +240,7 @@ protected:
 };
 
 // TYPE_RECTANGLE
-class b3CondRectangle : public b3Condition
+class B3_PLUGIN b3CondRectangle : public b3Condition
 {
 public:
 	b3_f32  m_xStart,m_yStart;    // rel. start coordinates
@@ -260,7 +260,7 @@ public:
 #define RCF_ACTIVE (1 << RCB_ACTIVE)
 
 // TYPE_TRIANGLE, TYPE_PARALLELOGRAM
-class b3Cond2 : public b3Condition
+class B3_PLUGIN b3Cond2 : public b3Condition
 {
 public:
 	b3_f32  m_xPos, m_yPos;       // base of triangle/ parallelogramme
@@ -280,7 +280,7 @@ public:
 	void    b3ComputeBound(b3_stencil_limit *limit);
 };
 
-class b3CondPara : public b3Cond2
+class B3_PLUGIN b3CondPara : public b3Cond2
 {
 public:
 	B3_ITEM_INIT(b3CondPara);
@@ -289,7 +289,7 @@ public:
 	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
-class b3CondTria : public b3Cond2
+class B3_PLUGIN b3CondTria : public b3Cond2
 {
 public:
 	B3_ITEM_INIT(b3CondTria);
@@ -300,7 +300,7 @@ public:
 
 
 // TYPE_CIRCLE
-class b3CondCircle : public b3Condition
+class B3_PLUGIN b3CondCircle : public b3Condition
 {
 protected:
 	b3_f32  m_xCenter,m_yCenter,m_Radius;      // Mittelpunkt und Radius
@@ -315,7 +315,7 @@ public:
 };
 
 // TYPE_SEGMENT
-class b3CondSegment : public b3Condition
+class B3_PLUGIN b3CondSegment : public b3Condition
 {
 protected:
 	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
@@ -332,7 +332,7 @@ public:
 };
 
 // TYPE_ELLIPSE
-class b3CondEllipse : public b3Condition
+class B3_PLUGIN b3CondEllipse : public b3Condition
 {
 protected:
 	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
@@ -350,7 +350,7 @@ public:
 };
 
 // TYPE_TEXTURE
-class b3CondTexture : public b3Condition
+class B3_PLUGIN b3CondTexture : public b3Condition
 {
 protected:
 	b3Tx   *m_Texture;
@@ -371,7 +371,7 @@ public:
 };
 
 // TYPE_WRAP_TEXTURE
-class b3CondWrapTexture : public b3Condition
+class B3_PLUGIN b3CondWrapTexture : public b3Condition
 {
 protected:
 	b3Tx   *m_Texture;
@@ -418,7 +418,7 @@ protected:
 	static void b3Init();
 };
 
-class b3Bump : public b3Item
+class B3_PLUGIN b3Bump : public b3Item
 {
 protected:
 	b3Bump(b3_size class_size,b3_u32 classtype);
@@ -436,7 +436,7 @@ public:
 };
 
 // BUMP_NOISE
-class b3BumpNoise : public b3Bump
+class B3_PLUGIN b3BumpNoise : public b3Bump
 {
 	b3_vector   m_Scale;
 	b3_f32      m_Size;
@@ -450,7 +450,7 @@ public:
 };
 
 // BUMP_MARBLE
-class b3BumpMarble : public b3Bump
+class B3_PLUGIN b3BumpMarble : public b3Bump
 {
 	b3_vector   m_Scale;
 	b3_f32      m_Size;
@@ -464,7 +464,7 @@ public:
 };
 
 // BUMP_TEXTURE
-class b3BumpTexture : public b3Bump
+class B3_PLUGIN b3BumpTexture : public b3Bump
 {
 	b3_f32      m_xStart,m_yStart;     // base of bump texture
 	b3_f32      m_xScale,m_yScale;     // scale of bump texture
@@ -488,7 +488,7 @@ private:
 };
 
 // BUMP_WATER
-class b3BumpWater : public b3Bump
+class B3_PLUGIN b3BumpWater : public b3Bump
 {
 	b3_s32      m_ScaleFlag;           // use BBox coords or direct coord
 	b3_vector   m_ScaleIPoint;         // intersection point scalar
@@ -504,7 +504,7 @@ public:
 };
 
 // BUMP_WAVE
-class b3BumpWave : public b3Bump
+class B3_PLUGIN b3BumpWave : public b3Bump
 {
 	b3_s32      m_Flags;               // use BBox coords or direct coord
 	b3_vector   m_Scale;               // point scalar
@@ -519,7 +519,7 @@ public:
 };
 
 // BUMP_GROOVE
-class b3BumpGroove : public b3Bump
+class B3_PLUGIN b3BumpGroove : public b3Bump
 {
 	b3_s32      m_Flags;               // use BBox coords or direct coord
 	b3_vector   m_Scale;               // point scalar
@@ -534,7 +534,7 @@ public:
 };
 
 // BUMP_GLOSSY */
-class b3BumpGlossy : public b3Bump
+class B3_PLUGIN b3BumpGlossy : public b3Bump
 {
 	b3_s32      m_Flags;
 	b3_f32      m_Intensity;
@@ -584,7 +584,7 @@ protected:
 	static void b3Init();
 };
 
-class b3Material : public b3Item
+class B3_PLUGIN b3Material : public b3Item
 {
 protected:
 	b3Material(b3_size class_size,b3_u32 classtype);
@@ -606,7 +606,7 @@ public:
 };
 
 // MATERIAL or MAT_NORMAL
-class b3MatNormal : public b3Material
+class B3_PLUGIN b3MatNormal : public b3Material
 {
 public:
 	b3Color           m_DiffColor;
@@ -635,7 +635,7 @@ public:
 };
 
 // CHESS
-class b3MatChess : public b3Material 
+class B3_PLUGIN b3MatChess : public b3Material 
 {
 public:
 	b3Color  m_DiffColor[2];
@@ -666,7 +666,7 @@ public:
 };
 
 // MARBLE
-class b3MatMarble : public b3Material 
+class B3_PLUGIN b3MatMarble : public b3Material 
 {
 	b3Color           m_DiffColor;
 	b3Color           m_AmbColor;
@@ -696,7 +696,7 @@ public:
 };
 
 // WOOD
-class b3MatWood : public b3Material 
+class B3_PLUGIN b3MatWood : public b3Material 
 {
 	b3Color           m_DiffColor;
 	b3Color           m_AmbColor;
@@ -726,7 +726,7 @@ public:
 };
 
 // TEXTURE
-class b3MatTexture : public b3Material 
+class B3_PLUGIN b3MatTexture : public b3Material 
 {
 public:
 	b3_f32            m_Reflection;
@@ -758,7 +758,7 @@ public:
 };
 
 // WRAPTEXTURE
-class b3MatWrapTexture : public b3Material 
+class B3_PLUGIN b3MatWrapTexture : public b3Material 
 {
 	b3Tx             *m_Texture;          // only one texture (compat. Dali)
 public:
@@ -789,7 +789,7 @@ public:
 };
 
 // SLIDE
-class b3MatSlide : public b3Material 
+class B3_PLUGIN b3MatSlide : public b3Material 
 {
 	b3Color           m_Diffuse[2];        // colors for start/end
 	b3Color           m_Ambient[2];
@@ -878,7 +878,7 @@ protected:
 	static void b3Init();
 };
 
-class b3ShapeBaseTrans
+class B3_PLUGIN b3ShapeBaseTrans
 {
 protected:
 	b3_vector         m_Normals[3];       // cross products
@@ -897,7 +897,7 @@ protected:
 	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
 };
 
-class b3ShapeRenderContext : public b3RenderContext
+class B3_PLUGIN b3ShapeRenderContext : public b3RenderContext
 {
 	static b3_f64         m_Sin[B3_MAX_RENDER_SUBDIV + 1];
 	static b3_f64         m_Cos[B3_MAX_RENDER_SUBDIV + 1];
@@ -934,7 +934,7 @@ public:
 };
 
 // same structure entries for all shapes
-class b3Shape : public b3Item, public b3RenderObject, public b3Activation
+class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
 protected:
 	b3_count           xSize,ySize;
@@ -1051,7 +1051,7 @@ private:
 	b3_index        b3FindVertex(b3_index vIndex);
 };
 
-class b3SimpleShape : public b3Shape
+class B3_PLUGIN b3SimpleShape : public b3Shape
 {
 protected:
 	b3_bool             b3CheckStencil(b3_polar_precompute *polar);
@@ -1068,7 +1068,7 @@ public:
 };
 
 // SPHERE
-class b3Sphere : public b3SimpleShape    // Kugel
+class B3_PLUGIN b3Sphere : public b3SimpleShape    // Kugel
 {
 	b3_f64               m_QuadRadius;   // Quadrat vom Radius
 
@@ -1095,7 +1095,7 @@ public:
 };
 
 // AREA, DISK
-class b3Shape2 : public b3SimpleShape
+class B3_PLUGIN b3Shape2 : public b3SimpleShape
 {
 protected:
 	b3_vector           m_Normal;
@@ -1120,7 +1120,7 @@ public:
 			void    b3SetupPicking(b3PickInfo *pick_info);
 };
 
-class b3Area : public b3Shape2
+class B3_PLUGIN b3Area : public b3Shape2
 {
 	b3_gl_vertex  area_vertex[4];
 
@@ -1136,7 +1136,7 @@ public:
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 };
 
-class b3Disk : public b3Shape2
+class B3_PLUGIN b3Disk : public b3Shape2
 {
 public:
 	B3_ITEM_INIT(b3Disk);
@@ -1150,7 +1150,7 @@ public:
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
-class b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
 	     b3Shape3(b3_size class_size,b3_u32 class_type);
@@ -1167,7 +1167,7 @@ public:
 			void    b3SetupPicking(b3PickInfo *pick_info);
 };
 
-class b3Cylinder : public b3Shape3
+class B3_PLUGIN b3Cylinder : public b3Shape3
 {
 public:
 	B3_ITEM_INIT(b3Cylinder);
@@ -1181,7 +1181,7 @@ public:
 	void   b3Normal(b3_ray *ray);
 };
 
-class b3Cone : public b3Shape3
+class B3_PLUGIN b3Cone : public b3Shape3
 {
 public:
 	B3_ITEM_INIT(b3Cone);
@@ -1195,7 +1195,7 @@ public:
 	void   b3Normal(b3_ray *ray);
 };
 
-class b3Ellipsoid : public b3Shape3
+class B3_PLUGIN b3Ellipsoid : public b3Shape3
 {
 public:
 	B3_ITEM_INIT(b3Ellipsoid);
@@ -1209,7 +1209,7 @@ public:
 	        void   b3Normal(b3_ray *ray);
 };
 
-class b3Box : public b3Shape3
+class B3_PLUGIN b3Box : public b3Shape3
 {
 	b3_gl_vertex  box_vertex[8 * 3];
 
@@ -1228,7 +1228,7 @@ public:
 };
 
 // DOUGHNUT, TORUS
-class b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
 	b3_s32            m_lSize;
@@ -1267,7 +1267,7 @@ struct b3_triainfo
 	b3_vector32 Normal;
 };
 
-class b3TriangleShape : public b3SimpleShape
+class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 {
 	b3Array<b3_index>     *m_GridList;       // list of grids
 	b3Array<b3_triainfo>   m_TriaInfos;
@@ -1326,7 +1326,7 @@ private:
 #define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
 
 // TRIANGLES
-class b3Triangles : public b3TriangleShape
+class B3_PLUGIN b3Triangles : public b3TriangleShape
 {
 public:
 	B3_ITEM_INIT(b3Triangles);
@@ -1341,7 +1341,7 @@ public:
 };
 
 // SPLINE_ROT
-class b3SplineRotShape : public b3TriangleShape
+class B3_PLUGIN b3SplineRotShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv;
 	b3_count         m_ySubDiv;
@@ -1370,7 +1370,7 @@ protected:
 };
 
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
-class b3SplineShape : public b3TriangleShape
+class B3_PLUGIN b3SplineShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv,m_ySubDiv;
 
@@ -1411,21 +1411,21 @@ private:
 	b3_bool b3Prepare();
 };
 
-class b3SplineArea : public b3SplineShape
+class B3_PLUGIN b3SplineArea : public b3SplineShape
 {
 public:
 	B3_ITEM_INIT(b3SplineArea);
 	B3_ITEM_LOAD(b3SplineArea);
 };
 
-class b3SplineCylinder : public b3SplineShape 
+class B3_PLUGIN b3SplineCylinder : public b3SplineShape 
 {
 public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
 };
 
-class b3SplineRing : public b3SplineShape 
+class B3_PLUGIN b3SplineRing : public b3SplineShape 
 {
 public:
 	B3_ITEM_INIT(b3SplineRing);
@@ -1487,7 +1487,7 @@ template<int count> struct b3_csg_intervals
 typedef b3_csg_intervals<4>                                 b3_shape_intervals;
 typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 
-class b3CSGShape : public b3Shape
+class B3_PLUGIN b3CSGShape : public b3Shape
 {
 protected:
 	b3_s32           m_Index;
@@ -1512,7 +1512,7 @@ public:
 };
 
 // CSG_SPHERE
-class b3CSGSphere : public b3CSGShape
+class B3_PLUGIN b3CSGSphere : public b3CSGShape
 {
 	b3_f64            m_QuadRadius;       // squared radius
 
@@ -1540,7 +1540,7 @@ public:
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
-class b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
 {
 protected:
 	b3CSGShape3(b3_size class_size,b3_u32 class_type);
@@ -1558,7 +1558,7 @@ public:
 	        b3_count b3GetMaxIntersections();
 };
 
-class b3CSGCylinder : public b3CSGShape3
+class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
 {
 
 public:
@@ -1573,7 +1573,7 @@ public:
 	void     b3Normal(b3_ray *ray);
 };
 
-class b3CSGCone : public b3CSGShape3
+class B3_PLUGIN b3CSGCone : public b3CSGShape3
 {
 
 public:
@@ -1588,7 +1588,7 @@ public:
 	void     b3Normal(b3_ray *ray);
 };
 
-class b3CSGEllipsoid : public b3CSGShape3
+class B3_PLUGIN b3CSGEllipsoid : public b3CSGShape3
 {
 
 public:
@@ -1604,7 +1604,7 @@ public:
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 };
 
-class b3CSGBox : public b3CSGShape3
+class B3_PLUGIN b3CSGBox : public b3CSGShape3
 {
 	b3_gl_vertex  box_vertex[8 * 3];
 
@@ -1624,7 +1624,7 @@ public:
 };
 
 // CSG_TORUS
-class b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
 {
 	b3_f64             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
 
@@ -1660,13 +1660,13 @@ public:
 #define CLASS_BBOX  0x60000000
 #define BBOX        CLASS_BBOX
 
-class b3InitBBox
+class B3_PLUGIN b3InitBBox
 {
 protected:
 	static void b3Init();
 };
 
-class b3BBox : public b3Item, public b3RenderObject
+class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
 	b3_u32           m_Type;               // texture type
@@ -1826,7 +1826,7 @@ protected:
 
 // POINT_LIGHT
 class b3Scene;
-class b3Light : public b3Item
+class B3_PLUGIN b3Light : public b3Item
 {
 	b3_f64            m_HalfJitter;
 	b3_f64            m_FullJitter;
@@ -1943,7 +1943,7 @@ protected:
 	static void b3Init();
 };
 
-class b3AnimControl : public b3Item
+class B3_PLUGIN b3AnimControl : public b3Item
 {
 	b3_size       m_Dimension;           // vector dimension
 	b3_count      m_Used;                // used number of vectors
@@ -1960,7 +1960,7 @@ public:
 
 class b3Animation;
 
-class b3AnimElement : public b3Item
+class B3_PLUGIN b3AnimElement : public b3Item
 {
 	b3_s32              m_Empty;                   // empty entry
 public:
@@ -2028,7 +2028,7 @@ protected:
 	static void b3Init();
 };
 
-class b3Special : public b3Item
+class B3_PLUGIN b3Special : public b3Item
 {
 protected:
 	b3Special(b3_size class_size,b3_u32 class_type);
@@ -2039,7 +2039,7 @@ public:
 };
 
 // SUPERSAMPLE4
-class b3SuperSample : public b3Special
+class B3_PLUGIN b3SuperSample : public b3Special
 {
 	b3_bool     m_Active;
 
@@ -2056,7 +2056,7 @@ public:
 };
 
 // CAMERA
-class b3CameraPart : public b3Special
+class B3_PLUGIN b3CameraPart : public b3Special
 {
 public:
 	b3_vector        m_Width;
@@ -2088,7 +2088,7 @@ public:
 #define CAMERA_ACTIVE 2
 
 // NEBULAR
-class b3Nebular : public b3Special
+class B3_PLUGIN b3Nebular : public b3Special
 {
 	b3_f64           m_NebularDenom;
 public:
@@ -2133,7 +2133,7 @@ enum b3_measure
 	B3_MEASURE_MAX
 };
 
-class b3ModellerInfo : public b3Special
+class B3_PLUGIN b3ModellerInfo : public b3Special
 {
 	b3_u32           m_Flags;
 
@@ -2177,7 +2177,7 @@ public:
 #define B3_CUSTOM_MEASURE_SHIFT      8
 
 // ANIMATION
-class b3Animation : public b3Special
+class B3_PLUGIN b3Animation : public b3Special
 {
 	// OK, the following values are only for "Lines"
 	b3_count        m_Frames;          // computed number of frames
@@ -2244,7 +2244,7 @@ enum b3_sample
 	SAMPLE_SEPARATED   = 0x0400
 };
 
-class b3Distribute : public b3Special
+class B3_PLUGIN b3Distribute : public b3Special
 {
 public:
 	b3Array<b3_f64>    m_MotionBlur;
@@ -2285,7 +2285,7 @@ public:
 #define SAMPLE_SET_TYPE(d,v)    ((d)->m_Type = ((d)->m_Type & 0xffff00ff) | (v))
 
 // LENSFLARE
-class b3LensFlare : public b3Special
+class B3_PLUGIN b3LensFlare : public b3Special
 {
 public:
 	b3_s32         m_Flags;
@@ -2304,7 +2304,7 @@ public:
 #define LENSFLARE_ACTIVE 1
 
 // CAUSTIC
-class b3Caustic : public b3Special
+class B3_PLUGIN b3Caustic : public b3Special
 {
 public:
 	b3_u32   m_Flags;
@@ -2365,7 +2365,7 @@ enum b3_bg_type
 
 class b3RayRow;
 
-class b3Scene : public b3Item
+class B3_PLUGIN b3Scene : public b3Item
 {
 	b3Base<b3Row>    m_RowPool;
 	b3Base<b3Row>    m_TrashPool;
@@ -2521,7 +2521,7 @@ private:
 	friend class b3MotionBlurRayRow;
 };
 
-class b3ScenePhong : public b3Scene
+class B3_PLUGIN b3ScenePhong : public b3Scene
 {
 public:
 	B3_ITEM_INIT(b3ScenePhong);
@@ -2532,7 +2532,7 @@ public:
 	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 };
 
-class b3SceneMork : public b3Scene
+class B3_PLUGIN b3SceneMork : public b3Scene
 {
 public:
 	B3_ITEM_INIT(b3SceneMork);
@@ -2547,7 +2547,7 @@ private:
 	void    b3LightFlare(b3_ray_info *ray);
 };
 
-class b3RayRow : public b3Row
+class B3_PLUGIN b3RayRow : public b3Row
 {
 protected:
 	b3Display   *m_Display;
@@ -2577,7 +2577,7 @@ enum b3_row_state
 	B3_STATE_READY
 };
 
-class b3SupersamplingRayRow : public b3RayRow
+class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 {
 	b3SupersamplingRayRow *m_PrevRow;
 	b3SupersamplingRayRow *m_SuccRow;
@@ -2594,7 +2594,7 @@ private:
 	void    b3Convert();
 };
 
-class b3DistributedRayRow : public b3RayRow
+class B3_PLUGIN b3DistributedRayRow : public b3RayRow
 {
 protected:
 	b3Distribute *m_Distr;
@@ -2610,7 +2610,7 @@ public:
 	virtual void    b3Raytrace();
 };
 
-class b3MotionBlurRayRow : public b3DistributedRayRow
+class B3_PLUGIN b3MotionBlurRayRow : public b3DistributedRayRow
 {
 	b3_index       *m_TimeIndex;
 	b3_index        m_Index;

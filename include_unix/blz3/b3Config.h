@@ -59,6 +59,8 @@
 #define B3_ASSERT(a)
 #endif
 
+#define B3_PLUGIN
+
 typedef unsigned long b3DrawContext;
 
 static inline int stricmp(const char *a,const char *b)
@@ -99,7 +101,7 @@ static inline int stricmp(const char *a,const char *b)
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
 #define B3_FILESTRINGLEN  (MAXNAMLEN)
 
-class b3Runtime : public b3CPU
+class B3_PLUGIN b3Runtime : public b3CPU
 {
 	static char        compiler[128];
 

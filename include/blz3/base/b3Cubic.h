@@ -19,7 +19,7 @@
 
 #include "blz3/b3Types.h"
 
-class b3Cubic
+class B3_PLUGIN b3Cubic
 {
 public:
 	static b3_f64   b3Cbrt     (b3_f64 value);

@@ -34,7 +34,7 @@ enum b3_array_error
 
 typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
 
-template <class T> class b3Array : protected b3Mem
+template <class T> class B3_PLUGIN b3Array : protected b3Mem
 {
 	b3_count  m_Increment;
 	b3_count  m_Index;

@@ -42,7 +42,7 @@ class b3BoxFilter;
 class b3GaussFilter;
 class b3ShutterFilter;
 
-class b3Filter
+class B3_PLUGIN b3Filter
 {
 public:
 	virtual b3_f64    b3Func(b3_f64 x) = 0;
@@ -52,7 +52,7 @@ public:
 	static  b3Filter *b3New(b3_filter filter);
 };
 
-class b3BoxFilter : public b3Filter
+class B3_PLUGIN b3BoxFilter : public b3Filter
 {
 public:
 	inline b3_f64 b3Func(b3_f64 x)
@@ -78,7 +78,7 @@ public:
 };
 
 
-class b3GaussFilter : public b3Filter
+class B3_PLUGIN b3GaussFilter : public b3Filter
 {
 	static b3Array<b3_f64> m_GaussNDTable;
 	static b3_f64          m_Area;
@@ -89,7 +89,7 @@ public:
 	b3_f64 b3Integral(b3_f64 value);
 };
 
-class b3ShutterFilter : public b3Filter
+class B3_PLUGIN b3ShutterFilter : public b3Filter
 {
 	b3_f64 m_lMax,m_uMax,m_Max;
 	b3_f64 m_Slope;

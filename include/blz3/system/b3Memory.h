@@ -50,7 +50,7 @@ enum b3_mem_error
 
 typedef b3Exception<b3_mem_error,'MEM'> b3MemException;
 
-class b3Mem : protected b3MemNode, protected b3MemAccess
+class B3_PLUGIN b3Mem : protected b3MemNode, protected b3MemAccess
 {
 	b3Mutex m_Mutex;
 

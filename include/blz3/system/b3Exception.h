@@ -30,7 +30,7 @@ class b3ExceptionBase;
 typedef void         (*b3ExceptionLogger)(const b3ExceptionBase *exception);
 typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
-class b3ExceptionBase
+class B3_PLUGIN b3ExceptionBase
 {
 	static b3ExceptionLogger   m_Logger;
 	static b3ExceptionMsgFunc  m_GetMessage;
@@ -59,7 +59,7 @@ public:
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 };
 
-template <class T,b3_excno C> class b3Exception : public b3ExceptionBase
+template <class T,b3_excno C> class B3_PLUGIN b3Exception : public b3ExceptionBase
 {
 public:
 	b3Exception(

@@ -28,7 +28,7 @@ enum b3_cpu_type
 	B3_LITTLE_ENDIAN  = 0x4949
 };
 
-class b3CPUBase
+class B3_PLUGIN b3CPUBase
 {
 	static b3_cpu_type cpu_type;
 

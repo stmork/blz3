@@ -22,7 +22,7 @@
 #include "blz3/base/b3SearchPath.h"
 #include "blz3/image/b3Tx.h"
 
-class b3TxPool : public b3Mem, public b3SearchPath
+class B3_PLUGIN b3TxPool : public b3Mem, public b3SearchPath
 {
 	b3Mutex          m_Mutex;
 	b3Base<b3Tx>     m_Pool;

@@ -25,7 +25,7 @@
 #include "blz3/base/b3Compare.h"
 #include "blz3/base/b3List.h"
 
-class b3FileEntry : public b3Link<b3FileEntry>, public b3Comparator<b3FileEntry>
+class B3_PLUGIN b3FileEntry : public b3Link<b3FileEntry>, public b3Comparator<b3FileEntry>
 {
 	b3Path       name;
 public:

@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 
-class b3Endian
+class B3_PLUGIN b3Endian
 {
 public:
 	static b3_u16   b3Get16         (void *Ptr);

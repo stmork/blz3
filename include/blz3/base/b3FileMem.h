@@ -28,7 +28,7 @@
 **                                                                      **
 *************************************************************************/
 
-class b3FileMem : public b3FileAbstract, public b3Mem
+class B3_PLUGIN b3FileMem : public b3FileAbstract, public b3Mem
 {
 	b3_size    m_BufferPos;  // actual file position
 	b3_size    m_BufferMax;  // buffer size

@@ -105,7 +105,7 @@ typedef b3Exception<b3_world_error,'BLZ'> b3WorldException;
 class b3Item;
 class b3FirstItem;
 
-class b3World : public b3Mem, public b3SearchPath
+class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
 	b3_u32         *m_Buffer;
 	b3_size         m_BufferSize;
@@ -156,7 +156,7 @@ typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3StaticInit(b3_u32  class_type) { return new item_class(class_type); }
 #define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3StaticInit(b3_u32 *src)        { return new item_class(src); }
 
-class b3Item : public b3Link<b3Item>, public b3Mem
+class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
 	b3_size         m_ItemSize;
@@ -254,7 +254,7 @@ private:
 **                                                                      **
 *************************************************************************/
 
-class b3FirstItem : public b3Item
+class B3_PLUGIN b3FirstItem : public b3Item
 {
 public:
 	B3_ITEM_INIT(b3FirstItem);

@@ -25,7 +25,7 @@
 class b3Scene;
 class b3BBox;
 
-class b3BBoxReference : public b3Link<b3BBoxReference>
+class B3_PLUGIN b3BBoxReference : public b3Link<b3BBoxReference>
 {
 public:
 	b3BBox *m_BBox;
@@ -49,7 +49,7 @@ typedef b3Exception<b3_error_prepare,'PRP'> b3PrepareException;
 
 #define B3_MIN_BBOXES_FOR_THREADING 50
 
-class b3PrepareInfo
+class B3_PLUGIN b3PrepareInfo
 {
 	b3Thread                *m_Threads;
 	b3PrepareProc            m_PrepareProc;

@@ -35,7 +35,7 @@ enum b3_dir_error
 	B3_DIR_NOT_FOUND
 };
 
-class b3PathAbstract
+class B3_PLUGIN b3PathAbstract
 {
 protected:
 	char m_Path[B3_FILESTRINGLEN];
@@ -76,7 +76,7 @@ private:
 	static void b3RemoveDelimiter(char *path);
 };
 
-class b3DirAbstract
+class B3_PLUGIN b3DirAbstract
 {
 public:
 	virtual b3_bool       b3OpenDir(const char *) = 0;

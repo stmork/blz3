@@ -42,7 +42,7 @@ enum b3_vector_error
 
 typedef b3Exception<b3_vector_error,'VEC'> b3VectorException;
 
-template<class F,int dim> class b3VectorTemplate
+template<class F,int dim> class B3_PLUGIN b3VectorTemplate
 {
 	F B3_ALIGN_16 v[dim];
 

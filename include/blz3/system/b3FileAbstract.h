@@ -103,7 +103,7 @@ typedef b3Exception<b3_file_error,'FIL'> b3FileException;
 **                                                                      **
 *************************************************************************/
 
-class b3FileAbstract
+class B3_PLUGIN b3FileAbstract
 {
 public:
 	virtual b3_bool  b3Open      (const char *file_name,const b3_access_mode mode) = 0;

@@ -29,7 +29,7 @@
 #define B3_NODE_SUCC    8
 #define B3_NODE_LAST   16
 
-template <class T> class b3Link
+template <class T> class B3_PLUGIN b3Link
 {
 public:
 	T         *Succ;
@@ -77,7 +77,7 @@ public:
 #define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= null;(n) = (n)->Prev)
 #define B3_DELETE_BASE(b,n) ((b)->b3Free())
 
-template <class T> class b3Base
+template <class T> class B3_PLUGIN b3Base
 {
 protected:
 	b3_u32  Class;

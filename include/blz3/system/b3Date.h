@@ -58,7 +58,7 @@ typedef enum
 
 typedef b3Exception<b3_date_error,'DAT'> b3DateException;
 
-class b3Date
+class B3_PLUGIN b3Date
 {
 	time_t         time_code;
 	long           mode;

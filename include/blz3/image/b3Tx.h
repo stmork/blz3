@@ -188,7 +188,7 @@ typedef b3Exception<b3_tx_error,'TX'> b3TxException;
 *************************************************************************/
 
 // Auxiliary class for color indexing (private use of class b3Tx)
-class b3ColorIndices : public b3Mem
+class B3_PLUGIN b3ColorIndices : public b3Mem
 {
 	b3_count       num;
 	b3_count       max;
@@ -200,7 +200,7 @@ public:
 };
 
 // One single texture point
-class b3TxPoint
+class B3_PLUGIN b3TxPoint
 {
 public:
 	b3_coord x,y;
@@ -215,7 +215,7 @@ public:
 #define B3_MEASURE_EDGE 3
 
 // For measuring an image...
-class b3Measure
+class B3_PLUGIN b3Measure
 {
 public:
 	b3_bool   valid;
@@ -243,7 +243,7 @@ public:
 *************************************************************************/
 
 // one single image and its methods
-class b3Tx : public b3Link<b3Tx>, public b3Mem
+class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 {
 private:           
 	b3_pkd_color     *palette;

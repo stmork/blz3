@@ -1,4 +1,4 @@
-/*
+#/*
 **
 **	$Filename:	b3TimeAbstract.h $
 **	$Release:	Dortmund 2002 $
@@ -22,14 +22,14 @@
 
 #define B3_MAX_TIME_SLICE 100
 
-class b3TimeAccumAbstract
+class B3_PLUGIN b3TimeAccumAbstract
 {
 public:
 	virtual void  b3Init(unsigned long slice=10) = 0;
 	virtual void  b3Get(unsigned long &refSpan,unsigned long &refCount) = 0;
 };
 
-class b3TimeSpanAbstract
+class B3_PLUGIN b3TimeSpanAbstract
 {
 public:
 	b3_f64        m_uTime;
@@ -48,7 +48,7 @@ private:
 	static char    *b3PrintTime(char *buffer,b3_f64 time_needed);
 };
 
-class b3TimeAbstract
+class B3_PLUGIN b3TimeAbstract
 {
 public:
 	virtual void    b3Now() = 0;

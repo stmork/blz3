@@ -66,7 +66,7 @@ enum b3_bspline_error
 **                                                                      **
 *************************************************************************/
 
-class b3SplineVector
+class B3_PLUGIN b3SplineVector
 {
 public:
 	static inline void b3Clear(b3_vector *vector)
@@ -242,7 +242,7 @@ template<class VECTOR> struct b3_spline_template
 typedef b3_spline_template<b3_vector>   b3_spline;
 typedef b3_spline_template<b3_vector4D> b3_nurbs;
 
-template<class VECTOR> class b3SplineTemplate : public b3_spline_template<VECTOR>
+template<class VECTOR> class B3_PLUGIN b3SplineTemplate : public b3_spline_template<VECTOR>
 {
 public:
 	static b3_bspline_error bspline_errno;

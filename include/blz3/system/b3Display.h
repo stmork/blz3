@@ -49,7 +49,7 @@ typedef b3Exception<b3_display_error,'DSP'> b3DisplayException;
 
 class b3Row;
 
-class b3Display : public b3Mem
+class B3_PLUGIN b3Display : public b3Mem
 {
 	b3_bool               m_OwnTx;
 protected:
@@ -107,7 +107,7 @@ private:
 	        void          b3Init(b3_res xSize,b3_res ySize,const char *title);
 };
 
-class b3Row : public b3Link<b3Row>, public b3Mem
+class B3_PLUGIN b3Row : public b3Link<b3Row>, public b3Mem
 {
 protected:
 	b3_res        m_xSize;
