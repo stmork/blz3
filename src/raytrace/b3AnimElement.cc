@@ -27,8 +27,6 @@
 #include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
 
-#define ANIM_STEP 0.01
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -37,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2004/05/31 08:14:17  sm
+**      - Added autorun infos
+**      - Fixed rounding problem of animation.
+**
 **      Revision 1.8  2004/05/30 20:25:00  sm
 **      - Set paging size in supersampling dialog to 1 instead of 10.
 **      - Added support for debugging super sampling.
@@ -85,6 +87,10 @@
 **                        b3AnimControl implementation                  **
 **                                                                      **
 *************************************************************************/
+
+b3_f64 b3AnimElement::epsilon = 0.0005;
+
+#define ANIM_STEP (2.0 * b3AnimElement::epsilon)
 
 b3AnimControl::b3AnimControl(b3_u32 class_type) : b3Item(sizeof (b3AnimControl),CPOINT_4D)
 {
@@ -286,7 +292,6 @@ void b3AnimElement::b3AnimateMove(
 	b3Matrix::b3Move (&m_NeutralInverse,transform,&move);
 }
 
-
 /* This routine computes the new position point for an animation. The */
 /* point is computed using a NURBS curve. */
 /* ------------------------------------------------------------------ */
@@ -299,14 +304,14 @@ void b3AnimElement::b3AnimateRotate(
 	b3_matrix   *transform,
 	b3_f64       tParam)
 {
-	b3_f32     t1,t2,t = tParam;
+	b3_f64     t1,t2,t = b3Round(tParam);
 	b3_bool    negate;
 	b3_vector  lookTo;
 	b3_vector  oldDir;
 	b3_vector  oldCenter;
 
-	t1 = b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End);
-	t2 = b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End);
+	t1 = b3Round(b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End));
+	t2 = b3Round(b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End));
 	if (t1 != t2)
 	{
 		b3GetPosition (&lookTo, t);

@@ -19,6 +19,7 @@
 #define B3_RAYTRACE_ANIMATION_H
 
 #include "blz3/raytrace/b3Base.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Spline.h"
 
 /*************************************************************************
@@ -132,6 +133,14 @@ private:
 	       void            b3AnimateMove  (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 	       void            b3AnimateRotate(b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
 	       void            b3AnimateScale (b3Animation *AnimRoot,b3_matrix *transform,b3_f64 t);
+
+private:
+	static inline b3_f64 b3Round(b3_f64 x)
+	{
+		return b3Math::b3Round(x,epsilon);
+	}
+
+	static b3_f64 epsilon;
 };
 
 #endif

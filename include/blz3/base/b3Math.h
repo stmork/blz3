@@ -83,6 +83,13 @@ public:
 		return value;
 	}
 
+	static inline b3_f64 b3Round(b3_f64 x,b3_f64 rnd)
+	{
+		b3_f64 mul = floor(0.5 / rnd + 0.5);
+
+		return floor(x * mul + 0.5) / mul;
+	}
+
 	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)
 	{
 		return a * (1 - x) + b * x;
