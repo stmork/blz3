@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/02 16:30:39  sm
+**	- CDlgScene draw error fix
+**
 **	Revision 1.2  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -79,7 +82,6 @@ void CB3ShowImage::b3Aspect(
 	b3_f64 scale,scaleSrc,scaleDst;
 
 	GetClientRect(&m_Rect);
-
 	if (keep_aspect)
 	{
 		scaleSrc = (b3_f64)srcTx->ySize    / (b3_f64)srcTx->xSize;
@@ -151,6 +153,8 @@ void CB3ShowImage::OnPaint()
 	CPaintDC      dc(this);
 
 	CStatic::OnPaint();
+
+	GetClientRect(&m_Rect);
 	dc.FillSolidRect(&m_Rect,GetSysColor(COLOR_BTNFACE));
 	dc.BitBlt(m_xPos,m_yPos,m_xSize,m_ySize,m_DDB.b3GetDC(),0,0,SRCCOPY);
 }

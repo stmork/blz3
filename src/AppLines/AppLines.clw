@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgLight
+LastClass=CB3FloatEdit
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,32 +22,32 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=20
-Resource1=IDD_HIERARCHY
-Resource2=IDD_MODELLER_INFO
-Resource3=IDR_TOOLBAR_OBJECT
-Resource4=IDD_SUPER_SAMPLE
-Resource5=IDR_TOOLBAR_ACTION
-Resource6=IDR_BLZ3TYPE
-Resource7=IDD_LENS_FLARE
-Resource8=IDR_TOOLBAR_LIGHT
-Resource9=IDR_TOOLBAR_DISPLAY
-Resource10=IDD_ABOUTBOX
-Resource11=IDD_NEBULAR
-Resource12=IDD_DISTRIBUTED
-Resource13=IDR_TOOLBAR_CAMERA
+Resource1=IDD_SEARCH_PATH_LIST
+Resource2=IDD_SUPER_SAMPLE
+Resource3=IDR_TOOLBAR_DISPLAY
+Resource4=IDD_NEBULAR
+Resource5=IDR_TOOLBAR_OBJECT
+Resource6=IDR_DISPLAYTYPE
+Resource7=IDD_MODELLER_INFO
+Resource8=IDR_TOOLBAR_VIEW
+Resource9=IDR_TOOLBAR_CAMERA
+Resource10=IDD_SCENE
+Resource11=IDD_ABOUTBOX
+Resource12=IDR_MAINFRAME
+Resource13=IDR_TOOLBAR_LIGHT
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_DISPLAYTYPE
+Resource14=IDR_BLZ3TYPE
 Class17=CDlgModellerInfo
-Resource15=IDD_SCENE
-Resource16=IDD_NEW_ITEM
-Resource17=IDR_MAINFRAME
-Resource18=IDR_TOOLBAR_VIEW
+Resource15=IDD_DISTRIBUTED
+Resource16=IDD_LENS_FLARE
+Resource17=IDD_NEW_ITEM
+Resource18=IDR_TOOLBAR_ACTION
 Class18=CDlgCreateItem
-Resource19=IDD_SEARCH_PATH_LIST
+Resource19=IDD_HIERARCHY
 Class19=CDlgLight
 Resource20=IDD_LIGHT
 
@@ -522,6 +522,7 @@ ImplementationFile=..\system_win32\b3floatedit.cpp
 BaseClass=CEdit
 Filter=W
 LastObject=CB3FloatEdit
+VirtualFilter=WC
 
 [DLG:IDD_MODELLER_INFO]
 Type=1
@@ -651,5 +652,5 @@ ImplementationFile=DlgLight.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
-LastObject=IDC_LIGHT_COLOR
+LastObject=CDlgLight
 

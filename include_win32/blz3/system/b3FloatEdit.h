@@ -68,7 +68,6 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CB3FloatEdit)
-		// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

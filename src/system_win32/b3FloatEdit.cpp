@@ -31,12 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/02 16:30:39  sm
+**	- CDlgScene draw error fix
+**
 **	Revision 1.1  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
 **	- DlgLensFlare implemented
 **	- Adjusting far clipping plane inside b3RenderView
-**
+**	
 **	
 */
 
@@ -60,7 +63,6 @@ CB3FloatEdit::~CB3FloatEdit()
 
 BEGIN_MESSAGE_MAP(CB3FloatEdit, CEdit)
 	//{{AFX_MSG_MAP(CB3FloatEdit)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
