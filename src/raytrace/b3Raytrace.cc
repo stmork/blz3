@@ -34,10 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/10/20 16:14:59  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.16  2001/10/19 18:27:28  sm
 **	- Fixing LDC bug
 **	- Optimizing color routines
-**
+**	
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -114,7 +123,7 @@
 **
 */
 
-b3_f64 epsilon = 0.0001;
+b3_f64 epsilon = 0.0005;
 
 struct b3_rt_info
 {
@@ -279,7 +288,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 		display->b3GetRes(xSize,ySize);
 
 		// Determine CPU count
-		CPUs = m_CPU.b3GetNumCPU();
+		CPUs = b3Runtime::b3GetNumCPUs();
 		b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
 			CPUs,
 			CPUs > 1 ? "'s" : "");

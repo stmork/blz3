@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/10/20 16:14:59  sm
+**      - Some runtime environment cleanups. The CPU count is determined
+**        only once.
+**      - Introduced preparing routines for raytring to shapes.
+**      - Found 5% performance loss: No problem, this was eaten by
+**        bug fxing of the rotation spline shapes. (Phuu!)
+**      - The next job is to implement different row sampler. Then we
+**        should implemented the base set of the Blizzard II raytracer.
+**
 **      Revision 1.18  2001/10/19 14:46:57  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -380,7 +389,6 @@ GLushort *b3RenderShapeContext::b3GetConePolygons()
 
 b3RenderShapeObject::b3RenderShapeObject()
 {
-	Epsilon     = 0.001;
 	Between     = null;
 	m_Activated = false;
 }
@@ -400,8 +408,8 @@ b3_count b3RenderShapeObject::b3GetIndexOverhead (
 	xs = (b3_index)ceil(x1);
 	xe = (b3_index)floor(x2);
 	Overhead = xe - xs;
-	if ((xs - x1) > Epsilon) Overhead++;
-	if ((x2 - xe) > Epsilon) Overhead++;
+	if ((xs - x1) > epsilon) Overhead++;
+	if ((x2 - xe) > epsilon) Overhead++;
 
 	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
@@ -457,7 +465,7 @@ b3_index b3RenderShape::b3FindVertex(GLushort vertex)
 	point = &ptr[vertex];
 	for (i = 0;i < glVertexCount;i++)
 	{
-		if (b3Vector::b3Distance(point,ptr) < Epsilon)
+		if (b3Vector::b3Distance(point,ptr) < epsilon)
 		{
 			return i;
 		}
@@ -573,7 +581,7 @@ void b3RenderShape::b3ComputeCylinderVertices(
 	ySize = 2;
 	glVertexCount = 0;
 
-	if ((i - start) > Epsilon)
+	if ((i - start) > epsilon)
 	{
 		b = Limit.x1 * M_PI * 2;
 		sx = cos(b);
@@ -612,7 +620,7 @@ void b3RenderShape::b3ComputeCylinderVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > Epsilon)
+	if ((end - iMax) > epsilon)
 	{
 		b = Limit.x2 * M_PI * 2;
 		sx = cos(b);
@@ -689,7 +697,7 @@ void b3RenderShape::b3ComputeConeVertices(
 	if (Limit.y2 < 1)
 	{
 		ySize++;
-		if ((i - start) > Epsilon)
+		if ((i - start) > epsilon)
 		{
 			a = Limit.x1 * M_PI * 2;
 			sx = cos(a);
@@ -729,7 +737,7 @@ void b3RenderShape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > Epsilon)
+		if ((end - iMax) > epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
 			sx = cos(a);
@@ -756,7 +764,7 @@ void b3RenderShape::b3ComputeConeVertices(
 		Vector++;
 		glVertexCount++;
 
-		if ((i - start) > Epsilon)
+		if ((i - start) > epsilon)
 		{
 			a  = Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
@@ -784,7 +792,7 @@ void b3RenderShape::b3ComputeConeVertices(
 			xSize++;
 		}
 
-		if ((end - iMax) > Epsilon)
+		if ((end - iMax) > epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
 			sx = (1-b) * cos(a);
@@ -853,7 +861,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > Epsilon)	/* underflow */
+	if ((i - start) > epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = Limit.y1;
 		Circles++;
@@ -864,7 +872,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > Epsilon)	/* Overflow */
+	if ((end - iMax) > epsilon)	/* Overflow */
 	{
 		LocalSin[Circles] = Limit.y2;
 		Circles++;
@@ -884,7 +892,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 	ySize = Circles;
 	glVertexCount = 0;
 
-	if ((i - start) > Epsilon)
+	if ((i - start) > epsilon)
 	{
 		a  = Limit.x1 * M_PI * 2;
 		sx = cos(a);
@@ -923,7 +931,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > Epsilon)
+	if ((end - iMax) > epsilon)
 	{
 		a  = Limit.x2 * M_PI * 2;
 		sx = cos(a);
@@ -972,12 +980,12 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;
-	if ((ys - y1) > Epsilon) Heights++;
-	if ((y2 - ye) > Epsilon) Heights++;
+	if ((ys - y1) > epsilon) Heights++;
+	if ((y2 - ye) > epsilon) Heights++;
 
 	Widths = Heights - 1;
-	if ((SinCosSteps * 0.5 - y2) > Epsilon) Widths++;
-	if (                     y1  > Epsilon) Widths++;
+	if ((SinCosSteps * 0.5 - y2) > epsilon) Widths++;
+	if (                     y1  > epsilon) Widths++;
 
 	if (EndLine) Number = (Widths + Heights + 1) * Overhead + Heights;
 	else         Number = (Widths + Heights + 1) * Overhead;
@@ -1002,7 +1010,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 		}
 		glGridCount += Heights;
 
-		if (y1 <= Epsilon) j = 1;
+		if (y1 <= epsilon) j = 1;
 		else               j = 0;
 		while (j < Heights)
 		{
@@ -1022,7 +1030,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 			glPolyCount += 2;
 			j++;
 		}
-		if ((SinCosSteps * 0.5 - y2) > Epsilon)
+		if ((SinCosSteps * 0.5 - y2) > epsilon)
 		{
 			*gPtr++ = s + j;
 			*gPtr++ = s + j + Heights + 1;
@@ -1127,7 +1135,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 	end    = Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
-	if ((i - start) > Epsilon)	/* underflow */
+	if ((i - start) > epsilon)	/* underflow */
 	{
 		LocalSin[Circles] = Limit.y1;
 		Circles++;
@@ -1138,7 +1146,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
-	if ((end - iMax) > Epsilon)	/* Overflow */
+	if ((end - iMax) > epsilon)	/* Overflow */
 	{
 		LocalSin[Circles] = Limit.y2;
 		Circles++;
@@ -1158,7 +1166,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 
-	if ((i - start) > Epsilon)
+	if ((i - start) > epsilon)
 	{
 		a     = Limit.x1 * M_PI * 2;
 		sx    = cos(a);
@@ -1203,7 +1211,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 		xSize++;
 	}
 
-	if ((end - iMax) > Epsilon)
+	if ((end - iMax) > epsilon)
 	{
 		a     = Limit.x2 * M_PI * 2;
 		sx    = cos(a);
@@ -1253,8 +1261,8 @@ void b3RenderShape::b3ComputeTorusIndices()
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;
-	if ((ys - y1) > Epsilon) Heights++;
-	if ((y2 - ye) > Epsilon) Heights++;
+	if ((ys - y1) > epsilon) Heights++;
+	if ((y2 - ye) > epsilon) Heights++;
 	if ((ys > 0) || (ye < SinCosSteps))
 	{
 		EndCol = true;

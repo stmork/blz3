@@ -804,7 +804,6 @@ protected:
 	b3_vector       *Between;
 	b3_f64          *Cos;
 	b3_f64          *Sin;
-	b3_f64           Epsilon;
 
 	b3CondLimit      Limit;
 
@@ -934,28 +933,31 @@ protected:
 	b3_f64            m_DirLen[3];        // length of direction vectors
 
 protected:
-	void b3InitBaseTrans();
-	void b3BaseTrans(b3_line64 *in,b3_line64 *out);
+	b3_bool b3Prepare();
+	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
 };
 
 // SPHERE
 class b3Sphere : public b3RenderShape    // Kugel
 {
+	b3_f64               m_QuadRadius;   // Quadrat vom Radius
+
+public:
 	b3_vector       	 m_Base;         // Mittelpunkt
 	b3_vector       	 m_Dir;          // Radius
-	b3_f64               m_QuadRadius;   // Quadrat vom Radius
 
 public:
 	B3_ITEM_INIT(b3Sphere);
 	B3_ITEM_LOAD(b3Sphere);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	void   b3Normal(b3_ray *ray);
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeIndices();
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	void    b3Normal(b3_ray *ray);
 
-	void b3Transform(b3_matrix *transformation);
+	b3_bool b3Prepare();
+	void    b3Transform(b3_matrix *transformation);
 };
 
 // AREA, DISK
@@ -974,8 +976,9 @@ public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
 
-	void b3Transform(b3_matrix *transformation);
-	void b3Normal(b3_ray *ray);
+	b3_bool b3Prepare();
+	void    b3Transform(b3_matrix *transformation);
+	void    b3Normal(b3_ray *ray);
 };
 
 class b3Area : public b3Shape2
@@ -1021,7 +1024,8 @@ public:
 	B3_ITEM_INIT(b3Shape3);
 	B3_ITEM_LOAD(b3Shape3);
 
-	void b3Transform(b3_matrix *transformation);
+	b3_bool b3Prepare();
+	void    b3Transform(b3_matrix *transformation);
 };
 
 class b3Cylinder : public b3Shape3
@@ -1096,12 +1100,13 @@ public:
 	B3_ITEM_INIT(b3Torus);
 	B3_ITEM_LOAD(b3Torus);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	void   b3Normal(b3_ray *ray);
-	void   b3Transform(b3_matrix *transformation);
+	b3_bool b3Prepare();
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3ComputeVertices();
+	void    b3ComputeIndices();
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	void    b3Normal(b3_ray *ray);
+	void    b3Transform(b3_matrix *transformation);
 };
 
 #define CLASS_VERTEX        0x00010000
@@ -1956,7 +1961,6 @@ public:
 
 class b3Scene : public b3Item
 {
-	b3CPU            m_CPU;
 	b3Base<b3RayRow> m_Rows;
 	b3Mutex          m_RowMutex;
 public:

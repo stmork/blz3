@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Config.c $
+**	$Filename:	b3Config.cpp $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -31,10 +31,19 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2001/10/20 16:15:00  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.4  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.3  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
@@ -64,6 +73,16 @@ b3Runtime::b3Runtime()
 b3_cpu_type b3Runtime::b3GetCPUType()
 {
 	return static_runtime_environment.cpu_type;
+}
+
+b3_count b3Runtime::b3GetNumThreads()
+{
+	return static_runtime_environment.b3CPU::b3GetNumThreads();
+}
+
+b3_count b3Runtime::b3GetNumCPUs()
+{
+	return static_runtime_environment.b3CPU::b3GetNumCPUs();
 }
 
 void b3Runtime::b3PSwap(

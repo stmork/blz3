@@ -32,11 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/20 16:14:59  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.11  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.10  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
@@ -101,7 +110,12 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);
+}
+
+b3_bool b3Sphere::b3Prepare()
+{
 	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
+	return true;
 }
 
 void b3Sphere::b3GetCount(

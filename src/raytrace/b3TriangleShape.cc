@@ -33,6 +33,15 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/10/20 16:15:00  sm
+**      - Some runtime environment cleanups. The CPU count is determined
+**        only once.
+**      - Introduced preparing routines for raytring to shapes.
+**      - Found 5% performance loss: No problem, this was eaten by
+**        bug fxing of the rotation spline shapes. (Phuu!)
+**      - The next job is to implement different row sampler. Then we
+**        should implemented the base set of the Blizzard II raytracer.
+**
 **      Revision 1.15  2001/10/19 14:46:58  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -249,10 +258,7 @@ void b3TriangleShape::b3PrepareGridList ()
 		P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
 		P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
 		P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
-		if ((
-			m_Triangles[i].Normal.x * m_Triangles[i].Normal.x +
-			m_Triangles[i].Normal.y * m_Triangles[i].Normal.y +
-			m_Triangles[i].Normal.z * m_Triangles[i].Normal.z) > epsilon)
+		if (b3Vector::b3QuadLength(&m_Triangles[i].Normal) > (epsilon * epsilon))
 		{
 			b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
 		}

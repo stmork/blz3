@@ -32,6 +32,7 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/system/b3Thread.h"
 
 #ifdef BLZ3_USE_OPENGL
 #include <GL/glut.h>
@@ -83,7 +84,7 @@ typedef enum
 	B3_LITTLE_ENDIAN = 0x4949
 } b3_cpu_type;
 
-class b3Runtime
+class b3Runtime : public b3CPU
 {
 	b3_cpu_type        cpu_type;
 public:
@@ -93,6 +94,8 @@ public:
 	static b3_bool     b3Hostname(char *hostname,const b3_size buffer_size);
 	static b3_s32      b3Execute(const char *command, const b3_bool async);
 	static b3_cpu_type b3GetCPUType();
+	static b3_count    b3GetNumThreads();
+	static b3_count    b3GetNumCPUs();
 };
 
 #endif

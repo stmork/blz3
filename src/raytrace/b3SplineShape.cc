@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/10/20 16:14:59  sm
+**      - Some runtime environment cleanups. The CPU count is determined
+**        only once.
+**      - Introduced preparing routines for raytring to shapes.
+**      - Found 5% performance loss: No problem, this was eaten by
+**        bug fxing of the rotation spline shapes. (Phuu!)
+**      - The next job is to implement different row sampler. Then we
+**        should implemented the base set of the Blizzard II raytracer.
+**
 **      Revision 1.16  2001/10/18 14:48:26  sm
 **      - Fixing refracting problem on some scenes with glasses.
 **      - Fixing overlighting problem when using Mork shading.
@@ -146,29 +155,6 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
 	}
 }
 
-void b3SplineCurve::b3Transform(b3_matrix *transformation)
-{
-	b3_vector *control;
-	b3_index   offset;
-	b3_index   x;
-
-	control = Spline.controls;
-	offset  = Spline.offset;
-
-	// Transform rotation axis
-	b3MatrixVMul (transformation,&Axis.pos,&Axis.pos,true);
-	b3MatrixVMul (transformation,&Axis.dir,&Axis.dir,false);
-
-	// Transform control points
-	for (x = 0;x < Spline.control_num;x++)
-	{
-		b3MatrixVMul (transformation,control,control,true);
-		control += offset;
-	}
-	b3Recompute();
-	b3TriangleShape::b3Transform(transformation);
-}
-
 b3_bool b3SplineCurve::b3Prepare()
 {
 	b3Spline     MySpline;
@@ -246,6 +232,29 @@ b3_bool b3SplineCurve::b3Prepare()
 	m_Flags = PHONG;
 
 	return b3TriangleShape::b3Prepare();
+}
+
+void b3SplineCurve::b3Transform(b3_matrix *transformation)
+{
+	b3_vector *control;
+	b3_index   offset;
+	b3_index   x;
+
+	control = Spline.controls;
+	offset  = Spline.offset;
+
+	// Transform rotation axis
+	b3MatrixVMul (transformation,&Axis.pos,&Axis.pos,true);
+	b3MatrixVMul (transformation,&Axis.dir,&Axis.dir,false);
+
+	// Transform control points
+	for (x = 0;x < Spline.control_num;x++)
+	{
+		b3MatrixVMul (transformation,control,control,true);
+		control += offset;
+	}
+	b3Recompute();
+	b3TriangleShape::b3Transform(transformation);
 }
 
 

@@ -61,11 +61,20 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/20 16:14:59  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.3  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
 **	
@@ -104,7 +113,6 @@ typedef struct
 **                                                                      **
 *************************************************************************/
 
-static b3CPU        cpu;
 static b3_pkd_color quad256[512];
 static b3_bool      quadValid = false;
 
@@ -737,17 +745,17 @@ void b3Tx::b3MonoScaleToGrey(
 	b3_pkd_color  pal[2];
 	b3_pkd_color *tx_pal,color;
 	b3_index      i;
-	b3_count      NumCPU;
+	b3_count      NumCPUs;
 	b3_f64        r,g,b;
 
 #if 1
-	NumCPU = cpu.b3GetNumCPU();
-	if (NumCPU > CPU_MAX)
+	NumCPUs = b3Runtime::b3GetNumCPUs();
+	if (NumCPUs > CPU_MAX)
 	{
-		NumCPU = CPU_MAX;
+		NumCPUs = CPU_MAX;
 	}
 #else
-	NumCPU = 1;
+	NumCPUs = 1;
 #endif
 
 	// compute new palette
@@ -770,11 +778,11 @@ void b3Tx::b3MonoScaleToGrey(
 	// if the image is too small
 	if ((Tx->xSize * Tx->ySize) < 1000000)
 	{
-		NumCPU = 1;
+		NumCPUs = 1;
 	}
 
 	// Init rect infos
-	for (i = 0;i < NumCPU;i++)
+	for (i = 0;i < NumCPUs;i++)
 	{
 		RectInfo[i].dstType   = type;
 		RectInfo[i].rIndex    = rIndex;
@@ -785,15 +793,15 @@ void b3Tx::b3MonoScaleToGrey(
 		RectInfo[i].xSizeDst  = xSize;
 		RectInfo[i].ySizeSrc  = Tx->ySize;
 		RectInfo[i].ySizeDst  = ySize;
-		RectInfo[i].yMin      = ySize *  i      / NumCPU;
-		RectInfo[i].yMax      = ySize * (i + 1) / NumCPU;
+		RectInfo[i].yMin      = ySize *  i      / NumCPUs;
+		RectInfo[i].yMax      = ySize * (i + 1) / NumCPUs;
 		RectInfo[i].pal[0]    = pal[0];
 		RectInfo[i].pal[1]    = pal[1];
 	}
-	if (NumCPU > 1)
+	if (NumCPUs > 1)
 	{
 		// start threads
-		for (i = 0;i < NumCPU;i++)
+		for (i = 0;i < NumCPUs;i++)
 		{
 			tx_thread[i].b3Name("b3Tx - b3MonoScaleToGrey");
 			tx_thread[i].b3Start(
@@ -802,7 +810,7 @@ void b3Tx::b3MonoScaleToGrey(
 		}
 
 		// Wait for threads
-		for (i = 0;i < NumCPU;i++)
+		for (i = 0;i < NumCPUs;i++)
 		{
 			tx_thread[i].b3Wait();
 		}
@@ -1096,27 +1104,27 @@ void b3Tx::b3ColorScaleToGrey(
 	b3RectInfo RectInfo[CPU_MAX];
 	b3Thread   tx_thread[CPU_MAX];
 	b3_index   i;
-	b3_count   NumCPU;
+	b3_count   NumCPUs;
 
 #if 1
-	NumCPU = cpu.b3GetNumCPU();
-	if (NumCPU > CPU_MAX)
+	NumCPUs = b3Runtime::b3GetNumCPUs();
+	if (NumCPUs > CPU_MAX)
 	{
-		NumCPU = CPU_MAX;
+		NumCPUs = CPU_MAX;
 	}
 #else
-	NumCPU = 1;
+	NumCPUs = 1;
 #endif
 
 	// It doesn't worth multi threading
 	// if the image is too small
 	if ((srcTx->xSize * srcTx->ySize) < 250000)
 	{
-		NumCPU = 1;
+		NumCPUs = 1;
 	}
 
 	// Init rect infos
-	for (i = 0;i < NumCPU;i++)
+	for (i = 0;i < NumCPUs;i++)
 	{
 		RectInfo[i].dstType   = type;
 		RectInfo[i].rIndex    = rIndex;
@@ -1127,16 +1135,16 @@ void b3Tx::b3ColorScaleToGrey(
 		RectInfo[i].xSizeDst  = xSize;
 		RectInfo[i].ySizeSrc  = srcTx->ySize;
 		RectInfo[i].ySizeDst  = ySize;
-		RectInfo[i].yMin      = ySize *  i      / NumCPU;
-		RectInfo[i].yMax      = ySize * (i + 1) / NumCPU;
+		RectInfo[i].yMin      = ySize *  i      / NumCPUs;
+		RectInfo[i].yMax      = ySize * (i + 1) / NumCPUs;
 		RectInfo[i].pal[0]    = 0;
 		RectInfo[i].pal[1]    = 0;
 	}
 
-	if (NumCPU > 1)
+	if (NumCPUs > 1)
 	{
 		// start threads
-		for (i = 0;i < NumCPU;i++)
+		for (i = 0;i < NumCPUs;i++)
 		{
 			tx_thread[i].b3Name("b3Tx - b3ColorScaleToGrey");
 			tx_thread[i].b3Start(
@@ -1145,7 +1153,7 @@ void b3Tx::b3ColorScaleToGrey(
 		}
 
 		// Wait for threads
-		for (i = 0;i < NumCPU;i++)
+		for (i = 0;i < NumCPUs;i++)
 		{
 			tx_thread[i].b3Wait();
 		}
@@ -1530,16 +1538,16 @@ void b3Tx::b3MonoScale(
 	b3_f64         r,g,b;
 	b3RectInfo     RectInfo[CPU_MAX];
 	b3_index       i;
-	b3_count       NumCPU;
+	b3_count       NumCPUs;
 
 #if 1
-	NumCPU = cpu.b3GetThreads();
-	if (NumCPU > CPU_MAX)
+	NumCPUs = b3Runtime::b3GetNumCPUs();
+	if (NumCPUs > CPU_MAX)
 	{
-		NumCPU = CPU_MAX;
+		NumCPUs = CPU_MAX;
 	}
 #else
-	NumCPU = 1;
+	NumCPUs = 1;
 #endif
 
 	cData  = (b3_u08 *)Tx->b3GetData();
@@ -1600,11 +1608,11 @@ void b3Tx::b3MonoScale(
 		// if the image is too small
 		if ((xSize * ySize) < 300000)
 		{
-			NumCPU = 1;
+			NumCPUs = 1;
 		}
 
 		// Init rect infos
-		for (i = 0;i < NumCPU;i++)
+		for (i = 0;i < NumCPUs;i++)
 		{
 			RectInfo[i].rIndex    = rIndex;
 			RectInfo[i].cIndex    = cIndex;
@@ -1614,13 +1622,13 @@ void b3Tx::b3MonoScale(
 			RectInfo[i].xSizeDst  = xSize;
 			RectInfo[i].ySizeSrc  = Tx->ySize;
 			RectInfo[i].ySizeDst  = ySize;
-			RectInfo[i].yMin      = ySize *  i      / NumCPU;
-			RectInfo[i].yMax      = ySize * (i + 1) / NumCPU;
+			RectInfo[i].yMin      = ySize *  i      / NumCPUs;
+			RectInfo[i].yMax      = ySize * (i + 1) / NumCPUs;
 		}
-		if (NumCPU > 1)
+		if (NumCPUs > 1)
 		{
 			// start threads
-			for (i = 0;i < NumCPU;i++)
+			for (i = 0;i < NumCPUs;i++)
 			{
 				tx_thread[i].b3Name("b3Tx - b3MonoScale");
 				tx_thread[i].b3Start(
@@ -1629,7 +1637,7 @@ void b3Tx::b3MonoScale(
 			}
 
 			// Wait for threads
-			for (i = 0;i < NumCPU;i++)
+			for (i = 0;i < NumCPUs;i++)
 			{
 				tx_thread[i].b3Wait();
 			}

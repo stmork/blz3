@@ -32,11 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/20 16:14:59  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.14  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.13  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -124,8 +133,6 @@ b3Torus::b3Torus(b3_u32 class_type) : b3RenderShape(sizeof(b3Torus), class_type)
 
 b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 {
-	b3_f64 denom,scale;
-
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
 	b3InitVector();  // This is Normals[2]
@@ -140,6 +147,11 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[2]
 	m_aRad = b3InitFloat();
 	m_bRad = b3InitFloat();
+}
+
+b3_bool b3Torus::b3Prepare()
+{
+	b3_f64 denom,scale;
 
 	if ((scale = b3Vector::b3Normalize(&m_Dir1)) == 0)
 	{
@@ -164,7 +176,7 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;
 
-	b3InitBaseTrans();
+	return b3ShapeBaseTrans::b3Prepare();
 }
 
 void b3Torus::b3GetCount(

@@ -79,12 +79,11 @@ private:
 // Info about available CPUs
 class b3CPU
 {
-	b3_u32 num;
+	b3_count num;
 public:
-	       b3CPU();
-	b3_u32 b3GetCPU();
-	b3_u32 b3GetThreads();
-	b3_u32 b3GetNumCPU();
+	         b3CPU();
+	b3_count b3GetNumThreads();
+	b3_count b3GetNumCPUs();
 };
 
 #endif

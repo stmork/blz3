@@ -31,6 +31,15 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/20 16:14:59  sm
+**      - Some runtime environment cleanups. The CPU count is determined
+**        only once.
+**      - Introduced preparing routines for raytring to shapes.
+**      - Found 5% performance loss: No problem, this was eaten by
+**        bug fxing of the rotation spline shapes. (Phuu!)
+**      - The next job is to implement different row sampler. Then we
+**        should implemented the base set of the Blizzard II raytracer.
+**
 **      Revision 1.12  2001/09/22 16:19:52  sm
 **      - Adding basic shape intersection routines
 **
@@ -147,7 +156,7 @@ void b3Disk::b3ComputeVertices()
 	{
 		ySize++;
 		// This is a ring formed disk
-		if ((i - start) > Epsilon)
+		if ((i - start) > epsilon)
 		{
 			//compute front fractional disk ring
 			a  = Limit.x1 * M_PI * 2;
@@ -189,7 +198,7 @@ void b3Disk::b3ComputeVertices()
 			xSize++;
 		}
 
-		if ((end - iMax) > Epsilon)
+		if ((end - iMax) > epsilon)
 		{
 			// compute rest fractional ring disk
 			a  = Limit.x2 * M_PI * 2;
@@ -216,7 +225,7 @@ void b3Disk::b3ComputeVertices()
 		glVertexCount++;
 
 		// First fractional disk part if any
-		if ((i - start) > Epsilon)
+		if ((i - start) > epsilon)
 		{
 			a  = Limit.x1 * M_PI * 2;
 			sx = h * cos(a);
@@ -245,8 +254,8 @@ void b3Disk::b3ComputeVertices()
 			xSize++;
 		}
 
-		// Last part as fracvtional disk
-		if ((end - iMax) > Epsilon)
+		// Last part as fractional disk
+		if ((end - iMax) > epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
 			sx = h * cos(a);

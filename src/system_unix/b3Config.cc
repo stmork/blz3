@@ -33,10 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/20 16:15:00  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.2  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	
 */
 
@@ -96,4 +105,14 @@ b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
 	}
 
 	return result;
+}
+
+b3_count b3Runtime::b3GetNumThreads()
+{
+	return static_runtime_environment.b3CPU::b3GetNumThreads();
+}
+
+b3_count b3Runtime::b3GetNumCPUs()
+{
+	return static_runtime_environment.b3CPU::b3GetNumCPUs();
 }

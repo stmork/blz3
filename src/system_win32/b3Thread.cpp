@@ -33,10 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/20 16:15:00  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.4  2001/07/03 18:14:08  sm
 **	- Now having running threads. The system lib
 **	  needed the appropriate project options
-**
+**	
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
@@ -297,12 +306,7 @@ b3CPU::b3CPU()
 	b3PrintF (B3LOG_DEBUG,"### CLASS: b3CPU  # Number of used CPUs: %ld\n",num);
 }
 
-b3_count b3CPU::b3GetCPU()
-{
-	return num;
-}
-
-b3_count b3CPU::b3GetThreads()
+b3_count b3CPU::b3GetNumThreads()
 {
 	b3_count resuming;
 
@@ -319,7 +323,7 @@ b3_count b3CPU::b3GetThreads()
 	return resuming;
 }
 
-b3_count b3CPU::b3GetNumCPU()
+b3_count b3CPU::b3GetNumCPUs()
 {
 	return num;
 }

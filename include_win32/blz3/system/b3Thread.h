@@ -79,8 +79,8 @@ class b3CPU
 public:
 	         b3CPU();
 	b3_count b3GetCPU();
-	b3_count b3GetThreads();
-	b3_count b3GetNumCPU();
+	b3_count b3GetNumThreads();
+	b3_count b3GetNumCPUs();
 };
 
 #endif

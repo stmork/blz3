@@ -23,9 +23,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Log.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
-#include "blz3/system/b3Thread.h"
 
 #include "b3Mandel.h"
 
@@ -48,11 +47,20 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/20 16:15:00  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.2  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.1  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -148,7 +156,6 @@ public:
 	}
 };
 
-static b3CPU               cpu;
 static b3Base<b3MandelRow> rows;
 static b3Mutex             row_mutex;
 
@@ -210,7 +217,7 @@ void b3Mandel::b3Compute(
 	display->b3GetRes(xSize,ySize);
 
 	// Determine number of CPU's
-	CPUs = cpu.b3GetNumCPU();
+	CPUs = b3Runtime::b3GetNumCPUs();
 	b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
 		CPUs,
 		CPUs > 1 ? "'s" : "");

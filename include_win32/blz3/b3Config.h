@@ -83,10 +83,19 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/20 16:14:59  sm
+**	- Some runtime environment cleanups. The CPU count is determined
+**	  only once.
+**	- Introduced preparing routines for raytring to shapes.
+**	- Found 5% performance loss: No problem, this was eaten by
+**	  bug fxing of the rotation spline shapes. (Phuu!)
+**	- The next job is to implement different row sampler. Then we
+**	  should implemented the base set of the Blizzard II raytracer.
+**
 **	Revision 1.14  2001/10/17 21:09:06  sm
 **	- Triangle support added for intersections, normal computations. So
 **	  Spline shapes can be computed, too. Now only CSG is missing.
-**
+**	
 **	Revision 1.13  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -236,7 +245,7 @@ enum b3_msgbox_type
 };
 
 
-class b3Runtime
+class b3Runtime : public b3CPU
 {
 	b3_cpu_type        cpu_type;
 public:
@@ -248,6 +257,8 @@ public:
 	static b3_cpu_type   b3GetCPUType();
 	static b3_msg_result b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
 	static b3_msg_result b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
+	static b3_count      b3GetNumThreads();
+	static b3_count      b3GetNumCPUs();
 };
 
 #endif

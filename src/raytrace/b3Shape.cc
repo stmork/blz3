@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2001/10/20 16:14:59  sm
+**      - Some runtime environment cleanups. The CPU count is determined
+**        only once.
+**      - Introduced preparing routines for raytring to shapes.
+**      - Found 5% performance loss: No problem, this was eaten by
+**        bug fxing of the rotation spline shapes. (Phuu!)
+**      - The next job is to implement different row sampler. Then we
+**        should implemented the base set of the Blizzard II raytracer.
+**
 **      Revision 1.25  2001/10/19 14:46:57  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -372,9 +381,13 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
+}
 
+b3_bool b3Shape2::b3Prepare()
+{
 	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
 	m_NormalLength = b3Vector::b3Length(&m_Normal);
+	return true;
 }
 
 void b3Shape2::b3Transform(b3_matrix *transformation)
@@ -403,39 +416,44 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
 	b3InitVector(&m_Dir3);
-
-	b3InitBaseTrans();
 }
 
-void b3ShapeBaseTrans::b3InitBaseTrans()
+b3_bool b3Shape3::b3Prepare()
+{
+	return b3ShapeBaseTrans::b3Prepare();
+}
+
+b3_bool b3ShapeBaseTrans::b3Prepare()
 {
 	b3_f64 denom;
 
 	denom = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
 	if (denom != 0)
 	{
-		m_Denom = 1.0 / denom;
+		m_Denom        = 1.0 / denom;
 
-		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) * m_Denom;
-		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) * m_Denom;
-		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) * m_Denom;
+		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) / denom;
+		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) / denom;
+		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) / denom;
 
-		m_Normals[1].x = (m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y) * m_Denom;
-		m_Normals[1].y = (m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z) * m_Denom;
-		m_Normals[1].z = (m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x) * m_Denom;
+		m_Normals[1].x = (m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y) / denom;
+		m_Normals[1].y = (m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z) / denom;
+		m_Normals[1].z = (m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x) / denom;
 
-		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) * m_Denom;
-		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) * m_Denom;
-		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) * m_Denom;
+		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) / denom;
+		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) / denom;
+		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) / denom;
 	}
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
+		m_Denom = 0;
 	}
 
 	m_DirLen[0] = b3Vector::b3QuadLength(&m_Dir1);
 	m_DirLen[1] = b3Vector::b3QuadLength(&m_Dir2);
 	m_DirLen[2] = b3Vector::b3QuadLength(&m_Dir3);
+	return denom != 0;
 }
 
 void b3ShapeBaseTrans::b3BaseTrans(
