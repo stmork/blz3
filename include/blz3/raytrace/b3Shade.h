@@ -46,7 +46,6 @@ public:
 
 protected:
 	virtual void            b3ShadeSurface(b3_surface &surface,b3_count depth) = 0;
-	virtual void            b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result) = 0;
 	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result) = 0;
 
 protected:
@@ -64,7 +63,6 @@ public:
 
 protected:
 	       void    b3ShadeSurface(b3_surface &surface,b3_count depth);
-	       void    b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 };
 
@@ -73,7 +71,7 @@ protected:
 //////////////
 class B3_PLUGIN b3ShaderMork : public b3Shader
 {
-	b3_f64 m_ShadowFactor;
+	b3_f32 m_ShadowFactor;
 
 public:
 	         b3ShaderMork(b3Scene *scene);
@@ -82,7 +80,6 @@ public:
 
 protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
-	void     b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 private:

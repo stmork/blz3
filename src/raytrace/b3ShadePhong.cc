@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/05/27 13:13:56  sm
+**	- Optimized Mork shader
+**	- Removed b3ShadePostMaterial
+**	- Removed m_SpecularSum
+**
 **	Revision 1.27  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
-**
+**	
 **	Revision 1.26  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -185,16 +190,6 @@ b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 #define MIX_REFLECTION 1
 #define MIX_REFRACTION 2
 #define MIX_BOTH       (MIX_REFLECTION | MIX_REFRACTION)
-
-void b3ShaderPhong::b3ShadePostMaterial(
-	b3Light       *light,
-	b3_light_info *Jit,
-	b3_surface    *surface,
-	b3Color       &aux,
-	b3Color       &result)
-{
-	result += aux * 2.0;
-}
 
 void b3ShaderPhong::b3ShadeLight(
 	b3Light       *light,

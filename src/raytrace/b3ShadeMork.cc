@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/05/27 13:13:56  sm
+**	- Optimized Mork shader
+**	- Removed b3ShadePostMaterial
+**	- Removed m_SpecularSum
+**
 **	Revision 1.35  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
-**
+**	
 **	Revision 1.34  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -222,29 +227,14 @@ void b3ShaderMork::b3Prepare()
 	m_ShadowFactor = m_Scene->m_ShadowBrightness / m_Scene->b3GetLightCount();
 }
 
-void b3ShaderMork::b3ShadePostMaterial(
-	b3Light       *light,
-	b3_light_info *Jit,
-	b3_surface    *surface,
-	b3Color       &aux,
-	b3Color       &result)
-{
-	result += aux * 2.0;
-}
-
 void b3ShaderMork::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3_f64   ShapeAngle,Factor;
-	b3Color  filter;
-
-	// Real absorption
-	result += (surface->m_Diffuse * m_ShadowFactor);
-
-	filter.b3Init();
+	b3_f64  ShapeAngle,Factor;
+	b3Color illumination;
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -260,7 +250,7 @@ void b3ShaderMork::b3ShadeLight(
 			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
 			{
 				Factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->LightFrac;
-				surface->m_SpecularSum += (light->m_Color * Factor);
+				result += (light->m_Color * Factor);
 			}
 		}
 		else
@@ -269,13 +259,22 @@ void b3ShaderMork::b3ShadeLight(
 		}
 
 		// surface illumination (diffuse color)
-		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
+		Factor = ShapeAngle * Jit->LightFrac * 0.5 - m_ShadowFactor;
+		if (Factor >= 0)
 		{
-			filter = light->m_Color * Factor;
+			illumination = light->m_Color * Factor + b3Color(m_ShadowFactor);
+		}
+		else
+		{
+			illumination.b3Init(m_ShadowFactor);
 		}
 	}
+	else
+	{
+		illumination.b3Init(m_ShadowFactor);
+	}
 
-	result += (surface->m_Diffuse * filter);
+	result += (surface->m_Diffuse * illumination);
 }
 
 void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
@@ -301,8 +300,8 @@ void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
 	b3ComputeFresnel(surface);
 
 	// Mix to unpolarized light
-	refl = (Ers + Erp) * surface->m_Reflection *        surface->m_Fresnel  * 0.5;
-	refr = (Ets + Etp) * surface->m_Refraction * (1.0 - surface->m_Fresnel) * 0.5;
+	refl = (Ers + Erp) * surface->m_Reflection * 0.5;
+	refr = (Ets + Etp) * surface->m_Refraction * 0.5;
 }
 
 void b3ShaderMork::b3ShadeSurface(
@@ -364,21 +363,17 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
-	factor = (1.0 - refl - refr) * 0.5;
+	factor = (1.0 - refl - refr);
 	if (factor > 0)
 	{
 		// For each light source
 		ray->color.b3Init();
-		surface.m_SpecularSum.b3Init();
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color =
-			ray->color * factor +
-			result +
-			surface.m_SpecularSum;
+		ray->color = ray->color * factor + result;
 	}
 	else
 	{

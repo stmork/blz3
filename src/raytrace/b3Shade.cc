@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2004/05/27 13:13:56  sm
+**	- Optimized Mork shader
+**	- Removed b3ShadePostMaterial
+**	- Removed m_SpecularSum
+**
 **	Revision 1.47  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
-**
+**	
 **	Revision 1.46  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -435,14 +440,9 @@ b3_bool b3Shader::b3Shade(
 
 void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result)
 {
-	b3Color     accumulate = b3Color(0,0,0);
 	b3Material *material = surface->incoming->material;
 
-	if ((material != null) && material->b3Illuminate(surface,jit,accumulate))
-	{
-		b3ShadePostMaterial(light, jit, surface, accumulate, result);
-	}
-	else
+	if (!((material != null) && material->b3Illuminate(surface,jit,result)))
 	{
 		b3ShadeLight(light, jit, surface, result);
 	}

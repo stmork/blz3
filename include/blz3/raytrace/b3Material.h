@@ -74,7 +74,6 @@ struct b3_surface : public b3_material
 	b3_f64       m_Fresnel;
 	b3_f64       m_IorComputed;
 	b3_f64       m_CosAlpha;
-	b3Color      m_SpecularSum;
 };
 
 class B3_PLUGIN b3Material : public b3Item
