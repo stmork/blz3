@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Profile.cpp $
+**	$Filename:	b3ProfileBevelSpline.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -22,7 +22,8 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "b3Profile.h"
+#include "b3ProfileBevelSpline.h"
+#include "DlgProfileBevelSpline.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,16 +33,12 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/03/05 20:38:24  sm
+**	Revision 1.1  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
 **
-**	Revision 1.1  2002/03/03 21:22:22  sm
-**	- Added support for creating surfaces using profile curves.
-**	- Added simple creating of triangle fields.
-**	
 **
 */
 
@@ -51,56 +48,66 @@
 **                                                                      **
 *************************************************************************/
 
-b3Base<b3Profile> LinesProfileBase;
+b3ProfileBevelSpline static_profile_bevel_spline;
 
-b3Profile::b3Profile() : b3Link<b3Profile>(sizeof(b3Profile))
+b3ProfileBevelSpline::b3ProfileBevelSpline()
 {
-	m_Dlg = null;
-	LinesProfileBase.b3Append(this);
 }
 
-b3Profile::~b3Profile()
+b3_bool b3ProfileBevelSpline::b3Create()
 {
-	if (m_Dlg != null)
+	m_Dlg = new CDlgProfileBevelSpline;
+	m_Title.LoadString(IDS_PROFILE_BEVEL_SPLINE);
+	return m_Dlg != null;
+}
+
+b3_bool b3ProfileBevelSpline::b3MatchClassType(b3_u32 class_type)
+{
+	return class_type == SPLINES_CYL;
+}
+
+int b3ProfileBevelSpline::b3AddImage(CImageList *images)
+{
+	return images->Add(AfxGetApp()->LoadIcon(IDI_PROFILE_BEVEL_SPLINE));
+}
+
+b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
+{
+	va_list   args;
+	b3_f64    xEdge;
+	b3_f64    yEdge;
+	b3_f64    oblique;
+	b3_vector *c = spline->controls;
+	int        i;
+
+	va_start(args,spline);
+	xEdge   = va_arg(args,b3_f64) * 0.5;
+	yEdge   = va_arg(args,b3_f64) * 0.5;
+	oblique = va_arg(args,b3_f64);
+	va_end(args);
+
+	spline->b3InitCurve(2,12,true);
+	spline->b3ClearControls();
+
+	c[0].x = -xEdge;
+	c[0].y = oblique * 2 - yEdge;
+	c[1].x = -xEdge;
+	c[1].y = -yEdge;
+	c[2].x = oblique * 2 - xEdge;
+	c[2].y = -yEdge;
+
+	// mirror horizontally
+	for (i = 0;i < 3;i++)
 	{
-		delete m_Dlg;
+		c[5 - i].x = -c[i].x;
+		c[5 - i].y =  c[i].y;
 	}
-}
 
-b3_bool b3Profile::b3Create()
-{
-	m_Title.LoadString(IDS_PROFILE);
-	return false;
-}
-
-b3_bool b3Profile::b3MatchClassType(b3_u32 class_type)
-{
-	return false;
-}
-
-const char *b3Profile::b3GetTitle()
-{
-	return m_Title;
-}
-
-int b3Profile::b3AddImage(CImageList *images)
-{
-	return -1;
-}
-
-CB3ProfileShapeDialog *b3Profile::b3GetCreateDialog()
-{
-	B3_ASSERT(m_Dlg != null);
-	m_Dlg->m_Profile = this;
-	return m_Dlg;
-}
-
-int b3Profile::b3Compare(b3Profile *a,b3Profile *b,void *ptr)
-{
-	return stricmp(a->b3GetTitle(),b->b3GetTitle());
-}
-
-b3_bool b3Profile::b3ComputeProfile(b3Spline *,...)
-{
-	return false;
+	// mirror vertically
+	for (i = 0;i < 6;i++)
+	{
+		c[11 - i].x =  c[i].x;
+		c[11 - i].y = -c[i].y;
+	}
+	return true;
 }

@@ -23,19 +23,29 @@
 #endif // _MSC_VER > 1000
 
 #include "b3ShapeDialog.h"
-#include "b3Profile.h"
+
+class b3Profile;
 
 class CB3ProfileShapeDialog : public CB3ShapeDialog  
 {
+protected:
+	CB3PosGroup m_BaseGroup;
+	b3_vector   m_Base;
+
 public:
 	b3Profile    *m_Profile;
 
 public:
 	              CB3ProfileShapeDialog(UINT IDD,CWnd* pParent = NULL);
+	virtual      ~CB3ProfileShapeDialog();
 	virtual void  b3PostProcess();
 
 // Dialog Data
 	//{{AFX_DATA(CB3ProfileShapeDialog)
+	CB3FloatEdit	m_xBaseCtrl;
+	CB3FloatEdit	m_yBaseCtrl;
+	CB3FloatEdit	m_zBaseCtrl;
+	int		m_Align;
 	//}}AFX_DATA
 
 
@@ -48,9 +58,12 @@ public:
 
 // Implementation
 protected:
+	virtual void b3Init();
+	virtual const char *b3GetSection();
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ProfileShapeDialog)
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

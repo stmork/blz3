@@ -34,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/05 20:38:24  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.1  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **
 */
 
@@ -55,6 +61,7 @@ CDlgSelectProfile::CDlgSelectProfile(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	m_Shape        = null;
 	m_ShapeCreator = null;
+	m_CreateMode = AfxGetApp()->GetProfileInt(CB3ClientString(),"profile select mode",m_CreateMode);
 }
 
 
@@ -81,7 +88,6 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 	CDlgSelectProfile    dlg;
 	CDlgCreateTriangles  dlg_triangles;
 	CB3ShapeDialog      *page = null;
-	CB3ShapeDialog      *page_to_delete = null;
 	int                  result;
 
 	if (create)
@@ -92,8 +98,7 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 			switch(dlg.m_CreateMode)
 			{
 			case 0:
-				// This page is dynamically created
-				page_to_delete = page = dlg.m_ShapeCreator;
+				page = dlg.m_ShapeCreator;
 				break;
 
 			case 1:
@@ -139,10 +144,6 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 
 	// Customize shape values
 	result = CB3ShapeDialog::b3Edit(page,item,create);
-	if (page_to_delete != null)
-	{
-		delete page_to_delete;
-	}
 	return result;
 }
 
@@ -151,7 +152,7 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	b3Profile *profile;
 	b3_u32     class_type = m_Shape->b3GetClassType();
 	LVITEM     item;
-	int        i = 0;
+	int        index,selected;
 
 	CDialog::OnInitDialog();
 	m_ImageList.Create(64,64,ILC_COLOR8,30,8);
@@ -159,6 +160,10 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	m_ListCtrl.SetIconSpacing(128,96);
 
 	// TODO: Add extra initialization here
+	m_Section.Format("profile selected [%08x]",m_Shape->b3GetClassType());
+	selected = AfxGetApp()->GetProfileInt(CB3ClientString(),m_Section,0);
+	
+	// Init list control
 	memset(&item,0,sizeof(item));
 	item.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
 	item.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
@@ -167,12 +172,15 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	{
 		if (profile->b3MatchClassType(class_type))
 		{
-			profile->b3AddImage(&m_ImageList);
-			item.iImage  = i;
-			item.lParam  = (LPARAM)profile;
-			item.state   = 0; // Preselection see CB3ImageList
-			item.pszText = (char *)profile->b3GetTitle();
-			m_ListCtrl.InsertItem(&item);
+			index = profile->b3AddImage(&m_ImageList);
+			if (index >= 0)
+			{
+				item.iImage  = index;
+				item.lParam  = (LPARAM)profile;
+				item.state   = (index == selected ? item.stateMask : 0); // Preselection see CB3ImageList
+				item.pszText = (char *)profile->b3GetTitle();
+				m_ListCtrl.InsertItem(&item);
+			}
 		}
 	}
 	
@@ -183,11 +191,13 @@ BOOL CDlgSelectProfile::OnInitDialog()
 void CDlgSelectProfile::OnOK() 
 {
 	// TODO: Add extra validation here
-	b3Profile           *profile = null;
-	POSITION             pos;
-	int                  index;
+	b3Profile *profile = null;
+	POSITION   pos;
+	int        index;
 
 	CDialog::OnOK();
+	AfxGetApp()->WriteProfileInt(CB3ClientString(),"profile select mode",m_CreateMode);
+	
 	switch(m_CreateMode)
 	{
 	case 0:
@@ -198,9 +208,14 @@ void CDlgSelectProfile::OnOK()
 			profile = (b3Profile *)m_ListCtrl.GetItemData(index);
 			if (profile != null)
 			{
+				AfxGetApp()->WriteProfileInt(CB3ClientString(),m_Section,index);
 				m_ShapeCreator = profile->b3GetCreateDialog();
 			}
 		}
+		break;
+
+	case 1:
+
 		break;
 	}
 }

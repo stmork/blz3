@@ -23,7 +23,6 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
-#include <float.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2002/03/05 20:38:25  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.50  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.49  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
@@ -636,13 +641,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	b3_vector            subUpper;
 	b3_bool              result = false;
 
-	subLower.x =  FLT_MAX;
-	subLower.y =  FLT_MAX;
-	subLower.z =  FLT_MAX;
-	subUpper.x = -FLT_MAX;
-	subUpper.y = -FLT_MAX;
-	subUpper.z = -FLT_MAX;
-
+	b3Vector::b3InitBound(&subLower,&subUpper);
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape   = (b3ShapeRenderObject *)item;
@@ -688,6 +687,22 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 		m_DimBase   = subLower;
 	}
 
+	return result;
+}
+
+b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+	b3_bool  result = false;
+
+	b3Vector::b3InitBound(lower,upper);
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox    = (b3BBox *)item;
+		result |= bbox->b3ComputeBounds(lower,upper,m_BBoxOverSize);
+	}
 	return result;
 }
 
@@ -773,27 +788,6 @@ void b3Scene::b3Draw()
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
 	}
-}
-
-b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
-{
-	b3Item  *item;
-	b3BBox  *bbox;
-	b3_bool  result = false;
-
-	lower->x =  FLT_MAX;
-	lower->y =  FLT_MAX;
-	lower->z =  FLT_MAX;
-	upper->x = -FLT_MAX;
-	upper->y = -FLT_MAX;
-	upper->z = -FLT_MAX;
-
-	B3_FOR_BASE(b3GetBBoxHead(),item)
-	{
-		bbox    = (b3BBox *)item;
-		result |= bbox->b3ComputeBounds(lower,upper,m_BBoxOverSize);
-	}
-	return result;
 }
 
 void b3Scene::b3AllocVertices(b3RenderContext *context)

@@ -33,6 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/05 20:38:24  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.4  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -40,7 +46,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.3  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -134,8 +140,8 @@ BOOL CDlgCSG1::OnInitDialog()
 	// TODO: Add extra initialization here
 	if (m_Creation)
 	{
-		m_Base.b3Read(b3GetSection() + CString(".base"));
-		m_Dir1.b3Read(b3GetSection() + CString(".dir1"));
+		m_Base.b3Read(b3MakeSection("base"));
+		m_Dir1.b3Read(b3MakeSection("dir1"));
 	}
 
 	m_Base.b3Set(true);
@@ -182,7 +188,7 @@ void CDlgCSG1::b3PostProcess()
 	CB3SpanningShapeDialog::b3PostProcess();
 	if (m_Creation)
 	{
-		m_Base.b3Write(b3GetSection() + CString(".base"));
-		m_Dir1.b3Write(b3GetSection() + CString(".dir1"));
+		m_Base.b3Write(b3MakeSection("base"));
+		m_Dir1.b3Write(b3MakeSection("dir1"));
 	}
 }

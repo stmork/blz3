@@ -108,6 +108,7 @@ IDI_CSG_SPHERE          ICON    DISCARDABLE     "res\\csg_sphere.ico"
 IDI_CSGMODE_INTERSECT   ICON    DISCARDABLE     "res\\csgmode_intersect.ico"
 IDI_CSGMODE_SUB         ICON    DISCARDABLE     "res\\csgmode_sub.ico"
 IDI_CSGMODE_UNION       ICON    DISCARDABLE     "res\\csgmode_union.ico"
+IDI_PROFILE_BEVEL_SPLINE ICON    DISCARDABLE     "res\\profile_bevel_spline.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1484,13 +1485,65 @@ BEGIN
                     BS_AUTORADIOBUTTON,15,185,77,10
 END
 
-IDD_PROFILE_CUSTOM DIALOG DISCARDABLE  0, 0, 364, 261
+IDD_PROFILE_BEVEL_SPLINE DIALOGEX 0, 0, 272, 246
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Profil anpassen"
+CAPTION "Rund abgeschrägte Kanten"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "",IDC_PROFILE_PREVIEW,"Static",SS_BLACKFRAME,25,20,124,
-                    100
+    EDITTEXT        IDC_OBLIQUE,20,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_OBLIQUE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,60,30,11,14
+    EDITTEXT        IDC_XEDGE,20,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_XEDGE_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,60,11,
+                    14
+    EDITTEXT        IDC_YEDGE,20,90,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_YEDGE_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,90,11,
+                    14
+    EDITTEXT        IDC_HEIGHT,105,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin3",IDC_HEIGHT_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,145,30,
+                    11,14
+    EDITTEXT        IDC_YDEGREE,105,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin4",IDC_YDEGREE_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,145,60,11,14
+    EDITTEXT        IDC_YCONTROLS,105,90,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin5",IDC_YCONTROLS_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,145,90,11,14
+    EDITTEXT        IDC_BASE_X,200,20,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_BASE_Y,200,40,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_BASE_Z,200,60,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    CONTROL         "aufrecht",IDC_ALIGN_UP,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,20,140,42,10
+    CONTROL         "rechts",IDC_ALIGN_RIGHT,"Button",BS_AUTORADIOBUTTON,20,
+                    154,35,10
+    CONTROL         "vorne",IDC_ALIGN_FRONT,"Button",BS_AUTORADIOBUTTON,20,
+                    170,34,10
+    CONTROL         "links",IDC_ALIGN_LEFT,"Button",BS_AUTORADIOBUTTON,20,
+                    185,30,10
+    CONTROL         "hinten",IDC_ALIGN_BACK,"Button",BS_AUTORADIOBUTTON,20,
+                    200,35,10
+    CONTROL         "abwärts",IDC_ALIGN_DOWN,"Button",BS_AUTORADIOBUTTON,20,
+                    215,41,10
+    CONTROL         "",IDC_PROFILE_PREVIEW,"Static",SS_BLACKFRAME | WS_GROUP,
+                    95,130,165,105,WS_EX_CLIENTEDGE
+    GROUPBOX        "Profilwerte:",IDC_STATIC,10,5,75,110
+    LTEXT           "Schräge:",IDC_STATIC,20,20,30,8
+    LTEXT           "Kantenbreite:",IDC_STATIC,20,50,43,8
+    LTEXT           "Höhe",IDC_STATIC,105,20,18,8
+    LTEXT           "Kantentiefe:",IDC_STATIC,20,80,39,8
+    LTEXT           "vert. Spline-Grad",IDC_STATIC,105,50,54,8
+    GROUPBOX        "Vertikal-Spline:",IDC_STATIC,95,5,75,110
+    GROUPBOX        "Ausrichtung:",IDC_STATIC,10,125,75,110
+    GROUPBOX        " Basis: ",IDC_STATIC,180,5,80,75
+    LTEXT           "x:",IDC_STATIC,190,20,10,8,NOT WS_GROUP
+    LTEXT           "y:",IDC_STATIC,190,40,10,8,NOT WS_GROUP
+    LTEXT           "z:",IDC_STATIC,190,60,10,8,NOT WS_GROUP
+    LTEXT           "Kontrollpunkte:",IDC_STATIC,105,80,48,8
 END
 
 
@@ -1780,12 +1833,12 @@ BEGIN
         BOTTOMMARGIN, 224
     END
 
-    IDD_PROFILE_CUSTOM, DIALOG
+    IDD_PROFILE_BEVEL_SPLINE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 357
+        RIGHTMARGIN, 265
         TOPMARGIN, 7
-        BOTTOMMARGIN, 254
+        BOTTOMMARGIN, 239
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2063,6 +2116,7 @@ BEGIN
     IDS_PROFILE             "Profil"
     IDS_LENGTH              "Länge:"
     IDS_RADIUS              "Radius:"
+    IDS_PROFILE_BEVEL_SPLINE "Runde BSpline-Kante (quadr.)"
 END
 
 STRINGTABLE DISCARDABLE 

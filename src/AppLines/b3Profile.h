@@ -20,21 +20,27 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Array.h"
-
-class CB3ProfileShapeDialog;
+#include "b3ProfileShapeDialog.h"
 
 class b3Profile : public b3Link<b3Profile>
 {
+protected:
+	CB3ProfileShapeDialog *m_Dlg;
+	CString                m_Title;
+
 public:
-	b3_bool            m_Closed;
-	b3Array<b3_vector> m_Controls;
+	b3_bool                m_Closed;
+	b3Array<b3_vector>     m_Controls;
 
 public:
 	                               b3Profile();
+	virtual                       ~b3Profile();
+	virtual b3_bool                b3Create();
 	virtual b3_bool                b3MatchClassType(b3_u32 class_type);
-	virtual const char            *b3GetTitle();
-	virtual void                   b3AddImage(CImageList *images);
-	virtual CB3ProfileShapeDialog *b3GetCreateDialog();
+	virtual int                    b3AddImage(CImageList *images);
+	virtual b3_bool                b3ComputeProfile(b3Spline *spline,...);
+	        const char            *b3GetTitle();
+	        CB3ProfileShapeDialog *b3GetCreateDialog();
 
 	static  int                    b3Compare(b3Profile *a,b3Profile *b,void *ptr);
 };

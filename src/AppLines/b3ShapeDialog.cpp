@@ -36,10 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/03/05 20:38:25  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.7  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.6  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -196,6 +202,12 @@ int CB3ShapeDialog::b3Edit(
 const char *CB3ShapeDialog::b3GetSection()
 {
 	return "shape";
+}
+
+const char *CB3ShapeDialog::b3MakeSection(const char *title)
+{
+	m_SectionTitle.Format("%s.%s",b3GetSection(),title);
+	return m_SectionTitle;
 }
 
 void CB3ShapeDialog::b3Init()

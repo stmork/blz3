@@ -37,6 +37,7 @@ typedef int (*b3ItemEditCall)(b3Item *item,b3_bool create);
 
 class CB3ShapeDialog : public CPropertyPage
 {
+	CString              m_SectionTitle;
 // Construction
 public:
 	b3ShapeRenderObject *m_Shape;
@@ -64,6 +65,7 @@ public:
 protected:
 	virtual void        b3Init();
 	virtual const char *b3GetSection();
+	        const char *b3MakeSection(const char *title);
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ShapeDialog)

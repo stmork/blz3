@@ -18,6 +18,7 @@
 #define B3_BASE_MATRIX_H
 
 #include "blz3/b3Types.h"
+#include <float.h>
 
 #define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)                + ((v) < 0 ? (M_PI * 2.0) : 0))
 #define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
@@ -378,6 +379,34 @@ public:
 		{
 			aux = lower->z; lower->z = upper->z; upper->z = aux;
 		}
+	}
+	
+	static inline void b3InitBound(
+		b3_vector *lower,
+		b3_vector *upper)
+	{
+		lower->x =
+		lower->y =
+		lower->z =  FLT_MAX;
+		upper->x =
+		upper->y =
+		upper->z = -FLT_MAX;
+	}
+
+	static inline void b3AdjustBound(
+		b3_vector *point,
+		b3_vector *lower,
+		b3_vector *upper)
+	{
+		// Check lower bound
+		if (point->x < lower->x) lower->x = point->x;
+		if (point->y < lower->y) lower->y = point->y;
+		if (point->z < lower->z) lower->z = point->z;
+												  
+		// Check upper bound					  
+		if (point->x > upper->x) upper->x = point->x;
+		if (point->y > upper->y) upper->y = point->y;
+		if (point->z > upper->z) upper->z = point->z;
 	}
 };
 

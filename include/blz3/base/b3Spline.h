@@ -31,15 +31,15 @@
 #define B3_MAX_DEGREE    (B3_MAX_CONTROLS)
 #define B3_MAX_KNOTS    ((B3_MAX_CONTROLS) + (B3_MAX_DEGREE) + 1)
 
-#define B3_BSPLINE_SEGMENTS(s) ((s)->closed ?\
-	(s)->control_num :\
-	(s)->control_num - (s)->degree)
-
-#define B3_BSPLINE_SEGMENTKNOTS(s) ((s)->closed ?\
-	(s)->control_num :\
-	(s)->control_num - (s)->degree + 1)
-
 #define B3_BSPLINE_EPSILON 0.0001
+
+#define B3_BSPLINE_SEGMENTS(s)     ((s)->b3GetSegmentCount())
+#define B3_BSPLINE_SEGMENTKNOTS(s) ((s)->b3GetSegmentKnotCount())
+#define B3_BSPLINE_GEOMETRY(s,c,k) {\
+	(s)->controls = c;\
+	(s)->knots    = k;\
+	(s)->control_max = (sizeof(c) / sizeof(c[0]));\
+	(s)->knot_max    = (sizeof(k) / sizeof(b3_f32)); }
 
 /*************************************************************************
 **                                                                      **
@@ -220,6 +220,60 @@ public:
 		closed      = false;
 	}
 
+	inline b3_count b3GetSegmentCount()
+	{
+		return closed ? control_num : control_num - degree;
+	}
+
+	inline b3_count b3GetSegmentKnotCount()
+	{
+		return closed ? control_num : control_num - degree + 1;
+	}
+
+	inline b3_f64 b3ArcLengthParameter(
+		b3_count n,
+		b3_f64   scale = 1)
+	{
+		B3_ASSERT(!closed);
+		return b3ArcLengthParamter(n,degree,control_num,scale);
+	}
+
+	static inline b3_f64 b3ArcLengthParameter(
+		b3_count n,
+		b3_count ControlNum,
+		b3_count Degree,
+		b3_f64   scale = 1)
+	{
+		b3_f64 result;
+		b3_u32 sum,back;
+
+		if (((Degree - 1) * 2) < ControlNum)
+		{
+			// No arc length parametrization
+			result = (b3_f64)n / (ControlNum - 1);
+		}
+		else
+		{
+			if (n <= Degree)
+			{
+				// first ramp
+				sum = (n * (n + 1)) >> 1;
+			}
+			else
+			{
+				sum = ((Degree * (Degree + 1)) >> 1) + (n - Degree) * Degree;
+				if (n > (ControlNum - Degree))
+				{
+					// last ramp
+					back = Degree - (ControlNum - n);
+					sum -= ((back * (back + 1)) >> 1);
+				}
+			}
+			result = (b3_f64)n / (Degree * (ControlNum - Degree));
+		}
+		return result * scale;
+	}
+
 	b3_bool b3InitCurve(const b3_count Degree,const b3_count ControlNum,const b3_bool Closed)
 	{
 		b3_index  i;
@@ -252,6 +306,17 @@ public:
 			knots[i] = (b3_f32)i;
 		}
 		return true;
+	}
+
+	void b3ClearControls(b3_index index = 0)
+	{
+		b3_index i;
+
+		for (i = 0;i < control_num;i++)
+		{
+			b3SplineVector::b3Clear(&controls[index]);
+			index += offset;
+		}
 	}
 
 	b3_bool b3ThroughEndControl()
@@ -383,7 +448,7 @@ public:
 		return true;
 	}
 
-	b3_index  b3DeBoor(VECTOR *point,b3_index index)
+	b3_index  b3DeBoor(VECTOR *point,b3_index index = 0)
 	{
 		b3_f64	 q,qStep;
 		b3_index i;

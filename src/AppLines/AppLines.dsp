@@ -184,6 +184,10 @@ SOURCE=.\b3Profile.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ProfileBevelSpline.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ProfileShapeDialog.cpp
 # End Source File
 # Begin Source File
@@ -213,6 +217,10 @@ SOURCE=.\b3SpanningShapeDialog.cpp
 # Begin Source File
 
 SOURCE=.\b3Splash.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplinePreview.cpp
 # End Source File
 # Begin Source File
 
@@ -297,6 +305,10 @@ SOURCE=.\DlgNewObject.cpp
 # Begin Source File
 
 SOURCE=.\DlgObjectCopy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProfileBevelSpline.cpp
 # End Source File
 # Begin Source File
 
@@ -424,6 +436,10 @@ SOURCE=.\b3Profile.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ProfileBevelSpline.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ProfileShapeDialog.h
 # End Source File
 # Begin Source File
@@ -453,6 +469,10 @@ SOURCE=.\b3SpanningShapeDialog.h
 # Begin Source File
 
 SOURCE=.\b3Splash.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplinePreview.h
 # End Source File
 # Begin Source File
 
@@ -541,6 +561,10 @@ SOURCE=.\DlgNewObject.h
 # Begin Source File
 
 SOURCE=.\DlgObjectCopy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProfileBevelSpline.h
 # End Source File
 # Begin Source File
 
@@ -697,6 +721,10 @@ SOURCE=.\res\left.ico
 # Begin Source File
 
 SOURCE=.\res\object.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\profile_bevel_spline.ico
 # End Source File
 # Begin Source File
 

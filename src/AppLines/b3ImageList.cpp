@@ -40,10 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/03/05 20:38:24  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.5  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.4  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -229,7 +235,7 @@ void CB3ImageList::b3Create(b3_res size)
 	int i;
 	CWinApp *app = AfxGetApp();
 
-	Create(size,size,ILC_COLOR8,30,8);
+	Create(size,size,ILC_COLOR32,30,8);
 	for (i = 0;i < (sizeof(m_ResIcon) / sizeof(int));i++)
 	{
 		Add(app->LoadIcon(m_ResIcon[i]));

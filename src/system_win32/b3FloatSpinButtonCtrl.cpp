@@ -31,11 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/05 20:38:25  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.2  2002/03/01 21:25:36  sm
 **	- Fixed a problem in create material dialog: Use the
 **	  correct function proto types depending on the
 **	  message type!
-**
+**	
 **	Revision 1.1  2002/03/01 20:26:41  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -88,6 +94,9 @@ void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CB3FloatSpinButtonCtrl::b3SetRange(b3_f64 min, b3_f64 max,int digits,b3_f64 increment)
 {
+	int maxint;
+	double maxf;
+	
 	// Ensure something...
 	B3_ASSERT(min < max);
 	B3_ASSERT(increment > 0);
@@ -97,7 +106,10 @@ void CB3FloatSpinButtonCtrl::b3SetRange(b3_f64 min, b3_f64 max,int digits,b3_f64
 	m_Max       = max;
 	m_Increment = increment;
 	b3SetDigits(digits);
-	SetRange(0,(int)floor((max - min) / increment + 0.5));
+
+	maxf = floor((max - min) / increment + 0.5);
+	maxint = (int)(maxf > UD_MAXVAL ? UD_MAXVAL : maxf);
+	SetRange(0,maxint);
 }
 
 void CB3FloatSpinButtonCtrl::b3SetDigits(int digits)
@@ -122,13 +134,18 @@ b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 {
 	CEdit   *edit = (CEdit *)GetBuddy();
 	CString  value;
-	b3_f64   pos;
+	b3_f64   pos,check;
 
 	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);
-	pos = atof(value);
-	B3_LIMIT(pos,m_Min,m_Max);
-	return pos;
+	check = pos = atof(value);
+	B3_LIMIT(check,m_Min,m_Max);
+	if (check != pos)
+	{
+		value.Format(m_Format,check);
+		edit->SetWindowText(value);
+	}
+	return check;
 }
 
 void CB3FloatSpinButtonCtrl::b3SetAccel(b3_f64 increment,int secs)

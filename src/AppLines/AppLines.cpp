@@ -37,6 +37,7 @@
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
 #include "b3Splash.h"
+#include "b3Profile.h"
 
 /*************************************************************************
 **                                                                      **
@@ -46,10 +47,16 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2002/03/05 20:38:24  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.28  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
-**
+**	
 **	Revision 1.27  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
 **	
@@ -383,6 +390,18 @@ BOOL CAppLinesApp::InitInstance()
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);
 	pMainFrame->UpdateWindow();
+
+	b3Profile *profile;
+
+	B3_FOR_BASE(&LinesProfileBase,profile)
+	{
+		if (!profile->b3Create())
+		{
+			b3PrintF(B3LOG_NORMAL,"Cannot create curve profile %s!\n",profile->b3GetTitle());
+			b3PrintF(B3LOG_NORMAL,"Exiting now!\n");
+			return false;
+		}
+	}
 
 	return TRUE;
 }

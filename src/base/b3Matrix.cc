@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/03/05 20:38:25  sm
+**	- Added first profile (beveled spline shape).
+**	- Added some features to b3SplineTemplate class.
+**	- Added simple control to display 2 dimensional spline.
+**	- Fine tuned the profile dialogs.
+**
 **	Revision 1.21  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.20  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -128,6 +134,11 @@ static b3_matrix UnitMatrix =
 	0,1,0,0,
 	0,0,1,0,
 	0,0,0,1
+};
+
+static b3_vector EmptyVector =
+{
+	0,0,0
 };
 
 typedef b3_f32 b3_matrix_array[4][4];
@@ -532,12 +543,9 @@ b3_matrix * b3MatrixScale (
 	b3_vector *Scale)
 {
 	b3_matrix Operator;
-	b3_vector null_center;
 
-	if (Center == null)
-	{
-		b3Vector::b3Init(Center = &null_center);
-	}
+	if (Center == null) Center = &EmptyVector;
+
 	Operator     = UnitMatrix;
 	Operator.m11 = Scale->x;
 	Operator.m22 = Scale->y;
@@ -558,6 +566,8 @@ b3_matrix * b3MatrixRotX (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
+	if (A == null) A = &UnitMatrix;
+	if (Center == null) Center = &EmptyVector;
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
@@ -581,6 +591,8 @@ b3_matrix * b3MatrixRotY (
 	b3_matrix Result,CenterMatrix;
 	b3_f32    Cos,Sin;
 
+	if (A == null) A = &UnitMatrix;
+	if (Center == null) Center = &EmptyVector;
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
@@ -605,6 +617,7 @@ b3_matrix *b3MatrixRotZ (
 	b3_f32    Cos,Sin;
 
 	if (A == null) A = &UnitMatrix;
+	if (Center == null) Center = &EmptyVector;
 	Cos = (b3_f32)cos(Angle);
 	Sin = (b3_f32)sin(Angle);
 
@@ -689,6 +702,7 @@ b3_matrix *b3MatrixMirrorPoint (
 	b3_matrix Mirror,Mirrored;
 
 	if (A == null) A = &UnitMatrix;
+	if (Center == null) Center = &EmptyVector;
 
 	b3MatrixMoveNeg (A,B,Center);
 
