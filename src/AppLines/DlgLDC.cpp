@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/09/27 13:20:49  sm
+**	- Fixed uninitialized class type for preview in LDC dialog.
+**
 **	Revision 1.4  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.3  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -56,9 +59,10 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgLDC::CDlgLDC(CWnd* pParent /*=NULL*/)
+CDlgLDC::CDlgLDC(b3_u32 class_type,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgLDC::IDD, pParent)
 {
+	m_ShadingClassType = class_type;
 	//{{AFX_DATA_INIT(CDlgLDC)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT

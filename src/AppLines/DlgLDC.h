@@ -40,7 +40,7 @@ class CDlgLDC : public CDialog
 	b3Scene   *m_LightScene;
 public:
 	b3Light   *m_Light;
-	CDlgLDC(CWnd* pParent = NULL);   // standard constructor
+	CDlgLDC(b3_u32 class_type,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgLDC)

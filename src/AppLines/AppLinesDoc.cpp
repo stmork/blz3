@@ -61,13 +61,16 @@
 
 /*
 **	$Log$
+**	Revision 1.103  2004/09/27 13:20:48  sm
+**	- Fixed uninitialized class type for preview in LDC dialog.
+**
 **	Revision 1.102  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.101  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -1279,7 +1282,7 @@ void CAppLinesDoc::OnLightProperties()
 void CAppLinesDoc::OnLightLDC() 
 {
 	// TODO: Add your command handler code here
-	CDlgLDC     dlg;
+	CDlgLDC dlg(m_Scene->b3GetClassType());
 
 	dlg.m_Light = m_Light;
 	if (dlg.DoModal() == IDOK)
