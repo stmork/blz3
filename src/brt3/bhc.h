@@ -25,6 +25,7 @@ struct b3_door
 {
 	b3_index a,b;
 	b3_f64   pos,base,width,height;
+	b3_count line;
 	enum b3_door_type
 	{
 		BHC_DOOR,
@@ -48,14 +49,14 @@ class b3BHDParser
 	} m_Token;
 
 	static const char *m_TokenNames[];
-	b3Array<b3Point> m_Points;
-	b3Array<b3_door> m_Openings;
-	b3_index    m_Pos;
-	char        m_Line[1024];
-	FILE       *m_BHD;
-	b3Scene    *m_Scene;
-	b3_index    m_LineNo;
-	b3_f64      m_Scale;
+	b3Array<b3Point>   m_Points;
+	b3Array<b3_door>   m_Openings;
+	b3_size            m_Pos;
+	char               m_Line[1024];
+	FILE              *m_BHD;
+	b3Scene           *m_Scene;
+	b3_count           m_LineNo;
+	b3_f64             m_Scale;
 	
 private:
 	                b3BHDParser(const char *filename);
@@ -66,7 +67,7 @@ private:
 	void            b3ParseLevel();
 	void            b3ParsePoint();
 	void            b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height);
-	void            b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b);
+	void            b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index b);
 	void            b3AddWall(b3BBox *room);
 	void            b3ParseDoor();
 	void            b3ParseWindow();
@@ -86,9 +87,9 @@ public:
 		strcpy(m_Message,text);
 	}
 
-	b3ParseException(char *text,int line)
+	b3ParseException(char *text,b3_count line)
 	{
-		sprintf(m_Message,"%s (line: %d)",text,line);
+		sprintf(m_Message,"%s (line: %ld)",text,line);
 	}
 };
 

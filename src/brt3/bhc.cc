@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/07/10 08:03:16  sm
+**	- Some further error messages added.
+**
 **	Revision 1.5  2003/07/09 19:04:22  sm
 **	- Added white walls and ceils
-**
+**	
 **	Revision 1.3  2003/07/09 16:15:06  sm
 **	- Fixed empty line bug.
 **	
@@ -245,11 +248,11 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 	b3Item *item;
 	b3_f64  xMin,xMax,x;
 	b3_f64  yMin,yMax,y;
-	int index[16],i;
+	b3_index index[16],i;
 	b3_count args;
 	b3_vector normal;
 
-	args = sscanf(&m_Line[m_Pos],"%*s %s %d %d %d %d %d %d %d %d %d %d\n",
+	args = sscanf(&m_Line[m_Pos],"%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
 		room->m_BoxName,
 		&index[0],&index[1],&index[2],&index[3],&index[4],
 		&index[5],&index[6],&index[7],&index[8],&index[9]);
@@ -368,7 +371,7 @@ void b3BHDParser::b3AddWall(b3BBox *room)
 	}
 }
 
-void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b)
+void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index b)
 {
 	b3Area          *left,*right,*top,*bottom;
 	b3CondRectangle *cond;
@@ -387,6 +390,15 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b)
 			cond->m_yStart =  m_Openings[i].base  / height;
 			cond->m_xEnd   = (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   = (m_Openings[i].base + m_Openings[i].height)  / height;
+			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
+			    (cond->m_yStart < 0) || (cond->m_yEnd > 1))
+			{
+				char message[1024];
+
+				sprintf(message,"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
+					cond->m_xStart,cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
+				throw b3ParseException(message,m_Openings[i].line);
+			}
 			area->b3GetConditionHead()->b3Append(cond);
 
 			b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
@@ -445,16 +457,29 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,int a,int b)
 			cond->m_xEnd   =  1;
 			cond->m_yEnd   =  1;
 			right->b3GetConditionHead()->b3Append(cond);
+
+			b3PrintF(B3LOG_DEBUG,"       Added door/window of line %d\n",m_Openings[i].line);
 		}
 
 		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
 		{
 			cond = new b3CondRectangle(COND_NRECTANGLE);
-			cond->m_xStart = 0.0 -  m_Openings[i].pos   / width;
-			cond->m_yStart =        m_Openings[i].base  / height;
-			cond->m_xEnd   = 0.0 - (m_Openings[i].pos  + m_Openings[i].width)   / width;
-			cond->m_yEnd   =       (m_Openings[i].base + m_Openings[i].height)  / height;
+			cond->m_xStart =  -m_Openings[i].pos   / width;
+			cond->m_yStart =   m_Openings[i].base  / height;
+			cond->m_xEnd   = -(m_Openings[i].pos  + m_Openings[i].width)   / width;
+			cond->m_yEnd   =  (m_Openings[i].base + m_Openings[i].height)  / height;
+			if ((cond->m_xStart > 0) || (cond->m_xEnd < -1) ||
+			    (cond->m_yStart > 0) || (cond->m_yEnd < -1))
+			{
+				char message[1024];
+
+				sprintf(message,"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
+			         -cond->m_xStart,-cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
+				throw b3ParseException(message,m_Openings[i].line);
+			}
 			area->b3GetConditionHead()->b3Append(cond);
+
+			b3PrintF(B3LOG_DEBUG,"       Used door/window of line %d\n",m_Openings[i].line);
 		}
 	}
 }
@@ -464,7 +489,7 @@ void b3BHDParser::b3ParseWindow()
 	b3_door window;
 
 	b3PrintF(B3LOG_DEBUG,"    creating window...\n");
-	if (sscanf(&m_Line[m_Pos],"%*s %d %d %lf %lf %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos],"%*s %ld %ld %lf %lf %lf %lf\n",
 		&window.a,&window.b,
 		&window.pos,&window.base,
 		&window.width,&window.height) != 6)
@@ -472,10 +497,9 @@ void b3BHDParser::b3ParseWindow()
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
 	window.pos    *= m_Scale;
-	window.base   *= m_Scale;
 	window.width  *= m_Scale;
-	window.height *= m_Scale;
-	window.type = b3_door::BHC_WINDOW;
+	window.type    = b3_door::BHC_WINDOW;
+	window.line    = m_LineNo;
 	m_Openings.b3Add(window);
 }
 
@@ -484,7 +508,7 @@ void b3BHDParser::b3ParseDoor()
 	b3_door  door;
 
 	b3PrintF(B3LOG_DEBUG,"    creating door...\n");
-	if (sscanf(&m_Line[m_Pos],"%*s %d %d %lf %lf\n",
+	if (sscanf(&m_Line[m_Pos],"%*s %ld %ld %lf %lf\n",
 		&door.a,&door.b,
 		&door.pos,&door.width) != 4)
 	{
@@ -494,7 +518,8 @@ void b3BHDParser::b3ParseDoor()
 	door.width  *= m_Scale;
 	door.height  = 200;
 	door.base    =   0;
-	door.type = b3_door::BHC_DOOR;
+	door.type    = b3_door::BHC_DOOR;
+	door.line    = m_LineNo;
 	m_Openings.b3Add(door);
 }
 
