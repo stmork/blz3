@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/12 16:50:29  sm
+**	- Scene properties dialog coding
+**
 **	Revision 1.2  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
-**
+**	
 **	Revision 1.1  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	
@@ -62,15 +65,24 @@ inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
 
 b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 {
-	b3Scene    *scene = new b3SceneMork(TRACEPHOTO_MORK);
-	b3BBox     *bbox  = new b3BBox(BBOX);
-	b3Area     *area  = new b3Area(AREA);
-	b3Light    *light = new b3Light(SPOT_LIGHT);
+	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox       *bbox   = new b3BBox(BBOX);
+	b3Area       *area   = new b3Area(AREA);
+	b3Light      *light  = new b3Light(SPOT_LIGHT);
+	b3CameraPart *camera = new b3CameraPart(CAMERA);
+	b3_vector     eye,view;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
 	bbox->b3GetShapeHead()->b3Append(area);
 	
+	// Init camera
+	b3Vector::b3Init(&eye, 0,-350,75);
+	b3Vector::b3Init(&view,0,-250,25);
+	camera->b3Orientate(&eye,&view,100.0,50.0,37.5);
+	scene->b3SetCamera(camera);
+	scene->b3GetSpecialHead()->b3Append(camera);
+
 	b3Consolidate(scene);
 	return scene;
 }

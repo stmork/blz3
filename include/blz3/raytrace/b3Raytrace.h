@@ -1808,6 +1808,9 @@ public:
 public:
 	B3_ITEM_INIT(b3SuperSample);
 	B3_ITEM_LOAD(b3SuperSample);
+
+	b3_bool b3IsActive();
+	void    b3Activate(b3_bool activate=true);
 };
 
 // CAMERA
@@ -1843,8 +1846,9 @@ public:
 	B3_ITEM_INIT(b3Nebular);
 	B3_ITEM_LOAD(b3Nebular);
 
-	b3_bool b3IsActive();
 	b3_bool b3Prepare();
+	b3_bool b3IsActive();
+	void    b3Activate(b3_bool activate=true);
 	void    b3GetNebularColor(b3_color *result);
 	void    b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
 };
@@ -1957,6 +1961,7 @@ public:
 	B3_ITEM_LOAD(b3LensFlare);
 
 	b3_bool b3IsActive();
+	void    b3Activate(b3_bool activate=true);
 };
 
 #define LENSFLARE_ACTIVE 1
@@ -2061,9 +2066,9 @@ public:
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
 		    b3ModellerInfo *b3GetModellerInfo();
-		    b3Nebular      *b3GetNebular();
-		    b3SuperSample  *b3GetSuperSample();
-		    b3LensFlare    *b3GetLensFlare();
+		    b3Nebular      *b3GetNebular    (b3_bool force=true);
+		    b3SuperSample  *b3GetSuperSample(b3_bool force=false);
+		    b3LensFlare    *b3GetLensFlare  (b3_bool force=false);
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 			void            b3SetFilename(const char *filename);

@@ -39,7 +39,13 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgDistributed)
 	enum { IDD = IDD_DISTRIBUTED };
-		// NOTE: the ClassWizard will add data members here
+	CSliderCtrl	m_SamplesPerFrameCtrl;
+	CSliderCtrl	m_SamplesPerPixelControl;
+	BOOL	m_ActDistributed;
+	BOOL	m_ActMotionBlur;
+	int		m_PixelFilter;
+	int		m_TimeFilter;
+	int		m_SamplingMethod;
 	//}}AFX_DATA
 
 

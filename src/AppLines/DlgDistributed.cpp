@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/12 16:50:29  sm
+**	- Scene properties dialog coding
+**
 **	Revision 1.1  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -39,7 +42,7 @@
 **	  o super sampling (controls layouted)
 **	  o nebular (controls layouted)
 **	  o lens flares (controls layouted)
-**
+**	
 **
 */
 
@@ -53,7 +56,11 @@ CDlgDistributed::CDlgDistributed(CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgDistributed::IDD)
 {
 	//{{AFX_DATA_INIT(CDlgDistributed)
-		// NOTE: the ClassWizard will add member initialization here
+	m_ActDistributed = FALSE;
+	m_ActMotionBlur = FALSE;
+	m_PixelFilter = -1;
+	m_TimeFilter = -1;
+	m_SamplingMethod = -1;
 	//}}AFX_DATA_INIT
 }
 
@@ -62,7 +69,13 @@ void CDlgDistributed::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgDistributed)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_SPF, m_SamplesPerFrameCtrl);
+	DDX_Control(pDX, IDC_SPP, m_SamplesPerPixelControl);
+	DDX_Check(pDX, IDC_ACT_DISTRIBUTED, m_ActDistributed);
+	DDX_Check(pDX, IDC_ACT_MOTION_BLUR, m_ActMotionBlur);
+	DDX_Radio(pDX, IDC_PFLTR_BOX, m_PixelFilter);
+	DDX_Radio(pDX, IDC_TFLTR_BOX, m_TimeFilter);
+	DDX_Radio(pDX, IDC_SMP_REGULAR, m_SamplingMethod);
 	//}}AFX_DATA_MAP
 }
 

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -32,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/11/12 16:50:29  sm
+**      - Scene properties dialog coding
+**
 **      Revision 1.17  2001/11/08 19:31:33  sm
 **      - Nasty CR/LF removal!
 **      - Added TGA/RGB8/PostScript image saving.
@@ -161,6 +165,10 @@ b3Special::b3Special(b3_u32 *src) : b3Item(src)
 b3SuperSample::b3SuperSample(b3_u32 class_type) :
 	b3Special(sizeof(b3SuperSample),class_type)
 {
+	m_Limit.a = 0;
+	m_Limit.r = 0.2f;
+	m_Limit.g = 0.2f;
+	m_Limit.b = 0.2f;
 }
 
 b3SuperSample::b3SuperSample(b3_u32 *src) :
@@ -169,6 +177,14 @@ b3SuperSample::b3SuperSample(b3_u32 *src) :
 	b3InitColor(&m_Limit);
 }
 
+b3_bool b3SuperSample::b3IsActive()
+{
+	return true;
+}
+
+void b3SuperSample::b3Activate(b3_bool flag)
+{
+}
 
 /*************************************************************************
 **                                                                      **
@@ -286,7 +302,8 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)
 {
-	m_NebularVal = -1;
+	m_NebularVal = -100.0;
+	b3Color::b3Init(&m_NebularColor,0,0.8f,0.9f,1.0f);
 }
 
 b3Nebular::b3Nebular(b3_u32 *src) :
@@ -310,6 +327,11 @@ b3_bool b3Nebular::b3IsActive()
 	return m_NebularVal > 0;
 }
 
+void b3Nebular::b3Activate(b3_bool flag)
+{
+	m_NebularVal = (flag ? fabs(m_NebularVal) : -fabs(m_NebularVal));
+}
+
 void b3Nebular::b3GetNebularColor(b3_color *result)
 {
 	*result = m_NebularColor;
@@ -331,35 +353,41 @@ void b3Nebular::b3ComputeNebular(
 
 /*************************************************************************
 **                                                                      **
-**                        Animation root definition                     **
+**                        Lens flares                                   **
 **                                                                      **
 *************************************************************************/
 
-b3Animation::b3Animation(b3_u32 class_type) :
-	b3Special(sizeof(b3Animation),class_type)
+b3LensFlare::b3LensFlare(b3_u32 class_type) :
+	b3Special(sizeof(b3LensFlare),class_type)
 {
+	b3Activate(false);
+	b3Color::b3Init(&m_Color,0,1,1,1);
 }
 
-b3Animation::b3Animation(b3_u32 *src) :
+b3LensFlare::b3LensFlare(b3_u32 *src) :
 	b3Special(src)
 {
-	start           = b3InitFloat();
-	end             = b3InitFloat();
-	time            = b3InitFloat();
-	neutral         = b3InitFloat();
-	framesPerSecond = b3InitInt();
-	flags           = b3InitInt();;
-
-	// OK, the following values are only for "Lines"
-	frames     = b3InitInt();;
-	tracks     = b3InitInt();;
-	trackIndex = b3InitInt();;
-	frameIndex = b3InitInt();;
-	WTracks    = b3InitInt();;
-	WFrames    = b3InitInt();;
-	Element    = (b3AnimElement *)b3InitNull();
+	m_Flags = b3InitInt();
+	b3InitColor(&m_Color);
+	m_Expon = b3InitFloat();
 }
 
+b3_bool b3LensFlare::b3IsActive()
+{
+	return (m_Flags & LENSFLARE_ACTIVE) != 0;
+}
+
+void b3LensFlare::b3Activate(b3_bool flag)
+{
+	if (flag)
+	{
+		m_Flags |=   LENSFLARE_ACTIVE;
+	}
+	else
+	{
+		m_Flags &= (~LENSFLARE_ACTIVE);
+	}
+}
 
 /*************************************************************************
 **                                                                      **
@@ -386,27 +414,33 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 	}
 }
 
-
 /*************************************************************************
 **                                                                      **
-**                        Lens flares                                   **
+**                        Animation root definition                     **
 **                                                                      **
 *************************************************************************/
 
-b3LensFlare::b3LensFlare(b3_u32 class_type) :
-	b3Special(sizeof(b3LensFlare),class_type)
+b3Animation::b3Animation(b3_u32 class_type) :
+	b3Special(sizeof(b3Animation),class_type)
 {
 }
 
-b3LensFlare::b3LensFlare(b3_u32 *src) :
+b3Animation::b3Animation(b3_u32 *src) :
 	b3Special(src)
 {
-	m_Flags = b3InitInt();
-	b3InitColor(&m_Color);
-	m_Expon = b3InitFloat();
-}
+	start           = b3InitFloat();
+	end             = b3InitFloat();
+	time            = b3InitFloat();
+	neutral         = b3InitFloat();
+	framesPerSecond = b3InitInt();
+	flags           = b3InitInt();;
 
-b3_bool b3LensFlare::b3IsActive()
-{
-	return (m_Flags & LENSFLARE_ACTIVE) != 0;
+	// OK, the following values are only for "Lines"
+	frames     = b3InitInt();
+	tracks     = b3InitInt();
+	trackIndex = b3InitInt();
+	frameIndex = b3InitInt();
+	WTracks    = b3InitInt();
+	WFrames    = b3InitInt();
+	Element    = (b3AnimElement *)b3InitNull();
 }

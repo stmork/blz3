@@ -31,6 +31,9 @@
     
 /*
 **      $Log$
+**      Revision 1.6  2001/11/12 16:50:29  sm
+**      - Scene properties dialog coding
+**
 **      Revision 1.5  2001/11/11 11:51:21  sm
 **      - Added image select feature
 **      - Cleaned up scene dialog (Now ready to improve it)

@@ -39,7 +39,10 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgSuperSampling)
 	enum { IDD = IDD_SUPER_SAMPLE };
-		// NOTE: the ClassWizard will add data members here
+	CSliderCtrl	m_RedCtrl;
+	CSliderCtrl	m_GreenCtrl;
+	CSliderCtrl	m_BlueCtrl;
+	BOOL	m_ActSuperSampling;
 	//}}AFX_DATA
 
 

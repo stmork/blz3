@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/11/12 16:50:29  sm
+**      - Scene properties dialog coding
+**
 **      Revision 1.15  2001/11/05 16:57:39  sm
 **      - Creating demo scenes.
 **      - Initializing some b3Item derived objects
@@ -111,10 +114,22 @@
 
 b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem),class_type)
 {
+	b3AllocHeads(1);
+	b3InitBase();
 }
 
 b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
 {
+}
+
+void b3FirstItem::b3InitBase(b3_u32 class_value)
+{
+	heads[0].b3InitBase(class_value);
+}
+
+void b3FirstItem::b3Append(b3Item *item)
+{
+	heads[0].b3Append(item);
 }
 
 b3Item *b3FirstItem::b3GetFirst()
@@ -534,4 +549,13 @@ void b3World::b3Dump()
 b3Item *b3World::b3GetFirst()
 {
 	return m_Start->b3GetFirst();
+}
+
+void b3World::b3SetFirst(b3Item *item)
+{
+	b3FirstItem *first = new b3FirstItem(B3_CLASS_MAX);
+
+	first->b3InitBase(item->b3GetClass());
+	first->b3Append(item);
+	m_Start = first;
 }

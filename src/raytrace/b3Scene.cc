@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2001/11/12 16:50:29  sm
+**	- Scene properties dialog coding
+**
 **	Revision 1.22  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	Revision 1.21  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -283,11 +286,11 @@ b3ModellerInfo *b3Scene::b3GetModellerInfo()
 	}
 
 	info = new b3ModellerInfo(LINES_INFO);
-	heads[2].b3Append(info);
+	b3GetSpecialHead()->b3Append(info);
 	return info;
 }
 
-b3Nebular *b3Scene::b3GetNebular()
+b3Nebular *b3Scene::b3GetNebular(b3_bool force)
 {
 	b3Nebular *nebular;
 	b3Item    *item;
@@ -300,14 +303,22 @@ b3Nebular *b3Scene::b3GetNebular()
 		}
 	}
 
-	nebular = new b3Nebular(NEBULAR);
-	heads[2].b3Append(nebular);
+	if (force)
+	{
+		nebular = new b3Nebular(NEBULAR);
+		b3GetSpecialHead()->b3Append(nebular);
+	}
+	else
+	{
+		nebular = null;
+	}
 	return nebular;
 }
 
-b3SuperSample *b3Scene::b3GetSuperSample()
+b3SuperSample *b3Scene::b3GetSuperSample(b3_bool force)
 {
-	b3Item *item;
+	b3SuperSample *supersample;
+	b3Item        *item;
 
 	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
@@ -316,12 +327,23 @@ b3SuperSample *b3Scene::b3GetSuperSample()
 			return (b3SuperSample *)item;
 		}
 	}
-	return null;
+	
+	if (force)
+	{
+		supersample = new b3SuperSample(SUPERSAMPLE4);
+		b3GetSpecialHead()->b3Append(supersample);
+	}
+	else
+	{
+		supersample = null;
+	}
+	return supersample;
 }
 
-b3LensFlare *b3Scene::b3GetLensFlare()
+b3LensFlare *b3Scene::b3GetLensFlare(b3_bool force)
 {
-	b3Item *item;
+	b3LensFlare *lensflare;
+	b3Item      *item;
 
 	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
@@ -330,7 +352,18 @@ b3LensFlare *b3Scene::b3GetLensFlare()
 			return (b3LensFlare *)item;
 		}
 	}
-	return null;
+
+	if (force)
+	{
+		lensflare = new b3LensFlare(LENSFLARE);
+		b3GetSpecialHead()->b3Append(lensflare);
+	}
+	else
+	{
+		lensflare = null;
+	}
+
+	return lensflare;
 }
 
 b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)

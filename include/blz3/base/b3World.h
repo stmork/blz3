@@ -150,6 +150,8 @@ public:
 	B3_ITEM_LOAD(b3FirstItem);
 
 	b3Item *b3GetFirst();
+	void    b3InitBase(b3_u32 class_value = 0);
+	void    b3Append(b3Item *item);
 };
 
 class b3World : public b3Mem, public b3SearchPath
@@ -172,6 +174,7 @@ public:
 	b3_size         b3Length();
 	void            b3Dump();
 	b3Item         *b3GetFirst();
+	void            b3SetFirst(b3Item *item);
 private:
 	b3_world_error  b3EndianSwapWorld();
 	b3_world_error  b3ReadInternal(const char *world_name);

@@ -44,6 +44,9 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2001/11/12 16:50:29  sm
+**	- Scene properties dialog coding
+**
 **	Revision 1.21  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -51,7 +54,7 @@
 **	  o super sampling (controls layouted)
 **	  o nebular (controls layouted)
 **	  o lens flares (controls layouted)
-**
+**	
 **	Revision 1.20  2001/11/09 18:58:52  sm
 **	- Fixed JPEG handling
 **	
@@ -191,7 +194,7 @@ CAppLinesDoc::CAppLinesDoc()
 	// TODO: add one-time construction code here
 	m_Scene = null;
 	m_RaytraceDoc = null;
-	m_Raytracer   = new b3Thread("Raytracing thread");
+	m_Raytracer   = new b3Thread("Raytracing master thread");
 	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
@@ -218,6 +221,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 	m_Scene->b3Reorg();
 	m_Scene->b3Prepare(0,0);
 	m_Scene->b3AllocVertices(&m_Context);
+	m_World.b3SetFirst(m_Scene);
 	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
 	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
@@ -458,9 +462,9 @@ void CAppLinesDoc::OnDlgScene()
 
 	dlg_scene.m_Scene                = m_Scene;
 	dlg_distributed.m_Distributed    = null;
-	dlg_super_sampling.m_SuperSample = m_Scene->b3GetSuperSample();
-	dlg_nebular.m_Nebular            = m_Scene->b3GetNebular();
-	dlg_lens_flare.m_LensFlare       = m_Scene->b3GetLensFlare();
+	dlg_super_sampling.m_SuperSample = m_Scene->b3GetSuperSample(true);
+	dlg_nebular.m_Nebular            = m_Scene->b3GetNebular(true);
+	dlg_lens_flare.m_LensFlare       = m_Scene->b3GetLensFlare(true);
 
 	dlg_sheets.AddPage(&dlg_scene);
 	dlg_sheets.AddPage(&dlg_distributed);

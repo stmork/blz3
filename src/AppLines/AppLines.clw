@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgDistributed
+LastClass=CDlgLensFlare
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,24 +22,24 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=14
-Resource1=IDD_LENS_FLARE
-Resource2=IDR_TOOLBAR_VIEW
-Resource3=IDR_TOOLBAR_ACTION
-Resource4=IDR_TOOLBAR_OBJECT
-Resource5=IDR_TOOLBAR_DISPLAY
-Resource6=IDR_BLZ3TYPE
-Resource7=IDR_DISPLAYTYPE
+Resource1=IDD_HIERARCHY
+Resource2=IDR_TOOLBAR_DISPLAY
+Resource3=IDR_TOOLBAR_VIEW
+Resource4=IDR_TOOLBAR_ACTION
+Resource5=IDR_TOOLBAR_OBJECT
+Resource6=IDR_DISPLAYTYPE
+Resource7=IDR_BLZ3TYPE
 Resource8=IDD_NEBULAR
-Resource9=IDD_DISTRIBUTED
-Resource10=IDD_HIERARCHY
-Resource11=IDR_MAINFRAME
-Resource12=IDD_ABOUTBOX
-Resource13=IDD_SUPER_SAMPLE
+Resource9=IDD_SUPER_SAMPLE
+Resource10=IDD_DISTRIBUTED
+Resource11=IDD_ABOUTBOX
+Resource12=IDD_SCENE
+Resource13=IDR_MAINFRAME
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
-Resource14=IDD_SCENE
+Resource14=IDD_LENS_FLARE
 
 [CLS:CAppLinesApp]
 Type=0
@@ -388,18 +388,19 @@ Control1=IDC_ACT_LENS_FLARE,button,1342242819
 Control2=IDC_LF_VALUE,edit,1350631552
 Control3=IDC_LF_CHANGE,button,1342242816
 Control4=IDC_STATIC,static,1342308352
-Control5=IDC_LF_COLOR,static,1342177280
+Control5=IDC_LF_COLOR,static,1342181376
 
 [DLG:IDD_SUPER_SAMPLE]
 Type=1
 Class=CDlgSuperSampling
-ControlCount=6
+ControlCount=7
 Control1=IDC_SS4_RED,msctls_trackbar32,1342242817
 Control2=IDC_SS4_GREEN,msctls_trackbar32,1342242817
 Control3=IDC_SS4_BLUE,msctls_trackbar32,1342242817
 Control4=IDC_STATIC,static,1342308352
 Control5=IDC_STATIC,static,1342308352
 Control6=IDC_STATIC,static,1342308352
+Control7=IDC_SS4_ACTIVE,button,1342242819
 
 [DLG:IDD_NEBULAR]
 Type=1
@@ -407,7 +408,7 @@ Class=CDlgNebular
 ControlCount=3
 Control1=IDC_ACT_NEBULAR,button,1342242819
 Control2=ID_NEB_CHANGE,button,1342242816
-Control3=IDC_NEB_COLOR,static,1342177280
+Control3=IDC_NEB_COLOR,static,1342181376
 
 [DLG:IDD_DISTRIBUTED]
 Type=1

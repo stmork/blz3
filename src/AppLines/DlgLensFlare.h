@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3ColorField.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLensFlare dialog
@@ -39,7 +40,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgLensFlare)
 	enum { IDD = IDD_LENS_FLARE };
-		// NOTE: the ClassWizard will add data members here
+	CB3ColorField	m_LensFlareColorCtrl;
+	BOOL	m_ActLensFlare;
+	CString	m_LensFlareDistance;
 	//}}AFX_DATA
 
 

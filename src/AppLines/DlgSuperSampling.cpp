@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/12 16:50:29  sm
+**	- Scene properties dialog coding
+**
 **	Revision 1.1  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -39,7 +42,7 @@
 **	  o super sampling (controls layouted)
 **	  o nebular (controls layouted)
 **	  o lens flares (controls layouted)
-**
+**	
 **
 */
 
@@ -53,7 +56,7 @@ CDlgSuperSampling::CDlgSuperSampling(CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgSuperSampling::IDD)
 {
 	//{{AFX_DATA_INIT(CDlgSuperSampling)
-		// NOTE: the ClassWizard will add member initialization here
+	m_ActSuperSampling = FALSE;
 	//}}AFX_DATA_INIT
 }
 
@@ -62,7 +65,10 @@ void CDlgSuperSampling::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgSuperSampling)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_SS4_RED, m_RedCtrl);
+	DDX_Control(pDX, IDC_SS4_GREEN, m_GreenCtrl);
+	DDX_Control(pDX, IDC_SS4_BLUE, m_BlueCtrl);
+	DDX_Check(pDX, IDC_SS4_ACTIVE, m_ActSuperSampling);
 	//}}AFX_DATA_MAP
 }
 

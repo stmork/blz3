@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3ColorField.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgNebular dialog
@@ -39,7 +40,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgNebular)
 	enum { IDD = IDD_NEBULAR };
-		// NOTE: the ClassWizard will add data members here
+	CB3ColorField	m_NebColorCtrl;
+	BOOL	m_ActNebular;
 	//}}AFX_DATA
 
 
