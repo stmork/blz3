@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.13  2001/12/18 14:36:25  sm
 **	- Double click bug on camera acting found and fixed
-**
+**	
 **	Revision 1.12  2001/12/08 19:17:07  sm
 **	- Added interactive focal length
 **	- Added interactive twirl
@@ -235,27 +239,39 @@ void CB3Action::b3RDown(b3_coord x,b3_coord y)
 void CB3Action::b3RMove(b3_coord x,b3_coord y)
 {
 	b3_vector *point = m_Doc->b3GetFulcrum();
+	b3_vector  diff  = *point;
 	b3_f64     xRel,yRel;
 
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		b3GetRelCoord(x,y,xRel,yRel);
-		m_View->m_RenderView.b3Unproject(xRel,yRel,point);
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
+		m_Doc->m_Info->b3SnapToGrid(&diff);
+		if (!b3IsEqual(&diff,point))
+		{
+			*point = diff;
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+		}
 	}
 }
 
 void CB3Action::b3RUp(b3_coord x,b3_coord y)
 {
 	b3_vector *point = m_Doc->b3GetFulcrum();
+	b3_vector  diff  = *point;
 	b3_f64     xRel,yRel;
 
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,point);
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
-		m_Doc->SetModifiedFlag();
+		m_Doc->m_Info->b3SnapToGrid(&diff);
+		if (!b3IsEqual(&diff,point))
+		{
+			*point = diff;
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+			m_Doc->SetModifiedFlag();
+		}
 	}
 }
 

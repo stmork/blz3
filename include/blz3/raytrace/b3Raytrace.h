@@ -1850,6 +1850,8 @@ class b3ModellerInfo : public b3Special
 {
 public:
 	b3_vector        m_Center;
+	b3_vector        m_StepMove;
+	b3_vector        m_StepRotate;
 	b3_f32           m_GridMove;
 	b3_f32           m_GridRot;
 	b3_bool          m_ResizeFlag;

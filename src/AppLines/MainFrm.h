@@ -25,6 +25,9 @@
 #include "blz3/system/b3Toolbar.h"
 #include "blz3/system/b3ComboBox.h"
 #include "../smart_gui/CoolMenu.h"
+#include "DlgFulcrum.h"
+#include "DlgStepMove.h"
+#include "DlgStepRotate.h"
 
 #define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
 
@@ -65,6 +68,9 @@ protected:  // control bar embedded members
 	CB3Toolbar         m_wndLghtBar;
 	CB3Toolbar         m_wndObjtBar;
 	CB3Toolbar         m_wndDispBar;
+	CDlgFulcrum        m_dlgFulcrum;
+	CDlgStepMove       m_dlgStepMove;
+	CDlgStepRotate     m_dlgStepRotate;
 	CB3ComboBox        m_cameraBox;
 	CB3ComboBox        m_lightBox;
 
@@ -107,6 +113,8 @@ public:
 	b3CameraPart *b3GetSelectedCamera();
 	void          b3UpdateLightBox(b3Scene *scene,b3Light *light);
 	b3Light      *b3GetSelectedLight();
+	void          b3UpdateModellerInfo(CAppLinesDoc *pDoc = null);
+	void          b3UpdateFulcrum();
 	void          b3SetPerformance(CView *drawing_window,long millis,b3_count poly_count);
 };
 

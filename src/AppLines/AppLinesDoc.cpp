@@ -49,9 +49,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.27  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
-**
+**	
 **	Revision 1.26  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
 **	
@@ -520,7 +524,7 @@ void CAppLinesDoc::OnDlgScene()
 void CAppLinesDoc::OnModellerInfo() 
 {
 	// TODO: Add your command handler code here
-	CDlgModellerInfo dlg;
+	CDlgModellerInfo  dlg;
 
 	dlg.m_ModellerInfo = m_Info;
 	if (dlg.DoModal() == IDOK)

@@ -164,6 +164,10 @@ SOURCE=.\DlgDistributed.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgFulcrum.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
@@ -193,6 +197,14 @@ SOURCE=.\DlgScene.cpp
 # Begin Source File
 
 SOURCE=.\DlgSearchPathList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgStepMove.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgStepRotate.cpp
 # End Source File
 # Begin Source File
 
@@ -264,6 +276,10 @@ SOURCE=.\DlgDistributed.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgFulcrum.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgHierarchy.h
 # End Source File
 # Begin Source File
@@ -289,6 +305,14 @@ SOURCE=.\DlgNebular.h
 # Begin Source File
 
 SOURCE=.\DlgScene.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgStepMove.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgStepRotate.h
 # End Source File
 # Begin Source File
 

@@ -39,13 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.23  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
 **	- Toolbars got adjusted and beautified
 **	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
 **	- Found and fixed some minor bugs
-**
+**	
 **	Revision 1.22  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
@@ -454,7 +458,10 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 	if (lHint & B3_UPDATE_FULCRUM)
 	{
+		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+
 		pDoc->m_Fulcrum.b3Update(pDoc->b3GetFulcrum());
+		main->b3UpdateFulcrum();
 		doInvalidate = true;
 	}
 
@@ -972,20 +979,27 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 {
 // TODO: Add your specialized code here and/or call the base class
 	CMainFrame *main;
+	CB3App     *app;
 
 	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 
-	main = (CMainFrame *)CB3GetApp()->m_pMainWnd;
+	app  = CB3GetApp();
+	main = (CMainFrame *)app->m_pMainWnd;
+
+	app->b3GetData();
 	if (bActivate)
 	{
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
+		main->b3UpdateModellerInfo(GetDocument());
 		m_Scene->b3SetCamera(m_Camera);
 	}
 	else
 	{
 		main->b3Clear();
+		main->b3UpdateModellerInfo();
 	}
+	app->b3SetData();
 }
 
 void CAppLinesView::OnViewToFulcrum() 

@@ -41,9 +41,13 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.1  2001/11/28 19:54:03  sm
 **	- Adding modelling info dialog
-**
+**	
 **
 */
 
@@ -84,12 +88,12 @@ BOOL CDlgModellerInfo::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_xFulcrumCtrl.b3SetDigits(4,2);
+	m_xFulcrumCtrl.b3SetDigits(5,2);
 	m_xFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.x);
-	m_yFulcrumCtrl.b3SetDigits(4,2);
+	m_yFulcrumCtrl.b3SetDigits(5,2);
 	m_yFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.y);
-	m_zFulcrumCtrl.b3SetDigits(4,2);
-	m_zFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.y);
+	m_zFulcrumCtrl.b3SetDigits(5,2);
+	m_zFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.z);
 	m_SnapToGridCtrl.b3SetDigits(3,2);
 	m_SnapToGridCtrl.b3SetMin(epsilon);
 	m_SnapToGridCtrl.b3SetValue(m_ModellerInfo->m_GridMove);

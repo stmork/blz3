@@ -36,12 +36,15 @@
 #define IDD_CAMERA                      149
 #define IDI_BBOX_SHAPES                 150
 #define IDI_BBOX_SHAPES_SUB             151
+#define IDD_FULCRUM                     151
 #define IDI_BBOX_S_SHAPES_SUB           152
 #define IDI_BBOX_S_SHAPES               153
 #define IDI_BBOX_EMPTY                  155
 #define IDM_BAR_VIEW                    252
 #define IDD_SEARCH_PATH_LIST            509
 #define IDD_LDC                         510
+#define IDD_STEP_MOVE                   511
+#define IDD_STEP_ROTATE                 512
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -155,6 +158,12 @@
 #define IDC_CAMERA_VIEW_Y               1072
 #define IDC_CAMERA_VIEW_Z               1073
 #define IDC_CAMERA_ACTIVATION           1074
+#define IDC_STEP_MOVE_X                 1076
+#define IDC_STEP_MOVE_Y                 1077
+#define IDC_STEP_MOVE_Z                 1078
+#define IDC_STEP_ROT_X                  1079
+#define IDC_STEP_ROT_Y                  1080
+#define IDC_STEP_ROT_Z                  1081
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -251,15 +260,18 @@
 #define IDS_SELECT_TEXTURE_PATH         61460
 #define IDS_TOOLBAR_CAMERA              61461
 #define IDS_TOOLBAR_LIGHT               61462
+#define IDS_DIALOGBAR_FULCRUM           61463
+#define IDS_DIALOGBAR_STEP_MOVE         61464
+#define IDS_DIALOGBAR_STEP_ROTATE       61465
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        151
+#define _APS_NEXT_RESOURCE_VALUE        152
 #define _APS_NEXT_COMMAND_VALUE         32841
-#define _APS_NEXT_CONTROL_VALUE         1075
+#define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

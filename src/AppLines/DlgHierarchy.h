@@ -1,3 +1,20 @@
+/*
+**
+**	$Filename:	DlgHierarchy.h $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Hierarchy activation
+**
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #if !defined(AFX_DLGHIERARCHY_H__CCE9F5A2_AE95_11D1_A42D_0080AD1927F8__INCLUDED_)
 #define AFX_DLGHIERARCHY_H__CCE9F5A2_AE95_11D1_A42D_0080AD1927F8__INCLUDED_
 

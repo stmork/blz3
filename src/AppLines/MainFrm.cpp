@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.14  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
-**
+**	
 **	Revision 1.13  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -220,14 +224,17 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3GfxType(this);
 	app->b3MoveWindow(this);
 
-	app->b3AddMenubar(&m_wndMenuBar,IDR_MAINFRAME);
-	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
-	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
-	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
-	app->b3AddToolbar(&m_wndCamrBar,IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
-	app->b3AddToolbar(&m_wndLghtBar,IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
-	app->b3AddToolbar(&m_wndObjtBar,IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
-	app->b3AddToolbar(&m_wndDispBar,IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
+	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
+	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
+	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
+	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
+	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
+	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
+	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
+	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
+	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
+	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
@@ -490,6 +497,18 @@ b3Light *CMainFrame::b3GetSelectedLight()
 	b3_s32 index = m_lightBox.GetCurSel();
 
 	return index != CB_ERR ? (b3Light *)m_lightBox.GetItemDataPtr(index) : null;
+}
+
+void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
+{
+	m_dlgFulcrum.m_pDoc    = pDoc;
+	m_dlgStepMove.m_Info   = pDoc != null ? pDoc->m_Info : null;
+	m_dlgStepRotate.m_Info = pDoc != null ? pDoc->m_Info : null;
+}
+
+void CMainFrame::b3UpdateFulcrum()
+{
+	m_dlgFulcrum.b3SetData();
 }
 
 /*************************************************************************

@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2001/12/25 18:52:39  sm
+**      - Introduced CB3Dialogbar for dialogs opened any time.
+**      - Fulcrum fixed with snap to grid
+**
 **      Revision 1.28  2001/12/23 08:57:22  sm
 **      - Fixed recursive calling bug in b3IsObscured(...)
 **      - Minor intersection optimazations done.
@@ -327,9 +331,15 @@ char *b3CameraPart::b3GetName()
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
-	m_Center.x = 0;
-	m_Center.y = 0;
-	m_Center.z = 0;
+	m_Center.x     = 0;
+	m_Center.y     = 0;
+	m_Center.z     = 0;
+	m_StepMove.x   =
+	m_StepMove.y   =
+	m_StepMove.z   = 10;
+	m_StepRotate.x =
+	m_StepRotate.y =
+	m_StepRotate.z = 15;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
@@ -343,10 +353,23 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridActive   =
 	m_AngleActive  = b3InitBool();
 	m_CameraActive = b3InitBool();
+	m_Flags        = 0;
+	m_Unit         = RULE_CM;
+	m_StepMove.x   =
+	m_StepMove.y   =
+	m_StepMove.z   = 10;
+	m_StepRotate.x =
+	m_StepRotate.y =
+	m_StepRotate.z = 15;
 	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Flags    = b3InitInt();
 		m_Unit     = b3InitFloat();	
+		if (B3_PARSE_INDEX_VALID)
+		{
+			b3InitVector(&m_StepMove);
+			b3InitVector(&m_StepRotate);
+		}
 	}
 }
 

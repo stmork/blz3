@@ -39,11 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/25 18:52:39  sm
+**	- Introduced CB3Dialogbar for dialogs opened any time.
+**	- Fulcrum fixed with snap to grid
+**
 **	Revision 1.3  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.2  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -66,16 +70,16 @@
 									
 CB3ToolbarState::CB3ToolbarState()
 {
-	m_ToolbarMain = null;
-	m_MenuCount   = 0;
-	m_ToolCount   = 0;
+	m_MainFrame = null;
+	m_MenuCount = 0;
+	m_ToolCount = 0;
 	sprintf (m_Code,"_ToolbarState of %s",CB3ClientString());
 }
 
 void CB3ToolbarState::b3AddToolbar(
 	CB3Toolbar *toolbar,
-	long         id_bitmap,
-	long         id_title)
+	long        id_bitmap,
+	long        id_title)
 {
 	if (toolbar != null)
 	{
@@ -96,18 +100,31 @@ void CB3ToolbarState::b3AddMenubar(
 	}
 }
 
+void CB3ToolbarState::b3AddDialogbar(
+	CB3Dialogbar *dialogbar,
+	long          id_dialog,
+	long          id_title)
+{
+	if (dialogbar != null)
+	{
+		m_Dialogbars.b3Append(dialogbar);
+		dialogbar->b3SetID(id_dialog,id_title,m_ToolCount == 0 ? AFX_IDW_MENUBAR : id_dialog);
+	}
+}
+
 b3_bool CB3ToolbarState::b3CreateToolbars(CFrameWnd *parent)
 {
-	CB3Menubar *mb;
-	CB3Toolbar *tb;
+	CB3Menubar   *mb;
+	CB3Toolbar   *tb;
+	CB3Dialogbar *db;
 
-	m_ToolbarMain = parent;
-	ASSERT(m_ToolbarMain != null);
+	m_MainFrame = parent;
+	ASSERT(m_MainFrame != null);
 
 	// Create menubars
 	for (mb = m_Menubars.First;mb != null;mb = mb->Succ)
 	{
-		if (!mb->b3Create(m_ToolbarMain))
+		if (!mb->b3Create(m_MainFrame))
 		{
 			return false;
 		}
@@ -116,7 +133,16 @@ b3_bool CB3ToolbarState::b3CreateToolbars(CFrameWnd *parent)
 	// Create toolbars
 	for (tb = m_Toolbars.First;tb != null;tb = tb->Succ)
 	{
-		if (!tb->b3Create(m_ToolbarMain))
+		if (!tb->b3Create(m_MainFrame))
+		{
+			return false;
+		}
+	}
+
+	// Create toolbars
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+		if (!db->b3Create(m_MainFrame))
 		{
 			return false;
 		}
@@ -126,11 +152,12 @@ b3_bool CB3ToolbarState::b3CreateToolbars(CFrameWnd *parent)
 
 void CB3ToolbarState::b3UpdateUI()
 {
-	CB3Menubar *mb;
-	CB3Toolbar *tb;
+	CB3Menubar   *mb;
+	CB3Toolbar   *tb;
+	CB3Dialogbar *db;
 
 	// Do nothing if no MainFrame was specified.
-	if (m_ToolbarMain == null)
+	if (m_MainFrame == null)
 	{
 		return;
 	}
@@ -138,24 +165,53 @@ void CB3ToolbarState::b3UpdateUI()
 	// Update menubars
 	for (mb = m_Menubars.First;mb != null;mb = mb->Succ)
 	{
-		mb->OnUpdateCmdUI(m_ToolbarMain,TRUE);
+		mb->OnUpdateCmdUI(m_MainFrame,TRUE);
 	}
 
 	// Update toolbars
 	for (tb = m_Toolbars.First;tb != null;tb = tb->Succ)
 	{
-		tb->OnUpdateCmdUI(m_ToolbarMain,TRUE);
+		tb->OnUpdateCmdUI(m_MainFrame,TRUE);
+	}
+
+	// Update dialogbars
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+		db->OnUpdateCmdUI(m_MainFrame,TRUE);
+	}
+}
+
+void CB3ToolbarState::b3GetData()
+{
+	CB3Dialogbar *db;
+
+	// Read data out of controls
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+		db->b3GetData();
+	}
+}
+
+void CB3ToolbarState::b3SetData()
+{
+	CB3Dialogbar *db;
+
+	// Put data into controls
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+		db->b3SetData();
 	}
 }
 
 void CB3ToolbarState::b3LoadState()
 {
-	CB3Menubar *mb;
-	CB3Toolbar *tb;
-	CB3Toolbar *last = null;
+	CB3Menubar   *mb;
+	CB3Toolbar   *tb;
+	CB3Dialogbar *db;
+	CControlBar  *last = null;
 
 	// Do nothing if no MainFrame was specified.
-	if (m_ToolbarMain == null)
+	if (m_MainFrame == null)
 	{
 		return;
 	}
@@ -172,13 +228,19 @@ void CB3ToolbarState::b3LoadState()
 		tb->EnableDocking(CBRS_ALIGN_ANY);
 	}
 
+	// Enable docking for dialogbars
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+		db->EnableDocking(CBRS_ALIGN_ANY);
+	}
+
 	// Enable docking for main frame window
-	m_ToolbarMain->EnableDocking(CBRS_ALIGN_ANY);
+	m_MainFrame->EnableDocking(CBRS_ALIGN_ANY);
 
 	// Dock menus
 	for (mb = m_Menubars.First;mb != null;mb = mb->Succ)
 	{
-		m_ToolbarMain->DockControlBar(mb);
+		m_MainFrame->DockControlBar(mb);
 	}
 
 	// Dock toolbars
@@ -189,10 +251,18 @@ void CB3ToolbarState::b3LoadState()
 		last = tb->b3DockRight(last);
 	}
 
+	// Dock Dialogbars
+	for (db = m_Dialogbars.First;db != null;db = db->Succ)
+	{
+//		db->b3InitCustomization();
+//		db->b3RestoreState();
+		last = db->b3DockRight(last);
+	}
+
 	// Load bar state
 	try
 	{
-		m_ToolbarMain->LoadBarState(m_Code);
+		m_MainFrame->LoadBarState(m_Code);
 	}
 	catch (...)
 	{
@@ -204,7 +274,7 @@ void CB3ToolbarState::b3SaveState()
 {
 	CB3Toolbar *tb;
 
-	if (m_ToolbarMain != null)
+	if (m_MainFrame != null)
 	{
 		try
 		{
@@ -213,7 +283,7 @@ void CB3ToolbarState::b3SaveState()
 			{
 				tb->b3SaveState();
 			}
-			m_ToolbarMain->SaveBarState(m_Code);
+			m_MainFrame->SaveBarState(m_Code);
 		}
 		catch (...)
 		{
@@ -238,14 +308,13 @@ b3_bool CB3ToolbarState::b3PreTranslateMsg(MSG *pMSG)
 
 /*************************************************************************
 **                                                                      **
-**                        B3 toolbar base class                       **
+**                        Blizzard III toolbar base class               **
 **                                                                      **
 *************************************************************************/
 
 BEGIN_MESSAGE_MAP(CB3Toolbar, CToolBar)
-	ON_WM_CONTEXTMENU()
 	//{{AFX_MSG_MAP(CB3Toolbar)
-	//}}AFX_MSG_MAP
+	ON_WM_CONTEXTMENU()
 	ON_NOTIFY_REFLECT(TBN_BEGINADJUST, OnToolBarBeginAdjust)
 	ON_NOTIFY_REFLECT(TBN_BEGINDRAG, OnToolBarBeginDrag)
 	ON_NOTIFY_REFLECT(TBN_CUSTHELP, OnToolBarCustomHelp)
@@ -256,11 +325,12 @@ BEGIN_MESSAGE_MAP(CB3Toolbar, CToolBar)
 	ON_NOTIFY_REFLECT(TBN_QUERYINSERT, OnToolBarQueryInsert)
 	ON_NOTIFY_REFLECT(TBN_RESET, OnToolBarReset)
 	ON_NOTIFY_REFLECT(TBN_TOOLBARCHANGE, OnToolBarChange)
+	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 CB3Toolbar::CB3Toolbar() : b3Link<CB3Toolbar>(sizeof(CB3Toolbar))
 {
-	m_ToolbarMain = null;
+	m_MainFrame   = null;
 	m_ID          = 0;
 	m_Bar         = AFX_IDW_TOOLBAR;
 	m_ButtonCount = 0;
@@ -299,8 +369,8 @@ void CB3Toolbar::b3SetID(
 
 b3_bool CB3Toolbar::b3Create(CFrameWnd *parent)
 {
-	m_ToolbarMain = parent;
-	if (CreateEx(m_ToolbarMain,
+	m_MainFrame = parent;
+	if (CreateEx(m_MainFrame,
 		TBSTYLE_FLAT|TBSTYLE_ALTDRAG,
 		WS_VISIBLE | WS_CHILD |
 		CCS_ADJUSTABLE |
@@ -431,7 +501,7 @@ b3_bool CB3Toolbar::b3IsVisible()
 b3_bool CB3Toolbar::b3ToggleVisibility()
 {
 	m_Visible = !m_Visible;
-	m_ToolbarMain->ShowControlBar(this,m_Visible,FALSE);
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
 
 	return m_Visible;
 }
@@ -439,16 +509,16 @@ b3_bool CB3Toolbar::b3ToggleVisibility()
 b3_bool CB3Toolbar::b3SetVisibility(bool new_visibility)
 {
 	m_Visible = new_visibility && (GetSafeHwnd() != 0);
-	m_ToolbarMain->ShowControlBar(this,m_Visible,FALSE);
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
 	return m_Visible;
 }
 
 // Docking routines
-CB3Toolbar *CB3Toolbar::b3DockRight(CB3Toolbar *Left)
+CControlBar *CB3Toolbar::b3DockRight(CControlBar *Left)
 {
 	CRect          rect,*rectPtr = null;
 	CPoint         pos;
-	CB3Toolbar   *result = this;
+	CControlBar   *result = this;
 	unsigned long  n;
 	long           dw;
 
@@ -462,7 +532,7 @@ CB3Toolbar *CB3Toolbar::b3DockRight(CB3Toolbar *Left)
 	else
 	{
 		rectPtr = &rect;
-		m_ToolbarMain->RecalcLayout();
+		m_MainFrame->RecalcLayout();
 		Left->GetWindowRect(rectPtr);
 		rectPtr->OffsetRect(1,0);
 		dw = Left->GetBarStyle();
@@ -477,13 +547,13 @@ CB3Toolbar *CB3Toolbar::b3DockRight(CB3Toolbar *Left)
 		// are simulating a Toolbar being dragged to that location and docked.
 	}
 
-	m_ToolbarMain->DockControlBar(this,n,rectPtr);
+	m_MainFrame->DockControlBar(this,n,rectPtr);
 	return result;
 }
 
 void CB3Toolbar::b3DockSimple()
 {
-	m_ToolbarMain->DockControlBar(this);
+	m_MainFrame->DockControlBar(this);
 }
 
 // CB3Toolbar message handlers
@@ -594,7 +664,7 @@ void CB3Toolbar::OnToolBarChange(NMHDR *notify, LRESULT *result)
 	b3AdjustComboboxes();
 
 	// Force the frame window to recalculate the size
-	m_ToolbarMain->RecalcLayout();
+	m_MainFrame->RecalcLayout();
 
 	if (IsFloating())
 	{
@@ -612,7 +682,7 @@ void CB3Toolbar::OnToolBarReset(NMHDR *notify, LRESULT *result)
 	b3AdjustComboboxes();
 
 	// Force the frame window to recalculate the size
-	m_ToolbarMain->RecalcLayout();
+	m_MainFrame->RecalcLayout();
 
 	if (IsFloating())
 	{
@@ -681,16 +751,16 @@ void CB3Toolbar::b3Print(CRect &rect,long dw)
 
 /*************************************************************************
 **                                                                      **
-**                        B3 toolbar base class                       **
+**                        Blizzard III toolbar base class               **
 **                                                                      **
 *************************************************************************/
 
 CB3Menubar::CB3Menubar() : b3Link<CB3Menubar>(sizeof(CB3Menubar))
 {
-	m_MenubarMain = null;
-	m_ID          = 0;
-	m_Bar         = 0;
-	m_Visible     = true;
+	m_MainFrame = null;
+	m_ID        = 0;
+	m_Bar       = 0;
+	m_Visible   = true;
 }
 
 void CB3Menubar::b3SetID(long id,long id_bar)
@@ -701,8 +771,8 @@ void CB3Menubar::b3SetID(long id,long id_bar)
 
 b3_bool CB3Menubar::b3Create(CFrameWnd *parent)
 {
-	m_MenubarMain = parent;
-	if (CreateEx(m_MenubarMain,
+	m_MainFrame = parent;
+	if (CreateEx(m_MainFrame,
 		WS_CHILD | WS_VISIBLE |
 		CBRS_TOP | CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_RAISEDBORDER),CRect(0,0,0,0),m_Bar)
 	{
@@ -725,7 +795,7 @@ b3_bool CB3Menubar::b3IsVisible()
 b3_bool CB3Menubar::b3ToggleVisibility()
 {
 	m_Visible = !m_Visible;
-	m_MenubarMain->ShowControlBar(this,m_Visible,FALSE);
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
 
 	return m_Visible;
 }
@@ -733,6 +803,182 @@ b3_bool CB3Menubar::b3ToggleVisibility()
 b3_bool CB3Menubar::b3SetVisibility(bool new_visibility)
 {
 	m_Visible = new_visibility && (GetSafeHwnd() != 0);
-	m_MenubarMain->ShowControlBar(this,m_Visible,FALSE);
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
 	return m_Visible;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III toolbar base class               **
+**                                                                      **
+*************************************************************************/
+
+CB3Dialogbar::CB3Dialogbar() : b3Link<CB3Dialogbar>(sizeof(CB3Dialogbar))
+{
+	m_MainFrame = null;
+	m_ID        = 0;
+	m_Bar       = AFX_IDW_TOOLBAR;
+	m_Key.Format("Software\\%s\\%s\\%s",
+		BLIZZARD3_REG_COMPANY,
+		BLIZZARD3_REG_PRODUCT,
+		CB3ClientString());
+}
+
+CB3Dialogbar::Create(
+	CWnd    *pParentWnd,
+	LPCTSTR  lpszTemplateName,
+	UINT     nStyle,
+	UINT     nID)
+{
+	if (CDialogBar::Create(pParentWnd,lpszTemplateName,nStyle,nID))
+	{
+		if (OnInitDialogBar())
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+CB3Dialogbar::Create(
+	CWnd    *pParentWnd,
+	UINT     nIDTemplate,
+	UINT     nStyle,
+	UINT     nID)
+{
+	if (CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID))
+	{
+		if (OnInitDialogBar())
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+BOOL CB3Dialogbar::OnInitDialogBar()
+{
+	UpdateData(FALSE);
+	b3SetData();
+
+	return TRUE;
+}
+
+void CB3Dialogbar::DoDataExchange(CDataExchange *pDX)
+{
+	ASSERT(pDX);
+	CDialogBar::DoDataExchange(pDX);
+}
+
+void CB3Dialogbar::b3SetID(
+	long id,
+	long id_title,
+	long id_bar)
+{
+	m_MainFrame = null;
+	m_ID        = id;
+	m_Bar       = id_bar;
+	m_Visible   = true;
+	m_Title.LoadString(id_title);
+	m_Value.Format("Toolbar buttons of 0x%04x",m_Bar);
+}
+
+b3_bool CB3Dialogbar::b3Create(CFrameWnd *parent)
+{
+	b3_bool result;
+
+	m_MainFrame = parent;
+	result = Create(m_MainFrame,
+		m_ID,
+		CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_LEFT | CBRS_RIGHT,
+		m_Bar); // You need this line if you want use LoadBarState()/SaveBarState()!!!!
+	if (result)
+	{
+		SetWindowText(m_Title);
+	}
+	return result;
+}
+
+b3_bool CB3Dialogbar::b3IsVisible()
+{
+	m_Visible = (GetSafeHwnd() != 0 ? (GetStyle() & WS_VISIBLE) != 0 : false);
+
+	return m_Visible;
+}
+
+b3_bool CB3Dialogbar::b3ToggleVisibility()
+{
+	m_Visible = !m_Visible;
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
+
+	return m_Visible;
+}
+
+b3_bool CB3Dialogbar::b3SetVisibility(bool new_visibility)
+{
+	m_Visible = new_visibility && (GetSafeHwnd() != 0);
+	m_MainFrame->ShowControlBar(this,m_Visible,FALSE);
+	return m_Visible;
+}
+
+// Docking routines
+CControlBar *CB3Dialogbar::b3DockRight(CControlBar *Left)
+{
+	CRect          rect,*rectPtr = null;
+	CPoint         pos;
+	CControlBar   *result = this;
+	unsigned long  n;
+	long           dw;
+
+	// get MFC to adjust the dimensions of all docked ToolBars
+	// so that GetWindowRect will be accurate
+	if (Left == null)
+	{
+		n       = 0;
+		rectPtr = null;
+	}
+	else
+	{
+		rectPtr = &rect;
+		m_MainFrame->RecalcLayout();
+		Left->GetWindowRect(rectPtr);
+		rectPtr->OffsetRect(1,0);
+		dw = Left->GetBarStyle();
+		n  = 0;
+		n  = (dw & CBRS_ALIGN_TOP)              ? AFX_IDW_DOCKBAR_TOP    : n;
+		n  = (dw & CBRS_ALIGN_BOTTOM && n == 0) ? AFX_IDW_DOCKBAR_BOTTOM : n;
+		n  = (dw & CBRS_ALIGN_LEFT   && n == 0) ? AFX_IDW_DOCKBAR_LEFT   : n;
+		n  = (dw & CBRS_ALIGN_RIGHT  && n == 0) ? AFX_IDW_DOCKBAR_RIGHT  : n;
+
+		// When we take the default parameters on rect, DockControlBar will dock
+		// each Toolbar on a seperate line.  By calculating a rectangle, we in effect
+		// are simulating a Toolbar being dragged to that location and docked.
+	}
+
+	m_MainFrame->DockControlBar(this,n,rectPtr);
+	return result;
+}
+
+void CB3Dialogbar::b3DockSimple()
+{
+	m_MainFrame->DockControlBar(this);
+}
+
+void CB3Dialogbar::b3SaveState()
+{
+//	GetToolBarCtrl().SaveState(HKEY_CURRENT_USER, m_Key,m_Value);
+}
+
+void CB3Dialogbar::b3RestoreState()
+{
+	// OK, get values
+//	GetToolBarCtrl().RestoreState(HKEY_CURRENT_USER, m_Key,m_Value);
+}
+
+void CB3Dialogbar::b3GetData()
+{
+}
+
+void CB3Dialogbar::b3SetData()
+{
 }
