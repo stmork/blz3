@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/01/10 20:18:54  sm
+**	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
+**	  what to do...
+**
 **	Revision 1.16  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.15  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
@@ -603,9 +607,9 @@ b3_bool b3Tx::b3IsLoaded()
 	return ((xSize != 0) && (ySize != 0) && (data != null));
 }
 
-char *b3Tx::b3Name()
+const char *b3Tx::b3Name()
 {
-	return (char *)image_name;
+	return image_name;
 }
 
 void b3Tx::b3Name(const char *ImageName)

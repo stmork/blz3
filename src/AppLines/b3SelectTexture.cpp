@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/10 20:18:54  sm
+**	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
+**	  what to do...
+**
 **	Revision 1.2  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
 **	- Added image selection with image preview.
-**
+**	
 **	Revision 1.1  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -64,8 +68,12 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 	suggest.b3Correct((*tx)->b3Name());
 	file_filter.LoadString(IDS_TEXTURE_FILTER);
 
+#if 1
 	CB3ImagePreviewFileDlg   filedlg(
-		true, // Use file save dialog
+#else
+	CFileDialog   filedlg(
+#endif
+	true, // Use file save dialog
 		default_ext, // default extension
 		suggest, // file name suggestion to save
 		OFN_HIDEREADONLY,	// flags

@@ -34,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/10 20:18:54  sm
+**	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
+**	  what to do...
+**
 **	Revision 1.1  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
 **	- Added image selection with image preview.
-**
+**	
 **
 */
 
@@ -49,16 +53,6 @@
 *************************************************************************/
 
 IMPLEMENT_DYNAMIC(CB3ImagePreviewFileDlg, CFileDialog)
-
-CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(BOOL bOpenFileDialog, LPCTSTR lpszDefExt, LPCTSTR lpszFileName,
-		DWORD dwFlags, LPCTSTR lpszFilter, CWnd* pParentWnd) :
-		CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
-{
-	m_ofn.Flags |= (OFN_EXPLORER | OFN_ENABLETEMPLATE);
-	m_ofn.lpTemplateName = MAKEINTRESOURCE(IDD_FILEOPENPREVIEW);
-
-  m_bPreview = TRUE;
-}
 
 
 BEGIN_MESSAGE_MAP(CB3ImagePreviewFileDlg, CFileDialog)
@@ -71,12 +65,33 @@ BEGIN_MESSAGE_MAP(CB3ImagePreviewFileDlg, CFileDialog)
 END_MESSAGE_MAP()
 
 
+CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(
+	BOOL      bOpenFileDialog,
+	LPCTSTR   lpszDefExt,
+	LPCTSTR   lpszFileName,
+	DWORD     dwFlags,
+	LPCTSTR   lpszFilter,
+	CWnd     *pParentWnd) :
+		CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
+{
+	m_ofn.Flags |= (OFN_EXPLORER | OFN_ENABLETEMPLATE);
+	m_ofn.lpTemplateName = MAKEINTRESOURCE(IDD_FILEOPENPREVIEW);
+
+	m_bPreview = TRUE;
+}
+
 BOOL CB3ImagePreviewFileDlg::OnInitDialog() 
 {
+	CWnd *wnd;
+
 	CFileDialog::OnInitDialog();
 	
 	m_DIBStaticCtrl.SubclassDlgItem(IDC_IMAGE, this);
-	GetDlgItem(IDC_PREVIEW)->SendMessage(BM_SETCHECK, (m_bPreview) ? 1 : 0);
+	wnd = GetDlgItem(IDC_PREVIEW);
+	if (wnd != null)
+	{
+		wnd->SendMessage(BM_SETCHECK, (m_bPreview) ? 1 : 0);
+	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -86,22 +101,30 @@ void CB3ImagePreviewFileDlg::OnFileNameChange()
 {
 	CFileDialog::OnFileNameChange();
 	if (m_bPreview)
+	{
 		m_DIBStaticCtrl.b3Load(GetPathName()); // the control will handle errors
+		m_DIBStaticCtrl.b3Update(true);
+	}
 }
 
 void CB3ImagePreviewFileDlg::OnFolderChange() 
 {
 	CFileDialog::OnFolderChange();
-//	m_DIBStaticCtrl.RemoveDib();
+	m_DIBStaticCtrl.b3Load(null);
 }
 
 void CB3ImagePreviewFileDlg::OnPreview() 
 {
 	m_bPreview = !m_bPreview;
 	if (!m_bPreview)
+	{
 		m_DIBStaticCtrl.b3Load(null); // no preview
+	}
 	else
+	{
 		m_DIBStaticCtrl.b3Load(GetPathName()); // the control will handle errors
+	}
+	m_DIBStaticCtrl.b3Update(true);
 }
 
 BOOL CB3ImagePreviewFileDlg::OnQueryNewPalette() 

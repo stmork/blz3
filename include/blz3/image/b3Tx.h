@@ -287,7 +287,7 @@ public:
 	void          *b3GetData      ();
 	void           b3SetData      (void *newData,b3_res newXSize,b3_res newYSize);
 	b3Measure     *b3GetMeasure   ();
-	char          *b3Name         ();
+	const char    *b3Name         ();
 	void           b3Name         (const char *ImageName);
 	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI);
 	void           b3GetRow       (b3_pkd_color *row,b3_coord  y);
