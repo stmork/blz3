@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/06/05 08:07:05  sm
+**	- Corrected b3Color for multiplying colors as filter.
+**
 **	Revision 1.3  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.2  2004/05/28 20:33:05  sm
 **	- Backported Mork shader
 **	
@@ -67,7 +70,9 @@ void b3ShaderMork2::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3Color illumination = m_ShadowFactor;
+	b3Color illumination;
+
+	illumination.b3InitFactor(m_ShadowFactor);
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
