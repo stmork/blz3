@@ -45,7 +45,7 @@ class b3TimeSpan
 	FILETIME      m_sStart;
 	struct timeb  m_RealTime;
 
-	public:
+public:
 	b3_s32        m_uTime;
 	b3_s32        m_sTime;
 	b3_s32        m_rTime;

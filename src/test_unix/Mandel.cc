@@ -24,7 +24,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Display.h"
+#include "blz3/system/b3DisplayView.h"
 
 #include "b3Mandel.h"
 
@@ -39,12 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/11 11:22:33  sm
+**	- Adjusted some includes concerning b3DisplayView.
+**
 **	Revision 1.8  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.7  2002/01/22 17:11:18  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.

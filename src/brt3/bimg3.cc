@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/system/b3Display.h" 
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/base/b3FileList.h"
 #include "blz3/image/b3TxPool.h"
 
@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/11 11:22:33  sm
+**	- Adjusted some includes concerning b3DisplayView.
+**
 **	Revision 1.10  2002/07/20 10:49:34  sm
 **	- Added custom light support (not finished yet)
 **	- Added b3Light::b3IsActive() for compatibility.
 **	- Added texture search path support like in brt3.
-**
+**	
 **	Revision 1.9  2002/05/08 14:44:46  sm
 **	- Insert Tag names
 **	
