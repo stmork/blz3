@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2005/02/02 09:08:25  smork
+**	- Fine tuning of epsilon.
+**
 **	Revision 1.45  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -45,7 +48,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.44  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
 **	
@@ -306,7 +309,7 @@ const b3_u08 b3Noise::m_OM[4][8][3] =
 
 b3Noise       b3Noise::m_Noise;
 b3_noisetype *b3Noise::m_NoiseTable = null;
-b3_f64        b3Noise::epsilon = 0.005;
+b3_f64        b3Noise::epsilon      = FLT_EPSILON;
 
 b3Noise::b3Noise ()
 {

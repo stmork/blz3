@@ -25,6 +25,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Math.h"
+#include <float.h>
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/02/02 09:08:25  smork
+**	- Fine tuning of epsilon.
+**
 **	Revision 1.1  2004/03/21 16:08:35  sm
 **	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
-**
+**	
 **
 */
 
@@ -46,7 +50,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3Math::epsilon = 0.005;
+b3_f64 b3Math::epsilon = FLT_EPSILON;
 
 b3_f64 b3Math::m_CbrtCoeffs[15] =
 {

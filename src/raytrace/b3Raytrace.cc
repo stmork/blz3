@@ -26,6 +26,7 @@
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
+#include "blz3/base/b3Math.h"
 
 #define no_DEBUG_SS4
 
@@ -37,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2005/02/02 09:08:25  smork
+**	- Fine tuning of epsilon.
+**
 **	Revision 1.67  2005/01/14 14:22:45  smork
 **	- Corrected thread priority for motion blur raytracing.
-**
+**	
 **	Revision 1.66  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -384,7 +388,7 @@ struct b3_rt_info
 
 b3TxPool b3Scene::m_TexturePool;
 b3_s32   b3Scene::m_RenderPriority = -2;
-b3_f64   b3Scene::epsilon = 0.0005;
+b3_f64   b3Scene::epsilon          = 0.0004;
 
 /*************************************************************************
 **                                                                      **

@@ -47,7 +47,7 @@ public:
 	static inline b3_bool b3NearZero(b3_f32 x)
 	{
 #ifndef FINE_MATH
-		return fabs(x) <= 1e-5;
+		return fabs(x) <= FLT_EPSILON;
 #else
 		return x == 0;
 #endif
@@ -56,7 +56,7 @@ public:
 	static inline b3_bool b3NearZero(b3_f64 x)
 	{
 #ifndef FINE_MATH
-		return fabs(x) <= 1e-10;
+		return fabs(x) <= FLT_EPSILON;
 #else
 		return x == 0;
 #endif
