@@ -126,6 +126,10 @@ SOURCE=.\b3ItemRegisterEntry.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Math.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Matrix.cc
 # End Source File
 # Begin Source File
