@@ -61,7 +61,7 @@ switch ( $1 )
        breaksw
 
    case "pgo_render" :
-#       brt3/brt3 -a -w -n    AlleObjekte.bwd
+       brt3/brt3 -a -w -n    AlleObjekte.bwd
        brt3/brt3 -w -a -n    Chair.bwd Planks.bwd Blockkugel.bwd Wassersockel.bwd
 #       brt3/brt3 -w -a -n    Band.bwd
        brt3/brt3 -w -a -n -g $PROF_FILES
