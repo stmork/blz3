@@ -1,19 +1,23 @@
 /*
 **
 **	$Filename:	b3Shade.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
-**	Blizzard III - The default shader
+**	Blizzard III - The shading dispatcher
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2004  Steffen A. Mork
 **          All Rights Reserved
 **
 **
 **
 */
+
+#ifdef _DEBUG
+#define USE_FRESNEL
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2004/05/24 20:25:13  sm
+**	- Fresnel experiments
+**
 **	Revision 1.41  2004/05/23 20:52:34  sm
 **	- Done some Fresnel formula experiments.
-**
+**	
 **	Revision 1.40  2004/05/23 15:04:19  sm
 **	- Some optimizations
 **	
@@ -249,8 +256,11 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	b3_vector64 *incoming_dir = &surface->incoming->dir;
 	b3_vector64 *refl_dir     = &surface->refl_ray.dir;
 	b3_vector64 *refr_dir     = &surface->refr_ray.dir;
-	b3_f64       Factor,d,cos_a,ica,ica_sqr,ica_pow5,ior,R0;
- 
+	b3_f64       Factor,d,cos_a,ior;
+#ifdef USE_FRESNEL
+	b3_f64       ica,ica_sqr,ica_pow5,R0;
+#endif
+
 	Factor = 2 * (cos_a =
 		incoming_dir->x * Normal->x +
 		incoming_dir->y * Normal->y +
@@ -277,13 +287,15 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	// Compute Fresnel factor for unpolarized light using
 	// Christphe Schlick's hack.
 	ior      = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
+#ifdef USE_FRESNEL
 	ica      = 1.0 + cos_a; // cos_a was made negative earlier.
 	ica_sqr  = ica * ica;
 	ica_pow5 = ica * ica_sqr * ica_sqr;
 	R0       = (ior - 1.0) / (ior + 1);
 	R0      *= R0;
 	surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
-	
+#endif
+
 	if (surface->m_Refraction > 0)
 	{
 		if (fabs(cos_a) < 1)
@@ -318,6 +330,14 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 			surface->transparent = true;
 		}
 	}
+
+#ifdef USE_FRESNEL
+//	if (surface->transparent)
+	{
+		surface->m_Reflection = surface->m_Fresnel;
+		surface->m_Refraction = (1.0 - surface->m_Fresnel);
+	}
+#endif
 }
 
 b3_bool b3Shader::b3Shade(
