@@ -45,9 +45,24 @@ public:
 	               b3Noise();
 	              ~b3Noise();
 
+	static        b3_f64        b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+	static inline b3_f64  b3SignedNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+	{
+		return b3NoiseVector(x,y,z) * 2 - 1;
+	}
+	
+	static        void       b3NoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result);
+	static inline void b3SignedNoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result)
+	{
+		b3NoiseDeriv(dx,dy,dz,result);
+		
+		result->x = result->x * 2 - 1;
+		result->y = result->y * 2 - 1;
+		result->z = result->z * 2 - 1;
+	}
+
 	static b3_f64  b3Turbulence  (b3_vector *P);
-	static b3_f64  b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
-	static void    b3NoiseDeriv  (b3_f64  dx,b3_f64  dy,b3_f64  dz,b3_vector *RVec);
+
 	static inline b3_f64  b3FBm(b3_vector &p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain)
 	{
 		b3_f64 sum = 0;

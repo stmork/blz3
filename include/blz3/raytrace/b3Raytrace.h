@@ -718,6 +718,8 @@ public:
 // WOOD
 class B3_PLUGIN b3MatWood : public b3Material 
 {
+	b3_matrix         m_Warp;
+
 public:
 	b3Color           m_DiffColor;
 	b3Color           m_AmbColor;
@@ -729,12 +731,16 @@ public:
 	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes; // not used
+	b3_f32            m_yRot;
+	b3_f32            m_zRot;
+	b3_f32            m_RingSpacing;
 	b3_f32            m_RingFrequency;
 	b3_f32            m_RingNoise;
 	b3_f32            m_RingNoiseFrequency;
 	b3_f32            m_TrunkWobble;
 	b3_f32            m_TrunkWobbleFrequency;
 	b3_f32            m_AngularWobble;
+	b3_f32            m_AngularWobbleFrequency;
 	b3_f32            m_GrainFrequency;
 	b3_f32            m_Grainy;
 	b3_f32            m_Ringy;
@@ -746,6 +752,7 @@ public:
 	B3_ITEM_LOAD(b3MatWood);
 
 	void    b3Write();
+	b3_bool b3Prepare();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
