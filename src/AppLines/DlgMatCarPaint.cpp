@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/09/29 18:37:02  sm
+**	- Added metallic properties to dialog.
+**
 **	Revision 1.2  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
 **	- Added material dependend possibility for color
 **	  mixing instead of mixing inside shader.
-**
+**	
 **	Revision 1.1  2004/09/27 11:08:54  sm
 **	- Added rudimental car paint material dialog.
 **	
@@ -63,6 +66,8 @@ CDlgMatCarPaint::CDlgMatCarPaint(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParen
 	//{{AFX_DATA_INIT(CDlgMatCarPaint)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+	m_Metallic = (m_Material->m_Flags & B3_MAT_CP_METALLIC) != 0;
+	m_MetallicCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
 }
 
 CDlgMatCarPaint::~CDlgMatCarPaint()
@@ -76,14 +81,19 @@ void CDlgMatCarPaint::DoDataExchange(CDataExchange* pDX)
 {
 	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatCarPaint)
+	DDX_Control(pDX, IDC_SPIN_METALLIC, m_MetallicCtrl);
+	DDX_Check(pDX, IDC_METALLIC, m_Metallic);
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	//}}AFX_DATA_MAP
+	m_MetallicCtrl.b3DDX(pDX,m_Material->m_MetallicScale);
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgMatCarPaint, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatCarPaint)
-		// NOTE: the ClassWizard will add message map macros here
+	ON_BN_CLICKED(IDC_METALLIC, OnMetallicMode)
+	ON_EN_KILLFOCUS(IDC_EDIT_METALLIC, OnEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_EDIT_METALLIC, OnSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -114,4 +124,12 @@ void CDlgMatCarPaint::b3InitDialog()
 void CDlgMatCarPaint::b3UpdateUI()
 {
 	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
+void CDlgMatCarPaint::OnMetallicMode() 
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	m_Material->m_Flags = (m_Metallic ? B3_MAT_CP_METALLIC : 0);
+	b3Preview();
 }

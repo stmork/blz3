@@ -24,6 +24,7 @@
 // DlgMatNormal.h : header file
 //
 
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
 #include "PageMaterial.h"
@@ -51,6 +52,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgMatCarPaint)
 	enum { IDD = IDD_MAT_CAR_PAINT };
+	BOOL	m_Metallic;
+	CB3FloatSpinButtonCtrl	m_MetallicCtrl;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
@@ -67,7 +70,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatCarPaint)
-		// NOTE: the ClassWizard will add member functions here
+	afx_msg void OnMetallicMode();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
