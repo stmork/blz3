@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/09/05 15:21:34  sm
+**	- Now object moving/rotating on perspective view.
+**
 **	Revision 1.13  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
 **	  are necessary.
 **	- It's really nice to see!
-**
+**	
 **	Revision 1.12  2001/08/21 14:24:14  sm
 **	- New selecting code added.
 **	
@@ -491,7 +494,7 @@ void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 	CScrollView::OnLButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y);
+	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
 }
 
 void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
@@ -505,7 +508,7 @@ void CAppLinesView::OnRButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
 	CScrollView::OnRButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y);
+	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
 }
 
 void CAppLinesView::OnRButtonUp(UINT nFlags, CPoint point) 

@@ -40,15 +40,17 @@ protected:
 	b3_coord         m_xStart,m_xLast;
 	b3_coord         m_yStart,m_yLast;
 	b3_matrix        m_Transformation;
+	b3_bool          m_PressedShift;
+	b3_bool          m_PressedCtrl;
 
 public:
 	             CB3Action(CAppLinesView *window);
 	        void b3DispatchMouseMove  (b3_coord x,b3_coord y);
-	        void b3DispatchLButtonDown(b3_coord x,b3_coord y);
+	        void b3DispatchLButtonDown(b3_coord x,b3_coord y,b3_u32 flags);
 	        void b3DispatchLButtonUp  (b3_coord x,b3_coord y);
-			void b3DispatchMButtonDown(b3_coord x,b3_coord y);
+			void b3DispatchMButtonDown(b3_coord x,b3_coord y,b3_u32 flags);
 	        void b3DispatchMButtonUp  (b3_coord x,b3_coord y);
-			void b3DispatchRButtonDown(b3_coord x,b3_coord y);
+			void b3DispatchRButtonDown(b3_coord x,b3_coord y,b3_u32 flags);
 	        void b3DispatchRButtonUp  (b3_coord x,b3_coord y);
 protected:
 	        void b3GetRelCoord(b3_coord x,b3_coord y,b3_f64 &xRel,b3_f64 &yRel);
@@ -91,14 +93,24 @@ public:
 class CB3ActionObjectMove : public CB3Action
 {
 	b3_vector m_StartPoint;
+	b3_vector m_xDir,m_yDir,m_zDir;
+	b3_f64    m_xRelStart,m_yRelStart;
 	b3_vector m_LastPoint;
 	b3_vector m_LastDiff;
+
 public:
 	CB3ActionObjectMove(CAppLinesView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
+
+	void b3RDown(b3_coord x,b3_coord y);
+	void b3RMove(b3_coord x,b3_coord y);
+	void b3RUp(b3_coord x,b3_coord y);
+
+private:
+	void b3InitTranslation(b3_f64 xRel,b3_f64 yRel);
 };
 
 class CB3ActionObjectRotate : public CB3Action
@@ -106,7 +118,11 @@ class CB3ActionObjectRotate : public CB3Action
 	b3_vector *m_Center;
 	b3_vector  m_StartPoint;
 	b3_f64     m_StartAngle;
+<<<<<<< b3Action.h
+	b3_f64     m_xRelStart;
+=======
 	b3_f64     m_LastAngle;
+>>>>>>> 1.7
 	b3_line    m_Axis;
 public:
 	CB3ActionObjectRotate(CAppLinesView *window);

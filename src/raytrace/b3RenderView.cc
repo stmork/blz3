@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/09/05 15:21:34  sm
+**      - Now object moving/rotating on perspective view.
+**
 **      Revision 1.12  2001/09/04 15:15:57  sm
 **      - Added rotating objects
 **
@@ -380,6 +383,8 @@ b3_f64 b3RenderView::b3GetPositionAngle(b3_vector *center,b3_vector *position)
 
 	switch(m_ViewMode)
 	{
+	case B3_VIEW_3D:
+		// Walk through!!
 	case B3_VIEW_TOP:
 		result = atan2(position->y - center->y,position->x - center->x);
 		break;
