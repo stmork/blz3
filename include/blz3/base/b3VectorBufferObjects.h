@@ -18,6 +18,8 @@
 #ifndef B3_BASE_VECTORBUFFEROBJECTS_H
 #define B3_BASE_VECTORBUFFEROBJECTS_H
 
+#include "blz3/b3Config.h"
+
 class B3_PLUGIN b3VectorBufferObjects
 {
 	static b3_bool                   glHasVBO;

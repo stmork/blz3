@@ -134,6 +134,10 @@ SOURCE=.\b3Matrix.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3MultiSample.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File

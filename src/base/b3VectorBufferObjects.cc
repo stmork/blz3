@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Render.h"
+#include "blz3/base/b3VectorBufferObjects.h"
 
 #define USE_VBOS
 
@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/09/24 15:39:31  sm
+**	- Added multisampling support which doesn't work.
+**
 **	Revision 1.1  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
-**
+**	
 **
 */
 
