@@ -11,8 +11,7 @@ prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
 PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
-	testimg.cc half.cc pw.cc divx.cc reduce.cc\
-	gif_trans.cc gif_movie.cc gif_info.cc gif.cc BodThumb.cc
+	testimg.cc half.cc pw.cc reduce.cc BodThumb.cc
 
 RESTOREEXT_OBJS	= RestoreExt.o
 CLEANRES_OBJS	= CleanRes.o
@@ -21,11 +20,7 @@ HALF_OBJS		= half.o
 CALIBRATE_OBJS	= calibrate.o
 TESTIMG_OBJS	= testimg.o
 PW_OBJS			= pw.o
-DIVX_OBJS		= divx.o
 REDUCE_OBJS		= reduce.o
-GIF_INFO_OBJS	= gif_info.o gif.o
-GIF_MOVIE_OBJS	= gif_movie.o gif.o
-GIF_TRANS_OBJS	= gif_trans.o gif.o
 BOD_THUMB_OBJS	= BodThumb.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
@@ -36,9 +31,7 @@ PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce divx gif_inf
 
 all:	$(PRGS)
 
-install:	$(PRGS)
-	cp $^ @bindir@
-	(cd @bindir@; chmod 755 $^;)
+install:
 
 depend:
 	@CPP@ -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
@@ -62,9 +55,6 @@ half:	$(HALF_OBJS) $(B3_LIB_BASE)
 pw:	$(PW_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
-
 testimg:	$(TESTIMG_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
@@ -72,15 +62,6 @@ calibrate:	$(CALIBRATE_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 reduce:	$(REDUCE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-gif_info:	$(GIF_INFO_OBJS) $(B3_LIB_BASE) 
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-gif_movie:	$(GIF_MOVIE_OBJS) $(B3_LIB_BASE) 
-	$(LINK.cc) -o $@ $^ $(LIBS)
-
-gif_trans:	$(GIF_TRANS_OBJS) $(B3_LIB_BASE) 
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 BodThumb:	$(BOD_THUMB_OBJS)  $(B3_LIB_BASE) $(B3_LIB_RAYTRACE)

@@ -22,10 +22,11 @@ B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
 PRGS			= simple render matrix_test
+INSTALL_PRGS	= render
 
 all:	$(PRGS)
 
-install:	render
+install:	$(INSTALL_PRGS)
 	cp $^ @bindir@
 	(cd @bindir@; chmod 755 $^;)
 

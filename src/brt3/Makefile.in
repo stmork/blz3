@@ -10,22 +10,29 @@ LIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc bhc.cc rp.cc
+PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc bhc.cc rp.cc\
+	divx.cc gif_trans.cc gif_movie.cc gif_info.cc gif.cc
 
 BRT3_OBJS		= brt3.o
 BIMG3_OBJS		= bimg3.o
 BCONV3_OBJS		= bconv3.o
 BHC_OBJS		= bhc.o
 RP_OBJS			= rp.o
+DIVX_OBJS		= divx.o
+GIF_INFO_OBJS	= gif_info.o gif.o
+GIF_MOVIE_OBJS	= gif_movie.o gif.o
+GIF_TRANS_OBJS	= gif_trans.o gif.o
 
+B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= brt3 bimg3 bconv3 bhc rp
+PRGS			= brt3 bimg3 divx gif_info gif_trans gif_movie bconv3 bhc rp
+INSTALL_PRGS	= brt3 bimg3 divx gif_info gif_trans gif_movie
 
 all:	$(PRGS)
 
-install:	$(PRGS)
+install:	$(INSTALL_PRGS)
 	cp $^ @bindir@
 	(cd @bindir@; chmod 755 $^;)
 
@@ -40,6 +47,18 @@ brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
+
+gif_info:	$(GIF_INFO_OBJS) $(B3_LIB_BASE) 
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+gif_movie:	$(GIF_MOVIE_OBJS) $(B3_LIB_BASE) 
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+gif_trans:	$(GIF_TRANS_OBJS) $(B3_LIB_BASE) 
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 bconv3:	$(BCONV3_OBJS) $(B3_LIB_BASE)
