@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/06/23 13:58:07  sm
+**	- Changed Fresnel computation decision from real transparent
+**	  to real refractive to force Fresnel computation even on
+**	  total reflection.
+**
 **	Revision 1.6  2004/06/23 13:50:49  sm
 **	- Fixed ticket no. 26: Now the Fresnel coefficients were mixed correctly.
-**
+**	
 **	Revision 1.5  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
@@ -114,9 +119,9 @@ void b3ShaderMork2::b3ShadeLight(
 
 void b3ShaderMork2::b3ComputeFresnelCoeffs(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
 {
-    b3_f64 alpha    = acos(surface->m_CosAlpha);
+    b3_f64 alpha    = b3Math::b3Acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
-	b3_f64 beta     = asin(sin_beta);
+	b3_f64 beta     = b3Math::b3Asin(sin_beta);
 	b3_f64 apb      = alpha + beta;
 	b3_f64 amb      = alpha - beta;
 	b3_f64 s_apb    = sin(apb);
@@ -150,7 +155,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	b3_f64    refl,refr,factor;
 
 	// Refraction
-	if (surface.m_Transparent)
+	if (surface.m_Refraction > 0)
 	{
 		if (surface.m_Ior == 1)
 		{

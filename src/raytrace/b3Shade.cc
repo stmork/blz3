@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2004/06/23 13:58:07  sm
+**	- Changed Fresnel computation decision from real transparent
+**	  to real refractive to force Fresnel computation even on
+**	  total reflection.
+**
 **	Revision 1.49  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
-**
+**	
 **	Revision 1.48  2004/05/27 13:13:56  sm
 **	- Optimized Mork shader
 **	- Removed b3ShadePostMaterial
@@ -306,8 +311,6 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	}
 	surface->m_CosAlpha = -cos_a;
 
-	// Compute Fresnel factor for unpolarized light using
-	// Christphe Schlick's hack.
 	surface->m_IorComputed = ior = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
 
 	if (surface->m_Refraction > 0)
@@ -351,6 +354,8 @@ b3_f64 b3Shader::b3ComputeFresnel(b3_surface *surface)
 {
 	b3_f64 ica,ica_sqr,ica_pow5,R0;
 
+	// Compute Fresnel factor for unpolarized light using
+	// Christphe Schlick's hack.
 	ica      = 1.0 - surface->m_CosAlpha;
 	ica_sqr  = ica * ica;
 	ica_pow5 = ica * ica_sqr * ica_sqr;
