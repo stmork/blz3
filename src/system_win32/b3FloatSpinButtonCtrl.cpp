@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/05/06 18:13:52  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.10  2004/04/10 15:59:51  sm
 **	- Added control units as base class for
 **	  o CB3FloatSliderCtrl
 **	  o CB3FloatSpinButtonCtrl
-**
+**	
 **	Revision 1.9  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
 **	
@@ -141,10 +145,9 @@ void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
 
 void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	CWnd    *edit = GetBuddy();
-	CString  value;
+	NM_UPDOWN *pNMUpDown = (NM_UPDOWN*)pNMHDR;
+	CWnd      *edit = GetBuddy();
+	CString    value;
 	
 	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);

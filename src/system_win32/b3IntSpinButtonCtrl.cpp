@@ -31,11 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/06 18:13:52  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.3  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.2  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -104,10 +108,9 @@ void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
 
 void CB3IntSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	CWnd    *edit = GetBuddy();
-	CString  value;
+	NM_UPDOWN *pNMUpDown = (NM_UPDOWN*)pNMHDR;
+	CWnd      *edit = GetBuddy();
+	CString    value;
 	
 	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.4  2004/04/26 14:28:10  sm
 **	- Added marble dialog
 **	- Resorted controls
-**
+**	
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -61,7 +65,7 @@
 *************************************************************************/
 
 CDlgMatMarble::CDlgMatMarble(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CB3SimplePreviewDialog(CDlgMatMarble::IDD, pParent)
+	: CB3SimplePreviewDialog(item, CDlgMatMarble::IDD, pParent)
 {
 	m_Material = (b3MatMarble *)item;
 	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);

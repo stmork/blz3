@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2004/05/06 18:13:52  sm
+**      - Added support for changed only b3Items for a
+**        better preview performance.
+**
 **      Revision 1.38  2003/11/25 13:31:43  sm
 **      - Changed b3_loop to int (best performance)
 **
@@ -1002,4 +1006,17 @@ void b3Item::b3StoreNOP()
 	b3EnsureStoreBuffer(1);
 
 	m_StoreIndex++;
+}
+
+b3_u32 b3Item::b3Checksum()
+{
+	b3_u32 result = 0;
+
+	b3Store();
+
+	for (int i = 0;i < m_StoreIndex;i++)
+	{
+		result += m_StoreBuffer[i];
+	}
+	return result;
 }

@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.68  2004/05/06 18:13:52  sm
+**      - Added support for changed only b3Items for a
+**        better preview performance.
+**
 **      Revision 1.67  2004/04/26 12:27:43  sm
 **      - Added following dialogs:
 **        o granite
@@ -847,10 +851,10 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	surface->m_Ambient     = b3Color::b3Mix(m_Material[0].m_Ambient,  m_Material[1].m_Ambient,  Factor);
 	surface->m_Specular    = b3Color::b3Mix(m_Material[0].m_Specular, m_Material[1].m_Specular, Factor);
 
-	surface->m_Reflection  = b3Math::b3Mix(m_Material[0].m_Reflection,  m_Material[0].m_Reflection,  Factor);
-	surface->m_Refraction  = b3Math::b3Mix(m_Material[0].m_Refraction,  m_Material[0].m_Refraction,  Factor);
-	surface->m_Ior         = b3Math::b3Mix(m_Material[0].m_Ior,         m_Material[0].m_Ior,         Factor);
-	surface->m_SpecularExp = b3Math::b3Mix(m_Material[0].m_SpecularExp, m_Material[0].m_SpecularExp, Factor);
+	surface->m_Reflection  = b3Math::b3Mix(m_Material[0].m_Reflection,  m_Material[1].m_Reflection,  Factor);
+	surface->m_Refraction  = b3Math::b3Mix(m_Material[0].m_Refraction,  m_Material[1].m_Refraction,  Factor);
+	surface->m_Ior         = b3Math::b3Mix(m_Material[0].m_Ior,         m_Material[1].m_Ior,         Factor);
+	surface->m_SpecularExp = b3Math::b3Mix(m_Material[0].m_SpecularExp, m_Material[1].m_SpecularExp, Factor);
 
 	return true;
 }

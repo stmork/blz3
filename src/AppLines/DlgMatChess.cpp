@@ -34,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.4  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
 **	  o chess
 **	- Added scaling to wood properties
-**
+**	
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -63,7 +67,7 @@
 *************************************************************************/
 
 CDlgMatChess::CDlgMatChess(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CB3SimplePropertyPreviewDialog(CDlgMatChess::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(item, CDlgMatChess::IDD, pParent)
 {
 	m_Material             = (b3MatChess *)item;
 	m_PageBlack.m_Material = &m_Material->m_Material[0];
@@ -123,10 +127,10 @@ b3_bool CDlgMatChess::b3Edit(b3Item *item)
 
 void CDlgMatChess::b3InitDialog()
 {
-	m_PageBlack.b3SetCaption(IDS_FROM);
-	m_PageWhite.b3SetCaption(IDS_TO);
-	m_PropertySheet.AddPage(&m_PageBlack);
-	m_PropertySheet.AddPage(&m_PageWhite);
+	m_PageBlack.b3AddToSheet(&m_PropertySheet);
+	m_PageWhite.b3AddToSheet(&m_PropertySheet);
+	m_PageBlack.b3SetCaption(IDS_TITLE_BLACK);
+	m_PageWhite.b3SetCaption(IDS_TITLE_WHITE);
 }
 
 void CDlgMatChess::b3UpdateUI()

@@ -25,17 +25,20 @@
 //
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3World.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3SimplePreviewDialog dialog
 
 class CB3SimplePreviewDialog : public CDialog
 {
+	b3Item *m_Item;
+	b3_u32  m_Checksum;
 	CString m_RegKeyAutoRefresh;
 protected:
 // Construction
 public:
-	CB3SimplePreviewDialog(int dlgId,CWnd* pParent = NULL);   // standard constructor
+	CB3SimplePreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
 	~CB3SimplePreviewDialog();
 
 // Dialog Data

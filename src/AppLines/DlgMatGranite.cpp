@@ -34,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.4  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
 **	  o chess
 **	- Added scaling to wood properties
-**
+**	
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -61,7 +65,7 @@
 *************************************************************************/
 
 CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CB3SimplePropertyPreviewDialog(CDlgMatGranite::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(item, CDlgMatGranite::IDD, pParent)
 {
 	m_Material             = (b3MatGranite *)item;
 	m_PageDark.m_Material  = &m_Material->m_DarkMaterial;
@@ -117,10 +121,10 @@ b3_bool CDlgMatGranite::b3Edit(b3Item *item)
 
 void CDlgMatGranite::b3InitDialog()
 {
-	m_PageDark.b3SetCaption(IDS_FROM);
-	m_PageLight.b3SetCaption(IDS_TO);
-	m_PropertySheet.AddPage(&m_PageDark);
-	m_PropertySheet.AddPage(&m_PageLight);
+	m_PageDark.b3AddToSheet(&m_PropertySheet);
+	m_PageLight.b3AddToSheet(&m_PropertySheet);
+	m_PageDark.b3SetCaption(IDS_TITLE_DARK);
+	m_PageLight.b3SetCaption(IDS_TITLE_LIGHT);
 }
 
 void CDlgMatGranite::b3UpdateUI()

@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.71  2004/04/26 14:28:10  sm
 **	- Added marble dialog
 **	- Resorted controls
-**
+**	
 **	Revision 1.70  2004/04/26 12:27:42  sm
 **	- Added following dialogs:
 **	  o granite
@@ -1086,7 +1090,7 @@ void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
 	b3Base<b3Item> head;
-	b3Item        *item = b3World::b3AllocNode(MARBLE);
+	b3Item        *item = b3World::b3AllocNode(SLIDE);
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);

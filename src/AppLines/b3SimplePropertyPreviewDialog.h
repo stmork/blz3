@@ -37,7 +37,7 @@ protected:
 	CPropertySheet     m_PropertySheet;
 // Construction
 public:
-	CB3SimplePropertyPreviewDialog(int dlgId,CWnd* pParent = NULL);   // standard constructor
+	CB3SimplePropertyPreviewDialog(b3Item *item,int dlgId,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CB3SimplePropertyPreviewDialog)

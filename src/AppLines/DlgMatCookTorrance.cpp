@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.8  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
-**
+**	
 **	Revision 1.7  2004/04/25 14:56:55  sm
 **	- Completed simple material dialog.
 **	
@@ -72,7 +76,7 @@
 *************************************************************************/
 
 CDlgMatCookTorrance::CDlgMatCookTorrance(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CB3SimplePreviewDialog(CDlgMatCookTorrance::IDD, pParent)
+	: CB3SimplePreviewDialog(item, CDlgMatCookTorrance::IDD, pParent)
 {
 	m_Material = (b3MatCookTorrance *)item;
 	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);

@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.3  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -39,7 +43,7 @@
 **	    is still a perfomrmance problem.
 **	  o #17 fixed. Now we use b3Scene::b3GetName() in
 **	    combination with the b3Scene filename.
-**
+**	
 **	Revision 1.2  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -58,7 +62,7 @@
 **                                                                      **
 *************************************************************************/
 
-CB3SimplePreviewDialog::CB3SimplePreviewDialog(int dlgId,CWnd* pParent /*=NULL*/)
+CB3SimplePreviewDialog::CB3SimplePreviewDialog(b3Item *item,int dlgId,CWnd* pParent /*=NULL*/)
 	: CDialog(dlgId, pParent)
 {
 	CB3App *app = CB3GetApp();
@@ -66,6 +70,7 @@ CB3SimplePreviewDialog::CB3SimplePreviewDialog(int dlgId,CWnd* pParent /*=NULL*/
 	//{{AFX_DATA_INIT(CB3SimplePropertyPreviewDialog)
 	m_AutoRefresh = TRUE;
 	//}}AFX_DATA_INIT
+	m_Item = item;
     m_RegKeyAutoRefresh.Format("material.dlg %d.auto refresh",dlgId);
 	m_AutoRefresh = app->GetProfileInt(CB3ClientString(),m_RegKeyAutoRefresh,m_AutoRefresh);
 }
@@ -103,6 +108,7 @@ BOOL CB3SimplePreviewDialog::OnInitDialog()
 	b3InitDialog();
 
 	b3UpdateUI();
+	m_Checksum = m_Item->b3Checksum();
 	OnAutoRefresh();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -112,7 +118,7 @@ BOOL CB3SimplePreviewDialog::OnInitDialog()
 void CB3SimplePreviewDialog::OnEdit()
 {
 	UpdateData();
-    b3Preview();
+	b3Preview();
 }
 
 void CB3SimplePreviewDialog::OnSpin(NMHDR* pNMHDR, LRESULT* pResult) 
@@ -135,7 +141,13 @@ void CB3SimplePreviewDialog::b3Preview()
 		m_AutoRefresh ? "True" : "False");
 	if (m_AutoRefresh)
 	{
-		b3UpdateUI();
+		b3_u32 checksum = m_Item->b3Checksum();
+
+		if (checksum != m_Checksum)
+		{
+			b3UpdateUI();
+			m_Checksum = checksum;
+		}
 	}
 	b3PrintF(B3LOG_FULL,"<CB3SimplePreviewDialog::b3Preview()");
 }
@@ -157,4 +169,5 @@ void CB3SimplePreviewDialog::OnRefresh()
 {
 	// TODO: Add your control notification handler code here
 	b3UpdateUI();
+	m_Checksum = m_Item->b3Checksum();
 }

@@ -196,6 +196,7 @@ public:
 	        b3_world_error  b3ParseLinkuage(b3Item **array,b3_count node_count,b3_u32 class_limit,b3_count level = 0);
 	        b3_size         b3Store();
 	        b3_world_error  b3StoreFile(b3FileAbstract *file);
+			b3_u32          b3Checksum();
 
 	static  b3_bool         b3IsClass(b3_u32 class_type,b3_u32 class_id);
 	        b3_bool         b3IsClass(b3_u32 class_id);

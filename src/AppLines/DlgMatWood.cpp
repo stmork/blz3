@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.13  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.12  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
@@ -94,7 +98,7 @@
 *************************************************************************/
 
 CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CB3SimplePropertyPreviewDialog(CDlgMatWood::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(item, CDlgMatWood::IDD, pParent)
 {
 	m_Material = (b3MatWood *)item;
 	m_PageMatWood.m_Material = m_Material;

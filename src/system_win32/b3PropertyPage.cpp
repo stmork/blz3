@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/06 18:13:52  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.3  2004/04/24 20:15:52  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.2  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
@@ -55,6 +59,10 @@ CB3PropertyPage::CB3PropertyPage(UINT nIDTemplate) : CPropertyPage(nIDTemplate)
 	//{{AFX_DATA_INIT(CB3PropertyPage)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+	m_PropertySheet = null;
+	m_psp.pszTitle  = m_Caption; 
+	m_psp.dwFlags  |= PSP_USETITLE; 
+
 }
 
 CB3PropertyPage::~CB3PropertyPage()
@@ -80,10 +88,14 @@ END_MESSAGE_MAP()
 
 BOOL CB3PropertyPage::OnInitDialog() 
 {
-	SetWindowText(m_Caption);
+	if (m_Caption.IsEmpty())
+	{
+		GetWindowText(m_Caption);
+	}
+	m_psp.pszTitle = m_Caption; 
+
 	CPropertyPage::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -127,7 +139,14 @@ void CB3PropertyPage::b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet,int
 			SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE );
 }
 
+void CB3PropertyPage::b3AddToSheet(CPropertySheet *sheet)
+{
+	m_PropertySheet = sheet;
+	m_PropertySheet->AddPage(this);
+}
+
 void CB3PropertyPage::b3SetCaption(int id)
 {
 	m_Caption.LoadString(id);
+	m_psp.pszTitle = m_Caption; 
 }

@@ -683,6 +683,7 @@
 #define IDS_ERR_WRITE                   60058
 #define IDS_FRAME_RATE                  60059
 #define IDS_FROM                        60060
+#define IDS_TITLE_FROM                  60060
 #define IDS_ITEMDESC_ANIMATION          60061
 #define IDS_ITEMDESC_CAMERA             60062
 #define IDS_ITEMDESC_CAUSTIC            60063
@@ -799,6 +800,7 @@
 #define IDS_TITLE_SCENE                 60174
 #define IDS_TITLE_UNDO                  60175
 #define IDS_TO                          60176
+#define IDS_TITLE_TO                    60176
 #define IDS_TOOLBAR_ACTION              60177
 #define IDS_TOOLBAR_ANIMATION           60178
 #define IDS_TOOLBAR_CAMERA              60179
@@ -808,6 +810,10 @@
 #define IDS_TOOLBAR_OBJECT              60183
 #define IDS_TOOLBAR_VIEW                60184
 #define IDS_UNKNOWN                     60185
+#define IDS_TITLE_DARK                  61446
+#define IDS_TITLE_LIGHT                 61447
+#define IDS_TITLE_BLACK                 61448
+#define IDS_TITLE_WHITE                 61449
 
 // Next default values for new objects
 // 

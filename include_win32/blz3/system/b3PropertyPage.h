@@ -31,7 +31,9 @@
 
 class CB3PropertyPage : public CPropertyPage
 {
-	CString m_Caption;
+	CPropertySheet *m_PropertySheet;
+	CString         m_Caption;
+
 // Construction
 public:
 	CB3PropertyPage(UINT nIDTemplate);
@@ -62,11 +64,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 protected:
-	void b3UpdateUI();
+	        void   b3UpdateUI();
 
 public:
-	static void b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet, int id);
-	void b3SetCaption(int id);
+	static  void   b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet, int id);
+	        void   b3AddToSheet(CPropertySheet *sheet);
+	        void   b3SetCaption(int id);
 };
 
 //{{AFX_INSERT_LOCATION}}

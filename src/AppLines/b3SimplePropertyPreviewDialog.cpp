@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/06 18:13:51  sm
+**	- Added support for changed only b3Items for a
+**	  better preview performance.
+**
 **	Revision 1.3  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
-**
+**	
 **	Revision 1.2  2004/04/24 20:15:52  sm
 **	- Further slide material dialog development
 **	
@@ -52,8 +56,8 @@
 **                                                                      **
 *************************************************************************/
 
-CB3SimplePropertyPreviewDialog::CB3SimplePropertyPreviewDialog(int dlgId,CWnd* pParent /*=NULL*/)
-	: CB3SimplePreviewDialog(dlgId, pParent)
+CB3SimplePropertyPreviewDialog::CB3SimplePropertyPreviewDialog(b3Item *item,int dlgId,CWnd* pParent /*=NULL*/)
+	: CB3SimplePreviewDialog(item, dlgId, pParent)
 {
 	//{{AFX_DATA_INIT(CB3SimplePropertyPreviewDialog)
 	//}}AFX_DATA_INIT

@@ -3223,7 +3223,7 @@ BEGIN
     IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
     IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
     IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
-    IDS_FROM                "Anfang"
+    IDS_TITLE_FROM          "Anfang"
     IDS_ITEMDESC_ANIMATION  "Animation"
     IDS_ITEMDESC_CAMERA     "Kameraeinstellung"
     IDS_ITEMDESC_CAUSTIC    "Kaustiken (experimentell)"
@@ -3531,7 +3531,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_TO                  "Ende"
+    IDS_TITLE_TO            "Ende"
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_ANIMATION   "Animationssymbolleiste"
     IDS_TOOLBAR_CAMERA      "Kamera..."
@@ -3662,6 +3662,10 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_TITLE_DARK          "Dunkel"
+    IDS_TITLE_LIGHT         "Hell"
+    IDS_TITLE_BLACK         "Schwarz"
+    IDS_TITLE_WHITE         "Weiﬂ"
 END
 
 STRINGTABLE DISCARDABLE 
