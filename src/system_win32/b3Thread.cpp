@@ -33,8 +33,8 @@
 
 /*
 **	$Log$
-**	Revision 1.11  2002/08/25 13:01:11  sm
-**	- b3ShowImage updated to handle empty images.
+**	Revision 1.12  2002/08/25 13:32:20  sm
+**	- Renamed members in b3Thread of Windows implementation.
 **
 **	Revision 1.10  2002/08/24 13:07:34  sm
 **	- Added error message for errornous thread starting.
@@ -169,9 +169,9 @@ static b3IPCMutex  threadMutex;
 
 b3Thread::b3Thread(const char *task_name)
 {
-	name       = task_name;
-	thread     = null;
-	is_running = false;
+	m_Name      = task_name;
+	m_Thread    = null;
+	m_IsRunning = false;
 }
 
 b3Thread::~b3Thread()
@@ -179,32 +179,50 @@ b3Thread::~b3Thread()
 	b3Stop();
 }
 
+void b3Thread::b3Inc()
+{
+	threadMutex.b3Lock();
+	if (!m_IsRunning)
+	{
+		m_Span.b3Start();
+		m_IsRunning = true;
+		threadCount++;
+	}
+	threadMutex.b3Unlock();
+}
+
+void b3Thread::b3Dec(b3_bool incl_delete)
+{
+	threadMutex.b3Lock();
+	if (m_IsRunning)
+	{
+		threadCount--;
+		m_IsRunning = false;
+		m_Span.b3Stop();
+	}
+	if (incl_delete && (m_Thread != null))
+	{
+		delete m_Thread;
+		m_Thread = null;
+	}
+	threadMutex.b3Unlock();
+
+}
+
 void b3Thread::b3Name(const char *task_name)
 {
-	name = task_name;
+	m_Name = task_name;
 }
 
 b3_u32 b3Thread::b3Trampoline(void *ptr)
 {
-	b3Thread *threadClass;
+	b3Thread *threadClass = (b3Thread *)ptr;
 
-	threadClass = (b3Thread *)ptr;
+	threadClass->b3Inc();
+	threadClass->m_Result = threadClass->m_CallProc(threadClass->m_CallArg);
+	threadClass->b3Dec();
 
-	threadClass->m_Span.b3Start();
-	threadMutex.b3Lock();
-	threadCount++;
-	threadClass->is_running = true;
-	threadMutex.b3Unlock();
-	
-	threadClass->result = threadClass->callProc(threadClass->callArg);
-
-	threadMutex.b3Lock();
-	threadClass->is_running = false;
-	threadCount--;
-	threadMutex.b3Unlock();
-	threadClass->m_Span.b3Stop();
-
-	return threadClass->result;
+	return threadClass->m_Result;
 }
 
 b3_bool b3Thread::b3Start(
@@ -242,87 +260,67 @@ b3_bool b3Thread::b3Start(
 	}
 
 	// Start new thread
-	callProc = proc;
-	callArg  = ptr;
-	thread = ::AfxBeginThread(b3Trampoline,this,priority,0,CREATE_SUSPENDED);
-	if (thread != null)
+	m_CallProc = proc;
+	m_CallArg  = ptr;
+	m_Thread = ::AfxBeginThread(b3Trampoline,this,priority,0,CREATE_SUSPENDED);
+	if (m_Thread != null)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # starting thread %02lX with prio %ld (%s).\n",
-			thread->m_nThreadID,prio_rate,
-			name != null ? name : "no name");
-		thread->m_bAutoDelete = false;
-		thread->ResumeThread();
+			m_Thread->m_nThreadID,prio_rate,
+			m_Name != null ? m_Name : "no name");
+		m_Thread->m_bAutoDelete = false;
+		m_Thread->ResumeThread();
 	}
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread not started!\n",
-			thread);
+			m_Thread);
 	}
-	return thread != null;
+	return m_Thread != null;
 }
 
 b3_u32 b3Thread::b3Wait()
 {
-	if (thread != null)
+	if (m_Thread != null)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # waiting for thread %02lX to stop (%s).\n",
-			thread->m_nThreadID,
-			name != null ? name : "no name");
-		::WaitForSingleObject (thread->m_hThread,INFINITE);
+			m_Thread->m_nThreadID,
+			m_Name != null ? m_Name : "no name");
+		::WaitForSingleObject (m_Thread->m_hThread,INFINITE);
 
 		threadMutex.b3Lock();
-		delete thread;
-		thread = null;
+		delete m_Thread;
+		m_Thread = null;
 		threadMutex.b3Unlock();
 	}
 	else
 	{
-		result = null;
+		m_Result = null;
 	}
-	return result;
+	return m_Result;
 }
 
 b3_bool b3Thread::b3Stop()
 {
 	b3_bool was_running;
 
-	was_running = is_running;
-	if (thread != null) 
+	was_running = m_IsRunning;
+	if (m_Thread != null) 
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminating thread %02lX (%s).\n",
-			thread->m_nThreadID,
-			name != null ? name : "no name");
-		::TerminateThread (thread->m_hThread,0);
-		is_running = false;
-		
-		threadMutex.b3Lock();
-		delete thread;
-		thread = null;
-
-		threadCount--;
-		threadMutex.b3Unlock();
-		m_Span.b3Stop();
+			m_Thread->m_nThreadID,
+			m_Name != null ? m_Name : "no name");
+		::TerminateThread (m_Thread->m_hThread,0);
+		b3Dec(true);
+		m_CallProc  = null;
+		m_CallArg   = 0;
 	}
 	return was_running;
 }
 
 b3_bool b3Thread::b3IsRunning()
 {
-#if 0 
-	b3_bool is_running;
-	b3_s32  result;
-
-	if (thread != null)
-	{
-		result = ::WaitForSingleObject (thread->m_hThread,0);
-		is_running = true;
-	}
-	else
-	{
-		is_running = false;
-	}
-#endif
-	return is_running;
+	return m_IsRunning;
 }
 
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
