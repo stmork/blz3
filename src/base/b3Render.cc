@@ -34,7 +34,7 @@
 #define B3_MAX_TX_SIZE 128
 #else
 #define B3_MAX_TX_SIZE   8
-#define VERBOSE
+#define nVERBOSE
 #endif
 
 /*************************************************************************
@@ -45,6 +45,9 @@
 
 /*
 **      $Log$
+**      Revision 1.96  2004/09/24 20:22:05  sm
+**      - Some VBO adjustments.
+**
 **      Revision 1.95  2004/09/24 13:45:36  sm
 **      - Extracted OpenGL extension vector buffer objects into own files.
 **      - Some cleanup for Lines.

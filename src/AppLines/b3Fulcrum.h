@@ -36,12 +36,14 @@ public:
 public:
 	         b3Fulcrum();
 	void     b3Update(b3_vector *fulcrum);
-	void     b3AllocVertices(b3RenderContext *context);
-	void     b3FreeVertices();
+	void     b3FreeVertexMemory();
 	void     b3Draw(b3RenderContext *context);
 
 protected:
+	void     b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys);
+	void     b3AllocVertexMemory(b3RenderContext *context);
 	void     b3ComputeVertices();
+	void     b3ComputeIndices();
 
 	inline void b3GetGridColor(b3Color &color)
 	{

@@ -170,12 +170,15 @@ class b3RenderObject : public b3Mem, protected b3VectorBufferObjects
 	b3_bool          glBoundVertices;
 	b3_bool          glBoundIndices;
 
+	// Actuality flags
+	b3_bool          glVerticesComputed;
+	b3_bool          glIndicesComputed;
+	b3_bool          glMaterialComputed;
+
 protected:
 	b3_count         glVertexCount;
 	b3_count         glGridCount;
 	b3_count         glPolyCount;
-	b3_bool          glVerticesComputed;
-	b3_bool          glIndicesComputed;
 	b3_gl_vertex    *glVertex;
 	b3_gl_line      *glGrids;
 	b3_gl_polygon   *glPolygons;
@@ -188,7 +191,6 @@ protected:
 	GLuint           glVBO[3];
 
 	// Some material values
-	b3_bool          glMaterialComputed;
 	GLfloat          glAmbient[4];
 	GLfloat          glDiffuse[4];
 	GLfloat          glSpecular[4];

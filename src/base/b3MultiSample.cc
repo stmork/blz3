@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/09/24 20:22:05  sm
+**	- Some VBO adjustments.
+**
 **	Revision 1.1  2004/09/24 15:39:31  sm
 **	- Added multisampling support which doesn't work.
-**
+**	
 **
 */
 
@@ -48,7 +51,7 @@
 
 b3_bool                   b3MultiSample::glHasMS;
 
-void b3MultiSample::b3Init(char *extensions)
+void b3MultiSample::b3Init(const char *extensions)
 {
 #ifdef HAS_MULTISAMPLE
 	glHasMS = strstr(extensions,"ARB_multisample") !=  null;

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.100  2004/09/24 20:22:05  sm
+**	- Some VBO adjustments.
+**
 **	Revision 1.99  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
-**
+**	
 **	Revision 1.98  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
 **	
@@ -863,8 +866,7 @@ void b3BBox::b3ComputeVertices()
 	glVertex[7].v.y = m_DimBase.y + m_DimSize.y;
 	glVertex[7].v.z = m_DimBase.z;
 
-	glVertexCount      = 8;
-	glVerticesComputed = true;
+	glVertexCount   = 8;
 }
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)
@@ -927,7 +929,7 @@ void b3Scene::b3Update()
 {
 	b3PrintF(B3LOG_FULL,"    Updating geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateThread);
+	m_PrepareInfo.b3Prepare(b3UpdateThread, null,false);
 }
 
 b3_bool b3Scene::b3UpdateMaterialThread(b3BBox *bbox,void *ptr)

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2004/09/24 20:22:05  sm
+**      - Some VBO adjustments.
+**
 **      Revision 1.11  2003/03/04 20:37:36  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -106,7 +109,7 @@ b3Color b3CameraVolume::m_GridColor(1.0f,0.1f,0.25f);
 
 b3CameraVolume::b3CameraVolume()
 {
-	glComputed = false;
+	b3Recompute();
 	memset(m_Vertex,0,sizeof(m_Vertex));
 }
 
@@ -118,50 +121,50 @@ void b3CameraVolume::b3Update(b3CameraPart *camera)
 	view_dir.y = camera->m_ViewPoint.y - camera->m_EyePoint.y;
 	view_dir.z = camera->m_ViewPoint.z - camera->m_EyePoint.z;
 
-	m_Vertex[0].v.x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x + camera->m_Height.x;
-	m_Vertex[0].v.y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y + camera->m_Height.y;
-	m_Vertex[0].v.z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z + camera->m_Height.z;
+	glVertex[0].v.x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x + camera->m_Height.x;
+	glVertex[0].v.y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y + camera->m_Height.y;
+	glVertex[0].v.z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z + camera->m_Height.z;
 
-	m_Vertex[1].v.x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x + camera->m_Height.x;
-	m_Vertex[1].v.y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y + camera->m_Height.y;
-	m_Vertex[1].v.z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z + camera->m_Height.z;
+	glVertex[1].v.x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x + camera->m_Height.x;
+	glVertex[1].v.y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y + camera->m_Height.y;
+	glVertex[1].v.z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z + camera->m_Height.z;
 
-	m_Vertex[2].v.x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x - camera->m_Height.x;
-	m_Vertex[2].v.y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y - camera->m_Height.y;
-	m_Vertex[2].v.z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z - camera->m_Height.z;
+	glVertex[2].v.x = camera->m_EyePoint.x + view_dir.x - camera->m_Width.x - camera->m_Height.x;
+	glVertex[2].v.y = camera->m_EyePoint.y + view_dir.y - camera->m_Width.y - camera->m_Height.y;
+	glVertex[2].v.z = camera->m_EyePoint.z + view_dir.z - camera->m_Width.z - camera->m_Height.z;
 
-	m_Vertex[3].v.x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x - camera->m_Height.x;
-	m_Vertex[3].v.y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y - camera->m_Height.y;
-	m_Vertex[3].v.z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z - camera->m_Height.z;
+	glVertex[3].v.x = camera->m_EyePoint.x + view_dir.x + camera->m_Width.x - camera->m_Height.x;
+	glVertex[3].v.y = camera->m_EyePoint.y + view_dir.y + camera->m_Width.y - camera->m_Height.y;
+	glVertex[3].v.z = camera->m_EyePoint.z + view_dir.z + camera->m_Width.z - camera->m_Height.z;
 
-	m_Vertex[4].v.x = camera->m_EyePoint.x;
-	m_Vertex[4].v.y = camera->m_EyePoint.y;
-	m_Vertex[4].v.z = camera->m_EyePoint.z;
+	glVertex[4].v.x = camera->m_EyePoint.x;
+	glVertex[4].v.y = camera->m_EyePoint.y;
+	glVertex[4].v.z = camera->m_EyePoint.z;
 
-	m_Vertex[5].v.x = camera->m_EyePoint.x + view_dir.x * 2;
-	m_Vertex[5].v.y = camera->m_EyePoint.y + view_dir.y * 2;
-	m_Vertex[5].v.z = camera->m_EyePoint.z + view_dir.z * 2;
+	glVertex[5].v.x = camera->m_EyePoint.x + view_dir.x * 2;
+	glVertex[5].v.y = camera->m_EyePoint.y + view_dir.y * 2;
+	glVertex[5].v.z = camera->m_EyePoint.z + view_dir.z * 2;
 
-	m_Vertex[6].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
-	m_Vertex[6].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
-	m_Vertex[6].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
+	glVertex[6].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
+	glVertex[6].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
+	glVertex[6].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
 
-	m_Vertex[7].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
-	m_Vertex[7].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
-	m_Vertex[7].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
+	glVertex[7].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 + camera->m_Height.x * 1.5;
+	glVertex[7].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 + camera->m_Height.y * 1.5;
+	glVertex[7].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 + camera->m_Height.z * 1.5;
 
-	m_Vertex[8].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
-	m_Vertex[8].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
-	m_Vertex[8].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
+	glVertex[8].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 - camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
+	glVertex[8].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 - camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
+	glVertex[8].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 - camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
 
-	m_Vertex[9].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
-	m_Vertex[9].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
-	m_Vertex[9].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
+	glVertex[9].v.x = camera->m_EyePoint.x + view_dir.x * 1.5 + camera->m_Width.x * 1.5 - camera->m_Height.x * 1.5;
+	glVertex[9].v.y = camera->m_EyePoint.y + view_dir.y * 1.5 + camera->m_Width.y * 1.5 - camera->m_Height.y * 1.5;
+	glVertex[9].v.z = camera->m_EyePoint.z + view_dir.z * 1.5 + camera->m_Width.z * 1.5 - camera->m_Height.z * 1.5;
 
-	glComputed = false;
+	b3Recompute();
 }
 
-void b3CameraVolume::b3AllocVertices(b3RenderContext *cts)
+void b3CameraVolume::b3AllocVertexMemory(b3RenderContext *cts)
 {
 	glVertex   = m_Vertex;
 	glGrids    = VolumeIndices;
@@ -171,7 +174,7 @@ void b3CameraVolume::b3AllocVertices(b3RenderContext *cts)
 	glGridCount   = B3_CV_INDEX_COUNT;
 }
 
-void b3CameraVolume::b3FreeVertices()
+void b3CameraVolume::b3FreeVertexMemory()
 {
 	glVertex   = null;
 	glGrids    = null;

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2004/09/24 20:22:05  sm
+**      - Some VBO adjustments.
+**
 **      Revision 1.10  2003/03/04 20:37:36  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -139,14 +142,25 @@ void b3Fulcrum::b3Update(b3_vector *fulcrum)
 	b3Recompute();
 }
 
-void b3Fulcrum::b3AllocVertices(b3RenderContext *cts)
+void b3Fulcrum::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
 {
-	glVertex   = m_Vertex;
-	glGrids    = FulcrumIndices;
-	glPolygons = null;
+	verts = B3_FULCRUM_VERTEX_COUNT;
 }
 
-void b3Fulcrum::b3FreeVertices()
+void b3Fulcrum::b3AllocVertexMemory(b3RenderContext *cts)
+{
+	if (b3HasVBO())
+	{
+		b3RenderObject::b3AllocVertexMemory(cts);
+	}
+	else
+	{
+		glVertex   = m_Vertex;
+		glVertexCount = B3_FULCRUM_VERTEX_COUNT;
+	}
+}
+
+void b3Fulcrum::b3FreeVertexMemory()
 {
 	glVertex   = null;
 	glGrids    = null;
@@ -163,8 +177,14 @@ void b3Fulcrum::b3ComputeVertices()
 		glVertex[i].v.y = fulcrum[i].y * m_Scale + m_Position.y;
 		glVertex[i].v.z = fulcrum[i].z * m_Scale + m_Position.z;
 	}
-	glVertexCount = B3_FULCRUM_VERTEX_COUNT;
-	glGridCount   = B3_FULCRUM_INDEX_COUNT;
+}
+
+void b3Fulcrum::b3ComputeIndices()
+{
+	glGrids     = null;
+	glPolygons  = null;
+	glGridCount = B3_FULCRUM_INDEX_COUNT;
+	glPolyCount = 0;
 }
 
 void b3Fulcrum::b3Draw(b3RenderContext *context)
@@ -175,7 +195,7 @@ void b3Fulcrum::b3Draw(b3RenderContext *context)
 	glGetIntegerv(GL_DEPTH_FUNC,&func);
 	glDepthFunc(GL_ALWAYS);
 //	glDepthMask(GL_FALSE);
-	b3RenderObject::b3Draw(context);
+//	b3RenderObject::b3Draw(context);
 //	glDepthMask(GL_TRUE);
 	glDepthFunc(func);
 	glEnable(GL_DEPTH_TEST);

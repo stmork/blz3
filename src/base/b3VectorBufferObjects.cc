@@ -24,7 +24,7 @@
 
 #include "blz3/base/b3VectorBufferObjects.h"
 
-#define nUSE_VBOS
+#define USE_VBOS
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/09/24 20:22:05  sm
+**	- Some VBO adjustments.
+**
 **	Revision 1.3  2004/09/24 19:07:27  sm
 **	- VBOs on ATI running - or better: crawling.
-**
+**	
 **	Revision 1.2  2004/09/24 15:39:31  sm
 **	- Added multisampling support which doesn't work.
 **	
@@ -63,7 +66,7 @@ PFNGLBUFFERSUBDATAARBPROC b3VectorBufferObjects::glBufferSubDataARB;
 PFNGLMAPBUFFERARBPROC     b3VectorBufferObjects::glMapBufferARB;
 PFNGLUNMAPBUFFERARBPROC   b3VectorBufferObjects::glUnmapBufferARB;
 
-void b3VectorBufferObjects::b3Init(char *extensions)
+void b3VectorBufferObjects::b3Init(const char *extensions)
 {
 #ifdef BLZ3_USE_OPENGL
 	glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
@@ -93,7 +96,7 @@ void b3VectorBufferObjects::b3Init(char *extensions)
 	b3PrintF(B3LOG_FULL, "glUnmapBufferARB   = %p\n", glUnmapBufferARB);
 #endif
 
-#else // HAS_VBO
+#else // USE_VBOS
 	glHasVBO = false;
 #endif
 }

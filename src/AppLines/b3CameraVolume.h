@@ -34,8 +34,8 @@ public:
 public:
 	         b3CameraVolume();
 	void     b3Update(b3CameraPart *camera);
-	void     b3AllocVertices(b3RenderContext *context);
-	void     b3FreeVertices();
+	void     b3AllocVertexMemory(b3RenderContext *context);
+	void     b3FreeVertexMemory();
 	void     b3Draw(b3RenderContext *context);
 
 protected:

@@ -25,7 +25,7 @@ class B3_PLUGIN b3MultiSample
 	static        b3_bool glHasMS;
 
 public:
-	static        void    b3Init(char *extensions);
+	static        void    b3Init(const char *extensions);
 	static        void    b3Enable(b3_bool enable = true);
 	static        b3_bool b3IsEnabled();
 	static inline b3_bool b3HasMS()
