@@ -324,7 +324,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Erzeugen...",                 ID_OBJECT_NEW
         MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
-        MENUITEM "Löschen\tEntf",               ID_OBJECT_DELETE
+        MENUITEM "Löschen",                     ID_OBJECT_DELETE
         MENUITEM "Kopieren...",                 ID_OBJECT_COPY
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
@@ -604,7 +604,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Erzeugen...",                 ID_OBJECT_NEW
         MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
-        MENUITEM "Löschen\tEntf",               ID_OBJECT_DELETE
+        MENUITEM "Löschen",                     ID_OBJECT_DELETE
         MENUITEM "Kopieren...",                 ID_OBJECT_COPY
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
@@ -656,9 +656,6 @@ IDR_BLZ3TYPE ACCELERATORS DISCARDABLE
 BEGIN
     "E",            ID_OBJECT_EDIT,         VIRTKEY, CONTROL, NOINVERT
     "N",            ID_WINDOW_NEW,          VIRTKEY, CONTROL, NOINVERT
-    VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
-    VK_DELETE,      ID_OBJECT_DELETE,       VIRTKEY, NOINVERT
-    VK_SUBTRACT,    ID_VIEW_SMALLER,        VIRTKEY, NOINVERT
 END
 
 
@@ -849,6 +846,9 @@ BEGIN
     GROUPBOX        "Raster:",IDC_STATIC,90,10,130,60
     DEFPUSHBUTTON   "OK",IDOK,20,125,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,170,125,50,14
+    GROUPBOX        "Einheit:",IDC_STATIC,90,75,130,40
+    COMBOBOX        IDC_UNIT,100,90,110,90,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
 END
 
 IDD_SEARCH_PATH_LIST DIALOG DISCARDABLE  0, 0, 312, 196
@@ -1326,6 +1326,23 @@ BEGIN
     IDC_CAMERA_TYPES, 0x403, 18, 0
 0x6542, 0x756e, 0x7a74, 0x7265, 0x6564, 0x6966, 0x696e, 0x7265, 0x0074, 
 
+    0
+END
+
+IDD_MODELLER_INFO DLGINIT
+BEGIN
+    IDC_UNIT, 0x403, 10, 0
+0x694d, 0x696c, 0x656d, 0x6574, 0x0072, 
+    IDC_UNIT, 0x403, 11, 0
+0x655a, 0x746e, 0x6d69, 0x7465, 0x7265, "\000" 
+    IDC_UNIT, 0x403, 5, 0
+0x6f5a, 0x6c6c, "\000" 
+    IDC_UNIT, 0x403, 10, 0
+0x6544, 0x697a, 0x656d, 0x6574, 0x0072, 
+    IDC_UNIT, 0x403, 4, 0
+0x7546, 0x00df, 
+    IDC_UNIT, 0x403, 6, 0
+0x654d, 0x6574, 0x0072, 
     0
 END
 

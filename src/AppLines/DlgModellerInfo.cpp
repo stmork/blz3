@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/03 21:42:30  sm
+**	- Added measurement printing. The measure itself is missing yet.
+**	  The support is done in b3RenderView and CAppRenderView.
+**	- Added support for units in b3ModellerInfo
+**	- Cleaned up some accelerators. Now arrow keys are working
+**	  again. The del key is working correctly inside edit controls again.
+**
 **	Revision 1.4  2002/01/05 22:22:50  sm
 **	- Code cleanup
-**
+**	
 **	Revision 1.3  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
 **	
@@ -60,6 +67,7 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgModellerInfo)
 	m_SnapToAngle = FALSE;
 	m_SnapToGrid = FALSE;
+	m_Unit = -1;
 	//}}AFX_DATA_INIT
 }
 
@@ -74,6 +82,7 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FULCRUM_X, m_xFulcrumCtrl);
 	DDX_Check(pDX, IDC_SNAP_TO_ANGLE, m_SnapToAngle);
 	DDX_Check(pDX, IDC_SNAP_TO_GRID, m_SnapToGrid);
+	DDX_CBIndex(pDX, IDC_UNIT, m_Unit);
 	//}}AFX_DATA_MAP
 }
 
@@ -108,6 +117,7 @@ BOOL CDlgModellerInfo::OnInitDialog()
 	m_SnapToAngleCtrl.b3SetValue(m_ModellerInfo->m_GridRot);
 	m_SnapToGrid  = m_ModellerInfo->m_GridActive;
 	m_SnapToAngle = m_ModellerInfo->m_AngleActive;
+	m_Unit        = m_ModellerInfo->m_Flags & B3_UNIT_MASK;
 	UpdateData(FALSE);
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -189,6 +199,8 @@ void CDlgModellerInfo::OnOK()
 	m_ModellerInfo->m_Center.x    = m_xFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.y    = m_yFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.z    = m_zFulcrumCtrl.m_Value;
+	m_ModellerInfo->m_Flags      &= (~B3_UNIT_MASK);
+	m_ModellerInfo->m_Flags      |= m_Unit;
 	CB3GetApp()->b3SetData();
 	CDialog::OnOK();
 }

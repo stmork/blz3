@@ -1925,6 +1925,7 @@ public:
 // LINES_INFO
 class b3ModellerInfo : public b3Special
 {
+	b3_f32           m_Unit;
 public:
 	b3_vector        m_Center;
 	b3_vector        m_StepMove;
@@ -1936,8 +1937,7 @@ public:
 	b3_bool          m_GridActive;
 	b3_bool          m_AngleActive;
 	b3_bool          m_CameraActive;
-	b3_s32           m_Flags;
-	b3_f32           m_Unit;
+	b3_u32           m_Flags;
 
 public:
 	B3_ITEM_INIT(b3ModellerInfo);
@@ -1946,14 +1946,21 @@ public:
 	void       b3Write();
 	void       b3SnapToGrid(b3_vector *translation);
 	void       b3SnapToAngle(b3_f64 &angle);
+	b3_f64     b3ScaleUnitToMM();
 };
 
-#define RULE_MM 0
-#define RULE_CM 1
-#define RULE_IN 2
-#define RULE_DM 3
-#define RULE_FT 4
-#define RULE_M  5
+enum b3_unit
+{
+	B3_UNIT_MM = 0,
+	B3_UNIT_CM,
+	B3_UNIT_IN,
+	B3_UNIT_DM,
+	B3_UNIT_FT,
+	B3_UNIT_M,
+	B3_UNIT_MAX
+};
+
+#define B3_UNIT_MASK 0xf
 
 // ANIMATION
 class b3Animation : public b3Special

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2002/02/03 21:42:30  sm
+**      - Added measurement printing. The measure itself is missing yet.
+**        The support is done in b3RenderView and CAppRenderView.
+**      - Added support for units in b3ModellerInfo
+**      - Cleaned up some accelerators. Now arrow keys are working
+**        again. The del key is working correctly inside edit controls again.
+**
 **      Revision 1.39  2002/02/01 15:04:09  sm
 **      - Prepared shapes for icon conversion
 **      - Added to save selected/first visible item in
@@ -458,7 +465,8 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_StepRotate.x =
 	m_StepRotate.y =
 	m_StepRotate.z = 15;
-	m_Unit         = RULE_CM;
+	m_Flags        = B3_UNIT_CM;
+	m_Unit         = b3ScaleUnitToMM();
 	m_GridMove     = 10;
 	m_GridRot      = 15;
 	m_GridActive   = true;
@@ -476,8 +484,7 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridActive   =
 	m_AngleActive  = b3InitBool();
 	m_CameraActive = b3InitBool();
-	m_Flags        = 0;
-	m_Unit         = RULE_CM;
+	m_Flags        = B3_UNIT_CM;
 	m_StepMove.x   =
 	m_StepMove.y   =
 	m_StepMove.z   = 10;
@@ -495,10 +502,12 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 			m_AngleActive  = b3InitBool();
 		}
 	}
+	m_Unit = b3ScaleUnitToMM();
 }
 
 void b3ModellerInfo::b3Write()
 {
+	m_Unit = b3ScaleUnitToMM();
 	b3StoreVector(&m_Center);
 	b3StoreFloat(m_GridMove  );
 	b3StoreFloat(m_GridRot   );
@@ -532,6 +541,21 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 
 		angle = floor(angle / GridStep + 0.5) * GridStep;
 	}
+}
+
+static b3_f64 unit_scale[B3_UNIT_MAX] =
+{
+	1.0,   // B3_UNIT_MM
+	10.0,  // B3_UNIT_CM
+	25.4,  // B3_UNIT_IN
+	100.0, // B3_UNIT_DM
+	308.4, // B3_UNIT_FT
+	1000.0 // B3_UNIT_M
+};
+
+b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
+{
+	return unit_scale[m_Flags & B3_UNIT_MASK];
 }
 
 /*************************************************************************

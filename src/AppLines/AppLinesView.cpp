@@ -39,11 +39,18 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/02/03 21:42:30  sm
+**	- Added measurement printing. The measure itself is missing yet.
+**	  The support is done in b3RenderView and CAppRenderView.
+**	- Added support for units in b3ModellerInfo
+**	- Cleaned up some accelerators. Now arrow keys are working
+**	  again. The del key is working correctly inside edit controls again.
+**
 **	Revision 1.41  2002/01/31 11:50:53  sm
 **	- Now we can print OpenGL scenes (Note: We have to do basic
 **	  initialization prior to render a scene. Then we can see the scene
 **	  on paper)
-**
+**	
 **	Revision 1.40  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
 **	
@@ -363,14 +370,33 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
-void CAppLinesView::b3Draw(b3_res xSize,b3_res ySize)
+b3_bool CAppLinesView::b3GetDimension(
+	b3_f64 &xSize,
+	b3_f64 &ySize,
+	b3_f64 &unit)
+{
+	b3_bool success;
+
+	success = m_RenderView.b3GetDimension(xSize,ySize);
+	if (success)
+	{
+		unit = GetDocument()->m_Info->b3ScaleUnitToMM();
+	}
+	return success;
+}
+
+void CAppLinesView::b3Draw(
+	b3_res xSize,
+	b3_res ySize,
+	b3_f64 xOffset,
+	b3_f64 yOffset)
 {
 	CAppLinesDoc *pDoc = GetDocument();
 
 	pDoc->m_Context.b3StartDrawing();
 
 	// Setup view first
-	m_RenderView.b3UpdateView(0,0,xSize,ySize);
+	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 //	m_RenderView.b3UpdateView(0,ySize - 100,100,100);
 
 	// Then draw objects

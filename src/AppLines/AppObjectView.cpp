@@ -35,9 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/02/03 21:42:30  sm
+**	- Added measurement printing. The measure itself is missing yet.
+**	  The support is done in b3RenderView and CAppRenderView.
+**	- Added support for units in b3ModellerInfo
+**	- Cleaned up some accelerators. Now arrow keys are working
+**	  again. The del key is working correctly inside edit controls again.
+**
 **	Revision 1.8  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
-**
+**	
 **	Revision 1.7  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -183,7 +190,11 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
-void CAppObjectView::b3Draw(b3_res xSize,b3_res ySize) 
+void CAppObjectView::b3Draw(
+	b3_res xSize,
+	b3_res ySize,
+	b3_f64 xOffset,
+	b3_f64 yOffset)
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
@@ -194,7 +205,7 @@ void CAppObjectView::b3Draw(b3_res xSize,b3_res ySize)
 		pDoc->m_Context.b3StartDrawing();
 
 		// Setup view first
-		m_RenderView.b3UpdateView(0,0,xSize,ySize);
+		m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
 		// Then draw objects
 		m_BBox->b3Draw();

@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/02/03 21:42:30  sm
+**	- Added measurement printing. The measure itself is missing yet.
+**	  The support is done in b3RenderView and CAppRenderView.
+**	- Added support for units in b3ModellerInfo
+**	- Cleaned up some accelerators. Now arrow keys are working
+**	  again. The del key is working correctly inside edit controls again.
+**
 **	Revision 1.23  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.22  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
 **	
@@ -182,42 +189,35 @@ b3RenderView::b3RenderView()
 
 b3RenderView::~b3RenderView()
 {
-	b3RenderViewItem *item;
-	b3_index          i;
+	b3_index i;
 
 	for (i = 1;i < B3_VIEW_MAX;i++)
 	{
-		while((item = m_ViewStack[i].First) != null)
-		{
-			m_ViewStack[i].b3Remove(item);
-			delete item;
-		}
+		m_ViewStack[i].b3Free();
 	}
 
-	while((item = m_Depot.First) != null)
-	{
-		m_Depot.b3Remove(item);
-		delete item;
-	}
+	m_Depot.b3Free();
 }
 
-b3RenderViewItem *b3RenderView::b3NewRenderViewItem(
-	b3RenderViewItem *last)
+b3RenderViewItem *b3RenderView::b3NewRenderViewItem(b3RenderViewItem *last)
 {
 	b3RenderViewItem *item;
 
 	item = m_Depot.First;
 	if (item != null)
 	{
+		// Recycle item
 		m_Depot.b3Remove(item);
 	}
 	else
 	{
+		// Create new item
 		item = new b3RenderViewItem();
 	}
 
 	if(last != null)
 	{
+		// Use dimension of last item
 		item->m_Mid  = last->m_Mid;
 		item->m_Size = last->m_Size;
 		item->m_xRelation = last->m_xRelation;
@@ -225,6 +225,7 @@ b3RenderViewItem *b3RenderView::b3NewRenderViewItem(
 	}
 	else
 	{
+		// Use dimension of complete scene
 		item->b3Set(&m_Lower,&m_Upper);
 	}
 	return item;
@@ -276,6 +277,37 @@ b3_bool b3RenderView::b3SetBounds(b3Scene *scene)
 		}
 	}
 	return result;
+}
+
+b3_bool b3RenderView::b3GetDimension(b3_f64 &xSize,b3_f64 &ySize)
+{
+	b3_bool success = true;
+
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_3D:
+		xSize = 2.0 * b3Vector::b3Length(&m_Width);
+		ySize = 2.0 * b3Vector::b3Length(&m_Height);
+		break;
+	case B3_VIEW_TOP:
+		xSize = m_Upper.x - m_Lower.x;
+		ySize = m_Upper.y - m_Lower.y;
+		break;
+	case B3_VIEW_FRONT:
+	case B3_VIEW_BACK:
+		xSize = m_Upper.x - m_Lower.x;
+		ySize = m_Upper.z - m_Lower.z;
+		break;
+	case B3_VIEW_RIGHT:
+	case B3_VIEW_LEFT:
+		xSize = m_Upper.y - m_Lower.y;
+		ySize = m_Upper.z - m_Lower.z;
+		break;
+
+		default:
+		success = false;
+	}
+	return success;
 }
 
 void b3RenderView::b3SetBounds(b3_vector *lower,b3_vector *upper)
@@ -771,11 +803,11 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 #endif
 }
 
-void b3RenderView::b3UpdateView(
-	b3_coord xPos,
-	b3_coord yPos,
+void b3RenderView::b3SetupView(
 	b3_res   xSize,
-	b3_res   ySize)
+	b3_res   ySize,
+	b3_f64   xOffset,
+	b3_f64   yOffset)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_f64    width,height,nearCP,farCP,distance,factor,relation;
@@ -783,15 +815,15 @@ void b3RenderView::b3UpdateView(
 	GLfloat   aspectCamera;
 	GLfloat   min = 0.1f;
 	b3_vector eye,look,up;
+	b3_vector offset;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	B3_ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
-	glViewport(xPos,yPos,xSize,ySize);
-	up.x  =
-	up.y  =
-	up.z  = 0;
+	glViewport(0,0,xSize,ySize);
+	b3Vector::b3Init(&up);
+	b3Vector::b3Init(&offset);
 	switch (m_ViewMode)
 	{
 	case B3_VIEW_3D:
@@ -818,10 +850,14 @@ void b3RenderView::b3UpdateView(
 		farCP  = (m_Upper.z - m_Lower.z);
 
 		// Prepare gluLookAt()
-		eye    = look = m_Actual->m_Mid;
-		eye.z  = m_Upper.z;
-		look.z = m_Lower.z;
-		up.y   = 1;
+		eye     = look = m_Actual->m_Mid;
+		eye.z   = m_Upper.z;
+		look.z  = m_Lower.z;
+		up.y    = 1;
+
+		// Prepare offset for print tiling
+		offset.x = -xOffset;
+		offset.y = -yOffset;
 		break;
 
 	case B3_VIEW_FRONT:
@@ -836,6 +872,10 @@ void b3RenderView::b3UpdateView(
 		eye.y  = m_Lower.y;
 		look.y = m_Upper.y;
 		up.z   = 1;
+
+		// Prepare offset for print tiling
+		offset.x = -xOffset;
+		offset.z = -yOffset;
 		break;
 
 	case B3_VIEW_RIGHT:
@@ -850,6 +890,10 @@ void b3RenderView::b3UpdateView(
 		eye.x  = m_Upper.x;
 		look.x = m_Lower.x;
 		up.z   = 1;
+
+		// Prepare offset for print tiling
+		offset.y = -xOffset;
+		offset.z = -yOffset;
 		break;
 
 	case B3_VIEW_LEFT:
@@ -864,6 +908,10 @@ void b3RenderView::b3UpdateView(
 		eye.x  = m_Lower.x;
 		look.x = m_Upper.x;
 		up.z   = 1;
+
+		// Prepare offset for print tiling
+		offset.y = -yOffset;
+		offset.z = -yOffset;
 		break;
 
 	case B3_VIEW_BACK:
@@ -878,6 +926,10 @@ void b3RenderView::b3UpdateView(
 		eye.y  = m_Upper.y;
 		look.y = m_Lower.y;
 		up.z   = 1;
+
+		// Prepare offset for print tiling
+		offset.x =  xOffset;
+		offset.z = -yOffset;
 		break;
 	}
 
@@ -919,6 +971,7 @@ void b3RenderView::b3UpdateView(
 		eye.x, eye.y, eye.z,
 		look.x,look.y,look.z,
 		up.x,  up.y,  up.z);
+	glTranslatef(offset.x,offset.y,offset.z);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	

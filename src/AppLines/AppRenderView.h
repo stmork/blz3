@@ -66,8 +66,20 @@ class CAppRenderView : public CScrollView
 	HDC             m_prtDC;
 	HBITMAP         m_prtBitmap;
 	HGDIOBJ         m_prtOldBitmap;
-	b3_res          m_prtWidth;
-	b3_res          m_prtHeight;
+	b3_f64          m_prtScale;
+	b3_f64          m_prtUnit;
+	b3_f64          m_prtWidth;
+	b3_f64          m_prtHeight;
+	b3_res          m_prtPageWidth;
+	b3_res          m_prtPageHeight;
+	b3_res          m_prtLogWidth;
+	b3_res          m_prtLogHeight;
+	b3_res          m_prtLogOffsetX;
+	b3_res          m_prtLogOffsetY;
+	b3_res          m_prtHardCopyWidth;
+	b3_res          m_prtHardCopyHeight;
+	b3_count        m_prtCountWidth;
+	b3_count        m_prtCountHeight;
 
 protected:
 	// OpenGL window display values
@@ -123,7 +135,8 @@ public:
 
 protected:
 	virtual b3_bool b3IsMouseActionAllowed();
-	virtual void    b3Draw(b3_res xSize,b3_res ySize);
+	virtual b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit);
+	virtual void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
 
 // Generated message map functions
 protected:
@@ -165,6 +178,7 @@ protected:
 	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
 	afx_msg void OnPaint();
+	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

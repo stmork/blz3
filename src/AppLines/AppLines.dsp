@@ -516,6 +516,10 @@ SOURCE=.\res\shape_bspline_cylinder.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\shape_bspline_ring.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\shape_bspline_rot.ico
 # End Source File
 # Begin Source File

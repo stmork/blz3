@@ -47,6 +47,7 @@ public:
 	CB3FloatEdit	m_xFulcrumCtrl;
 	BOOL	m_SnapToAngle;
 	BOOL	m_SnapToGrid;
+	int		m_Unit;
 	//}}AFX_DATA
 
 

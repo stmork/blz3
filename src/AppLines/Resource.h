@@ -218,6 +218,7 @@
 #define IDC_PREVIEW                     1107
 #define IDC_IMAGE                       1108
 #define IDC_PREVIEW_IMAGE               1109
+#define IDC_UNIT                        1110
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -353,9 +354,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        171
+#define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         32866
-#define _APS_NEXT_CONTROL_VALUE         1110
+#define _APS_NEXT_CONTROL_VALUE         1111
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif
