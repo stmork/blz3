@@ -46,6 +46,7 @@ class b3Event
 {
 	pthread_cond_t  event;
 	pthread_mutex_t mutex;
+	b3_bool         pulse;
 
 public:
 	         b3Event();

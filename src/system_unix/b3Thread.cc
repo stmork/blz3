@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/23 13:40:28  sm
+**	- b3Event on Un*x platforms were broken.
+**
 **	Revision 1.7  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.6  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -141,6 +144,7 @@ b3Event::b3Event()
 {
 	pthread_cond_init(&event,NULL);
 	pthread_mutex_init(&mutex,NULL);
+	pulse = false;
 }
 
 b3Event::~b3Event()
@@ -153,6 +157,7 @@ b3Event::~b3Event()
 void b3Event::b3Pulse()
 {
 	pthread_mutex_lock(&mutex);
+	pulse = true;
 	pthread_cond_broadcast(&event);
 	pthread_mutex_unlock(&mutex);
 }
@@ -161,8 +166,13 @@ void b3Event::b3Pulse()
 b3_bool b3Event::b3Wait()
 {
 	pthread_mutex_lock(&mutex);
-	pthread_cond_wait(&event,&mutex);
+	if (!pulse)
+	{
+		pthread_cond_wait(&event,&mutex);
+	}
+	pulse = false;
 	pthread_mutex_unlock(&mutex);
+
 	return true;
 }
 
@@ -179,6 +189,7 @@ b3Thread::b3Thread(const char *task_name)
 {
 	m_Name      = task_name;
 	m_IsRunning = false;
+	m_Result    = 0;
 }
 
 b3Thread::~b3Thread()
@@ -257,8 +268,11 @@ b3_u32 b3Thread::b3Wait()
 	int   result;
 	void *ptr = &result;
 
-	pthread_join(m_Thread,&ptr);
-	return result;
+	if (m_IsRunning)
+	{
+		pthread_join(m_Thread,&ptr);
+	}
+	return m_Result;
 }
 
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)

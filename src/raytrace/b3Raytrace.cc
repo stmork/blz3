@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2002/08/23 13:40:28  sm
+**	- b3Event on Un*x platforms were broken.
+**
 **	Revision 1.45  2002/08/23 12:37:11  sm
 **	- Optimized motion blur raytracing using their own thread methods...
-**
+**	
 **	Revision 1.44  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
@@ -312,6 +315,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	while(row != null);
 
 	// Reach this if the row list ran empty.
+	b3PrintF(B3LOG_FULL,"  Raytracing thread %d terminates...\n",info->m_Num);
 	return 0;
 }
 
@@ -325,6 +329,8 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 	{
 		b3PrintF(B3LOG_FULL,"  Thread %d is waiting to start job.\n",info->m_Num);
 		info->m_WaitForAnimation.b3Wait();
+		b3PrintF(B3LOG_FULL,"  Thread %d is doing his job...\n",info->m_Num);
+
 		do
 		{
 			// Enter critical section
@@ -350,7 +356,7 @@ b3_u32 b3Scene::b3RaytraceMotionBlurThread(void *ptr)
 	}
 	while(info->m_Loop);
 
-	// Reach this if the row list ran empty.
+	b3PrintF(B3LOG_FULL,"  Raytracing thread %d for motion blur terminates...\n",info->m_Num);
 	return 0;
 }
 
@@ -451,6 +457,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 	// Signalling stop to threads but first we have to empty the row
 	// pool
 	m_TrashPool.b3Move(&m_RowPool);
+
 	b3PrintF (B3LOG_FULL,"  Signalling threads to terminate...\n");
 	for (i = 0;i < CPUs;i++)
 	{
