@@ -23,7 +23,6 @@
 
 #include "AppLines.h"
 #include "DlgItemMaintain.h"
-#include "DlgItemCreate.h"
 #include "b3StaticPluginInfoInit.h"
 #include "blz3/system/b3FileReg.h"
 
@@ -35,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/04/26 19:45:56  sm
+**	- Item maintain dialog: The return key enters the
+**	  property dialog or creates a new item
+**
 **	Revision 1.11  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
 **	  o chess
 **	- Added scaling to wood properties
-**
+**	
 **	Revision 1.10  2004/04/25 19:52:31  sm
 **	- Added safety message box for item deletion.
 **	
@@ -120,9 +123,11 @@ BEGIN_MESSAGE_MAP(CDlgItemMaintain, CDialog)
 	ON_BN_CLICKED(IDC_ITEM_UP, OnItemUp)
 	ON_BN_CLICKED(IDC_ITEM_DOWN, OnItemDown)
 	ON_BN_CLICKED(IDC_ITEM_LAST, OnItemLast)
-	ON_NOTIFY(NM_DBLCLK, IDC_ITEM_LIST, OnDblclkItemList)
+	ON_NOTIFY(NM_DBLCLK, IDC_ITEM_LIST, OnDoItemList)
 	ON_NOTIFY(NM_CLICK, IDC_ITEM_LIST, OnClickItemList)
-	ON_NOTIFY(NM_DBLCLK, IDC_CLASS_LIST, OnDblclkClassList)
+	ON_NOTIFY(NM_DBLCLK, IDC_CLASS_LIST, OnDoClassList)
+	ON_NOTIFY(NM_RETURN, IDC_ITEM_LIST, OnDoItemList)
+	ON_NOTIFY(NM_RETURN, IDC_CLASS_LIST, OnDoClassList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -363,13 +368,6 @@ void CDlgItemMaintain::b3Store(b3Item *item)
 	}
 }
 
-void CDlgItemMaintain::OnDblclkItemList(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	// TODO: Add your control notification handler code here
-	OnItemEdit();
-	*pResult = 0;
-}
-
 void CDlgItemMaintain::OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	// TODO: Add your control notification handler code here
@@ -478,9 +476,39 @@ b3_bool CDlgItemMaintain::b3SetModified(CDocument *pDoc)
 	return m_Changed;
 }
 
-void CDlgItemMaintain::OnDblclkClassList(NMHDR* pNMHDR, LRESULT* pResult) 
+void CDlgItemMaintain::OnDoItemList(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	OnItemEdit();
+	*pResult = 0;
+}
+
+void CDlgItemMaintain::OnDoClassList(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	// TODO: Add your control notification handler code here
 	OnItemNew();
 	*pResult = 0;
+}
+
+BOOL CDlgItemMaintain::PreTranslateMessage(MSG* pMsg) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_RETURN)
+		{
+			if (m_ItemListCtrl.m_hWnd == pMsg->hwnd)
+			{
+				OnItemEdit();
+				return TRUE;
+			}
+			if (m_ClassListCtrl.m_hWnd == pMsg->hwnd)
+			{
+				OnItemNew();
+				return TRUE;
+			}
+		}
+	}
+	
+	return CDialog::PreTranslateMessage(pMsg);
 }

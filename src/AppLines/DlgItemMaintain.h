@@ -52,6 +52,8 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgItemMaintain)
+	public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -70,9 +72,9 @@ protected:
 	afx_msg void OnItemDown();
 	afx_msg void OnItemLast();
 	virtual void OnOK();
-	afx_msg void OnDblclkItemList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDoItemList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnDblclkClassList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDoClassList(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
