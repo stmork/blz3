@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/05/08 14:44:46  sm
+**	- Insert Tag names
+**
 **	Revision 1.20  2002/05/08 14:37:56  sm
 **	- Output some information when not specifying data files.
-**
+**	
 **	Revision 1.19  2002/02/01 15:49:23  sm
 **	- Added "force no display" for remote Un*x raytracing
 **	- Converted BWDs to binary

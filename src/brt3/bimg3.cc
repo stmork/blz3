@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/05/08 14:44:46  sm
+**	- Insert Tag names
+**
 **	Revision 1.8  2002/05/08 14:37:56  sm
 **	- Output some information when not specifying data files.
-**
+**	
 **	Revision 1.7  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
