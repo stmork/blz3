@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2003/02/19 18:27:27  sm
+**	- Release bug fix for logging
+**
 **	Revision 1.35  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.34  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
 **	
@@ -280,7 +283,7 @@ CMainFrame::CMainFrame()
 
 #ifndef _DEBUG
 	level = (b3_log_level)app->b3ReadInt("Settings","DebugLevel",B3LOG_NORMAL);
-	b3Log_SetLevel(level);
+	b3Log::b3SetLevel(level);
 #endif
 
 	// Get window sizes...
