@@ -23,6 +23,7 @@ LIB_SOURCE		=\
 	b3TxJPG.cc\
 	b3TxLoadImage.cc\
 	b3TxLoadTIFF.cc\
+	b3TxMirror.cc\
 	b3TxPCX.cc\
 	b3TxPool.cc\
 	b3TxSaveInfo.cc\
@@ -50,6 +51,7 @@ LIB_OBJ			=\
 	b3TxJPG.o\
 	b3TxLoadImage.o\
 	b3TxLoadTIFF.o\
+	b3TxMirror.o\
 	b3TxPCX.o\
 	b3TxPool.o\
 	b3TxSaveInfo.o\

@@ -17,9 +17,10 @@ HALF_OBJS		= half.o
 CALIBRATE_OBJS		= calibrate.o
 TESTIMG_OBJS		= testimg.o
 PW_OBJS			= pw.o
+DIVX_OBJS		= divx.o
 
-PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc
-PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS) $(RESTOREEXT_OBJS) $(SCALE_OBJS) $(CALIBRATE_OBJS) $(TESTIMG_OBJS) $(HALF_OBJS) $(PW_OBJS)
+PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc divx.cc
+PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS) $(RESTOREEXT_OBJS) $(SCALE_OBJS) $(CALIBRATE_OBJS) $(TESTIMG_OBJS) $(HALF_OBJS) $(PW_OBJS) $(DIVX_OBJS)
 #PRG_SOURCE		= ${PRG_OBJS:.o=.cc}
 
 all:	$(PRGS)
@@ -33,16 +34,16 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 RemDepend:	$(REMDEPEND_OBJS)
-	$(LINK.cc) -o $@ $(REMDEPEND_OBJS) -lB3System -lpthread
+	$(LINK.cc) -o $@ $^ -lB3System -lpthread
 
 RemCR:	$(REMCR_OBJS)
-	$(LINK.cc) -o $@ $(REMCR_OBJS) -lB3System -lpthread # $(LDLIBS)
+	$(LINK.cc) -o $@ $^ -lB3System -lpthread # $(LDLIBS)
 
 RestoreExt:	$(RESTOREEXT_OBJS)
-	$(LINK.cc) -o $@ $(RESTOREEXT_OBJS) $(LDLIBS)
+	$(LINK.cc) -o $@ $^ $(LDLIBS)
 
 CleanRes:	$(CLEANRES_OBJS)
-	$(LINK.cc) -o $@ $(CLEANRES_OBJS) -lB3System -lpthread
+	$(LINK.cc) -o $@ $^ -lB3System -lpthread
 
 scale:	$(SCALE_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
@@ -52,6 +53,9 @@ half:	$(HALF_OBJS)
 
 pw:	$(PW_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+
+divx:	$(DIVX_OBJS)
+	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS) -ldivxencore -lavi
 
 testimg:	$(TESTIMG_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)

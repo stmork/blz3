@@ -351,6 +351,10 @@ public:
 	void           b3ScaleToGrey(b3Tx *srcTx);
 	void           b3Scale      (b3Tx *srcTx);
 
+	// b3TxMirror.cc
+	void           b3MirrorHorizontal();
+	void           b3MirrorVertical();
+
 	// b3TxDeskew.cc
 	void           b3Deskew     ();
 
