@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2004/09/28 18:03:19  sm
+**	- Search path correction: Home directory before environment.
+**
 **	Revision 1.57  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
 **	- Removed b3PrintF()s from singletons.
-**
+**	
 **	Revision 1.56  2004/05/31 08:42:58  sm
 **	- Changed animation from time point to frame index which
 **	  is more accurate.
@@ -431,11 +434,12 @@ int main(int argc,char *argv[])
 				b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
 			}
 			b3Scene::m_TexturePool.b3AddPath(pictures);
+
+			world->b3AddPath(data);
 			if (BLZ3_DATA != null)
 			{
 				world->b3AddPath(BLZ3_DATA);
 			}
-			world->b3AddPath(data);
 		}
 
 		b3RaytracingItems::b3Register();
