@@ -324,6 +324,10 @@ SOURCE=.\DlgSuperSampling.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgTorus.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MainFrm.cpp
 # End Source File
 # End Group
@@ -468,6 +472,10 @@ SOURCE=.\DlgCSGMode.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCSGTorus.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgDistributed.h
 # End Source File
 # Begin Source File
@@ -545,6 +553,10 @@ SOURCE=.\DlgSuperSampling.h
 # Begin Source File
 
 SOURCE=.\DlgTexturePathList.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgTorus.h
 # End Source File
 # Begin Source File
 

@@ -1314,9 +1314,9 @@ STYLE WS_POPUP | WS_CAPTION
 CAPTION "Material"
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Farbe ändern...",ID_CHANGE_AMBIENT,90,30,60,15
-    PUSHBUTTON      "Farbe ändern...",ID_CHANGE_DIFFUSE,90,65,60,15
-    PUSHBUTTON      "Farbe ändern...",ID_CHANGE_SPECULAR,90,100,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,90,30,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,90,65,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,90,100,60,15
     CONTROL         "Textur verwenden",IDC_TEXTURE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,90,150,73,10
     PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,90,170,60,15
