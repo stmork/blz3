@@ -85,10 +85,7 @@ class B3_PLUGIN b3Scene : public b3Item
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
 	b3Path           m_SceneName;
-
 	b3Shader        *m_Shader;
-
-protected:
 	b3Path           m_Filename;
 	b3Mutex          m_PoolMutex;
 	b3Mutex          m_TrashMutex;
