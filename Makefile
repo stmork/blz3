@@ -9,13 +9,16 @@ source:
 	+make -C src
 
 count:
-	+make -C src $@
+	test -f src/Makefile && make -C src $@
+
+uncr:
+	test -f src/Makefile && make -C src $@
 
 install:
-	+make -C src install
+	+make -C src $@
 
 clean:
-	test -f src/Makefile && make -C src clean
+	test -f src/Makefile && make -C src $@
 
 configure:	configure.ac
 	autoconf

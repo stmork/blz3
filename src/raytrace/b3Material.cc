@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.101  2004/10/09 06:56:07  sm
+**      - Cook/Torrance delivers surface values again.
+**
 **      Revision 1.100  2004/10/07 12:09:43  sm
 **      - Added new temporary variable for precomputation.
 **
@@ -1537,6 +1540,15 @@ b3_bool b3MatCookTorrance::b3Prepare()
 		b3Math::b3GetMu(m_Diffuse[b3Color::R]),
 		b3Math::b3GetMu(m_Diffuse[b3Color::G]),
 		b3Math::b3GetMu(m_Diffuse[b3Color::B]));
+
+	return true;
+}
+
+b3_bool b3MatCookTorrance::b3GetSurfaceValues(b3_surface *surface)
+{
+	b3_material *dst = surface;
+	
+	*dst = *this;
 
 	return true;
 }

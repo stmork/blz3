@@ -438,12 +438,8 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_surface *surface);
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
-
-	inline b3_bool b3GetSurfaceValues(b3_surface *surface)
-	{
-		return true;
-	}
 };
 
 /*************************************************************************
