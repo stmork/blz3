@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2002/08/16 14:00:02  sm
+**      - Lines III adjustments to new vertex computation.
+**
 **      Revision 1.55  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -1764,7 +1767,7 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
 
-//			glPolyCount += 2;
+			glPolyCount += 2;
 		}
 		glGridCount += Widths;
 

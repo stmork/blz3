@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3Mem.h $
+**	$Filename:	b3Memory.h $
 **	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
@@ -137,6 +137,7 @@ public:
 					b3LinkChunk(node);
 					m_Mutex.b3Unlock();
 #ifndef _DEBUG
+					b3PrintF(B3LOG_NORMAL,"Tried to reallocate %d bytes\n",new_size);
 					B3_THROW(b3MemException,B3_MEM_MEMORY);
 #else
 					return null;

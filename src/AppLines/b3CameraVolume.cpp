@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2002/08/16 14:00:02  sm
+**      - Lines III adjustments to new vertex computation.
+**
 **      Revision 1.7  2002/08/01 15:02:56  sm
 **      - Found texture missing bug when printing. There weren't any
 **        selected textures inside an other OpenGL rendering context.
@@ -81,11 +84,11 @@
 **                                                                      **
 *************************************************************************/
 
-static GLushort VolumeIndices[B3_CV_INDEX_COUNT * 2] =
+static b3_gl_line VolumeIndices[B3_CV_INDEX_COUNT] =
 {
-	 0, 1,    1, 2,    2, 3,    3, 0,  // border
-	 4, 5,                             // view axis
-	 4, 6,    4, 7,    4, 8,    4, 9   // camera edges
+	{ 0, 1 }, { 1, 2 }, { 2, 3}, { 3, 0 },  // border
+	{ 4, 5 },                               // view axis
+	{ 4, 6 }, { 4, 7 }, { 4, 8}, { 4, 9 }   // camera edges
 };
 
 b3CameraVolume::b3CameraVolume()

@@ -26,7 +26,7 @@
 
 class b3CameraVolume : public b3RenderObject
 {
-	b3_tnv_vertex m_Vertex[B3_CV_VERTEX_COUNT];
+	b3_gl_vertex m_Vertex[B3_CV_VERTEX_COUNT];
 
 public:
 	         b3CameraVolume();

@@ -27,7 +27,7 @@ class b3Fulcrum : public b3RenderObject
 {
 	b3_f64        m_Scale;
 	b3_vector     m_Position;
-	b3_tnv_vertex m_Vertex[B3_FULCRUM_VERTEX_COUNT];
+	b3_gl_vertex  m_Vertex[B3_FULCRUM_VERTEX_COUNT];
 
 public:
 	         b3Fulcrum();

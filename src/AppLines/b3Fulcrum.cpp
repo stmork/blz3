@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2002/08/16 14:00:02  sm
+**      - Lines III adjustments to new vertex computation.
+**
 **      Revision 1.6  2002/08/01 15:02:56  sm
 **      - Found texture missing bug when printing. There weren't any
 **        selected textures inside an other OpenGL rendering context.
@@ -100,12 +103,12 @@ static b3_vector fulcrum[B3_FULCRUM_VERTEX_COUNT] =
 	{   2,  0, 18}
 };
 
-static GLushort FulcrumIndices[B3_FULCRUM_INDEX_COUNT * 2] =
+static b3_gl_line FulcrumIndices[B3_FULCRUM_INDEX_COUNT] =
 {
-	 0, 1,    2, 3,    4, 5,                    // Achsen
-	 6, 7,    8, 9,                             // x
-	10,11,   11,12,   13,12,   12,14,   14,15,  // y
-	17,19,   19,16,   16,18                     // z
+	{  0, 1 },   {  2, 3 },   {  4, 5 },                            // Achsen
+	{  6, 7 },   {  8, 9 },                                         // x
+	{ 10,11 },   { 11,12 },   { 13,12 },   { 12,14 },   { 14,15 },  // y
+	{ 17,19 },   { 19,16 },   { 16,18 }                             // z
 };
 
 b3Fulcrum::b3Fulcrum()
