@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2004/11/28 20:20:17  sm
+**      - Added support for switchable VBOs.
+**
 **      Revision 1.48  2004/10/16 17:00:52  sm
 **      - Moved lighting into own class to ensure light setup
 **        after view setup.
@@ -496,6 +499,9 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 		exit(0);
 	}
+
+	// FIXME! Make switchable!
+	b3VectorBufferObjects::b3AllowVBO(false);
 
 	glutInit(&argc,argv);
 

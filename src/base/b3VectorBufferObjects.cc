@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/11/28 20:20:17  sm
+**	- Added support for switchable VBOs.
+**
 **	Revision 1.7  2004/11/21 16:44:46  sm
 **	- Corrected fulcrum drawing problem: The fulcrum was
 **	  updated before first initialization. And even the initialization
@@ -42,7 +45,7 @@
 **	  The vertex array drawing cannot be combined with
 **	  VBOs due to binding problems. Its likely that any VBO
 **	  is bound so a simple vertex array call should go wrong.
-**
+**	
 **	Revision 1.6  2004/11/21 14:56:58  sm
 **	- Merged VBO development into main trunk.
 **	
@@ -75,7 +78,8 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bool                   b3VectorBufferObjects::glHasVBO;
+b3_bool                   b3VectorBufferObjects::glHasVBO   = false;
+b3_bool                   b3VectorBufferObjects::glAllowVBO = true;
 
 #ifdef BLZ3_USE_OPENGL
 PFNGLGENBUFFERSARBPROC    b3VectorBufferObjects::glGenBuffersARB;
@@ -99,7 +103,8 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #ifdef USE_VBOS
-	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
+	glHasVBO = glAllowVBO &&
+		(strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&
 		(glBindBufferARB != null) &&
