@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.6  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.5  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -115,7 +118,7 @@ b3_bool CB3SelectSaveObject::b3Select(b3Path &name,const char *box_name)
 	b3Path::b3LinkFileName(filename,filepath,box_name);
 	suggest = filename;
 	file_filter.LoadString(IDS_OBJECT_FILTER);
-	result = b3SaveDialog(suggest,default_ext,file_filter,name);
+	result = b3Path::b3SaveDialog(suggest,default_ext,file_filter,name);
 	if (result)
 	{
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,name);

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.13  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
-**
+**	
 **	Revision 1.12  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -106,10 +109,10 @@
 **                                                                      **
 *************************************************************************/
 
-class b3_yuv_table
+class b3_tx_yuv_table
 {
-	static b3_yuv_table  m_MultYuvTable;
-	static b3_u08        m_ConvertBits[8];
+	static b3_tx_yuv_table  m_MultYuvTable;
+	static b3_u08           m_ConvertBits[8];
 
 	       b3_s16 MultRV[256];
 	       b3_s16 MultGU[256];
@@ -119,7 +122,7 @@ class b3_yuv_table
 	       b3_u32 MultG[768];
 	       b3_u32 MultB[768];
 
-	inline b3_yuv_table()
+	inline b3_tx_yuv_table()
 	{
 		long				 i;
 		double				 Rad;
@@ -162,9 +165,9 @@ class b3_yuv_table
 	friend class b3Tx;
 };
 
-b3_yuv_table b3_yuv_table::m_MultYuvTable;
+b3_tx_yuv_table b3_tx_yuv_table::m_MultYuvTable;
 
-b3_u08 b3_yuv_table::m_ConvertBits[8] =
+b3_u08 b3_tx_yuv_table::m_ConvertBits[8] =
 {
 	128,64,32,16,8,4,2,1
 };
@@ -369,7 +372,7 @@ void b3Tx::b3ConvertILBMLine (
 		{
 			Interleave -= Width;
 			Color      += Color;
-			if (b3_yuv_table::m_ConvertBits[x & 7] & Interleave[0])
+			if (b3_tx_yuv_table::m_ConvertBits[x & 7] & Interleave[0])
 			{
 				Color |= 1;
 			}
@@ -654,7 +657,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 **                                                                      **
 *************************************************************************/
 
-static inline b3_u32 b3ShiftCount(b3_count Count)
+inline b3_u32 b3Tx::b3ShiftCount(b3_count Count)
 {
 	b3_u32 Shift = 0;
 
@@ -806,9 +809,9 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 				u = Uprop >> Shift;
 				v = Vprop >> Shift;
 				*LongData++ =
-					b3_yuv_table::m_MultYuvTable.MultR[y + b3_yuv_table::m_MultYuvTable.MultRV[v]] |
-					b3_yuv_table::m_MultYuvTable.MultG[y + b3_yuv_table::m_MultYuvTable.MultGU[u] + b3_yuv_table::m_MultYuvTable.MultGV[v]] |
-					b3_yuv_table::m_MultYuvTable.MultB[y + b3_yuv_table::m_MultYuvTable.MultBU[u]];
+					b3_tx_yuv_table::m_MultYuvTable.MultR[y + b3_tx_yuv_table::m_MultYuvTable.MultRV[v]] |
+					b3_tx_yuv_table::m_MultYuvTable.MultG[y + b3_tx_yuv_table::m_MultYuvTable.MultGU[u] + b3_tx_yuv_table::m_MultYuvTable.MultGV[v]] |
+					b3_tx_yuv_table::m_MultYuvTable.MultB[y + b3_tx_yuv_table::m_MultYuvTable.MultBU[u]];
 
 				Uprop -= Uprev;
 				Vprop -= Vprev;

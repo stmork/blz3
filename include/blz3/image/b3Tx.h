@@ -267,10 +267,11 @@ public:
 // one single image and its methods
 class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 {
-	static const b3_u08 m_Bits[8];
-	static const b3_u08 m_RightMaskLeftByte[16];
-	static const b3_u08 m_RightMaskRightByte[16];
-	static const b3_u08 m_RightBorder[];
+	static const b3_u08  m_Bits[8];
+	static const b3_u08  m_RightMaskLeftByte[16];
+	static const b3_u08  m_RightMaskRightByte[16];
+	static const b3_u08  m_RightBorder[];
+	static       b3_bool m_ErrorHandlerInstalled;
 
 private:           
 	b3_pkd_color     *palette;
@@ -471,6 +472,16 @@ private:
 	b3_result      b3SaveTIFFFax      (TIFF *handle);
 	b3_result      b3SaveTIFFPalette  (TIFF *handle);
 	b3_result      b3SaveTIFFTrueColor(TIFF *handle);
+	
+	static void    b3TIFFErrorHandler(const char *module,const char *fmt,va_list args);
+	static void    b3TIFFWarnHandler( const char *module,const char *fmt,va_list args);
+	static tsize_t b3ReadProc( thandle_t fd, tdata_t buf, tsize_t size);
+	static tsize_t b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size);
+	static toff_t  b3SeekProc( thandle_t fd, toff_t off, int whence);
+	static int     b3CloseProc(thandle_t fd);
+	static toff_t  b3SizeProc( thandle_t fd);
+	static int     b3MMapProc( thandle_t fd, tdata_t* pbase, toff_t* psize);
+	static void    b3UnmapProc(thandle_t fd, tdata_t base, toff_t size);
 
 	// b3TxScale.cc (color indexing)
 	void           b3ColorGrid();
@@ -496,7 +507,9 @@ private:
 	void           b3EHBPalette();
 	void           b3ConvertILBMLine (b3_u08 *Line,b3_u08 *Interleave,b3_res xMax,b3_count Planes);
 	void           b3HamPalette (b3_bool HAM8);
-
+	
+	static b3_u32  b3ShiftCount(b3_count Count);
+	
 	// b3TxGIF.cc
 	b3_result      b3ParseGIF  (b3_u08 *buffer);
 
@@ -507,6 +520,9 @@ private:
 	// b3TxIMG.cc
 	b3_result      b3ParseSGI  (b3_u08 *buffer);
 	void           b3ParseSGI3 (HeaderSGI *HeaderSGI,b3_u08 *Data);
+
+	static void    b3ConvertSGILine(b3_u16 *buffer,b3_offset offset,b3_size size,b3_count bytes);
+	static void    b3UnpackSGI (b3_u08 *buffer,void *inPtr,b3_count count,b3_count bytes,b3_offset offset);
 
 	// b3TxTGA.cc
 	b3_result      b3ParseTGA  (b3_u08 *buffer);
@@ -606,6 +622,8 @@ public:
 	class           b3Error {};
 };
 
+typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
+
 class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 {
 	b3Base<b3TIFF_Dir>  dirs;
@@ -632,9 +650,26 @@ public:
 
 public:
 	class b3Error {};
-};
 
-typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
+public:
+	static long           b3GetTIFFTypeSize (struct TagTIFF *DataTag);
+	static long           b3GetTIFFSize (struct TagTIFF *DataTag);
+	static char          *b3GetModeString(long mode);
+	static long           b3GetTIFFValue (void *PtrTIFF,struct TagTIFF *DataTag,long Index);
+	static long           b3TAFcorrectOffset (long offset);
+	static long           b3TAFwriteGap (b3FileAbstract *out,long offset);
+	static void           b3LogTIFF(const char *format,...);
+
+private:
+	static void           b3ChangeTag (void *PtrTIFF,struct TagTIFF *DataTag);
+	static void           b3ChangeTIFF (struct HeaderTIFF *TIFF);
+	static void          *b3LogFuncPtr;
+	static b3LogTiffFunc  b3LogFuncTIFF;
+	static void           b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr);
+	static void           b3TravTIFF  (b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
+	static void           b3TravRemIFW(b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
+	static void           b3TravOffset(b3Base<class T> *Head,b3Link<class T> *Node,void *ptr);
+};
 
 // void          b3SetLogTiffFunc(b3LogTiffFunc log_func,void *ptr = null);
 

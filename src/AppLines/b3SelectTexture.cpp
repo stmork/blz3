@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.9  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.8  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -171,7 +174,7 @@ b3_bool CB3SelectSaveTexture::b3Select(b3Path &name,const char *tx_name)
 	}
 	name.b3Format("%s",(const char *)suggest);
 	file_filter.LoadString(IDS_SAVE_IMAGE_FILTER);
-	result = b3SaveDialog(suggest,default_ext,file_filter,name);
+	result = b3Path::b3SaveDialog(suggest,default_ext,file_filter,name);
 	if (result && registry)
 	{
 		app->WriteProfileString(CB3ClientString(),m_RegEntry,name);

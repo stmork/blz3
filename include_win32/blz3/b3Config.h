@@ -91,9 +91,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.34  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.33  2004/12/27 20:14:18  sm
 **	- Added Windows installation project
-**
+**	
 **	Revision 1.32  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
 **	
@@ -309,16 +312,6 @@ enum b3_msgbox_type
 #define  snprintf  _snprintf
 #define vsnprintf _vsnprintf
 
-static inline char *strlcpy(char *dst,const char *src,size_t size)
-{
-	if (size > 0)
-	{
-		strncpy(dst,src,size);
-		dst[size-1] = 0;
-	}
-	return dst;
-}
-
 class B3_PLUGIN b3Runtime : public b3CPU
 {
 	static b3Runtime     m_Runtime;
@@ -333,6 +326,17 @@ public:
 	static b3_msg_result  b3MessageBox(const char *message,   const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
 	static b3_msg_result  b3MessageBox(const long  message_id,const b3_msgbox_type type=B3_MSGBOX_OK,const char *title=null);
 	static void          *b3GetOpenGLExtension(const char *procedure_name);
+	static inline char   *b3StrLCpy(char *dst,const char *src,size_t size)
+	{
+		if (size > 0)
+		{
+			strncpy(dst,src,size);
+			dst[size-1] = 0;
+		}
+		return dst;
+	}
 };
+
+#define strlcpy(dst,src,size) b3Runtime::b3StrLCpy(dst,src,size)
 
 #endif

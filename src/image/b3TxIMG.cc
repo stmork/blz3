@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.9  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.8  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -87,7 +90,7 @@
 **                                                                      **
 *************************************************************************/
 
-static inline void UnpackSGI (
+inline void b3Tx::b3UnpackSGI (
 	b3_u08    *buffer,
 	void      *inPtr,
 	b3_count   count,
@@ -165,7 +168,7 @@ static inline void UnpackSGI (
 	}
 }
 
-static inline void ConvertSGILine(
+inline void b3Tx::b3ConvertSGILine(
 	b3_u16    *buffer,
 	b3_offset  offset,
 	b3_size    size,
@@ -218,7 +221,7 @@ void b3Tx::b3ParseSGI3(
 			{
 				b3Endian::b3ChangeEndian32 (&lineTable[y + z * ySize]);
 				b3Endian::b3ChangeEndian32 (&lineSizes[y + z * ySize]);
-				ConvertSGILine ((unsigned short *)buffer,
+				b3ConvertSGILine ((b3_u16 *)buffer,
 					lineTable[y + z * ySize],
 					lineSizes[y + z * ySize],bytes);
 			}
@@ -227,7 +230,7 @@ void b3Tx::b3ParseSGI3(
 		{
 			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
 			{
-				ConvertSGILine ((b3_u16 *)buffer,
+				b3ConvertSGILine ((b3_u16 *)buffer,
 					256 + y * xSize * zSize + z * xSize,xSize,bytes);
 			}
 		}
@@ -242,15 +245,15 @@ void b3Tx::b3ParseSGI3(
 			{
 				if (rle > 0) /* read raw data */
 				{
-					UnpackSGI(&line[0],          buffer,rle,bytes,y * xSize);
-					UnpackSGI(&line[xSize],      buffer,rle,bytes,y * xSize + block);
-					UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,y * xSize + block + block);
+					b3UnpackSGI(&line[0],          buffer,rle,bytes,y * xSize);
+					b3UnpackSGI(&line[xSize],      buffer,rle,bytes,y * xSize + block);
+					b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,y * xSize + block + block);
 				}
 				else /* read RLE packed data */
 				{
-					UnpackSGI(&line[0],          buffer,rle,bytes,lineTable[y]);
-					UnpackSGI(&line[xSize],      buffer,rle,bytes,lineTable[y+ySize]);
-					UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,lineTable[y+ySize+ySize]);
+					b3UnpackSGI(&line[0],          buffer,rle,bytes,lineTable[y]);
+					b3UnpackSGI(&line[xSize],      buffer,rle,bytes,lineTable[y+ySize]);
+					b3UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,lineTable[y+ySize+ySize]);
 				}
 				for (x=0;x<xSize;x++)
 				{
@@ -265,8 +268,8 @@ void b3Tx::b3ParseSGI3(
 			cPtr = data;
 			for (y = ySize - 1;y >= 0;y--)
 			{
-				if (rle > 0) UnpackSGI (cPtr,buffer,rle,bytes,y * xSize);
-				else         UnpackSGI (cPtr,buffer,rle,bytes,lineTable[y]);
+				if (rle > 0) b3UnpackSGI (cPtr,buffer,rle,bytes,y * xSize);
+				else         b3UnpackSGI (cPtr,buffer,rle,bytes,lineTable[y]);
 				cPtr += xSize;
 			}
 			break;

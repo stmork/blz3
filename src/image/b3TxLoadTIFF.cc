@@ -45,9 +45,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.13  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.12  2004/10/24 23:59:09  sm
 **	- Some TIFF version adjustments.
 **	
@@ -150,7 +153,7 @@ public:
 	}
 };
 
-static tsize_t b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
+tsize_t b3Tx::b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 {
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
@@ -167,7 +170,7 @@ static tsize_t b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 	return size;
 }
 
-static tsize_t b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
+tsize_t b3Tx::b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 {
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
@@ -184,7 +187,7 @@ static tsize_t b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 	return size;
 }
 
-static toff_t b3SeekProc(thandle_t fd, toff_t off, int whence)
+toff_t b3Tx::b3SeekProc(thandle_t fd, toff_t off, int whence)
 {
 	b3MemTiffInfo *value  = (b3MemTiffInfo *)fd;
 	toff_t                  offset = value->pos;
@@ -220,7 +223,7 @@ static toff_t b3SeekProc(thandle_t fd, toff_t off, int whence)
 	return offset;
 }
 
-static int b3CloseProc(thandle_t fd)
+int b3Tx::b3CloseProc(thandle_t fd)
 {
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcClos:\n");
@@ -228,7 +231,7 @@ static int b3CloseProc(thandle_t fd)
 	return 0;
 }
 
-static toff_t b3SizeProc(thandle_t fd)
+toff_t b3Tx::b3SizeProc(thandle_t fd)
 {
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
@@ -238,7 +241,7 @@ static toff_t b3SizeProc(thandle_t fd)
 	return value->size;
 }
 
-static int b3MMapProc(thandle_t fd, tdata_t* pbase, toff_t* psize)
+int b3Tx::b3MMapProc(thandle_t fd, tdata_t* pbase, toff_t* psize)
 {
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
@@ -248,7 +251,7 @@ static int b3MMapProc(thandle_t fd, tdata_t* pbase, toff_t* psize)
 	return 1;
 }
 
-static void b3UnmapProc(thandle_t fd, tdata_t base, toff_t size)
+void b3Tx::b3UnmapProc(thandle_t fd, tdata_t base, toff_t size)
 {
 }
 

@@ -60,8 +60,26 @@ public:
 	static void b3Correct      (const char *path,char *result);
 	static void b3Correct      (char *path);
 
+	static b3_bool b3OpenDialog(
+		const char *default_name,
+		const char *default_ext,
+		const char *file_filter,
+		char       *file_name);
+
+	static b3_bool b3SaveDialog(
+		const char *default_name,
+		const char *default_ext,
+		const char *file_filter,
+		char       *file_name);
+
 private:
-	static void b3RemoveDelimiter(char *path);
+	static void    b3RemoveDelimiter(char *path);
+	static b3_bool b3FileDialog(
+		const char *default_name,
+		const char *default_ext,
+		const char *file_filter,
+		char       *file_name,
+		bool        is_open);
 };
 
 class b3DirSystem

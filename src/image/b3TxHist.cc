@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.9  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
-**
+**	
 **	Revision 1.8  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -134,11 +137,11 @@ bits     bwBitsSet bwBitsClear
 
 *****************************/
 
-class b3_fill_bits
+class b3_tx_fill_bits
 {
-	static b3_fill_bits m_FillBits;
+	static b3_tx_fill_bits m_FillBits;
 
-	inline b3_fill_bits()
+	inline b3_tx_fill_bits()
 	{
 		b3_coord      x;
 		b3_pkd_color  bit;
@@ -164,7 +167,7 @@ class b3_fill_bits
 	friend class b3Tx;
 };
 
-b3_fill_bits b3_fill_bits::m_FillBits;
+b3_tx_fill_bits b3_tx_fill_bits::m_FillBits;
 
 /*************************************************************************
 **                                                                      **
@@ -295,8 +298,8 @@ b3_bool b3Tx::b3AddHist(
 			cPtr = &data[y * xBytes];
 			for (x = 0;x < xBytes;x++)
 			{
-				histogramme[0] += b3_fill_bits::m_FillBits.bwBitsClr[cPtr[x]];
-				histogramme[1] += b3_fill_bits::m_FillBits.bwBitsSet[cPtr[x]];
+				histogramme[0] += b3_tx_fill_bits::m_FillBits.bwBitsClr[cPtr[x]];
+				histogramme[1] += b3_tx_fill_bits::m_FillBits.bwBitsSet[cPtr[x]];
 			}
 		}
 		return true;

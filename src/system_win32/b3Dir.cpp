@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.14  2005/01/02 21:18:34  sm
 **	- Changed version output
-**
+**	
 **	Revision 1.13  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -710,7 +713,7 @@ void b3Path::b3Append(const char *ext)
 **                                                                      **
 *************************************************************************/
 
-static b3_bool b3FileDialog(
+b3_bool b3Path::b3FileDialog(
 	const char *default_name,
 	const char *default_ext,
 	const char *file_filter,
@@ -768,7 +771,7 @@ static b3_bool b3FileDialog(
 	return result;
 }
 
-b3_bool b3OpenDialog(
+b3_bool b3Path::b3OpenDialog(
 	const char *default_name,
 	const char *default_ext,
 	const char *file_filter,
@@ -777,7 +780,7 @@ b3_bool b3OpenDialog(
 	return b3FileDialog(default_name,default_ext,file_filter,file_name,true);
 }
 
-b3_bool b3SaveDialog(
+b3_bool b3Path::b3SaveDialog(
 	const char *default_name,
 	const char *default_ext,
 	const char *file_filter,

@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.31  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
-**
+**	
 **	Revision 1.30  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -263,7 +266,7 @@ const b3_u08 b3Tx::m_Bits[8] =
 	128,64,32,16,8,4,2,1
 };
 
-static b3_bool errorHandlerInstalled = false;
+b3_bool b3Tx::m_ErrorHandlerInstalled = false;
 
 /*************************************************************************
 **                                                                      **
@@ -271,7 +274,7 @@ static b3_bool errorHandlerInstalled = false;
 **                                                                      **
 *************************************************************************/
 
-static void b3TIFFErrorHandler(
+void b3Tx::b3TIFFErrorHandler(
 	const char *module,
 	const char *fmt,
 	va_list     args)
@@ -282,7 +285,7 @@ static void b3TIFFErrorHandler(
 	b3PrintF(B3LOG_NORMAL,"ERROR: %s %s\n",module,message);
 }
 
-static void b3TIFFWarnHandler(
+void b3Tx::b3TIFFWarnHandler(
 	const char *module,
 	const char *fmt,
 	va_list     args)
@@ -315,11 +318,11 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 	yDPI        = 1;
 
 	// set TIFF error und warning handler
-	if (!errorHandlerInstalled)
+	if (!m_ErrorHandlerInstalled)
 	{
 		TIFFSetErrorHandler   (b3TIFFErrorHandler);
 		TIFFSetWarningHandler (b3TIFFWarnHandler);
-		errorHandlerInstalled = true;
+		m_ErrorHandlerInstalled = true;
 	}
 	measure.b3Init(0,0,0);
 #ifdef VERBOSE

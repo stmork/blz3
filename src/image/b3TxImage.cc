@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.14  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
-**
+**	
 **	Revision 1.13  2005/01/04 15:13:59  smork
 **	- Changed some data types.
 **	
@@ -471,7 +474,7 @@ void b3Tx::b3RemoveBlackBorder()
 {
 	b3_coord x,y;
 	b3_res   xEnd;
-	b3_count xBytes,b,byte;
+	b3_count xBytes;
 	b3_u08   *cPtr;
 	b3_bool   loop;
 

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/01/24 18:32:34  sm
+**	- Removed some static variables and functions.
+**
 **	Revision 1.11  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.10  2004/06/29 19:17:16  sm
 **	- GIF decoder doesn't use malloc/free any more.
 **	- All image types are the default for image selection.
@@ -93,17 +96,12 @@
 **                                                                      **
 *************************************************************************/
 
-static const long firstrow[4] = {4,2,1,0};
-static const long nextrow[4]  = {8,8,4,2};
-static const long mask[13]    =
-{
-	0x000, 0x001, 0x003, 0x007, 0x00F,
-	0x01F, 0x03F, 0x07F, 0x0FF, 0x1FF,
-	0x3FF, 0x7FF, 0xFFF
-};
-
 class b3GifDecoder
 {
+	static const long m_GifFirstRow[4];
+	static const long m_GifNextRow[4];
+	static const long m_GifMask[13];
+
 public:
 	b3_size bitsleft,availbytes,currbyte;
 
@@ -150,8 +148,27 @@ public:
 		}
 
 		bitsleft -= currsize;
-		return (code & mask[currsize]);
+		return (code & m_GifMask[currsize]);
 	}
+
+	friend class b3Tx;
+};
+
+const long b3GifDecoder::m_GifFirstRow[4] =
+{
+	4,2,1,0
+};
+
+const long b3GifDecoder::m_GifNextRow[4]  =
+{
+	8,8,4,2
+};
+
+const long b3GifDecoder::m_GifMask[13]    =
+{
+	0x000, 0x001, 0x003, 0x007, 0x00F,
+	0x01F, 0x03F, 0x07F, 0x0FF, 0x1FF,
+	0x3FF, 0x7FF, 0xFFF
 };
 
 b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
@@ -337,15 +354,15 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 				{
 					xk = xSize;
 
-					if ((yk+=nextrow[status]) >= ySize)
+					if ((yk += b3GifDecoder::m_GifNextRow[status]) >= ySize)
 					{
-						yk  = firstrow[status];
+						yk  = b3GifDecoder::m_GifFirstRow[status];
 						out = (unsigned char *)(data +
-							firstrow[status++] * xSize);
+							b3GifDecoder::m_GifFirstRow[status++] * xSize);
 					}
 					else
 					{
-						out += (nextrow[status]-1) * xSize;
+						out += (b3GifDecoder::m_GifNextRow[status]-1) * xSize;
 					}
 				}
 			}
