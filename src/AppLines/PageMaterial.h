@@ -34,7 +34,7 @@
 class CPageMaterial : public CB3PropertyPage
 {
 public:
-	b3MaterialWooden *m_Material;
+	b3_material *m_Material;
 
 
 // Construction

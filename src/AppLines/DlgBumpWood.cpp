@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.7  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.6  2004/04/23 16:51:09  sm
 **	- Color renaming finished.
 **	- Bug #18 fixed: The bump amplitude is read out correctly now.
@@ -73,7 +77,7 @@
 *************************************************************************/
 
 CDlgBumpWood::CDlgBumpWood(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgBumpWood::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(CDlgBumpWood::IDD, pParent)
 {
 	m_Bump            = (b3BumpWood *)item;
 	m_PageBump.m_Bump = m_Bump;
@@ -90,16 +94,15 @@ CDlgBumpWood::~CDlgBumpWood()
 
 void CDlgBumpWood::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgBumpWood)
 	DDX_Control(pDX, IDC_PREVIEW_BUMP, m_PreviewBumpCtrl);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgBumpWood, CDialog)
+BEGIN_MESSAGE_MAP(CDlgBumpWood, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgBumpWood)
-	ON_MESSAGE(WM_USER,OnPreviewBump)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -119,32 +122,17 @@ b3_bool CDlgBumpWood::b3Edit(b3Item *item)
 	return true;
 }
 
-BOOL CDlgBumpWood::OnInitDialog() 
+void CDlgBumpWood::b3InitDialog() 
 {
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
 	m_PreviewBumpCtrl.b3Init();
 	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
 	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PropertySheet.AddPage(&m_PageBump);
 	m_PropertySheet.AddPage(&m_PageWood);
-
-	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,IDC_PROPERTY);
-
-	b3UpdateUI();
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CDlgBumpWood::b3UpdateUI()
 {
 	m_PreviewBumpCtrl.b3Update(m_BumpSampler);
-}
-
-void CDlgBumpWood::OnPreviewBump(WPARAM wParam,LPARAM lParam)
-{
-	// TODO: Add your control notification handler code here
-	b3UpdateUI();
 }

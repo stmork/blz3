@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.11  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.10  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
 **	
@@ -84,7 +88,7 @@
 *************************************************************************/
 
 CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgMatWood::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(CDlgMatWood::IDD, pParent)
 {
 	m_Material = (b3MatWood *)item;
 	m_PageMatWood.m_Material = m_Material;
@@ -100,16 +104,15 @@ CDlgMatWood::~CDlgMatWood()
 
 void CDlgMatWood::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatWood)
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgMatWood, CDialog)
+BEGIN_MESSAGE_MAP(CDlgMatWood, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatWood)
-	ON_MESSAGE(WM_USER,OnPreviewMaterial)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -129,31 +132,17 @@ b3_bool CDlgMatWood::b3Edit(b3Item *item)
 	return true;
 }
 
-BOOL CDlgMatWood::OnInitDialog() 
+void CDlgMatWood::b3InitDialog()
 {
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
 	m_PreviewMaterialCtrl.b3Init();
 	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl);
 	m_MatSampler->b3SetMaterial(m_Material);
 
 	m_PropertySheet.AddPage(&m_PageMatWood);
 	m_PropertySheet.AddPage(&m_PageWood);
-	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,IDC_PROPERTY);
-
-	b3UpdateUI();
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CDlgMatWood::b3UpdateUI()
 {
 	m_PreviewMaterialCtrl.b3Update(m_MatSampler);
-}
-
-void CDlgMatWood::OnPreviewMaterial(WPARAM wParam,LPARAM lParam)
-{
-	// TODO: Add your control notification handler code here
-	b3UpdateUI();
 }

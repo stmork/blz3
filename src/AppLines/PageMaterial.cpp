@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.3  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.2  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
@@ -82,13 +86,13 @@ void CPageMaterial::DoDataExchange(CDataExchange* pDX)
 {
 	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageMaterial)
-	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
-	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
+	DDX_Control(pDX, IDC_COLOR_AMBIENT, m_AmbientCtrl);
+	DDX_Control(pDX, IDC_COLOR_DIFFUSE, m_DiffuseCtrl);
+	DDX_Control(pDX, IDC_COLOR_SPECULAR, m_SpecularCtrl);
 	DDX_Control(pDX, IDC_REFLECTANCE_SPIN, m_ReflectionCtrl);
+	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
 	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_IorCtrl);
-	DDX_Control(pDX, IDC_COLOR_LIGHT, m_AmbientCtrl);
-	DDX_Control(pDX, IDC_COLOR_DARK, m_DiffuseCtrl);
-	DDX_Control(pDX, IDC_COLOR_DARK, m_SpecularCtrl);
+	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	//}}AFX_DATA_MAP
 	m_ReflectionCtrl.b3DDX(pDX,m_Material->m_Reflection);
 	m_RefractionCtrl.b3DDX(pDX,m_Material->m_Refraction);
@@ -103,10 +107,10 @@ BEGIN_MESSAGE_MAP(CPageMaterial, CB3PropertyPage)
 	ON_BN_CLICKED(IDC_CHANGE_DIFFUSE, OnColorDiffuse)
 	ON_BN_CLICKED(IDC_CHANGE_SPECULAR, OnColorSpecular)
 	ON_EN_KILLFOCUS(IDC_REFLECTANCE, OnPropertyPageEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnPropertyPageSpin)
 	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnPropertyPageEdit)
 	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnPropertyPageEdit)
 	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnPropertyPageSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnPropertyPageSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnPropertyPageSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnPropertyPageSpin)

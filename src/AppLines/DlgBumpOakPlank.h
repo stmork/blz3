@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3BumpSampler.h"
+#include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
 #include "PageBump.h"
 #include "PageWood.h"
@@ -33,12 +34,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgBumpOakPlank dialog
 
-class CDlgBumpOakPlank : public CDialog
+class CDlgBumpOakPlank : public CB3SimplePropertyPreviewDialog
 {
 	b3BumpOakPlank    *m_Bump;
 	b3BumpSampler     *m_BumpSampler;
 
-	CPropertySheet     m_PropertySheet;
 	CPageBump          m_PageBump;
 	CPageWood          m_PageWood;
 	CPageOakPlank      m_PageOakPlank;
@@ -69,12 +69,11 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgBumpOakPlank)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPreviewBump(WPARAM wParam,LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 private:
+	void b3InitDialog();
 	void b3UpdateUI();
 };
 

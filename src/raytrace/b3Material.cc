@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.64  2004/04/24 15:40:12  sm
+**      - Started slide material dialog implementation
+**      - Added simple property sheet/preview dialog template
+**
 **      Revision 1.63  2004/04/23 11:09:04  sm
 **      - Refectored b3Materials for better dialog use.
 **
@@ -716,6 +720,22 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_type) 
 {
+	m_Material[0].m_Diffuse  = B3_RED;
+	m_Material[0].m_Ambient  = m_Material[0].m_Diffuse * 0.2;
+	m_Material[0].m_Specular = B3_GREY;
+
+	m_Material[1].m_Diffuse  = B3_GREEN;
+	m_Material[1].m_Ambient  = m_Material[1].m_Diffuse * 0.2;
+	m_Material[1].m_Specular = B3_GREY;
+	
+	m_Material[0].m_Reflection  = m_Material[1].m_Reflection  =    0;
+	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
+	m_Material[0].m_Ior         = m_Material[1].m_Ior         =    1;
+	m_Material[0].m_SpecularExp = m_Material[1].m_SpecularExp = 1000;
+
+	m_From = 0;
+	m_To   = 1;
+	m_ModeFlag = 0;
 }
 
 b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
@@ -728,15 +748,26 @@ b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 	b3InitColor(m_Material[1].m_Specular);
 	m_From        = b3InitFloat();
 	m_To          = b3InitFloat();
-	m_Material[0].m_Reflection  =
-	m_Material[1].m_Reflection  = b3InitFloat();
-	m_Material[0].m_Refraction  =
-	m_Material[1].m_Refraction  = b3InitFloat();
-	m_Material[0].m_Ior         =
-	m_Material[1].m_Ior         = b3InitFloat();
-	m_Material[0].m_SpecularExp =
-	m_Material[1].m_SpecularExp = b3InitFloat();
+	m_Material[0].m_Reflection  = b3InitFloat();
+	m_Material[0].m_Refraction  = b3InitFloat();
+	m_Material[0].m_Ior         = b3InitFloat();
+	m_Material[0].m_SpecularExp = b3InitFloat();
 	m_ModeFlag    = b3InitInt();
+
+	if (B3_PARSE_INDEX_VALID)
+	{
+		m_Material[1].m_Reflection  = b3InitFloat();
+		m_Material[1].m_Refraction  = b3InitFloat();
+		m_Material[1].m_Ior         = b3InitFloat();
+		m_Material[1].m_SpecularExp = b3InitFloat();
+	}
+	else
+	{
+		m_Material[1].m_Reflection  = m_Material[0].m_Reflection;
+		m_Material[1].m_Refraction  = m_Material[0].m_Refraction;
+		m_Material[1].m_Ior         = m_Material[0].m_Ior;
+		m_Material[1].m_SpecularExp = m_Material[0].m_SpecularExp;
+	}
 }
 
 void b3MatSlide::b3Write()
@@ -754,6 +785,10 @@ void b3MatSlide::b3Write()
 	b3StoreFloat(m_Material[0].m_Ior);
 	b3StoreFloat(m_Material[0].m_SpecularExp);
 	b3StoreInt(m_ModeFlag);
+	b3StoreFloat(m_Material[1].m_Reflection);
+	b3StoreFloat(m_Material[1].m_Refraction);
+	b3StoreFloat(m_Material[1].m_Ior);
+	b3StoreFloat(m_Material[1].m_SpecularExp);
 }
 
 b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
@@ -792,9 +827,9 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 			break;
 	}
 
-	surface->m_Diffuse  = b3Color::b3Mix(m_Material[0].m_Diffuse,  m_Material[1].m_Diffuse,  Factor);
-	surface->m_Ambient  = b3Color::b3Mix(m_Material[0].m_Ambient,  m_Material[1].m_Ambient,  Factor);
-	surface->m_Specular = b3Color::b3Mix(m_Material[0].m_Specular, m_Material[1].m_Specular, Factor);
+	surface->m_Diffuse     = b3Color::b3Mix(m_Material[0].m_Diffuse,  m_Material[1].m_Diffuse,  Factor);
+	surface->m_Ambient     = b3Color::b3Mix(m_Material[0].m_Ambient,  m_Material[1].m_Ambient,  Factor);
+	surface->m_Specular    = b3Color::b3Mix(m_Material[0].m_Specular, m_Material[1].m_Specular, Factor);
 
 	surface->m_Reflection  = b3Math::b3Mix(m_Material[0].m_Reflection,  m_Material[0].m_Reflection,  Factor);
 	surface->m_Refraction  = b3Math::b3Mix(m_Material[0].m_Refraction,  m_Material[0].m_Refraction,  Factor);

@@ -2022,16 +2022,25 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
 END
 
-IDD_MAT_SLIDE DIALOG DISCARDABLE  0, 0, 440, 302
+IDD_MAT_SLIDE DIALOG DISCARDABLE  0, 0, 407, 236
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Farbverlauf"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,281,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,383,281,50,14
-    LTEXT           "",IDC_PROPERTY,10,15,300,225,NOT WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,10,215,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,345,215,50,14
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,295,20,105,95
+                    SS_SUNKEN,290,10,105,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,290,125,50,14
+    CONTROL         "Horizontal",IDC_SLIDE_HORIZONTAL,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,290,150,47,10
+    CONTROL         "Vertikal",IDC_SLIDE_VERTICAL,"Button",
+                    BS_AUTORADIOBUTTON,290,165,39,10
+    CONTROL         "Kantenschnitt",IDC_CUTOFF,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,290,180,59,10
 END
 
 IDD_MAT_TEXTURE DIALOG DISCARDABLE  0, 0, 302, 250
@@ -2286,8 +2295,11 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,320,10,235,225
+                    SS_SUNKEN,320,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
 END
 
 IDD_PAGE_OAKPLANK DIALOG DISCARDABLE  0, 0, 177, 126
@@ -2459,8 +2471,11 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
-                    320,10,235,225
+                    320,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
 END
 
 IDD_BUMP_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
@@ -2471,8 +2486,11 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
-                    320,10,235,225
+                    320,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
 END
 
 IDD_MAT_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
@@ -2483,8 +2501,11 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,320,10,235,225
+                    SS_SUNKEN,320,10,235,200
     LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,320,225,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,505,220,50,14
 END
 
 IDD_PAGE_MAT_WOOD DIALOG DISCARDABLE  0, 0, 167, 170
@@ -2907,9 +2928,9 @@ BEGIN
     IDD_MAT_SLIDE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 433
+        RIGHTMARGIN, 400
         TOPMARGIN, 7
-        BOTTOMMARGIN, 295
+        BOTTOMMARGIN, 229
     END
 
     IDD_MAT_TEXTURE, DIALOG
@@ -3623,6 +3644,8 @@ BEGIN
     IDS_MAT_OAKPLANK        "Holzplanken"
     IDS_BUMP_WOOD           "Holzstruktur"
     IDS_BUMP_OAKPLANK       "Parkettstruktur"
+    IDS_FROM                "Anfang"
+    IDS_TO                  "Ende"
 END
 
 #endif    // German (Germany) resources

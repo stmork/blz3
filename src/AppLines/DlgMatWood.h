@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wood material
+**	Blizzard III - Dialog with preview and property sheet
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3MaterialSampler.h"
+#include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
 #include "PageMatWood.h"
 #include "PageWood.h"
@@ -32,12 +33,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatWood dialog
 
-class CDlgMatWood : public CDialog
+class CDlgMatWood : public CB3SimplePropertyPreviewDialog
 {
 	b3MatWood         *m_Material;
 	b3MaterialSampler *m_MatSampler;
 
-	CPropertySheet     m_PropertySheet;
 	CPageMatWood       m_PageMatWood;
 	CPageWood          m_PageWood;
 // Construction
@@ -66,12 +66,11 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatWood)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPreviewMaterial(WPARAM wParam,LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 private:
+	void b3InitDialog();
 	void b3UpdateUI();
 };
 

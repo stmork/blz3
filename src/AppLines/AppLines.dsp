@@ -237,6 +237,10 @@ SOURCE=.\b3ShowSample.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SimplePropertyPreviewDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SpanningShapeDialog.cpp
 # End Source File
 # Begin Source File
@@ -646,6 +650,10 @@ SOURCE=.\b3ShowRaytrace.h
 # Begin Source File
 
 SOURCE=.\b3ShowSample.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SimplePropertyPreviewDialog.h
 # End Source File
 # Begin Source File
 

@@ -25,24 +25,34 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "b3SimplePropertyPreviewDialog.h"
+#include "b3ShowRaytrace.h"
+#include "PageMaterial.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatSlide dialog
 
-class CDlgMatSlide : public CDialog
+class CDlgMatSlide : public CB3SimplePropertyPreviewDialog
 {
-	b3MatSlide *m_Material;
+	b3Scene        *m_MatScene;
+	b3Base<b3Item> *m_MatHead;
+	b3MatSlide     *m_Material;
 
+	CPageMaterial      m_PageLeft;
+	CPageMaterial      m_PageRight;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgMatSlide(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgMatSlide();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatSlide)
 	enum { IDD = IDD_MAT_SLIDE };
-		// NOTE: the ClassWizard will add data members here
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
+	BOOL	m_CutOff;
+	int		m_SlideMode;
 	//}}AFX_DATA
 
 
@@ -58,9 +68,13 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatSlide)
-		// NOTE: the ClassWizard will add member functions here
+	afx_msg void OnSlideMode();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

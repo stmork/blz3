@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.1  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **
 */
 
@@ -97,10 +101,10 @@ void CB3PropertyPage::b3UpdateUI()
 
 BOOL CB3PropertyPage::OnInitDialog() 
 {
+	SetWindowText(m_Caption);
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -118,4 +122,9 @@ void CB3PropertyPage::b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet,int
 	dlg->ScreenToClient( &rect );
 	sheet.SetWindowPos( NULL, rect.left-7, rect.top-7, 0, 0, 
 			SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE );
+}
+
+void CB3PropertyPage::b3SetCaption(int id)
+{
+	m_Caption.LoadString(id);
 }

@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3BumpSampler.h"
+#include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
 #include "PageBump.h"
 #include "PageWood.h"
@@ -32,7 +33,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgBumpWood dialog
 
-class CDlgBumpWood : public CDialog
+class CDlgBumpWood : public CB3SimplePropertyPreviewDialog
 {
 	b3BumpWood         *m_Bump;
 	b3BumpSampler      *m_BumpSampler;
@@ -66,12 +67,11 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgBumpWood)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPreviewBump(WPARAM wParam,LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 private:
+	void b3InitDialog();
 	void b3UpdateUI();
 };
 

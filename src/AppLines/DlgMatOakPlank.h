@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3MaterialSampler.h"
+#include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
 #include "PageMatWood.h"
 #include "PageWood.h"
@@ -33,12 +34,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatOakPlank dialog
 
-class CDlgMatOakPlank : public CDialog
+class CDlgMatOakPlank : public CB3SimplePropertyPreviewDialog
 {
 	b3MatOakPlank     *m_Material;
 	b3MaterialSampler *m_MatSampler;
 
-	CPropertySheet     m_PropertySheet;
 	CPageMatWood       m_PageMatWood;
 	CPageWood          m_PageWood;
 	CPageOakPlank      m_PageOakPlank;
@@ -68,12 +68,11 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatOakPlank)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPreviewMaterial(WPARAM wParam,LPARAM lParam);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 private:
+	void b3InitDialog();
 	void b3UpdateUI();
 };
 

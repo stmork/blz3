@@ -597,14 +597,19 @@
 #define IDC_GRAIN_FREQUENCY             32305
 #define IDC_SPIN_RING_FREQUENCY         32305
 #define IDC_SPIN_XTIMES                 32305
+#define IDC_AUTO_REFRESH                32305
 #define IDC_GRAINY                      32306
 #define IDC_SPIN_RING_NOISE             32306
 #define IDC_SPIN_YTIMES                 32306
+#define IDC_REFRESH                     32306
 #define IDC_RINGY                       32307
 #define IDC_SPIN_RING_NOISE_FREQUENCY   32307
+#define IDC_SLIDE_HORIZONTAL            32307
 #define IDC_ANGULAR_WOBBLE_FREQUENCY    32308
 #define IDC_SPIN_TRUNK_WOBBLE           32308
+#define IDC_SLIDE_VERTICAL              32308
 #define IDC_SPIN_TRUNK_WOBBLE_FREQUENCY 32309
+#define IDC_CUTOFF                      32309
 #define IDC_SPIN_ANGULAR_WOBBLE         32310
 #define IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY 32311
 #define IDS_ARCON_FILTER                60000
@@ -790,6 +795,8 @@
 #define IDS_MAT_OAKPLANK                61456
 #define IDS_BUMP_WOOD                   61457
 #define IDS_BUMP_OAKPLANK               61458
+#define IDS_FROM                        61459
+#define IDS_TO                          61460
 
 // Next default values for new objects
 // 
@@ -798,7 +805,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         10120
-#define _APS_NEXT_CONTROL_VALUE         32305
+#define _APS_NEXT_CONTROL_VALUE         32310
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif
 #endif

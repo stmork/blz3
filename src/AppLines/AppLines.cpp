@@ -57,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.65  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.64  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
 **	
@@ -1057,7 +1061,7 @@ BOOL CAboutDlg::OnInitDialog()
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3Item *item = b3World::b3AllocNode(WOOD);
+	b3Item *item = b3World::b3AllocNode(SLIDE);
 
 	b3Loader::b3GetLoader().b3Edit(item);
 

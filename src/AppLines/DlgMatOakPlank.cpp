@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/24 15:40:12  sm
+**	- Started slide material dialog implementation
+**	- Added simple property sheet/preview dialog template
+**
 **	Revision 1.6  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
-**
+**	
 **	Revision 1.5  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
@@ -68,7 +72,7 @@
 *************************************************************************/
 
 CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgMatOakPlank::IDD, pParent)
+	: CB3SimplePropertyPreviewDialog(CDlgMatOakPlank::IDD, pParent)
 {
 	m_Material                = (b3MatOakPlank *)item;
 	m_PageMatWood.m_Material  = m_Material;
@@ -86,16 +90,15 @@ CDlgMatOakPlank::~CDlgMatOakPlank()
 
 void CDlgMatOakPlank::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgMatOakPlank)
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CDlgMatOakPlank, CDialog)
+BEGIN_MESSAGE_MAP(CDlgMatOakPlank, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgMatOakPlank)
-	ON_MESSAGE(WM_USER,OnPreviewMaterial)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -116,11 +119,8 @@ b3_bool CDlgMatOakPlank::b3Edit(b3Item *item)
 	return true;
 }
 
-BOOL CDlgMatOakPlank::OnInitDialog() 
+void CDlgMatOakPlank::b3InitDialog() 
 {
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
 	m_PreviewMaterialCtrl.b3Init();
 	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl);
 	m_MatSampler->b3SetMaterial(m_Material);
@@ -128,21 +128,9 @@ BOOL CDlgMatOakPlank::OnInitDialog()
 	m_PropertySheet.AddPage(&m_PageMatWood);
 	m_PropertySheet.AddPage(&m_PageWood);
 	m_PropertySheet.AddPage(&m_PageOakPlank);
-
-	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,IDC_PROPERTY);
-
-	b3UpdateUI();
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CDlgMatOakPlank::b3UpdateUI()
 {
 	m_PreviewMaterialCtrl.b3Update(m_MatSampler);
-}
-
-void CDlgMatOakPlank::OnPreviewMaterial(WPARAM wParam,LPARAM lParam) 
-{
-	// TODO: Add your control notification handler code here
-	b3UpdateUI();
 }

@@ -231,9 +231,9 @@ public:
 // SLIDE
 class B3_PLUGIN b3MatSlide : public b3Material 
 {
+public:
 	b3_material       m_Material[2];
 	b3_f32            m_From,m_To;           // rel. polar values of start, end
-	b3_f32            m_HighLight;
 	b3_s32            m_ModeFlag;            // direction and cut flags, see below
 
 public:

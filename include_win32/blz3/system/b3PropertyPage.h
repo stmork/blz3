@@ -31,6 +31,7 @@
 
 class CB3PropertyPage : public CPropertyPage
 {
+	CString m_Caption;
 // Construction
 public:
 	CB3PropertyPage(UINT nIDTemplate);
@@ -65,6 +66,7 @@ protected:
 
 public:
 	static void b3InitPropertySheet(CDialog *dlg,CPropertySheet &sheet, int id);
+	void b3SetCaption(int id);
 };
 
 //{{AFX_INSERT_LOCATION}}
