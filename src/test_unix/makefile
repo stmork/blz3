@@ -30,7 +30,7 @@ PRG_SOURCE		=\
 	TestUtil.cc\
 	TestVector.cc\
 	TestMaterial.cc\
-	TestWood
+	TestWood.cc
 
 all:	$(PRGS)
 
