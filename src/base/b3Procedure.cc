@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/05/18 16:31:01  sm
+**	- Simple valud adjustment.
+**
 **	Revision 1.36  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
-**
+**	
 **	Revision 1.35  2004/05/18 10:44:52  sm
 **	- Fine tuning animated water.
 **	
@@ -766,7 +769,7 @@ b3Water::b3Water()
 	m_WindFreq  = 0.5;
 	m_WindAmp   = 0.2f;
 	m_MinWind   = 1.0f;
-	b3Vector::b3Init(&m_Anim,1.5f,1.5f,1.0f);
+	b3Vector::b3Init(&m_Anim,1.5f,1.5f,4.0f);
 	b3PrepareWater();
 }
 
