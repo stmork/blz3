@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2004/09/20 13:40:40  sm
+**      - Removed GLUT_ALPHA requirement.
+**
 **      Revision 1.43  2004/08/17 15:19:13  sm
 **      - Some OpenGL include fixes.
 **
@@ -487,7 +490,7 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
-			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH|GLUT_ALPHA);
+			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow("Greetinxx");
 			glutDisplayFunc (&b3RenderScene);
