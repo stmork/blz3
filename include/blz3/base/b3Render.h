@@ -15,11 +15,12 @@
 **
 */
 
-#ifndef B3_RAYTRACE_RENDER_H
-#define B3_RAYTRACE_RENDER_H
+#ifndef B3_BASE_RENDER_H
+#define B3_BASE_RENDER_H
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
 
@@ -43,7 +44,6 @@ class b3RenderObject;
 
 class b3RenderContext : protected b3Mem
 {
-	static b3_bool              glHasVBO;
 	       b3_index             glLightNum;
 	       b3RenderObject      *glSelectedObject;
 
@@ -55,16 +55,6 @@ public:
 	b3_bool                     glUseSpotLight;
 	b3_bool                     glDrawCachedTextures;
 	b3Color                     glBgColor;
-
-#ifdef BLZ3_USE_OPENGL
-	static PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
-	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-	static PFNGLBINDBUFFERARBPROC    glBindBufferARB;
-	static PFNGLBUFFERDATAARBPROC    glBufferDataARB;
-	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;
-	static PFNGLMAPBUFFERARBPROC     glMapBufferARB;
-	static PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
-#endif
 
 public:
 	                 b3RenderContext();
@@ -89,11 +79,6 @@ public:
 	inline void b3SetSelected(b3RenderObject *selected)
 	{
 		glSelectedObject = selected;
-	}
-
-	static inline b3_bool b3HasVBO()
-	{
-		return glHasVBO;
 	}
 
 #ifdef BLZ3_USE_OPENGL
@@ -180,15 +165,17 @@ struct b3_gl_polygon
 #define B3_GL_LINIT(l,ai,bi)    { (l)->a = (ai); (l)->b = (bi); (l)++; }
 #define B3_GL_PINIT(p,ai,bi,ci) { (p)->a = (ai); (p)->b = (bi); (p)->c = (ci); (p)++; }
 
-class b3RenderObject : public b3Mem
+class b3RenderObject : public b3Mem, protected b3VectorBufferObjects
 {
-	b3_bool          glBound;
+	b3_bool          glBoundVertices;
+	b3_bool          glBoundIndices;
 
 protected:
 	b3_count         glVertexCount;
 	b3_count         glGridCount;
 	b3_count         glPolyCount;
-	b3_bool          glComputed;
+	b3_bool          glVerticesComputed;
+	b3_bool          glIndicesComputed;
 	b3_gl_vertex    *glVertex;
 	b3_gl_line      *glGrids;
 	b3_gl_polygon   *glPolygons;
@@ -233,6 +220,7 @@ public:
 	virtual void            b3FreeVertexMemory();
 	virtual void            b3Draw(b3RenderContext *context);
 	        void            b3Recompute();
+	        void            b3RecomputeIndices();
 	        void            b3RecomputeMaterial();
 	        void            b3Update();
 	        void            b3UpdateMaterial();
@@ -288,9 +276,9 @@ private:
 	        void            b3DrawLinedGeometry(b3RenderContext *context);
 	        void            b3DrawFilledGeometry(b3RenderContext *context);
 
-			void            b3Bind();
+			void            b3BindIndices();
 			void            b3BindVertices();
-			void            b3Unbind();
+			void            b3UnbindIndices();
 			void            b3UnbindVertices();
 };
 

@@ -41,9 +41,13 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2004/09/24 13:45:35  sm
+**	- Extracted OpenGL extension vector buffer objects into own files.
+**	- Some cleanup for Lines.
+**
 **	Revision 1.40  2004/07/03 13:49:30  sm
 **	- Added spline knot control dialog which is not completed yet.
-**
+**	
 **	Revision 1.39  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -361,7 +365,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 		bbox->b3GetType());
 
 	main->b3SetStatusMessage(IDS_DOC_VERTICES);
-	bbox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+	bbox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
 	bbox->b3Prepare(true);
@@ -677,7 +681,7 @@ void CAppObjectDoc::OnObjectNew()
 				// Init data
 				m_DlgHierarchy->b3GetData();
 				m_BBox->b3Prepare(true);
-				m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+				m_BBox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 				m_BBox->b3BacktraceRecompute(bbox);
 				b3ComputeBounds();
 

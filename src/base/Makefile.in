@@ -26,6 +26,7 @@ LIB_SOURCE =\
 	b3SearchPath.cc\
 	b3Spline.cc\
 	b3UndoOperation.cc\
+	b3VectorBufferObjects.cc\
 	b3Wood.cc\
 	b3World.cc
 
@@ -50,6 +51,7 @@ LIB_OBJ	=\
 	b3SearchPath.o\
 	b3Spline.o\
 	b3UndoOperation.o\
+	b3VectorBufferObjects.o\
 	b3Wood.o\
 	b3World.o
 

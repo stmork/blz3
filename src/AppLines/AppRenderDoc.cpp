@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/09/24 13:45:35  sm
+**	- Extracted OpenGL extension vector buffer objects into own files.
+**	- Some cleanup for Lines.
+**
 **	Revision 1.23  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.22  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -164,7 +168,7 @@ CAppRenderDoc::CAppRenderDoc()
 {
 	// TODO: add one-time construction code here
 	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
-	m_Fulcrum.b3AllocVertices(&m_Context);
+	m_Fulcrum.b3SetupVertexMemory(&m_Context);
 	m_RaytraceDoc  = null;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
 	m_Display      = null;

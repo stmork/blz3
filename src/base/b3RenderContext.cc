@@ -1,14 +1,14 @@
 /*
 **
-**      $Filename:      b3Render.cc $
-**      $Release:       Dortmund 2001, 2002 $
+**      $Filename:      b3RenderContext.cc $
+**      $Release:       Dortmund 2004 $
 **      $Revision$
 **      $Date$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Rendering some objects
+**      Blizzard III - Render context for rendering some objects
 **
-**      (C) Copyright 2001, 2002  Steffen A. Mork
+**      (C) Copyright 2004  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -25,8 +25,6 @@
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Color.h"
 
-#define USE_VBOS 1
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/09/24 13:45:36  sm
+**	- Extracted OpenGL extension vector buffer objects into own files.
+**	- Some cleanup for Lines.
+**
 **	Revision 1.5  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
-**
+**	
 **	Revision 1.4  2004/09/23 21:27:38  sm
 **	- VBOs still don't work.
 **	
@@ -66,8 +68,6 @@ static b3_vector light0_position =
 	1000.0f,-2500.0f,2000.0f
 };
 
-b3_bool b3RenderContext::glHasVBO;
-
 #ifdef BLZ3_USE_OPENGL
 static b3Color world_ambient(  0.25f,0.25f,0.25f);
 static b3Color light0_ambient( 0.25f,0.25f,0.25f);
@@ -86,14 +86,6 @@ static GLenum light_num[] =
 	GL_LIGHT7
 };
 
-PFNGLGENBUFFERSARBPROC    b3RenderContext::glGenBuffersARB;
-PFNGLDELETEBUFFERSARBPROC b3RenderContext::glDeleteBuffersARB;
-PFNGLBINDBUFFERARBPROC    b3RenderContext::glBindBufferARB;
-PFNGLBUFFERDATAARBPROC    b3RenderContext::glBufferDataARB;
-PFNGLBUFFERSUBDATAARBPROC b3RenderContext::glBufferSubDataARB;
-PFNGLMAPBUFFERARBPROC     b3RenderContext::glMapBufferARB;
-PFNGLUNMAPBUFFERARBPROC   b3RenderContext::glUnmapBufferARB;
-
 #define VALIDATE_LIGHT_NUM(num) (((num) >= 0) && (((size_t)num) < (sizeof(light_num) / sizeof(GLint))))
 
 #endif
@@ -106,7 +98,6 @@ b3RenderContext::b3RenderContext()
 	glDrawCachedTextures = true;
 	glSelectedObject     = null;
 	glBgColor.b3Init(0.8f,0.8f,0.8f);
-	glHasVBO = false;
 }
 
 void b3RenderContext::b3Init()
@@ -145,35 +136,7 @@ void b3RenderContext::b3Init()
 		b3PrintF(B3LOG_DEBUG,"Support for OpenGL shading language V1.00.\n");
 	}
 
-#ifdef BLZ3_USE_OPENGL
-	glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
-	glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-	glBufferDataARB    = (PFNGLBUFFERDATAARBPROC)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-	glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)b3Runtime::b3GetOpenGLExtension("glBufferSubDataARB");
-	glMapBufferARB     = (PFNGLMAPBUFFERARBPROC)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
-
-#ifdef USE_VBOS
-	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
-		(glGenBuffersARB != null) &&
-		(glDeleteBuffersARB != null) &&
-		(glBindBufferARB != null) &&
-		(glBufferDataARB != null) &&
-		(glMapBufferARB  != null) &&
-		(glUnmapBufferARB != null);
-#endif
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL, "glGenBuffersARB    = %p\n", glGenBuffersARB);
-	b3PrintF(B3LOG_FULL, "glDeleteBuffersARB = %p\n", glDeleteBuffersARB);
-	b3PrintF(B3LOG_FULL, "glBindBufferARB    = %p\n", glBindBufferARB);
-	b3PrintF(B3LOG_FULL, "glBufferDataARB    = %p\n", glBufferDataARB);
-	b3PrintF(B3LOG_FULL, "glMapBufferARB     = %p\n", glMapBufferARB);
-	b3PrintF(B3LOG_FULL, "glUnmapBufferARB   = %p\n", glUnmapBufferARB);
-#endif
-#else
-	glHasVBO = false;
-#endif
+	b3VectorBufferObjects::b3Init(extensions);
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

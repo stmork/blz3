@@ -45,6 +45,10 @@
 
 /*
 **      $Log$
+**      Revision 1.95  2004/09/24 13:45:36  sm
+**      - Extracted OpenGL extension vector buffer objects into own files.
+**      - Some cleanup for Lines.
+**
 **      Revision 1.94  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
 **
@@ -509,7 +513,9 @@
 
 b3RenderObject::b3RenderObject()
 {
-	glBound       = false;
+	glBoundVertices = false;
+	glBoundIndices  = false;
+
 	glCustomVert  = false;
 	glCustomGrids = false;
 	glCustomPolys = false;
@@ -523,6 +529,7 @@ b3RenderObject::b3RenderObject()
 	glPolygons    = null;
 
 	b3Recompute();
+	b3RecomputeIndices();
 	b3RecomputeMaterial();
 
 #ifdef BLZ3_USE_OPENGL
@@ -580,26 +587,18 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
-void b3RenderObject::b3Bind()
+void b3RenderObject::b3BindIndices()
 {
-	B3_ASSERT(!glBound);
-#ifdef BLZ3_USE_OPENGL
-	if (b3RenderContext::b3HasVBO())
-	{
-		if ((!glCustomVert) && (glVertexCount > 0))
-		{
-			// Vertices
-			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-			glVertex = (b3_gl_vertex *)b3RenderContext::glMapBufferARB(
-				GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
-			B3_ASSERT(glVertex != null);
-		}
+	B3_ASSERT(!glBoundIndices);
 
+#ifdef BLZ3_USE_OPENGL
+	if (b3HasVBO())
+	{
 		if ((!glCustomGrids) && (glGridCount > 0))
 		{
 			// Grids
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
-			glGrids = (b3_gl_line *)b3RenderContext::glMapBufferARB(
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glGrids = (b3_gl_line *)glMapBufferARB(
 				GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			B3_ASSERT(glGrids != null);
 		}
@@ -607,83 +606,83 @@ void b3RenderObject::b3Bind()
 		if ((!glCustomPolys) && (glPolyCount > 0))
 		{
 			// Polygons
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
-			glPolygons = (b3_gl_polygon *)b3RenderContext::glMapBufferARB(
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glPolygons = (b3_gl_polygon *)glMapBufferARB(
 				GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			B3_ASSERT(glPolygons != null);
 		}
 	}
 #endif
-	glBound = true;
+	glBoundIndices = true;
 }
 
 void b3RenderObject::b3BindVertices()
 {
-	B3_ASSERT(!glBound);
+	B3_ASSERT(!glBoundVertices);
+
 #ifdef BLZ3_USE_OPENGL
-	if (b3RenderContext::b3HasVBO() && (!glCustomVert))
+	if (b3HasVBO() && (!glCustomVert))
 	{
 		// Vertices
-		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-		glVertex = (b3_gl_vertex *)b3RenderContext::glMapBufferARB(
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glVertex = (b3_gl_vertex *)glMapBufferARB(
 			GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
 	}
 #endif
-	glBound = true;
+	glBoundVertices = true;
 }
 
-void b3RenderObject::b3Unbind()
+void b3RenderObject::b3UnbindIndices()
 {
-	B3_ASSERT(glBound);
-#ifdef BLZ3_USE_OPENGL
-	if (b3RenderContext::b3HasVBO())
-	{
-		if ((!glCustomVert) && (glVBO[0] != 0) && (glVertex != null))
-		{
-			// Vertices
-			b3RenderContext::glBindBufferARB (GL_ARRAY_BUFFER_ARB, glVBO[0]);
-			b3RenderContext::glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
-			glVertex = null;
-		}
+	B3_ASSERT(glBoundIndices);
 
+#ifdef BLZ3_USE_OPENGL
+	if (b3HasVBO())
+	{
 		if ((!glCustomGrids) && (glVBO[1] != 0) && (glGrids != null))
 		{
 			// Grids
-			b3RenderContext::glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
-			b3RenderContext::glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+			glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
 			glGrids = null;
 		}
 
 		if ((!glCustomPolys) && (glVBO[2] != 0) && (glPolygons != null))
 		{
 			// Polygons
-			b3RenderContext::glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
-			b3RenderContext::glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+			glBindBufferARB (GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
 			glPolygons = null;
 		}
 	}
 #endif
-	glBound = false;
+	glBoundIndices = false;
 }
 
 void b3RenderObject::b3UnbindVertices()
 {
-	B3_ASSERT(glBound);
+	B3_ASSERT(glBoundVertices);
+
 #ifdef BLZ3_USE_OPENGL
-	if (b3RenderContext::b3HasVBO() && (!glCustomVert) && (glVBO[0] != 0) && (glVertex != null))
+	if (b3HasVBO() && (!glCustomVert) && (glVBO[0] != 0) && (glVertex != null))
 	{
 		// Vertices
-		b3RenderContext::glBindBufferARB (GL_ARRAY_BUFFER_ARB, glVBO[0]);
-		b3RenderContext::glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+		glBindBufferARB (GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
 		glVertex = null;
 	}
 #endif
-	glBound = false;
+	glBoundVertices = false;
 }
 
 void b3RenderObject::b3Recompute()
 {
-	glComputed = false;
+	glVerticesComputed = false;
+}
+
+void b3RenderObject::b3RecomputeIndices()
+{
+	glIndicesComputed = false;
 }
 
 void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
@@ -704,19 +703,19 @@ void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
 void b3RenderObject::b3PreAlloc()
 {
 #ifdef BLZ3_USE_OPENGL
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
 		if (glVBO[0] == 0)
 		{
-			b3RenderContext::glGenBuffersARB(1,&glVBO[0]);
+			glGenBuffersARB(1,&glVBO[0]);
 		}
 		if (glVBO[1] == 0)
 		{
-			b3RenderContext::glGenBuffersARB(1,&glVBO[1]);
+			glGenBuffersARB(1,&glVBO[1]);
 		}
 		if (glVBO[2] == 0)
 		{
-			b3RenderContext::glGenBuffersARB(1,&glVBO[2]);
+			glGenBuffersARB(1,&glVBO[2]);
 		}
 	}
 #endif
@@ -745,11 +744,11 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 
 		if (glVertexCount > 0)
 		{
-			if (b3RenderContext::b3HasVBO())
+			if (b3HasVBO())
 			{
 #ifdef BLZ3_USE_OPENGL
-				b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-				b3RenderContext::glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+				glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+				glBufferDataARB(GL_ARRAY_BUFFER_ARB,
 					glVertexCount * sizeof(b3_gl_vertex), NULL, GL_DYNAMIC_DRAW_ARB);
 				glVertex = null;
 #endif
@@ -759,7 +758,7 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 				glVertex = (b3_gl_vertex *)b3Alloc(glVertexCount * sizeof(b3_gl_vertex));
 			}
 		}
-		glComputed = false;
+		glVerticesComputed = false;
 	}
 
 	if (glGridCount != new_gridCount)
@@ -770,11 +769,11 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 
 		if (glGridCount > 0)
 		{
-			if (b3RenderContext::b3HasVBO())
+			if (b3HasVBO())
 			{
 #ifdef BLZ3_USE_OPENGL
-				b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
-				b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+				glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
 					glGridCount * sizeof(b3_gl_line), NULL, GL_DYNAMIC_DRAW_ARB);
 				glGrids = null;
 #endif
@@ -784,7 +783,7 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 				glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
 			}
 		}
-		glComputed = false;
+		glVerticesComputed = false;
 	}
 
 	if (glPolyCount != new_polyCount)
@@ -795,11 +794,11 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 
 		if (glPolyCount > 0)
 		{
-			if (b3RenderContext::b3HasVBO())
+			if (b3HasVBO())
 			{
 #ifdef BLZ3_USE_OPENGL
-				b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
-				b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+				glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+				glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
 					glPolyCount * sizeof(b3_gl_polygon), NULL, GL_DYNAMIC_DRAW_ARB);
 				glPolygons = null;
 #endif
@@ -809,10 +808,10 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 				glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
 			}
 		}
-		glComputed = false;
+		glVerticesComputed = false;
 	}
 
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
 		glCustomVert  = (glVertexCount <= 0);
 		glCustomGrids = (glGridCount   <= 0);
@@ -841,12 +840,11 @@ void b3RenderObject::b3FreeVertexMemory()
 
 void b3RenderObject::b3Update()
 {
-	if (!glComputed)
+	if (!glIndicesComputed)
 	{
-		b3Bind();
+		b3BindIndices();
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update() this = %p\n",this);
-		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",glVertexCount, glVertex,   glCustomVert  ? "custom" : "buffer");
+		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateIndices() this = %p\n",this);
 		b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",glGridCount,   glGrids,    glCustomGrids ? "custom" : "buffer");
 		b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",glPolyCount,   glPolygons, glCustomPolys ? "custom" : "buffer");
 #endif
@@ -856,33 +854,50 @@ void b3RenderObject::b3Update()
 #ifdef BLZ3_USE_OPENGL
 		if ((glCustomGrids) && (glGrids != null) && (glGridCount > 0))
 		{
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
-			b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
 				glGridCount * sizeof(b3_gl_line), glGrids, GL_STATIC_DRAW_ARB);
 		}
 		if ((glCustomPolys) && (glPolygons != null) && (glPolyCount > 0))
 		{
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
-			b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
 				glPolyCount * sizeof(b3_gl_polygon), glPolygons, GL_STATIC_DRAW_ARB);
 		}
 #endif
+		b3UnbindIndices();
 
+		glIndicesComputed = true;
+#ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateIndices()\n");
+#endif
+	}
+
+	if (!glVerticesComputed)
+	{
+		b3BindVertices();
+		b3BindIndices();
+
+#ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateVertices() this = %p\n",this);
+		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",glVertexCount, glVertex,   glCustomVert  ? "custom" : "buffer");
+#endif
 		b3ComputeVertices();
 		b3ComputeNormals();
 #ifdef BLZ3_USE_OPENGL
 		if ((glCustomVert) && (glVertex != null) && (glVertexCount > 0))
 		{
-			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-			b3RenderContext::glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+			glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB,
 				glVertexCount * sizeof(b3_gl_vertex), glVertex, GL_STATIC_DRAW_ARB);
 		}
 #endif
-		b3Unbind();
+		b3UnbindVertices();
+		b3UnbindIndices();
 
-		glComputed = true;
+		glVerticesComputed = true;
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Update()\n");
+		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateVertices()\n");
 #endif
 	}
 }
@@ -901,7 +916,8 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3_gl_vector xDir,yDir;
 	b3_index     i,start,end,v1,v2,v3;
 
-	B3_ASSERT(glBound);
+	B3_ASSERT(glBoundVertices);
+	B3_ASSERT(glBoundVertices);
 
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3ComputeNormals() this = %p\n",this);
@@ -975,7 +991,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	b3Update();
 
 	b3BindVertices();
-	if (glComputed && (glVertex != null) && (glVertexCount > 0))
+	if (glVerticesComputed && (glVertex != null) && (glVertexCount > 0))
 	{
 		b3GetVertexRange(start,end);
 		for (i = start;i < end;i++)
@@ -995,7 +1011,8 @@ void b3RenderObject::b3TransformVertices(
 {
 	b3_count i;
 
-	b3Bind();
+	b3BindVertices();
+	b3BindIndices();
 	if (glVertex != null)
 	{
 		if (is_affine)
@@ -1015,7 +1032,8 @@ void b3RenderObject::b3TransformVertices(
 			b3ComputeNormals();
 		}
 	}
-	b3Unbind();
+	b3UnbindVertices();
+	b3UnbindIndices();
 }
 
 /*************************************************************************
@@ -1411,7 +1429,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 		break;
 	}
 #else
-	if ((!glComputed) || (!glMaterialComputed))
+	if ((!glVerticesComputed) || (!glIndicesComputed) || (!glMaterialComputed))
 	{
 		b3Update();
 		b3UpdateMaterial();
@@ -1435,7 +1453,8 @@ void b3RenderObject::b3CheckGeometry(
 #ifdef _DEBUG
 	b3_index       i;
 
-	b3Bind();
+	b3BindVertices();
+	b3BindIndices();
 
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",glVertexCount, glVertex,   glCustomVert  ? "custom" : "buffer");
@@ -1509,7 +1528,8 @@ void b3RenderObject::b3CheckGeometry(
 			break;
 		}
 	}
-	b3Unbind();
+	b3UnbindVertices();
+	b3UnbindIndices();
 #endif
 }
 
@@ -1605,12 +1625,12 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
-		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
 		glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
 
-		b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
 		glDrawElements(GL_LINES,glGridCount * 2, GL_UNSIGNED_INT, 0);
 	}
 	else
@@ -1625,9 +1645,9 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 #endif
 
 	GLenum error = glGetError();
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
-		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
 		glInterleavedArrays(GL_T2F_N3F_V3F,0, 0);
 	}
 	else
@@ -1639,9 +1659,9 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		if (b3RenderContext::b3HasVBO())
+		if (b3HasVBO())
 		{
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
 			glDrawElements(GL_LINES,glGridCount * 2, GL_UNSIGNED_INT, 0);
 		}
 		else
@@ -1658,12 +1678,12 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
-		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
 		glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
 
-		b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
 		glDrawElements(GL_TRIANGLES, glPolyCount * 3, GL_UNSIGNED_INT, 0);
 	}
 	else
@@ -1678,9 +1698,9 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 #endif
 
 	GLenum error = glGetError();
-	if (b3RenderContext::b3HasVBO())
+	if (b3HasVBO())
 	{
-		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
 		glInterleavedArrays(GL_T2F_N3F_V3F,0, 0);
 	}
 	else
@@ -1692,9 +1712,9 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		if (b3RenderContext::b3HasVBO())
+		if (b3HasVBO())
 		{
-			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
+			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT, 0);
 		}
 		else

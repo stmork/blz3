@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.99  2004/09/24 13:45:36  sm
+**	- Extracted OpenGL extension vector buffer objects into own files.
+**	- Some cleanup for Lines.
+**
 **	Revision 1.98  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
-**
+**	
 **	Revision 1.97  2004/09/23 21:27:38  sm
 **	- VBOs still don't work.
 **	
@@ -793,7 +797,7 @@ void b3BBox::b3GetCount(
 
 void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 {
-	if (context->b3HasVBO())
+	if (b3HasVBO())
 	{
 		b3RenderObject::b3AllocVertexMemory(context);
 	}
@@ -859,8 +863,8 @@ void b3BBox::b3ComputeVertices()
 	glVertex[7].v.y = m_DimBase.y + m_DimSize.y;
 	glVertex[7].v.z = m_DimBase.z;
 
-	glVertexCount = 8;
-	glComputed    = true;
+	glVertexCount      = 8;
+	glVerticesComputed = true;
 }
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)

@@ -166,6 +166,10 @@ SOURCE=.\b3UndoOperation.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3VectorBufferObjects.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Wood.cc
 # End Source File
 # Begin Source File
