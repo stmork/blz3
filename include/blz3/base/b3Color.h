@@ -81,10 +81,10 @@ public:
 	}
 
 	inline b3Color(
-		b3_f64 r,
-		b3_f64 g,
-		b3_f64 b,
-		b3_f64 a = 0)
+		b3_f32 r,
+		b3_f32 g,
+		b3_f32 b,
+		b3_f32 a = 0)
 	{
 		b3Init(r,g,b,a);
 	}
@@ -130,7 +130,7 @@ public:
 		}
 	}
 
-	inline void b3SetAlpha(const b3_f64 alpha)
+	inline void b3SetAlpha(const b3_f32 alpha)
 	{
 		v[A] = alpha;
 	}
@@ -148,47 +148,61 @@ public:
 		}
 	}
 
-	inline void b3Init(b3_f64 rgb, b3_f64 a = 0)
+	inline void b3Init(b3_f32 rgb, b3_f32 a = 0)
 	{
 		v[R] =
 		v[G] =
-		v[B] = (b3_f32)rgb;
-		v[A] = (b3_f32)a;
+		v[B] = rgb;
+		v[A] = a;
 	}
 
 	inline void b3Init(
-		b3_f64 r,
-		b3_f64 g,
-		b3_f64 b,
-		b3_f64 a = 0)
+		b3_f32 r,
+		b3_f32 g,
+		b3_f32 b,
+		b3_f32 a = 0)
 	{
-		v[R] = (b3_f32)r;
-		v[G] = (b3_f32)g;
-		v[B] = (b3_f32)b;
-		v[A] = (b3_f32)a;
+		v[R] = r;
+		v[G] = g;
+		v[B] = b;
+		v[A] = a;
 	}
 
 	inline static b3_color *b3Init(b3_color *color,
-		b3_f64 r = 0,
-		b3_f64 g = 0,
-		b3_f64 b = 0,
-		b3_f64 a = 0)
+		b3_f32 r = 0,
+		b3_f32 g = 0,
+		b3_f32 b = 0,
+		b3_f32 a = 0)
 	{
-		color->r = (b3_f32)r;
-		color->g = (b3_f32)g;
-		color->b = (b3_f32)b;
-		color->a = (b3_f32)a;
+		color->r = r;
+		color->g = g;
+		color->b = b;
+		color->a = a;
 		return color;
+	}
+
+	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f32 mix)
+	{
+		b3Color result;
+		b3Color amix = 1.0f - mix;
+		b3Color bmix =        mix;
+
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			result.v[i] = low.v[i] * amix.v[i] + high.v[i] * bmix.v[i];
+		}
+		return result;
 	}
 
 	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f64 mix)
 	{
 		b3Color result;
-		b3_f64  amix = 1 - mix;
+		b3Color amix = 1.0f - (b3_f32)mix;
+		b3Color bmix =        (b3_f32)mix;
 
 		for (b3_loop i = 0;i < 4;i++)
 		{
-			result.v[i] = low.v[i] * amix + high.v[i] * mix;
+			result.v[i] = low.v[i] * amix.v[i] + high.v[i] * bmix.v[i];
 		}
 		return result;
 	}

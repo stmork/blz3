@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2004/05/28 13:15:39  sm
+**      - Major optimizations inside shader. But why is the intel brt3
+**        5 minutes slower than the unoptimized version?
+**
 **      Revision 1.43  2004/05/22 17:02:56  sm
 **      - Decoupled material shader.
 **
@@ -456,15 +460,15 @@ inline b3_bool b3Light::b3PointIllumination(
 {
 	b3_light_info Jit;
 	b3_vector     point;
-	b3_f64        LightDist,LightFrac,q,UpperBound;
+	b3_f64        RecLightDist,SpotAngle,q,LightDist;
 
 	if (!m_LightActive)
 	{
 		return false;
 	}
 
-	Jit.Distr = 1;
-	Jit.Size  = 0;
+	Jit.m_Distr = 1;
+	Jit.m_Size  = 0;
 	Jit.pos.x = surface->incoming->ipoint.x;
 	Jit.pos.y = surface->incoming->ipoint.y;
 	Jit.pos.z = surface->incoming->ipoint.z;
@@ -472,42 +476,42 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.dir.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.dir.z = m_Position.z - surface->incoming->ipoint.z;
 
-	if ((UpperBound = b3Vector::b3QuadLength(&Jit.dir)) == 0)
+	if ((LightDist = b3Vector::b3QuadLength(&Jit.dir)) == 0)
 	{
 		return false;
 	}
-	LightDist = 1.0 / (UpperBound = sqrt(UpperBound));
-	Jit.dir.x *= LightDist;
-	Jit.dir.y *= LightDist;
-	Jit.dir.z *= LightDist;
+	RecLightDist = 1.0 / (LightDist = sqrt(LightDist));
+	Jit.dir.x *= RecLightDist;
+	Jit.dir.y *= RecLightDist;
+	Jit.dir.z *= RecLightDist;
 
 	// Compute relative brightness via LDC
 	// (= light distribution curve)
 	if (m_SpotActive)
 	{
-		LightFrac = -(
+		SpotAngle = -(
 			Jit.dir.x * m_SpotDir.x +
 			Jit.dir.y * m_SpotDir.y +
 			Jit.dir.z * m_SpotDir.z);
-		if (LightFrac <= 0)
+		if (SpotAngle <= 0)
 		{
 			q = 1.0 - b3Scene::epsilon;
 		}
 		else
 		{
-			q = (LightFrac >= 1 ? b3Scene::epsilon : acos(LightFrac) * 2.0 / M_PI);
+			q = (SpotAngle >= 1 ? b3Scene::epsilon : acos(SpotAngle) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
-		Jit.LightFrac = LightDist * m_Distance * point.y;
+		Jit.m_LightFrac = m_Distance * RecLightDist * point.y;
 	}
 	else
 	{
-		Jit.LightFrac = LightDist * m_Distance;
+		Jit.m_LightFrac = m_Distance * RecLightDist;
 	}
-	Jit.LightDist = LightDist;
+	Jit.m_LightDist = RecLightDist;
 
-	shader->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
+	shader->b3FindObscurer(&Jit,LightDist - b3Scene::epsilon);
 	shader->b3Shade(this,&Jit,surface,surface->incoming->color);
 	return true;
 }
@@ -524,30 +528,30 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3_count       max,Distr;
 	b3_bool        equal;				
 
-	Jit.Distr = m_JitterEdge;
-	Jit.Size  = m_Distance * m_Size / (b3_f64)Jit.Distr;
+	Jit.m_Distr = m_JitterEdge;
+	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
 
 	// computing light axis between ipoint and light
 	// Changed by SAM 9-04-1993
 	Jit.pos         = surface->incoming->ipoint;
-	Jit.LightView.x = m_Position.x - surface->incoming->ipoint.x;
-	Jit.LightView.y = m_Position.y - surface->incoming->ipoint.y;
-	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
+	Jit.m_LightView.x = m_Position.x - surface->incoming->ipoint.x;
+	Jit.m_LightView.y = m_Position.y - surface->incoming->ipoint.y;
+	Jit.m_LightView.z = m_Position.z - surface->incoming->ipoint.z;
 
 	// normalizing light axis
-	if ((denomLightDist = b3Vector::b3QuadLength(&Jit.LightView)) == 0)
+	if ((denomLightDist = b3Vector::b3QuadLength(&Jit.m_LightView)) == 0)
 	{
 		return false;
 	}
-	denomLightDist = 1.0 / (Jit.LightDist = sqrt(denomLightDist));
-	Jit.LightView.x *= denomLightDist;
-	Jit.LightView.y *= denomLightDist;
-	Jit.LightView.z *= denomLightDist;
+	denomLightDist = 1.0 / (Jit.m_LightDist = sqrt(denomLightDist));
+	Jit.m_LightView.x *= denomLightDist;
+	Jit.m_LightView.y *= denomLightDist;
+	Jit.m_LightView.z *= denomLightDist;
 
 	// inserted Nov. 1994, SAM
 	if (m_SpotActive)
 	{
-		Factor = -b3Vector::b3SMul(&Jit.LightView,&m_SpotDir);
+		Factor = -b3Vector::b3SMul(&Jit.m_LightView,&m_SpotDir);
 		if (Factor <= 0)
 		{
 			q = 1.0 - b3Scene::epsilon;
@@ -558,33 +562,33 @@ inline b3_bool b3Light::b3AreaIllumination (
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
-		Jit.LightFrac = denomLightDist * m_Distance * point.y;
+		Jit.m_LightFrac = denomLightDist * m_Distance * point.y;
 	}
 	else
 	{
-		Jit.LightFrac = denomLightDist * m_Distance;
+		Jit.m_LightFrac = denomLightDist * m_Distance;
 	}
 
 	Factor = denomLightDist / sqrt(
-		Jit.LightView.x * Jit.LightView.x +
-		Jit.LightView.y * Jit.LightView.y);
-	Jit.xDir.x	= -Jit.LightView.y * Factor;
-	Jit.xDir.y	=  Jit.LightView.x * Factor;
-	Jit.xDir.z	=  0;
+		Jit.m_LightView.x * Jit.m_LightView.x +
+		Jit.m_LightView.y * Jit.m_LightView.y);
+	Jit.m_xDir.x	= -Jit.m_LightView.y * Factor;
+	Jit.m_xDir.y	=  Jit.m_LightView.x * Factor;
+	Jit.m_xDir.z	=  0;
 
-	b3Vector::b3CrossProduct(&Jit.LightView,&Jit.xDir,&Jit.yDir);
-	Factor = denomLightDist / b3Vector::b3Length(&Jit.yDir);
-	Jit.yDir.x *= Factor;
-	Jit.yDir.y *= Factor;
-	Jit.yDir.z *= Factor;
+	b3Vector::b3CrossProduct(&Jit.m_LightView,&Jit.m_xDir,&Jit.m_yDir);
+	Factor = denomLightDist / b3Vector::b3Length(&Jit.m_yDir);
+	Jit.m_yDir.x *= Factor;
+	Jit.m_yDir.y *= Factor;
+	Jit.m_yDir.z *= Factor;
 
-	Jit.Result.b3Init();
+	Jit.m_Result.b3Init();
 
 	// The following loops check every second point of the outline
 	// of the light raster. If every sample hits the same shape the
 	// shadow computation is completed.
 	equal = true;
-	Distr = Jit.Distr - 1;
+	Distr = Jit.m_Distr - 1;
 	xs    = 1;
 	for (x = xs;x <= Distr;x += 2)
 	{
@@ -626,7 +630,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 
 		for (y = 1;y < Distr;y++)
 		{
-			max = Distr + ((Jit.Distr + xs) & 1);
+			max = Distr + ((Jit.m_Distr + xs) & 1);
 			for (x = xs;x < max;x++)
 			{
 				b3CheckSinglePoint (shader,surface,&Jit,x,y);
@@ -637,7 +641,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 		Factor = m_FullJitter;
 	}
 
-	surface->incoming->color += Jit.Result * Factor;
+	surface->incoming->color += Jit.m_Result * Factor;
 	return true;
 }
 
@@ -648,19 +652,19 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3_coord       x,
 	b3_coord       y)
 {
-	b3_f64   jx,jy,UpperBound;
+	b3_f64   jx,jy,LightDist;
 
-	jx = ((b3_f32)x - 0.5 * Jit->Distr + B3_FRAN(1.0)) * Jit->Size;
-	jy = ((b3_f32)y - 0.5 * Jit->Distr + B3_FRAN(1.0)) * Jit->Size;
+	jx = ((b3_f32)x - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
+	jy = ((b3_f32)y - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
 
-	Jit->dir.x = Jit->LightView.x + jx * Jit->xDir.x + jy * Jit->yDir.x;
-	Jit->dir.y = Jit->LightView.y + jx * Jit->xDir.y + jy * Jit->yDir.y;
-	Jit->dir.z = Jit->LightView.z + jx * Jit->xDir.z + jy * Jit->yDir.z;
+	Jit->dir.x = Jit->m_LightView.x + jx * Jit->m_xDir.x + jy * Jit->m_yDir.x;
+	Jit->dir.y = Jit->m_LightView.y + jx * Jit->m_xDir.y + jy * Jit->m_yDir.y;
+	Jit->dir.z = Jit->m_LightView.z + jx * Jit->m_xDir.z + jy * Jit->m_yDir.z;
 
-	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
+	if ((LightDist = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
-		shader->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
-		shader->b3Shade(this,Jit,surface,Jit->Result);
+		shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
+		shader->b3Shade(this,Jit,surface,Jit->m_Result);
 	}
 	else
 	{

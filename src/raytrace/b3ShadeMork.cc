@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/05/28 13:15:39  sm
+**	- Major optimizations inside shader. But why is the intel brt3
+**	  5 minutes slower than the unoptimized version?
+**
 **	Revision 1.36  2004/05/27 13:13:56  sm
 **	- Optimized Mork shader
 **	- Removed b3ShadePostMaterial
 **	- Removed m_SpecularSum
-**
+**	
 **	Revision 1.35  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
@@ -233,8 +237,12 @@ void b3ShaderMork::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3_f64  ShapeAngle,Factor;
+	b3_f64  ShapeAngle;
+	b3_f32  factor;
 	b3Color illumination;
+
+	// ambient term
+	illumination.b3Init(m_ShadowFactor);
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -249,8 +257,8 @@ void b3ShaderMork::b3ShadeLight(
 
 			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
 			{
-				Factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->LightFrac;
-				result += (light->m_Color * Factor);
+				factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
+				surface->m_SpecularSum += (light->m_Color * factor);
 			}
 		}
 		else
@@ -259,25 +267,17 @@ void b3ShaderMork::b3ShadeLight(
 		}
 
 		// surface illumination (diffuse color)
-		Factor = ShapeAngle * Jit->LightFrac * 0.5 - m_ShadowFactor;
-		if (Factor >= 0)
+		factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor;
+		if (factor >= 0)
 		{
-			illumination = light->m_Color * Factor + b3Color(m_ShadowFactor);
+			illumination += (light->m_Color * factor);
 		}
-		else
-		{
-			illumination.b3Init(m_ShadowFactor);
-		}
-	}
-	else
-	{
-		illumination.b3Init(m_ShadowFactor);
 	}
 
 	result += (surface->m_Diffuse * illumination);
 }
 
-void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
+void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
 {
     b3_f64 alpha    = acos(surface->m_CosAlpha);
 	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
@@ -312,7 +312,7 @@ void b3ShaderMork::b3ShadeSurface(
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
-	b3_f64    refl,refr,factor;
+	b3_f32    refl,refr,factor;
 
 	// Refraction
 	if (surface.m_Transparent)
@@ -368,12 +368,13 @@ void b3ShaderMork::b3ShadeSurface(
 	{
 		// For each light source
 		ray->color.b3Init();
+		surface.m_SpecularSum.b3Init();
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color = ray->color * factor + result;
+		ray->color = ray->color * factor + result + surface.m_SpecularSum;
 	}
 	else
 	{

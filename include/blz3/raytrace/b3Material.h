@@ -59,10 +59,10 @@ struct b3_material
 	b3Color     m_Diffuse;
 	b3Color     m_Ambient;
 	b3Color     m_Specular;
-	b3_f64      m_Reflection;
-	b3_f64      m_Refraction;
-	b3_f64      m_Ior;
-	b3_f64      m_SpecularExp;
+	b3_f32      m_Reflection;
+	b3_f32      m_Refraction;
+	b3_f32      m_Ior;
+	b3_f32      m_SpecularExp;
 };
 
 struct b3_surface : public b3_material
@@ -70,11 +70,14 @@ struct b3_surface : public b3_material
 	b3_ray      *incoming;
 	b3_ray       refl_ray;
 	b3_ray       refr_ray;
+	b3Color      m_SpecularSum;
 	b3_bool      m_Transparent;
 	b3_f64       m_Fresnel;
 	b3_f64       m_IorComputed;
 	b3_f64       m_CosAlpha;
 };
+
+struct b3_light_info;
 
 class B3_PLUGIN b3Material : public b3Item
 {

@@ -42,6 +42,17 @@
 #define LIGHT_NAMELEN(Node) (BINDEX_OFFSET(Node) > 0 ? \
 	BINDEX_LENGTH(Node) - BINDEX_OFFSET(Node) : 0)
 
+// aux. structure for JitterLight
+struct b3_light_info : public b3_ray
+{
+	b3_vector m_LightView,m_xDir,m_yDir;
+	b3Color   m_Result;
+	b3_f64    m_Size;
+	b3_f64    m_LightFrac;
+	b3_f64    m_LightDist;
+	b3_s32    m_Distr;
+};
+
 class b3Material;
 class b3Shader;
 class b3Scene;

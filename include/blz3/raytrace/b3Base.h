@@ -68,15 +68,6 @@ struct b3_ray : public b3_line64
 	b3_f64      aTriaValue,bTriaValue; // polar coordinates of that triangle
 };
 
-// aux. structure for JitterLight
-struct b3_light_info : public b3_ray
-{
-	b3_vector LightView,xDir,yDir;
-	b3Color   Result;
-	b3_f64    Size,LightFrac,LightDist;
-	b3_s32    Distr;
-};
-
 class B3_PLUGIN b3Activation
 {
 public:
