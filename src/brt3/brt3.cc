@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3Time.h"
 #include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
@@ -34,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/11/02 19:05:36  sm
+**	- Introducing time mearuring.
+**	- Fixed wrong lens flare handling.
+**
 **	Revision 1.8  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.7  2001/10/29 19:34:02  sm
 **	- Added new define B3_DELETE_BASE.
 **	- Added support to abort raytrace processing.
@@ -81,16 +86,18 @@
 
 int main(int argc,char *argv[])
 {
-	b3Item    *item;
-	b3World   *world;
-	b3Scene   *scene;
-	b3Display *display;
-	b3_res     xSize,ySize;
-	b3_index   i;
-	char      *HOME = getenv("HOME");
-	b3Path     textures;
-	b3Path     pictures;
-	b3Path     data;
+	b3Item       *item;
+	b3World      *world;
+	b3Scene      *scene;
+	b3CameraPart *camera;
+	b3Display    *display;
+	b3_res        xSize,ySize;
+	b3_index      i;
+	char         *HOME = getenv("HOME");
+	b3TimeSpan    span;
+	b3Path        textures;
+	b3Path        pictures;
+	b3Path        data;
 
 	if (argc > 1)
 	{
@@ -126,7 +133,38 @@ int main(int argc,char *argv[])
 				{
 					display = new b3Display();
 				}
-				scene->b3Raytrace(display);
+
+				if ((camera = scene->b3GetCamera(false)) != null)
+				{
+					do
+					{
+						if (camera->Flags & CAMERA_ACTIVE)
+						{
+							b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
+								camera->CameraName);
+							scene->m_Width     = camera->Width;
+							scene->m_Height    = camera->Height;
+							scene->m_EyePoint  = camera->EyePoint;
+							scene->m_ViewPoint = camera->ViewPoint;
+
+							span.b3Start();
+							scene->b3Raytrace(display);
+							span.b3Stop();
+							span.b3Print();
+						}
+						else
+						{
+							b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
+								camera->CameraName);
+						}
+						camera = scene->b3GetNextCamera(camera);
+					}
+					while (camera != null);
+				}
+				else
+				{
+					scene->b3Raytrace(display);
+				}
 
 				display->b3Wait();
 				delete display;

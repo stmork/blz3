@@ -36,11 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2001/11/02 19:05:36  sm
+**	- Introducing time mearuring.
+**	- Fixed wrong lens flare handling.
+**
 **	Revision 1.23  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.22  2001/10/31 14:46:35  sm
 **	- Filling b3IsCancelled() with sense.
 **	- Inlining b3RGB
@@ -526,10 +530,10 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 
 b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 {
-	b3Nebular *nebular;
-	b3Light   *light;
-	b3BBox    *bbox;
-	b3_f64     xDenom,yDenom;
+	b3Nebular   *nebular;
+	b3Light     *light;
+	b3BBox      *bbox;
+	b3_f64       xDenom,yDenom;
 
 	m_AvrgColor.r = (m_BottomColor.r + m_TopColor.r) * 0.5;
 	m_AvrgColor.g = (m_BottomColor.g + m_TopColor.g) * 0.5;
@@ -551,7 +555,14 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
 
-	m_LensFlare   = b3GetLensFlare();
+	m_LensFlare = b3GetLensFlare();
+	if (m_LensFlare != null)
+	{
+		if (!m_LensFlare->b3IsActive())
+		{
+			m_LensFlare = null;
+		}
+	}
 
 	nebular = b3GetNebular();
 	if (nebular->b3IsActive())

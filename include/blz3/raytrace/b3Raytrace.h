@@ -1949,7 +1949,11 @@ public:
 public:
 	B3_ITEM_INIT(b3LensFlare);
 	B3_ITEM_LOAD(b3LensFlare);
+
+	b3_bool b3IsActive();
 };
+
+#define LENSFLARE_ACTIVE 1
 
 /*************************************************************************
 **                                                                      **

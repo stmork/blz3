@@ -17,7 +17,8 @@ LIB_SOURCE		=\
 	b3Log.cc\
 	b3Mem.cc\
 	b3Row.cc\
-	b3Thread.cc
+	b3Thread.cc\
+	b3Time.cc
 
 LIB_OBJ			=\
 	b3Config.o\
@@ -28,7 +29,8 @@ LIB_OBJ			=\
 	b3Log.o\
 	b3Mem.o\
 	b3Row.o\
-	b3Thread.o
+	b3Thread.o\
+	b3Time.o
 
 all:	lib
 

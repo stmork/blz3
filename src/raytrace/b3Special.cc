@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/11/02 19:05:36  sm
+**      - Introducing time mearuring.
+**      - Fixed wrong lens flare handling.
+**
 **      Revision 1.13  2001/10/29 19:34:02  sm
 **      - Added new define B3_DELETE_BASE.
 **      - Added support to abort raytrace processing.
@@ -359,4 +363,9 @@ b3LensFlare::b3LensFlare(b3_u32 *src) :
 	m_Flags = b3InitInt();
 	b3InitColor(&m_Color);
 	m_Expon = b3InitFloat();
+}
+
+b3_bool b3LensFlare::b3IsActive()
+{
+	return (m_Flags & LENSFLARE_ACTIVE) != 0;
 }

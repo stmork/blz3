@@ -1,7 +1,7 @@
 /*
 **
-**	$Filename:	b3Date.cpp $
-**	$Release:	Dortmund 1998 $
+**	$Filename:	b3Date.cc $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -23,7 +23,6 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Date.h"
-#include "blz3/system/b3Log.h"
 
 #define TICKS_SEC       (1)
 #define TICKS_MIN      (60)
@@ -49,9 +48,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/02 19:05:36  sm
+**	- Introducing time mearuring.
+**	- Fixed wrong lens flare handling.
+**
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
-**
+**	
 **	Revision 1.2  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles

@@ -31,6 +31,10 @@
     
 /*
 **      $Log$
+**      Revision 1.4  2001/11/02 19:05:36  sm
+**      - Introducing time mearuring.
+**      - Fixed wrong lens flare handling.
+**
 **      Revision 1.3  2001/11/01 13:22:43  sm
 **      - Introducing performance meter
 **
