@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/05/09 18:59:52  sm
+**	- Fixed bump water.
+**
 **	Revision 1.29  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.28  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -436,28 +439,27 @@ b3BumpWater::b3BumpWater(b3_u32 class_type) : b3Bump(sizeof(b3BumpWater),class_t
 
 b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 {
-	m_ScaleFlag = b3InitInt();
-	m_ScaleRad  = b3InitFloat();
+	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
+	m_ScaleRad   = b3InitFloat();
 	if (B3_PARSE_INDEX_VALID)
 	{
-		m_ScaleIPoint.x = m_ScaleRad;
-		m_ScaleIPoint.y = b3InitFloat();
-		m_ScaleIPoint.z = b3InitFloat();
+		m_Scale.x   = m_ScaleRad;
+		m_Scale.y   = b3InitFloat();
+		m_Scale.z   = b3InitFloat();
 		m_ScaleRad  = b3InitFloat();
 		m_ScaleTime = b3InitFloat();
 	}
 	else
 	{
-		m_ScaleFlag = BUMP_IPOINT;
-		b3Vector::b3Init(&m_ScaleIPoint,1.0,1.0,1.0);
+		b3InitScaling(1.0,B3_SCALE_IPOINT);
 		m_ScaleTime = 1;
 	}
 }
 
 void b3BumpWater::b3Write()
 {
-	b3StoreInt(m_ScaleFlag);
-	b3StoreVector(&m_ScaleIPoint);
+	b3StoreInt(m_ScaleFlags);
+	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_ScaleRad);
 	b3StoreFloat(m_ScaleTime);
 }
@@ -479,10 +481,10 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	water = b3Noise::b3Water(&point,ray->t);
 	ox.x     = 0.125;
 	ox.y     = 0;
-	ox.z     = (m_ScaleFlag & BUMP_U_SUPPRESS_WAVE ? 0 : water);
+	ox.z     = water;
 	oy.x     = 0;
 	oy.y     = 0.125;
-	oy.z     = (m_ScaleFlag & BUMP_V_SUPPRESS_WAVE ? 0 : water);
+	oy.z     = water;
 
 	point.x += ox.x;
 	ox.z    -= b3Noise::b3Water (&point,time);

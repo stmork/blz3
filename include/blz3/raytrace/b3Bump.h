@@ -134,8 +134,6 @@ private:
 class B3_PLUGIN b3BumpWater : public b3Bump, public b3Scaling
 {
 public:
-	b3_s32      m_ScaleFlag;           // use BBox coords or direct coord
-	b3_vector   m_ScaleIPoint;         // intersection point scalar
 	b3_f32      m_ScaleRad;            // radius scalar
 	b3_f32      m_ScaleTime;           // time period for wave swing
 
