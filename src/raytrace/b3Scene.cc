@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2004/12/14 07:40:44  smork
+**	- Put scene/bbox traversion methods into their own source file.
+**
 **	Revision 1.71  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.70  2004/10/13 15:33:14  smork
 **	- Optimized OpenGL lights.
 **	
@@ -928,11 +931,6 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 **                        Object handling                               **
 **                                                                      **
 *************************************************************************/
-
-void b3Scene::b3Recount()
-{
-	b3BBox::b3Recount(b3GetBBoxHead());
-}
 
 b3Scene *b3Scene::b3ReadTGF(const char *filename)
 {

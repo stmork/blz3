@@ -234,6 +234,10 @@ SOURCE=b3Scene.cc
 # End Source File
 # Begin Source File
 
+SOURCE=b3SceneBBoxTraversal.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Shade.cc
 # End Source File
 # Begin Source File

@@ -121,7 +121,6 @@ protected:
 	void    b3AllocVertexMemory(b3RenderContext *context);
 	void    b3ComputeVertices();
 	void    b3ComputeNormals(b3_bool normalize = true);
-	void    b3ComputeIndices();
 };
 
 #define BBB_HTML         0

@@ -43,6 +43,7 @@ PRG_SOURCE		=\
 	b3RenderView.cc\
 	b3Scaling.cc\
 	b3Scene.cc\
+	b3SceneBBoxTraversal.cc\
 	b3Shade.cc\
 	b3ShadeMork.cc\
 	b3ShadeMork2.cc\
@@ -97,6 +98,7 @@ PRG_OBJ			=\
 	b3RenderView.o\
 	b3Scaling.o\
 	b3Scene.o\
+	b3SceneBBoxTraversal.o\
 	b3Shade.o\
 	b3ShadeMork.o\
 	b3ShadeMork2.o\
