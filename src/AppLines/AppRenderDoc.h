@@ -33,12 +33,13 @@ class CB3Action;
 
 class CAppRenderDoc : public CDocument, public b3Document
 {
+	b3UndoBuffer         *m_UndoBuffer;
+
 protected:
 	CDlgHierarchy        *m_DlgHierarchy;
 	CAppRaytraceDoc      *m_RaytraceDoc;
 	b3Thread             *m_Raytracer;
 	b3Display            *m_Display;
-	b3UndoBuffer         *m_UndoBuffer;
 
 public:
 	LPARAM                m_FirstVisible;
@@ -82,6 +83,8 @@ public:
 	virtual void       b3ContextMenu(HTREEITEM item);
 
 	virtual void       b3AddUndoAction(CB3Action *action);
+	        void       b3AddOp(b3Operation *op);
+			void       b3ClearOp();
 
 	// Drag & drop operations
 	virtual void       b3DragBegin();

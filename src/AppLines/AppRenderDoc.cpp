@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/01/14 19:07:35  sm
+**	- Added some camera undo/redo actions.
+**
 **	Revision 1.14  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
-**
+**	
 **	Revision 1.13  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
@@ -304,6 +307,16 @@ void CAppRenderDoc::b3ClearRaytraceDoc()
 
 void CAppRenderDoc::b3AddUndoAction(CB3Action *action)
 {
+}
+
+void CAppRenderDoc::b3AddOp(b3Operation *op)
+{
+	m_UndoBuffer->b3Do(op);
+}
+
+void CAppRenderDoc::b3ClearOp()
+{
+	m_UndoBuffer->b3Clear();
 }
 
 void CAppRenderDoc::OnEditUndo() 

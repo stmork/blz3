@@ -21,27 +21,69 @@
 #include "AppLines.h"
 #include "b3Undo.h"
 
-class b3OpCameraCreate : public b3Operation
+class b3OpCamera : public b3Operation
 {
+public:
+	b3CameraPart *m_Camera;
+
 protected:
+	inline b3OpCamera(b3CameraPart *camera)
+	{
+		m_Camera = camera;
+	}
+};
+
+class b3OpCameraCreate : public b3OpCamera
+{
+	b3Scene      *m_Scene;
+	b3CameraPart *m_Selected;
+
+public:
+	b3OpCameraCreate(b3Scene *scene,b3CameraPart *camera);
+	
+protected:
+	void b3Undo();
+	void b3Redo();
+	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Delete();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_CAMERA_CREATE;
 	}
 };
 
-class b3OpCameraDelete : public b3Operation
+class b3OpCameraDelete : public b3OpCamera
 {
+	b3Scene      *m_Scene;
+	b3CameraPart *m_Selected;
+
+public:
+	           b3OpCameraDelete(b3Scene *scene,b3CameraPart *camera);
 protected:
+	void b3Undo();
+	void b3Redo();
+	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Delete();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_CAMERA_DELETE;
 	}
 };
 
-class b3OpCameraEnable : public b3Operation
+class b3OpCameraEnable : public b3OpCamera
 {
+	b3_bool       m_Activation;
+
+public:
+	     b3OpCameraEnable(b3CameraPart *camera);
+
 protected:
+	void b3Prepare(CAppRenderDoc *pDoc);
+	void b3Undo();
+	void b3Redo();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_CAMERA_ENABLE;

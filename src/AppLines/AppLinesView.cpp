@@ -28,7 +28,6 @@
 #include "b3Action.h"
 #include <sys/timeb.h>
 
-#include "DlgCreateItem.h"
 #include "DlgCamera.h"
 
 #include "b3UndoAction.h"
@@ -42,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2003/01/14 19:07:35  sm
+**	- Added some camera undo/redo actions.
+**
 **	Revision 1.56  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
-**
+**	
 **	Revision 1.55  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -884,73 +886,31 @@ void CAppLinesView::OnViewToFulcrum()
 void CAppLinesView::OnCameraNew() 
 {
 	// TODO: Add your command handler code here
-	CDlgCreateItem  dlg;
-	CMainFrame     *main;
-	b3CameraPart   *camera;
-
-	dlg.m_Label.LoadString(IDS_NEW_CAMERA);
-	dlg.m_ItemBase   = m_Scene->b3GetSpecialHead();
-	dlg.m_ClassType  = CAMERA;
-	dlg.m_MaxNameLen = B3_CAMERANAMELEN;
-	dlg.m_Suggest    = m_Camera->b3GetName();
-	if (dlg.DoModal() == IDOK)
-	{
-		camera = new b3CameraPart(CAMERA);
-		camera->m_EyePoint  = m_Camera->m_EyePoint;
-		camera->m_ViewPoint = m_Camera->m_ViewPoint;
-		camera->m_Width     = m_Camera->m_Width;
-		camera->m_Height    = m_Camera->m_Height;
-		camera->m_Flags     = CAMERA_ACTIVE;
-		strcpy (camera->b3GetName(),dlg.m_NewName);
-		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
-		m_Scene->b3SetCamera(m_Camera,true);
-
-		GetDocument()->SetModifiedFlag();
-		main = CB3GetMainFrame();
-		main->b3UpdateCameraBox(m_Scene,m_Camera);
-		OnUpdate(this,B3_UPDATE_CAMERA,0);
-	}
+	GetDocument()->b3AddOp(new b3OpCameraCreate(m_Scene,m_Camera));
 }
 
 void CAppLinesView::OnCameraDelete() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame   *main;
-	b3CameraPart *camera,*select;
-
-	if (AfxMessageBox(IDS_ASK_DELETE_CAMERA,MB_ICONQUESTION|MB_YESNO) == IDYES)
-	{
-		main = CB3GetMainFrame();
-		
-		camera = main->b3GetSelectedCamera();
-		select = m_Scene->b3GetNextCamera(camera);
-		if (select == null)
-		{
-			select = m_Scene->b3GetCamera();
-		}
-		m_Scene->b3GetSpecialHead()->b3Remove(camera);
-		delete camera;
-
-		GetDocument()->SetModifiedFlag();
-		main->b3UpdateCameraBox(m_Scene,m_Camera = select);
-		m_Scene->b3SetCamera(m_Camera,true);
-		OnUpdate(this,B3_UPDATE_CAMERA,0);
-	}
+	GetDocument()->b3AddOp(new b3OpCameraDelete(m_Scene,m_Camera));
 }
 
 void CAppLinesView::OnCameraProperties() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame *main;
-	CDlgCamera  dlg;
+	CMainFrame    *main;
+	CDlgCamera     dlg;
+	CAppRenderDoc *pDoc;
 
 	dlg.m_Scene  = m_Scene;
 	dlg.m_Camera = m_Camera;
 	if (dlg.DoModal() == IDOK)
 	{
 		main = CB3GetMainFrame();
+		pDoc = GetDocument();
 
-		GetDocument()->SetModifiedFlag();
+		pDoc->SetModifiedFlag();
+		pDoc->b3ClearOp();
 		m_Camera = dlg.m_Camera;
 		m_Scene->b3SetCamera(m_Camera,true);
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
@@ -961,8 +921,7 @@ void CAppLinesView::OnCameraProperties()
 void CAppLinesView::OnCameraEnable() 
 {
 	// TODO: Add your command handler code here
-	m_Camera->b3Activate(!m_Camera->b3IsActive());
-	GetDocument()->SetModifiedFlag();
+	GetDocument()->b3AddOp(new b3OpCameraEnable(m_Camera));
 }
 
 void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 

@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.80  2003/01/14 19:07:35  sm
+**	- Added some camera undo/redo actions.
+**
 **	Revision 1.79  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
-**
+**	
 **	Revision 1.78  2003/01/12 10:26:52  sm
 **	- Undo/Redo of
 **	  o Cut & paste
@@ -891,7 +894,7 @@ void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
 
 	srcBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dragitem);
 	dstBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dropitem);
-	m_UndoBuffer->b3Do(new b3OpDrop(m_Scene,srcBBox,dstBBox));
+	b3AddOp(new b3OpDrop(m_Scene,srcBBox,dstBBox));
 }
 
 void CAppLinesDoc::b3AddUndoAction(CB3Action *action)
@@ -901,14 +904,14 @@ void CAppLinesDoc::b3AddUndoAction(CB3Action *action)
 	if (action->b3IsObject())
 	{
 		op = new b3OpObjectAction(m_Scene,action->b3GetTransformation());
-		m_UndoBuffer->b3Do(op);
+		b3AddOp(op);
 	}
 	if (action->b3IsCamera())
 	{
 		op = new b3OpCameraAction(
 			CB3GetMainFrame()->b3GetSelectedCamera(),
 			action->b3GetTransformation());
-		m_UndoBuffer->b3Do(op);
+		b3AddOp(op);
 	}
 }
 
@@ -1042,7 +1045,7 @@ void CAppLinesDoc::OnDlgScene()
 	dlg_sheets.SetTitle(title);
 	if (dlg_sheets.DoModal() == IDOK)
 	{
-		m_UndoBuffer->b3Clear();
+		b3ClearOp();
 		SetModifiedFlag();
 	}
 }
@@ -1055,7 +1058,7 @@ void CAppLinesDoc::OnModellerInfo()
 	dlg.m_ModellerInfo = m_Info;
 	if (dlg.DoModal() == IDOK)
 	{
-		m_UndoBuffer->b3Clear();
+		b3ClearOp();
 		UpdateAllViews(NULL,B3_UPDATE_FULCRUM|B3_UPDATE_LIGHT);
 		SetModifiedFlag();
 	}
@@ -1076,13 +1079,13 @@ void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnLightNew() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpLightCreate(m_Scene,m_Light));
+	b3AddOp(new b3OpLightCreate(m_Scene,m_Light));
 }
 
 void CAppLinesDoc::OnLightDelete() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpLightDelete(m_Scene,m_Light));
+	b3AddOp(new b3OpLightDelete(m_Scene,m_Light));
 }
 
 void CAppLinesDoc::OnLightProperties() 
@@ -1097,7 +1100,7 @@ void CAppLinesDoc::OnLightProperties()
 		m_Light = dlg.m_Light;
 		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
 
-		m_UndoBuffer->b3Clear();
+		b3ClearOp();
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
@@ -1111,7 +1114,7 @@ void CAppLinesDoc::OnLightLDC()
 	dlg.m_Light = m_Light;
 	if (dlg.DoModal() == IDOK)
 	{
-		m_UndoBuffer->b3Clear();
+		b3ClearOp();
 		SetModifiedFlag();
 		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,dlg.m_Light);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
@@ -1121,19 +1124,19 @@ void CAppLinesDoc::OnLightLDC()
 void CAppLinesDoc::OnLightEnable() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpLightEnable(m_Light));
+	b3AddOp(new b3OpLightEnable(m_Light));
 }
 
 void CAppLinesDoc::OnLightSoft() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpLightSoft(m_Light));
+	b3AddOp(new b3OpLightSoft(m_Light));
 }
 
 void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpLightSpot(m_Light));
+	b3AddOp(new b3OpLightSpot(m_Light));
 }
 
 void CAppLinesDoc::OnLightSelect() 
@@ -1388,7 +1391,7 @@ void CAppLinesDoc::b3Select(
 
 void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 {
-	m_UndoBuffer->b3Do(new b3OpObjectCreate(m_Scene,m_DlgHierarchy,insert_sub));
+	b3AddOp(new b3OpObjectCreate(m_Scene,m_DlgHierarchy,insert_sub));
 }
 
 void CAppLinesDoc::OnObjectNew() 
@@ -1406,13 +1409,13 @@ void CAppLinesDoc::OnObjectNewSub()
 void CAppLinesDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpObjectDelete(m_Scene,m_DlgHierarchy));
+	b3AddOp(new b3OpObjectDelete(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnEditCut() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpCut(m_DlgHierarchy,m_Scene));
+	b3AddOp(new b3OpCut(m_DlgHierarchy,m_Scene));
 }
 
 void CAppLinesDoc::OnEditCopy() 
@@ -1436,13 +1439,13 @@ void CAppLinesDoc::OnEditCopy()
 
 void CAppLinesDoc::OnEditPaste() 
 {
-	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,false));
+	b3AddOp(new b3OpPaste(m_DlgHierarchy,m_Scene,false));
 }
 
 void CAppLinesDoc::OnEditPasteSub() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,true));
+	b3AddOp(new b3OpPaste(m_DlgHierarchy,m_Scene,true));
 }
 
 void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI) 
@@ -1459,7 +1462,7 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnObjectLoad() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpObjectLoad(m_Scene,m_DlgHierarchy));
+	b3AddOp(new b3OpObjectLoad(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectSave() 
@@ -1547,13 +1550,13 @@ void CAppLinesDoc::OnObjectSave()
 void CAppLinesDoc::OnObjectReplace() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpObjectReplace(m_Scene,m_DlgHierarchy));
+	b3AddOp(new b3OpObjectReplace(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectCopy() 
 {
 	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpObjectCopy(m_Scene,m_DlgHierarchy,b3GetFulcrum()));
+	b3AddOp(new b3OpObjectCopy(m_Scene,m_DlgHierarchy,b3GetFulcrum()));
 }
 
 void CAppLinesDoc::OnObjectEdit() 
@@ -1570,7 +1573,7 @@ void CAppLinesDoc::OnObjectEdit()
 		pDoc = app->b3CreateObjectDoc(this,selected);
 		if (pDoc != null)
 		{
-			m_UndoBuffer->b3Clear();
+			b3ClearOp();
 		}
 	}
 }
