@@ -26,12 +26,16 @@
 #include "blz3/image/b3Tx.h"
 #include "blz3/base/b3Color.h"
 
+#ifdef BLZ3_USE_DIVX4LINUX
 #include "encore2.h"
+#endif
 
+#ifdef BLZ3_USE_AVILIB
 extern "C"
 {
 #include "avilib.h"
 }
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -41,9 +45,12 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.3  2004/08/16 06:05:43  sm
+**	- Added divx define rules.
+**
 **	Revision 1.2  2004/08/04 13:56:24  sm
 **	- More quiet divx encoder
-**
+**	
 **	Revision 1.1  2004/08/03 10:46:26  sm
 **	- Added simgle frame to DivX/AVI conversion tool
 **	- Added image mirror (not completely implemented yet)
@@ -59,32 +66,41 @@ extern "C"
 
 int main(int argc,char *argv[])
 {
+#ifdef BLZ3_USE_DIVX4LINUX
 	ENC_PARAM     encoding;
 	ENC_FRAME     frame;
 	ENC_RESULT    result;
+#endif
 	b3_u08       *buffer = null;
 	b3_u08       *ptr;
 	char         *bitstream = null;
 	b3_pkd_color *data,color;
 	b3_size       size = 0;
 	int           error;
+#ifdef BLZ3_USE_AVILIB
 	avi_t        *out;
+#endif
 
+#ifdef BLZ3_USE_AVILIB
 	out = AVI_open_output_file(argv[1]);
 	if (out == NULL)
 	{
 		fprintf(stderr,"Cannot write %s\n",argv[1]);
 		exit (10);
 	}
+#endif
 
+#ifdef BLZ3_USE_DIVX4LINUX
 	memset(&encoding,0,sizeof(encoding));
 	memset(&frame,   0,sizeof(frame));
+#endif
 	for (int i = 2;i < argc;i++)
 	{
 		b3Tx img;
 
 		img.b3LoadImage(argv[i]);
 		img.b3MirrorVertical();
+#ifdef BLZ3_USE_DIVX4LINUX
 		if (encoding.handle == 0)
 		{
 			encoding.x_dim     = img.xSize;
@@ -107,8 +123,11 @@ int main(int argc,char *argv[])
 				b3PrintF(B3LOG_DEBUG,"Start encoding...");
 			}
 
+#ifdef BLZ3_USE_AVILIB
 			AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
+#endif
 		}
+#endif
 
 		// Recode image
 		ptr  = buffer;
@@ -121,6 +140,7 @@ int main(int argc,char *argv[])
 			*ptr++ = (color & 0xff0000) >> 16;
 		}
 
+#ifdef BLZ3_USE_DIVX4LINUX
 		frame.image      = buffer;
 		frame.bitstream  = bitstream;
 		frame.length     =  0;
@@ -135,12 +155,16 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
+#ifdef BLZ3_USE_AVILIB
 			AVI_write_frame(out,bitstream,frame.length,0);
+#endif
 			b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
 			b3PrintF(B3LOG_NORMAL,".");
 		}
+#endif
 	}
 
+#ifdef BLZ3_USE_DIVX4LINUX
 	error = encore(encoding.handle,ENC_OPT_RELEASE,0,0);
 	if (error != ENC_OK)
 	{
@@ -150,8 +174,11 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"\nDone.\n");
 	}
+#endif
 
+#ifdef BLZ3_USE_AVILIB
 	AVI_close(out);
+#endif
 
 	return 0;
 }
