@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/17 21:09:06  sm
+**	- Triangle support added for intersections, normal computations. So
+**	  Spline shapes can be computed, too. Now only CSG is missing.
+**
 **	Revision 1.13  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -42,7 +46,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.12  2001/10/11 16:06:33  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
@@ -844,9 +848,275 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 	return -1;
 }
 
+#define INCREMENT(x)  ((x) >= 0 ? 1 : -1)
+#define FSWAP(a,b,m)  { m = a; a = b; b = m; }
+
+b3_f64 b3TriangleShape::b3IntersectTriangleList (
+	b3_ray                *ray,
+	b3_polar              *polar,
+	b3Base<b3TriangleRef> *TriaField)
+{
+	b3TriangleRef *TRef;
+	b3_triangle   *Triangle;
+	b3_f64         Denom,lValue,aValue,bValue,OldValue = -1;
+	b3_index       Index;
+	b3_res         dxSize;
+	b3_vector      Base,R1,R2,Dir,Product;
+
+	 xSize   = m_xSize;
+	 ySize   = m_ySize;
+	dxSize   = m_xSize << 1;
+
+	B3_FOR_BASE(TriaField,TRef)
+	{
+		Index    = TRef->m_Index;
+		Triangle = &m_Triangles[Index];
+		Base.x   = m_Vertices[Triangle->P1].Point.x;
+		Base.y   = m_Vertices[Triangle->P1].Point.y;
+		Base.z   = m_Vertices[Triangle->P1].Point.z;
+		R1.x     = m_Vertices[Triangle->P2].Point.x - Base.x;
+		R1.y     = m_Vertices[Triangle->P2].Point.y - Base.y;
+		R1.z     = m_Vertices[Triangle->P2].Point.z - Base.z;
+		R2.x     = m_Vertices[Triangle->P3].Point.x - Base.x;
+		R2.y     = m_Vertices[Triangle->P3].Point.y - Base.y;
+		R2.z     = m_Vertices[Triangle->P3].Point.z - Base.z;
+
+		if ((Denom =
+			Triangle->Normal.x * ray->dir.x +
+			Triangle->Normal.y * ray->dir.y +
+			Triangle->Normal.z * ray->dir.z) != 0)
+		{
+			Denom = -1 / Denom;
+			if ((lValue=(
+				Triangle->Normal.x * (Dir.x = ray->pos.x-Base.x) +
+				Triangle->Normal.y * (Dir.y = ray->pos.y-Base.y) +
+				Triangle->Normal.z * (Dir.z = ray->pos.z-Base.z))
+					* Denom) >= epsilon)
+			{
+				if (lValue < ray->Q)
+				{
+					aValue = (
+						R2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
+						R2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
+						R2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
+							* Denom;
+					if (aValue >= 0)
+					{
+						bValue =
+							-(R1.x * Product.x +
+							  R1.y * Product.y +
+							  R1.z * Product.z) * Denom;
+						if ((bValue >= 0) && ((aValue+bValue) <= 1))
+						{
+							if (Index & 1)
+							{
+								polar->polar.x =
+									((((Index % dxSize) >> 1) + 1) - aValue) / xSize;
+								polar->polar.y =
+									(  (Index / dxSize        + 1) - bValue) / ySize;
+							}
+							else
+							{
+								polar->polar.x =
+									(((Index % dxSize) >> 1) + aValue) / xSize;
+								polar->polar.y =
+									  (Index / dxSize        + bValue) / ySize;
+							}
+							polar->polar.z      = 0;
+							polar->object_polar = polar->polar;
+							if (b3CheckStencil (polar))
+							{
+								ray->Q = OldValue = lValue;
+								ray->TriaIndex    = Index;
+								ray->aTriaValue   = aValue;
+								ray->bTriaValue   = bValue;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return (OldValue);
+}
+
 b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	return -1;
+	b3_index               gx,gy,gz,sx,sy,sz,index;
+	b3_f64        start,end,tn,tf,m,result = -1;
+	b3_vector64       pos;
+	b3_vector64       d;
+	b3_vector64       denom;
+	b3_vector64       dmax;
+#ifdef _DEBUG
+	b3_count   GridMax;
+#endif
+
+#ifdef _DEBUG
+	if (m_GridList == null)
+	{
+		return -1;
+	}
+#endif
+
+	if (m_GridSize <= 1)
+	{
+		return b3IntersectTriangleList (ray,polar,m_GridList);
+	}
+#ifdef _DEBUG
+	GridMax = m_GridSize * m_GridSize * m_GridSize;
+#endif
+
+	denom.x = 1.0 / ray->dir.x;
+	pos.x   = (ray->pos.x - m_Base.x);
+	start   = (                      - pos.x) * denom.x;
+	end     = (m_GridSize * m_Size.x - pos.x) * denom.x;
+	if (start > end) FSWAP(start,end,m);
+
+	denom.y = 1.0 / ray->dir.y;
+	pos.y   = (ray->pos.y - m_Base.y);
+	tn      = (                      - pos.y) * denom.y;
+	tf      = (m_GridSize * m_Size.y - pos.y) * denom.y;
+	if (tn    > tf)    FSWAP(tn,tf,m);
+	if (tn    > start) start = tn;
+	if (tf    < end)   end   = tf;
+	if (start > end) return result;
+
+	denom.z = 1.0 / ray->dir.z;
+	pos.z   = (ray->pos.z - m_Base.z);
+	tn      = (                      - pos.z) * denom.z;
+	tf      = (m_GridSize * m_Size.z - pos.z) * denom.z;
+	if (tn    > tf)    FSWAP(tn,tf,m);
+	if (tn    > start) start = tn;
+	if (tf    < end)   end   = tf;
+	if (start > end) return result;
+
+	if (end   < 0)      return result;
+	if (start > ray->Q) return result;
+
+	if (start < 0)   start = 0;
+	end    -= epsilon;
+	if (ray->Q < end) end = ray->Q;
+
+
+	// start position
+	pos.x = (pos.x + start * ray->dir.x) / m_Size.x;
+	pos.y = (pos.y + start * ray->dir.y) / m_Size.y;
+	pos.z = (pos.z + start * ray->dir.z) / m_Size.z;
+
+
+	// start indizes
+	gx    = (b3_index)pos.x;
+	gy    = (b3_index)pos.y;
+	gz    = (b3_index)pos.z;
+
+
+	// compute deltas
+	dmax.x = fabs(m_Size.x * denom.x);
+	dmax.y = fabs(m_Size.y * denom.y);
+	dmax.z = fabs(m_Size.z * denom.z);
+	d.x    = (pos.x - gx);
+	d.y    = (pos.y - gy);
+	d.z    = (pos.z - gz);
+
+
+	// correct start point
+	if (d.x > 0.0001)
+	{
+		if (ray->dir.x >= 0) d.x = (1.0 - d.x) * dmax.x;
+		else                  d.x *= dmax.x;
+	}
+	else
+	{
+		d.x = dmax.x;
+		if (gx == m_GridSize) gx--;
+	}
+	if (d.y > 0.0001)
+	{
+		if (ray->dir.y >= 0) d.y = (1.0 - d.y) * dmax.y;
+		else                  d.y *= dmax.y;
+	}
+	else
+	{
+		d.y = dmax.y;
+		if (gy == m_GridSize) gy--;
+	}
+	if (d.z > 0.0001)
+	{
+		if (ray->dir.z >= 0) d.z = (1.0 - d.z) * dmax.z;
+		else                  d.z *= dmax.z;
+	}
+	else
+	{
+		d.z = dmax.z;
+		if (gz == m_GridSize) gz--;
+	}
+
+
+		/* compute increments */
+	sx  = INCREMENT(ray->dir.x);
+	sy  = INCREMENT(ray->dir.y);
+	sz  = INCREMENT(ray->dir.z);
+
+	do
+	{
+		index = GRID_INDEX(gx,gy,gz,m_GridSize);
+#ifdef _DEBUG
+		if (index >= GridMax)
+		{
+			b3PrintF (B3LOG_NORMAL,"index error: (%2ld,%2ld,%2ld) = %ld\n",
+				gx,gy,gz,index);
+		}
+		else
+#endif
+		{
+			if (m_GridList[index].First)
+			{
+				m = b3IntersectTriangleList (ray,polar,&m_GridList[index]);
+				if (m > 0)
+				{
+					result = m;  /* ray->Q is modified by IntersectTriangleList */
+					if (ray->Q < end)
+					{
+						end = ray->Q;
+					}
+				}
+			}
+			if (start >= end) return result;
+		}
+
+		if      ((d.x <= d.y) && (d.x <= d.z))
+		{
+			gx    +=     sx;
+			if ((gx < 0) || (gx >= m_GridSize)) return result;
+			start +=    d.x;
+			d.y   -=    d.x;
+			d.z   -=    d.x;
+			d.x    = dmax.x;
+		}
+		else if ((d.y <= d.x) && (d.y <= d.z))
+		{
+			gy    +=     sy;
+			if ((gy < 0) || (gy >= m_GridSize)) return result;
+			start +=    d.y;
+			d.x   -=    d.y;
+			d.z   -=    d.y;
+			d.y    = dmax.y;
+		}
+		else if ((d.z <= d.x) && (d.z <= d.y))
+		{
+			gz    +=     sz;
+			if ((gz < 0) || (gz >= m_GridSize)) return result;
+			start +=    d.z;
+			d.x   -=    d.z;
+			d.y   -=    d.z;
+			d.z    = dmax.z;
+		}
+		else B3_BEEP;
+	}
+	while (true);
+
+	return result;
 }
 
 b3_f64 b3CSGSphere::b3Intersect(b3_ray *ray,b3_polar *polar)

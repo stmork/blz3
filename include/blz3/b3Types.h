@@ -116,23 +116,6 @@ struct b3_matrix64
     b3_f32    m41,m42,m43,m44;
 };
 
-struct b3_triangle
-{
-	b3_u32 P1;
-	b3_u32 P2;
-	b3_u32 P3;
-};
-
-struct b3_vertex
-{
-	b3_f32 x;
-	b3_f32 y;
-	b3_f32 z;
-	b3_f32 nx;
-	b3_f32 ny;
-	b3_f32 nz;
-};
-
 typedef struct b3_line32
 {
 	b3_vector pos,dir;

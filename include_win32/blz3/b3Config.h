@@ -83,10 +83,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/17 21:09:06  sm
+**	- Triangle support added for intersections, normal computations. So
+**	  Spline shapes can be computed, too. Now only CSG is missing.
+**
 **	Revision 1.13  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.12  2001/10/13 09:56:44  sm
 **	- Minor corrections
 **	
@@ -189,6 +193,7 @@
 
 #define B3_FRAN(x)             ((x) * (b3_f64)rand() / RAND_MAX)
 #define B3_IRAN(x)      ((long)((x) * (b3_f64)rand() / RAND_MAX))
+#define B3_ABS(a)        ((a) < 0 ? (-(a)) : (a))
 #define B3_SWAP(a,b)    {(a)^=(b);(b)^=(a);(a)^=(b);}
 #define B3_PSWAP(a,b)   b3Runtime::b3PSwap(a,b)
 #define B3_MIN(a,b)     ((a) < (b) ? (a) : (b))

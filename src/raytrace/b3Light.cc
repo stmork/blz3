@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/10/17 21:09:06  sm
+**      - Triangle support added for intersections, normal computations. So
+**        Spline shapes can be computed, too. Now only CSG is missing.
+**
 **      Revision 1.13  2001/10/17 14:46:02  sm
 **      - Adding triangle support.
 **      - Renaming b3TriangleShape into b3Triangles and introducing
@@ -114,7 +118,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	m_Distance = b3InitFloat();
 	m_Flags    = b3InitInt();
 
-	if (b3GetClassType() >= AREA_LIGHT)
+	if ((b3GetClassType() >= AREA_LIGHT) && B3_PARSE_INDEX_VALID)
 	{
 		m_Size       = b3InitFloat();
 		m_JitterEdge = b3InitInt();

@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/17 21:09:06  sm
+**	- Triangle support added for intersections, normal computations. So
+**	  Spline shapes can be computed, too. Now only CSG is missing.
+**
 **	Revision 1.1  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
-**
+**	
 **	
 */
 
@@ -138,4 +142,34 @@ void b3Torus::b3Normal(b3_ray *ray)
 	ray->normal.x  = x * m_Dir1.x + y * m_Dir2.x + z * m_Dir3.x;
 	ray->normal.y  = x * m_Dir1.y + y * m_Dir2.y + z * m_Dir3.y;
 	ray->normal.z  = x * m_Dir1.z + y * m_Dir2.z + z * m_Dir3.z;
+}
+
+void b3TriangleShape::b3Normal(b3_ray *ray)
+{
+	b3_f64   a,b;
+	b3_index P1,P2,P3;
+
+	if (m_Flags & PHONG)
+	{
+		a        = ray->aTriaValue;
+		b        = ray->bTriaValue;
+		P1       = m_Triangles[ray->TriaIndex].P1;
+		P2       = m_Triangles[ray->TriaIndex].P2;
+		P3       = m_Triangles[ray->TriaIndex].P3;
+		ray->normal.x =						m_Vertices[P1].Normal.x  +
+			a * (m_Vertices[P2].Normal.x -	m_Vertices[P1].Normal.x) +
+			b * (m_Vertices[P3].Normal.x -	m_Vertices[P1].Normal.x);
+		ray->normal.y =						m_Vertices[P1].Normal.y  +
+			a * (m_Vertices[P2].Normal.y -	m_Vertices[P1].Normal.y) +
+			b * (m_Vertices[P3].Normal.y -	m_Vertices[P1].Normal.y);
+		ray->normal.z =						m_Vertices[P1].Normal.z  +
+			a * (m_Vertices[P2].Normal.z -	m_Vertices[P1].Normal.z) +
+			b * (m_Vertices[P3].Normal.z -	m_Vertices[P1].Normal.z);
+	}
+	else
+	{
+		ray->normal.x = m_Triangles[ray->TriaIndex].Normal.x;
+		ray->normal.y = m_Triangles[ray->TriaIndex].Normal.y;
+		ray->normal.z = m_Triangles[ray->TriaIndex].Normal.z;
+	}
 }

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/10/17 21:09:06  sm
+**      - Triangle support added for intersections, normal computations. So
+**        Spline shapes can be computed, too. Now only CSG is missing.
+**
 **      Revision 1.1  2001/10/17 14:46:02  sm
 **      - Adding triangle support.
 **      - Renaming b3TriangleShape into b3Triangles and introducing
@@ -117,37 +121,42 @@ b3Triangles::b3Triangles(b3_u32 *src) : b3TriangleShape(src)
 	b3_index i;
 
 	b3InitNOP();
-	b3InitVector(&Base);
-	b3InitVector(&Size);
-	GridSize    = b3InitInt();
-	TriaCount   = b3InitInt() << 1;
-	VertexCount = b3InitInt();
-	xSize       = b3InitInt();
-	ySize       = b3InitInt();
-	Flags       = b3InitInt();
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Size);
+	m_GridSize    = b3InitInt();
+	m_TriaCount   = b3InitInt();
+	m_VertexCount = b3InitInt();
+	m_xSize       = b3InitInt();
+	m_ySize       = b3InitInt();
+	m_Flags       = b3InitInt();
 	b3InitNOP();
 	b3InitNOP();
 	b3InitNOP();
 
-	vertices  = (b3_vertex *)b3Item::b3Alloc(VertexCount * sizeof(b3_vertex));
-	triangles = (b3_triangle *)b3Item::b3Alloc(TriaCount * sizeof(b3_triangle));
+	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
+	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
 
-	for (i = 0;i < VertexCount;i++)
+	for (i = 0;i < m_VertexCount;i++)
 	{
-		vertices[i].x  = b3InitFloat();
-		vertices[i].y  = b3InitFloat();
-		vertices[i].z  = b3InitFloat();
-		vertices[i].nx = b3InitFloat();
-		vertices[i].ny = b3InitFloat();
-		vertices[i].nz = b3InitFloat();
+		m_Vertices[i].Point.x  = b3InitFloat();
+		m_Vertices[i].Point.y  = b3InitFloat();
+		m_Vertices[i].Point.z  = b3InitFloat();
+		m_Vertices[i].Normal.x = b3InitFloat();
+		m_Vertices[i].Normal.y = b3InitFloat();
+		m_Vertices[i].Normal.z = b3InitFloat();
 	}
 
-	for (i = 0;i < TriaCount;i++)
+	for (i = 0;i < m_TriaCount;i++)
 	{
-		triangles[i].P1 = b3InitInt();
-		triangles[i].P2 = b3InitInt();
-		triangles[i].P3 = b3InitInt();
+		m_Triangles[i].P1       = b3InitInt();
+		m_Triangles[i].P2       = b3InitInt();
+		m_Triangles[i].P3       = b3InitInt();
+		m_Triangles[i].Normal.x = b3InitFloat();
+		m_Triangles[i].Normal.y = b3InitFloat();
+		m_Triangles[i].Normal.z = b3InitFloat();
 	}
+
+	b3PrepareTriangles();
 }
 
 void b3Triangles::b3GetCount(
@@ -156,9 +165,9 @@ void b3Triangles::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	vertCount = VertexCount;
-	gridCount = TriaCount * 3;
-	polyCount = TriaCount;
+	vertCount = m_VertexCount;
+	gridCount = m_TriaCount * 3;
+	polyCount = m_TriaCount;
 }
 
 void b3Triangles::b3ComputeVertices()
@@ -168,15 +177,15 @@ void b3Triangles::b3ComputeVertices()
 	b3_vertex *Vertex;
 	b3_index   i;
 
-	Vertex   = (b3_vertex *)vertices;
+	Vertex   = (b3_vertex *)m_Vertices;
 	Vector   = (b3_vector *)glVertices;
 
-	glVertexCount = VertexCount;
-	for (i = 0;i < VertexCount;i++)
+	glVertexCount = m_VertexCount;
+	for (i = 0;i < m_VertexCount;i++)
 	{
-		Vector->x = Vertex->x;
-		Vector->y = Vertex->y;
-		Vector->z = Vertex->z;
+		Vector->x = Vertex->Point.x;
+		Vector->y = Vertex->Point.y;
+		Vector->z = Vertex->Point.z;
 		Vertex++;
 		Vector++;
 	}
@@ -197,11 +206,11 @@ void b3Triangles::b3ComputeIndices()
 	b3_vertex   *Vertex;
 	b3_count     i;
 
-	Vertex   = vertices;
-	Triangle = triangles;
+	Vertex   = m_Vertices;
+	Triangle = m_Triangles;
 	gPtr     = glGrids;
 	pPtr     = glPolygons;
-	for (i = 0;i < TriaCount;i++)
+	for (i = 0;i < m_TriaCount;i++)
 	{
 		*gPtr++ = (unsigned short)Triangle->P1;
 		*gPtr++ = (unsigned short)Triangle->P2;
@@ -218,7 +227,7 @@ void b3Triangles::b3ComputeIndices()
 
 		Triangle++;
 	}
-	glGridCount = TriaCount * 3;
-	glPolyCount = TriaCount;
+	glGridCount = m_TriaCount * 3;
+	glPolyCount = m_TriaCount;
 #endif
 }

@@ -68,9 +68,11 @@ struct b3_ray : public b3_line64
 {
 	b3_vector64 normal;
 	b3_vector64 ipoint;
-	b3_polar     polar;
-	b3_f64       Q;
-	b3_bool      inside;
+	b3_polar    polar;
+	b3_f64      Q;
+	b3_bool     inside;
+	b3_index    TriaIndex;
+	b3_f64      aTriaValue,bTriaValue;
 };
 
 
@@ -1099,19 +1101,62 @@ public:
 	void   b3Transform(b3_matrix *transformation);
 };
 
+#define CLASS_VERTEX        0x00010000
+#define CLASS_TRIANGLE      0x00020000
+#define TYPE_VERTEXNODE     0x00000001
+#define TYPE_TRIA           0x00000001
+#define TYPE_TRIAREF        0x00000002
+#define TYPE_CPOINT_3D      0x00000003
+#define TYPE_CPOINT_4D      0x00000004
+
+#define TRIANGLE            (CLASS_TRIANGLE|TYPE_TRIA)
+#define TRIANGLEREF         (CLASS_TRIANGLE|TYPE_TRIAREF)
+#define VERTEXNODE          (CLASS_VERTEX|TYPE_VERTEXNODE)
+#define CPOINT_3D           (CLASS_VERTEX|TYPE_CPOINT_3D)
+#define CPOINT_4D           (CLASS_VERTEX|TYPE_CPOINT_4D)
+
+struct b3_triangle
+{
+	b3_index  P1;
+	b3_index  P2;
+	b3_index  P3;
+	b3_vector Normal;
+};
+
+struct b3_vertex
+{
+	b3_vector Point;
+	b3_vector Normal;
+};
+
+class b3TriangleRef : public b3Link<b3TriangleRef>
+{
+public:
+	b3_index m_Index;
+
+public:
+	b3TriangleRef(b3_index index) :
+		b3Link<b3TriangleRef>(sizeof(b3TriangleRef),TRIANGLEREF)
+	{
+		m_Index = index;
+	}
+};
+
 class b3TriangleShape : public b3Shape
 {
 public:
-	struct BHead *GridList;              // list of grids
-	b3_vector     Base,Size;             // size of bounding box of all triangles
-	b3_count      GridSize;              // num grid edges
-	b3_count      TriaCount,VertexCount; // num of verteces and triangles
-	b3_triangle  *triangles;
-	b3_vertex    *vertices;
+	b3Base<b3TriangleRef> *m_GridList;              // list of grids
+	b3_vector              m_Base,m_Size;             // size of bounding box of all triangles
+	b3_count               m_GridSize;              // num grid edges
+	b3_count               m_VertexCount; // num of verteces and triangles
+	b3_count               m_TriaCount;
+	b3_triangle           *m_Triangles;
+	b3_vertex             *m_Vertices;
+	b3_u32                 m_Flags;                 // interpolation flags
+	b3_res                 m_xSize,m_ySize;           // triangle order
 
 //	b3_index      IndexHit;              // index of hit triangle
 //	b3_f64        aValue,bValue;         // polarcoord. of triangles
-//	b3_s32        xSize,ySize;           // triangle order
 
 protected:
 	b3TriangleShape(b3_size class_size,b3_u32 class_type);
@@ -1121,14 +1166,27 @@ public:
 	B3_ITEM_LOAD(b3TriangleShape);
 
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	        void   b3Normal(b3_ray *ray);
 	virtual void   b3Transform(b3_matrix *transformation);
+
+protected:
+	        b3_bool b3PrepareTriangles();
+	        void    b3FreeTriaRefs();
+private:
+	        void    b3PrepareGridList();
+	        b3_bool b3AddCubicItem(b3_count trianum,b3_index index);
+	        void    b3SearchCubicItem(
+				b3_vector *P1,b3_vector *P2,b3_vector *P3,
+				b3_index   index,b3_index   rec,b3_count   MaxRec);
+	        b3_f64  b3IntersectTriangleList(
+				b3_ray                *ray,
+				b3_polar              *polar,
+				b3Base<b3TriangleRef> *list);
 };
 
 // TRIANGLES
 class b3Triangles : public b3TriangleShape
 {
-	b3_u32        Flags;                 // interpolation flags
-
 public:
 	B3_ITEM_INIT(b3Triangles);
 	B3_ITEM_LOAD(b3Triangles);
@@ -1165,6 +1223,9 @@ public:
 	B3_ITEM_LOAD(b3SplineCurve);
 
 	void b3Transform(b3_matrix *transformation);
+
+private:
+	b3_bool b3PrepareSplines();
 };
 
 class b3SplineCurveShape : b3SplineCurve
@@ -1224,6 +1285,8 @@ private:
 	void b3ComputeSolidVertices();
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
+
+	b3_bool b3PrepareSplines();
 };
 
 class b3SplineArea : public b3SplineShape

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/10/17 21:09:06  sm
+**      - Triangle support added for intersections, normal computations. So
+**        Spline shapes can be computed, too. Now only CSG is missing.
+**
 **      Revision 1.14  2001/10/17 14:46:02  sm
 **      - Adding triangle support.
 **      - Renaming b3TriangleShape into b3Triangles and introducing
@@ -132,6 +136,9 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
 	{
 		b3InitVector(&Controls[i]);
 	}
+
+	b3PrepareSplines();
+	b3PrepareTriangles();
 }
 
 void b3SplineCurve::b3Transform(b3_matrix *transformation)
@@ -156,6 +163,91 @@ void b3SplineCurve::b3Transform(b3_matrix *transformation)
 	b3Recompute();
 }
 
+b3_bool b3SplineCurve::b3PrepareSplines()
+{
+	b3Spline     MySpline;
+	b3_triangle *Triangle;
+	b3_matrix    Matrix;
+	b3_res       xSize,ySize,x,y;
+	b3_vector    Between[B3_MAX_CONTROLS+1];
+	b3_vector    VertexField[B3_MAX_SUBDIV+1];
+
+
+	// Create aux BSpline
+	MySpline          = Spline;
+	MySpline.controls = Between;
+
+	xSize       = rSubDiv;
+	ySize       = MySpline.subdiv;
+	m_TriaCount = xSize * ySize * 2;
+
+	if (!MySpline.closed) ySize++;
+	m_VertexCount = xSize * ySize;
+
+
+
+	// allocating new tria shape
+	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
+	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
+	if ((m_Vertices == null) || (m_Triangles == null))
+	{
+		return false;
+	}
+
+
+	// computing vertices
+	MySpline.offset = 1;
+	for (x = 0;x < xSize;x++)
+	{
+		b3MatrixRotVec (null,&Matrix,&Axis,M_PI * 2.0 * x / xSize);
+		for (y = 0;y < MySpline.control_num;y++)
+		{
+			b3MatrixVMul (&Matrix,&this->Controls[y],&Between[y],true);
+		}
+
+		MySpline.b3DeBoor (VertexField,0);
+		for (y = 0;y < ySize;y++)
+		{
+			m_Vertices[y * xSize + x].Point.x = VertexField[y].x;
+			m_Vertices[y * xSize + x].Point.y = VertexField[y].y;
+			m_Vertices[y * xSize + x].Point.z = VertexField[y].z;
+		}
+	}
+
+
+	// computing triangles
+	Triangle = m_Triangles;
+	for (y = 0;y < MySpline.subdiv;y++)
+	{
+		for (x = 0;x < xSize;x++)
+		{
+			Triangle->P1 =  x            + xSize *  y;
+			Triangle->P2 = (x+1) % xSize + xSize *  y;
+			Triangle->P3 =  x            + xSize * ((y+1) % ySize);
+			Triangle++;
+
+			Triangle->P1 = (x+1) % xSize + xSize * ((y+1) % ySize);
+			Triangle->P2 =  x            + xSize * ((y+1) % ySize);
+			Triangle->P3 = (x+1) % xSize + xSize *  y;
+			Triangle++;
+		}
+	}
+
+
+	/* initializing values */
+	m_xSize = xSize;
+	m_ySize = MySpline.subdiv;
+	m_Flags = PHONG;
+
+	return true;
+}
+
+
+/*************************************************************************
+**                                                                      **
+**                        BSpline shapes                                **
+**                                                                      **
+*************************************************************************/
 
 b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) :
 	b3TriangleShape(class_size, class_type)
@@ -185,7 +277,12 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 	Controls      = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	Spline[0].controls =
 	Spline[1].controls = Controls;
-	for (i = 0;i < control_count;i++) b3InitVector(&Controls[i]);
+	for (i = 0;i < control_count;i++)
+	{
+		b3InitVector(&Controls[i]);
+	}
+	b3PrepareSplines();
+	b3PrepareTriangles();
 }
 
 void b3SplineShape::b3GetCount(
@@ -444,4 +541,88 @@ void b3SplineShape::b3Transform(b3_matrix *transformation)
 		}
 	}
 	b3Recompute();
+}
+
+b3_bool b3SplineShape::b3PrepareSplines()
+{
+	b3_vertex   *Vertex;
+	b3_triangle *Triangle;
+	b3_vector   *Vector;
+	b3_vector   *Between;
+	b3Spline     MySpline;
+	b3_res       xSize,ySize,x,y;
+	b3_count     SubDiv;
+	b3_vector    VertexField[B3_MAX_SUBDIV+1];
+
+	Between = (b3_vector *)b3Item::b3Alloc (sizeof(b3_vector) *
+		(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
+	if (Between == null)
+	{
+		return false;
+	}
+
+	xSize       = Spline[0].subdiv;
+	ySize       = Spline[1].subdiv;
+	m_TriaCount = xSize * ySize * 2;
+
+	if (!Spline[0].closed) xSize++;
+	if (!Spline[1].closed) ySize++;
+	m_VertexCount = xSize * ySize;
+
+	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
+	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
+	if ((m_Vertices == null) || (m_Triangles == null))
+	{
+		return false;
+	}
+
+
+	// building horizontal splines
+	Vector = Between;
+	SubDiv = Spline[0].subdiv + 1;
+	for (x = 0;x < SubDiv;x++)
+	{
+		Vector += Spline[1].b3DeBoor (Vector,x * Spline[0].offset);
+	}
+
+	MySpline          = Spline[0];
+	MySpline.offset   = Spline[1].subdiv + 1;
+	MySpline.controls = Between;
+
+	Vertex = m_Vertices;
+	for (y = 0;y < ySize;y++)
+	{
+		MySpline.b3DeBoor (VertexField,y);
+		for (x = 0;x < xSize;x++)
+		{
+			Vertex->Point.x = VertexField[x].x;
+			Vertex->Point.y = VertexField[x].y;
+			Vertex->Point.z = VertexField[x].z;
+			Vertex++;
+		}
+	}
+
+	Triangle = m_Triangles;
+	for (y = 0;y < Spline[1].subdiv;y++)
+	{
+		for (x = 0;x < Spline[0].subdiv;x++)
+		{
+			Triangle->P1  =  x            + xSize *  y;
+			Triangle->P2  = (x+1) % xSize + xSize *  y;
+			Triangle->P3  =  x            + xSize * ((y+1) % ySize);
+			Triangle++;
+
+			Triangle->P1  = (x+1) % xSize + xSize * ((y+1) % ySize);
+			Triangle->P2  =  x            + xSize * ((y+1) % ySize);
+			Triangle->P3  = (x+1) % xSize + xSize *  y;
+			Triangle++;
+		}
+	}
+
+	m_xSize = Spline[0].subdiv;
+	m_ySize = Spline[1].subdiv;
+	m_Flags = PHONG;
+
+	b3Item::b3Free(Between);
+	return true;
 }
