@@ -41,11 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/12/09 12:59:41  sm
+**	- Added tag name
+**
 **	Revision 1.8  2001/12/09 12:53:02  sm
 **	- Added tag name
 **	- Added watches for test purposes
 **	- Customized about dialog
-**
+**	
 **	Revision 1.7  2001/12/09 12:36:34  sm
 **	- Adding Tag name
 **	
@@ -295,6 +298,7 @@ BOOL CAboutDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	char buffer[1024];
 	CString copyright;
+	CString version;
 	b3Date  today;
 
 	copyright.Format("Copyright (C) %lu by\nBlizzard III",today.year);
@@ -312,7 +316,8 @@ BOOL CAboutDlg::OnInitDialog()
 			buffer[0] = 0;
 		}
 	}
-	m_CtrlVersion.SetWindowText(buffer);
+	version.Format("%s %s",CB3ClientString(),buffer);
+	m_CtrlVersion.SetWindowText(version);
 	m_CtrlCopyright.SetWindowText(copyright);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
