@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2002/08/18 13:06:08  sm
+**  - Some minor updates
+**
 **  Revision 1.1  2002/08/17 10:17:09  sm
 **  - Added a tool to cleanup the resource id include.
 **
@@ -46,17 +49,17 @@ static struct b3DefineType
 	int   m_Last;
 } define_types[] =
 {
-	{ "IDP_OLE_INIT_FAILED", 1, 101 },
-	{ "IDR_MAINFRAME", 1,   110 },
-	{ "IDR_", 2,   111 },
-	{ "IDM_", 3,   500 },
-	{ "IDD_", 4,   600 },
-	{ "IDI_", 5,  1000 },
-	{ "IDB_", 5,  1000 },
-	{ "ID_",  6, 10000 },
-	{ "IDC_", 7, 32000 },
-	{ "IDS_", 8, 60000 },
-	{ "_APS", 9,     0 }
+	{ "IDP_OLE_INIT_FAILED",  1, 101 },
+	{ "IDR_MAINFRAME",  1,   110 },
+	{ "IDR_",  2,   111 },
+	{ "IDB_",  3,   400 },
+	{ "IDM_",  4,   500 },
+	{ "IDD_",  5,   600 },
+	{ "IDI_",  6,  1001 },
+	{ "ID_",   7, 10000 },
+	{ "IDC_",  8, 32000 },
+	{ "IDS_",  9, 60000 },
+	{ "_APS", 10,     0 }
 };
 
 #define TYPE_MAX (sizeof(define_types) / sizeof(b3DefineType))
