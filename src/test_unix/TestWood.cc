@@ -25,7 +25,7 @@
 #include "blz3/raytrace/b3BumpSampler.h"
 #include "blz3/raytrace/b3MaterialSampler.h"
 
-#define WOOD_RES   400
+#define WOOD_RES   640
 #define no_CREATE_ICON
 
 /*************************************************************************
@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.15  2004/06/29 12:49:12  sm
+**  - Added some OpenGL shader comments.
+**
 **  Revision 1.14  2004/06/25 11:25:34  sm
 **  - Added pure wooden sampler.
 **
@@ -210,7 +213,8 @@ int main(int argc,char *argv[])
 		b3Time span;
 		sampler.b3Sample();
 		b3_f64 used = b3Time() - span;
-		b3PrintF(B3LOG_NORMAL,"Time used: %1.3fs = %1.5fms/px\n",used,used * 1000/ (tx.xSize * tx.ySize));
+
+		b3PrintF(B3LOG_NORMAL,"Time used: %1.3fs = %1.5fms/px\n",used,used * 1000.0 / (tx.xSize * tx.ySize));
 		// We want to see the computed picture until we make input
 		// into the display window.
 		display->b3PutTx(&tx);

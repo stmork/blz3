@@ -43,6 +43,9 @@
 
 /*
 **      $Log$
+**      Revision 1.72  2004/06/29 12:49:12  sm
+**      - Added some OpenGL shader comments.
+**
 **      Revision 1.71  2004/06/29 12:43:26  sm
 **      - Fixed uninitialized data inside OpenGL texture creation. This
 **        speeds up initial data scene load.
@@ -466,12 +469,27 @@ void b3RenderContext::b3Init()
 
 	if (strstr(extensions,"GL_ARB_vertex_program") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Vertex shader support (nice).\n");
+		b3PrintF(B3LOG_NORMAL,"Vertex shader low level support.\n");
 	}
 
 	if (strstr(extensions,"GL_ARB_fragment_program") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Pixel shader support (very fine).\n");
+		b3PrintF(B3LOG_NORMAL,"Pixel shader low level support.\n");
+	}
+
+	if (strstr(extensions,"GL_ARB_vertex_shader") != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"Vertex shader language support (nice).\n");
+	}
+
+	if (strstr(extensions,"GL_ARB_fragment_shader") != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"Pixel shader language support (very fine).\n");
+	}
+
+	if (strstr(extensions,"GL_ARB_shading_language_100") != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"Support for OpenGL shading language V1.00.\n");
 	}
 
 	glDrawBuffer(GL_BACK);
