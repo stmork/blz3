@@ -7,13 +7,14 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 CFLAGS			= $(OFLAGS) 
 CXXFLAGS		= $(OFLAGS)
-LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
+LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= 
-PRG_OBJ			= 
-PRG_SOURCE		= 
+PRGS			= simple
+SIMPLE_OBJ			= simple.o
+SIMPLE_SOURCE		= simple.cc
+PRG_SOURCE		= $(SIMPLE_SOURCE)
 
-all:	lib
+all:	$(PRGS)
 
 depend:
 #	makedepend -- $(CPPFLAGS) -- $(PRG_SOURCE)
