@@ -289,10 +289,13 @@ public:
 		const b3VectorTemplate<F,dim> &a,
 		const b3VectorTemplate<F,dim> &b)
 	{
-		F result = 0;
+		F B3_ALIGN_16 r[dim];
 
-		for (int i = 0;i < dim;i++) result += (a.v[i] * b.v[i]);
-		return result;
+		for (int i = 0;i < dim;i++)
+		{
+			r[i] = a.v[i] * b.v[i];
+		}
+		return r[0] + r[1] + r[2] + r[3];
 	}
 
 	inline F b3SMul(
@@ -300,7 +303,10 @@ public:
 	{
 		F result = 0;
 
-		for (int i = 0;i < dim;i++) result += (v[i] * a.v[i]);
+		for (int i = 0;i < dim;i++)
+		{
+			result += (a.v[i] * v[i]);
+		}
 		return result;
 	}
 

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2003/03/19 20:33:07  sm
+**      - Triangles intersection optimized.
+**
 **      Revision 1.38  2003/02/22 17:21:35  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -444,9 +447,10 @@ void b3TriangleShape::b3FreeTriaRefs()
 
 b3_bool b3TriangleShape::b3Prepare()
 {
-	b3_vector Start,End,R1,R2,disp;
-	b3_index  P1,P2,P3,i,max;
-	b3_f64    Denom;
+	b3_vector   Start,End,disp;
+	b3_index    P1,P2,P3,i,max;
+	b3_f64      Denom;
+	b3_triainfo info;
 
 	if ((m_xSize < 1) || (m_ySize < 1))
 	{
@@ -454,17 +458,23 @@ b3_bool b3TriangleShape::b3Prepare()
 		if (m_ySize < 1) m_ySize = 1;
 		B3_ASSERT(b3GetConditionHead()->First == null);
 	}
+
+	m_TriaInfos.b3Clear();
 	for (i = 0;i < m_TriaCount;i++)
 	{
 		P1 = m_Triangles[i].P1;		/* Base */
 		P2 = m_Triangles[i].P2;		/* Dir1 */
 		P3 = m_Triangles[i].P3;		/* Dir2 */
-		b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point,&R1);
-		b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point,&R2);
+
+		info.O  = m_Vertices[P1].Point;
+		b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point,&info.R1);
+		b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point,&info.R2);
+		b3Vector::b3CrossProduct(&info.R1,&info.R2,&info.N);
+		m_TriaInfos.b3Add(info);
+
 		if ((m_Flags & NORMAL_FACE_VALID)==0)
 		{
-			b3Vector::b3CrossProduct(&R1,&R2,&m_Triangles[i].Normal);
-			disp = m_Triangles[i].Normal;
+			disp = m_Triangles[i].Normal = info.N;
 			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 			{
 #ifdef NORMAL_NORMALIZED

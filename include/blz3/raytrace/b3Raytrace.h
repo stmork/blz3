@@ -1261,9 +1261,16 @@ public:
 #define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
 #define NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
 
+struct b3_triainfo
+{
+	b3_vector O,R1,R2,N;
+};
+
 class b3TriangleShape : public b3SimpleShape
 {
 	b3Array<b3_index>     *m_GridList;       // list of grids
+	b3Array<b3_triainfo>   m_TriaInfos;
+
 protected:
 	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
 	b3_count               m_GridSize;       // num grid edges

@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2003/03/19 20:33:07  sm
+**	- Triangles intersection optimized.
+**
 **	Revision 1.32  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.31  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
 **	
@@ -940,96 +943,97 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 #define INCREMENT(x)  ((x) >= 0 ? 1 : -1)
 #define FSWAP(a,b,m)  { m = a; a = b; b = m; }
 
+#define _TEST
+
 b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_ray                *ray,
 	b3_polar_precompute   *polar,
 	b3_index               TriaField)
 {
 	b3_triangle    *Triangle;
-	b3_f64          Denom,lValue,aValue,bValue,OldValue = -1;
 	b3_index        Index,i,max;
-	const b3_index *buffer;
+	b3_index       *buffer;
+	b3_triainfo    *infos,*info;
 	b3_res          dxSize;
-	b3_vector       Base,R1,R2,Dir,Product;
+	b3_vector32     aux,product,dir,pos;
+	b3_f32          Denom,aValue,bValue;
+	b3_f32          q = ray->Q,e = b3Scene::epsilon;
+	b3_f32          OldValue = -1,lValue;
 
 	 xSize   = m_xSize;
 	 ySize   = m_ySize;
 	dxSize   = m_xSize << 1;
+	pos.x    = ray->pos.x;
+	pos.y    = ray->pos.y;
+	pos.z    = ray->pos.z;
+	dir.x    = ray->dir.x;
+	dir.y    = ray->dir.y;
+	dir.z    = ray->dir.z;
 
 	B3_ASSERT(TriaField < m_GridCount);
+	infos  = m_TriaInfos.b3GetBuffer();
 	buffer = m_GridList[TriaField].b3GetBuffer();
 	max    = m_GridList[TriaField].b3GetCount();
 	for (i = 0;i < max;i++)
 	{
 		Index    = buffer[i];
 		Triangle = &m_Triangles[Index];
-		Base.x   = m_Vertices[Triangle->P1].Point.x;
-		Base.y   = m_Vertices[Triangle->P1].Point.y;
-		Base.z   = m_Vertices[Triangle->P1].Point.z;
-		R1.x     = m_Vertices[Triangle->P2].Point.x - Base.x;
-		R1.y     = m_Vertices[Triangle->P2].Point.y - Base.y;
-		R1.z     = m_Vertices[Triangle->P2].Point.z - Base.z;
-		R2.x     = m_Vertices[Triangle->P3].Point.x - Base.x;
-		R2.y     = m_Vertices[Triangle->P3].Point.y - Base.y;
-		R2.z     = m_Vertices[Triangle->P3].Point.z - Base.z;
+		info     = &infos[Index];
 
-		if ((Denom =
-			Triangle->Normal.x * ray->dir.x +
-			Triangle->Normal.y * ray->dir.y +
-			Triangle->Normal.z * ray->dir.z) != 0)
+		Denom = 
+			info->N.x * dir.x +
+			info->N.y * dir.y +
+			info->N.z * dir.z;
+		if (Denom != 0)
 		{
 			Denom = -1.0 / Denom;
-			if ((lValue=(
-				Triangle->Normal.x * (Dir.x = ray->pos.x-Base.x) +
-				Triangle->Normal.y * (Dir.y = ray->pos.y-Base.y) +
-				Triangle->Normal.z * (Dir.z = ray->pos.z-Base.z))
-					* Denom) >= b3Scene::epsilon)
+			lValue = Denom * (
+				info->N.x * (aux.x = pos.x - info->O.x) +
+				info->N.y * (aux.y = pos.y - info->O.y) +
+				info->N.z * (aux.z = pos.z - info->O.z));
+			if ((lValue >= e) && (lValue < q))
 			{
-				if (lValue < ray->Q)
+				aValue = Denom * (
+					info->R2.x * (product.x = aux.y * dir.z - aux.z * dir.y) +
+					info->R2.y * (product.y = aux.z * dir.x - aux.x * dir.z) +
+					info->R2.z * (product.z = aux.x * dir.y - aux.y * dir.x));
+				if (aValue >= 0)
 				{
-					aValue = (
-						R2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
-						R2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
-						R2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
-							* Denom;
-					if (aValue >= 0)
+					bValue = -Denom * (
+						info->R1.x * product.x +
+						info->R1.y * product.y +
+						info->R1.z * product.z);
+					if ((bValue >= 0) && ((aValue+bValue) <= 1))
 					{
-						bValue =
-							-(R1.x * Product.x +
-							  R1.y * Product.y +
-							  R1.z * Product.z) * Denom;
-						if ((bValue >= 0) && ((aValue+bValue) <= 1))
+						if (Index & 1)
 						{
-							if (Index & 1)
-							{
-								polar->polar.x =
-									((((Index % dxSize) >> 1) + 1) - aValue) / xSize;
-								polar->polar.y =
-									(  (Index / dxSize        + 1) - bValue) / ySize;
-							}
-							else
-							{
-								polar->polar.x =
-									(((Index % dxSize) >> 1) + aValue) / xSize;
-								polar->polar.y =
-									  (Index / dxSize        + bValue) / ySize;
-							}
-							polar->polar.z      = 0;
-							polar->object_polar = polar->polar;
-							if (b3CheckStencil (polar))
-							{
-								ray->Q = OldValue = lValue;
-								ray->TriaIndex    = Index;
-								ray->aTriaValue   = aValue;
-								ray->bTriaValue   = bValue;
-							}
+							polar->polar.x =
+								((((Index % dxSize) >> 1) + 1) - aValue) / xSize;
+							polar->polar.y =
+								(  (Index / dxSize        + 1) - bValue) / ySize;
+						}
+						else
+						{
+							polar->polar.x =
+								(((Index % dxSize) >> 1) + aValue) / xSize;
+							polar->polar.y =
+								  (Index / dxSize        + bValue) / ySize;
+						}
+						polar->polar.z      = 0;
+						polar->object_polar = polar->polar;
+						if (b3CheckStencil (polar))
+						{
+							ray->Q = OldValue = lValue;
+							ray->TriaIndex    = Index;
+							ray->aTriaValue   = aValue;
+							ray->bTriaValue   = bValue;
 						}
 					}
 				}
 			}
 		}
 	}
-	return (OldValue);
+	return OldValue;
 }
 
 b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
