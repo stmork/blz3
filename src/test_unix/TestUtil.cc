@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/06 16:16:59  sm
+**	- Added support for custom hash functions.
+**
 **	Revision 1.1  2002/08/06 15:54:12  sm
 **	- Introduced b3HashMap<key,object> class incl. test prog.
 **	- Found some source files without header.
-**
+**	
 **
 */
 
@@ -47,6 +50,11 @@
 static int b3ArraySorter(int *a,int *b)
 {
 	return *a - *b;
+}
+
+static b3_hash b3HashFunc(const int &key)
+{
+	return (key >> 1) % 11;
 }
 
 static void b3Dump(b3HashMap<int,char *> &map,const char *title)
@@ -92,6 +100,7 @@ int main(int argc,char *argv[])
 	b3HashMap<int,char *>  hash;
 	b3_index               i;
 
+	hash.b3SetHashFunc(&b3HashFunc);
 	for (i = 0;i < argc;i++)
 	{
 		hash.b3Add(i,argv[i]);

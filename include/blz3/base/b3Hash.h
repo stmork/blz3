@@ -33,7 +33,8 @@
 {
 	B3_HASH_ERROR = -1,
 	B3_HASH_OK    =  0,
-	B3_HASH_DUPLICATE_KEY
+	B3_HASH_DUPLICATE_KEY,
+	B3_HASH_INVALID
 };
 
 typedef b3Exception<b3_hash_error> b3HashException;
@@ -79,12 +80,23 @@ typedef b3_u32 b3_hash;
 
 template <class Key,class Object> class b3HashMap
 {
-	b3Base<b3HashPair<Key,Object > > m_HashMap[B3_MAX_HASH_INDEX];
-
+	b3Base<b3HashPair<Key,Object > >   m_HashMap[B3_MAX_HASH_INDEX];
+	b3_hash                          (*m_HashFunc)(const Key &key);
+	
 public:
+	b3HashMap()
+	{
+		b3SetHashFunc(&b3HashFunc);
+	}
+
 	virtual ~b3HashMap()
 	{
 		b3Clear();
+	}
+
+	inline void b3SetHashFunc(b3_hash (*func)(const Key &key))
+	{
+		m_HashFunc = func;
 	}
 
 	inline void b3Add(const Key &key,const Object &object)
@@ -220,7 +232,18 @@ public:
 	}
 
 private:
-	inline static b3_hash b3Hash(const Key &key)
+	inline b3_hash b3Hash(const Key &key)
+	{
+		b3_hash hash = m_HashFunc(key);
+
+		if ((hash < 0) || (hash >= B3_MAX_HASH_INDEX))
+		{
+			throw new b3HashException(B3_HASH_INVALID);
+		}
+		return hash;
+	}
+
+	inline static b3_hash b3HashFunc(const Key &key)
 	{
 		b3_u08  *ptr  = (b3_u08 *)&key;
 		b3_size  size = sizeof(Key),i;
