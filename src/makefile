@@ -52,7 +52,7 @@ win:
 	cp Btiff/tif_fax3sm.c system_win32
 
 count:
-	wc -l `find $(BLZ3_HOME)/include* -name "*.h";find $(BLZ3_HOME)/src -name "*.cc"`
+	wc -l `find $(BLZ3_HOME)/include* -name "*.h";find $(BLZ3_HOME)/src -name "*.cc";find $(BLZ3_HOME)/src -name "*.cpp"`
 
 depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 	@for i in $(SUB_DIRS); do \
