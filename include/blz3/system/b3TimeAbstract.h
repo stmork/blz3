@@ -32,19 +32,20 @@ public:
 class b3TimeSpanAbstract
 {
 public:
-	b3_s32        m_uTime;
-	b3_s32        m_sTime;
-	b3_s32        m_rTime;
+	b3_f64        m_uTime;
+	b3_f64        m_sTime;
+	b3_f64        m_rTime;
 
 public:
 	                b3TimeSpanAbstract();
 	virtual void    b3Start() = 0;
 	virtual void    b3Stop() = 0;
+	        void    b3Clear();
 	        b3_f64  b3GetUsage();
 	        void    b3Print(b3_log_level level = B3LOG_NORMAL);
 
 private:
-	static char    *b3PrintTime(char *buffer,b3_s32 time_needed);
+	static char    *b3PrintTime(char *buffer,b3_f64 time_needed);
 };
 
 class b3TimeAbstract
