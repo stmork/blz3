@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/08 07:29:31  sm
+**	- Introducing a tool for reading patches in the
+**	  original Utah teapot format.
+**	- Fixed a warning converning COB read.
+**
 **	Revision 1.9  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
-**
+**	
 **	Revision 1.8  2004/01/18 13:51:57  sm
 **	- Done further security issues.
 **	
@@ -671,7 +676,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		{
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf(line,"rgb %f , %f , %f",&r,&g,&b);
-			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
+			sscanf(line,"alpha %f ka %f ks %f exp %lf ior %lf",
 				&alpha,
 				&ambient,
 				&specular,
