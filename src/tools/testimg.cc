@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/08/11 18:49:34  sm
+**	- Some minor pattern changes
+**
 **	Revision 1.1  2003/08/08 08:50:07  sm
 **	- Added test image creation
-**
+**	
 **	
 */
 
@@ -92,6 +95,7 @@ static void create(b3Tx &img)
 	}
 
 	max = img.ySize - yQuart;
+#if 0
 	for (y = 0;y < max;y++)
 	{
 		b3_f64 f = freq(2 + (y + 1) * 48.0 / max);
@@ -102,6 +106,20 @@ static void create(b3Tx &img)
 		}
 		lPtr += img.xSize;
 	}
+#else
+	for (c = 0;c < 50;c+=2)
+	{
+		b3_f64 f = freq(c + 1);
+		for (y = c * max / 25;y < ((c + 1) * max / 25);y++)
+		{
+			for (x = 0;x < img.xSize;x++)
+			{
+				lPtr[x] = 0x010101 * (b3_pkd_color)(127.5 * sin((b3_f64)x * f) + 127.5);
+			}
+			lPtr += img.xSize;
+		}
+	}
+#endif
 }
 
 int main(int argc,char *argv[])
