@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/04/05 09:16:03  sm
+**	- Added test wood for Lines wood dialog
+**	- Optimized noise a little bit.
+**
 **	Revision 1.18  2004/04/04 13:50:38  sm
 **	- Optimized noise
 **	- Added filtered noise
-**
+**	
 **	Revision 1.17  2004/04/03 19:25:00  sm
 **	- Some other wood
 **	
@@ -217,7 +221,9 @@ b3Noise::b3Noise ()
 		for (x = 0;x < NOISEMAX;x++)
 		for (y = 0;y < NOISEMAX;y++)
 		for (z = 0;z < NOISEMAX;z++)
+		{
 			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
+		}
 
 		// init marble spline
 		marbleSpline.knot_max    = sizeof(marbleKnots)    / sizeof(b3_f32);
@@ -339,7 +345,8 @@ inline b3_f64 b3Noise::b3Interpolate(
 	b3_f64   fy,
 	b3_f64   fz)
 {
-	b3_f64 a[4],b[4];
+	b3_f64  B3_ALIGN_16 a[4],b[4],c[4];
+	b3_loop i;
 
 	a[0] = NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
 	b[0] = NoiseTable[INDEX3D(ix+1,iy  ,iz  )];
@@ -350,15 +357,22 @@ inline b3_f64 b3Noise::b3Interpolate(
 	a[3] = NoiseTable[INDEX3D(ix  ,iy+1,iz+1)];
 	b[3] = NoiseTable[INDEX3D(ix+1,iy+1,iz+1)];
 
-	a[0] = b3Math::b3Mix(a[0],b[0],fx);
-	b[0] = b3Math::b3Mix(a[1],b[1],fx);
-	a[1] = b3Math::b3Mix(a[2],b[2],fx);
-	b[1] = b3Math::b3Mix(a[3],b[3],fx);
+	for (i = 0;i < 4;i++)
+	{
+		c[i] = a[i] * (1.0 - fx) + b[i] * fx;
+	}
 
-	a[0] = b3Math::b3Mix(a[0],b[0],fy);
-	b[0] = b3Math::b3Mix(a[1],b[1],fy);
+	a[0] = c[0];
+	b[0] = c[1];
+	a[1] = c[2];
+	b[1] = c[3];
 
-	return b3Math::b3Mix(a[0],b[0],fz);
+	for (i = 0;i < 2;i++)
+	{
+		c[i] = a[i] * (1.0 - fy) + b[i] * fy;
+	}
+
+	return b3Math::b3Mix(c[0],c[1],fz);
 }
 
 inline b3_noisetype b3Noise::b3GetDiff(
