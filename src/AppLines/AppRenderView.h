@@ -174,6 +174,9 @@ protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
 
+private:
+	void b3ListPixelFormats(HDC dc);
+
 	friend class CB3Action;
 	friend class CB3MoveAction;
 	friend class CB3CameraRotateAction;

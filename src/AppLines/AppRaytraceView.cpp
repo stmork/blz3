@@ -36,6 +36,11 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/31 11:50:53  sm
+**	- Now we can print OpenGL scenes (Note: We have to do basic
+**	  initialization prior to render a scene. Then we can see the scene
+**	  on paper)
+**
 **	Revision 1.6  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -43,7 +48,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.5  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -121,14 +126,6 @@ CAppRaytraceView::CAppRaytraceView()
 
 CAppRaytraceView::~CAppRaytraceView()
 {
-}
-
-BOOL CAppRaytraceView::PreCreateWindow(CREATESTRUCT& cs)
-{
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-
-	return CScrollView::PreCreateWindow(cs);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -221,6 +218,13 @@ CAppRaytraceDoc* CAppRaytraceView::GetDocument() // non-debug version is inline
 void CAppRaytraceView::b3BestFit()
 {
 	OnFull();
+}
+
+BOOL CAppRaytraceView::OnPreparePrinting(CPrintInfo* pInfo) 
+{
+	// TODO: call DoPreparePrinting to invoke the Print dialog box
+	pInfo->m_pPD->m_pd.Flags |= (PD_NOPAGENUMS | PD_NOSELECTION);
+	return CB3ScrollView::OnPreparePrinting(pInfo);
 }
 
 void CAppRaytraceView::OnUpdatePrintable(CCmdUI *pCmdUI)

@@ -46,7 +46,7 @@ public:
 
 public:
 	                 b3RenderContext();
-	virtual void     b3Init();
+	static  void     b3Init();
 	virtual void     b3StartDrawing();
 	        void     b3SetBGColor(b3_f64 r,b3_f64 g,b3_f64 b);
 			void     b3SetBGColor(b3_color *color);

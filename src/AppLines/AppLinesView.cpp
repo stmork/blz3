@@ -39,9 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2002/01/31 11:50:53  sm
+**	- Now we can print OpenGL scenes (Note: We have to do basic
+**	  initialization prior to render a scene. Then we can see the scene
+**	  on paper)
+**
 **	Revision 1.40  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
-**
+**	
 **	Revision 1.39  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -366,6 +371,7 @@ void CAppLinesView::b3Draw(b3_res xSize,b3_res ySize)
 
 	// Setup view first
 	m_RenderView.b3UpdateView(0,0,xSize,ySize);
+//	m_RenderView.b3UpdateView(0,ySize - 100,100,100);
 
 	// Then draw objects
 	m_Scene->b3Draw();
