@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.99  2004/10/07 10:33:08  sm
+**      - Added some GIF tools and made them usable with Blizzard III.
+**
 **      Revision 1.98  2004/10/05 09:29:22  sm
 **      - Donw some documentations.
 **
@@ -1258,7 +1261,7 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_surface *surface)
 	b3_f64    mix;
 
 	b3Scale(surface->m_Incoming,null,&point);
-	mix = b3ComputeWood(&point);
+	mix = b3ComputeWood(&point, surface->m_Incoming->Q);
 
 	b3Mix(surface,&m_DarkMaterial,&m_LightMaterial, mix);
 
@@ -1471,7 +1474,7 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_surface *surface)
 	b3_f64    mix;
 
 	b3Scale(surface->m_Incoming,null,&point);
-	mix = b3ComputeOakPlank(&point,index);
+	mix = b3ComputeOakPlank(&point, surface->m_Incoming->Q, index);
 
 	b3Mix(surface,&m_DarkMaterials[index],&m_LightMaterials[index], mix);
 

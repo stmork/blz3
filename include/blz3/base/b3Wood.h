@@ -41,7 +41,7 @@ public:
 	b3_f32            m_Ringy;
 
 public:
-	b3_f64 b3ComputeWood(b3_vector *polar);
+	b3_f64 b3ComputeWood(b3_vector *polar, b3_f64 distance);
 	void   b3InitWood();
 	void   b3PrepareWood(b3_vector *scale);
 	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
@@ -68,7 +68,7 @@ public:
 public:
 	         b3OakPlank();
 	virtual ~b3OakPlank();
-	b3_f64   b3ComputeOakPlank(b3_vector *polar,b3_index &index);
+	b3_f64   b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index &index);
 	void     b3InitOakPlank();
 	void     b3PrepareOakPlank(b3_vector *scale);
 };

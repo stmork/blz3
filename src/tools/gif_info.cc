@@ -1,14 +1,14 @@
 /*
 **
-**	$Filename:	InfoGIF.c        $  
-**	$Release:	Dortmund 1997 $
+**	$Filename:	gif_info.cc $  
+**	$Release:	Dortmund 1997, 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Printing GIF tags
 **
-**	(C) Copyright 1997  Steffen A. Mork
+**	(C) Copyright 1997, 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -18,14 +18,26 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard includes                             **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
-#include <blizzard/sys/config.h>
-#include <blizzard/sys/bio.h>
-
+#include "blz3/b3Config.h"
 #include "gif.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**  $Log$
+**  Revision 1.2  2004/10/07 10:33:08  sm
+**  - Added some GIF tools and made them usable with Blizzard III.
+**
+**
+*/
 
 /*************************************************************************
 **                                                                      **
@@ -33,50 +45,42 @@
 **                                                                      **
 *************************************************************************/
 
-static struct MemNode Mem;
-
-static void InfoGIF(char *name)
+InfoGIF(char *name)
 {
-	struct BFile      *in;
+	b3File             in;
+	b3_u08            *buffer,*data;
+	b3_size            size;
+	b3_count           i,diff,planes;
+	b3_bool            loop = true;
 	struct Extension  *transPtr;
 	struct Descriptor *descrPtr;
-	unsigned char     *buffer,*data;
-	long               size,i,diff,planes;
-	bool               loop = true;
 
-	PrintF ("\n");
-	PrintF ("FILE: %s\n",name);
-	in = BOpen (name,B_READ);
-	if (in == null)
-	{
-		PrintF ("file not found!\n");
-		return;
-	}
+	b3PrintF(B3LOG_NORMAL, "\n");
+	b3PrintF(B3LOG_NORMAL, "FILE: %s\n",name);
 
-	size = BSize (in);
-	data = buffer = AllocKeyMem (&Mem,size);
+	buffer = in.b3ReadBuffer(name,size);
 	if (buffer == null)
 	{
-		BClose (in);
-		PrintF ("buffer not allocated\n");
+		b3PrintF(B3LOG_NORMAL, "no memory available.\n");
 		return;
 	}
+	data = buffer;
 
-	BRead  (in,buffer,size);
-	BClose (in);
 	if (strncmp(buffer,"GIF8",4) != 0)
 	{
-		FreePartMem (&Mem,buffer);
-		PrintF ("not a GIF image!\n");
+		b3PrintF(B3LOG_NORMAL, "not a GIF image!\n");
 		return;
 	}
 
-	PrintF ("*** ");
-	for (i=0;i<6;i++) PrintF ("%c",*data++);
-	PrintF ("\n");
-	PrintF ("width:  %4ld\n",VAL2(data));
-	PrintF ("height: %4ld\n",VAL2(data+2));
-	PrintF ("planes: %4ld\n",planes = ((long)data[4] & 0x07) + 1);
+	b3PrintF(B3LOG_NORMAL, "*** ");
+	for (i = 0; i < 6; i++)
+	{
+		b3PrintF(B3LOG_NORMAL, "%c",*data++);
+	}
+	b3PrintF(B3LOG_NORMAL, "\n");
+	b3PrintF(B3LOG_NORMAL, "width:  %4ld\n",VAL2(data));
+	b3PrintF(B3LOG_NORMAL, "height: %4ld\n",VAL2(data+2));
+	b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes = ((long)data[4] & 0x07) + 1);
 	data += 7;
 	data += ((1 << planes) * 3);
 
@@ -88,36 +92,39 @@ static void InfoGIF(char *name)
 				switch (data[1])
 				{
 					case 0x01 :
-						PrintF ("*** Plain text extension:\n");
+						b3PrintF(B3LOG_NORMAL, "*** Plain text extension:\n");
 						data += (data[2] + 3);
 						while ((diff = data[0]) != 0) data += (diff + 1);
 						break;
 
 					case 0xf9 :
 						transPtr         = (struct Extension *)data;
-						PrintF ("*** Graphic Control Extension:\n");
-						PrintF ("flags: $%02x\n",transPtr->flags);
-						PrintF ("transparency: %s\n",
+						b3PrintF(B3LOG_NORMAL, "*** Graphic Control Extension:\n");
+						b3PrintF(B3LOG_NORMAL, "flags: $%02x\n",transPtr->flags);
+						b3PrintF(B3LOG_NORMAL, "transparency: %s\n",
 							transPtr->flags & 1 ? "yes" : "no");
-						if (transPtr->flags & 1) PrintF ("transparent color index: %ld\n",
-							transPtr->index);
-						PrintF ("delay time:  %ld/100 s\n",VAL2(transPtr->delay));
+						if (transPtr->flags & 1)
+						{
+							b3PrintF(B3LOG_NORMAL, "transparent color index: %ld\n",
+								transPtr->index);
+						}
+						b3PrintF(B3LOG_NORMAL, "delay time:  %ld/100 s\n",VAL2(transPtr->delay));
 						data += (transPtr->size + 3);
 						break;
 
 					case 0xfe :
-						PrintF ("*** Comment Extension:\n");
+						b3PrintF(B3LOG_NORMAL, "*** Comment Extension:\n");
 						data += 2;
 						while ((diff = data[0]) != 0)
 						{
-							for (i=1;i <= diff;i++) PrintF ("%c",data[i]);
+							for (i=1;i <= diff;i++) b3PrintF(B3LOG_NORMAL, "%c",data[i]);
 							data += (diff + 1);
 						}
-						PrintF ("\n");
+						b3PrintF(B3LOG_NORMAL, "\n");
 						break;
 
 					case 0xff :
-						PrintF ("*** Application Extension:\n");
+						b3PrintF(B3LOG_NORMAL, "*** Application Extension:\n");
 						data += (data[2] + 3);
 						while ((diff = data[0]) != 0) data += (diff + 1);
 						break;
@@ -127,22 +134,22 @@ static void InfoGIF(char *name)
 				break;
 
 			case 0x2e :
-				PrintF ("*** $2E ???\n");
+				b3PrintF(B3LOG_NORMAL, "*** $2E ???\n");
 				break;
 
 			case 0x2c :
 				descrPtr = (struct Descriptor *)data;
 				planes   = (descrPtr->flags & 0x07) + 1;
-				PrintF ("*** Image descriptor:\n");
-				PrintF ("xPos:   %4ld\n",VAL2(descrPtr->xPos));
-				PrintF ("yPos:   %4ld\n",VAL2(descrPtr->yPos));
-				PrintF ("xSize:  %4ld\n",VAL2(descrPtr->xSize));
-				PrintF ("ySize:  %4ld\n",VAL2(descrPtr->ySize));
-				PrintF ("planes: %4ld\n",planes);
-				PrintF ("flags:   $%02x\n",descrPtr->flags);
-				PrintF ("local color table: %s\n",
+				b3PrintF(B3LOG_NORMAL, "*** Image descriptor:\n");
+				b3PrintF(B3LOG_NORMAL, "xPos:   %4ld\n",VAL2(descrPtr->xPos));
+				b3PrintF(B3LOG_NORMAL, "yPos:   %4ld\n",VAL2(descrPtr->yPos));
+				b3PrintF(B3LOG_NORMAL, "xSize:  %4ld\n",VAL2(descrPtr->xSize));
+				b3PrintF(B3LOG_NORMAL, "ySize:  %4ld\n",VAL2(descrPtr->ySize));
+				b3PrintF(B3LOG_NORMAL, "planes: %4ld\n",planes);
+				b3PrintF(B3LOG_NORMAL, "flags:   $%02x\n",descrPtr->flags);
+				b3PrintF(B3LOG_NORMAL, "local color table: %s\n",
 					descrPtr->flags & 0x80 ? "yes" : "no");
-				PrintF ("interlace: %s\n",
+				b3PrintF(B3LOG_NORMAL, "interlace: %s\n",
 					descrPtr->flags & 0x40 ? "yes" : "no");
 				data   += sizeof(struct Descriptor);
 				if (descrPtr->flags & 0x80) data += ((1 << planes) * 3);
@@ -153,30 +160,27 @@ static void InfoGIF(char *name)
 				break;
 
 			case 0x3b :
-				PrintF ("*** Trailer:\n");
+				b3PrintF(B3LOG_NORMAL, "*** Trailer:\n");
 				data++;
 				loop = false;
 				break;
 
 			default :
-				PrintF ("*** $%02lx:%02lx\n",(long)data[0],(long)data[1]);
+				b3PrintF(B3LOG_NORMAL, "*** $%02lx:%02lx\n",(long)data[0],(long)data[1]);
 				loop = false;
 				break;
 		}
 	}
 	while (loop);
-
-	FreePartMem (&Mem,buffer);
 }
 
 int main(int argc,char *argv[])
 {
-	long i;
+	int i;
 
-	if (OpenRequirements())
+	for (i = 1; i < argc; i++)
 	{
-		for (i=1;i<argc;i++) InfoGIF (argv[i]);
-		CloseRequirements();
+		InfoGIF (argv[i]);
 	}
 	return 0;
 }

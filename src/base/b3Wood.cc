@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/10/07 10:33:08  sm
+**	- Added some GIF tools and made them usable with Blizzard III.
+**
 **	Revision 1.9  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.8  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
@@ -104,7 +107,7 @@ void b3Wood::b3PrepareWood(b3_vector *scale)
 	b3Matrix::b3RotateY(&m_Warp,&m_Warp,null,m_yRot);
 }
 
-b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
+b3_f64 b3Wood::b3ComputeWood(b3_vector *polar,b3_f64 dist)
 {
 	b3_vector d;
 	b3_vector offset;
@@ -143,7 +146,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 	Pgrain.x = d.x * m_GrainFrequency;
 	Pgrain.y = d.y * m_GrainFrequency;
 	Pgrain.z = d.z * m_GrainFrequency * 0.05;
-	dPgrain = 1; // FIXME
+	dPgrain  = dist / 100;
 
 	for (i = 0;i < 2;i++)
 	{
@@ -250,7 +253,7 @@ void b3OakPlank::b3PrepareOakPlank(b3_vector *scale)
 	}
 }
 
-b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar,b3_index &index)
+b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index &index)
 {
 	b3_vector surface;
 	b3_index  ix,iy;
@@ -267,5 +270,5 @@ b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar,b3_index &index)
 	ix  = (b3_index)((fx - floor(fx)) * m_xTimes);
 	iy  = (b3_index)((fy - floor(fy)) * m_yTimes);
 	index = ix * m_yTimes + iy;
-	return m_Planks[index].b3ComputeWood(&surface);
+	return m_Planks[index].b3ComputeWood(&surface, distance);
 }

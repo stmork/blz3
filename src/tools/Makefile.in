@@ -10,7 +10,9 @@ LIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc divx.cc reduce.cc
+PRG_SOURCE		= RestoreExt.cc CleanRes.cc scale.cc calibrate.cc\
+	testimg.cc half.cc pw.cc divx.cc reduce.cc\
+	gif_trans.cc gif_movie.cc gif_info.cc gif.cc
 
 RESTOREEXT_OBJS	= RestoreExt.o
 CLEANRES_OBJS	= CleanRes.o
@@ -21,12 +23,15 @@ TESTIMG_OBJS	= testimg.o
 PW_OBJS			= pw.o
 DIVX_OBJS		= divx.o
 REDUCE_OBJS		= reduce.o
+GIF_INFO_OBJS	= gif_info.o gif.o
+GIF_MOVIE_OBJS	= gif_movie.o gif.o
+GIF_TRANS_OBJS	= gif_trans.o gif.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
 
-PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce divx
+PRGS			= RestoreExt CleanRes testimg scale calibrate half pw reduce divx gif_info gif_trans gif_movie
 
 all:	$(PRGS)
 
@@ -66,6 +71,15 @@ calibrate:	$(CALIBRATE_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 reduce:	$(REDUCE_OBJS) $(B3_LIB_BASE)
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+gif_info:	$(GIF_INFO_OBJS) $(B3_LIB_BASE) 
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+gif_movie:	$(GIF_MOVIE_OBJS) $(B3_LIB_BASE) 
+	$(LINK.cc) -o $@ $^ $(LIBS)
+
+gif_trans:	$(GIF_TRANS_OBJS) $(B3_LIB_BASE) 
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

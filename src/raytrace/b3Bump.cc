@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/10/07 10:33:08  sm
+**	- Added some GIF tools and made them usable with Blizzard III.
+**
 **	Revision 1.39  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
-**
+**	
 **	Revision 1.38  2004/08/01 12:47:39  sm
 **	- Animated thin film material.
 **	
@@ -869,7 +872,7 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 
 	b3Scale(ray,null,&point);
-	wood = b3Wood::b3ComputeWood(&point);
+	wood = b3Wood::b3ComputeWood(&point, ray->Q);
 
 	// Note: xDeriv and yDeriv are not normalized!
 	xLen    = b3Vector::b3Length(&ray->xDeriv);
@@ -879,7 +882,7 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xRay);
 	b3Scale(&xRay,null,&xWood);
-	dX = (b3Wood::b3ComputeWood (&xWood) - wood) * m_dX / xLen;
+	dX = (b3Wood::b3ComputeWood (&xWood, ray->Q) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
@@ -888,7 +891,7 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yRay);
 	b3Scale(&yRay,null,&yWood);
-	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY / yLen;
+	dY = (b3Wood::b3ComputeWood (&yWood, ray->Q) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
 	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;
@@ -1010,7 +1013,7 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	b3_index    index,iX,iY;
 
 	b3Scale(ray,null,&point);
-	wood = b3OakPlank::b3ComputeOakPlank(&point,index);
+	wood = b3OakPlank::b3ComputeOakPlank(&point, ray->Q, index);
 
 	// Note: xDeriv and yDeriv are not normalized!
 	xLen    = b3Vector::b3Length(&ray->xDeriv);
@@ -1020,7 +1023,7 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xRay);
 	b3Scale(&xRay,null,&xWood);
-	dX = (b3OakPlank::b3ComputeOakPlank (&xWood,iX) - wood) * m_dX / xLen;
+	dX = (b3OakPlank::b3ComputeOakPlank (&xWood, ray->Q, iX) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
@@ -1029,7 +1032,7 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yRay);
 	b3Scale(&yRay,null,&yWood);
-	dY = (b3OakPlank::b3ComputeOakPlank (&yWood,iY) - wood) * m_dY / yLen;
+	dY = (b3OakPlank::b3ComputeOakPlank (&yWood, ray->Q, iY) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
 	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;

@@ -1,14 +1,14 @@
 /*
 **
-**	$Filename:	TransGIF.c       $  
-**	$Release:	Dortmund 1997 $
+**	$Filename:	gif_trans.cc $  
+**	$Release:	Dortmund 1997, 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Make a GIF transparent
 **
-**	(C) Copyright 1997  Steffen A. Mork
+**	(C) Copyright 1997, 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -18,83 +18,66 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard includes                             **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
-#include <blizzard/sys/config.h>
-#include <blizzard/sys/bio.h>
-
 #include "gif.h"
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+  
+/*
+**	$Log$
+**	Revision 1.2  2004/10/07 10:33:08  sm
+**	- Added some GIF tools and made them usable with Blizzard III.
+**
+**
+*/
+  
 /*************************************************************************
 **                                                                      **
 **                        routines                                      **
 **                                                                      **
 *************************************************************************/
 
-static struct MemNode Mem;
-
-static long WriteGIF (
-	struct BFile  *out,
-	unsigned char *buffer,
-	unsigned char *data,
-	long           index)
+static void TransGIF(char *name)
 {
-	long size;
-
-	size = data - &buffer[index];
-	if (size <= 0) return index;
-	BWrite (out,&buffer[index],size);
-	index = data - buffer;
-	return index;
-}
-
-static void InfoGIF(char *name)
-{
-	struct BFile      *in,*out;
+	b3File             in,out;
+	b3_u08            *buffer,*data;
+	b3_size            size;
+	b3_count           diff,planes;
+	b3_bool            loop = true,visited = false,index = 0;
 	struct Extension  *transPtr,trans;
 	struct Descriptor *descrPtr;
-	unsigned char     *buffer,*data;
-	long               size,diff,planes;
-	bool               loop = true,visited = false,index = 0;
 
-	PrintF ("\n");
-	PrintF ("FILE: %s\n",name);
-	in = BOpen (name,B_READ);
-	if (in == null)
-	{
-		PrintF ("file not found!\n");
-		return;
-	}
+	b3PrintF (B3LOG_NORMAL, "\n");
+	b3PrintF (B3LOG_NORMAL, "FILE: %s\n",name);
 
-	size = BSize (in);
-	data = buffer = AllocKeyMem (&Mem,size);
+	buffer = in.b3ReadBuffer(name,size);
 	if (buffer == null)
 	{
-		BClose (in);
-		PrintF ("buffer not allocated\n");
+		b3PrintF (B3LOG_NORMAL, "buffer not allocated\n");
 		return;
 	}
+	data = buffer;
 
-	BRead  (in,buffer,size);
-	BClose (in);
 	if (strncmp(buffer,"GIF8",4) != 0)
 	{
-		FreePartMem (&Mem,buffer);
-		PrintF ("not a GIF image!\n");
+		b3PrintF (B3LOG_NORMAL, "not a GIF image!\n");
 		return;
 	}
 
-#ifdef DEBUG
-	out = BOpen ("test.gif",B_WRITE);
+#ifdef _DEBUG
+	if (!out.b3Open("test.gif",B_WRITE))
 #else
-	out = BOpen (name,B_WRITE);
+	if (!out.b3Open(name,B_WRITE))
 #endif
-	if (out == null)
 	{
-		FreePartMem (&Mem,buffer);
-		PrintF ("cannot open file for writing!\n");
+		b3PrintF (B3LOG_NORMAL, "cannot open file for writing!\n");
 		return;
 	}
 
@@ -122,7 +105,10 @@ static void InfoGIF(char *name)
 				{
 					case 0x01 :
 						data += (data[2] + 3);
-						while ((diff = data[0]) != 0) data += (diff + 1);
+						while ((diff = data[0]) != 0)
+						{
+							data += (diff + 1);
+						}
 						break;
 
 					case 0xf9 :
@@ -142,10 +128,16 @@ static void InfoGIF(char *name)
 
 					case 0xff :
 						data += (data[2] + 3);
-						while ((diff = data[0]) != 0) data += (diff + 1);
+						while ((diff = data[0]) != 0)
+						{
+							data += (diff + 1);
+						}
 						break;
 				}
-				while (data[0] != 0) data++;
+				while (data[0] != 0)
+				{
+					data++;
+				}
 				data++;
 				break;
 
@@ -156,15 +148,21 @@ static void InfoGIF(char *name)
 				if (!visited)
 				{
 					index = WriteGIF(out,buffer,data,index);
-					BWrite (out,&trans,sizeof(trans));
+					out.b3Write (&trans,sizeof(trans));
 				}
 				descrPtr = (struct Descriptor *)data;
 				data   += sizeof(struct Descriptor);
 				planes  = (descrPtr->flags & 0x07) + 1;
-				if (descrPtr->flags & 0x80) data += ((1 << planes) * 3);
+				if (descrPtr->flags & 0x80)
+				{
+					data += ((1 << planes) * 3);
+				}
 				data++;
 
-				while ((diff = data[0]) != 0) data += (diff + 1);
+				while ((diff = data[0]) != 0)
+				{
+					data += (diff + 1);
+				}
 				data++;
 				visited = false;
 				break;
@@ -180,20 +178,18 @@ static void InfoGIF(char *name)
 		}
 	}
 	while (loop);
-	WriteGIF(out,buffer,data,index);
-	BClose (out);
 
-	FreePartMem (&Mem,buffer);
+	WriteGIF(out,buffer,data,index);
+	out.b3Close();
 }
 
 int main(int argc,char *argv[])
 {
-	long i;
+	int i;
 
-	if (OpenRequirements())
+	for (i = 1; i < argc; i++)
 	{
-		for (i=1;i<argc;i++) InfoGIF (argv[i]);
-		CloseRequirements();
+		TransGIF (argv[i]);
 	}
 	return 0;
 }
