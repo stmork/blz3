@@ -35,8 +35,8 @@
 
 /*
 **	$Log$
-**	Revision 1.10  2001/11/03 16:36:29  sm
-**	- Added some b3Scene changes
+**	Revision 1.11  2001/11/03 16:43:04  sm
+**	- Fixed brt3
 **
 **	Revision 1.9  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
@@ -101,6 +101,7 @@ int main(int argc,char *argv[])
 	b3Path        textures;
 	b3Path        pictures;
 	b3Path        data;
+	b3Path        camera_name;
 
 	if (argc > 1)
 	{
@@ -142,13 +143,11 @@ int main(int argc,char *argv[])
 				{
 					do
 					{
-						b3Path camera_name;
-
 						scene->b3GetTitle(camera_name);
 						if (camera->m_Flags & CAMERA_ACTIVE)
 						{
 							b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
-								camera_name);
+								camera->m_CameraName);
 							scene->b3SetCamera(camera);
 
 							span.b3Start();
@@ -159,7 +158,7 @@ int main(int argc,char *argv[])
 						else
 						{
 							b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
-								camera_name);
+								camera->m_CameraName);
 						}
 						camera = scene->b3GetNextCamera(camera);
 					}
