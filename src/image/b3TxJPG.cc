@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/26 18:37:14  sm
+**	- Creating search path support
+**	- Splitting image pool support and image loading into
+**	  their own area.
+**	- Fixed JPEG to support b3Tx::b3AllocTx()
+**
 **	Revision 1.5  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.4  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -121,10 +127,8 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	JSAMPARRAY                     sample_array;
 	int                            row_stride;
 	b3_u08                        *line;
-	b3_pkd_color                  *out,color;
-	b3_tx_type                     type;
+	b3_pkd_color                  *out;
 	b3_coord                       x;
-	b3_size                        Max;
 
 	cinfo.err           = jpeg_std_error(&jerr.pub);
 	jerr.pub.error_exit = my_error_exit;
@@ -152,42 +156,34 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	sample_array = (*cinfo.mem->alloc_sarray)
 		((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
 
-	xSize = cinfo.output_width;
-	ySize = cinfo.output_height;
-	Max   = xSize * ySize;
-
 	if (cinfo.out_color_space != JCS_GRAYSCALE)
 	{
-		out = (b3_pkd_color *)b3Alloc(Max * sizeof(b3_pkd_color));
-		if (out == null)
+		if (!b3AllocTx(cinfo.output_width,cinfo.output_height,24))
 		{
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
 			b3FreeTx();
 			throw new b3TxException(B3_TX_MEMORY);
 		}
-		data = (b3_u08 *)out;
 
+		out = (b3_pkd_color *)data;
 		while (cinfo.output_scanline < cinfo.output_height)
 		{
 			jpeg_read_scanlines(&cinfo, sample_array, 1);
-			line = (unsigned char *)sample_array[0];
+			line = (b3_u08 *)sample_array[0];
 			for (x = 0;x < (b3_coord)cinfo.output_width;x++)
 			{
-				color  = *line++;
-				color  = (color << 8) | *line++;
-				color  = (color << 8) | *line++;
-				*out++ = color;
+				*out++ =
+					((b3_pkd_color)line[0] << 16) |
+					((b3_pkd_color)line[1] <<  8) |
+					 (b3_pkd_color)line[2];
+				line += 3;
 			}
 		}
-		depth   = 24;
-		palette = null;
-		type    = B3_TX_RGB8;
 	}
 	else
 	{
-		line = (b3_u08 *)b3Alloc(Max);
-		if (line == null)
+		if (!b3AllocTx(cinfo.output_width,cinfo.output_height,8))
 		{
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
@@ -195,29 +191,13 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 			throw new b3TxException(B3_TX_MEMORY);
 		}
 
-		out = (b3_pkd_color *)b3Alloc(Max * sizeof(b3_pkd_color));
-		if (out == null)
-		{
-			jpeg_finish_decompress (&cinfo);
-			jpeg_destroy_decompress(&cinfo);
-			b3FreeTx();
-			throw new b3TxException(B3_TX_MEMORY);
-		}
-		for (x = 0;x < 256;x++)
-		{
-			out[x] = 0x010101 * x;
-		}
-		depth   = 8;
-		palette = out;
-		data    = line;
-
+		line = (b3_u08 *)data;
 		while (cinfo.output_scanline < cinfo.output_height)
 		{
 			jpeg_read_scanlines(&cinfo, sample_array, 1);
 			memcpy (line,sample_array[0],cinfo.output_width);
 			line += cinfo.output_width;
 		}
-		type = B3_TX_VGA;
 	}
 
 	jpeg_finish_decompress (&cinfo);

@@ -133,6 +133,10 @@ SOURCE=.\b3Render.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3SearchPath.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Spline.cc
 # End Source File
 # Begin Source File

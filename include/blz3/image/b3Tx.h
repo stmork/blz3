@@ -101,6 +101,7 @@ enum b3_tx_filetype
 	FT_PCX8,
 	FT_ILBM,
 	FT_ILBM_HAM,
+	FT_ILBM_HAM8,
 	FT_ILBM_EHB,
 	FT_ILBM_24,
 	FT_RGB8,
@@ -108,7 +109,6 @@ enum b3_tx_filetype
 	FT_MTV,
 	FT_YUV,
 	FT_TIFF,
-	FT_ILBM_HAM8,
 	FT_TGA,
 	FT_GIF,
 	FT_PPM6,
@@ -150,49 +150,6 @@ enum b3_tx_threshold
 #define B3_TX_MAX_HISTGRM_DEPTH 8
 #define B3_TX_MAX_HISTGRM       (1 << B3_TX_MAX_HISTGRM_DEPTH)
 
-// Auxiliary class for color indexing (private use of class b3Tx)
-class b3ColorIndices : public b3Mem
-{
-	b3_count       num;
-	b3_count       max;
-	b3_index      *indices;
-public:
-	          b3ColorIndices ();
-	void      b3AddColorIndex(b3_index);
-	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
-};
-
-class b3TxPoint
-{
-public:
-	b3_coord x,y;
-
-	b3TxPoint(b3_coord new_x = 0,b3_coord new_y = 0)
-	{
-		x = new_x;
-		y = new_y;
-	}
-};
-
-#define B3_MEASURE_EDGE 3
-
-class b3Measure
-{
-public:
-	b3_bool   valid;
-	b3TxPoint left[B3_MEASURE_EDGE];
-	b3TxPoint top[B3_MEASURE_EDGE];
-	b3TxPoint right[B3_MEASURE_EDGE];
-	b3TxPoint bottom[B3_MEASURE_EDGE];
-
-	b3TxPoint points[(B3_MEASURE_EDGE - 1) * 4];
-	b3_count  num;
-public:
-	     b3Measure();
-	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
-	void b3Print();
-};
-
 typedef enum
 {
 	B3_TX_ERROR = -1,
@@ -221,6 +178,51 @@ public:
 	{
 		return error;
 	}
+};
+
+// Auxiliary class for color indexing (private use of class b3Tx)
+class b3ColorIndices : public b3Mem
+{
+	b3_count       num;
+	b3_count       max;
+	b3_index      *indices;
+public:
+	          b3ColorIndices ();
+	void      b3AddColorIndex(b3_index);
+	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
+};
+
+// One single texture point
+class b3TxPoint
+{
+public:
+	b3_coord x,y;
+
+	b3TxPoint(b3_coord new_x = 0,b3_coord new_y = 0)
+	{
+		x = new_x;
+		y = new_y;
+	}
+};
+
+#define B3_MEASURE_EDGE 3
+
+// For measuring an image...
+class b3Measure
+{
+public:
+	b3_bool   valid;
+	b3TxPoint left[B3_MEASURE_EDGE];
+	b3TxPoint top[B3_MEASURE_EDGE];
+	b3TxPoint right[B3_MEASURE_EDGE];
+	b3TxPoint bottom[B3_MEASURE_EDGE];
+
+	b3TxPoint points[(B3_MEASURE_EDGE - 1) * 4];
+	b3_count  num;
+public:
+	     b3Measure();
+	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
+	void b3Print();
 };
 
 // one single image and its methods

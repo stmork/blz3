@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/26 18:37:14  sm
+**	- Creating search path support
+**	- Splitting image pool support and image loading into
+**	  their own area.
+**	- Fixed JPEG to support b3Tx::b3AllocTx()
+**
 **	Revision 1.4  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.3  2001/10/13 15:48:53  sm
 **	- Minor image loading corrections
 **	
@@ -150,7 +156,7 @@ static inline void ConvertSGILine(
 	}
 }
 
-inline void b3Tx::b3ParseSGI3(
+void b3Tx::b3ParseSGI3(
 	HeaderSGI *HeaderSGI,
 	b3_u08    *buffer)
 {
@@ -242,7 +248,6 @@ inline void b3Tx::b3ParseSGI3(
 		default :
 			b3FreeTx();
 			throw new b3TxException(B3_TX_UNSUPP);
-			break;
 	}
 	b3Free(line);
 }

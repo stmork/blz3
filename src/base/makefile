@@ -20,6 +20,7 @@ PRG_SOURCE =\
 	b3Node.cc\
 	b3Procedure.cc\
 	b3Render.cc\
+	b3SearchPath.cc\
 	b3Spline.cc\
 	b3World.cc
 
@@ -35,6 +36,7 @@ PRG_OBJ	=\
 	b3Node.o\
 	b3Procedure.o\
 	b3Render.o\
+	b3SearchPath.o\
 	b3Spline.o\
 	b3World.o
 

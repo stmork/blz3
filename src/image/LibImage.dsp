@@ -129,6 +129,10 @@ SOURCE=.\b3TxJPG.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxLoadImage.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxLoadTIFF.cc
 # End Source File
 # Begin Source File
