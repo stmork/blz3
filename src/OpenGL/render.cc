@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/10/06 14:58:18  sm
+**      - Done some finetuning on setup
+**      - Output of GCC version under Un*x
+**
 **      Revision 1.26  2002/08/28 15:31:00  sm
 **      - Added some help output to render and bimg3.
 **
@@ -360,6 +364,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"%s BWD-file\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"Compiler GCC %d.%d.%d\n",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
 		exit(0);
 	}
 

@@ -45,8 +45,14 @@ else
   setenv LIB_OGL3    ""
 endif
 
-if ( `echo $PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
-   setenv PATH   "$BLZ3_BIN":"$PATH"
+if ( ! $?INH_PATH ) then
+  if ( `echo $PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
+     setenv PATH   "$BLZ3_BIN":"$PATH"
+  endif
+  else
+  if ( `echo $INH_PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
+     setenv INH_PATH   "$BLZ3_BIN $INH_PATH"
+  endif
 endif
 
 if ( $?MANPATH ) then

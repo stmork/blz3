@@ -37,6 +37,10 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/10/06 14:58:18  sm
+**	- Done some finetuning on setup
+**	- Output of GCC version under Un*x
+**
 **	Revision 1.32  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -46,7 +50,7 @@
 **	  which I only can assume what they are doing;-)
 **	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
 **	  and corrected upper time limit.
-**
+**	
 **	Revision 1.31  2002/08/23 15:34:27  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
@@ -446,6 +450,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"Compiler GCC %d.%d.%d\n",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
 	}
 	return 0;
 }
