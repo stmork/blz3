@@ -25,6 +25,7 @@
 #include "AppLinesDoc.h"
 
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/system/b3DashPen.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Pick.h"
 #include "blz3/base/b3Render.h"
@@ -39,6 +40,7 @@ class CB3Action;
 
 class CAppLinesView : public CAppRenderView
 {
+	CB3DashPen      m_RedDash;
 	b3PickBase      m_PickBaseLight;
 
 protected:

@@ -39,11 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2002/02/13 20:13:13  sm
+**	- Added dashed line pattern support in class CB3DashPen
+**
 **	Revision 1.47  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
 **	  on example camera settings.
-**
+**	
 **	Revision 1.46  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -317,6 +320,7 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
+	m_RedDash.b3CreateDashPen(RGB(0xff,0x11,0x44));
 }
 
 CAppLinesView::~CAppLinesView()
@@ -579,28 +583,14 @@ void CAppLinesView::b3DrawDC(
 	b3_f64 xOffset,
 	b3_f64 yOffset)
 {
-	CDC      *dc = CDC::FromHandle(hDC);
-	CPen     *old,red;
-	LOGBRUSH  logbrush;
-	DWORD     stipple[2];
+	CDC        *dc = CDC::FromHandle(hDC);
+	CPen       *old;
 
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
-	// Create pen fpr dashed line (pattern: **..**..**)
-	stipple[0] = 1; // Set 2 pixel (2 - 1)
-	stipple[1] = 3; // Unset 2 pixel (2 + 1) - and so on
-
-	// Create brush entry for color
-	logbrush.lbColor = RGB(0xff,0x11,0x44);
-	logbrush.lbHatch = 0;
-	logbrush.lbStyle = BS_SOLID;
-
-	// Create pen from brush and pattern (I don't know what is Windows is doing here...)
-	red.CreatePen(PS_USERSTYLE|PS_SOLID|PS_GEOMETRIC,1,&logbrush,2,stipple);
-
 	// Set attributes to DC
-	old = dc->SelectObject(&red);
+	old = dc->SelectObject(&m_RedDash);
 	dc->SetROP2(R2_COPYPEN);
 	dc->SetTextColor(RGB(0xff,0x11,0x44));
 	dc->SetBkMode(TRANSPARENT);
