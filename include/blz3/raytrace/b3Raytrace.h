@@ -1235,16 +1235,25 @@ public:
 
 class b3TriangleShape : public b3SimpleShape
 {
+	b3Base<b3TriangleRef> *m_GridList;       // list of grids
+protected:
+	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
+	b3_count               m_GridSize;       // num grid edges
+
 public:
-	b3Base<b3TriangleRef> *m_GridList;              // list of grids
-	b3_vector              m_Base,m_Size;             // size of bounding box of all triangles
-	b3_count               m_GridSize;              // num grid edges
-	b3_count               m_VertexCount; // num of verteces and triangles
+	b3_count               m_VertexCount;    // num of verteces and triangles
 	b3_count               m_TriaCount;
-	b3_triangle           *m_Triangles;
 	b3_vertex             *m_Vertices;
-	b3_u32                 m_Flags;                 // interpolation flags
-	b3_res                 m_xSize,m_ySize;           // triangle order
+	b3_triangle           *m_Triangles;
+	b3_u32                 m_Flags;          // interpolation flags
+	b3_res                 m_xSize,m_ySize;  // triangle order
+
+	enum b3_triangle_flag
+	{
+		B3_PHONG_B               = 0,
+		B3_NORMAL_VERTEX_VALID_B = 1,
+		B3_NORMAL_FACE_VALID_B   = 2
+	};
 
 protected:
 	b3TriangleShape(b3_size class_size,b3_u32 class_type);
@@ -1254,6 +1263,7 @@ public:
 	B3_ITEM_LOAD(b3TriangleShape);
 
 	               ~b3TriangleShape();
+	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count);
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);
@@ -1274,6 +1284,14 @@ private:
 				b3Base<b3TriangleRef> *list);
 };
 
+// index calculation of triangle grid
+#define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
+
+// normal interpolation defines
+#define PHONG                   (1 << b3TriangleShape::b3_triangle_flag::B3_PHONG_B)     // use Phong interpolation
+#define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::b3_triangle_flag::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
+#define NORMAL_FACE_VALID       (1 << b3TriangleShape::b3_triangle_flag::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
+
 // TRIANGLES
 class b3Triangles : public b3TriangleShape
 {
@@ -1281,20 +1299,12 @@ public:
 	B3_ITEM_INIT(b3Triangles);
 	B3_ITEM_LOAD(b3Triangles);
 
-	        void   b3StoreShape();
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	        void   b3ComputeVertices();
-	        void   b3ComputeNormals(b3_bool normalize=true);
-	        void   b3ComputeIndices();
+	void   b3StoreShape();
+	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void   b3ComputeVertices();
+	void   b3ComputeNormals(b3_bool normalize=true);
+	void   b3ComputeIndices();
 };
-
-// index calculation of triangle grid
-#define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
-
-// normal interpolation defines
-#define PHONG                   1L     // use Phong interpolation
-#define NORMAL_VERTEX_VALID     2L     // normals of vertices valid, no auto computation
-#define NORMAL_FACE_VALID       4L     // normals of triangles valid, no auto computation
 
 // SPLINE, SPLINE_ROT
 class b3SplineCurve : public b3TriangleShape
@@ -1313,6 +1323,7 @@ public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
 
+	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed);
 	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation);
 	b3_bool b3Prepare();
@@ -1345,6 +1356,7 @@ protected:
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
 class b3SplineShape : public b3TriangleShape
 {
+	b3_count         m_xSubDiv,m_ySubDiv;
 protected:
 #ifdef BLZ3_USE_OPENGL
 	b3_count         m_GridVertexCount;
@@ -1353,7 +1365,6 @@ protected:
 	
 public:
 	b3Spline         m_Spline[2];
-	b3_count         m_xSubDiv,m_ySubDiv;
 	b3_f32           m_Knots[2][B3_MAX_KNOTS];
 	b3_vector       *m_Controls;
 

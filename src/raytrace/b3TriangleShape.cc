@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/03/02 16:47:50  sm
+**      - Further cleanup of spline shapes and triangle shapes.
+**      - Some cleanups of b3ControlLDC done: Now sending
+**        messages to dialog via WM_NOTIFY.
+**
 **      Revision 1.24  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -123,33 +128,67 @@
 b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
 	b3SimpleShape(class_size, class_type)
 {
-	m_Vertices  = null;
-	m_Triangles = null;
-	m_GridList  = null;
-	m_GridSize  = 0;
+	m_Vertices    = null;
+	m_Triangles   = null;
+	m_GridList    = null;
+	m_GridSize    = 0;
+	m_VertexCount = 0;
+	m_TriaCount   = 0;
+	m_xSize       = 0;
+	m_ySize       = 0;
+	m_Flags       = 0;
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 	b3SimpleShape(sizeof(b3TriangleShape), class_type)
 {
-	m_Vertices  = null;
-	m_Triangles = null;
-	m_GridList  = null;
-	m_GridSize  = 0;
+	m_Vertices    = null;
+	m_Triangles   = null;
+	m_GridList    = null;
+	m_GridSize    = 0;
+	m_VertexCount = 0;
+	m_TriaCount   = 0;
+	m_xSize       = 0;
+	m_ySize       = 0;
+	m_Flags       = 0;
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 *src) :
 	b3SimpleShape(src)
 {
-	m_Vertices  = null;
-	m_Triangles = null;
-	m_GridList  = null;
-	m_GridSize  = 0;
+	m_Vertices    = null;
+	m_Triangles   = null;
+	m_GridList    = null;
+	m_GridSize    = 0;
+	m_VertexCount = 0;
+	m_TriaCount   = 0;
+	m_xSize       = 0;
+	m_ySize       = 0;
+	m_Flags       = 0;
 }
 
 b3TriangleShape::~b3TriangleShape()
 {
 	b3FreeTriaRefs();
+}
+
+b3_bool b3TriangleShape::b3Init(b3_count vertex_count,b3_count tria_count)
+{
+	if (m_VertexCount != vertex_count)
+	{
+		b3Item::b3Free(m_Vertices);
+		m_VertexCount = vertex_count;
+		m_Vertices    = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
+	}
+
+	if (m_TriaCount != tria_count)
+	{
+		b3Item::b3Free(m_Triangles);
+		m_TriaCount = tria_count;
+		m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
+	}
+
+	return (m_Vertices != null) && (m_Triangles != null);
 }
 
 void b3TriangleShape::b3Transform(b3_matrix *transformation)

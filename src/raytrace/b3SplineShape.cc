@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2002/03/02 16:47:50  sm
+**      - Further cleanup of spline shapes and triangle shapes.
+**      - Some cleanups of b3ControlLDC done: Now sending
+**        messages to dialog via WM_NOTIFY.
+**
 **      Revision 1.28  2002/03/02 15:24:35  sm
 **      - Templetized splines (uhff).
 **      - Prepared spline shapes for their creation.
@@ -191,11 +196,13 @@
 b3SplineCurve::b3SplineCurve(b3_size class_size,b3_u32 class_type) :
 	b3TriangleShape(class_size, class_type)
 {
+	m_Controls = null;
 }
 
 b3SplineCurve::b3SplineCurve(b3_u32 class_type) :
 	b3TriangleShape(sizeof(b3SplineCurve), class_type)
 {
+	m_Controls = null;
 }
 
 b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
@@ -238,12 +245,29 @@ void b3SplineCurve::b3StoreShape()
 	}
 }
 
+
+void b3SplineCurve::b3Init(
+	b3_count Degree,
+	b3_count ControlNum,
+	b3_bool  Closed)
+{
+	// Allocate controls
+	m_Controls      = (b3_vector *)b3Item::b3Alloc(m_Spline.control_max * sizeof(b3_vector));
+
+	// Init horizontal spline
+	m_Spline.knots    = m_Knots;
+	m_Spline.controls = m_Controls;
+	m_Spline.offset   = 1;
+	m_Spline.b3InitCurve(Degree,ControlNum,Closed);
+}
+
 b3_bool b3SplineCurve::b3Prepare()
 {
 	b3Spline     MySpline;
 	b3_triangle *Triangle;
 	b3_matrix    Matrix;
 	b3_res       xSize,ySize,x,y;
+	b3_count     VertexCount,TriaCount;
 	b3_vector    Between[B3_MAX_CONTROLS+1];
 	b3_vector    VertexField[B3_MAX_SUBDIV+1];
 
@@ -254,17 +278,13 @@ b3_bool b3SplineCurve::b3Prepare()
 
 	xSize       = m_rSubDiv;
 	ySize       = MySpline.subdiv;
-	m_TriaCount = xSize * ySize * 2;
+	TriaCount = xSize * ySize * 2;
 
 	if (!MySpline.closed) ySize++;
-	m_VertexCount = xSize * ySize;
+	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	b3Item::b3Free(m_Vertices);
-	b3Item::b3Free(m_Triangles);
-	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
-	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
-	if ((m_Vertices == null) || (m_Triangles == null))
+	if (!b3TriangleShape::b3Init(VertexCount,TriaCount))
 	{
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
@@ -705,7 +725,7 @@ b3_bool b3SplineShape::b3Prepare()
 	b3_vector   *Between;
 	b3Spline     MySpline;
 	b3_res       xSize,ySize,x,y;
-	b3_count     SubDiv;
+	b3_count     SubDiv,TriaCount,VertexCount;
 	b3_vector    VertexField[B3_MAX_SUBDIV+1];
 
 	Between = (b3_vector *)b3Item::b3Alloc (sizeof(b3_vector) *
@@ -717,18 +737,14 @@ b3_bool b3SplineShape::b3Prepare()
 
 	xSize       = m_Spline[0].subdiv;
 	ySize       = m_Spline[1].subdiv;
-	m_TriaCount = xSize * ySize * 2;
+	TriaCount = xSize * ySize * 2;
 
 	if (!m_Spline[0].closed) xSize++;
 	if (!m_Spline[1].closed) ySize++;
-	m_VertexCount = xSize * ySize;
+	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	b3Item::b3Free(m_Vertices);
-	b3Item::b3Free(m_Triangles);
-	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
-	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
-	if ((m_Vertices == null) || (m_Triangles == null))
+	if (!b3TriangleShape::b3Init(VertexCount,TriaCount))
 	{
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
