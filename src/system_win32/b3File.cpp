@@ -36,12 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/13 07:53:26  sm
+**	- Fixed b3File caching problem which occured becaus
+**	  of a variable hiding problem.
+**
 **	Revision 1.5  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.4  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -76,10 +80,10 @@ b3_count b3File::m_OpenFiles = 0;
 // Initialize an instance only
 b3File::b3File()
 {
-	Index =  0;
-	Size  =  0;
-	File  = -1;
-	Cache =  null;
+	m_Index       =  0;
+	m_BufferSize  =  0;
+	m_File        = -1;
+	m_Cache       =  null;
 }
 
 // Instantiate as opened file
@@ -87,10 +91,10 @@ b3File::b3File (
 	const char           *Name,
 	const b3_access_mode  AccessMode)
 {
-	Cache =  null;
-	Size  =  0;
-	Index =  0;
-	File  = -1;
+	m_Index       =  0;
+	m_BufferSize  =  0;
+	m_File        = -1;
+	m_Cache       =  null;
 
 	if (!b3Open(Name,AccessMode))
 	{
@@ -100,7 +104,7 @@ b3File::b3File (
 
 b3File::~b3File()
 {
-	if (File != -1)
+	if (m_File != -1)
 	{
 		b3Close();
 	}
@@ -115,9 +119,9 @@ b3_bool b3File::b3Open (
 	{
 		case B_READ :
 		case T_READ :
-			File = _open(Name,O_RDONLY|
+			m_File = _open(Name,O_RDONLY|
 					(AccessMode == B_READ ? O_BINARY : O_TEXT));
-			if (File != -1)
+			if (m_File != -1)
 			{
 				m_OpenFiles++;
 				return true;
@@ -127,10 +131,10 @@ b3_bool b3File::b3Open (
 		case B_WRITE :
 		case T_WRITE :
 			remove (Name);
-			File = _open(Name,O_WRONLY|O_CREAT|
+			m_File = _open(Name,O_WRONLY|O_CREAT|
 				(AccessMode == B_WRITE ? O_BINARY : O_TEXT),
 				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
-			if (File != -1)
+			if (m_File != -1)
 			{
 				m_OpenFiles++;
 				b3Buffer (DEFAULT_CACHESIZE);
@@ -140,10 +144,10 @@ b3_bool b3File::b3Open (
 
 		case B_APPEND :
 		case T_APPEND :
-			File = _open(Name,O_WRONLY|O_APPEND|
+			m_File = _open(Name,O_WRONLY|O_APPEND|
 				(AccessMode == B_WRITE ? O_BINARY : O_TEXT),
 				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
-			if (File != -1)
+			if (m_File != -1)
 			{
 				m_OpenFiles++;
 				b3Buffer (DEFAULT_CACHESIZE);
@@ -152,7 +156,7 @@ b3_bool b3File::b3Open (
 			break;
 
 		default :
-			File = null;
+			m_File = -1;
 			break;
 	}
 	return false;
@@ -166,7 +170,7 @@ b3_size b3File::b3Read (
 {
 	b3_size readBytes;
 
-	readBytes = _read (File,(void *)buffer,buffer_size);
+	readBytes = _read (m_File,(void *)buffer,buffer_size);
 	return readBytes;
 }
 
@@ -179,33 +183,36 @@ b3_size b3File::b3Write (
 	b3_size  written;
 
 	// write buffer is cachable
-	if (buffer_size <= (Size - Index))
+	if (buffer_size <= (m_BufferSize - m_Index))
 	{
 		// OK! Cache it!
-		memcpy (&Cache[Index],buffer,buffer_size);
-		Index += buffer_size;
+		memcpy (&m_Cache[m_Index],buffer,buffer_size);
+		m_Index += buffer_size;
 		return   buffer_size;
 	}
 
 	// Other case: We must flush cache buffer first
-	written = _write (File,Cache,Index);
-	if (written < (b3_size)Index)
+	if (m_Index > 0)
+	{
+		written = _write (m_File,m_Cache,m_Index);
+	}
+	if (written < (b3_size)m_Index)
 	{
 		b3_index i;
 		b3_size  num;
 
 		// Overwrite written bytes
-		for (i = written;i < Index;i++)
+		for (i = written;i < m_Index;i++)
 		{
-			Cache[i-written] = Cache[i];
+			m_Cache[i-written] = m_Cache[i];
 		}
 
 		// Set new write position inside cache
-		Index = written;
+		m_Index = written;
 
 		// First compute the rest space of the cache. Then
 		// check if buffer_size is lower than rest space.
-		num = Size - written;
+		num = m_BufferSize - written;
 		if (buffer_size < num)
 		{
 			num = buffer_size;
@@ -214,7 +221,7 @@ b3_size b3File::b3Write (
 		// Copy as much as possible
 		for (i = 0;i < 0;i++)
 		{
-			Cache[Index++] = buffer[i];
+			m_Cache[m_Index++] = buffer[i];
 		}
 
 		// That's it. The caller must check this condition!
@@ -222,50 +229,59 @@ b3_size b3File::b3Write (
 	}
 
 	// Write buffer is cachable but cache buffer is too full
-	if (buffer_size < Size)
+	if (buffer_size < m_BufferSize)
 	{
-		memcpy (Cache,buffer,buffer_size);
-		Index = buffer_size;
+		memcpy (m_Cache,buffer,buffer_size);
+		m_Index = buffer_size;
 		return  buffer_size;
 	}
-	Index = 0;
+	m_Index = 0;
 
 	// The write buffer is greater than the cache buffer
-	return (_write(File,buffer,buffer_size));
+	return (_write(m_File,buffer,buffer_size));
 }
 
 b3_bool b3File::b3Flush ()
 {
-	b3_size written,i,k,Size;
+	b3_size written,i,k,size;
+
+	// Check file handle
+	if (m_File == -1)
+	{
+		return false;
+	}
 
 	// Buffer is empty
-	if (Index == 0)
+	if (m_Index == 0)
 	{
 		return true;
 	}
 
 	// Write buffer contents
-	written = _write (File,Cache,Index);
+	if (m_Index > 0)
+	{
+		written = _write (m_File,m_Cache,m_Index);
+	}
 
 	// Handle case that not the whole buffer was written
-	if (written < (b3_size)Index)
+	if (written < (b3_size)m_Index)
 	{
 		k     = written;
-		Size  = Index - written;
+		size  = m_Index - written;
 
 		// Copy data to front of buffer
-		for (i = 0;i < Size;i++)
+		for (i = 0;i < size;i++)
 		{
-			Cache[i] = Cache[k++];
+			m_Cache[i] = m_Cache[k++];
 		}
-		Index = Size;
+		m_Index = size;
 	}
 	else
 	{
-		Index = 0;
+		m_Index = 0;
 	}
 
-	return Index == 0;
+	return m_Index == 0;
 }
 
 b3_size b3File::b3Seek (
@@ -274,47 +290,47 @@ b3_size b3File::b3Seek (
 {
 	b3_size OldPos;
 
-	OldPos = _lseek(File,0L,SEEK_CUR);
+	OldPos = _lseek(m_File,0L,SEEK_CUR);
 	if (b3Flush())
 	{
 		switch (SeekMode)
 		{
 			case B3_SEEK_START :
-				_lseek(File,offset,SEEK_SET);
+				_lseek(m_File,offset,SEEK_SET);
 				return OldPos;
 			case B3_SEEK_CURRENT :
-				_lseek(File,offset,SEEK_CUR);
+				_lseek(m_File,offset,SEEK_CUR);
 				return OldPos;
 			case B3_SEEK_END :
-				_lseek(File,offset,SEEK_END);
+				_lseek(m_File,offset,SEEK_END);
 				return OldPos;
 		}
 	}
-	_lseek(File,0L,SEEK_CUR);
+	_lseek(m_File,0L,SEEK_CUR);
 	return OldPos;
 }
 
 b3_size b3File::b3Size ()
 {
-	b3_size OldPos,Size;
+	b3_size pos,size;
 
 	b3Flush ();
 
 	// save old position
-	OldPos = _lseek (File,0L,SEEK_CUR);
+	pos  = _lseek (m_File,0L,SEEK_CUR);
 
 	// Run to EOF
-	         _lseek (File,0L,SEEK_END);
+	       _lseek (m_File,0L,SEEK_END);
 
 	// save end position (= file size)
-	Size   = _lseek (File,0L,SEEK_CUR);
+	size = _lseek (m_File,0L,SEEK_CUR);
 
 	// Remember old position
-	         _lseek (File,OldPos,SEEK_SET);
-	return Size;
+	       _lseek (m_File,pos,SEEK_SET);
+	return size;
 }
 
-b3_bool b3File::b3Buffer (b3_size Size)
+b3_bool b3File::b3Buffer (b3_size size)
 {
 	// Flush old buffer
 	if (!b3Flush())
@@ -323,43 +339,35 @@ b3_bool b3File::b3Buffer (b3_size Size)
 	}
 
 	// Free old buffer
-	b3Free (Cache);
-	Size  = 0;
-	Index = 0;
+	b3Free (m_Cache);
+	m_Index      = 0;
+	m_BufferSize = 0;
 
 	// Allocate new buffer
-	if (Size > 32)
+	if (size > 32)
 	{
-		Cache = (b3_u08 *)b3Alloc (Size);
-		if (Cache) 
+		m_Cache = (b3_u08 *)b3Alloc (size);
+		if (m_Cache != null) 
 		{
-			Size -= 32;
+			m_BufferSize =  size - 32;
 		}
 	}
-	return Cache != null;
+	return m_Cache != null;
 }
 
 void b3File::b3Close ()
 {
 	// Close file;
-	if (File != -1)
+	b3Buffer(0);
+	if (m_File != -1)
 	{
-		b3Flush ();
-		_close  (File);
+		_close  (m_File);
 		m_OpenFiles--;
-		File  = -1;
-	}
-
-	// Free Cache
-	if (Cache)
-	{
-		b3Free (Cache);
-		Cache = null;
-		Size  =  0;
+		m_File  = -1;
 	}
 
 	// Reset cache position
-	Index =  0;
+	m_Index =  0;
 }
 
 b3_u08 *b3File::b3ReadBuffer(const char *filename,b3_size &file_size)

@@ -32,10 +32,10 @@ class b3File : public b3FileAbstract, public b3Mem
 {
 	static b3_count m_OpenFiles;
 
-	b3_u08     *Cache;		// cache buffer
-	b3_index    Index;		// index in cache
-	b3_size     Size;		// size of cache
-	int         File;		// fileno
+	b3_u08     *m_Cache;		// cache buffer
+	b3_index    m_Index;		// index in cache
+	b3_size     m_BufferSize;		// size of cache
+	int         m_File;		// fileno
 public:
 	         b3File  ();
 	         b3File  (const char *file_name,const b3_access_mode mode);
