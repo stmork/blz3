@@ -32,7 +32,7 @@ public:
 
 	virtual void            b3Prepare();
 	        b3_bool         b3Shade(b3_ray *ray,b3_count depth = 0);
-	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result) = 0;
+	        void            b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 	inline  b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX)
 	{
@@ -41,7 +41,8 @@ public:
 
 protected:
 	virtual void            b3ShadeSurface(b3_surface &surface,b3_count depth) = 0;
-
+	virtual void            b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result) = 0;
+	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result) = 0;
 	virtual b3_bool         b3IsPointLightBackground(b3Light *light,b3_ray *ray) = 0;
 
 protected:
@@ -52,7 +53,10 @@ class B3_PLUGIN b3ShaderPhong : public b3Shader
 {
 public:
 	               b3ShaderPhong(b3Scene *scene);
+
+protected:
 	       void    b3ShadeSurface(b3_surface &surface,b3_count depth);
+	       void    b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 	inline b3_bool b3IsPointLightBackground(b3Light *light,b3_ray *ray)
 	{
@@ -68,7 +72,10 @@ public:
 	         b3ShaderMork(b3Scene *scene);
 
 	void     b3Prepare();
+
+protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
+	void     b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 private:

@@ -48,6 +48,7 @@ struct b3_polar
 
 class b3Shape;
 class b3BBox;
+class b3Material;
 
 struct b3_ray : public b3_line64
 {
@@ -65,6 +66,7 @@ struct b3_ray : public b3_line64
 	b3Color     color;                 // result color
 	b3Shape    *shape;                 // intersected shape
 	b3BBox     *bbox;                  // bounding box which contains intersected shape
+	b3Material *material;              // hit material of intersected shape
 };
 
 struct b3_material
@@ -78,15 +80,12 @@ struct b3_material
 	b3_f64      m_SpecularExp;
 };
 
-class b3Material;
-
 struct b3_surface : public b3_material
 {
 	b3_ray      *incoming;
 	b3_ray       refl_ray;
 	b3_ray       refr_ray;
 	b3_bool      transparent;
-	b3Material  *material;
 	b3Color      m_SpecularSum;
 };
 

@@ -21,11 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Material.h"  
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Light.h"
-#include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
 
@@ -37,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/05/22 17:02:56  sm
+**	- Decoupled material shader.
+**
 **	Revision 1.22  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.21  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -173,37 +172,38 @@ b3ShaderPhong::b3ShaderPhong(b3Scene *scene) : b3Shader(scene)
 #define MIX_REFRACTION 2
 #define MIX_BOTH       (MIX_REFLECTION | MIX_REFRACTION)
 
+void b3ShaderPhong::b3ShadePostMaterial(
+	b3Light       *light,
+	b3_light_info *Jit,
+	b3_surface    *surface,
+	b3Color       &aux,
+	b3Color       &result)
+{
+	result += aux * 2.0;
+}
+
 void b3ShaderPhong::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3Color aux = b3Color(0,0,0);
+	b3_f64 ShapeAngle,Factor;
 
-	if ((surface->material != null) && surface->material->b3Illuminate(surface,Jit,aux))
+	if (Jit->shape == null)
 	{
-		result += aux * 2.0;
-	}
-	else
-	{
-		b3_f64 ShapeAngle,Factor;
-
-		if (Jit->shape == null)
+		if ((ShapeAngle =
+			surface->incoming->normal.x * Jit->dir.x +
+			surface->incoming->normal.y * Jit->dir.y +
+			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			if ((ShapeAngle =
-				surface->incoming->normal.x * Jit->dir.x +
-				surface->incoming->normal.y * Jit->dir.y +
-				surface->incoming->normal.z * Jit->dir.z) >= 0)
-			{
-				Factor = log ((
-					surface->refl_ray.dir.x * Jit->dir.x +
-					surface->refl_ray.dir.y * Jit->dir.y +
-					surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
-				Factor = exp(Factor * surface->m_SpecularExp) * Jit->LightFrac;
+			Factor = log ((
+				surface->refl_ray.dir.x * Jit->dir.x +
+				surface->refl_ray.dir.y * Jit->dir.y +
+			surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
 
-				result += (surface->m_Specular * Factor + surface->m_Diffuse * ShapeAngle) * light->m_Color;
-			}
+			Factor = exp(Factor * surface->m_SpecularExp) * Jit->LightFrac;
+			result += (surface->m_Specular * Factor + surface->m_Diffuse * ShapeAngle) * light->m_Color;
 		}
 	}
 }

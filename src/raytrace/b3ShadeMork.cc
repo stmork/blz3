@@ -21,11 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3Material.h"
-#include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3BBox.h" 
 #include "blz3/raytrace/b3Light.h"
-#include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
 
@@ -37,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2004/05/22 17:02:56  sm
+**	- Decoupled material shader.
+**
 **	Revision 1.26  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.25  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -195,62 +194,63 @@ void b3ShaderMork::b3Prepare()
 	m_ShadowFactor = m_Scene->m_ShadowBrightness / m_Scene->b3GetLightCount();
 }
 
+void b3ShaderMork::b3ShadePostMaterial(
+	b3Light       *light,
+	b3_light_info *Jit,
+	b3_surface    *surface,
+	b3Color       &aux,
+	b3Color       &result)
+{
+	result += aux * 2.0;
+}
+
 void b3ShaderMork::b3ShadeLight(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3Color aux = b3Color(0,0,0);
+	b3_f64   ShapeAngle,Factor;
+	b3Color  filter;
 
-	if ((surface->material != null) && surface->material->b3Illuminate(surface,Jit,aux))
+	// Real absorption
+	result += (surface->m_Diffuse * m_ShadowFactor);
+
+	filter.b3Init();
+
+	// No shadow => surface in light
+	if (Jit->shape == null)
 	{
-		result += aux * 2.0;
-	}
-	else
-	{
-		b3_f64   ShapeAngle,Factor;
-		b3Color  filter;
-
-		// Real absorption
-		result += (surface->m_Diffuse * m_ShadowFactor);
-
-		filter.b3Init();
-
-		// No shadow => surface in light
-		if (Jit->shape == null)
+		// specular high light
+		if ((ShapeAngle =
+			surface->incoming->normal.x * Jit->dir.x +
+			surface->incoming->normal.y * Jit->dir.y +
+			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			// specular high light
-			if ((ShapeAngle =
-				surface->incoming->normal.x * Jit->dir.x +
-				surface->incoming->normal.y * Jit->dir.y +
-				surface->incoming->normal.z * Jit->dir.z) >= 0)
+			if (surface->m_SpecularExp < 100000)
 			{
-				if (surface->m_SpecularExp < 100000)
-				{
-					Factor = log ((
+				Factor = log ((
 						surface->refl_ray.dir.x * Jit->dir.x +
 						surface->refl_ray.dir.y * Jit->dir.y +
 						surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
 
-					Factor = exp (Factor * surface->m_SpecularExp) * Jit->LightFrac;
-					surface->m_SpecularSum += (light->m_Color * Factor);
-				}
-			}
-			else
-			{
-				ShapeAngle = 0;
-			}
-
-			// surface illumination (diffuse color)
-			if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
-			{
-				filter = light->m_Color * Factor;
+				Factor = exp (Factor * surface->m_SpecularExp) * Jit->LightFrac;
+				surface->m_SpecularSum += (light->m_Color * Factor);
 			}
 		}
+		else
+		{
+			ShapeAngle = 0;
+		}
 
-		result += (surface->m_Diffuse * filter);
+		// surface illumination (diffuse color)
+		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
+		{
+			filter = light->m_Color * Factor;
+		}
 	}
+
+	result += (surface->m_Diffuse * filter);
 }
 
 void b3ShaderMork::b3ShadeSurface(

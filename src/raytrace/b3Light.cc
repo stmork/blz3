@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2004/05/22 17:02:56  sm
+**      - Decoupled material shader.
+**
 **      Revision 1.42  2004/05/22 14:17:31  sm
 **      - Merging some basic raytracing structures and gave them some
 **        self explaining names. Also cleaned up some parameter lists.
@@ -505,7 +508,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.LightDist = LightDist;
 
 	shader->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
-	shader->b3ShadeLight(this,&Jit,surface,surface->incoming->color);
+	shader->b3Shade(this,&Jit,surface,surface->incoming->color);
 	return true;
 }
 
@@ -657,7 +660,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
 		shader->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
-		shader->b3ShadeLight(this,Jit,surface,Jit->Result);
+		shader->b3Shade(this,Jit,surface,Jit->Result);
 	}
 	else
 	{

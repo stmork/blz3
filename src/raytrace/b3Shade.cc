@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/raytrace/b3Material.h"
 #include "blz3/raytrace/b3Shape.h"
-#include "blz3/raytrace/b3BBox.h"
-#include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
@@ -36,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/05/22 17:02:56  sm
+**	- Decoupled material shader.
+**
 **	Revision 1.37  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.36  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -307,7 +309,6 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	}
 }
 
-
 b3_bool b3Shader::b3Shade(
 	b3_ray   *ray,
 	b3_count  depth_count)
@@ -358,7 +359,7 @@ b3_bool b3Shader::b3Shade(
 		bbox->b3ComputeBoxPolar(ray);
 
 		// Compute surface values
-		surface.material = shape->b3GetSurfaceValues(&surface);
+		ray->material = shape->b3GetSurfaceValues(&surface);
 		shape->b3BumpNormal(ray);
 
 		b3ComputeOutputRays(&surface);
@@ -392,4 +393,19 @@ b3_bool b3Shader::b3Shade(
 		}
 	}
 	return result;
+}
+
+void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result)
+{
+	b3Color     aux = b3Color(0,0,0);
+	b3Material *material = surface->incoming->material;
+
+	if ((material != null) && material->b3Illuminate(surface,jit,aux))
+	{
+		b3ShadePostMaterial(light, jit, surface, aux, result);
+	}
+	else
+	{
+		b3ShadeLight(light, jit, surface, result);
+	}
 }
