@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2003/07/09 10:09:38  sm
+**	- Changed brt3's default image file format to JPEG
+**	- Increased default quality of JPEG images from 75 to 85
+**	- Added house creating support ;-)
+**
 **	Revision 1.19  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.18  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
@@ -237,6 +242,11 @@ void b3Condition::b3CheckOuterBound(
 
 b3CondRectangle::b3CondRectangle(b3_u32 class_type) : b3Condition(sizeof(b3CondRectangle), class_type)
 {
+	m_xStart = 0;
+	m_yStart = 0;
+	m_xEnd   = 1;
+	m_yEnd   = 1;
+	m_Flags  = RCF_ACTIVE;
 }
 
 b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)

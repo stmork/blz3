@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2003/07/09 10:09:38  sm
+**	- Changed brt3's default image file format to JPEG
+**	- Increased default quality of JPEG images from 75 to 85
+**	- Added house creating support ;-)
+**
 **	Revision 1.48  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.47  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
 **	
@@ -665,6 +670,11 @@ void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 void b3Scene::b3SetFilename(const char *filename)
 {
 	strcpy(m_Filename,filename);
+}
+
+const char *b3Scene::b3GetFilename()
+{
+	return m_Filename;
 }
 
 b3_bool b3Scene::b3GetTitle(char *title)

@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	brt3.cc $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002, 2003 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - The new Blizzard III raytracer
 **
-**      (C) Copyright 2001  Steffen A. Mork
+**      (C) Copyright 2001, 2002, 2003  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2003/07/09 10:09:38  sm
+**	- Changed brt3's default image file format to JPEG
+**	- Increased default quality of JPEG images from 75 to 85
+**	- Added house creating support ;-)
+**
 **	Revision 1.40  2003/05/24 16:37:06  sm
 **	- Added plugin support for Un*x
-**
+**	
 **	Revision 1.39  2003/02/22 19:39:34  sm
 **	- Fixed some GCC compile errors in b3TIFF stuff.
 **	
@@ -234,7 +239,13 @@
 **
 */
 
-static char BLZ3_EXTENSION[] = ".tga";
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
+
+static char BLZ3_EXTENSION[] = ".jpg";
 
 static void b3SaveRaytracedImage(
 	b3Display  *display,
@@ -511,9 +522,9 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
 		b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
 		b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
-		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());

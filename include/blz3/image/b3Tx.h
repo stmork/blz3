@@ -55,6 +55,8 @@
 #define B3_TX_MAX_HISTGRM_DEPTH 8
 #define B3_TX_MAX_HISTGRM       (1 << B3_TX_MAX_HISTGRM_DEPTH)
 
+#define B3_JPG_QUALITY       85
+
 /*************************************************************************
 **                                                                      **
 **                        TIFF structures and definitions               **
@@ -360,7 +362,7 @@ public:
 		const b3_size  BufferSize);
 
 	// b3TxSaveXXX.cc
-	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = 75);
+	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = B3_JPG_QUALITY);
 	b3_result      b3SavePS   (const char *ImageName);
 	b3_result      b3SaveRGB8 (const char *ImageName);
 	b3_result      b3SaveTGA  (const char *ImageName);

@@ -2455,6 +2455,7 @@ public:
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		    b3CameraPart   *b3UpdateCamera();
 			void            b3SetFilename(const char *filename);
+			const char     *b3GetFilename();
 			b3_bool         b3GetTitle(char *title);
 			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
 		    b3Light        *b3GetLight(b3_bool must_active = false);
