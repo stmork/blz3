@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2005/01/12 18:52:35  sm
+**	- Fixed pointer problem.
+**
 **	Revision 1.40  2005/01/12 14:37:10  smork
 **	- Added a painting DC to OpenGL drawing.
-**
+**	
 **	Revision 1.39  2005/01/12 14:25:38  smork
 **	- Added some ReleaseDC for wine.
 **	
@@ -307,7 +310,7 @@ BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
 
 int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	CDC dc;
+	CDC *dc;
 
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
 	{
