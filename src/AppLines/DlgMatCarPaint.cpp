@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/09/30 11:52:44  sm
+**	- Adjusted edit field accuracy.
+**	- Done some minor car paint tests.
+**
 **	Revision 1.3  2004/09/29 18:37:02  sm
 **	- Added metallic properties to dialog.
-**
+**	
 **	Revision 1.2  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
@@ -67,7 +71,7 @@ CDlgMatCarPaint::CDlgMatCarPaint(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParen
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_Metallic = (m_Material->m_Flags & B3_MAT_CP_METALLIC) != 0;
-	m_MetallicCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_MetallicCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
 }
 
 CDlgMatCarPaint::~CDlgMatCarPaint()

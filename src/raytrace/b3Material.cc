@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.97  2004/09/30 11:52:44  sm
+**      - Adjusted edit field accuracy.
+**      - Done some minor car paint tests.
+**
 **      Revision 1.96  2004/09/29 08:46:00  sm
 **      - Added metallic effect on car paint.
 **
@@ -1787,18 +1791,24 @@ b3_bool b3MatCarPaint::b3Prepare()
 	return true;
 }
 
+static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 scale,b3_f64 half)
+{
+	dst->x = src->x + B3_FRAN(scale) - half;
+	dst->y = src->y + B3_FRAN(scale) - half;
+	dst->z = src->z + B3_FRAN(scale) - half;
+	b3Vector::b3Normalize(dst);
+}
+
 b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 {
-	b3_ray    *ray = surface->incoming;
-	b3_vector  normal;
-	b3_f64     ni;
+	b3_ray      *ray = surface->incoming;
+	b3_f64       ni;
 
 	if (m_Flags & B3_MAT_CP_METALLIC)
 	{
-		normal.x = ray->normal.x + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-		normal.y = ray->normal.y + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-		normal.z = ray->normal.z + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-		b3Vector::b3Normalize(&normal);
+		b3_vector64  normal;
+	
+		b3Randomize(&ray->normal, &normal, m_MetallicScale,m_MetallicScaleHalf);
 
 		ni = fabs(b3Vector::b3SMul(&normal,&ray->dir));
 	}
@@ -1830,10 +1840,8 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 
 		if (m_Flags & B3_MAT_CP_METALLIC)  
 		{
-			refl_dir.x = surface->refl_ray.dir.x + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-			refl_dir.y = surface->refl_ray.dir.y + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-			refl_dir.z = surface->refl_ray.dir.z + B3_FRAN(m_MetallicScale) - m_MetallicScaleHalf;
-			b3Vector::b3Normalize(&refl_dir);
+			b3Randomize(&surface->refl_ray.dir, &refl_dir, m_MetallicScale, m_MetallicScaleHalf);
+
 			rl = b3Vector::b3SMul(&refl_dir,&L);
 		}
 		else
