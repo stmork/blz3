@@ -25,7 +25,10 @@
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/base/b3Endian.h"
 
+#include "b3TxIFF.h"
+#include "b3TxIMG.h"
 /*
 #include <blizzard/system/config.h>
 #include <blizzard/system/tdisplay.h>
@@ -36,7 +39,6 @@
 #include "tx_main.h"
 #include "tx_easy.h"
 #include "tx_gif.h"
-#include "tx_iff.h"
 #include "tx_img.h"
 #include "tx_jpeg.h"
 #include "tx_pcx.h"
@@ -52,12 +54,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/13 09:20:49  sm
+**	- Adding multi image file format support
+**
 **	Revision 1.5  2001/10/11 16:06:33  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
 **	  b3Endian
 **	- Cleaning up some datatypes for proper display in Together.
-**
+**	
 **	Revision 1.4  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
@@ -122,71 +127,80 @@ b3TxPool::~b3TxPool()
 **                                                                      **
 *************************************************************************/
 
-long b3TxPool::b3ParseTexture (
-	b3Tx    *Texture,
-	b3_u08  *Data,
-	b3_size  Size)
+b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 {
-#if 0
 	long              *LongData;
 	struct HeaderTIFF *TIFF;
 	struct HeaderSGI  *HeaderSGI;
-	long               x,y,type,i;
 	b3_offset          pos;
+	b3_coord           x,y;
+	b3_tx_type         type;
+	b3_index           i;
 
-	Texture->b3FreeTx();
-	LongData = (long *)Data;
-	if (Size < 4)
+	b3FreeTx();
+	LongData = (long *)buffer;
+	if (buffer_size < 4)
 	{
-		return 0;
+		return type = B3_TX_UNDEFINED;
 	}
 
 	// schon mal irgend ein IFF
-	if (b3GetMotLong(LongData) == IFF_FORM)
+	if (b3Endian::b3GetMot32(LongData) == IFF_FORM)
 	{
-		switch (GetMotLong(&LongData[2]))
+		switch (b3Endian::b3GetMot32(&LongData[2]))
 		{
-			case IFF_ILBM : return ParseIFF_ILBM(Texture,Data,Size);
-			case IFF_RGB8 :	return ParseIFF_RGB8(Texture,Data,Size);
-			case IFF_RGBN : return ParseIFF_RGBN(Texture,Data,Size);
-			case IFF_YUVN : return ParseIFF_YUVN(Texture,Data,Size);
-			default :		return 0;
+			case IFF_ILBM : return type = b3ParseIFF_ILBM(buffer,buffer_size);
+			case IFF_RGB8 :	return type = b3ParseIFF_RGB8(buffer,buffer_size);
+			case IFF_RGBN : return type = b3ParseIFF_RGB4(buffer,buffer_size);
+			case IFF_YUVN : return type = b3ParseIFF_YUVN(buffer,buffer_size);
+			default :		return type = B3_TX_UNDEFINED;
 		}
 	}
 
 
 	// JPEG
-	for (i = 0;i < BMIN(256,Size - 2);i++)
+	for (i = 0;i < B3_MIN(256,Size - 2);i++)
 	{
-		if ((Data[i] == 0xff) && (Data[i+1] == 0xd8) && (Data[i+2] == 0xff))
+		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
-			if (strncmp (&Data[i+6],"JFIF",4) == 0)
+			if (strncmp ((const char *)&buffer[i+6],"JFIF",4) == 0)
 			{
-				return ParseJPEG(Texture,&Data[i],Size-i);
+				return type = b3ParseJPEG(&buffer[i],Size-i);
 			}
 		}
 	}
 
-	// GIF
-	if (strncmp (Data,"GIF",3) == 0) return ParseGIF (Texture,Data);
 
+	// GIF
+	if (strncmp((const char *)buffer,"GIF",3) == 0)
+	{
+		return type = b3ParseGIF (buffer);
+	}
+
+#if 0
 
 	// TIFF
-	TIFF = (struct HeaderTIFF *)Data;
+	TIFF = (struct HeaderTIFF *)buffer;
 	if ((TIFF->TypeCPU == 0x4d4d)||(TIFF->TypeCPU == 0x4949))
 	{
 #ifndef USE_TIFFLIB_LOAD
-		if (TIFF->VersionTIFF == 0x2a00) ChangeTIFF (TIFF);
-		if (TIFF->VersionTIFF == 0x002a) return ParseTIFF(Texture,TIFF,Size);
+		if (TIFF->VersionTIFF == 0x2a00)
+		{
+			ChangeTIFF (TIFF);
+		}
+		if (TIFF->VersionTIFF == 0x002a)
+		{
+			return type = b3ParseTIFF(TIFF,Size);
+		}
 #else
-		return ParseTIFF(Texture,TIFF,Size);
+		return type = b3ParseTIFF(TIFF,Size);
 #endif
 	}
 
 
 	// PPM6
 	pos = 0;
-	i   = sscanf(Data,"P%ld %ld %ld %*d%n",&type,&x,&y,&pos);
+	i   = sscanf(buffer,"P%ld %ld %ld %*d%n",&type,&x,&y,&pos);
 /*	if (DBUG(2)) PrintF ("PxM (%ld): (%ld,%ld - %ld) %d\n",type,x,y,i,pos); */
 	if (i >= 2)
 	{
@@ -196,8 +210,8 @@ long b3TxPool::b3ParseTexture (
 				if ((((x + 7) >> 3) * y + pos) <= Size)
 				{
 					pos = Size - ((x + 7) >> 3) * y;
-					Texture->FileType = FT_PBM;
-					return ParseRAW (Texture,&Data[pos],x,y,type);
+					FileType = FT_PBM;
+					return type = b3ParseRAW (&buffer[pos],x,y,type);
 				}
 				break;
 
@@ -205,8 +219,8 @@ long b3TxPool::b3ParseTexture (
 				if ((x * y + pos) <= Size)
 				{
 					pos = Size - x * y;
-					Texture->FileType = FT_PGM;
-					return ParseRAW (Texture,&Data[pos],x,y,type);
+					FileType = FT_PGM;
+					return type = b3ParseRAW (&buffer[pos],x,y,type);
 				}
 				break;
 				
@@ -214,8 +228,8 @@ long b3TxPool::b3ParseTexture (
 				if ((x * y * 3 + pos) <= Size)
 				{
 					pos = Size - 3 * x * y;
-					Texture->FileType = FT_PPM;
-					return ParseRAW (Texture,&Data[pos],x,y,type);
+					FileType = FT_PPM;
+					return type = b3ParseRAW (&buffer[pos],x,y,type);
 				}
 				break;
 
@@ -223,40 +237,40 @@ long b3TxPool::b3ParseTexture (
 			case 2 :
 			case 3 :
 			default :
-				Texture->FileType = FT_ERR_UNSUPP;
+				FileType = FT_ERR_UNSUPP;
 				break;
 		}
 	}
 
 
 	// BMP
-	if ((Data[0] == 'B') &&
-	    (Data[1] == 'M') &&
-	    (GetIntelLong(&Data[2]) == Size))
+	if ((buffer[0] == 'B') &&
+	    (buffer[1] == 'M') &&
+	    (b3Endian::b3GetIntel32(&buffer[2]) == Size))
 	{
-		return ParseBMP(Texture,Data);
+		return type = b3ParseBMP(buffer);
 	}
 
 
 		/* MTV */
-	if (sscanf(Data,"%ld %ld",&x,&y) == 2)
+	if (sscanf(buffer,"%ld %ld",&x,&y) == 2)
 	{
-		for (pos = 0;(pos < 100) && (Data[pos] != 10);pos++);
-		if (Data[pos++] == 10)
+		for (pos = 0;(pos < 100) && (buffer[pos] != 10);pos++);
+		if (buffer[pos++] == 10)
 		{
 			if ((x * y * 3 + pos) == Size)
 			{
-				Texture->FileType = FT_MTV;
-				return ParseRAW (Texture,&Data[pos],x,y,6);
+				FileType = FT_MTV;
+				return type = b3ParseRAW (&buffer[pos],x,y,6);
 			}
 		}
 	}
 
 
 	// BMF
-	x = GetIntelShort (&Data[2]);
-	y = GetIntelShort (&Data[4]);
-	switch (Data[6])
+	x = b3Endian::b3GetIntel16 (&buffer[2]);
+	y = b3Endian::b3GetIntel16 (&buffer[4]);
+	switch (buffer[6])
 	{
 		case 2 :
 			i = 1;
@@ -268,36 +282,44 @@ long b3TxPool::b3ParseTexture (
 			i = 0;
 			break;
 	}
-	if ((x * y * i + 16) == Size) return ParseBMF(Texture,Data,Size);
+	if ((x * y * i + 16) == Size) return type = b3ParseBMF(buffer,buffer_size);
 	
 	// SGI RLE
-	HeaderSGI = (struct HeaderSGI *)Data;
+	HeaderSGI = (struct HeaderSGI *)buffer;
 	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
 	{
-		return ParseSGI (Texture,Data,Size);
+		return type = b3ParseSGI (buffer,buffer_size);
 	}
 
 
 	// Targa
-	if ((Data[2] == 2) || (Data[2] == 10))
-		if ((GetLong (&Data[4])  ==  0) && (GetLong(&Data[8]) == 0))
-			if ((Data[16]==32) || (Data[16]==24)) return ParseTGA (Texture,Data);
+	if ((buffer[2] == 2) || (buffer[2] == 10))
+	{
+		if ((b3Endian::b3Get32(&buffer[4])  ==  0) &&
+		    (b3Endian::b3Get32(&buffer[8]) == 0))
+		{
+			if ((buffer[16]==32) || (buffer[16]==24))
+			{
+				return type = b3ParseTGA(buffer);
+			}
+		}
+	}
 
 
 	// PCX
-	if ((Data[2] == 1) && (Data[0] == 0x0a))
+	if ((buffer[2] == 1) && (buffer[0] == 0x0a))
 	{
-		switch (Data[3])			/* Bits pro Pixel */
+		switch (buffer[3])			/* Bits pro Pixel */
 		{
-			case 8  : return ParsePCX8(Texture,Data);
-			case 1 	: return ParsePCX4(Texture,Data);
-			default : return 0; 	
+			case 8  : return type = b3ParsePCX8(buffer);
+			case 1 	: return type = b3ParsePCX4(buffer);
+			default : return type = B3_TX_UNDEFINED;
 		}
 	}
 
 #endif
 	// really unknown
-	return 0;
+	return type = B3_TX_UNDEFINED;
 }
 
 void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
@@ -353,7 +375,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	}
 
 	Texture->b3Name(FullName);
-	b3ParseTexture(Texture,Data,FileSize);
+	Texture->b3ParseTexture(Data,FileSize);
 	b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
 		Texture->b3Name(),Data,FileSize);
 }

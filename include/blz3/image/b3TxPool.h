@@ -39,7 +39,6 @@ public:
 
 private:
 	       void     b3ReloadTexture(b3Tx *texture,const char *name=null);
-	       long     b3ParseTexture(b3Tx *texture,b3_u08 *buffer,b3_size size);
 };
 
 extern b3TxPool texture_pool;

@@ -35,6 +35,45 @@ enum b3_tx_type
 	B3_TX_RGB8      =  3
 };
 
+/*************************************************************************
+**                                                                      **
+**                        error codes or original file format           **
+**                                                                      **
+*************************************************************************/
+
+enum b3_tx_filetype
+{
+	FT_ERR_UNSUPP   =  -6,			/* errors, loading textures */
+	FT_ERR_PACKING	=  -5,
+	FT_ERR_OPEN		=  -4,
+	FT_ERR_UNCOMPL	=  -3,
+	FT_ERR_HEADER	=  -2,
+	FT_ERR_MEM		=  -1,
+	FT_UNKNOWN		=   1,
+	FT_PCX4			=   2,			/* original file types */
+	FT_PCX8			=   3,
+	FT_ILBM			=   4,
+	FT_ILBM_HAM		=   5,
+	FT_ILBM_EHB		=   6,
+	FT_ILBM_24		=   7,
+	FT_RGB8			=   8,
+	FT_RGB4			=   9,
+	FT_MTV			=  10,
+	FT_YUV			=  11,
+	FT_TIFF			=  12,
+	FT_ILBM_HAM8	=  13,
+	FT_TGA          =  14,
+	FT_GIF			=  15,
+	FT_PPM6			=  16,	// old fashioned representation, now FT_PPM
+	FT_BMP			=  17,
+	FT_SGI_RLE		=  18,
+	FT_PPM			=  16,
+	FT_PGM			=  19,
+	FT_PBM			=  20,
+	FT_JPEG			=  21,
+	FT_BMF          =  22
+};
+
 enum b3_tx_threshold
 {
 	B3_THRESHOLD_WHITE_RATIO = 0,
@@ -142,6 +181,7 @@ private:
 	b3_u08           *data;
 	b3_count          dSize,pSize;
 	b3_tx_type        type;
+	b3_tx_filetype    FileType;
 	b3_f64            whiteRatio;
 	b3Path            name;
 	b3ColorIndices   *grid;
@@ -175,7 +215,7 @@ public:
 	b3_bool        b3IsPalette    ();
 	b3_bool        b3IsGreyPalette();
 
-	// b3TxBlit.cpp
+	// b3TxBlit.cc
 	void           b3GetColorMask(
 		b3_u08       *mask,
 		b3_count      BytesPerRow,
@@ -186,7 +226,7 @@ public:
 		b3_res    xMax,     b3_res   yMax,
 		b3_coord  xSrcOff=0,b3_coord ySrcOff=0);
 
-	// b3TxImage.cpp
+	// b3TxImage.cc
 	void           b3Shrink     (b3_count shrink=1);
 	void           b3RemoveBlackBorder();
 	void           b3Negate     ();
@@ -209,7 +249,7 @@ public:
 		b3_pkd_color *bTable,
 		b3Tx         *srcTx = null);
 
-	// b3TxHist.cpp
+	// b3TxHist.cc
 	b3_bool        b3Histogramme();
 	b3_bool        b3StartHist  ();
 	void           b3EndHist    ();
@@ -226,35 +266,36 @@ public:
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
-	// b3TxSaveTIFF.cpp, b3TxLoadTIFF.cc
+	// b3TxSaveTIFF.cc, b3TxLoadTIFF.cc
+	b3_tx_type     b3ParseTexture(b3_u08 *buffer,b3_size size);
 	b3_result      b3Save       (const char *ImageName);
 	b3_result      b3LoadTIFF   (const char *ImageName);
 	b3_result      b3LoadTIFF   (const char *ImageName,
 		const b3_u08 *ImageBuffer,
 		b3_size       BufferSize);
 
-	// b3TxScale.cpp
+	// b3TxScale.cc
 	void           b3TransToGrey();
 	void           b3ScaleToGrey(b3Tx *srcTx);
 	void           b3Scale      (b3Tx *srcTx);
 
-	// b3TxDeskew.cpp
+	// b3TxDeskew.cc
 	void           b3Deskew     ();
 
 private:
-	// b3TxTurn.cpp
+	// b3TxTurn.cc
 	void           b3TurnLeftILBM();
 	void           b3TurnLeftVGA();
 	void           b3TurnLeftRGB4();
 	void           b3TurnLeftRGB8();
 
-	// b3TxTurn.cpp
+	// b3TxTurn.cc
 	void           b3TurnRightILBM();
 	void           b3TurnRightVGA();
 	void           b3TurnRightRGB4();
 	void           b3TurnRightRGB8();
 
-	// b3TxScale.cpp
+	// b3TxScale.cc
 	void           b3DivTableInit    ();
 	void           b3MonoScaleToGrey (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToGrey  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
@@ -266,42 +307,74 @@ private:
 	void           b3VGAScale        (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ColorScale      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 
-	// b3Tx.cpp
+	// b3Tx.cc
 	b3_pkd_color   b3ILBMValue(b3_coord x,b3_coord y);
 	b3_pkd_color   b3RGB4Value(b3_coord x,b3_coord y);
 	b3_pkd_color   b3RGB8Value(b3_coord x,b3_coord y);
 	b3_pkd_color   b3VGAValue (b3_coord x,b3_coord y);
 
-	// b3Tx.cpp
+	// b3Tx.cc
 	void           b3GetILBM  (b3_pkd_color *row,b3_coord y);
 	void           b3GetRGB4  (b3_pkd_color *row,b3_coord y);
 	void           b3GetRGB8  (b3_pkd_color *row,b3_coord y);
 	void           b3GetVGA   (b3_pkd_color *row,b3_coord y);
 
-	// b3TxImage.cpp
+	// b3TxImage.cc
 	b3_count       b3BuildRLE (b3_count *row,b3_u08 *rle);
 	void           b3BuildRow (b3_count *row,b3_u08 *rle,b3_count codeNum,b3_count byteNum);
 
-	// b3TxLoadTIFF.cpp
+	// b3TxLoadTIFF.cc
 	long           b3TIFFPalette(TIFF *handle,short PaletteMode);
 	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
 	long           nauiTIFFAlloc  ();
 
-	// maioTxSaveTIFF.cpp
+	// maioTxSaveTIFF.cc
 	void           b3GetSampleValues  (long &BitsPerPixel,long &SamplesPerPixel);
 	b3_result      b3SaveTIFFFax      (TIFF *handle);
 	b3_result      b3SaveTIFFPalette  (TIFF *handle);
 	b3_result      b3SaveTIFFTrueColor(TIFF *handle);
 
-	// b3TxScale.cpp (color indexing)
+	// b3TxScale.cc (color indexing)
 	void           b3ColorGrid();
 	b3_index       b3ColorIndex(b3_pkd_color color);
 
-	// b3TxDeskew.cpp (deskew page)
+	// b3TxDeskew.cc (deskew page)
 	void           b3DeskewILBM();
 	void           b3DeskewRGB4();
 	void           b3DeskewRGB8();
 	void           b3DeskewVGA();
+
+	// b3TxEasy.cc
+	long           b3ParseRAW (b3_u08 *buffer,long,long,long);
+	long           b3ParseBMP (b3_u08 *buffer);
+	long           b3ParseMTV (b3_u08 *buffer);
+	long           b3ParseBMF (b3_u08 *buffer,unsigned long);
+
+	// b3TxIFF.cc
+	b3_tx_type     b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size);
+	b3_tx_type     b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size);
+	b3_tx_type     b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size);
+	b3_tx_type     b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size);
+	b3_tx_type     b3EHBPalette();
+	void           b3ConvertILBMLine (b3_u08 *Line,b3_u08 *Interleave,b3_res xMax,b3_count Planes);
+	b3_tx_type     b3HamPalette (b3_bool HAM8);
+	b3_bool        b3CalcYUVTable();
+
+	// b3TxGIF.cc
+	b3_tx_type     b3ParseGIF  (b3_u08 *buffer);
+
+	// b3TxPCX.cc
+	b3_tx_type     b3ParsePCX4 (b3_u08 *buffer);
+	b3_tx_type     b3ParsePCX8 (b3_u08 *buffer);
+
+	// b3TxIMG.cc
+	b3_tx_type     b3ParseIMG  (b3_u08 *buffer);
+
+	// b3TxTGA.cc
+	b3_tx_type     b3ParseTGA  (b3_u08 *buffer);
+
+	// b3TxJPG.cc
+	b3_tx_type     b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size);
 };
 
 extern b3_f64        b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
