@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2002/08/23 07:52:12  sm
+**	- Added some b3List operations.
+**	- Made some preliminary discussions concerning motion blur raytracing.
+**
 **	Revision 1.42  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
 **	  real time raytracing: 8 fps for Animationtest.
-**
+**	
 **	Revision 1.41  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -260,8 +264,8 @@ b3_f64 epsilon = 0.0005;
 
 struct b3_rt_info
 {
-	b3Display *display;
-	b3Scene   *scene;
+	b3Display *m_Display;
+	b3Scene   *m_Scene;
 };
 
 /*************************************************************************
@@ -273,17 +277,14 @@ struct b3_rt_info
 b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 {
 	b3_rt_info *info  = (b3_rt_info *)ptr;
-	b3Scene    *scene = info->scene;
+	b3Scene    *scene = info->m_Scene;
 	b3RayRow   *row;
 
 	do
 	{
 		// Enter critical section
 		scene->m_PoolMutex.b3Lock();
-		if ((row = (b3RayRow *)scene->m_RowPool.First) != null)
-		{
-			scene->m_RowPool.b3Remove(row);
-		}
+		row = (b3RayRow *)scene->m_RowPool.b3RemoveFirst();
 		scene->m_PoolMutex.b3Unlock();
 		// Leave critical section
 
@@ -500,8 +501,8 @@ void b3Scene::b3Raytrace(b3Display *display)
 		span.b3Start();
 		for (i = 0;i < CPUs;i++)
 		{
-			infos[i].display = display;
-			infos[i].scene   = this;
+			infos[i].m_Display = display;
+			infos[i].m_Scene   = this;
 
 			threads[i].b3Start(b3RaytraceThread,&infos[i],-1);
 		}

@@ -106,6 +106,22 @@ public:
 		return Class;
 	}
 
+	inline b3_bool b3IsEmpty()
+	{
+		return (First == null) && (Last == null);
+	}
+
+	inline void b3Move(T *from)
+	{
+		B3_ASSERT(b3IsEmpty());
+
+		Class = from->Class;
+		First = from->First;
+		Last  = from->Last;
+		
+		from->b3InitBase(Class);
+	}
+
 	inline void b3Free()
 	{
 		T *node,*succ;
@@ -137,7 +153,7 @@ public:
 		}
 	}
 
-	inline b3_count b3Count()
+	inline b3_count b3GetCount()
 	{
 		T        *node;
 		b3_count  count = 0;
