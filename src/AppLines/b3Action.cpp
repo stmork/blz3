@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/12/18 14:36:25  sm
+**	- Double click bug on camera acting found and fixed
+**
 **	Revision 1.12  2001/12/08 19:17:07  sm
 **	- Added interactive focal length
 **	- Added interactive twirl
 **	- Added camera move left/right on right mouse button
-**
+**	
 **	Revision 1.11  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
@@ -93,7 +96,7 @@ CB3Action::CB3Action(CAppLinesView *window)
 
 void CB3Action::b3DispatchMouseMove  (b3_coord x,b3_coord y)
 {
-	if ((x != m_xLast) || (y != m_yLast))
+	if (((x != m_xLast) || (y != m_yLast)) && (::GetCapture() == m_View->m_hWnd))
 	{
 		switch (m_Button)
 		{
@@ -129,9 +132,12 @@ void CB3Action::b3DispatchLButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 
 void CB3Action::b3DispatchLButtonUp  (b3_coord x,b3_coord y)
 {
-	b3LUp(x,y);
-	m_Button = B3_MB_UP;
-	::ReleaseCapture();
+	if (::GetCapture() == m_View->m_hWnd)
+	{
+		b3LUp(x,y);
+		m_Button = B3_MB_UP;
+		::ReleaseCapture();
+	}
 }
 
 void CB3Action::b3DispatchMButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
@@ -148,9 +154,12 @@ void CB3Action::b3DispatchMButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 
 void CB3Action::b3DispatchMButtonUp(b3_coord x,b3_coord y)
 {
-	b3MUp(x,y);
-	m_Button = B3_MB_UP;
-	::ReleaseCapture();
+	if (::GetCapture() == m_View->m_hWnd)
+	{
+		b3MUp(x,y);
+		m_Button = B3_MB_UP;
+		::ReleaseCapture();
+	}
 }
 
 void CB3Action::b3DispatchRButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
@@ -167,9 +176,12 @@ void CB3Action::b3DispatchRButtonDown(b3_coord x,b3_coord y,b3_u32 flags)
 
 void CB3Action::b3DispatchRButtonUp(b3_coord x,b3_coord y)
 {
-	b3RUp(x,y);
-	m_Button = B3_MB_UP;
-	::ReleaseCapture();
+	if (::GetCapture() == m_View->m_hWnd)
+	{
+		b3RUp(x,y);
+		m_Button = B3_MB_UP;
+		::ReleaseCapture();
+	}
 }
 
 void CB3Action::b3GetRelCoord(
@@ -514,7 +526,8 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 CB3CameraRotateAction::CB3CameraRotateAction(CAppLinesView *window) :
 	CB3Action(window)
 {
-	m_Sign = 0;
+	m_Sign   = 0;
+	m_Camera = null;
 }
 
 void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
@@ -546,6 +559,7 @@ void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
 		m_xRelStart = xRel;
 		m_yRelStart = yRel;
 	}
+	m_Camera = m_View->m_Camera;
 }
 
 void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
@@ -1099,6 +1113,7 @@ void CB3ActionCameraView::b3LUp(b3_coord x,b3_coord y)
 		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
 		m_Doc->SetModifiedFlag();
 	}
+	m_Camera = null;
 }
 
 void CB3ActionCameraView::b3RDown(b3_coord x,b3_coord y)
@@ -1179,6 +1194,7 @@ void CB3ActionCameraView::b3RUp(b3_coord x,b3_coord y)
 			}
 		}
 	}
+	m_Camera = null;
 }
 
 /*************************************************************************

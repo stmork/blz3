@@ -173,16 +173,16 @@ class CB3CameraRotateAction : public CB3Action
 {
 protected:
 	b3CameraPart *m_Camera;
-	b3_vector *m_Center;
-	b3_vector  m_StartPoint;
-	b3_f64     m_StartAngle;
-	b3_f64     m_xRelStart;
-	b3_f64     m_yRelStart;
-	b3_f64     m_xLastAngle;
-	b3_f64     m_yLastAngle;
-	b3_line    m_Axis;
-	b3_line    m_UpDown;
-	b3_f64     m_Sign;
+	b3_vector    *m_Center;
+	b3_vector     m_StartPoint;
+	b3_f64        m_StartAngle;
+	b3_f64        m_xRelStart;
+	b3_f64        m_yRelStart;
+	b3_f64        m_xLastAngle;
+	b3_f64        m_yLastAngle;
+	b3_line       m_Axis;
+	b3_line       m_UpDown;
+	b3_f64        m_Sign;
 
 public:
 	             CB3CameraRotateAction(CAppLinesView *window);
