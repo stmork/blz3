@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/04/02 08:56:45  sm
+**	- Computed more realistic clouds.
+**
 **	Revision 1.15  2004/03/21 16:08:35  sm
 **	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
-**
+**	
 **	Revision 1.14  2004/02/28 13:51:53  sm
 **	- Added Cook/Torrance material. But this is not a material
 **	  it is a shader! Further reading is necessary to redesign
@@ -520,16 +523,36 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	Color = HellColors[(int)(t * 4)];
 }
 
-void b3Noise::b3Clouds (b3_vector *P,b3Color &Color)
+static b3Color CloudHaze = b3Color(0.7,0.7,1.0);
+
+void b3Noise::b3Clouds (b3_vector *P,b3Color &result)
 {
 	b3_vector Dir;
-	b3_f64    r;
+	b3_f64    scaling = 5.0;
+	b3_f64    sharpness = 10.2;
+	b3_f64    hazyness = 0.07;
+	b3_f64    blue = 0.45;
+	b3_f64    r,factor,sight;
 
-	b3Vector::b3Scale(&Dir,P,scal * 0.08);
-	Dir.x *= 0.3f;
+	if (P->z > 0)
+	{
+		factor = scaling / P->z;
+		Dir.x = P->x * factor;
+		Dir.y = P->y * factor;
+		Dir.z = 1.0;
 
-	r = b3Turbulence (&Dir) - 0.45;
-	Color.b3Init(r,r,1.0);
+		r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
+		if (r < 0)
+		{
+			r = 0;
+		}
+		sight = exp(-hazyness * b3Vector::b3Length(&Dir));
+		result = b3Color::b3Mix(CloudHaze,b3Color(r,r,B3_MAX(r,blue)),sight);
+	}
+	else
+	{
+		result = CloudHaze;
+	}
 }
 
 inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)

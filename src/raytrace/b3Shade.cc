@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/04/02 08:56:45  sm
+**	- Computed more realistic clouds.
+**
 **	Revision 1.24  2004/03/01 14:00:32  sm
 **	- Ready to go for Cook/Torrance reflectance model.
-**
+**	
 **	Revision 1.23  2004/02/28 19:10:13  sm
 **	- Cook/Torrance is applicable by use through material
 **	  shader.
@@ -308,6 +311,7 @@ void b3Scene::b3GetBackgroundColor(
 			dir.y = ray->dir.y;
 			dir.z = ray->dir.z;
 			b3Noise::b3Clouds (&dir,ray->color);
+
 #ifdef SKY_SLIDE
 			ly = ray->color[b3Color::R] * 2.0 - 1.0;
 #else

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.65  2004/04/02 08:56:45  sm
+**      - Computed more realistic clouds.
+**
 **      Revision 1.64  2003/08/31 10:44:07  sm
 **      - Further buffer overflow avoidments.
 **
@@ -883,9 +886,8 @@ void b3Nebular::b3ComputeNebular(
 	b3_f64   distance)
 {
 	b3_f64 NebularIndex = exp (-distance * m_NebularDenom);
-	b3_f64 NebularDenom = 1 - NebularIndex;
 
-	result = input * NebularIndex + m_NebularColor * NebularDenom;
+	result = b3Color::b3Mix(m_NebularColor,input,NebularIndex);
 }
 
 /*************************************************************************
