@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ExampleScene.cpp $
+**	$Filename:	b3Factory.cpp $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -21,13 +21,11 @@
 **                                                                      **
 *************************************************************************/
 
-#include "AppLines.h"
-#include "DlgScene.h"
-#include "b3ExampleScene.h"
-#include "blz3/base/b3Color.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Render.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Factory.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3ShapeRenderContext.h"
+#include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,6 +35,11 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2005/01/07 12:38:51  smork
+**	- Bump release.
+**	- Added tool to create object/bbox thumb nails.
+**	- Moved scene factory from Lines to raytrace lib.
+**
 **	Revision 1.23  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -45,7 +48,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.22  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -156,11 +159,11 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3ExampleScene implementation                 **
+**                        b3Factory implementation                      **
 **                                                                      **
 *************************************************************************/
 
-inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
+inline void b3Factory::b3Consolidate(b3Scene *scene)
 {
 	b3ShapeRenderContext context;
 	b3_vector            lower,upper;
@@ -169,31 +172,7 @@ inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
 	scene->b3ComputeBounds(&lower,&upper);
 }
 
-inline void b3ExampleScene::b3SetCameraName(b3CameraPart *camera,int id)
-{
-	CString name;
-
-	name.LoadString(id);
-	camera->b3SetName(name);
-}
-
-inline void b3ExampleScene::b3SetLightName(b3Light *light,int id)
-{
-	CString name;
-
-	name.LoadString(id);
-	light->b3SetName(name);
-}
-
-inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
-{
-	CString name;
-
-	name.LoadString(id);
-	bbox->b3SetName(name);
-}
-
-b3Scene *b3ExampleScene::b3CreateNew(const char *filename, b3_u32 class_type)
+b3Scene *b3Factory::b3CreateNew(const char *filename, b3_u32 class_type)
 {
 	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox   = new b3BBox(BBOX);
@@ -202,9 +181,11 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename, b3_u32 class_type)
 	b3CameraPart *camera = new b3CameraPart(CAMERA);
 	b3_vector     eye,view;
 
+/*
 	b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
 	b3SetLightName(light,IDS_NEW_LIGHT_NAME);
 	b3SetObjectName(bbox,IDS_NEW_OBJECT_NAME);
+*/
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
@@ -222,7 +203,7 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename, b3_u32 class_type)
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateGlobal(b3_u32 class_type)
+b3Scene *b3Factory::b3CreateGlobal(b3_u32 class_type)
 {
 	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox1  = new b3BBox(BBOX);
@@ -280,7 +261,7 @@ b3Scene *b3ExampleScene::b3CreateGlobal(b3_u32 class_type)
 	return scene;
 }
 
-b3CameraPart *b3ExampleScene::b3CreateCamera(
+b3CameraPart *b3Factory::b3CreateCamera(
 	b3Scene *scene,
 	b3_f64   xAngle,
 	b3_f64   yAngle)
@@ -300,7 +281,7 @@ b3CameraPart *b3ExampleScene::b3CreateCamera(
 	return camera;
 }
 
-b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox, b3_u32 class_type,b3CameraPart *original_camera)
+b3Scene *b3Factory::b3CreateBBox(b3BBox *original_bbox, b3_u32 class_type,b3CameraPart *original_camera)
 {
 	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
@@ -335,7 +316,7 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox, b3_u32 class_type,b
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_type)
+b3Scene *b3Factory::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_type)
 {
 	b3Scene      *scene = new b3Scene(class_type);
 	b3BBox       *bbox  = new b3BBox(BBOX);
@@ -373,7 +354,7 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 cl
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type)
+b3Scene *b3Factory::b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type)
 {
 	b3Scene      *scene = new b3Scene(class_type);
 	b3BBox       *bbox  = new b3BBox(BBOX);

@@ -25,6 +25,7 @@ PRG_SOURCE		=\
 	b3Cylinder.cc\
 	b3Disk.cc\
 	b3Ellipsoid.cc\
+	b3Factory.cc\
 	b3Init.cc\
 	b3Intersect.cc\
 	b3Light.cc\
@@ -80,6 +81,7 @@ PRG_OBJ			=\
 	b3Cylinder.o\
 	b3Disk.o\
 	b3Ellipsoid.o\
+	b3Factory.o\
 	b3Init.o\
 	b3Intersect.o\
 	b3Light.o\

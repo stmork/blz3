@@ -22,12 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "DlgScene.h"
-#include "b3ExampleScene.h"
-#include "blz3/base/b3Color.h"
-#include "blz3/base/b3Matrix.h"
-#include "blz3/base/b3Render.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Factory.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2005/01/07 12:38:51  smork
+**	- Bump release.
+**	- Added tool to create object/bbox thumb nails.
+**	- Moved scene factory from Lines to raytrace lib.
+**
 **	Revision 1.23  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -45,7 +45,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.22  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -160,15 +160,6 @@
 **                                                                      **
 *************************************************************************/
 
-inline void b3ExampleScene::b3Consolidate(b3Scene *scene)
-{
-	b3ShapeRenderContext context;
-	b3_vector            lower,upper;
-
-	scene->b3SetupVertexMemory(&context);
-	scene->b3ComputeBounds(&lower,&upper);
-}
-
 inline void b3ExampleScene::b3SetCameraName(b3CameraPart *camera,int id)
 {
 	CString name;
@@ -191,224 +182,4 @@ inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
 
 	name.LoadString(id);
 	bbox->b3SetName(name);
-}
-
-b3Scene *b3ExampleScene::b3CreateNew(const char *filename, b3_u32 class_type)
-{
-	b3Scene      *scene  = new b3Scene(class_type);
-	b3BBox       *bbox   = new b3BBox(BBOX);
-	b3Area       *area   = new b3Area(AREA);
-	b3Light      *light  = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera = new b3CameraPart(CAMERA);
-	b3_vector     eye,view;
-
-	b3SetCameraName(camera,IDS_NEW_CAMERA_NAME);
-	b3SetLightName(light,IDS_NEW_LIGHT_NAME);
-	b3SetObjectName(bbox,IDS_NEW_OBJECT_NAME);
-
-	scene->b3GetBBoxHead()->b3Append(bbox);
-	scene->b3GetLightHead()->b3Append(light);
-	scene->b3SetFilename(filename);
-	bbox->b3GetShapeHead()->b3Append(area);
-	
-	// Init camera
-	b3Vector::b3Init(&eye, 0,-350,75);
-	b3Vector::b3Init(&view);
-	camera->b3Orientate(&eye,&view,100.0,50.0,50.0);
-	scene->b3SetCamera(camera);
-	scene->b3GetSpecialHead()->b3Append(camera);
-
-	b3Consolidate(scene);
-	return scene;
-}
-
-b3Scene *b3ExampleScene::b3CreateGlobal(b3_u32 class_type)
-{
-	b3Scene      *scene  = new b3Scene(class_type);
-	b3BBox       *bbox1  = new b3BBox(BBOX);
-	b3BBox       *bbox2  = new b3BBox(BBOX);
-	b3Sphere     *medium = new b3Sphere(SPHERE);
-	b3Sphere     *big    = new b3Sphere(SPHERE);
-	b3Area       *area   = new b3Area(AREA);
-	b3MatChess   *chess  = new b3MatChess(CHESS);
-	b3MatNormal  *mirror = new b3MatNormal(MATERIAL);
-	b3MatNormal  *glass  = new b3MatNormal(MATERIAL);
-	b3Light      *light  = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera = new b3CameraPart(CAMERA);
-	b3_vector     eye,view;
-
-	scene->b3GetBBoxHead()->b3Append(bbox1);
-	scene->b3GetBBoxHead()->b3Append(bbox2);
-	scene->b3GetLightHead()->b3Append(light);
-	scene->b3GetSpecialHead()->b3Append(camera);
-	bbox1->b3GetShapeHead()->b3Append(area);
-	bbox2->b3GetShapeHead()->b3Append(big);
-	bbox2->b3GetShapeHead()->b3Append(medium);
-
-	// Init camera
-	b3Vector::b3Init(&eye, 0,-350,75);
-	b3Vector::b3Init(&view,0,-250,25);
-	camera->b3Orientate(&eye,&view,100.0,50.0,37.5);
-	scene->b3SetCamera(camera);
-
-	// Init checker board
-	area->m_Base.z = -100;
-	area->m_Base.y =   50;
-	area->m_Dir1.x =  200;
-	area->m_Dir2.y =  150;
-	area->b3GetMaterialHead()->b3Append(chess);
-
-	// Big spere
-	b3Vector::b3Init(&big->m_Base,-50,50,-50);
-	big->m_Dir.x = 50;
-	big->b3GetMaterialHead()->b3Append(mirror);
-
-	// Small spere
-	b3Vector::b3Init(&medium->m_Base,-10,-10,-70);
-	medium->m_Dir.x = 30;
-	medium->b3GetMaterialHead()->b3Append(glass);
-
-	// Init mirror sphere
-	mirror->m_Reflection = 0.8f;
-
-	// Init mirror sphere
-	glass->m_Reflection = 0.1f;
-	glass->m_Refraction = 0.8f;
-	glass->m_Ior  = 1.53f;
-
-	b3Consolidate(scene);
-	return scene;
-}
-
-b3CameraPart *b3ExampleScene::b3CreateCamera(
-	b3Scene *scene,
-	b3_f64   xAngle,
-	b3_f64   yAngle)
-{
-	b3CameraPart *camera = new b3CameraPart(CAMERA);
-	b3_vector     lower,upper;
-	b3_vector     center,size;
-
-	scene->b3ComputeBounds(&lower,&upper);
-	center.x = (lower.x + upper.x) * 0.5;
-	center.y = (lower.y + upper.y) * 0.5;
-	center.z = (lower.z + upper.z) * 0.5;
-	size.x   =  upper.x - lower.x;
-	size.y   =  upper.y - lower.y;
-	size.z   =  upper.z - lower.z;
-	camera->b3Overview(&center,&size,xAngle * M_PI / 180,yAngle * M_PI / 180);
-	return camera;
-}
-
-b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox, b3_u32 class_type,b3CameraPart *original_camera)
-{
-	b3Scene      *scene  = new b3Scene(class_type);
-	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
-	b3Light      *light  = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera;
-	b3_f64        rad;
-
-	scene->b3GetBBoxHead()->b3Append(bbox);
-	scene->b3GetLightHead()->b3Append(light);
-
-	rad = b3Vector::b3Length(&bbox->m_DimSize);
-	light->m_Position.x = bbox->m_DimBase.x + 10.0 * rad;
-	light->m_Position.y = bbox->m_DimBase.y - 10.0 * rad;
-	light->m_Position.z = bbox->m_DimBase.z + 10.0 * rad;
-	light->m_Distance   = 40.0 * rad;
-
-	b3Consolidate(scene);
-	if (original_camera != null)
-	{
-		b3_f64    xAngle,yAngle;
-
-		original_camera->b3ComputeAngles(xAngle,yAngle);
-		camera = b3CreateCamera(scene,xAngle * 180 / M_PI,yAngle * 180 / M_PI);
-	}
-	else
-	{
-		camera = b3CreateCamera(scene);
-	}
-	scene->b3GetSpecialHead()->b3Append(camera);
-	scene->b3SetCamera(camera);
-
-	return scene;
-}
-
-b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_type)
-{
-	b3Scene      *scene = new b3Scene(class_type);
-	b3BBox       *bbox  = new b3BBox(BBOX);
-	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
-	b3Area       *area  = new b3Area(AREA);
-	b3MatChess   *chess = new b3MatChess(CHESS);
-	b3Light      *light = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera;
-	b3_matrix     transform;
-
-	scene->b3GetBBoxHead()->b3Append(bbox);
-	scene->b3GetLightHead()->b3Append(light);
-
-	bbox->b3GetShapeHead()->b3Append(area);
-	bbox->b3GetShapeHead()->b3Append(big);
-	
-	area->b3GetMaterialHead()->b3Append(chess);
-
-	// Transform ellipsoid
-	b3Matrix::b3Scale(null,&transform,null,0.4,0.4,0.4);
-	b3Matrix::b3Move(&transform,&transform,0,0,20);
-	big->b3Transform(&transform,true);
-
-	// Enlarge whole scene
-	b3Matrix::b3Scale(null,&transform,null,5,5,5);
-	bbox->b3Transform(&transform,true,true);
-
-	// Create camera
-	b3Consolidate(scene);
-	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene,225,60));
-	camera->b3ScaleFocalLength(2.7);
-	scene->b3SetCamera(camera);
-
-	*ptrMatHead = big->b3GetMaterialHead();
-	return scene;
-}
-
-b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type)
-{
-	b3Scene      *scene = new b3Scene(class_type);
-	b3BBox       *bbox  = new b3BBox(BBOX);
-	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
-	b3Area       *area  = new b3Area(AREA);
-	b3MatChess   *chess = new b3MatChess(CHESS);
-	b3MatNormal  *mat   = new b3MatNormal(MATERIAL);
-	b3Light      *light = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera;
-	b3_matrix     transform;
-
-	scene->b3GetBBoxHead()->b3Append(bbox);
-	scene->b3GetLightHead()->b3Append(light);
-
-	bbox->b3GetShapeHead()->b3Append(area);
-	bbox->b3GetShapeHead()->b3Append(big);
-	
-	big->b3GetMaterialHead()->b3Append(chess);
-
-	mat->m_Reflection = 0.2f;
-	mat->m_Diffuse    = b3_pkd_color(0x886644);
-	mat->m_Ambient    = mat->m_Diffuse * 0.2;
-	area->b3GetMaterialHead()->b3Append(mat);
-
-	// Transform ellipsoid
-	b3Matrix::b3Scale(null,&transform,null,0.2,0.2,0.2);
-	b3Matrix::b3Move(&transform,&transform,15,3,10);
-	big->b3Transform(&transform,true);
-
-	// Create camera
-	b3Consolidate(scene);
-	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene,225,60));
-	camera->b3ScaleFocalLength(2.7);
-	scene->b3SetCamera(camera);
-
-	*ptrBumpHead = area->b3GetBumpHead();
-	return scene;
 }
