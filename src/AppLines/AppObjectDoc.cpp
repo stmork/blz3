@@ -39,11 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2003/07/13 12:19:07  sm
+**	- Added unit/measurement on object print
+**	- Adjusted bhc tool for level scaling
+**
 **	Revision 1.25  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 **	Revision 1.24  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -250,8 +254,11 @@ BOOL CAppObjectDoc::OnNewDocument()
 
 void CAppObjectDoc::b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original)
 {
-	m_Original = original;
-	m_LinesDoc = LinesDoc;
+	m_Original              = original;
+	m_LinesDoc              = LinesDoc;
+	m_Info->m_Unit          = LinesDoc->m_Info->m_Unit;
+	m_Info->m_Measure       = LinesDoc->m_Info->m_Measure;
+	m_Info->m_CustomMeasure = LinesDoc->m_Info->m_CustomMeasure;
 	b3SetBBox((b3BBox *)b3World::b3Clone(original));
 	SetPathName(m_BBox->b3GetName(),FALSE);
 }

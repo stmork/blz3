@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2003/07/13 12:19:07  sm
+**	- Added unit/measurement on object print
+**	- Adjusted bhc tool for level scaling
+**
 **	Revision 1.19  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
-**
+**	
 **	Revision 1.17  2003/04/05 13:57:21  sm
 **	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
 **	
@@ -229,6 +233,25 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	}
 
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
+}
+
+b3_bool CAppObjectView::b3GetDimension(
+	b3_f64 &xSize,
+	b3_f64 &ySize,
+	b3_f64 &unit,
+	b3_f64 &measure)
+{
+	b3_bool success;
+
+	success = m_RenderView.b3GetDimension(xSize,ySize);
+	if (success)
+	{
+		CAppObjectDoc *pDoc = GetDocument();
+		
+		unit    = pDoc->m_Info->b3ScaleUnitToMM();
+		measure = pDoc->m_Info->b3GetMeasure(false);
+	}
+	return success;
 }
 
 void CAppObjectView::b3Draw(

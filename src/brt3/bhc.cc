@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/07/13 12:19:07  sm
+**	- Added unit/measurement on object print
+**	- Adjusted bhc tool for level scaling
+**
 **	Revision 1.7  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.6  2003/07/10 08:03:16  sm
 **	- Some further error messages added.
 **	
@@ -171,7 +175,7 @@ void b3BHDParser::b3ParseHouse()
 		switch(token)
 		{
 		case TKN_LEVEL:
-			b3ParseLevel();
+			b3ParseLevel(m_Scale);
 			break;
 
 		case TKN_END:
@@ -186,13 +190,13 @@ void b3BHDParser::b3ParseHouse()
 	while (token != TKN_END);
 }
 
-void b3BHDParser::b3ParseLevel()
+void b3BHDParser::b3ParseLevel(b3_f64 scale)
 {
 	b3_bhd_token  token;
 	b3BBox       *level = new b3BBox(BBOX);
 	b3_f64        base,height;
 
-	if (sscanf(&m_Line[m_Pos],"%*s %s %lf %lf\n",level->m_BoxName,&base,&height) != 3)
+	if (sscanf(&m_Line[m_Pos],"%*s %s %lf %lf %lf\n",level->m_BoxName,&base,&height,&scale) < 3)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
@@ -207,17 +211,17 @@ void b3BHDParser::b3ParseLevel()
 		switch(token)
 		{
 		case TKN_ROOM:
-			b3ParseRoom(level,base,height);
+			b3ParseRoom(level,base,height,scale);
 			m_Scene->b3GetBBoxHead()->b3Append(level);
 			break;
 		case TKN_POINT:
-			b3ParsePoint();
+			b3ParsePoint(scale);
 			break;
 		case TKN_WINDOW:
-			b3ParseWindow();
+			b3ParseWindow(scale);
 			break;
 		case TKN_DOOR:
-			b3ParseDoor();
+			b3ParseDoor(scale);
 			break;
 
 		case TKN_END:
@@ -230,7 +234,7 @@ void b3BHDParser::b3ParseLevel()
 	while (token != TKN_END);
 }
 
-void b3BHDParser::b3ParsePoint()
+void b3BHDParser::b3ParsePoint(b3_f64 scale)
 {
 	b3Point point;
 
@@ -238,12 +242,12 @@ void b3BHDParser::b3ParsePoint()
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
-	point.x *= m_Scale;
-	point.y *= m_Scale;
+	point.x *= scale;
+	point.y *= scale;
 	m_Points.b3Add(point);
 }
 
-void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
+void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 scale)
 {
 	b3BBox *room = new b3BBox(BBOX);
 	b3CondRectangle *cond;
@@ -370,6 +374,8 @@ void b3BHDParser::b3AddWall(b3BBox *room)
 		material->m_DiffColor.b3Init(1,1,1);
 		material->m_AmbColor.b3Init(0.2,0.2,0.2);
 		material->m_SpecColor.b3Init(1,1,1);
+		material->m_Reflection = 0.0;
+		material->m_HighLight = 100000.0;
 		shape->b3GetMaterialHead()->b3Append(material);
 	}
 }
@@ -487,7 +493,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 	}
 }
 
-void b3BHDParser::b3ParseWindow()
+void b3BHDParser::b3ParseWindow(b3_f64 scale)
 {
 	b3_door window;
 
@@ -499,14 +505,14 @@ void b3BHDParser::b3ParseWindow()
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
-	window.pos    *= m_Scale;
-	window.width  *= m_Scale;
+	window.pos    *= scale;
+	window.width  *= scale;
 	window.type    = b3_door::BHC_WINDOW;
 	window.line    = m_LineNo;
 	m_Openings.b3Add(window);
 }
 
-void b3BHDParser::b3ParseDoor()
+void b3BHDParser::b3ParseDoor(b3_f64 scale)
 {
 	b3_door  door;
 
@@ -517,8 +523,8 @@ void b3BHDParser::b3ParseDoor()
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
 	}
-	door.pos    *= m_Scale;
-	door.width  *= m_Scale;
+	door.pos    *= scale;
+	door.width  *= scale;
 	door.height  = 200;
 	door.base    =   0;
 	door.type    = b3_door::BHC_DOOR;
