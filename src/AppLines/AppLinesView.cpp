@@ -39,10 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2002/07/29 12:32:56  sm
+**	- Full disk draws textures correctly now
+**	- Windows selects the correct pixel format for
+**	  the nVidia driver.
+**	- Some problems concerning first drawing and lighting
+**	  aren't fixed, yet. This seems to be a nVidia problem
+**
 **	Revision 1.50  2002/07/26 10:22:37  sm
 **	- Some minor fixes
 **	- Texturing simply runs under Windows :-)
-**
+**	
 **	Revision 1.49  2002/07/22 12:46:08  sm
 **	- Added Windows Lines III support for textures
 **	- Fixed sphere computation
@@ -392,6 +399,17 @@ void CAppLinesView::OnInitialUpdate()
 	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
+void CAppLinesView::b3UpdateLight()
+{
+	CAppLinesDoc *pDoc   = GetDocument();
+
+#if 0
+	m_Scene->b3SetLights(&pDoc->m_Context);
+#else
+	pDoc->m_Context.b3LightDefault();
+#endif
+}
+
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -412,8 +430,6 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	{
 		b3_vector  look;
 		b3_f64     len;
-
-//		m_Scene->b3SetLights(&pDoc->m_Context);
 
 		light = pDoc->m_Light;
 		len   = b3Vector::b3Length(&light->m_Direction);

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/07/29 12:32:56  sm
+**      - Full disk draws textures correctly now
+**      - Windows selects the correct pixel format for
+**        the nVidia driver.
+**      - Some problems concerning first drawing and lighting
+**        aren't fixed, yet. This seems to be a nVidia problem
+**
 **      Revision 1.19  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -188,147 +195,81 @@ void b3Disk::b3ComputeVertices()
 	ySize = 1;
 
 	glVertexCount = 0;
-	if (b > 0)
+	// This is a ring formed disk
+	if ((i - start) > epsilon)
 	{
-		ySize++;
-		// This is a ring formed disk
-		if ((i - start) > epsilon)
-		{
-			//compute front fractional disk ring
-			a  = Limit.x1 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
+		//compute front fractional disk ring
+		a  = Limit.x1 * M_PI * 2;
+		sx = cos(a);
+		sy = sin(a);
 
-			Vector->t.s = 0;
-			Vector->t.t = 0;
-			Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
-			Vector++;
-
-			Vector->t.s = 0;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
-			Vector++;
-
-			glVertexCount += 2;
-			xSize++;
-		}
-
-		for (;i<=iMax;i++)
-		{
-			b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-
-			// compute ordered position of ring disk
-			sx = h * Cos[i % SinCosSteps];
-			sy = h * Sin[i % SinCosSteps];
-			Vector->t.s = s;
-			Vector->t.t = 0;
-			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
-			Vector++;
-
-			sx = b * Cos[i % SinCosSteps];
-			sy = b * Sin[i % SinCosSteps];
-			Vector->t.s = s;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
-			Vector++;
-
-			glVertexCount += 2;
-			xSize++;
-		}
-
-		if ((end - iMax) > epsilon)
-		{
-			// compute rest fractional ring disk
-			a  = Limit.x2 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
-
-			Vector->t.s = 1;
-			Vector->t.t = 0;
-			Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
-			Vector++;
-
-			Vector->t.s = 1;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
-
-			glVertexCount += 2;
-			xSize++;
-		}
-	}
-	else
-	{
-		// Position center first
-		Vector->t.s = 0.5;
+		Vector->t.s = 0;
 		Vector->t.t = 0;
-		Vector->v.x = m_Base.x;
-		Vector->v.y = m_Base.y;
-		Vector->v.z = m_Base.z;
+		Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
 		Vector++;
-		glVertexCount++;
 
-		// First fractional disk part if any
-		if ((i - start) > epsilon)
-		{
-			a  = Limit.x1 * M_PI * 2;
-			sx = h * cos(a);
-			sy = h * sin(a);
+		Vector->t.s = 0;
+		Vector->t.t = 1;
+		Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
+		Vector++;
 
-			Vector->t.s = 0;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
-			Vector++;
+		glVertexCount += 2;
+		xSize++;
+	}
 
-			glVertexCount++;
-			xSize++;
-		}
+	for (;i<=iMax;i++)
+	{
+		b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
 
-		// ordered parts of disk
-		for (;i<=iMax;i++)
-		{
-			sx = h * Cos[i % SinCosSteps];
-			sy = h * Sin[i % SinCosSteps];
-			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
-			Vector++;
+		// compute ordered position of ring disk
+		sx = h * Cos[i % SinCosSteps];
+		sy = h * Sin[i % SinCosSteps];
+		Vector->t.s = s;
+		Vector->t.t = 0;
+		Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+		Vector++;
 
-			glVertexCount++;
-			xSize++;
-		}
+		sx = b * Cos[i % SinCosSteps];
+		sy = b * Sin[i % SinCosSteps];
+		Vector->t.s = s;
+		Vector->t.t = 1;
+		Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+		Vector++;
 
-		// Last part as fractional disk
-		if ((end - iMax) > epsilon)
-		{
-			a  = Limit.x2 * M_PI * 2;
-			sx = h * cos(a);
-			sy = h * sin(a);
+		glVertexCount += 2;
+		xSize++;
+	}
 
-			Vector->t.s = 1;
-			Vector->t.t = 1;
-			Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
-			Vector->v.y = m_Base.y + sx * m_Dir1.y + sy * m_Dir2.y;
-			Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
+	if ((end - iMax) > epsilon)
+	{
+		// compute rest fractional ring disk
+		a  = Limit.x2 * M_PI * 2;
+		sx = cos(a);
+		sy = sin(a);
 
-			glVertexCount++;
-			xSize++;
-		}
+		Vector->t.s = 1;
+		Vector->t.t = 0;
+		Vector->v.x = m_Base.x + h * sx * m_Dir1.x + h * sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + h * sx * m_Dir1.y + h * sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + h * sx * m_Dir1.z + h * sy * m_Dir2.z;
+		Vector++;
+
+		Vector->t.s = 1;
+		Vector->t.t = 1;
+		Vector->v.x = m_Base.x + b * sx * m_Dir1.x + b * sy * m_Dir2.x;
+		Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
+		Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
+
+		glVertexCount += 2;
+		xSize++;
 	}
 #endif
 }
@@ -339,7 +280,7 @@ void b3Disk::b3ComputeIndices()
 	GLushort *gPtr;
 	GLushort *pPtr;
 	b3_bool   EndLines = false;
-	b3_index  i,Number = 0;
+	b3_index  i,Number = 0,pos;
 	b3_count  Overhead;
 
 	b3ComputeBound(&Limit);
@@ -351,7 +292,7 @@ void b3Disk::b3ComputeIndices()
 		Number   = 2;
 	}
 	Number += Overhead;
-	if (Limit.y1 > 0) Number += Overhead;
+	Number += Overhead;
 
 	glGridCount = 0;
 	glPolyCount = 0;
@@ -366,65 +307,35 @@ void b3Disk::b3ComputeIndices()
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
-	if (Limit.y1 > 0)
+	for (i = 0;i < Overhead;i++)
 	{
-		b3_index pos;
+		pos = i + i;
+		*gPtr++ = pos;
+		*gPtr++ = pos + 2;
 
-		for (i = 0;i < Overhead;i++)
-		{
-			pos = i + i;
-			*gPtr++ = pos;
-			*gPtr++ = pos + 2;
+		*gPtr++ = pos + 1;
+		*gPtr++ = pos + 3;
 
-			*gPtr++ = pos + 1;
-			*gPtr++ = pos + 3;
+		*pPtr++ = pos;
+		*pPtr++ = pos + 2;
+		*pPtr++ = pos + 1;
 
-			*pPtr++ = pos;
-			*pPtr++ = pos + 2;
-			*pPtr++ = pos + 1;
+		*pPtr++ = pos + 3;
+		*pPtr++ = pos + 1;
+		*pPtr++ = pos + 2;
 
-			*pPtr++ = pos + 3;
-			*pPtr++ = pos + 1;
-			*pPtr++ = pos + 2;
-
-			glGridCount += 2;
-			glPolyCount += 2;
-		}
-		if (EndLines)
-		{
-			*gPtr++ = 0;
-			*gPtr++ = 1;
-
-			*gPtr++ = Overhead + Overhead;
-			*gPtr++ = Overhead + Overhead + 1;
-
-			glGridCount += 2;
-		}
+		glGridCount += 2;
+		glPolyCount += 2;
 	}
-	else
+	if (EndLines)
 	{
-		for (i = 1;i <= Overhead;i++)
-		{
-			*gPtr++ = i;
-			*gPtr++ = i + 1;
+		*gPtr++ = 0;
+		*gPtr++ = 1;
 
-			*pPtr++ = i;
-			*pPtr++ = i + 1;
-			*pPtr++ = 0;
+		*gPtr++ = Overhead + Overhead;
+		*gPtr++ = Overhead + Overhead + 1;
 
-			glGridCount++;
-			glPolyCount++;
-		}
-		if (EndLines)
-		{
-			*gPtr++ = 0;
-			*gPtr++ = 1;
-
-			*gPtr++ = 0;
-			*gPtr++ = Overhead + 1;
-
-			glGridCount += 2;
-		}
+		glGridCount += 2;
 	}
 #endif
 }

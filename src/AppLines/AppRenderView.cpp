@@ -35,10 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2002/07/29 12:32:56  sm
+**	- Full disk draws textures correctly now
+**	- Windows selects the correct pixel format for
+**	  the nVidia driver.
+**	- Some problems concerning first drawing and lighting
+**	  aren't fixed, yet. This seems to be a nVidia problem
+**
 **	Revision 1.14  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **	Revision 1.13  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -107,16 +114,16 @@ static PIXELFORMATDESCRIPTOR window_pixelformat =
 	1,
 	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
 	PFD_TYPE_RGBA,
-	32,
-	0,0,0,0,0,0,
-	0,0,
-	0,0,0,0,0,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,0,0
+	32,          // color bits
+	0,0,0,0,0,0, // rgb bits/shift
+	0,0,         // alpha bits/shift
+	0,0,0,0,0,   // accum rgba bits
+	24,          // depth bits
+	0,           // stencil bits
+	0,           // aux buffers
+	0,           // layer type
+	0,           // reserverd
+	0,0,0        // layer/visible/damage mask
 };
 
 static PIXELFORMATDESCRIPTOR print_pixelformat =
@@ -125,16 +132,16 @@ static PIXELFORMATDESCRIPTOR print_pixelformat =
 	1,
 	PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
 	PFD_TYPE_RGBA,
-	24,
-	0,0,0,0,0,0,
-	0,0,
-	0,0,0,0,0,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,0,0
+	24,          // color bits
+	0,0,0,0,0,0, // rgb bits/shift
+	0,0,         // alpha bits/shift
+	0,0,0,0,0,   // accum rgba bits
+	32,          // depth bits
+	0,           // stencil bits
+	0,           // aux buffers
+	0,           // layer type
+	0,           // reserverd
+	0,0,0        // layer/visible/damage mask
 };
 
 IMPLEMENT_DYNCREATE(CAppRenderView, CScrollView)
@@ -222,11 +229,11 @@ void CAppRenderView::b3ListPixelFormats(HDC dc)
 	PIXELFORMATDESCRIPTOR format;
 	CString               flags;
 
+	max = DescribePixelFormat(dc,1,0,NULL);
 	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
 	b3PrintF(B3LOG_DEBUG,"Known OpenGL pixel formats:\n");
 	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
 	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	max = DescribePixelFormat(dc,1,0,NULL);
 	for (i = 1;i <= max;i++)
 	{
 		DescribePixelFormat(dc,i,format.nSize,&format);
@@ -255,6 +262,9 @@ void CAppRenderView::b3ListPixelFormats(HDC dc)
 
 int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
+	PIXELFORMATDESCRIPTOR dFormat,iFormat;
+	int                   depth = 0,i,PixelFormatIndex;
+
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
 	{
 		return -1;
@@ -265,6 +275,22 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 #ifdef _DEBUG
 	b3ListPixelFormats(m_glDC);
 #endif
+
+	iFormat.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	for (i = 0;i < 3;i++)
+	{
+		dFormat = window_pixelformat;
+		dFormat.cDepthBits = 32 - i * 8;
+		PixelFormatIndex = ChoosePixelFormat(m_glDC,&dFormat);
+		DescribePixelFormat(m_glDC,PixelFormatIndex,iFormat.nSize,&iFormat);
+		if (iFormat.cDepthBits > depth)
+		{
+			depth = iFormat.cDepthBits;
+		}
+	}
+
+	// Select pixel format with best found depth bits
+	window_pixelformat.cDepthBits = depth;
 	m_glPixelFormatIndex = ChoosePixelFormat(m_glDC,&window_pixelformat);
 	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&window_pixelformat);
 	m_glGC = wglCreateContext(m_glDC);
@@ -274,6 +300,7 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
 		m_glPixelFormatIndex);
+	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
 	glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
 	glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);
@@ -351,11 +378,21 @@ void CAppRenderView::OnInitialUpdate()
 	CScrollView::OnInitialUpdate();
 }
 
+void CAppRenderView::b3UpdateLight()
+{
+	GetDocument()->m_Context.b3LightDefault();
+}
+
 void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
 	CAppRenderDoc *pDoc         = GetDocument();
 	b3_bool        doInvalidate = false;
+
+	if (lHint & B3_UPDATE_LIGHT)
+	{
+		b3UpdateLight();
+	}
 
 	if (lHint & B3_UPDATE_CAMERA)
 	{

@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2002/07/29 12:32:56  sm
+**      - Full disk draws textures correctly now
+**      - Windows selects the correct pixel format for
+**        the nVidia driver.
+**      - Some problems concerning first drawing and lighting
+**        aren't fixed, yet. This seems to be a nVidia problem
+**
 **      Revision 1.41  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -312,11 +319,6 @@ void b3RenderContext::b3Init()
 	// Enable light
 	b3LightReset();
 	b3LightSet(&light0_position,null,1.0);
-
-	// Some material settings
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 #endif
 }
 
@@ -333,6 +335,7 @@ void b3RenderContext::b3SetAmbient(b3_color *ambient)
 void b3RenderContext::b3LightReset()
 {
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightReset()\n");
+
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
@@ -350,6 +353,8 @@ void b3RenderContext::b3LightReset()
 
 void b3RenderContext::b3LightDefault()
 {
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightDefault()\n");
+
 	b3LightNum();
 	b3LightReset();
 	b3LightSet(&light0_position,null,0.0);
@@ -364,6 +369,8 @@ void b3RenderContext::b3LightSpotEnable(b3_bool enable)
 
 void b3RenderContext::b3LightNum(b3_index num)
 {
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightNum(%d)\n",num);
+
 	if (VALIDATE_LIGHT_NUM(num))
 	{
 		glLightNum = num;
@@ -378,7 +385,6 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_color  *b3_ambient,
 	b3_color  *b3_specular)
 {
-	b3PrintF(B3LOG_FULL,"b3LightAdd(%d)\n",glLightNum);
 	b3_bool result = false;
 
 	if (VALIDATE_LIGHT_NUM(glLightNum))
@@ -388,6 +394,8 @@ b3_bool b3RenderContext::b3LightAdd(
 			spot_exp,
 			b3_diffuse,b3_ambient,b3_specular,glLightNum++);
 	}
+	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d) = %s\n",
+		glLightNum,result ? "true" : "false");
 	return result;
 }
 
@@ -411,7 +419,6 @@ b3_bool b3RenderContext::b3LightSet(
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{
-		b3PrintF(B3LOG_FULL,"b3LightSet(%d)\n",num);
 
 		light = light_num[num];
 
@@ -452,6 +459,8 @@ b3_bool b3RenderContext::b3LightSet(
 		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
 		result = true;
 	}
+	b3PrintF(B3LOG_FULL,"b3LightSet(%d) = %s\n",
+		num,result ? "true" : "false");
 #endif
 	return result;
 }

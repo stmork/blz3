@@ -80,6 +80,7 @@ protected:
 	void      b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
 	void      b3DrawDC(HDC hDC,b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
 	void      b3DrawLegend(CDC *pDC);
+	void      b3UpdateLight();
 
 // Generated message map functions
 protected:
