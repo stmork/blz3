@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/11/25 12:25:31  sm
+**      - Completing some dialogs:
+**        o super sampling
+**        o distributed raytracing
+**
 **      Revision 1.18  2001/11/12 16:50:29  sm
 **      - Scene properties dialog coding
 **
@@ -398,19 +403,26 @@ void b3LensFlare::b3Activate(b3_bool flag)
 b3Distribute::b3Distribute(b3_u32 class_type) :
 	b3Special(sizeof(b3Distribute),class_type)
 {
+	SAMPLE_SET_FLAGS(this,0);
+	SAMPLE_SET_TYPE(this,SAMPLE_REGULAR);
+	m_PixelAperture   = FILTER_BOX;
+	m_FrameAperture   = FILTER_GAUSS;
+	m_SamplesPerPixel = 5;
+	m_SamplesPerFrame = 5;
+	m_DepthOfField    = 0;
 }
 
 b3Distribute::b3Distribute(b3_u32 *src) :
 	b3Special(src)
 {
-	Type            = b3InitInt();
-	SamplesPerPixel = b3InitInt();
-	SamplesPerFrame = b3InitInt();
+	m_Type            = b3InitInt();
+	m_SamplesPerPixel = b3InitInt();
+	m_SamplesPerFrame = b3InitInt();
 	if (B3_PARSE_INDEX_VALID)
 	{
-		DepthOfField    = b3InitFloat();
-		PixelAperture   = b3InitInt();
-		FrameAperture   = b3InitInt();
+		m_DepthOfField    = b3InitFloat();
+		m_PixelAperture   = (b3_filter)b3InitInt();
+		m_FrameAperture   = (b3_filter)b3InitInt();
 	}
 }
 

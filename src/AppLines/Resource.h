@@ -61,10 +61,15 @@
 #define IDC_SMP_JITTER                  1020
 #define IDC_LF_PREVIEW                  1020
 #define IDC_SMP_SEMI                    1021
+#define IDC_SS4_GREEN_LEGEND            1021
 #define IDC_SMP_SEPARATED               1022
+#define IDC_SS4_RED_LEGEND              1022
 #define IDC_PFLTR_BOX                   1023
+#define IDC_SS4_BLUE_LEGEND             1023
 #define IDC_PFLTR_GAUSS                 1024
+#define IDC_SPP_SPIN                    1026
 #define IDC_SCAN_PARA                   1027
+#define IDC_SPF_SPIN                    1028
 #define IDC_ACT_LENS_FLARE              1039
 #define IDC_LF_CHANGE                   1040
 #define IDC_LF_COLOR                    1041
@@ -150,6 +155,9 @@
 #define IDS_SCENE_NEW                   61453
 #define IDS_SHADOW_BRIGHTNESS           61454
 #define IDS_TITLE_SCENE                 61455
+#define IDS_SS4_RED_LEGEND              61456
+#define IDS_SS4_GREEN_LEGEND            61457
+#define IDS_SS4_BLUE_LEGEND             61458
 
 // Next default values for new objects
 // 
@@ -158,7 +166,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32816
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -488,14 +488,14 @@ CAPTION "Super Sampling"
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Slider1",IDC_SS4_RED,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,5,45,120,24
+                    WS_TABSTOP,5,35,120,24
     CONTROL         "Slider2",IDC_SS4_GREEN,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,5,85,120,24
+                    TBS_AUTOTICKS | WS_TABSTOP,5,75,120,24
     CONTROL         "Slider3",IDC_SS4_BLUE,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,5,120,120,24
-    LTEXT           "Kontrastschwelle rot",IDC_STATIC,10,35,72,8
-    LTEXT           "Kontrastschwelle grün",IDC_STATIC,10,75,72,8
-    LTEXT           "Kontrastschwelle blau",IDC_STATIC,10,110,72,8
+                    WS_TABSTOP,5,115,120,24
+    LTEXT           "Kontrastschwelle rot",IDC_SS4_RED_LEGEND,10,25,110,8
+    LTEXT           "Kontrastschwelle grün",IDC_SS4_GREEN_LEGEND,10,65,110,8
+    LTEXT           "Kontrastschwelle blau",IDC_SS4_BLUE_LEGEND,10,105,110,8
     CONTROL         "aktiviert",IDC_SS4_ACTIVE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,10,10,41,10
 END
@@ -559,13 +559,19 @@ BEGIN
                     192,104,46,10
     CONTROL         "Shutter",IDC_TFLTR_SHUTTER,"Button",BS_AUTORADIOBUTTON,
                     192,120,39,10
-    CONTROL         "Slider1",IDC_SPP,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,16,120,144,24
-    CONTROL         "Slider2",IDC_SPF,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    WS_TABSTOP,16,152,144,24
     GROUPBOX        " Zeitfilter: ",IDC_STATIC,176,72,80,64
     GROUPBOX        " Pixel-Filter: ",IDC_STATIC,176,8,80,48
     GROUPBOX        " Sampling-Methode: ",IDC_STATIC,64,8,96,96
+    EDITTEXT        IDC_SPP,115,120,35,15,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPP_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,150,120,
+                    11,15
+    EDITTEXT        IDC_SPF,115,145,35,15,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_SPF_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,150,145,
+                    11,15
+    LTEXT           "Samples pro Pixel (2er Potenz)",IDC_STATIC,5,120,96,8
+    LTEXT           "Samples pro Frame (2er Potenz)",IDC_STATIC,5,145,101,8
 END
 
 
@@ -905,6 +911,13 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_TEXTURE_FILTER      "Alle Dateien (*.*)|*.*|BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff||"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
+    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
+    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
 END
 
 #endif    // German (Germany) resources

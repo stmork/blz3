@@ -44,9 +44,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2001/11/25 12:25:31  sm
+**	- Completing some dialogs:
+**	  o super sampling
+**	  o distributed raytracing
+**
 **	Revision 1.22  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
-**
+**	
 **	Revision 1.21  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -461,7 +466,7 @@ void CAppLinesDoc::OnDlgScene()
 	CString           title;
 
 	dlg_scene.m_Scene                = m_Scene;
-	dlg_distributed.m_Distributed    = null;
+	dlg_distributed.m_Distributed    = m_Scene->b3GetDistributed(true);
 	dlg_super_sampling.m_SuperSample = m_Scene->b3GetSuperSample(true);
 	dlg_nebular.m_Nebular            = m_Scene->b3GetNebular(true);
 	dlg_lens_flare.m_LensFlare       = m_Scene->b3GetLensFlare(true);

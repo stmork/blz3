@@ -1910,15 +1910,23 @@ public:
 
 #define ANIMF_ON     (1<<ANIMB_ON)
 
+enum b3_filter
+{
+	FILTER_BOX     = 0,
+	FILTER_GAUSS   = 1,
+	FILTER_SHUTTER = 2
+};
+
 // DISTRIBUTE
 class b3Distribute : public b3Special
 {
-	b3_s32           Type;
-	b3_s32           SamplesPerPixel;
-	b3_s32           SamplesPerFrame;
-	b3_f32           DepthOfField;
-	b3_s32           PixelAperture;
-	b3_s32           FrameAperture;
+public:
+	b3_u32           m_Type;
+	b3_count         m_SamplesPerPixel;
+	b3_count         m_SamplesPerFrame;
+	b3_f32           m_DepthOfField;
+	b3_filter        m_PixelAperture;
+	b3_filter        m_FrameAperture;
 
 public:
 	B3_ITEM_INIT(b3Distribute);
@@ -1933,20 +1941,16 @@ public:
 #define SAMPLE_SUPERSAMPLE      (1 << SAMPLE_SUPERSAMPLE_B)
 #define SAMPLE_DEPTH_OF_FIELD   (1 << SAMPLE_DEPTH_OF_FIELD_B)
 
-#define SAMPLE_GET_FLAGS(d)      ((d)->Type & 0x00ff)
-#define SAMPLE_GET_TYPE(d)       ((d)->Type & 0xff00)
-#define SAMPLE_SET_FLAGS(d,v)   ((d)->Type = ((d)->Type & 0xffffff00) | (v))
-#define SAMPLE_SET_TYPE(d,v)    ((d)->Type = ((d)->Type & 0xffff00ff) | (v))
+#define SAMPLE_GET_FLAGS(d)     ((d)->m_Type & 0x00ff)
+#define SAMPLE_GET_TYPE(d)      ((d)->m_Type & 0xff00)
+#define SAMPLE_SET_FLAGS(d,v)   ((d)->m_Type = ((d)->m_Type & 0xffffff00) | (v))
+#define SAMPLE_SET_TYPE(d,v)    ((d)->m_Type = ((d)->m_Type & 0xffff00ff) | (v))
 
 #define SAMPLE_REGULAR          0x0000
 #define SAMPLE_RANDOM           0x0100
 #define SAMPLE_JITTER           0x0200
 #define SAMPLE_SEMI_JITTER      0x0300
 #define SAMPLE_SEPARATED        0x0400
-
-#define FILTER_BOX              0
-#define FILTER_GAUSS            1
-#define FILTER_SHUTTER          2
 
 // LENSFLARE
 class b3LensFlare : public b3Special
@@ -2066,6 +2070,7 @@ public:
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
 		    b3ModellerInfo *b3GetModellerInfo();
+			b3Distribute   *b3GetDistributed(b3_bool force=true);
 		    b3Nebular      *b3GetNebular    (b3_bool force=true);
 		    b3SuperSample  *b3GetSuperSample(b3_bool force=false);
 		    b3LensFlare    *b3GetLensFlare  (b3_bool force=false);

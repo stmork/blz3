@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2001/11/25 12:25:31  sm
+**	- Completing some dialogs:
+**	  o super sampling
+**	  o distributed raytracing
+**
 **	Revision 1.23  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
-**
+**	
 **	Revision 1.22  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -288,6 +293,31 @@ b3ModellerInfo *b3Scene::b3GetModellerInfo()
 	info = new b3ModellerInfo(LINES_INFO);
 	b3GetSpecialHead()->b3Append(info);
 	return info;
+}
+
+b3Distribute *b3Scene::b3GetDistributed(b3_bool force)
+{
+	b3Distribute *distributed;
+	b3Item       *item;
+
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if (item->b3GetClassType() == DISTRIBUTE)
+		{
+			return (b3Distribute *)item;
+		}
+	}
+
+	if (force)
+	{
+		distributed = new b3Distribute(DISTRIBUTE);
+		b3GetSpecialHead()->b3Append(distributed);
+	}
+	else
+	{
+		distributed = null;
+	}
+	return distributed;
 }
 
 b3Nebular *b3Scene::b3GetNebular(b3_bool force)

@@ -43,6 +43,9 @@ public:
 	CSliderCtrl	m_GreenCtrl;
 	CSliderCtrl	m_BlueCtrl;
 	BOOL	m_ActSuperSampling;
+	CString	m_GreenLegend;
+	CString	m_BlueLegend;
+	CString	m_RedLegend;
 	//}}AFX_DATA
 
 
@@ -62,8 +65,13 @@ protected:
 	//{{AFX_MSG(CDlgSuperSampling)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	afx_msg void OnActivation();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	int m_LastRed;
+	int m_LastGreen;
+	int m_LastBlue;
 };
 
 //{{AFX_INSERT_LOCATION}}

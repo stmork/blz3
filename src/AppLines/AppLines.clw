@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgNebular
+LastClass=CDlgDistributed
 LastTemplate=CEdit
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -23,18 +23,18 @@ Class11=CMainFrame
 
 ResourceCount=14
 Resource1=IDR_MAINFRAME
-Resource2=IDR_TOOLBAR_DISPLAY
-Resource3=IDR_TOOLBAR_VIEW
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
+Resource2=IDR_TOOLBAR_ACTION
+Resource3=IDR_TOOLBAR_OBJECT
+Resource4=IDR_TOOLBAR_DISPLAY
+Resource5=IDR_TOOLBAR_VIEW
 Resource6=IDR_DISPLAYTYPE
 Resource7=IDR_BLZ3TYPE
 Resource8=IDD_SCENE
-Resource9=IDD_ABOUTBOX
-Resource10=IDD_HIERARCHY
-Resource11=IDD_LENS_FLARE
+Resource9=IDD_SUPER_SAMPLE
+Resource10=IDD_LENS_FLARE
+Resource11=IDD_HIERARCHY
 Resource12=IDD_NEBULAR
-Resource13=IDD_SUPER_SAMPLE
+Resource13=IDD_ABOUTBOX
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
@@ -399,9 +399,9 @@ ControlCount=7
 Control1=IDC_SS4_RED,msctls_trackbar32,1342242817
 Control2=IDC_SS4_GREEN,msctls_trackbar32,1342242817
 Control3=IDC_SS4_BLUE,msctls_trackbar32,1342242817
-Control4=IDC_STATIC,static,1342308352
-Control5=IDC_STATIC,static,1342308352
-Control6=IDC_STATIC,static,1342308352
+Control4=IDC_SS4_RED_LEGEND,static,1342308352
+Control5=IDC_SS4_GREEN_LEGEND,static,1342308352
+Control6=IDC_SS4_BLUE_LEGEND,static,1342308352
 Control7=IDC_SS4_ACTIVE,button,1342242819
 
 [DLG:IDD_NEBULAR]
@@ -418,7 +418,7 @@ Control6=IDC_STATIC,static,1342308352
 [DLG:IDD_DISTRIBUTED]
 Type=1
 Class=CDlgDistributed
-ControlCount=17
+ControlCount=21
 Control1=IDC_ACT_DISTRIBUTED,button,1342242819
 Control2=IDC_ACT_MOTION_BLUR,button,1342242819
 Control3=IDC_SMP_REGULAR,button,1342308361
@@ -431,11 +431,15 @@ Control9=IDC_PFLTR_GAUSS,button,1342177289
 Control10=IDC_TFLTR_BOX,button,1342308361
 Control11=IDC_TFLTR_GAUSS,button,1342177289
 Control12=IDC_TFLTR_SHUTTER,button,1342177289
-Control13=IDC_SPP,msctls_trackbar32,1342242817
-Control14=IDC_SPF,msctls_trackbar32,1342242817
+Control13=IDC_STATIC,button,1342177287
+Control14=IDC_STATIC,button,1342177287
 Control15=IDC_STATIC,button,1342177287
-Control16=IDC_STATIC,button,1342177287
-Control17=IDC_STATIC,button,1342177287
+Control16=IDC_SPP,edit,1350631552
+Control17=IDC_SPP_SPIN,msctls_updown32,1342177334
+Control18=IDC_SPF,edit,1350631552
+Control19=IDC_SPF_SPIN,msctls_updown32,1342177334
+Control20=IDC_STATIC,static,1342308352
+Control21=IDC_STATIC,static,1342308352
 
 [CLS:CDlgDistributed]
 Type=0
@@ -443,7 +447,7 @@ HeaderFile=DlgDistributed.h
 ImplementationFile=DlgDistributed.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CDlgDistributed
+LastObject=IDC_ACT_DISTRIBUTED
 VirtualFilter=dWC
 
 [CLS:CDlgLensFlare]
@@ -470,7 +474,7 @@ HeaderFile=DlgSuperSampling.h
 ImplementationFile=DlgSuperSampling.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CDlgSuperSampling
+LastObject=IDC_SS4_BLUE_LEGEND
 VirtualFilter=dWC
 
 [CLS:CB3FloatEdit]

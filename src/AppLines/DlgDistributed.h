@@ -39,13 +39,15 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgDistributed)
 	enum { IDD = IDD_DISTRIBUTED };
-	CSliderCtrl	m_SamplesPerFrameCtrl;
-	CSliderCtrl	m_SamplesPerPixelControl;
+	CSpinButtonCtrl	m_CtrlSPP;
+	CSpinButtonCtrl	m_CtrlSPF;
 	BOOL	m_ActDistributed;
 	BOOL	m_ActMotionBlur;
 	int		m_PixelFilter;
 	int		m_TimeFilter;
 	int		m_SamplingMethod;
+	int		m_SPF;
+	int		m_SPP;
 	//}}AFX_DATA
 
 
@@ -65,8 +67,11 @@ protected:
 	//{{AFX_MSG(CDlgDistributed)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	afx_msg void OnActivation();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}
