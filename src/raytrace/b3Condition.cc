@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/02/22 20:18:09  sm
+**	- Added shape/bbox creation in object editor. So bigger
+**	  icons (64x64) for shape selection are created.
+**	- Created new class for image list maintainance.
+**
 **	Revision 1.15  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.14  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -178,7 +183,7 @@ void b3Condition::b3ComputeBound(b3_cond_limit *Limit)
 {
 }
 
-b3_bool b3Condition::b3CheckStencil(b3_polar *polar)
+b3_bool b3Condition::b3CheckStencil(b3_polar_precompute *polar)
 {
 	return true;
 }
@@ -303,7 +308,7 @@ void b3CondRectangle::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondRectangle::b3CheckStencil(b3_polar_precompute *polar)
 {
 	if ((m_Flags & RCF_ACTIVE) == 0)
 	{
@@ -374,7 +379,7 @@ void b3CondCircle::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondCircle::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondCircle::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y;
 
@@ -437,7 +442,7 @@ void b3CondSegment::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondSegment::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y,angle,Rad;
 
@@ -562,7 +567,7 @@ b3CondPara::b3CondPara(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondPara::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondPara::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
@@ -595,7 +600,7 @@ b3CondTria::b3CondTria(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-b3_bool b3CondTria::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondTria::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 Dx,Dy,a,b;
 
@@ -688,7 +693,7 @@ void b3CondTexture::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondTexture::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondTexture::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64   fx,fy;
 	b3_coord x,y;
@@ -788,7 +793,7 @@ void b3CondWrapTexture::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_coord x,y;
 	b3_f64   fx,fy,xEnd,xPolar;
@@ -892,7 +897,7 @@ void b3CondEllipse::b3ComputeBound(b3_cond_limit *Limit)
 	}
 }
 
-b3_bool b3CondEllipse::b3CheckStencil(b3_polar *polar)
+b3_bool b3CondEllipse::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3_f64 x,y,angle,AngleEnd,Rad;
 

@@ -168,6 +168,10 @@ SOURCE=.\b3Fulcrum.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ImageList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ImagePreviewFileDlg.cpp
 # End Source File
 # Begin Source File
@@ -233,6 +237,10 @@ SOURCE=.\DlgModellerInfo.cpp
 # Begin Source File
 
 SOURCE=.\DlgNebular.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgNewObject.cpp
 # End Source File
 # Begin Source File
 
@@ -328,6 +336,10 @@ SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ImageList.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ImagePreviewFileDlg.h
 # End Source File
 # Begin Source File
@@ -397,6 +409,10 @@ SOURCE=.\DlgModellerInfo.h
 # Begin Source File
 
 SOURCE=.\DlgNebular.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgNewObject.h
 # End Source File
 # Begin Source File
 
@@ -500,11 +516,27 @@ SOURCE=.\res\csg_ellipsoid.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\csg_intersect.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\csg_sphere.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\csg_torus.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csgmode_intersect.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csgmode_sub.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\csgmode_union.ico
 # End Source File
 # Begin Source File
 

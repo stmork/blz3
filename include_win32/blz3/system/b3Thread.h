@@ -38,8 +38,8 @@ class b3Mutex
 {
 	CRITICAL_SECTION cs;
 public:
-	        b3Mutex();
-		   ~b3Mutex();
+	         b3Mutex();
+		    ~b3Mutex();
 	b3_bool  b3Lock();
 	b3_bool  b3Unlock();
 };

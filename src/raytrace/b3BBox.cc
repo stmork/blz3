@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2002/02/22 20:18:09  sm
+**	- Added shape/bbox creation in object editor. So bigger
+**	  icons (64x64) for shape selection are created.
+**	- Created new class for image list maintainance.
+**
 **	Revision 1.46  2002/02/19 16:26:49  sm
 **	- Further CSG interval computing cleanup done.
-**
+**	
 **	Revision 1.45  2002/02/18 17:50:31  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -878,6 +883,12 @@ b3_bool b3BBox::b3FindBBox(b3Base<b3Item> *base,b3BBox *search)
 	return false;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Find BBox where bbox belongs to               **
+**                                                                      **
+*************************************************************************/
+
 b3Base<b3Item> *b3BBox::b3FindBBoxHead(b3BBox *bbox)
 {
 	b3Item         *item;
@@ -918,6 +929,57 @@ b3Base<b3Item> *b3Scene::b3FindBBoxHead(b3BBox *bbox)
 
 		inc_bbox = (b3BBox *)item;
 		result   = inc_bbox->b3FindBBoxHead(bbox);
+		if (result != null)
+		{
+			return result;
+		}
+	}
+	return null;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Find BBox where shape belongs to              **
+**                                                                      **
+*************************************************************************/
+
+b3BBox *b3BBox::b3FindParentBBox(b3Shape *shape)
+{
+	b3Item         *item;
+	b3BBox         *bbox,*result;
+	b3Base<b3Item> *base;
+
+	base = b3GetShapeHead();
+	B3_FOR_BASE(base,item)
+	{
+		if (item == shape)
+		{
+			return this;
+		}
+	}
+
+	base = b3GetBBoxHead();
+	B3_FOR_BASE(base,item)
+	{
+		bbox   = (b3BBox *)item;
+		result = bbox->b3FindParentBBox(shape);
+		if (result != null)
+		{
+			return result;
+		}
+	}
+	return null;
+}
+
+b3BBox *b3Scene::b3FindParentBBox(b3Shape *shape)
+{
+	b3Item         *item;
+	b3BBox         *bbox,*result;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox   = (b3BBox *)item;
+		result = bbox->b3FindParentBBox(shape);
 		if (result != null)
 		{
 			return result;

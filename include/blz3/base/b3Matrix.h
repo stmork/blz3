@@ -290,6 +290,17 @@ public:
 	static inline b3_vector *b3LinearCombine(
 		b3_vector *pVec,
 		b3_f64     a,b3_vector *aVec,
+		b3_vector *result)
+	{
+		result->x = pVec->x + a * aVec->x;
+		result->y = pVec->y + a * aVec->y;
+		result->z = pVec->z + a * aVec->z;
+		return result;
+	}
+
+	static inline b3_vector *b3LinearCombine(
+		b3_vector *pVec,
+		b3_f64     a,b3_vector *aVec,
 		b3_f64     b,b3_vector *bVec,
 		b3_vector *result)
 	{

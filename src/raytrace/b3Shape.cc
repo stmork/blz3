@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2002/02/22 20:18:09  sm
+**      - Added shape/bbox creation in object editor. So bigger
+**        icons (64x64) for shape selection are created.
+**      - Created new class for image list maintainance.
+**
 **      Revision 1.38  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -483,7 +488,7 @@ b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3ShapeRenderObject(src)
 {
 }
 
-b3_bool b3SimpleShape::b3CheckStencil(b3_polar *polar)
+b3_bool b3SimpleShape::b3CheckStencil(b3_polar_precompute *polar)
 {
 	b3Item      *item;
 	b3Condition *cond;

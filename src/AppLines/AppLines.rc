@@ -105,6 +105,9 @@ IDI_CSG_ELLIPSOID       ICON    DISCARDABLE     "res\\csg_ellipsoid.ico"
 IDI_CSG_CONE            ICON    DISCARDABLE     "res\\csg_cone.ico"
 IDI_CSG_CYLINDER        ICON    DISCARDABLE     "res\\csg_cylinder.ico"
 IDI_CSG_SPHERE          ICON    DISCARDABLE     "res\\csg_sphere.ico"
+IDI_CSGMODE_INTERSECT   ICON    DISCARDABLE     "res\\csgmode_intersect.ico"
+IDI_CSGMODE_SUB         ICON    DISCARDABLE     "res\\csgmode_sub.ico"
+IDI_CSGMODE_UNION       ICON    DISCARDABLE     "res\\csgmode_union.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -603,6 +606,32 @@ BEGIN
 END
 
 IDR_CONTEXT_SCENE MENU DISCARDABLE 
+BEGIN
+    POPUP "Szene"
+    BEGIN
+        MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
+        MENUITEM "Um&benennen",                 ID_RENAME
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM "E&infügen als &Unterobjekt",  ID_EDIT_PASTE_SUB
+        MENUITEM SEPARATOR
+        MENUITEM "Erzeugen...",                 ID_OBJECT_NEW
+        MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
+        MENUITEM "Löschen",                     ID_OBJECT_DELETE
+        MENUITEM "Kopieren...",                 ID_OBJECT_COPY
+        MENUITEM SEPARATOR
+        MENUITEM "Ak&tivieren",                 ID_ACTIVATE
+        MENUITEM "&Deaktivieren",               ID_DEACTIVATE
+        MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
+        MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
+        MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
+        MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
+    END
+END
+
+IDR_CONTEXT_OBJECT MENU DISCARDABLE 
 BEGIN
     POPUP "Szene"
     BEGIN
@@ -1130,6 +1159,29 @@ BEGIN
     LTEXT           "Druckpuffer",IDC_STATIC,10,10,38,8
 END
 
+IDD_NEW_OBJECT DIALOGEX 0, 0, 367, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Neues Objekt"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,15,230,50,15
+    PUSHBUTTON      "Abbrechen",IDCANCEL,300,230,50,15
+    CONTROL         "List1",IDC_OBJECTLIST,"SysListView32",LVS_SINGLESEL | 
+                    LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
+                    LVS_AUTOARRANGE | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,15,15,335,155,WS_EX_CLIENTEDGE
+    CONTROL         "Vereinigung",IDC_CSGMODE_UNION,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,85,190,53,10
+    CONTROL         "Schnitt",IDC_CSGMODE_INTERSECT,"Button",
+                    BS_AUTORADIOBUTTON,175,190,38,10
+    CONTROL         "Abzug",IDC_CSGMODE_SUB,"Button",BS_AUTORADIOBUTTON,265,
+                    190,36,10
+    ICON            IDI_CSGMODE_UNION,IDC_STATIC,54,185,21,20
+    ICON            IDI_CSGMODE_INTERSECT,IDC_STATIC,145,185,20,20
+    ICON            IDI_CSGMODE_SUB,IDC_STATIC,235,185,20,20
+    GROUPBOX        "CSG Modi",IDC_STATIC,15,170,335,50
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1335,6 +1387,14 @@ BEGIN
         RIGHTMARGIN, 145
         TOPMARGIN, 7
         BOTTOMMARGIN, 74
+    END
+
+    IDD_NEW_OBJECT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 360
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1788,6 +1848,7 @@ BEGIN
     IDS_CSG_MODE_UNION      "Vereinigung"
     IDS_CSG_MODE_INTERSECT  "Schnittmenge"
     IDS_CSG_MODE_SUB        "Abzug"
+    IDS_BBOX                "Objekt"
 END
 
 #endif    // German (Germany) resources

@@ -55,7 +55,7 @@ class CAppLinesApp : public CB3App
 	CMultiDocTemplate *pObjectTemplate;
 
 public:
-	b3_size         m_PrintBufferSize;
+	b3_size            m_PrintBufferSize;
 
 public:
 	                 CAppLinesApp();

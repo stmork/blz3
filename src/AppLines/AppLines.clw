@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CAppLinesView
+LastClass=CAppRenderDoc
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=45
+ClassCount=46
 Class1=CB3ColorField
 Class2=CB3LineWidth
 Class3=CB3FontField
@@ -53,39 +53,42 @@ Class41=CDlgStepRotate
 Class42=CDlgSuperSampling
 Class43=CMainFrame
 
-ResourceCount=30
-Resource1=IDR_OBJECT
-Resource2=IDR_TOOLBAR_ACTION
-Resource3=IDD_SEARCH_PATH_LIST
-Resource4=IDR_TOOLBAR_DISPLAY
-Resource5=IDR_TOOLBAR_CAMERA
-Resource6=IDR_TOOLBAR_LIGHT
-Resource7=IDR_TOOLBAR_VIEW
-Resource8=IDD_STEP_ROTATE
-Resource9=IDD_MODELLER_INFO
-Resource10=IDR_MAINFRAME
-Resource11=IDD_LDC
-Resource12=IDR_TOOLBAR_OBJECT
-Resource13=IDD_ABOUTBOX
-Resource14=IDD_FULCRUM
-Resource15=IDD_NEW_ITEM
-Resource16=IDD_FILEOPENPREVIEW
-Resource17=IDD_DISTRIBUTED
-Resource18=IDD_HIERARCHY
-Resource19=IDD_CAMERA
-Resource20=IDD_STEP_MOVE
-Resource21=IDD_NEBULAR
+ResourceCount=32
+Resource1=IDD_NEBULAR
+Resource2=IDR_TOOLBAR_LIGHT
+Resource3=IDD_OBJECT_COPY
+Resource4=IDR_TOOLBAR_ACTION
+Resource5=IDR_TOOLBAR_OBJECT
+Resource6=IDR_TOOLBAR_DISPLAY
+Resource7=IDR_TOOLBAR_CAMERA
+Resource8=IDR_BLZ3TYPE
+Resource9=IDD_STEP_ROTATE
+Resource10=IDD_SUPER_SAMPLE
+Resource11=IDR_MAINFRAME
+Resource12=IDR_TOOLBAR_VIEW
+Resource13=IDD_DISTRIBUTED
+Resource14=IDR_CONTEXT_SCENE
+Resource15=IDD_FILEOPENPREVIEW
+Resource16=IDD_HIERARCHY
+Resource17=IDD_STEP_MOVE
+Resource18=IDD_SEARCH_PATH_LIST
+Resource19=IDR_OBJECT
+Resource20=IDR_CONTEXT_OBJECT
+Resource21=IDD_CAMERA
 Resource22=IDR_DISPLAYTYPE
-Resource23=IDD_SUPER_SAMPLE
-Resource24=IDR_BLZ3TYPE
-Resource25=IDD_OBJECT_COPY
-Resource26=IDD_LIGHT
-Resource27=IDD_SCENE
+Resource23=IDD_LDC
+Resource24=IDD_NEW_ITEM
+Resource25=IDD_ABOUTBOX
+Resource26=IDD_PROPERTIES
+Resource27=IDD_LIGHT
 Class44=CB3TreeCtrl
-Resource28=IDD_LENS_FLARE
-Resource29=IDR_CONTEXT_SCENE
+Resource28=IDD_FULCRUM
+Resource29=IDD_MODELLER_INFO
 Class45=CDlgProperties
-Resource30=IDD_PROPERTIES
+Resource30=IDD_SCENE
+Class46=CDlgNewObject
+Resource31=IDD_LENS_FLARE
+Resource32=IDD_NEW_OBJECT
 
 [CLS:CB3ColorField]
 Type=0
@@ -194,7 +197,7 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
-LastObject=CAppLinesDoc
+LastObject=ID_RENAME
 Filter=N
 VirtualFilter=DC
 
@@ -212,7 +215,7 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppObjectDoc.h
 ImplementationFile=AppObjectDoc.cpp
-LastObject=CAppObjectDoc
+LastObject=ID_OBJECT_NEW
 Filter=N
 VirtualFilter=DC
 
@@ -1160,4 +1163,49 @@ BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
 LastObject=CDlgProperties
+
+[DLG:IDD_NEW_OBJECT]
+Type=1
+Class=CDlgNewObject
+ControlCount=10
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_OBJECTLIST,SysListView32,1350680908
+Control4=IDC_CSGMODE_UNION,button,1342308361
+Control5=IDC_CSGMODE_INTERSECT,button,1342177289
+Control6=IDC_CSGMODE_SUB,button,1342177289
+Control7=IDC_STATIC,static,1342177283
+Control8=IDC_STATIC,static,1342177283
+Control9=IDC_STATIC,static,1342177283
+Control10=IDC_STATIC,button,1342177287
+
+[CLS:CDlgNewObject]
+Type=0
+HeaderFile=DlgNewObject.h
+ImplementationFile=DlgNewObject.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+LastObject=IDC_CSGMODE_UNION
+
+[MNU:IDR_CONTEXT_OBJECT]
+Type=1
+Class=?
+Command1=ID_OBJECT_EDIT
+Command2=ID_RENAME
+Command3=ID_EDIT_CUT
+Command4=ID_EDIT_COPY
+Command5=ID_EDIT_PASTE
+Command6=ID_EDIT_PASTE_SUB
+Command7=ID_OBJECT_NEW
+Command8=ID_OBJECT_NEW_SUB
+Command9=ID_OBJECT_DELETE
+Command10=ID_OBJECT_COPY
+Command11=ID_ACTIVATE
+Command12=ID_DEACTIVATE
+Command13=ID_DEACTIVATE_REST
+Command14=ID_ALL_ACTIVATE
+Command15=ID_ALL_DEACTIVATE
+Command16=ID_ALL_DEACTIVATE_REST
+CommandCount=16
 

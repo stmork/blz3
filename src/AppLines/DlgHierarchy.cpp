@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/02/22 20:18:09  sm
+**	- Added shape/bbox creation in object editor. So bigger
+**	  icons (64x64) for shape selection are created.
+**	- Created new class for image list maintainance.
+**
 **	Revision 1.17  2002/02/18 17:50:31  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.16  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -161,205 +166,15 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgHierarchy message handlers
 
-static int res_icon[] =
-{
-	IDI_BBOX_EMPTY,
-	IDI_BBOX_SUB,
-	IDI_BBOX_SHAPES,
-	IDI_BBOX_SHAPES_SUB,
-	IDI_BBOX_WORLD,
-	IDI_BBOX_EMPTY,
-	IDI_BBOX_SUB,
-	IDI_BBOX_S_SHAPES,
-	IDI_BBOX_S_SHAPES_SUB,
-	IDI_BBOX_WORLD,
-	IDI_SHAPE_AREA,
-	IDI_SHAPE_DISK,
-	IDI_SHAPE_SPHERE,
-	IDI_SHAPE_CYLINDER,
-	IDI_SHAPE_CONE,
-	IDI_SHAPE_ELLIPSOID,
-	IDI_SHAPE_BOX,
-	IDI_SHAPE_TORUS,
-	IDI_SHAPE_TRIANGLES,
-	IDI_SHAPE_BSPLINE_ROT,
-	IDI_SHAPE_BSPLINE_AREA,
-	IDI_SHAPE_BSPLINE_CYLINDER,
-	IDI_SHAPE_BSPLINE_RING,
-
-	// CSG shapes
-	IDI_CSG_SPHERE,
-	IDI_CSG_CYLINDER,
-	IDI_CSG_CONE,
-	IDI_CSG_ELLIPSOID,
-	IDI_CSG_BOX,
-	IDI_CSG_TORUS
-};
-
-static int res_string[] =
-{
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_UNKNOWN,
-	IDS_SHAPE_AREA,
-	IDS_SHAPE_DISK,
-	IDS_SHAPE_SPHERE,
-	IDS_SHAPE_CYLINDER,
-	IDS_SHAPE_CONE,
-	IDS_SHAPE_ELLIPSOID,
-	IDS_SHAPE_BOX,
-	IDS_SHAPE_TORUS,
-	IDS_SHAPE_TRIANGLES,
-	IDS_SHAPE_BSPLINE_ROT,
-	IDS_SHAPE_BSPLINE_AREA,
-	IDS_SHAPE_BSPLINE_CYLINDER,
-	IDS_SHAPE_BSPLINE_RING,
-
-	// CSG shapes
-	IDS_CSG_SPHERE,
-	IDS_CSG_CYLINDER,
-	IDS_CSG_CONE,
-	IDS_CSG_ELLIPSOID,
-	IDS_CSG_BOX,
-	IDS_CSG_TORUS
-};
-
 BOOL CDlgHierarchy::OnInitDialog() 
 {
-	int i;
-
-	CWinApp *app = AfxGetApp();
-
 	CB3Dialogbar::OnInitDialog();
-	
-	m_ImageList.Create(16,16,ILC_COLOR8,30,8);
-	for (i = 0;i < (sizeof(res_icon) / sizeof(int));i++)
-	{
-		m_ImageList.Add(app->LoadIcon(res_icon[i]));
-	}
+	m_ImageList.b3Create();
 	m_Hierarchy.SetImageList (&m_ImageList,TVSIL_NORMAL);
 
 	// TODO: Add extra initialization here
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
-}
-
-long CDlgHierarchy::b3ComputeImgNum(b3BBox *BBox)
-{
-	b3BBox *sub;
-	long    imgNum = 0;
-
-	sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
-	if ((sub != null) || (BBox->b3GetShapeHead()->First != null))
-	{
-		if (sub != null)        imgNum += 1;
-		imgNum += 2;
-		if (BBox->b3IsActive()) imgNum += 5;
-	}
-	return imgNum;
-}
-
-long CDlgHierarchy::b3ComputeImgNum(b3Shape *Shape,CString &text)
-{
-	CString mode;
-	long    imgnum;
-
-	if (Shape->b3GetClass() == CLASS_CSG)
-	{
-		b3CSGShape *csg = (b3CSGShape *)Shape;
-		switch(csg->m_Operation)
-		{
-		case B3_CSG_UNION:
-			mode.LoadString(IDS_CSG_MODE_UNION);
-			break;
-		case B3_CSG_INTERSECT:
-			mode.LoadString(IDS_CSG_MODE_INTERSECT);
-			break;
-		case B3_CSG_SUB:
-			mode.LoadString(IDS_CSG_MODE_SUB);
-			break;
-		}
-	}
-	else
-	{
-		mode.LoadString(IDS_CSG_MODE_NONE);
-	}
-
-	switch(Shape->b3GetClassType())
-	{
-	case AREA:
-		imgnum = 10;
-		break;
-	case DISK:
-		imgnum = 11;
-		break;
-	case SPHERE:
-		imgnum = 12;
-		break;
-	case CYLINDER:
-		imgnum = 13;
-		break;
-	case CONE:
-		imgnum = 14;
-		break;
-	case ELLIPSOID:
-		imgnum = 15;
-		break;
-	case BOX:
-		imgnum = 16;
-		break;
-	case TORUS:
-		imgnum = 17;
-		break;
-	case TRIANGLES:
-		imgnum = 18;
-		break;
-	case SPLINE_ROT:
-		imgnum = 19;
-		break;
-	case SPLINES_AREA:
-		imgnum = 20;
-		break;
-	case SPLINES_CYL:
-		imgnum = 21;
-		break;
-	case SPLINES_RING:
-		imgnum = 22;
-		break;
-
-	case CSG_SPHERE:
-		imgnum = 23;
-		break;
-	case CSG_CYLINDER:
-		imgnum = 24;
-		break;
-	case CSG_CONE:
-		imgnum = 25;
-		break;
-	case CSG_ELLIPSOID:
-		imgnum = 26;
-		break;
-	case CSG_BOX:
-		imgnum = 27;
-		break;
-	case CSG_TORUS:
-		imgnum = 28;
-		break;
-
-	default:
-		imgnum = 0;
-		break;
-	}
-
-	text.Format(res_string[imgnum],(const char *)mode);
-	return imgnum;
 }
 
 void CDlgHierarchy::b3AddBBoxes (
@@ -381,7 +196,7 @@ void CDlgHierarchy::b3AddBBoxes (
 	}
 	while (BBox != null)
 	{
-		imgNum = b3ComputeImgNum(BBox);
+		imgNum = CB3ImageList::b3ComputeImgNum(BBox);
 		insert.hParent      = parent;
 		insert.hInsertAfter = TVI_LAST;
 		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
@@ -407,7 +222,7 @@ void CDlgHierarchy::b3AddBBoxes (
 			{
 				shape = (b3Shape     *)item;
 
-				imgNum = b3ComputeImgNum(shape,shape_title);
+				imgNum = CB3ImageList::b3ComputeImgNum(shape,shape_title);
 				insert.hParent      = new_treeitem;
 				insert.hInsertAfter = TVI_LAST;
 				insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
@@ -469,7 +284,7 @@ void CDlgHierarchy::b3UpdateIcons(HTREEITEM parent)
 	    item != NULL;
 		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
 	{
-		imgnum = b3ComputeImgNum((b3BBox *)m_Hierarchy.GetItemData(item));
+		imgnum = CB3ImageList::b3ComputeImgNum((b3BBox *)m_Hierarchy.GetItemData(item));
 		info.hItem          = item;
 		info.iImage         = imgnum;
 		info.iSelectedImage = imgnum;
@@ -602,19 +417,19 @@ b3Shape *CDlgHierarchy::b3GetSelectedShape()
 
 void CDlgHierarchy::OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	TV_DISPINFO* pTVDispInfo = (TV_DISPINFO*)pNMHDR;
-	b3BBox      *BBox;
+	TV_DISPINFO *pTVDispInfo = (TV_DISPINFO*)pNMHDR;
+	b3Item      *item;
 
 	// TODO: Add your control notification handler code here
-	BBox = (b3BBox *)pTVDispInfo->item.lParam;
-	if (BBox != null)
+	*pResult = 1; // Mark as uneditable by default
+	item = (b3Item *)pTVDispInfo->item.lParam;
+	if (item != null)
 	{
-		m_Hierarchy.GetEditControl()->LimitText(B3_BOXSTRINGLEN);
-		*pResult = 0;
-	}
-	else
-	{
-		*pResult = 1;
+		if (item->b3GetClass() == CLASS_BBOX)
+		{
+			m_Hierarchy.GetEditControl()->LimitText(B3_BOXSTRINGLEN);
+			*pResult = 0;
+		}
 	}
 }
 
@@ -626,7 +441,7 @@ void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult)
 	// TODO: Add your control notification handler code here
 	
 	BBox = (b3BBox *)pTVDispInfo->item.lParam;
-	if ((BBox != null) && (pTVDispInfo->item.pszText))
+	if ((BBox != null) && (pTVDispInfo->item.pszText != null))
 	{
 		strcpy (BBox->m_BoxName,pTVDispInfo->item.pszText);
 		

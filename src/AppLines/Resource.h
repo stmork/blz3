@@ -59,6 +59,8 @@
 #define IDM_BAR_STEP_ROTATE             159
 #define IDR_CONTEXT_SCENE               166
 #define IDI_SHAPE_CYLINDER              167
+#define IDR_CONTEXT_SCENE1              167
+#define IDR_CONTEXT_OBJECT              167
 #define IDI_SHAPE_SPHERE                168
 #define IDI_SHAPE_CONE                  169
 #define IDI_SHAPE_ELLIPSOID             170
@@ -69,6 +71,7 @@
 #define IDI_SHAPE_TORUS                 174
 #define IDD_PROPERTIES                  174
 #define IDI_SHAPE_TRIANGLES             175
+#define IDD_NEW_OBJECT                  175
 #define IDI_SHAPE_BSPLINE_ROT           176
 #define IDI_SHAPE_BSPLINE_AREA          177
 #define IDI_SHAPE_BSPLINE_CYLINDER      178
@@ -79,6 +82,9 @@
 #define IDI_CSG_CONE                    183
 #define IDI_CSG_CYLINDER                184
 #define IDI_CSG_SPHERE                  185
+#define IDI_CSGMODE_INTERSECT           186
+#define IDI_CSGMODE_SUB                 187
+#define IDI_CSGMODE_UNION               188
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -234,6 +240,10 @@
 #define IDC_MEASURE                     1113
 #define IDC_PRT_BUFFER_SPIN             1114
 #define IDC_CAMERA_UNIT                 1115
+#define IDC_OBJECTLIST                  1116
+#define IDC_CSGMODE_UNION               1117
+#define IDC_CSGMODE_INTERSECT           1118
+#define IDC_CSGMODE_SUB                 1119
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -395,15 +405,16 @@
 #define IDS_CSG_MODE_UNION              61512
 #define IDS_CSG_MODE_INTERSECT          61513
 #define IDS_CSG_MODE_SUB                61514
+#define IDS_BBOX                        61515
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        175
+#define _APS_NEXT_RESOURCE_VALUE        187
 #define _APS_NEXT_COMMAND_VALUE         32867
-#define _APS_NEXT_CONTROL_VALUE         1116
+#define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -20,6 +20,7 @@
 
 #include <blz3/b3Config.h>
 #include "AppLinesDoc.h"	// Added by ClassView
+#include "b3ImageList.h"
 
 #if _MSC_VER >= 1000
 #pragma once
@@ -35,8 +36,9 @@
 class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 {
 	CAppRenderDoc *m_pDoc;
-	CImageList     m_ImageList;
 	HTREEITEM      m_DragItem,m_DropItem;
+	CB3ImageList	m_ImageList;
+
 // Construction
 public:
 	 ~CDlgHierarchy();
@@ -72,8 +74,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	long           b3ComputeImgNum(b3BBox *BBox);
-	long           b3ComputeImgNum(b3Shape *Shape,CString &text);
 	void           b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
 	b3_bool        b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
 	void           b3UpdateActivation();

@@ -69,6 +69,7 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppObjectDoc)
+	afx_msg void OnObjectNew();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -84,6 +85,7 @@ public:
 	void    b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
 	void    b3ComputeBounds();
 	void    b3InitTree();
+	void    b3ContextMenu(HTREEITEM item);
 	void    b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	b3_bool b3IsLinesDoc(CAppLinesDoc *LinesDoc);
 	b3_bool b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);

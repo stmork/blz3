@@ -26,6 +26,8 @@
 #include "AppObjectView.h"
 #include "MainFrm.h"
 
+#include "DlgNewObject.h"
+
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -36,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/02/22 20:18:09  sm
+**	- Added shape/bbox creation in object editor. So bigger
+**	  icons (64x64) for shape selection are created.
+**	- Created new class for image list maintainance.
+**
 **	Revision 1.11  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
-**
+**	
 **	Revision 1.10  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -94,6 +101,7 @@ IMPLEMENT_DYNCREATE(CAppObjectDoc, CAppRenderDoc)
 
 BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	//{{AFX_MSG_MAP(CAppObjectDoc)
+	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -359,6 +367,25 @@ void CAppObjectDoc::b3InitTree()
 	}
 }
 
+void CAppObjectDoc::b3ContextMenu(HTREEITEM item)
+{
+	CMenu          menu;
+	CMenu         *submenu;
+	CPoint point;
+
+	if (menu.LoadMenu(IDR_CONTEXT_SCENE))
+	{
+		submenu = menu.GetSubMenu(0);
+		ASSERT(submenu != NULL);
+
+		m_DlgHierarchy->m_Hierarchy.SelectItem(item);
+		::GetCursorPos(&point);
+		submenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON,
+			point.x, point.y,
+			CB3GetMainFrame()); // use main window for cmds
+	}
+}
+
 void CAppObjectDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
 {
 	b3Base<b3Item> *srcBase;
@@ -392,4 +419,31 @@ b3_bool CAppObjectDoc::b3IsObjectAlreadyOpen(
 			(b3BBox::b3FindBBox(bbox->b3GetBBoxHead(),m_Original)));
 	}
 	return is_open;
+}
+
+void CAppObjectDoc::OnObjectNew() 
+{
+	// TODO: Add your command handler code here
+	b3BBox        *bbox;
+	b3Shape       *shape;
+	CDlgNewObject  dlg;
+
+	shape = m_DlgHierarchy->b3GetSelectedShape();
+	bbox  = (shape != null ?
+		m_BBox->b3FindParentBBox(shape) :
+		m_DlgHierarchy->b3GetSelectedBBox());
+	dlg.m_InsertAfter = shape;
+	dlg.m_BBox = bbox;
+	if (dlg.DoModal() == IDOK)
+	{
+		m_DlgHierarchy->b3GetData();
+		m_BBox->b3Prepare();
+		m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+		m_BBox->b3BacktraceRecompute(bbox);
+		b3ComputeBounds();
+
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		m_DlgHierarchy->b3InitTree(this,true);
+	}
 }

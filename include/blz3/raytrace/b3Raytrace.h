@@ -42,12 +42,16 @@ extern b3_f64 epsilon;
 **                                                                      **
 *************************************************************************/
 
-struct b3_polar
+struct b3_polar_precompute
 {
 	b3_vector polar;
 	b3_vector object_polar;
-	b3_vector box_polar;
 	b3_index  normal_index;
+};
+
+struct b3_polar : b3_polar_precompute
+{
+	b3_vector box_polar;
 };
 
 struct b3_ray : public b3_line64
@@ -188,7 +192,7 @@ public:
 
 	virtual b3_bool b3Prepare();
 	virtual void    b3ComputeBound(b3_cond_limit *limit);
-	virtual b3_bool b3CheckStencil(b3_polar *polar);
+	virtual b3_bool b3CheckStencil(b3_polar_precompute *polar);
 	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
 
 protected:
@@ -210,7 +214,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 #define RCB_ACTIVE  0
@@ -243,7 +247,7 @@ public:
 	B3_ITEM_INIT(b3CondPara);
 	B3_ITEM_LOAD(b3CondPara);
 
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 class b3CondTria : public b3Cond2
@@ -252,7 +256,7 @@ public:
 	B3_ITEM_INIT(b3CondTria);
 	B3_ITEM_LOAD(b3CondTria);
 
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 
@@ -268,7 +272,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 // TYPE_SEGMENT
@@ -285,7 +289,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 // TYPE_ELLIPSE
@@ -303,7 +307,7 @@ public:
 
 	void    b3Write();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 // TYPE_TEXTURE
@@ -324,7 +328,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 // TYPE_WRAP_TEXTURE
@@ -344,7 +348,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3_cond_limit *limit);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	b3_bool b3CheckStencil(b3_polar_precompute *polar);
 };
 
 /*************************************************************************
@@ -1000,7 +1004,7 @@ private:
 class b3SimpleShape : public b3ShapeRenderObject
 {
 protected:
-	b3_bool             b3CheckStencil(b3_polar *polar);
+	b3_bool             b3CheckStencil(b3_polar_precompute *polar);
 
 protected:
 	b3SimpleShape(b3_size class_size,b3_u32 class_type);
@@ -1010,7 +1014,7 @@ public:
 	B3_ITEM_LOAD(b3SimpleShape);
 
 public:
-	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
+	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 };
 
 // SPHERE
@@ -1030,7 +1034,7 @@ public:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
-	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void    b3Normal(b3_ray *ray);
 
 	b3_bool b3Prepare();
@@ -1077,7 +1081,7 @@ public:
 	void   b3FreeVertices();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 };
 
 class b3Disk : public b3Shape2
@@ -1089,7 +1093,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
@@ -1117,7 +1121,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -1131,7 +1135,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -1144,7 +1148,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -1163,7 +1167,7 @@ public:
 	void   b3FreeVertices();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void   b3Normal(b3_ray *ray);
 };
 
@@ -1186,7 +1190,7 @@ public:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
-	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void    b3Normal(b3_ray *ray);
 
 	b3_bool b3Prepare();
@@ -1227,7 +1231,7 @@ public:
 	B3_ITEM_LOAD(b3TriangleShape);
 
 	               ~b3TriangleShape();
-	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);
 	virtual b3_bool b3Prepare();
@@ -1243,7 +1247,7 @@ private:
 				b3_index   index,b3_index   rec,b3_count   MaxRec);
 	        b3_f64  b3IntersectTriangleList(
 				b3_ray                *ray,
-				b3_polar              *polar,
+				b3_polar_precompute   *polar,
 				b3Base<b3TriangleRef> *list);
 };
 
@@ -1637,7 +1641,8 @@ public:
 		   b3_bool         b3Prepare();
 		   char           *b3GetName();
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
-		   b3Base<b3Item> *b3FindBBoxHead(b3BBox *bbox);
+		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
+		   b3BBox         *b3FindParentBBox(b3Shape *shape);
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
@@ -2266,7 +2271,8 @@ public:
 			char           *b3GetName();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
-		    b3Base<b3Item> *b3FindBBoxHead(b3BBox *bbox);
+		    b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
+		    b3BBox         *b3FindParentBBox(b3Shape *shape);
 			b3Base<b3Item> *b3GetBBoxHead();
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();

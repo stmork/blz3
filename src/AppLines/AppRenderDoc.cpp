@@ -34,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/02/22 20:18:09  sm
+**	- Added shape/bbox creation in object editor. So bigger
+**	  icons (64x64) for shape selection are created.
+**	- Created new class for image list maintainance.
+**
 **	Revision 1.9  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -41,7 +46,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.8  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
@@ -211,7 +216,7 @@ void CAppRenderDoc::OnRename()
 void CAppRenderDoc::OnUpdateRename(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(m_DlgHierarchy->m_Hierarchy.GetSelectedItem() != null);
+	pCmdUI->Enable(m_DlgHierarchy->b3GetSelectedBBox() != null);
 }
 
 void CAppRenderDoc::b3DragBegin()
