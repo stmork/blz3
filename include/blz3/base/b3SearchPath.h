@@ -25,6 +25,8 @@
 class b3PathEntry : public b3Link<b3PathEntry>, public b3Path
 {
 public:
+	b3PathEntry(const b3PathEntry &src);
+	b3PathEntry(const b3PathEntry *src);
 	b3PathEntry(const char *path);
 };
 

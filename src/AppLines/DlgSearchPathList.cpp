@@ -40,11 +40,15 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.3  2002/11/01 12:49:07  sm
+**	- Some b3SearchPath constructor refinements.
+**	- Fixed texture path configuration.
+**
 **	Revision 1.2  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **	Revision 1.1  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -123,14 +127,12 @@ BOOL CDlgSearchPathList::OnInitDialog()
 void CDlgSearchPathList::b3RefreshList()
 {
 	b3PathEntry *entry;
-	char        *string;
 	int          index;
 
 	m_List.ResetContent();
 	B3_FOR_BASE(m_ListBase,entry)
 	{
-		string = (char *)((b3Path *)entry);
-		index  = m_List.AddString(string);
+		index  = m_List.AddString(*entry);
 		m_List.SetItemDataPtr(index,entry);
 	}
 }
@@ -249,11 +251,11 @@ void CDlgSearchPathList::OnPathNew()
 	b3PathEntry *new_entry;
 
 	// Create new list entry
-	new_entry = new b3PathEntry((const char *)((b3Path *)m_PathEntry));
+	new_entry = new b3PathEntry(m_PathEntry);
 	m_ListBase->b3Insert(m_PathEntry,new_entry);
 
 	// Update combobox
-	m_Index  = m_List.InsertString(m_Index + 1,(const char *)((b3Path *)new_entry));
+	m_Index  = m_List.InsertString(m_Index + 1,(const char *)*new_entry);
 	m_List.SetItemDataPtr(m_Index,new_entry);
 	m_PathEntry = new_entry;
 
@@ -280,7 +282,7 @@ void CDlgSearchPathList::OnPathEdit()
 	b3Folder folder = this;
 
 	folder.b3SelectFolder(path,IDS_SELECT_TEXTURE_PATH);
-	strcpy((char *)((b3Path *)m_PathEntry),path);
+	strcpy(*m_PathEntry,path);
 	b3RefreshList();
 	b3SetSelection(0);
 }
@@ -315,7 +317,7 @@ void CDlgSearchPathList::OnKillfocusPath()
 		m_List.DeleteString  (m_Index);
 		m_List.InsertString  (m_Index,title);
 		m_List.SetItemDataPtr(m_Index,m_PathEntry);
-		strcpy((char *)((b3Path *)m_PathEntry),title);			  
+		strcpy(*m_PathEntry,title);			  
 		b3SetSelection(m_Index);
 	}
 }

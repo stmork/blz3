@@ -54,13 +54,17 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2002/11/01 12:49:07  sm
+**	- Some b3SearchPath constructor refinements.
+**	- Fixed texture path configuration.
+**
 **	Revision 1.43  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.42  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -666,7 +670,7 @@ void CAppLinesApp::OnChangeTexturePath()
 		{
 			path += ";";
 		}
-		path += ((const char *)((b3Path *)entry));
+		path += ((const char *)*entry);
 	}
 	WriteProfileString(b3ClientName(),"texture search path",path);
 }

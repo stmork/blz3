@@ -32,12 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/11/01 12:49:07  sm
+**	- Some b3SearchPath constructor refinements.
+**	- Fixed texture path configuration.
+**
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.6  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
@@ -74,6 +78,16 @@
 **                        Texture maintainance                          **
 **                                                                      **
 *************************************************************************/
+
+b3PathEntry::b3PathEntry(const b3PathEntry &src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
+{
+	strcpy(m_Path,src.m_Path);
+}
+
+b3PathEntry::b3PathEntry(const b3PathEntry *src) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
+{
+	strcpy(m_Path,src != null ? src->m_Path : "");
+}
 
 b3PathEntry::b3PathEntry(const char *new_path) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
