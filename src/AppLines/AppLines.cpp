@@ -57,6 +57,10 @@
 
 /*
 **	$Log$
+**	Revision 1.76  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.75  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -71,7 +75,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.74  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -878,10 +882,11 @@ void CAppLinesApp::OnProperties()
 void CAppLinesApp::OnFileOpen() 
 {
 	// TODO: Add your command handler code here
-	CString filename;
-	CString filter_bwd,bwdFilterName,bwdFilterExt;
-	CString filter_bod,bodFilterName,bodFilterExt;
-	CString filter_img;
+	CB3App  *app = CB3GetApp();
+	CString  filename;
+	CString  filter_bwd,bwdFilterName,bwdFilterExt;
+	CString  filter_bod,bodFilterName,bodFilterExt;
+	CString  filter_img;
 
 	// Build scene filter
 	pSceneTemplate->GetDocString(bwdFilterName,CDocTemplate::filterName);
@@ -897,11 +902,13 @@ void CAppLinesApp::OnFileOpen()
 	filter_img.LoadString(IDS_TEXTURE_FILTER);
 
 	// Select filename
-	CB3FileDialog dlg(TRUE,"",NULL,OFN_HIDEREADONLY,filter_bwd + filter_bod + filter_img,m_pMainWnd);
+	filename = app->GetProfileString(CB3ClientString(),"file load.document",null);
+	CB3FileDialog dlg(TRUE,"",filename,OFN_HIDEREADONLY,filter_bwd + filter_bod + filter_img,m_pMainWnd);
 	if (dlg.DoModal() == IDOK)
 	{
 		// and load document
 		filename = dlg.GetPathName();
+		app->WriteProfileString(CB3ClientString(),"file load.document",filename);
 		OpenDocumentFile(filename);
 	}
 }

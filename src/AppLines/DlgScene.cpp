@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.17  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.16  2004/04/03 14:07:18  sm
 **	- Resolved internal compiler error problem of VC++
 **	
@@ -132,15 +136,34 @@ static b3_bg_type dialog_to_scene[4] =
 	TP_TEXTURE
 };
 
+static struct b3_resolution
+{
+	b3_res xRes,yRes;
+}
+resolution[] =
+{
+	{    0,    0 },
+	{  704,  576 },
+	{  352,  288 },
+	{ 2048, 1536 },
+	{ 1600, 1200 },
+	{ 1024,  768 },
+	{  640,  480 },
+	{  800,  600 },
+	{  400,  300 },
+	{  200,  150 }
+};
+
 CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgScene::IDD)
 {
 	//{{AFX_DATA_INIT(CDlgScene)
-	m_ResValid = false;
 	m_RayDepthLegend = _T("");
-	m_BackgroundMode = 0;
-	m_GfxValid = FALSE;
 	m_ShadowBrightnessLegend = _T("");
+	m_BackgroundMode = 0;
+	m_ResValid = false;
+	m_GfxValid = FALSE;
+	m_Resolution = 0;
 	//}}AFX_DATA_INIT
 	m_LastTraceDepth = -1;
 	m_LastShadowBrightness = -1;
@@ -151,32 +174,36 @@ void CDlgScene::DoDataExchange(CDataExchange* pDX)
 {
 	CPropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgScene)
-	DDX_Radio(pDX, IDC_BG_LIGHT, m_BackgroundMode);
-	DDX_Control(pDX, IDC_YRES_SPIN, m_yResSpin);
-	DDX_Control(pDX, IDC_XRES_SPIN, m_xResSpin);
 	DDX_Control(pDX, IDC_PREVIEW_RAYTRACE, m_PreviewSceneCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_BGIMAGE, m_PreviewImageCtrl);
+	DDX_Control(pDX, IDC_RAYDEPTH, m_RayDepthCtrl);
+	DDX_Control(pDX, IDC_SHADOW_BRIGHTNESS, m_ShadowBrightnessCtrl);
+	DDX_Text(pDX, IDC_RAYDEPTH_LEGEND, m_RayDepthLegend);
+	DDX_Text(pDX, IDC_SHADOW_BRIGHTNESS_LEGEND, m_ShadowBrightnessLegend);
+	DDX_Control(pDX, IDC_YRES_SPIN, m_yResSpin);
+	DDX_Control(pDX, IDC_XRES_SPIN, m_xResSpin);
+	DDX_Radio(pDX, IDC_BG_LIGHT, m_BackgroundMode);
 	DDX_Check(pDX, IDC_RES_VALID, m_ResValid);
 	DDX_Check(pDX, IDC_OPEN_GFX, m_GfxValid);
-	DDX_Control(pDX, IDC_SHADOW_BRIGHTNESS, m_ShadowBrightnessCtrl);
-	DDX_Control(pDX, IDC_RAYDEPTH, m_RayDepthCtrl);
-	DDX_Text(pDX, IDC_SHADOW_BRIGHTNESS_LEGEND, m_ShadowBrightnessLegend);
-	DDX_Text(pDX, IDC_RAYDEPTH_LEGEND, m_RayDepthLegend);
+	DDX_CBIndex(pDX, IDC_RES, m_Resolution);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgScene, CPropertyPage)
 	//{{AFX_MSG_MAP(CDlgScene)
-	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BG_LIGHT, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_IMAGE_SELECT, OnBgImageSelect)
 	ON_BN_CLICKED(IDC_RES_VALID, OnResValid)
+	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDC_BG_TOP_SELECT, OnTopColor)
+	ON_BN_CLICKED(IDC_BG_BOTTOM_SELECT, OnBottomColor)
+	ON_CBN_SELCHANGE(IDC_RES, OnChangedResolution)
 	ON_BN_CLICKED(IDC_BG_COLOR, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_SKY, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_IMAGE, OnBgModeChanged)
-	ON_BN_CLICKED(IDC_BG_TOP_SELECT, OnTopColor)
-	ON_BN_CLICKED(IDC_BG_BOTTOM_SELECT, OnBottomColor)
+	ON_EN_KILLFOCUS(IDC_XRES, OnEditedResolution)
+	ON_EN_KILLFOCUS(IDC_YRES, OnEditedResolution)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -188,6 +215,7 @@ BOOL CDlgScene::OnInitDialog()
 	m_ResValid = (m_Scene->m_Flags & TP_SIZEVALID) != 0;
 	m_GfxValid = (m_Scene->m_Flags & TP_NO_GFX) == 0;
 	m_BackgroundMode = scene_to_dialog[m_Scene->m_BackgroundType];
+	b3SetResolution(m_Scene->m_xSize,m_Scene->m_ySize);
 
 	CPropertyPage::OnInitDialog();
 	
@@ -348,4 +376,46 @@ void CDlgScene::OnOK()
 		(m_ResValid ? TP_SIZEVALID : 0) |
 		(m_GfxValid ? 0 : TP_NO_GFX);
 	m_Scene->b3SetTexture(m_PreviewScene->m_TextureName);
+}
+
+void CDlgScene::OnChangedResolution() 
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	m_xResSpin.b3SetPos(resolution[m_Resolution].xRes);
+	m_yResSpin.b3SetPos(resolution[m_Resolution].yRes);
+}
+
+void CDlgScene::OnEditedResolution() 
+{
+	// TODO: Add your control notification handler code here
+	b3_res   xRes = m_xResSpin.b3GetPos();
+	b3_res   yRes = m_yResSpin.b3GetPos();
+
+	if (b3SetResolution(xRes,yRes))
+	{
+		UpdateData(FALSE);
+	}
+}
+
+b3_bool CDlgScene::b3SetResolution(b3_res xRes,b3_res yRes)
+{
+	b3_index i,max = sizeof(resolution) / sizeof(b3_resolution);
+	b3_index pos = 0;
+	b3_bool  changed = false;
+
+	for (i = 1;i < max;i++)
+	{
+		if ((resolution[i].xRes == xRes) && (resolution[i].yRes == yRes))
+		{
+			pos = i;
+			break;
+		}
+	}
+	if (pos != m_Resolution)
+	{
+		m_Resolution = pos;
+		changed = true;
+	}
+	return changed;
 }

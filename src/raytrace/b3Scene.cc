@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.59  2004/05/13 16:17:26  sm
 **	- Added background clouds as special item.
-**
+**	
 **	Revision 1.58  2004/05/12 16:28:16  sm
 **	- Beautified bump icons
 **	- Missing return type for b3Material::b3Mix added
@@ -643,7 +647,7 @@ b3CloudBackground*b3Scene::b3GetCloudBackground(b3_bool force)
 	return clouds;
 }
 
-b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
+b3CameraPart *b3Scene::b3GetFirstCamera(b3_bool must_active)
 {
 	b3CameraPart *camera,*first = null;
 	b3Item       *item;
@@ -707,7 +711,7 @@ b3CameraPart *b3Scene::b3GetActualCamera()
 {
 	if (m_ActualCamera == null)
 	{
-		b3SetCamera(b3GetCamera(false));
+		b3SetCamera(b3GetFirstCamera(false));
 	}
 
 	return m_ActualCamera;

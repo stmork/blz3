@@ -54,6 +54,7 @@ public:
 	int		m_BackgroundMode;
 	BOOL	m_ResValid;
 	BOOL	m_GfxValid;
+	int		m_Resolution;
 	//}}AFX_DATA
 
 
@@ -79,13 +80,16 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnTopColor();
 	afx_msg void OnBottomColor();
+	afx_msg void OnChangedResolution();
+	afx_msg void OnEditedResolution();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	int m_LastTraceDepth;
 	int m_LastShadowBrightness;
-	void b3PrintLegend();
-	void b3UpdateUI();
+	void    b3PrintLegend();
+	void    b3UpdateUI();
+	b3_bool b3SetResolution(b3_res xRes,b3_res yRes);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -683,6 +683,7 @@
 #define IDC_Y_TIMES_SPIN                32400
 #define IDC_SPIN_WIND_AMP               32401
 #define IDC_SPIN_WIND_FREQ              32402
+#define IDC_RES                         32402
 #define IDC_SPIN_WIND_MIN               32403
 #define IDC_SPIN_KM                     32404
 #define IDC_SPIN_SCALE_TIME             32405
@@ -900,9 +901,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        123
+#define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10122
-#define _APS_NEXT_CONTROL_VALUE         32402
+#define _APS_NEXT_CONTROL_VALUE         32403
 #define _APS_NEXT_SYMED_VALUE           60207
 #endif
 #endif

@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.2  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.1  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
@@ -128,7 +132,7 @@ b3_s32 CB3ComboBox::b3SetString(const char *text)
 	{
 		GetWindowText((char *)text,GetWindowTextLength() + 1);
 	}
-	b3PrintF (B3LOG_FULL,"### CLASS: b3CBox # mauiSetString(%s) = %d\n",
+	b3PrintF (B3LOG_FULL,"### CLASS: b3CBox # b3SetString(%s) = %d\n",
 		text,index);
 	return index;
 }

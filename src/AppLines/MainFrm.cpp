@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.37  2004/05/06 08:38:32  sm
 **	- Demerged raytracing includes of Lines
-**
+**	
 **	Revision 1.36  2003/02/19 18:27:27  sm
 **	- Release bug fix for logging
 **	
@@ -684,7 +688,7 @@ void CMainFrame::b3UpdateCameraBox(b3Scene *scene,b3CameraPart *act)
 	b3CameraPart *camera;
 
 	m_cameraBox.b3Clear();
-	for (camera  = scene->b3GetCamera();
+	for (camera  = scene->b3GetFirstCamera();
 	     camera != null;
 		 camera  = scene->b3GetNextCamera(camera))
 	{

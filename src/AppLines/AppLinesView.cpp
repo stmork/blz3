@@ -42,9 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.68  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
-**
+**	
 **	Revision 1.66  2003/04/05 13:57:21  sm
 **	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
 **	
@@ -449,7 +453,7 @@ void CAppLinesView::OnInitialUpdate()
 
 	m_Scene      = pDoc->m_Scene;
 	B3_ASSERT(m_Scene != null);
-	m_Camera     = m_Scene->b3GetCamera(true);
+	m_Camera     = m_Scene->b3GetFirstCamera(true);
 
 	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
 	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
@@ -913,7 +917,7 @@ void CAppLinesView::OnCamSelect()
 	if (m_Camera != new_camera)
 	{
 		m_Camera = new_camera;
-		m_Scene->b3SetCamera(m_Camera,true);
+		m_Scene->b3SetCamera(m_Camera,true); // set and resort
 		GetDocument()->SetModifiedFlag();
 		OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 	}
@@ -942,7 +946,9 @@ void CAppLinesView::OnCameraNew()
 void CAppLinesView::OnCameraDelete() 
 {
 	// TODO: Add your command handler code here
-	GetDocument()->b3AddOp(new b3OpCameraDelete(m_Scene,m_Camera));
+	b3UndoOperation *op = new b3OpCameraDelete(m_Scene,m_Camera);
+
+	GetDocument()->b3AddOp(op);
 }
 
 void CAppLinesView::OnCameraProperties() 

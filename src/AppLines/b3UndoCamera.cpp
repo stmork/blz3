@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.4  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.3  2003/01/15 16:23:53  sm
 **	- Some other camera undo/redo operations added.
 **	- Fixed some undo(redo operations.
@@ -122,7 +126,11 @@ b3OpCameraDelete::b3OpCameraDelete(
 		m_Selected = m_Scene->b3GetNextCamera(m_Camera);
 		if (m_Selected == null)
 		{
-			m_Selected = m_Scene->b3GetCamera();
+			m_Selected = m_Scene->b3GetFirstCamera();
+			while ((m_Selected == m_Camera) && (m_Selected != null))
+			{
+				m_Selected = m_Scene->b3GetNextCamera(m_Selected);
+			}
 		}
 		b3Initialize();
 	}

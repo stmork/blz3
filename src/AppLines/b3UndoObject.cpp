@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.6  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -177,6 +181,9 @@ void b3OpObjectDelete::b3Redo()
 **                        read file operations on objects               **
 **                                                                      **
 *************************************************************************/
+
+#define B3_OBJECT_LOAD_REGITEM "file load.object"
+#define B3_OBJECT_REPLACE_REGITEM "file replace.object"
 
 b3OpObjectFile::b3OpObjectFile(
 	b3Scene       *scene,
@@ -330,8 +337,7 @@ void b3OpObjectReplace::b3Redo()
 
 b3OpObjectLoadCob::b3OpObjectLoadCob(
 	b3Scene       *scene,
-	CDlgHierarchy *hierarchy,
-	const char    *regitem) : b3OpObject(scene,hierarchy)
+	CDlgHierarchy *hierarchy) : b3OpObject(scene,hierarchy)
 {
 	CAppLinesApp   *app  = CB3GetLinesApp();
 	CMainFrame     *main = CB3GetMainFrame();
@@ -412,8 +418,7 @@ void b3OpObjectLoadCob::b3Redo()
 
 b3OpObjectLoadTgf::b3OpObjectLoadTgf(
 	b3Scene       *scene,
-	CDlgHierarchy *hierarchy,
-	const char    *regitem) : b3OpObject(scene,hierarchy)
+	CDlgHierarchy *hierarchy) : b3OpObject(scene,hierarchy)
 {
 	CAppLinesApp   *app  = CB3GetLinesApp();
 	CMainFrame     *main = CB3GetMainFrame();

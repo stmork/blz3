@@ -77,8 +77,6 @@ protected:
 	}
 };
 
-#define B3_OBJECT_LOAD_REGITEM "file load.object"
-
 class b3OpObjectFile : public b3OpObject
 {
 protected:
@@ -109,8 +107,6 @@ protected:
 	}
 };
 
-#define B3_OBJECT_REPLACE_REGITEM "file replace.object"
-
 class b3OpObjectReplace : public b3OpObjectFile
 {
 public:
@@ -128,8 +124,6 @@ protected:
 	}
 };
 
-#define B3_OBJECT_CALIGARI_REGITEM "Loaded caligari object filename"
-
 class b3OpObjectLoadCob : public b3OpObject
 {
 protected:
@@ -138,7 +132,7 @@ protected:
 	b3Base<b3Item> *m_Base;
 
 public:
-	         b3OpObjectLoadCob(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_CALIGARI_REGITEM);
+	         b3OpObjectLoadCob(b3Scene *scene,CDlgHierarchy *hierarchy);
 
 protected:
 	virtual void b3Do();
@@ -152,8 +146,6 @@ protected:
 	}
 };
 
-#define B3_OBJECT_ARCON_REGITEM "Loaded arcon object filename"
-
 class b3OpObjectLoadTgf : public b3OpObject
 {
 protected:
@@ -162,7 +154,7 @@ protected:
 	b3Base<b3Item> *m_Base;
 
 public:
-	         b3OpObjectLoadTgf(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_CALIGARI_REGITEM);
+	         b3OpObjectLoadTgf(b3Scene *scene,CDlgHierarchy *hierarchy);
 
 protected:
 	virtual void b3Do();

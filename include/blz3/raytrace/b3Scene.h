@@ -164,7 +164,7 @@ public:
 		    b3SuperSample  *b3GetSuperSample(b3_bool force = true);
 		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
 			b3CloudBackground *b3GetCloudBackground(b3_bool force = false);
-		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
+		    b3CameraPart   *b3GetFirstCamera(b3_bool must_active = false);
 	        b3CameraPart   *b3GetActualCamera();
 			b3CameraPart   *b3GetCameraByName(const char *camera_name);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);

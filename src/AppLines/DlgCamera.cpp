@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/15 14:37:46  sm
+**	- Added resolution combo box to scene dialog.
+**	- Fixed bug no. 3
+**
 **	Revision 1.8  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -48,7 +52,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -265,7 +269,9 @@ void CDlgCamera::b3RefreshList()
 
 	// Fill combobox with light names
 	m_CameraListCtrl.ResetContent();
-	for (camera = m_Scene->b3GetCamera();camera != null;camera = m_Scene->b3GetNextCamera(camera))
+	for (camera  = m_Scene->b3GetFirstCamera();
+	     camera != null;
+		 camera  = m_Scene->b3GetNextCamera(camera))
 	{
 		index  = m_CameraListCtrl.AddString(camera->b3GetName());
 		m_CameraListCtrl.SetItemDataPtr(index,camera);
@@ -330,7 +336,9 @@ void CDlgCamera::b3UpdateUI()
 	m_HeightCtrl.EnableWindow(m_EnableCamera);
 	m_TypeCtrl.EnableWindow(m_EnableCamera);
 
-	for (camera = m_Scene->b3GetCamera();camera != null;camera = m_Scene->b3GetNextCamera(camera))
+	for (camera  = m_Scene->b3GetFirstCamera();
+		 camera != null;
+	     camera  = m_Scene->b3GetNextCamera(camera))
 	{
 		count++;
 	}
