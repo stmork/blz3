@@ -32,12 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/05 16:32:26  sm
+**	- Fixing following bugs:
+**	  o #19 because of variable shadowing
+**	  o #20 is no bug due to a KILLFOCUS event. This
+**	    is still a perfomrmance problem.
+**	  o #17 fixed. Now we use b3Scene::b3GetName() in
+**	    combination with the b3Scene filename.
+**
 **	Revision 1.2  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.1  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -123,10 +131,13 @@ void CB3SimplePreviewDialog::OnPreview(WPARAM wParam,LPARAM lParam)
 
 void CB3SimplePreviewDialog::b3Preview()
 {
+	b3PrintF(B3LOG_FULL,">CB3SimplePreviewDialog::b3Preview() m_AutoRefresh = %s\n",
+		m_AutoRefresh ? "True" : "False");
 	if (m_AutoRefresh)
 	{
 		b3UpdateUI();
 	}
+	b3PrintF(B3LOG_FULL,"<CB3SimplePreviewDialog::b3Preview()");
 }
 
 void CB3SimplePreviewDialog::OnAutoRefresh() 
@@ -138,6 +149,7 @@ void CB3SimplePreviewDialog::OnAutoRefresh()
 	{
 		UpdateData();
 		refresh->EnableWindow(!m_AutoRefresh);
+		b3Preview();
 	}
 }
 

@@ -38,7 +38,6 @@ class CDlgBumpWood : public CB3SimplePropertyPreviewDialog
 	b3BumpWood         *m_Bump;
 	b3BumpSampler      *m_BumpSampler;
 
-	CPropertySheet     m_PropertySheet;
 	CPageBump          m_PageBump;
 	CPageWood          m_PageWood;
 // Construction

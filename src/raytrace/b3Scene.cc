@@ -32,9 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2004/05/05 16:32:26  sm
+**	- Fixing following bugs:
+**	  o #19 because of variable shadowing
+**	  o #20 is no bug due to a KILLFOCUS event. This
+**	    is still a perfomrmance problem.
+**	  o #17 fixed. Now we use b3Scene::b3GetName() in
+**	    combination with the b3Scene filename.
+**
 **	Revision 1.56  2004/05/05 15:41:17  sm
 **	- Working on bug 17.
-**
+**	
 **	Revision 1.55  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -423,7 +431,7 @@ void b3Scene::b3Write()
 
 char *b3Scene::b3GetName()
 {
-	m_FileName.b3SplitFileName(null,m_SceneName);
+	m_Filename.b3SplitFileName(null,m_SceneName);
 	m_SceneName.b3RemoveExt();
 	return m_SceneName;
 }

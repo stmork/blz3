@@ -60,12 +60,20 @@
 
 /*
 **	$Log$
+**	Revision 1.93  2004/05/05 16:32:26  sm
+**	- Fixing following bugs:
+**	  o #19 because of variable shadowing
+**	  o #20 is no bug due to a KILLFOCUS event. This
+**	    is still a perfomrmance problem.
+**	  o #17 fixed. Now we use b3Scene::b3GetName() in
+**	    combination with the b3Scene filename.
+**
 **	Revision 1.92  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.91  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
@@ -813,6 +821,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Saving %s\n",lpszPathName);
 	}
 
+	m_DlgHierarchy->b3InitTree(this,true);
 	AfxGetApp()->WriteProfileString(CB3ClientString(),"Saved world filename",lpszPathName);
 	return result;
 }
