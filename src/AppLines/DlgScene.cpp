@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/05/28 19:57:24  sm
+**	- Added new world data file for soft shadow testing.
+**	- Added enhanced Mork shading model to scene dialog.
+**
 **	Revision 1.20  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.19  2004/05/16 09:21:11  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
@@ -174,7 +178,8 @@ shading[] =
 	{ TRACEANGLE_PHONG, 0 },
 	{ TRACEPHOTO_MORK, 1 },
 	{ TRACEANGLE_MORK, 1 },
-	{ GLOBAL_ILLUM, 1 }
+	{ GLOBAL_ILLUM, 1 },
+	{ TRACEPHOTO_MORK2, 2 }
 };
 
 CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)

@@ -883,6 +883,8 @@ BEGIN
                     BS_AUTORADIOBUTTON | WS_GROUP,290,110,65,10
     CONTROL         "Mork-Shading",IDC_SHADING_MORK,"Button",
                     BS_AUTORADIOBUTTON,290,125,60,10
+    CONTROL         "Erweitertes Mork-Shading",IDC_SHADING_MORK2,"Button",
+                    BS_AUTORADIOBUTTON,290,140,97,10
 END
 
 IDD_SUPER_SAMPLE DIALOG DISCARDABLE  0, 0, 128, 151

@@ -695,6 +695,7 @@
 #define IDC_OBJ_RESET                   32406
 #define IDC_SHADING_PHONG               32407
 #define IDC_SHADING_MORK                32408
+#define IDC_SHADING_MORK2               32409
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
