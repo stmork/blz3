@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2004/09/23 16:05:28  sm
+**	- Some BLZ3_USE_OPENGL caveats removed.
+**
 **	Revision 1.40  2004/09/19 15:36:18  sm
 **	- Changed polygon/grid index data type from short (Hey! Are we
 **	  on Windows 3.11???) to long.
-**
+**	
 **	Revision 1.39  2004/08/19 19:25:55  sm
 **	- Fixed ticket no. 7. The perspective unprojection is
 **	  correct now.
@@ -776,6 +779,7 @@ void b3RenderView::b3Project(
 
 void b3RenderView::b3Unproject(const b3_coord x,const b3_coord y,b3_vector *point)
 {
+#ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
 	GLdouble modelview[16];
 	GLdouble projection[16];
@@ -797,6 +801,7 @@ void b3RenderView::b3Unproject(const b3_coord x,const b3_coord y,b3_vector *poin
 	point->x = (b3_f32)posX;
 	point->y = (b3_f32)posY;
 	point->z = (b3_f32)posZ;
+#endif
 }
 
 void b3RenderView::b3Unproject(const b3_f64 xRelParam,const b3_f64 yRelParam,b3_vector *point)

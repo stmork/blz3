@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/09/23 16:05:28  sm
+**	- Some BLZ3_USE_OPENGL caveats removed.
+**
 **	Revision 1.1  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
 **	  run yet.
-**
+**	
 **
 */
 
@@ -51,6 +54,8 @@ static b3_vector light0_position =
 {
 	1000.0f,-2500.0f,2000.0f
 };
+
+b3_bool b3RenderContext::glHasVBO;
 
 #ifdef BLZ3_USE_OPENGL
 static b3Color world_ambient(  0.25f,0.25f,0.25f);
@@ -70,7 +75,6 @@ static GLenum light_num[] =
 	GL_LIGHT7
 };
 
-b3_bool              b3RenderContext::glHasVBO;
 procBindBufferARB    b3RenderContext::glBindBufferARB;
 procDeleteBuffersARB b3RenderContext::glDeleteBuffersARB;
 procGenBuffersARB    b3RenderContext::glGenBuffersARB;

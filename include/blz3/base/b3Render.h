@@ -39,6 +39,7 @@ typedef enum
 	B3_MATRIX_PROJECTION
 } b3_matrix_mode;
 
+#ifdef BLZ3_USE_OPENGL
 typedef void      (*procBindBufferARB)(GLenum target, GLuint buffer);
 typedef void      (*procDeleteBuffersARB)(GLsizei n, const GLuint *buffers);
 typedef void      (*procGenBuffersARB)(GLsizei n, GLuint *buffers);
@@ -50,6 +51,7 @@ typedef void *    (*procMapBufferARB)(GLenum target, GLenum access);
 typedef void      (*procUnmapBufferARB)(GLenum target);
 typedef void      (*procGetBufferParameterivARB)(GLenum target, GLenum pname, GLint *params);
 typedef void      (*procGetBufferPointervARB)(GLenum target, GLenum pname, void **params);
+#endif
 
 class b3RenderObject;
 

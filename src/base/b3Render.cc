@@ -26,8 +26,10 @@
 #include "blz3/base/b3Color.h"
 
 #define not_VERBOSE
+#ifdef BLZ3_USE_OPENGL
 #define B3_DISPLAY_LIST
 #define B3_DISPLAY_LIST_COUNT 1
+#endif
 
 #ifndef _DEBUG
 #define B3_MAX_TX_SIZE 128
@@ -43,6 +45,9 @@
 
 /*
 **      $Log$
+**      Revision 1.91  2004/09/23 16:05:28  sm
+**      - Some BLZ3_USE_OPENGL caveats removed.
+**
 **      Revision 1.90  2004/09/23 15:47:04  sm
 **      - Splitted b3RenderContext into own file.
 **      - Added vertex buffer object support which does not
@@ -672,6 +677,7 @@ void b3RenderObject::b3Update()
 
 		b3Bind();
 		b3ComputeIndices();
+
 #ifdef BLZ3_USE_OPENGL
 		if (glCustomGrids)
 		{
@@ -685,8 +691,11 @@ void b3RenderObject::b3Update()
 			b3RenderContext::glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
 				glPolyCount * sizeof(b3_gl_polygon), glPolygons, GL_STATIC_DRAW_ARB);
 		}
+#endif
 
 		b3ComputeVertices();
+
+#ifdef BLZ3_USE_OPENGL
 		if ((glCustomVert) && (glVertex != null) && (glVertexCount > 0))
 		{
 			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
@@ -694,6 +703,7 @@ void b3RenderObject::b3Update()
 				glVertexCount * sizeof(b3_gl_vertex), glVertex, GL_STATIC_DRAW_ARB);
 		}
 #endif
+
 		b3ComputeNormals();
 		b3Unbind();
 
@@ -1444,7 +1454,6 @@ void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3Color        diffuse;
-#endif
 
 	glDisable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);
@@ -1458,10 +1467,12 @@ void b3RenderObject::b3SelectMaterialForLineDrawing(b3RenderContext *context)
 		b3GetGridColor(diffuse);
 	}
 	glColor3f(diffuse[b3Color::R],diffuse[b3Color::G],diffuse[b3Color::B]);
+#endif
 }
 
 void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 	glEnable(GL_LIGHTING);
 	if (glTextureSize > 0)
 	{
@@ -1494,10 +1505,12 @@ void b3RenderObject::b3SelectMaterialForFilledDrawing(b3RenderContext *context)
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,  glDiffuse);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, glSpecular);
 	glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,glShininess);
+#endif
 }
 
 void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
 	if (b3RenderContext::b3HasVBO())
 	{
@@ -1543,10 +1556,12 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 		error = glGetError();
 	}
 #endif
+#endif
 }
 
 void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
 	if (b3RenderContext::b3HasVBO())
 	{
@@ -1591,5 +1606,6 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 		}
 		error = glGetError();
 	}
+#endif
 #endif
 }
