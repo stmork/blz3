@@ -90,6 +90,10 @@ SOURCE=.\b3Aux.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Color.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Cubic.cc
 # End Source File
 # Begin Source File
