@@ -33,13 +33,11 @@ int main(int argc,char *argv[])
 	b3_u32   i,k;
 	b3Date   date;
 	b3World  world;
+	b3Item  *item;
 	b3Scene *scene;
 
 	b3Log_SetLevel(B3LOG_FULL);
 	b3InitRaytrace::b3Init();
-
-	scene = new b3Scene(TRACEPHOTO_MORK);
-	scene->b3Dump(0);
 
 	switch(b3Runtime::b3GetCPUType())
 	{
@@ -91,6 +89,13 @@ int main(int argc,char *argv[])
 		try
 		{
 			world.b3Read(argv[i]);
+			for (item  = world.b3GetFirst();
+			     item != null;
+			     item  = scene->Succ)
+			{
+				scene = (b3Scene *)item;
+				scene->b3Reorg();
+			}
 			world.b3Dump();
 			b3PrintF(B3LOG_NORMAL,"  File OK!\n");
 		}

@@ -116,7 +116,7 @@ public:
 	}
 };
 
-#define B3_FOR_BASE(b,n) for((n) = (b)->First;(n) != null;(n) = (n)->Succ)
+#define B3_FOR_BASE(b,n) for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
 
 template <class T> class b3Base
 {

@@ -126,34 +126,44 @@ protected:
 	void     b3InitNOP();
 
 protected:
-	void     b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
+	static void b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
 };
 
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new (item_class)(class_type); }
 #define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new (item_class)(src); }
+
+class b3FirstItem : public b3Item
+{
+public:
+	B3_ITEM_INIT(b3FirstItem);
+	B3_ITEM_LOAD(b3FirstItem);
+
+	b3Item *b3GetFirst();
+};
 
 class b3World : public b3Mem
 {
 	b3_u32         *buffer;
 	b3_size         size;
 	b3_bool         need_endian_change;
-	b3Item         *start;
+	b3FirstItem    *start;
 
 public:
 	 b3World();
 	~b3World(); 
 	 b3World(const char *world_name);
 
-	static b3Item *b3AllocNode(b3_u32 class_value);
-	static b3Item *b3AllocNode(b3_u32 *buffer);
+	static b3Item  *b3AllocNode(b3_u32 class_value);
+	static b3Item  *b3AllocNode(b3_u32 *buffer);
 
-	b3_bool b3Read(const char *world_name);
-	b3_size b3Length();
-	void    b3Dump();
+	b3_bool         b3Read(const char *world_name);
+	b3_size         b3Length();
+	void            b3Dump();
+	b3Item         *b3GetFirst();
 private:
-	void           b3EndianSwap32(b3_u32 *ptr);
-	b3_world_error b3EndianSwapWorld();
-	b3_world_error b3Parse();
+	void            b3EndianSwap32(b3_u32 *ptr);
+	b3_world_error  b3EndianSwapWorld();
+	b3_world_error  b3Parse();
 };
 
 #endif

@@ -41,11 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/02 16:09:46  sm
+**	- Added bounding box reorganization.
+**
 **	Revision 1.2  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles
 **	- Cleaned up some CVS conflicts
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -181,8 +184,10 @@ void b3PrintF (
 		fprintf  (bout,"(%02lX)",GetCurrentThreadId());
 #endif
 		va_start (argptr,format);
-		vfprintf (bout,format,argptr);
+		vfprintf (bout,  format,argptr);
+		vfprintf (stdout,format,argptr);
 		fflush   (bout);	// We want to do the output immediately!
+		fflush   (stdout);
 
 		// Close the file
 		if (bout != stderr)

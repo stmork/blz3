@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/07/02 16:09:46  sm
+**      - Added bounding box reorganization.
+**
 **      Revision 1.2  2001/07/01 16:31:52  sm
 **      - Creating MSVC Projects
 **      - Welcome to Windows 32
@@ -114,6 +117,11 @@ public:
 	void b3Append(b3ItemRegisterEntry *new_entry)
 	{
 		classes.b3Append(new_entry);
+	}
+
+	b3_bool b3IsEmpty()
+	{
+		classes.First == null;
 	}
 
 	b3ItemRegisterEntry *b3Find(b3_u32 class_type)
@@ -402,6 +410,26 @@ void b3Item::b3InitNOP()
 	parseIndex++;
 }
 
+
+/*************************************************************************
+**                                                                      **
+**                        b3FirstItem: which contains Blizzard data     **
+**                                                                      **
+*************************************************************************/
+
+b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem),class_type)
+{
+}
+
+b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
+{
+}
+
+b3Item *b3FirstItem::b3GetFirst()
+{
+	return heads[0].First;
+}
+
 /*************************************************************************
 **                                                                      **
 **                        b3World: which constructs whole               **
@@ -574,6 +602,12 @@ b3_world_error b3World::b3Parse()
 		return result;
 	}
 
+	if (b3_item_register.b3Find(B3_CLASS_MAX) == null)
+	{
+		b3PrintF(B3LOG_FULL,"Initializing item registry...\n");
+		b3Item::b3Register(&b3FirstItem::b3Init,&b3FirstItem::b3Init,B3_CLASS_MAX,true);
+	}
+
 	b3PrintF(B3LOG_FULL,"Parsing...\n");
 
 	i        = 0;
@@ -626,7 +660,7 @@ b3_world_error b3World::b3Parse()
 			array[i] = node;
 			node_list.b3Remove(node);
 		}
-		start  = array[0];
+		start  = (b3FirstItem *)array[0];
 		result = start->b3ParseLinkuage(array,node_count,0x7fff0000);
 		b3Free(array);
 	}
@@ -643,7 +677,10 @@ b3_bool b3World::b3Read(const char *world_name)
 	b3_u32         header[2];
 	b3_world_error error = B3_WORLD_ERROR;
 
-	start = null;
+	b3Free();
+	buffer = null;
+	size   = 0;
+	start  = null;
 
 	// Read specified file into buffer
 	if (file.b3Open(world_name,B_READ))
@@ -720,7 +757,13 @@ void b3World::b3Dump()
 {
 	if (start != null)
 	{
-		b3PrintF(B3LOG_FULL,"---\n");
+		b3PrintF(B3LOG_FULL,"--- World dump:\n");
 		start->b3Dump(0);
+		b3PrintF(B3LOG_FULL,"--- World dump complete.\n");
 	}
+}
+
+b3Item *b3World::b3GetFirst()
+{
+	return start->b3GetFirst();
 }

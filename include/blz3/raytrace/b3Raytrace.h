@@ -793,7 +793,8 @@ public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
-	void b3Dump(b3_count level);
+	       void b3Dump(b3_count level);
+	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 };
 
 #define BBB_HTML         0
@@ -1193,11 +1194,13 @@ class b3Scene : public b3Item
 	char             TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
 
 public:
-	b3Scene(b3_u32  class_type);
-	b3Scene(b3_u32 *src);
+	                b3Scene(b3_u32  class_type);
+	                b3Scene(b3_u32 *src);
 
 	static b3Item  *b3Init(b3_u32  class_type);
 	static b3Item  *b3Init(b3_u32 *src);
+
+	       void     b3Reorg();
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild
