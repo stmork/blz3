@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/06/05 09:57:08  sm
+**	- Fixed uninitialized data.
+**
 **	Revision 1.12  2004/05/30 20:43:19  sm
 **	- Fixed casting error under intel compiler.
-**
+**	
 **	Revision 1.11  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -317,7 +320,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 	b3_vector64   dir;
 	b3_f64        fxLeft,fxRight,fyUp,fyDown;
 	b3_bool       do_refine_succ = false;
-	b3_pkd_color  result;
+	b3_pkd_color  result = B3_BLACK;
 
 	B3_ASSERT(m_RowState != B3_STATE_READY);
 
