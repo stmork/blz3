@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2004/09/25 10:48:47  sm
+**      - Setting to static fixed size arrays.
+**
 **      Revision 1.28  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
 **
@@ -175,7 +178,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_gl_line area_grids[] =
+b3_gl_line b3Area::m_AreaGrids[4] =
 {
 	{ 0,1 },
 	{ 1,2 },
@@ -183,13 +186,13 @@ static b3_gl_line area_grids[] =
 	{ 3,0 }
 };
 
-static b3_gl_polygon area_polygons[] =
+b3_gl_polygon b3Area::m_AreaPolygons[2] =
 {
 	{ 0,3,1 },
 	{ 2,1,3 }
 };
 
-static b3_f32 area_texcoord[] =
+b3_f32 b3Area::m_AreaTexcoord[8] =
 {
 	0,0,
 	0,1,
@@ -205,9 +208,15 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
+void b3Area::b3AllocVertexMemory(b3RenderContext *context)
 {
-	verts = 4;
+	glVertex   = m_AreaVertex;
+	glGrids    = m_AreaGrids;
+	glPolygons = m_AreaPolygons;
+
+	glVertexCount = 4;
+	glGridCount   = 4;
+	glPolyCount   = 2;
 }
 
 void b3Area::b3ComputeVertices()
@@ -221,29 +230,29 @@ void b3Area::b3ComputeVertices()
 	y2 = m_Limit.y2;
 
 	// Setup world coordinates
-	Vector->t.s = area_texcoord[0];
-	Vector->t.t = area_texcoord[1];
+	Vector->t.s = m_AreaTexcoord[0];
+	Vector->t.t = m_AreaTexcoord[1];
 	Vector->v.x = (b3_f32)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
 	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
 	Vector++;
 															 
-	Vector->t.s = area_texcoord[2];
-	Vector->t.t = area_texcoord[3];
+	Vector->t.s = m_AreaTexcoord[2];
+	Vector->t.t = m_AreaTexcoord[3];
 	Vector->v.x = (b3_f32)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
 	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
 	Vector++;
 	
-	Vector->t.s = area_texcoord[4];
-	Vector->t.t = area_texcoord[5];
+	Vector->t.s = m_AreaTexcoord[4];
+	Vector->t.t = m_AreaTexcoord[5];
 	Vector->v.x = (b3_f32)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
 	Vector->v.y = (b3_f32)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
 	Vector++;
 
-	Vector->t.s = area_texcoord[6];
-	Vector->t.t = area_texcoord[7];
+	Vector->t.s = m_AreaTexcoord[6];
+	Vector->t.t = m_AreaTexcoord[7];
 	Vector->v.x = (b3_f32)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
 	Vector->v.y = (b3_f32)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
 	Vector->v.z = (b3_f32)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
@@ -254,12 +263,6 @@ void b3Area::b3ComputeVertices()
 
 void b3Area::b3ComputeIndices()
 {
-	glGrids    = area_grids;
-	glPolygons = area_polygons;
-
-	glGridCount   = 4;
-	glPolyCount   = 2;
-
 	b3ComputeBound(&m_Limit);
 }
 

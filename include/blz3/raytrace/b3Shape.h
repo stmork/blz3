@@ -273,7 +273,10 @@ public:
 
 class B3_PLUGIN b3Area : public b3Shape2
 {
-	b3_gl_vertex  area_vertex[4];
+	       b3_gl_vertex  m_AreaVertex[4];
+	static b3_gl_line    m_AreaGrids[4];
+	static b3_gl_polygon m_AreaPolygons[2];
+	static b3_f32        m_AreaTexcoord[8];
 
 public:
 	B3_ITEM_INIT(b3Area);
@@ -283,7 +286,7 @@ public:
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void   b3AllocVertexMemory(b3RenderContext *context);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
 };
@@ -373,7 +376,7 @@ protected:
 
 class B3_PLUGIN b3Box : public b3Shape3
 {
-	b3_gl_vertex   m_BoxVertex[8 * 3];
+	b3_gl_vertex   m_BoxVertex[6 * 4];
 
 public:
 	B3_ITEM_INIT(b3Box);
@@ -384,7 +387,7 @@ public:
 	        void   b3Normal(b3_ray *ray);
 
 protected:
-	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void   b3AllocVertexMemory(b3RenderContext *context);
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize = true);
 	        void   b3ComputeIndices();
@@ -833,7 +836,7 @@ protected:
 
 class B3_PLUGIN b3CSGBox : public b3CSGShape3
 {
-	b3_gl_vertex    m_BoxVertex[8 * 3];
+	b3_gl_vertex    m_BoxVertex[6 * 4];
 
 public:
 	B3_ITEM_INIT(b3CSGBox);
@@ -845,7 +848,7 @@ public:
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 
 protected:
-	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	        void    b3AllocVertexMemory(b3RenderContext *context);
 	        void    b3ComputeVertices();
 	        void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3ComputeIndices();

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2004/09/25 10:48:47  sm
+**      - Setting to static fixed size arrays.
+**
 **      Revision 1.22  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
 **
@@ -156,13 +159,10 @@ b3CSGBox::b3CSGBox(b3_u32 *src) : b3CSGShape3(src)
 {
 }
 
-void b3CSGBox::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
+void b3CSGBox::b3AllocVertexMemory(b3RenderContext *context)
 {
-	vertCount = 24;
+	glVertex      = m_BoxVertex;
+	glVertexCount = 24;
 }
 
 void b3CSGBox::b3ComputeVertices()
