@@ -30,9 +30,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/01 16:08:26  sm
+**	- Corrected assert in saving routines for formats which
+**	  only support resolutions less than 65536.
+**
 **	Revision 1.3  2002/02/01 15:41:52  sm
 **	- Fixed saving TGA and RGB8 missing last line to save
-**
+**	
 **	Revision 1.2  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -107,8 +111,8 @@ void b3InfoRGB8::b3Write()
 
 b3InfoRGB8::~b3InfoRGB8()
 {
-	B3_ASSERT(m_Tx->xSize >= 65535);
-	B3_ASSERT(m_Tx->ySize >= 65535);
+	B3_ASSERT(m_Tx->xSize < 65535);
+	B3_ASSERT(m_Tx->ySize < 65535);
 
 	m_SaveBuffer[0] = (OldValue & 0xff0000) >> 16;
 	m_SaveBuffer[1] = (OldValue & 0x00ff00) >>  8;

@@ -62,6 +62,10 @@
 #define IDI_SHAPE_SPHERE                168
 #define IDI_SHAPE_CONE                  169
 #define IDI_SHAPE_ELLIPSOID             170
+#define IDI_SHAPE_AREA                  171
+#define IDI_SHAPE_DISK                  172
+#define IDI_SHAPE_BOX                   173
+#define IDI_SHAPE_TORUS                 174
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002

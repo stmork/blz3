@@ -496,6 +496,14 @@ SOURCE=.\res\rot_right.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\shape_area.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_box.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\shape_cone.ico
 # End Source File
 # Begin Source File
@@ -504,11 +512,19 @@ SOURCE=.\res\shape_cylinder.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\shape_disk.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\shape_ellipsoid.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\shape_sphere.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_torus.ico
 # End Source File
 # Begin Source File
 

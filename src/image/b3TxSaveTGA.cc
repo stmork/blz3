@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/01 16:08:26  sm
+**	- Corrected assert in saving routines for formats which
+**	  only support resolutions less than 65536.
+**
 **	Revision 1.4  2002/02/01 15:41:52  sm
 **	- Fixed saving TGA and RGB8 missing last line to save
-**
+**	
 **	Revision 1.3  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -143,8 +147,8 @@ void b3InfoTGA::b3Write()
 
 b3InfoTGA::~b3InfoTGA()
 {
-	B3_ASSERT(m_Tx->xSize >= 65535);
-	B3_ASSERT(m_Tx->ySize >= 65535);
+	B3_ASSERT(m_Tx->xSize < 65535);
+	B3_ASSERT(m_Tx->ySize < 65535);
 
 	m_SaveData[ 0] =  0;
 	m_SaveData[ 1] =  0;

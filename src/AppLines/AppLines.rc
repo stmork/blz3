@@ -88,6 +88,10 @@ IDI_SHAPE_CYLINDER      ICON    DISCARDABLE     "res\\shape_cylinder.ico"
 IDI_SHAPE_SPHERE        ICON    DISCARDABLE     "res\\shape_sphere.ico"
 IDI_SHAPE_CONE          ICON    DISCARDABLE     "res\\shape_cone.ico"
 IDI_SHAPE_ELLIPSOID     ICON    DISCARDABLE     "res\\shape_ellipsoid.ico"
+IDI_SHAPE_AREA          ICON    DISCARDABLE     "res\\shape_area.ico"
+IDI_SHAPE_DISK          ICON    DISCARDABLE     "res\\shape_disk.ico"
+IDI_SHAPE_BOX           ICON    DISCARDABLE     "res\\shape_box.ico"
+IDI_SHAPE_TORUS         ICON    DISCARDABLE     "res\\shape_torus.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
