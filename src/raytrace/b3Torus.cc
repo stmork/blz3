@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/07/31 07:30:44  sm
+**	- New normal computation. Textures are rendered correctly and
+**	  quadrics are shaded correctly. Spheres and doughnuts have
+**	  got their own more simple computation.
+**
 **	Revision 1.26  2002/03/02 19:52:40  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.25  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -294,6 +299,16 @@ void b3Torus::b3GetCount(
 void b3Torus::b3ComputeVertices()
 {
 	b3ComputeTorusVertices(m_Base,m_Dir1,m_Dir2,m_Dir3,m_aRad,m_bRad);
+}
+
+void b3Torus::b3ComputeNormals(b3_bool normalize)
+{
+	// b3ComputeVertices() does already compute the normals
+	// So only normalize if needed
+	if (normalize)
+	{
+		b3ComputeTorusNormals();
+	}
 }
 
 void b3Torus::b3ComputeIndices()

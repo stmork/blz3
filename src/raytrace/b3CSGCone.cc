@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.15  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -144,7 +149,7 @@ void b3CSGCone::b3ComputeVertices()
 	Vector = (b3_tnv_vertex *)glVertex;
 	for (i = 0;i < SinCosSteps;i++)
 	{
-		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],(b3_vector *)&Vector[i].v);
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[i].v);
 		Vector[i + SinCosSteps] = Vector[i];
 	}
 	Vector += SinCosSteps;

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.9  2002/03/13 19:01:59  sm
 **      - Fixed some GCC warnings.
 **
@@ -91,6 +96,12 @@ b3_csg_operation b3CSGShape::m_CSGMode[] =
 	B3_CSG_SUB
 };
 
+/*************************************************************************
+**                                                                      **
+**                        CSG shape base class                          **
+**                                                                      **
+*************************************************************************/
+ 
 b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
 {
 	m_Operation = B3_CSG_UNION;
@@ -209,6 +220,12 @@ b3_count b3CSGShape::b3GetMaxIntersections()
 	return 0;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for quadric CSG shapes             **
+**                                                                      **
+*************************************************************************/
+ 
 b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3CSGShape(class_size, class_type)
 {
 	b3Vector::b3Init(&m_Base);
@@ -268,6 +285,11 @@ void b3CSGShape3::b3StoreShape()
 	b3StoreInt(m_Operation);
 	b3StoreVector(); // This is BTLine.pos
 	b3StoreVector(); // This is BTLine.dir
+}
+
+void b3CSGShape3::b3ComputeNormals(b3_bool normalize)
+{
+	b3ComputeQuadricNormals(normalize);
 }
 
 void b3CSGShape3::b3Transform(b3_matrix *transformation)

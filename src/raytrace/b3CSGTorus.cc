@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.19  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -223,6 +228,16 @@ void b3CSGTorus::b3GetCount(
 void b3CSGTorus::b3ComputeVertices()
 {
 	b3ComputeTorusVertices(m_Base,m_Dir1,m_Dir2,m_Dir3,m_aRad,m_bRad);
+}
+
+void b3CSGTorus::b3ComputeNormals(b3_bool normalize)
+{
+	// b3ComputeVertices() does already compute the normals
+	// So only normalize if needed
+	if (normalize)
+	{
+		b3ComputeTorusNormals();
+	}
 }
 
 void b3CSGTorus::b3ComputeIndices()

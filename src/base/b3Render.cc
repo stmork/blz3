@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.43  2002/07/29 14:48:11  sm
 **      - Circled shapes like cylinder, doughnuts etc. draw
 **        textures correctly but renders shading a little bit
@@ -794,7 +799,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	{
 		for (i = 0;i < glVertexCount;i++)
 		{
-			len = b3Vector::b3Length((b3_vector *)&nPtr[i].n);
+			len = b3Vector::b3Length(&nPtr[i].n);
 			if (len > 0)
 			{
 				nPtr[i].n.x /= len;
@@ -1013,8 +1018,8 @@ void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 		ptr = (b3_tnv_vertex *)glVertex;
 		for (i = 0;i < glVertexCount;i++)
 		{
-			b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&ptr->v);
-			b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&ptr->n);
+			b3Vector::b3MatrixMul4D(transformation,&ptr->v);
+			b3Vector::b3MatrixMul4D(transformation,&ptr->n);
 			ptr++;
 		}
 	}

@@ -969,10 +969,11 @@ protected:
 	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
 
+	void            b3ComputeQuadricNormals(b3_bool normalize = true);
+
 	// Sphere
-	void            b3ComputeSphereVertices(
-		b3_vector &base,
-		b3_vector &dir);
+	void            b3ComputeSphereVertices(b3_vector &base,b3_vector &dir);
+	void            b3ComputeSphereNormals( b3_vector &base,b3_bool normalize);
 
 	// Cylinder
 	void            b3ComputeCylinderVertices(
@@ -1014,13 +1015,13 @@ protected:
 		b3_vector &dir3,
 		b3_f64    aRad,
 		b3_f64    bRad);
+	void            b3ComputeTorusNormals();
 	void            b3ComputeTorusIndices();
 
 private:
 #ifdef BLZ3_USE_OPENGL
 	b3_index        b3FindVertex(GLushort vIndex);
 #endif
-	void            b3CorrectIndices();
 };
 
 class b3SimpleShape : public b3ShapeRenderObject
@@ -1056,6 +1057,7 @@ public:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	void    b3ComputeVertices();
+	void    b3ComputeNormals(b3_bool normalize=true);
 	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void    b3Normal(b3_ray *ray);
@@ -1133,6 +1135,7 @@ public:
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
+	virtual void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3Transform(b3_matrix *transformation);
 };
 
@@ -1192,6 +1195,7 @@ public:
 	        void   b3AllocVertices(b3RenderContext *context);
 	        void   b3FreeVertices();
 	        void   b3ComputeVertices();
+	        void   b3ComputeNormals(b3_bool normalize = true);
 	        void   b3ComputeIndices();
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void   b3Normal(b3_ray *ray);
@@ -1215,6 +1219,7 @@ public:
 
 	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void    b3ComputeVertices();
+	        void    b3ComputeNormals(b3_bool normalize=true);
 	        void    b3ComputeIndices();
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
@@ -1496,6 +1501,7 @@ public:
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	void     b3ComputeVertices();
+	void     b3ComputeNormals(b3_bool normalize=true);
 	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -1518,6 +1524,7 @@ public:
 	        void     b3StoreShape();
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
+	virtual void     b3ComputeNormals(b3_bool normalize = true);
 	        void     b3Transform(b3_matrix *transformation);
 	        b3_count b3GetMaxIntersections();
 };
@@ -1581,6 +1588,7 @@ public:
 	        void    b3AllocVertices(b3RenderContext *context);
 	        void    b3FreeVertices();
 	        void    b3ComputeVertices();
+	        void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3ComputeIndices();
 	        b3_bool b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void    b3InverseMap(b3_ray *ray,b3_csg_point *point);
@@ -1603,6 +1611,7 @@ public:
 	        void     b3StoreShape();
 	        void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void     b3ComputeVertices();
+	        void     b3ComputeNormals(b3_bool normalize=true);
 	        void     b3ComputeIndices();
 	        b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);

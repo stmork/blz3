@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.45  2002/07/21 21:09:37  sm
 **      - Now having texture mapping! Texture mapping is only applied to
 **        areas and cylinders.
@@ -293,6 +298,92 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3CSGTorus::b3StaticInit,         &b3CSGTorus::b3StaticInit,         CSG_TORUS);
 }
 
+/*************************************************************************
+**                                                                      **
+**                        basis transformation class                    **
+**                                                                      **
+*************************************************************************/
+
+b3_bool b3ShapeBaseTrans::b3Prepare()
+{
+	b3_f64 denom;
+
+	denom = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
+	if (denom != 0)
+	{
+		m_Denom        = 1.0 / denom;
+
+		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) / denom;
+		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) / denom;
+		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) / denom;
+
+		m_Normals[1].x = (m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y) / denom;
+		m_Normals[1].y = (m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z) / denom;
+		m_Normals[1].z = (m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x) / denom;
+
+		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) / denom;
+		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) / denom;
+		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) / denom;
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
+		m_Denom = 0;
+	}
+
+	m_DirLen[0] = b3Vector::b3QuadLength(&m_Dir1);
+	m_DirLen[1] = b3Vector::b3QuadLength(&m_Dir2);
+	m_DirLen[2] = b3Vector::b3QuadLength(&m_Dir3);
+	return denom != 0;
+}
+
+void b3ShapeBaseTrans::b3BaseTrans(
+	b3_line64 *in,
+	b3_line64 *out)
+{
+	b3_f64 xPos,yPos,zPos;
+	b3_f64 xDir,yDir,zDir;
+
+	xPos = in->pos.x - m_Base.x;
+	yPos = in->pos.y - m_Base.y;
+	zPos = in->pos.z - m_Base.z;
+	xDir = in->dir.x;
+	yDir = in->dir.y;
+	zDir = in->dir.z;
+
+	out->pos.x =
+		xPos * m_Normals[0].x +
+		yPos * m_Normals[0].y +
+		zPos * m_Normals[0].z;
+	out->pos.y =
+		xPos * m_Normals[1].x +
+		yPos * m_Normals[1].y +
+		zPos * m_Normals[1].z;
+	out->pos.z =
+		xPos * m_Normals[2].x +
+		yPos * m_Normals[2].y +
+		zPos * m_Normals[2].z;
+
+	out->dir.x =
+		xDir * m_Normals[0].x +
+		yDir * m_Normals[0].y +
+		zDir * m_Normals[0].z;
+	out->dir.y =
+		xDir * m_Normals[1].x +
+		yDir * m_Normals[1].y +
+		zDir * m_Normals[1].z;
+	out->dir.z =
+		xDir * m_Normals[2].x +
+		yDir * m_Normals[2].y +
+		zDir * m_Normals[2].z;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        shape base class                              **
+**                                                                      **
+*************************************************************************/
+
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	m_Activated = false;
@@ -524,6 +615,12 @@ void b3Shape::b3Transform(b3_matrix *transformation)
 	B3_ASSERT(true);
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Simple shapes (non CSG)                       **
+**                                                                      **
+*************************************************************************/
+
 b3SimpleShape::b3SimpleShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
 {
 }
@@ -550,6 +647,12 @@ b3_bool b3SimpleShape::b3CheckStencil(b3_polar_precompute *polar)
 	}
 	return result;
 }
+
+/*************************************************************************
+**                                                                      **
+**                        Base class for area shapes                    **
+**                                                                      **
+*************************************************************************/
 
 b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
@@ -597,6 +700,12 @@ void b3Shape2::b3Transform(b3_matrix *transformation)
 	b3TransformVertices(transformation);
 }
 
+
+/*************************************************************************
+**                                                                      **
+**                        Base class for simple quadric shapes          **
+**                                                                      **
+*************************************************************************/
 
 b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
@@ -670,78 +779,9 @@ void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound *info)
 	info->yFactor = b3Vector::b3Length(&m_Dir3);;
 }
 
-b3_bool b3ShapeBaseTrans::b3Prepare()
+void b3Shape3::b3ComputeNormals(b3_bool normalize)
 {
-	b3_f64 denom;
-
-	denom = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
-	if (denom != 0)
-	{
-		m_Denom        = 1.0 / denom;
-
-		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) / denom;
-		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) / denom;
-		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) / denom;
-
-		m_Normals[1].x = (m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y) / denom;
-		m_Normals[1].y = (m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z) / denom;
-		m_Normals[1].z = (m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x) / denom;
-
-		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) / denom;
-		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) / denom;
-		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) / denom;
-	}
-	else
-	{
-		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
-		m_Denom = 0;
-	}
-
-	m_DirLen[0] = b3Vector::b3QuadLength(&m_Dir1);
-	m_DirLen[1] = b3Vector::b3QuadLength(&m_Dir2);
-	m_DirLen[2] = b3Vector::b3QuadLength(&m_Dir3);
-	return denom != 0;
-}
-
-void b3ShapeBaseTrans::b3BaseTrans(
-	b3_line64 *in,
-	b3_line64 *out)
-{
-	b3_f64 xPos,yPos,zPos;
-	b3_f64 xDir,yDir,zDir;
-
-	xPos = in->pos.x - m_Base.x;
-	yPos = in->pos.y - m_Base.y;
-	zPos = in->pos.z - m_Base.z;
-	xDir = in->dir.x;
-	yDir = in->dir.y;
-	zDir = in->dir.z;
-
-	out->pos.x =
-		xPos * m_Normals[0].x +
-		yPos * m_Normals[0].y +
-		zPos * m_Normals[0].z;
-	out->pos.y =
-		xPos * m_Normals[1].x +
-		yPos * m_Normals[1].y +
-		zPos * m_Normals[1].z;
-	out->pos.z =
-		xPos * m_Normals[2].x +
-		yPos * m_Normals[2].y +
-		zPos * m_Normals[2].z;
-
-	out->dir.x =
-		xDir * m_Normals[0].x +
-		yDir * m_Normals[0].y +
-		zDir * m_Normals[0].z;
-	out->dir.y =
-		xDir * m_Normals[1].x +
-		yDir * m_Normals[1].y +
-		zDir * m_Normals[1].z;
-	out->dir.z =
-		xDir * m_Normals[2].x +
-		yDir * m_Normals[2].y +
-		zDir * m_Normals[2].z;
+	b3ComputeQuadricNormals(normalize);
 }
 
 void b3Shape3::b3Transform(b3_matrix *transformation)
@@ -752,4 +792,3 @@ void b3Shape3::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation);
 }
-

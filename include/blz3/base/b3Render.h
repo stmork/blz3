@@ -127,15 +127,9 @@ struct b3_tnv_vertex
 	struct
 	{
 		GLfloat s,t;
-	} t;
-	struct
-	{
-		GLfloat x,y,z;
-	} n;
-	struct
-	{
-		GLfloat x,y,z;
-	} v;
+	}         t;
+	b3_vector n;
+	b3_vector v;
 };
 #endif
 

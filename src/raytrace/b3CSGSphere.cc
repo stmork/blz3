@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.20  2002/07/22 18:45:16  sm
 **      - Further probing of texture stencil via alpha channel.
 **      - Why does Mesa loose the first texture?
@@ -204,6 +209,11 @@ void b3CSGSphere::b3ComputeVertices()
 void b3CSGSphere::b3ComputeIndices()
 {
 	b3ComputeEllipsoidIndices();
+}
+
+void b3CSGSphere::b3ComputeNormals(b3_bool normalize)
+{
+	b3ComputeSphereNormals(m_Base,normalize);
 }
 
 void b3CSGSphere::b3Transform(b3_matrix *transformation)

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.47  2002/07/29 14:48:11  sm
 **      - Circled shapes like cylinder, doughnuts etc. draw
 **        textures correctly but renders shading a little bit
@@ -572,26 +577,11 @@ void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
 	}
 }
 
-b3_count b3ShapeRenderObject::b3GetIndexOverhead (
-	b3_f64 xLeft,
-	b3_f64 yLeft)
-{
-	b3_count Overhead;
-	b3_index xs,xe;
-	b3_f64   x1,x2;
-
-	if  (Limit.x1 < xLeft) Limit.x1 = xLeft;
-	if  (Limit.y1 < yLeft) Limit.y1 = yLeft;
-	x1 = Limit.x1 * SinCosSteps;
-	x2 = Limit.x2 * SinCosSteps;
-	xs = (b3_index)ceil(x1);
-	xe = (b3_index)floor(x2);
-	Overhead = xe - xs;
-	if ((xs - x1) > epsilon) Overhead++;
-	if ((x2 - xe) > epsilon) Overhead++;
-
-	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
-}
+/*************************************************************************
+**                                                                      **
+**                        Retrieving material properties                **
+**                                                                      **
+*************************************************************************/
 
 void b3ShapeRenderObject::b3GetDiffuseColor(b3_color *color)
 {
@@ -776,10 +766,30 @@ b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
 **                                                                      **
 *************************************************************************/
 
+b3_count b3ShapeRenderObject::b3GetIndexOverhead (
+	b3_f64 xLeft,
+	b3_f64 yLeft)
+{
+	b3_count Overhead;
+	b3_index xs,xe;
+	b3_f64   x1,x2;
+
+	if  (Limit.x1 < xLeft) Limit.x1 = xLeft;
+	if  (Limit.y1 < yLeft) Limit.y1 = yLeft;
+	x1 = Limit.x1 * SinCosSteps;
+	x2 = Limit.x2 * SinCosSteps;
+	xs = (b3_index)ceil(x1);
+	xe = (b3_index)floor(x2);
+	Overhead = xe - xs;
+	if ((xs - x1) > epsilon) Overhead++;
+	if ((x2 - xe) > epsilon) Overhead++;
+
+	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
+}
+
 #ifdef BLZ3_USE_OPENGL
 b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 {
-#if 0
 	b3_tnv_vertex *point;
 	b3_tnv_vertex *ptr = glVertex;
 	b3_index       i;
@@ -787,7 +797,7 @@ b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 	point = &ptr[vertex];
 	for (i = 0;i < glVertexCount;i++)
 	{
-		if (b3Vector::b3Distance((b3_vector *)&point->v,(b3_vector *)&ptr->v) < epsilon)
+		if (b3Vector::b3Distance(&point->v,&ptr->v) < epsilon)
 		{
 			return i;
 		}
@@ -795,26 +805,48 @@ b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 	}
 
 	B3_ASSERT(false);
-#endif
+
 	return vertex;
 }
 #endif
 
-void b3ShapeRenderObject::b3CorrectIndices()
+void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_index  i;
+	b3_index  v1,v2,v3;
 	GLushort *pPtr = glPolygons;
+	b3_vector xDir,yDir,normal;
 
 	for (i = 0;i < glPolyCount;i++)
 	{
-		pPtr[0] = b3FindVertex(pPtr[0]);
-		pPtr[1] = b3FindVertex(pPtr[1]);
-		pPtr[2] = b3FindVertex(pPtr[2]);
+		v1 = b3FindVertex(pPtr[0]);
+		v2 = b3FindVertex(pPtr[1]);
+		v3 = b3FindVertex(pPtr[2]);
+
+		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
+		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
+		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
+		if (b3Vector::b3Normalize(&normal) > 0)
+		{
+			b3Vector::b3Add(&normal,&glVertex[v1].n);
+			b3Vector::b3Add(&normal,&glVertex[v2].n);
+			b3Vector::b3Add(&normal,&glVertex[v3].n);
+		}
 
 		pPtr += 3;
 	}
+
+	// Normalize
+	if (normalize)
+	{
+		for (i = 0;i < glVertexCount;i++)
+		{
+			b3Vector::b3Normalize(&glVertex[i].n);
+		}
+	}
 #endif
+
 }
 
 /*************************************************************************
@@ -875,9 +907,24 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 			Vector++;
 		}
 	}
-	b3CorrectIndices();
 #endif
  }
+
+void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_index i;
+
+	for (i = 0;i < glVertexCount;i++)
+	{
+		b3Vector::b3Sub(&base,&glVertex[i].v,&glVertex[i].n);
+		if (normalize)
+		{
+			b3Vector::b3Normalize(&glVertex[i].n);
+		}
+	}
+#endif
+}
 
 /*************************************************************************
 **                                                                      **
@@ -983,8 +1030,6 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		glVertexCount += 2;
 		xSize++;
 	}
-
-	b3CorrectIndices();
 #endif
 }
 
@@ -1202,15 +1247,15 @@ void b3ShapeRenderObject::b3ComputeConeIndices()
 	}
 	if (Limit.y2 < 1)
 	{
-		glGrids    = GridsCyl;
-		glPolygons = PolysCyl;
+		glGrids      = GridsCyl;
+		glPolygons   = PolysCyl;
 		glGridCount += Overhead * 3;
 		glPolyCount  = Overhead * 2;
 	}
 	else
 	{
-		glGrids    = GridsCone;
-		glPolygons = PolysCone;
+		glGrids      = GridsCone;
+		glPolygons   = PolysCone;
 		glGridCount += Overhead * 2;
 		glPolyCount  = Overhead;
 	}
@@ -1336,8 +1381,6 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 		glVertexCount += Circles;
 		xSize++;
 	}
-
-	b3CorrectIndices();
 #endif
 }
 
@@ -1620,6 +1663,7 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
 			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1644,6 +1688,7 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
 			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1669,13 +1714,22 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
 			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
+			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
 			Vector++;
 		}
 		glVertexCount += Circles;
 		xSize++;
 	}
+#endif
+}
 
-	b3CorrectIndices();
+void b3ShapeRenderObject::b3ComputeTorusNormals()
+{
+#ifdef BLZ3_USE_OPENGL
+	for (int i = 0;i < glVertexCount;i++)
+	{
+		b3Vector::b3Normalize(&glVertex[i].n);
+	}
 #endif
 }
 

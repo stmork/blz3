@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/07/31 07:30:44  sm
+**      - New normal computation. Textures are rendered correctly and
+**        quadrics are shaded correctly. Spheres and doughnuts have
+**        got their own more simple computation.
+**
 **      Revision 1.13  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -134,6 +139,11 @@ void b3Box::b3FreeVertices()
 void b3Box::b3ComputeVertices()
 {
 	b3ComputeBoxVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
+}
+
+void b3Box::b3ComputeNormals(b3_bool normalize)
+{
+	b3RenderObject::b3ComputeNormals(normalize);
 }
 
 void b3Box::b3ComputeIndices()
