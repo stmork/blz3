@@ -386,10 +386,15 @@
 #define IDC_DIR3_Z                      32108
 #define IDC_DIRECTION                   32109
 #define IDC_EDIT1                       32110
+#define IDC_EDIT_WIND_AMP               32110
 #define IDC_EDIT_AMPLITUDE              32111
+#define IDC_EDIT_WIND_FREQ              32111
 #define IDC_EDIT_ANGULAR_WOBBLE         32112
+#define IDC_EDIT_WIND_MIN               32112
 #define IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY 32113
+#define IDC_EDIT_KM                     32113
 #define IDC_EDIT_FROM                   32114
+#define IDC_EDIT_SCALE_TIME             32114
 #define IDC_EDIT_GRAINY                 32115
 #define IDC_EDIT_GRAIN_FREQUENCY        32116
 #define IDC_EDIT_RINGY                  32117
@@ -676,6 +681,11 @@
 #define IDC_Y_START_SPIN                32398
 #define IDC_Y_TIMES                     32399
 #define IDC_Y_TIMES_SPIN                32400
+#define IDC_SPIN_WIND_AMP               32401
+#define IDC_SPIN_WIND_FREQ              32402
+#define IDC_SPIN_WIND_MIN               32403
+#define IDC_SPIN_KM                     32404
+#define IDC_SPIN_SCALE_TIME             32405
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -892,7 +902,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         10122
-#define _APS_NEXT_CONTROL_VALUE         32401
+#define _APS_NEXT_CONTROL_VALUE         32402
 #define _APS_NEXT_SYMED_VALUE           60207
 #endif
 #endif

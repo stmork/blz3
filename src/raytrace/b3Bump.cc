@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/05/14 16:16:52  sm
+**	- Modified water
+**	- Added some water values to its property dialog
+**
 **	Revision 1.32  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
-**
+**	
 **	Revision 1.31  2004/05/12 14:13:28  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -480,11 +484,18 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 		m_Scale.z   = b3InitFloat();
 		m_Amplitude = b3InitFloat();
 		m_ScaleTime = b3InitFloat();
+		if (B3_PARSE_INDEX_VALID)
+		{
+			m_Km       = b3InitFloat();
+			m_Octaves  = b3InitCount(); 
+			m_WindAmp  = b3InitFloat();
+			m_WindFreq = b3InitFloat();
+			m_MinWind  = b3InitFloat();
+		}
 	}
 	else
 	{
 		b3InitScaling(1.0,B3_SCALE_BOX_POLAR);
-		m_ScaleTime = 1;
 	}
 }
 
@@ -494,6 +505,11 @@ void b3BumpWater::b3Write()
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Amplitude);
 	b3StoreFloat(m_ScaleTime);
+	b3StoreFloat(m_Km);
+	b3StoreCount(m_Octaves);
+	b3StoreFloat(m_WindAmp);
+	b3StoreFloat(m_WindFreq);
+	b3StoreFloat(m_MinWind);
 }
 
 b3_bool b3BumpWater::b3Prepare()
@@ -510,7 +526,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	time = (m_ScaleTime < 0.0001 ? 0 : m_TimePoint / m_ScaleTime);
 	b3Scale(ray,&m_Scale,&point);
 
-	water = b3Noise::b3Water(&point,ray->t);
+	water = b3ComputeWater(&point,ray->t);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = water;
@@ -519,11 +535,11 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	oy.z     = water;
 
 	point.x += ox.x;
-	ox.z    -= b3Noise::b3Water (&point,time);
+	ox.z    -= b3ComputeWater (&point,time);
 	point.x -= ox.x;
 
 	point.y += oy.y;
-	oy.z    -= b3Noise::b3Water (&point,time);
+	oy.z    -= b3ComputeWater (&point,time);
 
 	r   = m_Amplitude;
 	n.x = ox.y * oy.z - ox.z - oy.y;

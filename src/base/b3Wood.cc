@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/14 16:16:52  sm
+**	- Modified water
+**	- Added some water values to its property dialog
+**
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.5  2004/04/19 10:13:37  sm
 **	- Adjusted oak plank.
 **	
@@ -99,7 +103,6 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 	b3_vector Pring;
 	b3_vector aux;
 	b3_vector Pgrain;
-	b3_f64    dPshad = 1; // FIXME
 	b3_f64    dPgrain;
 	b3_f64    inring;
 	b3_f64    grain = 0;
@@ -107,7 +110,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 	b3_loop   i;
 
 	b3Matrix::b3VMul(&m_Warp,polar,&d,true);
-	b3Noise::b3VFBm(&d,dPshad * m_RingNoiseFrequency,2,4,0.5,&offset);
+	b3Noise::b3FractionalBrownianMotion(&d,2,4,0.5,&offset);
 
 	b3Noise::b3SignedNoiseDeriv(0,0,d.z * m_TrunkWobbleFrequency,&aux);
 	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * aux.x;

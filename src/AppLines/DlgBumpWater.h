@@ -25,6 +25,7 @@
 //
 
 #include "b3SimplePropertyPreviewDialog.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "b3ShowRaytrace.h"
 #include "PageBump.h"
 #include "PageScaling.h"
@@ -51,6 +52,11 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpWater)
 	enum { IDD = IDD_BUMP_WATER };
+	CB3FloatSpinButtonCtrl	m_WindAmpCtrl;
+	CB3FloatSpinButtonCtrl	m_WindFreqCtrl;
+	CB3FloatSpinButtonCtrl	m_MinWindCtrl;
+	CB3FloatSpinButtonCtrl	m_ScaleTimeCtrl;
+	CB3FloatSpinButtonCtrl	m_KmCtrl;
 	CB3ShowRaytrace	m_PreviewBumpCtrl;
 	//}}AFX_DATA
 

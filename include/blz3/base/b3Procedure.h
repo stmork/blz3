@@ -80,53 +80,36 @@ public:
 		result->z = result->z * 2 - 1;
 	}
 
-	static inline b3_f64  b3Turbulence  (b3_vector *P)
+	static inline b3_f64  b3Turbulence  (b3_vector *P,b3_count octaves = 10)
 	{
-		b3_f64  x,y,z,s,t;
-		b3_loop i;
-
-		t = 0;
-		s = 1;
-		x = P->x;
-		y = P->y;
-		z = P->z;
-
-		for (i = 0;i < 10;i++)
-		{
-			t += b3NoiseVector(x,y,z) * s;
-			s *= 0.5;
-			x += x;
-			y += y;
-			z += z;
-		}
-		return t;
+		return b3FractionalBrownianMotion(P,octaves,2.0,0.5);
 	}
 
-	static inline b3_f64  b3FBm(b3_vector &p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain)
+	static inline b3_f64  b3FractionalBrownianMotion(b3_vector *p,b3_count octaves,b3_f64 lacunarity,b3_f64 gain)
 	{
 		b3_f64    sum = 0;
-		b3_vector pp = p;
-		b3_f64    fw = width;
+		b3_f64    x,y,z;
 		b3_f64    amp = 1;
 		b3_loop   i;
 
+		x = p->x;
+		y = p->y;
+		z = p->z;
 		for (i = 0;i < octaves;i++)
 		{
-			sum  += amp * b3NoiseVector(pp.x,pp.y,pp.z);
+			sum  += amp * b3NoiseVector(x,y,z);
 			amp  *= gain;
-			pp.x *= lacunarity;
-			pp.y *= lacunarity;
-			pp.z *= lacunarity;
-			fw   *= lacunarity;
+			x    *= lacunarity;
+			y    *= lacunarity;
+			z    *= lacunarity;
 		}
 		return sum;
 	}
 
-	static inline void b3VFBm(b3_vector *p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain,b3_vector *result)
+	static inline void b3FractionalBrownianMotion(b3_vector *p,b3_count octaves,b3_f64 lacunarity,b3_f64 gain,b3_vector *result)
 	{
 		b3_vector pp  = *p;
 		b3_vector aux;
-		b3_f64    fw  = width;
 		b3_f64    amp = 1;
 		b3_loop   i;
 
@@ -142,7 +125,6 @@ public:
 			pp.x *= lacunarity;
 			pp.y *= lacunarity;
 			pp.z *= lacunarity;
-			fw   *= lacunarity;
 		}
 	}
 
@@ -150,7 +132,6 @@ public:
 	static void    b3Wood        (b3_vector *d,b3Color &mask);
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
 	static b3_f64  b3Wave        (b3_vector *point);
-	static b3_f64  b3Water       (b3_vector *point,b3_f64 time);
 	static b3_f64  b3Granite     (b3_vector *point,b3_count octaves);
 	static b3_f64  b3PGauss      ();
 
@@ -161,6 +142,39 @@ private:
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
+};
+
+class b3Water
+{
+public:
+	b3_f32    m_Km;
+	b3_count  m_Octaves;
+	b3_f32    m_WindAmp;
+	b3_f32    m_WindFreq;
+	b3_f32    m_MinWind;
+	b3_f32    m_ScaleTime;           // time period for wave swing
+	
+
+public:
+	b3Water();
+
+	inline b3_f64 b3ComputeWater(b3_vector *point, b3_f64 time)
+	{
+		b3_vector P;
+		b3_f64    factor  = 10 * m_WindFreq;
+		b3_f64    offset,turbulence;
+
+		P.x = point->x * factor;
+		P.y = point->y * factor;
+		P.z = point->z * factor + time * m_ScaleTime * 3.0;
+		offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
+
+		P.x *= 8;
+		P.y *= 8;
+		P.z *= 8;
+		turbulence = b3Noise::b3Turbulence(&P, 4);
+		return (m_MinWind + m_WindAmp * turbulence) * offset;
+	}
 };
 
 #define EARTH_RADIUS_KM 10.0
@@ -180,25 +194,8 @@ public:
 	b3_f64    m_Sharpness;
 
 public:
-	b3Clouds()
-	{
-		b3Vector::b3Init(&m_Anim, 0.1, 0.1, 0.05);
-		b3Vector::b3Init(&m_PosScale,0.01f,0.01f,0.01f);
-		m_EarthRadius = EARTH_RADIUS_KM;
-		m_CloudHeight =   1.0f;
-		m_Scaling     =   5.0f;
-		m_Sharpness   =  10.2f;
-		m_Flags       =   0;
-		b3PrepareClouds();
-	}
-
-	inline void b3PrepareClouds()
-	{
-		b3_f64 Rc = m_EarthRadius + m_CloudHeight;
-
-		m_EarthRadiusSqr = m_EarthRadius * m_EarthRadius;
-		m_CloudRadiusSqr = Rc * Rc;
-	}
+	     b3Clouds();
+	void b3PrepareClouds();
 
 	inline b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
 	{

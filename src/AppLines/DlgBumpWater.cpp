@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/14 16:16:52  sm
+**	- Modified water
+**	- Added some water values to its property dialog
+**
 **	Revision 1.1  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -48,7 +52,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	
 */
 
@@ -70,6 +74,13 @@ CDlgBumpWater::CDlgBumpWater(b3Item *item,CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgBumpWater)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+	m_ScaleTimeCtrl.b3SetRange(0.0,100.0);
+	m_ScaleTimeCtrl.b3SetIncrement(0.1);
+	m_ScaleTimeCtrl.b3SetDigits(3,2);
+	m_WindAmpCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
+	m_WindFreqCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
+	m_MinWindCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
+	m_KmCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
 }
 
 CDlgBumpWater::~CDlgBumpWater()
@@ -82,14 +93,33 @@ void CDlgBumpWater::DoDataExchange(CDataExchange* pDX)
 {
 	CB3SimplePropertyPreviewDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgBumpWater)
+	DDX_Control(pDX, IDC_SPIN_WIND_AMP, m_WindAmpCtrl);
+	DDX_Control(pDX, IDC_SPIN_WIND_FREQ, m_WindFreqCtrl);
+	DDX_Control(pDX, IDC_SPIN_WIND_MIN, m_MinWindCtrl);
+	DDX_Control(pDX, IDC_SPIN_SCALE_TIME, m_ScaleTimeCtrl);
+	DDX_Control(pDX, IDC_SPIN_KM, m_KmCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_BUMP, m_PreviewBumpCtrl);
 	//}}AFX_DATA_MAP
+	m_WindAmpCtrl.b3DDX(pDX,   m_Bump->m_WindAmp);
+	m_WindFreqCtrl.b3DDX(pDX,  m_Bump->m_WindFreq);
+	m_MinWindCtrl.b3DDX(pDX,   m_Bump->m_MinWind);
+	m_ScaleTimeCtrl.b3DDX(pDX, m_Bump->m_ScaleTime);
+	m_KmCtrl.b3DDX(pDX,        m_Bump->m_Km);
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgBumpWater, CB3SimplePropertyPreviewDialog)
 	//{{AFX_MSG_MAP(CDlgBumpWater)
-		// NOTE: the ClassWizard will add message map macros here
+	ON_EN_KILLFOCUS(IDC_EDIT_WIND_AMP,   OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_WIND_FREQ,  OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_WIND_MIN,   OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_SCALE_TIME, OnEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_KM,         OnEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_WIND_AMP,   OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_WIND_FREQ,  OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_WIND_MIN,   OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_SCALE_TIME, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_KM,         OnSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 

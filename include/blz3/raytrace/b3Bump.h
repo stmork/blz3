@@ -20,6 +20,7 @@
 
 #include "blz3/raytrace/b3Scaling.h"
 #include "blz3/base/b3Array.h"
+#include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Wood.h"
 #include "blz3/image/b3Tx.h"
 
@@ -131,11 +132,8 @@ private:
 };
 
 // BUMP_WATER
-class B3_PLUGIN b3BumpWater : public b3Bump, public b3Scaling
+class B3_PLUGIN b3BumpWater : public b3Bump, public b3Water, public b3Scaling
 {
-public:
-	b3_f32      m_ScaleTime;           // time period for wave swing
-
 public:
 	B3_ITEM_INIT(b3BumpWater);
 	B3_ITEM_LOAD(b3BumpWater);

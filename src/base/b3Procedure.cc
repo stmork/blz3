@@ -37,6 +37,10 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/05/14 16:16:52  sm
+**	- Modified water
+**	- Added some water values to its property dialog
+**
 **	Revision 1.30  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -51,7 +55,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.29  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -180,7 +184,6 @@
 #define NOISEMAXALLOC    (NOISEMAX)
 #define NOISEMASK        ((NOISEMAX) - 1)
 
-#define FRAC(Value)      ((Value) - (b3_f32)((long)(Value)))
 #define INDEX3D(x,y,z)   ((((\
 	((x) & NOISEMASK)  << NOISEBITS) +\
 	((y) & NOISEMASK)) << NOISEBITS) +\
@@ -660,22 +663,6 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 	return mSin(point->y * 10 + v.z * 2);
 }
 
-b3_f64 b3Noise::b3Water(b3_vector *point,b3_f64 time)
-{
-	b3_f64 phase,delay;
-
-	phase = b3NoiseVector(
-		point->x * 10.0,
-		point->y * 20.0,
-		point->z * 20.0);
-	delay = (time + b3NoiseVector(
-		point->x * 3.0,
-		point->y * 7.0,
-		point->z * 14.0)) * 2.0 * M_PI;
-
-	return mSin(phase * 2.0 * M_PI - M_PI + delay);
-}
-
 b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)
 {
 	b3_loop   i;
@@ -695,6 +682,48 @@ b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)
 		freq += freq; // = freq *= 2;
 	}
 	return b3Math::b3Limit(sum,0,1);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Water default values                          **
+**                                                                      **
+*************************************************************************/
+
+b3Water::b3Water()
+{
+	m_Km        = 1.0f;
+	m_Octaves   = 2;
+	m_ScaleTime = 2;
+	m_WindFreq  = 0.5;
+	m_WindAmp   = 0.2f;
+	m_MinWind   = 0.8f;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Cloud default values                          **
+**                                                                      **
+*************************************************************************/
+
+b3Clouds::b3Clouds()
+{
+	b3Vector::b3Init(&m_Anim, 0.1, 0.1, 0.05);
+	b3Vector::b3Init(&m_PosScale,0.01f,0.01f,0.01f);
+	m_EarthRadius = EARTH_RADIUS_KM;
+	m_CloudHeight =   1.0f;
+	m_Scaling     =   5.0f;
+	m_Sharpness   =  10.2f;
+	m_Flags       =   0;
+	b3PrepareClouds();
+}
+
+void b3Clouds::b3PrepareClouds()
+{
+	b3_f64 Rc = m_EarthRadius + m_CloudHeight;
+
+	m_EarthRadiusSqr = m_EarthRadius * m_EarthRadius;
+	m_CloudRadiusSqr = Rc * Rc;
 }
 
 /*************************************************************************
