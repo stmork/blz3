@@ -42,11 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/12/08 21:37:38  sm
+**	- Added "No Gfx" support
+**
 **	Revision 1.4  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	Revision 1.3  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	
@@ -68,11 +71,17 @@
 
 b3Display::b3Display()
 {
-	m_xs     = 0;
-	m_ys     = 0;
-	m_depth  = 0;
-	m_Buffer = null;
+#ifdef LOW_RES
+	m_xs = 240;
+	m_ys = 180;
+#else
+	m_xs = 768;
+	m_ys = 576;
+#endif
+	m_depth  = 24;
 	m_Tx     = new b3Tx();
+	m_Tx->b3AllocTx(m_xs,m_ys,m_depth);
+	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
 }
 
 b3Display::b3Display(b3Tx *tx)

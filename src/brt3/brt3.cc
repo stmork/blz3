@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/08 21:37:38  sm
+**	- Added "No Gfx" support
+**
 **	Revision 1.13  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.12  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
@@ -139,11 +142,25 @@ int main(int argc,char *argv[])
 				scene->b3SetFilename(argv[i]);
 				if (scene->b3GetDisplaySize(xSize,ySize))
 				{
-					display = new b3DisplayView(xSize,ySize);
+					if (scene->m_Flags & TP_NO_GFX)
+					{
+						display = new b3Display(xSize,ySize);
+					}
+					else
+					{
+						display = new b3DisplayView(xSize,ySize);
+					}
 				}
 				else
 				{
-					display = new b3DisplayView();
+					if (scene->m_Flags & TP_NO_GFX)
+					{
+						display = new b3Display();
+					}
+					else
+					{
+						display = new b3DisplayView();
+					}
 				}
 
 				if ((camera = scene->b3GetCamera(false)) != null)

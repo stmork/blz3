@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2001/12/08 21:37:38  sm
+**      - Added "No Gfx" support
+**
 **      Revision 1.25  2001/12/08 19:17:07  sm
 **      - Added interactive focal length
 **      - Added interactive twirl
