@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2002/07/31 13:46:02  sm
+**      - I have to spend more brain into correct shading of quadrics...
+**
 **      Revision 1.49  2002/07/31 08:53:22  sm
 **      - Added simplified pixel format selection
 **      - Some problems with normal computation occured
@@ -791,55 +794,62 @@ b3_count b3ShapeRenderObject::b3GetIndexOverhead (
 	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
 
-#ifdef BLZ3_USE_OPENGL
-b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
-{
-#if 0
-	b3_tnv_vertex *point;
-	b3_tnv_vertex *ptr = glVertex;
-	b3_index       i;
+#define no_USE_FIND_VERTEX
 
-	point = &ptr[vertex];
-	for (i = 0;i < glVertexCount;i++)
+#ifdef BLZ3_USE_OPENGL
+b3_index b3ShapeRenderObject::b3FindVertex(GLushort index)
+{
+#ifdef USE_FIND_VERTEX
+	b3_vector *point = &glVertex[index].v;
+
+	for (b3_index i = 0;i < glVertexCount;i++)
 	{
-		if (b3Vector::b3Distance(&point->v,&ptr->v) < epsilon)
+		if (b3Vector::b3Distance(point,&glVertex[i].v) < epsilon)
 		{
 			return i;
 		}
-		ptr++;
 	}
 
 	B3_ASSERT(false);
 #endif
-	return vertex;
+	return index;
 }
 #endif
 
 void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_index  i;
-	b3_index  v1,v2,v3;
-	GLushort *pPtr = glPolygons;
-	b3_vector xDir,yDir,normal;
+#ifdef USE_FIND_VERTEX
+	b3_vector normal;
+	b3_vector xDir,yDir;
+	b3_index  i,k,v1,v2,v3,n1,n2,n3,start,end;
 
-	for (i = 0;i < glPolyCount;i++)
+	// Clear normals
+	b3GetVertexRange(start,end);
+	for (i = start;i < end;i++)
 	{
-		v1 = b3FindVertex(pPtr[0]);
-		v2 = b3FindVertex(pPtr[1]);
-		v3 = b3FindVertex(pPtr[2]);
+		b3Vector::b3Init(&glVertex[i].n);
+	}
 
-		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
-		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
+	for (i = k = 0;i < glPolyCount;i++)
+	{
+		n1 = b3FindVertex(v1 = glPolygons[k++]);
+		n2 = b3FindVertex(v2 = glPolygons[k++]);
+		n3 = b3FindVertex(v3 = glPolygons[k++]);
+
+		b3Vector::b3Sub(&glVertex[n2].v,&glVertex[n1].v,&xDir);
+		b3Vector::b3Sub(&glVertex[n3].v,&glVertex[n1].v,&yDir);
 		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
-		if (b3Vector::b3Normalize(&normal) > 0)
+		if (b3Vector::b3Normalize(&normal) > epsilon)
 		{
 			b3Vector::b3Add(&normal,&glVertex[v1].n);
 			b3Vector::b3Add(&normal,&glVertex[v2].n);
 			b3Vector::b3Add(&normal,&glVertex[v3].n);
-		}
 
-		pPtr += 3;
+			if (n1 != v1) b3Vector::b3Add(&normal,&glVertex[n1].n);
+			if (n2 != v2) b3Vector::b3Add(&normal,&glVertex[n2].n);
+			if (n3 != v3) b3Vector::b3Add(&normal,&glVertex[n3].n);
+		}
 	}
 
 	// Normalize
@@ -850,8 +860,10 @@ void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 			b3Vector::b3Normalize(&glVertex[i].n);
 		}
 	}
+#else
+	b3RenderObject::b3ComputeNormals(normalize);
 #endif
-
+#endif
 }
 
 /*************************************************************************

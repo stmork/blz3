@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2002/07/31 13:46:02  sm
+**      - I have to spend more brain into correct shading of quadrics...
+**
 **      Revision 1.45  2002/07/31 11:57:11  sm
 **      - The nVidia OpenGL init bug fixed by using following work
 **        around: The wglMakeCurrent() method is invoked on
@@ -747,68 +750,39 @@ void b3RenderObject::b3ComputeIndices()
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *nPtr = (b3_tnv_vertex *)glVertex;
-	b3_tnv_vertex *vPtr = (b3_tnv_vertex *)glVertex;
-	GLushort      *pPtr = glPolygons;
-	b3_vector      normal;
-	b3_vector      xDir,yDir;
-	b3_f64         len;
-	b3_index       i,p1,p2,p3,start,end;
+	b3_vector normal;
+	b3_vector xDir,yDir;
+	b3_index  i,k,v1,v2,v3,start,end;
 
-	if (nPtr == null)
-	{
-		// Do nothing!
-		return;
-	}
+	B3_ASSERT(glVertex != null);
 
 	// Clear normals
 	b3GetVertexRange(start,end);
 	for (i = start;i < end;i++)
 	{
-		nPtr[i].n.x = 0;
-		nPtr[i].n.y = 0;
-		nPtr[i].n.z = 0;
+		b3Vector::b3Init(&glVertex[i].n);
 	}
 
 	// Collect normals
-	for (i = 0;i < glPolyCount;i++)
+	for (i = k = 0;i < glPolyCount;i++)
 	{
-		p1 = *pPtr++;
-		p2 = *pPtr++;
-		p3 = *pPtr++;
+		v1 = glPolygons[k++];
+		v2 = glPolygons[k++];
+		v3 = glPolygons[k++];
 
 		// Do some semantic checks
-		B3_ASSERT((start <= p1) && (p1 < end));
-		B3_ASSERT((start <= p2) && (p2 < end));
-		B3_ASSERT((start <= p3) && (p3 < end));
+		B3_ASSERT((start <= v1) && (v1 < end));
+		B3_ASSERT((start <= v2) && (v2 < end));
+		B3_ASSERT((start <= v3) && (v3 < end));
 
-		xDir.x = vPtr[p2].v.x - vPtr[p1].v.x;
-		xDir.y = vPtr[p2].v.y - vPtr[p1].v.y;
-		xDir.z = vPtr[p2].v.z - vPtr[p1].v.z;
-
-		yDir.x = vPtr[p3].v.x - vPtr[p1].v.x;
-		yDir.y = vPtr[p3].v.y - vPtr[p1].v.y;
-		yDir.z = vPtr[p3].v.z - vPtr[p1].v.z;
-
+		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
+		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
 		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
-		len = b3Vector::b3Length(&normal);
-		if (len > 0)
+		if (b3Vector::b3Normalize(&normal) > 0.001)
 		{
-			normal.x /= len;
-			normal.y /= len;
-			normal.z /= len;
-
-			nPtr[p1].n.x += normal.x;
-			nPtr[p1].n.y += normal.y;
-			nPtr[p1].n.z += normal.z;
-
-			nPtr[p2].n.x += normal.x;
-			nPtr[p2].n.y += normal.y;
-			nPtr[p2].n.z += normal.z;
-
-			nPtr[p3].n.x += normal.x;
-			nPtr[p3].n.y += normal.y;
-			nPtr[p3].n.z += normal.z;
+			b3Vector::b3Add(&normal,&glVertex[v1].n);
+			b3Vector::b3Add(&normal,&glVertex[v2].n);
+			b3Vector::b3Add(&normal,&glVertex[v3].n);
 		}
 	}
 
@@ -817,13 +791,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	{
 		for (i = 0;i < glVertexCount;i++)
 		{
-			len = b3Vector::b3Length(&nPtr[i].n);
-			if (len > 0)
-			{
-				nPtr[i].n.x /= len;
-				nPtr[i].n.y /= len;
-				nPtr[i].n.z /= len;
-			}
+			b3Vector::b3Normalize(&glVertex[i].n);
 		}
 	}
 #endif
