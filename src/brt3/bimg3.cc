@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/08/28 15:31:00  sm
+**	- Added some help output to render and bimg3.
+**
 **	Revision 1.11  2002/08/11 11:22:33  sm
 **	- Adjusted some includes concerning b3DisplayView.
-**
+**	
 **	Revision 1.10  2002/07/20 10:49:34  sm
 **	- Added custom light support (not finished yet)
 **	- Added b3Light::b3IsActive() for compatibility.
@@ -166,8 +169,6 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"Compile name: %s\n",cvs_tag);
 	}
-
 	return 0;
 }

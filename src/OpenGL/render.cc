@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/08/28 15:31:00  sm
+**      - Added some help output to render and bimg3.
+**
 **      Revision 1.25  2002/08/21 10:16:40  sm
 **      - Made some changes to the Un*x OpenGL renderer:
 **        o Added animations
@@ -348,7 +351,19 @@ int main(int argc,char *argv[])
 	b3_vector       lower,upper;
 	b3_res          xSize,ySize;
 
-	if (argc > 1) try
+	if (argc <= 1)
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s BWD-file\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		exit(0);
+	}
+
+	try
 	{
 		b3InitRaytrace::b3Init();
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
