@@ -38,6 +38,10 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2004/04/04 13:50:38  sm
+**      - Optimized noise
+**      - Added filtered noise
+**
 **      Revision 1.47  2004/04/04 12:57:52  sm
 **      - Fixed wood alignment.
 **
@@ -998,8 +1002,8 @@ void b3MatWood::b3Init()
 	m_yTimes     =   0;
 
 	// The noise parameters
-	m_yRot                   =  -0.5 * M_PI;
-	m_zRot                   =  -0.5 * M_PI;
+	m_yRot                   = (b3_f32)(  0.5 * M_PI );
+	m_zRot                   = (b3_f32)( -0.5 * M_PI );
 	m_RingSpacing            =   0.2f;
 	m_RingFrequency          =   0.2f;
 	m_RingNoise              =   0.2f;
@@ -1068,7 +1072,13 @@ b3_bool b3MatWood::b3GetColors(
 	b3_vector offset;
 	b3_vector Pring;
 	b3_vector aux;
-	b3_f64 dPshad = 1; // FIXME
+	b3_vector Pgrain;
+	b3_f64    dPshad = 1; // FIXME
+	b3_f64    dPgrain;
+	b3_f64    inring;
+	b3_f64    grain = 0;
+	b3_f64    amp = 1;
+	b3_loop   i;
 
 	b3Matrix::b3VMul(&m_Warp,&polar->box_polar,&d,true);
 	b3Noise::b3VFBm(&d,dPshad * m_RingNoiseFrequency,2,4,0.5,&offset);
@@ -1089,20 +1099,14 @@ b3_bool b3MatWood::b3GetColors(
 		Pring.z * m_AngularWobbleFrequency * 0.1);
 	
 	// Ensure unequally spaced rings
-	r += m_RingSpacing * b3Noise::b3SignedNoiseVector(0,0,r);
+	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseVector(0,0,r);
 
-	b3_f64 inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
-
-	b3_vector Pgrain;
+	inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
 
 	Pgrain.x = d.x * m_GrainFrequency;
 	Pgrain.y = d.y * m_GrainFrequency;
 	Pgrain.z = d.z * m_GrainFrequency * 0.05;
-	b3_f64 dPgrain = 1; // FIXME
-
-	b3_loop i;
-	b3_f64  grain = 0;
-	b3_f64  amp = 1;
+	dPgrain = 1; // FIXME
 
 	for (i = 0;i < 2;i++)
 	{
@@ -1296,6 +1300,7 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_HighLight  = 100.0;
 	m_Overtone   =   2;
 	m_Flags      =   0;
+	b3Vector::b3Init(&m_Scale,10,10,10);
 }
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
@@ -1348,7 +1353,7 @@ b3_bool b3MatGranite::b3GetColors(
 
 	for (i = 0;i < m_Overtone;i++)
 	{
-		sum += b3Noise::b3NoiseVector(
+		sum += b3Noise::b3FilteredNoiseVector(
 			4 * freq * d.x,
 			4 * freq * d.y,
 			4 * freq * d.z) / freq;

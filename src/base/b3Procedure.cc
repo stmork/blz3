@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/04/04 13:50:38  sm
+**	- Optimized noise
+**	- Added filtered noise
+**
 **	Revision 1.17  2004/04/03 19:25:00  sm
 **	- Some other wood
-**
+**	
 **	Revision 1.16  2004/04/02 08:56:45  sm
 **	- Computed more realistic clouds.
 **	
@@ -131,7 +135,6 @@
 #define MAXVAL           255
 #define mul4b(a,b,c,d)   ((a)*(b)*(c)*(d))
 #define scal             (NOISEMAX)
-#define nscal            (1.0/MAXVAL)
 
 #define mSin(x)          ((sin(x) + 1.0) * 0.5)
 #define mMod(x)          ((fabs(x) * 0.5 / M_PI) - floor(fabs(x) * 0.5 / M_PI))
@@ -214,7 +217,7 @@ b3Noise::b3Noise ()
 		for (x = 0;x < NOISEMAX;x++)
 		for (y = 0;y < NOISEMAX;y++)
 		for (z = 0;z < NOISEMAX;z++)
-			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL);
+			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
 
 		// init marble spline
 		marbleSpline.knot_max    = sizeof(marbleKnots)    / sizeof(b3_f32);
@@ -268,71 +271,94 @@ b3Noise::~b3Noise ()
 **
 **
 **                3-------------*--------------7
-**                             /
+**                a[3]         /b[1]           b[3]
 **                            /
-**                           *
+**                           *b[0]
 **                          /|
 **                         / |
 **                        /  |
 **                       /   |
 **                      /    |
 **       1-------------*--------------6
-**                           |
+**       a[2]          a[1]  |		  b[2]
 **                           |
 **       |<-- ox ----->|     |
 **                           |
-**          -                #  <== interpolated point
+**          -                #a[0]  <== interpolated point
 **          ^                |
 **          |                |
 **         oz                |
 **          |     2----------|--*--------------6
-**          |                | /
+**          |     a[1]       | /b[0]           b[1]
 **          v                |/
-**          -     --         *
+**          -     --         *a[0]
 **               /          /
 **              /          /
 **             /          /
 **            oy         /
 **           /          /
 **       0-------------*--------------4
-**
+**		 a[0]          a[0]           b[0]
 **
 **
 */
 
 b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 {
-	register b3_f64    n00,n01,n10,n11;
-	register b3_f64    ox,oy,oz,n0,n1;
-	register b3_noisetype n;
-	register long      ix,iy,iz;
+	b3_index ix,iy,iz;
 
-	if (NoiseTable == null) return (0.0);
+	ix = (b3_index)floor(x);
+	iy = (b3_index)floor(y);
+	iz = (b3_index)floor(z);
 
-	ix = (long)(x = fabs(x + 15000)); ox = FRAC(x);
-	iy = (long)(y = fabs(y + 15000)); oy = FRAC(y);
-	iz = (long)(z = fabs(z + 15000)); oz = FRAC(z);
+	return b3Interpolate(ix,iy,iz,
+		x - ix,
+		y - iy,
+		z - iz);
+}
 
+b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+{
+	b3_index ix,iy,iz;
 
-		// trilinear interpolation
-		// first dimension
-	  n =                NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
-	n00 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy  ,iz  )] - n);
-	  n =                NoiseTable[INDEX3D(ix  ,iy  ,iz+1)];
-	n01 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy  ,iz+1)] - n);
-	  n =                NoiseTable[INDEX3D(ix  ,iy+1,iz  )];
-	n10 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy+1,iz  )] - n);
-	  n =                NoiseTable[INDEX3D(ix  ,iy+1,iz+1)];
-	n11 =    n   + ox * (NoiseTable[INDEX3D(ix+1,iy+1,iz+1)] - n);
+	ix = (b3_index)floor(x);
+	iy = (b3_index)floor(y);
+	iz = (b3_index)floor(z);
 
+	return b3Interpolate(ix,iy,iz,
+		b3Math::b3Smoothstep(x - ix),
+		b3Math::b3Smoothstep(y - iy),
+		b3Math::b3Smoothstep(z - iz));
+}
 
-	// second dimension
-	n0  =    n00 + oy * (n10 - n00);
-	n1  =    n01 + oy * (n11 - n01);
+inline b3_f64 b3Noise::b3Interpolate(
+	b3_index ix,
+	b3_index iy,
+	b3_index iz,
+	b3_f64   fx,
+	b3_f64   fy,
+	b3_f64   fz)
+{
+	b3_f64 a[4],b[4];
 
+	a[0] = NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
+	b[0] = NoiseTable[INDEX3D(ix+1,iy  ,iz  )];
+	a[1] = NoiseTable[INDEX3D(ix  ,iy+1,iz  )];
+	b[1] = NoiseTable[INDEX3D(ix+1,iy+1,iz  )];
+	a[2] = NoiseTable[INDEX3D(ix  ,iy  ,iz+1)];
+	b[2] = NoiseTable[INDEX3D(ix+1,iy  ,iz+1)];
+	a[3] = NoiseTable[INDEX3D(ix  ,iy+1,iz+1)];
+	b[3] = NoiseTable[INDEX3D(ix+1,iy+1,iz+1)];
 
-	// third and last dimension
-	return ((n0  + oz * (n1  - n0)) * nscal);
+	a[0] = b3Math::b3Mix(a[0],b[0],fx);
+	b[0] = b3Math::b3Mix(a[1],b[1],fx);
+	a[1] = b3Math::b3Mix(a[2],b[2],fx);
+	b[1] = b3Math::b3Mix(a[3],b[3],fx);
+
+	a[0] = b3Math::b3Mix(a[0],b[0],fy);
+	b[0] = b3Math::b3Mix(a[1],b[1],fy);
+
+	return b3Math::b3Mix(a[0],b[0],fz);
 }
 
 inline b3_noisetype b3Noise::b3GetDiff(
@@ -360,17 +386,14 @@ inline b3_f64 b3Noise::b3GradNoise (
 	register b3_f64    n00,n01,n10,n11,n0,n1;
 	register b3_f64    ox,oy,oz;
 	register b3_noisetype n;
-	register long      ix,iy,iz;
+	register b3_index      ix,iy,iz;
 
-	if (NoiseTable == null) return (0.0);
+	ix = (b3_index)floor(x); ox = x - ix;
+	iy = (b3_index)floor(y); oy = y - iy;
+	iz = (b3_index)floor(z); oz = z - iz;
 
-	ix = (long)x; ox = FRAC(x);
-	iy = (long)y; oy = FRAC(y);
-	iz = (long)z; oz = FRAC(z);
-
-
-		// trilinear interpolation
-		// first dimension
+	// trilinear interpolation
+	// first dimension
 	  n =                b3GetDiff(ix,iy,iz,i,0);
 	n00 =    n   + ox * (b3GetDiff(ix,iy,iz,i,4) - n);
 	  n =                b3GetDiff(ix,iy,iz,i,1);
@@ -386,7 +409,7 @@ inline b3_f64 b3Noise::b3GradNoise (
 	n1  =    n01 + oy * (n11 - n01);
 
 	// third and last dimension
-	return ((n0 + oz * (n1 - n0)) * nscal * 2 - 1);
+	return ((n0 + oz * (n1 - n0)) * 2 - 1);
 }
 
 void b3Noise::b3NoiseDeriv (

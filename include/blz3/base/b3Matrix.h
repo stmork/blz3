@@ -873,9 +873,10 @@ public:
 class b3Matrix
 {
 	static b3_matrix m_UnitMatrix;
-	static b3_vector m_EmptyVector;
 
 public:
+	static b3_vector m_EmptyVector;
+
 	static b3_bool    b3NormalizeCol (b3_matrix *Dst,b3_index col_num);
 	static b3_bool    b3NormalizeRow (b3_matrix *Dst,b3_index row_num);
 	static b3_f64     b3Det4         (b3_matrix *Matrix);

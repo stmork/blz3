@@ -70,6 +70,11 @@ public:
 		return value;
 	}
 
+	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)
+	{
+		return a * (1 - x) + b * x;
+	}
+
 	static inline b3_f64 b3Hermite(b3_f64 t1,b3_f64 s0,b3_f64 s1)
 	{
 		b3_f64 t2 = t1 * t1;
@@ -97,6 +102,7 @@ public:
 		
 		return (3 - 2 * t) * t * t;
 	}
+
 
 	static inline b3_f64 b3Smoothstep(b3_f64 t)
 	{

@@ -25,7 +25,7 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Matrix.h"
 
-typedef unsigned char b3_noisetype;
+typedef b3_f32 b3_noisetype;
 
 enum b3_noise_error
 {
@@ -51,6 +51,12 @@ public:
 		return b3NoiseVector(x,y,z) * 2 - 1;
 	}
 	
+	static        b3_f64        b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
+	static inline b3_f64  b3SignedFilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
+	{
+		return b3NoiseVector(x,y,z) * 2 - 1;
+	}
+	
 	static        void       b3NoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result);
 	static inline void b3SignedNoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result)
 	{
@@ -65,16 +71,16 @@ public:
 
 	static inline b3_f64  b3FBm(b3_vector &p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain)
 	{
-		b3_f64 sum = 0;
+		b3_f64    sum = 0;
 		b3_vector pp = p;
-		b3_f64 fw = width;
-		b3_f64 amp = 1;
-		b3_f64 i;
+		b3_f64    fw = width;
+		b3_f64    amp = 1;
+		b3_loop   i;
 
-		for (i = 0;i < octaves;i+=1)
+		for (i = 0;i < octaves;i++)
 		{
-			sum += amp * b3NoiseVector(pp.x,pp.y,pp.z);
-			amp *= gain;
+			sum  += amp * b3NoiseVector(pp.x,pp.y,pp.z);
+			amp  *= gain;
 			pp.x *= lacunarity;
 			pp.y *= lacunarity;
 			pp.z *= lacunarity;
@@ -85,21 +91,21 @@ public:
 
 	static inline void b3VFBm(b3_vector *p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain,b3_vector *result)
 	{
-		b3_vector pp = *p;
+		b3_vector pp  = *p;
 		b3_vector aux;
-		b3_f64 fw = width;
-		b3_f64 amp = 1;
-		b3_f64 i;
+		b3_f64    fw  = width;
+		b3_f64    amp = 1;
+		b3_loop   i;
 
 		b3Vector::b3Init(result);
-		for (i = 0;i < octaves;i+=1)
+		for (i = 0;i < octaves;i++)
 		{
 			b3NoiseDeriv(pp.x,pp.y,pp.z,&aux);
 
 			result->x += aux.x * amp;
 			result->y += aux.y * amp;
 			result->z += aux.z * amp;
-			amp *= gain;
+			amp       *= gain;
 			pp.x *= lacunarity;
 			pp.y *= lacunarity;
 			pp.z *= lacunarity;
@@ -118,6 +124,7 @@ public:
 private:
 	static b3_f64       b3Frac      (b3_f64 a,b3_f64 b);
 	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
+	static b3_f64       b3Interpolate(b3_index ix,b3_index iy,b3_index iz,b3_f64 fx,b3_f64 fy,b3_f64 fz);
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
