@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2002/08/07 17:25:01  sm
+**      - Added new error messages
+**      - Changed exception handling a little bit
+**
 **      Revision 1.2  2002/08/07 14:26:23  sm
 **      - Introduced mapping from Blizzard III error codes to human
 **        readable error messages supplied from Windows resources.
@@ -59,10 +63,27 @@ static char        LocalMessageBuffer[512];
 b3ExceptionLogger  b3ExceptionBase::m_Logger;
 b3ExceptionMsgFunc b3ExceptionBase::m_GetMessage;
 
-b3ExceptionBase::b3ExceptionBase()
+b3ExceptionBase::b3ExceptionBase(
+	const b3_errno ErrNo,
+	const b3_excno ExcNo)
 {
+	m_ErrorCode     = ErrNo;
+	m_ExceptionType = ExcNo;
+
 	if (m_Logger == null)     b3SetLogger(null);
 	if (m_GetMessage == null) b3SetMsgFunc(null);
+
+	m_Logger(m_ExceptionType,m_ErrorCode);	
+}
+
+const b3_errno b3ExceptionBase::b3GetError()
+{
+	return m_ErrorCode;
+}
+
+const char *b3ExceptionBase::b3GetErrorMsg()
+{
+	return m_GetMessage(m_ErrorCode);
 }
 
 void b3ExceptionBase::b3Log(const b3_excno ExcNo,const b3_errno ErrNo)

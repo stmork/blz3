@@ -30,42 +30,31 @@ typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
 class b3ExceptionBase
 {
-protected:
 	static b3ExceptionLogger  m_Logger;
 	static b3ExceptionMsgFunc m_GetMessage;
+	       b3_excno           m_ExceptionType;
+	       b3_errno           m_ErrorCode;
 
 protected:
-	                   b3ExceptionBase();
+	                   b3ExceptionBase(const b3_errno ErrNo,const b3_excno ExcNo);
 	static void        b3Log(const b3_excno ExcNo,const b3_errno ErrNo);
 	static const char *b3GetMessage(const b3_errno ErrNo);
 
 public:
+	const  b3_errno    b3GetError();
+	const  char       *b3GetErrorMsg();
+
 	static void        b3SetLogger(b3ExceptionLogger logger = null);
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 };
 
-template <class T,b3_excno C> class b3Exception : protected b3ExceptionBase
+template <class T,b3_excno C> class b3Exception : public b3ExceptionBase
 {
 protected:
-	b3_excno   m_ExceptionType;
-	b3_errno   m_ErrorCode;
 
 public:
-	b3Exception(const T error)
+	b3Exception(const T error) : b3ExceptionBase(B3_MK_ERRNO(error,C),C)
 	{
-		m_ExceptionType = C;
-		m_ErrorCode     = B3_MK_ERRNO(error,m_ExceptionType);
-		m_Logger(m_ExceptionType,m_ErrorCode);	
-	}
-
-	inline const b3_errno b3GetError()
-	{
-		return m_ErrorCode;
-	}
-
-	inline const char *b3GetErrorMsg()
-	{
-		return m_GetMessage(errno);
 	}
 };
 

@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/07 17:25:01  sm
+**	- Added new error messages
+**	- Changed exception handling a little bit
+**
 **	Revision 1.1  2002/08/07 14:26:23  sm
 **	- Introduced mapping from Blizzard III error codes to human
 **	  readable error messages supplied from Windows resources.
-**
+**	
 **
 */
 
@@ -52,7 +56,15 @@ static CString                        LocalMessageString;
 static b3HashMap<b3_errno,UINT>       LocalMessageMap;
 static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 {
-	{ B3_MK_ERRNO(B3_TX_MEMORY,'TX'),  IDS_ERR_MEMORY }
+	{ B3_MK_ERRNO(B3_TX_MEMORY,                     'TX'),  IDS_ERR_MEMORY },
+	{ B3_MK_ERRNO(B3_WORLD_OPEN,                    'BLZ'), IDS_ERR_OPEN },
+	{ B3_MK_ERRNO(B3_WORLD_READ,                    'BLZ'), IDS_ERR_READ },
+	{ B3_MK_ERRNO(B3_WORLD_MEMORY,                  'BLZ'), IDS_ERR_MEMORY },
+	{ B3_MK_ERRNO(B3_WORLD_PARSE,                   'BLZ'), IDS_ERR_PARSE },
+	{ B3_MK_ERRNO(B3_WORLD_WRITE,                   'BLZ'), IDS_ERR_WRITE },
+	{ B3_MK_ERRNO(B3_WORLD_STORAGE_NOT_IMPLEMENTED, 'BLZ'), IDS_ERR_STORAGE },
+	{ B3_MK_ERRNO(B3_WORLD_OUT_OF_ORDER,            'BLZ'), IDS_ERR_ORDER },
+	{ B3_MK_ERRNO(B3_WORLD_CLASSTYPE_UNKNOWN,       'BLZ'), IDS_ERR_CLASSTYPE_UNKNOWN }
 };
 
 CB3ExceptionLogger::CB3ExceptionLogger()

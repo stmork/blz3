@@ -2390,6 +2390,14 @@ BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
     IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
     IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
+    IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
+    IDS_ERR_READ            "Die Blizzard Datei ließ sich nicht lesen!"
+    IDS_ERR_PARSE           "Die Blizzard-Datei ist nicht im richtigen Format!"
+    IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
+    IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht speichern läßt."
+    IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
+    IDS_ERR_CLASSTYPE_UNKNOWN 
+                            "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
 END
 
 STRINGTABLE DISCARDABLE 

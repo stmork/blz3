@@ -543,6 +543,13 @@
 #define IDS_PROFILE_BEVEL_TRIANGLES     60083
 #define IDS_ERR_UNKNOWN                 61446
 #define IDS_ERR_MEMORY                  61447
+#define IDS_ERR_OPEN                    61448
+#define IDS_ERR_READ                    61449
+#define IDS_ERR_PARSE                   61450
+#define IDS_ERR_WRITE                   61451
+#define IDS_ERR_STORAGE                 61452
+#define IDS_ERR_ORDER                   61453
+#define IDS_ERR_CLASSTYPE_UNKNOWN       61454
 
 // Next default values for new objects
 // 
