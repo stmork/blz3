@@ -279,10 +279,11 @@ public:
 	{
 #ifdef B3_SSE
 		b3_f32 *v = &vector->x;
+		b3_f32  f = (b3_f32)factor;
 
 		for(int i = 0;i < 3;i++)
 		{
-			vector[i] *= factor;
+			v[i] *= f;
 		}
 #else
 		vector->x = (b3_f32)(vector->x * factor);
@@ -299,10 +300,11 @@ public:
 #ifdef B3_SSE
 		b3_f32 *r = &result->x;
 		b3_f32 *v = &vector->x;
+		b3_f32  f = (b3_f32)factor;
 
 		for(int i = 0;i < 3;i++)
 		{
-			r[i] = v[i] * factor;
+			r[i] = v[i] * f;
 		}
 #else
 		result->x = (b3_f32)(vector->x * factor);
@@ -319,7 +321,7 @@ public:
 
 		for(int i = 0;i < 3;i++)
 		{
-			vector[i] *= factor;
+			v[i] *= factor;
 		}
 #else
 		vector->x *= factor;
@@ -515,9 +517,11 @@ public:
 		b3_vector *vector,
 		b3_f64     min)
 	{
-		if (vector->x < min) vector->x = min;
-		if (vector->y < min) vector->y = min;
-		if (vector->z < min) vector->z = min;
+		b3_f32 m = (b3_f32)min;
+
+		if (vector->x < m) vector->x = m;
+		if (vector->y < m) vector->y = m;
+		if (vector->z < m) vector->z = m;
 	}
 
 	static inline void b3AdjustBound(
