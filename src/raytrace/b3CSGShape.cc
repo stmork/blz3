@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2002/02/27 20:14:51  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.6  2002/02/24 17:45:32  sm
 **      - Added CSG edit dialogs
 **      - Corrected shape edit inheritance.
@@ -276,6 +281,18 @@ b3_bool b3CSGShape3::b3Prepare()
 		result = b3Shape::b3Prepare();
 	}
 	return result;
+}
+
+void b3CSGShape3::b3GetStencilBoundInfo(b3_stencil_bound *info)
+{
+	info->xMin    = 0;
+	info->xMax    = 1;
+	info->yMin    = 0;
+	info->yMax    = 1;
+	info->xUnit   = B3_STENCIL_ANGLE;
+	info->yUnit   = B3_STENCIL_LENGTH;
+	info->xFactor = 360;
+	info->yFactor = b3Vector::b3Length(&m_Dir3);;
 }
 
 b3_count b3CSGShape3::b3GetMaxIntersections()

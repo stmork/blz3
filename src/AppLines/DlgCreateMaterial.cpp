@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgCreateMaterial.h"
+#include "b3ExampleScene.h"
 #include "b3SelectTexture.h"
 
 /*************************************************************************
@@ -33,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.1  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **
 */
 
@@ -56,11 +62,14 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	//}}AFX_DATA_INIT
 	m_MatNormal  = new b3MatNormal(MATERIAL);
 	m_MatTexture = new b3MatTexture(TEXTURE);
+	m_MatScene   = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_Material   = null;
 }
 
 CDlgCreateMaterial::~CDlgCreateMaterial()
 {
+	m_MatHead->b3RemoveAll();
+	delete m_MatScene;
 	delete m_MatTexture;
 	delete m_MatNormal;
 }
@@ -92,6 +101,10 @@ BEGIN_MESSAGE_MAP(CDlgCreateMaterial, CPropertyPage)
 	ON_BN_CLICKED(IDC_TEXTURE_SELECT , OnChangeTexturePath)
 	ON_BN_CLICKED(IDC_REALLY_CREATE, OnReallyCreate)
 	ON_BN_CLICKED(IDC_TEXTURE, OnUseTexture)
+	ON_EN_KILLFOCUS(IDC_REFLECTANCE, OnKillfocusReflectance)
+	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnKillfocusRefractance)
+	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnKillfocusIndexOfRefraction)
+	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnKillfocusSpecExponent)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -100,6 +113,20 @@ END_MESSAGE_MAP()
 
 BOOL CDlgCreateMaterial::OnInitDialog() 
 {
+	CB3App       *app = CB3GetApp();
+
+	app->b3ReadProfileColor("material.ambient",  &m_MatNormal->m_AmbColor);
+	app->b3ReadProfileColor("material.diffuse",  &m_MatNormal->m_DiffColor);
+	app->b3ReadProfileColor("material.specular", &m_MatNormal->m_SpecColor);
+	m_MatNormal->m_Reflection = app->b3ReadProfileFloat("material.reflection",   0);
+	m_MatNormal->m_Refraction = app->b3ReadProfileFloat("material.refraction",   0);
+	m_MatNormal->m_RefrValue  = app->b3ReadProfileFloat("material.ior",          1);
+	m_MatNormal->m_HighLight  = app->b3ReadProfileFloat("material.exponent",  1000);
+	m_ReallyCreate            = app->GetProfileInt(CB3ClientString(),"material.really create",TRUE);
+	m_UseTexture              = app->GetProfileInt(CB3ClientString(),"material.use texture",FALSE);
+	strcpy(m_MatTexture->m_Name,app->GetProfileString(CB3ClientString(),"material.texture",""));
+	b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
+
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -107,21 +134,36 @@ BOOL CDlgCreateMaterial::OnInitDialog()
 	m_DiffCtrl.b3Init(&m_MatNormal->m_DiffColor,this);
 	m_SpecCtrl.b3Init(&m_MatNormal->m_SpecColor,this);
 
-	m_ReflCtrl.b3SetValue(m_MatNormal->m_Reflection);
 	m_ReflCtrl.b3SetRange(0.0,1.0);
 	m_ReflCtrl.b3SetDigits(1,3);
-	m_RefrCtrl.b3SetValue(m_MatNormal->m_Reflection);
+	m_ReflCtrl.b3SetValue(m_MatNormal->m_Reflection);
 	m_RefrCtrl.b3SetRange(0.0,1.0);
 	m_RefrCtrl.b3SetDigits(1,3);
-	m_IORCtrl.b3SetValue(m_MatNormal->m_RefrValue);
+	m_RefrCtrl.b3SetValue(m_MatNormal->m_Refraction);
 	m_IORCtrl.b3SetRange(-5.0,5.0);
 	m_IORCtrl.b3SetDigits(1,3);
-	m_SpecExponentCtrl.b3SetValue(m_MatNormal->m_HighLight);
+	m_IORCtrl.b3SetValue(m_MatNormal->m_RefrValue);
 	m_SpecExponentCtrl.b3SetRange(1.0,100000.0);
 	m_SpecExponentCtrl.b3SetDigits(5,2);
+	m_SpecExponentCtrl.b3SetValue(m_MatNormal->m_HighLight);
+
+	m_PreviewTexture.b3Copy(m_MatTexture->m_Texture);
+	m_PreviewTexture.b3Update(true,true);
+	b3UpdateUI();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgCreateMaterial::b3UpdateUI()
+{
+	GetDlgItem(ID_CHANGE_AMBIENT)->EnableWindow(!m_UseTexture);
+	GetDlgItem(ID_CHANGE_DIFFUSE)->EnableWindow(!m_UseTexture);
+	GetDlgItem(ID_CHANGE_SPECULAR)->EnableWindow(!m_UseTexture);
+	GetDlgItem(IDC_TEXTURE_SELECT)->EnableWindow(m_UseTexture);
+	m_MatHead->b3RemoveAll();
+	m_MatHead->b3Append(m_UseTexture ? (b3Item *)m_MatTexture : (b3Item *)m_MatNormal);
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
 }
 
 void CDlgCreateMaterial::OnChangeAmbient() 
@@ -129,7 +171,7 @@ void CDlgCreateMaterial::OnChangeAmbient()
 	// TODO: Add your control notification handler code here
 	if (m_AmbCtrl.b3Select())
 	{
-//		m_PreviewMaterialCtrl.b3Update(m_NebularScene);
+		m_PreviewMaterialCtrl.b3Update(m_MatScene);
 	}
 }
 
@@ -138,7 +180,7 @@ void CDlgCreateMaterial::OnChangeDiffuse()
 	// TODO: Add your control notification handler code here
 	if (m_DiffCtrl.b3Select())
 	{
-//		m_PreviewMaterialCtrl.b3Update(m_NebularScene);
+		m_PreviewMaterialCtrl.b3Update(m_MatScene);
 	}
 }
 
@@ -147,7 +189,7 @@ void CDlgCreateMaterial::OnChangeSpecular()
 	// TODO: Add your control notification handler code here
 	if (m_SpecCtrl.b3Select())
 	{
-//		m_PreviewMaterialCtrl.b3Update(m_NebularScene);
+		m_PreviewMaterialCtrl.b3Update(m_MatScene);
 	}
 }
 
@@ -157,8 +199,8 @@ void CDlgCreateMaterial::OnChangeTexturePath()
 	if (CB3SelectTexture::b3Select(&m_MatTexture->m_Texture,m_MatTexture->m_Name))
 	{
 		((b3Tx *)m_PreviewTexture)->b3Copy(m_MatTexture->m_Texture);
-		m_PreviewTexture.b3Update(true,true);
-//		m_PreviewMaterialCtrl.b3Update(m_PreviewScene);
+		m_PreviewTexture.b3Copy(m_MatTexture->m_Texture);
+		m_PreviewMaterialCtrl.b3Update(m_MatScene);
 	}
 }
 
@@ -166,10 +208,7 @@ void CDlgCreateMaterial::OnUseTexture()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData();
-	GetDlgItem(ID_CHANGE_AMBIENT)->EnableWindow(!m_UseTexture);
-	GetDlgItem(ID_CHANGE_DIFFUSE)->EnableWindow(!m_UseTexture);
-	GetDlgItem(ID_CHANGE_SPECULAR)->EnableWindow(!m_UseTexture);
-	GetDlgItem(IDC_TEXTURE_SELECT)->EnableWindow(m_UseTexture);
+	b3UpdateUI();
 }
 
 void CDlgCreateMaterial::OnReallyCreate() 
@@ -177,9 +216,42 @@ void CDlgCreateMaterial::OnReallyCreate()
 	// TODO: Add your control notification handler code here
 }
 
+void CDlgCreateMaterial::OnKillfocusReflectance() 
+{
+	// TODO: Add your control notification handler code here
+	m_MatNormal->m_Reflection  = m_ReflCtrl.m_Value;
+	m_MatTexture->m_Reflection = m_ReflCtrl.m_Value;
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
+void CDlgCreateMaterial::OnKillfocusRefractance() 
+{
+	// TODO: Add your control notification handler code here
+	m_MatNormal->m_Refraction  = m_RefrCtrl.m_Value;
+	m_MatTexture->m_Refraction = m_RefrCtrl.m_Value;
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
+void CDlgCreateMaterial::OnKillfocusIndexOfRefraction() 
+{
+	// TODO: Add your control notification handler code here
+	m_MatNormal->m_RefrValue  = m_IORCtrl.m_Value;
+	m_MatTexture->m_RefrValue = m_IORCtrl.m_Value;
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
+void CDlgCreateMaterial::OnKillfocusSpecExponent() 
+{
+	// TODO: Add your control notification handler code here
+	m_MatNormal->m_HighLight  = m_SpecExponentCtrl.m_Value;
+	m_MatTexture->m_HighLight = m_SpecExponentCtrl.m_Value;
+	m_PreviewMaterialCtrl.b3Update(m_MatScene);
+}
+
 void CDlgCreateMaterial::OnOK() 
 {
 	// TODO: Add extra validation here
+	CB3App       *app = CB3GetApp();
 	b3MatNormal  *normal;
 	b3MatTexture *texture;
 
@@ -194,6 +266,7 @@ void CDlgCreateMaterial::OnOK()
 			texture->m_RefrValue  = m_IORCtrl.m_Value;
 			texture->m_HighLight  = m_SpecExponentCtrl.m_Value;
 			strcpy(texture->m_Name,m_MatTexture->m_Name);
+			app->WriteProfileString(CB3ClientString(),"material.texture",m_MatTexture->m_Name);
 		}
 		else
 		{
@@ -205,6 +278,15 @@ void CDlgCreateMaterial::OnOK()
 			normal->m_AmbColor   = m_MatNormal->m_AmbColor;
 			normal->m_DiffColor  = m_MatNormal->m_DiffColor;
 			normal->m_SpecColor  = m_MatNormal->m_SpecColor;
+			app->b3WriteProfileColor("material.ambient",&m_MatNormal->m_AmbColor);
+			app->b3WriteProfileColor("material.diffuse",&m_MatNormal->m_DiffColor);
+			app->b3WriteProfileColor("material.specular",&m_MatNormal->m_SpecColor);
 		}
+		app->b3WriteProfileFloat("material.reflection",m_ReflCtrl.m_Value);
+		app->b3WriteProfileFloat("material.refraction",m_RefrCtrl.m_Value);
+		app->b3WriteProfileFloat("material.ior",       m_IORCtrl.m_Value);
+		app->b3WriteProfileFloat("material.exponent",  m_SpecExponentCtrl.m_Value);
+		app->WriteProfileInt(CB3ClientString(),"material.use texture",  m_UseTexture);
 	}
+	app->WriteProfileInt(CB3ClientString(),"material.really create",m_ReallyCreate);
 }

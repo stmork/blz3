@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.3  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
-**
+**	
 **	Revision 1.2  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
@@ -112,7 +117,12 @@ void CB3ActionObjectSelect::b3ComputeSelectionDir(
 		// Compute selection direction
 		selection_dir->pos = camera->m_EyePoint;
 		b3Vector::b3Sub(&camera->m_ViewPoint,&camera->m_EyePoint,&view);
-		b3Vector::b3LinearCombine(&view,xRel,&camera->m_Width,yRel,&camera->m_Height,&selection_dir->dir);
+		b3Vector::b3LinearCombine(
+			&view,
+			&camera->m_Width,
+			&camera->m_Height,
+			xRel,yRel,
+			&selection_dir->dir);
 	}
 	else
 	{

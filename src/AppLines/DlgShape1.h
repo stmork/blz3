@@ -38,11 +38,10 @@ protected:
 	CB3DirGroup m_Dir1;
 
 public:
-	virtual void b3SetDirMode(int dirmode);
-	static int b3Edit(b3Item *item,b3_bool create=true);
-
 	CDlgShape1(CWnd* pParent = NULL);   // standard constructor
 	CDlgShape1(UINT id,CWnd* pParent = NULL);
+	virtual void b3SetDirMode(int dirmode);
+	static  int  b3Edit(b3Item *item,b3_bool create=true);
 
 // Dialog Data
 	//{{AFX_DATA(CDlgShape1)
@@ -66,6 +65,7 @@ public:
 
 // Implementation
 protected:
+	virtual void        b3Init();
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 

@@ -45,6 +45,7 @@ public:
 		b3_bool keep_aspect=true);
 
 	b3_bool b3Update(b3_bool filtered,b3_bool keep_aspect=true);
+	void    b3Copy(b3Tx *original);
 
 	        operator b3Tx *();
 

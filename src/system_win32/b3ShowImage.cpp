@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/27 20:14:52  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.5  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.4  2001/12/16 11:07:45  sm
 **	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
 **	  These images are converted into B3_TX_VGA now
@@ -188,4 +193,9 @@ void CB3ShowImage::OnPaint()
 CB3ShowImage::operator b3Tx *()
 {
 	return &m_Tx;
+}
+
+void CB3ShowImage::b3Copy(b3Tx *original)
+{
+	m_Tx.b3Copy(original);
 }

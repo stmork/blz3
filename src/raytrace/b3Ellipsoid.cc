@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/02/27 20:14:52  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.11  2001/09/22 16:19:52  sm
 **      - Adding basic shape intersection routines
 **
@@ -126,4 +131,16 @@ void b3Ellipsoid::b3ComputeVertices()
 void b3Ellipsoid::b3ComputeIndices()
 {
 	b3ComputeEllipsoidIndices();
+}
+
+void b3Ellipsoid::b3GetStencilBoundInfo(b3_stencil_bound *info)
+{
+	info->xMin    =  0;
+	info->xMax    =  1;
+	info->yMin    = -1;
+	info->yMax    =  1;
+	info->xUnit   = B3_STENCIL_ANGLE;
+	info->yUnit   = B3_STENCIL_ANGLE;
+	info->xFactor = 360;
+	info->yFactor =  90;
 }

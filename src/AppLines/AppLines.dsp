@@ -208,6 +208,10 @@ SOURCE=.\b3Splash.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3VectorEdit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
@@ -221,6 +225,10 @@ SOURCE=.\DlgCreateItem.cpp
 # Begin Source File
 
 SOURCE=.\DlgCreateMaterial.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateStencil.cpp
 # End Source File
 # Begin Source File
 
@@ -416,6 +424,10 @@ SOURCE=.\b3Splash.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3VectorEdit.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3View.h
 # End Source File
 # Begin Source File
@@ -433,6 +445,10 @@ SOURCE=.\DlgCreateItem.h
 # Begin Source File
 
 SOURCE=.\DlgCreateMaterial.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateStencil.h
 # End Source File
 # Begin Source File
 

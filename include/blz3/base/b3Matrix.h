@@ -299,14 +299,16 @@ public:
 	}
 
 	static inline b3_vector *b3LinearCombine(
-		b3_vector *pVec,
-		b3_f64     a,b3_vector *aVec,
-		b3_f64     b,b3_vector *bVec,
-		b3_vector *result)
+		const b3_vector *coeff2,
+		const b3_vector *coeff1,
+		const b3_vector *coeff0,
+		const b3_f64     factor1,
+		const b3_f64     factor0,
+		      b3_vector *result)
 	{
-		result->x = pVec->x + a * aVec->x + b * bVec->x;
-		result->y = pVec->y + a * aVec->y + b * bVec->y;
-		result->z = pVec->z + a * aVec->z + b * bVec->z;
+		result->x = coeff2->x + factor1 * coeff1->x + factor0 * coeff0->x;
+		result->y = coeff2->y + factor1 * coeff1->y + factor0 * coeff0->y;
+		result->z = coeff2->z + factor1 * coeff1->z + factor0 * coeff0->z;
 		return result;
 	}
 
@@ -361,8 +363,10 @@ b3_matrix *b3MatrixUnit         (b3_matrix *Dst);
 b3_matrix *b3MatrixInv          (b3_matrix *Src,b3_matrix *Dst);
 b3_matrix *b3MatrixTrans        (b3_matrix *Src,b3_matrix *Dst);
 b3_matrix *b3MatrixMove         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Move);
+b3_matrix *b3MatrixMove         (b3_matrix *Src,b3_matrix *Dst,b3_f64 x,b3_f64 y,b3_f64 z);
 b3_matrix *b3MatrixMoveNeg      (b3_matrix *Src,b3_matrix *Dst,b3_vector *MoveNeg);
 b3_matrix *b3MatrixScale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Scale);
+b3_matrix *b3MatrixScale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 x,b3_f64 y,b3_f64 z);
 b3_matrix *b3MatrixRotX         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
 b3_matrix *b3MatrixRotY         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
 b3_matrix *b3MatrixRotZ         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);

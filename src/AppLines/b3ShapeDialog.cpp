@@ -25,6 +25,7 @@
 #include "b3ImageList.h"
 #include "b3ShapeDialog.h"
 #include "DlgCreateMaterial.h"
+#include "DlgCreateStencil.h"
 #include "DlgCSGMode.h"
 
 /*************************************************************************
@@ -35,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.3  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.2  2002/02/24 17:45:32  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
@@ -99,8 +105,9 @@ int CB3ShapeDialog::b3Edit(
 	CPropertySheet      sheet;
 	CDlgCSGMode         dlg_csg;
 	CDlgCreateMaterial  dlg_material;
+	CDlgCreateStencil   dlg_stencil;
 	CString             text;
-	b3Shape            *shape = null;
+	b3Shape            *shape;
 	b3_bool             result;
 
 	page->m_Creation = create;
@@ -110,17 +117,29 @@ int CB3ShapeDialog::b3Edit(
 	switch (item->b3GetClass())
 	{
 	case CLASS_CSG:
+		shape = (b3Shape *)item;
 		dlg_csg.m_Creation = create;
 		dlg_csg.m_Shape    = (b3CSGShape *)item;
 		dlg_csg.m_Section  = page->b3GetSection();
 		sheet.AddPage(&dlg_csg);
-		// Walk through!
-	case CLASS_SHAPE:
 		if (create)
 		{
 			sheet.AddPage(&dlg_material);
 		}
+		break;
+
+	case CLASS_SHAPE:
 		shape = (b3Shape *)item;
+		if (create)
+		{
+			dlg_stencil.m_Shape = shape;
+			sheet.AddPage(&dlg_material);
+			sheet.AddPage(&dlg_stencil);
+		}
+		break;
+
+	default:
+		shape = null;
 		break;
 	}
 
@@ -134,6 +153,11 @@ int CB3ShapeDialog::b3Edit(
 		{
 			shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
 		}
+		if (dlg_stencil.m_Stencil != null)
+		{
+			shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);
+		}
+		shape->b3Activate();
 	}
 	return result;
 }
@@ -141,6 +165,10 @@ int CB3ShapeDialog::b3Edit(
 const char *CB3ShapeDialog::b3GetSection()
 {
 	return "shape";
+}
+
+void CB3ShapeDialog::b3Init()
+{
 }
 
 void CB3ShapeDialog::OnDirModeChanged() 
@@ -161,6 +189,7 @@ void CB3ShapeDialog::b3UpdateBase()
 BOOL CB3ShapeDialog::OnInitDialog() 
 {
 	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
+	b3Init();
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here

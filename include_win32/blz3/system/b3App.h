@@ -29,16 +29,22 @@ public:
 	bool          m_AutoSave;
 
 public:
-	              CB3App(const char *appName = "");
-				 ~CB3App();
-	        bool  b3InitInstance();
+	                    CB3App(const char *appName = "");
+				       ~CB3App();
+	        bool        b3InitInstance();
 			const char *b3ClientName();
-			bool  b3ExitInstance();
-			void  b3GfxType(CWnd *wnd);
-	virtual void  b3GetWindowMode();
-	virtual void  b3SetWindowMode(bool ForceSave);
-			void  b3MoveWindow(CWnd *wnd);
-			void  b3CoolEnable(bool enable=true);
+			bool        b3ExitInstance();
+			void        b3GfxType(CWnd *wnd);
+	virtual void        b3GetWindowMode();
+	virtual void        b3SetWindowMode(bool ForceSave);
+			void        b3MoveWindow(CWnd *wnd);
+			void        b3CoolEnable(bool enable=true);
+	        b3_f64      b3ReadProfileFloat(const char *title,b3_f64 default_value);
+	        b3_bool     b3WriteProfileFloat(const char *title,b3_f64 default_value);
+	        void        b3ReadProfileVector(const char *title,b3_vector *default_vector);
+	        b3_bool     b3WriteProfileVector(const char *title,const b3_vector *vector);
+	        void        b3ReadProfileColor(const char *title,b3_color *default_vector);
+	        b3_bool     b3WriteProfileColor(const char *title,const b3_color *vector);
 
 // From CWinApp
 // Overrides

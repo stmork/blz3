@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.16  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.15  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
 **	
@@ -179,7 +184,7 @@ b3_bool b3Condition::b3Conditionate(
 	return input;
 }
 
-void b3Condition::b3ComputeBound(b3_cond_limit *Limit)
+void b3Condition::b3ComputeBound(b3_stencil_limit *Limit)
 {
 }
 
@@ -189,8 +194,8 @@ b3_bool b3Condition::b3CheckStencil(b3_polar_precompute *polar)
 }
 
 void b3Condition::b3CheckInnerBound(
-	b3_cond_limit *limit,
-	b3_cond_limit *object)
+	b3_stencil_limit *limit,
+	b3_stencil_limit *object)
 {
 	if (object->x2 < object->x1) B3_PSWAP((b3_u32 *)&object->x1,(b3_u32 *)&object->x2);
 	if (object->y2 < object->y1) B3_PSWAP((b3_u32 *)&object->y1,(b3_u32 *)&object->y2);
@@ -202,8 +207,8 @@ void b3Condition::b3CheckInnerBound(
 }
 
 void b3Condition::b3CheckOuterBound(
-	b3_cond_limit *limit,
-	b3_cond_limit *object)
+	b3_stencil_limit *limit,
+	b3_stencil_limit *object)
 {
 	if (object->x2 < object->x1) B3_PSWAP((b3_u32 *)&object->x1,(b3_u32 *)&object->x2);
 	if (object->y2 < object->y1) B3_PSWAP((b3_u32 *)&object->y1,(b3_u32 *)&object->y2);
@@ -249,9 +254,9 @@ void b3CondRectangle::b3Write()
 	b3StoreInt(m_Flags);
 }
 
-void b3CondRectangle::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondRectangle::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -355,9 +360,9 @@ void b3CondCircle::b3Write()
 	b3StoreFloat(m_Radius);
 }
 
-void b3CondCircle::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondCircle::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -418,9 +423,9 @@ void b3CondSegment::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondSegment::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondSegment::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -519,9 +524,9 @@ b3_bool b3Cond2::b3Prepare()
 	return true;
 }
 
-void b3Cond2::b3ComputeBound(b3_cond_limit *Limit)
+void b3Cond2::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound,Aux;
+	b3_stencil_limit Bound,Aux;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -667,9 +672,9 @@ b3_bool b3CondTexture::b3Prepare()
 	return b3CheckTexture(&m_Texture,m_Name);
 }
 
-void b3CondTexture::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondTexture::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -753,9 +758,9 @@ b3_bool b3CondWrapTexture::b3Prepare()
 	return b3CheckTexture(&m_Texture,m_Name);
 }
 
-void b3CondWrapTexture::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondWrapTexture::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -873,9 +878,9 @@ void b3CondEllipse::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondEllipse::b3ComputeBound(b3_cond_limit *Limit)
+void b3CondEllipse::b3ComputeBound(b3_stencil_limit *Limit)
 {
-	b3_cond_limit Bound;
+	b3_stencil_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{

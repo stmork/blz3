@@ -24,6 +24,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3App.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/base/b3Aux.h"
 #include <math.h>
 
 #ifndef _DEBUG
@@ -42,10 +43,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/27 20:14:52  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.5  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
-**
+**	
 **	Revision 1.4  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
 **	
@@ -225,6 +231,62 @@ void CB3App::b3SetWindowMode(bool ForceSave)
 		WriteProfileInt (b3ClientName(),"ShowCmd",mode);
 		b3SaveState();
 	}
+}
+
+b3_f64 CB3App::b3ReadProfileFloat(const char *title,b3_f64 default_value)
+{
+	CString  value;
+
+	value.Format("%lf",default_value);
+	return atof(GetProfileString(b3ClientName(),title,value));
+}
+
+b3_bool CB3App::b3WriteProfileFloat(const char *title,b3_f64 default_value)
+{
+	CString  value;
+
+	value.Format("%lf",default_value);
+	return WriteProfileString(b3ClientName(),title,value);
+}
+
+void CB3App::b3ReadProfileVector(const char *title,b3_vector *default_vector)
+{
+	CString  heading;
+
+	heading.Format("%s.x",title);
+	default_vector->x = b3ReadProfileFloat(heading,default_vector->x);
+	heading.Format("%s.y",title);
+	default_vector->y = b3ReadProfileFloat(heading,default_vector->y);
+	heading.Format("%s.z",title);
+	default_vector->z = b3ReadProfileFloat(heading,default_vector->z);
+}
+
+b3_bool CB3App::b3WriteProfileVector(const char *title,const b3_vector *vector)
+{
+	CString  heading;
+	b3_bool  success = true;
+
+	heading.Format("%s.x",title);
+	success &= b3WriteProfileFloat(heading,vector->x);
+	heading.Format("%s.y",title);
+	success &= b3WriteProfileFloat(heading,vector->y);
+	heading.Format("%s.z",title);
+	success &= b3WriteProfileFloat(heading,vector->z);
+	return success;
+};
+
+void CB3App::b3ReadProfileColor(const char *title,b3_color *default_color)
+{
+	b3_pkd_color pkd = GetProfileInt(b3ClientName(),title,0);
+
+	b3Color::b3GetColor(default_color,pkd);
+}
+
+b3_bool CB3App::b3WriteProfileColor(const char *title,const b3_color *color)
+{
+	b3_pkd_color pkd = b3Color::b3GetColor(color);
+	
+	return WriteProfileInt(b3ClientName(),title,pkd);
 }
 
 BOOL CB3App::PreTranslateMessage(MSG *pMSG)

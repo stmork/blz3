@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/02/27 20:14:52  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.23  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -41,7 +46,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.22  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -291,4 +296,16 @@ void b3Torus::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation);
+}
+
+void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound *info)
+{
+	info->xMin    = 0;
+	info->xMax    = 1;
+	info->yMin    = 0;
+	info->yMax    = 1;
+	info->xUnit   = B3_STENCIL_ANGLE;
+	info->yUnit   = B3_STENCIL_ANGLE;
+	info->xFactor = 360;
+	info->yFactor = 360;
 }

@@ -35,8 +35,10 @@
 
 class CDlgCreateMaterial : public CPropertyPage
 {
-	b3MatNormal  *m_MatNormal;
-	b3MatTexture *m_MatTexture;
+	b3MatNormal    *m_MatNormal;
+	b3MatTexture   *m_MatTexture;
+	b3Scene        *m_MatScene;
+	b3Base<b3Item> *m_MatHead;
 	DECLARE_DYNCREATE(CDlgCreateMaterial)
 
 // Construction
@@ -81,9 +83,15 @@ protected:
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	afx_msg void OnUseTexture();
+	afx_msg void OnKillfocusReflectance();
+	afx_msg void OnKillfocusRefractance();
+	afx_msg void OnKillfocusIndexOfRefraction();
+	afx_msg void OnKillfocusSpecExponent();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

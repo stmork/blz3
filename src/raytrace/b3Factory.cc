@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.6  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.5  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
@@ -161,26 +166,36 @@ b3Scene *b3ExampleScene::b3CreateGlobal()
 	return scene;
 }
 
+b3CameraPart *b3ExampleScene::b3CreateCamera(
+	b3Scene *scene,
+	b3_f64   xAngle,
+	b3_f64   yAngle)
+{
+	b3CameraPart *camera = new b3CameraPart(CAMERA);
+	b3_vector     lower,upper;
+	b3_vector     center,size;
+
+	scene->b3ComputeBounds(&lower,&upper);
+	center.x = (lower.x + upper.x) * 0.5;
+	center.y = (lower.y + upper.y) * 0.5;
+	center.z = (lower.z + upper.z) * 0.5;
+	size.x   =  upper.x - lower.x;
+	size.y   =  upper.y - lower.y;
+	size.z   =  upper.z - lower.z;
+	camera->b3Overview(&center,&size,xAngle * M_PI / 180,yAngle * M_PI / 180);
+	return camera;
+}
+
 b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
 {
-	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
-	b3BBox       *bbox  = (b3BBox *)b3World::b3Clone(original);
-	b3Light      *light = new b3Light(SPOT_LIGHT);
-	b3CameraPart *camera = new b3CameraPart(CAMERA);
-	b3_vector     center;
+	b3Scene      *scene  = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original);
+	b3Light      *light  = new b3Light(SPOT_LIGHT);
+	b3CameraPart *camera;
 	b3_f64        rad;
-	b3_f64        xAngle = 225 * M_PI / 180;
-	b3_f64        yAngle =  30 * M_PI / 180;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
-	scene->b3GetSpecialHead()->b3Append(camera);
-
-	center.x = bbox->m_DimBase.x + 0.5 * bbox->m_DimSize.x;
-	center.y = bbox->m_DimBase.y + 0.5 * bbox->m_DimSize.y;
-	center.z = bbox->m_DimBase.z + 0.5 * bbox->m_DimSize.z;
-	camera->b3Overview(&center,&bbox->m_DimSize,xAngle,yAngle);
-	scene->b3SetCamera(camera);
 
 	rad = b3Vector::b3Length(&bbox->m_DimSize);
 	light->m_Position.x = bbox->m_DimBase.x + 10.0 * rad;
@@ -189,24 +204,46 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
 	light->m_Distance   = 40.0 * rad;
 
 	b3Consolidate(scene);
+	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene));
+	scene->b3SetCamera(camera);
+
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateMaterial()
+b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 {
-	b3Scene     *scene = new b3SceneMork(TRACEPHOTO_MORK);
-	b3BBox      *bbox  = new b3BBox(BBOX);
-	b3Ellipsoid *big   = new b3Ellipsoid(ELLIPSOID);
-	b3Area      *area  = new b3Area(AREA);
-	b3MatChess  *chess = new b3MatChess(CHESS);
-	b3Light     *light = new b3Light(SPOT_LIGHT);
+	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox       *bbox  = new b3BBox(BBOX);
+	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
+	b3Area       *area  = new b3Area(AREA);
+	b3MatChess   *chess = new b3MatChess(CHESS);
+	b3Light      *light = new b3Light(SPOT_LIGHT);
+	b3CameraPart *camera;
+	b3_matrix     transform;
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
+
 	bbox->b3GetShapeHead()->b3Append(area);
 	bbox->b3GetShapeHead()->b3Append(big);
+	
 	area->b3GetMaterialHead()->b3Append(chess);
 
+	// Transform ellipsoid
+	b3MatrixScale(null,&transform,null,0.4,0.4,0.4);
+	b3MatrixMove(&transform,&transform,0,0,20);
+	big->b3Transform(&transform);
+
+	// Elarge whole scene
+	b3MatrixScale(null,&transform,null,5,5,5);
+	bbox->b3Transform(&transform,true);
+
+	// Create camera
 	b3Consolidate(scene);
+	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene,225,60));
+	camera->b3ScaleFocalLength(2.7);
+	scene->b3SetCamera(camera);
+
+	*ptrMatHead = big->b3GetMaterialHead();
 	return scene;
 }

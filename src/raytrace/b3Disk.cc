@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/02/27 20:14:52  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.14  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -373,4 +379,16 @@ void b3Disk::b3ComputeIndices()
 		}
 	}
 #endif
+}
+
+void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound *info)
+{
+	info->xMin    = 0;
+	info->xMax    = 1;
+	info->yMin    = 0;
+	info->yMax    = 1;
+	info->xUnit   = B3_STENCIL_ANGLE;
+	info->yUnit   = B3_STENCIL_LENGTH;
+	info->xFactor = 360;
+	info->yFactor = (b3Vector::b3Length(&m_Dir1) + b3Vector::b3Length(&m_Dir2)) * 0.5;
 }

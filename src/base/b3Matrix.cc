@@ -35,6 +35,11 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.19  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -42,7 +47,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.18  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -458,6 +463,19 @@ b3_matrix * b3MatrixMAdd (
 b3_matrix * b3MatrixMove (
 	b3_matrix *A,
 	b3_matrix *B,
+	b3_f64     x,
+	b3_f64     y,
+	b3_f64     z)
+{
+	b3_vector move;
+
+	b3Vector::b3Init(&move,x,y,z);
+	return b3MatrixMove(A,B,&move);
+}
+
+b3_matrix * b3MatrixMove (
+	b3_matrix *A,
+	b3_matrix *B,
 	b3_vector *Translation)
 {
 	b3_matrix Move;
@@ -493,10 +511,29 @@ b3_matrix * b3MatrixScale (
 	b3_matrix *A,
 	b3_matrix *B,
 	b3_vector *Center,
+	b3_f64     x,
+	b3_f64     y,
+	b3_f64     z)
+{
+	b3_vector scale;
+
+	b3Vector::b3Init(&scale,x,y,z);
+	return b3MatrixScale(A,B,Center,&scale);
+}
+
+b3_matrix * b3MatrixScale (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
 	b3_vector *Scale)
 {
 	b3_matrix Operator;
+	b3_vector null_center;
 
+	if (Center == null)
+	{
+		b3Vector::b3Init(Center = &null_center);
+	}
 	Operator     = UnitMatrix;
 	Operator.m11 = Scale->x;
 	Operator.m22 = Scale->y;

@@ -93,7 +93,7 @@ public:
 		return col;
 	}
 
-	static inline b3_pkd_color b3GetColor(b3_color *color)
+	static inline b3_pkd_color b3GetColor(const b3_color *color)
 	{
 		return
 			((b3_pkd_color)(color->r * 255) << 16) |
@@ -102,7 +102,7 @@ public:
 	}
 
 #ifdef WIN32
-	static inline COLORREF b3GetColorref(b3_color *color)
+	static inline COLORREF b3GetColorref(const b3_color *color)
 	{
 		return RGB(
 			(b3_pkd_color)(color->r * 255),
@@ -129,38 +129,38 @@ public:
 	}
 #endif
 
-	static inline b3_color *b3GetColor(b3_color *color,const b3_pkd_color input)
+	static inline b3_color *b3GetColor(b3_color *result,const b3_pkd_color input)
 	{
-		color->a = 0;
-		color->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;
-		color->g = (b3_f64)((input & 0x00ff00) >>  8) * 0.0039215686;
-		color->b = (b3_f64)((input & 0x0000ff))       * 0.0039215686;
+		result->a = 0;
+		result->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;
+		result->g = (b3_f64)((input & 0x00ff00) >>  8) * 0.0039215686;
+		result->b = (b3_f64)((input & 0x0000ff))       * 0.0039215686;
 
-		return color;
+		return result;
 	}
 
 #ifdef WIN32
-	static inline b3_color *b3GetColorref(b3_color *input,COLORREF value)
+	static inline b3_color *b3GetColorref(b3_color *result,const COLORREF value)
 	{
-		input->a = 0;
-		input->r = (b3_f64)((value & 0x0000ff))       * 0.0039215686;
-		input->g = (b3_f64)((value & 0x00ff00) >>  8) * 0.0039215686;
-		input->b = (b3_f64)((value & 0xff0000) >> 16) * 0.0039215686;
+		result->a = 0;
+		result->r = (b3_f64)((value & 0x0000ff))       * 0.0039215686;
+		result->g = (b3_f64)((value & 0x00ff00) >>  8) * 0.0039215686;
+		result->b = (b3_f64)((value & 0xff0000) >> 16) * 0.0039215686;
 
-		return input;
+		return result;
 	}
 #endif
 
-	static inline b3_color *b3Scale(b3_color *color,b3_f64 factor)
+	static inline b3_color *b3Scale(b3_color *result,const b3_f64 factor)
 	{
-		color->a *= factor;
-		color->r *= factor;
-		color->g *= factor;
-		color->b *= factor;
-		return color;
+		result->a *= factor;
+		result->r *= factor;
+		result->g *= factor;
+		result->b *= factor;
+		return result;
 	}
 
-	static inline b3_color *b3Scale(b3_color *input,b3_f64 factor,b3_color *result)
+	static inline b3_color *b3Scale(const b3_color *input,const b3_f64 factor,b3_color *result)
 	{
 		result->a = input->a * factor;
 		result->r = input->r * factor;
@@ -179,7 +179,7 @@ public:
 		return input;
 	}
 
-	static inline b3_color *b3Sat(b3_color *input,b3_color *result,b3_f64 sat = 1.0)
+	static inline b3_color *b3Sat(const b3_color *input,b3_color *result,const b3_f64 sat = 1.0)
 	{
 		result->a = (input->a > sat ? sat : input->a);
 		result->r = (input->r > sat ? sat : input->r);
@@ -189,7 +189,7 @@ public:
 		return result;
 	}
 
-	static inline b3_color *b3Add(b3_color *input,b3_color *result)
+	static inline b3_color *b3Add(const b3_color *input,b3_color *result)
 	{
 		result->a += input->a;
 		result->r += input->r;
@@ -199,7 +199,7 @@ public:
 		return result;
 	}
 
-	static inline b3_color *b3AddScaled(b3_color *input,b3_color *result,b3_f64 factor)
+	static inline b3_color *b3AddScaled(const b3_color *input,b3_color *result,const b3_f64 factor)
 	{
 		result->a += (input->a * factor);
 		result->r += (input->r * factor);
@@ -210,12 +210,12 @@ public:
 	}
 
 	static inline b3_color *b3LinearCombine(
-		b3_color *coeff2,
-		b3_color *coeff1,
-		b3_color *coeff0,
-		b3_f64    factor1,
-		b3_f64    factor0,
-		b3_color *result)
+		const b3_color *coeff2,
+		const b3_color *coeff1,
+		const b3_color *coeff0,
+		const b3_f64    factor1,
+		const b3_f64    factor0,
+		      b3_color *result)
 	{
 		result->a = coeff2->a + factor1 * coeff1->a + factor0 * coeff0->a;
 		result->r = coeff2->r + factor1 * coeff1->r + factor0 * coeff0->r;

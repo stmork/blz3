@@ -38,10 +38,9 @@ protected:
 	CB3DirGroup m_Dir3;
 
 public:
-	virtual void b3SetDirMode(int dirmode);
-	static int b3Edit(b3Item *item,b3_bool create=true);
-
 	CDlgCSG3(CWnd* pParent = NULL);   // standard constructor
+	virtual void b3SetDirMode(int dirmode);
+	static  int b3Edit(b3Item *item,b3_bool create=true);
 
 // Dialog Data
 	//{{AFX_DATA(CDlgCSG3)
@@ -66,6 +65,7 @@ public:
 
 // Implementation
 protected:
+	virtual void        b3Init();
 	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 

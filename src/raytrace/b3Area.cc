@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/02/27 20:14:51  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.15  2002/02/17 21:25:06  sm
 **      - Introduced CSG
 **        o Heavily reorganized shape inheritance
@@ -194,4 +200,16 @@ void b3Area::b3ComputeVertices()
 void b3Area::b3ComputeIndices()
 {
 	b3ComputeBound(&Limit);
+}
+
+void b3Area::b3GetStencilBoundInfo(b3_stencil_bound *info)
+{
+	info->xMin    = -1;
+	info->xMax    =  1;
+	info->yMin    = -1;
+	info->yMax    =  1;
+	info->xUnit   = B3_STENCIL_LENGTH;
+	info->yUnit   = B3_STENCIL_LENGTH;
+	info->xFactor = b3Vector::b3Length(&m_Dir1);
+	info->yFactor = b3Vector::b3Length(&m_Dir2);;
 }

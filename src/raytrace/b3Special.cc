@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2002/02/27 20:14:52  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.45  2002/02/17 21:58:11  sm
 **      - Done UnCR
 **      - Modified makefiles
@@ -412,6 +417,15 @@ void b3CameraPart::b3ComputeFocalLength(b3_f64 focal_length)
 
 	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&dir);
 	b3Vector::b3Normalize(&dir,focal_length);
+	b3Vector::b3Add(&m_EyePoint,&dir,&m_ViewPoint);
+}
+
+void b3CameraPart::b3ScaleFocalLength(b3_f64 factor)
+{
+	b3_vector  dir;
+
+	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&dir);
+	b3Vector::b3Scale(&dir,factor);
 	b3Vector::b3Add(&m_EyePoint,&dir,&m_ViewPoint);
 }
 

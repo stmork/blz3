@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.8  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.7  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
 **	
@@ -172,7 +177,7 @@ BOOL CDlgScene::OnInitDialog()
 	strcpy(m_PreviewScene->m_TextureName,m_Scene->m_TextureName);
 	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	b3CheckTexture(&m_PreviewScene->m_BackTexture,m_PreviewScene->m_TextureName);
-	((b3Tx *)m_PreviewImageCtrl)->b3Copy(m_PreviewScene->m_BackTexture);
+	m_PreviewImageCtrl.b3Copy(m_PreviewScene->m_BackTexture);
 	m_PreviewImageCtrl.b3Update(true,true);
 
 	m_xResSpin.SetRange(16,16383);
@@ -226,7 +231,7 @@ void CDlgScene::OnBgImageSelect()
 	// TODO: Add your control notification handler code here
 	if (CB3SelectTexture::b3Select(&m_PreviewScene->m_BackTexture,m_PreviewScene->m_TextureName))
 	{
-		((b3Tx *)m_PreviewImageCtrl)->b3Copy(m_PreviewScene->m_BackTexture);
+		m_PreviewImageCtrl.b3Copy(m_PreviewScene->m_BackTexture);
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 		m_PreviewImageCtrl.b3Update(true,true);
 	}

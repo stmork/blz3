@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/02/27 20:14:52  sm
+**      - Added stencil creation for creating simple shapes.
+**      - Fixed material creation.
+**      - Cleaned up some files.
+**
 **      Revision 1.27  2002/02/20 20:23:57  sm
 **      - Some type cleanups done.
 **
@@ -446,7 +451,7 @@ b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
 	Between = null;
 }
 
-void b3ShapeRenderObject::b3ComputeBound(b3_cond_limit *limit)
+void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
 {
 	b3Item      *item;
 	b3Condition *cond;

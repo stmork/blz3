@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.47  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.46  2002/02/19 16:26:49  sm
 **	- Further CSG interval computing cleanup done.
 **	
@@ -994,16 +999,18 @@ b3_bool b3BBox::b3BacktraceRecompute(b3BBox *search)
 	b3BBox  *bbox;
 	b3_bool  result;
 
+	// Found?
+	if (search == this)
+	{
+		b3Recompute();
+		return true;
+	}
+
+	// Search children
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		if (bbox == search)
-		{
-			b3Recompute();
-			return true;
-		}
-
-		if ((result = bbox->b3BacktraceRecompute(search)) != null)
+		if (result = bbox->b3BacktraceRecompute(search))
 		{
 			bbox->b3Recompute();
 			return result;

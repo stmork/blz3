@@ -91,6 +91,7 @@
 #define IDD_CSG3                        191
 #define IDD_CSGMODE                     192
 #define IDD_CREATE_MATERIAL             193
+#define IDD_CREATE_STENCIL              194
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -244,9 +245,13 @@
 #define IDC_CUSTOM_MEASURE              1112
 #define IDC_PRT_BUFFER                  1112
 #define IDC_REFLECTANCE                 1112
+#define IDC_X_START                     1112
 #define IDC_MEASURE                     1113
+#define IDC_X_END                       1113
 #define IDC_PRT_BUFFER_SPIN             1114
+#define IDC_Y_START                     1114
 #define IDC_CAMERA_UNIT                 1115
+#define IDC_Y_END                       1115
 #define IDC_OBJECTLIST                  1116
 #define IDC_CSGMODE_UNION               1117
 #define IDC_CSGMODE_INTERSECT           1118
@@ -265,6 +270,11 @@
 #define IDC_TEXTURE_SELECT              1129
 #define IDC_PREVIEW_TEXTURE             1130
 #define IDC_TEXTURE                     1131
+#define IDC_RELATIVE                    1133
+#define IDC_X_START_LEGEND              1134
+#define IDC_X_END_LEGEND                1135
+#define IDC_Y_START_LEGEND              1136
+#define IDC_Y_END_LEGEND                1137
 #define IDC_DIRECTION                   3000
 #define IDC_POSITION                    3001
 #define IDC_BASE_X                      3002
@@ -445,15 +455,21 @@
 #define IDS_CSG_MODE_SUB                61514
 #define IDS_BBOX                        61515
 #define IDS_ASK_DELETE_SHAPE            61516
+#define IDS_STENCIL_START_UNIT          61517
+#define IDS_STENCIL_END_UNIT            61518
+#define IDS_STENCIL_START_LENGTH        61519
+#define IDS_STENCIL_END_LENGTH          61520
+#define IDS_STENCIL_START_ANGLE         61521
+#define IDS_STENCIL_END_ANGLE           61522
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        194
+#define _APS_NEXT_RESOURCE_VALUE        195
 #define _APS_NEXT_COMMAND_VALUE         32867
-#define _APS_NEXT_CONTROL_VALUE         1132
+#define _APS_NEXT_CONTROL_VALUE         1135
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

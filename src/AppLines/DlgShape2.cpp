@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/27 20:14:51  sm
+**	- Added stencil creation for creating simple shapes.
+**	- Fixed material creation.
+**	- Cleaned up some files.
+**
 **	Revision 1.3  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.2  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
@@ -108,13 +113,17 @@ const char *CDlgShape2::b3GetSection()
 	return "shape2";
 }
 
-BOOL CDlgShape2::OnInitDialog() 
+void CDlgShape2::b3Init()
 {
 	b3Shape2 *shape = (b3Shape2 *)m_Shape;
 
 	m_Base.b3Init(&shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
 	m_Dir1.b3Init(&shape->m_Base,&shape->m_Dir1,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
 	m_Dir2.b3Init(&shape->m_Base,&shape->m_Dir2,&m_xDir2Ctrl,&m_yDir2Ctrl,&m_zDir2Ctrl,&m_lenDir2Ctrl);
+}
+
+BOOL CDlgShape2::OnInitDialog() 
+{
 	CDlgShape1::OnInitDialog();
 	
 	// TODO: Add extra initialization here
