@@ -186,6 +186,10 @@ SOURCE=.\b3PrepareInfo.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3RayRow.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Raytrace.cc
 # End Source File
 # Begin Source File

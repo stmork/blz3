@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:	b3Raytrace.h $ 
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
 **	Blizzard III - Raytracing Structure Definitions
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -20,9 +20,10 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3DisplayView.h"
+#include "blz3/system/b3Display.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Spline.h"
+#include "blz3/base/b3Filter.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
@@ -2178,14 +2179,17 @@ private:
 
 #define ANIMF_ON     (1<<ANIMB_ON)
 
-enum b3_filter
+// DISTRIBUTE
+
+enum b3_sample
 {
-	FILTER_BOX     = 0,
-	FILTER_GAUSS   = 1,
-	FILTER_SHUTTER = 2
+	SAMPLE_REGULAR     = 0x0000,
+	SAMPLE_RANDOM      = 0x0100,
+	SAMPLE_JITTER      = 0x0200,
+	SAMPLE_SEMI_JITTER = 0x0300,
+	SAMPLE_SEPARATED   = 0x0400
 };
 
-// DISTRIBUTE
 class b3Distribute : public b3Special
 {
 public:
@@ -2195,12 +2199,18 @@ public:
 	b3_f32           m_DepthOfField;
 	b3_filter        m_PixelAperture;
 	b3_filter        m_FrameAperture;
+	b3Filter        *m_FilterPixel;
+	b3Filter        *m_FilterFrame;
 
 public:
 	B3_ITEM_INIT(b3Distribute);
 	B3_ITEM_LOAD(b3Distribute);
 
-	void b3Write();
+	virtual ~b3Distribute();
+	void     b3Write();
+	b3_bool  b3IsActive();
+	b3_bool  b3IsMotionBlur();
+	void     b3Prepare();
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -2212,15 +2222,9 @@ public:
 #define SAMPLE_DEPTH_OF_FIELD   (1 << SAMPLE_DEPTH_OF_FIELD_B)
 
 #define SAMPLE_GET_FLAGS(d)     ((d)->m_Type & 0x00ff)
-#define SAMPLE_GET_TYPE(d)      ((d)->m_Type & 0xff00)
+#define SAMPLE_GET_TYPE(d)      (b3_sample)((d)->m_Type & 0xff00)
 #define SAMPLE_SET_FLAGS(d,v)   ((d)->m_Type = ((d)->m_Type & 0xffffff00) | (v))
 #define SAMPLE_SET_TYPE(d,v)    ((d)->m_Type = ((d)->m_Type & 0xffff00ff) | (v))
-
-#define SAMPLE_REGULAR          0x0000
-#define SAMPLE_RANDOM           0x0100
-#define SAMPLE_JITTER           0x0200
-#define SAMPLE_SEMI_JITTER      0x0300
-#define SAMPLE_SEPARATED        0x0400
 
 // LENSFLARE
 class b3LensFlare : public b3Special
@@ -2316,6 +2320,7 @@ protected:
 	b3Mutex          m_PoolMutex;
 	b3Mutex          m_TrashMutex;
 	b3Mutex          m_SamplingMutex;
+	b3Distribute    *m_Distributed;
 	b3Nebular       *m_Nebular;
 	b3SuperSample   *m_SuperSample;
 	b3LensFlare     *m_LensFlare;
@@ -2429,6 +2434,7 @@ private:
 
 	friend class b3RayRow;
 	friend class b3SupersamplingRayRow;
+	friend class b3DistributedRayRow;
 };
 
 class b3ScenePhong : public b3Scene
@@ -2501,6 +2507,25 @@ private:
 	b3_bool b3Test(b3_res x);
 	void    b3Refine(b3_bool this_row);
 	void    b3Convert();
+};
+
+class b3DistributedRayRow : public b3RayRow
+{
+	b3Distribute *m_Distr;
+	b3Filter     *m_Filter;
+	b3_count      m_SPP;
+	b3_count      m_SPF;
+	b3_vector64  *m_xHalfDir;
+	b3_vector64  *m_yHalfDir;
+	b3_f32       *m_Samples;
+
+public:
+	                b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
+	virtual        ~b3DistributedRayRow();
+	virtual void    b3Raytrace();
+
+private:
+	        b3_f64  b3Integral(b3_f64 value);
 };
 
 // m_Flags

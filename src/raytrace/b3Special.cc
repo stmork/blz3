@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2002/08/21 20:13:32  sm
+**      - Introduced distributed raytracing with all sampling methods
+**        and filter computations. This made some class movements
+**        inside files necessary. The next step would be to integrate
+**        motion blur.
+**
 **      Revision 1.54  2002/08/19 18:38:47  sm
 **      - Adjusted b3Animate to read/write correctly
 **        into Blizzard data file.
@@ -888,11 +894,13 @@ b3Distribute::b3Distribute(b3_u32 class_type) :
 {
 	SAMPLE_SET_FLAGS(this,0);
 	SAMPLE_SET_TYPE(this,SAMPLE_REGULAR);
-	m_PixelAperture   = FILTER_BOX;
-	m_FrameAperture   = FILTER_GAUSS;
-	m_SamplesPerPixel = 5;
-	m_SamplesPerFrame = 5;
-	m_DepthOfField    = 0;
+	m_PixelAperture   = B3_FILTER_BOX;
+	m_FrameAperture   = B3_FILTER_GAUSS;
+	m_SamplesPerPixel =  5;
+	m_SamplesPerFrame = 64;
+	m_DepthOfField    =  0;
+	m_FilterPixel     = null;
+	m_FilterFrame     = null;
 }
 
 b3Distribute::b3Distribute(b3_u32 *src) :
@@ -907,6 +915,21 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 		m_PixelAperture   = (b3_filter)b3InitInt();
 		m_FrameAperture   = (b3_filter)b3InitInt();
 	}
+	m_FilterPixel     = null;
+	m_FilterFrame     = null;
+}
+
+b3Distribute::~b3Distribute()
+{
+	if (m_FilterPixel != null)
+	{
+		delete m_FilterPixel;
+	}
+	
+	if (m_FilterFrame != null)
+	{
+		delete m_FilterFrame;
+	}
 }
 
 void b3Distribute::b3Write()
@@ -917,6 +940,31 @@ void b3Distribute::b3Write()
 	b3StoreFloat(m_DepthOfField);
 	b3StoreInt(m_PixelAperture);
 	b3StoreInt(m_FrameAperture);
+}
+
+b3_bool b3Distribute::b3IsActive()
+{
+	return (m_Type & SAMPLE_SUPERSAMPLE) != 0;
+}
+
+b3_bool b3Distribute::b3IsMotionBlur()
+{
+	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
+}
+
+void b3Distribute::b3Prepare()
+{
+	if (m_FilterPixel != null)
+	{
+		delete m_FilterPixel;
+	}
+	m_FilterPixel = b3Filter::b3New(m_PixelAperture);
+	
+	if (m_FilterFrame != null)
+	{
+		delete m_FilterFrame;
+	}
+	m_FilterFrame = b3Filter::b3New(m_FrameAperture);
 }
 
 /*************************************************************************

@@ -14,6 +14,7 @@ LIB_SOURCE =\
 	b3Endian.cc\
 	b3FileList.cc\
 	b3FileMem.cc\
+	b3Filter.cc\
 	b3Item.cc\
 	b3ItemRegister.cc\
 	b3ItemRegisterEntry.cc\
@@ -32,6 +33,7 @@ LIB_OBJ	=\
 	b3Endian.o\
 	b3FileList.o\
 	b3FileMem.o\
+	b3Filter.o\
 	b3Item.o\
 	b3ItemRegister.o\
 	b3ItemRegisterEntry.o\

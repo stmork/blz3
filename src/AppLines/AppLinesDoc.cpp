@@ -57,12 +57,18 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2002/08/21 20:13:32  sm
+**	- Introduced distributed raytracing with all sampling methods
+**	  and filter computations. This made some class movements
+**	  inside files necessary. The next step would be to integrate
+**	  motion blur.
+**
 **	Revision 1.71  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.70  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
@@ -2146,7 +2152,7 @@ void CAppLinesDoc::OnUpdateAnimStart(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateAnimStepBack(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsAnimClipped(m_TimePoint - 0.5));
+	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint - 0.5));
 }
 
 void CAppLinesDoc::OnUpdateAnimStop(CCmdUI* pCmdUI) 
@@ -2170,7 +2176,7 @@ void CAppLinesDoc::OnUpdateAnimPause(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateAnimStepForward(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!b3IsAnimClipped(m_TimePoint + 0.5));
+	pCmdUI->Enable(b3HasAnimation() && !b3IsAnimClipped(m_TimePoint + 0.5));
 }
 
 void CAppLinesDoc::OnUpdateAnimEnd(CCmdUI* pCmdUI) 

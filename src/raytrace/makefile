@@ -34,6 +34,7 @@ PRG_SOURCE		=\
 	b3Normal.cc\
 	b3NormalDeriv.cc\
 	b3PrepareInfo.cc\
+	b3RayRow.cc\
 	b3Raytrace.cc\
 	b3RenderShape.cc\
 	b3RenderView.cc\
@@ -79,6 +80,7 @@ PRG_OBJ			=\
 	b3Normal.o\
 	b3NormalDeriv.o\
 	b3PrepareInfo.o\
+	b3RayRow.o\
 	b3Raytrace.o\
 	b3RenderShape.o\
 	b3RenderView.o\

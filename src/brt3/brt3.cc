@@ -25,6 +25,7 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/image/b3TxPool.h"
 
@@ -36,13 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/08/21 20:13:32  sm
+**	- Introduced distributed raytracing with all sampling methods
+**	  and filter computations. This made some class movements
+**	  inside files necessary. The next step would be to integrate
+**	  motion blur.
+**
 **	Revision 1.27  2002/08/16 13:20:13  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
 **	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
 **	  rather than b3renderContext which doesn't initialize subdivision
 **	  for shapes.
-**
+**	
 **	Revision 1.26  2002/08/16 11:40:38  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There

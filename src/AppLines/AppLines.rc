@@ -401,9 +401,11 @@ BEGIN
     POPUP "Ani&mation"
     BEGIN
         MENUITEM "&Anfang",                     ID_ANIM_START
+        MENUITEM "R&ückwärts",                  ID_ANIM_STEP_BACKWARD
         MENUITEM "&Stop",                       ID_ANIM_STOP
         MENUITEM "Abs&pielen",                  ID_ANIM_PLAY
         MENUITEM "Pau&se",                      ID_ANIM_PAUSE
+        MENUITEM "&Vorwärts",                   ID_ANIM_STEP_FORWARD
         MENUITEM "&Ende",                       ID_ANIM_END
     END
     POPUP "&Ansicht"
@@ -477,7 +479,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
-        MENUITEM "&Bild speichern unter...\tStrg+S", ID_IMG_SAVE
+        MENUITEM "&Bild speichern unter...\tStrg+S", ID_FILE_SAVE
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -894,7 +896,7 @@ BEGIN
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,150,145,
                     11,15
     LTEXT           "Samples pro Pixel (2er Potenz)",IDC_STATIC,5,120,96,8
-    LTEXT           "Samples pro Frame (2er Potenz)",IDC_STATIC,5,145,101,8
+    LTEXT           "Samples pro Frame",IDC_STATIC,5,145,61,8
 END
 
 IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 201
@@ -2279,17 +2281,20 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_COORD_X              "x: 00000000.00"
+    ID_COORD_Y              "y: 00000000.00"
+    ID_COORD_Z              "z: 00000000.00"
     ID_CUST_ANIM2           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
-    ID_DRAWING_PERF         "#####################################"
-    ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
-    ID_FRONT                "Frontansicht (Aufriß)"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_DRAWING_PERF         "#####################################"
+    ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
+    ID_FRONT                "Frontansicht (Aufriß)"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nAktivierung zeigen"
     ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
     ID_LIGHT_DELETE         "Löscht eine Lichtquelle.\nLichtqielle löschen"
@@ -2302,52 +2307,13 @@ BEGIN
     ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
     ID_MODELLER_INFO        "Modellierhilfen einstellen\nModellierhilfen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
     ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
     ID_OBJECT_EDIT          "Editiert ein Objekt.\nObjekt editieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
-    ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
-    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
-    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
-    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
-    ID_ANIM_END             "Spult die Animation an das Ende.\nAn das Ende spulen"
-    ID_ANIM_PLAY            "Spielt die Animation ab.\nAnimation abspielen"
-    ID_ANIM_START           "Spult die Animation an den Anfang.\nZurückspulen"
-    ID_ANIM_STOP            "Hält die Animation an.\nAnimation anhalten"
-    ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
-    ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
-    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
-    ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
-    ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
-    ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_B3_ORIGINAL          "Zeigt das Bild in Originalgröße an\nOriginalgröße"
-    ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
-    ID_B3_WIDTH             "Paßt die Bildausgabe der Fensterbreite an\nAn Fensterbreite anpassen"
-    ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
-    ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
-    ID_CAMERA_MOVE          "Bewegt die Kamera\nKamera bewegen"
-    ID_CAMERA_NEW           "Erzeugt eine neue Kamera.\nNeue Kamera erzeugen"
-    ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
-    ID_CAMERA_ROTATE        "Rotiert die Kamera um das Folkrum\nKamera rotieren"
-    ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
-    ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
-    ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
-    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
-    ID_COORD_X              "x: 00000000.00"
-    ID_COORD_Y              "y: 00000000.00"
-    ID_COORD_Z              "z: 00000000.00"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
     ID_OBJECT_MOVE          "Bewegt aktivierte Objekte\nObjekte bewegen"
     ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
@@ -2361,13 +2327,52 @@ BEGIN
     ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
     ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
     ID_PREF_AUTOSAVE        "Speichert die Fensterpostion beim Verlassen des Programms"
-    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
-    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
-    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
+    ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
+    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
+    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
+    ID_ANIM_END             "Spult die Animation an das Ende.\nAn das Ende spulen"
+    ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
+    ID_ANIM_PLAY            "Spielt die Animation ab.\nAnimation abspielen"
+    ID_ANIM_START           "Spult die Animation an den Anfang.\nZurückspulen"
+    ID_ANIM_STEP_BACKWARD   "Schaltet die Animation eine Sekunde zurück.\nRückwärts"
+    ID_ANIM_STEP_FORWARD    "Schaltet die Animation eine Sekunde vorwärts.\nVorwärts"
+    ID_ANIM_STOP            "Hält die Animation an.\nAnimation anhalten"
+    ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
+    ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
+    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
+    ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
+    ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
+    ID_B3_ORIGINAL          "Zeigt das Bild in Originalgröße an\nOriginalgröße"
+    ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
+    ID_B3_WIDTH             "Paßt die Bildausgabe der Fensterbreite an\nAn Fensterbreite anpassen"
+    ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
+    ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
+    ID_CAMERA_MOVE          "Bewegt die Kamera\nKamera bewegen"
+    ID_CAMERA_NEW           "Erzeugt eine neue Kamera.\nNeue Kamera erzeugen"
+    ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
+    ID_CAMERA_ROTATE        "Rotiert die Kamera um das Folkrum\nKamera rotieren"
+    ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
+    ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
+    ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
+    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
+    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
+    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
     ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
     ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
     ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
@@ -2377,9 +2382,20 @@ BEGIN
     ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
     ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
     ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
+    ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
+    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
+    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
+    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
+    ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
+    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
+    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2637,20 +2653,6 @@ BEGIN
     IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
     IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
     IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
-    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
-    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
-    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
-    ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
-    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
-    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
-    ID_ANIM_STEP_BACKWARD   "Schaltet die Animation eine Sekunde zurück.\nRückwärts"
-    ID_ANIM_STEP_FORWARD    "Schaltet die Animation eine Sekunde vorwärts.\nVorwärts"
 END
 
 STRINGTABLE DISCARDABLE 

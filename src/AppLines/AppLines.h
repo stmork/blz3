@@ -37,6 +37,7 @@
 #include "Resource.h"       // main symbols
 #include "AppRaytraceDoc.h"
 #include "AppObjectDoc.h"
+#include "blz3/system/b3DisplayView.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:

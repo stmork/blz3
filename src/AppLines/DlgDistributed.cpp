@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/21 20:13:32  sm
+**	- Introduced distributed raytracing with all sampling methods
+**	  and filter computations. This made some class movements
+**	  inside files necessary. The next step would be to integrate
+**	  motion blur.
+**
 **	Revision 1.3  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
 **	  o distributed raytracing
-**
+**	
 **	Revision 1.2  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	
@@ -66,8 +72,6 @@ CDlgDistributed::CDlgDistributed(CWnd* pParent /*=NULL*/)
 	m_PixelFilter = -1;
 	m_TimeFilter = -1;
 	m_SamplingMethod = -1;
-	m_SPF = 0;
-	m_SPP = 0;
 	//}}AFX_DATA_INIT
 }
 
@@ -83,10 +87,6 @@ void CDlgDistributed::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_PFLTR_BOX, m_PixelFilter);
 	DDX_Radio(pDX, IDC_TFLTR_BOX, m_TimeFilter);
 	DDX_Radio(pDX, IDC_SMP_REGULAR, m_SamplingMethod);
-	DDX_Text(pDX, IDC_SPF, m_SPF);
-	DDV_MinMaxInt(pDX, m_SPF, 1, 10);
-	DDX_Text(pDX, IDC_SPP, m_SPP);
-	DDV_MinMaxInt(pDX, m_SPP, 1, 10);
 	//}}AFX_DATA_MAP
 }
 
@@ -107,18 +107,17 @@ BOOL CDlgDistributed::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_CtrlSPP.SetRange(1,10);
-	m_CtrlSPF.SetRange(1,10);
-
-	m_ActDistributed = flags & SAMPLE_SUPERSAMPLE;
+	m_ActDistributed = m_Distributed->b3IsActive();
 	m_ActMotionBlur  = flags & SAMPLE_MOTION_BLUR;
 	m_SamplingMethod = SAMPLE_GET_TYPE(m_Distributed) >> 8;
 	m_PixelFilter    = m_Distributed->m_PixelAperture;
 	m_TimeFilter     = m_Distributed->m_FrameAperture;
-	m_SPP            = m_Distributed->m_SamplesPerPixel;
-	m_SPF            = m_Distributed->m_SamplesPerFrame;
 
 	UpdateData(FALSE);
+	m_CtrlSPP.b3SetRange(1,  10);
+	m_CtrlSPF.b3SetRange(1,1000);
+	m_CtrlSPP.b3SetPos(m_Distributed->m_SamplesPerPixel);
+	m_CtrlSPF.b3SetPos(m_Distributed->m_SamplesPerFrame);
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -178,8 +177,8 @@ void CDlgDistributed::OnOK()
 
 	SAMPLE_SET_FLAGS(m_Distributed,flags);
 	SAMPLE_SET_TYPE(m_Distributed,m_SamplingMethod << 8);
-	m_Distributed->m_SamplesPerPixel = m_SPP;
-	m_Distributed->m_SamplesPerFrame = m_SPF;
+	m_Distributed->m_SamplesPerPixel = m_CtrlSPP.b3GetPos();
+	m_Distributed->m_SamplesPerFrame = m_CtrlSPF.b3GetPos();
 	m_Distributed->m_PixelAperture   = (b3_filter)m_PixelFilter;
 	m_Distributed->m_FrameAperture   = (b3_filter)m_TimeFilter;
 	CPropertyPage::OnOK();

@@ -106,6 +106,10 @@ SOURCE=.\b3FileMem.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Filter.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Item.cc
 # End Source File
 # Begin Source File
@@ -183,6 +187,10 @@ SOURCE=..\..\include\blz3\base\b3FileList.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3FileMem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Filter.h
 # End Source File
 # Begin Source File
 

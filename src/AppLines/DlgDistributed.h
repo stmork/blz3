@@ -25,6 +25,7 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgDistributed dialog
@@ -39,15 +40,13 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgDistributed)
 	enum { IDD = IDD_DISTRIBUTED };
-	CSpinButtonCtrl	m_CtrlSPP;
-	CSpinButtonCtrl	m_CtrlSPF;
+	CB3IntSpinButtonCtrl	m_CtrlSPP;
+	CB3IntSpinButtonCtrl	m_CtrlSPF;
 	BOOL	m_ActDistributed;
 	BOOL	m_ActMotionBlur;
 	int		m_PixelFilter;
 	int		m_TimeFilter;
 	int		m_SamplingMethod;
-	int		m_SPF;
-	int		m_SPP;
 	//}}AFX_DATA
 
 
