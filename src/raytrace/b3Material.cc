@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2004/03/15 18:49:57  sm
+**      - New example material created.
+**
 **      Revision 1.41  2004/03/15 10:38:37  sm
 **      - Found good values for granite.
 **
@@ -1131,12 +1134,12 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
 	m_AmbColor   = b3Color(0.1, 0.1, 0.1);
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
-	b3Vector::b3Init(&m_Scale,0.1,0.1,0.1);
-	m_Reflection = 0.0;
-	m_Refraction = 0.0;
-	m_RefrValue  = 1.0;
+	b3Vector::b3Init(&m_Scale,2.0,2.0,2.0);
+	m_Reflection =   0.0;
+	m_Refraction =   0.0;
+	m_RefrValue  =   1.0;
 	m_HighLight  = 100.0;
-	m_Flags      = 0;
+	m_Flags      =   0;
 }
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
