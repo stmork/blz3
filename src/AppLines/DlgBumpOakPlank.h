@@ -24,7 +24,7 @@
 // DlgBumpOakPlank.h : header file
 //
 
-#include "blz3/raytrace/b3MaterialSampler.h"
+#include "blz3/raytrace/b3BumpSampler.h"
 #include "b3ShowSample.h"
 #include "PageBump.h"
 #include "PageWood.h"
@@ -36,6 +36,7 @@
 class CDlgBumpOakPlank : public CDialog
 {
 	b3BumpOakPlank    *m_Bump;
+	b3BumpSampler     *m_BumpSampler;
 
 	CPropertySheet     m_PropertySheet;
 	CPageBump          m_PageBump;

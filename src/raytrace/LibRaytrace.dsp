@@ -110,6 +110,10 @@ SOURCE=b3Bump.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3BumpSampler.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Condition.cc
 # End Source File
 # Begin Source File
@@ -295,6 +299,10 @@ SOURCE=..\..\include\blz3\raytrace\b3BBox.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3Bump.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3BumpSampler.h
 # End Source File
 # Begin Source File
 

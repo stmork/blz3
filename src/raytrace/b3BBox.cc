@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.87  2004/04/21 20:44:56  sm
+**	- Added bump sampler to their dialogs.
+**	- Added bbox dimensions for bump sampler
+**
 **	Revision 1.86  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.85  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -487,12 +491,8 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 
 	b3Matrix::b3Unit(&m_Matrix);
 	m_Type       = 0;
-	m_DimBase.x  = 0;
-	m_DimBase.y  = 0;
-	m_DimBase.z  = 0;
-	m_DimSize.x  = 0;
-	m_DimSize.y  = 0;
-	m_DimSize.z  = 0;
+	b3Vector::b3Init(&m_DimBase,-1.0,-1.0,-1.0);
+	b3Vector::b3Init(&m_DimSize, 2.0, 2.0, 2.0);
 	m_BoxName[0] = 0;
 	m_BoxURL[0]  = 0;
 

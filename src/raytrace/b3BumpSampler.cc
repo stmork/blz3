@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/21 20:44:56  sm
+**	- Added bump sampler to their dialogs.
+**	- Added bbox dimensions for bump sampler
+**
 **	Revision 1.2  2004/04/19 17:52:00  sm
 **	- Compile fix for Intel compiler.
-**
+**	
 **	Revision 1.1  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
@@ -97,12 +101,14 @@ b3SampleInfo *b3BumpSampler::b3SampleInit(b3_count CPUs)
 void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 {
 	b3Bump       *bump = (b3Bump *)info->m_Ptr;
+	b3BBox        bbox = BBOX;
 	b3_coord      x,y;
 	b3_ray        ray;
 	b3_f64        fy,angle;
 	b3_vector     normal;
 	b3_pkd_color *data = info->m_Data;
 
+	ray.bbox = &bbox;
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;

@@ -16,10 +16,6 @@
 **
 */
 
-#ifdef _DEBUG
-#define NO__B3_USE_SPIN_TEST
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Lines III includes                            **
@@ -61,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2004/04/21 20:44:56  sm
+**	- Added bump sampler to their dialogs.
+**	- Added bbox dimensions for bump sampler
+**
 **	Revision 1.61  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
-**
+**	
 **	Revision 1.60  2004/04/09 17:30:31  sm
 **	- Wood dialog fine tuning.
 **	
