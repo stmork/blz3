@@ -104,6 +104,8 @@ protected:
 	afx_msg void OnObjectSave();
 	afx_msg void OnObjectReplace();
 	afx_msg void OnObjectCopy();
+	afx_msg void OnObjectEdit();
+	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

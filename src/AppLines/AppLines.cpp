@@ -44,10 +44,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/01/18 16:49:34  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.19  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.18  2002/01/15 16:17:31  sm
 **	- Checked OLE support
 **	- Checked icons
@@ -447,6 +451,20 @@ void CAppLinesApp::OnAppAbout()
 CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 {
 	return (CAppRaytraceDoc *)pImageTemplate->OpenDocumentFile(NULL);
+}
+
+CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(b3BBox *bbox)
+{
+	CAppObjectDoc *pDoc;
+	b3BBox        *cloned_bbox;
+
+	pDoc = (CAppObjectDoc *)pObjectTemplate->OpenDocumentFile("");
+	if (pDoc != null)
+	{
+		cloned_bbox = (b3BBox *)b3World::b3Clone(bbox);
+		pDoc->b3SetBBox(cloned_bbox);
+	}
+	return pDoc;
 }
 
 void CAppLinesApp::OnChangeTexturePath() 

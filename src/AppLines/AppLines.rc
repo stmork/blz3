@@ -170,6 +170,7 @@ BEGIN
     BUTTON      ID_ALL_ACTIVATE
     BUTTON      ID_ALL_DEACTIVATE
     BUTTON      ID_ALL_DEACTIVATE_REST
+    BUTTON      ID_OBJECT_EDIT
 END
 
 IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 15
@@ -1312,6 +1313,7 @@ BEGIN
     ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
     ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
     ID_DRAWING_PERF         "#####################################"
+    ID_OBJECT_EDIT          "Editiert ein Objekt.\nObjekt editieren"
 END
 
 STRINGTABLE DISCARDABLE 

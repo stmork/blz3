@@ -27,6 +27,8 @@
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 
+#define B3_UPDATE_OBJECT 256
+
 class CB3Action;
 
 class CAppObjectView : public CAppRenderView

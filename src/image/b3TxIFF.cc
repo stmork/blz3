@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.8  2002/01/17 19:17:02  sm
 **	- Fixed ILBM to other unfiltered scaling
-**
+**	
 **	Revision 1.7  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes

@@ -61,9 +61,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.9  2002/01/17 19:17:03  sm
 **	- Fixed ILBM to other unfiltered scaling
-**
+**	
 **	Revision 1.8  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.

@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.5  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.4  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -125,9 +129,6 @@ void CAppObjectView::OnInitialUpdate()
 	// Do necessary Blizzard III stuff!
 	CAppObjectDoc *pDoc         = GetDocument();
 
-	m_BBox = pDoc->m_BBox;
-	B3_ASSERT(m_BBox != null);
-
 	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
 	m_Action[B3_SHAPE_MOVE]           = new CB3ActionShapeMove(this);
 	m_Action[B3_SHAPE_ROTATE_POINT]   = new CB3ActionShapeRotatePoint(this);
@@ -140,7 +141,7 @@ void CAppObjectView::OnInitialUpdate()
 	CAppRenderView::OnInitialUpdate();
 
 	// TODO: calculate the total size of this view
-	OnUpdate(this,B3_UPDATE_ALL,0);
+//	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
 void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
@@ -148,6 +149,11 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	// TODO: Add your specialized code here and/or call the base class
 	b3_bool     doInvalidate = false;
 	b3_vector   center;
+
+	if (lHint & B3_UPDATE_OBJECT)
+	{
+		m_BBox = GetDocument()->m_BBox;
+	}
 
 	if ((lHint & B3_UPDATE_CAMERA) && (m_BBox != null))
 	{

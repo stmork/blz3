@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.4  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.3  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -278,9 +282,6 @@ void CAppRenderView::OnInitialUpdate()
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
 	CScrollView::OnInitialUpdate();
-
-	// TODO: calculate the total size of this view
-	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
 void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 

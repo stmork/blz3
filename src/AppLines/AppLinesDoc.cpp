@@ -56,10 +56,14 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2002/01/18 16:49:34  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.53  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.52  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -341,10 +345,11 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
 	ON_COMMAND(ID_OBJECT_NEW_SUB, OnObjectNewSub)
 	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
-	ON_COMMAND(ID_OBJECT_COPY, OnObjectCopy)
 	ON_COMMAND(ID_OBJECT_LOAD, OnObjectLoad)
 	ON_COMMAND(ID_OBJECT_SAVE, OnObjectSave)
 	ON_COMMAND(ID_OBJECT_REPLACE, OnObjectReplace)
+	ON_COMMAND(ID_OBJECT_COPY, OnObjectCopy)
+	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -395,7 +400,6 @@ END_INTERFACE_MAP()
 
 CAppLinesDoc::CAppLinesDoc()
 {
-	// TODO: add one-time construction code here
 	m_Scene        = null;
 	EnableAutomation();
 
@@ -1672,4 +1676,15 @@ void CAppLinesDoc::OnObjectCopy()
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		m_DlgHierarchy->b3InitTree(this,true);
 	}
+}
+
+void CAppLinesDoc::OnObjectEdit() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp  *app  = (CAppLinesApp *)AfxGetApp();
+	CAppObjectDoc *pDoc;
+	b3BBox        *selected;
+
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
+	pDoc = app->b3CreateObjectDoc(selected);
 }

@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.40  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.39  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -543,7 +547,6 @@ void b3BBox::b3Draw()
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
-
 	}
 }
 

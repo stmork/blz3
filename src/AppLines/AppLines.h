@@ -36,6 +36,7 @@
 
 #include "Resource.h"       // main symbols
 #include "AppRaytraceDoc.h"
+#include "AppObjectDoc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
@@ -51,6 +52,7 @@ class CAppLinesApp : public CB3App
 public:
 	CAppLinesApp();
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
+	CAppObjectDoc   *b3CreateObjectDoc(b3BBox *bbox);
 
 	UINT m_ClipboardFormatForBlizzardObject;
 // Overrides
@@ -73,6 +75,7 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
+#define CB3GetLinesApp()  ((CB3AppLinesApp *)AfxGetApp())
 
 /////////////////////////////////////////////////////////////////////////////
 

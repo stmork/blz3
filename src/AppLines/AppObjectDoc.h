@@ -29,6 +29,8 @@ class CDlgHierarchy;
 class CAppObjectDoc : public CAppRenderDoc
 {
 	b3_matrix             m_OriginalPosition;
+	b3_bool               m_Edit;
+
 protected:
 	b3World               m_World;
 	b3Thread             *m_Raytracer;
@@ -77,6 +79,9 @@ protected:
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
+
+public:
+	void b3SetBBox(b3BBox *bbox);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/18 16:49:35  sm
+**	- Further development of the object edit from scene branch. This needs
+**	  much more logics for handling scenes and open object edits properly.
+**
 **	Revision 1.8  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.7  2002/01/16 17:01:08  sm
 **	- Some minor fixes done
 **	
@@ -106,8 +110,9 @@ END_INTERFACE_MAP()
 CAppObjectDoc::CAppObjectDoc()
 {
 	// TODO: add one-time construction code here
-	m_BBox         = null;
-	m_Info         = new b3ModellerInfo(LINES_INFO);
+	m_BBox = null;
+	m_Info = new b3ModellerInfo(LINES_INFO);
+	m_Edit = false;
 	b3MatrixUnit(&m_OriginalPosition);
 	EnableAutomation();
 
@@ -128,48 +133,78 @@ BOOL CAppObjectDoc::OnNewDocument()
 	{
 		return result;
 	}
+	m_Edit = false;
 
 	// TODO: Add your specialized creation code here
 	return result;
 }
 
-BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
+void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 {
 	CMainFrame     *main = CB3GetMainFrame();
 	CString         message;
-	BOOL            result = FALSE;
-	b3Base<b3Item>  base;
-	b3_count        level;
 	b3_matrix       inverse;
 
+	B3_ASSERT(m_BBox == null);
+	m_BBox = bbox;
+
+	main->b3SetStatusMessage(IDS_DOC_REORG);
+	b3BBox::b3Recount(
+		m_BBox->b3GetBBoxHead(),
+		m_BBox->b3GetClassType() & 0xffff);
+
+	m_OriginalPosition = m_BBox->m_Matrix;
+	b3MatrixInv(&m_BBox->m_Matrix,&inverse);
+	m_BBox->b3Transform(&inverse,true);
+	main->b3SetStatusMessage(IDS_DOC_PREPARE);
+	m_BBox->b3Prepare();
+
+	main->b3SetStatusMessage(IDS_DOC_VERTICES);
+	m_BBox->b3AllocVertices(&m_Context);
+
+	main->b3SetStatusMessage(IDS_DOC_BOUND);
+	b3ComputeBounds();
+
+	UpdateAllViews(NULL,B3_UPDATE_ALL|B3_UPDATE_OBJECT);
+//	m_DlgHierarchy->b3InitTree(this,true);
+//	m_DlgHierarchy->b3SelectBBox(bbox);
+}
+
+BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
+{
+	BOOL result = FALSE;
+	
 	try
 	{
-		message.Format(IDS_DOC_READ,lpszPathName);
-		main->b3SetStatusMessage(message);
+		if (strlen(lpszPathName) > 0)
+		{
+			CMainFrame     *main = CB3GetMainFrame();
+			CString         message;
+			b3Base<b3Item>  base;
+			b3Item         *first;
+			b3_count        level;
+		
+			message.Format(IDS_DOC_READ,lpszPathName);
+			main->b3SetStatusMessage(message);
 
-		m_World.b3Read(lpszPathName);
-		main->b3SetStatusMessage(IDS_DOC_REORG);
-		m_BBox = (b3BBox *)m_World.b3GetFirst();
-		level  = m_BBox->b3GetClassType() & 0xffff;
-		b3BBox::b3Reorg(m_World.b3GetHead(),&base,level,1);
-		b3BBox::b3Recount(m_BBox->b3GetBBoxHead());
-
-		m_OriginalPosition = m_BBox->m_Matrix;
-		b3MatrixInv(&m_BBox->m_Matrix,&inverse);
-		m_BBox->b3Transform(&inverse,true);
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_BBox->b3Prepare();
-
-		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_BBox->b3AllocVertices(&m_Context);
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		b3ComputeBounds();
-
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-//		m_DlgHierarchy->b3InitTree(this,true);
-//		m_DlgHierarchy->b3SelectBBox(bbox);
+			m_World.b3Read(lpszPathName);
+			first  = m_World.b3GetFirst();
+			level  = first->b3GetClassType() & 0xffff;
+			b3BBox::b3Reorg(m_World.b3GetHead(),&base,level,1);
+			b3SetBBox((b3BBox *)first);
+			m_Edit = false;
+		}
+		else
+		{
+			m_Edit = true;
+			b3PrintF(B3LOG_FULL,"Preparing CAppObjectDoc for scene object editing...\n");
+		}
 		result = TRUE;
+	}
+	catch(b3FileException *f)
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",f->b3GetError());
 	}
 	catch(b3WorldException *e)
 	{
@@ -193,9 +228,21 @@ BOOL CAppObjectDoc::OnSaveDocument(LPCTSTR lpszPathName)
 void CAppObjectDoc::OnCloseDocument() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	m_BBox->b3Transform(&m_OriginalPosition,true);
-	delete m_BBox;
-	m_BBox = null;
+	if (m_BBox != null)
+	{
+		m_BBox->b3Transform(&m_OriginalPosition,true);
+		if (m_Edit)
+		{
+			// We have to give back this object
+			delete m_BBox;
+			m_BBox = null;
+		}
+		else
+		{
+			delete m_BBox;
+			m_BBox = null;
+		}
+	}
 	CDocument::OnCloseDocument();
 }
 
