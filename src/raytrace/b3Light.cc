@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/10/15 19:07:12  sm
+**      - Experimenting with soft shadows.
+**
 **      Revision 1.11  2001/10/11 16:06:33  sm
 **      - Cleaning up b3BSpline with including isolated methods.
 **      - Cleaning up endian conversion routines and collecting into
@@ -283,7 +286,7 @@ b3_bool b3Light::b3AreaIllumination (
 	b3_vector      point;
 	b3_f64         Factor,LightDist,q;
 	b3_coord       x,y,xs;
-	b3_count       Distr,max;
+	b3_count       max,Distr;
 	b3_bool        equal;				
 
 	Jit.Distr = m_JitterEdge;
@@ -305,7 +308,7 @@ b3_bool b3Light::b3AreaIllumination (
 	}
 
 	// normalizing light axis
-	LightDist = 1.0 / (Jit.Q = sqrt(LightDist));
+	LightDist = 1.0 / sqrt(LightDist);
 	Jit.LightView.x	*= LightDist;
 	Jit.LightView.y	*= LightDist;
 	Jit.LightView.z	*= LightDist;
@@ -405,7 +408,7 @@ b3_bool b3Light::b3AreaIllumination (
 			xs ^= 1;
 		}
 
-		Factor = 1.0 / (Jit.Distr * Jit.Distr);
+		Factor = 1.0 / (m_JitterEdge * m_JitterEdge);
 	}
 
 	surface->incoming->color.r += Jit.Result.r * Factor;
@@ -421,7 +424,7 @@ b3Shape *b3Light::b3CheckSinglePoint (
 	b3_coord         x,
 	b3_coord         y)
 {
-	b3_f64   jx,jy,LightDist;
+	b3_f64   jx,jy,LightDist,UpperBound;
 
 	jx = (((b3_f64)x + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
 	jy = (((b3_f64)y + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
@@ -436,14 +439,14 @@ b3Shape *b3Light::b3CheckSinglePoint (
 		Jit->dir.z * Jit->dir.z;
 	if (LightDist != 0)
 	{
-		LightDist   = 1.0 / sqrt(LightDist);
+		LightDist   = 1.0 / (UpperBound = sqrt(LightDist));
 		Jit->dir.x *= LightDist;
 		Jit->dir.y *= LightDist;
 		Jit->dir.z *= LightDist;
 	}
 	Jit->LightDist = LightDist;
 
-	scene->b3Intersect(Jit,Jit->Q - epsilon);
+	scene->b3Intersect(Jit,UpperBound - epsilon);
 	scene->b3Illuminate(this,Jit,surface,&Jit->Result);
 
 	return Jit->shape;

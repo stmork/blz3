@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= TestIo TestThread TestImage Mandel
+PRGS			= TestIo TestThread Mandel
 TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
 TESTTHREAD_OBJS	= TestThread.o
 MANDEL_OBJS		= Mandel.o b3Mandel.o
