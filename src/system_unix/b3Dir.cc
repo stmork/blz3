@@ -117,7 +117,7 @@ b3_path_type b3Dir::b3DirNext (char *name)
 {
 	struct dirent *entry;
 	b3_path_type   type;
-	char           fileName[FILESTRINGLEN];
+	char           fileName[B3_FILESTRINGLEN];
 	b3_bool        loop;
 
 	name[0] = 0;
@@ -224,8 +224,8 @@ void b3Path::b3SplitFileName(
 // for creating a new extension.
 void b3Path::b3RemoveExt(char *name)
 {
-	char    actPath[FILESTRINGLEN];
-	char    actName[FILESTRINGLEN];
+	char    actPath[B3_FILESTRINGLEN];
+	char    actName[B3_FILESTRINGLEN];
 	b3_size i,len;
 
 	b3Path::b3SplitFileName (name,actPath,actName);

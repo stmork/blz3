@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3File.c $
-**	$Release:	Dortmund 1998 $
+**	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Maui 2000 - file access routines
+**	Blizzard III - file access routines
 **
-**	(C) Copyright 1998-2000  M-DMS GmbH
+**	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -17,7 +17,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Maui 2000 includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/01 16:48:00  sm
+**	- FILESTRINGLEN -> B3_FILESTRINGLEN
+**	- Cleaned up some makefiles
+**	- Cleaned up some CVS conflicts
+**
 **	Revision 1.2  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -141,8 +146,8 @@ b3_bool b3File::b3Open (
 
 // Guess what
 b3_size b3File::b3Read (
-	void          *buffer,
-	const b3_size  buffer_size)
+	void    *buffer,
+	const b3_size buffer_size)
 
 {
 	long readBytes;
@@ -156,8 +161,8 @@ b3_size b3File::b3Write (
 	const void    *ptr,
 	const b3_size  buffer_size)
 {
-	b3_u08  *buffer = (b3_u08 *)ptr;
-	b3_size  written;
+	register unsigned char *buffer = (unsigned char *)ptr;
+	register b3_size        written;
 
 	// write buffer is cachable
 	if (buffer_size <= (Size - Index))
@@ -172,8 +177,7 @@ b3_size b3File::b3Write (
 	written = write (File,Cache,Index);
 	if (written < Index)
 	{
-		b3_index i;
-		b3_size  num;
+		unsigned long i,num;
 
 		// Overwrite written bytes
 		for (i = written;i < Index;i++)
@@ -217,7 +221,7 @@ b3_size b3File::b3Write (
 
 b3_bool b3File::b3Flush ()
 {
-	b3_size written,i,k,Size;
+	register b3_size written,i,k,Size;
 
 	// Buffer is empty
 	if (Index == 0)
@@ -277,7 +281,7 @@ b3_size b3File::b3Seek (
 
 b3_size b3File::b3Size ()
 {
-	b3_size OldPos,Size;
+	long OldPos,Size;
 
 	b3Flush ();
 
@@ -311,7 +315,7 @@ b3_bool b3File::b3Buffer (b3_size Size)
 	// Allocate new buffer
 	if (Size > 32)
 	{
-		Cache = (b3_u08 *)b3Alloc (Size);
+		Cache = (unsigned char *)b3Alloc (Size);
 		if (Cache) 
 		{
 			Size -= 32;

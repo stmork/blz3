@@ -41,9 +41,14 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 16:48:00  sm
+**	- FILESTRINGLEN -> B3_FILESTRINGLEN
+**	- Cleaned up some makefiles
+**	- Cleaned up some CVS conflicts
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 */
 
 /*************************************************************************
@@ -56,8 +61,8 @@ static FILE *bout;
 
 #define B3_DEFAULT_FILE "b3.log"
 
-static char  B3_OUT[FILESTRINGLEN] = B3_DEFAULT_FILE;
-static bool  alreadyOpen             = false;
+static char  B3_OUT[B3_FILESTRINGLEN] = B3_DEFAULT_FILE;
+static bool  alreadyOpen              = false;
 
 #ifndef _DEBUG
 static b3_log_level  logLevel = B3LOG_NORMAL;	// normal version

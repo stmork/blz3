@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 16:48:00  sm
+**	- FILESTRINGLEN -> B3_FILESTRINGLEN
+**	- Cleaned up some makefiles
+**	- Cleaned up some CVS conflicts
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 */
 
 /*************************************************************************
