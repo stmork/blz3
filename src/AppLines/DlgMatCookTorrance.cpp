@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wood material
+**	Blizzard III - Cook&Torrance material shader
 **
 **	(C) Copyright 2003  Steffen A. Mork
 **	    All Rights Reserved
@@ -33,18 +33,21 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/03/07 13:08:52  sm
+**	- Added dialog for Cook/Torrance material
+**
 **	Revision 1.1  2004/03/07 12:23:26  sm
 **	- Added Cook/Torrance material editors.
-**
+**	
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CDlgMatCookTorrance implementation                    **
+**                        CDlgMatCookTorrance implementation            **
 **                                                                      **
 *************************************************************************/
 
-CDlgMatCookTorrance::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatCookTorrance::CDlgMatCookTorrance(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgMatCookTorrance::IDD, pParent)
 {
 	m_Material = (b3MatCookTorrance *)item;
@@ -74,7 +77,7 @@ END_MESSAGE_MAP()
 
 void CDlgMatCookTorrance::b3Register()
 {
-	b3Loader::b3AddClassType(WOOD,IDS_MAT_COOK_TORRANCE,IDI_MAT_COOK_TORRANCE,b3Edit,b3Edit);
+	b3Loader::b3AddClassType(COOK_TORRANCE,IDS_MAT_COOK_TORRANCE,IDI_MAT_COOK_TORRANCE,b3Edit,b3Edit);
 }
 
 b3_bool CDlgMatCookTorrance::b3Edit(b3Item *item)

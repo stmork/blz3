@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wood material
+**	Blizzard III - Cook&Torrance material shader
 **
 **	(C) Copyright 2003  Steffen A. Mork
 **	    All Rights Reserved
@@ -15,8 +15,8 @@
 **
 */
 
-#if !defined(AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)
-#define AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_
+#if !defined(AFX_DLGMATCOOKTORRANCE_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)
+#define AFX_DLGMATCOOKTORRANCE_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,7 +41,7 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatCookTorrance)
-	enum { IDD = IDD_MAT_WOOD };
+	enum { IDD = IDD_MAT_COOK_TORRANCE };
 		// NOTE: the ClassWizard will add data members here
 	//}}AFX_DATA
 
@@ -66,4 +66,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DLGMATWOOD_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)
+#endif // !defined(AFX_DLGMATCOOKTORRANCE_H__7C6BBDA5_AE55_4E64_A4C5_CA0B09524C5C__INCLUDED_)

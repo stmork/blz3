@@ -26,6 +26,7 @@
 #define IDI_MAT_TEXTURE                 130
 #define IDI_MAT_WRAP_TEXTURE            131
 #define IDD_MAT_NORMAL                  132
+#define IDI_MAT_COOK_TORRANCE           133
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -85,6 +86,7 @@
 #define IDD_MAT_MARBLE                  645
 #define IDD_MAT_WOOD                    646
 #define IDD_MAT_WRAP_TEXTURE            647
+#define IDD_MAT_COOK_TORRANCE           648
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -719,13 +721,14 @@
 #define IDS_MAT_TEXTURE                 61451
 #define IDS_MAT_WRAP_TEXTURE            61452
 #define IDS_PRT_OBJECTNAME              61453
+#define IDS_MAT_COOK_TORRANCE           61454
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_RESOURCE_VALUE        134
 #define _APS_NEXT_COMMAND_VALUE         10126
 #define _APS_NEXT_CONTROL_VALUE         32292
 #define _APS_NEXT_SYMED_VALUE           60170

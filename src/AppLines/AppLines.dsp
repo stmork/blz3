@@ -369,6 +369,10 @@ SOURCE=.\DlgMatChess.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatCookTorrance.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatMarble.cpp
 # End Source File
 # Begin Source File
@@ -966,6 +970,10 @@ SOURCE=.\res\left.ico
 # Begin Source File
 
 SOURCE=.\res\mat_chess.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_cook_torrance.ico
 # End Source File
 # Begin Source File
 

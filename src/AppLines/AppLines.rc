@@ -119,6 +119,7 @@ IDI_MAT_WOOD            ICON    DISCARDABLE     "res\\mat_wood.ico"
 IDI_MAT_SLIDE           ICON    DISCARDABLE     "res\\mat_slide.ico"
 IDI_MAT_TEXTURE         ICON    DISCARDABLE     "res\\mat_texture.ico"
 IDI_MAT_WRAP_TEXTURE    ICON    DISCARDABLE     "res\\mat_wrap_texture.ico"
+IDI_MAT_COOK_TORRANCE   ICON    DISCARDABLE     "res\\mat_cook_torrance.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2035,6 +2036,15 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
 END
 
+IDD_MAT_COOK_TORRANCE DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Cook & Torrance Material-Shader"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2451,6 +2461,14 @@ BEGIN
     END
 
     IDD_MAT_WRAP_TEXTURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_COOK_TORRANCE, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 179
@@ -3042,6 +3060,7 @@ BEGIN
     IDS_MAT_TEXTURE         "Textur"
     IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
     IDS_PRT_OBJECTNAME      "Objektname: %s"
+    IDS_MAT_COOK_TORRANCE   "Cook & Torrance Material-Shader"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.67  2004/03/07 13:08:52  sm
+**      - Added dialog for Cook/Torrance material
+**
 **      Revision 1.66  2004/03/07 12:41:23  sm
 **      - Print shader support.
 **
@@ -427,7 +430,7 @@ b3RenderContext::b3RenderContext()
 void b3RenderContext::b3Init()
 {
 #ifdef BLZ3_USE_OPENGL
-	char *extensions = glGetString(GL_EXTENSIONS);
+	const char *extensions = (const char *)glGetString(GL_EXTENSIONS);
 
 	b3PrintF(B3LOG_FULL,  "b3RenderContext::b3Init()\n");
 	b3PrintF(B3LOG_NORMAL,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
