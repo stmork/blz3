@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/09/28 16:04:43  sm
+**	- Fixed material ponter problem inside all shader.
+**
 **	Revision 1.35  2004/09/28 15:07:41  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
 **	- Added material dependend possibility for color
 **	  mixing instead of mixing inside shader.
-**
+**	
 **	Revision 1.34  2004/09/17 14:48:12  sm
 **	- I have forgotten the area lights. Now sampling is correct by moving
 **	  the color sum from surface to Jit (light info).
@@ -284,7 +287,7 @@ void b3ShaderPhong::b3ShadeSurface(
 		light->b3Illuminate(this,surface);
 	}
 
-	if (!ray->material->b3MixComponents(surface, refl, refr))
+	if (!b3Material::b3MixComponents(surface, refl, refr))
 	{
 		factor = (1.0 - refl - refr);
 		ray->color =

@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2004/09/28 16:04:43  sm
+**	- Fixed material ponter problem inside all shader.
+**
 **	Revision 1.47  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
 **	- Added material dependend possibility for color
 **	  mixing instead of mixing inside shader.
-**
+**	
 **	Revision 1.46  2004/09/17 20:57:53  sm
 **	- Material shader add their color components to jit.
 **	- Grizzle fix to Mork 2 shader: The reflective and refractive color
@@ -298,10 +301,10 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_surface *surface,
 	b3_count    depth_count)
 {
-	b3Item   *item;
-	b3Light  *light;
-	b3_ray   *ray = surface->incoming;
-	b3_f32    refl,refr,factor;
+	b3Item  *item;
+	b3Light *light;
+	b3_ray  *ray = surface->incoming;
+	b3_f32   refl,refr,factor;
 
 	// Refraction
 	if (surface->m_Transparent)
@@ -345,7 +348,7 @@ void b3ShaderMork::b3ShadeSurface(
 			light = (b3Light *)item;
 			light->b3Illuminate(this,surface);
 		}
-		if (!ray->material->b3MixComponents(surface, refl, refr))
+		if (!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =
 				(surface->m_AmbientSum + surface->m_DiffuseSum) * factor * 0.5 +
@@ -356,7 +359,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 	else
 	{
-		if (!ray->material->b3MixComponents(surface, refl, refr))
+		if (!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =
 				surface->refl_ray.color * refl +

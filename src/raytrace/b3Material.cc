@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.95  2004/09/28 16:04:43  sm
+**      - Fixed material ponter problem inside all shader.
+**
 **      Revision 1.94  2004/09/28 15:07:40  sm
 **      - Support for car paint is complete.
 **      - Made some optimizations concerning light.
@@ -1799,7 +1802,7 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	return true;
 }
 
-b3_bool b3MatCarPaint::b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+b3_bool b3MatCarPaint::b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 {
 	surface->incoming->color =
 		surface->m_AmbientSum +

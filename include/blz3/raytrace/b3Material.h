@@ -121,9 +121,11 @@ public:
 		return false;
 	}
 
-	virtual inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
-		return false;
+		b3Material *material = surface->incoming->material;
+
+		return material != null ? material->b3ShadeComponents(surface,reflection,refraction) : false;
 	}
 
 	static inline void b3Mix(
@@ -146,6 +148,12 @@ public:
 		surface->m_Refraction  =  a->m_Refraction  * a_mix + b->m_Refraction  * mix;
 		surface->m_Ior         =  a->m_Ior         * a_mix + b->m_Ior         * mix;
 		surface->m_SpecularExp =  a->m_SpecularExp * a_mix + b->m_SpecularExp * mix;
+	}
+
+protected:
+	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	{
+		return false;
 	}
 };
 
@@ -400,7 +408,9 @@ public:
 	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
-	b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
+
+protected:
+	b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction);
 };
 
 // THIN_FILM
