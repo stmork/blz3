@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2001/12/28 18:55:09  sm
+**      - Nasty un cr/lf
+**
 **      Revision 1.29  2001/12/25 18:52:39  sm
 **      - Introduced CB3Dialogbar for dialogs opened any time.
 **      - Fulcrum fixed with snap to grid
