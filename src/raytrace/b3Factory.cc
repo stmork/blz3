@@ -35,13 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/10 17:31:11  sm
+**	- Some minor GUI updates.
+**	- b3BBox::b3Transform() changes m_Matrix member.
+**	- Added image selection with image preview.
+**
 **	Revision 1.4  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
 **	- Added some non static methods to b3Dir (Un*x untested, yet!)
 **	- Fixed missing sphere/ellipsoid south pole triangles
 **	- Fixed Spline cylinder/ring triangle indexing
-**
+**	
 **	Revision 1.3  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	
@@ -148,6 +153,43 @@ b3Scene *b3ExampleScene::b3CreateGlobal()
 	glass->m_Reflection = 0.1f;
 	glass->m_Refraction = 0.8f;
 	glass->m_RefrValue  = 1.53f;
+
+	b3Consolidate(scene);
+	return scene;
+}
+
+b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
+{
+	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox       *bbox  = (b3BBox *)b3World::b3Clone(original);
+	b3Light      *light = new b3Light(SPOT_LIGHT);
+	b3CameraPart *camera = new b3CameraPart(CAMERA);
+	b3_vector     eye,view;
+	b3_f64        rad;
+	b3_f64        xAngle = 225 * M_PI / 180;
+	b3_f64        yAngle =  30 * M_PI / 180;
+
+	scene->b3GetBBoxHead()->b3Append(bbox);
+	scene->b3GetLightHead()->b3Append(light);
+	scene->b3GetSpecialHead()->b3Append(camera);
+
+	view.x = bbox->m_DimBase.x + 0.5 * bbox->m_DimSize.x;
+	view.y = bbox->m_DimBase.y + 0.5 * bbox->m_DimSize.y;
+	view.z = bbox->m_DimBase.z + 0.5 * bbox->m_DimSize.z;
+
+	rad    = 0.4 * b3Vector::b3Length(&bbox->m_DimSize);
+	eye.x  = view.x + 8.0 * rad * cos(xAngle) * cos(yAngle);
+	eye.y  = view.y + 8.0 * rad * sin(xAngle) * cos(yAngle);
+	eye.z  = view.z + 8.0 * rad * sin(yAngle);
+
+	camera->b3Orientate(&eye,&view,7.0 * rad,rad,rad);
+	scene->b3SetCamera(camera);
+
+	rad = b3Vector::b3Length(&bbox->m_DimSize);
+	light->m_Position.x = bbox->m_DimBase.x + 10.0 * rad;
+	light->m_Position.y = bbox->m_DimBase.y - 10.0 * rad;
+	light->m_Position.z = bbox->m_DimBase.z + 10.0 * rad;
+	light->m_Distance   = 40.0 * rad;
 
 	b3Consolidate(scene);
 	return scene;

@@ -31,6 +31,7 @@ public:
 	}
 	static        b3Scene *b3CreateNew(const char *filename);
 	static        b3Scene *b3CreateGlobal();
+	static        b3Scene *b3CreateBBox(b3BBox *original);
 	static        b3Scene *b3CreateMaterial();
 
 private:

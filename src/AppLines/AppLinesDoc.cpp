@@ -55,10 +55,15 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2002/01/10 17:31:11  sm
+**	- Some minor GUI updates.
+**	- b3BBox::b3Transform() changes m_Matrix member.
+**	- Added image selection with image preview.
+**
 **	Revision 1.46  2002/01/09 17:47:53  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.45  2002/01/08 16:21:58  sm
 **	- Added center to copy dialog
 **	
@@ -1168,6 +1173,7 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		m_DlgHierarchy->b3InitTree(this,true);
+		m_DlgHierarchy->b3SelectBBox(bbox);
 	}
 }
 
@@ -1188,11 +1194,13 @@ void CAppLinesDoc::OnObjectDelete()
 	// TODO: Add your command handler code here
 	CMainFrame     *main    = CB3GetMainFrame();
 	b3Base<b3Item> *base;
+	b3BBox         *select;
 	b3BBox         *selected;
 
 	if (AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO) == IDYES)
 	{
 		selected = m_DlgHierarchy->b3GetSelectedBBox();
+		select   = (b3BBox *)(selected->Succ != null ? selected->Succ : selected->Prev);
 		B3_ASSERT(selected != null);
 		base = m_Scene->b3FindBBoxHead(selected);
 
@@ -1207,6 +1215,7 @@ void CAppLinesDoc::OnObjectDelete()
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		m_DlgHierarchy->b3InitTree(this,true);
+		m_DlgHierarchy->b3SelectBBox(select);
 	}
 }
 
@@ -1270,14 +1279,16 @@ void CAppLinesDoc::OnEditCut()
 {
 	// TODO: Add your command handler code here
 	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
+	b3BBox         *select;
 	b3Item         *prev;
 	b3Base<b3Item> *base;
 
 	m_DlgHierarchy->b3GetData();
 	if (bbox != null)
 	{
-		base = m_Scene->b3FindBBoxHead(bbox);
-		prev = bbox->Prev;
+		base   = m_Scene->b3FindBBoxHead(bbox);
+		prev   = bbox->Prev;
+		select = (b3BBox *)(bbox->Succ != null ? bbox->Succ : bbox->Prev);
 		m_Scene->b3Recompute(bbox);
 		base->b3Remove(bbox);
 		if(!b3PutClipboard(bbox))
@@ -1293,6 +1304,7 @@ void CAppLinesDoc::OnEditCut()
 			SetModifiedFlag();
 			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 			m_DlgHierarchy->b3InitTree(this,true);
+			m_DlgHierarchy->b3SelectBBox(select);
 		}
 	}
 }
@@ -1522,7 +1534,32 @@ void CAppLinesDoc::OnObjectSave()
 		base->b3Remove(selected);
 		try
 		{
+			CWaitCursor  wait_for_end_of_workday;
+			b3Display   *display;
+			b3Scene     *scene;
+			b3Tx         tx;
+
 			b3WriteBBox(selected,result);
+
+			tx.b3AllocTx(120,120,24);
+			display = new b3Display(&tx);
+			scene = b3ExampleScene::b3CreateBBox(selected);
+			scene->b3Raytrace(display);
+			result.b3RemoveExt();
+			strcat(result,".TGA");
+			tx.b3SaveImage(result);
+			delete scene;
+			delete display;
+		}
+		catch(b3TxException *t)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: Creating object thumbnail %s from %s (code: %d)\n",
+				(const char *)result,selected->b3GetName(),t->b3GetError());
+		}
+		catch(b3DisplayException *d)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: Creating object thumbnail %s (code: %d)\n",
+				selected->b3GetName(),d->b3GetError());
 		}
 		catch(b3FileException *f)
 		{

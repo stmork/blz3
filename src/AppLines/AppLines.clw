@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CB3ImageButton
+LastClass=CB3Dialogbar
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -46,33 +46,34 @@ Class34=CDlgStepRotate
 Class35=CDlgSuperSampling
 Class36=CMainFrame
 
-ResourceCount=26
-Resource1=IDR_TOOLBAR_VIEW
-Resource2=IDR_TOOLBAR_ACTION
-Resource3=IDR_TOOLBAR_OBJECT
-Resource4=IDR_TOOLBAR_DISPLAY
-Resource5=IDR_TOOLBAR_CAMERA
-Resource6=IDR_TOOLBAR_LIGHT
-Resource7=IDD_DISTRIBUTED
+ResourceCount=27
+Resource1=IDR_TOOLBAR_ACTION
+Resource2=IDR_TOOLBAR_OBJECT
+Resource3=IDR_TOOLBAR_DISPLAY
+Resource4=IDR_TOOLBAR_CAMERA
+Resource5=IDR_TOOLBAR_LIGHT
+Resource6=IDR_TOOLBAR_VIEW
+Resource7=IDD_LENS_FLARE
 Resource8=IDR_DISPLAYTYPE
-Resource9=IDD_SEARCH_PATH_LIST
-Resource10=IDD_LENS_FLARE
-Resource11=IDD_NEW_ITEM
-Resource12=IDD_MODELLER_INFO
-Resource13=IDD_LIGHT
-Resource14=IDD_LDC
-Resource15=IDD_CAMERA
-Resource16=IDD_FULCRUM
-Resource17=IDD_STEP_MOVE
-Resource18=IDD_STEP_ROTATE
-Resource19=IDD_OBJECT_COPY
-Resource20=IDD_ABOUTBOX
-Resource21=IDR_BLZ3TYPE
-Resource22=IDD_SCENE
-Resource23=IDD_HIERARCHY
-Resource24=IDD_SUPER_SAMPLE
-Resource25=IDD_NEBULAR
-Resource26=IDR_MAINFRAME
+Resource9=IDD_LIGHT
+Resource10=IDD_MODELLER_INFO
+Resource11=IDD_LDC
+Resource12=IDD_NEW_ITEM
+Resource13=IDD_FULCRUM
+Resource14=IDD_STEP_MOVE
+Resource15=IDD_STEP_ROTATE
+Resource16=IDD_OBJECT_COPY
+Resource17=IDR_MAINFRAME
+Resource18=IDR_BLZ3TYPE
+Resource19=IDD_ABOUTBOX
+Resource20=IDD_SCENE
+Resource21=IDD_HIERARCHY
+Resource22=IDD_NEBULAR
+Resource23=IDD_SUPER_SAMPLE
+Resource24=IDD_SEARCH_PATH_LIST
+Resource25=IDD_DISTRIBUTED
+Resource26=IDD_CAMERA
+Resource27=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
 Type=0
@@ -121,6 +122,9 @@ Type=0
 BaseClass=CDialogBar
 HeaderFile=\include_win32\blz3\system\b3Toolbar.h
 ImplementationFile=\src\system_win32\b3Toolbar.cpp
+Filter=D
+VirtualFilter=dWC
+LastObject=CB3Dialogbar
 
 [CLS:CAppLinesApp]
 Type=0
@@ -932,4 +936,12 @@ Command2=ID_VIEW_BIGGER
 Command3=ID_OBJECT_DELETE
 Command4=ID_VIEW_SMALLER
 CommandCount=4
+
+[DLG:IDD_FILEOPENPREVIEW]
+Type=1
+Class=?
+ControlCount=3
+Control1=IDC_PREVIEW,button,1342242819
+Control2=IDC_IMAGE,static,1342181902
+Control3=1119,static,1342308352
 

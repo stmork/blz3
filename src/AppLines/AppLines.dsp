@@ -140,6 +140,10 @@ SOURCE=.\b3Fulcrum.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ImagePreviewFileDlg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectTexture.cpp
 # End Source File
 # Begin Source File

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2002/01/10 17:31:11  sm
+**      - Some minor GUI updates.
+**      - b3BBox::b3Transform() changes m_Matrix member.
+**      - Added image selection with image preview.
+**
 **      Revision 1.33  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -273,7 +278,7 @@ void b3Shape::b3Write()
 	b3StoreVector(); // This is Polar.BoxPolar
 	b3StoreNull();   // This is Custom
 	b3StoreShape();
-	b3StoreBool(b3IsActivated());
+	b3StoreBool(b3IsActive());
 }
 
 void b3Shape::b3StoreShape()

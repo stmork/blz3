@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/01/10 17:31:11  sm
+**      - Some minor GUI updates.
+**      - b3BBox::b3Transform() changes m_Matrix member.
+**      - Added image selection with image preview.
+**
 **      Revision 1.22  2002/01/06 21:38:18  sm
 **      - Nasty Un CR/LF
 **      - b3Dir fix. Not tested, yet!
@@ -438,7 +443,7 @@ void b3RenderShapeObject::b3Activate(b3_bool activate)
 	m_Activated = activate;
 }
 											
-b3_bool b3RenderShapeObject::b3IsActivated()
+b3_bool b3RenderShapeObject::b3IsActive()
 {
 	return m_Activated;
 }

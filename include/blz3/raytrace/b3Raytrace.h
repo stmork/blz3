@@ -835,7 +835,7 @@ protected:
 public:
 	                b3RenderShapeObject();
 	void            b3Activate(b3_bool activate=true);
-	b3_bool         b3IsActivated();
+	b3_bool         b3IsActive();
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);

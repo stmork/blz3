@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/01/10 17:31:11  sm
+**	- Some minor GUI updates.
+**	- b3BBox::b3Transform() changes m_Matrix member.
+**	- Added image selection with image preview.
+**
 **	Revision 1.37  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.36  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
@@ -649,7 +654,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
-		if (force_action || shape->b3IsActivated())
+		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation);
 			transformed = true;
@@ -663,6 +668,12 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 		{
 			transformed = true;
 		}
+	}
+
+	if (force_action || b3IsActive())
+	{
+		b3MatrixMMul(&m_Matrix,&m_Matrix,transformation);
+		transformed = true;
 	}
 
 	if (transformed)

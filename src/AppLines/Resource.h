@@ -5,6 +5,7 @@
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define ID_DRAWING_PERF                 101
+#define IDD_FILEOPENPREVIEW             101
 #define IDS_NEW_CAMERA                  102
 #define IDS_NEW_LIGHT                   103
 #define IDS_NAME_EXISTS                 104
@@ -54,7 +55,9 @@
 #define IDD_STEP_MOVE                   511
 #define IDD_STEP_ROTATE                 512
 #define IDC_PREVIEW_RAYTRACE            1000
+#define IDC_PREVIEW                     1000
 #define IDC_PREVIEW_BGIMAGE             1001
+#define IDC_IMAGE                       1001
 #define IDC_BG_LIGHT                    1002
 #define IDC_BG_COLOR                    1003
 #define IDC_BG_IMAGE                    1004

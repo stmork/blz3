@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "b3SelectTexture.h"
+#include "b3ImagePreviewFileDlg.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/10 17:31:11  sm
+**	- Some minor GUI updates.
+**	- b3BBox::b3Transform() changes m_Matrix member.
+**	- Added image selection with image preview.
+**
 **	Revision 1.1  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **
 */
 
@@ -58,7 +64,7 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 	suggest.b3Correct((*tx)->b3Name());
 	file_filter.LoadString(IDS_TEXTURE_FILTER);
 
-	CFileDialog   filedlg(
+	CB3ImagePreviewFileDlg   filedlg(
 		true, // Use file save dialog
 		default_ext, // default extension
 		suggest, // file name suggestion to save
