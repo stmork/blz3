@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/05/25 16:47:31  sm
+**	- Added error messages in case a plugin fails.
+**
 **	Revision 1.1  2003/05/24 16:37:06  sm
 **	- Added plugin support for Un*x
-**
+**	
 */
 
 /*************************************************************************
@@ -77,8 +80,19 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 		if(init != null)
 		{
 			init();
-			b3PrintF(B3LOG_DEBUG,"Plugin %s initialized.\n",(const char *)m_PluginPath);
+			b3PrintF(B3LOG_DEBUG,"Plugin %s initialized.\n",
+				(const char *)m_PluginPath);
 		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Plugin %s doesn't have init method!\n",
+				(const char *)m_PluginPath);
+		}
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Problems loading plugin %s:\n",(const char *)m_PluginPath);
+		b3PrintF(B3LOG_NORMAL,"  %s\n",dlerror());
 	}
 }
 
