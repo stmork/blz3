@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/11/26 16:28:17  smork
+**	- Equalizing VERBOSE print outs.
+**	- pthread error messages only in _DEBUG version.
+**
 **	Revision 1.18  2004/08/18 07:32:00  sm
 **	- Fixed b3Thread::b3Stop() bug on gcc 2.95 systems.
-**
+**	
 **	Revision 1.17  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
 **	
@@ -127,7 +131,7 @@
 **                                                                      **
 *************************************************************************/
 
-#if 1
+#ifdef _DEBUG
 static b3_bool b3LogPThread(int error_code)
 {
 	if(error_code != 0)

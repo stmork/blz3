@@ -16,7 +16,7 @@
 */
 
 #ifdef _DEBUG
-#define nVERBOSE
+#define not_VERBOSE
 #endif
 
 /*************************************************************************
@@ -38,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/11/26 16:28:17  smork
+**	- Equalizing VERBOSE print outs.
+**	- pthread error messages only in _DEBUG version.
+**
 **	Revision 1.8  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
-**
+**	
 **	Revision 1.7  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
 **	

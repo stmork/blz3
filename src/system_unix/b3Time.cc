@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/11/26 16:28:17  smork
+**	- Equalizing VERBOSE print outs.
+**	- pthread error messages only in _DEBUG version.
+**
 **	Revision 1.6  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
-**
+**	
 **	Revision 1.5  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -79,7 +83,7 @@ void b3TimeSpan::b3Start()
 {
 	ftime(&m_RealTime);
 	getrusage(RUSAGE_SELF,&m_UsageTime);
-#ifdef _VERBOSE
+#ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL,"Thread time start: %9d,%06d\n",
 		m_UsageTime.ru_utime.tv_sec,
 		m_UsageTime.ru_utime.tv_usec);
@@ -93,7 +97,7 @@ void b3TimeSpan::b3Stop()
 
 	getrusage(RUSAGE_SELF,&usage_stop);
 	ftime(&real_stop);
-#ifdef _VERBOSE
+#ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL,"Thread time stop:  %9d,%06d\n",
 		usage_stop.ru_utime.tv_sec,
 		usage_stop.ru_utime.tv_usec);

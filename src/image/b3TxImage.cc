@@ -26,7 +26,6 @@
 #include "blz3/base/b3Color.h"
 
 #define not_SLOW_N_UGLY
-#define not_VERY_VERBOSE
 
 /*************************************************************************
 **                                                                      **
@@ -36,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/11/26 16:28:17  smork
+**	- Equalizing VERBOSE print outs.
+**	- pthread error messages only in _DEBUG version.
+**
 **	Revision 1.9  2004/08/28 13:55:33  sm
 **	- Added some mirror methods.
 **	- Cleanup job.
-**
+**	
 **	Revision 1.8  2004/08/09 10:09:05  sm
 **	- Added color palette reduction and its tool.
 **	

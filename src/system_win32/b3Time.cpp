@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/11/26 16:28:17  smork
+**	- Equalizing VERBOSE print outs.
+**	- pthread error messages only in _DEBUG version.
+**
 **	Revision 1.11  2002/11/16 15:18:02  sm
 **	- Adjusted b3TimeSpan to double
-**
+**	
 **	Revision 1.10  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -182,7 +186,7 @@ void b3TimeSpan::b3Start()
 		&start_time,&exit_time,
 		&m_sStart,&m_uStart);
 	ftime(&m_RealTime);
-#ifdef _VERBOSE
+#ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL,"Thread time start: %9d,%06d\n",
 		m_uStart.dwLowDateTime,
 		m_uStart.dwHighDateTime);
@@ -199,7 +203,7 @@ void b3TimeSpan::b3Stop()
 		&start_time,&exit_time,
 		&system_usage,&user_usage);
 	ftime(&real_stop);
-#ifdef _VERBOSE
+#ifdef VERBOSE
 	b3PrintF(B3LOG_NORMAL,"Thread time stop:  %9d,%06d\n",
 		user_usage.dwLowDateTime,
 		user_usage.dwHighDateTime);

@@ -17,6 +17,8 @@
 **
 */
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -36,6 +38,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2004/11/26 16:28:17  smork
+**      - Equalizing VERBOSE print outs.
+**      - pthread error messages only in _DEBUG version.
+**
 **      Revision 1.10  2003/07/20 10:10:16  sm
 **      - Fixed typo.
 **
@@ -161,7 +167,7 @@ b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 	{
 		if (entry->b3IsClassType(class_type))
 		{
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 			b3PrintF (B3LOG_FULL,"%08lx found,\n",class_type);
 #endif
 			// Some kind of LRU

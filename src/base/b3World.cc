@@ -17,6 +17,8 @@
 **
 */
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -37,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2004/11/26 16:28:17  smork
+**      - Equalizing VERBOSE print outs.
+**      - pthread error messages only in _DEBUG version.
+**
 **      Revision 1.30  2003/07/20 09:21:18  sm
 **      - Added item register dump.
 **
@@ -293,21 +299,21 @@ b3_world_error b3Item::b3ParseLinkuage(
 	b3_u32    act_class;
 	b3_u32    cmp_class;
 
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 	b3Space(level);
 	b3PrintF (B3LOG_FULL,"---- %08lx %08lx Start\n",b3GetClass(),my_class_limit);
 #endif
 	for (i = 0;i < m_HeadCount;i++)
 	{
 		cmp_class = m_Heads[i].b3GetClass();
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 		b3Space(level);
 		b3PrintF (B3LOG_FULL,"       %08lx\n",cmp_class);
 #endif
 		pos = 1;
 		while ((pos < node_count) && ((act_class = array[pos]->b3GetClass()) < my_class_limit))
 		{
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 			b3Space(level);
 			b3PrintF (B3LOG_FULL,"         %08lx %08lx %p",
 				act_class,
@@ -317,21 +323,21 @@ b3_world_error b3Item::b3ParseLinkuage(
 			if (act_class == cmp_class)
 			{
 				m_Heads[i].b3Append(array[pos]);
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 				b3PrintF (B3LOG_FULL," appended.\n");
 #endif
 				array[pos]->b3ParseLinkuage(&array[pos],node_count - pos,cmp_class,level + 1);
 			}
 			else
 			{
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 				b3PrintF (B3LOG_FULL," ignored.\n");
 #endif
 			}
 			pos++;
 		}
 	}
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 	b3Space(level);
 	b3PrintF (B3LOG_FULL,"---- %08lx %08lx End\n",b3GetClass(),my_class_limit);
 #endif
@@ -397,7 +403,7 @@ b3_world_error b3World::b3Parse()
 		i += max_node;
 	}
 
-#ifdef _DEBUG_VERBOSE
+#ifdef VERBOSE
 	if (b3CheckLevel(B3LOG_FULL))
 	{
 		b3PrintF (B3LOG_FULL,"Counted %d nodes.\n",node_count);
