@@ -81,6 +81,8 @@ struct b3_surface
 	b3_f64    refl,refr,ior,se;
 };
 
+extern b3_f64 epsilon;
+
 /*************************************************************************
 **                                                                      **
 **                        einschraenkende Bedingungen                   **
@@ -323,12 +325,14 @@ public:
 #define TYPE_WATER          0x00000004
 #define TYPE_WAVE           0x00000005
 #define TYPE_GLOSSY         0x00000006
+#define TYPE_GROOVE         0x00000007
 #define BUMP_NOISE          (CLASS_BUMP|TYPE_NOISE)
 #define BUMP_MARBLE         (CLASS_BUMP|TYPE_MARBLE)
 #define BUMP_TEXTURE        (CLASS_BUMP|TYPE_TEXTURE)
 #define BUMP_WATER          (CLASS_BUMP|TYPE_WATER)
 #define BUMP_WAVE           (CLASS_BUMP|TYPE_WAVE)
 #define BUMP_GLOSSY         (CLASS_BUMP|TYPE_GLOSSY)
+#define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
 
 class b3InitBump
 {
@@ -348,72 +352,111 @@ public:
 	virtual void b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_NOISE, BUMP_MARBLE
+// BUMP_NOISE
 class b3BumpNoise : public b3Bump
 {
-	b3_vector   Scale;
-	b3_f32      Size;
+	b3_vector   m_Scale;
+	b3_f32      m_Size;
 
 public:
 	B3_ITEM_INIT(b3BumpNoise);
 	B3_ITEM_LOAD(b3BumpNoise);
+
+	void b3BumpNormal(b3_ray *ray);
+};
+
+// BUMP_MARBLE
+class b3BumpMarble : public b3Bump
+{
+	b3_vector   m_Scale;
+	b3_f32      m_Size;
+
+public:
+	B3_ITEM_INIT(b3BumpMarble);
+	B3_ITEM_LOAD(b3BumpMarble);
+
+	void b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_TEXTURE
 class b3BumpTexture : public b3Bump
 {
-	b3_f32      xStart,yStart;       // base of bump texture
-	b3_f32      xScale,yScale;       // scale of bump texture
-	b3_s32      xTimes,yTimes;       // repetition
-	b3_f32      Intensity;           // non zero
-	b3Tx       *Texture;
-	b3_s32      Flags;
-	b3Path      Name;
+	b3_f32      m_xStart,m_yStart;     // base of bump texture
+	b3_f32      m_xScale,m_yScale;     // scale of bump texture
+	b3_s32      m_xTimes,m_yTimes;     // repetition
+	b3_f32      m_Intensity;           // non zero
+	b3Tx       *m_Texture;
+	b3_s32      m_Flags;
+	b3Path      m_Name;
 
 public:
 	B3_ITEM_INIT(b3BumpTexture);
 	B3_ITEM_LOAD(b3BumpTexture);
+
+	void b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_WATER
 class b3BumpWater : public b3Bump
 {
-	b3_s32      ScaleFlag;           // use BBox coords or direct coord
-	b3_vector   ScaleIPoint;         // intersection point scalar
-	b3_f32      ScaleRad;            // radius scalar
-	b3_f32      ScaleTime;           // time period for wave swing
+	b3_s32      m_ScaleFlag;           // use BBox coords or direct coord
+	b3_vector   m_ScaleIPoint;         // intersection point scalar
+	b3_f32      m_ScaleRad;            // radius scalar
+	b3_f32      m_ScaleTime;           // time period for wave swing
 
 public:
 	B3_ITEM_INIT(b3BumpWater);
 	B3_ITEM_LOAD(b3BumpWater);
+
+	void b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_WAVE
 class b3BumpWave : public b3Bump
 {
-	b3_s32      Flags;               // use BBox coords or direct coord
-	b3_vector   Scale;               // point scalar
-	b3_f32      Amplitude;           // amplitude
+	b3_s32      m_Flags;               // use BBox coords or direct coord
+	b3_vector   m_Scale;               // point scalar
+	b3_f32      m_Amplitude;           // amplitude
 
 public:
 	B3_ITEM_INIT(b3BumpWave);
 	B3_ITEM_LOAD(b3BumpWave);
+
+	void b3BumpNormal(b3_ray *ray);
+};
+
+// BUMP_GROOVE
+class b3BumpGroove : public b3Bump
+{
+	b3_s32      m_Flags;               // use BBox coords or direct coord
+	b3_vector   m_Scale;               // point scalar
+	b3_f32      m_Amplitude;           // amplitude
+
+public:
+	B3_ITEM_INIT(b3BumpGroove);
+	B3_ITEM_LOAD(b3BumpGroove);
+
+	void b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_GLOSSY */
 class b3BumpGlossy : public b3Bump
 {
-	b3_s32      Flags;
-	b3_f32      Intensity;
+	b3_s32      m_Flags;
+	b3_f32      m_Intensity;
 
 public:
 	B3_ITEM_INIT(b3BumpGlossy);
 	B3_ITEM_LOAD(b3BumpGlossy);
+
+	void b3BumpNormal(b3_ray *ray);
 };
 
 
 //flags for WaterBump, WaveBump
-#define BUMP_IPOINT  1
+#define BUMP_IPOINT          1
+#define BUMP_U_SUPPRESS_WAVE 2
+#define BUMP_V_SUPPRESS_WAVE 4
 
 /*************************************************************************
 **                                                                      **
@@ -469,12 +512,14 @@ public:
 // MATERIAL or MAT_NORMAL
 class b3MatNormal : public b3Material
 {
-	b3_color          DiffColor,AmbColor,SpecColor;
-	b3_f32            Reflection;          // self explaining
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_s32            Flags;
+	b3_color          m_DiffColor;
+	b3_color          m_AmbColor;
+	b3_color          m_SpecColor;
+	b3_f32            m_Reflection;          // self explaining
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
 
 public:
 	B3_ITEM_INIT(b3MatNormal);
@@ -523,14 +568,16 @@ public:
 // MARBLE
 class b3MatMarble : public b3Material 
 {
-	b3_color          DiffColor,AmbColor,SpecColor;
-	b3_vector         Scale;
-	b3_f32            Reflection;
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_s32            Flags;
-	b3_s32            xTimes,yTimes;
+	b3_color          m_DiffColor;
+	b3_color          m_AmbColor;
+	b3_color          m_SpecColor;
+	b3_vector         m_Scale;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
+	b3_s32            m_xTimes,m_yTimes;
 
 public:
 	B3_ITEM_INIT(b3MatMarble);
@@ -540,19 +587,26 @@ public:
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // WOOD
 class b3MatWood : public b3Material 
 {
-	b3_color          DiffColor,AmbColor,SpecColor;
-	b3_vector         Scale;
-	b3_f32            Reflection;
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_s32            Flags;
-	b3_s32            xTimes,yTimes;
+	b3_color          m_DiffColor;
+	b3_color          m_AmbColor;
+	b3_color          m_SpecColor;
+	b3_vector         m_Scale;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_Flags;
+	b3_s32            m_xTimes,m_yTimes;
 
 public:
 	B3_ITEM_INIT(b3MatWood);
@@ -562,21 +616,26 @@ public:
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // TEXTURE
 class b3MatTexture : public b3Material 
 {
-	b3_f32            Reflection;
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_f32            xStart,yStart;    // surface coordinate start
-	b3_f32            xScale,yScale;    // texture scale
-	b3_s32            xTimes,yTimes;    // repetition in x- y-direction
-	b3Tx             *Texture;
-	b3_s32            Flags;
-	b3Path            Name;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_f32            m_xStart,m_yStart;    // surface coordinate start
+	b3_f32            m_xScale,m_yScale;    // texture scale
+	b3_s32            m_xTimes,m_yTimes;    // repetition in x- y-direction
+	b3Tx             *m_Texture;
+	b3_s32            m_Flags;
+	b3Path            m_Name;
 
 public:
 	B3_ITEM_INIT(b3MatTexture);
@@ -586,20 +645,25 @@ public:
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // WRAPTEXTURE
 class b3MatWrapTexture : public b3Material 
 {
-	b3_f32            Reflection;
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_f32            xStart,yStart;    // surface coordinate start
-	b3_f32            xEnd,yEnd;        // surface coordinate end
-	b3Tx             *Texture;          // only one texture (compat. Dali)
-	b3_s32            Flags;
-	b3Path            Name;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_f32            m_xStart,m_yStart;  // surface coordinate start
+	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
+	b3Tx             *m_Texture;          // only one texture (compat. Dali)
+	b3_s32            m_Flags;
+	b3Path            m_Name;
 
 public:
 	B3_ITEM_INIT(b3MatWrapTexture);
@@ -609,6 +673,11 @@ public:
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // SLIDE
@@ -1458,6 +1527,7 @@ struct b3_illumination : public b3_surface
 struct b3_light_info : public b3_ray_info
 {
 	b3_vector LightView,xDir,yDir;
+	b3_color  Result;
 	b3_f64    Size,LightFrac,LightDist;
 	b3_s32    Distr;
 };
@@ -1496,7 +1566,11 @@ public:
 	b3_bool b3Illuminate(b3Scene *scene,b3_illumination *surface);
 
 private:
-	void    b3Init();
+	void     b3Init();
+	b3_bool  b3PointIllumination(b3Scene *scene,b3_illumination *surface);
+	b3_bool  b3AreaIllumination(b3Scene  *scene,b3_illumination *surface);
+	b3Shape *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
+		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
 /************************************************************************\
@@ -1862,7 +1936,7 @@ public:
 		    void            b3Raytrace(b3Display *display);
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
-	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
+	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_illumination *surface);
@@ -1884,7 +1958,7 @@ public:
 	B3_ITEM_LOAD(b3ScenePhong);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
 };
 
 class b3SceneMork : public b3Scene
@@ -1894,7 +1968,7 @@ public:
 	B3_ITEM_LOAD(b3SceneMork);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);

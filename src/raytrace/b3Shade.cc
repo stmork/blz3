@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.8  2001/10/06 19:56:00  sm
 **	- Fixing bugs concerning reflection and
 **	  refraction computation (both: direction
 **	  computation and shading)
-**
+**	
 **	Revision 1.7  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -153,7 +159,8 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 void b3Scene::b3Illuminate(
 	b3Light         *light,
 	b3_light_info   *Jit,
-	b3_illumination *surface)
+	b3_illumination *surface,
+	b3_color        *result)
 {
 	register double ShapeAngle;
 
@@ -162,12 +169,9 @@ void b3Scene::b3Illuminate(
 		surface->incoming->normal.y * Jit->dir.y +
 		surface->incoming->normal.z * Jit->dir.z) >= 0)
 	{
-		surface->incoming->color.r +=
-			ShapeAngle * surface->diffuse.r * light->m_Color.r;
-		surface->incoming->color.g +=
-			ShapeAngle * surface->diffuse.g * light->m_Color.g;
-		surface->incoming->color.b +=
-			ShapeAngle * surface->diffuse.b * light->m_Color.b;
+		result->r += ShapeAngle * surface->diffuse.r * light->m_Color.r;
+		result->g += ShapeAngle * surface->diffuse.g * light->m_Color.g;
+		result->b += ShapeAngle * surface->diffuse.b * light->m_Color.b;
 	}
 }
 

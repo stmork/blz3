@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.10  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
-**
+**	
 **	Revision 1.9  2001/10/03 20:17:56  sm
 **	- Minor bugfixes
 **	
@@ -76,6 +82,8 @@
 **	
 **
 */
+
+b3_f64 epsilon = 0.001;
 
 struct b3_rt_info
 {

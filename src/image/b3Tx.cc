@@ -36,10 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.3  2001/07/03 18:14:08  sm
 **	- Now having running threads. The system lib
 **	  needed the appropriate project options
@@ -150,7 +156,7 @@ void b3TIFFWarnHandler(
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);
 }
 
-b3Tx::b3Tx()
+b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx))
 {
 	data        = null;
 	palette     = null;
@@ -183,7 +189,7 @@ b3Tx::b3Tx()
 #endif
 }
 
-b3Tx::b3Tx(b3Tx *orig)
+b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx))
 {
 	name.b3Empty();
 	histogramme = null;

@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.10  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.9  2001/10/05 20:30:45  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -83,8 +89,6 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
-
-static b3_f64 epsilon = 0.001;
 
 b3_f64 b3Shape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {

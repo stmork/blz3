@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.2  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.1  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -61,16 +67,17 @@ b3SceneMork::b3SceneMork(b3_u32 *src) : b3Scene(src)
 void b3SceneMork::b3Illuminate(
 	b3Light         *light,
 	b3_light_info   *Jit,
-	b3_illumination *surface)
+	b3_illumination *surface,
+	b3_color        *result)
 {
 	b3_f64   ShapeAngle,Factor;
 	b3_color filter;
 
 	// Real absorption
-	surface->incoming->color.a  = 0;
-	surface->incoming->color.r += (surface->diffuse.r * m_ShadowBrightness);
-	surface->incoming->color.g += (surface->diffuse.g * m_ShadowBrightness);
-	surface->incoming->color.b += (surface->diffuse.b * m_ShadowBrightness);
+	result->a  = 0;
+	result->r += (surface->diffuse.r * m_ShadowBrightness);
+	result->g += (surface->diffuse.g * m_ShadowBrightness);
+	result->b += (surface->diffuse.b * m_ShadowBrightness);
 
 	filter.r =
 	filter.g =
@@ -114,9 +121,9 @@ void b3SceneMork::b3Illuminate(
 		}
 	}
 
-	surface->incoming->color.r += (surface->diffuse.r * filter.r);
-	surface->incoming->color.g += (surface->diffuse.g * filter.g);
-	surface->incoming->color.b += (surface->diffuse.b * filter.b);
+	result->r += (surface->diffuse.r * filter.r);
+	result->g += (surface->diffuse.g * filter.g);
+	result->b += (surface->diffuse.b * filter.b);
 }
 
 

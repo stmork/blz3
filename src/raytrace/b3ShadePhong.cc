@@ -32,13 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
+**
 **	Revision 1.2  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.1  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -60,9 +66,10 @@ b3ScenePhong::b3ScenePhong(b3_u32 *src) : b3Scene(src)
 void b3ScenePhong::b3Illuminate(
 	b3Light         *light,
 	b3_light_info   *Jit,
-	b3_illumination *surface)
+	b3_illumination *surface,
+	b3_color        *result)
 {
-	register double ShapeAngle,Factor;
+	b3_f64 ShapeAngle,Factor;
 
 	if (Jit->shape == null)
 	{
@@ -75,15 +82,15 @@ void b3ScenePhong::b3Illuminate(
 				surface->refl_ray.dir.x * Jit->dir.x +
 				surface->refl_ray.dir.y * Jit->dir.y +
 				surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
-			Factor = exp (Factor * surface->se) * Jit->LightFrac;
+			Factor = exp(Factor * surface->se) * Jit->LightFrac;
 
-			surface->incoming->color.r += (
+			result->r += (
 				Factor     * surface->specular.r +
 				ShapeAngle * surface->diffuse.r) * light->m_Color.r;
-			surface->incoming->color.g += (
+			result->g += (
 				Factor     * surface->specular.g +
 				ShapeAngle * surface->diffuse.g) * light->m_Color.g;
-			surface->incoming->color.b += (
+			result->b += (
 				Factor     * surface->specular.b +
 				ShapeAngle * surface->diffuse.b) * light->m_Color.b;
 		}

@@ -38,6 +38,12 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/10/07 20:17:26  sm
+**      - Prepared texture support.
+**      - Noise procedures added.
+**      - Added bump and material support.
+**      - Added soft shadows.
+**
 **      Revision 1.11  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects
@@ -128,7 +134,7 @@ b3World::~b3World()
 
 void b3World::b3EndianSwap32(b3_u32 *uPtr)
 {
-	register b3_u08 *ptr = (b3_u08 *)uPtr;
+	b3_u08 *ptr = (b3_u08 *)uPtr;
 
 	B3_SWAP(ptr[0],ptr[3]);
 	B3_SWAP(ptr[1],ptr[2]);

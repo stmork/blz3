@@ -134,7 +134,7 @@ public:
 };
 
 // one single image and its methods
-class b3Tx : public b3Mem
+class b3Tx : public b3Link<b3Tx>, public b3Mem
 {
 private:           
 	b3_pkd_color     *palette;

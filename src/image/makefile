@@ -15,6 +15,7 @@ LIB_SOURCE		=\
 	b3TxHist.cc\
 	b3TxImage.cc\
 	b3TxLoadTIFF.cc\
+	b3TxPool.cc\
 	b3TxSaveTIFF.cc\
 	b3TxScale.cc\
 	b3TxTIFF.cc\
@@ -27,6 +28,7 @@ LIB_OBJ			=\
 	b3TxHist.o\
 	b3TxImage.o\
 	b3TxLoadTIFF.o\
+	b3TxPool.o\
 	b3TxSaveTIFF.o\
 	b3TxScale.o\
 	b3TxTIFF.o\

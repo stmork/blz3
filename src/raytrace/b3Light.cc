@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/10/07 20:17:27  sm
+**      - Prepared texture support.
+**      - Noise procedures added.
+**      - Added bump and material support.
+**      - Added soft shadows.
+**
 **      Revision 1.8  2001/10/06 19:56:00  sm
 **      - Fixing bugs concerning reflection and
 **        refraction computation (both: direction
@@ -61,8 +67,6 @@
 **      Blizzard III is born
 **
 */
-
-static b3_f64 Limit = 0.001;
 
 void b3InitLight::b3Init()
 {
@@ -116,12 +120,20 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	if (m_ItemOffset > 0)
 	{
 		b3InitString(m_Name,m_ItemSize - (m_ParseIndex << 2));
-		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n",m_Name);
 	}
-	else
+
+	if (m_LightActive)
 	{
-		strcpy(m_Name,"Light");
-		b3PrintF(B3LOG_DEBUG,"Unnamed light loaded.\n");
+		b3PrintF(B3LOG_NORMAL,"  Light \"%s\" is active",m_Name);
+		if (m_SoftShadow)
+		{
+			b3PrintF(B3LOG_NORMAL," and uses soft shadows");
+		}
+		if (m_SpotActive)
+		{
+			b3PrintF(B3LOG_NORMAL," and uses light distribution curve");
+		}
+		b3PrintF(B3LOG_NORMAL,".\n");
 	}
 }
 
@@ -164,7 +176,7 @@ void b3Light::b3Init()
 			(b3_f64)(i - INIT_DEGREE) /
 			(b3_f64)(INIT_CONTROL_MAX - INIT_DEGREE);
 	}
-	m_Knots[INIT_CONTROL_MAX] += Limit;
+	m_Knots[INIT_CONTROL_MAX] += epsilon;
 	b3BSplineThroughEndControl (&m_Spline);
 
 	strcpy(m_Name,"Light");
@@ -177,7 +189,19 @@ b3_bool b3Light::b3Illuminate(
 	b3Scene         *scene,
 	b3_illumination *surface)
 {
-	b3Shape      *Shadow;
+	if (!m_LightActive)
+	{
+		return false;
+	}
+	return (m_SoftShadow ?
+		b3AreaIllumination(scene,surface) :
+		b3PointIllumination(scene,surface));
+}
+
+b3_bool b3Light::b3PointIllumination(
+	b3Scene         *scene,
+	b3_illumination *surface)
+{
 	b3_light_info Jit;
 	b3_vector     point;
 	b3_f64        LightDist,LightFrac,q,UpperBound;
@@ -210,7 +234,6 @@ b3_bool b3Light::b3Illuminate(
 	Jit.dir.y	*= LightDist;
 	Jit.dir.z	*= LightDist;
 
-
 	// Compute relative brightness via LDC
 	// (= light distribution curve)
 	if (m_SpotActive)
@@ -221,11 +244,76 @@ b3_bool b3Light::b3Illuminate(
 			Jit.dir.z * m_Direction.z);
 		if (LightFrac <= 0)
 		{
-			q = 1.0 - Limit;
+			q = 1.0 - epsilon;
 		}
 		else
 		{
-			q = (LightFrac >= 1 ? Limit : acos(LightFrac) * 2.0 / M_PI);
+			q = (LightFrac >= 1 ? epsilon : acos(LightFrac) * 2.0 / M_PI);
+		}
+
+		b3DeBoorOpened (&m_Spline,&point,0,q);
+		Jit.LightFrac = LightDist * m_Distance * point.y;
+	}
+	else
+	{
+		Jit.LightFrac = LightDist * m_Distance;
+	}
+	Jit.LightDist = LightDist;
+
+	scene->b3Intersect(&Jit,UpperBound - epsilon);
+	scene->b3Illuminate(this,&Jit,surface,&surface->incoming->color);
+	return true;
+}
+
+b3_bool b3Light::b3AreaIllumination (
+	b3Scene         *scene,
+	b3_illumination *surface)
+{
+	b3Shape       *Edge1,*Edge2,*LastEdge = null;
+	b3_light_info  Jit;
+	b3_color       result;
+	b3_vector      point;
+	b3_f64         Factor,LightDist,q;
+	b3_coord       x,y,xs;
+	b3_count       Distr,max;
+	b3_bool        equal;				
+
+	Jit.Distr = m_JitterEdge;
+	Jit.Size  = m_Distance * m_Size / (b3_f64)Jit.Distr;
+
+	// computing light axis between ipoint and light
+	// Changed by SAM 9-04-1993
+	Jit.pos         = surface->incoming->ipoint;
+	Jit.LightView.x = m_Position.x - surface->incoming->ipoint.x;
+	Jit.LightView.y = m_Position.y - surface->incoming->ipoint.y;
+	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
+	LightDist =
+		Jit.LightView.x * Jit.LightView.x +
+		Jit.LightView.y * Jit.LightView.y +
+		Jit.LightView.z * Jit.LightView.z;
+	if (LightDist == 0)
+	{
+		return false;
+	}
+
+	// normalizing light axis
+	LightDist = 1.0 / (Jit.Q = sqrt(LightDist));
+	Jit.LightView.x	*= LightDist;
+	Jit.LightView.y	*= LightDist;
+	Jit.LightView.z	*= LightDist;
+
+
+	// inserted Nov. 1994, SAM
+	if (m_SpotActive)
+	{
+		Factor = -(
+			Jit.LightView.x * m_Direction.x +
+			Jit.LightView.y * m_Direction.y +
+			Jit.LightView.z * m_Direction.z);
+		if (Factor <= 0) q = 1.0 - epsilon;
+		else
+		{
+			q = (Factor >= 1 ? epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
 		b3DeBoorOpened (&m_Spline,&point,0,q);
@@ -237,8 +325,118 @@ b3_bool b3Light::b3Illuminate(
 	}
 	Jit.LightDist = LightDist;
 
-	scene->b3Intersect(&Jit,UpperBound - Limit);
-	Shadow = Jit.shape;
-	scene->b3Illuminate(this,&Jit,surface);
+	Factor = LightDist / sqrt(
+		Jit.LightView.x * Jit.LightView.x +
+		Jit.LightView.y * Jit.LightView.y);
+	Jit.xDir.x	= -Jit.LightView.y * Factor;
+	Jit.xDir.y	=  Jit.LightView.x * Factor;
+	Jit.xDir.z	=  0;
+
+	Jit.yDir.x	=  Jit.LightView.y * Jit.xDir.z - Jit.LightView.z * Jit.xDir.y;
+	Jit.yDir.y	=  Jit.LightView.z * Jit.xDir.x - Jit.LightView.x * Jit.xDir.z;
+	Jit.yDir.z	=  Jit.LightView.x * Jit.xDir.y - Jit.LightView.y * Jit.xDir.x;
+	Factor = LightDist / sqrt(
+		Jit.yDir.x * Jit.yDir.x +
+		Jit.yDir.y * Jit.yDir.y +
+		Jit.yDir.z * Jit.yDir.z);
+	Jit.yDir.x *= Factor;
+	Jit.yDir.y *= Factor;
+	Jit.yDir.z *= Factor;
+
+	Jit.Result.a =
+	Jit.Result.r =
+	Jit.Result.g =
+	Jit.Result.b = 0;
+
+	// The following loops check every second point of the outline
+	// of the light raster. If every sample hits the same shape the
+	// shadow computation is completed.
+	equal = true;
+	Distr = Jit.Distr - 1;
+	xs    = B3_IRAN(2);
+	for (x = xs;x <= Distr;x += 2)
+	{
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0);
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr-x);
+
+		equal   &= (Edge1 == Edge2);
+		if (x != xs) equal &= (Edge1 == LastEdge);
+		LastEdge = Edge1;
+	}
+	for (y = 2 - xs;y < Distr;y += 2)
+	{
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y);
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr-y);
+
+		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
+		LastEdge = Edge1;
+	}
+
+
+	// This part computes the untested points in the light raster.
+	if (equal)
+	{
+		Factor = 0.5 / Distr;
+	}
+	else
+	{
+		// fill top and bottom outline
+		for (x = 1 - xs;x <= Distr;x += 2)
+		{
+			b3CheckSinglePoint (scene,surface,&Jit,x,0);
+			b3CheckSinglePoint (scene,surface,&Jit,x,Distr);
+		}
+
+		for (y = 1;y < Distr;y++)
+		{
+			max = Distr + ((Jit.Distr + xs) & 1);
+			for (x = xs;x < max;x++)
+			{
+				b3CheckSinglePoint (scene,surface,&Jit,x,y);
+			}
+			xs ^= 1;
+		}
+
+		Factor = 1.0 / (Jit.Distr * Jit.Distr);
+	}
+
+	surface->incoming->color.r += Jit.Result.r * Factor;
+	surface->incoming->color.g += Jit.Result.g * Factor;
+	surface->incoming->color.b += Jit.Result.b * Factor;
 	return true;
+}
+
+b3Shape *b3Light::b3CheckSinglePoint (
+	b3Scene         *scene,                                
+	b3_illumination *surface,
+	b3_light_info   *Jit,
+	b3_coord         x,
+	b3_coord         y)
+{
+	b3_f64   jx,jy,LightDist;
+
+	jx = (((b3_f64)x + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
+	jy = (((b3_f64)y + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
+
+	Jit->dir.x = Jit->LightView.x + jx * Jit->xDir.x + jy * Jit->yDir.x;
+	Jit->dir.y = Jit->LightView.y + jx * Jit->xDir.y + jy * Jit->yDir.y;
+	Jit->dir.z = Jit->LightView.z + jx * Jit->xDir.z + jy * Jit->yDir.z;
+
+	LightDist =
+		Jit->dir.x * Jit->dir.x +
+		Jit->dir.y * Jit->dir.y +
+		Jit->dir.z * Jit->dir.z;
+	if (LightDist != 0)
+	{
+		LightDist   = 1.0 / sqrt(LightDist);
+		Jit->dir.x *= LightDist;
+		Jit->dir.y *= LightDist;
+		Jit->dir.z *= LightDist;
+	}
+	Jit->LightDist = LightDist;
+
+	scene->b3Intersect(Jit,Jit->Q - epsilon);
+	scene->b3Illuminate(this,Jit,surface,&Jit->Result);
+
+	return Jit->shape;
 }
