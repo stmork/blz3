@@ -1,0 +1,23 @@
+#!/bin/tcsh
+
+set BLZ3_HOME=@BLZ3_HOME@
+
+cd $BLZ3_HOME
+make clean
+make distclean
+
+echo "Removing temp files..."
+find $BLZ3_HOME -name "*.log" -exec rm -f {} \;
+find $BLZ3_HOME -name "*.ncb" -exec rm -f {} \;
+find $BLZ3_HOME -name "*.plg" -exec rm -f {} \;
+find $BLZ3_HOME -name "*.mak" -exec rm -f {} \;
+find $BLZ3_HOME -name "*.bak" -exec rm -f {} \;
+find $BLZ3_HOME -name "*~"    -exec rm -f {} \;
+find $BLZ3_HOME -name ".#*"   -exec rm -f {} \;
+find $BLZ3_HOME -name DEADJOE -exec rm -f {} \;
+
+test -d $BLZ3_HOME/Debug   && rm -rf $BLZ3_HOME/Debug
+test -d $BLZ3_HOME/Release && rm -rf $BLZ3_HOME/Release
+
+echo "Creating tar..."       
+(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
