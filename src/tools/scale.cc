@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/03/30 13:31:19  sm
+**	- Added title support for image page scaler.
+**
 **	Revision 1.2  2003/03/24 18:38:53  sm
 **	- Scaling adjusted.
-**
+**	
 **	Revision 1.1  2003/03/24 16:15:58  sm
 **	- Added a scale tool for examples.
 **	
@@ -52,6 +55,7 @@
 
 #define DEST_IMG_SIZE 100.0f
 #define ROW_SIZE        4
+#define TITLE         "Bildersammlung";
 
 class b3Site
 {
@@ -78,7 +82,7 @@ public:
 		m_List.b3Sort();
 
 		m_Num = 0;
-		m_Title = "Isabella";
+		m_Title = TITLE;
 	}
 
 	void b3Dump()
@@ -117,6 +121,10 @@ public:
 				"\n"
 				"<td width=\"500\" valign=\"top\">\n");
 
+			fprintf(file,
+				"<center>\n"
+				"<h1>%s</h1>\n"
+				"</center>\n",m_Title);
 			fprintf(file,"<table>\n");
 			for (int i = 0;i < m_Num;i++)
 			{
@@ -146,6 +154,11 @@ public:
 		{
 			b3PrintF(B3LOG_NORMAL,"Cannot write %s\n",(const char *)index);
 		}
+	}
+
+	void setTitle(char *title)
+	{
+		m_Title = title;
 	}
 
 private:
@@ -261,17 +274,25 @@ int main(int argc,char *argv[])
 {
 	b3Path dir;
 	b3CPU  cpu;
+	char  *title = TITLE;
 
-	if (argc > 1)
+	switch (argc)
 	{
+	default:
+	case 3:
+		title = argv[2];
+	case 2:
 		dir = argv[1];
-	}
-	else
-	{
-		dir = ".";
-	}
-	b3Site site(dir,"/tmp/im");
+		break;
 
+	case 1:
+		dir = ".";
+		break;
+	}
+
+	b3Site site(dir,"/tmp/im");
+	site.setTitle(title);
 	site.b3Dump();
+
 	return 0;
 }
