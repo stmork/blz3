@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/07/12 10:20:16  sm
+**	- Fixed ticketno. 12 (memory leak in b3ItemRegistry)
+**
 **	Revision 1.1  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 */
 
 /*************************************************************************
@@ -46,9 +49,10 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatMarble::CDlgMatMarble(CWnd* pParent /*=NULL*/)
+CDlgMatMarble::CDlgMatMarble(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgMatMarble::IDD, pParent)
 {
+	m_Material = (b3MatMarble *)item;
 	//{{AFX_DATA_INIT(CDlgMatMarble)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -80,5 +84,8 @@ void CDlgMatMarble::b3Register()
 
 b3_bool CDlgMatMarble::b3Edit(b3Item *item)
 {
+	CDlgMatMarble dlg(item);
+
+	dlg.DoModal();
 	return true;
 }

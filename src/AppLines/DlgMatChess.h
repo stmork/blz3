@@ -31,11 +31,13 @@
 
 class CDlgMatChess : public CDialog
 {
+	b3MatChess *m_Material;
+
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
-	CDlgMatChess(CWnd* pParent = NULL);   // standard constructor
+	CDlgMatChess(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatChess)

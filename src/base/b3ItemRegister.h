@@ -41,20 +41,23 @@ public:
 	b3Item  *b3Load(b3_u32 *buffer);
 };
 
-class B3_PLUGIN b3ItemRegister
+class B3_PLUGIN b3ItemRegister : b3Base<b3ItemRegisterEntry>
 {
-private:
-	static b3Base<b3ItemRegisterEntry> m_Classes;
+	static b3ItemRegister              m_Register;
 
 public:
 	                            b3ItemRegister();
 	                           ~b3ItemRegister();
-	static void                 b3Append(b3ItemRegisterEntry *new_entry);
 	static b3ItemRegisterEntry *b3Find(b3_u32 class_type);
+
+	static inline void          b3Append(b3ItemRegisterEntry *new_entry)
+	{
+		m_Register.b3Base<b3ItemRegisterEntry>::b3Append(new_entry);
+	}
 
 	static inline b3_bool       b3IsEmpty()
 	{
-		return m_Classes.b3IsEmpty();
+		return m_Register.b3Base<b3ItemRegisterEntry>::b3IsEmpty();
 	}
 };
 

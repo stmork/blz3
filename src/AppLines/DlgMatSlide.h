@@ -31,11 +31,13 @@
 
 class CDlgMatSlide : public CDialog
 {
+	b3MatSlide *m_Material;
+
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
-	CDlgMatSlide(CWnd* pParent = NULL);   // standard constructor
+	CDlgMatSlide(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatSlide)

@@ -31,11 +31,13 @@
 
 class CDlgMatTexture : public CDialog
 {
+	b3MatTexture *m_Material;
+
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
-	CDlgMatTexture(CWnd* pParent = NULL);   // standard constructor
+	CDlgMatTexture(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatTexture)

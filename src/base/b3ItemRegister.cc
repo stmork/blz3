@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2003/07/12 10:20:16  sm
+**      - Fixed ticketno. 12 (memory leak in b3ItemRegistry)
+**
 **      Revision 1.7  2003/06/26 08:15:43  sm
 **      - Cleaned up b3ItemRegister
 **      - Added writing support for unregistered b3Item instances.
@@ -128,7 +131,8 @@ b3Base<b3Item> *b3FirstItem::b3GetHead()
 **                                                                      **
 *************************************************************************/
 
-b3Base<b3ItemRegisterEntry> b3ItemRegister::m_Classes;
+// b3Base<b3ItemRegisterEntry> b3ItemRegister::m_Classes;
+b3ItemRegister b3ItemRegister::m_Register;
 
 b3ItemRegister::b3ItemRegister()
 {
@@ -140,25 +144,14 @@ b3ItemRegister::b3ItemRegister()
 
 b3ItemRegister::~b3ItemRegister()
 {
-	b3ItemRegisterEntry *item;
-
-	while((item = m_Classes.First) != null)
-	{
-		m_Classes.b3Remove(item);
-		delete item;
-	}
-}
-
-void b3ItemRegister::b3Append(b3ItemRegisterEntry *new_entry)
-{
-	m_Classes.b3Append(new_entry);
+	b3Free();
 }
 
 b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 {
 	b3ItemRegisterEntry *entry;
 
-	B3_FOR_BASE(&m_Classes,entry)
+	B3_FOR_BASE(&m_Register,entry)
 	{
 		if (entry->b3IsClassType(class_type))
 		{
@@ -166,8 +159,8 @@ b3ItemRegisterEntry *b3ItemRegister::b3Find(b3_u32 class_type)
 			b3PrintF (B3LOG_FULL,"%08lx found,\n",class_type);
 #endif
 			// Some kind of LRU
-			m_Classes.b3Remove(entry);
-			m_Classes.b3First(entry);
+			m_Register.b3Remove(entry);
+			m_Register.b3First(entry);
 			return entry;
 		}
 	}
