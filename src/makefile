@@ -72,7 +72,7 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-install:	all
+install:	all tools
 	@$(BLZ3_HOME)/bin/install.sh
 
 #########################################################

@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/07/08 10:43:00  sm
+**	- Make some makefile cleanups.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.2  2003/08/11 18:49:34  sm
 **	- Some minor pattern changes
-**
+**	
 **	Revision 1.1  2003/08/08 08:50:07  sm
 **	- Added test image creation
 **	
@@ -66,8 +70,8 @@ static b3_f64 freq(b3_f64 freq)
 
 static void create(b3Tx &img)
 {
-	b3_coord x,xQuart = img.xSize >> 2,xOct = img.xSize >> 3;
-	b3_coord y,yQuart = img.ySize >> 2,yOct = img.ySize >> 3,c,max;
+	b3_coord              x,xOct = img.xSize >> 3;
+	b3_coord              y,yQuart = img.ySize >> 2,c,max;
 	b3Array<b3_pkd_color> bars,sinus;
 
 	b3_pkd_color *lPtr = (b3_pkd_color *)img.b3GetData();
@@ -133,10 +137,10 @@ int main(int argc,char *argv[])
 		switch(i)
 		{
 		case 1:
-			sscanf(argv[i],"%d",&xSize);
+			sscanf(argv[i],"%ld",&xSize);
 			break;
 		case 2:
-			sscanf(argv[i],"%d",&ySize);
+			sscanf(argv[i],"%ld",&ySize);
 			break;
 		case 3:
 			imgname = argv[i];

@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/07/08 10:43:00  sm
+**	- Make some makefile cleanups.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.5  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.4  2003/05/17 21:09:48  sm
 **	- Added feeder scanning calibration
 **	
@@ -278,9 +282,8 @@ private:
 
 int main(int argc,char *argv[])
 {
-	b3Path dir;
-	b3CPU  cpu;
-	char  *title = TITLE;
+	b3Path  dir;
+	char   *title = TITLE;
 
 	switch (argc)
 	{

@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/07/08 10:43:00  sm
+**	- Make some makefile cleanups.
+**	- Removed some compiler warnings.
+**
 **	Revision 1.3  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.2  2003/05/18 14:59:01  sm
 **	- Fixed predefined constat MAX
 **	- Fixed typo
@@ -210,7 +214,7 @@ int main(int argc,char *argv[])
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);
-		snprintf(name,sizeof(name),"%08x.tif",++count);
+		snprintf(name,sizeof(name),"%08x.tif",(unsigned)++count);
 		file.b3LinkFileName(dest,name);
 		image.b3SaveTIFF(file);
 		b3PrintF(B3LOG_NORMAL,"%s\n",(const char *)file);

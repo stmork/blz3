@@ -23,9 +23,10 @@ PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS) $(RESTOREEXT_OBJS) 
 #PRG_SOURCE		= ${PRG_OBJS:.o=.cc}
 
 all:	$(PRGS)
+	chmod 775 $^
+	cp $^ $(BLZ3_BIN)
 
 depend:
-#	makedepend -- $(CPPFLAGS) -- ${PRG_SOURCE}
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
@@ -33,48 +34,29 @@ clean:
 
 RemDepend:	$(REMDEPEND_OBJS)
 	$(LINK.cc) -o $@ $(REMDEPEND_OBJS) -lB3System -lpthread
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 RemCR:	$(REMCR_OBJS)
-	$(LINK.cc) -o $@ $(REMCR_OBJS) -lB3System -lpthread
-# $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
+	$(LINK.cc) -o $@ $(REMCR_OBJS) -lB3System -lpthread # $(LDLIBS)
 
 RestoreExt:	$(RESTOREEXT_OBJS)
 	$(LINK.cc) -o $@ $(RESTOREEXT_OBJS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 CleanRes:	$(CLEANRES_OBJS)
 	$(LINK.cc) -o $@ $(CLEANRES_OBJS) -lB3System -lpthread
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 scale:	$(SCALE_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 half:	$(HALF_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 pw:	$(PW_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 testimg:	$(TESTIMG_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 calibrate:	$(CALIBRATE_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 -include .dep

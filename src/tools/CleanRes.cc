@@ -32,6 +32,10 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2004/07/08 10:43:00  sm
+**  - Make some makefile cleanups.
+**  - Removed some compiler warnings.
+**
 **  Revision 1.3  2004/01/18 13:51:58  sm
 **  - Done further security issues.
 **
@@ -65,7 +69,7 @@ static struct b3DefineType
 	{ "_APS", 10,     0 }
 };
 
-#define TYPE_MAX (sizeof(define_types) / sizeof(b3DefineType))
+#define TYPE_MAX ((int)(sizeof(define_types) / sizeof(b3DefineType)))
 
 enum b3DefineMode
 {
@@ -136,6 +140,9 @@ public:
 			fprintf(m_File,"#define _APS_NEXT_SYMED_VALUE           %d\r\n",b3GetDefineTypesLastValue("IDS_"));
 			fprintf(m_File,"#endif\r\n");
 			fprintf(m_File,"#endif\r\n");
+			break;
+
+		default:
 			break;
 		}
 	}
