@@ -2515,7 +2515,7 @@ BEGIN
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_COB_LOAD             "Importiert ein Caligari-Objekt.\nCaligari-Objekt importieren"
     ID_IMPORT_ARCON         "Importiert eine ArCon-Datei.\nArCon-Datei importieren..."
-    ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\\mArCon-Objekt importieren"
+    ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\nArCon-Objekt importieren"
 END
 
 STRINGTABLE DISCARDABLE 
