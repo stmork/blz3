@@ -101,6 +101,10 @@ SOURCE=b3TxDeskew.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxEasy.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3TxGIF.cc
 # End Source File
 # Begin Source File
@@ -117,11 +121,19 @@ SOURCE=b3TxImage.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxIMG.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3TxJPG.cc
 # End Source File
 # Begin Source File
 
 SOURCE=b3TxLoadTIFF.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxPCX.cc
 # End Source File
 # Begin Source File
 
@@ -134,6 +146,10 @@ SOURCE=b3TxSaveTIFF.cc
 # Begin Source File
 
 SOURCE=b3TxScale.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxTGA.cc
 # End Source File
 # Begin Source File
 

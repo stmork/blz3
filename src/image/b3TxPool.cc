@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/13 15:48:53  sm
+**	- Minor image loading corrections
+**
 **	Revision 1.7  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.6  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -120,7 +123,6 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	HeaderSGI    *HeaderSGI;
 	b3_offset     pos;
 	b3_coord      x,y;
-	b3_tx_type    result;
 	b3_s32        ppm_type;
 	b3_index      i;
 
@@ -146,13 +148,13 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 
 
 	// JPEG
-	for (i = 0;i < B3_MIN(256,Size - 2);i++)
+	for (i = 0;i < (b3_index)B3_MIN(256,buffer_size - 2);i++)
 	{
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
 			if (strncmp ((const char *)&buffer[i+6],"JFIF",4) == 0)
 			{
-				return type = b3ParseJPEG(&buffer[i],Size-i);
+				return type = b3ParseJPEG(&buffer[i],buffer_size - i);
 			}
 		}
 	}
@@ -176,7 +178,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		}
 		if (TIFF->VersionTIFF == 0x002a)
 		{
-			return type = b3ParseTIFF(TIFF,Size);
+			return type = b3ParseTIFF(TIFF,buffer_size);
 		}
 #else
 		b3LoadTIFF(b3Name(),buffer,buffer_size);
@@ -194,27 +196,27 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		switch (ppm_type)
 		{
 			case 4 :
-				if ((((x + 7) >> 3) * y + pos) <= Size)
+				if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
 				{
-					pos = Size - ((x + 7) >> 3) * y;
+					pos = buffer_size - ((x + 7) >> 3) * y;
 					FileType = FT_PBM;
 					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 
 			case 5 :
-				if ((x * y + pos) <= Size)
+				if ((b3_size)(x * y + pos) <= buffer_size)
 				{
-					pos = Size - x * y;
+					pos = buffer_size - x * y;
 					FileType = FT_PGM;
 					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 				
 			case 6 :
-				if ((x * y * 3 + pos) <= Size)
+				if ((b3_size)(x * y * 3 + pos) <= buffer_size)
 				{
-					pos = Size - 3 * x * y;
+					pos = buffer_size - 3 * x * y;
 					FileType = FT_PPM;
 					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
@@ -233,7 +235,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	// BMP
 	if ((buffer[0] == 'B') &&
 	    (buffer[1] == 'M') &&
-	    (b3Endian::b3GetIntel32(&buffer[2]) == Size))
+	    (b3Endian::b3GetIntel32(&buffer[2]) == buffer_size))
 	{
 		return type = b3ParseBMP(buffer);
 	}
@@ -245,7 +247,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		for (pos = 0;(pos < 100) && (buffer[pos] != 10);pos++);
 		if (buffer[pos++] == 10)
 		{
-			if ((x * y * 3 + pos) == Size)
+			if ((b3_size)(x * y * 3 + pos) == buffer_size)
 			{
 				FileType = FT_MTV;
 				return type = b3ParseRAW (&buffer[pos],x,y,6);
@@ -269,7 +271,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 			i = 0;
 			break;
 	}
-	if ((x * y * i + 16) == Size)
+	if ((b3_size)(x * y * i + 16) == buffer_size)
 	{
 		return type = b3ParseBMF(buffer,buffer_size);
 	}

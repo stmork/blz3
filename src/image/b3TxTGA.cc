@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/13 15:48:53  sm
+**	- Minor image loading corrections
+**
 **	Revision 1.2  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -51,7 +54,7 @@
 b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 {
 	b3_pkd_color *srcPtr;
-	b3_count      DataSize,depth,depth2,t,dNext,xk,count,Inc = 1;
+	b3_count      DataSize,depth1,depth2,t,dNext,xk,count,Inc = 1;
 	b3_pkd_color  Color;
 	b3_res        xNewSize,yNewSize;
 
@@ -60,8 +63,9 @@ b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 
 	if (b3AllocTx(xNewSize,yNewSize,24))
 	{
-		srcPtr     = (b3_pkd_color *)data;
+		srcPtr   = (b3_pkd_color *)data;
 		DataSize = dSize;
+		depth2   = (4 - (depth1 = buffer[16] >> 3)) << 3;
 		if (buffer[17] & 0x20)
 		{
 			dNext = 0;             /* bottom up */
@@ -86,10 +90,10 @@ b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 		{
 			case 2:                                 /* unkomprimiert */
 				buffer += ((long)buffer[0] + ((long)buffer[1]<<8) + 18L);
-				while (DataSize > 0L)
+				while (DataSize > 0)
 				{
 					Color = 0;
-					for (t=0; t<depth; t++)         /* Pixel übernehmen */
+					for (t = 0;t < depth1;t++)         /* Pixel übernehmen */
 					{
 						Color = (Color << 8) | (long)buffer[0];
 						buffer++;
@@ -117,7 +121,7 @@ b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 					{                               /* nächste Farbe count mal */
 						buffer++;                
 						Color = 0;
-						for (t=0;t < depth;t++)     /* schreiben. */   
+						for (t = 0;t < depth1;t++)     /* schreiben. */   
 						{
 							Color = (Color << 8) | (long)buffer[0];
 							buffer++;
@@ -145,7 +149,7 @@ b3_tx_type b3Tx::b3ParseTGA (b3_u08 *buffer)
 						while (count)
 						{
 							Color = 0;
-							for (t=0;t < depth;t++)
+							for (t = 0;t < depth1;t++)
 							{
 								Color = (Color << 8) | (long)buffer[0];
 								buffer++;

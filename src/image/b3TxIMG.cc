@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/13 15:48:53  sm
+**	- Minor image loading corrections
+**
 **	Revision 1.2  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -241,7 +244,6 @@ void b3Tx::b3ParseSGI3(
 b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 {
 	HeaderSGI *HeaderSGI;
-	b3_u08    *newPtr;
 	b3_bool    success = false;
 	b3_res     xNewSize,yNewSize;
 	b3_index   c;

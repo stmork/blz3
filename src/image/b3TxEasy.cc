@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/13 15:48:53  sm
+**	- Minor image loading corrections
+**
 **	Revision 1.3  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.2  2001/10/13 09:56:44  sm
 **	- Minor corrections
 **	
@@ -69,6 +72,7 @@ b3_tx_type b3Tx::b3ParseRAW (
 				b3_count xSrcBytes = TX_BBA(x);
 				b3_count xDstBytes = TX_BWA(x);
 
+				newCData = data;
 				for (y = 0;y < ySize;y++)
 				{
 					memcpy (newCData,buffer,xSrcBytes);
@@ -126,7 +130,7 @@ b3_tx_type b3Tx::b3ParseRAW (
 
 b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 {
-	b3_pkd_color *palette,*Long;
+	b3_pkd_color *Long;
 	b3_u08       *cPtr;
 	b3_res        xNewSize,yNewSize;
 	b3_coord      x,y;
