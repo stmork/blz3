@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2003/06/24 06:26:43  sm
+**      - Added read/write support for unknown b3Item instances.
+**
 **      Revision 1.33  2003/06/15 09:24:21  sm
 **      - Added item creation dialog
 **
@@ -324,20 +327,6 @@ b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 		}
 	}
 	return m_Heads != null;
-}
-
-void b3Item::b3Read()
-{
-}
-
-void b3Item::b3Write()
-{
-	b3PrintF(B3LOG_NORMAL,"ERROR: b3Item::b3Write() not implemented:\n");
-	b3PrintF(B3LOG_NORMAL,"       CLASS TYPE: %08x\n",b3GetClassType());
-	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",m_ItemSize);
-	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",m_ItemOffset);
-
-	B3_THROW(b3WorldException,B3_WORLD_STORAGE_NOT_IMPLEMENTED);
 }
 
 char *b3Item::b3GetName()
@@ -667,6 +656,26 @@ b3_size b3Item::b3Store()
 	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = m_ItemOffset = m_StoreOffset << 2;
 
 	return size + m_ItemSize;
+}
+
+void b3Item::b3Write()
+{
+	if (m_ItemOffset == 0)
+	{
+		m_ItemOffset = m_ItemSize;
+	}
+
+	b3EnsureStoreBuffer(( m_ItemOffset >> 2) - m_StoreIndex);
+	b3EnsureStoreBuffer(((m_ItemSize - m_ItemOffset) >> 2) - m_StoreIndex,false);
+
+	memcpy(&m_StoreBuffer[m_StoreIndex],&m_Buffer[m_StoreIndex],m_ItemSize - m_StoreIndex);
+	m_StoreIndex  = m_ItemSize;
+	m_StoreOffset = m_ItemOffset;
+
+	b3PrintF(B3LOG_NORMAL,"WARN: b3Item::b3Write() not implemented:\n");
+	b3PrintF(B3LOG_NORMAL,"      CLASS TYPE: %08x\n",b3GetClassType());
+	b3PrintF(B3LOG_NORMAL,"      Size:       %8d\n",m_ItemSize);
+	b3PrintF(B3LOG_NORMAL,"      Offset:     %8d\n",m_ItemOffset);
 }
 
 b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)

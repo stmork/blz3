@@ -185,7 +185,6 @@ public:
 		b3_u32            class_type,
 		b3_bool           is_class = false);
 
-	virtual void            b3Read();
 	virtual void            b3Write();
 	virtual char           *b3GetName();
 	virtual b3_bool         b3Prepare();
