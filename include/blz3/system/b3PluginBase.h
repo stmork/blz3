@@ -29,6 +29,7 @@ class b3PluginBase;
 
 class b3LoaderBase : public b3SearchPath
 {
+protected:
 	b3Base<b3PluginBase> m_PluginList;
 
 public:

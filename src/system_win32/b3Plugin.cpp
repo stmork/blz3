@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/06/07 11:40:10  sm
+**	- Changed plugin interface:
+**	  o Added icons
+**	  o Added checksum/size/version in b3_plugin_info
+**	  o Changed plugin method name
+**	  o Changed b3Info signature for use of only one b3_plugin_info
+**
 **	Revision 1.7  2003/06/01 13:36:03  sm
 **	- Added define for exported plugin methods.
-**
+**	
 **	Revision 1.6  2003/06/01 13:03:45  sm
 **	- Is this the final plugin version?
 **	
@@ -78,12 +85,65 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 
 b3Item *b3Loader::b3Create(b3_u32 class_type)
 {
-	return b3World::b3AllocNode(class_type);
+	b3Item         *item = b3World::b3AllocNode(class_type);
+	b3_plugin_info *info;
+
+	if (item != null)
+	{
+		info = b3FindInfo(class_type);
+		if (info != null)
+		{
+			if (info->m_CreateFunc != null)
+			{
+				if (!info->m_CreateFunc(item))
+				{
+					delete item;
+					item = null;
+				}
+			}
+		}
+	}
+	return item;
 }
 
 b3_bool b3Loader::b3Edit(b3Item *item)
 {
-	return false;
+	b3_bool         result = false;
+	b3_plugin_info *info;
+
+	if (item != null)
+	{
+		info = b3FindInfo(item->b3GetClassType());
+		if (info != null)
+		{
+			if (info->m_EditFunc != null)
+			{
+				result = info->m_EditFunc(item);
+			}
+		}
+	}
+
+	return result;
+}
+
+b3_plugin_info *b3Loader::b3FindInfo(b3_u32 class_type)
+{
+	b3PluginBase *base;
+	b3Plugin     *plugin;
+	b3_count      i;
+
+	B3_FOR_BASE(&m_PluginList,base)
+	{
+		plugin = (b3Plugin *)base;
+		for (i = 0;i < plugin->m_InfoArray.b3GetCount();i++)
+		{
+			if (plugin->m_InfoArray[i].m_ClassType == class_type)
+			{
+				return &plugin->m_InfoArray[i];
+			}
+		}
+	}
+	return null;
 }
 
 /*************************************************************************
@@ -94,32 +154,48 @@ b3_bool b3Loader::b3Edit(b3Item *item)
 
 b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 {
-	b3_count i;
+	b3_count        i = 0;
+	b3_plugin_info *info;
 
 	m_Handle    = AfxLoadLibrary(m_PluginPath);
 	if (m_Handle != null)
 	{
-		b3_plugin_init_func init = (b3_plugin_init_func)GetProcAddress(m_Handle,"init");
-		b3_plugin_info_func info = (b3_plugin_info_func)GetProcAddress(m_Handle,"info");
+		b3_plugin_init_func b3Init = (b3_plugin_init_func)GetProcAddress(m_Handle,B3_PLUGIN_INIT_FUNC);
+		b3_plugin_info_func b3Info = (b3_plugin_info_func)GetProcAddress(m_Handle,B3_PLUGIN_INFO_FUNC);
 
 		b3PrintF(B3LOG_DEBUG,"Plugin %s loaded.\n",(const char *)m_PluginPath);
 
-		if(init != null)
+		if(b3Init != null)
 		{
-			init();
+			b3Init();
 			b3PrintF(B3LOG_DEBUG,"Plugin %s initialized.\n",(const char *)m_PluginPath);
 
-			if (info != null)
+			if (b3Info != null)
 			{
-				info(m_InfoArray);
 				b3PrintF(B3LOG_DEBUG,"Got infos of plugin %s.\n",(const char *)m_PluginPath);
-				for(i = 0;i < m_InfoArray.b3GetCount();i++)
+				do
 				{
-					b3PrintF(B3LOG_DEBUG,"  class: %08x \"%s\" %s edit option\n",
-						m_InfoArray[i].m_ClassType,
-						m_InfoArray[i].m_Description == null ? "(unnamed)" : m_InfoArray[i].m_Description,
-						m_InfoArray[i].m_EditFunc != null ? "with" : "without");
+					info = b3Info(i++);
+					if (info != null)
+					{
+						if (b3IsValid(info))
+						{
+							m_InfoArray.b3Add(*info);
+							b3PrintF(B3LOG_DEBUG,"  class: %08x V%d \"%s\" %s edit option\n",
+								info->m_ClassType,
+								info->m_Version,
+								info->m_Description == null ? "(unnamed)" : info->m_Description,
+								info->m_EditFunc != null ? "with" : "without");
+						}
+						else
+						{
+							b3PrintF(B3LOG_NORMAL,"  info class%08x/V%d invalid!\n",
+								info->m_ClassType,
+								info->m_Version);
+						}
+					}
 				}
+				while(info != null);
 			}
 			else
 			{
@@ -145,4 +221,38 @@ b3Plugin::~b3Plugin()
 		AfxFreeLibrary(m_Handle);
 		b3PrintF(B3LOG_DEBUG,"Plugin %s unloaded.\n",(const char *)m_PluginPath);
 	}
+}
+
+b3_bool b3Plugin::b3IsValid(b3_plugin_info *info)
+{
+	b3_u32    checksum = 0,old;
+	b3_u08   *ptr = (b3_u08 *)info;
+	b3_size   i;
+
+	// If the plugin is newer than the application: Don't use!
+	if (info->m_Version > B3_PLUGIN_INFO_VERSION)
+	{
+		return false;
+	}
+
+	// If the plugin info is greater than of the application: Don't use!
+	if (info->m_Size    > sizeof(b3_plugin_info))
+	{
+		return false;
+	}
+
+	// Compute negative checksum of itself
+	old = info->m_CheckSum;
+	for (i = 0; i < 4;i++)
+	{
+		checksum -= (old & 0xff);
+		old = old >> 8;
+	}
+
+	// Add all info bytes
+	for (i = 0;i < info->m_Size;i++)
+	{
+		checksum += *ptr++;
+	}
+	return checksum == info->m_CheckSum;
 }
