@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2002/02/20 20:23:57  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.14  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.13  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -171,7 +174,7 @@ b3_bool b3Condition::b3Conditionate(
 	return input;
 }
 
-void b3Condition::b3ComputeBound(b3CondLimit *Limit)
+void b3Condition::b3ComputeBound(b3_cond_limit *Limit)
 {
 }
 
@@ -181,8 +184,8 @@ b3_bool b3Condition::b3CheckStencil(b3_polar *polar)
 }
 
 void b3Condition::b3CheckInnerBound(
-	b3CondLimit *limit,
-	b3CondLimit *object)
+	b3_cond_limit *limit,
+	b3_cond_limit *object)
 {
 	if (object->x2 < object->x1) B3_PSWAP((b3_u32 *)&object->x1,(b3_u32 *)&object->x2);
 	if (object->y2 < object->y1) B3_PSWAP((b3_u32 *)&object->y1,(b3_u32 *)&object->y2);
@@ -194,8 +197,8 @@ void b3Condition::b3CheckInnerBound(
 }
 
 void b3Condition::b3CheckOuterBound(
-	b3CondLimit *limit,
-	b3CondLimit *object)
+	b3_cond_limit *limit,
+	b3_cond_limit *object)
 {
 	if (object->x2 < object->x1) B3_PSWAP((b3_u32 *)&object->x1,(b3_u32 *)&object->x2);
 	if (object->y2 < object->y1) B3_PSWAP((b3_u32 *)&object->y1,(b3_u32 *)&object->y2);
@@ -241,9 +244,9 @@ void b3CondRectangle::b3Write()
 	b3StoreInt(m_Flags);
 }
 
-void b3CondRectangle::b3ComputeBound(b3CondLimit *Limit)
+void b3CondRectangle::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -347,9 +350,9 @@ void b3CondCircle::b3Write()
 	b3StoreFloat(m_Radius);
 }
 
-void b3CondCircle::b3ComputeBound(b3CondLimit *Limit)
+void b3CondCircle::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -410,9 +413,9 @@ void b3CondSegment::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondSegment::b3ComputeBound(b3CondLimit *Limit)
+void b3CondSegment::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -511,9 +514,9 @@ b3_bool b3Cond2::b3Prepare()
 	return true;
 }
 
-void b3Cond2::b3ComputeBound(b3CondLimit *Limit)
+void b3Cond2::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound,Aux;
+	b3_cond_limit Bound,Aux;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -659,9 +662,9 @@ b3_bool b3CondTexture::b3Prepare()
 	return b3CheckTexture(&m_Texture,m_Name);
 }
 
-void b3CondTexture::b3ComputeBound(b3CondLimit *Limit)
+void b3CondTexture::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -745,9 +748,9 @@ b3_bool b3CondWrapTexture::b3Prepare()
 	return b3CheckTexture(&m_Texture,m_Name);
 }
 
-void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)
+void b3CondWrapTexture::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{
@@ -865,9 +868,9 @@ void b3CondEllipse::b3Write()
 	b3StoreFloat(m_AngleEnd);
 }
 
-void b3CondEllipse::b3ComputeBound(b3CondLimit *Limit)
+void b3CondEllipse::b3ComputeBound(b3_cond_limit *Limit)
 {
-	b3CondLimit Bound;
+	b3_cond_limit Bound;
 
 	switch(ClassType & MODE_MASK)
 	{

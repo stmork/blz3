@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/02/20 20:23:57  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.6  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.5  2002/01/17 19:17:03  sm
 **	- Fixed ILBM to other unfiltered scaling
 **	
@@ -354,6 +357,11 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 		return b3SaveTGA(filename);
 	case FT_RGB8:
 		return b3SaveRGB8(filename);
+
+	default:
+		return B3_ERROR;
 	}
+	
+	// Never reached
 	return B3_ERROR;
 }

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/02/20 20:23:57  sm
+**      - Some type cleanups done.
+**
 **      Revision 1.26  2002/02/18 17:50:32  sm
 **      - Corrected some intersection problems concerning CSG
 **      - Added CSG shape icons
@@ -443,7 +446,7 @@ b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
 	Between = null;
 }
 
-void b3ShapeRenderObject::b3ComputeBound(b3CondLimit *limit)
+void b3ShapeRenderObject::b3ComputeBound(b3_cond_limit *limit)
 {
 	b3Item      *item;
 	b3Condition *cond;

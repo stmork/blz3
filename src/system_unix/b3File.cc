@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/20 20:23:58  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.5  2001/10/16 15:21:24  sm
 **	- Minor changes to compile with GCC 3.x
-**
+**	
 **	Revision 1.4  2001/10/09 20:47:02  sm
 **	- some further texture handling.
 **	
@@ -55,6 +58,7 @@
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
+*/
 
 /*************************************************************************
 **                                                                      **
@@ -168,8 +172,8 @@ b3_size b3File::b3Write (
 	const void    *ptr,
 	const b3_size  buffer_size)
 {
-	register unsigned char *buffer = (unsigned char *)ptr;
-	register b3_size        written;
+	b3_u08  *buffer = (b3_u08 *)ptr;
+	b3_size  written;
 
 	// write buffer is cachable
 	if (buffer_size <= (Size - Index))
@@ -182,9 +186,10 @@ b3_size b3File::b3Write (
 
 	// Other case: We must flush cache buffer first
 	written = write (File,Cache,Index);
-	if (written < Index)
+	if (written < (b3_size)Index)
 	{
-		unsigned long i,num;
+		b3_offset i;
+		b3_size   num;
 
 		// Overwrite written bytes
 		for (i = written;i < Index;i++)
@@ -228,7 +233,8 @@ b3_size b3File::b3Write (
 
 b3_bool b3File::b3Flush ()
 {
-	register b3_size written,i,k,Size;
+	b3_size   i,k,Size;
+	b3_offset written;
 
 	// Buffer is empty
 	if (Index == 0)

@@ -35,9 +35,9 @@ class b3File : public b3FileAbstract, public b3Mem
 	b3_size     Size;		// size of cache
 	int         File;		// fileno
 public:
-	      b3File  ();
-	      b3File  (const char *file_name,const b3_access_mode mode);
-	     ~b3File  ();
+	         b3File      ();
+	         b3File      (const char *file_name,const b3_access_mode mode);
+	        ~b3File      ();
 
 	b3_bool  b3Open      (const char *file_name,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);

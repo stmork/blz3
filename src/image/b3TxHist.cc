@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/20 20:23:57  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.3  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
 **	
@@ -655,6 +658,9 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		}
 		result = true;
 		break;
+
+	default:
+		break;
 	}
 
 	// Replace image information
@@ -684,4 +690,3 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 
 	return result;
 }
-

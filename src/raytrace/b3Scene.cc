@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/02/20 20:23:57  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.32  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
-**
+**	
 **	Revision 1.31  2001/12/31 11:05:18  sm
 **	- Added TestData for testing Blizzard data structures for reading
 **	  and writing.
@@ -286,7 +289,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_xAngle           = b3InitFloat();
 	m_yAngle           = b3InitFloat();
 	m_BBoxOverSize     = b3InitFloat();
-	m_BackgroundType   = b3InitInt();
+	m_BackgroundType   = (b3_bg_type)b3InitInt();
 	m_TraceDepth       = b3InitInt();
 	m_Flags            = b3InitInt();
 	m_ShadowBrightness = b3InitFloat();

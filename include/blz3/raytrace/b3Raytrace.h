@@ -34,9 +34,11 @@
 #define B3_TEXSTRINGLEN   96
 #define B3_CAMERANAMELEN  96
 
+extern b3_f64 epsilon;
+
 /*************************************************************************
 **                                                                      **
-**                        textures                                      **
+**                        Surface descriptions for intersections        **
 **                                                                      **
 *************************************************************************/
 
@@ -69,11 +71,43 @@ struct b3_surface
 	b3_f64    refl,refr,ior,se;
 };
 
-extern b3_f64 epsilon;
+/*************************************************************************
+**                                                                      **
+**                        Some triangle definitions                     **
+**                                                                      **
+*************************************************************************/
+
+#define CLASS_VERTEX        0x00010000
+#define CLASS_TRIANGLE      0x00020000
+#define TYPE_VERTEXNODE     0x00000001
+#define TYPE_TRIA           0x00000001
+#define TYPE_TRIAREF        0x00000002
+#define TYPE_CPOINT_3D      0x00000003
+#define TYPE_CPOINT_4D      0x00000004
+
+#define TRIANGLE            (CLASS_TRIANGLE|TYPE_TRIA)
+#define TRIANGLEREF         (CLASS_TRIANGLE|TYPE_TRIAREF)
+#define VERTEXNODE          (CLASS_VERTEX|TYPE_VERTEXNODE)
+#define CPOINT_3D           (CLASS_VERTEX|TYPE_CPOINT_3D)
+#define CPOINT_4D           (CLASS_VERTEX|TYPE_CPOINT_4D)
+
+struct b3_triangle
+{
+	b3_index  P1;
+	b3_index  P2;
+	b3_index  P3;
+	b3_vector Normal;
+};
+
+struct b3_vertex
+{
+	b3_vector Point;
+	b3_vector Normal;
+};
 
 /*************************************************************************
 **                                                                      **
-**                        einschraenkende Bedingungen                   **
+**                        Stencil                                       **
 **                                                                      **
 *************************************************************************/
 
@@ -131,10 +165,10 @@ extern b3_f64 epsilon;
 #define COND_AELLIPSE           (CLASS_CONDITION|MODE_AND|TYPE_ELLIPSE)
 
 
-typedef struct b3_cond_limit
+struct b3_cond_limit
 {
 	b3_f32 x1,y1,x2,y2;
-} b3CondLimit;
+};
 
 class b3InitCondition
 {
@@ -153,13 +187,13 @@ public:
 	B3_ITEM_LOAD(b3Condition);
 
 	virtual b3_bool b3Prepare();
-	virtual void    b3ComputeBound(b3CondLimit *limit);
+	virtual void    b3ComputeBound(b3_cond_limit *limit);
 	virtual b3_bool b3CheckStencil(b3_polar *polar);
 	        b3_bool b3Conditionate(b3_bool input,b3_bool operation);
 
 protected:
-	static  void    b3CheckInnerBound(b3CondLimit *limit,b3CondLimit *object);
-	static  void    b3CheckOuterBound(b3CondLimit *limit,b3CondLimit *object);
+	static  void    b3CheckInnerBound(b3_cond_limit *limit,b3_cond_limit *object);
+	static  void    b3CheckOuterBound(b3_cond_limit *limit,b3_cond_limit *object);
 };
 
 // TYPE_RECTANGLE
@@ -175,7 +209,7 @@ public:
 	B3_ITEM_LOAD(b3CondRectangle);
 
 	void    b3Write();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -200,7 +234,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 };
 
 class b3CondPara : public b3Cond2
@@ -233,7 +267,7 @@ public:
 	B3_ITEM_LOAD(b3CondCircle);
 
 	void    b3Write();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -250,7 +284,7 @@ public:
 	B3_ITEM_LOAD(b3CondSegment);
 
 	void    b3Write();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -268,7 +302,7 @@ public:
 	B3_ITEM_LOAD(b3CondEllipse);
 
 	void    b3Write();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -289,7 +323,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -309,7 +343,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	void    b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3_cond_limit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
@@ -886,7 +920,7 @@ protected:
 	b3_vector      *Between;
 	b3_f64         *Cos;
 	b3_f64         *Sin;
-	b3CondLimit     Limit;
+	b3_cond_limit   Limit;
 
 #ifdef BLZ3_USE_OPENGL
 	GLushort       *GridsCyl;
@@ -901,7 +935,7 @@ protected:
 public:
 	B3_ITEM_INIT(b3ShapeRenderObject);
 	B3_ITEM_LOAD(b3ShapeRenderObject);
-	void            b3ComputeBound(b3CondLimit *limit);
+	void            b3ComputeBound(b3_cond_limit *limit);
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
@@ -1157,34 +1191,6 @@ public:
 
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
-};
-
-#define CLASS_VERTEX        0x00010000
-#define CLASS_TRIANGLE      0x00020000
-#define TYPE_VERTEXNODE     0x00000001
-#define TYPE_TRIA           0x00000001
-#define TYPE_TRIAREF        0x00000002
-#define TYPE_CPOINT_3D      0x00000003
-#define TYPE_CPOINT_4D      0x00000004
-
-#define TRIANGLE            (CLASS_TRIANGLE|TYPE_TRIA)
-#define TRIANGLEREF         (CLASS_TRIANGLE|TYPE_TRIAREF)
-#define VERTEXNODE          (CLASS_VERTEX|TYPE_VERTEXNODE)
-#define CPOINT_3D           (CLASS_VERTEX|TYPE_CPOINT_3D)
-#define CPOINT_4D           (CLASS_VERTEX|TYPE_CPOINT_4D)
-
-struct b3_triangle
-{
-	b3_index  P1;
-	b3_index  P2;
-	b3_index  P3;
-	b3_vector Normal;
-};
-
-struct b3_vertex
-{
-	b3_vector Point;
-	b3_vector Normal;
 };
 
 class b3TriangleRef : public b3Link<b3TriangleRef>
@@ -1767,11 +1773,11 @@ private:
 		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
-/************************************************************************\
+/*************************************************************************
 **                                                                      **
 **                        animations                                    **
 **                                                                      **
-\************************************************************************/
+*************************************************************************/
 
 #define CLASS_ANIMATION         0x75000000 // animation class
 #define CLASS_VERTEX            0x00010000
@@ -2185,6 +2191,15 @@ protected:
 	static void b3Init();
 };
 
+// m_BackgroundType
+enum b3_bg_type
+{
+	TP_NOTHING    = 0,            // Lightning background
+	TP_TEXTURE    = 1,            // Background image
+	TP_SLIDE      = 2,            // Background slide
+	TP_SKY_N_HELL = 3             // Sky & hell
+};
+
 class b3RayRow;
 
 class b3Scene : public b3Item
@@ -2224,7 +2239,7 @@ public:
 	b3_color         m_TopColor;
 	b3_color         m_BottomColor;
 	b3Tx            *m_BackTexture;         //
-	b3_u32           m_BackgroundType;      // Hintergrund: Farbe/Datei/...
+	b3_bg_type       m_BackgroundType;      // Hintergrund: Farbe/Datei/...
 
 	b3_count         m_TraceDepth;          // Rekursionstiefe
 	b3_u32           m_Flags;               // beschreibt, welche Werte gueltig sind
@@ -2366,12 +2381,6 @@ private:
 	void    b3Refine(b3_bool this_row);
 	void    b3Convert();
 };
-
-// m_BackgroundType
-#define TP_NOTHING       0L            // Lightning background
-#define TP_TEXTURE       1L            // Background image
-#define TP_SLIDE         2L            // Background slide
-#define TP_SKY_N_HELL    3L            // Sky & hell
 
 // m_Flags
 #define TP_SIZEVALID     2L            // SizeX, SizeY gueltig

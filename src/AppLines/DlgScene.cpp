@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/02/20 20:23:57  sm
+**	- Some type cleanups done.
+**
 **	Revision 1.6  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
-**
+**	
 **	Revision 1.5  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -80,7 +83,7 @@ static int scene_to_dialog[4] =
 	2  // TP_SKY_N_HELL
 };
 
-static int dialog_to_scene[4] =
+static b3_bg_type dialog_to_scene[4] =
 {
 	TP_NOTHING,
 	TP_SLIDE,
