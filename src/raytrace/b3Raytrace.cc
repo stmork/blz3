@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2003/08/11 08:21:40  sm
+**	- Added priority scheduling to b3Thread class.
+**	- Cleaned up brt3 comments.
+**
 **	Revision 1.53  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector
 **	  component.
-**
+**	
 **	Revision 1.52  2003/06/09 08:53:48  sm
 **	- Added preparation support for all b3Item objects.
 **	
@@ -417,7 +421,7 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = false;
 		infos[i].m_Num     = i;
 
-		if (!threads[i].b3Start(b3RaytraceThread,&infos[i],-1))
+		if (!threads[i].b3Start(b3RaytraceThread,&infos[i],-2))
 		{
 			delete [] threads;
 			delete [] infos;
@@ -464,7 +468,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 		infos[i].m_Loop    = true;
 		infos[i].m_Num     = i;
 
-		if (!threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],-1))
+		if (!threads[i].b3Start(b3RaytraceMotionBlurThread,&infos[i],-2))
 		{
 			delete [] threads;
 			delete [] infos;
@@ -706,9 +710,6 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// Determine CPU count
 		CPUs = b3Runtime::b3GetNumCPUs();
-		b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
-			CPUs,
-			CPUs > 1 ? "'s" : "");
 		
 		// add rows to list
 		fy     = 1.0;
@@ -765,7 +766,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 	B3_DELETE_BASE(&m_TrashPool,row);
 	m_TrashMutex.b3Unlock();
 
-	b3PrintF (B3LOG_NORMAL,"Done.\n");
+	b3PrintF (B3LOG_NORMAL,"Done.\n\n");
 }
 
 void b3Scene::b3AbortRaytrace()

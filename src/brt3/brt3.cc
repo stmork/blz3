@@ -38,11 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2003/08/11 08:21:40  sm
+**	- Added priority scheduling to b3Thread class.
+**	- Cleaned up brt3 comments.
+**
 **	Revision 1.46  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector
 **	  component.
-**
+**	
 **	Revision 1.45  2003/07/20 10:18:35  sm
 **	- Banner compilation problem fixed.
 **	
@@ -443,6 +447,11 @@ int main(int argc,char *argv[])
 			}
 			else
 			{
+				b3_count CPUs = b3Runtime::b3GetNumCPUs();
+
+				b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
+					CPUs,
+					CPUs > 1 ? "'s" : "");
 				try
 				{
 					world->b3Read(argv[i]);
@@ -459,12 +468,12 @@ int main(int argc,char *argv[])
 						{
 							if ((!animation->b3IsActive()) || (force_no_anim))
 							{
-								b3PrintF(B3LOG_DEBUG,"Animation deactivated...\n");
+								b3PrintF(B3LOG_NORMAL,"Animation deactivated...\n");
 								animation = null;
 							}
 							else
 							{
-								b3PrintF(B3LOG_DEBUG,"Using animation...\n");
+								b3PrintF(B3LOG_NORMAL,"Using animation...\n");
 							}
 						}
 
@@ -485,10 +494,12 @@ int main(int argc,char *argv[])
 										b3Path   img_name;
 										b3_count count = 0;
 
+										b3PrintF(B3LOG_NORMAL,"Animating!!!\n\n");
 										scene->b3ResetAnimation();
 										step = 1.0 / animation->m_FramesPerSecond;
 										for (t = animation->m_Start;t < animation->m_End;t += step)
 										{
+											b3PrintF(B3LOG_NORMAL,"Rendering frame t=%1.2f\n",t);
 											scene->b3SetAnimation(t);
 											scene->b3Raytrace(display);
 											sprintf((char *)img_name,"%s_%04ld",

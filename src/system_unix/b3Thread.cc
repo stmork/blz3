@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/08/11 08:21:40  sm
+**	- Added priority scheduling to b3Thread class.
+**	- Cleaned up brt3 comments.
+**
 **	Revision 1.15  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.14  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -301,6 +305,7 @@ b3_bool b3Thread::b3Start(
 	m_CallArg  = ptr;
 	m_Result   = 0;
 	m_Thread   = 0;
+	m_Prio     = -priority * 5;
 
 	success = b3LogPThread(error_code = pthread_create(&m_Thread,NULL,&b3Trampoline,this));
 	if (success)
@@ -329,6 +334,7 @@ void * b3Thread::b3Trampoline(void *ptr)
 {
 	b3Thread *threadClass = (b3Thread *)ptr;
 
+	nice(threadClass->m_Prio);
 	threadClass->b3Inc();
 	threadClass->m_Result = threadClass->m_CallProc((void *)threadClass->m_CallArg);
 	threadClass->b3Dec();

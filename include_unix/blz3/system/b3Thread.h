@@ -62,6 +62,7 @@ class b3Thread
 {
 	const char   *m_Name;
 	b3TimeSpan    m_Span;
+	int           m_Prio;
 
 protected:
 	         pthread_t     m_Thread;
