@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2004/03/05 13:20:20  sm
+**      - Some additional test materials added.
+**
 **      Revision 1.35  2004/03/02 09:07:17  sm
 **      - Added read/write support for Cook/Torrance material.
 **      - Added test module for Cook/Torrance reflection model.
@@ -1077,10 +1080,14 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 	b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
 
 	b3_f64 phi = asin(nl);
-	b3Color Rf(
-		b3Math::b3GetFresnel(phi,m_Mu[b3Color::R]) * Rs,
-		b3Math::b3GetFresnel(phi,m_Mu[b3Color::G]) * Rs,
-		b3Math::b3GetFresnel(phi,m_Mu[b3Color::B]) * Rs);
+
+	b3Color Rf;
+	for (int i = 0;i < 4;i++)
+	{
+		b3Color::b3_color_index l = (b3Color::b3_color_index)i;
+
+		Rf[l] = b3Math::b3GetFresnel(phi,m_Mu[l]) * Rs;
+	}
 	Rf.b3Min();
 	
 	result = m_Ra + m_DiffColor * nl * m_kd + Rf * m_ks;

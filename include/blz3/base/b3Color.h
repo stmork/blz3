@@ -119,7 +119,7 @@ public:
 		v[A] = alpha;
 	}
 
-	inline b3_f32 operator[](const b3_color_index index)
+	inline b3_f32 &operator[](const b3_color_index index)
 	{
 		return v[index];
 	}
