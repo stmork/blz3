@@ -3,16 +3,16 @@
 // This file will be processed by the MIDL compiler to produce the
 // type library (AppObject.tlb).
 
-[ uuid(72D69518-8984-11D5-A54F-0050BF4EB3F4), version(1.0) ]
+[ uuid(72D69518-8984-11D5-A54F-0050BF4EB3F3), version(1.0) ]
 library AppObject
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");
 
 
-	//  Primary dispatch interface for CAppLinesDoc
+	//  Primary dispatch interface for CAppObjectDoc
 	
-	[ uuid(72D69519-8984-11D5-A54F-0050BF4EB3F4) ]
+	[ uuid(72D6951A-8984-11D5-A54F-0050BF4EB3F3) ]
 	dispinterface IAppObject
 	{
 		properties:
@@ -31,7 +31,7 @@ library AppObject
 
 	//  Class information for CAppObjectDoc
 	
-	[ uuid(72D69517-8984-11D5-A54F-0050BF4EB3F4) ]
+	[ uuid(72D6951B-8984-11D5-A54F-0050BF4EB3F3) ]
 	coclass Document
 	{
 		[default] dispinterface IAppObject;

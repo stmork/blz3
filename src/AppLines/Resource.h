@@ -4,6 +4,8 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             101
+#define IDS_ASK_DELETE_CAMERA           108
+#define IDS_LIGHT_SAMPLE_LABEL          109
 #define IDR_MAINFRAME                   110
 #define IDR_BLZ3TYPE                    111
 #define IDR_DISPLAYTYPE                 112
@@ -327,8 +329,6 @@
 #define IDS_NAME_EXISTS                 61481
 #define IDS_EMPTY_NAME                  61482
 #define IDS_ASK_DELETE_LIGHT            61483
-#define IDS_ASK_DELETE_CAMERA           108
-#define IDS_LIGHT_SAMPLE_LABEL          109
 
 // Next default values for new objects
 // 

@@ -69,7 +69,6 @@ END
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON    DISCARDABLE     "res\\AppLines.ico"
 IDR_BLZ3TYPE            ICON    DISCARDABLE     "res\\AppLinesDoc.ico"
-IDI_BBOX_WORLD          ICON    DISCARDABLE     "res\\bboxworld.ico"
 IDI_BBOX_SUB            ICON    DISCARDABLE     "res\\bbox_sub.ico"
 IDI_BBOX_SHAPES_SUB     ICON    DISCARDABLE     "res\\bbox_sub_shape.ico"
 IDI_BBOX_SHAPES         ICON    DISCARDABLE     "res\\bbox_shape.ico"
@@ -84,6 +83,7 @@ IDI_DOWN                ICON    DISCARDABLE     "res\\down.ico"
 IDI_ROT_LEFT            ICON    DISCARDABLE     "res\\rot_left.ico"
 IDI_ROT_RIGHT           ICON    DISCARDABLE     "res\\rot_right.ico"
 IDR_OBJECT              ICON    DISCARDABLE     "res\\object.ico"
+IDI_BBOX_WORLD          ICON    DISCARDABLE     "res\\bbox_world.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1294,22 +1294,46 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDP_OLE_INIT_FAILED     "Fehler bei der OLE-Initialisierung. Überprüfen Sie, ob die OLE-Bibliotheken in der richtigen Version vorliegen."
-    ID_DRAWING_PERF         "#####################################"
-    IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
-    IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
-    IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
-    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
-    IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
     IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
     IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
     IDR_MAINFRAME           "Lines III"
     IDR_BLZ3TYPE            "Blizzard III Lines\nUnbenannt\nBlizzard III Geometrie\nBlizzard III Geometrie (*.bwd)\n.bwd\nblz3scn.Document\nBlizzard III Szene"
 END
 
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
+    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
+    ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
+    ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
+    ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
+    ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
+    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
+    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
+    ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
+    ID_DRAWING_PERF         "#####################################"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_COORD_Y              "y: 00000000.00"
+    ID_COORD_Z              "z: 00000000.00"
+    IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
+    IDS_NEW_OBJECT          "Neues Objekt"
+    IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
+    IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
+    IDS_DIALOGBAR_ACTION    "Bewegungen"
+    IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
+    IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
+    IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
+    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
+    IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
+END
+
 STRINGTABLE PRELOAD DISCARDABLE 
 BEGIN
-    IDR_OBJECT              "Blizzard III Lines\nUnbenannt\nBlizzard III Objekt\nBlizzard III Objekt (*.bod)\n.bod\nblz3obj.Document\nBlizzard III Objekt"
     IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nBerechnetes Bild\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
+    IDR_OBJECT              "Blizzard III Lines\nUnbenannt\nBlizzard III Objekt\nBlizzard III Objekt (*.bod)\n.bod\nblz3obj.Document\nBlizzard III Objekt"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -1481,9 +1505,19 @@ BEGIN
     ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
-    IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_BAR_VIEW            "Blendet die Ansicht-Symbolleiste ein oder aus.\nAnsicht-Symbolleiste ein-/ausschalten"
+    IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
     IDM_BAR_SCENE           "Blendet die Szenenwerkzeug-Symbolleiste ein oder aus.\nSzenenwerkzeug-Symbolleiste ein-/ausschalten"
+    IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
+    IDM_BAR_LIGHT           "Blendet die Lichtquellen-Symbolleiste ein oder aus.\nLichtquellen-Symbolleiste ein-/ausschalten"
+    IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
+    IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
+    IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1541,8 +1575,6 @@ BEGIN
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
     ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
-    IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
-    IDM_BAR_LIGHT           "Blendet die Lichtquellen-Symbolleiste ein oder aus.\nLichtquellen-Symbolleiste ein-/ausschalten"
     ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
     ID_LIGHT_DELETE         "Löscht eine Lichtquelle.\nLichtqielle löschen"
     ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
@@ -1553,19 +1585,11 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDM_BAR_VIEW            "Blendet die Ansicht-Symbolleiste ein oder aus.\nAnsicht-Symbolleiste ein-/ausschalten"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
     ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
     ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
     ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
     ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
-    IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
-    IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
-    IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
     ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
 END
 
@@ -1588,17 +1612,6 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_COORD_Y              "y: 00000000.00"
-    ID_COORD_Z              "z: 00000000.00"
-    IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
-    IDS_NEW_OBJECT          "Neues Objekt"
-    IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
-    IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
-    IDS_DIALOGBAR_ACTION    "Bewegungen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
 END
 
@@ -1607,19 +1620,6 @@ BEGIN
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
     ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
-    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
-    ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
-    ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
-    ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
-    ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
-    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
-    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
-    ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
 END
 
 #endif    // German (Germany) resources

@@ -4,16 +4,30 @@ REGEDIT
 ;   registered in your InitInstance automatically with a call to
 ;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
 
-HKEY_CLASSES_ROOT\.bwd = Blizzard3.Document
-HKEY_CLASSES_ROOT\Blizzard3.Document\shell\open\command = APPLINES.EXE %1
-HKEY_CLASSES_ROOT\Blizzard3.Document\shell\open\ddeexec = [open("%1")]
-HKEY_CLASSES_ROOT\Blizzard3.Document\shell\open\ddeexec\application = APPLINES
+HKEY_CLASSES_ROOT\.bwd = blz3scn.Document
+HKEY_CLASSES_ROOT\blz3scn.Document\shell\open\command = APPLINES.EXE %1
+HKEY_CLASSES_ROOT\blz3scn.Document\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\blz3scn.Document\shell\open\ddeexec\application = APPLINES
     ; note: the application is optional
     ;  (it defaults to the app name in "command")
 
-HKEY_CLASSES_ROOT\Blizzard3.Document = Blizzard III Dokument
-HKEY_CLASSES_ROOT\Blizzard3.Document\CLSID = {72D69517-8984-11D5-A54F-0050BF4EB3F3}
+HKEY_CLASSES_ROOT\blz3scn.Document = Blizzard III Szene
+HKEY_CLASSES_ROOT\blz3scn.Document\CLSID = {72D69517-8984-11D5-A54F-0050BF4EB3F3}
 
-HKEY_CLASSES_ROOT\CLSID\{72D69517-8984-11D5-A54F-0050BF4EB3F3} = Blizzard III Dokument
-HKEY_CLASSES_ROOT\CLSID\{72D69517-8984-11D5-A54F-0050BF4EB3F3}\ProgId = Blizzard3.Document
+HKEY_CLASSES_ROOT\CLSID\{72D69517-8984-11D5-A54F-0050BF4EB3F3} = Blizzard III Szene
+HKEY_CLASSES_ROOT\CLSID\{72D69517-8984-11D5-A54F-0050BF4EB3F3}\ProgId = blz3scn.Document
 HKEY_CLASSES_ROOT\CLSID\{72D69517-8984-11D5-A54F-0050BF4EB3F3}\LocalServer32 = APPLINES.EXE
+
+HKEY_CLASSES_ROOT\.bod = blz3obj.Document
+HKEY_CLASSES_ROOT\blz3obj.Document\shell\open\command = APPLINES.EXE %1
+HKEY_CLASSES_ROOT\blz3obj.Document\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\blz3obj.Document\shell\open\ddeexec\application = APPLINES
+    ; note: the application is optional
+    ;  (it defaults to the app name in "command")
+
+HKEY_CLASSES_ROOT\blz3scn.Document = Blizzard III Objekt
+HKEY_CLASSES_ROOT\blz3scn.Document\CLSID = {72D6951B-8984-11D5-A54F-0050BF4EB3F3}
+
+HKEY_CLASSES_ROOT\CLSID\{72D6951B-8984-11D5-A54F-0050BF4EB3F3} = Blizzard III Objekt
+HKEY_CLASSES_ROOT\CLSID\{72D6951B-8984-11D5-A54F-0050BF4EB3F3}\ProgId = blz3obj.Document
+HKEY_CLASSES_ROOT\CLSID\{72D6951B-8984-11D5-A54F-0050BF4EB3F3}\LocalServer32 = APPLINES.EXE

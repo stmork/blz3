@@ -61,7 +61,8 @@ public:
 	//}}AFX_VIRTUAL
 
 // Implementation
-	COleTemplateServer m_server;
+	COleTemplateServer m_SceneServer;
+	COleTemplateServer m_ObjectServer;
 		// Server object for document creation
 	//{{AFX_MSG(CAppLinesApp)
 	afx_msg void OnAppAbout();

@@ -44,10 +44,15 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/01/15 16:17:31  sm
+**	- Checked OLE support
+**	- Checked icons
+**	- Added two bwd files which create icons
+**
 **	Revision 1.17  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.16  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
@@ -157,8 +162,12 @@ CAppLinesApp theApp;
 // You may change it if you prefer to choose a specific identifier.
 
 // {72D69517-8984-11D5-A54F-0050BF4EB3F3}
-static const CLSID clsid =
+static const CLSID scene_clsid =
 { 0x72d69517, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
+
+// {72D6951B-8984-11D5-A54F-0050BF4EB3F3}
+static const CLSID object_clsid =
+{ 0x72d6951b, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp initialization
@@ -234,8 +243,8 @@ BOOL CAppLinesApp::InitInstance()
 	//  The COleTemplateServer creates new documents on behalf
 	//  of requesting OLE containers by using information
 	//  specified in the document template.
-	m_server.ConnectTemplate(clsid, pSceneTemplate, FALSE);
-	m_server.ConnectTemplate(clsid, pObjectTemplate, FALSE);
+	m_SceneServer.ConnectTemplate( scene_clsid,  pSceneTemplate,  FALSE);
+	m_ObjectServer.ConnectTemplate(object_clsid, pObjectTemplate, FALSE);
 
 	// Register all OLE server factories as running.  This enables the
 	//  OLE libraries to create objects from other applications.
@@ -271,14 +280,17 @@ BOOL CAppLinesApp::InitInstance()
 
 	// When a server application is launched stand-alone, it is a good idea
 	//  to update the system registry in case it has been damaged.
-	m_server.UpdateRegistry(OAT_DISPATCH_OBJECT);
+	m_SceneServer.UpdateRegistry(OAT_DISPATCH_OBJECT);
+	m_ObjectServer.UpdateRegistry(OAT_DISPATCH_OBJECT);
 	COleObjectFactory::UpdateRegistryAll();
 
 	// Dispatch commands specified on the command line
-#if 0
+	if (cmdInfo.m_nShellCommand == CCommandLineInfo::FileNew)
+	{
+		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
+	}
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
-#endif
 
 	// The main window has been initialized, so show and update it.
 	pMainFrame->ShowWindow(m_nCmdShow);

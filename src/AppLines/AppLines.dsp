@@ -432,19 +432,11 @@ SOURCE=.\res\bbox_empty.ico
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\bbox_s_s.ico
-# End Source File
-# Begin Source File
-
 SOURCE=.\res\bbox_sel_shape.ico
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\bbox_sel_sub_shape.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\bbox_sha.ico
 # End Source File
 # Begin Source File
 
@@ -460,15 +452,7 @@ SOURCE=.\res\bbox_sub_shape.ico
 # End Source File
 # Begin Source File
 
-SOURCE=.\res\bbox_wor.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\bboxworld.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\Display.bmp
+SOURCE=.\res\bbox_world.ico
 # End Source File
 # Begin Source File
 
@@ -477,18 +461,6 @@ SOURCE=.\res\down.ico
 # Begin Source File
 
 SOURCE=.\res\H_move.cur
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\ico00001.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\ico00002.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\res\ico00003.ico
 # End Source File
 # Begin Source File
 

@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/15 16:17:31  sm
+**	- Checked OLE support
+**	- Checked icons
+**	- Added two bwd files which create icons
+**
 **	Revision 1.4  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.3  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -76,9 +81,9 @@ END_DISPATCH_MAP()
 //  from VBA.  This IID must match the GUID that is attached to the 
 //  dispinterface in the .ODL file.
 
-// {72D69519-8984-11D5-A54F-0050BF4EB3F4}
+// {72D6951A-8984-11D5-A54F-0050BF4EB3F3}
 static const IID IID_IAppObject =
-{ 0x72d69519, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf4 } };
+{ 0x72d6951a, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
 
 BEGIN_INTERFACE_MAP(CAppObjectDoc, CAppRenderDoc)
 	INTERFACE_PART(CAppObjectDoc, IID_IAppObject, Dispatch)
@@ -118,14 +123,52 @@ BOOL CAppObjectDoc::OnNewDocument()
 
 BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
 {
+	CMainFrame *main = CB3GetMainFrame();
+	CString     message;
 	BOOL        result = FALSE;
+	b3_count    level;
 
 	if (!CDocument::OnOpenDocument(lpszPathName))
 	{
 		return FALSE;
 	}
 
-	// TODO: Add your specialized creation code here
+	try
+	{
+		message.Format(IDS_DOC_READ,lpszPathName);
+		main->b3SetStatusMessage(message);
+
+		m_World.b3Read(lpszPathName);
+		main->b3SetStatusMessage(IDS_DOC_REORG);
+		m_BBox = (b3BBox *)m_World.b3GetFirst();
+		level  = m_BBox->b3GetClassType() & 0xffff;
+//		b3BBox::b3Reorg(m_World.b3GetHead(),base,level,1,selected);
+		b3BBox::b3Recount(m_BBox->b3GetBBoxHead());
+
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_BBox->b3Prepare();
+
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_BBox->b3AllocVertices(&m_Context);
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+//		m_DlgHierarchy->b3InitTree(this,true);
+//		m_DlgHierarchy->b3SelectBBox(bbox);
+		result = TRUE;
+	}
+	catch(b3WorldException *e)
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",e->b3GetError());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+	}
 	return result;
 }
 
