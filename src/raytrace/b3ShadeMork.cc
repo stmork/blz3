@@ -33,22 +33,29 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
+**
 **	Revision 1.1  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
-**
+**	
 **
 */
 
 
 b3SceneMork::b3SceneMork(b3_u32 class_type) : b3Scene(sizeof(b3SceneMork), class_type)
 {
-	b3PrintF(B3LOG_NORMAL,"  using Mork shading...\n");
+	b3PrintF(B3LOG_NORMAL,"Using Mork shading...\n");
 }
 
 b3SceneMork::b3SceneMork(b3_u32 *src) : b3Scene(src)
 {
-	b3PrintF(B3LOG_NORMAL,"  using Mork shading...\n");
+	b3PrintF(B3LOG_NORMAL,"Using Mork shading...\n");
 }
 
 void b3SceneMork::b3Illuminate(
@@ -204,7 +211,6 @@ b3_bool b3SceneMork::b3Shade(
 	b3Item          *item;
 	b3Light         *light;
 	b3Shape         *shape;
-	b3Material      *material,dummy(CLASS_MATERIAL);
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
 	b3_f64           denom;
@@ -246,15 +252,7 @@ b3_bool b3SceneMork::b3Shade(
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
 		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-		material = shape->b3GetColors(ray,&surface);
-		if (material == null)
-		{
-			material = &dummy;
-		}
-		surface.refl = material->b3GetRefraction();
-		surface.refr = material->b3GetRefraction();
-		surface.ior  = material->b3GetIndexOfRefraction();
-		surface.se   = material->b3GetSpecularExponent();
+		shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 
 		// Where to shoot subsequent rays...
@@ -276,7 +274,7 @@ b3_bool b3SceneMork::b3Shade(
 		if (depth_count <= m_TraceDepth)
 		{
 			// Reflection
-			if (((!ray->inside) || (!transparent)) && (refl > 0))
+			if (((!ray->inside) || (!transparent)) && (surface.refl > 0))
 			{
 				refl = surface.refl;
 				if (!b3Shade(&surface.refl_ray,depth_count + 1))

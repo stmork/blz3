@@ -32,6 +32,7 @@ b3_f64     b3AngleOfPoints      (b3_vector *base,b3_vector *dir1,b3_vector *dir2
 b3_bool    b3IsEqual            (b3_vector *vec1,b3_vector *vec2);
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
 b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
+b3_vector *b3CrossProduct       (b3_vector *a,b3_vector *b,b3_vector *result);
 b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);
 b3_f64     b3Det3               (b3_vector *left,b3_vector *mid,b3_vector *right);
 b3_f64     b3Det4               (b3_matrix *Matrix);

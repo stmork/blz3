@@ -194,10 +194,10 @@ public:
 class b3Cond2 : public b3Condition
 {
 protected:
-	b3_f32  xPos,yPos;        // base of triangle/ parallelogramme
-	b3_f32  xDir1,yDir1;      // direction 1
-	b3_f32  xDir2,yDir2;      // direction 2
-	b3_f32  denom;
+	b3_f32  m_xPos, m_yPos;       // base of triangle/ parallelogramme
+	b3_f32  m_xDir1,m_yDir1;      // direction 1
+	b3_f32  m_xDir2,m_yDir2;      // direction 2
+	b3_f32  m_Denom;
 
 protected:
 	b3Cond2(b3_size class_size,b3_u32  class_type);
@@ -205,6 +205,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3Cond2);
 	B3_ITEM_LOAD(b3Cond2);
+
+	void    b3ComputeBound(b3CondLimit *limit);
 };
 
 class b3CondPara : public b3Cond2
@@ -213,7 +215,7 @@ public:
 	B3_ITEM_INIT(b3CondPara);
 	B3_ITEM_LOAD(b3CondPara);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 class b3CondTria : public b3Cond2
@@ -222,7 +224,7 @@ public:
 	B3_ITEM_INIT(b3CondTria);
 	B3_ITEM_LOAD(b3CondTria);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 
@@ -230,44 +232,47 @@ public:
 class b3CondCircle : public b3Condition
 {
 protected:
-	b3_f32  xCenter,yCenter,radius;      // Mittelpunkt und Radius
+	b3_f32  m_xCenter,m_yCenter,m_Radius;      // Mittelpunkt und Radius
 
 public:
 	B3_ITEM_INIT(b3CondCircle);
 	B3_ITEM_LOAD(b3CondCircle);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_SEGMENT
 class b3CondSegment : public b3Condition
 {
 protected:
-	b3_f32  xCenter,yCenter;     // Mittelpunkt
-	b3_f32  radStart,radEnd;     // gültiger Bereich im Ring
-	b3_f32  angleStart,angleEnd; // Segment
+	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
+	b3_f32  m_RadStart,  m_RadEnd;   // gültiger Bereich im Ring
+	b3_f32  m_AngleStart,m_AngleEnd; // Segment
 
 public:
 	B3_ITEM_INIT(b3CondSegment);
 	B3_ITEM_LOAD(b3CondSegment);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_ELLIPSE
 class b3CondEllipse : public b3Condition
 {
 protected:
-	b3_f32  xCenter,yCenter;     // Mittelpunkt
-	b3_f32  xRadius,yRadius;     // Radien
-	b3_f32  radStart,radEnd;     // gültiger Bereich im Ring
-	b3_f32  angleStart,angleEnd; // Segment
+	b3_f32  m_xCenter,   m_yCenter;  // Mittelpunkt
+	b3_f32  m_xRadius,   m_yRadius;  // Radien
+	b3_f32  m_RadStart,  m_RadEnd;   // gültiger Bereich im Ring
+	b3_f32  m_AngleStart,m_AngleEnd; // Segment
 
 public:
 	B3_ITEM_INIT(b3CondEllipse);
 	B3_ITEM_LOAD(b3CondEllipse);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_TEXTURE
@@ -450,10 +455,10 @@ public:
 	B3_ITEM_INIT(b3Material);
 	B3_ITEM_LOAD(b3Material);
 
-	virtual b3_f64  b3GetReflection();
-	virtual b3_f64  b3GetRefraction();
-	virtual b3_f64  b3GetIndexOfRefraction();
-	virtual b3_f64  b3GetSpecularExponent();
+	virtual b3_f64  b3GetReflection(b3_polar *polar);
+	virtual b3_f64  b3GetRefraction(b3_polar *polar);
+	virtual b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	virtual b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	virtual b3_bool b3GetColors(
 		b3_polar *polar,
 		b3_color *diff,
@@ -475,10 +480,10 @@ public:
 	B3_ITEM_INIT(b3MatNormal);
 	B3_ITEM_LOAD(b3MatNormal);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
 		b3_color *diff,
@@ -489,17 +494,30 @@ public:
 // CHESS
 class b3MatChess : public b3Material 
 {
-	b3_color          DiffColor[2],AmbColor[2],SpecColor[2];
-	b3_f32            Reflection[2];         // same like NormMaterial, but
-	b3_f32            Refraction[2];
-	b3_f32            RefrValue[2];
-	b3_f32            HighLight[2];
-	b3_s32            Flags;
-	b3_s32            xTimes,yTimes;
+	b3_color m_DiffColor[2];
+	b3_color m_AmbColor[2];
+	b3_color m_SpecColor[2];
+	b3_f32   m_Reflection[2];         // same like NormMaterial, but
+	b3_f32   m_Refraction[2];
+	b3_f32   m_RefrValue[2];
+	b3_f32   m_HighLight[2];
+	b3_s32   m_Flags;
+	b3_s32   m_xTimes;
+	b3_s32   m_yTimes;
 
 public:
 	B3_ITEM_INIT(b3MatChess);
 	B3_ITEM_LOAD(b3MatChess);
+
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 // MARBLE
@@ -518,10 +536,10 @@ public:
 	B3_ITEM_INIT(b3MatMarble);
 	B3_ITEM_LOAD(b3MatMarble);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 };
 
 // WOOD
@@ -540,10 +558,10 @@ public:
 	B3_ITEM_INIT(b3MatWood);
 	B3_ITEM_LOAD(b3MatWood);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 };
 
 // TEXTURE
@@ -564,10 +582,10 @@ public:
 	B3_ITEM_INIT(b3MatTexture);
 	B3_ITEM_LOAD(b3MatTexture);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 };
 
 // WRAPTEXTURE
@@ -587,10 +605,10 @@ public:
 	B3_ITEM_INIT(b3MatWrapTexture);
 	B3_ITEM_LOAD(b3MatWrapTexture);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 };
 
 // SLIDE
@@ -610,10 +628,10 @@ public:
 	B3_ITEM_INIT(b3MatSlide);
 	B3_ITEM_LOAD(b3MatSlide);
 
-	b3_f64  b3GetReflection();
-	b3_f64  b3GetRefraction();
-	b3_f64  b3GetIndexOfRefraction();
-	b3_f64  b3GetSpecularExponent();
+	b3_f64  b3GetReflection(b3_polar *polar);
+	b3_f64  b3GetRefraction(b3_polar *polar);
+	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
 		b3_color *diff,
@@ -830,6 +848,19 @@ private:
 	void b3CorrectIndices();
 };
 
+class b3ShapeBaseTrans
+{
+protected:
+	b3_vector         m_Base;
+	b3_vector         m_Dir1,m_Dir2,m_Dir3;
+	b3_vector         m_Normals[3];       // cross products
+	b3_f64            m_Denom;            // denominator of lin. system
+	b3_f64            m_DirLen[3];        // length of direction vectors
+
+protected:
+	void b3InitBaseTrans();
+	void b3BaseTrans(b3_dLine *in,b3_dLine *out);
+};
 
 // SPHERE
 class b3Sphere : public b3RenderShape    // Kugel
@@ -902,19 +933,13 @@ public:
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
-class b3Shape3 : public b3RenderShape
+class b3Shape3 : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
-	b3_vector         m_Normals[3];       // cross products
-	b3_vector         m_Base;             // size
-	b3_vector         m_Dir1,m_Dir2,m_Dir3;
 	b3_s32            m_lSize;
-	b3_f32            m_Denom;            // denominator of lin. system
-	b3_f32            m_DirLen[3];        // length of direction vectors
 
 protected:
 	     b3Shape3(b3_size class_size,b3_u32 class_type);
-	void b3BaseTrans(b3_dLine *in,b3_dLine *out);
 
 public:
 	B3_ITEM_INIT(b3Shape3);
@@ -984,15 +1009,10 @@ public:
 };
 
 // DOUGHNUT, TORUS
-class b3Torus : public b3RenderShape
+class b3Torus : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
-	b3_vector         m_Normals[3];       // cross products, unused
-	b3_vector         m_Base;             // size
-	b3_vector         m_Dir1,m_Dir2,m_Dir3;
 	b3_s32            m_lSize;
-	b3_f32            m_Denom;            // denominator of lin. system
-	b3_f32            m_DirLen[3];        // squared lengths of direction vectors
 	b3_f32            m_aRad, m_bRad;     // radiuses of torus
 	b3_f32            m_aQuad,m_bQuad;    // squared lengths of aRad, bRad
 
@@ -1424,7 +1444,7 @@ struct b3_ray_info : public b3_ray
 {
 	b3_color   color;
 	b3Shape   *shape;
-	b3BBox    *BBox;
+	b3BBox    *bbox;
 };
 
 struct b3_illumination : public b3_surface
@@ -1825,7 +1845,7 @@ public:
 	B3_ITEM_LOAD(b3Scene);
 
 	        void            b3Reorg();
-	        void            b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 		    void            b3AllocVertices(b3RenderContext *context);
 		    void            b3FreeVertices();
 	        void            b3Draw();

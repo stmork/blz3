@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2001/10/06 19:24:17  sm
+**      - New torus intersection routines and support routines
+**      - Added further shading support from materials
+**      - Added stencil checking
+**      - Changed support for basis transformation for shapes with
+**        at least three direction vectors.
+**
 **      Revision 1.20  2001/10/05 20:30:46  sm
 **      - Introducing Mork and Phong shading.
 **      - Using light source when shading
@@ -272,6 +279,22 @@ b3Material *b3Shape::b3GetColors(
 	b3Item     *item;
 	b3Material *material;
 
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetColors(
+			&ray->polar,
+			&surface->diffuse,
+			&surface->ambient,
+			&surface->specular))
+		{
+			surface->refl = material->b3GetReflection(&ray->polar);
+			surface->refr = material->b3GetRefraction(&ray->polar);
+			surface->ior  = material->b3GetIndexOfRefraction(&ray->polar);
+			surface->se   = material->b3GetSpecularExponent(&ray->polar);
+			return material;
+		}
+	}
 	surface->diffuse.r = 0.1f;
 	surface->diffuse.g = 0.5f;
 	surface->diffuse.b = 1.0f;
@@ -287,18 +310,11 @@ b3Material *b3Shape::b3GetColors(
 	surface->specular.b = 0.1f;
 	surface->specular.a = 0.0f;
 
-	B3_FOR_BASE(b3GetMaterialHead(),item)
-	{
-		material = (b3Material *)item;
-		if (material->b3GetColors(
-			&ray->polar,
-			&surface->diffuse,
-			&surface->ambient,
-			&surface->specular))
-		{
-			return material;
-		}
-	}
+	surface->refl =      0.0f;
+	surface->refr =      0.0f;
+	surface->ior  =      1.0f;
+	surface->se   = 100000.0f;
+
 	return null;
 }
 
@@ -348,74 +364,87 @@ b3Shape3::b3Shape3(b3_u32 class_type) : b3RenderShape(sizeof(b3Shape3), class_ty
 
 b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 {
-	b3_f64 denom;
-
-	b3InitVector();  // This is Base[0]
-	b3InitVector();  // This is Base[1]
-	b3InitVector();  // This is Base[2]
+	b3InitVector();  // This is Normals[0]
+	b3InitVector();  // This is Normals[1]
+	b3InitVector();  // This is Normals[2]
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
 	b3InitVector(&m_Dir3);
 
-	denom   = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
-	m_Denom = 1.0 / denom;
+	b3InitBaseTrans();
+}
 
-	m_Normals[0].x = m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y / denom;
-	m_Normals[0].y = m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z / denom;
-	m_Normals[0].z = m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x / denom;
+void b3ShapeBaseTrans::b3InitBaseTrans()
+{
+	b3_f64 denom;
 
-	m_Normals[1].x = m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y / denom;
-	m_Normals[1].y = m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z / denom;
-	m_Normals[1].z = m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x / denom;
+	denom = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
+	if (denom != 0)
+	{
+		m_Denom = 1.0 / denom;
 
-	m_Normals[2].x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y / denom;
-	m_Normals[2].y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z / denom;
-	m_Normals[2].z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x / denom;
+		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) * m_Denom;
+		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) * m_Denom;
+		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) * m_Denom;
+
+		m_Normals[1].x = (m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y) * m_Denom;
+		m_Normals[1].y = (m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z) * m_Denom;
+		m_Normals[1].z = (m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x) * m_Denom;
+
+		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) * m_Denom;
+		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) * m_Denom;
+		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) * m_Denom;
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
+	}
 
 	m_DirLen[0] = b3QuadLength(&m_Dir1);
 	m_DirLen[1] = b3QuadLength(&m_Dir2);
 	m_DirLen[2] = b3QuadLength(&m_Dir3);
 }
 
-void b3Shape3::b3BaseTrans(
+void b3ShapeBaseTrans::b3BaseTrans(
 	b3_dLine *in,
 	b3_dLine *out)
 {
-	b3_dVector *RVector;
-	b3_f64      xLineBase,yLineBase,zLineBase;
+	b3_f64 xPos,yPos,zPos;
+	b3_f64 xDir,yDir,zDir;
 
-	RVector = &in->dir;
-
-	xLineBase  = in->pos.x - m_Base.x;
-	yLineBase  = in->pos.y - m_Base.y;
-	zLineBase  = in->pos.z - m_Base.z;
+	xPos = in->pos.x - m_Base.x;
+	yPos = in->pos.y - m_Base.y;
+	zPos = in->pos.z - m_Base.z;
+	xDir = in->dir.x;
+	yDir = in->dir.y;
+	zDir = in->dir.z;
 
 	out->pos.x =
-		xLineBase * m_Normals[0].x +
-		yLineBase * m_Normals[0].y +
-		zLineBase * m_Normals[0].z;
+		xPos * m_Normals[0].x +
+		yPos * m_Normals[0].y +
+		zPos * m_Normals[0].z;
 	out->pos.y =
-		xLineBase * m_Normals[1].x +
-		yLineBase * m_Normals[1].y +
-		zLineBase * m_Normals[1].z;
+		xPos * m_Normals[1].x +
+		yPos * m_Normals[1].y +
+		zPos * m_Normals[1].z;
 	out->pos.z =
-		xLineBase * m_Normals[2].x +
-		yLineBase * m_Normals[2].y +
-		zLineBase * m_Normals[2].z;
+		xPos * m_Normals[2].x +
+		yPos * m_Normals[2].y +
+		zPos * m_Normals[2].z;
 
 	out->dir.x =
-		RVector->x * m_Normals[0].x +
-		RVector->y * m_Normals[0].y +
-		RVector->z * m_Normals[0].z;
+		xDir * m_Normals[0].x +
+		yDir * m_Normals[0].y +
+		zDir * m_Normals[0].z;
 	out->dir.y =
-		RVector->x * m_Normals[1].x +
-		RVector->y * m_Normals[1].y +
-		RVector->z * m_Normals[1].z;
+		xDir * m_Normals[1].x +
+		yDir * m_Normals[1].y +
+		zDir * m_Normals[1].z;
 	out->dir.z =
-		RVector->x * m_Normals[2].x +
-		RVector->y * m_Normals[2].y +
-		RVector->z * m_Normals[2].z;
+		xDir * m_Normals[2].x +
+		yDir * m_Normals[2].y +
+		zDir * m_Normals[2].z;
 }
 
 void b3Shape3::b3Transform(b3_matrix *transformation)

@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
+**
 **	Revision 1.13  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
-**
+**	
 **	Revision 1.12  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
 **	
@@ -140,10 +147,11 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_Nebular          = null;
 }
 
-void b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
+b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
 	xSize = this->m_xSize;
 	ySize = this->m_ySize;
+	return (m_Flags & TP_SIZEVALID) != 0;
 }
 
 b3ModellerInfo *b3Scene::b3GetModellerInfo()

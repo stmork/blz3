@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/10/06 19:24:17  sm
+**      - New torus intersection routines and support routines
+**      - Added further shading support from materials
+**      - Added stencil checking
+**      - Changed support for basis transformation for shapes with
+**        at least three direction vectors.
+**
 **      Revision 1.7  2001/10/05 20:30:45  sm
 **      - Introducing Mork and Phong shading.
 **      - Using light source when shading
@@ -266,9 +273,9 @@ b3CondCircle::b3CondCircle(b3_u32 class_type) : b3Condition(sizeof(b3CondCircle)
 
 b3CondCircle::b3CondCircle(b3_u32 *src) : b3Condition(src)
 {
-	xCenter = b3InitFloat();
-	yCenter = b3InitFloat();
-	radius  = b3InitFloat();
+	m_xCenter = b3InitFloat();
+	m_yCenter = b3InitFloat();
+	m_Radius  = b3InitFloat();
 }
 
 void b3CondCircle::b3ComputeBound(b3CondLimit *Limit)
@@ -278,21 +285,30 @@ void b3CondCircle::b3ComputeBound(b3CondLimit *Limit)
 	switch(ClassType & MODE_MASK)
 	{
 	case MODE_OR:
-		Bound.x1 = xCenter - radius;
-		Bound.y1 = yCenter - radius;
-		Bound.x2 = xCenter + radius;
-		Bound.y2 = yCenter + radius;
+		Bound.x1 = m_xCenter - m_Radius;
+		Bound.y1 = m_yCenter - m_Radius;
+		Bound.x2 = m_xCenter + m_Radius;
+		Bound.y2 = m_yCenter + m_Radius;
 		b3CheckOuterBound (Limit,&Bound);
 		break;
 
 	case MODE_AND:
-		Bound.x1 = xCenter - radius;
-		Bound.y1 = yCenter - radius;
-		Bound.x2 = xCenter + radius;
-		Bound.y2 = yCenter + radius;
+		Bound.x1 = m_xCenter - m_Radius;
+		Bound.y1 = m_yCenter - m_Radius;
+		Bound.x2 = m_xCenter + m_Radius;
+		Bound.y2 = m_yCenter + m_Radius;
 		b3CheckInnerBound (Limit,&Bound);
 		break;
 	}
+}
+
+b3_bool b3CondCircle::b3CheckStencil(b3_polar *polar)
+{
+	b3_f64 x,y;
+
+	x = polar->polar.x - m_xCenter;
+	y = polar->polar.y - m_yCenter;
+	return ((x * x + y * y) < (m_Radius * m_Radius));
 }
 
 
@@ -302,12 +318,12 @@ b3CondSegment::b3CondSegment(b3_u32 class_type) : b3Condition(sizeof(b3CondSegme
 
 b3CondSegment::b3CondSegment(b3_u32 *src) : b3Condition(src)
 {
-	xCenter    = b3InitFloat();
-	yCenter    = b3InitFloat();
-	radStart   = b3InitFloat();
-	radEnd     = b3InitFloat();
-	angleStart = b3InitFloat();
-	angleEnd   = b3InitFloat();
+	m_xCenter    = b3InitFloat();
+	m_yCenter    = b3InitFloat();
+	m_RadStart   = b3InitFloat();
+	m_RadEnd     = b3InitFloat();
+	m_AngleStart = b3InitFloat();
+	m_AngleEnd   = b3InitFloat();
 }
 
 void b3CondSegment::b3ComputeBound(b3CondLimit *Limit)
@@ -317,20 +333,54 @@ void b3CondSegment::b3ComputeBound(b3CondLimit *Limit)
 	switch(ClassType & MODE_MASK)
 	{
 	case MODE_OR:
-		Bound.x1 = xCenter - radEnd;
-		Bound.y1 = yCenter - radEnd;
-		Bound.x2 = xCenter + radEnd;
-		Bound.y2 = yCenter + radEnd;
+		Bound.x1 = m_xCenter - m_RadEnd;
+		Bound.y1 = m_yCenter - m_RadEnd;
+		Bound.x2 = m_xCenter + m_RadEnd;
+		Bound.y2 = m_yCenter + m_RadEnd;
 		b3CheckOuterBound (Limit,&Bound);
 		break;
 
 	case MODE_AND:
-		Bound.x1 = xCenter - radEnd;
-		Bound.y1 = yCenter - radEnd;
-		Bound.x2 = xCenter + radEnd;
-		Bound.y2 = yCenter + radEnd;
+		Bound.x1 = m_xCenter - m_RadEnd;
+		Bound.y1 = m_yCenter - m_RadEnd;
+		Bound.x2 = m_xCenter + m_RadEnd;
+		Bound.y2 = m_yCenter + m_RadEnd;
 		b3CheckInnerBound (Limit,&Bound);
 		break;
+	}
+}
+
+b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
+{
+	b3_f64 x,y,angle,Rad;
+
+	x = polar->polar.x - m_xCenter;
+	y = polar->polar.y - m_yCenter;
+	Rad = sqrt(x * x + y * y);
+	if ((Rad < m_RadStart)||(Rad > m_RadEnd))
+	{
+		return false;
+	}
+ 
+	if (x==0)
+	{
+		if (y<0)	angle = 270;
+		else		angle =  90;
+	}
+	else
+	{
+		angle = atan (y/x) * 180.0 / M_PI;
+		if (x     < 0) angle += 180;
+		if (angle < 0) angle += 360;
+	}
+
+	if (m_AngleStart < m_AngleEnd)
+	{
+		return ((m_AngleStart <= angle) && (angle <= m_AngleEnd));
+	}
+	else
+	{
+		return ((angle >= m_AngleStart) || (angle <= m_AngleEnd));
 	}
 }
 
@@ -345,12 +395,47 @@ b3Cond2::b3Cond2(b3_u32 class_type) : b3Condition(class_type)
 
 b3Cond2::b3Cond2(b3_u32 *src) : b3Condition(src)
 {
-	xPos  = b3InitFloat();
-	yPos  = b3InitFloat();
-	xDir1 = b3InitFloat();
-	yDir1 = b3InitFloat();
-	xDir2 = b3InitFloat();
-	yDir2 = b3InitFloat();
+	m_xPos  = b3InitFloat();
+	m_yPos  = b3InitFloat();
+	m_xDir1 = b3InitFloat();
+	m_yDir1 = b3InitFloat();
+	m_xDir2 = b3InitFloat();
+	m_yDir2 = b3InitFloat();
+	m_Denom = m_xDir1 * m_yDir2 - m_yDir1 * m_xDir2;
+}
+
+void b3Cond2::b3ComputeBound(b3CondLimit *Limit)
+{
+	b3CondLimit Bound,Aux;
+
+	switch(ClassType & MODE_MASK)
+	{
+	case MODE_OR:
+		Bound.x1 = m_xPos   + m_xDir1;
+		Bound.y1 = m_yPos   + m_yDir1;
+		Bound.x2 = m_xPos   + m_xDir2;
+		Bound.y2 = m_yPos   + m_yDir2;
+		Aux.x1   = Bound.x1 + m_xDir2;
+		Aux.y1   = Bound.y1 + m_yDir2;
+		Aux.x2   = m_xPos;
+		Aux.y2   = m_yPos;
+		b3CheckOuterBound (&Bound,&Aux);
+		b3CheckOuterBound (Limit,&Bound);
+		break;
+
+	case MODE_AND:
+		Bound.x1 = m_xPos   + m_xDir1;
+		Bound.y1 = m_yPos   + m_yDir1;
+		Bound.x2 = m_xPos   + m_xDir2;
+		Bound.y2 = m_yPos   + m_yDir2;
+		Aux.x1   = Bound.x1 + m_xDir2;
+		Aux.y1   = Bound.y1 + m_yDir2;
+		Aux.x2   = m_xPos;
+		Aux.y2   = m_yPos;
+		b3CheckOuterBound (&Bound,&Aux);
+		b3CheckInnerBound (Limit,&Bound);
+		break;
+	}
 }
 
 
@@ -362,38 +447,23 @@ b3CondPara::b3CondPara(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-void b3CondPara::b3ComputeBound(b3CondLimit *Limit)
+b3_bool b3CondPara::b3CheckStencil(b3_polar *polar)
 {
-	b3CondLimit Bound,Aux;
+	b3_f64 Dx,Dy,a,b;
 
-	switch(ClassType & MODE_MASK)
+	Dx = polar->polar.x - m_xPos;
+	Dy = polar->polar.y - m_yPos;
+	if (m_Denom == 0)
 	{
-	case MODE_OR:
-		Bound.x1 = xPos + xDir1;
-		Bound.y1 = yPos + yDir1;
-		Bound.x2 = xPos + xDir2;
-		Bound.y2 = yPos + yDir2;
-		Aux.x1   = Bound.x1 + xDir2;
-		Aux.y1   = Bound.y1 + yDir2;
-		Aux.x2   = xPos;
-		Aux.y2   = yPos;
-		b3CheckOuterBound (&Bound,&Aux);
-		b3CheckOuterBound (Limit,&Bound);
-		break;
-
-	case MODE_AND:
-		Bound.x1 = xPos + xDir1;
-		Bound.y1 = yPos + yDir1;
-		Bound.x2 = xPos + xDir2;
-		Bound.y2 = yPos + yDir2;
-		Aux.x1   = Bound.x1 + xDir2;
-		Aux.y1   = Bound.y1 + yDir2;
-		Aux.x2   = xPos;
-		Aux.y2   = yPos;
-		b3CheckOuterBound (&Bound,&Aux);
-		b3CheckInnerBound (Limit,&Bound);
-		break;
+		return false;
 	}
+
+	a = (Dx * m_yDir2 - Dy * m_xDir2) / m_Denom;
+	if ((a < 0) || (a > 1)) return (false);
+
+	b = (m_xDir1 * Dy - m_yDir1 * Dx) / m_Denom;
+	if ((b < 0) || (b > 1)) return (false);
+	return true;
 }
 
 
@@ -405,38 +475,30 @@ b3CondTria::b3CondTria(b3_u32 *src) : b3Cond2(src)
 {
 }
 
-void b3CondTria::b3ComputeBound(b3CondLimit *Limit)
+b3_bool b3CondTria::b3CheckStencil(b3_polar *polar)
 {
-	b3CondLimit Bound,Aux;
+	b3_f64 Dx,Dy,a,b;
 
-	switch(ClassType & MODE_MASK)
+	Dx = polar->polar.x - m_xPos;
+	Dy = polar->polar.y - m_yPos;
+	if (m_Denom==0)
 	{
-	case MODE_OR:
-		Bound.x1 = xPos + xDir1;
-		Bound.y1 = yPos + yDir1;
-		Bound.x2 = xPos + xDir2;
-		Bound.y2 = yPos + yDir2;
-		Aux.x1   = Bound.x1;
-		Aux.y1   = Bound.y1;
-		Aux.x2   = xPos;
-		Aux.y2   = yPos;
-		b3CheckOuterBound (&Bound,&Aux);
-		b3CheckOuterBound (Limit,&Bound);
-		break;
-
-	case MODE_AND:
-		Bound.x1 = xPos + xDir1;
-		Bound.y1 = yPos + yDir1;
-		Bound.x2 = xPos + xDir2;
-		Bound.y2 = yPos + yDir2;
-		Aux.x1   = Bound.x1;
-		Aux.y1   = Bound.y1;
-		Aux.x2   = xPos;
-		Aux.y2   = yPos;
-		b3CheckOuterBound (&Bound,&Aux);
-		b3CheckInnerBound (Limit,&Bound);
-		break;
+		return false;
 	}
+
+	a = (Dx * m_yDir2 - Dy * m_xDir2) / m_Denom;
+	if (a < 0)
+	{
+		return false;
+	}
+
+	b = (m_xDir1 * Dy - m_yDir1 * Dx) / m_Denom;
+	if ((b < 0)||((a + b) > 1))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 
@@ -546,35 +608,74 @@ b3CondEllipse::b3CondEllipse(b3_u32 class_type) : b3Condition(sizeof(b3CondEllip
 
 b3CondEllipse::b3CondEllipse(b3_u32 *src) : b3Condition(src)
 {
-	xCenter    = b3InitFloat();
-	yCenter    = b3InitFloat();
-	xRadius    = b3InitFloat();
-	yRadius    = b3InitFloat();
-	radStart   = b3InitFloat();
-	radEnd     = b3InitFloat();
-	angleStart = b3InitFloat();
-	angleEnd   = b3InitFloat();
+	m_xCenter    = b3InitFloat();
+	m_yCenter    = b3InitFloat();
+	m_xRadius    = b3InitFloat();
+	m_yRadius    = b3InitFloat();
+	m_RadStart   = b3InitFloat();
+	m_RadEnd     = b3InitFloat();
+	m_AngleStart = b3InitFloat();
+	m_AngleEnd   = b3InitFloat();
 }
 
 void b3CondEllipse::b3ComputeBound(b3CondLimit *Limit)
 {
 	b3CondLimit Bound;
+
 	switch(ClassType & MODE_MASK)
 	{
 	case MODE_OR:
-		Bound.x1 = xCenter - xRadius * radEnd;
-		Bound.y1 = yCenter - yRadius * radEnd;
-		Bound.x2 = xCenter + xRadius * radEnd;
-		Bound.y2 = yCenter + yRadius * radEnd;
+		Bound.x1 = m_xCenter - m_xRadius * m_RadEnd;
+		Bound.y1 = m_yCenter - m_yRadius * m_RadEnd;
+		Bound.x2 = m_xCenter + m_xRadius * m_RadEnd;
+		Bound.y2 = m_yCenter + m_yRadius * m_RadEnd;
 		b3CheckOuterBound (Limit,&Bound);
 		break;
 
 	case MODE_AND:
-		Bound.x1 = xCenter - xRadius * radEnd;
-		Bound.y1 = yCenter - yRadius * radEnd;
-		Bound.x2 = xCenter + xRadius * radEnd;
-		Bound.y2 = yCenter + yRadius * radEnd;
+		Bound.x1 = m_xCenter - m_xRadius * m_RadEnd;
+		Bound.y1 = m_yCenter - m_yRadius * m_RadEnd;
+		Bound.x2 = m_xCenter + m_xRadius * m_RadEnd;
+		Bound.y2 = m_yCenter + m_yRadius * m_RadEnd;
 		b3CheckInnerBound (Limit,&Bound);
 		break;
+	}
+}
+
+b3_bool b3CondEllipse::b3CheckStencil(b3_polar *polar)
+{
+	b3_f64 x,y,angle,AngleEnd,Rad;
+
+	x = (polar->polar.x - m_xCenter) / m_xRadius;
+	y = (polar->polar.y - m_yCenter) / m_yRadius;
+	Rad = sqrt(x * x + y * y);
+	if ((Rad < m_RadStart) || (Rad > m_RadEnd))
+	{
+		return false;
+	}
+ 
+	if (x==0)
+	{
+		if (y<0) angle = 270;
+		else     angle =  90;
+	}
+	else
+	{
+		angle = atan (y/x) * 180.0 / M_PI;
+		if (x     < 0) angle += 180;
+		if (angle < 0) angle += 360;
+	}
+	AngleEnd = m_AngleEnd;
+	if (m_AngleStart > AngleEnd)
+	{
+		if ((angle >= m_AngleStart)||(angle <= AngleEnd))
+			return (true);
+		return (false);
+	}
+	else
+	{
+		if ((angle <= m_AngleStart)||(angle >= AngleEnd))
+			return (false);
+		return (true);
 	}
 }

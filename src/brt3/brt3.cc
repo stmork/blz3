@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
+**
 **	Revision 1.2  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.1  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -66,8 +73,14 @@ int main(int argc,char *argv[])
 			{
 				scene = (b3Scene *)item;
 				scene->b3Reorg();
-				scene->b3GetDisplaySize(xSize,ySize);
-				display = new b3Display(xSize,ySize);
+				if (scene->b3GetDisplaySize(xSize,ySize))
+				{
+					display = new b3Display(xSize,ySize);
+				}
+				else
+				{
+					display = new b3Display();
+				}
 				scene->b3Raytrace(display);
 
 				display->b3Wait();

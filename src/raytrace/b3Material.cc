@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/10/06 19:24:17  sm
+**      - New torus intersection routines and support routines
+**      - Added further shading support from materials
+**      - Added stencil checking
+**      - Changed support for basis transformation for shapes with
+**        at least three direction vectors.
+**
 **      Revision 1.6  2001/10/05 20:30:46  sm
 **      - Introducing Mork and Phong shading.
 **      - Using light source when shading
@@ -82,22 +89,22 @@ b3Material::b3Material(b3_u32 *src) : b3Item(src)
 {
 }
 
-b3_f64 b3Material::b3GetReflection()
+b3_f64 b3Material::b3GetReflection(b3_polar *polar)
 {
 	return 0.0;
 }
 
-b3_f64 b3Material::b3GetRefraction()
+b3_f64 b3Material::b3GetRefraction(b3_polar *polar)
 {
 	return 0.0;
 }
 
-b3_f64 b3Material::b3GetIndexOfRefraction()
+b3_f64 b3Material::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return 1.0;
 }
 
-b3_f64 b3Material::b3GetSpecularExponent()
+b3_f64 b3Material::b3GetSpecularExponent(b3_polar *polar)
 {
 	return 100000.0;
 }
@@ -139,22 +146,22 @@ b3_bool b3MatNormal::b3GetColors(
 	return true;
 }
 
-b3_f64 b3MatNormal::b3GetReflection()
+b3_f64 b3MatNormal::b3GetReflection(b3_polar *polar)
 {
 	return Reflection;
 }
 
-b3_f64 b3MatNormal::b3GetRefraction()
+b3_f64 b3MatNormal::b3GetRefraction(b3_polar *polar)
 {
 	return Refraction;
 }
 
-b3_f64 b3MatNormal::b3GetIndexOfRefraction()
+b3_f64 b3MatNormal::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return RefrValue;
 }
 
-b3_f64 b3MatNormal::b3GetSpecularExponent()
+b3_f64 b3MatNormal::b3GetSpecularExponent(b3_polar *polar)
 {
 	return HighLight;
 }
@@ -181,22 +188,22 @@ b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 	b3InitString(Name,B3_TEXSTRINGLEN);
 }
 
-b3_f64 b3MatTexture::b3GetReflection()
+b3_f64 b3MatTexture::b3GetReflection(b3_polar *polar)
 {
 	return Reflection;
 }
 
-b3_f64 b3MatTexture::b3GetRefraction()
+b3_f64 b3MatTexture::b3GetRefraction(b3_polar *polar)
 {
 	return Refraction;
 }
 
-b3_f64 b3MatTexture::b3GetIndexOfRefraction()
+b3_f64 b3MatTexture::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return RefrValue;
 }
 
-b3_f64 b3MatTexture::b3GetSpecularExponent()
+b3_f64 b3MatTexture::b3GetSpecularExponent(b3_polar *polar)
 {
 	return HighLight;
 }
@@ -208,23 +215,61 @@ b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_
 
 b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&DiffColor[0]);
-	b3InitColor(&AmbColor[0]);
-	b3InitColor(&SpecColor[0]);
-	b3InitColor(&DiffColor[1]);
-	b3InitColor(&AmbColor[1]);
-	b3InitColor(&SpecColor[1]);
-	Reflection[0] = b3InitFloat();
-	Reflection[1] = b3InitFloat();
-	Refraction[0] = b3InitFloat();
-	Refraction[1] = b3InitFloat();
-	RefrValue[0]  = b3InitFloat();
-	RefrValue[1]  = b3InitFloat();
-	HighLight[0]  = b3InitFloat();
-	HighLight[1]  = b3InitFloat();
-	Flags         = b3InitInt();
-	xTimes        = b3InitInt();
-	yTimes        = b3InitInt();
+	b3InitColor(&m_DiffColor[0]);
+	b3InitColor(&m_AmbColor[0]);
+	b3InitColor(&m_SpecColor[0]);
+	b3InitColor(&m_DiffColor[1]);
+	b3InitColor(&m_AmbColor[1]);
+	b3InitColor(&m_SpecColor[1]);
+	m_Reflection[0] = b3InitFloat();
+	m_Reflection[1] = b3InitFloat();
+	m_Refraction[0] = b3InitFloat();
+	m_Refraction[1] = b3InitFloat();
+	m_RefrValue[0]  = b3InitFloat();
+	m_RefrValue[1]  = b3InitFloat();
+	m_HighLight[0]  = b3InitFloat();
+	m_HighLight[1]  = b3InitFloat();
+	m_Flags         = b3InitInt();
+	m_xTimes        = b3InitInt();
+	m_yTimes        = b3InitInt();
+}
+
+#define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
+
+b3_bool b3MatChess::b3GetColors(
+	b3_polar *polar,
+	b3_color *diffuse,
+	b3_color *ambient,
+	b3_color *specular)
+{
+	b3_index index;
+
+	index = CHESS_INDEX(polar->polar.x,polar->polar.y);
+	*diffuse  = m_DiffColor[index];
+	*ambient  = m_AmbColor[index];
+	*specular = m_SpecColor[index];
+
+	return true;
+}
+
+b3_f64 b3MatChess::b3GetReflection(b3_polar *polar)
+{
+	return m_Reflection[CHESS_INDEX(polar->polar.x,polar->polar.y)];
+}
+
+b3_f64 b3MatChess::b3GetRefraction(b3_polar *polar)
+{
+	return m_Refraction[CHESS_INDEX(polar->polar.x,polar->polar.y)];
+}
+
+b3_f64 b3MatChess::b3GetIndexOfRefraction(b3_polar *polar)
+{
+	return m_RefrValue[CHESS_INDEX(polar->polar.x,polar->polar.y)];
+}
+
+b3_f64 b3MatChess::b3GetSpecularExponent(b3_polar *polar)
+{
+	return m_HighLight[CHESS_INDEX(polar->polar.x,polar->polar.y)];
 }
 
 
@@ -247,22 +292,22 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 	b3InitString(Name,B3_TEXSTRINGLEN);
 }
 
-b3_f64 b3MatWrapTexture::b3GetReflection()
+b3_f64 b3MatWrapTexture::b3GetReflection(b3_polar *polar)
 {
 	return Reflection;
 }
 
-b3_f64 b3MatWrapTexture::b3GetRefraction()
+b3_f64 b3MatWrapTexture::b3GetRefraction(b3_polar *polar)
 {
 	return Refraction;
 }
 
-b3_f64 b3MatWrapTexture::b3GetIndexOfRefraction()
+b3_f64 b3MatWrapTexture::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return RefrValue;
 }
 
-b3_f64 b3MatWrapTexture::b3GetSpecularExponent()
+b3_f64 b3MatWrapTexture::b3GetSpecularExponent(b3_polar *polar)
 {
 	return HighLight;
 }
@@ -287,22 +332,22 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 	yTimes     = b3InitInt();
 }
 
-b3_f64 b3MatMarble::b3GetReflection()
+b3_f64 b3MatMarble::b3GetReflection(b3_polar *polar)
 {
 	return Reflection;
 }
 
-b3_f64 b3MatMarble::b3GetRefraction()
+b3_f64 b3MatMarble::b3GetRefraction(b3_polar *polar)
 {
 	return Refraction;
 }
 
-b3_f64 b3MatMarble::b3GetIndexOfRefraction()
+b3_f64 b3MatMarble::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return RefrValue;
 }
 
-b3_f64 b3MatMarble::b3GetSpecularExponent()
+b3_f64 b3MatMarble::b3GetSpecularExponent(b3_polar *polar)
 {
 	return HighLight;
 }
@@ -329,22 +374,22 @@ b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 	m_ModeFlag   = b3InitInt();
 }
 
-b3_f64 b3MatSlide::b3GetReflection()
+b3_f64 b3MatSlide::b3GetReflection(b3_polar *polar)
 {
 	return m_Reflection;
 }
 
-b3_f64 b3MatSlide::b3GetRefraction()
+b3_f64 b3MatSlide::b3GetRefraction(b3_polar *polar)
 {
 	return m_Refraction;
 }
 
-b3_f64 b3MatSlide::b3GetIndexOfRefraction()
+b3_f64 b3MatSlide::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return m_RefrValue;
 }
 
-b3_f64 b3MatSlide::b3GetSpecularExponent()
+b3_f64 b3MatSlide::b3GetSpecularExponent(b3_polar *polar)
 {
 	return m_HighLight;
 }
@@ -421,22 +466,22 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 	yTimes     = b3InitInt();
 }
 
-b3_f64 b3MatWood::b3GetReflection()
+b3_f64 b3MatWood::b3GetReflection(b3_polar *polar)
 {
 	return Reflection;
 }
 
-b3_f64 b3MatWood::b3GetRefraction()
+b3_f64 b3MatWood::b3GetRefraction(b3_polar *polar)
 {
 	return Refraction;
 }
 
-b3_f64 b3MatWood::b3GetIndexOfRefraction()
+b3_f64 b3MatWood::b3GetIndexOfRefraction(b3_polar *polar)
 {
 	return RefrValue;
 }
 
-b3_f64 b3MatWood::b3GetSpecularExponent()
+b3_f64 b3MatWood::b3GetSpecularExponent(b3_polar *polar)
 {
 	return HighLight;
 }

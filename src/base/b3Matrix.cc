@@ -35,10 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
+**
 **	Revision 1.13  2001/10/05 20:30:45  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
-**
+**	
 **	Revision 1.12  2001/09/30 16:27:48  sm
 **	- Raytracing with diffuse color without shading
 **	- Sphere intersection fixed (now using normalized rays)
@@ -271,6 +278,17 @@ b3_f64 b3AngleOfPoints(
 		result = 0.0;
 	}
 	return result;
+}
+
+b3_vector *b3CrossProduct (
+	b3_vector *a,
+	b3_vector *b,
+	b3_vector *c)
+{
+	c->x = a->y * b->z - a->z * b->y;
+	c->y = a->z * b->x - a->x * b->z;
+	c->z = a->x * b->y - a->y * b->x;
+	return c;
 }
 
 b3_f64 b3Det2(

@@ -10,6 +10,7 @@ PRGS			=
 LIBS			= libB3Base.a
 PRG_SOURCE =\
 	b3Aux.cc\
+	b3Cubic.cc\
 	b3FileList.cc\
 	b3Item.cc\
 	b3ItemRegister.cc\
@@ -22,6 +23,7 @@ PRG_SOURCE =\
 
 PRG_OBJ	=\
 	b3Aux.o\
+	b3Cubic.o\
 	b3FileList.o\
 	b3Item.o\
 	b3ItemRegister.o\

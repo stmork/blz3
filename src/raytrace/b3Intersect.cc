@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Cubic.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
+**
 **	Revision 1.9  2001/10/05 20:30:45  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
-**
+**	
 **	Revision 1.8  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
 **	
@@ -325,17 +333,20 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64   l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
-	a =  BTLine.dir.x * BTLine.dir.x + BTLine.dir.y * BTLine.dir.y;
-	if (a == 0)
+	if ((a =
+		BTLine.dir.x * BTLine.dir.x +
+		BTLine.dir.y * BTLine.dir.y) == 0)
 	{
 		return -1;
 	}
-	a = 1 / a;
+	a = 1.0 / a;
 
-	p = (BTLine.dir.x * BTLine.pos.x + BTLine.dir.y * BTLine.pos.y) * a;
-	if ((Discriminant =	p * p -
-		(BTLine.pos.x * BTLine.pos.x +
-		 BTLine.pos.y * BTLine.pos.y - 1) * a) < 0)
+	p = (
+		BTLine.dir.x * BTLine.pos.x +
+		BTLine.dir.y * BTLine.pos.y) * a;
+	if ((Discriminant =	p * p - (
+		BTLine.pos.x * BTLine.pos.x +
+		BTLine.pos.y * BTLine.pos.y - 1) * a) < 0)
 	{
 		return -1;
 	}
@@ -367,6 +378,8 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 			l2 = -1;
 		}
 	}
+
+	// Not found any intersection
 	if ((l1 < 0) && (l2 < 0))
 	{
 		return -3;
@@ -422,29 +435,30 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64   l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
-	a = BTLine.dir.x * BTLine.dir.x +
+	if ((a =
+		BTLine.dir.x * BTLine.dir.x +
 		BTLine.dir.y * BTLine.dir.y -
-		BTLine.dir.z * BTLine.dir.z;
-	if (a == 0)
+		BTLine.dir.z * BTLine.dir.z) == 0)
 	{
 		return -1;
 	}
 
-	a = 1 / a;
+	a = 1.0 / a;
 	p = (
 		BTLine.dir.x  *      BTLine.pos.x +
 		BTLine.dir.y  *      BTLine.pos.y +
 		BTLine.dir.z  * (1 - BTLine.pos.z)) * a;
-	if ((Discriminant = p * p -
-		(   BTLine.pos.x  *    BTLine.pos.x +
-		    BTLine.pos.y  *    BTLine.pos.y -
-		 (1-BTLine.pos.z) * (1-BTLine.pos.z)) * a) < 0)
+	if ((Discriminant = p * p - (
+		   BTLine.pos.x  *    BTLine.pos.x +
+		   BTLine.pos.y  *    BTLine.pos.y -
+		(1-BTLine.pos.z) * (1-BTLine.pos.z)) * a) < 0)
 	{
 		return -1;
 	}
 	z  = sqrt(Discriminant);
 	l1 = -p - z;
 	l2 = -p + z;
+
 
 	if (l1 < epsilon)
 	{
@@ -746,6 +760,67 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
+	b3_count NumOfX,i,k;
+	b3_f64   Val1,Val2,pQuad,dQuad,pdQuad;
+	b3_f64   xp,yp;
+	b3_f64   Coeff[5],x[4];
+	b3_dLine BTLine;
+
+	b3BaseTrans (ray,&BTLine);
+	pQuad	= BTLine.pos.z * BTLine.pos.z;
+	dQuad	= BTLine.dir.z * BTLine.dir.z;
+	pdQuad	= BTLine.pos.z * BTLine.dir.z;
+	Val1	= BTLine.pos.x * BTLine.pos.x +
+	          BTLine.pos.y * BTLine.pos.y + pQuad - m_aQuad - m_bQuad;
+	Val2	= BTLine.pos.x * BTLine.dir.x +
+	          BTLine.pos.y * BTLine.dir.y + pdQuad;
+
+	Coeff[4]	= 1;
+	Coeff[3]	= 4 *  Val2;
+	Coeff[2]	= 2 * (Val1        + 2 * Val2    * Val2 + 2 * m_aQuad * dQuad);
+	Coeff[1]	= 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
+	Coeff[0]	=      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
+
+	if ((NumOfX = b3SolveOrd4 (Coeff,x)) == 0)
+	{
+		return -1;
+	}
+	for (i = 0;i < NumOfX;)
+	{
+		if ((x[i] > epsilon) && (x[i] < ray->Q)) i++;
+		else x[i] = x[--NumOfX];
+	}
+
+	for (i = 0;i < NumOfX;i++)
+	{
+		Val1 = x[i];
+		for (k = NumOfX - 1;k > i;k--)
+		{
+			if (x[k] < Val1)
+			{
+				Val2 = x[k];
+				x[k] = Val1;
+				Val1 = Val2;
+			}
+		}
+		xp = polar->object_polar.x = BTLine.pos.x + Val1 * BTLine.dir.x;
+		yp = polar->object_polar.y = BTLine.pos.y + Val1 * BTLine.dir.y;
+		     polar->object_polar.z = BTLine.pos.z + Val1 * BTLine.dir.z;
+
+		Val2 = m_aRad - m_aQuad / sqrt(xp * xp + yp * yp);
+		polar->polar.x = b3RelAngleOfScalars(
+			polar->object_polar.x,
+			polar->object_polar.y);
+		polar->polar.y = b3RelAngleOfScalars(
+			Val2,
+			polar->object_polar.z);
+		polar->polar.z = 0;
+
+		if (b3CheckStencil (polar))
+		{
+			return Val1;
+		}
+	}
 	return -1;
 }
 
@@ -874,10 +949,10 @@ b3Shape *b3Scene::b3Intersect(
 
 	while (BBox != null)
 	{
-		Shapes = BBox->b3GetShapeHead();
-		BBoxes = BBox->b3GetBBoxHead();
 		if (BBox->b3Intersect(ray))
 		{
+			Shapes = BBox->b3GetShapeHead();
+			BBoxes = BBox->b3GetBBoxHead();
 			if (BBoxes->First)
 			{
 				Found = b3Intersect ((b3BBox *)BBoxes->First,ray);
@@ -896,7 +971,7 @@ b3Shape *b3Scene::b3Intersect(
 					if ((Result > 0) && (Result <= ray->Q))
 					{
 						BackShape  = Shape;
-						ray->BBox  = BBox;
+						ray->bbox  = BBox;
 						ray->Q     = Result;
 						ray->polar = polar;
 					}
@@ -919,8 +994,20 @@ b3Shape *b3Scene::b3Intersect(
 
 b3_bool b3Scene::b3Intersect(b3_ray_info *ray,b3_f64 max)
 {
-	ray->Q      = max;
-	ray->shape  = b3Intersect(b3GetFirstBBox(),ray);
+	b3BBox  *bbox;
+	b3_bool  found;
 
-	return ray->shape != null;
+	ray->Q     = max;
+	ray->shape = b3Intersect(b3GetFirstBBox(),ray);
+
+	found      = (ray->shape != null);
+	if (found)
+	{
+		bbox = ray->bbox;
+		ray->polar.box_polar.x = (ray->ipoint.x - bbox->m_DimBase.x) / bbox->m_DimSize.x;
+		ray->polar.box_polar.y = (ray->ipoint.y - bbox->m_DimBase.y) / bbox->m_DimSize.y;
+		ray->polar.box_polar.z = (ray->ipoint.z - bbox->m_DimBase.z) / bbox->m_DimSize.z;
+	}
+
+	return found;
 }
