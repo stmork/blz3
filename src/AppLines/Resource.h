@@ -91,6 +91,7 @@
 #define IDD_MAT_COOK_TORRANCE           648
 #define IDD_MAT_GRANITE                 649
 #define IDD_MAT_OAKPLANK                650
+#define IDD_BUMP_OAKPLANK               651
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -747,6 +748,7 @@
 #define IDS_MAT_GRANITE                 61455
 #define IDS_MAT_OAKPLANK                61456
 #define IDS_BUMP_WOOD                   61457
+#define IDS_BUMP_OAKPLANK               61458
 
 // Next default values for new objects
 // 

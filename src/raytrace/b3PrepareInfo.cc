@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Scene.h"
 
@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/04/17 17:18:33  sm
+**	- Made some include adjustments
+**	- Added oakplank bump as dialog
+**	- Fixed b3BumpWood and b3BumpOakPlank
+**	  bump computation
+**
 **	Revision 1.11  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.10  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads

@@ -21,6 +21,7 @@
 #include <stdio.h>
 
 #include "blz3/b3Types.h"
+#include "blz3/b3PluginDef.h"
 
 enum b3_log_level
 {

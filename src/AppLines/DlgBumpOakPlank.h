@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	DlgBumpWood.h $
+**	$Filename:	DlgBumpOakPlank.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -15,37 +15,37 @@
 **
 */
 
-#if !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
-#define AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_
+#if !defined(AFX_DLGBUMPOAKPLANK_H__39AE8FE4_AB49_4FBC_85EF_BB94F9AE60F1__INCLUDED_)
+#define AFX_DLGBUMPOAKPLANK_H__39AE8FE4_AB49_4FBC_85EF_BB94F9AE60F1__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-// DlgBumpWood.h : header file
+// DlgBumpOakPlank.h : header file
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgBumpWood dialog
+// CDlgBumpOakPlank dialog
 
-class CDlgBumpWood : public CDialog
+class CDlgBumpOakPlank : public CDialog
 {
-	b3BumpWood         *m_Bump;
+	b3BumpOakPlank        *m_Bump;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
-	CDlgBumpWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpOakPlank(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
-	//{{AFX_DATA(CDlgBumpWood)
-	enum { IDD = IDD_BUMP_WOOD };
+	//{{AFX_DATA(CDlgBumpOakPlank)
+	enum { IDD = IDD_BUMP_OAKPLANK };
 		// NOTE: the ClassWizard will add data members here
 	//}}AFX_DATA
 
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDlgBumpWood)
+	//{{AFX_VIRTUAL(CDlgBumpOakPlank)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -54,7 +54,7 @@ public:
 protected:
 
 	// Generated message map functions
-	//{{AFX_MSG(CDlgBumpWood)
+	//{{AFX_MSG(CDlgBumpOakPlank)
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -63,4 +63,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
+#endif // !defined(AFX_DLGBUMPOAKPLANK_H__39AE8FE4_AB49_4FBC_85EF_BB94F9AE60F1__INCLUDED_)

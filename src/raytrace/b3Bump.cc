@@ -34,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/04/17 17:18:33  sm
+**	- Made some include adjustments
+**	- Added oakplank bump as dialog
+**	- Fixed b3BumpWood and b3BumpOakPlank
+**	  bump computation
+**
 **	Revision 1.21  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.20  2004/04/15 08:57:00  sm
 **	- Added b3BumpAokPlank
 **	
@@ -141,14 +147,15 @@
 void b3Bump::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bump mapping...\n");
-	b3Item::b3Register(&b3BumpNoise::b3StaticInit,   &b3BumpNoise::b3StaticInit,   BUMP_NOISE);
-	b3Item::b3Register(&b3BumpMarble::b3StaticInit,  &b3BumpMarble::b3StaticInit,  BUMP_MARBLE);
-	b3Item::b3Register(&b3BumpTexture::b3StaticInit, &b3BumpTexture::b3StaticInit, BUMP_TEXTURE);
-	b3Item::b3Register(&b3BumpWater::b3StaticInit,   &b3BumpWater::b3StaticInit,   BUMP_WATER);
-	b3Item::b3Register(&b3BumpWave::b3StaticInit,    &b3BumpWave::b3StaticInit,    BUMP_WAVE);
-	b3Item::b3Register(&b3BumpGroove::b3StaticInit,  &b3BumpGroove::b3StaticInit,  BUMP_GROOVE);
-	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,  &b3BumpGlossy::b3StaticInit,  BUMP_GLOSSY);
-	b3Item::b3Register(&b3BumpWood::b3StaticInit,    &b3BumpWood::b3StaticInit,    BUMP_WOOD);
+	b3Item::b3Register(&b3BumpNoise::b3StaticInit,    &b3BumpNoise::b3StaticInit,    BUMP_NOISE);
+	b3Item::b3Register(&b3BumpMarble::b3StaticInit,   &b3BumpMarble::b3StaticInit,   BUMP_MARBLE);
+	b3Item::b3Register(&b3BumpTexture::b3StaticInit,  &b3BumpTexture::b3StaticInit,  BUMP_TEXTURE);
+	b3Item::b3Register(&b3BumpWater::b3StaticInit,    &b3BumpWater::b3StaticInit,    BUMP_WATER);
+	b3Item::b3Register(&b3BumpWave::b3StaticInit,     &b3BumpWave::b3StaticInit,     BUMP_WAVE);
+	b3Item::b3Register(&b3BumpGroove::b3StaticInit,   &b3BumpGroove::b3StaticInit,   BUMP_GROOVE);
+	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,   &b3BumpGlossy::b3StaticInit,   BUMP_GLOSSY);
+	b3Item::b3Register(&b3BumpWood::b3StaticInit,     &b3BumpWood::b3StaticInit,     BUMP_WOOD);
+	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit, &b3BumpOakPlank::b3StaticInit, BUMP_OAKPLANK);
 }
 
 b3Bump::b3Bump(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)
@@ -716,32 +723,34 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	b3_vector   point,n;
 	b3_vector64 xTest,yTest;
 	b3_vector   xWood,yWood;
-	b3_f64      Denom,wood,dX,dY,x,y;
+	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 
 //	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
 	wood = b3Wood::b3ComputeWood(&point);
 
 	// Note: xDeriv and yDeriv are not normalized!
-	x       = 1.0 / (b3Vector::b3Length(&ray->xDeriv) * m_dX);
+	xLen    = b3Vector::b3Length(&ray->xDeriv);
+	x       = 1.0 / (xLen * m_dX);
 	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
 	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
 	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
-	dX = (b3Wood::b3ComputeWood (&xWood) - wood) * m_dX;
+	dX = (b3Wood::b3ComputeWood (&xWood) - wood) * m_dX / xLen;
 
-	y       = 1.0 / (b3Vector::b3Length(&ray->yDeriv) * m_dY);
+	yLen    = b3Vector::b3Length(&ray->yDeriv);
+	y       = 1.0 / (yLen * m_dY);
 	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
 	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
 	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
-	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY;
+	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY / yLen;
 
-	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
-	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
-	n.z = ray->xDeriv.z * dX - ray->yDeriv.y * dY;
+	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
+	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;
+	n.z = ray->xDeriv.z * dX + ray->yDeriv.z * dY;
 
-	Denom = b3Vector::b3Length(&ray->normal);
+	Denom = 1.0 / b3Vector::b3Length(&ray->normal);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
@@ -759,7 +768,7 @@ b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3Bump(sizeof(b3BumpOakPlank
 	m_Amplitude = 0.3f;
 	m_dX = 1.0 / BUMP_dX;
 	m_dY = 1.0 / BUMP_dY;
-	b3InitWood();
+	b3InitOakPlank();
 }
 
 b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3Bump(src)
@@ -827,7 +836,8 @@ void b3BumpOakPlank::b3Write()
 b3_bool b3BumpOakPlank::b3Prepare()
 {
 	b3_index x,y;
-	b3_f64   fx,fy;
+	b3_f64   fx,fy,wobble;
+
 	b3PrepareOakPlank();
 
 	m_dX = 1.0 / BUMP_dX;
@@ -841,7 +851,8 @@ b3_bool b3BumpOakPlank::b3Prepare()
 		{
 			fx = (b3_f64)x / m_xTimes;
 
-			m_Amplitudes.b3Add(m_Amplitude + b3Noise::b3SignedFilteredNoiseVector(fx,fy,0) * m_Amplitude * m_Wobble);
+			wobble = b3Noise::b3SignedFilteredNoiseVector(fx,fy,0) * m_Amplitude * m_Wobble;
+			m_Amplitudes.b3Add(m_Amplitude + wobble);
 		}
 	}
 
@@ -853,33 +864,36 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	b3_vector   point,n;
 	b3_vector64 xTest,yTest;
 	b3_vector   xWood,yWood;
-	b3_f64      Denom,wood,dX,dY,x,y;
+	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
+	b3_index    index,iX,iY;
 
 //	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
-	wood = b3OakPlank::b3ComputeWood(&point);
+	wood = b3OakPlank::b3ComputeOakPlank(&point,index);
 
 	// Note: xDeriv and yDeriv are not normalized!
-	x       = 1.0 / (b3Vector::b3Length(&ray->xDeriv) * m_dX);
+	xLen    = b3Vector::b3Length(&ray->xDeriv);
+	x       = 1.0 / (xLen * m_dX);
 	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
 	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
 	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
-	dX = (b3OakPlank::b3ComputeWood (&xWood) - wood) * m_dX;
+	dX = (b3OakPlank::b3ComputeOakPlank (&xWood,iX) - wood) * m_dX / xLen;
 
-	y       = 1.0 / (b3Vector::b3Length(&ray->yDeriv) * m_dY);
+	yLen    = b3Vector::b3Length(&ray->yDeriv);
+	y       = 1.0 / (yLen * m_dY);
 	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
 	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
 	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
 	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
-	dY = (b3OakPlank::b3ComputeWood (&yWood) - wood) * m_dY;
+	dY = (b3OakPlank::b3ComputeOakPlank (&yWood,iY) - wood) * m_dY / yLen;
 
-	n.x = ray->xDeriv.x * dX - ray->yDeriv.z * dY;
-	n.y = ray->xDeriv.y * dX - ray->yDeriv.x * dY;
-	n.z = ray->xDeriv.z * dX - ray->yDeriv.y * dY;
+	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
+	n.y = ray->xDeriv.y * dX + ray->yDeriv.y * dY;
+	n.z = ray->xDeriv.z * dX + ray->yDeriv.z * dY;
 
-	Denom = b3Vector::b3Length(&ray->normal);
-	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
-	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitude;
-	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitude;
+	Denom = 1.0 / b3Vector::b3Length(&ray->normal);
+	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitudes[index];
+	ray->normal.y = ray->normal.y * Denom + n.y * m_Amplitudes[index];
+	ray->normal.z = ray->normal.z * Denom + n.z * m_Amplitudes[index];
 }

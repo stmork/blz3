@@ -282,6 +282,34 @@ SOURCE=.\b3TriangleShape.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include\blz3\raytrace\b3Animation.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Base.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3BBox.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Bump.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Condition.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Light.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Material.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\raytrace\b3MaterialSampler.h
 # End Source File
 # Begin Source File
@@ -307,6 +335,18 @@ SOURCE=.\b3ReadTGF.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3RenderView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Scene.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Shape.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Special.h
 # End Source File
 # End Group
 # End Target

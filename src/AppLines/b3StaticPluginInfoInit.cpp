@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "b3StaticPluginInfoInit.h"
 #include "DlgBumpWood.h"
+#include "DlgBumpOakPlank.h"
 #include "DlgMatNormal.h"
 #include "DlgMatChess.h"
 #include "DlgMatMarble.h"
@@ -43,6 +44,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/17 17:18:33  sm
+**	- Made some include adjustments
+**	- Added oakplank bump as dialog
+**	- Fixed b3BumpWood and b3BumpOakPlank
+**	  bump computation
+**
 **	Revision 1.6  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -51,7 +58,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.5  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
 **	
@@ -99,6 +106,7 @@ void b3StaticPluginInfoInit::b3Init()
 	b3Loader::b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
 
 	CDlgBumpWood::b3Register();
+	CDlgBumpOakPlank::b3Register();
 
 	CDlgMatNormal::b3Register();
 	CDlgMatChess::b3Register();

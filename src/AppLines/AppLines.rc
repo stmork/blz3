@@ -2356,6 +2356,15 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
 END
 
+IDD_BUMP_OAKPLANK DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Parkettstruktur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2804,6 +2813,14 @@ BEGIN
     END
 
     IDD_BUMP_WOOD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_BUMP_OAKPLANK, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 179
@@ -3409,6 +3426,7 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_MAT_OAKPLANK        "Holzplanken"
     IDS_BUMP_WOOD           "Holzstruktur"
+    IDS_BUMP_OAKPLANK       "Parkettstruktur"
 END
 
 #endif    // German (Germany) resources
