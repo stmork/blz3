@@ -120,6 +120,14 @@ public:
 		return negate;
 	}
 
+	static inline b3_vector64 *b3Negate(b3_vector64 *negate)
+	{
+		negate->x   = -negate->x;
+		negate->y   = -negate->y;
+		negate->z   = -negate->z;
+		return negate;
+	}
+
 	static inline b3_f64 b3Normalize(
 		      b3_vector *vector,
 		const b3_f64     length = 1.0)
@@ -239,6 +247,28 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
+
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
+		{
+			r[i] = a[i] + b[i];
+		}
+#else
+		result->x = aVec->x + bVec->x;
+		result->y = aVec->y + bVec->y;
+		result->z = aVec->z + bVec->z;
+#endif
+		return result;
+	}
+
+	static inline b3_vector64 *b3Add(
+		const b3_vector64 *aVec,
+		const b3_vector64 *bVec,
+		      b3_vector64 *result)
+	{
+#ifdef B3_SSE
+		b3_f64 *r = &result->x;
+		b3_f64 *a = &aVec->x;
+		b3_f64 *b = &bVec->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
