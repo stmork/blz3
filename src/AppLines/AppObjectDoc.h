@@ -25,6 +25,7 @@
 #include "AppRenderDoc.h"
 
 class CDlgHierarchy;
+class b3SplineShape;
 
 class CAppObjectDoc : public CAppRenderDoc
 {
@@ -93,6 +94,8 @@ protected:
 	afx_msg void OnUpdateEditBumpDirect(CCmdUI* pCmdUI);
 	afx_msg void OnCopyMaterialToBump();
 	afx_msg void OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI);
+	afx_msg void OnSplineControl();
+	afx_msg void OnUpdateSplineControl(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -105,27 +108,28 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 public:
-	void        b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
-	void        b3ComputeBounds();
-	void        b3InitTree();
-	void        b3HierarchySelectionChanged();
-	b3Shape    *b3GetSelectedShape();
-	void        b3ContextMenu(HTREEITEM item);
-	void        b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
-	b3_bool     b3IsLinesDoc(CAppLinesDoc *LinesDoc);
-	b3_bool     b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
-	const char *b3GetDocumentName();
-	b3Scene    *b3GetParentScene();
-	b3_u32      b3GetParentShading();
+	void           b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
+	void           b3ComputeBounds();
+	void           b3InitTree();
+	void           b3HierarchySelectionChanged();
+	b3Shape       *b3GetSelectedShape();
+	void           b3ContextMenu(HTREEITEM item);
+	void           b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	b3_bool        b3IsLinesDoc(CAppLinesDoc *LinesDoc);
+	b3_bool        b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+	const char    *b3GetDocumentName();
+	b3Scene       *b3GetParentScene();
+	b3_u32         b3GetParentShading();
 
 private:
-	void        b3SetBBox(b3BBox *bbox);
-	void        b3ActivateItem(b3Item *item,b3_bool activate=true);
-	b3Item     *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
-	b3Item     *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
-	b3_bool     b3CopyMaterialToBump();
-	b3_bool     b3CopyBumpToMaterial();
-	void        b3UpdateSurface(b3Shape *shape);
+	void           b3SetBBox(b3BBox *bbox);
+	void           b3ActivateItem(b3Item *item,b3_bool activate=true);
+	b3Item        *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
+	b3Item        *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
+	b3_bool        b3CopyMaterialToBump();
+	b3_bool        b3CopyBumpToMaterial();
+	void           b3UpdateSurface(b3Shape *shape);
+	b3SplineShape *b3GetSplineShape();
 };
 
 /////////////////////////////////////////////////////////////////////////////

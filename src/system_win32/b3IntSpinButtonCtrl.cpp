@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/07/03 13:49:30  sm
+**	- Added spline knot control dialog which is not completed yet.
+**
 **	Revision 1.4  2004/05/06 18:13:52  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.3  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
@@ -94,6 +97,19 @@ END_MESSAGE_MAP()
 // CB3FloatSpinButtonCtrl message handlers
 
 void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
+{
+	B3_ASSERT(m_Min < m_Max);
+	if (pDX->m_bSaveAndValidate)
+	{
+		pos = b3GetPos();
+	}
+	else
+	{
+		pos = b3SetPos(pos);
+	}
+}
+
+void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_count &pos)
 {
 	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)

@@ -32,7 +32,7 @@
 #ifndef _DEBUG
 #define B3_MAX_TX_SIZE  64
 #else
-#define B3_MAX_TX_SIZE 128
+#define B3_MAX_TX_SIZE   8
 #endif
 
 /*************************************************************************
@@ -43,6 +43,9 @@
 
 /*
 **      $Log$
+**      Revision 1.74  2004/07/03 13:49:30  sm
+**      - Added spline knot control dialog which is not completed yet.
+**
 **      Revision 1.73  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow

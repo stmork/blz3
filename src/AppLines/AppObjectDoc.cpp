@@ -26,9 +26,10 @@
 #include "AppObjectView.h"
 #include "MainFrm.h"
 
-#include "DlgNewObject.h"
-#include "DlgItemMaintain.h"
 #include "DlgCopyProperties.h"
+#include "DlgItemMaintain.h"
+#include "DlgKnotControl.h"
+#include "DlgNewObject.h"
 
 #include "blz3/base/b3Matrix.h"
 
@@ -40,13 +41,16 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/07/03 13:49:30  sm
+**	- Added spline knot control dialog which is not completed yet.
+**
 **	Revision 1.39  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.38  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
 **	
@@ -253,13 +257,15 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_COMMAND(ID_EDIT_BUMP_DIRECT, OnEditBumpDirect)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL_DIRECT, OnUpdateEditMaterialDirect)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP_DIRECT, OnUpdateEditBumpDirect)
+	ON_COMMAND(ID_COPY_MATERIAL_TO_BUMP, OnCopyMaterialToBump)
+	ON_UPDATE_COMMAND_UI(ID_COPY_MATERIAL_TO_BUMP, OnUpdateCopyMaterialToBump)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_COPY_MATERIAL_TO_BUMP, OnCopyMaterialToBump)
-	ON_UPDATE_COMMAND_UI(ID_COPY_MATERIAL_TO_BUMP, OnUpdateCopyMaterialToBump)
+	ON_COMMAND(ID_SPLINE_CONTROL, OnSplineControl)
+	ON_UPDATE_COMMAND_UI(ID_SPLINE_CONTROL, OnUpdateSplineControl)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1230,4 +1236,42 @@ b3Item *CAppObjectDoc::b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type
 		head->b3Append(item);
 	}
 	return item;
+}
+
+b3SplineShape *CAppObjectDoc::b3GetSplineShape()
+{
+	b3SplineShape *spline_shape = null;
+	b3Shape       *shape = b3GetSelectedShape();
+
+	if (shape != null)
+	{
+		b3_u32 class_type = shape->b3GetClassType();
+
+		if ((class_type == SPLINES_AREA) ||
+			(class_type == SPLINES_CYL) ||
+			(class_type == SPLINES_RING))
+		{
+			spline_shape = (b3SplineShape *)shape;
+		}
+	}
+	return spline_shape;
+}
+
+void CAppObjectDoc::OnSplineControl() 
+{
+	// TODO: Add your command handler code here
+	b3SplineShape *spline_shape = b3GetSplineShape();
+
+	if (spline_shape != null)
+	{
+		CDlgKnotControl dlg(&spline_shape->m_Spline[0]);
+
+		dlg.DoModal();
+	}
+}
+
+void CAppObjectDoc::OnUpdateSplineControl(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(b3GetSplineShape() != null);
 }

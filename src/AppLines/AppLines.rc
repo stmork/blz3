@@ -635,6 +635,7 @@ BEGIN
         MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
         MENUITEM "Transformationsablauf löschen", 
                                                 ID_DELETE_TRANSFORM_HISTORY
+        MENUITEM "Knoten&vektor bearbeiten...", ID_SPLINE_CONTROL
     END
     POPUP "&Material"
     BEGIN
@@ -2909,6 +2910,21 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,115,50,50,14
 END
 
+IDD_BSPLINE_CTRL DIALOG DISCARDABLE  0, 0, 487, 121
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "BSpline-Kontrolle"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_KNOT_NUM_EDIT,15,20,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_KNOT_NUM_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,55,23,11,14
+    CONTROL         "Slider1",IDC_KNOT_POS,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_BOTH | WS_TABSTOP,75,20,380,25
+    DEFPUSHBUTTON   "OK",IDOK,10,65,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,410,60,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -3506,6 +3522,14 @@ BEGIN
         RIGHTMARGIN, 170
         TOPMARGIN, 7
         BOTTOMMARGIN, 69
+    END
+
+    IDD_BSPLINE_CTRL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 480
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -409,6 +409,10 @@ SOURCE=.\DlgItemMaintain.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgKnotControl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgLDC.cpp
 # End Source File
 # Begin Source File
@@ -870,6 +874,10 @@ SOURCE=.\DlgItemCreate.h
 # Begin Source File
 
 SOURCE=.\DlgItemMaintain.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgKnotControl.h
 # End Source File
 # Begin Source File
 

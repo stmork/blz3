@@ -50,6 +50,7 @@ public:
 	void     b3SetIncrement(b3_s32 increment = B3_ISBC_DEFAULT_INCREMENT);
 	void     b3SetAccel(b3_s32 increment = B3_ISBC_DEFAULT_ACCEL,int secs = 2);
 	void     b3DDX(CDataExchange *pDX,b3_s32 &pos);
+	void     b3DDX(CDataExchange *pDX,b3_index &pos);
 	b3_s32   b3GetPos();
 	b3_s32   b3GetAccel();
 
