@@ -891,7 +891,6 @@ public:
 	b3_count   b3GetSubdiv();
 	b3_f64    *b3GetCosTable();
 	b3_f64    *b3GetSinTable();
-	b3_vector *b3GetSplineAux();
 
 #ifdef BLZ3_USE_OPENGL
 	GLushort  *b3GetCylinderIndices();
@@ -939,7 +938,7 @@ class b3ShapeRenderObject : public b3Shape, public b3RenderObject
 protected:
 	b3_count           xSize,ySize;
 	b3_count           SinCosSteps;
-	b3_vector         *Between;
+//	b3_vector         *Between;
 	b3_f64            *Cos;
 	b3_f64            *Sin;
 	b3_stencil_limit   Limit;

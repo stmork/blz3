@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2002/08/02 18:55:44  sm
+**      - SplineShape weren't be multi threadable - fixed.
+**
 **      Revision 1.50  2002/07/31 13:46:02  sm
 **      - I have to spend more brain into correct shading of quadrics...
 **
@@ -500,22 +503,6 @@ b3_f64 *b3ShapeRenderContext::b3GetCosTable()
 	return m_Cos;
 }
 
-b3_vector *b3ShapeRenderContext::b3GetSplineAux()
-{
-	b3_count factor;
-
-	if (m_Between == null)
-	{
-		factor  = B3_MAX(B3_MAX_CONTROLS,B3_MAX_SUBDIV) + 1;
-		m_Between = (b3_vector *)b3Alloc(factor * factor * sizeof(b3_vector));
-		if (m_Between == null)
-		{
-			throw new b3WorldException(B3_WORLD_MEMORY);
-		}
-	}
-	return m_Between;
-}
-
 #ifdef BLZ3_USE_OPENGL
 GLushort *b3ShapeRenderContext::b3GetCylinderIndices()
 {
@@ -548,19 +535,19 @@ GLushort *b3ShapeRenderContext::b3GetConePolygons()
 b3ShapeRenderObject::b3ShapeRenderObject(b3_size class_size,b3_u32 class_type) :
 	b3Shape(class_size, class_type)
 {
-	Between = null;
+//	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 class_type) :
 	b3Shape(sizeof(b3ShapeRenderObject), class_type)
 {
-	Between = null;
+//	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
 	b3Shape(src)
 {
-	Between = null;
+//	Between = null;
 }
 
 void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)

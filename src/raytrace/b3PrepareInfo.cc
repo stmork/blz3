@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/02 18:55:44  sm
+**	- SplineShape weren't be multi threadable - fixed.
+**
 **	Revision 1.2  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
 **	- Last changes to Windows port.
-**
+**	
 **	Revision 1.1  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -57,6 +60,12 @@ b3PrepareInfo::b3PrepareInfo(b3Scene *scene)
 	b3BBox *bbox;
 
 	m_PrepareProc = null;
+#ifdef _DEBUG
+	m_MinBBoxesForThreading = 0;
+#else
+	m_MinBBoxesForThreading = B3_MIN_BBOXES_FOR_THREADING;
+#endif
+	
 	for (bbox = scene->b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
 	{
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
@@ -75,11 +84,13 @@ b3BBoxReference *b3PrepareInfo::b3GetBBoxReference()
 
 void b3PrepareInfo::b3RebuildListFromArray()
 {
+	m_Mutex.b3Lock();
 	m_BBoxRefList.b3RemoveAll();
 	for (int i = 0;i < m_BBoxRefArray.b3GetCount();i++)
 	{
 		m_BBoxRefList.b3Append(&m_BBoxRefArray[i]);
 	}
+	m_Mutex.b3Unlock();
 }
 
 b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
@@ -104,7 +115,7 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc)
 
 	b3RebuildListFromArray();
 	m_PrepareProc = prepare_proc;
-	if ((CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= B3_MIN_BBOXES_FOR_THREADING))
+	if ((CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading))
 	{
 		b3Thread *threads = new b3Thread[CPUs];
 		int       i;
@@ -119,6 +130,8 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc)
 		{
 			result &= (threads[i].b3Wait() != 0);
 		}
+
+		delete [] threads;
 	}
 	else
 	{

@@ -21,7 +21,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 
 typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
-
+								  
 #define B3_MIN_BBOXES_FOR_THREADING 50
 
 class b3PrepareInfo
@@ -34,6 +34,7 @@ protected:
 	b3Base<b3BBoxReference>  m_BBoxRefList;
 	b3Array<b3BBoxReference> m_BBoxRefArray;
 	b3Mutex                  m_Mutex;
+	b3_count                 m_MinBBoxesForThreading;
 
 public:
 	                 b3PrepareInfo(b3Scene *scene);

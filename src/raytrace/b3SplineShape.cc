@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2002/08/02 18:55:45  sm
+**      - SplineShape weren't be multi threadable - fixed.
+**
 **      Revision 1.34  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -315,8 +318,6 @@ void b3SplineShape::b3GetCount(
 {
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 	
-	Between   = context->b3GetSplineAux();
-
 	// Compute number of grid vertices
 #ifdef BLZ3_USE_OPENGL
 	m_GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
@@ -344,6 +345,7 @@ void b3SplineShape::b3ComputeGridVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3_tnv_vertex *Vector = glVertex;
 	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
+	b3_vector      Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
 	b3_count       CurveNum,Points = 0;
 	b3_index       x,y,t;
 	b3Spline       MySpline;
@@ -406,6 +408,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_tnv_vertex *Vector;
 	b3_vector     *Aux;
 	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
+	b3_vector      Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
 
 	// Building horizontal BSplines
 	Aux    = Between;
