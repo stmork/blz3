@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/08/25 13:03:02  sm
+**	- Added a tool to restore correct file extensions.
+**	- b3Tx can determine the image types' file extension.
+**
 **	Revision 1.12  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -356,7 +360,7 @@ b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 	return error_code;
 }
 
-b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
+const b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
 {
 	if (stricmp(ext,"tif")  == 0) return FT_TIFF;
 	if (stricmp(ext,"tiff") == 0) return FT_TIFF;
@@ -377,6 +381,75 @@ b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
 	if (stricmp(ext,"bmp")  == 0) return FT_BMP;
 
 	return FT_UNKNOWN;
+}
+
+const char *b3Tx::b3GetExt()
+{
+	return b3GetExt(FileType);
+}
+
+const char *b3Tx::b3GetExt(b3_tx_filetype type)
+{
+	switch(type)
+	{
+	case FT_PCX4:
+	case FT_PCX8:
+		return "pcx";
+
+	case FT_ILBM:
+	case FT_ILBM_HAM:
+	case FT_ILBM_HAM8:
+	case FT_ILBM_EHB:
+	case FT_ILBM_24:
+		return "iff";
+
+	case FT_RGB8:
+		return "rgb8";
+	case FT_RGB4:
+		return "rgbn";
+
+	case FT_MTV:
+		return "mtv";
+
+	case FT_YUV:
+		return "yuv";
+
+	case FT_TIFF:
+		return "tif";
+
+	case FT_TGA:
+		return "tga";
+
+	case FT_GIF:
+		return "gif";
+
+	case FT_PPM6:
+		return "ppm";
+
+	case FT_BMP:
+		return "bmp";
+
+	case FT_SGI_RLE:
+		return "img";
+
+	case FT_PPM:
+	case FT_PGM:
+	case FT_PBM:
+		return "ppm";
+
+	case FT_JPEG:
+		return "jpg";
+
+	case FT_BMF:
+		return "bmf";
+
+	case FT_PS:
+		return "ps";
+
+	default:
+		return null;
+	}
+	return null;
 }
 
 b3_result b3Tx::b3SaveImage(const char *filename)
