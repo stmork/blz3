@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/09/23 20:02:25  sm
+**	- Introduced VBOs on Windows - with success!
+**
 **	Revision 1.2  2004/09/23 16:05:28  sm
 **	- Some BLZ3_USE_OPENGL caveats removed.
-**
+**	
 **	Revision 1.1  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
@@ -75,9 +78,9 @@ static GLenum light_num[] =
 	GL_LIGHT7
 };
 
-procBindBufferARB    b3RenderContext::glBindBufferARB;
-procDeleteBuffersARB b3RenderContext::glDeleteBuffersARB;
 procGenBuffersARB    b3RenderContext::glGenBuffersARB;
+procDeleteBuffersARB b3RenderContext::glDeleteBuffersARB;
+procBindBufferARB    b3RenderContext::glBindBufferARB;
 procBufferDataARB    b3RenderContext::glBufferDataARB;
 procMapBufferARB     b3RenderContext::glMapBufferARB;
 procUnmapBufferARB   b3RenderContext::glUnmapBufferARB;
@@ -110,17 +113,17 @@ void b3RenderContext::b3Init()
 
 	if (strstr(extensions,"GL_ARB_vertex_program") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Vertex shader low level support.\n");
+		b3PrintF(B3LOG_DEBUG,"Vertex shader low level support.\n");
 	}
 
 	if (strstr(extensions,"GL_ARB_fragment_program") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Pixel shader low level support.\n");
+		b3PrintF(B3LOG_DEBUG,"Pixel shader low level support.\n");
 	}
 
 	if (strstr(extensions,"GL_ARB_vertex_shader") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Vertex shader language support (nice).\n");
+		b3PrintF(B3LOG_DEBUG,"Vertex shader language support (nice).\n");
 	}
 
 	if (strstr(extensions,"GL_ARB_fragment_shader") != null)
@@ -130,16 +133,16 @@ void b3RenderContext::b3Init()
 
 	if (strstr(extensions,"GL_ARB_shading_language_100") != null)
 	{
-		b3PrintF(B3LOG_NORMAL,"Support for OpenGL shading language V1.00.\n");
+		b3PrintF(B3LOG_DEBUG,"Support for OpenGL shading language V1.00.\n");
 	}
 
 #ifdef BLZ3_USE_OPENGL
-	glGenBuffersARB    = b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
-	glDeleteBuffersARB = b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
-	glBindBufferARB    = b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
-	glBufferDataARB    = b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
-	glMapBufferARB     = b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
-	glUnmapBufferARB   = b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
+	glGenBuffersARB    = (procGenBuffersARB)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
+	glDeleteBuffersARB = (procDeleteBuffersARB)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
+	glBindBufferARB    = (procBindBufferARB)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
+	glBufferDataARB    = (procBufferDataARB)   b3Runtime::b3GetOpenGLExtension("glBufferDataARB");
+	glMapBufferARB     = (procMapBufferARB)    b3Runtime::b3GetOpenGLExtension("glMapBufferARB");
+	glUnmapBufferARB   = (procUnmapBufferARB)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #if 0
 	glHasVBO = (strstr(extensions,"ARB_vertex_buffer_object") != 0) &&

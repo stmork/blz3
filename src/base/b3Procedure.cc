@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2004/09/23 20:02:25  sm
+**	- Introduced VBOs on Windows - with success!
+**
 **	Revision 1.42  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
 **	- Removed b3PrintF()s from singletons.
-**
+**	
 **	Revision 1.41  2004/08/10 09:23:13  sm
 **	- Noise indexing optimized
 **	- Added b3Color::b3Pow() method.
@@ -356,7 +359,11 @@ b3Noise::b3Noise ()
 
 b3Noise::~b3Noise ()
 {
-	m_NoiseTable = null;
+	if (m_NoiseTable != null)
+	{
+		b3Free(m_NoiseTable);
+		m_NoiseTable = null;
+	}
 }
 
 /*************************************************************************

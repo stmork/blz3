@@ -44,9 +44,10 @@ class b3Noise : public b3Mem
 	static b3_f64        epsilon;
 
 	               b3Noise();
-	              ~b3Noise();
 
 public:
+	              ~b3Noise();
+
 	static        b3_f64        b3NoiseScalar (b3_f64 x);
 	static inline b3_f64  b3SignedNoiseScalar (b3_f64 x)
 	{

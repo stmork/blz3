@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/09/23 20:02:25  sm
+**	- Introduced VBOs on Windows - with success!
+**
 **	Revision 1.3  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
 **	  run yet.
-**
+**	
 **	Revision 1.2  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -201,5 +204,5 @@ b3_msg_result b3Runtime::b3MessageBox(
 
 void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
 {
-	return wglGetProcAddress(procedure_name);
+	return GetProcAddress(null,procedure_name);
 }

@@ -45,6 +45,9 @@
 
 /*
 **      $Log$
+**      Revision 1.92  2004/09/23 20:02:25  sm
+**      - Introduced VBOs on Windows - with success!
+**
 **      Revision 1.91  2004/09/23 16:05:28  sm
 **      - Some BLZ3_USE_OPENGL caveats removed.
 **
@@ -517,6 +520,10 @@ b3RenderObject::b3RenderObject()
 	b3RecomputeMaterial();
 
 #ifdef BLZ3_USE_OPENGL
+	glVBO[0]      = 0;
+	glVBO[1]      = 0;
+	glVBO[2]      = 0;
+
 	glDisplayList  = 0;
 	glTextureId    = 0;
 	glTextureData  = null;
@@ -577,7 +584,8 @@ void b3RenderObject::b3Bind()
 		{
 			// Vertices
 			b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-			glVertex   = b3RenderContext::glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			glVertex = (b3_gl_vertex *)b3RenderContext::glMapBufferARB(
+				GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			B3_ASSERT(glVertex != null);
 		}
 
@@ -585,7 +593,8 @@ void b3RenderObject::b3Bind()
 		{
 			// Grids
 			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[1]);
-			glGrids    = b3RenderContext::glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			glGrids = (b3_gl_line *)b3RenderContext::glMapBufferARB(
+				GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			B3_ASSERT(glGrids != null);
 		}
 
@@ -593,7 +602,8 @@ void b3RenderObject::b3Bind()
 		{
 			// Polygons
 			b3RenderContext::glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO[2]);
-			glPolygons = b3RenderContext::glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
+			glPolygons = (b3_gl_polygon *)b3RenderContext::glMapBufferARB(
+				GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			B3_ASSERT(glPolygons != null);
 		}
 	}
@@ -609,7 +619,8 @@ void b3RenderObject::b3BindVertices()
 	{
 		// Vertices
 		b3RenderContext::glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO[0]);
-		glVertex = b3RenderContext::glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
+		glVertex = (b3_gl_vertex *)b3RenderContext::glMapBufferARB(
+			GL_ARRAY_BUFFER_ARB, GL_READ_WRITE_ARB);
 	}
 #endif
 	glBound = true;
@@ -673,7 +684,9 @@ void b3RenderObject::b3Update()
 {
 	if (!glComputed)
 	{
+#ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Update()\n");
+#endif
 
 		b3Bind();
 		b3ComputeIndices();
@@ -708,7 +721,9 @@ void b3RenderObject::b3Update()
 		b3Unbind();
 
 		glComputed = true;
+#ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3Update()\n");
+#endif
 	}
 }
 
@@ -1130,8 +1145,10 @@ void b3RenderObject::b3CreateTexture(
 		if (size != glTextureSize)
 		{
 			glGetError();
+#ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d,%4d) # %5d previous: %5d\n",
 				xSize,ySize,size,glTextureSize);
+#endif
 			if (size != 0)
 			{
 				void   *ptr = b3Realloc(glTextureData,size * 4);
@@ -1145,7 +1162,9 @@ void b3RenderObject::b3CreateTexture(
 				glTextureSize  =  size;
 				glTextureSizeX = xSize;
 				glTextureSizeY = ySize;
+#ifdef VERBOSE
 				b3PrintF(B3LOG_FULL,"   Allocated texture memory of %d pixel\n",size);
+#endif
 
 				if (glTextureId == 0)
 				{
@@ -1160,18 +1179,24 @@ void b3RenderObject::b3CreateTexture(
 
 					glBindTexture(GL_TEXTURE_2D,glTextureId);
 					B3_ASSERT(glIsTexture(glTextureId));
+#ifdef VERBOSE
 					b3PrintF(B3LOG_FULL,"   Allocated texture id %d\n",glTextureId);
+#endif
 				}
 			}
 			else
 			{
 				if (glTextureId != 0)
 				{
+#ifdef VERBOSE
 					b3PrintF(B3LOG_FULL,"   Freeing texture id %d\n",glTextureId);
+#endif
 					glDeleteTextures(1,&glTextureId);
 					glTextureId = 0;
 				}
+#ifdef VERBOSE
 				b3PrintF(B3LOG_FULL,"   Freeing texture data\n");
+#endif
 				b3Free(glTextureData);
 				glTextureData  = null;
 				glTextureSize  = 0;
@@ -1243,8 +1268,10 @@ void b3RenderObject::b3CopyTexture(
 	{
 		yMax /= 2;
 	}
+#ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CopyTexture(...) # xSize: %4d ySize: %4d # xMax: %4d yMax: %4d\n",
 		input->xSize,input->ySize,xMax,yMax);
+#endif
 	scale.b3AllocTx(xMax,yMax,24);
 	scale.b3Scale(input);
 	b3CreateTexture(context,xMax,yMax);
@@ -1268,7 +1295,9 @@ void b3RenderObject::b3CreateImage(
 
 	B3_ASSERT(lPtr != null);
 	size = input->xSize * input->ySize;
+#ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateImage(...) # size: %4d\n",size);
+#endif
 	b3CreateTexture(context,input->xSize,input->ySize);
 	for (i = 0;i < size;i++)
 	{
@@ -1526,8 +1555,10 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 		glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
 	}
 #else
+#ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"### b3Draw lined:  %d vertices, %d lines\n",
 		glVertexCount,glGridCount);
+#endif
 
 	GLenum error = glGetError();
 	if (b3RenderContext::b3HasVBO())
@@ -1577,8 +1608,10 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
 	}
 #else
+#ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"### b3Draw filled: %d vertices, %d polygons\n",
 		glVertexCount,glPolyCount);
+#endif
 
 	GLenum error = glGetError();
 	if (b3RenderContext::b3HasVBO())

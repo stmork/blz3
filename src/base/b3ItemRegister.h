@@ -47,9 +47,9 @@ class B3_PLUGIN b3ItemRegister : b3Base<b3ItemRegisterEntry>
 	static b3ItemRegister       m_Register;
 
 	                            b3ItemRegister();
-	                           ~b3ItemRegister();
 
 public:
+	                           ~b3ItemRegister();
 	static b3ItemRegisterEntry *b3Find(b3_u32 class_type);
 	static void                 b3Dump();
 

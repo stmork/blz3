@@ -57,6 +57,7 @@
 #ifdef BLZ3_USE_OPENGL
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include "blz3/glext.h"
 #endif
 
 // Some defines for getting to know who we are
@@ -90,11 +91,14 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.32  2004/09/23 20:02:25  sm
+**	- Introduced VBOs on Windows - with success!
+**
 **	Revision 1.31  2004/09/23 15:47:03  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
 **	  run yet.
-**
+**	
 **	Revision 1.30  2004/08/28 14:02:14  sm
 **	- Including correct FLT_MAX/DBL_MAX file.
 **	
