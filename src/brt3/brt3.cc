@@ -34,10 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.5  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
-**
+**	
 **	Revision 1.4  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -108,6 +116,7 @@ int main(int argc,char *argv[])
 				delete display;
 			}
 		}
+		delete world;
 	}
 	return 0;
 }

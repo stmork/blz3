@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2001/10/18 14:48:26  sm
+**      - Fixing refracting problem on some scenes with glasses.
+**      - Fixing overlighting problem when using Mork shading.
+**      - Finxing some memory leaks (espacially b3TriangleRefs)
+**      - Adding texture support to conditions (stencil mapping).
+**        Now conditions are ready to work compatible with
+**        Blizzard II.
+**
 **      Revision 1.23  2001/10/17 14:46:02  sm
 **      - Adding triangle support.
 **      - Renaming b3TriangleShape into b3Triangles and introducing
@@ -238,6 +246,11 @@ b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 			result,cond->b3CheckStencil(polar));
 	}
 	return result;
+}
+
+b3_bool b3Shape::b3Prepare()
+{
+	return true;
 }
 
 void b3Shape::b3BumpNormal(b3_ray *ray)

@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/10/18 14:48:26  sm
+**      - Fixing refracting problem on some scenes with glasses.
+**      - Fixing overlighting problem when using Mork shading.
+**      - Finxing some memory leaks (espacially b3TriangleRefs)
+**      - Adding texture support to conditions (stencil mapping).
+**        Now conditions are ready to work compatible with
+**        Blizzard II.
+**
 **      Revision 1.2  2001/10/17 21:09:06  sm
 **      - Triangle support added for intersections, normal computations. So
 **        Spline shapes can be computed, too. Now only CSG is missing.
@@ -155,8 +163,6 @@ b3Triangles::b3Triangles(b3_u32 *src) : b3TriangleShape(src)
 		m_Triangles[i].Normal.y = b3InitFloat();
 		m_Triangles[i].Normal.z = b3InitFloat();
 	}
-
-	b3PrepareTriangles();
 }
 
 void b3Triangles::b3GetCount(

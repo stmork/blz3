@@ -36,6 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.9  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -45,7 +53,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.8  2001/10/16 15:21:24  sm
 **	- Minor changes to compile with GCC 3.x
 **	
@@ -577,6 +585,51 @@ b3_pkd_color b3Tx::b3VGAValue (
 {
 	if (palette == null) return 0;
 	return palette[data[y * xSize + x]];
+}
+
+/*************************************************************************
+**                                                                      **
+**                        for stenceling                                **
+**                                                                      **
+*************************************************************************/
+
+b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
+{
+	b3_u08       *cPtr,bit;
+	b3_u16       *sPtr;
+	b3_pkd_color *lPtr,result;
+	b3_count      i,xBytes;
+
+	switch (type)
+	{
+		case B3_TX_ILBM :
+			xBytes = TX_BWA(xSize);
+			cPtr   = (b3_u08 *)data;
+			cPtr  += ((y + 1) * xBytes * depth + (x >> 3) - xBytes);
+			result = 0;
+			bit    = 128 >> (x & 7);
+			for (i = 0;i < depth;i++)
+			{
+				result *= 2;
+				if (*cPtr & bit) result |= 1;
+				cPtr -= xBytes;
+			}
+
+			return result != 0;
+
+		case B3_TX_RGB8	:
+			lPtr = (b3_pkd_color *)data;
+			return (lPtr[x + y * xSize] & 0x00ffffff) != 0;
+
+		case B3_TX_RGB4	:
+			sPtr = (b3_u16 *)data;
+			return (sPtr[x + y * xSize] & 0x0fff) != 0;
+
+		case B3_TX_VGA	:
+			cPtr = (b3_u08 *)data;
+			return cPtr[x + y * xSize] != 0;
+	}
+	return false;
 }
 
 /*************************************************************************

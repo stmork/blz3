@@ -39,9 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.4  2001/07/08 13:02:19  sm
 **	- Merging with Windoze stuff.
-**
+**	
 **	Revision 1.3  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
 **	
@@ -276,7 +284,7 @@ void b3Display::b3Open(b3_res xSize,b3_res ySize)
 
 	if (m_Title == null)
 	{
-		m_Title = "Raytracen ist gut, Blizzard ist besser...";
+		m_Title = "Raytracen ist gut, Blizzard III ist noch besser...";
 	}
 
 	m_Display = XOpenDisplay(NULL);

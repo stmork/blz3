@@ -262,6 +262,7 @@ public:
 	void           b3GetResolution(b3_res &xDPI,b3_res &yDPI);
 	void           b3GetRow       (b3_pkd_color *row,b3_coord  y);
 	b3_pkd_color   b3GetValue     (b3_coord x,b3_coord  y);
+	b3_bool        b3IsBackground (b3_coord x,b3_coord  y);
 	b3_bool        b3IsLoaded     ();
 	b3_bool        b3IsBW         ();
 	b3_bool        b3IsTrueColor  ();
@@ -438,8 +439,6 @@ extern b3_f64        b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 
 **                        TIFF class definitions                        **
 **                                                                      **
 *************************************************************************/
-
-typedef void (*b3TravFunc)(b3Head *,b3Node *,void *);
 
 class b3TIFF_Dir;
 

@@ -33,12 +33,20 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.3  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.2  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -75,15 +83,16 @@ void b3SceneMork::b3Illuminate(
 
 	// Real absorption
 	result->a  = 0;
-	result->r += (surface->diffuse.r * m_ShadowBrightness);
-	result->g += (surface->diffuse.g * m_ShadowBrightness);
-	result->b += (surface->diffuse.b * m_ShadowBrightness);
+	result->r += (surface->diffuse.r * m_ShadowFactor);
+	result->g += (surface->diffuse.g * m_ShadowFactor);
+	result->b += (surface->diffuse.b * m_ShadowFactor);
 
+	filter.a =
 	filter.r =
 	filter.g =
 	filter.b = 0;
 
-		   /***** no shadow => surface in light *****/
+	// No shadow => surface in light
 	if (Jit->shape == null)
 	{
 
@@ -113,7 +122,7 @@ void b3SceneMork::b3Illuminate(
 		}
 
 		// surface illumination (diffuse color)
-		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowBrightness) > 0)
+		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
 		{
 			filter.r = light->m_Color.r * Factor;
 			filter.g = light->m_Color.g * Factor;
@@ -121,6 +130,7 @@ void b3SceneMork::b3Illuminate(
 		}
 	}
 
+	result->a += (surface->diffuse.r * filter.a);	
 	result->r += (surface->diffuse.r * filter.r);
 	result->g += (surface->diffuse.g * filter.g);
 	result->b += (surface->diffuse.b * filter.b);
@@ -277,6 +287,7 @@ b3_bool b3SceneMork::b3Shade(
 		{
 			refr = 0;
 		}
+		memset(&surface.refr_ray.color,0,sizeof(surface.refr_ray.color));
 
 		if (depth_count <= m_TraceDepth)
 		{
@@ -315,11 +326,21 @@ b3_bool b3SceneMork::b3Shade(
 		}
 
 		// Mix colors
-		factor        = (1.0 - refl - refr) * 0.5;
-		ray->color.r *= factor;
-		ray->color.g *= factor;
-		ray->color.b *= factor;
-		ray->color.a *= factor;
+		factor = (1.0 - refl - refr) * 0.5;
+		if (factor > 0)
+		{
+			ray->color.r *= factor;
+			ray->color.g *= factor;
+			ray->color.b *= factor;
+			ray->color.a *= factor;
+		}
+		else
+		{
+			ray->color.r =
+			ray->color.g =
+			ray->color.b =
+			ray->color.a = 0;
+		}
 
 		if (refl > 0)
 		{

@@ -33,6 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.12  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -42,7 +50,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.11  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -153,9 +161,9 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 		{
 			b3GetBackgroundColor(&ray.color);
 		}
-		r = (b3_pkd_color)(ray.color.r * 255.0);
-		g = (b3_pkd_color)(ray.color.g * 255.0);
-		b = (b3_pkd_color)(ray.color.b * 255.0);
+		r = (b3_pkd_color)(ray.color.r * 255);
+		g = (b3_pkd_color)(ray.color.g * 255);
+		b = (b3_pkd_color)(ray.color.b * 255);
 		buffer[x] =
 			((r > 255 ? 255 : r) << 16) |
 			((g > 255 ? 255 : g) <<  8) |
@@ -196,15 +204,43 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	return 0;
 }
 
+b3_bool b3BBox::b3Prepare()
+{
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		if (!bbox->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		if (!shape->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void b3Scene::b3Raytrace(b3Display *display)
 {
 	b3RayRow    *row;
 	b3Nebular   *nebular;
+	b3Light     *light;
+	b3BBox      *bbox;
 	b3Thread    *threads;
 	b3_res       xSize,ySize;
 	b3_count     CPUs,i;
 	b3_rt_info  *infos;
-
 	b3_f64       fy,fyStep;
 
 	nebular = b3GetNebular();
@@ -212,6 +248,22 @@ void b3Scene::b3Raytrace(b3Display *display)
 	{
 		m_Nebular = nebular;
 	}
+
+	for(bbox = b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
+	{
+		bbox->b3Prepare();
+	}
+
+	m_LightCount = 0;
+	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
+	{
+		if (light->m_LightActive)
+		{
+			m_LightCount++;
+		}
+	}
+	m_ShadowFactor = (b3_f64)m_ShadowBrightness / (b3_f64)m_LightCount;
+
 	try
 	{
 		// What resolution to use

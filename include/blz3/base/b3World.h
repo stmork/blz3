@@ -105,7 +105,7 @@ public:
 	                        b3Item();
 	                        b3Item(b3_size class_size,b3_u32 class_type);
 	                        b3Item(b3_u32 *buffer);
-	                       ~b3Item();
+	virtual                ~b3Item();
 	static  void            b3Register(
 		b3_item_init_func init_func,
 		b3_item_load_func load_func,
@@ -158,9 +158,9 @@ class b3World : public b3Mem
 	b3FirstItem    *m_Start;
 
 public:
-	 b3World();
-	~b3World(); 
-	 b3World(const char *world_name);
+	                b3World();
+	                b3World(const char *world_name);
+	virtual        ~b3World(); 
 
 	static b3Item  *b3AllocNode(b3_u32 class_value);
 	static b3Item  *b3AllocNode(b3_u32 *buffer);

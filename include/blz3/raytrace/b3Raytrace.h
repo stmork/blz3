@@ -294,7 +294,8 @@ public:
 	B3_ITEM_INIT(b3CondTexture);
 	B3_ITEM_LOAD(b3CondTexture);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 // TYPE_WRAP_TEXTURE
@@ -311,7 +312,8 @@ public:
 	B3_ITEM_INIT(b3CondWrapTexture);
 	B3_ITEM_LOAD(b3CondWrapTexture);
 
-	void b3ComputeBound(b3CondLimit *limit);
+	void    b3ComputeBound(b3CondLimit *limit);
+	b3_bool b3CheckStencil(b3_polar *polar);
 };
 
 /*************************************************************************
@@ -847,6 +849,7 @@ public:
 	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation);
+	virtual b3_bool     b3Prepare();
 };
 
 class b3RenderShape : public b3Shape
@@ -1155,9 +1158,6 @@ public:
 	b3_u32                 m_Flags;                 // interpolation flags
 	b3_res                 m_xSize,m_ySize;           // triangle order
 
-//	b3_index      IndexHit;              // index of hit triangle
-//	b3_f64        aValue,bValue;         // polarcoord. of triangles
-
 protected:
 	b3TriangleShape(b3_size class_size,b3_u32 class_type);
 
@@ -1165,12 +1165,13 @@ public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);
 
-	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	        void   b3Normal(b3_ray *ray);
-	virtual void   b3Transform(b3_matrix *transformation);
+	               ~b3TriangleShape();
+	        b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
+	        void    b3Normal(b3_ray *ray);
+	virtual b3_bool b3Prepare();
+	virtual void    b3Transform(b3_matrix *transformation);
 
 protected:
-	        b3_bool b3PrepareTriangles();
 	        void    b3FreeTriaRefs();
 private:
 	        void    b3PrepareGridList();
@@ -1222,10 +1223,8 @@ public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
 
-	void b3Transform(b3_matrix *transformation);
-
-private:
-	b3_bool b3PrepareSplines();
+	void    b3Transform(b3_matrix *transformation);
+	b3_bool b3Prepare();
 };
 
 class b3SplineCurveShape : b3SplineCurve
@@ -1286,7 +1285,7 @@ private:
 	void b3ComputeGridIndices();
 	void b3ComputeSolidIndices();
 
-	b3_bool b3PrepareSplines();
+	b3_bool b3Prepare();
 };
 
 class b3SplineArea : public b3SplineShape
@@ -1529,6 +1528,7 @@ public:
 		   void            b3Activate(b3_bool activate=true);
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
+		   b3_bool         b3Prepare();
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
@@ -1967,16 +1967,19 @@ public:
 	b3_color         m_TopColor;
 	b3_color         m_BottomColor;
 	b3Tx            *m_BackTexture;         //
-	b3_s32           m_BackgroundType;      // Hintergrund: Farbe/Datei/...
+	b3_u32           m_BackgroundType;      // Hintergrund: Farbe/Datei/...
 
-	b3_s32           m_TraceDepth;          // Rekursionstiefe
-	b3_s32           m_Flags;               // beschreibt, welche Werte gueltig sind
-	b3_f32           m_ShadowBrightness;    // Schattenhelligkeit
+	b3_count         m_TraceDepth;          // Rekursionstiefe
+	b3_u32           m_Flags;               // beschreibt, welche Werte gueltig sind
+	b3_f32           m_ShadowBrightness;
+	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 
 	// Some limits
 	b3_f32           m_BBoxOverSize;        // BBox-Ueberziehung
 	b3_f32           m_Epsilon;             // Schwellenwert
 	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
+
+	b3_count         m_LightCount;
 
 protected:
 	b3Nebular       *m_Nebular;

@@ -32,10 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.10  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
-**
+**	
 **	Revision 1.9  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -97,7 +105,7 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 	refl_dir->x = incoming_dir->x - Factor * Normal->x;
 	refl_dir->y = incoming_dir->y - Factor * Normal->y;
 	refl_dir->z = incoming_dir->z - Factor * Normal->z;
-	Factor = 1/sqrt(
+	Factor = 1.0 / sqrt(
 		refl_dir->x * refl_dir->x +
 		refl_dir->y * refl_dir->y +
 		refl_dir->z * refl_dir->z);
@@ -134,7 +142,7 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 				refr_dir->y = Factor * Normal->y - incoming_dir->y * ior;
 				refr_dir->z = Factor * Normal->z - incoming_dir->z * ior;
 
-				Factor = -1/sqrt(
+				Factor = -1.0 / sqrt(
 					refr_dir->x * refr_dir->x +
 					refr_dir->y * refr_dir->y +
 					refr_dir->z * refr_dir->z);

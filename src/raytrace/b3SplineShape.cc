@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/10/18 14:48:26  sm
+**      - Fixing refracting problem on some scenes with glasses.
+**      - Fixing overlighting problem when using Mork shading.
+**      - Finxing some memory leaks (espacially b3TriangleRefs)
+**      - Adding texture support to conditions (stencil mapping).
+**        Now conditions are ready to work compatible with
+**        Blizzard II.
+**
 **      Revision 1.15  2001/10/17 21:09:06  sm
 **      - Triangle support added for intersections, normal computations. So
 **        Spline shapes can be computed, too. Now only CSG is missing.
@@ -136,9 +144,6 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
 	{
 		b3InitVector(&Controls[i]);
 	}
-
-	b3PrepareSplines();
-	b3PrepareTriangles();
 }
 
 void b3SplineCurve::b3Transform(b3_matrix *transformation)
@@ -161,9 +166,10 @@ void b3SplineCurve::b3Transform(b3_matrix *transformation)
 		control += offset;
 	}
 	b3Recompute();
+	b3TriangleShape::b3Transform(transformation);
 }
 
-b3_bool b3SplineCurve::b3PrepareSplines()
+b3_bool b3SplineCurve::b3Prepare()
 {
 	b3Spline     MySpline;
 	b3_triangle *Triangle;
@@ -239,7 +245,7 @@ b3_bool b3SplineCurve::b3PrepareSplines()
 	m_ySize = MySpline.subdiv;
 	m_Flags = PHONG;
 
-	return true;
+	return b3TriangleShape::b3Prepare();
 }
 
 
@@ -281,8 +287,6 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 	{
 		b3InitVector(&Controls[i]);
 	}
-	b3PrepareSplines();
-	b3PrepareTriangles();
 }
 
 void b3SplineShape::b3GetCount(
@@ -541,9 +545,10 @@ void b3SplineShape::b3Transform(b3_matrix *transformation)
 		}
 	}
 	b3Recompute();
+	b3TriangleShape::b3Transform(transformation);
 }
 
-b3_bool b3SplineShape::b3PrepareSplines()
+b3_bool b3SplineShape::b3Prepare()
 {
 	b3_vertex   *Vertex;
 	b3_triangle *Triangle;
@@ -624,5 +629,6 @@ b3_bool b3SplineShape::b3PrepareSplines()
 	m_Flags = PHONG;
 
 	b3Item::b3Free(Between);
-	return true;
+
+	return b3TriangleShape::b3Prepare();
 }

@@ -32,9 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/18 14:48:26  sm
+**	- Fixing refracting problem on some scenes with glasses.
+**	- Fixing overlighting problem when using Mork shading.
+**	- Finxing some memory leaks (espacially b3TriangleRefs)
+**	- Adding texture support to conditions (stencil mapping).
+**	  Now conditions are ready to work compatible with
+**	  Blizzard II.
+**
 **	Revision 1.9  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.8  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -258,24 +266,26 @@ b3_bool b3CondRectangle::b3CheckStencil(b3_polar *polar)
 
 	if ((m_yStart <= polar->polar.y) && (polar->polar.y <= m_yEnd))
 	{
-		if (m_xStart < m_xEnd)
+		if (m_xStart <= m_xEnd)
 		{
 			return ((m_xStart <= polar->polar.x) && (polar->polar.x <= m_xEnd));
 		}
 		else
 		{
-			return ((polar->polar.x <= m_xEnd) || (m_xStart >= polar->polar.x));
+			return (polar->polar.x <= m_xEnd) || (polar->polar.x >= m_xStart);
 		}
 	}
 	return false;
 }
 
 
-b3CondCircle::b3CondCircle(b3_u32 class_type) : b3Condition(sizeof(b3CondCircle), class_type)
+b3CondCircle::b3CondCircle(b3_u32 class_type) :
+	b3Condition(sizeof(b3CondCircle), class_type)
 {
 }
 
-b3CondCircle::b3CondCircle(b3_u32 *src) : b3Condition(src)
+b3CondCircle::b3CondCircle(b3_u32 *src) :
+	b3Condition(src)
 {
 	m_xCenter = b3InitFloat();
 	m_yCenter = b3InitFloat();
@@ -550,6 +560,28 @@ void b3CondTexture::b3ComputeBound(b3CondLimit *Limit)
 	}
 }
 
+b3_bool b3CondTexture::b3CheckStencil(b3_polar *polar)
+{
+	b3_f64   fx,fy;
+	b3_coord x,y;
+
+	fx = (polar->polar.x - m_xStart) / m_xScale;
+	if ((fx < 0) || (fx >= m_xTimes))
+	{
+		return false;
+	}
+
+	fy = (polar->polar.y - m_yStart) / m_yScale;
+	if ((fy < 0) || (fy >= m_yTimes))
+	{
+		return false;
+	}
+
+	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
+	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
+
+	return m_Texture->b3IsBackground(x,y);
+}
 
 b3CondWrapTexture::b3CondWrapTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondWrapTexture), class_type)
 {
@@ -607,6 +639,51 @@ void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)
 	}
 }
 
+b3_bool b3CondWrapTexture::b3CheckStencil(b3_polar *polar)
+{
+	b3_coord x,y;
+	b3_f64   fx,fy,xEnd,xPolar;
+
+	if ((polar->polar.y >= m_yStart) && (polar->polar.y <= m_yEnd))
+	{
+		xEnd	= m_xEnd;
+		xPolar	= polar->polar.x;
+		fy = (polar->polar.y - m_yStart) /
+			(m_yEnd - m_yStart);
+		if ((fy < 0) || (fy > 1))
+		{
+			return false;
+		}
+		y = (b3_coord)(fy * m_Texture->ySize);
+		if (m_xStart > xEnd)
+		{
+			if ((xPolar >= m_xStart) || (xPolar <= xEnd))
+			{
+				if (xPolar < 0)
+				{
+					return false;
+				}
+				if (xPolar < m_xStart) xPolar++;
+				xEnd++;
+				fx = (xPolar - m_xStart) / (xEnd - m_xStart);
+				x = (b3_coord)(fx * m_Texture->xSize);
+			}
+			else return (false);
+		}
+		else
+		{
+			if ((xPolar <= m_xStart) || (xPolar >= xEnd))
+			{
+				return false;
+			}
+			fx = (xPolar - m_xStart) / (xEnd  - m_xStart);
+			x = (long)(fx * m_Texture->xSize);
+		}
+	}
+	else return (false);
+
+	return m_Texture->b3IsBackground(x,y);
+}
 
 b3CondEllipse::b3CondEllipse(b3_u32 class_type) : b3Condition(sizeof(b3CondEllipse), class_type)
 {

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Cubic.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -32,6 +33,14 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/10/18 14:48:26  sm
+**      - Fixing refracting problem on some scenes with glasses.
+**      - Fixing overlighting problem when using Mork shading.
+**      - Finxing some memory leaks (espacially b3TriangleRefs)
+**      - Adding texture support to conditions (stencil mapping).
+**        Now conditions are ready to work compatible with
+**        Blizzard II.
+**
 **      Revision 1.13  2001/10/17 21:09:06  sm
 **      - Triangle support added for intersections, normal computations. So
 **        Spline shapes can be computed, too. Now only CSG is missing.
@@ -69,15 +78,21 @@ b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 	m_GridSize = 0;
 }
 
-b3TriangleShape::b3TriangleShape(b3_u32 *src) : b3Shape(src)
+b3TriangleShape::b3TriangleShape(b3_u32 *src) :
+	b3Shape(src)
 {
 	m_GridList = null;
 	m_GridSize = 0;
 }
 
+b3TriangleShape::~b3TriangleShape()
+{
+	b3FreeTriaRefs();
+}
+
 void b3TriangleShape::b3Transform(b3_matrix *transformation)
 {
-	b3_index   i;
+	b3_index i;
 
 	for (i = 0;i < m_VertexCount;i++)
 	{
@@ -250,18 +265,18 @@ void b3TriangleShape::b3FreeTriaRefs()
 	}
 }
 
-b3_bool b3TriangleShape::b3PrepareTriangles()
+b3_bool b3TriangleShape::b3Prepare()
 {
 	b3_vector Start,End,R1,R2;
 	b3_index  P1,P2,P3,i;
 	b3_f64    x,y,z,Denom;
 
-	Start.x =  1e38;
-	Start.y =  1e38;
-	Start.z =  1e38;
-	End.x	= -1e38;
-	End.y	= -1e38;
-	End.z	= -1e38;
+	Start.x =  FLT_MAX;
+	Start.y =  FLT_MAX;
+	Start.z =  FLT_MAX;
+	End.x	= -FLT_MAX;
+	End.y	= -FLT_MAX;
+	End.z	= -FLT_MAX;
 
 	if ((m_xSize < 1) || (m_ySize < 1))
 	{
@@ -348,12 +363,12 @@ b3_bool b3TriangleShape::b3PrepareTriangles()
 	if ((End.x - Start.x) < 0.1) m_GridSize = 1;
 	if ((End.y - Start.y) < 0.1) m_GridSize = 1;
 	if ((End.z - Start.z) < 0.1) m_GridSize = 1;
-	Start.x -= 0.1;
-	Start.y -= 0.1;
-	Start.z -= 0.1;
-	End.x   += 0.1;
-	End.y   += 0.1;
-	End.z   += 0.1;
+	Start.x -= 0.1f;
+	Start.y -= 0.1f;
+	Start.z -= 0.1f;
+	End.x   += 0.1f;
+	End.y   += 0.1f;
+	End.z   += 0.1f;
 
 	Denom = 1.0 / m_GridSize;
 	m_Base     = Start;
@@ -372,6 +387,10 @@ b3_bool b3TriangleShape::b3PrepareTriangles()
 		{
 			return false;
 		}
+	}
+	else
+	{
+		b3FreeTriaRefs();
 	}
 	b3PrepareGridList();
 	return true;
