@@ -26,11 +26,11 @@
 #define LOOP_INSIDE (1 << LOOP_B)
 #define LOOP_MASK   (LOOP_INSIDE - 1)
 
-#define B3_MEM_ALIGN 64u
-#define B3_MEM_MASK  (-B3_MEM_ALIGN)
+#define B3_MEM_ALIGN      64u
+#define B3_MEM_MASK       ((b3_u64)(0u - B3_MEM_ALIGN))
 
-#define B3_MEM_ALIGN_CHUNK(p)  (void *)(((size_t)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)
-#define B3_MEM_ASSERT(p)       B3_ASSERT((((size_t)(p)) % B3_MEM_ALIGN) == 0)
+#define B3_MEM_ALIGN_CHUNK(p)  (void *)(((b3_u64)(p) + (B3_MEM_ALIGN - 1)) & B3_MEM_MASK)
+#define B3_MEM_ASSERT(p)       B3_ASSERT((((b3_u64)(p)) % B3_MEM_ALIGN) == 0)
 
 struct b3MemNode
 {

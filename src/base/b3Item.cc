@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2005/01/02 19:15:25  sm
+**      - Fixed signed/unsigned warnings
+**
 **      Revision 1.39  2004/05/06 18:13:52  sm
 **      - Added support for changed only b3Items for a
 **        better preview performance.
@@ -270,7 +273,7 @@ b3Item::b3Item(b3_u32 *src) :
 		src[B3_NODE_IDX_SIZE] + sizeof(b3Item),
 		src[B3_NODE_IDX_CLASSTYPE])
 {
-	b3_index i,k;
+	b3_u32 i,k;
 
 	m_ItemSize   = src[B3_NODE_IDX_SIZE];
 	m_ItemOffset = src[B3_NODE_IDX_OFFSET];
@@ -314,7 +317,7 @@ b3Item::b3Item(b3_u32 *src) :
 
 b3Item::~b3Item()
 {
-	b3_index  i;
+	b3_u32  i;
 
 	for (i = 0;i < m_HeadCount;i++)
 	{
@@ -334,7 +337,7 @@ b3_bool b3Item::b3IsClass(b3_u32 class_id)
 
 b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 {
-	b3_index  i;
+	b3_u32  i;
 
 	m_Heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
 	if (m_Heads != null)
@@ -368,8 +371,8 @@ void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)
 
 void b3Item::b3Dump(b3_count level)
 {
-	b3Item   *node;
-	b3_count  i;
+	b3Item *node;
+	b3_u32  i;
 
 	b3DumpSpace(level);
 	b3PrintF (B3LOG_NORMAL,"%08lx %7d\n",ClassType,Size);
@@ -387,7 +390,7 @@ void b3Item::b3Dump(b3_count level)
 
 void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 {
-	b3_count  i,max = (b3_count)(m_ItemSize >> 2);
+	b3_u32  i,max = (b3_count)(m_ItemSize >> 2);
 
 	b3DumpSpace(level,log_level);
 	b3PrintF (log_level,"%08lx %7d # %7d %7d # %7d",ClassType,Size,m_ItemSize,m_ItemOffset,m_ParseIndex);
@@ -592,8 +595,8 @@ void b3Item::b3InitColor(b3Color &col)
 
 void b3Item::b3InitString(char *name,b3_size len)
 {
-	b3_index pos = m_ParseIndex << 2;
-	b3_size  new_size;
+	b3_u32  pos = m_ParseIndex << 2;
+	b3_u32  new_size;
 
 	B3_ASSERT_INDEX;
 
@@ -603,7 +606,7 @@ void b3Item::b3InitString(char *name,b3_size len)
 	{
 		name[new_size] = 0;
 	}
-	m_ParseIndex += ((len + 3) >> 2);
+	m_ParseIndex += ((b3_u32)(len + 3) >> 2);
 }
 
 void *b3Item::b3InitNull()
@@ -627,11 +630,11 @@ void b3Item::b3InitNOP()
 **                                                                      **
 *************************************************************************/
 
-b3_size b3Item::b3Store()
+b3_u32 b3Item::b3Store()
 {
-	b3Item   *item;
-	b3_size   size = 0;
-	b3_count  i;
+	b3Item  *item;
+	b3_u32   size = 0;
+	b3_u32   i;
 
 	// Write b3Link data later
 	m_StoreIndex  = B3_NODE_IDX_FIRSTHEAD_CLASS;
@@ -707,7 +710,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
 {
 	b3Item         *item;
 	b3_world_error  error = B3_WORLD_WRITE;
-	b3_index        i;
+	b3_u32          i;
 
 	if (m_StoreBuffer != null)
 	{
@@ -741,7 +744,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
 	return error;
 }
 
-void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
+void b3Item::b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data)
 {
 	// Clearify some things...
 	if ((m_StoreOffset != 0) && (is_data))
@@ -749,9 +752,9 @@ void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
 		B3_THROW(b3WorldException,B3_WORLD_OUT_OF_ORDER);
 	}
 
-	if ((m_StoreIndex + needed) > (b3_index)(m_StoreSize >> 2))
+	if ((m_StoreIndex + needed) > (m_StoreSize >> 2))
 	{
-		b3_size new_size = m_StoreSize + (needed << 2) + 16384;
+		b3_u32 new_size = m_StoreSize + (needed << 2) + 16384;
 #if 1
 		b3_u32  *new_buffer;
 
@@ -984,14 +987,14 @@ void b3Item::b3StoreColor(b3Color &col)
 
 void b3Item::b3StoreString(const char *name,const b3_size len)
 {
-	b3EnsureStoreBuffer(len >> 2,false);
+	b3EnsureStoreBuffer((b3_u32)len >> 2,false);
 
 	if(m_StoreOffset == 0)
 	{
 		m_StoreOffset = m_StoreIndex;
 	}
 	memcpy(&m_StoreBuffer[m_StoreIndex],name,len);
-	m_StoreIndex += (len >> 2);
+	m_StoreIndex += ((b3_u32)len >> 2);
 }
 
 void b3Item::b3StoreNull()
@@ -1014,7 +1017,7 @@ b3_u32 b3Item::b3Checksum()
 
 	b3Store();
 
-	for (int i = 0;i < m_StoreIndex;i++)
+	for (b3_u32 i = 0;i < m_StoreIndex;i++)
 	{
 		result += m_StoreBuffer[i];
 	}

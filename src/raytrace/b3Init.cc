@@ -39,6 +39,9 @@
     
 /*
 **      $Log$
+**      Revision 1.12  2005/01/02 19:15:25  sm
+**      - Fixed signed/unsigned warnings
+**
 **      Revision 1.11  2005/01/01 16:43:19  sm
 **      - Fixed some aliasing warnings.
 **
@@ -106,14 +109,14 @@ b3_bool b3Scene::b3CheckTexture(b3Tx **tx,const char *name)
 {
 	const char *txName;
 	b3_size     txLen,nameLen;
-	b3_diff     diff;
+	b3_offset   diff;
 
 	if (*tx != null)
 	{
 		txName  = (*tx)->b3Name();
 		txLen   = strlen(txName);
 		nameLen = strlen(name);
-		diff    = txLen - nameLen;
+		diff    = (b3_offset)txLen - (b3_offset)nameLen;
 		if (strcmp(&txName[diff >= 0 ? diff : 0],name) != 0)
 		{
 			*tx = m_TexturePool.b3FindTexture(name);

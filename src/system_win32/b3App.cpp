@@ -43,10 +43,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.11  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.10  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -121,8 +124,8 @@ CB3App::CB3App(const char *appName) :
 	m_RunAutomated       = false;
 	m_AutoSave           = true;
 	m_ClientName         = appName;
-	m_lastGC             = (HGLRC)0xdeadbeef;
-	m_lastDC             = (HDC)0xbadc0ded;
+	m_lastGC             = HGLRC(0xdeadbeef);
+	m_lastDC             = HDC(0xbadc0ded);
 	b3Log::b3GetLogFile(DebugFile);
 	b3ReadString("Settings","DebugFile",DebugFile);
 	b3Log::b3SetLogFile(DebugFile);
@@ -137,7 +140,8 @@ void CB3App::b3SelectRenderContext(HDC dc,HGLRC gc)
 {
 	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0) || (m_UncheckedContextSwitch))
 	{
-		b3PrintF(B3LOG_FULL,"######################################### CB3App::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
+		b3PrintF(B3LOG_FULL,
+			"######################################### CB3App::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
 			dc,gc);
 		wglMakeCurrent(dc,gc);
 		m_lastDC = dc;

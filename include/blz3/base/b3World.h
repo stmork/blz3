@@ -108,7 +108,7 @@ class b3FirstItem;
 class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 {
 	b3_u32         *m_Buffer;
-	b3_size         m_BufferSize;
+	b3_u32          m_BufferSize;
 	b3_bool         m_NeedEndianChange;
 	b3FirstItem    *m_Start;
 
@@ -128,7 +128,7 @@ public:
 	b3_world_error  b3Read (b3FileAbstract *file_handle);
 	b3_world_error  b3Write(b3FileAbstract *file_handle);
 	b3_bool         b3ReadDump(const char *world_name);
-	b3_size         b3Length();
+	b3_u32          b3Length();
 	void            b3Dump();
 	b3Item         *b3RemoveFirst();
 	b3Item         *b3GetFirst();
@@ -159,19 +159,19 @@ typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
-	b3_size         m_ItemSize;
-	b3_size         m_ItemOffset;
+	b3_u32          m_ItemSize;
+	b3_s32          m_ItemOffset;
 	b3Base<b3Item> *m_Heads;
-	b3_index        m_HeadCount;
+	b3_u32          m_HeadCount;
 
 	// Attributes for parsing
 	b3_u32         *m_Buffer;
-	b3_index        m_ParseIndex;
+	b3_u32          m_ParseIndex;
 
 	// Attributes for writing
-	b3_index        m_StoreIndex;
-	b3_index        m_StoreOffset;
-	b3_size         m_StoreSize;
+	b3_u32          m_StoreIndex;
+	b3_s32          m_StoreOffset;
+	b3_u32          m_StoreSize;
 	b3_u32         *m_StoreBuffer;
 
 public:
@@ -192,8 +192,7 @@ public:
 	        void            b3DumpSimple(b3_count level = 0,b3_log_level log_level = B3LOG_NORMAL);
 			b3_bool         b3AllocHeads(b3_count head_count);
 
-	        b3_world_error  b3ParseLinkuage(b3Item **array,b3_count node_count,b3_u32 class_limit,b3_count level = 0);
-	        b3_size         b3Store();
+	        b3_u32          b3Store();
 	        b3_world_error  b3StoreFile(b3FileAbstract *file);
 			b3_u32          b3Checksum();
 
@@ -246,7 +245,8 @@ protected:
 	static void b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
 
 private:
-	void     b3EnsureStoreBuffer(b3_index needed,b3_bool is_data=true);
+	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true);
+	b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
 
 	friend class b3World;
 };

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.11  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.10  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
@@ -527,7 +530,7 @@ void b3Tx::b3RemoveBlackBorder()
 
 #endif
 
-void b3Tx::b3Shrink(long shrink)
+void b3Tx::b3Shrink(b3_count shrink)
 {
 	b3_coord  y;
 	b3_count  xBytes,num;

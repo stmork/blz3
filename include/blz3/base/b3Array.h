@@ -38,7 +38,7 @@ typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
 template <class T> class B3_PLUGIN b3Array : protected b3Mem
 {
 	b3_count  m_Increment;
-	b3_count  m_Index;
+	b3_index  m_Index;
 	b3_count  m_Max;
 	T        *m_Buffer;
 
@@ -106,7 +106,7 @@ public:
 		return m_Buffer;
 	}
 
-	inline T & operator [](const int index)
+	inline T & operator [](const b3_index index)
 	{
 #ifdef _DEBUG
 		if ((index < 0) || (index >= m_Index))

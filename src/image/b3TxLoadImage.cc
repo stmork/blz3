@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.18  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.17  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
@@ -131,7 +134,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	b3_pkd_color *LongData;
 	HeaderTIFF   *TIFF;
 	HeaderSGI    *HeaderSGI;
-	int           pos;
+	b3_offset     pos;
 	b3_coord      x,y;
 	b3_s32        ppm_type;
 	b3_index      i;
@@ -216,7 +219,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 4 :
 				if ((b3_size)(((x + 7) >> 3) * y + pos) <= buffer_size)
 				{
-					pos = buffer_size - ((x + 7) >> 3) * y;
+					pos = (b3_offset)buffer_size - ((x + 7) >> 3) * y;
 					FileType = FT_PBM;
 					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
@@ -225,7 +228,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 5 :
 				if ((b3_size)(x * y + pos) <= buffer_size)
 				{
-					pos = buffer_size - x * y;
+					pos = (b3_offset)buffer_size - x * y;
 					FileType = FT_PGM;
 					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
@@ -234,7 +237,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 6 :
 				if ((b3_size)(x * y * 3 + pos) <= buffer_size)
 				{
-					pos = buffer_size - 3 * x * y;
+					pos = (b3_offset)buffer_size - 3 * x * y;
 					FileType = FT_PPM;
 					return b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}

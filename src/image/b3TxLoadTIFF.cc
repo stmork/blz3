@@ -45,9 +45,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.12  2004/10/24 23:59:09  sm
 **	- Some TIFF version adjustments.
-**
+**	
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -139,7 +142,7 @@ public:
 	toff_t   pos;
 
 public:
-	b3MemTiffInfo(const b3_u08 *InitBuffer,size_t InitSize)
+	b3MemTiffInfo(const b3_u08 *InitBuffer,tsize_t InitSize)
 	{
 		ptr  = (b3_u08 *)InitBuffer;
 		size = InitSize;
@@ -366,7 +369,7 @@ long b3Tx::b3TIFFDecode(
 	if ((depth > 1) && (depth <= 8) && (type != B3_TX_UNDEFINED))
 	{
 		b3_res    b;
-		b3_count  max;
+		b3_size   max;
 		b3_index  pos;
 		b3_u32    bit;
 		b3_u08   *lPtr,lVal;
@@ -482,9 +485,9 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 }
 
 b3_result b3Tx::b3LoadTIFF(
-	const char   *tiff_name,
-	const b3_u08 *tiff_buffer,
-	size_t        tiff_size)
+	const char    *tiff_name,
+	const b3_u08  *tiff_buffer,
+	const b3_size  tiff_size)
 {
 	TIFF    *tiff;
 	b3_u16   bps = 1,spp = 1,pm = PHOTOMETRIC_MINISWHITE,pc = 0;
@@ -496,7 +499,7 @@ b3_result b3Tx::b3LoadTIFF(
 	b3_f32   yDoubleDPI  = 200;
 
 #if 1
-	b3MemTiffInfo  tiff_info(tiff_buffer,tiff_size);
+	b3MemTiffInfo  tiff_info(tiff_buffer,(tsize_t)tiff_size);
 
 	tiff = TIFFClientOpen (
 		tiff_name,"r",(thandle_t)&tiff_info,

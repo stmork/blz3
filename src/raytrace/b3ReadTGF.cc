@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.9  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
-**
+**	
 **	Revision 1.8  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -197,7 +200,8 @@ b3_bool b3TGFReader::b3ParseLight(char *ptr)
 
 b3_bool b3TGFReader::b3ProcessMaterial(b3Shape *shape,b3_index index)
 {
-	b3_index i,max = m_Materials.b3GetCount();
+	b3_count max = m_Materials.b3GetCount();
+	b3_index i;
 
 	for (i = 0;i < max;i++)
 	{
@@ -220,7 +224,7 @@ b3Triangles *b3TGFReader::b3ProcessOneShape(
 	b3_index                 facEnd)
 {
 	b3Triangles *shape = new b3Triangles(TRIANGLES);
-	b3_index     k,min,max,start,end,face = 0;
+	b3_count     k,min,max,start,end,face = 0;
 	b3_count     faces = 0,diff;
 
 	// Count faces, compute vertex range

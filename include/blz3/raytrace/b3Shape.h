@@ -617,7 +617,7 @@ private:
 	        {
 	        	if((grid >= 0) && (grid < m_GridCount))
 	        	{
-					b3_index max = m_GridList[grid].b3GetCount();
+					b3_count max = m_GridList[grid].b3GetCount();
 
 					if (max > 0)
 					{
@@ -855,7 +855,7 @@ public:
 
 public:
 	virtual b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);
-	        int      b3GetOperationIndex(b3_csg_operation mode);
+	        b3_size  b3GetOperationIndex(b3_csg_operation mode);
 	        void     b3Operate(b3_shape_intervals *local,b3_bbox_intervals *list,b3_bbox_intervals *result);
 	virtual void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	virtual b3_count b3GetMaxIntersections();

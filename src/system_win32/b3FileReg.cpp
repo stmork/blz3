@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.2  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
-**
+**	
 **	Revision 1.1  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -149,7 +152,8 @@ b3_size  b3FileReg::b3Write     (const void * write_buffer,const b3_size size)
 	{
 		if (m_Pos < (b3_size)m_Buffer.b3GetCount())
 		{
-			m_Buffer[m_Pos++] = buffer[i];
+			m_Buffer[(b3_index)m_Pos] = buffer[i];
+			m_Pos++;
 		}
 		else
 		{

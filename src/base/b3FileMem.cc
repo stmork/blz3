@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.6  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.5  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -225,8 +228,8 @@ b3_size b3FileMem::b3Seek (
 	const b3_offset    offset,
 	const b3_seek_type SeekMode)
 {
-	b3_offset old_pos;
-	b3_diff   new_pos;
+	b3_size   old_pos;
+	b3_offset new_pos;
 
 	old_pos = m_BufferPos;
 	switch (SeekMode)
@@ -236,11 +239,11 @@ b3_size b3FileMem::b3Seek (
 			break;
 
 		case B3_SEEK_CURRENT :
-			new_pos = m_BufferPos + offset;
+			new_pos = (b3_offset)m_BufferPos + offset;
 			break;
 
 		case B3_SEEK_END :
-			new_pos  = m_BufferSize + offset;
+			new_pos  = (b3_offset)m_BufferSize + offset;
 			break;
 	}
 

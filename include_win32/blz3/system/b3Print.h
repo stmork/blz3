@@ -64,7 +64,7 @@ class CB3Print
 	b3_res    m_ScaleHeight;
 
 public:
-	      CB3Print(b3Tx *,b3_res xSize,b3_res ySize,CDC *pDC,CPrintInfo *pInfo,b3_bool FitOnPage=false);
+	      CB3Print(b3Tx *,b3_count strips,b3_res strip_height,CDC *pDC,CPrintInfo *pInfo,b3_bool FitOnPage=false);
 		  CB3Print(CDC *pDC,CPrintInfo *pInfo,b3_bool FitOnPage = true);
 	     ~CB3Print();
 	void  b3PrintPage(CDC *pDC,CPrintInfo *pInfo);

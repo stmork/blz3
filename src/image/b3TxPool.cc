@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.25  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.24  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
@@ -220,7 +223,7 @@ b3Tx *b3TxPool::b3FindTextureUnsafe(const char *ParamName)
 	b3Tx       *tx;
 	const char *txName;
 	b3_size     txLen,nameLen;
-	b3_diff     diff;
+	b3_offset   diff;
 
 	Name.b3Correct(ParamName);
 	B3_FOR_BASE(&m_Pool,tx)
@@ -228,7 +231,7 @@ b3Tx *b3TxPool::b3FindTextureUnsafe(const char *ParamName)
 		txName  = tx->b3Name();
 		txLen   = strlen(txName);
 		nameLen = strlen(Name);
-		diff    = txLen - nameLen;
+		diff    = (b3_offset)txLen - (b3_offset)nameLen;
 		if (strcmp(&txName[diff >= 0 ? diff : 0],Name) == 0)
 		{
 			return tx;

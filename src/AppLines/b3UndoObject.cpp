@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.11  2004/09/27 11:08:54  sm
 **	- Added rudimental car paint material dialog.
-**
+**	
 **	Revision 1.10  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -574,7 +577,7 @@ b3OpObjectCopy::b3OpObjectCopy(
 		{
 			cloned = (b3BBox *)b3World::b3Clone(bbox);
 			cloned->b3Transform(&dlg.m_Transformation,true,true);
-			cloned->b3Prepare(true);
+			cloned->b3PrepareBBox(true);
 			m_ClonedBBoxes.b3Add(cloned);
 
 			bbox = cloned;

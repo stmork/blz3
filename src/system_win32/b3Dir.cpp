@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.12  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.11  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
@@ -376,7 +379,7 @@ void b3Path::b3Correct(const char *input)
 // Static filename correction
 void b3Path::b3Correct(const char *input,char *output)
 {
-	b3_index i,len;
+	b3_size i,len;
 
 	B3_ASSERT(input != null);
 	B3_ASSERT(output != null);
@@ -403,14 +406,14 @@ void b3Path::b3LinkFileName(
 	const char *path,
 	const char *name)
 {
-	char nDrive[_MAX_DRIVE];
-	char nPathOfPath[_MAX_DIR];
-	char nNameOfPath[_MAX_FNAME];
-	char nExt[_MAX_EXT];
-	char nPathOfName[_MAX_DIR];
-	char nNameOfName[_MAX_FNAME];
-	char nFullPath[_MAX_DIR];
-	long i,len;
+	char    nDrive[_MAX_DRIVE];
+	char    nPathOfPath[_MAX_DIR];
+	char    nNameOfPath[_MAX_FNAME];
+	char    nExt[_MAX_EXT];
+	char    nPathOfName[_MAX_DIR];
+	char    nNameOfName[_MAX_FNAME];
+	char    nFullPath[_MAX_DIR];
+	b3_size i,len;
 
 	B3_ASSERT(full != null);
 
@@ -540,8 +543,7 @@ void b3Path::b3ParentName(
 	      char *parent)
 {
 	char     actDir[B3_FILESTRINGLEN];
-	b3_index i;
-	b3_count len;
+	b3_size  i, len;
 
 	ASSERT((file != null) && (parent != null));
 
@@ -647,8 +649,7 @@ void b3Path::b3ExtractExt(const char *input)
 void b3Path::b3ExtractExt(const char *filename,char *ext)
 {
 	char     actName[B3_FILESTRINGLEN];
-	b3_index i;
-	b3_count len;
+	b3_size  i, len;
 
 	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
@@ -665,8 +666,7 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 
 void b3Path::b3RemoveDelimiter(char *name)
 {
-	b3_index i;
-	b3_size  len;
+	b3_offset i, len;
 
 	len = strlen(name);
 	for (i = len - 1;i >= 0;i--)
@@ -717,8 +717,7 @@ static b3_bool b3FileDialog(
 	char      aux[B3_FILESTRINGLEN];
 	char      suggest[B3_FILESTRINGLEN];
 	b3_bool   result;
-	b3_index  i;
-	b3_count  len;
+	b3_size   i, len;
 	CWinApp  *app = AfxGetApp();
 
 	// Make filename ready for use...
@@ -865,8 +864,7 @@ b3_bool b3Folder::b3SelectFolder(CString &param,const char *title,const char *ro
 	ITEMIDLIST *result;
 	ITEMIDLIST *root_id;
 	LPMALLOC    pMalloc;
-	b3_index    i;
-	b3_count    len;
+	b3_size     i, len;
 
 	b3Format("%s",param);
 	len = strlen(m_Path);
@@ -925,7 +923,7 @@ int __stdcall b3Folder::b3Callback(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM l
 	if (uMsg == BFFM_INITIALIZED)
 	{
 		ptr = (char *)pbff;
-		::SendMessage(hwnd, BFFM_SETSELECTION, TRUE,(long)ptr);
+		::SendMessage(hwnd, BFFM_SETSELECTION, TRUE,(LPARAM)ptr);
 	}
 
 	return 0;

@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.7  2004/05/13 08:14:29  sm
 **	- Fixed some uninitialized variables.
-**
+**	
 **	Revision 1.6  2004/05/13 07:53:26  sm
 **	- Fixed b3File caching problem which occured becaus
 **	  of a variable hiding problem.
@@ -173,7 +176,7 @@ b3_size b3File::b3Read (
 {
 	b3_size readBytes;
 
-	readBytes = _read (m_File,(void *)buffer,buffer_size);
+	readBytes = _read (m_File,(void *)buffer,(unsigned int)buffer_size);
 	return readBytes;
 }
 
@@ -182,15 +185,15 @@ b3_size b3File::b3Write (
 	const void    *ptr,
 	const b3_size  buffer_size)
 {
-	b3_u08  *buffer = (b3_u08 *)ptr;
-	b3_size  written;
+	b3_u08   *buffer = (b3_u08 *)ptr;
+	b3_count  written;
 
 	// write buffer is cachable
 	if (buffer_size <= (m_BufferSize - m_Index))
 	{
 		// OK! Cache it!
 		memcpy (&m_Cache[m_Index],buffer,buffer_size);
-		m_Index += buffer_size;
+		m_Index += (b3_index)buffer_size;
 		return   buffer_size;
 	}
 
@@ -198,7 +201,7 @@ b3_size b3File::b3Write (
 	if (m_Index > 0)
 	{
 		written = _write (m_File,m_Cache,m_Index);
-		if (written < (b3_size)m_Index)
+		if (written < m_Index)
 		{
 			b3_index i;
 			b3_size  num;
@@ -235,18 +238,18 @@ b3_size b3File::b3Write (
 	if (buffer_size < m_BufferSize)
 	{
 		memcpy (m_Cache,buffer,buffer_size);
-		m_Index = buffer_size;
+		m_Index = (b3_index)buffer_size;
 		return  buffer_size;
 	}
 	m_Index = 0;
 
 	// The write buffer is greater than the cache buffer
-	return (_write(m_File,buffer,buffer_size));
+	return (b3_size)_write(m_File,buffer,(unsigned int)buffer_size);
 }
 
 b3_bool b3File::b3Flush ()
 {
-	b3_size written,i,k,size;
+	b3_index written,i,k,size;
 
 	// Check file handle
 	if (m_File == -1)
@@ -266,7 +269,7 @@ b3_bool b3File::b3Flush ()
 		written = _write (m_File,m_Cache,m_Index);
 
 		// Handle case that not the whole buffer was written
-		if (written < (b3_size)m_Index)
+		if (written < m_Index)
 		{
 			k     = written;
 			size  = m_Index - written;
@@ -329,7 +332,7 @@ b3_size b3File::b3Size ()
 	size = _lseek (m_File,0L,SEEK_CUR);
 
 	// Remember old position
-	       _lseek (m_File,pos,SEEK_SET);
+	_lseek (m_File,(long)pos,SEEK_SET);
 	return size;
 }
 

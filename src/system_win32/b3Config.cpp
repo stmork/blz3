@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.5  2004/09/23 21:27:39  sm
 **	- VBOs still don't work.
-**
+**	
 **	Revision 1.4  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
 **	
@@ -99,7 +102,7 @@ void b3Runtime::b3Beep()
 
 b3_bool b3Runtime::b3Hostname(char *hostname,const b3_size buffer_size)
 {
-	unsigned long size = buffer_size;
+	DWORD size = (DWORD)buffer_size;
 
 	return GetComputerName (hostname,&size);
 }

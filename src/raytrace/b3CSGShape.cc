@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2005/01/02 19:15:25  sm
+**      - Fixed signed/unsigned warnings
+**
 **      Revision 1.16  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -145,9 +148,9 @@ b3CSGShape::b3CSGShape(b3_u32 *src) : b3Shape(src)
 {
 }
 
-int b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
+b3_size b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
 {
-	size_t i;
+	b3_size i;
 
 	for (i = 0;i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation));i++)
 	{

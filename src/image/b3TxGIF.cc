@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.10  2004/06/29 19:17:16  sm
 **	- GIF decoder doesn't use malloc/free any more.
 **	- All image types are the default for image selection.
-**
+**	
 **	Revision 1.9  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -102,7 +105,7 @@ static const long mask[13]    =
 class b3GifDecoder
 {
 public:
-	b3_count bitsleft,availbytes,currbyte;
+	b3_size bitsleft,availbytes,currbyte;
 
 public:
 	b3GifDecoder()
@@ -112,7 +115,7 @@ public:
 		currbyte   = 0;
 	}
 
-	b3_count b3GetNextGifCode (b3_u08 **Data,b3_count currsize)		 			
+	b3_u32 b3GetNextGifCode (b3_u08 **Data,b3_size currsize)		 			
 	{
 		long code;
 
@@ -130,7 +133,7 @@ public:
 			availbytes--;
 		}
 
-		code = currbyte >> (8 - bitsleft);
+		code = (long)(currbyte >> (8 - bitsleft));
 		while (currsize > bitsleft)
 		{
 			if (availbytes <= 0)
@@ -156,6 +159,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	b3_index       i;
 	b3_count       Colors;
 	b3_size        currsize;
+	b3_u32         c;
 	b3_pkd_color   t;
 	b3_u08        *pPtr = buffer;
 	b3_u08        *out;
@@ -167,7 +171,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	b3_coord       xk,yk;
 	b3_res         xNewSize,yNewSize,NewDepth;
 	b3_u32         status,code, oldcode,clearcode;
-	b3_u32         endcode,newcodes,maxcode,codecnt,c,size;
+	b3_u32         endcode,newcodes,maxcode,codecnt,size;
 	b3_bool        interlaced;
 	b3GifDecoder   decoder;
 
@@ -280,9 +284,10 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			if (c >= codecnt)
 				c = 0;
 
-			fc = oldcode = c;
+			fc      = (b3_u08)c;
+			oldcode = c;
 
-			*sp++ = c;
+			*sp++ = fc;
 		}
 		else
 		{

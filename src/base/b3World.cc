@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2005/01/02 19:15:25  sm
+**      - Fixed signed/unsigned warnings
+**
 **      Revision 1.32  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -231,7 +234,7 @@ b3World::~b3World()
 
 b3_world_error b3World::b3EndianSwapWorld()
 {
-	b3_index i,max_file;
+	b3_size  i,max_file;
 	b3_index k,max_node,max_offset;
 
 	b3PrintF(B3LOG_FULL,"Converting endian type.\n");
@@ -294,11 +297,11 @@ b3Item *b3World::b3AllocNode(b3_u32 *buffer)
 
 b3_world_error b3Item::b3ParseLinkuage(
 	b3Item  **array,
-	b3_count  node_count,
+	b3_u32    node_count,
 	b3_u32    my_class_limit,
 	b3_count  level)
 {
-	b3_index  pos,i;
+	b3_u32    pos,i;
 	b3_u32    act_class;
 	b3_u32    cmp_class;
 
@@ -350,9 +353,9 @@ b3_world_error b3Item::b3ParseLinkuage(
 b3_world_error b3World::b3Parse()
 {
 	b3_world_error  result;
-	b3_index        i,max_file;
-	b3_index        max_node,max_offset;
-	b3_count        node_count = 0;
+	b3_u32          i,max_file;
+	b3_u32          max_node,max_offset;
+	b3_u32          node_count = 0;
 	b3Base<b3Item>  node_list;
 	b3Item         *node;
 	b3Item       **array;
@@ -541,7 +544,7 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 {
 	b3File         file;
 	b3_world_error error;
-	b3_index       i,max_file;
+	b3_size        i,max_file;
 	b3_index       max_node,max_offset;
 
 	if (file.b3Open(world_name,B_READ))
@@ -607,7 +610,7 @@ void b3World::b3CloneBase(
 	b3ItemRegisterEntry *entry;
 	b3Item              *srcItem;
 	b3Item              *dstItem;
-	b3_index             i;
+	b3_u32               i;
 
 	B3_FOR_BASE(srcBase,srcItem)
 	{
@@ -635,7 +638,7 @@ b3Item *b3World::b3Clone(b3Item *original)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
-	b3_index             i;
+	b3_u32               i;
 
 	original->b3Store();
 	entry = b3ItemRegister::b3Find(original->b3GetClassType());
@@ -682,7 +685,7 @@ b3_bool b3World::b3Write(const char *filename)
 b3_world_error b3World::b3Write(b3FileAbstract *file)
 {
 	b3Item         *item;
-	b3_size         size;
+	b3_u32          size;
 	b3_u32          header[2];
 	b3_world_error  error = B3_WORLD_OK;
 

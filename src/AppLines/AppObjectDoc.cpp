@@ -44,9 +44,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2005/01/02 19:15:24  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.43  2004/12/11 17:05:01  sm
 **	- Fixed update/draw problem in object editor
-**
+**	
 **	Revision 1.42  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -381,7 +384,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 	bbox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	bbox->b3Prepare(true);
+	bbox->b3PrepareBBox(true);
 	bbox->b3Update();
 	bbox->b3Inverse(&m_OriginalPosition);
 
@@ -694,7 +697,7 @@ void CAppObjectDoc::OnObjectNew()
 
 				// Init data
 				m_DlgHierarchy->b3GetData();
-				m_BBox->b3Prepare(true);
+				m_BBox->b3PrepareBBox(true);
 				m_BBox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
 				m_BBox->b3BacktraceRecompute(bbox);
 				b3ComputeBounds();

@@ -63,8 +63,8 @@ typedef	uint16 tdir_t;		/* directory index */
 typedef	uint16 tsample_t;	/* sample number */
 typedef	uint32 tstrip_t;	/* strip number */
 typedef uint32 ttile_t;		/* tile number */
-typedef	int32 tsize_t;		/* i/o size in bytes */
-typedef	void* tdata_t;		/* image data ref */
+typedef	int32  tsize_t;		/* i/o size in bytes */
+typedef	void*  tdata_t;		/* image data ref */
 typedef	uint32 toff_t;		/* file offset */
 
 #if !defined(__WIN32__) && (defined(_WIN32) || defined(WIN32))

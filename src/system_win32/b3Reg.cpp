@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.2  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -116,7 +119,7 @@ void CB3Reg::b3WriteString(const char *section,const char *entry,const char *str
 	if (hSecKey)
 	{
 		::RegSetValueEx(hSecKey, entry,NULL,REG_SZ, 
-			(const unsigned char *)string, (strlen(string) + 1) * sizeof(TCHAR));
+			(const unsigned char *)string, (DWORD)((strlen(string) + 1) * sizeof(TCHAR)));
 		::RegCloseKey (hSecKey);
 	}
 }
@@ -179,7 +182,7 @@ void CB3Reg::b3WriteBinary(const char *section,const char *entry,const void *buf
 
 	if (hSecKey)
 	{
-		LONG result = ::RegSetValueEx(hSecKey, entry, NULL, REG_BINARY, (LPBYTE)buffer, size);
+		LONG result = ::RegSetValueEx(hSecKey, entry, NULL, REG_BINARY, (LPBYTE)buffer, (DWORD)size);
 		::RegCloseKey(hSecKey);
 	}
 }

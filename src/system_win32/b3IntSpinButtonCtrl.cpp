@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/01/02 19:15:25  sm
+**	- Fixed signed/unsigned warnings
+**
 **	Revision 1.5  2004/07/03 13:49:30  sm
 **	- Added spline knot control dialog which is not completed yet.
-**
+**	
 **	Revision 1.4  2004/05/06 18:13:52  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -109,7 +112,7 @@ void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
 	}
 }
 
-void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_count &pos)
+void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_offset &pos)
 {
 	B3_ASSERT(m_Min < m_Max);
 	if (pDX->m_bSaveAndValidate)
@@ -118,7 +121,7 @@ void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_count &pos)
 	}
 	else
 	{
-		pos = b3SetPos(pos);
+		pos = b3SetPos((b3_s32)pos);
 	}
 }
 
