@@ -40,6 +40,7 @@
 #include "DlgLDC.h"
 
 #include "b3ExampleScene.h"
+#include "blz3/system/b3Dir.h"
 
 /*************************************************************************
 **                                                                      **
@@ -49,6 +50,14 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2001/12/30 16:54:15  sm
+**	- Inserted safe b3Write() into Lines III
+**	- Fixed b3World saving: b3StoreXXX() methods must ensure
+**	  buffer before the buffer itself is used.
+**	- Extended b3Shape format with shape activation flag. Nice: The
+**	  new data structures don't confuse the old Lines II/Blizzard II and
+**	  even stores these new values.
+**
 **	Revision 1.31  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -57,7 +66,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.30  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
@@ -362,6 +371,57 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return result;
 }
 
+BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	BOOL     result = false;
+	b3_index i      = 1;
+	b3Path   name,new_name;
+	b3Path   path;
+	b3Path   filename;
+
+	try
+	{
+		// Suggest a temporary filename
+		b3Path::b3SplitFileName(lpszPathName,path,name);
+		b3Path::b3RemoveExt(name);
+		do
+		{
+			sprintf(new_name,"%s-new%d.bwd",(const char *)name,i++);
+			b3Path::b3LinkFileName(filename,path,new_name);
+		}
+		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);
+
+		// Write!
+		m_World.b3Write(filename);
+
+		// ...and rename to original name
+		remove(lpszPathName);
+		if (rename(filename,lpszPathName) == 0)
+		{
+			// Mark if OK!
+			SetModifiedFlag(FALSE);
+			result = TRUE;
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Error renaming %s into %s\n",
+				(const char *)filename,lpszPathName);
+		}
+	}
+	catch(b3WorldException *w)
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World saver: Error saving %s\n",lpszPathName);
+		b3PrintF(B3LOG_NORMAL,"Blizzard III World saver: Error code %d\n",w->b3GetError());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Saving %s\n",lpszPathName);
+	}
+
+	return result;
+}
+
 void CAppLinesDoc::OnCloseDocument() 
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -419,13 +479,6 @@ b3_vector *CAppLinesDoc::b3GetFulcrum()
 void CAppLinesDoc::b3DrawFulcrum()
 {
 	m_Fulcrum.b3Draw();
-}
-
-BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName) 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	::AfxMessageBox("Lines III kann noch nicht speichern!",MB_ICONSTOP);
-	return false;
 }
 
 void CAppLinesDoc::b3ComputeBounds()

@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CChildFrame
+LastClass=CAppLinesDoc
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,46 +22,46 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=25
-Resource1=IDD_NEBULAR
-Resource2=IDR_TOOLBAR_CAMERA
-Resource3=IDR_TOOLBAR_ACTION
-Resource4=IDD_HIERARCHY
-Resource5=IDD_SEARCH_PATH_LIST
-Resource6=IDD_NEW_ITEM
-Resource7=IDD_LDC
-Resource8=IDD_STEP_MOVE
-Resource9=IDD_CAMERA
-Resource10=IDR_BLZ3TYPE
-Resource11=IDD_FULCRUM
-Resource12=IDR_TOOLBAR_VIEW
-Resource13=IDD_LENS_FLARE
+Resource1=IDD_ABOUTBOX
+Resource2=IDR_TOOLBAR_VIEW
+Resource3=IDR_TOOLBAR_DISPLAY
+Resource4=IDD_STEP_MOVE
+Resource5=IDD_NEBULAR
+Resource6=IDD_LENS_FLARE
+Resource7=IDD_MODELLER_INFO
+Resource8=IDD_LIGHT
+Resource9=IDD_SEARCH_PATH_LIST
+Resource10=IDD_CAMERA
+Resource11=IDD_NEW_ITEM
+Resource12=IDR_TOOLBAR_OBJECT
+Resource13=IDD_HIERARCHY
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_TOOLBAR_DISPLAY
+Resource14=IDR_TOOLBAR_LIGHT
 Class17=CDlgModellerInfo
-Resource15=IDD_ABOUTBOX
-Resource16=IDD_MODELLER_INFO
-Resource17=IDD_LIGHT
-Resource18=IDR_TOOLBAR_LIGHT
+Resource15=IDD_FULCRUM
+Resource16=IDD_SUPER_SAMPLE
+Resource17=IDD_DISTRIBUTED
+Resource18=IDR_TOOLBAR_ACTION
 Class18=CDlgCreateItem
-Resource19=IDR_TOOLBAR_OBJECT
+Resource19=IDR_TOOLBAR_CAMERA
 Class19=CDlgLight
 Class20=CB3ControlLDC
-Resource20=IDD_STEP_ROTATE
+Resource20=IDD_LDC
 Class21=CDlgLDC
-Resource21=IDD_SUPER_SAMPLE
+Resource21=IDR_BLZ3TYPE
 Class22=CDlgCamera
 Class23=CB3ShowImage
-Resource22=IDR_MAINFRAME
+Resource22=IDR_DISPLAYTYPE
 Class24=CDlgFulcrum
-Resource23=IDD_SCENE
-Resource24=IDD_DISTRIBUTED
+Resource23=IDR_MAINFRAME
+Resource24=IDD_SCENE
 Class25=CDlgStepRotate
 Class26=CDlgStepMove
-Resource25=IDR_DISPLAYTYPE
+Resource25=IDD_STEP_ROTATE
 
 [CLS:CAppLinesApp]
 Type=0
@@ -88,7 +88,7 @@ HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
 Filter=N
 VirtualFilter=DC
-LastObject=ID_HIERACHY
+LastObject=CAppLinesDoc
 
 [CLS:CAppLinesView]
 Type=0
@@ -847,6 +847,7 @@ VirtualFilter=dWC
 
 [ACL:IDR_DISPLAYTYPE]
 Type=1
+Class=?
 Command1=ID_IMG_SAVE
 Command2=ID_B3_MORE
 Command3=ID_B3_LESS
@@ -854,6 +855,7 @@ CommandCount=3
 
 [ACL:IDR_BLZ3TYPE]
 Type=1
+Class=?
 Command1=ID_WINDOW_NEW
 CommandCount=1
 

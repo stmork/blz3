@@ -35,10 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/30 16:54:15  sm
+**	- Inserted safe b3Write() into Lines III
+**	- Fixed b3World saving: b3StoreXXX() methods must ensure
+**	  buffer before the buffer itself is used.
+**	- Extended b3Shape format with shape activation flag. Nice: The
+**	  new data structures don't confuse the old Lines II/Blizzard II and
+**	  even stores these new values.
+**
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	
 */
 
@@ -73,14 +81,14 @@ b3Mem::~b3Mem()
 // This routine is like "malloc()"
 void *b3Mem::b3Alloc(b3_size size)
 {
-	register struct b3MemNode *act;
+	struct b3MemNode *act;
 
 	// allocate memory block
 	act = (struct b3MemNode *)GlobalAlloc(GPTR,size + sizeof(struct b3MemNode));
 	if (act == null)
 	{
 #ifdef no_DEBUG
-		throw new b3MemException(B§_MEM_MEMORY);
+		throw new b3MemException(B3_MEM_MEMORY);
 #else
 		return null;
 #endif

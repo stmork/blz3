@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/12/30 16:54:15  sm
+**      - Inserted safe b3Write() into Lines III
+**      - Fixed b3World saving: b3StoreXXX() methods must ensure
+**        buffer before the buffer itself is used.
+**      - Extended b3Shape format with shape activation flag. Nice: The
+**        new data structures don't confuse the old Lines II/Blizzard II and
+**        even stores these new values.
+**
 **      Revision 1.18  2001/12/30 14:16:58  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -163,13 +171,12 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3TriangleShape(src)
 	{
 		b3InitVector(&m_Controls[i]);
 	}
+	b3InitActivation();
 }
 
-void b3SplineCurve::b3Write()
+void b3SplineCurve::b3StoreShape()
 {
 	b3_index i;
-
-	b3Shape::b3Write();
 
 	b3StoreInt(m_rSubDiv);
 	for (i = 0;i < B3_MAX_KNOTS;i++)
@@ -326,14 +333,14 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 	{
 		b3InitVector(&m_Controls[i]);
 	}
+	b3InitActivation();
 }
 
-void b3SplineShape::b3Write()
+void b3SplineShape::b3StoreShape()
 {
 	b3_index i;
 	b3_count control_count;
 
-	b3Shape::b3Write();
 	b3StoreVector(&m_Axis.pos);
 	b3StoreVector(&m_Axis.dir);
 	b3StoreSpline(&m_Spline[0]);
@@ -464,7 +471,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 		Vector += count;
 		index  += count;
 	}
-	B3_ASSERT(index <= SolidVertexCount);
+	B3_ASSERT(index <= m_SolidVertexCount);
 #endif
 }
 

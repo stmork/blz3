@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/12/30 16:54:15  sm
+**      - Inserted safe b3Write() into Lines III
+**      - Fixed b3World saving: b3StoreXXX() methods must ensure
+**        buffer before the buffer itself is used.
+**      - Extended b3Shape format with shape activation flag. Nice: The
+**        new data structures don't confuse the old Lines II/Blizzard II and
+**        even stores these new values.
+**
 **      Revision 1.8  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -93,11 +101,11 @@ b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3RenderShape(src)
 	b3InitInt();   // This is Index
 
 	m_Operation = b3InitInt();
+	b3InitActivation();
 }
 
-void b3CSGSphere::b3Write()
+void b3CSGSphere::b3StoreShape()
 {
-	b3Shape::b3Write();
 	b3StoreVector(&m_Base);
 	b3StoreVector(&m_Dir);
 	b3StoreFloat(m_QuadRadius);

@@ -32,13 +32,21 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/12/30 16:54:15  sm
+**	- Inserted safe b3Write() into Lines III
+**	- Fixed b3World saving: b3StoreXXX() methods must ensure
+**	  buffer before the buffer itself is used.
+**	- Extended b3Shape format with shape activation flag. Nice: The
+**	  new data structures don't confuse the old Lines II/Blizzard II and
+**	  even stores these new values.
+**
 **	Revision 1.17  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.16  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -157,13 +165,15 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[0]
 	b3InitFloat(); // This is DirLen[1]
 	b3InitFloat(); // This is DirLen[2]
-	m_aRad = b3InitFloat();
-	m_bRad = b3InitFloat();
+	m_aRad  = b3InitFloat();
+	m_bRad  = b3InitFloat();
+	m_aQuad = b3InitFloat();
+	m_bQuad = b3InitFloat();
+	b3InitActivation();
 }
 
-void b3Torus::b3Write()
+void b3Torus::b3StoreShape()
 {
-	b3Shape::b3Write();
 	b3StoreVector(&m_Normals[0]);
 	b3StoreVector(&m_Normals[1]);
 	b3StoreVector(&m_Normals[2]);

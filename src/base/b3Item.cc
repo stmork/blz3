@@ -35,6 +35,14 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/12/30 16:54:15  sm
+**      - Inserted safe b3Write() into Lines III
+**      - Fixed b3World saving: b3StoreXXX() methods must ensure
+**        buffer before the buffer itself is used.
+**      - Extended b3Shape format with shape activation flag. Nice: The
+**        new data structures don't confuse the old Lines II/Blizzard II and
+**        even stores these new values.
+**
 **      Revision 1.15  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -489,7 +497,7 @@ b3_size b3Item::b3Store()
 	// Allocate store buffer
 	if (m_StoreBuffer == null)
 	{
-		if ((Size >> 2) < (B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
+		if ((Size >> 2) < (b3_size)(B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
 		{
 			m_StoreSize = 8192;
 		}
@@ -500,6 +508,7 @@ b3_size b3Item::b3Store()
 		m_StoreBuffer = (b3_u32 *)b3Alloc(m_StoreSize);
 		if (m_StoreBuffer == null)
 		{
+			throw new b3WorldException(B3_WORLD_MEMORY);
 		}
 	}
 
@@ -569,17 +578,15 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
 
 void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
 {
-	b3_size new_size;
-
 	// Clearify some things...
 	if ((m_StoreOffset != 0) && (is_data))
 	{
 		throw new b3WorldException(B3_WORLD_OUT_OF_ORDER);
 	}
 
-	if ((m_StoreIndex + needed) > (m_StoreSize >> 2))
+	if ((m_StoreIndex + needed) > (b3_index)(m_StoreSize >> 2))
 	{
-		b3_size new_size = m_StoreSize += 16384;
+		b3_size new_size = m_StoreSize + 16384;
 #if 1
 		b3_u32  *new_buffer;
 
@@ -620,33 +627,33 @@ void b3Item::b3StoreInt(const b3_s32 value)
 
 void b3Item::b3StoreRes(const b3_res value)
 {
-	b3_res *ptr = (b3_res *)&m_StoreBuffer[m_StoreIndex++];
-
 	b3EnsureStoreBuffer(1);
+
+	b3_res *ptr = (b3_res *)&m_StoreBuffer[m_StoreIndex++];
 	*ptr = value;
 }
 
 void b3Item::b3StoreCount(const b3_count value)
 {
-	b3_count *ptr = (b3_count *)&m_StoreBuffer[m_StoreIndex++];
-
 	b3EnsureStoreBuffer(1);
+
+	b3_count *ptr = (b3_count *)&m_StoreBuffer[m_StoreIndex++];
 	*ptr = value;
 }
 
 void b3Item::b3StoreIndex(const b3_index value)
 {
-	b3_index *ptr = (b3_index *)&m_StoreBuffer[m_StoreIndex++];
-
 	b3EnsureStoreBuffer(1);
+
+	b3_index *ptr = (b3_index *)&m_StoreBuffer[m_StoreIndex++];
 	*ptr = value;
 }
 
 void b3Item::b3StoreFloat(const b3_f32 value)
 {
-	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex++];
-
 	b3EnsureStoreBuffer(1);
+
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex++];
 	*ptr = value;
 }
 
@@ -666,10 +673,9 @@ void b3Item::b3StorePtr(const void *ptr)
 
 void b3Item::b3StoreVector(const b3_vector *vec)
 {
-	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-
 	b3EnsureStoreBuffer(3);
 
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 	if (vec != null)
 	{
 		*ptr++ = vec->x;
@@ -687,10 +693,9 @@ void b3Item::b3StoreVector(const b3_vector *vec)
 
 void b3Item::b3StoreVector4D(const b3_vector4D *vec)
 {
-	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-
 	b3EnsureStoreBuffer(4);
 
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 	if (vec != null)
 	{
 		*ptr++ = vec->x;
@@ -710,9 +715,9 @@ void b3Item::b3StoreVector4D(const b3_vector4D *vec)
 
 void b3Item::b3StoreMatrix(const b3_matrix *mat)
 {
-	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-
 	b3EnsureStoreBuffer(16);
+
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 
 	*ptr++ = mat->m11;
 	*ptr++ = mat->m12;
@@ -767,10 +772,9 @@ void b3Item::b3StoreNurbs(const b3_nurbs *nurbs)
 
 void b3Item::b3StoreColor(const b3_color *col)
 {
-	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
-
 	b3EnsureStoreBuffer(4);
 
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
 	*ptr++ = col->a;
 	*ptr++ = col->r;
 	*ptr++ = col->g;

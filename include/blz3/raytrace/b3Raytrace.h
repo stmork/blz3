@@ -863,7 +863,9 @@ public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
-	virtual void        b3Write();
+	        void        b3Write();
+	virtual void        b3StoreShape();
+	        void        b3InitActivation();
 	        void        b3ComputeBound(b3CondLimit *limit);
 	        void        b3GetDiffuseColor(b3_color *color);
 	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
@@ -986,7 +988,7 @@ public:
 	B3_ITEM_INIT(b3Sphere);
 	B3_ITEM_LOAD(b3Sphere);
 
-	void    b3Write();
+	void    b3StoreShape();
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
@@ -1015,7 +1017,7 @@ public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
 
-	void    b3Write();
+	void    b3StoreShape();
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 	void    b3Normal(b3_ray *ray);
@@ -1062,7 +1064,7 @@ public:
 	B3_ITEM_INIT(b3Shape3);
 	B3_ITEM_LOAD(b3Shape3);
 
-	void    b3Write();
+	void    b3StoreShape();
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 };
@@ -1141,7 +1143,7 @@ public:
 	B3_ITEM_INIT(b3Torus);
 	B3_ITEM_LOAD(b3Torus);
 
-	void    b3Write();
+	void    b3StoreShape();
 	b3_bool b3Prepare();
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
@@ -1240,7 +1242,7 @@ public:
 	B3_ITEM_INIT(b3Triangles);
 	B3_ITEM_LOAD(b3Triangles);
 
-	        void   b3Write();
+	        void   b3StoreShape();
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize=true);
@@ -1272,7 +1274,7 @@ public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
 
-	void    b3Write();
+	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation);
 	b3_bool b3Prepare();
 };
@@ -1318,7 +1320,7 @@ protected:
 protected:
 	     b3SplineShape(b3_size class_size,b3_u32 class_type);
 
-	void b3Write();
+	void b3StoreShape();
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3GetVertexRange(b3_index &start,b3_index &end);
 	void b3ComputeVertices();
@@ -1418,7 +1420,7 @@ public:
 	B3_ITEM_INIT(b3CSGSphere);
 	B3_ITEM_LOAD(b3CSGSphere);
 
-	void   b3Write();
+	void   b3StoreShape();
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
@@ -1442,7 +1444,7 @@ public:
 	B3_ITEM_INIT(b3CSGShape3);
 	B3_ITEM_LOAD(b3CSGShape3);
 
-	void b3Write();
+	void b3StoreShape();
 	void b3Transform(b3_matrix *transformation);
 };
 
@@ -1521,7 +1523,7 @@ public:
 	B3_ITEM_INIT(b3CSGTorus);
 	B3_ITEM_LOAD(b3CSGTorus);
 
-	void   b3Write();
+	void   b3StoreShape();
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
@@ -1590,13 +1592,18 @@ protected:
 #define BBB_TEXT         1
 #define BBB_BOLD         2
 #define BBB_ITALIC       3
+#define BBB_SANSSERIF    4
+#define BBB_TYPEWRITER   5
+#define BBB_ACTIVE       6
+
 #define BBF_HTML        (1 << BBB_HTML)
 #define BBF_TEXT        (1 << BBB_TEXT)
 #define BBF_BOLD        (1 << BBB_BOLD)
 #define BBF_ITALIC      (1 << BBB_ITALIC)
 #define BBF_SERIF        0
-#define BBF_SANSSERIF   16
-#define BBF_TYPEWRITER  32
+#define BBF_SANSSERIF   (1 << BBB_SANSSERIF)
+#define BBF_TYPEWRITER  (1 << BBB_TYPEWRITER)
+#define BBF_ACTIVE      (1 << BBB_ACTIVE)
 
 #define BB_GETTEXTSIZE(BBox)      (((BBox)->Type & 0x0ff00) >>  8)
 #define BB_SETTEXTSIZE(BBox,Size)  ((BBox)->Type = ((BBox)->Type & 0xffff00ff) |  ((Size) << 8))

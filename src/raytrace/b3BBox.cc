@@ -33,13 +33,21 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2001/12/30 16:54:15  sm
+**	- Inserted safe b3Write() into Lines III
+**	- Fixed b3World saving: b3StoreXXX() methods must ensure
+**	  buffer before the buffer itself is used.
+**	- Extended b3Shape format with shape activation flag. Nice: The
+**	  new data structures don't confuse the old Lines II/Blizzard II and
+**	  even stores these new values.
+**
 **	Revision 1.26  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.25  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
@@ -521,6 +529,9 @@ void b3BBox::b3Activate(b3_bool activate)
 	b3Item  *item;
 	b3Shape *shape;
 	b3BBox  *bbox;
+
+	if (activate) m_Type |=   BBF_ACTIVE;
+	else          m_Type &= (~BBF_ACTIVE);
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{

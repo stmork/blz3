@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2001/12/30 16:54:15  sm
+**      - Inserted safe b3Write() into Lines III
+**      - Fixed b3World saving: b3StoreXXX() methods must ensure
+**        buffer before the buffer itself is used.
+**      - Extended b3Shape format with shape activation flag. Nice: The
+**        new data structures don't confuse the old Lines II/Blizzard II and
+**        even stores these new values.
+**
 **      Revision 1.31  2001/12/30 14:16:58  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -249,6 +257,11 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
+void b3Shape::b3InitActivation()
+{
+	b3Activate(B3_PARSE_INDEX_VALID ? b3InitBool() : false);
+}
+
 void b3Shape::b3Write()
 {
 	b3StoreVector(); // This is the normal
@@ -256,6 +269,12 @@ void b3Shape::b3Write()
 	b3StoreVector(); // This is Polar.ObjectPolar
 	b3StoreVector(); // This is Polar.BoxPolar
 	b3StoreNull();   // This is Custom
+	b3StoreShape();
+	b3StoreBool(b3IsActivated());
+}
+
+void b3Shape::b3StoreShape()
+{
 }
 
 b3Base<b3Item> *b3Shape::b3GetBumpHead()
@@ -496,11 +515,12 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
+	b3InitFloat(); // This is m_NormalLength
+	b3InitActivation();
 }
 
-void b3Shape2::b3Write()
+void b3Shape2::b3StoreShape()
 {
-	b3Shape::b3Write();
 	b3StoreVector(&m_Base);
 	b3StoreVector(&m_Dir1);
 	b3StoreVector(&m_Dir2);
@@ -540,11 +560,16 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
 	b3InitVector(&m_Dir3);
+	b3InitInt();   // This is lSize
+	b3InitFloat(); // This is m_Denom
+	b3InitFloat(); // This is m_DirLen[0]
+	b3InitFloat(); // This is m_DirLen[1]
+	b3InitFloat(); // This is m_DirLen[2]
+	b3InitActivation();
 }
 
-void b3Shape3::b3Write()
+void b3Shape3::b3StoreShape()
 {
-	b3Shape::b3Write();
 	b3StoreVector(&m_Normals[0]);
 	b3StoreVector(&m_Normals[1]);
 	b3StoreVector(&m_Normals[2]);
@@ -679,13 +704,15 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[2]
 
 	b3InitInt();   // This Index
-
 	m_Operation = b3InitInt();
+
+	b3InitVector(); // This is BTLine.pos
+	b3InitVector(); // This is BTLine.dir
+	b3InitActivation();
 }
 
-void b3CSGShape3::b3Write()
+void b3CSGShape3::b3StoreShape()
 {
-	b3Shape::b3Write();
 	b3StoreVector(&m_Normals[0]);
 	b3StoreVector(&m_Normals[1]);
 	b3StoreVector(&m_Normals[2]);
