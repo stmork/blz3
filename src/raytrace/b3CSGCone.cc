@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.16  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -142,11 +149,9 @@ void b3CSGCone::b3GetCount(
 
 void b3CSGCone::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_index       i;
-	b3_tnv_vertex *Vector;
+	b3_index      i;
+	b3_gl_vertex *Vector = glVertex;
 
-	Vector = (b3_tnv_vertex *)glVertex;
 	for (i = 0;i < SinCosSteps;i++)
 	{
 		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[i].v);
@@ -158,38 +163,23 @@ void b3CSGCone::b3ComputeVertices()
 	Vector[1].v.x = (Vector[0].v.x = m_Base.x) + m_Base.x;
 	Vector[1].v.y = (Vector[0].v.y = m_Base.y) + m_Base.y;
 	Vector[1].v.z = (Vector[0].v.z = m_Base.z) + m_Base.z;
-#endif
 }
 
 void b3CSGCone::b3ComputeIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr    = glGrids;
-	GLushort *pPtr    = glPolygons;
-	b3_index   offset = SinCosSteps * 2;
-	b3_index   i;
+	b3_gl_line    *gPtr   = glGrids;
+	b3_gl_polygon *pPtr   = glPolygons;
+	b3_index       offset = SinCosSteps * 2;
+	b3_index       i;
 
 	for (i = 0;i < SinCosSteps;i++)
 	{
-		// bottom line
-		*gPtr++ =  i;
-		*gPtr++ = (i + 1) % SinCosSteps;
+		B3_GL_LINIT(gPtr,i,(i + 1) % SinCosSteps);
+		B3_GL_LINIT(gPtr,i,i + offset + 1);
 
-		// up line
-		*gPtr++ = i;
-		*gPtr++ = i + offset + 1;
-
-		// bottom face
-		*pPtr++ =  i;
-		*pPtr++ = (i + 1) % SinCosSteps;
-		*pPtr++ = offset;
-
-		// cylinder face lower left
-		*pPtr++ = SinCosSteps +  i;
-		*pPtr++ = SinCosSteps + (i + 1) % SinCosSteps;
-		*pPtr++ = offset + 1;
+		B3_GL_PINIT(pPtr,i,(i + 1) % SinCosSteps,offset);
+		B3_GL_PINIT(pPtr,SinCosSteps +  i,SinCosSteps + (i + 1) % SinCosSteps,offset + 1);
 	}
-#endif
 }
 
 void b3CSGCone::b3InverseMap(b3_ray *ray,b3_csg_point *point)

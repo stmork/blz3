@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.22  2002/08/15 13:56:43  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -191,11 +198,10 @@ void b3Disk::b3GetCount(
 
 void b3Disk::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_f64         sx,sy,b,a,h,start,end;
-	b3_index       i;
-	b3_count       iMax;
+	b3_gl_vertex *Vector = glVertex;
+	b3_f64        sx,sy,b,a,h,start,end;
+	b3_index      i;
+	b3_count      iMax;
 
 	h = Limit.y2;
 	b = Limit.y1;
@@ -284,17 +290,15 @@ void b3Disk::b3ComputeVertices()
 		glVertexCount += 2;
 		xSize++;
 	}
-#endif
 }
 
 void b3Disk::b3ComputeIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	GLushort *pPtr;
-	b3_bool   EndLines = false;
-	b3_index  i,Number = 0,pos;
-	b3_count  Overhead;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_bool        EndLines = false;
+	b3_index       i,Number = 0,pos;
+	b3_count       Overhead;
 
 	b3ComputeBound(&Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -311,10 +315,10 @@ void b3Disk::b3ComputeIndices()
 	glPolyCount = 0;
 	b3RenderObject::b3Free(glGrids);
 	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 2 * sizeof(GLushort));
-	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 3 * sizeof(GLushort));
+	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_line));
+	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_polygon));
 	if ((gPtr == null) || (pPtr == null))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -323,34 +327,22 @@ void b3Disk::b3ComputeIndices()
 	for (i = 0;i < Overhead;i++)
 	{
 		pos = i + i;
-		*gPtr++ = pos;
-		*gPtr++ = pos + 2;
+		B3_GL_LINIT(gPtr,pos,  pos+2);
+		B3_GL_LINIT(gPtr,pos+1,pos+3);
 
-		*gPtr++ = pos + 1;
-		*gPtr++ = pos + 3;
-
-		*pPtr++ = pos;
-		*pPtr++ = pos + 2;
-		*pPtr++ = pos + 1;
-
-		*pPtr++ = pos + 3;
-		*pPtr++ = pos + 1;
-		*pPtr++ = pos + 2;
+		B3_GL_PINIT(pPtr,pos,  pos+2,pos+1);
+		B3_GL_PINIT(pPtr,pos+3,pos+1,pos+2);
 
 		glGridCount += 2;
 		glPolyCount += 2;
 	}
 	if (EndLines)
 	{
-		*gPtr++ = 0;
-		*gPtr++ = 1;
-
-		*gPtr++ = Overhead + Overhead;
-		*gPtr++ = Overhead + Overhead + 1;
+		B3_GL_LINIT(gPtr,0,1);
+		B3_GL_LINIT(gPtr,Overhead + Overhead,Overhead + Overhead + 1);
 
 		glGridCount += 2;
 	}
-#endif
 }
 
 void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound *info)

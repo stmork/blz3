@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.54  2002/08/15 13:56:43  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -351,47 +358,44 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef BLZ3_USE_OPENGL
-static GLushort box_grids[] =
+static b3_gl_line box_grids[] =
 {
-	0,1,
-	1,2,
-	2,3,
-	3,0,
-	7,6,
-	6,5,
-	5,4,
-	4,7,
-	0,7,
-	1,6,
-	2,5,
-	3,4
+	{ 0,1 },
+	{ 1,2 },
+	{ 2,3 },
+	{ 3,0 },
+	{ 7,6 },
+	{ 6,5 },
+	{ 5,4 },
+	{ 4,7 },
+	{ 0,7 },
+	{ 1,6 },
+	{ 2,5 },
+	{ 3,4 }
 };
 
-static GLushort box_polygons[] =
+static b3_gl_polygon box_polygons[] =
 {
-	 6, 7, 5, // top
-	 4, 5, 7,
-	 0, 1, 3, // bottom
-	 2, 3, 1,
-	13,12,10, // back
-	11,10,12,
-	 9, 8,14, // front
-	15,14, 8,
-	16,19,23, // right
-	20,23,19,
-	18,17,21, // left
-	22,21,17
+	{  6, 7, 5 }, // top
+	{  4, 5, 7 },
+	{  0, 1, 3 }, // bottom
+	{  2, 3, 1 },
+	{ 13,12,10 }, // back
+	{ 11,10,12 },
+	{  9, 8,14 }, // front
+	{ 15,14, 8 },
+	{ 16,19,23 }, // right
+	{ 20,23,19 },
+	{ 18,17,21 }, // left
+	{ 22,21,17 }
 };
 
-static GLfloat box_texcoord[] =
+static b3_f32 box_texcoord[] =
 {
 	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
 	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0,
 	0,0,  1,0,  1,1,  0,1,  0,1, 1,1,  1,0,  0,0
 };
-
-#endif
 
 /*************************************************************************
 **                                                                      **
@@ -401,20 +405,20 @@ static GLfloat box_texcoord[] =
 
 b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
 {
-#ifdef BLZ3_USE_OPENGL
 	m_CylinderIndices  = null;
 	m_CylinderPolygons = null;
 	m_ConeIndices      = null;
 	m_ConePolygons     = null;
-#endif
 	m_Between          = null;
 	b3InitSubdiv(new_subdiv);
 }
 
 void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 {
-	b3_f64   aux;
-	b3_index i;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_index       a,i;
+	b3_f64         aux;
 
 	m_SubDiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
 	if (m_SubDiv < 8)
@@ -429,20 +433,15 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		m_Cos[i] = cos(aux);
 	}
 
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	GLushort *pPtr;
-	b3_index  a;
-
 	b3Free(m_CylinderIndices);
 	b3Free(m_CylinderPolygons);
 	b3Free(m_ConeIndices);
 	b3Free(m_ConePolygons);
 
-	m_CylinderIndices  = (GLushort *)b3Alloc
-			((m_SubDiv + 1) * 3 * 2 * sizeof(GLushort));
-	m_CylinderPolygons = (GLushort *)b3Alloc
-			((m_SubDiv + 1) * 2 * 3 * sizeof(GLushort));
+	m_CylinderIndices  = (b3_gl_line *)b3Alloc
+			((m_SubDiv + 1) * 3 * sizeof(b3_gl_line));
+	m_CylinderPolygons = (b3_gl_polygon *)b3Alloc
+			((m_SubDiv + 1) * 2 * sizeof(b3_gl_polygon));
 	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
 	{
 		gPtr = m_CylinderIndices;
@@ -461,24 +460,12 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 			//   (b)
 
 			// (a)
-			*gPtr++ = a;
-			*gPtr++ = a + 1;
+			B3_GL_LINIT(gPtr,a,  a+1);  // (a)
+			B3_GL_LINIT(gPtr,a,  a+2);  // (b)
+			B3_GL_LINIT(gPtr,a+1,a+3);  // (c)
 
-			// (b)
-			*gPtr++ = a;
-			*gPtr++ = a + 2;
-
-			// (c)
-			*gPtr++ = a + 1;
-			*gPtr++ = a + 3;
-
-			*pPtr++ = a;
-			*pPtr++ = a + 2;
-			*pPtr++ = a + 1;
-
-			*pPtr++ = a + 3;
-			*pPtr++ = a + 1;
-			*pPtr++ = a + 2;
+			B3_GL_PINIT(pPtr,a,  a+2,a+1);
+			B3_GL_PINIT(pPtr,a+3,a+1,a+2);
 
 			a += 2;
 		}
@@ -488,32 +475,26 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
-	m_ConeIndices  = (GLushort *)b3Alloc
-		((m_SubDiv + 1) * 2 * 2 * sizeof(GLushort));
-	m_ConePolygons = (GLushort *)b3Alloc
-		((m_SubDiv + 1) * 1 * 3 * sizeof(GLushort));
+	m_ConeIndices  = (b3_gl_line *)b3Alloc
+		((m_SubDiv + 1) * 2 * sizeof(b3_gl_line));
+	m_ConePolygons = (b3_gl_polygon *)b3Alloc
+		((m_SubDiv + 1) * 1 * sizeof(b3_gl_polygon));
 	if ((m_ConeIndices != null) && (m_ConePolygons != null))
 	{
 		gPtr = m_ConeIndices;
 		pPtr = m_ConePolygons;
 		for (i = 0;i <= m_SubDiv;i++)
 		{
-			*gPtr++ = 0;
-			*gPtr++ = i+1;
+			B3_GL_LINIT(gPtr,0,  i+1);
+			B3_GL_LINIT(gPtr,i+1,i+2);
 
-			*gPtr++ = i+1;
-			*gPtr++ = i+2;
-
-			*pPtr++ = i+1;
-			*pPtr++ = i+2;
-			*pPtr++ =   0;
+			B3_GL_PINIT(pPtr,i+1,i+2,0);
 		}
 	}
 	else
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
-#endif
 }
 
 b3_count b3ShapeRenderContext::b3GetSubdiv()
@@ -531,28 +512,25 @@ b3_f64 *b3ShapeRenderContext::b3GetCosTable()
 	return m_Cos;
 }
 
-#ifdef BLZ3_USE_OPENGL
-GLushort *b3ShapeRenderContext::b3GetCylinderIndices()
+b3_gl_line *b3ShapeRenderContext::b3GetCylinderIndices()
 {
 	return m_CylinderIndices;
 }
 
-GLushort *b3ShapeRenderContext::b3GetCylinderPolygons()
+b3_gl_polygon *b3ShapeRenderContext::b3GetCylinderPolygons()
 {
 	return m_CylinderPolygons;
 }
 
-GLushort *b3ShapeRenderContext::b3GetConeIndices()
+b3_gl_line *b3ShapeRenderContext::b3GetConeIndices()
 {
 	return m_ConeIndices;
 }
 
-GLushort *b3ShapeRenderContext::b3GetConePolygons()
+b3_gl_polygon *b3ShapeRenderContext::b3GetConePolygons()
 {
 	return m_ConePolygons;
 }
-#endif
-
 
 /*************************************************************************
 **                                                                      **
@@ -808,8 +786,7 @@ b3_count b3ShapeRenderObject::b3GetIndexOverhead (
 
 #define no_USE_FIND_VERTEX
 
-#ifdef BLZ3_USE_OPENGL
-b3_index b3ShapeRenderObject::b3FindVertex(GLushort index)
+b3_index b3ShapeRenderObject::b3FindVertex(b3_index index)
 {
 #ifdef USE_FIND_VERTEX
 	b3_vector *point = &glVertex[index].v;
@@ -826,11 +803,9 @@ b3_index b3ShapeRenderObject::b3FindVertex(GLushort index)
 #endif
 	return index;
 }
-#endif
 
 void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 {
-#ifdef BLZ3_USE_OPENGL
 #ifdef USE_FIND_VERTEX
 	b3_vector normal;
 	b3_vector xDir,yDir;
@@ -875,7 +850,6 @@ void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 #else
 	b3RenderObject::b3ComputeNormals(normalize);
 #endif
-#endif
 }
 
 /*************************************************************************
@@ -888,14 +862,13 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector;
-	b3_index       i,j;
-	b3_count       Circles;
-	b3_f64         cx,sx,cy,sy,a;
-	b3_f64         LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f32         Rad;
-	b3_vector      Aux,Dir1,Dir2,Dir3;
+	b3_gl_vertex *Vector;
+	b3_index      i,j;
+	b3_count      Circles;
+	b3_f64        cx,sx,cy,sy,a;
+	b3_f64        LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f32        Rad;
+	b3_vector     Aux,Dir1,Dir2,Dir3;
 
 	Vector = glVertex;
 	Aux    = Base;
@@ -936,12 +909,10 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 			Vector++;
 		}
 	}
-#endif
  }
 
 void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_index i;
 
 	for (i = 0;i < glVertexCount;i++)
@@ -952,7 +923,6 @@ void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normali
 			b3Vector::b3Normalize(&glVertex[i].n);
 		}
 	}
-#endif
 }
 
 /*************************************************************************
@@ -967,12 +937,11 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_f64         sx,sy,b,h,start,end;
-	b3_index       i;
-	b3_count       iMax;
-	b3_vector      Bottom;
+	b3_gl_vertex *Vector = glVertex;
+	b3_f64        sx,sy,b,h,start,end;
+	b3_index      i;
+	b3_count      iMax;
+	b3_vector     Bottom;
 
 	h        = Limit.y2 - Limit.y1;
 	b        = Limit.y1;
@@ -1059,12 +1028,10 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		glVertexCount += 2;
 		xSize++;
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeCylinderIndices()
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
 
 	b3ComputeBound(&Limit);
@@ -1080,7 +1047,6 @@ void b3ShapeRenderObject::b3ComputeCylinderIndices()
 	}
 	glGridCount += Overhead * 3;
 	glPolyCount  = Overhead * 2;
-#endif
 }
 
 /*************************************************************************
@@ -1095,12 +1061,11 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_f64         sx,sy,b,h,d,a,start,end;
-	b3_index       i;
-	b3_count       iMax;
-	b3_vector      Bottom;
+	b3_gl_vertex *Vector = glVertex;
+	b3_f64        sx,sy,b,h,d,a,start,end;
+	b3_index      i;
+	b3_count      iMax;
+	b3_vector     Bottom;
 
 	d        = Limit.y2 - Limit.y1;
 	b        = Limit.y1;
@@ -1255,12 +1220,10 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 			xSize++;
 		}
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeConeIndices()
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
 
 	b3ComputeBound(&Limit);
@@ -1288,7 +1251,6 @@ void b3ShapeRenderObject::b3ComputeConeIndices()
 		glGridCount += Overhead * 2;
 		glPolyCount  = Overhead;
 	}
-#endif
 }
 
 /*************************************************************************
@@ -1303,13 +1265,12 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_index       i,j;
-	b3_count       iMax,Circles = 0;
-	b3_f64         RadX,RadY,sx,sy;
-	b3_f64         LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f32         start,end,a;
+	b3_gl_vertex *Vector = glVertex;
+	b3_index      i,j;
+	b3_count      iMax,Circles = 0;
+	b3_f64        RadX,RadY,sx,sy;
+	b3_f64        LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f32        start,end,a;
 
 	start  = (Limit.y1 + 1) * SinCosSteps * 0.25;
 	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
@@ -1410,18 +1371,16 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 		glVertexCount += Circles;
 		xSize++;
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	GLushort *pPtr;
-	b3_bool   EndLine = false;
-	b3_index  i,j,Number,s,ys,ye;
-	b3_count  Heights,Widths,Overhead;
-	b3_f64    y1,y2;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_bool        EndLine = false;
+	b3_index       i,j,Number,s,ys,ye;
+	b3_count       Heights,Widths,Overhead;
+	b3_f64         y1,y2;
 
 	glGridCount = 0;
 	glPolyCount = 0;
@@ -1451,10 +1410,10 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 	// Realloc buffers
 	b3RenderObject::b3Free(glGrids);
 	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 2 * sizeof(GLushort));
-	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 3 * sizeof(GLushort));
+	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_line));
+	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_polygon));
 	if ((gPtr == null) || (pPtr == null))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -1466,19 +1425,15 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 		for (j = 0;j < Heights;j++)
 		{
 			// This marks a longitude
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
 		glGridCount += Heights;
 
 		if (y1 <= epsilon)
 		{
 			// NOTE: j = 0 substitution
-			*pPtr++ = s + Heights + 2;
-			*pPtr++ = s + Heights + 1;
-			*pPtr++ = s + 1;
+			B3_GL_PINIT(pPtr,s + Heights + 2,s + Heights + 1,s + 1);
 			glPolyCount++;
-
 			j = 1;
 		}
 		else
@@ -1487,25 +1442,18 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 		}
 		while(j < Heights)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + Heights + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
 			glGridCount++;
 
-			*pPtr++ = s + j;
-			*pPtr++ = s + j + 1;
-			*pPtr++ = s + j + Heights + 1;
-
-			*pPtr++ = s + j + Heights + 2;
-			*pPtr++ = s + j + Heights + 1;
-			*pPtr++ = s + j + 1;
+			B3_GL_PINIT(pPtr,s+j,              s+j + 1,          s+j + Heights + 1);
+			B3_GL_PINIT(pPtr,s+j + Heights + 2,s+j + Heights + 1,s+j + 1);
 			glPolyCount += 2;
 			j++;
 		}
 
 		if ((SinCosSteps * 0.5 - y2) > epsilon)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + Heights + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
 			glGridCount++;
 
 			j++;
@@ -1517,14 +1465,12 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
 		glGridCount += Heights;
 	}
 
 	B3_ASSERT(glGridCount <= Number);
-#endif
 }
 
 /*************************************************************************
@@ -1539,8 +1485,7 @@ void b3ShapeRenderObject::b3ComputeBoxVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-#ifdef BLZ3_USE_OPENGL
-	GLfloat   *tex_coord = box_texcoord;
+	b3_f32    *tex_coord = box_texcoord;
 	b3_vector  Aux;
 	b3_index   i;
 
@@ -1599,15 +1544,12 @@ void b3ShapeRenderObject::b3ComputeBoxVertices(
 		glVertex[i +  8] =
 		glVertex[i + 16] = glVertex[i];
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeBoxIndices()
 {
-#ifdef BLZ3_USE_OPENGL
 	glGrids    = box_grids;
 	glPolygons = box_polygons;
-#endif
 }
 
 /*************************************************************************
@@ -1624,15 +1566,14 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 	b3_f64       aRad,
 	b3_f64       bRad)
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector;
-	b3_f64         start,end,a;
-	b3_f64         sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
-	b3_f64         sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
-	b3_f64         relTex[B3_MAX_RENDER_SUBDIV+1];
-	b3_index       i,j;
-	b3_count       iMax,Circles=0;
-	b3_vector      Aux;
+	b3_gl_vertex *Vector;
+	b3_f64        start,end,a;
+	b3_f64        sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64        sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64        relTex[B3_MAX_RENDER_SUBDIV+1];
+	b3_index      i,j;
+	b3_count      iMax,Circles=0;
+	b3_vector     Aux;
 
 	Vector = glVertex;
 	start  = Limit.y1 * SinCosSteps;
@@ -1749,28 +1690,24 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 		glVertexCount += Circles;
 		xSize++;
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeTorusNormals()
 {
-#ifdef BLZ3_USE_OPENGL
 	for (int i = 0;i < glVertexCount;i++)
 	{
 		b3Vector::b3Normalize(&glVertex[i].n);
 	}
-#endif
 }
 
 void b3ShapeRenderObject::b3ComputeTorusIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	GLushort *pPtr;
-	b3_bool   EndLine = false,EndCol = false;
-	b3_index  i,j,Number,s,ys,ye;
-	b3_count  Heights,Widths,Overhead;
-	b3_f64    y1,y2;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_bool        EndLine = false,EndCol = false;
+	b3_index       i,j,Number,s,ys,ye;
+	b3_count       Heights,Widths,Overhead;
+	b3_f64         y1,y2;
 
 	b3ComputeBound(&Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -1802,10 +1739,10 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 	glPolyCount = 0;
 	b3RenderObject::b3Free(glGrids);
 	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 2 * sizeof(GLushort));
-	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
-		(Number * 3 * sizeof(GLushort));
+	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_line));
+	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
+		(Number * sizeof(b3_gl_polygon));
 	if ((gPtr == null) || (pPtr == null))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -1816,25 +1753,18 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 
-			*pPtr++ = s + j;
-			*pPtr++ = s + j + 1;
-			*pPtr++ = s + j + Heights + 1;
-
-			*pPtr++ = s + j + Heights + 2;
-			*pPtr++ = s + j + Heights + 1;
-			*pPtr++ = s + j + 1;
+			B3_GL_PINIT(pPtr,s+j,              s+j + 1,          s+j + Heights + 1);
+			B3_GL_PINIT(pPtr,s+j + Heights + 2,s+j + Heights + 1,s+j + 1);
 		}
 		glGridCount += Heights;
 
 		for (j = 0;j < Widths;j++)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + Heights + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
 
-			glPolyCount += 2;
+//			glPolyCount += 2;
 		}
 		glGridCount += Widths;
 
@@ -1845,10 +1775,8 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*gPtr++ = s + j;
-			*gPtr++ = s + j + 1;
+			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
 		glGridCount += Heights;
 	}
-#endif
 }

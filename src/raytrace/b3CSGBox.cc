@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.16  2002/08/10 14:36:31  sm
 **      - Some shapes had cleared the vertex array whenever the
 **        b3AllocVertices() method were called. Without calling
@@ -126,22 +133,19 @@ b3CSGBox::b3CSGBox(b3_u32 *src) : b3CSGShape3(src)
 
 void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 {
-#ifdef BLZ3_USE_OPENGL
 	glVertex      = box_vertex;
 
 	glVertexCount = 24;
 	glGridCount   = 12;
 	glPolyCount   = 12;
-#endif
 }
 
 void b3CSGBox::b3FreeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
 	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
-#endif
+
 	b3FreeVertices();
 }
 

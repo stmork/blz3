@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.22  2002/08/10 14:36:31  sm
 **      - Some shapes had cleared the vertex array whenever the
 **        b3AllocVertices() method were called. Without calling
@@ -147,30 +154,27 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef BLZ3_USE_OPENGL
-static GLushort area_grids[] =
+static b3_gl_line area_grids[] =
 {
-	0,1,
-	1,2,
-	2,3,
-	3,0
+	{ 0,1 },
+	{ 1,2 },
+	{ 2,3 },
+	{ 3,0 }
 };
 
-static GLushort area_polygons[] =
+static b3_gl_polygon area_polygons[] =
 {
-	0,3,1,
-	2,1,3
+	{ 0,3,1 },
+	{ 2,1,3 }
 };
 
-static GLfloat area_texcoord[] =
+static b3_f32 area_texcoord[] =
 {
 	0,0,
 	0,1,
 	1,1,
 	1,0
 };
-
-#endif
 
 b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 {
@@ -182,7 +186,6 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 
 void b3Area::b3AllocVertices(b3RenderContext *context)
 {
-#ifdef BLZ3_USE_OPENGL
 	glVertex   = area_vertex;
 	glGrids    = area_grids;
 	glPolygons = area_polygons;
@@ -190,24 +193,20 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 	glVertexCount = 4;
 	glGridCount   = 4;
 	glPolyCount   = 2;
-#endif
 }
 
 void b3Area::b3FreeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
 	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
-#endif
 	b3FreeVertices();
 }
 
 void b3Area::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_f32         x1,y1,x2,y2;
+	b3_gl_vertex *Vector = glVertex;
+	b3_f32        x1,y1,x2,y2;
 
 	x1 = Limit.x1;
 	y1 = Limit.y1;
@@ -217,34 +216,33 @@ void b3Area::b3ComputeVertices()
 	// Setup world coordinates
 	Vector->t.s = area_texcoord[0];
 	Vector->t.t = area_texcoord[1];
-	Vector->v.x = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
-	Vector->v.y = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
-	Vector->v.z = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
+	Vector->v.x = (b3_f32)(m_Base.x + x1 * m_Dir1.x + y1 * m_Dir2.x);
+	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y1 * m_Dir2.y);
+	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y1 * m_Dir2.z);
 	Vector++;
 															 
 	Vector->t.s = area_texcoord[2];
 	Vector->t.t = area_texcoord[3];
-	Vector->v.x = (GLfloat)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
-	Vector->v.y = (GLfloat)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
-	Vector->v.z = (GLfloat)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
+	Vector->v.x = (b3_f32)(m_Base.x + x1 * m_Dir1.x + y2 * m_Dir2.x);
+	Vector->v.y = (b3_f32)(m_Base.y + x1 * m_Dir1.y + y2 * m_Dir2.y);
+	Vector->v.z = (b3_f32)(m_Base.z + x1 * m_Dir1.z + y2 * m_Dir2.z);
 	Vector++;
 	
 	Vector->t.s = area_texcoord[4];
 	Vector->t.t = area_texcoord[5];
-	Vector->v.x = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
-	Vector->v.y = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
-	Vector->v.z = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
+	Vector->v.x = (b3_f32)(m_Base.x + x2 * m_Dir1.x + y2 * m_Dir2.x);
+	Vector->v.y = (b3_f32)(m_Base.y + x2 * m_Dir1.y + y2 * m_Dir2.y);
+	Vector->v.z = (b3_f32)(m_Base.z + x2 * m_Dir1.z + y2 * m_Dir2.z);
 	Vector++;
 
 	Vector->t.s = area_texcoord[6];
 	Vector->t.t = area_texcoord[7];
-	Vector->v.x = (GLfloat)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
-	Vector->v.y = (GLfloat)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
-	Vector->v.z = (GLfloat)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
+	Vector->v.x = (b3_f32)(m_Base.x + x2 * m_Dir1.x + y1 * m_Dir2.x);
+	Vector->v.y = (b3_f32)(m_Base.y + x2 * m_Dir1.y + y1 * m_Dir2.y);
+	Vector->v.z = (b3_f32)(m_Base.z + x2 * m_Dir1.z + y1 * m_Dir2.z);
 
 	xSize = 1;
 	ySize = 1;
-#endif
 }
 
 void b3Area::b3ComputeIndices()

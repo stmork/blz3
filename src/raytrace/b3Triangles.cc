@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/08/16 11:40:39  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.8  2002/07/29 14:48:11  sm
 **      - Circled shapes like cylinder, doughnuts etc. draw
 **        textures correctly but renders shading a little bit
@@ -247,10 +254,9 @@ void b3Triangles::b3GetCount(
 
 void b3Triangles::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector;
-	b3_vertex     *Vertex;
-	b3_index       i;
+	b3_gl_vertex *Vector;
+	b3_vertex    *Vertex;
+	b3_index      i;
 
 	Vertex        = m_Vertices;
 	Vector        = glVertex;
@@ -287,7 +293,6 @@ void b3Triangles::b3ComputeVertices()
 			fy += fyStep;
 		}
 	}
-#endif
 }
 
 void b3Triangles::b3ComputeNormals(b3_bool normalize)
@@ -297,12 +302,12 @@ void b3Triangles::b3ComputeNormals(b3_bool normalize)
 
 void b3Triangles::b3ComputeIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort    *gPtr;
-	GLushort    *pPtr;
-	b3_triangle *Triangle;
-	b3_vertex   *Vertex;
-	b3_count     i;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_triangle   *Triangle;
+	b3_vertex     *Vertex;
+	b3_count       i;
+	b3_u16         p1,p2,p3;
 
 	Vertex   = m_Vertices;
 	Triangle = m_Triangles;
@@ -310,22 +315,17 @@ void b3Triangles::b3ComputeIndices()
 	pPtr     = glPolygons;
 	for (i = 0;i < m_TriaCount;i++)
 	{
-		*gPtr++ = (unsigned short)Triangle->P1;
-		*gPtr++ = (unsigned short)Triangle->P2;
-
-		*gPtr++ = (unsigned short)Triangle->P2;
-		*gPtr++ = (unsigned short)Triangle->P3;
-
-		*gPtr++ = (unsigned short)Triangle->P3;
-		*gPtr++ = (unsigned short)Triangle->P1;
-
-		*pPtr++ = (unsigned short)Triangle->P1;
-		*pPtr++ = (unsigned short)Triangle->P2;
-		*pPtr++ = (unsigned short)Triangle->P3;
-
+		p1 = (b3_u16)Triangle->P1;
+		p2 = (b3_u16)Triangle->P2;
+		p3 = (b3_u16)Triangle->P3;
 		Triangle++;
+		
+		B3_GL_LINIT(gPtr,p1,p2);
+		B3_GL_LINIT(gPtr,p2,p3);
+		B3_GL_LINIT(gPtr,p3,p1);
+		
+		B3_GL_PINIT(pPtr,p1,p2,p3);
 	}
 	glGridCount = m_TriaCount * 3;
 	glPolyCount = m_TriaCount;
-#endif
 }

@@ -123,7 +123,7 @@ public:
 /*
 ** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));
 */
-struct b3_tnv_vertex
+struct b3_gl_vertex
 {
 	struct
 	{
@@ -133,18 +133,39 @@ struct b3_tnv_vertex
 	b3_vector v;
 };
 
+struct b3_gl_line
+{
+#ifdef BLZ3_USE_OPENGL
+	GLushort a,b;
+#else
+	b3_u16   a,b;
+#endif
+};
+
+struct b3_gl_polygon
+{
+#ifdef BLZ3_USE_OPENGL
+	GLushort a,b,c;
+#else
+	b3_u16   a,b,c;
+#endif
+};
+
+#define B3_GL_LINIT(l,ai,bi)    { (l)->a = (ai); (l)->b = (bi); (l)++; }
+#define B3_GL_PINIT(p,ai,bi,ci) { (p)->a = (ai); (p)->b = (bi); (p)->c = (ci); (p)++; }
+
 class b3RenderObject : public b3Mem
 {
 protected:
 	b3_count         glVertexCount;
 	b3_count         glGridCount;
 	b3_count         glPolyCount;
-#ifdef BLZ3_USE_OPENGL
 	b3_bool          glComputed;
-	b3_tnv_vertex   *glVertex;
-	GLushort        *glGrids;
-	GLushort        *glPolygons;
+	b3_gl_vertex    *glVertex;
+	b3_gl_line      *glGrids;
+	b3_gl_polygon   *glPolygons;
 
+#ifdef BLZ3_USE_OPENGL
 	// Some material values
 	b3_bool          glMaterialComputed;
 	GLfloat          glAmbient[4];

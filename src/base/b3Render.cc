@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.54  2002/08/15 13:56:43  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -328,6 +335,12 @@
 **                                                                      **
 *************************************************************************/
 
+static b3_vector light0_position =
+{
+	1000.0f,-2500.0f,2000.0f
+};
+
+#ifdef BLZ3_USE_OPENGL
 static b3_color world_ambient =
 {
 	0.0f,0.25f,0.25f,0.25f
@@ -348,12 +361,6 @@ static b3_color light0_specular =
 	0.0f,1.0f,1.0f,1.0f
 };
 
-static b3_vector light0_position =
-{
-	1000.0f,-2500.0f,2000.0f
-};
-
-#ifdef BLZ3_USE_OPENGL
 static GLint light_num[] =
 {
 	GL_LIGHT0,
@@ -694,7 +701,6 @@ b3RenderObject::b3RenderObject()
 	glGridCount   = 0;
 	glPolyCount   = 0;
 
-#ifdef BLZ3_USE_OPENGL
 	glVertex      = null;
 	glGrids       = null;
 	glPolygons    = null;
@@ -702,6 +708,7 @@ b3RenderObject::b3RenderObject()
 	b3Recompute();
 	b3RecomputeMaterial();
 
+#ifdef BLZ3_USE_OPENGL
 	glTextureId    = 0;
 	glTextureData  = null;
 	glTextureSize  = 0;
@@ -741,14 +748,11 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 
 void b3RenderObject::b3Recompute()
 {
-#ifdef BLZ3_USE_OPENGL
 	glComputed = false;
-#endif
 }
 
 void b3RenderObject::b3Update()
 {
-#ifdef BLZ3_USE_OPENGL
 	if (!glComputed)
 	{
 		b3ComputeIndices();
@@ -756,12 +760,10 @@ void b3RenderObject::b3Update()
 		b3ComputeNormals();
 		glComputed = true;
 	}
-#endif
 }
 
 void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_count new_vertCount = 0;
 	b3_count new_gridCount = 0;
 	b3_count new_polyCount = 0;
@@ -776,7 +778,7 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 		if (glVertexCount > 0)
 		{
-			glVertex = (b3_tnv_vertex *)b3Alloc(glVertexCount * sizeof(b3_tnv_vertex));
+			glVertex = (b3_gl_vertex *)b3Alloc(glVertexCount * sizeof(b3_gl_vertex));
 		}
 		glComputed = false;
 	}
@@ -789,7 +791,7 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 		if (glGridCount > 0)
 		{
-			glGrids = (GLushort *)b3Alloc(glGridCount   * 2 * sizeof(GLushort));
+			glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
 		}
 		glComputed = false;
 	}
@@ -802,23 +804,20 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 		if (glPolyCount > 0)
 		{
-			glPolygons = (GLushort *)b3Alloc(glPolyCount   * 3 * sizeof(GLushort));
+			glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
 		}
 		glComputed = false;
 	}
-#endif
 }
 
 void b3RenderObject::b3FreeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
 	b3Free(glVertex);
 	b3Free(glGrids);
 	b3Free(glPolygons);
-	glVertex   = null;
-	glGrids    = null;
-	glPolygons = null;
-#endif
+	glVertex      = null;
+	glGrids       = null;
+	glPolygons    = null;
 	glVertexCount = 0;
 	glGridCount   = 0;
 	glPolyCount   = 0;
@@ -834,7 +833,6 @@ void b3RenderObject::b3ComputeIndices()
 
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_vector normal;
 	b3_vector xDir,yDir;
 	b3_index  i,k,v1,v2,v3,start,end;
@@ -851,9 +849,10 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	// Collect normals
 	for (i = k = 0;i < glPolyCount;i++)
 	{
-		v1 = glPolygons[k++];
-		v2 = glPolygons[k++];
-		v3 = glPolygons[k++];
+		v1 = glPolygons[k].a;
+		v2 = glPolygons[k].b;
+		v3 = glPolygons[k].c;
+		k++;
 
 		// Do some semantic checks
 		B3_ASSERT((start <= v1) && (v1 < end));
@@ -879,22 +878,18 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 			b3Vector::b3Normalize(&glVertex[i].n);
 		}
 	}
-#endif
 }
 
 void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 {
-#ifdef BLZ3_USE_OPENGL
 	start = 0;
 	end   = glVertexCount;
-#endif
 }
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
-	b3_bool        result = false;
-#ifdef BLZ3_USE_OPENGL
-	b3_index       i,start,end;
+	b3_bool  result = false;
+	b3_index i,start,end;
 
 	b3Update();
 	if (glComputed && (glVertex != null) && (glVertexCount > 0))
@@ -914,7 +909,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 		}
 		result = true;
 	}
-#endif
+
 	return result;
 }
 
@@ -922,7 +917,6 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix *transformation,
 	b3_bool    is_affine)
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_count i;
 
 	if (glVertex != null)
@@ -944,7 +938,6 @@ void b3RenderObject::b3TransformVertices(
 			b3ComputeNormals();
 		}
 	}
-#endif
 }
 
 /*************************************************************************
@@ -1290,10 +1283,11 @@ void b3RenderObject::b3CreateImage(
 
 void b3RenderObject::b3Draw(b3RenderContext *context)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_render_mode render_mode = b3GetRenderMode();
 	b3_color       diffuse;
+#endif
 
-#ifdef BLZ3_USE_OPENGL
 	b3Update();
 	b3UpdateMaterial();
 #ifdef _DEBUG
@@ -1356,6 +1350,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 	}
 #endif
 
+#ifdef BLZ3_USE_OPENGL
 	switch (render_mode)
 	{
 	case B3_RENDER_NOTHING:

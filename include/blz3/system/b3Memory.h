@@ -71,6 +71,7 @@ public:
 		if (node == null)
 		{
 #ifndef _DEBUG
+			b3PrintF(B3LOG_NORMAL,"Tried to allocate %d bytes\n",size);
 			B3_THROW(b3MemException,B3_MEM_MEMORY);
 #else
 			return null;

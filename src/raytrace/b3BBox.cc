@@ -32,13 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2002/08/16 11:40:38  sm
+**	- Changed vertex handling for use without OpenGL. Vertex computation
+**	  is needed for bound computation which is needed for animation. There
+**	  are still some problems so we have to work further on Windows for
+**	  better debugging.
+**	- b3ExtractExt searches from right instead from left.
+**
 **	Revision 1.64  2002/08/10 14:36:31  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling
 **	  b3Recomute() the shapes disoccured.
 **	- Some methods moved as static methods into the
 **	  b3Mem class.
-**
+**	
 **	Revision 1.63  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -348,23 +355,21 @@
 **                                                                      **
 *************************************************************************/
 
-#ifdef BLZ3_USE_OPENGL
-static GLushort bbox_indices[12 * 2] =
+static b3_gl_line bbox_indices[12 * 2] =
 {
-	0,1,
-	1,2,
-	2,3,
-	3,0,
-	4,5,
-	5,6,
-	6,7,
-	7,4,
-	0,4,
-	1,5,
-	2,6,
-	3,7
+	{ 0,1 },
+	{ 1,2 },
+	{ 2,3 },
+	{ 3,0 },
+	{ 4,5 },
+	{ 5,6 },
+	{ 6,7 },
+	{ 7,4 },
+	{ 0,4 },
+	{ 1,5 },
+	{ 2,6 },
+	{ 3,7 }
 };
-#endif
 
 void b3InitBBox::b3Init()
 {
@@ -591,11 +596,9 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	glGridCount   = 12;
 	glPolyCount   =  0;
 
-#ifdef BLZ3_USE_OPENGL
 	glVertex   = bbox_vertex;
 	glGrids    = bbox_indices;
 	glPolygons = null;
-#endif
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
@@ -617,11 +620,9 @@ void b3BBox::b3FreeVertices()
 	b3BBox              *bbox;
 	b3ShapeRenderObject *shape;
 
-#ifdef BLZ3_USE_OPENGL
 	glVertex   = null;
 	glGrids    = null;
 	glPolygons = null;
-#endif
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
@@ -640,7 +641,6 @@ void b3BBox::b3FreeVertices()
 
 void b3BBox::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
 	bbox_vertex[0].v.x = m_DimBase.x;
 	bbox_vertex[0].v.y = m_DimBase.y;
 	bbox_vertex[0].v.z = m_DimBase.z;
@@ -675,7 +675,6 @@ void b3BBox::b3ComputeVertices()
 
 	glVertexCount = 8;
 	glComputed    = true;
-#endif
 }
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2002/08/16 11:40:39  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.40  2002/08/15 13:56:44  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -350,7 +357,6 @@ void b3SplineShape::b3GetCount(
 	b3_count        &polyCount)
 {
 	// Compute number of grid vertices
-#ifdef BLZ3_USE_OPENGL
 	m_GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
 
 	// Compute number of solid vertices. That
@@ -368,18 +374,16 @@ void b3SplineShape::b3GetCount(
 		B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]) * m_Spline[0].subdiv +
 		B3_BSPLINE_SEGMENTKNOTS(&m_Spline[0]) * m_Spline[1].subdiv;
 	polyCount = m_Spline[0].subdiv * m_Spline[1].subdiv * 2;
-#endif
 }
 
 void b3SplineShape::b3ComputeGridVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex *Vector = glVertex;
-	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
-	b3_vector      Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
-	b3_count       CurveNum,Points = 0;
-	b3_index       x,y,t;
-	b3Spline       MySpline;
+	b3_gl_vertex *Vector = glVertex;
+	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
+	b3_vector     Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
+	b3_count      CurveNum,Points = 0;
+	b3_index      x,y,t;
+	b3Spline      MySpline;
 
 	m_Spline[0].controls =  m_Controls;
 	m_Spline[1].controls =  m_Controls;
@@ -425,21 +429,19 @@ void b3SplineShape::b3ComputeGridVertices()
 			Vector++;
 		}
 	}
-#endif
 }
 
 void b3SplineShape::b3ComputeSolidVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3Spline       MySpline;
-	b3_index       x,y;
-	b3_f64         fx,fxStep;
-	b3_f64         fy,fyStep;
-	b3_count       SubDiv,index,count;
-	b3_tnv_vertex *Vector;
-	b3_vector     *Aux;
-	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
-	b3_vector      Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
+	b3Spline      MySpline;
+	b3_index      x,y;
+	b3_f64        fx,fxStep;
+	b3_f64        fy,fyStep;
+	b3_count      SubDiv,index,count;
+	b3_gl_vertex *Vector;
+	b3_vector    *Aux;
+	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
+	b3_vector     Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
 
 	// Building horizontal BSplines
 	Aux    = Between;
@@ -478,23 +480,19 @@ void b3SplineShape::b3ComputeSolidVertices()
 		fy += fyStep;
 	}
 	B3_ASSERT(index <= m_SolidVertexCount);
-#endif
 }
 
 void b3SplineShape::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
 	if (m_GridVertexCount  > 0) b3ComputeGridVertices();
 	if (m_SolidVertexCount > 0) b3ComputeSolidVertices();
-#endif
 }
 
 void b3SplineShape::b3ComputeGridIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	b3_index  x,y,i=0;
-	b3_count  max;
+	b3_gl_line *gPtr;
+	b3_index    x,y,i=0;
+	b3_count    max;
 
 	// horizontal splines
 	gPtr = glGrids;
@@ -503,12 +501,10 @@ void b3SplineShape::b3ComputeGridIndices()
 	{
 		for (x = 1;x < m_Spline[0].subdiv;x++)
 		{
-			*gPtr++ = i + x - 1;
-			*gPtr++ = i + x;
+			B3_GL_LINIT(gPtr,i+x-1,i+x);
 		}
 
-		*gPtr++ = i + x - 1;
-		*gPtr++ = (m_Spline[0].closed ? i : i + x);
+		B3_GL_LINIT(gPtr,i+x-1,m_Spline[0].closed ? i : i + x);
 
 		i += (m_Spline[0].subdiv + 1);
 	}
@@ -519,26 +515,22 @@ void b3SplineShape::b3ComputeGridIndices()
 	{
 		for (y = 1;y < m_Spline[1].subdiv;y++)
 		{
-			*gPtr++ = i + y - 1;
-			*gPtr++ = i + y;
+			B3_GL_LINIT(gPtr,i+y-1,i+y);
 		}
 
-		*gPtr++ = i + y - 1;
-		*gPtr++ = (m_Spline[1].closed ? i : i + y);
+		B3_GL_LINIT(gPtr,i+y-1,m_Spline[1].closed ? i : i + y);
 
 		i += (m_Spline[1].subdiv + 1);
 		
 	}
-#endif
 }
 
 void b3SplineShape::b3ComputeSolidIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort   *pPtr;
-	b3_index    x,y;
-	b3_count    xSubDiv = m_Spline[0].subdiv,xModulo,xOffset;
-	b3_count    ySubDiv = m_Spline[1].subdiv,yModulo;
+	b3_gl_polygon *pPtr;
+	b3_index       x,y;
+	b3_count       xSubDiv = m_Spline[0].subdiv,xModulo,xOffset;
+	b3_count       ySubDiv = m_Spline[1].subdiv,yModulo;
 
 	pPtr = glPolygons;
 	xModulo = m_Spline[0].closed ? xSubDiv : xSubDiv + 1;
@@ -548,17 +540,18 @@ void b3SplineShape::b3ComputeSolidIndices()
 	{
 		for (x = 0;x < xSubDiv;x++)
 		{
-			*pPtr++ = m_GridVertexCount +  x              + xOffset *   y;
-			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset *   y;
-			*pPtr++ = m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo);
+			B3_GL_PINIT(pPtr,
+				m_GridVertexCount +  x              + xOffset *   y,
+				m_GridVertexCount + (x+1) % xModulo + xOffset *   y,
+				m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo));
 
-			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset * ((y+1) % yModulo);
-			*pPtr++ = m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo);
-			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset *   y;
+			B3_GL_PINIT(pPtr,
+				m_GridVertexCount + (x+1) % xModulo + xOffset * ((y+1) % yModulo),
+				m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo),
+				m_GridVertexCount + (x+1) % xModulo + xOffset *   y);
 		}
 	}
 	glPolyCount = xSubDiv * ySubDiv * 2;
-#endif
 }
 
 void b3SplineShape::b3ComputeIndices()
@@ -569,10 +562,8 @@ void b3SplineShape::b3ComputeIndices()
 
 void b3SplineShape::b3GetVertexRange(b3_index &start,b3_index &end)
 {
-#ifdef BLZ3_USE_OPENGL
 	start = m_GridVertexCount;
 	end   = m_GridVertexCount + m_ySubDiv * (m_Spline[0].subdiv + 1);
-#endif
 }
 
 #ifdef GLU_NURBS

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2002/08/16 11:40:39  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.18  2002/08/15 13:56:43  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -320,16 +327,15 @@ void b3SplineRotShape::b3GetCount(
 
 void b3SplineRotShape::b3ComputeVertices()
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_matrix      Matrix;
-	b3Spline       AuxSpline;
-	b3_vector      AuxControls[B3_MAX_CONTROLS + 1];
-	b3_vector      SplVector[B3_MAX_SUBDIV + 1];
-	b3_tnv_vertex *Vector;
-	b3_index       i,a,x;
-	b3_count       count;
-	b3_f64         fx,fxStep;
-	b3_f64         fy,fyStep;
+	b3_matrix     Matrix;
+	b3Spline      AuxSpline;
+	b3_vector     AuxControls[B3_MAX_CONTROLS + 1];
+	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
+	b3_gl_vertex *Vector;
+	b3_index      i,a,x;
+	b3_count      count;
+	b3_f64        fx,fxStep;
+	b3_f64        fy,fyStep;
 
 	// Build rotation matrix
 	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / m_rSubDiv);
@@ -373,17 +379,15 @@ void b3SplineRotShape::b3ComputeVertices()
 
 	xSize  = m_rSubDiv;
 	ySize  = AuxSpline.subdiv;
-#endif
 }
 
 void b3SplineRotShape::b3ComputeIndices()
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *gPtr;
-	GLushort *pPtr;
-	b3_index   a,x1,x2,y1,y2;
-	b3_count   yStep;
-	b3_f64     sStep;
+	b3_gl_line    *gPtr;
+	b3_gl_polygon *pPtr;
+	b3_index       a,x1,x2,y1,y2;
+	b3_count       yStep;
+	b3_f64         sStep;
 
 	yStep = m_Spline.subdiv + 1;
 	sStep = (b3_f64)m_Spline.subdiv / m_rSubDiv;
@@ -402,25 +406,17 @@ void b3SplineRotShape::b3ComputeIndices()
 		{
 			y2 = (y1 + 1) % m_ySubDiv;
 
-			*gPtr++ = x1 + y1;
-			*gPtr++ = x1 + y2;
+			B3_GL_LINIT(gPtr,x1+y1,x1+y2);
 
-			*pPtr++ = x1 + y1;
-			*pPtr++ = x2 + y1;
-			*pPtr++ = x1 + y2;
-
-			*pPtr++ = x2 + y2;
-			*pPtr++ = x1 + y2;
-			*pPtr++ = x2 + y1;
+			B3_GL_PINIT(pPtr,x1+y1,x2+y1,x1+y2);
+			B3_GL_PINIT(pPtr,x2+y2,x1+y2,x2+y1);
 		}
 
 		// lines between curves
 		for (y1 = 0;y1 < m_ySubDiv;y1++)
 		{
-			*gPtr++ = x1 + y1;
-			*gPtr++ = x2 + y1;
+			B3_GL_LINIT(gPtr,x1+y1,x2+y1);
 		}
 		x1 += yStep;
 	}
-#endif
 }

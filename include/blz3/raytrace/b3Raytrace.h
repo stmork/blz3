@@ -875,30 +875,26 @@ protected:
 
 class b3ShapeRenderContext : public b3RenderContext
 {
-	b3_count   m_SubDiv;
-	b3_f64     m_Sin[B3_MAX_RENDER_SUBDIV + 1];
-	b3_f64     m_Cos[B3_MAX_RENDER_SUBDIV + 1];
-	b3_vector *m_Between;
-#ifdef BLZ3_USE_OPENGL
-	GLushort  *m_CylinderIndices;
-	GLushort  *m_CylinderPolygons;
-	GLushort  *m_ConeIndices;
-	GLushort  *m_ConePolygons;
-#endif
+	b3_count       m_SubDiv;
+	b3_f64         m_Sin[B3_MAX_RENDER_SUBDIV + 1];
+	b3_f64         m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+	b3_vector     *m_Between;
+	b3_gl_line    *m_CylinderIndices;
+	b3_gl_polygon *m_CylinderPolygons;
+	b3_gl_line    *m_ConeIndices;
+	b3_gl_polygon *m_ConePolygons;
 
 public:
-	           b3ShapeRenderContext(b3_count subdiv = 16);
-	void       b3InitSubdiv(b3_count subdiv);
-	b3_count   b3GetSubdiv();
-	b3_f64    *b3GetCosTable();
-	b3_f64    *b3GetSinTable();
+	               b3ShapeRenderContext(b3_count subdiv = 16);
+	void           b3InitSubdiv(b3_count subdiv);
+	b3_count       b3GetSubdiv();
+	b3_f64        *b3GetCosTable();
+	b3_f64        *b3GetSinTable();
 
-#ifdef BLZ3_USE_OPENGL
-	GLushort  *b3GetCylinderIndices();
-	GLushort  *b3GetCylinderPolygons();
-	GLushort  *b3GetConeIndices();
-	GLushort  *b3GetConePolygons();
-#endif
+	b3_gl_line    *b3GetCylinderIndices();
+	b3_gl_polygon *b3GetCylinderPolygons();
+	b3_gl_line    *b3GetConeIndices();
+	b3_gl_polygon *b3GetConePolygons();
 };
 
 // same structure entries for all shapes
@@ -939,17 +935,14 @@ class b3ShapeRenderObject : public b3Shape, public b3RenderObject
 protected:
 	b3_count           xSize,ySize;
 	b3_count           SinCosSteps;
-//	b3_vector         *Between;
 	b3_f64            *Cos;
 	b3_f64            *Sin;
 	b3_stencil_limit   Limit;
 
-#ifdef BLZ3_USE_OPENGL
-	GLushort          *GridsCyl;
-	GLushort          *PolysCyl;
-	GLushort          *GridsCone;
-	GLushort          *PolysCone;
-#endif
+	b3_gl_line        *GridsCyl;
+	b3_gl_polygon     *PolysCyl;
+	b3_gl_line        *GridsCone;
+	b3_gl_polygon     *PolysCone;
 
 protected:
 	b3ShapeRenderObject(b3_size class_size,b3_u32 class_type);
@@ -1019,9 +1012,7 @@ protected:
 	void            b3ComputeTorusIndices();
 
 private:
-#ifdef BLZ3_USE_OPENGL
-	b3_index        b3FindVertex(GLushort vIndex);
-#endif
+	b3_index        b3FindVertex(b3_index vIndex);
 };
 
 class b3SimpleShape : public b3ShapeRenderObject
@@ -1093,9 +1084,7 @@ public:
 
 class b3Area : public b3Shape2
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex  area_vertex[4];
-#endif
+	b3_gl_vertex  area_vertex[4];
 
 public:
 	B3_ITEM_INIT(b3Area);
@@ -1183,9 +1172,7 @@ public:
 
 class b3Box : public b3Shape3
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex  box_vertex[8 * 3];
-#endif
+	b3_gl_vertex  box_vertex[8 * 3];
 
 public:
 	B3_ITEM_INIT(b3Box);
@@ -1348,10 +1335,8 @@ class b3SplineShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv,m_ySubDiv;
 protected:
-#ifdef BLZ3_USE_OPENGL
 	b3_count         m_GridVertexCount;
 	b3_count         m_SolidVertexCount;
-#endif
 	
 public:
 	b3Spline         m_Spline[2];
@@ -1577,9 +1562,7 @@ public:
 
 class b3CSGBox : public b3CSGShape3
 {
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex  box_vertex[8 * 3];
-#endif
+	b3_gl_vertex  box_vertex[8 * 3];
 
 public:
 	B3_ITEM_INIT(b3CSGBox);
@@ -1652,9 +1635,7 @@ public:
 	char             m_BoxName[B3_BOXSTRINGLEN];   // object name
 	char             m_BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
-#ifdef BLZ3_USE_OPENGL
-	b3_tnv_vertex    bbox_vertex[8];
-#endif
+	b3_gl_vertex    bbox_vertex[8];
 
 public:
 	B3_ITEM_INIT(b3BBox);

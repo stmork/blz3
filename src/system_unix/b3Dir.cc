@@ -34,13 +34,20 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/08/16 11:40:39  sm
+**	- Changed vertex handling for use without OpenGL. Vertex computation
+**	  is needed for bound computation which is needed for animation. There
+**	  are still some problems so we have to work further on Windows for
+**	  better debugging.
+**	- b3ExtractExt searches from right instead from left.
+**
 **	Revision 1.12  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.11  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -474,7 +481,7 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 
 	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
-	for (i = 0;i < len;i++)
+	for (i = len - 1;i >= 0;i--)
 	{
 		if (actName[i] == '.')
 		{

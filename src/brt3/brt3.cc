@@ -36,12 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/08/16 11:40:38  sm
+**	- Changed vertex handling for use without OpenGL. Vertex computation
+**	  is needed for bound computation which is needed for animation. There
+**	  are still some problems so we have to work further on Windows for
+**	  better debugging.
+**	- b3ExtractExt searches from right instead from left.
+**
 **	Revision 1.25  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.24  2002/08/05 17:42:58  sm
 **	- Displaying brt3 options.
 **	- Clearing XBuffer which displayed garbage from previous X applications
@@ -220,6 +227,8 @@ int main(int argc,char *argv[])
 	b3Scene      *scene;
 	b3CameraPart *camera;
 	b3Display    *display;
+	b3RenderContext  context;
+	b3_vector        lower,upper;
 	char         *picture_home = getenv("BLZ3_PICTURES");
 	char         *HOME         = getenv("HOME");
 	b3_index      i;
@@ -272,9 +281,9 @@ int main(int argc,char *argv[])
 					     item  = scene->Succ)
 					{
 						scene = (b3Scene *)item;
-#ifdef BLZ3_USE_OPENGL
 						scene->b3Reorg();
-#endif
+						scene->b3AllocVertices(&context);
+						scene->b3ComputeBounds(&lower,&upper);
 						scene->b3SetFilename(argv[i]);
 
 						display = b3AllocDisplay(scene,force_no_display);
@@ -285,7 +294,7 @@ int main(int argc,char *argv[])
 								scene->b3GetTitle(camera_name);
 								if (camera->m_Flags & CAMERA_ACTIVE)
 								{
-								b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
+									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 										camera->m_CameraName);
 									scene->b3SetCamera(camera);
 									scene->b3Raytrace(display);

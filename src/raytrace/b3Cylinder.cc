@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/08/16 11:40:38  sm
+**      - Changed vertex handling for use without OpenGL. Vertex computation
+**        is needed for bound computation which is needed for animation. There
+**        are still some problems so we have to work further on Windows for
+**        better debugging.
+**      - b3ExtractExt searches from right instead from left.
+**
 **      Revision 1.12  2002/02/28 16:58:46  sm
 **      - Added torus dialogs.
 **      - Fixed material and stencil handling when not activating
@@ -130,10 +137,8 @@ void b3Cylinder::b3AllocVertices(b3RenderContext *ctx)
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	b3RenderObject::b3AllocVertices(context);
-#ifdef BLZ3_USE_OPENGL
 	glGrids    = context->b3GetCylinderIndices();
 	glPolygons = context->b3GetCylinderPolygons();
-#endif
 }
 
 void b3Cylinder::b3ComputeVertices()
