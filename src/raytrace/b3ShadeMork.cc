@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/05/23 20:52:34  sm
+**	- Done some Fresnel formula experiments.
+**
 **	Revision 1.29  2004/05/23 15:04:19  sm
 **	- Some optimizations
-**
+**	
 **	Revision 1.28  2004/05/23 13:51:14  sm
 **	- Some shader cleanups
 **	
@@ -312,13 +315,13 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.m_SpecularSum;
 	}
 
-	if (refl > 0)
-	{
-		ray->color += (surface.refl_ray.color * refl);
-	}
-
 	if (refr > 0)
 	{
 		ray->color += (surface.refr_ray.color * refr);
+	}
+
+	if (refl > 0)
+	{
+		ray->color += (surface.refl_ray.color * refl);
 	}
 }

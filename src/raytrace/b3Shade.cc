@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2004/05/23 20:52:34  sm
+**	- Done some Fresnel formula experiments.
+**
 **	Revision 1.40  2004/05/23 15:04:19  sm
 **	- Some optimizations
-**
+**	
 **	Revision 1.39  2004/05/23 13:51:14  sm
 **	- Some shader cleanups
 **	
@@ -231,6 +234,7 @@
 b3Shader::b3Shader(b3Scene *scene)
 {
 	m_Scene = scene;
+	b3Prepare();
 }
 
 void b3Shader::b3Prepare()
@@ -245,7 +249,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	b3_vector64 *incoming_dir = &surface->incoming->dir;
 	b3_vector64 *refl_dir     = &surface->refl_ray.dir;
 	b3_vector64 *refr_dir     = &surface->refr_ray.dir;
-	b3_f64       Factor,cos_a,d,ior;
+	b3_f64       Factor,d,cos_a,ica,ica_sqr,ica_pow5,ior,R0;
  
 	Factor = 2 * (cos_a =
 		incoming_dir->x * Normal->x +
@@ -261,7 +265,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	surface->refl_ray.t      = surface->incoming->t;
 	surface->transparent     = false;
 
-	//Use only sharp angles
+	// Use only sharp angles
 	if (cos_a >= 0)
 	{
 		Normal->x = -Normal->x;
@@ -270,11 +274,18 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 		cos_a     = -cos_a;
 	}
 
+	// Compute Fresnel factor for unpolarized light using
+	// Christphe Schlick's hack.
+	ior      = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
+	ica      = 1.0 + cos_a; // cos_a was made negative earlier.
+	ica_sqr  = ica * ica;
+	ica_pow5 = ica * ica_sqr * ica_sqr;
+	R0       = (ior - 1.0) / (ior + 1);
+	R0      *= R0;
+	surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
+	
 	if (surface->m_Refraction > 0)
 	{
-		ior      = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
-		refr_dir = &surface->refr_ray.dir;
-
 		if (fabs(cos_a) < 1)
 		{
 			d = ior * ior;
@@ -284,17 +295,11 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 			if (Factor >= 0)
 			{
 				Factor = sqrt(Factor) + ior * cos_a;
-				refr_dir->x = Factor * Normal->x - incoming_dir->x * ior;
-				refr_dir->y = Factor * Normal->y - incoming_dir->y * ior;
-				refr_dir->z = Factor * Normal->z - incoming_dir->z * ior;
+				refr_dir->x = incoming_dir->x * ior - Factor * Normal->x;
+				refr_dir->y = incoming_dir->y * ior - Factor * Normal->y;
+				refr_dir->z = incoming_dir->z * ior - Factor * Normal->z;
 
-				Factor = -1.0 / sqrt(
-					refr_dir->x * refr_dir->x +
-					refr_dir->y * refr_dir->y +
-					refr_dir->z * refr_dir->z);
-				refr_dir->x *= Factor;
-				refr_dir->y *= Factor;
-				refr_dir->z *= Factor;
+				b3Vector::b3Normalize(refr_dir);
 
 				surface->refr_ray.pos    =  surface->incoming->ipoint;
 				surface->refr_ray.inside = !surface->incoming->inside;
@@ -387,6 +392,10 @@ b3_bool b3Shader::b3Shade(
 		else if (depth_count > 0)
 		{
 			m_Scene->b3GetInfiniteColor(ray);
+			finite = true;
+		}
+		else
+		{
 			finite = false;
 		}
 	}

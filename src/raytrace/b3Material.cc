@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.78  2004/05/23 20:52:34  sm
+**      - Done some Fresnel formula experiments.
+**
 **      Revision 1.77  2004/05/22 14:17:31  sm
 **      - Merging some basic raytracing structures and gave them some
 **        self explaining names. Also cleaned up some parameter lists.
@@ -413,7 +416,7 @@ b3_bool b3Material::b3GetSurfaceValues(b3_surface *surface)
 	surface->m_Specular    = B3_GREY;
 	surface->m_Reflection  =      0.0;
 	surface->m_Refraction  =      0.0;
-	surface->m_Ior         =      1.0;
+	surface->m_Ior         =      1.5;
 	surface->m_SpecularExp = 100000.0;
 
 	return false;
@@ -466,7 +469,7 @@ void b3MatNormal::b3Init()
 	m_Specular    = B3_GREY;
 	m_Reflection  =    0;
 	m_Refraction  =    0;
-	m_Ior         =    1;
+	m_Ior         =    1.5;
 	m_SpecularExp = 1000;
 	m_Flags       =    0;
 }
@@ -503,7 +506,7 @@ b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_
 	
 	m_Material[BLACK].m_Reflection  = m_Material[WHITE].m_Reflection  =    0;
 	m_Material[BLACK].m_Refraction  = m_Material[WHITE].m_Refraction  =    0;
-	m_Material[BLACK].m_Ior         = m_Material[WHITE].m_Ior         =    1;
+	m_Material[BLACK].m_Ior         = m_Material[WHITE].m_Ior         =    1.5;
 	m_Material[BLACK].m_SpecularExp = m_Material[WHITE].m_SpecularExp = 1000;
 
 	m_Flags  = 0;
@@ -582,7 +585,7 @@ b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture),
 	// Init material values
 	m_Reflection  =    0;
 	m_Refraction  =    0;
-	m_Ior         =    1;
+	m_Ior         =    1.5;
 	m_SpecularExp = 1000;
 
 	// Init texture repetition values
@@ -685,6 +688,22 @@ b3_bool b3MatTexture::b3GetSurfaceValues(b3_surface *surface)
 b3MatWrapTexture::b3MatWrapTexture(b3_u32 class_type) :
 	b3Material(sizeof(b3MatWrapTexture),class_type) 
 {
+	// Material values
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1.5;
+	m_SpecularExp = 1000.0;
+
+	// Mapping boundary values
+	m_xStart = 0;
+	m_xEnd   = 1;
+	m_yStart = 0;
+	m_yEnd   = 1;
+
+	// Init texture
+	m_Name.b3Empty();
+	m_Texture = null;
+	m_Flags   = 0;
 }
 
 b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
@@ -809,7 +828,7 @@ b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_
 	
 	m_Material[0].m_Reflection  = m_Material[1].m_Reflection  =    0;
 	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
-	m_Material[0].m_Ior         = m_Material[1].m_Ior         =    1;
+	m_Material[0].m_Ior         = m_Material[1].m_Ior         =    1.5;
 	m_Material[0].m_SpecularExp = m_Material[1].m_SpecularExp = 1000;
 
 	m_From = 0;
@@ -932,7 +951,7 @@ b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),cla
 	m_DarkMaterial.m_Specular    = B3_GREY;
 	m_DarkMaterial.m_Reflection  =    0;
 	m_DarkMaterial.m_Refraction  =    0;
-	m_DarkMaterial.m_Ior         =    1;
+	m_DarkMaterial.m_Ior         =    1.5;
 	m_DarkMaterial.m_SpecularExp = 1000;
 
 	m_xTimes      =    0;
@@ -1052,12 +1071,12 @@ void b3MaterialWooden::b3Init()
 
 	m_DarkMaterial.m_Reflection  =   0;
 	m_DarkMaterial.m_Refraction  =   0;
-	m_DarkMaterial.m_Ior         =   1;
+	m_DarkMaterial.m_Ior         =   1.5;
 	m_DarkMaterial.m_SpecularExp = 200;
 
 	m_LightMaterial.m_Reflection  =   0;
 	m_LightMaterial.m_Refraction  =   0;
-	m_LightMaterial.m_Ior         =   1;
+	m_LightMaterial.m_Ior         =   1.5;
 	m_LightMaterial.m_SpecularExp = 200;
 }
 
@@ -1421,9 +1440,18 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_surface *surface)
 b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	b3MatNormal(sizeof(b3MatCookTorrance),class_type)
 {
-	m_Diffuse = b3Color(0.79,0.54,0.2);
+	// Colors
+	m_Diffuse  = b3Color(0.79,0.54,0.2);
 	m_Specular = b3Color(0.8,0.8,0.8);
 	m_Ambient  = m_Diffuse * 0.2;
+
+	// Material values
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1.5;
+	m_SpecularExp = 1000.0;
+
+	// Cook & torrance values
 	m_ka   = 0.1;
 	m_ks   = 0.6;
 	m_kd   = 0.6;
@@ -1550,7 +1578,7 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 	m_DarkMaterial.m_Refraction   =
 	m_LightMaterial.m_Refraction  =   0.0;
 	m_DarkMaterial.m_Ior          =
-	m_LightMaterial.m_Ior         =   1.0;
+	m_LightMaterial.m_Ior         =   1.5;
 	m_DarkMaterial.m_SpecularExp  =
 	m_LightMaterial.m_SpecularExp = 100.0;
 	m_Octaves     =   2;

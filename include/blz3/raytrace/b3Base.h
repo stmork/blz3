@@ -85,6 +85,7 @@ struct b3_surface : public b3_material
 	b3_ray       refl_ray;
 	b3_ray       refr_ray;
 	b3_bool      transparent;
+	b3_f64       m_Fresnel;
 	b3Color      m_SpecularSum;
 };
 
