@@ -1,0 +1,415 @@
+package id47tgne0uyn553e0uyq7i2;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#Unnamed186:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#jpeg_source_mgr:oiref><oihard>
+@__modelType reference 
+*/
+class reference3 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed109:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}/**
+@__ref <oiref:design#Class#idj3y0e0uyn553e0uyqbo6.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#bin:oiref> 
+*/
+class reference9 {
+}/**
+@__ref <oiref:design#Class#id3dbzje0uyn553e0uyqbpj.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#data:oiref> 
+*/
+class reference12 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed182:oiref><oihard>
+@__modelType reference 
+*/
+class reference13 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_error_mgr:oiref><oihard>
+@__modelType reference 
+*/
+class reference15 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_marker_struct:oiref><oihard>
+@__modelType reference 
+*/
+class reference16 {
+}/**
+@__ref <oiref:design#Class#id1enlre0uyn553e0uyqbqh.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#include_win32:oiref> 
+*/
+class reference17 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_memory_mgr:oiref><oihard>
+@__modelType reference 
+*/
+class reference18 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_compress_struct:oiref><oihard>
+@__modelType reference 
+*/
+class reference19 {
+}/**
+@__ref <oiref:design#Class#id3a650e0uyn553e0uyqbou.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#cd:oiref> 
+*/
+class reference20 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed81:oiref><oihard>
+@__modelType reference 
+*/
+class reference22 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed225:oiref><oihard>
+@__modelType reference 
+*/
+class reference25 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed98:oiref><oihard>
+@__modelType reference 
+*/
+class reference27 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_progress_mgr:oiref><oihard>
+@__modelType reference 
+*/
+class reference28 {
+}/**
+@__ref <oiref:cpp#Class#TIFFIgnoreSense:oiref><oihard>
+@__modelType reference 
+*/
+class reference29 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed132:oiref><oihard>
+@__modelType reference 
+*/
+class reference33 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_decompress_struct:oiref><oihard>
+@__modelType reference 
+*/
+class reference34 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed91:oiref><oihard>
+@__modelType reference 
+*/
+class reference35 {
+}/**
+@__ref <oiref:cpp#Class#tiff:oiref><oihard>
+@__modelType reference 
+*/
+class reference38 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_common_struct:oiref><oihard>
+@__modelType reference 
+*/
+class reference42 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_destination_mgr:oiref><oihard>
+@__modelType reference 
+*/
+class reference43 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed114:oiref><oihard>
+@__modelType reference 
+*/
+class reference44 {
+}/**
+@__ref <oiref:cpp#Class#_TIFFRGBAImage:oiref><oihard>
+@__modelType reference 
+*/
+class reference46 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_d_coef_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference2 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_downsampler:oiref><oihard>
+@__modelType reference 
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed80:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_entropy_decoder:oiref><oihard>
+@__modelType reference 
+*/
+class reference6 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_color_deconverter:oiref><oihard>
+@__modelType reference 
+*/
+class reference7 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_forward_dct:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_comp_master:oiref><oihard>
+@__modelType reference 
+*/
+class reference11 {
+}/**
+@__ref <oiref:cpp#Class#Unnamed33:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_inverse_dct:oiref><oihard>
+@__modelType reference 
+*/
+class reference21 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_c_main_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference23 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_c_coef_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_decomp_master:oiref><oihard>
+@__modelType reference 
+*/
+class reference26 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_color_quantizer:oiref><oihard>
+@__modelType reference 
+*/
+class reference30 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_marker_reader:oiref><oihard>
+@__modelType reference 
+*/
+class reference31 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_upsampler:oiref><oihard>
+@__modelType reference 
+*/
+class reference32 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_c_prep_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference36 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_entropy_encoder:oiref><oihard>
+@__modelType reference 
+*/
+class reference37 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_input_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference39 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_d_post_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference40 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_d_main_controller:oiref><oihard>
+@__modelType reference 
+*/
+class reference41 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_marker_writer:oiref><oihard>
+@__modelType reference 
+*/
+class reference45 {
+}/**
+@__ref <oiref:cpp#Class#jpeg_color_converter:oiref><oihard>
+@__modelType reference 
+*/
+class reference47 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#idfmpkce0uz4omoe0uzddih.diagram:oiref><oihard>
+@automatic 
+*/
+class link {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id7uwce0uyn553e0uyx2qr.diagram:oiref><oihard>
+@automatic 
+*/
+class link48 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id1enlre0uyn553e0uyqbqh.diagram:oiref><oihard>
+@automatic 
+*/
+class link49 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id149x9e0uyn553e0uyx2p0.diagram:oiref><oihard>
+@automatic 
+*/
+class link50 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id3jqdhe0uyn553e0uyx2oc.diagram:oiref><oihard>
+@automatic 
+*/
+class link51 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id4aj4me0uyn553e0uyx1f2.diagram:oiref><oihard>
+@automatic 
+*/
+class link52 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id47arie0uyn553e0uyr0k3.diagram:oiref><oihard>
+@automatic 
+*/
+class link53 {
+}/**
+@shapeType DependencyLink
+@__modelType link
+@__ref <oiref:design#Class#id1rfo1e0uyn553e0uyx2pp.diagram:oiref><oihard>
+@automatic 
+*/
+class link54 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options option.links = Rectilinear 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#jpeg_marker_writer:oiref>=1413,1257,175,257,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#dc_huff_tbl_ptrs:oiref>=331,515,331,271,459,271,459,179:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_common_struct#progress:oiref>=182,1875,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_c_main_controller:oiref>=1026,620,148,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_source_mgr:oiref>=1280,515,200,257,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_comp_master:oiref>=474,768,173,213,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_memory_mgr:oiref>=353,1901,200,389,1:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed182:oiref>=605,515,164,235,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_compress_struct:oiref>=255,515,200,1533,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_common_struct#err:oiref>=160,750,160,1835,623,1835,623,1901:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#cur_comp_info:oiref>=765,209,32,22,0:oigroup>
+<oigroup:<oiref:design#Class#idj3y0e0uyn553e0uyqbo6.diagram:oiref>=1378,950,53,65,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#progress:oiref>=811,1024,269,1024,269,1901:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_progress_mgr:oiref>=167,1901,153,213,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_entropy_decoder:oiref>=777,171,167,169,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_c_coef_controller:oiref>=1029,783,162,147,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#src:oiref>=1011,603,1280,603:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#quant_tbl_ptrs:oiref>=424,515,424,490,924,490,924,157:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_c_prep_controller:oiref>=1203,787,155,147,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#comp_info:oiref>=525,360,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_marker_reader:oiref>=470,994,200,257,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#script_space:oiref>=455,569,605,569:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed91:oiref>=1534,10,127,169,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#_TIFFRGBAImage#ycbcr:oiref>=1222,101,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_error_mgr:oiref>=573,1901,200,427,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#src:oiref>=1244,586,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed225:oiref>=1744,1070,163,279,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_color_deconverter:oiref>=5,769,151,147,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#ac_huff_tbl_ptrs:oiref>=455,179,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_color_quantizer:oiref>=660,764,141,191,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#mem:oiref>=517,1948,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#dest:oiref>=234,223,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed80:oiref>=10,4,141,169,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#comp_info:oiref>=943,515,943,405,761,405:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#tiff#tif_header:oiref>=1754,94,1661,94:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_forward_dct:oiref>=776,350,128,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_color_converter:oiref>=1132,446,136,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_input_controller:oiref>=468,1262,184,235,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#cur_comp_info:oiref>=525,172,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#quant_tbl_ptrs:oiref>=977,515,977,157:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed33:oiref>=1200,1154,200,1291,1:oigroup>
+<oigroup:<oiref:design#Class#id3dbzje0uyn553e0uyqbpj.diagram:oiref>=1451,950,53,65,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#dest:oiref>=270,515,270,223:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#scan_info:oiref>=455,623,605,623:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_downsampler:oiref>=58,242,184,169,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#ac_huff_tbl_ptrs:oiref>=391,179,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#err:oiref>=537,1985,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#dc_huff_tbl_ptrs:oiref>=487,179,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#mem:oiref>=455,1974,553,1974:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#Unnamed114#quant_table:oiref>=835,48,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#progress:oiref>=233,1875,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#TIFFIgnoreSense:oiref>=1061,1290,120,169,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_decomp_master:oiref>=2,926,197,169,1:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed98:oiref>=395,10,138,169,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#progress:oiref>=251,2088,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#mem:oiref>=450,1875,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_upsampler:oiref>=1138,262,184,169,1:oigroup>
+<oigroup:<oiref:design#Class#id1enlre0uyn553e0uyqbqh.diagram:oiref>=1744,950,109,90,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_common_struct:oiref>=10,515,200,235,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_common_struct#mem:oiref>=383,1875,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#mem:oiref>=811,1534,486,1534,486,1901:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed109:oiref>=1224,950,123,191,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_inverse_dct:oiref>=920,354,200,147,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#dc_huff_tbl_ptrs:oiref>=423,179,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_d_post_controller:oiref>=1370,784,160,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_decompress_struct:oiref>=811,515,200,2039,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#ac_huff_tbl_ptrs:oiref>=844,515,844,445,491,445,491,179:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed114:oiref>=561,10,200,565,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#scan_info:oiref>=569,606,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed81:oiref>=871,10,149,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_d_main_controller:oiref>=1025,1129,150,147,1:oigroup>
+<oigroup:<oiref:cpp#Class#tiff:oiref>=1754,10,200,1467,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#comp_info:oiref>=765,379,32,22,0:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed132:oiref>=1047,10,171,235,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#quant_tbl_ptrs:oiref>=888,157,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#err:oiref>=455,2011,573,2011:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#cur_comp_info:oiref>=393,515,393,198,561,198:oigroup>
+<oigroup:<oiref:design#Class#id4aj4me0uyn553e0uyx1f2.diagram:oiref>=2663,1665,112,457,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_entropy_encoder:oiref>=7,1111,146,169,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#progress:oiref>=287,2048,287,2114:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#Unnamed114#quant_table:oiref>=761,65,871,65:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#cur_comp_info:oiref>=910,515,910,235,761,235:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_common_struct#err:oiref>=587,1875,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#err:oiref>=811,2044,773,2044:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#ac_huff_tbl_ptrs:oiref>=300,515,300,365,427,365,427,179:oigroup>
+<oigroup:<oiref:cpp#Class#_TIFFRGBAImage:oiref>=1337,10,167,581,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#_TIFFRGBAImage#ycbcr:oiref>=1337,127,1218,127:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_destination_mgr:oiref>=169,10,194,213,1:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_d_coef_controller:oiref>=254,238,193,213,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#dc_huff_tbl_ptrs:oiref>=877,515,877,430,523,430,523,179:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#err:oiref>=777,2018,32,22,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_common_struct#mem:oiref>=110,750,110,1851,419,1851,419,1901:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_common_struct#progress:oiref>=60,750,60,1867,218,1867,218,1901:oigroup>
+<oigroup:<oiref:cpp#Class#jpeg_marker_struct:oiref>=1524,950,190,213,1:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jpeg_compress_struct#comp_info:oiref>=362,515,362,386,561,386:oigroup>
+<oigroup:<oiref:design#Class#id3a650e0uyn553e0uyqbou.diagram:oiref>=1885,950,53,65,1:oigroup>
+<oigroup:<oiref:cpp#Class#Unnamed186:oiref>=1061,950,128,169,1:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_decompress_struct#quant_tbl_ptrs:oiref>=941,157,32,22,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jpeg_compress_struct#script_space:oiref>=569,552,32,22,0:oigroup>
+*/
+class __positions {
+}
