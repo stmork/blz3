@@ -31,12 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/12/08 19:17:07  sm
+**	- Added interactive focal length
+**	- Added interactive twirl
+**	- Added camera move left/right on right mouse button
+**
 **	Revision 1.11  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
 **	  o Camera turn around itself
 **	  o Camera rotate around fulcrum
-**
+**	
 **	Revision 1.10  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -433,7 +438,8 @@ void CB3MoveAction::b3RMove(b3_coord x,b3_coord y)
 {
 	b3_vector diff;
 	b3_matrix inv,activity;
-	b3_f64    xRel,yRel,yFactor;
+	b3_f64    xRel,xFactor;
+	b3_f64    yRel,yFactor;
 
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
@@ -444,12 +450,13 @@ void CB3MoveAction::b3RMove(b3_coord x,b3_coord y)
 
 	// Compute delta coefficionts
 	b3GetRelCoord(x,y,xRel,yRel);
+	xFactor = xRel - m_xRelStart;
 	yFactor = m_yRelStart - yRel;
 
 	// Compute moving vector;
-	diff.x = yFactor * m_zDir.x;
-	diff.y = yFactor * m_zDir.y;
-	diff.z = yFactor * m_zDir.z;
+	diff.x = xFactor * m_xDir.x + yFactor * m_zDir.x;
+	diff.y = xFactor * m_xDir.y + yFactor * m_zDir.y;
+	diff.z = xFactor * m_xDir.z + yFactor * m_zDir.z;
 
 	// Do action!
 	m_Doc->m_Info->b3SnapToGrid(&diff);
@@ -469,7 +476,8 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 {
 	b3_vector diff;
 	b3_matrix inv,activity;
-	b3_f64    xRel,yRel,yFactor;
+	b3_f64    xRel,xFactor;
+	b3_f64    yRel,yFactor;
 
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
@@ -480,12 +488,13 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 
 	// Compute delta coefficionts
 	b3GetRelCoord(x,y,xRel,yRel);
+	xFactor = xRel - m_xRelStart;
 	yFactor = m_yRelStart - yRel;
 
 	// Compute moving vector;
-	diff.x = yFactor * m_zDir.x;
-	diff.y = yFactor * m_zDir.y;
-	diff.z = yFactor * m_zDir.z;
+	diff.x = xFactor * m_xDir.x + yFactor * m_zDir.x;
+	diff.y = xFactor * m_xDir.y + yFactor * m_zDir.y;
+	diff.z = xFactor * m_xDir.z + yFactor * m_zDir.z;
 
 	if (b3MatrixInv(&m_Transformation,&inv))
 	{
@@ -1044,6 +1053,132 @@ void CB3ActionCameraRotate::b3LDown(b3_coord x,b3_coord y)
 CB3ActionCameraView::CB3ActionCameraView(CAppLinesView *window) :
 	CB3Action(window)
 {
+}
+
+void CB3ActionCameraView::b3LDown(b3_coord x,b3_coord y)
+{
+	CRect  rect;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3LDown(x,y);
+	}
+	else
+	{
+		m_Camera   = m_View->m_Camera;
+		m_Distance = b3Vector::b3Distance(&m_Camera->m_EyePoint,&m_Camera->m_ViewPoint);
+
+		m_View->GetClientRect(&rect);
+		m_ySize  = rect.Height();
+		m_yStart = y;
+	}
+}
+
+void CB3ActionCameraView::b3LMove(b3_coord x,b3_coord y)
+{
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3LMove(x,y);
+	}
+	else
+	{
+		m_Camera->b3ComputeFocalLength(m_Distance * pow(2.0,(double)(m_yStart - y) / (double)m_ySize));
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+	}
+}
+
+void CB3ActionCameraView::b3LUp(b3_coord x,b3_coord y)
+{
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3LUp(x,y);
+	}
+	else
+	{
+		m_Camera->b3ComputeFocalLength(m_Distance * pow(2.0,(double)(m_yStart - y) / (double)m_ySize));
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+		m_Doc->SetModifiedFlag();
+	}
+}
+
+void CB3ActionCameraView::b3RDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3RDown(x,y);
+	}
+	else
+	{
+		m_Camera    = m_View->m_Camera;
+		m_Axis.pos  = m_Camera->m_EyePoint;
+		b3Vector::b3Sub(
+			&m_Camera->m_ViewPoint,
+			&m_Camera->m_EyePoint,
+			&m_Axis.dir);
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_xRelStart = xRel;
+		m_LastAngle = 0;
+	}
+}
+
+void CB3ActionCameraView::b3RMove(b3_coord x,b3_coord y)
+{
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel,angle;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3RMove(x,y);
+	}
+	else
+	{
+		b3GetRelCoord(x,y,xRel,yRel);
+		angle = (xRel - m_xRelStart) * M_PI * 2;
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		if (angle != m_LastAngle)
+		{
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastAngle = angle;
+				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Camera->b3Transform(&activity);
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+			}
+		}
+	}
+}
+
+void CB3ActionCameraView::b3RUp(b3_coord x,b3_coord y)
+{
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel,angle;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3RUp(x,y);
+	}
+	else
+	{
+		b3GetRelCoord(x,y,xRel,yRel);
+		angle = (xRel - m_xRelStart) * M_PI * 2;
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		if (angle != m_LastAngle)
+		{
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastAngle = angle;
+				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Camera->b3Transform(&activity);
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+				m_Doc->SetModifiedFlag();
+			}
+		}
+	}
 }
 
 /*************************************************************************

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2001/12/08 19:17:07  sm
+**      - Added interactive focal length
+**      - Added interactive twirl
+**      - Added camera move left/right on right mouse button
+**
 **      Revision 1.24  2001/12/02 17:38:17  sm
 **      - Removing nasty CR/LF
 **      - Added b3ExtractExt()
@@ -240,6 +245,15 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3InitVector(&m_ViewPoint);
 	m_Flags = b3InitInt();
 	b3InitString(m_CameraName,B3_CAMERANAMELEN);
+}
+
+void b3CameraPart::b3ComputeFocalLength(b3_f64 focal_length)
+{
+	b3_vector  dir;
+
+	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&dir);
+	b3Vector::b3Normalize(&dir,focal_length);
+	b3Vector::b3Add(&m_EyePoint,&dir,&m_ViewPoint);
 }
 
 void b3CameraPart::b3Orientate(

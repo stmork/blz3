@@ -197,6 +197,7 @@ protected:
 	friend class CB3ActionCameraMove;
 	friend class CB3ActionCameraTurn;
 	friend class CB3ActionCameraRotate;
+	friend class CB3ActionCameraView;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

@@ -209,8 +209,22 @@ public:
 
 class CB3ActionCameraView : public CB3Action
 {
+	b3CameraPart *m_Camera;
+	b3_line       m_Axis;
+	b3_f64        m_xRelStart;
+	b3_f64        m_LastAngle;
+	b3_f64        m_Distance;
+	b3_res        m_ySize;
+
 public:
-	CB3ActionCameraView(CAppLinesView *window);
+	     CB3ActionCameraView(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
+	void b3LMove(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
+	void b3RDown(b3_coord x,b3_coord y);
+	void b3RMove(b3_coord x,b3_coord y);
+	void b3RUp(b3_coord x,b3_coord y);
 };
 
 class CB3ActionLightTurn : public CB3Action
