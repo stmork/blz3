@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2003/06/09 08:53:48  sm
+**	- Added preparation support for all b3Item objects.
+**
 **	Revision 1.51  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.50  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -537,15 +540,16 @@ b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 	return bbox->b3Prepare();
 }
 
-b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
+b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 {
+	b3Item        *item;
 	b3Nebular     *nebular;
 	b3Distribute  *distributed;
 	b3SuperSample *supersample;
 	b3Light       *light;
 	b3_f64         xDenom,yDenom;
 
-	b3PrintF(B3LOG_FULL,"b3Scene::b3Prepare(%d,%d)\n",xSize,ySize);
+	b3PrintF(B3LOG_FULL,"b3Scene::b3PrepareScene(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
 	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
 	m_DiffColor = (m_TopColor    - m_AvrgColor);
@@ -564,6 +568,15 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_NormHeight.y = m_Height.y / yDenom;
 	m_NormHeight.z = m_Height.z / yDenom;
 
+	b3PrintF(B3LOG_FULL,"  preparing special items...\n");
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if(!item->b3Prepare())
+		{
+			B3_THROW(b3PrepareException,B3_PREPARE_ERROR);
+		}
+	}
+
 	b3PrintF(B3LOG_FULL,"  preparing lensflare...\n");
 	m_LensFlare = b3GetLensFlare();
 	if (m_LensFlare != null)
@@ -579,7 +592,6 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	if (nebular->b3IsActive())
 	{
 		m_Nebular = nebular;
-		m_Nebular->b3Prepare();
 		b3PrintF(B3LOG_DEBUG,"Using nebular with %3.2f units distance to half value.\n",
 			m_Nebular->m_NebularVal);
 	}
@@ -593,7 +605,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	if (distributed->b3IsActive())
 	{
 		m_Distributed = distributed;
-		m_Distributed->b3Prepare(xSize,b3GetAnimation());
+		m_Distributed->b3PrepareAnimation(xSize,b3GetAnimation());
 		m_SuperSample = null;
 	}
 	else
@@ -681,7 +693,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// What resolution to use
 		display->b3GetRes(xSize,ySize);
-		if (!b3Prepare(xSize,ySize))
+		if (!b3PrepareScene(xSize,ySize))
 		{
 			b3PrintF(B3LOG_NORMAL,"Cannot initialize raytracing!\n");
 			return;

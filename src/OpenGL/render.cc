@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2003/06/09 08:53:48  sm
+**      - Added preparation support for all b3Item objects.
+**
 **      Revision 1.35  2003/03/04 20:37:36  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -382,7 +385,7 @@ static void b3Prepare(b3Scene *scene)
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize,ySize);
 	scene->b3SetCamera(scene->b3GetCamera(false));
-	scene->b3Prepare(xSize,ySize);
+	scene->b3PrepareScene(xSize,ySize);
 	scene->b3AllocVertices(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);

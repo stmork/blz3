@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.61  2003/06/09 08:53:49  sm
+**      - Added preparation support for all b3Item objects.
+**
 **      Revision 1.60  2003/03/04 20:37:39  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -975,7 +978,7 @@ b3_bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3Prepare(b3_res xSize,b3Animation *animation)
+void b3Distribute::b3PrepareAnimation(b3_res xSize,b3Animation *animation)
 {
 	b3_f32       *samples;
 	b3_f64        start,step;

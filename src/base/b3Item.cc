@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2003/06/09 08:53:48  sm
+**      - Added preparation support for all b3Item objects.
+**
 **      Revision 1.31  2003/03/20 21:04:58  sm
 **      - Made some triangle intersection optimizations.
 **
@@ -327,6 +330,11 @@ void b3Item::b3Write()
 char *b3Item::b3GetName()
 {
 	return null;
+}
+
+b3_bool b3Item::b3Prepare()
+{
+	return true;
 }
 
 void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)

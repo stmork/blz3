@@ -2268,7 +2268,7 @@ public:
 	void     b3Write();
 	b3_bool  b3IsActive();
 	b3_bool  b3IsMotionBlur();
-	void     b3Prepare(b3_res xSize,b3Animation *animation=null);
+	void     b3PrepareAnimation(b3_res xSize,b3Animation *animation=null);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -2462,7 +2462,7 @@ public:
 		    b3_count        b3GetBBoxCount();
 		    void            b3Activate(b3_bool activate=true);
 		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
-		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
+		    b3_bool         b3PrepareScene(b3_res xSize,b3_res ySize);
 		    void            b3Raytrace(b3Display *display);
 		    void            b3AbortRaytrace();
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
