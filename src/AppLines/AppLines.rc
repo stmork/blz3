@@ -2671,6 +2671,11 @@ BEGIN
     IDS_OP_LOAD             "Objekt laden"
     IDS_OP_REPLACE          "Objekt ersetzen"
     IDS_OP_ACTION           "Mausaktion"
+    IDS_OP_OBJECT_CREATE    "Objekt erzeugen"
+    IDS_OP_OBJECT_DELETE    "Objekt löschen"
+    IDS_OP_OBJECT_LOAD      "Objekt laden"
+    IDS_OP_OBJECT_REPLACE   "Objekt ersetzen"
+    IDS_OP_OBJECT_COPY      "Objekt kopieren"
 END
 
 STRINGTABLE DISCARDABLE 
