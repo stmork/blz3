@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/26 14:11:50  sm
+**	- COB support integrated into Lines III
+**
 **	Revision 1.3  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
-**
+**	
 **	Revision 1.2  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
@@ -298,6 +301,100 @@ void b3OpObjectReplace::b3Redo()
 {
 	m_Base->b3Insert(m_Selected,m_BBox);
 	m_Base->b3Remove(m_Selected);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Undo/Redo Caligari object import              **
+**                                                                      **
+*************************************************************************/
+
+b3OpObjectLoadCob::b3OpObjectLoadCob(
+	b3Scene       *scene,
+	CDlgHierarchy *hierarchy,
+	const char    *regitem) : b3OpObject(scene,hierarchy)
+{
+	CAppLinesApp   *app  = CB3GetLinesApp();
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	CString         suggest;
+	b3Path          filepath;
+	b3Path          result;
+
+	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
+	m_Base     = (m_Selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(m_Selected));
+	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
+
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	if (m_Selected != null)
+	{
+		result.b3LinkFileName(filepath,m_Selected->b3GetName());
+		result.b3RemoveExt();
+		strcat((char *)result,".cob");
+	}
+	else
+	{
+		strcpy((char *)result,suggest);
+	}
+	
+	if (CB3SelectCOB::b3Select((char *)result))
+	{
+		app->WriteProfileString(CB3ClientString(),regitem,result);
+		
+		try
+		{
+			m_BBox = b3BBox::b3ReadCOB(result);
+			if (m_BBox != null)
+			{
+				b3Initialize();
+				m_PrepareGeometry         = true;
+				m_PrepareChangedStructure = false;
+			}
+		}
+		catch(b3FileException &f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading Caligari object from file %s (code: %d)\n",
+				(const char *)result,f.b3GetError());
+			B3_MSG_ERROR(f);
+		}
+		catch(b3WorldException &w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: reading Caligari object from file %s (code: %d)\n",
+				(const char *)result,w.b3GetError());
+			B3_MSG_ERROR(w);
+		}
+	}
+}
+
+void b3OpObjectLoadCob::b3Delete()
+{
+	if (!b3IsDone() && (m_BBox != null))
+	{
+		delete m_BBox;
+	}
+}
+
+void b3OpObjectLoadCob::b3Do()
+{
+	m_Base->b3Insert(m_Selected,m_BBox);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
+	m_PrepareChangedStructure = true;
+}
+
+void b3OpObjectLoadCob::b3Undo()
+{
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_Base->b3Remove(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_Selected);
+}
+
+void b3OpObjectLoadCob::b3Redo()
+{
+	m_Base->b3Insert(m_Selected,m_BBox);
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
 }

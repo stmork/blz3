@@ -15,6 +15,10 @@
 **
 */
 
+#ifdef _DEBUG
+#define VERBOSE_INDEX
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -34,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/26 14:11:50  sm
+**	- COB support integrated into Lines III
+**
 **	Revision 1.1  2003/01/26 11:53:26  sm
 **	- Added support for Caligari object loading.
-**
+**	
 */
 
 /*************************************************************************
@@ -49,6 +56,12 @@ b3COBReader::b3COBReader()
 {
 	cobInfos.b3InitBase();
 	cobDone.b3InitBase();
+}
+
+b3COBReader::~b3COBReader()
+{
+	cobInfos.b3Free();
+	cobDone.b3Free();
 }
 
 /* This routine allocates an info structure to identify an caligari object. */
@@ -338,7 +351,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	b3COB_GetLine (line,&buffer[len+1],sizeof(line));
 	if (sscanf (line,"Name %32s",boxName) != 1) strcpy (boxName,"bbox");
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"G: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
 		ver,rev,id,parent,len,size);
 #endif
@@ -368,7 +381,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	const char *buffer,
 	const char *name)
 {
-	b3TriangleShape *TriaShape;
+	b3Triangles     *TriaShape;
 	b3BBox          *BBox;
 	b3_vertex       *vert;
 	b3_triangle     *tria;
@@ -380,7 +393,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	b3_count         ver,rev;
 	b3_cob_id        id,parent;
 	b3_count         count,vertices=0,faces=0,polygons=0,k;
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3_count         dbgCount = 0;
 #endif
 
@@ -398,7 +411,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			{
 				delete BBox;
 			}
-#ifdef DEBUG
+#ifdef _DEBUG
 			else
 			{
 				b3PrintF (B3LOG_FULL,"R: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
@@ -409,7 +422,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		parent = 1;
 	}
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"P: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
 		ver,rev,id,parent,len,size);
 #endif
@@ -470,14 +483,14 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				&transform.m41,&transform.m42,&transform.m43,&transform.m44);
 		}
 	}
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"%ld vertices, %ld polygons, %ld triangles\n",vertices,polygons,faces);
 #endif
 
-	TriaShape = new b3TriangleShape(TRIANGLES);
+	TriaShape = new b3Triangles(TRIANGLES);
 	if (TriaShape != null)
 	{
-		TriaShape->b3Init(vertices,faces,0,0);
+		TriaShape->b3Init(vertices,faces,1,1);
 		if (!b3COB_AllocObject(TriaShape,id,parent,COB_POLH))
 		{
 			delete TriaShape;
@@ -495,7 +508,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				sscanf (line,"%f %f %f",&pos.x,&pos.y,&pos.z);
 				b3MatrixVMul (&transform,&pos,(b3_vector *)&vert[count],true);
 /*
-#ifdef DEBUG
+#ifdef _DEBUG
 				b3PrintF (B3LOG_FULL,"% 3.3f % 3.3f % 3.3f\n",
 					vert[count].x,vert[count].y,vert[count].z);
 #endif
@@ -524,7 +537,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #endif
 				len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 				i += (len+1);
-				if (IDs)
+				if (IDs != null)
 				{
 					long u,l;
 
@@ -564,7 +577,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 						b3PrintF (B3LOG_FULL,"%3ld - %3ld - %3ld\n",tria->P1,tria->P2,tria->P3);
 #endif
 						tria++;
-#ifdef DEBUG
+#ifdef _DEBUG
 						dbgCount++;
 #endif
 					}
@@ -588,7 +601,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 						b3PrintF (B3LOG_FULL,"%6ld %6ld %6ld\n",tria->P1,tria->P2,tria->P3);
 #endif
 						tria++;
-#ifdef DEBUG
+#ifdef _DEBUG
 						dbgCount++;
 #endif
 					}
@@ -597,7 +610,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				b3PrintF (B3LOG_FULL,"---\n");
 #endif
 			}
-#ifdef DEBUG
+#ifdef _DEBUG
 #ifdef VERBOSE_INDEX
 			b3PrintF (B3LOG_FULL,"%ld triangles expected, %ld triangles counted.\n",faces,dbgCount);
 #endif
@@ -630,7 +643,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08d",
 		&ver,&rev,&id,&parent,&size);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"M: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
 		ver,rev,id,parent,len,size);
 #endif
@@ -709,7 +722,7 @@ b3_size b3COBReader::b3COB_ParseDummy(const char *buffer)
 	sscanf (line,"%4s V%ld.%ld Id %d Parent %d Size %08d",
 		command,&ver,&rev,&id,&parent,&size);
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"D: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld (%c%c%c%c)\n",
 		ver,rev,id,parent,len,size,
 		command[0],
@@ -772,7 +785,7 @@ b3Item *b3COBReader::b3COB_Parse(
 			break;
 
 			default :
-#ifdef DEBUG
+#ifdef _DEBUG
 			B3_BEEP;
 			b3PrintF (B3LOG_FULL,"%6ld - %6ld: %s\n",pos,size,token == COB_POLH ? "PolH" : "-");
 #endif

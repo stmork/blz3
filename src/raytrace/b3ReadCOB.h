@@ -65,6 +65,7 @@ class b3COBReader
 	b3Base<b3COBInfo>   cobDone;
 
 	                    b3COBReader();
+	                   ~b3COBReader();
 
 	       b3_bool      b3COB_AllocObject(b3Item *node,b3_cob_id id,b3_cob_id parent,b3_cob_type type);
 	       b3COBInfo   *b3COB_FindInfo(b3_cob_id id);

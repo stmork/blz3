@@ -82,11 +82,11 @@ protected:
 class b3OpObjectLoad : public b3OpObject
 {
 protected:
+	b3BBox         *m_Selected;
 	b3BBox         *m_BBox;
 	b3Base<b3Item> *m_Base;
 	b3World         m_World;
 	b3_count        m_Level;
-	b3BBox         *m_Selected;
 
 public:
 	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_LOAD_REGITEM);
@@ -119,6 +119,30 @@ protected:
 	inline int  b3GetId()
 	{
 		return IDS_OP_OBJECT_REPLACE;
+	}
+};
+
+#define B3_OBJECT_CALIGARI_REGITEM "Loaded caligari object filename"
+
+class b3OpObjectLoadCob : public b3OpObject
+{
+protected:
+	b3BBox         *m_Selected;
+	b3BBox         *m_BBox;
+	b3Base<b3Item> *m_Base;
+
+public:
+	         b3OpObjectLoadCob(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_CALIGARI_REGITEM);
+
+protected:
+	virtual void b3Do();
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_COB_LOAD;
 	}
 };
 

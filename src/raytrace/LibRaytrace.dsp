@@ -194,6 +194,10 @@ SOURCE=.\b3Raytrace.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ReadCOB.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3RenderShape.cc
 # End Source File
 # Begin Source File
@@ -271,6 +275,10 @@ SOURCE=..\..\include\blz3\raytrace\b3PrepareInfo.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ReadCOB.h
 # End Source File
 # Begin Source File
 

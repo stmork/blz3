@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.60  2003/01/26 14:11:50  sm
+**      - COB support integrated into Lines III
+**
 **      Revision 1.59  2002/12/31 15:11:03  sm
 **      - Fixed bound checking.
 **      - Added a vector test module.
@@ -1437,8 +1440,20 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 
 			// Put geometry :-)
 			B3_ASSERT(glVertex != null);
+#ifndef _DEBUG
 			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+#else
+			GLenum error = glGetError();
+
+			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+			error = glGetError();
+			if (error == GL_NO_ERROR)
+			{
+				glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+				error = glGetError();
+			}
+#endif
 		}
 		break;
 

@@ -214,6 +214,7 @@
 #define ID_VIEW_THUMB                   10106
 #define ID_VIEW_TOP                     10107
 #define ID_VIEW_TO_FULCRUM              10108
+#define ID_COB_LOAD                     10109
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -619,6 +620,8 @@
 #define IDS_TOOLBAR_OBJECT              60142
 #define IDS_TOOLBAR_VIEW                60143
 #define IDS_UNKNOWN                     60144
+#define IDS_COB_FILTER                  60145
+#define IDS_OP_COB_LOAD                 61446
 
 // Next default values for new objects
 // 
@@ -626,7 +629,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        123
-#define _APS_NEXT_COMMAND_VALUE         10109
+#define _APS_NEXT_COMMAND_VALUE         10110
 #define _APS_NEXT_CONTROL_VALUE         32260
 #define _APS_NEXT_SYMED_VALUE           60145
 #endif

@@ -58,10 +58,13 @@
 
 /*
 **	$Log$
+**	Revision 1.82  2003/01/26 14:11:50  sm
+**	- COB support integrated into Lines III
+**
 **	Revision 1.81  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
-**
+**	
 **	Revision 1.80  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
 **	
@@ -507,6 +510,9 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_PAUSE, OnUpdateAnimPause)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_STEP_FORWARD, OnUpdateAnimStepForward)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_END, OnUpdateAnimEnd)
+	ON_COMMAND(ID_ANIM_PROPERTIES, OnAnimProperties)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PROPERTIES, OnUpdateAnimProperties)
+	ON_COMMAND(ID_COB_LOAD, OnCobLoad)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -531,8 +537,6 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_ANIM_PROPERTIES, OnAnimProperties)
-	ON_UPDATE_COMMAND_UI(ID_ANIM_PROPERTIES, OnUpdateAnimProperties)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1558,6 +1562,13 @@ void CAppLinesDoc::OnObjectReplace()
 {
 	// TODO: Add your command handler code here
 	b3AddOp(new b3OpObjectReplace(m_Scene,m_DlgHierarchy));
+}
+
+
+void CAppLinesDoc::OnCobLoad() 
+{
+	// TODO: Add your command handler code here
+	b3AddOp(new b3OpObjectLoadCob(m_Scene,m_DlgHierarchy));
 }
 
 void CAppLinesDoc::OnObjectCopy() 

@@ -26,4 +26,10 @@ public:
 	static b3_bool b3Select(char *name);
 };
 
+class CB3SelectCOB
+{
+public:
+	static b3_bool b3Select(char *name);
+};
+
 #endif

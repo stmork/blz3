@@ -141,7 +141,7 @@ BEGIN
     BUTTON      ID_OBJECT_LOAD
     BUTTON      ID_OBJECT_SAVE
     BUTTON      ID_OBJECT_REPLACE
-    SEPARATOR
+    BUTTON      ID_COB_LOAD
     BUTTON      ID_OBJECT_NEW
     BUTTON      ID_OBJECT_DELETE
     BUTTON      ID_OBJECT_COPY
@@ -2298,9 +2298,39 @@ BEGIN
     IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
     IDS_NEW_OBJECT          "Neues Objekt"
     IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
+    IDS_OP_ACTION           "Mausaktion"
+    IDS_OP_CAMERA_CREATE    "Kamera erzeugen"
+    IDS_OP_CAMERA_DELETE    "Kamera löschen"
+    IDS_OP_CAMERA_ENABLE    "Kamera ein-/ausschalten"
+    IDS_OP_CAMERA_ORIENTATE "Kamera ausrichten"
+    IDS_OP_CUT              "Ausschneiden"
+    IDS_OP_DROP             "Objekt hierarchisch verschieben"
+    IDS_OP_LIGHT_CREATE     "Lichtquelle erzeugen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_OP_LIGHT_DELETE     "Lichtquelle löschen"
+    IDS_OP_LIGHT_ENABLE     "Lichtquelle ein-/ausschalten"
+    IDS_OP_LIGHT_SOFT       "Weiche Schatten ein-/ausschalten"
+    IDS_OP_LIGHT_SPOT       "Spot ein-/ausschalten"
+    IDS_OP_LOAD             "Objekt laden"
+    IDS_OP_MOVE             "Objekte verschieben"
+    IDS_OP_OBJECT_COPY      "Objekt kopieren"
+    IDS_OP_OBJECT_CREATE    "Objekt erzeugen"
+    IDS_OP_OBJECT_DELETE    "Objekt löschen"
+    IDS_OP_OBJECT_LOAD      "Objekt laden"
+    IDS_OP_OBJECT_REPLACE   "Objekt ersetzen"
+    IDS_OP_PASTE            "Einfügen"
+    IDS_OP_REPLACE          "Objekt ersetzen"
+    IDS_OP_ROTATE           "Objekte rotieren"
     IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
     IDS_PRGERR_BSPLINE_MISSING_KNOTS 
                             "Programmfehler!\nDem BSpline fehlt der Knotenvektor! Ohne dem geht's nicht;-)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS 
                             "Programmfehler!\nDer angegebene BSpline hat zu wenig Kontrollpunkte!"
     IDS_PRGERR_BSPLINE_TOO_FEW_MAXCONTROLS 
@@ -2312,21 +2342,37 @@ BEGIN
     IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
                             "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
     IDS_PRGERR_DATATYPE     "Programmfehler!\nDas interne Datenformat ist unbekannt!"
+    IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
+    IDS_PRGERR_FILE_NOT_OPEN 
+                            "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
+    IDS_PRGERR_HASH_DUPLICATE_KEY 
+                            "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
+    IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
+    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
+    IDS_PRGERR_ILLEGAL_DATEMODE 
+                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
+    IDS_PRGERR_OUT_OF_BOUNDS 
+                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
+    IDS_PROFILE             "Profil"
+    IDS_PROFILE_BEVELSTUMP_SPLINE 
+                            "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
+    IDS_PROFILE_BEVEL_SPLINE "Runde BSpline-Kante (quadr.)"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
     ID_COORD_X              "x: 00000000.00"
     ID_COORD_Y              "y: 00000000.00"
     ID_COORD_Z              "z: 00000000.00"
     ID_CUST_ANIM2           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
-    ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
     ID_DRAWING_PERF         "#####################################"
     ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
     ID_FRONT                "Frontansicht (Aufriß)"
@@ -2361,7 +2407,23 @@ BEGIN
     ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
     ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     ID_PREF_AUTOSAVE        "Speichert die Fensterpostion beim Verlassen des Programms"
+    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
+    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
+    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
+    ID_REDO                 "\nRedo"
+    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
+    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
+    ID_UNDO                 "\nUndo"
+    ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
+    ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
+    ID_VIEW_BIGGER          "Vergrößert die Ansicht.\nVergrößern"
+    ID_VIEW_FRONT           "Zeigt die Szene von vorne (Aufriß).\nAnsicht von vorne (Aufriß)"
+    ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2374,17 +2436,18 @@ BEGIN
     ID_ANIM_END             "Spult die Animation an das Ende.\nAn das Ende spulen"
     ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
     ID_ANIM_PLAY            "Spielt die Animation ab.\nAnimation abspielen"
+    ID_ANIM_PROPERTIES      "Animationseigenschaften.\nAnimationseigenschaften"
     ID_ANIM_START           "Spult die Animation an den Anfang.\nZurückspulen"
     ID_ANIM_STEP_BACKWARD   "Schaltet die Animation ein Frame zurück.\nFrame rückwärts"
     ID_ANIM_STEP_FORWARD    "Schaltet die Animation ein Frame vorwärts.\nFrame vorwärts"
     ID_ANIM_STOP            "Hält die Animation an.\nAnimation anhalten"
     ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
     ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
-    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
     ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
     ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
     ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
@@ -2400,27 +2463,12 @@ BEGIN
     ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
     ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
     ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
-    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
-    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
-    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
-    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
-    ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
-    ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
-    ID_VIEW_BIGGER          "Vergrößert die Ansicht.\nVergrößern"
-    ID_VIEW_FRONT           "Zeigt die Szene von vorne (Aufriß).\nAnsicht von vorne (Aufriß)"
-    ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
     ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
     ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
@@ -2431,9 +2479,7 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_ANIM_PROPERTIES      "Animationseigenschaften.\nAnimationseigenschaften"
-    ID_UNDO                 "\nUndo"
-    ID_REDO                 "\nRedo"
+    ID_COB_LOAD             "Lädt ein Caligari-Objekt.\nCaligari-Objekt laden"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2452,6 +2498,12 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_PROFILE_BEVEL_TRIANGLES "Abgerundete Kante"
+    IDS_PRT_DATE            "Datum: %s"
+    IDS_PRT_FILENAME        "Dateiname: %s"
+    IDS_PRT_LEGEND          "Legende:"
+    IDS_PRT_MEASURE         "Maßstab: 1:%d"
+    IDS_PRT_UNIT            "Einheit: %s"
     IDS_PRT_VIEWNAME        "Ansicht: %s"
     IDS_RADIUS              "Radius:"
     IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
@@ -2462,16 +2514,36 @@ BEGIN
     IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
     IDS_SHAPE_AREA          "Fläche"
     IDS_SHAPE_BOX           "Quader"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
     IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
     IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
     IDS_SHAPE_BSPLINE_ROT   "BSpline-Rotationskörper"
     IDS_SHAPE_CONE          "Kegel"
     IDS_SHAPE_CYLINDER      "Zylinder"
+    IDS_SHAPE_DISK          "Scheibe"
+    IDS_SHAPE_ELLIPSOID     "Ellipsoid"
+    IDS_SHAPE_SPHERE        "Kugel"
+    IDS_SHAPE_TORUS         "Torus"
+    IDS_SHAPE_TRIANGLES     "Dreiecke"
+    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
+    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
+    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
+    IDS_STENCIL_END_ANGLE   "Endwinkel"
+    IDS_STENCIL_END_LENGTH  "Endlänge"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_STENCIL_END_UNIT    "rel. Maximum"
+    IDS_STENCIL_START_ANGLE "Startwinkel"
+    IDS_STENCIL_START_LENGTH "Startlänge"
+    IDS_STENCIL_START_UNIT  "rel. Minimum"
+    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
+    IDS_TITLE_CREATE        "%s anlegen"
     IDS_TITLE_EDIT          "%s ändern"
     IDS_TITLE_SCENE         "Sceneneigenschaften"
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
@@ -2482,7 +2554,12 @@ BEGIN
     IDS_TOOLBAR_MAINFRAME   "Datei..."
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
     IDS_TOOLBAR_VIEW        "Ansicht..."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_UNKNOWN             "unbekannt"
+    IDS_COB_FILTER          "Caligari Objekt (*.cob)|*.cob|Alle Dateien (*.*)|*.*||"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2504,51 +2581,6 @@ BEGIN
     IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
     IDS_ERR_FILE_NOT_FOUND  "Die Datei konnte nicht geöffnet werden!"
     IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
-    IDS_PRGERR_FILE_NOT_OPEN 
-                            "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
-    IDS_PRGERR_HASH_DUPLICATE_KEY 
-                            "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
-    IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
-    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
-    IDS_PRGERR_ILLEGAL_DATEMODE 
-                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
-    IDS_PRGERR_OUT_OF_BOUNDS 
-                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
-    IDS_PROFILE             "Profil"
-    IDS_PROFILE_BEVELSTUMP_SPLINE 
-                            "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
-    IDS_PROFILE_BEVEL_SPLINE "Runde BSpline-Kante (quadr.)"
-    IDS_PROFILE_BEVEL_TRIANGLES "Abgerundete Kante"
-    IDS_PRT_DATE            "Datum: %s"
-    IDS_PRT_FILENAME        "Dateiname: %s"
-    IDS_PRT_LEGEND          "Legende:"
-    IDS_PRT_MEASURE         "Maßstab: 1:%d"
-    IDS_PRT_UNIT            "Einheit: %s"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_SHAPE_DISK          "Scheibe"
-    IDS_SHAPE_ELLIPSOID     "Ellipsoid"
-    IDS_SHAPE_SPHERE        "Kugel"
-    IDS_SHAPE_TORUS         "Torus"
-    IDS_SHAPE_TRIANGLES     "Dreiecke"
-    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
-    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
-    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
-    IDS_STENCIL_END_ANGLE   "Endwinkel"
-    IDS_STENCIL_END_LENGTH  "Endlänge"
-    IDS_STENCIL_END_UNIT    "rel. Maximum"
-    IDS_STENCIL_START_ANGLE "Startwinkel"
-    IDS_STENCIL_START_LENGTH "Startlänge"
-    IDS_STENCIL_START_UNIT  "rel. Minimum"
-    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
-    IDS_TITLE_CREATE        "%s anlegen"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -2670,16 +2702,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
-    IDS_OP_CUT              "Ausschneiden"
-    IDS_OP_PASTE            "Einfügen"
-    IDS_OP_LOAD             "Objekt laden"
-    IDS_OP_REPLACE          "Objekt ersetzen"
-    IDS_OP_ACTION           "Mausaktion"
-    IDS_OP_OBJECT_CREATE    "Objekt erzeugen"
-    IDS_OP_OBJECT_DELETE    "Objekt löschen"
-    IDS_OP_OBJECT_LOAD      "Objekt laden"
-    IDS_OP_OBJECT_REPLACE   "Objekt ersetzen"
-    IDS_OP_OBJECT_COPY      "Objekt kopieren"
+    IDS_OP_COB_LOAD         "Caligari Objekt laden"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2706,22 +2729,6 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_OP_LIGHT_CREATE     "Lichtquelle erzeugen"
-    IDS_OP_LIGHT_DELETE     "Lichtquelle löschen"
-    IDS_OP_LIGHT_ENABLE     "Lichtquelle ein-/ausschalten"
-    IDS_OP_LIGHT_SPOT       "Spot ein-/ausschalten"
-    IDS_OP_LIGHT_SOFT       "Weiche Schatten ein-/ausschalten"
-    IDS_OP_DROP             "Objekt hierarchisch verschieben"
-    IDS_OP_MOVE             "Objekte verschieben"
-    IDS_OP_ROTATE           "Objekte rotieren"
-    IDS_OP_CAMERA_CREATE    "Kamera erzeugen"
-    IDS_OP_CAMERA_DELETE    "Kamera löschen"
-    IDS_OP_CAMERA_ENABLE    "Kamera ein-/ausschalten"
-    IDS_OP_CAMERA_ORIENTATE "Kamera ausrichten"
 END
 
 #endif    // German (Germany) resources
