@@ -8,9 +8,9 @@ make -C src clean
 echo "Setting groups..."
 chgrp -R blz3 .
 
-setenv libfiles `ls lib/*_*/lib*.a lib/*_*/*.lib bin/*_*/`
-test -n "$libfiles" && rm $libfiles
-unsetenv libfiles
+foreach binfiles ( bin/*_*/* lib/*_*/* )
+  test -d $binfiles || rm $binfiles
+end
 
 echo "Setting permissions..."
 chmod 770 bin/*
