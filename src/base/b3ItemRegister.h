@@ -1,3 +1,25 @@
+/*
+**
+**	$Filename:      b3ItemRegister.h $
+**	$Release:       Dortmund 2001, 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
+**
+**	Blizzard III - a registry for class maintainance
+**
+**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+**
+**
+*/
+
+#ifndef B3_ITEMREGISTER_H
+#define B3_ITEMREGISTER_H
+
 class b3ItemRegisterEntry : public b3Link<b3ItemRegisterEntry>
 {
 	b3_item_init_func init_func;
@@ -29,3 +51,5 @@ public:
 };
 
 extern b3ItemRegister b3_item_register;
+
+#endif

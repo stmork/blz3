@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= TestIo TestThread Mandel TestData
+PRGS			= TestIo TestThread Mandel TestData TestUtil
 TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
 TESTTHREAD_OBJS	= TestThread.o
 MANDEL_OBJS		= Mandel.o b3Mandel.o
@@ -19,7 +19,8 @@ PRG_SOURCE		=\
 	TestThread.cc\
 	Mandel.cc\
 	b3Mandel.cc\
-	TestData.cc
+	TestData.cc\
+	TestUtil.cc
 
 all:	$(PRGS)
 
@@ -35,6 +36,9 @@ TestIo:	$(TESTIO_OBJS)
 
 TestData:	TestData.o
 	$(LINK.cc) -o $@ TestData.o $(LDLIBS)
+
+TestUtil:	TestUtil.o
+	$(LINK.cc) -o $@ TestUtil.o $(LDLIBS)
 
 TestThread:	$(TESTTHREAD_OBJS)
 	$(LINK.cc) -o $@ $(TESTTHREAD_OBJS) $(LDLIBS)

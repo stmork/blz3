@@ -1,5 +1,49 @@
+/*
+**
+**	$Filename:	TestMem.cc $
+**	$Release:	Dortmund 2001, 2002 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
+**
+**	Blizzard III - Testing memory routines
+**
+**      (C) Copyright 2001, 2002  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+  
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Mem.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2002/08/06 15:54:12  sm
+**	- Introduced b3HashMap<key,object> class incl. test prog.
+**	- Found some source files without header.
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        implementation                                **
+**                                                                      **
+*************************************************************************/
 
 void b3TestMem()
 {
