@@ -10,8 +10,8 @@ CXXFLAGS		= $(OFLAGS)
 LDLIBS			= $(LIB_B3) $(LIB_X) $(LIB_S)
 PRGS			= 
 LIBS			= libB3Base.a
-PRG_SOURCE		= b3FileList.cc b3Node.cc b3World.cc
-PRG_OBJ			= b3FileList.o  b3Node.o  b3World.o
+PRG_SOURCE		= b3Aux.cc b3FileList.cc b3Node.cc b3World.cc
+PRG_OBJ			= b3Aux.o  b3FileList.o  b3Node.o  b3World.o
 
 all:	lib
 

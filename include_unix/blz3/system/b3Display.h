@@ -47,10 +47,6 @@
 **                                                                      **
 *************************************************************************/
 
-typedef unsigned long b3_res;
-typedef b3_u32        b3_pkd_color;
-typedef long          b3_coord;
-
 typedef enum
 {
 	B3_DISPLAY_ERROR = -1,
