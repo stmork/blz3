@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/09/30 16:27:48  sm
+**	- Raytracing with diffuse color without shading
+**	- Sphere intersection fixed (now using normalized rays)
+**
 **	Revision 1.5  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
-**
+**	
 **	Revision 1.4  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
@@ -586,8 +590,8 @@ b3_f64 b3Box::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	Index = n[0] = n[1] = 0;
 	b3BaseTrans (ray,&BTLine);
 
-	if ((BTLine.dir.x == 0)||
-		(BTLine.dir.y == 0)||
+	if ((BTLine.dir.x == 0) ||
+		(BTLine.dir.y == 0) ||
 		(BTLine.dir.z == 0))
 	{
 		return -1;

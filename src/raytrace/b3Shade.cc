@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/09/30 16:27:48  sm
+**	- Raytracing with diffuse color without shading
+**	- Sphere intersection fixed (now using normalized rays)
+**
 **	Revision 1.1  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **
 */
 
@@ -43,9 +47,7 @@ void b3Scene::b3Shade(b3_ray *ray,b3_count depth_count)
 	ray->color.a = 0;
 	if (b3Intersect(ray))
 	{
-		ray->color.r =
-		ray->color.g =
-		ray->color.b = 1;
+		ray->shape->b3GetDiffuseColor(&ray->color);
 	}
 	else
 	{

@@ -23,6 +23,7 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/09/30 16:27:48  sm
+**	- Raytracing with diffuse color without shading
+**	- Sphere intersection fixed (now using normalized rays)
+**
 **	Revision 1.5  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
-**
+**	
 **	Revision 1.4  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -83,6 +88,7 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	b3_dVector    preDir;
 	b3_f64        fx,fxStep;
 	b3_f64        fy;
+	b3_f64        denom;
 	b3_pkd_color *buffer,r,g,b;
 
 	buffer = row->b3GetBuffer();
@@ -107,6 +113,14 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 		ray.ray.dir.x = preDir.x + fx * m_Width.x;
 		ray.ray.dir.y = preDir.y + fx * m_Width.y;
 		ray.ray.dir.z = preDir.z + fx * m_Width.z;
+
+		denom = sqrt(
+			ray.ray.dir.x * ray.ray.dir.x +
+			ray.ray.dir.y * ray.ray.dir.y +
+			ray.ray.dir.z * ray.ray.dir.z);
+		ray.ray.dir.x /= denom;
+		ray.ray.dir.y /= denom;
+		ray.ray.dir.z /= denom;
 
 		b3Shade(&ray);
 		r = (b3_pkd_color)(ray.color.r * 255.0);

@@ -680,7 +680,6 @@ protected:
 
 protected:
 	        b3Shape(b3_size class_size,b3_u32 class_type);
-	void    b3GetDiffuseColor(b3_color *color);
 	b3_bool b3CheckStencil();
 
 public:
@@ -688,6 +687,7 @@ public:
 	B3_ITEM_LOAD(b3Shape);
 
 	        void   b3ComputeBound(b3CondLimit *limit);
+	        void   b3GetDiffuseColor(b3_color *color);
 	virtual b3_f64 b3Intersect(b3_dLine *ray,b3_f64 &Q);
 	virtual void   b3Transform(b3_matrix *transformation);
 };

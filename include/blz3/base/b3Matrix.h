@@ -24,6 +24,7 @@
 #define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * pim180 + ((v) < 0 ? 360.0 : 0))
 
 b3_f64     b3Length             (b3_vector *vec);
+b3_f64     b3Normalize          (b3_vector *vec);
 b3_f64     b3QuadLength         (b3_vector *vec);
 b3_f64     b3Distance           (b3_vector *from,b3_vector *to);
 b3_f64     b3AngleOfVectors     (b3_vector *dir1,b3_vector *dir2);

@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/09/30 16:27:48  sm
+**	- Raytracing with diffuse color without shading
+**	- Sphere intersection fixed (now using normalized rays)
+**
 **	Revision 1.11  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
 **	  yet. Next step: shading!
-**
+**	
 **	Revision 1.10  2001/09/22 16:19:51  sm
 **	- Adding basic shape intersection routines
 **	
@@ -165,6 +169,20 @@ b3_bool b3NormalizeRow (
 **                           global part                                **
 **                                                                      **
 *************************************************************************/
+
+b3_f64 b3Normalize(b3_vector *vector)
+{
+	b3_f64 length;
+
+	length = sqrt(
+		vector->x * vector->x +
+		vector->y * vector->y +
+		vector->z * vector->z);
+	vector->x /= length;
+	vector->y /= length;
+	vector->z /= length;
+	return length;
+}
 
 b3_f64 b3Length (b3_vector *Vector)
 {
