@@ -59,10 +59,10 @@ struct b3_material
 	b3Color     m_Diffuse;
 	b3Color     m_Ambient;
 	b3Color     m_Specular;
-	b3_f32      m_Reflection;
-	b3_f32      m_Refraction;
-	b3_f32      m_Ior;
-	b3_f32      m_SpecularExp;
+	b3_f64      m_Reflection;
+	b3_f64      m_Refraction;
+	b3_f64      m_Ior;
+	b3_f64      m_SpecularExp;
 };
 
 struct b3_surface : public b3_material
@@ -104,14 +104,20 @@ public:
 		const b3_material *b,
 		const b3_f64       mix)
 	{
-		surface->m_Ambient     = b3Color::b3Mix(a->m_Ambient,     b->m_Ambient,     mix);
-		surface->m_Diffuse     = b3Color::b3Mix(a->m_Diffuse,     b->m_Diffuse,     mix);
-		surface->m_Specular    = b3Color::b3Mix(a->m_Specular,    b->m_Specular,    mix);
+		b3Color b_mixer;
+		b3Color a_mixer;
+		b3_f64  a_mix = 1.0 - mix;
 
-		surface->m_Reflection  =  b3Math::b3Mix(a->m_Reflection,  b->m_Reflection,  mix);
-		surface->m_Refraction  =  b3Math::b3Mix(a->m_Refraction,  b->m_Refraction,  mix);
-		surface->m_Ior         =  b3Math::b3Mix(a->m_Ior,         b->m_Ior,         mix);
-		surface->m_SpecularExp =  b3Math::b3Mix(a->m_SpecularExp, b->m_SpecularExp, mix);
+		b_mixer.b3InitFactor(mix);
+		a_mixer.b3InitFactor(a_mix);
+		surface->m_Ambient     = a_mixer * a->m_Ambient  + b_mixer * b->m_Ambient;
+		surface->m_Diffuse     = a_mixer * a->m_Diffuse  + b_mixer * b->m_Diffuse;
+		surface->m_Specular    = a_mixer * a->m_Specular + b_mixer * b->m_Specular;
+
+		surface->m_Reflection  =  a->m_Reflection  * a_mix + b->m_Reflection  * mix;
+		surface->m_Refraction  =  a->m_Refraction  * a_mix + b->m_Refraction  * mix;
+		surface->m_Ior         =  a->m_Ior         * a_mix + b->m_Ior         * mix;
+		surface->m_SpecularExp =  a->m_SpecularExp * a_mix + b->m_SpecularExp * mix;
 	}
 };
 

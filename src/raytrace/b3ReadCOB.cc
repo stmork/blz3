@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/06/05 12:00:02  sm
+**	- Some minor optimizations.
+**
 **	Revision 1.11  2004/05/28 13:15:39  sm
 **	- Major optimizations inside shader. But why is the intel brt3
 **	  5 minutes slower than the unoptimized version?
-**
+**	
 **	Revision 1.10  2004/05/08 07:29:31  sm
 **	- Introducing a tool for reading patches in the
 **	  original Utah teapot format.
@@ -680,7 +683,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		{
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 			sscanf(line,"rgb %f , %f , %f",&r,&g,&b);
-			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
+			sscanf(line,"alpha %f ka %f ks %f exp %lf ior %lf",
 				&alpha,
 				&ambient,
 				&specular,
