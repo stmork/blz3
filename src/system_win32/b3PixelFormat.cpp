@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/01/18 11:09:49  smork
+**	- More informative pixel format.
+**
 **	Revision 1.5  2005/01/13 20:05:16  sm
 **	- Some Lines bugfixes
-**
+**	
 **	Revision 1.4  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -250,7 +253,6 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
 
 void CB3PixelFormat::b3ListPixelFormats(HDC dc,const char *title)
 {
-#ifdef _DEBUG
 	int                   max,i;
 	PIXELFORMATDESCRIPTOR format;
 	CString               flags;
@@ -258,13 +260,14 @@ void CB3PixelFormat::b3ListPixelFormats(HDC dc,const char *title)
 	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	max = DescribePixelFormat(dc,1,0,NULL);
 
-	b3PrintF(B3LOG_DEBUG,"========================================= %s\n",title);
-	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
+	b3PrintF(B3LOG_FULL ,"========================================= %s\n",title);
+	b3PrintF(B3LOG_FULL ,"                                   (  bits  )\n");
+	b3PrintF(B3LOG_FULL ,"(index) (flags)  (pixeltype) (color) (depth) (accum) (flags):\n");
 	for (i = 0;i < m_glPixelFormat.b3GetCount();i++)
 	{
 		b3FlagsString(flags,m_glPixelFormat[i].desc.dwFlags);
-		b3PrintF(B3LOG_DEBUG,
-			"%3d: %8lx %8lx %2ld %2ld %2ld%s\n",
+		b3PrintF(B3LOG_FULL ,
+			"%3d:    %8lx %8lx    %2ld      %2ld      %2ld      %s\n",
 			m_glPixelFormat[i].index,
 			m_glPixelFormat[i].desc.dwFlags,
 			m_glPixelFormat[i].desc.iPixelType,
@@ -272,6 +275,5 @@ void CB3PixelFormat::b3ListPixelFormats(HDC dc,const char *title)
 			m_glPixelFormat[i].desc.cDepthBits,
 			m_glPixelFormat[i].desc.cAccumBits,flags);
 	}
-	b3PrintF(B3LOG_DEBUG,"=========================================\n");
-#endif
+	b3PrintF(B3LOG_FULL ,"=========================================\n");
 }
