@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/04/03 19:25:00  sm
+**	- Some other wood
+**
 **	Revision 1.16  2004/04/02 08:56:45  sm
 **	- Computed more realistic clouds.
-**
+**	
 **	Revision 1.15  2004/03/21 16:08:35  sm
 **	- Moved b3Cbrt from b3Cubic into b3Math and made it inlined.
 **	
@@ -476,7 +479,7 @@ void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
 	e        = (long)(t * 4 + 1) & 3;
 	frac     = t - s;
 
-	Color = MarbleColors[s] * frac + MarbleColors[e] * (1.0 - frac);
+	Color = b3Color::b3Mix(MarbleColors[e], MarbleColors[s], frac);
 }
 
 /*************************************************************************

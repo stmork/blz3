@@ -718,6 +718,7 @@ public:
 // WOOD
 class B3_PLUGIN b3MatWood : public b3Material 
 {
+public:
 	b3Color           m_DiffColor;
 	b3Color           m_AmbColor;
 	b3Color           m_SpecColor;
@@ -728,6 +729,17 @@ class B3_PLUGIN b3MatWood : public b3Material
 	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes; // not used
+	b3_f32            m_RingFrequency;
+	b3_f32            m_RingNoise;
+	b3_f32            m_RingNoiseFrequency;
+	b3_f32            m_TrunkWobble;
+	b3_f32            m_TrunkWobbleFrequency;
+	b3_f32            m_AngularWobble;
+	b3_f32            m_GrainFrequency;
+	b3_f32            m_Grainy;
+	b3_f32            m_Ringy;
+	b3Color           m_LightWood;
+	b3Color           m_DarkWood;
 
 public:
 	B3_ITEM_INIT(b3MatWood);
@@ -743,6 +755,9 @@ public:
 		b3Color  &diff,
 		b3Color  &amb,
 		b3Color  &spec);
+
+private:
+	void    b3Init();
 };
 
 // TEXTURE

@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/03 19:25:00  sm
+**	- Some other wood
+**
 **	Revision 1.6  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 **	Revision 1.5  2003/06/15 14:18:17  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
@@ -127,7 +130,14 @@ BOOL CDlgItemMaintain::OnInitDialog()
 		class_type = class_types[i];
 		info = loader.b3FindInfo(class_type);
 		m_ImageList.Add(info->m_Icon != null ? info->m_Icon : unknown);
-		m_ClassTypesToImg.b3Add(class_type,i + 1);
+		if (!m_ClassTypesToImg.b3HasKey(class_type))
+		{
+			m_ClassTypesToImg.b3Add(class_type,i + 1);
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Tried to add already allocated class type %08x.\n",class_type);
+		}
 	}
 	m_ItemList.SetImageList(&m_ImageList,LVSIL_NORMAL);
 	m_ItemList.SetIconSpacing(128,64);

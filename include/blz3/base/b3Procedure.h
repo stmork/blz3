@@ -23,6 +23,7 @@
 #include "blz3/system/b3Mem.h"
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3Matrix.h"
 
 typedef unsigned char b3_noisetype;
 
@@ -47,6 +48,49 @@ public:
 	static b3_f64  b3Turbulence  (b3_vector *P);
 	static b3_f64  b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
 	static void    b3NoiseDeriv  (b3_f64  dx,b3_f64  dy,b3_f64  dz,b3_vector *RVec);
+	static inline b3_f64  b3FBm(b3_vector &p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain)
+	{
+		b3_f64 sum = 0;
+		b3_vector pp = p;
+		b3_f64 fw = width;
+		b3_f64 amp = 1;
+		b3_f64 i;
+
+		for (i = 0;i < octaves;i+=1)
+		{
+			sum += amp * b3NoiseVector(pp.x,pp.y,pp.z);
+			amp *= gain;
+			pp.x *= lacunarity;
+			pp.y *= lacunarity;
+			pp.z *= lacunarity;
+			fw   *= lacunarity;
+		}
+		return sum;
+	}
+
+	static inline void b3VFBm(b3_vector *p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain,b3_vector *result)
+	{
+		b3_vector pp = *p;
+		b3_vector aux;
+		b3_f64 fw = width;
+		b3_f64 amp = 1;
+		b3_f64 i;
+
+		b3Vector::b3Init(result);
+		for (i = 0;i < octaves;i+=1)
+		{
+			b3NoiseDeriv(pp.x,pp.y,pp.z,&aux);
+
+			result->x += aux.x * amp;
+			result->y += aux.y * amp;
+			result->z += aux.z * amp;
+			amp *= gain;
+			pp.x *= lacunarity;
+			pp.y *= lacunarity;
+			pp.z *= lacunarity;
+			fw   *= lacunarity;
+		}
+	}
 
 	static void    b3Marble      (b3_vector *d,b3Color &mask);
 	static void    b3Wood        (b3_vector *d,b3Color &mask);

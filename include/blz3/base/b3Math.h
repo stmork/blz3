@@ -81,7 +81,23 @@ public:
 		
 		return P4 + s0 * R1 + s1 * R4;
 	}
-	
+
+	static inline b3_f64 b3Smoothstep(b3_f64 s,b3_f64 e,b3_f64 x)
+	{
+		if (x < s)
+		{
+			return 0;
+		}
+		else if (x > e)
+		{
+			return 1;
+		}
+		
+		b3_f64 t = (x - s) / (e - s);
+		
+		return (3 - 2 * t) * t * t;
+	}
+
 	static inline b3_f64 b3Smoothstep(b3_f64 t)
 	{
 		if (t < 0)
@@ -92,8 +108,29 @@ public:
 		{
 			return 1;
 		}
-//		return b3Hermite(t,0.0,0.0);
+
 		return (3 - 2 * t) * t * t;
+	}
+
+	static inline b3_f64 b3SmoothPulse(
+		b3_f64 e0,
+		b3_f64 e1,
+		b3_f64 e2,
+		b3_f64 e3,
+		b3_f64 x)
+	{
+		return b3Smoothstep(e0,e1,x) - b3Smoothstep(e2,e3,x);
+	}
+
+	static inline b3_f64 b3SmoothPulseTrain(
+		b3_f64 e0,
+		b3_f64 e1,
+		b3_f64 e2,
+		b3_f64 e3,
+		b3_f64 x,
+		b3_f64 period)
+	{
+		return b3SmoothPulse(e0,e1,e2,e3,fmod(x,period));
 	}
 
 #ifndef CBRT_SYS

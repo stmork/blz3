@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2004/04/03 19:25:00  sm
+**      - Some other wood
+**
 **      Revision 1.44  2004/03/18 14:07:05  sm
 **      - Changed granite icons
 **
@@ -935,10 +938,12 @@ b3_f64 b3MatMarble::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatWood::b3MatWood(b3_u32 class_type) : b3Material(sizeof(b3MatWood),class_type) 
 {
+	b3Init();
 }
 
 b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 {
+	b3Init();
 	b3InitColor(m_DiffColor);
 	b3InitColor(m_AmbColor);
 	b3InitColor(m_SpecColor);
@@ -950,6 +955,33 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 	m_Flags      = b3InitInt();
 	m_xTimes     = b3InitInt();
 	m_yTimes     = b3InitInt();
+}
+
+void b3MatWood::b3Init()
+{
+	// Basic parameters
+	m_AmbColor.b3Init(0.2,0.2,0.2);
+	m_DiffColor.b3Init(0.1,0.2,0.9);
+	m_SpecColor.b3Init(0.8,0.8,0.8);
+	m_Reflection           =   0;
+	m_Refraction           =   0;
+	m_RefrValue            =   1;
+	m_HighLight            = 200;
+	m_Flags                =   0;
+	m_xTimes = m_yTimes    =   0;
+
+	// The noise parameters
+	m_RingFrequency        =   0.2f;
+	m_RingNoise            =   0.2f;
+	m_RingNoiseFrequency   =   1;
+	m_TrunkWobble          =   0.5f;
+	m_TrunkWobbleFrequency =   0.025f;
+	m_AngularWobble        =   1;
+	m_GrainFrequency       =  25;
+	m_Grainy               =   1;
+	m_Ringy                =   1;
+	m_LightWood.b3Init(0.5,0.2,0.067);
+	m_DarkWood.b3Init(0.15,0.077,0.028);
 }
 
 void b3MatWood::b3Write()
@@ -973,19 +1005,80 @@ b3_bool b3MatWood::b3GetColors(
 	b3Color  &ambient,
 	b3Color  &specular)
 {
-	b3Color   mask;
 	b3_vector d;
+	b3_vector offset;
+	b3_vector Pring;
+	b3_vector aux;
+	b3_f64 dPshad = 1; // FIXME
 
 	d.x = ((polar->box_polar.x - 0.5) * m_Scale.x * M_PI);
-	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
-	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
+	d.y = ((polar->box_polar.z - 0.5) * m_Scale.y * M_PI);
+	d.z = ((polar->box_polar.y - 0.5) * m_Scale.z * M_PI);
+	b3Noise::b3VFBm(&d,dPshad * m_RingNoiseFrequency,2,4,0.5,&offset);
 
-	b3Noise::b3Wood (&d,mask);
+	b3Noise::b3NoiseDeriv(d.z * m_TrunkWobbleFrequency,0,0,&aux);
+	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * aux.x;
+	Pring.y = d.y + m_RingNoise * offset.y + m_TrunkWobble * aux.y;
+	Pring.z = d.z + m_RingNoise * offset.z;
 
+
+	b3_f64 r2 = Pring.x * Pring.x + Pring.y * Pring.y;
+	b3_f64 r  = sqrt(r2) * m_RingFrequency;
+	r += m_AngularWobble * b3Math::b3Smoothstep(0,5,r);
+	r += 0.5 * b3Noise::b3NoiseVector(r,0,0);
+
+	b3_f64 inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
+
+	b3_vector Pgrain;
+
+	Pgrain.x = d.x * m_GrainFrequency;
+	Pgrain.y = d.y * m_GrainFrequency;
+	Pgrain.z = d.z * m_GrainFrequency * 0.05;
+	b3_f64 dPgrain = 1; // FIXME
+
+	b3_loop i;
+	b3_f64  grain = 0;
+	b3_f64  amp = 1;
+
+	for (i = 0;i < 2;i++)
+	{
+		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2,0.6,dPgrain);
+		if (grain1valid > 0)
+		{
+			b3_f64 g = grain1valid * b3Noise::b3NoiseVector(Pgrain.x,Pgrain.y,Pgrain.z);
+
+			g *= (0.3 + 0.7 * inring);
+			g  = b3Math::b3Limit(0.8 - g,0,1);
+			g *= g;
+			g  = m_Grainy * b3Math::b3Smoothstep(0.5,1,g);
+			if (i == 0)
+			{
+				inring *= (1 - 0.4 * grain1valid);
+			}
+			grain = B3_MAX(grain,g);
+		}
+		Pgrain.x += Pgrain.x;
+		Pgrain.y += Pgrain.y;
+		Pgrain.z += Pgrain.z;
+		dPgrain  += dPgrain;
+		amp      *= 0.5;
+	}
+
+	b3Color cWood = b3Color::b3Mix(
+		m_LightWood,m_DarkWood,
+		inring * m_Ringy * (1 - grain) + grain);
+
+
+//	b3Noise::b3Wood (&d,mask);
+
+/*
 	diffuse  = m_DiffColor * mask;
 	ambient  = m_AmbColor  * mask;
 	specular = m_SpecColor * mask;
-
+*/
+	diffuse  = cWood;
+	ambient  = m_AmbColor;
+	specular = m_SpecColor;
 	return true;
 }
 
