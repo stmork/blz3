@@ -1,3 +1,20 @@
+/*
+**
+**	$Filename:	b3ImageButton.h $
+**	$Release:	Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Repeating image button
+**
+**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #if !defined(AFX_B3IMAGEBUTTON_H__FDF44B83_040C_11D6_9D01_080020FDDE74__INCLUDED_)
 #define AFX_B3IMAGEBUTTON_H__FDF44B83_040C_11D6_9D01_080020FDDE74__INCLUDED_
 
@@ -7,13 +24,20 @@
 // b3ImageButton.h : header file
 //
 
+#include <stdafx.h>
+
 /////////////////////////////////////////////////////////////////////////////
 // CB3ImageButton window
 
 class CB3ImageButton : public CButton
 {
-	bool m_Pressed;
+	unsigned long m_PressedCount;
+	unsigned long m_RepeatCount;
+	unsigned long m_FirstRepeatMillies;
+	unsigned long m_FurtherRepeatMillies;
 
+public:
+	HICON         m_hIcon;
 // Construction
 public:
 	CB3ImageButton();
@@ -27,6 +51,8 @@ public:
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3ImageButton)
+	public:
+	virtual void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -37,6 +63,8 @@ public:
 protected:
 	//{{AFX_MSG(CB3ImageButton)
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnTimer(UINT nIDEvent);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
