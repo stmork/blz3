@@ -37,13 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/12/11 17:05:01  sm
+**	- Fixed update/draw problem in object editor
+**
 **	Revision 1.24  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.23  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -249,7 +252,15 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 	if (lHint & B3_UPDATE_PICK)
 	{
-		doInvalidate |= m_PickList.b3SetShape(GetDocument()->b3GetSelectedShape());
+		CAppObjectDoc *pDoc    = GetDocument();
+		b3_bool        result;
+
+		result = m_PickList.b3SetShape(pDoc->b3GetSelectedShape());
+			m_PickList.b3SetupVertexMemory(&pDoc->m_Context);
+		if (result)
+		{
+			doInvalidate = true;
+		}
 	}
 
 	if (doInvalidate)

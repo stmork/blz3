@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.108  2004/12/11 17:05:01  sm
+**      - Fixed update/draw problem in object editor
+**
 **      Revision 1.107  2004/12/04 12:54:07  sm
 **      - Disabling VBO check box if VBO not available.
 **
@@ -1436,6 +1439,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Draw() this = %p\n",this);
 #endif
 
+	b3Update();
 	if ((!glMaterialComputed) || (glDisplayList == 0))
 	{
 		b3UpdateMaterial();
@@ -1488,13 +1492,10 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3Draw() this = %p\n",this);
 #endif
 
-	if (
-		(!glVertexElements->b3IsComputed()) ||
-		(!glGridElements->b3IsComputed()) ||
-		(!glPolygonElements->b3IsComputed()) ||
-		(!glMaterialComputed))
+	b3Update();
+
+	if (!glMaterialComputed)
 	{
-		b3Update();
 		b3UpdateMaterial();
 	}
 
@@ -1518,6 +1519,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"#####  b3RenderObject::b3Draw()\n");
 #endif
+	b3Update();
 }
 
 #endif
@@ -1526,6 +1528,10 @@ void b3RenderObject::b3CheckGeometry(
 	b3RenderContext *context,
 	b3_render_mode   render_mode)
 {
+	B3_ASSERT(glVertexElements->b3IsComputed());
+	B3_ASSERT(glGridElements->b3IsComputed());
+	B3_ASSERT(glPolygonElements->b3IsComputed());
+
 	b3MapVertices(B3_MAP_VBO_R);
 	b3MapIndices(B3_MAP_VBO_R);
 

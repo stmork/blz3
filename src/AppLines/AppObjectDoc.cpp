@@ -44,13 +44,16 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2004/12/11 17:05:01  sm
+**	- Fixed update/draw problem in object editor
+**
 **	Revision 1.42  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.41  2004/09/24 13:45:35  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
@@ -379,6 +382,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
 	bbox->b3Prepare(true);
+	bbox->b3Update();
 	bbox->b3Inverse(&m_OriginalPosition);
 
 	// Now everything necessary is initialized. So we can mark this

@@ -73,7 +73,8 @@ public:
 		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
 		   b3_bool         b3IsExpanded();
-		   void            b3Update();
+	       void            b3Update();
+		   void            b3UpdateBBox();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 	       void            b3ComputeBoxPolar(b3_ray *ray); 
 		   b3_count        b3Count();

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.106  2004/12/11 17:05:02  sm
+**	- Fixed update/draw problem in object editor
+**
 **	Revision 1.105  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
-**
+**	
 **	Revision 1.104  2004/11/27 10:31:12  sm
 **	- Removed b3Mem heritage from VBO handlers
 **	
@@ -931,7 +934,7 @@ void b3BBox::b3Draw(b3RenderContext *context)
 	}
 }
 
-void b3BBox::b3Update()
+void b3BBox::b3UpdateBBox()
 {
 	b3Item  *item;
 	b3Shape *shape;
@@ -944,9 +947,24 @@ void b3BBox::b3Update()
 	}
 }
 
+void b3BBox::b3Update()
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	b3UpdateBBox();
+
+	// Update subsequent BBoxes
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Update();
+	}
+}
+
 b3_bool b3Scene::b3UpdateThread(b3BBox *bbox,void *ptr)
 {
-	bbox->b3Update();
+	bbox->b3UpdateBBox();
 	return true;
 }
 
