@@ -130,6 +130,10 @@ SOURCE=.\b3File.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3FileDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3FloatEdit.cpp
 # End Source File
 # Begin Source File

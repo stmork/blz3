@@ -37,6 +37,7 @@
 #include "AppRaytraceView.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Date.h"
+#include "blz3/system/b3FileDialog.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
@@ -51,11 +52,17 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/04/07 12:59:38  sm
+**	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
+**	- CB3FileDialog used for CWinApp::OnFileOpen()
+**	- Image buttons changed to draw disabled state correctly using
+**	  CDC::DrawState()
+**
 **	Revision 1.31  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.30  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -206,6 +213,7 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
 	ON_COMMAND(ID_FILE_NEW, OnFileNew)
 	ON_COMMAND(ID_PROPERTIES, OnProperties)
+	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -632,4 +640,35 @@ void CAppLinesApp::OnProperties()
 	CDlgProperties dlg;
 
 	dlg.DoModal();
+}
+
+void CAppLinesApp::OnFileOpen() 
+{
+	// TODO: Add your command handler code here
+	CString filename;
+	CString filter_bwd,bwdFilterName,bwdFilterExt;
+	CString filter_bod,bodFilterName,bodFilterExt;
+	CString filter_img;
+
+	// Build scene filter
+	pSceneTemplate->GetDocString(bwdFilterName,CDocTemplate::filterName);
+	pSceneTemplate->GetDocString(bwdFilterExt,CDocTemplate::filterExt);
+	filter_bwd = bwdFilterName + "|*" + bwdFilterExt + "|";
+
+	// Build object filter
+	pObjectTemplate->GetDocString(bodFilterName,CDocTemplate::filterName);
+	pObjectTemplate->GetDocString(bodFilterExt,CDocTemplate::filterExt);
+	filter_bod = bodFilterName + "|*" + bodFilterExt + "|";
+
+	// Build image filter
+	filter_img.LoadString(IDS_TEXTURE_FILTER);
+
+	// Select filename
+	CB3FileDialog dlg(TRUE,"",NULL,OFN_HIDEREADONLY,filter_bwd + filter_bod + filter_img,m_pMainWnd);
+	if (dlg.DoModal())
+	{
+		// and load document
+		filename = dlg.GetFileName();
+		OpenDocumentFile(filename);
+	}
 }

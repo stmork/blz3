@@ -27,9 +27,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // CB3ImagePreviewFileDlg dialog
 
+#include "blz3/system/b3FileDialog.h"
 #include "blz3/system/b3ShowImage.h"
 
-class CB3ImagePreviewFileDlg : public CFileDialog
+class CB3ImagePreviewFileDlg : public CB3FileDialog
 {
 	DECLARE_DYNAMIC(CB3ImagePreviewFileDlg)
 
@@ -46,9 +47,15 @@ public:
 	BOOL         m_bPreview;
 	CB3ShowImage m_PreviewCtrl;
 
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CB3ImagePreviewFileDlg)
+	protected:
+	virtual BOOL OnInitDialog();
+	//}}AFX_VIRTUAL
+
 protected:
 	//{{AFX_MSG(CB3ImagePreviewFileDlg)
-	virtual BOOL OnInitDialog();
 	afx_msg void OnPreview();
 	afx_msg BOOL OnQueryNewPalette();
 	afx_msg void OnPaletteChanged(CWnd* pFocusWnd);
@@ -74,8 +81,19 @@ public:
 		DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 		LPCTSTR lpszFilter = NULL,
 		CWnd* pParentWnd = NULL);
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CB3ObjectPreviewFileDlg)
+	//}}AFX_VIRTUAL
 protected:
 	virtual void b3LoadImage(const char *image_name);
+
+protected:
+	//{{AFX_MSG(CB3ObjectPreviewFileDlg)
+	//}}AFX_MSG
+
+// Implementation
+	DECLARE_MESSAGE_MAP()
 };
 
 

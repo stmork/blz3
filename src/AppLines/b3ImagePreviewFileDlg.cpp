@@ -34,11 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/04/07 12:59:38  sm
+**	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
+**	- CB3FileDialog used for CWinApp::OnFileOpen()
+**	- Image buttons changed to draw disabled state correctly using
+**	  CDC::DrawState()
+**
 **	Revision 1.3  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.2  2002/01/10 20:18:54  sm
 **	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
 **	  what to do...
@@ -57,10 +63,10 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNAMIC(CB3ImagePreviewFileDlg, CFileDialog)
+IMPLEMENT_DYNAMIC(CB3ImagePreviewFileDlg, CB3FileDialog)
 
 
-BEGIN_MESSAGE_MAP(CB3ImagePreviewFileDlg, CFileDialog)
+BEGIN_MESSAGE_MAP(CB3ImagePreviewFileDlg, CB3FileDialog)
 	//{{AFX_MSG_MAP(CB3ImagePreviewFileDlg)
 	ON_BN_CLICKED(IDC_PREVIEW, OnPreview)
 	ON_WM_QUERYNEWPALETTE()
@@ -77,9 +83,9 @@ CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(
 	DWORD     dwFlags,
 	LPCTSTR   lpszFilter,
 	CWnd     *pParentWnd) :
-		CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
+		CB3FileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
 {
-	m_ofn.Flags |= (OFN_EXPLORER | OFN_ENABLETEMPLATE);
+	m_ofn.Flags |= (OFN_EXPLORER | OFN_ENABLESIZING | OFN_ENABLETEMPLATE);
 	m_ofn.lpTemplateName = MAKEINTRESOURCE(IDD_FILEOPENPREVIEW);
 
 	m_bPreview = TRUE;
@@ -160,6 +166,11 @@ void CB3ImagePreviewFileDlg::OnSetFocus(CWnd* pOldWnd)
 *************************************************************************/
 
 IMPLEMENT_DYNAMIC(CB3ObjectPreviewFileDlg, CB3ImagePreviewFileDlg)
+
+BEGIN_MESSAGE_MAP(CB3ObjectPreviewFileDlg, CB3ImagePreviewFileDlg)
+	//{{AFX_MSG_MAP(CB3ObjectPreviewFileDlg)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
 
 CB3ObjectPreviewFileDlg::CB3ObjectPreviewFileDlg(
 	BOOL      bOpenFileDialog,

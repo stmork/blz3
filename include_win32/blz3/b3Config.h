@@ -70,6 +70,7 @@
 #endif // WIN32
 
 #define IS_NT        (IS_WIN32 && (BOOL)(GetVersion() < 0x80000000))
+#define IS_WIN2K     (IS_NT && (LOBYTE(LOWORD(GetVersion())) >= 5))
 #define IS_WIN32S    (IS_WIN32 && (BOOL)(!(IS_NT) && (LOBYTE(LOWORD(GetVersion())) < 4)))
 #define IS_WIN95     ((BOOL)(!(IS_NT) && !(IS_WIN32S)) && IS_WIN32)
 
@@ -87,10 +88,16 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.21  2002/04/07 12:59:37  sm
+**	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
+**	- CB3FileDialog used for CWinApp::OnFileOpen()
+**	- Image buttons changed to draw disabled state correctly using
+**	  CDC::DrawState()
+**
 **	Revision 1.20  2002/03/01 20:26:38  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **	Revision 1.19  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
