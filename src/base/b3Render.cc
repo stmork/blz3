@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/08/20 19:35:08  sm
+**      - Index correction introduced (This is a hack!)
+**      - Some OpenGL cleanups
+**
 **      Revision 1.13  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -130,19 +134,16 @@ static GLfloat light0[] =
 
 b3RenderContext::b3RenderContext()
 {
+}
+
+void b3RenderContext::b3Init()
+{
 #ifdef BLZ3_USE_OPENGL
 	b3PrintF(B3LOG_DEBUG,"OpenGL vendor:     %s\n",glGetString(GL_VENDOR));
 	b3PrintF(B3LOG_DEBUG,"OpenGL renderer:   %s\n",glGetString(GL_RENDERER));
 	b3PrintF(B3LOG_DEBUG,"OpenGL version:    %s\n",glGetString(GL_VERSION));
 	b3PrintF(B3LOG_DEBUG,"OpenGL extensions: %s\n",glGetString(GL_EXTENSIONS));
-#endif
-}
 
-void b3RenderContext::b3StartDrawing()
-{
-#ifdef BLZ3_USE_OPENGL
-	glClearColor(0.9f,0.9f,0.9f,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_AUTO_NORMAL);
@@ -155,10 +156,18 @@ void b3RenderContext::b3StartDrawing()
 	glLightfv(GL_LIGHT0,GL_POSITION,light0);
 
 	// Some material settings
-	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+//	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
+#endif
+}
+
+void b3RenderContext::b3StartDrawing()
+{
+#ifdef BLZ3_USE_OPENGL
+	glClearColor(0.9f,0.9f,0.9f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 #endif
 }
 
@@ -433,13 +442,16 @@ void b3RenderObject::b3GetDiffuseColor(b3_color *color)
 	color->a = 0.0f;
 }
 
-b3_bool b3RenderObject::b3IsSolid()
+b3_render_mode b3RenderObject::b3GetRenderMode()
 {
-	return false;
+	return B3_RENDER_LINE;
 }
 
 void b3RenderObject::b3Draw()
 {
+	b3_render_mode render_mode = b3GetRenderMode();
+	b3_color       color;
+
 #ifdef BLZ3_USE_OPENGL
 	if (!glComputed)
 	{
@@ -449,95 +461,102 @@ void b3RenderObject::b3Draw()
 			glComputed = true;
 	}
 
-	if (GridCount > 0)
-	{
-		b3_color color;
-
 #ifdef _DEBUG
+	b3_index       i;
+
+	switch (render_mode)
+	{
+	case B3_RENDER_LINE:
 		// This loop collects access vialoations
 		// prior calling OpenGL routines. This
 		// makes it possible to catch to faulty
 		// index data. The access simply compute
 		// the length of the lines to be drawn.
-		if (b3IsSolid())
+		for (i = 0;i < PolyCount;i++)
 		{
-			for (b3_index i = 0;i < PolyCount;i++)
-			{
-				b3_vector aPoint,bPoint,cPoint;
-				b3_index  a,b,c;
-				b3_f64    aLen,bLen;
+			b3_vector aPoint,bPoint,cPoint;
+			b3_index  a,b,c;
+			b3_f64    aLen,bLen;
 
-				a = glPolygons[i * 3]     * 3;
-				aPoint.x = glVertices[a++];
-				aPoint.y = glVertices[a++];
-				aPoint.z = glVertices[a++];
+			a = glPolygons[i * 3]     * 3;
+			aPoint.x = glVertices[a++];
+			aPoint.y = glVertices[a++];
+			aPoint.z = glVertices[a++];
 
-				b = glPolygons[i * 3] * 3;
-				bPoint.x = glVertices[b++];
-				bPoint.y = glVertices[b++];
-				bPoint.z = glVertices[b++];
+			b = glPolygons[i * 3] * 3;
+			bPoint.x = glVertices[b++];
+			bPoint.y = glVertices[b++];
+			bPoint.z = glVertices[b++];
 
-				c = glPolygons[i * 3] * 3;
-				cPoint.x = glVertices[c++];
-				cPoint.y = glVertices[c++];
-				cPoint.z = glVertices[c++];
+			c = glPolygons[i * 3] * 3;
+			cPoint.x = glVertices[c++];
+			cPoint.y = glVertices[c++];
+			cPoint.z = glVertices[c++];
 
-				aLen = b3Distance(&aPoint,&bPoint);
-				bLen = b3Distance(&aPoint,&cPoint);
-			}
+			aLen = b3Distance(&aPoint,&bPoint);
+			bLen = b3Distance(&aPoint,&cPoint);
 		}
-		else
+		break;
+
+	case B3_RENDER_FILLED:
+		for (i = 0;i < GridCount;i++)
 		{
-			for (b3_index i = 0;i < GridCount;i++)
-			{
-				b3_vector aPoint,bPoint;
-				b3_index  a,b;
-				b3_f64    len;
+			b3_vector aPoint,bPoint;
+			b3_index  a,b;
+			b3_f64    len;
 
-				a = glGrids[i + i]     * 3;
-				aPoint.x = glVertices[a++];
-				aPoint.y = glVertices[a++];
-				aPoint.z = glVertices[a++];
+			a = glGrids[i + i]     * 3;
+			aPoint.x = glVertices[a++];
+			aPoint.y = glVertices[a++];
+			aPoint.z = glVertices[a++];
 
-				b = glGrids[i + i + 1] * 3;
-				bPoint.x = glVertices[b++];
-				bPoint.y = glVertices[b++];
-				bPoint.z = glVertices[b++];
+			b = glGrids[i + i + 1] * 3;
+			bPoint.x = glVertices[b++];
+			bPoint.y = glVertices[b++];
+			bPoint.z = glVertices[b++];
 
-				len = b3Distance(&aPoint,&bPoint);
-			}
+			len = b3Distance(&aPoint,&bPoint);
 		}
+		break;
+	}
 #endif
-		glVertexPointer(3, GL_FLOAT, 0, glVertices);
-		glNormalPointer(GL_FLOAT, 0, glNormals);
-		if (b3IsSolid())
+	switch (render_mode)
+	{
+	case B3_RENDER_NOTHING:
+		// Do nothing!
+		break;
+
+	case B3_RENDER_LINE:
+		if (GridCount > 0)
 		{
-			b3GetDiffuseColor(&color);
-#ifdef VERBOSE
-			b3PrintF(B3LOG_FULL,"---------- OpenGL start solid drawing\n");
-#endif
-			glEnable(GL_LIGHTING);
-			glEnable(GL_COLOR_MATERIAL);
-			glColor3f(color.r,color.g,color.b);
-			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
-#ifdef VERBOSE
-			b3PrintF(B3LOG_FULL,"---------- OpenGL stop solid drawing\n");
-#endif
-		}
-		else
-		{
+			glVertexPointer(3, GL_FLOAT, 0, glVertices);
+			glNormalPointer(GL_FLOAT, 0, glNormals);
+
 			b3GetGridColor(&color);
-#ifdef VERBOSE
-			b3PrintF(B3LOG_FULL,"---------- OpenGL start line drawing\n");
-#endif
 			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
 			glColor3f(color.r,color.g,color.b);
 			glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
-#ifdef VERBOSE
-			b3PrintF(B3LOG_FULL,"---------- OpenGL stop line drawing\n");
-#endif
 		}
+		break;
+
+	case B3_RENDER_FILLED:
+		if (PolyCount > 0)
+		{
+			glVertexPointer(3, GL_FLOAT, 0, glVertices);
+			glNormalPointer(GL_FLOAT, 0, glNormals);
+
+			b3GetDiffuseColor(&color);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_COLOR_MATERIAL);
+			glColor3f(color.r,color.g,color.b);
+			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+		}
+		break;
+
+	default:
+		b3PrintF(B3LOG_NORMAL,"Illegal render mode selected.\n");
+		break;
 	}
 #endif
 }

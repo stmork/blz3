@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/08/20 19:35:08  sm
+**	- Index correction introduced (This is a hack!)
+**	- Some OpenGL cleanups
+**
 **	Revision 1.10  2001/08/20 14:16:48  sm
 **	- Putting data into cmaera and light combobox.
 **	- Selecting camera and light.
-**
+**	
 **	Revision 1.9  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
@@ -289,7 +293,7 @@ int CAppLinesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&pixelformat);
 	SetPixelFormat(m_DC,m_PixelFormatIndex,&pixelformat);
 	m_GC = wglCreateContext(m_DC);
-	glEnable(GL_DEPTH_TEST);
+
 
 	return 0;
 }
@@ -308,6 +312,8 @@ void CAppLinesView::OnInitialUpdate()
 	// Do necessary Blizzard III stuff!
 	CAppLinesDoc *pDoc = GetDocument();
 
+	wglMakeCurrent(m_DC,m_GC);
+	pDoc->m_Context.b3Init();
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 	m_Scene      = pDoc->m_Scene;
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
@@ -377,7 +383,7 @@ void CAppLinesView::OnSize(UINT nType, int cx, int cy)
 BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
 {
 	// TODO: Add your message handler code here and/or call default
-	return FALSE;
+	return TRUE;
 }
 
 void CAppLinesView::OnDraw(CDC* pDC)

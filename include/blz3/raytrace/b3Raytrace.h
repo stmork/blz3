@@ -640,12 +640,12 @@ protected:
 	b3CondLimit      Limit;
 
 public:
-	         b3RenderShapeObject();
+	                b3RenderShapeObject();
 
 protected:
-	b3_count b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void     b3GetGridColor(b3_color *color);
-	b3_bool  b3IsSolid();
+	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
+	void            b3GetGridColor(b3_color *color);
+	b3_render_mode  b3GetRenderMode();
 };
 
 class b3InitShape
@@ -739,6 +739,10 @@ protected:
 		b3_f64    aRad,
 		b3_f64    bRad);
 	void b3ComputeTorusIndices();
+
+private:
+	b3_index b3FindVertex(GLushort vIndex);
+	void b3CorrectIndices();
 };
 
 

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/08/20 19:35:08  sm
+**      - Index correction introduced (This is a hack!)
+**      - Some OpenGL cleanups
+**
 **      Revision 1.12  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -376,12 +380,12 @@ b3_count b3RenderShapeObject::b3GetIndexOverhead (
 	if ((xs - x1) > Epsilon) Overhead++;
 	if ((x2 - xe) > Epsilon) Overhead++;
 
-	return ((xs > 0)||(xe < SinCosSteps)) ? -Overhead : Overhead;
+	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
 
-b3_bool b3RenderShapeObject::b3IsSolid()
+b3_render_mode b3RenderShapeObject::b3GetRenderMode()
 {
-	return true;
+	return B3_RENDER_FILLED;
 }
 
 void b3RenderShapeObject::b3GetGridColor(b3_color *color)
@@ -408,6 +412,41 @@ b3RenderShape::b3RenderShape(b3_u32 class_type) : b3Shape(sizeof(b3RenderShape),
 
 b3RenderShape::b3RenderShape(b3_u32 *src) : b3Shape(src)
 {
+}
+
+b3_index b3RenderShape::b3FindVertex(GLushort vertex)
+{
+	b3_vector *point;
+	b3_vector *ptr = (b3_vector *)glVertices;
+	b3_index   i;
+
+	point = &ptr[vertex];
+	for (i = 0;i < VertexCount;i++)
+	{
+		if (b3Distance(point,ptr) < Epsilon)
+		{
+			return i;
+		}
+		ptr++;
+	}
+
+	B3_ASSERT(false);
+	return vertex;
+}
+
+void b3RenderShape::b3CorrectIndices()
+{
+	b3_index  i;
+	GLushort *pPtr = glPolygons;
+
+	for (i = 0;i < PolyCount;i++)
+	{
+		pPtr[0] = b3FindVertex(pPtr[0]);
+		pPtr[1] = b3FindVertex(pPtr[1]);
+		pPtr[2] = b3FindVertex(pPtr[2]);
+
+		pPtr += 3;
+	}
 }
 
 void b3RenderShape::b3ComputeSphereVertices(
@@ -460,6 +499,7 @@ void b3RenderShape::b3ComputeSphereVertices(
 			Vector++;
 		}
 	}
+	b3CorrectIndices();
 	/*
 		PrintF ("\n");
 		PrintF ("Points: %3ld\n",Points);
@@ -547,6 +587,8 @@ void b3RenderShape::b3ComputeCylinderVertices(
 		Vector++;
 		xSize++;
 	}
+
+	b3CorrectIndices();
 #endif
 }
 
@@ -840,11 +882,8 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 		}
 		xSize++;
 	}
-	/*
-		PrintF ("\n");
-		PrintF ("Points: %3ld\n",Points);
-		PrintF ("Circles:%3ld\n",Circles);
-	*/
+
+	b3CorrectIndices();
 #endif
 }
 
@@ -939,15 +978,8 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 		}
 		GridCount += Heights;
 	}
+
 	B3_ASSERT(GridCount <= Number);
-	/*
-		PrintF ("\n");
-		PrintF ("Heights:  %ld\n",Heights);
-		PrintF ("Widths:   %ld\n",Widths);
-		PrintF ("Number:   %ld\n",Number);
-		PrintF ("Overhead: %ld\n",Overhead);
-		PrintF ("n:        %ld\n",n);
-	*/
 #endif
 }
 
@@ -1126,11 +1158,8 @@ void b3RenderShape::b3ComputeTorusVertices(
 		}
 		xSize++;
 	}
-	/*
-		PrintF ("\n");
-		PrintF ("Points: %3ld\n",Points);
-		PrintF ("Circles:%3ld\n",Circles);
-	*/
+
+	b3CorrectIndices();
 #endif
 }
 
