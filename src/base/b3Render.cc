@@ -46,6 +46,10 @@
 
 /*
 **      $Log$
+**      Revision 1.103  2004/11/29 16:35:02  smork
+**      - Added additional VBO version which recomputes in host memory
+**        and only transfers recomputed data to GPU.
+**
 **      Revision 1.102  2004/11/27 10:31:12  sm
 **      - Removed b3Mem heritage from VBO handlers
 **
@@ -732,9 +736,15 @@ void b3RenderObject::b3PreAlloc()
 #ifdef BLZ3_USE_OPENGL
 		if (b3VectorBufferObjects::b3HasVBO())
 		{
+#if 1
 			glVertexElements  = new b3VboVertexElements();
 			glGridElements    = new b3VboGridElements();
 			glPolygonElements = new b3VboPolygonElements();
+#else
+			glVertexElements  = new b3VboStaticVertexElements();
+			glGridElements    = new b3VboStaticGridElements();
+			glPolygonElements = new b3VboStaticPolygonElements();
+#endif
 		}
 		else
 		{
@@ -844,6 +854,7 @@ void b3RenderObject::b3Update()
 
 		glGridElements->b3Recomputed();
 		glPolygonElements->b3Recomputed();
+
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"      <b3RenderObject::b3UpdateIndices()\n");
 #endif

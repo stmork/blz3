@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/11/29 16:35:02  smork
+**	- Added additional VBO version which recomputes in host memory
+**	  and only transfers recomputed data to GPU.
+**
 **	Revision 1.6  2004/11/27 10:31:12  sm
 **	- Removed b3Mem heritage from VBO handlers
-**
+**	
 **	Revision 1.5  2004/11/24 10:58:02  smork
 **	- Added missing log entry
 **	
@@ -289,7 +293,7 @@ b3VBO::~b3VBO()
 
 /*************************************************************************
 **                                                                      **
-**                        b3VertexElements implementation               **
+**                        b3VboVertexElements implementation            **
 **                                                                      **
 *************************************************************************/
 
@@ -557,6 +561,111 @@ void b3VboPolygonElements::b3CustomData()
 }
 
 void b3VboPolygonElements::b3Draw()
+{
+	B3_ASSERT(!glBound);
+
+#ifdef BLZ3_USE_OPENGL
+	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
+	glDrawElements(GL_TRIANGLES, glElementCount * 3,GL_UNSIGNED_INT,0);
+#endif
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3VboStaticVertexElements implementation      **
+**                                                                      **
+*************************************************************************/
+
+b3VboStaticVertexElements::b3VboStaticVertexElements()
+{
+#ifdef BLZ3_USE_OPENGL
+	glEnableClientState(GL_VERTEX_ARRAY);
+#endif
+}
+
+void b3VboStaticVertexElements::b3CustomData()
+{
+	if ((glVertex != null) && (glElementCount > 0))
+	{
+#ifdef BLZ3_USE_OPENGL
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB,
+			glElementCount * sizeof(b3_gl_vertex), glVertex, GL_DYNAMIC_DRAW_ARB);
+#endif
+	}
+}
+
+void b3VboStaticVertexElements::b3Draw()
+{
+	B3_ASSERT(!glBound);
+
+#ifdef BLZ3_USE_OPENGL
+	glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO);
+	glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
+#endif
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3VboStaticGridElements implementation        **
+**                                                                      **
+*************************************************************************/
+
+b3VboStaticGridElements::b3VboStaticGridElements()
+{
+#ifdef BLZ3_USE_OPENGL
+	glEnableClientState(GL_INDEX_ARRAY);
+#endif
+}
+
+void b3VboStaticGridElements::b3CustomData()
+{
+	if ((glGrids != null) && (glElementCount > 0))
+	{
+#ifdef BLZ3_USE_OPENGL
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
+		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+			glElementCount * sizeof(b3_gl_line), glGrids, GL_DYNAMIC_DRAW_ARB);
+#endif
+	}
+}
+
+void b3VboStaticGridElements::b3Draw()
+{
+	B3_ASSERT(!glBound);
+
+#ifdef BLZ3_USE_OPENGL
+	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
+	glDrawElements(GL_LINES,glElementCount * 2,GL_UNSIGNED_INT, 0);
+#endif
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3VboStaticPolygonElements implementation     **
+**                                                                      **
+*************************************************************************/
+
+b3VboStaticPolygonElements::b3VboStaticPolygonElements()
+{
+#ifdef BLZ3_USE_OPENGL
+	glEnableClientState(GL_INDEX_ARRAY);
+#endif
+}
+
+void b3VboStaticPolygonElements::b3CustomData()
+{
+	if ((glPolygons != null) && (glElementCount > 0))
+	{
+#ifdef BLZ3_USE_OPENGL
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
+		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
+			glElementCount * sizeof(b3_gl_polygon), glPolygons, GL_DYNAMIC_DRAW_ARB);
+#endif
+	}
+}
+
+void b3VboStaticPolygonElements::b3Draw()
 {
 	B3_ASSERT(!glBound);
 

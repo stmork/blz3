@@ -250,6 +250,12 @@ public:
 	virtual      ~b3VBO();
 };
 
+/*************************************************************************
+**                                                                      **
+**                        VBO dynamic version                           **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3VboVertexElements : public b3VertexElements, protected b3VBO
 {
 public:
@@ -282,6 +288,36 @@ public:
 	virtual void b3FreeVertexMemory();
 	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
+	virtual void b3CustomData();
+	virtual void b3Draw();
+};
+
+/*************************************************************************
+**                                                                      **
+**                        VBO static version                            **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3VboStaticVertexElements : public b3SimpleVertexElements, protected b3VBO
+{
+public:
+	             b3VboStaticVertexElements();
+	virtual void b3CustomData();
+	virtual void b3Draw();
+};
+
+class B3_PLUGIN b3VboStaticGridElements : public b3SimpleGridElements, protected b3VBO
+{
+public:
+	             b3VboStaticGridElements();
+	virtual void b3CustomData();
+	virtual void b3Draw();
+};
+
+class B3_PLUGIN b3VboStaticPolygonElements : public b3SimplePolygonElements, protected b3VBO
+{
+public:
+	             b3VboStaticPolygonElements();
 	virtual void b3CustomData();
 	virtual void b3Draw();
 };
