@@ -149,7 +149,7 @@ public:
 	static void    b3Marble      (b3_vector *d,b3Color &mask);
 	static void    b3Wood        (b3_vector *d,b3Color &mask);
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
-	static void    b3Clouds      (b3_vector *P,b3Color &Color);
+	static b3_f64  b3Clouds      (b3_vector *P,b3_f64 &intensity);
 	static b3_f64  b3Wave        (b3_vector *point);
 	static b3_f64  b3Water       (b3_vector *point,b3_f64 time);
 	static b3_f64  b3PGauss      ();

@@ -37,12 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2004/04/22 14:28:44  sm
+**	- Adjusted clouds.
+**
 **	Revision 1.26  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
 **	  o b3MaterialSampler
 **	- Cleaneup
-**
+**	
 **	Revision 1.25  2004/04/10 13:45:30  sm
 **	- Added wooden oak planks.
 **	
@@ -606,36 +609,42 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	Color = HellColors[(int)(t * 4)];
 }
 
-static b3Color CloudHaze = b3Color(0.7,0.7,1.0);
+#define EARTH_RADIUS_KM 10.0
 
-void b3Noise::b3Clouds (b3_vector *P,b3Color &result)
+b3_f64 b3Noise::b3Clouds (b3_vector *P,b3_f64 &r)
 {
 	b3_vector Dir;
-	b3_f64    scaling = 5.0;
-	b3_f64    sharpness = 10.2;
-	b3_f64    hazyness = 0.07;
-	b3_f64    blue = 0.45;
-	b3_f64    r,factor,sight;
+	b3_f64    scaling   =   5.0;
+	b3_f64    R         = EARTH_RADIUS_KM;
+	b3_f64    sharpness =  10.2;
+	b3_f64    factor,sight;
 
 	if (P->z > 0)
 	{
-		factor = scaling / P->z;
-		Dir.x = P->x * factor;
-		Dir.y = P->y * factor;
-		Dir.z = 1.0;
+		b3_f64 Rc,p,D,len;
+
+		Rc = R + 1;
+
+		p     = P->z * -R;
+		D     = p * p + Rc * Rc - R * R;
+		len   = (-p - sqrt(D)) * scaling;
+		Dir.x = P->x * len;
+		Dir.y = P->y * len;
+		Dir.z = P->z * len;
 
 		r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
 		if (r < 0)
 		{
 			r = 0;
 		}
-		sight = exp(-hazyness * b3Vector::b3Length(&Dir));
-		result = b3Color::b3Mix(CloudHaze,b3Color(r,r,B3_MAX(r,blue)),sight);
+		sight = P->z;
 	}
 	else
 	{
-		result = CloudHaze;
+		r = 1;
+		sight = 0;
 	}
+	return sight;
 }
 
 inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)

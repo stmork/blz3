@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/04/22 14:28:44  sm
+**	- Adjusted clouds.
+**
 **	Revision 1.30  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.29  2004/04/11 19:04:21  sm
 **	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **	
@@ -317,10 +320,7 @@ void b3Scene::b3GetBackgroundColor(
 {
 	b3_coord  x,y;
 	b3_vector Dir;
-	b3_f64    scaling = 5.0;
-	b3_f64    sharpness = 10.2;
-	b3_f64    hazyness = 0.07;
-	b3_f64    r,factor,sight;
+	b3_f64    r,sight;
 
 	switch (m_BackgroundType)
 	{
@@ -336,25 +336,9 @@ void b3Scene::b3GetBackgroundColor(
 			break;
 
 		case TP_SKY_N_HELL :
-			if (ray->dir.z > 0)
-			{
-				factor = scaling / ray->dir.z;
-				Dir.x = ray->dir.x * factor;
-				Dir.y = ray->dir.y * factor;
-				Dir.z = 1.0;
-
-				r = 1.0 - pow(b3Noise::b3Turbulence (&Dir),-sharpness);
-				if (r < 0)
-				{
-					r = 0;
-				}
-				sight = exp(-hazyness * b3Vector::b3Length(&Dir));
-				ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
-			}
-			else
-			{
-				ray->color = m_BottomColor;
-			}
+			b3Vector::b3Init(&Dir,&ray->dir);
+			sight      = b3Noise::b3Clouds(&Dir,r);
+			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
 
 #ifdef SKY_SLIDE
 			ly = ray->color[b3Color::R] * 2.0 - 1.0;
