@@ -374,19 +374,21 @@ public:
 };
 
 // THIN_FILM
-class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material
+class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3Scaling
 {
 	static b3Color m_WaveLength;
 
 public:
 	b3_s32         m_Flags;
-	b3_f32         m_Thickness;
+	b3_f32         m_Thickness; // in micro meter
+	b3Color        m_Intensity;
 
 public:
 	B3_ITEM_INIT(b3MatThinFilm);
 	B3_ITEM_LOAD(b3MatThinFilm);
 
 	void    b3Write();
+	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 

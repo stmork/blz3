@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.85  2004/07/27 16:33:50  sm
+**      - Added thin film material rendering
+**
 **      Revision 1.84  2004/07/27 10:21:12  sm
 **      - Added two new materials:
 **        o car paint
@@ -1715,19 +1718,21 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 **                                                                      **
 *************************************************************************/
 
-b3Color b3MatThinFilm::m_WaveLength(480.0,520,780.0,0); // in nano meter
+b3Color b3MatThinFilm::m_WaveLength(700.0,510,485.0,0); // in nano meter
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm),class_type) 
 {
-	m_Diffuse     = B3_BLUE;
+	m_Diffuse     = B3_PEARL;
 	m_Ambient     = m_Diffuse * 0.2;
 	m_Specular    = B3_GREY;
+	m_Intensity.b3Init(0.2f);
 	m_Reflection  =    0;
 	m_Refraction  =    0;
-	m_Ior         =    1.5;
+	m_Ior         =    1.5f;
 	m_SpecularExp = 1000;
 	m_Flags       =    0;
-	m_Thickness   = 0.01; // in milli meter
+	m_Thickness   =	   7; // in micro meter
+	b3InitScaling(0.05,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3MatThinFilm::b3MatThinFilm(b3_u32 *src) : b3Material(src)
@@ -1741,22 +1746,67 @@ b3MatThinFilm::b3MatThinFilm(b3_u32 *src) : b3Material(src)
 	m_SpecularExp = b3InitFloat();
 	m_Flags       = b3InitInt();
 	m_Thickness   = b3InitFloat();
+	b3InitColor (m_Intensity);
+	b3InitVector(&m_Scale);
+	m_ScaleFlags    = (b3_scaling_mode)b3InitInt();
 }
 
 void b3MatThinFilm::b3Write()
 {
-	b3StoreColor(m_Diffuse);
-	b3StoreColor(m_Ambient);
-	b3StoreColor(m_Specular);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_Ior);
-	b3StoreFloat(m_SpecularExp);
-	b3StoreInt  (m_Flags);
-	b3StoreFloat(m_Thickness);
+	b3StoreColor (m_Diffuse);
+	b3StoreColor (m_Ambient);
+	b3StoreColor (m_Specular);
+	b3StoreFloat (m_Reflection);
+	b3StoreFloat (m_Refraction);
+	b3StoreFloat (m_Ior);
+	b3StoreFloat (m_SpecularExp);
+	b3StoreInt   (m_Flags);
+	b3StoreFloat (m_Thickness);
+	b3StoreColor (m_Intensity);
+	b3StoreVector(&m_Scale);
+	b3StoreInt   (m_ScaleFlags);
+}
+
+b3_bool b3MatThinFilm::b3Prepare()
+{
+	b3PrepareScaling();
+	return true;
 }
 
 b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 {
+	b3Color      factor;
+	b3_vector    point;
+	b3_vector64 *normal = &surface->incoming->normal;
+	b3_f64       quotient;
+	b3_f64       cos_phi;
+	b3_f64       sin_theta_sqr,cos_theta;
+	b3_f64       wobble;
+
+	// scale
+	b3Scale(surface->incoming,&m_Scale,&point);
+	wobble        = b3Noise::b3FilteredNoiseVector(point.x,point.y,point.z) * 2 - 1;
+
+	// compute refraction angle
+	cos_phi       = b3Vector::b3SMul(&surface->incoming->dir,normal);
+	sin_theta_sqr = (1.0 - cos_phi * cos_phi) / (m_Ior * m_Ior);
+	cos_theta = sqrt(1.0 - sin_theta_sqr);
+	quotient = 4000.0 * M_PI * m_Thickness * (0.5 + wobble) * cos_theta;
+
+	// compute interferences
+	for (int i = b3Color::R;i <= b3Color::B;i++)
+	{
+		factor[i] = (1 - cos(quotient / m_WaveLength[i])) * 0.5;
+	}
+	factor.b3SetAlpha(1);
+
+	// copy some values
+	surface->m_Ambient     = m_Ambient;
+	surface->m_Diffuse     = m_Diffuse + m_Intensity * factor;
+	surface->m_Specular    = m_Specular;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 	return true;
 }

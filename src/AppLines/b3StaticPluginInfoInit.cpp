@@ -44,6 +44,7 @@
 #include "DlgMatCookTorrance.h"
 #include "DlgMatGranite.h"
 #include "DlgMatOakPlank.h"
+#include "DlgMatThinFilm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -53,6 +54,9 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/07/27 16:33:50  sm
+**	- Added thin film material rendering
+**
 **	Revision 1.8  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -67,7 +71,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.7  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
@@ -149,6 +153,7 @@ void b3StaticPluginInfoInit::b3Init()
 	CDlgMatCookTorrance::b3Register();
 	CDlgMatGranite::b3Register();
 	CDlgMatOakPlank::b3Register();
+	CDlgMatThinFilm::b3Register();
 }
 
 const char *b3StaticPluginInfoInit::b3GetClassName(b3_u32 class_id)

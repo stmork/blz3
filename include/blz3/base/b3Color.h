@@ -39,6 +39,7 @@
 #define B3_YELLOW      ((b3_pkd_color)0x00ffff00)
 #define B3_MAGENTA     ((b3_pkd_color)0x00ff00ff)
 #define B3_CYAN        ((b3_pkd_color)0x0000ffff)
+#define B3_PEARL       ((b3_pkd_color)0x00a4aeb7)
 #define B3_MARKER      ((b3_pkd_color)0x00ff1144)
 #define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
 
@@ -187,6 +188,11 @@ public:
 	inline b3_f32 &operator[](const b3_color_index index)
 	{
 		return v[index];
+	}
+
+	inline b3_f32 &operator[](const int index)
+	{
+		return v[(b3_color_index)index];
 	}
 
 	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f32 mix)

@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2004/07/27 16:33:50  sm
+**	- Added thin film material rendering
+**
 **	Revision 1.50  2004/06/23 13:58:07  sm
 **	- Changed Fresnel computation decision from real transparent
 **	  to real refractive to force Fresnel computation even on
 **	  total reflection.
-**
+**	
 **	Revision 1.49  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
@@ -407,11 +410,11 @@ b3_bool b3Shader::b3Shade(
 		// Compute rel. box coordinates
 		bbox->b3ComputeBoxPolar(ray);
 
-		// Get material values
-		ray->material = shape->b3GetSurfaceValues(&surface);
-
 		// Do bump mapping
 		shape->b3BumpNormal(ray);
+
+		// Get material values
+		ray->material = shape->b3GetSurfaceValues(&surface);
 
 		// Compute geometry
 		b3ComputeOutputRays(&surface);

@@ -457,6 +457,10 @@ SOURCE=.\DlgMatTexture.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatThinFilm.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatWood.cpp
 # End Source File
 # Begin Source File
@@ -925,6 +929,10 @@ SOURCE=.\DlgMatTexture.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatThinFilm.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatWood.h
 # End Source File
 # Begin Source File
@@ -1214,6 +1222,10 @@ SOURCE=.\res\mat_slide.ico
 # Begin Source File
 
 SOURCE=.\res\mat_texture.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_thin_film.ico
 # End Source File
 # Begin Source File
 
