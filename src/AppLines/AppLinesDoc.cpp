@@ -60,9 +60,15 @@
 
 /*
 **	$Log$
+**	Revision 1.91  2003/08/28 14:44:26  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.90  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.89  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -639,7 +645,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 			null);
 		filename.b3LinkFileName(filepath,GetTitle());
 		filename.b3RemoveExt();
-		strcat(filename,".bwd");
+		filename.b3Append(".bwd");
 
 		m_Scene = b3ExampleScene::b3CreateNew(filename);
 		m_Anim  = m_Scene->b3GetAnimation();
@@ -763,7 +769,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		name.b3RemoveExt();
 		do
 		{
-			snprintf(new_name,B3_PATHSTRINGLEN,"%s-new%d.bwd",(const char *)name,i++);
+			new_name.b3Format("%s-new%d.bwd",(const char *)name,i++);
 			filename.b3LinkFileName(path,new_name);
 		}
 		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);
@@ -1582,7 +1588,7 @@ void CAppLinesDoc::OnObjectSave()
 			scene = b3ExampleScene::b3CreateBBox(selected);
 			scene->b3Raytrace(display);
 			result.b3RemoveExt();
-			strcat(result,".TGA");
+			result.b3Append(".TGA");
 			tx.b3SaveImage(result);
 			delete scene;
 			delete display;

@@ -38,9 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2003/08/28 14:44:26  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.48  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.47  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
@@ -283,12 +289,11 @@ static void b3SaveRaytracedImage(
 	if (picture_home != null)
 	{
 		imagename.b3LinkFileName(picture_home,filename);
-		strcat((char *)imagename,BLZ3_EXTENSION);
+		imagename.b3Append(BLZ3_EXTENSION);
 	}
 	else
-	{	
-		snprintf((char *)imagename,B3_FILESTRINGLEN,"%s%s",
-			(const char *)filename,BLZ3_EXTENSION);
+	{
+		imagename.b3Format("%s%s",(const char *)filename,BLZ3_EXTENSION);
 	}
 	display->b3SaveImage(imagename);
 }
@@ -505,8 +510,7 @@ int main(int argc,char *argv[])
 											b3PrintF(B3LOG_NORMAL,"Rendering frame t=%1.2f\n",t);
 											scene->b3SetAnimation(t);
 											scene->b3Raytrace(display);
-											snprintf((char *)img_name,B3_FILESTRINGLEN,"%s_%04ld",
-												camera->b3GetName(),count++);
+											img_name.b3Format("%s_%04ld",camera->b3GetName(),count++);
 											b3SaveRaytracedImage(
 												display,
 												BLZ3_PICTURES,img_name);

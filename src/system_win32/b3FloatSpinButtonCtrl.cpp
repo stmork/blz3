@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/28 14:44:27  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.6  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.5  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
@@ -179,22 +185,22 @@ void CB3FloatSpinButtonCtrl::b3SetIncrement(b3_f64 increment)
 
 void CB3FloatSpinButtonCtrl::b3SetDigits(int pre,int post)
 {
-	char digit[16];
+	char pre_digit[16];
+	char post_digit[16];
 	
 	B3_ASSERT((post >= 0) && (post < 6));
 
-	strcpy (m_Format,"%");
+	pre_digit[0] = post_digit[0] = 0;
+
 	if (pre >= 0)
 	{
-		snprintf(digit,sizeof(digit),"%d",pre);
-		strcat(m_Format,digit);
+		snprintf(pre_digit,sizeof(pre_digit),"%d",pre);
 	}
 	if (post >= 0)
 	{
-		snprintf(digit,sizeof(digit),".%d",post);
-		strcat(m_Format,digit);
+		snprintf(post_digit,sizeof(post_digit),".%d",post);
 	}
-	strcat (m_Format,"lf");
+	snprintf(m_Format,sizeof(m_Format),"%%%s%slf",pre_digit,post_digit);
 }
 
 b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()

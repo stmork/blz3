@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/28 14:44:26  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.6  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.5  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -108,13 +114,15 @@ b3_bool b3Runtime::b3Hostname(char *hostname,const b3_size buffer_size)
 
 b3_s32 b3Runtime::b3Execute(const char *command, const b3_bool async)
 {
-	char   set[1024];
-	b3_s32 result = 127;
+	char        set[1024];
+	const char *fmt;
+	b3_s32      result = 127;
+	b3_size     offset = sizeof(set) - (async ? 2 : 0);
 
-	if (strlen(command) <= (sizeof(set) - 2))
+	if (strlen(command) < offset)
 	{
-		strcpy (set,command);
-		if (async) strcat(set," &");
+		fmt = async ? "%s &" : "%s";
+		snprintf(set,sizeof(set),fmt,command);
 		result = system(set);
 	}
 

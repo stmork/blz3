@@ -34,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/08/28 14:44:26  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.14  2003/05/26 11:20:52  sm
 **	- Used wrong data types for b3Path::b3ExtractExt() methods. Now using
 **	  signed versus unsigned int.
-**
+**	
 **	Revision 1.13  2002/08/16 11:40:39  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There
@@ -495,4 +501,28 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 		}
 	}
 	ext[0] = 0;
+}
+
+void b3Path::b3Format(const char *format,...)
+{
+	va_list  argptr;
+
+	va_start (argptr,format);
+	vsnprintf(m_Path,sizeof(m_Path),format,argptr);
+	va_end   (argptr);
+}
+
+void b3Path::b3Append(const char *ext)
+{
+	b3_size i,k=0;
+
+	for (i = strlen(m_Path);i < sizeof(m_Path);i++)
+	{
+		m_Path[i] = ext[k];
+		if (ext[k] == 0)
+		{
+			return;
+		}
+		k++;
+	}
 }

@@ -61,6 +61,8 @@ public:
 	virtual void b3ExtractExt   () = 0;
 	virtual void b3Correct      (const char *path) = 0;
 	virtual void b3Correct      () = 0;
+	virtual void b3Format       (const char *format,...) = 0;
+	virtual void b3Append       (const char *ext) = 0;
 
 	inline operator char * ()
 	{

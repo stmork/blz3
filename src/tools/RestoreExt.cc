@@ -32,6 +32,12 @@
 
 /*
 **  $Log$
+**  Revision 1.4  2003/08/28 14:44:27  sm
+**  - Further buffer overflow prevention:
+**    o added b3Path::b3Format
+**    o added b3Path::b3Append
+**  - Further strcat/strcpy removal necessary
+**
 **  Revision 1.3  2003/07/12 17:44:47  sm
 **  - Cleaned up raytracing b3Item registration
 **
@@ -99,8 +105,8 @@ static void b3TestFile(const char *filename)
 	if (ext != null)
 	{
 		new_filename.b3RemoveExt(filename);
-		strcat(new_filename,".");
-		strcat(new_filename,ext);
+		new_filename.b3Append(".");
+		new_filename.b3Append(ext);
 		if (strcmp(filename,new_filename) != null)
 		{
 #if 1

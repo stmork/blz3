@@ -33,12 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/08/28 14:44:27  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.2  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
 **	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
 **	  to avoid thousands point.
-**
+**	
 **	Revision 1.1  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -70,7 +76,7 @@ CB3Version::CB3Version(b3_bool no_cr)
 	         void    *info;
 			 char    *debug;
 			 char    *cr;
-	         char     FileName[1024];
+	         b3Path   FileName(app->m_pszHelpFilePath);
 	unsigned long     handle;
 	unsigned int      len;
 	b3Date            today;
@@ -93,9 +99,8 @@ CB3Version::CB3Version(b3_bool no_cr)
 	// We assume that the help file is at the same
 	// position like this *.exe. So get *.hlp with
 	// full path and convert it to the *.exe.
-	strcpy     (FileName,app->m_pszHelpFilePath);
-	b3Path::b3RemoveExt(FileName);
-	strcat     (FileName,".exe");
+	FileName.b3RemoveExt();
+	FileName.b3Append(".exe");
 
 	// Now we get a handle about this *.exe information
 	len = GetFileVersionInfoSize(FileName, &handle);

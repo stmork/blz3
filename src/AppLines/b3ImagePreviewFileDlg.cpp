@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/28 14:44:26  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.6  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.5  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
 **	
@@ -204,7 +210,7 @@ void CB3ObjectPreviewFileDlg::b3LoadImage(const char *image_name)
 		b3Path thumbnail;
 
 		thumbnail.b3RemoveExt(image_name);
-		strcat((char *)thumbnail,".TGA");
+		thumbnail.b3Append(".TGA");
 		m_PreviewCtrl.b3Load(thumbnail);
 	}
 	else

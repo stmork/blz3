@@ -31,9 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/08/28 14:44:27  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.9  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.8  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -160,22 +166,22 @@ void CB3FloatEdit::b3DisableBound()
 
 void CB3FloatEdit::b3SetDigits(int pre, int post)
 {
-	char digit[16];
+	char pre_digit[16];
+	char post_digit[16];
 	
 	m_PreDigits  = pre;
 	m_PostDigits = post;
-	strcpy (m_Format,"%");
+	pre_digit[0] = post_digit[0] = 0;
+
 	if (pre >= 0)
 	{
-		snprintf(digit,sizeof(digit),"%d",pre);
-		strcat(m_Format,digit);
+		snprintf(pre_digit,sizeof(pre_digit),"%d",pre);
 	}
 	if (post >= 0)
 	{
-		snprintf(digit,sizeof(digit),".%d",post);
-		strcat(m_Format,digit);
+		snprintf(post_digit,sizeof(post_digit),".%d",post);
 	}
-	strcat (m_Format,"lf");
+	snprintf(m_Format,sizeof(m_Format),"%%%s%slf",pre_digit,post_digit);
 }
 
 b3_f64 CB3FloatEdit::b3SetPos(b3_f64 value)

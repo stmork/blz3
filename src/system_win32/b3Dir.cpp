@@ -38,9 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/08/28 14:44:27  sm
+**	- Further buffer overflow prevention:
+**	  o added b3Path::b3Format
+**	  o added b3Path::b3Append
+**	- Further strcat/strcpy removal necessary
+**
 **	Revision 1.10  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.9  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -106,7 +112,7 @@ b3_path_type b3Dir::b3Exists (const char *Name)
 
 	if ((strlen(Name) == 2) && (Name[1] == ':'))
 	{
-		snprintf (aux,B3_FILESTRINGLEN,"%s\\",Name);
+		aux.b3Format("%s\\",Name);
 		Name = aux;
 	}
 
@@ -649,6 +655,30 @@ void b3Path::b3RemoveDelimiter(char *name)
 		else i = -1;
 	}
 	name[len] = 0;
+}
+
+void b3Path::b3Format(const char *format,...)
+{
+	va_list  argptr;
+
+	va_start (argptr,format);
+	vsnprintf(m_Path,sizeof(m_Path),format,argptr);
+	va_end   (argptr);
+}
+
+void b3Path::b3Append(const char *ext)
+{
+	b3_size i,k=0;
+
+	for (i = strlen(m_Path);i < sizeof(m_Path);i++)
+	{
+		m_Path[i] = ext[k];
+		if (ext[k] == 0)
+		{
+			return;
+		}
+		k++;
+	}
 }
 
 /*************************************************************************

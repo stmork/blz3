@@ -47,6 +47,8 @@ public:
 		   void b3ExtractExt   ();
 	       void b3Correct      (const char *path);
 		   void b3Correct      ();
+		   void b3Format       (const char *format,...);
+		   void b3Append       (const char *ext);
 	static void b3LinkFileName (char *full,const char *path,const char *name);
 	static void b3SplitFileName(const char *full,char *path,char *name);
 	static void b3ParentName   (const char *path,char *result);
