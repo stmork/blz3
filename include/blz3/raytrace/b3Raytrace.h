@@ -1053,6 +1053,7 @@ public:
 
 	void    b3StoreShape();
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
@@ -1494,6 +1495,7 @@ public:
 
 	void     b3StoreShape();
 	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	void     b3ComputeVertices();
 	void     b3ComputeIndices();
 	b3_bool  b3Intersect(b3_ray *ray,b3_shape_intervals *interval,b3_line64 *BTLine);

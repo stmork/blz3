@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2002/07/22 12:46:08  sm
+**      - Added Windows Lines III support for textures
+**      - Fixed sphere computation
+**
 **      Revision 1.30  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -271,7 +275,9 @@ void b3RenderContext::b3LightReset()
 {
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
+#ifdef GL_LIGHT_MODEL_COLOR_CONTROL
 	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+#endif
 
 	// Disable all other lights
 	for (int i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
@@ -850,7 +856,6 @@ void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 void b3RenderObject::b3Draw()
 {
 	b3_render_mode render_mode = b3GetRenderMode();
-	b3_color       blend;
 	b3_color       ambient;
 	b3_color       diffuse;
 	b3_color       specular;
@@ -927,7 +932,6 @@ void b3RenderObject::b3Draw()
 	case B3_RENDER_LINE:
 		if (glGridCount > 0)
 		{
-			B3_ASSERT(glTexCoord != null);
 			glVertexPointer( 3,  GL_FLOAT, 0, glVertices);
 			glNormalPointer(     GL_FLOAT, 0, glNormals);
 			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);

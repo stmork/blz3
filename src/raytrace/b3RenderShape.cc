@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2002/07/22 12:46:08  sm
+**      - Added Windows Lines III support for textures
+**      - Fixed sphere computation
+**
 **      Revision 1.35  2002/07/22 10:52:16  sm
 **      - Added correct chess support
 **      - Added texture support for following shapes:
@@ -504,12 +508,14 @@ void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
 	b3Condition      *cond;
 	b3_stencil_bound  info;
 
+	// Get outer limits
 	b3GetStencilBoundInfo(&info);
 	limit->x1 = info.xMin;
 	limit->y1 = info.yMin;
 	limit->x2 = info.xMax;
 	limit->y2 = info.yMax;
 
+	// Do any stencil make the limits closer?
 	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
 		cond = (b3Condition *)item;
@@ -595,20 +601,17 @@ b3_bool b3ShapeRenderObject::b3GetChess(
 	b3Item  *item;
 	b3_bool  result = false;
 
-	if (b3GetClassType() == AREA)
+	item   = b3GetMaterialHead()->First;
+	if (item != null)
 	{
-		item   = b3GetMaterialHead()->First;
-		if (item != null)
+		result = item->b3GetClassType() == CHESS;
+		if (result)
 		{
-			result = item->b3GetClassType() == CHESS;
-			if (result)
-			{
-				b3MatChess *chess = (b3MatChess *)item;
-				*black  = chess->m_DiffColor[0];
-				*white  = chess->m_DiffColor[1];
-				xRepeat = chess->m_xTimes;
-				yRepeat = chess->m_yTimes;
-			}
+			b3MatChess *chess = (b3MatChess *)item;
+			*black  = chess->m_DiffColor[0];
+			*white  = chess->m_DiffColor[1];
+			xRepeat = chess->m_xTimes;
+			yRepeat = chess->m_yTimes;
 		}
 	}
 	return result;
@@ -620,11 +623,6 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 	b3_bool       result = false;
 	b3_u32        type;
 
-	if (b3GetClassType() != AREA)
-	{
-//		return false;
-	}
-
 	for( item  = b3GetMaterialHead()->First;
 	    (item != null) && (!result);
 	     item  = item->Succ)
@@ -635,7 +633,6 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 
 	if (result)
 	{
-		b3Item           *item;
 		b3Material       *material;
 		b3_stencil_limit  limit;
 		b3_polar          polar;

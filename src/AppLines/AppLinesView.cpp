@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2002/07/22 12:46:08  sm
+**	- Added Windows Lines III support for textures
+**	- Fixed sphere computation
+**
 **	Revision 1.48  2002/02/13 20:13:13  sm
 **	- Added dashed line pattern support in class CB3DashPen
-**
+**	
 **	Revision 1.47  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
@@ -404,6 +408,8 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	{
 		b3_vector  look;
 		b3_f64     len;
+
+		m_Scene->b3SetLights(&pDoc->m_Context);
 
 		light = pDoc->m_Light;
 		len   = b3Vector::b3Length(&light->m_Direction);
