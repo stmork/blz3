@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/04/03 14:07:18  sm
+**	- Resolved internal compiler error problem of VC++
+**
 **	Revision 1.15  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.14  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -323,8 +326,8 @@ void CDlgScene::b3UpdateUI()
 	m_xResSpin.EnableWindow(m_ResValid);
 	m_yResSpin.EnableWindow(m_ResValid);
 	imgSelect->EnableWindow(m_BackgroundMode == 3);
-	topSelect->EnableWindow(m_BackgroundMode == 1);
-	bottomSelect->EnableWindow(m_BackgroundMode == 1);
+	topSelect->EnableWindow((m_BackgroundMode == 1) || (m_BackgroundMode == 2));
+	bottomSelect->EnableWindow((m_BackgroundMode == 1) || (m_BackgroundMode == 2));
 }
 
 void CDlgScene::OnOK() 

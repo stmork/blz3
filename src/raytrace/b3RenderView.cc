@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/04/03 14:07:18  sm
+**	- Resolved internal compiler error problem of VC++
+**
 **	Revision 1.35  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.34  2003/02/27 19:39:05  sm
 **	- Added two grid colors for configuration.
 **	- Beautified properties dialog.
@@ -1136,6 +1139,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3Color &color)
 	b3_f64    yStart,yEnd;
 	b3_f64    depth;
 	b3_count  x,y,xCount,yCount;
+	b3_f64 aux = B3_RASTER_FLOOR(m_vvLook.x,grid);
 
 	if (m_Actual == null)
 	{
@@ -1225,7 +1229,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3Color &color)
 		xEnd    = m_vvLook.y + m_vvWidth;
 		yStart  = m_vvLook.z - m_vvHeight;
 		yEnd    = m_vvLook.z + m_vvHeight;
-		depth   = B3_RASTER_FLOOR(m_vvLook.x,grid);
+		depth   = aux; // This is due to a internal compiler problem.
 
 		// horizontal raster
 		b3Vector::b3Init(&a,depth,B3_RASTER_CEIL(xStart,grid),yStart);

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2004/04/03 14:07:18  sm
+**	- Resolved internal compiler error problem of VC++
+**
 **	Revision 1.25  2004/04/02 08:56:45  sm
 **	- Computed more realistic clouds.
-**
+**	
 **	Revision 1.24  2004/03/01 14:00:32  sm
 **	- Ready to go for Cook/Torrance reflectance model.
 **	
@@ -291,6 +294,11 @@ void b3Scene::b3GetBackgroundColor(
 	b3_f64       ly)
 {
 	b3_coord  x,y;
+	b3_vector Dir;
+	b3_f64    scaling = 5.0;
+	b3_f64    sharpness = 10.2;
+	b3_f64    hazyness = 0.07;
+	b3_f64    r,factor,sight;
 
 	switch (m_BackgroundType)
 	{
@@ -306,11 +314,25 @@ void b3Scene::b3GetBackgroundColor(
 			break;
 
 		case TP_SKY_N_HELL :
-			b3_vector dir;
-			dir.x = ray->dir.x;
-			dir.y = ray->dir.y;
-			dir.z = ray->dir.z;
-			b3Noise::b3Clouds (&dir,ray->color);
+			if (ray->dir.z > 0)
+			{
+				factor = scaling / ray->dir.z;
+				Dir.x = ray->dir.x * factor;
+				Dir.y = ray->dir.y * factor;
+				Dir.z = 1.0;
+
+				r = 1.0 - pow(b3Noise::b3Turbulence (&Dir),-sharpness);
+				if (r < 0)
+				{
+					r = 0;
+				}
+				sight = exp(-hazyness * b3Vector::b3Length(&Dir));
+				ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
+			}
+			else
+			{
+				ray->color = m_BottomColor;
+			}
 
 #ifdef SKY_SLIDE
 			ly = ray->color[b3Color::R] * 2.0 - 1.0;
