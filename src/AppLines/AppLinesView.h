@@ -36,6 +36,8 @@ class CAppLinesView : public CScrollView
 	HGLRC  m_GC;
 	int    m_PixelFormatIndex;
 	b3RenderView m_RenderView;
+	b3_bool      m_Selecting;
+	CPoint       m_SelectStart;
 protected: // create from serialization only
 	CAppLinesView();
 	DECLARE_DYNCREATE(CAppLinesView)
@@ -93,6 +95,25 @@ protected:
 	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
 	afx_msg void OnViewAntialias();
 	afx_msg void OnUpdateViewAntialias(CCmdUI* pCmdUI);
+	afx_msg void OnViewSmaller();
+	afx_msg void OnViewSelect();
+	afx_msg void OnViewBigger();
+	afx_msg void OnViewOptimal();
+	afx_msg void OnUpdateViewSmaller(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewSelect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewBigger(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
+	afx_msg void OnViewMoveRight();
+	afx_msg void OnViewMoveLeft();
+	afx_msg void OnViewMoveTop();
+	afx_msg void OnViewMoveBottom();
+	afx_msg void OnUpdateViewMoveRight(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewMoveLeft(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewMoveTop(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewMoveBottom(CCmdUI* pCmdUI);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

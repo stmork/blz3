@@ -32,6 +32,8 @@ protected: // create from serialization only
 
 // Attributes
 public:
+	b3_vector m_Lower;
+	b3_vector m_Upper;
 
 // Operations
 public:

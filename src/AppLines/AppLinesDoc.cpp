@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/08/13 15:05:01  sm
+**	- Now we can scale and move around with stacked views.
+**
 **	Revision 1.5  2001/08/12 19:47:47  sm
 **	- Now having correct orthogonal projection incl. aspect ratio
-**
+**	
 **	Revision 1.4  2001/08/10 18:28:58  sm
 **	- Some bug fixing
 **	- Update functions per view inserted. Now with redraw when loading.
@@ -132,6 +135,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3AllocVertices(&m_Context);
+	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 	return TRUE;
 }
 

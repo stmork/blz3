@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/08/13 15:05:01  sm
+**	- Now we can scale and move around with stacked views.
+**
 **	Revision 1.6  2001/08/12 19:47:47  sm
 **	- Now having correct orthogonal projection incl. aspect ratio
-**
+**	
 **	Revision 1.5  2001/08/11 19:59:15  sm
 **	- Added orthogonal projection
 **	
@@ -106,6 +109,25 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BACK, OnUpdateViewBack)
 	ON_COMMAND(ID_VIEW_ANTIALIAS, OnViewAntialias)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ANTIALIAS, OnUpdateViewAntialias)
+	ON_COMMAND(ID_VIEW_SMALLER, OnViewSmaller)
+	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
+	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
+	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SMALLER, OnUpdateViewSmaller)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_SELECT, OnUpdateViewSelect)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_BIGGER, OnUpdateViewBigger)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
+	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
+	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
+	ON_COMMAND(ID_VIEW_MOVE_TOP, OnViewMoveTop)
+	ON_COMMAND(ID_VIEW_MOVE_BOTTOM, OnViewMoveBottom)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMoveRight)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMoveLeft)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_TOP, OnUpdateViewMoveTop)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_BOTTOM, OnUpdateViewMoveBottom)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -120,6 +142,7 @@ CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
+	m_Selecting = false;
 }
 
 CAppLinesView::~CAppLinesView()
@@ -136,24 +159,6 @@ BOOL CAppLinesView::PreCreateWindow(CREATESTRUCT& cs)
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesView drawing
-
-void CAppLinesView::OnDraw(CDC* pDC)
-{
-	CAppLinesDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	// TODO: add draw code for native data here
-}
-
-void CAppLinesView::OnInitialUpdate()
-{
-	CScrollView::OnInitialUpdate();
-
-	CSize sizeTotal;
-	// TODO: calculate the total size of this view
-	sizeTotal.cx = sizeTotal.cy = 100;
-	SetScrollSizes(MM_TEXT, sizeTotal);
-	OnUpdate(this,B3_UPDATE_ALL,0);
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesView printing
@@ -236,6 +241,12 @@ void CAppLinesView::OnDestroy()
 	wglDeleteContext(m_GC);
 }
 
+void CAppLinesView::OnDraw(CDC* pDC)
+{
+	CAppLinesDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	// TODO: add draw code for native data here
+}
 
 void CAppLinesView::OnPaint() 
 {
@@ -246,27 +257,37 @@ void CAppLinesView::OnPaint()
 
 	if (scene != null)
 	{
-		wglMakeCurrent(m_DC,m_GC);
+		CRect  rect;
+		CPoint pos;
 
+		// Init Drawing
+		wglMakeCurrent(m_DC,m_GC);
 		pDoc->m_Context.b3StartDrawing();
+
+		pos = GetScrollPosition();
+		GetClientRect(&rect);
+//		m_RenderView.b3UpdateView(pos.x,750 - pos.y - rect.Height(),1000,750);
+		m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
 		scene->b3Draw();
+
+		// Done...
 		SwapBuffers(m_DC);
 		ValidateRect(NULL);
 	}
-}
-
-void CAppLinesView::OnSize(UINT nType, int cx, int cy) 
-{
-	CScrollView::OnSize(nType, cx, cy);
-	
-	// TODO: Add your message handler code here
-	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
 BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
 {
 	// TODO: Add your message handler code here and/or call default
 	return FALSE;
+}
+
+void CAppLinesView::OnInitialUpdate()
+{
+	CScrollView::OnInitialUpdate();
+
+	// TODO: calculate the total size of this view
+	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
@@ -281,18 +302,27 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		m_RenderView.b3SetCamera(scene);
 		doInvalidate = true;
 	}
-	if ((lHint & B3_UPDATE_GEOMETRY) && (scene != null))
+	if (lHint & B3_UPDATE_GEOMETRY)
 	{
-		m_RenderView.b3SetBounds(scene);
+		m_RenderView.b3SetBounds(&pDoc->m_Lower,&pDoc->m_Upper);
 		doInvalidate = true;
 	}
 	if (lHint & B3_UPDATE_VIEW)
 	{
 		CRect rect;
+		CSize size;
 
-		GetClientRect(&rect);
-		wglMakeCurrent(m_DC,m_GC);
-		m_RenderView.b3UpdateView(rect.Width(),rect.Height());
+		if (m_RenderView.b3IsViewMode(B3_VIEW_3D) && false)
+		{
+			GetClientRect(&rect);
+			size = rect.Size();
+		}
+		else
+		{
+			size.cx = 10;
+			size.cy = 10;
+		}
+		SetScrollSizes(MM_TEXT, size);
 		doInvalidate = true;
 	}
 
@@ -302,10 +332,19 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	}
 }
 
+void CAppLinesView::OnSize(UINT nType, int cx, int cy) 
+{
+	CScrollView::OnSize(nType, cx, cy);
+	
+	// TODO: Add your message handler code here
+	OnUpdate(this,B3_UPDATE_VIEW,0);
+}
+
 void CAppLinesView::OnViewPerspective() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -313,6 +352,7 @@ void CAppLinesView::OnViewTop()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -320,6 +360,7 @@ void CAppLinesView::OnViewFront()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -327,6 +368,7 @@ void CAppLinesView::OnViewRight()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -334,6 +376,7 @@ void CAppLinesView::OnViewLeft()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -341,6 +384,7 @@ void CAppLinesView::OnViewBack()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
+	m_Selecting = false;
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -384,11 +428,159 @@ void CAppLinesView::OnViewAntialias()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.m_AntiAliased = !m_RenderView.m_AntiAliased;
-	OnUpdate(this,B3_UPDATE_VIEW,0);
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
 void CAppLinesView::OnUpdateViewAntialias(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck(m_RenderView.m_AntiAliased);
+}
+
+void CAppLinesView::OnViewSmaller() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Scale(1.25);
+	m_Selecting = false;
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewSelect() 
+{
+	// TODO: Add your command handler code here
+	m_Selecting = true;
+}
+
+void CAppLinesView::OnViewBigger() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Scale(0.8);
+	m_Selecting = false;
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewOptimal() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Original();
+	m_Selecting = false;
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnUpdateViewSmaller(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+	pCmdUI->SetCheck(m_Selecting);
+}
+
+void CAppLinesView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnViewMoveRight() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Move(0.2,0.0);
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewMoveLeft() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Move(-0.2,0.0);
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewMoveTop() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Move(0.0,0.2);
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnViewMoveBottom() 
+{
+	// TODO: Add your command handler code here
+	m_RenderView.b3Move(0.0,-0.2);
+	OnUpdate(this,B3_UPDATE_VIEW,NULL);
+}
+
+void CAppLinesView::OnUpdateViewMoveRight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewMoveLeft(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewMoveTop(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnUpdateViewMoveBottom(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CScrollView::OnLButtonDown(nFlags, point);
+	if(m_Selecting)
+	{
+		SetCapture();
+		m_SelectStart = point;
+	}
+}
+
+void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	
+	CScrollView::OnMouseMove(nFlags, point);
+}
+
+void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (m_Selecting)
+	{
+		CRect  rect;
+		b3_f64 xSize,ySize;
+
+		GetClientRect(&rect);
+		xSize = rect.Width();
+		ySize = rect.Height();
+		m_RenderView.b3Select(
+			m_SelectStart.x / xSize,
+			m_SelectStart.y / ySize,
+			point.x / xSize,
+			point.y / ySize);
+		m_Selecting = false;
+		::ReleaseCapture();
+		OnUpdate(this,B3_UPDATE_VIEW,NULL);
+	}
+	CScrollView::OnLButtonUp(nFlags, point);
 }

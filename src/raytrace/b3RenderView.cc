@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/13 15:05:01  sm
+**      - Now we can scale and move around with stacked views.
+**
 **      Revision 1.5  2001/08/12 19:47:48  sm
 **      - Now having correct orthogonal projection incl. aspect ratio
 **
@@ -62,15 +65,108 @@
 **                                                                      **
 *************************************************************************/
 
+b3RenderViewItem::b3RenderViewItem() :
+	b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
+{
+	m_Mid.x =
+	m_Mid.y =
+	m_Mid.z = 0;
+	m_Size.x =
+	m_Size.y =
+	m_Size.z = 0;
+}
+
+b3RenderViewItem::b3RenderViewItem(
+	b3_vector *lower,
+	b3_vector *upper) :
+		b3Link<b3RenderViewItem>(sizeof(b3RenderViewItem))
+{
+	b3Set(lower,upper);
+}
+
+void b3RenderViewItem::b3Set(
+	b3_vector *lower,
+	b3_vector *upper)
+{
+	m_Mid.x  = (upper->x + lower->x) * 0.5;
+	m_Mid.y  = (upper->y + lower->y) * 0.5;
+	m_Mid.z  = (upper->z + lower->z) * 0.5;
+	m_Size.x =  upper->x - lower->x;
+	m_Size.y =  upper->y - lower->y;
+	m_Size.z =  upper->z - lower->z;
+}
+
 b3RenderView::b3RenderView()
 {
+	b3_index          i;
+
 	m_ViewMode    = B3_VIEW_3D;
 	m_AntiAliased = true;
+	m_AspectRatio = true;
+
+	for (i = 0;i < B3_VIEW_MAX;i++)
+	{
+		m_ViewStack[i].b3InitBase();
+	}
+	m_Depot.b3InitBase();
+}
+
+b3RenderView::~b3RenderView()
+{
+	b3RenderViewItem *item;
+	b3_index          i;
+
+	for (i = 1;i < B3_VIEW_MAX;i++)
+	{
+		while(item = m_ViewStack[i].First)
+		{
+			m_ViewStack[i].b3Remove(item);
+			delete item;
+		}
+	}
+
+	while(item = m_Depot.First)
+	{
+		m_Depot.b3Remove(item);
+		delete item;
+	}
+}
+
+b3RenderViewItem *b3RenderView::b3NewRenderViewItem(
+	b3RenderViewItem *last)
+{
+	b3RenderViewItem *item;
+
+	item = m_Depot.First;
+	if (item != null)
+	{
+		m_Depot.b3Remove(item);
+	}
+	else
+	{
+		item = new b3RenderViewItem();
+	}
+
+	if(last != null)
+	{
+		item->m_Mid  = last->m_Mid;
+		item->m_Size = last->m_Size;
+	}
+	else
+	{
+		item->b3Set(&m_Lower,&m_Upper);
+	}
+	return item;
 }
 
 void b3RenderView::b3SetViewMode(b3_view_mode mode)
 {
 	m_ViewMode = mode;
+	if (m_ViewStack[m_ViewMode].Last == null)
+	{
+		b3Original();
+	}
+	m_Actual   = m_ViewStack[m_ViewMode].Last;
 }
 
 b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode)
@@ -96,45 +192,174 @@ void b3RenderView::b3SetCamera(b3Scene *scene)
 
 b3_bool b3RenderView::b3SetBounds(b3Scene *scene)
 {
-	return scene->b3ComputeBounds(&m_Lower,&m_Upper);
+	b3_bool result;
+
+	result = scene->b3ComputeBounds(&m_Lower,&m_Upper);
+	if (result)
+	{
+		b3_index i;
+
+		for (i = 1;i < B3_VIEW_MAX;i++)
+		{
+			m_ViewStack[i].b3Append(b3NewRenderViewItem());
+		}
+	}
+	return result;
 }
 
-void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
+void b3RenderView::b3SetBounds(b3_vector *lower,b3_vector *upper)
+{
+	m_Lower = *lower;
+	m_Upper = *upper;
+}
+
+void b3RenderView::b3Original()
+{
+	b3RenderViewItem *item;
+
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		// Empty stack
+		while(item = m_ViewStack[m_ViewMode].First)
+		{
+			m_ViewStack[m_ViewMode].b3Remove(item);
+			m_Depot.b3Append(item);
+		}
+
+		// Allocate new top item
+		item = b3NewRenderViewItem();
+		if (item != null)
+		{
+			m_ViewStack[m_ViewMode].b3Append(item);
+			m_Actual = item;
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Not enogh memory for allocating topmost view item.\n");
+		}
+	}
+}
+
+void b3RenderView::b3Scale(b3_f64 scale)
+{
+	ASSERT(m_Actual != null);
+	m_Actual->m_Size.x *= scale;
+	m_Actual->m_Size.y *= scale;
+	m_Actual->m_Size.z *= scale;
+}
+
+void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
+{
+	ASSERT(m_Actual != null);
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
+		m_Actual->m_Mid.y += (m_Actual->m_Size.y * yDir);
+		break;
+	case B3_VIEW_FRONT:
+		m_Actual->m_Mid.x += (m_Actual->m_Size.x * xDir);
+		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+		break;
+	case B3_VIEW_RIGHT:
+		m_Actual->m_Mid.y += (m_Actual->m_Size.y * xDir);
+		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+		break;
+	case B3_VIEW_BACK:
+		m_Actual->m_Mid.x -= (m_Actual->m_Size.x * xDir);
+		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+		break;
+	case B3_VIEW_LEFT:
+		m_Actual->m_Mid.y -= (m_Actual->m_Size.y * xDir);
+		m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+		break;
+	}
+}
+
+void b3RenderView::b3Select(
+	b3_f64 xStart,
+	b3_f64 yStart,
+	b3_f64 xEnd,
+	b3_f64 yEnd)
+{
+	b3RenderViewItem *item;
+	b3_f64            xDiff,yDiff;
+	b3_f64            xMove,yMove;
+
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		item = b3NewRenderViewItem(m_ViewStack[m_ViewMode].Last);
+		if (item != null)
+		{
+			// Push view item
+			m_ViewStack[m_ViewMode].b3Append(item);
+			m_Actual = item;
+
+			// Compute some values...
+			xDiff = (xStart < xEnd ? xEnd - xStart : xStart - xEnd);
+			yDiff = (yStart < yEnd ? yEnd - yStart : yStart - yEnd);
+			xMove = (xStart + xEnd) * 0.5 - 0.5;
+			yMove = (yStart + yEnd) * 0.5 - 0.5;
+
+			switch(m_ViewMode)
+			{
+			case B3_VIEW_TOP:
+				m_Actual->m_Mid.x  += (m_Actual->m_Size.x * xMove);
+				m_Actual->m_Mid.y  -= (m_Actual->m_Size.y * yMove);
+				m_Actual->m_Size.x *= xDiff;
+				m_Actual->m_Size.y *= yDiff;
+				break;
+			case B3_VIEW_FRONT:
+				m_Actual->m_Mid.x  += (m_Actual->m_Size.x * xMove);
+				m_Actual->m_Mid.z  -= (m_Actual->m_Size.z * yMove);
+				m_Actual->m_Size.x *= xDiff;
+				m_Actual->m_Size.z *= yDiff;
+				break;
+			case B3_VIEW_RIGHT:
+				m_Actual->m_Mid.y  += (m_Actual->m_Size.y * xMove);
+				m_Actual->m_Mid.z  -= (m_Actual->m_Size.z * yMove);
+				m_Actual->m_Size.y *= xDiff;
+				m_Actual->m_Size.z *= yDiff;
+				break;
+			case B3_VIEW_BACK:
+				m_Actual->m_Mid.x  -= (m_Actual->m_Size.x * xMove);
+				m_Actual->m_Mid.z  -= (m_Actual->m_Size.z * yMove);
+				m_Actual->m_Size.x *= xDiff;
+				m_Actual->m_Size.z *= yDiff;
+				break;
+			case B3_VIEW_LEFT:
+				m_Actual->m_Mid.y  -= (m_Actual->m_Size.y * xMove);
+				m_Actual->m_Mid.z  -= (m_Actual->m_Size.z * yMove);
+				m_Actual->m_Size.y *= xDiff;
+				m_Actual->m_Size.z *= yDiff;
+				break;
+			}
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"Not enogh memory for allocating new selection.\n");
+		}
+	}
+}
+
+void b3RenderView::b3UpdateView(
+	b3_coord xPos,
+	b3_coord yPos,
+	b3_res   xSize,
+	b3_res   ySize)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_f64    width,height,nearCP,farCP,distance,factor,relation;
 	GLfloat   aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
 	GLfloat   aspectCamera;
 	GLfloat   min = 0.1f;
-	b3_vector eye,look,up,mid;
-
-	if (m_AntiAliased)
-	{
-		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-		glHint(GL_LINE_SMOOTH_HINT,GL_DONT_CARE);
-		glLineWidth(1.2f);
-	}
-	else
-	{
-		glDisable(GL_LINE_SMOOTH);
-		glDisable(GL_BLEND);
-		glLineWidth(1.0f);
-	}
-
-	distance = b3Distance(&m_ViewPoint,&m_EyePoint);
-	factor   = min / distance;
-	width    = factor * b3Length(&m_Width);
-	height   = factor * b3Length(&m_Height);
+	b3_vector eye,look,up;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glViewport(0,0,xSize,ySize);
-	eye.x = look.x = mid.x = (m_Lower.x + m_Upper.x) * 0.5;
-	eye.y = look.y = mid.y = (m_Lower.y + m_Upper.y) * 0.5;
-	eye.z = look.z = mid.z = (m_Lower.z + m_Upper.z) * 0.5;
+	ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
+	glViewport(xPos,yPos,xSize,ySize);
 	up.x  =
 	up.y  =
 	up.z  = 0;
@@ -142,22 +367,29 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 	{
 	case B3_VIEW_3D:
 	default:
-		nearCP = min;
-		farCP  = 10000;
+		// Prepare glOrtho();
+		distance = b3Distance(&m_ViewPoint,&m_EyePoint);
+		factor   = min / distance;
+		width    = factor * b3Length(&m_Width);
+		height   = factor * b3Length(&m_Height);
+		nearCP   = min;
+		farCP    = 10000;
 
 		// Prepare gluLookAt() - it's simple
 		eye  = m_EyePoint;
 		look = m_ViewPoint;
 		up   = m_Height;
 		break;
+
 	case B3_VIEW_TOP:
 		// Prepare glOrtho();
-		width  = (m_Upper.x - m_Lower.x) * 0.5;
-		height = (m_Upper.y - m_Lower.y) * 0.5;
+		width  = (m_Actual->m_Size.x) * 0.5;
+		height = (m_Actual->m_Size.y) * 0.5;
 		nearCP = 0;
 		farCP  = (m_Upper.z - m_Lower.z);
 
 		// Prepare gluLookAt()
+		eye    = look = m_Actual->m_Mid;
 		eye.z  = m_Upper.z;
 		look.z = m_Lower.z;
 		up.y   = 1;
@@ -165,12 +397,13 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 
 	case B3_VIEW_FRONT:
 		// Prepare glOrtho();
-		width  = (m_Upper.x - m_Lower.x) * 0.5;
-		height = (m_Upper.z - m_Lower.z) * 0.5;
+		width  = (m_Actual->m_Size.x) * 0.5;
+		height = (m_Actual->m_Size.z) * 0.5;
 		nearCP = 0;
 		farCP  = (m_Upper.y - m_Lower.y);
 
 		// Prepare gluLookAt()
+		eye    = look = m_Actual->m_Mid;
 		eye.y  = m_Lower.y;
 		look.y = m_Upper.y;
 		up.z   = 1;
@@ -178,12 +411,13 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 
 	case B3_VIEW_RIGHT:
 		// Prepare glOrtho();
-		width  = (m_Upper.y - m_Lower.y) * 0.5;
-		height = (m_Upper.z - m_Lower.z) * 0.5;
+		width  = (m_Actual->m_Size.y) * 0.5;
+		height = (m_Actual->m_Size.z) * 0.5;
 		nearCP = 0;
 		farCP  = (m_Upper.x - m_Lower.x);
 
 		// Prepare gluLookAt()
+		eye    = look = m_Actual->m_Mid;
 		eye.x  = m_Upper.x;
 		look.x = m_Lower.x;
 		up.z   = 1;
@@ -191,12 +425,13 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 
 	case B3_VIEW_LEFT:
 		// Prepare glOrtho();
-		width  = (m_Upper.y - m_Lower.y) * 0.5;
-		height = (m_Upper.z - m_Lower.z) * 0.5;
+		width  = (m_Actual->m_Size.y) * 0.5;
+		height = (m_Actual->m_Size.z) * 0.5;
 		nearCP = 0;
 		farCP  = (m_Upper.x - m_Lower.x);
 
 		// Prepare gluLookAt()
+		eye    = look = m_Actual->m_Mid;
 		eye.x  = m_Lower.x;
 		look.x = m_Upper.x;
 		up.z   = 1;
@@ -204,12 +439,13 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 
 	case B3_VIEW_BACK:
 		// Prepare glOrtho();
-		width  = (m_Upper.x - m_Lower.x) * 0.5;
-		height = (m_Upper.z - m_Lower.z) * 0.5;
+		width  = (m_Actual->m_Size.x) * 0.5;
+		height = (m_Actual->m_Size.z) * 0.5;
 		nearCP = 0;
 		farCP  = (m_Upper.y - m_Lower.y);
 
 		// Prepare gluLookAt()
+		eye    = look = m_Actual->m_Mid;
 		eye.y  = m_Upper.y;
 		look.y = m_Lower.y;
 		up.z   = 1;
@@ -217,10 +453,13 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 	}
 
 	// Maintain aspect ratio
-	aspectCamera = (GLfloat)(width / height);
-	relation     = aspectCamera / aspectWindow;
-	if (relation > 1) height *= relation;
-	else              width  /= relation;
+	if (m_AspectRatio)
+	{
+		aspectCamera = (GLfloat)(width / height);
+		relation     = aspectCamera / aspectWindow;
+		if (relation > 1) height *= relation;
+		else              width  /= relation;
+	}
 
 	// Now initialize view
 	if (m_ViewMode == B3_VIEW_3D)
@@ -238,5 +477,21 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
+
+	if (m_AntiAliased)
+	{
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glHint(GL_LINE_SMOOTH_HINT,GL_DONT_CARE);
+		glLineWidth(1.2f);
+	}
+	else
+	{
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_BLEND);
+		glLineWidth(1.0f);
+	}
+
 #endif
 }

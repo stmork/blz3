@@ -106,6 +106,11 @@ BEGIN
     BUTTON      ID_VIEW_RIGHT
     BUTTON      ID_VIEW_BACK
     BUTTON      ID_VIEW_LEFT
+    SEPARATOR
+    BUTTON      ID_VIEW_BIGGER
+    BUTTON      ID_VIEW_SMALLER
+    BUTTON      ID_VIEW_SELECT
+    BUTTON      ID_VIEW_ORIGINAL
 END
 
 
@@ -181,18 +186,30 @@ BEGIN
     END
     POPUP "&Ansicht"
     BEGIN
-        POPUP "&Symbolleisten anzeigen"
+        POPUP "Symbolleisten an&zeigen"
         BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
         END
-        POPUP "Symbolleisten &anpassen"
+        POPUP "S&ymbolleisten anpassen"
         BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
-        MENUITEM "An&ti-Aliasing",              ID_VIEW_ANTIALIAS
+        MENUITEM "&Anti-Aliasing",              ID_VIEW_ANTIALIAS
+        MENUITEM SEPARATOR
+        MENUITEM "&Perspektive",                ID_VIEW_PERSPECTIVE
+        MENUITEM "Grun&driﬂ",                   ID_VIEW_TOP
+        MENUITEM "A&ufriﬂ",                     ID_VIEW_FRONT
+        MENUITEM "Seiten&riﬂ",                  ID_VIEW_RIGHT
+        MENUITEM "Ansicht von &hinten",         ID_VIEW_BACK
+        MENUITEM "Ansicht von &links",          ID_VIEW_LEFT
+        MENUITEM SEPARATOR
+        MENUITEM "Ver&grˆﬂern",                 ID_VIEW_BIGGER
+        MENUITEM "Ver&kleinern",                ID_VIEW_SMALLER
+        MENUITEM "Aus&schnitt",                 ID_VIEW_SELECT
+        MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
     END
     POPUP "&Fenster"
     BEGIN
@@ -215,20 +232,26 @@ END
 
 IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
 BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
-    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
-    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
-    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
-    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT, NOINVERT
+    VK_DOWN,        ID_VIEW_MOVE_BOTTOM,    VIRTKEY, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    VK_LEFT,        ID_VIEW_MOVE_LEFT,      VIRTKEY, NOINVERT
+    VK_RIGHT,       ID_VIEW_MOVE_RIGHT,     VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_VIEW_SMALLER,        VIRTKEY, NOINVERT
+    VK_UP,          ID_VIEW_MOVE_TOP,       VIRTKEY, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
 END
 
 
@@ -448,19 +471,27 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_FRONT                "Frontansicht (Aufriﬂ)"
-    ID_VIEW_TOP             "Ansicht von oben (Grundriﬂ)"
-    ID_VIEW_BACK            "Ansicht von hinten\n"
-    ID_VIEW_LEFT            "Ansicht von links"
-    ID_VIEW_PERSPECTIVE     "Perspektivische Ansicht"
-    ID_VIEW_FRONT           "Ansicht von vorne (Aufriﬂ)"
-    ID_VIEW_RIGHT           "Ansicht von rechts (Seitenriﬂ)"
+    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriﬂ).\nAnsicht von oben (Grundriﬂ)"
+    ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
+    ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
+    ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
+    ID_VIEW_FRONT           "Zeigt die Szene von vorne (Aufriﬂ).\nAnsicht von vorne (Aufriﬂ)"
+    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriﬂ).\nAnsicht von rechts (Seitenriﬂ)"
     ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
+    ID_VIEW_BIGGER          "Vergrˆﬂert die Ansicht.\nVergrˆﬂern"
+    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
     ID_PREF_AUTOSAVE        "Speichert die Fensterpostion beim Verlassen des Programms"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_SELECT          "Selektiert einen Bereich f¸r die Ausschnittvergrˆﬂerung\nAusschnitt ausw‰hlen"
+    ID_VIEW_ORIGINAL        "Paﬂt die Anzeige den Grˆﬂenverh‰ltnissen der Szene an.\nGesamtansicht"
 END
 
 #endif    // German (Germany) resources
