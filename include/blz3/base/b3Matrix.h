@@ -17,7 +17,7 @@
 #ifndef B3_BASE_MATRIX_H
 #define B3_BASE_MATRIX_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 #include <float.h>
 
 #define b3ArcAngleOfScalars(u,v) (atan2((double)v,(double)u)                + ((v) < 0 ? (M_PI * 2.0) : 0))
