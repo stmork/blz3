@@ -1,12 +1,7 @@
 # Beispiel Makefile
 
-.KEEP_STATE:
-
-# Optionen
-
-CPPFLAGS		= $(STDINC)
-LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
-PRGS			= 
+CPPFLAGS		= @CPPFLAGS@
+LDLIBS			= @LIBS@
 LIBS			= libB3Image.o
 LIB_SOURCE		=\
 	b3Measure.cc\
@@ -67,7 +62,6 @@ LIB_OBJ			=\
 all:	$(LIBS)
 
 depend:
-#	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
 	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:

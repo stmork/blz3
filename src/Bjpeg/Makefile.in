@@ -2,10 +2,8 @@
 
 # Optionen
 
-CPPFLAGS        = $(STDINC)
-
-DOCDIR		= $(BLZ3_DOC)
-MANDIR		= $(BLZ3_MAN)
+BLZ3_LIB    = @BLZ3_LIB@
+CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3jpeg.o
 
 LIB_SRCS	= jcapimin.c jcapistd.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c \

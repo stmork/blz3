@@ -2,18 +2,19 @@
 # basic makefile to create Blizzard III
 #
 
-CFLAGS		= $(OFLAGS) -D__$(OSTYPE)__
-CXXFLAGS	= $(CFLAGS)
-
-ifeq ($(HOSTTYPE),m68k-amiga)
-	SUB_DIRS := system_amiga
-else
-	SUB_DIRS := system_unix
-endif
+BLZ3_HOME	= @BLZ3_HOME@
+BLZ3_LIB	= @BLZ3_LIB@
+BLZ3_BIN	= @BLZ3_BIN@
+CPPFLAGS	= @CPPFLAGS@
+CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
+LDFLAGS		= @LDFLAGS@
+AR			= @AR@
+RANLIB		= @RANLIB@
 
 SUB_DIRS +=\
+	system_unix\
 	system\
-	tools\
 	Btiff\
 	Bjpeg\
 	base\
@@ -75,7 +76,7 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 	done
 
 install:	all
-	@$(BLZ3_HOME)/bin/install.sh
+	@$(BLZ3_HOME)/bin/install.sh $(BLZ3_BIN)
 
 #########################################################
 #                                                       #

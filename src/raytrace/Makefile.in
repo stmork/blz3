@@ -1,12 +1,7 @@
 # Beispiel Makefile
 
-.KEEP_STATE:
+CPPFLAGS = @CPPFLAGS@
 
-# Optionen
-
-CPPFLAGS		= $(STDINC)
-LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
-PRGS			= 
 LIBS			= libB3Raytrace.o
 PRG_SOURCE		=\
 	b3Animation.cc\

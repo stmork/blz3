@@ -1,8 +1,9 @@
 # Beispiel Makefile
 
-# Optionen
-
-CPPFLAGS        = $(STDINC)
+BLZ3_LIB	= @BLZ3_LIB@
+BLZ3_BIN	= @BLZ3_BIN@
+CPPFLAGS	= @CPPFLAGS@
+DOS2UNIX	= @DOS2UNIX@
 LIBS		= libB3tiff.o
 PRGS		= mkversion mkg3states
 AUTO		= tif_fax3sm.c version.h
@@ -101,22 +102,18 @@ libB3tiff.a:	$(LIB_OBJ)
 	cp $@ $(BLZ3_LIB)
 
 tif_fax3sm.c:	mkg3states
-	mkg3states -c const tif_fax3sm.c
+	./mkg3states -c const tif_fax3sm.c
 
 tif_version.c:	version.h
 
 version.h:	mkversion
-	mkversion -v ${VERSION} -a ${ALPHA} version.h
-	RemCR version.h
+	./mkversion -v ${VERSION} -a ${ALPHA} version.h
+	$(DOS2UNIX) -o version.h version.h
 
 mkversion:	mkversion.o
-	$(LINK.c) -o $@ mkversion.o $(LIB_S)
-	cp mkversion $(BLZ3_BIN)
-	chmod 775 $@ $(BLZ3_BIN)/$@
+	$(LINK.c) -o $@ $^
 
 mkg3states:	mkg3states.o
-	$(LINK.c) -o $@ mkg3states.o $(LIB_S)
-	cp mkg3states $(BLZ3_BIN)
-	chmod 775 $@ $(BLZ3_BIN)/$@
+	$(LINK.c) -o $@ $^
 
 -include .dep

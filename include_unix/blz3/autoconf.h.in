@@ -1,0 +1,28 @@
+/*
+**
+**	$Filename:      autoconf.h $
+**	$Release:       Dortmund 2004 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
+**
+**	Blizzard III - autoconf template for system configuration
+**
+**	(C) Copyright 2004  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+**
+**
+*/
+
+#ifndef B3_CONF_H
+#define B3_CONF_H
+
+#undef BLZ3_USE_OPENGL
+#undef BLZ3_USE_CG
+#undef BLZ3_USE_AVILIB
+#undef BLZ3_USE_DIVX4LINUX
+
+#endif

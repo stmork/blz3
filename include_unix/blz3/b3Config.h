@@ -31,6 +31,7 @@
 #include <time.h>
 #include <limits.h>
 
+#include "blz3/autoconf.h"
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Thread.h"
@@ -39,6 +40,11 @@
 #include <GL/glut.h>
 
 #define no_GLU_NURBS
+#endif
+
+#ifdef BLZ3_USE_CG
+#include <Cg/cg.h>
+#include <Cg/cgGL.h>
 #endif
 
 #define USE_JPEGLIB_LOAD
