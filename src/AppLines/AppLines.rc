@@ -485,6 +485,7 @@ BEGIN
         MENUITEM "&Raytracing-Vorschau...\tStrg+R", ID_RAYTRACE
         MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
         MENUITEM "&Modellierhilfen...",         ID_MODELLER_INFO
+        MENUITEM "&Dateiattribute...",          ID_MAINTAIN_SPECIAL
     END
     POPUP "&Fenster"
     BEGIN
@@ -1920,6 +1921,22 @@ BEGIN
                     WS_VSCROLL | WS_TABSTOP
 END
 
+IDD_ITEM_MAINTAIN DIALOG DISCARDABLE  0, 0, 252, 191
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,165,50,15
+    LISTBOX         IDC_ITEM_LIST,10,10,168,145,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Neu...",IDC_ITEM_NEW,190,10,50,15
+    PUSHBUTTON      "Editieren...",IDC_ITEM_EDIT,190,30,50,15
+    PUSHBUTTON      "Löschen...",IDC_ITEM_DELETE,190,50,50,15
+    PUSHBUTTON      "Anfang",IDC_ITEM_FIRST,190,80,50,15
+    PUSHBUTTON      "Aufwärts",IDC_ITEM_UP,190,100,50,15
+    PUSHBUTTON      "Abwärts",IDC_ITEM_DOWN,190,120,50,15
+    PUSHBUTTON      "Ende",IDC_ITEM_LAST,190,140,50,15
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2269,6 +2286,14 @@ BEGIN
         RIGHTMARGIN, 123
         TOPMARGIN, 7
         BOTTOMMARGIN, 56
+    END
+
+    IDD_ITEM_MAINTAIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 184
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -137,6 +137,7 @@ protected:
 	afx_msg void OnUpdateAnimProperties(CCmdUI* pCmdUI);
 	afx_msg void OnCobLoad();
 	afx_msg void OnTgfLoad();
+	afx_msg void OnMaintainSpecial();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

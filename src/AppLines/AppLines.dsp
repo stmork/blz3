@@ -341,6 +341,10 @@ SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgItemMaintain.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgLDC.cpp
 # End Source File
 # Begin Source File
@@ -670,6 +674,10 @@ SOURCE=.\DlgFulcrum.h
 # Begin Source File
 
 SOURCE=.\DlgHierarchy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgItemMaintain.h
 # End Source File
 # Begin Source File
 

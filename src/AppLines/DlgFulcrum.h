@@ -21,8 +21,6 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-// DlgFulcrum.h : header file
-//
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3Toolbar.h"

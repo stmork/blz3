@@ -30,6 +30,7 @@
 
 #include "DlgAnimation.h"
 #include "DlgHierarchy.h"
+#include "DlgItemMaintain.h"
 #include "DlgScene.h"
 #include "DlgSuperSampling.h"
 #include "DlgNebular.h"
@@ -59,9 +60,12 @@
 
 /*
 **	$Log$
+**	Revision 1.87  2003/06/08 18:57:02  sm
+**	- Added list editing to Lines
+**
 **	Revision 1.86  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.85  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -528,6 +532,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_COMMAND(ID_ANIM_PROPERTIES, OnAnimProperties)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_PROPERTIES, OnUpdateAnimProperties)
 	ON_COMMAND(ID_COB_LOAD, OnCobLoad)
+	ON_COMMAND(ID_TGF_LOAD, OnTgfLoad)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -552,7 +557,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_TGF_LOAD, OnTgfLoad)
+	ON_COMMAND(ID_MAINTAIN_SPECIAL, OnMaintainSpecial)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1850,4 +1855,12 @@ void CAppLinesDoc::OnUpdateAnimProperties(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(b3HasAnimation());
+}
+
+void CAppLinesDoc::OnMaintainSpecial() 
+{
+	// TODO: Add your command handler code here
+	CDlgItemMaintain dlg(m_Scene->b3GetSpecialHead());
+
+	dlg.DoModal();
 }
