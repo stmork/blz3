@@ -51,6 +51,12 @@
 #define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMP_WOOD)
 #define BUMP_OAKPLANK       (CLASS_BUMP|TYPE_BUMP_OAKPLANK)
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for all bump classes               **               
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3Bump : public b3Item
 {
 public:
@@ -68,16 +74,23 @@ public:
 	{
 		return true;
 	}
+
 	virtual inline void    b3BumpNormal(b3_ray *ray)
 	{
 	}
+
 	virtual inline b3_bool b3NeedDeriv()
 	{
 		return false;
 	}
 };
 
-// BUMP_NOISE
+/*************************************************************************
+**                                                                      **
+**                        Noise bumping                                 **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpNoise : public b3Bump, public b3Scaling
 {
 public:
@@ -88,7 +101,12 @@ public:
 	void b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_MARBLE
+/*************************************************************************
+**                                                                      **
+**                        Marble like bumping                           **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpMarble : public b3Bump, public b3Scaling
 {
 public:
@@ -100,7 +118,12 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_TEXTURE
+/*************************************************************************
+**                                                                      **
+**                        Classic bump mapping                          **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpTexture : public b3Bump
 {
 public:
@@ -128,7 +151,12 @@ private:
 	b3_bool b3GetNormalDeriv(b3_f64 lx,b3_f64 ly,b3_vector *deriv);
 };
 
-// BUMP_WATER
+/*************************************************************************
+**                                                                      **
+**                        Water surface bumping                         **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpWater : public b3Bump, public b3Water, public b3Scaling
 {
 public:
@@ -140,7 +168,12 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_WAVE
+/*************************************************************************
+**                                                                      **
+**                        Beach ripples bumping                         **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpWave : public b3Bump, public b3Scaling
 {
 public:
@@ -152,7 +185,12 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_GROOVE
+/*************************************************************************
+**                                                                      **
+**                        A groovy kind of love                         **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpGroove : public b3Bump, public b3Scaling
 {
 public:
@@ -164,7 +202,13 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_GLOSSY */
+/*************************************************************************
+**                                                                      **
+**                        glossy surface bumping (needs                 **
+**                        distributed raytracing!)                      **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpGlossy : public b3Bump
 {
 public:
@@ -177,6 +221,12 @@ public:
 	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Wodden bump base class                        **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3BumpWooden : public b3Bump, public b3Scaling
 {
@@ -192,7 +242,12 @@ public:
 	B3_ITEM_LOAD(b3BumpWooden);
 };
 
-// BUMP_WOOD
+/*************************************************************************
+**                                                                      **
+**                        Wood bump                                     **
+**                                                                      **
+*************************************************************************/
+ 
 class B3_PLUGIN b3BumpWood : public b3BumpWooden, public b3Wood
 {
 public:
@@ -209,7 +264,12 @@ public:
 	void    b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_OAKPLANK
+/*************************************************************************
+**                                                                      **
+**                        Oak plank bump                                **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3BumpOakPlank : public b3BumpWooden, public b3OakPlank
 {
 	b3Array<b3_f64> m_Amplitudes;

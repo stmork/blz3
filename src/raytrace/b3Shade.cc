@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2004/10/05 09:29:22  sm
+**	- Donw some documentations.
+**
 **	Revision 1.54  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
 **	- Added material dependend possibility for color
 **	  mixing instead of mixing inside shader.
-**
+**	
 **	Revision 1.53  2004/09/17 20:57:53  sm
 **	- Material shader add their color components to jit.
 **	- Grizzle fix to Mork 2 shader: The reflective and refractive color
@@ -300,10 +303,10 @@ void b3Shader::b3Prepare()
 
 void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 {
-	b3_vector64 *Normal       = &surface->incoming->normal;
-	b3_vector64 *incoming_dir = &surface->incoming->dir;
-	b3_vector64 *refl_dir     = &surface->refl_ray.dir;
-	b3_vector64 *refr_dir     = &surface->refr_ray.dir;
+	b3_vector64 *Normal       = &surface->m_Incoming->normal;
+	b3_vector64 *incoming_dir = &surface->m_Incoming->dir;
+	b3_vector64 *refl_dir     = &surface->m_ReflRay.dir;
+	b3_vector64 *refr_dir     = &surface->m_RefrRay.dir;
 	b3_f64       Factor,cos_a,ior,ior_sqr;
 
 	Factor = 2 * (cos_a =
@@ -315,10 +318,10 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	refl_dir->z = incoming_dir->z - Factor * Normal->z;
 
 	b3Vector::b3Normalize(refl_dir);
-	surface->refl_ray.pos    = surface->incoming->ipoint;
-	surface->refl_ray.inside = surface->incoming->inside;
-	surface->refl_ray.t      = surface->incoming->t;
-	surface->m_Transparent   = false;
+	surface->m_ReflRay.pos    = surface->m_Incoming->ipoint;
+	surface->m_ReflRay.inside = surface->m_Incoming->inside;
+	surface->m_ReflRay.t      = surface->m_Incoming->t;
+	surface->m_Transparent    = false;
 
 	// Use only sharp angles
 	if (cos_a >= 0)
@@ -330,7 +333,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	}
 	surface->m_CosAlpha = -cos_a;
 
-	surface->m_IorComputed = ior = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
+	surface->m_IorComputed = ior = surface->m_Incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
 
 	if (surface->m_Refraction > 0)
 	{
@@ -349,21 +352,21 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 
 				b3Vector::b3Normalize(refr_dir);
 
-				surface->refr_ray.pos    =  surface->incoming->ipoint;
-				surface->refr_ray.inside = !surface->incoming->inside;
-				surface->refr_ray.t      =  surface->incoming->t;
-				surface->m_Transparent   = true;
+				surface->m_RefrRay.pos    =  surface->m_Incoming->ipoint;
+				surface->m_RefrRay.inside = !surface->m_Incoming->inside;
+				surface->m_RefrRay.t      =  surface->m_Incoming->t;
+				surface->m_Transparent    = true;
 			}
 		}
 		else
 		{
 			// Perpendicular incoming ray so refracting ray is
 			// upside down.
-			surface->refr_ray.pos    =  surface->incoming->ipoint;
-			surface->refr_ray.dir    =  surface->incoming->dir;
-			surface->refr_ray.inside = !surface->incoming->inside;
-			surface->refr_ray.t      =  surface->incoming->t;
-			surface->m_Transparent   = true;
+			surface->m_RefrRay.pos    =  surface->m_Incoming->ipoint;
+			surface->m_RefrRay.dir    =  surface->m_Incoming->dir;
+			surface->m_RefrRay.inside = !surface->m_Incoming->inside;
+			surface->m_RefrRay.t      =  surface->m_Incoming->t;
+			surface->m_Transparent    = true;
 		}
 	}
 
@@ -416,7 +419,7 @@ b3_bool b3Shader::b3Shade(
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;
-		surface.incoming = ray;
+		surface.m_Incoming = ray;
 
 		// Compute intersection point
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
@@ -469,7 +472,7 @@ b3_bool b3Shader::b3Shade(
 
 void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface)
 {
-	b3Material *material = surface->incoming->material;
+	b3Material *material = surface->m_Incoming->material;
 
 	if (!((material != null) && material->b3Illuminate(surface,jit)))
 	{

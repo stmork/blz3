@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2004/10/05 09:29:22  sm
+**      - Donw some documentations.
+**
 **      Revision 1.47  2004/09/28 15:07:40  sm
 **      - Support for car paint is complete.
 **      - Made some optimizations concerning light.
@@ -484,12 +487,12 @@ inline b3_bool b3Light::b3PointIllumination(
 
 	Jit.m_Distr = 1;
 	Jit.m_Size  = 0;
-	Jit.pos.x = surface->incoming->ipoint.x;
-	Jit.pos.y = surface->incoming->ipoint.y;
-	Jit.pos.z = surface->incoming->ipoint.z;
-	Jit.dir.x = m_Position.x - surface->incoming->ipoint.x;
-	Jit.dir.y = m_Position.y - surface->incoming->ipoint.y;
-	Jit.dir.z = m_Position.z - surface->incoming->ipoint.z;
+	Jit.pos.x = surface->m_Incoming->ipoint.x;
+	Jit.pos.y = surface->m_Incoming->ipoint.y;
+	Jit.pos.z = surface->m_Incoming->ipoint.z;
+	Jit.dir.x = m_Position.x - surface->m_Incoming->ipoint.x;
+	Jit.dir.y = m_Position.y - surface->m_Incoming->ipoint.y;
+	Jit.dir.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	if ((LightDist = b3Vector::b3QuadLength(&Jit.dir)) == 0)
 	{
@@ -560,10 +563,10 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
 
-	Jit.pos         = surface->incoming->ipoint;
-	Jit.m_LightView.x = m_Position.x - surface->incoming->ipoint.x;
-	Jit.m_LightView.y = m_Position.y - surface->incoming->ipoint.y;
-	Jit.m_LightView.z = m_Position.z - surface->incoming->ipoint.z;
+	Jit.pos         = surface->m_Incoming->ipoint;
+	Jit.m_LightView.x = m_Position.x - surface->m_Incoming->ipoint.x;
+	Jit.m_LightView.y = m_Position.y - surface->m_Incoming->ipoint.y;
+	Jit.m_LightView.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	// normalizing light axis
 	if ((denomLightDist = b3Vector::b3QuadLength(&Jit.m_LightView)) == 0)

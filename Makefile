@@ -3,10 +3,13 @@ all:	source
 dep:	depend
 
 depend:
-	+make -C src depend
+	+make -C src $@
 
 source:
 	+make -C src
+
+count:
+	+make -C src $@
 
 install:
 	+make -C src install

@@ -25,7 +25,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        materials                                     **
+**                        Materials                                     **
 **                                                                      **
 *************************************************************************/
 
@@ -74,15 +74,21 @@ struct b3_surface : public b3_material
 	b3Color      m_AmbientSum;
 	b3Color      m_DiffuseSum;
 	b3Color      m_SpecularSum;
-	b3_ray      *incoming;
-	b3_ray       refl_ray;
-	b3_ray       refr_ray;
+	b3_ray      *m_Incoming;
+	b3_ray       m_ReflRay;
+	b3_ray       m_RefrRay;
 	b3_bool      m_Transparent;
 	b3_f64       m_Fresnel;
 	b3_f64       m_IorComputed;
 	b3_f64       m_CosAlpha;
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Base class for all materials                  **
+**                                                                      **
+*************************************************************************/
+ 
 struct b3_light_info;
 
 class B3_PLUGIN b3Material : public b3Item
@@ -103,6 +109,7 @@ public:
 
 	/********************** Shading pipeline ********************************/
 
+	// Retrieve surface values and decide to terminate value retrieval.
 	virtual inline b3_bool b3GetSurfaceValues(b3_surface *surface)
 	{
 		surface->m_Diffuse     = B3_LIGHT_BLUE;
@@ -113,20 +120,34 @@ public:
 		surface->m_Ior         =      1.5;
 		surface->m_SpecularExp = 100000.0;
 
-		return true;
+		return false;
 	}
-	
+
+	// Make lighting: Compute ambient, diffuse and specular components from
+	// already retrieved surface values. If the configured shader should
+	// compute this return simply false.
 	virtual inline b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit)
 	{
 		return false;
 	}
 
+	// Static entry point for component mixing (ambient, diffuse, specular terms plus refracted and
+	// refleted parts.
 	static inline b3_bool b3MixComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 	{
-		b3Material *material = surface->incoming->material;
+		b3Material *material = surface->m_Incoming->material;
 
 		return material != null ? material->b3ShadeComponents(surface,reflection,refraction) : false;
 	}
+
+protected:
+	// Mix color components. If the configured shader should do this job return simply false.
+	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
+	{
+		return false;
+	}
+
+	/********************** Shading pipeline ********************************/
 
 	static inline void b3Mix(
 		      b3_surface  *surface,
@@ -149,15 +170,14 @@ public:
 		surface->m_Ior         =  a->m_Ior         * a_mix + b->m_Ior         * mix;
 		surface->m_SpecularExp =  a->m_SpecularExp * a_mix + b->m_SpecularExp * mix;
 	}
-
-protected:
-	virtual inline b3_bool b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
-	{
-		return false;
-	}
 };
 
-// MATERIAL or MAT_NORMAL
+/*************************************************************************
+**                                                                      **
+**                        Standard material                             **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatNormal : public b3Material, public b3_material
 {
 public:
@@ -177,7 +197,12 @@ private:
 	        void    b3Init();
 };
 
-// CHESS
+/*************************************************************************
+**                                                                      **
+**                        Chess material                                **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatChess : public b3Material 
 {
 public:
@@ -200,79 +225,12 @@ public:
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
-// MARBLE
-class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
-{
-	b3_s32            m_xTimes,m_yTimes;
-public:
-	b3_material       m_DarkMaterial;
-	b3_material       m_LightMaterial;
+/*************************************************************************
+**                                                                      **
+**                        Texture material                              **
+**                                                                      **
+*************************************************************************/
 
-public:
-	B3_ITEM_INIT(b3MatMarble);
-	B3_ITEM_LOAD(b3MatMarble);
-
-	void    b3Write();
-	b3_bool b3Prepare();
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
-};
-
-class B3_PLUGIN b3MaterialWooden : public b3Material, public b3Scaling
-{
-public:
-	b3_material       m_DarkMaterial;
-	b3_material       m_LightMaterial;
-
-protected:
-	B3_ITEM_BASE(b3MaterialWooden);
-
-public:
-	B3_ITEM_INIT(b3MaterialWooden);
-	B3_ITEM_LOAD(b3MaterialWooden);
-
-protected:
-	void     b3Init();
-};
-
-// WOOD
-class B3_PLUGIN b3MatWood : public b3MaterialWooden, public b3Wood
-{
-public:
-	b3_u32            m_xTimes,m_yTimes; // not used
-
-public:
-	B3_ITEM_INIT(b3MatWood);
-	B3_ITEM_LOAD(b3MatWood);
-
-	void    b3Write();
-	b3_bool b3Prepare();
-	b3_bool b3GetSurfaceValues(b3_surface *surface);
-
-private:
-	void    b3Init();
-};
-
-// OAKPLANK
-class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
-{
-	b3_material     *m_LightMaterials;
-	b3_material     *m_DarkMaterials;
-
-public:
-	B3_ITEM_INIT(b3MatOakPlank);
-	B3_ITEM_LOAD(b3MatOakPlank);
-
-	virtual ~b3MatOakPlank();
-
-	void     b3Write();
-	b3_bool  b3Prepare();
-	b3_bool  b3GetSurfaceValues(b3_surface *surface);
-
-private:
-	void     b3Init();
-};
-
-// TEXTURE
 class B3_PLUGIN b3MatTexture : public b3Material 
 {
 public:
@@ -297,7 +255,12 @@ public:
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
-// WRAPTEXTURE
+/*************************************************************************
+**                                                                      **
+**                        Wrapping texture material                     **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatWrapTexture : public b3Material 
 {
 public:
@@ -321,7 +284,12 @@ public:
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
-// SLIDE
+/*************************************************************************
+**                                                                      **
+**                        Color sliding material                        **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatSlide : public b3Material 
 {
 public:
@@ -353,7 +321,105 @@ public:
 #define XSLIDE_CUT          (XSLIDE|SLIDE_CUT)
 #define YSLIDE_CUT          (YSLIDE|SLIDE_CUT)
 
-// TYPE_COOK_TORRANCE
+/*************************************************************************
+**                                                                      **
+**                        Marble material                               **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
+{
+	b3_s32            m_xTimes,m_yTimes;
+public:
+	b3_material       m_DarkMaterial;
+	b3_material       m_LightMaterial;
+
+public:
+	B3_ITEM_INIT(b3MatMarble);
+	B3_ITEM_LOAD(b3MatMarble);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_surface *surface);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Base class for wooden materials               **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3MaterialWooden : public b3Material, public b3Scaling
+{
+public:
+	b3_material       m_DarkMaterial;
+	b3_material       m_LightMaterial;
+
+protected:
+	B3_ITEM_BASE(b3MaterialWooden);
+
+public:
+	B3_ITEM_INIT(b3MaterialWooden);
+	B3_ITEM_LOAD(b3MaterialWooden);
+
+protected:
+	void     b3Init();
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Wooden material                               **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3MatWood : public b3MaterialWooden, public b3Wood
+{
+public:
+	b3_u32            m_xTimes,m_yTimes; // not used
+
+public:
+	B3_ITEM_INIT(b3MatWood);
+	B3_ITEM_LOAD(b3MatWood);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_surface *surface);
+
+private:
+	void    b3Init();
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Oak planks                                    **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
+{
+	b3_material     *m_LightMaterials;
+	b3_material     *m_DarkMaterials;
+
+public:
+	B3_ITEM_INIT(b3MatOakPlank);
+	B3_ITEM_LOAD(b3MatOakPlank);
+
+	virtual ~b3MatOakPlank();
+
+	void     b3Write();
+	b3_bool  b3Prepare();
+	b3_bool  b3GetSurfaceValues(b3_surface *surface);
+
+private:
+	void     b3Init();
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Cook and Torrance reflection model            **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
 	b3Color     m_Ra;
@@ -372,9 +438,19 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
+
+	inline b3_bool b3GetSurfaceValues(b3_surface *surface)
+	{
+		return true;
+	}
 };
 
-// GRANITE
+/*************************************************************************
+**                                                                      **
+**                        Granite material                              **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatGranite : public b3Material, public b3Scaling
 {
 public:
@@ -391,7 +467,11 @@ public:
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
-// CAR_PAINT
+/*************************************************************************
+**                                                                      **
+**                        Car paint material                            **
+**                                                                      **
+*************************************************************************/
 
 class B3_PLUGIN b3MatCarPaint : public b3Material
 {
@@ -418,7 +498,12 @@ protected:
 
 #define B3_MAT_CP_METALLIC 1
 
-// THIN_FILM
+/*************************************************************************
+**                                                                      **
+**                        Thin film material                            **
+**                                                                      **
+*************************************************************************/
+
 class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material, public b3Scaling
 {
 	static b3Color   m_WaveLength;

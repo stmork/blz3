@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/10/05 09:29:22  sm
+**	- Donw some documentations.
+**
 **	Revision 1.7  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.6  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -128,8 +131,8 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 	b3_f64        fy;
 	b3_pkd_color *data = info->m_Data;
 
-	ray.bbox         = &bbox;
-	surface.incoming = &ray;
+	ray.bbox           = &bbox;
+	surface.m_Incoming = &ray;
 	bbox.b3Prepare();
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{

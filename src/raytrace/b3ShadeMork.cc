@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2004/10/05 09:29:22  sm
+**	- Donw some documentations.
+**
 **	Revision 1.48  2004/09/28 16:04:43  sm
 **	- Fixed material ponter problem inside all shader.
-**
+**	
 **	Revision 1.47  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
@@ -275,11 +278,11 @@ void b3ShaderMork::b3ShadeLight(
 	{
 		// specular high light
 		if ((ShapeAngle =
-			surface->incoming->normal.x * Jit->dir.x +
-			surface->incoming->normal.y * Jit->dir.y +
-			surface->incoming->normal.z * Jit->dir.z) >= 0)
+			surface->m_Incoming->normal.x * Jit->dir.x +
+			surface->m_Incoming->normal.y * Jit->dir.y +
+			surface->m_Incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			b3_f64 lambda   = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
+			b3_f64 lambda   = b3Vector::b3SMul(&surface->m_ReflRay.dir,&Jit->dir);
 			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
 			if (spec_exp < 100000)
@@ -303,7 +306,7 @@ void b3ShaderMork::b3ShadeSurface(
 {
 	b3Item  *item;
 	b3Light *light;
-	b3_ray  *ray = surface->incoming;
+	b3_ray  *ray = surface->m_Incoming;
 	b3_f32   refl,refr,factor;
 
 	// Refraction
@@ -311,28 +314,28 @@ void b3ShaderMork::b3ShadeSurface(
 	{
 		if (surface->m_Ior == 1)
 		{
-			surface->refr_ray.inside = false;
-			surface->refl_ray.inside = false;
+			surface->m_RefrRay.inside = false;
+			surface->m_ReflRay.inside = false;
 		}
 		refr = surface->m_Refraction;
-		b3Shade(&surface->refr_ray,depth_count);
+		b3Shade(&surface->m_RefrRay,depth_count);
 	}
 	else
 	{
 		refr = 0;
-		surface->refr_ray.color.b3Init();
+		surface->m_RefrRay.color.b3Init();
 	}
 
 	// Reflection
 	refl = surface->m_Reflection;
 	if (((!ray->inside) || (!surface->m_Transparent)) && (refl > 0))
 	{
-		b3Shade(&surface->refl_ray,depth_count);
+		b3Shade(&surface->m_ReflRay,depth_count);
 	}
 	else
 	{
 		refl = 0;
-		surface->refl_ray.color.b3Init();
+		surface->m_ReflRay.color.b3Init();
 	}
 
 	factor = 1.0 - refl - refr;
@@ -352,8 +355,8 @@ void b3ShaderMork::b3ShadeSurface(
 		{
 			ray->color =
 				(surface->m_AmbientSum + surface->m_DiffuseSum) * factor * 0.5 +
-				surface->refl_ray.color * refl +
-				surface->refr_ray.color * refr +
+				surface->m_ReflRay.color * refl +
+				surface->m_RefrRay.color * refr +
 				surface->m_SpecularSum;
 		}
 	}
@@ -362,8 +365,8 @@ void b3ShaderMork::b3ShadeSurface(
 		if (!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =
-				surface->refl_ray.color * refl +
-				surface->refr_ray.color * refr;
+				surface->m_ReflRay.color * refl +
+				surface->m_RefrRay.color * refr;
 		}
 	}
 }

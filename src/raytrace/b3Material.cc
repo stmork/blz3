@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.98  2004/10/05 09:29:22  sm
+**      - Donw some documentations.
+**
 **      Revision 1.97  2004/09/30 11:52:44  sm
 **      - Adjusted edit field accuracy.
 **      - Done some minor car paint tests.
@@ -461,7 +464,7 @@ void b3Material::b3Register()
 
 /*************************************************************************
 **                                                                      **
-**                        Base material                                 **
+**                        Base class for all materials                  **
 **                                                                      **
 *************************************************************************/
 
@@ -611,7 +614,7 @@ void b3MatChess::b3Write()
 b3_bool b3MatChess::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_material *dst = surface;
-	b3_index     index = CHESS_INDEX(surface->incoming->polar.m_Polar.x,surface->incoming->polar.m_Polar.y);
+	b3_index     index = CHESS_INDEX(surface->m_Incoming->polar.m_Polar.x,surface->m_Incoming->polar.m_Polar.y);
 	
 	*dst = m_Material[index];
 
@@ -695,14 +698,14 @@ b3_bool b3MatTexture::b3GetSurfaceValues(b3_surface *surface)
 	b3_coord     x,y;
 	b3_f64       fx,fy;
 
-	fx = (surface->incoming->polar.m_Polar.x - m_xStart) / m_xScale;
+	fx = (surface->m_Incoming->polar.m_Polar.x - m_xStart) / m_xScale;
 	if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
 	if ((fx < 0) || (fx >= m_xTimes))
 	{
 		return false;
 	}
 
-	fy = (surface->incoming->polar.m_Polar.y - m_yStart) / m_yScale;
+	fy = (surface->m_Incoming->polar.m_Polar.y - m_yStart) / m_yScale;
 	if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 	if ((fy < 0) || (fy >= m_yTimes))
 	{
@@ -795,11 +798,11 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_surface *surface)
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
 
-	if ((surface->incoming->polar.m_Polar.y >= m_yStart) && (surface->incoming->polar.m_Polar.y <= m_yEnd))
+	if ((surface->m_Incoming->polar.m_Polar.y >= m_yStart) && (surface->m_Incoming->polar.m_Polar.y <= m_yEnd))
 	{
 		xEnd	= m_xEnd;
-		xPolar	= surface->incoming->polar.m_Polar.x;
-		fy = (surface->incoming->polar.m_Polar.y - m_yStart) /
+		xPolar	= surface->m_Incoming->polar.m_Polar.x;
+		fy = (surface->m_Incoming->polar.m_Polar.y - m_yStart) /
 			(m_yEnd - m_yStart);
 		if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
 		if ((fy < 0) || (fy > 1))
@@ -940,24 +943,24 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_surface *surface)
 	switch (m_ModeFlag)
 	{
 		case XSLIDE :
-			Factor = (surface->incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
+			Factor = (surface->m_Incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case YSLIDE :
-			Factor = (surface->incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
+			Factor = (surface->m_Incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if (Factor < 0) Factor = 0;
 			if (Factor > 1) Factor = 1;
             break;
 		case XSLIDE_CUT :
-			Factor = (surface->incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
+			Factor = (surface->m_Incoming->polar.m_Polar.x - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
 			}
 			break;
 		case YSLIDE_CUT :
-			Factor = (surface->incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
+			Factor = (surface->m_Incoming->polar.m_Polar.y - m_From) / (m_To - m_From);
 			if ((Factor < 0) || (Factor > 1))
 			{
 				return false;
@@ -1074,7 +1077,7 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_surface *surface)
 {
 	b3_vector point;
 
-	b3Scale(surface->incoming,&m_Scale,&point);
+	b3Scale(surface->m_Incoming,&m_Scale,&point);
 
 	b3_f64 mix = b3Noise::b3Marble(&point);
 
@@ -1254,7 +1257,7 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_surface *surface)
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(surface->incoming,null,&point);
+	b3Scale(surface->m_Incoming,null,&point);
 	mix = b3ComputeWood(&point);
 
 	b3Mix(surface,&m_DarkMaterial,&m_LightMaterial, mix);
@@ -1467,7 +1470,7 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_surface *surface)
 	b3_vector point;
 	b3_f64    mix;
 
-	b3Scale(surface->incoming,null,&point);
+	b3Scale(surface->m_Incoming,null,&point);
 	mix = b3ComputeOakPlank(&point,index);
 
 	b3Mix(surface,&m_DarkMaterials[index],&m_LightMaterials[index], mix);
@@ -1533,7 +1536,7 @@ b3_bool b3MatCookTorrance::b3Prepare()
 
 b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 {
-	b3_ray      *ray = surface->incoming;
+	b3_ray      *ray = surface->m_Incoming;
 	b3_vector64  L;
 
 	B3_ASSERT(ray != null);	
@@ -1543,6 +1546,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 
 	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
 
+	jit->m_AmbientSum += m_Ra;
 #if 1
 	b3Color Rf;
 
@@ -1597,7 +1601,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 
 	jit->m_SpecularSum += Rf * m_ks;
 #else
-	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+	b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir,&L);
 
 	jit->m_DiffuseSum  += m_Diffuse * nl;
 	jit->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
@@ -1701,7 +1705,7 @@ b3_bool b3MatGranite::b3GetSurfaceValues(b3_surface *surface)
 	b3_vector point;
 	b3_f64    granite;
 
-	b3Scale(surface->incoming,&m_Scale,&point);
+	b3Scale(surface->m_Incoming,&m_Scale,&point);
 
 	granite = b3Noise::b3Granite(&point,m_Octaves);
 	
@@ -1801,7 +1805,7 @@ static inline void b3Randomize(const b3_vector64 *src,b3_vector64 *dst,b3_f64 sc
 
 b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 {
-	b3_ray      *ray = surface->incoming;
+	b3_ray      *ray = surface->m_Incoming;
 	b3_f64       ni;
 
 	if (m_Flags & B3_MAT_CP_METALLIC)
@@ -1823,9 +1827,10 @@ b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 
 b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 {
+	jit->m_AmbientSum += surface->m_Ambient;
 	if (jit->shape == null)
 	{
-		b3_ray      *ray = surface->incoming;
+		b3_ray      *ray = surface->m_Incoming;
 		b3_vector64  L;
 		b3_vector64  refl_dir;
 		b3_f64       nl;
@@ -1840,13 +1845,13 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 
 		if (m_Flags & B3_MAT_CP_METALLIC)  
 		{
-			b3Randomize(&surface->refl_ray.dir, &refl_dir, m_MetallicScale, m_MetallicScaleHalf);
+			b3Randomize(&surface->m_ReflRay.dir, &refl_dir, m_MetallicScale, m_MetallicScaleHalf);
 
 			rl = b3Vector::b3SMul(&refl_dir,&L);
 		}
 		else
 		{
-			rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+			rl = b3Vector::b3SMul(&surface->m_ReflRay.dir,&L);
 		}
 
 		jit->m_DiffuseSum  += surface->m_Diffuse * nl * jit->m_LightFrac;
@@ -1858,12 +1863,12 @@ b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 
 b3_bool b3MatCarPaint::b3ShadeComponents(b3_surface *surface, b3_f64 reflection, b3_f64 refraction)
 {
-	surface->incoming->color =
+	surface->m_Incoming->color =
 		surface->m_AmbientSum +
 		surface->m_DiffuseSum +
 		surface->m_SpecularSum +
-		surface->refr_ray.color * refraction +
-		surface->refl_ray.color * reflection;
+		surface->m_RefrRay.color * refraction +
+		surface->m_ReflRay.color * reflection;
 	return true;
 }
 
@@ -1937,17 +1942,17 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 	b3Color      factor;
 	b3_vector    point;
 	b3_vector    shift;
-	b3_vector64 *normal = &surface->incoming->normal;
+	b3_vector64 *normal = &surface->m_Incoming->normal;
 	b3_f64       quotient;
 	b3_f64       cos_phi;
 	b3_f64       sin_theta_sqr,cos_theta;
 	b3_f64       wobble;
 
 	// scale
-	b3Scale(surface->incoming,&m_Scale,&point);
+	b3Scale(surface->m_Incoming,&m_Scale,&point);
 
 	// Compute animation
-	b3Noise::b3AnimThinFilm(surface->incoming->t,&shift);
+	b3Noise::b3AnimThinFilm(surface->m_Incoming->t,&shift);
 	point.x += m_ScaleTime.x * shift.x;
 	point.y += m_ScaleTime.y * shift.y;
 	point.z += m_ScaleTime.z * shift.z;
@@ -1958,7 +1963,7 @@ b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
 		b3Noise::b3SignedFilteredNoiseVector(point.x * 4,point.y * 4,point.z * 4) * 0.25;
 
 	// compute refraction angle
-	cos_phi       = b3Vector::b3SMul(&surface->incoming->dir,normal);
+	cos_phi       = b3Vector::b3SMul(&surface->m_Incoming->dir,normal);
 	sin_theta_sqr = (1.0 - cos_phi * cos_phi) / (m_Ior * m_Ior);
 	cos_theta     = sqrt(1.0 - sin_theta_sqr);
 	quotient      = 4000.0 * M_PI * m_Thickness * (1.5 + 0.5 * wobble) * cos_theta;

@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.78  2004/10/05 09:29:22  sm
+**      - Donw some documentations.
+**
 **      Revision 1.77  2004/09/28 15:07:40  sm
 **      - Support for car paint is complete.
 **      - Made some optimizations concerning light.
@@ -670,7 +673,7 @@ void b3Shape::b3GetDiffuseColor(b3Color &color)
 	b3_surface   surface;
 
 	color.b3Init(0.1f,0.5f,1.0f,0.0f);
-	surface.incoming = &ray;
+	surface.m_Incoming = &ray;
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
@@ -692,8 +695,8 @@ b3_f64 b3Shape::b3GetColors(
 	b3_ray       ray;
 	b3_surface   surface;
 
-	surface.incoming = &ray;
-	b3Vector::b3Init(&surface.incoming->normal,0,0,1);
+	surface.m_Incoming = &ray;
+	b3Vector::b3Init(&surface.m_Incoming->normal,0,0,1);
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
@@ -825,7 +828,7 @@ private:
 		fxStep = (limit.x2 - limit.x1 - 2 * b3Scene::epsilon) / info->m_xMax;
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
 
-		surface.incoming = &ray;
+		surface.m_Incoming = &ray;
 		ray.bbox = &bbox;
 		ray.shape = m_Shape;
 		bbox.b3Prepare();

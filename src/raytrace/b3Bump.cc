@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/10/05 09:29:22  sm
+**	- Donw some documentations.
+**
 **	Revision 1.38  2004/08/01 12:47:39  sm
 **	- Animated thin film material.
-**
+**	
 **	Revision 1.37  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -231,7 +234,7 @@ void b3Bump::b3Register()
 
 /*************************************************************************
 **                                                                      **
-**                        Bump base class                               **
+**                        Base class for all bump classes               **
 **                                                                      **
 *************************************************************************/
 
@@ -304,7 +307,7 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 
 /*************************************************************************
 **                                                                      **
-**                        marble like bumping                           **
+**                        Marble like bumping                           **
 **                                                                      **
 *************************************************************************/
 
@@ -362,7 +365,7 @@ void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 
 /*************************************************************************
 **                                                                      **
-**                        classic bump mapping                          **
+**                        Classic bump mapping                          **
 **                                                                      **
 *************************************************************************/
 
@@ -478,7 +481,7 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 
 /*************************************************************************
 **                                                                      **
-**                        water surface bumping                         **
+**                        Water surface bumping                         **
 **                                                                      **
 *************************************************************************/
 
@@ -581,7 +584,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 
 /*************************************************************************
 **                                                                      **
-**                        beach ripples bumping                         **
+**                        Beach ripples bumping                         **
 **                                                                      **
 *************************************************************************/
 
