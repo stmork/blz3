@@ -88,6 +88,12 @@ protected:
 	afx_msg void OnCopyProperties();
 	afx_msg void OnUpdateCopyProperties(CCmdUI* pCmdUI);
 	afx_msg void OnDeleteTransformHistory();
+	afx_msg void OnEditMaterialDirect();
+	afx_msg void OnEditBumpDirect();
+	afx_msg void OnUpdateEditMaterialDirect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditBumpDirect(CCmdUI* pCmdUI);
+	afx_msg void OnCopyMaterialToBump();
+	afx_msg void OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -116,6 +122,10 @@ public:
 private:
 	void    b3SetBBox(b3BBox *bbox);
 	void    b3ActivateItem(b3Item *item,b3_bool activate=true);
+	b3Item *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
+	b3Item *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
+	void    b3CopyMaterialToBump();
+	void    b3CopyBumpToMaterial();
 };
 
 /////////////////////////////////////////////////////////////////////////////

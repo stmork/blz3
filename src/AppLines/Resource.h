@@ -277,6 +277,9 @@
 #define ID_VIEW_THUMB                   10119
 #define ID_VIEW_TOP                     10120
 #define ID_VIEW_TO_FULCRUM              10121
+#define ID_EDIT_BUMP_DIRECT             10122
+#define ID_EDIT_MATERIAL_DIRECT         10123
+#define ID_COPY_MATERIAL_TO_BUMP        10124
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -695,7 +698,9 @@
 #define IDC_OBJ_RESET                   32406
 #define IDC_SHADING_PHONG               32407
 #define IDC_SHADING_MORK                32408
+#define IDC_ITEM_DEFAULT                32408
 #define IDC_SHADING_MORK2               32409
+#define IDC_ITEM_REGISTRY               32409
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -911,8 +916,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        127
-#define _APS_NEXT_COMMAND_VALUE         10122
-#define _APS_NEXT_CONTROL_VALUE         32408
+#define _APS_NEXT_COMMAND_VALUE         10125
+#define _APS_NEXT_CONTROL_VALUE         32410
 #define _APS_NEXT_SYMED_VALUE           60207
 #endif
 #endif

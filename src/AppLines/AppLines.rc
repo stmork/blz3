@@ -633,11 +633,21 @@ BEGIN
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
         MENUITEM SEPARATOR
-        MENUITEM "&Material...",                ID_EDIT_MATERIAL
-        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
         MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
         MENUITEM "Transformationsablauf löschen", 
                                                 ID_DELETE_TRANSFORM_HISTORY
+    END
+    POPUP "&Material"
+    BEGIN
+        MENUITEM "&Verwalten...",               ID_EDIT_MATERIAL
+        MENUITEM "&Editieren",                  ID_EDIT_MATERIAL_DIRECT
+        MENUITEM "Werte in Oberflächenstruktur kopieren", 
+                                                ID_COPY_MATERIAL_TO_BUMP
+    END
+    POPUP "Bump Mapping"
+    BEGIN
+        MENUITEM "&Verwalten...",               ID_EDIT_BUMP
+        MENUITEM "&Editieren",                  ID_EDIT_BUMP_DIRECT
     END
     POPUP "&Ansicht"
     BEGIN
@@ -1966,7 +1976,7 @@ END
 
 IDD_ITEM_MAINTAIN DIALOGEX 0, 0, 387, 261
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "List1",IDC_ITEM_LIST,"SysListView32",LVS_SINGLESEL | 
                     LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
@@ -1987,6 +1997,10 @@ BEGIN
     LTEXT           "Bearbeitungsliste:",IDC_STATIC,10,10,56,8
     LTEXT           "Verfügbarkeitsliste:",IDC_STATIC,195,10,60,8
     DEFPUSHBUTTON   "OK",IDOK,10,235,50,15
+    CONTROL         "Default-Werte",IDC_ITEM_DEFAULT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,195,230,60,10
+    CONTROL         "Letzte gespeicherten Werte",IDC_ITEM_REGISTRY,"Button",
+                    BS_AUTORADIOBUTTON,275,230,103,10
 END
 
 IDD_ITEM_CREATE DIALOGEX 0, 0, 382, 206
@@ -3929,6 +3943,10 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_EDIT_BUMP_DIRECT     "Einzelne Oberflächenstruktur direkt ändern.\nOberflächenstruktur direkt ändern"
+    ID_EDIT_MATERIAL_DIRECT "Einzelnes Material direkt ändern.\nMaterial direkt ändern"
+    ID_COPY_MATERIAL_TO_BUMP 
+                            "Kopiert die Materialwerte in Strukturwerte um.\nMaterial in Struktur anpassen"
 END
 
 STRINGTABLE DISCARDABLE 

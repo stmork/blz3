@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/06/06 14:45:57  sm
+**	- Added quick material/bump edit support.
+**	- Added material to bump copy on wooden materials.
+**
 **	Revision 1.15  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
-**
+**	
 **	Revision 1.14  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
 **	
@@ -111,11 +115,13 @@ CDlgItemMaintain::CDlgItemMaintain(
 	: CDialog(CDlgItemMaintain::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgItemMaintain)
+	m_CreationValue = 1;
 	//}}AFX_DATA_INIT
 	m_Head    = head;
 	m_Plugins = &b3Loader::b3GetLoader();
 	m_Changed = false;
 	m_pDoc    = pDoc;
+	m_CreationValue = CB3GetApp()->GetProfileInt(CB3ClientString(),"item maintain.creation source",m_CreationValue);
 }
 
 
@@ -125,6 +131,7 @@ void CDlgItemMaintain::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CDlgItemMaintain)
 	DDX_Control(pDX, IDC_ITEM_LIST, m_ItemListCtrl);
 	DDX_Control(pDX, IDC_CLASS_LIST, m_ClassListCtrl);
+	DDX_Radio(pDX, IDC_ITEM_DEFAULT, m_CreationValue);
 	//}}AFX_DATA_MAP
 }
 
@@ -323,8 +330,18 @@ void CDlgItemMaintain::OnItemNew()
 		b3_u32    *buffer;
 		b3_size    size = 0;
 
-		section.Format("item %08x.default",class_type);
-		buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
+		UpdateData();
+		switch(m_CreationValue)
+		{
+		case 1:
+			section.Format("item %08x.default",class_type);
+			buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
+			break;
+		case 0:
+		default:
+			buffer = null;
+			break;
+		}
 		if (buffer != null)
 		{
 			item = b3Loader::b3GetLoader().b3Create(buffer,m_pDoc,false);
@@ -480,6 +497,7 @@ void CDlgItemMaintain::OnOK()
 	// TODO: Add extra validation here
 	
 	CDialog::OnOK();
+	CB3GetApp()->WriteProfileInt(CB3ClientString(),"item maintain.creation source",m_CreationValue);
 	if ((m_pDoc != null) && m_Changed)
 	{
 		m_pDoc->SetModifiedFlag();

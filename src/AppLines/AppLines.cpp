@@ -57,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.79  2004/06/06 14:45:57  sm
+**	- Added quick material/bump edit support.
+**	- Added material to bump copy on wooden materials.
+**
 **	Revision 1.78  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.77  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
@@ -1129,7 +1133,7 @@ void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
 	b3Base<b3Item> head;
-	b3Item        *item = b3World::b3AllocNode(BUMP_MARBLE);
+	b3Item        *item = b3World::b3AllocNode(WOOD);
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);

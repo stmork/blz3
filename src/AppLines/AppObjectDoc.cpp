@@ -40,9 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/06/06 14:45:57  sm
+**	- Added quick material/bump edit support.
+**	- Added material to bump copy on wooden materials.
+**
 **	Revision 1.34  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.33  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -223,12 +227,18 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP, OnUpdateEditBump)
 	ON_COMMAND(ID_COPY_PROPERTIES, OnCopyProperties)
 	ON_UPDATE_COMMAND_UI(ID_COPY_PROPERTIES, OnUpdateCopyProperties)
+	ON_COMMAND(ID_DELETE_TRANSFORM_HISTORY, OnDeleteTransformHistory)
+	ON_COMMAND(ID_EDIT_MATERIAL_DIRECT, OnEditMaterialDirect)
+	ON_COMMAND(ID_EDIT_BUMP_DIRECT, OnEditBumpDirect)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL_DIRECT, OnUpdateEditMaterialDirect)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP_DIRECT, OnUpdateEditBumpDirect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_DELETE_TRANSFORM_HISTORY, OnDeleteTransformHistory)
+	ON_COMMAND(ID_COPY_MATERIAL_TO_BUMP, OnCopyMaterialToBump)
+	ON_UPDATE_COMMAND_UI(ID_COPY_MATERIAL_TO_BUMP, OnUpdateCopyMaterialToBump)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -931,4 +941,183 @@ void CAppObjectDoc::OnDeleteTransformHistory()
 		m_BBox->b3ResetTransformation();
 		SetModifiedFlag();
 	}
+}
+
+void CAppObjectDoc::OnEditMaterialDirect() 
+{
+	// TODO: Add your command handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3Item   *item;
+
+	if (shape != null)
+	{
+		item = shape->b3GetMaterialHead()->First;
+		if (item != null)
+		{
+			b3Loader::b3GetLoader().b3Edit(item,this);
+		}
+	}
+}
+
+void CAppObjectDoc::OnEditBumpDirect() 
+{
+	// TODO: Add your command handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3Item   *item;
+
+	if (shape != null)
+	{
+		item = shape->b3GetBumpHead()->First;
+		if (item != null)
+		{
+			b3Loader::b3GetLoader().b3Edit(item,this);
+		}
+	}
+}
+
+void CAppObjectDoc::OnUpdateEditMaterialDirect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3_count  count = 0;
+
+	if (shape != null)
+	{
+		count = shape->b3GetMaterialHead()->b3GetCount();
+	}
+	pCmdUI->Enable(count == 1);
+}
+
+void CAppObjectDoc::OnUpdateEditBumpDirect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape  *shape = b3GetSelectedShape();
+	b3_count  count = 0;
+
+	if (shape != null)
+	{
+		count = shape->b3GetBumpHead()->b3GetCount();
+	}
+	pCmdUI->Enable(count == 1);
+}
+
+b3Item *CAppObjectDoc::b3FindItem(b3Base<b3Item> *head,b3_u32 class_type)
+{
+	b3Item *item;
+
+	B3_FOR_BASE(head,item)
+	{
+		if (item->b3GetClassType() == class_type)
+		{
+			return item;
+		}
+	}
+	return null;
+}
+
+b3Item *CAppObjectDoc::b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type)
+{
+	b3Item *item = b3FindItem(head,class_type);
+
+	if (item != null)
+	{
+		head->b3Remove(item);
+	}
+	else
+	{
+		item = b3World::b3AllocNode(class_type);
+	}
+	if (item != null)
+	{
+		head->b3Free();
+		head->b3Append(item);
+	}
+	return item;
+}
+
+void CAppObjectDoc::b3CopyMaterialToBump()
+{
+	b3Shape *shape = b3GetSelectedShape();
+	b3Item  *src;
+	b3Item  *dst;
+
+	if (shape == null)
+	{
+		return;
+	}
+
+	if (shape->b3GetMaterialHead()->b3GetCount() != 1)
+	{
+		return;
+	}
+
+	src = shape->b3GetMaterialHead()->First;
+	switch(src->b3GetClassType())
+	{
+	case WOOD:
+		dst = b3EnsureSingleItem(shape->b3GetBumpHead(),BUMP_WOOD);
+		if (dst != null)
+		{
+			b3MatWood  *material   = (b3MatWood *)src;
+			b3BumpWood *bump       = (b3BumpWood *)dst;
+			b3Wood     *srcWood    = material;
+			b3Scaling  *srcScaling = material;
+			b3Wood     *dstWood    = bump;
+			b3Scaling  *dstScaling = bump;
+
+			*dstWood     = *srcWood;
+			*dstScaling  = *srcScaling;
+		}
+		break;
+
+	case OAKPLANK:
+		dst = b3EnsureSingleItem(shape->b3GetBumpHead(),BUMP_OAKPLANK);
+		if (dst != null)
+		{
+			b3MatOakPlank  *material    = (b3MatOakPlank *)src;
+			b3BumpOakPlank *bump        = (b3BumpOakPlank *)dst;
+			b3Wood         *srcWood     = material;
+			b3OakPlank     *srcOakPlank = material;
+			b3Scaling      *srcScaling  = material;
+			b3Wood         *dstWood     = bump;
+			b3OakPlank     *dstOakPlank = bump;
+			b3Scaling      *dstScaling  = bump;
+
+			*dstWood     = *srcWood;
+            *dstOakPlank = *srcOakPlank;
+			*dstScaling  = *srcScaling;
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
+void CAppObjectDoc::OnCopyMaterialToBump() 
+{
+	// TODO: Add your command handler code here
+	b3CopyMaterialToBump();
+}
+
+void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = b3GetSelectedShape();
+	b3_bool  enabled = false;
+
+	if (shape != null)
+	{
+		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
+		{
+			switch(shape->b3GetMaterialHead()->First->b3GetClassType())
+			{
+			case WOOD:
+			case OAKPLANK:
+				enabled = true;
+				break;
+			}
+		}
+	}
+	pCmdUI->Enable(enabled);
 }

@@ -46,6 +46,7 @@ public:
 	enum { IDD = IDD_ITEM_MAINTAIN };
 	CListCtrl	m_ItemListCtrl;
 	CListCtrl	m_ClassListCtrl;
+	int		m_CreationValue;
 	//}}AFX_DATA
 
 
