@@ -33,10 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/05/07 16:30:33  sm
+**	- Bug #13 fixed. The BBox hierarchy is recounted on every
+**	  object edit finish.
+**	- Wooden materials contain a dark and a separate light
+**	  material. Changes were also made in Lines.
+**	- Introduced shape property copy including all materials,
+**	  bumps and conditions. Multiple copy modes are possible.
+**
 **	Revision 1.14  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.13  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -101,8 +109,9 @@ CDlgMatWood::CDlgMatWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatWood::IDD, pParent)
 {
 	m_Material = (b3MatWood *)item;
-	m_PageMatWood.m_Material = m_Material;
-	m_PageWood.m_Wood        = m_Material;
+	m_PageDark.m_Material  = &m_Material->m_DarkMaterial;
+	m_PageLight.m_Material = &m_Material->m_LightMaterial;
+	m_PageWood.m_Wood      = m_Material;
 	//{{AFX_DATA_INIT(CDlgMatWood)
 	//}}AFX_DATA_INIT
 }
@@ -147,8 +156,11 @@ void CDlgMatWood::b3InitDialog()
 	m_MatSampler = new b3MaterialSampler(m_PreviewMaterialCtrl);
 	m_MatSampler->b3SetMaterial(m_Material);
 
-	m_PropertySheet.AddPage(&m_PageMatWood);
-	m_PropertySheet.AddPage(&m_PageWood);
+	m_PageDark.b3SetCaption(IDS_TITLE_DARK);
+	m_PageLight.b3SetCaption(IDS_TITLE_LIGHT);
+	m_PageDark.b3AddToSheet(&m_PropertySheet);
+	m_PageLight.b3AddToSheet(&m_PropertySheet);
+	m_PageWood.b3AddToSheet(&m_PropertySheet);
 }
 
 void CDlgMatWood::b3UpdateUI()

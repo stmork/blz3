@@ -60,6 +60,14 @@
 
 /*
 **	$Log$
+**	Revision 1.94  2004/05/07 16:30:33  sm
+**	- Bug #13 fixed. The BBox hierarchy is recounted on every
+**	  object edit finish.
+**	- Wooden materials contain a dark and a separate light
+**	  material. Changes were also made in Lines.
+**	- Introduced shape property copy including all materials,
+**	  bumps and conditions. Multiple copy modes are possible.
+**
 **	Revision 1.93  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -67,7 +75,7 @@
 **	    is still a perfomrmance problem.
 **	  o #17 fixed. Now we use b3Scene::b3GetName() in
 **	    combination with the b3Scene filename.
-**
+**	
 **	Revision 1.92  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -1676,6 +1684,7 @@ void CAppLinesDoc::OnObjectEdit()
 	if (selected != null)
 	{
 		B3_ASSERT(b3BBox::b3FindBBox(m_Scene->b3GetBBoxHead(),selected));
+		m_Scene->b3Dump(1);
 		pDoc = app->b3CreateObjectDoc(this,selected);
 		if (pDoc != null)
 		{
@@ -1695,6 +1704,7 @@ void CAppLinesDoc::b3FinishEdit(
 		base = m_Scene->b3FindBBoxHead(original);
 		base->b3Insert(original,bbox);
 		base->b3Remove(original);
+		b3BBox::b3Recount(base);
 		SetModifiedFlag();
 	}
 }

@@ -28,6 +28,7 @@
 
 #include "DlgNewObject.h"
 #include "DlgItemMaintain.h"
+#include "DlgCopyProperties.h"
 
 #include "blz3/base/b3Matrix.h"
 
@@ -39,9 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/05/07 16:30:33  sm
+**	- Bug #13 fixed. The BBox hierarchy is recounted on every
+**	  object edit finish.
+**	- Wooden materials contain a dark and a separate light
+**	  material. Changes were also made in Lines.
+**	- Introduced shape property copy including all materials,
+**	  bumps and conditions. Multiple copy modes are possible.
+**
 **	Revision 1.28  2004/04/10 20:05:12  sm
 **	- Introduced bump map editing in Lines III
-**
+**	
 **	Revision 1.27  2003/07/20 07:48:30  sm
 **	- Added legend to object printing
 **	
@@ -190,13 +199,15 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateObjectEdit)
 	ON_COMMAND(ID_EDIT_MATERIAL, OnEditMaterial)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL, OnUpdateEditMaterial)
+	ON_COMMAND(ID_EDIT_BUMP, OnEditBump)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP, OnUpdateEditBump)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_EDIT_BUMP, OnEditBump)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP, OnUpdateEditBump)
+	ON_COMMAND(ID_COPY_PROPERTIES, OnCopyProperties)
+	ON_UPDATE_COMMAND_UI(ID_COPY_PROPERTIES, OnUpdateCopyProperties)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -285,7 +296,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 	main->b3SetStatusMessage(IDS_DOC_REORG);
 	b3BBox::b3Recount(
 		bbox->b3GetBBoxHead(),
-		bbox->b3GetClassType() & 0xffff);
+		bbox->b3GetType());
 
 	main->b3SetStatusMessage(IDS_DOC_VERTICES);
 	bbox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
@@ -857,6 +868,33 @@ void CAppObjectDoc::OnEditBump()
 }
 
 void CAppObjectDoc::OnUpdateEditBump(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	pCmdUI->Enable(shape != null);
+}
+
+void CAppObjectDoc::OnCopyProperties() 
+{
+	// TODO: Add your command handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	if (shape != null)
+	{
+		CDlgCopyProperties dlg;
+
+		if (dlg.DoModal() == IDOK)
+		{
+			if (dlg.b3CopyProperties(m_BBox,shape))
+			{
+				SetModifiedFlag();
+			}
+		}
+	}
+}
+
+void CAppObjectDoc::OnUpdateCopyProperties(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();

@@ -16,6 +16,7 @@
 #define IDR_TOOLBAR_LIGHT               120
 #define IDR_TOOLBAR_OBJECT              121
 #define IDR_TOOLBAR_VIEW                122
+#define IDD_COPY_PROPERTIES             123
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -256,6 +257,7 @@
 #define ID_VIEW_THUMB                   10117
 #define ID_VIEW_TOP                     10118
 #define ID_VIEW_TO_FULCRUM              10119
+#define ID_COPY_PROPERTIES              10120
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -622,6 +624,24 @@
 #define IDC_SCALE_X                     32363
 #define IDC_SCALE_Y                     32364
 #define IDC_SCALE_Z                     32365
+#define IDC_MAT_NONE                    32366
+#define IDC_MAT_EQUAL                   32367
+#define IDC_MAT_ALL                     32368
+#define IDC_MAT_CONTAIN                 32369
+#define IDC_MAT_SHAPE_EQUAL             32370
+#define IDC_BUMP_NONE                   32371
+#define IDC_BUMP_EQUAL                  32372
+#define IDC_BUMP_CONTAIN                32373
+#define IDC_BUMP_ALL                    32374
+#define IDC_BUMP_SHAPE_EQUAL            32375
+#define IDC_COND_NONE                   32376
+#define IDC_COND_EQUAL                  32377
+#define IDC_COND_CONTAIN                32378
+#define IDC_COND_ALL                    32379
+#define IDC_COND_SHAPE_EQUAL            32380
+#define IDC_MAT_ACTIVE                  32381
+#define IDC_BUMP_ACTIVE                 32382
+#define IDC_COND_ACTIVE                 32383
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -820,9 +840,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        123
-#define _APS_NEXT_COMMAND_VALUE         10120
-#define _APS_NEXT_CONTROL_VALUE         32366
+#define _APS_NEXT_RESOURCE_VALUE        124
+#define _APS_NEXT_COMMAND_VALUE         10121
+#define _APS_NEXT_CONTROL_VALUE         32382
 #define _APS_NEXT_SYMED_VALUE           60186
 #endif
 #endif

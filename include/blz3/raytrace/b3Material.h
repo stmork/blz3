@@ -126,11 +126,11 @@ public:
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
-class B3_PLUGIN b3MaterialWooden : public b3Material, public b3_material
+class B3_PLUGIN b3MaterialWooden : public b3Material
 {
 public:
-	b3Color           m_LightWood;
-	b3Color           m_DarkWood;
+	b3_material       m_DarkMaterial;
+	b3_material       m_LightMaterial;
 
 protected:
 	B3_ITEM_BASE(b3MaterialWooden);
@@ -164,8 +164,8 @@ private:
 // OAKPLANK
 class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
 {
-	b3Color          *m_LightColors;
-	b3Color          *m_DarkColors;
+	b3_material     *m_LightMaterials;
+	b3_material     *m_DarkMaterials;
 
 public:
 	B3_ITEM_INIT(b3MatOakPlank);

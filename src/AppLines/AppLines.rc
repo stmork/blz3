@@ -723,6 +723,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Material...",                ID_EDIT_MATERIAL
         MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
+        MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "Ak&tivieren",                 ID_ACTIVATE
         MENUITEM "&Deaktivieren",               ID_DEACTIVATE
@@ -1939,7 +1940,7 @@ END
 
 IDD_ITEM_MAINTAIN DIALOGEX 0, 0, 387, 261
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "List1",IDC_ITEM_LIST,"SysListView32",LVS_SINGLESEL | 
                     LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
@@ -2562,6 +2563,54 @@ BEGIN
                     UDS_NOTHOUSANDS,125,135,11,15
 END
 
+IDD_COPY_PROPERTIES DIALOG DISCARDABLE  0, 0, 437, 157
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Körpereigenschaften verteilen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Material",IDC_STATIC,10,10,130,110
+    CONTROL         "Nicht verteilen",IDC_MAT_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,20,25,61,10
+    CONTROL         "Nur wenn Material gleich ist",IDC_MAT_EQUAL,"Button",
+                    BS_AUTORADIOBUTTON,20,40,103,10
+    CONTROL         "Wenn Materialien enthalten sind",IDC_MAT_CONTAIN,"Button",
+                    BS_AUTORADIOBUTTON,20,55,117,10
+    CONTROL         "Auf alles verteilen",IDC_MAT_ALL,"Button",
+                    BS_AUTORADIOBUTTON,20,70,71,10
+    CONTROL         "Körpertyp muß gleich sein",IDC_MAT_SHAPE_EQUAL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,20,85,97,10
+    CONTROL         "Körper muß aktiv sein",IDC_MAT_ACTIVE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,20,100,84,10
+    GROUPBOX        "Oberflächenstruktur",IDC_STATIC,150,10,130,110
+    CONTROL         "Nicht verteilen",IDC_BUMP_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,160,25,61,10
+    CONTROL         "Nur wenn Struktur gleich ist",IDC_BUMP_EQUAL,"Button",
+                    BS_AUTORADIOBUTTON,160,40,103,10
+    CONTROL         "Wenn Strukturen enthalten sind",IDC_BUMP_CONTAIN,"Button",
+                    BS_AUTORADIOBUTTON,160,55,116,10
+    CONTROL         "Auf alles verteilen",IDC_BUMP_ALL,"Button",
+                    BS_AUTORADIOBUTTON,160,70,71,10
+    CONTROL         "Körpertyp muß gleich sein",IDC_BUMP_SHAPE_EQUAL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,160,85,97,10
+    CONTROL         "Körper muß aktiv sein",IDC_BUMP_ACTIVE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,160,100,84,10
+    GROUPBOX        "Ausschnitt",IDC_STATIC,290,10,135,110
+    CONTROL         "Nicht verteilen",IDC_COND_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,300,25,61,10
+    CONTROL         "Nur wenn Ausschnitt gleich ist",IDC_COND_EQUAL,"Button",
+                    BS_AUTORADIOBUTTON,300,40,111,10
+    CONTROL         "Wenn Ausschnitte enthalten sind",IDC_COND_CONTAIN,
+                    "Button",BS_AUTORADIOBUTTON,300,55,120,10
+    CONTROL         "Auf alles verteilen",IDC_COND_ALL,"Button",
+                    BS_AUTORADIOBUTTON,300,70,71,10
+    CONTROL         "Körpertyp muß gleich sein",IDC_COND_SHAPE_EQUAL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,300,85,97,10
+    CONTROL         "Körper muß aktiv sein",IDC_COND_ACTIVE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,300,100,84,10
+    DEFPUSHBUTTON   "OK",IDOK,10,130,50,15
+    PUSHBUTTON      "Abbrechen",IDCANCEL,375,130,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -3064,6 +3113,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 163
     END
+
+    IDD_COPY_PROPERTIES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 430
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 150
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -3434,6 +3491,7 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_COPY_PROPERTIES      "Verteilt die Körpereigenschaften auf andere Körper\nKörpereigenschaften verteilen"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -313,6 +313,10 @@ SOURCE=.\DlgCamera.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCopyProperties.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCreateItem.cpp
 # End Source File
 # Begin Source File
@@ -514,10 +518,6 @@ SOURCE=.\PageBump.cpp
 # Begin Source File
 
 SOURCE=.\PageMaterial.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\PageMatWood.cpp
 # End Source File
 # Begin Source File
 
@@ -733,6 +733,10 @@ SOURCE=.\DlgCamera.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCopyProperties.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCreateItem.h
 # End Source File
 # Begin Source File
@@ -934,10 +938,6 @@ SOURCE=.\PageBump.h
 # Begin Source File
 
 SOURCE=.\PageMaterial.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\PageMatWood.h
 # End Source File
 # Begin Source File
 

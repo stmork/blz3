@@ -33,9 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/07 16:30:33  sm
+**	- Bug #13 fixed. The BBox hierarchy is recounted on every
+**	  object edit finish.
+**	- Wooden materials contain a dark and a separate light
+**	  material. Changes were also made in Lines.
+**	- Introduced shape property copy including all materials,
+**	  bumps and conditions. Multiple copy modes are possible.
+**
 **	Revision 1.4  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -127,12 +135,19 @@ int main(int argc,char *argv[])
 
 	for (i = 1;i < argc;i++)
 	{
-		b3FileList   list(argv[i]);
-		b3FileEntry *entry;
-
-		for(entry = list.b3First();entry != null;entry = entry->Succ)
+		if (b3Dir::b3Exists(argv[i]) == B3_TYPE_DIR)
 		{
-			b3TestFile(entry->b3Name());
+			b3FileList   list(argv[i]);
+			b3FileEntry *entry;
+
+			for(entry = list.b3First();entry != null;entry = entry->Succ)
+			{
+				b3TestFile(entry->b3Name());
+			}
+		}
+		else
+		{
+			b3TestFile(argv[i]);
 		}
 	}
 

@@ -135,13 +135,12 @@ public:
 	void            b3SetFirst(b3Item *item);
 	b3Base<b3Item> *b3GetHead(b3_u32 class_value = 0);
 
-	static  b3Item *b3Clone(b3Item *original);
+	static b3Item  *b3Clone(b3Item *original);
+	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase);
 
 private:
 	b3_world_error  b3EndianSwapWorld();
 	b3_world_error  b3Parse();
-
-	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase);
 };
 
 /*************************************************************************

@@ -27,7 +27,7 @@
 #include "blz3/raytrace/b3MaterialSampler.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowSample.h"
-#include "PageMatWood.h"
+#include "PageMaterial.h"
 #include "PageWood.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,8 @@ class CDlgMatWood : public CB3SimplePropertyPreviewDialog
 	b3MatWood         *m_Material;
 	b3MaterialSampler *m_MatSampler;
 
-	CPageMatWood       m_PageMatWood;
+	CPageMaterial      m_PageDark;
+	CPageMaterial      m_PageLight;
 	CPageWood          m_PageWood;
 // Construction
 public:

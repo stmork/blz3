@@ -36,6 +36,14 @@
 
 /*
 **      $Log$
+**      Revision 1.69  2004/05/07 16:30:33  sm
+**      - Bug #13 fixed. The BBox hierarchy is recounted on every
+**        object edit finish.
+**      - Wooden materials contain a dark and a separate light
+**        material. Changes were also made in Lines.
+**      - Introduced shape property copy including all materials,
+**        bumps and conditions. Multiple copy modes are possible.
+**
 **      Revision 1.68  2004/05/06 18:13:52  sm
 **      - Added support for changed only b3Items for a
 **        better preview performance.
@@ -953,16 +961,23 @@ b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
 
 void b3MaterialWooden::b3Init()
 {
-	m_Ambient.b3Init(0.2,0.2,0.2);
-	m_Diffuse.b3Init(0.1,0.2,0.9);
-	m_Specular.b3Init(0.8,0.8,0.8);
-	m_LightWood.b3Init(0.5,0.2,0.067);
-//	m_DarkWood.b3Init(0.15,0.077,0.028);
-	m_DarkWood    = m_LightWood * 0.7;
-	m_Reflection  =   0;
-	m_Refraction  =   0;
-	m_Ior         =   1;
-	m_SpecularExp = 200;
+	m_LightMaterial.m_Diffuse.b3Init(0.5,0.2,0.067);
+	m_LightMaterial.m_Ambient = m_LightMaterial.m_Diffuse * 0.2;
+	m_LightMaterial.m_Specular.b3Init(0.8,0.8,0.8);
+
+	m_DarkMaterial.m_Diffuse = m_LightMaterial.m_Diffuse * 0.7;
+	m_DarkMaterial.m_Ambient = m_DarkMaterial.m_Diffuse * 0.2;
+	m_DarkMaterial.m_Specular.b3Init(0.8,0.8,0.8);
+
+	m_DarkMaterial.m_Reflection  =   0;
+	m_DarkMaterial.m_Refraction  =   0;
+	m_DarkMaterial.m_Ior         =   1;
+	m_DarkMaterial.m_SpecularExp = 200;
+
+	m_LightMaterial.m_Reflection  =   0;
+	m_LightMaterial.m_Refraction  =   0;
+	m_LightMaterial.m_Ior         =   1;
+	m_LightMaterial.m_SpecularExp = 200;
 }
 
 /*************************************************************************
@@ -979,17 +994,18 @@ b3MatWood::b3MatWood(b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood),cla
 b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 {
 	b3Init();
-	b3InitColor(m_Diffuse);
-	b3InitColor(m_Ambient);
-	b3InitColor(m_Specular);
+	b3InitColor(m_DarkMaterial.m_Diffuse);
+	b3InitColor(m_DarkMaterial.m_Ambient);
+	b3InitColor(m_DarkMaterial.m_Specular);
 	b3InitVector(&m_Scale);
-	m_Reflection  = b3InitFloat();
-	m_Refraction  = b3InitFloat();
-	m_Ior         = b3InitFloat();
-	m_SpecularExp = b3InitFloat();
+	m_DarkMaterial.m_Reflection  = b3InitFloat();
+	m_DarkMaterial.m_Refraction  = b3InitFloat();
+	m_DarkMaterial.m_Ior         = b3InitFloat();
+	m_DarkMaterial.m_SpecularExp = b3InitFloat();
 	m_Flags       = b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
+	m_LightMaterial = m_DarkMaterial;
 
 	// Load extensions if available
 	if (B3_PARSE_INDEX_VALID)
@@ -1007,8 +1023,28 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 		m_GrainFrequency         = b3InitFloat();
 		m_Grainy                 = b3InitFloat();
 		m_Ringy                  = b3InitFloat();
-		b3InitColor(m_LightWood);
-		b3InitColor(m_DarkWood);
+		b3InitColor(m_LightMaterial.m_Diffuse);
+		b3InitColor(m_DarkMaterial.m_Diffuse);
+		if (B3_PARSE_INDEX_VALID)
+		{
+			b3InitColor(m_LightMaterial.m_Ambient);
+			b3InitColor(m_DarkMaterial.m_Ambient);
+			b3InitColor(m_LightMaterial.m_Specular);
+			b3InitColor(m_DarkMaterial.m_Specular);
+			m_LightMaterial.m_Reflection  = b3InitFloat();
+			m_LightMaterial.m_Refraction  = b3InitFloat();
+			m_LightMaterial.m_Ior         = b3InitFloat();
+			m_LightMaterial.m_SpecularExp = b3InitFloat();
+		}
+		else
+		{
+			m_LightMaterial.m_Ambient  = m_LightMaterial.m_Diffuse * 0.2;
+			m_LightMaterial.m_Specular = B3_GREY;
+			m_DarkMaterial.m_Ambient   = m_DarkMaterial.m_Diffuse * 0.2;
+			m_DarkMaterial.m_Specular  = B3_GREY;
+
+			// light material surface values copied earlier.
+		}
 	}
 }
 
@@ -1025,14 +1061,14 @@ void b3MatWood::b3Init()
 
 void b3MatWood::b3Write()
 {
-	b3StoreColor(m_Diffuse);
-	b3StoreColor(m_Ambient);
-	b3StoreColor(m_Specular);
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Ambient);
+	b3StoreColor(m_DarkMaterial.m_Specular);
 	b3StoreVector(&m_Scale);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_Ior);
-	b3StoreFloat(m_SpecularExp);
+	b3StoreFloat(m_DarkMaterial.m_Reflection);
+	b3StoreFloat(m_DarkMaterial.m_Refraction);
+	b3StoreFloat(m_DarkMaterial.m_Ior);
+	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -1051,8 +1087,16 @@ void b3MatWood::b3Write()
 	b3StoreFloat(m_GrainFrequency);
 	b3StoreFloat(m_Grainy);
 	b3StoreFloat(m_Ringy);
-	b3StoreColor(m_LightWood);
-	b3StoreColor(m_DarkWood);
+	b3StoreColor(m_LightMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_LightMaterial.m_Ambient);
+	b3StoreColor(m_DarkMaterial.m_Ambient);
+	b3StoreColor(m_LightMaterial.m_Specular);
+	b3StoreColor(m_DarkMaterial.m_Specular);
+	b3StoreFloat(m_LightMaterial.m_Reflection);
+	b3StoreFloat(m_LightMaterial.m_Refraction);
+	b3StoreFloat(m_LightMaterial.m_Ior);
+	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
 b3_bool b3MatWood::b3Prepare()
@@ -1071,14 +1115,14 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	
 	mix = b3ComputeWood(&point);
 
-	surface->m_Diffuse  = b3Color::b3Mix(m_LightWood,m_DarkWood,mix);
-	surface->m_Ambient  = m_Ambient;
-	surface->m_Specular = m_Specular;
+	surface->m_Diffuse  = b3Color::b3Mix(m_LightMaterial.m_Diffuse, m_DarkMaterial.m_Diffuse, mix);
+	surface->m_Ambient  = b3Color::b3Mix(m_LightMaterial.m_Ambient, m_DarkMaterial.m_Ambient, mix);
+	surface->m_Specular = b3Color::b3Mix(m_LightMaterial.m_Specular,m_DarkMaterial.m_Specular,mix);
 
-	surface->m_Reflection  = m_Reflection;
-	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_Ior;
-	surface->m_SpecularExp = m_SpecularExp;
+	surface->m_Reflection  = b3Math::b3Mix(m_LightMaterial.m_Reflection, m_DarkMaterial.m_Reflection, mix);
+	surface->m_Refraction  = b3Math::b3Mix(m_LightMaterial.m_Refraction, m_DarkMaterial.m_Refraction, mix);
+	surface->m_Ior         = b3Math::b3Mix(m_LightMaterial.m_Ior,        m_DarkMaterial.m_Ior,        mix);
+	surface->m_SpecularExp = b3Math::b3Mix(m_LightMaterial.m_SpecularExp,m_DarkMaterial.m_SpecularExp,mix);
 
 	return true;
 }
@@ -1094,22 +1138,27 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 	b3OakPlank()
 {
 	b3Init();
-	m_DarkColors  = null;
-	m_LightColors = null;
+	m_DarkMaterials  = null;
+	m_LightMaterials = null;
 }
 
 b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 {
 	b3Init();
-	b3InitColor(m_Diffuse);
-	b3InitColor(m_Ambient);
-	b3InitColor(m_Specular);
 
+	// Dark
+	b3InitColor(m_DarkMaterial.m_Diffuse); // Overwritten later
+	b3InitColor(m_DarkMaterial.m_Ambient);
+	b3InitColor(m_DarkMaterial.m_Specular);
 	b3InitVector(&m_Scale);
-	m_Reflection  = b3InitFloat();
-	m_Refraction  = b3InitFloat();
-	m_Ior         = b3InitFloat();
-	m_SpecularExp = b3InitFloat();
+	m_DarkMaterial.m_Reflection  = b3InitFloat();
+	m_DarkMaterial.m_Refraction  = b3InitFloat();
+	m_DarkMaterial.m_Ior         = b3InitFloat();
+	m_DarkMaterial.m_SpecularExp = b3InitFloat();
+
+	m_LightMaterial = m_DarkMaterial;
+
+	// Oak plank values
 	m_Flags       = b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
@@ -1118,9 +1167,11 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 	m_yScale      = b3InitFloat();
 	m_Wobble      = b3InitFloat();
 
+	// Some diffuse colors - real use.
+	b3InitColor(m_LightMaterial.m_Diffuse);
+	b3InitColor(m_DarkMaterial.m_Diffuse);
+
 	// Wood basic definition
-	b3InitColor(m_LightWood);
-	b3InitColor(m_DarkWood);
 	m_yRot                   = b3InitFloat();
 	m_zRot                   = b3InitFloat();
 	m_RingSpacing            = b3InitFloat();
@@ -1135,20 +1186,31 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 	m_Grainy                 = b3InitFloat();
 	m_Ringy                  = b3InitFloat();
 
-	m_DarkColors  = null;
-	m_LightColors = null;
+	// Light
+	if (B3_PARSE_INDEX_VALID)
+	{
+		b3InitColor(m_LightMaterial.m_Ambient);
+		b3InitColor(m_LightMaterial.m_Specular);
+		m_LightMaterial.m_Reflection  = b3InitFloat();
+		m_LightMaterial.m_Refraction  = b3InitFloat();
+		m_LightMaterial.m_Ior         = b3InitFloat();
+		m_LightMaterial.m_SpecularExp = b3InitFloat();
+	}
+
+	m_DarkMaterials  = null;
+	m_LightMaterials = null;
 }
 
 b3MatOakPlank::~b3MatOakPlank()
 {
-	if (m_DarkColors != null)
+	if (m_DarkMaterials != null)
 	{
-		delete [] m_DarkColors;
+		delete [] m_DarkMaterials;
 	}
 
-	if (m_LightColors != null)
+	if (m_LightMaterials != null)
 	{
-		delete [] m_LightColors;
+		delete [] m_LightMaterials;
 	}
 }
 
@@ -1163,14 +1225,17 @@ void b3MatOakPlank::b3Init()
 
 void b3MatOakPlank::b3Write()
 {
-	b3StoreColor(m_Diffuse);
-	b3StoreColor(m_Ambient);
-	b3StoreColor(m_Specular);
+	// Dark
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Ambient);
+	b3StoreColor(m_DarkMaterial.m_Specular);
 	b3StoreVector(&m_Scale);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_Ior);
-	b3StoreFloat(m_SpecularExp);
+	b3StoreFloat(m_DarkMaterial.m_Reflection);
+	b3StoreFloat(m_DarkMaterial.m_Refraction);
+	b3StoreFloat(m_DarkMaterial.m_Ior);
+	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
+
+	// Oak plank values
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -1178,10 +1243,12 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_xScale);
 	b3StoreFloat(m_yScale);
 	b3StoreFloat(m_Wobble);
+
+	// Diffuse color
+	b3StoreColor(m_LightMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
 	
 	// Store wood base definitions
-	b3StoreColor(m_LightWood);
-	b3StoreColor(m_DarkWood);
 	b3StoreFloat(m_yRot);
 	b3StoreFloat(m_zRot);
 	b3StoreFloat(m_RingSpacing);
@@ -1195,7 +1262,15 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_GrainFrequency);
 	b3StoreFloat(m_Grainy);
 	b3StoreFloat(m_Ringy);
-	}
+
+	// rest of light material
+	b3StoreColor(m_LightMaterial.m_Ambient);
+	b3StoreColor(m_LightMaterial.m_Specular);
+	b3StoreFloat(m_LightMaterial.m_Reflection);
+	b3StoreFloat(m_LightMaterial.m_Refraction);
+	b3StoreFloat(m_LightMaterial.m_Ior);
+	b3StoreFloat(m_LightMaterial.m_SpecularExp);
+}
 
 b3_bool b3MatOakPlank::b3Prepare()
 {
@@ -1204,18 +1279,18 @@ b3_bool b3MatOakPlank::b3Prepare()
 
 	b3PrepareOakPlank();
 	
-	if (m_DarkColors != null)
+	if (m_DarkMaterials != null)
 	{
-		delete [] m_DarkColors;
+		delete [] m_DarkMaterials;
 	}
 
-	if (m_LightColors != null)
+	if (m_LightMaterials != null)
 	{
-		delete [] m_LightColors;
+		delete [] m_LightMaterials;
 	}
 
-	m_DarkColors  = new b3Color[m_PlankCount];
-	m_LightColors = new b3Color[m_PlankCount];
+	m_DarkMaterials  = new b3_material[m_PlankCount];
+	m_LightMaterials = new b3_material[m_PlankCount];
 
 	for (y = 0;y < m_yTimes;y++)
 	{
@@ -1224,15 +1299,26 @@ b3_bool b3MatOakPlank::b3Prepare()
 		{
 			fx = (b3_f64)x / m_xTimes;
 
-			m_DarkColors[index] = m_DarkWood + b3Color(
+			m_DarkMaterials[index].m_Diffuse = m_DarkMaterial.m_Diffuse + b3Color(
 				b3Noise::b3SignedFilteredNoiseVector(fx,fy,0),
 				b3Noise::b3SignedFilteredNoiseVector(0,fx,fy),
-				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_DarkWood * m_Wobble * 0.5;
+				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_DarkMaterial.m_Diffuse * m_Wobble * 0.5;
 
-			m_LightColors[index] = m_LightWood + b3Color(
+			m_LightMaterials[index].m_Diffuse = m_LightMaterial.m_Diffuse + b3Color(
 				b3Noise::b3SignedFilteredNoiseVector(fx,fy,0),
 				b3Noise::b3SignedFilteredNoiseVector(0,fx,fy),
-				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_LightWood * m_Wobble * 0.5;
+				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_LightMaterial.m_Diffuse * m_Wobble * 0.5;
+
+			m_DarkMaterials[index].m_Reflection  = m_DarkMaterial.m_Reflection;
+			m_DarkMaterials[index].m_Refraction  = m_DarkMaterial.m_Refraction;
+			m_DarkMaterials[index].m_Ior         = m_DarkMaterial.m_Ior;
+			m_DarkMaterials[index].m_SpecularExp = m_DarkMaterial.m_SpecularExp;
+
+			m_LightMaterials[index].m_Reflection  = m_LightMaterial.m_Reflection;
+			m_LightMaterials[index].m_Refraction  = m_LightMaterial.m_Refraction;
+			m_LightMaterials[index].m_Ior         = m_LightMaterial.m_Ior;
+			m_LightMaterials[index].m_SpecularExp = m_LightMaterial.m_SpecularExp;
+
 			index++;
 		}
 	}
@@ -1245,14 +1331,14 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	b3_index index;
 	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_BoxPolar,index);
 
-	surface->m_Diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
-	surface->m_Ambient  = m_Ambient;
-	surface->m_Specular = m_Specular;
+	surface->m_Diffuse  = b3Color::b3Mix(m_LightMaterials[index].m_Diffuse, m_DarkMaterials[index].m_Diffuse, mix);
+	surface->m_Ambient  = b3Color::b3Mix(m_LightMaterials[index].m_Ambient, m_DarkMaterials[index].m_Ambient, mix);
+	surface->m_Specular = b3Color::b3Mix(m_LightMaterials[index].m_Specular,m_DarkMaterials[index].m_Specular,mix);
 
-	surface->m_Reflection  = m_Reflection;
-	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_Ior;
-	surface->m_SpecularExp = m_SpecularExp;
+	surface->m_Reflection  = b3Math::b3Mix(m_LightMaterials[index].m_Reflection, m_DarkMaterials[index].m_Reflection, mix);
+	surface->m_Refraction  = b3Math::b3Mix(m_LightMaterials[index].m_Refraction, m_DarkMaterials[index].m_Refraction, mix);
+	surface->m_Ior         = b3Math::b3Mix(m_LightMaterials[index].m_Ior,        m_DarkMaterials[index].m_Ior,        mix);
+	surface->m_SpecularExp = b3Math::b3Mix(m_LightMaterials[index].m_SpecularExp,m_DarkMaterials[index].m_SpecularExp,mix);
 
 	return true;
 }
