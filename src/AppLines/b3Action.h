@@ -48,6 +48,7 @@ public:
 			void b3DispatchRButtonDown(b3_coord x,b3_coord y);
 	        void b3DispatchRButtonUp  (b3_coord x,b3_coord y);
 protected:
+	        void b3GetRelCoord(b3_coord x,b3_coord y,b3_f64 &xRel,b3_f64 &yRel);
 	virtual void b3MouseMove(b3_coord x,b3_coord y);
 
 	virtual void b3LDown(b3_coord x,b3_coord y);
@@ -68,7 +69,6 @@ class CB3ActionMagnify : public CB3Action
 public:
 	CB3ActionMagnify(CAppLinesView *window);
 
-	void b3LDown(b3_coord x,b3_coord y);
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
 };

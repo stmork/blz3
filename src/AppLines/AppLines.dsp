@@ -148,6 +148,14 @@ SOURCE=.\AppLinesView.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Action.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CameraVolume.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File

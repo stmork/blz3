@@ -205,6 +205,20 @@ BEGIN
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
     END
+    POPUP "Betriebsmodus"
+    BEGIN
+        MENUITEM "Objekt &selektieren",         ID_OBJ_SELECT
+        MENUITEM "Objekt &bewegen",             ID_OBJ_MOVE
+        MENUITEM "Objekt &rotieren",            ID_OBJ_ROTATE
+        MENUITEM "Objekt s&kalieren",           ID_OBJ_SCALE
+        MENUITEM SEPARATOR
+        MENUITEM "&Kamera bewegen",             ID_CAM_MOVE
+        MENUITEM "Kamera sch&wenken",           ID_CAM_TURN
+        MENUITEM "Kamera ro&tieren",            ID_CAM_ROTATE
+        MENUITEM "Kamera&projektion",           ID_CAM_VIEW
+        MENUITEM SEPARATOR
+        MENUITEM "Licht&quelle ausrichten",     ID_LIGHT_TURN
+    END
     POPUP "&Ansicht"
     BEGIN
         POPUP "Symbolleisten an&zeigen"

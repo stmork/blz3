@@ -25,6 +25,20 @@
 
 /*************************************************************************
 **                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/08/21 18:01:11  sm
+**	- Minor updates
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
 **                        CB3Action default implementation              **
 **                                                                      **
 *************************************************************************/
@@ -107,6 +121,22 @@ void CB3Action::b3DispatchRButtonUp(b3_coord x,b3_coord y)
 	::ReleaseCapture();
 }
 
+void CB3Action::b3GetRelCoord(
+	b3_coord  x,
+	b3_coord  y,
+	b3_f64   &xRel,
+	b3_f64   &yRel)
+{
+	CRect  rect;
+	b3_f64 xSize,ySize;
+
+	m_View->GetClientRect(&rect);
+	xSize = rect.Width();
+	ySize = rect.Height();
+	xRel  = x / xSize;
+	yRel  = y / ySize;
+}
+
 void CB3Action::b3MouseMove(b3_coord x,b3_coord y)
 {
 }
@@ -158,10 +188,6 @@ CB3ActionMagnify::CB3ActionMagnify(CAppLinesView *window) :
 {
 }
 
-void CB3ActionMagnify::b3LDown(b3_coord x,b3_coord y)
-{
-}
-
 void CB3ActionMagnify::b3LMove(b3_coord x,b3_coord y)
 {
 	m_View->b3DrawRect(m_xStart,m_yStart,m_xLast,m_yLast);
@@ -170,17 +196,11 @@ void CB3ActionMagnify::b3LMove(b3_coord x,b3_coord y)
 
 void CB3ActionMagnify::b3LUp(b3_coord x,b3_coord y)
 {
-	CRect  rect;
-	b3_f64 xSize,ySize;
+	b3_f64 x1,y1,x2,y2;
 
-	m_View->GetClientRect(&rect);
-	xSize = rect.Width();
-	ySize = rect.Height();
-	m_View->m_RenderView.b3Select(
-		m_xStart / xSize,
-		m_yStart / ySize,
-		x        / xSize,
-		y        / ySize);
+	b3GetRelCoord(m_xStart,m_yStart,x1,y1);
+	b3GetRelCoord(x,y,x2,y2);
+	m_View->m_RenderView.b3Select(x1,y1,x2,y2);
 	m_View->b3Update(B3_UPDATE_VIEW);
 	m_View->b3UnsetMagnification();
 }
