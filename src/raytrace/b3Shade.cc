@@ -35,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2004/09/17 20:57:53  sm
+**	- Material shader add their color components to jit.
+**	- Grizzle fix to Mork 2 shader: The reflective and refractive color
+**	  is initialized when coefficents are zero.
+**
 **	Revision 1.52  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
 **	  to do this for a long time, puh!
-**
+**	
 **	Revision 1.51  2004/07/27 16:33:50  sm
 **	- Added thin film material rendering
 **	
@@ -449,6 +454,7 @@ b3_bool b3Shader::b3Shade(
 		}
 		else
 		{
+			ray->color.b3Init();
 			finite = false;
 		}
 	}

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2004/09/17 20:57:53  sm
+**	- Material shader add their color components to jit.
+**	- Grizzle fix to Mork 2 shader: The reflective and refractive color
+**	  is initialized when coefficents are zero.
+**
 **	Revision 1.45  2004/09/17 14:48:12  sm
 **	- I have forgotten the area lights. Now sampling is correct by moving
 **	  the color sum from surface to Jit (light info).
-**
+**	
 **	Revision 1.44  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
@@ -252,7 +257,6 @@ void b3ShaderMork::b3ShadeLight(
 {
 	b3_f64   ShapeAngle;
 	b3_f32   Factor;
-	b3Color  sum;
 
 	// Real absorption
 	Jit->m_AmbientSum += (surface->m_Diffuse * m_ShadowFactor);
@@ -271,7 +275,6 @@ void b3ShaderMork::b3ShadeLight(
 
 			if (spec_exp < 100000)
 			{
-				
 				Factor = b3Math::b3FastPow((lambda + 1.0) * 0.5, spec_exp) * Jit->m_LightFrac;
 				Jit->m_SpecularSum += (light->m_Color * Factor);
 			}

@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.91  2004/09/17 20:57:53  sm
+**      - Material shader add their color components to jit.
+**      - Grizzle fix to Mork 2 shader: The reflective and refractive color
+**        is initialized when coefficents are zero.
+**
 **      Revision 1.90  2004/09/17 12:53:55  sm
 **      - Changed chader signatures to sum on different color
 **        channels (ambient, diffuse and specular). I wanted
@@ -1584,15 +1589,15 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 		Rf.b3Init();
 	}
 
-	surface->m_AmbientSum  += m_Ra;
-	surface->m_DiffuseSum  += m_Diffuse * nl * m_kd;
-	surface->m_SpecularSum += Rf * m_ks;
+	jit->m_AmbientSum  += m_Ra;
+	jit->m_DiffuseSum  += m_Diffuse * nl * m_kd;
+	jit->m_SpecularSum += Rf * m_ks;
 #else
-	b3_f64 rl = b3Vector::b3SMul(&ray->refl_ray.dir,&L);
+	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
 
-	surface->m_AmbientSum  += m_Ra;
-	surface->m_DiffuseSum  += m_Diffuse * nl;
-	surface->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
+	jit->m_AmbientSum  += m_Ra;
+	jit->m_DiffuseSum  += m_Diffuse * nl;
+	jit->m_SpecularSum += m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)m_SpecularExp);
 #endif
 
 	return true;

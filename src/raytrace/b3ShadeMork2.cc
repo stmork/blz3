@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/09/17 20:57:53  sm
+**	- Material shader add their color components to jit.
+**	- Grizzle fix to Mork 2 shader: The reflective and refractive color
+**	  is initialized when coefficents are zero.
+**
 **	Revision 1.10  2004/09/17 14:48:12  sm
 **	- I have forgotten the area lights. Now sampling is correct by moving
 **	  the color sum from surface to Jit (light info).
-**
+**	
 **	Revision 1.9  2004/09/17 12:53:55  sm
 **	- Changed chader signatures to sum on different color
 **	  channels (ambient, diffuse and specular). I wanted
@@ -167,13 +172,12 @@ void b3ShaderMork2::b3ShadeSurface(
 	// Refraction
 	if (surface.m_Transparent)
 	{
-		if (surface.m_Ior == 1)
+		if (surface.m_Ior == 1.0)
 		{
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
 		b3ComputeFresnelCoeffs(&surface,refl,refr);
-
 		b3Shade(&surface.refr_ray,depth_count);
 	}
 	else
@@ -182,7 +186,7 @@ void b3ShaderMork2::b3ShadeSurface(
 		{
 			// simulate dielectric metal
 			b3ComputeFresnel(&surface);
-			refl = surface.m_Reflection * (1 - surface.m_Reflection + surface.m_Fresnel);
+			refl = surface.m_Reflection * (1.0 - surface.m_Reflection + surface.m_Fresnel);
 		}
 		else
 		{
@@ -190,6 +194,7 @@ void b3ShaderMork2::b3ShadeSurface(
 			refl = surface.m_Reflection;
 		}
 		refr = 0;
+		surface.refr_ray.color.b3Init();
 	}
 
 	// Reflection
@@ -200,6 +205,7 @@ void b3ShaderMork2::b3ShadeSurface(
 	else
 	{
 		refl = 0;
+		surface.refl_ray.color.b3Init();
 	}
 
 	// Mix colors
