@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/10/12 08:30:35  sm
+**	- Added rotating of image before scaling and saving.
+**
 **	Revision 1.1  2003/09/28 20:33:20  sm
 **	- Ensure CPU count in image scaling methods.
-**
+**	
 */
 
 /*************************************************************************
@@ -47,32 +50,63 @@
 **                                                                      **
 *************************************************************************/
 
+enum op
+{
+	NOP = 0,
+	RIGHT,
+	TURN,
+	LEFT
+};
+
 int main (int argc,char *argv[])
 {
 	int i;
+	op  operation = NOP;
 
 	for (i = 1;i < argc;i++)
 	{
 		b3Tx   image,half;
 		b3_res xSize,ySize;
 
-		try
+		     if (strcmp(argv[i],"-r") == 0) operation = RIGHT;
+		else if (strcmp(argv[i],"-t") == 0) operation = TURN;
+		else if (strcmp(argv[i],"-l") == 0) operation = LEFT;
+		else
 		{
-			if (image.b3LoadImage(argv[i]) == B3_OK)
+			try
 			{
-				xSize = (image.xSize >> 1);
-				ySize = (image.ySize >> 1);
-				if (half.b3AllocTx(xSize,ySize,24))
+				if (image.b3LoadImage(argv[i]) == B3_OK)
 				{
-					half.b3ScaleToGrey(&image);
-					half.b3SaveJPEG(argv[i]);
+					switch (operation)
+					{
+					case RIGHT:
+						image.b3TurnRight();
+						break;
+					case LEFT:
+						image.b3TurnLeft();
+						break;
+					case TURN:
+						image.b3Turn();
+						break;
+					case NOP:
+						break;
+					}
+
+					xSize = (image.xSize >> 1);
+					ySize = (image.ySize >> 1);
+					if (half.b3AllocTx(xSize,ySize,24))
+					{
+						half.b3ScaleToGrey(&image);
+						half.b3SaveJPEG(argv[i]);
+					}
 				}
 			}
-		}
-		catch(b3TxException &t)
-		{
-			b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
-			b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
+			catch(b3TxException &t)
+			{
+				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
+				b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
+			}
+			operation = NOP;
 		}
 	}
 	return 0;
