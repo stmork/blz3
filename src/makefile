@@ -144,5 +144,5 @@ lib_jpeg:
 
 libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Raytrace.a $(BLZ3_LIB)/libB3Base.a
 
-install:
+install:	all
 	@$(BLZ3_HOME)/bin/install.sh
