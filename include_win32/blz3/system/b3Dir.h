@@ -62,13 +62,24 @@ protected:
 
 public:
 	       void b3Empty();
-	       void b3Correct      (const char *path = null);
+		   void b3LinkFileName (const char *path,const char *name);
+	       void b3SplitFileName(char *path,char *name);
+	       void b3RemoveExt    (const char *filename);
+	       void b3RemoveExt    ();
+		   void b3ParentName   (const char *filename);
+	       void b3ParentName   ();
+		   void b3ExtractExt   (char *ext);
+	       void b3Correct      (const char *path);
+		   void b3Correct      ();
 	static void b3LinkFileName (char *full,const char *path,const char *name);
 	static void b3SplitFileName(const char *full,char *path,char *name);
-	static void b3ParentName   (const char *path,char *parent);
+	static void b3ParentName   (const char *path,char *result);
 	static void b3ParentName   (char *parent);
+	static void b3RemoveExt    (const char *filename,char *result);
 	static void b3RemoveExt    (char *filename);
 	static void b3ExtractExt   (const char *filename,char *ext);
+	static void b3Correct      (const char *path,char *result);
+	static void b3Correct      (char *path);
 
 	inline operator char * ()
 	{
@@ -81,7 +92,7 @@ public:
 	}
 
 private:
-	static void CorrectFilePath(char *path);
+	static void b3RemoveDelimiter(char *path);
 };
 
 class b3DirSystem

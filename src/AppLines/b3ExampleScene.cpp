@@ -35,9 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/06 16:30:47  sm
+**	- Added Load/Save/Replace object
+**	- Enhanced "New world"
+**	- Added some non static methods to b3Dir (Un*x untested, yet!)
+**	- Fixed missing sphere/ellipsoid south pole triangles
+**	- Fixed Spline cylinder/ring triangle indexing
+**
 **	Revision 1.3  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
-**
+**	
 **	Revision 1.2  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -74,12 +81,13 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 
 	scene->b3GetBBoxHead()->b3Append(bbox);
 	scene->b3GetLightHead()->b3Append(light);
+	scene->b3SetFilename(filename);
 	bbox->b3GetShapeHead()->b3Append(area);
 	
 	// Init camera
 	b3Vector::b3Init(&eye, 0,-350,75);
-	b3Vector::b3Init(&view,0,-250,25);
-	camera->b3Orientate(&eye,&view,100.0,50.0,37.5);
+	b3Vector::b3Init(&view,0);
+	camera->b3Orientate(&eye,&view,100.0,50.0,50.0);
 	scene->b3SetCamera(camera);
 	scene->b3GetSpecialHead()->b3Append(camera);
 

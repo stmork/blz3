@@ -53,11 +53,18 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2002/01/06 16:30:47  sm
+**	- Added Load/Save/Replace object
+**	- Enhanced "New world"
+**	- Added some non static methods to b3Dir (Un*x untested, yet!)
+**	- Fixed missing sphere/ellipsoid south pole triangles
+**	- Fixed Spline cylinder/ring triangle indexing
+**
 **	Revision 1.40  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
 **	- Code cleanup
-**
+**	
 **	Revision 1.39  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -255,6 +262,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
 	ON_COMMAND(ID_LIGHT_NEW, OnLightNew)
 	ON_COMMAND(ID_LIGHT_DELETE, OnLightDelete)
@@ -268,7 +276,6 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
-	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
 	ON_COMMAND(ID_ACTIVATE, OnActivate)
 	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
@@ -276,18 +283,24 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
 	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_CUT, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
-	ON_COMMAND(ID_OBJECT_NEW_SUB, OnObjectNewSub)
-	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
 	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_PASTE, OnEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, OnUpdateEditPaste)
 	ON_COMMAND(ID_EDIT_PASTE_SUB, OnEditPasteSub)
 	ON_COMMAND(ID_ALL_DEACTIVATE_REST, OnAllDeactivateRest)
+	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
+	ON_COMMAND(ID_OBJECT_NEW_SUB, OnObjectNewSub)
+	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
+	ON_COMMAND(ID_OBJECT_LOAD, OnObjectLoad)
+	ON_COMMAND(ID_OBJECT_SAVE, OnObjectSave)
+	ON_COMMAND(ID_OBJECT_REPLACE, OnObjectReplace)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_LOAD, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_SAVE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_REPLACE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE_SUB, OnUpdateEditPaste)
 	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
@@ -351,36 +364,55 @@ CAppLinesDoc::~CAppLinesDoc()
 BOOL CAppLinesDoc::OnNewDocument()
 {
 	CMainFrame *main = CB3GetMainFrame();
-	CString     filename;
+	b3Path      filename;
+	b3Path      filepath;
+	BOOL        result = FALSE;
 
 	if (!CDocument::OnNewDocument())
 	{
-		return FALSE;
+		return result;
 	}
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
-	filename.LoadString(IDS_SCENE_NEW);
-	m_Scene = b3ExampleScene::b3CreateNew(filename);
-	
-	main->b3SetStatusMessage(IDS_DOC_REORG);
-	m_Scene->b3Reorg();
+	try
+	{
+		// Build filename
+		b3Path::b3SplitFileName(
+			AfxGetApp()->GetProfileString(CB3ClientString(),"Saved world filename",""),
+			filepath,
+			null);
+		filename.b3LinkFileName(filepath,GetTitle());
+		filename.b3RemoveExt();
+		strcat(filename,".bwd");
 
-	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	m_Scene->b3Prepare(0,0);
+		m_Scene = b3ExampleScene::b3CreateNew(filename);
+		m_Info = m_Scene->b3GetModellerInfo();
+		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+		
+		main->b3SetStatusMessage(IDS_DOC_REORG);
+		m_Scene->b3Reorg();
 
-	main->b3SetStatusMessage(IDS_DOC_VERTICES);
-	m_Scene->b3AllocVertices(&m_Context);
-	m_World.b3SetFirst(m_Scene);
-	b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
-	b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
-	b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
-	m_Info = m_Scene->b3GetModellerInfo();
-	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_Scene->b3Prepare(0,0);
 
-	main->b3SetStatusMessage(IDS_DOC_BOUND);
-	b3ComputeBounds();
-	return TRUE;
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_Scene->b3AllocVertices(&m_Context);
+		m_World.b3SetFirst(m_Scene);
+		b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);
+		b3PrintF(B3LOG_DEBUG,"# %d triangles\n",m_Context.glPolyCount);
+		b3PrintF(B3LOG_DEBUG,"# %d lines\n",    m_Context.glGridCount);
+
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+		SetPathName(filename);
+		result = TRUE;
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"ERROR creating %s\n",GetPathName());
+	}
+	return result;
 }
 
 BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName) 
@@ -413,9 +445,9 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 		main->b3SetStatusMessage(IDS_DOC_VERTICES);
 		m_Scene->b3AllocVertices(&m_Context);
-		b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
-		b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
-		b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
+		b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);
+		b3PrintF(B3LOG_DEBUG,"# %d triangles\n",m_Context.glPolyCount);
+		b3PrintF(B3LOG_DEBUG,"# %d lines\n",    m_Context.glGridCount);
 
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
@@ -446,11 +478,11 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	{
 		// Suggest a temporary filename
 		b3Path::b3SplitFileName(lpszPathName,path,name);
-		b3Path::b3RemoveExt(name);
+		name.b3RemoveExt();
 		do
 		{
 			sprintf(new_name,"%s-new%d.bwd",(const char *)name,i++);
-			b3Path::b3LinkFileName(filename,path,new_name);
+			filename.b3LinkFileName(path,new_name);
 		}
 		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);
 
@@ -484,6 +516,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Saving %s\n",lpszPathName);
 	}
 
+	AfxGetApp()->WriteProfileString(CB3ClientString(),"Saved world filename",lpszPathName);
 	return result;
 }
 
@@ -554,30 +587,9 @@ void CAppLinesDoc::b3ComputeBounds()
 
 b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,const char *filename)
 {
-	b3_bool result = false;
+	b3File  file(filename,B_WRITE);
 
-	try
-	{
-		b3File file(filename,B_WRITE);
-
-		result = b3WriteBBox(bbox,&file);
-	}
-	catch(b3FileException *f)
-	{
-		b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to file %s (code: %d)\n",
-			bbox->b3GetName(),filename,f->b3GetError());
-	}
-	catch(b3WorldException *w)
-	{
-		b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to file %s (code: %d)\n",
-			bbox->b3GetName(),filename,w->b3GetError());
-	}
-	catch(...)
-	{
-		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to file %s\n",
-			bbox->b3GetName(),filename);
-	}
-	return result;
+	return b3WriteBBox(bbox,&file);
 }
 
 b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
@@ -1117,9 +1129,6 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 
 		main->b3SetStatusMessage(IDS_DOC_VERTICES);
 		m_Scene->b3AllocVertices(&m_Context);
-		b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
-		b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
-		b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
@@ -1330,9 +1339,6 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 
 					main->b3SetStatusMessage(IDS_DOC_VERTICES);
 					m_Scene->b3AllocVertices(&m_Context);
-					b3PrintF(B3LOG_NORMAL,"# %d vertices\n", m_Context.glVertexCount);
-					b3PrintF(B3LOG_NORMAL,"# %d triangles\n",m_Context.glPolyCount);
-					b3PrintF(B3LOG_NORMAL,"# %d lines\n",    m_Context.glGridCount);
 
 					main->b3SetStatusMessage(IDS_DOC_BOUND);
 					m_Scene->b3Recompute(bbox);
@@ -1380,4 +1386,200 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 		(m_DlgHierarchy->b3GetSelectedBBox() != null) &&
 		(!b3IsRaytracing()) &&
 		(::IsClipboardFormatAvailable(app->m_ClipboardFormatForBlizzardObject)));
+}
+
+void CAppLinesDoc::OnObjectLoad() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	CString         suggest;
+	CString         ext;
+	CString         filter;
+	b3BBox         *selected;
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+	b3_count        level;
+	b3Path          filepath;
+	b3Path          result;
+
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
+	base     = (selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(selected));
+	suggest  = app->GetProfileString(CB3ClientString(),"Loaded object filename","");
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	suggest = filepath;
+
+	filter.LoadString(IDS_OBJECT_FILTER);
+	if (b3OpenDialog(suggest,ext,filter,result))
+	{
+		app->WriteProfileString(CB3ClientString(),"Loaded object filename",result);
+		
+		try
+		{
+			b3File  file(result,B_READ);
+			b3World world;
+
+			if(world.b3Read(&file) == B3_WORLD_OK)
+			{
+				main->b3SetStatusMessage(IDS_DOC_REORG);
+				bbox  = (b3BBox *)world.b3GetFirst();
+				level = bbox->b3GetClassType() & 0xffff;
+				b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
+				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+
+				main->b3SetStatusMessage(IDS_DOC_PREPARE);
+				bbox->b3Prepare();
+
+				main->b3SetStatusMessage(IDS_DOC_VERTICES);
+				m_Scene->b3AllocVertices(&m_Context);
+
+				main->b3SetStatusMessage(IDS_DOC_BOUND);
+				m_Scene->b3Recompute(bbox);
+				b3ComputeBounds();
+
+				SetModifiedFlag();
+				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+				m_DlgHierarchy->b3InitTree(this,true);
+				m_DlgHierarchy->b3SelectBBox(bbox);
+			}
+		}
+		catch(b3FileException *f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
+				(const char *)result,f->b3GetError());
+		}
+		catch(b3WorldException *w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
+				(const char *)result,w->b3GetError());
+		}
+	}
+}
+
+void CAppLinesDoc::OnObjectSave() 
+{
+	// TODO: Add your command handler code here
+	CString         suggest;
+	CString         ext;
+	CString         filter;
+	CWinApp        *app = AfxGetApp();
+	b3Base<b3Item> *base;
+	b3BBox         *selected;
+	b3Item         *prev;
+	b3Path          filepath;
+	b3Path          filename;
+	b3Path          result;
+
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
+	B3_ASSERT(selected != null);
+	prev = selected->Prev;
+	base = m_Scene->b3FindBBoxHead(selected);
+
+	suggest  = app->GetProfileString(CB3ClientString(),"Saved object filename","");
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	b3Path::b3LinkFileName(filename,filepath,selected->b3GetName());
+	suggest = filename;
+
+	filter.LoadString(IDS_OBJECT_FILTER);
+	if (b3SaveDialog(suggest,ext,filter,result))
+	{
+		app->WriteProfileString(CB3ClientString(),"Saved object filename",result);
+
+		base->b3Remove(selected);
+		try
+		{
+			b3WriteBBox(selected,result);
+		}
+		catch(b3FileException *f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to file %s (code: %d)\n",
+				selected->b3GetName(),(const char *)result,f->b3GetError());
+		}
+		catch(b3WorldException *w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to file %s (code: %d)\n",
+				selected->b3GetName(),(const char *)result,w->b3GetError());
+		}
+		catch(...)
+		{
+			b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to file %s\n",
+				selected->b3GetName(),(const char *)result);
+		}
+		base->b3Insert(prev,selected);
+	}
+}
+
+void CAppLinesDoc::OnObjectReplace() 
+{
+	// TODO: Add your command handler code here
+	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
+	CMainFrame     *main = CB3GetMainFrame();
+	CWaitCursor     wait;
+	CString         suggest;
+	CString         ext;
+	CString         filter;
+	b3BBox         *selected;
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+	b3_count        level;
+	b3Path          filepath;
+	b3Path          filename;
+	b3Path          result;
+
+	selected = m_DlgHierarchy->b3GetSelectedBBox();
+	B3_ASSERT(selected != null);
+	base     = m_Scene->b3FindBBoxHead(selected);
+	suggest  = app->GetProfileString(CB3ClientString(),"Replaced object filename","");
+	b3Path::b3SplitFileName(suggest,filepath,null);
+	b3Path::b3LinkFileName(filename,filepath,selected->b3GetName());
+	suggest = filename;
+
+	filter.LoadString(IDS_OBJECT_FILTER);
+	if (b3OpenDialog(suggest,ext,filter,result))
+	{
+		app->WriteProfileString(CB3ClientString(),"Replaced object filename",result);
+		
+		try
+		{
+			b3File  file(result,B_READ);
+			b3World world;
+
+			if(world.b3Read(&file) == B3_WORLD_OK)
+			{
+				main->b3SetStatusMessage(IDS_DOC_REORG);
+				bbox  = (b3BBox *)world.b3GetFirst();
+				level = bbox->b3GetClassType() & 0xffff;
+				b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
+				base->b3Remove(selected);
+				delete selected;
+				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+
+				main->b3SetStatusMessage(IDS_DOC_PREPARE);
+				bbox->b3Prepare();
+
+				main->b3SetStatusMessage(IDS_DOC_VERTICES);
+				m_Scene->b3AllocVertices(&m_Context);
+
+				main->b3SetStatusMessage(IDS_DOC_BOUND);
+				m_Scene->b3Recompute(bbox);
+				b3ComputeBounds();
+
+				SetModifiedFlag();
+				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+				m_DlgHierarchy->b3InitTree(this,true);
+				m_DlgHierarchy->b3SelectBBox(bbox);
+			}
+		}
+		catch(b3FileException *f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
+				(const char *)result,f->b3GetError());
+		}
+		catch(b3WorldException *w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
+				(const char *)result,w->b3GetError());
+		}
+	}
 }

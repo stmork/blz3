@@ -38,12 +38,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/06 16:30:47  sm
+**	- Added Load/Save/Replace object
+**	- Enhanced "New world"
+**	- Added some non static methods to b3Dir (Un*x untested, yet!)
+**	- Fixed missing sphere/ellipsoid south pole triangles
+**	- Fixed Spline cylinder/ring triangle indexing
+**
 **	Revision 1.4  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.3  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -296,7 +303,7 @@ void b3Dir::b3CloseDir ()
 
 /*************************************************************************
 **                                                                      **
-**                        routines                                      **
+**                        filename handling routines                    **
 **                                                                      **
 *************************************************************************/
 
@@ -305,35 +312,44 @@ void b3Path::b3Empty()
 	path[0] = 0;
 }
 
+// Non static one...
+void b3Path::b3Correct()
+{
+	b3Correct(path);
+}
+
+// Static input=output
+void b3Path::b3Correct(char *input)
+{
+	b3Correct(input,input);
+}
+
+// Non static one...
 void b3Path::b3Correct(const char *input)
+{
+	b3Correct(input,path);
+}
+
+// Static filename correction
+void b3Path::b3Correct(const char *input,char *output)
 {
 	b3_index i,len;
 
-	if (input == null)
-	{
-		input = path;
-	}
-
+	ASSERT((input != null) && (output != null));
 	len = strlen(input);
 	for (i = 0;i < len;i++)
 	{
-		path[i] = (input[i] == '/' ? '\\' : input[i]);
+		output[i] = (input[i] == '/' ? '\\' : input[i]);
 	}
-	path[len] = 0;
+	output[len] = 0;
 }
 
-void b3Path::CorrectFilePath(char *name)
+// Non static one...
+void b3Path::b3LinkFileName(
+	const char *param_path,
+	const char *param_name)
 {
-	b3_index i;
-	b3_size  len;
-
-	len = strlen(name);
-	for (i = len - 1;i >= 0;i--)
-	{
-		if ((name[i] == '/') || (name[i] == '\\')) len--;
-		else i = -1;
-	}
-	name[len] = 0;
+	b3LinkFileName(path,param_path,param_name);
 }
 
 // link a name to an existing file path to create a
@@ -350,7 +366,7 @@ void b3Path::b3LinkFileName(
 	char nExt[_MAX_EXT];
 	long i,len;
 
-	if (full == null) return;
+	ASSERT(full != null);
 
 	nFullPath[0] = 0;
 	if (path)
@@ -365,7 +381,7 @@ void b3Path::b3LinkFileName(
 		strcat (nFullPath,nPath);
 	}
 	_makepath (full,nDrive,nFullPath,nName,nExt);
-	CorrectFilePath (full);
+	b3RemoveDelimiter(full);
 
 		/* convert '/' to '\' */
 	len = strlen(full);
@@ -373,6 +389,14 @@ void b3Path::b3LinkFileName(
 	{
 		if (full[i] == '/') full[i] = '\\';
 	}
+}
+
+// Non static one...
+void b3Path::b3SplitFileName(
+	char *param_path,
+	char *param_name)
+{
+	b3SplitFileName(path,param_path,param_name);
 }
 
 // This routine splits a full qualified filename into
@@ -393,7 +417,10 @@ void b3Path::b3SplitFileName(
 	long i;
 #endif
 
-	if (uncorrected == null) return;
+	if (uncorrected == null)
+	{
+		return;
+	}
 
 		/* convert '/' to '\' */
 #ifdef CONVERT_SLASH
@@ -420,14 +447,27 @@ void b3Path::b3SplitFileName(
 	if (path)
 	{
 		sprintf (path,"%s%s",nDrive,nPath);
-		CorrectFilePath(path);
+		b3RemoveDelimiter(path);
 	}
 	if (name) sprintf (name,"%s%s",nName,nExt);
 }
 
-void b3Path::b3ParentName(char *path)
+// Non static one...
+void b3Path::b3ParentName()
 {
-	b3ParentName(path,null);
+	b3ParentName(path);
+}
+
+// Source and destination are the same (static one)
+void b3Path::b3ParentName(char *param_path)
+{
+	b3ParentName(param_path,param_path);
+}
+
+// Static one...
+void b3Path::b3ParentName(const char *param_path)
+{
+	b3ParentName(param_path,path);
 }
 
 // Get the parent directory of a directory or file
@@ -439,11 +479,7 @@ void b3Path::b3ParentName(
 	b3_index i;
 	b3_count len;
 
-	// No source dir
-	if (file == null)
-	{
-		return;
-	}
+	ASSERT((file != null) && (parent != null));
 
 	// Source is a file so split directory first
 	if (b3Dir::b3Exists(file) == B3_TYPE_FILE)
@@ -483,26 +519,52 @@ void b3Path::b3ParentName(
 	strcpy (parent != null ? parent : (char *)file,actDir);
 }
 
+// Non static one...
+void b3Path::b3RemoveExt()
+{
+	b3RemoveExt(path);
+}
+
+// Static one
+void b3Path::b3RemoveExt(char *input)
+{
+	b3RemoveExt(input,input);
+}
+
+// Non static one...
+void b3Path::b3RemoveExt(const char *input)
+{
+	b3RemoveExt(input,path);
+}
+
 // Remove extension of a file. This routine is needed
 // for creating a new extension.
-void b3Path::b3RemoveExt(char *name)
+void b3Path::b3RemoveExt(const char *name,char *output)
 {
-	char     actPath[B3_FILESTRINGLEN];
-	char     actName[B3_FILESTRINGLEN];
-	b3_index i;
-	b3_count len;
+	char    actPath[B3_FILESTRINGLEN];
+	char    actName[B3_FILESTRINGLEN];
+	b3_size i = 0;
 
+	ASSERT((name != null) && (output != null));
 	b3SplitFileName (name,actPath,actName);
-	len = strlen(actName);
-	for (i = 0;i < len;i++)
+	while(actName[i] != 0)
 	{
 		if (actName[i] == '.')
 		{
 			actName[i] = 0;
-			len        = i;
+		}
+		else
+		{
+			i++;
 		}
 	}
-	b3LinkFileName  (name,actPath,actName);
+	b3LinkFileName (output,actPath,actName);
+}
+
+// Non static one...
+void b3Path::b3ExtractExt(char *ext)
+{
+	b3ExtractExt(path,ext);
 }
 
 // Extract an extension from a filename;
@@ -526,6 +588,26 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 	ext[0] = 0;
 }
 
+void b3Path::b3RemoveDelimiter(char *name)
+{
+	b3_index i;
+	b3_size  len;
+
+	len = strlen(name);
+	for (i = len - 1;i >= 0;i--)
+	{
+		if ((name[i] == '/') || (name[i] == '\\')) len--;
+		else i = -1;
+	}
+	name[len] = 0;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        file dialog routines                          **
+**                                                                      **
+*************************************************************************/
+
 static b3_bool b3FileDialog(
 	const char *default_name,
 	const char *default_ext,
@@ -546,6 +628,12 @@ static b3_bool b3FileDialog(
 		suggest[i] = (default_name[i] == '/' ? '\\' : default_name[i]);
 	}
 	suggest[len] = 0;
+
+	if (b3Dir::b3Exists(suggest) == B3_TYPE_DIR)
+	{
+		// Suggest directory pattern
+		strcat(suggest,"\\*.*");
+	}
 
 	CFileDialog   filedlg(
 		is_open, // Use file save dialog
@@ -590,7 +678,7 @@ b3_bool b3SaveDialog(
 
 /*************************************************************************
 **                                                                      **
-**                        b3Folder implementation for                 **
+**                        b3Folder implementation for                   **
 **                        selecting a folder.                           **
 **                                                                      **
 *************************************************************************/

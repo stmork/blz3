@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/01/06 16:30:47  sm
+**	- Added Load/Save/Replace object
+**	- Enhanced "New world"
+**	- Added some non static methods to b3Dir (Un*x untested, yet!)
+**	- Fixed missing sphere/ellipsoid south pole triangles
+**	- Fixed Spline cylinder/ring triangle indexing
+**
 **	Revision 1.15  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.14  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -343,7 +350,7 @@ void CB3MoveAction::b3InitTranslation(b3_f64 xRel,b3_f64 yRel)
 
 		x        = camera->m_Width.x;
 		y        = camera->m_Width.y;
-		B3_ASSERT((x != 0.0) && (y != 0.0));
+		B3_ASSERT((x != 0.0) || (y != 0.0));
 		denom    = max / sqrt(x * x + y * y);
 		m_xDir.x = x * denom;
 		m_xDir.y = y * denom;
@@ -351,7 +358,7 @@ void CB3MoveAction::b3InitTranslation(b3_f64 xRel,b3_f64 yRel)
 
 		x        = camera->m_ViewPoint.x - camera->m_EyePoint.x;
 		y        = camera->m_ViewPoint.y - camera->m_EyePoint.y;
-		B3_ASSERT((x != 0.0) && (y != 0.0));
+		B3_ASSERT((x != 0.0) || (y != 0.0));
 		denom    = max / sqrt(x * x + y * y);
 		m_yDir.x = x * denom;
 		m_yDir.y = y * denom;

@@ -252,6 +252,9 @@
 #define ID_OBJECT_DELETE                32851
 #define ID_OBJECT_NEW                   32852
 #define ID_OBJECT_NEW_SUB               32853
+#define ID_OBJECT_LOAD                  32857
+#define ID_OBJECT_SAVE                  32858
+#define ID_OBJECT_REPLACE               32859
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -285,6 +288,7 @@
 #define IDS_DIALOGBAR_HIERARCHY         61474
 #define IDS_NEW_OBJECT                  61475
 #define IDS_ASK_DELETE_OBJECT           61476
+#define IDS_OBJECT_FILTER               61477
 
 // Next default values for new objects
 // 
@@ -292,7 +296,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32857
+#define _APS_NEXT_COMMAND_VALUE         32861
 #define _APS_NEXT_CONTROL_VALUE         1084
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

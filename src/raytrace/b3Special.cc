@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2002/01/06 16:30:47  sm
+**      - Added Load/Save/Replace object
+**      - Enhanced "New world"
+**      - Added some non static methods to b3Dir (Un*x untested, yet!)
+**      - Fixed missing sphere/ellipsoid south pole triangles
+**      - Fixed Spline cylinder/ring triangle indexing
+**
 **      Revision 1.34  2001/12/31 11:05:18  sm
 **      - Added TestData for testing Blizzard data structures for reading
 **        and writing.
@@ -386,6 +393,11 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_StepRotate.x =
 	m_StepRotate.y =
 	m_StepRotate.z = 15;
+	m_Unit         = RULE_CM;
+	m_GridMove     = 10;
+	m_GridRot      = 15;
+	m_GridActive   = true;
+	m_AngleActive  = true;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/06 16:30:47  sm
+**      - Added Load/Save/Replace object
+**      - Enhanced "New world"
+**      - Added some non static methods to b3Dir (Un*x untested, yet!)
+**      - Fixed missing sphere/ellipsoid south pole triangles
+**      - Fixed Spline cylinder/ring triangle indexing
+**
 **      Revision 1.20  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -1014,18 +1021,30 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
+			// This marks a longitude
 			*gPtr++ = s + j;
 			*gPtr++ = s + j + 1;
 		}
 		glGridCount += Heights;
 
-		if (y1 <= epsilon) j = 1;
-		else               j = 0;
-		while (j < Heights)
+		if (y1 <= epsilon)
+		{
+			// NOTE: j = 0 substitution
+			*pPtr++ = s + Heights + 2;
+			*pPtr++ = s + Heights + 1;
+			*pPtr++ = s + 1;
+			glPolyCount++;
+
+			j = 1;
+		}
+		else
+		{
+			j = 0;
+		}
+		while(j < Heights)
 		{
 			*gPtr++ = s + j;
 			*gPtr++ = s + j + Heights + 1;
-
 			glGridCount++;
 
 			*pPtr++ = s + j;
@@ -1035,15 +1054,16 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 			*pPtr++ = s + j + Heights + 2;
 			*pPtr++ = s + j + Heights + 1;
 			*pPtr++ = s + j + 1;
-
 			glPolyCount += 2;
 			j++;
 		}
+
 		if ((SinCosSteps * 0.5 - y2) > epsilon)
 		{
 			*gPtr++ = s + j;
 			*gPtr++ = s + j + Heights + 1;
 			glGridCount++;
+
 			j++;
 		}
 		s += (Heights + 1);

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/01/06 16:30:47  sm
+**      - Added Load/Save/Replace object
+**      - Enhanced "New world"
+**      - Added some non static methods to b3Dir (Un*x untested, yet!)
+**      - Fixed missing sphere/ellipsoid south pole triangles
+**      - Fixed Spline cylinder/ring triangle indexing
+**
 **      Revision 1.22  2002/01/03 15:50:14  sm
 **      - Added cut/copy/paste
 **
@@ -544,22 +551,27 @@ void b3SplineShape::b3ComputeSolidIndices()
 #ifdef BLZ3_USE_OPENGL
 	GLushort   *pPtr;
 	b3_index    x,y;
+	b3_count    xSubDiv = m_Spline[0].subdiv,xModulo,xOffset;
+	b3_count    ySubDiv = m_Spline[1].subdiv,yModulo;
 
 	pPtr = glPolygons;
-	for (y = 0;y < m_Spline[1].subdiv;y++)
+	xModulo = m_Spline[0].closed ? xSubDiv : xSubDiv + 1;
+	yModulo = m_Spline[1].closed ? ySubDiv : ySubDiv + 1;
+	xOffset = m_Spline[0].subdiv + 1;
+	for (y = 0;y < ySubDiv;y++)
 	{
-		for (x = 0;x < m_Spline[0].subdiv;x++)
+		for (x = 0;x < xSubDiv;x++)
 		{
-			*pPtr++ = m_GridVertexCount +  x                + m_xSubDiv *  y;
-			*pPtr++ = m_GridVertexCount + (x+1) % m_xSubDiv + m_xSubDiv *  y;
-			*pPtr++ = m_GridVertexCount +  x                + m_xSubDiv * ((y+1) % m_ySubDiv);
+			*pPtr++ = m_GridVertexCount +  x              + xOffset *   y;
+			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset *   y;
+			*pPtr++ = m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo);
 
-			*pPtr++ = m_GridVertexCount + (x+1) % m_xSubDiv + m_xSubDiv * ((y+1) % m_ySubDiv);
-			*pPtr++ = m_GridVertexCount +  x                + m_xSubDiv * ((y+1) % m_ySubDiv);
-			*pPtr++ = m_GridVertexCount + (x+1) % m_xSubDiv + m_xSubDiv *  y;
+			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset * ((y+1) % yModulo);
+			*pPtr++ = m_GridVertexCount +  x              + xOffset * ((y+1) % yModulo);
+			*pPtr++ = m_GridVertexCount + (x+1) % xModulo + xOffset *   y;
 		}
 	}
-	glPolyCount = m_Spline[0].subdiv * m_Spline[1].subdiv * 2;
+	glPolyCount = xSubDiv * ySubDiv * 2;
 #endif
 }
 

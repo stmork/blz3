@@ -102,12 +102,16 @@ BEGIN
     BUTTON      ID_FILE_OPEN
     BUTTON      ID_FILE_SAVE
     SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
+    BUTTON      ID_OBJECT_LOAD
+    BUTTON      ID_OBJECT_SAVE
+    BUTTON      ID_OBJECT_REPLACE
     SEPARATOR
     BUTTON      ID_OBJECT_NEW
     BUTTON      ID_OBJECT_DELETE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     SEPARATOR
@@ -346,6 +350,7 @@ BEGIN
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
             MENUITEM SEPARATOR
+            MENUITEM "&Hierarchie-Dialog",          ID_HIERACHY
             MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
             MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
             MENUITEM "&Winkelschritt-Dialog",       IDM_BAR_STEP_ROTATE
@@ -1398,6 +1403,7 @@ BEGIN
     IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
     IDS_NEW_OBJECT          "Neues Objekt"
     IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
+    IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1419,6 +1425,9 @@ BEGIN
     ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
     ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
     ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
+    ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
+    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
+    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
 END
 
 #endif    // German (Germany) resources
