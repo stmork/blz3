@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/06/29 12:43:25  sm
+**	- Fixed uninitialized data inside OpenGL texture creation. This
+**	  speeds up initial data scene load.
+**
 **	Revision 1.29  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
-**
+**	
 **	Revision 1.27  2003/04/05 13:57:33  sm
 **	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
 **	
@@ -479,6 +483,7 @@ void CAppRenderView::OnPaint()
 	
 		main->b3SetPerformance(this,time_diff,GetDocument()->m_Context.glPolyCount);
 	}
+	b3PrintF(B3LOG_FULL,"Draw time: %2.4fs\n",time_diff);
 }
 
 void CAppRenderView::b3DrawRect(

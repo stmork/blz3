@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.73  2004/06/29 12:43:26  sm
+**      - Fixed uninitialized data inside OpenGL texture creation. This
+**        speeds up initial data scene load.
+**
 **      Revision 1.72  2004/06/21 09:26:19  sm
 **      - Changed rendering: The constant sin/cos tables are now directly
 **        used from b3ShapeRenderContext.
@@ -780,9 +784,10 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 			fx = limit.x1 + b3Scene::epsilon;
 			for (x = 0;x < image->xSize;x++)
 			{
-				b3Vector::b3Init(&ray.polar.m_BoxPolar,   fx,fy);
-				b3Vector::b3Init(&ray.polar.m_ObjectPolar,fx,fy);
-				b3Vector::b3Init(&ray.polar.m_Polar,      fx,fy);
+				b3Vector::b3Init(&ray.polar.m_BoxPolar,     fx,fy);
+				b3Vector::b3Init(&ray.polar.m_ObjectPolar,  fx,fy);
+				b3Vector::b3Init(&ray.polar.m_Polar,        fx,fy);
+				b3Vector::b3Init(&ray.polar.m_BBoxOriginal, fx,fy);
 
 				color = B3_BLACK;
 				for(material  = (b3Material *)b3GetMaterialHead()->First,loop = true;

@@ -29,6 +29,12 @@
 
 #define not_VERBOSE
 
+#ifndef _DEBUG
+#define B3_MAX_TX_SIZE 128
+#else
+#define B3_MAX_TX_SIZE   8
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -37,6 +43,10 @@
 
 /*
 **      $Log$
+**      Revision 1.71  2004/06/29 12:43:26  sm
+**      - Fixed uninitialized data inside OpenGL texture creation. This
+**        speeds up initial data scene load.
+**
 **      Revision 1.70  2004/06/27 11:36:54  sm
 **      - Changed texture dialog for editing negative direction in
 **        contrast to length.
@@ -1104,11 +1114,8 @@ void b3RenderObject::b3UpdateMaterial()
 				glTextureMutex.b3Lock();
 				if (!glTextureBuffer.b3IsLoaded())
 				{
-#ifndef _DEBUG
-					b3_res max  = 128;
-#else
-					b3_res max  =   8;
-#endif
+					b3_res max  = B3_MAX_TX_SIZE;
+
 					glTextureBuffer.b3AllocTx(max,max,24);
 				}
 				glTextureMutex.b3Unlock();
@@ -1268,12 +1275,9 @@ void b3RenderObject::b3CopyTexture(
 #ifdef BLZ3_USE_OPENGL
 	b3Tx          scale;
 	b3_pkd_color *lPtr;
-#ifndef _DEBUG
-	b3_res        max  = 128;
-#else
-	b3_res        max  =   8;
-#endif
-	b3_res        xMax = max,yMax = max,size;
+	b3_res        xMax = B3_MAX_TX_SIZE;
+	b3_res        yMax = B3_MAX_TX_SIZE;
+	b3_res        size;
 	b3_coord      i = 0;
 
 	// Limit size
