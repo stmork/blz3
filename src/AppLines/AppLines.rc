@@ -500,12 +500,20 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Cursor
+//
+
+IDC_PANNING             CURSOR  DISCARDABLE     "res\\H_move.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDP_OLE_INIT_FAILED     "Fehler bei der OLE-Initialisierung. Überprüfen Sie, ob die OLE-Bibliotheken in der richtigen Version vorliegen."
+    ID_DRAWING_PERF         "#########################"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -632,6 +640,7 @@ BEGIN
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
     IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
+    IDS_FRAME_RATE          "%3.2f frames/sec."
 END
 
 STRINGTABLE DISCARDABLE 

@@ -125,7 +125,7 @@ protected:
 			void          b3ViewRubber();
 
 // Generated message map functions
-public:
+protected:
 	//{{AFX_MSG(CB3ScrollView)
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);

@@ -43,6 +43,7 @@ public:
 	void b3SetLinesDoc(CAppLinesDoc *LinesDoc);
 	b3Display *b3GetDisplay(const char *title);
 	b3Display *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
+	void       b3ActivateView();
 
 // Overrides
 	// ClassWizard generated virtual function overrides

@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.8  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
-**
+**	
 **	Revision 1.7  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -106,6 +109,7 @@ END_MESSAGE_MAP()
 static UINT indicators[] =
 {
 	ID_SEPARATOR,           // status line indicator
+	ID_DRAWING_PERF,
 	ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,
@@ -200,6 +204,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
+	m_wndStatusBar.SetPaneText(1,"");
 
 	m_cameraBox.b3Create(&m_wndActnBar,ID_CAM_SELECT);
 	m_lightBox.b3Create(&m_wndActnBar,ID_LIGHT_SELECT);
@@ -371,4 +376,19 @@ b3Light *CMainFrame::b3GetSelectedLight()
 	b3_s32 index = m_lightBox.GetCurSel();
 
 	return (b3Light *)m_lightBox.GetItemDataPtr(index);
+}
+
+void CMainFrame::b3SetPerformance(
+	CView *drawer,
+	long   millis)
+{
+	b3_f64 frame_rate;
+	CString text;
+
+	if (GetActiveFrame()->GetActiveView() == drawer)
+	{
+		frame_rate = 1000.0 / (b3_f64)millis;
+		text.Format(IDS_FRAME_RATE,frame_rate);
+		m_wndStatusBar.SetPaneText(1,text);
+	}
 }

@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.2  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
-**
+**	
 **	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -48,18 +51,18 @@
 **                                                                      **
 *************************************************************************/
 
-b3Time::b3Time()
+b3TimeAccum::b3TimeAccum()
 {
 	count = 0;
 	pos   = 0;
 	size  = 0;
 }
 
-void b3Time::b3Init(b3_u32 slice)
+void b3TimeAccum::b3Init(b3_u32 slice)
 {
-	if (slice >= MAX_B3TIME_SLICE)
+	if (slice >= B3_MAX_TIME_SLICE)
 	{
-		slice = MAX_B3TIME_SLICE - 1;
+		slice = B3_MAX_TIME_SLICE - 1;
 	}
 	if (slice < 1)
 	{
@@ -71,7 +74,7 @@ void b3Time::b3Init(b3_u32 slice)
 	_ftime(&buffer[0]);
 }
 
-void b3Time::b3Get(
+void b3TimeAccum::b3Get(
 	b3_u32 &refTime,
 	b3_u32 &refCount)
 {

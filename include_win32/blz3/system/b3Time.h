@@ -22,16 +22,16 @@
 
 #include "blz3/b3Config.h"
 
-#define MAX_B3TIME_SLICE 100
+#define B3_MAX_TIME_SLICE 100
 
-class b3Time
+class b3TimeAccum
 {
 	b3_u32        size;
 	b3_u32        count;
 	b3_u32        pos;
-	struct _timeb buffer[MAX_B3TIME_SLICE];
+	struct _timeb buffer[B3_MAX_TIME_SLICE];
 public:
-	      b3Time();
+	      b3TimeAccum();
 	void  b3Init(b3_u32 slice=10);
 	void  b3Get(b3_u32 &refSpan,b3_u32 &refCount);
 };

@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.15  2001/10/29 19:34:02  sm
 **	- Added new define B3_DELETE_BASE.
 **	- Added support to abort raytrace processing.
 **	- Added search path to world loading.
 **	- Fixed super sampling.
 **	- Fixed memory leak in raytracing row processing.
-**
+**	
 **	Revision 1.14  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
@@ -190,6 +193,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3Reorg();
+	m_Scene->b3Prepare(0,0);
 	m_Scene->b3AllocVertices(&m_Context);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
@@ -288,6 +292,10 @@ void CAppLinesDoc::OnRaytrace()
 	{
 		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
 		m_RaytraceDoc->b3SetLinesDoc(this);
+	}
+	else
+	{
+		m_RaytraceDoc->b3ActivateView();
 	}
 	b3Raytrace();
 }

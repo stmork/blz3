@@ -42,11 +42,14 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.2  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.1  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
@@ -92,6 +95,7 @@ END_MESSAGE_MAP()
 CAppRaytraceView::CAppRaytraceView()
 {
 	// TODO: add construction code here
+	m_Cursor = AfxGetApp()->LoadCursor(IDC_PANNING);
 }
 
 CAppRaytraceView::~CAppRaytraceView()

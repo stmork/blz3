@@ -4,6 +4,7 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
+#define ID_DRAWING_PERF                 101
 #define IDR_MAINFRAME                   128
 #define IDR_BLZ3TYPE                    129
 #define IDR_TOOLBAR_VIEW                130
@@ -11,6 +12,7 @@
 #define IDR_TOOLBAR_ACTION              132
 #define IDR_TOOLBAR_OBJECT              134
 #define IDR_TOOLBAR_DISPLAY             137
+#define IDC_PANNING                     137
 #define IDD_HIERARCHY                   145
 #define IDI_BBOX_WORLD                  148
 #define IDI_BBOX_SUB                    149
@@ -86,15 +88,16 @@
 #define IDS_TOOLBAR_ACTION              61447
 #define IDS_TOOLBAR_OBJECT              61448
 #define IDS_TOOLBAR_DISPLAY             61449
+#define IDS_FRAME_RATE                  61450
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32813
 #define _APS_NEXT_CONTROL_VALUE         1000
-#define _APS_NEXT_SYMED_VALUE           101
+#define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -31,6 +31,9 @@
     
 /*
 **      $Log$
+**      Revision 1.3  2001/11/01 13:22:43  sm
+**      - Introducing performance meter
+**
 **      Revision 1.2  2001/11/01 09:43:11  sm
 **      - Some image logging cleanups.
 **      - Texture preparing now in b3Prepare().
@@ -64,10 +67,19 @@ void b3InitRaytrace::b3Init()
 
 b3_bool b3CheckTexture(b3Tx **tx,const char *name)
 {
+	const char *txName;
+	b3_size     txLen,nameLen,diff;
+
 	if (*tx != null)
 	{
-		delete *tx;
-		*tx = null;
+		txName  = (*tx)->b3Name();
+		txLen   = strlen(txName);
+		nameLen = strlen(name);
+		diff    = txLen - nameLen;
+		if (strcmp(&txName[diff >= 0 ? diff : 0],name) != 0)
+		{
+			*tx = texture_pool.b3FindTexture(name);
+		}
 	}
 
 	if (*tx == null)

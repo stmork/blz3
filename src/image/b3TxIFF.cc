@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.4  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.3  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -88,7 +91,7 @@ b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 		(const char *)name);
 
 	palette	 = null;
-	while (Pos < buffer_size)
+	while (Pos < (b3_index)buffer_size)
 	{
 		srcPtr = (b3_u32 *)&buffer[Pos];
 		cPtr   = (b3_u08 *)srcPtr;

@@ -252,6 +252,10 @@ SOURCE=.\res\Display.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\H_move.cur
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\ico00001.ico
 # End Source File
 # Begin Source File

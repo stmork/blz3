@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.4  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
-**
+**	
 **	Revision 1.3  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -968,6 +971,15 @@ void CB3ScrollView::OnLButtonDown(UINT nFlags, CPoint point)
 		b3PrintF (B3LOG_FULL,"### CLASS: b3View # Magnifying stop.\n");
 		return;
 	}
+
+	// enable panning
+	m_Panning   = true;
+	m_UseCursor = true;
+
+	// Set cursor
+	b3PrintF (B3LOG_FULL,"### CLASS: b3View # Panning start.\n");
+	b3PrintF (B3LOG_FULL,"### CLASS: b3View # SetCursor(%8lx); [OnLButtonDown]\n",m_Cursor);
+	::SetCursor(m_Cursor);
 }
 
 // What's going up when moving the mouse while dolding down

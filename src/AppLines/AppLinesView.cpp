@@ -26,6 +26,7 @@
 #include "AppLinesView.h"
 #include "MainFrm.h"
 #include "b3Action.h"
+#include <sys/timeb.h>
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.14  2001/09/05 15:21:34  sm
 **	- Now object moving/rotating on perspective view.
-**
+**	
 **	Revision 1.13  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -441,6 +445,10 @@ void CAppLinesView::OnPaint()
 	CAppLinesDoc *pDoc = GetDocument();
 	CRect         rect;
 	CPoint        pos;
+	struct _timeb start,stop;
+	long          sDiff,mDiff;
+
+	_ftime(&start);
 
 	// Init Drawing
 	wglMakeCurrent(m_DC,m_GC);
@@ -463,6 +471,24 @@ void CAppLinesView::OnPaint()
 	// Done...
 	SwapBuffers(m_DC);
 	ValidateRect(NULL);
+
+	_ftime(&stop);
+	mDiff = stop.millitm - start.millitm;
+	sDiff = stop.time    - start.time;
+	if (mDiff < 0)
+	{
+		mDiff += 1000;
+		sDiff -=    1;
+	}
+	mDiff += (sDiff * 1000);
+	sDiff  = 0;
+
+	if (mDiff > 0)
+	{
+		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	
+		main->b3SetPerformance(this,mDiff);
+	}
 }
 
 void CAppLinesView::b3DrawRect(

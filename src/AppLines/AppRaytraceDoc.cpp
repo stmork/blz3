@@ -41,10 +41,13 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/01 13:22:43  sm
+**	- Introducing performance meter
+**
 **	Revision 1.3  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
-**
+**	
 **	Revision 1.2  2001/10/03 20:17:55  sm
 **	- Minor bugfixes
 **	
@@ -166,4 +169,14 @@ void CAppRaytraceDoc::OnRaytrace()
 {
 	// TODO: Add your command handler code here
 	m_LinesDoc->b3Raytrace();
+}
+
+void CAppRaytraceDoc::b3ActivateView()
+{
+	CAppRaytraceView *pView;
+	POSITION          pos;
+
+	pos   = GetFirstViewPosition();
+	pView = (CAppRaytraceView *)GetNextView(pos);
+	pView->GetParentFrame()->BringWindowToTop();
 }
