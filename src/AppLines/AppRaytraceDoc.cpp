@@ -24,6 +24,7 @@
 #include "stdafx.h"
 #include "AppLines.h"
 #include "MainFrm.h"
+#include "b3SelectTexture.h"
 
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.15  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.14  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -287,20 +291,32 @@ void CAppRaytraceDoc::OnUpdateRaytrace(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(b3IsRaytracing());
 }
 
+void CAppRaytraceDoc::b3UpdateTitle(const char *title)
+{
+	b3Path fullname;
+	b3Path path,name;
+
+	CB3SelectSaveTexture::b3GetLastFilename((char *)fullname);
+	if (strlen(title) > 0)
+	{
+		fullname.b3SplitFileName(path,null);
+		name.b3LinkFileName(path,title);
+		m_Tx->b3Name(name);
+	}
+	else
+	{
+		m_Tx->b3Name(fullname);
+	}
+}
+
 void CAppRaytraceDoc::OnSaveImage() 
 {
 	// TODO: Add your command handler code here
-	CString  suggest;
-	CString  ext;
-	CString  filter;
-	b3Path   result;
-	CWinApp *app = AfxGetApp();
+	b3Path   result = "";
+	CWinApp *app    = AfxGetApp();
 
-	suggest = app->GetProfileString(CB3ClientString(),"Saved image filename","");
-	filter.LoadString(IDS_SAVE_IMAGE_FILTER);
-	if (b3SaveDialog(suggest,ext,filter,result))
+	if (CB3SelectSaveTexture::b3Select(result,m_Tx->b3Name()))
 	{
-		app->WriteProfileString(CB3ClientString(),"Saved image filename",result);
 		m_Tx->b3SaveImage(result);
 	}
 }

@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.5  2003/02/05 18:42:21  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
 **	- Added TGF import to Un*x makefile
-**
+**	
 **	Revision 1.4  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
 **	
@@ -168,42 +171,29 @@ void b3OpObjectDelete::b3Redo()
 
 /*************************************************************************
 **                                                                      **
-**                        Undo/Redo object load                         **
+**                        read file operations on objects               **
 **                                                                      **
 *************************************************************************/
 
-b3OpObjectLoad::b3OpObjectLoad(
+b3OpObjectFile::b3OpObjectFile(
 	b3Scene       *scene,
 	CDlgHierarchy *hierarchy,
-	const char    *regitem) : b3OpObject(scene,hierarchy)
+	const char    *reg_entry) : b3OpObject(scene,hierarchy)
 {
-	CAppLinesApp   *app  = CB3GetLinesApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
-	CString         suggest;
-	b3Path          filepath;
-	b3Path          result;
+	CWaitCursor  wait;
+	b3Path       result = "";
 
 	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
-	m_Base     = (m_Selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(m_Selected));
-	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
-
-	b3Path::b3SplitFileName(suggest,filepath,null);
 	if (m_Selected != null)
 	{
-		result.b3LinkFileName(filepath,m_Selected->b3GetName());
-		result.b3RemoveExt();
-		strcat((char *)result,".bod");
+		m_Base = m_Scene->b3FindBBoxHead(m_Selected);
 	}
 	else
 	{
-		strcpy((char *)result,suggest);
+		m_Base = m_Scene->b3GetBBoxHead();
 	}
-	
-	if (CB3SelectObject::b3Select((char *)result))
+	if (CB3SelectLoadObject::b3Select(result,reg_entry))
 	{
-		app->WriteProfileString(CB3ClientString(),regitem,result);
-		
 		try
 		{
 			b3File  file(result,B_READ);
@@ -230,6 +220,18 @@ b3OpObjectLoad::b3OpObjectLoad(
 			B3_MSG_ERROR(w);
 		}
 	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Undo/Redo object load                         **
+**                                                                      **
+*************************************************************************/
+
+b3OpObjectLoad::b3OpObjectLoad(
+	b3Scene       *scene,
+	CDlgHierarchy *hierarchy) : b3OpObjectFile(scene,hierarchy,B3_OBJECT_LOAD_REGITEM)
+{
 }
 
 void b3OpObjectLoad::b3Delete()
@@ -271,16 +273,23 @@ void b3OpObjectLoad::b3Redo()
 
 b3OpObjectReplace::b3OpObjectReplace(
 	b3Scene       *scene,
-	CDlgHierarchy *hierarchy,
-	const char    *regitem) : b3OpObjectLoad(scene,hierarchy,regitem)
+	CDlgHierarchy *hierarchy) : b3OpObjectFile(scene,hierarchy,B3_OBJECT_REPLACE_REGITEM)
 {
 }
 
 void b3OpObjectReplace::b3Delete()
 {
-	if (b3IsDone() && (m_Selected != null))
+	if (b3IsDone())
 	{
-		delete m_Selected;
+		if (m_Selected != null)
+		{
+			delete m_Selected;
+		}
+	}
+	else
+	{
+		B3_ASSERT(m_BBox != null);
+		delete m_BBox;
 	}
 }
 
@@ -324,35 +333,23 @@ b3OpObjectLoadCob::b3OpObjectLoadCob(
 	CAppLinesApp   *app  = CB3GetLinesApp();
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
-	CString         suggest;
-	b3Path          filepath;
-	b3Path          result;
+	b3Path          result = "";
 
 	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
 	m_Base     = (m_Selected == null ? m_Scene->b3GetBBoxHead() : m_Scene->b3FindBBoxHead(m_Selected));
-	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
-
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	if (m_Selected != null)
-	{
-		result.b3LinkFileName(filepath,m_Selected->b3GetName());
-		result.b3RemoveExt();
-		strcat((char *)result,".cob");
-	}
-	else
-	{
-		strcpy((char *)result,suggest);
-	}
 	
-	if (CB3SelectCOB::b3Select((char *)result))
+	if (CB3SelectLoadCOB::b3Select(result))
 	{
-		app->WriteProfileString(CB3ClientString(),regitem,result);
-		
 		try
 		{
 			m_BBox = b3BBox::b3ReadCOB(result);
 			if (m_BBox != null)
 			{
+				b3Path name;
+
+				result.b3SplitFileName(null,name);
+				name.b3RemoveExt();
+				strcpy (m_BBox->m_BoxName,name);
 				b3Initialize();
 				m_PrepareGeometry         = true;
 				m_PrepareChangedStructure = false;
@@ -418,32 +415,15 @@ b3OpObjectLoadTgf::b3OpObjectLoadTgf(
 	CAppLinesApp   *app  = CB3GetLinesApp();
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
-	CString         suggest;
-	b3Path          filepath;
-	b3Path          result;
+	b3Path          result = "";
 
 	m_Selected = m_DlgHierarchy->b3GetSelectedBBox();
 	m_Base     = (m_Selected == null ?
 		m_Scene->b3GetBBoxHead() :
 		m_Scene->b3FindBBoxHead(m_Selected));
-	suggest    = app->GetProfileString(CB3ClientString(),regitem,"");
 
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	if (m_Selected != null)
+	if (CB3SelectLoadArcon::b3Select(result))
 	{
-		result.b3LinkFileName(filepath,m_Selected->b3GetName());
-		result.b3RemoveExt();
-		strcat((char *)result,".tgf");
-	}
-	else
-	{
-		strcpy((char *)result,suggest);
-	}
-	
-	if (CB3SelectArcon::b3Select((char *)result))
-	{
-		app->WriteProfileString(CB3ClientString(),regitem,result);
-		
 		try
 		{
 			m_BBox = b3BBox::b3ReadTGF(result);

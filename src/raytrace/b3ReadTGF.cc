@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.3  2003/02/08 21:42:13  sm
 **	- Removed some unused variables.
-**
+**	
 **	Revision 1.2  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
@@ -501,7 +504,11 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 
 	if (!error)
 	{
-		strcpy (bbox->m_BoxName,"TGF-Angelegenheit");
+		b3Path name;
+
+		b3Path::b3SplitFileName(filename,null,name);
+		name.b3RemoveExt();
+		strcpy (bbox->m_BoxName,name);
 	}
 	else
 	{

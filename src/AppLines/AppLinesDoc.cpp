@@ -38,6 +38,7 @@
 #include "DlgDistributed.h"
 #include "DlgLight.h"
 #include "DlgLDC.h"
+#include "b3SelectObject.h"
 #include "b3UndoCutPaste.h"
 #include "b3UndoAction.h"
 #include "b3UndoObject.h"
@@ -58,9 +59,12 @@
 
 /*
 **	$Log$
+**	Revision 1.86  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.85  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.84  2003/02/05 18:42:20  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
@@ -1026,6 +1030,7 @@ void CAppLinesDoc::b3StartRaytrace()
 		m_Scene->b3GetTitle(name);
 		title.Format(IDS_RAYTRACE_TITLE,(const char *)name,xSize,ySize);
 		m_RaytraceDoc->SetTitle(title);
+		m_RaytraceDoc->b3UpdateTitle(name);
 		m_Raytracer->b3Start(&b3RaytracingThread,this);
 	}
 }
@@ -1533,32 +1538,19 @@ void CAppLinesDoc::OnObjectLoad()
 void CAppLinesDoc::OnObjectSave() 
 {
 	// TODO: Add your command handler code here
-	CString         suggest;
-	CString         ext;
-	CString         filter;
 	CAppLinesApp   *app = CB3GetLinesApp();
 	b3Base<b3Item> *base;
 	b3BBox         *selected;
 	b3Item         *prev;
-	b3Path          filepath;
-	b3Path          filename;
-	b3Path          result;
+	b3Path          result = "";
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	B3_ASSERT(selected != null);
 	prev = selected->Prev;
 	base = m_Scene->b3FindBBoxHead(selected);
 
-	suggest  = app->GetProfileString(CB3ClientString(),"Saved object filename","");
-	b3Path::b3SplitFileName(suggest,filepath,null);
-	b3Path::b3LinkFileName(filename,filepath,selected->b3GetName());
-	suggest = filename;
-
-	filter.LoadString(IDS_OBJECT_FILTER);
-	if (b3SaveDialog(suggest,ext,filter,result))
+	if (CB3SelectSaveObject::b3Select(result,selected->b3GetName()))
 	{
-		app->WriteProfileString(CB3ClientString(),"Saved object filename",result);
-
 		base->b3Remove(selected);
 		try
 		{

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.5  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.4  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -61,14 +64,17 @@
 
 /*************************************************************************
 **                                                                      **
-**                        CB3SelectTexture implementation               **
+**                        CB3SelectLoadTexture implementation           **
 **                                                                      **
 *************************************************************************/
 
-b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
+const char *CB3SelectLoadTexture::m_RegEntry = "file load.image";
+
+b3_bool CB3SelectLoadTexture::b3Select(b3Tx **tx,char *name)
 {
 	b3Path    suggest,fullname;
 	b3_bool   result;
+	b3Tx     *ptr;
 	CWinApp  *app = AfxGetApp();
 	CString   file_filter;
 	CString   default_ext;
@@ -76,12 +82,27 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 	// Make filename ready for use...
 	if ((*tx) != null)
 	{
-		suggest.b3Correct((*tx)->b3Name());
+		ptr = *tx;
+		if (!ptr->b3IsLoaded())
+		{
+			ptr = null;
+		}
 	}
 	else
 	{
-		suggest.b3Empty();
+		ptr = null;
 	}
+
+	if (ptr != null)
+	{
+		suggest.b3Correct(ptr->b3Name());
+	}
+	else
+	{
+
+		strcpy((char *)suggest,app->GetProfileString(CB3ClientString(),m_RegEntry,""));
+	}
+
 	file_filter.LoadString(IDS_TEXTURE_FILTER);
 
 #if 1
@@ -89,7 +110,7 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 #else
 	CFileDialog   filedlg(
 #endif
-	true, // Use file save dialog
+		true, // Use file open dialog
 		default_ext, // default extension
 		suggest, // file name suggestion to save
 		OFN_HIDEREADONLY,	// flags
@@ -101,8 +122,52 @@ b3_bool CB3SelectTexture::b3Select(b3Tx **tx,char *name)
 	if (result)
 	{
 		strcpy(fullname,filedlg.GetPathName());
+		app->WriteProfileString(CB3ClientString(),m_RegEntry,fullname);
 		texture_pool.b3CutName(fullname,name);
 		b3CheckTexture(tx,name);
 	}
 	return result;
 }
+
+/*************************************************************************
+**                                                                      **
+**                        CB3SelectSaveTexture implementation           **
+**                                                                      **
+*************************************************************************/
+
+const char *CB3SelectSaveTexture::m_RegEntry = "file save.image";
+
+b3_bool CB3SelectSaveTexture::b3Select(b3Path &name,const char *tx_name)
+{
+	CAppLinesApp *app = CB3GetLinesApp();
+	CString       default_ext;
+	CString       file_filter;
+	CString       suggest;
+	b3_bool       result;
+	b3_bool       registry = false;
+
+	if (strlen(tx_name) > 0)
+	{
+		suggest = tx_name;
+	}
+	else
+	{
+		suggest = app->GetProfileString(CB3ClientString(),m_RegEntry,name);
+		registry = true;
+	}
+	strcpy((char *)name,suggest);
+	file_filter.LoadString(IDS_SAVE_IMAGE_FILTER);
+	result = b3SaveDialog(suggest,default_ext,file_filter,name);
+	if (result && registry)
+	{
+		app->WriteProfileString(CB3ClientString(),m_RegEntry,name);
+	}
+	return result;
+}
+
+const char *CB3SelectSaveTexture::b3GetLastFilename(char *filename)
+{
+	strcpy(filename,AfxGetApp()->GetProfileString(CB3ClientString(),m_RegEntry,""));
+	return filename;
+}
+

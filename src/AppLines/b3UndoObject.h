@@ -77,9 +77,9 @@ protected:
 	}
 };
 
-#define B3_OBJECT_LOAD_REGITEM "Loaded object filename"
+#define B3_OBJECT_LOAD_REGITEM "file load.object"
 
-class b3OpObjectLoad : public b3OpObject
+class b3OpObjectFile : public b3OpObject
 {
 protected:
 	b3BBox         *m_Selected;
@@ -88,8 +88,14 @@ protected:
 	b3World         m_World;
 	b3_count        m_Level;
 
+protected:
+	        b3OpObjectFile(b3Scene *scene,CDlgHierarchy *hierarchy,const char *reg_entry);
+};
+
+class b3OpObjectLoad : public b3OpObjectFile
+{
 public:
-	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_LOAD_REGITEM);
+	         b3OpObjectLoad(b3Scene *scene,CDlgHierarchy *hierarchy);
 
 protected:
 	virtual void b3Do();
@@ -103,12 +109,12 @@ protected:
 	}
 };
 
-#define B3_OBJECT_REPLACE_REGITEM "Replaced object filename"
+#define B3_OBJECT_REPLACE_REGITEM "file replace.object"
 
-class b3OpObjectReplace : public b3OpObjectLoad
+class b3OpObjectReplace : public b3OpObjectFile
 {
 public:
-	         b3OpObjectReplace(b3Scene *scene,CDlgHierarchy *hierarchy,const char *regitem = B3_OBJECT_REPLACE_REGITEM);
+	         b3OpObjectReplace(b3Scene *scene,CDlgHierarchy *hierarchy);
 
 protected:
 	void b3Do();

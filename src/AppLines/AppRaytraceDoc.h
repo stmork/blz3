@@ -48,6 +48,7 @@ public:
 	void        b3ActivateDoc();
 	void        b3ActivateView();
 	const char *b3GetDocumentName();
+	void        b3UpdateTitle(const char *title);
 
 // Overrides
 	// ClassWizard generated virtual function overrides

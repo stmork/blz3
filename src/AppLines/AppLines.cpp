@@ -57,9 +57,12 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.47  2003/02/02 14:22:31  sm
 **	- Added TGF import facility.
-**
+**	
 **	Revision 1.46  2003/01/12 10:26:52  sm
 **	- Undo/Redo of
 **	  o Cut & paste
@@ -716,13 +719,10 @@ void CAppLinesApp::OnImportArcon()
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
 	CFrameWnd     *frame;
-	CString         regitem = "arcon geometry";
-	b3Path          result;
+	b3Path          result = "";
 
-	strcpy(result,GetProfileString(CB3ClientString(),regitem,""));
-	if (CB3SelectArcon::b3Select((char *)result))
+	if (CB3SelectLoadArcon::b3Select(result))
 	{
-		WriteProfileString(CB3ClientString(),regitem,result);
 		pDoc = (CAppLinesDoc *)pSceneTemplate->CreateNewDocument();
 		if (pDoc->OnImportArcon(result))
 		{

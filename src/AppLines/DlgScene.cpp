@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.11  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.10  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
@@ -232,7 +235,7 @@ void CDlgScene::OnBgModeChanged()
 void CDlgScene::OnBgImageSelect() 
 {
 	// TODO: Add your control notification handler code here
-	if (CB3SelectTexture::b3Select(&m_PreviewScene->m_BackTexture,m_PreviewScene->m_TextureName))
+	if (CB3SelectLoadTexture::b3Select(&m_PreviewScene->m_BackTexture,m_PreviewScene->m_TextureName))
 	{
 		m_PreviewImageCtrl.b3Copy(m_PreviewScene->m_BackTexture);
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/02/09 13:58:14  sm
+**	- cleaned up file selection dialogs
+**
 **	Revision 1.9  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.8  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
@@ -267,7 +270,7 @@ void CDlgCreateMaterial::OnChangeSpecular()
 void CDlgCreateMaterial::OnChangeTexturePath() 
 {
 	// TODO: Add your command handler code here
-	if (CB3SelectTexture::b3Select(&m_MatTexture->m_Texture,m_MatTexture->m_Name))
+	if (CB3SelectLoadTexture::b3Select(&m_MatTexture->m_Texture,m_MatTexture->m_Name))
 	{
 		((b3Tx *)m_PreviewTexture)->b3Copy(m_MatTexture->m_Texture);
 		m_PreviewTexture.b3Copy(m_MatTexture->m_Texture);

@@ -20,10 +20,21 @@
 
 #include "blz3/image/b3Tx.h"
 
-class CB3SelectTexture
+class CB3SelectLoadTexture
 {
+	static const char *m_RegEntry;
+
 public:
 	static b3_bool b3Select(b3Tx **tx,char *name);
+};
+
+class CB3SelectSaveTexture
+{
+	static const char *m_RegEntry;
+
+public:
+	static       b3_bool  b3Select(b3Path &name,const char *tx_name);
+	static const char    *b3GetLastFilename(char *filename);
 };
 
 #endif

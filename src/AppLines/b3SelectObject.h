@@ -18,24 +18,37 @@
 #ifndef B3_SELECT_OBJECT_H
 #define B3_SELECT_OBJECT_H
 
+#include "blz3/system/b3Dir.h"
 #include "blz3/image/b3Tx.h"
 
-class CB3SelectObject
+class CB3SelectLoadObject
 {
 public:
-	static b3_bool b3Select(char *name);
+	static b3_bool b3Select(b3Path &name,const char *reg_entry);
 };
 
-class CB3SelectCOB
+class CB3SelectSaveObject
 {
+	static const char *m_RegEntry;
+
 public:
-	static b3_bool b3Select(char *name);
+	static b3_bool b3Select(b3Path &name,const char *box_name);
 };
 
-class CB3SelectArcon
+class CB3SelectLoadCOB
 {
+	static const char *m_RegEntry;
+
 public:
-	static b3_bool b3Select(char *name);
+	static b3_bool b3Select(b3Path &name);
+};
+
+class CB3SelectLoadArcon
+{					
+	static const char *m_RegEntry;
+
+public:
+	static b3_bool b3Select(b3Path &path);
 };
 
 #endif

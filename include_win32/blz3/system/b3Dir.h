@@ -29,6 +29,13 @@ typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 class b3Path : public b3PathAbstract
 {
 public:
+	inline      b3Path()
+	{
+	}
+	inline      b3Path(const char *path) : b3PathAbstract(path)
+	{
+	}
+
 	       void b3Empty();
 		   void b3LinkFileName (const char *path,const char *name);
 	       void b3SplitFileName(char *path,char *name);

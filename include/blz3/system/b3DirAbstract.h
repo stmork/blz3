@@ -41,6 +41,15 @@ protected:
 	char m_Path[B3_FILESTRINGLEN];
 
 public:
+			inline b3PathAbstract()
+			{
+			}
+
+	        inline b3PathAbstract(const char *path)
+			{
+				strcpy (m_Path,path);
+			}
+
 	virtual void b3Empty        () = 0;
 	virtual void b3LinkFileName (const char *path,const char *name) = 0;
 	virtual void b3SplitFileName(char *path,char *name) = 0;
