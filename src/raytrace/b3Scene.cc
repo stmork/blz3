@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2002/08/23 15:34:28  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.43  2002/08/23 12:37:11  sm
 **	- Optimized motion blur raytracing using their own thread methods...
-**
+**	
 **	Revision 1.42  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
@@ -428,6 +432,13 @@ b3Animation *b3Scene::b3GetAnimation(b3_bool force)
 		animation = null;
 	}
 	return animation;
+}
+
+b3_f64 b3Scene::b3GetTimePoint()
+{
+	b3Animation *anim = b3GetAnimation();
+
+	return anim != null ? anim->m_Time : 0;
 }
 
 b3ModellerInfo *b3Scene::b3GetModellerInfo()

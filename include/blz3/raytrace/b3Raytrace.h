@@ -67,6 +67,7 @@ struct b3_ray : public b3_line64
 	b3_bool     inside;
 	b3_index    TriaIndex;
 	b3_f64      aTriaValue,bTriaValue;
+	b3_f64      t;
 };
 
 
@@ -2390,6 +2391,7 @@ public:
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
 			b3Animation    *b3GetAnimation(b3_bool force = false);
+			b3_f64          b3GetTimePoint();
 		    b3ModellerInfo *b3GetModellerInfo();
 			b3Distribute   *b3GetDistributed(b3_bool force = true);
 		    b3Nebular      *b3GetNebular    (b3_bool force = true);
@@ -2486,6 +2488,7 @@ protected:
 	b3_res       m_ySize;
 	b3_f64       m_fxStep;
 	b3_f64       m_fy;
+	b3_f64       m_t;
 
 public:
 	              b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
@@ -2548,6 +2551,7 @@ public:
 	                b3MotionBlurRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
 	virtual        ~b3MotionBlurRayRow();
 	virtual void    b3Raytrace();
+	        void    b3SetTimePoint(b3_f64 t);
 };
 
 // m_Flags

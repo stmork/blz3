@@ -35,6 +35,10 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/08/23 15:34:28  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.19  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -42,7 +46,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.18  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -352,6 +356,7 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_ray_fork *surface)
 	b3Vector::b3Normalize(refl_dir);
 	surface->refl_ray.pos    = surface->incoming->ipoint;
 	surface->refl_ray.inside = surface->incoming->inside;
+	surface->refl_ray.t      = surface->incoming->t;
 
 	//Use only sharp angles
 	if (cos_a >= 0)
@@ -390,6 +395,7 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_ray_fork *surface)
 
 				surface->refr_ray.pos    =  surface->incoming->ipoint;
 				surface->refr_ray.inside = !surface->incoming->inside;
+				surface->refr_ray.t      =  surface->incoming->t;
 				transparent = true;
 			}
 		}
@@ -400,6 +406,7 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_ray_fork *surface)
 			surface->refr_ray.pos    =  surface->incoming->ipoint;
 			surface->refr_ray.dir    =  surface->incoming->dir;
 			surface->refr_ray.inside = !surface->incoming->inside;
+			surface->refr_ray.t      =  surface->incoming->t;
 			transparent = true;
 		}
 	}

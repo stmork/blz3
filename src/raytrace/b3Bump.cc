@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/23 15:34:28  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.10  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.9  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -379,7 +383,7 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 		point.z = ray->polar.box_polar.z * m_ScaleIPoint.z;
 	}
 
-	water = noise_procedures.b3Water(&point,time);
+	water = noise_procedures.b3Water(&point,ray->t);
 	ox.x     = 0.125;
 	ox.y     = 0;
 	ox.z     = (m_ScaleFlag & BUMP_U_SUPPRESS_WAVE ? 0 : water);

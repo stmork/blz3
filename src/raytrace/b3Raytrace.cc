@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2002/08/23 15:34:28  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.46  2002/08/23 13:40:28  sm
 **	- b3Event on Un*x platforms were broken.
-**
+**	
 **	Revision 1.45  2002/08/23 12:37:11  sm
 **	- Optimized motion blur raytracing using their own thread methods...
 **	
@@ -406,6 +410,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 	b3Animation *anim = b3GetAnimation();
 	b3TimeSpan   span;
 	b3Thread    *threads;
+	b3Row       *row;
 	b3_vector    lower,upper;
 	b3_count     i,k;
 	b3_f64       t,base = anim->m_Time;
@@ -435,6 +440,12 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 		b3SetAnimation(t);
 		b3UpdateCamera();
 		b3ComputeBounds(&lower,&upper);
+
+		// We have to update the actual time point
+		B3_FOR_BASE(&m_RowPool,row)
+		{
+			((b3MotionBlurRayRow *)row)->b3SetTimePoint(t);
+		}
 
 		// Start raytracing at this time point
 		b3PrintF (B3LOG_FULL,"  Activating threads at index %d, time point %3.3lf...\n",k,t);

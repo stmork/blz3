@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/23 15:34:28  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.3  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
-**
+**	
 **	Revision 1.2  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
@@ -72,6 +76,7 @@ b3RayRow::b3RayRow(
 	m_y       = y;
 	m_xSize   = xSize;
 	m_ySize   = ySize;
+	m_t       = scene->b3GetTimePoint();
 
 	// Init direction
 	m_fy        =  1.0 - m_y * 2.0 / (b3_f64)m_ySize;
@@ -100,6 +105,7 @@ void b3RayRow::b3Raytrace()
 		ray.dir.y  = m_preDir.y;
 		ray.dir.z  = m_preDir.z;
 		ray.inside = false;
+		ray.t      = m_t;
 
 		if (!m_Scene->b3Shade(&ray))
 		{
@@ -176,6 +182,7 @@ void b3SupersamplingRayRow::b3Raytrace()
 		ray.dir.y  = dir.y;
 		ray.dir.z  = dir.z;
 		ray.inside = false;
+		ray.t      = m_t;
 
 		if (!m_Scene->b3Shade(&ray))
 		{
@@ -309,6 +316,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.y  = (dir.y += m_Scene->m_yHalfDir.y);
 			ray.dir.z  = (dir.z += m_Scene->m_yHalfDir.z);
 			ray.inside = false;
+			ray.t      =  m_t;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxRight,fyUp);
@@ -319,6 +327,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.y  = (dir.y -= m_Scene->m_xHalfDir.y);
 			ray.dir.z  = (dir.z -= m_Scene->m_xHalfDir.z);
 			ray.inside = false;
+			ray.t      =  m_t;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyUp);
@@ -329,6 +338,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.y  = (dir.y -= m_Scene->m_yHalfDir.y);
 			ray.dir.z  = (dir.z -= m_Scene->m_yHalfDir.z);
 			ray.inside = false;
+			ray.t      =  m_t;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
@@ -428,6 +438,7 @@ void b3DistributedRayRow::b3Raytrace()
 			ray.dir.y  = m_preDir.y + sx * m_Scene->m_xHalfDir.y + sy * m_Scene->m_yHalfDir.y;
 			ray.dir.z  = m_preDir.z + sx * m_Scene->m_xHalfDir.z + sy * m_Scene->m_yHalfDir.z;
 			ray.inside = false;
+			ray.t      = m_t;
 
 			if (!m_Scene->b3Shade(&ray))
 			{
@@ -482,6 +493,11 @@ b3MotionBlurRayRow::~b3MotionBlurRayRow()
 {
 }
 
+void b3MotionBlurRayRow::b3SetTimePoint(b3_f64 t)
+{
+	m_t = t;
+}
+
 void b3MotionBlurRayRow::b3Raytrace()
 {
 	b3_ray_info   ray;
@@ -511,6 +527,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 				ray.dir.y  = m_preDir.y + sx * m_Scene->m_xHalfDir.y + sy * m_Scene->m_yHalfDir.y;
 				ray.dir.z  = m_preDir.z + sx * m_Scene->m_xHalfDir.z + sy * m_Scene->m_yHalfDir.z;
 				ray.inside = false;
+				ray.t      = m_t;
 
 				if (!m_Scene->b3Shade(&ray))
 				{

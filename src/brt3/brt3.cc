@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/08/23 15:34:27  sm
+**	- Added time support to water animation.
+**	- Added multiple file format types to brt3.
+**
 **	Revision 1.30  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
-**
+**	
 **	Revision 1.29  2002/08/22 14:06:32  sm
 **	- Corrected filter support and added test suite.
 **	- Added animation computing to brt3. Now we are near to
@@ -186,7 +190,7 @@
 **
 */
 
-#define BLZ3_EXTENSION ".tga"
+static char BLZ3_EXTENSION[] = ".tga";
 
 static void b3SaveRaytracedImage(
 	b3Display  *display,
@@ -292,6 +296,16 @@ int main(int argc,char *argv[])
 					force_no_display = true;
 					b3PrintF(B3LOG_NORMAL,"Forcing no display output\n");
 					break;
+				case 'i':
+					strcpy(BLZ3_EXTENSION,".tif");
+					break;
+				case 'j':
+					strcpy(BLZ3_EXTENSION,".jpg");
+					break;
+				case 'g':
+					strcpy(BLZ3_EXTENSION,".tga");
+					break;
+
 				case 'v' :
 					b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracing software\n");
 					break;
@@ -414,10 +428,13 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n] {Blizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -n  disabled display\n");
+		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 	}
