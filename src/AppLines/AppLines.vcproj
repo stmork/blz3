@@ -133,7 +133,7 @@
 				AdditionalLibraryDirectories="..\..\lib\win32_i386"
 				ProgramDatabaseFile=".\..\..\Release/AppLines.pdb"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\Release/AppLines.map"
+				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool

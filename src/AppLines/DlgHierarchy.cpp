@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2004/12/27 21:21:45  sm
+**	- Adjusted type size (LPARAM vs. long)
+**
 **	Revision 1.25  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.24  2004/04/22 20:23:55  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
@@ -242,7 +245,7 @@ void CDlgHierarchy::b3AddBBoxes (
 		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 		insert.item.pszText        = BBox->m_BoxName;
 		insert.item.cchTextMax     = B3_BOXSTRINGLEN;
-		insert.item.lParam         = (long)BBox;
+		insert.item.lParam         = (LPARAM)BBox;
 		insert.item.iImage         = imgNum;
 		insert.item.iSelectedImage = imgNum;
 
@@ -269,7 +272,7 @@ void CDlgHierarchy::b3AddBBoxes (
 				insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 				insert.item.pszText        = (char *)((const char *)shape_title);
 				insert.item.cchTextMax     = B3_BOXSTRINGLEN;
-				insert.item.lParam         = (long)shape;
+				insert.item.lParam         = (LPARAM)shape;
 				insert.item.iImage         = imgNum;
 				insert.item.iSelectedImage = imgNum;
 				m_Hierarchy.InsertItem (&insert);

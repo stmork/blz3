@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/12/27 21:21:45  sm
+**	- Adjusted type size (LPARAM vs. long)
+**
 **	Revision 1.5  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.4  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
@@ -120,7 +123,7 @@ void CDlgItemCreate::b3InitClassTypeList()
 	b3Array<b3_u32>  class_types;
 	b3_u32           class_type;
 	b3_count         i;
-	b3_size          size = 48;
+	int              size = 48;
 	b3_index         img = 0;
 	HICON            unknown = AfxGetApp()->LoadIcon(IDI_ITEM_UNKNOWN);
 	LVITEM           listitem;
