@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.3  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.2  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes

@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3ActionObject.cpp $
-**      $Release:       Dortmund 2002 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:	b3UndoObject.cpp
+**	$Release:	Dortmund 2003 $
+**	$Revision$
+**	$Date$
+**	$Developer:	Steffen A. Mork $
 **
-**      Blizzard III - What to do on mouse input (object action)
+**	Blizzard III - Undo/Redo for mouse actions
 **
-**      (C) Copyright 2002  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2003  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -21,9 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "b3UndoObject.h"
 #include "b3Action.h"
-#include "AppLines.h"
-#include "MainFrm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,88 +32,77 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2003/01/11 12:30:30  sm
+**	Revision 1.1  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
-**	Revision 1.1  2002/01/16 16:17:13  sm
-**	- Introducing object edit painting and acting.
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ActionShapeMove implementation             **
+**                        Undo/Redo object creation                     **
 **                                                                      **
 *************************************************************************/
 
-CB3ActionShapeMove::CB3ActionShapeMove(CAppObjectView *window) :
-	CB3ShapeAction(window)
+b3OpObjectCreate::b3OpObjectCreate()
+{
+}
+
+void b3OpObjectCreate::b3Do()
 {
 }
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ActionShapeRotatePoint implementation      **
+**                        Undo/Redo object deletion                     **
 **                                                                      **
 *************************************************************************/
 
-CB3ActionShapeRotatePoint::CB3ActionShapeRotatePoint(CAppObjectView *window) :
-	CB3ShapeAction(window)
+b3OpObjectDelete::b3OpObjectDelete()
+{
+}
+
+void b3OpObjectDelete::b3Do()
 {
 }
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ActionShapeRotateAxis implementation       **
+**                        Undo/Redo object load                         **
 **                                                                      **
 *************************************************************************/
 
-CB3ActionShapeRotateAxis::CB3ActionShapeRotateAxis(CAppObjectView *window) :
-	CB3ShapeAction(window)
+b3OpObjectLoad::b3OpObjectLoad()
+{
+}
+
+void b3OpObjectLoad::b3Do()
 {
 }
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ActionShapeScale implementation            **
+**                        Undo/Redo object replacement                  **
 **                                                                      **
 *************************************************************************/
 
-CB3ActionShapeScale::CB3ActionShapeScale(CAppObjectView *window) :
-	CB3ShapeAction(window)
+b3OpObjectReplace::b3OpObjectReplace()
+{
+}
+
+void b3OpObjectReplace::b3Do()
 {
 }
 
 /*************************************************************************
 **                                                                      **
-**                        CB3ActionShapeMirrorPoint implementation      **
+**                        Undo/Redo object copy                         **
 **                                                                      **
 *************************************************************************/
 
-CB3ActionShapeMirrorPoint::CB3ActionShapeMirrorPoint(CAppObjectView *window) :
-	CB3ShapeAction(window)
+b3OpObjectCopy::b3OpObjectCopy()
 {
 }
 
-/*************************************************************************
-**                                                                      **
-**                        CB3ActionShapeMirrorAxis implementation       **
-**                                                                      **
-*************************************************************************/
-
-CB3ActionShapeMirrorAxis::CB3ActionShapeMirrorAxis(CAppObjectView *window) :
-	CB3ShapeAction(window)
-{
-}
-
-/*************************************************************************
-**                                                                      **
-**                        CB3ActionShapeMirrorArea implementation       **
-**                                                                      **
-*************************************************************************/
-
-CB3ActionShapeMirrorArea::CB3ActionShapeMirrorArea(CAppObjectView *window) :
-	CB3ShapeAction(window)
+void b3OpObjectCopy::b3Do()
 {
 }

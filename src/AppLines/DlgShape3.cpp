@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.7  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.6  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.

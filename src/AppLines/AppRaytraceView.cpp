@@ -36,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.8  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry
 **	- b3ExtractExt searches from right instead from left.
 **	- Made some cleanup inside CB3ScrollView
-**
+**	
 **	Revision 1.7  2002/01/31 11:50:53  sm
 **	- Now we can print OpenGL scenes (Note: We have to do basic
 **	  initialization prior to render a scene. Then we can see the scene

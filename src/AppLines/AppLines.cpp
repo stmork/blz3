@@ -54,10 +54,13 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.44  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
-**
+**	
 **	Revision 1.43  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.

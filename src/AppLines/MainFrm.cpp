@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.31  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.30  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
 **	

@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.10  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.9  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.

@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.10  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
 **	  every OnPaint(). This is configurable depending on the
 **	  hostname.
-**
+**	
 **	Revision 1.9  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.

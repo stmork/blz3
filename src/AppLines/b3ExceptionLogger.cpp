@@ -40,13 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.6  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.5  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
 **	

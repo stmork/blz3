@@ -40,10 +40,13 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.3  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
-**
+**	
 **	Revision 1.2  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras

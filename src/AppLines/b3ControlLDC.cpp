@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.7  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
 **	  *** And now: Testing! Testing! Testing! ***
-**
+**	
 **	Revision 1.6  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!

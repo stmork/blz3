@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.3  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
 **	  o distributed raytracing
-**
+**	
 **	Revision 1.2  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	

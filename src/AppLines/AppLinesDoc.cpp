@@ -44,6 +44,7 @@
 #include "b3SelectObject.h"
 #include "b3UndoCutPaste.h"
 #include "b3UndoAction.h"
+#include "b3UndoObject.h"
 #include "b3ExampleScene.h"
 #include "b3Action.h"
 
@@ -61,10 +62,13 @@
 
 /*
 **	$Log$
+**	Revision 1.76  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.75  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.74  2003/01/05 16:13:23  sm
 **	- First undo/redo implementations
 **	
@@ -889,6 +893,7 @@ HTREEITEM CAppLinesDoc::b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem)
 
 void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
 {
+	// 	m_UndoBuffer->b3Do(new b3OpDrop(...));
 	b3BBox         *srcBBox;
 	b3BBox         *dstBBox;
 	b3Base<b3Item> *srcBase;
@@ -1063,6 +1068,7 @@ void CAppLinesDoc::OnDlgScene()
 	dlg_sheets.SetTitle(title);
 	if (dlg_sheets.DoModal() == IDOK)
 	{
+		m_UndoBuffer->b3Clear();
 		SetModifiedFlag();
 	}
 }
@@ -1075,6 +1081,7 @@ void CAppLinesDoc::OnModellerInfo()
 	dlg.m_ModellerInfo = m_Info;
 	if (dlg.DoModal() == IDOK)
 	{
+		m_UndoBuffer->b3Clear();
 		UpdateAllViews(NULL,B3_UPDATE_FULCRUM|B3_UPDATE_LIGHT);
 		SetModifiedFlag();
 	}
@@ -1095,6 +1102,8 @@ void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnLightNew() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpLightNew(...));
+
 	CDlgCreateItem  dlg;
 
 	dlg.m_Label.LoadString(IDS_NEW_LIGHT);
@@ -1116,6 +1125,7 @@ void CAppLinesDoc::OnLightNew()
 void CAppLinesDoc::OnLightDelete() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpLightDelete(...));
 	b3Light *select;
 
 	if (AfxMessageBox(IDS_ASK_DELETE_LIGHT,MB_ICONQUESTION|MB_YESNO) == IDYES)
@@ -1151,6 +1161,7 @@ void CAppLinesDoc::OnLightProperties()
 		m_Light = dlg.m_Light;
 		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
 
+		m_UndoBuffer->b3Clear();
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
@@ -1164,6 +1175,7 @@ void CAppLinesDoc::OnLightLDC()
 	dlg.m_Light = m_Light;
 	if (dlg.DoModal() == IDOK)
 	{
+		m_UndoBuffer->b3Clear();
 		SetModifiedFlag();
 		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,dlg.m_Light);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
@@ -1173,6 +1185,7 @@ void CAppLinesDoc::OnLightLDC()
 void CAppLinesDoc::OnLightEnable() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpLightEnable(...));
 	m_Light->m_LightActive = !m_Light->m_LightActive;
 	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
@@ -1181,6 +1194,7 @@ void CAppLinesDoc::OnLightEnable()
 void CAppLinesDoc::OnLightSoft() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpLightSoft(...));
 	m_Light->m_SoftShadow = !m_Light->m_SoftShadow;
 	SetModifiedFlag();
 }
@@ -1188,6 +1202,7 @@ void CAppLinesDoc::OnLightSoft()
 void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpLightSpot(...));
 	m_Light->m_SpotActive = !m_Light->m_SpotActive;
 	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
@@ -1445,8 +1460,9 @@ void CAppLinesDoc::b3Select(
 
 void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 {
-	CAppLinesApp   *app     = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main    = CB3GetMainFrame();
+	// m_UndoBuffer->b3Do(new b3OpObjectCreate(...));
+	CAppLinesApp   *app  = CB3GetLinesApp();
+	CMainFrame     *main = CB3GetMainFrame();
 	CDlgCreateItem  dlg;
 	b3BBox         *selected;
 	b3BBox         *bbox;
@@ -1498,6 +1514,7 @@ void CAppLinesDoc::OnObjectNewSub()
 void CAppLinesDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpObjectDelete(...));
 	b3Base<b3Item> *base;
 	b3Item         *select;
 	b3BBox         *selected;
@@ -1654,6 +1671,7 @@ void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnObjectLoad() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpObjectLoad(...));
 	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
@@ -1802,6 +1820,7 @@ void CAppLinesDoc::OnObjectSave()
 void CAppLinesDoc::OnObjectReplace() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpObjectReplace(...));
 	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
 	CMainFrame     *main = CB3GetMainFrame();
 	CWaitCursor     wait;
@@ -1864,6 +1883,7 @@ void CAppLinesDoc::OnObjectReplace()
 void CAppLinesDoc::OnObjectCopy() 
 {
 	// TODO: Add your command handler code here
+	// m_UndoBuffer->b3Do(new b3OpObjectCopy(...));
 	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
 	CMainFrame     *main = CB3GetMainFrame();
 	CDlgObjectCopy  dlg;
@@ -1922,6 +1942,7 @@ void CAppLinesDoc::b3FinishEdit(
 		base = m_Scene->b3FindBBoxHead(original);
 		base->b3Insert(original,bbox);
 		base->b3Remove(original);
+		m_UndoBuffer->b3Clear();
 		SetModifiedFlag();
 	}
 }

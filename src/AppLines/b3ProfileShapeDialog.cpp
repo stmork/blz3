@@ -31,12 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.7  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.6  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods

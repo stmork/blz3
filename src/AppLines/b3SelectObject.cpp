@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.1  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **
 */
 

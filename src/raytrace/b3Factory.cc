@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.10  2002/12/31 15:13:07  sm
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.9  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?

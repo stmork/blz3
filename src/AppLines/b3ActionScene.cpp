@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.6  2003/01/06 19:16:03  sm
 **	- Removed use of b3TriangleRef into an b3Array<b3_index>.
 **	- Camera transformations are now matrix transformations.
-**
+**	
 **	Revision 1.5  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?

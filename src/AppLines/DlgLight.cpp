@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.12  2003/01/03 15:47:09  sm
 **	- Changed area light optimization.
 **	- Fixed some errors in the light dialog.
-**
+**	
 **	Revision 1.11  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.

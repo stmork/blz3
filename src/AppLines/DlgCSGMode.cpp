@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -40,7 +43,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.1  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog

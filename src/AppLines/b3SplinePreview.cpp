@@ -36,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.1  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **
 */
 

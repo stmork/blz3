@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.5  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
-**
+**	
 **	Revision 1.4  2002/04/07 12:59:38  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()

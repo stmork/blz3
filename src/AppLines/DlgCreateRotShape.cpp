@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.1  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.21  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **	Revision 1.20  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.22  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
-**
+**	
 **	Revision 1.21  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.

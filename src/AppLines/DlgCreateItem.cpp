@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.3  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -39,7 +42,7 @@
 **	- Sub object insertion added.
 **	- Fixed update routines to reflect correct state in hierarchy.
 **	- Better hierarchy update coded.
-**
+**	
 **	Revision 1.2  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates

@@ -32,12 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.4  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **	Revision 1.3  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2003/01/11 12:30:30  sm
+**      - Some additional undo/redo actions
+**
 **      Revision 1.7  2002/08/16 14:00:02  sm
 **      - Lines III adjustments to new vertex computation.
 **

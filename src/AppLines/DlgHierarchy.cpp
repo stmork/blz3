@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.19  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -43,7 +46,7 @@
 **	  o area, disk
 **	  o cylinder, cone, ellipsoid, box
 **	- Changed hierarchy to reflect these changes.
-**
+**	
 **	Revision 1.18  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.

@@ -602,6 +602,11 @@
 #define IDS_OP_LOAD                     61448
 #define IDS_OP_REPLACE                  61449
 #define IDS_OP_ACTION                   61450
+#define IDS_OP_OBJECT_CREATE            61451
+#define IDS_OP_OBJECT_DELETE            61452
+#define IDS_OP_OBJECT_LOAD              61453
+#define IDS_OP_OBJECT_REPLACE           61454
+#define IDS_OP_OBJECT_COPY              61455
 
 // Next default values for new objects
 // 

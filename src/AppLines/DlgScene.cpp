@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.10  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
 **	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
 **	  to avoid thousands point.
-**
+**	
 **	Revision 1.9  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.

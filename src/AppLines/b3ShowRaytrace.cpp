@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
-**
+**	
 **	Revision 1.1  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	

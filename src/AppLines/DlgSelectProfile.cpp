@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.7  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
-**
+**	
 **	Revision 1.6  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating

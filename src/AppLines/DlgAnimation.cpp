@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.1  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
-**
+**	
 **	
 **
 */

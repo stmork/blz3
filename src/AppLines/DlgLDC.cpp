@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
 **	  *** And now: Testing! Testing! Testing! ***
-**
+**	
 **	Revision 1.1  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
 **	

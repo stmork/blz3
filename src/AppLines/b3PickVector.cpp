@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
-**
+**	
 **	Revision 1.1  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!

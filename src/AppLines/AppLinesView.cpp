@@ -39,11 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.54  2002/08/01 15:02:55  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.53  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on

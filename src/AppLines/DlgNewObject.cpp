@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.4  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
 **	  a new shape.
 **	- Some minor fixes done.
-**
+**	
 **	Revision 1.3  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.

@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.2  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.1  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog

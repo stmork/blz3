@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/01/11 12:30:30  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.4  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
-**
+**	
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.

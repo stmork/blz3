@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/01/11 12:30:29  sm
+**	- Some additional undo/redo actions
+**
 **	Revision 1.13  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.12  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
