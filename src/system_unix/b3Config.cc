@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/06/22 11:12:20  sm
+**	- Added support for Intel C++ compiler V8
+**
 **	Revision 1.9  2004/01/18 13:51:58  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.8  2003/11/01 09:47:26  sm
 **	- Added CPU bit version with compiler version string.
 **	
@@ -85,14 +88,14 @@ b3Runtime::b3Runtime()
 {
 	b3_count bits = b3GetCPUBits();
 
-#ifdef __GNUC__
+#ifdef __ICC
+	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d (%ld bit)",__ICC / 100,(__ICC / 10) % 10,bits);
+#elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
 	snprintf(compiler,sizeof(compiler),"GCC V%d.%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits);
 #	else
 	snprintf(compiler,sizeof(compiler),"GCC V%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,bits);
 #	endif
-#elif __ICC
-	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d (%ld bit)",__ICC / 100,(__ICC / 10) % 10,bits);
 #else
 	snprintf(compiler,sizeof(compiler),"Unknown compiler");
 #endif
