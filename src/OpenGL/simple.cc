@@ -1,4 +1,34 @@
+/*
+**
+**	$Filename:	b3Light.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Raytracing light sources
+**
+**	(C) Copyright 2001  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
 #include <GL/glut.h>
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**      $Log$
+**      Revision 1.2  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**              
+*/
 
 GLfloat points[] =
 {
@@ -76,6 +106,34 @@ GLubyte indices[] =
 	20,21,22,23
 };
 
+GLfloat boxVertices[8 * 3] =
+{
+	-1.0,-1.0,-1.0,
+	-1.0,-1.0, 1.0,
+	 1.0,-1.0, 1.0,
+	 1.0,-1.0,-1.0,
+	-1.0, 1.0,-1.0,
+	-1.0, 1.0, 1.0,
+	 1.0, 1.0, 1.0,
+	 1.0, 1.0,-1.0
+};
+
+GLubyte boxIndices[12 * 2] =
+{
+	0,1,
+	1,2,
+	2,3,
+	3,0,
+	4,5,
+	5,6,
+	6,7,
+	7,4,
+	0,4,
+	1,5,
+	2,6,
+	3,7
+};
+
 GLfloat ambient[] =
 {
 	1.0,1.0,1.0,1.0
@@ -94,10 +152,10 @@ GLfloat light0[] =
 void RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT);
-
+#if 0
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -109,6 +167,17 @@ void RenderScene()
 	glDrawElements(GL_QUADS,24,GL_UNSIGNED_BYTE,indices);
 
 	glPopMatrix();	
+#else
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor3f(1.0f,1.0f,1.0f);
+	glVertexPointer(3, GL_FLOAT, 0, boxVertices);
+	glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE,boxIndices);
+	glPopMatrix();	
+#endif
 	glutSwapBuffers();
 }
 

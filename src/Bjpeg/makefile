@@ -3,7 +3,6 @@
 # Optionen
 
 CPPFLAGS        = $(STDINC) -I$(BLZ3_INCLUDE)
-CFLAGS          = $(OFLAGS)
 
 DOCDIR		= $(BLZ3_DOC)
 MANDIR		= $(BLZ3_MAN)

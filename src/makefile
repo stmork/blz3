@@ -2,6 +2,9 @@
 # basic makefile to create Blizzard II
 #
 
+CFLAGS		= $(OFLAGS)
+CXXFLAGS	= $(CFLAGS)
+
 ifeq ($(HOSTTYPE),m68k-amiga)
 	SUB_DIRS := system_amiga
 else
@@ -15,7 +18,8 @@ SUB_DIRS +=\
 	base\
 	image\
 	raytrace\
-	test_unix
+	test_unix\
+	OpenGL
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN)
 	+@for i in $(SUB_DIRS); do \
@@ -42,7 +46,6 @@ clean:
 		echo "Cleaning "$$i"..."; \
 		make -C $$i clean; \
 	done
-	make -C OpenGL clean
 
 win:
 	make -C Btiff tif_fax3sm.c version.h

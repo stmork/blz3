@@ -5,8 +5,6 @@
 # Optionen
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-CFLAGS			= $(OFLAGS) 
-CXXFLAGS		= $(OFLAGS)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
 LIBS			= libB3System.a

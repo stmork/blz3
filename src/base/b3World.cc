@@ -23,11 +23,13 @@
 **                                                                      **
 *************************************************************************/
 
-#define B3_NO_CLASS_CHECK 1
-
 #include "blz3/b3Config.h"
 #include "blz3/base/b3World.h"
 #include "blz3/system/b3File.h"
+
+#ifdef _DEBUG
+#include <assert.h>
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -37,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**
 **      Revision 1.5  2001/07/08 12:30:06  sm
 **      - New tool to remove nasty CR/LF from Windoze.
 **      - Removing some nasty CR/LF with that new tool.
@@ -293,13 +298,23 @@ void b3Item::b3Init()
 	parseIndex = B3_NODE_IDX_MIN + head_count * B3_HEAD_SIZE;
 }
 
+#ifdef _DEBUG
+#include <assert.h>
+
+#define	ASSERT_INDEX	assert((parseIndex << 2) < size)
+#else
+#define ASSERT_INDEX
+#endif
+
 b3_s32 b3Item::b3InitInt()
 {
+	ASSERT_INDEX;
 	return buffer[parseIndex++];
 }
 
 b3_f32 b3Item::b3InitFloat()
 {
+	ASSERT_INDEX;
 	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex++];
 
 	return *ptr;
@@ -307,11 +322,13 @@ b3_f32 b3Item::b3InitFloat()
 
 b3_bool b3Item::b3InitBool()
 {
+	ASSERT_INDEX;
 	return buffer[parseIndex++] != 0;
 }
 
 void b3Item::b3InitVector(b3_vector *vec)
 {
+	ASSERT_INDEX;
 	if (vec != null)
 	{
 		b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
@@ -325,6 +342,7 @@ void b3Item::b3InitVector(b3_vector *vec)
 
 void b3Item::b3InitVector4D(b3_vector4D *vec)
 {
+	ASSERT_INDEX;
 	if (vec != null)
 	{
 		b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
@@ -340,6 +358,8 @@ void b3Item::b3InitVector4D(b3_vector4D *vec)
 void b3Item::b3InitMatrix(b3_matrix *mat)
 {
 	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
+
+	ASSERT_INDEX;
 
 	mat->m11 = *ptr++;
 	mat->m12 = *ptr++;
@@ -369,6 +389,8 @@ void b3Item::b3InitSpline(
 	b3_vector *new_controls,
 	b3_f32    *new_knots)
 {
+	ASSERT_INDEX;
+
 	spline->control_num = b3InitInt();
 	spline->knot_num    = b3InitInt();
 	spline->degree      = b3InitInt();
@@ -387,6 +409,8 @@ void b3Item::b3InitNurbs(
 	b3_vector4D *new_controls,
 	b3_f32      *new_knots)
 {
+	ASSERT_INDEX;
+
 	nurbs->control_num = b3InitInt();
 	nurbs->knot_num    = b3InitInt();
 	nurbs->degree      = b3InitInt();
@@ -404,6 +428,8 @@ void b3Item::b3InitColor(b3_color *col)
 {
 	b3_f32 *ptr = (b3_f32 *)&buffer[parseIndex];
 
+	ASSERT_INDEX;
+
 	col->a = *ptr++;
 	col->r = *ptr++;
 	col->g = *ptr++;
@@ -413,12 +439,14 @@ void b3Item::b3InitColor(b3_color *col)
 
 void b3Item::b3InitString(char *name,b3_size len)
 {
+	ASSERT_INDEX;
 	memcpy(name,&buffer[parseIndex],len);
 	parseIndex += ((len + 3) >> 2);
 }
 
 void *b3Item::b3InitNull()
 {
+	ASSERT_INDEX;
 	parseIndex++;
 
 	return null;
@@ -426,6 +454,7 @@ void *b3Item::b3InitNull()
 
 void b3Item::b3InitNOP()
 {
+	ASSERT_INDEX;
 	parseIndex++;
 }
 
@@ -673,6 +702,10 @@ b3_world_error b3World::b3Parse()
 	array = (b3Item **)b3Alloc(node_count * sizeof(b3Item *));
 	if (array != null)
 	{
+#ifdef _DEBUG
+		b3_count counted = node_list.b3Count();
+		assert(counted == node_count);
+#endif
 		for (i = 0;i < node_count;i++)
 		{
 			node = node_list.First;
@@ -691,6 +724,83 @@ b3_world_error b3World::b3Parse()
 }
 
 b3_bool b3World::b3Read(const char *world_name)
+{
+	b3_world_error error;
+
+	error = b3ReadInternal(world_name);
+	if (error == B3_WORLD_OK)
+	{
+		error = b3Parse();
+	}
+
+	// Cleanup any occured error
+	if (error != B3_WORLD_OK)
+	{
+		size = 0;
+		throw new b3WorldException(error);
+	}
+
+	b3Free(buffer);
+	buffer = null;
+
+	return true;
+}
+
+b3_bool b3World::b3ReadDump(const char *world_name)
+{
+	b3_world_error error;
+	b3_index       i,max_file;
+	b3_index       k,max_node,max_offset;
+
+	error = b3ReadInternal(world_name);
+	if (error == B3_WORLD_OK)
+	{
+		error = (need_endian_change ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
+	}
+
+	// Cleanup any occured error
+	if (error != B3_WORLD_OK)
+	{
+		size = 0;
+		throw new b3WorldException(error);
+	}
+
+	i        = 0;
+	max_file = size >> 2;
+	while (i < max_file)
+	{
+		// Extract size information
+		max_node   = buffer[i + B3_NODE_IDX_SIZE] >> 2;
+		max_offset = buffer[i + B3_NODE_IDX_OFFSET] >> 2;
+		if (max_offset == 0) max_offset = max_node;
+
+		// Print node class/type
+		b3PrintF(B3LOG_NORMAL,"%04lx:%04lx s:%6lu o:%6lu # ",
+			buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
+			buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
+			buffer[i + B3_NODE_IDX_SIZE],
+			buffer[i + B3_NODE_IDX_OFFSET]);
+
+		// Print heads
+		for (k = B3_NODE_IDX_MIN;buffer[i+k] != null;k += 3)
+		{
+			b3PrintF(B3LOG_NORMAL,"%08lx ",buffer[i+k]);
+		}
+		k++;
+		b3PrintF(B3LOG_NORMAL,"\n");
+
+		// Print custom area (longs)
+		// Print strings at node end
+		i += max_node;
+	}
+	
+	b3Free(buffer);
+	buffer = null;
+
+	return true;
+}
+
+b3_world_error b3World::b3ReadInternal(const char *world_name)
 {
 	b3File         file;
 	b3_u32         header[2];
@@ -731,14 +841,14 @@ b3_bool b3World::b3Read(const char *world_name)
 				{
 					if (file.b3Read(buffer,size) == size)
 					{
-						error = b3Parse();
+						error = B3_WORLD_OK;
 					}
 					else
 					{
 						error = B3_WORLD_READ;
+						b3Free(buffer);
+						buffer = null;
 					}
-					b3Free(buffer);
-					buffer = null;
 				}
 				else
 				{
@@ -757,14 +867,7 @@ b3_bool b3World::b3Read(const char *world_name)
 		error = B3_WORLD_OPEN;
 	}
 
-	// Cleanup any occured error
-	if (error != B3_WORLD_OK)
-	{
-		size = 0;
-		throw new b3WorldException(error);
-	}
-
-	return true;
+	return error;
 }
 
 b3_size b3World::b3Length()

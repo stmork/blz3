@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**
 **      Revision 1.3  2001/08/02 15:21:54  sm
 **      - Some minor changes
 **
@@ -78,24 +81,28 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 
 b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 {
+	b3_index diff;
+
 	Type = b3InitInt();
 	b3InitVector(&Base);
 	b3InitVector(&Size);
 	b3InitNOP();
 	b3InitMatrix(&Matrix);
-	b3InitString(BoxName,B3_BOXSTRINGLEN);
-	b3InitString(BoxURL, B3_BOXSTRINGLEN);
+
+	diff = (size >> 2) - parseIndex;
+	if (diff < (B3_BOXSTRINGLEN >> 2))
+	{
+		b3InitString(BoxName,diff);
+		BoxURL[0] = 0;
+	}
+	else
+	{
+		b3InitString(BoxName,B3_BOXSTRINGLEN);
+		b3InitString(BoxURL, B3_BOXSTRINGLEN);
+	}
 
 #ifdef BLZ3_USE_OPENGL
 	b3_index        i = 0;
-
-b3PrintF (B3LOG_NORMAL,"%4.2f %4.2f %4.2f - %4.2f %4.2f %4.2f\n",
-	Base.x,
-	Base.y,
-	Base.z,
-	Base.x + Size.x,
-	Base.y + Size.y,
-	Base.z + Size.z);
 
 	vertices[i++] = Base.x;
 	vertices[i++] = Base.y;
@@ -182,8 +189,7 @@ void b3BBox::b3Draw()
 
 #ifdef BLZ3_USE_OPENGL
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glDrawElements(GL_LINE,12,GL_UNSIGNED_BYTE,indices);
-	b3PrintF(B3LOG_NORMAL,".");
+	glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE,indices);
 #endif
 	B3_FOR_BASE(&heads[1],item)
 	{
@@ -213,11 +219,11 @@ void b3Scene::b3Draw()
 	b3BBox         *bbox;
 
 #ifdef BLZ3_USE_OPENGL
-	b3PrintF(B3LOG_NORMAL,"render...\n");
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT); 
+	glEnableClientState(GL_VERTEX_ARRAY);
 
-//	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
 	glColor3f(1.0f,1.0f,1.0f);
 #endif
 
@@ -228,6 +234,5 @@ void b3Scene::b3Draw()
 	}
 #ifdef BLZ3_USE_OPENGL
 	glPopMatrix();
-	b3PrintF(B3LOG_NORMAL,"\n");
 #endif
 }

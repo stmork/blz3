@@ -5,8 +5,6 @@
 # Optionen
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-CFLAGS			= $(OFLAGS) 
-CXXFLAGS		= $(OFLAGS)
 LDLIBS			= $(LIB_OGL3) $(LIB_B3) $(LIB_X3) $(LIB_S3)
 LIBS			= libB3xxx.a
 PRGS			= simple render
@@ -27,3 +25,5 @@ clean:
 
 render:	$(RENDER_OBJ)
 	$(LINK.cc) -o $@ $(RENDER_OBJ) $(LDLIBS)
+
+-include .dep

@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3Light.cc $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3Light.cc $
+**	$Release:       Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Raytracing light sources
+**	Blizzard III - Raytracing light sources
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -31,8 +31,11 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -57,6 +60,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	b3InitColor(&Color);
 	Distance = b3InitFloat();
 	Type     = b3InitInt();
+return;
 	if (b3GetClassType() >= AREA_LIGHT)
 	{
 		Size     = b3InitFloat();
@@ -73,8 +77,8 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 
 	if (Offset > 0)
 	{
-		b3InitString(Name,B3_BOXSTRINGLEN);
-		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n",Name);
+		b3InitString(Name,size - (parseIndex << 2));
+		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n","Scheisse");
 	}
 	else
 	{

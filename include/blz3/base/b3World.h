@@ -157,12 +157,14 @@ public:
 	static b3Item  *b3AllocNode(b3_u32 *buffer);
 
 	b3_bool         b3Read(const char *world_name);
+	b3_bool         b3ReadDump(const char *world_name);
 	b3_size         b3Length();
 	void            b3Dump();
 	b3Item         *b3GetFirst();
 private:
 	void            b3EndianSwap32(b3_u32 *ptr);
 	b3_world_error  b3EndianSwapWorld();
+	b3_world_error  b3ReadInternal(const char *world_name);
 	b3_world_error  b3Parse();
 };
 

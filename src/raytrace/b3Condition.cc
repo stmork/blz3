@@ -31,8 +31,11 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -91,7 +94,10 @@ b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)
 	yStart = b3InitFloat();
 	xEnd   = b3InitFloat();
 	yEnd   = b3InitFloat();
-	Flags  = b3InitInt();
+	if ((parseIndex << 2) < size)
+	{
+		Flags  = b3InitInt();
+	}
 }
 
 

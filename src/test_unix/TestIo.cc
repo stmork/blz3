@@ -90,7 +90,11 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Checking >%s<\n",argv[i]);
 		try
 		{
+#ifdef WIN32
 			world.b3Read(argv[i]);
+#else
+			world.b3Read("M:\\Blizzard\\Data\\AllShapes");
+#endif
 			for (item  = world.b3GetFirst();
 			     item != null;
 			     item  = scene->Succ)

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/02 15:37:17  sm
+**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**
 **      Revision 1.2  2001/08/02 15:21:54  sm
 **      - Some minor changes
 **
@@ -102,14 +105,35 @@ b3Item *b3Scene::b3Init(b3_u32 *src)
 void b3Scene::b3SetView(b3_res xSize,b3_res ySize)
 {
 #ifdef BLZ3_USE_OPENGL
-b3PrintF(B3LOG_NORMAL,"view...\n");
-	GLfloat aspect = (GLfloat)xSize / (GLfloat)ySize;
+	b3_f64  width,height,distance,x,y,z,factor,relation;
+	GLfloat aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
+	GLfloat aspectCamera;
+	GLfloat min = 0.1;
+
+	x = ViewPoint.x - EyePoint.x;
+	y = ViewPoint.y - EyePoint.y;
+	z = ViewPoint.z - EyePoint.z;
+	distance     = sqrt(x * x + y * y + z * z);
+	factor       = min / distance;
+	width = factor * sqrt(
+		Width.x * Width.x +
+		Width.y * Width.y +
+		Width.z * Width.z);
+	height = factor * sqrt(
+		Height.x * Height.x +
+		Height.y * Height.y +
+		Height.z * Height.z);
+
+	aspectCamera = width / height;
+	relation     = aspectCamera / aspectWindow;
+	if (relation > 1) height *= relation;
+	else              width  /= relation;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	glViewport(0,0,xSize,ySize);
-	gluPerspective (90.0f, aspect, 0.1f,10000.0f);
+	glFrustum(-width,width,-height,height,min,10000.0f);
 	gluLookAt(
 		EyePoint.x, EyePoint.y, EyePoint.z,
 		ViewPoint.x,ViewPoint.y,ViewPoint.z,

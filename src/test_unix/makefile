@@ -5,10 +5,6 @@
 # Optionen
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-CFLAGS			= $(OFLAGS)
-CXXFLAGS		= $(OFLAGS)
-#CFLAGS			= -g
-#CXXFLAGS		= -g
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
 PRGS			= TestIo TestThread Mandel

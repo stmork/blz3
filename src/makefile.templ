@@ -32,3 +32,5 @@ libB3System.a:	$(LIB_OBJ)
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 	cp $@ $(BLZ3_LIB)
+
+-include .dep
