@@ -48,6 +48,9 @@ protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
 };
 
+///////////////
+// Phong shader
+///////////////
 class B3_PLUGIN b3ShaderPhong : public b3Shader
 {
 public:
@@ -59,6 +62,9 @@ protected:
 	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 };
 
+//////////////
+// Mork shader
+//////////////
 class B3_PLUGIN b3ShaderMork : public b3Shader
 {
 	b3_f64 m_ShadowFactor;
@@ -72,10 +78,6 @@ protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
 	void     b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
-
-private:
-	void    b3LightFlare(b3_ray *ray);
 };
-
 
 #endif
