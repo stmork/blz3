@@ -24,7 +24,6 @@
 *************************************************************************/
 
 #include <sys/time.h>
-#include <time.h>
 #include <stdarg.h>
 
 #include "blz3/b3Config.h"
@@ -37,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/02/02 10:54:17  smork
+**	- Removed include.
+**
 **	Revision 1.13  2004/06/19 13:56:55  sm
 **	- Changed log file location to /tmp.
-**
+**	
 **	Revision 1.12  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
