@@ -27,6 +27,8 @@
 #include "b3Action.h"
 #include <sys/timeb.h>
 
+#define USE_OWN_DC
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2005/01/14 19:49:05  sm
+**	- Switchable device context for OpenGL rendering
+**
 **	Revision 1.43  2005/01/13 20:52:05  sm
 **	- Fixed Lines III drawing problem.
-**
+**	
 **	Revision 1.42  2005/01/13 20:05:15  sm
 **	- Some Lines bugfixes
 **	
@@ -309,7 +314,9 @@ BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
+#ifdef USE_OWN_DC
 	cs.style |= CS_OWNDC;
+#endif
 	cs.style |= WS_MAXIMIZE;
 	return CScrollView::PreCreateWindow(cs);
 }
@@ -329,6 +336,9 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	{
 		m_glDC = dc->GetSafeHdc();
 		m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
+#ifndef USE_OWN_DC
+		ReleaseDC(dc);
+#endif
 	}
 	return 0;
 }
@@ -516,13 +526,21 @@ void CAppRenderView::OnPaint()
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
 	CAppRenderDoc *pDoc = GetDocument();
+#ifndef USE_OWN_DC
 	CPaintDC       paint_dc(this);
+#endif
+	HDC            dc;
 	CRect          rect;
 	b3Time         start,stop;
 	b3_f64         time_diff;
 
 	// Init Drawing
-	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
+#ifdef USE_OWN_DC
+	dc = m_glDC;
+#else
+	dc = paint_dc.m_hDC;
+#endif
+	CB3GetLinesApp()->b3SelectRenderContext(dc,m_glGC);
 	pDoc->m_Context.glBgColor = CAppRenderDoc::m_BgColor;
 	pDoc->m_Context.glDrawCachedTextures = true;
 
@@ -534,13 +552,13 @@ void CAppRenderView::OnPaint()
 
 	// Flush OpenGL buffer to screen
 	glFinish();
-	if (!SwapBuffers(m_glDC))
+	if (!SwapBuffers(dc))
 	{
 		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
 	}
 
 	// Do post drawings using Windows DC
-	b3DrawDC(m_glDC,rect.Width(),rect.Height());
+	b3DrawDC(dc,rect.Width(),rect.Height());
 
 	// That's it! Mark valid.
 	ValidateRect(NULL);
