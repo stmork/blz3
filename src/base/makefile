@@ -8,8 +8,8 @@ CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
 LIBS			= libB3Base.a
-PRG_SOURCE		= b3Aux.cc b3FileList.cc b3Node.cc b3World.cc
-PRG_OBJ			= b3Aux.o  b3FileList.o  b3Node.o  b3World.o
+PRG_SOURCE		= b3Aux.cc b3FileList.cc b3Matrix.cc b3Node.cc b3Spline.cc b3World.cc
+PRG_OBJ			= b3Aux.o  b3FileList.o  b3Matrix.o  b3Node.o  b3Spline.o  b3World.o
 
 all:	lib
 

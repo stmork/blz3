@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/05 09:23:22  sm
+**      - Introducing vectors, matrices, Splines and NURBS
+**
 **      Revision 1.4  2001/08/03 15:54:09  sm
 **      - Compilation of OpenGL under Windows NT
 **
@@ -114,24 +118,15 @@ void b3Scene::b3GetView(b3_res &xSize,b3_res &ySize)
 void b3Scene::b3SetView(b3_res xSize,b3_res ySize)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_f64  width,height,distance,x,y,z,factor,relation;
+	b3_f64  width,height,distance,factor,relation;
 	GLfloat aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
 	GLfloat aspectCamera;
 	GLfloat min = 0.1f;
 
-	x = ViewPoint.x - EyePoint.x;
-	y = ViewPoint.y - EyePoint.y;
-	z = ViewPoint.z - EyePoint.z;
-	distance     = sqrt(x * x + y * y + z * z);
-	factor       = min / distance;
-	width = factor * sqrt(
-		Width.x * Width.x +
-		Width.y * Width.y +
-		Width.z * Width.z);
-	height = factor * sqrt(
-		Height.x * Height.x +
-		Height.y * Height.y +
-		Height.z * Height.z);
+	distance = b3Distance(&ViewPoint,&EyePoint);
+	factor   = min / distance;
+	width    = factor * b3Length(&Width);
+	height   = factor * b3Length(&Height);
 
 	aspectCamera = (GLfloat)(width / height);
 	relation     = aspectCamera / aspectWindow;

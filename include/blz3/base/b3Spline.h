@@ -6,7 +6,7 @@
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Spline proto types
+**	Blizzard III Spline proto types
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -20,18 +20,40 @@
 
 #include "blz3/b3Types.h"
 
-#define B3_MAX_CONTROLS        64
-#define B3_MAX_SUBDIV          64
-#define B3_MAX_DEGREE          (B3_MAX_CONTROLS)
-#define B3_MAX_KNOTS          ((B3_MAX_CONTROLS)+(B3_MAX_DEGREE)+1)
+#define B3_MAX_CONTROLS   32
+#define B3_MAX_SUBDIV     64
+#define B3_MAX_DEGREE    (B3_MAX_CONTROLS)
+#define B3_MAX_KNOTS    ((B3_MAX_CONTROLS) + (B3_MAX_DEGREE) + 1)
 
-#define BSPLINE_SEGMENTS(s) ((s)->closed ?\
+#define B3_BSPLINE_SEGMENTS(s) ((s)->closed ?\
 	(s)->control_num :\
 	(s)->control_num - (s)->degree)
 
-#define BSPLINE_SEGMENTKNOTS(s) ((s)->closed ?\
+#define B3_BSPLINE_SEGMENTKNOTS(s) ((s)->closed ?\
 	(s)->control_num :\
 	(s)->control_num - (s)->degree + 1)
+
+typedef struct b3Spline
+{
+	b3_count     control_num,knot_num;
+	b3_count     degree,subdiv;         // values of B-Spline
+	b3_count     control_max,knot_max;  // max. values
+	b3_index     offset;                // offset of controls
+	b3_bool      closed;                // open/close curve
+	b3_vector3D *controls;              // control sequence
+	b3_f32      *knots;                 // knot sequence
+} b3_spline;
+
+typedef struct b3Nurbs
+{
+	b3_count     control_num,knot_num;
+	b3_count     degree,subdiv;         // values of B-Spline
+	b3_count     control_max,knot_max;  // max. values
+	b3_index     offset;                // offset of controls
+	b3_bool      closed;                // open/close curve
+	b3_vector4D *controls;              // control sequence
+	b3_f32      *knots;                 // knot sequence
+} b3_nurbs;
 
 /*************************************************************************
 **                                                                      **
@@ -41,7 +63,7 @@
 
 typedef enum
 {
-	BSPLINE_OK                     = 0,
+	BSPLINE_OK = 0,
 	BSPLINE_TOO_MUCH_CONTROLS,
 	BSPLINE_TOO_FEW_CONTROLS,
 	BSPLINE_TOO_FEW_MAXKNOTS,
@@ -49,9 +71,9 @@ typedef enum
 	BSPLINE_MISSING_KNOTS,
 	BSPLINE_CLOSED,
 	BSPLINE_TOO_LOW_MULTIPLICATION
-} b3_spline_error;
+} b3_bspline_error;
 
-extern long BSplineErrno();
+extern b3_bspline_error b3BSplineErrno();
 
 /*************************************************************************
 **                                                                      **
@@ -59,71 +81,35 @@ extern long BSplineErrno();
 **                                                                      **
 *************************************************************************/
 
-class b3SplineBase
-{
-protected:
-	static b3_spline_error errno;
-public:
-	b3_count   control_num,knot_num;
-	b3_count   control_max,knot_max;
-	b3_count   degree,subdiv;
-	b3_index   offset;
-	b3_bool    closed;
+b3_index  b3DeBoorOpened        (b3_spline *Spline,b3_vector *Result,b3_index index,b3_f64 q);
+b3_index  b3DeBoorClosed        (b3_spline *Spline,b3_vector *Result,b3_index index,b3_f64 q);
+b3_index  b3DeBoor              (b3_spline *Spline,b3_vector *Result,b3_index index);
+b3_index  b3DeBoorNurbs         (b3_nurbs  *Nurbs, b3_vector *Result,b3_index index);
+b3_index  b3DeBoorControl       (b3_spline *Spline,b3_vector *,b3_index index);
+b3_count  b3DeBoorSurfaceControl(b3_spline *Spline,b3_spline *Curve,b3_vector *Result);
+b3_index  b3Mansfield           (b3_spline *Spline,b3_f64    *,b3_f64);
+void      b3MansfieldVector     (b3_spline *Spline,b3_vector *Result,b3_f64 *,b3_index,b3_index);
+void      b3MansfieldNurbsVector(b3_nurbs  *Spline,b3_vector *Result,b3_f64 *,b3_index,b3_index);
 
-public:
-	static b3_spline_error b3Errno();
-};
+/*************************************************************************
+**                                                                      **
+**                        support routines                              **
+**                                                                      **
+*************************************************************************/
 
-class b3_spline : public b3SplineBase
-{
-public:
-	b3_vector3D *controls;
-	b3_f32      *knots;
-};
+b3_bool	 b3BSplineInitCurve			(b3_spline *Spline,b3_index,b3_index,b3_bool);
+b3_bool	 b3BSplineThroughEndControl	(b3_spline *Spline);
+b3_bool	 b3BSplineToBezier			(b3_spline *Spline);
+b3_bool	 b3BSplineDegree			(b3_spline *Spline,b3_index);
 
-class b3_nurbs : public b3SplineBase
-{
-public:
-	b3_vector4D *controls;
-	b3_f32      *knots;
-};
+b3_bool	 b3BSplineInsertControl       (b3_spline *Spline,b3_f64 q,b3_count Mult,b3_index index);
+b3_bool	 b3BSplineSurfaceInsertControl(b3_spline *Spline,b3_f64 q,b3_count Mult,b3_index uIndex,b3_index vIndex);
+b3_bool	 b3BSplineAppendControl       (b3_spline *Spline,b3_bool,b3_f64,b3_index,b3_index);
+b3_bool	 b3BSplineSurfaceAppendControl(b3_spline *Spline,b3_bool,b3_f64,b3_index,b3_index,b3_index);
 
-class b3_spline_schrott
-{
-public:
-
-	long  DeBoorOpened		(b3_vector *,long,b3_f64);
-	long  DeBoorClosed		(b3_vector *,long,b3_f64);
-	long  DeBoor			(b3_vector *,long);
-	long  DeBoorControl		(b3_vector *,long);
-	long  DeBoorSurfaceControl	(b3_spline *,b3_vector *);
-	long  b3Mansfield			(b3_f64 *,b3_f64);
-	void  MansfieldVector		(b3_vector *,b3_f64 *,long,long);
-
-	b3_bool	 BSplineInitCurve		(b3_spline *,long,long,b3_bool);
-	b3_bool	 BSplineThroughEndControl	(b3_spline *);
-	b3_bool	 BSplineToBezier		(b3_spline *);
-	b3_bool	 BSplineDegree			(b3_spline *,long);
-
-	b3_bool	 BSplineInsertControl		(b3_spline *,b3_f64,long,long);
-	b3_bool	 BSplineSurfaceInsertControl(b3_spline *,b3_f64,long,long,long);
-	b3_bool	 BSplineAppendControl		(b3_spline *,b3_bool,b3_f64,long,long);
-	b3_bool	 BSplineSurfaceAppendControl(b3_spline *,b3_bool,b3_f64,long,long,long);
-
-private:
-	b3_index iFind(b3_f64 q);
-};
-
-class b3_nurbs_schrott
-{
-public:
-	long  DeBoor		(b3_nurbs  *,b3_vector *,long);
-	void  MansfieldVector	(b3_nurbs  *,b3_vector *,b3_f64 *,long,long);
-
-	b3_bool	 BNurbsInsertControl		(b3_nurbs *,b3_f64,long,long);
-	b3_bool	 BNurbsSurfaceInsertControl (b3_nurbs *,b3_f64,long,long,long);
-	b3_bool	 BNurbsAppendControl		(b3_nurbs *,b3_bool,b3_f64,long,long);
-	b3_bool	 BNurbsSurfaceAppendControl	(b3_nurbs *,b3_bool,b3_f64,long,long,long);
-};
+b3_bool	 b3BNurbsInsertControl       (b3_nurbs *Nurbs,b3_f64,b3_index,b3_index);
+b3_bool	 b3BNurbsSurfaceInsertControl(b3_nurbs *Nurbs,b3_f64,b3_index,b3_index,b3_index);
+b3_bool	 b3BNurbsAppendControl       (b3_nurbs *Nurbs,b3_bool,b3_f64,b3_index,b3_index);
+b3_bool	 b3BNurbsSurfaceAppendControl(b3_nurbs *Nurbs,b3_bool,b3_f64,b3_index,b3_index,b3_index);
 
 #endif

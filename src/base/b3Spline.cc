@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3Spline.cc $
+**	$Filename:	b3Spline.c $
 **	$Release:	Dortmund 2001 $
 **	$Revision: 2.02 
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Spline Routines
+**	Blizzard III Standard - Spline Routines
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -17,13 +17,11 @@
 
 /*************************************************************************
 **                                                                      **
-**                        includes                                      **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
 #include "blz3/base/b3Spline.h"
-
-#define EPSILON 0.0001
 
 /*************************************************************************
 **                                                                      **
@@ -33,14 +31,19 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:58  sm
-**	Initial revision
+**	Revision 1.2  2001/08/05 09:23:22  sm
+**	- Introducing vectors, matrices, Splines and NURBS
 **
+**	
 */
 
-b3_spline_error b3_spline::b3Errno()
+#define EPSILON 0.0001
+
+static b3_bspline_error bspline_errno;
+
+b3_bspline_error b3BSplineErrno()
 {
-	return errno;
+	return bspline_errno;
 }
 
 /*************************************************************************
@@ -58,11 +61,15 @@ b3_spline_error b3_spline::b3Errno()
 /* KnotNum: length of knot vector */
 /* closed:  open or closed curve */
 
-long b3_spline::iFind(b3_f64 q)
+static b3_index iFind(
+	b3_f32	*knots,
+	b3_f64	 q,
+	b3_count KnotNum,
+	b3_bool	 closed)
 {
-	register long i;
+	b3_index i;
 
-	for (i=0;i < (knot_num-1);i++)
+	for (i=0;i < (KnotNum-1);i++)
 	{
 		if ((knots[i] <= q) && (q < knots[i+1])) return (i);
 	}
@@ -84,18 +91,24 @@ long b3_spline::iFind(b3_f64 q)
 /* it:     array where to store the basis function coefficents */
 /* qStart: parameter value inside the curve */
 
-long b3_spline::b3Mansfield(
-	double	*it,
-	double	 qStart)
+b3_index b3Mansfield(
+	b3_spline	*Spline,
+	b3_f64	*it,
+	b3_f64	 qStart)
 {
-	register int      l,i,j,m,k;
-	register double	  r,denom,q,diff;
+	b3_f32   *knots;
+	b3_index  l,i,j,m,k;
+	b3_count  degree;
+	b3_f64	  r,denom,q,diff;
 
-	if (closed)
+	degree  = Spline->degree;
+	knots   = Spline->knots;
+
+	if (Spline->closed)
 	{
-		m       = control_num;
+		m       = Spline->control_num;
 		diff    = knots[m] - knots[0];
-		if  ((i = iFind (qStart)) >= m) i -= m;
+		if  ((i = iFind (knots,qStart,m,true)) >= m) i -= m;
 
 		it[0]  = 1;
 		for (l = 1;l <= degree;l++)
@@ -120,7 +133,7 @@ long b3_spline::b3Mansfield(
 	}
 	else
 	{
-		i      = iFind (knots,qStart,Spline->KnotNum,false);
+		i      = iFind (knots,qStart,Spline->knot_num,false);
 		it[0]  = 1;
 		for (l = 1;l <= degree;l++)
 		{
@@ -150,39 +163,43 @@ long b3_spline::b3Mansfield(
 /* i:      knot index returned by Mansfield() */
 /* index:  start index of control points */
 
-void b3_spline::b3MansfieldVector(
+void b3MansfieldVector(
+	b3_spline *Spline,
 	b3_vector *point,
 	b3_f64    *it,
 	b3_index   i,
 	b3_index   index)
 {
-	register b3_vector *cntrls;
-	register b3_index   l,m,j;
+	b3_vector *controls;
+	b3_index   l,m,j;
+	b3_count   degree;
 
-	m        = control_num;
+	degree = Spline->degree;
+	m      = Spline->control_num;
+
 	point->x =
 	point->y =
 	point->z = 0;
-	if (closed)
+	if (Spline->closed)
 	{
 		j = i;
 		for (l = degree;l >= 0;l--)
 		{
-			point->x += it[l] * controls[j * offset + index].x;
-			point->y += it[l] * controls[j * offset + index].y;
-			point->z += it[l] * controls[j * offset + index].z;
+			point->x += it[l] * Spline->controls[j * Spline->offset + index].x;
+			point->y += it[l] * Spline->controls[j * Spline->offset + index].y;
+			point->z += it[l] * Spline->controls[j * Spline->offset + index].z;
 			if (--j < 0) j += m;
 		}
 	}
 	else
 	{
-		cntrls = &controls[i * offset + index];
+		controls = &Spline->controls[i * Spline->offset + index];
 		for (l = degree;l >= 0;l--)
 		{
-			point->x += it[l] * cntrls->x;
-			point->y += it[l] * cntrls->y;
-			point->z += it[l] * cntrls->z;
-			cntrls -= offset;
+			point->x += it[l] * controls->x;
+			point->y += it[l] * controls->y;
+			point->z += it[l] * controls->z;
+			controls -= Spline->offset;
 		}
 	}
 }
@@ -199,45 +216,48 @@ void b3_spline::b3MansfieldVector(
 /* i:     knot index returned by Mansfield() */
 /* index: start index of control points */
 
-void b3_nurbs::b3MansfieldVector(
+void b3MansfieldNurbsVector(
+	b3_nurbs  *Nurbs,
 	b3_vector *point,
 	b3_f64    *it,
 	b3_index   i,
 	b3_index   index)
 {
-	register vector4D *cntrls;
-	register long      l,m,j;
-	register double    denom;
-	         vector4D  result;
+	b3_vector4D *controls;
+	b3_index     l,m,j;
+	b3_count     degree;
+	b3_f64       denom;
+	b3_vector4D  result;
 
-	m      = control_num;
+	degree = Nurbs->degree;
+	m      = Nurbs->control_num;
 
 	result.x =
 	result.y =
 	result.z =
 	result.w = 0;
-	if (closed)
+	if (Nurbs->closed)
 	{
 		j = i;
 		for (l = degree;l >= 0;l--)
 		{
-			result.x += it[l] * controls[j * offset + index].x;
-			result.y += it[l] * controls[j * offset + index].y;
-			result.z += it[l] * controls[j * offset + index].z;
-			result.w += it[l] * controls[j * offset + index].w;
+			result.x += it[l] * Nurbs->controls[j * Nurbs->offset + index].x;
+			result.y += it[l] * Nurbs->controls[j * Nurbs->offset + index].y;
+			result.z += it[l] * Nurbs->controls[j * Nurbs->offset + index].z;
+			result.w += it[l] * Nurbs->controls[j * Nurbs->offset + index].w;
 			if (--j < 0) j += m;
 		}
 	}
 	else
 	{
-		cntrls = &controls[i * offset + index];
+		controls = &Nurbs->controls[i * Nurbs->offset + index];
 		for (l = degree;l >= 0;l--)
 		{
-			result.x += it[l] * cntrls->x;
-			result.y += it[l] * cntrls->y;
-			result.z += it[l] * cntrls->z;
-			result.w += it[l] * cntrls->w;
-			controls -= Nurbs->Offset;
+			result.x += it[l] * controls->x;
+			result.y += it[l] * controls->y;
+			result.z += it[l] * controls->z;
+			result.w += it[l] * controls->w;
+			controls -= Nurbs->offset;
 		}
 	}
 
@@ -257,39 +277,40 @@ void b3_nurbs::b3MansfieldVector(
 /* index:  I  start index of curve */
 /* q:      I  curve parameter to be inserted into knot (later) */
 
-static long InsertDeBoorOpened(
-	spline	 *Spline,
-	vector4D *ins,
-	long	  index,
-	double	  q,
-	bool      useNurbs)
+static b3_index b3InsertDeBoorOpened(
+	b3_spline   *Spline,
+	b3_vector4D *ins,
+	b3_index     index,
+	b3_f64       q,
+	b3_bool      useNurbs)
 {
-	register float    *knots;
-	register nurbs    *Nurbs = (nurbs *)Spline;
-	register int       l,i,j,degree;
-	register double    r,Denom;
-	         vector4D  it[MAX_DEGREE+1];
+	b3_f32      *knots;
+	b3_nurbs    *Nurbs = (b3_nurbs *)Spline;
+	b3_index     l,i,j;
+	b3_count     degree;
+	b3_f64       r,Denom;
+	b3_vector4D  it[B3_MAX_DEGREE + 1];
 
-	degree  = Spline->Degree;
-	knots   = Spline->Knots;
-	i       = iFind (knots,q,Spline->KnotNum,false);
+	degree  = Spline->degree;
+	knots   = Spline->knots;
+	i       = iFind (knots,q,Spline->knot_num,false);
 
-	j = i * Spline->Offset + index;
+	j = i * Spline->offset + index;
 	if (!useNurbs) for (l = 0;l <= degree;l++)
 	{
-		it[l].x = Spline->Controls[j].x;
-		it[l].y = Spline->Controls[j].y;
-		it[l].z = Spline->Controls[j].z;
+		it[l].x = Spline->controls[j].x;
+		it[l].y = Spline->controls[j].y;
+		it[l].z = Spline->controls[j].z;
 		it[l].w = 1;
-		j      -= Spline->Offset;
+		j      -= Spline->offset;
 	}
 	else for (l = 0;l <= degree;l++)
 	{
-		it[l].x = Nurbs->Controls[j].x;
-		it[l].y = Nurbs->Controls[j].y;
-		it[l].z = Nurbs->Controls[j].z;
-		it[l].w = Nurbs->Controls[j].w;
-		j      -= Nurbs->Offset;
+		it[l].x = Nurbs->controls[j].x;
+		it[l].y = Nurbs->controls[j].y;
+		it[l].z = Nurbs->controls[j].z;
+		it[l].w = Nurbs->controls[j].w;
+		j      -= Nurbs->offset;
 	}
 
 	ins += i;		/* loop for control point insertion */
@@ -321,16 +342,21 @@ static long InsertDeBoorOpened(
 /* index:  start index */
 /* qStart: curve parameter */
 
-b3_index b3Spline::b3DeBoorOpened (
+b3_index b3DeBoorOpened (
+	b3_spline *Spline, /* this routine ought to be called MansfieldOpened, */
 	b3_vector *point,  /* but DeBoor is more known among CG-freaks. */
 	b3_index   index,
 	b3_f64     q)
 {
-	register int      l,i,j;
-	register double	  r,denom;
-	         double   it[MAX_DEGREE+1];
+	b3_f32   *knots;
+	b3_index  l,i,j;
+	b3_count  degree;
+	b3_f64    r,denom;
+	b3_f64    it[B3_MAX_DEGREE + 1];
 
-	i      = iFind (q);
+	degree  = Spline->degree;
+	knots   = Spline->knots;
+	i       = iFind (knots,q,Spline->knot_num,false);
 
 	it[0]  = 1;
 	for (l = 1;l <= degree;l++)
@@ -349,13 +375,13 @@ b3_index b3Spline::b3DeBoorOpened (
 	point->x =
 	point->y =
 	point->z = 0;
-	j = i * Spline->Offset + index;
+	j = i * Spline->offset + index;
 	for (l = degree;l >= 0;l--)
 	{
-		point->x += it[l] * Spline->Controls[j].x;
-		point->y += it[l] * Spline->Controls[j].y;
-		point->z += it[l] * Spline->Controls[j].z;
-		j -= Spline->Offset;
+		point->x += it[l] * Spline->controls[j].x;
+		point->y += it[l] * Spline->controls[j].y;
+		point->z += it[l] * Spline->controls[j].z;
+		j -= Spline->offset;
 	}
 
 #	ifdef BSPLINE_DEBUG
@@ -373,46 +399,52 @@ b3_index b3Spline::b3DeBoorOpened (
 /* computed points are used for the new control points needed for */
 /* knot insertion. The control points are put into the o[]-array. */
 /* ------------------------------------------------------------------- */
+/* Spline: I  b-spline handle */
 /* ins:    O  recreated control points */
 /* index:  I  start index of curve */
 /* q:      I  curve parameter to be inserted into knot (later) */
 
-b3_index b3_spline::b3InsertDeBoorClosed (
-	vector4D *ins,
-	long	  index,
-	double	  qStart,
-	bool      useNurbs)
+static b3_index b3InsertDeBoorClosed (
+	b3_spline   *Spline,
+	b3_vector4D *ins,
+	b3_index     index,
+	b3_f64       qStart,
+	b3_bool      useNurbs)
 {
-	register nurbs   *Nurbs = (nurbs *)Spline;
-	register int      l,i,j,degree,m;
-	register double   r,Denom,q,diff;
-	         vector4D it[MAX_DEGREE+1];
+	b3_f32      *knots;
+	b3_nurbs    *Nurbs = (b3_nurbs *)Spline;
+	b3_index     l,i,j,m;
+	b3_count     degree;
+	b3_f64       r,Denom,q,diff;
+	b3_vector4D  it[B3_MAX_DEGREE + 1];
 
-	m       = control_num;
+	degree  = Spline->degree;
+	knots   = Spline->knots;
+	m       = Spline->control_num;
 	diff    = knots[m] - knots[0];
 
-	if ((i = iFind (qStart)) >= m) i -= m;
+	if ((i = iFind (knots,qStart,m,true)) >= m) i -= m;
 
 	j = i;
 	if (!useNurbs) for (l = 0;l <= degree;l++)
 	{
-		it[l].x = Spline->Controls[j * Spline->Offset + index].x;
-		it[l].y = Spline->Controls[j * Spline->Offset + index].y;
-		it[l].z = Spline->Controls[j * Spline->Offset + index].z;
+		it[l].x = Spline->controls[j * Spline->offset + index].x;
+		it[l].y = Spline->controls[j * Spline->offset + index].y;
+		it[l].z = Spline->controls[j * Spline->offset + index].z;
 		it[l].w = 1;
 		if (--j < 0) j += m;
 	}
 	else for (l = 0;l <= degree;l++)
 	{
-		it[l].x = Nurbs->Controls[j * Nurbs->Offset + index].x;
-		it[l].y = Nurbs->Controls[j * Nurbs->Offset + index].y;
-		it[l].z = Nurbs->Controls[j * Nurbs->Offset + index].z;
-		it[l].w = Nurbs->Controls[j * Nurbs->Offset + index].w;
+		it[l].x = Nurbs->controls[j * Nurbs->offset + index].x;
+		it[l].y = Nurbs->controls[j * Nurbs->offset + index].y;
+		it[l].z = Nurbs->controls[j * Nurbs->offset + index].z;
+		it[l].w = Nurbs->controls[j * Nurbs->offset + index].w;
 		if (--j < 0) j += m;
 	}
 
-		/* loop for control point insertion */
-		/* the interval [o[i-degree+1] , o[i]] is valid */
+	// loop for control point insertion
+	// the interval [o[i-degree+1] , o[i]] is valid
 	ins   += i;
 	j      = i;
 	q      = qStart;
@@ -449,20 +481,21 @@ b3_index b3_spline::b3InsertDeBoorClosed (
 /* index:  start index */
 /* qStart: curve parameter */
 
-long DeBoorClosed (
-	spline	*Spline, /* this routine ought to be called MansfieldOpened, */
-	vector	*point,  /* but DeBoor is more known among CG-freaks. */
-	long	 index,
-	double	 qStart)
+b3_index b3DeBoorClosed (
+	b3_spline *Spline, /* this routine ought to be called MansfieldOpened, */
+	b3_vector *point,  /* but DeBoor is more known among CG-freaks. */
+	b3_index   index,
+	b3_f64     qStart)
 {
-	register float   *knots;
-	register int      l,i,j,degree,m,k;
-	register double	  r,denom,diff,q;
-	         double   it[MAX_DEGREE+1];
+	b3_f32    *knots;
+	b3_index   l,i,j,m,k;
+	b3_count   degree;
+	b3_f64     r,denom,diff,q;
+	b3_f64     it[B3_MAX_DEGREE + 1];
 
-	degree  = Spline->Degree;
-	knots   = Spline->Knots;
-	m       = Spline->ControlNum;
+	degree  = Spline->degree;
+	knots   = Spline->knots;
+	m       = Spline->control_num;
 	diff    = knots[m] - knots[0];
 	if  ((i = iFind (knots,qStart,m,true)) >= m) i -= m;
 
@@ -493,9 +526,9 @@ long DeBoorClosed (
 	j = i;
 	for (l = degree;l >= 0;l--)
 	{
-		point->x += it[l] * Spline->Controls[j * Spline->Offset + index].x;
-		point->y += it[l] * Spline->Controls[j * Spline->Offset + index].y;
-		point->z += it[l] * Spline->Controls[j * Spline->Offset + index].z;
+		point->x += it[l] * Spline->controls[j * Spline->offset + index].x;
+		point->y += it[l] * Spline->controls[j * Spline->offset + index].y;
+		point->z += it[l] * Spline->controls[j * Spline->offset + index].z;
 		if (--j < 0) j += m;
 	}
 
@@ -515,257 +548,259 @@ long DeBoorClosed (
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3_spline::b3Init (
-	long    Degree,
-	long    ControlNum,
-	bool    Closed)
+b3_bool b3BSplineInitCurve (
+	b3_spline *Spline,
+	b3_count   degree,
+	b3_count   ControlNum,
+	b3_bool    closed)
 {
-	b3_index i;
+	b3_f32   *knots;
+	b3_index  i;
 
-	errno = BSPLINE_TOO_MUCH_CONTROLS;
-	if ( ControlNum               > control_max) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((ControlNum + Degree + 1) > knot_max)    return false;
-	errno = BSPLINE_MISSING_KNOTS;
-	if (knots == null)                           return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_TOO_MUCH_CONTROLS;
+	if ( ControlNum               > Spline->control_max) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((ControlNum + degree + 1) > Spline->knot_max)    return false;
+	bspline_errno = BSPLINE_MISSING_KNOTS;
+	if (Spline->knots == null)                          return false;
+	bspline_errno = BSPLINE_OK;
 
-	degree      = Degree;
-	control_num = ControlNum;
-	knot_num    = ControlNum + Degree + 1;
-	closed      = Closed;
+	Spline->degree     = degree;
+	Spline->control_num = ControlNum;
+	Spline->knot_num    = ControlNum + degree + 1;
+	Spline->closed     = closed;
 
-	knots = Spline->Knots;
-	for (i = 0; i < knot_max;i++) knots[i] = (float)i;
+	knots = Spline->knots;
+	for (i=0;i < Spline->knot_max;i++) *knots++ = (b3_f32)i;
 	return true;
 }
 
-b3_bool  b3_spline::b3SplineThroughEndControl ()
+b3_bool b3BSplineThroughEndControl (b3_spline *Spline)
 {
-	register b3_f64   start,end;
-	register b3_index i;
+	b3_f64    start,end;
+	b3_f32   *knots;
+	b3_index  i;
+	b3_count  KnotNum,ControlNum,degree;
 
-	errno = BSPLINE_CLOSED;
-	if (closed) return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_CLOSED;
+	if (Spline->closed) return false;
+	bspline_errno = BSPLINE_OK;
 
+	knots      = Spline->knots;
+	ControlNum = Spline->control_num;
+	degree     = Spline->degree;
+	KnotNum    = ControlNum + degree + 1;
 	start      = knots[degree];
-	end        = knots[control_num];
-	for (i=0;i < degree;i++)
+	end        = knots[ControlNum];
+
+	for (i = 0;i < degree;i++)
 	{
-		knots[i]                   = start;
-		knots[control_num + i + 1] = end;
+		knots[i]                  = start;
+		knots[ControlNum + i + 1] = end;
 	}
+	Spline->knot_num = KnotNum;
 	return true;
 }
 
-b3_bool b3_spline::b3SplineToBezier ()
+b3_bool b3BSplineToBezier (b3_spline *Spline)
 {
 	b3_index i;
+	b3_count KnotNum;
 
-	errno = BSPLINE_CLOSED;
-	if  (closed) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((control_num + control_num) > kKnot_max) return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_CLOSED;
+	if  (Spline->closed) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((Spline->control_num * 2) > Spline->knot_max) return false;
+	bspline_errno = BSPLINE_OK;
 
-	knot_num = control_num + control_num;
-	for (i = 0;i < (knot_num >> 1);    i++) knots[i] = 0;
-	for (i = knot_num >> 1;i < knot_num;i++) knots[i] = 1;
-	degree = control_num - 1;
+	KnotNum = Spline->knot_num = Spline->control_num * 2;
+	for (i = 0;i < (KnotNum / 2);    i++) Spline->knots[i] = 0;
+	for (i = KnotNum / 2;i < KnotNum;i++) Spline->knots[i] = 1;
+	Spline->degree = Spline->control_num - 1;
 
 	return true;
 }
 
-b3_bool BSplineDegree (b3_count Degree)
+b3_bool b3BSplineDegree (
+	b3_spline *Spline,
+	b3_count   degree)
 {
-	b3_f64   start,end;
-	b3_index i,diff;
+	b3_f32   *knots;
+	b3_f32	  start,end;
+	b3_index  i,diff;
+	b3_count  ControlNum;
 
-	errno = BSPLINE_OK;
-	if ( Degree == degree)                     return true;
-	errno = BSPLINE_TOO_FEW_CONTROLS;
-	if ( degree >= control_num)                return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((control_num + degree + 1) > knot_max) return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_OK;
+	if ( Spline->degree == degree)                           return true;
+	bspline_errno = BSPLINE_TOO_FEW_CONTROLS;
+	if ( Spline->degree >= Spline->control_num)               return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((Spline->control_num + degree + 1) > Spline->knot_max) return false;
+	bspline_errno = BSPLINE_OK;
 
-	if (degree < Spline->Degree)     /* decreasing degree */
+	knots      = Spline->knots;
+	ControlNum = Spline->control_num;
+	if (degree < Spline->degree)     /* decreasing degree */
 	{
-		diff = degree - Degree;
-		end = knots[control_num];
-		for (i = 0;i <  diff;i++) knots[control_num + i] = end+i;
-		for (i = 0;i <= control_num;i++) knots[i + Degree] = knots[i + degree];
-		if (Spline->Closed)
+		diff = Spline->degree - degree;
+		end = knots[ControlNum];
+		for (i = 0;i <  diff;i++) knots[ControlNum+i] = end+i;
+		for (i = 0;i <= ControlNum;i++) knots[i+degree] = knots[i + Spline->degree];
+		if (Spline->closed)
 		{
-			start = knots[Degree];
-			end   = knots[control_num+Degree];
-			for (i = 0;i < Degree;i++)
-			{
-				knots[i] = knots[control_num+i] - end + start;
-			}
+			start = knots[degree];
+			end   = knots[ControlNum+degree];
+			for (i=0;i<degree;i++) knots[i] = knots[ControlNum+i] - end + start;
 			start = -knots[0];
-			for (i = Degree + control_num;i>=0;i--)
-			{
-				knots[i] += start;
-			}
+			for (i=degree+ControlNum;i>=0;i--) knots[i] += start;
 		}
 	}
 	else                             /* increasing degree */
 	{
-		for (i = control_num;i >= 0;i--)
+		for (i = ControlNum;i >= 0;i--) knots[i+degree] = knots[i + Spline->degree];
+		if (Spline->closed)
 		{
-			knots[i + Degree] = knots[i + degree];
-		}
-		if (closed)
-		{
-			start = knots[Degree];
-			end   = knots[control_num + Degree];
-			for (i = 0;i < Degree;i++)
-			{
-				knots[i] = knots[control_num + i] - end + start;
-			}
+			start = knots[degree];
+			end   = knots[ControlNum+degree];
+			for (i=0;i<degree;i++) knots[i] = knots[ControlNum+i] - end + start;
 			start = -knots[0];
-			for (i = Degree + control_num;i>=0;i--)
-			{
-				knots[i] += start;
-			}
+			for (i=degree+ControlNum;i>=0;i--) knots[i] += start;
 		}
 	}
 
-	degree   = Degree;
-	knot_num = control_num + degree + 1;
+	Spline->knot_num = ControlNum + degree + 1;
+	Spline->degree  = degree;
 	return true;
 }
 
-b3_bool b3_spline::b3InsertControl (
-	double	 q,
-	long	 Mult,
-	long     index,
-	bool     useNurbs)
+static b3_bool b3InternalInsertControl (
+	b3_spline *Spline,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   index,
+	b3_bool    useNurbs)
 {
-	register vector   *Controls;
-	register vector4D *Controls4D;
-	register long      l,m,i,Count;
-	register double    start,end;
-	         vector4D  o[MAX_CONTROLS+1]; /* buffer for knot insertion */
+	b3_vector   *Controls;
+	b3_vector4D *Controls4D;
+	b3_f32      *knots;
+	b3_index     l,m,i;
+	b3_count     degree,KnotNum,Count;
+	b3_f64       start,end;
+	b3_vector4D  o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
-	errno = BSPLINE_TOO_LOW_MULTIPLICATION;
-	if (Mult < 1) return (false);
+	bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+	if (Mult < 1) return false;
 
-	m        =  control_num;
-	if (!useNurbs) Controls   = &          Spline ->Controls[index];
-	else           Controls4D = &((nurbs *)Spline)->Controls[index];
+	m        =  Spline->control_num;
+	KnotNum  =  Spline->knot_num;
+	degree   =  Spline->degree;
+	knots    =  Spline->knots;
+	if (!useNurbs) Controls   = &Spline ->controls[index];
+	else           Controls4D = &((b3_nurbs *)Spline)->controls[index];
 
-	errno = BSPLINE_TOO_FEW_MAXCONTROLS;
-	if ((m       + Mult) > control_max) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((knot_num + Mult) > knot_max)    return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+	if ((m       + Mult) > Spline->control_max) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((KnotNum + Mult) > Spline->knot_max)    return false;
+	bspline_errno = BSPLINE_OK;
 
-	if (closed) for (Count = 0;Count < Mult;Count++)
+	if (Spline->closed) for (Count = 0;Count < Mult;Count++)
 	{
 		start = knots[0];
 		end   = knots[m];
 
-		i = b3InsertDeBoorClosed (o,index,q,useNurbs);
+		i = b3InsertDeBoorClosed (Spline,o,index,q,useNurbs);
 
-		// insert new knot
-		for (l = KnotNum;l > i;l--)
-		{
-			knots[l] = knots[l-1];
-		}
+			/* insert new knot */
+		for (l = KnotNum;l > i;l--) knots[l] = knots[l-1];
 		knots[i+1]         =   q;
-		Spline->KnotNum    = ++KnotNum;
-		Spline->ControlNum = ++m;
-		for (l = 0;l <= degree;l++)
-		{
-			knots[l+m] = knots[l] - start + end;
-		}
+		Spline->knot_num    = ++KnotNum;
+		Spline->control_num = ++m;
+		for (l=0;l<=degree;l++) knots[l+m] = knots[l] - start + end;
 
 			/* insert o[x] into control points */
 		if (!useNurbs)
 		{
 			for (l=m-1;l>i;l--)
-				Controls[l * Spline->Offset] = Controls[(l - 1) * Spline->Offset];
+				Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
 			for (l=i-degree+1;l <= i;l++)
 			{
-				Controls[((l + m) % m) * Spline->Offset].x = o[(l + (m-1)) % (m-1)].x;
-				Controls[((l + m) % m) * Spline->Offset].y = o[(l + (m-1)) % (m-1)].y;
-				Controls[((l + m) % m) * Spline->Offset].z = o[(l + (m-1)) % (m-1)].z;
+				Controls[((l + m) % m) * Spline->offset].x = o[(l + (m-1)) % (m-1)].x;
+				Controls[((l + m) % m) * Spline->offset].y = o[(l + (m-1)) % (m-1)].y;
+				Controls[((l + m) % m) * Spline->offset].z = o[(l + (m-1)) % (m-1)].z;
 			}
 		}
 		else
 		{
 			for (l=m-1;l>i;l--)
-				Controls4D[l * Spline->Offset] = Controls4D[(l - 1) * Spline->Offset];
+				Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
 
 			for (l=i-degree+1;l <= i;l++)
 			{
-				Controls4D[((l + m) % m) * Spline->Offset].x = o[(l + (m-1)) % (m-1)].x;
-				Controls4D[((l + m) % m) * Spline->Offset].y = o[(l + (m-1)) % (m-1)].y;
-				Controls4D[((l + m) % m) * Spline->Offset].z = o[(l + (m-1)) % (m-1)].z;
-				Controls4D[((l + m) % m) * Spline->Offset].w = o[(l + (m-1)) % (m-1)].w;
+				Controls4D[((l + m) % m) * Spline->offset].x = o[(l + (m-1)) % (m-1)].x;
+				Controls4D[((l + m) % m) * Spline->offset].y = o[(l + (m-1)) % (m-1)].y;
+				Controls4D[((l + m) % m) * Spline->offset].z = o[(l + (m-1)) % (m-1)].z;
+				Controls4D[((l + m) % m) * Spline->offset].w = o[(l + (m-1)) % (m-1)].w;
 			}
 		}
 	}
 	else for (Count = 0;Count < Mult;Count++)
 	{
-		i = InsertDeBoorOpened (Spline,o,index,q,useNurbs);
+		i = b3InsertDeBoorOpened (Spline,o,index,q,useNurbs);
 
 			/* insert new knot */
 		for (l=KnotNum;l > i;l--) knots[l+1] = knots[l];
 		knots[i+1]         =   q;
-		Spline->KnotNum    = ++KnotNum;
+		Spline->knot_num    = ++KnotNum;
 
 			/* insert o[x] into control points */
 		if (!useNurbs)
 		{
 			for (l=m;l>i;l--)
-				Controls[l * Spline->Offset] = Controls[(l - 1) * Spline->Offset];
+				Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
 
 			for (l=i-degree+1;l <= i;l++)
 			{
-				Controls[l * Spline->Offset].x = o[l].x;
-				Controls[l * Spline->Offset].y = o[l].y;
-				Controls[l * Spline->Offset].z = o[l].z;
+				Controls[l * Spline->offset].x = o[l].x;
+				Controls[l * Spline->offset].y = o[l].y;
+				Controls[l * Spline->offset].z = o[l].z;
 			}
 		}
 		else
 		{
 			for (l=m;l>i;l--)
-				Controls4D[l * Spline->Offset] = Controls4D[(l - 1) * Spline->Offset];
+				Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
 
 			for (l=i-degree+1;l <= i;l++)
 			{
-				Controls4D[l * Spline->Offset].x = o[l].x;
-				Controls4D[l * Spline->Offset].y = o[l].y;
-				Controls4D[l * Spline->Offset].z = o[l].z;
-				Controls4D[l * Spline->Offset].w = o[l].w;
+				Controls4D[l * Spline->offset].x = o[l].x;
+				Controls4D[l * Spline->offset].y = o[l].y;
+				Controls4D[l * Spline->offset].z = o[l].z;
+				Controls4D[l * Spline->offset].w = o[l].w;
 			}
 		}
 
-		Spline->ControlNum = ++m;
+		Spline->control_num = ++m;
 	}
-	return (true);
+	return true;
 }
 
-bool BSplineInsertControl (
-	spline	*Spline,
-	double	 q,
-	long	 Mult,
-	long     index)
+b3_bool b3BSplineInsertControl (
+	b3_spline *Spline,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   index)
 {
-	return InternalInsertControl (Spline,q,Mult,index,false);
+	return b3InternalInsertControl (Spline,q,Mult,index,false);
 }
 
-bool BNurbsInsertControl (
-	nurbs   *Nurbs,
-	double	 q,
-	long	 Mult,
-	long     index)
+b3_bool b3BNurbsInsertControl (
+	b3_nurbs *Nurbs,
+	b3_f64    q,
+	b3_count  Mult,
+	b3_index  index)
 {
-	return InternalInsertControl ((spline *)Nurbs,q,Mult,index,true);
+	return b3InternalInsertControl ((b3_spline *)Nurbs,q,Mult,index,true);
 }
 
 
@@ -780,38 +815,38 @@ bool BNurbsInsertControl (
 /* ControlOffset: distance between to curves */
 /* yLines:        how many curves where to insert knots */
 
-bool InternalSurfaceInsertControl(
-	spline	*Spline,
-	double	 q,
-	long	 Mult,
-	long     ControlOffset,
-	long     yLines,
-	
-	bool     useNurbs)
+b3_bool b3InternalSurfaceInsertControl(
+	b3_spline *Spline,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   ControlOffset,
+	b3_count   yLines,
+	b3_bool    useNurbs)
 {
-	register vector   *Controls;
-	register vector4D *Controls4D;
-	register float    *knots;
-	register long      l,m,degree,i,KnotNum,Count,index,y;
-	register double	   start,end;
-	         vector4D  o[MAX_CONTROLS+1]; /* buffer for knot insertion */
+	b3_vector   *Controls;
+	b3_vector4D *Controls4D;
+	b3_f32      *knots;
+	b3_index     l,m,i,index,y;
+	b3_count     degree,KnotNum,Count;
+	b3_f64	     start,end;
+	b3_vector4D  o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
-	errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+	bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
 	if (Mult < 1) return false;
 
-	m        =  Spline->ControlNum;
-	KnotNum  =  Spline->KnotNum;
-	degree   =  Spline->Degree;
-	knots    =  Spline->Knots;
+	m        =  Spline->control_num;
+	KnotNum  =  Spline->knot_num;
+	degree   =  Spline->degree;
+	knots    =  Spline->knots;
 	if (Mult > (degree + 1)) Mult = degree + 1;
 
-	errno = BSPLINE_TOO_FEW_MAXCONTROLS;
-	if ((m       + Mult) > Spline->ControlMax) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((KnotNum + Mult) > Spline->KnotMax)    return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+	if ((m       + Mult) > Spline->control_max) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((KnotNum + Mult) > Spline->knot_max)    return false;
+	bspline_errno = BSPLINE_OK;
 
-	if (Spline->Closed) for (Count = 0;Count < Mult;Count++)
+	if (Spline->closed) for (Count = 0;Count < Mult;Count++)
 	{
 		start = knots[0];
 		end   = knots[m];
@@ -819,40 +854,40 @@ bool InternalSurfaceInsertControl(
 		for (y = 0;y < yLines;y++)
 		{
 			index = y * ControlOffset;
-			i = InsertDeBoorClosed (Spline,o,index,q,useNurbs);
+			i = b3InsertDeBoorClosed (Spline,o,index,q,useNurbs);
 			m++;
 
 			if (!useNurbs)
 			{
-				Controls = &Spline->Controls[index];
+				Controls = &Spline->controls[index];
 
 					/* insert o[x] into control points */
 				for (l=m-1;l>i;l--)
-					Controls[l * Spline->Offset] = Controls[(l - 1) * Spline->Offset];
+					Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
 				for (l=i-degree+1;l <= i;l++)
 				{
-					Controls[((l + m) % m) * Spline->Offset].x = o[(l + (m-1)) % (m-1)].x;
-					Controls[((l + m) % m) * Spline->Offset].y = o[(l + (m-1)) % (m-1)].y;
-					Controls[((l + m) % m) * Spline->Offset].z = o[(l + (m-1)) % (m-1)].z;
+					Controls[((l + m) % m) * Spline->offset].x = o[(l + (m-1)) % (m-1)].x;
+					Controls[((l + m) % m) * Spline->offset].y = o[(l + (m-1)) % (m-1)].y;
+					Controls[((l + m) % m) * Spline->offset].z = o[(l + (m-1)) % (m-1)].z;
 				}
 			}
 			else
 			{
-				Controls4D = &((nurbs *)Spline)->Controls[index = y * ControlOffset];
+				Controls4D = &((b3_nurbs *)Spline)->controls[index = y * ControlOffset];
 
 					/* insert o[x] into control points */
 				for (l=m-1;l>i;l--)
-					Controls4D[l * Spline->Offset] = Controls4D[(l - 1) * Spline->Offset];
+					Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
 				for (l=i-degree+1;l <= i;l++)
-					Controls4D[((l + m) % m) * Spline->Offset] = o[(l + (m-1)) % (m-1)];
+					Controls4D[((l + m) % m) * Spline->offset] = o[(l + (m-1)) % (m-1)];
 			}
 			m--;
 		}
 			/* insert new knot */
 		for (l = KnotNum;l > i;l--) knots[l] = knots[l-1];
 		knots[i+1]         =   q;
-		Spline->KnotNum    = ++KnotNum;
-		Spline->ControlNum = ++m;
+		Spline->knot_num    = ++KnotNum;
+		Spline->control_num = ++m;
 		for (l=0;l<=degree;l++) knots[l+m] = knots[l] - start + end;
 	}
 	else for (Count = 0;Count < Mult;Count++)
@@ -860,31 +895,31 @@ bool InternalSurfaceInsertControl(
 		for (y = 0;y < yLines;y++)
 		{
 			index = y * ControlOffset;
-			i = InsertDeBoorOpened (Spline,o,index,q,useNurbs);
+			i = b3InsertDeBoorOpened (Spline,o,index,q,useNurbs);
 			m++;
 
 				/* insert o[x] into control points */
 			if (!useNurbs)
 			{
-				Controls = &Spline->Controls[index];
+				Controls = &Spline->controls[index];
 				for (l=m;l>i;l--)
-					Controls[l * Spline->Offset] = Controls[(l - 1) * Spline->Offset];
+					Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
 
 				for (l=i-degree+1;l <= i;l++)
 				{
-					Controls[l * Spline->Offset].x = o[l].x;
-					Controls[l * Spline->Offset].y = o[l].y;
-					Controls[l * Spline->Offset].z = o[l].z;
+					Controls[l * Spline->offset].x = o[l].x;
+					Controls[l * Spline->offset].y = o[l].y;
+					Controls[l * Spline->offset].z = o[l].z;
 				}
 			}
 			else
 			{
-				Controls4D = &((nurbs *)Spline)->Controls[index = y * ControlOffset];
+				Controls4D = &((b3_nurbs *)Spline)->controls[index = y * ControlOffset];
 				for (l=m;l>i;l--)
-					Controls4D[l * Spline->Offset] = Controls4D[(l - 1) * Spline->Offset];
+					Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
 
 				for (l=i-degree+1;l <= i;l++)
-					Controls4D[l * Spline->Offset] = o[l];
+					Controls4D[l * Spline->offset] = o[l];
 			}
 			m--;
 		}
@@ -892,32 +927,32 @@ bool InternalSurfaceInsertControl(
 			/* insert new knot */
 		for (l = KnotNum;l > i;l--) knots[l+1] = knots[l];
 		knots[i+1]         =   q;
-		Spline->KnotNum    = ++KnotNum;
-		Spline->ControlNum = ++m;
+		Spline->knot_num    = ++KnotNum;
+		Spline->control_num = ++m;
 	}
-	return (true);
+	return true;
 }
 
-bool BSplineSurfaceInsertControl(
-	spline	*Spline,
-	double	 q,
-	long	 Mult,
-	long     ControlOffset,
-	long     yLines)
+b3_bool b3BSplineSurfaceInsertControl(
+	b3_spline *Spline,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   ControlOffset,
+	b3_index   yLines)
 {
-	return InternalSurfaceInsertControl
+	return b3InternalSurfaceInsertControl
 		(Spline,q,Mult,ControlOffset,yLines,false);
 }
 
-bool BNurbsSurfaceInsertControl(
-	nurbs  *Nurbs,
-	double	q,
-	long	Mult,
-	long    ControlOffset,
-	long    yLines)
+b3_bool b3BNurbsSurfaceInsertControl(
+	b3_nurbs *Nurbs,
+	b3_f64    q,
+	b3_count  Mult,
+	b3_index  ControlOffset,
+	b3_index  yLines)
 {
-	return InternalSurfaceInsertControl
-		((spline *)Nurbs,q,Mult,ControlOffset,yLines,true);
+	return b3InternalSurfaceInsertControl
+		((b3_spline *)Nurbs,q,Mult,ControlOffset,yLines,true);
 }
 
 /*************************************************************************
@@ -926,37 +961,38 @@ bool BNurbsSurfaceInsertControl(
 **                                                                      **
 *************************************************************************/
 
-static bool InternalAppendControl(
-	spline *Spline,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    index,
-	bool    useNurbs)
+static b3_bool b3InternalAppendControl(
+	b3_spline *Spline,
+	b3_bool    append,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   index,
+	b3_bool    useNurbs)
 {
-	register vector   *Controls;
-	register vector4D *Controls4D;
-	register float    *knots;
-	register long      m,degree,i,KnotNum,offset;
-	         vector4D  start,diff;
+	b3_vector   *Controls;
+	b3_vector4D *Controls4D;
+	b3_f32      *knots;
+	b3_index     m,i,offset;
+	b3_count     degree,KnotNum;
+	b3_vector4D  start,diff;
 
-	errno = BSPLINE_CLOSED;
-	if (Spline->Closed) return false;
-	errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+	bspline_errno = BSPLINE_CLOSED;
+	if (Spline->closed) return false;
+	bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
 	if (Mult < 1) return false;
 
-	m        =  Spline->ControlNum;
-	KnotNum  =  Spline->KnotNum;
-	degree   =  Spline->Degree;
-	knots    =  Spline->Knots;
-	offset   =  Spline->Offset;
+	m        =  Spline->control_num;
+	KnotNum  =  Spline->knot_num;
+	degree   =  Spline->degree;
+	knots    =  Spline->knots;
+	offset   =  Spline->offset;
 	if (Mult > (degree + 1)) Mult = degree + 1;
 
-	errno = BSPLINE_TOO_FEW_MAXCONTROLS;
-	if ((m       + Mult) > Spline->ControlMax) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((KnotNum + Mult) > Spline->KnotMax)    return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+	if ((m       + Mult) > Spline->control_max) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((KnotNum + Mult) > Spline->knot_max)    return false;
+	bspline_errno = BSPLINE_OK;
 
 	if (append)
 	{
@@ -965,7 +1001,7 @@ static bool InternalAppendControl(
 
 		if (!useNurbs)
 		{
-			Controls = &Spline->Controls[index];
+			Controls = &Spline->controls[index];
 			start.x  = Controls[(m - 1) * offset].x;
 			start.y  = Controls[(m - 1) * offset].y;
 			start.z  = Controls[(m - 1) * offset].z;
@@ -981,7 +1017,7 @@ static bool InternalAppendControl(
 		}
 		else
 		{
-			Controls4D = &((nurbs *)Spline)->Controls[index];
+			Controls4D = &((b3_nurbs *)Spline)->controls[index];
 			start  = Controls4D[(m - 1) * offset];
 			diff.x = start.x - Controls4D[(m - 2) * offset].x;
 			diff.y = start.y - Controls4D[(m - 2) * offset].y;
@@ -1003,7 +1039,7 @@ static bool InternalAppendControl(
 
 		if (!useNurbs)
 		{
-			Controls = &Spline->Controls[index];
+			Controls = &Spline->controls[index];
 			start.x = Controls[0].x;
 			start.y = Controls[0].y;
 			start.z = Controls[0].z;
@@ -1026,7 +1062,7 @@ static bool InternalAppendControl(
 		}
 		else
 		{
-			Controls4D = &((nurbs *)Spline)->Controls[index];
+			Controls4D = &((b3_nurbs *)Spline)->controls[index];
 
 			start  = Controls4D[0];
 			diff.x = start.x - Controls4D[offset].x;
@@ -1049,29 +1085,29 @@ static bool InternalAppendControl(
 			}
 		}
 	}
-	Spline->KnotNum    += Mult;
-	Spline->ControlNum += Mult;
+	Spline->knot_num    += Mult;
+	Spline->control_num += Mult;
 	return true;
 }
 
-bool BSplineAppendControl(
-	spline *Spline,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    index)
+b3_bool b3BSplineAppendControl(
+	b3_spline *Spline,
+	b3_bool    append,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   index)
 {
-	return InternalAppendControl (Spline,append,q,Mult,index,false);
+	return b3InternalAppendControl (Spline,append,q,Mult,index,false);
 }
 
-bool BNurbsAppendControl(
-	nurbs  *Nurbs,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    index)
+b3_bool b3BNurbsAppendControl(
+	b3_nurbs *Nurbs,
+	b3_bool   append,
+	b3_f64    q,
+	b3_count  Mult,
+	b3_index  index)
 {
-	return InternalAppendControl ((spline *)Nurbs,append,q,Mult,index,true);
+	return b3InternalAppendControl ((b3_spline *)Nurbs,append,q,Mult,index,true);
 }
 
 /*************************************************************************
@@ -1080,38 +1116,39 @@ bool BNurbsAppendControl(
 **                                                                      **
 *************************************************************************/
 
-static bool InternalSurfaceAppendControl(
-	spline *Spline,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    skipOffset,
-	long    lines,
-	bool    useNurbs)
+static b3_bool b3InternalSurfaceAppendControl(
+	b3_spline *Spline,
+	b3_bool    append,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   skipOffset,
+	b3_index   lines,
+	b3_bool    useNurbs)
 {
-	register vector   *Controls;
-	register vector4D *Controls4D;
-	register float    *knots;
-	register long      m,degree,i,KnotNum,offset,y;
-	         vector4D  start,diff;
+	b3_vector   *Controls;
+	b3_vector4D *Controls4D;
+	b3_f32      *knots;
+	b3_index    m,i,offset,y;
+	b3_count    degree,KnotNum;
+	b3_vector4D start,diff;
 
-	errno = BSPLINE_CLOSED;
-	if (Spline->Closed) return false;
-	errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+	bspline_errno = BSPLINE_CLOSED;
+	if (Spline->closed) return false;
+	bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
 	if (Mult < 1) return false;
 
-	m        = Spline->ControlNum;
-	KnotNum  = Spline->KnotNum;
-	degree   = Spline->Degree;
-	knots    = Spline->Knots;
-	offset   = Spline->Offset;
+	m        = Spline->control_num;
+	KnotNum  = Spline->knot_num;
+	degree   = Spline->degree;
+	knots    = Spline->knots;
+	offset   = Spline->offset;
 	if (Mult > (degree + 1)) Mult = degree + 1;
 
-	errno = BSPLINE_TOO_FEW_MAXCONTROLS;
-	if ((m       + Mult) > Spline->ControlMax) return false;
-	errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((KnotNum + Mult) > Spline->KnotMax)    return false;
-	errno = BSPLINE_OK;
+	bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+	if ((m       + Mult) > Spline->control_max) return false;
+	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+	if ((KnotNum + Mult) > Spline->knot_max)    return false;
+	bspline_errno = BSPLINE_OK;
 
 	if (append)
 	{
@@ -1120,7 +1157,7 @@ static bool InternalSurfaceAppendControl(
 
 		if (!useNurbs)
 		{
-			Controls = Spline->Controls;
+			Controls = Spline->controls;
 			for (y=0;y<lines;y++)
 			{
 				start.x = Controls[(m - 1) * offset].x;
@@ -1140,7 +1177,7 @@ static bool InternalSurfaceAppendControl(
 		}
 		else
 		{
-			Controls4D = ((nurbs *)Spline)->Controls;
+			Controls4D = ((b3_nurbs *)Spline)->controls;
 			for (y=0;y<lines;y++)
 			{
 				start  = Controls4D[(m - 1) * offset];
@@ -1168,7 +1205,7 @@ static bool InternalSurfaceAppendControl(
 
 		if (!useNurbs)
 		{
-			Controls = Spline->Controls;
+			Controls = Spline->controls;
 			for (y = 0;  y <  lines;y++)
 			{
 				start.x = Controls[0].x;
@@ -1193,7 +1230,7 @@ static bool InternalSurfaceAppendControl(
 		}
 		else
 		{
-			Controls4D = ((nurbs *)Spline)->Controls;
+			Controls4D = ((b3_nurbs *)Spline)->controls;
 			for (y = 0;  y <  lines;y++)
 			{
 				start  = Controls4D[0];
@@ -1217,33 +1254,33 @@ static bool InternalSurfaceAppendControl(
 			}
 		}
 	}
-	Spline->KnotNum    += Mult;
-	Spline->ControlNum += Mult;
+	Spline->knot_num    += Mult;
+	Spline->control_num += Mult;
 	return true;
 }
 
-bool BSplineSurfaceAppendControl(
-	spline *Spline,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    skipOffset,
-	long    lines)
+b3_bool b3BSplineSurfaceAppendControl(
+	b3_spline *Spline,
+	b3_bool    append,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   skipOffset,
+	b3_index   lines)
 {
-	return InternalSurfaceAppendControl
+	return b3InternalSurfaceAppendControl
 		(Spline,append,q,Mult,skipOffset,lines,false);
 }
 
-bool BNurbsSurfaceAppendControl(
-	nurbs  *Nurbs,
-	bool    append,
-	double  q,
-	long    Mult,
-	long    skipOffset,
-	long    lines)
+b3_bool b3BNurbsSurfaceAppendControl(
+	b3_nurbs  *Nurbs,
+	b3_bool    append,
+	b3_f64     q,
+	b3_count   Mult,
+	b3_index   skipOffset,
+	b3_index   lines)
 {
-	return InternalSurfaceAppendControl
-		((spline *)Nurbs,append,q,Mult,skipOffset,lines,true);
+	return b3InternalSurfaceAppendControl
+		((b3_spline *)Nurbs,append,q,Mult,skipOffset,lines,true);
 }
 
 /*************************************************************************
@@ -1252,37 +1289,38 @@ bool BNurbsSurfaceAppendControl(
 **                                                                      **
 *************************************************************************/
 
-long DeBoor(
-	spline	*Spline,
-	vector	*point,
-	long	 index)
+b3_index b3DeBoor(
+	b3_spline *Spline,
+	b3_vector *point,
+	b3_index   index)
 {
-	register float	*knots;
-	register double	 q,qStep;
-	register long	 SubDiv,i;
+	b3_f32	*knots;
+	b3_f64	 q,qStep;
+	b3_count SubDiv;
+	b3_index i;
 
-	SubDiv = Spline->SubDiv;
-	knots  = Spline->Knots;
+	SubDiv = Spline->subdiv;
+	knots  = Spline->knots;
 
-	if (Spline->Closed)
+	if (Spline->closed)
 	{
 		q     =  knots[0];
-		qStep = (knots[Spline->ControlNum] - q - EPSILON) / (float)Spline->SubDiv;
+		qStep = (knots[Spline->control_num] - q - EPSILON) / (b3_f32)Spline->subdiv;
 
 		for (i = 0;i <= SubDiv;i++)
 		{
-			DeBoorClosed (Spline,point++,index,q);
+			b3DeBoorClosed (Spline,point++,index,q);
 			q += qStep;
 		}
 	}
 	else
 	{
-		q     =  knots[Spline->Degree];
-		qStep = (knots[Spline->ControlNum] - q - EPSILON) / (float)Spline->SubDiv;
+		q     =  knots[Spline->degree];
+		qStep = (knots[Spline->control_num] - q - EPSILON) / (b3_f32)Spline->subdiv;
 
 		for (i = 0;i <= SubDiv;i++)
 		{
-			DeBoorOpened (Spline,point++,index,q);
+			b3DeBoorOpened (Spline,point++,index,q);
 			q += qStep;
 		}
 	}
@@ -1290,76 +1328,78 @@ long DeBoor(
 	return i;
 }
 
-long DeBoorNurbs(
-	nurbs	*Nurbs,
-	vector  *point,
-	long     index)
+b3_index b3DeBoorNurbs(
+	b3_nurbs  *Nurbs,
+	b3_vector *point,
+	b3_index   index)
 {
-	register float	*knots;
-	register double	 q,qStep;
-	register long	 SubDiv,i,pos;
-	         double  coeffs[MAX_DEGREE+1];
+	b3_f32   *knots;
+	b3_f64    q,qStep;
+	b3_index  SubDiv,i,pos;
+	b3_f64    coeffs[B3_MAX_DEGREE + 1];
 
-	SubDiv = Nurbs->SubDiv;
-	knots  = Nurbs->Knots;
-	q      =  knots[Nurbs->Closed ? 0 : Nurbs->Degree];
-	qStep  = (knots[Nurbs->ControlNum] - q - EPSILON) / (float)Nurbs->SubDiv;
+	SubDiv = Nurbs->subdiv;
+	knots  = Nurbs->knots;
+	q      =  knots[Nurbs->closed ? 0 : Nurbs->degree];
+	qStep  = (knots[Nurbs->control_num] - q - EPSILON) / (b3_f32)Nurbs->subdiv;
 
 	for (i = 0;i <= SubDiv;i++)
 	{
-		pos = Mansfield ((spline *)Nurbs,coeffs,q);
-		MansfieldNurbsVector (Nurbs,point++,coeffs,pos,index);
+		pos = b3Mansfield ((b3_spline *)Nurbs,coeffs,q);
+		b3MansfieldNurbsVector (Nurbs,point++,coeffs,pos,index);
 		q += qStep;
 	}
 	return i;
 }
 
-long DeBoorControl(
-	spline	*Spline,
-	vector	*point,
-	long	 index)
+b3_count b3DeBoorControl(
+	b3_spline *Spline,
+	b3_vector *point,
+	b3_index   index)
 {
-	register float	*knots;
-	register long	 ControlNum,i;
+	b3_f32   *knots;
+	b3_count  ControlNum;
+	b3_index  i;
 
-	ControlNum = Spline->ControlNum;
-	knots      = Spline->Knots;
+	ControlNum = Spline->control_num;
+	knots      = Spline->knots;
 
-	if (Spline->Closed)
+	if (Spline->closed)
 	{
 		for (i = 0;i < ControlNum;i++)
-			DeBoorClosed(Spline,point++,index,knots[i]);
+			b3DeBoorClosed(Spline,point++,index,knots[i]);
 		return ControlNum;
 	}
 	else
 	{
-		for (i = Spline->Degree;i <= ControlNum;i++)
-			DeBoorOpened (Spline,point++,index,knots[i]);
-		return ControlNum - Spline->Degree + 1;
+		for (i = Spline->degree;i <= ControlNum;i++)
+			b3DeBoorOpened (Spline,point++,index,knots[i]);
+		return ControlNum - Spline->degree + 1;
 	}
 }
 
-long DeBoorSurfaceControl(
-	spline	*controlSpline,
-	spline	*curveSpline,
-	vector	*point)
+b3_count b3DeBoorSurfaceControl(
+	b3_spline *controlSpline,
+	b3_spline *curveSpline,
+	b3_vector *point)
 {
-	register float	*knots;
-	register long	 ControlNum,i,index,x,end;
-	         double  it[MAX_DEGREE+1];
+	b3_f32   *knots;
+	b3_index  i,x,end,index;
+	b3_count  ControlNum;
+	b3_f64    it[B3_MAX_DEGREE + 1];
 
-	ControlNum = BSPLINE_SEGMENTKNOTS(curveSpline);
-	knots      = curveSpline->Knots;
-	end        = curveSpline->ControlNum;
-	if (!curveSpline->Closed) end++;
+	ControlNum = B3_BSPLINE_SEGMENTKNOTS(curveSpline);
+	knots      = curveSpline->knots;
+	end        = curveSpline->control_num;
+	if (!curveSpline->closed) end++;
 
-	for (i = (curveSpline->Closed ? 0 : curveSpline->Degree);i < end;i++)
+	for (i = (curveSpline->closed ? 0 : curveSpline->degree);i < end;i++)
 	{
-		index = Mansfield (curveSpline,it,knots[i]);
-		for (x = 0;x < controlSpline->ControlNum;x++)
+		index = b3Mansfield (curveSpline,it,knots[i]);
+		for (x = 0;x < controlSpline->control_num;x++)
 		{
-			MansfieldVector (curveSpline,&point[x * ControlNum],it,
-				index,x * controlSpline->Offset);
+			b3MansfieldVector (curveSpline,&point[x * ControlNum],it,
+				index,x * controlSpline->offset);
 		}
 		point++;
 	}

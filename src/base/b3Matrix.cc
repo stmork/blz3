@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3Matrix.c $
+**	$Filename:	b3Matrix.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision: 2.02 
 **	$Date:		05-Jun-1998 
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - vector and matrix computation
+**	Blizzard III - vector and matrix methods
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -15,20 +15,16 @@
 **
 */
 
-#if 0
-#ifndef BLIZZARD_MATRIX_C
-#define BLIZZARD_MATRIX_C
-
 #define MATRIX_INV_4D
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard includes                             **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
-#include <blizzard/bsystem.h>
-#include <blizzard/braytrace.h>
+#include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3Aux.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,17 +34,10 @@
 
 /*
 **	$Log$
-**	Revision 1.3  2001/07/08 12:30:06  sm
-**	- New tool to remove nasty CR/LF from Windoze.
-**	- Removing some nasty CR/LF with that new tool.
+**	Revision 1.4  2001/08/05 09:23:22  sm
+**	- Introducing vectors, matrices, Splines and NURBS
 **
-**	Revision 1.2  2001/07/01 16:31:51  sm
-**	- Creating MSVC Projects
-**	- Welcome to Windows 32
-**	
-**	Revision 1.1.1.1  2001/07/01 12:24:58  sm
-**	Blizzard III is born
-**	
+**
 */
 
 /*************************************************************************
@@ -57,7 +46,7 @@
 **                                                                      **
 *************************************************************************/
 
-static matrix UnitMatrix =
+static b3_matrix UnitMatrix =
 {
 	1,0,0,0,
 	0,1,0,0,
@@ -65,24 +54,28 @@ static matrix UnitMatrix =
 	0,0,0,1
 };
 
-typedef float matrixarray[4][4];
+typedef b3_f32 b3_matrix_array[4][4];
 
-static bool NormalizeCol (Matrix,col)
-
-register matrixarray	 Matrix;
-register long			 col;
-
+static b3_bool b3NormalizeCol (
+	b3_matrix_array Matrix,
+	b3_count        col)
 {
-	register double	 Denom;
-	register long	 i;
+	b3_f64   Denom;
+	b3_index i;
 
 	Denom = 0;
-	for (i=0;i<4;i++) Denom += (Matrix[i][col] * Matrix[i][col]);
+	for (i = 0;i < 4;i++)
+	{
+		Denom += (Matrix[i][col] * Matrix[i][col]);
+	}
 	
 	if (Denom == 0) return (false);
 	Denom = 1 / sqrt(Denom);
-	for (i=0;i<4;i++) Matrix[i][col] *= Denom;
-	return (true);
+	for (i = 0;i < 4;i++)
+	{
+		Matrix[i][col] *= Denom;
+	}
+	return true;
 }
 
 /*************************************************************************
@@ -91,27 +84,38 @@ register long			 col;
 **                                                                      **
 *************************************************************************/
 
-double Length (register vector *Vector)
+b3_f64 b3Length (b3_vector *Vector)
 {
-	return (sqrt(
+	return sqrt(
 		Vector->x * Vector->x +
 		Vector->y * Vector->y +
-		Vector->z * Vector->z));
+		Vector->z * Vector->z);
 }
 
-double Det2(
-	register double a,
-	register double b,
-	register double c,
-	register double d)
+b3_f64 b3Distance(b3_vector *from,b3_vector *to)
 {
-	return (a*d-b*c);
+	b3_f64 x,y,z;
+
+	x = to->x - from->x;
+	y = to->y - from->y;
+	z = to->z - from->z;
+
+	return sqrt(x * x + y * y + z * z);
 }
 
-double Det3(
-	vector *a,
-	vector *b,
-	vector *c)
+b3_f64 b3Det2(
+	b3_f64 a,
+	b3_f64 b,
+	b3_f64 c,
+	b3_f64 d)
+{
+	return a * d - b * c;
+}
+
+b3_f64 b3Det3(
+	b3_vector *a,
+	b3_vector *b,
+	b3_vector *c)
 {
 	return (a->x * b->y * c->z -
 			c->x * b->y * a->z +
@@ -121,10 +125,10 @@ double Det3(
 			a->x * c->y * b->z);
 }
 
-double Det4(register matrix *Matrix)
+b3_f64 Det4(b3_matrix *Matrix)
 {
-	vector	 Row1,Row2,Row3,Row4;
-	double	 Result;
+	b3_vector Row1,Row2,Row3,Row4;
+	b3_f64    Result;
 
 	Row1.x  = Matrix->m21;
 	Row1.y  = Matrix->m31;
@@ -142,23 +146,23 @@ double Det4(register matrix *Matrix)
 	Row4.y  = Matrix->m34;
 	Row4.z  = Matrix->m44;
 
-	Result  = Matrix->m11 * Det3 (&Row2,&Row3,&Row4);
-	Result -= Matrix->m12 * Det3 (&Row1,&Row3,&Row4);
-	Result += Matrix->m13 * Det3 (&Row1,&Row2,&Row4);
-	Result -= Matrix->m14 * Det3 (&Row1,&Row2,&Row3);
+	Result  = Matrix->m11 * b3Det3 (&Row2,&Row3,&Row4);
+	Result -= Matrix->m12 * b3Det3 (&Row1,&Row3,&Row4);
+	Result += Matrix->m13 * b3Det3 (&Row1,&Row2,&Row4);
+	Result -= Matrix->m14 * b3Det3 (&Row1,&Row2,&Row3);
 
 	return (Result);
 }
 
-matrix * MatrixUnit (register matrix *Matrix)
+b3_matrix * b3MatrixUnit (b3_matrix *Matrix)
 {
-	*Matrix = UnitMatrix;
-	return (Matrix);
+	memcpy(Matrix,&UnitMatrix,16 * sizeof(b3_f32));
+	return Matrix;
 }
 
-matrix * MatrixTrans (
-	register matrix *From,
-	register matrix *To)
+b3_matrix * b3MatrixTrans (
+	b3_matrix *From,
+	b3_matrix *To)
 {
 	To->m11 = From->m11; To->m21 = From->m12; To->m31 = From->m13; To->m41 = From->m14;
 	To->m12 = From->m21; To->m22 = From->m22; To->m32 = From->m23; To->m42 = From->m24;
@@ -168,13 +172,13 @@ matrix * MatrixTrans (
 	return (To);
 }
 
-matrix * MatrixInv (
-	register matrix *From,
-	register matrix *To)
+b3_matrix * b3MatrixInv (
+	b3_matrix *From,
+	b3_matrix *To)
 {
 #	ifdef MATRIX_INV_4D
-		double	 Denom;
-		vector	 Row1,Row2,Row3,Row4;
+		b3_f64    Denom;
+		b3_vector Row1,Row2,Row3,Row4;
 
 		Denom = Det4 (From);
 		if (Denom == 0) return (null);
@@ -189,43 +193,43 @@ matrix * MatrixInv (
 		Row3.z  = From->m34;	Row4.z  = From->m44;
   
 		/* inverting first line */
-		To->m11 =   Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m12 = - Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m13 =   Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m14 = - Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m11 =   b3Det3 (&Row2,&Row3,&Row4) * Denom;
+		To->m12 = - b3Det3 (&Row1,&Row3,&Row4) * Denom;
+		To->m13 =   b3Det3 (&Row1,&Row2,&Row4) * Denom;
+		To->m14 = - b3Det3 (&Row1,&Row2,&Row3) * Denom;
 
 		/* inverting second line */
 		Row1.x  =   From->m11;
 		Row2.x  =   From->m21;
 		Row3.x  =   From->m31;
 		Row4.x  =   From->m41;
-		To->m21 = - Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m22 =   Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m23 = - Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m24 =   Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m21 = - b3Det3 (&Row2,&Row3,&Row4) * Denom;
+		To->m22 =   b3Det3 (&Row1,&Row3,&Row4) * Denom;
+		To->m23 = - b3Det3 (&Row1,&Row2,&Row4) * Denom;
+		To->m24 =   b3Det3 (&Row1,&Row2,&Row3) * Denom;
 
 		/* inverting third line */
 		Row1.y  =   From->m12;
 		Row2.y  =   From->m22;
 		Row3.y  =   From->m32;
 		Row4.y  =   From->m42;
-		To->m31 =   Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m32 = - Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m33 =   Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m34 = - Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m31 =   b3Det3 (&Row2,&Row3,&Row4) * Denom;
+		To->m32 = - b3Det3 (&Row1,&Row3,&Row4) * Denom;
+		To->m33 =   b3Det3 (&Row1,&Row2,&Row4) * Denom;
+		To->m34 = - b3Det3 (&Row1,&Row2,&Row3) * Denom;
 
 		/* inverting third fourth */
 		Row1.z  =   From->m13;
 		Row2.z  =   From->m23;
 		Row3.z  =   From->m33;
 		Row4.z  =   From->m43;
-		To->m41 = - Det3 (&Row2,&Row3,&Row4) * Denom;
-		To->m42 =   Det3 (&Row1,&Row3,&Row4) * Denom;
-		To->m43 = - Det3 (&Row1,&Row2,&Row4) * Denom;
-		To->m44 =   Det3 (&Row1,&Row2,&Row3) * Denom;
+		To->m41 = - b3Det3 (&Row2,&Row3,&Row4) * Denom;
+		To->m42 =   b3Det3 (&Row1,&Row3,&Row4) * Denom;
+		To->m43 = - b3Det3 (&Row1,&Row2,&Row4) * Denom;
+		To->m44 =   b3Det3 (&Row1,&Row2,&Row3) * Denom;
 #	else
-		double	 Denom;
-		vector	 Row1,Row2,Row3;
+		b3_f64    Denom;
+		b3_vector Row1,Row2,Row3;
 
 		Row1.x  = From->m11;
 		Row1.y  = From->m21;
@@ -243,19 +247,19 @@ matrix * MatrixInv (
 		if (Denom == 0) return (null);
 		Denom = 1 / Denom;
 
-		To->m11 =  Det2 (From->m22,From->m23,From->m32,From->m33) * Denom;
-		To->m12 = -Det2 (From->m12,From->m13,From->m32,From->m33) * Denom;
-		To->m13 =  Det2 (From->m12,From->m13,From->m22,From->m23) * Denom;
+		To->m11 =  b3Det2 (From->m22,From->m23,From->m32,From->m33) * Denom;
+		To->m12 = -b3Det2 (From->m12,From->m13,From->m32,From->m33) * Denom;
+		To->m13 =  b3Det2 (From->m12,From->m13,From->m22,From->m23) * Denom;
 		To->m14 = -From->m14;
 
-		To->m21 = -Det2 (From->m21,From->m23,From->m31,From->m33) * Denom;
-		To->m22 =  Det2 (From->m11,From->m13,From->m31,From->m33) * Denom;
-		To->m23 = -Det2 (From->m11,From->m13,From->m21,From->m23) * Denom;
+		To->m21 = -b3Det2 (From->m21,From->m23,From->m31,From->m33) * Denom;
+		To->m22 =  b3Det2 (From->m11,From->m13,From->m31,From->m33) * Denom;
+		To->m23 = -b3Det2 (From->m11,From->m13,From->m21,From->m23) * Denom;
 		To->m24 = -From->m24;
 
-		To->m31 =  Det2 (From->m21,From->m22,From->m31,From->m32) * Denom;
-		To->m32 = -Det2 (From->m11,From->m12,From->m31,From->m32) * Denom;
-		To->m33 =  Det2 (From->m11,From->m12,From->m21,From->m22) * Denom;
+		To->m31 =  b3Det2 (From->m21,From->m22,From->m31,From->m32) * Denom;
+		To->m32 = -b3Det2 (From->m11,From->m12,From->m31,From->m32) * Denom;
+		To->m33 =  b3Det2 (From->m11,From->m12,From->m21,From->m22) * Denom;
 		To->m34 = -From->m34;
 
 		To->m41 =
@@ -267,12 +271,12 @@ matrix * MatrixInv (
 	return (To);
 }
 
-matrix * MatrixMMul (
-	register matrix	*B,
-	register matrix	*A,
-	register matrix	*C)
+b3_matrix * b3MatrixMMul (
+	b3_matrix	*B,
+	b3_matrix	*A,
+	b3_matrix	*C)
 {
-	matrix	 Result;
+	b3_matrix	 Result;
 
 	Result.m11 = A->m11 * B->m11 + A->m12 * B->m21 + A->m13 * B->m31 + A->m14 * B->m41;
 	Result.m12 = A->m11 * B->m12 + A->m12 * B->m22 + A->m13 * B->m32 + A->m14 * B->m42;
@@ -298,10 +302,10 @@ matrix * MatrixMMul (
 	return (C);
 }
 
-matrix * MatrixSMul (
-	register matrix	*A,
-	register matrix *B,
-	register double	 Value)
+b3_matrix * b3MatrixSMul (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_f64     Value)
 {
 	B->m11 = A->m11 * Value;
 	B->m12 = A->m12 * Value;
@@ -326,13 +330,13 @@ matrix * MatrixSMul (
 	return (B);
 }
 
-vector * MatrixVMul (
-	register matrix	*A,
-	register vector	*V1,
-	register vector	*V2,
-	register bool	 FourDim)
+b3_vector * b3MatrixVMul (
+	b3_matrix *A,
+	b3_vector *V1,
+	b3_vector *V2,
+	b3_bool    FourDim)
 {
-	vector	 Result;
+	b3_vector Result;
 
 	if (FourDim)
 	{
@@ -351,10 +355,10 @@ vector * MatrixVMul (
 	return (V2);
 }
 
-matrix * MatrixMAdd (
-	register matrix	*A,
-	register matrix	*B,
-	register matrix	*C)
+b3_matrix * b3MatrixMAdd (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_matrix *C)
 {
 	C->m11 = A->m11 + B->m11;
 	C->m12 = A->m12 + B->m12;
@@ -376,15 +380,15 @@ matrix * MatrixMAdd (
 	C->m43 = A->m43 + B->m43;
 	C->m44 = A->m44 + B->m44;
 
-	return (C);
+	return C;
 }
 
-matrix * MatrixMove (
-	register matrix	*A,
-	         matrix *B,
-	register vector	*Translation)
+b3_matrix * b3MatrixMove (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Translation)
 {
-	matrix Move;
+	b3_matrix Move;
 
 	if (A == null) A = &UnitMatrix;
 
@@ -393,15 +397,15 @@ matrix * MatrixMove (
 	Move.m24 =  Translation->y;
 	Move.m34 =  Translation->z;
 
-	return MatrixMMul (A,&Move,B);
+	return b3MatrixMMul (A,&Move,B);
 }
 
-matrix * MatrixMoveNeg (
-	register matrix	*A,
-	         matrix *B,
-	register vector	*Translation)
+b3_matrix * b3MatrixMoveNeg (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Translation)
 {
-	matrix Move;
+	b3_matrix Move;
 
 	if (A == null) A = &UnitMatrix;
 
@@ -410,36 +414,36 @@ matrix * MatrixMoveNeg (
 	Move.m24 = - (Translation->y);
 	Move.m34 = - (Translation->z);
 
-	return MatrixMMul (A,&Move,B);
+	return b3MatrixMMul (A,&Move,B);
 }
 
-matrix * MatrixScale (
-	register matrix	*A,
-	register matrix	*B,
-	register vector	*Center,
-	register vector	*Scale)
+b3_matrix * b3MatrixScale (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
+	b3_vector *Scale)
 {
-	matrix Operator;
+	b3_matrix Operator;
 
 	Operator     = UnitMatrix;
 	Operator.m11 = Scale->x;
 	Operator.m22 = Scale->y;
 	Operator.m33 = Scale->z;
 
-	MatrixMoveNeg (A,B,Center);
-	MatrixMMul    (B,&Operator,B);
+	b3MatrixMoveNeg (A,B,Center);
+	b3MatrixMMul    (B,&Operator,B);
 
-	return MatrixMove (B,B,Center);
+	return b3MatrixMove (B,B,Center);
 }
 
-matrix * MatrixRotX (
-	register matrix	*A,
-	register matrix	*B,
-	register vector	*Center,
-	register double	 Angle)
+b3_matrix * b3MatrixRotX (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
+	b3_f64     Angle)
 {
-	         matrix	 Result,CenterMatrix;
-	register float	 Cos,Sin;
+	b3_matrix Result,CenterMatrix;
+	b3_f32    Cos,Sin;
 
 	Cos = cos(Angle);
 	Sin = sin(Angle);
@@ -450,19 +454,19 @@ matrix * MatrixRotX (
 	Result.m23 = -Sin;
 	Result.m33 =  Cos;
 
-	MatrixMoveNeg (A,&CenterMatrix,Center);
-	MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return MatrixMove (&Result,B,Center);
+	b3MatrixMoveNeg (A,&CenterMatrix,Center);
+	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
+	return b3MatrixMove (&Result,B,Center);
 }
 
-matrix * MatrixRotY (
-	register matrix	*A,
-	register matrix	*B,
-	register vector	*Center,
-	register double	 Angle)
+b3_matrix * b3MatrixRotY (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
+	b3_f64     Angle)
 {
-	         matrix	 Result,CenterMatrix;
-	register float	 Cos,Sin;
+	b3_matrix Result,CenterMatrix;
+	b3_f32    Cos,Sin;
 
 	Cos = cos(Angle);
 	Sin = sin(Angle);
@@ -473,19 +477,19 @@ matrix * MatrixRotY (
 	Result.m13 =  Sin;
 	Result.m33 =  Cos;
 
-	MatrixMoveNeg (A,&CenterMatrix,Center);
-	MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return MatrixMove (&Result,B,Center);
+	b3MatrixMoveNeg (A,&CenterMatrix,Center);
+	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
+	return b3MatrixMove (&Result,B,Center);
 }
 
-matrix * MatrixRotZ (
-	register matrix	*A,
-	register matrix	*B,
-	register vector	*Center,
-	register double	 Angle)
+b3_matrix *b3MatrixRotZ (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
+	b3_f64     Angle)
 {
-	         matrix	 Result,CenterMatrix;
-	register float	 Cos,Sin;
+	b3_matrix Result,CenterMatrix;
+	b3_f32    Cos,Sin;
 
 	if (A == null) A = &UnitMatrix;
 	Cos = cos(Angle);
@@ -497,56 +501,56 @@ matrix * MatrixRotZ (
 	Result.m12 = -Sin;
 	Result.m22 =  Cos;
 
-	MatrixMoveNeg (A,&CenterMatrix,Center);
-	MatrixMMul    (&CenterMatrix,&Result,&Result);
-	return MatrixMove (&Result,B,Center);
+	b3MatrixMoveNeg (A,&CenterMatrix,Center);
+	b3MatrixMMul    (&CenterMatrix,&Result,&Result);
+	return b3MatrixMove (&Result,B,Center);
 }
 
-matrix * MatrixRotVec (
-	register matrix      *A,
-	register matrix      *B,
-	register struct Line *Axis,
-	register double       Angle)
+b3_matrix *b3MatrixRotVec (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_line   *Axis,
+	b3_f64     Angle)
 {
-	register double	 Cos,Sin;
-	         matrix	 System,InvSystem,Result,Rotate;
+	b3_f64    Cos,Sin;
+	b3_matrix System,InvSystem,Result,Rotate;
 
 	if (A == null) A = &UnitMatrix;
 
-	System.m11 = Axis->Dir.x;
-	System.m21 = Axis->Dir.y;
-	System.m31 = Axis->Dir.z;
+	System.m11 = Axis->dir.x;
+	System.m21 = Axis->dir.y;
+	System.m31 = Axis->dir.z;
 	System.m41 = 0;
 
-	if (Axis->Dir.x == 0 && Axis->Dir.y == 0)
+	if (Axis->dir.x == 0 && Axis->dir.y == 0)
 	{
 		System.m12 = 0;
-		System.m22 = Axis->Dir.z;
+		System.m22 = Axis->dir.z;
 		System.m32 = 0;
 		System.m42 = 0;
 	}
 	else
 	{
-		System.m12 = -Axis->Dir.y;
-		System.m22 =  Axis->Dir.x;
+		System.m12 = -Axis->dir.y;
+		System.m22 =  Axis->dir.x;
 		System.m32 =  0;
 		System.m42 =  0;
 	}
 
-	NormalizeCol (&System,0L);
-	NormalizeCol (&System,1L);
+	b3NormalizeCol ((b3_matrix_array)&System,0);
+	b3NormalizeCol ((b3_matrix_array)&System,1);
 
 	System.m13 =  System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 =  System.m31 * System.m12 - System.m11 * System.m32;
 	System.m33 =  System.m11 * System.m22 - System.m21 * System.m12;
 	System.m43 =  0;
 
-	System.m14 =  Axis->Pos.x;
-	System.m24 =  Axis->Pos.y;
-	System.m34 =  Axis->Pos.z;
+	System.m14 =  Axis->pos.x;
+	System.m24 =  Axis->pos.y;
+	System.m34 =  Axis->pos.z;
 	System.m44 =  1;
 
-	if (!MatrixInv (&System,&InvSystem)) return (null);
+	if (!b3MatrixInv (&System,&InvSystem)) return (null);
 
 	Rotate     =  UnitMatrix;
 	Rotate.m22 =  Cos = cos(Angle);
@@ -554,101 +558,101 @@ matrix * MatrixRotVec (
 	Rotate.m23 = -Sin;
 	Rotate.m33 =  Cos;
 
-	MatrixMMul (A,      &InvSystem, B);
-	MatrixMMul (B,      &Rotate,   &Result);
-	MatrixMMul (&Result,&System,    B);
+	b3MatrixMMul (A,      &InvSystem, B);
+	b3MatrixMMul (B,      &Rotate,   &Result);
+	b3MatrixMMul (&Result,&System,    B);
 
 	return B;
 }
 
-matrix *MatrixMirrorPoint (
-	register matrix *A,
-	register matrix *B,
-	register vector *Center,
-	double           a)
+b3_matrix *b3MatrixMirrorPoint (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Center,
+	b3_f64     a)
 {
-	matrix	 Mirror,Mirrored;
+	b3_matrix Mirror,Mirrored;
 
 	if (A == null) A = &UnitMatrix;
 
-	MatrixMoveNeg (A,B,Center);
+	b3MatrixMoveNeg (A,B,Center);
 
 	Mirror     = UnitMatrix;
 	Mirror.m11 = -a;
 	Mirror.m22 = -a;
 	Mirror.m33 = -a;
-	MatrixMMul (B,&Mirror,&Mirrored);
-	MatrixMove (&Mirrored,B,Center);
+	b3MatrixMMul (B,&Mirror,&Mirrored);
+	b3MatrixMove (&Mirrored,B,Center);
 
 	return B;
 }
 
-matrix *MatrixMirrorAxis (
-	register matrix *A,
-	register matrix *B,
-	register line   *Axis,
-	register double	 a)
+b3_matrix *b3MatrixMirrorAxis (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_line   *Axis,
+	b3_f64     a)
 {
-	matrix	 Mirror,Mirrored,Result;
-	matrix	 System,InvSystem;
+	b3_matrix Mirror,Mirrored,Result;
+	b3_matrix System,InvSystem;
 
 	if (A == null) A = &UnitMatrix;
 
-	System.m11 = Axis->Dir.x;
-	System.m21 = Axis->Dir.y;
-	System.m31 = Axis->Dir.z;
+	System.m11 = Axis->dir.x;
+	System.m21 = Axis->dir.y;
+	System.m31 = Axis->dir.z;
 	System.m41 = 0;
 
-	if (Axis->Dir.x == 0 && Axis->Dir.y == 0)
+	if (Axis->dir.x == 0 && Axis->dir.y == 0)
 	{
 		System.m12 = 0;
-		System.m22 = Axis->Dir.z;
+		System.m22 = Axis->dir.z;
 		System.m32 = 0;
 		System.m42 = 0;
 	}
 	else
 	{
-		System.m12 = -Axis->Dir.y;
-		System.m22 =  Axis->Dir.x;
+		System.m12 = -Axis->dir.y;
+		System.m22 =  Axis->dir.x;
 		System.m32 =  0;
 		System.m42 =  0;
 	}
 
-	NormalizeCol (&System,0L);
-	NormalizeCol (&System,1L);
+	b3NormalizeCol ((b3_matrix_array)&System,0);
+	b3NormalizeCol ((b3_matrix_array)&System,1);
 
 	System.m13 = System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 = System.m31 * System.m12 - System.m11 * System.m32;
 	System.m33 = System.m11 * System.m22 - System.m21 * System.m12;
 	System.m43 = 0;
 
-	System.m14 = Axis->Pos.x;
-	System.m24 = Axis->Pos.y;
-	System.m34 = Axis->Pos.z;
+	System.m14 = Axis->pos.x;
+	System.m24 = Axis->pos.y;
+	System.m34 = Axis->pos.z;
 	System.m44 = 1;
 
-	if (!MatrixInv (&System,&InvSystem)) return null;
+	if (!b3MatrixInv (&System,&InvSystem)) return null;
 
 	Mirror = UnitMatrix;
 	Mirror.m22 = -a;
 	Mirror.m33 = -a;
 
-	MatrixMMul (A,        &InvSystem,&Result);
-	MatrixMMul (&Result,  &Mirror,   &Mirrored);
-	MatrixMMul (&Mirrored,&System,    B);
+	b3MatrixMMul (A,        &InvSystem,&Result);
+	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
+	b3MatrixMMul (&Mirrored,&System,    B);
 	return B;
 }
 
-matrix *MatrixMirrorPlane (
-	matrix *A,
-	matrix *B,
-	vector *Base,
-	vector *Dir1,
-	vector *Dir2,
-	double  a)
+b3_matrix *b3MatrixMirrorPlane (
+	b3_matrix *A,
+	b3_matrix *B,
+	b3_vector *Base,
+	b3_vector *Dir1,
+	b3_vector *Dir2,
+	b3_f64     a)
 {
-	matrix	 Mirror,Mirrored,Result;
-	matrix	 System,InvSystem;
+	b3_matrix Mirror,Mirrored,Result;
+	b3_matrix System,InvSystem;
 
 	if (A == null) A = &UnitMatrix;
 
@@ -662,8 +666,8 @@ matrix *MatrixMirrorPlane (
 	System.m32 = Dir2->z;
 	System.m42 = 0;
 
-	NormalizeCol (&System,0L);
-	NormalizeCol (&System,1L);
+	b3NormalizeCol ((b3_matrix_array)&System,0);
+	b3NormalizeCol ((b3_matrix_array)&System,1);
 
 	System.m13 = System.m21 * System.m32 - System.m31 * System.m22;
 	System.m23 = System.m31 * System.m12 - System.m11 * System.m32;
@@ -675,16 +679,13 @@ matrix *MatrixMirrorPlane (
 	System.m34 = Base->z;
 	System.m44 = 1;
 
-	if (!MatrixInv (&System,&InvSystem)) return null;
+	if (!b3MatrixInv (&System,&InvSystem)) return null;
 
 	Mirror     = UnitMatrix;
 	Mirror.m33 = -a;
 
-	MatrixMMul (A,        &InvSystem,&Result);
-	MatrixMMul (&Result,  &Mirror,   &Mirrored);
-	MatrixMMul (&Mirrored,&System,   B);
+	b3MatrixMMul (A,        &InvSystem,&Result);
+	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
+	b3MatrixMMul (&Mirrored,&System,   B);
 	return B;
 }
-
-#endif
-'ENDIF
