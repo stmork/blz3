@@ -6,7 +6,7 @@
 
 CPPFLAGS		= $(STDINC)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
-PRGS			= RemDepend RemCR RestoreExt CleanRes testimg scale calibrate half
+PRGS			= RemDepend RemCR RestoreExt CleanRes testimg scale calibrate half pw
 
 REMDEPEND_OBJS		= RemDepend.o
 REMCR_OBJS		= RemCR.o
@@ -16,9 +16,10 @@ SCALE_OBJS		= scale.o
 HALF_OBJS		= half.o
 CALIBRATE_OBJS		= calibrate.o
 TESTIMG_OBJS		= testimg.o
+PW_OBJS			= pw.o
 
-PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc
-PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS) $(RESTOREEXT_OBJS) $(SCALE_OBJS) $(CALIBRATE_OBJS) $(TESTIMG_OBJS) $(HALF_OBJS)
+PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc
+PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS) $(RESTOREEXT_OBJS) $(SCALE_OBJS) $(CALIBRATE_OBJS) $(TESTIMG_OBJS) $(HALF_OBJS) $(PW_OBJS)
 #PRG_SOURCE		= ${PRG_OBJS:.o=.cc}
 
 all:	$(PRGS)
@@ -57,6 +58,11 @@ scale:	$(SCALE_OBJS)
 	cp $@ $(BLZ3_BIN)
 
 half:	$(HALF_OBJS)
+	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	chmod 775 $@
+	cp $@ $(BLZ3_BIN)
+
+pw:	$(PW_OBJS)
 	$(LINK.cc) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
