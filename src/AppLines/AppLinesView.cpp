@@ -42,10 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2003/02/27 19:39:05  sm
+**	- Added two grid colors for configuration.
+**	- Beautified properties dialog.
+**
 **	Revision 1.63  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.62  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -335,6 +339,16 @@
 **                        CAppLinesView implementation                  **
 **                                                                      **
 *************************************************************************/
+
+b3_color CAppLinesView::m_GridColorUnit =
+{
+	0,0.7f,0.7f,0.7f
+};
+
+b3_color CAppLinesView::m_GridColorMove =
+{
+	0,0.75f,0.75f,0.75f
+};
 
 IMPLEMENT_DYNCREATE(CAppLinesView, CAppRenderView)
 
@@ -649,10 +663,10 @@ void CAppLinesView::b3Draw(
 
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
-	m_RenderView.b3DrawRaster(info->b3ScaleUnitToMM() * info->b3GetMeasure(false),0.7);
+	m_RenderView.b3DrawRaster(info->b3ScaleUnitToMM() * info->b3GetMeasure(false),&m_GridColorUnit);
 	if (pDoc->m_Info->m_GridActive)
 	{
-		m_RenderView.b3DrawRaster(pDoc->m_Info->m_GridMove);
+		m_RenderView.b3DrawRaster(pDoc->m_Info->m_GridMove,&m_GridColorMove);
 	}
 
 	// Then draw objects

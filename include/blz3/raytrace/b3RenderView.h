@@ -113,7 +113,7 @@ public:
 	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *pos);
 	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);
 	void              b3SetupView(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
-	void              b3DrawRaster(b3_f64 grid,b3_f64 intensity=0.75);
+	void              b3DrawRaster(b3_f64 grid,b3_color *color);
 	void              b3SetTranslationStepper(b3_vector *steps,b3_vector *mover,b3_action_mode mode);
 	b3_f64            b3SetRotationStepper(b3_vector *steps,b3_vector *axis_dir,b3_action_mode mode);
 

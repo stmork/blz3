@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "AppLinesView.h"
 #include "blz3/raytrace/b3PickInfo.h"
 #include "DlgProperties.h"
 #include "b3CameraVolume.h"
@@ -36,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/02/27 19:39:05  sm
+**	- Added two grid colors for configuration.
+**	- Beautified properties dialog.
+**
 **	Revision 1.6  2003/02/26 19:13:05  sm
 **	- Update scene/object views after color redefinition.
 **	- Beautofied the app properties dialog.
-**
+**	
 **	Revision 1.5  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -75,6 +80,7 @@ CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgProperties::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgProperties)
+	m_BBoxVisible = FALSE;
 	//}}AFX_DATA_INIT
 	m_App = CB3GetLinesApp();
 }
@@ -84,6 +90,9 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgProperties)
+	DDX_Control(pDX, IDC_COLOR_UNIT, m_CtrlColorUnit);
+	DDX_Control(pDX, IDC_COLOR_MOVE, m_CtrlColorMove);
+	DDX_Control(pDX, IDC_PICK_SIZE, m_PickSizeCtrl);
 	DDX_Control(pDX, IDC_COLOR_SHAPE, m_CtrlColorShape);
 	DDX_Control(pDX, IDC_COLOR_SELECTED, m_CtrlColorSelected);
 	DDX_Control(pDX, IDC_COLOR_PICK, m_CtrlColorPick);
@@ -94,6 +103,7 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COLOR_BG, m_CtrlColorBg);
 	DDX_Control(pDX, IDC_ROW_REFRESH, m_RowRefreshCtrl);
 	DDX_Control(pDX, IDC_PRT_BUFFER_SPIN, m_PrtBufferCtrl);
+	DDX_Check(pDX, IDC_BBOX_VISIBLE, m_BBoxVisible);
 	//}}AFX_DATA_MAP
 }
 
@@ -108,6 +118,8 @@ BEGIN_MESSAGE_MAP(CDlgProperties, CDialog)
 	ON_BN_CLICKED(IDC_CHANGE_PICK, OnChangePick)
 	ON_BN_CLICKED(IDC_CHANGE_SELECTED, OnChangeSelected)
 	ON_BN_CLICKED(IDC_CHANGE_SHAPE, OnChangeShape)
+	ON_BN_CLICKED(IDC_CHANGE_MOVE, OnChangeMove)
+	ON_BN_CLICKED(IDC_CHANGE_UNIT, OnChangeUnit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -116,15 +128,14 @@ END_MESSAGE_MAP()
 
 BOOL CDlgProperties::OnInitDialog() 
 {
+	m_BBoxVisible = b3BBox::m_GridVisible;
+
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_PrtBufferCtrl.b3SetRange(1,128);
-	m_PrtBufferCtrl.b3SetPos(m_App->m_PrintBufferSize);
-
-	m_RowRefreshCtrl.SetRange(1,32);
-	m_RowRefreshCtrl.SetPos(m_App->m_RowRefreshCount);
 	m_ColorBg       = CAppRenderDoc::m_BgColor;
+	m_ColorUnit     = CAppLinesView::m_GridColorUnit;
+	m_ColorMove     = CAppLinesView::m_GridColorMove;
 	m_ColorCamera   = b3CameraVolume::m_GridColor;
 	m_ColorFulcrum  = b3Fulcrum::m_GridColor;
 	m_ColorObject   = b3BBox::m_GridColor;
@@ -134,6 +145,8 @@ BOOL CDlgProperties::OnInitDialog()
 	b3Color::b3GetColorref(&m_ColorPick,b3PickPoint::m_PickColor);
 
 	m_CtrlColorBg.b3Init(&m_ColorBg,this);
+	m_CtrlColorUnit.b3Init(&m_ColorUnit,this);
+	m_CtrlColorMove.b3Init(&m_ColorMove,this);
 	m_CtrlColorCamera.b3Init(&m_ColorCamera,this);
 	m_CtrlColorFulcrum.b3Init(&m_ColorFulcrum,this);
 	m_CtrlColorObject.b3Init(&m_ColorObject,this);
@@ -141,6 +154,15 @@ BOOL CDlgProperties::OnInitDialog()
 	m_CtrlColorSelected.b3Init(&m_ColorSelected,this);
 	m_CtrlColorPick.b3Init(&m_ColorPick,this);
 	m_CtrlColorGrid.b3Init(&m_ColorGrid,this);
+
+	m_PrtBufferCtrl.b3SetRange(1,128);
+	m_PrtBufferCtrl.b3SetPos(m_App->m_PrintBufferSize);
+
+	m_RowRefreshCtrl.SetRange(1,32);
+	m_RowRefreshCtrl.SetPos(m_App->m_RowRefreshCount);
+	
+	m_PickSizeCtrl.SetRange(1,4);
+	m_PickSizeCtrl.SetPos(b3PickInfo::m_PickSize);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -194,18 +216,34 @@ void CDlgProperties::OnChangeShape()
 	m_CtrlColorShape.b3Select();
 }
 
+void CDlgProperties::OnChangeMove() 
+{
+	// TODO: Add your control notification handler code here
+	m_CtrlColorMove.b3Select();
+}
+
+void CDlgProperties::OnChangeUnit() 
+{
+	// TODO: Add your control notification handler code here
+	m_CtrlColorUnit.b3Select();
+}
+
 void CDlgProperties::OnOK() 
 {
 	// TODO: Add extra validation here
 	CDialog::OnOK();
 	
 	CAppRenderDoc::m_BgColor        = m_ColorBg;
+	CAppLinesView::m_GridColorUnit  = m_ColorUnit;
+	CAppLinesView::m_GridColorMove  = m_ColorMove;
 	b3CameraVolume::m_GridColor     = m_ColorCamera;
 	b3Fulcrum::m_GridColor          = m_ColorFulcrum;
 	b3BBox::m_GridColor             = m_ColorObject;
+	b3BBox::m_GridVisible           = m_BBoxVisible;
 	b3RenderObject::m_GridColor     = m_ColorShape;
 	b3RenderObject::m_SelectedColor = m_ColorSelected;
 	b3PickInfo::m_GridColor         = m_ColorGrid;
+	b3PickInfo::m_PickSize          = m_PickSizeCtrl.GetPos();
 	b3PickPoint::m_PickColor        = b3Color::b3GetColorref(&m_ColorPick);
 
 	m_App->m_PrintBufferSize = m_PrtBufferCtrl.b3GetPos();
@@ -213,7 +251,11 @@ void CDlgProperties::OnOK()
 	m_App->WriteProfileInt(m_App->b3ClientName(),"print buffer size",m_App->m_PrintBufferSize);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"row refresh count",m_App->m_RowRefreshCount);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
+	m_App->WriteProfileInt(m_App->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
+	m_App->WriteProfileInt(m_App->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
 	m_App->b3WriteProfileColor("default color.object grid",&b3BBox::m_GridColor);
+	m_App->b3WriteProfileColor("default color.unit grid",&CAppLinesView::m_GridColorUnit);
+	m_App->b3WriteProfileColor("default color.move grid",&CAppLinesView::m_GridColorMove);
 	m_App->b3WriteProfileColor("default color.fulcrum",&b3Fulcrum::m_GridColor);
 	m_App->b3WriteProfileColor("default color.camera",&b3CameraVolume::m_GridColor);
 	m_App->b3WriteProfileColor("default color.background",&CAppRenderDoc::m_BgColor);
@@ -227,10 +269,14 @@ void CDlgProperties::b3ReadConfig()
 {
 	CAppLinesApp *app = CB3GetLinesApp();
 
-	app->m_PrintBufferSize = app->GetProfileInt(app->b3ClientName(),"print buffer size",32);
-	app->m_RowRefreshCount = app->GetProfileInt(app->b3ClientName(),"row refresh count",B3_DISPLAY_ROWREFRESHCOUNT);
+	app->m_PrintBufferSize   = app->GetProfileInt(app->b3ClientName(),"print buffer size",32);
+	app->m_RowRefreshCount   = app->GetProfileInt(app->b3ClientName(),"row refresh count",B3_DISPLAY_ROWREFRESHCOUNT);
 	b3PickPoint::m_PickColor = app->GetProfileInt(app->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
+	b3PickInfo::m_PickSize   = app->GetProfileInt(app->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
+	b3BBox::m_GridVisible    = app->GetProfileInt(app->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
 	app->b3ReadProfileColor("default color.object grid",&b3BBox::m_GridColor);
+	app->b3ReadProfileColor("default color.unit grid",&CAppLinesView::m_GridColorUnit);
+	app->b3ReadProfileColor("default color.move grid",&CAppLinesView::m_GridColorMove);
 	app->b3ReadProfileColor("default color.fulcrum",&b3Fulcrum::m_GridColor);
 	app->b3ReadProfileColor("default color.camera",&b3CameraVolume::m_GridColor);
 	app->b3ReadProfileColor("default color.background",&CAppRenderDoc::m_BgColor);

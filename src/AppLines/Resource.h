@@ -408,6 +408,7 @@
 #define IDC_ROT_Z_USE                   32176
 #define IDC_ROW_REFRESH                 32177
 #define IDC_SCAN_PARA                   32178
+#define IDC_PICK_SIZE                   32178
 #define IDC_SHADOW_BRIGHTNESS           32179
 #define IDC_SHADOW_BRIGHTNESS_LEGEND    32180
 #define IDC_SMP_JITTER                  32181
@@ -500,6 +501,11 @@
 #define IDC_CHANGE_SELECTED             32270
 #define IDC_CHANGE_PICK                 32271
 #define IDC_CHANGE_GRID                 32272
+#define IDC_BBOX_VISIBLE                32273
+#define IDC_COLOR_UNIT                  32274
+#define IDC_COLOR_MOVE                  32275
+#define IDC_CHANGE_UNIT                 32276
+#define IDC_CHANGE_MOVE                 32277
 #define IDS_ASK_DELETE_CAMERA           60000
 #define IDS_ASK_DELETE_LIGHT            60001
 #define IDS_ASK_DELETE_OBJECT           60002
@@ -664,7 +670,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10118
-#define _APS_NEXT_CONTROL_VALUE         32266
+#define _APS_NEXT_CONTROL_VALUE         32274
 #define _APS_NEXT_SYMED_VALUE           60145
 #endif
 #endif

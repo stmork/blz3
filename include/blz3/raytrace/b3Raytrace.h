@@ -1732,7 +1732,7 @@ protected:
 
 	inline b3_render_mode  b3GetRenderMode()
 	{
-		return b3IsActive() ? B3_RENDER_LINE : B3_RENDER_NOTHING;
+		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}
 };
 

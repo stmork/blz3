@@ -45,6 +45,10 @@ protected: // create from serialization only
 	CAppLinesView();
 	DECLARE_DYNCREATE(CAppLinesView)
 
+public:
+	static b3_color m_GridColorUnit;
+	static b3_color m_GridColorMove;
+
 // Attributes
 public:
 	CAppLinesDoc* GetDocument();

@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2003/02/27 19:39:05  sm
+**	- Added two grid colors for configuration.
+**	- Beautified properties dialog.
+**
 **	Revision 1.33  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.32  2002/08/21 10:16:40  sm
 **	- Made some changes to the Un*x OpenGL renderer:
 **	  o Added animations
@@ -1119,7 +1123,7 @@ void b3RenderView::b3SetupView(
 #define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
 #define B3_RASTER_MINDIST  8
 
-void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
+void b3RenderView::b3DrawRaster(b3_f64 grid,b3_color *color)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp,yDisp;
@@ -1238,7 +1242,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
 	    (yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
 	{
 		glBegin(GL_LINES);
-		glColor3f(intensity,intensity,intensity);
+		glColor3f(color->r,color->g,color->b);
 		for (x = 0;x < xCount;x++)
 		{
 			glVertex3f(a.x,a.y,a.z);

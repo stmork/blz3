@@ -34,6 +34,8 @@ class CDlgProperties : public CDialog
 {
 	CAppLinesApp *m_App;
 	b3_color      m_ColorBg;
+	b3_color      m_ColorUnit;
+	b3_color      m_ColorMove;
 	b3_color      m_ColorCamera;
 	b3_color      m_ColorFulcrum;
 	b3_color      m_ColorObject;
@@ -48,6 +50,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgProperties)
 	enum { IDD = IDD_PROPERTIES };
+	CSliderCtrl	m_PickSizeCtrl;
 	CB3ColorFieldSelector	m_CtrlColorShape;
 	CB3ColorFieldSelector	m_CtrlColorSelected;
 	CB3ColorFieldSelector	m_CtrlColorPick;
@@ -56,8 +59,11 @@ public:
 	CB3ColorFieldSelector	m_CtrlColorFulcrum;
 	CB3ColorFieldSelector	m_CtrlColorCamera;
 	CB3ColorFieldSelector	m_CtrlColorBg;
+	CB3ColorFieldSelector	m_CtrlColorUnit;
+	CB3ColorFieldSelector	m_CtrlColorMove;
 	CSliderCtrl	m_RowRefreshCtrl;
 	CB3IntSpinButtonCtrl	m_PrtBufferCtrl;
+	BOOL	m_BBoxVisible;
 	//}}AFX_DATA
 
 
@@ -83,6 +89,8 @@ protected:
 	afx_msg void OnChangePick();
 	afx_msg void OnChangeSelected();
 	afx_msg void OnChangeShape();
+	afx_msg void OnChangeMove();
+	afx_msg void OnChangeUnit();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
