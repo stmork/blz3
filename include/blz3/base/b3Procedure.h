@@ -39,7 +39,7 @@ typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
 class b3Noise : public b3Mem
 {
-	static b3_noisetype *NoiseTable;
+	static b3_noisetype *m_NoiseTable;
 	static b3_f64        epsilon;
 
 public:
@@ -69,6 +69,9 @@ public:
 	{
 		return b3FilteredNoiseVector(x,y,z) * 2 - 1;
 	}
+	
+	static        void          b3NoiseVector         (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
+	static        void          b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
 	
 	static        void       b3NoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result);
 	static inline void b3SignedNoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result)
@@ -108,7 +111,7 @@ public:
 
 		for (i = 0;i < octaves;i++)
 		{
-			n = b3NoiseVector(v[1],v[2],v[3]);
+			n = b3FilteredNoiseVector(v[1],v[2],v[3]);
 			sum  += (v[0] * n);
 			for (k = 0;k < 4;k++)
 			{
@@ -171,7 +174,7 @@ public:
 private:
 	static b3_f64       b3Frac      (b3_f64 a,b3_f64 b);
 	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
-	static b3_f64       b3Interpolate(b3_index ix,b3_index iy,b3_index iz,b3_f32 fx,b3_f32 fy,b3_f32 fz);
+	static b3_f64       b3Interpolate(b3_index ix,b3_index iy,b3_index iz,b3_f32 fx,b3_f32 fy,b3_f32 fz,b3_index d=0);
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
@@ -206,6 +209,7 @@ public:
 		P.y *= 8;
 		P.z *= 8;
 		turbulence = b3Noise::b3Turbulence(&P, 4);
+
 		return (m_MinWind + m_WindAmp * turbulence) * offset;
 	}
 };
