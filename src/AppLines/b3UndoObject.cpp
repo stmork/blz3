@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/09/27 11:08:54  sm
+**	- Added rudimental car paint material dialog.
+**
 **	Revision 1.10  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.9  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
@@ -114,7 +117,7 @@ b3OpObjectCreate::b3OpObjectCreate(
 		m_BBox = new b3BBox(BBOX);
 		m_BBox->b3SetName(dlg.m_NewName);
 		b3Initialize();
-		m_PrepareGeometry         = false;
+		m_PrepareGeometry         = true;
 		m_PrepareChangedStructure = true;
 	}
 }

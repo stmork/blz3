@@ -102,6 +102,7 @@
 #define IDD_SUPER_SAMPLE                672
 #define IDD_TORUS                       673
 #define IDD_UNDO_REDO                   674
+#define IDD_MAT_CAR_PAINT               675
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -159,6 +160,7 @@
 #define IDI_SHAPE_TORUS                 1055
 #define IDI_SHAPE_TRIANGLES             1056
 #define IDI_UP                          1057
+#define IDI_MAT_CAR_PAINT               1058
 #define ID_ACTIVATE                     10000
 #define ID_ACTIVATE_ALL                 10001
 #define ID_ACT_SELECT                   10002
@@ -925,6 +927,7 @@
 #define IDS_TOOLBAR_OBJECT              60206
 #define IDS_TOOLBAR_VIEW                60207
 #define IDS_UNKNOWN                     60208
+#define IDS_MAT_CAR_PAINT               61446
 
 // Next default values for new objects
 // 

@@ -45,6 +45,7 @@
 #include "DlgMatGranite.h"
 #include "DlgMatOakPlank.h"
 #include "DlgMatThinFilm.h"
+#include "DlgMatCarPaint.h"
 
 /*************************************************************************
 **                                                                      **
@@ -54,9 +55,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/09/27 11:08:54  sm
+**	- Added rudimental car paint material dialog.
+**
 **	Revision 1.9  2004/07/27 16:33:50  sm
 **	- Added thin film material rendering
-**
+**	
 **	Revision 1.8  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -154,6 +158,7 @@ void b3StaticPluginInfoInit::b3Init()
 	CDlgMatGranite::b3Register();
 	CDlgMatOakPlank::b3Register();
 	CDlgMatThinFilm::b3Register();
+	CDlgMatCarPaint::b3Register();
 }
 
 const char *b3StaticPluginInfoInit::b3GetClassName(b3_u32 class_id)

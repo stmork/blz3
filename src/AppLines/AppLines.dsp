@@ -429,6 +429,10 @@ SOURCE=.\DlgLight.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatCarPaint.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatChess.cpp
 # End Source File
 # Begin Source File
@@ -905,6 +909,10 @@ SOURCE=.\DlgLight.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatCarPaint.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgMatChess.h
 # End Source File
 # Begin Source File
@@ -1198,6 +1206,10 @@ SOURCE=.\res\item_unknown.ico
 # Begin Source File
 
 SOURCE=.\res\left.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_car_paint.ico
 # End Source File
 # Begin Source File
 
