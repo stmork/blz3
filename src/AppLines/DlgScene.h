@@ -26,6 +26,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3ShowImage.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -48,11 +49,9 @@ public:
 	CSliderCtrl	m_ShadowBrightnessCtrl;
 	CString	m_RayDepthLegend;
 	CString	m_ShadowBrightnessLegend;
-	CSpinButtonCtrl	m_yResSpin;
-	CSpinButtonCtrl	m_xResSpin;
+	CB3IntSpinButtonCtrl	m_yResSpin;
+	CB3IntSpinButtonCtrl	m_xResSpin;
 	int		m_BackgroundMode;
-	int		m_xRes;
-	int		m_yRes;
 	BOOL	m_ResValid;
 	BOOL	m_GfxValid;
 	//}}AFX_DATA

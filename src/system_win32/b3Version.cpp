@@ -33,6 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/10 16:07:46  sm
+**	- Added some OS version output
+**	- Corrected language specifiers for version output.
+**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
+**	  to avoid thousands point.
+**
 **	Revision 1.1  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -47,7 +53,7 @@
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	
 */
 
@@ -67,7 +73,7 @@ CB3Version::CB3Version(b3_bool no_cr)
 	         char     FileName[1024];
 	unsigned long     handle;
 	unsigned int      len;
-	b3Date     today;
+	b3Date            today;
 
 	// Predefine version information
 	m_VerMajor   =  B3_VERSION;
@@ -102,6 +108,8 @@ CB3Version::CB3Version(b3_bool no_cr)
 			// We get the information, and...
 			if (GetFileVersionInfo(FileName, handle, len, info) != 0)
 			{
+				DWORD lang = 0x040704b0;
+
 				// We get the version information
 				if (VerQueryValue(info, "\\", &ptr, &len) != 0)
 				{
@@ -114,8 +122,14 @@ CB3Version::CB3Version(b3_bool no_cr)
 					m_RevMinor   = LOWORD(vsf->dwProductVersionLS);
 					m_PreRelease = (vsf->dwFileFlags & vsf->dwFileFlagsMask & VS_FF_PRERELEASE) != 0;
 				}
-				CString company(  b3GetFileInfo(info,"CompanyName" ,   &ptr, &len));
-				CString copyright(b3GetFileInfo(info,"LegalCopyright", &ptr, &len));
+				if (VerQueryValue(info, "VarFileInfo\\Translation", &ptr, &len) != 0)
+				{
+					USHORT *var = (USHORT *)ptr;
+
+					lang = MAKELONG(var[1],var[0]);
+				}
+				CString company(  b3GetFileInfo(info,"CompanyName" ,   &ptr, &len,lang));
+				CString copyright(b3GetFileInfo(info,"LegalCopyright", &ptr, &len,lang));
 			
 				m_Copyright.Format("%s 2001 - %lu by%s%s",
 					copyright,today.year,cr,company);
@@ -134,17 +148,63 @@ const char *CB3Version::b3GetFileInfo(
 	void          *info,
 	const char    *key,
 	void         **ptr,
-	unsigned int  *len)
+	unsigned int  *len,
+	DWORD          lang)
 {
 	CString     StringFileInfoKey;
 	const char *result = "";
 
-	StringFileInfoKey.Format("\\StringFileInfo\\040704b0\\%s",key);
+	StringFileInfoKey.Format("\\StringFileInfo\\%08x\\%s",lang,key);
 	if (VerQueryValue(info,(char *)((const char*)StringFileInfoKey),ptr,len) != 0)
 	{
 		result = (const char *)*ptr;
 	}
 	return result;
+}
+
+void CB3Version::b3DumpOS()
+{
+	OSVERSIONINFO version_info;
+	b3Date        today;
+	b3_count      CPUs = b3Runtime::b3GetNumCPUs();
+
+	version_info.dwOSVersionInfoSize = sizeof(version_info);
+	GetVersionEx(&version_info);
+
+	// Dumping system information
+	b3PrintF (B3LOG_NORMAL,"### Blizzard III started on %02ld.%02ld.%ld - %02ld:%02ld:%02ld\n",
+		today.day, today.month,today.year,
+		today.hour,today.min,  today.sec);
+	b3PrintF (B3LOG_NORMAL,"      Compiled with MS VC++: %d (= V%2.2f)\n",
+		_MSC_VER,(double)_MSC_VER / 200.0);
+	b3PrintF (B3LOG_NORMAL,"      Optimized for an i%d processor.\n",_M_IX86 + 86);
+	b3PrintF (B3LOG_NORMAL,"      OS-Version: %ld.%ld Build: %ld %s%s%s\n",
+		version_info.dwMajorVersion,version_info.dwMinorVersion,
+		IS_NT ? version_info.dwBuildNumber : LOWORD(version_info.dwBuildNumber),
+		version_info.szCSDVersion,
+		IS_NT ?    " [Windows NT]" : "",
+		IS_WIN95 ?
+			(version_info.dwMinorVersion == 0 ?
+				" [Windows 95]" :
+				" [Windows 98]") :
+			"");
+
+	switch (CPUs)
+	{
+	case 1:
+		b3PrintF(B3LOG_NORMAL,"      Found only one CPU.\n");
+		break;
+
+	case 2:
+		b3PrintF(B3LOG_NORMAL,"      Found two CPUs - Good.\n");
+		break;
+
+	default:
+		B3_ASSERT(CPUs > 2);
+		b3PrintF(B3LOG_NORMAL,"      Found %d CPUs - Fine!\n",CPUs);
+		break;
+	}
+	b3PrintF (B3LOG_NORMAL,"\n");
 }
 
 // Put version string into buffer

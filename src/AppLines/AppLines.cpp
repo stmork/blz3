@@ -54,10 +54,16 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2002/08/10 16:07:46  sm
+**	- Added some OS version output
+**	- Corrected language specifiers for version output.
+**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
+**	  to avoid thousands point.
+**
 **	Revision 1.40  2002/08/07 14:26:23  sm
 **	- Introduced mapping from Blizzard III error codes to human
 **	  readable error messages supplied from Windows resources.
-**
+**	
 **	Revision 1.39  2002/08/05 16:04:54  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -451,10 +457,11 @@ BOOL CAppLinesApp::InitInstance()
 #ifdef _DEBUG
 	b3Log_SetLevel(B3LOG_FULL);
 #endif
-	b3PrintF(B3LOG_NORMAL,"%s %s\n%s\n",
+	b3PrintF(B3LOG_NORMAL,"%s %s\n%s\n\n",
 		b3ClientName(),
 		version.b3GetVersionString(),
 		version.b3GetCopyrightString());
+	CB3Version::b3DumpOS();
 
 	b3InitRaytrace::b3Init();
 

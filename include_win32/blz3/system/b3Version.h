@@ -32,19 +32,26 @@ class CB3Version
 	CString  m_Version;
 	CString  m_Copyright;
 public:
-	            CB3Version(b3_bool no_cr = false);
-	void        b3CopyVersionString(char *version);
-	void        b3CopyCopyrightString(char *copyright);
-	const char *b3GetVersionString();
-	const char *b3GetCopyrightString();
-	b3_bool     b3IsPreRelease();
+	             CB3Version(b3_bool no_cr = false);
+	void         b3CopyVersionString(char *version);
+	void         b3CopyCopyrightString(char *copyright);
+	const char  *b3GetVersionString();
+	const char  *b3GetCopyrightString();
+	b3_bool      b3IsPreRelease();
 
+	static void  b3DumpOS();
 private:
-	const char *b3GetFileInfo(void *info,const char *key,void **ptr,unsigned int *len);
+	const char  *b3GetFileInfo(void *info,const char *key,void **ptr,unsigned int *len,DWORD langID);
 };
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/10 16:07:46  sm
+**	- Added some OS version output
+**	- Corrected language specifiers for version output.
+**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
+**	  to avoid thousands point.
+**
 **	Revision 1.1  2002/08/05 16:04:52  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -59,7 +66,7 @@ private:
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	
 */
 

@@ -35,11 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/10 16:07:46  sm
+**	- Added some OS version output
+**	- Corrected language specifiers for version output.
+**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
+**	  to avoid thousands point.
+**
 **	Revision 1.9  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.8  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -108,8 +114,6 @@ CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
 	m_ResValid = false;
 	m_RayDepthLegend = _T("");
 	m_BackgroundMode = 0;
-	m_xRes = 240;
-	m_yRes = 160;
 	m_GfxValid = FALSE;
 	m_ShadowBrightnessLegend = _T("");
 	//}}AFX_DATA_INIT
@@ -133,10 +137,6 @@ void CDlgScene::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RAYDEPTH, m_RayDepthCtrl);
 	DDX_Text(pDX, IDC_SHADOW_BRIGHTNESS_LEGEND, m_ShadowBrightnessLegend);
 	DDX_Text(pDX, IDC_RAYDEPTH_LEGEND, m_RayDepthLegend);
-	DDX_Text(pDX, IDC_XRES, m_xRes);
-	DDV_MinMaxInt(pDX, m_xRes, 16, 16383);
-	DDX_Text(pDX, IDC_YRES, m_yRes);
-	DDV_MinMaxInt(pDX, m_yRes, 16, 16383);
 	//}}AFX_DATA_MAP
 }
 
@@ -163,8 +163,6 @@ BOOL CDlgScene::OnInitDialog()
 	m_ResValid = (m_Scene->m_Flags & TP_SIZEVALID) != 0;
 	m_GfxValid = (m_Scene->m_Flags & TP_NO_GFX) == 0;
 	m_BackgroundMode = scene_to_dialog[m_Scene->m_BackgroundType];
-	m_xRes = m_Scene->m_xSize;
-	m_yRes = m_Scene->m_ySize;
 
 	CDialog::OnInitDialog();
 	
@@ -180,8 +178,10 @@ BOOL CDlgScene::OnInitDialog()
 	m_PreviewImageCtrl.b3Copy(m_PreviewScene->m_BackTexture);
 	m_PreviewImageCtrl.b3Update(true,true);
 
-	m_xResSpin.SetRange(16,16383);
-	m_yResSpin.SetRange(16,16383);
+	m_xResSpin.b3SetRange(16,16383);
+	m_yResSpin.b3SetRange(16,16383);
+	m_xResSpin.b3SetPos(m_Scene->m_xSize);
+	m_yResSpin.b3SetPos(m_Scene->m_ySize);
 	
 	m_RayDepthCtrl.SetRangeMin (  1);
 	m_RayDepthCtrl.SetRangeMax ( 10);
@@ -315,8 +315,8 @@ void CDlgScene::OnOK()
 	m_Scene->m_BackgroundType   = m_PreviewScene->m_BackgroundType;
 	m_Scene->m_TopColor         = m_PreviewScene->m_TopColor;
 	m_Scene->m_BottomColor      = m_PreviewScene->m_BottomColor;
-	m_Scene->m_xSize            = m_xRes;
-	m_Scene->m_ySize            = m_yRes;
+	m_Scene->m_xSize            = m_xResSpin.b3GetPos();
+	m_Scene->m_ySize            = m_yResSpin.b3GetPos();
 	m_Scene->m_TraceDepth       = m_RayDepthCtrl.GetPos();
 	m_Scene->m_ShadowBrightness = m_ShadowBrightnessCtrl.GetPos() / 100.0;
 	m_Scene->m_Flags            =

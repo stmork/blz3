@@ -43,11 +43,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/10 16:07:46  sm
+**	- Added some OS version output
+**	- Corrected language specifiers for version output.
+**	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
+**	  to avoid thousands point.
+**
 **	Revision 1.6  2002/02/27 20:14:52  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.5  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -149,18 +155,18 @@ void CB3App::b3GfxType(CWnd *wnd)
 	pSize  = dc->GetDeviceCaps(NUMCOLORS);
 	width  = (double)xSize / dc->GetDeviceCaps(LOGPIXELSX);
 	height = (double)ySize / dc->GetDeviceCaps(LOGPIXELSY);
-	b3PrintF (B3LOG_NORMAL,"### Blizzard III DUMPING SCREEN INFORMATION...\n");
-	b3PrintF (B3LOG_NORMAL,"### B3 Screen dimensions: %ldx%ld pixels\n",
+	b3PrintF (B3LOG_NORMAL,"### Blizzard III Screen information:\n");
+	b3PrintF (B3LOG_NORMAL,"      Screen dimensions: %ldx%ld pixels\n",
 		xSize,ySize);
-	b3PrintF (B3LOG_NORMAL,"### B3 Monitor dimensions: %2.2fx%2.2f inches "
+	b3PrintF (B3LOG_NORMAL,"      Monitor dimensions: %2.2fx%2.2f inches "
 		"(using %2.2f monitor)\n",
 		width,height,sqrt(width * width + height * height));
-	b3PrintF (B3LOG_NORMAL,"### B3 Monitor dimensions: %ldx%ld mm²\n",
+	b3PrintF (B3LOG_NORMAL,"      Monitor dimensions: %ldx%ld mm²\n",
 		dc->GetDeviceCaps(HORZSIZE),
 		dc->GetDeviceCaps(VERTSIZE));
-	b3PrintF (B3LOG_NORMAL,"### B3 Using %ld bits per pixel\n",
+	b3PrintF (B3LOG_NORMAL,"      Using %ld bits per pixel\n",
 		dc->GetDeviceCaps(BITSPIXEL));
-	b3PrintF (B3LOG_NORMAL,"### B3 Palette size %ld entries\n",
+	b3PrintF (B3LOG_NORMAL,"      Palette size %ld entries\n",
 		pSize < 0 ? 0 : pSize);
 	wnd->ReleaseDC(dc);
 }
