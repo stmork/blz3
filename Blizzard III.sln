@@ -66,6 +66,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibTIFF", "src\Btiff\LibTIF
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Lines III", "Installer\Lines III\Lines III.vdproj", "{98CE390B-C373-408D-8C1D-82384A013131}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -78,16 +82,12 @@ Global
 		{1BD7E585-1B59-451F-B16C-400CFBC36072}.Release.Build.0 = Release|Win32
 		{F2F12679-D05E-4644-8A09-8A4169D14B4D}.Debug.ActiveCfg = Debug|Win32
 		{F2F12679-D05E-4644-8A09-8A4169D14B4D}.Release.ActiveCfg = Release|Win32
-		{F2F12679-D05E-4644-8A09-8A4169D14B4D}.Release.Build.0 = Release|Win32
 		{FB6DF1AD-EA63-49CD-BF09-8E6E09D6DBEA}.Debug.ActiveCfg = Debug|Win32
 		{FB6DF1AD-EA63-49CD-BF09-8E6E09D6DBEA}.Release.ActiveCfg = Release|Win32
-		{FB6DF1AD-EA63-49CD-BF09-8E6E09D6DBEA}.Release.Build.0 = Release|Win32
 		{34090A0D-3B72-48C1-B9EE-17F5CDFCB413}.Debug.ActiveCfg = Debug|Win32
 		{34090A0D-3B72-48C1-B9EE-17F5CDFCB413}.Release.ActiveCfg = Release|Win32
-		{34090A0D-3B72-48C1-B9EE-17F5CDFCB413}.Release.Build.0 = Release|Win32
 		{7CE9CD22-08A1-4044-B4CF-78CB7AB39BAB}.Debug.ActiveCfg = Debug|Win32
 		{7CE9CD22-08A1-4044-B4CF-78CB7AB39BAB}.Release.ActiveCfg = Release|Win32
-		{7CE9CD22-08A1-4044-B4CF-78CB7AB39BAB}.Release.Build.0 = Release|Win32
 		{8100A85F-2910-4B5E-9042-45EA7FB2B309}.Debug.ActiveCfg = Debug|Win32
 		{8100A85F-2910-4B5E-9042-45EA7FB2B309}.Debug.Build.0 = Debug|Win32
 		{8100A85F-2910-4B5E-9042-45EA7FB2B309}.Release.ActiveCfg = Release|Win32
@@ -120,6 +120,9 @@ Global
 		{9BA92C50-F51C-4D7E-BA6D-E42D840B5ED5}.Debug.Build.0 = Debug|Win32
 		{9BA92C50-F51C-4D7E-BA6D-E42D840B5ED5}.Release.ActiveCfg = Release|Win32
 		{9BA92C50-F51C-4D7E-BA6D-E42D840B5ED5}.Release.Build.0 = Release|Win32
+		{98CE390B-C373-408D-8C1D-82384A013131}.Debug.ActiveCfg = Debug
+		{98CE390B-C373-408D-8C1D-82384A013131}.Release.ActiveCfg = Release
+		{98CE390B-C373-408D-8C1D-82384A013131}.Release.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

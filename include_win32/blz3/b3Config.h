@@ -18,7 +18,7 @@
 #ifndef B3_CONFIG_H
 #define B3_CONFIG_H
 
-#define BLIZZARD3_REG_COMPANY  "Steffen A. Mork"
+#define BLIZZARD3_REG_COMPANY  "MORKNet"
 #define BLIZZARD3_REG_PRODUCT  "Blizzard III"
 
 #define main(argc,argv) _Blizzard3Main(argc,argv)
@@ -91,9 +91,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.33  2004/12/27 20:14:18  sm
+**	- Added Windows installation project
+**
 **	Revision 1.32  2004/09/23 20:02:25  sm
 **	- Introduced VBOs on Windows - with success!
-**
+**	
 **	Revision 1.31  2004/09/23 15:47:03  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
@@ -244,33 +247,19 @@ typedef CDC b3DrawContext;
 // Define this keyword to nothing (for TIFF library)
 #define huge
 
+// Define this to prevent different types i JPEG library
+#define XMD_H
+
 // Some unessessary warnings in level 4 we have to disable first
 #pragma warning(disable : 4100)
 #pragma warning(disable : 4711)
 #pragma warning(disable : 4244)
-
-// Some linker optimazations
-#ifndef _DEBUG
-/*
-#	pragma comment(linker,"/RELEASE")
-#	pragma comment(linker,"/merge:.rdata=.data")
-#	pragma comment(linker,"/merge:.text=.data")
-#	pragma comment(linker,"/merge:.reloc=.data")
-*/
-#	if _MSC_VER >= 1000
-		// Only supported/needed with VC6; VC5 already does 0x200 for release builds.
-		// Totally undocumented! And if you set it lower than 512 bytes, the program crashes.
-		// Either leave at 0x200 or 0x1000
-#		pragma comment(linker,"/FILEALIGN:0x200")
-#	endif // _MSC_VER >= 1000
-#endif // _DEBUG
 
 #define INTEL    0x4949
 #define MOTOROLA 0x4d4d
 
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
-#define XMD_H
 #define HAVE_BOOLEAN
 
 #define USE_TIFFLIB_LOAD

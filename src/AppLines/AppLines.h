@@ -56,7 +56,7 @@ class CAppLinesApp : public CB3App
 
 public:
 	b3_count           m_RowRefreshCount;
-	b3_size            m_PrintBufferSize;
+	b3_s32             m_PrintBufferSize;
 	UINT               m_ClipboardFormatForBlizzardObject;
 
 public:
