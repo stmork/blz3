@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
-**	Revision 1.12  2001/12/09 13:06:56  sm
+**	Revision 1.13  2001/12/09 13:16:21  sm
 **	- Added tag name
 **
+**	Revision 1.12  2001/12/09 13:06:56  sm
+**	- Added tag name
+**	
 **	Revision 1.11  2001/12/09 13:03:29  sm
 **	- Added tag name
 **	
@@ -307,6 +310,7 @@ BOOL CAboutDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	char buffer[1024];
+	CString pattern;
 	CString copyright;
 	CString version;
 	b3Date  today;
@@ -315,7 +319,8 @@ BOOL CAboutDlg::OnInitDialog()
 #ifdef _DEBUG
 	copyright += " (Debug version)";
 #endif
-	if (sscanf(AppLinesVersionString,"$Name$",buffer) != 1)
+	pattern.Format("%cName: %%s %c",'$','$');
+	if (sscanf(AppLinesVersionString,pattern,buffer) != 1)
 	{
 		buffer[0] = 0;
 	}
