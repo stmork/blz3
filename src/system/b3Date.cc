@@ -38,7 +38,6 @@
 #define DATE_000000_29022000 (DATE_000000_31121999 + TICKS_DAY *  60)
 #define DATE_120000_01042001 (DATE_000000_01012000 + TICKS_DAY * 456 + 12 * TICKS_HOUR)
 #define DATE_120000_08042001 (DATE_120000_01042001 + TICKS_DAY *   7)
-#define DATE_LAST             0x7fffffff
 
 /*************************************************************************
 **                                                                      **
@@ -48,11 +47,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/10/16 08:46:44  sm
+**	- Adjusted most possible time_t value.
+**
 **	Revision 1.6  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.5  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -403,7 +405,11 @@ bool b3Date::b3Y2K_Selftest()
 		code & 128 ? '*' : '-',
 		code ==  0 ? "OK" : "ERROR");
 
-	time_code = DATE_LAST;
+	time_code = 0;
+	for (int b = sizeof(time_t) * 8 - 1;b > 0;b--)
+	{
+		time_code = (time_code << 1) | 1;
+	}
 	b3GMTime();
 	b3PrintF (B3LOG_DEBUG,"### Y2K\n");
 	b3PrintF (B3LOG_DEBUG,"### Y2K - The last possible time code is at:\n");
