@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/12 10:26:53  sm
+**	- Undo/Redo of
+**	  o Cut & paste
+**	  o Drag & drop
+**
 **	Revision 1.2  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
-**
+**	
 **	Revision 1.1  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -45,20 +50,106 @@
 
 /*************************************************************************
 **                                                                      **
+**                        Undo/Redo drop                                **
+**                                                                      **
+*************************************************************************/
+
+b3OpDrop::b3OpDrop(b3Scene *scene,b3BBox *src,b3BBox *dstBBox)
+{
+	m_Scene   = scene;
+	m_SrcBBox = src;
+	m_Prev    = src->Prev;
+
+	// Get BBoxes an their bases
+	m_SrcBase = m_Scene->b3FindBBoxHead(m_SrcBBox);
+	m_DstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
+
+	b3Initialize();
+	m_PrepareGeometry = true;
+	m_PrepareChangedStructure = true;
+}
+
+void b3OpDrop::b3Undo()
+{
+	// Mark every ancestor before relink as changed
+	m_Scene->b3BacktraceRecompute(m_SrcBBox);
+
+	// Relink BBox
+	m_DstBase->b3Remove(m_SrcBBox);
+	m_SrcBase->b3Insert(m_Prev,m_SrcBBox);
+
+	// Mark every ancestor after relink as changed
+	m_Scene->b3BacktraceRecompute(m_SrcBBox);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+}
+
+void b3OpDrop::b3Redo()
+{
+	// Mark every ancestor before relink as changed
+	m_Scene->b3BacktraceRecompute(m_SrcBBox);
+
+	// Relink BBox
+	m_SrcBase->b3Remove(m_SrcBBox);
+	m_DstBase->b3Append(m_SrcBBox);
+
+	// Mark every ancestor after relink as changed
+	m_Scene->b3BacktraceRecompute(m_SrcBBox);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+}
+
+/*************************************************************************
+**                                                                      **
 **                        Undo/Redo Cut                                 **
 **                                                                      **
 *************************************************************************/
 
-b3OpCut::b3OpCut()
+b3OpCut::b3OpCut(
+	CDlgHierarchy *hierarchy,
+	b3Scene       *scene)
 {
+	CAppLinesApp *app  = CB3GetLinesApp();
+
+	m_DlgHierarchy = hierarchy;
+	m_Scene        = scene;
+	m_BBox         = m_DlgHierarchy->b3GetSelectedBBox();
+
+	m_DlgHierarchy->b3GetData();
+	if (m_BBox != null)
+	{
+		m_Base   = m_Scene->b3FindBBoxHead(m_BBox);
+		m_Prev   = m_BBox->Prev;
+		m_Select = (m_BBox->Succ != null ? m_BBox->Succ : m_BBox->Prev);
+		m_Base->b3Remove(m_BBox);
+		if(app->b3PutClipboard(m_BBox))
+		{
+			b3Initialize();
+			m_PrepareGeometry = false;
+			m_PrepareChangedStructure = true;
+		}
+		m_Base->b3Insert(m_Prev,m_BBox);
+	}
+}
+
+void b3OpCut::b3Delete()
+{
+	if (b3IsDone() && (m_BBox != null))
+	{
+		delete m_BBox;
+	}
 }
 
 void b3OpCut::b3Undo()
 {
+	m_Base->b3Insert(m_Prev,m_BBox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
 void b3OpCut::b3Redo()
 {
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_Base->b3Remove(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_Select);
 }
 
 /*************************************************************************
@@ -73,11 +164,7 @@ b3OpPaste::b3OpPaste(
 	b3_bool        insert_sub)
 {
 	CAppLinesApp   *app  = CB3GetLinesApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
-	void           *ptr;
-	b3_size         size;
-	HANDLE          handle;
+	b3BBox         *selected;
 
 	m_DlgHierarchy = hierarchy;
 	m_Scene        = scene;
@@ -85,69 +172,50 @@ b3OpPaste::b3OpPaste(
 	B3_ASSERT(selected != null);
 	if (insert_sub)
 	{
-		base = selected->b3GetBBoxHead();
-		insert_after = base->Last;
+		m_Base = selected->b3GetBBoxHead();
+		m_InsertAfter = m_Base->Last;
 	}
 	else
 	{
-		base = m_Scene->b3FindBBoxHead(selected);
-		insert_after = selected;
+		m_Base = m_Scene->b3FindBBoxHead(selected);
+		m_InsertAfter = selected;
 	}
-	B3_ASSERT(base != null);
-
-	if (main->OpenClipboard())
+	B3_ASSERT(m_Base != null);
+	m_BBox = app->b3PasteClipboard(&m_World);
+	if (m_BBox != null)
 	{
-		handle = ::GetClipboardData(app->m_ClipboardFormatForBlizzardObject);
-		if (handle != 0)
-		{
-			size = ::GlobalSize(handle);
-			ptr  = ::GlobalLock(handle);
-			try
-			{
-				b3FileMem file(B_WRITE);
-
-				file.b3Write(ptr,size);
-				file.b3Seek(0,B3_SEEK_START);
-
-				if(world.b3Read(&file) == B3_WORLD_OK)
-				{
-					bbox  = (b3BBox *)world.b3GetFirst();
-					b3Initialize();
-				}
-			}
-			catch(b3FileException &f)
-			{
-				b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from clipboard (code: %d)\n",
-					f.b3GetError());
-				B3_MSG_ERROR(f);
-			}
-			catch(b3WorldException &w)
-			{
-				b3PrintF(B3LOG_NORMAL,"ERROR: reading object from clipboard (code: %d)\n",
-					w.b3GetError());
-				B3_MSG_ERROR(w);
-			}
-			::GlobalUnlock(handle);
-		}
-		::CloseClipboard();
+		m_Level = m_BBox->b3GetClassType() & 0xffff;
+		b3Initialize();
+		m_PrepareChangedStructure = true;
 	}
+}
+
+void b3OpPaste::b3Delete()
+{
+	if (!b3IsDone() && (m_BBox != null))
+	{
+		delete m_BBox;
+	}
+}
+
+void b3OpPaste::b3Do()
+{
+	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_InsertAfter);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
 void b3OpPaste::b3Undo()
 {
-
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_Base->b3Remove(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_InsertAfter);
 }
 
 void b3OpPaste::b3Redo()
 {
-	CAppLinesApp   *app  = CB3GetLinesApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	b3_count        level;
-
-	main->b3SetStatusMessage(IDS_DOC_REORG);
-	level = bbox->b3GetClassType() & 0xffff;
-	b3BBox::b3Reorg(world.b3GetHead(),base,level,1,insert_after);
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	m_Scene->b3BacktraceRecompute(bbox);
-	m_DlgHierarchy->b3SelectItem(bbox);
+	m_Base->b3Insert(m_InsertAfter,m_BBox);
+	m_Scene->b3BacktraceRecompute(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }

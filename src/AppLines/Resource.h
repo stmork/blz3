@@ -612,6 +612,7 @@
 #define IDS_OP_LIGHT_ENABLE             61458
 #define IDS_OP_LIGHT_SPOT               61459
 #define IDS_OP_LIGHT_SOFT               61460
+#define IDS_OP_DROP                     61461
 
 // Next default values for new objects
 // 

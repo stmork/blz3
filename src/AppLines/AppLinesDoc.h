@@ -161,10 +161,6 @@ public:
 	void           b3Drop    (HTREEITEM dragitem,HTREEITEM dropitem);
 
 private:
-	b3_bool        b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
-	b3_bool        b3WriteBBox(b3BBox *bbox,const char *filename);
-	b3_bool        b3PutClipboard(b3BBox *bbox);
-	void           b3PasteClipboard(b3_bool insert_sub);
 	void           b3ObjectCreate(b3_bool insert_sub);
 	b3_bool        b3HasAnimation();
 	b3_bool        b3IsPlaying();

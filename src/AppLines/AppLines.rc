@@ -2715,6 +2715,7 @@ BEGIN
     IDS_OP_LIGHT_ENABLE     "Lichtquelle ein-/ausschalten"
     IDS_OP_LIGHT_SPOT       "Spot ein-/ausschalten"
     IDS_OP_LIGHT_SOFT       "Weiche Schatten ein-/ausschalten"
+    IDS_OP_DROP             "Objekt verschieben"
 END
 
 #endif    // German (Germany) resources

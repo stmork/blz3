@@ -37,8 +37,10 @@
 #include "AppRaytraceView.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Date.h"
+#include "blz3/system/b3File.h"
 #include "blz3/system/b3FileDialog.h"
 #include "blz3/system/b3Version.h"
+#include "blz3/base/b3FileMem.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
@@ -54,9 +56,14 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2003/01/12 10:26:52  sm
+**	- Undo/Redo of
+**	  o Cut & paste
+**	  o Drag & drop
+**
 **	Revision 1.45  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.44  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
@@ -738,8 +745,137 @@ void CAppLinesApp::OnFileOpen()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
+/*************************************************************************
+**                                                                      **
+**                        CAppLinesApp clipboard operations             **
+**                                                                      **
+*************************************************************************/
+
+b3_bool CAppLinesApp::b3PutClipboard(b3BBox *bbox)
+{
+	CMainFrame   *main    = CB3GetMainFrame();
+	b3_bool       success = false;
+	b3_size       size;
+	void         *ptr;
+	HANDLE        handle;
+
+	if (main->OpenClipboard())
+	{
+		try
+		{
+			b3FileMem  file(B_WRITE);
+
+			if (b3WriteBBox(bbox,&file))
+			{
+				size = file.b3Size();
+				handle = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,size);
+				if (handle != 0)
+				{
+					ptr = ::GlobalLock(handle);
+					if (ptr != null)
+					{
+						file.b3Seek(0,B3_SEEK_START);
+						if (file.b3Read(ptr,size) == size)
+						{
+							::GlobalUnlock(handle);
+							::EmptyClipboard();
+							::SetClipboardData(m_ClipboardFormatForBlizzardObject,handle);
+							success = true;
+						}
+					}
+				}
+			}
+		}
+		catch(b3FileException &f)
+		{
+			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to clipboard (code: %d)\n",
+				bbox->b3GetName(),f.b3GetError());
+			B3_MSG_ERROR(f);
+		}
+		catch(b3WorldException &w)
+		{
+			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to clipboard (code: %d)\n",
+				bbox->b3GetName(),w.b3GetError());
+			B3_MSG_ERROR(w);
+		}
+		catch(...)
+		{
+			b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to clipboard %s\n",
+				bbox->b3GetName());
+		}
+		::CloseClipboard();
+	}
+	return success;
+}
+
+b3BBox *CAppLinesApp::b3PasteClipboard(b3World *world)
+{
+	CMainFrame  *main    = CB3GetMainFrame();
+	CWaitCursor  wait;
+	void        *ptr;
+	b3_size      size;
+	HANDLE       handle;
+	b3BBox      *bbox = null;
+
+	if (main->OpenClipboard())
+	{
+		handle = ::GetClipboardData(m_ClipboardFormatForBlizzardObject);
+		if (handle != 0)
+		{
+			size = ::GlobalSize(handle);
+			ptr  = ::GlobalLock(handle);
+			try
+			{
+				b3FileMem file(B_WRITE);
+
+				file.b3Write(ptr,size);
+				file.b3Seek(0,B3_SEEK_START);
+
+				if(world->b3Read(&file) == B3_WORLD_OK)
+				{
+					bbox  = (b3BBox *)world->b3GetFirst();
+				}
+			}
+			catch(b3FileException &f)
+			{
+				b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from clipboard (code: %d)\n",
+					f.b3GetError());
+				B3_MSG_ERROR(f);
+			}
+			catch(b3WorldException &w)
+			{
+				b3PrintF(B3LOG_NORMAL,"ERROR: reading object from clipboard (code: %d)\n",
+					w.b3GetError());
+				B3_MSG_ERROR(w);
+			}
+			::GlobalUnlock(handle);
+		}
+		::CloseClipboard();
+	}
+	return bbox;
+}
+
+b3_bool CAppLinesApp::b3WriteBBox(b3BBox *bbox,const char *filename)
+{
+	b3File  file(filename,B_WRITE);
+
+	return b3WriteBBox(bbox,&file);
+}
+
+b3_bool CAppLinesApp::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
+{
+	b3World  world;
+
+	world.m_AutoDelete = false;
+	world.b3SetFirst(bbox);
+	return (world.b3Write(file) == B3_WORLD_OK);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        CAppLinesApp about box                        **
+**                                                                      **
+*************************************************************************/
 
 const char AppLinesVersionString[] = "$Revision$";
 const char AppLinesNameString[] = "$Name$";

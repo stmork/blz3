@@ -46,9 +46,8 @@
 #include "b3Action.h"
 
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3File.h"
 #include "blz3/base/b3Array.h"
-#include "blz3/base/b3FileMem.h"
+#include "blz3/system/b3File.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -59,10 +58,15 @@
 
 /*
 **	$Log$
+**	Revision 1.78  2003/01/12 10:26:52  sm
+**	- Undo/Redo of
+**	  o Cut & paste
+**	  o Drag & drop
+**
 **	Revision 1.77  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
-**
+**	
 **	Revision 1.76  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -811,22 +815,6 @@ void CAppLinesDoc::b3ComputeBounds()
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 }
 
-b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,const char *filename)
-{
-	b3File  file(filename,B_WRITE);
-
-	return b3WriteBBox(bbox,&file);
-}
-
-b3_bool CAppLinesDoc::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
-{
-	b3World  world;
-
-	world.m_AutoDelete = false;
-	world.b3SetFirst(bbox);
-	return (world.b3Write(file) == B3_WORLD_OK);
-}
-
 void CAppLinesDoc::OnUpdateGlobal(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
@@ -894,31 +882,12 @@ HTREEITEM CAppLinesDoc::b3Dragging(HTREEITEM dragitem,HTREEITEM dropitem)
 
 void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
 {
-	// 	m_UndoBuffer->b3Do(new b3OpDrop(...));
 	b3BBox         *srcBBox;
 	b3BBox         *dstBBox;
-	b3Base<b3Item> *srcBase;
-	b3Base<b3Item> *dstBase;
 
-	// Get BBoxes an their bases
 	srcBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dragitem);
 	dstBBox = (b3BBox *)m_DlgHierarchy->m_Hierarchy.GetItemData(dropitem);
-	srcBase = m_Scene->b3FindBBoxHead(srcBBox);
-	dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
-
-	// Mark every ancestor before relink as changed
-	m_Scene->b3BacktraceRecompute(srcBBox);
-
-	// Relink BBox
-	srcBase->b3Remove(srcBBox);
-	dstBase->b3Append(srcBBox);
-
-	// Mark every ancestor after relink as changed
-	m_Scene->b3BacktraceRecompute(srcBBox);
-
-	// Some recomputations...
-	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	b3Prepare(false,true);
+	m_UndoBuffer->b3Do(new b3OpDrop(m_Scene,srcBBox,dstBBox));
 }
 
 void CAppLinesDoc::b3AddUndoAction(CB3Action *action)
@@ -1436,97 +1405,16 @@ void CAppLinesDoc::OnObjectDelete()
 	m_UndoBuffer->b3Do(new b3OpObjectDelete(m_Scene,m_DlgHierarchy));
 }
 
-b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
-{
-	CAppLinesApp *app     = (CAppLinesApp *)AfxGetApp();
-	CMainFrame   *main    = CB3GetMainFrame();
-	b3_bool       success = false;
-	b3_size       size;
-	void         *ptr;
-	HANDLE        handle;
-
-	if (main->OpenClipboard())
-	{
-		try
-		{
-			b3FileMem  file(B_WRITE);
-
-			if (b3WriteBBox(bbox,&file))
-			{
-				size = file.b3Size();
-				handle = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE,size);
-				if (handle != 0)
-				{
-					ptr = ::GlobalLock(handle);
-					if (ptr != null)
-					{
-						file.b3Seek(0,B3_SEEK_START);
-						if (file.b3Read(ptr,size) == size)
-						{
-							::GlobalUnlock(handle);
-							::EmptyClipboard();
-							::SetClipboardData(app->m_ClipboardFormatForBlizzardObject,handle);
-							success = true;
-						}
-					}
-				}
-			}
-		}
-		catch(b3FileException &f)
-		{
-			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to clipboard (code: %d)\n",
-				bbox->b3GetName(),f.b3GetError());
-			B3_MSG_ERROR(f);
-		}
-		catch(b3WorldException &w)
-		{
-			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to clipboard (code: %d)\n",
-				bbox->b3GetName(),w.b3GetError());
-			B3_MSG_ERROR(w);
-		}
-		catch(...)
-		{
-			b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: writing object %s to clipboard %s\n",
-				bbox->b3GetName());
-		}
-		::CloseClipboard();
-	}
-	return success;
-}
-
 void CAppLinesDoc::OnEditCut() 
 {
 	// TODO: Add your command handler code here
-	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
-	b3Item         *select;
-	b3Item         *prev;
-	b3Base<b3Item> *base;
-
-	m_DlgHierarchy->b3GetData();
-	if (bbox != null)
-	{
-		base   = m_Scene->b3FindBBoxHead(bbox);
-		prev   = bbox->Prev;
-		select = (bbox->Succ != null ? bbox->Succ : bbox->Prev);
-		m_Scene->b3BacktraceRecompute(bbox);
-		base->b3Remove(bbox);
-		if(!b3PutClipboard(bbox))
-		{
-			base->b3Insert(prev,bbox);
-		}
-		else
-		{
-			delete bbox;
-
-			m_DlgHierarchy->b3SelectItem(select);
-			b3Prepare(false,true);
-		}
-	}
+	m_UndoBuffer->b3Do(new b3OpCut(m_DlgHierarchy,m_Scene));
 }
 
 void CAppLinesDoc::OnEditCopy() 
 {
 	// TODO: Add your command handler code here
+	CAppLinesApp   *app  = CB3GetLinesApp();
 	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
 	b3Item         *prev;
 	b3Base<b3Item> *base;
@@ -1537,32 +1425,26 @@ void CAppLinesDoc::OnEditCopy()
 		base = m_Scene->b3FindBBoxHead(bbox);
 		prev = bbox->Prev;
 		base->b3Remove(bbox);
-		b3PutClipboard(bbox);
+		app->b3PutClipboard(bbox);
 		base->b3Insert(prev,bbox);
 	}
 }
 
-void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub) 
-{
-	// TODO: Add your command handler code here
-	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,insert_sub));
-}
-
 void CAppLinesDoc::OnEditPaste() 
 {
-	b3PasteClipboard(false);
+	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,false));
 }
 
 void CAppLinesDoc::OnEditPasteSub() 
 {
 	// TODO: Add your command handler code here
-	b3PasteClipboard(true);
+	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,true));
 }
 
 void CAppLinesDoc::OnUpdateEditPaste(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CAppLinesApp *app  = (CAppLinesApp *)AfxGetApp();
+	CAppLinesApp *app  = CB3GetLinesApp();
 
 	pCmdUI->Enable(
 		(m_DlgHierarchy->b3GetSelectedBBox() != null) &&
@@ -1582,7 +1464,7 @@ void CAppLinesDoc::OnObjectSave()
 	CString         suggest;
 	CString         ext;
 	CString         filter;
-	CWinApp        *app = AfxGetApp();
+	CAppLinesApp   *app = CB3GetLinesApp();
 	b3Base<b3Item> *base;
 	b3BBox         *selected;
 	b3Item         *prev;
@@ -1613,7 +1495,7 @@ void CAppLinesDoc::OnObjectSave()
 			b3Scene     *scene;
 			b3Tx         tx;
 
-			b3WriteBBox(selected,result);
+			app->b3WriteBBox(selected,result);
 
 			tx.b3AllocTx(120,120,24);
 			display = new b3Display(&tx);

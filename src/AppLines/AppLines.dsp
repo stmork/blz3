@@ -557,6 +557,10 @@ SOURCE=.\b3UndoCutPaste.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3UndoLight.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3UndoObject.h
 # End Source File
 # Begin Source File

@@ -64,6 +64,7 @@ class CAppLinesApp : public CB3App
 public:
 	b3_count           m_RowRefreshCount;
 	b3_size            m_PrintBufferSize;
+	UINT               m_ClipboardFormatForBlizzardObject;
 
 public:
 	                 CAppLinesApp();
@@ -72,7 +73,12 @@ public:
 	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);
 	void             b3SelectRenderContext(HDC dc,HGLRC gc);
 
-	UINT m_ClipboardFormatForBlizzardObject;
+	// Cut & paste operation
+	b3_bool          b3PutClipboard(b3BBox *bbox);
+	b3BBox          *b3PasteClipboard(b3World *world);
+	b3_bool          b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
+	b3_bool          b3WriteBBox(b3BBox *bbox,const char *filename);
+
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesApp)
