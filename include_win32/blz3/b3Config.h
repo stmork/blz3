@@ -83,9 +83,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/13 09:56:44  sm
+**	- Minor corrections
+**
 **	Revision 1.11  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
-**
+**	
 **	Revision 1.10  2001/08/16 04:28:29  sm
 **	- Solving conflicts
 **	
@@ -170,7 +173,9 @@
 
 #define USE_JPEGLIB_LOAD
 #define USE_JPEGLIB_SAVE
- 
+#define XMD_H
+#define HAVE_BOOLEAN
+
 #define USE_TIFFLIB_LOAD
 #define USE_TIFFLIB_SAVE
   

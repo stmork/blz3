@@ -101,11 +101,23 @@ SOURCE=b3TxDeskew.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxGIF.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxHist.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxIFF.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxImage.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxJPG.cc
 # End Source File
 # Begin Source File
 
@@ -134,6 +146,14 @@ SOURCE=b3TxTIFF.cc
 # Begin Source File
 
 SOURCE=..\..\include\blz3\image\b3Tx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxIFF.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxIMG.h
 # End Source File
 # Begin Source File
 

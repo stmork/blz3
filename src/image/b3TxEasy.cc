@@ -24,8 +24,6 @@
 
 #include <blz3/image/b3Tx.h>
 
-#include "b3TxEasy.h"
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -34,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/13 09:56:44  sm
+**	- Minor corrections
+**
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	
 */
 

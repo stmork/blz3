@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/13 09:56:44  sm
+**	- Minor corrections
+**
 **	Revision 1.2  2001/10/13 09:54:32  sm
 **	- Making include extern "C"
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -155,7 +158,7 @@ b3_tx_type b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 		{
 			jpeg_read_scanlines(&cinfo, sample_array, 1);
 			line = (unsigned char *)sample_array[0];
-			for (x=0;x<cinfo.output_width;x++)
+			for (x = 0;x < (b3_coord)cinfo.output_width;x++)
 			{
 				color  = *line++;
 				color  = (color << 8) | *line++;

@@ -31,12 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/13 09:56:44  sm
+**	- Minor corrections
+**
 **	Revision 1.5  2001/10/11 16:06:32  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
 **	  b3Endian
 **	- Cleaning up some datatypes for proper display in Together.
-**
+**	
 **	Revision 1.4  2001/08/05 19:53:43  sm
 **	- Removing some nasty CR/LF
 **	
@@ -179,7 +182,6 @@ void b3Spline::b3MansfieldVector(
 	b3_index   index)
 {
 	b3_index   l,j;
-	b3_count   degree;
 	b3_vector *ctrls;
 
 	point->x =

@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/13 09:56:44  sm
+**	- Minor corrections
+**
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	
 */
 
@@ -66,7 +69,7 @@ public:
 		currbyte   = 0;
 	}
 
-	b3_count b3GetNextGifCode (b3_u08 **Data,b3_size currsize)		 			
+	b3_count b3GetNextGifCode (b3_u08 **Data,b3_count currsize)		 			
 	{
 		long code;
 
@@ -115,7 +118,8 @@ b3_tx_type b3Tx::b3ParseGIF (b3_u08 *buffer)
 	b3_u08        *sp,*suffix,*charstack;
 	b3_u08         fc;
 	b3_u32        *prefix;
-	b3_u32         xk,yk,status,code, oldcode,clearcode;
+	b3_coord       xk,yk;
+	b3_u32         status,code, oldcode,clearcode;
 	b3_u32         endcode,newcodes,maxcode,codecnt,c,size;
 	b3_bool        interlaced;
 	b3GifDecoder   decoder;
