@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/02/28 19:10:13  sm
+**	- Cook/Torrance is applicable by use through material
+**	  shader.
+**
 **	Revision 1.13  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.12  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -135,7 +139,8 @@ void b3ScenePhong::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3Color       &result)
+	b3Color       &result,
+	b3Material    *material)
 {
 	b3_f64 ShapeAngle,Factor;
 

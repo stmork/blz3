@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/02/28 19:10:13  sm
+**	- Cook/Torrance is applicable by use through material
+**	  shader.
+**
 **	Revision 1.17  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.16  2002/12/31 16:01:03  sm
 **	- Fixed wrong vector multiplication.
 **	
@@ -149,49 +153,53 @@ void b3SceneMork::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3Color       &result)
+	b3Color       &result,
+	b3Material    *material)
 {
-	b3_f64   ShapeAngle,Factor;
-	b3Color  filter;
-
-	// Real absorption
-	result += (surface->diffuse * m_ShadowFactor);
-
-	filter.b3Init();
-
-	// No shadow => surface in light
-	if (Jit->shape == null)
+	if (!material->b3Illuminate(surface,Jit,result))
 	{
-		// specular high light
-		if ((ShapeAngle =
-			surface->incoming->normal.x * Jit->dir.x +
-			surface->incoming->normal.y * Jit->dir.y +
-			surface->incoming->normal.z * Jit->dir.z) >= 0)
-		{
-			if (surface->se < 100000)
-			{
-				Factor = log ((
-					surface->refl_ray.dir.x * Jit->dir.x +
-					surface->refl_ray.dir.y * Jit->dir.y +
-					surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+		b3_f64   ShapeAngle,Factor;
+		b3Color  filter;
 
-				Factor = exp (Factor * surface->se) * Jit->LightFrac;
-				surface->specular_sum += (light->m_Color * Factor);
+		// Real absorption
+		result += (surface->diffuse * m_ShadowFactor);
+
+		filter.b3Init();
+
+		// No shadow => surface in light
+		if (Jit->shape == null)
+		{
+			// specular high light
+			if ((ShapeAngle =
+				surface->incoming->normal.x * Jit->dir.x +
+				surface->incoming->normal.y * Jit->dir.y +
+				surface->incoming->normal.z * Jit->dir.z) >= 0)
+			{
+				if (surface->se < 100000)
+				{
+					Factor = log ((
+						surface->refl_ray.dir.x * Jit->dir.x +
+						surface->refl_ray.dir.y * Jit->dir.y +
+						surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
+
+					Factor = exp (Factor * surface->se) * Jit->LightFrac;
+					surface->specular_sum += (light->m_Color * Factor);
+				}
+			}
+			else
+			{
+				ShapeAngle = 0;
+			}
+
+			// surface illumination (diffuse color)
+			if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
+			{
+				filter = light->m_Color * Factor;
 			}
 		}
-		else
-		{
-			ShapeAngle = 0;
-		}
 
-		// surface illumination (diffuse color)
-		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
-		{
-			filter = light->m_Color * Factor;
-		}
+		result += (surface->diffuse * filter);
 	}
-
-	result += (surface->diffuse * filter);
 }
 
 
@@ -292,6 +300,8 @@ b3_bool b3SceneMork::b3Shade(
 
 	if (b3Intersect(ray))
 	{
+		b3Material *material = null;
+
 		// Initialize some values
 		// Compute intersection point "ipoint"
 		// Get hit material
@@ -302,7 +312,7 @@ b3_bool b3SceneMork::b3Shade(
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
 		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-		shape->b3GetColors(ray,&surface);
+		material = shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 
 		// Where to shoot subsequent rays...
@@ -355,7 +365,7 @@ b3_bool b3SceneMork::b3Shade(
 		B3_FOR_BASE(b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
-			light->b3Illuminate(this,&surface);
+			light->b3Illuminate(this,&surface,material);
 		}
 
 		// Mix colors

@@ -71,12 +71,35 @@ struct b3_ray : public b3_line64
 	b3_f64      t;
 };
 
-
 // aux. structure for computing illumination
 struct b3_surface
 {
 	b3Color   diffuse,ambient,specular,specular_sum;
 	b3_f64    refl,refr,ior,se;
+};
+
+struct b3_ray_info : public b3_ray
+{
+	b3_index     depth;
+	b3Color      color;
+	b3Shape     *shape;
+	b3BBox      *bbox;
+};
+
+struct b3_ray_fork : public b3_surface
+{
+	b3_ray_info *incoming;
+	b3_ray_info  refl_ray;
+	b3_ray_info  refr_ray;
+};
+
+// aux. structure for JitterLight
+struct b3_light_info : public b3_ray_info
+{
+	b3_vector LightView,xDir,yDir;
+	b3Color   Result;
+	b3_f64    Size,LightFrac,LightDist;
+	b3_s32    Distr;
 };
 
 class B3_PLUGIN b3Activation
@@ -585,6 +608,11 @@ public:
 	virtual b3_f64  b3GetRefraction(b3_polar *polar);
 	virtual b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
 	virtual b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	virtual b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result)
+	{
+		return false;
+	}
+
 	virtual b3_bool b3GetColors(
 		b3_polar *polar,
 		b3Color  &diff,
@@ -827,26 +855,23 @@ public:
 // TYPE_COOK_TORRANCE
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
-	b3_f64  m_Il;
-	b3_f64  m_dw;
-	b3_f64  m_ks;
-	b3_f64  m_kd;
-	b3_f64  m_m;
-	b3_f64  m_Ia;
-	b3Color m_Ra;
-	b3Color m_Rd;
-	b3Color m_Mu;
+	b3_f64      m_Il;
+	b3_f64      m_dw;
+	b3_f64      m_ks;
+	b3_f64      m_kd;
+	b3_f64      m_m;
+	b3_f64      m_Ia;
+	b3Color     m_Ra;
+	b3Color     m_Rd;
+	b3Color     m_Mu;
+	b3_vector64 m_V;
 
 public:
 	B3_ITEM_INIT(b3MatCookTorrance);
 	B3_ITEM_LOAD(b3MatCookTorrance);
 
 	b3_bool b3Prepare();
-	b3_bool b3GetColors(
-		b3_polar *polar,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec);
+	b3_bool b3Illuminate(b3_ray_fork *surface,b3_light_info *jit,b3Color &result);
 };
 
 /*************************************************************************
@@ -1800,31 +1825,6 @@ protected:
 #define LIGHT_NAMELEN(Node) (BINDEX_OFFSET(Node) > 0 ? \
 	BINDEX_LENGTH(Node) - BINDEX_OFFSET(Node) : 0)
 
-
-struct b3_ray_info : public b3_ray
-{
-	b3_index     depth;
-	b3Color      color;
-	b3Shape     *shape;
-	b3BBox      *bbox;
-};
-
-struct b3_ray_fork : public b3_surface
-{
-	b3_ray_info *incoming;
-	b3_ray_info  refl_ray;
-	b3_ray_info  refr_ray;
-};
-
-// aux. structure for JitterLight
-struct b3_light_info : public b3_ray_info
-{
-	b3_vector LightView,xDir,yDir;
-	b3Color   Result;
-	b3_f64    Size,LightFrac,LightDist;
-	b3_s32    Distr;
-};
-
 // POINT_LIGHT
 class b3Scene;
 class B3_PLUGIN b3Light : public b3Item
@@ -1855,7 +1855,7 @@ public:
 
 	static void     b3Register();
 	       void     b3Write();
-	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface);
+	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface,b3Material *material = null);
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();
 	       char    *b3GetName();
@@ -1878,10 +1878,10 @@ public:
 
 private:
 	void         b3InitValues();
-	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface);
-	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_ray_fork *surface);
+	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface,b3Material *material);
+	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_ray_fork *surface,b3Material *material);
 	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_ray_fork *surface,
-		b3_light_info *Jit,b3_coord x,b3_coord y);
+		b3_light_info *Jit,b3_coord x,b3_coord y,b3Material *material);
 };
 
 /*************************************************************************
@@ -2460,7 +2460,7 @@ public:
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 			b3_bool         b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
+	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
 	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
@@ -2520,7 +2520,7 @@ public:
 	B3_ITEM_LOAD(b3ScenePhong);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
 	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 };
 
@@ -2532,7 +2532,7 @@ public:
 
 	virtual void     b3SetLights(b3RenderContext *context);
 	        b3_bool  b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
+	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result,b3Material *material);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);

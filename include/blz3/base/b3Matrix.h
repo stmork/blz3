@@ -161,6 +161,30 @@ public:
 			aVec->z * bVec->z;
 	}
 
+	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector64 *bVec)
+	{
+		return
+			aVec->x * bVec->x +
+			aVec->y * bVec->y +
+			aVec->z * bVec->z;
+	}
+
+	static inline b3_f64 b3SMul(const b3_vector64 *aVec,const b3_vector *bVec)
+	{
+		return
+			aVec->x * bVec->x +
+			aVec->y * bVec->y +
+			aVec->z * bVec->z;
+	}
+
+	static inline b3_f64 b3SMul(const b3_vector64 *aVec,const b3_vector64 *bVec)
+	{
+		return
+			aVec->x * bVec->x +
+			aVec->y * bVec->y +
+			aVec->z * bVec->z;
+	}
+
 	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE

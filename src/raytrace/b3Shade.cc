@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/02/28 19:10:13  sm
+**	- Cook/Torrance is applicable by use through material
+**	  shader.
+**
 **	Revision 1.22  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.21  2002/12/11 14:47:58  sm
 **	- Changed noise handling to static
 **	- Fixed some error cases when image not loaded.
@@ -424,7 +428,8 @@ void b3Scene::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3Color       &result)
+	b3Color       &result,
+	b3Material    *material)
 {
 	b3_f64 ShapeAngle;
 

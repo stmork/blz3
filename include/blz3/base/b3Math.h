@@ -55,6 +55,19 @@ public:
 		
 		return 0.5 * (a / b + c / d);
 	}
+
+	static inline b3_f64 b3Limit(const b3_f64 value,const b3_f64 min,const b3_f64 max)
+	{
+		if (value < min)
+		{
+			return min;
+		}
+		else if (value > max)
+		{
+			return max;
+		}
+		return value;
+	}
 };
 
 

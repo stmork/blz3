@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2004/02/28 19:10:13  sm
+**      - Cook/Torrance is applicable by use through material
+**        shader.
+**
 **      Revision 1.37  2003/08/31 10:44:07  sm
 **      - Further buffer overflow avoidments.
 **
@@ -410,20 +414,22 @@ void b3Light::b3SetName(const char *name)
 
 b3_bool b3Light::b3Illuminate(
 	b3Scene     *scene,
-	b3_ray_fork *surface)
+	b3_ray_fork *surface,
+	b3Material  *material)
 {
 	if (!m_LightActive)
 	{
 		return false;
 	}
 	return (m_SoftShadow ?
-		b3AreaIllumination(scene,surface) :
-		b3PointIllumination(scene,surface));
+		b3AreaIllumination(scene,surface,material) :
+		b3PointIllumination(scene,surface,material));
 }
 
 inline b3_bool b3Light::b3PointIllumination(
 	b3Scene     *scene,
-	b3_ray_fork *surface)
+	b3_ray_fork *surface,
+	b3Material  *material)
 {
 	b3_light_info Jit;
 	b3_vector     point;
@@ -479,13 +485,14 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.LightDist = LightDist;
 
 	scene->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
-	scene->b3Illuminate(this,&Jit,surface,surface->incoming->color);
+	scene->b3Illuminate(this,&Jit,surface,surface->incoming->color,material);
 	return true;
 }
 
 inline b3_bool b3Light::b3AreaIllumination (
 	b3Scene     *scene,
-	b3_ray_fork *surface)
+	b3_ray_fork *surface,
+	b3Material  *material)
 {
 	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
@@ -559,8 +566,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 	xs    = 1;
 	for (x = xs;x <= Distr;x += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0) != null;
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x) != null;
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0,material) != null;
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x,material) != null;
 
 		equal   &= (Edge1 == Edge2);
 		if ((x != xs) && (!first))
@@ -573,8 +580,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 
 	for (y = 2 - xs;y < Distr;y += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y) != null;
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y) != null;
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y,material) != null;
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y,material) != null;
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;
@@ -591,8 +598,8 @@ inline b3_bool b3Light::b3AreaIllumination (
 		// fill top and bottom outline
 		for (x = 1 - xs;x <= Distr;x += 2)
 		{
-			b3CheckSinglePoint (scene,surface,&Jit,x,0);
-			b3CheckSinglePoint (scene,surface,&Jit,x,Distr);
+			b3CheckSinglePoint (scene,surface,&Jit,x,0,material);
+			b3CheckSinglePoint (scene,surface,&Jit,x,Distr,material);
 		}
 
 		for (y = 1;y < Distr;y++)
@@ -600,7 +607,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 			max = Distr + ((Jit.Distr + xs) & 1);
 			for (x = xs;x < max;x++)
 			{
-				b3CheckSinglePoint (scene,surface,&Jit,x,y);
+				b3CheckSinglePoint (scene,surface,&Jit,x,y,material);
 			}
 			xs ^= 1;
 		}
@@ -617,7 +624,8 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3_ray_fork   *surface,
 	b3_light_info *Jit,
 	b3_coord       x,
-	b3_coord       y)
+	b3_coord       y,
+	b3Material    *material)
 {
 	b3_f64   jx,jy,UpperBound;
 
@@ -631,7 +639,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
 		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
-		scene->b3Illuminate(this,Jit,surface,Jit->Result);
+		scene->b3Illuminate(this,Jit,surface,Jit->Result,material);
 	}
 	else
 	{

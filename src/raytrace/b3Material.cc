@@ -25,6 +25,7 @@
 #include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Matrix.h"
 #include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
@@ -35,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2004/02/28 19:10:13  sm
+**      - Cook/Torrance is applicable by use through material
+**        shader.
+**
 **      Revision 1.28  2004/02/28 13:51:53  sm
 **      - Added Cook/Torrance material. But this is not a material
 **        it is a shader! Further reading is necessary to redesign
@@ -164,14 +169,14 @@
 void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
-	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
+//	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
 	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
 	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);
 	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit,  &b3MatWrapTexture::b3StaticInit,  WRAPTEXTURE);
 	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
 	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
-	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
+	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, MAT_NORMAL);
 }
 
 /*************************************************************************
@@ -974,14 +979,36 @@ b3_bool b3MatCookTorrance::b3Prepare()
 		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
 		b3Math::b3GetMu(m_DiffColor[b3Color::B]));
+	b3Vector::b3Init(&m_V,0,0,1);
 	return true;
 }
 
-b3_bool b3MatCookTorrance::b3GetColors(
-	b3_polar *polar,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular)
+b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Color &result)
 {
+	b3_f64 nh = b3Vector::b3SMul(&ray->incoming->normal,&ray->incoming->dir);
+	b3_f64 nl = b3Vector::b3SMul(&ray->incoming->normal,&jit->LightView);
+	b3_f64 nv = b3Vector::b3SMul(&ray->incoming->normal,&m_V);
+	b3_f64 vh = b3Vector::b3SMul(&m_V,&ray->incoming->dir);
+
+	b3_f64 Gs = 2 * nh * nv / vh;
+	b3_f64 Gm = 2 * nh * nl / vh;
+	b3_f64 alpha = acos(nh);
+
+	b3_f64 D = 1/b3Math::b3Sqr(m_m) / b3Math::b3Sqr(b3Math::b3Sqr(cos(alpha))) * exp(-b3Math::b3Sqr(tan(alpha)) / b3Math::b3Sqr(m_m));
+	if (alpha > (0.5 * M_PI))
+	{
+		D = 0;
+	}
+	b3_f64 G = Gs < Gm ? Gs : Gm;
+	G = b3Math::b3Limit(G,0,1);
+	b3_f64 Rs = (D * G * nl) / (M_PI * nv);
+	b3_f64 phi = acos(nl);
+	b3Color R(
+		b3Math::b3GetFresnel(phi,m_Mu[b3Color::R]) * Rs,
+		b3Math::b3GetFresnel(phi,m_Mu[b3Color::G]) * Rs,
+		b3Math::b3GetFresnel(phi,m_Mu[b3Color::B]) * Rs);
+
+	result += (m_Ra * m_Ia + (m_Rd * m_kd + R * m_ks) * m_Il * nl * m_dw);
+
 	return true;
 }
