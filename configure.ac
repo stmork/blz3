@@ -15,10 +15,11 @@ AC_CHECK_TOOL(AR, ar, :)
 AC_PROG_RANLIB
 AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 
-if test "$GCC" = yes
-then
-  LDFLAGS="-Ur -Wl,-E"
-fi
+# FIXME!
+#if test "$GCC" = yes
+#then
+#  LDFLAGS="-Ur -Wl,-E"
+#fi
 
 AC_SUBST(BLZ3_HOME, "$PWD", [This home directory of Blizzard III])
 AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The system dependend include path])
