@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/04/18 09:13:50  sm
+**	- Removed hardwired values.
+**	- Now we have congruent material and bump oakpank structure.
+**
 **	Revision 1.24  2004/04/18 08:53:05  sm
 **	- Put temporiraly some hardwired values into the oakplank.
-**
+**	
 **	Revision 1.23  2004/04/17 19:17:44  sm
 **	- Minor changes
 **	
@@ -811,9 +815,9 @@ b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3Bump(src)
 void b3BumpOakPlank::b3Write()
 {
 	// Bump parameter
-	b3StoreFloat(m_Amplitude);
-	b3StoreVector(&m_Scale);
 	b3StoreInt(m_Flags);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Amplitude);
 
 	// Wood parameter
 	b3StoreFloat(m_yRot);
@@ -844,7 +848,6 @@ b3_bool b3BumpOakPlank::b3Prepare()
 	b3_index x,y;
 	b3_f64   fx,fy,wobble;
 
-m_Amplitude = 0.001f;
 	b3PrepareOakPlank();
 
 	m_dX = 1.0 / BUMP_dX;
