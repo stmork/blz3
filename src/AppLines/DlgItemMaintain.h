@@ -36,10 +36,10 @@ class CDlgItemMaintain : public CDialog
 	b3Loader              *m_Plugins;
 	b3_bool                m_Changed;
 	CImageList             m_ImageList;
+	CAppRenderDoc         *m_pDoc;
 
 public:
-	b3_bool b3SetModified(CDocument *pDoc);
-	CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
+	CDlgItemMaintain(CAppRenderDoc *pDoc,b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgItemMaintain)

@@ -92,12 +92,16 @@ struct b3_stencil_limit
 	b3_f64 x1,y1,x2,y2;
 };
 
+struct b3_stencil_bound_info
+{
+	b3_f64          min,max,factor;
+	b3_stencil_unit unit;
+};
+
 struct b3_stencil_bound
 {
-	b3_f64          xMin,xMax,xFactor;
-	b3_f64          yMin,yMax,yFactor;
-	b3_stencil_unit xUnit;
-	b3_stencil_unit yUnit;
+	b3_stencil_bound_info xInfo;
+	b3_stencil_bound_info yInfo;
 };
 
 class B3_PLUGIN b3Condition : public b3Item

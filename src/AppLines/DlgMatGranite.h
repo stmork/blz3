@@ -25,7 +25,6 @@
 //
 
 #include "blz3/raytrace/b3Material.h"
-#include "blz3/system/b3FloatEdit.h"
 #include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowRaytrace.h"
 #include "PageMaterial.h"
@@ -46,7 +45,7 @@ class CDlgMatGranite : public CB3SimplePropertyPreviewDialog
 
 // Construction
 public:
-	static b3_bool b3Edit(b3Item *item);
+	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
 	CDlgMatGranite(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 	~CDlgMatGranite();

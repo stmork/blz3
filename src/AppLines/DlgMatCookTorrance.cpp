@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.10  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.9  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -90,17 +95,12 @@ CDlgMatCookTorrance::CDlgMatCookTorrance(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_KaCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
 	m_KdCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
 	m_KsCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_MCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	
-	m_IorCtrl.b3SetRange(-5.0,5.0);
-	m_IorCtrl.b3SetDigits(0,2);
-	m_IorCtrl.b3SetIncrement(0.01);
-	
-	m_SpecularExpCtrl.b3SetRange(1.0,100000);
-	m_SpecularExpCtrl.b3SetDigits(0,1);
-	m_SpecularExpCtrl.b3SetIncrement(10.0);
+	m_MCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+
+	m_ReflectionCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_RefractionCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_IorCtrl.b3SetUnit(        CB3FloatSpinButtonCtrl::B3_UNIT_IOR);
+	m_SpecularExpCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_SPECULAR_EXP);
 }
 
 CDlgMatCookTorrance::~CDlgMatCookTorrance()
@@ -169,7 +169,7 @@ void CDlgMatCookTorrance::b3Register()
 	b3Loader::b3AddClassType(COOK_TORRANCE,IDS_MAT_COOK_TORRANCE,IDI_MAT_COOK_TORRANCE,b3Edit,b3Edit);
 }
 
-b3_bool CDlgMatCookTorrance::b3Edit(b3Item *item)
+b3_bool CDlgMatCookTorrance::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgMatCookTorrance dlg(item);
 

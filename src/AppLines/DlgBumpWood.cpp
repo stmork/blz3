@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.11  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.10  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -128,7 +133,7 @@ void CDlgBumpWood::b3Register()
 	b3Loader::b3AddClassType(BUMP_WOOD,IDS_BUMP_WOOD,IDI_MAT_WOOD,b3Edit,b3Edit);
 }
 
-b3_bool CDlgBumpWood::b3Edit(b3Item *item)
+b3_bool CDlgBumpWood::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgBumpWood dlg(item);
 

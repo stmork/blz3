@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.5  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -74,6 +79,7 @@ CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_PageDark.m_Material   = &m_Material->m_DarkMaterial;
 	m_PageLight.m_Material  = &m_Material->m_LightMaterial;
 	m_PageScaling.m_Scaling =  m_Material;
+
 	m_MatScene              = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatGranite)
@@ -109,7 +115,7 @@ void CDlgMatGranite::b3Register()
 	b3Loader::b3AddClassType(GRANITE,IDS_MAT_GRANITE,IDI_MAT_GRANITE,b3Edit,b3Edit);
 }
 
-b3_bool CDlgMatGranite::b3Edit(b3Item *item)
+b3_bool CDlgMatGranite::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgMatGranite dlg(item);
 

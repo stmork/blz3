@@ -2086,21 +2086,17 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,355,215,50,14
 END
 
-IDD_MAT_TEXTURE DIALOG DISCARDABLE  0, 0, 302, 250
+IDD_MAT_TEXTURE DIALOG DISCARDABLE  0, 0, 537, 361
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Textur"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,15,225,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,225,220,50,14
-    CONTROL         "Textur verwenden",IDC_TEXTURE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,90,150,73,10
     PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,90,170,60,15
     CONTROL         "",IDC_PREVIEW_TEXTURE,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,20,150,60,35
     GROUPBOX        "Textur:",IDC_STATIC,10,135,160,60
-    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,180,100,105,95
     EDITTEXT        IDC_REFLECTANCE,20,40,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
@@ -2122,92 +2118,89 @@ BEGIN
     LTEXT           "Verglasung",IDC_STATIC,20,60,36,8
     LTEXT           "Brechungsindex",IDC_STATIC,85,30,52,8
     LTEXT           "Spek. Exponent",IDC_STATIC,85,60,52,8
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
 END
 
-IDD_MAT_MARBLE DIALOG DISCARDABLE  0, 0, 287, 255
+IDD_MAT_MARBLE DIALOG DISCARDABLE  0, 0, 417, 255
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Marmor"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "Farben:",IDC_STATIC,10,5,140,125
-    LTEXT           "Ambient",IDC_STATIC,20,20,26,8
-    LTEXT           "",IDC_COLOR_AMBIENT,20,30,50,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    PUSHBUTTON      "Farbe ‰ndern...",IDC_CHANGE_AMBIENT,80,30,60,15
-    LTEXT           "Diffuse",IDC_STATIC,20,55,23,8
-    LTEXT           "",IDC_COLOR_DIFFUSE,20,65,50,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    PUSHBUTTON      "Farbe ‰ndern...",IDC_CHANGE_DIFFUSE,80,65,60,15
-    LTEXT           "Specular",IDC_STATIC,20,90,29,8
-    LTEXT           "",IDC_COLOR_SPECULAR,20,100,50,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    PUSHBUTTON      "Farbe ‰ndern...",IDC_CHANGE_SPECULAR,80,100,60,15
-    GROUPBOX        "Materialwerte",IDC_STATIC,10,140,140,80
-    LTEXT           "Verspiegelung",IDC_STATIC,20,156,46,8
-    EDITTEXT        IDC_REFLECTANCE,20,166,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,55,166,11,15
-    LTEXT           "Verglasung",IDC_STATIC,20,186,36,8
-    EDITTEXT        IDC_REFRACTANCE,20,196,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,55,196,11,15
-    LTEXT           "Brechungsindex",IDC_STATIC,80,156,52,8
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,80,166,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,115,165,11,15
-    LTEXT           "Spek. Exponent",IDC_STATIC,80,186,52,8
-    EDITTEXT        IDC_SPEC_EXPONENT,80,196,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,115,195,11,15
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,160,10,115,95
+                    SS_SUNKEN,290,10,115,95
     CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,160,110,104,10
-    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,225,125,50,14
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
     DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,225,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
 END
 
-IDD_MAT_WRAP_TEXTURE DIALOG DISCARDABLE  0, 0, 440, 301
+IDD_MAT_WRAP_TEXTURE DIALOG DISCARDABLE  0, 0, 302, 290
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Wickeltextur"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,280,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,383,280,50,14
-    CONTROL         "Textur verwenden",IDC_TEXTURE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,90,150,73,10
-    PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,90,170,60,15
+    DEFPUSHBUTTON   "OK",IDOK,10,265,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,240,265,50,14
+    PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,155,225,60,15
     CONTROL         "",IDC_PREVIEW_TEXTURE,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,20,150,60,35
-    GROUPBOX        "Textur:",IDC_STATIC,10,135,160,60
-    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,180,100,105,95
-    EDITTEXT        IDC_REFLECTANCE,20,40,45,12,ES_AUTOHSCROLL
+                    SS_SUNKEN,155,130,135,90
+    EDITTEXT        IDC_REFLECTANCE,20,35,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,65,40,11,15
-    EDITTEXT        IDC_REFRACTANCE,20,70,45,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,65,35,11,15
+    EDITTEXT        IDC_REFRACTANCE,20,65,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,65,70,11,15
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,85,40,45,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,65,65,11,15
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,85,35,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,130,40,11,15
-    EDITTEXT        IDC_SPEC_EXPONENT,85,70,45,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,130,35,11,15
+    EDITTEXT        IDC_SPEC_EXPONENT,85,65,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,130,70,11,15
-    LTEXT           "Verspiegelung",IDC_STATIC,20,30,46,8
+                    UDS_NOTHOUSANDS,130,65,11,15
+    LTEXT           "Verspiegelung",IDC_STATIC,20,25,46,8
     GROUPBOX        "Materialwerte",IDC_STATIC,10,15,135,80
-    LTEXT           "Verglasung",IDC_STATIC,20,60,36,8
-    LTEXT           "Brechungsindex",IDC_STATIC,85,30,52,8
-    LTEXT           "Spek. Exponent",IDC_STATIC,85,60,52,8
+    LTEXT           "Verglasung",IDC_STATIC,20,55,36,8
+    LTEXT           "Brechungsindex",IDC_STATIC,85,25,52,8
+    LTEXT           "Spek. Exponent",IDC_STATIC,85,55,52,8
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,10,105,135,115
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,245,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,10,225,50,14
+    EDITTEXT        IDC_X_START,165,39,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,210,40,11,14
+    EDITTEXT        IDC_X_END,231,39,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,276,40,
+                    11,14
+    EDITTEXT        IDC_Y_START,165,70,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,210,70,11,14
+    EDITTEXT        IDC_Y_END,231,70,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,276,70,
+                    11,14
+    CONTROL         "Relativ",IDC_RELATIVE,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,165,90,38,10
+    CONTROL         "Einheit",IDC_UNIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,165,105,37,10
+    GROUPBOX        "Ausmaﬂe",IDC_STATIC,155,15,135,105
+    LTEXT           "x-Start",IDC_X_START_LEGEND,165,30,45,10
+    LTEXT           "x-Ende",IDC_X_END_LEGEND,232,30,45,10
+    LTEXT           "y-Start",IDC_Y_START_LEGEND,165,60,45,10
+    LTEXT           "y-Ende",IDC_Y_END_LEGEND,232,60,45,10
 END
 
 IDD_MAT_COOK_TORRANCE DIALOG DISCARDABLE  0, 0, 357, 250
@@ -3017,15 +3010,15 @@ BEGIN
     IDD_MAT_TEXTURE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 295
+        RIGHTMARGIN, 530
         TOPMARGIN, 7
-        BOTTOMMARGIN, 243
+        BOTTOMMARGIN, 354
     END
 
     IDD_MAT_MARBLE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 280
+        RIGHTMARGIN, 410
         TOPMARGIN, 7
         BOTTOMMARGIN, 248
     END
@@ -3033,9 +3026,9 @@ BEGIN
     IDD_MAT_WRAP_TEXTURE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 433
+        RIGHTMARGIN, 295
         TOPMARGIN, 7
-        BOTTOMMARGIN, 294
+        BOTTOMMARGIN, 283
     END
 
     IDD_MAT_COOK_TORRANCE, DIALOG
@@ -3746,11 +3739,21 @@ BEGIN
     IDS_TITLE_WHITE         "Weiﬂ"
     IDS_TITLE_YROT          "Rotation um y-Achse: %3.2f Grad"
     IDS_TITLE_ZROT          "Rotation um z-Achse: %3.2f Grad"
+    IDS_STENCIL_DIR_UNIT    "rel. Richtung"
+    IDS_STENCIL_LEN_UNIT    "re. L‰nge"
+    IDS_STENCIL_DIR_LENGTH  "Richtungsl‰nge"
+    IDS_STENCIL_LEN_LENGTH  "L‰nge"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_STENCIL_DIR_ANGLE   "Winkelrichtung"
+    IDS_STENCIL_LEN_ANGLE   "Winkel"
 END
 
 #endif    // German (Germany) resources

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2004/05/10 15:12:09  sm
+**      - Unified condition legends for conditions and
+**        texture materials.
+**      - Added wrap texture material dialog.
+**
 **      Revision 1.25  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -345,12 +350,12 @@ b3_count b3CSGTorus::b3GetMaxIntersections()
 
 void b3CSGTorus::b3GetStencilBoundInfo(b3_stencil_bound *info)
 {
-	info->xMin    = 0;
-	info->xMax    = 1;
-	info->yMin    = 0;
-	info->yMax    = 1;
-	info->xUnit   = B3_STENCIL_ANGLE;
-	info->yUnit   = B3_STENCIL_ANGLE;
-	info->xFactor = 360;
-	info->yFactor = 360;
+	info->xInfo.min    = 0;
+	info->xInfo.max    = 1;
+	info->yInfo.min    = 0;
+	info->yInfo.max    = 1;
+	info->xInfo.unit   = B3_STENCIL_ANGLE;
+	info->yInfo.unit   = B3_STENCIL_ANGLE;
+	info->xInfo.factor = 360;
+	info->yInfo.factor = 360;
 }

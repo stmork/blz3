@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.7  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.6  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -71,16 +76,10 @@ CPageMaterial::CPageMaterial() : CB3PropertyPage(CPageMaterial::IDD)
 	//{{AFX_DATA_INIT(CPageMaterial)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	
-	m_IorCtrl.b3SetRange(-5.0,5.0);
-	m_IorCtrl.b3SetDigits(0,2);
-	m_IorCtrl.b3SetIncrement(0.01);
-
-	m_SpecularExpCtrl.b3SetRange(1.0,100000);
-	m_SpecularExpCtrl.b3SetDigits(0,1);
-	m_SpecularExpCtrl.b3SetIncrement(10.0);
+	m_ReflectionCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_RefractionCtrl.b3SetUnit( CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_IorCtrl.b3SetUnit(        CB3FloatSpinButtonCtrl::B3_UNIT_IOR);
+	m_SpecularExpCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_SPECULAR_EXP);
 }
 
 CPageMaterial::~CPageMaterial()

@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.10  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.9  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -126,7 +131,7 @@ void CDlgBumpOakPlank::b3Register()
 	b3Loader::b3AddClassType(BUMP_OAKPLANK,IDS_BUMP_OAKPLANK,IDI_MAT_OAKPLANK,b3Edit,b3Edit);
 }
 
-b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item)
+b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgBumpOakPlank dlg(item);
 

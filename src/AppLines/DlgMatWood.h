@@ -46,7 +46,7 @@ class CDlgMatWood : public CB3SimplePropertyPreviewDialog
 
 // Construction
 public:
-	static b3_bool b3Edit(b3Item *item);
+	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
 	CDlgMatWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 	~CDlgMatWood();

@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.16  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.15  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -147,7 +152,7 @@ void CDlgMatWood::b3Register()
 	b3Loader::b3AddClassType(WOOD,IDS_MAT_WOOD,IDI_MAT_WOOD,b3Edit,b3Edit);
 }
 
-b3_bool CDlgMatWood::b3Edit(b3Item *item)
+b3_bool CDlgMatWood::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgMatWood dlg(item);
 

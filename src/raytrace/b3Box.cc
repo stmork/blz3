@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2004/05/10 15:12:09  sm
+**      - Unified condition legends for conditions and
+**        texture materials.
+**      - Added wrap texture material dialog.
+**
 **      Revision 1.19  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -181,12 +186,12 @@ void b3Box::b3ComputeIndices()
 
 void b3Box::b3GetStencilBoundInfo(b3_stencil_bound *info)
 {
-	info->xMin    = 0;
-	info->xMax    = 1;
-	info->yMin    = 0;
-	info->yMax    = 1;
-	info->xUnit   = B3_STENCIL_LENGTH;
-	info->yUnit   = B3_STENCIL_LENGTH;
-	info->xFactor = b3Vector::b3Length(&m_Dir1);
-	info->yFactor = b3Vector::b3Length(&m_Dir2);
+	info->xInfo.min    = 0;
+	info->xInfo.max    = 1;
+	info->yInfo.min    = 0;
+	info->yInfo.max    = 1;
+	info->xInfo.unit   = B3_STENCIL_LENGTH;
+	info->yInfo.unit   = B3_STENCIL_LENGTH;
+	info->xInfo.factor = b3Vector::b3Length(&m_Dir1);
+	info->yInfo.factor = b3Vector::b3Length(&m_Dir2);
 }

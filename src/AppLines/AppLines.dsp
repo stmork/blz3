@@ -157,6 +157,10 @@ SOURCE=.\b3CameraVolume.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ConditionControl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ControlLDC.cpp
 # End Source File
 # Begin Source File
@@ -578,6 +582,10 @@ SOURCE=.\b3Action.h
 # Begin Source File
 
 SOURCE=.\b3CameraVolume.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ConditionControl.h
 # End Source File
 # Begin Source File
 

@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/05/10 15:12:09  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.13  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
-**
+**	
 **	Revision 1.12  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -112,21 +117,21 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 	return new b3Plugin(this,library);
 }
 
-b3Item *b3Loader::b3Create(b3_u32 class_type,b3_bool edit)
+b3Item *b3Loader::b3Create(b3_u32 class_type,void *ptr,b3_bool edit)
 {
 	b3Item *item = b3World::b3AllocNode(class_type);
 
-	return b3EditCreation(item,edit);
+	return b3EditCreation(item,ptr,edit);
 }
 
-b3Item *b3Loader::b3Create(b3_u32 *class_buffer,b3_bool edit)
+b3Item *b3Loader::b3Create(b3_u32 *class_buffer,void *ptr,b3_bool edit)
 {
 	b3Item *item = b3World::b3AllocNode(class_buffer);
 
-	return b3EditCreation(item,edit);
+	return b3EditCreation(item,ptr,edit);
 }
 
-b3Item *b3Loader::b3EditCreation(b3Item *item,b3_bool edit)
+b3Item *b3Loader::b3EditCreation(b3Item *item,void *ptr,b3_bool edit)
 {
 	b3_plugin_info *info;
 
@@ -137,7 +142,7 @@ b3Item *b3Loader::b3EditCreation(b3Item *item,b3_bool edit)
 		{
 			if (info->m_CreateFunc != null)
 			{
-				if (!info->m_CreateFunc(item))
+				if (!info->m_CreateFunc(item,ptr))
 				{
 					delete item;
 					item = null;
@@ -148,7 +153,7 @@ b3Item *b3Loader::b3EditCreation(b3Item *item,b3_bool edit)
 	return item;
 }
 
-b3_bool b3Loader::b3Edit(b3Item *item)
+b3_bool b3Loader::b3Edit(b3Item *item,void *ptr)
 {
 	b3_bool         result = false;
 	b3_plugin_info *info;
@@ -160,7 +165,7 @@ b3_bool b3Loader::b3Edit(b3Item *item)
 		{
 			if (info->m_EditFunc != null)
 			{
-				result = info->m_EditFunc(item);
+				result = info->m_EditFunc(item,ptr);
 			}
 		}
 	}

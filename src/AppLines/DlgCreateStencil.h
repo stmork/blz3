@@ -26,20 +26,22 @@
 
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "b3ConditionControl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateStencil dialog
 
 class CDlgCreateStencil : public CPropertyPage
 {
-	CString          m_Section;
+	CString            m_Section;
 
-	b3_stencil_bound m_Bound;
-	b3_stencil_limit m_Limit;
+	b3_stencil_bound   m_Bound;
+	b3_stencil_limit   m_Limit;
 
-	static b3_f64 m_Increments[3];
-	static b3_f64 m_Accels[3];
-	static int    m_Digits[3];
+	b3ConditionControl m_xStart;
+	b3ConditionControl m_xEnd;
+	b3ConditionControl m_yStart;
+	b3ConditionControl m_yEnd;
 
 	DECLARE_DYNCREATE(CDlgCreateStencil)
 

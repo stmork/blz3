@@ -24,24 +24,27 @@
 // DlgMatMarble.h : header file
 //
 
-#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/raytrace/b3Material.h"
-#include "b3SimplePreviewDialog.h"
-#include "b3SelectColor.h"
+#include "b3SimplePropertyPreviewDialog.h"
 #include "b3ShowRaytrace.h"
+#include "PageMaterial.h"
+#include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatMarble dialog
 
-class CDlgMatMarble : public CB3SimplePreviewDialog
+class CDlgMatMarble : public CB3SimplePropertyPreviewDialog
 {
 	b3Scene           *m_MatScene;
 	b3Base<b3Item>    *m_MatHead;
 	b3MatMarble       *m_Material;
 
+	CPageMaterial      m_PageDark;
+	CPageMaterial      m_PageLight;
+	CPageScaling       m_PageScaling;
 // Construction
 public:
-	static b3_bool b3Edit(b3Item *item);
+	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
 	CDlgMatMarble(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 	~CDlgMatMarble();
@@ -49,13 +52,6 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgMatMarble)
 	enum { IDD = IDD_MAT_MARBLE };
-	CB3ColorFieldSelector	m_AmbientCtrl;
-	CB3ColorFieldSelector	m_DiffuseCtrl;
-	CB3ColorFieldSelector	m_SpecularCtrl;
-	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
-	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
-	CB3FloatSpinButtonCtrl	m_IorCtrl;
-	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
@@ -72,10 +68,6 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgMatMarble)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnColorAmbient();
-	afx_msg void OnColorDiffuse();
-	afx_msg void OnColorSpecular();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.61  2004/05/10 15:12:09  sm
+**      - Unified condition legends for conditions and
+**        texture materials.
+**      - Added wrap texture material dialog.
+**
 **      Revision 1.60  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -662,14 +667,14 @@ b3_bool b3Shape::b3CheckStencil(b3_polar_precompute *polar)
 
 void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound *info)
 {
-	info->xMin    = 0;
-	info->xMax    = 1;
-	info->yMin    = 0;
-	info->yMax    = 1;
-	info->xUnit   = B3_STENCIL_UNIT;
-	info->yUnit   = B3_STENCIL_UNIT;
-	info->xFactor = 1;
-	info->yFactor = 1;
+	info->xInfo.min    = 0;
+	info->xInfo.max    = 1;
+	info->yInfo.min    = 0;
+	info->yInfo.max    = 1;
+	info->xInfo.unit   = B3_STENCIL_UNIT;
+	info->yInfo.unit   = B3_STENCIL_UNIT;
+	info->xInfo.factor = 1;
+	info->yInfo.factor = 1;
 }
 
 void b3Shape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
@@ -838,14 +843,14 @@ b3_bool b3Shape3::b3Prepare()
 
 void b3Shape3::b3GetStencilBoundInfo(b3_stencil_bound *info)
 {
-	info->xMin    = 0;
-	info->xMax    = 1;
-	info->yMin    = 0;
-	info->yMax    = 1;
-	info->xUnit   = B3_STENCIL_ANGLE;
-	info->yUnit   = B3_STENCIL_LENGTH;
-	info->xFactor = 360;
-	info->yFactor = b3Vector::b3Length(&m_Dir3);;
+	info->xInfo.min    = 0;
+	info->xInfo.max    = 1;
+	info->yInfo.min    = 0;
+	info->yInfo.max    = 1;
+	info->xInfo.unit   = B3_STENCIL_ANGLE;
+	info->yInfo.unit   = B3_STENCIL_LENGTH;
+	info->xInfo.factor = 360;
+	info->yInfo.factor = b3Vector::b3Length(&m_Dir3);;
 }
 
 void b3Shape3::b3ComputeNormals(b3_bool normalize)

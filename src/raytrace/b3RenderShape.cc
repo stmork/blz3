@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.70  2004/05/10 15:12:09  sm
+**      - Unified condition legends for conditions and
+**        texture materials.
+**      - Added wrap texture material dialog.
+**
 **      Revision 1.69  2004/04/23 11:09:04  sm
 **      - Refectored b3Materials for better dialog use.
 **
@@ -603,10 +608,10 @@ void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 
 	// Get outer limits
 	b3GetStencilBoundInfo(&info);
-	limit->x1 = info.xMin;
-	limit->y1 = info.yMin;
-	limit->x2 = info.xMax;
-	limit->y2 = info.yMax;
+	limit->x1 = info.xInfo.min;
+	limit->y1 = info.yInfo.min;
+	limit->x2 = info.xInfo.max;
+	limit->y2 = info.yInfo.max;
 
 	// Do any stencil make the limits closer?
 	B3_FOR_BASE(b3GetConditionHead(),item)

@@ -24,25 +24,34 @@
 // DlgMatTexture.h : header file
 //
 
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/raytrace/b3Material.h"
+#include "b3SimplePreviewDialog.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatTexture dialog
 
-class CDlgMatTexture : public CDialog
+class CDlgMatTexture : public CB3SimplePreviewDialog
 {
-	b3MatTexture *m_Material;
+	b3Scene           *m_MatScene;
+	b3Base<b3Item>    *m_MatHead;
+	b3MatTexture      *m_Material;
 
 // Construction
 public:
-	static b3_bool b3Edit(b3Item *item);
+	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
 	CDlgMatTexture(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgMatTexture)
 	enum { IDD = IDD_MAT_TEXTURE };
-		// NOTE: the ClassWizard will add data members here
+	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
+	CB3FloatSpinButtonCtrl	m_IorCtrl;
+	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 
@@ -61,6 +70,10 @@ protected:
 		// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitDialog();
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -57,10 +57,15 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.73  2004/05/07 18:19:08  sm
 **	- Added some menu entries and toolbar buttons
 **	- Fixed missing default title of CB3PropertyPages
-**
+**	
 **	Revision 1.72  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -1098,7 +1103,7 @@ void CAppLinesApp::OnAppAbout()
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);
-	CDlgItemMaintain dlg(&head);
+	CDlgItemMaintain dlg(null,&head);
 
 	dlg.DoModal();
 

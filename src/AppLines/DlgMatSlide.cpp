@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.8  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.7  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
@@ -131,7 +136,7 @@ void CDlgMatSlide::b3Register()
 	b3Loader::b3AddClassType(SLIDE,IDS_MAT_SLIDE,IDI_MAT_SLIDE,b3Edit,b3Edit);
 }
 
-b3_bool CDlgMatSlide::b3Edit(b3Item *item)
+b3_bool CDlgMatSlide::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgMatSlide dlg(item);
 

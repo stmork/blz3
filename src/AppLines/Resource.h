@@ -844,6 +844,12 @@
 #define IDS_TITLE_WHITE                 61449
 #define IDS_TITLE_YROT                  61450
 #define IDS_TITLE_ZROT                  61451
+#define IDS_STENCIL_DIR_UNIT            61452
+#define IDS_STENCIL_LEN_UNIT            61453
+#define IDS_STENCIL_DIR_LENGTH          61454
+#define IDS_STENCIL_LEN_LENGTH          61455
+#define IDS_STENCIL_DIR_ANGLE           61456
+#define IDS_STENCIL_LEN_ANGLE           61457
 
 // Next default values for new objects
 // 

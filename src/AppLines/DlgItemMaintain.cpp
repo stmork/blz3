@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.12  2004/04/26 19:45:56  sm
 **	- Item maintain dialog: The return key enters the
 **	  property dialog or creates a new item
-**
+**	
 **	Revision 1.11  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
@@ -93,14 +98,18 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgItemMaintain::CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent /*=NULL*/)
+CDlgItemMaintain::CDlgItemMaintain(
+	CAppRenderDoc  *pDoc,
+	b3Base<b3Item> *head,
+	CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgItemMaintain::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgItemMaintain)
 	//}}AFX_DATA_INIT
-	m_Head = head;
+	m_Head    = head;
 	m_Plugins = &b3Loader::b3GetLoader();
 	m_Changed = false;
+	m_pDoc    = pDoc;
 }
 
 
@@ -337,7 +346,7 @@ void CDlgItemMaintain::OnItemEdit()
 	if (item != null)
 	{
 		edit = b3World::b3Clone(item);
-		if (b3Loader::b3GetLoader().b3Edit(edit))
+		if (b3Loader::b3GetLoader().b3Edit(edit,m_pDoc))
 		{
 			b3Store(edit);
 			m_Head->b3Insert(item,edit);
@@ -465,15 +474,10 @@ void CDlgItemMaintain::OnOK()
 	// TODO: Add extra validation here
 	
 	CDialog::OnOK();
-}
-
-b3_bool CDlgItemMaintain::b3SetModified(CDocument *pDoc)
-{
-	if (m_Changed)
+	if (m_pDoc != null)
 	{
-		pDoc->SetModifiedFlag();
+		m_pDoc->SetModifiedFlag();
 	}
-	return m_Changed;
 }
 
 void CDlgItemMaintain::OnDoItemList(NMHDR* pNMHDR, LRESULT* pResult) 

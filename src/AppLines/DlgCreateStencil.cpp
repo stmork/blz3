@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.6  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.5  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
@@ -81,21 +86,6 @@
 *************************************************************************/
 
 IMPLEMENT_DYNCREATE(CDlgCreateStencil, CPropertyPage)
-
-b3_f64 CDlgCreateStencil::m_Increments[3] =
-{
-	0.1,1.0,1.0
-};
-
-b3_f64 CDlgCreateStencil::m_Accels[3] =
-{
-	0.25,5.0,15.0
-};
-
-int CDlgCreateStencil::m_Digits[3] =
-{
-	3,2,1
-};
 
 CDlgCreateStencil::CDlgCreateStencil() : CPropertyPage(CDlgCreateStencil::IDD)
 {
@@ -156,47 +146,20 @@ void CDlgCreateStencil::b3Init()
 	m_Shape->b3GetStencilBoundInfo(&m_Bound);
 	m_Unit         = app->GetProfileInt(CB3ClientString(),m_Section + ".unit",1);
 	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),m_Section + ".really create",1);
-	m_Limit.x1     = app->b3ReadProfileFloat(m_Section + ".xMin",m_Bound.xMin);
-	m_Limit.x2     = app->b3ReadProfileFloat(m_Section + ".xMax",m_Bound.xMax);
-	m_Limit.y1     = app->b3ReadProfileFloat(m_Section + ".yMin",m_Bound.yMin);
-	m_Limit.y2     = app->b3ReadProfileFloat(m_Section + ".yMax",m_Bound.yMax);
+	m_Limit.x1     = app->b3ReadProfileFloat(m_Section + ".xMin",m_Bound.xInfo.min);
+	m_Limit.x2     = app->b3ReadProfileFloat(m_Section + ".xMax",m_Bound.xInfo.max);
+	m_Limit.y1     = app->b3ReadProfileFloat(m_Section + ".yMin",m_Bound.yInfo.min);
+	m_Limit.y2     = app->b3ReadProfileFloat(m_Section + ".yMax",m_Bound.yInfo.max);
 }
 
 BOOL CDlgCreateStencil::OnInitDialog() 
 {
-	// Init horizontal legend
-	switch(m_Bound.xUnit)
-	{
-	case B3_STENCIL_UNIT:
-		m_xStartLegend.LoadString(IDS_STENCIL_START_UNIT);
-		m_xEndLegend.LoadString(IDS_STENCIL_END_UNIT);
-		break;
-	case B3_STENCIL_LENGTH:
-		m_xStartLegend.LoadString(IDS_STENCIL_START_LENGTH);
-		m_xEndLegend.LoadString(IDS_STENCIL_END_LENGTH);
-		break;
-	case B3_STENCIL_ANGLE:
-		m_xStartLegend.LoadString(IDS_STENCIL_START_ANGLE);
-		m_xEndLegend.LoadString(IDS_STENCIL_END_ANGLE);
-		break;
-	}
+	// Init legends
+	m_xStart.b3Init(&m_xStartCtrl,&m_xStartLegend,&m_Bound.xInfo,B3_COND_CTRL_START);
+	m_xEnd.b3Init(  &m_xEndCtrl,  &m_xEndLegend,  &m_Bound.xInfo,B3_COND_CTRL_END);
+	m_yStart.b3Init(&m_yStartCtrl,&m_yStartLegend,&m_Bound.yInfo,B3_COND_CTRL_START);
+	m_yEnd.b3Init(  &m_yEndCtrl,  &m_yEndLegend,  &m_Bound.yInfo,B3_COND_CTRL_END);
 
-	// Init vertical legend
-	switch(m_Bound.yUnit)
-	{
-	case B3_STENCIL_UNIT:
-		m_yStartLegend.LoadString(IDS_STENCIL_START_UNIT);
-		m_yEndLegend.LoadString(IDS_STENCIL_END_UNIT);
-		break;
-	case B3_STENCIL_LENGTH:
-		m_yStartLegend.LoadString(IDS_STENCIL_START_LENGTH);
-		m_yEndLegend.LoadString(IDS_STENCIL_END_LENGTH);
-		break;
-	case B3_STENCIL_ANGLE:
-		m_yStartLegend.LoadString(IDS_STENCIL_START_ANGLE);
-		m_yEndLegend.LoadString(IDS_STENCIL_END_ANGLE);
-		break;
-	}
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -216,67 +179,22 @@ void CDlgCreateStencil::OnUnitChanged()
 void CDlgCreateStencil::OnLimitChanged() 
 {
 	// TODO: Add your control notification handler code here
-	m_Limit.x1 = m_xStartCtrl.b3GetPos();
-	m_Limit.x2 = m_xEndCtrl.b3GetPos();
-	m_Limit.y1 = m_yStartCtrl.b3GetPos();
-	m_Limit.y2 = m_yEndCtrl.b3GetPos();
+	b3_bool absolute = m_Unit == 0;
 
-	// Normalize values
-	if (m_Unit != 0)
-	{
-		m_Limit.x1 /= m_Bound.xFactor;
-		m_Limit.x2 /= m_Bound.xFactor;
-		m_Limit.y1 /= m_Bound.yFactor;
-		m_Limit.y2 /= m_Bound.yFactor;
-	}
+	m_Limit.x1 = m_xStart.b3GetPos(absolute);
+	m_Limit.x2 = m_xEnd.b3GetPos(absolute);
+	m_Limit.y1 = m_yStart.b3GetPos(absolute);
+	m_Limit.y2 = m_yEnd.b3GetPos(absolute);
 }
 
 void CDlgCreateStencil::b3UpdateUI()
 {
-	if (m_Unit == 0)
-	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin,m_Bound.xMax);
-		m_xStartCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
-		m_xStartCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
-		m_xStartCtrl.b3SetPos(m_Limit.x1);
-		
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin,m_Bound.xMax);
-		m_xEndCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
-		m_xEndCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
-		m_xEndCtrl.b3SetPos(  m_Limit.x2);
-		
-		m_yStartCtrl.b3SetRange(m_Bound.yMin,m_Bound.yMax);
-		m_yStartCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
-		m_yStartCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
-		m_yStartCtrl.b3SetPos(m_Limit.y1);
-		
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin,m_Bound.yMax);
-		m_yEndCtrl.b3SetDigits(m_Digits[B3_STENCIL_UNIT]);
-		m_yEndCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
-		m_yEndCtrl.b3SetPos(  m_Limit.y2);
-	}
-	else
-	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
-		m_xStartCtrl.b3SetDigits(0,m_Digits[m_Bound.xUnit]);
-		m_xStartCtrl.b3SetIncrement(m_Increments[m_Bound.xUnit]);
-		m_xStartCtrl.b3SetPos(m_Limit.x1 * m_Bound.xFactor);
+	b3_bool absolute = m_Unit == 0;
 
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
-		m_xEndCtrl.b3SetDigits(0,m_Digits[m_Bound.xUnit]);
-		m_xEndCtrl.b3SetIncrement(m_Increments[m_Bound.xUnit]);
-		m_xEndCtrl.b3SetPos(  m_Limit.x2 * m_Bound.xFactor);
-
-		m_yStartCtrl.b3SetRange(m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
-		m_yStartCtrl.b3SetDigits(0,m_Digits[m_Bound.yUnit]);
-		m_yStartCtrl.b3SetIncrement(m_Increments[m_Bound.yUnit]);
-		m_yStartCtrl.b3SetPos(m_Limit.y1 * m_Bound.yFactor);
-		
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
-		m_yEndCtrl.b3SetDigits(0,m_Digits[m_Bound.yUnit]);
-		m_yEndCtrl.b3SetIncrement(m_Increments[m_Bound.yUnit]);
-		m_yEndCtrl.b3SetPos(  m_Limit.y2 * m_Bound.yFactor);
-	}
+	m_xStart.b3SetPos(absolute,m_Limit.x1);
+	m_xEnd.b3SetPos(  absolute,m_Limit.x2);
+	m_yStart.b3SetPos(absolute,m_Limit.y1);
+	m_yEnd.b3SetPos(  absolute,m_Limit.y2);
 }
 
 BOOL CDlgCreateStencil::OnSetActive() 

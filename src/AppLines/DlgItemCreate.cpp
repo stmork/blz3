@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.4  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
-**
+**	
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -60,9 +65,10 @@
 *************************************************************************/
 
 
-CDlgItemCreate::CDlgItemCreate(b3_u32 class_id,CWnd* pParent /*=NULL*/)
+CDlgItemCreate::CDlgItemCreate(CAppRenderDoc *pDoc,b3_u32 class_id,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgItemCreate::IDD, pParent)
 {
+	m_pDoc = pDoc;
 	m_Item = null;
 	m_ClassId = class_id;
 	//{{AFX_DATA_INIT(CDlgItemCreate)
@@ -89,9 +95,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgItemCreate message handlers
 
-b3Item * CDlgItemCreate::b3Create(b3_u32 class_id)
+b3Item * CDlgItemCreate::b3Create(CAppRenderDoc *pDoc,b3_u32 class_id)
 {
-	CDlgItemCreate dlg(class_id);
+	CDlgItemCreate dlg(pDoc,class_id);
 
 	return dlg.DoModal() == IDOK ? dlg.m_Item : null;
 }
@@ -176,11 +182,11 @@ void CDlgItemCreate::OnOK()
 		buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
 		if (buffer != null)
 		{
-			m_Item = b3Loader::b3GetLoader().b3Create(buffer);
+			m_Item = b3Loader::b3GetLoader().b3Create(buffer,m_pDoc);
 		}
 		else
 		{
-			m_Item = b3Loader::b3GetLoader().b3Create(class_type);
+			m_Item = b3Loader::b3GetLoader().b3Create(class_type,m_pDoc);
 		}
 	}
 }

@@ -60,13 +60,18 @@
 
 /*
 **	$Log$
+**	Revision 1.96  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.95  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.94  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -1908,8 +1913,7 @@ void CAppLinesDoc::OnUpdateAnimProperties(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnMaintainSpecial() 
 {
 	// TODO: Add your command handler code here
-	CDlgItemMaintain dlg(m_Scene->b3GetSpecialHead());
+	CDlgItemMaintain dlg(this,m_Scene->b3GetSpecialHead());
 
 	dlg.DoModal();
-	dlg.b3SetModified(this);
 }

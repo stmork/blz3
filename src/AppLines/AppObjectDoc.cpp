@@ -40,6 +40,11 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.29  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -47,7 +52,7 @@
 **	  material. Changes were also made in Lines.
 **	- Introduced shape property copy including all materials,
 **	  bumps and conditions. Multiple copy modes are possible.
-**
+**	
 **	Revision 1.28  2004/04/10 20:05:12  sm
 **	- Introduced bump map editing in Lines III
 **	
@@ -838,10 +843,9 @@ void CAppObjectDoc::OnEditMaterial()
 
 	if (shape != null)
 	{
-		CDlgItemMaintain dlg(shape->b3GetMaterialHead());
+		CDlgItemMaintain dlg(this,shape->b3GetMaterialHead());
 
 		dlg.DoModal();
-		dlg.b3SetModified(this);
 	}
 }
 
@@ -860,10 +864,9 @@ void CAppObjectDoc::OnEditBump()
 
 	if (shape != null)
 	{
-		CDlgItemMaintain dlg(shape->b3GetBumpHead());
+		CDlgItemMaintain dlg(this,shape->b3GetBumpHead());
 
 		dlg.DoModal();
-		dlg.b3SetModified(this);
 	}
 }
 

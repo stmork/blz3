@@ -30,8 +30,8 @@
 
 #define B3_PLUGIN_RANGE_CHECK(i,max) (((i) >= 0) && ((i) < (max)))
 
-typedef b3_bool          (*b3_plugin_create_func)(b3Item *item);
-typedef b3_bool          (*b3_plugin_edit_func)(b3Item *item);
+typedef b3_bool          (*b3_plugin_create_func)(b3Item *item,void *ptr);
+typedef b3_bool          (*b3_plugin_edit_func)(b3Item *item,void *ptr);
 
 struct b3_plugin_info
 {
@@ -56,9 +56,9 @@ class b3Loader : public b3LoaderBase
 
 	                b3Loader();
 public:
-	b3Item         *b3Create(b3_u32 class_type,b3_bool edit = true);
-	b3Item         *b3Create(b3_u32 *class_buffer,b3_bool edit = true);
-	b3_bool         b3Edit(b3Item *item);
+	b3Item         *b3Create(b3_u32 class_type,void *ptr,b3_bool edit = true);
+	b3Item         *b3Create(b3_u32 *class_buffer,void *ptr,b3_bool edit = true);
+	b3_bool         b3Edit(b3Item *item,void *ptr);
 	b3_bool         b3AddPluginInfo(b3_plugin_info *info);
 	b3_plugin_info *b3FindInfo(b3Item *item);
 	b3_plugin_info *b3FindInfo(b3_u32 class_type);
@@ -81,7 +81,7 @@ protected:
 	b3PluginBase   *b3CreatePlugin(b3Path &library);
 
 private:
-	b3Item         *b3EditCreation(b3Item *item,b3_bool edit);
+	b3Item         *b3EditCreation(b3Item *item,void *ptr,b3_bool edit);
 };
 
 class b3Plugin : public b3PluginBase

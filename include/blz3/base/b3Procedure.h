@@ -184,7 +184,7 @@ public:
 		return sight;
 	}
 
-	static void    b3Marble      (b3_vector *d,b3Color &mask);
+	static b3_f64  b3Marble      (b3_vector *d);
 	static void    b3Wood        (b3_vector *d,b3Color &mask);
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
 	static b3_f64  b3Wave        (b3_vector *point);

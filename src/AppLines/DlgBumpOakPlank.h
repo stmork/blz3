@@ -47,7 +47,7 @@ class CDlgBumpOakPlank : public CB3SimplePropertyPreviewDialog
 
 	// Construction
 public:
-	static b3_bool b3Edit(b3Item *item);
+	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void b3Register();
 	CDlgBumpOakPlank(b3Item *item,CWnd* pParent = NULL);   // standard constructor
 	~CDlgBumpOakPlank();

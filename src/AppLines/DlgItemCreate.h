@@ -29,13 +29,14 @@
 
 class CDlgItemCreate : public CDialog
 {
-	CImageList m_ImageList;
-	b3_u32 m_ClassId;
+	CAppRenderDoc *m_pDoc;
+	CImageList     m_ImageList;
+	b3_u32         m_ClassId;
 // Construction
 public:
 	b3Item * m_Item;
-	static b3Item * b3Create(b3_u32 class_id);
-	CDlgItemCreate(b3_u32 class_id,CWnd* pParent = NULL);   // standard constructor
+	static b3Item * b3Create(CAppRenderDoc *pDoc,b3_u32 class_id);
+	CDlgItemCreate(CAppRenderDoc *pDoc,b3_u32 class_id,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgItemCreate)

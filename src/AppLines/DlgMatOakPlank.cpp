@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/05/10 15:12:08  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.12  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
-**
+**	
 **	Revision 1.11  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -138,7 +143,7 @@ void CDlgMatOakPlank::b3Register()
 	b3Loader::b3AddClassType(OAKPLANK,IDS_MAT_OAKPLANK,IDI_MAT_OAKPLANK,b3Edit,b3Edit);
 }
 
-b3_bool CDlgMatOakPlank::b3Edit(b3Item *item)
+b3_bool CDlgMatOakPlank::b3Edit(b3Item *item,void *ptr)
 {
 	CDlgMatOakPlank dlg(item);
 

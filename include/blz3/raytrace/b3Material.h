@@ -111,9 +111,12 @@ public:
 };
 
 // MARBLE
-class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling, public b3_material
+class B3_PLUGIN b3MatMarble : public b3Material, public b3Scaling
 {
 	b3_s32            m_xTimes,m_yTimes;
+public:
+	b3_material       m_DarkMaterial;
+	b3_material       m_LightMaterial;
 
 public:
 	B3_ITEM_INIT(b3MatMarble);
@@ -207,7 +210,6 @@ public:
 // WRAPTEXTURE
 class B3_PLUGIN b3MatWrapTexture : public b3Material 
 {
-	b3Tx             *m_Texture;          // only one texture (compat. Dali)
 public:
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
@@ -217,6 +219,7 @@ public:
 	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
 	b3_s32            m_Flags;
 	b3Path            m_Name;
+	b3Tx             *m_Texture;          // only one texture (compat. Dali)
 
 public:
 	B3_ITEM_INIT(b3MatWrapTexture);
@@ -224,6 +227,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
+	void    b3SetTexture(const char *name);
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 

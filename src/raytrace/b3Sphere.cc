@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/05/10 15:12:09  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.31  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.30  2003/02/24 17:32:38  sm
 **	- Added further picking support.
 **	- Fixed geometry update delay.
@@ -244,14 +249,14 @@ void b3Sphere::b3GetCount(
 
 void b3Sphere::b3GetStencilBoundInfo(b3_stencil_bound *info)
 {
-	info->xMin    =  0;
-	info->xMax    =  1;
-	info->yMin    = -1;
-	info->yMax    =  1;
-	info->xUnit   = B3_STENCIL_ANGLE;
-	info->yUnit   = B3_STENCIL_ANGLE;
-	info->xFactor = 360;
-	info->yFactor =  90;
+	info->xInfo.min    =  0;
+	info->xInfo.max    =  1;
+	info->yInfo.min    = -1;
+	info->yInfo.max    =  1;
+	info->xInfo.unit   = B3_STENCIL_ANGLE;
+	info->yInfo.unit   = B3_STENCIL_ANGLE;
+	info->xInfo.factor = 360;
+	info->yInfo.factor =  90;
 }
 
 void b3Sphere::b3ComputeVertices()

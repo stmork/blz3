@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/05/10 15:12:09  sm
+**	- Unified condition legends for conditions and
+**	  texture materials.
+**	- Added wrap texture material dialog.
+**
 **	Revision 1.28  2004/04/22 14:35:16  sm
 **	- Optimized clouds by making them inline.
-**
+**	
 **	Revision 1.27  2004/04/22 14:28:44  sm
 **	- Adjusted clouds.
 **	
@@ -539,14 +544,14 @@ static inline void marbleCurve (
 	Spline->b3DeBoorOpened (result,0,q);
 }
 
-void b3Noise::b3Marble(b3_vector *d,b3Color &mask)
+b3_f64 b3Noise::b3Marble(b3_vector *d)
 {
 	b3_vector result;
 
 	marbleCurve(&marbleSpline,&result,
 		mSin(d->x + 0.5 * d->y + 0.3 * d->z + b3Turbulence(d)));
 
-	mask.b3Init(result.y,result.y,result.y);
+	return result.y;
 }
 
 void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
