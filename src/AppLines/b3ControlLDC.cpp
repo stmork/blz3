@@ -34,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/02 15:24:35  sm
+**	- Templetized splines (uhff).
+**	- Prepared spline shapes for their creation.
+**	  *** And now: Testing! Testing! Testing! ***
+**
 **	Revision 1.6  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -41,7 +46,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.5  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
 **	
@@ -337,7 +342,14 @@ void CB3ControlLDC::OnMouseMove(UINT nFlags, CPoint point)
 		b3Update();
 		if (parent != null)
 		{
-			parent->PostMessage(WM_B3_LDC_MOVED);
+		NMHDR nmhdr;
+
+		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.idFrom   = GetDlgCtrlID();
+		nmhdr.code     = WM_MOUSEMOVE;
+		parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
+
+//			parent->PostMessage(WM_B3_LDC_MOVED);
 		}
 	}
 	CStatic::OnMouseMove(nFlags, point);
@@ -353,7 +365,14 @@ void CB3ControlLDC::OnLButtonUp(UINT nFlags, CPoint point)
 		::ReleaseCapture();
 		if (parent != null)
 		{
-			parent->PostMessage(WM_B3_LDC_CHANGED);
+		NMHDR nmhdr;
+
+		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.idFrom   = GetDlgCtrlID();
+		nmhdr.code     = WM_LBUTTONUP;
+		parent->SendMessage(WM_NOTIFY,nmhdr.idFrom,(LPARAM)&nmhdr);
+
+//			parent->PostMessage(WM_B3_LDC_CHANGED);
 		}
 	}
 	CStatic::OnLButtonUp(nFlags, point);

@@ -35,12 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/02 15:24:35  sm
+**	- Templetized splines (uhff).
+**	- Prepared spline shapes for their creation.
+**	  *** And now: Testing! Testing! Testing! ***
+**
 **	Revision 1.3  2001/10/11 16:06:32  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
 **	  b3Endian
 **	- Cleaning up some datatypes for proper display in Together.
-**
+**	
 **	Revision 1.2  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
 **	
@@ -163,8 +168,8 @@ b3Noise::b3Noise ()
 	marbleSpline.offset      = 1;
 	marbleSpline.knots       = marbleKnots;
 	marbleSpline.controls    = marbleControls;
-	b3BSplineInitCurve         (&marbleSpline,3L,marbleSpline.control_max,false);
-	b3BSplineThroughEndControl (&marbleSpline);
+	marbleSpline.b3InitCurve         (3,marbleSpline.control_max,false);
+	marbleSpline.b3ThroughEndControl ();
 
 	// init wood spline
 	woodSpline.knot_max     = sizeof(woodKnots)    / sizeof(b3_f32);
@@ -172,8 +177,8 @@ b3Noise::b3Noise ()
 	woodSpline.offset       = 1;
 	woodSpline.knots        = woodKnots;
 	woodSpline.controls     = woodControls;
-	b3BSplineInitCurve         (&woodSpline,  3L,  woodSpline.control_max,false);
-	b3BSplineThroughEndControl (&woodSpline);
+	woodSpline.b3InitCurve         (3,woodSpline.control_max,false);
+	woodSpline.b3ThroughEndControl ();
 
 	// init wave spline
 	waveSpline.knot_max     = sizeof(waveKnots)    / sizeof(b3_f32);
@@ -181,7 +186,7 @@ b3Noise::b3Noise ()
 	waveSpline.offset       = 1;
 	waveSpline.knots        = waveKnots;
 	waveSpline.controls     = waveControls;
-	b3BSplineInitCurve(&waveSpline,3,waveSpline.control_max,true);
+	waveSpline.b3InitCurve(3,waveSpline.control_max,true);
 	for (i = 0;i < waveSpline.control_max;i++)
 	{
 		waveControls[i].x = cos(M_PI * 2.0 * i / waveSpline.control_max);

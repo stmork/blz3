@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/02 15:24:35  sm
+**	- Templetized splines (uhff).
+**	- Prepared spline shapes for their creation.
+**	  *** And now: Testing! Testing! Testing! ***
+**
 **	Revision 1.1  2001/12/07 16:36:12  sm
 **	- Added simple LDC editing dialog.
-**
+**	
 **
 */
 
@@ -69,8 +74,6 @@ void CDlgLDC::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgLDC, CDialog)
 	//{{AFX_MSG_MAP(CDlgLDC)
-	ON_MESSAGE(WM_B3_LDC_MOVED, b3UpdateDiagram)
-	ON_MESSAGE(WM_B3_LDC_CHANGED, b3UpdatePreview)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -110,13 +113,7 @@ BOOL CDlgLDC::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-LRESULT CDlgLDC::b3UpdateDiagram(WPARAM wParam,LPARAM lParam)
-{
-	m_CtrlDiagram.b3Update();
-	return 0;
-}
-
-LRESULT CDlgLDC::b3UpdatePreview(WPARAM wParam,LPARAM lParam)
+void CDlgLDC::b3UpdatePreview()
 {
 	b3Light  *light = m_LightScene->b3GetLight();
 	b3_index  i;
@@ -127,7 +124,6 @@ LRESULT CDlgLDC::b3UpdatePreview(WPARAM wParam,LPARAM lParam)
 		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
 	}
 	m_CtrlPreview.b3Update(m_LightScene);
-	return 0;
 }
 
 void CDlgLDC::OnDestroy() 
@@ -136,4 +132,28 @@ void CDlgLDC::OnDestroy()
 	
 	// TODO: Add your message handler code here
 	delete m_LightScene;
+}
+
+BOOL CDlgLDC::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	switch(wParam)
+	{
+	case IDC_LIGHT_LDC_CONTROL:
+		NMHDR *pHdr = (NMHDR *)lParam;
+		switch(pHdr->code)
+		{
+		case WM_MOUSEMOVE:
+			m_CtrlDiagram.b3Update();
+			*pResult = 0;
+			return TRUE;
+
+		case WM_LBUTTONUP:
+			b3UpdatePreview();
+			*pResult = 0;
+			return TRUE;
+		}
+		break;
+	}
+	return CDialog::OnNotify(wParam, lParam, pResult);
 }

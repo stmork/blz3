@@ -73,6 +73,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -89,12 +90,11 @@ protected:
 	afx_msg void OnKillfocusLight();
 	virtual void OnOK();
 	afx_msg void OnDestroy();
-	afx_msg LRESULT b3UpdateDiagram(WPARAM wParam=0,LPARAM lParam=0);
-	afx_msg LRESULT b3UpdatePreview(WPARAM wParam=0,LPARAM lParam=0);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	void b3UpdateUI();
+	void b3UpdatePreview();
 	void b3SetLight();
 	void b3GetLight();
 	void b3RefreshList();

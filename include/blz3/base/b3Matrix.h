@@ -28,9 +28,9 @@ class b3Vector
 public:
 	static inline b3_vector *b3Init(b3_vector *vec,b3_f64 x=0,b3_f64 y=0,b3_f64 z=0)
 	{
-		vec->x = x;
-		vec->y = y;
-		vec->z = z;
+		vec->x = (b3_f32)x;
+		vec->y = (b3_f32)y;
+		vec->z = (b3_f32)z;
 
 		return vec;
 	}
@@ -65,9 +65,9 @@ public:
 		if (denom > 0)
 		{
 			denom     = length / (result = sqrt(denom));
-			vector->x = x * denom;
-			vector->y = y * denom;
-			vector->z = z * denom;
+			vector->x = (b3_f32)(x * denom);
+			vector->y = (b3_f32)(y * denom);
+			vector->z = (b3_f32)(z * denom);
 		}
 		return result;
 	}
@@ -191,47 +191,55 @@ public:
 
 	static inline void b3Scale(b3_vector *vector,b3_f64 factor)
 	{
-		vector->x *= factor;
-		vector->y *= factor;
-		vector->z *= factor;
+		vector->x = (b3_f32)(vector->x * factor);
+		vector->y = (b3_f32)(vector->y * factor);
+		vector->z = (b3_f32)(vector->z * factor);
 	}
 
-	static inline void b3Scale(b3_vector64 *vector,b3_f64 factor)
+	static inline void b3Scale(b3_vector4D *vector,b3_f64 factor)
+	{
+		vector->x = (b3_f32)(vector->x * factor);
+		vector->y = (b3_f32)(vector->y * factor);
+		vector->z = (b3_f32)(vector->z * factor);
+		vector->w = (b3_f32)(vector->w * factor);
+	}
+
+	static inline void b3Scale(b3_vector64 *vector,const b3_f64 factor)
 	{
 		vector->x *= factor;
 		vector->y *= factor;
 		vector->z *= factor;
 	}
 
-	static inline b3_vector *b3MatrixMul3D(b3_matrix *A,b3_vector *vector)
+	static inline b3_vector *b3MatrixMul3D(const b3_matrix *A,b3_vector *vector)
 	{
 		register b3_f64 x,y,z;
 
 		x = vector->x;
 		y = vector->y;
 		z = vector->z;
-		vector->x = x * A->m11 + y * A->m12 + z * A->m13;
-		vector->y = x * A->m21 + y * A->m22 + z * A->m23;
-		vector->z = x * A->m31 + y * A->m32 + z * A->m33;
+		vector->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13);
+		vector->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23);
+		vector->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33);
 		return vector;
 	}
 
-	static inline b3_vector *b3MatrixMul4D(b3_matrix *A,b3_vector *vector)
+	static inline b3_vector *b3MatrixMul4D(const b3_matrix *A,b3_vector *vector)
 	{
 		register b3_f64 x,y,z;
 
 		x = vector->x;
 		y = vector->y;
 		z = vector->z;
-		vector->x = x * A->m11 + y * A->m12 + z * A->m13 + A->m14;
-		vector->y = x * A->m21 + y * A->m22 + z * A->m23 + A->m24;
-		vector->z = x * A->m31 + y * A->m32 + z * A->m33 + A->m34;
+		vector->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
+		vector->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
+		vector->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
 		return vector;
 	}
 
 	static inline b3_f64 b3AngleOfVectors(
-		b3_vector *Vector1,
-		b3_vector *Vector2)
+		const b3_vector *Vector1,
+		const b3_vector *Vector2)
 	{
 		b3_f64 Denom;
 
@@ -255,9 +263,9 @@ public:
 	}
 
 	static inline b3_f64 b3AngleOfPoints(
-		b3_vector *base,
-		b3_vector *point1,
-		b3_vector *point2)
+		const b3_vector *base,
+		const b3_vector *point1,
+		const b3_vector *point2)
 	{
 		b3_vector a,b;
 		b3_f64    denom,result;
@@ -288,13 +296,27 @@ public:
 	}
 
 	static inline b3_vector *b3LinearCombine(
-		b3_vector *pVec,
-		b3_f64     a,b3_vector *aVec,
-		b3_vector *result)
+		const b3_vector *pVec,
+		const b3_f64     a,
+		const b3_vector *aVec,
+		      b3_vector *result)
 	{
-		result->x = pVec->x + a * aVec->x;
-		result->y = pVec->y + a * aVec->y;
-		result->z = pVec->z + a * aVec->z;
+		result->x = (b3_f32)(pVec->x + a * aVec->x);
+		result->y = (b3_f32)(pVec->y + a * aVec->y);
+		result->z = (b3_f32)(pVec->z + a * aVec->z);
+		return result;
+	}
+
+	static inline b3_vector4D *b3LinearCombine(
+		const b3_vector4D *pVec,
+		const b3_f64       a,
+		const b3_vector4D *aVec,
+		      b3_vector4D *result)
+	{
+		result->x = (b3_f32)(pVec->x + a * aVec->x);
+		result->y = (b3_f32)(pVec->y + a * aVec->y);
+		result->z = (b3_f32)(pVec->z + a * aVec->z);
+		result->w = (b3_f32)(pVec->w + a * aVec->w);
 		return result;
 	}
 
@@ -306,9 +328,9 @@ public:
 		const b3_f64     factor0,
 		      b3_vector *result)
 	{
-		result->x = coeff2->x + factor1 * coeff1->x + factor0 * coeff0->x;
-		result->y = coeff2->y + factor1 * coeff1->y + factor0 * coeff0->y;
-		result->z = coeff2->z + factor1 * coeff1->z + factor0 * coeff0->z;
+		result->x = (b3_f32)(coeff2->x + factor1 * coeff1->x + factor0 * coeff0->x);
+		result->y = (b3_f32)(coeff2->y + factor1 * coeff1->y + factor0 * coeff0->y);
+		result->z = (b3_f32)(coeff2->z + factor1 * coeff1->z + factor0 * coeff0->z);
 		return result;
 	}
 

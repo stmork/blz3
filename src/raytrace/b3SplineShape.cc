@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/03/02 15:24:35  sm
+**      - Templetized splines (uhff).
+**      - Prepared spline shapes for their creation.
+**        *** And now: Testing! Testing! Testing! ***
+**
 **      Revision 1.27  2002/02/28 16:58:46  sm
 **      - Added torus dialogs.
 **      - Fixed material and stencil handling when not activating
@@ -344,10 +349,12 @@ void b3SplineCurve::b3Transform(b3_matrix *transformation)
 b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) :
 	b3TriangleShape(class_size, class_type)
 {
+	m_Controls = null;
 }
 
 b3SplineShape::b3SplineShape(b3_u32 class_type) : b3TriangleShape(sizeof(b3SplineShape), class_type)
 {
+	m_Controls = null;
 }
 
 b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
@@ -355,8 +362,8 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3TriangleShape(src)
 	b3_index i;
 	b3_count control_count;
 
-	b3InitVector(&m_Axis.pos);
-	b3InitVector(&m_Axis.dir);
+	b3InitVector();
+	b3InitVector();
 	b3InitSpline(&m_Spline[0],null,m_Knots[0]);
 	b3InitSpline(&m_Spline[1],null,m_Knots[1]);
 
@@ -381,8 +388,8 @@ void b3SplineShape::b3StoreShape()
 	b3_index i;
 	b3_count control_count;
 
-	b3StoreVector(&m_Axis.pos);
-	b3StoreVector(&m_Axis.dir);
+	b3StoreVector();
+	b3StoreVector();
 	b3StoreSpline(&m_Spline[0]);
 	b3StoreSpline(&m_Spline[1]);
 
@@ -402,6 +409,30 @@ void b3SplineShape::b3StoreShape()
 	{
 		b3StoreVector(&m_Controls[i]);
 	}
+}
+
+void b3SplineShape::b3Init(
+	b3_count hDegree,
+	b3_count vDegree,
+	b3_count hControlNum,
+	b3_count vControlNum)
+{
+	// Allocate controls
+	m_Controls      = (b3_vector *)b3Item::b3Alloc(
+		m_Spline[0].control_max *
+		m_Spline[1].control_max * sizeof(b3_vector));
+
+	// Init horizontal spline
+	m_Spline[0].knots    = m_Knots[0];
+	m_Spline[0].controls = m_Controls;
+	m_Spline[0].offset   = 1;
+	m_Spline[0].b3InitCurve(hDegree,hControlNum,b3GetClassType() != SPLINES_AREA);
+
+	// Init vertical spline
+	m_Spline[1].knots    = m_Knots[1];
+	m_Spline[1].controls = m_Controls;
+	m_Spline[1].offset   = m_Spline[0].control_max;
+	m_Spline[1].b3InitCurve(vDegree,vControlNum,b3GetClassType() == SPLINES_RING);
 }
 
 void b3SplineShape::b3GetCount(
@@ -455,7 +486,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
-	b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],Between);
+	b3Spline::b3DeBoorSurfaceControl (&m_Spline[0],&m_Spline[1],Between);
 	MySpline          = m_Spline[0];
 	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
 	MySpline.controls = Between;
@@ -469,7 +500,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 	// building vertical splines
 	// first create controls for segments of horizontal spline...
-	b3DeBoorSurfaceControl (&m_Spline[1],&m_Spline[0],Between);
+	b3Spline::b3DeBoorSurfaceControl (&m_Spline[1],&m_Spline[0],Between);
 	MySpline          = m_Spline[1];
 	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[0]);
 	MySpline.controls = Between;

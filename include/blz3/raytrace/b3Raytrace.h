@@ -1349,27 +1349,30 @@ protected:
 #ifdef BLZ3_USE_OPENGL
 	b3_count         m_GridVertexCount;
 	b3_count         m_SolidVertexCount;
-	b3_count         m_xSubDiv,m_ySubDiv;
 #endif
-	b3_line          m_Axis;             // for rotation shapes, unused
-	b3Spline         m_Spline[2];        // horizontal spline definition, these control points are valid!
-	b3_f32           m_Knots[2][B3_MAX_KNOTS];  // two knot vectors
+	
+public:
+	b3Spline         m_Spline[2];
+	b3_count         m_xSubDiv,m_ySubDiv;
+	b3_f32           m_Knots[2][B3_MAX_KNOTS];
 	b3_vector       *m_Controls;
 
 protected:
 	     b3SplineShape(b3_size class_size,b3_u32 class_type);
-
-	void b3StoreShape();
-	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void b3GetVertexRange(b3_index &start,b3_index &end);
-	void b3ComputeVertices();
-	void b3ComputeIndices();
 
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
 
 	void b3Transform(b3_matrix *transformation);
+	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
+
+protected:
+	void b3StoreShape();
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3GetVertexRange(b3_index &start,b3_index &end);
+	void b3ComputeVertices();
+	void b3ComputeIndices();
 
 private:
 	void b3ComputeGridVertices();

@@ -55,6 +55,7 @@ public:
 	//{{AFX_VIRTUAL(CDlgLDC)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -62,12 +63,13 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgLDC)
-	afx_msg LRESULT b3UpdateDiagram(WPARAM wParam=0,LPARAM lParam=0);
-	afx_msg LRESULT b3UpdatePreview(WPARAM wParam=0,LPARAM lParam=0);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3UpdatePreview();
 };
 
 //{{AFX_INSERT_LOCATION}}

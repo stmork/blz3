@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/03/02 15:24:35  sm
+**      - Templetized splines (uhff).
+**      - Prepared spline shapes for their creation.
+**        *** And now: Testing! Testing! Testing! ***
+**
 **      Revision 1.26  2002/02/28 16:58:46  sm
 **      - Added torus dialogs.
 **      - Fixed material and stencil handling when not activating
@@ -282,7 +287,7 @@ void b3Light::b3Init()
 	m_Spline.controls    = m_Controls;
 	m_Spline.control_max = sizeof(m_Controls) / sizeof(m_Controls[0]);
 	m_Spline.knot_max    = sizeof(m_Knots)    / sizeof(m_Knots[0]);
-	b3BSplineInitCurve (&m_Spline,INIT_DEGREE,INIT_CONTROL_MAX,false);
+	m_Spline.b3InitCurve (INIT_DEGREE,INIT_CONTROL_MAX,false);
 	for (i = 0;i < INIT_CONTROL_MAX;i++)
 	{
 		m_Controls[i].x = (b3_f64)i / (INIT_CONTROL_MAX - 1);
@@ -298,7 +303,7 @@ void b3Light::b3Init()
 			(b3_f64)(INIT_CONTROL_MAX - INIT_DEGREE);
 	}
 	m_Knots[INIT_CONTROL_MAX] += epsilon;
-	b3BSplineThroughEndControl (&m_Spline);
+	m_Spline.b3ThroughEndControl ();
 
 	strcpy(m_Name,"Light");
 	m_LightActive = true;

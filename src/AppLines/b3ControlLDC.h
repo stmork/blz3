@@ -32,9 +32,6 @@
 
 typedef CDC b3DrawContext;
 
-#define WM_B3_LDC_MOVED   (WM_USER + 1)
-#define WM_B3_LDC_CHANGED (WM_USER + 2)
-
 enum CB3LDCMode
 {
 	LDC_EDIT,

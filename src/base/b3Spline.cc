@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/base/b3Spline.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/03/02 15:24:35  sm
+**	- Templetized splines (uhff).
+**	- Prepared spline shapes for their creation.
+**	  *** And now: Testing! Testing! Testing! ***
+**
 **	Revision 1.7  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.6  2001/10/13 09:56:44  sm
 **	- Minor corrections
 **	
@@ -58,14 +64,7 @@
 **	
 */
 
-#define EPSILON 0.0001
-
-static b3_bspline_error bspline_errno;
-
-b3_bspline_error b3BSplineErrno()
-{
-	return bspline_errno;
-}
+b3_bspline_error bspline_errno = BSPLINE_OK;
 
 /*************************************************************************
 **                                                                      **
@@ -82,15 +81,15 @@ b3_bspline_error b3BSplineErrno()
 /* KnotNum: length of knot vector */
 /* closed:  open or closed curve */
 
-static b3_index iFind(
+static inline b3_index iFind(
 	b3_f32	*knots,
 	b3_f64	 q,
-	b3_count KnotNum,
+	b3_count max,
 	b3_bool	 closed)
 {
 	b3_index i;
 
-	for (i=0;i < (KnotNum-1);i++)
+	for (i=0;i < (max - 1);i++)
 	{
 		if ((knots[i] <= q) && (q < knots[i+1])) return (i);
 	}
@@ -101,184 +100,6 @@ static b3_index iFind(
 	}
 	return i;
 }
-
-
-/* The routine Mansfield computes the basis coefficents for the */
-/* appropriate control points and returns the highest index of */
-/* the corresponding control point. This routine is independend */
-/* of the spline type (e.g. openend or closed). */
-/* ------------------------------------------------------------ */
-/* Spline: spline control handle */
-/* it:     array where to store the basis function coefficents */
-/* qStart: parameter value inside the curve */
-
-b3_index b3Spline::b3Mansfield(
-	b3_f64	*it,
-	b3_f64	 qStart)
-{
-	b3_index  l,i,j,k;
-	b3_f64	  r,denom,q,diff;
-
-	if (closed)
-	{
-		diff    = knots[control_num] - knots[0];
-		if  ((i = iFind (knots,qStart,control_num,true)) >= control_num)
-		{
-			i -= control_num;
-		}
-
-		it[0]  = 1;
-		for (l = 1;l <= degree;l++)
-		{
-			it[l]  = 0;
-			q      = qStart;
-			k      = i;
-			for (j = 0;j < l;j++)
-			{
-				denom     = knots[k+l] - knots[k];
-				if (denom != 0) r = (q - knots[k]) / denom;
-				else            r = 0;
-				it[l-j]   += r * it[l-j-1];
-				it[l-j-1] *= (1 - r);
-				if (--k < 0) /* check underflow of knots */
-				{
-					k += control_num;
-					q += diff;
-				}
-			}
-		}
-	}
-	else
-	{
-		i      = iFind (knots,qStart,knot_num,false);
-		it[0]  = 1;
-		for (l = 1;l <= degree;l++)
-		{
-			it[l]  = 0;
-			for (j = 0;j < l;j++)
-			{
-				denom   = knots[i-j+l]      - knots[i-j];
-				if (denom != 0) r = (qStart - knots[i-j]) / denom;
-				else            r = 0;
-				it[l-j]   += r * it[l-j-1];
-				it[l-j-1] *= (1 - r);
-			}
-		}
-	}
-	return i;
-}
-
-
-/* This routine computes the real curve point according to the basis */
-/* coefficients computed by Mansfield(). The value "i" is the knot */
-/* index returned by Mansfield(). The start index is like the DeBoor- */
-/* routines. */
-/* ------------------------------------------------------------------ */
-/* Spline: control handle of spline */
-/* point:  where to store the curve point */
-/* it:     basis coefficients computed by Mansfield() */
-/* i:      knot index returned by Mansfield() */
-/* index:  start index of control points */
-
-void b3Spline::b3MansfieldVector(
-	b3_vector *point,
-	b3_f64    *it,
-	b3_index   i,
-	b3_index   index)
-{
-	b3_index   l,j;
-	b3_vector *ctrls;
-
-	point->x =
-	point->y =
-	point->z = 0;
-	if (closed)
-	{
-		j = i;
-		for (l = degree;l >= 0;l--)
-		{
-			point->x += (b3_f32)(it[l] * controls[j * offset + index].x);
-			point->y += (b3_f32)(it[l] * controls[j * offset + index].y);
-			point->z += (b3_f32)(it[l] * controls[j * offset + index].z);
-			if (--j < 0) j += control_num;
-		}
-	}
-	else
-	{
-		ctrls = &controls[i * offset + index];
-		for (l = degree;l >= 0;l--)
-		{
-			point->x += (b3_f32)(it[l] * ctrls->x);
-			point->y += (b3_f32)(it[l] * ctrls->y);
-			point->z += (b3_f32)(it[l] * ctrls->z);
-			ctrls -= offset;
-		}
-	}
-}
-
-
-/* This routine computes the real curve point according to the basis */
-/* coefficients computed by Mansfield(). The value "i" is the knot */
-/* index returned by Mansfield(). The start index is like the DeBoor- */
-/* routines. */
-/* ------------------------------------------------------------------ */
-/* Nurbs: control handle of NURBS */
-/* point: where to store the curve point */
-/* it:    basis coefficients computed by Mansfield() */
-/* i:     knot index returned by Mansfield() */
-/* index: start index of control points */
-
-void b3MansfieldNurbsVector(
-	b3_nurbs  *Nurbs,
-	b3_vector *point,
-	b3_f64    *it,
-	b3_index   i,
-	b3_index   index)
-{
-	b3_vector4D *controls;
-	b3_index     l,m,j;
-	b3_count     degree;
-	b3_f64       denom;
-	b3_vector4D  result;
-
-	degree = Nurbs->degree;
-	m      = Nurbs->control_num;
-
-	result.x =
-	result.y =
-	result.z =
-	result.w = 0;
-	if (Nurbs->closed)
-	{
-		j = i;
-		for (l = degree;l >= 0;l--)
-		{
-			result.x += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].x);
-			result.y += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].y);
-			result.z += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].z);
-			result.w += (b3_f32)(it[l] * Nurbs->controls[j * Nurbs->offset + index].w);
-			if (--j < 0) j += m;
-		}
-	}
-	else
-	{
-		controls = &Nurbs->controls[i * Nurbs->offset + index];
-		for (l = degree;l >= 0;l--)
-		{
-			result.x += (b3_f32)(it[l] * controls->x);
-			result.y += (b3_f32)(it[l] * controls->y);
-			result.z += (b3_f32)(it[l] * controls->z);
-			result.w += (b3_f32)(it[l] * controls->w);
-			controls -= Nurbs->offset;
-		}
-	}
-
-	denom = 1.0 / result.w;
-	point->x = (b3_f32)(result.x * denom);
-	point->y = (b3_f32)(result.y * denom);
-	point->z = (b3_f32)(result.z * denom);
-}
-
 
 /* This routine computes the first level of the de Boor algorithm. The */
 /* computed points are used for the new control points needed for */
@@ -341,66 +162,6 @@ static b3_index b3InsertDeBoorOpened(
 	}
 	return i;
 }
-
-
-/* This routine computes the same as the algorithm of de Boor. But it first */
-/* computes the basis functions of the corresponding control points. The */
-/* curve point is computed by computing the linear combination of the */
-/* basis functions and its control points. This version is much faster than */
-/* the de Boor algorithm, because the coefficients are only one dimensional. */
-/* ------------------------------------------------------------------------- */
-/* Spline: b-spline handle */
-/* point:  point of computed curve point */
-/* index:  start index */
-/* qStart: curve parameter */
-
-b3_index b3Spline::b3DeBoorOpened (
-	b3_vector *point,  /* but DeBoor is more known among CG-freaks. */
-	b3_index   index,
-	b3_f64     q)
-{
-	b3_index  l,i,j;
-	b3_f64    r,denom;
-	b3_f64    it[B3_MAX_DEGREE + 1];
-
-	i = iFind (knots,q,knot_num,false);
-
-	it[0]  = 1;
-	for (l = 1;l <= degree;l++)
-	{
-		it[l]  = 0;
-		for (j = 0;j < l;j++)
-		{
-			denom   = knots[i-j+l] - knots[i-j];
-			if (denom != 0) r = (q - knots[i-j]) / denom;
-			else            r = 0;
-			it[l-j]   += r * it[l-j-1];
-			it[l-j-1] *= (1 - r);
-		}
-	}
-
-	point->x =
-	point->y =
-	point->z = 0;
-	j = i * offset + index;
-	for (l = degree;l >= 0;l--)
-	{
-		point->x += (b3_f32)(it[l] * controls[j].x);
-		point->y += (b3_f32)(it[l] * controls[j].y);
-		point->z += (b3_f32)(it[l] * controls[j].z);
-		j -= offset;
-	}
-
-#	ifdef BSPLINE_DEBUG
-		b3PrintF (B3LOG_FULL,"x: % 3.5f\n",point->x);
-		b3PrintF (B3LOG_FULL,"y: % 3.5f\n",point->y);
-		b3PrintF (B3LOG_FULL,"z: % 3.5f\n",point->z);
-		b3PrintF (B3LOG_FULL,"\n");
-#	endif
-
-	return i;
-}
-
 
 /* This routine computes the first level of the de Boor algorithm. The */
 /* computed points are used for the new control points needed for */
@@ -476,206 +237,11 @@ static b3_index b3InsertDeBoorClosed (
 	return i;
 }
 
-
-/* This routine computes the same as the algorithm of de Boor. But it first */
-/* computes the basis functions of the corresponding control points. The */
-/* curve point is computed by computing the linear combination of the */
-/* basis functions and its control points. This version is much faster than */
-/* the de Boor algorithm, because the coefficients are only one dimensional. */
-/* ------------------------------------------------------------------------- */
-/* Spline: b-spline handle */
-/* point:  point of computed curve point */
-/* index:  start index */
-/* qStart: curve parameter */
-
-b3_index b3Spline::b3DeBoorClosed (
-	b3_vector *point,  /* but DeBoor is more known among CG-freaks. */
-	b3_index   index,
-	b3_f64     qStart)
-{
-	b3_index   l,i,j,k;
-	b3_f64     r,denom,diff,q;
-	b3_f64     it[B3_MAX_DEGREE + 1];
-
-	diff    = knots[control_num] - knots[0];
-	if  ((i = iFind (knots,qStart,control_num,true)) >= control_num)
-	{
-		i -= control_num;
-	}
-
-	it[0]  = 1;
-	for (l = 1;l <= degree;l++)
-	{
-		it[l]  = 0;
-		q      = qStart;
-		k      = i;
-		for (j = 0;j < l;j++)
-		{
-			denom     = knots[k+l] - knots[k];
-			if (denom != 0) r = (q - knots[k]) / denom;
-			else            r = 0;
-			it[l-j]   += r * it[l-j-1];
-			it[l-j-1] *= (1 - r);
-			if (--k < 0) /* check underflow of knots */
-			{
-				k += control_num;
-				q += diff;
-			}
-		}
-	}
-
-	point->x =
-	point->y =
-	point->z = 0;
-	j = i;
-	for (l = degree;l >= 0;l--)
-	{
-		point->x += (b3_f32)(it[l] * controls[j * offset + index].x);
-		point->y += (b3_f32)(it[l] * controls[j * offset + index].y);
-		point->z += (b3_f32)(it[l] * controls[j * offset + index].z);
-		if (--j < 0) j += control_num;
-	}
-
-#	ifdef BSPLINE_DEBUG
-		b3PrintF (B3LOG_FULL,"x: % 3.5f\n",point->x);
-		b3PrintF (B3LOG_FULL,"y: % 3.5f\n",point->y);
-		b3PrintF (B3LOG_FULL,"z: % 3.5f\n",point->z);
-		b3PrintF (B3LOG_FULL,"\n");
-#	endif
-
-	return i;
-}
-
 /*************************************************************************
 **                                                                      **
 **                        control routines                              **
 **                                                                      **
 *************************************************************************/
-
-b3_bool b3BSplineInitCurve (
-	b3_spline *Spline,
-	b3_count   degree,
-	b3_count   ControlNum,
-	b3_bool    closed)
-{
-	b3_f32   *knots;
-	b3_index  i;
-
-	bspline_errno = BSPLINE_TOO_MUCH_CONTROLS;
-	if ( ControlNum               > Spline->control_max) return false;
-	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((ControlNum + degree + 1) > Spline->knot_max)    return false;
-	bspline_errno = BSPLINE_MISSING_KNOTS;
-	if (Spline->knots == null)                          return false;
-	bspline_errno = BSPLINE_OK;
-
-	Spline->degree     = degree;
-	Spline->control_num = ControlNum;
-	Spline->knot_num    = ControlNum + degree + 1;
-	Spline->closed     = closed;
-
-	knots = Spline->knots;
-	for (i=0;i < Spline->knot_max;i++) *knots++ = (b3_f32)i;
-	return true;
-}
-
-b3_bool b3BSplineThroughEndControl (b3_spline *Spline)
-{
-	b3_f64    start,end;
-	b3_f32   *knots;
-	b3_index  i;
-	b3_count  KnotNum,ControlNum,degree;
-
-	bspline_errno = BSPLINE_CLOSED;
-	if (Spline->closed) return false;
-	bspline_errno = BSPLINE_OK;
-
-	knots      = Spline->knots;
-	ControlNum = Spline->control_num;
-	degree     = Spline->degree;
-	KnotNum    = ControlNum + degree + 1;
-	start      = knots[degree];
-	end        = knots[ControlNum];
-
-	for (i = 0;i < degree;i++)
-	{
-		knots[i]                  = (b3_f32)start;
-		knots[ControlNum + i + 1] = (b3_f32)end;
-	}
-	Spline->knot_num = KnotNum;
-	return true;
-}
-
-b3_bool b3BSplineToBezier (b3_spline *Spline)
-{
-	b3_index i;
-	b3_count KnotNum;
-
-	bspline_errno = BSPLINE_CLOSED;
-	if  (Spline->closed) return false;
-	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((Spline->control_num * 2) > Spline->knot_max) return false;
-	bspline_errno = BSPLINE_OK;
-
-	KnotNum = Spline->knot_num = Spline->control_num * 2;
-	for (i = 0;i < (KnotNum / 2);    i++) Spline->knots[i] = 0;
-	for (i = KnotNum / 2;i < KnotNum;i++) Spline->knots[i] = 1;
-	Spline->degree = Spline->control_num - 1;
-
-	return true;
-}
-
-b3_bool b3BSplineDegree (
-	b3_spline *Spline,
-	b3_count   degree)
-{
-	b3_f32   *knots;
-	b3_f32	  start,end;
-	b3_index  i,diff;
-	b3_count  ControlNum;
-
-	bspline_errno = BSPLINE_OK;
-	if ( Spline->degree == degree)                           return true;
-	bspline_errno = BSPLINE_TOO_FEW_CONTROLS;
-	if ( Spline->degree >= Spline->control_num)               return false;
-	bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
-	if ((Spline->control_num + degree + 1) > Spline->knot_max) return false;
-	bspline_errno = BSPLINE_OK;
-
-	knots      = Spline->knots;
-	ControlNum = Spline->control_num;
-	if (degree < Spline->degree)     /* decreasing degree */
-	{
-		diff = Spline->degree - degree;
-		end = knots[ControlNum];
-		for (i = 0;i <  diff;i++) knots[ControlNum+i] = end+i;
-		for (i = 0;i <= ControlNum;i++) knots[i+degree] = knots[i + Spline->degree];
-		if (Spline->closed)
-		{
-			start = knots[degree];
-			end   = knots[ControlNum+degree];
-			for (i=0;i<degree;i++) knots[i] = knots[ControlNum+i] - end + start;
-			start = -knots[0];
-			for (i=degree+ControlNum;i>=0;i--) knots[i] += start;
-		}
-	}
-	else                             /* increasing degree */
-	{
-		for (i = ControlNum;i >= 0;i--) knots[i+degree] = knots[i + Spline->degree];
-		if (Spline->closed)
-		{
-			start = knots[degree];
-			end   = knots[ControlNum+degree];
-			for (i=0;i<degree;i++) knots[i] = knots[ControlNum+i] - end + start;
-			start = -knots[0];
-			for (i=degree+ControlNum;i>=0;i--) knots[i] += start;
-		}
-	}
-
-	Spline->knot_num = ControlNum + degree + 1;
-	Spline->degree  = degree;
-	return true;
-}
 
 static b3_bool b3InternalInsertControl (
 	b3_spline *Spline,
@@ -1325,119 +891,4 @@ b3_bool b3BNurbsSurfaceAppendControl(
 {
 	return b3InternalSurfaceAppendControl
 		((b3_spline *)Nurbs,append,q,Mult,skipOffset,lines,true);
-}
-
-/*************************************************************************
-**                                                                      **
-**                        de Boor routines                              **
-**                                                                      **
-*************************************************************************/
-
-b3_index b3Spline::b3DeBoor(
-	b3_vector *point,
-	b3_index   index)
-{
-	b3_f64	 q,qStep;
-	b3_index i;
-
-	if (closed)
-	{
-		q     =  knots[0];
-		qStep = (knots[control_num] - q - EPSILON) / (b3_f32)subdiv;
-
-		for (i = 0;i <= subdiv;i++)
-		{
-			b3DeBoorClosed (point++,index,q);
-			q += qStep;
-		}
-	}
-	else
-	{
-		q     =  knots[degree];
-		qStep = (knots[control_num] - q - EPSILON) / (b3_f32)subdiv;
-
-		for (i = 0;i <= subdiv;i++)
-		{
-			b3DeBoorOpened (point++,index,q);
-			q += qStep;
-		}
-	}
-
-	return i;
-}
-
-b3_index b3DeBoorNurbs(
-	b3_nurbs  *Nurbs,
-	b3_vector *point,
-	b3_index   index)
-{
-	b3_f32   *knots;
-	b3_f64    q,qStep;
-	b3_index  SubDiv,i,pos;
-	b3_f64    coeffs[B3_MAX_DEGREE + 1];
-
-	SubDiv = Nurbs->subdiv;
-	knots  = Nurbs->knots;
-	q      =  knots[Nurbs->closed ? 0 : Nurbs->degree];
-	qStep  = (knots[Nurbs->control_num] - q - EPSILON) / (b3_f32)Nurbs->subdiv;
-
-	for (i = 0;i <= SubDiv;i++)
-	{
-		pos = ((b3Spline *)Nurbs)->b3Mansfield (coeffs,q);
-		b3MansfieldNurbsVector (Nurbs,point++,coeffs,pos,index);
-		q += qStep;
-	}
-	return i;
-}
-
-b3_count b3Spline::b3DeBoorControl(
-	b3_vector *point,
-	b3_index   index)
-{
-	b3_index  i;
-
-	if (closed)
-	{
-		for (i = 0;i < control_num;i++)
-		{
-			b3DeBoorClosed(point++,index,knots[i]);
-		}
-		return control_num;
-	}
-	else
-	{
-		for (i = degree;i <= control_num;i++)
-		{
-			b3DeBoorOpened(point++,index,knots[i]);
-		}
-		return control_num - degree + 1;
-	}
-}
-
-b3_count b3DeBoorSurfaceControl(
-	b3Spline *controlSpline,
-	b3Spline *curveSpline,
-	b3_vector *point)
-{
-	b3_f32   *knots;
-	b3_index  i,x,end,index;
-	b3_count  ControlNum;
-	b3_f64    it[B3_MAX_DEGREE + 1];
-
-	ControlNum = B3_BSPLINE_SEGMENTKNOTS(curveSpline);
-	knots      = curveSpline->knots;
-	end        = curveSpline->control_num;
-	if (!curveSpline->closed) end++;
-
-	for (i = (curveSpline->closed ? 0 : curveSpline->degree);i < end;i++)
-	{
-		index = curveSpline->b3Mansfield (it,knots[i]);
-		for (x = 0;x < controlSpline->control_num;x++)
-		{
-			curveSpline->b3MansfieldVector (&point[x * ControlNum],it,
-				index,x * controlSpline->offset);
-		}
-		point++;
-	}
-	return ControlNum;
 }
