@@ -18,7 +18,7 @@ setenv LIBS      "$LIB_X3 $LIB_S3 $LIB_OGL3 -lB3tiff -lB3jpeg"
 setenv PROF_DIR   /tmp/profdir
 setenv PROF_FILES "../data/*.bwd GeoNebel.bwd AllShapes.bwd"
 setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
-setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd"
+setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd ../data/Lichttest.bwd"
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
@@ -63,7 +63,7 @@ switch ( $1 )
    case "pgo_render" :
 #       brt3/brt3 -a -w -n AlleObjekte.bwd
        brt3/brt3 -a -w -n Chair.bwd Planks.bwd Blockkugel.bwd Wassersockel.bwd
-#       bet3/brt3 -a -w -n Band.bwd
+#       brt3/brt3 -a -w -n Band.bwd
        brt3/brt3 -a -w -n $PROF_FILES
        brt3/brt3 -a -w    GeoNebel.bwd VarioNebel.bwd
        breaksw
