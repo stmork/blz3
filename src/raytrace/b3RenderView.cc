@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/11/18 13:49:26  sm
+**	- Introduced new CB3FloatEdit derived from CEdit
+**	- DlgNebular implemented
+**	- DlgLensFlare implemented
+**	- Adjusting far clipping plane inside b3RenderView
+**
 **	Revision 1.17  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.16  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -533,6 +539,54 @@ void b3RenderView::b3Select(
 	}
 }
 
+inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
+{
+#if 1
+	b3_f64    farCP = 1,denom,l;
+	b3_vector edge,look,cross;
+
+	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&look);
+	b3Vector::b3CrossProduct(&m_Width,&m_Height,&cross);
+	denom = b3Vector::b3Length(&look) / (cross.x * look.x + cross.y * look.y + cross.z * look.z);
+
+	b3Vector::b3Sub(&m_Lower,&m_EyePoint,&edge);
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.x = m_Upper.x - m_EyePoint.x;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.y = m_Upper.y - m_EyePoint.y;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.x = m_Lower.x - m_EyePoint.x;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.z = m_Upper.z - m_EyePoint.z;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.x = m_Upper.x - m_EyePoint.x;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.y = m_Lower.y - m_EyePoint.y;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	edge.x = m_Lower.x - m_EyePoint.x;
+	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
+	if (l > farCP) farCP = l;
+
+	return farCP;
+#else
+	return 10000;
+#endif
+}
+
 void b3RenderView::b3UpdateView(
 	b3_coord xPos,
 	b3_coord yPos,
@@ -564,7 +618,7 @@ void b3RenderView::b3UpdateView(
 		width    = factor * b3Vector::b3Length(&m_Width);
 		height   = factor * b3Vector::b3Length(&m_Height);
 		nearCP   = min;
-		farCP    = 10000;
+		farCP    = b3ComputeFarClippingPlane();
 
 		// Prepare gluLookAt() - it's simple
 		eye  = m_EyePoint;

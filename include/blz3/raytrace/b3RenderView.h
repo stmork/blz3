@@ -88,6 +88,7 @@ public:
 
 private:
 	b3RenderViewItem *b3NewRenderViewItem(b3RenderViewItem *lastItem = null);
+	b3_f64            b3ComputeFarClippingPlane();
 };
 
 #endif

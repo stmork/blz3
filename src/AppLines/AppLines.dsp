@@ -208,6 +208,10 @@ SOURCE=.\b3CameraVolume.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3floatedit.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File

@@ -26,6 +26,8 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3ColorField.h"
+#include "blz3/system/b3FloatEdit.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLensFlare dialog
@@ -33,6 +35,8 @@
 class CDlgLensFlare : public CPropertyPage
 {
 // Construction
+	b3Scene   *m_LensFlareScene;
+	b3LensFlare *m_EditLensFlare;
 public:
 	b3LensFlare * m_LensFlare;
 	CDlgLensFlare(CWnd* pParent = NULL);   // standard constructor
@@ -40,9 +44,10 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgLensFlare)
 	enum { IDD = IDD_LENS_FLARE };
+	CB3ShowRaytrace	m_LensFlarePreviewCtrl;
+	CB3FloatEdit	m_LensFlareExponCtrl;
 	CB3ColorField	m_LensFlareColorCtrl;
 	BOOL	m_ActLensFlare;
-	CString	m_LensFlareDistance;
 	//}}AFX_DATA
 
 
@@ -59,9 +64,15 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgLensFlare)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
+	virtual BOOL OnApply();
+	afx_msg void OnLensFlareColorChange();
+	afx_msg void OnActLensFlare();
+	afx_msg void OnDestroy();
+	afx_msg void OnLensFlareExponChanged();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

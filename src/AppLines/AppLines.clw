@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CDlgLensFlare
-LastTemplate=CDialog
+LastClass=CDlgNebular
+LastTemplate=CEdit
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=15
+ClassCount=16
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -22,24 +22,25 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=14
-Resource1=IDD_HIERARCHY
+Resource1=IDR_MAINFRAME
 Resource2=IDR_TOOLBAR_DISPLAY
 Resource3=IDR_TOOLBAR_VIEW
 Resource4=IDR_TOOLBAR_ACTION
 Resource5=IDR_TOOLBAR_OBJECT
 Resource6=IDR_DISPLAYTYPE
 Resource7=IDR_BLZ3TYPE
-Resource8=IDD_NEBULAR
-Resource9=IDD_SUPER_SAMPLE
-Resource10=IDD_DISTRIBUTED
-Resource11=IDD_ABOUTBOX
-Resource12=IDD_SCENE
-Resource13=IDR_MAINFRAME
+Resource8=IDD_SCENE
+Resource9=IDD_ABOUTBOX
+Resource10=IDD_HIERARCHY
+Resource11=IDD_LENS_FLARE
+Resource12=IDD_NEBULAR
+Resource13=IDD_SUPER_SAMPLE
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
-Resource14=IDD_LENS_FLARE
+Class16=CB3FloatEdit
+Resource14=IDD_DISTRIBUTED
 
 [CLS:CAppLinesApp]
 Type=0
@@ -383,12 +384,13 @@ CommandCount=20
 [DLG:IDD_LENS_FLARE]
 Type=1
 Class=CDlgLensFlare
-ControlCount=5
+ControlCount=6
 Control1=IDC_ACT_LENS_FLARE,button,1342242819
 Control2=IDC_LF_VALUE,edit,1350631552
 Control3=IDC_LF_CHANGE,button,1342242816
 Control4=IDC_STATIC,static,1342308352
 Control5=IDC_LF_COLOR,static,1342181376
+Control6=IDC_LF_PREVIEW,static,1342181383
 
 [DLG:IDD_SUPER_SAMPLE]
 Type=1
@@ -405,10 +407,13 @@ Control7=IDC_SS4_ACTIVE,button,1342242819
 [DLG:IDD_NEBULAR]
 Type=1
 Class=CDlgNebular
-ControlCount=3
+ControlCount=6
 Control1=IDC_ACT_NEBULAR,button,1342242819
 Control2=ID_NEB_CHANGE,button,1342242816
 Control3=IDC_NEB_COLOR,static,1342181376
+Control4=IDC_NEB_PREVIEW,static,1342181383
+Control5=IDC_NEB_DISTANCE,edit,1350631552
+Control6=IDC_STATIC,static,1342308352
 
 [DLG:IDD_DISTRIBUTED]
 Type=1
@@ -447,7 +452,7 @@ HeaderFile=DlgLensFlare.h
 ImplementationFile=DlgLensFlare.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CDlgLensFlare
+LastObject=IDC_LF_VALUE
 VirtualFilter=dWC
 
 [CLS:CDlgNebular]
@@ -456,7 +461,7 @@ HeaderFile=DlgNebular.h
 ImplementationFile=DlgNebular.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CDlgNebular
+LastObject=ID_NEB_CHANGE
 VirtualFilter=dWC
 
 [CLS:CDlgSuperSampling]
@@ -467,4 +472,12 @@ BaseClass=CDialog
 Filter=D
 LastObject=CDlgSuperSampling
 VirtualFilter=dWC
+
+[CLS:CB3FloatEdit]
+Type=0
+HeaderFile=..\..\include_win32\blz3\system\b3floatedit.h
+ImplementationFile=..\system_win32\b3floatedit.cpp
+BaseClass=CEdit
+Filter=W
+LastObject=CB3FloatEdit
 

@@ -26,6 +26,8 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3ColorField.h"
+#include "blz3/system/b3FloatEdit.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgNebular dialog
@@ -33,6 +35,8 @@
 class CDlgNebular : public CPropertyPage
 {
 // Construction
+	b3Scene   *m_NebularScene;
+	b3Nebular *m_EditNebular;
 public:
 	b3Nebular * m_Nebular;
 	CDlgNebular(CWnd* pParent = NULL);   // standard constructor
@@ -40,7 +44,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgNebular)
 	enum { IDD = IDD_NEBULAR };
-	CB3ColorField	m_NebColorCtrl;
+	CB3ShowRaytrace	m_NebularPreviewCtrl;
+	CB3FloatEdit	m_NebularDistanceCtrl;
+	CB3ColorField	m_NebularColorCtrl;
 	BOOL	m_ActNebular;
 	//}}AFX_DATA
 
@@ -58,9 +64,14 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgNebular)
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
+	virtual BOOL OnApply();
+	afx_msg void OnNebularColorChange();
+	afx_msg void OnActNebular();
+	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

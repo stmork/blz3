@@ -54,9 +54,12 @@
 #define IDC_SPF                         1017
 #define IDC_SHADOW_BRIGHTNESS           1018
 #define IDC_SMP_REGULAR                 1018
+#define IDC_NEB_PREVIEW                 1018
 #define IDC_SHADOW_BRIGHTNESS_LEGEND    1019
 #define IDC_SMP_RANDOM                  1019
+#define IDC_NEB_DISTANCE                1019
 #define IDC_SMP_JITTER                  1020
+#define IDC_LF_PREVIEW                  1020
 #define IDC_SMP_SEMI                    1021
 #define IDC_SMP_SEPARATED               1022
 #define IDC_PFLTR_BOX                   1023
@@ -68,6 +71,7 @@
 #define IDC_LF_VALUE                    1042
 #define IDC_NEB_COLOR                   1043
 #define ID_NEB_CHANGE                   1044
+#define IDC_SS4_ACTIVE                  1046
 #define IDC_SS4_RED                     1047
 #define IDC_SS4_GREEN                   1048
 #define IDC_SS4_BLUE                    1049
@@ -154,7 +158,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32816
-#define _APS_NEXT_CONTROL_VALUE         1018
+#define _APS_NEXT_CONTROL_VALUE         1021
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif
