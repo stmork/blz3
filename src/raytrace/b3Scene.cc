@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2004/05/12 16:28:16  sm
+**	- Beautified bump icons
+**	- Missing return type for b3Material::b3Mix added
+**	- Fixed bug 23 concerning camera title cropping.
+**
 **	Revision 1.57  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -39,7 +44,7 @@
 **	    is still a perfomrmance problem.
 **	  o #17 fixed. Now we use b3Scene::b3GetName() in
 **	    combination with the b3Scene filename.
-**
+**	
 **	Revision 1.56  2004/05/05 15:41:17  sm
 **	- Working on bug 17.
 **	
@@ -638,7 +643,7 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 		camera->m_Width     = m_Width;
 		camera->m_Height    = m_Height;
 		camera->m_Flags     = CAMERA_ACTIVE;
-		b3GetTitle(camera->m_CameraName);
+		b3GetTitle(camera->m_CameraName,sizeof(camera->m_CameraName));
 		b3GetSpecialHead()->b3Append(camera);
 	}
 	else
@@ -723,14 +728,14 @@ void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 	}
 }
 
-b3_bool b3Scene::b3GetTitle(char *title)
+b3_bool b3Scene::b3GetTitle(char *title,size_t size)
 {
 	title[0] = 0;
 	if (m_ActualCamera != null)
 	{
 		if (strlen(m_ActualCamera->m_CameraName) > 0)
 		{
-			strlcpy(title,m_ActualCamera->m_CameraName,sizeof(title));
+			strlcpy(title,m_ActualCamera->m_CameraName,size);
 		}
 	}
 	else

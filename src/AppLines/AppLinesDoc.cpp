@@ -60,12 +60,17 @@
 
 /*
 **	$Log$
+**	Revision 1.98  2004/05/12 16:28:16  sm
+**	- Beautified bump icons
+**	- Missing return type for b3Material::b3Mix added
+**	- Fixed bug 23 concerning camera title cropping.
+**
 **	Revision 1.97  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
 **	  editor (= transformed history) and object editor
 **	  (= original form)
-**
+**	
 **	Revision 1.96  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -1092,7 +1097,7 @@ void CAppLinesDoc::b3StartRaytrace()
 			m_RaytraceDoc->b3GetDisplay(xSize,ySize,"Raytracing...") :
 			m_RaytraceDoc->b3GetDisplay("Raytracing...");
 
-		m_Scene->b3GetTitle(name);
+		m_Scene->b3GetTitle(name,B3_FILESTRINGLEN);
 		title.Format(IDS_RAYTRACE_TITLE,(const char *)name,xSize,ySize);
 		m_RaytraceDoc->SetTitle(title);
 		m_RaytraceDoc->b3UpdateTitle(name);

@@ -165,7 +165,7 @@ public:
 			b3CameraPart   *b3GetCameraByName(const char *camera_name);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		    b3CameraPart   *b3UpdateCamera();
-			b3_bool         b3GetTitle(char *title);
+			b3_bool         b3GetTitle(char *title,size_t size);
 			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
 		    b3Light        *b3GetLight(b3_bool must_active = false);
 			b3Light        *b3GetLightByName(const char *light_name);

@@ -34,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/12 16:28:16  sm
+**	- Beautified bump icons
+**	- Missing return type for b3Material::b3Mix added
+**	- Fixed bug 23 concerning camera title cropping.
+**
 **	Revision 1.1  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -48,7 +53,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	
 */
 
@@ -98,7 +103,7 @@ END_MESSAGE_MAP()
 
 void CDlgBumpGroove::b3Register()
 {
-	b3Loader::b3AddClassType(BUMP_GROOVE,IDS_BUMP_GROOVE,IDI_BUMP_GROOVE,b3Edit,b3Edit);
+	b3Loader::b3AddClassType(BUMP_GROOVE,IDS_BUMP_GROOVE,IDI_ITEM_UNKNOWN,b3Edit,b3Edit);
 }
 
 b3_bool CDlgBumpGroove::b3Edit(b3Item *item,void *ptr)

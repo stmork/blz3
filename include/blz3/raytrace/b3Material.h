@@ -73,7 +73,7 @@ public:
 
 	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 
-	static inline b3Mix(
+	static inline void b3Mix(
 		b3_surface *surface,
 		const b3_material *a, const b3_material *b,const b3_f64 mix)
 	{
