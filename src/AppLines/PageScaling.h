@@ -25,6 +25,7 @@
 //
 
 #include "blz3/system/b3PropertyPage.h"
+#include "blz3/raytrace/b3Scaling.h"
 #include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,7 @@ public:
 	CB3FloatEdit	m_xScaleCtrl;
 	CB3FloatEdit	m_yScaleCtrl;
 	CB3FloatEdit	m_zScaleCtrl;
+	int		m_ScaleMode;
 	//}}AFX_DATA
 
 

@@ -645,6 +645,11 @@
 #define IDC_LEGEND_YROT                 32382
 #define IDC_COND_ACTIVE                 32383
 #define IDC_LEGEND_ZROT                 32383
+#define IDC_SCALE_BOX_POLAR             32383
+#define IDC_SCALE_IPOINT                32384
+#define IDC_SCALE_POLAR                 32385
+#define IDC_SCALE_OBJECT_POLAR          32386
+#define IDC_SCALE_BBOX_ORIGNAL          32387
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -847,7 +852,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
 #define _APS_NEXT_COMMAND_VALUE         10124
-#define _APS_NEXT_CONTROL_VALUE         32383
+#define _APS_NEXT_CONTROL_VALUE         32384
 #define _APS_NEXT_SYMED_VALUE           60186
 #endif
 #endif

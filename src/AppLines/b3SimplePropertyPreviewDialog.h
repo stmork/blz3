@@ -57,6 +57,7 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CB3SimplePropertyPreviewDialog)
 	virtual BOOL OnInitDialog();
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

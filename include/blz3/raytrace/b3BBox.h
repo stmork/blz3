@@ -39,6 +39,7 @@ class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 	b3_u32           m_Type;               // texture type
 	b3_count         m_ShapeCount;
 	b3_count         m_CSGIntersectionCount;
+	b3_matrix        m_Inverse;
 
 public:
 	b3_vector        m_DimBase;
@@ -73,7 +74,7 @@ public:
 		   b3_bool         b3IsExpanded();
 		   void            b3Update();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
-	       void            b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar); 
+	       void            b3ComputeBoxPolar(b3_ray *ray); 
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare(b3_bool recursive = false);
 		   char           *b3GetName();

@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.71  2004/05/09 15:06:56  sm
+**      - Added inverse transformation for mapping.
+**      - Unified scale mapping source via b3Scaling.
+**      - Moved b3Scaling in its own files.
+**      - Added property pages for scaling and removed
+**        scaling input fields from dialogs.
+**
 **      Revision 1.70  2004/05/08 17:36:39  sm
 **      - Unified scaling for materials and bumps.
 **
@@ -899,7 +906,7 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 	m_Refraction  = b3InitFloat();
 	m_Ior         = b3InitFloat();
 	m_SpecularExp = b3InitFloat();
-	m_ScaleFlags  = b3InitInt();
+	m_ScaleFlags  = (b3_scaling_mode)b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 }
@@ -928,11 +935,11 @@ b3_bool b3MatMarble::b3Prepare()
 b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3Color   mask;
-	b3_vector d;
+	b3_vector point;
 
-	b3Scale(ray,&m_Scale,&d);
+	b3Scale(ray,&m_Scale,&point,M_PI);
 
-	b3Noise::b3Marble(&d,mask);
+	b3Noise::b3Marble(&point,mask);
 
 	surface->m_Diffuse  = m_Diffuse  * mask;
 	surface->m_Ambient  = m_Ambient  * mask;
@@ -954,10 +961,12 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MaterialWooden::b3MaterialWooden(b3_size class_size,b3_u32 class_type) : b3Material(class_size,class_type)
 {
+	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3MaterialWooden::b3MaterialWooden(b3_u32 class_type) : b3Material(sizeof(b3MaterialWooden),class_type)
 {
+	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
@@ -1007,7 +1016,7 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 	m_DarkMaterial.m_Refraction  = b3InitFloat();
 	m_DarkMaterial.m_Ior         = b3InitFloat();
 	m_DarkMaterial.m_SpecularExp = b3InitFloat();
-	m_ScaleFlags  = b3InitInt();
+	m_ScaleFlags  = (b3_scaling_mode)b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 	m_LightMaterial = m_DarkMaterial;
@@ -1162,7 +1171,7 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 	m_LightMaterial = m_DarkMaterial;
 
 	// Oak plank values
-	m_ScaleFlags  = b3InitInt();
+	m_ScaleFlags  = (b3_scaling_mode)b3InitInt();
 	m_xTimes      = b3InitInt();
 	m_yTimes      = b3InitInt();
 	m_xOffset     = b3InitFloat();
@@ -1511,7 +1520,7 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 	m_LightMaterial.m_Ior         = b3InitFloat();
 	m_LightMaterial.m_SpecularExp = b3InitFloat();
 	b3InitVector(&m_Scale);
-	m_ScaleFlags  = b3InitInt();
+	m_ScaleFlags  = (b3_scaling_mode)b3InitInt();
 	m_Overtone    = b3InitCount();
 }
 
@@ -1546,21 +1555,19 @@ b3_bool b3MatGranite::b3Prepare()
 
 b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	b3_vector d;
+	b3_vector point;
 	b3_loop   i;
 	b3_f64    sum = 0;
 	b3_f64    freq = 1.0;
 
-	d.x = ((ray->polar.m_BoxPolar.x - 0.5) * m_Scale.x * M_PI);
-	d.y = ((ray->polar.m_BoxPolar.y - 0.5) * m_Scale.y * M_PI);
-	d.z = ((ray->polar.m_BoxPolar.z - 0.5) * m_Scale.z * M_PI);
+	b3Scale(ray,&m_Scale,&point,M_PI);
 
 	for (i = 0;i < m_Overtone;i++)
 	{
 		sum += b3Noise::b3FilteredNoiseVector(
-			4 * freq * d.x,
-			4 * freq * d.y,
-			4 * freq * d.z) / freq;
+			4 * freq * point.x,
+			4 * freq * point.y,
+			4 * freq * point.z) / freq;
 		freq += freq; // = freq *= 2;
 	}
 	b3Math::b3Limit(sum,0,1);

@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.88  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.87  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler
-**
+**	
 **	Revision 1.86  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -559,6 +566,7 @@ b3_bool b3BBox::b3Prepare(b3_bool recursive)
 	b3CSGShape *csgShape;
 	b3BBox     *bbox;
 
+	b3Matrix::b3Inverse(&m_Matrix,&m_Inverse);
 	m_ShapeCount = 0;
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
@@ -904,11 +912,19 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	return result;
 }
 
-void b3BBox::b3ComputeBoxPolar(const b3_vector64 *ipoint,b3_vector *box_polar)
+void b3BBox::b3ComputeBoxPolar(b3_ray *ray)
 {
-	box_polar->x = (ipoint->x - m_DimBase.x) / m_DimSize.x;
-	box_polar->y = (ipoint->y - m_DimBase.y) / m_DimSize.y;
-	box_polar->z = (ipoint->z - m_DimBase.z) / m_DimSize.z;
+	b3_f64 x = ray->ipoint.x;
+	b3_f64 y = ray->ipoint.y;
+	b3_f64 z = ray->ipoint.z;
+
+	ray->polar.m_BoxPolar.x = (x - m_DimBase.x) / m_DimSize.x;
+	ray->polar.m_BoxPolar.y = (y - m_DimBase.y) / m_DimSize.y;
+	ray->polar.m_BoxPolar.z = (z - m_DimBase.z) / m_DimSize.z;
+
+	ray->polar.m_BBoxOriginal.x = (b3_f32)(x * m_Inverse.m11 + y * m_Inverse.m12 + z * m_Inverse.m13 + m_Inverse.m14);
+	ray->polar.m_BBoxOriginal.y = (b3_f32)(x * m_Inverse.m21 + y * m_Inverse.m22 + z * m_Inverse.m23 + m_Inverse.m24);
+	ray->polar.m_BBoxOriginal.z = (b3_f32)(x * m_Inverse.m31 + y * m_Inverse.m32 + z * m_Inverse.m33 + m_Inverse.m34);
 }
 
 b3_count b3BBox::b3Count()

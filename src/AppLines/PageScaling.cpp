@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.1  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	
 */
 
@@ -48,7 +55,7 @@
 CPageScaling::CPageScaling() : CB3PropertyPage(CPageScaling::IDD)
 {
 	//{{AFX_DATA_INIT(CPageScaling)
-		// NOTE: the ClassWizard will add member initialization here
+	m_ScaleMode = -1;
 	//}}AFX_DATA_INIT
 }
 
@@ -58,13 +65,22 @@ CPageScaling::~CPageScaling()
 
 void CPageScaling::DoDataExchange(CDataExchange* pDX)
 {
+	if (!pDX->m_bSaveAndValidate)
+	{
+		m_ScaleMode = m_Scaling->b3GetScaleMode();
+	}
 	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageScaling)
 	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
 	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
 	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
+	DDX_Radio(pDX,   IDC_SCALE_BOX_POLAR, m_ScaleMode);
 	//}}AFX_DATA_MAP
 	m_ScaleCtrl.b3DDX(pDX);
+	if (pDX->m_bSaveAndValidate)
+	{
+		m_Scaling->b3SetScaleMode(m_ScaleMode);
+	}
 }
 
 

@@ -31,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.5  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
-**
+**	
 **	Revision 1.4  2004/04/11 19:04:21  sm
 **	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **	
@@ -109,13 +116,16 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(b3_count CPUs)
 
 void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 {
-	b3Material *material = (b3Material *)info->m_Ptr;
-	b3_coord              x,y;
-	b3_ray                ray;
-	b3_surface            surface;
-	b3_f64                fy;
-	b3_pkd_color         *data = info->m_Data;
+	b3Material   *material = (b3Material *)info->m_Ptr;
+	b3BBox        bbox = BBOX;
+	b3_coord      x,y;
+	b3_ray        ray;
+	b3_surface    surface;
+	b3_f64        fy;
+	b3_pkd_color *data = info->m_Data;
 
+	ray.bbox = &bbox;
+	bbox.b3Prepare();
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
 		fy = (b3_f64)y / info->m_yMax;
@@ -133,6 +143,7 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
 			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
 			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
+			bbox.b3ComputeBoxPolar(&ray);
 			material->b3GetSurfaceValues(&ray,&surface);
 
 			*data++ = surface.m_Diffuse;

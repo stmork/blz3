@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.4  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
-**
+**	
 **	Revision 1.3  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -93,4 +100,12 @@ BOOL CB3SimplePropertyPreviewDialog::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CB3SimplePropertyPreviewDialog::OnOK() 
+{
+	// TODO: Add extra validation here
+	
+	CB3SimplePreviewDialog::OnOK();
+	m_PropertySheet.PressButton(PSBTN_OK);
 }

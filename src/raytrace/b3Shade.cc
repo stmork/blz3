@@ -36,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.32  2004/04/22 14:35:16  sm
 **	- Optimized clouds by making them inline.
-**
+**	
 **	Revision 1.31  2004/04/22 14:28:44  sm
 **	- Adjusted clouds.
 **	
@@ -518,7 +525,7 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
 
 		// Compute rel. box coordinates
-		bbox->b3ComputeBoxPolar(&ray->ipoint,&ray->polar.m_BoxPolar);
+		bbox->b3ComputeBoxPolar(ray);
 
 		// Compute surface values
 		material = shape->b3GetSurfaceValues(ray,&surface);

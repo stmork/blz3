@@ -36,10 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.23  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.22  2004/04/11 19:04:21  sm
 **	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
 **	
@@ -349,7 +356,7 @@ b3_bool b3SceneMork::b3Shade(
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
 
 		// Compute rel. box coordinates
-		bbox->b3ComputeBoxPolar(&ray->ipoint,&ray->polar.m_BoxPolar);
+		bbox->b3ComputeBoxPolar(ray);
 
 		// Compute surface values
 		material = shape->b3GetSurfaceValues(ray,&surface);

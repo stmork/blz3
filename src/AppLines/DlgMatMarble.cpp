@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.5  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -106,15 +113,11 @@ void CDlgMatMarble::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_IorCtrl);
 	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
-	DDX_Control(pDX, IDC_SCALE_X,   m_xScaleCtrl);
-	DDX_Control(pDX, IDC_SCALE_Y,   m_yScaleCtrl);
-	DDX_Control(pDX, IDC_SCALE_Z,   m_zScaleCtrl);
 	//}}AFX_DATA_MAP
 	m_ReflectionCtrl.b3DDX(pDX,m_Material->m_Reflection);
 	m_RefractionCtrl.b3DDX(pDX,m_Material->m_Refraction);
 	m_IorCtrl.b3DDX(pDX, m_Material->m_Ior);
 	m_SpecularExpCtrl.b3DDX(pDX, m_Material->m_SpecularExp);
-	m_ScaleCtrl.b3DDX(pDX);
 }
 
 
@@ -131,9 +134,6 @@ BEGIN_MESSAGE_MAP(CDlgMatMarble, CB3SimplePreviewDialog)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnSpin)
-	ON_EN_KILLFOCUS(IDC_SCALE_X, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SCALE_Y, OnEdit)
-	ON_EN_KILLFOCUS(IDC_SCALE_Z, OnEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -154,8 +154,6 @@ b3_bool CDlgMatMarble::b3Edit(b3Item *item)
 
 BOOL CDlgMatMarble::OnInitDialog() 
 {
-	m_ScaleCtrl.b3Init(&m_Material->m_Scale,&m_xScaleCtrl,&m_yScaleCtrl,&m_zScaleCtrl);
-
 	CB3SimplePreviewDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here

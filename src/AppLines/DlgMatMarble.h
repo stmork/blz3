@@ -28,7 +28,6 @@
 #include "blz3/raytrace/b3Material.h"
 #include "b3SimplePreviewDialog.h"
 #include "b3SelectColor.h"
-#include "b3VectorEdit.h"
 #include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -39,8 +38,6 @@ class CDlgMatMarble : public CB3SimplePreviewDialog
 	b3Scene           *m_MatScene;
 	b3Base<b3Item>    *m_MatHead;
 	b3MatMarble       *m_Material;
-
-	CB3PosGroup        m_ScaleCtrl;
 
 // Construction
 public:
@@ -60,9 +57,6 @@ public:
 	CB3FloatSpinButtonCtrl	m_IorCtrl;
 	CB3FloatSpinButtonCtrl	m_SpecularExpCtrl;
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
-	CB3FloatEdit	m_xScaleCtrl;
-	CB3FloatEdit	m_yScaleCtrl;
-	CB3FloatEdit	m_zScaleCtrl;
 	//}}AFX_DATA
 
 

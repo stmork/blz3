@@ -918,12 +918,48 @@ public:
 			a->x * c->y * b->z;
 	}
 
-	static inline b3_vector *b3VMul  (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
+	static inline b3_vector *b3VMul  (b3_matrix *A,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
 	{
-		*Dst = *Src;
-		return (Use4D ?
-			b3Vector::b3MatrixMul4D(Mat,Dst) :
-			b3Vector::b3MatrixMul3D(Mat,Dst));
+		register b3_f64 x,y,z;
+
+		x = Src->x;
+		y = Src->y;
+		z = Src->z;
+		if (Use4D)
+		{
+			Dst->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
+			Dst->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
+			Dst->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
+		}
+		else
+		{
+			Dst->x = (b3_f32)(x * A->m11 + y * A->m12 + z * A->m13);
+			Dst->y = (b3_f32)(x * A->m21 + y * A->m22 + z * A->m23);
+			Dst->z = (b3_f32)(x * A->m31 + y * A->m32 + z * A->m33);
+		}
+		return Dst;
+	}
+
+	static inline b3_vector64 *b3VMul  (b3_matrix *A,b3_vector64 *Src,b3_vector64 *Dst,b3_bool Use4D)
+	{
+		register b3_f64 x,y,z;
+
+		x = Src->x;
+		y = Src->y;
+		z = Src->z;
+		if (Use4D)
+		{
+			Dst->x = (b3_f64)(x * A->m11 + y * A->m12 + z * A->m13 + A->m14);
+			Dst->y = (b3_f64)(x * A->m21 + y * A->m22 + z * A->m23 + A->m24);
+			Dst->z = (b3_f64)(x * A->m31 + y * A->m32 + z * A->m33 + A->m34);
+		}
+		else
+		{
+			Dst->x = (b3_f64)(x * A->m11 + y * A->m12 + z * A->m13);
+			Dst->y = (b3_f64)(x * A->m21 + y * A->m22 + z * A->m23);
+			Dst->z = (b3_f64)(x * A->m31 + y * A->m32 + z * A->m33);
+		}
+		return Dst;
 	}
 };
 

@@ -60,6 +60,13 @@
 
 /*
 **	$Log$
+**	Revision 1.95  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.94  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -67,7 +74,7 @@
 **	  material. Changes were also made in Lines.
 **	- Introduced shape property copy including all materials,
 **	  bumps and conditions. Multiple copy modes are possible.
-**
+**	
 **	Revision 1.93  2004/05/05 16:32:26  sm
 **	- Fixing following bugs:
 **	  o #19 because of variable shadowing
@@ -1684,7 +1691,6 @@ void CAppLinesDoc::OnObjectEdit()
 	if (selected != null)
 	{
 		B3_ASSERT(b3BBox::b3FindBBox(m_Scene->b3GetBBoxHead(),selected));
-		m_Scene->b3Dump(1);
 		pDoc = app->b3CreateObjectDoc(this,selected);
 		if (pDoc != null)
 		{

@@ -98,10 +98,6 @@ SOURCE=.\b3Area.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Base.cc
-# End Source File
-# Begin Source File
-
 SOURCE=b3BBox.cc
 # End Source File
 # Begin Source File
@@ -226,6 +222,10 @@ SOURCE=.\b3RenderView.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Scaling.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Scene.cc
 # End Source File
 # Begin Source File
@@ -347,6 +347,10 @@ SOURCE=.\b3ReadTGF.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3RenderView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3Scaling.h
 # End Source File
 # Begin Source File
 

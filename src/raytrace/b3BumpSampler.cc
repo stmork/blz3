@@ -31,9 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.5  2004/04/24 20:15:52  sm
 **	- Further slide material dialog development
-**
+**	
 **	Revision 1.4  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
 **	
@@ -115,6 +122,7 @@ void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 	b3_pkd_color *data = info->m_Data;
 
 	ray.bbox = &bbox;
+	bbox.b3Prepare();
 	b3Vector::b3Init(&ray.xDeriv,1.0,0.0,0.0);
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
@@ -136,6 +144,7 @@ void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 			ray.normal.x =  0;
 			ray.normal.y = -BUMP_SLOPE * ix;
 			ray.normal.z = sqrt(1 - ray.normal.y * ray.normal.y);
+			bbox.b3ComputeBoxPolar(&ray);
 
 			b3Vector::b3Init(&ray.yDeriv,0,-ray.normal.z,ray.normal.x);
 			bump->b3BumpNormal(&ray);

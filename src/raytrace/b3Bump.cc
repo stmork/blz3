@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.28  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.27  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
 **	
@@ -224,11 +231,10 @@ void b3BumpNoise::b3Write()
 void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector n;
-	b3_f64    u,v,w,Denom;
+	b3_vector point;
+	b3_f64    Denom;
 
-	u = ray->polar.m_BoxPolar.x * m_Scale.x * 1024;
-	v = ray->polar.m_BoxPolar.y * m_Scale.y * 1024;
-	w = ray->polar.m_BoxPolar.z * m_Scale.z * 1024;
+	b3Scale(ray,&m_Scale,&point,1024.0);
 
 	Denom =	ray->normal.x * ray->normal.x +
 			ray->normal.y * ray->normal.y +
@@ -236,7 +242,7 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 	if (Denom == 0) return;
 	if (Denom != 1) Denom = 1/sqrt(Denom);  
 
-	b3Noise::b3NoiseDeriv (u,v,w,&n);
+	b3Noise::b3NoiseDeriv (point.x,point.y,point.z,&n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Size;
 	ray->normal.y = ray->normal.y * Denom + n.y * m_Size;
 	ray->normal.z = ray->normal.z * Denom + n.z * m_Size;
@@ -272,26 +278,41 @@ b3_bool b3BumpMarble::b3Prepare()
 
 void b3BumpMarble::b3BumpNormal(b3_ray *ray)
 {
-	b3_f64 u,v,w,i,d,dd;
+	b3_vector point;
+	b3_f64    i,d,dd;
 
-	u = ray->polar.m_BoxPolar.x * m_Scale.x * 1024;
-	v = ray->polar.m_BoxPolar.y * m_Scale.y * 1024;
-	w = ray->polar.m_BoxPolar.z * m_Scale.z * 1024;
+	b3Scale(ray,&m_Scale,&point,1024.0);
 
 	b3Vector::b3Normalize(&ray->normal);
 
-	d  = (u+15000.0) * 0.02 + 7.0 * b3Noise::b3NoiseVector(u*0.01,v*0.005,w*0.005);
+	d  = (point.x + 15000.0) * 0.02 + 7.0 *
+		b3Noise::b3NoiseVector(
+			point.x * 0.01,
+			point.y * 0.005,
+			point.z * 0.005);
 	dd = (long)d % 17;
-	if (dd < 4) i = 0.7 + 0.2   * b3Noise::b3NoiseVector(u/70.0,v*0.02,w*0.02);
+	if (dd < 4) i = 0.7 + 0.2   *
+		b3Noise::b3NoiseVector(
+			point.x / 70.0,
+			point.y * 0.02,
+			point.z * 0.02);
 	else
 	{
 		if ((dd < 9) || (dd >= 12))
 		{
-			d = fabs (d-(long)(d / 17.0) * 17.0 - 10.5) * 0.1538462;
-			i = 0.4 + 0.3 * d + 0.2 * b3Noise::b3NoiseVector
-				(u * 0.01,v * 0.01,w * 0.01);
+			d = fabs (d - floor(d / 17.0) * 17.0 - 10.5) * 0.1538462;
+			i = 0.4 + 0.3 * d + 0.2 * b3Noise::b3NoiseVector(
+					point.x * 0.01,
+					point.y * 0.01,
+					point.z * 0.01);
 		}
-		else i = 0.2 + 0.2 * b3Noise::b3NoiseVector (u * 0.01,v * 0.01,w * 0.01);
+		else
+		{
+			i = 0.2 + 0.2 * b3Noise::b3NoiseVector (
+				point.x * 0.01,
+				point.y * 0.01,
+				point.z * 0.01);
+		}
 	}
 	i         *= m_Size;
 	ray->normal.x += i;
@@ -501,7 +522,7 @@ b3BumpWave::b3BumpWave(b3_u32 class_type) : b3Bump(sizeof(b3BumpWave),class_type
 
 b3BumpWave::b3BumpWave(b3_u32 *src) : b3Bump(src)
 {
-	m_ScaleFlags = b3InitInt();
+	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
 	m_Amplitude = b3InitFloat();
 	m_Flags     = 0;
@@ -572,7 +593,7 @@ b3BumpGroove::b3BumpGroove(b3_u32 class_type) : b3Bump(sizeof(b3BumpGroove),clas
 
 b3BumpGroove::b3BumpGroove(b3_u32 *src) : b3Bump(src)
 {
-	m_ScaleFlags = b3InitInt();
+	m_ScaleFlags = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
 	m_Amplitude = b3InitFloat();
 }
@@ -689,10 +710,12 @@ void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
 
 b3BumpWooden::b3BumpWooden(b3_size class_size,b3_u32 class_type) : b3Bump(class_size,class_type)
 {
+	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3BumpWooden::b3BumpWooden(b3_u32 class_type) : b3Bump(sizeof(b3Bump),class_type)
 {
+	b3InitScaling(1.0,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3BumpWooden::b3BumpWooden(b3_u32 *src) : b3Bump(src)
@@ -719,7 +742,7 @@ b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood),clas
 
 b3BumpWood::b3BumpWood(b3_u32 *src) : b3BumpWooden(src)
 {
-	m_ScaleFlags     = b3InitInt();
+	m_ScaleFlags     = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
 	m_Amplitude              = b3InitFloat();
 	m_yRot                   = b3InitFloat();
@@ -773,8 +796,8 @@ b3_bool b3BumpWood::b3Prepare()
 void b3BumpWood::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector   point,n;
-	b3_vector64 xTest,yTest;
 	b3_vector   xWood,yWood;
+	b3_ray      xRay,yRay;
 	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 
 	b3Scale(ray,null,&point);
@@ -783,18 +806,20 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	// Note: xDeriv and yDeriv are not normalized!
 	xLen    = b3Vector::b3Length(&ray->xDeriv);
 	x       = 1.0 / (xLen * m_dX);
-	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
-	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
-	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
-	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
+	xRay.ipoint.x = x * ray->xDeriv.x + ray->ipoint.x;
+	xRay.ipoint.y = x * ray->xDeriv.y + ray->ipoint.y;
+	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&xRay);
+	b3Scale(&xRay,null,&xWood);
 	dX = (b3Wood::b3ComputeWood (&xWood) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
-	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
-	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
-	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
-	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
+	yRay.ipoint.x = y * ray->yDeriv.x + ray->ipoint.x;
+	yRay.ipoint.y = y * ray->yDeriv.y + ray->ipoint.y;
+	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&yRay);
+	b3Scale(&yRay,null,&yWood);
 	dY = (b3Wood::b3ComputeWood (&yWood) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;
@@ -822,7 +847,7 @@ b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpOa
 b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3BumpWooden(src)
 {
 	// Bump parameter
-	m_ScaleFlags     = b3InitInt();
+	m_ScaleFlags     = (b3_scaling_mode)b3InitInt();
 	b3InitVector(&m_Scale);
 	m_Amplitude = b3InitFloat();
 
@@ -911,8 +936,8 @@ b3_bool b3BumpOakPlank::b3Prepare()
 void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector   point,n;
-	b3_vector64 xTest,yTest;
 	b3_vector   xWood,yWood;
+	b3_ray      xRay,yRay;
 	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 	b3_index    index,iX,iY;
 
@@ -922,18 +947,20 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	// Note: xDeriv and yDeriv are not normalized!
 	xLen    = b3Vector::b3Length(&ray->xDeriv);
 	x       = 1.0 / (xLen * m_dX);
-	xTest.x = x * ray->xDeriv.x + ray->ipoint.x;
-	xTest.y = x * ray->xDeriv.y + ray->ipoint.y;
-	xTest.z = x * ray->xDeriv.z + ray->ipoint.z;
-	ray->bbox->b3ComputeBoxPolar(&xTest,&xWood);
+	xRay.ipoint.x = x * ray->xDeriv.x + ray->ipoint.x;
+	xRay.ipoint.y = x * ray->xDeriv.y + ray->ipoint.y;
+	xRay.ipoint.z = x * ray->xDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&xRay);
+	b3Scale(&xRay,null,&xWood);
 	dX = (b3OakPlank::b3ComputeOakPlank (&xWood,iX) - wood) * m_dX / xLen;
 
 	yLen    = b3Vector::b3Length(&ray->yDeriv);
 	y       = 1.0 / (yLen * m_dY);
-	yTest.x = y * ray->yDeriv.x + ray->ipoint.x;
-	yTest.y = y * ray->yDeriv.y + ray->ipoint.y;
-	yTest.z = y * ray->yDeriv.z + ray->ipoint.z;
-	ray->bbox->b3ComputeBoxPolar(&yTest,&yWood);
+	yRay.ipoint.x = y * ray->yDeriv.x + ray->ipoint.x;
+	yRay.ipoint.y = y * ray->yDeriv.y + ray->ipoint.y;
+	yRay.ipoint.z = y * ray->yDeriv.z + ray->ipoint.z;
+	ray->bbox->b3ComputeBoxPolar(&yRay);
+	b3Scale(&yRay,null,&yWood);
 	dY = (b3OakPlank::b3ComputeOakPlank (&yWood,iY) - wood) * m_dY / yLen;
 
 	n.x = ray->xDeriv.x * dX + ray->yDeriv.x * dY;

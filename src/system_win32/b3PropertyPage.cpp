@@ -31,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/09 15:06:56  sm
+**	- Added inverse transformation for mapping.
+**	- Unified scale mapping source via b3Scaling.
+**	- Moved b3Scaling in its own files.
+**	- Added property pages for scaling and removed
+**	  scaling input fields from dialogs.
+**
 **	Revision 1.5  2004/05/07 18:19:08  sm
 **	- Added some menu entries and toolbar buttons
 **	- Fixed missing default title of CB3PropertyPages
-**
+**	
 **	Revision 1.4  2004/05/06 18:13:52  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -145,4 +152,18 @@ void CB3PropertyPage::b3SetCaption(int id)
 	m_Caption.LoadString(id);
 	m_psp.pszTitle  = m_Caption; 
 	m_psp.dwFlags  |= PSP_USETITLE; 
+}
+
+BOOL CB3PropertyPage::OnKillActive() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	
+	return CPropertyPage::OnKillActive();
+}
+
+void CB3PropertyPage::OnOK() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	
+	CPropertyPage::OnOK();
 }

@@ -18,7 +18,7 @@
 #ifndef B3_RAYTRACE_BUMP_H
 #define B3_RAYTRACE_BUMP_H
 
-#include "blz3/raytrace/b3Base.h"
+#include "blz3/raytrace/b3Scaling.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Wood.h"
 #include "blz3/image/b3Tx.h"

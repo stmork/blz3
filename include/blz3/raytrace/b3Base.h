@@ -39,14 +39,15 @@
 
 struct b3_polar_precompute
 {
-	b3_vector   m_Polar;       // surface coordinates of shape
-	b3_vector   m_ObjectPolar; // rel. shape coordinates
-	b3_index    m_NormalIndex; // which triangle in case of triangle mesh
+	b3_vector64   m_Polar;        // surface coordinates of shape (transform invariant!)
+	b3_vector64   m_ObjectPolar;  // rel. shape coordinates (transform invariant!)
+	b3_index      m_NormalIndex;  // which triangle in case of triangle mesh
 };
 
 struct b3_polar : b3_polar_precompute
 {
-	b3_vector   m_BoxPolar;    // rel. bbox coordinates which contains the shape
+	b3_vector64   m_BoxPolar;     // rel. bbox coordinates which contains the shape (This is not transform invariant!)
+	b3_vector64   m_BBoxOriginal; // Coordinates in original coordinate space (transform invariant!)
 };
 
 class b3Shape;
@@ -126,67 +127,6 @@ public:
 	void    b3Activate(b3_bool activate = true);
 	void    b3Animate(b3_bool activate = true);
 	void    b3Animate(b3_anim_activation activate);
-};
-
-#define B3_SCALE_MODE_MASK 3
-
-#define B3_SCALE_BBOX   0
-#define B3_SCALE_IPOINT 1
-#define B3_SCALE_POLAR  2
-#define B3_SCALE_SHAPE  3
-
-typedef void (*b3_scale_method)(b3_ray *ray,b3_vector *scale,b3_vector *scaled_point);
-typedef void (*b3_scale_method)(b3_ray *ray,b3_vector *scale,b3_vector *scaled_point);
-
-class b3Scaling
-{
-	static b3_vector m_Unit;
-	b3_scale_method  m_ScaleMethod;
-
-public:
-	b3_vector        m_Scale;
-	b3_u32           m_ScaleFlags;
-
-public:
-	inline b3Scaling()
-	{
-		b3Vector::b3Init(&m_Scale,40,40,40);
-		m_ScaleFlags = B3_SCALE_BBOX;
-		b3PrepareScaling();
-	}
-
-	inline void b3PrepareScaling()
-	{
-		switch(m_ScaleFlags & B3_SCALE_MODE_MASK)
-		{
-		case B3_SCALE_BBOX:
-			m_ScaleMethod = b3ScaleBBox;
-			break;
-
-		case B3_SCALE_IPOINT:
-			m_ScaleMethod = b3ScaleIPoint;
-			break;
-
-		case B3_SCALE_POLAR:
-			m_ScaleMethod = b3ScalePolar;
-			break;
-
-		case B3_SCALE_SHAPE:
-			m_ScaleMethod = b3ScaleObject;
-			break;
-		}
-	}
-
-	inline void b3Scale(b3_ray *ray,b3_vector *scale,b3_vector *point)
-	{
-		m_ScaleMethod(ray,scale != null ? scale : &m_Unit,point);
-	}
-
-private:
-	static void b3ScaleBBox(b3_ray *ray,b3_vector *scale,b3_vector *point);
-	static void b3ScaleIPoint(b3_ray *ray,b3_vector *scale,b3_vector *point);
-	static void b3ScalePolar(b3_ray *ray,b3_vector *scale,b3_vector *point);
-	static void b3ScaleObject(b3_ray *ray,b3_vector *scale,b3_vector *point);
 };
 
 /*************************************************************************
