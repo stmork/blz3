@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CAppLinesDoc
+LastClass=CB3ImageButton
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=27
+ClassCount=29
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -21,48 +21,51 @@ Class9=CDlgHierarchy
 Class10=CDlgScene
 Class11=CMainFrame
 
-ResourceCount=25
-Resource1=IDR_BLZ3TYPE
-Resource2=IDD_LENS_FLARE
-Resource3=IDD_SUPER_SAMPLE
-Resource4=IDD_NEW_ITEM
-Resource5=IDD_ABOUTBOX
-Resource6=IDD_SCENE
-Resource7=IDD_LDC
-Resource8=IDD_MODELLER_INFO
-Resource9=IDR_TOOLBAR_ACTION
-Resource10=IDD_LIGHT
-Resource11=IDD_HIERARCHY
-Resource12=IDR_TOOLBAR_CAMERA
-Resource13=IDD_SEARCH_PATH_LIST
+ResourceCount=26
+Resource1=IDD_STEP_ROTATE
+Resource2=IDD_SUPER_SAMPLE
+Resource3=IDD_HIERARCHY
+Resource4=IDD_SEARCH_PATH_LIST
+Resource5=IDR_BLZ3TYPE
+Resource6=IDD_ABOUTBOX
+Resource7=IDD_LIGHT
+Resource8=IDD_LENS_FLARE
+Resource9=IDR_TOOLBAR_VIEW
+Resource10=IDD_NEW_ITEM
+Resource11=IDR_MAINFRAME
+Resource12=IDR_TOOLBAR_DISPLAY
+Resource13=IDD_MODELLER_INFO
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDD_CAMERA
+Resource14=IDD_LDC
 Class17=CDlgModellerInfo
-Resource15=IDR_TOOLBAR_VIEW
-Resource16=IDR_TOOLBAR_DISPLAY
-Resource17=IDD_DISTRIBUTED
-Resource18=IDD_FULCRUM
+Resource15=IDR_TOOLBAR_LIGHT
+Resource16=IDR_TOOLBAR_OBJECT
+Resource17=IDD_NEBULAR
+Resource18=IDD_CAMERA
 Class18=CDlgCreateItem
-Resource19=IDR_MAINFRAME
+Resource19=IDD_STEP_MOVE
 Class19=CDlgLight
 Class20=CB3ControlLDC
-Resource20=IDR_TOOLBAR_OBJECT
+Resource20=IDR_TOOLBAR_ACTION
 Class21=CDlgLDC
-Resource21=IDR_TOOLBAR_LIGHT
+Resource21=IDR_TOOLBAR_CAMERA
 Class22=CDlgCamera
 Class23=CB3ShowImage
 Resource22=IDR_DISPLAYTYPE
 Class24=CDlgFulcrum
-Resource23=IDD_NEBULAR
-Resource24=IDD_STEP_MOVE
+Resource23=IDD_SCENE
+Resource24=IDD_FULCRUM
 Class25=CDlgStepRotate
 Class26=CDlgStepMove
 Class27=CB3Dialogbar
-Resource25=IDD_STEP_ROTATE
+Class28=CB3ImageButton
+Resource25=IDD_DISTRIBUTED
+Class29=CDlgAction
+Resource26=IDD_ACTION
 
 [CLS:CAppLinesApp]
 Type=0
@@ -98,7 +101,7 @@ HeaderFile=AppLinesView.h
 ImplementationFile=AppLinesView.cpp
 Filter=C
 VirtualFilter=VWC
-LastObject=CAppLinesView
+LastObject=ID_OBJECT_COPY
 
 [CLS:CAppRaytraceDoc]
 Type=0
@@ -890,4 +893,31 @@ BaseClass=CDialogBar
 Filter=D
 VirtualFilter=dWC
 LastObject=CB3Dialogbar
+
+[CLS:CB3ImageButton]
+Type=0
+HeaderFile=b3ImageButton.h
+ImplementationFile=b3ImageButton.cpp
+BaseClass=CButton
+Filter=W
+LastObject=CB3ImageButton
+VirtualFilter=BWC
+
+[DLG:IDD_ACTION]
+Type=1
+Class=CDlgAction
+ControlCount=4
+Control1=IDC_MOVE_LEFT,button,1342242816
+Control2=IDC_MOVE_UP,button,1342242944
+Control3=IDC_MOVE_DOWN,button,1342242944
+Control4=IDC_MOVE_RIGHT,button,1342242944
+
+[CLS:CDlgAction]
+Type=0
+HeaderFile=DlgAction.h
+ImplementationFile=DlgAction.cpp
+BaseClass=CB3Dialogbar
+Filter=D
+LastObject=IDC_MOVE_UP
+VirtualFilter=dWC
 

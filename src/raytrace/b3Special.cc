@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2002/01/08 15:45:50  sm
+**      - Added support for repeating CButtons for button movement/rotation mode.
+**
 **      Revision 1.36  2002/01/06 21:38:18  sm
 **      - Nasty Un CR/LF
 **      - b3Dir fix. Not tested, yet!
@@ -451,11 +454,6 @@ void b3ModellerInfo::b3Write()
 	b3StoreVector(&m_StepMove);
 	b3StoreVector(&m_StepRotate);
 	b3StoreBool(m_AngleActive);
-}
-
-b3_vector *b3ModellerInfo::b3GetFulcrum()
-{
-	return &m_Center;
 }
 
 void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)

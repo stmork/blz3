@@ -175,6 +175,11 @@ protected:
 	afx_msg void OnUpdateCameraDelete(CCmdUI* pCmdUI);
 	afx_msg void OnCameraEnable();
 	afx_msg void OnUpdateCameraEnable(CCmdUI* pCmdUI);
+	afx_msg void OnMoveLeft();
+	afx_msg void OnMoveRight();
+	afx_msg void OnMoveDown();
+	afx_msg void OnMoveUp();
+	afx_msg void OnUpdateMovement(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
@@ -184,6 +189,9 @@ public:
 protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
+
+private:
+	void b3Move(b3_action_mode mode);
 
 	friend class CB3Action;
 	friend class CB3MoveAction;

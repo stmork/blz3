@@ -39,11 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/01/08 15:45:50  sm
+**	- Added support for repeating CButtons for button movement/rotation mode.
+**
 **	Revision 1.32  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
 **	- Code cleanup
-**
+**	
 **	Revision 1.31  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -253,9 +256,6 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
 	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
@@ -283,13 +283,24 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
+	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
 	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
 	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
-	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
-	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
+	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
+	ON_BN_CLICKED(IDC_MOVE_LEFT, OnMoveLeft)
+	ON_BN_CLICKED(IDC_MOVE_RIGHT, OnMoveRight)
+	ON_BN_CLICKED(IDC_MOVE_DOWN, OnMoveDown)
+	ON_BN_CLICKED(IDC_MOVE_UP, OnMoveUp)
+	ON_UPDATE_COMMAND_UI(IDC_MOVE_LEFT, OnUpdateMovement)
+	ON_UPDATE_COMMAND_UI(IDC_MOVE_RIGHT, OnUpdateMovement)
+	ON_UPDATE_COMMAND_UI(IDC_MOVE_UP, OnUpdateMovement)
+	ON_UPDATE_COMMAND_UI(IDC_MOVE_DOWN, OnUpdateMovement)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -600,6 +611,38 @@ void CAppLinesView::OnPaint()
 		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	
 		main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
+	}
+}
+
+void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	CB3App     *app  = CB3GetApp();
+	CMainFrame *main = CB3GetMainFrame();
+
+	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"CAppLinesView::OnActivateView(%s,%p,%p)\n",
+		bActivate ? "TRUE " : "FALSE",
+		pActivateView, pDeactiveView);
+#endif
+	
+	if (bActivate)
+	{
+		main->b3UpdateCameraBox(m_Scene,m_Camera);
+		main->b3UpdateLightBox(m_Scene,m_Light);
+		main->b3UpdateModellerInfo(GetDocument());
+		main->m_dlgAction.m_pView = this;
+		m_Scene->b3SetCamera(m_Camera,true);
+		app->b3SetData();
+	}
+	else
+	{
+		main->m_dlgAction.m_pView = null;
+		main->b3Clear();
+		main->b3UpdateModellerInfo();
+		app->b3GetData();
 	}
 }
 
@@ -1014,36 +1057,6 @@ void CAppLinesView::OnLightSelect()
 	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
 
-void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	CB3App     *app  = CB3GetApp();
-	CMainFrame *main = CB3GetMainFrame();
-
-	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
-
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"CAppLinesView::OnActivateView(%s,%p,%p)\n",
-		bActivate ? "TRUE " : "FALSE",
-		pActivateView, pDeactiveView);
-#endif
-	
-	if (bActivate)
-	{
-		main->b3UpdateCameraBox(m_Scene,m_Camera);
-		main->b3UpdateLightBox(m_Scene,m_Light);
-		main->b3UpdateModellerInfo(GetDocument());
-		m_Scene->b3SetCamera(m_Camera,true);
-		app->b3SetData();
-	}
-	else
-	{
-		app->b3GetData();
-		main->b3Clear();
-		main->b3UpdateModellerInfo();
-	}
-}
-
 void CAppLinesView::OnViewToFulcrum() 
 {
 	// TODO: Add your command handler code here
@@ -1174,4 +1187,49 @@ void CAppLinesView::OnUpdateCameraEnable(CCmdUI* pCmdUI)
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck(m_Camera->b3IsActive());
 	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
+}
+
+void CAppLinesView::b3Move(b3_action_mode mode)
+{
+	CAppLinesDoc *pDoc = GetDocument();
+	b3_vector     stepper;
+	b3_matrix     transformation;
+
+	m_RenderView.b3SetTranslationStepper(
+		pDoc->b3GetStepMove(),&stepper,mode);
+	b3MatrixMove(null,&transformation,&stepper);
+	m_Scene->b3Transform(&transformation);
+	pDoc->b3ComputeBounds();
+	pDoc->SetModifiedFlag();
+	pDoc->UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+}
+
+void CAppLinesView::OnMoveLeft() 
+{
+	// TODO: Add your control notification handler code here
+	b3Move(B3_ACTION_LEFT);
+}
+
+void CAppLinesView::OnMoveRight() 
+{
+	// TODO: Add your control notification handler code here
+	b3Move(B3_ACTION_RIGHT);
+}
+
+void CAppLinesView::OnMoveDown() 
+{
+	// TODO: Add your control notification handler code here
+	b3Move(B3_ACTION_DOWN);
+}
+
+void CAppLinesView::OnMoveUp() 
+{
+	// TODO: Add your control notification handler code here
+	b3Move(B3_ACTION_UP);
+}
+
+void CAppLinesView::OnUpdateMovement(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }

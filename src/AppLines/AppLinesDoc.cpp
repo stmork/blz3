@@ -54,10 +54,13 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2002/01/08 15:45:50  sm
+**	- Added support for repeating CButtons for button movement/rotation mode.
+**
 **	Revision 1.42  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop
-**
+**	
 **	Revision 1.41  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
@@ -395,7 +398,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 
 		m_Scene = b3ExampleScene::b3CreateNew(filename);
 		m_Info = m_Scene->b3GetModellerInfo();
-		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+		m_Fulcrum.b3Update(b3GetFulcrum());
 		
 		main->b3SetStatusMessage(IDS_DOC_REORG);
 		m_Scene->b3Reorg();
@@ -442,7 +445,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Scene = (b3Scene *)m_World.b3GetFirst();
 		m_Scene->b3SetFilename(lpszPathName);
 		m_Info = m_Scene->b3GetModellerInfo();
-		m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+		m_Fulcrum.b3Update(b3GetFulcrum());
 
 		main->b3SetStatusMessage(IDS_DOC_REORG);
 		m_Scene->b3Reorg();
@@ -579,7 +582,17 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 
 b3_vector *CAppLinesDoc::b3GetFulcrum()
 {
-	return m_Info->b3GetFulcrum();
+	return &m_Info->m_Center;
+}
+
+b3_vector *CAppLinesDoc::b3GetStepMove()
+{
+	return &m_Info->m_StepMove;
+}
+
+b3_vector *CAppLinesDoc::b3GetStepRotate()
+{
+	return &m_Info->m_StepRotate;
 }
 
 void CAppLinesDoc::b3DrawFulcrum()

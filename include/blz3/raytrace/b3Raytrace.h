@@ -1940,7 +1940,6 @@ public:
 	B3_ITEM_LOAD(b3ModellerInfo);
 
 	void       b3Write();
-	b3_vector *b3GetFulcrum();
 	void       b3SnapToGrid(b3_vector *translation);
 	void       b3SnapToAngle(b3_f64 &angle);
 };

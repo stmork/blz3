@@ -140,6 +140,10 @@ SOURCE=.\b3Fulcrum.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ImageButton.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectTexture.cpp
 # End Source File
 # Begin Source File
@@ -149,6 +153,10 @@ SOURCE=.\b3ShowRaytrace.cpp
 # Begin Source File
 
 SOURCE=.\ChildFrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgAction.cpp
 # End Source File
 # Begin Source File
 
@@ -260,7 +268,15 @@ SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ImageButton.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ChildFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgAction.h
 # End Source File
 # Begin Source File
 

@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/01/08 15:45:50  sm
+**	- Added support for repeating CButtons for button movement/rotation mode.
+**
 **	Revision 1.21  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
 **	- Added stricmp() for Un*x
 **	- Fixed some defines
-**
+**	
 **	Revision 1.20  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
 **	
@@ -441,6 +444,102 @@ b3_f64 b3RenderView::b3GetPositionAngle(b3_vector *center,b3_vector *position)
 		break;
 	}
 	return result;
+}
+
+void b3RenderView::b3SetTranslationStepper(
+	b3_vector      *steps,
+	b3_vector      *mover,
+	b3_action_mode  mode)
+{
+	b3Vector::b3Init(mover);
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		switch(mode)
+		{
+		case B3_ACTION_RIGHT:
+			mover->x =  steps->x;
+			break;
+		case B3_ACTION_LEFT:
+			mover->x = -steps->x;
+			break;
+		case B3_ACTION_UP:
+			mover->y =  steps->y;
+			break;
+		case B3_ACTION_DOWN:
+			mover->y = -steps->y;
+			break;
+		}
+		break;
+	case B3_VIEW_FRONT:
+		switch(mode)
+		{
+		case B3_ACTION_RIGHT:
+			mover->x =  steps->x;
+			break;
+		case B3_ACTION_LEFT:
+			mover->x = -steps->x;
+			break;
+		case B3_ACTION_UP:
+			mover->z =  steps->z;
+			break;
+		case B3_ACTION_DOWN:
+			mover->z = -steps->z;
+			break;
+		}
+		break;
+	case B3_VIEW_RIGHT:
+		switch(mode)
+		{
+		case B3_ACTION_RIGHT:
+			mover->y =  steps->y;
+			break;
+		case B3_ACTION_LEFT:
+			mover->y = -steps->y;
+			break;
+		case B3_ACTION_UP:
+			mover->z =  steps->z;
+			break;
+		case B3_ACTION_DOWN:
+			mover->z = -steps->z;
+			break;
+		}
+		break;
+	case B3_VIEW_BACK:
+		switch(mode)
+		{
+		case B3_ACTION_RIGHT:
+			mover->x = -steps->x;
+			break;
+		case B3_ACTION_LEFT:
+			mover->x =  steps->x;
+			break;
+		case B3_ACTION_UP:
+			mover->z =  steps->z;
+			break;
+		case B3_ACTION_DOWN:
+			mover->z = -steps->z;
+			break;
+		}
+		break;
+	case B3_VIEW_LEFT:
+		switch(mode)
+		{
+		case B3_ACTION_RIGHT:
+			mover->y = -steps->y;
+			break;
+		case B3_ACTION_LEFT:
+			mover->y =  steps->y;
+			break;
+		case B3_ACTION_UP:
+			mover->z =  steps->z;
+			break;
+		case B3_ACTION_DOWN:
+			mover->z = -steps->z;
+			break;
+		}
+		break;
+	}
 }
 
 void b3RenderView::b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point)

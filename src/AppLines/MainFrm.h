@@ -25,10 +25,11 @@
 #include "blz3/system/b3Toolbar.h"
 #include "blz3/system/b3ComboBox.h"
 #include "../smart_gui/CoolMenu.h"
+#include "DlgHierarchy.h"
 #include "DlgFulcrum.h"
 #include "DlgStepMove.h"
+#include "DlgAction.h"
 #include "DlgStepRotate.h"
-#include "DlgHierarchy.h"
 
 #define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
 #define CB3GetMainFrame() ((CMainFrame *)AfxGetApp()->m_pMainWnd)
@@ -79,6 +80,7 @@ protected:  // control bar embedded members
 
 public:
 	CDlgHierarchy      m_dlgHierarchy;
+	CDlgAction         m_dlgAction;
 
 // Generated message map functions
 protected:

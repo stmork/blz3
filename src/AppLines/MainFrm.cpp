@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/01/08 15:45:50  sm
+**	- Added support for repeating CButtons for button movement/rotation mode.
+**
 **	Revision 1.23  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
 **	- Code cleanup
-**
+**	
 **	Revision 1.22  2002/01/04 17:53:53  sm
 **	- Added new/delete object.
 **	- Added deactive rest of all scene objects.
@@ -283,10 +286,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
 	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
 	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
+	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
 	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
+	app->b3AddDialogbar(&m_dlgAction,    IDD_ACTION,         IDS_DIALOGBAR_ACTION);
 	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
-	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");

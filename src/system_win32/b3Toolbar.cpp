@@ -40,11 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/08 15:45:50  sm
+**	- Added support for repeating CButtons for button movement/rotation mode.
+**
 **	Revision 1.9  2002/01/05 22:17:48  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
 **	- Code cleanup
-**
+**	
 **	Revision 1.8  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -127,7 +130,7 @@ void CB3ToolbarState::b3AddDialogbar(
 {
 	if (dialogbar != null)
 	{
-		m_Dialogbars.b3Append(dialogbar);
+		m_Dialogbars.b3First(dialogbar);
 		dialogbar->b3SetID(id_dialog,id_title,m_ToolCount == 0 ? AFX_IDW_DIALOGBAR : id_dialog);
 	}
 }
