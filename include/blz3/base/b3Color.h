@@ -51,6 +51,14 @@ public:
 	{
 	}
 
+	inline b3Color(const b3_f32 init)
+	{
+		for (int i = 0;i < 4;i++)
+		{
+			v[i] = init;
+		}
+	}
+
 	inline b3Color(
 		b3_f64 r,
 		b3_f64 g,
@@ -58,11 +66,6 @@ public:
 		b3_f64 a = 0)
 	{
 		b3Init(r,g,b,a);
-	}
-
-	inline void b3SetAlpha(const b3_f64 alpha)
-	{
-		v[A] = alpha;
 	}
 
 	inline b3Color(const b3Color &color)
@@ -94,6 +97,11 @@ public:
 			mask >>= 8;
 			shift -= 8;
 		}
+	}
+
+	inline void b3SetAlpha(const b3_f64 alpha)
+	{
+		v[A] = alpha;
 	}
 
 	inline b3_f32 operator[](const b3_color_index index)
@@ -188,7 +196,7 @@ public:
 
 	inline b3Color &operator*=(const b3_f32 value)
 	{
-		b3Color prod(value,value,value,value);
+		b3Color prod(value);
 
 		for (int i = 0;i < 4;i++)
 		{
@@ -199,7 +207,7 @@ public:
 
 	inline b3Color &operator*=(const b3_f64 value)
 	{
-		b3Color prod(value,value,value,value);
+		b3Color prod((b3_f32)value);
 
 		for (int i = 0;i < 4;i++)
 		{
@@ -210,7 +218,7 @@ public:
 
 	inline b3Color operator*(const b3_f32 value)
 	{
-		b3Color result,multiplicator(value,value,value,value);
+		b3Color result,multiplicator(value);
 
 		for (int i = 0;i < 4;i++)
 		{
@@ -221,7 +229,7 @@ public:
 
 	inline b3Color operator*(const b3_f64 value)
 	{
-		b3Color result,multiplicator(value,value,value,value);
+		b3Color result,multiplicator((b3_f32)value);
 
 		for (int i = 0;i < 4;i++)
 		{
@@ -232,7 +240,31 @@ public:
 
 	inline b3Color &operator/=(const b3_f32 value)
 	{
-		b3Color prod(value,value,value,1);
+		b3Color prod(value);
+
+		B3_ASSERT(value != 0);
+		for (int i = 0;i < 4;i++)
+		{
+			v[i] /= prod.v[i];
+		}
+		return *this;
+	}
+
+	inline b3Color &operator/=(const b3_f64 value)
+	{
+		b3Color prod((b3_f32)value);
+
+		B3_ASSERT(value != 0);
+		for (int i = 0;i < 4;i++)
+		{
+			v[i] /= prod.v[i];
+		}
+		return *this;
+	}
+
+	inline b3Color &operator/=(const b3_count value)
+	{
+		b3Color prod((b3_f32)value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
@@ -244,7 +276,7 @@ public:
 
 	inline b3Color operator/(const b3_f32 value)
 	{
-		b3Color result,divisor(value,value,value,1);
+		b3Color result,divisor(value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
@@ -254,21 +286,9 @@ public:
 		return result;
 	}
 
-	inline b3Color &operator/=(const b3_f64 value)
-	{
-		b3Color prod(value,value,value,1);
-
-		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
-		{
-			v[i] /= prod.v[i];
-		}
-		return *this;
-	}
-
 	inline b3Color operator/(const b3_f64 value)
 	{
-		b3Color result,divisor(value,value,value,1);
+		b3Color result,divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
@@ -280,7 +300,7 @@ public:
 
 	inline b3Color operator/(const b3_count value)
 	{
-		b3Color result,divisor(value,value,value,1);
+		b3Color result,divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
@@ -305,11 +325,43 @@ public:
 
 	inline operator b3_pkd_color()
 	{
-		return
-			((b3_pkd_color)(v[A] > 1.0 ? 255 : (b3_u08)(v[A] * 255)) << 24) |
-			((b3_pkd_color)(v[R] > 1.0 ? 255 : (b3_u08)(v[R] * 255)) << 16) |
-			((b3_pkd_color)(v[G] > 1.0 ? 255 : (b3_u08)(v[G] * 255)) <<  8) |
-			 (b3_pkd_color)(v[B] > 1.0 ? 255 : (b3_u08)(v[B] * 255));
+		b3_pkd_color B3_ALIGN_16  result = 0;
+#if 1
+		b3_u16 B3_ALIGN_16 c[4];
+		b3Color            sat(*this);
+		
+		sat *= 255.0;
+		sat.b3Sat(255.0);
+
+		for (int i = 0;i < 4;i++)
+		{
+			c[i] = (b3_u16)sat.v[i];
+		}
+
+		result =
+			((c[0] & 0x00ff) << 24) |
+			((c[1] & 0x00ff) << 16) |
+			((c[2] & 0x00ff) <<  8) |
+			 (c[3] & 0x00ff);
+			
+#else
+		float limit = 255.0f;
+
+		__m128 max = _mm_load_ps1(&limit);
+		__m128 res = _mm_min_ps(
+			_mm_mul_ps(
+				_mm_load_ps(v),
+				max),
+			max);
+
+		__m64 mmx = _mm_packs_pu16(
+			_mm_cvtps_pi16(res),
+			_mm_setzero_si64());
+		result = (b3_pkd_color)_mm_cvtsi64_si32(mmx);
+
+		_mm_empty();
+#endif
+		return result;
 	}
 
 	inline operator b3_color()
@@ -323,7 +375,7 @@ public:
 		return result;
 	}
 
-	inline void b3Sat(b3_f64 sat = 1.0)
+	inline void b3Sat(b3_f32 sat = 1.0)
 	{
 		for (int i = 0;i < 4;i++)
 		{

@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/03/05 19:08:18  sm
+**	- Trying to optimize b3Color...
+**
 **	Revision 1.5  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.4  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
@@ -203,7 +206,6 @@ void b3SupersamplingRayRow::b3Raytrace()
 		dir.z   += m_Scene->m_xStepDir.z;
 
 		m_ThisResult[x] = ray.color;
-//		m_ThisResult[x].b3Sat();
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();
@@ -355,7 +357,6 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.y = (dir.y += m_Scene->m_xHalfDir.y);
 			ray.dir.z = (dir.z += m_Scene->m_xHalfDir.z);
 			m_ThisResult[x] *= 0.25;
-//			m_ThisResult[x].b3Sat();
 		}
 		ray.dir.x  = (dir.x += m_Scene->m_xStepDir.x);
 		ray.dir.y  = (dir.y += m_Scene->m_xStepDir.y);
@@ -514,7 +515,6 @@ void b3MotionBlurRayRow::b3Raytrace()
 {
 	b3_ray_info   ray;
 	b3_coord      x,s;
-	b3Color       result;
 	b3_f64        fx,sx,sy;
 	b3_f32       *samples = m_Samples;
 	b3_index      count = 0;
@@ -546,14 +546,8 @@ void b3MotionBlurRayRow::b3Raytrace()
 					m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
 				}
 
-				m_Color[x] += ray.color;
-				result      = m_Color[x] / m_SPP;
-
-/*
-				b3Color::b3Add(&ray.color,&m_Color[x]);
-				b3Color::b3Scale(&m_Color[x],1.0 / m_SPP,&result);
-*/
-				m_buffer[x] = result;
+				m_Color[x]  += ray.color;
+				m_buffer[x]  = m_Color[x] / m_SPP;
 			}
 			else
 			{
