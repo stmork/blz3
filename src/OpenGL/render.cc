@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2003/02/08 21:42:13  sm
+**      - Removed some unused variables.
+**
 **      Revision 1.29  2003/01/26 11:53:26  sm
 **      - Added support for Caligari object loading.
 **
@@ -387,7 +390,6 @@ int main(int argc,char *argv[])
 	b3Path          textures;
 	b3Path          pictures;
 	b3Path          data;
-	b3Path          ext;
 
 	if (argc <= 1)
 	{

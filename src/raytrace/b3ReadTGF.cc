@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/02/08 21:42:13  sm
+**	- Removed some unused variables.
+**
 **	Revision 1.2  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
 **	- Added TGF import to Un*x makefile
-**
+**	
 **	Revision 1.1  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
 **	
@@ -285,7 +288,6 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	b3_f64                  *vPtr,u,v;
 	b3_u32                  *lPtr;
 	b3_u16                  *sPtr;
-	b3_count                 faces = 0,face = 0;
 
 	numVert = b3Endian::b3GetIntel32(&ptr[ 0]);
 	numAttr = b3Endian::b3GetIntel32(&ptr[ 4]);
@@ -303,6 +305,8 @@ b3_bool b3TGFReader::b3ParseGeometry(b3BBox *bbox, char *ptr)
 	case TGF_VERTEX_POINT_NORMAL_TEX:
 		size = 8;
 		break;
+	default:
+		return false;
 	}
 	ptr += 18;
 	pos  = 18;
