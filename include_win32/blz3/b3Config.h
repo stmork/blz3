@@ -88,9 +88,12 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.28  2004/01/18 14:29:26  sm
+**	- Added Windows security changes
+**
 **	Revision 1.27  2003/08/31 08:56:21  sm
 **	- Windows support for the snprintf functions
-**
+**	
 **	Revision 1.26  2003/05/30 14:44:09  sm
 **	- Plugin support for Windows added. All exported classes got an
 **	  additional keyword: B3_PLUGIN
@@ -295,8 +298,19 @@ enum b3_msgbox_type
 
 #define B3_MAXHOSTNAMELEN ((MAX_COMPUTERNAME_LENGTH) + 1)
 #define B3_FILESTRINGLEN  (_MAX_PATH)
+
 #define  snprintf  _snprintf
 #define vsnprintf _vsnprintf
+
+static inline char *strlcpy(char *dst,const char *src,size_t size)
+{
+	if (size > 0)
+	{
+		strncpy(dst,src,size);
+		dst[size-1] = 0;
+	}
+	return dst;
+}
 
 class B3_PLUGIN b3Runtime : public b3CPU
 {
