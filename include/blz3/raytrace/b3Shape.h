@@ -470,13 +470,33 @@ private:
 
 	        void     b3Clear();
 	        void     b3PrepareGridList();
-			void b3SubdivideIntoGrid(
+			void     b3SubdivideIntoGrid(
 			    b3_vector *P1,
 			    b3_vector *P2,
 			    b3_vector *P3,
 			    b3_index   triangle,
 			    b3_count   max);
+			void     b3TriangleShape::b3SearchCubicItem (
+				b3_vector *P1,
+				b3_vector *P2,
+				b3_vector *P3,
+				b3_index   index,
+				b3_index   rec,
+				b3_count   MaxRec);
 
+			inline b3_index b3GridDistance(b3_f32 v1,b3_f32 v2,b3_f32 v3)
+			{
+				b3_index i1 = (b3_index)v1;
+				b3_index i2 = (b3_index)v2;
+				b3_index i3 = (b3_index)v3;
+				b3_index d12 = B3_ABS(i2 - i1);
+				b3_index d23 = B3_ABS(i3 - i2);
+				b3_index d31 = B3_ABS(i1 - i3);
+				
+				b3_index result = B3_MAX(d12,d23);
+				return B3_MAX(result,d31);
+			}
+			
 			inline void b3ToGridSpace(const b3_vector *point,b3_vector *result)
 			{
 				result->x = (point->x - m_Base.x) / m_Size.x;
@@ -508,6 +528,7 @@ private:
 	        }
 
 			static b3_count b3IntLog2(b3_count value);
+			static b3_count b3IntLog3(b3_count value);
 };
 
 // TRIANGLES

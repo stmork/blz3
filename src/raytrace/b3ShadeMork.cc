@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2004/07/24 13:55:12  sm
+**	- Changed triangle grid size computation.
+**	- Corrected Mork shading to its roots.
+**
 **	Revision 1.42  2004/06/23 11:02:54  sm
 **	- Fixed material shader problem in Mork shading model: The half factor
 **	  moved into the lighting method.
-**
+**	
 **	Revision 1.41  2004/05/28 20:33:05  sm
 **	- Backported Mork shader
 **	
@@ -256,14 +260,15 @@ void b3ShaderMork::b3ShadeLight(
 			b3_f64 lambda   = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
-			if ((spec_exp < 100000) && (lambda > 0))
+			if (spec_exp < 100000)
 			{
+				
 				Factor = b3Math::b3FastPow((lambda + 1.0) * 0.5, spec_exp) * Jit->m_LightFrac;
 				surface->m_SpecularSum += (light->m_Color * Factor);
 			}
 
 			// surface illumination (diffuse color)
-			if ((Factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor) > 0)
+			if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
 			{
 				result += (surface->m_Diffuse * light->m_Color * Factor);
 			}
@@ -314,7 +319,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
-	factor = 1.0 - refl - refr;
+	factor = (1.0 - refl - refr) * 0.5;
 	if (factor > 0)
 	{
 		// For each light source

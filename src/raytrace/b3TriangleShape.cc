@@ -25,6 +25,8 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Math.h"
 
+#define USE_NEW_GRID
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -33,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2004/07/24 13:55:12  sm
+**      - Changed triangle grid size computation.
+**      - Corrected Mork shading to its roots.
+**
 **      Revision 1.45  2004/07/22 10:09:38  sm
 **      - Optimized triangle into grid insertion.
 **
@@ -292,9 +298,21 @@ b3_count b3TriangleShape::b3IntLog2(b3_count value)
 {
 	b3_count result = -1;
 
-	while (value != 0)
+	while (value > 0)
 	{
 		value = value >> 1;
+		result++;
+	}
+	return result;
+}
+
+b3_count b3TriangleShape::b3IntLog3(b3_count value)
+{
+	b3_count result = -1;
+
+	while (value > 0)
+	{
+		value = (value + value) / 3;
 		result++;
 	}
 	return result;
@@ -307,7 +325,7 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	b3_index   triangle,
 	b3_count   max)
 {
-	b3_index i1 = b3GetGrid(P1);
+	b3_index i1 = b3GetGrid(P1); 
 	b3_index i2 = b3GetGrid(P2);
 	b3_index i3 = b3GetGrid(P3);
 
@@ -318,7 +336,10 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	}
 	else
 	{
-		b3_index dSum = B3_ABS(i2 - i1) + B3_ABS(i3 - i2) + B3_ABS(i1 - i3);
+		b3_index dSum =
+			b3GridDistance(P1->x,P2->x,P3->x) +
+			b3GridDistance(P1->y,P2->y,P3->y) + 
+			b3GridDistance(P1->z,P2->z,P3->z);
 
 		if (dSum == 1)
 		{
@@ -361,6 +382,68 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	}
 }
 
+void b3TriangleShape::b3SearchCubicItem (
+	b3_vector *P1,
+	b3_vector *P2,
+	b3_vector *P3,
+	b3_index   index,
+	b3_index   rec,
+	b3_count   MaxRec)
+{
+	b3_index  I1,I2,I3;
+	b3_index  x1,y1,z1;
+	b3_index  x2,y2,z2;
+	b3_index  x3,y3,z3;
+	b3_vector P4;
+
+	if (rec > MaxRec)
+	{
+		return;
+	}
+
+	P4.x = (P1->x + P2->x + P3->x) / 3.0;
+	P4.y = (P1->y + P2->y + P3->y) / 3.0;
+	P4.z = (P1->z + P2->z + P3->z) / 3.0;
+
+	x1 = (b3_index)P1->x; y1 = (b3_index)P1->y; z1 = (b3_index)P1->z;
+	x2 = (b3_index)P2->x; y2 = (b3_index)P2->y; z2 = (b3_index)P2->z;
+	x3 = (b3_index)P3->x; y3 = (b3_index)P3->y; z3 = (b3_index)P3->z;
+
+	I1 = B3_ABS(x1 - x2) + B3_ABS(y1 - y2) + B3_ABS(z1 - z2);
+	I2 = B3_ABS(x2 - x3) + B3_ABS(y2 - y3) + B3_ABS(z2 - z3);
+	I3 = B3_ABS(x3 - x1) + B3_ABS(y3 - y1) + B3_ABS(z3 - z1);
+
+	if (I1 <= 1)
+	{
+		b3AddTriangleToGrid (GRID_INDEX(x1,y1,z1,m_GridSize),index);
+		b3AddTriangleToGrid (GRID_INDEX(x2,y2,z2,m_GridSize),index);
+	}
+	else
+	{
+		b3SearchCubicItem (P1,P2,&P4,index,rec+1,MaxRec);
+	}
+
+	if (I2 <= 1)
+	{
+		b3AddTriangleToGrid (GRID_INDEX(x2,y2,z2,m_GridSize),index);
+		b3AddTriangleToGrid (GRID_INDEX(x3,y3,z3,m_GridSize),index);
+	}
+	else
+	{
+		b3SearchCubicItem (P2,P3,&P4,index,rec+1,MaxRec);
+	}
+
+	if (I3 <= 1)
+	{
+		b3AddTriangleToGrid (GRID_INDEX(x3,y3,z3,m_GridSize),index);
+		b3AddTriangleToGrid (GRID_INDEX(x1,y1,z1,m_GridSize),index);
+	}
+	else
+	{
+		b3SearchCubicItem (P3,P1,&P4,index,rec+1,MaxRec);
+	}
+}
+
 void b3TriangleShape::b3PrepareGridList ()
 {
 	b3_index  i,MaxRec;
@@ -371,7 +454,12 @@ void b3TriangleShape::b3PrepareGridList ()
 #endif
 
 	max    = m_GridSize * m_GridSize * m_GridSize;
+#ifdef USE_NEW_GRID
 	MaxRec = b3IntLog2(m_GridSize);
+#else
+	MaxRec = b3IntLog3(m_GridSize) << 1;
+#endif
+
 	if (max > 1)
 	{
 		for (i = 0;i < m_TriaCount;i++)
@@ -382,7 +470,23 @@ void b3TriangleShape::b3PrepareGridList ()
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P2].Point,&P2);
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P3].Point,&P3);
 
+#ifdef USE_NEW_GRID
 				b3SubdivideIntoGrid(&P1,&P2,&P3,i,MaxRec);
+#else
+				b3_index i1 = b3GetGrid(&P1); 
+				b3_index i2 = b3GetGrid(&P2);
+				b3_index i3 = b3GetGrid(&P3);
+
+				if ((i1 == i2) && (i2 == i3))
+				{
+					// Entire triangle is in a single voxel
+					m_GridList[i1].b3Add(i);
+				}
+				else
+				{
+					b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
+				}
+#endif
 			}
 #ifdef _DEBUG
 			else
@@ -496,15 +600,15 @@ b3_bool b3TriangleShape::b3Prepare()
 			}
 		}
 
-#	ifndef ONE_GRID
-		m_GridSize = (b3_count)b3Math::b3Cbrt (0.125 * m_TriaCount);
+#ifndef ONE_GRID
+		m_GridSize = (b3_count)b3Math::b3Cbrt(m_TriaCount);
 		if (m_GridSize < 1)
 		{
 			m_GridSize = 1;
 		}
-#	else
+#else
 		m_GridSize = 1;
-#	endif
+#endif
 
 		if (((End.x - Start.x) < 0.1) ||
 		    ((End.y - Start.y) < 0.1) ||
