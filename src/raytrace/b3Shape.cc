@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2002/08/04 13:24:56  sm
+**      - Found transformation bug: Normals have to be treated as
+**        direction vectors, aren't them?
+**      - b3PrepareInfo::m_PrepareProc initialized not only in
+**        debug mode.
+**
 **      Revision 1.46  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -609,7 +615,7 @@ void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound *info)
 	info->yFactor = 1;
 }
 
-void b3Shape::b3Transform(b3_matrix *transformation)
+void b3Shape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
@@ -692,12 +698,12 @@ b3_bool b3Shape2::b3Prepare()
 	return b3Shape::b3Prepare();
 }
 
-void b3Shape2::b3Transform(b3_matrix *transformation)
+void b3Shape2::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3TransformVertices(transformation);
+	b3TransformVertices(transformation,is_affine);
 }
 
 
@@ -784,11 +790,11 @@ void b3Shape3::b3ComputeNormals(b3_bool normalize)
 	b3ComputeQuadricNormals(normalize);
 }
 
-void b3Shape3::b3Transform(b3_matrix *transformation)
+void b3Shape3::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation);
+	b3TransformVertices(transformation,is_affine);
 }

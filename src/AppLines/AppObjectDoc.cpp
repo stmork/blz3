@@ -38,10 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/08/04 13:24:55  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.15  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.14  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
@@ -220,7 +226,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 
 	m_OriginalPosition = bbox->m_Matrix;
 	b3MatrixInv(&bbox->m_Matrix,&inverse);
-	bbox->b3Transform(&inverse,true);
+	bbox->b3Transform(&inverse,true,true);
 
 	// Now everything necessary is initialized. So we can mark this
 	// document as valid
@@ -318,7 +324,7 @@ void CAppObjectDoc::OnCloseDocument()
 			if (IsModified())
 			{
 				m_LinesDoc->b3FinishEdit(m_Original,m_BBox);
-				m_BBox->b3Transform(&m_OriginalPosition,true);
+				m_BBox->b3Transform(&m_OriginalPosition,true,true);
 				m_LinesDoc->b3ComputeBounds();
 				delete m_Original;
 			}

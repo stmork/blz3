@@ -57,12 +57,18 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2002/08/04 13:24:55  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.62  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
 **	  every OnPaint(). This is configurable depending on the
 **	  hostname.
-**
+**	
 **	Revision 1.61  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -516,6 +522,8 @@ BOOL CAppLinesDoc::OnNewDocument()
 	{
 		b3PrintF(B3LOG_NORMAL,"ERROR creating %s\n",GetPathName());
 	}
+
+	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
 	return result;
 }
 
@@ -524,7 +532,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	CMainFrame *main = CB3GetMainFrame();
 	CString     message;
 	BOOL        result = FALSE;
-
+b3Log_SetLevel(B3LOG_FULL);
 	// TODO: Add your specialized creation code here
 	try
 	{
@@ -562,6 +570,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	{
 		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
 	}
+
+	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
 	return result;
 }
 
@@ -1862,7 +1872,7 @@ void CAppLinesDoc::OnObjectCopy()
 		for (i = 0;i < dlg.m_NumCopies;i++)
 		{
 			cloned = (b3BBox *)b3World::b3Clone(bbox);
-			cloned->b3Transform(&dlg.m_Transformation,true);
+			cloned->b3Transform(&dlg.m_Transformation,true,true);
 			cloned->b3Prepare();
 			base->b3Insert(bbox,cloned);
 			bbox = cloned;

@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2002/08/04 13:24:56  sm
+**      - Found transformation bug: Normals have to be treated as
+**        direction vectors, aren't them?
+**      - b3PrepareInfo::m_PrepareProc initialized not only in
+**        debug mode.
+**
 **      Revision 1.28  2002/03/10 13:55:15  sm
 **      - Added creation dialog for rotation shapes.
 **      - Cleaned up derivation of b3SplineRotShape.
@@ -210,7 +216,7 @@ b3_bool b3TriangleShape::b3Init(
 	return (m_Vertices != null) && (m_Triangles != null);
 }
 
-void b3TriangleShape::b3Transform(b3_matrix *transformation)
+void b3TriangleShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3_index   i;
 	b3_vertex *ptr = m_Vertices;
@@ -220,7 +226,7 @@ void b3TriangleShape::b3Transform(b3_matrix *transformation)
 		b3Vector::b3MatrixMul4D (transformation,&ptr->Point);
 		ptr++;
 	}
-	b3TransformVertices(transformation);
+	b3TransformVertices(transformation,is_affine);
 }
 
 b3_bool b3TriangleShape::b3AddCubicItem (

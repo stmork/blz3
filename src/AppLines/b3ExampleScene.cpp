@@ -35,6 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/04 13:24:55  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.8  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -42,7 +48,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.7  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -240,11 +246,11 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 	// Transform ellipsoid
 	b3MatrixScale(null,&transform,null,0.4,0.4,0.4);
 	b3MatrixMove(&transform,&transform,0,0,20);
-	big->b3Transform(&transform);
+	big->b3Transform(&transform,true);
 
 	// Elarge whole scene
 	b3MatrixScale(null,&transform,null,5,5,5);
-	bbox->b3Transform(&transform,true);
+	bbox->b3Transform(&transform,true,true);
 
 	// Create camera
 	b3Consolidate(scene);

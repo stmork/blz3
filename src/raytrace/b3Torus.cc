@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/08/04 13:24:56  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.27  2002/07/31 07:30:44  sm
 **	- New normal computation. Textures are rendered correctly and
 **	  quadrics are shaded correctly. Spheres and doughnuts have
 **	  got their own more simple computation.
-**
+**	
 **	Revision 1.26  2002/03/02 19:52:40  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
@@ -316,13 +322,13 @@ void b3Torus::b3ComputeIndices()
 	b3ComputeTorusIndices();
 }
 
-void b3Torus::b3Transform(b3_matrix *transformation)
+void b3Torus::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation);
+	b3TransformVertices(transformation,is_affine);
 }
 
 void b3Torus::b3GetStencilBoundInfo(b3_stencil_bound *info)

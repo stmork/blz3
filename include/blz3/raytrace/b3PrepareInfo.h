@@ -21,10 +21,6 @@
 class b3Scene;
 class b3BBox;
 
-typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
-
-#define B3_MIN_BBOXES_FOR_THREADING 50
-
 class b3BBoxReference : public b3Link<b3BBoxReference>
 {
 public:
@@ -36,11 +32,14 @@ public:
 	}
 };
 
+typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
+
+#define B3_MIN_BBOXES_FOR_THREADING 50
+
 class b3PrepareInfo
 {
-	friend class b3Scene;
-
 	b3PrepareProc            m_PrepareProc;
+	b3_count                 m_CPUs;
 
 protected:
 	b3Base<b3BBoxReference>  m_BBoxRefList;

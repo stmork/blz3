@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/04 13:24:55  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.3  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
 **	
@@ -397,7 +403,7 @@ void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
 		{
 			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
 			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity);
+			m_LinesView->GetDocument()->m_Scene->b3Transform(&activity,false);
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
 	}
@@ -452,7 +458,7 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 
 			b3MatrixScale(null,&m_Transformation,m_Center,&scale);
 			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			pDoc->m_Scene->b3Transform(&activity);
+			pDoc->m_Scene->b3Transform(&activity,false);
 			pDoc->b3ComputeBounds();
 			pDoc->SetModifiedFlag();
 			pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);

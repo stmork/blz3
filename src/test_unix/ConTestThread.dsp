@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /YX /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /YX /FD /TP /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe

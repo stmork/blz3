@@ -921,7 +921,7 @@ public:
 	        void        b3BumpNormal(b3_ray *ray);
 	virtual b3_bool     b3CheckStencil(b3_polar_precompute *polar);
 	virtual void        b3Normal(b3_ray *ray);
-	virtual void        b3Transform(b3_matrix *transformation);
+	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
 	b3Base<b3Item>     *b3GetBumpHead();
@@ -1063,7 +1063,7 @@ public:
 	void    b3Normal(b3_ray *ray);
 
 	b3_bool b3Prepare();
-	void    b3Transform(b3_matrix *transformation);
+	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
 // AREA, DISK
@@ -1086,7 +1086,7 @@ public:
 
 	        void    b3StoreShape();
 	        b3_bool b3Prepare();
-	        void    b3Transform(b3_matrix *transformation);
+	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);
 };
@@ -1136,7 +1136,7 @@ public:
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void    b3ComputeNormals(b3_bool normalize = true);
-	        void    b3Transform(b3_matrix *transformation);
+	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
 class b3Cylinder : public b3Shape3
@@ -1226,7 +1226,7 @@ public:
 
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void    b3Transform(b3_matrix *transformation);
+	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
 class b3TriangleRef : public b3Link<b3TriangleRef>
@@ -1283,7 +1283,7 @@ public:
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);
 	virtual b3_bool b3Prepare();
-	virtual void    b3Transform(b3_matrix *transformation);
+	virtual void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 
 protected:
 	        void    b3FreeTriaRefs();
@@ -1334,7 +1334,7 @@ public:
 
 	void    b3Init(b3_count degree,b3_count control_num,b3_bool closed,b3_count subdiv);
 	void    b3StoreShape();
-	void    b3Transform(b3_matrix *transformation);
+	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	b3_bool b3Prepare();
 
 protected:
@@ -1365,7 +1365,7 @@ public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
 
-	void b3Transform(b3_matrix *transformation);
+	void b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
 
 protected:
@@ -1508,7 +1508,7 @@ public:
 	b3_count b3GetMaxIntersections();
 	void     b3Normal(b3_ray *ray);
 	b3_bool  b3Prepare();
-	void     b3Transform(b3_matrix *transformation);
+	void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -1525,7 +1525,7 @@ public:
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void     b3ComputeNormals(b3_bool normalize = true);
-	        void     b3Transform(b3_matrix *transformation);
+	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	        b3_count b3GetMaxIntersections();
 };
 
@@ -1620,7 +1620,7 @@ public:
 
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
-	        void     b3Transform(b3_matrix *transformation);
+	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
 };
 
 /*************************************************************************
@@ -1667,7 +1667,7 @@ public:
 	       void            b3ComputeVertices();
 		   void            b3ComputeNormals(b3_bool normalize = true);
 	       void            b3Draw(b3RenderContext *context);
-		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool force_action = false);
+		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
 		   void            b3Activate(b3_bool activate=true);
 		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
@@ -2353,7 +2353,7 @@ public:
 		    b3BBox         *b3GetFirstBBox();
 		    b3_count        b3GetBBoxCount();
 		    void            b3Activate(b3_bool activate=true);
-		    void            b3Transform(b3_matrix *transformation,b3_bool force_action = false);
+		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
 		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
 		    void            b3Raytrace(b3Display *display);
 		    void            b3AbortRaytrace();

@@ -32,12 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2002/08/04 13:24:56  sm
+**	- Found transformation bug: Normals have to be treated as
+**	  direction vectors, aren't them?
+**	- b3PrepareInfo::m_PrepareProc initialized not only in
+**	  debug mode.
+**
 **	Revision 1.60  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
 **	  saves memory allocation calls and is an investment into
 **	  faster Lines III object transformation.
-**
+**	
 **	Revision 1.59  2002/08/02 14:52:12  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
@@ -797,7 +803,10 @@ b3_count b3BBox::b3Count()
 	return count;
 }
 
-b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
+b3_bool b3BBox::b3Transform(
+	b3_matrix *transformation,
+	b3_bool    is_affine,
+	b3_bool    force_action)
 {
 	b3Item  *item;
 	b3Shape *shape;
@@ -809,7 +818,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 		shape = (b3Shape *)item;
 		if (force_action || shape->b3IsActive())
 		{
-			shape->b3Transform(transformation);
+			shape->b3Transform(transformation,is_affine);
 			transformed = true;
 		}
 	}
@@ -817,7 +826,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		if(bbox->b3Transform(transformation,force_action))
+		if(bbox->b3Transform(transformation,is_affine,force_action))
 		{
 			transformed = true;
 		}
@@ -837,7 +846,10 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 	return transformed;
 }
 
-void b3Scene::b3Transform(b3_matrix *transformation,b3_bool force_action)
+void b3Scene::b3Transform(
+	b3_matrix *transformation,
+	b3_bool    is_affine,
+	b3_bool    force_action)
 {
 	b3Item *item;
 	b3BBox *bbox;
@@ -845,7 +857,7 @@ void b3Scene::b3Transform(b3_matrix *transformation,b3_bool force_action)
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
-		bbox->b3Transform(transformation,force_action);
+		bbox->b3Transform(transformation,is_affine,force_action);
 	}
 }
 

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/08/04 13:24:56  sm
+**      - Found transformation bug: Normals have to be treated as
+**        direction vectors, aren't them?
+**      - b3PrepareInfo::m_PrepareProc initialized not only in
+**        debug mode.
+**
 **      Revision 1.15  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -258,7 +264,7 @@ b3_bool b3SplineRotShape::b3Prepare()
 	return b3TriangleShape::b3Prepare();
 }
 
-void b3SplineRotShape::b3Transform(b3_matrix *transformation)
+void b3SplineRotShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3_vector *control;
 	b3_index   offset;
@@ -277,7 +283,7 @@ void b3SplineRotShape::b3Transform(b3_matrix *transformation)
 		b3Vector::b3MatrixMul4D(transformation,control);
 		control += offset;
 	}
-	b3TriangleShape::b3Transform(transformation);
+	b3TriangleShape::b3Transform(transformation,is_affine);
 }
 
 void b3SplineRotShape::b3GetCount(

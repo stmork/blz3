@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/08/04 13:24:56  sm
+**      - Found transformation bug: Normals have to be treated as
+**        direction vectors, aren't them?
+**      - b3PrepareInfo::m_PrepareProc initialized not only in
+**        debug mode.
+**
 **      Revision 1.21  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -216,11 +222,11 @@ void b3CSGSphere::b3ComputeNormals(b3_bool normalize)
 	b3ComputeSphereNormals(m_Base,normalize);
 }
 
-void b3CSGSphere::b3Transform(b3_matrix *transformation)
+void b3CSGSphere::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 {
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir, &m_Dir, false);
-	b3TransformVertices(transformation);
+	b3TransformVertices(transformation,is_affine);
 }
 
 b3_bool b3CSGSphere::b3Prepare()
