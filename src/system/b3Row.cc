@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Display.h"
+#include "blz3/system/b3Display.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,10 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/11 11:03:40  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.2  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.1  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
 **	

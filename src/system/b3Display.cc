@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Display.h"
+#include "blz3/system/b3Display.h"
 #include "blz3/base/b3Aux.h"
 
 #define no_SYNC
@@ -42,12 +42,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/11 11:03:40  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.7  2002/01/22 17:11:17  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
 **	- Better b3DisplayView in Un*x port.
 **	- Fixed stricmp() in Un*x port.
-**
+**	
 **	Revision 1.6  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.

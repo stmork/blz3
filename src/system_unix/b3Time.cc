@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/11 11:03:41  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.2  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.1  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
@@ -49,13 +54,6 @@
 **                        b3TimeSpan routines                           **
 **                                                                      **
 *************************************************************************/
-
-b3TimeSpan::b3TimeSpan()
-{
-	m_uTime = 0;
-	m_sTime = 0;
-	m_rTime = 0;
-}
 
 void b3TimeSpan::b3Start()
 {
@@ -98,30 +96,4 @@ void b3TimeSpan::b3Stop()
 		 real_stop.millitm        -
 		m_RealTime.time    * 1000 -
 		m_RealTime.millitm);
-}
-
-b3_f64 b3TimeSpan::b3GetUsage()
-{
-	return (m_rTime > 0 ?
-		(b3_f64)(m_uTime + m_sTime) / (b3_f64)m_rTime : 1.0);
-}
-
-char *b3TimeSpan::b3PrintTime(char *buffer,b3_s32 time_needed)
-{
-	sprintf(buffer,"%3d:%02d,%02d",
-		 time_needed / 60000,
-		(time_needed /  1000) % 60,
-		 time_needed %  1000);
-	return buffer;
-}
-
-void b3TimeSpan::b3Print(b3_log_level level)
-{
-	char buffer[32];
-
-	b3PrintF(level,"Computation time:\n");
-	b3PrintF(level," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
-	b3PrintF(level," User time:   %s\n",b3PrintTime(buffer,m_uTime));
-	b3PrintF(level," System time: %s\n",b3PrintTime(buffer,m_sTime));
-	b3PrintF(level," Load:        %3.2f%%\n",b3GetUsage() * 100.0);
 }

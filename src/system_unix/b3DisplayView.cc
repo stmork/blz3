@@ -23,7 +23,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Display.h"
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/base/b3Aux.h"
 
@@ -40,12 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/11 11:03:40  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.6  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.5  2002/08/05 17:42:58  sm
 **	- Displaying brt3 options.
 **	- Clearing XBuffer which displayed garbage from previous X applications

@@ -23,9 +23,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Time.h"
-#include "blz3/system/b3Log.h"
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Time.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,13 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/11 11:03:41  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.6  2002/08/10 14:36:32  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling
 **	  b3Recomute() the shapes disoccured.
 **	- Some methods moved as static methods into the
 **	  b3Mem class.
-**
+**	
 **	Revision 1.5  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -67,7 +71,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3Time routines                             **
+**                        b3Time routines                               **
 **                                                                      **
 *************************************************************************/
 
@@ -207,21 +211,6 @@ void b3TimeSpan::b3Stop()
 		m_RealTime.millitm);
 }
 
-b3_f64 b3TimeSpan::b3GetUsage()
-{
-	return (m_rTime > 0 ?
-		(b3_f64)(m_uTime + m_sTime) / (b3_f64)m_rTime : 1.0);
-}
-
-char *b3TimeSpan::b3PrintTime(char *buffer,b3_s32 time_needed)
-{
-	sprintf(buffer,"%3d:%02d,%02d",
-		 time_needed / 60000,
-		(time_needed /  1000) % 60,
-		 time_needed %  1000);
-	return buffer;
-}
-
 static inline void b3_64_div_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
 {
 #if 0
@@ -282,15 +271,4 @@ b3_u32 b3TimeSpan::b3DiffDiv10000(FILETIME *first,FILETIME *last)
 	// I think debugging a session would not take at least 49 days...
 	B3_ASSERT(highDiff == 0);
 	return lowDiff;
-}
-
-void b3TimeSpan::b3Print(b3_log_level level)
-{
-	char buffer[32];
-
-	b3PrintF(level,"Computation time:\n");
-	b3PrintF(level," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
-	b3PrintF(level," User time:   %s\n",b3PrintTime(buffer,m_uTime));
-	b3PrintF(level," System time: %s\n",b3PrintTime(buffer,m_sTime));
-	b3PrintF(level," Load:        %3.2f%%\n",b3GetUsage() * 100.0);
 }

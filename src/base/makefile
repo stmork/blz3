@@ -11,7 +11,6 @@ LIBS			= libB3base.a
 LIB_SOURCE =\
 	b3Aux.cc\
 	b3Cubic.cc\
-	b3Display.cc\
 	b3Endian.cc\
 	b3FileList.cc\
 	b3FileMem.cc\
@@ -23,7 +22,6 @@ LIB_SOURCE =\
 	b3Pick.cc\
 	b3Procedure.cc\
 	b3Render.cc\
-	b3Row.cc\
 	b3SearchPath.cc\
 	b3Spline.cc\
 	b3World.cc
@@ -31,7 +29,6 @@ LIB_SOURCE =\
 LIB_OBJ	=\
 	b3Aux.o\
 	b3Cubic.o\
-	b3Display.o\
 	b3Endian.o\
 	b3FileList.o\
 	b3FileMem.o\
@@ -43,7 +40,6 @@ LIB_OBJ	=\
 	b3Pick.o\
 	b3Procedure.o\
 	b3Render.o\
-	b3Row.o\
 	b3SearchPath.o\
 	b3Spline.o\
 	b3World.o

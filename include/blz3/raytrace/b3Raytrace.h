@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3Display.h"
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"

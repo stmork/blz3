@@ -54,12 +54,17 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/08/11 11:03:40  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.41  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
 **	- Changed CDlgScene CSpinButtonCtrl to CB3IntSpinButtonCtrl
 **	  to avoid thousands point.
-**
+**	
 **	Revision 1.40  2002/08/07 14:26:23  sm
 **	- Introduced mapping from Blizzard III error codes to human
 **	  readable error messages supplied from Windows resources.
@@ -418,6 +423,7 @@ BOOL CAppLinesApp::InitInstance()
 	// Parse command line for standard shell commands, DDE, file open
 	CB3Version         version;
 	CB3ExceptionLogger init_logging;
+	b3Date             today;
 
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
@@ -462,6 +468,9 @@ BOOL CAppLinesApp::InitInstance()
 		version.b3GetVersionString(),
 		version.b3GetCopyrightString());
 	CB3Version::b3DumpOS();
+#ifdef _DEBUG
+	today.b3Y2K_Selftest();
+#endif
 
 	b3InitRaytrace::b3Init();
 

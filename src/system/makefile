@@ -10,11 +10,17 @@ PRGS			=
 LIBS			= libB3system_ind.a
 LIB_SOURCE =\
 	b3Date.cc\
-	b3Exception.cc
+	b3Display.cc\
+	b3Exception.cc\
+	b3Row.cc\
+	b3TimeAbstract.cc
 
 LIB_OBJ	=\
 	b3Date.o\
-	b3Exception.o
+	b3Display.o\
+	b3Exception.o\
+	b3Row.o\
+	b3TimeAbstract.o
 
 all:	lib
 

@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Display.h"
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/base/b3Aux.h"
 
 #define no_SYNC
@@ -41,12 +41,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/11 11:03:41  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.4  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.3  2001/12/23 14:59:05  sm
 **	- Updated new b3Display interface
 **	

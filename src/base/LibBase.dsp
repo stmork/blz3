@@ -94,10 +94,6 @@ SOURCE=.\b3Cubic.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Display.cc
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3Endian.cc
 # End Source File
 # Begin Source File
@@ -146,10 +142,6 @@ SOURCE=.\b3Render.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Row.cc
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3SearchPath.cc
 # End Source File
 # Begin Source File
@@ -183,10 +175,6 @@ SOURCE=..\..\include\blz3\base\b3Cubic.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3DirAbstract.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\blz3\base\b3Display.h
 # End Source File
 # Begin Source File
 

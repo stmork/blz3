@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include <math.h>
-#include "blz3/system/b3Display.h"
+#include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Tracker.h"
 
 /*************************************************************************
@@ -33,12 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/11 11:03:41  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
+**
 **	Revision 1.8  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.7  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.

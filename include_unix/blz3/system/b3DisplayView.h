@@ -15,8 +15,8 @@
 **
 */
 
-#ifndef B3_SYSTEM_DISPLAY_H
-#define B3_SYSTEM_DISPLAY_H
+#ifndef B3_SYSTEM_DISPLAYVIEW_H
+#define B3_SYSTEM_DISPLAYVIEW_H
 
 /*************************************************************************
 **                                                                      **
@@ -25,7 +25,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3Display.h"
+#include "blz3/system/b3Display.h"
 
 /*************************************************************************
 **                                                                      **

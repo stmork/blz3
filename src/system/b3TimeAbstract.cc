@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3Row.cc $
+**	$Filename:	b3TimeAbstract.cc $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Controlling one single row
+**	Blizzard III - date routines
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -21,7 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Display.h"
+#include "blz3/b3Config.h"
+#include "blz3/system/b3TimeAbstract.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,33 +32,49 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2001/11/04 12:15:15  sm
-**	- Renaming some attributes...
-**	- Taking account to redesign of b3Display
+**	Revision 1.1  2002/08/11 11:03:40  sm
+**	- Moved b3Display and b3Row classes from base lib into system
+**	  independend lib.
+**	- Made b3TimeSpan more system independend;-)
 **
-**	Revision 1.1  2001/11/04 10:54:14  sm
-**	- Redesigned b3Display for control use.
 **	
 */
 
 /*************************************************************************
 **                                                                      **
-**                        row constructor                               **
+**                        b3TimeSpan routines                           **
 **                                                                      **
 *************************************************************************/
 
-b3Row::b3Row(b3_coord y,b3_res xSize) :
-	b3Link<b3Row>(sizeof(b3Row))
+b3TimeSpanAbstract::b3TimeSpanAbstract()
 {
-	m_xSize  = xSize;
-	m_y      = y;
-	m_buffer = (b3_pkd_color *)b3Alloc(sizeof(b3_pkd_color) * xSize);
+	m_uTime = 0;
+	m_sTime = 0;
+	m_rTime = 0;
 }
 
-b3Row::b3Row(b3_coord y,b3_res xSize,b3_pkd_color *buffer) :
-	b3Link<b3Row>(sizeof(b3Row))
+b3_f64 b3TimeSpanAbstract::b3GetUsage()
 {
-	m_xSize  = xSize;
-	m_y      = y;
-	m_buffer = buffer;
+	return (m_rTime > 0 ?
+		(b3_f64)(m_uTime + m_sTime) / (b3_f64)m_rTime : 1.0);
+}
+
+void b3TimeSpanAbstract::b3Print(b3_log_level level)
+{
+	char buffer[32];
+
+	b3PrintF(level,"Computation time:\n");
+	b3PrintF(level," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
+	b3PrintF(level," User time:   %s\n",b3PrintTime(buffer,m_uTime));
+	b3PrintF(level," System time: %s\n",b3PrintTime(buffer,m_sTime));
+	b3PrintF(level," Load:        %3.2f%%\n",b3GetUsage() * 100.0);
+}
+
+char *b3TimeSpanAbstract::b3PrintTime(char *buffer,b3_s32 time_needed)
+{
+	sprintf(buffer,"%3d:%02d,%02d",
+		 time_needed / 60000,
+		(time_needed /  1000) % 60,
+		 time_needed %  1000);
+	return buffer;
 }

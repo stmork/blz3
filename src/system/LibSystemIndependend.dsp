@@ -90,7 +90,19 @@ SOURCE=.\b3Date.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Display.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Exception.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Row.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TimeAbstract.cc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -106,6 +118,10 @@ SOURCE=..\..\include\blz3\system\b3DirAbstract.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\system\b3Display.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\system\b3Exception.h
 # End Source File
 # Begin Source File
@@ -115,6 +131,10 @@ SOURCE=..\..\include\blz3\system\b3FileAbstract.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\system\b3Memory.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\system\b3TimeAbstract.h
 # End Source File
 # End Group
 # End Target
