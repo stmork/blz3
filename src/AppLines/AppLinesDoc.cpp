@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/08/06 19:58:58  sm
+**	- Drawing area - the first shape we can see with OpenGL
+**
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **
 */
 
@@ -97,7 +100,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 
 	// TODO: add reinitialization code here
 	// (SDI documents will reuse this document)
-	m_Scene = null;
+	m_Scene = null;//new b3Scene(TRACEPHOTO_MORK);
 	return TRUE;
 }
 
@@ -109,6 +112,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	// TODO: Add your specialized creation code here
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
+	m_Scene->b3AllocVertices();
 	return TRUE;
 }
 

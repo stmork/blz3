@@ -563,6 +563,7 @@ protected:
 	GLfloat         *Vertices;
 	GLushort        *Grids;
 	GLushort        *Polygons;
+	b3_bool          Computed;
 #endif
 
 	b3_count         xSize,ySize;
@@ -624,11 +625,11 @@ public:
 	B3_ITEM_INIT(b3Area);
 	B3_ITEM_LOAD(b3Area);
 
-	void b3AllocVertices();
-	void b3FreeVertices();
-	void b3ComputeVertices();
-	void b3ComputeIndices();
-	void b3Intersect();
+	virtual void b3AllocVertices();
+	virtual void b3FreeVertices();
+	virtual void b3ComputeVertices();
+	virtual void b3ComputeIndices();
+	virtual void b3Intersect();
 };
 
 class b3Disk : public b3Shape2
@@ -1002,8 +1003,9 @@ public:
 	B3_ITEM_LOAD(b3BBox);
 
 	       void b3Dump(b3_count level);
+		   void b3AllocVertices();
 	       void b3Draw();
-	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
+ 	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 };
 
 #define BBB_HTML         0
@@ -1412,6 +1414,7 @@ public:
 	       void     b3Reorg();
 	       void     b3SetView(b3_res  xSize,b3_res  ySize);
 	       void     b3GetView(b3_res &xSize,b3_res &ySize);
+		   void     b3AllocVertices();
 	       void     b3Draw();
 };
 

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/06 19:58:58  sm
+**      - Drawing area - the first shape we can see with OpenGL
+**
 **      Revision 1.2  2001/08/06 16:35:35  sm
 **      - Drawing first area
 **
@@ -92,29 +95,30 @@ void b3Area::b3ComputeVertices()
 {
 	GLfloat     *Vector;
 	b3CondLimit  limit;
-	b3_f64       x1,y1,x2,y2;
+	b3_f32       x1,y1,x2,y2;
 
 	Vector = Vertices;
+	b3ComputeBound(&limit);
 	x1     = limit.x1;
 	y1     = limit.y1;
 	x2     = limit.x2;
 	y2     = limit.y2;
 
-	*Vector++ = Base.x + x1 * Dir1.x + y1 * Dir2.x;
-	*Vector++ = Base.y + x1 * Dir1.y + y1 * Dir2.y;
-	*Vector++ = Base.z + x1 * Dir1.z + y1 * Dir2.z;
-
-	*Vector++ = Base.x + x1 * Dir1.x + y2 * Dir2.x;
-	*Vector++ = Base.y + x1 * Dir1.y + y2 * Dir2.y;
-	*Vector++ = Base.z + x1 * Dir1.z + y2 * Dir2.z;
-	
-	*Vector++ = Base.x + x2 * Dir1.x + y2 * Dir2.x;
-	*Vector++ = Base.y + x2 * Dir1.y + y2 * Dir2.y;
-	*Vector++ = Base.z + x2 * Dir1.z + y2 * Dir2.z;
-	
-	*Vector++ = Base.x + x2 * Dir1.x + y1 * Dir2.x;
-	*Vector++ = Base.y + x2 * Dir1.y + y1 * Dir2.y;
-	*Vector++ = Base.z + x2 * Dir1.z + y1 * Dir2.z;
+	*Vector++ = (GLfloat)(Base.x + x1 * Dir1.x + y1 * Dir2.x);
+	*Vector++ = (GLfloat)(Base.y + x1 * Dir1.y + y1 * Dir2.y);
+	*Vector++ = (GLfloat)(Base.z + x1 * Dir1.z + y1 * Dir2.z);
+															 
+	*Vector++ = (GLfloat)(Base.x + x1 * Dir1.x + y2 * Dir2.x);
+	*Vector++ = (GLfloat)(Base.y + x1 * Dir1.y + y2 * Dir2.y);
+	*Vector++ = (GLfloat)(Base.z + x1 * Dir1.z + y2 * Dir2.z);
+															 
+	*Vector++ = (GLfloat)(Base.x + x2 * Dir1.x + y2 * Dir2.x);
+	*Vector++ = (GLfloat)(Base.y + x2 * Dir1.y + y2 * Dir2.y);
+	*Vector++ = (GLfloat)(Base.z + x2 * Dir1.z + y2 * Dir2.z);
+															 
+	*Vector++ = (GLfloat)(Base.x + x2 * Dir1.x + y1 * Dir2.x);
+	*Vector++ = (GLfloat)(Base.y + x2 * Dir1.y + y1 * Dir2.y);
+	*Vector++ = (GLfloat)(Base.z + x2 * Dir1.z + y1 * Dir2.z);
 
 	xSize = 1;
 	ySize = 1;

@@ -129,8 +129,8 @@ protected:
 	static void b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
 };
 
-#define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new (item_class)(class_type); }
-#define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new (item_class)(src); }
+#define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new item_class(class_type); }
+#define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3Init(b3_u32 *src)        { return new item_class(src); }
 
 class b3FirstItem : public b3Item
 {

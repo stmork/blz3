@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/06 19:58:58  sm
+**      - Drawing area - the first shape we can see with OpenGL
+**
 **      Revision 1.5  2001/08/06 16:35:35  sm
 **      - Drawing first area
 **
@@ -208,6 +211,25 @@ void b3BBox::b3Draw()
 	}
 }
 
+void b3BBox::b3AllocVertices()
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3Shape        *shape;
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3AllocVertices();
+
+	}
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3AllocVertices();
+	}
+}
+
 void b3Scene::b3Reorg()
 {
 	b3Base<b3Item>  depot;
@@ -245,4 +267,16 @@ void b3Scene::b3Draw()
 #ifdef BLZ3_USE_OPENGL
 	glPopMatrix();
 #endif
+}
+
+void b3Scene::b3AllocVertices()
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3AllocVertices();
+	}
 }

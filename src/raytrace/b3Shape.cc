@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/06 19:58:59  sm
+**      - Drawing area - the first shape we can see with OpenGL
+**
 **      Revision 1.5  2001/08/06 16:35:35  sm
 **      - Drawing first area
 **
@@ -92,10 +95,8 @@ b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 	Vertices = null;
 	Grids    = null;
 	Polygons = null;
+	Computed = false;
 #endif
-
-	b3AllocVertices();
-	b3ComputeVertices();
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
@@ -107,10 +108,8 @@ b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 	Vertices = null;
 	Grids    = null;
 	Polygons = null;
+	Computed = false;
 #endif
-
-	b3AllocVertices();
-	b3ComputeVertices();
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -120,6 +119,16 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitVector(); // This is Polar.ObjectPolar
 	b3InitVector(); // This is Polar.BoxPolar
 	b3InitNOP();    // This is Custom
+
+	VertexCount = 0;
+	GridCount   = 0;
+	PolyCount   = 0;
+#ifdef BLZ3_USE_OPENGL
+	Vertices = null;
+	Grids    = null;
+	Polygons = null;
+	Computed = false;
+#endif
 }
 
 void b3Shape::b3ComputeBound(b3CondLimit *limit)
@@ -178,6 +187,12 @@ void b3Shape::b3Intersect()
 void b3Shape::b3Draw()
 {
 #ifdef BLZ3_USE_OPENGL
+	if (!Computed)
+	{
+			b3ComputeVertices();
+			b3ComputeIndices();
+			Computed = true;
+	}
 	glVertexPointer(3, GL_FLOAT, 0, Vertices);
 	glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,Grids);
 #endif

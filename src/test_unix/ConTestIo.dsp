@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /D "BLZ3_USE_OPENGL" /FD /TP /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /D "BLZ3_USE_OPENGL" /YX /FD /TP /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -50,7 +50,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib LibSystem.lib LibBase.lib LibRaytrace.lib  opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:console /machine:I386 /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:console /machine:I386 /libpath:"..\..\lib\win32_i386"
 
 !ELSEIF  "$(CFG)" == "ConTestIo - Win32 Debug"
 
@@ -66,7 +66,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /D "BLZ3_USE_OPENGL" /FR /FD /GZ /TP /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_AFXDLL" /D "_CONSOLE" /D "BLZ3_USE_OPENGL" /FR /YX /FD /GZ /TP /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -74,7 +74,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib  opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
 
 !ENDIF 
 

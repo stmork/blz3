@@ -89,7 +89,15 @@ SOURCE=b3Animation.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Area.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3BBox.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Box.cc
 # End Source File
 # Begin Source File
 
@@ -98,6 +106,46 @@ SOURCE=b3Bump.cc
 # Begin Source File
 
 SOURCE=b3Condition.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Cone.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGBox.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGCone.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGCylinder.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGEllipsoid.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGSphere.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3CSGTorus.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Cylinder.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Disk.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Ellipsoid.cc
 # End Source File
 # Begin Source File
 
@@ -129,7 +177,31 @@ SOURCE=b3Special.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Sphere.cc
+# End Source File
+# Begin Source File
+
 SOURCE=..\base\b3Spline.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplineArea.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplineCylinder.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplineRing.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Torus.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TriangleShape.cc
 # End Source File
 # End Group
 # Begin Group "Header Files"
