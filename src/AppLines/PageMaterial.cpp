@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.2  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
-**
+**	
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
@@ -50,9 +53,7 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CPageMaterial, CPropertyPage)
-
-CPageMaterial::CPageMaterial() : CPropertyPage(CPageMaterial::IDD)
+CPageMaterial::CPageMaterial() : CB3PropertyPage(CPageMaterial::IDD)
 {
 	//{{AFX_DATA_INIT(CPageMaterial)
 		// NOTE: the ClassWizard will add member initialization here
@@ -79,7 +80,7 @@ CPageMaterial::~CPageMaterial()
 
 void CPageMaterial::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageMaterial)
 	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
@@ -96,19 +97,19 @@ void CPageMaterial::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPageMaterial, CPropertyPage)
+BEGIN_MESSAGE_MAP(CPageMaterial, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageMaterial)
 	ON_BN_CLICKED(IDC_CHANGE_AMBIENT, OnColorAmbient)
 	ON_BN_CLICKED(IDC_CHANGE_DIFFUSE, OnColorDiffuse)
 	ON_BN_CLICKED(IDC_CHANGE_SPECULAR, OnColorSpecular)
-	ON_EN_KILLFOCUS(IDC_REFLECTANCE, OnSurfaceEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnSurfaceSpin)
-	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnSurfaceEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnSurfaceSpin)
+	ON_EN_KILLFOCUS(IDC_REFLECTANCE, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnPropertyPageSpin)
+	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnPropertyPageSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -117,7 +118,7 @@ END_MESSAGE_MAP()
 
 BOOL CPageMaterial::OnInitDialog() 
 {
-	CPropertyPage::OnInitDialog();
+	CB3PropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
 	m_AmbientCtrl.b3Init(&m_Material->m_Ambient,this);
@@ -152,29 +153,5 @@ void CPageMaterial::OnColorSpecular()
 	if (m_SpecularCtrl.b3Select())
 	{
 		b3UpdateUI();
-	}
-}
-
-void CPageMaterial::OnSurfaceEdit()
-{
-	UpdateData();
-	b3UpdateUI();
-}
-
-void CPageMaterial::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	OnSurfaceEdit();
-	*pResult = 0;
-}
-
-void CPageMaterial::b3UpdateUI()
-{
-	CWnd *parent = GetParent();
-
-	if (parent != null)
-	{
-		parent->PostMessage(WM_USER);
 	}
 }

@@ -24,15 +24,14 @@
 // PageBump.h : header file
 //
 
+#include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageBump dialog
 
-class CPageBump : public CPropertyPage
+class CPageBump : public CB3PropertyPage
 {
-	DECLARE_DYNCREATE(CPageBump)
-
 // Construction
 public:
 	b3BumpWooden *m_Bump;
@@ -58,13 +57,8 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageBump)
-	afx_msg void OnSurfaceEdit();
-	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-private:
-	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

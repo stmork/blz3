@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	
 */
 
@@ -46,9 +49,7 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CPageWood, CPropertyPage)
-
-CPageWood::CPageWood() : CPropertyPage(CPageWood::IDD)
+CPageWood::CPageWood() : CB3PropertyPage(CPageWood::IDD)
 {
 	m_Wood = null;
 	//{{AFX_DATA_INIT(CPageWood)
@@ -78,7 +79,7 @@ CPageWood::~CPageWood()
 
 void CPageWood::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageWood)
 	DDX_Control(pDX, IDC_ROT_Z, m_RotZCtrl);
 	DDX_Control(pDX, IDC_ROT_Y, m_RotYCtrl);
@@ -110,58 +111,34 @@ void CPageWood::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPageWood, CPropertyPage)
+BEGIN_MESSAGE_MAP(CPageWood, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageWood)
-	ON_EN_KILLFOCUS(IDC_EDIT_RINGY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_GRAINY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_GRAIN_FREQUENCY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_RING_SPACING, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_RING_FREQUENCY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_RING_NOISE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_RING_NOISE_FREQUENCY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_TRUNK_WOBBLE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_TRUNK_WOBBLE_FREQUENCY, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY, OnSurfaceEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Y, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Z, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RINGY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_GRAINY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_GRAIN_FREQUENCY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_SPACING, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_FREQUENCY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_NOISE, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_NOISE_FREQUENCY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_TRUNK_WOBBLE, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_TRUNK_WOBBLE_FREQUENCY, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_ANGULAR_WOBBLE, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY, OnSurfaceSpin)
+	ON_EN_KILLFOCUS(IDC_EDIT_RINGY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_GRAINY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_GRAIN_FREQUENCY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_RING_SPACING, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_RING_FREQUENCY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_RING_NOISE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_RING_NOISE_FREQUENCY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_TRUNK_WOBBLE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_TRUNK_WOBBLE_FREQUENCY, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Y, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_ROT_Z, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RINGY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_GRAINY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_GRAIN_FREQUENCY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_SPACING, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_FREQUENCY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_NOISE, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_RING_NOISE_FREQUENCY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_TRUNK_WOBBLE, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_TRUNK_WOBBLE_FREQUENCY, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_ANGULAR_WOBBLE, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY, OnPropertyPageSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood message handlers
-
-void CPageWood::OnSurfaceEdit()
-{
-	UpdateData();
-	b3UpdateUI();
-}
-
-void CPageWood::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	OnSurfaceEdit();
-	*pResult = 0;
-}
-
-void CPageWood::b3UpdateUI()
-{
-	CWnd *parent = GetParent();
-
-	if (parent != null)
-	{
-		parent->SendMessage(WM_USER);
-	}
-}

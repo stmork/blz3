@@ -57,9 +57,12 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.64  2004/04/23 18:46:17  sm
 **	- Fixed bump sampler: Now using initialized derivativs
-**
+**	
 **	Revision 1.63  2004/04/22 20:23:55  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
@@ -1050,17 +1053,15 @@ BOOL CAboutDlg::OnInitDialog()
 #define DLG_TEST
 #endif
 
-#ifdef DLG_TEST
-#include "DlgBumpWood.h"
-#endif
-
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3BumpWood bump = BUMP_WOOD;
+	b3Item *item = b3World::b3AllocNode(WOOD);
 
-	CDlgBumpWood::b3Edit(&bump);
+	b3Loader::b3GetLoader().b3Edit(item);
+
+	delete item;
 #else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();

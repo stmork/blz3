@@ -24,16 +24,15 @@
 // PageOakPlank.h : header file
 //
 
+#include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageOakPlank dialog
 
-class CPageOakPlank : public CPropertyPage
+class CPageOakPlank : public CB3PropertyPage
 {
-	DECLARE_DYNCREATE(CPageOakPlank)
-
 // Construction
 public:
 	b3OakPlank *m_OakPlank;
@@ -62,13 +61,8 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageOakPlank)
-	afx_msg void OnSurfaceEdit();
-	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-private:
-	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -24,16 +24,15 @@
 // PageWood.h : header file
 //
 
+#include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSliderCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageWood dialog
 
-class CPageWood : public CPropertyPage
+class CPageWood : public CB3PropertyPage
 {
-	DECLARE_DYNCREATE(CPageWood)
-
 // Construction
 public:
 	CPageWood();
@@ -71,13 +70,8 @@ public:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPageWood)
-	afx_msg void OnSurfaceEdit();
-	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-private:
-	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

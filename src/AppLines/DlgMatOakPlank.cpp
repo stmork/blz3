@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.5  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
-**
+**	
 **	Revision 1.4  2004/04/22 20:23:56  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
@@ -126,15 +129,7 @@ BOOL CDlgMatOakPlank::OnInitDialog()
 	m_PropertySheet.AddPage(&m_PageWood);
 	m_PropertySheet.AddPage(&m_PageOakPlank);
 
-	m_PropertySheet.Create(this, WS_CHILD | WS_VISIBLE, 0);
-	m_PropertySheet.ModifyStyleEx (0, WS_EX_CONTROLPARENT);
-	m_PropertySheet.ModifyStyle( 0, WS_TABSTOP );
-
-	CRect rcSheet;
-	GetDlgItem( IDC_PROPERTY )->GetWindowRect( &rcSheet );
-	ScreenToClient( &rcSheet );
-	m_PropertySheet.SetWindowPos( NULL, rcSheet.left-7, rcSheet.top-7, 0, 0, 
-			SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE );
+	CB3PropertyPage::b3InitPropertySheet(this,m_PropertySheet,IDC_PROPERTY);
 
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control

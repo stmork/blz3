@@ -24,15 +24,15 @@
 // PageMaterial.h : header file
 //
 
+#include "blz3/system/b3PropertyPage.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
 #include "b3SelectColor.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageMaterial dialog
 
-class CPageMaterial : public CPropertyPage
+class CPageMaterial : public CB3PropertyPage
 {
-	DECLARE_DYNCREATE(CPageMaterial)
 public:
 	b3MaterialWooden *m_Material;
 
@@ -69,14 +69,9 @@ protected:
 	afx_msg void OnColorAmbient();
 	afx_msg void OnColorDiffuse();
 	afx_msg void OnColorSpecular();
-	afx_msg void OnSurfaceEdit();
-	afx_msg void OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult);
 	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-
-private:
-	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

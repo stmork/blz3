@@ -170,6 +170,10 @@ SOURCE=.\b3Print.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PropertyPage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Reg.cpp
 # End Source File
 # Begin Source File
@@ -299,6 +303,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Plugin.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3Print.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3PropertyPage.h
 # End Source File
 # Begin Source File
 

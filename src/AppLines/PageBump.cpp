@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.3  2004/04/23 16:51:09  sm
 **	- Color renaming finished.
 **	- Bug #18 fixed: The bump amplitude is read out correctly now.
-**
+**	
 **	Revision 1.2  2004/04/23 08:23:14  sm
 **	- Adjusted wood dialog.
 **	- Updated copyright in splash window.
@@ -54,10 +57,7 @@
 **                                                                      **
 *************************************************************************/
 
-
-IMPLEMENT_DYNCREATE(CPageBump, CPropertyPage)
-
-CPageBump::CPageBump() : CPropertyPage(CPageBump::IDD)
+CPageBump::CPageBump() : CB3PropertyPage(CPageBump::IDD)
 {
 	//{{AFX_DATA_INIT(CPageBump)
 		// NOTE: the ClassWizard will add member initialization here
@@ -73,7 +73,7 @@ CPageBump::~CPageBump()
 
 void CPageBump::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageBump)
 	DDX_Control(pDX, IDC_SPIN_AMPLITUDE, m_AmplitudeCtrl);
 	//}}AFX_DATA_MAP
@@ -81,36 +81,12 @@ void CPageBump::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPageBump, CPropertyPage)
+BEGIN_MESSAGE_MAP(CPageBump, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageBump)
-	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnSurfaceEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnSurfaceSpin)
+	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnPropertyPageSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageBump message handlers
-
-void CPageBump::OnSurfaceEdit()
-{
-	UpdateData();
-	b3UpdateUI();
-}
-
-void CPageBump::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	OnSurfaceEdit();
-	*pResult = 0;
-}
-			  
-void CPageBump::b3UpdateUI()
-{
-	CWnd *parent = GetParent();
-
-	if (parent != null)
-	{
-		parent->PostMessage(WM_USER);
-	}
-}

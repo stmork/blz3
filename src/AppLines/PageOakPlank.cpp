@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/24 08:54:20  sm
+**	- Simplified property sheets inside dialogs.
+**
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	
 */
 
@@ -46,9 +49,7 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CPageOakPlank, CPropertyPage)
-
-CPageOakPlank::CPageOakPlank() : CPropertyPage(CPageOakPlank::IDD)
+CPageOakPlank::CPageOakPlank() : CB3PropertyPage(CPageOakPlank::IDD)
 {
 	//{{AFX_DATA_INIT(CPageOakPlank)
 	//}}AFX_DATA_INIT
@@ -74,7 +75,7 @@ CPageOakPlank::~CPageOakPlank()
 
 void CPageOakPlank::DoDataExchange(CDataExchange* pDX)
 {
-	CPropertyPage::DoDataExchange(pDX);
+	CB3PropertyPage::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CPageOakPlank)
 	DDX_Control(pDX, IDC_SPIN_XSCALE, m_xScaleCtrl);
 	DDX_Control(pDX, IDC_SPIN_YSCALE, m_yScaleCtrl);
@@ -90,44 +91,20 @@ void CPageOakPlank::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPageOakPlank, CPropertyPage)
+BEGIN_MESSAGE_MAP(CPageOakPlank, CB3PropertyPage)
 	//{{AFX_MSG_MAP(CPageOakPlank)
-	ON_EN_KILLFOCUS(IDC_SPIN_XSCALE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YSCALE, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XOFFSET, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_XTIMES, OnSurfaceEdit)
-	ON_EN_KILLFOCUS(IDC_SPIN_YTIMES, OnSurfaceEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XSCALE, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YSCALE, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XOFFSET, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XTIMES, OnSurfaceSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YTIMES, OnSurfaceSpin)
+	ON_EN_KILLFOCUS(IDC_SPIN_XSCALE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_YSCALE, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_XOFFSET, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_XTIMES, OnPropertyPageEdit)
+	ON_EN_KILLFOCUS(IDC_SPIN_YTIMES, OnPropertyPageEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XSCALE, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YSCALE, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XOFFSET, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_XTIMES, OnPropertyPageSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_YTIMES, OnPropertyPageSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageOakPlank message handlers
-
-void CPageOakPlank::OnSurfaceEdit()
-{
-	UpdateData();
-	b3UpdateUI();
-}
-
-void CPageOakPlank::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
-{
-	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
-	// TODO: Add your control notification handler code here
-	OnSurfaceEdit();
-	*pResult = 0;
-}
-
-void CPageOakPlank::b3UpdateUI()
-{
-	CWnd *parent = GetParent();
-
-	if (parent != null)
-	{
-		parent->SendMessage(WM_USER);
-	}
-}
