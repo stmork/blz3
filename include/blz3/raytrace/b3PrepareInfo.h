@@ -32,13 +32,14 @@ public:
 	}
 };
 
-typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
+typedef b3_bool (*b3PrepareProc)(b3BBox *bbox,void *ptr);
 
 #define B3_MIN_BBOXES_FOR_THREADING 50
 
 class b3PrepareInfo
 {
 	b3PrepareProc            m_PrepareProc;
+	void                    *m_Ptr;
 	b3_count                 m_CPUs;
 
 protected:
@@ -51,7 +52,7 @@ public:
 	                 b3PrepareInfo();
 	void             b3CollectBBoxes(b3Scene *scene);
 	void             b3CollectBBoxes(b3BBox  *firstBBox);
-	b3_bool          b3Prepare(b3PrepareProc prepare_func);
+	b3_bool          b3Prepare(b3PrepareProc prepare_func,void *ptr = null);
 
 private:
 	b3BBoxReference *b3GetBBoxReference();

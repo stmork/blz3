@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2002/08/18 13:05:17  sm
+**      - First try to animate. We have to relink the control points which
+**        are stored in separate Blizzard classes to the b3AnimElement
+**        class.
+**
 **      Revision 1.51  2002/08/17 17:31:23  sm
 **      - Introduced animation support (Puh!)
 **
@@ -914,12 +919,16 @@ void b3Distribute::b3Write()
 b3Animation::b3Animation(b3_u32 class_type) :
 	b3Special(sizeof(b3Animation),class_type)
 {
+	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_ANIMATION);
 }
 
 b3Animation::b3Animation(b3_u32 *src) :
 	b3Special(src)
 {
+	b3AllocHeads(1);
+	m_Heads[0].b3InitBase(CLASS_ANIMATION);
+
 	m_Start           = b3InitFloat();
 	m_End             = b3InitFloat();
 	m_Time            = b3InitFloat();

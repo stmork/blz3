@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/08/18 13:05:17  sm
+**	- First try to animate. We have to relink the control points which
+**	  are stored in separate Blizzard classes to the b3AnimElement
+**	  class.
+**
 **	Revision 1.38  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.37  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
@@ -602,7 +607,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	return 0;
 }
 
-b3_bool b3Scene::b3PrepareThread(b3BBox *bbox)
+b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 {
 	return bbox->b3Prepare();
 }

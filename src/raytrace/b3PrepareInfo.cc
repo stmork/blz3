@@ -31,6 +31,11 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/18 13:05:17  sm
+**	- First try to animate. We have to relink the control points which
+**	  are stored in separate Blizzard classes to the b3AnimElement
+**	  class.
+**
 **	Revision 1.7  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -38,7 +43,7 @@
 **	- Added some additional b3Hash methods.
 **	- Added -Wall compiler option to all C++ files.
 **	- Removed some compiler warnings.
-**
+**	
 **	Revision 1.6  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -145,7 +150,7 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 
 	while ((reference = info->b3GetBBoxReference()) != null)
 	{
-		if (!info->m_PrepareProc(reference->m_BBox))
+		if (!info->m_PrepareProc(reference->m_BBox,info->m_Ptr))
 		{
 			return 0;
 		}
@@ -153,11 +158,12 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 	return 1;
 }
 
-b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc)
+b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc,void *ptr)
 {
 	b3_bool  result = true;
 
 	m_PrepareProc = prepare_proc;
+	m_Ptr         = ptr;
 	B3_ASSERT(m_PrepareProc != null);
 	if ((m_CPUs > 1) && (m_BBoxRefArray.b3GetCount() >= m_MinBBoxesForThreading))
 	{
@@ -184,7 +190,7 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc)
 		b3PrintF(B3LOG_FULL,"    Doing prepare thread...\n");
 		for (int i = 0;(i < m_BBoxRefArray.b3GetCount()) && result;i++)
 		{
-			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox);
+			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox,m_Ptr);
 		}
 	}
 	b3PrintF(B3LOG_FULL,"    Preparing finished %s.\n",

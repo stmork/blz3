@@ -32,13 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2002/08/18 13:05:17  sm
+**	- First try to animate. We have to relink the control points which
+**	  are stored in separate Blizzard classes to the b3AnimElement
+**	  class.
+**
 **	Revision 1.65  2002/08/16 11:40:38  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There
 **	  are still some problems so we have to work further on Windows for
 **	  better debugging.
 **	- b3ExtractExt searches from right instead from left.
-**
+**	
 **	Revision 1.64  2002/08/10 14:36:31  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling
@@ -787,7 +792,7 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	return result;
 }
 
-b3_bool b3Scene::b3UpdateThread(b3BBox *bbox)
+b3_bool b3Scene::b3UpdateThread(b3BBox *bbox,void *ptr)
 {
 	bbox->b3Update();
 	return true;
@@ -925,7 +930,7 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	}
 }
 
-void b3BBox::b3Activate(b3_bool activate)
+void b3BBox::b3Activate(b3_bool activate,b3_bool recurse)
 {
 	b3Item  *item;
 	b3Shape *shape;
@@ -940,10 +945,13 @@ void b3BBox::b3Activate(b3_bool activate)
 		shape->b3Activate(activate);
 	}
 
-	B3_FOR_BASE(b3GetBBoxHead(),item)
+	if (recurse)
 	{
-		bbox = (b3BBox *)item;
-		bbox->b3Activate(activate);
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3Activate(activate);
+		}
 	}
 }
 

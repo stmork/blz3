@@ -1649,7 +1649,7 @@ public:
 		   void            b3ComputeNormals(b3_bool normalize = true);
 	       void            b3Draw(b3RenderContext *context);
 		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
-		   void            b3Activate(b3_bool activate=true);
+		   void            b3Activate(b3_bool activate=true,b3_bool recurse=true);
 		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
 		   b3_bool         b3IsExpanded();
@@ -2122,30 +2122,31 @@ public:
 	B3_ITEM_INIT(b3Animation);
 	B3_ITEM_LOAD(b3Animation);
 
-	void b3Write();
+	       void            b3Write();
 
 public:
-	b3Base<b3Item> *b3GetAnimElementHead();
-	void            b3SetAnimElement (b3AnimElement *Element);
+	       b3Base<b3Item> *b3GetAnimElementHead();
+	       void            b3SetAnimElement (b3AnimElement *Element);
 
-	void            b3SetAnimation (b3Scene *Global,b3_f64 t);
-	void            b3ResetAnimation (b3Scene *Global);
-	b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
-	b3_f64          b3AnimTimeCode (b3_index index);
-	b3_index        b3AnimFrameIndex (b3_f64 t);
+	       void            b3SetAnimation (b3Scene *Global,b3_f64 t);
+	       void            b3ResetAnimation (b3Scene *Global);
+	       b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
+	       b3_f64          b3AnimTimeCode (b3_index index);
+	       b3_index        b3AnimFrameIndex (b3_f64 t);
+	static b3_bool         b3SelectObjects (b3BBox *BBox,void *ptr);
 
 private:
-	       void           b3RecomputeNeutralInverse (b3AnimElement *Element);
-		   void           b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
-		   void           b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
-		   void           b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
-	static b3_bool        b3SelectAnimElement (b3Scene *Global,b3AnimElement *Element);
-	static b3AnimElement *b3FindSameTrack(b3AnimElement *Element);
-	static b3_f64         b3ClipValue(b3_f64 val,b3_f64 min,b3_f64 max);
-	       void           b3ComputeTransformationMatrix(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
-	       void           b3AnimateMove  (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
-	       void           b3AnimateRotate(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
-	       void           b3AnimateScale (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void            b3RecomputeNeutralInverse (b3AnimElement *Element);
+		   void            b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
+		   void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+		   void            b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	static b3_bool         b3SelectAnimElement (b3Scene *Global,b3AnimElement *Element);
+	static b3AnimElement  *b3FindSameTrack(b3AnimElement *Element);
+	static b3_f64          b3ClipValue(b3_f64 val,b3_f64 min,b3_f64 max);
+	       void            b3ComputeTransformationMatrix(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void            b3AnimateMove  (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void            b3AnimateRotate(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void            b3AnimateScale (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
 };
 
 #define ANIMB_ON     1
@@ -2371,6 +2372,7 @@ public:
 		    void            b3Activate(b3_bool activate=true);
 		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
 		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
+			void            b3SelectObjects(b3AnimElement *Anim);
 		    void            b3Raytrace(b3Display *display);
 		    void            b3AbortRaytrace();
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
@@ -2381,6 +2383,8 @@ public:
 	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
+	        void            b3SetAnimation (b3_f64 t);
+	        void            b3ResetAnimation();
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
@@ -2389,8 +2393,8 @@ protected:
 
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
-	static  b3_u32          b3PrepareThread(b3BBox *bbox);
-	static  b3_u32          b3UpdateThread( b3BBox *bbox);
+	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
+	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray_info *ray);
 		    b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);

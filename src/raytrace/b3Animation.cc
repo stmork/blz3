@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/08/18 13:05:17  sm
+**      - First try to animate. We have to relink the control points which
+**        are stored in separate Blizzard classes to the b3AnimElement
+**        class.
+**
 **      Revision 1.11  2002/08/17 17:31:22  sm
 **      - Introduced animation support (Puh!)
 **
@@ -253,13 +258,13 @@ void b3Animation::b3RecomputeCenter (
 	{
 		Anim = (b3AnimElement *)item;
 
-		/* the element to reset */
+		// the element to reset
 		if (Anim == Element)
 		{
 			return;
 		}
 
-			/* compute rotation center if necessary */
+		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
 			tClipped = b3ClipValue (t,Anim->m_Start,Anim->m_End);
@@ -284,7 +289,7 @@ void b3Animation::b3AnimateMove(
 {
 	b3_vector move;
 
-		/* now compute transformation */
+	// now compute transformation
 	Element->b3GetPosition (&move,t);
 	b3MatrixMove (&Element->m_NeutralInverse,transform,&move);
 }
@@ -334,7 +339,7 @@ void b3Animation::b3AnimateRotate(
 		oldDir.z -= oldCenter.z;
 		b3MatrixDress (&Element->m_NeutralInverse,transform,
 			&Element->m_Center,&lookTo,&oldDir,negate);
-		if (fabs(b3Det4(transform)) < 0.0001)
+		if (fabs(b3Det4(transform)) < epsilon)
 		{
 			b3MatrixUnit (transform);
 		}
@@ -394,6 +399,22 @@ void b3Animation::b3ComputeTransformationMatrix(
 	}
 }
 
+b3_bool b3Animation::b3SelectObjects (b3BBox *BBox,void *ptr)
+{
+	b3AnimElement *Anim = (b3AnimElement *)ptr;
+
+	if (stricmp(BBox->b3GetName(),Anim->m_Object) == 0)
+	{
+		BBox->b3Activate(true,(Anim->m_Flags & ANIMFLAGF_RECURSIVE) != 0);
+	}
+	return true;
+}
+
+void b3Scene::b3SelectObjects(b3AnimElement *Anim)
+{
+	m_PrepareInfo.b3Prepare(&b3Animation::b3SelectObjects,Anim);
+}
+
 /* This routine sets the activation state of a bounding box depending */
 /* of the box name. */
 /* ------------------------------------------------------------------ */
@@ -412,8 +433,7 @@ b3_bool b3Animation::b3SelectAnimElement (
 	Global->b3Activate(false);
 	if (Element->m_Flags & ANIMFLAGF_OBJECT)
 	{
-//		Global->m_PrepareInfo.b3CollectBBoxes();
-//		BTraverse (&Global->BBoxes,SelectObjects,Element);
+		Global->b3SelectObjects(Element);
 	}
 
 	return (Element->m_Flags & ANIMFLAGF_OBJECT) != 0;
@@ -518,7 +538,7 @@ void b3Animation::b3RecomputeNeutralInverse (b3AnimElement *Element)
 			return;
 		}
 
-			/* compute rotation center if necessary */
+		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
 			t = b3ClipValue (m_Neutral,Anim->m_Start,Anim->m_End);
@@ -540,7 +560,7 @@ void b3Animation::b3ResetAnimation (b3Scene *Global)
 	b3Item        *item;
 	b3_matrix      resetMatrix;
 
-		/* reset animation, compute time range and number of tracks */
+	// reset animation, compute time range and number of tracks
 	m_Tracks = 0;
 	m_Frames = 0;
 	Anim  = (b3AnimElement *)b3GetAnimElementHead()->First;
@@ -572,7 +592,7 @@ void b3Animation::b3ResetAnimation (b3Scene *Global)
 		b3MatrixUnit (&Anim->m_Actual);
 	}
 
-		/* compute number of frames */
+	// compute number of frames
 	m_Frames =
 		(b3_index)ceil (m_End   * m_FramesPerSecond) -
 		(b3_index)floor(m_Start * m_FramesPerSecond);
@@ -582,6 +602,16 @@ void b3Animation::b3ResetAnimation (b3Scene *Global)
 	}
 	m_Time       = m_Start;
 	m_FrameIndex = 0;
+}
+
+void b3Scene::b3ResetAnimation()
+{
+	b3Animation *animation = b3GetAnimation();
+
+	if (animation != null)
+	{
+		animation->b3ResetAnimation(this);
+	}
 }
 
 
@@ -631,7 +661,7 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 			b3ComputeTransformationMatrix (Anim,&Anim->m_Actual,tClipped);
 			b3ApplyTransformation (Global,Anim,&Anim->m_Actual,t);
 
-				/* set center position */
+			// set center position
 			if (Anim->m_Flags & ANIMFLAGF_CENTER)
 			{
 				Anim->b3GetPosition(&m_AnimCenter,tClipped);
@@ -639,6 +669,16 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 		}
 	}
 	Global->b3ComputeBounds(&lower,&upper);
+}
+
+void b3Scene::b3SetAnimation(b3_f64 t)
+{
+	b3Animation *animation = b3GetAnimation();
+
+	if (animation != null)
+	{
+		animation->b3SetAnimation(this,t);
+	}
 }
 
 b3_bool b3Animation::b3ActivateAnimation (

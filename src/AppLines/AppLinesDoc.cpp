@@ -57,9 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2002/08/18 13:05:17  sm
+**	- First try to animate. We have to relink the control points which
+**	  are stored in separate Blizzard classes to the b3AnimElement
+**	  class.
+**
 **	Revision 1.69  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.68  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -2010,7 +2015,12 @@ b3_bool CAppLinesDoc::b3IsPlaying()
 void CAppLinesDoc::OnAnimStart() 
 {
 	// TODO: Add your command handler code here
-	
+	if (b3HasAnimation != null)
+	{
+		m_Scene->b3ResetAnimation();
+		m_Scene->b3SetAnimation(m_Anim->m_Start);
+		UpdateAllViews(NULL,B3_UPDATE_ALL);
+	}
 }
 
 void CAppLinesDoc::OnAnimStop() 
@@ -2034,7 +2044,12 @@ void CAppLinesDoc::OnAnimPause()
 void CAppLinesDoc::OnAnimEnd() 
 {
 	// TODO: Add your command handler code here
-	
+	if (b3HasAnimation != null)
+	{
+		m_Scene->b3ResetAnimation();
+		m_Scene->b3SetAnimation(m_Anim->m_Start);
+		UpdateAllViews(NULL,B3_UPDATE_ALL);
+	}
 }
 
 void CAppLinesDoc::OnUpdateAnimStart(CCmdUI* pCmdUI) 

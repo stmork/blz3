@@ -34,9 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/08/18 13:05:17  sm
+**	- First try to animate. We have to relink the control points which
+**	  are stored in separate Blizzard classes to the b3AnimElement
+**	  class.
+**
 **	Revision 1.38  2002/08/17 17:31:23  sm
 **	- Introduced animation support (Puh!)
-**
+**	
 **	Revision 1.37  2002/07/26 09:13:33  sm
 **	- Found alpha problem: the Linux OpenGL renderer didn't use the
 **	  b3RenderContext::b3Init() method! Now everything function very well:-)
@@ -386,7 +391,7 @@ b3Animation *b3Scene::b3GetAnimation()
 
 	B3_FOR_BASE(b3GetSpecialHead(),item)
 	{
-		if (item->b3GetClassType() == LINES_INFO)
+		if (item->b3GetClassType() == ANIMATION)
 		{
 			return (b3Animation *)item;
 		}

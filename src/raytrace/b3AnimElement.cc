@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2002/08/18 13:05:17  sm
+**      - First try to animate. We have to relink the control points which
+**        are stored in separate Blizzard classes to the b3AnimElement
+**        class.
+**
 **      Revision 1.1  2002/08/17 17:31:22  sm
 **      - Introduced animation support (Puh!)
 **
@@ -46,11 +51,15 @@
 
 b3AnimElement::b3AnimElement(b3_u32 class_type) : b3Item(sizeof (b3AnimElement),class_type)
 {
+	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_VERTEX);
 }
 
 b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 {
+	b3AllocHeads(1);
+	m_Heads[0].b3InitBase(CLASS_VERTEX);
+
 	b3InitNOP();
 	if (m_ItemSize > 0x1ec)
 	{
@@ -74,7 +83,7 @@ b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 
 	// Init nurbs
 	b3InitNurbs(&m_Param,null,m_Knots);
-	for (b3_index i = 0;i < B3_MAX_KNOTS;i++)
+	for (b3_index i = 0;i < m_Param.knot_max;i++)
 	{
 		m_Knots[i] = b3InitFloat();
 	}
@@ -99,7 +108,7 @@ void b3AnimElement::b3Write()
 
 	// Init nurbs
 	b3StoreNurbs(&m_Param);
-	for (b3_index i = 0;i < B3_MAX_KNOTS;i++)
+	for (b3_index i = 0;i < m_Param.knot_max;i++)
 	{
 		b3StoreFloat(m_Knots[i]);
 	}
