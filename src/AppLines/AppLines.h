@@ -45,7 +45,6 @@
 
 class CAppLinesApp : public CB3App
 {
-	char            m_Hostname[B3_MAXHOSTNAMELEN];
 	b3_bool         m_UncheckedContextSwitch;
 
 	// OpenGL general values

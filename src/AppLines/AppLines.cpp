@@ -52,12 +52,15 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/07/31 16:29:40  sm
+**	- Minor changes
+**
 **	Revision 1.35  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
 **	  every OnPaint(). This is configurable depending on the
 **	  hostname.
-**
+**	
 **	Revision 1.34  2002/07/22 16:27:45  sm
 **	- Fixed some errors concerning texture stencil
 **	
@@ -521,15 +524,10 @@ BOOL CAppLinesApp::InitInstance()
 		}
 	}
 
-	m_UncheckedContextSwitch = false;
-	if (b3Runtime::b3Hostname(m_Hostname,sizeof(m_Hostname)))
-	{
-		CString key("GL unchecked context switch.");
+	CString key("GL unchecked context switch");
 
-		key += m_Hostname;
-		m_UncheckedContextSwitch = b3ReadInt(b3ClientName(),key,m_UncheckedContextSwitch);
-		b3WriteInt(b3ClientName(),key,m_UncheckedContextSwitch);
-	}
+	m_UncheckedContextSwitch = b3ReadInt(b3ClientName(),key,0) != 0;
+	b3WriteInt(b3ClientName(),key,m_UncheckedContextSwitch);
 	return TRUE;
 }
 
