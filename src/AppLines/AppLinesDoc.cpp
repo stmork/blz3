@@ -56,10 +56,13 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2002/01/13 19:24:11  sm
+**	- Introduced CAppRenderDoc/View (puuh!)
+**
 **	Revision 1.49  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
-**
+**	
 **	Revision 1.48  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -291,9 +294,9 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CAppLinesDoc, CDocument)
+IMPLEMENT_DYNCREATE(CAppLinesDoc, CAppRenderDoc)
 
-BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
+BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
@@ -357,7 +360,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-BEGIN_DISPATCH_MAP(CAppLinesDoc, CDocument)
+BEGIN_DISPATCH_MAP(CAppLinesDoc, CAppRenderDoc)
 	//{{AFX_DISPATCH_MAP(CAppLinesDoc)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 		//      DO NOT EDIT what you see in these blocks of generated code!
@@ -372,7 +375,7 @@ END_DISPATCH_MAP()
 static const IID IID_IAppLines =
 { 0x72d69519, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
 
-BEGIN_INTERFACE_MAP(CAppLinesDoc, CDocument)
+BEGIN_INTERFACE_MAP(CAppLinesDoc, CAppRenderDoc)
 	INTERFACE_PART(CAppLinesDoc, IID_IAppLines, Dispatch)
 END_INTERFACE_MAP()
 
@@ -606,26 +609,6 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 **                        General scene commands                        **
 **                                                                      **
 *************************************************************************/
-
-b3_vector *CAppLinesDoc::b3GetFulcrum()
-{
-	return &m_Info->m_Center;
-}
-
-b3_vector *CAppLinesDoc::b3GetStepMove()
-{
-	return &m_Info->m_StepMove;
-}
-
-b3_vector *CAppLinesDoc::b3GetStepRotate()
-{
-	return &m_Info->m_StepRotate;
-}
-
-void CAppLinesDoc::b3DrawFulcrum()
-{
-	m_Fulcrum.b3Draw();
-}
 
 void CAppLinesDoc::b3ComputeBounds()
 {

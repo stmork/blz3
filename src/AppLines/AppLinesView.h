@@ -26,23 +26,14 @@
 
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
-#include "b3View.h"
+#include "AppRenderView.h"
 
 class CB3Action;
 
-class CAppLinesView : public CScrollView
+class CAppLinesView : public CAppRenderView
 {
-	HDC             m_DC;
-	HGLRC           m_GC;
-	int             m_PixelFormatIndex;
-	b3_select_mode  m_PreviousMode;
-	b3_select_mode  m_SelectMode;
-	CPoint          m_SelectStart;
-	CPoint          m_SelectAct;
-	CB3Action      *m_Action[B3_MODE_MAX];
 protected:
 	b3Scene        *m_Scene;
-	b3RenderView    m_RenderView;
 	b3CameraPart   *m_Camera;
 	b3CameraVolume  m_CameraVolume;
 	b3Light        *m_Light;
@@ -62,13 +53,8 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesView)
 	public:
-	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	protected:
 	virtual void OnInitialUpdate(); // called first time after construct
-	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 	//}}AFX_VIRTUAL
@@ -86,38 +72,7 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesView)
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnDestroy();
 	afx_msg void OnPaint();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	afx_msg void OnViewPerspective();
-	afx_msg void OnViewTop();
-	afx_msg void OnViewFront();
-	afx_msg void OnViewRight();
-	afx_msg void OnViewLeft();
-	afx_msg void OnViewBack();
-	afx_msg void OnUpdateViewPerspective(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewTop(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewFront(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
-	afx_msg void OnViewAntialias();
-	afx_msg void OnUpdateViewAntialias(CCmdUI* pCmdUI);
-	afx_msg void OnViewSmaller();
-	afx_msg void OnViewSelect();
-	afx_msg void OnViewBigger();
-	afx_msg void OnViewOptimal();
-	afx_msg void OnUpdateViewSmaller(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewSelect(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewBigger(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
-	afx_msg void OnViewMoveRight();
-	afx_msg void OnViewMoveLeft();
-	afx_msg void OnViewMoveUp();
-	afx_msg void OnViewMoveDown();
-	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
@@ -161,13 +116,6 @@ protected:
 	afx_msg void OnUpdateMovement(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-public:
-	void b3DrawRect(b3_coord x1,b3_coord y1,b3_coord x2,b3_coord y2);
-	void b3Update(b3_u32 update_mask);
-
-protected:
-	void b3SetMagnification();
-	void b3UnsetMagnification();
 
 private:
 	void b3Move(b3_action_mode mode);

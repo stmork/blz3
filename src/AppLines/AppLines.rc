@@ -1303,7 +1303,7 @@ BEGIN
     IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
     IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
     IDR_MAINFRAME           "Lines III"
-    IDR_BLZ3TYPE            "Blizzard III Lines\nUnbenannt\nBlizzard III Geometrie\nBlizzard III Geometrie (*.bwd)\n.bwd\nBlizzard3.Document\nBlizzard III Szene"
+    IDR_BLZ3TYPE            "Blizzard III Lines\nUnbenannt\nBlizzard III Geometrie\nBlizzard III Geometrie (*.bwd)\n.bwd\nblz3scn.Document\nBlizzard III Szene"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 

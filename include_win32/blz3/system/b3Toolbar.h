@@ -90,7 +90,7 @@ protected:
 	b3_bool       b3InitCustomization();
 
 protected:
-	//{{AFX_MSG(b3Toolbar)
+	//{{AFX_MSG(CB3Toolbar)
 	afx_msg void OnToolBarQueryDelete(NMHDR *notify, LRESULT *result);
 	afx_msg void OnToolBarQueryInsert(NMHDR *notify, LRESULT *result);
 	afx_msg void OnToolBarChange(NMHDR *notify, LRESULT *result);
@@ -112,6 +112,8 @@ private:
 
 class CB3Menubar : public CMenuBar, public b3Link<CB3Menubar>
 {
+	DECLARE_DYNAMIC(CB3Menubar)
+
 	CFrameWnd    *m_MainFrame;
 	b3_index      m_ID;
 	b3_index      m_Bar;
@@ -128,6 +130,12 @@ protected:
 
 	void          b3SetID(long id_menu,long id_bar);
 	b3_bool       b3Create(CFrameWnd *parent);
+
+protected:
+	// Generated message map functions
+	//{{AFX_MSG(CB3Menubar)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 };
 
 class CB3Dialogbar : public CDialogBar, public b3Link<CB3Dialogbar>
@@ -157,9 +165,8 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	//}}AFX_VIRTUAL
 
-// Implementation
-protected:
 
+protected:
 	// Generated message map functions
 	//{{AFX_MSG(CB3Dialogbar)
 	//}}AFX_MSG

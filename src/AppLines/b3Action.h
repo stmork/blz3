@@ -21,7 +21,9 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Matrix.h"
 
+#include "AppRenderView.h"
 #include "AppLinesView.h"
+#include "AppObjectView.h"
 
 typedef enum
 {
@@ -34,8 +36,8 @@ typedef enum
 class CB3Action
 {
 protected:
-	CAppLinesView   *m_View;
-	CAppLinesDoc    *m_Doc;
+	CAppRenderView  *m_View;
+	CAppRenderDoc   *m_Doc;
 	b3_mouse_button  m_Button;
 	b3_coord         m_xStart,m_xLast;
 	b3_coord         m_yStart,m_yLast;
@@ -44,7 +46,7 @@ protected:
 	b3_bool          m_PressedCtrl;
 
 public:
-	             CB3Action(CAppLinesView *window);
+	             CB3Action(CAppRenderView *window);
 	        void b3DispatchMouseMove  (b3_coord x,b3_coord y);
 	        void b3DispatchLButtonDown(b3_coord x,b3_coord y,b3_u32 flags);
 	        void b3DispatchLButtonUp  (b3_coord x,b3_coord y);
@@ -72,11 +74,12 @@ protected:
 class CB3MoveAction : public CB3Action
 {
 protected:
-	b3_f64    m_xRelStart,m_yRelStart;
-	b3_vector m_xDir,m_yDir,m_zDir;
-	b3_vector m_StartPoint;
-	b3_vector m_LastPoint;
-	b3_vector m_LastDiff;
+	CAppLinesView *m_LinesView;
+	b3_f64         m_xRelStart,m_yRelStart;
+	b3_vector      m_xDir,m_yDir,m_zDir;
+	b3_vector      m_StartPoint;
+	b3_vector      m_LastPoint;
+	b3_vector      m_LastDiff;
 
 protected:
 	             CB3MoveAction(CAppLinesView *window);
@@ -97,7 +100,7 @@ private:
 class CB3ActionMagnify : public CB3Action
 {
 public:
-	CB3ActionMagnify(CAppLinesView *window);
+	CB3ActionMagnify(CAppRenderView *window);
 
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
@@ -126,12 +129,13 @@ protected:
 
 class CB3ActionObjectRotate : public CB3Action
 {
-	b3_vector *m_Center;
-	b3_vector  m_StartPoint;
-	b3_f64     m_StartAngle;
-	b3_f64     m_xRelStart;
-	b3_f64     m_LastAngle;
-	b3_line    m_Axis;
+	CAppLinesView *m_LinesView;
+	b3_vector     *m_Center;
+	b3_vector      m_StartPoint;
+	b3_f64         m_StartAngle;
+	b3_f64         m_xRelStart;
+	b3_f64         m_LastAngle;
+	b3_line        m_Axis;
 public:
 	CB3ActionObjectRotate(CAppLinesView *window);
 
@@ -142,9 +146,10 @@ public:
 
 class CB3ActionObjectScale : public CB3Action
 {
-	b3_vector *m_Center;
-	b3_vector  m_StartPoint;
-	b3_vector  m_StartDiff;
+	CAppLinesView *m_LinesView;
+	b3_vector     *m_Center;
+	b3_vector      m_StartPoint;
+	b3_vector      m_StartDiff;
 public:
 	CB3ActionObjectScale(CAppLinesView *window);
 
@@ -172,17 +177,18 @@ public:
 class CB3CameraRotateAction : public CB3Action
 {
 protected:
-	b3CameraPart *m_Camera;
-	b3_vector    *m_Center;
-	b3_vector     m_StartPoint;
-	b3_f64        m_StartAngle;
-	b3_f64        m_xRelStart;
-	b3_f64        m_yRelStart;
-	b3_f64        m_xLastAngle;
-	b3_f64        m_yLastAngle;
-	b3_line       m_Axis;
-	b3_line       m_UpDown;
-	b3_f64        m_Sign;
+	CAppLinesView *m_LinesView;
+	b3CameraPart  *m_Camera;
+	b3_vector     *m_Center;
+	b3_vector      m_StartPoint;
+	b3_f64         m_StartAngle;
+	b3_f64         m_xRelStart;
+	b3_f64         m_yRelStart;
+	b3_f64         m_xLastAngle;
+	b3_f64         m_yLastAngle;
+	b3_line        m_Axis;
+	b3_line        m_UpDown;
+	b3_f64         m_Sign;
 
 public:
 	             CB3CameraRotateAction(CAppLinesView *window);
@@ -209,12 +215,13 @@ public:
 
 class CB3ActionCameraView : public CB3Action
 {
-	b3CameraPart *m_Camera;
-	b3_line       m_Axis;
-	b3_f64        m_xRelStart;
-	b3_f64        m_LastAngle;
-	b3_f64        m_Distance;
-	b3_res        m_ySize;
+	CAppLinesView *m_LinesView;
+	b3CameraPart  *m_Camera;
+	b3_line        m_Axis;
+	b3_f64         m_xRelStart;
+	b3_f64         m_LastAngle;
+	b3_f64         m_Distance;
+	b3_res         m_ySize;
 
 public:
 	     CB3ActionCameraView(CAppLinesView *window);

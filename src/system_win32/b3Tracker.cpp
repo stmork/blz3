@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/13 19:24:12  sm
+**	- Introduced CAppRenderDoc/View (puuh!)
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 
@@ -142,4 +145,3 @@ void CB3Tracker::AdjustRect(int nHandle,RECT *rect)
 	}
 #endif
 }
-

@@ -39,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/01/13 19:24:11  sm
+**	- Introduced CAppRenderDoc/View (puuh!)
+**
 **	Revision 1.34  2002/01/09 17:47:53  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.33  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
 **	
@@ -206,65 +209,16 @@
 **                                                                      **
 *************************************************************************/
 
-static PIXELFORMATDESCRIPTOR pixelformat =
-{
-	sizeof(PIXELFORMATDESCRIPTOR),
-	1,
-	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-	PFD_TYPE_RGBA,
-	32,
-	0,0,0,0,0,0,
-	0,0,
-	0,0,0,0,0,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,0,0
-};
+IMPLEMENT_DYNCREATE(CAppLinesView, CAppRenderView)
 
-IMPLEMENT_DYNCREATE(CAppLinesView, CScrollView)
-
-BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
+BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppLinesView)
-	ON_WM_CREATE()
-	ON_WM_DESTROY()
 	ON_WM_PAINT()
-	ON_WM_SIZE()
-	ON_WM_ERASEBKGND()
-	ON_COMMAND(ID_VIEW_PERSPECTIVE, OnViewPerspective)
-	ON_COMMAND(ID_VIEW_TOP, OnViewTop)
-	ON_COMMAND(ID_VIEW_FRONT, OnViewFront)
-	ON_COMMAND(ID_VIEW_RIGHT, OnViewRight)
-	ON_COMMAND(ID_VIEW_LEFT, OnViewLeft)
-	ON_COMMAND(ID_VIEW_BACK, OnViewBack)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_PERSPECTIVE, OnUpdateViewPerspective)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_TOP, OnUpdateViewTop)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_FRONT, OnUpdateViewFront)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_RIGHT, OnUpdateViewRight)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_LEFT, OnUpdateViewLeft)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_BACK, OnUpdateViewBack)
-	ON_COMMAND(ID_VIEW_ANTIALIAS, OnViewAntialias)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_ANTIALIAS, OnUpdateViewAntialias)
-	ON_COMMAND(ID_VIEW_SMALLER, OnViewSmaller)
-	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
-	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
-	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_SMALLER, OnUpdateViewSmaller)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_SELECT, OnUpdateViewSelect)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_BIGGER, OnUpdateViewBigger)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
-	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
-	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
-	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
-	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
-	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
-	ON_COMMAND(ID_VIEW_POP, OnViewPop)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_OBJECT_SELECT, OnObjSelect)
 	ON_COMMAND(ID_OBJECT_MOVE, OnObjMove)
 	ON_COMMAND(ID_OBJECT_ROTATE, OnObjRotate)
@@ -285,8 +239,6 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ROTATE, OnUpdateCamRotate)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_VIEW, OnUpdateCamView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
 	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
@@ -294,9 +246,6 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
 	ON_BN_CLICKED(IDC_MOVE_LEFT, OnMoveLeft)
 	ON_BN_CLICKED(IDC_MOVE_RIGHT, OnMoveRight)
 	ON_BN_CLICKED(IDC_MOVE_DOWN, OnMoveDown)
@@ -308,10 +257,6 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_UP, OnUpdateMovement)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_DOWN, OnUpdateMovement)
 	//}}AFX_MSG_MAP
-	// Standard printing commands
-	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_DIRECT, CScrollView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, CScrollView::OnFilePrintPreview)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -320,71 +265,14 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
-	b3_index i;
-
-	m_PreviousMode =
-	m_SelectMode   = B3_OBJECT_SELECT;
-	for (i = 0;i < B3_MODE_MAX;i++)
-	{
-		m_Action[i] = null;
-	}
 }
 
 CAppLinesView::~CAppLinesView()
 {
 }
 
-void CAppLinesView::b3UnsetMagnification()
-{
-	if (m_SelectMode == B3_SELECT_MAGNIFICATION)
-	{
-		m_SelectMode = m_PreviousMode;
-	}
-}
-
-void CAppLinesView::b3SetMagnification()
-{
-	if (m_SelectMode != B3_SELECT_MAGNIFICATION)
-	{
-		m_PreviousMode = m_SelectMode;
-		m_SelectMode   = B3_SELECT_MAGNIFICATION;
-	}
-	else
-	{
-		m_SelectMode = m_PreviousMode;
-	}
-}
-
-BOOL CAppLinesView::PreCreateWindow(CREATESTRUCT& cs)
-{
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-	cs.style |= CS_OWNDC;
-	cs.style |= WS_MAXIMIZE;
-	return CScrollView::PreCreateWindow(cs);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesView drawing
-
-/////////////////////////////////////////////////////////////////////////////
-// CAppLinesView printing
-
-BOOL CAppLinesView::OnPreparePrinting(CPrintInfo* pInfo)
-{
-	// default preparation
-	return DoPreparePrinting(pInfo);
-}
-
-void CAppLinesView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: add extra initialization before printing
-}
-
-void CAppLinesView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: add cleanup after printing
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesView diagnostics
@@ -410,66 +298,15 @@ CAppLinesDoc* CAppLinesView::GetDocument() // non-debug version is inline
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesView message handlers
 
-int CAppLinesView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
-{
-	if (CScrollView::OnCreate(lpCreateStruct) == -1)
-		return -1;
-	
-	// TODO: Add your specialized creation code here
-	m_DC = GetDC()->m_hDC;
-#ifdef _DEBUG
-	int                   max,i;
-	PIXELFORMATDESCRIPTOR format;
-
-	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	max = DescribePixelFormat(m_DC,1,0,NULL);
-	for (i = 1;i <= max;i++)
-	{
-		DescribePixelFormat(m_DC,i,format.nSize,&format);
-		b3PrintF(B3LOG_DEBUG,"%3ld: %8lx %8lx %2ld %2ld %2ld\n",i,
-			format.dwFlags,format.iPixelType,
-			format.cColorBits,format.cDepthBits,format.cAccumBits);
-	}
-#endif
-	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&pixelformat);
-	SetPixelFormat(m_DC,m_PixelFormatIndex,&pixelformat);
-	m_GC = wglCreateContext(m_DC);
-
-
-	return 0;
-}
-
-void CAppLinesView::OnDestroy() 
-{
-	b3_index i;
-
-	for (i = 0;i < B3_MODE_MAX;i++)
-	{
-		if (m_Action[i] != null)
-		{
-			delete m_Action[i];
-		}
-	}
-	CScrollView::OnDestroy();
-	
-	// TODO: Add your message handler code here
-	wglMakeCurrent(m_DC,NULL);
-	wglDeleteContext(m_GC);
-}
-
 void CAppLinesView::OnInitialUpdate()
 {
 	// Do necessary Blizzard III stuff!
 	CAppLinesDoc *pDoc = GetDocument();
 
-	wglMakeCurrent(m_DC,m_GC);
-	pDoc->m_Context.b3Init();
-	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 	m_Scene      = pDoc->m_Scene;
 	B3_ASSERT(m_Scene != null);
 	m_Camera     = m_Scene->b3GetCamera(true);
 	m_Light      = m_Scene->b3GetLight(true);
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 
 	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
 	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
@@ -481,7 +318,9 @@ void CAppLinesView::OnInitialUpdate()
 	m_Action[B3_CAMERA_ROTATE]        = new CB3ActionCameraRotate(this);
 	m_Action[B3_CAMERA_VIEW]          = new CB3ActionCameraView(this);
 	m_Action[B3_LIGHT_TURN]           = new CB3ActionLightTurn(this);
-	CScrollView::OnInitialUpdate();
+
+	CAppRenderView::OnInitialUpdate();
+	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
 	// TODO: calculate the total size of this view
 	OnUpdate(this,B3_UPDATE_ALL,0);
@@ -502,69 +341,13 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	if (lHint & B3_UPDATE_LIGHT)
 	{
 	}
-	if (lHint & B3_UPDATE_GEOMETRY)
-	{
-		m_RenderView.b3SetBounds(&pDoc->m_Lower,&pDoc->m_Upper);
-		doInvalidate = true;
-	}
-	if (lHint & B3_UPDATE_VIEW)
-	{
-		CRect rect;
-		CSize size;
-
-		if (m_RenderView.b3IsViewMode(B3_VIEW_3D) && false)
-		{
-			GetClientRect(&rect);
-			size = rect.Size();
-		}
-		else
-		{
-			size.cx = 10;
-			size.cy = 10;
-		}
-		SetScrollSizes(MM_TEXT, size);
-		doInvalidate = true;
-	}
-
-	if (lHint & B3_UPDATE_FULCRUM)
-	{
-		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-
-		pDoc->m_Fulcrum.b3Update(pDoc->b3GetFulcrum());
-		main->b3UpdateFulcrum();
-		doInvalidate = true;
-	}
 
 	if (doInvalidate)
 	{
 		Invalidate();
 	}
-}
 
-void CAppLinesView::b3Update(b3_u32 update_mask)
-{
-	OnUpdate(this,update_mask,NULL);
-}
-
-void CAppLinesView::OnSize(UINT nType, int cx, int cy) 
-{
-	CScrollView::OnSize(nType, cx, cy);
-	
-	// TODO: Add your message handler code here
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
-{
-	// TODO: Add your message handler code here and/or call default
-	return TRUE;
-}
-
-void CAppLinesView::OnDraw(CDC* pDC)
-{
-	CAppLinesDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	// TODO: add draw code for native data here
+	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
 void CAppLinesView::OnPaint() 
@@ -650,24 +433,6 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	}
 }
 
-void CAppLinesView::b3DrawRect(
-	b3_coord x1,
-	b3_coord y1,
-	b3_coord x2,
-	b3_coord y2)
-{
-	CDC *dc = CDC::FromHandle(m_DC);
-	CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
-
-	dc->SetROP2(R2_NOTXORPEN);
-	dc->SelectObject(&red);
-	dc->MoveTo(x1,y1);
-	dc->LineTo(x2,y1);
-	dc->LineTo(x2,y2);
-	dc->LineTo(x1,y2);
-	dc->LineTo(x1,y1);
-}
-
 void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
@@ -726,206 +491,6 @@ void CAppLinesView::OnRButtonUp(UINT nFlags, CPoint point)
 	{
 		m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
 	}
-}
-
-void CAppLinesView::OnViewPerspective() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnViewTop() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnViewFront() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnViewRight() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnViewLeft() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnViewBack() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppLinesView::OnUpdateViewPerspective(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewTop(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_TOP));
-}
-
-void CAppLinesView::OnUpdateViewFront(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_FRONT));
-}
-
-void CAppLinesView::OnUpdateViewRight(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_RIGHT));
-}
-
-void CAppLinesView::OnUpdateViewLeft(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_LEFT));
-}
-
-void CAppLinesView::OnUpdateViewBack(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_BACK));
-}
-
-void CAppLinesView::OnViewAntialias() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.m_AntiAliased = !m_RenderView.m_AntiAliased;
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnUpdateViewAntialias(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_RenderView.m_AntiAliased);
-}
-
-void CAppLinesView::OnViewSmaller() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Scale(1.25);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewBigger() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Scale(0.8);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewSelect() 
-{
-	// TODO: Add your command handler code here
-	b3SetMagnification();
-}
-
-void CAppLinesView::OnViewPop() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3PopView();
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewOptimal() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Original();
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnUpdateViewSmaller(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-	pCmdUI->SetCheck(m_SelectMode == B3_SELECT_MAGNIFICATION);
-}
-
-void CAppLinesView::OnUpdateViewPop(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(m_RenderView.b3ViewStackNotEmpty());
-}
-
-void CAppLinesView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppLinesView::OnViewMoveRight() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.2,0.0);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewMoveLeft() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(-0.2,0.0);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewMoveUp() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.0,0.2);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnViewMoveDown() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.0,-0.2);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppLinesView::OnUpdateViewMove(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
 void CAppLinesView::OnObjSelect() 

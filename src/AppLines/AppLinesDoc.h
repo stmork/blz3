@@ -23,12 +23,12 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "b3Fulcrum.h"
+#include "AppRenderDoc.h"
 
 class CAppRaytraceDoc;
 class CDlgHierarchy;
 
-class CAppLinesDoc : public CDocument, public b3Document
+class CAppLinesDoc : public CAppRenderDoc
 {
 protected:
 	b3World               m_World;
@@ -37,12 +37,7 @@ protected:
 	CAppRaytraceDoc      *m_RaytraceDoc;
 // Attributes
 public:
-	b3Fulcrum             m_Fulcrum;
 	b3Scene              *m_Scene;
-	b3ModellerInfo       *m_Info;
-	b3RenderShapeContext  m_Context;
-	b3_vector             m_Lower;
-	b3_vector             m_Upper;
 
 // Operations
 protected: // create from serialization only
@@ -63,10 +58,6 @@ public:
 
 // Implementation
 public:
-	b3_vector *b3GetFulcrum();
-	b3_vector *b3GetStepMove();
-	b3_vector *b3GetStepRotate();
-	void       b3DrawFulcrum();
 	void       b3ComputeBounds();
 	void       b3ClearRaytraceDoc();
 	void       b3StartRaytrace();

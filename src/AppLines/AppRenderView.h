@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	AppObjectView.h $
+**	$Filename:	AppRenderView.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -15,45 +15,84 @@
 **
 */
 
-#if !defined(APPOBJECTVIEW_H)
-#define APPOBJECTVIEW_H
+#if !defined(APPRENDERVIEW_H)
+#define APPRENDERVIEW_H
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "AppObjectDoc.h"
-#include "AppRenderView.h"
+#include "AppRenderDoc.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 
+#define B3_UPDATE_VIEW      1
+#define B3_UPDATE_CAMERA    2
+#define B3_UPDATE_GEOMETRY  4
+#define B3_UPDATE_LIGHT     8
+#define B3_UPDATE_FULCRUM  16
+
+#define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
+
+typedef enum b3SelectMode
+{
+	B3_SELECT_NOTHING = -1,
+	B3_SELECT_MAGNIFICATION = 0,
+	B3_OBJECT_SELECT,
+	B3_OBJECT_MOVE,
+	B3_OBJECT_ROTATE,
+	B3_OBJECT_SCALE,
+	B3_CAMERA_MOVE,
+	B3_CAMERA_TURN,
+	B3_CAMERA_ROTATE,
+	B3_CAMERA_VIEW,
+	B3_LIGHT_TURN,
+	B3_MODE_MAX
+} b3_select_mode;
+
 class CB3Action;
 
-class CAppObjectView : public CAppRenderView
+class CAppRenderView : public CScrollView
 {
+protected:
+	HDC             m_DC;
+	HGLRC           m_GC;
+	int             m_PixelFormatIndex;
+	b3_select_mode  m_PreviousMode;
+	b3_select_mode  m_SelectMode;
+	b3RenderView    m_RenderView;
+	CPoint          m_SelectStart;
+	CPoint          m_SelectAct;
+	CB3Action      *m_Action[B3_MODE_MAX];
+
 protected: // create from serialization only
-	CAppObjectView();
-	DECLARE_DYNCREATE(CAppObjectView)
+	CAppRenderView();
+	DECLARE_DYNCREATE(CAppRenderView)
 
 // Attributes
 public:
-	CAppObjectDoc* GetDocument();
+	CAppRenderDoc* GetDocument();
 
 // Operations
 public:
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAppObjectView)
+	//{{AFX_VIRTUAL(CAppRenderView)
+	public:
+	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	protected:
 	virtual void OnInitialUpdate(); // called first time after construct
 	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
-	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
+	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
+	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
+	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 	//}}AFX_VIRTUAL
 
 // Implementation
 public:
-	virtual ~CAppObjectView();
+	virtual ~CAppRenderView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -63,10 +102,11 @@ protected:
 
 // Generated message map functions
 protected:
-	//{{AFX_MSG(CAppObjectView)
+	//{{AFX_MSG(CAppRenderView)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnDestroy();
-	afx_msg void OnPaint();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnViewPerspective();
 	afx_msg void OnViewTop();
 	afx_msg void OnViewFront();
@@ -101,11 +141,31 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	void b3DrawRect(b3_coord x1,b3_coord y1,b3_coord x2,b3_coord y2);
+	void b3Update(b3_u32 update_mask);
+
+protected:
+	void b3SetMagnification();
+	void b3UnsetMagnification();
+
+	friend class CB3Action;
+	friend class CB3MoveAction;
+	friend class CB3CameraRotateAction;
+
+	friend class CB3ActionMagnify;
+	friend class CB3ActionObjectMove;
+	friend class CB3ActionObjectRotate;
+	friend class CB3ActionObjectScale;
+	friend class CB3ActionCameraMove;
+	friend class CB3ActionCameraTurn;
+	friend class CB3ActionCameraRotate;
+	friend class CB3ActionCameraView;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp
-inline CAppObjectDoc* CAppObjectView::GetDocument()
-   { return (CAppObjectDoc*)m_pDocument; }
+inline CAppRenderDoc* CAppRenderView::GetDocument()
+   { return (CAppRenderDoc*)m_pDocument; }
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -113,4 +173,4 @@ inline CAppObjectDoc* CAppObjectView::GetDocument()
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(APPOBJECTVIEW_H)
+#endif // !defined(APPRENDERVIEW_H)

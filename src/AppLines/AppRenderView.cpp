@@ -1,7 +1,7 @@
 /*
 **
-**	$Filename:	AppObjectView.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Filename:	AppRenderView.cpp $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - CView part
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "AppObjectView.h"
+#include "AppRenderView.h"
 #include "MainFrm.h"
 #include "b3Action.h"
 #include <sys/timeb.h>
@@ -35,19 +35,15 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/01/13 19:24:11  sm
+**	Revision 1.1  2002/01/13 19:24:12  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **
-**	Revision 1.1  2002/01/12 18:14:39  sm
-**	- Created object document template
-**	- Some menu fixes done
-**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CAppObjectView implementation                 **
+**                        CAppRenderView implementation                 **
 **                                                                      **
 *************************************************************************/
 
@@ -69,10 +65,10 @@ static PIXELFORMATDESCRIPTOR pixelformat =
 	0,0,0
 };
 
-IMPLEMENT_DYNCREATE(CAppObjectView, CAppRenderView)
+IMPLEMENT_DYNCREATE(CAppRenderView, CScrollView)
 
-BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
-	//{{AFX_MSG_MAP(CAppObjectView)
+BEGIN_MESSAGE_MAP(CAppRenderView, CScrollView)
+	//{{AFX_MSG_MAP(CAppRenderView)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
 	ON_WM_PAINT()
@@ -111,12 +107,16 @@ BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
 	//}}AFX_MSG_MAP
+	// Standard printing commands
+	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
+	ON_COMMAND(ID_FILE_PRINT_DIRECT, CScrollView::OnFilePrint)
+	ON_COMMAND(ID_FILE_PRINT_PREVIEW, CScrollView::OnFilePrintPreview)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CAppObjectView construction/destruction
+// CAppRenderView construction/destruction
 
-CAppObjectView::CAppObjectView()
+CAppRenderView::CAppRenderView()
 {
 	// TODO: add construction code here
 	b3_index i;
@@ -129,38 +129,87 @@ CAppObjectView::CAppObjectView()
 	}
 }
 
-CAppObjectView::~CAppObjectView()
+CAppRenderView::~CAppRenderView()
 {
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppObjectView drawing
+void CAppRenderView::b3UnsetMagnification()
+{
+	if (m_SelectMode == B3_SELECT_MAGNIFICATION)
+	{
+		m_SelectMode = m_PreviousMode;
+	}
+}
+
+void CAppRenderView::b3SetMagnification()
+{
+	if (m_SelectMode != B3_SELECT_MAGNIFICATION)
+	{
+		m_PreviousMode = m_SelectMode;
+		m_SelectMode   = B3_SELECT_MAGNIFICATION;
+	}
+	else
+	{
+		m_SelectMode = m_PreviousMode;
+	}
+}
+
+BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
+{
+	// TODO: Modify the Window class or styles here by modifying
+	//  the CREATESTRUCT cs
+	cs.style |= CS_OWNDC;
+	cs.style |= WS_MAXIMIZE;
+	return CScrollView::PreCreateWindow(cs);
+}
 
 /////////////////////////////////////////////////////////////////////////////
-// CAppObjectView diagnostics
+// CAppRenderView drawing
+
+/////////////////////////////////////////////////////////////////////////////
+// CAppRenderView printing
+
+BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
+{
+	// default preparation
+	return DoPreparePrinting(pInfo);
+}
+
+void CAppRenderView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+{
+	// TODO: add extra initialization before printing
+}
+
+void CAppRenderView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+{
+	// TODO: add cleanup after printing
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CAppRenderView diagnostics
 
 #ifdef _DEBUG
-void CAppObjectView::AssertValid() const
+void CAppRenderView::AssertValid() const
 {
 	CScrollView::AssertValid();
 }
 
-void CAppObjectView::Dump(CDumpContext& dc) const
+void CAppRenderView::Dump(CDumpContext& dc) const
 {
 	CScrollView::Dump(dc);
 }
 
-CAppObjectDoc* CAppObjectView::GetDocument() // non-debug version is inline
+CAppRenderDoc* CAppRenderView::GetDocument() // non-debug version is inline
 {
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CAppObjectDoc)));
-	return (CAppObjectDoc*)m_pDocument;
+	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CAppRenderDoc)));
+	return (CAppRenderDoc*)m_pDocument;
 }
 #endif //_DEBUG
 
 /////////////////////////////////////////////////////////////////////////////
-// CAppObjectView message handlers
+// CAppRenderView message handlers
 
-int CAppObjectView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -189,7 +238,7 @@ int CAppObjectView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void CAppObjectView::OnDestroy() 
+void CAppRenderView::OnDestroy() 
 {
 	b3_index i;
 
@@ -207,175 +256,156 @@ void CAppObjectView::OnDestroy()
 	wglDeleteContext(m_GC);
 }
 
-void CAppObjectView::OnInitialUpdate()
+void CAppRenderView::OnInitialUpdate()
 {
 	// Do necessary Blizzard III stuff!
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppRenderDoc *pDoc = GetDocument();
 
 	wglMakeCurrent(m_DC,m_GC);
 	pDoc->m_Context.b3Init();
-	B3_ASSERT(pDoc->m_BBox != null);
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 
-/*
-	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
-	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
-	m_Action[B3_OBJECT_MOVE]          = new CB3ActionObjectMove(this);
-	m_Action[B3_OBJECT_ROTATE]        = new CB3ActionObjectRotate(this);
-	m_Action[B3_OBJECT_SCALE]         = new CB3ActionObjectScale(this);
-	m_Action[B3_CAMERA_MOVE]          = new CB3ActionCameraMove(this);
-	m_Action[B3_CAMERA_TURN]          = new CB3ActionCameraTurn(this);
-	m_Action[B3_CAMERA_ROTATE]        = new CB3ActionCameraRotate(this);
-	m_Action[B3_CAMERA_VIEW]          = new CB3ActionCameraView(this);
-	m_Action[B3_LIGHT_TURN]           = new CB3ActionLightTurn(this);
-*/
 	CScrollView::OnInitialUpdate();
 
 	// TODO: calculate the total size of this view
 	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
-void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
+void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	CAppObjectDoc *pDoc         = GetDocument();
+	CAppRenderDoc *pDoc         = GetDocument();
 	b3_bool        doInvalidate = false;
+
+	if (lHint & B3_UPDATE_GEOMETRY)
+	{
+		m_RenderView.b3SetBounds(&pDoc->m_Lower,&pDoc->m_Upper);
+		doInvalidate = true;
+	}
+	if (lHint & B3_UPDATE_VIEW)
+	{
+		CRect rect;
+		CSize size;
+
+		if (m_RenderView.b3IsViewMode(B3_VIEW_3D) && false)
+		{
+			GetClientRect(&rect);
+			size = rect.Size();
+		}
+		else
+		{
+			size.cx = 10;
+			size.cy = 10;
+		}
+		SetScrollSizes(MM_TEXT, size);
+		doInvalidate = true;
+	}
+
+	if (lHint & B3_UPDATE_FULCRUM)
+	{
+		CMainFrame *main = CB3GetMainFrame();
+
+		pDoc->m_Fulcrum.b3Update(pDoc->b3GetFulcrum());
+		main->b3UpdateFulcrum();
+		doInvalidate = true;
+	}
 
 	if (doInvalidate)
 	{
 		Invalidate();
 	}
-
-	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 }
 
-void CAppObjectView::OnPaint() 
+void CAppRenderView::b3Update(b3_u32 update_mask)
 {
-	// We have already an HDC, you remember?
-	// So we don't need OnDraw();
-	CAppObjectDoc *pDoc = GetDocument();
-	CRect          rect;
-	CPoint         pos;
-	struct _timeb  start,stop;
-	long           sDiff,mDiff;
-
-	_ftime(&start);
-
-	// Init Drawing
-	wglMakeCurrent(m_DC,m_GC);
-	pDoc->m_Context.b3StartDrawing();
-
-	pos = GetScrollPosition();
-	GetClientRect(&rect);
-
-	// Setup view first
-	m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
-
-	// Then draw objects
-	pDoc->m_BBox->b3Draw();
-	pDoc->b3DrawFulcrum();
-	_ftime(&stop);
-
-	// Done...
-	SwapBuffers(m_DC);
-	ValidateRect(NULL);
-
-	mDiff = stop.millitm - start.millitm;
-	sDiff = stop.time    - start.time;
-	if (mDiff < 0)
-	{
-		mDiff += 1000;
-		sDiff -=    1;
-	}
-	mDiff += (sDiff * 1000);
-	sDiff  = 0;
-
-	if (mDiff > 0)
-	{
-		CMainFrame *main = CB3GetMainFrame();
-	
-		main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
-	}
+	OnUpdate(this,update_mask,NULL);
 }
 
-void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
+void CAppRenderView::OnSize(UINT nType, int cx, int cy) 
 {
-	// TODO: Add your specialized code here and/or call the base class
-	CB3App     *app  = CB3GetApp();
-	CMainFrame *main = CB3GetMainFrame();
-
-	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
-
-#ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"CAppObjectView::OnActivateView(%s,%p,%p)\n",
-		bActivate ? "TRUE " : "FALSE",
-		pActivateView, pDeactiveView);
-#endif
+	CScrollView::OnSize(nType, cx, cy);
 	
-	if (bActivate)
-	{
-/*
-		main->b3UpdateCameraBox(m_Scene,m_Camera);
-		main->b3UpdateLightBox(m_Scene,m_Light);
-		main->b3UpdateModellerInfo(GetDocument());
-		m_Scene->b3SetCamera(m_Camera,true);
-*/
-		app->b3SetData();
-	}
-	else
-	{
-		main->b3Clear();
-		main->b3UpdateModellerInfo();
-		app->b3GetData();
-	}
+	// TODO: Add your message handler code here
+	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnMouseMove(UINT nFlags, CPoint point) 
+BOOL CAppRenderView::OnEraseBkgnd(CDC* pDC) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
+	return TRUE;
+}
+
+void CAppRenderView::OnDraw(CDC* pDC)
+{
+	CAppRenderDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	// TODO: add draw code for native data here
+}
+
+void CAppRenderView::b3DrawRect(
+	b3_coord x1,
+	b3_coord y1,
+	b3_coord x2,
+	b3_coord y2)
+{
+	CDC *dc = CDC::FromHandle(m_DC);
+	CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
+
+	dc->SetROP2(R2_NOTXORPEN);
+	dc->SelectObject(&red);
+	dc->MoveTo(x1,y1);
+	dc->LineTo(x2,y1);
+	dc->LineTo(x2,y2);
+	dc->LineTo(x1,y2);
+	dc->LineTo(x1,y1);
+}
+
+void CAppRenderView::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CAppRenderDoc *pDoc = GetDocument();
 
 	CScrollView::OnMouseMove(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
 }
 
-void CAppObjectView::OnLButtonDown(UINT nFlags, CPoint point) 
+void CAppRenderView::OnLButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppRenderDoc *pDoc = GetDocument();
 
 	CScrollView::OnLButtonDown(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
 }
 
-void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point) 
+void CAppRenderView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppRenderDoc *pDoc = GetDocument();
 
 	CScrollView::OnLButtonUp(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
 }
 
-void CAppObjectView::OnRButtonDown(UINT nFlags, CPoint point) 
+void CAppRenderView::OnRButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppRenderDoc *pDoc = GetDocument();
 
 	CScrollView::OnRButtonDown(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
 }
 
-void CAppObjectView::OnRButtonUp(UINT nFlags, CPoint point) 
+void CAppRenderView::OnRButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
+	CAppRenderDoc *pDoc = GetDocument();
 
 	CScrollView::OnRButtonUp(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
 }
 
-void CAppObjectView::OnViewPerspective() 
+void CAppRenderView::OnViewPerspective() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
@@ -383,7 +413,7 @@ void CAppObjectView::OnViewPerspective()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnViewTop() 
+void CAppRenderView::OnViewTop() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
@@ -391,7 +421,7 @@ void CAppObjectView::OnViewTop()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnViewFront() 
+void CAppRenderView::OnViewFront() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
@@ -399,7 +429,7 @@ void CAppObjectView::OnViewFront()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnViewRight() 
+void CAppRenderView::OnViewRight() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
@@ -407,7 +437,7 @@ void CAppObjectView::OnViewRight()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnViewLeft() 
+void CAppRenderView::OnViewLeft() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
@@ -415,7 +445,7 @@ void CAppObjectView::OnViewLeft()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnViewBack() 
+void CAppRenderView::OnViewBack() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
@@ -423,43 +453,43 @@ void CAppObjectView::OnViewBack()
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
-void CAppObjectView::OnUpdateViewPerspective(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewPerspective(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
-void CAppObjectView::OnUpdateViewTop(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewTop(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_TOP));
 }
 
-void CAppObjectView::OnUpdateViewFront(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewFront(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_FRONT));
 }
 
-void CAppObjectView::OnUpdateViewRight(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewRight(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_RIGHT));
 }
 
-void CAppObjectView::OnUpdateViewLeft(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewLeft(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_LEFT));
 }
 
-void CAppObjectView::OnUpdateViewBack(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewBack(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_BACK));
 }
 
-void CAppObjectView::OnViewSmaller() 
+void CAppRenderView::OnViewSmaller() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(1.25);
@@ -467,7 +497,7 @@ void CAppObjectView::OnViewSmaller()
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewBigger() 
+void CAppRenderView::OnViewBigger() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(0.8);
@@ -475,13 +505,13 @@ void CAppObjectView::OnViewBigger()
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewSelect() 
+void CAppRenderView::OnViewSelect() 
 {
 	// TODO: Add your command handler code here
 	b3SetMagnification();
 }
 
-void CAppObjectView::OnViewPop() 
+void CAppRenderView::OnViewPop() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3PopView();
@@ -489,7 +519,7 @@ void CAppObjectView::OnViewPop()
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewOptimal() 
+void CAppRenderView::OnViewOptimal() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Original();
@@ -497,66 +527,66 @@ void CAppObjectView::OnViewOptimal()
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnUpdateViewSmaller(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewSmaller(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
-void CAppObjectView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
-void CAppObjectView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 	pCmdUI->SetCheck(m_SelectMode == B3_SELECT_MAGNIFICATION);
 }
 
-void CAppObjectView::OnUpdateViewPop(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewPop(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(m_RenderView.b3ViewStackNotEmpty());
 }
 
-void CAppObjectView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }
 
-void CAppObjectView::OnViewMoveRight() 
+void CAppRenderView::OnViewMoveRight() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(0.2,0.0);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewMoveLeft() 
+void CAppRenderView::OnViewMoveLeft() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(-0.2,0.0);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewMoveUp() 
+void CAppRenderView::OnViewMoveUp() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(0.0,0.2);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnViewMoveDown() 
+void CAppRenderView::OnViewMoveDown() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Move(0.0,-0.2);
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
-void CAppObjectView::OnUpdateViewMove(CCmdUI* pCmdUI) 
+void CAppRenderView::OnUpdateViewMove(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));

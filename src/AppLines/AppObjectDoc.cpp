@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/13 19:24:11  sm
+**	- Introduced CAppRenderDoc/View (puuh!)
+**
 **	Revision 1.1  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
-**
+**	
 **
 */
 
@@ -48,14 +51,14 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CAppObjectDoc, CDocument)
+IMPLEMENT_DYNCREATE(CAppObjectDoc, CAppRenderDoc)
 
-BEGIN_MESSAGE_MAP(CAppObjectDoc, CDocument)
+BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	//{{AFX_MSG_MAP(CAppObjectDoc)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-BEGIN_DISPATCH_MAP(CAppObjectDoc, CDocument)
+BEGIN_DISPATCH_MAP(CAppObjectDoc, CAppRenderDoc)
 	//{{AFX_DISPATCH_MAP(CAppObjectDoc)
 		// NOTE - the ClassWizard will add and remove mapping macros here.
 		//      DO NOT EDIT what you see in these blocks of generated code!
@@ -67,11 +70,11 @@ END_DISPATCH_MAP()
 //  dispinterface in the .ODL file.
 
 // {72D69519-8984-11D5-A54F-0050BF4EB3F4}
-static const IID IID_IAppLines =
+static const IID IID_IAppObject =
 { 0x72d69519, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf4 } };
 
-BEGIN_INTERFACE_MAP(CAppObjectDoc, CDocument)
-	INTERFACE_PART(CAppObjectDoc, IID_IAppLines, Dispatch)
+BEGIN_INTERFACE_MAP(CAppObjectDoc, CAppRenderDoc)
+	INTERFACE_PART(CAppObjectDoc, IID_IAppObject, Dispatch)
 END_INTERFACE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -83,7 +86,6 @@ CAppObjectDoc::CAppObjectDoc()
 	m_BBox         = null;
 	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
-	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -165,29 +167,3 @@ void CAppObjectDoc::Dump(CDumpContext& dc) const
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
-
-/*************************************************************************
-**                                                                      **
-**                        General scene commands                        **
-**                                                                      **
-*************************************************************************/
-
-b3_vector *CAppObjectDoc::b3GetFulcrum()
-{
-	return &m_Info->m_Center;
-}
-
-b3_vector *CAppObjectDoc::b3GetStepMove()
-{
-	return &m_Info->m_StepMove;
-}
-
-b3_vector *CAppObjectDoc::b3GetStepRotate()
-{
-	return &m_Info->m_StepRotate;
-}
-
-void CAppObjectDoc::b3DrawFulcrum()
-{
-	m_Fulcrum.b3Draw();
-}

@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/01/13 19:24:12  sm
+**	- Introduced CAppRenderDoc/View (puuh!)
+**
 **	Revision 1.10  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
-**
+**	
 **	Revision 1.9  2002/01/05 22:17:48  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
@@ -787,6 +790,13 @@ void CB3Toolbar::b3Print(CRect &rect,long dw)
 **                        Blizzard III Menubar base class               **
 **                                                                      **
 *************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3Menubar, CMenuBar)
+
+BEGIN_MESSAGE_MAP(CB3Menubar, CMenuBar)
+	//{{AFX_MSG_MAP(CB3Menubar)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
 
 CB3Menubar::CB3Menubar() : b3Link<CB3Menubar>(sizeof(CB3Menubar))
 {

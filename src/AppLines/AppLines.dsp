@@ -112,6 +112,10 @@ SOURCE=.\AppLinesView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppObject.odl
+# End Source File
+# Begin Source File
+
 SOURCE=.\AppObjectDoc.cpp
 # End Source File
 # Begin Source File
@@ -125,6 +129,14 @@ SOURCE=.\AppRaytraceDoc.cpp
 # Begin Source File
 
 SOURCE=.\AppRaytraceView.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppRenderDoc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppRenderView.cpp
 # End Source File
 # Begin Source File
 
@@ -265,6 +277,14 @@ SOURCE=.\AppRaytraceDoc.h
 # Begin Source File
 
 SOURCE=.\AppRaytraceView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppRenderDoc.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppRenderView.h
 # End Source File
 # Begin Source File
 
