@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2005/01/03 10:34:30  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.36  2004/12/03 12:34:10  smork
 **	- Grid and polygon count computation added for torus and ellipsoid.
-**
+**	
 **	Revision 1.35  2004/12/03 11:58:30  smork
 **	- Removed b3Mem from b3RenderObject as base class. The b3Shape
 **	  class and the torus/ellipsoid derivatives had to be corrected.
@@ -294,26 +301,15 @@ b3_bool b3Torus::b3Prepare()
 	b3_f64  denom,scale;
 	b3_bool result = false;
 
-	if ((scale = b3Vector::b3Normalize(&m_Dir1)) == 0)
-	{
-		scale = 1;
-	}
+	scale = b3Vector::b3Normalize(&m_Dir1);
 
-	if ((denom = b3Vector::b3Normalize(&m_Dir2)) != 0)
-	{
-		scale += denom;
-	}
-	else
-	{
-		scale += 1;
-	}
+	denom = b3Vector::b3Normalize(&m_Dir2);
+	scale += denom;
 	m_aRad *= (scale * 0.5);
 
 	denom = b3Vector::b3Normalize(&m_Dir3);
-	if ((denom != 1) && (denom != 0))
-	{
-		m_bRad   *= denom;
-	}
+	m_bRad   *= denom;
+
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;
 

@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2005/01/03 10:34:30  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.43  2004/07/22 12:17:31  sm
 **	- Fixed triangle into grid insertion problem.
-**
+**	
 **	Revision 1.42  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -256,39 +263,37 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64    Denom,aValue,bValue,lValue,result = -1;
 	b3_vector Dir,Product;
  
-	if ((Denom =
+	Denom = 1.0 / (
 		-m_Normal.x * ray->dir.x
 		-m_Normal.y * ray->dir.y
-		-m_Normal.z * ray->dir.z) != 0)
-	{
-		Denom = 1 / Denom;
-		if (((lValue = (
-			m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
-			m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
-			m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-				* Denom) >= b3Scene::epsilon) && (lValue < ray->Q))
-		{
-			aValue = (
-				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
-				m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
-				m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
-					* Denom;
-			if (fabs(aValue) <= 1)
-			{
-				bValue = (
-					-m_Dir1.x * Product.x
-					-m_Dir1.y * Product.y
-					-m_Dir1.z * Product.z) * Denom;
-				if (fabs(bValue) <= 1)
-				{
-					polar->m_Polar.x = polar->m_ObjectPolar.x = aValue;
-					polar->m_Polar.y = polar->m_ObjectPolar.y = bValue;
-					polar->m_Polar.z = polar->m_ObjectPolar.z = 0;
+		-m_Normal.z * ray->dir.z);
 
-					if(b3CheckStencil(polar))
-					{
-						result = lValue;
-					}
+	if (((lValue = (
+		m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
+		m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
+		m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
+			* Denom) >= b3Scene::epsilon) && (lValue < ray->Q))
+	{
+		aValue = (
+			m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
+			m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
+			m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
+				* Denom;
+		if (fabs(aValue) <= 1)
+		{
+			bValue = (
+				-m_Dir1.x * Product.x
+				-m_Dir1.y * Product.y
+				-m_Dir1.z * Product.z) * Denom;
+			if (fabs(bValue) <= 1)
+			{
+				polar->m_Polar.x = polar->m_ObjectPolar.x = aValue;
+				polar->m_Polar.y = polar->m_ObjectPolar.y = bValue;
+				polar->m_Polar.z = polar->m_ObjectPolar.z = 0;
+
+				if(b3CheckStencil(polar))
+				{
+					result = lValue;
 				}
 			}
 		}
@@ -301,14 +306,10 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64     Denom,aValue,bValue,lValue;
 	b3_vector  Dir,Product;
  
-	if ((Denom =
+	Denom = 1.0 / (
 		-m_Normal.x * ray->dir.x
 		-m_Normal.y * ray->dir.y
-		-m_Normal.z * ray->dir.z) == 0)
-	{
-		return -1;
-	}
-	Denom = 1 / Denom;
+		-m_Normal.z * ray->dir.z);
 
 	// check distance
 	if ((lValue = (
@@ -395,7 +396,7 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 
 	// now compute "north pole" - radius is point on equator
-	if ((m_Dir.x == 0) && (m_Dir.y == 0))
+	if (b3Math::b3NearZero(m_Dir.x) && b3Math::b3NearZero(m_Dir.y))
 	{
 		// special case: point on equator is north pole
 		aux.x   = m_Dir.z;
@@ -482,13 +483,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64    l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
-	if ((a =
-		BTLine.dir.x * BTLine.dir.x +
-		BTLine.dir.y * BTLine.dir.y) == 0)
-	{
-		return -1;
-	}
-	a = 1.0 / a;
+	a = 1.0 / (BTLine.dir.x * BTLine.dir.x + BTLine.dir.y * BTLine.dir.y);
 
 	p = (
 		BTLine.dir.x * BTLine.pos.x +
@@ -584,15 +579,11 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64    l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
-	if ((a =
+	a = 1.0 / (
 		BTLine.dir.x * BTLine.dir.x +
 		BTLine.dir.y * BTLine.dir.y -
-		BTLine.dir.z * BTLine.dir.z) == 0)
-	{
-		return -1;
-	}
+		BTLine.dir.z * BTLine.dir.z);
 
-	a = 1.0 / a;
 	p = (
 		BTLine.dir.x  *      BTLine.pos.x +
 		BTLine.dir.y  *      BTLine.pos.y +
@@ -687,15 +678,11 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64     l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
-	a = BTLine.dir.x * BTLine.dir.x +
+	a = 1.0 / (
+		BTLine.dir.x * BTLine.dir.x +
 		BTLine.dir.y * BTLine.dir.y +
-		BTLine.dir.z * BTLine.dir.z;
-	if (a == 0)
-	{
-		return -1;
-	}
+		BTLine.dir.z * BTLine.dir.z);
 
-	a = 1 / a;
 	p = (BTLine.dir.x * BTLine.pos.x +
 		 BTLine.dir.y * BTLine.pos.y +
 		 BTLine.dir.z * BTLine.pos.z) * a;
@@ -777,7 +764,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 	EndPoint.y = (BasePoint.y = -BTLine.pos.y) + 1;
 	EndPoint.z = (BasePoint.z = -BTLine.pos.z) + 1;
 
-	if (BTLine.dir.x != 0)
+	if (!b3Math::b3NearZero(BTLine.dir.x))
 	{
 		if ((m = BasePoint.x / BTLine.dir.x) >= b3Scene::epsilon)
 		{
@@ -810,7 +797,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 	}
 
-	if (BTLine.dir.y != 0)
+	if (!b3Math::b3NearZero(BTLine.dir.y))
 	{
 		if ((m = BasePoint.y / BTLine.dir.y) >= b3Scene::epsilon)
 		{
@@ -843,7 +830,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 	}
 
-	if (BTLine.dir.z != 0)
+	if (!b3Math::b3NearZero(BTLine.dir.z))
 	{
 		if ((m = BasePoint.z / BTLine.dir.z) >= b3Scene::epsilon)
 		{
@@ -1004,7 +991,6 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 	b3_vector32     aux,product;
 	b3_vector32     dir,pos;
 	b3_f32          denominator;
-	b3_f32          nominator;
 	b3_f32          aValue,bValue;
 	b3_f32          e = b3Scene::epsilon;
 	b3_f32          OldValue = -1,lValue;
@@ -1031,12 +1017,12 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 		Triangle = &m_Triangles[Index];
 		info     = &infos[Index];
 
-		if ((nominator = 
+		denominator = -1.0 / (
 			info->Normal.x * ray->dir.x +
 			info->Normal.y * ray->dir.y +
-			info->Normal.z * ray->dir.z) != 0)
+			info->Normal.z * ray->dir.z);
 		{
-			lValue = (denominator = -1.0 / nominator) * (
+			lValue = denominator * (
 				info->Normal.x * (aux.x = pos.x - info->O.x) +
 				info->Normal.y * (aux.y = pos.y - info->O.y) +
 				info->Normal.z * (aux.z = pos.z - info->O.z));
@@ -1314,91 +1300,88 @@ b3_bool b3CSGCylinder::b3Intersect(
 	b3BaseTrans (ray,BTLine);
 
 	// Compute normal cylinder intersection
-	a = BTLine->dir.x * BTLine->dir.x +
-	    BTLine->dir.y * BTLine->dir.y;
-	if (a != 0)
-	{
-		a = 1 / a;
-		p = (BTLine->dir.x * BTLine->pos.x +
-			 BTLine->dir.y * BTLine->pos.y) * a;
-		if ((Discriminant = p * p - (
-			BTLine->pos.x * BTLine->pos.x +
-			BTLine->pos.y * BTLine->pos.y - 1) * a) >= 0)
-		{
-			z  = sqrt(Discriminant);
-			l1 = -p - z;
-			l2 = -p + z;
+	a = 1.0 / (
+		BTLine->dir.x * BTLine->dir.x +
+	    BTLine->dir.y * BTLine->dir.y);
 
-			// check near intersection
-			z = BTLine->pos.z + l1 * BTLine->dir.z;
-			if (z < 0)
+	p = (BTLine->dir.x * BTLine->pos.x +
+		 BTLine->dir.y * BTLine->pos.y) * a;
+	if ((Discriminant = p * p - (
+		BTLine->pos.x * BTLine->pos.x +
+		BTLine->pos.y * BTLine->pos.y - 1) * a) >= 0)
+	{
+		z  = sqrt(Discriminant);
+		l1 = -p - z;
+		l2 = -p + z;
+
+		// check near intersection
+		z = BTLine->pos.z + l1 * BTLine->dir.z;
+		if (z < 0)
+		{
+			l1 =  -BTLine->pos.z      / BTLine->dir.z;
+			x  =   BTLine->pos.x + l1 * BTLine->dir.x;
+			y  =   BTLine->pos.y + l1 * BTLine->dir.y;
+			check = (x * x + y * y) <= 1;
+			interval->m_x[0].m_Index = B3_CSG_BOTTOM;
+		}
+		else
+		{
+			if (z > 1)
 			{
-				l1 =  -BTLine->pos.z      / BTLine->dir.z;
+				l1 = (-BTLine->pos.z + 1) / BTLine->dir.z;
 				x  =   BTLine->pos.x + l1 * BTLine->dir.x;
 				y  =   BTLine->pos.y + l1 * BTLine->dir.y;
 				check = (x * x + y * y) <= 1;
-				interval->m_x[0].m_Index = B3_CSG_BOTTOM;
+				interval->m_x[0].m_Index = B3_CSG_TOP;
 			}
 			else
 			{
-				if (z > 1)
-				{
-					l1 = (-BTLine->pos.z + 1) / BTLine->dir.z;
-					x  =   BTLine->pos.x + l1 * BTLine->dir.x;
-					y  =   BTLine->pos.y + l1 * BTLine->dir.y;
-					check = (x * x + y * y) <= 1;
-					interval->m_x[0].m_Index = B3_CSG_TOP;
-				}
-				else
-				{
-					check = true;
-					interval->m_x[0].m_Index = B3_CSG_NORMAL;
-				}
+				check = true;
+				interval->m_x[0].m_Index = B3_CSG_NORMAL;
 			}
-			if (check)
-			{
-				interval->m_x[0].m_Q       = l1;
-				interval->m_x[0].m_Shape   = this;
-				interval->m_x[0].m_BTLine = BTLine;
-				interval->m_Count++;
-			}
+		}
+		if (check)
+		{
+			interval->m_x[0].m_Q       = l1;
+			interval->m_x[0].m_Shape   = this;
+			interval->m_x[0].m_BTLine = BTLine;
+			interval->m_Count++;
+		}
 
-
-			// check far intersection
-			z = BTLine->pos.z + l2 * BTLine->dir.z;
-			if (z < 0)
+		// check far intersection
+		z = BTLine->pos.z + l2 * BTLine->dir.z;
+		if (z < 0)
+		{
+			l2 =  -BTLine->pos.z      / BTLine->dir.z;
+			x  =   BTLine->pos.x + l2 * BTLine->dir.x;
+			y  =   BTLine->pos.y + l2 * BTLine->dir.y;
+			check = (x * x + y * y) <= 1;
+			interval->m_x[interval->m_Count].m_Index = B3_CSG_BOTTOM;	/* Zylinderboden */
+		}
+		else
+		{
+			if (z > 1)
 			{
-				l2 =  -BTLine->pos.z      / BTLine->dir.z;
+				l2 = (-BTLine->pos.z + 1) / BTLine->dir.z;
 				x  =   BTLine->pos.x + l2 * BTLine->dir.x;
 				y  =   BTLine->pos.y + l2 * BTLine->dir.y;
 				check = (x * x + y * y) <= 1;
-				interval->m_x[interval->m_Count].m_Index = B3_CSG_BOTTOM;	/* Zylinderboden */
+				interval->m_x[interval->m_Count].m_Index = B3_CSG_TOP;	/* Zylinderdeckel */
 			}
 			else
 			{
-				if (z > 1)
-				{
-					l2 = (-BTLine->pos.z + 1) / BTLine->dir.z;
-					x  =   BTLine->pos.x + l2 * BTLine->dir.x;
-					y  =   BTLine->pos.y + l2 * BTLine->dir.y;
-					check = (x * x + y * y) <= 1;
-					interval->m_x[interval->m_Count].m_Index = B3_CSG_TOP;	/* Zylinderdeckel */
-				}
-				else
-				{
-					check = true;
-					interval->m_x[interval->m_Count].m_Index = B3_CSG_NORMAL;	/* Zylindermantel */
-				}
+				check = true;
+				interval->m_x[interval->m_Count].m_Index = B3_CSG_NORMAL;	/* Zylindermantel */
 			}
-			if (check)
-			{
-				interval->m_x[interval->m_Count].m_Q       = l2;
-				interval->m_x[interval->m_Count].m_Shape   = this;
-				interval->m_x[interval->m_Count].m_BTLine = BTLine;
-				interval->m_Count++;
-			}
-			B3_ASSERT(interval->m_Count != 1);
 		}
+		if (check)
+		{
+			interval->m_x[interval->m_Count].m_Q       = l2;
+			interval->m_x[interval->m_Count].m_Shape   = this;
+			interval->m_x[interval->m_Count].m_BTLine = BTLine;
+			interval->m_Count++;
+		}
+		B3_ASSERT(interval->m_Count != 1);
 	}
 	return interval->m_Count > 0;
 }
@@ -1413,69 +1396,67 @@ b3_bool b3CSGCone::b3Intersect(
 
 	interval->m_Count = 0;
 	b3BaseTrans (ray,BTLine);
-	a = BTLine->dir.x * BTLine->dir.x +
+	a = 1.0 / (
+		BTLine->dir.x * BTLine->dir.x +
 		BTLine->dir.y * BTLine->dir.y -
-		BTLine->dir.z * BTLine->dir.z;
-	if (a != 0)
+		BTLine->dir.z * BTLine->dir.z);
+
+	p = (
+		BTLine->dir.x  *      BTLine->pos.x +
+		BTLine->dir.y  *      BTLine->pos.y +
+		BTLine->dir.z  * (1 - BTLine->pos.z)) * a;
+	if ((Discriminant = p * p - (
+		      BTLine->pos.x  *      BTLine->pos.x +
+			  BTLine->pos.y  *      BTLine->pos.y -
+		 (1 - BTLine->pos.z) * (1 - BTLine->pos.z)) * a) >= 0)
 	{
-		a = 1 / a;
-		p = (
-			BTLine->dir.x  *      BTLine->pos.x +
-			BTLine->dir.y  *      BTLine->pos.y +
-			BTLine->dir.z  * (1 - BTLine->pos.z)) * a;
-		if ((Discriminant = p * p - (
-			      BTLine->pos.x  *      BTLine->pos.x +
-				  BTLine->pos.y  *      BTLine->pos.y -
-			 (1 - BTLine->pos.z) * (1 - BTLine->pos.z)) * a) >= 0)
+		Discriminant = sqrt(Discriminant);
+		z1           = BTLine->pos.z + (l1 = -p - Discriminant) * BTLine->dir.z;
+		z2           = BTLine->pos.z + (l2 = -p + Discriminant) * BTLine->dir.z;
+
+		if ((z1 >= 0) && (z1 <= 1))
 		{
-			Discriminant = sqrt(Discriminant);
-			z1           = BTLine->pos.z + (l1 = -p - Discriminant) * BTLine->dir.z;
-			z2           = BTLine->pos.z + (l2 = -p + Discriminant) * BTLine->dir.z;
-
-			if ((z1 >= 0) && (z1 <= 1))
-			{
-				interval->m_x[Index].m_Q      = l1;
-				interval->m_x[Index].m_Shape  = this;
-				interval->m_x[Index].m_BTLine = BTLine;
-				interval->m_x[Index].m_Index  = B3_CSG_NORMAL;
-				Index++;
-			}
-
-			if ((z2 >= 0) && (z2 <= 1))
-			{
-				interval->m_x[Index].m_Q      = l2;
-				interval->m_x[Index].m_Shape  = this;
-				interval->m_x[Index].m_BTLine = BTLine;
-				interval->m_x[Index].m_Index  = B3_CSG_NORMAL;
-				Index++;
-			}
-
-			if (Index < 2)
-			{
-				l1 = -BTLine->pos.z /      BTLine->dir.z;
-				x  =  BTLine->pos.x + l1 * BTLine->dir.x;
-				y  =  BTLine->pos.y + l1 * BTLine->dir.y;
-				if ((x * x + y * y) <= 1)
-				{
-					if (l1 < interval->m_x[0].m_Q)
-					{
-						interval->m_x[1] = interval->m_x[0];
-						interval->m_x[0].m_Q      = l1;
-						interval->m_x[0].m_Index  = B3_CSG_BOTTOM;
-					}
-					else
-		            {
-						interval->m_x[1].m_Q      = l1;
-						interval->m_x[1].m_Index  = B3_CSG_BOTTOM;
-						interval->m_x[1].m_Shape  = this;
-						interval->m_x[1].m_BTLine = BTLine;
-					}
-
-					Index++;
-				}
-			}
-			interval->m_Count = Index;
+			interval->m_x[Index].m_Q      = l1;
+			interval->m_x[Index].m_Shape  = this;
+			interval->m_x[Index].m_BTLine = BTLine;
+			interval->m_x[Index].m_Index  = B3_CSG_NORMAL;
+			Index++;
 		}
+
+		if ((z2 >= 0) && (z2 <= 1))
+		{
+			interval->m_x[Index].m_Q      = l2;
+			interval->m_x[Index].m_Shape  = this;
+			interval->m_x[Index].m_BTLine = BTLine;
+			interval->m_x[Index].m_Index  = B3_CSG_NORMAL;
+			Index++;
+		}
+
+		if (Index < 2)
+		{
+			l1 = -BTLine->pos.z /      BTLine->dir.z;
+			x  =  BTLine->pos.x + l1 * BTLine->dir.x;
+			y  =  BTLine->pos.y + l1 * BTLine->dir.y;
+			if ((x * x + y * y) <= 1)
+			{
+				if (l1 < interval->m_x[0].m_Q)
+				{
+					interval->m_x[1] = interval->m_x[0];
+					interval->m_x[0].m_Q      = l1;
+					interval->m_x[0].m_Index  = B3_CSG_BOTTOM;
+				}
+				else
+	            {
+					interval->m_x[1].m_Q      = l1;
+					interval->m_x[1].m_Index  = B3_CSG_BOTTOM;
+					interval->m_x[1].m_Shape  = this;
+					interval->m_x[1].m_BTLine = BTLine;
+				}
+
+				Index++;
+			}
+		}
+		interval->m_Count = Index;
 	}
 	return interval->m_Count > 0;
 }
@@ -1489,30 +1470,28 @@ b3_bool b3CSGEllipsoid::b3Intersect(
 
 	interval->m_Count = 0;
 	b3BaseTrans (ray,BTLine);
-	a = BTLine->dir.x * BTLine->dir.x +
+	a = 1.0 / (
+		BTLine->dir.x * BTLine->dir.x +
 		BTLine->dir.y * BTLine->dir.y +
-		BTLine->dir.z * BTLine->dir.z;
-	if (a != 0)
-	{
-		a = 1 / a;
-		p = (BTLine->dir.x * BTLine->pos.x +
-			 BTLine->dir.y * BTLine->pos.y +
-			 BTLine->dir.z * BTLine->pos.z) * a;
-		if ((Discriminant = p * p -
-			(BTLine->pos.x * BTLine->pos.x +
-			 BTLine->pos.y * BTLine->pos.y +
-			 BTLine->pos.z * BTLine->pos.z - 1) * a) >= 0)
-		{
-			z  = sqrt(Discriminant);
+		BTLine->dir.z * BTLine->dir.z);
 
-			interval->m_x[0].m_Q      = -z - p;
-			interval->m_x[0].m_Shape  = this;
-			interval->m_x[0].m_BTLine = BTLine;
-			interval->m_x[1].m_Q      =  z - p;
-			interval->m_x[1].m_Shape  = this;
-			interval->m_x[1].m_BTLine = BTLine;
-			interval->m_Count         = 2;
-		}
+	p = (BTLine->dir.x * BTLine->pos.x +
+		 BTLine->dir.y * BTLine->pos.y +
+		 BTLine->dir.z * BTLine->pos.z) * a;
+	if ((Discriminant = p * p -
+		(BTLine->pos.x * BTLine->pos.x +
+		 BTLine->pos.y * BTLine->pos.y +
+		 BTLine->pos.z * BTLine->pos.z - 1) * a) >= 0)
+	{
+		z  = sqrt(Discriminant);
+
+		interval->m_x[0].m_Q      = -z - p;
+		interval->m_x[0].m_Shape  = this;
+		interval->m_x[0].m_BTLine = BTLine;
+		interval->m_x[1].m_Q      =  z - p;
+		interval->m_x[1].m_Shape  = this;
+		interval->m_x[1].m_BTLine = BTLine;
+		interval->m_Count         = 2;
 	}
 	return interval->m_Count > 0;
 }
@@ -1535,7 +1514,7 @@ b3_bool b3CSGBox::b3Intersect(
 	EndPoint.y = (BasePoint.y = -BTLine->pos.y) + 1;
 	EndPoint.z = (BasePoint.z = -BTLine->pos.z) + 1;
 
-	if (BTLine->dir.x != 0)
+	if (!b3Math::b3NearZero(BTLine->dir.x))
 	{
 		m = BasePoint.x / BTLine->dir.x;
 		y = m * BTLine->dir.y;
@@ -1564,7 +1543,7 @@ b3_bool b3CSGBox::b3Intersect(
 		}
 	}
 
-	if (BTLine->dir.y != 0)
+	if (!b3Math::b3NearZero(BTLine->dir.y))
 	{
 		m = BasePoint.y / BTLine->dir.y;
 		x = m * BTLine->dir.x;
@@ -1593,7 +1572,7 @@ b3_bool b3CSGBox::b3Intersect(
 		}
 	}
 
-	if (BTLine->dir.z != 0)
+	if (!b3Math::b3NearZero(BTLine->dir.z))
 	{
 		m = BasePoint.z / BTLine->dir.z;
 		y = m * BTLine->dir.y;

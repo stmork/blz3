@@ -35,9 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2005/01/03 10:34:29  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.40  2004/10/07 10:33:08  sm
 **	- Added some GIF tools and made them usable with Blizzard III.
-**
+**	
 **	Revision 1.39  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
 **	
@@ -296,11 +303,10 @@ void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 
 	b3Scale(ray,&m_Scale,&point);
 
-	Denom =	ray->normal.x * ray->normal.x +
-			ray->normal.y * ray->normal.y +
-			ray->normal.z * ray->normal.z;
-	if (Denom == 0) return;
-	if (Denom != 1) Denom = 1/sqrt(Denom);  
+	Denom = 1.0 / sqrt(
+		ray->normal.x * ray->normal.x +
+		ray->normal.y * ray->normal.y +
+		ray->normal.z * ray->normal.z);
 
 	b3Noise::b3NoiseVector (point.x,point.y,point.z,&n);
 	ray->normal.x = ray->normal.x * Denom + n.x * m_Amplitude;
@@ -573,12 +579,10 @@ void b3BumpWater::b3BumpNormal(b3_ray *ray)
 	n.y = ox.z * oy.x - ox.x - oy.z;
 	n.z = ox.x * oy.y - ox.y - oy.x;
 
-	Denom =
+	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if (Denom == 0) Denom = 1;
-	if (Denom != 1) Denom = 1 / sqrt(Denom);
+		ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -643,12 +647,10 @@ void b3BumpWave::b3BumpNormal(b3_ray *ray)
 	n.y = ox.z * oy.x - ox.x - oy.z;
 	n.z = ox.x * oy.y - ox.y - oy.x;
 
-	Denom =
+	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if (Denom == 0) Denom = 1;
-	if (Denom != 1) Denom = 1 / sqrt(Denom);
+		ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -717,12 +719,10 @@ void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 	n.y = ox.z * oy.x - ox.x - oy.z;
 	n.z = ox.x * oy.y - ox.y - oy.x;
 
-	Denom =
+	Denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if (Denom == 0) Denom = 1;
-	if (Denom != 1) Denom = 1.0 / sqrt(Denom);
+		ray->normal.z * ray->normal.z);
 
 	ray->normal.x = ray->normal.x * Denom + n.x * r;
 	ray->normal.y = ray->normal.y * Denom + n.y * r;
@@ -762,10 +762,7 @@ void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
 		ray->normal.z * ray->normal.z;
 	if (Denom > 0)
 	{
-		if (Denom != 1)
-		{
-			Denom = 1 / sqrt(Denom);
-		}
+		Denom = 1 / sqrt(Denom);
 
 		ray->normal.x = ray->normal.x * Denom + (B3_FRAN(0.9) - 0.45) * m_Amplitude;
 		ray->normal.y = ray->normal.y * Denom + (B3_FRAN(0.9) - 0.45) * m_Amplitude;

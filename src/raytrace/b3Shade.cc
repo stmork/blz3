@@ -35,9 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2005/01/03 10:34:30  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.55  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
-**
+**	
 **	Revision 1.54  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
@@ -398,22 +405,13 @@ b3_bool b3Shader::b3Shade(
 	b3_bool      finite;
 
 	// Normalize incoming ray
-	denom =
+	denom = 1.0 / sqrt(
 		ray->dir.x * ray->dir.x +
 		ray->dir.y * ray->dir.y +
-		ray->dir.z * ray->dir.z;
-	if (denom != 0)
-	{
-		denom       = 1.0 / sqrt(denom);
-		ray->dir.x *= denom;
-		ray->dir.y *= denom;
-		ray->dir.z *= denom;
-	}
-	else
-	{
-		// Emergency exit
-		return false;
-	}
+		ray->dir.z * ray->dir.z);
+	ray->dir.x *= denom;
+	ray->dir.y *= denom;
+	ray->dir.z *= denom;
 
 	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray))
 	{

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.63  2005/01/03 10:34:30  smork
+**      - Rebalanced some floating point comparisons:
+**        a == 0  -> b3Math::b3NearZero
+**        a == b  -> b3Math::b3IsEqual
+**      - Removed some very inlikely fp comparisons
+**        in intersection methods.
+**
 **      Revision 1.62  2004/05/22 14:17:31  sm
 **      - Merging some basic raytracing structures and gave them some
 **        self explaining names. Also cleaned up some parameter lists.
@@ -379,10 +386,12 @@ void b3Shape::b3Register()
 
 b3_bool b3ShapeBaseTrans::b3Prepare()
 {
-	b3_f64 denom;
+	b3_f64  denom;
+	b3_bool is_zero_volume;
 
 	denom = b3Matrix::b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
-	if (denom != 0)
+	is_zero_volume = b3Math::b3NearZero(denom);
+	if (!is_zero_volume)
 	{
 		m_Denom        = 1.0 / denom;
 
@@ -407,7 +416,8 @@ b3_bool b3ShapeBaseTrans::b3Prepare()
 	m_DirLen[0] = b3Vector::b3QuadLength(&m_Dir1);
 	m_DirLen[1] = b3Vector::b3QuadLength(&m_Dir2);
 	m_DirLen[2] = b3Vector::b3QuadLength(&m_Dir3);
-	return denom != 0;
+
+	return !is_zero_volume;
 }
 
 void b3ShapeBaseTrans::b3BaseTrans(
@@ -616,17 +626,14 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 		}
 	}
 
-	denom =
+	denom = 1.0 / sqrt(
 		ray->normal.x * ray->normal.x +
 		ray->normal.y * ray->normal.y +
-		ray->normal.z * ray->normal.z;
-	if ((denom != 0) && (denom != 1))
-	{
-		denom = 1.0 / sqrt(denom);
-		ray->normal.x *= denom;
-		ray->normal.y *= denom;
-		ray->normal.z *= denom;
-	}
+		ray->normal.z * ray->normal.z);
+
+	ray->normal.x *= denom;
+	ray->normal.y *= denom;
+	ray->normal.z *= denom;
 }
 
 void b3Shape::b3SetupPicking(b3PickInfo *info)

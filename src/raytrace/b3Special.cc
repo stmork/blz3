@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.72  2005/01/03 10:34:30  smork
+**      - Rebalanced some floating point comparisons:
+**        a == 0  -> b3Math::b3NearZero
+**        a == b  -> b3Math::b3IsEqual
+**      - Removed some very inlikely fp comparisons
+**        in intersection methods.
+**
 **      Revision 1.71  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -558,13 +565,13 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Sub(view,eye,&dir);
 	b3Vector::b3Normalize(&dir,focal_length);
 	b3Vector::b3Add(eye,&dir,&m_ViewPoint);
-	if ((dir.x != 0) || (dir.y != 0))
+	if (b3Math::b3NearZero(dir.x) && b3Math::b3NearZero(dir.y))
 	{
-		b3Vector::b3Init(&up,0,0,1);
+		b3Vector::b3Init(&up,1,0,0);
 	}
 	else
 	{
-		b3Vector::b3Init(&up,1,0,0);
+		b3Vector::b3Init(&up,0,0,1);
 	}
 	b3Vector::b3CrossProduct(&dir,&up,&m_Width);
 	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
@@ -642,7 +649,7 @@ b3_f64 b3CameraPart::b3GetTwirl()
 	ViewDir.y = m_ViewPoint.y - m_EyePoint.y;
 	ViewDir.z = m_ViewPoint.z - m_EyePoint.z;
 
-	if ((ViewDir.x == 0) && (ViewDir.y == 0))
+	if (b3Math::b3NearZero(ViewDir.x) && b3Math::b3NearZero(ViewDir.y))
 	{
 		return 0;
 	}
@@ -682,7 +689,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	m_ViewPoint.y = m_EyePoint.y + factor * RotLine.dir.y;
 	m_ViewPoint.z = m_EyePoint.z + factor * RotLine.dir.z;
 
-	if ((RotLine.dir.x == 0) && (RotLine.dir.y == 0))
+	if (b3Math::b3NearZero(RotLine.dir.x) && b3Math::b3NearZero(RotLine.dir.y))
 	{
 		m_Width.x =  1;
 		m_Width.y =  0;
@@ -702,7 +709,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	b3Vector::b3Normalize(&m_Height,height);
 
 	// set to the old twirl
-	if (twirl != 0.0)
+	if (!b3Math::b3NearZero(twirl))
 	{
 		b3Matrix::b3RotateVector (null,&RotMatrix,&RotLine,-twirl);
 		b3Matrix::b3VMul   (&RotMatrix,&m_Width, &m_Width, false);

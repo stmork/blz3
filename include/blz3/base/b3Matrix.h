@@ -106,10 +106,11 @@ public:
 		const b3_vector *vec1,
 		const b3_vector *vec2)
 	{
-		return
-			(vec1->x == vec2->x) &&
-			(vec1->y == vec2->y) &&
-			(vec1->z == vec2->z);
+		b3_f32 x = vec2->x - vec1->x;
+		b3_f32 y = vec2->y - vec1->y;
+		b3_f32 z = vec2->z - vec1->z;
+
+		return (x*x + y*y + z*z) < 0.0001;
 	}
 
 	static inline b3_vector *b3Negate(b3_vector *negate)
@@ -624,9 +625,9 @@ public:
 		const b3_vector *Vector1,
 		const b3_vector *Vector2)
 	{
-		b3_f64 Denom;
+		b3_f64 Denom = b3Length(Vector1) * b3Length(Vector2);
 
-		if ((Denom = b3Length(Vector1) * b3Length(Vector2)) != 0)
+		if (fabs(Denom) > 0.0001)
 		{
 			return (
 				Vector1->x * Vector2->x  +

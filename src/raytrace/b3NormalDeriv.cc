@@ -31,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/01/03 10:34:30  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.3  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.2  2004/04/12 15:41:50  sm
 **	- Right computation of normal derivation.
 **	
@@ -61,7 +68,7 @@ b3_bool b3Shape::b3NormalDeriv(b3_ray *ray)
 
 b3_bool b3Sphere::b3NormalDeriv(b3_ray *ray)
 {
-	if ((ray->normal.x == 0) && (ray->normal.y == 0))
+	if (b3Math::b3NearZero(ray->normal.x) && b3Math::b3NearZero(ray->normal.y))
 	{
 		// Gimble lock
 		return b3Shape::b3NormalDeriv(ray);

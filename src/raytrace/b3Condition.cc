@@ -32,6 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2005/01/03 10:34:30  smork
+**	- Rebalanced some floating point comparisons:
+**	  a == 0  -> b3Math::b3NearZero
+**	  a == b  -> b3Math::b3IsEqual
+**	- Removed some very inlikely fp comparisons
+**	  in intersection methods.
+**
 **	Revision 1.25  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -40,7 +47,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.24  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -508,17 +515,9 @@ b3_bool b3CondSegment::b3CheckStencil(b3_polar *polar)
 		return false;
 	}
  
-	if (x==0)
-	{
-		if (y<0)	angle = 270;
-		else		angle =  90;
-	}
-	else
-	{
-		angle = atan (y/x) * 180.0 / M_PI;
-		if (x     < 0) angle += 180;
-		if (angle < 0) angle += 360;
-	}
+	angle = atan (y/x) * 180.0 / M_PI;
+	if (x     < 0) angle += 180;
+	if (angle < 0) angle += 360;
 
 	if (m_AngleStart < m_AngleEnd)
 	{
@@ -627,16 +626,13 @@ b3_bool b3CondPara::b3CheckStencil(b3_polar *polar)
 
 	Dx = polar->m_Polar.x - m_xPos;
 	Dy = polar->m_Polar.y - m_yPos;
-	if (m_Denom == 0)
-	{
-		return false;
-	}
 
 	a = (Dx * m_yDir2 - Dy * m_xDir2) / m_Denom;
 	if ((a < 0) || (a > 1)) return (false);
 
 	b = (m_xDir1 * Dy - m_yDir1 * Dx) / m_Denom;
 	if ((b < 0) || (b > 1)) return (false);
+
 	return true;
 }
 
@@ -660,10 +656,6 @@ b3_bool b3CondTria::b3CheckStencil(b3_polar *polar)
 
 	Dx = polar->m_Polar.x - m_xPos;
 	Dy = polar->m_Polar.y - m_yPos;
-	if (m_Denom==0)
-	{
-		return false;
-	}
 
 	a = (Dx * m_yDir2 - Dy * m_xDir2) / m_Denom;
 	if (a < 0)
@@ -963,17 +955,10 @@ b3_bool b3CondEllipse::b3CheckStencil(b3_polar *polar)
 		return false;
 	}
  
-	if (x==0)
-	{
-		if (y<0) angle = 270;
-		else     angle =  90;
-	}
-	else
-	{
-		angle = atan (y/x) * 180.0 / M_PI;
-		if (x     < 0) angle += 180;
-		if (angle < 0) angle += 360;
-	}
+	angle = atan (y/x) * 180.0 / M_PI;
+	if (x     < 0) angle += 180;
+	if (angle < 0) angle += 360;
+
 	AngleEnd = m_AngleEnd;
 	if (m_AngleStart > AngleEnd)
 	{

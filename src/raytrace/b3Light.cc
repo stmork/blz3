@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2005/01/03 10:34:30  smork
+**      - Rebalanced some floating point comparisons:
+**        a == 0  -> b3Math::b3NearZero
+**        a == b  -> b3Math::b3IsEqual
+**      - Removed some very inlikely fp comparisons
+**        in intersection methods.
+**
 **      Revision 1.50  2004/10/16 17:00:52  sm
 **      - Moved lighting into own class to ensure light setup
 **        after view setup.
@@ -504,10 +511,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.dir.y = m_Position.y - surface->m_Incoming->ipoint.y;
 	Jit.dir.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
-	if ((LightDist = b3Vector::b3QuadLength(&Jit.dir)) == 0)
-	{
-		return false;
-	}
+	LightDist    = b3Vector::b3QuadLength(&Jit.dir);
 	RecLightDist = 1.0 / (LightDist = sqrt(LightDist));
 	Jit.dir.x *= RecLightDist;
 	Jit.dir.y *= RecLightDist;
@@ -579,10 +583,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_LightView.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	// normalizing light axis
-	if ((denomLightDist = b3Vector::b3QuadLength(&Jit.m_LightView)) == 0)
-	{
-		return false;
-	}
+	denomLightDist = b3Vector::b3QuadLength(&Jit.m_LightView);
 	denomLightDist = 1.0 / (Jit.m_LightDist = sqrt(denomLightDist));
 	Jit.m_LightView.x *= denomLightDist;
 	Jit.m_LightView.y *= denomLightDist;
@@ -705,15 +706,9 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	Jit->dir.y = Jit->m_LightView.y + jx * Jit->m_xDir.y + jy * Jit->m_yDir.y;
 	Jit->dir.z = Jit->m_LightView.z + jx * Jit->m_xDir.z + jy * Jit->m_yDir.z;
 
-	if ((LightDist = b3Vector::b3Normalize(&Jit->dir)) != 0)
-	{
-		shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
-		shader->b3Shade(this,Jit,surface);
-	}
-	else
-	{
-		Jit->shape = null;
-	}
+	LightDist = b3Vector::b3Normalize(&Jit->dir);
+	shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
+	shader->b3Shade(this,Jit,surface);
 
 	return Jit->shape;
 }

@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2005/01/03 10:34:29  smork
+**      - Rebalanced some floating point comparisons:
+**        a == 0  -> b3Math::b3NearZero
+**        a == b  -> b3Math::b3IsEqual
+**      - Removed some very inlikely fp comparisons
+**        in intersection methods.
+**
 **      Revision 1.13  2004/11/30 10:16:14  smork
 **      - Added a working VBO version which computes vertices/indices
 **        completely in CPU memory and only updates the results into
@@ -332,7 +339,7 @@ void b3AnimElement::b3AnimateRotate(
 
 	t1 = b3Math::b3Round(b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End),epsilon);
 	t2 = b3Math::b3Round(b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End),epsilon);
-	if (t1 != t2)
+	if (!b3Math::b3IsEqual(t1, t2))
 	{
 		// Compute present orientation
 		b3GetPosition (&lookTo, t);
@@ -341,7 +348,7 @@ void b3AnimElement::b3AnimateRotate(
 		lookTo.z -= m_Center.z;
 
 		// Which reference to use.
-		future = (t == t1);
+		future = b3Math::b3IsEqual(t, t1);
 
 		// Use future or past reference time?
 		tRef = future ? t2 : t1;

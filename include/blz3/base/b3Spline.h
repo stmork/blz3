@@ -19,6 +19,7 @@
 #define B3_BASE_SPLINE_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -606,9 +607,8 @@ public:
 				k      = i;
 				for (j = 0;j < l;j++)
 				{
-					denom     = knots[k+l] - knots[k];
-					if (denom != 0) r = (q - knots[k]) / denom;
-					else            r = 0;
+					denom      = knots[k+l] - knots[k];
+					r          = (q - knots[k]) / denom;
 					it[l-j]   += r * it[l-j-1];
 					it[l-j-1] *= (1 - r);
 					if (--k < 0) /* check underflow of knots */
@@ -628,9 +628,8 @@ public:
 				it[l]  = 0;
 				for (j = 0;j < l;j++)
 				{
-					denom   = knots[i-j+l]      - knots[i-j];
-					if (denom != 0) r = (qStart - knots[i-j]) / denom;
-					else            r = 0;
+					denom      = knots[i-j+l]      - knots[i-j];
+					r          = (qStart - knots[i-j]) / denom;
 					it[l-j]   += r * it[l-j-1];
 					it[l-j-1] *= (1 - r);
 				}
@@ -693,9 +692,8 @@ public:
 			it[l]  = 0;
 			for (j = 0;j < l;j++)
 			{
-				denom   = knots[i-j+l] - knots[i-j];
-				if (denom != 0) r = (q - knots[i-j]) / denom;
-				else            r = 0;
+				denom      = knots[i-j+l] - knots[i-j];
+				r          = (q - knots[i-j]) / denom;
 				it[l-j]   += r * it[l-j-1];
 				it[l-j-1] *= (1 - r);
 			}
@@ -733,9 +731,8 @@ public:
 			k      = i;
 			for (j = 0;j < l;j++)
 			{
-				denom     = knots[k+l] - knots[k];
-				if (denom != 0) r = (q - knots[k]) / denom;
-				else            r = 0;
+				denom      = knots[k+l] - knots[k];
+				r          = (q - knots[k]) / denom;
 				it[l-j]   += r * it[l-j-1];
 				it[l-j-1] *= (1 - r);
 				if (--k < 0) /* check underflow of knots */
@@ -1293,7 +1290,7 @@ private:
 		if (!closed)
 		{
 			i--;
-			while (knots[i-1] == knots[i])
+			while (b3Math::b3IsEqual(knots[i-1], knots[i]))
 			{
 				i--;
 			}

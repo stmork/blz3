@@ -666,6 +666,7 @@ class B3_PLUGIN b3SplineRotShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv;
 	b3_count         m_ySubDiv;
+
 public:
 	b3_line          m_Axis;                // for rotation shapes
 	b3_s32           m_rSubDiv;             // sub division for rotation
