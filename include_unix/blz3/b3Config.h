@@ -47,6 +47,14 @@
 #define no_USE_MOTIF
 #endif
 
+#ifdef _DEBUG
+#include <assert.h>
+
+#define B3_ASSERT(a) assert(a)
+#else
+#define B3_ASSERT(a)
+#endif
+
 #define B3_FRAN(x)      ((float)x        * drand48())
 #define B3_IRAN(x)      ((long)((float)x * drand48()))
 #define B3_SWAP(a,b)    {(a)^=(b);(b)^=(a);(a)^=(b);}

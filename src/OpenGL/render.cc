@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/14 07:03:28  sm
+**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**        B3_ASSERT(condition) abort()s when condition is false.
+**
 **      Revision 1.7  2001/08/11 20:17:22  sm
 **      - Updated OpenGL on Un*x platform.
 **      - This was a great day!
@@ -87,7 +91,7 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 
 	scene = (b3Scene *)world->b3GetFirst();
 	view.b3SetCamera(scene);
-	view.b3UpdateView(xSize,ySize);
+	view.b3UpdateView(0,0,xSize,ySize);
 }
 
 void SetupRC()
@@ -120,7 +124,7 @@ int main(int argc,char *argv[])
 			scene->b3GetDisplaySize(xSize,ySize);
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
-			view.b3UpdateView(xSize,ySize);
+			view.b3UpdateView(0,0,xSize,ySize);
 		}
 
 		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);

@@ -23,7 +23,6 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
-#include <assert.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/14 07:03:28  sm
+**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**        B3_ASSERT(condition) abort()s when condition is false.
+**
 **      Revision 1.3  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -803,7 +806,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 		}
 		GridCount += Heights;
 	}
-	assert(GridCount <= Number);
+	B3_ASSERT(GridCount <= Number);
 	/*
 		PrintF ("\n");
 		PrintF ("Heights:  %ld\n",Heights);

@@ -24,7 +24,6 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Matrix.h"
-#include <assert.h>
 
 /*************************************************************************
 **                                                                      **
@@ -34,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/14 07:03:28  sm
+**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**        B3_ASSERT(condition) abort()s when condition is false.
+**
 **      Revision 1.6  2001/08/13 15:05:01  sm
 **      - Now we can scale and move around with stacked views.
 **
@@ -242,7 +245,7 @@ void b3RenderView::b3Original()
 
 void b3RenderView::b3Scale(b3_f64 scale)
 {
-	ASSERT(m_Actual != null);
+	B3_ASSERT(m_Actual != null);
 	m_Actual->m_Size.x *= scale;
 	m_Actual->m_Size.y *= scale;
 	m_Actual->m_Size.z *= scale;
@@ -250,7 +253,7 @@ void b3RenderView::b3Scale(b3_f64 scale)
 
 void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 {
-	ASSERT(m_Actual != null);
+	B3_ASSERT(m_Actual != null);
 	switch(m_ViewMode)
 	{
 	case B3_VIEW_TOP:
@@ -358,7 +361,7 @@ void b3RenderView::b3UpdateView(
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
+	B3_ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
 	glViewport(xPos,yPos,xSize,ySize);
 	up.x  =
 	up.y  =

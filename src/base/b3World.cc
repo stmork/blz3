@@ -31,9 +31,7 @@
 #include "b3ItemRegister.h"
 
 #ifdef _DEBUG
-#include <assert.h>
-
-#define	ASSERT_INDEX	assert((parseIndex << 2) < (b3_index)size)
+#define	ASSERT_INDEX	B3_ASSERT((parseIndex << 2) < (b3_index)size)
 #else
 #define ASSERT_INDEX
 #endif
@@ -46,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/14 07:03:28  sm
+**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**        B3_ASSERT(condition) abort()s when condition is false.
+**
 **      Revision 1.9  2001/08/05 19:53:43  sm
 **      - Removing some nasty CR/LF
 **
@@ -328,7 +330,7 @@ b3_world_error b3World::b3Parse()
 	{
 #ifdef _DEBUG
 		b3_count counted = node_list.b3Count();
-		assert(counted == node_count);
+		B3_ASSERT(counted == node_count);
 #endif
 		for (i = 0;i < node_count;i++)
 		{

@@ -28,10 +28,6 @@
 #include "blz3/system/b3File.h"
 #include "b3ItemRegister.h"
 
-#ifdef _DEBUG
-#include <assert.h>
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -40,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/14 07:03:28  sm
+**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**        B3_ASSERT(condition) abort()s when condition is false.
+**
 **      Revision 1.3  2001/08/05 19:53:43  sm
 **      - Removing some nasty CR/LF
 **
