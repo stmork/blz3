@@ -32,13 +32,13 @@ class b3TxPool : public b3Mem
 	b3Base<b3Tx>     m_Pool;
 	b3Base<b3TxPath> m_SearchPath;
 public:
-	                b3TxPool();
-	               ~b3TxPool();
-	       b3Tx    *b3LoadTexture(const char *name);
-	       void     b3AddPath(const char *path);
-
+	                     b3TxPool();
+	                    ~b3TxPool();
+	       b3Tx         *b3LoadTexture(const char *name);
+	       void          b3AddPath(const char *path);
+	       b3Base<b3Tx> *b3GetTxHead();
 private:
-	       void     b3ReloadTexture(b3Tx *texture,const char *name=null);
+	       void          b3ReloadTexture(b3Tx *texture,const char *name=null);
 };
 
 extern b3TxPool texture_pool;

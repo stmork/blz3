@@ -7,12 +7,11 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= TestIo TestThread Mandel
+PRGS			= TestIo TestThread TestImage Mandel
 TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
 TESTTHREAD_OBJS	= TestThread.o
 MANDEL_OBJS		= Mandel.o b3Mandel.o
 PRG_SOURCE		= TestIo.cc TestMem.cc TestFile.cc TestDir.cc TestThread.cc Mandel.cc b3Mandel.cc
-PRG_OBJS		= $(TESTIO_OBJS) $(TESTTHREAD_OBJS) $(MANDEL_OBJS)
 
 all:	$(PRGS)
 

@@ -83,9 +83,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/15 14:45:07  sm
+**	- Materials are accessing textures now.
+**	- Created image viewer "bimg3"
+**
 **	Revision 1.12  2001/10/13 09:56:44  sm
 **	- Minor corrections
-**
+**	
 **	Revision 1.11  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
 **	

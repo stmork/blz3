@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/10/15 14:45:08  sm
+**      - Materials are accessing textures now.
+**      - Created image viewer "bimg3"
+**
 **      Revision 1.10  2001/10/09 20:47:01  sm
 **      - some further texture handling.
 **
@@ -295,11 +299,30 @@ b3_bool b3MatTexture::b3GetColors(
 	b3_color *ambient,
 	b3_color *specular)
 {
-	b3_pkd_color IntColor = 0xffffff;
+	b3_pkd_color result;
+	b3_coord     x,y;
+	b3_f64       fx,fy;
 
-	diffuse->r  = (b3_f32)((IntColor & 0xff0000) >> 16) / 255;
-	diffuse->g  = (b3_f32)((IntColor & 0x00ff00) >>  8) / 255;
-	diffuse->b  = (b3_f32)( IntColor & 0x0000ff)        / 255;
+	fx = (polar->polar.x - m_xStart) / m_xScale;
+	if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
+	if ((fx < 0) || (fx >= m_xTimes))
+	{
+		return false;
+	}
+
+	fy = (polar->polar.y - m_yStart) / m_yScale;
+	if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
+	if ((fy < 0) || (fy >= m_yTimes))
+	{
+		return false;
+	}
+	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
+	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
+
+	result      = m_Texture->b3GetValue(x,y);
+	diffuse->r  = (b3_f32)((result & 0xff0000) >> 16) / 255;
+	diffuse->g  = (b3_f32)((result & 0x00ff00) >>  8) / 255;
+	diffuse->b  = (b3_f32)( result & 0x0000ff)        / 255;
 	ambient->r  = diffuse->r * 0.3;
 	ambient->g  = diffuse->g * 0.3;
 	ambient->b  = diffuse->b * 0.3;
@@ -363,11 +386,61 @@ b3_bool b3MatWrapTexture::b3GetColors(
 	b3_color *ambient,
 	b3_color *specular)
 {
-	b3_pkd_color IntColor = 0xffffff;
+	b3_pkd_color result = 0xffffff;
+	b3_coord     x,y;
+	b3_f64       fx,fy,xEnd,xPolar;
 
-	diffuse->r  = (b3_f32)((IntColor & 0xff0000) >> 16) / 255;
-	diffuse->g  = (b3_f32)((IntColor & 0x00ff00) >>  8) / 255;
-	diffuse->b  = (b3_f32)( IntColor & 0x0000ff)        / 255;
+	if ((polar->polar.y >= m_yStart) && (polar->polar.y <= m_yEnd))
+	{
+		xEnd	= m_xEnd;
+		xPolar	= polar->polar.x;
+		fy = (polar->polar.y - m_yStart) /
+			(m_yEnd - m_yStart);
+		if (m_Flags & MAT_YINVERT) fy = 1.0 - fy;
+		if ((fy < 0) || (fy > 1))
+		{
+			return false;
+		}
+		y = (long)(fy * m_Texture->ySize);
+		if (m_xStart > xEnd)
+		{
+			if ((xPolar >= m_xStart) || (xPolar <= xEnd))
+			{
+				if (xPolar < 0)
+				{
+					return false;
+				}
+				if (xPolar < m_xStart) xPolar++;
+				xEnd++;
+				fx = (xPolar - m_xStart) / (xEnd - m_xStart);
+				if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
+				x  = (b3_coord)(fx * m_Texture->xSize);
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if ((xPolar <= m_xStart) || (xPolar >= xEnd))
+			{
+				return false;
+			}
+			fx = (xPolar - m_xStart) / (xEnd  - m_xStart);
+			if (m_Flags & MAT_XINVERT) fx = 1.0 - fx;
+			x  = (long)(fx * m_Texture->xSize);
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	result      = m_Texture->b3GetValue(x,y);
+	diffuse->r  = (b3_f32)((result & 0xff0000) >> 16) / 255;
+	diffuse->g  = (b3_f32)((result & 0x00ff00) >>  8) / 255;
+	diffuse->b  = (b3_f32)( result & 0x0000ff)        / 255;
 	ambient->r  = diffuse->r * 0.3;
 	ambient->g  = diffuse->g * 0.3;
 	ambient->b  = diffuse->b * 0.3;

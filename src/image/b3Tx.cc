@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/15 14:45:07  sm
+**	- Materials are accessing textures now.
+**	- Created image viewer "bimg3"
+**
 **	Revision 1.6  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.5  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -515,7 +519,7 @@ b3_pkd_color b3Tx::b3ILBMValue (
 	for (i = 0;i < depth;i++)
 	{
 		PlaneValue *= 2;
-		if (Address[0] & Bit) PlaneValue |= 1L;
+		if (Address[0] & Bit) PlaneValue |= 1;
 		Address -= BytesPerLine;
 	}
 	if (palette != null) return palette[PlaneValue];
@@ -553,8 +557,7 @@ b3_pkd_color b3Tx::b3RGB8Value (
 	register b3_pkd_color *Address;
 
 	Address  = (b3_pkd_color *)data;
-	Address += (y * xSize + x);
-	return Address[0];
+	return Address[y * xSize + x];
 }
 
 b3_pkd_color b3Tx::b3VGAValue (
@@ -612,9 +615,10 @@ void b3Tx::b3GetILBM (
 				if (Data[0] & Bit) Color |= 1;
 				Data -= BytesPerLine;
 			}
-			ColorLine[0] =	((Color & 0x0000ff) << 16) |
-							((Color & 0x00ff00)) |
-							((Color & 0xff0000) >> 16);
+			ColorLine[0] =
+				((Color & 0x0000ff) << 16) |
+				((Color & 0x00ff00)) |
+				((Color & 0xff0000) >> 16);
 			ColorLine++;
 		}
 	}

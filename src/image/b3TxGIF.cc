@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/15 14:45:07  sm
+**	- Materials are accessing textures now.
+**	- Created image viewer "bimg3"
+**
 **	Revision 1.2  2001/10/13 09:56:44  sm
 **	- Minor corrections
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	

@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/10/15 14:45:08  sm
+**	- Materials are accessing textures now.
+**	- Created image viewer "bimg3"
+**
 **	Revision 1.8  2001/10/13 15:48:53  sm
 **	- Minor image loading corrections
-**
+**	
 **	Revision 1.7  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
 **	
@@ -108,6 +112,11 @@ b3TxPool::~b3TxPool()
 		m_SearchPath.b3Remove(path_item);
 		delete path_item;
 	}
+}
+
+b3Base<b3Tx> *b3TxPool::b3GetTxHead()
+{
+	return &m_Pool;
 }
 
 /*************************************************************************

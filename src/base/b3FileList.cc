@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/15 14:45:07  sm
+**	- Materials are accessing textures now.
+**	- Created image viewer "bimg3"
+**
 **	Revision 1.2  2001/07/01 20:29:21  sm
 **	- Changing some comments
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:58  sm
 **	Blizzard III is born
 **	
@@ -154,14 +158,11 @@ b3_bool b3FileList::b3Add(const char *name)
 	try
 	{
 		entry = new b3FileEntry(name);
+		list.b3Append(entry);
 	}
 	catch(...)
 	{
 		entry = null;
-	}
-	if (entry)
-	{
-		list.b3Append(entry);
 	}
 
 	return entry != null;
