@@ -35,12 +35,21 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.7  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.6  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
 **	
@@ -154,6 +163,12 @@ void CAppRaytraceDoc::Dump(CDumpContext& dc) const
 void CAppRaytraceDoc::b3SetLinesDoc(CAppLinesDoc *LinesDoc)
 {
 	m_LinesDoc = LinesDoc;
+}
+
+b3_bool CAppRaytraceDoc::b3IsRaytracing()
+{
+	B3_ASSERT(m_LinesDoc != null);
+	return m_LinesDoc->b3IsRaytracing();
 }
 
 b3Display *CAppRaytraceDoc::b3GetDisplay(b3_res xSize,b3_res ySize,const char *title)

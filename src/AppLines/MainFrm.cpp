@@ -32,10 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.17  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.16  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
 **	
@@ -288,7 +297,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
-
+	cs.style |= WS_MAXIMIZE;
 	return TRUE;
 }
 

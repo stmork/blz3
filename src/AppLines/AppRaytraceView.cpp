@@ -28,12 +28,6 @@
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -42,9 +36,18 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.3  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.2  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -86,7 +89,13 @@ BEGIN_MESSAGE_MAP(CAppRaytraceView, CB3ScrollView)
 	ON_UPDATE_COMMAND_UI(ID_B3_MORE, OnUpdateMore)
 	ON_UPDATE_COMMAND_UI(ID_B3_LESS, OnUpdateLess)
 	ON_UPDATE_COMMAND_UI(ID_B3_MAGNIFY, OnUpdateMagnify)
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateEditCopy)
 	//}}AFX_MSG_MAP
+	// Standard printing commands
+	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT, OnUpdatePrintable)
+	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT_DIRECT, OnUpdatePrintable)
+	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT_PREVIEW, OnUpdatePrintable)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -172,6 +181,11 @@ CAppRaytraceDoc* CAppRaytraceView::GetDocument() // non-debug version is inline
 void CAppRaytraceView::b3BestFit()
 {
 	OnFull();
+}
+
+void CAppRaytraceView::OnUpdatePrintable(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -293,4 +307,36 @@ void CAppRaytraceView::OnUpdateMagnify(CCmdUI* pCmdUI)
 	{
 		pCmdUI->SetCheck(b3IsMagnifying());
 	}
+}
+
+void CAppRaytraceView::OnEditCopy() 
+{
+	// TODO: Add your command handler code here
+	CB3BitmapDIB  dib;
+	CClientDC     dc(NULL);
+	b3Document   *docBase = b3GetDocument();
+	b3Tx         *tx;
+
+	if (OpenClipboard())
+	{
+		tx = docBase->m_Tx;
+		if  (dib.b3SetTx(tx))
+		{
+			HBITMAP bitmap;
+
+			bitmap = dib.b3CreateBitmap(&dc);
+			if (bitmap != null)
+			{
+				::EmptyClipboard();
+				::SetClipboardData(CF_BITMAP,bitmap);
+			}
+		}
+		::CloseClipboard();
+	}
+}
+
+void CAppRaytraceView::OnUpdateEditCopy(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
 }

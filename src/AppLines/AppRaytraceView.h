@@ -81,6 +81,9 @@ protected:
 	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
+	afx_msg void OnUpdatePrintable(CCmdUI* pCmdUI);
+	afx_msg void OnEditCopy();
+	afx_msg void OnUpdateEditCopy(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

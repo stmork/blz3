@@ -42,10 +42,19 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.14  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
-**
+**	
 **	Revision 1.13  2001/12/09 13:16:21  sm
 **	- Added tag name
 **	
@@ -126,6 +135,7 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
+	m_ClipboardFormatForBlizzardObject = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -227,6 +237,7 @@ BOOL CAppLinesApp::InitInstance()
 	// Enable DDE Execute open
 	EnableShellOpen();
 	RegisterShellFileTypes(TRUE);
+	m_ClipboardFormatForBlizzardObject = ::RegisterClipboardFormat("Blizzard Object");
 
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;

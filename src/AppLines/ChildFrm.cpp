@@ -32,10 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **
 */
 
@@ -78,7 +87,12 @@ BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 	return TRUE;
 }
 
-
+void CChildFrame::ActivateFrame(int nCmdShow) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	nCmdShow = SW_SHOWMAXIMIZED;
+	CMDIChildWnd::ActivateFrame(nCmdShow);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // CChildFrame diagnostics

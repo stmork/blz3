@@ -39,10 +39,19 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.27  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
-**
+**	
 **	Revision 1.26  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -310,6 +319,7 @@ BOOL CAppLinesView::PreCreateWindow(CREATESTRUCT& cs)
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
 	cs.style |= CS_OWNDC;
+	cs.style |= WS_MAXIMIZE;
 	return CScrollView::PreCreateWindow(cs);
 }
 

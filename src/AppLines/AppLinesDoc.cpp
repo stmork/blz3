@@ -49,10 +49,19 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.30  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
-**
+**	
 **	Revision 1.29  2001/12/26 18:17:55  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -199,25 +208,25 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
-	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
+	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
+	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
 	ON_COMMAND(ID_LIGHT_NEW, OnLightNew)
 	ON_COMMAND(ID_LIGHT_DELETE, OnLightDelete)
+	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
 	ON_COMMAND(ID_LIGHT_PROPERTIES, OnLightProperties)
 	ON_COMMAND(ID_LIGHT_ENABLE, OnLightEnable)
 	ON_COMMAND(ID_LIGHT_SOFT, OnLightSoft)
+	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_DELETE, OnUpdateLightDelete)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_ENABLE, OnUpdateLightEnable)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SOFT, OnUpdateLightSoft)
-	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
-	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
-	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_NEW, OnUpdateGlobal)

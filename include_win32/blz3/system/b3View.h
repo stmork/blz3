@@ -52,6 +52,38 @@ public:
 
 /*************************************************************************
 **                                                                      **
+**                        Bitmap exceptions                             **
+**                                                                      **
+*************************************************************************/
+
+typedef enum
+{
+	B3_VIEW_ERROR = -1,
+	B3_VIEW_OK    =  0,
+	B3_VIEW_MEMORY,
+	B3_VIEW_INIT_DIB,
+	B3_VIEW_PALETTE
+} b3_view_error;
+
+class b3ViewException
+{
+protected:
+	b3_view_error error;
+
+public:
+	b3ViewException(b3_view_error error)
+	{
+		this->error = error;
+	}
+
+	b3_view_error b3GetError()
+	{
+		return error;
+	}
+};
+
+/*************************************************************************
+**                                                                      **
 **                        Device independend bitmap                     **
 **                                                                      **
 *************************************************************************/
@@ -64,21 +96,21 @@ protected:
 	b3_res           ySize;
 	b3_res           depth;
 	b3_size          dSize;			// size of data needed
-	b3_pkd_color    *row;				// data itself
+	b3_pkd_color    *row;			// data itself
 
 public:
-	struct CB3DIB   DIB;
+	struct CB3DIB    DIB;
 
 	              CB3BitmapDIB();
 	              CB3BitmapDIB(BITMAPINFO *new_dib,void *new_row);
 	b3_size       b3ImageSize(b3_res xSize,b3_res ySize,b3_res depth);
 	b3_bool       b3SetSize(b3_res xSize,b3_res ySize,b3_res depth);
+	b3_bool       b3SetTx(b3Tx *tx);
 	void          b3SetData(b3Tx *texture,b3_coord yStart,b3_coord yEnd);
 	b3_bool       b3SetDIB(BITMAPINFO *new_dib,void *new_row);
 	b3_bool       b3DIBtoTx(b3Tx *texture);
+	HBITMAP       b3CreateBitmap(CDC *dc);
 	              operator BITMAPINFO *();
-
-				  class         b3ErrorInitDIB { };
 
 protected:
 	void          b3InitDIB();
@@ -120,8 +152,6 @@ public:
 	b3_bool   b3Transparent(b3RGB &filter,b3Rect &rectangle);
 	void      b3Clear     ();
 
-	class     b3PaletteError {};
-
 protected:
 	void     b3DeinitBitmap();
 	b3_bool  b3InitBitmap  ();
@@ -156,9 +186,6 @@ public:
 		b3_coord xOrig    = 0,b3_coord yOrig    = 0);
 	b3_count      b3Print   (CDC *displayDC,CDC *printDC,
 		b3_res xDstSize = 0,b3_res yDstSize = 0);
-
-public:
-	class b3Error{};
 };
 
 #endif // B3VIEW_H

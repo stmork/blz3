@@ -251,7 +251,7 @@ IDR_BLZ3TYPE MENU PRELOAD DISCARDABLE
 BEGIN
     POPUP "&Datei"
     BEGIN
-        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "&Neu",                        ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
         MENUITEM "&Schließen",                  ID_FILE_CLOSE
         MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
@@ -348,22 +348,22 @@ BEGIN
         MENUITEM "Ansicht von &hinten",         ID_VIEW_BACK
         MENUITEM "Ansicht von &links",          ID_VIEW_LEFT
         MENUITEM SEPARATOR
-        MENUITEM "Ver&größern",                 ID_VIEW_BIGGER
-        MENUITEM "Ver&kleinern",                ID_VIEW_SMALLER
+        MENUITEM "Ver&größern\t+",              ID_VIEW_BIGGER
+        MENUITEM "Ver&kleinern\t-",             ID_VIEW_SMALLER
         MENUITEM "Aus&schnitt",                 ID_VIEW_SELECT
         MENUITEM "&Verheriger Ausschnitt",      ID_VIEW_POP
-        MENUITEM "&Gesamtansicht",              ID_VIEW_ORIGINAL
+        MENUITEM "&Gesamtansicht\tStrg+F",      ID_VIEW_ORIGINAL
     END
     POPUP "Extras"
     BEGIN
         MENUITEM "&Objekthierarchie...",        ID_HIERACHY
-        MENUITEM "&Raytracing-Vorschau...",     ID_RAYTRACE
+        MENUITEM "&Raytracing-Vorschau...\tStrg+R", ID_RAYTRACE
         MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
         MENUITEM "&Modellierhilfen...",         ID_MODELLER_INFO
     END
     POPUP "&Fenster"
     BEGIN
-        MENUITEM "Neues &Fenster",              ID_WINDOW_NEW
+        MENUITEM "Neues &Fenster\tStrg+N",      ID_WINDOW_NEW
         MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
         MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_VERT
         MENUITEM "&Übereinander",               ID_WINDOW_TILE_HORZ
@@ -381,10 +381,7 @@ BEGIN
     BEGIN
         MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
         MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
-        MENUITEM "&Schließen",                  ID_FILE_CLOSE
-        MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
-        MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
-        MENUITEM "&Bild speichern unter...",    ID_IMG_SAVE
+        MENUITEM "&Bild speichern unter...\tStrg+S", ID_IMG_SAVE
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -426,7 +423,6 @@ BEGIN
             MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
-        MENUITEM "B&riefmarkenansicht",         ID_VIEW_THUMB
         MENUITEM SEPARATOR
         MENUITEM "&ungefiltert",                ID_B3_UNFILTERED
         MENUITEM "&gefiltert",                  ID_B3_FILTERED
@@ -462,9 +458,11 @@ END
 IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
 BEGIN
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_VIEW_ORIGINAL,       VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "R",            ID_RAYTRACE,            VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
     VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
@@ -481,6 +479,18 @@ BEGIN
     VK_UP,          ID_VIEW_MOVE_TOP,       VIRTKEY, NOINVERT
     "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
     "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+END
+
+IDR_DISPLAYTYPE ACCELERATORS DISCARDABLE 
+BEGIN
+    "S",            ID_IMG_SAVE,            VIRTKEY, CONTROL, NOINVERT
+    VK_ADD,         ID_B3_MORE,             VIRTKEY, NOINVERT
+    VK_SUBTRACT,    ID_B3_LESS,             VIRTKEY, NOINVERT
+END
+
+IDR_BLZ3TYPE ACCELERATORS DISCARDABLE 
+BEGIN
+    "N",            ID_WINDOW_NEW,          VIRTKEY, CONTROL, NOINVERT
 END
 
 

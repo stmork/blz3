@@ -32,10 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/28 15:17:44  sm
+**	- Added clipboard-copy to raytraced view
+**	- Added printing to raytraced view
+**	- Much minor UI tuning done:
+**	  o added accelerators
+**	  o open maximized window
+**	  o fixed some UpdateUI methods
+**	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 
@@ -88,6 +97,7 @@ CB3BitmapDIB::CB3BitmapDIB()
 	row   = null;
 	dSize = 0;
 	b3SetSize (0,0,0);
+	memset(&DIB,0,sizeof(DIB));
 }
 
 CB3BitmapDIB::CB3BitmapDIB(
@@ -101,7 +111,7 @@ CB3BitmapDIB::CB3BitmapDIB(
 
 	if (!b3SetDIB(new_dib,new_row))
 	{
-		throw b3ErrorInitDIB();
+		throw new b3ViewException(B3_VIEW_INIT_DIB);
 	}
 }
 
@@ -184,6 +194,16 @@ b3_size CB3BitmapDIB::b3ImageSize(
 		break;
 	}
 	return size;
+}
+
+b3_bool CB3BitmapDIB::b3SetTx(b3Tx *tx)
+{
+	if (b3SetSize(tx->xSize,tx->ySize,tx->depth))
+	{
+		b3SetData(tx,0,tx->ySize);
+		return true;
+	}
+	return false;
 }
 
 // Set the resolution for this view.
@@ -288,6 +308,10 @@ void CB3BitmapDIB::b3SetData(b3Tx *texture,b3_res yStart,b3_res yEnd)
 	{
 		b3PrintF (B3LOG_FULL,
 			"### CLASS: b3BDIB # b3SetData(): true color mode\n");
+
+		DIB.color.rgb[0] = 0x00ff0000;
+		DIB.color.rgb[1] = 0x0000ff00;
+		DIB.color.rgb[2] = 0x000000ff;
 
 		index  = yDiff * xSize;
 		for (y = yStart;y < yEnd;y++)
@@ -585,6 +609,12 @@ b3_bool CB3BitmapDIB::b3DIBtoTx(b3Tx *texture)
 	return true;
 }
 
+HBITMAP CB3BitmapDIB::b3CreateBitmap(CDC *dc)
+{
+	return ::CreateDIBitmap(dc->GetSafeHdc(),
+		&DIB.bmiHeader,CBM_INIT,row,(BITMAPINFO *)&DIB.bmiHeader,m_Mode);
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Device dependend bitmap                       **
@@ -601,7 +631,7 @@ CB3BitmapDDB::CB3BitmapDDB()
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw b3PaletteError();
+		throw new b3ViewException(B3_VIEW_PALETTE);
 	}
 }
 
@@ -616,7 +646,7 @@ CB3BitmapDDB::CB3BitmapDDB(CDC *srcDC)
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw b3PaletteError();
+		throw new b3ViewException(B3_VIEW_PALETTE);
 	}
 }
 

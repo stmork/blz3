@@ -28,6 +28,34 @@
 
 /*************************************************************************
 **                                                                      **
+**                        Some useful defines                           **
+**                                                                      **
+*************************************************************************/
+
+#define TX_BBA(x) ((((x) +  7) & 0xfffffff8) >> 3)
+#define TX_BWA(x) ((((x) + 15) & 0xfffffff0) >> 3)
+#define TX_BLA(x) ((((x) + 31) & 0xffffffe0) >> 3)
+
+#define TX_VBA(x)   (x)
+#define TX_VWA(x) (((x) +  1) & 0xfffffffe)
+#define TX_VLA(x) (((x) +  3) & 0xfffffffc)
+
+#define TX_RGB4_TO_RGB8(color) (\
+	(((color) & 0x0f00) << 12) |\
+	(((color) & 0x00f0) <<  8) |\
+	(((color) & 0x000f) <<  4))
+
+#define B3_MAX_GRID (1 << (2 + 2 + 2))
+#define b3ColorGridIndex(color) (\
+	(((color) & 0xc00000) >> 18) |\
+	(((color) & 0x00c000) >> 12) |\
+	(((color) & 0x0000c0) >>  6))
+
+#define B3_TX_MAX_HISTGRM_DEPTH 8
+#define B3_TX_MAX_HISTGRM       (1 << B3_TX_MAX_HISTGRM_DEPTH)
+
+/*************************************************************************
+**                                                                      **
 **                        TIFF structures and definitions               **
 **                                                                      **
 *************************************************************************/
@@ -90,7 +118,7 @@ enum b3_tx_type
 
 /*************************************************************************
 **                                                                      **
-**                        error codes or original file format           **
+**                        File format codes                             **
 **                                                                      **
 *************************************************************************/
 
@@ -129,27 +157,11 @@ enum b3_tx_threshold
 	B3_THRESHOLD_EQUALIZE    = 2
 };
 
-#define TX_BBA(x) ((((x) +  7) & 0xfffffff8) >> 3)
-#define TX_BWA(x) ((((x) + 15) & 0xfffffff0) >> 3)
-#define TX_BLA(x) ((((x) + 31) & 0xffffffe0) >> 3)
-
-#define TX_VBA(x)   (x)
-#define TX_VWA(x) (((x) +  1) & 0xfffffffe)
-#define TX_VLA(x) (((x) +  3) & 0xfffffffc)
-
-#define TX_RGB4_TO_RGB8(color) (\
-	(((color) & 0x0f00) << 12) |\
-	(((color) & 0x00f0) <<  8) |\
-	(((color) & 0x000f) <<  4))
-
-#define B3_MAX_GRID (1 << (2 + 2 + 2))
-#define b3ColorGridIndex(color) (\
-	(((color) & 0xc00000) >> 18) |\
-	(((color) & 0x00c000) >> 12) |\
-	(((color) & 0x0000c0) >>  6))
-
-#define B3_TX_MAX_HISTGRM_DEPTH 8
-#define B3_TX_MAX_HISTGRM       (1 << B3_TX_MAX_HISTGRM_DEPTH)
+/*************************************************************************
+**                                                                      **
+**                        Exception error codes                         **
+**                                                                      **
+*************************************************************************/
 
 typedef enum
 {
@@ -181,6 +193,12 @@ public:
 		return error;
 	}
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Image helper classes                          **
+**                                                                      **
+*************************************************************************/
 
 // Auxiliary class for color indexing (private use of class b3Tx)
 class b3ColorIndices : public b3Mem
@@ -230,6 +248,12 @@ public:
 #define CLASS_TEXTURE       0x20000000
 #define TYPE_USUAL          0x00000001
 #define USUAL_TEXTURE       (CLASS_TEXTURE|TYPE_USUAL)
+
+/*************************************************************************
+**                                                                      **
+**                        The image class itself!                       **
+**                                                                      **
+*************************************************************************/
 
 // one single image and its methods
 class b3Tx : public b3Link<b3Tx>, public b3Mem

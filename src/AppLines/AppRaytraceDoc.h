@@ -40,7 +40,8 @@ public:
 
 // Operations
 public:
-	void b3SetLinesDoc(CAppLinesDoc *LinesDoc);
+	void       b3SetLinesDoc(CAppLinesDoc *LinesDoc);
+	b3_bool    b3IsRaytracing();
 	b3Display *b3GetDisplay(const char *title);
 	b3Display *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
 	void       b3ActivateView();
