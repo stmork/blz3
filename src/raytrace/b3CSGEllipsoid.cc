@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2004/06/21 09:26:18  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.16  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -136,11 +141,8 @@ void b3CSGEllipsoid::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
 	vertCount   = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
 }
 

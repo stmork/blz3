@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.72  2004/06/21 09:26:19  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.71  2004/05/22 14:17:31  sm
 **      - Merging some basic raytracing structures and gave them some
 **        self explaining names. Also cleaned up some parameter lists.
@@ -816,14 +821,15 @@ b3_count b3Shape::b3GetIndexOverhead (
 	b3_f64 xLeft,
 	b3_f64 yLeft)
 {
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_count Overhead;
 	b3_index xs,xe;
 	b3_f64   x1,x2;
 
-	if  (Limit.x1 < xLeft) Limit.x1 = xLeft;
-	if  (Limit.y1 < yLeft) Limit.y1 = yLeft;
-	x1 = Limit.x1 * SinCosSteps;
-	x2 = Limit.x2 * SinCosSteps;
+	if  (m_Limit.x1 < xLeft) m_Limit.x1 = xLeft;
+	if  (m_Limit.y1 < yLeft) m_Limit.y1 = yLeft;
+	x1 = m_Limit.x1 * SinCosSteps;
+	x2 = m_Limit.x2 * SinCosSteps;
 	xs = (b3_index)ceil(x1);
 	xe = (b3_index)floor(x2);
 	Overhead = xe - xs;
@@ -914,6 +920,7 @@ void b3Shape::b3ComputeSphereVertices(
 	b3_gl_vertex *Vector;
 	b3_index      i,j;
 	b3_count      Circles;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        cx,sx,cy,sy,a;
 	b3_f64        LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
 	b3_f32        Rad;
@@ -934,7 +941,7 @@ void b3Shape::b3ComputeSphereVertices(
 	xSize	 = SinCosSteps + 1;
 	ySize  = Circles;
 
-	a = 2.0/SinCosSteps;
+	a = 2.0 / SinCosSteps;
 	for (j =0 ;j < Circles;j++)
 	{
 		LocalCos[j] = Rad = -cos(j * a * M_PI);
@@ -943,8 +950,8 @@ void b3Shape::b3ComputeSphereVertices(
 
 	for (i = 0;i <= SinCosSteps;i++)
 	{
-		cx = Cos[i];
-		sx = Sin[i];
+		cx = b3ShapeRenderContext::m_Cos[i];
+		sx = b3ShapeRenderContext::m_Sin[i];
 		for (j=0;j<Circles;j++)
 		{
 			cy = LocalCos[j];
@@ -1001,18 +1008,19 @@ void b3Shape::b3ComputeCylinderVertices(
 	b3_vector   &Dir3)
 {
 	b3_gl_vertex *Vector = glVertex;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,h,start,end;
 	b3_index      i;
 	b3_count      iMax;
 	b3_vector     Bottom;
 
-	h        = Limit.y2 - Limit.y1;
-	b        = Limit.y1;
+	h        = m_Limit.y2 - m_Limit.y1;
+	b        = m_Limit.y1;
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
 	Bottom.z = Base.z + b * Dir3.z;
-	start    = Limit.x1 * SinCosSteps;
-	end      = Limit.x2 * SinCosSteps;
+	start    = m_Limit.x1 * SinCosSteps;
+	end      = m_Limit.x2 * SinCosSteps;
 	i        = (b3_index)ceil(start);
 	iMax     = (b3_count)floor(end);
 	xSize    = 0;
@@ -1021,7 +1029,7 @@ void b3Shape::b3ComputeCylinderVertices(
 
 	if ((i - start) > b3Scene::epsilon)
 	{
-		b  = Limit.x1 * M_PI * 2;
+		b  = m_Limit.x1 * M_PI * 2;
 		sx = cos(b);
 		sy = sin(b);
 
@@ -1045,10 +1053,10 @@ void b3Shape::b3ComputeCylinderVertices(
 
 	for (;i<=iMax;i++)
 	{
-		b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+		b3_f64 s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 
-		sx = Cos[i % SinCosSteps];
-		sy = Sin[i % SinCosSteps];
+		sx = b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+		sy = b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 
 		Vector->t.s = s;
 		Vector->t.t = 0;
@@ -1070,7 +1078,7 @@ void b3Shape::b3ComputeCylinderVertices(
 
 	if ((end - iMax) > b3Scene::epsilon)
 	{
-		b = Limit.x2 * M_PI * 2;
+		b = m_Limit.x2 * M_PI * 2;
 		sx = cos(b);
 		sy = sin(b);
 
@@ -1097,7 +1105,7 @@ void b3Shape::b3ComputeCylinderIndices()
 {
 	b3_count Overhead;
 
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
 	if (Overhead < 0)
 	{
@@ -1125,32 +1133,33 @@ void b3Shape::b3ComputeConeVertices(
 	b3_vector   &Dir3)
 {
 	b3_gl_vertex *Vector = glVertex;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,h,d,a,start,end;
 	b3_index      i;
 	b3_count      iMax;
 	b3_vector     Bottom;
 
-	d        = Limit.y2 - Limit.y1;
-	b        = Limit.y1;
-	h        = Limit.y2;
+	d        = m_Limit.y2 - m_Limit.y1;
+	b        = m_Limit.y1;
+	h        = m_Limit.y2;
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
 	Bottom.z = Base.z + b * Dir3.z;
 
-	start  = Limit.x1 * SinCosSteps;
-	end    = Limit.x2 * SinCosSteps;
+	start  = m_Limit.x1 * SinCosSteps;
+	end    = m_Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 	xSize  = 0;
 	ySize  = 1;
 	glVertexCount = 0;
 
-	if (Limit.y2 < 1)
+	if (m_Limit.y2 < 1)
 	{
 		ySize++;
 		if ((i - start) > b3Scene::epsilon)
 		{
-			a = Limit.x1 * M_PI * 2;
+			a = m_Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 			Vector->t.s = 0;
@@ -1175,10 +1184,10 @@ void b3Shape::b3ComputeConeVertices(
 
 		for (;i <= iMax;i++)
 		{
-			b3_f64 s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			b3_f64 s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 
-			sx = (1-b) * Cos[i % SinCosSteps];
-			sy = (1-b) * Sin[i % SinCosSteps];
+			sx = (1-b) * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+			sy = (1-b) * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 			Vector->t.s = s;
 			Vector->t.t = 0;
 			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
@@ -1186,8 +1195,8 @@ void b3Shape::b3ComputeConeVertices(
 			Vector->v.z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
-			sx = (1-h) * Cos[i % SinCosSteps];
-			sy = (1-h) * Sin[i % SinCosSteps];
+			sx = (1-h) * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+			sy = (1-h) * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 			Vector->t.s = s;
 			Vector->t.t = 1;
 			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
@@ -1201,7 +1210,7 @@ void b3Shape::b3ComputeConeVertices(
 
 		if ((end - iMax) > b3Scene::epsilon)
 		{
-			a  = Limit.x2 * M_PI * 2;
+			a  = m_Limit.x2 * M_PI * 2;
 
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
@@ -1236,7 +1245,7 @@ void b3Shape::b3ComputeConeVertices(
 
 		if ((i - start) > b3Scene::epsilon)
 		{
-			a  = Limit.x1 * M_PI * 2;
+			a  = m_Limit.x1 * M_PI * 2;
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 
@@ -1253,10 +1262,10 @@ void b3Shape::b3ComputeConeVertices(
 
 		for (;i <= iMax;i++)
 		{
-			sx = (1-b) * Cos[i % SinCosSteps];
-			sy = (1-b) * Sin[i % SinCosSteps];
+			sx = (1-b) * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+			sy = (1-b) * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 
-			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Vector->t.s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 			Vector->t.t = 0;
 			Vector->v.x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
 			Vector->v.y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
@@ -1269,7 +1278,7 @@ void b3Shape::b3ComputeConeVertices(
 
 		if ((end - iMax) > b3Scene::epsilon)
 		{
-			a  = Limit.x2 * M_PI * 2;
+			a  = m_Limit.x2 * M_PI * 2;
 			sx = (1-b) * cos(a);
 			sy = (1-b) * sin(a);
 
@@ -1289,7 +1298,7 @@ void b3Shape::b3ComputeConeIndices()
 {
 	b3_count Overhead;
 
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
 	if (Overhead < 0)
 	{
@@ -1300,7 +1309,7 @@ void b3Shape::b3ComputeConeIndices()
 	{
 		glGridCount = 0;
 	}
-	if (Limit.y2 < 1)
+	if (m_Limit.y2 < 1)
 	{
 		glGrids      = GridsCyl;
 		glPolygons   = PolysCyl;
@@ -1329,19 +1338,20 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	b3_vector   &Dir3)
 {
 	b3_gl_vertex *Vector = glVertex;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index      i,j;
 	b3_count      iMax,Circles = 0;
 	b3_f64        RadX,RadY,sx,sy;
 	b3_f64        LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
 	b3_f32        start,end,a;
 
-	start  = (Limit.y1 + 1) * SinCosSteps * 0.25;
-	end    = (Limit.y2 + 1) * SinCosSteps * 0.25;
+	start  = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
+	end    = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
-		LocalSin[Circles] = Limit.y1;
+		LocalSin[Circles] = m_Limit.y1;
 		Circles++;
 	}
 	a = 4.0 / SinCosSteps;
@@ -1352,7 +1362,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	}
 	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
-		LocalSin[Circles] = Limit.y2;
+		LocalSin[Circles] = m_Limit.y2;
 		Circles++;
 	}
 
@@ -1362,8 +1372,8 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		LocalCos[j] = sqrt(1.0-a*a);
 	}
 
-	start  = Limit.x1 * SinCosSteps;
-	end    = Limit.x2 * SinCosSteps;
+	start  = m_Limit.x1 * SinCosSteps;
+	end    = m_Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 	xSize = 0;
@@ -1372,7 +1382,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 
 	if ((i - start) > b3Scene::epsilon)
 	{
-		a  = Limit.x1 * M_PI * 2;
+		a  = m_Limit.x1 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
@@ -1394,8 +1404,8 @@ void b3Shape::b3ComputeEllipsoidVertices(
 
 	for (;i<=iMax;i++)
 	{
-		sx = Cos[i];
-		sy = Sin[i];
+		sx = b3ShapeRenderContext::m_Cos[i];
+		sy = b3ShapeRenderContext::m_Sin[i];
 
 		for (j=0;j<Circles;j++)
 		{
@@ -1415,7 +1425,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 
 	if ((end - iMax) > b3Scene::epsilon)
 	{
-		a  = Limit.x2 * M_PI * 2;
+		a  = m_Limit.x2 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
@@ -1440,6 +1450,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 {
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;
+	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_bool        EndLine = false;
 	b3_index       i,j,Number,s,ys,ye;
 	b3_count       Heights,Widths,Overhead;
@@ -1447,7 +1458,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 
 	glGridCount = 0;
 	glPolyCount = 0;
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 	Overhead  = b3GetIndexOverhead (0.0,-1.0);
 	if (Overhead < 0)
 	{
@@ -1455,8 +1466,8 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		Overhead = -Overhead;
 	}
 
-	y1 = (Limit.y1 + 1) * SinCosSteps * 0.25;
-	y2 = (Limit.y2 + 1) * SinCosSteps * 0.25;
+	y1 = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
+	y2 = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;
@@ -1634,6 +1645,7 @@ void b3Shape::b3ComputeTorusVertices(
 	b3_f64       bRad)
 {
 	b3_gl_vertex *Vector;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        start,end,a;
 	b3_f64        sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
 	b3_f64        sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
@@ -1643,27 +1655,27 @@ void b3Shape::b3ComputeTorusVertices(
 	b3_vector     Aux;
 
 	Vector = glVertex;
-	start  = Limit.y1 * SinCosSteps;
-	end    = Limit.y2 * SinCosSteps;
+	start  = m_Limit.y1 * SinCosSteps;
+	end    = m_Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 	if ((i - start) > b3Scene::epsilon)	/* underflow */
 	{
 		relTex[Circles]   = 0;
-		LocalSin[Circles] = Limit.y1;
+		LocalSin[Circles] = m_Limit.y1;
 		Circles++;
 	}
 	a = 1.0 / SinCosSteps;
 	for (j = i;j <= iMax;j++)		/* integers */
 	{
-		relTex[Circles]   = ((double)j / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+		relTex[Circles]   = ((double)j / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
 	if ((end - iMax) > b3Scene::epsilon)	/* Overflow */
 	{
 		relTex[Circles]   = 1;
-		LocalSin[Circles] = Limit.y2;
+		LocalSin[Circles] = m_Limit.y2;
 		Circles++;
 	}
 	xSize = 0;
@@ -1676,14 +1688,14 @@ void b3Shape::b3ComputeTorusVertices(
 		LocalSin[j] = sin(LocalSin[j] * M_PI * 2) * bRad;
 	}
 
-	start  = Limit.x1 * SinCosSteps;
-	end    = Limit.x2 * SinCosSteps;
+	start  = m_Limit.x1 * SinCosSteps;
+	end    = m_Limit.x2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 
 	if ((i - start) > b3Scene::epsilon)
 	{
-		a     = Limit.x1 * M_PI * 2;
+		a     = m_Limit.x1 * M_PI * 2;
 		sx    = cos(a);
 		sy    = sin(a);
 		Aux.x = Base.x + sx * aRad * Dir1.x + sy * aRad * Dir2.x;
@@ -1708,8 +1720,8 @@ void b3Shape::b3ComputeTorusVertices(
 
 	for (;i<=iMax;i++)
 	{
-		sx    = Cos[i];
-		sy    = Sin[i];
+		sx    = b3ShapeRenderContext::m_Cos[i];
+		sy    = b3ShapeRenderContext::m_Sin[i];
 		Aux.x = Base.x + sx * aRad * Dir1.x + sy * aRad * Dir2.x;
 		Aux.y = Base.y + sx * aRad * Dir1.y + sy * aRad * Dir2.y;
 		Aux.z = Base.z + sx * aRad * Dir1.z + sy * aRad * Dir2.z;
@@ -1719,7 +1731,7 @@ void b3Shape::b3ComputeTorusVertices(
 			RadX = LocalCos[j];
 			RadY = LocalSin[j];
 
-			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			Vector->t.s = ((double)i / SinCosSteps) / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 			Vector->t.t = relTex[j];
 			Vector->n.x = Aux.x - (Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x);
 			Vector->n.y = Aux.y - (Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y);
@@ -1732,7 +1744,7 @@ void b3Shape::b3ComputeTorusVertices(
 
 	if ((end - iMax) > b3Scene::epsilon)
 	{
-		a     = Limit.x2 * M_PI * 2;
+		a     = m_Limit.x2 * M_PI * 2;
 		sx    = cos(a);
 		sy    = sin(a);
 		Aux.x = Base.x + sx * aRad * Dir1.x + sy * aRad * Dir2.x;
@@ -1768,12 +1780,13 @@ void b3Shape::b3ComputeTorusIndices()
 {
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;
+	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_bool        EndLine = false,EndCol = false;
 	b3_index       i,j,Number,s,ys,ye;
 	b3_count       Heights,Widths,Overhead;
 	b3_f64         y1,y2;
 
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
 	if (Overhead < 0)
 	{
@@ -1781,8 +1794,8 @@ void b3Shape::b3ComputeTorusIndices()
 		Overhead = -Overhead;
 	}
 
-	y1 = Limit.y1 * SinCosSteps;
-	y2 = Limit.y2 * SinCosSteps;
+	y1 = m_Limit.y1 * SinCosSteps;
+	y2 = m_Limit.y2 * SinCosSteps;
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
 	Heights = ye - ys;

@@ -83,15 +83,16 @@ protected:
 
 class B3_PLUGIN b3ShapeRenderContext : public b3RenderContext
 {
-	static b3_f64         m_Sin[B3_MAX_RENDER_SUBDIV + 1];
-	static b3_f64         m_Cos[B3_MAX_RENDER_SUBDIV + 1];
-	static b3_count       m_SubDiv;
+	b3_vector       *m_Between;
+	b3_gl_line      *m_CylinderIndices;
+	b3_gl_polygon   *m_CylinderPolygons;
+	b3_gl_line      *m_ConeIndices;
+	b3_gl_polygon   *m_ConePolygons;
 
-	b3_vector     *m_Between;
-	b3_gl_line    *m_CylinderIndices;
-	b3_gl_polygon *m_CylinderPolygons;
-	b3_gl_line    *m_ConeIndices;
-	b3_gl_polygon *m_ConePolygons;
+public:
+	static b3_f64    m_Sin[B3_MAX_RENDER_SUBDIV + 1];
+	static b3_f64    m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+	static b3_count  m_SubDiv;
 
 public:
 	                 b3ShapeRenderContext(b3_count subdiv = 16);
@@ -100,21 +101,6 @@ public:
 	b3_gl_polygon   *b3GetCylinderPolygons();
 	b3_gl_line      *b3GetConeIndices();
 	b3_gl_polygon   *b3GetConePolygons();
-
-	static inline b3_count  b3GetSubdiv()
-	{
-		return m_SubDiv;
-	}
-
-	static inline b3_f64   *b3GetCosTable()
-	{
-		return m_Cos;
-	}
-	
-	static inline b3_f64   *b3GetSinTable()
-	{
-		return m_Sin;
-	}
 };
 
 class b3Material;
@@ -128,10 +114,7 @@ class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activat
 {
 protected:
 	b3_count           xSize,ySize;
-	b3_count           SinCosSteps;
-	b3_f64            *Cos;
-	b3_f64            *Sin;
-	b3_stencil_limit   Limit;
+	b3_stencil_limit   m_Limit;
 
 	b3_gl_line        *GridsCyl;
 	b3_gl_polygon     *PolysCyl;

@@ -31,11 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/06/21 09:26:19  sm
+**	- Changed rendering: The constant sin/cos tables are now directly
+**	  used from b3ShapeRenderContext.
+**	- Memory allocation for polygons/grid removed from disks.
+**
 **	Revision 1.32  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.31  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -239,11 +244,8 @@ void b3Sphere::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
 	vertCount   = ((SinCosSteps >> 1) + 1) * (SinCosSteps + 1);
 }
 

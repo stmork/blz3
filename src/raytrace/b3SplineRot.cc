@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2004/06/21 09:26:19  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.25  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -380,7 +385,6 @@ void b3SplineRotShape::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	SinCosSteps = m_rSubDiv;
 	m_ySubDiv   = m_Spline.subdiv;
 	m_xSubDiv   = m_rSubDiv;
 	if (!m_Spline.closed)

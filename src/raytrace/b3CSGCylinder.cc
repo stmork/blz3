@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2004/06/21 09:26:18  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.20  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -152,11 +157,8 @@ void b3CSGCylinder::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
 	vertCount   = SinCosSteps * 4 + 2;
 	gridCount   = SinCosSteps * 3;
 	polyCount   = SinCosSteps * 4;
@@ -164,12 +166,15 @@ void b3CSGCylinder::b3GetCount(
 
 void b3CSGCylinder::b3ComputeVertices()
 {
-	b3_gl_vertex *Vector   = glVertex;
-	b3_index      i,offset = SinCosSteps * 2;
+	b3_gl_vertex *Vector      = glVertex;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+	b3_index      i,offset    = SinCosSteps * 2;
 
 	for (i = 0;i < SinCosSteps;i++)
 	{
-		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[0].v);
+		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,
+			b3ShapeRenderContext::m_Cos[i],
+			b3ShapeRenderContext::m_Sin[i],&Vector[0].v);
 		Vector[1].v.x = Vector[0].v.x + m_Dir3.x;
 		Vector[1].v.y = Vector[0].v.y + m_Dir3.y;
 		Vector[1].v.z = Vector[0].v.z + m_Dir3.z;
@@ -195,8 +200,8 @@ void b3CSGCylinder::b3ComputeIndices()
 {
 	b3_gl_line    *gPtr   = glGrids;
 	b3_gl_polygon *pPtr   = glPolygons;
-	b3_index       offset = SinCosSteps * 2;
-	b3_index       mid    = SinCosSteps * 4;
+	b3_index       offset = b3ShapeRenderContext::m_SubDiv * 2;
+	b3_index       mid    = b3ShapeRenderContext::m_SubDiv * 4;
 	b3_index       i;
 
 	for (i = 0;i < offset;i+=2)

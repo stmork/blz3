@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2004/06/21 09:26:18  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.25  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -216,10 +221,10 @@ void b3Area::b3ComputeVertices()
 	b3_gl_vertex *Vector = glVertex;
 	b3_f32        x1,y1,x2,y2;
 
-	x1 = Limit.x1;
-	y1 = Limit.y1;
-	x2 = Limit.x2;
-	y2 = Limit.y2;
+	x1 = m_Limit.x1;
+	y1 = m_Limit.y1;
+	x2 = m_Limit.x2;
+	y2 = m_Limit.y2;
 
 	// Setup world coordinates
 	Vector->t.s = area_texcoord[0];
@@ -255,7 +260,7 @@ void b3Area::b3ComputeVertices()
 
 void b3Area::b3ComputeIndices()
 {
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 }
 
 void b3Area::b3GetStencilBoundInfo(b3_stencil_bound *info)

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2004/06/21 09:26:19  sm
+**      - Changed rendering: The constant sin/cos tables are now directly
+**        used from b3ShapeRenderContext.
+**      - Memory allocation for polygons/grid removed from disks.
+**
 **      Revision 1.27  2004/06/20 15:33:10  sm
 **      - Update material when edited.
 **
@@ -206,26 +211,24 @@ void b3Disk::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
-
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
-	vertCount   = SinCosSteps + SinCosSteps + 6;
+	vertCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;
+	gridCount = b3ShapeRenderContext::m_SubDiv * 2 + 6;
+	polyCount = b3ShapeRenderContext::m_SubDiv * 2 + 4;
 }
 
 void b3Disk::b3ComputeVertices()
 {
 	b3_gl_vertex *Vector = glVertex;
+	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,a,h,start,end;
 	b3_index      i;
 	b3_count      iMax;
 
-	h = Limit.y2;
-	b = Limit.y1;
+	h = m_Limit.y2;
+	b = m_Limit.y1;
 
-	start = Limit.x1 * SinCosSteps;
-	end   = Limit.x2 * SinCosSteps;
+	start = m_Limit.x1 * SinCosSteps;
+	end   = m_Limit.x2 * SinCosSteps;
 	i     = (b3_index)ceil(start);
 	iMax  = (b3_count)floor(end);
 	xSize = 0;
@@ -237,7 +240,7 @@ void b3Disk::b3ComputeVertices()
 	if ((i - start) > b3Scene::epsilon)
 	{
 		//compute front fractional disk ring
-		a  = Limit.x1 * M_PI * 2;
+		a  = m_Limit.x1 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
@@ -262,11 +265,11 @@ void b3Disk::b3ComputeVertices()
 	for (;i<=iMax;i++)
 	{
 		b3_f64 pos = (double)i / SinCosSteps;
-		b3_f64 s   = pos / (Limit.x2 - Limit.x1) - Limit.x1;
+		b3_f64 s   = pos / (m_Limit.x2 - m_Limit.x1) - m_Limit.x1;
 
 		// compute ordered position of ring disk
-		sx = h * Cos[i % SinCosSteps];
-		sy = h * Sin[i % SinCosSteps];
+		sx = h * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+		sy = h * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 		Vector->t.s = s;
 		Vector->t.t = 0;
 		Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
@@ -274,8 +277,8 @@ void b3Disk::b3ComputeVertices()
 		Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 		Vector++;
 
-		sx = b * Cos[i % SinCosSteps];
-		sy = b * Sin[i % SinCosSteps];
+		sx = b * b3ShapeRenderContext::m_Cos[i % SinCosSteps];
+		sy = b * b3ShapeRenderContext::m_Sin[i % SinCosSteps];
 		Vector->t.s = s;
 		Vector->t.t = 1;
 		Vector->v.x = m_Base.x + sx * m_Dir1.x + sy * m_Dir2.x;
@@ -290,7 +293,7 @@ void b3Disk::b3ComputeVertices()
 	if ((end - iMax) > b3Scene::epsilon)
 	{
 		// compute rest fractional ring disk
-		a  = Limit.x2 * M_PI * 2;
+		a  = m_Limit.x2 * M_PI * 2;
 		sx = cos(a);
 		sy = sin(a);
 
@@ -317,32 +320,22 @@ void b3Disk::b3ComputeIndices()
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;
 	b3_bool        EndLines = false;
-	b3_index       i,Number = 0,pos;
+	b3_index       i,pos;
 	b3_count       Overhead;
 
-	b3ComputeBound(&Limit);
+	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
 	if (Overhead < 0)
 	{
 		EndLines = true;
 		Overhead = -Overhead;
-		Number   = 2;
 	}
-	Number += Overhead;
-	Number += Overhead;
 
 	glGridCount = 0;
 	glPolyCount = 0;
-	b3RenderObject::b3Free(glGrids);
-	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_line));
-	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_polygon));
-	if ((gPtr == null) || (pPtr == null))
-	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
-	}
+
+	gPtr = glGrids;
+	pPtr = glPolygons;
 
 	for (i = 0;i < Overhead;i++)
 	{
