@@ -180,7 +180,6 @@ public:
 			void             b3SetShading(b3_u32 class_type);
 		    void             b3GetBackgroundColor(b3_ray *ray,b3_f64 fx,b3_f64 fy);
 		    void             b3MixLensFlare(b3_ray *ray);
-		    b3_f64           b3ComputeSpotExponent(b3Light *light);
 		    void             b3GetInfiniteColor(b3_ray *ray);
 
 			// object methods

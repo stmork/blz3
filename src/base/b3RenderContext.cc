@@ -27,6 +27,8 @@
 #include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/base/b3MultiSample.h"
 
+#define LOCAL_VIEWER
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/10/13 15:33:14  smork
+**	- Optimized OpenGL lights.
+**
 **	Revision 1.11  2004/10/12 09:15:46  smork
 **	- Some more debug information.
 **	- Moved light init after camera init.
-**
+**	
 **	Revision 1.10  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
 **	
@@ -90,7 +95,7 @@ static b3_vector light0_position =
 static b3Color world_ambient(  0.25f,0.25f,0.25f);
 static b3Color light0_ambient( 0.25f,0.25f,0.25f);
 static b3Color light0_diffuse( 0.8f, 0.8f, 0.8f);
-static b3Color light0_specular(1.0f, 1.0f, 1.0f);
+static b3Color light0_specular(0.6f, 0.6f, 0.6f);
 
 static GLenum light_num[] =
 {
@@ -205,6 +210,7 @@ void b3RenderContext::b3LightReset()
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
+
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
 	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 #endif
@@ -220,11 +226,43 @@ void b3RenderContext::b3LightReset()
 
 void b3RenderContext::b3LightDefault()
 {
+#ifdef BLZ3_USE_OPENGL
+	GLfloat gl_position[4];
+	GLfloat gl_ambient[4];
+	GLfloat gl_diffuse[4];
+	GLfloat gl_specular[4];
+#endif
+
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightDefault()\n");
 
 	b3LightNum();
 	b3LightReset();
-	b3LightSet(&light0_position,null,0.0);
+
+#ifdef BLZ3_USE_OPENGL
+	// Light model values
+	glEnable(GL_LIGHT0);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
+
+	b3ColorToGL(light0_ambient,  gl_ambient);
+	b3ColorToGL(light0_diffuse,  gl_diffuse);
+	b3ColorToGL(light0_specular, gl_specular);
+	b3VectorToDirectionalGL(&light0_position,gl_position);
+
+	// Colors
+	glLightfv(GL_LIGHT0, GL_AMBIENT, gl_ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, gl_diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR,gl_specular);
+	glLightfv(GL_LIGHT0, GL_POSITION,gl_position);
+
+	// Spot effects
+	glLightf (GL_LIGHT0, GL_SPOT_EXPONENT,       100.0);
+	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,         180.0);
+
+	// Attenuation
+	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0);
+	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION,    0.0);
+	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0);
+#endif
 }
 
 void b3RenderContext::b3LightSpotEnable(b3_bool enable)
@@ -252,7 +290,8 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_f64     spot_exp,
 	b3Color   *b3_diffuse,
 	b3Color   *b3_ambient,
-	b3Color   *b3_specular)
+	b3Color   *b3_specular,
+	b3_f64     rel_dist)
 {
 	b3_bool  result = false;
 
@@ -264,7 +303,7 @@ b3_bool b3RenderContext::b3LightAdd(
 	result = b3LightSet(
 		b3_position,glUseSpotLight ? b3_direction : null,
 		spot_exp,
-		b3_diffuse,b3_ambient,b3_specular,glLightNum++);
+		b3_diffuse,b3_ambient,b3_specular,rel_dist,glLightNum++);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,">b3RenderContext::b3LightAdd(%d)\n",
@@ -281,6 +320,7 @@ b3_bool b3RenderContext::b3LightSet(
 	b3Color   *b3_diffuse,
 	b3Color   *b3_ambient,
 	b3Color   *b3_specular,
+	b3_f64     rel_dist,
 	b3_index   num)
 {
 	b3_bool result = false;
@@ -306,6 +346,7 @@ b3_bool b3RenderContext::b3LightSet(
 		b3ColorToGL(b3_diffuse  != null ? *b3_diffuse  : light0_diffuse, gl_diffuse);
 		b3ColorToGL(b3_specular != null ? *b3_specular : light0_specular,gl_specular);
 
+		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
 		glEnable( light);
 
 		glLightfv(light,GL_AMBIENT, gl_ambient);
@@ -322,21 +363,23 @@ b3_bool b3RenderContext::b3LightSet(
 		}
 		else
 		{
-			glLightf (light,GL_SPOT_EXPONENT,   0.0);
-			glLightf (light,GL_SPOT_CUTOFF,   180.0);
+			glLightf (light,GL_SPOT_EXPONENT,        20.0);
+			glLightf (light,GL_SPOT_CUTOFF,         180.0);
 		}
 
-		// Influence on ambient light
-		glLightf (light,GL_CONSTANT_ATTENUATION,  1.0);
-		glLightf (light,GL_LINEAR_ATTENUATION,    0.0);
+		// Attenuation
+		glLightf (light,GL_CONSTANT_ATTENUATION,  0.0);
+		glLightf (light,GL_LINEAR_ATTENUATION,    3.0 / rel_dist);
 		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
+
 		result = true;
 	}
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"<b3RenderContext::b3LightSet() = %s # Light %d: %3.2f %3.2f %3.2f\n",
+	b3PrintF(B3LOG_FULL,"<b3RenderContext::b3LightSet() = %s # Light %d: %3.2f %3.2f %3.2f # %1.1f\n",
 		result ? "true" : "false",
-		light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
+		light - GL_LIGHT0,
+		gl_position[0],gl_position[1],gl_position[2],gl_position[3]);
 #endif
 
 #endif

@@ -27,10 +27,10 @@ configure:	configure.ac
 config:	configure
 	./configure --prefix=$(PWD)
 
-clobber:
+distclean:
 	bin/clobber.sh $(PWD)
 
-tar:	clobber configure
+dist:	distclean configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
 # DO NOT DELETE

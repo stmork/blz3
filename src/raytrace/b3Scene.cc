@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2004/10/13 15:33:14  smork
+**	- Optimized OpenGL lights.
+**
 **	Revision 1.69  2004/10/12 09:15:46  smork
 **	- Some more debug information.
 **	- Moved light init after camera init.
-**
+**	
 **	Revision 1.68  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
@@ -939,10 +942,11 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 			context->b3LightAdd(
 				&light->m_Position,
 				light->m_SpotActive ? &light->m_Direction : null,
-				b3ComputeSpotExponent(light),
+				light->b3ComputeSpotExponent(),
 				&light->m_Color,
 				&ambient,
-				&light->m_Color);
+				&light->m_Color,
+				light->m_Distance );
 		}
 	}
 
@@ -1144,27 +1148,4 @@ void b3Scene::b3GetInfiniteColor(b3_ray *ray)
 		ray->dir.z * m_NormWidth.z;
 
 	b3GetBackgroundColor (ray,lx,ly);
-}
-
-b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
-{
-	b3_index i,max = 20;
-	b3_f64   p     = 0,angle;
-	b3_bool  loop  = true;
-
-	if (light->m_SpotActive)
-	{
-		i = 0;
-
-		do
-		{
-			angle = (double)i / (double)max;
-			loop  = light->b3GetSpotFactor(angle) > 0.25;
-		}
-		while ((i < max) && loop);
-		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
-		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f lambda=%3.2f\n",
-			light->b3GetName(),p,angle);
-	}
-	return p;
 }

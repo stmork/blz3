@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.47  2004/10/13 15:33:14  smork
+**      - Optimized OpenGL lights.
+**
 **      Revision 1.46  2004/10/12 09:15:46  smork
 **      - Some more debug information.
 **      - Moved light init after camera init.
@@ -225,7 +228,7 @@ static b3ShapeRenderContext  context;
 static b3World              *world = null;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
-static b3_bool               spot_light = false;
+static b3_bool               spot_light = true;
 static b3_res                xWinSize,yWinSize;
 
 static void b3SetLights()

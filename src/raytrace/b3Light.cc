@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2004/10/13 15:33:14  smork
+**      - Optimized OpenGL lights.
+**
 **      Revision 1.48  2004/10/05 09:29:22  sm
 **      - Donw some documentations.
 **
@@ -706,4 +709,30 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	}
 
 	return Jit->shape;
+}
+
+b3_f64 b3Light::b3ComputeSpotExponent()
+{
+	b3_index i,max = 20;
+	b3_f64   p     = 0,angle;
+	b3_bool  loop  = true;
+
+	if (m_SpotActive)
+	{
+		i = 0;
+
+// FIXME!!
+return 200;
+
+		do
+		{
+			angle = (double)i / (double)max;
+			loop  = b3GetSpotFactor(angle) > 0.25;
+		}
+		while ((i < max) && loop);
+		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
+		b3PrintF(B3LOG_FULL,"b3Light::b3ComputeSpotExponent(%s) = %3.2f lambda=%3.2f\n",
+			b3GetName(),p,angle);
+	}
+	return p;
 }

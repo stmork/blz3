@@ -94,8 +94,16 @@ public:
 	       b3_bool  b3Illuminate(b3Shader *shader,b3_surface *surface);
 	       b3_bool  b3Prepare();
 	       b3_bool  b3IsActive();
+	       b3_f64   b3ComputeSpotExponent();
 	       char    *b3GetName();
 		   void     b3SetName(const char *name);
+
+private:
+	void         b3InitValues();
+	b3_bool      b3PointIllumination(b3Shader *shader,b3_surface *surface);
+	b3_bool      b3AreaIllumination( b3Shader *shader,b3_surface *surface);
+	b3Shape     *b3CheckSinglePoint (b3Shader *shader,b3_surface *surface,
+		b3_light_info *Jit,b3_coord x,b3_coord y);
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{
@@ -111,13 +119,6 @@ public:
 			return 1;
 		}
 	}
-
-private:
-	void         b3InitValues();
-	b3_bool      b3PointIllumination(b3Shader *shader,b3_surface *surface);
-	b3_bool      b3AreaIllumination( b3Shader *shader,b3_surface *surface);
-	b3Shape     *b3CheckSinglePoint (b3Shader *shader,b3_surface *surface,
-		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
 #endif

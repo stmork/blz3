@@ -63,8 +63,8 @@ public:
 	static  void     b3LightReset();
 	        void     b3LightDefault();
 			void     b3LightNum(b3_index light_num = 0);
-	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_index light_num = 0);
-			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null);
+	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_f64 rel_dist = 1000.0,b3_index light_num = 0);
+			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_f64 rel_dist = 1000.0);
 			void     b3LightSpotEnable(b3_bool enable = true);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
@@ -120,6 +120,20 @@ public:
 		*dst++ = src->y;
 		*dst++ = src->z;
 		*dst   = 1;
+	}
+
+	static inline void b3VectorToDirectionalGL(b3_vector *src,GLfloat *dst)
+	{
+		b3_f32 x,y,z,len;
+
+		x = src->x;
+		y = src->y;
+		z = src->z;
+		len = sqrt(x * x + y * y + z * z);
+		*dst++ = x / len;
+		*dst++ = y / len;
+		*dst++ = z / len;
+		*dst   = 0;
 	}
 
 	static inline void b3Vector4dToGL(b3_vector4D *src,GLfloat *dst)
