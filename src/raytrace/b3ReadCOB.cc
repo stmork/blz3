@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/26 19:45:39  sm
+**	- OpenGL drawing problem of Caligari imported objects fixed.
+**
 **	Revision 1.2  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
-**
+**	
 **	Revision 1.1  2003/01/26 11:53:26  sm
 **	- Added support for Caligari object loading.
 **	
@@ -389,7 +392,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	b3_matrix        transform;
 	char             line[MAX_LINE];
 	b3_size          len,size,i,index;
-	b3_index         id1,id2,vPos = 0,fPos = 0;
+	b3_index         vPos = 0,fPos = 0;
 	b3_count         ver,rev;
 	b3_cob_id        id,parent;
 	b3_count         count,vertices=0,faces=0,polygons=0,k;
@@ -506,13 +509,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			{
 				len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 				sscanf (line,"%f %f %f",&pos.x,&pos.y,&pos.z);
-				b3MatrixVMul (&transform,&pos,(b3_vector *)&vert[count],true);
-/*
-#ifdef _DEBUG
-				b3PrintF (B3LOG_FULL,"% 3.3f % 3.3f % 3.3f\n",
-					vert[count].x,vert[count].y,vert[count].z);
-#endif
-*/
+				b3MatrixVMul (&transform,&pos,&vert[count].Point,true);
 				i += (len+1);
 			}
 
@@ -520,8 +517,6 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			i = fPos; /* outer polygon loop */
 			for (count = 0;count < polygons;count++)
 			{
-				long *IDs;
-
 				len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 				rev = 0;
 				if (sscanf (line,"Face verts %ld",&rev) == 1)
@@ -530,82 +525,73 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				}
 				i += (len+1);
 
-#ifndef SINGLE_CYCLE
-				IDs = (long *)malloc(sizeof(long *) * (size_t)(rev + 2));
-#else
-				IDs = null;
-#endif
 				len = b3COB_GetLine (line,&buffer[i],sizeof(line));
 				i += (len+1);
-				if (IDs != null)
+#ifndef SINGLE_CYCLE
+				b3Array<b3_index> IDs;
+				b3_index          read,u,l;
+
+				/* first, scan indices */
+				rev += 2;
+				for (k = 0,len = 0;k < rev;k++)
 				{
-					long u,l;
-
-					/* first, scan indices */
-					rev += 2;
-					for (k = 0,len = 0;k < rev;k++)
-					{
-						sscanf (&line[len],"<%ld,%*d> %n",&IDs[k],&index);
-						len += index;
-					}
-
-					l = 1;
-					u = rev;
-					for (k = 2;k < rev;k++)
-					{
-						if (k & 1)
-						{
-#ifdef VERBOSE_INDEX
-							b3PrintF (B3LOG_FULL,"%3ld - %3ld - %3ld #",u % rev,l,(u - 1) % rev);
-#endif
-							tria->P1 = IDs[u % rev];
-							tria->P2 = IDs[l];
-							u--;
-							tria->P3 = IDs[u % rev];
-						}
-						else
-						{
-#ifdef VERBOSE_INDEX
-							b3PrintF (B3LOG_FULL,"%3ld - %3ld - %3ld #",u % rev,l,l+1);
-#endif
-							tria->P1 = IDs[u % rev];
-							tria->P2 = IDs[l];
-							l++;
-							tria->P3 = IDs[l];
-						}
-#ifdef VERBOSE_INDEX
-						b3PrintF (B3LOG_FULL,"%3ld - %3ld - %3ld\n",tria->P1,tria->P2,tria->P3);
-#endif
-						tria++;
-#ifdef _DEBUG
-						dbgCount++;
-#endif
-					}
-					free (IDs);
+					sscanf (&line[len],"<%ld,%*d> %n",&read,&index);
+					IDs.b3Add(read);
+					len += index;
 				}
-				else
+
+				l = 1;
+				u = rev;
+				for (k = 2;k < rev;k++)
 				{
-					sscanf (line,"<%ld,%*d> <%ld,%*d> %n",&id1,&id2,&index);
+					b3_index P1,P2,P3;
 
-					len = index;
-					for (k = 0;k < rev;k++) /* inner triangulation loop */
+					P1 = u % rev;
+					P2 = l;
+					if (k & 1)
 					{
-						tria->P1 = id1;
-						tria->P2 = id2;
+						u--;
+						P3 = u % rev;
+					}
+					else
+					{
+						l++;
+						P3 = l;
+					}
+					tria->P1 = IDs[P1];
+					tria->P2 = IDs[P2];
+					tria->P3 = IDs[P3];
+#ifdef VERBOSE_INDEX
+					b3PrintF (B3LOG_FULL,"%3ld - %3ld - %3ld\n",tria->P1,tria->P2,tria->P3);
+#endif
+					tria++;
+#ifdef _DEBUG
+					dbgCount++;
+#endif
+				}
+#else
+				b3_index id1,id2;
+				sscanf (line,"<%ld,%*d> <%ld,%*d> %n",&id1,&id2,&index);
 
-						sscanf (&line[len],"<%ld,%*d> %n",&tria->P3,&index);
-						id2  = tria->P3;
-						len += index;
+				len = index;
+				for (k = 0;k < rev;k++) /* inner triangulation loop */
+				{
+					tria->P1 = id1;
+					tria->P2 = id2;
+
+					sscanf (&line[len],"<%ld,%*d> %n",&tria->P3,&index);
+					id2  = tria->P3;
+					len += index;
 
 #ifdef VERBOSE_INDEX
-						b3PrintF (B3LOG_FULL,"%6ld %6ld %6ld\n",tria->P1,tria->P2,tria->P3);
+					b3PrintF (B3LOG_FULL,"%6ld %6ld %6ld\n",tria->P1,tria->P2,tria->P3);
 #endif
-						tria++;
+					tria++;
 #ifdef _DEBUG
-						dbgCount++;
+					dbgCount++;
 #endif
-					}
 				}
+#endif
 #ifdef VERBOSE_INDEX
 				b3PrintF (B3LOG_FULL,"---\n");
 #endif
@@ -615,12 +601,11 @@ b3_size b3COBReader::b3COB_ParsePolH(
 			b3PrintF (B3LOG_FULL,"%ld triangles expected, %ld triangles counted.\n",faces,dbgCount);
 #endif
 #endif
-			TriaShape->m_Flags     = PHONG;
+			TriaShape->m_Flags = PHONG;
 		}
 	}
 	return size;
 }
-
 
 /* This routine processes a material chunk. It reads the ID, the parent ID */
 /* and the material values for color, specular and ambient index and the */
@@ -637,7 +622,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 	b3_size      len,size,i;
 	b3_count     ver,rev;
 	b3_cob_id    id,parent;
-	b3_f32       ambient = 0,specular = 0;
+	b3_f32       ambient = 0,specular = 0,alpha;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08d",
@@ -668,12 +653,13 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 				&Mat->m_DiffColor.g,
 				&Mat->m_DiffColor.b);
 			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
-				&Mat->m_DiffColor.a,
+				&alpha,
 				&ambient,
 				&specular,
 				&Mat->m_HighLight,
 				&Mat->m_RefrValue);
 			sscanf(line,"texture: %s",name);
+			Mat->m_DiffColor.a = 0;
 		}
 		if ((Mat->m_RefrValue == 0) || (Mat->m_RefrValue == 1))
 		{
@@ -685,7 +671,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		}
 		Mat->m_HighLight  *= 100000;
 		if (Mat->m_HighLight <     20) Mat->m_HighLight =     20;
-		if (Mat->m_HighLight < 100000) Mat->m_HighLight = 100000;
+		if (Mat->m_HighLight > 100000) Mat->m_HighLight = 100000;
 		if (strlen(name) > 0)
 		{
 			b3Tx *texture;

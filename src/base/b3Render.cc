@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.61  2003/01/26 19:45:39  sm
+**      - OpenGL drawing problem of Caligari imported objects fixed.
+**
 **      Revision 1.60  2003/01/26 14:11:50  sm
 **      - COB support integrated into Lines III
 **
@@ -1445,7 +1448,6 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 #else
 			GLenum error = glGetError();
-
 			glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 			error = glGetError();
 			if (error == GL_NO_ERROR)

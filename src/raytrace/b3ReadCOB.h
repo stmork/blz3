@@ -79,6 +79,8 @@ class b3COBReader
 
 	static b3_size      b3COB_GetLine(char *line,const char *buffer,b3_size max);
 	static b3_cob_type  b3COB_GetToken(const char *buffer);
+	static b3_bool      b3COB_IsDegenerated(b3_vertex *vertices,b3_triangle *tria);
+
 
 public:
 	static b3BBox      *b3ReadCOB(const char *filename);
