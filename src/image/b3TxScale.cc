@@ -61,9 +61,15 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.13  2002/05/10 15:24:23  sm
+**	- Corrected some exceptions in b3Tx
+**	- Added double click support in list controls when creating
+**	  a new shape.
+**	- Some minor fixes done.
+**
 **	Revision 1.12  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.11  2002/03/11 13:48:55  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
@@ -160,8 +166,12 @@ b3ColorIndices::b3ColorIndices()
 	unsigned long size = 256;
 
 	num     = 0;
-	indices = (b3_index *)b3Alloc (size * sizeof(b3_index));
-	max     = (indices ? size : 0);
+	indices = (b3_index *)b3Alloc(size * sizeof(b3_index));
+	max     = (indices != null ? size : 0);
+	if (max == 0)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 }
 
 void b3ColorIndices::b3AddColorIndex(b3_index index)
@@ -555,7 +565,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3ScaleBW2Grey(): "
 			"Not enough memory for row counter\n");
-		return 0;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
@@ -563,7 +573,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3MakeItGrey(): "
 			"Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
-		return 0;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// Select right line computation
@@ -963,7 +973,7 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3ColorScaleToGrey(): "
 			"Not enough memory for row counter\n");
-		return 0;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	TxRowCells   = (b3_count *)malloc(xDstSize * sizeof(b3_count));
 	if (TxRowCells == null)
@@ -971,7 +981,7 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx   # b3MakeItGrey(): "
 			"Not enough memory for row cell sizes\n");
 		free(TxRowCounter);
-		return 0;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// Select right line computation
@@ -1221,35 +1231,28 @@ void b3Tx::b3ColorGrid()
 	}
 
 	// Allocate grid
-	try
+	grid = new b3ColorIndices[B3_MAX_GRID];
+	if (grid == null)
 	{
-		grid = (b3ColorIndices *)new b3ColorIndices[B3_MAX_GRID];
-	}
-	catch (...)
-	{
-		grid = null;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
-	// Now initialize grid
-	if (grid != null)
+	// compute squares in range [0;255]
+	if (!quadValid)
 	{
-		// compute squares in range [0;255]
-		if (!quadValid)
+		for (i = 0;i < 256;i++)
 		{
-			for (i = 0;i < 256;i++)
-			{
-				quad256[256 - i] =
-				quad256[256 + i] = i * i;
-			}
-			quadValid = true;
+			quad256[256 - i] =
+			quad256[256 + i] = i * i;
 		}
+		quadValid = true;
+	}
 
-		// "Check in" palette
-		for (i = 0;i < pSize;i++)
-		{
-			index = b3ColorGridIndex(palette[i]);
-			grid[index].b3AddColorIndex(i);
-		}
+	// "Check in" palette
+	for (i = 0;i < pSize;i++)
+	{
+		index = b3ColorGridIndex(palette[i]);
+		grid[index].b3AddColorIndex(i);
 	}
 }
 
@@ -1359,7 +1362,7 @@ void b3Tx::b3VGAScaleToRGB8(
 	b3_u08       *cSrc;
 	b3_pkd_color *lDst;
 	b3_pkd_color *palette;
-	b3_coord       x,y,sx,sy,ix,iy;
+	b3_coord      x,y,sx,sy,ix,iy;
 	b3_count      count=0;
 	b3_pkd_color  rVal,gVal,bVal,color;
 
@@ -1453,7 +1456,7 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3ScaleToGrey(): source image (0x%p) of undefined type!\n",
 			srcTx);
-		return;
+		throw new b3TxException(B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
@@ -1464,6 +1467,10 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
 	cIndex = (b3_count *)b3Alloc((ySize + 1) * sizeof(b3_count));
+	if ((rIndex == null) || (cIndex == null))
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	if (!divTableValid)
 	{
@@ -1844,7 +1851,7 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Scale(): source image (0x%p) of undefined type!\n",
 			srcTx);
-		return;
+		throw new b3TxException(B3_TX_UNKNOWN_DATATYPE);
 	}
 	if ((xSize <= 0) || (ySize <= 0))
 	{
@@ -1855,6 +1862,10 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 	}
 	rIndex = (b3_count *)b3Alloc((xSize + 1) * sizeof(b3_count));
 	cIndex = (b3_count *)b3Alloc((ySize + 1) * sizeof(b3_count));
+	if ((rIndex == null) || (cIndex == null))
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// Compute resampled start coordinates
 	for (x = 0;x <= xSize;x++) rIndex[x] = x * srcTx->xSize / xSize;
@@ -1910,7 +1921,7 @@ void b3Tx::b3TransToGrey()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new image buffer!\n");
-		return;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// alloc new palette
@@ -1920,10 +1931,14 @@ void b3Tx::b3TransToGrey()
 		b3Free (cPtr);
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TransToGrey(): Not enogh memory for new palette!\n");
-		return;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
+
 	// init grey ramp
-	for (x = 0;x < 256;x++) pPtr[x] = 0x010101 * x;
+	for (x = 0;x < 256;x++)
+	{
+		pPtr[x] = 0x010101 * x;
+	}
 
 	switch (type)
 	{

@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:  b3List.h $
-**	$Release:   Dortmund 2001 $
+**	$Filename:  b3Exception.h $
+**	$Release:   Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer: Steffen A. Mork $
 **
-**	Blizzard III - double linked list routines (proto types)
+**	Blizzard III - Exception template
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

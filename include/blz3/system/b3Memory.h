@@ -137,13 +137,7 @@ public:
 		}
 		mutex.b3Unlock();
 
-		// Block for replacement not found!
-#ifdef _DEBUG
-		if (old_ptr != null)
-		{
-			throw new b3MemException(B3_MEM_UNKNOWN_PTR);
-		}
-#endif
+		// Pointer not found
 		return null;
 	}
 
@@ -172,14 +166,7 @@ public:
 		}
 		mutex.b3Unlock();
 
-		// If memory block wasn't found throw exception. But
-		// Throw only when using non null ptr.
-#ifdef _DEBUG
-		if (ptr != null)
-		{
-			throw new b3MemException(B3_MEM_UNKNOWN_PTR);
-		}
-#endif
+		// Pointer not found
 		return false;
 	}
 

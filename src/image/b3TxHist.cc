@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/05/10 15:24:23  sm
+**	- Corrected some exceptions in b3Tx
+**	- Added double click support in list controls when creating
+**	  a new shape.
+**	- Some minor fixes done.
+**
 **	Revision 1.5  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -172,7 +178,7 @@ b3_bool b3Tx::b3Histogramme()
 {
 	if (!b3StartHist()) 
 	{
-		return false;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 	return b3AddHist(0,0,xSize,ySize);
 }

@@ -37,11 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/05/10 15:24:23  sm
+**	- Corrected some exceptions in b3Tx
+**	- Added double click support in list controls when creating
+**	  a new shape.
+**	- Some minor fixes done.
+**
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -250,8 +256,11 @@ void b3Tx::b3RemoveBlackBorder()
 
 	if (!b3IsBW()) return;
 	line = (b3_count *)b3Alloc(ySize * sizeof(b3_count));
-	if (line == null) return;
-
+	if (line == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
+	
 	cPtr   = (b3_u08 *)data;
 	xBytes = TX_BWA(xSize);
 	for (y = 0;y < ySize;y++)
@@ -492,7 +501,10 @@ void b3Tx::b3Shrink(long shrink)
 
 	if (!b3IsBW()) return;
 	line = (b3_count *)b3Alloc(xSize * sizeof(b3_count));
-	if (line == null) return;
+	if (line == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	cPtr   = (b3_u08 *)data;
 	xBytes = TX_BWA(xSize);
@@ -639,7 +651,7 @@ void b3Tx::b3TurnRightILBM()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
-		return;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -721,7 +733,7 @@ void b3Tx::b3TurnRightILBM()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
-		return;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -798,7 +810,10 @@ void b3Tx::b3TurnRightVGA()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_u08 *)data;
@@ -831,7 +846,10 @@ void b3Tx::b3TurnRightRGB4()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u16 *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_u16 *)data;
@@ -864,7 +882,10 @@ void b3Tx::b3TurnRightRGB8()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_pkd_color *)data;
@@ -937,7 +958,7 @@ void b3Tx::b3TurnLeftILBM()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnLeftILBM() NOT ENOUGH MEMORY!\n");
-		return;
+		throw new b3TxException(B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -1031,7 +1052,10 @@ void b3Tx::b3TurnLeftVGA()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u08 *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_u08 *)data;
@@ -1063,7 +1087,10 @@ void b3Tx::b3TurnLeftRGB4()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_u16 *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_u16 *)data;
@@ -1095,7 +1122,10 @@ void b3Tx::b3TurnLeftRGB8()
 	xNewSize  = ySize;
 	yNewSize  = xSize;
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
-	if (newData == null) return;
+	if (newData == null)
+	{
+		throw new b3TxException(B3_TX_MEMORY);
+	}
 
 	// change data pointer
 	oldData   = (b3_pkd_color *)data;

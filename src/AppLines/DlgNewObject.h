@@ -63,6 +63,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 	afx_msg void OnObjectChanged(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnObjectDoubleClicked(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

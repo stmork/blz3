@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/05/10 15:24:23  sm
+**	- Corrected some exceptions in b3Tx
+**	- Added double click support in list controls when creating
+**	  a new shape.
+**	- Some minor fixes done.
+**
 **	Revision 1.5  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.4  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
@@ -98,6 +104,7 @@ void CDlgSelectProfile::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgSelectProfile, CDialog)
 	//{{AFX_MSG_MAP(CDlgSelectProfile)
+	ON_NOTIFY(NM_DBLCLK, IDC_PROFILELIST, OnProfileDoubleClicked)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -176,6 +183,7 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	b3_u32     class_type = m_Shape->b3GetClassType();
 	LVITEM     item;
 	int        index,selected;
+	int        pos = 0;
 
 	CDialog::OnInitDialog();
 	m_ImageList.Create(64,64,ILC_COLOR8,30,8);
@@ -199,6 +207,7 @@ BOOL CDlgSelectProfile::OnInitDialog()
 			if (index >= 0)
 			{
 				item.iImage  = index;
+				item.iItem   = pos++;
 				item.lParam  = (LPARAM)profile;
 				item.state   = (index == selected ? item.stateMask : 0); // Preselection see CB3ImageList
 				item.pszText = (char *)profile->b3GetTitle();
@@ -257,4 +266,13 @@ void CDlgSelectProfile::OnOK()
 
 		break;
 	}
+}
+
+void CDlgSelectProfile::OnProfileDoubleClicked(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	m_CreateMode = 0;
+	UpdateData(FALSE);
+	OnOK();
+	*pResult = 0;
 }

@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/05/10 15:24:23  sm
+**	- Corrected some exceptions in b3Tx
+**	- Added double click support in list controls when creating
+**	  a new shape.
+**	- Some minor fixes done.
+**
 **	Revision 1.3  2002/02/24 17:45:31  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
-**
+**	
 **	Revision 1.2  2002/02/23 22:02:49  sm
 **	- Added shape/object edit.
 **	- Added shape/object deletion.
@@ -86,6 +92,7 @@ void CDlgNewObject::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgNewObject, CDialog)
 	//{{AFX_MSG_MAP(CDlgNewObject)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_OBJECTLIST, OnObjectChanged)
+	ON_NOTIFY(NM_DBLCLK, IDC_OBJECTLIST, OnObjectDoubleClicked)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -251,4 +258,11 @@ void CDlgNewObject::OnOK()
 		m_NewItem = null;
 		break;
 	}
+}
+
+void CDlgNewObject::OnObjectDoubleClicked(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	OnOK();
+	*pResult = 0;
 }

@@ -64,6 +64,7 @@ protected:
 	//{{AFX_MSG(CDlgSelectProfile)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
+	afx_msg void OnProfileDoubleClicked(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
