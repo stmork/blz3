@@ -146,6 +146,11 @@ struct B3_ALIGN_16 b3_pos
 	b3_s32    x,y;
 };
 
+struct B3_ALIGN_16 b3_point
+{
+	b3_f32    x,y;
+};
+
 typedef struct B3_ALIGN_16 b3_color32
 {
 	b3_f32    a,r,g,b;

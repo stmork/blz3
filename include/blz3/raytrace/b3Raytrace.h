@@ -1781,9 +1781,9 @@ protected:
 class b3Scene;
 class b3Light : public b3Item
 {
-	b3_f64           m_HalfJitter;
-	b3_f64           m_FullJitter;
-	b3_vector        m_SpotDir;
+	b3_f64            m_HalfJitter;
+	b3_f64            m_FullJitter;
+	b3_vector         m_SpotDir;
 
 public:
 	b3_vector        m_Position;     // Position

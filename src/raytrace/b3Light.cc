@@ -1,14 +1,14 @@
 /*
 **
 **	$Filename:      b3Light.cc $
-**	$Release:       Dortmund 2001 $
+**	$Release:       Dortmund 2001, 2002, 2003 $
 **	$Revision$
 **	$Date$
 **	$Developer:     Steffen A. Mork $
 **
 **	Blizzard III - Raytracing light sources
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002, 2003  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2003/01/03 15:47:09  sm
+**      - Changed area light optimization.
+**      - Fixed some errors in the light dialog.
+**
 **      Revision 1.29  2002/07/20 10:49:34  sm
 **      - Added custom light support (not finished yet)
 **      - Added b3Light::b3IsActive() for compatibility.
@@ -401,10 +405,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.dir.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.dir.z = m_Position.z - surface->incoming->ipoint.z;
 
-	if ((UpperBound =
-		Jit.dir.x * Jit.dir.x +
-		Jit.dir.y * Jit.dir.y +
-		Jit.dir.z * Jit.dir.z) == 0)
+	if ((UpperBound = b3Vector::b3QuadLength(&Jit.dir)) == 0)
 	{
 		return false;
 	}
@@ -448,7 +449,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3Scene     *scene,
 	b3_ray_fork *surface)
 {
-	b3Shape       *Edge1,*Edge2,*LastEdge = null;
+	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
 	b3_vector      point;
 	b3_f64         Factor,denomLightDist,q;
@@ -467,10 +468,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
 
 	// normalizing light axis
-	if ((denomLightDist =
-		Jit.LightView.x * Jit.LightView.x +
-		Jit.LightView.y * Jit.LightView.y +
-		Jit.LightView.z * Jit.LightView.z) == 0)
+	if ((denomLightDist = b3Vector::b3QuadLength(&Jit.LightView)) == 0)
 	{
 		return false;
 	}
@@ -482,18 +480,18 @@ inline b3_bool b3Light::b3AreaIllumination (
 	// inserted Nov. 1994, SAM
 	if (m_SpotActive)
 	{
-		Factor = -(
-			Jit.LightView.x * m_SpotDir.x +
-			Jit.LightView.y * m_SpotDir.y +
-			Jit.LightView.z * m_SpotDir.z);
-		if (Factor <= 0) q = 1.0 - epsilon;
+		Factor = -b3Vector::b3SMul(&Jit.LightView,&m_SpotDir);
+		if (Factor <= 0)
+		{
+			q = 1.0 - epsilon;
+		}
 		else
 		{
 			q = (Factor >= 1 ? epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
 		m_Spline.b3DeBoorOpened (&point,0,q);
-		Jit.LightFrac  = denomLightDist * m_Distance * point.y;
+		Jit.LightFrac = denomLightDist * m_Distance * point.y;
 	}
 	else
 	{
@@ -523,20 +521,25 @@ inline b3_bool b3Light::b3AreaIllumination (
 	// shadow computation is completed.
 	equal = true;
 	Distr = Jit.Distr - 1;
-	xs    = B3_IRAN(2);
+	xs    = 1;
 	for (x = xs;x <= Distr;x += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0);
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x);
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0) != null;
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x) != null;
 
 		equal   &= (Edge1 == Edge2);
-		if (x != xs) equal &= (Edge1 == LastEdge);
+		if ((x != xs) && (!first))
+		{
+			equal &= (Edge1 == LastEdge);
+		}
 		LastEdge = Edge1;
+		first = false;
 	}
+
 	for (y = 2 - xs;y < Distr;y += 2)
 	{
-		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y);
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y);
+		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y) != null;
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y) != null;
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;
@@ -585,8 +588,8 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 {
 	b3_f64   jx,jy,UpperBound;
 
-	jx = (((b3_f64)x + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
-	jy = (((b3_f64)y + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
+	jx = ((b3_f32)x - 0.5 * Jit->Distr + B3_FRAN(1.0)) * Jit->Size;
+	jy = ((b3_f32)y - 0.5 * Jit->Distr + B3_FRAN(1.0)) * Jit->Size;
 
 	Jit->dir.x = Jit->LightView.x + jx * Jit->xDir.x + jy * Jit->yDir.x;
 	Jit->dir.y = Jit->LightView.y + jx * Jit->xDir.y + jy * Jit->yDir.y;

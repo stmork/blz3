@@ -87,12 +87,16 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.24  2003/01/03 15:47:09  sm
+**	- Changed area light optimization.
+**	- Fixed some errors in the light dialog.
+**
 **	Revision 1.23  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.22  2002/07/31 11:57:08  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
@@ -243,8 +247,8 @@ typedef CDC b3DrawContext;
 #	define no_USE_MOTIF
 #endif
 
-#define B3_FRAN(x)          ((x) * (b3_f64)rand() / RAND_MAX)
-#define B3_IRAN(x)          ((long)((x) * (b3_f64)rand() / RAND_MAX))
+#define B3_FRAN(x)                 ((x) * (b3_f64)rand() / (RAND_MAX + 1))
+#define B3_IRAN(x)          ((long)((x) *         rand() / (RAND_MAX + 1)))
 #define B3_SWAP(a,b)        {(a)^=(b);(b)^=(a);(a)^=(b);}
 #define B3_PSWAP(a,b)       b3Runtime::b3PSwap(a,b)
 #define B3_BEEP             b3Runtime::b3Beep()

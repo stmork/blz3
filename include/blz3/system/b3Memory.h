@@ -138,7 +138,7 @@ public:
 				{
 					new_node->m_ChunkSize = new_size;
 					new_node->m_Chunk     = B3_MEM_ALIGN_CHUNK(&new_node[1]);
-					B3_MEM_ASSERT(node->m_Chunk);
+					B3_MEM_ASSERT(new_node->m_Chunk);
 					b3LinkChunk(new_node);
 				}
 				else

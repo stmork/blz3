@@ -90,6 +90,7 @@ protected:
 	afx_msg void OnKillfocusLight();
 	virtual void OnOK();
 	afx_msg void OnDestroy();
+	afx_msg void OnReleasedCaptureLightDistr(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/01/03 15:47:09  sm
+**	- Changed area light optimization.
+**	- Fixed some errors in the light dialog.
+**
 **	Revision 1.11  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
-**
+**	
 **	Revision 1.10  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -110,7 +114,7 @@ CDlgLight::CDlgLight(CWnd* pParent /*=NULL*/)
 	m_zDirCtrl.b3SetDigits(5,2);
 	m_DistanceCtrl.b3SetDigits(5,2);
 	m_DistanceCtrl.b3SetMin(epsilon);
-	m_SoftSizeCtrl.b3SetDigits(5,2);
+	m_SoftSizeCtrl.b3SetDigits(5,3);
 	m_SoftSizeCtrl.b3SetMin(epsilon);
 }
 
@@ -157,9 +161,10 @@ BEGIN_MESSAGE_MAP(CDlgLight, CDialog)
 	ON_BN_CLICKED(IDC_LIGHT_ENABLE, OnLightState)
 	ON_CBN_SELCHANGE(IDC_LIGHT_LIST, OnSelchangeLight)
 	ON_CBN_KILLFOCUS(IDC_LIGHT_LIST, OnKillfocusLight)
+	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_LIGHT_SOFT, OnLightState)
 	ON_BN_CLICKED(IDC_LIGHT_LDC, OnLightState)
-	ON_WM_DESTROY()
+	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_LIGHT_DISTR, OnReleasedCaptureLightDistr)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -204,6 +209,7 @@ void CDlgLight::b3UpdatePreview()
 	light->m_LightActive  = m_Light->m_LightActive;
 	light->m_SoftShadow   = m_Light->m_SoftShadow;
 	light->m_SpotActive   = m_Light->m_SpotActive;
+	light->m_JitterEdge   = m_Light->m_JitterEdge;
 	for (i = 0;i < m_Light->m_Spline.control_num;i++)
 	{
 		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
@@ -392,7 +398,7 @@ BOOL CDlgLight::PreTranslateMessage(MSG* pMsg)
 	pos = m_SampleCtrl.GetPos();
 	if (m_Light->m_JitterEdge != pos)
 	{
-		m_Light->m_JitterEdge = pos;
+		b3SetLight();
 		m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,pos * pos);
 		UpdateData(FALSE);
 	}
@@ -409,10 +415,10 @@ void CDlgLight::OnOK()
 BOOL CDlgLight::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
 {
 	// TODO: Add your specialized code here and/or call the base class
+	NMHDR *pHdr = (NMHDR *)lParam;
 	switch(wParam)
 	{
 	case IDC_LIGHT_LDC_CONTROL:
-		NMHDR *pHdr = (NMHDR *)lParam;
 		switch(pHdr->code)
 		{
 		case WM_MOUSEMOVE:
@@ -428,4 +434,11 @@ BOOL CDlgLight::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		break;
 	}
 	return CDialog::OnNotify(wParam, lParam, pResult);
+}
+
+void CDlgLight::OnReleasedCaptureLightDistr(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	b3UpdatePreview();
+	*pResult = 0;
 }
