@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/11/01 09:47:26  sm
+**	- Added CPU bit version with compiler version string.
+**
 **	Revision 1.12  2003/10/23 10:12:42  sm
 **	- Added more room indexes.
-**
+**	
 **	Revision 1.11  2003/09/28 20:33:19  sm
 **	- Ensure CPU count in image scaling methods.
 **	
@@ -100,6 +103,8 @@ b3BHDParser::b3BHDParser(const char *filename)
 		throw b3ParseException("File not found");
 	}
 }
+
+#define WALL_THICKNESS 10.0
 
 b3BHDParser::~b3BHDParser()
 {
@@ -261,15 +266,16 @@ void b3BHDParser::b3ParsePoint(b3_f64 scale)
 
 void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 scale)
 {
-	b3BBox *room = new b3BBox(BBOX);
+	b3BBox          *room = new b3BBox(BBOX);
 	b3CondRectangle *cond;
-	b3Area *area;
-	b3Item *item;
-	b3_f64  xMin,xMax,x;
-	b3_f64  yMin,yMax,y;
-	b3_index index[16],i;
-	b3_count args;
-	b3_vector normal;
+	b3Area          *area;
+	b3Light         *light;
+	b3Item          *item;
+	b3_f64           xMin,xMax,x;
+	b3_f64           yMin,yMax,y;
+	b3_index         index[16],i;
+	b3_count         args;
+	b3_vector        normal;
 
 	args = sscanf(&m_Line[m_Pos],"%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
 		room->m_BoxName,
@@ -316,7 +322,7 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 sca
 		area->m_Dir2.y = 0;
 		area->m_Dir2.z = height;
 		b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
-		b3Vector::b3Normalize(&normal,-10.0);
+		b3Vector::b3Normalize(&normal,-WALL_THICKNESS);
 		b3Vector::b3Add(&normal,&area->m_Base);
 
 		room->b3GetShapeHead()->b3Append(area);
@@ -372,6 +378,14 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 sca
 	cond->m_xEnd   = 1;
 	cond->m_yEnd   = 1;
 	area->b3GetConditionHead()->b3Append(cond);
+
+	light = new b3Light(POINT_LIGHT);
+	light->b3SetName(room->m_BoxName);
+	light->m_Position.x = (xMin + xMax) * 0.5;
+	light->m_Position.y = (yMin + yMax) * 0.5;
+	light->m_Position.z = base + height - 5;
+	light->m_Distance = 200;
+	m_Scene->b3GetLightHead()->b3Append(light);
 }
 
 void b3BHDParser::b3AddWall(b3BBox *room)
@@ -424,7 +438,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			area->b3GetConditionHead()->b3Append(cond);
 
 			b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
-			b3Vector::b3Normalize(&normal,10.0);
+			b3Vector::b3Normalize(&normal,WALL_THICKNESS);
 
 			left = new b3Area(AREA);
 			left->m_Base.x = m_Points[a].x + area->m_Dir1.x * cond->m_xStart;
@@ -486,12 +500,12 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
 		{
 			cond = new b3CondRectangle(COND_NRECTANGLE);
-			cond->m_xStart =  -m_Openings[i].pos   / width;
+			cond->m_xStart =   m_Openings[i].pos   / width;
 			cond->m_yStart =   m_Openings[i].base  / height;
-			cond->m_xEnd   = -(m_Openings[i].pos  + m_Openings[i].width)   / width;
+			cond->m_xEnd   =  (m_Openings[i].pos  + m_Openings[i].width)   / width;
 			cond->m_yEnd   =  (m_Openings[i].base + m_Openings[i].height)  / height;
-			if ((cond->m_xStart > 0) || (cond->m_xEnd < -1) ||
-			    (cond->m_yStart > 0) || (cond->m_yEnd < -1))
+			if ((cond->m_xStart < 0) || (cond->m_xEnd > 1) ||
+			    (cond->m_yStart < 0) || (cond->m_yEnd > 1))
 			{
 				char message[1024];
 
@@ -499,7 +513,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			         -cond->m_xStart,-cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
 				throw b3ParseException(message,m_Openings[i].line);
 			}
-			area->b3GetConditionHead()->b3Append(cond);
+ 			area->b3GetConditionHead()->b3Append(cond);
 
 			b3PrintF(B3LOG_DEBUG,"       Used door/window of line %d\n",m_Openings[i].line);
 		}

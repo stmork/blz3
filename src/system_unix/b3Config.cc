@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/11/01 09:47:26  sm
+**	- Added CPU bit version with compiler version string.
+**
 **	Revision 1.7  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.6  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -77,14 +80,16 @@ char        b3Runtime::compiler[128];
 
 b3Runtime::b3Runtime()
 {
+	b3_count bits = b3GetCPUBits();
+
 #ifdef __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(compiler,sizeof(compiler),"GCC V%d.%d.%d",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
+	snprintf(compiler,sizeof(compiler),"GCC V%d.%d.%d (%d bit)",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits);
 #	else
-	snprintf(compiler,sizeof(compiler),"GCC V%d.%d",__GNUC__,__GNUC_MINOR__);
+	snprintf(compiler,sizeof(compiler),"GCC V%d.%d (%d bit)",__GNUC__,__GNUC_MINOR__,bits);
 #	endif
 #elif __ICC
-	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d",__ICC / 100,(__ICC / 10) % 10);
+	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d (%d bit)",__ICC / 100,(__ICC / 10) % 10,bits);
 #else
 	snprintf(compiler,sizeof(compiler),"Unknown compiler");
 #endif
