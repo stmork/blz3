@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/05/23 15:04:19  sm
+**	- Some optimizations
+**
 **	Revision 1.39  2004/05/23 13:51:14  sm
 **	- Some shader cleanups
-**
+**	
 **	Revision 1.38  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
 **	
@@ -340,7 +343,7 @@ b3_bool b3Shader::b3Shade(
 		return false;
 	}
 
-	if ((depth_count <= m_TraceDepth) && m_Scene->b3Intersect(ray))
+	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray))
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;
@@ -360,6 +363,7 @@ b3_bool b3Shader::b3Shade(
 		// Do bump mapping
 		shape->b3BumpNormal(ray);
 
+		// Compute geometry
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
@@ -374,16 +378,17 @@ b3_bool b3Shader::b3Shade(
 	}
 	else
 	{
-		if (finite = (m_Nebular != null))
+		// Post process nebular
+		if (m_Nebular != null)
 		{
 			m_Nebular->b3GetNebularColor(ray->color);
 			finite = true;
 		}
-	}
-
-	if (!finite)
-	{
-		m_Scene->b3GetInfiniteColor(ray);
+		else if (depth_count > 0)
+		{
+			m_Scene->b3GetInfiniteColor(ray);
+			finite = false;
+		}
 	}
 	return finite;
 }

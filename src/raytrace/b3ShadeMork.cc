@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/05/23 15:04:19  sm
+**	- Some optimizations
+**
 **	Revision 1.28  2004/05/23 13:51:14  sm
 **	- Some shader cleanups
-**
+**	
 **	Revision 1.27  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
 **	
@@ -292,12 +295,12 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
+	ray->color.b3Init();
 	factor = (1.0 - refl - refr) * 0.5;
 	if (factor > 0)
 	{
 		// For each light source
 		surface.m_SpecularSum.b3Init();
-		ray->color.b3Init();
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
@@ -306,50 +309,16 @@ void b3ShaderMork::b3ShadeSurface(
 
 		ray->color =
 			ray->color * factor +
-			surface.refl_ray.color * refl +
-			surface.refr_ray.color * refr +
 			surface.m_SpecularSum;
 	}
-	else
+
+	if (refl > 0)
 	{
-		ray->color =
-			surface.refl_ray.color * refl +
-			surface.refr_ray.color * refr;
+		ray->color += (surface.refl_ray.color * refl);
 	}
-}
 
-void b3ShaderMork::b3LightFlare (b3_ray *Ray)
-{
-	b3Item    *item;
-	b3Light   *Light;
-	b3_vector  toLight;
-	b3_f64     angle,reverse;
-
-	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+	if (refr > 0)
 	{
-		Light = (b3Light *)item;
-
-		toLight.x = Light->m_Position.x - m_Scene->m_EyePoint.x;
-		toLight.y = Light->m_Position.y - m_Scene->m_EyePoint.y;
-		toLight.z = Light->m_Position.z - m_Scene->m_EyePoint.z;
-
-		// Ray->dir is already normalized so only
-		// toLight is to be normalized for angle
-		// computation between toLight and Ray->dir
-		angle  = (
-			toLight.x * Ray->dir.x +
-			toLight.y * Ray->dir.y +
-			toLight.z * Ray->dir.z) / sqrt(
-			toLight.x * toLight.x +
-			toLight.y * toLight.y +
-			toLight.z * toLight.z);
-		angle *= angle;
-		angle *= angle;
-		angle *= angle;
-		angle *= angle;
-		angle *= angle;
-
-		reverse    = 1.0 - angle;
-		Ray->color = Light->m_Color * angle + Ray->color * reverse;
+		ray->color += (surface.refr_ray.color * refr);
 	}
 }

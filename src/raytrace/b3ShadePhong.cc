@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/05/23 15:04:19  sm
+**	- Some optimizations
+**
 **	Revision 1.23  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
-**
+**	
 **	Revision 1.22  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -228,10 +231,7 @@ void b3ShaderPhong::b3ShadeSurface(
 			surface.refl_ray.inside = false;
 		}
 		refr = surface.m_Refraction;
-		if (!b3Shade(&surface.refr_ray,depth_count + 1))
-		{
-			m_Scene->b3GetInfiniteColor(&surface.refr_ray);
-		}
+		b3Shade(&surface.refr_ray,depth_count + 1);
 		formula |= MIX_REFRACTION;
 	}
 	else
@@ -242,23 +242,20 @@ void b3ShaderPhong::b3ShadeSurface(
 	refl = surface.m_Reflection;
 	if (refl > 0)
 	{
-		if (!b3Shade(&surface.refl_ray,depth_count + 1))
-		{
-			m_Scene->b3GetInfiniteColor(&surface.refl_ray);
-		}
+		b3Shade(&surface.refl_ray,depth_count + 1);
 		formula |= MIX_REFLECTION;
 	}
 
 	switch(formula)
 	{
-	case MIX_REFRACTION:
-		// Only refraction
-		ray->color = b3Color::b3Mix(ray->color, surface.refr_ray.color, refr);
-		break;
-
 	case MIX_REFLECTION:
 		// Only reflection
 		ray->color = b3Color::b3Mix(ray->color, surface.refl_ray.color, refl);
+		break;
+
+	case MIX_REFRACTION:
+		// Only refraction
+		ray->color = b3Color::b3Mix(ray->color, surface.refr_ray.color, refr);
 		break;
 
 	case MIX_BOTH:
