@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2003/07/20 10:18:35  sm
+**	- Banner compilation problem fixed.
+**
 **	Revision 1.44  2003/07/20 10:11:55  sm
 **	- Added banner on -v command line option.
-**
+**	
 **	Revision 1.43  2003/07/20 09:38:30  sm
 **	- Registering raytracing items manually.
 **	
@@ -313,22 +316,25 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 	return display;
 }
 
-static void b3Banner()
+static void b3Banner(const char *command)
 {
 	b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
 	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
 	b3PrintF(B3LOG_NORMAL,"\n");
-	b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-	b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);
-	b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
-	b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-	b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
-	b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
-	b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
-	b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
-	b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
-	b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
-	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
+		b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
+		b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
+		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+	}
 	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 }
@@ -416,7 +422,7 @@ int main(int argc,char *argv[])
 					break;
 
 				case 'v' :
-					b3Banner();
+					b3Banner(null);
 					break;
 				}
 			}
@@ -541,7 +547,7 @@ int main(int argc,char *argv[])
 	}
 	else
 	{
-		b3Banner();
+		b3Banner(argv[0]);
 	}
 	return 0;
 }
