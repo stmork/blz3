@@ -105,6 +105,10 @@ public:
 
 	inline void b3Recomputed()
 	{
+		if (!glComputed)
+		{
+			b3CustomData();
+		}
 		glComputed = true;
 	}
 };

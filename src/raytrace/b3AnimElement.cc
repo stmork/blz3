@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2004/11/30 10:16:14  smork
+**      - Added a working VBO version which computes vertices/indices
+**        completely in CPU memory and only updates the results into
+**        GPU memory finally. It's faster than computing directly
+**        in GPU memory but the fastest version is still the common
+**        vertex array version.
+**
 **      Revision 1.12  2004/08/20 08:09:27  sm
 **      - Optimized animation a little bit.
 **
@@ -543,6 +550,6 @@ void b3Animation::b3ApplyTransformation (
 		Anim->b3SelectAnimElement (Global);
 
 		b3PrintF(B3LOG_FULL,"  ANIM object %s (move)\n",Anim->m_Object);
-		Global->b3Transform (transform,false);
+		Global->b3Transform (transform, Anim->b3GetClassType() != ANIM_SCALE);
 	}
 }

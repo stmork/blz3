@@ -46,6 +46,13 @@
 
 /*
 **      $Log$
+**      Revision 1.104  2004/11/30 10:16:14  smork
+**      - Added a working VBO version which computes vertices/indices
+**        completely in CPU memory and only updates the results into
+**        GPU memory finally. It's faster than computing directly
+**        in GPU memory but the fastest version is still the common
+**        vertex array version.
+**
 **      Revision 1.103  2004/11/29 16:35:02  smork
 **      - Added additional VBO version which recomputes in host memory
 **        and only transfers recomputed data to GPU.
@@ -736,7 +743,7 @@ void b3RenderObject::b3PreAlloc()
 #ifdef BLZ3_USE_OPENGL
 		if (b3VectorBufferObjects::b3HasVBO())
 		{
-#if 1
+#if 0
 			glVertexElements  = new b3VboVertexElements();
 			glGridElements    = new b3VboGridElements();
 			glPolygonElements = new b3VboPolygonElements();
@@ -849,9 +856,6 @@ void b3RenderObject::b3Update()
 
 		b3ComputeIndices();
 
-		glGridElements->b3CustomData();
-		glPolygonElements->b3CustomData();
-
 		glGridElements->b3Recomputed();
 		glPolygonElements->b3Recomputed();
 
@@ -874,7 +878,6 @@ void b3RenderObject::b3Update()
 		b3ComputeVertices();
 		b3ComputeNormals();
 
-		glVertexElements->b3CustomData();
 		glVertexElements->b3Recomputed();
 
 #ifdef VERBOSE
@@ -1020,15 +1023,25 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix *transformation,
 	b3_bool    is_affine)
 {
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"        >b3RenderObject::b3TransformVertices(...)\n");
+#endif
+
 	b3MapVertices(B3_MAP_VBO_RW);
-	b3MapIndices(B3_MAP_VBO_R);
 
 	b3_count      glVertexCount =  glVertexElements->b3GetCount();
 	b3_gl_vertex *glVertex      = *glVertexElements;
 	b3_count      i;
 
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+		 glVertexElements->b3GetCount(), glVertex,
+		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+#endif
+
 	if (glVertex != null)
 	{
+		glVertexElements->b3Recompute();
 		if (is_affine)
 		{
 			for (i = 0;i < glVertexCount;i++)
@@ -1043,11 +1056,19 @@ void b3RenderObject::b3TransformVertices(
 			{
 				b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
 			}
+
+			b3MapIndices(B3_MAP_VBO_R);
 			b3ComputeNormals();
+			b3UnmapIndices();
 		}
+
+		glVertexElements->b3Recomputed();
 	}
 	b3UnmapVertices();
-	b3UnmapIndices();
+
+#ifdef VERBOSE
+	b3PrintF(B3LOG_FULL,"        <b3RenderObject::b3TransformVertices()\n");
+#endif
 }
 
 /*************************************************************************
@@ -1196,9 +1217,8 @@ void b3RenderObject::b3UpdateMaterial()
 		}
 		else
 		{
-#if 1
 			ambient = specular = diffuse;
-#endif
+
 			b3RenderContext::b3ColorToGL(ambient, glAmbient);
 			b3RenderContext::b3ColorToGL(diffuse, glDiffuse);
 			b3RenderContext::b3ColorToGL(specular,glSpecular);

@@ -37,6 +37,13 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2004/11/30 10:16:14  smork
+**      - Added a working VBO version which computes vertices/indices
+**        completely in CPU memory and only updates the results into
+**        GPU memory finally. It's faster than computing directly
+**        in GPU memory but the fastest version is still the common
+**        vertex array version.
+**
 **      Revision 1.50  2004/11/29 09:58:00  smork
 **      - Changed exit states to correct defines.
 **      - Added switch for disabling VBO in OpenGL renderer.
@@ -490,7 +497,7 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v] BWD-file\n", command);
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -v  Disable vertex buffer objects\n");
+		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());

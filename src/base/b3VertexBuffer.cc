@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/11/30 10:16:14  smork
+**	- Added a working VBO version which computes vertices/indices
+**	  completely in CPU memory and only updates the results into
+**	  GPU memory finally. It's faster than computing directly
+**	  in GPU memory but the fastest version is still the common
+**	  vertex array version.
+**
 **	Revision 1.7  2004/11/29 16:35:02  smork
 **	- Added additional VBO version which recomputes in host memory
 **	  and only transfers recomputed data to GPU.
-**
+**	
 **	Revision 1.6  2004/11/27 10:31:12  sm
 **	- Removed b3Mem heritage from VBO handlers
 **	
@@ -589,16 +596,14 @@ void b3VboStaticVertexElements::b3CustomData()
 	{
 #ifdef BLZ3_USE_OPENGL
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO);
-		glBufferDataARB(GL_ARRAY_BUFFER_ARB,
-			glElementCount * sizeof(b3_gl_vertex), glVertex, GL_DYNAMIC_DRAW_ARB);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, 
+			glElementCount * sizeof(b3_gl_vertex), glVertex, GL_STATIC_DRAW_ARB);
 #endif
 	}
 }
 
 void b3VboStaticVertexElements::b3Draw()
 {
-	B3_ASSERT(!glBound);
-
 #ifdef BLZ3_USE_OPENGL
 	glBindBufferARB(GL_ARRAY_BUFFER_ARB, glVBO);
 	glInterleavedArrays(GL_T2F_N3F_V3F, 0, 0);
@@ -625,15 +630,13 @@ void b3VboStaticGridElements::b3CustomData()
 #ifdef BLZ3_USE_OPENGL
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-			glElementCount * sizeof(b3_gl_line), glGrids, GL_DYNAMIC_DRAW_ARB);
+			glElementCount * sizeof(b3_gl_line), glGrids, GL_STATIC_DRAW_ARB);
 #endif
 	}
 }
 
 void b3VboStaticGridElements::b3Draw()
 {
-	B3_ASSERT(!glBound);
-
 #ifdef BLZ3_USE_OPENGL
 	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 	glDrawElements(GL_LINES,glElementCount * 2,GL_UNSIGNED_INT, 0);
@@ -660,15 +663,13 @@ void b3VboStaticPolygonElements::b3CustomData()
 #ifdef BLZ3_USE_OPENGL
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB,
-			glElementCount * sizeof(b3_gl_polygon), glPolygons, GL_DYNAMIC_DRAW_ARB);
+			glElementCount * sizeof(b3_gl_polygon), glPolygons, GL_STATIC_DRAW_ARB);
 #endif
 	}
 }
 
 void b3VboStaticPolygonElements::b3Draw()
 {
-	B3_ASSERT(!glBound);
-
 #ifdef BLZ3_USE_OPENGL
 	glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, glVBO);
 	glDrawElements(GL_TRIANGLES, glElementCount * 3,GL_UNSIGNED_INT,0);
