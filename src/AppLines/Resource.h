@@ -40,8 +40,8 @@
 #define IDI_BBOX_S_SHAPES_SUB           152
 #define IDI_BBOX_S_SHAPES               153
 #define IDD_OBJECT_COPY                 154
-#define IDD_ACTION                      154
-#define IDI_BBOX_EMPTY                  155
+#define IDD_ACTION                      155
+#define IDI_BBOX_EMPTY                  156
 #define IDM_BAR_VIEW                    252
 #define IDD_SEARCH_PATH_LIST            509
 #define IDD_LDC                         510
@@ -177,6 +177,9 @@
 #define IDC_MOVE_UP                     1090
 #define IDC_MOVE_DOWN                   1091
 #define IDC_MOVE_RIGHT                  1092
+#define IDC_CENTER_X                    1093
+#define IDC_CENTER_Y                    1094
+#define IDC_CENTER_Z                    1095
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -310,9 +313,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_RESOURCE_VALUE        157
 #define _APS_NEXT_COMMAND_VALUE         32862
-#define _APS_NEXT_CONTROL_VALUE         1093
+#define _APS_NEXT_CONTROL_VALUE         1094
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

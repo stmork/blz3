@@ -36,18 +36,22 @@ class CDlgObjectCopy : public CDialog
 public:
 	b3_vector  m_Move;
 	b3_vector  m_Rotate;
+	b3_vector *m_Center;
 	b3BBox    *m_OrigBBox;
 	CDlgObjectCopy(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgObjectCopy)
 	enum { IDD = IDD_OBJECT_COPY };
-	CB3FloatEdit	m_zCtrlRot;
-	CB3FloatEdit	m_yCtrlRot;
-	CB3FloatEdit	m_xCtrlRot;
-	CB3FloatEdit	m_zCtrlOffset;
-	CB3FloatEdit	m_yCtrlOffset;
 	CB3FloatEdit	m_xCtrlOffset;
+	CB3FloatEdit	m_yCtrlOffset;
+	CB3FloatEdit	m_zCtrlOffset;
+	CB3FloatEdit	m_xCtrlRot;
+	CB3FloatEdit	m_yCtrlRot;
+	CB3FloatEdit	m_zCtrlRot;
+	CB3FloatEdit	m_xCtrlCenter;
+	CB3FloatEdit	m_yCtrlCenter;
+	CB3FloatEdit	m_zCtrlCenter;
 	b3_count	m_NumCopies;
 	//}}AFX_DATA
 

@@ -55,10 +55,13 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2002/01/08 16:21:58  sm
+**	- Added center to copy dialog
+**
 **	Revision 1.44  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
-**
+**	
 **	Revision 1.43  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
 **	
@@ -1627,14 +1630,15 @@ void CAppLinesDoc::OnObjectCopy()
 	B3_ASSERT(selected != null);
 	base     = m_Scene->b3FindBBoxHead(selected);
 	dlg.m_OrigBBox = selected;
+	dlg.m_Center   = b3GetFulcrum();
 	if (dlg.DoModal() == IDOK)
 	{
 		CWaitCursor     wait;
 	
 		b3MatrixMove(null,&transformation,&dlg.m_Move);
-		b3MatrixRotX(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.x);
-		b3MatrixRotY(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.y);
-		b3MatrixRotZ(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.z);
+		b3MatrixRotX(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.x * M_PI / 180);
+		b3MatrixRotY(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.y * M_PI / 180);
+		b3MatrixRotZ(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.z * M_PI / 180);
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
 		bbox = selected;
 		for (i = 0;i < dlg.m_NumCopies;i++)
