@@ -32,6 +32,8 @@
 
 class CDlgCreateStencil : public CPropertyPage
 {
+	CString          m_Section;
+
 	b3_stencil_bound m_Bound;
 	b3_stencil_limit m_Limit;
 
@@ -49,6 +51,7 @@ public:
 public:
 	              CDlgCreateStencil();
 	             ~CDlgCreateStencil();
+	void          b3Init();
 	void          b3PostProcess();
 
 // Dialog Data

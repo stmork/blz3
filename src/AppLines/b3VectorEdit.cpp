@@ -31,6 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/10 20:34:18  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -38,7 +45,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **	Revision 1.2  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -82,6 +89,13 @@ void CB3PosGroup::b3DDX(CDataExchange *pDX)
 	m_xCtrl->b3DDX(pDX,m_Vector->x);
 	m_yCtrl->b3DDX(pDX,m_Vector->y);
 	m_zCtrl->b3DDX(pDX,m_Vector->z);
+}
+
+void CB3PosGroup::b3Update()
+{
+	m_Vector->x = m_xCtrl->b3GetPos();
+	m_Vector->y = m_yCtrl->b3GetPos();
+	m_Vector->z = m_zCtrl->b3GetPos();
 }
 
 void CB3PosGroup::b3Init(
@@ -165,14 +179,14 @@ void CB3DirGroup::b3Update(int mode)
 	switch ((b3_dir_mode)mode)
 	{
 	case B3_DIRMODE_DIR:
-		m_Vector->x = m_xCtrl->m_Value;
-		m_Vector->y = m_yCtrl->m_Value;
-		m_Vector->z = m_zCtrl->m_Value;
+		m_Vector->x = m_xCtrl->b3GetPos();
+		m_Vector->y = m_yCtrl->b3GetPos();
+		m_Vector->z = m_zCtrl->b3GetPos();
 		break;
 	case B3_DIRMODE_POS:
-		pos.x = m_xCtrl->m_Value;
-		pos.y = m_yCtrl->m_Value;
-		pos.z = m_zCtrl->m_Value;
+		pos.x = m_xCtrl->b3GetPos();
+		pos.y = m_yCtrl->b3GetPos();
+		pos.z = m_zCtrl->b3GetPos();
 		b3Vector::b3Sub(&pos,m_Base,m_Vector);
 		break;
 	}

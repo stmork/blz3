@@ -32,6 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.1  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -39,7 +46,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **
 */
 
@@ -56,9 +63,6 @@ CDlgCreateSplineShape::CDlgCreateSplineShape() :
 	m_ySizeLegend = _T("");
 	m_xSizeLegend = _T("");
 	//}}AFX_DATA_INIT
-	m_xSizeCtrl.b3SetDigits(5,2);
-	m_ySizeCtrl.b3SetDigits(5,2);
-	m_Section = "spline shape";
 }
 
 CDlgCreateSplineShape::~CDlgCreateSplineShape()
@@ -99,39 +103,37 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateSplineShape message handlers
 
-const char *CDlgCreateSplineShape::b3GetSection()
-{
-	return m_Section;
-}
-
 void CDlgCreateSplineShape::b3Init()
 {
 	CB3App *app        = CB3GetApp();
 	b3_u32  class_type = m_Shape->b3GetClassType();
 
-	m_Section.Format("spline shape [%08x]",class_type);
+	// Call base class
 	CB3ProfileShapeDialog::b3Init();
-	if (m_Creation)
-	{
-		m_xDegree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("x degree"),  2);
-		m_xControls = app->GetProfileInt(CB3ClientString(),b3MakeSection("x controls"),class_type == SPLINES_AREA ? 4 : 8);
-		m_xSize     = app->b3ReadProfileFloat(b3MakeSection("x size"),100);
 
-		m_yDegree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("y degree"),  2);
-		m_yControls = app->GetProfileInt(CB3ClientString(),b3MakeSection("y controls"),class_type != SPLINES_RING ? 4 : 8);
-		m_ySize     = app->b3ReadProfileFloat(b3MakeSection("y size"),50);
-	}
+	// Read from registry
+	B3_ASSERT(m_Creation);
+	m_xDegree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("x degree"),  2);
+	m_xControls = app->GetProfileInt(CB3ClientString(),b3MakeSection("x controls"),class_type == SPLINES_AREA ? 4 : 8);
+	m_xSize     = app->b3ReadProfileFloat(b3MakeSection("x size"),100);
+
+	m_yDegree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("y degree"),  2);
+	m_yControls = app->GetProfileInt(CB3ClientString(),b3MakeSection("y controls"),class_type != SPLINES_RING ? 4 : 8);
+	m_ySize     = app->b3ReadProfileFloat(b3MakeSection("y size"),50);
+
+	// Init control ranges
 	m_xSizeLegend.LoadString(class_type != SPLINES_AREA ? IDS_RADIUS : IDS_LENGTH);
 	m_ySizeLegend.LoadString(class_type == SPLINES_RING ? IDS_RADIUS : IDS_LENGTH);
 
 	m_xDegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
 	m_xControlsCtrl.b3SetRange(m_xDegree + 1,B3_MAX_CONTROLS);
 	m_xSizeCtrl.b3SetMin(epsilon);
+	m_xSizeCtrl.b3SetDigits(5,2);
 
 	m_yDegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
 	m_yControlsCtrl.b3SetRange(m_yDegree + 1,B3_MAX_CONTROLS);
 	m_ySizeCtrl.b3SetMin(epsilon);
-
+	m_ySizeCtrl.b3SetDigits(5,2);
 }
 
 void CDlgCreateSplineShape::OnXDegreeEdit() 
@@ -176,6 +178,7 @@ void CDlgCreateSplineShape::b3PostProcess()
 	b3_coord       x,y;
 	b3_f64         rad;
 
+	B3_ASSERT(m_Creation);
 	app->WriteProfileInt(CB3ClientString(),b3MakeSection("x degree"),  m_xDegree);
 	app->WriteProfileInt(CB3ClientString(),b3MakeSection("x controls"),m_xControls);
 	app->b3WriteProfileFloat(b3MakeSection("x size"),m_xSize);

@@ -33,7 +33,6 @@
 
 class CDlgCreateSplineShape : public CB3ProfileShapeDialog
 {
-	CString        m_Section;
 	b3_s32         m_xDegree;
 	b3_s32         m_xControls;
 	b3_f64         m_xSize;
@@ -71,7 +70,6 @@ public:
 // Implementation
 protected:
 	virtual void        b3Init();
-	virtual const char *b3GetSection();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateSplineShape)

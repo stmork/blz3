@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2002/03/10 20:34:18  sm
+**      - Cleaned up and tested CB3ShapeDialgo derivates:
+**        o Ordered meaning of methods
+**        o Made registry entries of stencil creation unique for
+**          each shape.
+**        o Fixed some bugs.
+**
 **      Revision 1.30  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -778,15 +785,16 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
-	b3_f64     sx,sy,b,a,h,start,end;
+	b3_f64     sx,sy,b,h,d,a,start,end;
 	b3_index   i;
 	b3_count   iMax;
 	b3_vector  Bottom;
 
 	Vector   = (b3_vector *)glVertices;
 
-	h        = Limit.y2 - Limit.y1;
+	d        = Limit.y2 - Limit.y1;
 	b        = Limit.y1;
+	h        = Limit.y2;
 	Bottom.x = Base.x + b * Dir3.x;
 	Bottom.y = Base.y + b * Dir3.y;
 	Bottom.z = Base.z + b * Dir3.z;
@@ -805,17 +813,18 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 		if ((i - start) > epsilon)
 		{
 			a = Limit.x1 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
-
-			Vector->x = Bottom.x + (1-b) * sx * Dir1.x + (1-b) * sy * Dir2.x;
-			Vector->y = Bottom.y + (1-b) * sx * Dir1.y + (1-b) * sy * Dir2.y;
-			Vector->z = Bottom.z + (1-b) * sx * Dir1.z + (1-b) * sy * Dir2.z;
+			sx = (1-b) * cos(a);
+			sy = (1-b) * sin(a);
+			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
-			Vector->x = Bottom.x + (1-h) * sx * Dir1.x + (1-h) * sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + (1-h) * sx * Dir1.y + (1-h) * sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + (1-h) * sx * Dir1.z + (1-h) * sy * Dir2.z + h * Dir3.z;
+			sx = (1-h) * cos(a);
+			sy = (1-h) * sin(a);
+			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
 
 			glVertexCount += 2;
@@ -833,9 +842,9 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 
 			sx = (1-h) * Cos[i % SinCosSteps];
 			sy = (1-h) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
+			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 			Vector++;
 
 			glVertexCount += 2;
@@ -845,17 +854,19 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 		if ((end - iMax) > epsilon)
 		{
 			a  = Limit.x2 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
 
-			Vector->x = Bottom.x + (1-b) * sx * Dir1.x + (1-b) * sy * Dir2.x;
-			Vector->y = Bottom.y + (1-b) * sx * Dir1.y + (1-b) * sy * Dir2.y;
-			Vector->z = Bottom.z + (1-b) * sx * Dir1.z + (1-b) * sy * Dir2.z;
+			sx = (1-b) * cos(a);
+			sy = (1-b) * sin(a);
+			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
+			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
+			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
 
-			Vector->x = Bottom.x + (1-h) * sx * Dir1.x + (1-h) * sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + (1-h) * sx * Dir1.y + (1-h) * sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + (1-h) * sx * Dir1.z + (1-h) * sy * Dir2.z + h * Dir3.z;
+			sx = (1-h) * cos(a);
+			sy = (1-h) * sin(a);
+			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + d * Dir3.x;
+			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + d * Dir3.y;
+			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + d * Dir3.z;
 
 			glVertexCount += 2;
 			xSize++;

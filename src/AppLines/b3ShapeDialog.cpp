@@ -30,18 +30,50 @@
 
 /*************************************************************************
 **                                                                      **
+**                        How to use CB3ShapeDialog derived classes...  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	Constructor:    Init values
+**
+**  b3Init()        Call base class
+**	                If m_Creation == true read values from registry.
+**	                Setup control ranges such as b3SetRange
+**	                m_Shape must be initialized!
+**
+**  OnInitDialog()  Calling base class(es) will init controls via DDX
+**
+**  b3PostProcess() Before calling base class:
+**	                If m_Creation == true write values to registry
+**	                Call base class
+**	                Initialize shape
+**
+**	NOTE: b3Init() is called anyway but OnInitDialog() is called when the
+**	      user clicks onto the property bar first.
+*/
+
+/*************************************************************************
+**                                                                      **
 **                        Blizzard III development log                  **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
+**	Revision 1.9  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.8  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **	Revision 1.7  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
@@ -97,6 +129,7 @@ CB3ShapeDialog::CB3ShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	m_Shape    = null;
 	m_Creation = false;
+	m_Section  = "shape";
 }
 
 
@@ -155,8 +188,11 @@ int CB3ShapeDialog::b3Edit(
 			shape = (b3Shape *)item;
 			if (create)
 			{
-				dlg_stencil.m_Shape = shape;
+				dlg_material.b3Init();
 				sheet.AddPage(&dlg_material);
+
+				dlg_stencil.m_Shape = shape;
+				dlg_stencil.b3Init();
 				sheet.AddPage(&dlg_stencil);
 			}
 			break;
@@ -201,7 +237,7 @@ int CB3ShapeDialog::b3Edit(
 
 const char *CB3ShapeDialog::b3GetSection()
 {
-	return "shape";
+	return m_Section;
 }
 
 const char *CB3ShapeDialog::b3MakeSection(const char *title)
@@ -212,9 +248,15 @@ const char *CB3ShapeDialog::b3MakeSection(const char *title)
 
 void CB3ShapeDialog::b3Init()
 {
+	B3_ASSERT(m_Shape != null);
+	m_Section.Format("shape [%08x]",m_Shape->b3GetClassType());
+	b3PrintF(B3LOG_NORMAL,"CB3ShapeDialog::b3Init() called for \"%s\"\n",
+		b3GetSection());
 }
 
 void CB3ShapeDialog::b3PostProcess() 
 {
 	m_Shape->b3Recompute();
+	b3PrintF(B3LOG_NORMAL,"CB3ShapeDialog::b3PostProcess() called for \"%s\"\n",
+		b3GetSection());
 }

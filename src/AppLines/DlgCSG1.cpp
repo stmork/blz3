@@ -33,6 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/10 20:34:16  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.6  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -44,7 +51,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.5  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -133,27 +140,27 @@ int CDlgCSG1::b3Edit(b3Item *item,b3_bool create)
 	return CB3SpanningShapeDialog::b3Edit(&dlg,item,create);
 }
 
-const char *CDlgCSG1::b3GetSection()
-{
-	return "csg1";
-}
-
 void CDlgCSG1::b3Init()
 {
 	b3CSGSphere *shape = (b3CSGSphere *)m_Shape;
 
+	// Call base class
+	CB3ShapeDialog::b3Init();
+
+	// Init vector group
 	m_Base.b3Init(&shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
 	m_Dir1.b3Init(&shape->m_Base,&shape->m_Dir,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
-}
 
-BOOL CDlgCSG1::OnInitDialog() 
-{
+	// Read from registry
 	if (m_Creation)
 	{
 		m_Base.b3Read(b3MakeSection("base"));
 		m_Dir1.b3Read(b3MakeSection("dir1"));
 	}
+}
 
+BOOL CDlgCSG1::OnInitDialog() 
+{
 	CB3SpanningShapeDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -164,19 +171,18 @@ BOOL CDlgCSG1::OnInitDialog()
 
 void CDlgCSG1::b3SetDirMode(int dirmode)
 {
-	CB3SpanningShapeDialog::b3SetDirMode(dirmode);
 	m_Dir1.b3Set(m_DirMode);
 }
 
 void CDlgCSG1::b3UpdateBase()
 {
-	CB3SpanningShapeDialog::b3UpdateBase();
 	m_Dir1.b3Update(m_DirMode);
 }
 
 void CDlgCSG1::OnChangedBase() 
 {
 	// TODO: Add your control notification handler code here
+	m_Base.b3Update();
 	b3UpdateBase();
 }
 

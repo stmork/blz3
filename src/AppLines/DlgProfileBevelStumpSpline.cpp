@@ -33,6 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.1  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -40,7 +47,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **
 */
 
@@ -104,7 +111,11 @@ void CDlgProfileBevelStumpSpline::b3Init()
 {
 	CB3App *app = CB3GetApp();
 
+	// Call base class
 	CB3ProfileShapeDialog::b3Init();
+
+	// Read from registry
+	B3_ASSERT(m_Creation);
 	m_xEdge     = app->b3ReadProfileFloat(b3MakeSection("x edge"), m_xEdge);
 	m_xEdge     = app->b3ReadProfileFloat(b3MakeSection("y edge"), m_xEdge);
 	m_Oblique   = app->b3ReadProfileFloat(b3MakeSection("oblique"),m_Oblique);
@@ -184,9 +195,10 @@ void CDlgProfileBevelStumpSpline::OnEdgeSpin(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CDlgProfileBevelStumpSpline::b3PostProcess()
 {
-	CB3App        *app = CB3GetApp();
+	CB3App *app = CB3GetApp();
 
 	// Write values into registry for next creation
+	B3_ASSERT(m_Creation);
 	app->b3WriteProfileFloat(b3MakeSection("x edge"), m_xEdge);
 	app->b3WriteProfileFloat(b3MakeSection("y edge"), m_yEdge);
 	app->b3WriteProfileFloat(b3MakeSection("oblique"),m_Oblique);

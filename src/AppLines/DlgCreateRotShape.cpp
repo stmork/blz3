@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.1  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **
 */
 
@@ -51,8 +58,6 @@ CDlgCreateRotShape::CDlgCreateRotShape() : CB3ProfileShapeDialog(CDlgCreateRotSh
 	//{{AFX_DATA_INIT(CDlgCreateRotShape)
 	m_Closed = FALSE;
 	//}}AFX_DATA_INIT
-	m_xSizeCtrl.b3SetDigits(5,2);
-	m_ySizeCtrl.b3SetDigits(5,2);
 }
 
 CDlgCreateRotShape::~CDlgCreateRotShape()
@@ -90,32 +95,31 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateRotShape message handlers
 
-const char *CDlgCreateRotShape::b3GetSection()
-{
-	return "rotation shape";
-}
-
 void CDlgCreateRotShape::b3Init()
 {
 	CB3App *app        = CB3GetApp();
 	b3_u32  class_type = m_Shape->b3GetClassType();
 
+	// Call base class
 	CB3ProfileShapeDialog::b3Init();
-	if (m_Creation)
-	{
-		m_xSize     = app->b3ReadProfileFloat(b3MakeSection("x size"),100);
-		m_ySize     = app->b3ReadProfileFloat(b3MakeSection("y size"),50);
 
-		m_Closed   = app->GetProfileInt(CB3ClientString(),b3MakeSection("closed"),  m_Closed);
-		m_Degree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("degree"),  2);
-		m_SubDiv   = app->GetProfileInt(CB3ClientString(),b3MakeSection("subdiv"),  16);
-		m_Controls = app->GetProfileInt(CB3ClientString(),b3MakeSection("controls"),m_Closed ? 8 : 4);
-	}
+	// Read from registry
+	B3_ASSERT(m_Creation);
+	m_xSize    = app->b3ReadProfileFloat(b3MakeSection("x size"),100);
+	m_ySize    = app->b3ReadProfileFloat(b3MakeSection("y size"), 50);
+	m_Closed   = app->GetProfileInt(CB3ClientString(),b3MakeSection("closed"),  m_Closed);
+	m_Degree   = app->GetProfileInt(CB3ClientString(),b3MakeSection("degree"),  2);
+	m_SubDiv   = app->GetProfileInt(CB3ClientString(),b3MakeSection("subdiv"),  16);
+	m_Controls = app->GetProfileInt(CB3ClientString(),b3MakeSection("controls"),m_Closed ? 8 : 4);
+
+	// Init control ranges
 	m_DegreeCtrl.b3SetRange(1,B3_MAX_DEGREE);
 	m_ControlsCtrl.b3SetRange(m_Degree + 1,B3_MAX_CONTROLS);
 	m_SubdivCtrl.b3SetRange(4,64);
 	m_xSizeCtrl.b3SetMin(epsilon);
+	m_xSizeCtrl.b3SetDigits(5,2);
 	m_ySizeCtrl.b3SetMin(epsilon);
+	m_ySizeCtrl.b3SetDigits(5,2);
 }
 
 BOOL CDlgCreateRotShape::OnInitDialog() 
@@ -166,12 +170,15 @@ void CDlgCreateRotShape::b3PostProcess()
 	b3_vector        *c;
 	b3_coord          x;
 
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("degree"),  m_Degree);
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("controls"),m_Controls);
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("subdiv"),  m_SubDiv);
-	app->WriteProfileInt(CB3ClientString(),b3MakeSection("closed"),  m_Closed);
-	app->b3WriteProfileFloat(b3MakeSection("x size"),m_xSize);
-	app->b3WriteProfileFloat(b3MakeSection("y size"),m_ySize);
+	if (m_Creation)
+	{
+		app->WriteProfileInt(CB3ClientString(),b3MakeSection("degree"),  m_Degree);
+		app->WriteProfileInt(CB3ClientString(),b3MakeSection("controls"),m_Controls);
+		app->WriteProfileInt(CB3ClientString(),b3MakeSection("subdiv"),  m_SubDiv);
+		app->WriteProfileInt(CB3ClientString(),b3MakeSection("closed"),  m_Closed);
+		app->b3WriteProfileFloat(b3MakeSection("x size"),m_xSize);
+		app->b3WriteProfileFloat(b3MakeSection("y size"),m_ySize);
+	}
 
 	shape->b3Init(m_Degree,m_Controls,m_Closed,m_SubDiv);
 	c = shape->m_Controls;

@@ -53,6 +53,7 @@ public:
 public:
 	              CDlgCreateMaterial();
 	             ~CDlgCreateMaterial();
+	void          b3Init();
 	void          b3PostProcess(b3CondRectangle *stencil = null);
 
 // Dialog Data

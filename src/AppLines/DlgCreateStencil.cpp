@@ -32,6 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -43,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.3  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -89,8 +96,6 @@ int CDlgCreateStencil::m_Digits[3] =
 
 CDlgCreateStencil::CDlgCreateStencil() : CPropertyPage(CDlgCreateStencil::IDD)
 {
-	CB3App       *app = CB3GetApp();
-
 	//{{AFX_DATA_INIT(CDlgCreateStencil)
 	m_ReallyCreate = FALSE;
 	m_yEndLegend = _T("");
@@ -100,13 +105,6 @@ CDlgCreateStencil::CDlgCreateStencil() : CPropertyPage(CDlgCreateStencil::IDD)
 	m_Unit = 1;
 	//}}AFX_DATA_INIT
 	m_Stencil = null;
-
-	m_Unit         = app->GetProfileInt(CB3ClientString(),"stencil.unit",1);
-	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),"stencil.really create",1);
-	m_Limit.x1     = app->b3ReadProfileFloat("stencil.xMin",0);
-	m_Limit.x2     = app->b3ReadProfileFloat("stencil.xMax",1);
-	m_Limit.y1     = app->b3ReadProfileFloat("stencil.yMin",0);
-	m_Limit.y2     = app->b3ReadProfileFloat("stencil.yMax",1);
 }
 
 CDlgCreateStencil::~CDlgCreateStencil()
@@ -145,10 +143,24 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateStencil message handlers
 
+void CDlgCreateStencil::b3Init()
+{
+	CB3App *app = CB3GetApp();
+
+	B3_ASSERT(m_Shape != null);
+	m_Section.Format("stencil [%08x]",m_Shape->b3GetClassType());
+
+	m_Shape->b3GetStencilBoundInfo(&m_Bound);
+	m_Unit         = app->GetProfileInt(CB3ClientString(),m_Section + ".unit",1);
+	m_ReallyCreate = app->GetProfileInt(CB3ClientString(),m_Section + ".really create",1);
+	m_Limit.x1     = app->b3ReadProfileFloat(m_Section + ".xMin",m_Bound.xMin);
+	m_Limit.x2     = app->b3ReadProfileFloat(m_Section + ".xMax",m_Bound.xMax);
+	m_Limit.y1     = app->b3ReadProfileFloat(m_Section + ".yMin",m_Bound.yMin);
+	m_Limit.y2     = app->b3ReadProfileFloat(m_Section + ".yMax",m_Bound.yMax);
+}
+
 BOOL CDlgCreateStencil::OnInitDialog() 
 {
-	m_Shape->b3GetStencilBoundInfo(&m_Bound);
-
 	// Init horizontal legend
 	switch(m_Bound.xUnit)
 	{
@@ -291,11 +303,11 @@ void CDlgCreateStencil::b3PostProcess()
 		m_Stencil->m_Flags  = RCF_ACTIVE;
 
 		// Write defaults to registry
-		app->b3WriteProfileFloat("stencil.xMin",m_Limit.x1);
-		app->b3WriteProfileFloat("stencil.xMax",m_Limit.x2);
-		app->b3WriteProfileFloat("stencil.yMin",m_Limit.y1);
-		app->b3WriteProfileFloat("stencil.yMax",m_Limit.y2);
-		app->WriteProfileInt(CB3ClientString(),"stencil.unit",m_Unit);
+		app->b3WriteProfileFloat(m_Section + ".xMin",m_Limit.x1);
+		app->b3WriteProfileFloat(m_Section + ".xMax",m_Limit.x2);
+		app->b3WriteProfileFloat(m_Section + ".yMin",m_Limit.y1);
+		app->b3WriteProfileFloat(m_Section + ".yMax",m_Limit.y2);
+		app->WriteProfileInt(CB3ClientString(),m_Section + ".unit",m_Unit);
 	}
-	app->WriteProfileInt(CB3ClientString(),"stencil.really create",m_ReallyCreate);
+	app->WriteProfileInt(CB3ClientString(),m_Section + ".really create",m_ReallyCreate);
 }

@@ -67,7 +67,6 @@ public:
 protected:
 	virtual void        b3Init();
 	virtual void        b3SetDirMode(int dirmode);
-	virtual const char *b3GetSection();
 	virtual void        b3UpdateBase();
 
 	// Generated message map functions

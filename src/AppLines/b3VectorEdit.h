@@ -35,6 +35,7 @@ public:
 	     CB3PosGroup();
 	void b3DDX(CDataExchange *pDX);
 	void b3Init(b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl);
+	void b3Update();
 	void b3Read(const char *title);
 	void b3Write(const char *title);
 };

@@ -31,11 +31,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.5  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.4  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -111,31 +118,16 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CB3SpanningShapeDialog message handlers
 
-const char *CB3ProfileShapeDialog::b3GetSection()
-{
-	return "profile shape";
-}
-
 void CB3ProfileShapeDialog::b3Init()
 {
+	// Call base class
+	CB3ShapeDialog::b3Init();
+
+	// Read from registry
 	B3_ASSERT(m_Creation);
 	m_BaseGroup.b3Init(&m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
-	if (m_Creation)
-	{
-		m_BaseGroup.b3Read(b3MakeSection("base"));
-		m_Align = AfxGetApp()->GetProfileInt(CB3ClientString(),b3MakeSection("align"),m_Align);
-	}
-}
-
-BOOL CB3ProfileShapeDialog::OnInitDialog() 
-{
-	B3_ASSERT(m_Creation);
-	CB3ShapeDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
+	m_BaseGroup.b3Read(b3MakeSection("base"));
+	m_Align = AfxGetApp()->GetProfileInt(CB3ClientString(),b3MakeSection("align"),m_Align);
 }
 
 void CB3ProfileShapeDialog::b3PostProcess() 

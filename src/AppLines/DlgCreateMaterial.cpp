@@ -34,6 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.7  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -45,7 +52,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.6  2002/03/01 21:25:36  sm
 **	- Fixed a problem in create material dialog: Use the
 **	  correct function proto types depending on the
@@ -89,7 +96,7 @@ IMPLEMENT_DYNCREATE(CDlgCreateMaterial, CPropertyPage)
 
 CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD)
 {
-	CB3App       *app = CB3GetApp();
+	CB3App *app = CB3GetApp();
 
 	//{{AFX_DATA_INIT(CDlgCreateMaterial)
 	m_ReallyCreate = TRUE;
@@ -176,6 +183,10 @@ END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCreateMaterial message handlers
+
+void CDlgCreateMaterial::b3Init()
+{
+}
 
 BOOL CDlgCreateMaterial::OnInitDialog() 
 {

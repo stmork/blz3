@@ -31,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/10 20:34:18  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.2  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **	Revision 1.1  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -58,7 +65,6 @@ CB3SpanningShapeDialog::CB3SpanningShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CB3ShapeDialog)
 	m_DirMode = 0;
 	//}}AFX_DATA_INIT
-	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
 }
 
 
@@ -81,6 +87,18 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CB3SpanningShapeDialog message handlers
 
+void CB3SpanningShapeDialog::b3Init()
+{
+	// Call base class
+	CB3ShapeDialog::b3Init();
+
+	// Read from registry
+	if (m_Creation)
+	{
+		m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3MakeSection("mode"),m_DirMode);
+	}
+}
+
 void CB3SpanningShapeDialog::OnDirModeChanged() 
 {
 	// TODO: Add your control notification handler code here
@@ -88,16 +106,11 @@ void CB3SpanningShapeDialog::OnDirModeChanged()
 	b3SetDirMode(m_DirMode);
 }
 
-void CB3SpanningShapeDialog::b3SetDirMode(int dirmode)
-{
-}
-
-void CB3SpanningShapeDialog::b3UpdateBase()
-{
-}
-
 void CB3SpanningShapeDialog::b3PostProcess() 
 {
 	CB3ShapeDialog::b3PostProcess();
-	AfxGetApp()->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
+	if (m_Creation)
+	{
+		AfxGetApp()->WriteProfileInt(CB3ClientString(),b3MakeSection("mode"),m_DirMode);
+	}
 }

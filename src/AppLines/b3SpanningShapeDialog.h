@@ -45,8 +45,9 @@ public:
 
 // Implementation
 protected:
-	virtual void        b3SetDirMode(int dirmode);
-	virtual void        b3UpdateBase();
+	virtual void  b3Init();
+	virtual void  b3SetDirMode(int dirmode) = 0;
+	virtual void  b3UpdateBase() = 0;
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3SpanningShapeDialog)

@@ -25,6 +25,7 @@
 //
 
 #include "blz3/system/b3FloatEdit.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "b3ShapeDialog.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,10 @@
 
 class CDlgCreateTriangles : public CB3ShapeDialog
 {
+	b3_f64  m_xSize;
+	b3_f64  m_ySize;
+	b3_s32  m_xCount;
+	b3_s32  m_yCount;
 // Construction
 public:
 	CDlgCreateTriangles(CWnd* pParent = NULL);   // standard constructor
@@ -41,12 +46,10 @@ public:
 	//{{AFX_DATA(CDlgCreateTriangles)
 	enum { IDD = IDD_CREATE_TRIANGLES };
 	CStatic	m_LegendCtrl;
-	CB3FloatEdit	m_HorzCtrl;
-	CB3FloatEdit	m_VertCtrl;
-	int		m_xSize;
-	int		m_ySize;
-	CSpinButtonCtrl	m_ySizeCtrl;
-	CSpinButtonCtrl	m_xSizeCtrl;
+	CB3FloatEdit	m_xSizeCtrl;
+	CB3FloatEdit	m_ySizeCtrl;
+	CB3IntSpinButtonCtrl	m_xCountCtrl;
+	CB3IntSpinButtonCtrl	m_yCountCtrl;
 	BOOL	m_Phong;
 	BOOL	m_xClosed;
 	//}}AFX_DATA
@@ -61,7 +64,7 @@ public:
 
 // Implementation
 protected:
-	virtual const char *b3GetSection();
+	virtual void        b3Init();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateTriangles)

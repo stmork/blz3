@@ -32,6 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/10 20:34:17  sm
+**	- Cleaned up and tested CB3ShapeDialgo derivates:
+**	  o Ordered meaning of methods
+**	  o Made registry entries of stencil creation unique for
+**	    each shape.
+**	  o Fixed some bugs.
+**
 **	Revision 1.6  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -43,7 +50,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.5  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -128,27 +135,29 @@ int CDlgShape2::b3Edit(b3Item *item,b3_bool create)
 	return CB3ShapeDialog::b3Edit(&dlg,item,create);
 }
 
-const char *CDlgShape2::b3GetSection()
-{
-	return "shape2";
-}
-
 void CDlgShape2::b3Init()
 {
 	b3Shape2 *shape = (b3Shape2 *)m_Shape;
 
+	// Call base class (Skipping CDlgShape1)
+	CB3SpanningShapeDialog::b3Init();
+
+	// Init vector group
 	m_Base.b3Init(&shape->m_Base,&m_xBaseCtrl,&m_yBaseCtrl,&m_zBaseCtrl);
 	m_Dir1.b3Init(&shape->m_Base,&shape->m_Dir1,&m_xDir1Ctrl,&m_yDir1Ctrl,&m_zDir1Ctrl,&m_lenDir1Ctrl);
 	m_Dir2.b3Init(&shape->m_Base,&shape->m_Dir2,&m_xDir2Ctrl,&m_yDir2Ctrl,&m_zDir2Ctrl,&m_lenDir2Ctrl);
+
+	// Read from registry
+	if (m_Creation)
+	{
+		m_Base.b3Read(b3MakeSection("base"));
+		m_Dir1.b3Read(b3MakeSection("dir1"));
+		m_Dir2.b3Read(b3MakeSection("dir2"));
+	}
 }
 
 BOOL CDlgShape2::OnInitDialog() 
 {
-	if (m_Creation)
-	{
-		m_Dir2.b3Read(b3GetSection() + CString(".dir2"));
-	}
-
 	CDlgShape1::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -186,6 +195,6 @@ void CDlgShape2::b3PostProcess()
 	CDlgShape1::b3PostProcess();
 	if (m_Creation)
 	{
-		m_Dir2.b3Write(b3GetSection() + CString(".dir2"));
+		m_Dir2.b3Write(b3MakeSection("dir2"));
 	}
 }

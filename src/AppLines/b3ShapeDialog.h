@@ -37,7 +37,8 @@ typedef int (*b3ItemEditCall)(b3Item *item,b3_bool create);
 
 class CB3ShapeDialog : public CPropertyPage
 {
-	CString              m_SectionTitle;
+	CString              m_Section;      // Used as default for b3GetSection()
+	CString              m_SectionTitle; // Used by b3MakeSection()
 // Construction
 public:
 	b3ShapeRenderObject *m_Shape;

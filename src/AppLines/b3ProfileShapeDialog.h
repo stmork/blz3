@@ -29,8 +29,8 @@ class b3Profile;
 class CB3ProfileShapeDialog : public CB3ShapeDialog  
 {
 protected:
-	CB3PosGroup m_BaseGroup;
-	b3_vector   m_Base;
+	CB3PosGroup   m_BaseGroup;
+	b3_vector     m_Base;
 
 public:
 	b3Profile    *m_Profile;
@@ -59,11 +59,9 @@ public:
 // Implementation
 protected:
 	virtual void b3Init();
-	virtual const char *b3GetSection();
 
 	// Generated message map functions
 	//{{AFX_MSG(CB3ProfileShapeDialog)
-	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -67,7 +67,6 @@ public:
 // Implementation
 protected:
 	virtual void        b3Init();
-	virtual const char *b3GetSection();
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgCreateRotShape)
