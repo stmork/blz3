@@ -1,7 +1,7 @@
 /*
 **
-**	$Filename:	b3Scene.h $ 
-*	$Release:	Dortmund 2004 $
+**	$Filename:	b3Shade.h $ 
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
@@ -43,7 +43,6 @@ protected:
 	virtual void            b3ShadeSurface(b3_surface &surface,b3_count depth) = 0;
 	virtual void            b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result) = 0;
 	virtual void            b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result) = 0;
-	virtual b3_bool         b3IsPointLightBackground(b3Light *light,b3_ray *ray) = 0;
 
 protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
@@ -58,10 +57,6 @@ protected:
 	       void    b3ShadeSurface(b3_surface &surface,b3_count depth);
 	       void    b3ShadePostMaterial(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &material_shading,b3Color &result);
 	       void    b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
-	inline b3_bool b3IsPointLightBackground(b3Light *light,b3_ray *ray)
-	{
-		return false;
-	}
 };
 
 class B3_PLUGIN b3ShaderMork : public b3Shader
@@ -79,7 +74,6 @@ protected:
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 private:
-	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray *ray);
 	void    b3LightFlare(b3_ray *ray);
 };
 

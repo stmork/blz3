@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2004/05/23 13:51:14  sm
+**	- Some shader cleanups
+**
 **	Revision 1.38  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
-**
+**	
 **	Revision 1.37  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -317,14 +320,7 @@ b3_bool b3Shader::b3Shade(
 	b3Shape     *shape;
 	b3_surface   surface;
 	b3_f64       denom;
-	b3_bool      result = false;
-
-	// If max raytrace depth is reached leave!
-	if (depth_count > m_TraceDepth)
-	{
-		ray->color.b3Init();
-		return false;
-	}
+	b3_bool      finite;
 
 	// Normalize incoming ray
 	denom =
@@ -340,11 +336,11 @@ b3_bool b3Shader::b3Shade(
 	}
 	else
 	{
-		ray->color.b3Init();
+		// Emergency exit
 		return false;
 	}
 
-	if (m_Scene->b3Intersect(ray))
+	if ((depth_count <= m_TraceDepth) && m_Scene->b3Intersect(ray))
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;
@@ -358,8 +354,10 @@ b3_bool b3Shader::b3Shade(
 		// Compute rel. box coordinates
 		bbox->b3ComputeBoxPolar(ray);
 
-		// Compute surface values
+		// Get material values
 		ray->material = shape->b3GetSurfaceValues(&surface);
+
+		// Do bump mapping
 		shape->b3BumpNormal(ray);
 
 		b3ComputeOutputRays(&surface);
@@ -367,32 +365,27 @@ b3_bool b3Shader::b3Shade(
 		// This does the shading
 		b3ShadeSurface(surface,depth_count);
 
+		// Post process nebular
 		if (m_Nebular != null)
 		{
 			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
 		}
-		result = true;
+		finite = true;
 	}
 	else
 	{
-		ray->color.b3Init();
-		if (m_Nebular != null)
+		if (finite = (m_Nebular != null))
 		{
 			m_Nebular->b3GetNebularColor(ray->color);
-			result = true;
-		}
-		else
-		{
-			b3Item *item;
-
-			B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
-			{
-				b3IsPointLightBackground((b3Light *)item,ray);
-			}
-			result = false;
+			finite = true;
 		}
 	}
-	return result;
+
+	if (!finite)
+	{
+		m_Scene->b3GetInfiniteColor(ray);
+	}
+	return finite;
 }
 
 void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result)

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/05/23 13:51:14  sm
+**	- Some shader cleanups
+**
 **	Revision 1.27  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
-**
+**	
 **	Revision 1.26  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -262,7 +265,6 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_ray   *ray = surface.incoming;
 	b3_f64    refl,refr,factor;
 
-	ray->color.b3Init();
 	if (surface.transparent)
 	{
 		if (surface.m_Ior == 1)
@@ -271,109 +273,49 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.refl_ray.inside = false;
 		}
 		refr = surface.m_Refraction;
+		b3Shade(&surface.refr_ray,depth_count + 1);
 	}
 	else
 	{
 		refr = 0;
 	}
-	memset(&surface.refr_ray.color,0,sizeof(surface.refr_ray.color));
 
-	if (depth_count <= m_TraceDepth)
+	// Reflection
+	if (((!ray->inside) || (!surface.transparent)) && (surface.m_Reflection > 0))
 	{
-		// Reflection
-		if (((!ray->inside) || (!surface.transparent)) && (surface.m_Reflection > 0))
-		{
-			refl = surface.m_Reflection;
-			if (!b3Shade(&surface.refl_ray,depth_count + 1))
-			{
-				m_Scene->b3GetInfiniteColor(&surface.refl_ray);
-			}
-		}
-		else
-		{
-			refl = 0;
-		}
-
-		if (surface.transparent)
-		{
-			if (!b3Shade(&surface.refr_ray,depth_count + 1))
-			{
-				m_Scene->b3GetInfiniteColor(&surface.refr_ray);
-			}
-		}
+		refl = surface.m_Reflection;
+		b3Shade(&surface.refl_ray,depth_count + 1);
 	}
 	else
 	{
 		refl = 0;
 	}
 
-	// For each light source
-	surface.m_SpecularSum.b3Init();
-	B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
-	{
-		light = (b3Light *)item;
-		light->b3Illuminate(this,&surface);
-	}
-
 	// Mix colors
 	factor = (1.0 - refl - refr) * 0.5;
 	if (factor > 0)
 	{
-		ray->color *= factor;
+		// For each light source
+		surface.m_SpecularSum.b3Init();
+		ray->color.b3Init();
+		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+		{
+			light = (b3Light *)item;
+			light->b3Illuminate(this,&surface);
+		}
+
+		ray->color =
+			ray->color * factor +
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr +
+			surface.m_SpecularSum;
 	}
 	else
 	{
-		ray->color.b3Init();
+		ray->color =
+			surface.refl_ray.color * refl +
+			surface.refr_ray.color * refr;
 	}
-
-	if (refl > 0)
-	{
-		ray->color += (surface.refl_ray.color * refl);
-	}
-	if (refr > 0)
-	{
-		ray->color += (surface.refr_ray.color * refr);
-	}
-
-	ray->color += surface.m_SpecularSum;
-}
-
-b3_bool b3ShaderMork::b3IsPointLightBackground (
-	b3Light *Light,
-	b3_ray  *Ray)
-{
-	b3_vector LightDir;
-	b3_f64    LightDist,Factor,ReflexAngle;
-
-	if (!Light->m_LightActive)
-	{
-		return false;
-	}
-
-	LightDir.x = Light->m_Position.x - Ray->pos.x;
-	LightDir.y = Light->m_Position.y - Ray->pos.y;
-	LightDir.z = Light->m_Position.z - Ray->pos.z;
-	if ((LightDist = b3Vector::b3QuadLength(&LightDir)) == 0)
-	{
-		return false;
-	}
- 	LightDist  = 1.0 / sqrt(LightDist);
- 	LightDir.x *= LightDist;
- 	LightDir.y *= LightDist;
- 	LightDir.z *= LightDist;
-
-	ReflexAngle =
-		(LightDir.x * Ray->dir.x +
-		 LightDir.y * Ray->dir.y +
-		 LightDir.z * Ray->dir.z);
-	Factor = ReflexAngle * Light->m_Distance * LightDist;
-	if (Factor > 1)
-	{
-		Factor = 1;
-	}
-
-	Ray->color = Light->m_Color * Factor;
-	return true;
 }
 
 void b3ShaderMork::b3LightFlare (b3_ray *Ray)

@@ -358,6 +358,10 @@ SOURCE=..\..\include\blz3\raytrace\b3Scene.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\raytrace\b3Shade.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\raytrace\b3Shape.h
 # End Source File
 # Begin Source File

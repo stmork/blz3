@@ -52,21 +52,20 @@ class b3Material;
 
 struct b3_ray : public b3_line64
 {
+	b3_f64      Q;                     // backward limit
 	b3_vector64 ipoint;                // intersection point
 	b3_vector64 normal;                // normal at intersection point
 	b3_vector64 xDeriv;                // surface x derivative 
 	b3_vector64 yDeriv;                // surface y derivative
 	b3_polar    polar;                 // diverse polar coordinates
-	b3_f64      Q;                     // backward limit
-	b3_bool     inside;                // inside or outside flag
-	b3_index    TriaIndex;             // triangle index at intersection point
-	b3_f64      aTriaValue,bTriaValue; // polar coordinates of that triangle
-	b3_f64      t;                     // animation time point
-	b3_index    depth;                 // trace depth
-	b3Color     color;                 // result color
 	b3Shape    *shape;                 // intersected shape
 	b3BBox     *bbox;                  // bounding box which contains intersected shape
 	b3Material *material;              // hit material of intersected shape
+	b3_bool     inside;                // inside or outside flag
+	b3_f64      t;                     // animation time point
+	b3Color     color;                 // result color
+	b3_index    TriaIndex;             // triangle index at intersection point
+	b3_f64      aTriaValue,bTriaValue; // polar coordinates of that triangle
 };
 
 struct b3_material
