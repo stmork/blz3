@@ -41,13 +41,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/24 13:08:22  sm
+**	- Removed old time measuring code which were commented out.
+**
 **	Revision 1.7  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.6  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
@@ -131,13 +134,6 @@ bool b3Log_SetFile(const char *DebugFile)
 
 void b3PrintT(const char *comment)
 {
-/*
-	struct _timeb timebuffer;
-
-	_ftime (&timebuffer);
-	b3PrintF (B3LOG_FULL,"                      timecode %ld - %3hd (%s)\n",
-		timebuffer.time,timebuffer.millitm,comment ? comment : "-");
-*/
 	struct timeval stamp;
 
 	gettimeofday(&stamp,0);
