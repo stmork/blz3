@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Scene.h $ 
-*	$Release:	Dortmund 2004 $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
