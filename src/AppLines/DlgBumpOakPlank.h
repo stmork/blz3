@@ -50,7 +50,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpOakPlank)
 	enum { IDD = IDD_BUMP_OAKPLANK };
-	CStatic	m_PreviewBumpCtrl;
+	CB3ShowSample	m_PreviewBumpCtrl;
 		// NOTE: the ClassWizard will add data members here
 	//}}AFX_DATA
 

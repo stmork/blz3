@@ -1,12 +1,12 @@
 /*
 **
-**	$Filename:	b3MaterialSampler.cc $ 
+**	$Filename:	b3BumpSampler.cc $ 
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Sampler for testing materials
+**	Blizzard III - Sampler for testing bump maps
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/raytrace/b3MaterialSampler.h"
+#include "blz3/raytrace/b3BumpSampler.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,33 +31,10 @@
 
 /*
 **	$Log$
-**	Revision 1.5  2004/04/19 09:00:52  sm
+**	Revision 1.1  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
 **
-**	Revision 1.4  2004/04/11 19:04:21  sm
-**	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
-**	
-**	Revision 1.3  2004/04/11 18:21:36  sm
-**	- Raytracer redesign:
-**	  o The complete set of surface values moved into
-**	    the b3_surface data structure when calling b3GetColors()
-**	
-**	Revision 1.2  2004/04/11 14:05:11  sm
-**	- Raytracer redesign:
-**	  o The reflection/refraction/ior/specular exponent getter
-**	    are removed. The values are copied via the b3GetColors()
-**	    method.
-**	  o The polar members are renamed.
-**	  o The shape/bbox pointers moved into the ray structure
-**	- Introduced wood bump mapping.
-**	
-**	Revision 1.1  2004/04/10 19:12:46  sm
-**	- Splitted up some header/source files:
-**	  o b3Wood/b3OakPlank
-**	  o b3MaterialSampler
-**	- Cleaneup
-**	
 **
 */
 
@@ -67,36 +44,43 @@
 **                                                                      **
 *************************************************************************/
 
-b3MaterialSampler::b3MaterialSampler(b3Tx *tx,b3_count tiles)
+#define BUMP_SLOPE 0.15
+
+b3_vector b3BumpSampler::m_Light =
+{
+	-1,1,1
+};
+
+b3BumpSampler::b3BumpSampler(b3Tx *tx,b3_count tiles)
 {
 	// Init texture
-	m_Material = null;
-	m_Tx       = tx;
-	m_xMax     = m_Tx->xSize;
-	m_yMax     = m_Tx->ySize;
-	m_Data     = (b3_pkd_color *)m_Tx->b3GetData();
-	m_Tiles    = tiles;
+	m_Bump  = null;
+	m_Tx    = tx;
+	m_xMax  = m_Tx->xSize;
+	m_yMax  = m_Tx->ySize;
+	m_Data  = (b3_pkd_color *)m_Tx->b3GetData();
+	m_Tiles = tiles;
 }
 	
-void b3MaterialSampler::b3SetMaterial(b3Material *material)
+void b3BumpSampler::b3SetBump(b3Bump *bump)
 {
-	m_Material = material;
+	m_Bump = bump;
 }
 
-b3SampleInfo *b3MaterialSampler::b3SampleInit(b3_count CPUs)
+b3SampleInfo *b3BumpSampler::b3SampleInit(b3_count CPUs)
 {
 	b3SampleInfo *info = new b3SampleInfo[CPUs];
 	b3_loop       i;
 	b3_res        yStart,yEnd;
 
-	B3_ASSERT(m_Material != null);
-	m_Material->b3Prepare();
+	B3_ASSERT(m_Bump != null);
+	m_Bump->b3Prepare();
 	yStart = 0;
 	for (i = 0;i < CPUs;i++)
 	{
 		yEnd = m_yMax * (i + 1) / CPUs;
 		info[i].m_Sampler = this;
-		info[i].m_Ptr     = m_Material;
+		info[i].m_Ptr     = m_Bump;
 		info[i].m_xMax    = m_xMax;
 		info[i].m_yMax    = m_yMax;
 		info[i].m_yStart  = yStart;
@@ -107,14 +91,14 @@ b3SampleInfo *b3MaterialSampler::b3SampleInit(b3_count CPUs)
 	return info;
 }
 
-void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
+void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 {
-	b3Material *material = (b3Material *)info->m_Ptr;
-	b3_coord              x,y;
-	b3_ray                ray;
-	b3_surface            surface;
-	b3_f64                fy;
-	b3_pkd_color         *data = info->m_Data;
+	b3Bump       *bump = (b3Bump *)info->m_Ptr;
+	b3_coord      x,y;
+	b3_ray        ray;
+	b3_f64        fy,angle;
+	b3_vector     normal;
+	b3_pkd_color *data = info->m_Data;
 
 	for (y = info->m_yStart;y < info->m_yEnd;y++)
 	{
@@ -125,7 +109,7 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 			
 			ray.polar.m_BoxPolar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
 			ray.polar.m_BoxPolar.y = 1.0 - fy;
-			ray.polar.m_BoxPolar.z = 1.0 - fy * 0.15 * ix;
+			ray.polar.m_BoxPolar.z = 1.0 - fy * BUMP_SLOPE * ix;
 			ray.polar.m_ObjectPolar.x = ray.polar.m_BoxPolar.x * 2 - 1;
 			ray.polar.m_ObjectPolar.y = ray.polar.m_BoxPolar.y * 2 - 1;
 			ray.polar.m_ObjectPolar.z = 0;
@@ -133,9 +117,14 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
 			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
 			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
-			material->b3GetSurfaceValues(&ray,&surface);
+			ray.normal.x =  0;
+			ray.normal.y = -BUMP_SLOPE * ix;
+			ray.normal.z = sqrt(1 - ray.normal.y * ray.normal.y);
 
-			*data++ = surface.m_Diffuse;
+			bump->b3BumpNormal(&ray);
+			b3Vector::b3Init(&normal,&ray.normal);
+			angle = b3Vector::b3AngleOfVectors(&m_Light,&normal);
+			*data++ = b3Color::b3Color(angle,angle,angle);
 		}
 	}
 }

@@ -48,7 +48,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpWood)
 	enum { IDD = IDD_BUMP_WOOD };
-	CStatic	m_PreviewBumpCtrl;
+	CB3ShowSample	m_PreviewBumpCtrl;
 	//}}AFX_DATA
 
 

@@ -15,6 +15,7 @@ PRG_SOURCE		=\
 	b3BBox.cc\
 	b3Box.cc\
 	b3Bump.cc\
+	b3BumpSampler.cc\
 	b3Condition.cc\
 	b3Cone.cc\
 	b3CSGBox.cc\
@@ -65,6 +66,7 @@ PRG_OBJ			=\
 	b3BBox.o\
 	b3Box.o\
 	b3Bump.o\
+	b3BumpSampler.o\
 	b3Condition.o\
 	b3Cone.o\
 	b3CSGBox.o\

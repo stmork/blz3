@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/19 09:00:52  sm
+**	- Added bump sampler.
+**	- Reactivated bump sampler in bump dialogs.
+**
 **	Revision 1.3  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	Revision 1.2  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
@@ -104,9 +108,9 @@ BOOL CDlgBumpWood::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-//	m_PreviewBumpCtrl.b3Init();
-//	m_MatSampler = new b3MaterialSampler(m_PreviewBumpCtrl);
-//	m_MatSampler->b3SetMaterial(m_Material);
+	m_PreviewBumpCtrl.b3Init();
+	m_BumpSampler = new b3BumpSampler(m_PreviewBumpCtrl);
+	m_BumpSampler->b3SetBump(m_Bump);
 
 	m_PropertySheet.AddPage(&m_PageBump);
 	m_PropertySheet.AddPage(&m_PageWood);
@@ -128,7 +132,7 @@ BOOL CDlgBumpWood::OnInitDialog()
 
 void CDlgBumpWood::b3UpdateUI()
 {
-//	m_PreviewBumpCtrl.b3Update(m_MatSampler);
+	m_PreviewBumpCtrl.b3Update(m_BumpSampler);
 }
 
 void CDlgBumpWood::OnPreviewBump() 

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/system/b3DisplayView.h"
+#include "blz3/raytrace/b3BumpSampler.h"
 #include "blz3/raytrace/b3MaterialSampler.h"
 
 /*************************************************************************
@@ -32,6 +33,10 @@
 
 /*
 **  $Log$
+**  Revision 1.9  2004/04/19 09:00:52  sm
+**  - Added bump sampler.
+**  - Reactivated bump sampler in bump dialogs.
+**
 **  Revision 1.8  2004/04/11 14:05:11  sm
 **  - Raytracer redesign:
 **    o The reflection/refraction/ior/specular exponent getter
@@ -76,26 +81,26 @@
 #define WOOD_RES   320
 #define no_CREATE_ICON
 
-class b3WoodSampler : public b3MaterialSampler
+class b3MatWoodSampler : public b3MaterialSampler
 {
 public:
-	b3WoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
+	b3MatWoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
 	{
 		// Init material
-		m_Material = new b3MatOakPlank(WOOD);
+		m_Material = new b3MatWood(WOOD);
 		m_Material->b3Prepare();
 	}
 	
-	virtual ~b3WoodSampler()
+	virtual ~b3MatWoodSampler()
 	{
 		delete m_Material;
 	}
 };
 
-class b3OakPlankSampler : public b3MaterialSampler
+class b3MatOakPlankSampler : public b3MaterialSampler
 {
 public:
-	b3OakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx,1)
+	b3MatOakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx,1)
 	{
 		b3MatOakPlank *material = new b3MatOakPlank(OAKPLANK);
 
@@ -115,9 +120,46 @@ public:
 		m_Material->b3Prepare();
 	}
 	
-	virtual ~b3OakPlankSampler()
+	virtual ~b3MatOakPlankSampler()
 	{
 		delete m_Material;
+	}
+};
+
+class b3BumpWoodSampler : public b3BumpSampler
+{
+public:
+	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx)
+	{
+		// Init material
+		m_Bump = new b3BumpWood(BUMP_WOOD);
+		m_Bump->b3Prepare();
+	}
+	
+	virtual ~b3BumpWoodSampler()
+	{
+		delete m_Bump;
+	}
+};
+
+class b3BumpOakPlankSampler : public b3BumpSampler
+{
+public:
+	b3BumpOakPlankSampler(b3Tx *tx) : b3BumpSampler(tx,1)
+	{
+		b3BumpOakPlank *bump = new b3BumpOakPlank(BUMP_OAKPLANK);
+
+		bump->m_xScale *= 4;
+		bump->m_yScale *= 4;
+
+		// Init material
+		m_Bump = bump;
+		m_Bump->b3Prepare();
+	}
+	
+	virtual ~b3BumpOakPlankSampler()
+	{
+		delete m_Bump;
 	}
 };
 
@@ -137,8 +179,10 @@ int main(int argc,char *argv[])
 		
 		tx.b3AllocTx(xMax,yMax,24);
 		
-		b3WoodSampler sampler(&tx);
-//		b3OakPlankSampler sampler(&tx);
+//		b3MatWoodSampler      sampler(&tx);
+//		b3MatOakPlankSampler  sampler(&tx);
+		b3BumpWoodSampler     sampler(&tx);
+//		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
 
