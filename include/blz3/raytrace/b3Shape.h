@@ -184,7 +184,7 @@ protected:
 	void            b3ComputeConeIndices();
 
 	// Ellipsoid
-	void b3GetEllipsoidIndexCount(b3_count &Number);
+	void b3GetEllipsoidIndexCount(b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeEllipsoidVertices(
 		b3_vector &base,
 		b3_vector &dir1,
@@ -201,7 +201,7 @@ protected:
 	void            b3ComputeBoxIndices();
 
 	// Torus
-	void            b3GetTorusIndexCount(b3_count &Number);
+	void            b3GetTorusIndexCount(b3_count &gridCount,b3_count &polyCount);
 	void            b3ComputeTorusVertices(
 		b3_vector &base,
 		b3_vector &dir1,

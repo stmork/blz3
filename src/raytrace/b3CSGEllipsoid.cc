@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2004/12/03 12:34:10  smork
+**      - Grid and polygon count computation added for torus and ellipsoid.
+**
 **      Revision 1.19  2004/12/03 11:58:30  smork
 **      - Removed b3Mem from b3RenderObject as base class. The b3Shape
 **        class and the torus/ellipsoid derivatives had to be corrected.
@@ -156,8 +159,7 @@ void b3CSGEllipsoid::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
-	b3GetEllipsoidIndexCount(gridCount);
-	polyCount = gridCount;
+	b3GetEllipsoidIndexCount(gridCount,polyCount);
 }
 
 void b3CSGEllipsoid::b3ComputeVertices()

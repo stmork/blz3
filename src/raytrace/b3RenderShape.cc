@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.81  2004/12/03 12:34:10  smork
+**      - Grid and polygon count computation added for torus and ellipsoid.
+**
 **      Revision 1.80  2004/12/03 11:58:30  smork
 **      - Removed b3Mem from b3RenderObject as base class. The b3Shape
 **        class and the torus/ellipsoid derivatives had to be corrected.
@@ -1566,7 +1569,7 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	glVertexElements->b3SetCount(glVertexCount);
 }
 
-void b3Shape::b3GetEllipsoidIndexCount(b3_count &Number)
+void b3Shape::b3GetEllipsoidIndexCount(b3_count &gridCount,b3_count &polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index i,j,s,ys,ye;
@@ -1596,10 +1599,22 @@ void b3Shape::b3GetEllipsoidIndexCount(b3_count &Number)
 	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon) m_Widths++;
 	if (                     y1  > b3Scene::epsilon) m_Widths++;
 
-	Number = (m_Widths + m_Heights + 1) * m_Overhead;
+	gridCount = m_Heights * 2;
+	polyCount = m_Heights * 2;
+	if (y1 <= b3Scene::epsilon)
+	{
+		polyCount--;
+		gridCount--;
+	}
+	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
+	{
+		gridCount++;
+	}
+	gridCount *= m_Overhead;
+	polyCount *= m_Overhead;
 	if (m_EndLine)
 	{
-		Number += m_Heights;
+		gridCount += m_Heights;
 	}
 }
 
@@ -1609,8 +1624,6 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	b3_index       i,j,s,ys,ye;
 	b3_gl_line    *gPtr = *glGridElements;
 	b3_gl_polygon *pPtr = *glPolygonElements;
-	b3_count       glGridCount = 0;
-	b3_count       glPolyCount = 0;
 	b3_f64         y1,y2;
 
 	s = 0;
@@ -1624,34 +1637,31 @@ void b3Shape::b3ComputeEllipsoidIndices()
 			// This marks a longitude
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += m_Heights;
 
+		// North pole
 		if (y1 <= b3Scene::epsilon)
 		{
 			// NOTE: j = 0 substitution
 			B3_GL_PINIT(pPtr,s + m_Heights + 2,s + m_Heights + 1,s + 1);
-			glPolyCount++;
 			j = 1;
 		}
 		else
 		{
 			j = 0;
 		}
+
 		while(j < m_Heights)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
-			glGridCount++;
 
 			B3_GL_PINIT(pPtr,s+j,                s+j + 1,            s+j + m_Heights + 1);
 			B3_GL_PINIT(pPtr,s+j + m_Heights + 2,s+j + m_Heights + 1,s+j + 1);
-			glPolyCount += 2;
 			j++;
 		}
 
 		if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
-			glGridCount++;
 
 			j++;
 		}
@@ -1664,11 +1674,7 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += m_Heights;
 	}
-
-	glGridElements->b3SetCount(glGridCount);
-	glPolygonElements->b3SetCount(glPolyCount);
 }
 
 /*************************************************************************
@@ -1901,7 +1907,7 @@ void b3Shape::b3ComputeTorusNormals()
 	}
 }
 
-void b3Shape::b3GetTorusIndexCount(b3_count &Number)
+void b3Shape::b3GetTorusIndexCount(b3_count &gridCount,b3_count &polyCount)
 {
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index ys,ye;
@@ -1935,8 +1941,12 @@ void b3Shape::b3GetTorusIndexCount(b3_count &Number)
 	m_Widths = m_Heights;
 	if (EndCol) m_Widths++;
 
-	Number = (m_Widths + m_Heights + 1) * m_Overhead;
-	if (m_EndLine) Number += m_Heights;
+	gridCount = (m_Widths + m_Heights) * m_Overhead;
+	if (m_EndLine)
+	{
+		gridCount += m_Heights;
+	}
+	polyCount = m_Heights * m_Overhead * 2;
 }
 
 void b3Shape::b3ComputeTorusIndices()
@@ -1944,8 +1954,6 @@ void b3Shape::b3ComputeTorusIndices()
 	b3_index       i,j,s,ys,ye;
 	b3_gl_line    *gPtr = *glGridElements;
 	b3_gl_polygon *pPtr = *glPolygonElements;
-	b3_count       glGridCount = 0;
-	b3_count       glPolyCount = 0;
 
 	s = 0;
 	for (i = 0;i < m_Overhead;i++)
@@ -1956,17 +1964,13 @@ void b3Shape::b3ComputeTorusIndices()
 
 			B3_GL_PINIT(pPtr,s+j,                s+j + 1,            s+j + m_Heights + 1);
 			B3_GL_PINIT(pPtr,s+j + m_Heights + 2,s+j + m_Heights + 1,s+j + 1);
+
 		}
-		glGridCount += m_Heights;
 
 		for (j = 0;j < m_Widths;j++)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
-
-			glPolyCount += 2;
 		}
-		glGridCount += m_Widths;
-
 		s += (m_Heights + 1);
 	}
 
@@ -1976,9 +1980,5 @@ void b3Shape::b3ComputeTorusIndices()
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += m_Heights;
 	}
-
-	glGridElements->b3SetCount(glGridCount);
-	glPolygonElements->b3SetCount(glPolyCount);
 }
