@@ -25,6 +25,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/base/b3Aux.h"
 
 #include <math.h>
 
@@ -36,13 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/12/10 20:14:59  sm
+**	- Added some new brt3 features:
+**	  o no wait after display output
+**	  o disable animation
+**	- Fixed some image exceptions
+**
 **	Revision 1.23  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.22  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -739,6 +746,9 @@ b3_pkd_color b3Tx::b3GetValue (
 		case B3_TX_RGB8 : return b3RGB8Value (x,y);
 		case B3_TX_VGA  : return b3VGAValue  (x,y);
 
+		case B3_TX_UNDEFINED :
+			return B3_BLACK;
+
 		default :
 			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
@@ -860,11 +870,12 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 		case B3_TX_VGA	:
 			cPtr = (b3_u08 *)data;
 			return cPtr[x + y * xSize] != 0;
-			
+
 		default:
-			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
+			// No image -> no hit -> always transparent...
+			return true;
 	}
-	return false;
+	return true;
 }
 
 /*************************************************************************

@@ -37,10 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/12/10 20:14:59  sm
+**	- Added some new brt3 features:
+**	  o no wait after display output
+**	  o disable animation
+**	- Fixed some image exceptions
+**
 **	Revision 1.33  2002/10/06 14:58:18  sm
 **	- Done some finetuning on setup
 **	- Output of GCC version under Un*x
-**
+**	
 **	Revision 1.32  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -279,7 +285,9 @@ int main(int argc,char *argv[])
 	b3Path                pictures;
 	b3Path                data;
 	b3Path                camera_name;
+	b3_bool               force_no_anim    = false;
 	b3_bool               force_no_display = false;
+	b3_bool               force_no_wait    = false;
 	b3_index              i;
 
 	if (argc > 1)
@@ -306,9 +314,17 @@ int main(int argc,char *argv[])
 				case 'f' :
 					b3Log_SetLevel(B3LOG_FULL);
 					break;
+				case 'a' :
+					force_no_anim = true;
+					b3PrintF(B3LOG_NORMAL,"Forcing no animation\n");
+					break;
 				case 'n' :
 					force_no_display = true;
 					b3PrintF(B3LOG_NORMAL,"Forcing no display output\n");
+					break;
+				case 'w' :
+					force_no_wait = true;
+					b3PrintF(B3LOG_NORMAL,"Forcing no wait after display output\n");
 					break;
 				case 'i':
 					strcpy(BLZ3_EXTENSION,".tif");
@@ -363,7 +379,7 @@ int main(int argc,char *argv[])
 									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 										camera->m_CameraName);
 									scene->b3SetCamera(camera);
-									if (animation != null)
+									if ((animation != null) && (!force_no_anim))
 									{
 										b3_f64   t,step;
 										b3Path   img_name;
@@ -410,8 +426,11 @@ int main(int argc,char *argv[])
 								display,
 								picture_home,scene->b3GetName());
 						}
-	
-						display->b3Wait();
+
+						if (!force_no_wait)
+						{
+							display->b3Wait();
+						}
 						delete display;
 					}
 				}
@@ -426,6 +445,12 @@ int main(int argc,char *argv[])
 					b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
 					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f.b3GetError());
 					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",f.b3GetErrorMsg());
+				}
+				catch(b3TxException &t)
+				{
+					b3PrintF(B3LOG_NORMAL,"Image error using %s\n",argv[i]);
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
 				}
 				catch(...)
 				{
@@ -444,7 +469,9 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -n  disabled display\n");
+		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
+		b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
+		b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
 		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving (default)\n");
 		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving\n");
