@@ -36,6 +36,9 @@
 
 /*
 **  $Log$
+**  Revision 1.16  2004/11/13 09:19:31  sm
+**  - Fixed test_unix build process.
+**
 **  Revision 1.15  2004/06/29 12:49:12  sm
 **  - Added some OpenGL shader comments.
 **
@@ -132,7 +135,7 @@ protected:
 		sample.x = m_Translate - y;
 		sample.z = m_Translate - x * 0.02;
 		
-		b3_f64 mix = b3ComputeWood(&sample);
+		b3_f64 mix = b3ComputeWood(&sample, 1.0);
 		result = b3Color::b3Mix(m_Dark,m_Light,mix);
 //		b3PrintF(B3LOG_FULL,"%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",x,y,result,mix,sample.x,sample.y,sample.z);
 		return result;
@@ -181,7 +184,7 @@ protected:
 		sample.y = y * m_Scale;
 		sample.z = 0;
 		
-		b3_f64 mix = b3ComputeOakPlank(&sample,index);
+		b3_f64 mix = b3ComputeOakPlank(&sample, 1.0, index);
 		result = b3Color::b3Mix(m_Dark,m_Light,mix);
 //		b3PrintF(B3LOG_NORMAL,"%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",x,y,result,mix,index,sample.x,sample.y,sample.z);
 		return result;
