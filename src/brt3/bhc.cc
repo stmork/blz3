@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/10/23 10:12:42  sm
+**	- Added more room indexes.
+**
 **	Revision 1.11  2003/09/28 20:33:19  sm
 **	- Ensure CPU count in image scaling methods.
-**
+**	
 **	Revision 1.10  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -268,10 +271,11 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height,b3_f64 sca
 	b3_count args;
 	b3_vector normal;
 
-	args = sscanf(&m_Line[m_Pos],"%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
+	args = sscanf(&m_Line[m_Pos],"%*s %s %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
 		room->m_BoxName,
-		&index[0],&index[1],&index[2],&index[3],&index[4],
-		&index[5],&index[6],&index[7],&index[8],&index[9]);
+		&index[ 0],&index[ 1],&index[ 2],&index[ 3],&index[ 4],
+		&index[ 5],&index[ 6],&index[ 7],&index[ 8],&index[ 9],
+		&index[10],&index[11],&index[12],&index[13],&index[14]);
 	if (args < 4)
 	{
 		throw b3ParseException("Invalid number of arguments",m_LineNo);
