@@ -1,10 +1,17 @@
 #!/bin/tcsh
 
-set BLZ3_HOME=@BLZ3_HOME@
+set BLZ3_HOME=$1
 
 cd $BLZ3_HOME
-make clean
-make distclean
+
+echo "Cleaning files..."
+if ( -f src/Makefile ) then
+  make clean
+  rm -rf `find src -name Makefile` config.*
+endif
+test -f include_unix/blz3/autoconf.h && rm -f include_unix/blz3/autoconf.h
+test -f configure      && rm  -f configure
+test -d autom4te.cache && rm -rf autom4te.cache
 
 echo "Removing temp files..."
 find $BLZ3_HOME -name "*.log" -exec rm -f {} \;
@@ -19,5 +26,4 @@ find $BLZ3_HOME -name DEADJOE -exec rm -f {} \;
 test -d $BLZ3_HOME/Debug   && rm -rf $BLZ3_HOME/Debug
 test -d $BLZ3_HOME/Release && rm -rf $BLZ3_HOME/Release
 
-echo "Creating tar..."       
-(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
+exit 0

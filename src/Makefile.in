@@ -9,7 +9,7 @@ CPPFLAGS	= @CPPFLAGS@
 CFLAGS		= @CFLAGS@
 CXXFLAGS	= @CXXFLAGS@
 LDFLAGS		= @LDFLAGS@
-AR			= @AR@
+AR		= @AR@
 RANLIB		= @RANLIB@
 
 SUB_DIRS +=\
@@ -26,7 +26,6 @@ SUB_DIRS +=\
 	test_unix
 
 PRGS	=\
-	test_unix\
 	tools\
 	OpenGL\
 	brt3
@@ -53,11 +52,7 @@ clean:	remdepend $(BLZ3_LIB)
 	done
 
 remdepend:
-	find . -name ".dep" -exec rm {} \;
-
-tar:
-	@$(BLZ3_HOME)/bin/configure.sh
-	@cd $(BLZ3_HOME)/.. && tar cv blz3 | gzip > /tmp/blz3.tar.gz
+	find $(BLZ3_HOME)/src -name ".dep" -exec rm {} \;
 
 win:	$(BLZ3_BIN)/RemCR
 	make -C Btiff tif_fax3sm.c version.h
@@ -76,8 +71,12 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 	done
 
 install:	all
-	@$(BLZ3_HOME)/bin/install.sh $(BLZ3_BIN)
-
+	+@for i in $(PRGS); do \
+		echo ""; \
+		echo "Installing "$$i"..."; \
+		make -C $$i install; \
+	done
+	
 #########################################################
 #                                                       #
 #  Blizzard III tools                                   #

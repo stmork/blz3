@@ -20,9 +20,8 @@ make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/usr/bin
-
-install -s -m 755 bin/brt3 $RPM_BUILD_ROOT/usr/bin/brt3
+mkdir -p $RPM_BUILD_ROOT/usr/local/bin
+make install
 
 %clean
 rm -rf $RPM_BUILD_ROOT

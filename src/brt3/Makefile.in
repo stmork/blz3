@@ -5,6 +5,8 @@ BLZ3_BIN		= @BLZ3_BIN@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
+prefix			= @prefix@
+exec_prefix		= @exec_prefix@
 
 PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc bhc.cc rp.cc
 
@@ -17,14 +19,16 @@ RP_OBJS			= rp.o
 PRGS			= brt3 bimg3 bconv3 bhc rp
 
 all:	$(PRGS)
-	chmod 775 $^
-	cp $^ $(BLZ3_BIN)
+
+install:	$(PRGS)
+	install -m 755 $^ @bindir@
 
 depend:
 	gcc -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 brt3:	$(BRT3_OBJS)
 	$(LINK.cc) -o $@ $^ -lB3Raytrace -lB3Base $(LIBS)

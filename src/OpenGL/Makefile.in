@@ -3,31 +3,35 @@
 BLZ3_LIB		= @BLZ3_LIB@
 BLZ3_BIN		= @BLZ3_BIN@
 CPPFLAGS		= @CPPFLAGS@
-LDFLAGS         = @LDFLAGS@
+LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
+prefix			= @prefix@
+exec_prefix		= @exec_prefix@
 
 SIMPLE_OBJ		= simple.o
 SIMPLE_SRC		= simple.cc
 RENDER_OBJ		= render.o
 RENDER_SRC		= render.cc
-MATRIX_TEST_SRC	= matrix_test.cc
-MATRIX_TEST_OBJ	= matrix_test.o
+MATRIX_TEST_SRC		= matrix_test.cc
+MATRIX_TEST_OBJ		= matrix_test.o
 PRG_SOURCE		= $(SIMPLE_SRC) $(RENDER_SRC) $(MATRIX_TEST_SRC)
 
 PRGS			= simple render matrix_test
 
 all:	$(PRGS)
 
+install:	render
+	install -m 755 $^ @bindir@
+
 depend:
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 render:	$(RENDER_OBJ)
 	$(LINK.cc) -o $@ $^ -lB3Raytrace -lB3Base $(LIBS)
-	chmod 775 $@
-	cp $@ $(BLZ3_BIN)
 
 simple:	$(SIMPLE_OBJ)
 	$(LINK.cc) -o $@ $^  $(LIBS)

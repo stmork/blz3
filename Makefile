@@ -19,15 +19,10 @@ autoconf:
 	rm -rf autom4te.cache
 
 configure:	autoconf
-	./configure
+	./configure --prefix=$(PWD)
 
-distclean:
-	rm -rf `find src -name Makefile` include_unix/blz3/autoconf.h config.* autom4te.cache
-	test -d Debug && rm -rf Debug
-	test -d Release && rm -rf Release
+clobber:
+	bin/clobber.sh $(PWD)
 
-autoclean:	distclean
-	rm configure
-
-tar:
-	source bin/clobber.sh
+tar:	clobber autoconf
+	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )

@@ -69,7 +69,7 @@ AC_FUNC_STAT
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
 
-AC_CONFIG_FILES([src/Makefile bin/clobber.sh
+AC_CONFIG_FILES([src/Makefile
 	src/system_unix/Makefile
 	src/system/Makefile
 	src/Btiff/Makefile

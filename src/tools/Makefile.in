@@ -1,21 +1,23 @@
 # Beispiel Makefile
 
 BLZ3_LIB		= @BLZ3_LIB@
-BLZ3_BIN        = @BLZ3_BIN@
+BLZ3_BIN		= @BLZ3_BIN@
 CPPFLAGS		= @CPPFLAGS@
 LDFLAGS			= @LDFLAGS@
 LIBS			= @LIBS@
+prefix			= @prefix@
+exec_prefix		= @exec_prefix@
 
 PRG_SOURCE		= RemDepend.cc RemCR.cc RestoreExt.cc CleanRes.cc scale.cc calibrate.cc testimg.cc half.cc pw.cc divx.cc reduce.cc
 
-REMDEPEND_OBJS	= RemDepend.o
+REMDEPEND_OBJS		= RemDepend.o
 REMCR_OBJS		= RemCR.o
-RESTOREEXT_OBJS	= RestoreExt.o
-CLEANRES_OBJS	= CleanRes.o
+RESTOREEXT_OBJS		= RestoreExt.o
+CLEANRES_OBJS		= CleanRes.o
 SCALE_OBJS		= scale.o
 HALF_OBJS		= half.o
-CALIBRATE_OBJS	= calibrate.o
-TESTIMG_OBJS	= testimg.o
+CALIBRATE_OBJS		= calibrate.o
+TESTIMG_OBJS		= testimg.o
 PW_OBJS			= pw.o
 DIVX_OBJS		= divx.o
 REDUCE_OBJS		= reduce.o
@@ -23,14 +25,16 @@ REDUCE_OBJS		= reduce.o
 PRGS			= RemDepend RemCR RestoreExt CleanRes testimg scale calibrate half pw reduce divx
 
 all:	$(PRGS)
-	chmod 775 $^
-	cp $^ $(BLZ3_BIN)
+
+install:	$(PRGS)
+	install -m 755 $^ @bindir@
 
 depend:
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
+	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 RemDepend:	$(REMDEPEND_OBJS)
 	$(LINK.cc) -o $@ $^ -lB3Base -lpthread
