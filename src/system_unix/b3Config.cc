@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/11/13 19:47:15  sm
+**	- Corrected some OpenGL exclusions.
+**
 **	Revision 1.11  2004/09/23 09:31:33  sm
 **	- Changed b3Runtime into a real singleton.
 **	- Added functions for OpenGL extension.
 **	- Removed b3PrintF()s from singletons.
-**
+**	
 **	Revision 1.10  2004/06/22 11:12:20  sm
 **	- Added support for Intel C++ compiler V8
 **	
@@ -152,5 +155,9 @@ char *b3Runtime::b3GetCompiler()
 
 void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
 {
+#if defined(BLZ3_USE_OPENGL) && defined(RTLD_NEXT)
 	return dlsym(RTLD_NEXT,procedure_name);
+#else
+	return null;
+#endif
 }

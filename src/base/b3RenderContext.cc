@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/11/13 19:47:15  sm
+**	- Corrected some OpenGL exclusions.
+**
 **	Revision 1.14  2004/10/17 09:08:41  sm
 **	- Moved camera setup into b3RenderContext.
 **	- Moved Antialiasing setup into b3RenderContext.
-**
+**	
 **	Revision 1.13  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -218,6 +221,7 @@ void b3RenderContext::b3StartDrawing()
 
 void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
 {
+#ifdef BLZ3_USE_OPENGL
 	if (enable)
 	{
 		glEnable(GL_LINE_SMOOTH);
@@ -232,6 +236,7 @@ void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
 		glDisable(GL_BLEND);
 		glLineWidth(1.0f);
 	}
+#endif
 }
 
 /*************************************************************************
@@ -242,6 +247,7 @@ void b3RenderContext::b3SetAntiAliasing(b3_bool enable)
 
 void b3RenderContext::b3ViewSet(b3_render_view_info *info)
 {
+#ifdef BLZ3_USE_OPENGL
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
@@ -268,6 +274,7 @@ void b3RenderContext::b3ViewSet(b3_render_view_info *info)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	
+#endif
 }
 
 /*************************************************************************
