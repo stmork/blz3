@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.11  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.10  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
@@ -231,7 +234,8 @@ void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView*
 	CB3App     *app  = CB3GetApp();
 	CMainFrame *main = CB3GetMainFrame();
 
-	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	CAppRenderView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	CB3LinesDocument::b3HandleBarState(this,bActivate);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"CAppObjectView::OnActivateView(%s,%p,%p)\n",

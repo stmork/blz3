@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.60  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 **	Revision 1.59  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
@@ -714,7 +717,8 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	CB3App     *app  = CB3GetApp();
 	CMainFrame *main = CB3GetMainFrame();
 
-	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	CAppRenderView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	CB3LinesDocument::b3HandleBarState(this,bActivate);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"CAppLinesView::OnActivateView(%s,%p,%p)\n",

@@ -25,9 +25,10 @@
 #include "blz3/system/b3Document.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
+#include "b3LinesDocument.h"
 #include "AppLinesDoc.h"
 
-class CAppRaytraceDoc : public CDocument, public b3Document
+class CAppRaytraceDoc : public CB3LinesDocument
 {
 	b3Scene       *m_Scene;
 	CAppRenderDoc *m_RenderDoc;
@@ -40,12 +41,13 @@ public:
 
 // Operations
 public:
-	void       b3SetRenderDoc(CAppRenderDoc *LinesDoc);
-	b3_bool    b3IsRaytracing();
-	b3Display *b3GetDisplay(const char *title);
-	b3Display *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
-	void       b3ActivateDoc();
-	void       b3ActivateView();
+	void        b3SetRenderDoc(CAppRenderDoc *LinesDoc);
+	b3_bool     b3IsRaytracing();
+	b3Display  *b3GetDisplay(const char *title);
+	b3Display  *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
+	void        b3ActivateDoc();
+	void        b3ActivateView();
+	const char *b3GetDocumentName();
 
 // Overrides
 	// ClassWizard generated virtual function overrides

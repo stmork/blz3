@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.9  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.8  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry
@@ -151,6 +154,7 @@ void CAppRaytraceView::OnActivateView(BOOL bActivate, CView* pActivateView, CVie
 	CMainFrame *main = CB3GetMainFrame();
 
 	CB3ScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+	CB3LinesDocument::b3HandleBarState(this,bActivate);
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL,"CAppRaytraceView::OnActivateView(%s,%p,%p)\n",

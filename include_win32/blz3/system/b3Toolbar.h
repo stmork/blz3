@@ -32,15 +32,22 @@ public:
 	char     *btnText;		// text for the button
 	long      width;
 
-	CB3ToolbarInfo()
+	inline CB3ToolbarInfo()
 	{
 		btnText = null;
 	}
-	void b3FreeText()
+
+	inline virtual ~CB3ToolbarInfo()
+	{
+		b3FreeText();
+	}
+
+	inline void b3FreeText()
 	{
 		if (btnText != null)
 		{
 			delete [] btnText;
+			btnText = null;
 		}
 	}
 };
@@ -72,12 +79,13 @@ class CB3Toolbar : public CToolBar, public b3Link<CB3Toolbar>
 	b3_count          m_ButtonCount;
 public:
 	              CB3Toolbar();
-				 ~CB3Toolbar();
+	virtual      ~CB3Toolbar();
 	b3_bool       b3ToggleVisibility();
 	b3_bool       b3SetVisibility(bool new_visibility=true);
 	b3_bool       b3IsVisible();
 	void          b3AddArrow(int id);
 	void          b3Customize();
+	void          b3Free();
 
 protected:
 	friend class  CB3ToolbarState;
@@ -86,8 +94,8 @@ protected:
 	b3_bool       b3Create(CFrameWnd *parent);
 	CControlBar  *b3DockRight(CControlBar *Left=null);
 	void          b3DockSimple();
-	void          b3SaveState();
-	void          b3RestoreState();
+	void          b3SaveState(const char *name = null);
+	void          b3RestoreState(const char *name = null);
 	b3_bool       b3InitCustomization();
 
 protected:
@@ -109,6 +117,7 @@ private:
 	void          b3Print(CRect &rect,long dw);
 	void          b3AdjustComboboxes();
 	void          b3Reset();
+	CString      &b3GetValueName(const char *name,CString &result);
 };
 
 class CB3Menubar : public CMenuBar, public b3Link<CB3Menubar>
@@ -183,8 +192,8 @@ protected:
 	b3_bool       b3Create(CFrameWnd *parent);
 	CControlBar  *b3DockRight(CControlBar *Left=null);
 	void          b3DockSimple();
-	void          b3SaveState();
-	void          b3RestoreState();
+	void          b3SaveState(const char *name = null);
+	void          b3RestoreState(const char *name = null);
 };
 
 class CB3ToolbarState
@@ -203,10 +212,11 @@ public:
 	void    b3AddDialogbar(CB3Dialogbar *dialogbar,long id_dialog,long id_title);
 	b3_bool b3CreateToolbars(CFrameWnd *parent);
 	void    b3UpdateUI();
-	void    b3LoadState();
-	void    b3SaveState();
+	void    b3LoadState(const char *name = null);
+	void    b3SaveState(const char *name = null);
 	void    b3GetData();
 	void    b3SetData();
+	void    b3Free();
 
 protected:
 	b3_bool b3PreTranslateMsg(MSG *pMSG);

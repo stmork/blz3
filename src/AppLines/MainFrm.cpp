@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.34  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
-**
+**	
 **	Revision 1.33  2003/01/30 16:19:59  sm
 **	- Added undo/redo list support.
 **	
@@ -329,11 +332,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,         IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT,    IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,      IDS_TOOLBAR_VIEW);
-	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,   IDS_TOOLBAR_DISPLAY);
+	app->b3AddToolbar(&m_wndAnimBar,     IDR_TOOLBAR_ANIMATION, IDS_TOOLBAR_ANIMATION);
 	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION,    IDS_TOOLBAR_ACTION);
 	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA,    IDS_TOOLBAR_CAMERA);
 	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,     IDS_TOOLBAR_LIGHT);
-	app->b3AddToolbar(&m_wndAnimBar,     IDR_TOOLBAR_ANIMATION, IDS_TOOLBAR_ANIMATION);
+	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,   IDS_TOOLBAR_DISPLAY);
 	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,         IDS_DIALOGBAR_HIERARCHY);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,         IDS_DIALOGBAR_STEP_MOVE);
 	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,           IDS_DIALOGBAR_FULCRUM);
@@ -440,20 +443,6 @@ void CMainFrame::OnToolbarDropDown(NMTOOLBAR* pnmtb, LRESULT *plr)
 	default:
 		return;
 	}
-/*
-	// load and display popup menu
-	CMenu menu;
-	menu.LoadMenu(nID);
-	CMenu* pPopup = menu.GetSubMenu(0);
-	ASSERT(pPopup);
-	
-	CRect rc;
-	pWnd->SendMessage(TB_GETRECT, pnmtb->iItem, (LPARAM)&rc);
-	pWnd->ClientToScreen(&rc);
-	
-	pPopup->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-		rc.left, rc.bottom, this, &rc);
-*/
 }
 
 /*************************************************************************

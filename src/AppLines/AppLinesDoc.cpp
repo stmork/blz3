@@ -58,11 +58,14 @@
 
 /*
 **	$Log$
+**	Revision 1.85  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.84  2003/02/05 18:42:20  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
 **	- Added TGF import to Un*x makefile
-**
+**	
 **	Revision 1.83  2003/02/02 14:22:31  sm
 **	- Added TGF import facility.
 **	
@@ -586,6 +589,11 @@ CAppLinesDoc::~CAppLinesDoc()
 {
 	AfxOleUnlockApp();
 	delete m_CameraLight;
+}
+
+const char *CAppLinesDoc::b3GetDocumentName()
+{
+	return "_Lines_III_Scene_Document";
 }
 
 BOOL CAppLinesDoc::OnNewDocument()

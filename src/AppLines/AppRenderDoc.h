@@ -23,7 +23,7 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/system/b3Document.h"
+#include "b3LinesDocument.h"
 #include "b3Fulcrum.h"
 #include "b3Undo.h"
 
@@ -31,7 +31,7 @@ class CAppRaytraceDoc;
 class CDlgHierarchy;
 class CB3Action;
 
-class CAppRenderDoc : public CDocument, public b3Document
+class CAppRenderDoc : public CB3LinesDocument
 {
 	b3LinesUndoBuffer    *m_UndoBuffer;
 
@@ -53,7 +53,7 @@ public:
 // Operations
 protected: // create from serialization only
 	CAppRenderDoc();
-	DECLARE_DYNCREATE(CAppRenderDoc)
+	DECLARE_DYNAMIC(CAppRenderDoc)
 
 public:
 // Overrides

@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.14  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.13  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
 **	
@@ -112,9 +115,9 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CAppRaytraceDoc, CDocument)
+IMPLEMENT_DYNCREATE(CAppRaytraceDoc, CB3LinesDocument)
 
-BEGIN_MESSAGE_MAP(CAppRaytraceDoc, CDocument)
+BEGIN_MESSAGE_MAP(CAppRaytraceDoc, CB3LinesDocument)
 	//{{AFX_MSG_MAP(CAppRaytraceDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
@@ -135,6 +138,11 @@ CAppRaytraceDoc::CAppRaytraceDoc()
 
 CAppRaytraceDoc::~CAppRaytraceDoc()
 {
+}
+
+const char *CAppRaytraceDoc::b3GetDocumentName()
+{
+	return "_Lines_III_Image_Document";
 }
 
 BOOL CAppRaytraceDoc::OnNewDocument()
@@ -174,7 +182,7 @@ void CAppRaytraceDoc::OnCloseDocument()
 		m_RenderDoc->b3ClearRaytraceDoc();
 	}
 	CB3GetMainFrame()->b3UpdateModellerInfo();
-	CDocument::OnCloseDocument();
+	CB3LinesDocument::OnCloseDocument();
 }
 
 /////////////////////////////////////////////////////////////////////////////

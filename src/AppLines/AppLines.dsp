@@ -181,6 +181,10 @@ SOURCE=.\b3ImagePreviewFileDlg.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3LinesDocument.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3PickVector.cpp
 # End Source File
 # Begin Source File
@@ -498,6 +502,10 @@ SOURCE=.\b3ImageList.h
 # Begin Source File
 
 SOURCE=.\b3ImagePreviewFileDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3LinesDocument.h
 # End Source File
 # Begin Source File
 

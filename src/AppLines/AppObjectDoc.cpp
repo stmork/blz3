@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.19  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
-**
+**	
 **	Revision 1.18  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -197,6 +200,11 @@ CAppObjectDoc::~CAppObjectDoc()
 {
 	AfxOleUnlockApp();
 	delete m_Info;
+}
+
+const char *CAppObjectDoc::b3GetDocumentName()
+{
+	return "_Lines_III_Object_Document";
 }
 
 BOOL CAppObjectDoc::OnNewDocument()

@@ -23,6 +23,7 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "AppRenderDoc.h"
 
 class CDlgHierarchy;
 
@@ -92,13 +93,14 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 public:
-	void    b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
-	void    b3ComputeBounds();
-	void    b3InitTree();
-	void    b3ContextMenu(HTREEITEM item);
-	void    b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
-	b3_bool b3IsLinesDoc(CAppLinesDoc *LinesDoc);
-	b3_bool b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+	void        b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
+	void        b3ComputeBounds();
+	void        b3InitTree();
+	void        b3ContextMenu(HTREEITEM item);
+	void        b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	b3_bool     b3IsLinesDoc(CAppLinesDoc *LinesDoc);
+	b3_bool     b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+	const char *b3GetDocumentName();
 
 private:
 	void    b3SetBBox(b3BBox *bbox);

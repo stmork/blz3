@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.19  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
-**
+**	
 **	Revision 1.18  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
 **	
@@ -124,9 +127,9 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CAppRenderDoc, CDocument)
+IMPLEMENT_DYNAMIC(CAppRenderDoc, CB3LinesDocument)
 
-BEGIN_MESSAGE_MAP(CAppRenderDoc, CDocument)
+BEGIN_MESSAGE_MAP(CAppRenderDoc, CB3LinesDocument)
 	//{{AFX_MSG_MAP(CAppRenderDoc)
 	ON_COMMAND(ID_RENAME, OnRename)
 	ON_UPDATE_COMMAND_UI(ID_RENAME, OnUpdateRename)
@@ -164,7 +167,7 @@ void CAppRenderDoc::OnCloseDocument()
 	// TODO: Add your specialized code here and/or call the base class
 	CB3GetMainFrame()->b3UpdateModellerInfo();
 	m_DlgHierarchy->b3InitTree(null);
-	CDocument::OnCloseDocument();
+	CB3LinesDocument::OnCloseDocument();
 }
 
 /////////////////////////////////////////////////////////////////////////////

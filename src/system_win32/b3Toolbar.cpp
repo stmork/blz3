@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/02/08 14:04:18  sm
+**	- Started support for document wise bar state
+**
 **	Revision 1.12  2003/01/30 16:19:59  sm
 **	- Added undo/redo list support.
-**
+**	
 **	Revision 1.11  2002/01/13 19:24:12  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	
@@ -232,7 +235,17 @@ void CB3ToolbarState::b3SetData()
 	}
 }
 
-void CB3ToolbarState::b3LoadState()
+void CB3ToolbarState::b3Free()
+{
+	CB3Toolbar   *tb;
+
+	B3_FOR_BASE(&m_Toolbars,tb)
+	{
+		tb->b3Free();
+	}
+}
+
+void CB3ToolbarState::b3LoadState(const char *name)
 {
 	CB3Menubar   *mb;
 	CB3Toolbar   *tb;
@@ -276,7 +289,7 @@ void CB3ToolbarState::b3LoadState()
 	B3_FOR_BASE(&m_Toolbars,tb)
 	{
 		tb->b3InitCustomization();
-		tb->b3RestoreState();
+		tb->b3RestoreState(name);
 		last = tb->b3DockRight(last);
 	}
 
@@ -285,14 +298,18 @@ void CB3ToolbarState::b3LoadState()
 	B3_FOR_BASE(&m_Dialogbars,db)
 	{
 //		db->b3InitCustomization();
-		db->b3RestoreState();
+		db->b3RestoreState(name);
 		last = db->b3DockRight(last);
 	}
 
 	// Load bar state
 	try
 	{
-		m_MainFrame->LoadBarState(m_Code);
+		if (name == null)
+		{
+			name = m_Code;
+		}
+		m_MainFrame->LoadBarState(name);
 	}
 	catch (...)
 	{
@@ -300,7 +317,7 @@ void CB3ToolbarState::b3LoadState()
 	}
 }
 
-void CB3ToolbarState::b3SaveState()
+void CB3ToolbarState::b3SaveState(const char *name)
 {
 	CB3Toolbar   *tb;
 	CB3Dialogbar *db;
@@ -312,15 +329,19 @@ void CB3ToolbarState::b3SaveState()
 			// Write bar state
 			B3_FOR_BASE(&m_Toolbars,tb)
 			{
-				tb->b3SaveState();
+				tb->b3SaveState(name);
 			}
 
 			// Write bar state
 			B3_FOR_BASE(&m_Dialogbars,db)
 			{
-				db->b3SaveState();
+				db->b3SaveState(name);
 			}
-			m_MainFrame->SaveBarState(m_Code);
+			if (name == null)
+			{
+				name = m_Code;
+			}
+			m_MainFrame->SaveBarState(name);
 		}
 		catch (...)
 		{
@@ -383,15 +404,15 @@ CB3Toolbar::CB3Toolbar() : b3Link<CB3Toolbar>(sizeof(CB3Toolbar))
 
 CB3Toolbar::~CB3Toolbar()
 {
-	long i;
+	b3Free();
+}
 
-	for (i = 0;i < m_ButtonCount;i++)
-	{
-		m_ToolbarInfo[i].b3FreeText();
-	}
+void CB3Toolbar::b3Free()
+{
 	if (m_ToolbarInfo != null)
 	{
 		delete [] m_ToolbarInfo;
+		m_ToolbarInfo = null;
 	}
 }
 
@@ -476,6 +497,7 @@ b3_bool CB3Toolbar::b3InitCustomization()
 		if (child != null)
 		{
 			CRect rect;
+
 			child->GetWindowRect(&rect);
 			m_ToolbarInfo[i].width = rect.Width();
 		}
@@ -529,15 +551,29 @@ void CB3Toolbar::b3AdjustComboboxes()
 	}
 }
 
-void CB3Toolbar::b3SaveState()
+CString & CB3Toolbar::b3GetValueName(const char *name,CString &result)
 {
-	GetToolBarCtrl().SaveState(HKEY_CURRENT_USER, m_Key,m_Value);
+	if (name != null)
+	{
+		result = CString(name) + "_";
+	}
+	result += m_Value;
+	return result;
+
+}
+void CB3Toolbar::b3SaveState(const char *name)
+{
+	CString value;
+
+	GetToolBarCtrl().SaveState(HKEY_CURRENT_USER, m_Key,b3GetValueName(name,value));
 }
 
-void CB3Toolbar::b3RestoreState()
+void CB3Toolbar::b3RestoreState(const char *name)
 {
 	// OK, get values
-	GetToolBarCtrl().RestoreState(HKEY_CURRENT_USER, m_Key,m_Value);
+	CString value;
+
+	GetToolBarCtrl().RestoreState(HKEY_CURRENT_USER, m_Key,b3GetValueName(name,value));
 	b3AdjustComboboxes();
 }
 
@@ -1030,15 +1066,15 @@ void CB3Dialogbar::b3DockSimple()
 	m_MainFrame->DockControlBar(this);
 }
 
-void CB3Dialogbar::b3SaveState()
+void CB3Dialogbar::b3SaveState(const char *name)
 {
-//	GetToolBarCtrl().SaveState(HKEY_CURRENT_USER, m_Key,m_Value);
+//	GetToolBarCtrl().SaveState(HKEY_CURRENT_USER, m_Key,name);
 }
 
-void CB3Dialogbar::b3RestoreState()
+void CB3Dialogbar::b3RestoreState(const char *name)
 {
 	// OK, get values
-//	GetToolBarCtrl().RestoreState(HKEY_CURRENT_USER, m_Key,m_Value);
+//	GetToolBarCtrl().RestoreState(HKEY_CURRENT_USER, m_Key,name);
 }
 
 void CB3Dialogbar::b3GetData()

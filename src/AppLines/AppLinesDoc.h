@@ -62,11 +62,11 @@ public:
 
 // Implementation
 public:
-	void       b3Prepare(b3_bool geometry_changed,b3_bool structure_changed,b3_bool reorg=false);
-	void       b3ComputeBounds();
-	void       b3StartRaytrace();
-	void       b3StopRaytrace();
-	BOOL       OnImportArcon(LPCTSTR lpszPathName) ;
+	void        b3Prepare(b3_bool geometry_changed,b3_bool structure_changed,b3_bool reorg=false);
+	void        b3ComputeBounds();
+	void        b3StartRaytrace();
+	void        b3StopRaytrace();
+	BOOL        OnImportArcon(LPCTSTR lpszPathName) ;
 
 	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG
@@ -153,6 +153,7 @@ public:
 	void           b3InitTree();
 	void           b3ContextMenu(HTREEITEM item);
 	void           b3AddUndoAction(CB3Action *action);
+	const char    *b3GetDocumentName();
 
 	// De-/select bboxes
 	void           b3Select(b3_line *dir,b3_bool activate,b3_bool add);
