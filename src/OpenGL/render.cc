@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2004/12/05 08:18:22  sm
+**      - Added VBO not available message.
+**
 **      Revision 1.52  2004/11/30 19:30:26  sm
 **      - Added VBO support settings in properties dialog.
 **
@@ -501,6 +504,10 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");
+		if (!b3VectorBufferObjects::b3HasVBO())
+		{
+			b3PrintF(B3LOG_NORMAL,"      (VBOs not available)\n");
+		}
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
