@@ -715,6 +715,7 @@
 #define IDC_Y_START_SPIN                32423
 #define IDC_Y_TIMES                     32424
 #define IDC_Y_TIMES_SPIN                32425
+#define IDC_KNOT_DISPLAY                32426
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -932,7 +933,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         10128
-#define _APS_NEXT_CONTROL_VALUE         32426
+#define _APS_NEXT_CONTROL_VALUE         32427
 #define _APS_NEXT_SYMED_VALUE           60209
 #endif
 #endif
