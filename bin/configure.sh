@@ -6,9 +6,9 @@ make -C src remdepend
 make -C src clean
 
 echo "Setting groups..."
-chgrp -R blz3 *
+chgrp -R blz3 .
 
-setenv libfiles `ls lib/*/lib*.a lib/*/*.lib bin/linux*/* bin/solaris*/* bin/win32/*`
+setenv libfiles `ls lib/*_*/lib*.a lib/*_*/*.lib bin/*_*/`
 test -n "$libfiles" && rm $libfiles
 unsetenv libfiles
 
