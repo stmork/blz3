@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2004/12/29 14:41:45  sm
+**	- Beautified Installation
+**
 **	Revision 1.37  2004/12/28 15:44:35  sm
 **	- Adjusted compiler settings
 **	- Some 64 bit corrections
-**
+**	
 **	Revision 1.36  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.
@@ -625,7 +628,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	void       *buffer = null;
 	int         PixelFormatIndex = -1;
 	b3_res      mmWidth,mmHeight;
-	b3_size     limit = CB3GetLinesApp()->m_PrintBufferSize;
+	b3_res      limit = CB3GetLinesApp()->m_PrintBufferSize;
 	b3_res      denom;
 
 	CScrollView::OnBeginPrinting(pDC, pInfo);

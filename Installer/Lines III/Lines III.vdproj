@@ -15,14 +15,62 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_32EAF5B7A9AB4398B1D16FEF025764F0"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_355116D83D60003486FCBCA5B9E28235"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_3DD2051AD8484AC088278A2F0C023455"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,7 +82,37 @@
         "Entry"
         {
         "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6EF54DF39A66FBA9EC53BE31BAD8C4D2"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_70193B185E7443449F020FE02196C761"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,19 +124,43 @@
         "Entry"
         {
         "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D9C946467A244D6DBA175F969C805801"
+        "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E5E558F92EE844FDA18BC2E581505FD6"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EE3AD3DD477243E39C739F92CB9CE958"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -86,6 +188,38 @@
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
         "OutputFilename" = "8:Release\\Blizzard_III.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+        }
+        "Release SSE"
+        {
+        "DisplayName" = "8:Release SSE"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Release SSE\\Lines III.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+        }
+        "Release SSE2"
+        {
+        "DisplayName" = "8:Release SSE2"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Release SSE2\\Lines III.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -135,7 +269,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -155,8 +289,28 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_3DD2051AD8484AC088278A2F0C023455"
+            {
+            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\AppLines.ico"
+            "TargetName" = "8:AppLines.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_671F850255EE4E5B92DF101B09A579E0"
@@ -195,8 +349,28 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_70DB3051E57C4FBC9EC2E140D1AF8432"
+            {
+            "SourcePath" = "8:InstallIcon.jpg"
+            "TargetName" = "8:InstallIcon.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_B4EB950B8F5D985ADB70AED0CF66B92C"
@@ -215,8 +389,28 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{A582A373-4685-4296-BEFE-614B80A702C3}:_EE3AD3DD477243E39C739F92CB9CE958"
+            {
+            "SourcePath" = "8:..\\..\\src\\AppLines\\res\\splash.bmp"
+            "TargetName" = "8:splash.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -486,7 +680,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Blizzard III"
         "ProductCode" = "8:{6D72BD35-E286-4602-8B39-D2BB927620F2}"
-        "PackageCode" = "8:{787BA3AF-D00C-4A10-A96E-C3CA25C80F7A}"
+        "PackageCode" = "8:{65123AE0-9FF4-4A4C-AD2E-ABC7123A148A}"
         "UpgradeCode" = "8:{0158E6F0-AD9F-4CE8-9B37-E9E3FA270279}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -499,9 +693,9 @@
         "Subject" = "8:"
         "ARPCONTACT" = "8:Steffen A. Mork"
         "Keywords" = "8:Raytracing OpenGL Rendering"
-        "ARPCOMMENTS" = "8:"
+        "ARPCOMMENTS" = "8:Blizzard III ist ein schneller optimierter Raytracer!"
         "ARPURLINFOABOUT" = "8:http://www.morknet.de/sm"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_3DD2051AD8484AC088278A2F0C023455"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -681,7 +875,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -725,7 +920,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -769,7 +965,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -791,7 +988,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -839,7 +1037,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -855,7 +1054,7 @@
                 {
                     "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_1451D9980E9F4738A25DBEEC5CA3B8CD"
                     {
-                    "Sequence" = "3:300"
+                    "Sequence" = "3:400"
                     "DisplayName" = "8:Installation bestätigen"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -870,14 +1069,15 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
                     }
                     "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_49468F0E0BD34A919AC3F2030FA8E12E"
                     {
-                    "Sequence" = "3:100"
+                    "Sequence" = "3:110"
                     "DisplayName" = "8:Willkommen"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -892,7 +1092,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -940,7 +1141,161 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
+                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_D1D833C3641C488FA0DA7BE73C0CB78D"
+                    {
+                    "Sequence" = "3:300"
+                    "DisplayName" = "8:Optionsfelder   (3 Felder)"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdCustom3ButtonDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BannerText"
+                            {
+                            "Name" = "8:BannerText"
+                            "DisplayName" = "8:#1014"
+                            "Description" = "8:#1114"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Zielarchitektur wählen"
+                            "DefaultValue" = "8:#1214"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "BodyText"
+                            {
+                            "Name" = "8:BodyText"
+                            "DisplayName" = "8:#1015"
+                            "Description" = "8:#1115"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Bitte wählen Sie hier Ihre optimale Zielarchitektur aus."
+                            "DefaultValue" = "8:#1215"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button1Label"
+                            {
+                            "Name" = "8:Button1Label"
+                            "DisplayName" = "8:#1022"
+                            "Description" = "8:#1122"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Generische Version für alle x86-CPUs"
+                            "DefaultValue" = "8:#1222"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button1Value"
+                            {
+                            "Name" = "8:Button1Value"
+                            "DisplayName" = "8:#1018"
+                            "Description" = "8:#1118"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
                             "Setting" = "3:1"
+                            "Value" = "8:1"
+                            "DefaultValue" = "8:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button2Label"
+                            {
+                            "Name" = "8:Button2Label"
+                            "DisplayName" = "8:#1023"
+                            "Description" = "8:#1123"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Pentium III mit SSE-Erweiterung"
+                            "DefaultValue" = "8:#1223"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button2Value"
+                            {
+                            "Name" = "8:Button2Value"
+                            "DisplayName" = "8:#1019"
+                            "Description" = "8:#1119"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:2"
+                            "DefaultValue" = "8:2"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button3Label"
+                            {
+                            "Name" = "8:Button3Label"
+                            "DisplayName" = "8:#1024"
+                            "Description" = "8:#1124"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:Pentium4 mit SSE2-Erweiterung"
+                            "DefaultValue" = "8:#1224"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Button3Value"
+                            {
+                            "Name" = "8:Button3Value"
+                            "DisplayName" = "8:#1020"
+                            "Description" = "8:#1120"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:1"
+                            "Value" = "8:3"
+                            "DefaultValue" = "8:3"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "ButtonProperty"
+                            {
+                            "Name" = "8:ButtonProperty"
+                            "DisplayName" = "8:#1017"
+                            "Description" = "8:#1117"
+                            "Type" = "3:12"
+                            "ContextData" = "8:Öffentlich"
+                            "Attributes" = "3:2"
+                            "Setting" = "3:2"
+                            "Value" = "8:DESTINATION_ARCH"
+                            "DefaultValue" = "8:BUTTON3"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "DefaultValue"
+                            {
+                            "Name" = "8:DefaultValue"
+                            "DisplayName" = "8:#1016"
+                            "Description" = "8:#1116"
+                            "Type" = "3:3"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:2"
+                            "DefaultValue" = "8:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -956,7 +1311,7 @@
                 {
                     "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_D9B722709D4044DCBF9646DB51261AFA"
                     {
-                    "Sequence" = "3:100"
+                    "Sequence" = "3:110"
                     "DisplayName" = "8:Status"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -971,7 +1326,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -1015,7 +1371,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_70DB3051E57C4FBC9EC2E140D1AF8432"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -1025,7 +1382,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_D9C946467A244D6DBA175F969C805801"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_2D210A87221C488484AD3288F4D86EC4"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1039,7 +1396,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_E5E558F92EE844FDA18BC2E581505FD6"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_CF93D40BAB0E473F924CFA746403E2D4"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1056,13 +1413,69 @@
         }
         "ProjectOutput"
         {
+            "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_70193B185E7443449F020FE02196C761"
+            {
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\AppLinesSSE2.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Condition" = "8:DESTINATION_ARCH=3"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release SSE2|Win32"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{1BD7E585-1B59-451F-B16C-400CFBC36072}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_7D66FAF8D902439B906320101096BF40"
+            {
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\AppLinesSSE.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Condition" = "8:DESTINATION_ARCH=2"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:Release SSE|Win32"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{1BD7E585-1B59-451F-B16C-400CFBC36072}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_9FFFCF9C4E9D409A871B06E88B069928"
             {
             "SourcePath" = "8:..\\..\\bin\\win32_i386\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
-            "Condition" = "8:"
+            "Condition" = "8:DESTINATION_ARCH=1"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
             "ReadOnly" = "11:FALSE"
