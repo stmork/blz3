@@ -119,8 +119,10 @@
  * support for the colorimetry and YCbCr-related tags.
  */
 #ifdef JPEG_SUPPORT
-#	ifndef HAVE_BOOLEAN
-#		define HAVE_BOOLEAN
+#	ifdef WIN32
+#		ifndef HAVE_BOOLEAN
+#			define HAVE_BOOLEAN
+#		endif
 #	endif
 #	ifndef YCBCR_SUPPORT
 #		define	YCBCR_SUPPORT
