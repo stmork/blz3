@@ -14,6 +14,7 @@ LIB_SOURCE =\
 	b3Display.cc\
 	b3Exception.cc\
 	b3LogBase.cc\
+	b3PluginBase.cc\
 	b3Row.cc\
 	b3TimeAbstract.cc
 
@@ -23,6 +24,7 @@ LIB_OBJ	=\
 	b3Display.o\
 	b3Exception.o\
 	b3LogBase.o\
+	b3PluginBase.o\
 	b3Row.o\
 	b3TimeAbstract.o
 
