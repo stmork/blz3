@@ -70,25 +70,26 @@ protected:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnHierarchySelectionChanged(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void           b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
-	b3_bool        b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
-	void           b3UpdateActivation();
-	b3Item        *b3GetSelectedItem();
-	b3BBox        *b3GetSelectedBBox();
-	b3Shape       *b3GetSelectedShape();
-	HTREEITEM      b3SelectItem(b3Item *item);
-	void           b3GetData();
-	void           b3SetData();
-	LPARAM         b3GetLParam(HTREEITEM item);
+	void                  b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
+	b3_bool               b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
+	void                  b3UpdateActivation();
+	b3Item               *b3GetSelectedItem();
+	b3BBox               *b3GetSelectedBBox();
+	b3Shape              *b3GetSelectedShape();
+	HTREEITEM             b3SelectItem(b3Item *item);
+	void                  b3GetData();
+	void                  b3SetData();
+	LPARAM                b3GetLParam(HTREEITEM item);
 
 private:
-	b3_count       b3GetExpansion (HTREEITEM parent);
-	HTREEITEM      b3FindItem (HTREEITEM parent,b3Item *item);
-	void           b3UpdateIcons(HTREEITEM parent);
+	b3_count              b3GetExpansion (HTREEITEM parent);
+	HTREEITEM             b3FindItem (HTREEITEM parent,b3Item *item);
+	void                  b3UpdateIcons(HTREEITEM parent);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -38,9 +38,12 @@ typedef enum
 	B3_MATRIX_PROJECTION
 } b3_matrix_mode;
 
+class b3RenderObject;
+
 class b3RenderContext : protected b3Mem
 {
 	b3_index         glLightNum;
+	b3RenderObject  *glSelectedObject;
 
 public:
 	b3_count         glVertexCount;
@@ -67,6 +70,16 @@ public:
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
+
+	inline b3RenderObject  *b3GetSelected()
+	{
+		return glSelectedObject;
+	}
+
+	inline void b3SetSelected(b3RenderObject *selected)
+	{
+		glSelectedObject = selected;
+	}
 
 #ifdef BLZ3_USE_OPENGL
 	// Some inlines :-)
@@ -208,6 +221,7 @@ protected:
 	// Some render overridables
 	virtual b3_render_mode  b3GetRenderMode();
 	virtual void            b3GetGridColor(b3_color *color);
+	virtual void            b3GetSelectedColor(b3_color *color);
 	virtual void            b3GetDiffuseColor(b3_color *diffuse);
 	virtual b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
 	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);

@@ -41,7 +41,7 @@ class CB3ShapeDialog : public CPropertyPage
 	CString              m_SectionTitle; // Used by b3MakeSection()
 // Construction
 public:
-	b3ShapeRenderObject *m_Shape;
+	b3Shape             *m_Shape;
 	b3_bool              m_Creation;
 
 public:

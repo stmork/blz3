@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2003/02/22 15:17:18  sm
+**      - Added support for selected shapes in object modeller
+**      - Glued b3Shape and b3ShapeRenderObject. There was no
+**        distinct access method in use.
+**      - Made some b3Shape methods inline and/or static which
+**        saves some memory.
+**
 **      Revision 1.50  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -655,15 +662,15 @@ void b3Shape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 **                                                                      **
 *************************************************************************/
 
-b3SimpleShape::b3SimpleShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
+b3SimpleShape::b3SimpleShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
 {
 }
 
-b3SimpleShape::b3SimpleShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3SimpleShape), class_type)
+b3SimpleShape::b3SimpleShape(b3_u32 class_type) : b3Shape(sizeof(b3SimpleShape), class_type)
 {
 }
 
-b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3ShapeRenderObject(src)
+b3SimpleShape::b3SimpleShape(b3_u32 *src) : b3Shape(src)
 {
 }
 

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.60  2003/02/22 15:17:18  sm
+**      - Added support for selected shapes in object modeller
+**      - Glued b3Shape and b3ShapeRenderObject. There was no
+**        distinct access method in use.
+**      - Made some b3Shape methods inline and/or static which
+**        saves some memory.
+**
 **      Revision 1.59  2003/01/07 16:14:38  sm
 **      - Lines III: object editing didn't prepared any more. Fixed.
 **      - Some prepare optimizations.
@@ -423,6 +430,10 @@ static b3_f32 box_texcoord[] =
 **                                                                      **
 *************************************************************************/
 
+b3_count b3ShapeRenderContext::m_SubDiv = 16;
+b3_f64   b3ShapeRenderContext::m_Sin[B3_MAX_RENDER_SUBDIV + 1];
+b3_f64   b3ShapeRenderContext::m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+
 b3ShapeRenderContext::b3ShapeRenderContext(b3_count new_subdiv)
 {
 	m_CylinderIndices  = null;
@@ -517,21 +528,6 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 }
 
-b3_count b3ShapeRenderContext::b3GetSubdiv()
-{
-	return m_SubDiv;
-}
-
-b3_f64 *b3ShapeRenderContext::b3GetSinTable()
-{
-	return m_Sin;
-}
-
-b3_f64 *b3ShapeRenderContext::b3GetCosTable()
-{
-	return m_Cos;
-}
-
 b3_gl_line *b3ShapeRenderContext::b3GetCylinderIndices()
 {
 	return m_CylinderIndices;
@@ -558,22 +554,7 @@ b3_gl_polygon *b3ShapeRenderContext::b3GetConePolygons()
 **                                                                      **
 *************************************************************************/
 
-b3ShapeRenderObject::b3ShapeRenderObject(b3_size class_size,b3_u32 class_type) :
-	b3Shape(class_size, class_type)
-{
-}
-
-b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 class_type) :
-	b3Shape(sizeof(b3ShapeRenderObject), class_type)
-{
-}
-
-b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
-	b3Shape(src)
-{
-}
-
-void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
+void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 {
 	b3Item           *item;
 	b3Condition      *cond;
@@ -600,7 +581,7 @@ void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3GetDiffuseColor(b3_color *color)
+void b3Shape::b3GetDiffuseColor(b3_color *color)
 {
 	b3Item     *item;
 	b3Material *material;
@@ -622,7 +603,7 @@ void b3ShapeRenderObject::b3GetDiffuseColor(b3_color *color)
 	}
 }
 
-b3_f64 b3ShapeRenderObject::b3GetColors(
+b3_f64 b3Shape::b3GetColors(
 	b3_color *ambient,
 	b3_color *diffuse,
 	b3_color *specular)
@@ -643,12 +624,12 @@ b3_f64 b3ShapeRenderObject::b3GetColors(
 	return b3RenderObject::b3GetColors(ambient,diffuse,specular);
 }
 
-void b3ShapeRenderObject::b3GetGridColor(b3_color *color)
+void b3Shape::b3GetGridColor(b3_color *color)
 {
 	b3Color::b3Init(color, 0.2f, 0.2f, 0.2f);
 }
 
-b3_bool b3ShapeRenderObject::b3GetChess(
+b3_bool b3Shape::b3GetChess(
 	b3_color *black,
 	b3_color *white,
 	b3_res   &xRepeat,
@@ -673,7 +654,7 @@ b3_bool b3ShapeRenderObject::b3GetChess(
 	return result;
 }
 
-b3Tx *b3ShapeRenderObject::b3GetTexture(
+b3Tx *b3Shape::b3GetTexture(
 	b3_f64 &xTrans,
 	b3_f64 &yTrans,
 	b3_f64 &xScale,
@@ -708,7 +689,7 @@ b3Tx *b3ShapeRenderObject::b3GetTexture(
 	return tx;
 }
 
-b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
+b3_bool b3Shape::b3GetImage(b3Tx *image)
 {
 	b3Item       *item;
 	b3_bool       result = false;
@@ -773,7 +754,7 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 	return result;
 }
 
-b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
+b3_render_mode b3Shape::b3GetRenderMode()
 {
 	return b3IsActive() ? B3_RENDER_FILLED : B3_RENDER_LINE;
 }
@@ -784,7 +765,7 @@ b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
 **                                                                      **
 *************************************************************************/
 
-b3_count b3ShapeRenderObject::b3GetIndexOverhead (
+b3_count b3Shape::b3GetIndexOverhead (
 	b3_f64 xLeft,
 	b3_f64 yLeft)
 {
@@ -807,7 +788,7 @@ b3_count b3ShapeRenderObject::b3GetIndexOverhead (
 
 #define no_USE_FIND_VERTEX
 
-b3_index b3ShapeRenderObject::b3FindVertex(b3_index index)
+b3_index b3Shape::b3FindVertex(b3_index index)
 {
 #ifdef USE_FIND_VERTEX
 	b3_vector *point = &glVertex[index].v;
@@ -825,7 +806,7 @@ b3_index b3ShapeRenderObject::b3FindVertex(b3_index index)
 	return index;
 }
 
-void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
+void b3Shape::b3ComputeQuadricNormals(b3_bool normalize)
 {
 #ifdef USE_FIND_VERTEX
 	b3_vector normal;
@@ -879,7 +860,7 @@ void b3ShapeRenderObject::b3ComputeQuadricNormals(b3_bool normalize)
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeSphereVertices(
+void b3Shape::b3ComputeSphereVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir)
 {
@@ -932,7 +913,7 @@ void b3ShapeRenderObject::b3ComputeSphereVertices(
 	}
  }
 
-void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
+void b3Shape::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
 {
 	b3_index i;
 
@@ -966,7 +947,7 @@ void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normali
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeCylinderVertices(
+void b3Shape::b3ComputeCylinderVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1065,7 +1046,7 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeCylinderIndices()
+void b3Shape::b3ComputeCylinderIndices()
 {
 	b3_count Overhead;
 
@@ -1090,7 +1071,7 @@ void b3ShapeRenderObject::b3ComputeCylinderIndices()
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeConeVertices(
+void b3Shape::b3ComputeConeVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1257,7 +1238,7 @@ void b3ShapeRenderObject::b3ComputeConeVertices(
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeConeIndices()
+void b3Shape::b3ComputeConeIndices()
 {
 	b3_count Overhead;
 
@@ -1294,7 +1275,7 @@ void b3ShapeRenderObject::b3ComputeConeIndices()
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
+void b3Shape::b3ComputeEllipsoidVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1408,7 +1389,7 @@ void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
+void b3Shape::b3ComputeEllipsoidIndices()
 {
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;
@@ -1518,7 +1499,7 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeBoxVertices(
+void b3Shape::b3ComputeBoxVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1585,7 +1566,7 @@ void b3ShapeRenderObject::b3ComputeBoxVertices(
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeBoxIndices()
+void b3Shape::b3ComputeBoxIndices()
 {
 	glGrids    = box_grids;
 	glPolygons = box_polygons;
@@ -1597,7 +1578,7 @@ void b3ShapeRenderObject::b3ComputeBoxIndices()
 **                                                                      **
 *************************************************************************/
 
-void b3ShapeRenderObject::b3ComputeTorusVertices(
+void b3Shape::b3ComputeTorusVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1728,7 +1709,7 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeTorusNormals()
+void b3Shape::b3ComputeTorusNormals()
 {
 	for (int i = 0;i < glVertexCount;i++)
 	{
@@ -1736,7 +1717,7 @@ void b3ShapeRenderObject::b3ComputeTorusNormals()
 	}
 }
 
-void b3ShapeRenderObject::b3ComputeTorusIndices()
+void b3Shape::b3ComputeTorusIndices()
 {
 	b3_gl_line    *gPtr;
 	b3_gl_polygon *pPtr;

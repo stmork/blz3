@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.62  2003/02/22 15:17:18  sm
+**      - Added support for selected shapes in object modeller
+**      - Glued b3Shape and b3ShapeRenderObject. There was no
+**        distinct access method in use.
+**      - Made some b3Shape methods inline and/or static which
+**        saves some memory.
+**
 **      Revision 1.61  2003/01/26 19:45:39  sm
 **      - OpenGL drawing problem of Caligari imported objects fixed.
 **
@@ -414,6 +421,7 @@ b3RenderContext::b3RenderContext()
 	b3LightNum();
 	b3LightSpotEnable(false);
 	glDrawCachedTextures = true;
+	glSelectedObject     = null;
 }
 
 void b3RenderContext::b3Init()
@@ -989,6 +997,11 @@ void b3RenderObject::b3GetGridColor(b3_color *color)
 	b3Color::b3Init(color,  0.2f, 0.2f, 0.2f);
 }
 
+void b3RenderObject::b3GetSelectedColor(b3_color *color)
+{
+	b3Color::b3Init(color,  1.0f, 0.1f, 0.25f);
+}
+
 void b3RenderObject::b3GetDiffuseColor(b3_color *diffuse)
 {
 	b3Color::b3Init(diffuse,0.0f, 0.5f, 1.0f);
@@ -1395,7 +1408,14 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 			glDisable(GL_LIGHTING);
 			glDisable(GL_TEXTURE_2D);
 
-			b3GetGridColor(&diffuse);
+			if (context->b3GetSelected() == this)
+			{
+				b3GetSelectedColor(&diffuse);
+			}
+			else
+			{
+				b3GetGridColor(&diffuse);
+			}
 			glColor3f(diffuse.r,diffuse.g,diffuse.b);
 
 			// Put geometry :-)

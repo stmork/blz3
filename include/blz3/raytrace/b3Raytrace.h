@@ -899,9 +899,10 @@ protected:
 
 class b3ShapeRenderContext : public b3RenderContext
 {
-	b3_count       m_SubDiv;
-	b3_f64         m_Sin[B3_MAX_RENDER_SUBDIV + 1];
-	b3_f64         m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+	static b3_f64         m_Sin[B3_MAX_RENDER_SUBDIV + 1];
+	static b3_f64         m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+	static b3_count       m_SubDiv;
+
 	b3_vector     *m_Between;
 	b3_gl_line    *m_CylinderIndices;
 	b3_gl_polygon *m_CylinderPolygons;
@@ -909,21 +910,44 @@ class b3ShapeRenderContext : public b3RenderContext
 	b3_gl_polygon *m_ConePolygons;
 
 public:
-	               b3ShapeRenderContext(b3_count subdiv = 16);
-	void           b3InitSubdiv(b3_count subdiv);
-	b3_count       b3GetSubdiv();
-	b3_f64        *b3GetCosTable();
-	b3_f64        *b3GetSinTable();
+	                 b3ShapeRenderContext(b3_count subdiv = 16);
+	void             b3InitSubdiv(b3_count subdiv);
+	b3_gl_line      *b3GetCylinderIndices();
+	b3_gl_polygon   *b3GetCylinderPolygons();
+	b3_gl_line      *b3GetConeIndices();
+	b3_gl_polygon   *b3GetConePolygons();
 
-	b3_gl_line    *b3GetCylinderIndices();
-	b3_gl_polygon *b3GetCylinderPolygons();
-	b3_gl_line    *b3GetConeIndices();
-	b3_gl_polygon *b3GetConePolygons();
+	static inline b3_count  b3GetSubdiv()
+	{
+		return m_SubDiv;
+	}
+
+	static inline b3_f64   *b3GetCosTable()
+	{
+		return m_Cos;
+	}
+	
+	static inline b3_f64   *b3GetSinTable()
+	{
+		return m_Sin;
+	}
 };
 
 // same structure entries for all shapes
-class b3Shape : public b3Activation, public b3Item
+class b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
+protected:
+	b3_count           xSize,ySize;
+	b3_count           SinCosSteps;
+	b3_f64            *Cos;
+	b3_f64            *Sin;
+	b3_stencil_limit   Limit;
+
+	b3_gl_line        *GridsCyl;
+	b3_gl_polygon     *PolysCyl;
+	b3_gl_line        *GridsCone;
+	b3_gl_polygon     *PolysCone;
+
 protected:
 	                    b3Shape(b3_size class_size,b3_u32 class_type);
 
@@ -936,6 +960,7 @@ public:
 	        void        b3InitActivation();
 	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
+	        void        b3ComputeBound(b3_stencil_limit *limit);
 	virtual b3_bool     b3CheckStencil(b3_polar_precompute *polar);
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
@@ -961,29 +986,6 @@ public:
 	{
 		return false;
 	}
-};
-
-class b3ShapeRenderObject : public b3Shape, public b3RenderObject
-{
-protected:
-	b3_count           xSize,ySize;
-	b3_count           SinCosSteps;
-	b3_f64            *Cos;
-	b3_f64            *Sin;
-	b3_stencil_limit   Limit;
-
-	b3_gl_line        *GridsCyl;
-	b3_gl_polygon     *PolysCyl;
-	b3_gl_line        *GridsCone;
-	b3_gl_polygon     *PolysCone;
-
-protected:
-	b3ShapeRenderObject(b3_size class_size,b3_u32 class_type);
-
-public:
-	B3_ITEM_INIT(b3ShapeRenderObject);
-	B3_ITEM_LOAD(b3ShapeRenderObject);
-	void            b3ComputeBound(b3_stencil_limit *limit);
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
@@ -1048,7 +1050,7 @@ private:
 	b3_index        b3FindVertex(b3_index vIndex);
 };
 
-class b3SimpleShape : public b3ShapeRenderObject
+class b3SimpleShape : public b3Shape
 {
 protected:
 	b3_bool             b3CheckStencil(b3_polar_precompute *polar);
@@ -1466,7 +1468,7 @@ template<int count> struct b3_csg_intervals
 typedef b3_csg_intervals<4>                                 b3_shape_intervals;
 typedef b3_csg_intervals<B3_MAX_CSG_INTERSECTIONS_PER_BBOX> b3_bbox_intervals;
 
-class b3CSGShape : public b3ShapeRenderObject
+class b3CSGShape : public b3Shape
 {
 protected:
 	b3_s32           m_Index;

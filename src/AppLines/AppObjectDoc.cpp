@@ -38,10 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/02/22 15:17:18  sm
+**	- Added support for selected shapes in object modeller
+**	- Glued b3Shape and b3ShapeRenderObject. There was no
+**	  distinct access method in use.
+**	- Made some b3Shape methods inline and/or static which
+**	  saves some memory.
+**
 **	Revision 1.21  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.20  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -432,6 +439,13 @@ void CAppObjectDoc::b3InitTree()
 		B3_ASSERT((m_BBox->Prev == null) && (m_BBox->Succ == null));
 		m_DlgHierarchy->b3AddBBoxes (null,m_BBox,true);
 	}
+}
+
+void CAppObjectDoc::b3HierarchySelectionChanged()
+{
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+	m_Context.b3SetSelected(shape);
+	UpdateAllViews(NULL,B3_UPDATE_VIEW);
 }
 
 void CAppObjectDoc::b3ContextMenu(HTREEITEM item)

@@ -65,13 +65,42 @@ public:
 						  b3Display(b3Tx *image);
 	                      b3Display(b3_res xSize,b3_res ySize,const char *title = null);
 	virtual              ~b3Display();
-	virtual void          b3GetRes(b3_res &xSize,b3_res &ySize);
-	virtual void          b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
-	virtual b3_pkd_color  b3GetPixel(b3_coord x,b3_coord y);
+
+	virtual inline void b3GetRes(b3_res &xSize,b3_res &ySize)
+	{
+		xSize = m_xMax;
+		ySize = m_yMax;
+	}
+
+	virtual inline void b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel)
+	{
+		B3_ASSERT(m_Buffer != null);
+		if ((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax))
+		{
+			m_Buffer[y * m_xMax + x] = pixel;
+		}
+	}
+
+	virtual inline b3_pkd_color b3GetPixel(b3_coord x,b3_coord y)
+	{
+		B3_ASSERT(m_Buffer != null);
+		return
+			((x >= 0) && (x < m_xMax) && (y >= 0) && (y < m_yMax)) ?
+				m_Buffer[y * m_xMax + x] :
+				0;
+	}
+
+	virtual inline b3_bool b3IsCancelled(b3_coord x,b3_coord y)
+	{
+		return false;
+	}
+	
+	virtual inline void b3Wait()
+	{
+	}
+
 	virtual void          b3PutRow(b3Row *row);
 	virtual void          b3PutTx(b3Tx *tx);
-	virtual b3_bool       b3IsCancelled(b3_coord x,b3_coord y);
-	virtual void          b3Wait();
 	virtual b3_bool       b3SaveImage(const char *filename);
 
 private:

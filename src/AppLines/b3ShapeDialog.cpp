@@ -61,11 +61,18 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/02/22 15:17:18  sm
+**	- Added support for selected shapes in object modeller
+**	- Glued b3Shape and b3ShapeRenderObject. There was no
+**	  distinct access method in use.
+**	- Made some b3Shape methods inline and/or static which
+**	  saves some memory.
+**
 **	Revision 1.10  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.9  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
@@ -170,7 +177,7 @@ int CB3ShapeDialog::b3Edit(
 	if (page != null)
 	{
 		page->m_Creation = create;
-		page->m_Shape    = (b3ShapeRenderObject *)item;
+		page->m_Shape    = (b3Shape *)item;
 		page->b3Init();
 		sheet.AddPage(page);
 

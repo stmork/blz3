@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/02/22 15:17:18  sm
+**	- Added support for selected shapes in object modeller
+**	- Glued b3Shape and b3ShapeRenderObject. There was no
+**	  distinct access method in use.
+**	- Made some b3Shape methods inline and/or static which
+**	  saves some memory.
+**
 **	Revision 1.21  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
-**
+**	
 **	Revision 1.20  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -176,6 +183,7 @@ BEGIN_MESSAGE_MAP(CDlgHierarchy, CB3Dialogbar)
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONUP()
 	ON_NOTIFY(NM_RCLICK, IDC_HIERARCHY, OnContextMenu)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_HIERARCHY, OnHierarchySelectionChanged)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -548,6 +556,17 @@ void CDlgHierarchy::OnContextMenu(NMHDR* pNMHDR, LRESULT* pResult)
 	{
 		m_Hierarchy.ScreenToClient(&point);
 		m_pDoc->b3ContextMenu(m_Hierarchy.HitTest(point));
+	}
+	*pResult = 0;
+}
+
+void CDlgHierarchy::OnHierarchySelectionChanged(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+	// TODO: Add your control notification handler code here
+	if (m_pDoc != null)
+	{
+		m_pDoc->b3HierarchySelectionChanged();
 	}
 	*pResult = 0;
 }

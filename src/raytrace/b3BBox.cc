@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
 #include "b3ReadCOB.h"
 #include "b3ReadTGF.h"
@@ -34,10 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.79  2003/02/22 15:17:18  sm
+**	- Added support for selected shapes in object modeller
+**	- Glued b3Shape and b3ShapeRenderObject. There was no
+**	  distinct access method in use.
+**	- Made some b3Shape methods inline and/or static which
+**	  saves some memory.
+**
 **	Revision 1.78  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
-**
+**	
 **	Revision 1.77  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
 **	
@@ -651,9 +659,9 @@ void b3Scene::b3Reorg()
 
 void b3BBox::b3AllocVertices(b3RenderContext *context)
 {
-	b3Item              *item;
-	b3BBox              *bbox;
-	b3ShapeRenderObject *shape;
+	b3Item  *item;
+	b3BBox  *bbox;
+	b3Shape *shape;
 
 	glVertexCount =  8;
 	glGridCount   = 12;
@@ -671,7 +679,7 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	}
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeRenderObject *)item;
+		shape = (b3Shape *)item;
 		shape->b3AllocVertices(context);
 		shape->b3AddCount(context);
 	}
@@ -679,9 +687,9 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 
 void b3BBox::b3FreeVertices()
 {
-	b3Item              *item;
-	b3BBox              *bbox;
-	b3ShapeRenderObject *shape;
+	b3Item  *item;
+	b3BBox  *bbox;
+	b3Shape *shape;
 
 	glVertex   = null;
 	glGrids    = null;
@@ -689,7 +697,7 @@ void b3BBox::b3FreeVertices()
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeRenderObject *)item;
+		shape = (b3Shape *)item;
 		shape->b3FreeVertices();
 	}
 	B3_FOR_BASE(b3GetBBoxHead(),item)
@@ -746,17 +754,14 @@ void b3BBox::b3ComputeNormals(b3_bool normalize)
 
 void b3BBox::b3GetGridColor(b3_color *color)
 {
-	color->r = 0.5;
-	color->g = 0.5;
-	color->b = 0.5;
-	color->a = 0.0;
+	b3Color::b3Init(color,0.5,0.5,0.5);
 }
 
 void b3BBox::b3Draw(b3RenderContext *context)
 {
-	b3Item              *item;
-	b3BBox              *bbox;
-	b3ShapeRenderObject *shape;
+	b3Item  *item;
+	b3BBox  *bbox;
+	b3Shape *shape;
 
 	// Draw this
 	b3RenderObject::b3Draw(context);
@@ -764,7 +769,7 @@ void b3BBox::b3Draw(b3RenderContext *context)
 	// Draw our shapes
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeRenderObject *)item;
+		shape = (b3Shape *)item;
 		shape->b3Draw(context);
 	}
 
@@ -778,13 +783,13 @@ void b3BBox::b3Draw(b3RenderContext *context)
 
 void b3BBox::b3Update()
 {
-	b3Item              *item;
-	b3ShapeRenderObject *shape;
+	b3Item  *item;
+	b3Shape *shape;
 
 	b3RenderObject::b3Update();
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeRenderObject *)item;
+		shape = (b3Shape *)item;
 		shape->b3Update();
 	}
 }
@@ -804,17 +809,17 @@ void b3Scene::b3Update()
 
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
 {
-	b3Item              *item;
-	b3BBox              *bbox;
-	b3ShapeRenderObject *shape;
-	b3_vector            subLower;
-	b3_vector            subUpper;
-	b3_bool              result = false;
+	b3Item    *item;
+	b3BBox    *bbox;
+	b3Shape   *shape;
+	b3_vector  subLower;
+	b3_vector  subUpper;
+	b3_bool    result = false;
 
 	b3Vector::b3InitBound(&subLower,&subUpper);
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape   = (b3ShapeRenderObject *)item;
+		shape   = (b3Shape *)item;
 		result |= shape->b3ComputeBounds(&subLower,&subUpper);
 	}
 
@@ -891,13 +896,13 @@ b3_bool b3BBox::b3Transform(
 	b3_bool    force_action)
 {
 	b3Item  *item;
-	b3ShapeRenderObject *shape;
+	b3Shape *shape;
 	b3BBox  *bbox;
 	b3_bool  transformed = false;
 
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
-		shape = (b3ShapeRenderObject *)item;
+		shape = (b3Shape *)item;
 		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation,is_affine);

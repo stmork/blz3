@@ -42,11 +42,18 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/02/22 15:17:18  sm
+**	- Added support for selected shapes in object modeller
+**	- Glued b3Shape and b3ShapeRenderObject. There was no
+**	  distinct access method in use.
+**	- Made some b3Shape methods inline and/or static which
+**	  saves some memory.
+**
 **	Revision 1.8  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.7  2002/01/22 17:11:17  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
@@ -154,12 +161,6 @@ b3Display::~b3Display()
 }
 
 
-void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
-{
-	xSize = m_xMax;
-	ySize = m_yMax;
-}
-
 void b3Display::b3PutRow(b3Row *row)
 {
 	b3_coord      y = row->m_y;
@@ -182,31 +183,6 @@ void b3Display::b3PutTx(b3Tx *tx)
 	{
 		tx->b3GetRow(&m_Buffer[y * m_xMax],y);
 	}
-}
-
-void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
-{
-	B3_ASSERT(m_Buffer != null);
-	if ((x < 0) || (x >= m_xMax)) return;
-	if ((y < 0) || (y >= m_yMax)) return;
-	m_Buffer[y * m_xMax + x] = Color;
-}
-
-b3_pkd_color  b3Display::b3GetPixel(b3_coord x,b3_coord y)
-{
-	B3_ASSERT(m_Buffer != null);
-	if ((x < 0) || (x >= m_xMax)) return 0;
-	if ((y < 0) || (y >= m_yMax)) return 0;
-	return (m_Buffer[y * m_xMax + x]);
-}
-
-b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
-{
-	return false;
-}
-
-void b3Display::b3Wait()
-{
 }
 
 b3_bool b3Display::b3SaveImage(const char *filename)

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2003/02/22 15:17:18  sm
+**      - Added support for selected shapes in object modeller
+**      - Glued b3Shape and b3ShapeRenderObject. There was no
+**        distinct access method in use.
+**      - Made some b3Shape methods inline and/or static which
+**        saves some memory.
+**
 **      Revision 1.16  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -142,7 +149,7 @@ void b3Box::b3FreeVertices()
 	glGrids    = null;
 	glPolygons = null;
 
-	b3ShapeRenderObject::b3FreeVertices();
+	b3Shape::b3FreeVertices();
 }
 
 void b3Box::b3ComputeVertices()
