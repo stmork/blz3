@@ -27,6 +27,8 @@
 #include "ChildFrm.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
+#include "AppObjectDoc.h"
+#include "AppObjectView.h"
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
 #include "blz3/image/b3TxPool.h"
@@ -42,6 +44,10 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/01/12 18:14:39  sm
+**	- Created object document template
+**	- Some menu fixes done
+**
 **	Revision 1.15  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -50,7 +56,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.14  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
@@ -212,6 +218,13 @@ BOOL CAppLinesApp::InitInstance()
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAppRaytraceView));
 	AddDocTemplate(pImageTemplate);
+
+	pObjectTemplate = new CMultiDocTemplate(
+		IDR_OBJECT,
+		RUNTIME_CLASS(CAppObjectDoc),
+		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CAppObjectView));
+	AddDocTemplate(pObjectTemplate);
 
 	// Connect the COleTemplateServer to the document template.
 	//  The COleTemplateServer creates new documents on behalf

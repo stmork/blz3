@@ -112,6 +112,14 @@ SOURCE=.\AppLinesView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppObjectDoc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppObjectView.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\AppRaytraceDoc.cpp
 # End Source File
 # Begin Source File
@@ -244,6 +252,14 @@ SOURCE=.\AppLinesView.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppObjectDoc.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppObjectView.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\AppRaytraceDoc.h
 # End Source File
 # Begin Source File
@@ -264,11 +280,35 @@ SOURCE=.\b3ControlLDC.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ExampleScene.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3floatedit.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\b3Fulcrum.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ImagePreviewFileDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SelectObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SelectTexture.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ShowRaytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3View.h
 # End Source File
 # Begin Source File
 
@@ -321,6 +361,10 @@ SOURCE=.\DlgObjectCopy.h
 # Begin Source File
 
 SOURCE=.\DlgScene.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSearchPathList.h
 # End Source File
 # Begin Source File
 
@@ -429,6 +473,10 @@ SOURCE=.\res\ico00003.ico
 # Begin Source File
 
 SOURCE=.\res\left.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\object.ico
 # End Source File
 # Begin Source File
 

@@ -56,11 +56,15 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2002/01/12 18:14:39  sm
+**	- Created object document template
+**	- Some menu fixes done
+**
 **	Revision 1.48  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.47  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
@@ -599,7 +603,7 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 
 /*************************************************************************
 **                                                                      **
-**                        General scene commands               **
+**                        General scene commands                        **
 **                                                                      **
 *************************************************************************/
 

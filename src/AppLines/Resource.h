@@ -15,6 +15,7 @@
 #define IDR_MAINFRAME                   110
 #define IDR_BLZ3TYPE                    111
 #define IDR_TOOLBAR_VIEW                112
+#define IDR_OBJECT                      112
 #define IDR_DISPLAYTYPE                 113
 #define IDR_TOOLBAR_ACTION              114
 #define IDR_TOOLBAR_OBJECT              115
@@ -334,7 +335,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        164
+#define _APS_NEXT_RESOURCE_VALUE        165
 #define _APS_NEXT_COMMAND_VALUE         32862
 #define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           102

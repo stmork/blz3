@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	AppLinesView.h $
+**	$Filename:	AppObjectView.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -15,22 +15,21 @@
 **
 */
 
-#if !defined(APPLINESVIEW_H)
-#define APPLINESVIEW_H
+#if !defined(APPOBJECTVIEW_H)
+#define APPOBJECTVIEW_H
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "AppLinesDoc.h"
-
+#include "AppObjectDoc.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 #include "b3View.h"
 
 class CB3Action;
 
-class CAppLinesView : public CScrollView
+class CAppObjectView : public CScrollView
 {
 	HDC             m_DC;
 	HGLRC           m_GC;
@@ -40,27 +39,24 @@ class CAppLinesView : public CScrollView
 	CPoint          m_SelectStart;
 	CPoint          m_SelectAct;
 	CB3Action      *m_Action[B3_MODE_MAX];
+
 protected:
-	b3Scene        *m_Scene;
 	b3RenderView    m_RenderView;
-	b3CameraPart   *m_Camera;
-	b3CameraVolume  m_CameraVolume;
-	b3Light        *m_Light;
 
 protected: // create from serialization only
-	CAppLinesView();
-	DECLARE_DYNCREATE(CAppLinesView)
+	CAppObjectView();
+	DECLARE_DYNCREATE(CAppObjectView)
 
 // Attributes
 public:
-	CAppLinesDoc* GetDocument();
+	CAppObjectDoc* GetDocument();
 
 // Operations
 public:
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAppLinesView)
+	//{{AFX_VIRTUAL(CAppObjectView)
 	public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -75,7 +71,7 @@ public:
 
 // Implementation
 public:
-	virtual ~CAppLinesView();
+	virtual ~CAppObjectView();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
@@ -103,12 +99,11 @@ protected:
 	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
-	afx_msg void OnViewAntialias();
-	afx_msg void OnUpdateViewAntialias(CCmdUI* pCmdUI);
 	afx_msg void OnViewSmaller();
 	afx_msg void OnViewSelect();
 	afx_msg void OnViewBigger();
 	afx_msg void OnViewOptimal();
+	afx_msg void OnViewPop();
 	afx_msg void OnUpdateViewSmaller(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewSelect(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewBigger(CCmdUI* pCmdUI);
@@ -117,48 +112,13 @@ protected:
 	afx_msg void OnViewMoveLeft();
 	afx_msg void OnViewMoveUp();
 	afx_msg void OnViewMoveDown();
-	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnViewPop();
 	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
-	afx_msg void OnObjSelect();
-	afx_msg void OnObjMove();
-	afx_msg void OnObjRotate();
-	afx_msg void OnObjScale();
-	afx_msg void OnCamMove();
-	afx_msg void OnCamTurn();
-	afx_msg void OnCamRotate();
-	afx_msg void OnCamView();
-	afx_msg void OnCamSelect();
-	afx_msg void OnLightTurn();
-	afx_msg void OnLightSelect();
-	afx_msg void OnUpdateObjSelect(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateObjMove(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateObjRotate(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateObjScale(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateCamMove(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateCamTurn(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateCamRotate(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateCamView(CCmdUI* pCmdUI);
-	afx_msg void OnUpdateLightTurn(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnViewToFulcrum();
-	afx_msg void OnCameraNew();
-	afx_msg void OnCameraDelete();
-	afx_msg void OnCameraProperties();
-	afx_msg void OnUpdateCameraDelete(CCmdUI* pCmdUI);
-	afx_msg void OnCameraEnable();
-	afx_msg void OnUpdateCameraEnable(CCmdUI* pCmdUI);
-	afx_msg void OnMoveLeft();
-	afx_msg void OnMoveRight();
-	afx_msg void OnMoveDown();
-	afx_msg void OnMoveUp();
-	afx_msg void OnRotateLeft();
-	afx_msg void OnRotateRight();
-	afx_msg void OnUpdateMovement(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
@@ -168,28 +128,11 @@ public:
 protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
-
-private:
-	void b3Move(b3_action_mode mode);
-	void b3Rotate(b3_action_mode mode);
-
-	friend class CB3Action;
-	friend class CB3MoveAction;
-	friend class CB3CameraRotateAction;
-
-	friend class CB3ActionMagnify;
-	friend class CB3ActionObjectMove;
-	friend class CB3ActionObjectRotate;
-	friend class CB3ActionObjectScale;
-	friend class CB3ActionCameraMove;
-	friend class CB3ActionCameraTurn;
-	friend class CB3ActionCameraRotate;
-	friend class CB3ActionCameraView;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp
-inline CAppLinesDoc* CAppLinesView::GetDocument()
-   { return (CAppLinesDoc*)m_pDocument; }
+inline CAppObjectDoc* CAppObjectView::GetDocument()
+   { return (CAppObjectDoc*)m_pDocument; }
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

@@ -46,6 +46,7 @@ class CAppLinesApp : public CB3App
 {
 	CMultiDocTemplate *pImageTemplate;
 	CMultiDocTemplate *pSceneTemplate;
+	CMultiDocTemplate *pObjectTemplate;
 
 public:
 	CAppLinesApp();
