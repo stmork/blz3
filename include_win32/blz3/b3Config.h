@@ -76,10 +76,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/08/05 19:53:43  sm
+**	- Removing some nasty CR/LF
+**
 **	Revision 1.6  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **	Revision 1.5  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.

@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/05 19:53:43  sm
+**      - Removing some nasty CR/LF
+**
 **      Revision 1.8  2001/08/05 19:51:56  sm
 **      - Now having OpenGL software for Windows NT and created
 **        new Lines III.

@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/08/05 19:53:43  sm
+**	- Removing some nasty CR/LF
+**
 **	Revision 1.3  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **	Revision 1.2  2001/08/05 09:23:22  sm
 **	- Introducing vectors, matrices, Splines and NURBS
 **	
