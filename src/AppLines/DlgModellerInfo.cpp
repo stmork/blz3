@@ -24,15 +24,6 @@
 #include "AppLines.h"
 #include "DlgModellerInfo.h"
 
-CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgModellerInfo::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CDlgModellerInfo)
-	m_SnapToAngle = FALSE;
-	m_SnapToGrid = FALSE;
-	//}}AFX_DATA_INIT
-}
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -41,9 +32,12 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/05 22:22:50  sm
+**	- Code cleanup
+**
 **	Revision 1.3  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
-**
+**	
 **	Revision 1.2  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -59,6 +53,15 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 **                        CDlgModellerInfo implementation               **
 **                                                                      **
 *************************************************************************/
+
+CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
+	: CDialog(CDlgModellerInfo::IDD, pParent)
+{
+	//{{AFX_DATA_INIT(CDlgModellerInfo)
+	m_SnapToAngle = FALSE;
+	m_SnapToGrid = FALSE;
+	//}}AFX_DATA_INIT
+}
 
 void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 {
