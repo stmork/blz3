@@ -143,3 +143,6 @@ lib_jpeg:
 	+@make -C Bjpeg
 
 libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Raytrace.a $(BLZ3_LIB)/libB3Base.a
+
+install:
+	@$(BLZ3_HOME)/bin/install.sh
