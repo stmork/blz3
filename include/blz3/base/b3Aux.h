@@ -72,13 +72,15 @@ public:
 #endif
 };
 
-#define B3_WHITE  ((b3_pkd_color)0xffffff)
-#define B3_GREY   ((b3_pkd_color)0x808080)
-#define B3_BLACK  ((b3_pkd_color)0x000000)
-#define B3_RED    ((b3_pkd_color)0xff0000)
-#define B3_GREEN  ((b3_pkd_color)0x00ff00)
-#define B3_BLUE   ((b3_pkd_color)0x0000ff)
-#define B3_YELLOW ((b3_pkd_color)0xffff00)
+#define B3_WHITE   ((b3_pkd_color)0xffffff)
+#define B3_GREY    ((b3_pkd_color)0x808080)
+#define B3_BLACK   ((b3_pkd_color)0x000000)
+#define B3_RED     ((b3_pkd_color)0xff0000)
+#define B3_GREEN   ((b3_pkd_color)0x00ff00)
+#define B3_BLUE    ((b3_pkd_color)0x0000ff)
+#define B3_YELLOW  ((b3_pkd_color)0xffff00)
+#define B3_MAGENTA ((b3_pkd_color)0xff00ff)
+#define B3_CYAN    ((b3_pkd_color)0x00ffff)
 
 class b3Color
 {
@@ -101,6 +103,7 @@ public:
 	static inline b3_pkd_color b3GetColor(const b3_color *color)
 	{
 		return
+			((b3_pkd_color)(color->a * 255) << 24) |
 			((b3_pkd_color)(color->r * 255) << 16) |
 			((b3_pkd_color)(color->g * 255) <<  8) |
 			 (b3_pkd_color)(color->b * 255);
@@ -119,6 +122,7 @@ public:
 	static inline b3_pkd_color b3GetSatColor(const b3_color *color)
 	{
 		return
+			((b3_pkd_color)(color->a > 1.0 ? 255 : (b3_u08)(color->a * 255)) << 24) |
 			((b3_pkd_color)(color->r > 1.0 ? 255 : (b3_u08)(color->r * 255)) << 16) |
 			((b3_pkd_color)(color->g > 1.0 ? 255 : (b3_u08)(color->g * 255)) <<  8) |
 			 (b3_pkd_color)(color->b > 1.0 ? 255 : (b3_u08)(color->b * 255));
@@ -136,10 +140,10 @@ public:
 
 	static inline b3_color *b3GetColor(b3_color *result,const b3_pkd_color input)
 	{
-		result->a = 0;
-		result->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;
-		result->g = (b3_f64)((input & 0x00ff00) >>  8) * 0.0039215686;
-		result->b = (b3_f64)((input & 0x0000ff))       * 0.0039215686;
+		result->a = (b3_f64)((input & 0xff000000) >> 24) * 0.0039215686;
+		result->r = (b3_f64)((input & 0x00ff0000) >> 16) * 0.0039215686;
+		result->g = (b3_f64)((input & 0x0000ff00) >>  8) * 0.0039215686;
+		result->b = (b3_f64)((input & 0x000000ff))       * 0.0039215686;
 
 		return result;
 	}

@@ -67,26 +67,10 @@ public:
 	// Some inlines :-)
 	static inline void b3ColorToGL(b3_color *src,GLfloat *dst)
 	{
-		dst[0] =       src->r;
-		dst[1] =       src->g;
-		dst[2] =       src->b;
-		dst[3] = 1.0 - src->a;
-	}
-
-	static inline void b3VectorToGL(b3_vector *src,GLfloat *dst)
-	{
-		dst[0] = src->x;
-		dst[1] = src->y;
-		dst[2] = src->z;
-		dst[3] = 1;
-	}
-
-	static inline void b3Vector4dToGL(b3_vector4D *src,GLfloat *dst)
-	{
-		dst[0] = src->x;
-		dst[1] = src->y;
-		dst[2] = src->z;
-		dst[3] = src->w;
+		*dst++ =       src->r;
+		*dst++ =       src->g;
+		*dst++ =       src->b;
+		*dst   = 1.0 - src->a;
 	}
 
 	static inline void b3PkdColorToGL(b3_pkd_color input,GLubyte *buffer)
@@ -94,7 +78,23 @@ public:
 		*buffer++ = (GLubyte)((input & 0x00ff0000) >> 16);
 		*buffer++ = (GLubyte)((input & 0x0000ff00) >>  8);
 		*buffer++ = (GLubyte)((input & 0x000000ff));
-		*buffer++ = (GLubyte)((input & 0xff000000) >> 24) ^ 0xff;
+		*buffer   = (GLubyte)((input & 0xff000000) >> 24) ^ 0xff;
+	}
+
+	static inline void b3VectorToGL(b3_vector *src,GLfloat *dst)
+	{
+		*dst++ = src->x;
+		*dst++ = src->y;
+		*dst++ = src->z;
+		*dst   = 1;
+	}
+
+	static inline void b3Vector4dToGL(b3_vector4D *src,GLfloat *dst)
+	{
+		*dst++ = src->x;
+		*dst++ = src->y;
+		*dst++ = src->z;
+		*dst   = src->w;
 	}
 #endif
 };

@@ -52,10 +52,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/07/22 16:27:45  sm
+**	- Fixed some errors concerning texture stencil
+**
 **	Revision 1.33  2002/04/07 19:51:27  sm
 **	- Added new CB3DocManager to open new
 **	  CB3FileFialog...
-**
+**	
 **	Revision 1.32  2002/04/07 12:59:38  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
@@ -745,7 +748,7 @@ void CAppLinesApp::OnFileOpen()
 
 	// Select filename
 	CB3FileDialog dlg(TRUE,"",NULL,OFN_HIDEREADONLY,filter_bwd + filter_bod + filter_img,m_pMainWnd);
-	if (dlg.DoModal())
+	if (dlg.DoModal() == IDOK)
 	{
 		// and load document
 		filename = dlg.GetPathName();

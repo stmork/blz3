@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2002/07/22 16:27:45  sm
+**      - Fixed some errors concerning texture stencil
+**
 **      Revision 1.36  2002/07/22 12:46:08  sm
 **      - Added Windows Lines III support for textures
 **      - Fixed sphere computation
@@ -661,22 +664,31 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 				b3Vector::b3Init(&polar.polar,       fx,fy);
 
 				color = B3_BLACK;
-				for(material = (b3Material *)b3GetMaterialHead()->First,loop = true;
-				    (material != null) && loop;
-				    material = (b3Material *)material->Succ)
+				for(material  = (b3Material *)b3GetMaterialHead()->First,loop = true;
+				   (material != null) && loop;
+				    material  = (b3Material *)material->Succ)
 				{
 					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
 						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
-						color = b3Color::b3GetColor(&diffuse);
-						loop  = false;
+						color     = b3Color::b3GetColor(&diffuse);
+						loop      = false;
 					}
 				}
+#ifdef _DEBUG
+				b3PrintF(B3LOG_FULL,color > 0xffffff ? "." : "#");
+#endif
 				*lPtr++ = color;
 				fx += fxStep;
 			}
 			fy += fyStep;
+#ifdef _DEBUG
+			b3PrintF(B3LOG_FULL,"\n");
+#endif
 		}
+#ifdef _DEBUG
+		b3PrintF(B3LOG_FULL,"\n");
+#endif
 	}
 	return result;
 }

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2002/07/22 16:27:45  sm
+**      - Fixed some errors concerning texture stencil
+**
 **      Revision 1.31  2002/07/22 12:46:08  sm
 **      - Added Windows Lines III support for textures
 **      - Fixed sphere computation
@@ -961,11 +964,11 @@ void b3RenderObject::b3Draw()
 
 				glBindTexture(  GL_TEXTURE_2D,glTextureId);
 				glEnable(       GL_TEXTURE_2D);
-				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,GL_DECAL);
+				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_DECAL);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
 				glTexImage2D(   GL_TEXTURE_2D,
 					0,GL_RGBA,glTextureSize,glTextureSize,
 					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
