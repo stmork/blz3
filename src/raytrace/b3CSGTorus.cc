@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.2  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -51,11 +54,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3Shape(sizeof(b3CSGTorus), class_type)
+b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGTorus), class_type)
 {
 }
 
-b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3Shape(src)
+b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -87,17 +90,20 @@ void b3CSGTorus::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3_count SinCosSteps = context->b3GetSubdiv();
-
+	SinCosSteps = context->b3GetSubdiv();
+	Cos         = context->b3GetCosTable();
+	Sin         = context->b3GetSinTable();
 	vertCount = (SinCosSteps + 2) * (SinCosSteps + 2);
 }
 
 void b3CSGTorus::b3ComputeVertices()
 {
+	b3ComputeTorusVertices(Base,Dir1,Dir2,Dir3,aRad,bRad);
 }
 
 void b3CSGTorus::b3ComputeIndices()
 {
+	b3ComputeTorusIndices();
 }
 
 void b3CSGTorus::b3Intersect()

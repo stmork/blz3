@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -70,17 +73,27 @@ void b3CSGCone::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3_count SinCosSteps = context->b3GetSubdiv();
+	SinCosSteps = context->b3GetSubdiv();
+	Cos         = context->b3GetCosTable();
+	Sin         = context->b3GetSinTable();
+	vertCount   = SinCosSteps + SinCosSteps + 6;
+}
 
-	vertCount = SinCosSteps + SinCosSteps + 6;
+void b3CSGCone::b3AllocVertices(b3RenderContext *context)
+{
+	b3RenderObject::b3AllocVertices(context);
+	GridsCyl  = context->b3GetCylinderIndices();
+	GridsCone = context->b3GetConeIndices();
 }
 
 void b3CSGCone::b3ComputeVertices()
 {
+	b3ComputeConeVertices(Base,Dir1,Dir2,Dir3);
 }
 
 void b3CSGCone::b3ComputeIndices()
 {
+	b3ComputeConeIndices();
 }
 
 void b3CSGCone::b3Intersect()

@@ -68,11 +68,11 @@ protected:
 	b3_count         GridCount;
 	b3_count         PolyCount;
 #ifdef BLZ3_USE_OPENGL
-	GLfloat         *Vertices;
-	GLfloat         *Normals;
-	GLushort        *Grids;
-	GLushort        *Polygons;
-	b3_bool          Computed;
+	GLfloat         *glVertices;
+	GLfloat         *glNormals;
+	GLushort        *glGrids;
+	GLushort        *glPolygons;
+	b3_bool          glComputed;
 #endif
 
 protected:

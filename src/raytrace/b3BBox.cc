@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.8  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -195,10 +198,10 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	GridCount   = 12;
 	PolyCount   =  0;
 
-	Vertices = vertices;
-	Normals  = null;
-	Grids    = indices;
-	Polygons = null;
+	glVertices = vertices;
+	glNormals  = null;
+	glGrids    = indices;
+	glPolygons = null;
 
 	B3_FOR_BASE(&heads[1],item)
 	{
@@ -219,9 +222,9 @@ void b3BBox::b3FreeVertices()
 	b3BBox         *bbox;
 	b3Shape        *shape;
 
-	Vertices = null;
-	Grids    = null;
-	Polygons = null;
+	glVertices = null;
+	glGrids    = null;
+	glPolygons = null;
 
 	B3_FOR_BASE(&heads[1],item)
 	{
@@ -275,7 +278,7 @@ void b3BBox::b3ComputeVertices()
 	vertices[i++] = Base.y + Size.y;
 	vertices[i++] = Base.z;
 #endif
-	Computed = true;
+	glComputed = true;
 }
 
 

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.2  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -195,11 +198,11 @@ b3RenderObject::b3RenderObject()
 	Between     = null;
 
 #ifdef BLZ3_USE_OPENGL
-	Vertices = null;
-	Normals  = null;
-	Grids    = null;
-	Polygons = null;
-	Computed = false;
+	glVertices = null;
+	glNormals  = null;
+	glGrids    = null;
+	glPolygons = null;
+	glComputed = false;
 #endif
 }
 
@@ -231,59 +234,59 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 	{
 		if (VertexCount > 0)
 		{
-			if (b3Free(Vertices))
+			if (b3Free(glVertices))
 			{
-				Normals = null;
+				glNormals = null;
 			}
-			if (b3Free(Normals))
+			if (b3Free(glNormals))
 			{
-				Normals = null;
+				glNormals = null;
 			}
 		}
 		VertexCount = new_vertCount;
 
 		if (VertexCount > 0)
 		{
-			Vertices =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
-			Normals  =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
+			glVertices =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
+			glNormals  =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
 		}
-		Computed = false;
+		glComputed = false;
 	}
 
 	if (GridCount != new_gridCount)
 	{
 		if (GridCount > 0)
 		{
-			if (b3Free(Grids))
+			if (b3Free(glGrids))
 			{
-				Grids = null;
+				glGrids = null;
 			}
 		}
 		GridCount = new_gridCount;
 
 		if (GridCount > 0)
 		{
-			Grids    = (GLushort *)b3Alloc(GridCount   * 2 * sizeof(GLushort));
+			glGrids    = (GLushort *)b3Alloc(GridCount   * 2 * sizeof(GLushort));
 		}
-		Computed = false;
+		glComputed = false;
 	}
 
 	if (PolyCount != new_polyCount)
 	{
 		if (PolyCount > 0)
 		{
-			if (b3Free(Polygons))
+			if (b3Free(glPolygons))
 			{
-				Polygons = null;
+				glPolygons = null;
 			}
 		}
 		PolyCount = new_polyCount;
 
 		if (PolyCount > 0)
 		{
-			Polygons = (GLushort *)b3Alloc(PolyCount   * 3 * sizeof(GLushort));
+			glPolygons = (GLushort *)b3Alloc(PolyCount   * 3 * sizeof(GLushort));
 		}
-		Computed = false;
+		glComputed = false;
 	}
 #endif
 }
@@ -291,25 +294,25 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 void b3RenderObject::b3FreeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	if (Vertices != null)
+	if (glVertices != null)
 	{
-		b3Free(Vertices);
-		Vertices = null;
+		b3Free(glVertices);
+		glVertices = null;
 	}
-	if (Normals != null)
+	if (glNormals != null)
 	{
-		b3Free(Normals);
-		Normals = null;
+		b3Free(glNormals);
+		glNormals = null;
 	}
-	if (Grids != null)
+	if (glGrids != null)
 	{
-		b3Free(Grids);
-		Grids = null;
+		b3Free(glGrids);
+		glGrids = null;
 	}
-	if (Polygons != null)
+	if (glPolygons != null)
 	{
-		b3Free(Polygons);
-		Polygons = null;
+		b3Free(glPolygons);
+		glPolygons = null;
 	}
 #endif
 	VertexCount = 0;
@@ -341,11 +344,11 @@ b3_count b3RenderObject::b3GetIndexOverhead (
 void b3RenderObject::b3Draw()
 {
 #ifdef BLZ3_USE_OPENGL
-	if (!Computed)
+	if (!glComputed)
 	{
 			b3ComputeIndices();
 			b3ComputeVertices();
-			Computed = true;
+			glComputed = true;
 	}
 
 	if (GridCount > 0)
@@ -362,21 +365,21 @@ void b3RenderObject::b3Draw()
 			b3_index  a,b;
 			b3_f64    len;
 
-			a = Grids[i + i]     * 3;
-			aPoint.x = Vertices[a++];
-			aPoint.y = Vertices[a++];
-			aPoint.z = Vertices[a++];
+			a = glGrids[i + i]     * 3;
+			aPoint.x = glVertices[a++];
+			aPoint.y = glVertices[a++];
+			aPoint.z = glVertices[a++];
 
-			b = Grids[i + i + 1] * 3;
-			bPoint.x = Vertices[b++];
-			bPoint.y = Vertices[b++];
-			bPoint.z = Vertices[b++];
+			b = glGrids[i + i + 1] * 3;
+			bPoint.x = glVertices[b++];
+			bPoint.y = glVertices[b++];
+			bPoint.z = glVertices[b++];
 
 			len = b3Distance(&aPoint,&bPoint);
 		}
 #endif
-		glVertexPointer(3, GL_FLOAT, 0, Vertices);
-		glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,Grids);
+		glVertexPointer(3, GL_FLOAT, 0, glVertices);
+		glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 	}
 #endif
 }

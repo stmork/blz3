@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.2  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -51,11 +54,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3Shape(sizeof(b3CSGSphere), class_type)
+b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGSphere), class_type)
 {
 }
 
-b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3Shape(src)
+b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&Base);
 	b3InitVector(&Dir);
@@ -79,10 +82,12 @@ void b3CSGSphere::b3GetCount(
 
 void b3CSGSphere::b3ComputeVertices()
 {
+	b3ComputeSphereVertices(Base,Dir);
 }
 
 void b3CSGSphere::b3ComputeIndices()
 {
+	b3ComputeEllipsoidIndices();
 }
 
 void b3CSGSphere::b3Intersect()

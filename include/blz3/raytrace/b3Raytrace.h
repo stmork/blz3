@@ -613,8 +613,73 @@ public:
 	virtual void b3Intersect();
 };
 
+class b3RenderShape : public b3Shape
+{
+protected:
+#ifdef BLZ3_USE_OPENGL
+	GLushort *GridsCyl;
+	GLushort *GridsCone;
+#endif
+
+protected:
+	b3RenderShape(b3_size class_size,b3_u32 class_type);
+
+public:
+	B3_ITEM_INIT(b3RenderShape);
+	B3_ITEM_LOAD(b3RenderShape);
+
+protected:
+	// Sphere
+	void b3ComputeSphereVertices(
+		b3_vector &base,
+		b3_vector &dir);
+
+	// Cylinder
+	void b3ComputeCylinderVertices(
+		b3_vector &base,
+		b3_vector &dir1,
+		b3_vector &dir2,
+		b3_vector &dir3);
+	void b3ComputeCylinderIndices();
+
+	// Cone
+	void b3ComputeConeVertices(
+		b3_vector &base,
+		b3_vector &dir1,
+		b3_vector &dir2,
+		b3_vector &dir3);
+	void b3ComputeConeIndices();
+
+	// Ellipsoid
+	void b3ComputeEllipsoidVertices(
+		b3_vector &base,
+		b3_vector &dir1,
+		b3_vector &dir2,
+		b3_vector &dir3);
+	void b3ComputeEllipsoidIndices();
+
+	// Box
+	void b3ComputeBoxVertices(
+		b3_vector &base,
+		b3_vector &dir1,
+		b3_vector &dir2,
+		b3_vector &dir3);
+	void b3ComputeBoxIndices();
+
+	// Torus
+	void b3ComputeTorusVertices(
+		b3_vector &base,
+		b3_vector &dir1,
+		b3_vector &dir2,
+		b3_vector &dir3,
+		b3_f64    aRad,
+		b3_f64    bRad);
+	void b3ComputeTorusIndices();
+};
+
+
 // SPHERE
-class b3Sphere : public b3Shape        // Kugel
+class b3Sphere : public b3RenderShape        // Kugel
 {
 	b3_vector       	 Base;         // Mittelpunkt
 	b3_vector       	 Dir;          // Radius
@@ -677,7 +742,7 @@ public:
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
-class b3Shape3 : public b3Shape
+class b3Shape3 : public b3RenderShape
 {
 protected:
 	b3_vector         Normals[3];       // cross products
@@ -710,11 +775,6 @@ public:
 
 class b3Cone : public b3Shape3
 {
-#ifdef BLZ3_USE_OPENGL
-	GLushort *GridsCyl;
-	GLushort *GridsCone;
-#endif
-
 public:
 	B3_ITEM_INIT(b3Cone);
 	B3_ITEM_LOAD(b3Cone);
@@ -740,18 +800,24 @@ public:
 
 class b3Box : public b3Shape3
 {
+#ifdef BLZ3_USE_OPENGL
+	GLfloat  box_vertices[8 * 3 * 3];
+	GLfloat  box_normals[8 * 3 * 3];
+#endif
+
 public:
 	B3_ITEM_INIT(b3Box);
 	B3_ITEM_LOAD(b3Box);
 
-	void b3AllocateVertices(b3RenderContext *context);
+	void b3AllocVertices(b3RenderContext *context);
+	void b3FreeVertices();
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
 };
 
 // DOUGHNUT, TORUS
-class b3Torus : public b3Shape
+class b3Torus : public b3RenderShape
 {
 protected:
 	b3_vector         Normals[3];       // cross products, unused
@@ -809,14 +875,43 @@ public:
 class b3SplineCurve : public b3Shape
 {
 protected:
-	b3_s32           rSubDiv;          // sub division for rotation
+	b3_line          Axis;                // for rotation shapes
+	b3_spline        Spline;              // spline curve
+	b3_s32           rSubDiv;             // sub division for rotation
 	b3_f32           Knots[B3_MAX_KNOTS]; // one knot vector
-	b3_spline        Spline;           // spline curve
-	b3_line          Axis;             // for rotation shapes
+	b3_vector       *Controls;
+
+protected:
+	b3SplineCurve(b3_size class_size,b3_u32 class_type);
 
 public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
+};
+
+class b3SplineCurveShape : b3SplineCurve
+{
+public:
+	B3_ITEM_INIT(b3SplineCurveShape);
+	B3_ITEM_LOAD(b3SplineCurveShape);
+
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
+};
+
+class b3SplineRotShape : b3SplineCurve
+{
+
+public:
+	B3_ITEM_INIT(b3SplineRotShape);
+	B3_ITEM_LOAD(b3SplineRotShape);
+
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 // SPLINES_AREA, SPLINES_CYL, SPLINES_RING
@@ -908,7 +1003,7 @@ typedef struct
 
 
 // CSG_SPHERE
-class b3CSGSphere : public b3Shape
+class b3CSGSphere : public b3RenderShape
 {
 protected:
 	b3_vector         Base;             // mid of sphere
@@ -929,7 +1024,7 @@ public:
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
-class b3CSGShape3 : public b3Shape
+class b3CSGShape3 : public b3RenderShape
 {
 protected:
 	b3_vector          Normals[3];       // cross products
@@ -959,6 +1054,7 @@ public:
 	B3_ITEM_LOAD(b3CSGCylinder);
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3AllocVertices(b3RenderContext *context);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -972,6 +1068,7 @@ public:
 	B3_ITEM_LOAD(b3CSGCone);
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3AllocVertices(b3RenderContext *context);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -992,18 +1089,24 @@ public:
 
 class b3CSGBox : public b3CSGShape3
 {
+#ifdef BLZ3_USE_OPENGL
+	GLfloat  box_vertices[8 * 3 * 3];
+	GLfloat  box_normals[8 * 3 * 3];
+#endif
 
 public:
 	B3_ITEM_INIT(b3CSGBox);
 	B3_ITEM_LOAD(b3CSGBox);
 
+	void b3AllocVertices(b3RenderContext *context);
+	void b3FreeVertices();
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
 };
 
 // CSG_TORUS
-class b3CSGTorus : public b3Shape
+class b3CSGTorus : public b3RenderShape
 {
 protected:
 	b3_vector          Normals[3];       // cross products, unused

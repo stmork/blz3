@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.4  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -94,7 +97,7 @@ void b3Disk::b3ComputeVertices()
 	b3_index   i;
 	b3_count   iMax;
 
-	Vector = (b3_vector *)Vertices;
+	Vector = (b3_vector *)glVertices;
 	h = Limit.y2;
 	b = Limit.y1;
 
@@ -232,7 +235,7 @@ void b3Disk::b3ComputeIndices()
 	Number += Overhead;
 	if (Limit.y1 > 0) Number += Overhead;
 
-	Grids = Index = (GLushort *)b3RenderObject::b3Alloc
+	glGrids = Index = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 2 * sizeof(GLushort));
 	if (Index == null)
 	{

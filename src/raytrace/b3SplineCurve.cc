@@ -1,12 +1,12 @@
 /*
 **
-**      $Filename:      b3CSGCylinder.cc $
+**      $Filename:      b3SplineCurve.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
 **      $Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Raytracing CSG cylinder
+**      Blizzard III - Raytracing BSpline curve
 **
 **      (C) Copyright 2001  Steffen A. Mork
 **          All Rights Reserved
@@ -31,24 +31,8 @@
 
 /*
 **      $Log$
-**      Revision 1.4  2001/08/10 15:14:36  sm
+**      Revision 1.1  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
-**
-**      Revision 1.3  2001/08/08 20:12:59  sm
-**      - Fixing some makefiles
-**      - introducing check/BlzDump (BlzDump moved from tools)
-**      - Some further line drawing added
-**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
-**        b3RenderObject.
-**
-**      Revision 1.2  2001/08/07 16:54:26  sm
-**      - Checking bounds on condition base for line drawing
-**      - Some object reordering
-**      - Bug fix for Mandel makefile
-**
-**      Revision 1.1  2001/08/06 15:26:00  sm
-**      - Splitted shapes into their own files
-**      - Some preparations for shapde drawing.
 **
 **
 */
@@ -59,42 +43,59 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGCylinder::b3CSGCylinder(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGCylinder),class_type)
+b3SplineCurveShape::b3SplineCurveShape(b3_u32 class_type) :
+	b3SplineCurve(sizeof(b3SplineCurveShape),class_type)
 {
 }
 
-b3CSGCylinder::b3CSGCylinder(b3_u32 *src) : b3CSGShape3(src)
+b3SplineCurveShape::b3SplineCurveShape(b3_u32 *src) : b3SplineCurve(src)
 {
 }
 
-void b3CSGCylinder::b3GetCount(
+void b3SplineCurveShape::b3GetCount(
 	b3RenderContext *context,
 	b3_count        &vertCount,
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	SinCosSteps = context->b3GetSubdiv();
-	Cos         = context->b3GetCosTable();
-	Sin         = context->b3GetSinTable();
-	vertCount   = SinCosSteps + SinCosSteps + 6;
+	vertCount = B3_MAX_SUBDIV + 1;
 }
 
-void b3CSGCylinder::b3AllocVertices(b3RenderContext *context)
+void b3SplineCurveShape::b3ComputeVertices()
 {
-	b3RenderObject::b3AllocVertices(context);
-	glGrids = context->b3GetCylinderIndices();
+	b3DeBoor (&Spline,(b3_vector *)glVertices,0L);
+
+	xSize  = Spline.subdiv;
+	ySize  = 0;
 }
 
-void b3CSGCylinder::b3ComputeVertices()
+void b3SplineCurveShape::b3ComputeIndices()
 {
-	b3ComputeCylinderVertices(Base,Dir1,Dir2,Dir3);
+	GLushort  *Index;
+	b3_count   SubDiv;
+	b3_index   i;
+
+	SubDiv   = Spline.subdiv;
+	Index    = (GLushort *)b3RenderObject::b3Alloc(SubDiv * 2 * sizeof(GLushort));
+	glGrids = Index;
+	if (Index)
+	{
+		for (i = 1;i < SubDiv;i++)
+		{
+			*Index++ = i - 1;
+			*Index++ = i;
+		}
+
+		*Index++ = i - 1;
+		*Index++ = (Spline.closed ? 0 : i);
+		GridCount  = SubDiv;
+	}
+	else
+	{
+		GridCount = 0;
+	}
 }
 
-void b3CSGCylinder::b3ComputeIndices()
-{
-	b3ComputeCylinderIndices();
-}
-
-void b3CSGCylinder::b3Intersect()
+void b3SplineCurveShape::b3Intersect()
 {
 }

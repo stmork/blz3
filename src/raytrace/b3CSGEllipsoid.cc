@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.3  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -70,17 +73,20 @@ void b3CSGEllipsoid::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3_count SinCosSteps = context->b3GetSubdiv();
-
-	vertCount = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
+	SinCosSteps = context->b3GetSubdiv();
+	Cos         = context->b3GetCosTable();
+	Sin         = context->b3GetSinTable();
+	vertCount   = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
 }
 
 void b3CSGEllipsoid::b3ComputeVertices()
 {
+	b3ComputeEllipsoidVertices(Base,Dir1,Dir2,Dir3);
 }
 
 void b3CSGEllipsoid::b3ComputeIndices()
 {
+	b3ComputeEllipsoidIndices();
 }
 
 void b3CSGEllipsoid::b3Intersect()

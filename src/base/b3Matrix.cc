@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/08/10 15:14:36  sm
+**	- Now having all shapes implemented for drawing lines.
+**
 **	Revision 1.6  2001/08/05 19:53:43  sm
 **	- Removing some nasty CR/LF
-**
+**	
 **	Revision 1.5  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -64,29 +67,74 @@ static b3_matrix UnitMatrix =
 
 typedef b3_f32 b3_matrix_array[4][4];
 
-static b3_bool b3NormalizeCol (
+b3_bool b3NormalizeCol (
 	b3_matrix *Matrix,
 	b3_count   col)
 {
 	b3_f32  *column;
 	b3_f64   Denom;
-	b3_index i,index = col << 2;
+	b3_index i,index;
 
-	column  = &Matrix->m11;
-	column += index;
-	Denom   = 0;
+	column = &Matrix->m11;
+
+	Denom  = 0;
+	index  = col;
 	for (i = 0;i < 4;i++)
 	{
-		Denom += (column[i] * column[i]);
+		Denom += (column[index] * column[index]);
+		index += 4;
 	}
 	
-	if (Denom == 0) return (false);
-	Denom = 1 / sqrt(Denom);
+	if (Denom != 0)
+	{
+		Denom = 1.0 / sqrt(Denom);
+		index = col;
+		for (i = 0;i < 4;i++)
+		{
+			column[index] = (b3_f32)(column[index] * Denom);
+			index += 4;
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+b3_bool b3NormalizeRow (
+	b3_matrix *Matrix,
+	b3_count   row)
+{
+	b3_f32  *column;
+	b3_f64   Denom;
+	b3_index i,index;
+
+	column = &Matrix->m11;
+
+	Denom  = 0;
+	index  = row << 2;
 	for (i = 0;i < 4;i++)
 	{
-		column[i] = (b3_f32)(column[i] * Denom);
+		Denom += (column[index] * column[index]);
+		index++;
 	}
-	return true;
+	
+	if (Denom != 0)
+	{
+		Denom = 1.0 / sqrt(Denom);
+		index = row << 2;
+		for (i = 0;i < 4;i++)
+		{
+			column[index] = (b3_f32)(column[index] * Denom);
+			index++;
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 /*************************************************************************

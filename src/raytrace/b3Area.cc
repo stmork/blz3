@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.7  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -100,10 +103,10 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 
 void b3Area::b3AllocVertices(b3RenderContext *context)
 {
-	Vertices = area_vertices;
-	Normals  = area_normals;
-	Grids    = area_grids;
-	Polygons = area_polygons;
+	glVertices = area_vertices;
+	glNormals  = area_normals;
+	glGrids    = area_grids;
+	glPolygons = area_polygons;
 
 	VertexCount = 4;
 	GridCount   = 4;
@@ -112,10 +115,10 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 
 void b3Area::b3FreeVertices()
 {
-	Vertices = null;
-	Normals  = null;
-	Grids    = null;
-	Polygons = null;
+	glVertices = null;
+	glNormals  = null;
+	glGrids    = null;
+	glPolygons = null;
 	b3Shape::b3FreeVertices();
 }
 
@@ -124,7 +127,7 @@ void b3Area::b3ComputeVertices()
 	GLfloat     *Vector;
 	b3_f32       x1,y1,x2,y2;
 
-	Vector = Vertices;
+	Vector = glVertices;
 	x1     = Limit.x1;
 	y1     = Limit.y1;
 	x2     = Limit.x2;

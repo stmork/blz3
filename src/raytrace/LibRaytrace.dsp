@@ -161,11 +161,11 @@ SOURCE=b3Material.cc
 # End Source File
 # Begin Source File
 
-SOURCE=..\base\b3Matrix.cc
+SOURCE=.\b3Render.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Render.cc
+SOURCE=.\b3RenderShape.cc
 # End Source File
 # Begin Source File
 
@@ -185,11 +185,11 @@ SOURCE=.\b3Sphere.cc
 # End Source File
 # Begin Source File
 
-SOURCE=..\base\b3Spline.cc
+SOURCE=.\b3SplineArea.cc
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3SplineArea.cc
+SOURCE=.\b3SplineCurve.cc
 # End Source File
 # Begin Source File
 
@@ -198,6 +198,14 @@ SOURCE=.\b3SplineCylinder.cc
 # Begin Source File
 
 SOURCE=.\b3SplineRing.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplineRot.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3SplineShape.cc
 # End Source File
 # Begin Source File
 
@@ -213,11 +221,23 @@ SOURCE=.\b3TriangleShape.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3FileList.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\b3Main.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3Raytrace.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\b3Types.h
 # End Source File
 # End Group
 # End Target

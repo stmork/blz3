@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.2  2001/08/07 16:54:26  sm
 **      - Checking bounds on condition base for line drawing
 **      - Some object reordering
@@ -57,12 +60,33 @@ b3Box::b3Box(b3_u32 *src) : b3Shape3(src)
 {
 }
 
+void b3Box::b3AllocVertices(b3RenderContext *context)
+{
+	glVertices = box_vertices;
+	glNormals  = box_normals;
+
+	VertexCount = 24;
+	GridCount   = 12;
+	PolyCount   = 12;
+}
+
+void b3Box::b3FreeVertices()
+{
+	glVertices = null;
+	glNormals  = null;
+	glGrids    = null;
+	glPolygons = null;
+	b3Shape::b3FreeVertices();
+}
+
 void b3Box::b3ComputeVertices()
 {
+	b3ComputeBoxVertices(Base,Dir1,Dir2,Dir3);
 }
 
 void b3Box::b3ComputeIndices()
 {
+	b3ComputeBoxIndices();
 }
 
 void b3Box::b3Intersect()

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/10 15:14:37  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.3  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -126,7 +129,7 @@ void b3TriangleShape::b3ComputeVertices()
 	b3_index   i;
 
 	Vertex   = (b3_vertex *)vertices;
-	Vector   = (b3_vector *)Vertices;
+	Vector   = (b3_vector *)glVertices;
 
 	for (i = 0;i < VertexCount;i++)
 	{
@@ -145,7 +148,7 @@ void b3TriangleShape::b3ComputeIndices()
 	b3_vertex   *Vertex;
 	b3_count     i;
 
-	Index    = Grids;
+	Index    = glGrids;
 	Vertex   = vertices;
 	Triangle = triangles;
 	for (i = 0;i < TriaCount;i++)

@@ -105,7 +105,15 @@ SOURCE=.\b3ItemRegisterEntry.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Matrix.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Node.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Spline.cc
 # End Source File
 # Begin Source File
 

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/10 15:14:36  sm
+**      - Now having all shapes implemented for drawing lines.
+**
 **      Revision 1.4  2001/08/09 15:27:34  sm
 **      - Following shapes are newly supported now:
 **        o disk
@@ -96,155 +99,12 @@ void b3Cone::b3AllocVertices(b3RenderContext *context)
 
 void b3Cone::b3ComputeVertices()
 {
-	b3_vector *Vector;
-	b3_f64     sx,sy,b,a,h,start,end;
-	b3_index   i;
-	b3_count   iMax;
-	b3_vector  Bottom;
-
-	Vector   = (b3_vector *)Vertices;
-
-	h        = Limit.y2 - Limit.y1;
-	b        = Limit.y1;
-	Bottom.x = Base.x + b * Dir3.x;
-	Bottom.y = Base.y + b * Dir3.y;
-	Bottom.z = Base.z + b * Dir3.z;
-
-	start  = Limit.x1 * SinCosSteps;
-	end    = Limit.x2 * SinCosSteps;
-	i      = (b3_index)ceil(start);
-	iMax   = (b3_count)floor(end);
-	xSize = 0;
-	ySize = 1;
-
-	if (Limit.y2 < 1)
-	{
-		ySize++;
-		if ((i - start) > Epsilon)
-		{
-			a = Limit.x1 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
-
-			Vector->x = Bottom.x + (1-b) * sx * Dir1.x + (1-b) * sy * Dir2.x;
-			Vector->y = Bottom.y + (1-b) * sx * Dir1.y + (1-b) * sy * Dir2.y;
-			Vector->z = Bottom.z + (1-b) * sx * Dir1.z + (1-b) * sy * Dir2.z;
-			Vector++;
-
-			Vector->x = Bottom.x + (1-h) * sx * Dir1.x + (1-h) * sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + (1-h) * sx * Dir1.y + (1-h) * sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + (1-h) * sx * Dir1.z + (1-h) * sy * Dir2.z + h * Dir3.z;
-			Vector++;
-			xSize++;
-		}
-
-		for (;i <= iMax;i++)
-		{
-			sx = (1-b) * Cos[i % SinCosSteps];
-			sy = (1-b) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-			Vector++;
-
-			sx = (1-h) * Cos[i % SinCosSteps];
-			sy = (1-h) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
-			Vector++;
-			xSize++;
-		}
-
-		if ((end - iMax) > Epsilon)
-		{
-			a  = Limit.x2 * M_PI * 2;
-			sx = cos(a);
-			sy = sin(a);
-
-			Vector->x = Bottom.x + (1-b) * sx * Dir1.x + (1-b) * sy * Dir2.x;
-			Vector->y = Bottom.y + (1-b) * sx * Dir1.y + (1-b) * sy * Dir2.y;
-			Vector->z = Bottom.z + (1-b) * sx * Dir1.z + (1-b) * sy * Dir2.z;
-			Vector++;
-
-			Vector->x = Bottom.x + (1-h) * sx * Dir1.x + (1-h) * sy * Dir2.x + h * Dir3.x;
-			Vector->y = Bottom.y + (1-h) * sx * Dir1.y + (1-h) * sy * Dir2.y + h * Dir3.y;
-			Vector->z = Bottom.z + (1-h) * sx * Dir1.z + (1-h) * sy * Dir2.z + h * Dir3.z;
-
-			xSize++;
-		}
-	}
-	else
-	{
-		Vector->x = Base.x + Dir3.x;
-		Vector->y = Base.y + Dir3.y;
-		Vector->z = Base.z + Dir3.z;
-		Vector++;
-
-		if ((i - start) > Epsilon)
-		{
-			a  = Limit.x1 * M_PI * 2;
-			sx = (1-b) * cos(a);
-			sy = (1-b) * sin(a);
-
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-			Vector++;
-			xSize++;
-		}
-
-		for (;i <= iMax;i++)
-		{
-			sx = (1-b) * Cos[i % SinCosSteps];
-			sy = (1-b) * Sin[i % SinCosSteps];
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-			Vector++;
-			xSize++;
-		}
-
-		if ((end - iMax) > Epsilon)
-		{
-			a  = Limit.x2 * M_PI * 2;
-			sx = (1-b) * cos(a);
-			sy = (1-b) * sin(a);
-
-			Vector->x = Bottom.x + sx * Dir1.x + sy * Dir2.x;
-			Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y;
-			Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z;
-
-			xSize++;
-		}
-	}
+	b3ComputeConeVertices(Base,Dir1,Dir2,Dir3);
 }
 
 void b3Cone::b3ComputeIndices()
 {
-	b3_count Overhead;
-
-	b3ComputeBound(&Limit);
-	Overhead = b3GetIndexOverhead (0.0,0.0);
-	if (Overhead < 0)
-	{
-		GridCount = 1;
-		Overhead  = -Overhead;
-	}
-	else
-	{
-		GridCount = 0;
-	}
-	if (Limit.y2 < 1)
-	{
-		Grids      = GridsCyl;
-		GridCount += Overhead * 3;
-	}
-	else
-	{
-		Grids      = GridsCone;
-		GridCount += Overhead * 2;
-	}
+	b3ComputeConeIndices();
 }
 
 void b3Cone::b3Intersect()
