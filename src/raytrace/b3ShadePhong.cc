@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/05/28 14:39:01  sm
+**	- Changed spacular exponent to integer value inside shader.
+**
 **	Revision 1.30  2004/05/28 14:06:29  sm
 **	- Minor optimizations in shader
-**
+**	
 **	Revision 1.29  2004/05/28 13:15:39  sm
 **	- Major optimizations inside shader. But why is the intel brt3
 **	  5 minutes slower than the unoptimized version?
@@ -204,21 +207,23 @@ void b3ShaderPhong::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
+	// No shadow => surface in light
 	if (Jit->shape == null)
 	{
 		b3_f32 ShapeAngle = b3Vector::b3SMul(&surface->incoming->normal, &Jit->dir);
 
 		if (ShapeAngle >= 0) // test for far side to light
 		{
-			result += (surface->m_Diffuse * light->m_Color * ShapeAngle);
+			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
 
-			if (surface->m_SpecularExp < 100000) // test if surface if rough
+			if (spec_exp < 100000) // test if surface if rough
 			{
 				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
-				b3_f32 factor = b3Math::b3FastPow (lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
+				b3_f32 factor = b3Math::b3FastPow (lambda, spec_exp) * Jit->m_LightFrac;
 
 				surface->m_SpecularSum += (surface->m_Specular * light->m_Color * factor);
 			}
+			result += (surface->m_Diffuse * light->m_Color * ShapeAngle);
 		}
 	}
 }

@@ -60,24 +60,23 @@ public:
 	};
 
 public:
+	//--------  constructors
 	inline b3Color()
 	{
 	}
 
 	inline b3Color(const int init)
 	{
-		for (b3_loop i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 3;i++)
 		{
 			v[i] = init;
 		}
+		v[A] = 0;
 	}
 
-	inline b3Color(const b3_f32 init)
+	inline b3Color(const b3_f32 rgb,const b3_f32 a = 0)
 	{
-		for (b3_loop i = 0;i < 4;i++)
-		{
-			v[i] = init;
-		}
+		b3Init(rgb,a);
 	}
 
 	inline b3Color(
@@ -130,16 +129,7 @@ public:
 		}
 	}
 
-	inline void b3SetAlpha(const b3_f32 alpha)
-	{
-		v[A] = alpha;
-	}
-
-	inline b3_f32 &operator[](const b3_color_index index)
-	{
-		return v[index];
-	}
-
+	//--------- initializers
 	inline void b3Init()
 	{
 		for (b3_loop i = 0;i < 4;i++)
@@ -179,6 +169,17 @@ public:
 		color->b = b;
 		color->a = a;
 		return color;
+	}
+
+	//--------- methods and operators
+	inline void b3SetAlpha(const b3_f32 alpha)
+	{
+		v[A] = alpha;
+	}
+
+	inline b3_f32 &operator[](const b3_color_index index)
+	{
+		return v[index];
 	}
 
 	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f32 mix)
