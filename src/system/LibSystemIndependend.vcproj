@@ -25,8 +25,14 @@
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_LIB;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
+				StringPooling="FALSE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="TRUE"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="TRUE"
+				EnableFunctionLevelLinking="TRUE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibSystemIndependend.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -35,6 +41,7 @@
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="2"/>
 			<Tool
@@ -71,26 +78,32 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_LIB;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
 				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="FALSE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibSystemIndependend.pch"
+				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
 				ObjectFile=".\..\..\Release/"
 				ProgramDataBaseFileName=".\..\..\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="2"/>
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -126,28 +139,36 @@
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="b3CPUBase.cc">
+				RelativePath="b3CPUBase.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Date.cc">
+				RelativePath="b3Date.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Display.cc">
+				RelativePath="b3Display.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Exception.cc">
+				RelativePath="b3Exception.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3LogBase.cc">
+				RelativePath="b3LogBase.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3PluginBase.cc">
+				RelativePath="b3PluginBase.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Row.cc">
+				RelativePath="b3Row.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TimeAbstract.cc">
+				RelativePath="b3TimeAbstract.cc"
+				FileType="0">
 			</File>
 		</Filter>
 		<Filter

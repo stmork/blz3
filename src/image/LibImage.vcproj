@@ -18,26 +18,32 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_LIB;WIN32;_B3_EXPORT"
 				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="FALSE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibImage.pch"
+				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
 				ObjectFile=".\..\..\Release/"
 				ProgramDataBaseFileName=".\..\..\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="2"/>
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -79,8 +85,14 @@
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_LIB;WIN32;_B3_EXPORT"
+				StringPooling="FALSE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="TRUE"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="TRUE"
+				EnableFunctionLevelLinking="TRUE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibImage.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -89,6 +101,7 @@
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="2"/>
 			<Tool
@@ -126,82 +139,108 @@
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="b3Measure.cc">
+				RelativePath="b3Measure.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Sampler.cc">
+				RelativePath="b3Sampler.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Tx.cc">
+				RelativePath="b3Tx.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxBlit.cc">
+				RelativePath="b3TxBlit.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxDeskew.cc">
+				RelativePath="b3TxDeskew.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxEasy.cc">
+				RelativePath="b3TxEasy.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxGIF.cc">
+				RelativePath="b3TxGIF.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxHist.cc">
+				RelativePath="b3TxHist.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxIFF.cc">
+				RelativePath="b3TxIFF.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxImage.cc">
+				RelativePath="b3TxImage.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxIMG.cc">
+				RelativePath="b3TxIMG.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxJPG.cc">
+				RelativePath="b3TxJPG.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxLoadImage.cc">
+				RelativePath="b3TxLoadImage.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxLoadTIFF.cc">
+				RelativePath="b3TxLoadTIFF.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxMirror.cc">
+				RelativePath="b3TxMirror.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxPCX.cc">
+				RelativePath="b3TxPCX.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxPool.cc">
+				RelativePath="b3TxPool.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSaveInfo.cc">
+				RelativePath="b3TxSaveInfo.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSaveJPEG.cc">
+				RelativePath="b3TxSaveJPEG.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSavePS.cc">
+				RelativePath="b3TxSavePS.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSaveRGB8.cc">
+				RelativePath="b3TxSaveRGB8.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSaveTGA.cc">
+				RelativePath="b3TxSaveTGA.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxSaveTIFF.cc">
+				RelativePath="b3TxSaveTIFF.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxScale.cc">
+				RelativePath="b3TxScale.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxTGA.cc">
+				RelativePath="b3TxTGA.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TxTIFF.cc">
+				RelativePath="b3TxTIFF.cc"
+				FileType="0">
 			</File>
 		</Filter>
 		<Filter

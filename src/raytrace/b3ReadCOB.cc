@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/12/28 15:44:35  sm
+**	- Adjusted compiler settings
+**	- Some 64 bit corrections
+**
 **	Revision 1.13  2004/06/18 12:03:12  sm
 **	- Removed default values from some b3Color methods.
-**
+**	
 **	Revision 1.12  2004/06/05 12:00:02  sm
 **	- Some minor optimizations.
 **	
@@ -428,8 +432,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 	b3_vector        pos;
 	b3_matrix        transform;
 	char             line[MAX_LINE];
-	b3_size          len,size,i,index;
-	b3_index         vPos = 0,fPos = 0;
+	b3_size          len,size,i,index,vPos = 0,fPos = 0;
 	b3_count         ver,rev;
 	b3_cob_id        id,parent;
 	b3_count         count,vertices=0,faces=0,polygons=0,k;

@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/12/28 15:44:35  sm
+**	- Adjusted compiler settings
+**	- Some 64 bit corrections
+**
 **	Revision 1.36  2004/12/11 18:39:44  sm
 **	- Fixed modified object problem in Lines when returning
 **	  to scene editor.
-**
+**	
 **	Revision 1.35  2004/11/21 16:44:46  sm
 **	- Corrected fulcrum drawing problem: The fulcrum was
 **	  updated before first initialization. And even the initialization
@@ -622,7 +626,7 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	int         PixelFormatIndex = -1;
 	b3_res      mmWidth,mmHeight;
 	b3_size     limit = CB3GetLinesApp()->m_PrintBufferSize;
-	b3_size     denom;
+	b3_res      denom;
 
 	CScrollView::OnBeginPrinting(pDC, pInfo);
 

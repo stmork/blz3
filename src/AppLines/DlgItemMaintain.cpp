@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/12/28 15:44:35  sm
+**	- Adjusted compiler settings
+**	- Some 64 bit corrections
+**
 **	Revision 1.16  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.
-**
+**	
 **	Revision 1.15  2004/05/18 13:34:50  sm
 **	- Cleaned up water animation
 **	
@@ -177,7 +181,7 @@ void CDlgItemMaintain::b3InitItemList()
 	b3_u32           class_type;
 	b3_count         i;
 	b3_index         img = 0;
-	b3_size          size = 48;
+	int              size = 48;
 	HICON            unknown = AfxGetApp()->LoadIcon(IDI_ITEM_UNKNOWN);
 	LVITEM           listitem;
 

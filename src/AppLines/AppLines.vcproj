@@ -26,15 +26,17 @@
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
+				StringPooling="FALSE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="TRUE"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
+				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/AppLines.pch"
-				AssemblerOutput="1"
+				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Debug/"
 				ObjectFile=".\..\..\Debug/"
 				ProgramDataBaseFileName=".\..\..\Debug/"
@@ -103,24 +105,27 @@
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
-				OptimizeForWindowsApplication="FALSE"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="TRUE"
+				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/AppLines.pch"
+				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
 				ObjectFile=".\..\..\Release/"
 				ProgramDataBaseFileName=".\..\..\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				Detect64BitPortabilityProblems="FALSE"
-				CompileAs="2"/>
+				DebugInformationFormat="3"
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -135,7 +140,7 @@
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\bin\win32_i386/AppLines.map"
 				SubSystem="2"
-				TargetMachine="1"/>
+				TargetMachine="0"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"

@@ -25,8 +25,14 @@
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_LIB;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
+				StringPooling="FALSE"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="TRUE"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="TRUE"
+				EnableFunctionLevelLinking="TRUE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibRaytrace.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -35,6 +41,7 @@
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="2"/>
 			<Tool
@@ -71,26 +78,33 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
+				OptimizeForWindowsApplication="TRUE"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_LIB;BLZ3_USE_OPENGL;WIN32;_B3_EXPORT"
 				StringPooling="TRUE"
+				MinimalRebuild="TRUE"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
+				BufferSecurityCheck="FALSE"
+				EnableFunctionLevelLinking="FALSE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibRaytrace.pch"
+				ExpandAttributedSource="FALSE"
+				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
 				ObjectFile=".\..\..\Release/"
 				ProgramDataBaseFileName=".\..\..\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="2"/>
+				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -126,13 +140,16 @@
 			Name="Source Files"
 			Filter="cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="b3Animation.cc">
+				RelativePath="b3Animation.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3AnimElement.cc">
+				RelativePath="b3AnimElement.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Area.cc">
+				RelativePath="b3Area.cc"
+				FileType="0">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
@@ -142,154 +159,204 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="b3BBox.cc">
+				RelativePath="b3BBox.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Box.cc">
+				RelativePath="b3Box.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Bump.cc">
+				RelativePath="b3Bump.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3BumpSampler.cc">
+				RelativePath="b3BumpSampler.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Condition.cc">
+				RelativePath="b3Condition.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Cone.cc">
+				RelativePath="b3Cone.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGBox.cc">
+				RelativePath="b3CSGBox.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGCone.cc">
+				RelativePath="b3CSGCone.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGCylinder.cc">
+				RelativePath="b3CSGCylinder.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGEllipsoid.cc">
+				RelativePath="b3CSGEllipsoid.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGShape.cc">
+				RelativePath="b3CSGShape.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGSphere.cc">
+				RelativePath="b3CSGSphere.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3CSGTorus.cc">
+				RelativePath="b3CSGTorus.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Cylinder.cc">
+				RelativePath="b3Cylinder.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Disk.cc">
+				RelativePath="b3Disk.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Ellipsoid.cc">
+				RelativePath="b3Ellipsoid.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Init.cc">
+				RelativePath="b3Init.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Intersect.cc">
+				RelativePath="b3Intersect.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Light.cc">
+				RelativePath="b3Light.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Material.cc">
+				RelativePath="b3Material.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3MaterialSampler.cc">
+				RelativePath="b3MaterialSampler.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Normal.cc">
+				RelativePath="b3Normal.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3NormalDeriv.cc">
+				RelativePath="b3NormalDeriv.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3PickInfo.cc">
+				RelativePath="b3PickInfo.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3PrepareInfo.cc">
+				RelativePath="b3PrepareInfo.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3RayRow.cc">
+				RelativePath="b3RayRow.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Raytrace.cc">
+				RelativePath="b3Raytrace.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3ReadCOB.cc">
+				RelativePath="b3ReadCOB.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3ReadTGF.cc">
+				RelativePath="b3ReadTGF.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3RenderLight.cc">
+				RelativePath="b3RenderLight.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3RenderShape.cc">
+				RelativePath="b3RenderShape.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3RenderView.cc">
+				RelativePath="b3RenderView.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Scaling.cc">
+				RelativePath="b3Scaling.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Scene.cc">
+				RelativePath="b3Scene.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SceneBBoxTraversal.cc">
+				RelativePath="b3SceneBBoxTraversal.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Shade.cc">
+				RelativePath="b3Shade.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3ShadeMork.cc">
+				RelativePath="b3ShadeMork.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3ShadeMork2.cc">
+				RelativePath="b3ShadeMork2.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3ShadePhong.cc">
+				RelativePath="b3ShadePhong.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Shape.cc">
+				RelativePath="b3Shape.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Special.cc">
+				RelativePath="b3Special.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Sphere.cc">
+				RelativePath="b3Sphere.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SplineArea.cc">
+				RelativePath="b3SplineArea.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SplineCylinder.cc">
+				RelativePath="b3SplineCylinder.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SplineRing.cc">
+				RelativePath="b3SplineRing.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SplineRot.cc">
+				RelativePath="b3SplineRot.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3SplineShape.cc">
+				RelativePath="b3SplineShape.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Torus.cc">
+				RelativePath="b3Torus.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Triangles.cc">
+				RelativePath="b3Triangles.cc"
+				FileType="0">
 			</File>
 			<File
-				RelativePath="b3TriangleShape.cc">
+				RelativePath="b3TriangleShape.cc"
+				FileType="0">
 			</File>
 		</Filter>
 		<Filter

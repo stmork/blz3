@@ -66,7 +66,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibTIFF", "src\Btiff\LibTIF
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Lines III", "Installer\Lines III\Lines III.vdproj", "{98CE390B-C373-408D-8C1D-82384A013131}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Blizzard III", "Installer\Lines III\Lines III.vdproj", "{98CE390B-C373-408D-8C1D-82384A013131}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
