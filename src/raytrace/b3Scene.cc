@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/07/25 13:22:32  sm
+**	- Introducing spot light
+**	- Optimized light settings when drawing
+**	- Further try of stencil maps
+**
 **	Revision 1.35  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
 **	  Windows now...
-**
+**	
 **	Revision 1.34  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
@@ -601,6 +606,25 @@ b3BBox *b3Scene::b3GetFirstBBox()
 	return (b3BBox *)b3GetBBoxHead()->First;
 }
 
+b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
+{
+	b3_index i,max = 20;
+	b3_f64   p     = 0,angle;
+	b3_bool  loop  = true;
+
+	if (light->m_SpotActive)
+	{
+		for (i = 0;(i < max) && loop;i++)
+		{
+			angle = (double)i / (double)max;
+			loop  = light->b3GetSpotFactor(angle) > 0.25;
+		}
+		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
+		b3PrintF(B3LOG_FULL,"Spot exponent: %3.2f at lambda: %2.2f\n",
+			p,angle);
+	}
+	return 0;
+}
 void b3Scene::b3SetLights(b3RenderContext *context)
 {
 	b3Item   *item;
@@ -620,6 +644,8 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 			// Use the same color for diffuse and specular
 			context->b3LightAdd(
 				&light->m_Position,
+				light->m_SpotActive ? &light->m_Direction : null,
+				b3ComputeSpotExponent(light),
 				&light->m_Color,
 				&ambient,
 				&light->m_Color);

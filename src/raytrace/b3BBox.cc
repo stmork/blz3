@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2002/07/25 13:22:32  sm
+**	- Introducing spot light
+**	- Optimized light settings when drawing
+**	- Further try of stencil maps
+**
 **	Revision 1.54  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
 **	  Windows now...
-**
+**	
 **	Revision 1.53  2002/03/13 19:01:59  sm
 **	- Fixed some GCC warnings.
 **	
@@ -798,11 +803,13 @@ void b3Scene::b3Draw()
 	b3Item *item;
 	b3BBox *bbox;
 
+	b3PrintT("OpenGL - Drawing start");
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
 	}
+	b3PrintT("OpenGL - Drawing end");
 }
 
 void b3Scene::b3AllocVertices(b3RenderContext *context)

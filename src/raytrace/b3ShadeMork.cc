@@ -25,6 +25,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Aux.h"
+#include <math.h>
 
 /*************************************************************************
 **                                                                      **
@@ -34,11 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2002/07/25 13:22:32  sm
+**	- Introducing spot light
+**	- Optimized light settings when drawing
+**	- Further try of stencil maps
+**
 **	Revision 1.13  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
 **	  Windows now...
-**
+**	
 **	Revision 1.12  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -430,11 +436,11 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 	b3_color  ambient;
 	b3_color  diffuse;
 	b3_color  black;
+	b3_count  count = 0;
 
 	b3Color::b3Init(&black,0,0,0);
 	b3Color::b3Init(&ambient,m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
 
-	context->b3SetAmbient(&ambient);
 	B3_FOR_BASE(b3GetLightHead(),item)
 	{
 		light = (b3Light *)item;
@@ -442,11 +448,21 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 		{
 			// Use the same color for diffuse and specular
 			b3Color::b3Scale(&light->m_Color,0.5,&diffuse);
-			context->b3LightAdd(
+			if (context->b3LightAdd(
 				&light->m_Position,
+				light->m_SpotActive ? &light->m_Direction : null,
+				b3ComputeSpotExponent(light),
 				&diffuse,
 				&black,
-				&diffuse);
+				&diffuse))
+			{
+				count++;
+			}
 		}
+	}
+	if (count > 0)
+	{
+		b3Color::b3Scale(&ambient,1.0 / (double)count);
+		context->b3SetAmbient(&ambient);
 	}
 }

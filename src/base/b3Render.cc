@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2002/07/25 13:22:32  sm
+**      - Introducing spot light
+**      - Optimized light settings when drawing
+**      - Further try of stencil maps
+**
 **      Revision 1.34  2002/07/23 07:04:05  sm
 **      - Added torus support
 **      - Precompute surface colors. So we don't need to collect
@@ -263,10 +268,12 @@ void b3RenderContext::b3Init()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_AUTO_NORMAL);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	// Enable light
 	b3LightReset();
-	b3LightSet(&light0_position);
+	b3LightSet(&light0_position,null,1.0);
 
 	// Some material settings
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -309,8 +316,10 @@ void b3RenderContext::b3LightNum(b3_index num)
 	}
 }
 
-void b3RenderContext::b3LightAdd(
+b3_bool b3RenderContext::b3LightAdd(
 	b3_vector *b3_position,
+	b3_vector *b3_direction,
+	b3_f64     spot_exp,
 	b3_color  *b3_diffuse,
 	b3_color  *b3_ambient,
 	b3_color  *b3_specular)
@@ -318,22 +327,31 @@ void b3RenderContext::b3LightAdd(
 #ifdef _DEBUG
 	b3PrintF(B3LOG_DEBUG,"b3LightAdd(%d)\n",glLightNum);
 #endif
+	b3_bool result = false;
 
 	if (VALIDATE_LIGHT_NUM(glLightNum))
 	{
-		b3LightSet(b3_position,b3_diffuse,b3_ambient,b3_specular,glLightNum++);
+		result = b3LightSet(
+			b3_position,b3_direction,
+			spot_exp,
+			b3_diffuse,b3_ambient,b3_specular,glLightNum++);
 	}
+	return result;
 }
 
-void b3RenderContext::b3LightSet(
+b3_bool b3RenderContext::b3LightSet(
 	b3_vector *b3_position,
+	b3_vector *b3_direction,
+	b3_f64     spot_exp,
 	b3_color  *b3_diffuse,
 	b3_color  *b3_ambient,
 	b3_color  *b3_specular,
 	b3_index   num)
 {
+	b3_bool result = false;
 #ifdef BLZ3_USE_OPENGL
 	GLfloat gl_position[4];
+	GLfloat gl_direction[4];
 	GLfloat gl_ambient[4];
 	GLfloat gl_diffuse[4];
 	GLfloat gl_specular[4];
@@ -365,12 +383,27 @@ void b3RenderContext::b3LightSet(
 		glLightfv(light,GL_SPECULAR,gl_specular);
 		glLightfv(light,GL_POSITION,gl_position);
 
+		if (b3_direction != null)
+		{
+			b3VectorToGL(b3_direction,gl_direction);
+			glLightfv(light,GL_SPOT_DIRECTION,gl_direction);
+			glLightf (light,GL_SPOT_EXPONENT, spot_exp);
+			glLightf (light,GL_SPOT_CUTOFF,   90.0);
+		}
+		else
+		{
+			glLightf (light,GL_SPOT_EXPONENT,   0.0);
+			glLightf (light,GL_SPOT_CUTOFF,   180.0);
+		}
+
 		// Influence on ambient light
 		glLightf (light,GL_CONSTANT_ATTENUATION,  1.0);
 		glLightf (light,GL_LINEAR_ATTENUATION,    0.0);
 		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
+		result = true;
 	}
 #endif
+	return result;
 }
 
 void b3RenderContext::b3SetBGColor(b3_color *color)
@@ -871,6 +904,22 @@ void b3RenderObject::b3UpdateMaterial()
 
 	if (glTextureSize > 0)
 	{
+		GLfloat blend[4];
+
+		// Set texture parameter
+		b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
+		glBindTexture(  GL_TEXTURE_2D,glTextureId);
+		glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
+		glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
+		glTexImage2D(   GL_TEXTURE_2D,
+			0,GL_RGBA,glTextureSize,glTextureSize,
+			0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
+
+		// Set material parameter
 		b3RenderContext::b3PkdColorToGL(B3_WHITE,glAmbient);
 		b3RenderContext::b3PkdColorToGL(B3_WHITE,glDiffuse);
 		b3RenderContext::b3PkdColorToGL(B3_WHITE,glSpecular);
@@ -1012,15 +1061,6 @@ void b3RenderObject::b3Draw()
 				B3_ASSERT(glIsTexture(glTextureId));
 				glBindTexture(  GL_TEXTURE_2D,glTextureId);
 				glEnable(       GL_TEXTURE_2D);
-
-				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_DECAL);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
-				glTexImage2D(   GL_TEXTURE_2D,
-					0,GL_RGBA,glTextureSize,glTextureSize,
-					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
 
 				// Set repitition of chess fields by scaling texture
 				// coordinates.

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2002/07/25 13:22:32  sm
+**      - Introducing spot light
+**      - Optimized light settings when drawing
+**      - Further try of stencil maps
+**
 **      Revision 1.41  2002/07/23 07:04:05  sm
 **      - Added torus support
 **      - Precompute surface colors. So we don't need to collect
@@ -712,7 +717,7 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 				{
 					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
-#if 1
+#if 0
 						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
 						color     = b3Color::b3GetColor(&diffuse);
 #else

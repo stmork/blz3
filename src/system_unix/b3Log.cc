@@ -24,7 +24,7 @@
 *************************************************************************/
 
 #include <stdio.h>
-#include <sys/timeb.h>
+#include <sys/time.h>
 #include <time.h>
 #include <stdarg.h>
 
@@ -41,9 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/07/25 13:22:32  sm
+**	- Introducing spot light
+**	- Optimized light settings when drawing
+**	- Further try of stencil maps
+**
 **	Revision 1.5  2002/03/13 19:01:59  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.4  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
@@ -123,8 +128,11 @@ void b3PrintT(const char *comment)
 	b3PrintF (B3LOG_FULL,"                      timecode %ld - %3hd (%s)\n",
 		timebuffer.time,timebuffer.millitm,comment ? comment : "-");
 */
+	struct timeval stamp;
+
+	gettimeofday(&stamp,0);
 	b3PrintF (B3LOG_FULL,"                      timecode %ld - %3hd (%s)\n",
-		0,0,comment ? comment : "-");
+		stamp.tv_sec,stamp.tv_usec / 1000,comment ? comment : "-");
 }
 
 /* MPrintF() has got the same proto types as printf(). This routine */

@@ -1804,6 +1804,21 @@ public:
 	b3_bool  b3IsActive();
 	char    *b3GetName();
 
+	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
+	{
+		if (m_SpotActive)
+		{
+			b3_vector point;
+
+			m_Spline.b3DeBoorOpened(&point,0,angle);
+			return point.y;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+
 private:
 	void         b3Init();
 	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface);
@@ -2344,6 +2359,7 @@ public:
 
 protected:
 		    b3_bool         b3ComputeOutputRays(b3_ray_fork *surface);
+		    b3_f64          b3ComputeSpotExponent(b3Light *light);
 		    void            b3GetInfiniteColor(b3_ray_info *ray);
 
 private:

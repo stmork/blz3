@@ -72,15 +72,16 @@ public:
 #endif
 };
 
-#define B3_WHITE   ((b3_pkd_color)0xffffff)
-#define B3_GREY    ((b3_pkd_color)0x808080)
-#define B3_BLACK   ((b3_pkd_color)0x000000)
-#define B3_RED     ((b3_pkd_color)0xff0000)
-#define B3_GREEN   ((b3_pkd_color)0x00ff00)
-#define B3_BLUE    ((b3_pkd_color)0x0000ff)
-#define B3_YELLOW  ((b3_pkd_color)0xffff00)
-#define B3_MAGENTA ((b3_pkd_color)0xff00ff)
-#define B3_CYAN    ((b3_pkd_color)0x00ffff)
+#define B3_WHITE       ((b3_pkd_color)0x00ffffff)
+#define B3_GREY        ((b3_pkd_color)0x00808080)
+#define B3_BLACK       ((b3_pkd_color)0x00000000)
+#define B3_RED         ((b3_pkd_color)0x00ff0000)
+#define B3_GREEN       ((b3_pkd_color)0x0000ff00)
+#define B3_BLUE        ((b3_pkd_color)0x000000ff)
+#define B3_YELLOW      ((b3_pkd_color)0x00ffff00)
+#define B3_MAGENTA     ((b3_pkd_color)0x00ff00ff)
+#define B3_CYAN        ((b3_pkd_color)0x0000ffff)
+#define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
 
 class b3Color
 {

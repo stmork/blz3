@@ -57,8 +57,8 @@ public:
 	static  void     b3SetAmbient(b3_color *ambient);
 	static  void     b3LightReset();
 			void     b3LightNum(b3_index light_num = 0);
-	static  void     b3LightSet(b3_vector *pos,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null,b3_index light_num = 0);
-			void     b3LightAdd(b3_vector *pos,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null);
+	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null,b3_index light_num = 0);
+			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
 	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
