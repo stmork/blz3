@@ -16,6 +16,7 @@
 #define IDR_TOOLBAR_LIGHT               120
 #define IDR_TOOLBAR_OBJECT              121
 #define IDR_TOOLBAR_VIEW                122
+#define IDD_OBJECT_REPLACE              124
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -97,6 +98,7 @@
 #define IDD_SUPER_SAMPLE                667
 #define IDD_TORUS                       668
 #define IDD_UNDO_REDO                   669
+#define IDD_OBJECT_LOAD                 670
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -685,8 +687,12 @@
 #define IDC_SPIN_WIND_FREQ              32402
 #define IDC_RES                         32402
 #define IDC_SPIN_WIND_MIN               32403
+#define IDC_OBJ_REPLACE                 32403
 #define IDC_SPIN_KM                     32404
+#define IDC_TRANSFORM_DELETE            32404
 #define IDC_SPIN_SCALE_TIME             32405
+#define IDC_OBJ_KEEP                    32405
+#define IDC_OBJ_RESET                   32406
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -901,9 +907,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        124
+#define _APS_NEXT_RESOURCE_VALUE        125
 #define _APS_NEXT_COMMAND_VALUE         10122
-#define _APS_NEXT_CONTROL_VALUE         32403
+#define _APS_NEXT_CONTROL_VALUE         32407
 #define _APS_NEXT_SYMED_VALUE           60207
 #endif
 #endif

@@ -21,13 +21,14 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3UndoObject.h"
-#include "DlgHierarchy.h"
 #include "MainFrm.h"
+#include "blz3/system/b3File.h"
+#include "DlgHierarchy.h"
 #include "DlgCreateItem.h"
 #include "DlgObjectCopy.h"
+#include "DlgObjectTransformMode.h"
+#include "b3UndoObject.h"
 #include "b3SelectObject.h"
-#include "blz3/system/b3File.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,10 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/17 13:00:33  sm
+**	- Fixed inverse/reverse handling of object editing.
+**	- Added diverse handling vor object loading/replacing.
+**
 **	Revision 1.8  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -210,8 +215,14 @@ b3OpObjectFile::b3OpObjectFile(
 
 			if(m_World.b3Read(&file) == B3_WORLD_OK)
 			{
+				b3Base<b3Item> *depot = m_World.b3GetHead();
+				b3Base<b3Item>  base;
+			
 				m_BBox  = (b3BBox *)m_World.b3GetFirst();
-				m_Level = m_BBox->b3GetClassType() & 0xffff;
+				m_Level = m_BBox->b3GetType();
+				base.b3InitBase(depot->b3GetClass());
+				b3BBox::b3Reorg(depot,&base,m_Level,1);
+
 				b3Initialize();
 				m_PrepareGeometry         = true;
 				m_PrepareChangedStructure = false;
@@ -242,6 +253,22 @@ b3OpObjectLoad::b3OpObjectLoad(
 	b3Scene       *scene,
 	CDlgHierarchy *hierarchy) : b3OpObjectFile(scene,hierarchy,B3_OBJECT_LOAD_REGITEM)
 {
+	if (b3IsInitialized())
+	{
+		b3_object_transform_mode mode = CDlgObjectTransformLoad::b3Dialog();
+
+		switch(mode)
+		{
+		case OBJECT_TRANSFORM_DELETE:
+			m_BBox->b3ResetTransformation();
+			break;
+
+		case OBJECT_TRANSFORM_RESET:
+			m_BBox->b3Inverse(null);
+			break;
+		}
+		b3Initialize(mode != OBJECT_TRANSFORM_CANCEL);
+	}
 }
 
 void b3OpObjectLoad::b3Delete()
@@ -254,7 +281,7 @@ void b3OpObjectLoad::b3Delete()
 
 void b3OpObjectLoad::b3Do()
 {
-	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_Selected);
+	m_Base->b3Insert(m_Selected,m_BBox);
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 	m_Scene->b3BacktraceRecompute(m_BBox);
 	m_DlgHierarchy->b3SelectItem(m_BBox);
@@ -285,6 +312,27 @@ b3OpObjectReplace::b3OpObjectReplace(
 	b3Scene       *scene,
 	CDlgHierarchy *hierarchy) : b3OpObjectFile(scene,hierarchy,B3_OBJECT_REPLACE_REGITEM)
 {
+	if (b3IsInitialized())
+	{
+		b3_object_transform_mode mode = CDlgObjectTransformReplace::b3Dialog();
+
+		switch(mode)
+		{
+		case OBJECT_TRANSFORM_USE_OLD:
+			m_BBox->b3Inverse(null);
+			m_BBox->b3Transform(&m_Selected->m_Matrix, true, true);
+			break;
+
+		case OBJECT_TRANSFORM_DELETE:
+			m_BBox->b3ResetTransformation();
+			break;
+
+		case OBJECT_TRANSFORM_RESET:
+			m_BBox->b3Inverse(null);
+			break;
+		}
+		b3Initialize(mode != OBJECT_TRANSFORM_CANCEL);
+	}
 }
 
 void b3OpObjectReplace::b3Delete()
@@ -305,7 +353,7 @@ void b3OpObjectReplace::b3Delete()
 
 void b3OpObjectReplace::b3Do()
 {
-	b3BBox::b3Reorg(m_World.b3GetHead(),m_Base,m_Level,1,m_Selected);
+	m_Base->b3Insert(m_Selected,m_BBox);
 	m_Base->b3Remove(m_Selected);
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 	m_Scene->b3BacktraceRecompute(m_BBox);

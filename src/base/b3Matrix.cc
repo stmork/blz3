@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/05/17 13:00:33  sm
+**	- Fixed inverse/reverse handling of object editing.
+**	- Added diverse handling vor object loading/replacing.
+**
 **	Revision 1.27  2003/03/20 21:04:58  sm
 **	- Made some triangle intersection optimizations.
-**
+**	
 **	Revision 1.26  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -943,4 +947,17 @@ b3_matrix * b3Matrix::b3Dress (
 	// "undo" from transformation, "do" to transformation
 	b3MMul (prev,&lookTo,transform);
 	return transform;
+}
+b3_matrix *b3Matrix::b3Dump(b3_matrix *m,const char *title)
+{
+	b3PrintF(B3LOG_FULL,"%s (m=%p)\n",title != null ? title : "b3Matrix::b3Dump",m);
+
+	if (m != null)
+	{
+		b3PrintF(B3LOG_FULL,"%3.3f %3.3f %3.3f %3.3f\n",m->m11,m->m12,m->m13,m->m14);
+		b3PrintF(B3LOG_FULL,"%3.3f %3.3f %3.3f %3.3f\n",m->m21,m->m22,m->m23,m->m24);
+		b3PrintF(B3LOG_FULL,"%3.3f %3.3f %3.3f %3.3f\n",m->m31,m->m32,m->m33,m->m34);
+		b3PrintF(B3LOG_FULL,"%3.3f %3.3f %3.3f %3.3f\n",m->m41,m->m42,m->m43,m->m44);
+	}
+	return m;
 }

@@ -2845,6 +2845,38 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,305,165,50,14
 END
 
+IDD_OBJECT_REPLACE DIALOG DISCARDABLE  0, 0, 177, 90
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Transformationshistorie"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "des geladenen Objektes",IDC_OBJ_KEEP,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,10,5,93,10
+    CONTROL         "löschen",IDC_TRANSFORM_DELETE,"Button",
+                    BS_AUTORADIOBUTTON,10,20,41,10
+    CONTROL         "des geladenen Objektes rückgängig machen",IDC_OBJ_RESET,
+                    "Button",BS_AUTORADIOBUTTON,10,35,157,10
+    CONTROL         "des alten Objektes",IDC_OBJ_REPLACE,"Button",
+                    BS_AUTORADIOBUTTON,10,50,75,10
+    DEFPUSHBUTTON   "Ersetzen",IDOK,10,65,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,115,65,50,14
+END
+
+IDD_OBJECT_LOAD DIALOG DISCARDABLE  0, 0, 177, 76
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Transformationshistorie"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "des geladenen Objektes",IDC_OBJ_KEEP,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,10,5,93,10
+    CONTROL         "löschen",IDC_TRANSFORM_DELETE,"Button",
+                    BS_AUTORADIOBUTTON,10,20,41,10
+    CONTROL         "des geladenen Objektes rückgängig machen",IDC_OBJ_RESET,
+                    "Button",BS_AUTORADIOBUTTON,10,35,157,10
+    DEFPUSHBUTTON   "Laden",IDOK,10,50,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,115,50,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -3426,6 +3458,22 @@ BEGIN
         RIGHTMARGIN, 360
         TOPMARGIN, 7
         BOTTOMMARGIN, 184
+    END
+
+    IDD_OBJECT_REPLACE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 170
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_OBJECT_LOAD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 170
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 69
     END
 END
 #endif    // APSTUDIO_INVOKED

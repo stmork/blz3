@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.77  2004/05/17 13:00:33  sm
+**	- Fixed inverse/reverse handling of object editing.
+**	- Added diverse handling vor object loading/replacing.
+**
 **	Revision 1.76  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3
-**
+**	
 **	Revision 1.75  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -1036,7 +1040,7 @@ b3_bool CAppLinesApp::b3WriteBBox(b3BBox *bbox,b3FileAbstract *file)
 
 	world.m_AutoDelete = false;
 	world.b3SetFirst(bbox);
-	return (world.b3Write(file) == B3_WORLD_OK);
+	return world.b3Write(file) == B3_WORLD_OK;
 }
 
 /*************************************************************************

@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.90  2004/05/17 13:00:33  sm
+**	- Fixed inverse/reverse handling of object editing.
+**	- Added diverse handling vor object loading/replacing.
+**
 **	Revision 1.89  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
 **	  editor (= transformed history) and object editor
 **	  (= original form)
-**
+**	
 **	Revision 1.88  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -656,7 +660,7 @@ void b3BBox::b3Reorg(
 
 	while ((bbox = (b3BBox *)depot->First) != null)
 	{
-		new_level = bbox->b3GetClassType() & 0xffff;
+		new_level = bbox->b3GetType();
 		if (new_level < level)
 		{
 			return;
@@ -692,17 +696,19 @@ void b3BBox::b3Recount(b3Base<b3Item> *base,b3_count level)
 void b3Scene::b3Reorg()
 {
 	b3Base<b3Item>  depot;
+	b3Base<b3Item> *base;
 	b3Link<b3Item> *first;
 	b3_count        level;
 
-	depot = *b3GetBBoxHead();
-	b3GetBBoxHead()->b3InitBase(CLASS_BBOX);
+	base  =  b3GetBBoxHead();
+	depot = *base;
+	base->b3InitBase(CLASS_BBOX);
 	if ((first = depot.First) != null)
 	{
-		level = first->b3GetClassType() & 0xffff;
-		b3BBox::b3Reorg(&depot,b3GetBBoxHead(),level,1);
+		level = first->b3GetType();
+		b3BBox::b3Reorg(&depot,base,level,1);
 	}
-	b3BBox::b3Recount(b3GetBBoxHead());
+	b3BBox::b3Recount(base);
 }
 
 void b3BBox::b3AllocVertices(b3RenderContext *context)
@@ -967,6 +973,11 @@ b3_bool b3BBox::b3Inverse(b3_matrix *original)
 	b3_matrix inverse;
 	b3_bool   success;
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"--- b3BBox::b3Inverse() ---\n");
+	b3Matrix::b3Dump(&m_Matrix, "original");
+#endif
+
 	success = b3Matrix::b3Inverse(&m_Matrix,&inverse) != null;
 	if (success)
 	{
@@ -978,9 +989,14 @@ b3_bool b3BBox::b3Inverse(b3_matrix *original)
 
 		// This is not necessary but it removes
 		// round errors.
-        b3Matrix::b3Unit(&m_Matrix);
-		b3Matrix::b3Unit(&m_Inverse);
+		b3ResetTransformation();
 	}
+
+#ifdef _DEBUG
+	b3Matrix::b3Dump(&m_Matrix, "b3BBox::m_Matrix");
+	b3Matrix::b3Dump(&m_Inverse,"b3BBox::m_Inverse");
+#endif
+
 	return success;
 }
 
@@ -991,9 +1007,16 @@ b3_bool b3BBox::b3Reverse(b3_matrix *original)
 	success = b3Matrix::b3Inverse(original,&m_Inverse) != null;
 	if (success)
 	{
-		m_Matrix = *original;
-		b3Transform(&m_Matrix,true,true);
+		b3Transform(original,true,true);
 	}
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"--- b3BBox::b3Reverse() ---\n");
+	b3Matrix::b3Dump(original, "original");
+	b3Matrix::b3Dump(&m_Matrix, "b3BBox::m_Matrix");
+	b3Matrix::b3Dump(&m_Inverse,"b3BBox::m_Inverse");
+#endif
+	
 	return success;
 }
 
