@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.66  2004/04/11 19:04:21  sm
+**      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
+**
 **      Revision 1.65  2004/04/11 18:21:36  sm
 **      - Raytracer redesign:
 **        o The complete set of surface values moved into
@@ -715,7 +718,7 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
-					if (material->b3GetColors(&ray,&surface))
+					if (material->b3GetSurfaceValues(&ray,&surface))
 					{
 						surface.m_Diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
 						color     = surface.m_Diffuse;

@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/11 19:04:21  sm
+**	- Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
+**
 **	Revision 1.3  2004/04/11 18:21:36  sm
 **	- Raytracer redesign:
 **	  o The complete set of surface values moved into
 **	    the b3_surface data structure when calling b3GetColors()
-**
+**	
 **	Revision 1.2  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -126,7 +129,7 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
 			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
 			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
-			material->b3GetColors(&ray,&surface);
+			material->b3GetSurfaceValues(&ray,&surface);
 
 			*data++ = surface.m_Diffuse;
 		}

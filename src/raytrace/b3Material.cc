@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2004/04/11 19:04:20  sm
+**      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
+**
 **      Revision 1.56  2004/04/11 18:21:36  sm
 **      - Raytracer redesign:
 **        o The complete set of surface values moved into
@@ -309,7 +312,7 @@ b3_bool b3Material::b3Prepare()
 	return true;
 }
 
-b3_bool b3Material::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3Material::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	surface->m_Reflection  =      0.0;
 	surface->m_Refraction  =      0.0;
@@ -373,7 +376,7 @@ void b3MatNormal::b3Write()
 	b3StoreInt  (m_Flags);
 }
 
-b3_bool b3MatNormal::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatNormal::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	surface->m_Diffuse  = m_DiffColor;
 	surface->m_Ambient  = m_AmbColor;
@@ -457,7 +460,7 @@ void b3MatChess::b3Write()
 
 #define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
 
-b3_bool b3MatChess::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatChess::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_index index;
 
@@ -546,7 +549,7 @@ void b3MatTexture::b3SetTexture(const char *name)
 	m_Name.b3Format("%s",name);
 }
 
-b3_bool b3MatTexture::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy;
@@ -625,7 +628,7 @@ b3_bool b3MatWrapTexture::b3Prepare()
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
-b3_bool b3MatWrapTexture::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
@@ -733,7 +736,7 @@ void b3MatSlide::b3Write()
 	b3StoreInt(m_ModeFlag);
 }
 
-b3_bool b3MatSlide::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_f64 Factor;
 
@@ -821,7 +824,7 @@ void b3MatMarble::b3Write()
 	b3StoreCount(m_yTimes);
 }
 
-b3_bool b3MatMarble::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3Color   mask;
 	b3_vector d;
@@ -948,7 +951,7 @@ void b3MatWood::b3Write()
 	b3StoreColor(m_DarkWood);
 }
 
-b3_bool b3MatWood::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_vector point;
 	b3_f64    mix;
@@ -1135,7 +1138,7 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
-b3_bool b3MatOakPlank::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_index index;
 	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_ObjectPolar,index);
@@ -1326,7 +1329,7 @@ void b3MatGranite::b3Write()
 	b3StoreCount(m_Overtone);
 }
 
-b3_bool b3MatGranite::b3GetColors(b3_ray *ray,b3_surface *surface)
+b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3Color   mask;
 	b3_vector d;

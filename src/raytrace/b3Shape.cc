@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2004/04/11 19:04:21  sm
+**      - Renamed b3Material::b3GetColors into b3Material::b3GetSurfaceValues
+**
 **      Revision 1.57  2004/04/11 18:21:36  sm
 **      - Raytracer redesign:
 **        o The complete set of surface values moved into
@@ -622,7 +625,7 @@ void b3Shape::b3SetupGrid(b3PickInfo *info)
 {
 }
 
-b3Material *b3Shape::b3GetColors(
+b3Material *b3Shape::b3GetSurfaceValues(
 	b3_ray     *ray,
 	b3_surface *surface)
 {
@@ -632,7 +635,7 @@ b3Material *b3Shape::b3GetColors(
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(ray,surface))
+		if (material->b3GetSurfaceValues(ray,surface))
 		{
 			return material;
 		}

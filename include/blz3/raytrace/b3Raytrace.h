@@ -648,7 +648,7 @@ public:
 		return false;
 	}
 
-	virtual b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // MATERIAL or MAT_NORMAL
@@ -672,7 +672,7 @@ public:
 	B3_ITEM_LOAD(b3MatNormal);
 
 	        void    b3Write();
-	virtual b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // CHESS
@@ -695,7 +695,7 @@ public:
 	B3_ITEM_LOAD(b3MatChess);
 
 	void    b3Write();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // MARBLE
@@ -717,7 +717,7 @@ public:
 	B3_ITEM_LOAD(b3MatMarble);
 
 	void    b3Write();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // WOOD
@@ -741,7 +741,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 
 private:
 	void    b3Init();
@@ -773,7 +773,7 @@ public:
 
 	void     b3Write();
 	b3_bool  b3Prepare();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 
 private:
 	void     b3Init();
@@ -801,7 +801,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3SetTexture(const char *name);
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // WRAPTEXTURE
@@ -824,7 +824,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 // SLIDE
@@ -845,7 +845,7 @@ public:
 	B3_ITEM_LOAD(b3MatSlide);
 
 	void    b3Write();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 #define DIR_SLIDE_BIT       0
@@ -907,7 +907,7 @@ public:
 	B3_ITEM_LOAD(b3MatGranite);
 
 	void    b3Write();
-	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
+	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
 /*************************************************************************
@@ -1030,7 +1030,7 @@ public:
 	        void        b3Write();
 	virtual void        b3StoreShape();
 	        void        b3InitActivation();
-	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
+	        b3Material *b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
 	        void        b3ComputeBound(b3_stencil_limit *limit);
 	virtual b3_bool     b3CheckStencil(b3_polar_precompute *polar);
