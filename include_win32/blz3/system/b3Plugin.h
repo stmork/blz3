@@ -56,8 +56,8 @@ class b3Loader : public b3LoaderBase
 
 	                b3Loader();
 public:
-	b3Item         *b3Create(b3_u32 class_type);
-	b3Item         *b3Create(b3_u32 *class_buffer);
+	b3Item         *b3Create(b3_u32 class_type,b3_bool edit = true);
+	b3Item         *b3Create(b3_u32 *class_buffer,b3_bool edit = true);
 	b3_bool         b3Edit(b3Item *item);
 	b3_bool         b3AddPluginInfo(b3_plugin_info *info);
 	b3_plugin_info *b3FindInfo(b3Item *item);
@@ -81,7 +81,7 @@ protected:
 	b3PluginBase   *b3CreatePlugin(b3Path &library);
 
 private:
-	b3Item         *b3EditCreation(b3Item *item);
+	b3Item         *b3EditCreation(b3Item *item,b3_bool edit);
 };
 
 class b3Plugin : public b3PluginBase

@@ -32,12 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/04/25 19:28:21  sm
+**	- Added available b3Items as list to maintain dialog.
+**	- Preview is done only on auto refresh activated.
+**
 **	Revision 1.12  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.11  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -108,25 +112,25 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 	return new b3Plugin(this,library);
 }
 
-b3Item *b3Loader::b3Create(b3_u32 class_type)
+b3Item *b3Loader::b3Create(b3_u32 class_type,b3_bool edit)
 {
-	b3Item         *item = b3World::b3AllocNode(class_type);
+	b3Item *item = b3World::b3AllocNode(class_type);
 
-	return b3EditCreation(item);
+	return b3EditCreation(item,edit);
 }
 
-b3Item *b3Loader::b3Create(b3_u32 *class_buffer)
+b3Item *b3Loader::b3Create(b3_u32 *class_buffer,b3_bool edit)
 {
-	b3Item         *item = b3World::b3AllocNode(class_buffer);
+	b3Item *item = b3World::b3AllocNode(class_buffer);
 
-	return b3EditCreation(item);
+	return b3EditCreation(item,edit);
 }
 
-b3Item *b3Loader::b3EditCreation(b3Item *item)
+b3Item *b3Loader::b3EditCreation(b3Item *item,b3_bool edit)
 {
 	b3_plugin_info *info;
 
-	if (item != null)
+	if ((item != null) && edit)
 	{
 		info = b3FindInfo(item->b3GetClassType());
 		if (info != null)

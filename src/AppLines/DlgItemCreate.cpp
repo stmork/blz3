@@ -34,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/04/25 19:28:21  sm
+**	- Added available b3Items as list to maintain dialog.
+**	- Preview is done only on auto refresh activated.
+**
 **	Revision 1.3  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.2  2003/06/15 14:18:17  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
@@ -94,6 +98,17 @@ b3Item * CDlgItemCreate::b3Create(b3_u32 class_id)
 
 BOOL CDlgItemCreate::OnInitDialog() 
 {
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	b3InitClassTypeList();
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgItemCreate::b3InitClassTypeList()
+{
 	b3Loader        &loader = b3Loader::b3GetLoader();
 	b3_plugin_info  *info;
 	b3Array<b3_u32>  class_types;
@@ -107,9 +122,6 @@ BOOL CDlgItemCreate::OnInitDialog()
 	memset(&listitem,0,sizeof(listitem));
 	listitem.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
 	listitem.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
 	loader.b3GetClassTypes(class_types,m_ClassId);
 	m_ImageList.Create(size,size,ILC_COLOR32,30,8);
 	m_ImageList.SetBkColor(m_ListCtrl.GetBkColor());
@@ -130,9 +142,6 @@ BOOL CDlgItemCreate::OnInitDialog()
 			img++;
 		}
 	}
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CDlgItemCreate::OnDblclkItemlist(NMHDR* pNMHDR, LRESULT* pResult) 

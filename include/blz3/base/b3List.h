@@ -340,6 +340,21 @@ public:
 		}
 	}
 
+	inline T *b3Reselect(T *ptr)
+	{
+		T *select = null;
+
+		if (ptr != null)
+		{
+			select = ptr->Prev;
+			if (select == null)
+			{
+				select = ptr->Succ;
+			}
+		}
+		return select;
+	}
+
 	inline long b3State(T *ptr)
 	{
 		b3_u32  flags;

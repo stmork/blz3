@@ -44,7 +44,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgItemMaintain)
 	enum { IDD = IDD_ITEM_MAINTAIN };
-	CListCtrl	m_ItemList;
+	CListCtrl	m_ItemListCtrl;
+	CListCtrl	m_ClassListCtrl;
 	//}}AFX_DATA
 
 
@@ -71,12 +72,14 @@ protected:
 	virtual void OnOK();
 	afx_msg void OnDblclkItemList(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnClickItemList(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDblclkClassList(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	b3Item *b3GetSelectedItem();
 	void    b3UpdateUI();
 	void    b3UpdateList(b3Item *select = null);
+	void    b3InitItemList();
 	
 	static void b3Store(b3Item *item);
 };

@@ -616,6 +616,7 @@
 #define IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY 32311
 #define IDC_EDIT_TO                     32311
 #define IDC_SPIN_TO                     32312
+#define IDC_CLASS_LIST                  32313
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_LIGHT            60002
@@ -809,7 +810,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         10120
-#define _APS_NEXT_CONTROL_VALUE         32313
+#define _APS_NEXT_CONTROL_VALUE         32315
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif
 #endif

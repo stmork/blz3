@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/25 19:28:21  sm
+**	- Added available b3Items as list to maintain dialog.
+**	- Preview is done only on auto refresh activated.
+**
 **	Revision 1.7  2004/04/25 14:56:55  sm
 **	- Completed simple material dialog.
-**
+**	
 **	Revision 1.6  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -215,7 +219,7 @@ void CDlgMatCookTorrance::OnColorAmbient()
 	// TODO: Add your control notification handler code here
 	if (m_AmbientCtrl.b3Select())
 	{
-		b3UpdateUI();
+		b3Preview();
 	}
 }
 
@@ -224,7 +228,7 @@ void CDlgMatCookTorrance::OnColorDiffuse()
 	// TODO: Add your control notification handler code here
 	if (m_DiffuseCtrl.b3Select())
 	{
-		b3UpdateUI();
+		b3Preview();
 	}
 }
 
@@ -233,6 +237,6 @@ void CDlgMatCookTorrance::OnColorSpecular()
 	// TODO: Add your control notification handler code here
 	if (m_SpecularCtrl.b3Select())
 	{
-		b3UpdateUI();
+		b3Preview();
 	}
 }

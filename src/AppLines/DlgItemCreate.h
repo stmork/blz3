@@ -61,6 +61,9 @@ protected:
 	afx_msg void OnDblclkItemlist(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3InitClassTypeList();
 };
 
 //{{AFX_INSERT_LOCATION}}

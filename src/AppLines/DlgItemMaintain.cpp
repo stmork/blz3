@@ -35,12 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/04/25 19:28:21  sm
+**	- Added available b3Items as list to maintain dialog.
+**	- Preview is done only on auto refresh activated.
+**
 **	Revision 1.8  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.7  2004/04/03 19:25:00  sm
 **	- Some other wood
 **	
@@ -81,7 +85,6 @@ CDlgItemMaintain::CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgItemMaintain::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgItemMaintain)
-		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_Head = head;
 	m_Plugins = &b3Loader::b3GetLoader();
@@ -93,7 +96,8 @@ void CDlgItemMaintain::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgItemMaintain)
-	DDX_Control(pDX, IDC_ITEM_LIST, m_ItemList);
+	DDX_Control(pDX, IDC_ITEM_LIST, m_ItemListCtrl);
+	DDX_Control(pDX, IDC_CLASS_LIST, m_ClassListCtrl);
 	//}}AFX_DATA_MAP
 }
 
@@ -109,6 +113,7 @@ BEGIN_MESSAGE_MAP(CDlgItemMaintain, CDialog)
 	ON_BN_CLICKED(IDC_ITEM_LAST, OnItemLast)
 	ON_NOTIFY(NM_DBLCLK, IDC_ITEM_LIST, OnDblclkItemList)
 	ON_NOTIFY(NM_CLICK, IDC_ITEM_LIST, OnClickItemList)
+	ON_NOTIFY(NM_DBLCLK, IDC_CLASS_LIST, OnDblclkClassList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -117,26 +122,59 @@ END_MESSAGE_MAP()
 
 BOOL CDlgItemMaintain::OnInitDialog() 
 {
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	b3InitItemList();
+
+	SetWindowText(b3StaticPluginInfoInit::b3GetClassName(m_Head->b3GetClass()));
+	b3UpdateList(m_Head->First);
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgItemMaintain::b3InitItemList()
+{
 	b3Loader        &loader = b3Loader::b3GetLoader();
 	b3_plugin_info  *info;
 	b3Array<b3_u32>  class_types;
 	b3_u32           class_type;
 	b3_count         i;
+	b3_index         img = 0;
 	b3_size          size = 48;
 	HICON            unknown = AfxGetApp()->LoadIcon(IDI_ITEM_UNKNOWN);
+	LVITEM           listitem;
 
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
+	memset(&listitem,0,sizeof(listitem));
+	listitem.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
+	listitem.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
+
 	loader.b3GetClassTypes(class_types,m_Head->b3GetClass());
 	m_ImageList.Create(size,size,ILC_COLOR32,30,8);
-	m_ImageList.SetBkColor(m_ItemList.GetBkColor());
+
+	m_ItemListCtrl.SetImageList(&m_ImageList,LVSIL_NORMAL);
+	m_ItemListCtrl.SetIconSpacing(128,80);
+
+	m_ClassListCtrl.SetImageList(&m_ImageList,LVSIL_NORMAL);
+	m_ClassListCtrl.SetIconSpacing(128,80);
+
+	m_ImageList.SetBkColor(m_ItemListCtrl.GetBkColor());
 	m_ImageList.Add(unknown);
 	for (i = 0;i < class_types.b3GetCount();i++)
 	{
 		class_type = class_types[i];
 		info = loader.b3FindInfo(class_type);
+		if (info->m_CreateFunc != null)
+		{
+			listitem.iImage  = i + 1;
+			listitem.lParam  = class_type;
+			listitem.state   = 0;
+			listitem.pszText = info->m_Description;
+			m_ClassListCtrl.InsertItem(&listitem);
+		}
+
 		m_ImageList.Add(info->m_Icon != null ? info->m_Icon : unknown);
+
 		if (!m_ClassTypesToImg.b3HasKey(class_type))
 		{
 			m_ClassTypesToImg.b3Add(class_type,i + 1);
@@ -146,13 +184,6 @@ BOOL CDlgItemMaintain::OnInitDialog()
 			b3PrintF(B3LOG_NORMAL,"Tried to add already allocated class type %08x.\n",class_type);
 		}
 	}
-	m_ItemList.SetImageList(&m_ImageList,LVSIL_NORMAL);
-	m_ItemList.SetIconSpacing(128,64);
-
-	SetWindowText(b3StaticPluginInfoInit::b3GetClassName(m_Head->b3GetClass()));
-	b3UpdateList();
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 void CDlgItemMaintain::b3UpdateList(b3Item *select)
@@ -172,7 +203,7 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 	listitem.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
 
 	unknown.LoadString(IDS_UNKNOWN);
-	m_ItemList.DeleteAllItems();
+	m_ItemListCtrl.DeleteAllItems();
 	B3_FOR_BASE(m_Head,item)
 	{
 		class_type = item->b3GetClassType();
@@ -201,7 +232,7 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 		listitem.lParam  = (LPARAM)item;
 		listitem.state   = item == select ? listitem.stateMask : 0;
 		listitem.pszText = info->m_Description;
-		m_ItemList.InsertItem(&listitem);
+		m_ItemListCtrl.InsertItem(&listitem);
 	}
 
 	b3UpdateUI();
@@ -228,11 +259,11 @@ b3Item *CDlgItemMaintain::b3GetSelectedItem()
 	int       index;
 	b3Item   *item = null;
 
-	pos = m_ItemList.GetFirstSelectedItemPosition();
+	pos = m_ItemListCtrl.GetFirstSelectedItemPosition();
 	if (pos != 0)
 	{
-		index = m_ItemList.GetNextSelectedItem(pos);
-		item  = (b3Item *)m_ItemList.GetItemData(index);
+		index = m_ItemListCtrl.GetNextSelectedItem(pos);
+		item  = (b3Item *)m_ItemListCtrl.GetItemData(index);
 	}
 	return item;
 }
@@ -240,14 +271,42 @@ b3Item *CDlgItemMaintain::b3GetSelectedItem()
 void CDlgItemMaintain::OnItemNew() 
 {
 	// TODO: Add your control notification handler code here
-	b3Item *selected = b3GetSelectedItem();
-	b3Item *item = CDlgItemCreate::b3Create(m_Head->b3GetClass());
+	b3Item   *selected = b3GetSelectedItem();
+	b3Item   *item;
+	POSITION  pos;
+	int       index;
+	b3_u32    class_type = 0;
 
-	if (item != null)
+	pos = m_ClassListCtrl.GetFirstSelectedItemPosition();
+	if (pos != 0)
 	{
-		m_Head->b3Insert(selected,item);
-		b3UpdateList(item);
-		m_Changed = true;
+		index      = m_ClassListCtrl.GetNextSelectedItem(pos);
+		class_type = m_ClassListCtrl.GetItemData(index);
+	}
+	if (class_type != 0)
+	{
+		CString    section;
+		b3FileReg  file;
+		b3_u32    *buffer;
+		b3_size    size = 0;
+
+		section.Format("item %08x.default",class_type);
+		buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
+		if (buffer != null)
+		{
+			item = b3Loader::b3GetLoader().b3Create(buffer,false);
+		}
+		else
+		{
+			item = b3Loader::b3GetLoader().b3Create(class_type,false);
+		}
+
+		if (item != null)
+		{
+			m_Head->b3Insert(selected,item);
+			b3UpdateList(item);
+			m_Changed = true;
+		}
 	}
 }
 
@@ -312,9 +371,11 @@ void CDlgItemMaintain::OnItemDelete()
 
 	if (item != null)
 	{
+		b3Item *select = m_Head->b3Reselect(item);
+		
 		m_Head->b3Remove(item);
 		delete item;
-		b3UpdateList(item);
+		b3UpdateList(select);
 		m_Changed = true;
 	}
 }
@@ -399,4 +460,11 @@ b3_bool CDlgItemMaintain::b3SetModified(CDocument *pDoc)
 		pDoc->SetModifiedFlag();
 	}
 	return m_Changed;
+}
+
+void CDlgItemMaintain::OnDblclkClassList(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	// TODO: Add your control notification handler code here
+	OnItemNew();
+	*pResult = 0;
 }

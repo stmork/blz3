@@ -57,9 +57,13 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2004/04/25 19:28:21  sm
+**	- Added available b3Items as list to maintain dialog.
+**	- Preview is done only on auto refresh activated.
+**
 **	Revision 1.68  2004/04/25 14:56:55  sm
 **	- Completed simple material dialog.
-**
+**	
 **	Revision 1.67  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -1063,18 +1067,24 @@ BOOL CAboutDlg::OnInitDialog()
 #define DLG_TEST
 #endif
 
+#ifdef DLG_TEST
+#include "DlgItemMaintain.h"
+#endif
+
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3Item *item = b3World::b3AllocNode(MAT_NORMAL);
+	b3Base<b3Item> head;
+	b3Item        *item = b3World::b3AllocNode(MAT_NORMAL);
 
-	if (item != null)
-	{
-		b3Loader::b3GetLoader().b3Edit(item);
+	head.b3InitBase(item->b3GetClass());
+	head.b3Append(item);
+	CDlgItemMaintain dlg(&head);
 
-		delete item;
-	}
+	dlg.DoModal();
+
+	head.b3Free();
 #else
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
