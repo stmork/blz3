@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.107  2004/12/04 12:54:07  sm
+**      - Disabling VBO check box if VBO not available.
+**
 **      Revision 1.106  2004/12/03 11:58:30  smork
 **      - Removed b3Mem from b3RenderObject as base class. The b3Shape
 **        class and the torus/ellipsoid derivatives had to be corrected.
@@ -742,7 +745,7 @@ void b3RenderObject::b3PreAlloc()
 	if (!glInit)
 	{
 #ifdef BLZ3_USE_OPENGL
-		if (b3VectorBufferObjects::b3HasVBO())
+		if (b3VectorBufferObjects::b3AllowVBO())
 		{
 #if 0
 			glVertexElements  = new b3VboVertexElements();

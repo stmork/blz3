@@ -45,6 +45,11 @@ public:
 	{
 		return glHasVBO;
 	}
+
+	static inline b3_bool b3AllowVBO()
+	{
+		return glHasVBO && glAllowVBO;
+	}
 };
 
 #endif

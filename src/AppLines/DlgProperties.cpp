@@ -27,6 +27,7 @@
 #include "b3CameraVolume.h"
 #include "b3Fulcrum.h"
 #include "b3PickVector.h"
+#include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3PickInfo.h"
 
@@ -38,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/12/04 12:54:07  sm
+**	- Disabling VBO check box if VBO not available.
+**
 **	Revision 1.10  2004/11/30 19:30:26  sm
 **	- Added VBO support settings in properties dialog.
-**
+**	
 **	Revision 1.9  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -182,6 +186,7 @@ BOOL CDlgProperties::OnInitDialog()
 	m_PickSizeCtrl.SetRange(1,4);
 	m_PickSizeCtrl.SetPos(b3PickInfo::m_PickSize);
 
+	GetDlgItem(IDC_ALLOW_VBO)->EnableWindow(b3VectorBufferObjects::b3HasVBO());
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }

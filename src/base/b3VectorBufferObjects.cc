@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/12/04 12:54:07  sm
+**	- Disabling VBO check box if VBO not available.
+**
 **	Revision 1.9  2004/12/04 12:32:49  sm
 **	- Disabling ATI VBOs.
-**
+**	
 **	Revision 1.8  2004/11/28 20:20:17  sm
 **	- Added support for switchable VBOs.
 **	
@@ -97,7 +100,7 @@ PFNGLUNMAPBUFFERARBPROC   b3VectorBufferObjects::glUnmapBufferARB;
 void b3VectorBufferObjects::b3Init(const char *extensions)
 {
 #ifdef BLZ3_USE_OPENGL
-	const char *vendor = glGetString(GL_VENDOR);
+	const char *vendor = (const char *)glGetString(GL_VENDOR);
 
 	glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
@@ -108,7 +111,7 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #ifdef USE_VBOS
-	glHasVBO = glAllowVBO && (strncmp(vendor,"ATI",3) != 0) &&
+	glHasVBO = (strncmp(vendor,"ATI",3) != 0) &&
 		(strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&

@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/12/04 12:54:07  sm
+**	- Disabling VBO check box if VBO not available.
+**
 **	Revision 1.16  2004/11/21 14:56:57  sm
 **	- Merged VBO development into main trunk.
-**
+**	
 **	Revision 1.15  2004/11/13 19:47:15  sm
 **	- Corrected some OpenGL exclusions.
 **	
@@ -186,7 +189,7 @@ void b3RenderContext::b3Init()
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
-	if (b3VectorBufferObjects::b3HasVBO())
+	if (b3VectorBufferObjects::b3AllowVBO())
 	{
 		b3PrintF(B3LOG_DEBUG, "Having vector buffer objects.\n");
 	}
