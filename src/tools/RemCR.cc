@@ -21,11 +21,8 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/b3Config.h"
 #include "blz3/system/b3File.h"
-#include <string.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <unistd.h>
 
 /*************************************************************************
 **                                                                      **
@@ -35,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/11/16 15:24:17  sm
+**	- Include cleanups in RemCR
+**
 **	Revision 1.2  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.1  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/11/16 15:24:17  sm
+**	- Include cleanups in RemCR
+**
 **	Revision 1.8  2002/11/01 12:49:07  sm
 **	- Some b3SearchPath constructor refinements.
 **	- Fixed texture path configuration.
-**
+**	
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
