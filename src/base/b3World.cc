@@ -39,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.23  2002/01/09 17:47:54  sm
 **      - Finished CB3ImageButton implementation.
 **      - Finished CDlgObjectCopy
@@ -341,7 +345,7 @@ b3_world_error b3World::b3Parse()
 	if (b3_item_register.b3Find(B3_CLASS_MAX) == null)
 	{
 		b3PrintF(B3LOG_FULL,"Initializing item registry...\n");
-		b3Item::b3Register(&b3FirstItem::b3Init,&b3FirstItem::b3Init,B3_CLASS_MAX,true);
+		b3Item::b3Register(&b3FirstItem::b3StaticInit,&b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
 	}
 
 	b3PrintF(B3LOG_FULL,"Parsing...\n");

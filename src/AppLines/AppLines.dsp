@@ -180,6 +180,14 @@ SOURCE=.\b3PickVector.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Profile.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ProfileShapeDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectColor.cpp
 # End Source File
 # Begin Source File
@@ -229,6 +237,10 @@ SOURCE=.\DlgCreateMaterial.cpp
 # Begin Source File
 
 SOURCE=.\DlgCreateStencil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateTriangles.cpp
 # End Source File
 # Begin Source File
 
@@ -297,6 +309,10 @@ SOURCE=.\DlgScene.cpp
 # Begin Source File
 
 SOURCE=.\DlgSearchPathList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSelectProfile.cpp
 # End Source File
 # Begin Source File
 
@@ -404,6 +420,14 @@ SOURCE=.\b3PickVector.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Profile.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ProfileShapeDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3SelectColor.h
 # End Source File
 # Begin Source File
@@ -457,6 +481,10 @@ SOURCE=.\DlgCreateMaterial.h
 # Begin Source File
 
 SOURCE=.\DlgCreateStencil.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateTriangles.h
 # End Source File
 # Begin Source File
 
@@ -525,6 +553,10 @@ SOURCE=.\DlgScene.h
 # Begin Source File
 
 SOURCE=.\DlgSearchPathList.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSelectProfile.h
 # End Source File
 # Begin Source File
 

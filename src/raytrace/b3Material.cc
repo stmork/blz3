@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.21  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -133,13 +137,13 @@
 void b3InitMaterial::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
-	b3Item::b3Register(&b3MatNormal::b3Init,      &b3MatNormal::b3Init,      MAT_NORMAL);
-	b3Item::b3Register(&b3MatTexture::b3Init,     &b3MatTexture::b3Init,     TEXTURE);
-	b3Item::b3Register(&b3MatChess::b3Init,       &b3MatChess::b3Init,       CHESS);
-	b3Item::b3Register(&b3MatWrapTexture::b3Init, &b3MatWrapTexture::b3Init, WRAPTEXTURE);
-	b3Item::b3Register(&b3MatMarble::b3Init,      &b3MatMarble::b3Init,      MARBLE);
-	b3Item::b3Register(&b3MatSlide::b3Init,       &b3MatSlide::b3Init,       SLIDE);
-	b3Item::b3Register(&b3MatWood::b3Init,        &b3MatWood::b3Init,        WOOD);
+	b3Item::b3Register(&b3MatNormal::b3StaticInit,      &b3MatNormal::b3StaticInit,      MAT_NORMAL);
+	b3Item::b3Register(&b3MatTexture::b3StaticInit,     &b3MatTexture::b3StaticInit,     TEXTURE);
+	b3Item::b3Register(&b3MatChess::b3StaticInit,       &b3MatChess::b3StaticInit,       CHESS);
+	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit, &b3MatWrapTexture::b3StaticInit, WRAPTEXTURE);
+	b3Item::b3Register(&b3MatMarble::b3StaticInit,      &b3MatMarble::b3StaticInit,      MARBLE);
+	b3Item::b3Register(&b3MatSlide::b3StaticInit,       &b3MatSlide::b3StaticInit,       SLIDE);
+	b3Item::b3Register(&b3MatWood::b3StaticInit,        &b3MatWood::b3StaticInit,        WOOD);
 }
 
 /*************************************************************************

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.42  2002/03/02 19:52:40  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -259,26 +263,26 @@
 void b3InitShape::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering shapes...\n");
-	b3Item::b3Register(&b3Sphere::b3Init,           &b3Sphere::b3Init,           SPHERE);
-	b3Item::b3Register(&b3Area::b3Init,             &b3Area::b3Init,             AREA);
-	b3Item::b3Register(&b3Disk::b3Init,             &b3Disk::b3Init,             DISK);
-	b3Item::b3Register(&b3Cylinder::b3Init,         &b3Cylinder::b3Init,         CYLINDER);
-	b3Item::b3Register(&b3Cone::b3Init,             &b3Cone::b3Init,             CONE);
-	b3Item::b3Register(&b3Ellipsoid::b3Init,        &b3Ellipsoid::b3Init,        ELLIPSOID);
-	b3Item::b3Register(&b3Box::b3Init,              &b3Box::b3Init,              BOX);
-	b3Item::b3Register(&b3Torus::b3Init,            &b3Torus::b3Init,            TORUS);
-	b3Item::b3Register(&b3Triangles::b3Init,        &b3Triangles::b3Init,        TRIANGLES);
-	b3Item::b3Register(&b3SplineCurveShape::b3Init, &b3SplineCurveShape::b3Init, SPLINE);
-	b3Item::b3Register(&b3SplineRotShape::b3Init,   &b3SplineRotShape::b3Init,   SPLINE_ROT);
-	b3Item::b3Register(&b3SplineArea::b3Init,       &b3SplineArea::b3Init,       SPLINES_AREA);
-	b3Item::b3Register(&b3SplineCylinder::b3Init,   &b3SplineCylinder::b3Init,   SPLINES_CYL);
-	b3Item::b3Register(&b3SplineRing::b3Init,       &b3SplineRing::b3Init,       SPLINES_RING);
-	b3Item::b3Register(&b3CSGSphere::b3Init,        &b3CSGSphere::b3Init,        CSG_SPHERE);
-	b3Item::b3Register(&b3CSGCylinder::b3Init,      &b3CSGCylinder::b3Init,      CSG_CYLINDER);
-	b3Item::b3Register(&b3CSGCone::b3Init,          &b3CSGCone::b3Init,          CSG_CONE);
-	b3Item::b3Register(&b3CSGEllipsoid::b3Init,     &b3CSGEllipsoid::b3Init,     CSG_ELLIPSOID);
-	b3Item::b3Register(&b3CSGBox::b3Init,           &b3CSGBox::b3Init,           CSG_BOX);
-	b3Item::b3Register(&b3CSGTorus::b3Init,         &b3CSGTorus::b3Init,         CSG_TORUS);
+	b3Item::b3Register(&b3Sphere::b3StaticInit,           &b3Sphere::b3StaticInit,           SPHERE);
+	b3Item::b3Register(&b3Area::b3StaticInit,             &b3Area::b3StaticInit,             AREA);
+	b3Item::b3Register(&b3Disk::b3StaticInit,             &b3Disk::b3StaticInit,             DISK);
+	b3Item::b3Register(&b3Cylinder::b3StaticInit,         &b3Cylinder::b3StaticInit,         CYLINDER);
+	b3Item::b3Register(&b3Cone::b3StaticInit,             &b3Cone::b3StaticInit,             CONE);
+	b3Item::b3Register(&b3Ellipsoid::b3StaticInit,        &b3Ellipsoid::b3StaticInit,        ELLIPSOID);
+	b3Item::b3Register(&b3Box::b3StaticInit,              &b3Box::b3StaticInit,              BOX);
+	b3Item::b3Register(&b3Torus::b3StaticInit,            &b3Torus::b3StaticInit,            TORUS);
+	b3Item::b3Register(&b3Triangles::b3StaticInit,        &b3Triangles::b3StaticInit,        TRIANGLES);
+	b3Item::b3Register(&b3SplineCurveShape::b3StaticInit, &b3SplineCurveShape::b3StaticInit, SPLINE);
+	b3Item::b3Register(&b3SplineRotShape::b3StaticInit,   &b3SplineRotShape::b3StaticInit,   SPLINE_ROT);
+	b3Item::b3Register(&b3SplineArea::b3StaticInit,       &b3SplineArea::b3StaticInit,       SPLINES_AREA);
+	b3Item::b3Register(&b3SplineCylinder::b3StaticInit,   &b3SplineCylinder::b3StaticInit,   SPLINES_CYL);
+	b3Item::b3Register(&b3SplineRing::b3StaticInit,       &b3SplineRing::b3StaticInit,       SPLINES_RING);
+	b3Item::b3Register(&b3CSGSphere::b3StaticInit,        &b3CSGSphere::b3StaticInit,        CSG_SPHERE);
+	b3Item::b3Register(&b3CSGCylinder::b3StaticInit,      &b3CSGCylinder::b3StaticInit,      CSG_CYLINDER);
+	b3Item::b3Register(&b3CSGCone::b3StaticInit,          &b3CSGCone::b3StaticInit,          CSG_CONE);
+	b3Item::b3Register(&b3CSGEllipsoid::b3StaticInit,     &b3CSGEllipsoid::b3StaticInit,     CSG_ELLIPSOID);
+	b3Item::b3Register(&b3CSGBox::b3StaticInit,           &b3CSGBox::b3StaticInit,           CSG_BOX);
+	b3Item::b3Register(&b3CSGTorus::b3StaticInit,         &b3CSGTorus::b3StaticInit,         CSG_TORUS);
 }
 
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)

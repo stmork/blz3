@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.27  2002/03/02 15:24:35  sm
 **      - Templetized splines (uhff).
 **      - Prepared spline shapes for their creation.
@@ -171,9 +175,9 @@ void b3InitLight::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering light sources...\n");
 
-	b3Item::b3Register(&b3Light::b3Init, &b3Light::b3Init, POINT_LIGHT );
-	b3Item::b3Register(&b3Light::b3Init, &b3Light::b3Init, AREA_LIGHT );
-	b3Item::b3Register(&b3Light::b3Init, &b3Light::b3Init, SPOT_LIGHT );
+	b3Item::b3Register(&b3Light::b3StaticInit, &b3Light::b3StaticInit, POINT_LIGHT );
+	b3Item::b3Register(&b3Light::b3StaticInit, &b3Light::b3StaticInit, AREA_LIGHT );
+	b3Item::b3Register(&b3Light::b3StaticInit, &b3Light::b3StaticInit, SPOT_LIGHT );
 }
 
 b3Light::b3Light(b3_u32 class_type) : b3Item(sizeof(b3Light),class_type)

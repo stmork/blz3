@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.33  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.32  2002/01/02 15:48:37  sm
 **	- Added automated expand/collapse to hierarchy tree.
 **	
@@ -198,12 +202,12 @@
 void b3InitScene::b3Init()
 {
 	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
-	b3Item::b3Register(&b3SceneMork::b3Init, &b3SceneMork::b3Init, TRACEANGLE_MORK);
-	b3Item::b3Register(&b3SceneMork::b3Init, &b3SceneMork::b3Init, TRACEPHOTO_MORK);
-	b3Item::b3Register(&b3ScenePhong::b3Init,&b3ScenePhong::b3Init,TRACEANGLE_PHONG);
-	b3Item::b3Register(&b3ScenePhong::b3Init,&b3ScenePhong::b3Init,TRACEPHOTO_PHONG);
-	b3Item::b3Register(&b3Scene::b3Init,     &b3Scene::b3Init,     TRACEPHOTO_ALBRECHT);
-	b3Item::b3Register(&b3Scene::b3Init,     &b3Scene::b3Init,     GLOBAL_ILLUM);
+	b3Item::b3Register(&b3SceneMork::b3StaticInit, &b3SceneMork::b3StaticInit, TRACEANGLE_MORK);
+	b3Item::b3Register(&b3SceneMork::b3StaticInit, &b3SceneMork::b3StaticInit, TRACEPHOTO_MORK);
+	b3Item::b3Register(&b3ScenePhong::b3StaticInit,&b3ScenePhong::b3StaticInit,TRACEANGLE_PHONG);
+	b3Item::b3Register(&b3ScenePhong::b3StaticInit,&b3ScenePhong::b3StaticInit,TRACEPHOTO_PHONG);
+	b3Item::b3Register(&b3Scene::b3StaticInit,     &b3Scene::b3StaticInit,     TRACEPHOTO_ALBRECHT);
+	b3Item::b3Register(&b3Scene::b3StaticInit,     &b3Scene::b3StaticInit,     GLOBAL_ILLUM);
 }
 
 b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)

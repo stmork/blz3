@@ -46,6 +46,7 @@ public:
 	     CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
 
 	virtual void b3PostProcess();
+	static  int  b3Edit(CB3ShapeDialog *page,b3Item *item,b3_bool create);
 
 // Dialog Data
 	//{{AFX_DATA(CB3ShapeDialog)
@@ -61,7 +62,6 @@ public:
 
 // Implementation
 protected:
-	static  int         b3Edit(CB3ShapeDialog *page,b3Item *item,b3_bool create);
 	virtual void        b3Init();
 	virtual const char *b3GetSection();
 

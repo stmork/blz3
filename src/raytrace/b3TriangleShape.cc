@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.26  2002/03/02 19:52:40  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -176,7 +180,11 @@ b3TriangleShape::~b3TriangleShape()
 	b3FreeTriaRefs();
 }
 
-b3_bool b3TriangleShape::b3Init(b3_count vertex_count,b3_count tria_count)
+b3_bool b3TriangleShape::b3Init(
+	b3_count vertex_count,
+	b3_count tria_count,
+	b3_res   xSize,
+	b3_res   ySize)
 {
 	if (m_VertexCount != vertex_count)
 	{
@@ -191,6 +199,8 @@ b3_bool b3TriangleShape::b3Init(b3_count vertex_count,b3_count tria_count)
 		m_TriaCount = tria_count;
 		m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
 	}
+	m_xSize = xSize;
+	m_ySize = ySize;
 
 	return (m_Vertices != null) && (m_Triangles != null);
 }

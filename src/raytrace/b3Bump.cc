@@ -34,13 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.9  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.8  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -92,13 +96,13 @@
 void b3InitBump::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bump mapping...\n");
-	b3Item::b3Register(&b3BumpNoise::b3Init,   &b3BumpNoise::b3Init,   BUMP_NOISE);
-	b3Item::b3Register(&b3BumpMarble::b3Init,  &b3BumpMarble::b3Init,  BUMP_MARBLE);
-	b3Item::b3Register(&b3BumpTexture::b3Init, &b3BumpTexture::b3Init, BUMP_TEXTURE);
-	b3Item::b3Register(&b3BumpWater::b3Init,   &b3BumpWater::b3Init,   BUMP_WATER);
-	b3Item::b3Register(&b3BumpWave::b3Init,    &b3BumpWave::b3Init,    BUMP_WAVE);
-	b3Item::b3Register(&b3BumpGroove::b3Init,  &b3BumpGroove::b3Init,  BUMP_GROOVE);
-	b3Item::b3Register(&b3BumpGlossy::b3Init,  &b3BumpGlossy::b3Init,  BUMP_GLOSSY);
+	b3Item::b3Register(&b3BumpNoise::b3StaticInit,   &b3BumpNoise::b3StaticInit,   BUMP_NOISE);
+	b3Item::b3Register(&b3BumpMarble::b3StaticInit,  &b3BumpMarble::b3StaticInit,  BUMP_MARBLE);
+	b3Item::b3Register(&b3BumpTexture::b3StaticInit, &b3BumpTexture::b3StaticInit, BUMP_TEXTURE);
+	b3Item::b3Register(&b3BumpWater::b3StaticInit,   &b3BumpWater::b3StaticInit,   BUMP_WATER);
+	b3Item::b3Register(&b3BumpWave::b3StaticInit,    &b3BumpWave::b3StaticInit,    BUMP_WAVE);
+	b3Item::b3Register(&b3BumpGroove::b3StaticInit,  &b3BumpGroove::b3StaticInit,  BUMP_GROOVE);
+	b3Item::b3Register(&b3BumpGlossy::b3StaticInit,  &b3BumpGlossy::b3StaticInit,  BUMP_GLOSSY);
 }
 
 b3Bump::b3Bump(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)

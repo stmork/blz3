@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Base class for simple shapes
+**	Blizzard III - Base class for editing spanning shapes
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved

@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.47  2002/03/02 19:52:40  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -266,14 +270,14 @@ void b3InitSpecial::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering special features...\n");
 
-	b3Item::b3Register(&b3SuperSample::b3Init,  &b3SuperSample::b3Init,  SUPERSAMPLE4 );
-	b3Item::b3Register(&b3CameraPart::b3Init,   &b3CameraPart::b3Init,   CAMERA );
-	b3Item::b3Register(&b3Nebular::b3Init,      &b3Nebular::b3Init,      NEBULAR );
-	b3Item::b3Register(&b3ModellerInfo::b3Init, &b3ModellerInfo::b3Init, LINES_INFO );
-	b3Item::b3Register(&b3Animation::b3Init,    &b3Animation::b3Init,    ANIMATION );
-	b3Item::b3Register(&b3Distribute::b3Init,   &b3Distribute::b3Init,   DISTRIBUTE );
-	b3Item::b3Register(&b3LensFlare::b3Init,    &b3LensFlare::b3Init,    LENSFLARE );
-	b3Item::b3Register(&b3Caustic::b3Init,      &b3Caustic::b3Init,      CAUSTIC );
+	b3Item::b3Register(&b3SuperSample::b3StaticInit,  &b3SuperSample::b3StaticInit,  SUPERSAMPLE4 );
+	b3Item::b3Register(&b3CameraPart::b3StaticInit,   &b3CameraPart::b3StaticInit,   CAMERA );
+	b3Item::b3Register(&b3Nebular::b3StaticInit,      &b3Nebular::b3StaticInit,      NEBULAR );
+	b3Item::b3Register(&b3ModellerInfo::b3StaticInit, &b3ModellerInfo::b3StaticInit, LINES_INFO );
+	b3Item::b3Register(&b3Animation::b3StaticInit,    &b3Animation::b3StaticInit,    ANIMATION );
+	b3Item::b3Register(&b3Distribute::b3StaticInit,   &b3Distribute::b3StaticInit,   DISTRIBUTE );
+	b3Item::b3Register(&b3LensFlare::b3StaticInit,    &b3LensFlare::b3StaticInit,    LENSFLARE );
+	b3Item::b3Register(&b3Caustic::b3StaticInit,      &b3Caustic::b3StaticInit,      CAUSTIC );
 }
 
 /*************************************************************************

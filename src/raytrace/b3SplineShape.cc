@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.30  2002/03/02 19:52:40  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -288,7 +292,7 @@ b3_bool b3SplineCurve::b3Prepare()
 	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	if (!b3TriangleShape::b3Init(VertexCount,TriaCount))
+	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.subdiv))
 	{
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
@@ -748,7 +752,7 @@ b3_bool b3SplineShape::b3Prepare()
 	VertexCount = xSize * ySize;
 
 	// Reallocating new tria shape
-	if (!b3TriangleShape::b3Init(VertexCount,TriaCount))
+	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_Spline[0].subdiv,m_Spline[1].subdiv))
 	{
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}

@@ -322,7 +322,7 @@ public:
 
 	// This is a nice piece of code! An in situ merge sort on
 	// doubly linked list.
-	inline void b3Sort(int (*func)(T *,T *,void *),void *Ptr)
+	inline void b3Sort(int (*func)(T *,T *,void *),void *Ptr = null)
 	{
 		b3Base    Right;
 		T        *start,*end;

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2002/03/03 21:22:22  sm
+**      - Added support for creating surfaces using profile curves.
+**      - Added simple creating of triangle fields.
+**
 **      Revision 1.7  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -83,11 +87,11 @@
 void b3InitAnimation::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering animation elements...\n");
-	b3Item::b3Register(&b3AnimElement::b3Init,&b3AnimElement::b3Init,ANIM_MOVE );
-	b3Item::b3Register(&b3AnimElement::b3Init,&b3AnimElement::b3Init,ANIM_ROTATE );
-	b3Item::b3Register(&b3AnimElement::b3Init,&b3AnimElement::b3Init,ANIM_SCALE );
-	b3Item::b3Register(&b3AnimControl::b3Init,&b3AnimControl::b3Init,CPOINT_3D );
-	b3Item::b3Register(&b3AnimControl::b3Init,&b3AnimControl::b3Init,CPOINT_4D );
+	b3Item::b3Register(&b3AnimElement::b3StaticInit,&b3AnimElement::b3StaticInit,ANIM_MOVE );
+	b3Item::b3Register(&b3AnimElement::b3StaticInit,&b3AnimElement::b3StaticInit,ANIM_ROTATE );
+	b3Item::b3Register(&b3AnimElement::b3StaticInit,&b3AnimElement::b3StaticInit,ANIM_SCALE );
+	b3Item::b3Register(&b3AnimControl::b3StaticInit,&b3AnimControl::b3StaticInit,CPOINT_3D );
+	b3Item::b3Register(&b3AnimControl::b3StaticInit,&b3AnimControl::b3StaticInit,CPOINT_4D );
 }
 
 /*************************************************************************

@@ -1441,6 +1441,58 @@ BEGIN
     GROUPBOX        "Richtungsdarstellung:",-1,10,95,80,50
 END
 
+IDD_CREATE_TRIANGLES DIALOG DISCARDABLE  0, 0, 212, 130
+STYLE WS_POPUP | WS_CAPTION
+CAPTION "Dreiecksfeld anlegen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_TRIA_XSIZE,25,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_TRIA_XSIZE_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,65,30,11,14
+    EDITTEXT        IDC_TRIA_HORZ,25,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "geschlossen",IDC_HORZ_CLOSED,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,25,80,55,10
+    EDITTEXT        IDC_TRIA_YSIZE,130,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_TRIA_YSIZE_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,170,30,11,14
+    EDITTEXT        IDC_TRIA_VERT,130,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "Phong-Interpolation",IDC_TRIA_PHONG,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,110,77,10
+    GROUPBOX        "Horizontale Dreieckszahl",IDC_STATIC,10,10,95,90
+    GROUPBOX        "Vertikale Dreieckszahl:",IDC_STATIC,115,10,85,90
+    LTEXT           "Breite",IDC_TRIA_LEGEND,25,50,40,8
+    LTEXT           "Höhe:",IDC_STATIC,130,50,20,8
+END
+
+IDD_CREATE_SHAPE_PROFILE DIALOGEX 0, 0, 382, 231
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profilauswahl"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,15,205,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,315,205,50,14
+    CONTROL         "List1",IDC_PROFILELIST,"SysListView32",LVS_SINGLESEL | 
+                    LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | 
+                    LVS_AUTOARRANGE | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,15,15,350,150,WS_EX_CLIENTEDGE
+    CONTROL         "Körper mit ausgewähltem Profil anlegen",
+                    IDC_CREATE_PROFILE,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,15,170,139,10
+    CONTROL         "Körper spezifizieren",IDC_CREATE_STANDARD,"Button",
+                    BS_AUTORADIOBUTTON,15,185,77,10
+END
+
+IDD_PROFILE_CUSTOM DIALOG DISCARDABLE  0, 0, 364, 261
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Profil anpassen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_PROFILE_PREVIEW,"Static",SS_BLACKFRAME,25,20,124,
+                    100
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1710,6 +1762,30 @@ BEGIN
         RIGHTMARGIN, 380
         TOPMARGIN, 7
         BOTTOMMARGIN, 149
+    END
+
+    IDD_CREATE_TRIANGLES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 205
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+
+    IDD_CREATE_SHAPE_PROFILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 375
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 224
+    END
+
+    IDD_PROFILE_CUSTOM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 357
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 254
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1984,6 +2060,9 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_PROFILE             "Profil"
+    IDS_LENGTH              "Länge:"
+    IDS_RADIUS              "Radius:"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -1269,7 +1269,7 @@ public:
 	B3_ITEM_LOAD(b3TriangleShape);
 
 	               ~b3TriangleShape();
-	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count);
+	        b3_bool b3Init(b3_count vertex_count,b3_count tria_count,b3_res xSize,b3_res ySize);
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);

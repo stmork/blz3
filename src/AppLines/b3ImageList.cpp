@@ -30,6 +30,7 @@
 #include "DlgCSG1.h"
 #include "DlgCSG3.h"
 #include "DlgCSGTorus.h"
+#include "DlgSelectProfile.h"
 
 /*************************************************************************
 **                                                                      **
@@ -39,6 +40,10 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.4  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -46,7 +51,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.3  2002/02/24 17:45:32  sm
 **	- Added CSG edit dialogs
 **	- Corrected shape edit inheritance.
@@ -204,11 +209,11 @@ b3ItemEditCall CB3ImageList::m_EditCalls[] =
 	CDlgShape3::b3Edit,
 	CDlgShape3::b3Edit,
 	CDlgTorus::b3Edit,
-	null,
-	null,
-	null,
-	null,
-	null,
+	CDlgSelectProfile::b3Edit,
+	CDlgSelectProfile::b3Edit,
+	CDlgSelectProfile::b3Edit,
+	CDlgSelectProfile::b3Edit,
+	CDlgSelectProfile::b3Edit,
 
 	// CSG shapes
 	CDlgCSG1::b3Edit,

@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.6  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **	Revision 1.5  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -119,65 +123,72 @@ int CB3ShapeDialog::b3Edit(
 	b3Shape            *shape;
 	int                 result;
 
-	page->m_Creation = create;
-	page->m_Shape    = (b3ShapeRenderObject *)item;
-	page->b3Init();
-	sheet.AddPage(page);
-
-	switch (item->b3GetClass())
+	if (page != null)
 	{
-	case CLASS_CSG:
-		shape = (b3Shape *)item;
-		dlg_csg.m_Creation = create;
-		dlg_csg.m_Shape    = (b3CSGShape *)item;
-		dlg_csg.m_Section  = page->b3GetSection();
-		dlg_csg.b3Init();
-		sheet.AddPage(&dlg_csg);
-		if (create)
-		{
-			sheet.AddPage(&dlg_material);
-		}
-		break;
+		page->m_Creation = create;
+		page->m_Shape    = (b3ShapeRenderObject *)item;
+		page->b3Init();
+		sheet.AddPage(page);
 
-	case CLASS_SHAPE:
-		shape = (b3Shape *)item;
-		if (create)
+		switch (item->b3GetClass())
 		{
-			dlg_stencil.m_Shape = shape;
-			sheet.AddPage(&dlg_material);
-			sheet.AddPage(&dlg_stencil);
-		}
-		break;
+		case CLASS_CSG:
+			shape = (b3Shape *)item;
+			dlg_csg.m_Creation = create;
+			dlg_csg.m_Shape    = (b3CSGShape *)item;
+			dlg_csg.m_Section  = page->b3GetSection();
+			dlg_csg.b3Init();
+			sheet.AddPage(&dlg_csg);
+			if (create)
+			{
+				sheet.AddPage(&dlg_material);
+			}
+			break;
 
-	default:
-		shape = null;
-		break;
+		case CLASS_SHAPE:
+			shape = (b3Shape *)item;
+			if (create)
+			{
+				dlg_stencil.m_Shape = shape;
+				sheet.AddPage(&dlg_material);
+				sheet.AddPage(&dlg_stencil);
+			}
+			break;
+
+		default:
+			shape = null;
+			break;
+		}
+
+		CB3ImageList::b3ComputeText(item,text);
+		sheet.SetTitle(text);
+		result = sheet.DoModal();
+
+		if (result == IDOK)
+		{
+			page->b3PostProcess();
+			dlg_csg.b3PostProcess();
+			if (create && (shape != null))
+			{
+				dlg_stencil.b3PostProcess();
+				dlg_material.b3PostProcess(dlg_stencil.m_Stencil);
+
+				if (dlg_material.m_Material != null)
+				{
+					shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
+				}
+
+				if (dlg_stencil.m_Stencil != null)
+				{
+					shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);
+				}
+				shape->b3Activate();
+			}
+		}
 	}
-
-	CB3ImageList::b3ComputeText(item,text);
-	sheet.SetTitle(text);
-	result = sheet.DoModal();
-
-	if (result == IDOK)
+	else
 	{
-		page->b3PostProcess();
-		dlg_csg.b3PostProcess();
-		if (create && (shape != null))
-		{
-			dlg_stencil.b3PostProcess();
-			dlg_material.b3PostProcess(dlg_stencil.m_Stencil);
-
-			if (dlg_material.m_Material != null)
-			{
-				shape->b3GetMaterialHead()->b3Append(dlg_material.m_Material);
-			}
-
-			if (dlg_stencil.m_Stencil != null)
-			{
-				shape->b3GetConditionHead()->b3Append(dlg_stencil.m_Stencil);
-			}
-			shape->b3Activate();
-		}
+		result = IDCANCEL;
 	}
 	return result;
 }

@@ -94,6 +94,9 @@
 #define IDD_CREATE_STENCIL              194
 #define IDD_TORUS                       195
 #define IDM_BAR_ACTION                  196
+#define IDD_CREATE_TRIANGLES            197
+#define IDD_CREATE_SHAPE_PROFILE        198
+#define IDD_PROFILE_CUSTOM              199
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -239,6 +242,7 @@
 #define IDC_UNIT                        1142
 #define IDC_PRTDLG_MEASURE              1143
 #define IDC_EDIT1                       1144
+#define IDC_TRIA_XSIZE                  1144
 #define IDC_CUSTOM_MEASURE              1145
 #define IDC_PRT_BUFFER                  1146
 #define IDC_REFLECTANCE                 1147
@@ -294,9 +298,21 @@
 #define IDC_X_START_SPIN                1198
 #define IDC_INDEX_OF_REFRACTION_SPIN    1199
 #define IDC_X_END_SPIN                  1199
+#define IDC_TRIA_XSIZE_SPIN             1199
 #define IDC_SPEC_EXPONENT_SPIN          1200
 #define IDC_Y_START_SPIN                1200
+#define IDC_TRIA_YSIZE                  1200
 #define IDC_Y_END_SPIN                  1201
+#define IDC_TRIA_YSIZE_SPIN             1201
+#define IDC_TRIA_PHONG                  1202
+#define IDC_HORZ_CLOSED                 1204
+#define IDC_PROFILELIST                 1205
+#define IDC_CREATE_PROFILE              1206
+#define IDC_CREATE_STANDARD             1207
+#define IDC_PROFILE_PREVIEW             1208
+#define IDC_TRIA_VERT                   1209
+#define IDC_TRIA_HORZ                   1210
+#define IDC_TRIA_LEGEND                 1211
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -470,15 +486,18 @@
 #define IDS_STENCIL_END_LENGTH          60073
 #define IDS_STENCIL_START_ANGLE         60074
 #define IDS_STENCIL_END_ANGLE           60075
+#define IDS_PROFILE                     61446
+#define IDS_LENGTH                      61447
+#define IDS_RADIUS                      61448
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        197
+#define _APS_NEXT_RESOURCE_VALUE        200
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1199
+#define _APS_NEXT_CONTROL_VALUE         1212
 #define _APS_NEXT_SYMED_VALUE           60076
 #endif
 #endif

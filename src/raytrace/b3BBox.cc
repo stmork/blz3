@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.49  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.48  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -278,7 +282,7 @@ static GLushort bbox_indices[12 * 2] =
 void b3InitBBox::b3Init()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bounding boxes...\n");
-	b3Item::b3Register(&b3BBox::b3Init,&b3BBox::b3Init,CLASS_BBOX,true);
+	b3Item::b3Register(&b3BBox::b3StaticInit,&b3BBox::b3StaticInit,CLASS_BBOX,true);
 }
                                                                                                                      
 b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)

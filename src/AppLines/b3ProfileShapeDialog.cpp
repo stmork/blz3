@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3SpanningShapeDialog.cpp $
+**	$Filename:	b3ProfileShapeDialog.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Base class for editing spanning shapes
+**	Blizzard III - Base class for shapes which can be created via profiles
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "b3SpanningShapeDialog.h"
+#include "b3ProfileShapeDialog.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,18 +31,10 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2002/03/03 21:22:22  sm
+**	Revision 1.1  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
 **
-**	Revision 1.1  2002/02/28 16:58:45  sm
-**	- Added torus dialogs.
-**	- Fixed material and stencil handling when not activating
-**	  sheet page.
-**	- Further cleanup of edit dialogs done.
-**	- Corrected shading of CSG cylinder and CSG cone (added
-**	  shaded top and bottom plate).
-**	
 **
 */
 
@@ -52,52 +44,32 @@
 **                                                                      **
 *************************************************************************/
 
-CB3SpanningShapeDialog::CB3SpanningShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
+CB3ProfileShapeDialog::CB3ProfileShapeDialog(UINT IDD,CWnd* pParent /*=NULL*/)
 	: CB3ShapeDialog(IDD)
 {
-	//{{AFX_DATA_INIT(CB3ShapeDialog)
-	m_DirMode = 0;
+	//{{AFX_DATA_INIT(CB3ProfileShapeDialog)
 	//}}AFX_DATA_INIT
-	m_DirMode = AfxGetApp()->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
+	m_Profile = null;
 }
 
 
-void CB3SpanningShapeDialog::DoDataExchange(CDataExchange* pDX)
+void CB3ProfileShapeDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CB3ShapeDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CB3SpanningShapeDialog)
-	DDX_Radio(pDX, IDC_DIRECTION, m_DirMode);
+	//{{AFX_DATA_MAP(CB3ProfileShapeDialog)
 	//}}AFX_DATA_MAP
 }
 
 
-BEGIN_MESSAGE_MAP(CB3SpanningShapeDialog, CB3ShapeDialog)
-	//{{AFX_MSG_MAP(CB3SpanningShapeDialog)
-	ON_BN_CLICKED(IDC_DIRECTION, OnDirModeChanged)
-	ON_BN_CLICKED(IDC_POSITION, OnDirModeChanged)
+BEGIN_MESSAGE_MAP(CB3ProfileShapeDialog, CB3ShapeDialog)
+	//{{AFX_MSG_MAP(CB3ProfileShapeDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3SpanningShapeDialog message handlers
 
-void CB3SpanningShapeDialog::OnDirModeChanged() 
-{
-	// TODO: Add your control notification handler code here
-	UpdateData();
-	b3SetDirMode(m_DirMode);
-}
-
-void CB3SpanningShapeDialog::b3SetDirMode(int dirmode)
-{
-}
-
-void CB3SpanningShapeDialog::b3UpdateBase()
-{
-}
-
-void CB3SpanningShapeDialog::b3PostProcess() 
+void CB3ProfileShapeDialog::b3PostProcess() 
 {
 	CB3ShapeDialog::b3PostProcess();
-	AfxGetApp()->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".mode"),m_DirMode);
 }

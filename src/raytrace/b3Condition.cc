@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/03/03 21:22:22  sm
+**	- Added support for creating surfaces using profile curves.
+**	- Added simple creating of triangle fields.
+**
 **	Revision 1.17  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
 **	- Cleaned up some files.
-**
+**	
 **	Revision 1.16  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
@@ -134,14 +138,14 @@ void b3InitCondition::b3Init()
 	{
 		mode = logic_ops[i];
 
-		b3Item::b3Register(&b3CondRectangle::b3Init,   &b3CondRectangle::b3Init,  mode | COND_RECTANGLE);
-		b3Item::b3Register(&b3CondCircle::b3Init,      &b3CondCircle::b3Init,     mode | COND_CIRCLE);
-		b3Item::b3Register(&b3CondSegment::b3Init,     &b3CondSegment::b3Init,    mode | COND_SEGMENT);
-		b3Item::b3Register(&b3CondTria::b3Init,        &b3CondTria::b3Init,       mode | COND_TRIANGLE);
-		b3Item::b3Register(&b3CondPara::b3Init,        &b3CondPara::b3Init,       mode | COND_PARALLELOGRAM);
-		b3Item::b3Register(&b3CondTexture::b3Init,     &b3CondTexture::b3Init,    mode | COND_TEXTURE);
-		b3Item::b3Register(&b3CondWrapTexture::b3Init, &b3CondWrapTexture::b3Init,mode | COND_TEXTUREWRAP);
-		b3Item::b3Register(&b3CondEllipse::b3Init,     &b3CondEllipse::b3Init,    mode | COND_ELLIPSE);
+		b3Item::b3Register(&b3CondRectangle::b3StaticInit,   &b3CondRectangle::b3StaticInit,  mode | COND_RECTANGLE);
+		b3Item::b3Register(&b3CondCircle::b3StaticInit,      &b3CondCircle::b3StaticInit,     mode | COND_CIRCLE);
+		b3Item::b3Register(&b3CondSegment::b3StaticInit,     &b3CondSegment::b3StaticInit,    mode | COND_SEGMENT);
+		b3Item::b3Register(&b3CondTria::b3StaticInit,        &b3CondTria::b3StaticInit,       mode | COND_TRIANGLE);
+		b3Item::b3Register(&b3CondPara::b3StaticInit,        &b3CondPara::b3StaticInit,       mode | COND_PARALLELOGRAM);
+		b3Item::b3Register(&b3CondTexture::b3StaticInit,     &b3CondTexture::b3StaticInit,    mode | COND_TEXTURE);
+		b3Item::b3Register(&b3CondWrapTexture::b3StaticInit, &b3CondWrapTexture::b3StaticInit,mode | COND_TEXTUREWRAP);
+		b3Item::b3Register(&b3CondEllipse::b3StaticInit,     &b3CondEllipse::b3StaticInit,    mode | COND_ELLIPSE);
 	}
 }
 
