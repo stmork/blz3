@@ -106,9 +106,20 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] = a[i] - b[i];
+		}
+#else
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
+#endif
 	}
 
 	static inline void b3Sub(
@@ -116,10 +127,21 @@ public:
 		const b3_vector4D *bVec,
 		      b3_vector4D *result)
 	{
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+
+		for(int i = 0;i < 4;i++)
+		{
+			r[i] = a[i] - b[i];
+		}
+#else
 		result->x = aVec->x - bVec->x;
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
 		result->w = aVec->w - bVec->w;
+#endif
 	}
 
 	static inline void b3AddScaled(
@@ -127,9 +149,19 @@ public:
 		const b3_vector *offset,
 		      b3_vector *vector)
 	{
+#ifdef B3_SSE
+		b3_f32 *v = &vector->x;
+		b3_f32 *o = &offset->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			v[i] = v[i] + factor * o[i];
+		}
+#else
 		vector->x = (b3_f32)(vector->x + factor * offset->x);
 		vector->y = (b3_f32)(vector->y + factor * offset->y);
 		vector->z = (b3_f32)(vector->z + factor * offset->z);
+#endif
 	}
 
 	static inline void b3AddScaled(
@@ -137,10 +169,20 @@ public:
 		const b3_vector4D *offset,
 		      b3_vector4D *vector)
 	{
+#ifdef B3_SSE
+		b3_f32 *v = &vector->x;
+		b3_f32 *o = &offset->x;
+
+		for(int i = 0;i < 4;i++)
+		{
+			v[i] = v[i] + factor * o[i];
+		}
+#else
 		vector->x = (b3_f32)(vector->x + factor * offset->x);
 		vector->y = (b3_f32)(vector->y + factor * offset->y);
 		vector->z = (b3_f32)(vector->z + factor * offset->z);
 		vector->w = (b3_f32)(vector->w + factor * offset->w);
+#endif
 	}
 
 	static inline void b3LinearCombine(

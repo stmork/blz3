@@ -19,9 +19,13 @@
 
 #include "blz3/b3Types.h"
 
-b3_f64   cbrt       (b3_f64 value);
-b3_count b3SolveOrd2(b3_f64 *Coeffs,b3_f64 *x);
-b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x);
-b3_count b3SolveOrd4(b3_f64 *Coeffs,b3_f64 *x);
+class b3Cubic
+{
+public:
+	static b3_f64   b3Cbrt     (b3_f64 value);
+	static b3_count b3SolveOrd2(b3_f64 *Coeffs,b3_f64 *x);
+	static b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x);
+	static b3_count b3SolveOrd4(b3_f64 *Coeffs,b3_f64 *x);
+};
 
 #endif

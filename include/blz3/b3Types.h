@@ -23,6 +23,18 @@
 #include <sys/types.h>
 #include <math.h>
 
+#ifdef __ICC
+#	define B3_SSE
+
+#	define B3_ALIGN_16  __declspec(align(16))
+#	define B3_ALIGN_32  __declspec(align(32))
+#	define B3_ALIGN_64  __declspec(align(64))
+#else
+#	define B3_ALIGN_16
+#	define B3_ALIGN_32
+#	define B3_ALIGN_64
+#endif
+
 // Some error codes
 typedef enum
 {
@@ -70,21 +82,21 @@ typedef b3_u32              b3_pkd_color;
 typedef long                b3_coord;
 
 // Some vectors
-typedef struct b3_vector
+typedef B3_ALIGN_16 struct b3_vector
 {
 	b3_f32    x;
 	b3_f32    y;
 	b3_f32    z;
 } b3_fVector, b3_vector32_3D, b3_vector3D;
 
-typedef struct b3_vector64
+typedef B3_ALIGN_32 struct b3_vector64
 {
 	b3_f64    x;
 	b3_f64    y;
 	b3_f64    z;
 } b3_dVector, b3_dVector3D;
 
-typedef struct b3_vector32_4D
+typedef B3_ALIGN_16 struct b3_vector32_4D
 {
 	b3_f32    x;
 	b3_f32    y;
@@ -92,7 +104,7 @@ typedef struct b3_vector32_4D
 	b3_f32    w;
 } b3_fVector4D,b3_vector4D;
 
-typedef struct b3_vector64_4D
+typedef B3_ALIGN_32 struct b3_vector64_4D
 {
 	b3_f64    x;
 	b3_f64    y;
@@ -100,7 +112,7 @@ typedef struct b3_vector64_4D
 	b3_f64    w;
 } b3_dVector4D;
 
-typedef struct b3_matrix32
+typedef B3_ALIGN_64 struct b3_matrix32
 {
 	b3_f32    m11,m12,m13,m14;
 	b3_f32    m21,m22,m23,m24;
@@ -108,30 +120,30 @@ typedef struct b3_matrix32
 	b3_f32    m41,m42,m43,m44;
 } b3_matrix;
 
-struct b3_matrix64
+B3_ALIGN_64 struct b3_matrix64
 {
 	b3_f64    m11,m12,m13,m14;
 	b3_f64    m21,m22,m23,m24;
-    b3_f32    m31,m32,m33,m34;
-    b3_f32    m41,m42,m43,m44;
+    b3_f64    m31,m32,m33,m34;
+    b3_f64    m41,m42,m43,m44;
 };
 
-typedef struct b3_line32
+typedef B3_ALIGN_32 struct b3_line32
 {
 	b3_vector pos,dir;
 } b3_line;
 
-typedef struct b3_line64
+typedef B3_ALIGN_64 struct b3_line64
 {
 	b3_vector64 pos,dir;
 } b3_dLine;
 
-struct b3_pos
+B3_ALIGN_16 struct b3_pos
 {
 	b3_s32    x,y;
 };
 
-struct b3_color
+B3_ALIGN_16 struct b3_color
 {
 	b3_f32    a,r,g,b;
 };

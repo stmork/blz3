@@ -33,6 +33,6 @@ depend:
 	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.il *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 -include .dep

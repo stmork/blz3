@@ -41,4 +41,8 @@ libB3jpeg.o:	$(LIB_OBJS)
 	rm -f core
 	ld -r -o $@ $^
 
+libB3jpeg.a:	$(LIB_OBJS)
+	$(AR) $(ARFLAGS) $@ $^
+	cp $@ $(BLZ3_LIB)
+
 -include .dep

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/12/20 15:32:55  sm
+**	- Made some ICC optimazations :-)
+**
 **	Revision 1.2  2002/11/18 17:30:01  sm
 **	- GCC patch level define fix.
-**
+**	
 **	Revision 1.1  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
@@ -43,10 +46,10 @@
 
 #define MAX   1000000
 #if 1
-#	define DIM   4
+#	define DIM   256
 #	define FTYPE b3_f32
 #else
-#	define DIM   2
+#	define DIM   128
 #	define FTYPE b3_f64
 #endif
 
@@ -173,7 +176,7 @@ public:
 	b3_f64   m_Result;
 
 public:
-	b3Test(b3_count max)
+	void b3Init(b3_count max)
 	{
 		m_Max = max;
 	}
@@ -283,7 +286,12 @@ public:
 		b3_f64      mflops = 0,used;
 
 		threads = new b3Thread[CPUs];
-		test    = new b3Test[CPUs](m_Max);
+		test    = new b3Test[CPUs];
+
+		for (i = 0;i < CPUs;i++)
+		{
+			test[i].b3Init(m_Max);
+		}
 
 		span.b3Start();
 		for (i = 0;i < CPUs;i++)

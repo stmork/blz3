@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2002/12/20 15:32:55  sm
+**      - Made some ICC optimazations :-)
+**
 **      Revision 1.32  2002/08/16 13:20:14  sm
 **      - Removed some unused methods.
 **      - Allocation bug found in brt3 - the Un*x version of the
@@ -490,7 +493,7 @@ b3_bool b3TriangleShape::b3Prepare()
 	}
 
 #	ifndef ONE_GRID
-	m_GridSize = (b3_count)cbrt (0.125 * m_TriaCount);
+	m_GridSize = (b3_count)b3Cubic::b3Cbrt (0.125 * m_TriaCount);
 	if (m_GridSize < 1)
 	{
 		m_GridSize = 1;

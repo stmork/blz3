@@ -51,10 +51,6 @@
 #define no_USE_MOTIF
 #endif
 
-#ifndef __GNUC_PATCHLEVEL__
-#define __GNUC_PATCHLEVEL__ 0
-#endif
-
 #ifdef _DEBUG
 #include <assert.h>
 
@@ -107,7 +103,9 @@ typedef enum
 
 class b3Runtime : public b3CPU
 {
-	b3_cpu_type        cpu_type;
+	static b3_cpu_type cpu_type;
+	static char        compiler[128];
+
 public:
 	                   b3Runtime();
 	static void        b3PSwap(b3_u32 *uPtr1,b3_u32 *uPtr2);
@@ -117,6 +115,7 @@ public:
 	static b3_cpu_type b3GetCPUType();
 	static b3_count    b3GetNumThreads();
 	static b3_count    b3GetNumCPUs();
+	static char       *b3GetCompiler();
 };
 
 #endif

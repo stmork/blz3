@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/12/20 15:32:55  sm
+**	- Made some ICC optimazations :-)
+**
 **	Revision 1.27  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
 **	  saves memory allocation calls and is an investment into
 **	  faster Lines III object transformation.
-**
+**	
 **	Revision 1.26  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
@@ -874,7 +877,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 	Coeff[1]	= 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
 	Coeff[0]	=      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
 
-	if ((NumOfX = b3SolveOrd4 (Coeff,x)) == 0)
+	if ((NumOfX = b3Cubic::b3SolveOrd4 (Coeff,x)) == 0)
 	{
 		return -1;
 	}
@@ -1607,7 +1610,7 @@ b3_bool b3CSGTorus::b3Intersect(
 	Coeff[1] = 4 * (Val1 * Val2 + 2 * m_aQuad * pdQuad);
 	Coeff[0] =      Val1 * Val1 + 4 * m_aQuad * (pQuad - m_bQuad);
 
-	NumOfX = b3SolveOrd4 (Coeff,x);
+	NumOfX = b3Cubic::b3SolveOrd4 (Coeff,x);
 	if ((NumOfX == 2) || (NumOfX == 4))
 	{
 		// Insert sorted

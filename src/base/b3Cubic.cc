@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/12/20 15:32:55  sm
+**	- Made some ICC optimazations :-)
+**
 **	Revision 1.1  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **
 */
 
@@ -49,7 +52,7 @@
 #ifndef CBRT_SYS
 #ifdef  CBRT_SLOW
 
-b3_f64 cbrt(b3_f64 x)			/* slow version */
+b3_f64 b3Cubic:b3Cbrt(b3_f64 x)			/* slow version */
 {
 	if (x > 0) return ( exp(log( x) / 3));
 	if (x < 0) return (-exp(log(-x) / 3));
@@ -77,7 +80,7 @@ static b3_f64 CbrtCoeffs[15] =
 	 6.019941663742065e+00
 };
 
-b3_f64 cbrt (b3_f64 x)		/* fast version */
+b3_f64 b3Cubic::b3Cbrt (b3_f64 x)		/* fast version */
 {
 	b3_f64   xx,y;
 	b3_count Negative;
@@ -123,7 +126,7 @@ b3_f64 cbrt (b3_f64 x)		/* fast version */
 #endif
 #endif
 
-b3_count b3SolveOrd2 (b3_f64 *Coeffs,b3_f64 *x)
+b3_count b3Cubic::b3SolveOrd2 (b3_f64 *Coeffs,b3_f64 *x)
 {
 	b3_f64 p,q,D;
 
@@ -146,7 +149,7 @@ b3_count b3SolveOrd2 (b3_f64 *Coeffs,b3_f64 *x)
     else return 0;
 }
 
-b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x)
+b3_count b3Cubic::b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x)
 {
 	b3_count i,NumOfX;
 	b3_f64   Sub,A,B,C;
@@ -169,7 +172,7 @@ b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x)
 		if (b3IsZero(q)) NumOfX = 0;
 		else
 		{
-	    	Sub  = cbrt(- q);
+	    	Sub  = b3Cbrt(- q);
 		    x[0] = 2 * Sub;
 		    x[1] =   - Sub;
 	    	NumOfX = 2;
@@ -188,7 +191,7 @@ b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x)
     else
    	{
 		Sub    = sqrt(D);
-		x[0]   = cbrt(Sub - q) - cbrt(Sub + q);
+		x[0]   = b3Cbrt(Sub - q) - b3Cbrt(Sub + q);
 		NumOfX = 1;
     }
 
@@ -201,7 +204,7 @@ b3_count b3SolveOrd3(b3_f64 *Coeffs,b3_f64 *x)
     return NumOfX;
 }
 
-b3_count b3SolveOrd4(b3_f64 *c,b3_f64 *x)
+b3_count b3Cubic::b3SolveOrd4(b3_f64 *c,b3_f64 *x)
 {
 	b3_f64	 Coeffs[4];
 	b3_f64	 Sub,B,C,D,A;

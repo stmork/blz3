@@ -9,6 +9,7 @@ echo "Using Blizzard III (Home: $BLZ3_HOME)"
 setenv BLZ3_INCLUDE  $BLZ3_HOME/include
 setenv BLZ3_DOC      $BLZ3_HOME/doc
 setenv BLZ3_MAN      $BLZ3_HOME/man
+setenv BLZ3_WWW      $BLZ3_HOME/WWW
 setenv BLZ3_SYSINC   $BLZ3_HOME/include_unix
 
 setenv BLZ3_LIB      "$BLZ3_HOME/lib/$OSTYPE"_"$CPUTYPE"
@@ -19,6 +20,12 @@ setenv LIB_X3        "-lX11 -lXt"
 setenv LIB_S3        "-lm -lpthread"
 
 setenv STDINC        "$ARCHFLAG -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
+
+test -d $BLZ3_LIB || mkdir -p $BLZ3_LIB
+test -d $BLZ3_BIN || mkdir -p $BLZ3_BIN
+test -d $BLZ3_DOC || mkdir -p $BLZ3_DOC
+test -d $BLZ3_MAN || mkdir -p $BLZ3_MAN
+test -d $BLZ3_WWW || mkdir -p $BLZ3_WWW
 
 if ( $?LDFLAGS ) then
   setenv LDFLAGS     "$LDFLAGS -L$BLZ3_LIB"

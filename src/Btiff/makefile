@@ -96,6 +96,10 @@ libB3tiff.o: $(LIB_OBJ)
 	rm -f core
 	ld -r -o $@ $^
 
+libB3tiff.a:	$(LIB_OBJ)
+	$(AR) $(ARFLAGS) $@ $^
+	cp $@ $(BLZ3_LIB)
+
 tif_fax3sm.c:	mkg3states
 	mkg3states -c const tif_fax3sm.c
 

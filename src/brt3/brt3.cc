@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/12/20 15:32:55  sm
+**	- Made some ICC optimazations :-)
+**
 **	Revision 1.35  2002/12/11 14:47:58  sm
 **	- Changed noise handling to static
 **	- Fixed some error cases when image not loaded.
 **	- Added some brt3 flags
-**
+**	
 **	Revision 1.34  2002/12/10 20:14:59  sm
 **	- Added some new brt3 features:
 **	  o no wait after display output
@@ -482,7 +485,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"Compiler GCC %d.%d.%d\n",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
+		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
 	}
 	return 0;
 }

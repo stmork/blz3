@@ -111,24 +111,43 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Add(const b3_vector *a,b3_vector *result)
+	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
 	{
-		result->x += a->x;
-		result->y += a->y;
-		result->z += a->z;
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
 
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] += a[i];
+		}
+#else
+		result->x += aVec->x;
+		result->y += aVec->y;
+		result->z += aVec->z;
+#endif
 		return result;
 	}
 
 	static inline b3_vector *b3Add(
-		const b3_vector *a,
-		const b3_vector *b,
+		const b3_vector *aVec,
+		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		result->x = a->x + b->x;
-		result->y = a->y + b->y;
-		result->z = a->z + b->z;
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
 
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] = a[i] + b[i];
+		}
+#else
+		result->x = aVec->x + bVec->x;
+		result->y = aVec->y + bVec->y;
+		result->z = aVec->z + bVec->z;
+#endif
 		return result;
 	}
 
@@ -142,14 +161,24 @@ public:
 	}
 
 	static inline b3_vector *b3Sub(
-		const b3_vector *a,
-		const b3_vector *b,
+		const b3_vector *aVec,
+		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		result->x = a->x - b->x;
-		result->y = a->y - b->y;
-		result->z = a->z - b->z;
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
 
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] = a[i] - b[i];
+		}
+#else
+		result->x = aVec->x - bVec->x;
+		result->y = aVec->y - bVec->y;
+		result->z = aVec->z - bVec->z;
+#endif
 		return result;
 	}
 
@@ -191,10 +220,21 @@ public:
 
 	static inline b3_f64 b3Length(const b3_vector *vector)
 	{
+#ifdef B3_SSE
+		b3_f32 *v = &vector->x;
+		b3_f64  r = 0;
+
+		for(int i = 0;i < 3;i++)
+		{
+			r += v[i] * v[i];
+		}
+		return sqrt(r);
+#else
 		return sqrt(
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z);
+#endif
 	}
 
 	static inline b3_f64 b3Length(const b3_vector64 *vector)

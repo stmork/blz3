@@ -107,10 +107,11 @@ depend:
 	gcc -M $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.il *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
 libB3Raytrace.o:	$(PRG_OBJ)
 	rm -f $@ core
 	ld -r -o $@ $^
+
 
 -include .dep
