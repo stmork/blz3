@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.9  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.8  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -92,8 +96,8 @@ BEGIN_MESSAGE_MAP(CAppRaytraceDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppRaytraceDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
-	ON_COMMAND(ID_IMG_SAVE, OnSaveImage)
-	ON_UPDATE_COMMAND_UI(ID_IMG_SAVE, OnUpdateSaveImage)
+	ON_COMMAND(ID_FILE_SAVE, OnSaveImage)
+	ON_UPDATE_COMMAND_UI(ID_FILE_SAVE, OnUpdateSaveImage)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -103,8 +107,8 @@ END_MESSAGE_MAP()
 CAppRaytraceDoc::CAppRaytraceDoc()
 {
 	// TODO: add one-time construction code here
-	m_Scene = null;
-	m_LinesDoc = null;
+	m_Scene     = null;
+	m_RenderDoc = null;
 }
 
 CAppRaytraceDoc::~CAppRaytraceDoc()
@@ -122,14 +126,21 @@ BOOL CAppRaytraceDoc::OnNewDocument()
 	return TRUE;
 }
 
+BOOL CAppRaytraceDoc::OnOpenDocument(LPCTSTR lpszPathName) 
+{
+	// TODO: Add your specialized creation code here
+	return m_Tx->b3LoadImage(lpszPathName) == B3_TX_OK;
+}
+
 void CAppRaytraceDoc::OnCloseDocument() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	m_LinesDoc->b3ClearRaytraceDoc();
+	if (m_RenderDoc != null)
+	{
+		m_RenderDoc->b3ClearRaytraceDoc();
+	}
 	CDocument::OnCloseDocument();
 }
-
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppRaytraceDoc serialization
@@ -164,15 +175,14 @@ void CAppRaytraceDoc::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CAppRaytraceDoc commands
 
-void CAppRaytraceDoc::b3SetLinesDoc(CAppLinesDoc *LinesDoc)
+void CAppRaytraceDoc::b3SetRenderDoc(CAppRenderDoc *RenderDoc)
 {
-	m_LinesDoc = LinesDoc;
+	m_RenderDoc = RenderDoc;
 }
 
 b3_bool CAppRaytraceDoc::b3IsRaytracing()
 {
-	B3_ASSERT(m_LinesDoc != null);
-	return m_LinesDoc->b3IsRaytracing();
+	return (m_RenderDoc != null ? m_RenderDoc->b3IsRaytracing() : false);
 }
 
 b3Display *CAppRaytraceDoc::b3GetDisplay(b3_res xSize,b3_res ySize,const char *title)
@@ -208,13 +218,16 @@ void CAppRaytraceDoc::b3ActivateView()
 void CAppRaytraceDoc::OnRaytrace() 
 {
 	// TODO: Add your command handler code here
-	m_LinesDoc->b3ToggleRaytrace();
+	if (m_RenderDoc != null)
+	{
+		m_RenderDoc->b3ToggleRaytrace();
+	}
 }
 
 void CAppRaytraceDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_LinesDoc->b3IsRaytracing());
+	pCmdUI->SetCheck(b3IsRaytracing());
 }
 
 void CAppRaytraceDoc::OnSaveImage() 
@@ -238,5 +251,5 @@ void CAppRaytraceDoc::OnSaveImage()
 void CAppRaytraceDoc::OnUpdateSaveImage(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_LinesDoc->b3IsRaytracing());
+	pCmdUI->Enable(!b3IsRaytracing());
 }

@@ -38,13 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.5  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
 **	- Added some non static methods to b3Dir (Un*x untested, yet!)
 **	- Fixed missing sphere/ellipsoid south pole triangles
 **	- Fixed Spline cylinder/ring triangle indexing
-**
+**	
 **	Revision 1.4  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -562,20 +566,31 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 }
 
 // Non static one...
-void b3Path::b3ExtractExt(char *ext)
+void b3Path::b3ExtractExt()
 {
-	b3ExtractExt(path,ext);
+	b3ExtractExt(path);
+}
+
+// Static one
+void b3Path::b3ExtractExt(char *input)
+{
+	b3ExtractExt(input,input);
+}
+
+// Non static one...
+void b3Path::b3ExtractExt(const char *input)
+{
+	b3ExtractExt(input,path);
 }
 
 // Extract an extension from a filename;
 void b3Path::b3ExtractExt(const char *filename,char *ext)
 {
-	char     actPath[B3_FILESTRINGLEN];
 	char     actName[B3_FILESTRINGLEN];
 	b3_index i;
 	b3_count len;
 
-	b3SplitFileName (filename,actPath,actName);
+	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
 	for (i = 0;i < len;i++)
 	{

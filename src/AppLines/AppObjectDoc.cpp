@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.7  2002/01/16 17:01:08  sm
 **	- Some minor fixes done
-**
+**	
 **	Revision 1.6  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -103,7 +107,6 @@ CAppObjectDoc::CAppObjectDoc()
 {
 	// TODO: add one-time construction code here
 	m_BBox         = null;
-	m_Raytracer    = new b3Thread("Raytracing master thread");
 	m_Info         = new b3ModellerInfo(LINES_INFO);
 	b3MatrixUnit(&m_OriginalPosition);
 	EnableAutomation();
@@ -114,7 +117,6 @@ CAppObjectDoc::CAppObjectDoc()
 CAppObjectDoc::~CAppObjectDoc()
 {
 	AfxOleUnlockApp();
-	delete m_Raytracer;
 	delete m_Info;
 }
 
@@ -139,11 +141,6 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	b3Base<b3Item>  base;
 	b3_count        level;
 	b3_matrix       inverse;
-
-	if (!CDocument::OnOpenDocument(lpszPathName))
-	{
-		return FALSE;
-	}
 
 	try
 	{

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.3  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.2  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -68,10 +72,13 @@ CAppRenderDoc::CAppRenderDoc()
 	// TODO: add one-time construction code here
 	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
 	m_Fulcrum.b3AllocVertices(&m_Context);
+	m_RaytraceDoc  = null;
+	m_Raytracer    = new b3Thread("Raytracing master thread");
 }
 
 CAppRenderDoc::~CAppRenderDoc()
 {
+	delete m_Raytracer;
 }
 
 
@@ -134,4 +141,41 @@ void CAppRenderDoc::b3DrawFulcrum()
 
 void CAppRenderDoc::b3ComputeBounds()
 {
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Raytracing methods                            **
+**                                                                      **
+*************************************************************************/
+
+void CAppRenderDoc::b3ToggleRaytrace()
+{
+	if (!b3IsRaytracing())
+	{
+		b3StartRaytrace();
+	}
+	else
+	{
+		b3StopRaytrace();
+	}
+}
+
+b3_bool CAppRenderDoc::b3IsRaytracing()
+{
+	return m_Raytracer->b3IsRunning();
+}
+
+void CAppRenderDoc::b3StartRaytrace()
+{
+}
+
+void CAppRenderDoc::b3StopRaytrace()
+{
+}
+
+void CAppRenderDoc::b3ClearRaytraceDoc()
+{
+	b3StopRaytrace();
+	m_RaytraceDoc = null;
 }

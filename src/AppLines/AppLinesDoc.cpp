@@ -56,10 +56,14 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.52  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.51  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -393,8 +397,6 @@ CAppLinesDoc::CAppLinesDoc()
 {
 	// TODO: add one-time construction code here
 	m_Scene        = null;
-	m_RaytraceDoc  = null;
-	m_Raytracer    = new b3Thread("Raytracing master thread");
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -403,7 +405,6 @@ CAppLinesDoc::CAppLinesDoc()
 CAppLinesDoc::~CAppLinesDoc()
 {
 	AfxOleUnlockApp();
-	delete m_Raytracer;
 }
 
 BOOL CAppLinesDoc::OnNewDocument()
@@ -465,11 +466,6 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	CMainFrame *main = CB3GetMainFrame();
 	CString     message;
 	BOOL        result = FALSE;
-
-	if (!CDocument::OnOpenDocument(lpszPathName))
-	{
-		return FALSE;
-	}
 
 	// TODO: Add your specialized creation code here
 	try
@@ -648,24 +644,6 @@ void CAppLinesDoc::OnUpdateGlobal(CCmdUI* pCmdUI)
 **                                                                      **
 *************************************************************************/
 
-b3_bool CAppLinesDoc::b3IsRaytracing()
-{
-	return m_Raytracer->b3IsRunning();
-}
-
-
-void CAppLinesDoc::b3ToggleRaytrace()
-{
-	if (!b3IsRaytracing())
-	{
-		b3StartRaytrace();
-	}
-	else
-	{
-		b3StopRaytrace();
-	}
-}
-
 b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
 {
 	CAppLinesDoc *pDoc = (CAppLinesDoc *)ptr;
@@ -740,12 +718,6 @@ void CAppLinesDoc::b3StopRaytrace()
 	}
 }
 
-void CAppLinesDoc::b3ClearRaytraceDoc()
-{
-	b3StopRaytrace();
-	m_RaytraceDoc = null;
-}
-
 /*************************************************************************
 **                                                                      **
 **                        Scene commands                                **
@@ -760,7 +732,7 @@ void CAppLinesDoc::OnRaytrace()
 	if (m_RaytraceDoc == null)
 	{
 		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
-		m_RaytraceDoc->b3SetLinesDoc(this);
+		m_RaytraceDoc->b3SetRenderDoc(this);
 	}
 	else
 	{

@@ -44,11 +44,15 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.18  2002/01/15 16:17:31  sm
 **	- Checked OLE support
 **	- Checked icons
 **	- Added two bwd files which create icons
-**
+**	
 **	Revision 1.17  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -143,8 +147,11 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CWinApp)
 	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppLinesApp construction
+/*************************************************************************
+**                                                                      **
+**                        CAppLinesApp construction                     **
+**                                                                      **
+*************************************************************************/
 
 CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 {
@@ -158,6 +165,44 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 
 CAppLinesApp theApp;
 
+class CImageMultiDocTemplate : public CMultiDocTemplate
+{
+	DECLARE_DYNAMIC(CImageMultiDocTemplate)
+
+// Constructors
+public:
+	CImageMultiDocTemplate(
+		UINT           nIDResource,
+		CRuntimeClass *pDocClass,
+		CRuntimeClass *pFrameClass,
+		CRuntimeClass *pViewClass) :
+			CMultiDocTemplate(nIDResource,pDocClass,pFrameClass,pViewClass)
+	{
+	}
+	
+	virtual Confidence MatchDocType(
+		LPCTSTR lpszPathName,
+		CDocument*& rpDocMatch)
+	{
+		Confidence result;
+		
+		result = CMultiDocTemplate::MatchDocType(lpszPathName,rpDocMatch);
+		if(result == yesAttemptForeign)
+		{
+			b3Path ext;
+
+			ext.b3ExtractExt(lpszPathName);
+			if (b3Tx::b3GetFileType(ext) != FT_UNKNOWN)
+			{
+				result = yesAttemptNative;
+			}
+		}
+		return result;
+	}
+};
+
+IMPLEMENT_DYNAMIC(CImageMultiDocTemplate,CMultiDocTemplate)
+
 // This identifier was generated to be statistically unique for your app.
 // You may change it if you prefer to choose a specific identifier.
 
@@ -169,8 +214,11 @@ static const CLSID scene_clsid =
 static const CLSID object_clsid =
 { 0x72d6951b, 0x8984, 0x11d5, { 0xa5, 0x4f, 0x0, 0x50, 0xbf, 0x4e, 0xb3, 0xf3 } };
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppLinesApp initialization
+/*************************************************************************
+**                                                                      **
+**                        CAppLinesApp initialization                   **
+**                                                                      **
+*************************************************************************/
 
 BOOL CAppLinesApp::InitInstance()
 {
@@ -225,7 +273,7 @@ BOOL CAppLinesApp::InitInstance()
 		RUNTIME_CLASS(CAppLinesView));
 	AddDocTemplate(pSceneTemplate);
 
-	pImageTemplate = new CMultiDocTemplate(
+	pImageTemplate = new CImageMultiDocTemplate(
 		IDR_DISPLAYTYPE,
 		RUNTIME_CLASS(CAppRaytraceDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame

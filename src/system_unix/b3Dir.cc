@@ -34,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.9  2002/01/06 21:38:18  sm
 **	- Nasty Un CR/LF
 **	- b3Dir fix. Not tested, yet!
 **	- make count/make count_all update
-**
+**	
 **	Revision 1.8  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
@@ -431,21 +435,31 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 }
 
 // Non static one...
-void b3Path::b3ExtractExt(char *ext)
+void b3Path::b3ExtractExt()
 {
-	b3ExtractExt(path,ext);
+	b3ExtractExt(path);
+}
+
+// Static one
+void b3Path::b3ExtractExt(char *input)
+{
+	b3ExtractExt(input,input);
+}
+
+// Non static one...
+void b3Path::b3ExtractExt(const char *input)
+{
+	b3ExtractExt(input,path);
 }
 
 // Remove extension of a file. This routine is needed
 // for creating a new extension.
 void b3Path::b3ExtractExt(const char *filename,char *ext)
 {
-	char     actPath[B3_FILESTRINGLEN];
 	char     actName[B3_FILESTRINGLEN];
-	b3_size  i;
-	b3_count len;
+	b3_size  i,len;
 
-	b3SplitFileName (filename,actPath,actName);
+	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
 	for (i = 0;i < len;i++)
 	{

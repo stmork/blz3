@@ -350,10 +350,10 @@ public:
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
-	b3_tx_filetype b3GetFileType(const char *extension);
-	b3_result      b3LoadImage(const char *ImageName);
-	b3_result      b3LoadImage(b3_u08 *buffer,b3_size size);
-	b3_result      b3SaveImage(const char *filename);
+	static b3_tx_filetype b3GetFileType(const char *extension);
+	b3_result             b3LoadImage(const char *ImageName);
+	b3_result             b3LoadImage(b3_u08 *buffer,b3_size size);
+	b3_result             b3SaveImage(const char *filename);
 
 	// b3TxScale.cc
 	void           b3TransToGrey();

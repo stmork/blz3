@@ -29,8 +29,8 @@
 
 class CAppRaytraceDoc : public CDocument, public b3Document
 {
-	b3Scene      *m_Scene;
-	CAppLinesDoc *m_LinesDoc;
+	b3Scene       *m_Scene;
+	CAppRenderDoc *m_RenderDoc;
 protected: // create from serialization only
 	CAppRaytraceDoc();
 	DECLARE_DYNCREATE(CAppRaytraceDoc)
@@ -40,7 +40,7 @@ public:
 
 // Operations
 public:
-	void       b3SetLinesDoc(CAppLinesDoc *LinesDoc);
+	void       b3SetRenderDoc(CAppRenderDoc *LinesDoc);
 	b3_bool    b3IsRaytracing();
 	b3Display *b3GetDisplay(const char *title);
 	b3Display *b3GetDisplay(b3_res xSize,b3_res ySize,const char *title);
@@ -53,6 +53,7 @@ public:
 	virtual BOOL OnNewDocument();
 	virtual void OnCloseDocument();
 	virtual void Serialize(CArchive& ar);
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	//}}AFX_VIRTUAL
 
 // Implementation

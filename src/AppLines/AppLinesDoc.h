@@ -25,16 +25,10 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "AppRenderDoc.h"
 
-class CAppRaytraceDoc;
-class CDlgHierarchy;
-
 class CAppLinesDoc : public CAppRenderDoc
 {
 protected:
 	b3World               m_World;
-	b3Thread             *m_Raytracer;
-	b3Display            *m_Display;
-	CAppRaytraceDoc      *m_RaytraceDoc;
 // Attributes
 public:
 	b3Scene              *m_Scene;
@@ -59,11 +53,8 @@ public:
 // Implementation
 public:
 	void       b3ComputeBounds();
-	void       b3ClearRaytraceDoc();
 	void       b3StartRaytrace();
 	void       b3StopRaytrace();
-	void       b3ToggleRaytrace();
-	b3_bool    b3IsRaytracing();
 
 	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG

@@ -25,12 +25,16 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "b3Fulcrum.h"
 
+class CAppRaytraceDoc;
 class CDlgHierarchy;
 
 class CAppRenderDoc : public CDocument, public b3Document
 {
 protected:
 	CDlgHierarchy        *m_DlgHierarchy;
+	CAppRaytraceDoc      *m_RaytraceDoc;
+	b3Thread             *m_Raytracer;
+	b3Display            *m_Display;
 
 public:
 	b3ModellerInfo       *m_Info;
@@ -57,6 +61,11 @@ public:
 	        b3_vector *b3GetStepMove();
 	        b3_vector *b3GetStepRotate();
 	        void       b3DrawFulcrum();
+	        void       b3ToggleRaytrace();
+	        b3_bool    b3IsRaytracing();
+	        void       b3ClearRaytraceDoc();
+	virtual void       b3StartRaytrace();
+	virtual void       b3StopRaytrace();
 	virtual void       b3ComputeBounds();
 
 	virtual   ~CAppRenderDoc();

@@ -37,12 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/17 15:46:00  sm
+**	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
+**	- Opening a CAppRaytraceDoc for all image extensions.
+**
 **	Revision 1.3  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
 **	- Added stricmp() for Un*x
 **	- Fixed some defines
-**
+**	
 **	Revision 1.2  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -330,7 +334,7 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 	b3Path         ext;
 	b3_tx_filetype filetype;
 
-	b3Path::b3ExtractExt(filename,ext);
+	ext.b3ExtractExt(filename);
 	filetype = b3GetFileType(ext);
 	switch(filetype)
 	{

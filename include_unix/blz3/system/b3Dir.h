@@ -73,7 +73,8 @@ public:
 	       void b3RemoveExt    ();
 		   void b3ParentName   (const char *filename);
 	       void b3ParentName   ();
-		   void b3ExtractExt   (char *ext);
+		   void b3ExtractExt   (const char *filename);
+		   void b3ExtractExt   ();
 	       void b3Correct      (const char *path);
 		   void b3Correct      ();
 	static void b3LinkFileName (char *full,const char *path,const char *name);
@@ -81,8 +82,9 @@ public:
 	static void b3ParentName   (const char *path,char *result);
 	static void b3ParentName   (char *parent);
 	static void b3RemoveExt    (const char *filename,char *result);
-	static void b3RemoveExt    (char *filename);
+	static void b3RemoveExt    (char *result);
 	static void b3ExtractExt   (const char *filename,char *ext);
+	static void b3ExtractExt   (char *ext);
 	static void b3Correct      (const char *path,char *result);
 	static void b3Correct      (char *path);
 

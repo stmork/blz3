@@ -1332,7 +1332,7 @@ END
 
 STRINGTABLE PRELOAD DISCARDABLE 
 BEGIN
-    IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nBerechnetes Bild\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
+    IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nBerechnetes Bild\n\n\nblz3img.Document\nBlizzard III Image"
     IDR_OBJECT              "Blizzard III Lines\nUnbenannt\nBlizzard III Objekt\nBlizzard III Objekt (*.bod)\n.bod\nblz3obj.Document\nBlizzard III Objekt"
 END
 
