@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/05/08 14:37:56  sm
+**	- Output some information when not specifying data files.
+**
 **	Revision 1.7  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
 **	- Accelerated ILBM access to image  pixel/row.
-**
+**	
 **	Revision 1.6  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
@@ -69,6 +72,7 @@
 */
 
 static b3TxPool texture_pool;
+static char     cvs_tag[] = "$Name$";
 
 class b3ImageRow : public b3Row
 {
@@ -142,5 +146,17 @@ int main(int argc,char *argv[])
 			display(tx);
 		}
 	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Simple image viewer\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s {Bllizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"Compile name: %s\n",cvs_tag);
+	}
+
 	return 0;
 }

@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/05/08 14:37:56  sm
+**	- Output some information when not specifying data files.
+**
 **	Revision 1.19  2002/02/01 15:49:23  sm
 **	- Added "force no display" for remote Un*x raytracing
 **	- Converted BWDs to binary
-**
+**	
 **	Revision 1.18  2002/01/22 17:11:17  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
@@ -128,6 +131,8 @@
 */
 
 #define BLZ3_EXTENSION ".tga"
+
+static char cvs_tag[] = "$Name$";
 
 static void b3SaveRaytracedImage(
 	b3Display  *display,
@@ -299,6 +304,17 @@ int main(int argc,char *argv[])
 			}
 		}
 		delete world;
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s {Bllizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+		b3PrintF(B3LOG_NORMAL,"Compile name: %s\n",cvs_tag);
 	}
 	return 0;
 }
