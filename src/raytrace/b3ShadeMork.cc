@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/12/31 16:01:03  sm
+**	- Fixed wrong vector multiplication.
+**
 **	Revision 1.15  2002/07/26 09:13:33  sm
 **	- Found alpha problem: the Linux OpenGL renderer didn't use the
 **	  b3RenderContext::b3Init() method! Now everything function very well:-)
 **	- The Un*x OpenGL renderer has got a key press interface now.
 **	- Corrected spot lights
 **	- Textures needn't to be square any more (some less memory usage)
-**
+**	
 **	Revision 1.14  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
@@ -207,24 +210,23 @@ b3_bool b3SceneMork::b3IsPointLightBackground (
 {
 	b3_vector LightDir;
 	b3_f64    LightDist,Factor,ReflexAngle;
-	b3_f64    x,y,z;
 
 	if (!Light->m_LightActive)
 	{
 		return false;
 	}
 
-	x = Light->m_Position.x - Ray->pos.x;
-	y = Light->m_Position.y - Ray->pos.y;
-	z = Light->m_Position.z - Ray->pos.z;
-	if ((LightDist = x * x + y * y + z * z) == 0)
+	LightDir.x = Light->m_Position.x - Ray->pos.x;
+	LightDir.y = Light->m_Position.y - Ray->pos.y;
+	LightDir.z = Light->m_Position.z - Ray->pos.z;
+	if ((LightDist = b3Vector::b3QuadLength(&LightDir)) == 0)
 	{
 		return false;
 	}
  	LightDist  = 1.0 / sqrt(LightDist);
- 	LightDir.x = x * LightDist;
- 	LightDir.y = x * LightDist;
- 	LightDir.z = x * LightDist;
+ 	LightDir.x *= LightDist;
+ 	LightDir.y *= LightDist;
+ 	LightDir.z *= LightDist;
 
 	ReflexAngle =
 		(LightDir.x * Ray->dir.x +
