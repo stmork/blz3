@@ -28,9 +28,9 @@ test -d $BLZ3_MAN || mkdir -p $BLZ3_MAN
 test -d $BLZ3_WWW || mkdir -p $BLZ3_WWW
 
 if ( $?LDFLAGS ) then
-  setenv LDFLAGS     "$LDFLAGS -Wl,-E -L$BLZ3_LIB"
+  setenv LDFLAGS     "$LDFLAGS -L$BLZ3_LIB"
 else
-  setenv LDFLAGS     "-Wl,-E -L$BLZ3_LIB"
+  setenv LDFLAGS     "-L$BLZ3_LIB"
 endif
 
 if ( $?MOTIF_INCLUDE ) then
