@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/16 04:28:29  sm
+**      - Solving conflicts
+**
 **      Revision 1.2  2001/08/15 19:52:57  sm
 **      - First polygon rendering with Blizzard III (areas only)
 **

@@ -83,12 +83,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/08/16 04:28:29  sm
+**	- Solving conflicts
+**
 **	Revision 1.9  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.8  2001/08/09 15:27:34  sm
 **	- Following shapes are newly supported now:
 **	  o disk
