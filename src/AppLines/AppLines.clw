@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgKnotControl
+LastClass=CAboutDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -79,133 +79,133 @@ Class67=CDlgFulcrum
 Class68=CDlgHierarchy
 Class69=CDlgItemCreate
 Class70=CDlgItemMaintain
-Class71=CDlgLDC
-Class72=CDlgLensFlare
-Class73=CDlgLight
-Class74=CDlgMatChess
-Class75=CDlgMatCookTorrance
-Class76=CDlgMatGranite
-Class77=CDlgMatMarble
-Class78=CDlgMatNormal
-Class79=CDlgMatOakPlank
-Class80=CDlgMatSlide
-Class81=CDlgMatTexture
-Class82=CDlgMatWood
-Class83=CDlgMatWrapTexture
-Class84=CDlgModellerInfo
-Class85=CDlgNebular
-Class86=CDlgNewObject
-Class87=CDlgObjectCopy
-Class88=CDlgObjectPreview
-Class89=CDlgObjectTransformMode
-Class90=CDlgObjectTransformReplace
-Class91=CDlgObjectTransformLoad
-Class92=CDlgProfileBevelSpline
-Class93=CDlgProfileBevelStumpSpline
-Class94=CDlgProfileBevelTriangles
-Class95=CDlgProperties
-Class96=CDlgScene
-Class97=CDlgSearchPathList
-Class98=CDlgSelectProfile
-Class99=CDlgShape1
-Class100=CDlgShape2
-Class101=CDlgShape3
-Class102=CDlgSpinTest
-Class103=CDlgStepMove
-Class104=CDlgStepRotate
-Class105=CDlgSuperSampling
-Class106=CDlgTorus
-Class107=CDlgUndoRedo
-Class108=CMainFrame
-Class109=CPageBump
-Class110=CPageMaterial
-Class111=CPageOakPlank
-Class112=CPageScaling
-Class113=CPageWood
+Class71=CDlgKnotControl
+Class72=CDlgLDC
+Class73=CDlgLensFlare
+Class74=CDlgLight
+Class75=CDlgMatChess
+Class76=CDlgMatCookTorrance
+Class77=CDlgMatGranite
+Class78=CDlgMatMarble
+Class79=CDlgMatNormal
+Class80=CDlgMatOakPlank
+Class81=CDlgMatSlide
+Class82=CDlgMatTexture
+Class83=CDlgMatWood
+Class84=CDlgMatWrapTexture
+Class85=CDlgModellerInfo
+Class86=CDlgNebular
+Class87=CDlgNewObject
+Class88=CDlgObjectCopy
+Class89=CDlgObjectPreview
+Class90=CDlgObjectTransformMode
+Class91=CDlgObjectTransformReplace
+Class92=CDlgObjectTransformLoad
+Class93=CDlgProfileBevelSpline
+Class94=CDlgProfileBevelStumpSpline
+Class95=CDlgProfileBevelTriangles
+Class96=CDlgProperties
+Class97=CDlgScene
+Class98=CDlgSearchPathList
+Class99=CDlgSelectProfile
+Class100=CDlgShape1
+Class101=CDlgShape2
+Class102=CDlgShape3
+Class103=CDlgSpinTest
+Class104=CDlgStepMove
+Class105=CDlgStepRotate
+Class106=CDlgSuperSampling
+Class107=CDlgTorus
+Class108=CDlgUndoRedo
+Class109=CMainFrame
+Class110=CPageBump
+Class111=CPageMaterial
+Class112=CPageOakPlank
+Class113=CPageScaling
+Class114=CPageWood
 
 ResourceCount=82
-Resource1=IDD_LDC
-Resource2=IDR_TOOLBAR_ANIMATION
-Resource3=IDR_TOOLBAR_VIEW
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
-Resource6=IDR_TOOLBAR_DISPLAY
-Resource7=IDR_TOOLBAR_CAMERA
-Resource8=IDR_TOOLBAR_LIGHT
-Resource9=IDD_NEBULAR
+Resource1=IDD_MAT_WOOD
+Resource2=IDR_TOOLBAR_VIEW
+Resource3=IDR_TOOLBAR_ACTION
+Resource4=IDR_TOOLBAR_OBJECT
+Resource5=IDR_TOOLBAR_DISPLAY
+Resource6=IDR_TOOLBAR_CAMERA
+Resource7=IDR_TOOLBAR_LIGHT
+Resource8=IDR_TOOLBAR_ANIMATION
+Resource9=IDD_OBJECT_PREVIEW
 Resource10=IDR_DISPLAYTYPE
-Resource11=IDD_ITEM_MAINTAIN
-Resource12=IDR_MAINFRAME
-Resource13=IDD_STEP_MOVE
-Resource14=IDR_CONTEXT_OBJECT
-Resource15=IDD_SHAPE3
-Resource16=IDD_MAT_MARBLE
-Resource17=IDD_HIERARCHY
-Resource18=IDD_SHAPE2
-Resource19=IDD_MAT_GRANITE
-Resource20=IDD_MAT_CHESS
-Resource21=IDD_PAGE_MAT_WOOD
-Resource22=IDD_PAGE_WOOD
-Resource23=IDD_CREATE_ROTSHAPE
-Resource24=IDD_OBJECT_PREVIEW
-Resource25=IDD_MAT_WRAP_TEXTURE
-Resource26=IDD_BUMP_GLOSSY
-Resource27=IDD_MAT_WOOD
-Resource28=IDD_PAGE_OAKPLANK
-Resource29=IDD_COPY_PROPERTIES
-Resource30=IDD_PAGE_SCALING
-Resource31=IDD_PAGE_BUMP
-Resource32=IDD_MAT_TEXTURE
-Resource33=IDD_UNDO_REDO
-Resource34=IDD_BUMP_TEXTURE
-Resource35=IDD_BUMP_GROOVE
-Resource36=IDD_PROFILE_BEVEL_TRIANGLES
-Resource37=IDD_BUMP_WATER
-Resource38=IDD_BUMP_NOISE
-Resource39=IDD_OBJECT_REPLACE
-Resource40=IDD_OBJECT_LOAD
-Resource41=IDD_ITEM_CREATE
-Resource42=IDR_OBJECT
-Resource43=IDR_CONTEXT_SCENE
-Resource44=IDD_MAT_SLIDE
-Resource45=IDR_BLZ3TYPE
-Resource46=IDD_ABOUTBOX
-Resource47=IDD_BUMP_OAKPLANK
-Resource48=IDD_SCENE
-Resource49=IDD_SUPER_SAMPLE
-Resource50=IDD_MAT_OAKPLANK
-Resource51=IDD_LENS_FLARE
-Resource52=IDD_DISTRIBUTED
-Resource53=IDD_PAGE_MATERIAL
-Resource54=IDD_CAMERA
-Resource55=IDD_NEW_ITEM
-Resource56=IDD_BUMP_WOOD
-Resource57=IDD_LIGHT
-Resource58=IDD_FULCRUM
-Resource59=IDD_MAT_NORMAL
-Resource60=IDD_STEP_ROTATE
-Resource61=IDD_OBJECT_COPY
-Resource62=IDD_BUMP_MARBLE
-Resource63=IDD_PROPERTIES
-Resource64=IDD_NEW_OBJECT
-Resource65=IDD_FILEOPENPREVIEW
-Resource66=IDD_SHAPE1
-Resource67=IDD_MAT_COOK_TORRANCE
-Resource68=IDD_TORUS
-Resource69=IDD_CREATE_MATERIAL
-Resource70=IDD_CREATE_STENCIL
-Resource71=IDD_CSGMODE
-Resource72=IDD_CREATE_TRIANGLES
-Resource73=IDD_CREATE_SHAPE_PROFILE
-Resource74=IDD_PROFILE_BEVEL_SPLINE
-Resource75=IDD_PROFILE_BEVELSTUMP_SPLINE
-Resource76=IDD_SPINTEST
-Resource77=IDD_CREATE_SPLINESHAPE
-Resource78=IDD_MODELLER_INFO
-Resource79=IDD_BUMP_WAVE
-Resource80=IDD_ANIMATION
-Resource81=IDD_SEARCH_PATH_LIST
-Class114=CDlgKnotControl
+Resource11=IDD_PAGE_MAT_WOOD
+Resource12=IDD_COPY_PROPERTIES
+Resource13=IDD_PAGE_SCALING
+Resource14=IDD_BUMP_MARBLE
+Resource15=IDD_BUMP_TEXTURE
+Resource16=IDD_BUMP_GLOSSY
+Resource17=IDD_BUMP_GROOVE
+Resource18=IDD_BUMP_WAVE
+Resource19=IDD_BUMP_WATER
+Resource20=IDD_BUMP_NOISE
+Resource21=IDD_OBJECT_REPLACE
+Resource22=IDD_OBJECT_LOAD
+Resource23=IDR_MAINFRAME
+Resource24=IDR_OBJECT
+Resource25=IDR_CONTEXT_SCENE
+Resource26=IDR_CONTEXT_OBJECT
+Resource27=IDR_BLZ3TYPE
+Resource28=IDD_ABOUTBOX
+Resource29=IDD_HIERARCHY
+Resource30=IDD_SCENE
+Resource31=IDD_SUPER_SAMPLE
+Resource32=IDD_NEBULAR
+Resource33=IDD_LENS_FLARE
+Resource34=IDD_DISTRIBUTED
+Resource35=IDD_MODELLER_INFO
+Resource36=IDD_SEARCH_PATH_LIST
+Resource37=IDD_NEW_ITEM
+Resource38=IDD_LIGHT
+Resource39=IDD_LDC
+Resource40=IDD_CAMERA
+Resource41=IDD_FULCRUM
+Resource42=IDD_STEP_MOVE
+Resource43=IDD_STEP_ROTATE
+Resource44=IDD_OBJECT_COPY
+Resource45=IDD_FILEOPENPREVIEW
+Resource46=IDD_PROPERTIES
+Resource47=IDD_NEW_OBJECT
+Resource48=IDD_SHAPE3
+Resource49=IDD_SHAPE1
+Resource50=IDD_SHAPE2
+Resource51=IDD_CSGMODE
+Resource52=IDD_CREATE_MATERIAL
+Resource53=IDD_CREATE_STENCIL
+Resource54=IDD_TORUS
+Resource55=IDD_CREATE_TRIANGLES
+Resource56=IDD_CREATE_SHAPE_PROFILE
+Resource57=IDD_PROFILE_BEVEL_SPLINE
+Resource58=IDD_SPINTEST
+Resource59=IDD_PROFILE_BEVELSTUMP_SPLINE
+Resource60=IDD_CREATE_SPLINESHAPE
+Resource61=IDD_CREATE_ROTSHAPE
+Resource62=IDD_PROFILE_BEVEL_TRIANGLES
+Resource63=IDD_ANIMATION
+Resource64=IDD_UNDO_REDO
+Resource65=IDD_ITEM_MAINTAIN
+Resource66=IDD_ITEM_CREATE
+Resource67=IDD_MAT_NORMAL
+Resource68=IDD_MAT_CHESS
+Resource69=IDD_MAT_SLIDE
+Resource70=IDD_MAT_TEXTURE
+Resource71=IDD_MAT_MARBLE
+Resource72=IDD_MAT_WRAP_TEXTURE
+Resource73=IDD_MAT_COOK_TORRANCE
+Resource74=IDD_MAT_GRANITE
+Resource75=IDD_MAT_OAKPLANK
+Resource76=IDD_PAGE_OAKPLANK
+Resource77=IDD_PAGE_WOOD
+Resource78=IDD_PAGE_MATERIAL
+Resource79=IDD_PAGE_BUMP
+Resource80=IDD_BUMP_OAKPLANK
+Resource81=IDD_BUMP_WOOD
 Resource82=IDD_BSPLINE_CTRL
 
 [CLS:CB3App]
@@ -225,14 +225,12 @@ Type=0
 BaseClass=CStatic
 HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
 ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
-LastObject=CB3LineWidth
 
 [CLS:CB3FontField]
 Type=0
 BaseClass=CStatic
 HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
 ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
-LastObject=CB3FontField
 
 [CLS:CB3HSVField]
 Type=0
@@ -354,9 +352,6 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppObjectDoc.h
 ImplementationFile=AppObjectDoc.cpp
-Filter=N
-VirtualFilter=DC
-LastObject=ID_SPLINE_CONTROL
 
 [CLS:CAppObjectView]
 Type=0
@@ -369,7 +364,6 @@ Type=0
 BaseClass=CB3LinesDocument
 HeaderFile=AppRaytraceDoc.h
 ImplementationFile=AppRaytraceDoc.cpp
-LastObject=CAppRaytraceDoc
 
 [CLS:CAppRaytraceView]
 Type=0
@@ -394,7 +388,6 @@ Type=0
 BaseClass=CStatic
 HeaderFile=b3ControlLDC.h
 ImplementationFile=b3ControlLDC.cpp
-LastObject=CB3ControlLDC
 
 [CLS:CB3ImagePreviewFileDlg]
 Type=0
@@ -425,7 +418,6 @@ Type=0
 BaseClass=CPropertyPage
 HeaderFile=b3ShapeDialog.h
 ImplementationFile=b3ShapeDialog.cpp
-LastObject=CB3ShapeDialog
 
 [CLS:CB3ShowRaytrace]
 Type=0
@@ -450,7 +442,6 @@ Type=0
 BaseClass=CB3SimplePreviewDialog
 HeaderFile=b3SimplePropertyPreviewDialog.h
 ImplementationFile=b3SimplePropertyPreviewDialog.cpp
-LastObject=CB3SimplePropertyPreviewDialog
 
 [CLS:CB3SpanningShapeDialog]
 Type=0
@@ -481,7 +472,6 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgAnimation.h
 ImplementationFile=DlgAnimation.cpp
-LastObject=CDlgAnimation
 
 [CLS:CDlgBumpGlossy]
 Type=0
@@ -518,7 +508,6 @@ Type=0
 BaseClass=CB3SimplePreviewDialog
 HeaderFile=DlgBumpTexture.h
 ImplementationFile=DlgBumpTexture.cpp
-LastObject=CDlgBumpTexture
 
 [CLS:CDlgBumpWater]
 Type=0
@@ -555,7 +544,6 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgCreateItem.h
 ImplementationFile=DlgCreateItem.cpp
-LastObject=CDlgCreateItem
 
 [CLS:CDlgCreateMaterial]
 Type=0
@@ -592,7 +580,6 @@ Type=0
 BaseClass=CB3SpanningShapeDialog
 HeaderFile=DlgCSG1.h
 ImplementationFile=DlgCSG1.cpp
-LastObject=CDlgCSG1
 
 [CLS:CDlgCSG3]
 Type=0
@@ -629,7 +616,6 @@ Type=0
 BaseClass=CB3Dialogbar
 HeaderFile=DlgHierarchy.h
 ImplementationFile=DlgHierarchy.cpp
-LastObject=CDlgHierarchy
 
 [CLS:CDlgItemCreate]
 Type=0
@@ -642,9 +628,12 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgItemMaintain.h
 ImplementationFile=DlgItemMaintain.cpp
-Filter=D
-VirtualFilter=dWC
-LastObject=ID_EDIT_BUMP_DIRECT
+
+[CLS:CDlgKnotControl]
+Type=0
+BaseClass=CDialog
+HeaderFile=DlgKnotControl.h
+ImplementationFile=DlgKnotControl.cpp
 
 [CLS:CDlgLDC]
 Type=0
@@ -669,7 +658,6 @@ Type=0
 BaseClass=CB3SimplePropertyPreviewDialog
 HeaderFile=DlgMatChess.h
 ImplementationFile=DlgMatChess.cpp
-LastObject=CDlgMatChess
 
 [CLS:CDlgMatCookTorrance]
 Type=0
@@ -706,7 +694,6 @@ Type=0
 BaseClass=CB3SimplePropertyPreviewDialog
 HeaderFile=DlgMatSlide.h
 ImplementationFile=DlgMatSlide.cpp
-LastObject=CDlgMatSlide
 
 [CLS:CDlgMatTexture]
 Type=0
@@ -743,7 +730,6 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgNewObject.h
 ImplementationFile=DlgNewObject.cpp
-LastObject=CDlgNewObject
 
 [CLS:CDlgObjectCopy]
 Type=0
@@ -756,35 +742,30 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgObjectPreview.h
 ImplementationFile=DlgObjectPreview.cpp
-LastObject=CDlgObjectPreview
 
 [CLS:CDlgObjectTransformMode]
 Type=0
 BaseClass=CDialog
 HeaderFile=DlgObjectTransformMode.h
 ImplementationFile=DlgObjectTransformMode.cpp
-LastObject=CDlgObjectTransformMode
 
 [CLS:CDlgObjectTransformReplace]
 Type=0
 BaseClass=CDlgObjectTransformMode
 HeaderFile=DlgObjectTransformMode.h
 ImplementationFile=DlgObjectTransformMode.cpp
-LastObject=CDlgObjectTransformReplace
 
 [CLS:CDlgObjectTransformLoad]
 Type=0
 BaseClass=CDlgObjectTransformMode
 HeaderFile=DlgObjectTransformMode.h
 ImplementationFile=DlgObjectTransformMode.cpp
-LastObject=CDlgObjectTransformLoad
 
 [CLS:CDlgProfileBevelSpline]
 Type=0
 BaseClass=CB3ProfileShapeDialog
 HeaderFile=DlgProfileBevelSpline.h
 ImplementationFile=DlgProfileBevelSpline.cpp
-LastObject=CDlgProfileBevelSpline
 
 [CLS:CDlgProfileBevelStumpSpline]
 Type=0
@@ -809,9 +790,6 @@ Type=0
 BaseClass=CPropertyPage
 HeaderFile=DlgScene.h
 ImplementationFile=DlgScene.cpp
-LastObject=IDC_SHADING_PHONG
-Filter=D
-VirtualFilter=idWC
 
 [CLS:CDlgSearchPathList]
 Type=0
@@ -1478,6 +1456,16 @@ Control11=IDC_STATIC,static,1342308352
 Control12=IDOK,button,1342242817
 Control13=IDC_ITEM_DEFAULT,button,1342308361
 Control14=IDC_ITEM_REGISTRY,button,1342177289
+
+[DLG:IDD_BSPLINE_CTRL]
+Type=1
+Class=CDlgKnotControl
+ControlCount=5
+Control1=IDC_KNOT_NUM_EDIT,edit,1350631552
+Control2=IDC_KNOT_NUM_SPIN,msctls_updown32,1342177462
+Control3=IDC_KNOT_POS,msctls_trackbar32,1342242825
+Control4=IDOK,button,1342242817
+Control5=IDCANCEL,button,1342242816
 
 [DLG:IDD_LDC]
 Type=1
@@ -2674,7 +2662,7 @@ CommandCount=46
 
 [MNU:IDR_OBJECT]
 Type=1
-Class=CAppObjectDoc
+Class=?
 Command1=ID_FILE_NEW
 Command2=ID_FILE_CLOSE
 Command3=ID_FILE_SAVE
@@ -2864,23 +2852,4 @@ Control16=IDC_INDEX_OF_REFRACTION_SPIN,msctls_updown32,1342177460
 Control17=IDC_STATIC,static,1342308352
 Control18=IDC_SPEC_EXPONENT,edit,1350631552
 Control19=IDC_SPEC_EXPONENT_SPIN,msctls_updown32,1342177460
-
-[DLG:IDD_BSPLINE_CTRL]
-Type=1
-Class=CDlgKnotControl
-ControlCount=5
-Control1=IDC_KNOT_NUM_EDIT,edit,1350631552
-Control2=IDC_KNOT_NUM_SPIN,msctls_updown32,1342177462
-Control3=IDC_KNOT_POS,msctls_trackbar32,1342242825
-Control4=IDOK,button,1342242817
-Control5=IDCANCEL,button,1342242816
-
-[CLS:CDlgKnotControl]
-Type=0
-HeaderFile=DlgKnotControl.h
-ImplementationFile=DlgKnotControl.cpp
-BaseClass=CDialog
-Filter=D
-VirtualFilter=dWC
-LastObject=IDC_KNOT_NUM_SPIN
 
