@@ -21,10 +21,11 @@ PRGS			= brt3 bimg3 bconv3 bhc rp
 all:	$(PRGS)
 
 install:	$(PRGS)
-	install -m 755 $^ @bindir@
+	cp $^ @bindir@
+	(cd @bindir@; chmod 755 $^;)
 
 depend:
-	gcc -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET

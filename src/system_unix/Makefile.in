@@ -28,7 +28,7 @@ LIB_OBJ			=\
 all:	$(LIB_OBJ)
 
 depend:
-	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.il *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET

@@ -29,8 +29,7 @@ LIB_OBJS	= jcapimin.o jcapistd.o jctrans.o jcparam.o jdatadst.o jcinit.o \
 all:	$(LIBS)
 
 depend:	$(LIB_SRCS)
-#	makedepend -- $(CPPFLAGS) -- $(LIB_SRCS)
-	gcc -M  $(LIB_SRCS) $(CPPFLAGS) >.dep
+	@CPP@ -M  $(LIB_SRCS) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS)

@@ -40,7 +40,7 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h s
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([pthread], [main])
 
-AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_OPENGL]) GLUTLIBS="$LIBS -lglut"])
+AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_OPENGL]) GLUTLIBS="$LIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
 AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG]) LIBS="$LIBS -lCgGL"])
 AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) DIVXLIBS="$DIVXLIBS -lavi"])

@@ -21,10 +21,11 @@ PRGS			= simple render matrix_test
 all:	$(PRGS)
 
 install:	render
-	install -m 755 $^ @bindir@
+	cp $^ @bindir@
+	(cd @bindir@; chmod 755 $^;)
 
 depend:
-	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
+	@CPP@ -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET

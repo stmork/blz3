@@ -45,9 +45,13 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.4  2004/08/17 08:35:37  sm
+**	- Correct make depend command
+**	- Correct install
+**
 **	Revision 1.3  2004/08/16 06:05:43  sm
 **	- Added divx define rules.
-**
+**	
 **	Revision 1.2  2004/08/04 13:56:24  sm
 **	- More quiet divx encoder
 **	
@@ -70,13 +74,13 @@ int main(int argc,char *argv[])
 	ENC_PARAM     encoding;
 	ENC_FRAME     frame;
 	ENC_RESULT    result;
+	char         *bitstream = null;
+	int           error;
 #endif
 	b3_u08       *buffer = null;
 	b3_u08       *ptr;
-	char         *bitstream = null;
 	b3_pkd_color *data,color;
 	b3_size       size = 0;
-	int           error;
 #ifdef BLZ3_USE_AVILIB
 	avi_t        *out;
 #endif

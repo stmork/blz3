@@ -86,8 +86,7 @@ LIB_OBJ	= \
 all:	$(LIBS)
 
 depend:	$(AUTO)
-#	makedepend -- $(CPPFLAGS) -- $(SRCS)
-	gcc -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
+	@CPP@ -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
 	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS) $(LIBS) $(AUTO) ALL QUIET version.h
