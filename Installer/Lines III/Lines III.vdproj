@@ -15,19 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
         "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
         "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2D210A87221C488484AD3288F4D86EC4"
+        "MsmKey" = "8:_0A25077064F94DADB04D2E15B86EE7DC"
         "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -111,6 +111,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_77DCA29E632647CBA28E01CFA7A06833"
+        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -136,24 +154,6 @@
         "Entry"
         {
         "MsmKey" = "8:_B4EB950B8F5D985ADB70AED0CF66B92C"
-        "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
-        "OwnerKey" = "8:_70193B185E7443449F020FE02196C761"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
-        "OwnerKey" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CF93D40BAB0E473F924CFA746403E2D4"
         "OwnerKey" = "8:_7D66FAF8D902439B906320101096BF40"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -680,7 +680,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Blizzard III"
         "ProductCode" = "8:{6D72BD35-E286-4602-8B39-D2BB927620F2}"
-        "PackageCode" = "8:{65123AE0-9FF4-4A4C-AD2E-ABC7123A148A}"
+        "PackageCode" = "8:{C3C8FD62-6AFA-43FE-B42F-D4DDC9473AAE}"
         "UpgradeCode" = "8:{0158E6F0-AD9F-4CE8-9B37-E9E3FA270279}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -808,12 +808,40 @@
             "Icon" = "8:"
             "Feature" = "8:"
             }
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_348E29DB3D4B4413B5F61A7769FEF231"
+            {
+            "Name" = "8:Lines III"
+            "Arguments" = "8:"
+            "Description" = "8:Lines III für Pentium-III (SSE)"
+            "ShowCmd" = "3:3"
+            "IconIndex" = "3:110"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_7D66FAF8D902439B906320101096BF40"
+            "Folder" = "8:_44827182F8ED4A7BBD92B5B75D95DDDA"
+            "WorkingFolder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Icon" = "8:_7D66FAF8D902439B906320101096BF40"
+            "Feature" = "8:"
+            }
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_618472AC38444CD59C1D3F6CF55E85E6"
+            {
+            "Name" = "8:Lines III"
+            "Arguments" = "8:"
+            "Description" = "8:Lines III für Pentium III (SSE)"
+            "ShowCmd" = "3:3"
+            "IconIndex" = "3:110"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_7D66FAF8D902439B906320101096BF40"
+            "Folder" = "8:_FD795197F3D04B41A09AF93A63F59744"
+            "WorkingFolder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Icon" = "8:_7D66FAF8D902439B906320101096BF40"
+            "Feature" = "8:"
+            }
             "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_872593D76AE54CD992021E0148328DE9"
             {
             "Name" = "8:Lines III"
             "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
+            "Description" = "8:Lines III für jedem x86-Prozessor"
+            "ShowCmd" = "3:3"
             "IconIndex" = "3:110"
             "Transitive" = "11:FALSE"
             "Target" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
@@ -822,18 +850,46 @@
             "Icon" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
             "Feature" = "8:"
             }
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_8D08394B65DA406B8054DB9F2C56BB6E"
+            {
+            "Name" = "8:Lines III"
+            "Arguments" = "8:"
+            "Description" = "8:Lines III für Pentium 4 (SSE2)"
+            "ShowCmd" = "3:3"
+            "IconIndex" = "3:110"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_70193B185E7443449F020FE02196C761"
+            "Folder" = "8:_44827182F8ED4A7BBD92B5B75D95DDDA"
+            "WorkingFolder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Icon" = "8:_70193B185E7443449F020FE02196C761"
+            "Feature" = "8:"
+            }
             "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_B2612226F6864DB9932559DEFA723518"
             {
             "Name" = "8:Lines III"
             "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
+            "Description" = "8:Lines III für jeden x86-Prozessor"
+            "ShowCmd" = "3:3"
             "IconIndex" = "3:110"
             "Transitive" = "11:FALSE"
             "Target" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
             "Folder" = "8:_FD795197F3D04B41A09AF93A63F59744"
             "WorkingFolder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
             "Icon" = "8:_9FFFCF9C4E9D409A871B06E88B069928"
+            "Feature" = "8:"
+            }
+            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_C16B2DAA3C5A47E19599012812E51B9F"
+            {
+            "Name" = "8:Lines III"
+            "Arguments" = "8:"
+            "Description" = "8:Lines III für Pentium4 (SSE2)"
+            "ShowCmd" = "3:3"
+            "IconIndex" = "3:110"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_70193B185E7443449F020FE02196C761"
+            "Folder" = "8:_FD795197F3D04B41A09AF93A63F59744"
+            "WorkingFolder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
+            "Icon" = "8:_70193B185E7443449F020FE02196C761"
             "Feature" = "8:"
             }
         }
@@ -1382,11 +1438,11 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_2D210A87221C488484AD3288F4D86EC4"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_0A25077064F94DADB04D2E15B86EE7DC"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
@@ -1396,11 +1452,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_CF93D40BAB0E473F924CFA746403E2D4"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_77DCA29E632647CBA28E01CFA7A06833"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:vc_user_crt71_rtl_x86_---.msm"
+            "SourcePath" = "8:vc_user_mfc71_rtl_x86_---.msm"
                 "Properties"
                 {
                 }
@@ -1415,7 +1471,7 @@
         {
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_70193B185E7443449F020FE02196C761"
             {
-            "SourcePath" = "8:..\\..\\bin\\win32_i686\\AppLinesSSE2.exe"
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse2\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
@@ -1443,7 +1499,7 @@
             }
             "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_7D66FAF8D902439B906320101096BF40"
             {
-            "SourcePath" = "8:..\\..\\bin\\win32_i686\\AppLinesSSE.exe"
+            "SourcePath" = "8:..\\..\\bin\\win32_i686\\sse\\AppLines.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4122497453594AF7840DE5EB8C9A4CA8"
