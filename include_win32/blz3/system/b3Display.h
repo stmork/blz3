@@ -82,8 +82,8 @@ class b3Display : public b3Mem
 	b3_pkd_color       *m_Buffer;
 
 public:
-	                    b3Display(const char *title = null);
-	                    b3Display(b3_res xSize,b3_res ySize,const char *title = null);
+	                    b3Display(CB3ScrollView *view,const char *title = null);
+	                    b3Display(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title = null);
 	                   ~b3Display();
 	void                b3GetRes(b3_res &xSize,b3_res &ySize);
 	void                b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
@@ -93,8 +93,8 @@ public:
 	void                b3Wait();
 
 private:
-	       void         b3Init();
-	       void         b3Open(b3_res xSize,b3_res ySize);
+	       void         b3Init(CB3ScrollView *view);
+	       void         b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize);
 	       void         b3Close();
 };
 

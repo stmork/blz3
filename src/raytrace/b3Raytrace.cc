@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/09/30 15:46:07  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.3  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
 **	  yet. Next step: shading!
-**
+**	
 **	Revision 1.2  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
@@ -153,17 +158,10 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 	try
 	{
-		if (display == null)
-		{
-			b3GetDisplaySize(xSize,ySize);
-			display = new b3Display(xSize,ySize);
-		}
-		else
-		{
-			display->b3GetRes(xSize,ySize);
-		}
+		// What resolution to use
+		display->b3GetRes(xSize,ySize);
 
-		// Determine number of CPU's
+		// Determine CPU count
 		CPUs = m_CPU.b3GetNumCPU();
 		b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
 			CPUs,
@@ -204,11 +202,6 @@ void b3Scene::b3Raytrace(b3Display *display)
 		delete [] threads;
 		delete [] infos;
 		b3PrintF (B3LOG_NORMAL,"Done.\n");
-
-		// We want to see the computed picture until we make input
-		// into the display window.
-		display->b3Wait();
-		delete display;
 	}
 	catch(b3DisplayException *e)
 	{

@@ -25,10 +25,15 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "b3Fulcrum.h"
 
+class CAppRaytraceDoc;
+
 class CAppLinesDoc : public CDocument, public b3Document
 {
 protected:
-	b3World  m_World;
+	b3World               m_World;
+	b3Thread             *m_Raytracer;
+	b3Display            *m_Display;
+	CAppRaytraceDoc      *m_RaytraceDoc;
 // Attributes
 public:
 	b3Fulcrum             m_Fulcrum;
@@ -52,6 +57,7 @@ public:
 	virtual void Serialize(CArchive& ar);
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
+	virtual void OnCloseDocument();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -59,15 +65,18 @@ public:
 	b3_vector *b3GetFulcrum();
 	void       b3DrawFulcrum();
 	void       b3ComputeBounds();
-	virtual ~CAppLinesDoc();
+	void       b3ClearRaytraceDoc();
+	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
 protected:
+	static b3_u32  b3RaytracingThread(void *ptr);
+	       b3_bool b3IsRaytracing();
 
-// Generated message map functions
+	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesDoc)
 	afx_msg void OnHierachy();

@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "AppMandel.h"
+#include "MainFrm.h"
 
 #include "AppMandelDoc.h"
 #include "AppMandelView.h"
@@ -38,6 +39,9 @@ BEGIN_MESSAGE_MAP(CAppMandelView, CB3ScrollView)
 	ON_UPDATE_COMMAND_UI(ID_B3_MORE, OnUpdateMore)
 	ON_UPDATE_COMMAND_UI(ID_B3_LESS, OnUpdateLess)
 	ON_UPDATE_COMMAND_UI(ID_B3_MAGNIFY, OnUpdateMagnify)
+	ON_COMMAND(ID_COMPUTE, OnCompute)
+	ON_UPDATE_COMMAND_UI(ID_COMPUTE, OnUpdateCompute)
+	ON_COMMAND(ID_RESET, OnReset)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -47,11 +51,13 @@ END_MESSAGE_MAP()
 CAppMandelView::CAppMandelView()
 {
 	// TODO: add construction code here
-
+	m_MandelThread = new b3Thread("Mandelbrot computing...");
+	OnReset();
 }
 
 CAppMandelView::~CAppMandelView()
 {
+	delete m_MandelThread;
 }
 
 BOOL CAppMandelView::PreCreateWindow(CREATESTRUCT& cs)
@@ -245,4 +251,80 @@ void CAppMandelView::OnUpdateMagnify(CCmdUI* pCmdUI)
 	{
 		pCmdUI->SetCheck(b3IsMagnifying());
 	}
+}
+
+#include "../test_unix/b3Mandel.h"
+
+b3_u32 CAppMandelView::b3ComputingThread(void *ptr)
+{
+	CAppMandelView *pView = (CAppMandelView *)ptr;
+	CWinApp        *app   = AfxGetApp();
+	b3_u32          result = 0;
+	b3Display      *display;
+
+	display = new b3Display(pView);
+	b3Mandel::b3Compute(display,
+		pView->m_rStart,
+		pView->m_rEnd,
+		pView->m_iStart,
+		pView->m_iEnd,256);
+	display->b3Wait();
+	delete display;
+
+	app->m_pMainWnd->PostMessage(WM_B3_UPDATE_UI);
+	return result;
+}
+
+void CAppMandelView::OnCompute() 
+{
+	// TODO: Add your command handler code here
+	if (!m_MandelThread->b3IsRunning())
+	{
+		CRect           rect;
+		CB3ViewParam    vParam("mandel params");	
+		b3_f64          rNew,rDiff,rWidth, rStart,rEnd;
+		b3_f64          iNew,iDiff,iHeight,iStart,iEnd;
+
+		b3GetViewParam(&vParam);
+
+		rDiff = m_rEnd - m_rStart;
+		iDiff = m_iEnd - m_iStart;
+		rNew  = rDiff  / vParam.m_xImgScale;
+		iNew  = iDiff  / vParam.m_yImgScale;
+
+		if ((rNew != 0.0) && (iNew != 0.0))
+		{
+			GetClientRect(&rect);
+
+			rWidth    = (b3_f64)GetDocument()->m_Tx->xSize * vParam.m_xImgScale;
+			iHeight   = (b3_f64)GetDocument()->m_Tx->ySize * vParam.m_yImgScale;
+			rStart    = (b3_f64)(vParam.m_xImgPos + rect.left)   / rWidth;
+			rEnd      = (b3_f64)(vParam.m_xImgPos + rect.right)  / rWidth;
+			iStart    = (b3_f64)(vParam.m_yImgPos + rect.top)    / iHeight;
+			iEnd      = (b3_f64)(vParam.m_yImgPos + rect.bottom) / iHeight;
+			m_rEnd    = m_rStart + rEnd * rDiff;
+			m_iEnd    = m_iStart + iEnd * iDiff;
+			m_rStart += rStart * rDiff;
+			m_iStart += iStart * iDiff;
+			b3BestFit();
+		}
+
+		// TODO: code your application's behavior here.
+		m_MandelThread->b3Start(&b3ComputingThread,this);
+	}
+}
+
+void CAppMandelView::OnUpdateCompute(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_MandelThread->b3IsRunning());
+}
+
+void CAppMandelView::OnReset() 
+{
+	// TODO: Add your command handler code here
+	m_rStart = -1.0;
+	m_rEnd   =  2.2;
+	m_iStart = -1.0;
+	m_iEnd   =  1.0;
 }

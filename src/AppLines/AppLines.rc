@@ -86,6 +86,7 @@ IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
 IDR_TOOLBAR_VIEW        BITMAP  DISCARDABLE     "res\\toolbar1.bmp"
 IDR_TOOLBAR_ACTION      BITMAP  DISCARDABLE     "res\\toolbar_action.bmp"
 IDR_TOOLBAR_OBJECT      BITMAP  DISCARDABLE     "res\\toolbar_object.bmp"
+IDR_TOOLBAR_DISPLAY     BITMAP  DISCARDABLE     "res\\toolbar_display.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -146,6 +147,21 @@ BEGIN
     BUTTON      ID_RAYTRACE
 END
 
+IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 17
+BEGIN
+    BUTTON      ID_B3_UNFILTERED
+    BUTTON      ID_B3_FILTERED
+    SEPARATOR
+    BUTTON      ID_B3_ORIGINAL
+    BUTTON      ID_B3_WIDTH
+    BUTTON      ID_B3_HEIGHT
+    BUTTON      ID_B3_FULL
+    SEPARATOR
+    BUTTON      ID_B3_MORE
+    BUTTON      ID_B3_LESS
+    BUTTON      ID_B3_MAGNIFY
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -175,12 +191,14 @@ BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
         END
         POPUP "Symbolleisten &anpassen"
         BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
     END
@@ -240,12 +258,14 @@ BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
         END
         POPUP "S&ymbolleisten anpassen"
         BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM "&Anti-Aliasing",              ID_VIEW_ANTIALIAS
@@ -266,6 +286,71 @@ BEGIN
     POPUP "&Fenster"
     BEGIN
         MENUITEM "Neues &Fenster",              ID_WINDOW_NEW
+        MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
+        MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_VERT
+        MENUITEM "&Übereinander",               ID_WINDOW_TILE_HORZ
+        MENUITEM "&Symbole anordnen",           ID_WINDOW_ARRANGE
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "Inf&o über AppLines...",      ID_APP_ABOUT
+    END
+END
+
+IDR_DISPLAYTYPE MENU DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "&Schließen",                  ID_FILE_CLOSE
+        MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
+        MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
+        MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
+        MENUITEM SEPARATOR
+        MENUITEM "&Drucken...\tStrg+P",         ID_FILE_PRINT
+        MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        POPUP "Symbolleisten an&zeigen"
+        BEGIN
+            MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
+            MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
+            MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
+        END
+        POPUP "S&ymbolleisten anpassen"
+        BEGIN
+            MENUITEM "Da&tei...",                   ID_CUST_MAIN
+            MENUITEM "&Ansicht...",                 ID_CUST_VIEW
+            MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
+        END
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+        MENUITEM "B&riefmarkenansicht",         ID_VIEW_THUMB
+        MENUITEM SEPARATOR
+        MENUITEM "&ungefiltert",                ID_B3_UNFILTERED
+        MENUITEM "&gefiltert",                  ID_B3_FILTERED
+        MENUITEM SEPARATOR
+        MENUITEM "&Originalgröße",              ID_B3_ORIGINAL
+        MENUITEM "Seite auf &Breite anpassen",  ID_B3_WIDTH
+        MENUITEM "Seite auf &Höhe anpassen",    ID_B3_HEIGHT
+        MENUITEM "Seite auf &Fenster anpassen", ID_B3_FULL
+        MENUITEM SEPARATOR
+        MENUITEM "Vergrößern\t+",               ID_B3_MORE
+        MENUITEM "Verkleinern\t-",              ID_B3_LESS
+        MENUITEM "Auss&chnitt",                 ID_B3_MAGNIFY
+    END
+    POPUP "&Fenster"
+    BEGIN
         MENUITEM "Über&lappend",                ID_WINDOW_CASCADE
         MENUITEM "&Nebeneinander",              ID_WINDOW_TILE_VERT
         MENUITEM "&Übereinander",               ID_WINDOW_TILE_HORZ
@@ -427,6 +512,7 @@ STRINGTABLE PRELOAD DISCARDABLE
 BEGIN
     IDR_MAINFRAME           "Lines III"
     IDR_BLZ3TYPE            "\nBLZ3\nBLZ3\nBlizzard III Geometrie (*.bwd)\n.bwd\nBlizzard3.Document\nBlizzard III Dokument"
+    IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nTIFF-Datei\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -545,6 +631,7 @@ BEGIN
     IDS_TOOLBAR_MAINFRAME   "Datei..."
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
+    IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -590,6 +677,30 @@ BEGIN
     ID_OBJ_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
+    ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
+    ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
+    ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
+    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
 END
 
 #endif    // German (Germany) resources

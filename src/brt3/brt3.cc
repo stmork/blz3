@@ -32,19 +32,25 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/09/30 15:46:07  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.1  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **
 */
 
 int main(int argc,char *argv[])
 {
-	b3Item   *item;
-	b3World  *world;
-	b3Scene  *scene;
-	b3_res    xSize,ySize;
-	b3_index  i;
+	b3Item    *item;
+	b3World   *world;
+	b3Scene   *scene;
+	b3Display *display;
+	b3_res     xSize,ySize;
+	b3_index   i;
 
 	if (argc > 1)
 	{
@@ -61,7 +67,11 @@ int main(int argc,char *argv[])
 				scene = (b3Scene *)item;
 				scene->b3Reorg();
 				scene->b3GetDisplaySize(xSize,ySize);
-				scene->b3Raytrace(new b3Display(xSize,ySize));
+				display = new b3Display(xSize,ySize);
+				scene->b3Raytrace(display);
+
+				display->b3Wait();
+				delete display;
 			}
 		}
 	}

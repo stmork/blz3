@@ -35,6 +35,7 @@
 #endif
 
 #include "resource.h"       // main symbols
+#include "AppRaytraceDoc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
@@ -43,8 +44,12 @@
 
 class CAppLinesApp : public CB3App
 {
+	CMultiDocTemplate *pImageTemplate;
+	CMultiDocTemplate *pSceneTemplate;
+
 public:
 	CAppLinesApp();
+	CAppRaytraceDoc *b3CreateRaytraceDoc();
 
 // Overrides
 	// ClassWizard generated virtual function overrides

@@ -26,6 +26,8 @@
 #include "ChildFrm.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
+#include "AppRaytraceDoc.h"
+#include "AppRaytraceView.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/09/30 15:46:06  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.3  2001/08/11 19:59:15  sm
 **	- Added orthogonal projection
-**
+**	
 **	Revision 1.2  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -130,19 +137,25 @@ BOOL CAppLinesApp::InitInstance()
 	b3InitRaytrace::b3Init();
 
 
-	CMultiDocTemplate* pDocTemplate;
-	pDocTemplate = new CMultiDocTemplate(
+	pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,
 		RUNTIME_CLASS(CAppLinesDoc),
 		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
 		RUNTIME_CLASS(CAppLinesView));
-	AddDocTemplate(pDocTemplate);
+	AddDocTemplate(pSceneTemplate);
+
+	pImageTemplate = new CMultiDocTemplate(
+		IDR_DISPLAYTYPE,
+		RUNTIME_CLASS(CAppRaytraceDoc),
+		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CAppRaytraceView));
+	AddDocTemplate(pImageTemplate);
 
 	// Connect the COleTemplateServer to the document template.
 	//  The COleTemplateServer creates new documents on behalf
 	//  of requesting OLE containers by using information
 	//  specified in the document template.
-	m_server.ConnectTemplate(clsid, pDocTemplate, FALSE);
+	m_server.ConnectTemplate(clsid, pSceneTemplate, FALSE);
 
 	// Register all OLE server factories as running.  This enables the
 	//  OLE libraries to create objects from other applications.
@@ -250,3 +263,14 @@ void CAppLinesApp::OnAppAbout()
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp message handlers
 
+CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
+{
+	CAppRaytraceDoc *pDoc;
+	CFrameWnd       *frame;
+
+	pDoc = (CAppRaytraceDoc *)pImageTemplate->CreateNewDocument();
+	frame = pImageTemplate->CreateNewFrame(pDoc,(CFrameWnd *)NULL);
+	pImageTemplate->InitialUpdateFrame(frame,pDoc);
+
+	return pDoc;
+}

@@ -112,6 +112,10 @@ SOURCE=.\AppLinesView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppRaytraceDoc.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\AppRaytraceView.cpp
 # End Source File
 # Begin Source File
@@ -156,6 +160,14 @@ SOURCE=.\AppLinesView.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppRaytraceDoc.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\AppRaytraceView.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Action.h
 # End Source File
 # Begin Source File
@@ -169,6 +181,10 @@ SOURCE=.\b3Fulcrum.h
 # Begin Source File
 
 SOURCE=.\ChildFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgHierarchy.h
 # End Source File
 # Begin Source File
 
@@ -229,6 +245,10 @@ SOURCE=.\res\bbox_sub_shape.ico
 # Begin Source File
 
 SOURCE=.\res\bboxworld.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\Display.bmp
 # End Source File
 # Begin Source File
 

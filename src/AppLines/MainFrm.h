@@ -60,6 +60,7 @@ protected:  // control bar embedded members
 	CB3Toolbar         m_wndViewBar;
 	CB3Toolbar         m_wndActnBar;
 	CB3Toolbar         m_wndObjtBar;
+	CB3Toolbar         m_wndDispBar;
 	CB3ComboBox        m_cameraBox;
 	CB3ComboBox        m_lightBox;
 
@@ -73,10 +74,13 @@ protected:
 	afx_msg void OnUpdatePrefAutosave(CCmdUI* pCmdUI);
 	afx_msg void OnCustMain();
 	afx_msg void OnCustView();
+	afx_msg void OnCustDisplay();
 	afx_msg void OnCustAction();
 	afx_msg void OnBarView();
+	afx_msg void OnBarDisplay();
 	afx_msg void OnBarAction();
 	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarDisplay(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarAction(CCmdUI* pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();

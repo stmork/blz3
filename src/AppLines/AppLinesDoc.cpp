@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
+#include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
 #include "MainFrm.h"
 
@@ -37,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/09/30 15:46:06  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.11  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
-**
+**	
 **	Revision 1.10  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -136,6 +142,8 @@ CAppLinesDoc::CAppLinesDoc()
 {
 	// TODO: add one-time construction code here
 	m_Scene = null;
+	m_RaytraceDoc = null;
+	m_Raytracer   = new b3Thread("Raytracing thread");
 	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
@@ -145,6 +153,7 @@ CAppLinesDoc::CAppLinesDoc()
 CAppLinesDoc::~CAppLinesDoc()
 {
 	AfxOleUnlockApp();
+	delete m_Raytracer;
 }
 
 BOOL CAppLinesDoc::OnNewDocument()
@@ -172,6 +181,17 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 	b3ComputeBounds();
 	return TRUE;
+}
+
+void CAppLinesDoc::OnCloseDocument() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (m_RaytraceDoc != null)
+	{
+		m_RaytraceDoc->OnCloseDocument();
+		m_RaytraceDoc = null;
+	}
+	CDocument::OnCloseDocument();
 }
 
 
@@ -240,17 +260,46 @@ void CAppLinesDoc::b3ComputeBounds()
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 }
 
+b3_bool CAppLinesDoc::b3IsRaytracing()
+{
+	return m_Raytracer->b3IsRunning();
+}
+
+
 void CAppLinesDoc::OnRaytrace() 
 {
 	// TODO: Add your command handler code here
-	CAppRaytraceView *view = new CAppRaytraceView();
-	CMainFrame       *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
+	b3_res        xSize,ySize;
 
-	view->Create(NULL, NULL, AFX_WS_DEFAULT_VIEW,
-		CFrameWnd::rectDefault, main, AFX_IDW_PANE_FIRST + 1, NULL);
-	view->ShowWindow(SW_SHOW);
-	AddView(view);
-	main->SetActiveView(view);
-	main->RecalcLayout();
-	m_Scene->b3Raytrace();
+	if (m_RaytraceDoc == null)
+	{
+		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
+		m_RaytraceDoc->b3SetLinesDoc(this);
+	}
+
+	if (!b3IsRaytracing())
+	{
+		m_Scene->b3GetDisplaySize(xSize,ySize);
+		m_Display = m_RaytraceDoc->b3GetDisplay(xSize,ySize,"Raytracing...");
+		m_Raytracer->b3Start(&b3RaytracingThread,this);
+	}
+}
+
+b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
+{
+	CAppLinesDoc *pDoc = (CAppLinesDoc *)ptr;
+
+	pDoc->m_Scene->b3Raytrace(pDoc->m_Display);
+
+	pDoc->m_Display->b3Wait();
+	delete pDoc->m_Display;
+	pDoc->m_Display = null;
+
+	return 0;
+}
+
+void CAppLinesDoc::b3ClearRaytraceDoc()
+{
+	m_RaytraceDoc = null;
 }

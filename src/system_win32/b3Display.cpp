@@ -35,65 +35,30 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_bool    display_init = false;
-static b3_bool    is_mdi;
-static b3Display *single_display;
-
-void b3Display::b3Init()
+void b3Display::b3Init(CB3ScrollView *view)
 {
-	CWinApp   *app  = AfxGetApp();
-	CFrameWnd *main = (CFrameWnd *)app->m_pMainWnd;
-
-	if (!display_init)
+	if (view->IsKindOf(RUNTIME_CLASS(CB3ScrollView)))
 	{
-
-		single_display = null;
-		is_mdi         = app->m_pMainWnd->IsKindOf(RUNTIME_CLASS(CMDIFrameWnd));
-
-		// Done!
-		display_init   = true;
-	}
-
-//	if (is_mdi)
-	if (false)
-	{
-		// Here we should open a new CDocument
-		throw new b3DisplayException(B3_DISPLAY_ERROR);
+		m_View = view;
+		m_Doc  = m_View->b3GetDocument();
 	}
 	else
 	{
-		if (single_display != null)
-		{
-			throw new b3DisplayException(B3_DISPLAY_OPEN);
-		}
-		else
-		{
-			CView *view = main->GetActiveView();
-
-			if (view->IsKindOf(RUNTIME_CLASS(CB3ScrollView)))
-			{
-				m_View         = (CB3ScrollView *)view;
-				m_Doc          = m_View->b3GetDocument();
-				single_display = this;
-			}
-			else
-			{
-				throw new b3DisplayException(B3_DISPLAY_OPEN);
-			}
-		}
+		throw new b3DisplayException(B3_DISPLAY_OPEN);
 	}
 
 	ASSERT(m_View != null);
 }
 
-void b3Display::b3Open(b3_res xSize,b3_res ySize)
+void b3Display::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 {
 	// We should make sure, that we've collected some data
 	// about us.
-	b3Init();
+	b3Init(view);
 
-	m_xs = xSize;
-	m_ys = ySize;
+	m_xs    = xSize;
+	m_ys    = ySize;
+	m_depth = 24;
 #ifdef _DEBUG
 	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xs);
 	b3PrintF (B3LOG_NORMAL,"ySize: %4ld\n",m_ys);
@@ -108,13 +73,9 @@ void b3Display::b3Open(b3_res xSize,b3_res ySize)
 
 void b3Display::b3Close()
 {
-	if (single_display == this)
-	{
-		single_display = null;
-	}
 }
 
-b3Display::b3Display(const char *title)
+b3Display::b3Display(CB3ScrollView *view,const char *title)
 {
 	b3_coord xSize;
 	b3_coord ySize;
@@ -127,16 +88,16 @@ b3Display::b3Display(const char *title)
 	ySize = 576;
 #endif
 	m_Title = (char *)title;
-	b3Open(xSize,ySize);
+	b3Open(view,xSize,ySize);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
 		m_Title,
 		m_xs,m_ys);
 }
 
-b3Display::b3Display(b3_res xSize,b3_res ySize,const char *title)
+b3Display::b3Display(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title)
 {
 	m_Title = (char *)title;
-	b3Open(xSize,ySize);
+	b3Open(view,xSize,ySize);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 		m_Title,
 		m_xs,m_ys);

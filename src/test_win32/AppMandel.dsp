@@ -108,11 +108,11 @@ SOURCE=.\AppMandelView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainFrm.cpp
+SOURCE=..\test_unix\b3Mandel.cc
 # End Source File
 # Begin Source File
 
-SOURCE=..\test_unix\Mandel.cc
+SOURCE=.\MainFrm.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"

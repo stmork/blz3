@@ -68,8 +68,20 @@ protected:
 	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
+	afx_msg void OnCompute();
+	afx_msg void OnUpdateCompute(CCmdUI* pCmdUI);
+	afx_msg void OnReset();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+protected:
+	b3_f64    m_rStart;
+	b3_f64    m_rEnd;
+	b3_f64    m_iStart;
+	b3_f64    m_iEnd;
+	b3Thread *m_MandelThread;
+
+	static b3_u32 b3ComputingThread(void *ptr);
 };
 
 #ifndef _DEBUG  // debug version in AppMandelView.cpp

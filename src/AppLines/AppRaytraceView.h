@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	AppRaytraceView.h $
+**	$Filename:	AppRaytraceView.cpp $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -26,13 +26,13 @@
 
 class CAppRaytraceView : public CB3ScrollView
 {
-public: // create from serialization only
+protected: // create from serialization only
 	CAppRaytraceView();
 	DECLARE_DYNCREATE(CAppRaytraceView)
 
 // Attributes
 public:
-	CAppLinesDoc* GetDocument();
+	CAppRaytraceDoc* GetDocument();
 
 // Operations
 public:
@@ -63,13 +63,31 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRaytraceView)
+	afx_msg void OnUnfiltered();
+	afx_msg void OnFiltered();
+	afx_msg void OnOriginal();
+	afx_msg void OnWidth();
+	afx_msg void OnHeight();
+	afx_msg void OnFull();
+	afx_msg void OnMore();
+	afx_msg void OnLess();
+	afx_msg void OnMagnify();
+	afx_msg void OnUpdateUnfiltered(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFiltered(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateOriginal(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateWidth(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateHeight(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateFull(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateMore(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
 
-#ifndef _DEBUG  // debug version in AppMandelView.cpp
-inline CAppLinesDoc* CAppRaytraceView::GetDocument()
-   { return (CAppLinesDoc*)m_pDocument; }
+#ifndef _DEBUG  // debug version in AppRaytraceView.cpp
+inline CAppRaytraceDoc* CAppRaytraceView::GetDocument()
+   { return (CAppRaytraceDoc*)m_pDocument; }
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,4 +95,4 @@ inline CAppLinesDoc* CAppRaytraceView::GetDocument()
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_APPMANDELVIEW_H__DF6683BF_729E_11D5_A544_0050BF4EB3F3__INCLUDED_)
+#endif // !defined(APPRAYTRACEVIEW_H)

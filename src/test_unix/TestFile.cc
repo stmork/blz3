@@ -1,7 +1,52 @@
+/*
+**
+**	$Filename:	TestFile.cc $
+**	$Release:	Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
+**
+**	Blizzard III - Testing file routines
+**
+**      (C) Copyright 2001  Steffen A. Mork
+**          All Rights Reserved
+**
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+  
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/09/30 15:46:07  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        b3TestFile implementation                     **
+**                                                                      **
+*************************************************************************/
 
 void b3TestFile()
 {

@@ -1749,7 +1749,7 @@ public:
 		   b3_count        b3GetBBoxCount();
 		   void            b3Activate(b3_bool activate=true);
 		   void            b3Transform(b3_matrix *transformation);
-		   void            b3Raytrace(b3Display *display = null);
+		   void            b3Raytrace(b3Display *display);
 		   void            b3Shade(b3_ray *ray,b3_count trace_depth=1);
 		   b3_bool         b3Intersect(b3_ray *ray,b3_f64 max = DBL_MAX);
 

@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/09/30 15:46:07  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.6  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
-**
+**	
 **	Revision 1.5  2001/08/20 14:16:48  sm
 **	- Putting data into cmaera and light combobox.
 **	- Selecting camera and light.
@@ -82,10 +87,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_PREF_AUTOSAVE, OnUpdatePrefAutosave)
 	ON_COMMAND(ID_CUST_MAIN, OnCustMain)
 	ON_COMMAND(ID_CUST_VIEW, OnCustView)
+	ON_COMMAND(ID_CUST_DISPLAY, OnCustDisplay)
 	ON_COMMAND(ID_CUST_ACTION, OnCustAction)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
+	ON_COMMAND(IDM_BAR_DISPLAY, OnBarDisplay)
 	ON_COMMAND(IDM_BAR_ACTION, OnBarAction)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_DISPLAY, OnUpdateBarDisplay)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_ACTION, OnUpdateBarAction)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
@@ -105,7 +113,8 @@ static UINT toolbar_bitmaps[] =
 	IDR_MAINFRAME,
 	IDR_TOOLBAR_VIEW,
 	IDR_TOOLBAR_ACTION,
-	IDR_TOOLBAR_OBJECT
+	IDR_TOOLBAR_OBJECT,
+	IDR_TOOLBAR_DISPLAY
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -170,10 +179,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3MoveWindow(this);
 
 	app->b3AddMenubar(&m_wndMenuBar,IDR_MAINFRAME);
-	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,     IDS_TOOLBAR_MAINFRAME);
-	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,  IDS_TOOLBAR_VIEW);
-	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION,IDS_TOOLBAR_ACTION);
-	app->b3AddToolbar(&m_wndObjtBar,IDR_TOOLBAR_OBJECT,IDS_TOOLBAR_OBJECT);
+	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
+	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
+	app->b3AddToolbar(&m_wndObjtBar,IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
+	app->b3AddToolbar(&m_wndDispBar,IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
@@ -252,6 +262,12 @@ void CMainFrame::OnCustView()
 	m_wndViewBar.b3Customize();
 }
 
+void CMainFrame::OnCustDisplay() 
+{
+	// TODO: Add your command handler code here
+	m_wndDispBar.b3Customize();
+}
+
 void CMainFrame::OnCustAction() 
 {
 	// TODO: Add your command handler code here
@@ -264,6 +280,12 @@ void CMainFrame::OnBarView()
 	m_wndViewBar.b3ToggleVisibility();
 }
 
+void CMainFrame::OnBarDisplay() 
+{
+	// TODO: Add your command handler code here
+	m_wndDispBar.b3ToggleVisibility();
+}
+
 void CMainFrame::OnBarAction() 
 {
 	// TODO: Add your command handler code here
@@ -274,6 +296,12 @@ void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndViewBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarDisplay(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndDispBar.b3IsVisible());
 }
 
 void CMainFrame::OnUpdateBarAction(CCmdUI* pCmdUI) 

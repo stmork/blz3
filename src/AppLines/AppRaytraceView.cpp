@@ -21,9 +21,18 @@
 **                                                                      **
 *************************************************************************/
 
+#include "stdafx.h"
 #include "AppLines.h"
-#include "AppLinesDoc.h"
+#include "MainFrm.h"
+
+#include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +42,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/09/30 15:46:06  sm
+**	- Displaying raytracing under Windows
+**	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
+**	  CAppRaytraceView pair for displaying Raytracing
+**
 **	Revision 1.1  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
-**
+**	
 **	
 **
 */
@@ -47,23 +61,37 @@
 **                                                                      **
 *************************************************************************/
 
-/////////////////////////////////////////////////////////////////////////////
-// CAppMandelView
-
 IMPLEMENT_DYNCREATE(CAppRaytraceView, CB3ScrollView)
 
 BEGIN_MESSAGE_MAP(CAppRaytraceView, CB3ScrollView)
 	//{{AFX_MSG_MAP(CAppRaytraceView)
+	ON_COMMAND(ID_B3_UNFILTERED, OnUnfiltered)
+	ON_COMMAND(ID_B3_FILTERED, OnFiltered)
+	ON_COMMAND(ID_B3_ORIGINAL, OnOriginal)
+	ON_COMMAND(ID_B3_WIDTH, OnWidth)
+	ON_COMMAND(ID_B3_HEIGHT, OnHeight)
+	ON_COMMAND(ID_B3_FULL, OnFull)
+	ON_COMMAND(ID_B3_MORE, OnMore)
+	ON_COMMAND(ID_B3_LESS, OnLess)
+	ON_COMMAND(ID_B3_MAGNIFY, OnMagnify)
+	ON_UPDATE_COMMAND_UI(ID_B3_UNFILTERED, OnUpdateUnfiltered)
+	ON_UPDATE_COMMAND_UI(ID_B3_FILTERED, OnUpdateFiltered)
+	ON_UPDATE_COMMAND_UI(ID_B3_ORIGINAL, OnUpdateOriginal)
+	ON_UPDATE_COMMAND_UI(ID_B3_WIDTH, OnUpdateWidth)
+	ON_UPDATE_COMMAND_UI(ID_B3_HEIGHT, OnUpdateHeight)
+	ON_UPDATE_COMMAND_UI(ID_B3_FULL, OnUpdateFull)
+	ON_UPDATE_COMMAND_UI(ID_B3_MORE, OnUpdateMore)
+	ON_UPDATE_COMMAND_UI(ID_B3_LESS, OnUpdateLess)
+	ON_UPDATE_COMMAND_UI(ID_B3_MAGNIFY, OnUpdateMagnify)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// CAppMandelView construction/destruction
+// CAppRaytraceView construction/destruction
 
 CAppRaytraceView::CAppRaytraceView()
 {
 	// TODO: add construction code here
-
 }
 
 CAppRaytraceView::~CAppRaytraceView()
@@ -79,11 +107,11 @@ BOOL CAppRaytraceView::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CAppMandelView drawing
+// CAppRaytraceView drawing
 
 void CAppRaytraceView::OnDraw(CDC* pDC)
 {
-	CAppLinesDoc* pDoc = GetDocument();
+	CAppRaytraceDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	// TODO: add draw code for native data here
 	CB3ScrollView::OnDraw(pDC);
@@ -105,11 +133,11 @@ void CAppRaytraceView::OnInitialUpdate()
 
 b3Document *CAppRaytraceView::b3GetDocument()
 {
-	CAppLinesDoc *pDoc;
+	CAppRaytraceDoc *pDoc;
 
-	if (m_pDocument->IsKindOf(RUNTIME_CLASS(CAppLinesDoc)))
+	if (m_pDocument->IsKindOf(RUNTIME_CLASS(CAppRaytraceDoc)))
 	{
-		pDoc = (CAppLinesDoc *)m_pDocument;
+		pDoc = (CAppRaytraceDoc *)m_pDocument;
 		return (b3Document*)pDoc;
 	}
 
@@ -130,9 +158,135 @@ void CAppRaytraceView::Dump(CDumpContext& dc) const
 	CScrollView::Dump(dc);
 }
 
-CAppLinesDoc* CAppRaytraceView::GetDocument() // non-debug version is inline
+CAppRaytraceDoc* CAppRaytraceView::GetDocument() // non-debug version is inline
 {
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CAppLinesDoc)));
-	return (CAppLinesDoc*)m_pDocument;
+	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CAppRaytraceDoc)));
+	return (CAppRaytraceDoc*)m_pDocument;
 }
 #endif //_DEBUG
+
+void CAppRaytraceView::b3BestFit()
+{
+	OnFull();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// CAppRaytraceView message handlers
+
+void CAppRaytraceView::OnUnfiltered() 
+{
+	// TODO: Add your command handler code here
+	b3ScaleBW();
+}
+
+void CAppRaytraceView::OnFiltered() 
+{
+	// TODO: Add your command handler code here
+	b3ScaleGrey();
+}
+
+void CAppRaytraceView::OnOriginal() 
+{
+	// TODO: Add your command handler code here
+	b3ViewMode(B3_VIEWMODE_ORIGINAL);
+}
+
+void CAppRaytraceView::OnWidth() 
+{
+	// TODO: Add your command handler code here
+	b3ViewMode(B3_VIEWMODE_FIT_WIDTH);
+}
+
+void CAppRaytraceView::OnHeight() 
+{
+	// TODO: Add your command handler code here
+	b3ViewMode(B3_VIEWMODE_FIT_HEIGHT);
+}
+
+void CAppRaytraceView::OnFull() 
+{
+	// TODO: Add your command handler code here
+	b3ViewMode(B3_VIEWMODE_BESTFIT);
+}
+
+void CAppRaytraceView::OnMore() 
+{
+	// TODO: Add your command handler code here
+	b3MagnifyMore();
+}
+
+void CAppRaytraceView::OnLess() 
+{
+	// TODO: Add your command handler code here
+	b3MagnifyLess();
+}
+
+void CAppRaytraceView::OnMagnify() 
+{
+	// TODO: Add your command handler code here
+	b3SetMagnifying();
+}
+
+void CAppRaytraceView::OnUpdateUnfiltered(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (!m_ScaleGrey);
+}
+
+void CAppRaytraceView::OnUpdateFiltered(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (m_ScaleGrey);
+}
+
+void CAppRaytraceView::OnUpdateOriginal(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (m_Mode == B3_VIEWMODE_ORIGINAL);
+}
+
+void CAppRaytraceView::OnUpdateWidth(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (m_Mode == B3_VIEWMODE_FIT_WIDTH);
+}
+
+void CAppRaytraceView::OnUpdateHeight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (m_Mode == B3_VIEWMODE_FIT_HEIGHT);
+}
+
+void CAppRaytraceView::OnUpdateFull(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetRadio (m_Mode == B3_VIEWMODE_BESTFIT);
+}
+
+void CAppRaytraceView::OnUpdateMore(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Document *docBase = b3GetDocument();
+
+	pCmdUI->Enable(docBase->m_Tx != null);
+}
+
+void CAppRaytraceView::OnUpdateLess(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Document *docBase = b3GetDocument();
+
+	pCmdUI->Enable(docBase->m_Tx != null);
+}
+
+void CAppRaytraceView::OnUpdateMagnify(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Document *docBase = b3GetDocument();
+
+	pCmdUI->Enable(docBase->m_Tx != null);
+	if (docBase->m_Tx != null)
+	{
+		pCmdUI->SetCheck(b3IsMagnifying());
+	}
+}
