@@ -19,6 +19,7 @@
 #define B3_SYSTEM_THREAD_H
 
 #include "blz3/b3Types.h"
+#include "blz3/system/b3Time.h"
 #include <pthread.h>
 
 class b3Mutex
@@ -57,13 +58,14 @@ typedef b3_u32 (*b3ThreadProc)(void *);
 
 class b3Thread
 {
-	const char     *name;
+	const char   *m_Name;
+	b3TimeSpan    m_Span;
 protected:
-	pthread_t     thread;
-	b3_bool       is_running;
-	b3_u32        result;
-	b3ThreadProc  callProc;
-	void         *callArg;
+	pthread_t     m_Thread;
+	b3_bool       m_IsRunning;
+	b3_u32        m_Result;
+	b3ThreadProc  m_CallProc;
+	void         *m_CallArg;
 public:
 	         b3Thread(const char *task_name = null);
 	        ~b3Thread();

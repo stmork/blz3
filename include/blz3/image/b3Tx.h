@@ -338,6 +338,8 @@ public:
 		const b3_u08  *ImageBuffer,
 		const b3_size  BufferSize);
 
+	// b3TxSaveJPEG.cc
+	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = 75);
 
 private:
 	// b3TxTurn.cc

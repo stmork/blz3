@@ -145,6 +145,10 @@ SOURCE=.\b3TxPool.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxSaveJPEG.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxSaveTIFF.cc
 # End Source File
 # Begin Source File

@@ -51,9 +51,6 @@ class b3DisplayView : public b3Display
 	b3_res        m_xMax,m_yMax; // This is the max. visible size
 	char         *m_Title;
 
-	// Some position values
-	b3_res        m_xs,m_ys; // This is the size we really use
-
 	// Some X values
 	b3_bool       m_Opened;
 	b3_bool       m_Closed;

@@ -6,10 +6,12 @@
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
+IMGLIBS			= -lB3Base -lB3Image -lB3Base -lB3System -lB3Base -lB3tiff -lB3jpeg $(LIB_X3) $(LIB_S3)
 BRT3_OBJS		= brt3.o
 BIMG3_OBJS		= bimg3.o
-PRG_SOURCE		= brt3.cc bimg3.cc
-PRGS			= brt3 bimg3
+BCONV3_OBJS		= bconv3.o
+PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc
+PRGS			= brt3 bimg3 bconv3
 
 all:	$(PRGS)
 
@@ -26,7 +28,12 @@ brt3:	$(BRT3_OBJS)
 	cp $@ $(BLZ3_BIN)
 
 bimg3:	$(BIMG3_OBJS)
-	$(LINK.cc) -o $@ $(BIMG3_OBJS) $(LDLIBS)
+	$(LINK.cc) -o $@ $(BIMG3_OBJS) $(IMGLIBS)
+	chmod 775 $@
+	cp $@ $(BLZ3_BIN)
+
+bconv3:	$(BCONV3_OBJS)
+	$(LINK.cc) -o $@ $(BCONV3_OBJS) $(IMGLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 

@@ -34,6 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/06 17:14:02  sm
+**	- Introducing JPEG saving
+**	- Made some library fine tunings on TIFF and JPEG
+**	- Conversion tool any image in/ JPEG or TIFF image out. Includes:
+**	  o scaling
+**	  o filtering
+**	  o B/W conversion
+**
 **	Revision 1.4  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -42,7 +50,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.3  2001/07/08 12:30:07  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -157,8 +165,8 @@ static b3IPCMutex threadMutex;
 
 b3Thread::b3Thread(const char *task_name)
 {
-	name       = task_name;
-	is_running = false;
+	m_Name      = task_name;
+	m_IsRunning = false;
 }
 
 b3Thread::~b3Thread()
@@ -168,7 +176,7 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Name(const char *task_name)
 {
-	name = task_name;
+	m_Name = task_name;
 }
 
 b3_bool b3Thread::b3Start(
@@ -178,61 +186,64 @@ b3_bool b3Thread::b3Start(
 {
 	b3Stop();
 
-	callProc = proc;
-	callArg  = ptr;
-	pthread_create(&thread,NULL,b3Trampoline,this);
+	m_CallProc = proc;
+	m_CallArg  = ptr;
+	pthread_create(&m_Thread,NULL,b3Trampoline,this);
 	return true;
 }
 
 void * b3Thread::b3Trampoline(void *ptr)
 {
 	b3Thread *threadClass = (b3Thread *)ptr;
-	b3_u32   *result      = &threadClass->result;
+	b3_u32   *result      = &threadClass->m_Result;
 
+	threadClass->m_Span.b3Start();
 	threadMutex.b3Lock();
 	threadCount++;
 	threadMutex.b3Unlock();
 
-	threadClass->is_running = true;
-	*result = threadClass->callProc(threadClass->callArg);
-	threadClass->is_running = false;
+	threadClass->m_IsRunning = true;
+	*result = threadClass->m_CallProc(threadClass->m_CallArg);
+	threadClass->m_IsRunning = false;
 
 	threadMutex.b3Lock();
 	threadCount--;
 	threadMutex.b3Unlock();
+	threadClass->m_Span.b3Stop();
 
 	return result;
 }
 
 b3_bool b3Thread::b3IsRunning()
 {
-	return is_running;
+	return m_IsRunning;
 }
 
 b3_bool b3Thread::b3Stop()
 {
-	b3_bool was_runnung = is_running;
+	b3_bool was_running = m_IsRunning;
 
-	if(is_running)
+	if(m_IsRunning)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # terminating thread %02lX (%s).\n",
 			0,
-			name != null ? name : "no name");
-		is_running = false;
-		callProc   = null;
-		callArg    = 0;
+			m_Name != null ? m_Name : "no name");
+		m_IsRunning = false;
+		m_CallProc  = null;
+		m_CallArg   = 0;
 
 		threadMutex.b3Lock();
 		threadCount--;
 		threadMutex.b3Unlock();
 	}
+	return was_running;
 }
 
 void b3Thread::b3Wait()
 {
 	void *ptr;
 
-	pthread_join(thread,&ptr);
+	pthread_join(m_Thread,&ptr);
 }
 
 /*************************************************************************
