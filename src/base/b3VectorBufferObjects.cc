@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/12/06 15:14:56  smork
+**	- Minor changes
+**
 **	Revision 1.10  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
-**
+**	
 **	Revision 1.9  2004/12/04 12:32:49  sm
 **	- Disabling ATI VBOs.
 **	
@@ -102,6 +105,11 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 #ifdef BLZ3_USE_OPENGL
 	const char *vendor = (const char *)glGetString(GL_VENDOR);
 
+	if (extensions == null)
+	{
+		extensions = (const char *)glGetString(GL_EXTENSIONS);
+	}
+
 	glGenBuffersARB    = (PFNGLGENBUFFERSARBPROC)   b3Runtime::b3GetOpenGLExtension("glGenBuffersARB");
 	glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)b3Runtime::b3GetOpenGLExtension("glDeleteBuffersARB");
 	glBindBufferARB    = (PFNGLBINDBUFFERARBPROC)   b3Runtime::b3GetOpenGLExtension("glBindBufferARB");
@@ -111,14 +119,17 @@ void b3VectorBufferObjects::b3Init(const char *extensions)
 	glUnmapBufferARB   = (PFNGLUNMAPBUFFERARBPROC)  b3Runtime::b3GetOpenGLExtension("glUnmapBufferARB");
 
 #ifdef USE_VBOS
-	glHasVBO = (strncmp(vendor,"ATI",3) != 0) &&
-		(strstr(extensions,"ARB_vertex_buffer_object") != 0) &&
+	b3_bool is_not_ati = strncmp(vendor,"ATI",3) != 0;
+	b3_bool driver_has_vbo = strstr(extensions,"ARB_vertex_buffer_object") != 0;
+	b3_bool methods_not_null =
 		(glGenBuffersARB != null) &&
 		(glDeleteBuffersARB != null) &&
 		(glBindBufferARB != null) &&
 		(glBufferDataARB != null) &&
 		(glMapBufferARB  != null) &&
 		(glUnmapBufferARB != null);
+
+	glHasVBO = is_not_ati && driver_has_vbo && methods_not_null;
 
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL, "glGenBuffersARB    = %p\n", glGenBuffersARB);

@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2004/12/06 15:14:56  smork
+**      - Minor changes
+**
 **      Revision 1.53  2004/12/05 08:18:22  sm
 **      - Added VBO not available message.
 **
@@ -504,10 +507,6 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");
-		if (!b3VectorBufferObjects::b3HasVBO())
-		{
-			b3PrintF(B3LOG_NORMAL,"      (VBOs not available)\n");
-		}
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
@@ -527,6 +526,8 @@ int main(int argc,char *argv[])
 	b3Path          data;
 	b3Loader        loader;
 	b3_index        i;
+
+	glutInit(&argc,argv);
 
 	if (argc <= 1)
 	{
@@ -555,8 +556,6 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"No filename given!\n");
 		exit(EXIT_FAILURE);
 	}
-
-	glutInit(&argc,argv);
 
 	try
 	{

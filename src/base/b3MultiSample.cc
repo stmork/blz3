@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/12/06 15:14:56  smork
+**	- Minor changes
+**
 **	Revision 1.3  2004/11/21 14:56:57  sm
 **	- Merged VBO development into main trunk.
-**
+**	
 **	Revision 1.2.2.2  2004/11/21 14:13:29  sm
 **	- Multisample test corrected.
 **	
@@ -63,6 +66,11 @@ b3_bool                   b3MultiSample::glHasMS;
 void b3MultiSample::b3Init(const char *extensions)
 {
 #ifdef HAS_MULTISAMPLE
+	if (extensions == null)
+	{
+		extensions = (const char *)glGetString(GL_EXTENSIONS);
+	}
+
 	glHasMS = strstr(extensions,"ARB_multisample") !=  null;
 #else
 	glHasMS = false;

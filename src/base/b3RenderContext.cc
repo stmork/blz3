@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/12/06 15:14:56  smork
+**	- Minor changes
+**
 **	Revision 1.17  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
-**
+**	
 **	Revision 1.16  2004/11/21 14:56:57  sm
 **	- Merged VBO development into main trunk.
 **	
@@ -189,9 +192,13 @@ void b3RenderContext::b3Init()
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
+	if (b3VectorBufferObjects::b3HasVBO())
+	{
+		b3PrintF(B3LOG_DEBUG, "Having vertex buffer objects.\n");
+	}
 	if (b3VectorBufferObjects::b3AllowVBO())
 	{
-		b3PrintF(B3LOG_DEBUG, "Having vector buffer objects.\n");
+		b3PrintF(B3LOG_DEBUG, "Allowing vertex buffer objects.\n");
 	}
 
 	b3MultiSample::b3Init(extensions);
@@ -199,7 +206,7 @@ void b3RenderContext::b3Init()
 	{
 		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
 		b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n",b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
-		b3MultiSample::b3Enable(false);
+		b3MultiSample::b3Enable(true);
 	}
 
 	glDrawBuffer(GL_BACK);
