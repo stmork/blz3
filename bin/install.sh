@@ -4,7 +4,7 @@ if ( $?MACHTYPE ) then
   setenv INSTALL_ARCH $MACHTYPE
 else
   setenv INSTALL_ARCH `uname -p`
-  test $INSTALL_ARCH == "unknown" && INSTALL_ARCH `uname -m`
+  test $INSTALL_ARCH = "unknown" && INSTALL_ARCH `uname -m`
 endif
 
 setenv INSTALL_BIN  "brt3 bimg3 render"
