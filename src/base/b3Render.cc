@@ -46,6 +46,10 @@
 
 /*
 **      $Log$
+**      Revision 1.106  2004/12/03 11:58:30  smork
+**      - Removed b3Mem from b3RenderObject as base class. The b3Shape
+**        class and the torus/ellipsoid derivatives had to be corrected.
+**
 **      Revision 1.105  2004/11/30 16:44:28  smork
 **      - Some formatting
 **
@@ -1250,12 +1254,16 @@ void b3RenderObject::b3CreateTexture(
 #endif
 			if (size != 0)
 			{
-				void   *ptr = b3Realloc(glTextureData,size * 4);
+				void   *ptr = b3MemAccess::b3Alloc(size * 4);
 				GLenum  error;
 
 				if (ptr == null)
 				{
 					B3_THROW(b3TxException,B3_TX_MEMORY);
+				}
+				if (glTextureData != null)
+				{
+					b3MemAccess::b3Free(glTextureData);
 				}
 				glTextureData  = (GLubyte *)ptr;
 				glTextureSize  =  size;
@@ -1296,7 +1304,10 @@ void b3RenderObject::b3CreateTexture(
 #ifdef VERBOSE
 				b3PrintF(B3LOG_FULL,"   Freeing texture data\n");
 #endif
-				b3Free(glTextureData);
+				if (glTextureData != null)
+				{
+					b3MemAccess::b3Free(glTextureData);
+				}
 				glTextureData  = null;
 				glTextureSize  = 0;
 				glTextureSizeX = 0;
@@ -1314,7 +1325,7 @@ void b3RenderObject::b3CreateTexture(
 		// Restore to defined and unallocated state
 		if (glTextureData != null)
 		{
-			b3Free(glTextureData);
+			b3MemAccess::b3Free(glTextureData);
 		}
 		if (glTextureId != 0)
 		{

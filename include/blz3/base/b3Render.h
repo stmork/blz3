@@ -171,7 +171,7 @@ public:
 #endif
 };
 
-class B3_PLUGIN b3RenderObject : protected b3Mem
+class B3_PLUGIN b3RenderObject
 {
 	b3_bool            glMaterialComputed;
 	b3_bool            glInit;

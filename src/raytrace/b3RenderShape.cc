@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.80  2004/12/03 11:58:30  smork
+**      - Removed b3Mem from b3RenderObject as base class. The b3Shape
+**        class and the torus/ellipsoid derivatives had to be corrected.
+**
 **      Revision 1.79  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -1562,72 +1566,70 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	glVertexElements->b3SetCount(glVertexCount);
 }
 
-void b3Shape::b3ComputeEllipsoidIndices()
+void b3Shape::b3GetEllipsoidIndexCount(b3_count &Number)
 {
-	b3_gl_line    *gPtr;
-	b3_gl_polygon *pPtr;
-	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_bool        EndLine = false;
-	b3_index       i,j,Number,s,ys,ye;
-	b3_count       Heights,Widths,Overhead;
-	b3_f64         y1,y2;
-	b3_count       glGridCount = 0;
-	b3_count       glPolyCount = 0;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+	b3_index i,j,s,ys,ye;
+	b3_f64   y1,y2;
 
 	b3ComputeBound(&m_Limit);
-	Overhead  = b3GetIndexOverhead (0.0,-1.0);
-	if (Overhead < 0)
+	m_Overhead = b3GetIndexOverhead (0.0,-1.0);
+	if (m_Overhead < 0)
 	{
-		EndLine  = true;
-		Overhead = -Overhead;
+		m_EndLine  = true;
+		m_Overhead = -m_Overhead;
+	}
+	else
+	{
+		m_EndLine = false;
 	}
 
 	y1 = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
 	y2 = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
-	Heights = ye - ys;
-	if ((ys - y1) > b3Scene::epsilon) Heights++;
-	if ((y2 - ye) > b3Scene::epsilon) Heights++;
+	m_Heights = ye - ys;
+	if ((ys - y1) > b3Scene::epsilon) m_Heights++;
+	if ((y2 - ye) > b3Scene::epsilon) m_Heights++;
 
-	Widths = Heights - 1;
-	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon) Widths++;
-	if (                     y1  > b3Scene::epsilon) Widths++;
+	m_Widths = m_Heights - 1;
+	if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon) m_Widths++;
+	if (                     y1  > b3Scene::epsilon) m_Widths++;
 
-	if (EndLine) Number = (Widths + Heights + 1) * Overhead + Heights;
-	else         Number = (Widths + Heights + 1) * Overhead;
-
-	// Realloc buffers
-	b3RenderObject::b3Free(*glGridElements);
-	b3RenderObject::b3Free(*glPolygonElements);
-	gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_line));
-	pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_polygon));
-
-	// Set before test!
-	glGridElements->b3SetGrids(gPtr);
-	glPolygonElements->b3SetPolygons(pPtr);
-
-	if ((gPtr == null) || (pPtr == null))
+	Number = (m_Widths + m_Heights + 1) * m_Overhead;
+	if (m_EndLine)
 	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+		Number += m_Heights;
 	}
+}
+
+void b3Shape::b3ComputeEllipsoidIndices()
+{
+	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+	b3_index       i,j,s,ys,ye;
+	b3_gl_line    *gPtr = *glGridElements;
+	b3_gl_polygon *pPtr = *glPolygonElements;
+	b3_count       glGridCount = 0;
+	b3_count       glPolyCount = 0;
+	b3_f64         y1,y2;
 
 	s = 0;
-	for (i = 0;i < Overhead;i++)
+	y1 = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
+	y2 = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
+
+	for (i = 0;i < m_Overhead;i++)
 	{
-		for (j = 0;j < Heights;j++)
+		for (j = 0;j < m_Heights;j++)
 		{
 			// This marks a longitude
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += Heights;
+		glGridCount += m_Heights;
 
 		if (y1 <= b3Scene::epsilon)
 		{
 			// NOTE: j = 0 substitution
-			B3_GL_PINIT(pPtr,s + Heights + 2,s + Heights + 1,s + 1);
+			B3_GL_PINIT(pPtr,s + m_Heights + 2,s + m_Heights + 1,s + 1);
 			glPolyCount++;
 			j = 1;
 		}
@@ -1635,44 +1637,38 @@ void b3Shape::b3ComputeEllipsoidIndices()
 		{
 			j = 0;
 		}
-		while(j < Heights)
+		while(j < m_Heights)
 		{
-			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
+			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
 			glGridCount++;
 
-			B3_GL_PINIT(pPtr,s+j,              s+j + 1,          s+j + Heights + 1);
-			B3_GL_PINIT(pPtr,s+j + Heights + 2,s+j + Heights + 1,s+j + 1);
+			B3_GL_PINIT(pPtr,s+j,                s+j + 1,            s+j + m_Heights + 1);
+			B3_GL_PINIT(pPtr,s+j + m_Heights + 2,s+j + m_Heights + 1,s+j + 1);
 			glPolyCount += 2;
 			j++;
 		}
 
 		if ((SinCosSteps * 0.5 - y2) > b3Scene::epsilon)
 		{
-			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
+			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
 			glGridCount++;
 
 			j++;
 		}
-		s += (Heights + 1);
+		s += (m_Heights + 1);
 	}
 
-	if (EndLine)
+	if (m_EndLine)
 	{
-		for (j = 0;j < Heights;j++)
+		for (j = 0;j < m_Heights;j++)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += Heights;
-	}
-
-	if (glGridCount > Number)
-	{
-		b3PrintF(B3LOG_NORMAL,"######## %d -> %d (%d)\n",glGridCount,Number,SinCosSteps);
+		glGridCount += m_Heights;
 	}
 
 	glGridElements->b3SetCount(glGridCount);
 	glPolygonElements->b3SetCount(glPolyCount);
-	B3_ASSERT(glGridCount <= Number);
 }
 
 /*************************************************************************
@@ -1905,91 +1901,82 @@ void b3Shape::b3ComputeTorusNormals()
 	}
 }
 
-void b3Shape::b3ComputeTorusIndices()
+void b3Shape::b3GetTorusIndexCount(b3_count &Number)
 {
-	b3_gl_line    *gPtr;
-	b3_gl_polygon *pPtr;
-	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_bool        EndLine = false,EndCol = false;
-	b3_index       i,j,Number,s,ys,ye;
-	b3_count       Heights,Widths,Overhead;
-	b3_f64         y1,y2;
-	b3_count       glGridCount = 0;
-	b3_count       glPolyCount = 0;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+	b3_index ys,ye;
+	b3_bool  EndCol = false;
+	b3_f64   y1,y2;
 
 	b3ComputeBound(&m_Limit);
-	Overhead = b3GetIndexOverhead (0.0,0.0);
-	if (Overhead < 0)
+	m_Overhead = b3GetIndexOverhead (0.0,0.0);
+	if (m_Overhead < 0)
 	{
-		EndLine  =  true;
-		Overhead = -Overhead;
+		m_EndLine  =  true;
+		m_Overhead = -m_Overhead;
+	}
+	else
+	{
+		m_EndLine = false;
 	}
 
 	y1 = m_Limit.y1 * SinCosSteps;
 	y2 = m_Limit.y2 * SinCosSteps;
 	ys = (b3_index)ceil(y1);
 	ye = (b3_index)floor(y2);
-	Heights = ye - ys;
-	if ((ys - y1) > b3Scene::epsilon) Heights++;
-	if ((y2 - ye) > b3Scene::epsilon) Heights++;
+	m_Heights = ye - ys;
+	if ((ys - y1) > b3Scene::epsilon) m_Heights++;
+	if ((y2 - ye) > b3Scene::epsilon) m_Heights++;
 	if ((ys > 0) || (ye < SinCosSteps))
 	{
 		EndCol = true;
 	}
 
-	Widths = Heights;
-	if (EndCol) Widths++;
+	m_Widths = m_Heights;
+	if (EndCol) m_Widths++;
 
-	Number = (Widths + Heights + 1) * Overhead;
-	if (EndLine) Number += Heights;
+	Number = (m_Widths + m_Heights + 1) * m_Overhead;
+	if (m_EndLine) Number += m_Heights;
+}
 
-	b3RenderObject::b3Free(*glGridElements);
-	b3RenderObject::b3Free(*glPolygonElements);
-
-	gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_line));
-	pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
-		(Number * sizeof(b3_gl_polygon));
-
-	// Set before test
-	glGridElements->b3SetGrids(gPtr);
-	glPolygonElements->b3SetPolygons(pPtr);
-
-	if ((gPtr == null) || (pPtr == null))
-	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
-	}
+void b3Shape::b3ComputeTorusIndices()
+{
+	b3_index       i,j,s,ys,ye;
+	b3_gl_line    *gPtr = *glGridElements;
+	b3_gl_polygon *pPtr = *glPolygonElements;
+	b3_count       glGridCount = 0;
+	b3_count       glPolyCount = 0;
 
 	s = 0;
-	for (i = 0;i < Overhead;i++)
+	for (i = 0;i < m_Overhead;i++)
 	{
-		for (j = 0;j < Heights;j++)
+		for (j = 0;j < m_Heights;j++)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 
-			B3_GL_PINIT(pPtr,s+j,              s+j + 1,          s+j + Heights + 1);
-			B3_GL_PINIT(pPtr,s+j + Heights + 2,s+j + Heights + 1,s+j + 1);
+			B3_GL_PINIT(pPtr,s+j,                s+j + 1,            s+j + m_Heights + 1);
+			B3_GL_PINIT(pPtr,s+j + m_Heights + 2,s+j + m_Heights + 1,s+j + 1);
 		}
-		glGridCount += Heights;
+		glGridCount += m_Heights;
 
-		for (j = 0;j < Widths;j++)
+		for (j = 0;j < m_Widths;j++)
 		{
-			B3_GL_LINIT(gPtr,s+j,s+j + Heights + 1);
+			B3_GL_LINIT(gPtr,s+j,s+j + m_Heights + 1);
 
 			glPolyCount += 2;
 		}
-		glGridCount += Widths;
+		glGridCount += m_Widths;
 
-		s += (Heights + 1);
+		s += (m_Heights + 1);
 	}
 
-	if (EndLine)
+	if (m_EndLine)
 	{
-		for (j = 0;j < Heights;j++)
+		for (j = 0;j < m_Heights;j++)
 		{
 			B3_GL_LINIT(gPtr,s+j,s+j + 1);
 		}
-		glGridCount += Heights;
+		glGridCount += m_Heights;
 	}
 
 	glGridElements->b3SetCount(glGridCount);

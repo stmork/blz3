@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/12/03 11:58:30  smork
+**	- Removed b3Mem from b3RenderObject as base class. The b3Shape
+**	  class and the torus/ellipsoid derivatives had to be corrected.
+**
 **	Revision 1.34  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.33  2004/06/21 09:26:19  sm
 **	- Changed rendering: The constant sin/cos tables are now directly
 **	  used from b3ShapeRenderContext.
@@ -326,6 +330,8 @@ void b3Torus::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv + 2;
 
 	vertCount = SinCosSteps * SinCosSteps;
+	b3GetTorusIndexCount(gridCount);
+	polyCount = gridCount;
 }
 
 void b3Torus::b3ComputeVertices()

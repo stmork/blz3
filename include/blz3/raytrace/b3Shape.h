@@ -101,6 +101,9 @@ struct b3_surface;
 
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
+	b3_bool  m_EndLine;
+	b3_count m_Overhead,m_Heights,m_Widths;
+
 protected:
 	b3_count           xSize,ySize;
 	b3_stencil_limit   m_Limit;
@@ -180,7 +183,8 @@ protected:
 		b3_vector &dir3);
 	void            b3ComputeConeIndices();
 
-	// El           lipsoid
+	// Ellipsoid
+	void b3GetEllipsoidIndexCount(b3_count &Number);
 	void b3ComputeEllipsoidVertices(
 		b3_vector &base,
 		b3_vector &dir1,
@@ -197,6 +201,7 @@ protected:
 	void            b3ComputeBoxIndices();
 
 	// Torus
+	void            b3GetTorusIndexCount(b3_count &Number);
 	void            b3ComputeTorusVertices(
 		b3_vector &base,
 		b3_vector &dir1,

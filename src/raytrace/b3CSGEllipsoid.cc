@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2004/12/03 11:58:30  smork
+**      - Removed b3Mem from b3RenderObject as base class. The b3Shape
+**        class and the torus/ellipsoid derivatives had to be corrected.
+**
 **      Revision 1.18  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -152,6 +156,8 @@ void b3CSGEllipsoid::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = (SinCosSteps + 2) * ((SinCosSteps >> 1) + 1);
+	b3GetEllipsoidIndexCount(gridCount);
+	polyCount = gridCount;
 }
 
 void b3CSGEllipsoid::b3ComputeVertices()
