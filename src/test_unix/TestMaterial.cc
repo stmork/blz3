@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/03/15 10:38:37  sm
+**	- Found good values for granite.
+**
 **	Revision 1.3  2004/03/05 13:20:21  sm
 **	- Some additional test materials added.
-**
+**	
 **	Revision 1.2  2004/03/03 08:13:59  sm
 **	- Cook/Torrance examples ready with vases.
 **	
@@ -83,8 +86,17 @@ class b3TestMaterial
 		return camera;
 	}
 
+	inline static void b3ComputeBBoxScale(b3BBox *bbox,b3_vector *scale)
+	{
+		b3_f64 min = B3_MIN(B3_MIN(bbox->m_DimSize.x,bbox->m_DimSize.y),bbox->m_DimSize.z);
+
+		scale->x = bbox->m_DimSize.x / min;
+		scale->y = bbox->m_DimSize.y / min;
+		scale->z = bbox->m_DimSize.z / min;
+	}
+
 public:
-	inline static b3Scene *b3CreateMaterial(b3Material *material)
+	inline static b3Scene *b3CreateMaterial(b3Material *material,b3_vector *dim = null)
 	{
 		b3Scene          *scene = new b3SceneMork(TRACEPHOTO_MORK);
 		b3BBox           *bbox  = new b3BBox(BBOX);
@@ -93,6 +105,7 @@ public:
 		b3MatChess       *chess = new b3MatChess(CHESS);
 		b3Light          *light = new b3Light(SPOT_LIGHT);
 		b3CameraPart     *camera;
+		b3SuperSample    *ss4   = new b3SuperSample(SUPERSAMPLE4);
 		b3_matrix         transform;
 
 		scene->b3GetBBoxHead()->b3Append(bbox);
@@ -127,16 +140,22 @@ public:
 		// Create camera
 		b3Consolidate(scene);
 		scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene,225,60));
+		scene->b3GetSpecialHead()->b3Append(ss4);
 		camera->b3ScaleFocalLength(2.7);
 		scene->b3SetCamera(camera);
 
 		big->b3GetMaterialHead()->b3Append(material);
 
+		if (dim != null)
+		{
+			b3ComputeBBoxScale(bbox,dim);
+		}
+
 		return scene;
 	}
 };
 
-static void b3SaveOneColor(b3Color &color,int y)
+static void b3SaveCookTorrance(b3Color &color,int y)
 {
 	int i;
 
@@ -157,6 +176,23 @@ static void b3SaveOneColor(b3Color &color,int y)
 	}
 }
 
+static void b3SaveGranite()
+{
+	b3MatGranite *material = new b3MatGranite(GRANITE);
+	b3_vector     dim;
+
+	b3Scene *scene    = b3TestMaterial::b3CreateMaterial(material,&dim);
+	b3World  world;
+	b3Path   name;
+	b3_f64   scale = 0.15;
+
+	b3Vector::b3Init(&material->m_Scale,dim.x / scale,dim.y / scale,dim.z / scale);
+	name.b3Format("/tmp/material_granite.bwd");
+
+	world.b3SetFirst(scene);
+	world.b3Write(name);
+}
+
 int main(int argc,char *argv[])
 {
 	b3Color gold    = b3Color(0.79,0.65,0.2);
@@ -166,12 +202,14 @@ int main(int argc,char *argv[])
 	b3Color grey    = b3Color(0.8, 0.8, 0.8);
 	b3Color blue    = b3Color(0.1, 0.3, 0.8);
 
-	b3SaveOneColor(gold,0);
-	b3SaveOneColor(messing,1);
-	b3SaveOneColor(copper,2);
-	b3SaveOneColor(silver,3);
-	b3SaveOneColor(grey,4);
-	b3SaveOneColor(blue,5);
+	b3SaveCookTorrance(gold,0);
+	b3SaveCookTorrance(messing,1);
+	b3SaveCookTorrance(copper,2);
+	b3SaveCookTorrance(silver,3);
+	b3SaveCookTorrance(grey,4);
+	b3SaveCookTorrance(blue,5);
+
+	b3SaveGranite();
 
 	return 0;
 }

@@ -23,7 +23,9 @@
 #include "blz3/b3Config.h"
 
 #define B3_WHITE       ((b3_pkd_color)0x00ffffff)
+#define B3_LIGHTGREY   ((b3_pkd_color)0x00c0c0c0)
 #define B3_GREY        ((b3_pkd_color)0x00808080)
+#define B3_DARKGREY    ((b3_pkd_color)0x00404040)
 #define B3_BLACK       ((b3_pkd_color)0x00000000)
 #define B3_RED         ((b3_pkd_color)0x00ff0000)
 #define B3_GREEN       ((b3_pkd_color)0x0000ff00)
@@ -157,14 +159,16 @@ public:
 		return color;
 	}
 
-	inline void b3Mix(const b3Color &a,const b3Color &b,b3_f64 mix)
+	inline static b3Color b3Mix(const b3Color &low,const b3Color &high,b3_f64 mix)
 	{
-		b3_f64 amix = 1 - mix;
+		b3Color result;
+		b3_f64  amix = 1 - mix;
 
 		for (b3_loop i = 0;i < 4;i++)
 		{
-			v[i] = a.v[i] * amix + b.v[i] * mix;
+			result.v[i] = low.v[i] * amix + high.v[i] * mix;
 		}
+		return result;
 	}
 
 	inline b3Color &operator+=(const b3Color &a)

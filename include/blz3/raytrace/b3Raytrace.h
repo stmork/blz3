@@ -878,6 +878,7 @@ public:
 // GRANITE
 class B3_PLUGIN b3MatGranite : public b3Material 
 {
+public:
 	b3Color           m_DarkColor;
 	b3Color           m_LightColor;
 	b3Color           m_DiffColor;

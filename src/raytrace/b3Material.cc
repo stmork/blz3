@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2004/03/15 10:38:37  sm
+**      - Found good values for granite.
+**
 **      Revision 1.40  2004/03/15 08:28:46  sm
 **      - Now saving granite color definitions.
 **
@@ -1123,12 +1126,12 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
-	m_DarkColor  = b3Color(0.25,0.25,0.25);
-	m_LightColor = b3Color(0.8, 0.3, 0.2);
+	m_DarkColor  = b3Color(b3_pkd_color(0xd0dde0));
+	m_LightColor = b3Color(B3_BLACK);
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
 	m_AmbColor   = b3Color(0.1, 0.1, 0.1);
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
-	b3Vector::b3Init(&m_Scale,1.0,1.0,1.0);
+	b3Vector::b3Init(&m_Scale,0.1,0.1,0.1);
 	m_Reflection = 0.0;
 	m_Refraction = 0.0;
 	m_RefrValue  = 1.0;
@@ -1184,10 +1187,10 @@ b3_bool b3MatGranite::b3GetColors(
 
 	for (i = 0;i < 6;i++)
 	{
-		sum += fabs(0.5 - b3Noise::b3NoiseVector(
+		sum += (fabs(0.5 - b3Noise::b3NoiseVector(
 			4 * freq * d.x,
 			4 * freq * d.y,
-			4 * freq * d.z)) / freq;
+			4 * freq * d.z)) / freq);
 		freq += freq; // = freq *= 2;
 	}
 	if (sum < 0)
@@ -1200,7 +1203,7 @@ b3_bool b3MatGranite::b3GetColors(
 	}
 	else
 	{
-		mask.b3Mix(m_DarkColor,m_LightColor,sum);
+		mask = b3Color::b3Mix(m_DarkColor,m_LightColor,sum);
 	}
 	
 	diffuse  = m_DiffColor * mask;
