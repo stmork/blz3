@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/12/23 08:57:21  sm
+**	- Fixed recursive calling bug in b3IsObscured(...)
+**	- Minor intersection optimazations done.
+**
 **	Revision 1.16  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
 **	- Toolbars got adjusted and beautified
 **	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
 **	- Found and fixed some minor bugs
-**
+**	
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -129,56 +133,47 @@ b3_f64 b3Shape::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_f64    Denom,aValue,bValue,lValue;
+	b3_f64    Denom,aValue,bValue,lValue,result = -1;
 	b3_vector Dir,Product;
  
 	if ((Denom =
 		-m_Normal.x * ray->dir.x
 		-m_Normal.y * ray->dir.y
-		-m_Normal.z * ray->dir.z) == 0)
+		-m_Normal.z * ray->dir.z) != 0)
 	{
-		return -1;
+		Denom = 1 / Denom;
+		if (((lValue = (
+			m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
+			m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
+			m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
+				* Denom) >= epsilon) && (lValue < ray->Q))
+		{
+			aValue = (
+				m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
+				m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
+				m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
+					* Denom;
+			if (fabs(aValue) <= 1)
+			{
+				bValue = (
+					-m_Dir1.x * Product.x
+					-m_Dir1.y * Product.y
+					-m_Dir1.z * Product.z) * Denom;
+				if (fabs(bValue) <= 1)
+				{
+					polar->polar.x = polar->object_polar.x = aValue;
+					polar->polar.y = polar->object_polar.y = bValue;
+					polar->polar.z = polar->object_polar.z = 0;
+
+					if(b3CheckStencil(polar))
+					{
+						result = lValue;
+					}
+				}
+			}
+		}
 	}
-
-	Denom = 1 / Denom;
-	if ((lValue=(
-		m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
-		m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
-		m_Normal.z * (Dir.z = ray->pos.z - m_Base.z))
-			* Denom) < epsilon)
-	{
-		return -1;
-	}
-
-	if (lValue > ray->Q)
-	{
-		return -1;
-	}
-
-	aValue = (
-		m_Dir2.x * (Product.x = Dir.y * ray->dir.z - Dir.z * ray->dir.y) +
-		m_Dir2.y * (Product.y = Dir.z * ray->dir.x - Dir.x * ray->dir.z) +
-		m_Dir2.z * (Product.z = Dir.x * ray->dir.y - Dir.y * ray->dir.x))
-			* Denom;
-	if (fabs(aValue) > 1)
-	{
-		return -1;
-	}
-
-	bValue = (
-		-m_Dir1.x * Product.x
-		-m_Dir1.y * Product.y
-		-m_Dir1.z * Product.z) * Denom;
-	if (fabs(bValue) > 1)
-	{
-		return -1;
-	}
-
-	polar->polar.x = polar->object_polar.x = aValue;
-	polar->polar.y = polar->object_polar.y = bValue;
-	polar->polar.z = polar->object_polar.z = 0;
-
-	return b3CheckStencil(polar) ? lValue : -1;
+	return result;
 }
 
 b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
@@ -1186,10 +1181,16 @@ b3_bool b3BBox::b3Intersect(b3_ray *ray)
 	}
 	if (t_near > start) start = t_near;
 	if (t_far  < end)   end   = t_far;
-	if (start  > end) return false;
+	if (start  > end)
+	{
+		return false;
+	}
 
 	// Is it OK?
-	if (end    < 0)   return false;
+	if (end    < 0)
+	{
+		return false;
+	}
 
 	m       = 1.0 / ray->dir.z;
 	pos     = (ray->pos.z  - m_DimBase.z);
@@ -1203,21 +1204,17 @@ b3_bool b3BBox::b3Intersect(b3_ray *ray)
 	}
 	if (t_near > start) start = t_near;
 	if (t_far  < end)   end   = t_far;
-	if (start  > end) return false;
 
-	if (end   < 0)      return false;
-	if (start > ray->Q) return false;
-	return true;
+	return (start <= end) && (end >= 0) && (start <= ray->Q);
 }
 
-
-inline b3Shape *b3Scene::b3Intersect(
+b3Shape *b3Scene::b3Intersect(
 	b3BBox      *BBox,
 	b3_ray_info *ray)
 {
 	b3Base<b3Item> *Shapes;
 	b3Base<b3Item> *BBoxes;
-	b3Shape        *Shape,*BackShape = null,*Found;
+	b3Shape        *Shape,*ResultShape = null;
 	b3Item         *item;
 	b3_polar        polar;
 	b3_f64          Result;
@@ -1226,17 +1223,19 @@ inline b3Shape *b3Scene::b3Intersect(
 	{
 		if (BBox->b3Intersect(ray))
 		{
-			Shapes = BBox->b3GetShapeHead();
+			//Check recursively
 			BBoxes = BBox->b3GetBBoxHead();
 			if (BBoxes->First)
 			{
-				Found = b3Intersect ((b3BBox *)BBoxes->First,ray);
-				if (Found != null)
+				Shape = b3Intersect ((b3BBox *)BBoxes->First,ray);
+				if (Shape != null)
 				{
-					BackShape = Found;
+					ResultShape = Shape;
 				}
 			}
 
+			// Check shapes inside this object
+			Shapes = BBox->b3GetShapeHead();
 			if (Shapes->b3GetClass() == CLASS_SHAPE)
 			{
 				B3_FOR_BASE(Shapes,item)
@@ -1245,10 +1244,10 @@ inline b3Shape *b3Scene::b3Intersect(
 					Result = Shape->b3Intersect(ray,&polar);
 					if ((Result > 0) && (Result <= ray->Q))
 					{
-						BackShape  = Shape;
-						ray->bbox  = BBox;
-						ray->Q     = Result;
-						ray->polar = polar;
+						ResultShape = Shape;
+						ray->bbox   = BBox;
+						ray->Q      = Result;
+						ray->polar  = polar;
 					}
 				} /* for shape*/
 			}     /* if CLASS_SHAPE */
@@ -1258,13 +1257,13 @@ inline b3Shape *b3Scene::b3Intersect(
 			// CLASS_SHAPE
 			if (Shapes->b3GetClass() == CLASS_CSG)
 			{
-				BackShape = BBox->b3IntersectCSG (BackShape,ray,Q);
+				ResultShape = BBox->b3IntersectCSG (ResultShape,ray,Q);
 			}
 #endif
 		}
 		BBox = (b3BBox *)BBox->Succ;
 	}
-	return BackShape;
+	return ResultShape;
 }
 
 b3_bool b3Scene::b3Intersect(b3_ray_info *ray,b3_f64 max)
@@ -1303,16 +1302,6 @@ b3Shape *b3Scene::b3IsObscured(
 		if (BBox->b3Intersect(ray))
 		{
 			Shapes = BBox->b3GetShapeHead();
-			BBoxes = BBox->b3GetBBoxHead();
-			if (BBoxes->First != null)
-			{
-				Shape = b3Intersect ((b3BBox *)BBoxes->First,ray);
-				if (Shape != null)
-				{
-					return Shape;
-				}
-			}
-
 			if (Shapes->b3GetClass() == CLASS_SHAPE)
 			{
 				B3_FOR_BASE(Shapes,item)
@@ -1326,7 +1315,6 @@ b3Shape *b3Scene::b3IsObscured(
 				} /* for shape*/
 			}     /* if CLASS_SHAPE */
 
-
 #if 0
 			// CLASS_SHAPE
 			if (Shapes->b3GetClass() == CLASS_CSG)
@@ -1334,6 +1322,17 @@ b3Shape *b3Scene::b3IsObscured(
 				BackShape = BBox->b3IntersectCSG (BackShape,ray,Q);
 			}
 #endif
+			// Check recursively
+			BBoxes = BBox->b3GetBBoxHead();
+			if (BBoxes->First != null)
+			{
+				Shape = b3IsObscured ((b3BBox *)BBoxes->First,ray);
+				if (Shape != null)
+				{
+					return Shape;
+				}
+			}
+
 		}
 		BBox = (b3BBox *)BBox->Succ;
 	}
@@ -1343,7 +1342,7 @@ b3Shape *b3Scene::b3IsObscured(
 b3_bool b3Scene::b3IsObscured(b3_ray_info *ray,b3_f64 max)
 {
 	ray->Q     = max;
-	ray->shape = b3Intersect(b3GetFirstBBox(),ray);
+	ray->shape = b3IsObscured(b3GetFirstBBox(),ray);
 	return ray->shape != null;
 }
 

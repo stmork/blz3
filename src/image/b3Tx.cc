@@ -36,11 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/23 08:57:21  sm
+**	- Fixed recursive calling bug in b3IsObscured(...)
+**	- Minor intersection optimazations done.
+**
 **	Revision 1.13  2001/12/16 11:07:45  sm
 **	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
 **	  These images are converted into B3_TX_VGA now
 **	- b3ScaleToGrey() fixed using correct palette
-**
+**	
 **	Revision 1.12  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration

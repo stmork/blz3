@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2001/12/23 08:57:22  sm
+**      - Fixed recursive calling bug in b3IsObscured(...)
+**      - Minor intersection optimazations done.
+**
 **      Revision 1.27  2001/12/21 16:46:16  sm
 **      - New dialog for camera properties
 **      - Done some bugfixes concerning CB3FloatEdit
