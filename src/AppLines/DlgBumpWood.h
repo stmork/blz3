@@ -1,0 +1,66 @@
+/*
+**
+**	$Filename:	DlgBumpWood.h $
+**	$Release:	Dortmund 2004 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Wood bump map
+**
+**	(C) Copyright 2004  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
+#if !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
+#define AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+// DlgBumpWood.h : header file
+//
+
+/////////////////////////////////////////////////////////////////////////////
+// CDlgBumpWood dialog
+
+class CDlgBumpWood : public CDialog
+{
+	b3BumpWood         *m_Bump;
+// Construction
+public:
+	static b3_bool b3Edit(b3Item *item);
+	static void b3Register();
+	CDlgBumpWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+
+// Dialog Data
+	//{{AFX_DATA(CDlgBumpWood)
+	enum { IDD = IDD_BUMP_WOOD };
+		// NOTE: the ClassWizard will add data members here
+	//}}AFX_DATA
+
+
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CDlgBumpWood)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+// Implementation
+protected:
+
+	// Generated message map functions
+	//{{AFX_MSG(CDlgBumpWood)
+		// NOTE: the ClassWizard will add member functions here
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+};
+
+//{{AFX_INSERT_LOCATION}}
+// Microsoft Visual C++ will insert additional declarations immediately before the previous line.
+
+#endif // !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
