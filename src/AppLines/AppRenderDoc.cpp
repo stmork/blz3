@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/01/28 15:58:27  sm
+**	- Added support for undoing/redoing picking
+**
 **	Revision 1.15  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
-**
+**	
 **	Revision 1.14  2003/01/12 19:21:37  sm
 **	- Some other undo/redo actions added (camera etc.)
 **	
@@ -137,7 +140,7 @@ CAppRenderDoc::CAppRenderDoc()
 	m_Display      = null;
 	m_FirstVisible = null;
 	m_Selected     = null;
-	m_UndoBuffer   = new b3UndoBuffer(this);
+	m_UndoBuffer   = new b3LinesUndoBuffer(this);
 }
 
 CAppRenderDoc::~CAppRenderDoc()
@@ -309,7 +312,7 @@ void CAppRenderDoc::b3AddUndoAction(CB3Action *action)
 {
 }
 
-void CAppRenderDoc::b3AddOp(b3Operation *op)
+void CAppRenderDoc::b3AddOp(b3UndoOperation *op)
 {
 	m_UndoBuffer->b3Do(op);
 }

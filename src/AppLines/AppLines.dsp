@@ -261,6 +261,10 @@ SOURCE=.\b3UndoObject.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3UndoPick.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3VectorEdit.cpp
 # End Source File
 # Begin Source File
@@ -570,6 +574,10 @@ SOURCE=.\b3UndoLight.h
 # Begin Source File
 
 SOURCE=.\b3UndoObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoPick.h
 # End Source File
 # Begin Source File
 

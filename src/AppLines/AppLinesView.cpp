@@ -32,6 +32,7 @@
 
 #include "b3UndoAction.h"
 #include "b3UndoCamera.h"
+#include "b3UndoPick.h"
 
 /*************************************************************************
 **                                                                      **
@@ -41,10 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2003/01/28 15:58:27  sm
+**	- Added support for undoing/redoing picking
+**
 **	Revision 1.59  2003/01/18 14:13:49  sm
 **	- Added move/rotate stepper operations
 **	- Cleaned up resource IDs
-**
+**	
 **	Revision 1.58  2003/01/15 16:23:53  sm
 **	- Some other camera undo/redo operations added.
 **	- Fixed some undo(redo operations.
@@ -582,6 +586,8 @@ void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point)
 void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	b3UndoOperation *op = m_PickBaseLight.b3GetOperation();
+
 	if (!m_PickBaseLight.b3Up(point.x,point.y))
 	{
 		// Do standard action
@@ -592,6 +598,11 @@ void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point)
 		// Do MFC mouse handling when picking
 		::ReleaseCapture();
 		CScrollView::OnLButtonUp(nFlags, point);
+
+		if (op != null)
+		{
+			GetDocument()->b3AddOp(op);
+		}
 	}
 }
 

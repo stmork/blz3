@@ -33,7 +33,7 @@ class CB3Action;
 
 class CAppRenderDoc : public CDocument, public b3Document
 {
-	b3UndoBuffer         *m_UndoBuffer;
+	b3LinesUndoBuffer    *m_UndoBuffer;
 
 protected:
 	CDlgHierarchy        *m_DlgHierarchy;
@@ -83,7 +83,7 @@ public:
 	virtual void       b3ContextMenu(HTREEITEM item);
 
 	virtual void       b3AddUndoAction(CB3Action *action);
-	        void       b3AddOp(b3Operation *op);
+	        void       b3AddOp(b3UndoOperation *op);
 			void       b3ClearOp();
 
 	// Drag & drop operations

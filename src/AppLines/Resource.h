@@ -621,6 +621,8 @@
 #define IDS_TOOLBAR_VIEW                60143
 #define IDS_UNKNOWN                     60144
 #define IDS_COB_FILTER                  60145
+#define IDS_OP_PICK_POINT               60146
+#define IDS_OP_PICK_DIR                 60147
 #define IDS_OP_COB_LOAD                 61446
 
 // Next default values for new objects

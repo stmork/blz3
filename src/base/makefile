@@ -25,6 +25,7 @@ LIB_SOURCE =\
 	b3Render.cc\
 	b3SearchPath.cc\
 	b3Spline.cc\
+	b3UndoOperation.cc\
 	b3World.cc
 
 LIB_OBJ	=\
@@ -44,6 +45,7 @@ LIB_OBJ	=\
 	b3Render.o\
 	b3SearchPath.o\
 	b3Spline.o\
+	b3UndoOperation.o\
 	b3World.o
 
 all:	$(LIBS)

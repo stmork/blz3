@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Pick.h"
+#include "b3UndoPick.h"
 
 class b3PickPoint : public b3Pick
 {
@@ -30,6 +31,7 @@ class b3PickPoint : public b3Pick
 
 protected:
 	b3RenderView   *m_RenderView;
+	b3_vector       m_StartVector;
 
 public:
 	b3PickPoint(
@@ -38,8 +40,9 @@ public:
 		const char     *text = null,
 		b3ModellerInfo *info = null);
 
-	void    b3Draw(b3DrawContext *dc);
-	b3_bool b3Moved(b3_coord x,b3_coord y);
+	        void             b3Draw(b3DrawContext *dc);
+	        b3_bool          b3Moved(b3_coord x,b3_coord y);
+	virtual b3UndoOperation *b3GetOperation();
 };
 
 class b3PickDir : public b3PickPoint
@@ -56,8 +59,9 @@ public:
 		const char     *text = null,
 		b3ModellerInfo *info = null);
 
-	void    b3Draw(b3DrawContext *dc);
-	b3_bool b3Moved(b3_coord x,b3_coord y);
+	        void             b3Draw(b3DrawContext *dc);
+	        b3_bool          b3Moved(b3_coord x,b3_coord y);
+	virtual b3UndoOperation *b3GetOperation();
 };
 
 #endif

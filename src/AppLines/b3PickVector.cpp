@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/28 15:58:27  sm
+**	- Added support for undoing/redoing picking
+**
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.2  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
 **	
@@ -62,9 +65,10 @@ b3PickPoint::b3PickPoint(
 	b3ModellerInfo *info)
 {
 	m_RenderView = renderview;
-	m_Pos        = pos;
-	m_Text       = text != null ? text : "";
-	m_Info       = info;
+	m_StartVector = *pos;
+	m_Pos         =  pos;
+	m_Text        =  text != null ? text : "";
+	m_Info        =  info;
 }
 
 void b3PickPoint::b3Draw(b3DrawContext *dc)
@@ -106,6 +110,11 @@ b3_bool b3PickPoint::b3Moved(b3_coord x,b3_coord y)
 	return changed;
 }
 
+b3UndoOperation *b3PickPoint::b3GetOperation()
+{
+	return new b3OpPickPoint(&m_StartVector,m_Pos);
+}
+
 /*************************************************************************
 **                                                                      **
 **                        b3PickDir implementation                      **
@@ -119,8 +128,9 @@ b3PickDir::b3PickDir(
 	const char     *text,
 	b3ModellerInfo *info) : b3PickPoint(renderview,&m_AuxPos,text,info)
 {
-	m_OrigPos = pos;
-	m_OrigDir = dir;
+	m_OrigPos     =  pos;
+	m_OrigDir     =  dir;
+	m_StartVector = *dir;
 }
 
 void b3PickDir::b3Draw(b3DrawContext *dc)
@@ -145,4 +155,9 @@ b3_bool b3PickDir::b3Moved(b3_coord x,b3_coord y)
 		b3Vector::b3Sub(&m_AuxPos,m_OrigPos,m_OrigDir);
 	}
 	return changed;
+}
+
+b3UndoOperation *b3PickDir::b3GetOperation()
+{
+	return new b3OpPickDir(&m_StartVector,m_OrigDir);
 }

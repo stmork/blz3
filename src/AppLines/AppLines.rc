@@ -2560,6 +2560,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_UNKNOWN             "unbekannt"
     IDS_COB_FILTER          "Caligari Objekt (*.cob)|*.cob|Alle Dateien (*.*)|*.*||"
+    IDS_OP_PICK_POINT       "Punkt verschieben"
+    IDS_OP_PICK_DIR         "Richtung verschieben"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/01/28 15:58:27  sm
+**	- Added support for undoing/redoing picking
+**
 **	Revision 1.6  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.5  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
@@ -122,6 +125,11 @@ b3_bool b3PickBase::b3Up(b3_coord x,b3_coord y)
 	return result;
 }
 
+b3UndoOperation *b3PickBase::b3GetOperation()
+{
+	return m_Selected != null ? m_Selected->b3GetOperation() : null;
+}
+
 void b3PickBase::b3Draw(b3DrawContext *dc)
 {
 	b3Pick *pick;
@@ -175,4 +183,9 @@ b3_bool b3Pick::b3Moved(b3_coord x,b3_coord y)
 		m_y = y;
 	}
 	return result;
+}
+
+b3UndoOperation *b3Pick::b3GetOperation()
+{
+	return null;
 }
