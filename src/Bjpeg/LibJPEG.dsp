@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_LIB" /D "_MBCS" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -83,10 +83,254 @@ LIB32=link.exe -lib
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\cdjpeg.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcapimin.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcapistd.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jccoefct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jccolor.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcdctmgr.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jchuff.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcinit.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcmainct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcmarker.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcmaster.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcomapi.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcparam.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcphuff.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcprepct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jcsample.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jctrans.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdapimin.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdapistd.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdatadst.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdatasrc.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdcoefct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdcolor.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jddctmgr.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdhuff.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdinput.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdmainct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdmarker.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdmaster.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdmerge.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdphuff.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdpostct.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdsample.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdtrans.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jerror.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jfdctflt.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jfdctfst.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jfdctint.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jidctflt.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jidctfst.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jidctint.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jidctred.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jmemmgr.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jmemnobs.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jpegtran.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jquant1.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jquant2.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\jutils.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\cderror.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\cdjpeg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jchuff.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jconfig.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdct.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jdhuff.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jerror.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jinclude.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jmemsys.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jmorecfg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jpegint.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jpeglib.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jversion.h
+# End Source File
 # End Group
 # End Target
 # End Project

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /G6 /MD /w /W0 /GX /O2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /G6 /MDd /w /W0 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_LIB" /D "_MBCS" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 # ADD RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -83,6 +83,142 @@ LIB32=link.exe -lib
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\tif_aux.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_close.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_codec.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_compress.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dir.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dir.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dirinfo.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dirread.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dirwrite.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dumpmode.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_error.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_fax3.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_fax3.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_flush.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_getimage.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_jpeg.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_luv.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_lzw.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_next.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_open.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_packbits.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_pixarlog.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_predict.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_print.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_read.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_strip.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_swab.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_thunder.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_tile.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_version.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_warning.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_win32.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_write.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_zip.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
