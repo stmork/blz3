@@ -18,15 +18,16 @@
 #ifndef B3_RAYTRACE_RAYTRACE_H
 #define B3_RAYTRACE_RAYTRACE_H
 
-#ifdef BLZ3_USE_OPENGL
-#include <GL/glut.h>
-#endif
-
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
+
+#ifdef BLZ3_USE_OPENGL
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 
 #define B3_TEXSTRINGLEN  128
 #define B3_BOXSTRINGLEN   96
@@ -1212,7 +1213,8 @@ public:
 	static b3Item  *b3Init(b3_u32 *src);
 
 	       void     b3Reorg();
-	       void     b3SetView(b3_res xSize,b3_res ySize);
+	       void     b3SetView(b3_res  xSize,b3_res  ySize);
+	       void     b3GetView(b3_res &xSize,b3_res &ySize);
 	       void     b3Draw();
 };
 
