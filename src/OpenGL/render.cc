@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2004/07/18 08:28:44  sm
+**      - Added transformation optimazation: We don't need to recompute
+**        vertices on unit matrix transformation. This simple test makes
+**        animation a lot faster!
+**
 **      Revision 1.41  2004/07/15 12:12:20  sm
 **      - Some FSAA debugging- Some FSAA debugging.
 **
@@ -247,13 +252,11 @@ static void b3PlayAnimation()
 			t = animation->m_Start + now - start;
 			scene->b3SetAnimation(t);
 			scene->b3ComputeBounds(&lower,&upper);
-
 			context.b3StartDrawing();
 			view.b3SetBounds(&lower,&upper);
 			view.b3SetCamera(scene);
 			view.b3SetupView(xWinSize,yWinSize);
 			scene->b3Draw(&context);
-
 			glutSwapBuffers();
 			count++;
 		}

@@ -880,6 +880,21 @@ public:
 	static b3_matrix *b3Dress        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Dir1,b3_vector *Dir2,b3_bool future);
 	static b3_matrix *b3Dump         (b3_matrix *mtx,const char *title=null);
 
+	static inline b3_bool    b3IsUnitMatrix(b3_matrix *test_matrix)
+	{
+		b3_f32 *ptr1 = &test_matrix->m11;
+		b3_f32 *ptr2 = &m_UnitMatrix.m11;
+
+		for (int i = 0;i < 16;i++)
+		{
+			if (fabs(*ptr1++ - *ptr2++) > 0.001f)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	static inline b3_f64     b3Det2  (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d)
 	{
 		return a * d - b * c;

@@ -33,13 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.93  2004/07/18 08:28:44  sm
+**	- Added transformation optimazation: We don't need to recompute
+**	  vertices on unit matrix transformation. This simple test makes
+**	  animation a lot faster!
+**
 **	Revision 1.92  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.91  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -1124,10 +1129,13 @@ void b3Scene::b3Transform(
 	b3Item *item;
 	b3BBox *bbox;
 
-	B3_FOR_BASE(b3GetBBoxHead(),item)
+	if (!b3Matrix::b3IsUnitMatrix(transformation))
 	{
-		bbox = (b3BBox *)item;
-		bbox->b3Transform(transformation,is_affine,force_action);
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3Transform(transformation,is_affine,force_action);
+		}
 	}
 }
 
