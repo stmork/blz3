@@ -19,6 +19,7 @@
 #define B3_SYSTEM_THREAD_H
 
 #include "blz3/b3Types.h"
+#include "blz3/system/b3Time.h"
 #include "stdafx.h"
 #include "afxmt.h"
 
@@ -54,6 +55,7 @@ public:
 // Thread handling
 class b3Thread
 {
+	b3TimeSpan      m_Span;
 	const char     *name;
 protected:
 	CWinThread     *thread;
@@ -69,6 +71,9 @@ public:
 	b3_bool       b3IsRunning();
 	b3_bool       b3Stop();
 	void          b3Wait();
+	void          b3AddTimeSpan(b3TimeSpan *span);
+
+private:
 	static b3_u32 b3Trampoline(void *custom_ptr);
 };
 

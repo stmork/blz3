@@ -32,16 +32,21 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.1  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
-**
+**	
 **	
 */
 
 /*************************************************************************
 **                                                                      **
-**                        b3Date routines                             **
+**                        b3TimeSpan routines                           **
 **                                                                      **
 *************************************************************************/
 
@@ -55,7 +60,7 @@ b3TimeSpan::b3TimeSpan()
 void b3TimeSpan::b3Start()
 {
 	ftime(&m_RealTime);
-	getrusage(RUSAGE_CHILDREN,&m_UsageTime);
+	getrusage(RUSAGE_SELF,&m_UsageTime);
 #ifdef _DEBUG
 	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
 		m_UsageTime.ru_utime.tv_sec,
@@ -68,7 +73,7 @@ void b3TimeSpan::b3Stop()
 	struct rusage usage_stop;
 	struct timeb  real_stop;
 
-	getrusage(RUSAGE_CHILDREN,&usage_stop);
+	getrusage(RUSAGE_SELF,&usage_stop);
 	ftime(&real_stop);
 #ifdef _DEBUG
 	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
@@ -76,23 +81,23 @@ void b3TimeSpan::b3Stop()
 		usage_stop.ru_utime.tv_usec);
 #endif
 
-	m_uTime =
-		 usage_stop.ru_utime.tv_sec  *   100 + 
-		 usage_stop.ru_utime.tv_usec / 10000 -
-		m_UsageTime.ru_utime.tv_sec  *   100 -
-		m_UsageTime.ru_utime.tv_usec / 10000;
+	m_uTime += (
+		 usage_stop.ru_utime.tv_sec  * 1000 + 
+		 usage_stop.ru_utime.tv_usec / 1000 -
+		m_UsageTime.ru_utime.tv_sec  * 1000 -
+		m_UsageTime.ru_utime.tv_usec / 1000);
 
-	m_sTime =
-		 usage_stop.ru_stime.tv_sec  *   100 + 
-		 usage_stop.ru_stime.tv_usec / 10000 -
-		m_UsageTime.ru_stime.tv_sec  *   100 -
-		m_UsageTime.ru_stime.tv_usec / 10000;
+	m_sTime += (
+		 usage_stop.ru_stime.tv_sec  * 1000 + 
+		 usage_stop.ru_stime.tv_usec / 1000 -
+		m_UsageTime.ru_stime.tv_sec  * 1000 -
+		m_UsageTime.ru_stime.tv_usec / 1000);
 
-	m_rTime =
-		 real_stop.time    * 100 + 
-		 real_stop.millitm /  10 -
-		m_RealTime.time    * 100 -
-		m_RealTime.millitm /  10;
+	m_rTime += (
+		 real_stop.time    * 1000 + 
+		 real_stop.millitm        -
+		m_RealTime.time    * 1000 -
+		m_RealTime.millitm);
 }
 
 b3_f64 b3TimeSpan::b3GetUsage()
@@ -104,19 +109,19 @@ b3_f64 b3TimeSpan::b3GetUsage()
 char *b3TimeSpan::b3PrintTime(char *buffer,b3_s32 time_needed)
 {
 	sprintf(buffer,"%3d:%02d,%02d",
-		 time_needed / 6000,
-		(time_needed / 100) % 60,
-		 time_needed % 100);
+		 time_needed / 60000,
+		(time_needed /  1000) % 60,
+		 time_needed %  1000);
 	return buffer;
 }
 
-void b3TimeSpan::b3Print()
+void b3TimeSpan::b3Print(b3_log_level level)
 {
 	char buffer[32];
 
-	b3PrintF(B3LOG_NORMAL,"Computation time:\n");
-	b3PrintF(B3LOG_NORMAL," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
-	b3PrintF(B3LOG_NORMAL," User time:   %s\n",b3PrintTime(buffer,m_uTime));
-	b3PrintF(B3LOG_NORMAL," System time: %s\n",b3PrintTime(buffer,m_sTime));
-	b3PrintF(B3LOG_NORMAL," Load:        %3.2f%%\n",b3GetUsage());
+	b3PrintF(level,"Computation time:\n");
+	b3PrintF(level," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
+	b3PrintF(level," User time:   %s\n",b3PrintTime(buffer,m_uTime));
+	b3PrintF(level," System time: %s\n",b3PrintTime(buffer,m_sTime));
+	b3PrintF(level," Load:        %3.2f%%\n",b3GetUsage() * 100.0);
 }

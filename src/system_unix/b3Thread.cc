@@ -34,6 +34,11 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.5  2001/11/06 17:14:02  sm
 **	- Introducing JPEG saving
 **	- Made some library fine tunings on TIFF and JPEG
@@ -41,7 +46,7 @@
 **	  o scaling
 **	  o filtering
 **	  o B/W conversion
-**
+**	
 **	Revision 1.4  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -160,7 +165,7 @@ b3_bool b3Event::b3Wait()
 **                                                                      **
 *************************************************************************/
 
-static b3_u32     threadCount;
+static b3_count   threadCount;
 static b3IPCMutex threadMutex;
 
 b3Thread::b3Thread(const char *task_name)
@@ -235,6 +240,7 @@ b3_bool b3Thread::b3Stop()
 		threadMutex.b3Lock();
 		threadCount--;
 		threadMutex.b3Unlock();
+		m_Span.b3Stop();
 	}
 	return was_running;
 }
@@ -245,6 +251,12 @@ void b3Thread::b3Wait()
 
 	pthread_join(m_Thread,&ptr);
 }
+
+void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
+{
+	span->m_uTime += m_Span.m_uTime;
+	span->m_sTime += m_Span.m_sTime;
+} 
 
 /*************************************************************************
 **                                                                      **

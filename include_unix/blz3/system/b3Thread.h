@@ -74,6 +74,7 @@ public:
 	b3_bool  b3IsRunning();
 	b3_bool  b3Stop();
 	void     b3Wait();
+	void     b3AddTimeSpan(b3TimeSpan *span);
 private:
 	static void *b3Trampoline(void *thread);
 };

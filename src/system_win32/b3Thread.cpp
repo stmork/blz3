@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.5  2001/10/20 16:15:00  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -41,7 +46,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.4  2001/07/03 18:14:08  sm
 **	- Now having running threads. The system lib
 **	  needed the appropriate project options
@@ -165,6 +170,7 @@ unsigned int b3Thread::b3Trampoline(void *ptr)
 
 	threadClass = (b3Thread *)ptr;
 
+	threadClass->m_Span.b3Start();
 	threadMutex.b3Lock();
 	threadCount++;
 	threadClass->is_running = true;
@@ -176,6 +182,7 @@ unsigned int b3Thread::b3Trampoline(void *ptr)
 	threadClass->is_running = false;
 	threadCount--;
 	threadMutex.b3Unlock();
+	threadClass->m_Span.b3Stop();
 
 	return result;
 }
@@ -264,6 +271,7 @@ b3_bool b3Thread::b3Stop()
 
 		threadCount--;
 		threadMutex.b3Unlock();
+		m_Span.b3Stop();
 	}
 	return was_running;
 }
@@ -286,6 +294,12 @@ b3_bool b3Thread::b3IsRunning()
 #endif
 	return is_running;
 }
+
+void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
+{
+	span->m_uTime += m_Span.m_uTime;
+	span->m_sTime += m_Span.m_sTime;
+} 
 
 /*************************************************************************
 **                                                                      **

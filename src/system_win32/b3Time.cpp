@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.3  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.2  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
@@ -118,4 +123,106 @@ void b3TimeAccum::b3Get(
 	}
 	refTime  = time_span;
 	refCount = pos - 1;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3TimeSpan routines                           **
+**                                                                      **
+*************************************************************************/
+
+b3TimeSpan::b3TimeSpan()
+{
+	m_uTime = 0;
+	m_sTime = 0;
+	m_rTime = 0;
+	m_ThreadHandle = GetCurrentThread();
+}
+
+void b3TimeSpan::b3Start()
+{
+	FILETIME start_time,exit_time;
+
+	GetThreadTimes(m_ThreadHandle,
+		&start_time,&exit_time,
+		&m_sStart,&m_uStart);
+	ftime(&m_RealTime);
+#ifdef _DEBUG
+	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+		m_uStart.dwLowDateTime,
+		m_uStart.dwHighDateTime);
+#endif
+}
+
+void b3TimeSpan::b3Stop()
+{
+	FILETIME      start_time,exit_time;
+	FILETIME      system_usage,user_usage;
+	struct timeb  real_stop;
+
+	GetThreadTimes(m_ThreadHandle,
+		&start_time,&exit_time,
+		&system_usage,&user_usage);
+	ftime(&real_stop);
+#ifdef _DEBUG
+	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+		user_usage.dwLowDateTime,
+		user_usage.dwHighDateTime);
+#endif
+
+/*
+	m_uTime += (
+		 usage_stop.ru_utime.tv_sec  * 1000 + 
+		 usage_stop.ru_utime.tv_usec / 1000 -
+		m_UsageTime.ru_utime.tv_sec  * 1000 -
+		m_UsageTime.ru_utime.tv_usec / 1000);
+
+	m_sTime += (
+		 usage_stop.ru_stime.tv_sec  * 1000 + 
+		 usage_stop.ru_stime.tv_usec / 1000 -
+		m_UsageTime.ru_stime.tv_sec  * 1000 -
+		m_UsageTime.ru_stime.tv_usec / 1000);
+*/
+	m_uTime += b3Diff(&m_uStart,&user_usage)   / 10000;
+	m_sTime += b3Diff(&m_sStart,&system_usage) / 10000;
+	m_rTime += (
+		 real_stop.time    * 1000 + 
+		 real_stop.millitm        -
+		m_RealTime.time    * 1000 -
+		m_RealTime.millitm);
+}
+
+b3_f64 b3TimeSpan::b3GetUsage()
+{
+	return (m_rTime > 0 ?
+		(b3_f64)(m_uTime + m_sTime) / (b3_f64)m_rTime : 1.0);
+}
+
+char *b3TimeSpan::b3PrintTime(char *buffer,b3_s32 time_needed)
+{
+	sprintf(buffer,"%3d:%02d,%02d",
+		 time_needed / 60000,
+		(time_needed /  1000) % 60,
+		 time_needed %  1000);
+	return buffer;
+}
+
+b3_u32 b3TimeSpan::b3Diff(FILETIME *first,FILETIME *last)
+{
+	b3_s32 highDiff,lowDiff;
+
+	lowDiff  = last->dwLowDateTime  - first->dwLowDateTime;
+	highDiff = last->dwHighDateTime - first->dwHighDateTime;
+	return lowDiff;
+}
+
+void b3TimeSpan::b3Print(b3_log_level level)
+{
+	char buffer[32];
+
+	b3PrintF(level,"Computation time:\n");
+	b3PrintF(level," Time needed: %s\n",b3PrintTime(buffer,m_rTime));
+	b3PrintF(level," User time:   %s\n",b3PrintTime(buffer,m_uTime));
+	b3PrintF(level," System time: %s\n",b3PrintTime(buffer,m_sTime));
+	b3PrintF(level," Load:        %3.2f%%\n",b3GetUsage() * 100.0);
 }

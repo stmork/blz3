@@ -24,7 +24,6 @@
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3Time.h"
 #include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
@@ -35,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.12  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.11  2001/11/03 16:43:04  sm
 **	- Fixed brt3
 **	
@@ -101,7 +105,6 @@ int main(int argc,char *argv[])
 	b3_res        xSize,ySize;
 	b3_index      i;
 	char         *HOME = getenv("HOME");
-	b3TimeSpan    span;
 	b3Path        textures;
 	b3Path        pictures;
 	b3Path        data;
@@ -154,10 +157,7 @@ int main(int argc,char *argv[])
 								camera->m_CameraName);
 							scene->b3SetCamera(camera);
 
-							span.b3Start();
 							scene->b3Raytrace(display);
-							span.b3Stop();
-							span.b3Print();
 						}
 						else
 						{

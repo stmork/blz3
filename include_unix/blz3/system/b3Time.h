@@ -20,6 +20,7 @@
 
 #include <sys/resource.h>
 #include <sys/timeb.h>
+#include "blz3/system/b3Log.h"
 
 #define B3_MAXTIME_SLICE 100
 
@@ -48,7 +49,7 @@ public:
 	               b3TimeSpan();
 	       void    b3Start();
 	       void    b3Stop();
-	       void    b3Print();
+	       void    b3Print(b3_log_level level = B3LOG_NORMAL);
 	       b3_f64  b3GetUsage();
 	static char   *b3PrintTime(char *buffer,b3_s32 time_needed);
 };

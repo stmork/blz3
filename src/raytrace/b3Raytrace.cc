@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2001/11/07 15:55:09  sm
+**	- Introducing b3TimeSpan to Windows to get computation time on
+**	  Windows as well.
+**	- Changed some include dependencies.
+**
 **	Revision 1.26  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.25  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -644,6 +649,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 {
 	b3Row      *row;
 	b3Thread   *threads;
+	b3TimeSpan  span;
 	b3_res      xSize,ySize;
 	b3_count    CPUs,i;
 	b3_rt_info *infos;
@@ -691,6 +697,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 		}
 
 		b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
+		span.b3Start();
 		for (i = 0;i < CPUs;i++)
 		{
 			infos[i].display = display;
@@ -704,7 +711,10 @@ void b3Scene::b3Raytrace(b3Display *display)
 		for (i = 0;i < CPUs;i++)
 		{
 			threads[i].b3Wait();
+			threads[i].b3AddTimeSpan(&span);
 		}
+		span.b3Stop();
+		span.b3Print();
 
 		// Free what we have allocated.
 		delete [] threads;
