@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/06 19:45:06  sm
+**	- Minor bug fixes in DlgLight
+**
 **	Revision 1.5  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
-**
+**	
 **	Revision 1.4  2001/12/06 07:08:55  sm
 **	- Further control programming
 **	
@@ -345,7 +348,9 @@ void CDlgLight::b3GetLight()
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
 	m_CtrlLDC.b3Init(m_Light);
+	m_CtrlLDC.b3Update();
 	m_CtrlDiagram.b3Init(m_Light);
+	m_CtrlDiagram.b3Update();
 	b3UpdateUI();
 	b3UpdatePreview();
 	UpdateData(FALSE);

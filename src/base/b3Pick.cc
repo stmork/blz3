@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/06 19:45:06  sm
+**	- Minor bug fixes in DlgLight
+**
 **	Revision 1.2  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
-**
+**	
 **	Revision 1.1  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
@@ -123,7 +126,6 @@ b3_bool b3Pick::b3Hit(b3_coord x,b3_coord y)
 {
 	b3_coord xDiff = m_x - x;
 	b3_coord yDiff = m_y - y;
-	b3_bool  result;
 
 	return (B3_ABS(xDiff) <= B3_PICK_SIZE) && (B3_ABS(yDiff) <= B3_PICK_SIZE);
 }
