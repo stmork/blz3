@@ -34,6 +34,7 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibTIFF.pch"
 				AssemblerOutput="0"
@@ -78,7 +79,8 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -93,6 +95,7 @@
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibTIFF.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -857,10 +860,10 @@
 				RelativePath="t4.h">
 			</File>
 			<File
-				RelativePath="tif_dir.h">
+				RelativePath="..\..\include\tif_dir.h">
 			</File>
 			<File
-				RelativePath="..\..\include\tif_dir.h">
+				RelativePath="tif_dir.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tif_fax3.h">

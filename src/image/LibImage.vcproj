@@ -34,6 +34,7 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibImage.pch"
 				AssemblerOutput="0"
@@ -78,7 +79,8 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -93,6 +95,7 @@
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibImage.pch"
 				AssemblerListingLocation=".\..\..\Debug/"

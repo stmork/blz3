@@ -18,7 +18,8 @@
 			ConfigurationType="4"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -33,6 +34,7 @@
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/LibSystemIndependend.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -94,6 +96,7 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/LibSystemIndependend.pch"
 				AssemblerOutput="0"

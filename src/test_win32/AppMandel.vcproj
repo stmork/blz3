@@ -34,6 +34,7 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/AppMandel.pch"
 				AssemblerOutput="0"
@@ -54,7 +55,6 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\lib\win32_i386"
-				ProgramDatabaseFile=".\..\..\Release/AppMandel.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -93,7 +93,8 @@
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -108,6 +109,7 @@
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/AppMandel.pch"
 				AssemblerListingLocation=".\..\..\Debug/"

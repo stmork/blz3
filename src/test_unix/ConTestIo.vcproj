@@ -18,7 +18,8 @@
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -33,6 +34,7 @@
 				BufferSecurityCheck="TRUE"
 				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/ConTestIo.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
@@ -106,6 +108,7 @@
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
 				EnableEnhancedInstructionSet="1"
+				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/ConTestIo.pch"
 				AssemblerOutput="0"
@@ -126,7 +129,6 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\lib\win32_i386"
-				ProgramDatabaseFile=".\..\..\Release/ConTestIo.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
