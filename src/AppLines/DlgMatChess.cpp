@@ -34,10 +34,25 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.7  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
-**
+**	
 **	Revision 1.6  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -79,8 +94,8 @@ CDlgMatChess::CDlgMatChess(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatChess::IDD, pParent)
 {
 	m_Material             = (b3MatChess *)item;
-	m_PageBlack.m_Material = &m_Material->m_Material[0];
-	m_PageWhite.m_Material = &m_Material->m_Material[1];
+	m_PageBlack.m_Material = &m_Material->m_Material[b3MatChess::BLACK];
+	m_PageWhite.m_Material = &m_Material->m_Material[b3MatChess::WHITE];
 	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatChess)

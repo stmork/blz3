@@ -49,21 +49,21 @@ public:
 	b3_scaling_mode b3GetScaleMode();
 	void            b3PrepareScaling();
 
-	inline void b3Scale(b3_ray *ray,b3_vector *scale,b3_vector *point,b3_f64 factor = 1.0)
+	inline void b3Scale(b3_ray *ray,b3_vector *scale,b3_vector *point)
 	{
 		b3_vector64 *polar = m_ScaleMethod(ray);
 
 		if (scale == null)
 		{
-			point->x = polar->x * factor;
-			point->y = polar->y * factor;
-			point->z = polar->z * factor;
+			point->x = polar->x;
+			point->y = polar->y;
+			point->z = polar->z;
 		}
 		else
 		{
-			point->x = polar->x * factor * scale->x;
-			point->y = polar->y * factor * scale->y;
-			point->z = polar->z * factor * scale->z;
+			point->x = polar->x * scale->x;
+			point->y = polar->y * scale->y;
+			point->z = polar->z * scale->z;
 		}
 	}
 

@@ -37,11 +37,26 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.29  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.28  2004/04/22 14:35:16  sm
 **	- Optimized clouds by making them inline.
 **	
@@ -659,6 +674,27 @@ b3_f64 b3Noise::b3Water(b3_vector *point,b3_f64 time)
 		point->z * 14.0)) * 2.0 * M_PI;
 
 	return mSin(phase * 2.0 * M_PI - M_PI + delay);
+}
+
+b3_f64 b3Noise::b3Granite(b3_vector *point,b3_count octaves)
+{
+	b3_loop   i;
+	b3_f64    sum = 0;
+	b3_f64    freq = 1.0;
+	b3_f64    x,y,z;
+
+	x = point->x * 4;
+	y = point->y * 4;
+	z = point->z * 4;
+	for (i = 0;i < octaves;i++)
+	{
+		sum  += b3Noise::b3FilteredNoiseVector(x,y,z) / freq;
+		x    += x;
+		y    += y;
+		z    += z;
+		freq += freq; // = freq *= 2;
+	}
+	return b3Math::b3Limit(sum,0,1);
 }
 
 /*************************************************************************

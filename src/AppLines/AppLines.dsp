@@ -305,7 +305,35 @@ SOURCE=.\DlgAnimation.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgBumpGlossy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpGroove.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpMarble.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpNoise.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgBumpOakPlank.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpTexture.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpWater.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpWave.cpp
 # End Source File
 # Begin Source File
 
@@ -737,7 +765,35 @@ SOURCE=.\DlgAnimation.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgBumpGlossy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpGroove.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpMarble.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpNoise.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgBumpOakPlank.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpTexture.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpWater.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgBumpWave.h
 # End Source File
 # Begin Source File
 
@@ -1018,6 +1074,34 @@ SOURCE=.\res\bbox_sub_shape.ico
 # Begin Source File
 
 SOURCE=.\res\bbox_world.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_glossy.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_groove.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_marble.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_noise.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_texture.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_water.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bump_wave.ico
 # End Source File
 # Begin Source File
 

@@ -122,6 +122,13 @@ IDI_MAT_WRAP_TEXTURE    ICON    DISCARDABLE     "res\\mat_wrap_texture.ico"
 IDI_MAT_COOK_TORRANCE   ICON    DISCARDABLE     "res\\mat_cook_torrance.ico"
 IDI_MAT_GRANITE         ICON    DISCARDABLE     "res\\mat_granite.ico"
 IDI_MAT_OAKPLANK        ICON    DISCARDABLE     "res\\mat_oakplank.ico"
+IDI_BUMP_MARBLE         ICON    DISCARDABLE     "res\\bump_marble.ico"
+IDI_BUMP_TEXTURE        ICON    DISCARDABLE     "res\\bump_texture.ico"
+IDI_BUMP_GROOVE         ICON    DISCARDABLE     "res\\bump_groove.ico"
+IDI_BUMP_GLOSSY         ICON    DISCARDABLE     "res\\bump_glossy.ico"
+IDI_BUMP_WATER          ICON    DISCARDABLE     "res\\bump_water.ico"
+IDI_BUMP_WAVE           ICON    DISCARDABLE     "res\\bump_wave.ico"
+IDI_BUMP_NOISE          ICON    DISCARDABLE     "res\\bump_noise.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2118,12 +2125,12 @@ BEGIN
                     UDS_NOTHOUSANDS,130,65,11,15
     GROUPBOX        "Ausmaße",IDC_STATIC,155,15,205,105
     LTEXT           "x-Start",IDC_X_START_LEGEND,165,30,45,10
-    EDITTEXT        IDC_X_START,165,39,45,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_X_START,165,40,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_X_START_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,210,40,11,14
     LTEXT           "x-Skalierung",IDC_X_SCALE_LEGEND,232,30,45,10
-    EDITTEXT        IDC_X_SCALE,231,39,45,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_X_SCALE,230,40,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_X_SCALE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,276,40,11,14
@@ -2133,7 +2140,7 @@ BEGIN
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,210,70,11,14
     LTEXT           "y-Skalierung",IDC_Y_SCALE_LEGEND,232,60,45,10
-    EDITTEXT        IDC_Y_SCALE,231,70,45,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_Y_SCALE,230,70,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_Y_SCALE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,276,70,11,14
@@ -2204,12 +2211,12 @@ BEGIN
                     UDS_NOTHOUSANDS,130,65,11,15
     GROUPBOX        "Ausmaße",IDC_STATIC,155,15,135,105
     LTEXT           "x-Start",IDC_X_START_LEGEND,165,30,45,10
-    EDITTEXT        IDC_X_START,165,39,45,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_X_START,165,40,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_X_START_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,210,40,11,14
-    LTEXT           "x-Ende",IDC_X_END_LEGEND,232,30,45,10
-    EDITTEXT        IDC_X_END,231,39,45,12,ES_AUTOHSCROLL
+    LTEXT           "x-Ende",IDC_X_END_LEGEND,230,30,45,10
+    EDITTEXT        IDC_X_END,230,40,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_X_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,276,40,
                     11,14
@@ -2219,7 +2226,7 @@ BEGIN
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,210,70,11,14
     LTEXT           "y-Ende",IDC_Y_END_LEGEND,232,60,45,10
-    EDITTEXT        IDC_Y_END,231,70,45,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_Y_END,230,70,45,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_Y_END_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,276,70,
                     11,14
@@ -2647,7 +2654,7 @@ BEGIN
                     BS_AUTORADIOBUTTON,95,55,102,10
     CONTROL         "relativ zum Körper",IDC_SCALE_OBJECT_POLAR,"Button",
                     BS_AUTORADIOBUTTON,95,70,72,10
-    CONTROL         "Original",IDC_SCALE_BBOX_ORIGNAL,"Button",
+    CONTROL         "Original",IDC_SCALE_IPOINT_ORIGINAL,"Button",
                     BS_AUTORADIOBUTTON,95,85,39,10
     GROUPBOX        "Static",IDC_STATIC,85,10,120,105
 END
@@ -2660,6 +2667,155 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,200,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,10,10,210,180
+END
+
+IDD_BUMP_MARBLE DIALOG DISCARDABLE  0, 0, 417, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Marmorstruktur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
+END
+
+IDD_BUMP_TEXTURE DIALOG DISCARDABLE  0, 0, 372, 290
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Bump Mapping"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Ausmaße",IDC_STATIC,155,15,205,105
+    LTEXT           "x-Start",IDC_X_START_LEGEND,165,30,45,10
+    EDITTEXT        IDC_X_START,165,40,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,210,40,11,14
+    LTEXT           "x-Skalierung",IDC_X_SCALE_LEGEND,232,30,45,10
+    EDITTEXT        IDC_X_SCALE,230,40,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_SCALE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,276,40,11,14
+    LTEXT           "y-Start",IDC_Y_START_LEGEND,165,60,45,10
+    EDITTEXT        IDC_Y_START,165,70,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_START_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,210,70,11,14
+    LTEXT           "y-Skalierung",IDC_Y_SCALE_LEGEND,232,60,45,10
+    EDITTEXT        IDC_Y_SCALE,230,70,45,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_SCALE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,276,70,11,14
+    CONTROL         "Relativ",IDC_RELATIVE,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,165,90,38,10
+    CONTROL         "Einheit",IDC_UNIT,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,165,105,37,10
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    10,105,135,115
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,10,225,50,14
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,245,104,10
+    CONTROL         "",IDC_PREVIEW_TEXTURE,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,155,130,135,90
+    PUSHBUTTON      "Auswahl...",IDC_TEXTURE_SELECT,155,225,60,15
+    DEFPUSHBUTTON   "OK",IDOK,10,265,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,240,265,50,14
+    EDITTEXT        IDC_X_TIMES,295,40,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_TIMES_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,335,40,11,14
+    EDITTEXT        IDC_Y_TIMES,295,70,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_Y_TIMES_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,335,70,11,14
+    LTEXT           "Strukturstärke:",IDC_STATIC,10,10,47,8
+    EDITTEXT        IDC_EDIT_AMPLITUDE,10,20,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_AMPLITUDE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,50,20,11,14
+END
+
+IDD_BUMP_GLOSSY DIALOG DISCARDABLE  0, 0, 142, 221
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Stumpfe Oberfläche"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,194,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,80,194,50,14
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    10,40,120,115
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,160,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,10,175,50,14
+    LTEXT           "Strukturstärke:",IDC_STATIC,10,10,47,8
+    EDITTEXT        IDC_EDIT_AMPLITUDE,10,20,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_AMPLITUDE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,50,20,11,14
+END
+
+IDD_BUMP_GROOVE DIALOG DISCARDABLE  0, 0, 417, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rillen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
+END
+
+IDD_BUMP_WAVE DIALOG DISCARDABLE  0, 0, 417, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wellenoberfläche"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
+END
+
+IDD_BUMP_WATER DIALOG DISCARDABLE  0, 0, 417, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wasseroberfläche"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
+END
+
+IDD_BUMP_NOISE DIALOG DISCARDABLE  0, 0, 417, 255
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rauschstruktur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "",IDC_PROPERTY,15,15,255,195,NOT WS_GROUP
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    290,10,115,95
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,290,110,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,355,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,230,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,355,230,50,14
 END
 
 
@@ -3188,6 +3344,62 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 219
     END
+
+    IDD_BUMP_MARBLE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 410
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+
+    IDD_BUMP_TEXTURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 365
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 283
+    END
+
+    IDD_BUMP_GLOSSY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 214
+    END
+
+    IDD_BUMP_GROOVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 410
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+
+    IDD_BUMP_WAVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 410
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+
+    IDD_BUMP_WATER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 410
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
+
+    IDD_BUMP_NOISE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 410
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 248
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -3279,9 +3491,21 @@ BEGIN
     IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
     IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
     IDS_ASK_DELETE_SHAPE    "Soll der aktuelle Körper wirklich gelöscht werden?"
+    IDS_ASK_DELETE_TRANSFORMATION_HISTORY 
+                            "Soll der Transformationsablauf gelöscht werden?"
     IDS_BBOX                "Objekt"
+    IDS_BUMP_GLOSSY         "Stumpfe Oberfläche"
+    IDS_BUMP_GROOVE         "Rillen"
+    IDS_BUMP_MARBLE         "Marmorstruktur"
+    IDS_BUMP_NOISE          "Rauschstruktur"
     IDS_BUMP_OAKPLANK       "Parkettstruktur"
+    IDS_BUMP_WATER          "Wasseroberfläche"
+    IDS_BUMP_WAVE           "Wellenoberfläche"
     IDS_BUMP_WOOD           "Holzstruktur"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_CAMERA_UNIT         "Maßeinheit: %s"
     IDS_CLASSDESC_BUMP      "Oberflächenstrukturen"
     IDS_CLASSDESC_CONDITION "Ausstanzungen"
@@ -3289,10 +3513,6 @@ BEGIN
     IDS_CLASSDESC_MATERIAL  "Materialien"
     IDS_CLASSDESC_SPECIAL   "Szenenweite Einstellungen"
     IDS_COB_FILTER          "Caligari Objekt (*.cob)|*.cob|Alle Dateien (*.*)|*.*||"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_CSG_BOX             "CSG Quader (%s)"
     IDS_CSG_CONE            "CSG Kegel (%s)"
     IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
@@ -3302,6 +3522,10 @@ BEGIN
     IDS_CSG_MODE_SUB        "Abzug"
     IDS_CSG_MODE_UNION      "Vereinigung"
     IDS_CSG_SPHERE          "CSG Kugel (%s)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_CSG_TORUS           "CSG Torus (%s)"
     IDS_DIALOGBAR_ACTION    "Bewegungen"
     IDS_DIALOGBAR_FULCRUM   "Drehkreuz"
@@ -3309,10 +3533,6 @@ BEGIN
     IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
     IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
     IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
     IDS_DOC_READ            "Datei %s wird geladen..."
     IDS_DOC_REORG           "Die Objekthierarchien werden rekonstruiert..."
@@ -3323,6 +3543,10 @@ BEGIN
     IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
     IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
     IDS_ERR_FILE_NOT_FOUND  "Die Datei konnte nicht geöffnet werden!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
     IDS_ERR_FILE_NOT_WRITTEN 
                             "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
@@ -3331,10 +3555,6 @@ BEGIN
     IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
     IDS_ERR_NOT_FOUND       "Die Textur konnte nicht gefunden werden."
     IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
     IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
     IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
@@ -3344,17 +3564,16 @@ BEGIN
     IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht speichern läßt."
     IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
     IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
-    IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
-    IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
-    IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
-    IDS_TITLE_FROM          "Anfang"
-    IDS_ITEMDESC_ANIMATION  "Animation"
-    IDS_ITEMDESC_CAMERA     "Kameraeinstellung"
-    IDS_ITEMDESC_CAUSTIC    "Kaustiken (experimentell)"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
+    IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
+    IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
+    IDS_ITEMDESC_ANIMATION  "Animation"
+    IDS_ITEMDESC_CAMERA     "Kameraeinstellung"
+    IDS_ITEMDESC_CAUSTIC    "Kaustiken (experimentell)"
     IDS_ITEMDESC_DISTRIBUTE "Distributed Raytracing"
     IDS_ITEMDESC_LENSFLARE  "Lensflare-Definition"
     IDS_ITEMDESC_LINES_INFO "Modellierhilfe"
@@ -3364,6 +3583,30 @@ BEGIN
     IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
     IDS_MAT_CHESS           "Schachbrett"
     IDS_MAT_COOK_TORRANCE   "Cook & Torrance Material-Shader"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_STENCIL_END_UNIT    "rel. Maximum"
+    IDS_STENCIL_LEN_ANGLE   "Winkel"
+    IDS_STENCIL_LEN_LENGTH  "Länge"
+    IDS_STENCIL_LEN_UNIT    "re. Länge"
+    IDS_STENCIL_START_ANGLE "Startwinkel"
+    IDS_STENCIL_START_LENGTH "Startlänge"
+    IDS_STENCIL_START_UNIT  "rel. Minimum"
+    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
+    IDS_TITLE_BLACK         "Schwarz"
+    IDS_TITLE_CREATE        "%s anlegen"
+    IDS_TITLE_DARK          "Dunkel"
+    IDS_TITLE_EDIT          "%s ändern"
+    IDS_TITLE_FROM          "Anfang"
+    IDS_TITLE_LIGHT         "Hell"
+    IDS_TITLE_REDO          "Wiederherstellen"
+    IDS_TITLE_SCENE         "Sceneneigenschaften"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_MAT_GRANITE         "Granit"
     IDS_MAT_MARBLE          "Marmor"
     IDS_MAT_NORMAL          "Normales Material"
@@ -3371,10 +3614,6 @@ BEGIN
     IDS_MAT_SLIDE           "Farbverlauf"
     IDS_MAT_TEXTURE         "Textur"
     IDS_MAT_WOOD            "Holz"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
     IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
     IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
@@ -3384,6 +3623,10 @@ BEGIN
     IDS_NEW_OBJECT          "Neues Objekt"
     IDS_NEW_OBJECT_NAME     "Boden"
     IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_OP_ACTION           "Mausaktion"
     IDS_OP_CAMERA_CREATE    "Kamera erzeugen"
     IDS_OP_CAMERA_DELETE    "Kamera löschen"
@@ -3391,10 +3634,6 @@ BEGIN
     IDS_OP_CAMERA_ORIENTATE "Kamera ausrichten"
     IDS_OP_COB_LOAD         "Caligari Objekt laden"
     IDS_OP_CUT              "Ausschneiden"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_OP_DROP             "Objekt hierarchisch verschieben"
     IDS_OP_LIGHT_CREATE     "Lichtquelle erzeugen"
     IDS_OP_LIGHT_DELETE     "Lichtquelle löschen"
@@ -3404,6 +3643,10 @@ BEGIN
     IDS_OP_LOAD             "Objekt laden"
     IDS_OP_MOVE             "Objekte verschieben"
     IDS_OP_OBJECT_COPY      "Objekt kopieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_OP_OBJECT_CREATE    "Objekt erzeugen"
     IDS_OP_OBJECT_DELETE    "Objekt löschen"
     IDS_OP_OBJECT_LOAD      "Objekt laden"
@@ -3411,10 +3654,6 @@ BEGIN
     IDS_OP_PASTE            "Einfügen"
     IDS_OP_PICK_DIR         "Richtung verschieben"
     IDS_OP_PICK_POINT       "Punkt verschieben"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_OP_REPLACE          "Objekt ersetzen"
     IDS_OP_ROTATE           "Objekte rotieren"
     IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
@@ -3430,6 +3669,10 @@ BEGIN
                             "Programmfehler!\nDer Multiplikator für diesen Knoten ist zu niedrig!"
     IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
                             "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_PRGERR_DATATYPE     "Programmfehler!\nDas interne Datenformat ist unbekannt!"
     IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
     IDS_PRGERR_FILE_NOT_OPEN 
@@ -3440,10 +3683,6 @@ BEGIN
     IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
     IDS_PRGERR_ILLEGAL_DATEMODE 
                             "Programmfehler!\nDer Datgumsmodus ist falsch!"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_PRGERR_INVALID_INCREMENT 
                             "Programmfehler!\nEin Speichervergrößerungswert ist ungültig!"
     IDS_PROFILE             "Profil"
@@ -3454,6 +3693,10 @@ BEGIN
     IDS_PRT_DATE            "Datum: %s"
     IDS_PRT_FILENAME        "Dateiname: %s"
     IDS_PRT_LEGEND          "Legende:"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_PRT_MEASURE         "Maßstab: 1:%d"
     IDS_PRT_OBJECTNAME      "Objektname: %s"
     IDS_PRT_UNIT            "Einheit: %s"
@@ -3461,6 +3704,15 @@ BEGIN
     IDS_RADIUS              "Radius:"
     IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
     IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
+    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
+    IDS_SCENE_NEW           "Unbenannt"
+    IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
+    IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
+    IDS_SHAPE_AREA          "Fläche"
+    IDS_SHAPE_BOX           "Quader"
+    IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
+    IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
+    IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -3470,6 +3722,7 @@ BEGIN
     ID_COORD_X              "x: 00000000.00"
     ID_COORD_Y              "y: 00000000.00"
     ID_COORD_Z              "z: 00000000.00"
+    ID_COPY_PROPERTIES      "Verteilt die Körpereigenschaften auf andere Körper\nKörpereigenschaften verteilen"
     ID_CUST_ANIM2           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
 END
@@ -3477,6 +3730,8 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
+    ID_DELETE_TRANSFORM_HISTORY 
+                            "Löscht die bisher abgelaufenen Transformationen.\nTransformationsablauf löschen"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
     ID_DRAWING_PERF         "#####################################"
     ID_EDIT_BUMP            "Editiert die Oberflächenstruktur.\nOberflächenstruktur editieren"
@@ -3490,12 +3745,12 @@ BEGIN
     ID_LIGHT_ENABLE         "Schaltet Lichtquelle ein oder aus.\nLichtquelle ein-/ausschalten"
     ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
     ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
-    ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
-    ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
+    ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
     ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
     ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
@@ -3508,12 +3763,12 @@ BEGIN
     ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
     ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
     ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
-    ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
+    ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
     ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
     ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
     ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
@@ -3528,12 +3783,12 @@ BEGIN
     ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
     ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
-    ID_REDO                 "\nRedo"
-    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_REDO                 "\nRedo"
+    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
     ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
     ID_TGF_LOAD             "Importiert ein ArCon-Objekt.\nArCon-Objekt importieren"
     ID_UNDO                 "\nUndo"
@@ -3544,12 +3799,12 @@ BEGIN
     ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
     ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
-    ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
-    ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
+    ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
     ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
     ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
     ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
@@ -3558,9 +3813,6 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_COPY_PROPERTIES      "Verteilt die Körpereigenschaften auf andere Körper\nKörpereigenschaften verteilen"
-    ID_DELETE_TRANSFORM_HISTORY 
-                            "Löscht die bisher abgelaufenen Transformationen.\nTransformationsablauf löschen"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -3618,15 +3870,6 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
-    IDS_SCENE_NEW           "Unbenannt"
-    IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
-    IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
-    IDS_SHAPE_AREA          "Fläche"
-    IDS_SHAPE_BOX           "Quader"
-    IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
-    IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
-    IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
     IDS_SHAPE_BSPLINE_ROT   "BSpline-Rotationskörper"
     IDS_SHAPE_CONE          "Kegel"
     IDS_SHAPE_CYLINDER      "Zylinder"
@@ -3634,31 +3877,24 @@ BEGIN
     IDS_SHAPE_ELLIPSOID     "Ellipsoid"
     IDS_SHAPE_SPHERE        "Kugel"
     IDS_SHAPE_TORUS         "Torus"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
     IDS_SHAPE_TRIANGLES     "Dreiecke"
     IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
     IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
     IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
+    IDS_STENCIL_DIR_ANGLE   "Winkelrichtung"
+    IDS_STENCIL_DIR_LENGTH  "Richtungslänge"
+    IDS_STENCIL_DIR_UNIT    "rel. Richtung"
     IDS_STENCIL_END_ANGLE   "Endwinkel"
     IDS_STENCIL_END_LENGTH  "Endlänge"
-    IDS_STENCIL_END_UNIT    "rel. Maximum"
-    IDS_STENCIL_START_ANGLE "Startwinkel"
-    IDS_STENCIL_START_LENGTH "Startlänge"
-    IDS_STENCIL_START_UNIT  "rel. Minimum"
-    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
-    IDS_TITLE_CREATE        "%s anlegen"
-    IDS_TITLE_EDIT          "%s ändern"
-    IDS_TITLE_REDO          "Wiederherstellen"
-    IDS_TITLE_SCENE         "Sceneneigenschaften"
-    IDS_TITLE_UNDO          "Rückgängig machen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_TITLE_TO            "Ende"
+    IDS_TITLE_UNDO          "Rückgängig machen"
+    IDS_TITLE_WHITE         "Weiß"
+    IDS_TITLE_YROT          "Rotation um y-Achse: %3.2f Grad"
+    IDS_TITLE_ZROT          "Rotation um z-Achse: %3.2f Grad"
     IDS_TOOLBAR_ACTION      "Betriebsmodi.."
     IDS_TOOLBAR_ANIMATION   "Animationssymbolleiste"
     IDS_TOOLBAR_CAMERA      "Kamera..."
@@ -3789,29 +4025,11 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
-    IDS_TITLE_DARK          "Dunkel"
-    IDS_TITLE_LIGHT         "Hell"
-    IDS_TITLE_BLACK         "Schwarz"
-    IDS_TITLE_WHITE         "Weiß"
-    IDS_TITLE_YROT          "Rotation um y-Achse: %3.2f Grad"
-    IDS_TITLE_ZROT          "Rotation um z-Achse: %3.2f Grad"
-    IDS_STENCIL_DIR_UNIT    "rel. Richtung"
-    IDS_STENCIL_LEN_UNIT    "re. Länge"
-    IDS_STENCIL_DIR_LENGTH  "Richtungslänge"
-    IDS_STENCIL_LEN_LENGTH  "Länge"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_STENCIL_DIR_ANGLE   "Winkelrichtung"
-    IDS_STENCIL_LEN_ANGLE   "Winkel"
-    IDS_ASK_DELETE_TRANSFORMATION_HISTORY 
-                            "Soll der Transformationsablauf gelöscht werden?"
 END
 
 #endif    // German (Germany) resources

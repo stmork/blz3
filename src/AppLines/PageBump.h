@@ -35,7 +35,7 @@ class CPageBump : public CB3PropertyPage
 {
 // Construction
 public:
-	b3BumpWooden *m_Bump;
+	b3Bump     *m_Bump;
 
 	CPageBump();
 	~CPageBump();

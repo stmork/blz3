@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	DlgBumpWood.h $
+**	$Filename:	DlgBumpWave.h $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Wood bump map
+**	Blizzard III - Wave surface
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -15,51 +15,49 @@
 **
 */
 
-#if !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
-#define AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_
+#if !defined(AFX_DLGBUMPWAVE_H__25D71774_9F55_4FD1_8919_D5B2266F5FFE__INCLUDED_)
+#define AFX_DLGBUMPWAVE_H__25D71774_9F55_4FD1_8919_D5B2266F5FFE__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-// DlgBumpWood.h : header file
+// DlgBumpWave.h : header file
 //
 
-#include "blz3/raytrace/b3BumpSampler.h"
 #include "b3SimplePropertyPreviewDialog.h"
-#include "b3ShowSample.h"
+#include "b3ShowRaytrace.h"
 #include "PageBump.h"
-#include "PageWood.h"
 #include "PageScaling.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CDlgBumpWood dialog
+// CDlgBumpWave dialog
 
-class CDlgBumpWood : public CB3SimplePropertyPreviewDialog
+class CDlgBumpWave : public CB3SimplePropertyPreviewDialog
 {
-	b3BumpWood         *m_Bump;
-	b3BumpSampler      *m_BumpSampler;
+	b3Scene           *m_BumpScene;
+	b3Base<b3Item>    *m_BumpHead;
+	b3BumpWave        *m_Bump;
 
 	CPageBump          m_PageBump;
-	CPageWood          m_PageWood;
 	CPageScaling       m_PageScaling;
 
-	// Construction
+// Construction
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void    b3Register();
-	CDlgBumpWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
-	~CDlgBumpWood();
+	CDlgBumpWave(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgBumpWave();
 
 // Dialog Data
-	//{{AFX_DATA(CDlgBumpWood)
-	enum { IDD = IDD_BUMP_WOOD };
-	CB3ShowSample	m_PreviewBumpCtrl;
+	//{{AFX_DATA(CDlgBumpWave)
+	enum { IDD = IDD_BUMP_WAVE };
+	CB3ShowRaytrace	m_PreviewBumpCtrl;
 	//}}AFX_DATA
 
 
 // Overrides
 	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CDlgBumpWood)
+	//{{AFX_VIRTUAL(CDlgBumpWave)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
@@ -68,7 +66,8 @@ public:
 protected:
 
 	// Generated message map functions
-	//{{AFX_MSG(CDlgBumpWood)
+	//{{AFX_MSG(CDlgBumpWave)
+		// NOTE: the ClassWizard will add member functions here
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -80,4 +79,4 @@ private:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_DLGBUMPWOOD_H__FE6CEEA1_94B4_4938_AFC4_96AFABD2FEA2__INCLUDED_)
+#endif // !defined(AFX_DLGBUMPWAVE_H__25D71774_9F55_4FD1_8919_D5B2266F5FFE__INCLUDED_)

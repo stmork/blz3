@@ -31,13 +31,28 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/12 14:13:28  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.6  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.5  2004/05/07 18:19:08  sm
 **	- Added some menu entries and toolbar buttons
 **	- Fixed missing default title of CB3PropertyPages
@@ -118,7 +133,7 @@ void CB3PropertyPage::OnSpin(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CB3PropertyPage::b3UpdateUI()
 {
-	CWnd *parent = GetParent();
+	CWnd *parent = GetParentOwner();
 
 	if (parent != null)
 	{

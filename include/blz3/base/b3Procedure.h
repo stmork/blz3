@@ -189,6 +189,7 @@ public:
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
 	static b3_f64  b3Wave        (b3_vector *point);
 	static b3_f64  b3Water       (b3_vector *point,b3_f64 time);
+	static b3_f64  b3Granite     (b3_vector *point,b3_count octaves);
 	static b3_f64  b3PGauss      ();
 
 private:

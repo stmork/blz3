@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "DlgScene.h"
 #include "b3ExampleScene.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/raytrace/b3Raytrace.h"
@@ -36,9 +37,24 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.17  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
-**
+**	
 **	Revision 1.16  2004/05/06 08:38:33  sm
 **	- Demerged raytracing includes of Lines
 **	
@@ -327,5 +343,45 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 	scene->b3SetCamera(camera);
 
 	*ptrMatHead = big->b3GetMaterialHead();
+	return scene;
+}
+
+b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead)
+{
+	b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
+	b3BBox       *bbox  = new b3BBox(BBOX);
+	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
+	b3Area       *area  = new b3Area(AREA);
+	b3MatChess   *chess = new b3MatChess(CHESS);
+	b3MatNormal  *mat   = new b3MatNormal(MATERIAL);
+	b3Light      *light = new b3Light(SPOT_LIGHT);
+	b3CameraPart *camera;
+	b3_matrix     transform;
+
+	scene->b3GetBBoxHead()->b3Append(bbox);
+	scene->b3GetLightHead()->b3Append(light);
+
+	bbox->b3GetShapeHead()->b3Append(area);
+	bbox->b3GetShapeHead()->b3Append(big);
+	
+	big->b3GetMaterialHead()->b3Append(chess);
+
+	mat->m_Reflection = 0.2;
+	mat->m_Diffuse    = b3_pkd_color(0x886644);
+	mat->m_Ambient    = mat->m_Diffuse * 0.2;
+	area->b3GetMaterialHead()->b3Append(mat);
+
+	// Transform ellipsoid
+	b3Matrix::b3Scale(null,&transform,null,0.2,0.2,0.2);
+	b3Matrix::b3Move(&transform,&transform,15,3,10);
+	big->b3Transform(&transform,true);
+
+	// Create camera
+	b3Consolidate(scene);
+	scene->b3GetSpecialHead()->b3Append(camera = b3CreateCamera(scene,225,60));
+	camera->b3ScaleFocalLength(2.7);
+	scene->b3SetCamera(camera);
+
+	*ptrBumpHead = area->b3GetBumpHead();
 	return scene;
 }

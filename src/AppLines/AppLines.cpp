@@ -57,11 +57,26 @@
 
 /*
 **	$Log$
+**	Revision 1.75  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.74  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.73  2004/05/07 18:19:08  sm
 **	- Added some menu entries and toolbar buttons
 **	- Fixed missing default title of CB3PropertyPages
@@ -1099,7 +1114,7 @@ void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
 	b3Base<b3Item> head;
-	b3Item        *item = b3World::b3AllocNode(WOOD);
+	b3Item        *item = b3World::b3AllocNode(BUMP_MARBLE);
 
 	head.b3InitBase(item->b3GetClass());
 	head.b3Append(item);

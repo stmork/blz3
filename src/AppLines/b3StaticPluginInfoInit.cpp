@@ -23,8 +23,17 @@
 
 #include "AppLines.h"
 #include "b3StaticPluginInfoInit.h"
-#include "DlgBumpWood.h"
+
+#include "DlgBumpGlossy.h"
+#include "DlgBumpGroove.h"
+#include "DlgBumpMarble.h"
+#include "DlgBumpNoise.h"
 #include "DlgBumpOakPlank.h"
+#include "DlgBumpTexture.h"
+#include "DlgBumpWater.h"
+#include "DlgBumpWave.h"
+#include "DlgBumpWood.h"
+
 #include "DlgMatNormal.h"
 #include "DlgMatChess.h"
 #include "DlgMatMarble.h"
@@ -44,12 +53,27 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.7  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
 **	- Fixed b3BumpWood and b3BumpOakPlank
 **	  bump computation
-**
+**	
 **	Revision 1.6  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -105,8 +129,15 @@ void b3StaticPluginInfoInit::b3Init()
 	b3Loader::b3AddClassType(LENSFLARE,    IDS_ITEMDESC_LENSFLARE);
 	b3Loader::b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
 
-	CDlgBumpWood::b3Register();
+	CDlgBumpGlossy::b3Register();
+	CDlgBumpGroove::b3Register();
+	CDlgBumpMarble::b3Register();
+	CDlgBumpNoise::b3Register();
 	CDlgBumpOakPlank::b3Register();
+	CDlgBumpTexture::b3Register();
+	CDlgBumpWater::b3Register ();
+	CDlgBumpWave::b3Register();
+	CDlgBumpWood::b3Register();
 
 	CDlgMatNormal::b3Register();
 	CDlgMatChess::b3Register();

@@ -34,9 +34,24 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/12 14:13:27  sm
+**	- Added bump dialogs:
+**	  o noise
+**	  o marble
+**	  o texture
+**	  o glossy
+**	  o groove
+**	  o water
+**	  o wave
+**	- Setup all bump items with default values.
+**	- Found bug 22 which show a camera deletion bug in
+**	  toolbar and camera property dialog.
+**	- Added bump example bwd
+**	- Recounted resource.h (full compile necessary)
+**
 **	Revision 1.7  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.6  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -215,19 +230,31 @@ void CDlgCamera::OnCameraDelete()
 	// TODO: Add your control notification handler code here
 	b3CameraPart *select;
 
-	if (AfxMessageBox(IDS_ASK_DELETE_CAMERA,MB_ICONQUESTION|MB_YESNO) == IDYES)
+	if (m_CameraListCtrl.GetCount() > 1)
 	{
-		select = (b3CameraPart *)m_Camera->Prev;
-		if (select == null)
+		if (AfxMessageBox(IDS_ASK_DELETE_CAMERA,MB_ICONQUESTION|MB_YESNO) == IDYES)
 		{
-			select = (b3CameraPart *)m_Camera->Succ;
-		}
-		m_Scene->b3GetSpecialHead()->b3Remove(m_Camera);
-		delete m_Camera;
+			int index = m_CameraListCtrl.GetCurSel();
+			
+			if (index != CB_ERR)
+			{
+				if (index > 0)
+				{
+					index--;
+				}
+				else
+				{
+					index++;
+				}
+				select = (b3CameraPart *)m_CameraListCtrl.GetItemDataPtr(index);
+			}
+			m_Scene->b3GetSpecialHead()->b3Remove(m_Camera);
+			delete m_Camera;
 
-		m_Camera = select;
-		b3RefreshList();
-		b3GetCamera();
+			m_Camera = select;
+			b3RefreshList();
+			b3GetCamera();
+		}
 	}
 }
 

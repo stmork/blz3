@@ -19,6 +19,7 @@
 #define B3_RAYTRACE_MATERIAL_H
 
 #include "blz3/raytrace/b3Scaling.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Wood.h"
 #include "blz3/image/b3Tx.h"
 
@@ -71,6 +72,20 @@ public:
 	}
 
 	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+
+	static inline b3Mix(
+		b3_surface *surface,
+		const b3_material *a, const b3_material *b,const b3_f64 mix)
+	{
+		surface->m_Ambient     = b3Color::b3Mix(a->m_Ambient,     b->m_Ambient,     mix);
+		surface->m_Diffuse     = b3Color::b3Mix(a->m_Diffuse,     b->m_Diffuse,     mix);
+		surface->m_Specular    = b3Color::b3Mix(a->m_Specular,    b->m_Specular,    mix);
+
+		surface->m_Reflection  =  b3Math::b3Mix(a->m_Reflection,  b->m_Reflection,  mix);
+		surface->m_Refraction  =  b3Math::b3Mix(a->m_Refraction,  b->m_Refraction,  mix);
+		surface->m_Ior         =  b3Math::b3Mix(a->m_Ior,         b->m_Ior,         mix);
+		surface->m_SpecularExp =  b3Math::b3Mix(a->m_SpecularExp, b->m_SpecularExp, mix);
+	}
 };
 
 // MATERIAL or MAT_NORMAL
@@ -101,6 +116,12 @@ public:
 	b3_s32      m_Flags;
 	b3_s32      m_xTimes;
 	b3_s32      m_yTimes;
+
+	enum b3_chess
+	{
+		BLACK = 0,
+		WHITE = 1
+	};
 
 public:
 	B3_ITEM_INIT(b3MatChess);
@@ -290,7 +311,7 @@ class B3_PLUGIN b3MatGranite : public b3Material, public b3Scaling
 public:
 	b3_material       m_DarkMaterial;
 	b3_material       m_LightMaterial;
-	b3_count          m_Overtone;
+	b3_count          m_Octaves;
 
 public:
 	B3_ITEM_INIT(b3MatGranite);

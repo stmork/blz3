@@ -55,6 +55,9 @@ class B3_PLUGIN b3Bump : public b3Item
 protected:
 	static b3_f64 m_TimePoint;
 
+public:
+	b3_f32        m_Amplitude;           // amplitude
+
 protected:
 	B3_ITEM_BASE(b3Bump);
 
@@ -79,8 +82,6 @@ public:
 // BUMP_NOISE
 class B3_PLUGIN b3BumpNoise : public b3Bump, public b3Scaling
 {
-	b3_f32      m_Size;
-
 public:
 	B3_ITEM_INIT(b3BumpNoise);
 	B3_ITEM_LOAD(b3BumpNoise);
@@ -92,8 +93,6 @@ public:
 // BUMP_MARBLE
 class B3_PLUGIN b3BumpMarble : public b3Bump, public b3Scaling
 {
-	b3_f32      m_Size;
-
 public:
 	B3_ITEM_INIT(b3BumpMarble);
 	B3_ITEM_LOAD(b3BumpMarble);
@@ -106,13 +105,13 @@ public:
 // BUMP_TEXTURE
 class B3_PLUGIN b3BumpTexture : public b3Bump
 {
+public:
 	b3_f32      m_xStart,m_yStart;     // base of bump texture
 	b3_f32      m_xScale,m_yScale;     // scale of bump texture
 	b3_s32      m_xTimes,m_yTimes;     // repetition
-	b3_f32      m_Intensity;           // non zero
-	b3Tx       *m_Texture;
 	b3_s32      m_Flags;
 	b3Path      m_Name;
+	b3Tx       *m_Texture;
 
 public:
 	B3_ITEM_INIT(b3BumpTexture);
@@ -120,6 +119,7 @@ public:
 
 	       void    b3Write();
 	       b3_bool b3Prepare();
+	       void    b3SetTexture(const char *name);
 	       void    b3BumpNormal(b3_ray *ray);
 	inline b3_bool b3NeedDeriv()
 	{
@@ -134,7 +134,6 @@ private:
 class B3_PLUGIN b3BumpWater : public b3Bump, public b3Scaling
 {
 public:
-	b3_f32      m_ScaleRad;            // radius scalar
 	b3_f32      m_ScaleTime;           // time period for wave swing
 
 public:
@@ -150,10 +149,6 @@ public:
 class B3_PLUGIN b3BumpWave : public b3Bump, public b3Scaling
 {
 public:
-	b3_f32      m_Amplitude;           // amplitude
-	b3_u32      m_Flags;
-
-public:
 	B3_ITEM_INIT(b3BumpWave);
 	B3_ITEM_LOAD(b3BumpWave);
 
@@ -165,9 +160,6 @@ public:
 // BUMP_GROOVE
 class B3_PLUGIN b3BumpGroove : public b3Bump, public b3Scaling
 {
-public:
-	b3_f32      m_Amplitude;           // amplitude
-
 public:
 	B3_ITEM_INIT(b3BumpGroove);
 	B3_ITEM_LOAD(b3BumpGroove);
@@ -182,7 +174,6 @@ class B3_PLUGIN b3BumpGlossy : public b3Bump
 {
 public:
 	b3_s32      m_Flags;
-	b3_f32      m_Intensity;
 
 public:
 	B3_ITEM_INIT(b3BumpGlossy);
@@ -197,9 +188,6 @@ class B3_PLUGIN b3BumpWooden : public b3Bump, public b3Scaling
 protected:
 	b3_f64      m_dX;
 	b3_f64      m_dY;
-
-public:
-	b3_f32      m_Amplitude;           // amplitude
 
 protected:
 	B3_ITEM_BASE(b3BumpWooden);
