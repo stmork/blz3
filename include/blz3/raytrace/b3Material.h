@@ -56,7 +56,7 @@
 class B3_PLUGIN b3Material : public b3Item
 {
 protected:
-	b3Material(b3_size class_size,b3_u32 classtype);
+	B3_ITEM_BASE(b3Material);
 
 public:
 	B3_ITEM_INIT(b3Material);
@@ -142,8 +142,7 @@ public:
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
-// WOOD
-class B3_PLUGIN b3MatWood : public b3Material, public b3Wood
+class B3_PLUGIN b3MaterialWooden : public b3Material
 {
 public:
 	b3Color           m_DiffColor;
@@ -155,7 +154,23 @@ public:
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
-	b3_s32            m_xTimes,m_yTimes; // not used
+
+protected:
+	B3_ITEM_BASE(b3MaterialWooden);
+
+public:
+	B3_ITEM_INIT(b3MaterialWooden);
+	B3_ITEM_LOAD(b3MaterialWooden);
+
+protected:
+	void     b3Init();
+};
+
+// WOOD
+class B3_PLUGIN b3MatWood : public b3MaterialWooden, public b3Wood
+{
+public:
+	b3_u32            m_xTimes,m_yTimes; // not used
 
 public:
 	B3_ITEM_INIT(b3MatWood);
@@ -170,22 +185,10 @@ private:
 };
 
 // OAKPLANK
-class B3_PLUGIN b3MatOakPlank : public b3Material, public b3OakPlank
+class B3_PLUGIN b3MatOakPlank : public b3MaterialWooden, public b3OakPlank
 {
 	b3Color          *m_LightColors;
 	b3Color          *m_DarkColors;
-
-public:
-	b3Color           m_DiffColor;
-	b3Color           m_AmbColor;
-	b3Color           m_SpecColor;
-	b3Color           m_LightWood;
-	b3Color           m_DarkWood;
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
-
 
 public:
 	B3_ITEM_INIT(b3MatOakPlank);

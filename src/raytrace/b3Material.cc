@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.62  2004/04/18 16:58:14  sm
+**      - Changed definitions for base classes of raytracing objects.
+**      - Put wood material and wood bump dialogs into property
+**        pages.
+**
 **      Revision 1.61  2004/04/18 09:17:34  sm
 **      - Minor changes
 **
@@ -860,16 +865,48 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 /*************************************************************************
 **                                                                      **
+**                        Base class for wooden materials               **
+**                                                                      **
+*************************************************************************/
+
+b3MaterialWooden::b3MaterialWooden(b3_size class_size,b3_u32 class_type) : b3Material(class_size,class_type)
+{
+}
+
+b3MaterialWooden::b3MaterialWooden(b3_u32 class_type) : b3Material(sizeof(b3MaterialWooden),class_type)
+{
+}
+
+b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
+{
+}
+
+void b3MaterialWooden::b3Init()
+{
+	m_AmbColor.b3Init(0.2,0.2,0.2);
+	m_DiffColor.b3Init(0.1,0.2,0.9);
+	m_SpecColor.b3Init(0.8,0.8,0.8);
+	m_LightWood.b3Init(0.5,0.2,0.067);
+//	m_DarkWood.b3Init(0.15,0.077,0.028);
+	m_DarkWood = m_LightWood * 0.7;
+	m_Reflection =   0;
+	m_Refraction =   0;
+	m_RefrValue  =   1;
+	m_HighLight  = 200;
+}
+
+/*************************************************************************
+**                                                                      **
 **                        Wooden material                               **
 **                                                                      **
 *************************************************************************/
 
-b3MatWood::b3MatWood(b3_u32 class_type) : b3Material(sizeof(b3MatWood),class_type) 
+b3MatWood::b3MatWood(b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood),class_type) 
 {
 	b3Init();
 }
 
-b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
+b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 {
 	b3Init();
 	b3InitColor(m_DiffColor);
@@ -907,20 +944,12 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 
 void b3MatWood::b3Init()
 {
+	b3MaterialWooden::b3Init();
+
 	// Basic parameters
-	m_AmbColor.b3Init(0.2,0.2,0.2);
-	m_DiffColor.b3Init(0.1,0.2,0.9);
-	m_SpecColor.b3Init(0.8,0.8,0.8);
-	m_LightWood.b3Init(0.5,0.2,0.067);
-//	m_DarkWood.b3Init(0.15,0.077,0.028);
-	m_DarkWood = m_LightWood * 0.7;
-	m_Reflection =   0;
-	m_Refraction =   0;
-	m_RefrValue  =   1;
-	m_HighLight  = 200;
-	m_Flags      =   0;
-	m_xTimes     =   0;
-	m_yTimes     =   0;
+	m_Flags  =   0;
+	m_xTimes =   0; // unused
+	m_yTimes =   0; // unused
 	b3InitWood();
 }
 
@@ -991,7 +1020,7 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 *************************************************************************/
 
 b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
-	b3Material(sizeof(b3MatOakPlank),class_type),
+	b3MaterialWooden(sizeof(b3MatOakPlank),class_type),
 	b3OakPlank()
 {
 	b3Init();
@@ -999,7 +1028,7 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 	m_LightColors = null;
 }
 
-b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3Material(src), b3OakPlank()
+b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 {
 	b3Init();
 	b3InitColor(m_DiffColor);
@@ -1055,17 +1084,9 @@ b3MatOakPlank::~b3MatOakPlank()
 
 void b3MatOakPlank::b3Init()
 {
+	b3MaterialWooden::b3Init();
+
 	// Basic parameters
-	m_AmbColor.b3Init(0.2,0.2,0.2);
-	m_DiffColor.b3Init(0.1,0.2,0.9);
-	m_SpecColor.b3Init(0.8,0.8,0.8);
-	m_LightWood.b3Init(0.5,0.2,0.067);
-//	m_DarkWood.b3Init(0.15,0.077,0.028);
-	m_DarkWood = m_LightWood * 0.7;
-	m_Reflection =   0;
-	m_Refraction =   0;
-	m_RefrValue  =   1;
-	m_HighLight  = 200;
 	m_Flags      =   0;
 	b3InitOakPlank();
 }

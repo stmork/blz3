@@ -24,12 +24,21 @@
 // DlgBumpWood.h : header file
 //
 
+#include "blz3/raytrace/b3MaterialSampler.h"
+#include "b3ShowSample.h"
+#include "PageBump.h"
+#include "PageWood.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CDlgBumpWood dialog
 
 class CDlgBumpWood : public CDialog
 {
 	b3BumpWood         *m_Bump;
+
+	CPropertySheet     m_PropertySheet;
+	CPageBump          m_PageBump;
+	CPageWood          m_PageWood;
 // Construction
 public:
 	static b3_bool b3Edit(b3Item *item);
@@ -39,7 +48,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpWood)
 	enum { IDD = IDD_BUMP_WOOD };
-		// NOTE: the ClassWizard will add data members here
+	CStatic	m_PreviewBumpCtrl;
 	//}}AFX_DATA
 
 
@@ -56,8 +65,12 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgBumpWood)
 	virtual BOOL OnInitDialog();
+	afx_msg void OnPreviewBump();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3UpdateUI();
 };
 
 //{{AFX_INSERT_LOCATION}}

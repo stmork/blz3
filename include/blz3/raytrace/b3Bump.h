@@ -56,7 +56,7 @@ protected:
 	static b3_f64 m_TimePoint;
 
 protected:
-	b3Bump(b3_size class_size,b3_u32 classtype);
+	B3_ITEM_BASE(b3Bump);
 
 public:
 	B3_ITEM_INIT(b3Bump);
@@ -195,15 +195,26 @@ public:
 	void b3BumpNormal(b3_ray *ray);
 };
 
-// BUMP_WOOD
-class B3_PLUGIN b3BumpWood : public b3Bump, public b3Wood
+class B3_PLUGIN b3BumpWooden : public b3Bump
 {
+protected:
 	b3_f64      m_dX;
 	b3_f64      m_dY;
 
 public:
 	b3_f32      m_Amplitude;           // amplitude
 
+protected:
+	B3_ITEM_BASE(b3BumpWooden);
+
+public:
+	B3_ITEM_INIT(b3BumpWooden);
+	B3_ITEM_LOAD(b3BumpWooden);
+};
+
+// BUMP_WOOD
+class B3_PLUGIN b3BumpWood : public b3BumpWooden, public b3Wood
+{
 public:
 	B3_ITEM_INIT(b3BumpWood);
 	B3_ITEM_LOAD(b3BumpWood);
@@ -219,14 +230,9 @@ public:
 };
 
 // BUMP_OAKPLANK
-class B3_PLUGIN b3BumpOakPlank : public b3Bump, public b3OakPlank
+class B3_PLUGIN b3BumpOakPlank : public b3BumpWooden, public b3OakPlank
 {
 	b3Array<b3_f64> m_Amplitudes;
-	b3_f64          m_dX;
-	b3_f64          m_dY;
-
-public:
-	b3_f32          m_Amplitude;           // amplitude
 
 public:
 	B3_ITEM_INIT(b3BumpOakPlank);

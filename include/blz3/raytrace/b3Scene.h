@@ -126,7 +126,7 @@ public:
 	static b3_f64    epsilon;
 
 protected:
-	b3Scene(b3_size class_size,b3_u32  class_type);
+	B3_ITEM_BASE(b3Scene);
 
 public:
 	B3_ITEM_INIT(b3Scene);

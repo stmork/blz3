@@ -137,7 +137,7 @@ protected:
 	b3_gl_polygon     *PolysCone;
 
 protected:
-	                    b3Shape(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3Shape);
 
 public:
 	B3_ITEM_INIT(b3Shape);
@@ -243,7 +243,7 @@ protected:
 	b3_bool             b3CheckStencil(b3_polar_precompute *polar);
 
 protected:
-	b3SimpleShape(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3SimpleShape);
 
 public:
 	B3_ITEM_INIT(b3SimpleShape);
@@ -293,7 +293,7 @@ public:
 	b3_vector           m_Dir1,m_Dir2;    // direction vectors
 
 protected:
-	b3Shape2(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3Shape2);
 
 public:
 	B3_ITEM_INIT(b3Shape2);
@@ -340,7 +340,7 @@ public:
 class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
 {
 protected:
-	     b3Shape3(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3Shape3);
 
 public:
 	B3_ITEM_INIT(b3Shape3);
@@ -481,7 +481,7 @@ public:
 
 
 protected:
-	b3TriangleShape(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3TriangleShape);
 
 public:
 	B3_ITEM_INIT(b3TriangleShape);
@@ -570,7 +570,7 @@ public:
 	b3_vector       *m_Controls;
 
 protected:
-	     b3SplineShape(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3SplineShape);
 
 public:
 	B3_ITEM_INIT(b3SplineShape);
@@ -683,7 +683,7 @@ public:
 	static b3_csg_operation m_CSGMode[];
 
 protected:
-	b3CSGShape(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3CSGShape);
 
 public:
 	B3_ITEM_INIT(b3CSGShape);
@@ -729,7 +729,7 @@ public:
 class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
 {
 protected:
-	b3CSGShape3(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3CSGShape3);
 
 public:
 	B3_ITEM_INIT(b3CSGShape3);
@@ -746,7 +746,6 @@ public:
 
 class B3_PLUGIN b3CSGCylinder : public b3CSGShape3
 {
-
 public:
 	B3_ITEM_INIT(b3CSGCylinder);
 	B3_ITEM_LOAD(b3CSGCylinder);

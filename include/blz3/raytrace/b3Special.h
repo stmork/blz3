@@ -49,7 +49,7 @@
 class B3_PLUGIN b3Special : public b3Item
 {
 protected:
-	b3Special(b3_size class_size,b3_u32 class_type);
+	B3_ITEM_BASE(b3Special);
 
 public:
 	B3_ITEM_INIT(b3Special);

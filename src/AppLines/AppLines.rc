@@ -2049,89 +2049,6 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
 END
 
-IDD_MAT_WOOD DIALOGEX 0, 0, 597, 306
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Holz"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,20,280,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,525,280,50,14
-    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,337,30,211,201
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_LIGHT,90,30,60,15
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DARK,90,65,60,15
-    LTEXT           "",IDC_COLOR_LIGHT,20,30,60,15,SS_SUNKEN | NOT WS_GROUP
-    LTEXT           "",IDC_COLOR_DARK,20,65,60,15,SS_SUNKEN | NOT WS_GROUP
-    LTEXT           "Hell",IDC_STATIC,20,20,13,8
-    LTEXT           "Dunkel",IDC_STATIC,20,55,24,8
-    EDITTEXT        IDC_REFLECTANCE,30,116,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,65,116,11,15
-    EDITTEXT        IDC_REFRACTANCE,30,146,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,65,146,11,15
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,101,116,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,135,116,11,15
-    EDITTEXT        IDC_SPEC_EXPONENT,101,146,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,135,146,11,15
-    LTEXT           "Verspiegelung",IDC_STATIC,30,106,46,8
-    GROUPBOX        "Materialwerte",IDC_STATIC,20,91,146,80
-    LTEXT           "Verglasung",IDC_STATIC,30,137,36,8
-    LTEXT           "Brechungsindex",IDC_STATIC,100,106,52,8
-    LTEXT           "Spek. Exponent",IDC_STATIC,100,137,52,8
-    CONTROL         "Slider1",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,335,244,210,21
-    CONTROL         "Slider2",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_VERT | TBS_TOP | WS_TABSTOP,559,31,31,193
-    CONTROL         "Slider3",IDC_RING_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,44,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,74,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_NOISE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,104,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_NOISE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,134,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_TRUNK_WOBBLE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,195,136,20,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_TRUNK_WOBBLE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,165,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,225,136,20,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_GRAIN_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,20,255,136,20
-    CONTROL         "Slider3",IDC_GRAINY,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,20,225,136,20
-    CONTROL         "Slider3",IDC_RINGY,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,20,195,136,20
-    LTEXT           "Ringabstandsschwankung",IDC_STATIC,190,35,135,8
-    LTEXT           "Ringfrequenz",IDC_STATIC,190,64,43,8
-    LTEXT           "Ringrauschen",IDC_STATIC,190,94,45,8
-    LTEXT           "Ringrauschfrequenz",IDC_STATIC,190,124,64,8
-    LTEXT           "Astschwankung",IDC_STATIC,190,159,52,8
-    LTEXT           "Astschwankungsfrequenz",IDC_STATIC,190,185,82,8
-    LTEXT           "Astverzerrung",IDC_STATIC,190,215,44,8
-    LTEXT           "Faserung",IDC_STATIC,20,245,30,8
-    LTEXT           "Faserungsgewichtung",IDC_STATIC,20,215,70,8
-    LTEXT           "Ringgewichtung",IDC_STATIC,20,185,52,8
-    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,255,136,20,
-                    WS_EX_TRANSPARENT
-    LTEXT           "Astverzerrungsfrequenz",IDC_STATIC,190,245,75,8
-END
-
 IDD_MAT_WRAP_TEXTURE DIALOG DISCARDABLE  0, 0, 186, 95
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Wickeltextur"
@@ -2264,15 +2181,126 @@ BEGIN
     GROUPBOX        "Static",IDC_STATIC,10,135,160,75
 END
 
-IDD_MAT_OAKPLANK DIALOGEX 0, 0, 597, 306
+IDD_MAT_OAKPLANK DIALOG DISCARDABLE  0, 0, 567, 271
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Holzplanken"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,20,280,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,525,280,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,337,30,211,201
+                    SS_SUNKEN,320,10,235,225
+    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+END
+
+IDD_PAGE_OAKPLANK DIALOG DISCARDABLE  0, 0, 177, 130
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Parkettierung"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_EDIT_XSCALE,20,35,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_XSCALE,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,55,35,11,
+                    14
+    EDITTEXT        IDC_EDIT_YSCALE,20,65,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_YSCALE,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,55,65,11,
+                    14
+    EDITTEXT        IDC_EDIT_XOFFSET,20,95,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_XOFFSET,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,55,95,11,14
+    EDITTEXT        IDC_EDIT_XTIMES,105,35,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_XTIMES,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,140,35,10,15
+    EDITTEXT        IDC_EDIT_YTIMES,105,60,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_YTIMES,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,140,60,10,15
+    LTEXT           "Breite",IDC_STATIC,105,25,19,8
+    LTEXT           "Höhe",IDC_STATIC,105,50,18,8
+    LTEXT           "Breite",IDC_STATIC,20,25,19,8
+    LTEXT           "Höhe",IDC_STATIC,20,55,18,8
+    LTEXT           "Versatz",IDC_STATIC,20,85,24,8
+    GROUPBOX        "Parkettierung in %:",IDC_STATIC,5,15,75,105
+    GROUPBOX        "Verteilung:",IDC_STATIC,90,15,75,75
+END
+
+IDD_PAGE_WOOD DIALOG DISCARDABLE  0, 0, 302, 191
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Holz"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Ringabstandsschwankung",IDC_STATIC,12,101,135,8
+    LTEXT           "Ringfrequenz",IDC_STATIC,12,130,43,8
+    LTEXT           "Ringrauschen",IDC_STATIC,12,160,45,8
+    LTEXT           "Ringrauschfrequenz",IDC_STATIC,80,160,64,8
+    LTEXT           "Astschwankung",IDC_STATIC,120,5,52,8
+    LTEXT           "Astschwankungsfrequenz",IDC_STATIC,190,5,82,8
+    LTEXT           "Astverzerrung",IDC_STATIC,120,35,44,8
+    LTEXT           "Faserung",IDC_STATIC,15,66,30,8
+    LTEXT           "Faserungsgewichtung",IDC_STATIC,15,36,70,8
+    LTEXT           "Ringgewichtung",IDC_STATIC,15,7,52,8
+    LTEXT           "Astverzerrungsfrequenz",IDC_STATIC,190,35,75,8
+    CONTROL         "Slider1",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,125,110,158,21
+    CONTROL         "Slider2",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,120,75,141,30
+    EDITTEXT        IDC_EDIT_RINGY,13,18,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_RINGY,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,53,19,11,
+                    14
+    EDITTEXT        IDC_EDIT_GRAINY,18,49,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_GRAINY,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,58,50,11,
+                    14
+    EDITTEXT        IDC_EDIT_GRAIN_FREQUENCY,15,79,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_GRAIN_FREQUENCY,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,55,80,11,14
+    EDITTEXT        IDC_EDIT_RING_SPACING,13,112,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_RING_SPACING,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,53,113,11,14
+    EDITTEXT        IDC_EDIT_RING_FREQUENCY,18,141,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_RING_FREQUENCY,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,58,142,11,14
+    EDITTEXT        IDC_EDIT_RING_NOISE,13,170,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_RING_NOISE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,53,171,11,14
+    EDITTEXT        IDC_EDIT_RING_NOISE_FREQUENCY,80,170,40,14,
+                    ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_RING_NOISE_FREQUENCY,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,120,170,11,14
+    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE,120,15,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_TRUNK_WOBBLE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,160,15,10,15
+    EDITTEXT        IDC_EDIT_TRUNK_WOBBLE_FREQUENCY,190,15,40,14,
+                    ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_TRUNK_WOBBLE_FREQUENCY,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,230,15,11,14
+    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE,120,45,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_ANGULAR_WOBBLE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,160,45,11,14
+    EDITTEXT        IDC_EDIT_ANGULAR_WOBBLE_FREQUENCY,190,45,40,14,
+                    ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_ANGULAR_WOBBLE_FREQUENCY,
+                    "msctls_updown32",UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,230,45,11,14
+END
+
+IDD_PAGE_MATERIAL DIALOG DISCARDABLE  0, 0, 184, 189
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Material"
+FONT 8, "MS Sans Serif"
+BEGIN
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_LIGHT,90,30,60,15
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DARK,90,65,60,15
     LTEXT           "",IDC_COLOR_LIGHT,20,30,60,15,SS_SUNKEN | NOT WS_GROUP
@@ -2300,69 +2328,54 @@ BEGIN
     LTEXT           "Verglasung",IDC_STATIC,30,137,36,8
     LTEXT           "Brechungsindex",IDC_STATIC,100,106,52,8
     LTEXT           "Spek. Exponent",IDC_STATIC,100,137,52,8
-    CONTROL         "Slider1",IDC_ROT_Y,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,335,244,210,21
-    CONTROL         "Slider2",IDC_ROT_Z,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_VERT | TBS_TOP | WS_TABSTOP,559,31,31,193
-    CONTROL         "Slider3",IDC_RING_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,44,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,74,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_NOISE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,104,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_RING_NOISE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,134,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_TRUNK_WOBBLE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,195,136,20,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_TRUNK_WOBBLE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,165,136,21,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,225,136,20,
-                    WS_EX_TRANSPARENT
-    CONTROL         "Slider3",IDC_GRAIN_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,20,255,136,20
-    CONTROL         "Slider3",IDC_GRAINY,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,20,225,136,20
-    CONTROL         "Slider3",IDC_RINGY,"msctls_trackbar32",TBS_AUTOTICKS | 
-                    TBS_TOP | WS_TABSTOP,20,195,136,20
-    LTEXT           "Ringabstandsschwankung",IDC_STATIC,190,35,135,8
-    LTEXT           "Ringfrequenz",IDC_STATIC,190,64,43,8
-    LTEXT           "Ringrauschen",IDC_STATIC,190,94,45,8
-    LTEXT           "Ringrauschfrequenz",IDC_STATIC,190,124,64,8
-    LTEXT           "Astschwankung",IDC_STATIC,190,159,52,8
-    LTEXT           "Astschwankungsfrequenz",IDC_STATIC,190,185,82,8
-    LTEXT           "Astverzerrung",IDC_STATIC,190,215,44,8
-    LTEXT           "Faserung",IDC_STATIC,20,245,30,8
-    LTEXT           "Faserungsgewichtung",IDC_STATIC,20,215,70,8
-    LTEXT           "Ringgewichtung",IDC_STATIC,20,185,52,8
-    CONTROL         "Slider3",IDC_ANGULAR_WOBBLE_FREQUENCY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,185,255,136,20,
-                    WS_EX_TRANSPARENT
-    LTEXT           "Astverzerrungsfrequenz",IDC_STATIC,190,245,75,8
 END
 
-IDD_BUMP_WOOD DIALOG DISCARDABLE  0, 0, 186, 95
+IDD_PAGE_BUMP DIALOG DISCARDABLE  0, 0, 114, 114
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Holzstruktur"
+CAPTION "Struktur"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+    LTEXT           "Strukturstärke:",IDC_STATIC,15,46,47,8
+    EDITTEXT        IDC_EDIT_AMPLITUDE,15,59,40,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_AMPLITUDE,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,55,56,10,14
 END
 
-IDD_BUMP_OAKPLANK DIALOG DISCARDABLE  0, 0, 186, 95
+IDD_BUMP_OAKPLANK DIALOG DISCARDABLE  0, 0, 567, 271
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Parkettstruktur"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    320,10,235,225
+    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+END
+
+IDD_BUMP_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Holzstruktur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    320,10,235,225
+    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
+END
+
+IDD_MAT_WOOD DIALOG DISCARDABLE  0, 0, 567, 271
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Holz"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,245,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,505,245,50,14
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,320,10,235,225
+    LTEXT           "",IDC_PROPERTY,10,10,300,225,NOT WS_GROUP
 END
 
 
@@ -2772,14 +2785,6 @@ BEGIN
         BOTTOMMARGIN, 88
     END
 
-    IDD_MAT_WOOD, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 590
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 299
-    END
-
     IDD_MAT_WRAP_TEXTURE, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -2807,25 +2812,65 @@ BEGIN
     IDD_MAT_OAKPLANK, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 590
+        RIGHTMARGIN, 560
         TOPMARGIN, 7
-        BOTTOMMARGIN, 299
+        BOTTOMMARGIN, 264
     END
 
-    IDD_BUMP_WOOD, DIALOG
+    IDD_PAGE_OAKPLANK, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 170
         TOPMARGIN, 7
-        BOTTOMMARGIN, 88
+        BOTTOMMARGIN, 123
+    END
+
+    IDD_PAGE_WOOD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 295
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 184
+    END
+
+    IDD_PAGE_MATERIAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 182
+    END
+
+    IDD_PAGE_BUMP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 107
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
     END
 
     IDD_BUMP_OAKPLANK, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 560
         TOPMARGIN, 7
-        BOTTOMMARGIN, 88
+        BOTTOMMARGIN, 264
+    END
+
+    IDD_BUMP_WOOD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 560
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 264
+    END
+
+    IDD_MAT_WOOD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 560
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 264
     END
 END
 #endif    // APSTUDIO_INVOKED

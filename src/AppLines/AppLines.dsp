@@ -499,6 +499,22 @@ SOURCE=.\DlgUndoRedo.cpp
 
 SOURCE=.\MainFrm.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\PageBump.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageMaterial.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageOakPlank.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageWood.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -902,6 +918,22 @@ SOURCE=.\DlgUndoRedo.h
 # Begin Source File
 
 SOURCE=.\MainFrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageBump.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageMaterial.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageOakPlank.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PageWood.h
 # End Source File
 # Begin Source File
 

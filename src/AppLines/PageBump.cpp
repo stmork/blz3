@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3ControlUnits.cpp $
+**	$Filename:	PageMaterial.cpp $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Control units
+**	Blizzard III - Wooden material properties
 **
 **	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
@@ -17,11 +17,12 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III includes                         **
+**                        Lines III includes                            **
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3ControlUnits.h"
+#include "AppLines.h"
+#include "PageBump.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,26 +32,52 @@
 
 /*
 **	$Log$
-**	Revision 1.2  2004/04/18 16:58:14  sm
+**	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
 **
-**	Revision 1.1  2004/04/10 15:59:51  sm
-**	- Added control units as base class for
-**	  o CB3FloatSliderCtrl
-**	  o CB3FloatSpinButtonCtrl
 **	
-**
 */
 
 /*************************************************************************
 **                                                                      **
-**                        CB3FloatSpinButtonCtrl implementation         **
+**                        CPageBump implementation                      **
 **                                                                      **
 *************************************************************************/
 
-b3_f64 b3ControlUnits::m_UnitScale[] =
+
+IMPLEMENT_DYNCREATE(CPageBump, CPropertyPage)
+
+CPageBump::CPageBump() : CPropertyPage(CPageBump::IDD)
 {
-	1.0,180.0 / M_PI,100.0,1000.0
-};
+	//{{AFX_DATA_INIT(CPageBump)
+		// NOTE: the ClassWizard will add member initialization here
+	//}}AFX_DATA_INIT
+	m_AmplitudeCtrl.b3SetRange(0.0,1.0);
+	m_AmplitudeCtrl.b3SetIncrement(0.001);
+	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
+}
+
+CPageBump::~CPageBump()
+{
+}
+
+void CPageBump::DoDataExchange(CDataExchange* pDX)
+{
+	CPropertyPage::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CPageBump)
+	DDX_Control(pDX, IDC_SPIN_AMPLITUDE, m_AmplitudeCtrl);
+	//}}AFX_DATA_MAP
+	m_AmplitudeCtrl.b3DDX(pDX,m_Bump->m_Amplitude);
+}
+
+
+BEGIN_MESSAGE_MAP(CPageBump, CPropertyPage)
+	//{{AFX_MSG_MAP(CPageBump)
+		// NOTE: the ClassWizard will add message map macros here
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+/////////////////////////////////////////////////////////////////////////////
+// CPageBump message handlers

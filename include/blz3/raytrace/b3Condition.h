@@ -103,7 +103,7 @@ struct b3_stencil_bound
 class B3_PLUGIN b3Condition : public b3Item
 {
 protected:
-	b3Condition(b3_size class_size,b3_u32  class_type);
+	B3_ITEM_BASE(b3Condition);
 
 public:
 
@@ -151,7 +151,7 @@ public:
 	b3_f32  m_Denom;
 
 protected:
-	b3Cond2(b3_size class_size,b3_u32  class_type);
+	B3_ITEM_BASE(b3Cond2);
 
 public:
 	B3_ITEM_INIT(b3Cond2);

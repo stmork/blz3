@@ -153,6 +153,7 @@ private:
 typedef b3Item * (*b3_item_init_func)(b3_u32  class_type);
 typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 
+#define B3_ITEM_BASE(item_class)  item_class(b3_size class_size,b3_u32 classtype);
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3StaticInit(b3_u32  class_type) { return new item_class(class_type); }
 #define B3_ITEM_LOAD(item_class)  item_class(b3_u32 *src);       static b3Item *b3StaticInit(b3_u32 *src)        { return new item_class(src); }
 

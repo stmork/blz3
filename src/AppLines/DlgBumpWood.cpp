@@ -33,12 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/18 16:58:14  sm
+**	- Changed definitions for base classes of raytracing objects.
+**	- Put wood material and wood bump dialogs into property
+**	  pages.
+**
 **	Revision 1.2  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
 **	- Fixed b3BumpWood and b3BumpOakPlank
 **	  bump computation
-**
+**	
 **	Revision 1.1  2004/04/11 18:56:08  sm
 **	- Forgotten these files.
 **	
@@ -54,7 +59,9 @@
 CDlgBumpWood::CDlgBumpWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgBumpWood::IDD, pParent)
 {
-	m_Bump = (b3BumpWood *)item;
+	m_Bump            = (b3BumpWood *)item;
+	m_PageBump.m_Bump = m_Bump;
+	m_PageWood.m_Wood = m_Bump;
 	//{{AFX_DATA_INIT(CDlgBumpWood)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -65,13 +72,14 @@ void CDlgBumpWood::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgBumpWood)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_PREVIEW_BUMP, m_PreviewBumpCtrl);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgBumpWood, CDialog)
 	//{{AFX_MSG_MAP(CDlgBumpWood)
+	ON_MESSAGE(WM_USER,OnPreviewBump)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -96,7 +104,35 @@ BOOL CDlgBumpWood::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	
+//	m_PreviewBumpCtrl.b3Init();
+//	m_MatSampler = new b3MaterialSampler(m_PreviewBumpCtrl);
+//	m_MatSampler->b3SetMaterial(m_Material);
+
+	m_PropertySheet.AddPage(&m_PageBump);
+	m_PropertySheet.AddPage(&m_PageWood);
+
+	m_PropertySheet.Create(this, WS_CHILD | WS_VISIBLE, 0);
+	m_PropertySheet.ModifyStyleEx (0, WS_EX_CONTROLPARENT);
+	m_PropertySheet.ModifyStyle( 0, WS_TABSTOP );
+
+	CRect rcSheet;
+	GetDlgItem( IDC_PROPERTY )->GetWindowRect( &rcSheet );
+	ScreenToClient( &rcSheet );
+	m_PropertySheet.SetWindowPos( NULL, rcSheet.left-7, rcSheet.top-7, 0, 0, 
+			SWP_NOZORDER | SWP_NOSIZE | SWP_NOACTIVATE );
+
+	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgBumpWood::b3UpdateUI()
+{
+//	m_PreviewBumpCtrl.b3Update(m_MatSampler);
+}
+
+void CDlgBumpWood::OnPreviewBump() 
+{
+	// TODO: Add your control notification handler code here
+	b3UpdateUI();
 }

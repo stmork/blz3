@@ -34,7 +34,8 @@ public:
 	{
 		B3_UNIT_ABS = 0,
 		B3_UNIT_DEGREE,
-		B3_UNIT_PERCENT
+		B3_UNIT_PERCENT,
+		B3_UNIT_PERMILLE
 	};
 
 private:

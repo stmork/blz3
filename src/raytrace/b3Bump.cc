@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2004/04/18 16:58:14  sm
+**	- Changed definitions for base classes of raytracing objects.
+**	- Put wood material and wood bump dialogs into property
+**	  pages.
+**
 **	Revision 1.25  2004/04/18 09:13:50  sm
 **	- Removed hardwired values.
 **	- Now we have congruent material and bump oakpank structure.
-**
+**	
 **	Revision 1.24  2004/04/18 08:53:05  sm
 **	- Put temporiraly some hardwired values into the oakplank.
 **	
@@ -168,6 +173,12 @@ void b3Bump::b3Register()
 	b3Item::b3Register(&b3BumpOakPlank::b3StaticInit, &b3BumpOakPlank::b3StaticInit, BUMP_OAKPLANK);
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Bump base class                               **
+**                                                                      **
+*************************************************************************/
+
 b3Bump::b3Bump(b3_size class_size,b3_u32 class_type) : b3Item(class_size,class_type)
 {
 }
@@ -181,9 +192,6 @@ b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
 }
 
 b3_f64 b3Bump::m_TimePoint = 0;
-
-#define BUMP_dX 0.02
-#define BUMP_dY 0.02
 
 /*************************************************************************
 **                                                                      **
@@ -663,11 +671,32 @@ void b3BumpGlossy::b3BumpNormal(b3_ray *ray)
 
 /*************************************************************************
 **                                                                      **
+**                        Wodden bump base class                        **
+**                                                                      **
+*************************************************************************/
+
+b3BumpWooden::b3BumpWooden(b3_size class_size,b3_u32 class_type) : b3Bump(class_size,class_type)
+{
+}
+
+b3BumpWooden::b3BumpWooden(b3_u32 class_type) : b3Bump(sizeof(b3Bump),class_type)
+{
+}
+
+b3BumpWooden::b3BumpWooden(b3_u32 *src) : b3Bump(src)
+{
+}
+
+#define BUMP_dX 0.02
+#define BUMP_dY 0.02
+
+/*************************************************************************
+**                                                                      **
 **                        Wood bump                                     **
 **                                                                      **
 *************************************************************************/
 
-b3BumpWood::b3BumpWood(b3_u32 class_type) : b3Bump(sizeof(b3BumpWood),class_type)
+b3BumpWood::b3BumpWood(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpWood),class_type)
 {
 	m_Flags = 0;
 	m_Amplitude = 0.3f;
@@ -677,7 +706,7 @@ b3BumpWood::b3BumpWood(b3_u32 class_type) : b3Bump(sizeof(b3BumpWood),class_type
 	b3InitWood();
 }
 
-b3BumpWood::b3BumpWood(b3_u32 *src) : b3Bump(src)
+b3BumpWood::b3BumpWood(b3_u32 *src) : b3BumpWooden(src)
 {
 	m_Flags     = b3InitInt();
 	b3InitVector(&m_Scale);
@@ -772,16 +801,14 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 **                                                                      **
 *************************************************************************/
 
-b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3Bump(sizeof(b3BumpOakPlank),class_type)
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3BumpWooden(sizeof(b3BumpOakPlank),class_type)
 {
 	m_Flags = 0;
 	m_Amplitude = 0.025f;
-	m_dX = 1.0 / BUMP_dX;
-	m_dY = 1.0 / BUMP_dY;
 	b3InitOakPlank();
 }
 
-b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3Bump(src)
+b3BumpOakPlank::b3BumpOakPlank(b3_u32 *src) : b3BumpWooden(src)
 {
 	// Bump parameter
 	m_Flags     = b3InitInt();
