@@ -148,6 +148,11 @@ BEGIN
     BUTTON      ID_RAYTRACE
     BUTTON      ID_DLG_SCENE
     BUTTON      ID_MODELLER_INFO
+    SEPARATOR
+    BUTTON      ID_ACTIVATE
+    BUTTON      ID_DEACTIVATE
+    BUTTON      ID_ALL_ACTIVATE
+    BUTTON      ID_ALL_DEACTIVATE
 END
 
 IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 15
@@ -512,17 +517,12 @@ BEGIN
 END
 
 IDD_HIERARCHY DIALOG DISCARDABLE  0, 0, 186, 250
-STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Objekthierarchie"
+STYLE DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Tree1",IDC_HIERARCHY,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | 
-                    WS_TABSTOP,5,5,175,200
-    PUSHBUTTON      "Aktivieren",IDC_ACTIVATE,5,210,55,15
-    PUSHBUTTON      "Deaktivieren",IDC_DEACTIVATE,5,230,55,15
-    PUSHBUTTON      "alles Aktivieren",IDC_ALL_ACTIVATE,70,210,55,15
-    PUSHBUTTON      "alles deaktivieren",IDC_ALL_DEACTIVATE,70,230,55,15
+                    WS_TABSTOP,7,7,172,236
 END
 
 IDD_SCENE DIALOG DISCARDABLE  0, 0, 297, 321
@@ -1376,6 +1376,19 @@ STRINGTABLE DISCARDABLE
 BEGIN
     ID_COORD_Y              "y: 00000000.00"
     ID_COORD_Z              "z: 00000000.00"
+    IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
+    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
+    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
 END
 
 #endif    // German (Germany) resources

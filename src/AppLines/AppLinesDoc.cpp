@@ -50,6 +50,9 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2001/12/31 16:39:40  sm
+**	- Made hierarchy dialog a CDialogBar
+**
 **	Revision 1.33  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -57,7 +60,7 @@
 **	  o b3Scene::b3SetCamera() calls added which now puts the
 **	    selected camera in front of the b3Special list so that Lines III
 **	    select it when reloading.
-**
+**	
 **	Revision 1.32  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -222,28 +225,26 @@ IMPLEMENT_DYNCREATE(CAppLinesDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
-	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
-	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
-	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
-	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
+	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
 	ON_COMMAND(ID_LIGHT_NEW, OnLightNew)
 	ON_COMMAND(ID_LIGHT_DELETE, OnLightDelete)
-	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
 	ON_COMMAND(ID_LIGHT_PROPERTIES, OnLightProperties)
 	ON_COMMAND(ID_LIGHT_ENABLE, OnLightEnable)
 	ON_COMMAND(ID_LIGHT_SOFT, OnLightSoft)
-	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_DELETE, OnUpdateLightDelete)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
-	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_ENABLE, OnUpdateLightEnable)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SOFT, OnUpdateLightSoft)
+	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
+	ON_COMMAND(ID_LIGHT_SPOT, OnLightSpot)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SPOT, OnUpdateLightSpot)
+	ON_UPDATE_COMMAND_UI(ID_DLG_SCENE, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_MODELLER_INFO, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_NEW, OnUpdateGlobal)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_PROPERTIES, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_NEW, OnUpdateGlobal)
@@ -251,6 +252,12 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_PROPERTIES, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TO_FULCRUM, OnUpdateGlobal)
+	ON_COMMAND(ID_ACTIVATE, OnActivate)
+	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
+	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
+	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
+	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -612,15 +619,6 @@ void CAppLinesDoc::b3ClearRaytraceDoc()
 **                                                                      **
 *************************************************************************/
 
-void CAppLinesDoc::OnHierachy() 
-{
-	// TODO: Add your command handler code here
-	CDlgHierarchy dlg;
-
-	dlg.m_Doc   = this;
-	dlg.DoModal();
-}
-
 void CAppLinesDoc::OnRaytrace()
 {
 	// TODO: Add your command handler code here
@@ -803,11 +801,9 @@ void CAppLinesDoc::OnLightSoft()
 void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main;
-	b3Light        *light;
+	b3Light *light;
 
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
+	light = CB3GetMainFrame()->b3GetSelectedLight();
 	light->m_SpotActive = !light->m_SpotActive;
 	SetModifiedFlag();
 }
@@ -821,11 +817,9 @@ void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CMainFrame     *main;
-	b3Light        *light;
+	b3Light *light;
 
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
+	light = CB3GetMainFrame()->b3GetSelectedLight();
 	if (light != null)
 	{
 		pCmdUI->Enable(light->m_LightActive && light->m_SpotActive && (!b3IsRaytracing()));
@@ -839,11 +833,9 @@ void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CMainFrame     *main;
-	b3Light        *light;
+	b3Light *light;
 
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
+	light = CB3GetMainFrame()->b3GetSelectedLight();
 	pCmdUI->Enable(!b3IsRaytracing());
 	pCmdUI->SetCheck(light != null ? light->m_LightActive : FALSE);
 }
@@ -851,11 +843,9 @@ void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CMainFrame     *main;
-	b3Light        *light;
+	b3Light *light;
 
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
+	light = CB3GetMainFrame()->b3GetSelectedLight();
 	if (light != null)
 	{
 		pCmdUI->Enable(light->m_LightActive && (!b3IsRaytracing()));
@@ -870,10 +860,9 @@ void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CMainFrame     *main;
-	b3Light        *light;
+	CMainFrame *main = CB3GetMainFrame();
+	b3Light    *light;
 
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	light = main->b3GetSelectedLight();
 	if (light != null)
 	{
@@ -884,4 +873,56 @@ void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI)
 	{
 		pCmdUI->Enable(FALSE);
 	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Light commands                                **
+**                                                                      **
+*************************************************************************/
+
+void CAppLinesDoc::OnActivate() 
+{
+	// TODO: Add your control notification handler code here
+	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+
+	if (BBox != null)
+	{
+		BBox->b3Activate();
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
+}
+
+void CAppLinesDoc::OnDeactivate() 
+{
+	// TODO: Add your control notification handler code here
+	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+
+	if (BBox != null)
+	{
+		BBox->b3Activate(false);
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
+}
+
+void CAppLinesDoc::OnAllDeactivate() 
+{
+	// TODO: Add your control notification handler code here
+	m_Scene->b3Activate(false);
+	SetModifiedFlag();
+	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppLinesDoc::OnAllActivate() 
+{
+	// TODO: Add your control notification handler code here
+	m_Scene->b3Activate();
+	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI) 
+{
+	pCmdUI->Enable(CB3GetMainFrame()->b3GetSelectedBBox() != null);
 }

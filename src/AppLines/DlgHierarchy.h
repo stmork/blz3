@@ -30,15 +30,15 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgHierarchy dialog
 
-class CDlgHierarchy : public CDialog, public b3Mem
+class CDlgHierarchy : public CB3Dialogbar, public b3Mem
 {
 // Construction
 public:
-	CAppLinesDoc *m_Doc;
+	b3BBox *b3GetSelectedBBox();
+	void    b3GetData();
+	void    b3SetData();
+	CAppLinesDoc *m_pDoc;
 	 ~CDlgHierarchy();
-
-	void InitTree ();
-	void AddBBoxes (b3BBox *bbox,HTREEITEM);
 	CDlgHierarchy(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -61,10 +61,6 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgHierarchy)
 	virtual BOOL OnInitDialog();
-	afx_msg void OnActivate();
-	afx_msg void OnDeactivate();
-	afx_msg void OnAllDeactivate();
-	afx_msg void OnAllActivate();
 	afx_msg void OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -72,6 +68,8 @@ private:
 	HTREEITEM  *m_TreeItems;
 	CImageList  m_ImageList;
 	b3Scene    *m_Scene;
+	void        b3InitTree ();
+	void        b3AddBBoxes (b3BBox *bbox,HTREEITEM);
 };
 
 //{{AFX_INSERT_LOCATION}}

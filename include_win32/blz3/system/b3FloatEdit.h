@@ -31,6 +31,8 @@
 
 class CB3FloatEdit : public CEdit
 {
+	DECLARE_DYNAMIC(CB3FloatEdit)
+
 // Construction
 	char    m_Format[16];
 	char    m_Buffer[32];

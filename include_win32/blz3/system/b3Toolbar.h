@@ -59,6 +59,8 @@ struct CToolBarData
 
 class CB3Toolbar : public CToolBar, public b3Link<CB3Toolbar>
 {
+	DECLARE_DYNAMIC(CB3Toolbar)
+
 	CFrameWnd        *m_MainFrame;
 	CString           m_Title;
 	CString           m_Key;
@@ -130,6 +132,8 @@ protected:
 
 class CB3Dialogbar : public CDialogBar, public b3Link<CB3Dialogbar>
 {
+	DECLARE_DYNAMIC(CB3Dialogbar)
+
 	CFrameWnd    *m_MainFrame;
 	b3_index      m_ID;
 	b3_index      m_Bar;
@@ -142,16 +146,25 @@ public:
 	              CB3Dialogbar();
 	        BOOL  Create(CWnd * pParentWnd, UINT nIDTemplate, UINT nStyle, UINT nID);
 	        BOOL  Create(CWnd * pParentWnd, LPCTSTR lpszTemplateName, UINT nStyle, UINT nID);
-	virtual BOOL  OnInitDialogBar();
+	virtual BOOL  OnInitDialog();
 	b3_bool       b3ToggleVisibility();
 	b3_bool       b3SetVisibility(bool new_visibility=true);
 	b3_bool       b3IsVisible();
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CB3Dialogbar)
-protected:
+	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);
 	//}}AFX_VIRTUAL
+
+// Implementation
+protected:
+
+	// Generated message map functions
+	//{{AFX_MSG(CB3Dialogbar)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+
 	virtual void  b3GetData();
 	virtual void  b3SetData();
 

@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CAppLinesDoc
+LastClass=CDlgHierarchy
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=26
+ClassCount=27
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -22,32 +22,32 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=25
-Resource1=IDD_ABOUTBOX
-Resource2=IDR_TOOLBAR_VIEW
-Resource3=IDR_TOOLBAR_DISPLAY
-Resource4=IDD_STEP_MOVE
+Resource1=IDD_SUPER_SAMPLE
+Resource2=IDR_TOOLBAR_OBJECT
+Resource3=IDD_STEP_MOVE
+Resource4=IDD_ABOUTBOX
 Resource5=IDD_NEBULAR
-Resource6=IDD_LENS_FLARE
-Resource7=IDD_MODELLER_INFO
-Resource8=IDD_LIGHT
-Resource9=IDD_SEARCH_PATH_LIST
-Resource10=IDD_CAMERA
-Resource11=IDD_NEW_ITEM
-Resource12=IDR_TOOLBAR_OBJECT
+Resource6=IDD_SEARCH_PATH_LIST
+Resource7=IDD_LIGHT
+Resource8=IDD_FULCRUM
+Resource9=IDR_MAINFRAME
+Resource10=IDR_TOOLBAR_LIGHT
+Resource11=IDD_CAMERA
+Resource12=IDR_TOOLBAR_CAMERA
 Resource13=IDD_HIERARCHY
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_TOOLBAR_LIGHT
+Resource14=IDR_TOOLBAR_ACTION
 Class17=CDlgModellerInfo
-Resource15=IDD_FULCRUM
-Resource16=IDD_SUPER_SAMPLE
-Resource17=IDD_DISTRIBUTED
-Resource18=IDR_TOOLBAR_ACTION
+Resource15=IDD_LENS_FLARE
+Resource16=IDD_DISTRIBUTED
+Resource17=IDD_NEW_ITEM
+Resource18=IDR_TOOLBAR_DISPLAY
 Class18=CDlgCreateItem
-Resource19=IDR_TOOLBAR_CAMERA
+Resource19=IDR_TOOLBAR_VIEW
 Class19=CDlgLight
 Class20=CB3ControlLDC
 Resource20=IDD_LDC
@@ -57,10 +57,11 @@ Class22=CDlgCamera
 Class23=CB3ShowImage
 Resource22=IDR_DISPLAYTYPE
 Class24=CDlgFulcrum
-Resource23=IDR_MAINFRAME
+Resource23=IDD_MODELLER_INFO
 Resource24=IDD_SCENE
 Class25=CDlgStepRotate
 Class26=CDlgStepMove
+Class27=CB3Dialogbar
 Resource25=IDD_STEP_ROTATE
 
 [CLS:CAppLinesApp]
@@ -140,6 +141,7 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgHierarchy.h
 ImplementationFile=DlgHierarchy.cpp
+LastObject=CDlgHierarchy
 
 [CLS:CDlgScene]
 Type=0
@@ -157,7 +159,7 @@ HeaderFile=MainFrm.h
 ImplementationFile=MainFrm.cpp
 Filter=T
 VirtualFilter=fWC
-LastObject=CMainFrame
+LastObject=ID_HIERACHY
 
 [DLG:IDD_ABOUTBOX]
 Type=1
@@ -171,12 +173,8 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_HIERARCHY]
 Type=1
 Class=CDlgHierarchy
-ControlCount=5
+ControlCount=1
 Control1=IDC_HIERARCHY,SysTreeView32,1342242831
-Control2=IDC_ACTIVATE,button,1342242816
-Control3=IDC_DEACTIVATE,button,1342242816
-Control4=IDC_ALL_ACTIVATE,button,1342242816
-Control5=IDC_ALL_DEACTIVATE,button,1342242816
 
 [DLG:IDD_SCENE]
 Type=1
@@ -256,7 +254,11 @@ Command1=ID_HIERACHY
 Command2=ID_RAYTRACE
 Command3=ID_DLG_SCENE
 Command4=ID_MODELLER_INFO
-CommandCount=4
+Command5=ID_ACTIVATE
+Command6=ID_DEACTIVATE
+Command7=ID_ALL_ACTIVATE
+Command8=ID_ALL_DEACTIVATE
+CommandCount=8
 
 [TB:IDR_TOOLBAR_DISPLAY]
 Type=1
@@ -565,7 +567,7 @@ HeaderFile=..\..\include_win32\blz3\system\b3FloatEdit.h
 ImplementationFile=..\system_win32\b3FloatEdit.cpp
 BaseClass=CEdit
 Filter=W
-LastObject=ID_CAMERA_ENABLE
+LastObject=CB3FloatEdit
 VirtualFilter=WC
 
 [DLG:IDD_MODELLER_INFO]
@@ -858,4 +860,13 @@ Type=1
 Class=?
 Command1=ID_WINDOW_NEW
 CommandCount=1
+
+[CLS:CB3Dialogbar]
+Type=0
+HeaderFile=\blz3\include_win32\blz3\system\b3toolbar.h
+ImplementationFile=\blz3\src\system_win32\b3toolbar.cpp
+BaseClass=CDialogBar
+Filter=D
+VirtualFilter=dWC
+LastObject=CB3Dialogbar
 

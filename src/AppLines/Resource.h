@@ -125,13 +125,13 @@
 #define IDC_LIGHT_SOFT_SIZE             1052
 #define IDC_LIGHT_DIR_X                 1053
 #define IDC_LIGHT_DIR_Y                 1054
-#define IDC_ACTIVATE                    1055
+#define ID_ACTIVATE                     1055
 #define IDC_LIGHT_DIR_Z                 1055
-#define IDC_DEACTIVATE                  1056
+#define ID_DEACTIVATE                   1056
 #define IDC_LIGHT_SAMPLE_LABEL          1056
-#define IDC_ALL_ACTIVATE                1057
+#define ID_ALL_ACTIVATE                 1057
 #define IDC_LIGHT_LDC_CONTROL           1057
-#define IDC_ALL_DEACTIVATE              1058
+#define ID_ALL_DEACTIVATE               1058
 #define IDC_LIGHT_PREVIEW               1058
 #define IDC_PATH_FIRST                  1059
 #define IDC_LIGHT_LDC_DIAGRAM           1059
@@ -244,6 +244,7 @@
 #define IDM_BAR_FULCRUM                 32841
 #define IDM_BAR_STEP_MOVE               32842
 #define IDM_BAR_STEP_ROTATE             32843
+#define ID_BUTTON32844                  32844
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -274,6 +275,7 @@
 #define ID_COORD_X                      61471
 #define ID_COORD_Y                      61472
 #define ID_COORD_Z                      61473
+#define IDS_DIALOGBAR_HIERARCHY         61474
 
 // Next default values for new objects
 // 
@@ -281,7 +283,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32844
+#define _APS_NEXT_COMMAND_VALUE         32845
 #define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

@@ -28,6 +28,7 @@
 #include "DlgFulcrum.h"
 #include "DlgStepMove.h"
 #include "DlgStepRotate.h"
+#include "DlgHierarchy.h"
 
 #define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
 #define CB3GetMainFrame() ((CMainFrame *)AfxGetApp()->m_pMainWnd)
@@ -73,6 +74,7 @@ protected:  // control bar embedded members
 	CDlgFulcrum        m_dlgFulcrum;
 	CDlgStepMove       m_dlgStepMove;
 	CDlgStepRotate     m_dlgStepRotate;
+	CDlgHierarchy      m_dlgHierarchy;
 	CB3ComboBox        m_cameraBox;
 	CB3ComboBox        m_lightBox;
 
@@ -114,6 +116,8 @@ protected:
 	afx_msg void OnUpdateControls();
 	afx_msg void OnUpdateCamSelect(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightSelect(CCmdUI* pCmdUI);
+	afx_msg void OnHierachy();
+	afx_msg void OnUpdateHierachy(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -125,6 +129,7 @@ public:
 	b3Light      *b3GetSelectedLight();
 	void          b3UpdateModellerInfo(CAppLinesDoc *pDoc = null);
 	void          b3UpdateFulcrum();
+	b3BBox       *b3GetSelectedBBox();
 	void          b3SetStatusMessage(const char *message);
 	void          b3SetStatusMessage(const int message_id);
 	void          b3SetPosition(b3_vector *position);

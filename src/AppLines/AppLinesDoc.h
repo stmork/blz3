@@ -83,7 +83,6 @@ protected:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesDoc)
-	afx_msg void OnHierachy();
 	afx_msg void OnRaytrace();
 	afx_msg void OnDlgScene();
 	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
@@ -101,6 +100,11 @@ protected:
 	afx_msg void OnLightSpot();
 	afx_msg void OnUpdateLightSpot(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateGlobal(CCmdUI* pCmdUI);
+	afx_msg void OnActivate();
+	afx_msg void OnDeactivate();
+	afx_msg void OnAllDeactivate();
+	afx_msg void OnAllActivate();
+	afx_msg void OnUpdateSelectedBBox(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

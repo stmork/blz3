@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/31 16:39:40  sm
+**	- Made hierarchy dialog a CDialogBar
+**
 **	Revision 1.2  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
-**
+**	
 **	Revision 1.1  2001/12/25 18:52:39  sm
 **	- Introduced CB3Dialogbar for dialogs opened any time.
 **	- Fulcrum fixed with snap to grid
@@ -83,9 +86,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgFulcrum message handlers
 
-BOOL CDlgFulcrum::OnInitDialogBar()
+BOOL CDlgFulcrum::OnInitDialog()
 {
-	if (!CB3Dialogbar::OnInitDialogBar())
+	if (!CB3Dialogbar::OnInitDialog())
 	{
 		return FALSE;
 	}

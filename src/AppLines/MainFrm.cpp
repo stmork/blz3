@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/12/31 16:39:41  sm
+**	- Made hierarchy dialog a CDialogBar
+**
 **	Revision 1.18  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -40,7 +43,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.17  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -164,6 +167,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_MESSAGE(WM_USER_UPDATE_CONTROLS, OnUpdateControls)
 	ON_UPDATE_COMMAND_UI(ID_CAM_SELECT, OnUpdateCamSelect)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
+	ON_COMMAND(ID_HIERACHY, OnHierachy)
+	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateHierachy)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -262,6 +267,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
 	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
+	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
@@ -428,6 +434,12 @@ void CMainFrame::OnBarStepRotate()
 	m_dlgStepRotate.b3ToggleVisibility();
 }
 
+void CMainFrame::OnHierachy() 
+{
+	// TODO: Add your command handler code here
+	m_dlgHierarchy.b3ToggleVisibility();
+}
+
 void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
@@ -480,6 +492,12 @@ void CMainFrame::OnUpdateBarStepRotate(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_dlgStepRotate.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateHierachy(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_dlgHierarchy.b3IsVisible());
 }
 
 /*************************************************************************
@@ -568,11 +586,17 @@ void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
 	m_dlgFulcrum.m_pDoc    = pDoc;
 	m_dlgStepMove.m_Info   = pDoc != null ? pDoc->m_Info : null;
 	m_dlgStepRotate.m_Info = pDoc != null ? pDoc->m_Info : null;
+	m_dlgHierarchy.m_pDoc  = pDoc;
 }
 
 void CMainFrame::b3UpdateFulcrum()
 {
 	m_dlgFulcrum.b3SetData();
+}
+
+b3BBox *CMainFrame::b3GetSelectedBBox()
+{
+	return m_dlgHierarchy.b3GetSelectedBBox();
 }
 
 /*************************************************************************

@@ -40,10 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/31 16:39:41  sm
+**	- Made hierarchy dialog a CDialogBar
+**
 **	Revision 1.7  2001/12/27 21:33:35  sm
 **	- Further docking handling done
 **	- CDocument cleanups done
-**
+**	
 **	Revision 1.6  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -347,6 +350,8 @@ BEGIN_MESSAGE_MAP(CB3Toolbar, CToolBar)
 	ON_NOTIFY_REFLECT(TBN_TOOLBARCHANGE, OnToolBarChange)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+IMPLEMENT_DYNAMIC(CB3Toolbar, CToolBar)
 
 CB3Toolbar::CB3Toolbar() : b3Link<CB3Toolbar>(sizeof(CB3Toolbar))
 {
@@ -833,6 +838,13 @@ b3_bool CB3Menubar::b3SetVisibility(bool new_visibility)
 **                                                                      **
 *************************************************************************/
 
+BEGIN_MESSAGE_MAP(CB3Dialogbar, CDialogBar)
+	//{{AFX_MSG_MAP(CB3Dialogbar)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+IMPLEMENT_DYNAMIC(CB3Dialogbar, CDialogBar)
+
 CB3Dialogbar::CB3Dialogbar() : b3Link<CB3Dialogbar>(sizeof(CB3Dialogbar))
 {
 	m_MainFrame = null;
@@ -871,7 +883,7 @@ BOOL CB3Dialogbar::Create(
 	if (CDialogBar::Create(pParentWnd,lpszTemplateName,nStyle,nID))
 	{
 		SetDlgCtrlID(nID);
-		if (OnInitDialogBar())
+		if (OnInitDialog())
 		{
 			return TRUE;
 		}
@@ -889,7 +901,7 @@ BOOL CB3Dialogbar::Create(
 	if (CDialogBar::Create(pParentWnd,nIDTemplate,nStyle,nID))
 	{
 		SetDlgCtrlID(nID);
-		if (OnInitDialogBar())
+		if (OnInitDialog())
 		{
 			return TRUE;
 		}
@@ -897,7 +909,7 @@ BOOL CB3Dialogbar::Create(
 	return FALSE;
 }
 
-BOOL CB3Dialogbar::OnInitDialogBar()
+BOOL CB3Dialogbar::OnInitDialog()
 {
 	UpdateData(FALSE);
 	b3SetData();

@@ -48,7 +48,7 @@ public:
 	//}}AFX_DATA
 
 public:
-	virtual BOOL  OnInitDialogBar();
+	virtual BOOL  OnInitDialog();
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgStepMove)
