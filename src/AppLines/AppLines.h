@@ -38,6 +38,7 @@
 #include "AppRaytraceDoc.h"
 #include "AppObjectDoc.h"
 #include "blz3/system/b3DisplayView.h"
+#include "blz3/system/b3Plugin.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
@@ -49,6 +50,7 @@ class CAppLinesApp : public CB3App
 	// Last view parameter
 	b3_bool          m_Filtered;
 	b3_display_mode  m_Mode;
+	b3Loader         m_Plugins;
 
 	// Document templates (we can handle many file types!)
 	CMultiDocTemplate *pImageTemplate;
@@ -78,6 +80,7 @@ public:
 	//{{AFX_VIRTUAL(CAppLinesApp)
 	public:
 	virtual BOOL InitInstance();
+	virtual int ExitInstance();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -93,6 +96,9 @@ public:
 	afx_msg void OnImportArcon();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3SetupSearchPath(b3SearchPath &search,CString &path);
 };
 
 #define CB3GetLinesApp()  ((CAppLinesApp *)AfxGetApp())

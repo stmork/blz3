@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2003/05/24 13:46:49  sm
+**	- Added plugin support
+**	- Fixed b3FileList on non existing directory.
+**
 **	Revision 1.53  2003/02/26 19:13:05  sm
 **	- Update scene/object views after color redefinition.
 **	- Beautofied the app properties dialog.
-**
+**	
 **	Revision 1.52  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -468,6 +472,18 @@ static const CLSID object_clsid =
 **                                                                      **
 *************************************************************************/
 
+void CAppLinesApp::b3SetupSearchPath(b3SearchPath &search,CString &path)
+{
+	CString sub;
+	
+	while(!path.IsEmpty())
+	{
+		sub = path.SpanExcluding(";");
+		search.b3AddPath(sub);
+		path = path.Right(path.GetLength() - sub.GetLength() - 1);
+	}
+}
+
 BOOL CAppLinesApp::InitInstance()
 {
 	// Parse command line for standard shell commands, DDE, file open
@@ -525,13 +541,11 @@ BOOL CAppLinesApp::InitInstance()
 	b3InitRaytrace::b3Init();
 
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
-	CString sub;
-	while(!path.IsEmpty())
-	{
-		sub = path.SpanExcluding(";");
-		b3Scene::m_TexturePool.b3AddPath(sub);
-		path = path.Right(path.GetLength() - sub.GetLength() - 1);
-	}
+	b3SetupSearchPath(b3Scene::m_TexturePool,path);
+
+	path = GetProfileString(b3ClientName(),"plugin search path","");
+	b3SetupSearchPath(m_Plugins,path);
+	m_Plugins.b3Load();
 
 	CDlgProperties::b3ReadConfig();
 	if (m_pDocManager == NULL)
@@ -627,6 +641,13 @@ BOOL CAppLinesApp::InitInstance()
 	}
 
 	return CB3App::InitInstance();
+}
+
+int CAppLinesApp::ExitInstance() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	m_Plugins.b3Unload();
+	return CB3App::ExitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////

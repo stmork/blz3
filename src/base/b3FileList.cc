@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/05/24 13:46:49  sm
+**	- Added plugin support
+**	- Fixed b3FileList on non existing directory.
+**
 **	Revision 1.5  2002/08/16 13:20:13  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
 **	  Blizzard III raytracer: It's necessary to use b3ShapeRenderContext
 **	  rather than b3renderContext which doesn't initialize subdivision
 **	  for shapes.
-**
+**	
 **	Revision 1.4  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
@@ -107,13 +111,7 @@ void b3FileList::b3CreateList(const char *dir)
 
 void b3FileList::b3DeleteList()
 {
-	b3FileEntry *entry;
-
-	while ((entry = list.First) != null)
-	{
-		list.b3Remove(entry);
-		delete entry;
-	}
+	list.b3Free();
 }
 
 void b3FileList::b3RecCreateList(const char *startDir)
@@ -127,15 +125,16 @@ void b3FileList::b3RecCreateList(const char *startDir)
 	do
 	{
 		type = dir.b3DirNext(name);
-		b3Path::b3LinkFileName (subdir,startDir,name);
 
 		switch (type)
 		{
 		case B3_TYPE_FILE:
+			b3Path::b3LinkFileName (subdir,startDir,name);
 			b3Add(subdir);
 			break;
 
 		case B3_TYPE_DIR:
+			b3Path::b3LinkFileName (subdir,startDir,name);
 			b3RecCreateList (subdir);
 			break;
 
