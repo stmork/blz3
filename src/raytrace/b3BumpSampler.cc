@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/19 17:52:00  sm
+**	- Compile fix for Intel compiler.
+**
 **	Revision 1.1  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
-**
+**	
 **
 */
 
@@ -123,8 +126,8 @@ void b3BumpSampler::b3SampleTask(b3SampleInfo *info)
 
 			bump->b3BumpNormal(&ray);
 			b3Vector::b3Init(&normal,&ray.normal);
-			angle = b3Vector::b3AngleOfVectors(&m_Light,&normal);
-			*data++ = b3Color::b3Color(angle,angle,angle);
+			angle   = b3Vector::b3AngleOfVectors(&m_Light,&normal);
+			*data++ = b3Color(angle,angle,angle);
 		}
 	}
 }
