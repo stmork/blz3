@@ -12,7 +12,7 @@ else
 endif
 
 SUB_DIRS +=\
-	system_independend\
+	system\
 	tools\
 	Btiff\
 	Bjpeg\

@@ -10,7 +10,6 @@ PRGS			=
 LIBS			= libB3System.a
 LIB_SOURCE		=\
 	b3Config.cc\
-	b3Date.cc\
 	b3Dir.cc\
 	b3DisplayView.cc\
 	b3File.cc\
@@ -20,7 +19,6 @@ LIB_SOURCE		=\
 
 LIB_OBJ			=\
 	b3Config.o\
-	b3Date.o\
 	b3Dir.o\
 	b3DisplayView.o\
 	b3File.o\
