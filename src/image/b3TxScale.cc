@@ -27,7 +27,6 @@
 #include "blz3/system/b3Log.h"
 
 #include <math.h>
-#include <malloc.h>
 
 struct b3_rect_info
 {
@@ -61,9 +60,12 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.22  2005/02/02 08:23:26  smork
+**	- Removed unnecessary malloc.h include.
+**
 **	Revision 1.21  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
-**
+**	
 **	Revision 1.20  2005/01/04 15:13:59  smork
 **	- Changed some data types.
 **	
