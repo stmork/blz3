@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.11  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 **	Revision 1.10  2003/06/15 09:24:25  sm
 **	- Added item creation dialog
 **	
@@ -105,11 +111,24 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 b3Item *b3Loader::b3Create(b3_u32 class_type)
 {
 	b3Item         *item = b3World::b3AllocNode(class_type);
+
+	return b3EditCreation(item);
+}
+
+b3Item *b3Loader::b3Create(b3_u32 *class_buffer)
+{
+	b3Item         *item = b3World::b3AllocNode(class_buffer);
+
+	return b3EditCreation(item);
+}
+
+b3Item *b3Loader::b3EditCreation(b3Item *item)
+{
 	b3_plugin_info *info;
 
 	if (item != null)
 	{
-		info = b3FindInfo(class_type);
+		info = b3FindInfo(item->b3GetClassType());
 		if (info != null)
 		{
 			if (info->m_CreateFunc != null)

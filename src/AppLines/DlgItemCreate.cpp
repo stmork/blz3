@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "DlgItemCreate.h"
 #include "blz3/system/b3Plugin.h"
+#include "blz3/system/b3FileReg.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.2  2003/06/15 14:18:17  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
-**
+**	
 **	Revision 1.1  2003/06/15 09:24:21  sm
 **	- Added item creation dialog
 **	
@@ -151,6 +158,20 @@ void CDlgItemCreate::OnOK()
 	CDialog::OnOK();
 	if (class_type != 0)
 	{
-		m_Item = b3Loader::b3GetLoader().b3Create(class_type);
+		CString    section;
+		b3FileReg  file;
+		b3_u32    *buffer;
+		b3_size    size = 0;
+
+		section.Format("item %08x.default",class_type);
+		buffer = (b3_u32 *)file.b3ReadBuffer(section,size);
+		if (buffer != null)
+		{
+			m_Item = b3Loader::b3GetLoader().b3Create(buffer);
+		}
+		else
+		{
+			m_Item = b3Loader::b3GetLoader().b3Create(class_type);
+		}
 	}
 }

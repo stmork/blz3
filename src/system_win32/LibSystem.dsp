@@ -134,6 +134,10 @@ SOURCE=.\b3FileDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3FileReg.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3FloatEdit.cpp
 # End Source File
 # Begin Source File
@@ -263,6 +267,10 @@ SOURCE=..\..\include_win32\blz3\system\b3File.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3FileDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3FileReg.h
 # End Source File
 # Begin Source File
 

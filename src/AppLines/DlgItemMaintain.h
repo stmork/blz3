@@ -77,6 +77,8 @@ private:
 	b3Item *b3GetSelectedItem();
 	void    b3UpdateUI();
 	void    b3UpdateList(b3Item *select = null);
+	
+	static void b3Store(b3Item *item);
 };
 
 //{{AFX_INSERT_LOCATION}}

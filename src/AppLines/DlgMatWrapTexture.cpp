@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.2  2003/07/12 10:20:16  sm
 **	- Fixed ticketno. 12 (memory leak in b3ItemRegistry)
-**
+**	
 **	Revision 1.1  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -86,6 +92,5 @@ b3_bool CDlgMatWrapTexture::b3Edit(b3Item *item)
 {
 	CDlgMatWrapTexture dlg(item);
 
-	dlg.DoModal();
-	return true;
+	return dlg.DoModal() == IDOK;
 }

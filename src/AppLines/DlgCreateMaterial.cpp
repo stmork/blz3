@@ -34,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.16  2004/04/23 16:51:09  sm
 **	- Color renaming finished.
 **	- Bug #18 fixed: The bump amplitude is read out correctly now.
-**
+**	
 **	Revision 1.15  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
@@ -156,14 +162,17 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_ReflectionCtrl.b3SetRange(0.0,1.0);
 	m_ReflectionCtrl.b3SetIncrement(0.01);
 	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_ReflectionCtrl.b3SetDigits(2,1);
+	m_ReflectionCtrl.b3SetDigits(3,1);
+
 	m_RefractionCtrl.b3SetRange(0.0,1.0);
 	m_RefractionCtrl.b3SetIncrement(0.01);
 	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
-	m_RefractionCtrl.b3SetDigits(2,1);
+	m_RefractionCtrl.b3SetDigits(3,1);
+
 	m_IorCtrl.b3SetRange(-5.0,5.0);
 	m_IorCtrl.b3SetDigits(0,2);
 	m_IorCtrl.b3SetIncrement(0.01);
+	
 	m_SpecularExpCtrl.b3SetRange(1.0,100000);
 	m_SpecularExpCtrl.b3SetDigits(0,1);
 	m_SpecularExpCtrl.b3SetIncrement(10.0);

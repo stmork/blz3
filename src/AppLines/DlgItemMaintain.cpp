@@ -25,6 +25,7 @@
 #include "DlgItemMaintain.h"
 #include "DlgItemCreate.h"
 #include "b3StaticPluginInfoInit.h"
+#include "blz3/system/b3FileReg.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.7  2004/04/03 19:25:00  sm
 **	- Some other wood
-**
+**	
 **	Revision 1.6  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -247,15 +254,40 @@ void CDlgItemMaintain::OnItemNew()
 void CDlgItemMaintain::OnItemEdit() 
 {
 	// TODO: Add your control notification handler code here
-	b3Item *item = b3GetSelectedItem();
+	b3Item *item = b3GetSelectedItem();		
+	b3Item *edit;
 
 	if (item != null)
 	{
-		if (b3Loader::b3GetLoader().b3Edit(item))
+		edit = b3World::b3Clone(item);
+		if (b3Loader::b3GetLoader().b3Edit(edit))
 		{
-			b3UpdateList(item);
+			b3Store(edit);
+			m_Head->b3Insert(item,edit);
+			m_Head->b3Remove(item);
+			delete item;
+
+			b3UpdateList(edit);
 			m_Changed = true;
 		}
+		else
+		{
+			delete edit;
+		}
+	}
+}
+
+void CDlgItemMaintain::b3Store(b3Item *item)
+{
+	CString   section;
+	b3FileReg file;
+
+	section.Format("item %08x.default",item->b3GetClassType());
+	if (file.b3Open(section,B_WRITE))
+	{
+		item->b3Store();
+		item->b3StoreFile(&file);
+		file.b3Close();
 	}
 }
 

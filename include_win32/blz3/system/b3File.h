@@ -30,6 +30,8 @@
 
 class b3File : public b3FileAbstract, public b3Mem
 {
+	static b3_count m_OpenFiles;
+
 	b3_u08     *Cache;		// cache buffer
 	b3_index    Index;		// index in cache
 	b3_size     Size;		// size of cache

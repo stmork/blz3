@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.2  2004/03/14 16:18:26  sm
 **	- Added Windows support for granite.
-**
+**	
 **	Revision 1.1  2004/03/14 08:19:17  sm
 **	- Added granite material.
 **	
@@ -84,6 +90,5 @@ b3_bool CDlgMatGranite::b3Edit(b3Item *item)
 {
 	CDlgMatGranite dlg(item);
 
-	dlg.DoModal();
-	return true;
+	return dlg.DoModal() == IDOK;
 }

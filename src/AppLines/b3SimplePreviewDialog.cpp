@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.1  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
-**
+**	
 **	
 */
 
@@ -47,11 +53,19 @@
 CB3SimplePreviewDialog::CB3SimplePreviewDialog(int dlgId,CWnd* pParent /*=NULL*/)
 	: CDialog(dlgId, pParent)
 {
+	CB3App *app = CB3GetApp();
+
 	//{{AFX_DATA_INIT(CB3SimplePropertyPreviewDialog)
 	m_AutoRefresh = TRUE;
 	//}}AFX_DATA_INIT
+    m_RegKeyAutoRefresh.Format("material.dlg %d.auto refresh",dlgId);
+	m_AutoRefresh = app->GetProfileInt(CB3ClientString(),m_RegKeyAutoRefresh,m_AutoRefresh);
 }
 
+CB3SimplePreviewDialog::~CB3SimplePreviewDialog()
+{
+	AfxGetApp()->WriteProfileInt(CB3ClientString(),m_RegKeyAutoRefresh,m_AutoRefresh);
+}
 
 void CB3SimplePreviewDialog::DoDataExchange(CDataExchange* pDX)
 {

@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.7  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
-**
+**	
 **	Revision 1.6  2004/04/24 08:54:20  sm
 **	- Simplified property sheets inside dialogs.
 **	
@@ -116,8 +122,7 @@ b3_bool CDlgBumpOakPlank::b3Edit(b3Item *item)
 {
 	CDlgBumpOakPlank dlg(item);
 
-	dlg.DoModal();
-	return true;
+	return dlg.DoModal() == IDOK;
 }
 
 void CDlgBumpOakPlank::b3InitDialog() 

@@ -31,10 +31,12 @@
 
 class CB3SimplePreviewDialog : public CDialog
 {
+	CString m_RegKeyAutoRefresh;
 protected:
 // Construction
 public:
 	CB3SimplePreviewDialog(int dlgId,CWnd* pParent = NULL);   // standard constructor
+	~CB3SimplePreviewDialog();
 
 // Dialog Data
 	//{{AFX_DATA(CB3SimplePreviewDialog)

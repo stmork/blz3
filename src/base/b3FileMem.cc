@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.4  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.3  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -257,7 +263,7 @@ void b3FileMem::b3Close ()
 	{
 		b3Free();
 	}
-	m_Buffer = null;
+	m_Buffer     = null;
 	m_BufferSize = 0;
 	m_BufferPos  = 0;
 	m_BufferMax  = 0;

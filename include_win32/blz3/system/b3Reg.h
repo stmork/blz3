@@ -26,12 +26,14 @@ class CB3Reg
 	HKEY hSoftKey;
 	HKEY hCompanyKey;
 public:
-	      CB3Reg(const char *company,const char *application);
-	     ~CB3Reg();
-	void  b3WriteString  (const char *client,const char *,const char *string);
-	int   b3WriteInt     (const char *client,const char *,const int   value);
-	void  b3ReadString   (const char *client,const char *,char       *string);
-	int   b3ReadInt      (const char *client,const char *,int         value);
+	        CB3Reg(const char *company,const char *application,HKEY key = HKEY_LOCAL_MACHINE);
+	       ~CB3Reg();
+	void    b3WriteString  (const char *client,const char *,const char *string);
+	int     b3WriteInt     (const char *client,const char *,const int   value);
+	void    b3WriteBinary  (const char *client,const char *,const void *buffer,const b3_size size);
+	void    b3ReadString   (const char *client,const char *,char       *string);
+	int     b3ReadInt      (const char *client,const char *,int         value);
+	void   *b3ReadBinary   (const char *client,const char *,b3_size     &size);
 
 private:
 	HKEY  b3GetSectionKey(const char *section_name);

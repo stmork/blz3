@@ -36,13 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.4  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -61,11 +67,11 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3File implementation                       **
+**                        b3File implementation                         **
 **                                                                      **
 *************************************************************************/
 
-static unsigned long b3Opened;
+b3_count b3File::m_OpenFiles = 0;
 
 // Initialize an instance only
 b3File::b3File()
@@ -113,7 +119,7 @@ b3_bool b3File::b3Open (
 					(AccessMode == B_READ ? O_BINARY : O_TEXT));
 			if (File != -1)
 			{
-				b3Opened++;
+				m_OpenFiles++;
 				return true;
 			}
 			break;
@@ -126,7 +132,7 @@ b3_bool b3File::b3Open (
 				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (File != -1)
 			{
-				b3Opened++;
+				m_OpenFiles++;
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -139,7 +145,7 @@ b3_bool b3File::b3Open (
 				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (File != -1)
 			{
-				b3Opened++;
+				m_OpenFiles++;
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -340,7 +346,7 @@ void b3File::b3Close ()
 	{
 		b3Flush ();
 		_close  (File);
-		b3Opened--;
+		m_OpenFiles--;
 		File  = -1;
 	}
 

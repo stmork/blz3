@@ -60,12 +60,18 @@
 
 /*
 **	$Log$
+**	Revision 1.92  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.91  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.90  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -1588,7 +1594,7 @@ void CAppLinesDoc::OnObjectSave()
 			scene = b3ExampleScene::b3CreateBBox(selected);
 			scene->b3Raytrace(display);
 			result.b3RemoveExt();
-			result.b3Append(".TGA");
+			result.b3Append(".tga");
 			tx.b3SaveImage(result);
 			delete scene;
 			delete display;

@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	
 */
 
@@ -48,12 +54,13 @@
 
 CB3Reg::CB3Reg(
 	const char *company,
-	const char *software)
+	const char *software,
+	HKEY        key)
 {
 	hAppKey     = NULL;
 	hSoftKey    = NULL;
 	hCompanyKey = NULL;
-	if (::RegOpenKeyEx(HKEY_LOCAL_MACHINE, "software", 0, KEY_WRITE|KEY_READ,
+	if (::RegOpenKeyEx(key, "software", 0, KEY_WRITE|KEY_READ,
 		&hSoftKey) == ERROR_SUCCESS)
 	{
 		unsigned long mode;
@@ -164,4 +171,48 @@ int CB3Reg::b3ReadInt(const char *section,const char *entry,int def)
 		::RegCloseKey(hSecKey);
 	}
 	return def;
+}
+
+void CB3Reg::b3WriteBinary(const char *section,const char *entry,const void *buffer,const b3_size size)
+{
+	HKEY hSecKey = b3GetSectionKey(section);
+
+	if (hSecKey)
+	{
+		LONG result = ::RegSetValueEx(hSecKey, entry, NULL, REG_BINARY, (LPBYTE)buffer, size);
+		::RegCloseKey(hSecKey);
+	}
+}
+
+void *CB3Reg::b3ReadBinary(const char *section,const char *entry,b3_size &size)
+{
+	HKEY  hSecKey = b3GetSectionKey(section);
+	void *buffer  = null;
+
+	if (hSecKey)
+	{
+		unsigned long len,type;
+
+		// Determine size
+		if (::RegQueryValueEx(hSecKey, entry, NULL, &type,NULL, &len) == ERROR_SUCCESS)
+		{
+			size = len;
+			buffer = malloc(size);
+
+			if (buffer != null)
+			{
+				// Read buffer
+				if (::RegQueryValueEx(hSecKey, entry, NULL, &type,(LPBYTE)buffer, &len) == ERROR_SUCCESS)
+				{
+					if ((type != REG_BINARY) || (len != size))
+					{
+						free (buffer);
+						buffer = null;
+					}
+				}
+			}
+		}
+		::RegCloseKey(hSecKey);
+	}
+	return buffer;
 }

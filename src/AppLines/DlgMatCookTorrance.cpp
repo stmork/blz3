@@ -34,9 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/25 13:40:59  sm
+**	- Added file saving into registry
+**	- Added last b3Item state saving for cloned b3Item
+**	  creation.
+**	- Now saving refresh state per b3Item dialog
+**
 **	Revision 1.5  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
-**
+**	
 **	Revision 1.4  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
@@ -176,8 +182,7 @@ b3_bool CDlgMatCookTorrance::b3Edit(b3Item *item)
 {
 	CDlgMatCookTorrance dlg(item);
 
-	dlg.DoModal();
-	return true;
+	return dlg.DoModal() == IDOK;
 }
 
 BOOL CDlgMatCookTorrance::OnInitDialog() 
