@@ -91,6 +91,8 @@ public:
 class CB3ActionObjectMove : public CB3Action
 {
 	b3_vector m_StartPoint;
+	b3_vector m_LastPoint;
+	b3_vector m_LastDiff;
 public:
 	CB3ActionObjectMove(CAppLinesView *window);
 
@@ -104,6 +106,7 @@ class CB3ActionObjectRotate : public CB3Action
 	b3_vector *m_Center;
 	b3_vector  m_StartPoint;
 	b3_f64     m_StartAngle;
+	b3_f64     m_LastAngle;
 	b3_line    m_Axis;
 public:
 	CB3ActionObjectRotate(CAppLinesView *window);

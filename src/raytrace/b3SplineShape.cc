@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/09/04 20:37:53  sm
+**      - Some minor updates
+**
 **      Revision 1.9  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -322,6 +325,8 @@ void b3SplineShape::b3ComputeSolidIndices()
 #ifdef BLZ3_USE_OPENGL
 	GLushort *pPtr;
 	b3_index  x,y;
+	// Is this correct? Rename variable!
+	b3_offset xSubDiv = Spline[0].subdiv + 1;
 
 	pPtr = glPolygons;
 	for (y = 0;y < Spline[1].subdiv;y++)

@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/09/04 20:37:53  sm
+**	- Some minor updates
+**
 **	Revision 1.6  2001/09/04 15:15:57  sm
 **	- Added rotating objects
-**
+**	
 **	Revision 1.5  2001/09/03 19:31:21  sm
 **	- Now able to scale active objects
 **	
@@ -297,6 +300,7 @@ void CB3ActionObjectMove::b3LDown(b3_coord x,b3_coord y)
 		m_StartPoint.x = 0;
 		m_StartPoint.y = 0;
 		m_StartPoint.z = 0;
+		m_LastPoint    = m_StartPoint;
 
 		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
@@ -321,14 +325,18 @@ void CB3ActionObjectMove::b3LMove(b3_coord x,b3_coord y)
 		diff.y -= m_StartPoint.y;
 		diff.z -= m_StartPoint.z;
 
-		if (b3MatrixInv(&m_Transformation,&inv))
+		m_Doc->m_Info->b3SnapToGrid(&diff);
+		if (!b3IsEqual(&diff,&m_LastDiff))
 		{
-			m_Doc->m_Info->b3SnapToGrid(&diff);
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastDiff = diff;
+				b3MatrixMove(null,&m_Transformation,&diff);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Doc->m_Scene->b3Transform(&activity);
+				m_Doc->b3ComputeBounds();
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }
@@ -351,15 +359,19 @@ void CB3ActionObjectMove::b3LUp(b3_coord x,b3_coord y)
 		diff.y -= m_StartPoint.y;
 		diff.z -= m_StartPoint.z;
 
-		if (b3MatrixInv(&m_Transformation,&inv))
+		m_Doc->m_Info->b3SnapToGrid(&diff);
+		if (!b3IsEqual(&diff,&m_LastDiff))
 		{
-			m_Doc->m_Info->b3SnapToGrid(&diff);
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->SetModifiedFlag();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastDiff = diff;
+				b3MatrixMove(null,&m_Transformation,&diff);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Doc->m_Scene->b3Transform(&activity);
+				m_Doc->b3ComputeBounds();
+				m_Doc->SetModifiedFlag();
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }
@@ -389,6 +401,7 @@ void CB3ActionObjectRotate::b3LDown(b3_coord x,b3_coord y)
 		b3GetRelCoord(x,y,xRel,yRel);
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
 		m_StartAngle = m_View->m_RenderView.b3GetPositionAngle(m_Center,&m_StartPoint);
+		m_LastAngle  = m_StartAngle;
 	}
 }
 
@@ -407,14 +420,18 @@ void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
 
 		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
-		if (b3MatrixInv(&m_Transformation,&inv))
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		if (angle != m_LastAngle)
 		{
-			m_Doc->m_Info->b3SnapToAngle(angle);
-			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastAngle = angle;
+				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Doc->m_Scene->b3Transform(&activity);
+				m_Doc->b3ComputeBounds();
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }
@@ -434,15 +451,19 @@ void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
 		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
 
 		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
-		if (b3MatrixInv(&m_Transformation,&inv))
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		if (angle != m_LastAngle)
 		{
-			m_Doc->m_Info->b3SnapToAngle(angle);
-			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->SetModifiedFlag();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_LastAngle = angle;
+				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				b3MatrixMMul(&inv,&m_Transformation,&activity);
+				m_Doc->m_Scene->b3Transform(&activity);
+				m_Doc->b3ComputeBounds();
+				m_Doc->SetModifiedFlag();
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			}
 		}
 	}
 }

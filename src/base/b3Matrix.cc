@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/09/04 20:37:53  sm
+**	- Some minor updates
+**
 **	Revision 1.8  2001/09/04 15:15:57  sm
 **	- Added rotating objects
-**
+**	
 **	Revision 1.7  2001/08/10 15:14:36  sm
 **	- Now having all shapes implemented for drawing lines.
 **	
@@ -69,6 +72,15 @@ static b3_matrix UnitMatrix =
 };
 
 typedef b3_f32 b3_matrix_array[4][4];
+
+b3_bool b3IsEqual(b3_vector *vec1,b3_vector *vec2)
+{
+	if (vec1->x != vec2->x) return false;
+	if (vec1->y != vec2->y) return false;
+	if (vec1->z != vec2->z) return false;
+
+	return true;
+}
 
 b3_bool b3NormalizeCol (
 	b3_matrix *Matrix,
