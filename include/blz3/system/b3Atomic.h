@@ -25,7 +25,7 @@ class b3AtomicCounter : protected b3Mutex
 	b3_u64 m_Counter;
 
 public:
-	b3AtomicCounter(int init = 0)
+	b3AtomicCounter(int init)
 	{
 		m_Counter = (b3_u64)init;
 	}
