@@ -144,6 +144,14 @@ SOURCE=.\b3Action.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ActionObject.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ActionScene.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3CameraVolume.cpp
 # End Source File
 # Begin Source File

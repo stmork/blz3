@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/16 17:01:08  sm
+**	- Some minor fixes done
+**
 **	Revision 1.6  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.5  2002/01/15 16:17:31  sm
 **	- Checked OLE support
 **	- Checked icons
@@ -101,6 +104,7 @@ CAppObjectDoc::CAppObjectDoc()
 	// TODO: add one-time construction code here
 	m_BBox         = null;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
+	m_Info         = new b3ModellerInfo(LINES_INFO);
 	b3MatrixUnit(&m_OriginalPosition);
 	EnableAutomation();
 
@@ -111,6 +115,7 @@ CAppObjectDoc::~CAppObjectDoc()
 {
 	AfxOleUnlockApp();
 	delete m_Raytracer;
+	delete m_Info;
 }
 
 BOOL CAppObjectDoc::OnNewDocument()
