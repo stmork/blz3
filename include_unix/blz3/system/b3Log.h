@@ -23,8 +23,6 @@
 class b3Log : public b3LogBase
 {
 public:
-            b3Log();
-
 	void    b3LogTime    (const char *comment = null);
 	void    b3LogFunction(const b3_log_level debug_level,const char *format,...);
 };

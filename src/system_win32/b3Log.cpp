@@ -40,10 +40,15 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.9  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.8  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
 **	
@@ -92,28 +97,15 @@
 **                                                                      **
 *************************************************************************/
 
-const char *b3LogBase::m_DefaultLogFile = "C:\\temp\\b3.log";
+char b3LogBase::m_LogFile[B3_MAX_LOGFILENAME]= "C:\\temp\\b3.log";
 
 b3Log __logger;
 
-b3Log::b3Log() : b3LogBase()
+b3Log::b3Log()
 {
-	if (!m_AlreadyOpen)
-	{
 #ifdef _DEBUG
-		OutputDebugString(m_Message);
+	OutputDebugString(m_Message);
 #endif
-		FILE *out;
-
-		out = fopen (m_LogFile,B3_TAPPEND);
-		if (out != null)
-		{
-			fprintf(out,m_Message);
-			fflush (out);
-			fclose (out);
-		}
-		m_AlreadyOpen = true;
-	}
 }
 
 void b3Log::b3LogTime(const char *comment)
@@ -138,11 +130,8 @@ void b3Log::b3LogFunction (
 	const char         *format,...)
 {
 	va_list  argptr;
-	FILE    *out;
 
-	B3_ASSERT(m_AlreadyOpen);
-	if (m_LogLevel < 0) return;
-	if (level <= m_LogLevel)
+	if (b3CheckLevel(level))
 	{
 		// Possibly we have multiple threads which are
 		// doing logging. So we need to save this
@@ -154,12 +143,10 @@ void b3Log::b3LogFunction (
 		vsprintf(m_Message,format,argptr);
 		OutputDebugString(m_Message);
 #endif
-		out = fopen (m_LogFile,B3_TAPPEND);
-		if (out != null)
+		if (m_Out != null)
 		{
-			vfprintf (out,  format,argptr);
-			fflush   (out);	// We want to do the output immediately!
-			fclose   (out);
+			vfprintf (m_Out, format,argptr);
+			fflush   (m_Out);
 
 			vfprintf (stdout,format,argptr);
 			fflush   (stdout);

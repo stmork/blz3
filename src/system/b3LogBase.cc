@@ -16,7 +16,6 @@
 */
 
 #include "blz3/b3Config.h"
-//#include "blz3/system/b3Log.h"
 
 /*************************************************************************
 **                                                                      **
@@ -26,10 +25,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.1  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 */
 
 /*************************************************************************
@@ -44,16 +48,14 @@ b3_log_level  b3LogBase::m_LogLevel = B3LOG_NORMAL;	// normal version
 b3_log_level  b3LogBase::m_LogLevel = B3LOG_FULL;	// debug version
 #endif
 
-b3Mutex b3LogBase::m_LogMutex;
-char    b3LogBase::m_Message[B3_MAX_LOGSIZE];
-char    b3LogBase::m_LogFile[B3_MAX_LOGFILENAME];
-b3_bool b3LogBase::m_AlreadyOpen = false;
+b3Mutex  b3LogBase::m_LogMutex;
+char     b3LogBase::m_Message[B3_MAX_LOGSIZE];
+FILE    *b3LogBase::m_Out = null;
 
 b3LogBase::b3LogBase()
 {
-	if (!m_AlreadyOpen)
+	if (m_Out == null)
 	{
-		strcpy (m_LogFile,m_DefaultLogFile);
 		remove (m_LogFile);
 
 		sprintf (m_Message,
@@ -63,6 +65,18 @@ b3LogBase::b3LogBase()
 			B3_VERSION,B3_REVISION,
 			m_LogFile,
 			m_LogLevel,m_LogLevel);
+
+		m_Out = fopen (m_LogFile,B3_TAPPEND);
+		if (m_Out != null)
+		{
+			fprintf(m_Out,m_Message);
+			fflush (m_Out);
+		}
+		else
+		{
+			fprintf(stderr,m_Message);
+			fflush (stderr);
+		}
 	}
 }
 
@@ -79,5 +93,5 @@ b3_bool b3LogBase::b3SetLogFile(const char *DebugFile)
 	strcpy (m_LogFile,DebugFile);
 //	m_LogMutex.b3Unlock();
 
-	return !m_AlreadyOpen;
+	return m_Out == null;
 }

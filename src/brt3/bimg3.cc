@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.15  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
-**
+**	
 **	Revision 1.14  2002/10/06 14:58:18  sm
 **	- Done some finetuning on setup
 **	- Output of GCC version under Un*x
@@ -172,7 +177,7 @@ int main(int argc,char *argv[])
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Simple image viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s {Image files}\n",argv[0]);

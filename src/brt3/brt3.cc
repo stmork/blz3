@@ -37,10 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.37  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.36  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
 **	
@@ -475,7 +480,7 @@ int main(int argc,char *argv[])
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);

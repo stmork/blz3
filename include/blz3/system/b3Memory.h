@@ -100,7 +100,7 @@ public:
 
 	void *b3Realloc(const void *old_ptr,const b3_size new_size)
 	{
-		b3MemNode *new_node,*node;
+		b3MemNode *new_node,*old_node;
 		void      *new_ptr  = null;
 
 		B3_ASSERT((old_ptr != null) || (new_size > 0));
@@ -113,38 +113,45 @@ public:
 		{
 			// Free on the standard way
 			m_Mutex.b3Lock();
-			node = b3FindNode(old_ptr);
-			if (node != null)
+			old_node = b3FindNode(old_ptr);
+			if (old_node != null)
 			{
-				b3UnlinkChunk(node);
-				b3MemAccess::b3Free(node);
+				b3UnlinkChunk(old_node);
+				b3MemAccess::b3Free(old_node);
 			}
 			m_Mutex.b3Unlock();
 			return null;
 		}
 
 		m_Mutex.b3Lock();
-		node = b3FindNode(old_ptr);
-		if (node != null)
+		old_node = b3FindNode(old_ptr);
+		if (old_node != null)
 		{
-			if (node->m_ChunkSize < new_size)
+			if (old_node->m_ChunkSize < new_size)
 			{
 				// After realloc node may be invalid
-				b3UnlinkChunk(node);
-				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,
-					node->m_ChunkSize + sizeof(b3MemNode) + B3_MEM_ALIGN,
+				b3UnlinkChunk(old_node);
+				new_node = b3Realloc(
+					old_node,
+					old_node->m_ChunkSize + sizeof(b3MemNode) + B3_MEM_ALIGN,
 					new_size          + sizeof(b3MemNode) + B3_MEM_ALIGN);
 				if (new_node != null)
 				{
 					new_node->m_ChunkSize = new_size;
 					new_node->m_Chunk     = B3_MEM_ALIGN_CHUNK(&new_node[1]);
+
+					memcpy(
+						new_node->m_Chunk,old_node->m_Chunk,
+						B3_MIN(new_node->m_ChunkSize,old_node->m_ChunkSize));
+					b3MemAccess::b3Free(old_node);
+					
 					B3_MEM_ASSERT(new_node->m_Chunk);
 					b3LinkChunk(new_node);
 				}
 				else
 				{
 					// node is still valid -> relink
-					b3LinkChunk(node);
+					b3LinkChunk(old_node);
 					m_Mutex.b3Unlock();
 #ifndef _DEBUG
 					b3PrintF(B3LOG_NORMAL,"Tried to reallocate %d bytes\n",new_size);
@@ -153,14 +160,14 @@ public:
 					return null;
 #endif
 				}
-				node = new_node;
+				old_node = new_node;
 			}
-			new_ptr = node->m_Chunk;
+			new_ptr = old_node->m_Chunk;
 		}
 		m_Mutex.b3Unlock();
 
 		// Pointer not found. This shouldn't be but it's failsafe!
-		return node != null ? new_ptr : b3Alloc(new_size);
+		return old_node != null ? new_ptr : b3Alloc(new_size);
 	}
 
 	b3_bool b3Free(const void *ptr)
@@ -301,6 +308,25 @@ public:
 	}
 
 private:
+	static inline b3MemNode *b3Realloc(
+		b3MemNode *old_ptr,
+		b3_size    old_size,
+		b3_size    new_size)
+	{
+		b3MemNode *new_ptr;
+
+		if (new_size == 0)
+		{
+			b3MemAccess::b3Free(old_ptr);
+			new_ptr = null;
+		}
+		else
+		{
+			new_ptr = (b3MemNode *)b3MemAccess::b3Alloc(new_size);
+		}
+		return new_ptr;
+	}
+
 	inline b3MemNode *b3FindNode(const void *ptr)
 	{
 		b3MemNode *node;

@@ -20,6 +20,7 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Time.h"
+#include "blz3/system/b3CPUBase.h"
 #include <pthread.h>
 
 class b3Mutex
@@ -84,31 +85,11 @@ private:
 	       void  b3Dec();
 };
 
-// Info about available CPUs
-enum b3_cpu_type
+class b3CPU : public b3CPUBase
 {
-	B3_BIG_ENDIAN    = 0x4d4d,
-	B3_LITTLE_ENDIAN = 0x4949
-};
-
-class b3CPU
-{
-	static b3_count    num;
-	static b3_cpu_type cpu_type;
-
 public:
 	                b3CPU();
 	static b3_count b3GetNumThreads();
-
-	static inline b3_count b3GetNumCPUs()
-	{
-		return num;
-	}
-
-	static inline b3_cpu_type b3GetCPUType()
-	{
-		return cpu_type;
-	}
 };
 
 #endif

@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.6  2002/12/22 14:22:33  sm
 **	- Setup memory allocation alignment to 64
-**
+**	
 **	Revision 1.5  2002/08/11 06:38:54  sm
 **	- Started some library reorganizations: Moved folowing classes into
 **	  system lib. Introduced new system library which is platform
@@ -80,12 +85,17 @@ void b3TestMem()
 	b3Mem     mem;
 	b3_count  count = 0;
 	b3_u08    buffer[MEM_MIN];
+	b3_bool   equal;
 	int       i,v;
 
 	// Put some stuff into realloc buffer
 	for (i = 0;i < MEM_MIN;i++)
 	{
+#if 1
 		v         = B3_IRAN(256);
+#else
+		v         = i;
+#endif
 		buffer[i] = (b3_u08)(v & 0xff);
 	}
 	ptr1 = mem.b3Alloc (MEM_MIN);
@@ -100,7 +110,10 @@ void b3TestMem()
 	b3PrintF (B3LOG_NORMAL,"whole node freed...\n");
 
 	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
-	memcpy(ptr1,buffer,MEM_MIN);
+	for (i = 0;i < MEM_MIN;i++)
+	{
+		((b3_u08 *)ptr1)[i] = buffer[i];
+	}
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p after b3Realloc() (%s)\n",
 		ptr1,
 		ptr1 != null ? "OK" : "wrong");
@@ -114,8 +127,22 @@ void b3TestMem()
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1,ptr2,
 		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
+	equal = memcmp(buffer,ptr1,MEM_MIN) == 0;
 	b3PrintF (B3LOG_NORMAL,"   Memory buffer is %s\n",
-		memcmp(buffer,ptr1,MEM_MIN) == 0 ? "preserved (OK)" : "corrupted (wrong)");
+		equal ? "preserved (OK)" : "corrupted (wrong)");
+	if (!equal)
+	{
+		for (i = 0; i < MEM_MIN;i++)
+		{
+			if ((i & 7) == 0)
+			{
+				b3PrintF(B3LOG_NORMAL,"\n%04x: ",i);
+			}
+			b3PrintF(B3LOG_NORMAL," %02x-%02x",buffer[i],((b3_u08 *)ptr1)[i]);
+		}
+		b3PrintF(B3LOG_NORMAL,"\n");
+	}
+
 	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)
 	{
 		count += ((char *)ptr1)[i];

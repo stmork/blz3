@@ -49,7 +49,7 @@ typedef unsigned short      b3_u16;
 typedef unsigned int        b3_u32;
 
 #ifdef WIN32
-typedef unsigned long int   b3_u64;
+typedef unsigned __int64    b3_u64;
 #else
 typedef unsigned long long  b3_u64;
 #endif
@@ -60,7 +60,7 @@ typedef   signed short      b3_s16;
 typedef   signed int        b3_s32;
 
 #ifdef WIN32
-typedef   signed long int   b3_s64;
+typedef   signed __int64    b3_s64;
 #else
 typedef   signed long long  b3_s64;
 #endif

@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2003/02/20 16:34:47  sm
+**      - Some logging cleanup
+**      - New base class for b3CPU (b3CPUBase)
+**      - b3Realloc bug fix on Solaris
+**
 **      Revision 1.31  2003/02/19 16:52:53  sm
 **      - Cleaned up logging
 **      - Clean up b3CPU/b3Runtime
@@ -398,7 +403,7 @@ int main(int argc,char *argv[])
 	if (argc <= 1)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III OpenGL scene viewer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
+		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s BWD-file\n",argv[0]);

@@ -38,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.10  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.9  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -103,9 +108,9 @@ int main(int argc,char *argv[])
 	}
 
 	b3PrintF (B3LOG_NORMAL,"size of some basic data types:\n");
-	b3PrintF (B3LOG_NORMAL,"8 bit:  uns. sgn.\n");
+	b3PrintF (B3LOG_NORMAL,"        uns. sgn.\n");
 	b3PrintF (B3LOG_NORMAL,"Integer:\n");
-	b3PrintF (B3LOG_NORMAL,"8 bit:  %3d  %3d (should be 1)\n",sizeof(b3_u08),sizeof(b3_s08));
+	b3PrintF (B3LOG_NORMAL," 8 bit: %3d  %3d (should be 1)\n",sizeof(b3_u08),sizeof(b3_s08));
 	b3PrintF (B3LOG_NORMAL,"16 bit: %3d  %3d (should be 2)\n",sizeof(b3_u16),sizeof(b3_s16));
 	b3PrintF (B3LOG_NORMAL,"32 bit: %3d  %3d (should be 4)\n",sizeof(b3_u32),sizeof(b3_s32));
 	b3PrintF (B3LOG_NORMAL,"64 bit: %3d  %3d (should be 8)\n",sizeof(b3_u64),sizeof(b3_s64));
@@ -124,13 +129,15 @@ int main(int argc,char *argv[])
 	B3_PSWAP (&v1,&v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
 
-	b3PrintF (B3LOG_NORMAL,"\ntesting 'Bio.c'...\n");
-
-	date.b3Y2K_Selftest();
-
 	try
 	{
+		b3PrintF (B3LOG_NORMAL,"\ntesting date handling...\n");
+		date.b3Y2K_Selftest();
+	
+		b3PrintF (B3LOG_NORMAL,"\ntesting memory handling...\n");
 		b3TestMem();
+
+		b3PrintF (B3LOG_NORMAL,"\ntesting basic i/o handling...\n");
 		b3PrintF(B3LOG_NORMAL,"Disk file: --------------------\n");
 		if (file.b3Open("Config.tst",B_WRITE))
 		{

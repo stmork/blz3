@@ -18,6 +18,8 @@
 #ifndef B3_SYSTEM_LOGBASE_H
 #define B3_SYSTEM_LOGBASE_H
 
+#include <stdio.h>
+
 #include "blz3/b3Types.h"
 
 enum b3_log_level
@@ -36,12 +38,11 @@ class b3Mutex;
 class b3LogBase
 {
 protected:
-	static       b3_log_level  m_LogLevel;
-	static       b3_bool       m_AlreadyOpen;
-	static       b3Mutex       m_LogMutex;
-	static       char          m_Message[B3_MAX_LOGSIZE];
-	static const char         *m_DefaultLogFile;
-	static       char          m_LogFile[B3_MAX_LOGFILENAME];
+	static FILE         *m_Out;
+	static b3_log_level  m_LogLevel;
+	static b3Mutex       m_LogMutex;
+	static char          m_Message[B3_MAX_LOGSIZE];
+	static char          m_LogFile[B3_MAX_LOGFILENAME];
 
 protected:
 	b3LogBase();
@@ -57,7 +58,7 @@ public:
 
 	static inline b3_bool b3CheckLevel(const b3_log_level debug_limit)
 	{
-		return m_LogLevel >= debug_limit;
+		return (m_LogLevel >= 0) && (m_LogLevel >= debug_limit);
 	}
 
 	static  void    b3GetLogFile (      char         *debug_file);

@@ -9,6 +9,7 @@ LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
 LIBS			= libB3System_ind.o
 LIB_SOURCE =\
+	b3CPUBase.cc\
 	b3Date.cc\
 	b3Display.cc\
 	b3Exception.cc\
@@ -17,6 +18,7 @@ LIB_SOURCE =\
 	b3TimeAbstract.cc
 
 LIB_OBJ	=\
+	b3CPUBase.o\
 	b3Date.o\
 	b3Display.o\
 	b3Exception.o\

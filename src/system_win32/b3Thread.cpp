@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.14  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.13  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
@@ -345,18 +350,11 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 **                                                                      **
 *************************************************************************/
 
-b3_count    b3CPU::num = 0;
-b3_cpu_type b3CPU::cpu_type;
-
 b3CPU::b3CPU()
 {
 	if (num == 0)
 	{
 		SYSTEM_INFO  info;
-		b3_u32       value = 0x01020304;
-		b3_u08      *ptr   = (b3_u08 *)&value;
-
-		cpu_type = (ptr[0] == 0x01 ? B3_BIG_ENDIAN : B3_LITTLE_ENDIAN);
 
 		GetSystemInfo(&info);
 		num = info.dwNumberOfProcessors;

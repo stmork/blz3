@@ -38,7 +38,7 @@
 #define DATE_000000_29022000 (DATE_000000_31121999 + TICKS_DAY *  60)
 #define DATE_120000_01042001 (DATE_000000_01012000 + TICKS_DAY * 456 + 12 * TICKS_HOUR)
 #define DATE_120000_08042001 (DATE_120000_01042001 + TICKS_DAY *   7)
-#define DATE_LAST             0x80000000
+#define DATE_LAST             0x7fffffff
 
 /*************************************************************************
 **                                                                      **
@@ -48,13 +48,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/02/20 16:34:47  sm
+**	- Some logging cleanup
+**	- New base class for b3CPU (b3CPUBase)
+**	- b3Realloc bug fix on Solaris
+**
 **	Revision 1.5  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.4  2002/08/11 08:17:41  sm
 **	- Renamed system_independend to system like include
 **	
