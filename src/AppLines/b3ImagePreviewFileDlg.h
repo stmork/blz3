@@ -45,6 +45,9 @@ public:
 // Attributes
 public:
 	BOOL         m_bPreview;
+	b3_bool      m_Filtered;
+	b3_bool      m_KeepAspect;
+
 	CB3ShowImage m_PreviewCtrl;
 
 // Overrides

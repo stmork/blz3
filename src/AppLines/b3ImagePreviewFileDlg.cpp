@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/16 17:30:23  sm
+**	- Minor changes
+**
 **	Revision 1.7  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.6  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -100,14 +103,16 @@ CB3ImagePreviewFileDlg::CB3ImagePreviewFileDlg(
 	m_ofn.Flags |= (OFN_EXPLORER | OFN_ENABLESIZING | OFN_ENABLETEMPLATE);
 	m_ofn.lpTemplateName = MAKEINTRESOURCE(IDD_FILEOPENPREVIEW);
 
-	m_bPreview = TRUE;
+	m_bPreview   = TRUE;
+	m_Filtered   = true;
+	m_KeepAspect = false;
 }
 
 void CB3ImagePreviewFileDlg::b3LoadImage(const char *image_name)
 {
 	if (m_PreviewCtrl.b3Load(image_name))
 	{
-		m_PreviewCtrl.b3Update(true);
+		m_PreviewCtrl.b3Update(m_Filtered,m_KeepAspect);
 	}
 }
 
@@ -217,5 +222,5 @@ void CB3ObjectPreviewFileDlg::b3LoadImage(const char *image_name)
 	{
 		m_PreviewCtrl.b3Load(null);
 	}
-	m_PreviewCtrl.b3Update(false,false);
+	m_PreviewCtrl.b3Update(m_Filtered,m_KeepAspect);
 }
