@@ -46,7 +46,6 @@ protected:
 	virtual void     b3Do();
 	virtual void     b3Undo();
 	virtual void     b3Redo();
-	virtual int      b3GetId() = 0;
 	virtual void     b3Delete();
 	virtual void     b3Prepare(b3UndoPrepareInfo *info) = 0;
 
@@ -69,14 +68,16 @@ protected:
 	{
 		return m_Done;
 	}
+
+public:
+	virtual int      b3GetId() = 0;
 };
 
 class b3UndoBuffer
 {
+protected:
 	b3Base<b3UndoOperation>  m_UndoBuffer;
 	b3Base<b3UndoOperation>  m_RedoBuffer;
-
-protected:
 	b3UndoPrepareInfo       *m_PrepareInfo;
 
 public:

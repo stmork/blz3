@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/01/30 19:49:55  sm
+**	- Further undo/redo history dialog build.
+**
 **	Revision 1.5  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 **	Revision 1.4  2003/01/12 10:39:45  sm
 **	- Fixed proper delete for undo/redo.
 **	
@@ -67,6 +70,58 @@ b3LinesUndoBuffer::b3LinesUndoBuffer(CAppRenderDoc *pDoc)
 b3LinesUndoBuffer::~b3LinesUndoBuffer()
 {
 	delete m_PrepareInfo;
+}
+
+void b3LinesUndoBuffer::b3FillUndoList(CListBox &listbox)
+{
+	CString          label;
+	b3UndoOperation *op;
+	int              index;
+
+	B3_FOR_BASE_BACK(&m_UndoBuffer,op)
+	{
+		label.LoadString(op->b3GetId());
+		index = listbox.AddString(label);
+		listbox.SetItemDataPtr(index,op);
+	}
+}
+
+void b3LinesUndoBuffer::b3FillRedoList(CListBox &listbox)
+{
+	CString          label;
+	b3UndoOperation *op;
+	int              index;
+
+	B3_FOR_BASE(&m_RedoBuffer,op)
+	{
+		label.LoadString(op->b3GetId());
+		index = listbox.AddString(label);
+		listbox.SetItemDataPtr(index,op);
+	}
+}
+
+void b3LinesUndoBuffer::b3UndoList(b3UndoOperation *op)
+{
+	b3_bool end;
+
+	do
+	{
+		end = m_UndoBuffer.Last == op;
+		b3Undo();
+	}
+	while(!end);
+}
+
+void b3LinesUndoBuffer::b3RedoList(b3UndoOperation *op)
+{
+	b3_bool end;
+
+	do
+	{
+		end = m_RedoBuffer.First == op;
+		b3Redo();
+	}
+	while(!end);
 }
 
 /*************************************************************************

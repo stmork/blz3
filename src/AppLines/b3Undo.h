@@ -57,8 +57,13 @@ protected:
 class b3LinesUndoBuffer : public b3UndoBuffer
 {
 public:
-	              b3LinesUndoBuffer(CAppRenderDoc *pDoc);
-	virtual      ~b3LinesUndoBuffer();
+	         b3LinesUndoBuffer(CAppRenderDoc *pDoc);
+	virtual ~b3LinesUndoBuffer();
+	
+	void     b3FillUndoList(CListBox &listbox);
+	void     b3FillRedoList(CListBox &listbox);
+	void     b3UndoList(b3UndoOperation *op);
+	void     b3RedoList(b3UndoOperation *op);
 };
 
 #endif

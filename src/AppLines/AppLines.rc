@@ -331,6 +331,7 @@ BEGIN
         MENUITEM "Objekt laden...",             ID_OBJECT_LOAD
         MENUITEM "Objekt speichern...",         ID_OBJECT_SAVE
         MENUITEM "Objekt e&rsetzen...",         ID_OBJECT_REPLACE
+        MENUITEM "Caligari-Objekt importieren...", ID_COB_LOAD
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -356,6 +357,9 @@ BEGIN
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
         MENUITEM "E&infügen als &Unterobjekt",  ID_EDIT_PASTE_SUB
+        MENUITEM SEPARATOR
+        MENUITEM "Rückgängig\tStrg+Z",          ID_EDIT_UNDO
+        MENUITEM "Wiederherstellen",            ID_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "Erzeugen...",                 ID_OBJECT_NEW
         MENUITEM "Erzeugen als Unterobjekt...", ID_OBJECT_NEW_SUB
@@ -1843,12 +1847,12 @@ BEGIN
     LTEXT           "Frames pro Sekunde:",IDC_STATIC,10,40,68,8
 END
 
-IDD_UNDO_REDO DIALOGEX 0, 0, 101, 52
+IDD_UNDO_REDO DIALOGEX 0, 0, 127, 63
 STYLE WS_POPUP | WS_CAPTION
 EXSTYLE WS_EX_TOOLWINDOW
 FONT 8, "MS Sans Serif"
 BEGIN
-    LISTBOX         IDC_UNDO_REDO_LIST,7,7,87,38,LBS_NOINTEGRALHEIGHT | 
+    LISTBOX         IDC_UNDO_REDO_LIST,7,7,113,49,LBS_NOINTEGRALHEIGHT | 
                     WS_HSCROLL | WS_TABSTOP
 END
 
@@ -2198,9 +2202,9 @@ BEGIN
     IDD_UNDO_REDO, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 94
+        RIGHTMARGIN, 120
         TOPMARGIN, 7
-        BOTTOMMARGIN, 45
+        BOTTOMMARGIN, 56
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2722,6 +2726,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
     IDS_OP_COB_LOAD         "Caligari Objekt laden"
+    IDS_TITLE_UNDO          "Rückgängig machen"
+    IDS_TITLE_REDO          "Wiederherstellen"
 END
 
 STRINGTABLE DISCARDABLE 

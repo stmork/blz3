@@ -626,6 +626,8 @@
 #define IDS_OP_PICK_POINT               60146
 #define IDS_OP_PICK_DIR                 60147
 #define IDS_OP_COB_LOAD                 61446
+#define IDS_TITLE_UNDO                  61447
+#define IDS_TITLE_REDO                  61448
 
 // Next default values for new objects
 // 

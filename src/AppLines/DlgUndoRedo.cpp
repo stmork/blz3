@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/30 19:49:55  sm
+**	- Further undo/redo history dialog build.
+**
 **	Revision 1.1  2003/01/30 16:19:58  sm
 **	- Added undo/redo list support.
-**
+**	
 */
 
 /*************************************************************************
@@ -43,9 +46,14 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgUndoRedo::CDlgUndoRedo(CWnd* pParent /*=NULL*/)
+CDlgUndoRedo::CDlgUndoRedo(
+	b3LinesUndoBuffer *buffer,
+	b3_list_mode       mode,
+	CWnd              *pParent /*=NULL*/)
 	: CDialog(CDlgUndoRedo::IDD, pParent)
 {
+	m_UndoBuffer = buffer;
+	m_ListMode   = mode;
 	//{{AFX_DATA_INIT(CDlgUndoRedo)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -63,6 +71,7 @@ void CDlgUndoRedo::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CDlgUndoRedo, CDialog)
 	//{{AFX_MSG_MAP(CDlgUndoRedo)
+	ON_LBN_SELCHANGE(IDC_UNDO_REDO_LIST, OnSelectOperation)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -71,10 +80,49 @@ END_MESSAGE_MAP()
 
 BOOL CDlgUndoRedo::OnInitDialog() 
 {
+	CString title;
+
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	
+	switch(m_ListMode)
+	{
+	case B3_LIST_UNDO:
+		m_UndoBuffer->b3FillUndoList(m_OpList);
+		title.LoadString(IDS_TITLE_UNDO);
+		break;
+
+	case B3_LIST_REDO:
+		m_UndoBuffer->b3FillRedoList(m_OpList);
+		title.LoadString(IDS_TITLE_REDO);
+		break;
+	}
+	SetWindowText(title);
+	m_OpList.SetFocus();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgUndoRedo::OnSelectOperation() 
+{
+	// TODO: Add your control notification handler code here
+	b3UndoOperation *op;
+	int              index;
+
+	index = m_OpList.GetCurSel();
+	if (index != LB_ERR)
+	{
+		op = (b3UndoOperation *)m_OpList.GetItemDataPtr(index);
+		switch(m_ListMode)
+		{
+		case B3_LIST_UNDO:
+			m_UndoBuffer->b3UndoList(op);
+			break;
+		case B3_LIST_REDO:
+			m_UndoBuffer->b3RedoList(op);
+			break;
+		}
+	}
+
+	CDialog::OnOK();
 }

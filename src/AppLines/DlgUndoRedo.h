@@ -29,11 +29,19 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgUndoRedo dialog
 
+enum b3_list_mode
+{
+	B3_LIST_UNDO,B3_LIST_REDO
+};
+
 class CDlgUndoRedo : public CDialog
 {
+	b3LinesUndoBuffer *m_UndoBuffer;
+	b3_list_mode       m_ListMode;
+
 // Construction
 public:
-	CDlgUndoRedo(CWnd* pParent = NULL);   // standard constructor
+	CDlgUndoRedo(b3LinesUndoBuffer * buffer,b3_list_mode mode,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgUndoRedo)
@@ -55,8 +63,13 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgUndoRedo)
 	virtual BOOL OnInitDialog();
+	afx_msg void OnSelectOperation();
+	afx_msg BOOL OnActivateApp( BOOL bActive );
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	void b3FillList();
 };
 
 //{{AFX_INSERT_LOCATION}}
