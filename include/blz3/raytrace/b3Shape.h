@@ -410,8 +410,8 @@ public:
 #define NORMAL_VERTEX_VALID     (1 << b3TriangleShape::B3_NORMAL_VERTEX_VALID_B)     // normals of vertices valid, no auto computation
 #define NORMAL_FACE_VALID       (1 << b3TriangleShape::B3_NORMAL_FACE_VALID_B)     // normals of triangles valid, no auto computation
 
-// index calculation of triangle grid
-#define GRID_INDEX(x,y,z,GridSize)  (((z)*(GridSize)+(y))*(GridSize)+(x))
+// Voxel index inside grid
+#define GRID_INDEX(x,y,z,g) (((z) * (g) + (y)) * (g) + (x))
 
 struct b3_triainfo
 {
@@ -486,10 +486,11 @@ private:
 
 			inline b3_index b3GetGrid(b3_vector *p)
 			{
-				return GRID_INDEX((b3_index)p->x,(b3_index)p->y,(b3_index)p->z,m_GridSize);
+				return GRID_INDEX(
+					b3_index(p->x),b3_index(p->y),b3_index(p->z),m_GridSize);
 			}
-			
-	        inline void b3AddTriangleToGrid(b3_index triangle,b3_index grid)
+
+	        inline void b3AddTriangleToGrid(b3_index grid,b3_index triangle)
 	        {
 	        	if((grid >= 0) && (grid < m_GridCount))
 	        	{
@@ -497,11 +498,12 @@ private:
 
 					if (max > 0)
 					{
-						if (m_GridList[grid][max - 1] != triangle)
+						if (m_GridList[grid][max - 1] == triangle)
 						{
-	 						m_GridList[grid].b3Add(triangle);
+							return;
 	 					}
 	 				}
+ 					m_GridList[grid].b3Add(triangle);
 	 			}
 	        }
 

@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2004/07/22 12:17:31  sm
+**	- Fixed triangle into grid insertion problem.
+**
 **	Revision 1.42  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.41  2004/06/30 13:18:13  sm
 **	- Add statistics support for intersection counting but the thread
 **	  safe counting is to expensive. So added b3AtomicCount class but
@@ -1083,7 +1086,8 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 
 b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_index     gx,gy,gz,sx,sy,sz,index;
+	b3_index     gx,gy,gz;
+	b3_index     sx,sy,sz,index;
 	b3_f64       start,end,tn,tf,m,result = -1;
 	b3_vector64  pos;
 	b3_vector64  d;
@@ -1134,18 +1138,15 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	end    -= b3Scene::epsilon;
 	if (ray->Q < end) end = ray->Q;
 
-
 	// start position
 	pos.x = (pos.x + start * ray->dir.x) / m_Size.x;
 	pos.y = (pos.y + start * ray->dir.y) / m_Size.y;
 	pos.z = (pos.z + start * ray->dir.z) / m_Size.z;
 
-
 	// start indizes
 	gx    = (b3_index)pos.x;
 	gy    = (b3_index)pos.y;
 	gz    = (b3_index)pos.z;
-
 
 	// compute deltas
 	dmax.x = fabs(m_Size.x * denom.x);
@@ -1189,7 +1190,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 
 
-		/* compute increments */
+	// compute increments
 	sx  = INCREMENT(ray->dir.x);
 	sy  = INCREMENT(ray->dir.y);
 	sz  = INCREMENT(ray->dir.z);
