@@ -25,7 +25,7 @@ depend:
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 render:	$(RENDER_OBJ) $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a
 	$(LINK.cc) -o $@ $(RENDER_OBJ) $(LDLIBS)

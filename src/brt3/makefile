@@ -23,7 +23,7 @@ depend:
 	gcc -M  $(PRG_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 
 brt3:	$(BRT3_OBJS) $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a
 	$(LINK.cc) -o $@ $(BRT3_OBJS) $(LDLIBS)
