@@ -7,11 +7,12 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 CXX			= g++
 LDLIBS			= -lB3System -lpthread
-PRGS			= RemDepend RemCR
-REMDEPEND_OBJS	= RemDepend.o
+PRGS			= RemDepend RemCR CleanRes
+REMDEPEND_OBJS		= RemDepend.o
 REMCR_OBJS		= RemCR.o
-PRG_SOURCE		= RemDepend.cc RemCR.cc
-PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS)
+CLEANRES_OBJS		= CleanRes.o
+PRG_SOURCE		= RemDepend.cc RemCR.cc CleanRes.cc
+PRG_OBJS		= $(REMDEPEND_OBJS) $(REMCR_OBJS) $(CLEANRES_OBJS)
 #PRG_SOURCE		= ${PRG_OBJS:.o=.cc}
 
 all:	$(PRGS)
@@ -30,6 +31,11 @@ RemDepend:	$(REMDEPEND_OBJS)
 
 RemCR:	$(REMCR_OBJS)
 	$(LINK.cc) -o $@ $(REMCR_OBJS) $(LDLIBS)
+	chmod 775 $@
+	cp $@ $(BLZ3_BIN)
+
+CleanRes:	$(CLEANRES_OBJS)
+	$(LINK.cc) -o $@ $(CLEANRES_OBJS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
