@@ -34,13 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/05/26 11:20:52  sm
+**	- Used wrong data types for b3Path::b3ExtractExt() methods. Now using
+**	  signed versus unsigned int.
+**
 **	Revision 1.13  2002/08/16 11:40:39  sm
 **	- Changed vertex handling for use without OpenGL. Vertex computation
 **	  is needed for bound computation which is needed for animation. There
 **	  are still some problems so we have to work further on Windows for
 **	  better debugging.
 **	- b3ExtractExt searches from right instead from left.
-**
+**	
 **	Revision 1.12  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -477,7 +481,8 @@ void b3Path::b3ExtractExt(const char *input)
 void b3Path::b3ExtractExt(const char *filename,char *ext)
 {
 	char     actName[B3_FILESTRINGLEN];
-	b3_size  i,len;
+	b3_index i;
+	b3_count len;
 
 	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
