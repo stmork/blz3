@@ -33,10 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/01 15:04:09  sm
+**	- Prepared shapes for icon conversion
+**	- Added to save selected/first visible item in
+**	  hierarchy dialog.
+**	- Some print cleanups done.
+**	- Fixed activation of b3SuperSample.
+**
 **	Revision 1.1  2002/01/24 15:55:58  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
-**
+**	
 **	
 */
 
@@ -113,4 +120,28 @@ void CB3TreeCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 //		Select(item,TVGN_DROPHILITE);
 	}
 	CTreeCtrl::OnRButtonDown(nFlags, point);
+}
+
+HTREEITEM CB3TreeCtrl::b3FindLParam(HTREEITEM parent,LPARAM lParam)
+{
+	HTREEITEM  item,result;
+
+	for(item  = GetNextItem(parent,TVGN_CHILD);
+	    item != NULL;
+		item  = GetNextItem(item,TVGN_NEXT))
+	{
+		if (lParam == (LPARAM)GetItemData(item))
+		{
+			// Found! Done...
+			return item;
+		}
+
+		// Fast way out!
+		result = b3FindLParam(item,lParam);
+		if (result != null)
+		{
+			return result;
+		}
+	}
+	return NULL;
 }

@@ -77,13 +77,13 @@ public:
 	b3_bool        b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
 	void           b3UpdateActivation();
 	b3BBox        *b3GetSelectedBBox();
-	b3_bool        b3FindBBox(b3Base<b3Item> *base,b3BBox *search);
 	void           b3SelectBBox(b3BBox *BBox);
 	void           b3GetData();
 	void           b3SetData();
+	LPARAM         b3GetLParam(HTREEITEM item);
 
 private:
-	b3_count       b3Traverse (HTREEITEM parent);
+	b3_count       b3GetExpansion (HTREEITEM parent);
 	HTREEITEM      b3FindBBox (HTREEITEM parent,b3BBox *BBox);
 	void           b3UpdateIcons(HTREEITEM parent);
 };

@@ -84,6 +84,10 @@ IDI_ROT_LEFT            ICON    DISCARDABLE     "res\\rot_left.ico"
 IDI_ROT_RIGHT           ICON    DISCARDABLE     "res\\rot_right.ico"
 IDR_OBJECT              ICON    DISCARDABLE     "res\\object.ico"
 IDI_BBOX_WORLD          ICON    DISCARDABLE     "res\\bbox_world.ico"
+IDI_SHAPE_CYLINDER      ICON    DISCARDABLE     "res\\shape_cylinder.ico"
+IDI_SHAPE_SPHERE        ICON    DISCARDABLE     "res\\shape_sphere.ico"
+IDI_SHAPE_CONE          ICON    DISCARDABLE     "res\\shape_cone.ico"
+IDI_SHAPE_ELLIPSOID     ICON    DISCARDABLE     "res\\shape_ellipsoid.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

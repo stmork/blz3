@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2002/02/01 15:04:09  sm
+**      - Prepared shapes for icon conversion
+**      - Added to save selected/first visible item in
+**        hierarchy dialog.
+**      - Some print cleanups done.
+**      - Fixed activation of b3SuperSample.
+**
 **      Revision 1.38  2002/01/16 16:17:13  sm
 **      - Introducing object edit painting and acting.
 **
@@ -266,26 +273,56 @@ b3SuperSample::b3SuperSample(b3_u32 class_type) :
 	m_Limit.r = 0.2f;
 	m_Limit.g = 0.2f;
 	m_Limit.b = 0.2f;
+	m_Active  = true;
 }
 
 b3SuperSample::b3SuperSample(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitColor(&m_Limit);
+	b3_color limit;
+
+	b3InitColor(&limit);
+	m_Limit.a = fabs(limit.a);
+	m_Limit.r = fabs(limit.r);
+	m_Limit.g = fabs(limit.g);
+	m_Limit.b = fabs(limit.b);
+
+	// This looks a little bit ugly but is for compatibility reasons.
+	// This instantiation uses an easy way to determine activation.
+	b3Activate((limit.r >= 0) && (limit.g >= 0) && (limit.b >= 0));
 }
 
 void b3SuperSample::b3Write()
 {
-	b3StoreColor(&m_Limit);
+	b3_color limit;
+
+	// This looks a little bit ugly but is for compatibility reasons.
+	// This instantiation uses an easy way to determine activation.
+	if (m_Active)
+	{
+		limit.a =  fabs(m_Limit.a);
+		limit.r =  fabs(m_Limit.r);
+		limit.g =  fabs(m_Limit.g);
+		limit.b =  fabs(m_Limit.b);
+	}
+	else
+	{
+		limit.a = -fabs(m_Limit.a);
+		limit.r = -fabs(m_Limit.r);
+		limit.g = -fabs(m_Limit.g);
+		limit.b = -fabs(m_Limit.b);
+	}
+	b3StoreColor(&limit);
 }
 
 b3_bool b3SuperSample::b3IsActive()
 {
-	return true;
+	return m_Active;
 }
 
 void b3SuperSample::b3Activate(b3_bool flag)
 {
+	m_Active = flag;
 }
 
 /*************************************************************************

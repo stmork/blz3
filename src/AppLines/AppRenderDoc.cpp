@@ -34,10 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/02/01 15:04:09  sm
+**	- Prepared shapes for icon conversion
+**	- Added to save selected/first visible item in
+**	  hierarchy dialog.
+**	- Some print cleanups done.
+**	- Fixed activation of b3SuperSample.
+**
 **	Revision 1.7  2002/01/31 19:30:31  sm
 **	- Some OpenGL print optimizations done.
 **	- Object renaming inside hierarchy tree added.
-**
+**	
 **	Revision 1.6  2002/01/24 15:55:57  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
@@ -93,6 +100,8 @@ CAppRenderDoc::CAppRenderDoc()
 	m_RaytraceDoc  = null;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
 	m_Display      = null;
+	m_FirstVisible = null;
+	m_Selected     = null;
 }
 
 CAppRenderDoc::~CAppRenderDoc()

@@ -62,6 +62,9 @@ protected:
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
+
+public:
+	HTREEITEM b3FindLParam(HTREEITEM parent,LPARAM lParam);
 };
 
 /////////////////////////////////////////////////////////////////////////////

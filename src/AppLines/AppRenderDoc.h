@@ -37,6 +37,8 @@ protected:
 	b3Display            *m_Display;
 
 public:
+	LPARAM                m_FirstVisible;
+	LPARAM                m_Selected;
 	b3ModellerInfo       *m_Info;
 	b3RenderShapeContext  m_Context;
 	b3Fulcrum             m_Fulcrum;

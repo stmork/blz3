@@ -36,10 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/02/01 15:04:09  sm
+**	- Prepared shapes for icon conversion
+**	- Added to save selected/first visible item in
+**	  hierarchy dialog.
+**	- Some print cleanups done.
+**	- Fixed activation of b3SuperSample.
+**
 **	Revision 1.31  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
-**
+**	
 **	Revision 1.30  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -564,10 +571,11 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 
 b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 {
-	b3Nebular   *nebular;
-	b3Light     *light;
-	b3BBox      *bbox;
-	b3_f64       xDenom,yDenom;
+	b3Nebular     *nebular;
+	b3SuperSample *supersample;
+	b3Light       *light;
+	b3BBox        *bbox;
+	b3_f64         xDenom,yDenom;
 
 	m_AvrgColor.r = (m_BottomColor.r + m_TopColor.r) * 0.5;
 	m_AvrgColor.g = (m_BottomColor.g + m_TopColor.g) * 0.5;
@@ -611,9 +619,11 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		m_Nebular = null;
 	}
 
-	m_SuperSample = b3GetSuperSample();
-	if (m_SuperSample != null)
+	supersample = b3GetSuperSample();
+	if (supersample->b3IsActive())
 	{
+		m_SuperSample = supersample;
+
 		// Init half steps for super sampling
 		m_xHalfDir.x = m_Width.x  / (b3_f64)xSize;
 		m_xHalfDir.y = m_Width.y  / (b3_f64)xSize;
@@ -630,9 +640,10 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	}
 	else
 	{
-		m_xStepDir.x = m_Width.x * 2.0 / (b3_f64)xSize;
-		m_xStepDir.y = m_Width.y * 2.0 / (b3_f64)xSize;
-		m_xStepDir.z = m_Width.z * 2.0 / (b3_f64)xSize;
+		m_SuperSample = null;
+		m_xStepDir.x  = m_Width.x * 2.0 / (b3_f64)xSize;
+		m_xStepDir.y  = m_Width.y * 2.0 / (b3_f64)xSize;
+		m_xStepDir.z  = m_Width.z * 2.0 / (b3_f64)xSize;
 		b3PrintF(B3LOG_NORMAL,"Using simple sampling.\n");
 	}
 

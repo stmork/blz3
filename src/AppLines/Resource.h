@@ -58,6 +58,10 @@
 #define IDM_BAR_STEP_MOVE               158
 #define IDM_BAR_STEP_ROTATE             159
 #define IDR_CONTEXT_SCENE               166
+#define IDI_SHAPE_CYLINDER              167
+#define IDI_SHAPE_SPHERE                168
+#define IDI_SHAPE_CONE                  169
+#define IDI_SHAPE_ELLIPSOID             170
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -340,7 +344,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        167
+#define _APS_NEXT_RESOURCE_VALUE        171
 #define _APS_NEXT_COMMAND_VALUE         32866
 #define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           102

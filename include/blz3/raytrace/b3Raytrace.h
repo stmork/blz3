@@ -1860,6 +1860,8 @@ public:
 // SUPERSAMPLE4
 class b3SuperSample : public b3Special
 {
+	b3_bool     m_Active;
+
 public:
 	b3_color    m_Limit;
 
@@ -2171,7 +2173,7 @@ public:
 		    b3ModellerInfo *b3GetModellerInfo();
 			b3Distribute   *b3GetDistributed(b3_bool force = true);
 		    b3Nebular      *b3GetNebular    (b3_bool force = true);
-		    b3SuperSample  *b3GetSuperSample(b3_bool force = false);
+		    b3SuperSample  *b3GetSuperSample(b3_bool force = true);
 		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);

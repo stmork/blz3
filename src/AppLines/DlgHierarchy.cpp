@@ -34,10 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/02/01 15:04:09  sm
+**	- Prepared shapes for icon conversion
+**	- Added to save selected/first visible item in
+**	  hierarchy dialog.
+**	- Some print cleanups done.
+**	- Fixed activation of b3SuperSample.
+**
 **	Revision 1.12  2002/01/24 15:55:58  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
-**
+**	
 **	Revision 1.11  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -223,7 +230,18 @@ b3_bool CDlgHierarchy::b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh)
 	b3Free();
 	if (m_pDoc != null)
 	{
+		HTREEITEM root;
 		m_pDoc->b3InitTree();
+
+		root = m_Hierarchy.GetRootItem();
+		if (m_pDoc->m_Selected != null)
+		{
+			m_Hierarchy.SelectItem(m_Hierarchy.b3FindLParam(root,m_pDoc->m_Selected));
+		}
+		if (m_pDoc->m_FirstVisible != null)
+		{
+			m_Hierarchy.SelectSetFirstVisible(m_Hierarchy.b3FindLParam(root,m_pDoc->m_FirstVisible));
+		}
 	}
 
 	return true;
@@ -261,34 +279,12 @@ void CDlgHierarchy::b3UpdateActivation()
 	}
 }
 
-HTREEITEM CDlgHierarchy::b3FindBBox(HTREEITEM parent,b3BBox *BBox)
+HTREEITEM CDlgHierarchy::b3FindBBox (HTREEITEM parent,b3BBox *BBox)
 {
-	HTREEITEM  item,result;
-
-	for(item  = m_Hierarchy.GetNextItem(parent,TVGN_CHILD);
-	    item != NULL;
-		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
-	{
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"BBox: %s\n",((b3BBox *)(m_Hierarchy.GetItemData(item)))->b3GetName());
-#endif
-		if (BBox == (b3BBox *)m_Hierarchy.GetItemData(item))
-		{
-			// Found! Done...
-			return item;
-		}
-
-		// Fast way out!
-		result = b3FindBBox(item,BBox);
-		if (result != null)
-		{
-			return result;
-		}
-	}
-	return NULL;
+	return m_Hierarchy.b3FindLParam(parent,(LPARAM)BBox);
 }
 
-b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
+b3_count CDlgHierarchy::b3GetExpansion(HTREEITEM parent)
 {
 	HTREEITEM  item;
 	b3BBox    *BBox;
@@ -298,7 +294,7 @@ b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
 	    item != NULL;
 		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
 	{
-		index += b3Traverse(item);
+		index += b3GetExpansion(item);
 		index++;
 		BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
 		if (BBox != null)
@@ -307,6 +303,11 @@ b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
 		}
 	}
 	return index;
+}
+
+LPARAM CDlgHierarchy::b3GetLParam(HTREEITEM item)
+{
+	return item != null ? m_Hierarchy.GetItemData(item) : null;
 }
 
 void CDlgHierarchy::b3GetData()
@@ -322,7 +323,14 @@ void CDlgHierarchy::b3GetData()
 
 		if (root != null)
 		{
-			b3Traverse(root);
+			b3GetExpansion(root);
+			m_pDoc->m_FirstVisible = b3GetLParam(m_Hierarchy.GetFirstVisibleItem());
+			m_pDoc->m_Selected     = b3GetLParam(m_Hierarchy.GetSelectedItem());
+		}
+		else
+		{
+			m_pDoc->m_FirstVisible = null;
+			m_pDoc->m_Selected     = null;
 		}
 	}
 }
@@ -436,8 +444,9 @@ void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point)
 void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	b3BBox         *srcBBox;
-	b3BBox         *dstBBox;
+	b3BBox *srcBBox;
+	b3BBox *dstBBox;
+	
 	if (m_DragItem != null)
 	{
 		::ReleaseCapture();
