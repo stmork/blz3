@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/03/24 18:38:53  sm
+**	- Scaling adjusted.
+**
 **	Revision 1.1  2003/03/24 16:15:58  sm
 **	- Added a scale tool for examples.
-**
+**	
 */
 
 /*************************************************************************
@@ -48,6 +51,7 @@
 *************************************************************************/
 
 #define DEST_IMG_SIZE 100.0f
+#define ROW_SIZE        4
 
 class b3Site
 {
@@ -116,7 +120,7 @@ public:
 			fprintf(file,"<table>\n");
 			for (int i = 0;i < m_Num;i++)
 			{
-				row = (i % 4) == 0;
+				row = (i % ROW_SIZE) == 0;
 				b3ImgName(name,i);
 				if (row)
 				{
@@ -127,7 +131,7 @@ public:
 					fprintf(file,"<tr>\n");
 				}
 				fprintf(file,
-					"<td>\n"
+					"<td align=\"center\" valign=\"center\">\n"
 					"  <a href=\"normal/%s\"><img src=\"small/%s\"></a>\n"
 					"</td>\n",
 					(const char *)name,(const char *)name);
@@ -150,6 +154,42 @@ private:
 		sprintf(name,"img_%04d.%s",num,b3Tx::b3GetExt(FT_JPEG));
 	}
 
+	b3_bool b3CopyImage(b3Tx *image,const char *full_normal)
+	{
+		const char *source = image->b3Name();
+			b3Path  ext;
+
+		ext.b3ExtractExt(source);
+		if (b3Tx::b3GetFileType(ext) == FT_JPEG)
+		{
+			b3File  src;
+			b3_u08 *buffer;
+			b3_size size;
+
+			buffer = src.b3ReadBuffer(source,size);
+			if (buffer != null)
+			{
+				b3File  dst(full_normal,B_WRITE);
+
+				dst.b3Write(buffer,size);
+			}
+			else
+			{
+				return false;
+			}
+			b3PrintF(B3LOG_NORMAL,"   %s (copied %d bytes)\n",(const char *)full_normal,size);
+		}
+		else
+		{
+			if (image->b3SaveJPEG(full_normal) != B3_OK)
+			{
+				return false;
+			}
+			b3PrintF(B3LOG_NORMAL,"   %s (save)\n",(const char *)full_normal);
+		}
+		return true;
+	}
+
 	b3_bool b3LoadImage(b3FileEntry *entry)
 	{
 		b3Path  source(m_Source);
@@ -165,54 +205,43 @@ private:
 		{
 			b3ImgName(name,m_Num);
 			b3Path::b3LinkFileName(full_normal,m_Normal,name);
-			b3PrintF(B3LOG_NORMAL,"   %s\n",(const char *)full_normal);
-			if (b3Tx::b3GetFileType(entry->b3Name()) == FT_JPEG)
+
+			if (b3CopyImage(&normal,full_normal))
 			{
-				b3File  src;
-				b3_u08 *buffer;
-				b3_size size;
+				b3Path::b3LinkFileName(full_small,m_Small,name);
+				scale = DEST_IMG_SIZE / (normal.xSize < normal.ySize ?
+					normal.ySize :
+					normal.xSize);
+				xSize = (b3_res)(scale * normal.xSize);
+				ySize = (b3_res)(scale * normal.ySize);
 
-				buffer = src.b3ReadBuffer(source,size);
-				if (buffer != null)
+				b3PrintF(B3LOG_NORMAL,"   %s - %dx%d - %3.3f\n",(const char *)full_small,xSize,ySize,scale);
+				if (small.b3AllocTx(xSize,ySize,24))
 				{
-					b3File  dst(full_normal,B_WRITE);
-
-					dst.b3Write(buffer,size);
+					try
+					{
+						small.b3ScaleToGrey(&normal);
+						result = small.b3SaveJPEG(full_small) == B3_OK;
+					}
+					catch(b3TxException &t)
+					{
+						b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
+						b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
+					}
 				}
 				else
 				{
-					return false;
+					b3PrintF(B3LOG_NORMAL,"Cannot allocate small image!\n");
 				}
 			}
 			else
 			{
-				if (normal.b3SaveJPEG(full_normal) != B3_OK)
-				{
-					return false;
-				}
+				b3PrintF(B3LOG_NORMAL,"Cannot copy image!\n");
 			}
-
-			b3Path::b3LinkFileName(full_small,m_Small,name);
-			scale = DEST_IMG_SIZE / (normal.xSize < normal.ySize ?
-				normal.ySize :
-				normal.xSize);
-			xSize = (b3_res)(scale * normal.xSize);
-			ySize = (b3_res)(scale * normal.ySize);
-
-			b3PrintF(B3LOG_NORMAL,"   %s - %dx%d - %3.3f\n",(const char *)full_small,xSize,ySize,scale);
-			if (small.b3AllocTx(xSize,ySize,24))
-			{
-				try
-				{
-					small.b3ScaleToGrey(&normal);
-					result = small.b3SaveJPEG(full_small) == B3_OK;
-				}
-				catch(b3TxException &t)
-				{
-					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",t.b3GetError());
-					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",t.b3GetErrorMsg());
-				}
-			}
+		}
+		else
+		{
+			 b3PrintF(B3LOG_NORMAL,"Cannot load image!\n");
 		}
 
 		if (result)
@@ -230,7 +259,8 @@ private:
 
 int main(int argc,char *argv[])
 {
-	b3Path       dir;
+	b3Path dir;
+	b3CPU  cpu;
 
 	if (argc > 1)
 	{
