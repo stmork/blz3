@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/06 16:21:56  sm
+**	- Finished CB3ControlLDC - very nice!
+**
 **	Revision 1.3  2001/11/11 14:07:15  sm
 **	- Adjusted b3Path to Un*x port.
-**
+**	
 **	Revision 1.2  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -57,7 +60,7 @@
 
 b3PathEntry::b3PathEntry(const char *new_path) : b3Link<b3PathEntry>(sizeof(b3PathEntry))
 {
-	strcpy(path,new_path);
+	strcpy(path,new_path != null ? new_path : "");
 }
 
 void b3SearchPath::b3AddPath(const char *path)

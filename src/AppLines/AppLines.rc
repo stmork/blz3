@@ -715,7 +715,9 @@ BEGIN
     CONTROL         "",IDC_LIGHT_LDC_CONTROL,"Static",SS_BLACKFRAME | 
                     SS_NOTIFY | SS_SUNKEN,330,15,80,70
     CONTROL         "",IDC_LIGHT_PREVIEW,"Static",SS_BLACKFRAME | SS_SUNKEN,
-                    330,100,80,65
+                    330,180,80,55
+    CONTROL         "",IDC_LIGHT_LDC_DIAGRAM,"Static",SS_BLACKFRAME | 
+                    SS_NOTIFY | SS_SUNKEN,330,100,80,65
 END
 
 

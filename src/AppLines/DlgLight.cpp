@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/12/06 16:21:56  sm
+**	- Finished CB3ControlLDC - very nice!
+**
 **	Revision 1.4  2001/12/06 07:08:55  sm
 **	- Further control programming
-**
+**	
 **	Revision 1.3  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
@@ -67,6 +70,7 @@ CDlgLight::CDlgLight(CWnd* pParent /*=NULL*/)
 	m_EnableSoft = FALSE;
 	m_SampleLabel = _T("");
 	//}}AFX_DATA_INIT
+	m_CtrlDiagram.b3SetMode(LDC_DIAGRAM);
 }
 
 
@@ -74,6 +78,7 @@ void CDlgLight::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgLight)
+	DDX_Control(pDX, IDC_LIGHT_LDC_DIAGRAM, m_CtrlDiagram);
 	DDX_Control(pDX, IDC_LIGHT_PREVIEW, m_CtrlPreview);
 	DDX_Control(pDX, IDC_LIGHT_LDC_CONTROL, m_CtrlLDC);
 	DDX_Control(pDX, IDC_LIGHT_LIST, m_LightListCtrl);
@@ -105,6 +110,8 @@ BEGIN_MESSAGE_MAP(CDlgLight, CDialog)
 	ON_CBN_KILLFOCUS(IDC_LIGHT_LIST, OnKillfocusLight)
 	ON_BN_CLICKED(IDC_LIGHT_SOFT, OnLightState)
 	ON_BN_CLICKED(IDC_LIGHT_LDC, OnLightState)
+	ON_MESSAGE(WM_B3_LDC_MOVED, b3UpdateDiagram)
+	ON_MESSAGE(WM_B3_LDC_CHANGED, b3UpdatePreview)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -121,8 +128,8 @@ BOOL CDlgLight::OnInitDialog()
 	B3_ASSERT(light != null);
 	light->m_Position.x  =   0;
 	light->m_Position.y  =   0;
-	light->m_Position.z  = 200;
-	light->m_Distance    = 500;
+	light->m_Position.z  = 100;
+	light->m_Distance    = 400;
 	light->m_Direction.x = -light->m_Position.x;
 	light->m_Direction.y = -light->m_Position.y;
 	light->m_Direction.z = -light->m_Position.z;
@@ -146,12 +153,17 @@ BOOL CDlgLight::OnInitDialog()
 	m_SoftSizeCtrl.b3SetMin(epsilon);
 	b3RefreshList();
 	b3GetLight();
-	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-void CDlgLight::b3UpdatePreview()
+LRESULT CDlgLight::b3UpdateDiagram(WPARAM wParam,LPARAM lParam)
+{
+	m_CtrlDiagram.b3Update();
+	return 0;
+}
+
+LRESULT CDlgLight::b3UpdatePreview(WPARAM wParam,LPARAM lParam)
 {
 	b3Light  *light = m_LightScene->b3GetLight();
 	b3_index  i;
@@ -166,6 +178,29 @@ void CDlgLight::b3UpdatePreview()
 		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
 	}
 	m_CtrlPreview.b3Update(m_LightScene);
+	return 0;
+}
+
+void CDlgLight::b3UpdateUI()
+{
+	GetDlgItem(IDC_LIGHT_SOFT)->EnableWindow(m_EnableLight);
+	GetDlgItem(IDC_LIGHT_LDC)->EnableWindow(m_EnableLight);
+	GetDlgItem(IDC_LIGHT_COLOR_CHANGE)->EnableWindow(m_EnableLight);
+
+	m_xPosCtrl.EnableWindow(m_EnableLight);
+	m_yPosCtrl.EnableWindow(m_EnableLight);
+	m_zPosCtrl.EnableWindow(m_EnableLight);
+	
+	m_xDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
+	m_yDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
+	m_zDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
+
+	m_DistanceCtrl.EnableWindow(m_EnableLight);
+	m_SoftSizeCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
+	m_SampleCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
+
+	GetDlgItem(IDC_LIGHT_DELETE)->EnableWindow(m_LightBase->b3Count() > 1);
+	b3UpdatePreview();
 }
 
 void CDlgLight::OnDestroy() 
@@ -185,6 +220,7 @@ void CDlgLight::OnLightColorChange()
 	{
 		b3Color::b3GetColorref(&m_Light->m_Color,dlg.GetColor());
 		m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
+		b3UpdatePreview();
 	}
 }
 
@@ -207,7 +243,6 @@ void CDlgLight::OnLightNew()
 		
 		b3RefreshList();
 		b3GetLight();
-		b3UpdateUI();
 	}
 }
 
@@ -229,7 +264,6 @@ void CDlgLight::OnLightDelete()
 		m_Light = select;
 		b3RefreshList();
 		b3GetLight();
-		b3UpdateUI();
 	}
 }
 
@@ -292,28 +326,6 @@ void CDlgLight::OnKillfocusLight()
 	b3RefreshList();
 }
 
-void CDlgLight::b3UpdateUI()
-{
-	GetDlgItem(IDC_LIGHT_SOFT)->EnableWindow(m_EnableLight);
-	GetDlgItem(IDC_LIGHT_LDC)->EnableWindow(m_EnableLight);
-	GetDlgItem(IDC_LIGHT_COLOR_CHANGE)->EnableWindow(m_EnableLight);
-
-	m_xPosCtrl.EnableWindow(m_EnableLight);
-	m_yPosCtrl.EnableWindow(m_EnableLight);
-	m_zPosCtrl.EnableWindow(m_EnableLight);
-	
-	m_xDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
-	m_yDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
-	m_zDirCtrl.EnableWindow(m_EnableLDC && m_EnableLight);
-
-	m_DistanceCtrl.EnableWindow(m_EnableLight);
-	m_SoftSizeCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
-	m_SampleCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
-
-	GetDlgItem(IDC_LIGHT_DELETE)->EnableWindow(m_LightBase->b3Count() > 1);
-	b3UpdatePreview();
-}
-
 void CDlgLight::b3GetLight()
 {
 	m_CtrlLDC.b3Init(m_Light);
@@ -333,6 +345,8 @@ void CDlgLight::b3GetLight()
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
 	m_CtrlLDC.b3Init(m_Light);
+	m_CtrlDiagram.b3Init(m_Light);
+	b3UpdateUI();
 	b3UpdatePreview();
 	UpdateData(FALSE);
 }

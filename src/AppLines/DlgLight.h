@@ -45,8 +45,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgLight)
 	enum { IDD = IDD_LIGHT };
-	CB3ShowRaytrace	m_CtrlPreview;
 	CB3ControlLDC	m_CtrlLDC;
+	CB3ControlLDC	m_CtrlDiagram;
+	CB3ShowRaytrace	m_CtrlPreview;
 	CComboBox	m_LightListCtrl;
 	CB3FloatEdit	m_SoftSizeCtrl;
 	CSliderCtrl	m_SampleCtrl;
@@ -88,13 +89,14 @@ protected:
 	afx_msg void OnKillfocusLight();
 	virtual void OnOK();
 	afx_msg void OnDestroy();
+	afx_msg LRESULT b3UpdateDiagram(WPARAM wParam=0,LPARAM lParam=0);
+	afx_msg LRESULT b3UpdatePreview(WPARAM wParam=0,LPARAM lParam=0);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	void b3UpdatePreview();
+	void b3UpdateUI();
 	void b3SetLight();
 	void b3GetLight();
-	void b3UpdateUI();
 	void b3RefreshList();
 };
 

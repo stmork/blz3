@@ -25,7 +25,6 @@
 
 #define SEGMENTS 6
 #define LINES_PER_SEGMENT 3
-#define B3_PICK_SIZE 1
 
 /*************************************************************************
 **                                                                      **
@@ -35,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/06 16:21:56  sm
+**	- Finished CB3ControlLDC - very nice!
+**
 **	Revision 1.1  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
-**
+**	
 **	
 */
 
@@ -123,13 +125,7 @@ b3_bool b3Pick::b3Hit(b3_coord x,b3_coord y)
 	b3_coord yDiff = m_y - y;
 	b3_bool  result;
 
-	result = (B3_ABS(xDiff) <= B3_PICK_SIZE) && (B3_ABS(yDiff) <= B3_PICK_SIZE);
-	if (result)
-	{
-		m_x = x;
-		m_y = y;
-	}
-	return result;
+	return (B3_ABS(xDiff) <= B3_PICK_SIZE) && (B3_ABS(yDiff) <= B3_PICK_SIZE);
 }
 
 b3_bool b3Pick::b3Moved(b3_coord x,b3_coord y)

@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3List.h"
 
-#define B3_PICK_SIZE 1
+#define B3_PICK_SIZE 2
 
 class b3Pick : public b3Link<b3Pick>
 {

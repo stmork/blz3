@@ -32,6 +32,15 @@
 
 typedef CDC b3DrawContext;
 
+#define WM_B3_LDC_MOVED   (WM_USER + 1)
+#define WM_B3_LDC_CHANGED (WM_USER + 2)
+
+enum CB3LDCMode
+{
+	LDC_EDIT,
+	LDC_DIAGRAM
+};
+
 class CB3ControlLDC : public CStatic, protected b3Mem
 {
 // Construction
@@ -51,6 +60,7 @@ public:
 
 // Implementation
 public:
+	void b3SetMode(CB3LDCMode mode);
 	void b3Init(b3Light *light);
 	void b3Update(b3_bool refresh = true);
 	b3Spline * m_LDC;
@@ -67,10 +77,14 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
-	b3_res m_yMax;
-	b3_res m_xMax;
-	b3_vector * m_Curve;
+	CDC         m_DC;
+	CBitmap     m_Bitmap;
+	CB3LDCMode  m_Mode;
 	b3PickBase  m_PickBase;
+	b3_vector  *m_Curve;
+	b3_res      m_xMax;
+	b3_res      m_yMax;
+	b3_bool     m_Init;
 };
 
 /////////////////////////////////////////////////////////////////////////////
