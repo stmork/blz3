@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "AppLinesDoc.h"
+#include "AppLinesView.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/08/10 18:28:58  sm
+**	- Some bug fixing
+**	- Update functions per view inserted. Now with redraw when loading.
+**
 **	Revision 1.3  2001/08/09 15:27:34  sm
 **	- Following shapes are newly supported now:
 **	  o disk
@@ -42,7 +47,7 @@
 **	  o triangles
 **	- Done some makefile fixes
 **	- Everything is Windozable
-**
+**	
 **	Revision 1.2  2001/08/06 19:58:58  sm
 **	- Drawing area - the first shape we can see with OpenGL
 **	
@@ -124,6 +129,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_World.b3Read(lpszPathName);
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3AllocVertices(&m_Context);
+	UpdateAllViews(NULL,B3_UPDATE_ALL);
 	return TRUE;
 }
 

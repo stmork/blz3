@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/08/10 18:28:58  sm
+**	- Some bug fixing
+**	- Update functions per view inserted. Now with redraw when loading.
+**
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **
 */
 
@@ -48,6 +52,8 @@
 
 static PIXELFORMATDESCRIPTOR pixelformat =
 {
+	sizeof(PIXELFORMATDESCRIPTOR),
+	1,
 	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
 	PFD_TYPE_RGBA,
 	32,
@@ -213,19 +219,33 @@ void CAppLinesView::OnSize(UINT nType, int cx, int cy)
 	CScrollView::OnSize(nType, cx, cy);
 	
 	// TODO: Add your message handler code here
-	CAppLinesDoc *pDoc  = GetDocument();
-	b3Scene      *scene = pDoc->b3GetScene();
-
-	if (scene != null)
-	{
-		wglMakeCurrent(m_DC,m_GC);
-		scene->b3SetView(cx,cy);
-	}
+	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
 BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
 {
 	// TODO: Add your message handler code here and/or call default
-	
 	return FALSE;
+}
+
+void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (lHint & B3_UPDATE_VIEW)
+	{
+		CAppLinesDoc *pDoc  = GetDocument();
+		CRect         rect;
+		b3Scene      *scene = pDoc->b3GetScene();
+
+		if (scene != null)
+		{
+			GetClientRect(&rect);
+			wglMakeCurrent(m_DC,m_GC);
+			scene->b3SetView(rect.Width(),rect.Height());
+		}
+	}
+	if (lHint & B3_UPDATE_DRAW)
+	{
+		Invalidate();
+	}
 }

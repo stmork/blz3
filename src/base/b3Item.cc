@@ -43,6 +43,10 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/10 18:28:58  sm
+**      - Some bug fixing
+**      - Update functions per view inserted. Now with redraw when loading.
+**
 **      Revision 1.4  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -347,8 +351,10 @@ void b3Item::b3InitColor(b3_color *col)
 
 void b3Item::b3InitString(char *name,b3_size len)
 {
+	b3_index pos = parseIndex << 2;
+
 	ASSERT_INDEX;
-	memcpy(name,&buffer[parseIndex],len);
+	memcpy(name,&buffer[parseIndex],pos + len > size ? size - pos : len);
 	parseIndex += ((len + 3) >> 2);
 }
 

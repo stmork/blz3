@@ -22,6 +22,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#define B3_UPDATE_DRAW 1
+#define B3_UPDATE_VIEW 2
+#define B3_UPDATE_ALL  (B3_UPDATE_DRAW|B3_UPDATE_VIEW)
+
 class CAppLinesView : public CScrollView
 {
 	HDC    m_DC;
@@ -49,6 +53,7 @@ public:
 	virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	//}}AFX_VIRTUAL
 
 // Implementation
