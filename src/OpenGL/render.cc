@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/07 16:54:26  sm
+**      - Checking bounds on condition base for line drawing
+**      - Some object reordering
+**      - Bug fix for Mandel makefile
+**
 **      Revision 1.3  2001/08/03 15:54:09  sm
 **      - Compilation of OpenGL under Windows NT
 **
@@ -93,6 +98,7 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
+			scene->b3AllocVertices();
 			scene->b3GetView(xSize,ySize);
 		}
 

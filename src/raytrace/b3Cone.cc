@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/07 16:54:26  sm
+**      - Checking bounds on condition base for line drawing
+**      - Some object reordering
+**      - Bug fix for Mandel makefile
+**
 **      Revision 1.1  2001/08/06 15:26:00  sm
 **      - Splitted shapes into their own files
 **      - Some preparations for shapde drawing.
@@ -44,7 +49,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3Cone::b3Cone(b3_u32 class_type) : b3Shape3(class_type)
+b3Cone::b3Cone(b3_u32 class_type) : b3Shape3(sizeof(b3Cone),class_type)
 {
 }
 

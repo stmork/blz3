@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/07 16:54:26  sm
+**      - Checking bounds on condition base for line drawing
+**      - Some object reordering
+**      - Bug fix for Mandel makefile
+**
 **      Revision 1.7  2001/08/06 20:49:39  sm
 **      - Some conflicts solved
 **
@@ -130,15 +135,25 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	Vertices = null;
 	Grids    = null;
 	Polygons = null;
+	Computed = false;
 #endif
 }
 
 void b3Shape::b3ComputeBound(b3CondLimit *limit)
 {
+	b3Item      *item;
+	b3Condition *cond;
+
 	limit->x1 = -1;
 	limit->y1 = -1;
 	limit->x2 =  1;
 	limit->y2 =  1;
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		cond = (b3Condition *)item;
+		cond->b3ComputeBound(limit);
+	}
 }
 
 void b3Shape::b3AllocVertices()
@@ -200,6 +215,11 @@ void b3Shape::b3Draw()
 #endif
 }
 
+
+b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+{
+}
+
 b3Shape2::b3Shape2(b3_u32 class_type) : b3Shape(sizeof(b3Shape2), class_type)
 {
 }
@@ -209,6 +229,11 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&Base);
 	b3InitVector(&Dir1);
 	b3InitVector(&Dir2);
+}
+
+
+b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+{
 }
 
 b3Shape3::b3Shape3(b3_u32 class_type) : b3Shape(sizeof(b3Shape3), class_type)
@@ -226,6 +251,7 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&Dir3);
 }
 
+
 b3SplineCurve::b3SplineCurve(b3_u32 class_type) : b3Shape(sizeof(b3SplineCurve), class_type)
 {
 }
@@ -237,6 +263,11 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3Shape(src)
 	b3InitSpline(&Spline,null,Knots);
 	b3InitVector(&Axis.pos);
 	b3InitVector(&Axis.dir);
+}
+
+
+b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+{
 }
 
 b3SplineShape::b3SplineShape(b3_u32 class_type) : b3Shape(sizeof(b3SplineShape), class_type)
@@ -255,6 +286,11 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 	// FIX ME: Is the order right?
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[0][i] = b3InitFloat();
 	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
+}
+
+
+b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
+{
 }
 
 b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape3), class_type)

@@ -115,7 +115,7 @@ public:
 // used for geometry.c
 typedef struct
 {
-	b3_f32            x1,y1,x2,y2;
+	b3_f32 x1,y1,x2,y2;
 } b3CondLimit;
 
 class b3InitCondition
@@ -133,11 +133,17 @@ public:
 
 	B3_ITEM_INIT(b3Condition);
 	B3_ITEM_LOAD(b3Condition);
+
+	virtual void b3ComputeBound(b3CondLimit *limit);
+protected:
+	static void b3CheckInnerBound(b3CondLimit *limit,b3CondLimit *object);
+	static void b3CheckOuterBound(b3CondLimit *limit,b3CondLimit *object);
 };
 
 // TYPE_RECTANGLE
 class b3CondRectangle : public b3Condition
 {
+protected:
 	b3_f32  xStart,yStart;    // rel. start coordinates
 	b3_f32  xEnd,yEnd;        // rel. end koordinates
 	b3_s32  Flags;
@@ -145,37 +151,66 @@ class b3CondRectangle : public b3Condition
 public:
 	B3_ITEM_INIT(b3CondRectangle);
 	B3_ITEM_LOAD(b3CondRectangle);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 #define RCB_ACTIVE  0
 #define RCF_ACTIVE (1 << RCB_ACTIVE)
 
 // TYPE_TRIANGLE, TYPE_PARALLELOGRAM
-class b3CondPara : public b3Condition
+class b3Cond2 : public b3Condition
 {
+protected:
 	b3_f32  xPos,yPos;        // base of triangle/ parallelogramme
 	b3_f32  xDir1,yDir1;      // direction 1
 	b3_f32  xDir2,yDir2;      // direction 2
 	b3_f32  denom;
 
+protected:
+	b3Cond2(b3_size class_size,b3_u32  class_type);
+
+public:
+	B3_ITEM_INIT(b3Cond2);
+	B3_ITEM_LOAD(b3Cond2);
+};
+
+class b3CondPara : public b3Cond2
+{
 public:
 	B3_ITEM_INIT(b3CondPara);
 	B3_ITEM_LOAD(b3CondPara);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
+
+class b3CondTria : public b3Cond2
+{
+public:
+	B3_ITEM_INIT(b3CondTria);
+	B3_ITEM_LOAD(b3CondTria);
+
+	void b3ComputeBound(b3CondLimit *limit);
+};
+
 
 // TYPE_CIRCLE
 class b3CondCircle : public b3Condition
 {
+protected:
 	b3_f32  xCenter,yCenter,radius;      // Mittelpunkt und Radius
 
 public:
 	B3_ITEM_INIT(b3CondCircle);
 	B3_ITEM_LOAD(b3CondCircle);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 // TYPE_SEGMENT
 class b3CondSegment : public b3Condition
 {
+protected:
 	b3_f32  xCenter,yCenter;     // Mittelpunkt
 	b3_f32  radStart,radEnd;     // gültiger Bereich im Ring
 	b3_f32  angleStart,angleEnd; // Segment
@@ -183,11 +218,14 @@ class b3CondSegment : public b3Condition
 public:
 	B3_ITEM_INIT(b3CondSegment);
 	B3_ITEM_LOAD(b3CondSegment);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 // TYPE_ELLIPSE
 class b3CondEllipse : public b3Condition
 {
+protected:
 	b3_f32  xCenter,yCenter;     // Mittelpunkt
 	b3_f32  xRadius,yRadius;     // Radien
 	b3_f32  radStart,radEnd;     // gültiger Bereich im Ring
@@ -196,11 +234,14 @@ class b3CondEllipse : public b3Condition
 public:
 	B3_ITEM_INIT(b3CondEllipse);
 	B3_ITEM_LOAD(b3CondEllipse);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 // TYPE_TEXTURE
 class b3CondTexture : public b3Condition
 {
+protected:
 	b3Tx   *Texture;
 	b3_s32  Flags;               // unused yet
 	b3_f32  xStart,yStart;       // base of texture
@@ -211,11 +252,14 @@ class b3CondTexture : public b3Condition
 public:
 	B3_ITEM_INIT(b3CondTexture);
 	B3_ITEM_LOAD(b3CondTexture);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 // TYPE_WRAP_TEXTURE
 class b3CondWrapTexture : public b3Condition
 {
+protected:
 	b3Tx   *Texture;
 	b3_s32  Flags;               // unused yet
 	b3_f32  xStart,yStart;       // borders in hor. direction
@@ -225,6 +269,8 @@ class b3CondWrapTexture : public b3Condition
 public:
 	B3_ITEM_INIT(b3CondWrapTexture);
 	B3_ITEM_LOAD(b3CondWrapTexture);
+
+	void b3ComputeBound(b3CondLimit *limit);
 };
 
 /*************************************************************************
@@ -610,6 +656,9 @@ protected:
 	b3_vector           Dir1,Dir2;      // direction vectors
 	b3_f32              NormalLength;     // normal length
 
+protected:
+	b3Shape2(b3_size class_size,b3_u32 class_type);
+
 public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
@@ -653,6 +702,9 @@ protected:
 	b3_s32            lSize;
 	b3_f32            Denom;            // denominator of lin. system
 	b3_f32            DirLen[3];        // length of direction vectors
+
+protected:
+	b3Shape3(b3_size class_size,b3_u32 class_type);
 
 public:
 	B3_ITEM_INIT(b3Shape3);
@@ -776,6 +828,9 @@ protected:
 	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
 	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
 
+protected:
+	b3SplineShape(b3_size class_size,b3_u32 class_type);
+
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
@@ -888,6 +943,9 @@ protected:
 	b3_s32             Index;
 	b3_s32             Operation;
 	b3_line            BTLine;
+
+protected:
+	b3CSGShape3(b3_size class_size,b3_u32 class_type);
 
 public:
 	B3_ITEM_INIT(b3CSGShape3);

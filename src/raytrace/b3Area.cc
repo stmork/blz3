@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/07 16:54:26  sm
+**      - Checking bounds on condition base for line drawing
+**      - Some object reordering
+**      - Bug fix for Mandel makefile
+**
 **      Revision 1.4  2001/08/06 20:49:39  sm
 **      - Some conflicts solved
 **
@@ -67,7 +72,7 @@ static GLushort area_polygons[] =
 	2,3,1
 };
 
-b3Area::b3Area(b3_u32 class_type) : b3Shape2(class_type)
+b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 {
 }
 

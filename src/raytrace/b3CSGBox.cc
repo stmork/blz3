@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/07 16:54:26  sm
+**      - Checking bounds on condition base for line drawing
+**      - Some object reordering
+**      - Bug fix for Mandel makefile
+**
 **      Revision 1.1  2001/08/06 15:25:59  sm
 **      - Splitted shapes into their own files
 **      - Some preparations for shapde drawing.
@@ -44,7 +49,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGBox::b3CSGBox(b3_u32 class_type) : b3CSGShape3(class_type)
+b3CSGBox::b3CSGBox(b3_u32 class_type) : b3CSGShape3(sizeof(b3CSGBox),class_type)
 {
 }
 
