@@ -25,9 +25,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/01/18 13:51:58  sm
+**	- Done further security issues.
+**
 **	Revision 1.5  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.4  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
@@ -105,7 +108,7 @@ void b3LogBase::b3GetLogFile(char *DebugFile)
 
 b3_bool b3LogBase::b3SetLogFile(const char *DebugFile)
 {
-	strcpy (m_LogFile,DebugFile);
+	strlcpy (m_LogFile,DebugFile,sizeof(m_LogFile));
 
 	return m_Out == null;
 }

@@ -20,7 +20,7 @@ depend:
 	gcc -M $(CPPFLAGS) $(PRG_SOURCE) >.dep
 
 clean:
-	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
+	rm -f *.o *.bak *~ .dep core $(PRGS) $(LIBS) ALL QUIET
 
 : $()
 	$(LINK.cc) -o $@ $() $(LDLIBS)

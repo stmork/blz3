@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/01/18 13:51:57  sm
+**	- Done further security issues.
+**
 **	Revision 1.28  2003/11/23 13:14:13  sm
 **	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
 **	  bit wide integers.
-**
+**	
 **	Revision 1.27  2003/08/31 08:56:23  sm
 **	- Windows support for the snprintf functions
 **	
@@ -680,7 +683,7 @@ const char *b3Tx::b3Name()
 
 void b3Tx::b3Name(const char *ImageName)
 {
-	strcpy (image_name,ImageName != null ? ImageName : "");
+	strlcpy (image_name,ImageName != null ? ImageName : "",sizeof(image_name));
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Name(%s)\n",
 		(const char *)image_name);
 }

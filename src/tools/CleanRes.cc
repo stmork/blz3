@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2004/01/18 13:51:58  sm
+**  - Done further security issues.
+**
 **  Revision 1.2  2002/08/18 13:06:08  sm
 **  - Some minor updates
 **
@@ -89,7 +92,7 @@ public:
 
 	b3Define(const char *define,const int value) : b3Link<b3Define>(sizeof(b3Define))
 	{
-		strcpy (m_Define,define);
+		strlcpy (m_Define,define,sizeof(m_Define));
 		m_Value = value;
 		m_File  = stdout;
 		m_Type  = b3FindDefineType();

@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/01/18 13:51:58  sm
+**	- Done further security issues.
+**
 **	Revision 1.1  2003/05/24 14:00:36  sm
 **	- Added plugin base classes for system independend support
-**#
+**	#
 */
 
 /*************************************************************************
@@ -62,7 +65,7 @@ void b3LoaderBase::b3Load()
 
 		for (file = list.b3First();file != null;file = file->Succ)
 		{
-			strcpy(name,file->b3Name());
+			strlcpy(name,file->b3Name(),B3_FILESTRINGLEN);
 			if (b3IsPlugin(name))
 			{
 				plugin = b3CreatePlugin(name);

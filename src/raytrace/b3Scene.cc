@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2004/01/18 13:51:57  sm
+**	- Done further security issues.
+**
 **	Revision 1.52  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.51  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector
@@ -694,7 +697,7 @@ b3_bool b3Scene::b3GetTitle(char *title)
 	title[0] = 0;
 	if (m_ActualCamera != null)
 	{
-		strcpy(title,m_ActualCamera->m_CameraName);
+		strlcpy(title,m_ActualCamera->m_CameraName,sizeof(title));
 	}
 	else
 	{
@@ -736,7 +739,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	if ((light = (b3Light *)b3GetLightHead()->First) == null)
 	{
 		light = new b3Light(SPOT_LIGHT);
-		strcpy(light->m_Name,"Light");
+		strlcpy(light->m_Name,"Light",sizeof(light->m_Name));
 		b3GetLightHead()->b3Append(light);
 	}
 

@@ -63,6 +63,16 @@
 
 typedef unsigned long b3DrawContext;
 
+static inline char * strlcpy(char *dst,const char *src,size_t size)
+{
+	if (size > 0)
+	{
+		strncpy(dst,src,size);
+		dst[size-1] = 0;
+	}
+	return dst;
+}
+
 static inline int stricmp(const char *a,const char *b)
 {
 	int diff,i;

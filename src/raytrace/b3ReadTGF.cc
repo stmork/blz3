@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/01/18 13:51:57  sm
+**	- Done further security issues.
+**
 **	Revision 1.5  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.4  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -92,7 +95,7 @@ b3_size b3TGFReader::b3StrCpy(
 	{
 		len = src_size;
 	}
-	strncpy(dst,src,len);
+	strlcpy(dst,src,len);
 	return strlen(dst);
 }
 
@@ -511,7 +514,7 @@ b3BBox *b3TGFReader::b3Parse(char *ptr,b3_size size,const char *filename)
 
 		b3Path::b3SplitFileName(filename,null,name);
 		name.b3RemoveExt();
-		strcpy (bbox->m_BoxName,name);
+		strlcpy (bbox->m_BoxName,name,sizeof(bbox->m_BoxName));
 	}
 	else
 	{

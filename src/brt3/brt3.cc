@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2004/01/18 13:51:57  sm
+**	- Done further security issues.
+**
 **	Revision 1.51  2004/01/05 08:01:55  sm
 **	- Added new year.
-**
+**	
 **	Revision 1.50  2004/01/01 12:46:43  sm
 **	- Fixed RGB8 image writing
 **	- Added RGB8 image saving to brt3 and display all command line options.
@@ -447,16 +450,16 @@ int main(int argc,char *argv[])
 					b3PrintF(B3LOG_NORMAL,"Forcing no wait after display output\n");
 					break;
 				case 'i':
-					strcpy(BLZ3_EXTENSION,".tif");
+					strlcpy(BLZ3_EXTENSION,".tif",sizeof(BLZ3_EXTENSION));
 					break;
 				case 'j':
-					strcpy(BLZ3_EXTENSION,".jpg");
+					strlcpy(BLZ3_EXTENSION,".jpg",sizeof(BLZ3_EXTENSION));
 					break;
 				case 'g':
-					strcpy(BLZ3_EXTENSION,".tga");
+					strlcpy(BLZ3_EXTENSION,".tga",sizeof(BLZ3_EXTENSION));
 					break;
 				case 'r':
-					strcpy(BLZ3_EXTENSION,".rgb8");
+					strlcpy(BLZ3_EXTENSION,".rgb8",sizeof(BLZ3_EXTENSION));
 					break;
 
 				case 'v' :

@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/01/18 13:51:57  sm
+**	- Done further security issues.
+**
 **	Revision 1.7  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.6  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -365,7 +368,10 @@ b3_size b3COBReader::b3COB_ParseGrou(
 		&ver,&rev,&id,&parent,&size);
 
 	b3COB_GetLine (line,&buffer[len+1],sizeof(line));
-	if (sscanf (line,"Name %32s",boxName) != 1) strcpy (boxName,"bbox");
+	if (sscanf (line,"Name %32s",boxName) != 1)
+	{
+		strlcpy (boxName,"bbox",sizeof(boxName));
+	}
 
 #ifdef _DEBUG
 	b3PrintF (B3LOG_FULL,"G: V%ld.%02ld ID: %8ld P: %8ld - size: %8ld,%8ld\n",
@@ -375,7 +381,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	BBox = new b3BBox (BBOX);
 	if (BBox != null)
 	{
-		strcpy(BBox->m_BoxName,boxName);
+		strlcpy(BBox->m_BoxName,boxName,sizeof(BBox->m_BoxName));
 		if (!b3COB_AllocObject(BBox,id,parent,COB_GROU))
 		{
 			delete BBox;
@@ -422,7 +428,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 		BBox = new b3BBox(BBOX);
 		if (BBox != null)
 		{
-			strcpy(BBox->m_BoxName,name);
+			strlcpy(BBox->m_BoxName,name,sizeof(BBox->m_BoxName));
 			if (!b3COB_AllocObject(BBox,1,parent,COB_GROU))
 			{
 				delete BBox;
