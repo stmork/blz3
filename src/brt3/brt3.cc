@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2003/07/20 10:11:55  sm
+**	- Added banner on -v command line option.
+**
 **	Revision 1.43  2003/07/20 09:38:30  sm
 **	- Registering raytracing items manually.
-**
+**	
 **	Revision 1.42  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -310,6 +313,26 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 	return display;
 }
 
+static void b3Banner()
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+	b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);
+	b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
+	b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
+	b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
+	b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
+	b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
+	b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
+	b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
+	b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+}
+
 int main(int argc,char *argv[])
 {
 	b3ShapeRenderContext  context;
@@ -393,7 +416,7 @@ int main(int argc,char *argv[])
 					break;
 
 				case 'v' :
-					b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracing software\n");
+					b3Banner();
 					break;
 				}
 			}
@@ -518,22 +541,7 @@ int main(int argc,char *argv[])
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracer\n");
-		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003\n");
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",argv[0]);
-		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
-		b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
-		b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
-		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
-		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+		b3Banner();
 	}
 	return 0;
 }
