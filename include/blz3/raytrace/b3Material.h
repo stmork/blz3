@@ -113,9 +113,10 @@ public:
 // MARBLE
 class B3_PLUGIN b3MatMarble : public b3Material, public b3_material
 {
-	b3_vector         m_Scale;
 	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes;
+public:
+	b3_vector         m_Scale;
 
 public:
 	B3_ITEM_INIT(b3MatMarble);

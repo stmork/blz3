@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/26 14:28:10  sm
+**	- Added marble dialog
+**	- Resorted controls
+**
 **	Revision 1.5  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
-**
+**	
 **	Revision 1.4  2004/04/25 14:56:55  sm
 **	- Completed simple material dialog.
 **	
@@ -96,7 +100,6 @@ CDlgMatNormal::~CDlgMatNormal()
 	m_MatHead->b3RemoveAll();
 	delete m_MatScene;
 }
-
 
 void CDlgMatNormal::DoDataExchange(CDataExchange* pDX)
 {
