@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/06/01 13:03:45  sm
+**	- Is this the final plugin version?
+**
 **	Revision 1.3  2003/06/01 12:07:01  sm
 **	- Minor plugin changes
-**
+**	
 **	Revision 1.2  2003/05/25 16:47:31  sm
 **	- Added error messages in case a plugin fails.
 **	
@@ -72,10 +75,6 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 
 b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 {
-}
-
-void b3Plugin::b3Load()
-{
 	m_Handle = dlopen(m_PluginPath,RTLD_LAZY | RTLD_GLOBAL);
 	if (m_Handle != null)
 	{
@@ -103,7 +102,7 @@ void b3Plugin::b3Load()
 	}
 }
 
-void b3Plugin::b3Unload()
+b3Plugin::~b3Plugin()
 {
 	if (m_Handle != null)
 	{

@@ -52,10 +52,9 @@ class b3Plugin : public b3PluginBase
 
 public:
 	         b3Plugin(b3Path &library);
-	void     b3Load();
-	void     b3Unload();
 
 public:
+	virtual ~b3Plugin();
 	b3Item  *b3Create(b3_u32 class_type);
 	b3_bool  b3Edit(b3Item *item);
 };

@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/06/01 13:03:45  sm
+**	- Is this the final plugin version?
+**
 **	Revision 1.5  2003/06/01 12:17:31  sm
 **	- Some plugin movements
-**
+**	
 **	Revision 1.4  2003/05/29 12:31:46  sm
 **	- Added error messages
 **	
@@ -86,15 +89,18 @@ b3_bool b3Loader::b3Edit(b3Item *item)
 **                                                                      **
 *************************************************************************/
 
-b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
+void b3Plugin::b3Load()
 {
 }
 
-void b3Plugin::b3Load()
+void b3Plugin::b3Unload()
+{
+}
+
+b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 {
 	b3_count i;
 
-	m_InfoArray = null;
 	m_Handle    = AfxLoadLibrary(m_PluginPath);
 	if (m_Handle != null)
 	{
@@ -114,7 +120,7 @@ void b3Plugin::b3Load()
 				b3PrintF(B3LOG_DEBUG,"Got infos of plugin %s.\n",(const char *)m_PluginPath);
 				for(i = 0;i < m_InfoArray.b3GetCount();i++)
 				{
-					b3PrintF(B3LOG_DEBUG,"  class: %08x %s %s edit option\n",
+					b3PrintF(B3LOG_DEBUG,"  class: %08x \"%s\" %s edit option\n",
 						m_InfoArray[i].m_ClassType,
 						m_InfoArray[i].m_Description == null ? "(unnamed)" : m_InfoArray[i].m_Description,
 						m_InfoArray[i].m_EditFunc != null ? "with" : "without");
@@ -136,7 +142,7 @@ void b3Plugin::b3Load()
 	}
 }
 
-void b3Plugin::b3Unload()
+b3Plugin::~b3Plugin()
 {
 	m_InfoArray.b3Clear(true);
 	if (m_Handle != null)

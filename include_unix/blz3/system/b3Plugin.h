@@ -32,9 +32,8 @@ class b3Plugin : public b3PluginBase
 	void    *m_Handle;
 
 public:
-	     b3Plugin(b3Path &library);
-	void b3Load();
-	void b3Unload();
+	         b3Plugin(b3Path &library);
+	virtual ~b3Plugin();
 };
 
 #endif

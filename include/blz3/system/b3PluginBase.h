@@ -48,8 +48,6 @@ protected:
 
 public:
 	b3PluginBase(b3Path &library);
-	virtual void b3Load() = 0;
-	virtual void b3Unload() = 0;
 };
 
 #endif
