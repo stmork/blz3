@@ -13,7 +13,7 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src clean
-	test -f data.tar.gz && rm -f data.tar.gz
+	rm -f data.tar.gz
 
 configure:	configure.ac
 	autoconf
