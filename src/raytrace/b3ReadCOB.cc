@@ -16,7 +16,7 @@
 */
 
 #ifdef _DEBUG
-#define VERBOSE_INDEX
+#define no_VERBOSE_INDEX
 #endif
 
 /*************************************************************************
@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/26 19:56:22  sm
+**	- Some defines cleared up.
+**
 **	Revision 1.3  2003/01/26 19:45:39  sm
 **	- OpenGL drawing problem of Caligari imported objects fixed.
-**
+**	
 **	Revision 1.2  2003/01/26 14:11:50  sm
 **	- COB support integrated into Lines III
 **	
