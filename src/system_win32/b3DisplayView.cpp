@@ -41,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/23 14:59:05  sm
+**	- Updated new b3Display interface
+**
 **	Revision 1.2  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	Revision 1.1  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
 **	
@@ -72,17 +75,17 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 
 	ASSERT(m_View != null);
 
-	m_xs    = xSize;
-	m_ys    = ySize;
+	m_xMax  = xSize;
+	m_yMax  = ySize;
 	m_depth = 24;
 	m_RowCounter = 0;
 #ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xs);
-	b3PrintF (B3LOG_NORMAL,"ySize: %4ld\n",m_ys);
+	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xMax);
+	b3PrintF (B3LOG_NORMAL,"ySize: %4ld\n",m_yMax);
 	b3PrintF (B3LOG_NORMAL,"dep:   %4ld\n",m_depth);
 #endif
 
-	m_Tx->b3AllocTx(m_xs,m_ys,m_depth);
+	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
 	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
 }
 
@@ -104,7 +107,7 @@ b3DisplayView::b3DisplayView(
 	b3Open(view,xSize,ySize);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
 		m_Title,
-		m_xs,m_ys);
+		m_xMax,m_yMax);
 }
 
 b3DisplayView::b3DisplayView(
@@ -117,14 +120,13 @@ b3DisplayView::b3DisplayView(
 	b3Open(view,xSize,ySize);
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 		m_Title,
-		m_xs,m_ys);
+		m_xMax,m_yMax);
 }
 
 b3DisplayView::~b3DisplayView()
 {
 	b3PrintF(B3LOG_FULL,"Closing view display...\n");
 }
-
 
 void b3DisplayView::b3PutRow(b3Row *row)
 {
@@ -133,6 +135,12 @@ void b3DisplayView::b3PutRow(b3Row *row)
 	{
 		m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
 	}
+}
+
+void b3DisplayView::b3PutTx(b3Tx *tx)
+{
+	b3Display::b3PutTx(tx);
+	m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
 }
 
 void b3DisplayView::b3Wait()

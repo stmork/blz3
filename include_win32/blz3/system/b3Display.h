@@ -48,6 +48,7 @@ public:
 	                    b3DisplayView(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title = null);
 	                   ~b3DisplayView();
 	void                b3PutRow(b3Row *row);
+	void                b3PutTx(b3Tx *tx);
 	void                b3Wait();
 
 private:
