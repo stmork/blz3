@@ -3,14 +3,11 @@ REGEDIT4
 [HKEY_CLASSES_ROOT\.cc]
 @="cppfile"
 
-[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build
-System\Components\Tools\<Component 0x3>]
+[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build System\Components\Tools\<Component 0x3>]
 "Input_Spec"="*.c;*.cpp;*.cxx,*.cc"
 
-[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build
-System\Components\Platforms\Win32 (x86)\Tools\32-bit C/C++ Compiler for 80x86]
+[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (x86)\Tools\32-bit C/C++ Compiler for 80x86]
 "Input_Spec"="*.c;*.cpp;*.cxx,*.cc"
 
-[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build
-System\Components\Platforms\Win32 (ALPHA)\Tools\C/C++ Compiler for Alpha]
+[HKEY_CURRENT_USER\Software\Microsoft\DevStudio\6.0\Build System\Components\Platforms\Win32 (ALPHA)\Tools\C/C++ Compiler for Alpha]
 "Input_Spec"="*.c;*.cpp;*.cxx,*.cc"
