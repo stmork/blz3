@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2004/03/15 08:28:46  sm
+**      - Now saving granite color definitions.
+**
 **      Revision 1.39  2004/03/14 16:18:26  sm
 **      - Added Windows support for granite.
 **
@@ -1120,11 +1123,11 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
-	m_Dark      = b3Color(0.25,0.25,0.25);
-	m_Light     = b3Color(0.8, 0.3, 0.2);
-	m_DiffColor = b3Color(0.8, 0.8, 0.8);
-	m_AmbColor  = b3Color(0.1, 0.1, 0.1);
-	m_DiffColor = b3Color(0.8, 0.8, 0.8);
+	m_DarkColor  = b3Color(0.25,0.25,0.25);
+	m_LightColor = b3Color(0.8, 0.3, 0.2);
+	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
+	m_AmbColor   = b3Color(0.1, 0.1, 0.1);
+	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
 	b3Vector::b3Init(&m_Scale,1.0,1.0,1.0);
 	m_Reflection = 0.0;
 	m_Refraction = 0.0;
@@ -1135,6 +1138,8 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 {
+	b3InitColor(m_DarkColor);
+	b3InitColor(m_LightColor);
 	b3InitColor(m_DiffColor);
 	b3InitColor(m_AmbColor);
 	b3InitColor(m_SpecColor);
@@ -1148,6 +1153,8 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 
 void b3MatGranite::b3Write()
 {
+	b3StoreColor(m_DarkColor);
+	b3StoreColor(m_LightColor);
 	b3StoreColor(m_DiffColor);
 	b3StoreColor(m_AmbColor);
 	b3StoreColor(m_SpecColor);
@@ -1165,7 +1172,7 @@ b3_bool b3MatGranite::b3GetColors(
 	b3Color  &ambient,
 	b3Color  &specular)
 {
-	b3Color   mask = 1;
+	b3Color   mask;
 	b3_vector d;
 	b3_loop   i;
 	b3_f64    sum = 0;
@@ -1185,15 +1192,15 @@ b3_bool b3MatGranite::b3GetColors(
 	}
 	if (sum < 0)
 	{
-		mask = m_Dark;
+		mask = m_DarkColor;
 	}
 	else if (sum > 1)
 	{
-		mask = m_Light;
+		mask = m_LightColor;
 	}
 	else
 	{
-		mask.b3Mix(m_Dark,m_Light,sum);
+		mask.b3Mix(m_DarkColor,m_LightColor,sum);
 	}
 	
 	diffuse  = m_DiffColor * mask;
