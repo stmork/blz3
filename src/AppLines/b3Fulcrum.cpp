@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2004/09/25 08:56:53  sm
+**      - Removed VBOs from source.
+**
 **      Revision 1.11  2004/09/24 20:22:05  sm
 **      - Some VBO adjustments.
 **
@@ -195,7 +198,7 @@ void b3Fulcrum::b3Draw(b3RenderContext *context)
 	glGetIntegerv(GL_DEPTH_FUNC,&func);
 	glDepthFunc(GL_ALWAYS);
 //	glDepthMask(GL_FALSE);
-//	b3RenderObject::b3Draw(context);
+	b3RenderObject::b3Draw(context);
 //	glDepthMask(GL_TRUE);
 	glDepthFunc(func);
 	glEnable(GL_DEPTH_TEST);

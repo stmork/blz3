@@ -24,6 +24,7 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/base/b3MultiSample.h"
 
 /*************************************************************************
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/09/25 08:56:53  sm
+**	- Removed VBOs from source.
+**
 **	Revision 1.9  2004/09/24 19:07:27  sm
 **	- VBOs on ATI running - or better: crawling.
-**
+**	
 **	Revision 1.8  2004/09/24 15:39:31  sm
 **	- Added multisampling support which doesn't work.
 **	

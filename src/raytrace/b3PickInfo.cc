@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/09/25 08:56:53  sm
+**	- Removed VBOs from source.
+**
 **	Revision 1.10  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
-**
+**	
 **	Revision 1.9  2004/09/23 15:47:04  sm
 **	- Splitted b3RenderContext into own file.
 **	- Added vertex buffer object support which does not
@@ -153,10 +156,8 @@ void b3PickInfo::b3AllocVertexMemory(b3RenderContext *context)
 	glVertexCount = m_Vertices.b3GetCount();
 	glGrids       = m_Grid.b3GetBuffer();
 	glGridCount   = m_Grid.b3GetCount();
-
-	glCustomVert  = true;
-	glCustomGrids = true;
-	glCustomPolys = true;
+	glPolygons    = null;
+	glPolyCount   = 0;
 }
 
 void b3PickInfo::b3FreeVertexMemory()

@@ -20,7 +20,6 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Color.h"
-#include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
 
@@ -165,11 +164,8 @@ struct b3_gl_polygon
 #define B3_GL_LINIT(l,ai,bi)    { (l)->a = (ai); (l)->b = (bi); (l)++; }
 #define B3_GL_PINIT(p,ai,bi,ci) { (p)->a = (ai); (p)->b = (bi); (p)->c = (ci); (p)++; }
 
-class b3RenderObject : public b3Mem, protected b3VectorBufferObjects
+class b3RenderObject : public b3Mem
 {
-	b3_bool          glBoundVertices;
-	b3_bool          glBoundIndices;
-
 	// Actuality flags
 	b3_bool          glVerticesComputed;
 	b3_bool          glIndicesComputed;
@@ -182,13 +178,9 @@ protected:
 	b3_gl_vertex    *glVertex;
 	b3_gl_line      *glGrids;
 	b3_gl_polygon   *glPolygons;
-	b3_bool          glCustomVert;
-	b3_bool          glCustomGrids;
-	b3_bool          glCustomPolys;
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint           glDisplayList;
-	GLuint           glVBO[3];
 
 	// Some material values
 	GLfloat          glAmbient[4];
@@ -277,11 +269,6 @@ private:
 	        void            b3SelectMaterialForFilledDrawing(b3RenderContext *context);
 	        void            b3DrawLinedGeometry(b3RenderContext *context);
 	        void            b3DrawFilledGeometry(b3RenderContext *context);
-
-			void            b3BindIndices();
-			void            b3BindVertices();
-			void            b3UnbindIndices();
-			void            b3UnbindVertices();
 };
 
 #endif

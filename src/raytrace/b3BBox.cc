@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.102  2004/09/25 08:56:53  sm
+**	- Removed VBOs from source.
+**
 **	Revision 1.101  2004/09/25 08:41:18  sm
 **	- Splitting a branch for VBO development.
-**
+**	
 **	Revision 1.100  2004/09/24 20:22:05  sm
 **	- Some VBO adjustments.
 **	
@@ -792,26 +795,10 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	}
 }
 
-void b3BBox::b3GetCount(
-	b3RenderContext *ctx,
-	b3_count        &vertCount,
-	b3_count        &gridCount,
-	b3_count        &polyCount)
-{
-	vertCount = 8;
-}
-
 void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 {
-	if (b3HasVBO())
-	{
-		b3RenderObject::b3AllocVertexMemory(context);
-	}
-	else
-	{
-		glVertex = m_BBoxVertex;
-		glVertexCount = 8;
-	}
+	glVertex      = m_BBoxVertex;
+	glVertexCount = 8;
 }
 
 void b3BBox::b3FreeVertexMemory()

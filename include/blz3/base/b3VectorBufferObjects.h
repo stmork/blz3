@@ -41,7 +41,6 @@ public:
 	{
 		return glHasVBO;
 	}
-
 };
 
 #endif
