@@ -40,9 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/05 17:42:58  sm
+**	- Displaying brt3 options.
+**	- Clearing XBuffer which displayed garbage from previous X applications
+**	  (This is a security leak inside X!!!)
+**
 **	Revision 1.4  2002/03/13 19:01:59  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.3  2002/01/22 17:11:18  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
@@ -214,8 +219,10 @@ void b3DisplayView::b3Open(
 		ButtonPressMask|
 		KeyPressMask);
 
-
 	// wait for window */
+	XSetForeground(m_Display,m_GC,0);
+	XFillRectangle(m_Display,m_Image, m_GC,0,0,m_xs,m_ys);
+
 	do
 	{
 		XNextEvent (m_Display,&report);

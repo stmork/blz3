@@ -36,13 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/08/05 17:42:58  sm
+**	- Displaying brt3 options.
+**	- Clearing XBuffer which displayed garbage from previous X applications
+**	  (This is a security leak inside X!!!)
+**
 **	Revision 1.23  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.22  2002/07/20 10:49:34  sm
 **	- Added custom light support (not finished yet)
 **	- Added b3Light::b3IsActive() for compatibility.
@@ -146,8 +151,6 @@
 */
 
 #define BLZ3_EXTENSION ".tga"
-
-static char cvs_tag[] = "$Name$";
 
 static void b3SaveRaytracedImage(
 	b3Display  *display,
@@ -329,10 +332,12 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s {Blizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n] {Blizzard World Data files}\n",argv[0]);
+		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -n  disabled display\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
-		b3PrintF(B3LOG_NORMAL,"Compile name: %s\n",cvs_tag);
 	}
 	return 0;
 }
