@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.53)
-AC_INIT(blz3, 2.99.2-7, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 2.99.2-8, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -52,6 +52,21 @@ AC_TRY_LINK([#include <stdio.h>],[
 #error "This is not Linux!"
 #endif
 ],[AC_DEFINE([BLZ3_IS_LINUX]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for stricmp])
+AC_TRY_LINK([#include <strings.h>],[
+stricmp("small","BIG");
+],[AC_DEFINE([HAVE_STRICMP]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for strcasecmp])
+AC_TRY_LINK([#include <strings.h>],[
+strcasecmp("small","BIG");
+],[AC_DEFINE([HAVE_STRCASECMP]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for strlcpy])
+AC_TRY_LINK([#include <string.h>],[
+char example[16];strlcpy(example,"Example",sizeof(example));
+],[AC_DEFINE([HAVE_STRLCPY]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
 
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"

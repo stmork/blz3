@@ -470,19 +470,13 @@ private:
 
 	        void     b3Clear();
 	        void     b3PrepareGridList();
+
 			void     b3SubdivideIntoGrid(
 			    b3_vector *P1,
 			    b3_vector *P2,
 			    b3_vector *P3,
 			    b3_index   triangle,
 			    b3_count   max);
-			void     b3TriangleShape::b3SearchCubicItem (
-				b3_vector *P1,
-				b3_vector *P2,
-				b3_vector *P3,
-				b3_index   index,
-				b3_index   rec,
-				b3_count   MaxRec);
 
 			inline b3_index b3GridDistance(b3_f32 v1,b3_f32 v2,b3_f32 v3)
 			{

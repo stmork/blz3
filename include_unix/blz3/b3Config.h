@@ -58,10 +58,6 @@
 #define USE_TIFFLIB_LOAD
 #define USE_TIFFLIB_SAVE
   
-#ifndef __linux__
-#define no_USE_MOTIF
-#endif
-
 #ifdef _DEBUG
 #include <assert.h>
 
@@ -74,7 +70,7 @@
 
 typedef unsigned long b3DrawContext;
 
-#ifndef __EXTENSIONS__
+#ifndef HAVE_STRLCPY
 static inline size_t strlcpy(char *dst,const char *src,size_t size)
 {
 	if (size > 0)
@@ -86,6 +82,10 @@ static inline size_t strlcpy(char *dst,const char *src,size_t size)
 }
 #endif
 
+#ifndef HAVE_STRICMP
+#ifdef HAVE_STRCASECMP
+#define stricmp(a,b) strcasecmp(a,b)
+#else
 static inline int stricmp(const char *a,const char *b)
 {
 	int diff,i;
@@ -104,6 +104,8 @@ static inline int stricmp(const char *a,const char *b)
 
 	return diff;
 }
+#endif
+#endif
 
 #define B3_FRAN(x)          ((double)(x)        * drand48())
 #define B3_IRAN(x)          ((long)((double)(x) * drand48()))

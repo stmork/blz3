@@ -25,8 +25,6 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Math.h"
 
-#define USE_NEW_GRID
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.49  2004/09/20 08:16:52  sm
+**      - Removed old triangle grid insertion code.
+**      - Added configurable defines for some str funktions.
+**      - Bumped revision.
+**
 **      Revision 1.48  2004/09/10 09:42:17  sm
 **      - Optimized triangle gridding.
 **
@@ -388,68 +391,6 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 	}
 }
 
-void b3TriangleShape::b3SearchCubicItem (
-	b3_vector *P1,
-	b3_vector *P2,
-	b3_vector *P3,
-	b3_index   index,
-	b3_index   rec,
-	b3_count   MaxRec)
-{
-	b3_index  I1,I2,I3;
-	b3_index  x1,y1,z1;
-	b3_index  x2,y2,z2;
-	b3_index  x3,y3,z3;
-	b3_vector P4;
-
-	if (rec > MaxRec)
-	{
-		return;
-	}
-
-	P4.x = (P1->x + P2->x + P3->x) / 3.0;
-	P4.y = (P1->y + P2->y + P3->y) / 3.0;
-	P4.z = (P1->z + P2->z + P3->z) / 3.0;
-
-	x1 = (b3_index)P1->x; y1 = (b3_index)P1->y; z1 = (b3_index)P1->z;
-	x2 = (b3_index)P2->x; y2 = (b3_index)P2->y; z2 = (b3_index)P2->z;
-	x3 = (b3_index)P3->x; y3 = (b3_index)P3->y; z3 = (b3_index)P3->z;
-
-	I1 = B3_ABS(x1 - x2) + B3_ABS(y1 - y2) + B3_ABS(z1 - z2);
-	I2 = B3_ABS(x2 - x3) + B3_ABS(y2 - y3) + B3_ABS(z2 - z3);
-	I3 = B3_ABS(x3 - x1) + B3_ABS(y3 - y1) + B3_ABS(z3 - z1);
-
-	if (I1 <= 1)
-	{
-		b3AddTriangleToGrid (GRID_INDEX(x1,y1,z1,m_GridSize),index);
-		b3AddTriangleToGrid (GRID_INDEX(x2,y2,z2,m_GridSize),index);
-	}
-	else
-	{
-		b3SearchCubicItem (P1,P2,&P4,index,rec+1,MaxRec);
-	}
-
-	if (I2 <= 1)
-	{
-		b3AddTriangleToGrid (GRID_INDEX(x2,y2,z2,m_GridSize),index);
-		b3AddTriangleToGrid (GRID_INDEX(x3,y3,z3,m_GridSize),index);
-	}
-	else
-	{
-		b3SearchCubicItem (P2,P3,&P4,index,rec+1,MaxRec);
-	}
-
-	if (I3 <= 1)
-	{
-		b3AddTriangleToGrid (GRID_INDEX(x3,y3,z3,m_GridSize),index);
-		b3AddTriangleToGrid (GRID_INDEX(x1,y1,z1,m_GridSize),index);
-	}
-	else
-	{
-		b3SearchCubicItem (P3,P1,&P4,index,rec+1,MaxRec);
-	}
-}
-
 void b3TriangleShape::b3PrepareGridList ()
 {
 	b3_index  i,MaxRec;
@@ -460,11 +401,7 @@ void b3TriangleShape::b3PrepareGridList ()
 #endif
 
 	max    = m_GridSize * m_GridSize * m_GridSize;
-#ifdef USE_NEW_GRID
 	MaxRec = b3IntLog2(m_GridSize) + 1;
-#else
-	MaxRec = b3IntLog3(m_GridSize) << 1;
-#endif
 
 	if (max > 1)
 	{
@@ -476,23 +413,7 @@ void b3TriangleShape::b3PrepareGridList ()
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P2].Point,&P2);
 				b3ToGridSpace(&m_Vertices[m_Triangles[i].P3].Point,&P3);
 
-#ifdef USE_NEW_GRID
 				b3SubdivideIntoGrid(&P1,&P2,&P3,i,MaxRec);
-#else
-				b3_index i1 = b3GetGrid(&P1); 
-				b3_index i2 = b3GetGrid(&P2);
-				b3_index i3 = b3GetGrid(&P3);
-
-				if ((i1 == i2) && (i2 == i3))
-				{
-					// Entire triangle is in a single voxel
-					m_GridList[i1].b3Add(i);
-				}
-				else
-				{
-					b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
-				}
-#endif
 			}
 #ifdef _DEBUG
 			else
