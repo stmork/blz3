@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/11/26 17:12:48  sm
+**	- Far clipping plane fix for Un*x
+**
 **	Revision 1.18  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
 **	- DlgLensFlare implemented
 **	- Adjusting far clipping plane inside b3RenderView
-**
+**	
 **	Revision 1.17  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -581,7 +584,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
 	if (l > farCP) farCP = l;
 
-	return farCP;
+	return farCP * 2 + 1;
 #else
 	return 10000;
 #endif
