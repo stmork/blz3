@@ -46,6 +46,10 @@
 
 /*
 **      $Log$
+**      Revision 1.100  2004/11/23 09:01:10  smork
+**      - Bump revision
+**      - Added non OpenGL compiling for VBOs.
+**
 **      Revision 1.99  2004/11/21 14:56:57  sm
 **      - Merged VBO development into main trunk.
 **
@@ -615,13 +619,13 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
-void b3RenderObject::b3MapIndices(GLenum map_mode)
+void b3RenderObject::b3MapIndices(b3_vbo_mapping map_mode)
 {
 	glGridElements->b3Map(map_mode);
 	glPolygonElements->b3Map(map_mode);
 }
 
-void b3RenderObject::b3MapVertices(GLenum map_mode)
+void b3RenderObject::b3MapVertices(b3_vbo_mapping map_mode)
 {
 	glVertexElements->b3Map(map_mode);
 }
@@ -658,8 +662,8 @@ void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
 	b3AllocVertexMemory(context);
 
 #ifdef VERBOSE
-	b3MapVertices(GL_READ_ONLY_ARB);
-	b3MapIndices(GL_READ_ONLY_ARB);
+	b3MapVertices(B3_MAP_VBO_R);
+	b3MapIndices(B3_MAP_VBO_R);
 
 	b3_gl_vertex  *glVertex   = *glVertexElements;
 	b3_gl_line    *glGrids    = *glGridElements;
@@ -686,6 +690,7 @@ void b3RenderObject::b3PreAlloc()
 {
 	if (!glInit)
 	{
+#ifdef BLZ3_USE_OPENGL
 		if (b3HasVBO())
 		{
 			glVertexElements  = new b3VboVertexElements();
@@ -698,6 +703,11 @@ void b3RenderObject::b3PreAlloc()
 			glGridElements    = new b3ArrayGridElements();
 			glPolygonElements = new b3ArrayPolygonElements();
 		}
+#else
+		glVertexElements  = new b3SimpleVertexElements();
+		glGridElements    = new b3SimpleGridElements();
+		glPolygonElements = new b3SimplePolygonElements();
+#endif
 		glInit = true;
 	}
 }
@@ -740,7 +750,7 @@ void b3RenderObject::b3Update()
 {
 	if ((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
 	{
-		b3MapIndices(GL_WRITE_ONLY_ARB);
+		b3MapIndices(B3_MAP_VBO_W);
 #ifdef VERBOSE
 		b3_gl_line    *glGrids    = *glGridElements;
 		b3_gl_polygon *glPolygons = *glPolygonElements;
@@ -770,8 +780,8 @@ void b3RenderObject::b3Update()
 
 	if (!glVertexElements->b3IsComputed())
 	{
-		b3MapVertices(GL_WRITE_ONLY_ARB);
-		b3MapIndices(GL_READ_ONLY_ARB);
+		b3MapVertices(B3_MAP_VBO_W);
+		b3MapIndices(B3_MAP_VBO_R);
 
 #ifdef VERBOSE
 		b3_gl_vertex  *glVertex   = *glVertexElements;
@@ -891,7 +901,7 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
 	b3Update();
 
-	b3MapVertices(GL_READ_ONLY_ARB);
+	b3MapVertices(B3_MAP_VBO_R);
 
 	b3_gl_vertex *glVertex = *glVertexElements;
 	b3_bool       result = false;
@@ -915,8 +925,8 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix *transformation,
 	b3_bool    is_affine)
 {
-	b3MapVertices(GL_READ_WRITE_ARB);
-	b3MapIndices(GL_READ_ONLY_ARB);
+	b3MapVertices(B3_MAP_VBO_RW);
+	b3MapIndices(B3_MAP_VBO_R);
 
 	b3_count      glVertexCount =  glVertexElements->b3GetCount();
 	b3_gl_vertex *glVertex      = *glVertexElements;
@@ -1360,8 +1370,8 @@ void b3RenderObject::b3CheckGeometry(
 	b3_render_mode   render_mode)
 {
 #ifdef _DEBUG
-	b3MapVertices(GL_READ_ONLY_ARB);
-	b3MapIndices(GL_READ_ONLY_ARB);
+	b3MapVertices(B3_MAP_VBO_R);
+	b3MapIndices(B3_MAP_VBO_R);
 
 	b3_gl_vertex  *glVertex   = *glVertexElements;
 	b3_gl_line    *glGrids    = *glGridElements;

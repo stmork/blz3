@@ -182,29 +182,29 @@ protected:
 	b3PolygonElements *glPolygonElements;
 
 #ifdef BLZ3_USE_OPENGL
-	GLuint           glDisplayList;
+	GLuint             glDisplayList;
 
 	// Some material values
-	GLfloat          glAmbient[4];
-	GLfloat          glDiffuse[4];
-	GLfloat          glSpecular[4];
-	GLfloat          glShininess;
+	GLfloat            glAmbient[4];
+	GLfloat            glDiffuse[4];
+	GLfloat            glSpecular[4];
+	GLfloat            glShininess;
 	
 	// Some texture values
-	GLuint           glTextureId;
-	GLubyte         *glTextureData;
-	b3_res           glTextureSize;
-	b3_res           glTextureSizeX;
-	b3_res           glTextureSizeY;
-	b3_f64           glTextureTransX;
-	b3_f64           glTextureTransY;
-	b3_f64           glTextureScaleX;
-	b3_f64           glTextureScaleY;
+	GLuint             glTextureId;
+	GLubyte           *glTextureData;
+	b3_res             glTextureSize;
+	b3_res             glTextureSizeX;
+	b3_res             glTextureSizeY;
+	b3_f64             glTextureTransX;
+	b3_f64             glTextureTransY;
+	b3_f64             glTextureScaleX;
+	b3_f64             glTextureScaleY;
 #endif
 
 public:
-	static b3Color   m_GridColor;
-	static b3Color   m_SelectedColor;
+	static b3Color     m_GridColor;
+	static b3Color     m_SelectedColor;
 
 protected:
 
@@ -272,8 +272,8 @@ private:
 	        void            b3DrawLinedGeometry(b3RenderContext *context);
 	        void            b3DrawFilledGeometry(b3RenderContext *context);
 
-			void            b3MapIndices(GLenum map_mode = GL_READ_WRITE_ARB);
-			void            b3MapVertices(GLenum map_mode = GL_READ_WRITE_ARB);
+			void            b3MapIndices(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
+			void            b3MapVertices(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 			void            b3UnmapIndices();
 			void            b3UnmapVertices();
 };

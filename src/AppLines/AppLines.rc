@@ -3033,8 +3033,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,99,2,13
- PRODUCTVERSION 2,99,2,13
+ FILEVERSION 2,99,2,14
+ PRODUCTVERSION 2,99,2,14
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x3L
@@ -3052,14 +3052,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Blizzard Development Group\0"
             VALUE "FileDescription", "Lines III - Managing Blizzard geometry\0"
-            VALUE "FileVersion", "2, 99, 2, 13\0"
+            VALUE "FileVersion", "2, 99, 2, 14\0"
             VALUE "InternalName", "AppLines\0"
             VALUE "LegalCopyright", "Copyright (C) Steffen A. Mork\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "AppLines.EXE\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Lines III\0"
-            VALUE "ProductVersion", "2, 99, 2, 13\0"
+            VALUE "ProductVersion", "2, 99, 2, 14\0"
             VALUE "SpecialBuild", "\0"
         END
     END

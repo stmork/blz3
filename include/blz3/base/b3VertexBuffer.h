@@ -23,6 +23,26 @@
 #include "blz3/base/b3RenderTypes.h"
 #include "blz3/base/b3VectorBufferObjects.h"
 
+#ifdef BLZ3_USE_OPENGL
+
+enum b3_vbo_mapping
+{
+	B3_MAP_VBO_RW = GL_READ_WRITE_ARB,
+	B3_MAP_VBO_R  = GL_READ_ONLY_ARB,
+	B3_MAP_VBO_W  = GL_WRITE_ONLY_ARB
+};
+
+#else
+
+enum b3_vbo_mapping
+{
+	B3_MAP_VBO_RW,
+	B3_MAP_VBO_R,
+	B3_MAP_VBO_W
+};
+
+#endif
+
 class b3RenderContext;
 
 class B3_PLUGIN b3VertexBuffer : public b3Mem
@@ -36,12 +56,12 @@ protected:
 public:
 	             b3VertexBuffer();
 
-	virtual void b3Map(GLenum map_mode = GL_READ_WRITE_ARB);
+	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
 	virtual void b3CustomData();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount) = 0;
 	virtual void b3FreeVertexMemory() = 0;
-	virtual void b3Draw() = 0;
+	virtual void b3Draw();
 
 	inline b3_count b3GetCount()
 	{
@@ -152,34 +172,58 @@ public:
 
 /*************************************************************************
 **                                                                      **
+**                        Simple buffer implementation                  **
+**                                                                      **
+*************************************************************************/
+
+class B3_PLUGIN b3SimpleVertexElements : public b3VertexElements
+{
+public:
+	             b3SimpleVertexElements();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void b3FreeVertexMemory();
+};
+
+class B3_PLUGIN b3SimpleGridElements : public b3GridElements
+{
+public:
+	             b3SimpleGridElements();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void b3FreeVertexMemory();
+};
+
+class B3_PLUGIN b3SimplePolygonElements : public b3PolygonElements
+{
+public:
+	             b3SimplePolygonElements();
+	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
+	virtual void b3FreeVertexMemory();
+};
+
+/*************************************************************************
+**                                                                      **
 **                        Standard OpenGL VertexArray implementation    **
 **                                                                      **
 *************************************************************************/
 
-class B3_PLUGIN b3ArrayVertexElements : public b3VertexElements
+class B3_PLUGIN b3ArrayVertexElements : public b3SimpleVertexElements
 {
 public:
 	             b3ArrayVertexElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
 	virtual void b3Draw();
 };
 
-class B3_PLUGIN b3ArrayGridElements : public b3GridElements
+class B3_PLUGIN b3ArrayGridElements : public b3SimpleGridElements
 {
 public:
 	             b3ArrayGridElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
 	virtual void b3Draw();
 };
 
-class B3_PLUGIN b3ArrayPolygonElements : public b3PolygonElements
+class B3_PLUGIN b3ArrayPolygonElements : public b3SimplePolygonElements
 {
 public:
 	             b3ArrayPolygonElements();
-	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
-	virtual void b3FreeVertexMemory();
 	virtual void b3Draw();
 };
 
@@ -192,7 +236,9 @@ public:
 class B3_PLUGIN b3VBO : protected b3VectorBufferObjects
 {
 protected:
+#ifdef BLZ3_USE_OPENGL
 	GLuint glVBO;
+#endif
 
 public:
 	              b3VBO();
@@ -205,7 +251,7 @@ public:
 	             b3VboVertexElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
 	virtual void b3FreeVertexMemory();
-	virtual void b3Map(GLenum map_mode = GL_READ_WRITE_ARB);
+	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
 	virtual void b3CustomData();
 	virtual void b3Draw();
@@ -217,7 +263,7 @@ public:
 	             b3VboGridElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
 	virtual void b3FreeVertexMemory();
-	virtual void b3Map(GLenum map_mode = GL_READ_WRITE_ARB);
+	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
 	virtual void b3CustomData();
 	virtual void b3Draw();
@@ -229,7 +275,7 @@ public:
 	             b3VboPolygonElements();
 	virtual void b3AllocVertexMemory(b3RenderContext *context,b3_count new_amount);
 	virtual void b3FreeVertexMemory();
-	virtual void b3Map(GLenum map_mode = GL_READ_WRITE_ARB);
+	virtual void b3Map(b3_vbo_mapping map_mode = B3_MAP_VBO_RW);
 	virtual void b3Unmap();
 	virtual void b3CustomData();
 	virtual void b3Draw();

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.53)
-AC_INIT(blz3, 2.99.2-13, blz3-dev@morknet.de, blz3.tar.gz)
+AC_INIT(blz3, 2.99.2-14, blz3-dev@morknet.de, blz3.tar.gz)
 AC_CONFIG_SRCDIR([include/blz3/b3Types.h])
 AC_CONFIG_HEADER([include_unix/blz3/autoconf.h])
 
@@ -107,5 +107,6 @@ AC_CONFIG_FILES([
 	src/test_unix/Makefile
 	src/OpenGL/Makefile
 	src/brt3/Makefile
-	src/tools/Makefile])
+	src/tools/Makefile
+	src/cpuperf/Makefile])
 AC_OUTPUT
