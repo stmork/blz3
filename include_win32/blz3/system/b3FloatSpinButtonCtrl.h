@@ -1,7 +1,7 @@
 /*
 **
-**	$Filename:	b3FloatSpinButtonCtrl.h $
-**	$Release:	Dortmund 2002 $
+**	$Filename:	b3ControlUnits.h $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Spin button control for float values
 **
-**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -26,6 +26,7 @@
 //
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3ControlUnits.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatSpinButtonCtrl window
@@ -34,14 +35,15 @@
 #define B3_FSBC_DEFAULT_ACCEL     5.0
 #define B3_FSBC_DEFAULT_DIGITS    2
 
-class CB3FloatSpinButtonCtrl : public CSpinButtonCtrl
+class CB3FloatSpinButtonCtrl : public CSpinButtonCtrl, public b3ControlUnits
 {
-	b3_f64 m_Increment;
-	b3_f64 m_Min;
-	b3_f64 m_Max;
-	b3_f64 m_Pos;
-	b3_f64 m_Accel;
-	char   m_Format[16];
+
+	b3_f64        m_Increment;
+	b3_f64        m_Min;
+	b3_f64        m_Max;
+	b3_f64        m_Pos;
+	b3_f64        m_Accel;
+	char          m_Format[16];
 
 public:
 	         CB3FloatSpinButtonCtrl();

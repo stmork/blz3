@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Slider control for float values
 **
-**	(C) Copyright 2001, 2002, 2003, 2004  Steffen A. Mork
+**	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/10 15:59:51  sm
+**	- Added control units as base class for
+**	  o CB3FloatSliderCtrl
+**	  o CB3FloatSpinButtonCtrl
+**
 **	Revision 1.4  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
-**
+**	
 **	Revision 1.3  2004/04/09 17:30:31  sm
 **	- Wood dialog fine tuning.
 **	

@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	b3FloatSliderCtrl.h $
-**	$Release:	Dortmund 2002 $
+**	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Spin button control for float values
+**	Blizzard III - Slider control for float values
 **
-**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	(C) Copyright 2004  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -26,6 +26,7 @@
 //
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3ControlUnits.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatSliderCtrl 
@@ -34,7 +35,7 @@
 #define B3_FSBC_DEFAULT_ACCEL     5.0
 #define B3_FSBC_DEFAULT_DIGITS    2
 
-class CB3FloatSliderCtrl : public CSliderCtrl
+class CB3FloatSliderCtrl : public CSliderCtrl, public b3ControlUnits
 {
 	b3_f64 m_Min;
 	b3_f64 m_Max;

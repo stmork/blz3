@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/10 15:59:51  sm
+**	- Added control units as base class for
+**	  o CB3FloatSliderCtrl
+**	  o CB3FloatSpinButtonCtrl
+**
 **	Revision 1.1  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
-**
+**	
 **
 */
 
@@ -53,6 +58,37 @@ CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgMatOakPlank)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
+	m_ReflectionCtrl.b3SetRange(0.0,1.0);
+	m_ReflectionCtrl.b3SetIncrement(0.01);
+	m_ReflectionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_ReflectionCtrl.b3SetDigits(2,1);
+	m_RefractionCtrl.b3SetRange(0.0,1.0);
+	m_RefractionCtrl.b3SetIncrement(0.01);
+	m_RefractionCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERCENT);
+	m_RefractionCtrl.b3SetDigits(2,1);
+	m_RefrValueCtrl.b3SetRange(-5.0,5.0);
+	m_RefrValueCtrl.b3SetDigits(0,2);
+	m_RefrValueCtrl.b3SetIncrement(0.01);
+	m_HighLightCtrl.b3SetRange(1.0,100000);
+	m_HighLightCtrl.b3SetDigits(0,1);
+	m_HighLightCtrl.b3SetIncrement(10.0);
+
+    m_RotYCtrl.b3SetRange(-0.5 * M_PI,0.5 * M_PI);
+	m_RotYCtrl.b3SetTicks(M_PI / 18,M_PI / 9);
+	m_RotZCtrl.b3SetRange(-0.5 * M_PI,0.5 * M_PI);
+	m_RotZCtrl.b3SetTicks(M_PI / 18,M_PI / 9);
+	m_RingyCtrl.b3SetRange(0,1);
+	m_GrainyCtrl.b3SetRange(0,1);
+	m_GrainFrequencyCtrl.b3SetRange(0,50);
+
+	m_RingSpacingCtrl.b3SetRange(0,2);
+	m_RingFrequencyCtrl.b3SetRange(0,2);
+	m_RingNoiseCtrl.b3SetRange(0,2);
+	m_RingNoiseFrequencyCtrl.b3SetRange(0,2);
+	m_TrunkWobbleCtrl.b3SetRange(0,2);
+	m_TrunkWobbleFrequencyCtrl.b3SetRange(0,0.025);
+	m_AngularWobbleCtrl.b3SetRange(0,1);
+	m_AngularWobbleFrequencyCtrl.b3SetRange(0,1);
 }
 
 CDlgMatOakPlank::~CDlgMatOakPlank()

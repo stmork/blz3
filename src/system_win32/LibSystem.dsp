@@ -106,6 +106,10 @@ SOURCE=.\b3Config.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ControlUnits.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3DashPen.cpp
 # End Source File
 # Begin Source File
@@ -227,6 +231,10 @@ SOURCE=..\..\include_win32\blz3\system\b3ColorField.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3ComboBox.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ControlUnits.h
 # End Source File
 # Begin Source File
 

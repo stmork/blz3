@@ -17,7 +17,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Lines III includes                            **
+**                        Blizzard III includes                         **
 **                                                                      **
 *************************************************************************/
 
@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/04/10 15:59:51  sm
+**	- Added control units as base class for
+**	  o CB3FloatSliderCtrl
+**	  o CB3FloatSpinButtonCtrl
+**
 **	Revision 1.9  2004/04/10 14:33:25  sm
 **	- Added oak plank support.
-**
+**	
 **	Revision 1.8  2003/08/31 08:56:23  sm
 **	- Windows support for the snprintf functions
 **	
@@ -143,7 +148,7 @@ void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 	
 	B3_ASSERT(edit != null);
 	edit->GetWindowText(value);
-	b3SetPos(atof(value) + (b3_f64)pNMUpDown->iDelta * m_Increment);
+	b3SetPos(atof(value) / b3GetUnit() + (b3_f64)pNMUpDown->iDelta * m_Increment);
 	*pResult = 1;
 }
 
@@ -221,7 +226,7 @@ b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 		edit = GetBuddy();
 		B3_ASSERT(edit != null);
 		edit->GetWindowText(value);
-		m_Pos = pos = atof(value);
+		m_Pos = pos = atof(value) / b3GetUnit();
 		B3_LIMIT(m_Pos,m_Min,m_Max);
 		if (m_Pos != pos)
 		{
@@ -252,7 +257,7 @@ b3_f64 CB3FloatSpinButtonCtrl::b3SetPos(b3_f64 pos)
 	// Set position
 	m_Pos = pos;
 	B3_LIMIT(m_Pos,m_Min,m_Max);
-	value.Format(m_Format,m_Pos);
+	value.Format(m_Format,m_Pos * b3GetUnit());
 	edit->SetWindowText(value);
 	SetPos(B3_VAL_TO_RANGE(m_Pos));
 	return m_Pos;
