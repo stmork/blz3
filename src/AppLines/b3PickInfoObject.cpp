@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/02/24 17:32:38  sm
+**	- Added further picking support.
+**	- Fixed geometry update delay.
+**
 **	Revision 1.1  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 */
 
 /*************************************************************************
@@ -71,6 +75,6 @@ void b3PickInfoObject::b3Modified()
 {
 	if (m_Shape != null)
 	{
-		m_Shape->b3Update();
+		m_Shape->b3Recompute();
 	}
 }

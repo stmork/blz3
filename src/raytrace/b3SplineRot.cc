@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2003/02/24 17:32:38  sm
+**      - Added further picking support.
+**      - Fixed geometry update delay.
+**
 **      Revision 1.21  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -317,6 +321,24 @@ void b3SplineRotShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 		control += offset;
 	}
 	b3TriangleShape::b3Transform(transformation,is_affine);
+}
+
+void b3SplineRotShape::b3SetupPicking(b3PickInfo *info)
+{
+	b3_vector *control;
+	b3_index   offset;
+	b3_index   x;
+
+	info->b3AddPickPoint(&m_Axis.pos,"b");
+	info->b3AddPickDir(&m_Axis.pos,&m_Axis.dir,"d");
+
+	control = m_Spline.controls;
+	offset  = m_Spline.offset;
+	for (x = 0;x < m_Spline.control_num;x++)
+	{
+		info->b3AddPickPoint(control);
+		control += offset;
+	}
 }
 
 void b3SplineRotShape::b3GetCount(

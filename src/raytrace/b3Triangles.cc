@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2003/02/24 17:32:39  sm
+**      - Added further picking support.
+**      - Fixed geometry update delay.
+**
 **      Revision 1.9  2002/08/16 11:40:39  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -328,4 +332,12 @@ void b3Triangles::b3ComputeIndices()
 	}
 	glGridCount = m_TriaCount * 3;
 	glPolyCount = m_TriaCount;
+}
+
+void b3Triangles::b3SetupPicking(b3PickInfo *info)
+{
+	for (int i = 0;i < m_VertexCount;i++)
+	{
+		info->b3AddPickPoint(&m_Vertices[i].Point);
+	}
 }

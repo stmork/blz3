@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/02/24 17:32:38  sm
+**	- Added further picking support.
+**	- Fixed geometry update delay.
+**
 **	Revision 1.13  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 **	Revision 1.12  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
 **	
@@ -162,7 +166,7 @@ CAppObjectDoc* CAppObjectView::GetDocument() // non-debug version is inline
 void CAppObjectView::OnInitialUpdate()
 {
 	// Do necessary Blizzard III stuff!
-	CAppObjectDoc *pDoc         = GetDocument();
+	CAppObjectDoc *pDoc = GetDocument();
 
 	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
 	m_Action[B3_SHAPE_MOVE]           = new CB3ActionShapeMove(this);
@@ -232,6 +236,7 @@ void CAppObjectView::b3Draw(
 		// Then draw objects
 		m_BBox->b3Draw(&pDoc->m_Context);
 		pDoc->b3DrawFulcrum();
+		m_PickList.m_Grid.b3Draw(&pDoc->m_Context);
 	}
 	else
 	{

@@ -1087,6 +1087,7 @@ public:
 	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	void    b3Normal(b3_ray *ray);
+	void    b3SetupPicking(b3PickInfo *pick_info);
 
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
@@ -1247,6 +1248,7 @@ public:
 	        void    b3ComputeIndices();
 	        b3_f64  b3Intersect(b3_ray *ray,b3_polar_precompute *polar);
 	        void    b3Normal(b3_ray *ray);
+	        void    b3SetupPicking(b3PickInfo *pick_info);
 
 	        b3_bool b3Prepare();
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
@@ -1326,6 +1328,7 @@ public:
 	void   b3ComputeVertices();
 	void   b3ComputeNormals(b3_bool normalize=true);
 	void   b3ComputeIndices();
+	void   b3SetupPicking(b3PickInfo *pick_info);
 };
 
 // SPLINE_ROT
@@ -1348,6 +1351,7 @@ public:
 	void    b3StoreShape();
 	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	b3_bool b3Prepare();
+	void    b3SetupPicking(b3PickInfo *pick_info);
 
 protected:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -1359,6 +1363,7 @@ protected:
 class b3SplineShape : public b3TriangleShape
 {
 	b3_count         m_xSubDiv,m_ySubDiv;
+
 protected:
 	b3_count         m_GridVertexCount;
 	b3_count         m_SolidVertexCount;
@@ -1377,6 +1382,7 @@ public:
 
 	void b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
+	void b3SetupPicking(b3PickInfo *pick_info);
 
 protected:
 	void b3StoreShape();
@@ -1519,6 +1525,7 @@ public:
 	void     b3Normal(b3_ray *ray);
 	b3_bool  b3Prepare();
 	void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	void     b3SetupPicking(b3PickInfo *pick_info);
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -1536,6 +1543,7 @@ public:
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void     b3ComputeNormals(b3_bool normalize = true);
 	        void     b3Transform(b3_matrix *transformation,b3_bool is_affine);
+	        void     b3SetupPicking(b3PickInfo *pick_info);
 	        b3_count b3GetMaxIntersections();
 };
 
@@ -1625,6 +1633,7 @@ public:
 	        void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
 	        b3_count b3GetMaxIntersections();
 	        void     b3Normal(b3_ray *ray);
+	        void     b3SetupPicking(b3PickInfo *pick_info);
 
 	        b3_bool  b3Prepare();
 	virtual void     b3GetStencilBoundInfo(b3_stencil_bound *info);

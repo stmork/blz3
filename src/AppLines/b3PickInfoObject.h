@@ -23,7 +23,7 @@
 
 class b3PickInfoObject : public b3PickInfo
 {
-	b3RenderView *m_RenderView;
+	b3RenderView  *m_RenderView;
 
 public:
 	     b3PickInfoObject(b3RenderView *render_view);

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2003/02/24 17:32:38  sm
+**      - Added further picking support.
+**      - Fixed geometry update delay.
+**
 **      Revision 1.13  2003/02/22 15:17:18  sm
 **      - Added support for selected shapes in object modeller
 **      - Glued b3Shape and b3ShapeRenderObject. There was no
@@ -316,6 +320,14 @@ void b3CSGShape3::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3Matrix::b3VMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3Matrix::b3VMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation,is_affine);
+}
+
+void b3CSGShape3::b3SetupPicking(b3PickInfo *info)
+{
+	info->b3AddPickPoint(&m_Base,"b");
+	info->b3AddPickDir(  &m_Base,&m_Dir1,"1");
+	info->b3AddPickDir(  &m_Base,&m_Dir2,"2");
+	info->b3AddPickDir(  &m_Base,&m_Dir3,"3");
 }
 
 b3_bool b3CSGShape3::b3Prepare()

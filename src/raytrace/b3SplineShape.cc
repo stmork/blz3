@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.42  2003/02/24 17:32:38  sm
+**      - Added further picking support.
+**      - Fixed geometry update delay.
+**
 **      Revision 1.41  2002/08/16 11:40:39  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -620,6 +624,69 @@ void b3SplineShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 		}
 	}
 	b3TriangleShape::b3Transform(transformation,is_affine);
+}
+
+void b3SplineShape::b3SetupPicking(b3PickInfo *info)
+{
+	b3_gl_vertex  vertex;
+	b3_gl_line    line;
+	b3_vector    *control;
+	b3_index      offset;
+	b3_index      x,y,start;
+
+	control = m_Spline[0].controls;
+	offset  = m_Spline[0].offset;
+
+	// Transform control points
+	for (y = 0;y < m_Spline[1].control_num;y++)
+	{
+		control  = &m_Spline[0].controls[y * m_Spline[1].offset];
+		for (x = 0;x < m_Spline[0].control_num;x++)
+		{
+			vertex.v.x = control->x;
+			vertex.v.y = control->y;
+			vertex.v.z = control->z;
+
+			info->m_Grid.m_Vertices.b3Add(vertex);
+			info->b3AddPickPoint(control);
+			control += offset;
+		}
+	}
+
+	// Compute horizontal grid lines
+	for (y = 0;y < m_Spline[1].control_num;y++)
+	{
+		start = y * m_Spline[0].control_num;
+		for (x = 1;x < m_Spline[0].control_num;x++)
+		{
+			line.a = start + x - 1;
+			line.b = start + x;
+			info->m_Grid.m_Grid.b3Add(line);
+		}
+		if (m_Spline[0].closed)
+		{
+			line.a = start;
+			line.b = start + m_Spline[0].control_num - 1;
+		}
+	}
+
+	// Compute vertical grid lines
+	offset = m_Spline[0].control_num;
+	for (x = 0;x < m_Spline[0].control_num;x++)
+	{
+		for (y = 1;y < m_Spline[1].control_num;y++)
+		{
+			line.a = x + (y - 1) * offset;
+			line.b = x +  y      * offset;
+			info->m_Grid.m_Grid.b3Add(line);
+		}
+		if (m_Spline[1].closed)
+		{
+			line.a = x + (m_Spline[1].control_num - 1) * offset;
+			line.b = x;
+		}
+	}
+	info->m_Grid.b3Recompute();
 }
 
 b3_bool b3SplineShape::b3Prepare()

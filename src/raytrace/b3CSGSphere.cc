@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2003/02/24 17:32:38  sm
+**      - Added further picking support.
+**      - Fixed geometry update delay.
+**
 **      Revision 1.23  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -231,6 +235,12 @@ void b3CSGSphere::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3Matrix::b3VMul (transformation,&m_Base,&m_Base,true);
 	b3Matrix::b3VMul (transformation,&m_Dir, &m_Dir, false);
 	b3TransformVertices(transformation,is_affine);
+}
+
+void b3CSGSphere::b3SetupPicking(b3PickInfo *info)
+{
+	info->b3AddPickPoint(&m_Base,"b");
+	info->b3AddPickDir(  &m_Base,&m_Dir,"r");
 }
 
 b3_bool b3CSGSphere::b3Prepare()

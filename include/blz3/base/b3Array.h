@@ -96,7 +96,7 @@ public:
 		return m_Index;
 	}
 
-	inline const T *b3GetBuffer()
+	inline T *b3GetBuffer()
 	{
 		return m_Buffer;
 	}
