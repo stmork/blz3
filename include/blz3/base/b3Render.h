@@ -46,6 +46,7 @@ public:
 	b3_count         glVertexCount;
 	b3_count         glPolyCount;
 	b3_count         glGridCount;
+	b3_count         glTextureSize;
 	b3_color         glBGColor;
 	b3_bool          glUseSpotLight;
 	b3_bool          glDrawCachedTextures;

@@ -42,20 +42,17 @@
 **                                                                      **
 *************************************************************************/
 
+#define no_DEBUG_VERBOSE
+
 #define B3_BLiZ 'BLiZ'
 #define B3_ZiLB 'ZiLB'
 
 #define B3_CLASS_MAX 0x7fff0000
 
-#ifdef _DEBUG
-#define	B3_ASSERT_INDEX	B3_ASSERT((b3_size)(b3Item::m_ParseIndex << 2) < b3Item::m_ItemSize)
-#else
-#define B3_ASSERT_INDEX
-#endif
-
 #define B3_PARSE_INDEX_VALID ((b3_size)(b3Item::m_ParseIndex << 2) < b3Item::m_ItemSize)
+#define	B3_ASSERT_INDEX      B3_ASSERT(B3_PARSE_INDEX_VALID)
 
-typedef enum
+enum b3_node_indices
 {
 	B3_NODE_IDX_SUCC = 0,
 	B3_NODE_IDX_PREV,
@@ -64,15 +61,15 @@ typedef enum
 	B3_NODE_IDX_OFFSET,
 	B3_NODE_IDX_FIRSTHEAD_CLASS,
 	B3_NODE_IDX_MIN // Should be 6 (including end of head marker)!
-} b3_node_indices;
+};
 
-typedef enum
+enum b3_head_indices
 {
 	B3_HEAD_IDX_CLASS = 0,
 	B3_HEAD_IDX_FIRST,
 	B3_HEAD_IDX_LAST,
 	B3_HEAD_SIZE // Should be 3
-} b3_head_indices;
+};
 
 /*************************************************************************
 **                                                                      **
@@ -80,7 +77,7 @@ typedef enum
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_world_error
 {
 	B3_WORLD_ERROR = -1,
 	B3_WORLD_OK    =  0,
@@ -92,7 +89,7 @@ typedef enum
 	B3_WORLD_STORAGE_NOT_IMPLEMENTED,
 	B3_WORLD_OUT_OF_ORDER,
 	B3_WORLD_CLASSTYPE_UNKNOWN
-} b3_world_error;
+};
 
 typedef b3Exception<b3_world_error> b3WorldException; 
 

@@ -57,12 +57,27 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2002/08/05 16:04:54  sm
+**	- Found first texture init bug. This wasn't an OpenGL bug. This
+**	  couldn't be because every implementation had got the same
+**	  bug. The static aux image for creating textures wasn't initialized
+**	  at the right time.
+**	- Version handling introduced: The version number is extracted
+**	  from the version resource now.
+**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**	  memory usage.
+**	- Some b3World messages removed.
+**	- The 0x7fff class is registered into the b3ItemRegister now. This
+**	  prevents printing a warning when this class isn't found. Due to
+**	  the fact that *every* Blizzard data contains this class every
+**	  data read put out this warning.
+**
 **	Revision 1.63  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.62  2002/07/31 11:57:10  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
@@ -532,7 +547,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	CMainFrame *main = CB3GetMainFrame();
 	CString     message;
 	BOOL        result = FALSE;
-b3Log_SetLevel(B3LOG_FULL);
+
 	// TODO: Add your specialized creation code here
 	try
 	{

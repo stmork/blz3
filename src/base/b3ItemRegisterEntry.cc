@@ -35,6 +35,21 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2002/08/05 16:04:55  sm
+**      - Found first texture init bug. This wasn't an OpenGL bug. This
+**        couldn't be because every implementation had got the same
+**        bug. The static aux image for creating textures wasn't initialized
+**        at the right time.
+**      - Version handling introduced: The version number is extracted
+**        from the version resource now.
+**      - The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**        memory usage.
+**      - Some b3World messages removed.
+**      - The 0x7fff class is registered into the b3ItemRegister now. This
+**        prevents printing a warning when this class isn't found. Due to
+**        the fact that *every* Blizzard data contains this class every
+**        data read put out this warning.
+**
 **      Revision 1.2  2001/08/05 19:51:56  sm
 **      - Now having OpenGL software for Windows NT and created
 **        new Lines III.
@@ -67,7 +82,7 @@ b3ItemRegisterEntry::b3ItemRegisterEntry(
 	load_func  = new_load_func;
 	class_type = new_class_type;
 	is_class   = new_is_class;
-	b3PrintF (B3LOG_DEBUG," Registered class %04lx:%04lx%s.\n",
+	b3PrintF (B3LOG_FULL," Registered class %04lx:%04lx%s.\n",
 		class_type >> 16,
 		class_type & 0xffff,
 		is_class ? " (class)" : "");

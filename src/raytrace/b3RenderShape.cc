@@ -33,6 +33,21 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2002/08/05 16:04:55  sm
+**      - Found first texture init bug. This wasn't an OpenGL bug. This
+**        couldn't be because every implementation had got the same
+**        bug. The static aux image for creating textures wasn't initialized
+**        at the right time.
+**      - Version handling introduced: The version number is extracted
+**        from the version resource now.
+**      - The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**        memory usage.
+**      - Some b3World messages removed.
+**      - The 0x7fff class is registered into the b3ItemRegister now. This
+**        prevents printing a warning when this class isn't found. Due to
+**        the fact that *every* Blizzard data contains this class every
+**        data read put out this warning.
+**
 **      Revision 1.51  2002/08/02 18:55:44  sm
 **      - SplineShape weren't be multi threadable - fixed.
 **
@@ -535,19 +550,16 @@ GLushort *b3ShapeRenderContext::b3GetConePolygons()
 b3ShapeRenderObject::b3ShapeRenderObject(b3_size class_size,b3_u32 class_type) :
 	b3Shape(class_size, class_type)
 {
-//	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 class_type) :
 	b3Shape(sizeof(b3ShapeRenderObject), class_type)
 {
-//	Between = null;
 }
 
 b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
 	b3Shape(src)
 {
-//	Between = null;
 }
 
 void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)

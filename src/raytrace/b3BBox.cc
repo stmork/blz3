@@ -32,12 +32,27 @@
 
 /*
 **	$Log$
+**	Revision 1.62  2002/08/05 16:04:55  sm
+**	- Found first texture init bug. This wasn't an OpenGL bug. This
+**	  couldn't be because every implementation had got the same
+**	  bug. The static aux image for creating textures wasn't initialized
+**	  at the right time.
+**	- Version handling introduced: The version number is extracted
+**	  from the version resource now.
+**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**	  memory usage.
+**	- Some b3World messages removed.
+**	- The 0x7fff class is registered into the b3ItemRegister now. This
+**	  prevents printing a warning when this class isn't found. Due to
+**	  the fact that *every* Blizzard data contains this class every
+**	  data read put out this warning.
+**
 **	Revision 1.61  2002/08/04 13:24:56  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.60  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
@@ -747,13 +762,16 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	if (subUpper.y > upper->y) upper->y = subUpper.y;
 	if (subUpper.z > upper->z) upper->z = subUpper.z;
 
-	// Compute bounds of thos BBox
+	// Compute bounds of this BBox
 	if (result)
 	{
 		m_DimSize.x = subUpper.x - subLower.x;
 		m_DimSize.y = subUpper.y - subLower.y;
 		m_DimSize.z = subUpper.z - subLower.z;
 		m_DimBase   = subLower;
+
+		b3Recompute();
+		b3RenderObject::b3Update();
 	}
 
 	return result;
@@ -888,6 +906,7 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	context->glVertexCount = 0;
 	context->glPolyCount   = 0;
 	context->glGridCount   = 0;
+	context->glTextureSize = 0;
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;

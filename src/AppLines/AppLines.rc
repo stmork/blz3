@@ -708,15 +708,16 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 182, 86
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 207, 86
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Info über Lines III"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "AppLines Version 1.0",IDC_VERSION,40,10,119,8,
+    LTEXT           "Blizzard Lines III",IDC_VERSION,40,10,145,20,
                     SS_NOPREFIX
-    LTEXT           "Copyright (C) 2001",IDC_COPYRIGHT,40,25,119,25
+    LTEXT           "Copyright (C) 2001, 2002",IDC_COPYRIGHT,40,35,150,20,
+                    SS_NOPREFIX
     DEFPUSHBUTTON   "OK",IDOK,35,60,50,14,WS_GROUP
 END
 
@@ -1788,13 +1789,13 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,1
- PRODUCTVERSION 3,0,0,1
+ FILEVERSION 2,99,1,1
+ PRODUCTVERSION 2,99,1,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+ FILEFLAGS 0x3L
 #else
- FILEFLAGS 0x0L
+ FILEFLAGS 0x2L
 #endif
  FILEOS 0x4L
  FILETYPE 0x1L
@@ -1807,14 +1808,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "Blizzard Development Group\0"
             VALUE "FileDescription", "Lines III - Managing Blizzard geometry\0"
-            VALUE "FileVersion", "3, 0, 0, 1\0"
+            VALUE "FileVersion", "2, 99, 1, 1\0"
             VALUE "InternalName", "AppLines\0"
-            VALUE "LegalCopyright", "Copyright (C) 2001, 2002\0"
-            VALUE "LegalTrademarks", "Steffen A. Mork\0"
+            VALUE "LegalCopyright", "Copyright (C) Steffen A. Mork\0"
+            VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "AppLines.EXE\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Lines III\0"
-            VALUE "ProductVersion", "3, 0, 0, 1\0"
+            VALUE "ProductVersion", "2, 99, 1, 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1838,7 +1839,7 @@ BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 175
+        RIGHTMARGIN, 200
         TOPMARGIN, 7
         BOTTOMMARGIN, 79
     END
@@ -2237,7 +2238,7 @@ BEGIN
     IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
     IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
     IDS_DOC_READ            "Datei %s wird geladen..."
-    IDS_DOC_REORG           "Die Objekte werden angeordnet..."
+    IDS_DOC_REORG           "Die Objekthierarchien werden rekonstruiert..."
     IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
     IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
     IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."

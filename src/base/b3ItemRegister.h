@@ -21,6 +21,7 @@ class b3ItemRegister
 {
 	b3Base<b3ItemRegisterEntry> classes;
 public:
+	                     b3ItemRegister();
 	                    ~b3ItemRegister();
 	void                 b3Append(b3ItemRegisterEntry *new_entry);
 	b3_bool              b3IsEmpty();

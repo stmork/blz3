@@ -31,12 +31,27 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/05 16:04:55  sm
+**	- Found first texture init bug. This wasn't an OpenGL bug. This
+**	  couldn't be because every implementation had got the same
+**	  bug. The static aux image for creating textures wasn't initialized
+**	  at the right time.
+**	- Version handling introduced: The version number is extracted
+**	  from the version resource now.
+**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**	  memory usage.
+**	- Some b3World messages removed.
+**	- The 0x7fff class is registered into the b3ItemRegister now. This
+**	  prevents printing a warning when this class isn't found. Due to
+**	  the fact that *every* Blizzard data contains this class every
+**	  data read put out this warning.
+**
 **	Revision 1.5  2002/08/04 13:24:56  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.4  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
@@ -75,7 +90,6 @@ b3PrepareInfo::b3PrepareInfo()
 	m_MinBBoxesForThreading = 0;
 #else
 	m_MinBBoxesForThreading = B3_MIN_BBOXES_FOR_THREADING;
-	m_MinBBoxesForThreading = 0;
 #endif
 }
 
@@ -120,13 +134,10 @@ b3_u32 b3PrepareInfo::b3PrepareThread(void *ptr)
 {
 	b3PrepareInfo   *info = (b3PrepareInfo *)ptr;
 	b3BBoxReference *reference;
-	b3BBox          *bbox;
 
 	while (reference = info->b3GetBBoxReference())
 	{
-		bbox = reference->m_BBox;
-		b3PrintF(B3LOG_FULL,"      Processing object %s\n",bbox->b3GetName());
-		if (!info->m_PrepareProc(bbox))
+		if (!info->m_PrepareProc(reference->m_BBox))
 		{
 			return 0;
 		}
@@ -162,14 +173,10 @@ b3_bool b3PrepareInfo::b3Prepare(b3PrepareProc prepare_proc)
 	}
 	else
 	{
-		b3BBox *bbox;
-
 		b3PrintF(B3LOG_FULL,"    Doing prepare thread...\n");
 		for (int i = 0;(i < m_BBoxRefArray.b3GetCount()) && result;i++)
 		{
-			bbox = m_BBoxRefArray[i].m_BBox;
-			b3PrintF(B3LOG_FULL,"      Processing object %s\n",bbox->b3GetName());
-			result = m_PrepareProc(bbox);
+			result = m_PrepareProc(m_BBoxRefArray[i].m_BBox);
 		}
 	}
 	b3PrintF(B3LOG_FULL,"    Preparing finished %s.\n",

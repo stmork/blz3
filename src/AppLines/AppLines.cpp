@@ -38,6 +38,7 @@
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3FileDialog.h"
+#include "blz3/system/b3Version.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
@@ -52,9 +53,24 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/08/05 16:04:54  sm
+**	- Found first texture init bug. This wasn't an OpenGL bug. This
+**	  couldn't be because every implementation had got the same
+**	  bug. The static aux image for creating textures wasn't initialized
+**	  at the right time.
+**	- Version handling introduced: The version number is extracted
+**	  from the version resource now.
+**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**	  memory usage.
+**	- Some b3World messages removed.
+**	- The 0x7fff class is registered into the b3ItemRegister now. This
+**	  prevents printing a warning when this class isn't found. Due to
+**	  the fact that *every* Blizzard data contains this class every
+**	  data read put out this warning.
+**
 **	Revision 1.38  2002/08/05 07:32:24  sm
 **	- Key word test
-**
+**	
 **	Revision 1.37  2002/08/01 15:02:55  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
@@ -389,6 +405,8 @@ static const CLSID object_clsid =
 BOOL CAppLinesApp::InitInstance()
 {
 	// Parse command line for standard shell commands, DDE, file open
+	CB3Version version;
+
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
 #ifndef _DEBUG
@@ -427,6 +445,11 @@ BOOL CAppLinesApp::InitInstance()
 #ifdef _DEBUG
 	b3Log_SetLevel(B3LOG_FULL);
 #endif
+	b3PrintF(B3LOG_NORMAL,"%s %s\n%s\n",
+		b3ClientName(),
+		version.b3GetVersionString(),
+		version.b3GetCopyrightString());
+
 	b3InitRaytrace::b3Init();
 
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
@@ -733,31 +756,10 @@ BOOL CAboutDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	char buffer[1024];
-	CString pattern;
-	CString copyright;
-	CString version;
-	b3Date  today;
+	CB3Version version;
 
-	copyright.Format("Copyright (C) %lu by\nBlizzard III",today.year);
-#ifdef _DEBUG
-	copyright += " (Debug version)";
-#endif
-	pattern.Format("%cName: %%s %c",'$','$');
-	if (sscanf(AppLinesVersionString,pattern,buffer) != 1)
-	{
-		buffer[0] = 0;
-	}
-	else
-	{
-		if (strcmp(buffer,"$") == 0)
-		{
-			buffer[0] = 0;
-		}
-	}
-	version.Format("%s %s",CB3ClientString(),buffer);
-	m_CtrlVersion.SetWindowText(version);
-	m_CtrlCopyright.SetWindowText(copyright);
+	m_CtrlVersion.SetWindowText(version.b3GetVersionString());
+	m_CtrlCopyright.SetWindowText(version.b3GetCopyrightString());
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE

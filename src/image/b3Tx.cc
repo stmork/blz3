@@ -36,9 +36,24 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/08/05 16:04:55  sm
+**	- Found first texture init bug. This wasn't an OpenGL bug. This
+**	  couldn't be because every implementation had got the same
+**	  bug. The static aux image for creating textures wasn't initialized
+**	  at the right time.
+**	- Version handling introduced: The version number is extracted
+**	  from the version resource now.
+**	- The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**	  memory usage.
+**	- Some b3World messages removed.
+**	- The 0x7fff class is registered into the b3ItemRegister now. This
+**	  prevents printing a warning when this class isn't found. Due to
+**	  the fact that *every* Blizzard data contains this class every
+**	  data read put out this warning.
+**
 **	Revision 1.19  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.18  2002/03/11 13:48:55  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
@@ -287,13 +302,10 @@ b3_bool b3Tx::b3AllocTx(
 	b3_res y,
 	b3_res d)
 {
-	b3FreeTx();
-	data    = null;
-	palette = null;
+	b3EndHist();
 
 	dSize   = 0;
 	pSize   = 0;
-		   
 	xSize   = 0;
 	ySize   = 0;
 	depth   = 0;
@@ -322,36 +334,42 @@ b3_bool b3Tx::b3AllocTx(
 	}
 	if (type == B3_TX_UNDEFINED)
 	{
+		b3FreeTx();
 		return false;
 	}
 
 	if (dSize > 0)
 	{
-		data    = (b3_u08 *)b3Alloc(dSize);
-		if (data == null)
+		void *new_ptr;
+
+		new_ptr = b3Realloc(data,dSize);
+		if (new_ptr == null)
 		{
-			type = B3_TX_UNDEFINED;
+			b3FreeTx();
 			return false;
 		}
+		data = (unsigned char *)new_ptr;
 	}
 
 	if (pSize > 0)
 	{
-		palette = (b3_pkd_color *)b3Alloc(pSize * sizeof(b3_pkd_color));
-		if (palette == null)
+		void *new_ptr;
+
+		new_ptr = b3Realloc(palette,pSize * sizeof(b3_pkd_color));
+		if (new_ptr == null)
 		{
-			b3Free();
-			type = B3_TX_UNDEFINED;
+			b3FreeTx();
 			return false;
 		}
+		palette = (b3_pkd_color *)new_ptr;
 	}
 
-		// setting size values
+	// setting size values
 	xSize  = x;
 	ySize  = y;
 	depth  = d;
 
-		// initializing default palettes
+	// initializing default palettes
 	if (depth == 1)
 	{
 		palette[0] = 0x00ffffff;
@@ -367,10 +385,42 @@ b3_bool b3Tx::b3AllocTx(
 			palette[i] = 0x010101 * i;
 		}
 	}
+	FileType  = FT_UNKNOWN;
 	measure.b3Init(xSize,ySize,depth);
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits)\n",
 		xSize,ySize,depth);
 	return data != null;
+}
+
+void b3Tx::b3FreeTx()
+{
+	if (data != null)
+	{
+		b3Free (data);
+		data  = null;
+		dSize = 0;
+	}
+	if (palette != null)
+	{
+		try
+		{
+			b3Free ((void *)palette);
+		}
+		catch(...)
+		{
+			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() Oops?\n");
+			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() %s %d\n",__FILE__,__LINE__);
+		}
+		palette = null;
+		pSize   = 0;
+	}
+	type      = B3_TX_UNDEFINED;
+	FileType  = FT_UNKNOWN;
+	xSize     = 0;
+	ySize     = 0;
+	depth     = 0;
+	ScanLines = 0;
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
 b3_bool b3Tx::b3IsGreyPalette()
@@ -573,36 +623,6 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	whiteRatio  = srcTx->whiteRatio;
 	ScanLines   = srcTx->ScanLines;
 	measure     = srcTx->measure;
-}
-
-void b3Tx::b3FreeTx()
-{
-	if (data != null)
-	{
-		b3Free (data);
-		data = null;
-	}
-	if (palette != null)
-	{
-		try
-		{
-			b3Free ((void *)palette);
-		}
-		catch(...)
-		{
-			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() Oops?\n");
-			b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3Tx() %s %d\n",__FILE__,__LINE__);
-		}
-		palette = null;
-	}
-	b3EndHist();
-	type      = B3_TX_UNDEFINED;
-	FileType  = FT_UNKNOWN;
-	xSize     = 0;
-	ySize     = 0;
-	depth     = 0;
-	ScanLines = 0;
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3FreeTx()\n");
 }
 
 void *b3Tx::b3GetData()

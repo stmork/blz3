@@ -36,6 +36,21 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2002/08/05 16:04:55  sm
+**      - Found first texture init bug. This wasn't an OpenGL bug. This
+**        couldn't be because every implementation had got the same
+**        bug. The static aux image for creating textures wasn't initialized
+**        at the right time.
+**      - Version handling introduced: The version number is extracted
+**        from the version resource now.
+**      - The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**        memory usage.
+**      - Some b3World messages removed.
+**      - The 0x7fff class is registered into the b3ItemRegister now. This
+**        prevents printing a warning when this class isn't found. Due to
+**        the fact that *every* Blizzard data contains this class every
+**        data read put out this warning.
+**
 **      Revision 1.49  2002/08/04 13:24:55  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -692,6 +707,7 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 	context->glVertexCount += glVertexCount;
 	context->glPolyCount   += glPolyCount;
 	context->glGridCount   += glGridCount;
+	context->glTextureSize += glTextureSize;
 }
 
 /*************************************************************************
@@ -914,7 +930,8 @@ void b3RenderObject::b3TransformVertices(
 **                                                                      **
 *************************************************************************/
 
-static b3Tx glTextureBuffer;
+static b3Tx    glTextureBuffer;
+static b3Mutex glTextureMutex;
 
 void b3RenderObject::b3RecomputeMaterial()
 {
@@ -1023,6 +1040,19 @@ void b3RenderObject::b3UpdateMaterial()
 			{
 				glTextureScaleX = 1;
 				glTextureScaleY = 1;
+				glTextureMutex.b3Lock();
+				if (!glTextureBuffer.b3IsLoaded())
+				{
+#ifndef _DEBUG
+					b3_res max  = 128;
+#else
+					b3_res max  =   8;
+#endif
+					glTextureBuffer.b3AllocTx(max,max,24);
+				}
+				glTextureMutex.b3Unlock();
+
+				glTextureMutex.b3Lock();
 				if (b3GetImage(&glTextureBuffer))
 				{
 					b3CreateImage(null,&glTextureBuffer);
@@ -1032,6 +1062,7 @@ void b3RenderObject::b3UpdateMaterial()
 					// Free memory
 					b3CreateTexture(null,0);
 				}
+				glTextureMutex.b3Unlock();
 			}
 		}
 
@@ -1072,51 +1103,84 @@ void b3RenderObject::b3CreateTexture(
 		ySize = xSize;
 	}
 	size = xSize * ySize;
-	if (size != glTextureSize)
+
+	try
 	{
-		b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d,%4d) # previous: %4d\n",
-			xSize,ySize,
-			glTextureSize);
-
-		glGetError();
-		if (glTextureData != null)
+		if (size != glTextureSize)
 		{
-			b3PrintF(B3LOG_FULL,"   Freeing texture id %d\n",glTextureId);
-			glDeleteTextures(1,&glTextureId);
-			b3Free(glTextureData);
-			glTextureData  = null;
-			glTextureSize  = 0;
-			glTextureSizeX = 0;
-			glTextureSizeY = 0;
-			glTextureId    = 0;
-		}
-
-		if (size > 0)
-		{
-			glTextureData = (GLubyte *)b3Alloc(size * 4);
-			if (glTextureData != null)
+			glGetError();
+			b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d,%4d) # %5d previous: %5d\n",
+				xSize,ySize,size,glTextureSize);
+			if (size != 0)
 			{
-				GLenum error;
+				void   *ptr = b3Realloc(glTextureData,size * 4);
+				GLenum  error;
 
-				glGenTextures(1,&glTextureId);
-				error = glGetError();
-
-				if (error != GL_NO_ERROR)
+				if (ptr == null)
 				{
-					b3PrintF(B3LOG_NORMAL,"  glGetError() = %d\n",error);
+					throw b3TxException(B3_TX_MEMORY);
 				}
-				else
+				glTextureData  = (GLubyte *)ptr;
+				glTextureSize  =  size;
+				glTextureSizeX = xSize;
+				glTextureSizeY = ySize;
+				b3PrintF(B3LOG_FULL,"   Allocated texture memory of %d pixel\n",size);
+
+				if (glTextureId == 0)
 				{
+					glGenTextures(1,&glTextureId);
+					error = glGetError();
+
+					if (error != GL_NO_ERROR)
+					{
+						b3PrintF(B3LOG_NORMAL,"  glGetError() = %d\n",error);
+						throw b3TxException(B3_TX_MEMORY);
+					}
+
 					glBindTexture(GL_TEXTURE_2D,glTextureId);
 					B3_ASSERT(glIsTexture(glTextureId));
-
-					glTextureSize  =  size;
-					glTextureSizeX = xSize;
-					glTextureSizeY = ySize;
 					b3PrintF(B3LOG_FULL,"   Allocated texture id %d\n",glTextureId);
 				}
 			}
+			else
+			{
+				if (glTextureId != 0)
+				{
+					b3PrintF(B3LOG_FULL,"   Freeing texture id %d\n",glTextureId);
+					glDeleteTextures(1,&glTextureId);
+					glTextureId = 0;
+				}
+				b3PrintF(B3LOG_FULL,"   Freeing texture data\n");
+				b3Free(glTextureData);
+				glTextureData  = null;
+				glTextureSize  = 0;
+				glTextureSizeX = 0;
+				glTextureSizeY = 0;
+			}
 		}
+		else
+		{
+			B3_ASSERT(((glTextureSize != 0) && (glTextureId != 0)) ||
+					  ((glTextureSize == 0) && (glTextureId == 0)));
+		}
+	}
+	catch(...)
+	{
+		// Restore to defined and unallocated state
+		if (glTextureData != null)
+		{
+			b3Free(glTextureData);
+		}
+		if (glTextureId != 0)
+		{
+			glDeleteTextures(1,&glTextureId);
+		}
+		glTextureData  = null;
+		glTextureId    = 0;
+		glTextureSize  = 0;
+		glTextureSizeX = 0;
+		glTextureSizeY = 0;
+		throw;
 	}
 #endif
 }
@@ -1184,25 +1248,12 @@ void b3RenderObject::b3CreateImage(
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
-#ifndef _DEBUG
-	b3_res        max  = 128;
-#else
-	b3_res        max  =   8;
-#endif
 	b3_coord      size,i = 0;
 
-	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateImage(...) # max: %4d\n",max);
-	B3_ASSERT(input != null);
-	if (lPtr == null)
-	{
-		input->b3AllocTx(max,max,24);
-		lPtr = (b3_pkd_color *)input->b3GetData();
-	}
-
-	B3_ASSERT(input->xSize == max);
-	B3_ASSERT(input->ySize == max);
-	b3CreateTexture(context,max);
-	size = max * max;
+	B3_ASSERT(lPtr != null);
+	size = input->xSize * input->ySize;
+	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateImage(...) # size: %4d\n",size);
+	b3CreateTexture(context,input->xSize,input->ySize);
 	for (i = 0;i < size;i++)
 	{
 		b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i << 2]);

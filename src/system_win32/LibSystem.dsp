@@ -194,6 +194,10 @@ SOURCE=.\b3TreeCtrl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Version.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3View.cpp
 # End Source File
 # Begin Source File
@@ -278,6 +282,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Mem.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\system\b3Memory.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3Print.h
 # End Source File
 # Begin Source File
@@ -315,6 +323,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Tracker.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3TreeCtrl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Version.h
 # End Source File
 # Begin Source File
 

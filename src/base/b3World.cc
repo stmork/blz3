@@ -17,8 +17,6 @@
 **
 */
 
-#define no_DEBUG_VERBOSE
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -39,6 +37,21 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/08/05 16:04:55  sm
+**      - Found first texture init bug. This wasn't an OpenGL bug. This
+**        couldn't be because every implementation had got the same
+**        bug. The static aux image for creating textures wasn't initialized
+**        at the right time.
+**      - Version handling introduced: The version number is extracted
+**        from the version resource now.
+**      - The b3Tx::b3AllocTx() method uses b3Realloc() for better
+**        memory usage.
+**      - Some b3World messages removed.
+**      - The 0x7fff class is registered into the b3ItemRegister now. This
+**        prevents printing a warning when this class isn't found. Due to
+**        the fact that *every* Blizzard data contains this class every
+**        data read put out this warning.
+**
 **      Revision 1.24  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -142,31 +155,6 @@
 **      Blizzard III is born
 **
 */
-
-/*************************************************************************
-**                                                                      **
-**                        b3FirstItem: which contains Blizzard data     **
-**                                                                      **
-*************************************************************************/
-
-b3FirstItem::b3FirstItem(b3_u32  class_type) : b3Item(sizeof(b3FirstItem),class_type)
-{
-	b3AllocHeads(1);
-	m_Heads[0].b3InitBase();
-}
-
-b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
-{
-}
-
-void b3FirstItem::b3Write()
-{
-}
-
-b3Base<b3Item> *b3FirstItem::b3GetHead()
-{
-	return &m_Heads[0];
-}
 
 /*************************************************************************
 **                                                                      **
@@ -382,6 +370,7 @@ b3_world_error b3World::b3Parse()
 		i += max_node;
 	}
 
+#ifdef _DEBUG_VERBOSE
 	if (b3CheckLevel(B3LOG_FULL))
 	{
 		b3PrintF (B3LOG_FULL,"Counted %d nodes.\n",node_count);
@@ -390,6 +379,7 @@ b3_world_error b3World::b3Parse()
 			node->b3DumpSimple();
 		}
 	}
+#endif
 
 	array = (b3Item **)b3Alloc(node_count * sizeof(b3Item *));
 	if (array != null)
@@ -516,7 +506,7 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 	b3File         file;
 	b3_world_error error;
 	b3_index       i,max_file;
-	b3_index       k,max_node,max_offset;
+	b3_index       max_node,max_offset;
 
 	if (file.b3Open(world_name,B_READ))
 	{
@@ -547,11 +537,10 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 					m_Buffer[i + B3_NODE_IDX_OFFSET]);
 
 				// Print heads
-				for (k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
+				for (int k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
 				{
 					b3PrintF(B3LOG_NORMAL,"%08lx ",m_Buffer[i+k]);
 				}
-				k++;
 				b3PrintF(B3LOG_NORMAL,"\n");
 
 				// Print custom area (longs)

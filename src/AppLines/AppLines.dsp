@@ -44,6 +44,7 @@ RSC=rc.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
 # ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "BLZ3_USE_OPENGL" /YX /FD /TP /c
+# SUBTRACT CPP /Fr
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x407 /d "NDEBUG" /d "_AFXDLL"
@@ -53,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32\AppLines.exe" /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem.lib LibBase.lib LibRaytrace.lib opengl32.lib glu32.lib  version.lib /nologo /version:3.0 /subsystem:windows /incremental:yes /machine:I386 /out:"..\..\bin\win32\AppLines.exe" /libpath:"..\..\lib\win32_i386"
 
 !ELSEIF  "$(CFG)" == "AppLines - Win32 Debug"
 
@@ -79,7 +80,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib /nologo /version:3.0 /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
+# ADD LINK32 LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib version.lib /nologo /version:3.0 /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"..\..\lib\win32_i386"
 
 !ENDIF 
 
