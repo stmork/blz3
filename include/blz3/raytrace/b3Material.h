@@ -131,7 +131,7 @@ public:
 class B3_PLUGIN b3MatNormal : public b3Material, public b3_material
 {
 public:
-	b3_s32            m_Flags;
+	b3_u32            m_Flags;
 
 protected:
 	     b3MatNormal(b3_size class_size,b3_u32 class_type);
@@ -365,6 +365,10 @@ public:
 
 class B3_PLUGIN b3MatCarPaint : public b3Material
 {
+public:
+	b3_material       m_Parallel;
+	b3_material       m_Perpendicular;
+	b3_u32            m_Flags;
 
 public:
 	B3_ITEM_INIT(b3MatCarPaint);
@@ -373,6 +377,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
+	b3_bool b3Illuminate(b3_surface *surface,b3_light_info *jit);
 };
 
 // THIN_FILM

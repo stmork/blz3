@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.92  2004/09/27 15:24:23  sm
+**      - Added car paint as material shader
+**
 **      Revision 1.91  2004/09/17 20:57:53  sm
 **      - Material shader add their color components to jit.
 **      - Grizzle fix to Mork 2 shader: The reflective and refractive color
@@ -1715,14 +1718,64 @@ b3_bool b3MatGranite::b3GetSurfaceValues(b3_surface *surface)
 
 b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPaint),class_type) 
 {
+	m_Parallel.m_Diffuse     = B3_BLUE;
+	m_Parallel.m_Specular    = B3_GREY;
+	m_Parallel.m_Ambient     = m_Parallel.m_Diffuse * 0.2;
+	m_Parallel.m_Reflection  =   0.8;
+	m_Parallel.m_Refraction  =   0.0;
+	m_Parallel.m_Ior         =   1.56;
+	m_Parallel.m_SpecularExp = 200.0;
+
+	m_Perpendicular = m_Parallel;
+
+	m_Flags = 0;
 }
 
 b3MatCarPaint::b3MatCarPaint(b3_u32 *src) : b3Material(src)
 {
+	b3InitColor(m_Parallel.m_Diffuse);
+	b3InitColor(m_Parallel.m_Ambient);
+	b3InitColor(m_Parallel.m_Specular);
+	m_Parallel.m_Reflection  = b3InitFloat();
+	m_Parallel.m_Refraction  = b3InitFloat();
+	m_Parallel.m_Ior         = b3InitFloat();
+	m_Parallel.m_SpecularExp = b3InitFloat();
+	
+	b3InitColor(m_Perpendicular.m_Diffuse);
+	b3InitColor(m_Perpendicular.m_Ambient);
+	b3InitColor(m_Perpendicular.m_Specular);
+	m_Perpendicular.m_Reflection  = b3InitFloat();
+	m_Perpendicular.m_Refraction  = b3InitFloat();
+	m_Perpendicular.m_Ior         = b3InitFloat();
+	m_Perpendicular.m_SpecularExp = b3InitFloat();
+
+	// FIXMEE!!
+	m_Parallel.m_Diffuse.b3Init(0.0,0.55f,1.0);
+	m_Parallel.m_Specular    = B3_GREY;
+	m_Parallel.m_Ambient     = m_Parallel.m_Diffuse * 0.2;
+
+	m_Flags       = b3InitInt();
 }
 
 void b3MatCarPaint::b3Write()
 {
+	b3StoreColor(m_Parallel.m_Diffuse);
+	b3StoreColor(m_Parallel.m_Ambient);
+	b3StoreColor(m_Parallel.m_Specular);
+	b3StoreFloat(m_Parallel.m_Reflection);
+	b3StoreFloat(m_Parallel.m_Refraction);
+	b3StoreFloat(m_Parallel.m_Ior);
+	b3StoreFloat(m_Parallel.m_SpecularExp);
+
+	b3StoreColor(m_Perpendicular.m_Diffuse);
+	b3StoreColor(m_Perpendicular.m_Ambient);
+	b3StoreColor(m_Perpendicular.m_Specular);
+	b3StoreFloat(m_Perpendicular.m_Reflection);
+	b3StoreFloat(m_Perpendicular.m_Refraction);
+	b3StoreFloat(m_Perpendicular.m_Ior);
+	b3StoreFloat(m_Perpendicular.m_SpecularExp);
+
+	b3StoreInt(m_Flags);
 }
 
 b3_bool b3MatCarPaint::b3Prepare()
@@ -1732,6 +1785,30 @@ b3_bool b3MatCarPaint::b3Prepare()
 
 b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
 {
+	b3_f64 Factor = fabs(b3Vector::b3SMul(&surface->incoming->normal,&surface->incoming->dir));
+
+	b3Mix(surface,&m_Parallel,&m_Perpendicular, Factor);
+
+	return true;
+}
+
+b3_bool b3MatCarPaint::b3Illuminate(b3_surface *surface,b3_light_info *jit)
+{
+	b3_ray      *ray = surface->incoming;
+	b3_vector64  L;
+
+	B3_ASSERT(ray != null);	
+
+	b3Vector::b3Init(&L,&jit->dir);
+	b3Vector::b3Normalize(&L);
+
+	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
+	b3_f64 rl = b3Vector::b3SMul(&surface->refl_ray.dir,&L);
+
+	jit->m_AmbientSum  += surface->m_Ambient;
+	jit->m_DiffuseSum  += surface->m_Diffuse * nl;
+	jit->m_SpecularSum += surface->m_Specular * b3Math::b3FastPow(fabs(rl),(b3_u32)surface->m_SpecularExp);
+	
 	return true;
 }
 
