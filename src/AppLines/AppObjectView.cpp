@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2003/07/20 07:48:30  sm
+**	- Added legend to object printing
+**
 **	Revision 1.20  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
-**
+**	
 **	Revision 1.19  2003/05/10 09:03:50  sm
 **	- Wrong update/commit made
 **	
@@ -313,6 +316,37 @@ void CAppObjectView::b3DrawDC(
 
 	// Puhh! And only to draw stippled lines...
 	dc->SelectObject(old);
+}
+
+void CAppObjectView::b3DrawLegend(CDC *pDC)
+{
+	CString         text;
+	CAppObjectDoc  *pDoc   = GetDocument();
+	b3ModellerInfo *info   = pDoc->m_Info;
+	b3Scene        *parent = pDoc->b3GetParentScene();
+	time_t          timecode;
+
+	text.LoadString(IDS_PRT_LEGEND);
+	b3DrawText(pDC,text);
+
+	if (parent != null)
+	{
+		text.Format(IDS_PRT_FILENAME,parent->b3GetName());
+		b3DrawText(pDC,text);
+	}
+
+	text.Format(IDS_PRT_OBJECTNAME,pDoc->m_BBox->b3GetName());
+	b3DrawText(pDC,text);
+
+	time(&timecode);
+	text.Format(IDS_PRT_DATE,asctime(localtime(&timecode)));
+	b3DrawText(pDC,text);
+
+	text.Format(IDS_PRT_MEASURE,info->b3GetMeasure(false));
+	b3DrawText(pDC,text);
+
+	text.Format(IDS_PRT_UNIT,info->b3GetUnitDescr());
+	b3DrawText(pDC,text);
 }
 
 void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 

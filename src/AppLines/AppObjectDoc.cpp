@@ -39,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2003/07/20 07:48:30  sm
+**	- Added legend to object printing
+**
 **	Revision 1.26  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
-**
+**	
 **	Revision 1.25  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
@@ -236,6 +239,11 @@ CAppObjectDoc::~CAppObjectDoc()
 const char *CAppObjectDoc::b3GetDocumentName()
 {
 	return "_Lines_III_Object_Document";
+}
+
+b3Scene *CAppObjectDoc::b3GetParentScene()
+{
+	return m_LinesDoc != null ? m_LinesDoc->m_Scene : null;
 }
 
 BOOL CAppObjectDoc::OnNewDocument()

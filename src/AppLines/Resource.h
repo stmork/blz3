@@ -711,6 +711,7 @@
 #define IDS_MAT_SLIDE                   61450
 #define IDS_MAT_TEXTURE                 61451
 #define IDS_MAT_WRAP_TEXTURE            61452
+#define IDS_PRT_OBJECTNAME              61453
 
 // Next default values for new objects
 // 
