@@ -22,7 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Log.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Thread.h"
 
 /*************************************************************************
@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/24 13:06:17  sm
+**	- Enhanced test suite for threading.
+**
 **	Revision 1.4  2002/03/16 15:12:57  sm
 **	- Making b3Mem system independend using new system dependen b3MemAccess
 **	  class with static methods.
 **	- Adjusting TestThread with volatile keyword to avoid the compiler
 **	  optimizeing access to the test counter.
-**
+**	
 **	
 */
 
@@ -85,15 +88,19 @@ public:
 		counter = 0;
 	}
 
-	void TestStart(b3ThreadProc proc)
+	b3_bool TestStart(b3ThreadProc proc)
 	{
 		int i;
 
 		// Starting...
 		for (i = 0;i < TEST_NUM_THREADS;i++)
 		{
-			thread[i].b3Start(proc,&info[i]);
+			if (!thread[i].b3Start(proc,&info[i]))
+			{
+				return false;
+			}
 		}
+		return true;
 	}
 
 	b3_u32 TestWait()
@@ -169,45 +176,123 @@ public:
 	{
 		b3_u32 safe_count;
 
-		TestStart(task_unsafe);
-		safe_count = TestWait();
+		if (TestStart(task_unsafe))
+		{
+			safe_count = TestWait();
 
-		// Printing result
-		b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-			counter,safe_count,
-			counter != safe_count ? "expected" : "not expected");
+			// Printing result
+			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
+				counter,safe_count,
+				counter != safe_count ? "expected" : "not expected");
+		}
 	}
 
 	void test2()
 	{
 		b3_u32 safe_count;
 
-		TestStart(task_thread);
-		safe_count = TestWait();
+		if (TestStart(task_thread))
+		{
+			safe_count = TestWait();
 
-		// Printing result
-		b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-			counter,safe_count,
-			counter != safe_count ? "not OK" : "OK");
+			// Printing result
+			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
+				counter,safe_count,
+				counter != safe_count ? "not OK" : "OK");
+		}
 	}
 
 	void test3()
 	{
 		b3_u32 safe_count;
 
-		TestStart(task_ipc);
-		safe_count = TestWait();
+		if (TestStart(task_ipc))
+		{
+			safe_count = TestWait();
 
-		// Printing result
-		b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
-			counter,safe_count,
-			counter != safe_count ? "not OK" : "OK");
+			// Printing result
+			b3PrintF (B3LOG_NORMAL,"counter %u - counted %u (%s)\n",
+				counter,safe_count,
+				counter != safe_count ? "not OK" : "OK");
+		}
 	}
 };
+
+#define MAX_TEST_THREAD_COUNT 20000
+
+static void *b3Counter(void *ptr)
+{
+	int *counter = (int *)ptr;
+
+	counter[0]++;
+	return 0;
+}
+
+static b3_u32 b3CounterThread(void *ptr)
+{
+	b3_count *counter = (b3_count *)ptr;
+
+	b3Counter(ptr);
+	return counter[0];
+}
+
+static void b3TestThreadStart1()
+{
+	pthread_t thread;
+	int       counter = 0;
+	int       i;
+	int       error_code;
+	int       result = 0;
+
+	b3PrintF(B3LOG_NORMAL,"Threads using original POSIX calls...\n");
+	for (i = 0;i < MAX_TEST_THREAD_COUNT;i++)
+	{
+		thread = 0;
+		result = 0;
+		error_code = pthread_create(&thread,NULL,&b3Counter,&counter);
+		if (error_code == 0)
+		{
+			pthread_join(thread,(void **)&result);
+		}
+		else
+		{
+			fprintf(stderr,"thread not created at attempt %d - errno: %d (%s)\n",i,
+				error_code,strerror(error_code));
+			exit(1);
+		}
+	}
+	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
+	b3PrintF(B3LOG_NORMAL,"Done.\n\n");
+}
+
+static void b3TestThreadStart2()
+{
+	b3Thread thread;
+	b3_count counter = 0;
+	b3_index i;
+
+	b3PrintF(B3LOG_NORMAL,"Threads using Blizzard III semantics...\n");
+	for (i = 0;i < MAX_TEST_THREAD_COUNT;i++)
+	{
+		if (!thread.b3Start(&b3CounterThread,&counter))
+		{
+			b3PrintF(B3LOG_NORMAL,"Thread not started!\n");
+			b3PrintF(B3LOG_NORMAL,"  attempt: %d\n",i);
+			b3PrintF(B3LOG_NORMAL,"  counter: %d\n",counter);
+			return;
+		}
+		thread.b3Wait();
+	}
+	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
+	b3PrintF(B3LOG_NORMAL,"Done.\n\n");
+}
 
 int main(int argc,char *argv[])
 {
 	TestUnit *ptr;
+
+	b3TestThreadStart1();
+	b3TestThreadStart2();
 
 	ptr = new TestUnit();
 	ptr->test1();
@@ -220,6 +305,5 @@ int main(int argc,char *argv[])
 	ptr = new TestUnit();
 	ptr->test3();
 	delete ptr;
-
 	return 0;
 }
