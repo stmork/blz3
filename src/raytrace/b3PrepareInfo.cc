@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3Raytrace.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,9 +31,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/03 18:05:10  sm
+**	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**	- Moved b3PrepareInfo into b3Scene class as member. This
+**	  saves memory allocation calls and is an investment into
+**	  faster Lines III object transformation.
+**
 **	Revision 1.3  2002/08/02 18:55:44  sm
 **	- SplineShape weren't be multi threadable - fixed.
-**
+**	
 **	Revision 1.2  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
@@ -55,21 +61,30 @@
 **                                                                      **
 *************************************************************************/
 
-b3PrepareInfo::b3PrepareInfo(b3Scene *scene)
+b3PrepareInfo::b3PrepareInfo()
 {
-	b3BBox *bbox;
-
 	m_PrepareProc = null;
 #ifdef _DEBUG
 	m_MinBBoxesForThreading = 0;
 #else
 	m_MinBBoxesForThreading = B3_MIN_BBOXES_FOR_THREADING;
 #endif
-	
-	for (bbox = scene->b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
+}
+
+void b3PrepareInfo::b3CollectBBoxes(b3Scene *scene)
+{
+	b3CollectBBoxes(scene->b3GetFirstBBox());
+}
+
+void b3PrepareInfo::b3CollectBBoxes(b3BBox *bbox)
+{
+	m_BBoxRefArray.b3Clear();
+	while(bbox != null)
 	{
 		bbox->b3CollectBBoxes(m_BBoxRefArray);
+		bbox = (b3BBox *)bbox->Succ;
 	}
+	
 }
 
 b3BBoxReference *b3PrepareInfo::b3GetBBoxReference()

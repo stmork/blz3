@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2002/08/03 18:05:11  sm
+**      - Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**      - Moved b3PrepareInfo into b3Scene class as member. This
+**        saves memory allocation calls and is an investment into
+**        faster Lines III object transformation.
+**
 **      Revision 1.35  2002/08/02 18:55:45  sm
 **      - SplineShape weren't be multi threadable - fixed.
 **

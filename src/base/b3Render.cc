@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2002/08/03 18:05:10  sm
+**      - Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**      - Moved b3PrepareInfo into b3Scene class as member. This
+**        saves memory allocation calls and is an investment into
+**        faster Lines III object transformation.
+**
 **      Revision 1.47  2002/08/01 15:02:56  sm
 **      - Found texture missing bug when printing. There weren't any
 **        selected textures inside an other OpenGL rendering context.
@@ -404,10 +410,12 @@ void b3RenderContext::b3LightNum(b3_index num)
 {
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightNum(%d)\n",num);
 
+#ifdef BLZ3_USE_OPENGL
 	if (VALIDATE_LIGHT_NUM(num))
 	{
 		glLightNum = num;
 	}
+#endif
 }
 
 b3_bool b3RenderContext::b3LightAdd(
@@ -813,11 +821,11 @@ void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
-	b3_tnv_vertex *ptr;
 	b3_bool        result = false;
+#ifdef BLZ3_USE_OPENGL
+	b3_tnv_vertex *ptr;
 	b3_index       i,start,end;
 
-#ifdef BLZ3_USE_OPENGL
 	b3Update();
 	if (glComputed && (glVertex != null) && (glVertexCount > 0))
 	{
@@ -917,6 +925,7 @@ void b3RenderObject::b3RecomputeMaterial()
 
 void b3RenderObject::b3DefineTexture()
 {
+#ifdef BLZ3_USE_OPENGL
 	GLfloat blend[4];
 
 	b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
@@ -931,6 +940,7 @@ void b3RenderObject::b3DefineTexture()
 	glTexImage2D(   GL_TEXTURE_2D,
 		0,GL_RGBA,glTextureSizeX,glTextureSizeY,
 		0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
+#endif
 }
 
 void b3RenderObject::b3UpdateMaterial()
@@ -1000,8 +1010,8 @@ void b3RenderObject::b3UpdateMaterial()
 			b3RenderContext::b3ColorToGL(&specular,glSpecular);
 		}
 	}
-#endif
 	glMaterialComputed = true;
+#endif
 }
 
 void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
@@ -1168,6 +1178,7 @@ void b3RenderObject::b3CreateTexture(
 	b3_res           xSize,
 	b3_res           ySize)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_res size;
 
 	if (ySize == 0)
@@ -1221,6 +1232,7 @@ void b3RenderObject::b3CreateTexture(
 			}
 		}
 	}
+#endif
 }
 
 void b3RenderObject::b3CreateChess(
@@ -1228,6 +1240,7 @@ void b3RenderObject::b3CreateChess(
 	b3_color        *bColor,
 	b3_color        *wColor)
 {
+#ifdef BLZ3_USE_OPENGL
 	GLubyte *ptr = glTextureData;
 
 	b3CreateTexture(null,2);
@@ -1236,12 +1249,14 @@ void b3RenderObject::b3CreateChess(
 	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 4]);
 	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 8]);
 	b3RenderContext::b3ColorToGL(wColor,&glTextureData[12]);
+#endif
 }
 
 void b3RenderObject::b3CopyTexture(
 	b3RenderContext *context,
 	b3Tx            *input)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3Tx          scale;
 	b3_pkd_color *lPtr;
 #ifndef _DEBUG
@@ -1274,12 +1289,14 @@ void b3RenderObject::b3CopyTexture(
 	{
 		b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i << 2]);
 	}
+#endif
 }
 
 void b3RenderObject::b3CreateImage(
 	b3RenderContext *context,
 	b3Tx            *input)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
 #ifndef _DEBUG
 	b3_res        max  = 128;
@@ -1304,4 +1321,5 @@ void b3RenderObject::b3CreateImage(
 	{
 		b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i << 2]);
 	}
+#endif
 }

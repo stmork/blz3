@@ -29,7 +29,7 @@ setenv STDINC        "$ARCHFLAG -I$BLZ3_SYSINC -I$MOTIF_INCLUDE"
 setenv LDFLAGS       "-L$BLZ3_LIB -L$MOTIF_LIB"
 
 if ( `echo $INH_PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
-   setenv INH_PATH   "$INH_PATH $BLZ3_BIN"
+   setenv INH_PATH   "$BLZ3_BIN $INH_PATH"
 endif
 
 if ( $?MANPATH ) then

@@ -119,7 +119,6 @@ public:
 #endif
 };
 
-#ifdef BLZ3_USE_OPENGL
 /*
 ** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));
 */
@@ -127,12 +126,11 @@ struct b3_tnv_vertex
 {
 	struct
 	{
-		GLfloat s,t;
+		b3_f32 s,t;
 	}         t;
 	b3_vector n;
 	b3_vector v;
 };
-#endif
 
 class b3RenderObject : public b3Mem
 {

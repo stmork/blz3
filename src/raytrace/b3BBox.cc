@@ -22,7 +22,6 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
-#include "blz3/raytrace/b3PrepareInfo.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -33,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2002/08/03 18:05:10  sm
+**	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**	- Moved b3PrepareInfo into b3Scene class as member. This
+**	  saves memory allocation calls and is an investment into
+**	  faster Lines III object transformation.
+**
 **	Revision 1.59  2002/08/02 14:52:12  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
 **	- Last changes to Windows port.
-**
+**	
 **	Revision 1.58  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -756,9 +761,8 @@ b3_bool b3Scene::b3UpdateThread(b3BBox *bbox)
 
 void b3Scene::b3Update()
 {
-	b3PrepareInfo info(this);
-
-	info.b3Prepare(b3UpdateThread);
+	m_PrepareInfo.b3CollectBBoxes(this);
+	m_PrepareInfo.b3Prepare(b3UpdateThread);
 }
 
 b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)

@@ -27,6 +27,7 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxPool.h"
+#include "blz3/raytrace/b3PrepareInfo.h"
 
 #include <float.h>
 
@@ -1637,18 +1638,6 @@ protected:
 	static void b3Init();
 };
 
-class b3BBox;
-
-class b3BBoxReference : public b3Link<b3BBoxReference>
-{
-public:
-	b3BBox *m_BBox;
-
-	b3BBoxReference(b3BBox *bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
-	{
-		m_BBox = bbox;
-	}
-};
 class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
@@ -2279,6 +2268,7 @@ class b3Scene : public b3Item
 {
 	b3Base<b3Row>    m_RowPool;
 	b3Base<b3Row>    m_TrashPool;
+	b3PrepareInfo    m_PrepareInfo;
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
 

@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/08/03 18:05:10  sm
+**	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**	- Moved b3PrepareInfo into b3Scene class as member. This
+**	  saves memory allocation calls and is an investment into
+**	  faster Lines III object transformation.
+**
 **	Revision 1.26  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.25  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -1607,7 +1613,8 @@ b3_bool b3CSGTorus::b3Intersect(
 		// Insert sorted
 		for (i = 0; i < NumOfX; i++)
 		{
-			// Simple bubble sort
+			// Simple bubble sort - with NumOfX <= 4
+			// it's much faster.
 			for (k = i; k < NumOfX; k++)
 			{
 				if (x[k] <= x[i])

@@ -37,11 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/08/03 18:05:10  sm
+**	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**	- Moved b3PrepareInfo into b3Scene class as member. This
+**	  saves memory allocation calls and is an investment into
+**	  faster Lines III object transformation.
+**
 **	Revision 1.36  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
 **	- Last changes to Windows port.
-**
+**	
 **	Revision 1.35  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -597,7 +603,6 @@ b3_bool b3Scene::b3PrepareThread(b3BBox *bbox)
 
 b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 {
-	b3PrepareInfo  info(this);
 	b3Nebular     *nebular;
 	b3SuperSample *supersample;
 	b3Light       *light;
@@ -696,7 +701,8 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 
 	// Init geometry
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
-	if(!info.b3Prepare(b3PrepareThread))
+	m_PrepareInfo.b3CollectBBoxes(this);
+	if(!m_PrepareInfo.b3Prepare(b3PrepareThread))
 	{
 		return false;
 	}

@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/08/03 18:05:10  sm
+**	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
+**	- Moved b3PrepareInfo into b3Scene class as member. This
+**	  saves memory allocation calls and is an investment into
+**	  faster Lines III object transformation.
+**
 **	Revision 1.30  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.29  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -1101,6 +1107,7 @@ void b3RenderView::b3SetupView(
 
 void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp,yDisp;
 	b3_vector a,b,c,d;
 	b3_f64    xStart,xEnd;
@@ -1234,4 +1241,5 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
 		}
 		glEnd();
 	}
+#endif
 }

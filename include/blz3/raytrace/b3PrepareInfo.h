@@ -18,11 +18,23 @@
 #ifndef B3_RAYTRACE_PREPAREINFO_H
 #define B3_RAYTRACE_PREPAREINFO_H
 
-#include "blz3/raytrace/b3Raytrace.h"
+class b3Scene;
+class b3BBox;
 
 typedef b3_bool (*b3PrepareProc)(b3BBox *bbox);
-								  
+
 #define B3_MIN_BBOXES_FOR_THREADING 50
+
+class b3BBoxReference : public b3Link<b3BBoxReference>
+{
+public:
+	b3BBox *m_BBox;
+
+	b3BBoxReference(b3BBox *bbox = null) : b3Link<b3BBoxReference>(sizeof(b3BBoxReference))
+	{
+		m_BBox = bbox;
+	}
+};
 
 class b3PrepareInfo
 {
@@ -37,7 +49,9 @@ protected:
 	b3_count                 m_MinBBoxesForThreading;
 
 public:
-	                 b3PrepareInfo(b3Scene *scene);
+	                 b3PrepareInfo();
+	void             b3CollectBBoxes(b3Scene *scene);
+	void             b3CollectBBoxes(b3BBox  *firstBBox);
 	b3_bool          b3Prepare(b3PrepareProc prepare_func);
 
 private:
