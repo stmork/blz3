@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - CView part for OpenGL Documents (scenes/objects)
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved

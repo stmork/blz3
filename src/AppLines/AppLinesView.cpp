@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	AppLinesView.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - CView part for scenes
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.36  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
-**
+**	
 **	Revision 1.35  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	

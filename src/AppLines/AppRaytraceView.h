@@ -1,15 +1,15 @@
 /*
 **
-**	$Filename:	AppRaytraceView.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Filename:	AppRaytraceView.h $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - CView part for raytracing visualization
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **

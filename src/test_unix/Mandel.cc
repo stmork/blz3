@@ -23,9 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Log.h"
 #include "blz3/system/b3Display.h"
-#include "blz3/system/b3Thread.h"
 
 #include "b3Mandel.h"
 
@@ -40,11 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.5  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **
 */
 
@@ -65,7 +67,7 @@ int main(int argc,char *argv[])
 	if (argc != 6)
 	{
 		printf("USAGE:\n");
-		printf("%s xMin yMin xMax yMax iterations\n",argv[0]);
+		printf("%s xMin xMax yMin yMax iterations\n",argv[0]);
 	}
 	else
 	{
@@ -83,7 +85,7 @@ int main(int argc,char *argv[])
 		try
 		{
 			// Create display
-			display = new b3Display();
+			display = new b3DisplayView();
 
 			// Compute Mandelbrot set
 			b3Mandel::b3Compute(display,

@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	AppObjectView.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - CView part for objects
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.3  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
-**
+**	
 **	Revision 1.2  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	
@@ -213,49 +217,4 @@ void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView*
 		main->b3UpdateModellerInfo();
 		app->b3GetData();
 	}
-}
-
-void CAppObjectView::OnMouseMove(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
-
-	CScrollView::OnMouseMove(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
-}
-
-void CAppObjectView::OnLButtonDown(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
-
-	CScrollView::OnLButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
-}
-
-void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
-
-	CScrollView::OnLButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
-}
-
-void CAppObjectView::OnRButtonDown(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
-
-	CScrollView::OnRButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
-}
-
-void CAppObjectView::OnRButtonUp(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppObjectDoc *pDoc = GetDocument();
-
-	CScrollView::OnRButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
 }

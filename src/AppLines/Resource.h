@@ -4,30 +4,21 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             101
-#define ID_DRAWING_PERF                 102
-#define IDS_NEW_CAMERA                  103
-#define IDS_NEW_LIGHT                   104
-#define IDS_NAME_EXISTS                 105
-#define IDS_EMPTY_NAME                  106
-#define IDS_ASK_DELETE_LIGHT            107
-#define IDS_ASK_DELETE_CAMERA           108
-#define IDS_LIGHT_SAMPLE_LABEL          109
 #define IDR_MAINFRAME                   110
 #define IDR_BLZ3TYPE                    111
-#define IDR_TOOLBAR_VIEW                112
-#define IDR_OBJECT                      112
-#define IDR_DISPLAYTYPE                 113
-#define IDR_TOOLBAR_ACTION              114
-#define IDR_TOOLBAR_OBJECT              115
-#define IDD_NEBULAR                     116
-#define IDD_DISTRIBUTED                 117
-#define IDR_TOOLBAR_DISPLAY             118
-#define IDC_PANNING                     119
-#define IDD_SCENE                       120
-#define IDD_SUPER_SAMPLE                121
-#define IDD_MODELLER_INFO               122
-#define IDR_TOOLBAR_CAMERA              123
-#define IDR_TOOLBAR_LIGHT               124
+#define IDR_DISPLAYTYPE                 112
+#define IDR_OBJECT                      113
+#define IDR_TOOLBAR_VIEW                114
+#define IDR_TOOLBAR_ACTION              115
+#define IDR_TOOLBAR_OBJECT              116
+#define IDR_TOOLBAR_DISPLAY             117
+#define IDR_TOOLBAR_CAMERA              118
+#define IDR_TOOLBAR_LIGHT               119
+#define IDD_DISTRIBUTED                 120
+#define IDC_PANNING                     121
+#define IDD_SCENE                       122
+#define IDD_SUPER_SAMPLE                123
+#define IDD_MODELLER_INFO               124
 #define IDD_HIERARCHY                   125
 #define IDD_LENS_FLARE                  126
 #define IDD_NEW_ITEM                    127
@@ -55,6 +46,14 @@
 #define IDD_STEP_MOVE                   149
 #define IDD_STEP_ROTATE                 150
 #define IDD_FILEOPENPREVIEW             151
+#define IDD_NEBULAR                     152
+#define IDM_BAR_DISPLAY                 153
+#define IDM_BAR_SCENE                   154
+#define IDM_BAR_CAMERA                  155
+#define IDM_BAR_LIGHT                   156
+#define IDM_BAR_FULCRUM                 157
+#define IDM_BAR_STEP_MOVE               158
+#define IDM_BAR_STEP_ROTATE             159
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -256,16 +255,12 @@
 #define ID_HIERACHY                     32808
 #define ID_RAYTRACE                     32809
 #define ID_CUST_DISPLAY                 32810
-#define IDM_BAR_DISPLAY                 32812
 #define ID_DLG_SCENE                    32813
-#define IDM_BAR_SCENE                   32814
 #define ID_CUST_SCENE                   32815
 #define ID_MODELLER_INFO                32816
 #define ID_VIEW_TO_FULCRUM              32817
 #define ID_IMG_SAVE                     32818
 #define ID_CHANGE_TEXTURE_PATH          32819
-#define IDM_BAR_CAMERA                  32822
-#define IDM_BAR_LIGHT                   32823
 #define ID_CUST_CAMERA                  32824
 #define ID_CUST_LIGHT                   32825
 #define ID_LIGHT_NEW                    32826
@@ -279,9 +274,6 @@
 #define ID_LIGHT_LDC                    32834
 #define ID_LIGHT_SPOT                   32835
 #define ID_CAMERA_ENABLE                32840
-#define IDM_BAR_FULCRUM                 32841
-#define IDM_BAR_STEP_MOVE               32842
-#define IDM_BAR_STEP_ROTATE             32843
 #define ID_DEACTIVATE_REST              32845
 #define ID_ACTIVATE_ALL                 32846
 #define ID_DEACTIVATE_ALL               32847
@@ -294,6 +286,7 @@
 #define ID_OBJECT_SAVE                  32858
 #define ID_OBJECT_REPLACE               32859
 #define ID_OBJECT_COPY                  32861
+#define ID_DRAWING_PERF                 32862
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -329,14 +322,21 @@
 #define IDS_ASK_DELETE_OBJECT           61476
 #define IDS_OBJECT_FILTER               61477
 #define IDS_DIALOGBAR_ACTION            61478
+#define IDS_NEW_CAMERA                  61479
+#define IDS_NEW_LIGHT                   61480
+#define IDS_NAME_EXISTS                 61481
+#define IDS_EMPTY_NAME                  61482
+#define IDS_ASK_DELETE_LIGHT            61483
+#define IDS_ASK_DELETE_CAMERA           108
+#define IDS_LIGHT_SAMPLE_LABEL          109
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        165
-#define _APS_NEXT_COMMAND_VALUE         32862
+#define _APS_NEXT_RESOURCE_VALUE        166
+#define _APS_NEXT_COMMAND_VALUE         32863
 #define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	AppRaytraceDoc.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CDocument part
+**	Blizzard III - CDocument part for raytracing visualization
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -35,6 +35,10 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.8  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -43,7 +47,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.7  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration

@@ -44,10 +44,14 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.16  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
-**
+**	
 **	Revision 1.15  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -231,6 +235,7 @@ BOOL CAppLinesApp::InitInstance()
 	//  of requesting OLE containers by using information
 	//  specified in the document template.
 	m_server.ConnectTemplate(clsid, pSceneTemplate, FALSE);
+	m_server.ConnectTemplate(clsid, pObjectTemplate, FALSE);
 
 	// Register all OLE server factories as running.  This enables the
 	//  OLE libraries to create objects from other applications.

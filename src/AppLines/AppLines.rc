@@ -1082,7 +1082,7 @@ BEGIN
             VALUE "FileDescription", "Lines III - Managing Blizzard geometry\0"
             VALUE "FileVersion", "3, 0, 0, 1\0"
             VALUE "InternalName", "AppLines\0"
-            VALUE "LegalCopyright", "Copyright (C) 2001\0"
+            VALUE "LegalCopyright", "Copyright (C) 2001, 2002\0"
             VALUE "LegalTrademarks", "Steffen A. Mork\0"
             VALUE "OriginalFilename", "AppLines.EXE\0"
             VALUE "PrivateBuild", "\0"

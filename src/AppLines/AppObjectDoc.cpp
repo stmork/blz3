@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	AppObjectDoc.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CDocument part
+**	Blizzard III - CDocument part for objects
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.3  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
-**
+**	
 **	Revision 1.2  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	
@@ -68,7 +72,7 @@ BEGIN_DISPATCH_MAP(CAppObjectDoc, CAppRenderDoc)
 	//}}AFX_DISPATCH_MAP
 END_DISPATCH_MAP()
 
-// Note: we add support for IID_IAppLines to support typesafe binding
+// Note: we add support for IID_IAppObject to support typesafe binding
 //  from VBA.  This IID must match the GUID that is attached to the 
 //  dispinterface in the .ODL file.
 

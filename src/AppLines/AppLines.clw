@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CAppRenderView
+LastClass=CAppLinesDoc
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,116 +54,117 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=28
-Resource1=IDR_OBJECT
-Resource2=IDR_TOOLBAR_LIGHT
-Resource3=IDR_TOOLBAR_VIEW
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
-Resource6=IDR_TOOLBAR_DISPLAY
-Resource7=IDR_TOOLBAR_CAMERA
-Resource8=IDD_ABOUTBOX
+Resource1=IDD_FULCRUM
+Resource2=IDR_TOOLBAR_CAMERA
+Resource3=IDR_TOOLBAR_LIGHT
+Resource4=IDR_TOOLBAR_VIEW
+Resource5=IDR_TOOLBAR_ACTION
+Resource6=IDR_TOOLBAR_OBJECT
+Resource7=IDR_TOOLBAR_DISPLAY
+Resource8=IDD_STEP_ROTATE
 Resource9=IDR_DISPLAYTYPE
-Resource10=IDR_BLZ3TYPE
-Resource11=IDD_HIERARCHY
-Resource12=IDD_SCENE
-Resource13=IDD_SUPER_SAMPLE
-Resource14=IDD_NEBULAR
-Resource15=IDD_LENS_FLARE
-Resource16=IDD_DISTRIBUTED
-Resource17=IDD_MODELLER_INFO
-Resource18=IDD_SEARCH_PATH_LIST
-Resource19=IDD_NEW_ITEM
-Resource20=IDD_LIGHT
-Resource21=IDD_LDC
-Resource22=IDD_CAMERA
-Resource23=IDD_FULCRUM
-Resource24=IDD_STEP_MOVE
-Resource25=IDD_STEP_ROTATE
-Resource26=IDD_OBJECT_COPY
-Resource27=IDR_MAINFRAME
+Resource10=IDD_STEP_MOVE
+Resource11=IDD_OBJECT_COPY
+Resource12=IDR_OBJECT
+Resource13=IDR_MAINFRAME
+Resource14=IDR_BLZ3TYPE
+Resource15=IDD_ABOUTBOX
+Resource16=IDD_HIERARCHY
+Resource17=IDD_SCENE
+Resource18=IDD_SUPER_SAMPLE
+Resource19=IDD_NEBULAR
+Resource20=IDD_LENS_FLARE
+Resource21=IDD_DISTRIBUTED
+Resource22=IDD_MODELLER_INFO
+Resource23=IDD_SEARCH_PATH_LIST
+Resource24=IDD_NEW_ITEM
+Resource25=IDD_LIGHT
+Resource26=IDD_LDC
+Resource27=IDD_CAMERA
 Resource28=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
-ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ColorField.h
+ImplementationFile=..\system_win32\b3ColorField.cpp
+LastObject=CB3ColorField
 
 [CLS:CB3LineWidth]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
-ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ColorField.h
+ImplementationFile=..\system_win32\b3ColorField.cpp
 LastObject=CB3LineWidth
 
 [CLS:CB3FontField]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
-ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ColorField.h
+ImplementationFile=..\system_win32\b3ColorField.cpp
 LastObject=CB3FontField
 
 [CLS:CB3HSVField]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ColorField.h
-ImplementationFile=\blz3\src\system_win32\b3ColorField.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ColorField.h
+ImplementationFile=..\system_win32\b3ColorField.cpp
 LastObject=CB3HSVField
 
 [CLS:CB3FloatEdit]
 Type=0
 BaseClass=CEdit
-HeaderFile=\blz3\include_win32\blz3\system\b3FloatEdit.h
-ImplementationFile=\blz3\src\system_win32\b3FloatEdit.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3FloatEdit.h
+ImplementationFile=..\system_win32\b3FloatEdit.cpp
 LastObject=CB3FloatEdit
 
 [CLS:CB3ImageButton]
 Type=0
 BaseClass=CButton
-HeaderFile=\blz3\include_win32\blz3\system\b3ImageButton.h
-ImplementationFile=\blz3\src\system_win32\b3ImageButton.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ImageButton.h
+ImplementationFile=..\system_win32\b3ImageButton.cpp
 LastObject=CB3ImageButton
 
 [CLS:CB3ScrollView]
 Type=0
 BaseClass=CScrollView
-HeaderFile=\blz3\include_win32\blz3\system\b3ScrollView.h
-ImplementationFile=\blz3\src\system_win32\b3ScrollView.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ScrollView.h
+ImplementationFile=..\system_win32\b3ScrollView.cpp
 LastObject=CB3ScrollView
 
 [CLS:CB3ShowColor]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ShowColor.h
-ImplementationFile=\blz3\src\system_win32\b3ShowColor.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ShowColor.h
+ImplementationFile=..\system_win32\b3ShowColor.cpp
 LastObject=CB3ShowColor
 
 [CLS:CB3ShowImage]
 Type=0
 BaseClass=CStatic
-HeaderFile=\blz3\include_win32\blz3\system\b3ShowImage.h
-ImplementationFile=\blz3\src\system_win32\b3ShowImage.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3ShowImage.h
+ImplementationFile=..\system_win32\b3ShowImage.cpp
 LastObject=CB3ShowImage
 
 [CLS:CB3Toolbar]
 Type=0
 BaseClass=CToolBar
-HeaderFile=\blz3\include_win32\blz3\system\b3Toolbar.h
-ImplementationFile=\blz3\src\system_win32\b3Toolbar.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3Toolbar.h
+ImplementationFile=..\system_win32\b3Toolbar.cpp
 LastObject=CB3Toolbar
 
 [CLS:CB3Menubar]
 Type=0
 BaseClass=CMenuBar
-HeaderFile=\blz3\include_win32\blz3\system\b3Toolbar.h
-ImplementationFile=\blz3\src\system_win32\b3Toolbar.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3Toolbar.h
+ImplementationFile=..\system_win32\b3Toolbar.cpp
 LastObject=CB3Menubar
 
 [CLS:CB3Dialogbar]
 Type=0
 BaseClass=CDialogBar
-HeaderFile=\blz3\include_win32\blz3\system\b3Toolbar.h
-ImplementationFile=\blz3\src\system_win32\b3Toolbar.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3Toolbar.h
+ImplementationFile=..\system_win32\b3Toolbar.cpp
 LastObject=CB3Dialogbar
 
 [CLS:CAppLinesApp]
@@ -171,6 +172,7 @@ Type=0
 BaseClass=CWinApp
 HeaderFile=AppLines.h
 ImplementationFile=AppLines.cpp
+LastObject=CAppLinesApp
 
 [CLS:CAboutDlg]
 Type=0
@@ -184,6 +186,7 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
+LastObject=CAppLinesDoc
 
 [CLS:CAppLinesView]
 Type=0
@@ -233,6 +236,7 @@ Type=0
 BaseClass=CStatic
 HeaderFile=b3ControlLDC.h
 ImplementationFile=b3ControlLDC.cpp
+LastObject=CB3ControlLDC
 
 [CLS:CB3ImagePreviewFileDlg]
 Type=0
@@ -360,6 +364,7 @@ Type=0
 BaseClass=CMDIFrameWnd
 HeaderFile=MainFrm.h
 ImplementationFile=MainFrm.cpp
+LastObject=CMainFrame
 
 [DLG:IDD_ABOUTBOX]
 Type=1

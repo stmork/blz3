@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CDocument part
+**	Blizzard III - CDocument part for objects
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved

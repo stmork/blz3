@@ -61,11 +61,15 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.7  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.6  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.

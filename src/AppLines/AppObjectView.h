@@ -1,15 +1,15 @@
 /*
 **
 **	$Filename:	AppObjectView.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - CView part for objects
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -65,11 +65,6 @@ protected:
 protected:
 	//{{AFX_MSG(CAppObjectView)
 	afx_msg void OnPaint();
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

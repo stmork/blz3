@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CDocument part
+**	Blizzard III - CDocument part for OpenGL Documents (scenes/objects)
 **
 **	(C) Copyright 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/14 16:13:02  sm
+**	- Some further cleanups done.
+**	- Icon reordering done.
+**
 **	Revision 1.2  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
-**
+**	
 **	Revision 1.1  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
 **	
