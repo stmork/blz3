@@ -175,7 +175,7 @@ public:
 		return count;
 	}
 
-	inline Object b3Find(Key key)
+	inline Object *b3Find(Key key)
 	{
 		b3HashPair<Key,Object> *pair;
 		b3_hash                 idx = b3Hash(key);
@@ -184,10 +184,25 @@ public:
 		{
 			if (pair->m_Key == key)
 			{
-				return pair->m_Object;
+				return &pair->m_Object;
 			}
 		}
 		return null;
+	}
+
+	inline b3_bool b3HasKey(Key key)
+	{
+		b3HashPair<Key,Object> *pair;
+		b3_hash                 idx = b3Hash(key);
+
+		B3_FOR_BASE(&m_HashMap[idx],pair)
+		{
+			if (pair->m_Key == key)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	b3_bool b3Remove(const Key &key)

@@ -35,16 +35,20 @@
 #include "AppObjectView.h"
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
+
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3File.h"
 #include "blz3/system/b3FileDialog.h"
+#include "blz3/system/b3Plugin.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/base/b3FileMem.h"
 
 #include "DlgSearchPathList.h"
 #include "DlgProperties.h"
+
 #include "b3Splash.h"
+#include "b3StaticPluginInfoInit.h"
 #include "b3Profile.h"
 #include "b3ExceptionLogger.h"
 #include "b3SelectObject.h"
@@ -57,10 +61,13 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2003/06/09 17:33:30  sm
+**	- New item maintainance dialog added.
+**
 **	Revision 1.54  2003/05/24 13:46:49  sm
 **	- Added plugin support
 **	- Fixed b3FileList on non existing directory.
-**
+**	
 **	Revision 1.53  2003/02/26 19:13:05  sm
 **	- Update scene/object views after color redefinition.
 **	- Beautofied the app properties dialog.
@@ -487,9 +494,10 @@ void CAppLinesApp::b3SetupSearchPath(b3SearchPath &search,CString &path)
 BOOL CAppLinesApp::InitInstance()
 {
 	// Parse command line for standard shell commands, DDE, file open
-	CB3Version         version;
-	CB3ExceptionLogger init_logging;
-	b3Date             today;
+	CB3Version          version;
+	CB3ExceptionLogger  init_logging;
+	b3Loader           &plugins = b3Loader::b3GetLoader();
+	b3Date              today;
 
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
@@ -543,9 +551,10 @@ BOOL CAppLinesApp::InitInstance()
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
 	b3SetupSearchPath(b3Scene::m_TexturePool,path);
 
+	b3StaticPluginInfoInit::b3Init();
 	path = GetProfileString(b3ClientName(),"plugin search path","");
-	b3SetupSearchPath(m_Plugins,path);
-	m_Plugins.b3Load();
+	b3SetupSearchPath(plugins,path);
+	plugins.b3Load();
 
 	CDlgProperties::b3ReadConfig();
 	if (m_pDocManager == NULL)
@@ -646,7 +655,7 @@ BOOL CAppLinesApp::InitInstance()
 int CAppLinesApp::ExitInstance() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	m_Plugins.b3Unload();
+	b3Loader::b3GetLoader().b3Unload();
 	return CB3App::ExitInstance();
 }
 

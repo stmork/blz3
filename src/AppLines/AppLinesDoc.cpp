@@ -60,9 +60,12 @@
 
 /*
 **	$Log$
+**	Revision 1.88  2003/06/09 17:33:30  sm
+**	- New item maintainance dialog added.
+**
 **	Revision 1.87  2003/06/08 18:57:02  sm
 **	- Added list editing to Lines
-**
+**	
 **	Revision 1.86  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -871,7 +874,7 @@ void CAppLinesDoc::b3Prepare(
 	if (geometry_changed)
 	{
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_Scene->b3Prepare(0,0);
+		m_Scene->b3PrepareScene(0,0);
 	}
 
 	if (geometry_changed || structure_changed)

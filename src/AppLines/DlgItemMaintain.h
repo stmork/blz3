@@ -25,10 +25,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgItemMaintain dialog
 
+#include "blz3/system/b3Plugin.h"
+
 class CDlgItemMaintain : public CDialog
 {
 // Construction
 	b3Base<b3Item> *m_Head;
+	b3Loader       *m_Plugins;
 
 public:
 	CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
@@ -62,6 +65,7 @@ protected:
 	afx_msg void OnItemLast();
 	virtual void OnOK();
 	afx_msg void OnDblclkItemList();
+	afx_msg void OnSelectionChanged();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/06/09 17:33:30  sm
+**	- New item maintainance dialog added.
+**
 **	Revision 1.9  2003/06/01 12:35:43  sm
 **	- added invalid increment exception to b3Array
-**
+**	
 **	Revision 1.8  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
 **	
@@ -143,11 +146,11 @@ CB3ExceptionLogger::CB3ExceptionLogger()
 
 const char *CB3ExceptionLogger::b3GetMessage(const b3_errno ErrNo)
 {
-	UINT MsgID = LocalMessageMap.b3Find(ErrNo);
+	UINT *MsgID = LocalMessageMap.b3Find(ErrNo);
 
-	if (MsgID != 0)
+	if (MsgID != null)
 	{
-		LocalMessageString.LoadString(MsgID);
+		LocalMessageString.LoadString(*MsgID);
 	}
 	else
 	{

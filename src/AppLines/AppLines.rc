@@ -2824,6 +2824,9 @@ BEGIN
     IDS_NEW_OBJECT_NAME     "Boden"
     IDS_PRGERR_INVALID_INCREMENT 
                             "Programmfehler!\nEin Speichervergrößerungswert ist ungültig!"
+    IDS_ITEMDESC_CAMERA     "Kameraeinstellung"
+    IDS_ITEMDESC_SUPERSAMPLE4 "Supersampling"
+    IDS_ITEMDESC_NEBULAR    "Nebel"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2859,6 +2862,20 @@ BEGIN
     ID_PICK_VERT            "Eine vertikale Pickerzeile verwenden.\nVertikale Pickerzeile"
     ID_PICK_PREV            "Pickerzeile vorher auswählen.\nVorherige Pickerzeile"
     ID_PICK_SUCK            "Nächste Pickerzeile auswählen.\nNächste Pickerzeile"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ITEMDESC_LINES_INFO "Modellierhilfe"
+    IDS_ITEMDESC_ANIMATION  "Animation"
+    IDS_ITEMDESC_DISTRIBUTE "Distributed Raytracing"
+    IDS_ITEMDESC_LENSFLARE  "Lensflare-Definition"
+    IDS_ITEMDESC_CAUSTIC    "Kaustiken (experimentell)"
+    IDS_CLASSDESC_SPECIAL   "Szenenweite Einstellungen"
+    IDS_CLASSDESC_MATERIAL  "Materialliste"
+    IDS_CLASSDESC_LIGHT     "Lichtquellen"
+    IDS_CLASSDESC_BUMP      "Oberflächenstrukturen"
+    IDS_CLASSDESC_CONDITION "Ausstanzungen"
 END
 
 #endif    // German (Germany) resources

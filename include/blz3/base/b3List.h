@@ -23,11 +23,16 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Compare.h"
 
-#define B3_NODE_FIRST   1
-#define B3_NODE_PREV    2
-#define B3_NODE_NULL    4
-#define B3_NODE_SUCC    8
-#define B3_NODE_LAST   16
+#define B3_NODE_FIRST        1
+#define B3_NODE_PREV         2
+#define B3_NODE_NULL         4
+#define B3_NODE_SUCC         8
+#define B3_NODE_LAST        16
+#define B3_NODE_NOT_FIRST   32
+#define B3_NODE_NOT_PREV    64
+#define B3_NODE_NOT_NULL   128
+#define B3_NODE_NOT_SUCC   256
+#define B3_NODE_NOT_LAST   512
 
 template <class T> class B3_PLUGIN b3Link
 {
@@ -334,16 +339,25 @@ public:
 
 	inline long b3State(T *ptr)
 	{
-		b3_u32  flags = 0;
+		b3_u32  flags;
 
-		if (ptr == First)  flags |= B3_NODE_FIRST;
-		if (ptr == Last)   flags |= B3_NODE_LAST;
-		if (ptr == null)   flags |= B3_NODE_NULL;
+		if (ptr == null)
+		{
+			flags = B3_NODE_NULL;
+		}
 		else
 		{
-			if (ptr->Prev) flags |= B3_NODE_PREV;
-			if (ptr->Succ) flags |= B3_NODE_SUCC;
+			flags = B3_NODE_NOT_NULL;
+			if (ptr == First) flags |= B3_NODE_FIRST;
+			else              flags |= B3_NODE_NOT_FIRST;
+			if (ptr == Last)  flags |= B3_NODE_LAST;
+			else              flags |= B3_NODE_NOT_LAST;
+			if (ptr->Prev)    flags |= B3_NODE_PREV;
+			else              flags |= B3_NODE_NOT_PREV;
+			if (ptr->Succ)    flags |= B3_NODE_SUCC;
+			else              flags |= B3_NODE_NOT_SUCC;
 		}
+
 		return flags;
 	}
 

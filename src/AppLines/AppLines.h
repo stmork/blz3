@@ -38,7 +38,6 @@
 #include "AppRaytraceDoc.h"
 #include "AppObjectDoc.h"
 #include "blz3/system/b3DisplayView.h"
-#include "blz3/system/b3Plugin.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
@@ -50,7 +49,6 @@ class CAppLinesApp : public CB3App
 	// Last view parameter
 	b3_bool          m_Filtered;
 	b3_display_mode  m_Mode;
-	b3Loader         m_Plugins;
 
 	// Document templates (we can handle many file types!)
 	CMultiDocTemplate *pImageTemplate;

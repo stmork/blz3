@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgItemMaintain.h"
+#include "b3StaticPluginInfoInit.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/06/09 17:33:30  sm
+**	- New item maintainance dialog added.
+**
 **	Revision 1.1  2003/06/08 18:57:02  sm
 **	- Added list editing to Lines
-**
+**	
 */
 
 /*************************************************************************
@@ -50,6 +54,7 @@ CDlgItemMaintain::CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent /*=NULL*/)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_Head = head;
+	m_Plugins = &b3Loader::b3GetLoader();
 }
 
 
@@ -72,6 +77,7 @@ BEGIN_MESSAGE_MAP(CDlgItemMaintain, CDialog)
 	ON_BN_CLICKED(IDC_ITEM_DOWN, OnItemDown)
 	ON_BN_CLICKED(IDC_ITEM_LAST, OnItemLast)
 	ON_LBN_DBLCLK(IDC_ITEM_LIST, OnDblclkItemList)
+	ON_LBN_SELCHANGE(IDC_ITEM_LIST, OnSelectionChanged)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -83,6 +89,7 @@ BOOL CDlgItemMaintain::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
+	SetWindowText(b3StaticPluginInfoInit::b3GetClassName(m_Head->b3GetClass()));
 	b3UpdateList();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -90,13 +97,39 @@ BOOL CDlgItemMaintain::OnInitDialog()
 
 void CDlgItemMaintain::b3UpdateList(b3Item *select)
 {
-	b3Item *item;
-	int     index;
+	b3_plugin_info *info;
+	CString     unknown;
+	CString     text;
+	const char *title;
+	const char *desc;
+	b3Item     *item;
+	int         index;
 
 	m_ItemList.ResetContent();
+	unknown.LoadString(IDS_UNKNOWN);
 	B3_FOR_BASE(m_Head,item)
 	{
-		index = m_ItemList.AddString("Item");
+		info = m_Plugins->b3FindInfo(item);
+		if (info != null)
+		{
+			desc = info->m_Description;
+		}
+		else
+		{
+			desc = unknown;
+		}
+
+		title = item->b3GetName();
+		if(title != null)
+		{
+			text.Format("%s (%s)",desc,title);
+		}
+		else
+		{
+			text = desc;
+		}
+
+		index = m_ItemList.AddString(text);
 		if (index != LB_ERR)
 		{
 			m_ItemList.SetItemDataPtr(index,item);
@@ -106,19 +139,22 @@ void CDlgItemMaintain::b3UpdateList(b3Item *select)
 			}
 		}
 	}
+	b3UpdateUI();
 }
 
 void CDlgItemMaintain::b3UpdateUI()
 {
-	b3Item *item  = b3GetSelectedItem();
-	long    state = m_Head->b3State(item);
+	b3Item         *item  = b3GetSelectedItem();
+	b3_plugin_info *info = m_Plugins->b3FindInfo(item);
+	long            state = m_Head->b3State(item);
 
-	GetDlgItem(IDC_ITEM_EDIT)->EnableWindow(  (state & B3_NODE_NULL) == 0);
-	GetDlgItem(IDC_ITEM_DELETE)->EnableWindow((state & B3_NODE_NULL) == 0);
-	GetDlgItem(IDC_ITEM_FIRST)->EnableWindow( (state & B3_NODE_FIRST) == 0);
-	GetDlgItem(IDC_ITEM_UP)->EnableWindow(     state & B3_NODE_PREV);
-	GetDlgItem(IDC_ITEM_DOWN)->EnableWindow(   state & B3_NODE_SUCC);
-	GetDlgItem(IDC_ITEM_LAST)->EnableWindow(  (state & B3_NODE_LAST) == 0);
+	GetDlgItem(IDC_ITEM_NEW)->EnableWindow();
+	GetDlgItem(IDC_ITEM_EDIT)->EnableWindow(b3Plugin::b3HasEditFunc(info));
+	GetDlgItem(IDC_ITEM_DELETE)->EnableWindow(state & B3_NODE_NOT_NULL);
+	GetDlgItem(IDC_ITEM_FIRST)->EnableWindow( state & B3_NODE_NOT_FIRST);
+	GetDlgItem(IDC_ITEM_UP)->EnableWindow(    state & B3_NODE_PREV);
+	GetDlgItem(IDC_ITEM_DOWN)->EnableWindow(  state & B3_NODE_SUCC);
+	GetDlgItem(IDC_ITEM_LAST)->EnableWindow(  state & B3_NODE_NOT_LAST);
 }
 
 b3Item *CDlgItemMaintain::b3GetSelectedItem()
@@ -156,6 +192,12 @@ void CDlgItemMaintain::OnDblclkItemList()
 	OnItemEdit();
 }
 
+void CDlgItemMaintain::OnSelectionChanged() 
+{
+	// TODO: Add your control notification handler code here
+	b3UpdateUI();
+}
+
 void CDlgItemMaintain::OnItemDelete() 
 {
 	// TODO: Add your control notification handler code here
@@ -163,6 +205,8 @@ void CDlgItemMaintain::OnItemDelete()
 
 	if (item != null)
 	{
+		m_Head->b3Remove(item);
+		delete item;
 	}
 }
 

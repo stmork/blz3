@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/06/09 17:33:30  sm
+**	- New item maintainance dialog added.
+**
 **	Revision 1.8  2003/06/07 11:40:10  sm
 **	- Changed plugin interface:
 **	  o Added icons
 **	  o Added checksum/size/version in b3_plugin_info
 **	  o Changed plugin method name
 **	  o Changed b3Info signature for use of only one b3_plugin_info
-**
+**	
 **	Revision 1.7  2003/06/01 13:36:03  sm
 **	- Added define for exported plugin methods.
 **	
@@ -70,6 +73,12 @@
 **                                                                      **
 *************************************************************************/
 
+b3Loader b3Loader::m_Loader;
+
+b3Loader::b3Loader()
+{
+}
+
 b3_bool b3Loader::b3IsPlugin(b3Path &library)
 {
 	b3Path ext(library);
@@ -80,7 +89,7 @@ b3_bool b3Loader::b3IsPlugin(b3Path &library)
 
 b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 {
-	return new b3Plugin(library);
+	return new b3Plugin(this,library);
 }
 
 b3Item *b3Loader::b3Create(b3_u32 class_type)
@@ -126,24 +135,49 @@ b3_bool b3Loader::b3Edit(b3Item *item)
 	return result;
 }
 
+b3_plugin_info *b3Loader::b3FindInfo(b3Item *item)
+{
+	return item != null ? b3FindInfo(item->b3GetClassType()) : null;
+}
+
 b3_plugin_info *b3Loader::b3FindInfo(b3_u32 class_type)
 {
-	b3PluginBase *base;
-	b3Plugin     *plugin;
-	b3_count      i;
+	b3_count i;
 
-	B3_FOR_BASE(&m_PluginList,base)
+	for (i = 0;i < m_InfoArray.b3GetCount();i++)
 	{
-		plugin = (b3Plugin *)base;
-		for (i = 0;i < plugin->m_InfoArray.b3GetCount();i++)
+		if (m_InfoArray[i].m_ClassType == class_type)
 		{
-			if (plugin->m_InfoArray[i].m_ClassType == class_type)
-			{
-				return &plugin->m_InfoArray[i];
-			}
+			return &m_InfoArray[i];
 		}
 	}
 	return null;
+}
+
+b3_bool b3Loader::b3AddPluginInfo(b3_plugin_info *info)
+{
+	b3_bool result = false;
+
+	if (info != null)
+	{
+		if (b3Plugin::b3IsValid(info))
+		{
+			m_InfoArray.b3Add(*info);
+			b3PrintF(B3LOG_DEBUG,"  class: %08x V%d \"%s\" %s edit option\n",
+				info->m_ClassType,
+				info->m_Version,
+				info->m_Description == null ? "(unnamed)" : info->m_Description,
+				info->m_EditFunc != null ? "with" : "without");
+			result = true;
+		}
+		else
+		{
+			b3PrintF(B3LOG_NORMAL,"  info class%08x/V%d invalid!\n",
+				info->m_ClassType,
+				info->m_Version);
+		}
+	}
+	return result;
 }
 
 /*************************************************************************
@@ -152,7 +186,7 @@ b3_plugin_info *b3Loader::b3FindInfo(b3_u32 class_type)
 **                                                                      **
 *************************************************************************/
 
-b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
+b3Plugin::b3Plugin(b3Loader *loader,b3Path &library) : b3PluginBase(library)
 {
 	b3_count        i = 0;
 	b3_plugin_info *info;
@@ -176,24 +210,7 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 				do
 				{
 					info = b3Info(i++);
-					if (info != null)
-					{
-						if (b3IsValid(info))
-						{
-							m_InfoArray.b3Add(*info);
-							b3PrintF(B3LOG_DEBUG,"  class: %08x V%d \"%s\" %s edit option\n",
-								info->m_ClassType,
-								info->m_Version,
-								info->m_Description == null ? "(unnamed)" : info->m_Description,
-								info->m_EditFunc != null ? "with" : "without");
-						}
-						else
-						{
-							b3PrintF(B3LOG_NORMAL,"  info class%08x/V%d invalid!\n",
-								info->m_ClassType,
-								info->m_Version);
-						}
-					}
+					loader->b3AddPluginInfo(info);
 				}
 				while(info != null);
 			}
@@ -215,7 +232,6 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 
 b3Plugin::~b3Plugin()
 {
-	m_InfoArray.b3Clear(true);
 	if (m_Handle != null)
 	{
 		AfxFreeLibrary(m_Handle);

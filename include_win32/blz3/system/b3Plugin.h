@@ -24,11 +24,11 @@
 
 #define B3_PLUGIN_INIT_FUNC "b3Init"
 #define B3_PLUGIN_INFO_FUNC "b3Info"
+typedef b3_bool          (*b3_plugin_create_func)(b3Item *item);
+typedef b3_bool          (*b3_plugin_edit_func)(b3Item *item);
 
-typedef b3_bool (*b3_plugin_create_func)(b3Item *item);
-typedef b3_bool (*b3_plugin_edit_func)(b3Item *item);
-
-#define B3_PLUGIN_INFO_VERSION 1
+#define B3_PLUGIN_INFO_VERSION   1
+#define B3_PLUGIN_DESC_LEN     128
 
 struct b3_plugin_info
 {
@@ -36,37 +36,43 @@ struct b3_plugin_info
 	b3_size                m_Size;
 	b3_u32                 m_CheckSum;
 	b3_u32                 m_ClassType;
-	const char            *m_Description;
+	char                   m_Description[B3_PLUGIN_DESC_LEN];
 	HICON                  m_Icon;
 	b3_plugin_create_func  m_CreateFunc;
 	b3_plugin_edit_func    m_EditFunc;
 };
 
+typedef b3_plugin_info * (*b3_plugin_info_func)(b3_index i);
+
 class b3Loader : public b3LoaderBase
 {
-protected:
-	b3_bool       b3IsPlugin(b3Path &library);
-	b3PluginBase *b3CreatePlugin(b3Path &library);
+	       b3Array<b3_plugin_info> m_InfoArray;
+	static b3Loader                m_Loader;
 
+	                b3Loader();
 public:
-	b3Item       *b3Create(b3_u32 class_type);
-	b3_bool       b3Edit(b3Item *item);
-
-private:
+	b3Item         *b3Create(b3_u32 class_type);
+	b3_bool         b3Edit(b3Item *item);
+	b3_bool         b3AddPluginInfo(b3_plugin_info *info);
+	b3_plugin_info *b3FindInfo(b3Item *item);
 	b3_plugin_info *b3FindInfo(b3_u32 class_type);
-};
 
-typedef b3_plugin_info * (*b3_plugin_info_func)(b3_index i);
+	static b3Loader &b3GetLoader()
+	{
+		return m_Loader;
+	}
+
+protected:
+	b3_bool         b3IsPlugin(b3Path &library);
+	b3PluginBase   *b3CreatePlugin(b3Path &library);
+};
 
 class b3Plugin : public b3PluginBase
 {
 	HINSTANCE               m_Handle;
 
-protected:
-	b3Array<b3_plugin_info> m_InfoArray;
-
 public:
-	         b3Plugin(b3Path &library);
+	         b3Plugin(b3Loader *loader,b3Path &library);
 
 public:
 	virtual ~b3Plugin();
@@ -92,6 +98,16 @@ public:
 			checksum += *ptr++;
 		}
 		info->m_CheckSum = checksum;
+	}
+
+	static b3_bool b3HasCreateFunc(b3_plugin_info *info)
+	{
+		return info != null ? info->m_CreateFunc != null : false;
+	}
+
+	static b3_bool b3HasEditFunc(b3_plugin_info *info)
+	{
+		return info != null ? info->m_EditFunc != null : false;
 	}
 
 private:

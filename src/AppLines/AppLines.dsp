@@ -245,6 +245,10 @@ SOURCE=.\b3SplinePreview.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3StaticPluginInfoInit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Undo.cpp
 # End Source File
 # Begin Source File
