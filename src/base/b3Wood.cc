@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/19 10:13:37  sm
+**	- Adjusted oak plank.
+**
 **	Revision 1.4  2004/04/18 09:13:50  sm
 **	- Removed hardwired values.
 **	- Now we have congruent material and bump oakpank structure.
-**
+**	
 **	Revision 1.3  2004/04/18 08:53:04  sm
 **	- Put temporiraly some hardwired values into the oakplank.
 **	
@@ -158,8 +161,8 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 void b3Wood::b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy)
 {
 	m_Scale                  = wood->m_Scale;
-	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx,0,0);
-	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0,fy,0) * 0.1;
+	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx,0,0) * wobble * 7;
+	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0,fy,0) * wobble * 5;
 	m_Ringy                  = wood->m_Ringy;
 	m_Grainy                 = wood->m_Grainy;
 	m_GrainFrequency         = wood->m_GrainFrequency;
@@ -196,7 +199,7 @@ b3OakPlank::~b3OakPlank()
 void b3OakPlank::b3InitOakPlank()
 {
 	b3InitWood();
-	m_yRot    = (b3_f32)(M_PI * 0.48);
+	m_yRot    = (b3_f32)(M_PI * 0.51);
 	m_zRot    = 0;
 	m_xTimes  = 3;
 	m_yTimes  = 7;
@@ -242,8 +245,8 @@ b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar,b3_index &index)
 
 	fy = polar->y * m_ryScale;
 	fx = polar->x * m_rxScale + m_xOffset * floor(fy);
-	surface.x = fx;
-	surface.y = fy;
+	surface.x = fmod(fx,(b3_f64)m_xTimes);
+	surface.y = fmod(fy,(b3_f64)m_yTimes);
 	surface.z = 0;
 
 	fx *= m_rxTimes;

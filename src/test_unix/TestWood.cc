@@ -33,6 +33,9 @@
 
 /*
 **  $Log$
+**  Revision 1.10  2004/04/19 10:13:37  sm
+**  - Adjusted oak plank.
+**
 **  Revision 1.9  2004/04/19 09:00:52  sm
 **  - Added bump sampler.
 **  - Reactivated bump sampler in bump dialogs.
@@ -111,8 +114,8 @@ public:
 		material->m_xOffset = 0.52;
 		material->m_RingFrequency *= 0.1;
 #else
-		material->m_xScale *= 4;
-		material->m_yScale *= 4;
+		material->m_xScale *= 2;
+		material->m_yScale *= 2;
 #endif
 
 		// Init material
@@ -180,8 +183,8 @@ int main(int argc,char *argv[])
 		tx.b3AllocTx(xMax,yMax,24);
 		
 //		b3MatWoodSampler      sampler(&tx);
-//		b3MatOakPlankSampler  sampler(&tx);
-		b3BumpWoodSampler     sampler(&tx);
+		b3MatOakPlankSampler  sampler(&tx);
+//		b3BumpWoodSampler     sampler(&tx);
 //		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
