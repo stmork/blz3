@@ -151,11 +151,21 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Sub(const b3_vector *a,b3_vector *result)
+	static inline b3_vector *b3Sub(const b3_vector *aVec,b3_vector *result)
 	{
-		result->x -= a->x;
-		result->y -= a->y;
-		result->z -= a->z;
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *a = &aVec->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] -= a[i];
+		}
+#else
+		result->x -= aVec->x;
+		result->y -= aVec->y;
+		result->z -= aVec->z;
+#endif
 
 		return result;
 	}
@@ -267,16 +277,76 @@ public:
 
 	static inline void b3Scale(b3_vector *vector,const b3_f64 factor)
 	{
+#ifdef B3_SSE
+		b3_f32 *v = &vector->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			vector[i] *= factor;
+		}
+#else
 		vector->x = (b3_f32)(vector->x * factor);
 		vector->y = (b3_f32)(vector->y * factor);
 		vector->z = (b3_f32)(vector->z * factor);
+#endif
+	}
+
+	static inline b3_vector *b3Scale(
+		      b3_vector *result,
+		const b3_vector *vector,
+		const b3_f64     factor)
+	{
+#ifdef B3_SSE
+		b3_f32 *r = &result->x;
+		b3_f32 *v = &vector->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] = v[i] * factor;
+		}
+#else
+		result->x = (b3_f32)(vector->x * factor);
+		result->y = (b3_f32)(vector->y * factor);
+		result->z = (b3_f32)(vector->z * factor);
+#endif
+		return result;
 	}
 
 	static inline void b3Scale(b3_vector64 *vector,const b3_f64 factor)
 	{
+#ifdef B3_SSE
+		b3_f64 *v = &vector->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			vector[i] *= factor;
+		}
+#else
 		vector->x *= factor;
 		vector->y *= factor;
 		vector->z *= factor;
+#endif
+	}
+
+	static inline b3_vector64 *b3Scale(
+		      b3_vector64 *result,
+		const b3_vector64 *vector,
+		const b3_f64       factor)
+	{
+#ifdef B3_SSE
+		b3_f64 *r = &result->x;
+		b3_f64 *v = &vector->x;
+
+		for(int i = 0;i < 3;i++)
+		{
+			r[i] = v[i] * factor;
+		}
+#else
+		result->x = vector->x * factor;
+		result->y = vector->y * factor;
+		result->z = vector->z * factor;
+#endif
+		return result;
 	}
 
 	static inline b3_vector *b3MatrixMul3D(const b3_matrix *A,b3_vector *vector)
@@ -439,6 +509,15 @@ public:
 		upper->x =
 		upper->y =
 		upper->z = -FLT_MAX;
+	}
+
+	static inline void b3SetMinimum(
+		b3_vector *vector,
+		b3_f64     min)
+	{
+		if (vector->x < min) vector->x = min;
+		if (vector->y < min) vector->y = min;
+		if (vector->z < min) vector->z = min;
 	}
 
 	static inline void b3AdjustBound(

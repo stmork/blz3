@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2002/12/22 11:52:22  sm
+**	- Ensure minimum volume for bounding boxes even for plain areas.
+**
 **	Revision 1.68  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -41,7 +44,7 @@
 **	  which I only can assume what they are doing;-)
 **	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
 **	  and corrected upper time limit.
-**
+**	
 **	Revision 1.67  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -779,15 +782,10 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	if (result)
 	{
 		// Use fresh data
-		m_DimSize.x  = (subUpper.x - subLower.x) * tolerance * 0.5;
-		m_DimSize.y  = (subUpper.y - subLower.y) * tolerance * 0.5;
-		m_DimSize.z  = (subUpper.z - subLower.z) * tolerance * 0.5;
-		subLower.x  -= m_DimSize.x;
-		subLower.y  -= m_DimSize.y;
-		subLower.z  -= m_DimSize.z;
-		subUpper.x  += m_DimSize.x;
-		subUpper.y  += m_DimSize.y;
-		subUpper.z  += m_DimSize.z;
+		b3Vector::b3Scale(b3Vector::b3Sub(&subUpper,&subLower,&m_DimSize),tolerance * 0.5);
+		b3Vector::b3SetMinimum(&m_DimSize,epsilon);
+		b3Vector::b3Sub(&m_DimSize,&subLower);
+		b3Vector::b3Add(&m_DimSize,&subUpper);
 	}
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)

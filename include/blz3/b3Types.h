@@ -82,19 +82,19 @@ typedef b3_u32              b3_pkd_color;
 typedef long                b3_coord;
 
 // Some vectors
-typedef B3_ALIGN_16 struct b3_vector
+typedef B3_ALIGN_16 struct b3_vector32_3D
 {
 	b3_f32    x;
 	b3_f32    y;
 	b3_f32    z;
-} b3_fVector, b3_vector32_3D, b3_vector3D;
+} b3_vector32, b3_vector;
 
-typedef B3_ALIGN_32 struct b3_vector64
+typedef B3_ALIGN_32 struct b3_vector64_3D
 {
 	b3_f64    x;
 	b3_f64    y;
 	b3_f64    z;
-} b3_dVector, b3_dVector3D;
+} b3_vector64;
 
 typedef B3_ALIGN_16 struct b3_vector32_4D
 {
@@ -102,7 +102,7 @@ typedef B3_ALIGN_16 struct b3_vector32_4D
 	b3_f32    y;
 	b3_f32    z;
 	b3_f32    w;
-} b3_fVector4D,b3_vector4D;
+} b3_vector4D;
 
 typedef B3_ALIGN_32 struct b3_vector64_4D
 {
@@ -110,9 +110,9 @@ typedef B3_ALIGN_32 struct b3_vector64_4D
 	b3_f64    y;
 	b3_f64    z;
 	b3_f64    w;
-} b3_dVector4D;
+} b3_vector4D_64;
 
-typedef B3_ALIGN_64 struct b3_matrix32
+typedef B3_ALIGN_64 struct b3_matrix32_4D
 {
 	b3_f32    m11,m12,m13,m14;
 	b3_f32    m21,m22,m23,m24;
@@ -120,33 +120,33 @@ typedef B3_ALIGN_64 struct b3_matrix32
 	b3_f32    m41,m42,m43,m44;
 } b3_matrix;
 
-B3_ALIGN_64 struct b3_matrix64
+typedef B3_ALIGN_64 struct b3_matrix64_4D
 {
 	b3_f64    m11,m12,m13,m14;
 	b3_f64    m21,m22,m23,m24;
     b3_f64    m31,m32,m33,m34;
     b3_f64    m41,m42,m43,m44;
-};
+} b3_matrix64;
 
-typedef B3_ALIGN_32 struct b3_line32
+typedef B3_ALIGN_32 struct b3_line32_3D
 {
 	b3_vector pos,dir;
-} b3_line;
+} b3_line32, b3_line;
 
-typedef B3_ALIGN_64 struct b3_line64
+typedef B3_ALIGN_64 struct b3_line64_3D
 {
 	b3_vector64 pos,dir;
-} b3_dLine;
+} b3_line64;
 
 B3_ALIGN_16 struct b3_pos
 {
 	b3_s32    x,y;
 };
 
-B3_ALIGN_16 struct b3_color
+typedef B3_ALIGN_16 struct b3_color32
 {
 	b3_f32    a,r,g,b;
-};
+} b3_color;
 
 // Some definitions
 #ifndef null

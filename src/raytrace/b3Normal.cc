@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/12/22 11:52:22  sm
+**	- Ensure minimum volume for bounding boxes even for plain areas.
+**
 **	Revision 1.5  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.4  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
@@ -93,8 +96,8 @@ void b3Cylinder::b3Normal(b3_ray *ray)
 
 void b3Cone::b3Normal(b3_ray *ray)
 {
-	b3_f64     x,y,Factor;
-	b3_dVector n1,z3;
+	b3_f64      x,y,Factor;
+	b3_vector64 n1,z3;
 
 	x     = ray->polar.object_polar.x;
 	y     = ray->polar.object_polar.y;
@@ -224,8 +227,8 @@ void b3CSGCylinder::b3Normal(b3_ray *ray)
 
 void b3CSGCone::b3Normal(b3_ray *ray)
 {
-	b3_f64     x,y,Factor;
-	b3_dVector n1,z3;
+	b3_f64      x,y,Factor;
+	b3_vector64 n1,z3;
 
 	switch(ray->polar.normal_index)
 	{

@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Spline.h"
 
@@ -35,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/12/22 11:52:22  sm
+**	- Ensure minimum volume for bounding boxes even for plain areas.
+**
 **	Revision 1.10  2002/12/11 14:53:39  sm
 **	- Made some comments
 **	- Changed b3Noise class to s static one.
-**
+**	
 **	Revision 1.9  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -415,7 +419,7 @@ static b3_color MarbleColors[4] =
 static inline void marbleCurve (
 	b3Spline  *Spline,
 	b3_vector *result,
-	b3_f64  x)
+	b3_f64     x)
 {
 	register b3_f32  *knots;
 	register b3_f64  q;
@@ -499,9 +503,7 @@ void b3Noise::b3Hell (b3_vector *P,b3_color *Color)
 	b3_f64    t;
 	b3_vector Dir;
 
-	Dir.x = P->x * 0.08;
-	Dir.y = P->y * 0.08;
-	Dir.z = P->z * 0.08;
+	b3Vector::b3Scale(&Dir,P,0.08);
 
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;
@@ -512,9 +514,8 @@ void b3Noise::b3Clouds (b3_vector *P,b3_color *Color)
 {
 	b3_vector Dir;
 
-	Dir.x = P->x * scal * 0.08 * 0.3;
-	Dir.y = P->y * scal * 0.08;
-	Dir.z = P->z * scal * 0.08;
+	b3Vector::b3Scale(&Dir,P,scal * 0.08);
+	Dir.x *= 0.3;
 
 	Color->a = 0;
 	Color->r =
@@ -545,7 +546,7 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 	b3_vector v;
 
 	n = b3NoiseVector(point->x * 0.5,point->y,point->z);
-	q =  b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
+	q = b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
 	waveSpline.b3DeBoorClosed (&v,0,q);
 	return mSin(point->y * 10 + v.z * 2);
 }
