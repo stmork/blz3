@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/system/b3DisplayView.h"
+#include "blz3/system/b3Time.h"
 #include "blz3/image/b3Sampler.h"
 #include "blz3/base/b3Procedure.h"
 
@@ -33,6 +34,9 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2004/05/18 10:44:52  sm
+**  - Fine tuning animated water.
+**
 **  Revision 1.1  2004/05/16 18:50:59  sm
 **  - Added new simple image sampler.
 **  - We need better water!
@@ -46,7 +50,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WATER_RES   400
+#define WATER_RES   200
 
 class b3WaterSampler : public b3ImageSampler, public b3Water
 {
@@ -73,7 +77,23 @@ public:
 	{
 		m_Factor = 1.0;
 		m_Time   = 0.0;
-		printf("octaves: %d\n",m_Octaves);
+
+		m_WindFreq  = 0.5;
+		m_WindAmp   = 0.2f;
+		m_MinWind   = 1.0f;
+		m_Km        = 1.0f;
+		m_Octaves   = 2;  
+
+		printf("octaves=%d\n",m_Octaves);
+		printf("Km=%3.3f\n",m_Km);
+		printf("wind: frequency=%3.3f min=%3.3f amp=%3.3f\n",
+			m_WindFreq,m_MinWind,m_WindAmp);
+	}
+	
+	void b3SampleTime(b3_f64 time)
+	{
+		m_Time = time;
+		b3Sample();
 	}
 };
 
@@ -94,15 +114,14 @@ int main(int argc,char *argv[])
 		
 		b3WaterSampler sampler(&tx);
 
-		sampler.b3Sample();
-
-		// We want to see the computed picture until we make input
-		// into the display window.
-		display->b3PutTx(&tx);
-		display->b3Wait();
-
 		if (argc > 1)
 		{
+			sampler.b3Sample();
+
+			// We want to see the computed picture until we make input
+			// into the display window.
+			display->b3PutTx(&tx);
+			display->b3Wait();
 #ifdef CREATE_ICON
 			if (argc > 3)
 			{
@@ -111,7 +130,7 @@ int main(int argc,char *argv[])
 				small.b3AllocTx(32,32,24);
 				small.b3ScaleToGrey(&tx);
 				small.b3SaveTGA(argv[2]);
-			
+
 				big.b3AllocTx(48,48,24);
 				big.b3ScaleToGrey(&tx);
 				big.b3SaveTGA(argv[3]);
@@ -120,6 +139,22 @@ int main(int argc,char *argv[])
 #else
 			tx.b3SaveJPEG(argv[1]);
 #endif
+		}
+		else
+		{
+			b3Time now;
+			b3_f64 time_start = now.b3GetTime(),time_diff;
+
+			do
+			{
+				now.b3Now();
+				time_diff = now.b3GetTime() - time_start;
+			printf("t=%3.3f\n",time_diff);
+				sampler.b3SampleTime(time_diff);
+				display->b3PutTx(&tx);
+			}
+//			while(true);
+			while(!display->b3IsCancelled(xMax,yMax));
 		}
 
 		// Delete Display

@@ -189,7 +189,7 @@ public:
 	b3_f32    m_WindFreq;
 	b3_f32    m_MinWind;
 	b3_f32    m_ScaleTime;           // time period for wave swing
-	
+	b3_vector m_Anim;
 
 public:
 	b3Water();
@@ -200,15 +200,15 @@ public:
 		b3_f64    factor  = 10 * m_WindFreq;
 		b3_f64    offset,turbulence;
 
-		P.x = point->x * factor;
-		P.y = point->y * factor;
-		P.z = point->z * factor + time * m_ScaleTime * 3.0;
+		P.x = point->x * factor + time * m_ScaleTime * m_Anim.x;
+		P.y = point->y * factor + time * m_ScaleTime * m_Anim.y;
+		P.z = point->z * factor + time * m_ScaleTime * m_Anim.z * m_ScaleTime;
 		offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
 
 		P.x *= 8;
 		P.y *= 8;
 		P.z *= 8;
-		turbulence = b3Noise::b3Turbulence(&P, 4);
+		turbulence = b3Noise::b3Turbulence(&P, 3);
 
 		return (m_MinWind + m_WindAmp * turbulence) * offset;
 	}

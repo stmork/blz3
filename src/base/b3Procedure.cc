@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/05/18 10:44:52  sm
+**	- Fine tuning animated water.
+**
 **	Revision 1.34  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
-**
+**	
 **	Revision 1.33  2004/05/15 10:09:13  sm
 **	- Added b3CloudBackground to b3Special item list.
 **	
@@ -756,10 +759,11 @@ b3Water::b3Water()
 {
 	m_Km        = 1.0f;
 	m_Octaves   = 2;
-	m_ScaleTime = 2;
+	m_ScaleTime = 1;
 	m_WindFreq  = 0.5;
 	m_WindAmp   = 0.2f;
-	m_MinWind   = 0.8f;
+	m_MinWind   = 1.0f;
+	b3Vector::b3Init(&m_Anim,1.5f,1.5f,1.0f);
 }
 
 /*************************************************************************

@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/05/18 10:44:52  sm
+**	- Fine tuning animated water.
+**
 **	Revision 1.34  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
-**
+**	
 **	Revision 1.33  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
@@ -495,6 +498,10 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 			m_WindAmp  = b3InitFloat();
 			m_WindFreq = b3InitFloat();
 			m_MinWind  = b3InitFloat();
+			if (B3_PARSE_INDEX_VALID)
+			{
+				b3InitVector(&m_Anim);
+			}
 		}
 	}
 	else
@@ -514,6 +521,7 @@ void b3BumpWater::b3Write()
 	b3StoreFloat(m_WindAmp);
 	b3StoreFloat(m_WindFreq);
 	b3StoreFloat(m_MinWind);
+	b3StoreVector(&m_Anim);
 }
 
 b3_bool b3BumpWater::b3Prepare()
