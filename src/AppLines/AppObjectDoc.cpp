@@ -35,6 +35,7 @@
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Bump.h"
 #include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -44,9 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.44  2005/01/02 19:15:24  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.43  2004/12/11 17:05:01  sm
 **	- Fixed update/draw problem in object editor
 **	

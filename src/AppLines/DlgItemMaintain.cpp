@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "AppRenderDoc.h"
 #include "DlgItemMaintain.h"
 #include "b3StaticPluginInfoInit.h"
 #include "blz3/system/b3FileReg.h"
@@ -34,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.17  2004/12/28 15:44:35  sm
 **	- Adjusted compiler settings
 **	- Some 64 bit corrections
-**
+**	
 **	Revision 1.16  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.

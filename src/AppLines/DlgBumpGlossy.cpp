@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "AppObjectDoc.h"
 #include "b3ExampleScene.h"
 #include "DlgBumpGlossy.h"
 #include "blz3/system/b3Plugin.h"
@@ -34,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.4  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.3  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
 **	

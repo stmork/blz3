@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.19  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
-**
+**	
 **	Revision 1.18  2004/12/06 15:14:56  smork
 **	- Minor changes
 **	
@@ -234,7 +239,6 @@ void b3RenderContext::b3StartDrawing()
 #ifdef _DEBUG
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3StartDrawing()\n");
 #endif
-
 	glClearColor(
 		glBgColor[b3Color::R],
 		glBgColor[b3Color::G],

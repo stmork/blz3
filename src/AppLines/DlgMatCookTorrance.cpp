@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "AppObjectDoc.h"
 #include "blz3/system/b3Plugin.h"
 #include "DlgMatCookTorrance.h"
 #include "b3ExampleScene.h"
@@ -34,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.13  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.12  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "AppObjectDoc.h"
 #include "DlgMatTexture.h"
 #include "blz3/system/b3Plugin.h"
 #include "b3ExampleScene.h"
@@ -35,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.10  2004/06/28 18:42:34  sm
 **	- Corrected some input types of texture dialogs.
-**
+**	
 **	Revision 1.9  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.

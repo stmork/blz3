@@ -24,7 +24,9 @@
 #include "AppLines.h"
 #include "MainFrm.h"
 #include "b3Splash.h"
+#include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.40  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.39  2004/05/16 09:21:11  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now

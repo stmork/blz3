@@ -21,6 +21,9 @@
 #include "AppLines.h"
 #include "b3Undo.h"
 
+#include "blz3/raytrace/b3Light.h"
+#include "blz3/raytrace/b3Scene.h"
+
 class b3OpLight : public b3Operation
 {
 protected:

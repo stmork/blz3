@@ -25,7 +25,12 @@
 #include "AppRenderDoc.h"
 
 class CDlgHierarchy;
+class b3World;
+class b3Item;
 class b3SplineShape;
+class b3Shape;
+class b3BBox;
+class b3Scene;
 
 class CAppObjectDoc : public CAppRenderDoc
 {

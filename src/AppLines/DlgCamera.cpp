@@ -24,6 +24,8 @@
 #include "AppLines.h"
 #include "DlgCamera.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 #include "DlgCreateItem.h"
 
 /*************************************************************************
@@ -34,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.10  2004/05/16 09:21:10  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now
-**
+**	
 **	Revision 1.9  2004/05/15 14:37:46  sm
 **	- Added resolution combo box to scene dialog.
 **	- Fixed bug no. 3

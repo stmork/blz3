@@ -24,6 +24,8 @@
 #include "b3UndoAction.h"
 #include "b3Action.h"
 #include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Special.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.7  2004/11/30 18:51:39  sm
 **	- Corrected affine transformations and scaling which is
 **	  not affine.
-**
+**	
 **	Revision 1.6  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.

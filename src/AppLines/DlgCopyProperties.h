@@ -27,6 +27,11 @@
 /////////////////////////////////////////////////////////////////////////////
 // DlgCopyProperties dialog
 
+#include "blz3/base/b3World.h"
+
+class b3Shape;
+class b3BBox;
+
 class CDlgCopyProperties : public CDialog
 {
 // Construction

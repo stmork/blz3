@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgModellerInfo.h"
+#include "blz3/raytrace/b3Scene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,12 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.12  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.11  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	

@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "DlgCopyProperties.h"
+#include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h"
 
 /*************************************************************************
@@ -33,13 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.2  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.1  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.

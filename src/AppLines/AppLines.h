@@ -34,14 +34,20 @@
 #endif
 
 #include "Resource.h"       // main symbols
-#include "AppRaytraceDoc.h"
-#include "AppObjectDoc.h"
 #include "blz3/system/b3DisplayView.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp:
 // See AppLines.cpp for the implementation of this class
 //
+
+class CAppRaytraceDoc;
+class CAppLinesDoc;
+class CAppObjectDoc;
+
+class b3BBox;
+class b3World;
+class b3SearchPath;
 
 class CAppLinesApp : public CB3App
 {

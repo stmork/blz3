@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.2  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -40,7 +45,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.1  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
@@ -80,7 +85,6 @@ BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
-
 	if( !CMDIChildWnd::PreCreateWindow(cs) )
 		return FALSE;
 

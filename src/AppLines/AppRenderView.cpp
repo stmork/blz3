@@ -38,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2005/01/23 19:54:06  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.48  2005/01/21 20:42:02  sm
 **	- Added error handling to Lines.
 **	- Try to use ChoosePixelFormat for OpenGL context selection.
-**
+**	
 **	Revision 1.47  2005/01/21 15:41:06  smork
 **	- Added error code/text preparation.
 **	
@@ -372,7 +377,7 @@ void CAppRenderView::OnDestroy()
 	CScrollView::OnDestroy();
 	
 	// TODO: Add your message handler code here
-	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,NULL);
+	CB3GetLinesApp()->b3SelectRenderContext(NULL,NULL);
 	wglDeleteContext(m_glGC);
 }
 

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/01/23 19:54:07  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.8  2005/01/21 20:42:03  sm
 **	- Added error handling to Lines.
 **	- Try to use ChoosePixelFormat for OpenGL context selection.
-**
+**	
 **	Revision 1.7  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
 **	
@@ -210,11 +215,14 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool 
 	CB3PixelFormatDescriptor format;
 	HGLRC                    gc;
 	int                      PixelFormatIndex;
-#if 1
+
+	m_glPixelFormat.b3Clear();
+#if 0
 	memset(&format.desc,0,sizeof(format.desc));
 	format.desc.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
 	format.desc.nVersion   = 1;
-	format.desc.dwFlags    = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_STEREO_DONTCARE;
+	format.desc.dwFlags    = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
+//	format.desc.dwFlags    = PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL;
 	format.desc.iPixelType = PFD_TYPE_RGBA;
 	format.desc.cColorBits = 32;
 	format.desc.cDepthBits = 32;
@@ -230,7 +238,6 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool 
 
 	// Retrieve all pixel formats
 	max = DescribePixelFormat(dc,1,0,NULL);
-	m_glPixelFormat.b3Clear();
 	for (i = 1;i <= max;i++)
 	{
 		format.index = i;

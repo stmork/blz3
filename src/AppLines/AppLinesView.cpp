@@ -28,6 +28,9 @@
 #include "b3Action.h"
 #include <sys/timeb.h>
 
+#include "blz3/raytrace/b3Light.h"
+#include "blz3/raytrace/b3Scene.h"
+
 #include "DlgCamera.h"
 
 #include "b3UndoAction.h"
@@ -42,13 +45,18 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2005/01/23 19:54:05  sm
+**	- Experimented with OpenGL settings for Linux Wine but there
+**	  is no solution for Wine/Windows MDI applications to use OpenGL.
+**	- Optimized precompiled header.
+**
 **	Revision 1.71  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.70  2004/05/16 09:21:10  sm
 **	- Fixed ticket no. 22: Camera deletions are handled
 **	  correctly now

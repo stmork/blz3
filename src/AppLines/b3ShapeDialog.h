@@ -29,11 +29,14 @@
 #include "b3VectorEdit.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/base/b3World.h"
 
 typedef int (*b3ItemEditCall)(b3_u32 shading_class_type, b3Item *item,b3_bool create);
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ShapeDialog dialog
+
+class b3Shape;
 
 class CB3ShapeDialog : public CPropertyPage
 {

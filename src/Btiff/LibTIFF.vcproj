@@ -37,6 +37,7 @@
 				EnableEnhancedInstructionSet="0"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="blz3/b3Config.h"
 				PrecompiledHeaderFile=".\..\..\Release/LibTIFF.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release/"
@@ -98,6 +99,7 @@
 				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="blz3/b3Config.h"
 				PrecompiledHeaderFile=".\..\..\Debug/LibTIFF.pch"
 				AssemblerListingLocation=".\..\..\Debug/"
 				ObjectFile=".\..\..\Debug/"
@@ -161,6 +163,7 @@
 				EnableEnhancedInstructionSet="2"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="blz3/b3Config.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE2/LibTIFF.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release-SSE2/"
@@ -223,6 +226,7 @@
 				EnableEnhancedInstructionSet="1"
 				TreatWChar_tAsBuiltInType="TRUE"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="blz3/b3Config.h"
 				PrecompiledHeaderFile=".\..\..\Release-SSE/LibTIFF.pch"
 				AssemblerOutput="0"
 				AssemblerListingLocation=".\..\..\Release-SSE/"
@@ -1513,10 +1517,10 @@
 				RelativePath="t4.h">
 			</File>
 			<File
-				RelativePath="tif_dir.h">
+				RelativePath="..\..\include\tif_dir.h">
 			</File>
 			<File
-				RelativePath="..\..\include\tif_dir.h">
+				RelativePath="tif_dir.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tif_fax3.h">

@@ -20,6 +20,10 @@
 
 #include "AppLines.h"
 #include "b3Undo.h"
+#include "blz3/base/b3Array.h"
+
+class b3Scene;
+class b3CameraPart;
 
 class b3OpObjectTransformation : public b3Operation
 {

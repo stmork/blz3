@@ -30,6 +30,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgStepRotate dialog
 
+class CAppRenderDoc;
+
 class CDlgStepRotate : public CB3Dialogbar
 {
 // Construction
