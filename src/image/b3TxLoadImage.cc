@@ -37,12 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/02 17:38:17  sm
+**	- Removing nasty CR/LF
+**	- Added b3ExtractExt()
+**	- Added stricmp() for Un*x
+**	- Fixed some defines
+**
 **	Revision 1.2  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.1  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into

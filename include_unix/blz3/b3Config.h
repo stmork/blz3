@@ -58,6 +58,24 @@
 #define B3_ASSERT(a)
 #endif
 
+static inline int stricmp(const char *a,const char *b)
+{
+	int diff,i = 0;
+
+	do
+	{
+		diff = tolower(a[i]) - tolower(b[i]);
+		if ((a[i] == 0) || (b[i] == 0))
+		{
+			return diff;
+		}
+		i++;
+	}
+	while (diff != 0);
+
+	return diff;
+}
+
 #define B3_FRAN(x)      ((float)x        * drand48())
 #define B3_IRAN(x)      ((long)((float)x * drand48()))
 #define B3_ABS(a)        ((a) < 0 ? (-(a)) : (a))
@@ -71,12 +89,12 @@
 #define B3_VERSION  3
 #define B3_REVISION 0
 
-#define BREAD      "r"
-#define BWRITE     "w"
-#define BAPPEND    "a"
-#define TREAD      "r"
-#define TWRITE     "w"  
-#define TAPPEND    "a"
+#define B3_BREAD      "r"
+#define B3_BWRITE     "w"
+#define B3_BAPPEND    "a"
+#define B3_TREAD      "r"
+#define B3_TWRITE     "w"  
+#define B3_TAPPEND    "a"
 
 typedef enum
 {

@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/12/02 17:38:17  sm
+**	- Removing nasty CR/LF
+**	- Added b3ExtractExt()
+**	- Added stricmp() for Un*x
+**	- Fixed some defines
+**
 **	Revision 1.20  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
-**
+**	
 **	Revision 1.19  2001/11/26 17:12:48  sm
 **	- Far clipping plane fix for Un*x
 **	
@@ -587,7 +593,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
 	if (l > farCP) farCP = l;
 
-	return farCP * 2 + 1;
+	return farCP * 2 + 4;
 #else
 	return 10000;
 #endif

@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/02 17:38:17  sm
+**	- Removing nasty CR/LF
+**	- Added b3ExtractExt()
+**	- Added stricmp() for Un*x
+**	- Fixed some defines
+**
 **	Revision 1.6  2001/11/11 14:07:15  sm
 **	- Adjusted b3Path to Un*x port.
-**
+**	
 **	Revision 1.5  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -328,6 +334,28 @@ void b3Path::b3ParentName(
 	// Copy to destination if available else
 	// overwrite source
 	strcpy (parent != null ? parent : (char *)file,actDir);
+}
+
+// Remove extension of a file. This routine is needed
+// for creating a new extension.
+void b3Path::b3ExtractExt(const char *filename,char *ext)
+{
+	char     actPath[B3_FILESTRINGLEN];
+	char     actName[B3_FILESTRINGLEN];
+	b3_size  i;
+	b3_count len;
+
+	b3SplitFileName (filename,actPath,actName);
+	len = strlen(actName);
+	for (i = 0;i < len;i++)
+	{
+		if (actName[i] == '.')
+		{
+			strcpy(ext,&actName[i+1]);
+			return;
+		}
+	}
+	ext[0] = 0;
 }
 
 // Remove extension of a file. This routine is needed

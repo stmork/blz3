@@ -41,9 +41,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/02 17:38:17  sm
+**	- Removing nasty CR/LF
+**	- Added b3ExtractExt()
+**	- Added stricmp() for Un*x
+**	- Fixed some defines
+**
 **	Revision 1.3  2001/07/02 16:09:46  sm
 **	- Added bounding box reorganization.
-**
+**	
 **	Revision 1.2  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles
@@ -154,7 +160,7 @@ void b3PrintF (
 		}
 
 		// Open the file
-		if (bout == null) bout = fopen (B3_OUT,TAPPEND);
+		if (bout == null) bout = fopen (B3_OUT,B3_TAPPEND);
 		if (bout == null) bout = stderr;
 
 		// Make start message if necessary

@@ -73,6 +73,7 @@ public:
 	static void b3ParentName   (const char *path,char *parent);
 	static void b3ParentName   (char *parent);
 	static void b3RemoveExt    (char *filename);
+	static void b3ExtractExt   (const char *filename,char *ext);
 
 	inline operator char * ()
 	{

@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2001/12/02 17:38:17  sm
+**	- Removing nasty CR/LF
+**	- Added b3ExtractExt()
+**	- Added stricmp() for Un*x
+**	- Fixed some defines
+**
 **	Revision 1.26  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **	Revision 1.25  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
 **	
