@@ -28,7 +28,7 @@
 #include <math.h>
 
 #ifndef _DEBUG
-#define USE_COOL_CONTROLS
+#define dont_USE_COOL_CONTROLS
 #endif
 
 #ifdef USE_COOL_CONTROLS
@@ -43,9 +43,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/13 20:05:16  sm
+**	- Some Lines bugfixes
+**
 **	Revision 1.12  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.11  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -143,9 +146,16 @@ void CB3App::b3SelectRenderContext(HDC dc,HGLRC gc)
 		b3PrintF(B3LOG_FULL,
 			"######################################### CB3App::b3SelectRenderContext(HDC:0x%x,HGLRC:0x%x)\n",
 			dc,gc);
-		wglMakeCurrent(dc,gc);
-		m_lastDC = dc;
-		m_lastGC = gc;
+		if (!wglMakeCurrent(dc,gc))
+		{
+			b3PrintF(B3LOG_NORMAL,"Error switching OpenGL context (HDC:0x%x,HGLRC:0x%x)\n",
+				dc,gc);
+		}
+		else
+		{
+			m_lastDC = dc;
+			m_lastGC = gc;
+		}
 	}
 }
 

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.74  2005/01/13 20:05:16  sm
+**      - Some Lines bugfixes
+**
 **      Revision 1.73  2005/01/13 11:38:23  smork
 **      - Changed default color for lens flares.
 **
@@ -952,7 +955,7 @@ b3LensFlare::b3LensFlare(b3_u32 class_type) :
 	b3Special(sizeof(b3LensFlare),class_type)
 {
 	b3Activate(false);
-	m_Color.b3Init(1.0,1.0,0.9);
+	m_Color.b3Init(1.0,1.0,0.9f);
 	m_Expon = 13;
 }
 

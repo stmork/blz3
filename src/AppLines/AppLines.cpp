@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.85  2005/01/13 20:05:15  sm
+**	- Some Lines bugfixes
+**
 **	Revision 1.84  2005/01/09 19:58:30  sm
 **	- Added more convenient plugin path maintainance
-**
+**	
 **	Revision 1.83  2005/01/09 15:04:30  sm
 **	- Added better search path support.
 **	
@@ -742,6 +745,9 @@ BOOL CAppLinesApp::InitInstance()
 	COleTemplateServer::RegisterAll();
 		// Note: MDI applications register all server objects without regard
 		//  to the /Embedding or /Automation on the command line.
+
+	// Init Blizzard values...
+	b3InitInstance();
 
 	// create main MDI Frame window
 	CMainFrame* pMainFrame = new CMainFrame;

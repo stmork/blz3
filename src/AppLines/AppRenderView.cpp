@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2005/01/13 20:05:15  sm
+**	- Some Lines bugfixes
+**
 **	Revision 1.41  2005/01/12 18:52:35  sm
 **	- Fixed pointer problem.
-**
+**	
 **	Revision 1.40  2005/01/12 14:37:10  smork
 **	- Added a painting DC to OpenGL drawing.
 **	
@@ -501,18 +504,17 @@ void CAppRenderView::b3DrawDC(
 {
 }
 
-void CAppRenderView::OnPaint()
+void CAppRenderView::b3Paint()
 {
-	CPaintDC dc(this);
-
-	b3Paint();
+	OnPaint();
 }
 
-void CAppRenderView::b3Paint()
+void CAppRenderView::OnPaint()
 {
 	// We have already an HDC, you remember?
 	// So we don't need OnDraw();
 	CAppRenderDoc *pDoc = GetDocument();
+	CPaintDC       paint_dc(this);
 	CRect          rect;
 	b3Time         start,stop;
 	b3_f64         time_diff;
@@ -530,7 +532,10 @@ void CAppRenderView::b3Paint()
 
 	// Flush OpenGL buffer to screen
 	glFinish();
-	SwapBuffers(m_glDC);
+	if (!SwapBuffers(m_glDC))
+	{
+		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
+	}
 
 	// Do post drawings using Windows DC
 	b3DrawDC(m_glDC,rect.Width(),rect.Height());

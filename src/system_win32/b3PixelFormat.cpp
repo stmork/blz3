@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/01/13 20:05:16  sm
+**	- Some Lines bugfixes
+**
 **	Revision 1.4  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -41,7 +44,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.3  2004/10/12 19:54:19  sm
 **	- Some camera/light resort. We have to draw the
 **	  light just after the camera to ensure a proper
@@ -206,8 +209,10 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
 	for (i = 1;i <= max;i++)
 	{
 		format.index = i;
-		DescribePixelFormat(dc,i,format.desc.nSize,&format.desc);
-		m_glPixelFormat.b3Add(format);
+		if (DescribePixelFormat(dc,i,format.desc.nSize,&format.desc) != 0)
+		{
+			m_glPixelFormat.b3Add(format);
+		}
 	}
 
 	// List and sort pixel formats depending on our requirements.

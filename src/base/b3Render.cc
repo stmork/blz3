@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.110  2005/01/13 20:05:15  sm
+**      - Some Lines bugfixes
+**
 **      Revision 1.109  2004/12/30 16:27:39  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -1055,52 +1058,55 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix *transformation,
 	b3_bool    is_affine)
 {
-#ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"        >b3RenderObject::b3TransformVertices(...)\n");
-#endif
-
-	b3MapVertices(B3_MAP_VBO_RW);
-
-	b3_count      glVertexCount =  glVertexElements->b3GetCount();
-	b3_gl_vertex *glVertex      = *glVertexElements;
-	b3_count      i;
-
-#ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
-		 glVertexElements->b3GetCount(), glVertex,
-		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
-#endif
-
-	if (glVertex != null)
+	if (glVertexElements != null)
 	{
-		glVertexElements->b3Recompute();
-		if (is_affine)
-		{
-			for (i = 0;i < glVertexCount;i++)
-			{
-				b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
-				b3Vector::b3MatrixMul3D(transformation,(b3_vector *)&glVertex[i].n);
-			}
-		}
-		else
-		{
-			for (i = 0;i < glVertexCount;i++)
-			{
-				b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
-			}
+#ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"        >b3RenderObject::b3TransformVertices(...)\n");
+#endif
 
-			b3MapIndices(B3_MAP_VBO_R);
-			b3ComputeNormals();
-			b3UnmapIndices();
-		}
+		b3MapVertices(B3_MAP_VBO_RW);
 
-		glVertexElements->b3Recomputed();
-	}
-	b3UnmapVertices();
+		b3_count      glVertexCount =  glVertexElements->b3GetCount();
+		b3_gl_vertex *glVertex      = *glVertexElements;
+		b3_count      i;
 
 #ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"        <b3RenderObject::b3TransformVertices()\n");
+		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+			glVertexElements->b3GetCount(), glVertex,
+			glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
+
+		if (glVertex != null)
+		{
+			glVertexElements->b3Recompute();
+			if (is_affine)
+			{
+				for (i = 0;i < glVertexCount;i++)
+				{
+					b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
+					b3Vector::b3MatrixMul3D(transformation,(b3_vector *)&glVertex[i].n);
+				}
+			}
+			else
+			{
+				for (i = 0;i < glVertexCount;i++)
+				{
+					b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
+				}
+
+				b3MapIndices(B3_MAP_VBO_R);
+				b3ComputeNormals();
+				b3UnmapIndices();
+			}
+
+			glVertexElements->b3Recomputed();
+		}
+		b3UnmapVertices();
+
+#ifdef VERBOSE
+		b3PrintF(B3LOG_FULL,"        <b3RenderObject::b3TransformVertices()\n");
+#endif
+	}
 }
 
 /*************************************************************************
