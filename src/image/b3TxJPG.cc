@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/13 09:54:32  sm
+**	- Making include extern "C"
+**
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	
 */
 
@@ -50,8 +53,11 @@
 #undef GLOBAL /* ausser JPEG brauchen wir sowieso nur noch ANSI-C */
 #endif
 
-#include "jpeglib.h"
-#include <setjmp.h>
+extern "C"
+{
+#	include "jpeglib.h"
+#	include <setjmp.h>
+}
 
 struct my_error_mgr
 {
