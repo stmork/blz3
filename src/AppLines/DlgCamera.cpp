@@ -34,10 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.1  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
-**
+**	
 **
 */
 
@@ -83,9 +90,9 @@ BEGIN_MESSAGE_MAP(CDlgCamera, CDialog)
 	ON_CBN_SELCHANGE(IDC_CAMERA_LIST, OnSelchangeCamera)
 	ON_CBN_KILLFOCUS(IDC_CAMERA_LIST, OnKillfocusCamera)
 	ON_BN_CLICKED(IDC_CAMERA_ACTIVATION, OnCameraState)
-	ON_EN_KILLFOCUS(IDC_CAMERA_FOCAL_LENGTH, OnKillfocusCameraFocalLength)
-	ON_EN_KILLFOCUS(IDC_CAMERA_WIDTH, OnKillfocusCameraWidth)
-	ON_EN_KILLFOCUS(IDC_CAMERA_HEIGHT, OnKillfocusCameraHeight)
+	ON_EN_KILLFOCUS(IDC_CAMERA_FOCAL_LENGTH, OnKillfocusCameraType)
+	ON_EN_KILLFOCUS(IDC_CAMERA_WIDTH, OnKillfocusCameraType)
+	ON_EN_KILLFOCUS(IDC_CAMERA_HEIGHT, OnKillfocusCameraType)
 	ON_CBN_SELCHANGE(IDC_CAMERA_TYPES, OnSelchangeCameraTypes)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -97,11 +104,11 @@ static struct b3_predefined_camera
 	b3_f64 m_Height;
 } camera_definition[] =
 {
-	{  10, 33, 22 },
-	{  35, 33, 22 },
-	{  50, 33, 22 },
-	{  70, 33, 22 },
-	{ 200, 33, 22 }
+	{  10.0, 34, 22.5 },
+	{  35.0, 34, 22.5 },
+	{  50.0, 34, 22.5 },
+	{  70.0, 34, 22.5 },
+	{ 200.0, 34, 22.5 }
 };
 
 #define MAX_CAMERA_TYPES (sizeof(camera_definition) / sizeof(b3_predefined_camera))
@@ -319,19 +326,7 @@ void CDlgCamera::OnOK()
 	CDialog::OnOK();
 }
 
-void CDlgCamera::OnKillfocusCameraFocalLength() 
-{
-	// TODO: Add your control notification handler code here
-	m_TypeCtrl.SetCurSel(b3GetCameraType());
-}
-
-void CDlgCamera::OnKillfocusCameraWidth() 
-{
-	// TODO: Add your control notification handler code here
-	m_TypeCtrl.SetCurSel(b3GetCameraType());
-}
-
-void CDlgCamera::OnKillfocusCameraHeight() 
+void CDlgCamera::OnKillfocusCameraType() 
 {
 	// TODO: Add your control notification handler code here
 	m_TypeCtrl.SetCurSel(b3GetCameraType());

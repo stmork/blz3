@@ -76,6 +76,7 @@ IDI_BBOX_SHAPES         ICON    DISCARDABLE     "res\\bbox_shape.ico"
 IDI_BBOX_S_SHAPES_SUB   ICON    DISCARDABLE     "res\\bbox_sel_sub_shape.ico"
 IDI_BBOX_S_SHAPES       ICON    DISCARDABLE     "res\\bbox_sel_shape.ico"
 IDI_BBOX_EMPTY          ICON    DISCARDABLE     "res\\bbox_empty.ico"
+IDR_DISPLAYTYPE         ICON    DISCARDABLE     "res\\raytrace.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -149,7 +150,7 @@ BEGIN
     BUTTON      ID_MODELLER_INFO
 END
 
-IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 17
+IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 15
 BEGIN
     BUTTON      ID_B3_UNFILTERED
     BUTTON      ID_B3_FILTERED
@@ -170,6 +171,8 @@ BEGIN
     BUTTON      ID_CAMERA_DELETE
     BUTTON      ID_CAMERA_PROPERTIES
     BUTTON      ID_VIEW_TO_FULCRUM
+    SEPARATOR
+    BUTTON      ID_CAMERA_ENABLE
     BUTTON      ID_CAM_SELECT
 END
 
@@ -292,6 +295,7 @@ BEGIN
         MENUITEM "&Löschen",                    ID_CAMERA_DELETE
         MENUITEM "&Eigenschaften...",           ID_CAMERA_PROPERTIES
         MENUITEM "&Auf Drehkreuz ausrichten",   ID_VIEW_TO_FULCRUM
+        MENUITEM "Einge&schaltet",              ID_CAMERA_ENABLE
     END
     POPUP "Lichtquelle"
     BEGIN
@@ -302,7 +306,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Einge&schaltet",              ID_LIGHT_ENABLE
         MENUITEM "&Weiche Schatten",            ID_LIGHT_SOFT
-        MENUITEM "Spotlicht",                   ID_LIGHT_SPOT
+        MENUITEM "Spot&licht",                  ID_LIGHT_SPOT
     END
     POPUP "&Ansicht"
     BEGIN
@@ -344,9 +348,9 @@ BEGIN
     END
     POPUP "Extras"
     BEGIN
-        MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
         MENUITEM "&Objekthierarchie...",        ID_HIERACHY
         MENUITEM "&Raytracing-Vorschau...",     ID_RAYTRACE
+        MENUITEM "&Sceneneigenschaften...",     ID_DLG_SCENE
         MENUITEM "&Modellierhilfen...",         ID_MODELLER_INFO
     END
     POPUP "&Fenster"
@@ -532,7 +536,7 @@ BEGIN
     CONTROL         "Slider1",IDC_SHADOW_BRIGHTNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_TABSTOP,165,280,120,25
     CONTROL         "",IDC_PREVIEW_RAYTRACE,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,25,25,100,65
+                    SS_NOTIFY | SS_SUNKEN,25,25,100,65
     CONTROL         "",IDC_PREVIEW_BGIMAGE,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,25,125,100,66
     LTEXT           "Rekursionstiefe:",IDC_RAYDEPTH_LEGEND,25,265,115,8
@@ -638,7 +642,7 @@ END
 
 IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 151
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION "Modellierhilfen"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_FULCRUM_X,30,25,35,12,ES_AUTOHSCROLL
@@ -754,12 +758,12 @@ BEGIN
                     SS_NOTIFY | SS_SUNKEN,240,10,110,60
 END
 
-IDD_CAMERA DIALOG DISCARDABLE  0, 0, 332, 201
+IDD_CAMERA DIALOG DISCARDABLE  0, 0, 332, 215
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Kameraeinstellungen"
 FONT 8, "MS Sans Serif"
 BEGIN
-    COMBOBOX        IDC_CAMERA_LIST,25,25,100,75,CBS_SIMPLE | 
+    COMBOBOX        IDC_CAMERA_LIST,25,50,100,75,CBS_SIMPLE | 
                     CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_CAMERA_POS_X,175,25,40,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_CAMERA_POS_Y,175,45,40,12,ES_AUTOHSCROLL
@@ -767,17 +771,17 @@ BEGIN
     EDITTEXT        IDC_CAMERA_VIEW_X,265,25,40,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_CAMERA_VIEW_Y,265,45,40,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_CAMERA_VIEW_Z,265,65,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_CAMERA_FOCAL_LENGTH,165,100,40,12,ES_AUTOHSCROLL
-    COMBOBOX        IDC_CAMERA_TYPES,215,100,85,70,CBS_DROPDOWNLIST | 
+    EDITTEXT        IDC_CAMERA_FOCAL_LENGTH,171,121,40,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_CAMERA_TYPES,221,121,85,70,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_CAMERA_WIDTH,165,130,40,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_CAMERA_HEIGHT,215,130,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_CAMERA_WIDTH,171,150,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_CAMERA_HEIGHT,221,150,40,12,ES_AUTOHSCROLL
     CONTROL         "Aktivierung",IDC_CAMERA_ACTIVATION,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,25,160,51,10
-    PUSHBUTTON      "Neu...",IDC_CAMERA_NEW,25,105,50,14
-    PUSHBUTTON      "Löschen...",IDC_CAMERA_DELETE,25,125,50,14
-    DEFPUSHBUTTON   "OK",IDOK,25,175,50,14
-    GROUPBOX        "Kameraliste:",IDC_STATIC,10,10,130,140
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,15,51,10
+    PUSHBUTTON      "Neu...",IDC_CAMERA_NEW,25,135,50,14
+    PUSHBUTTON      "Löschen...",IDC_CAMERA_DELETE,25,155,50,14
+    DEFPUSHBUTTON   "OK",IDOK,25,190,50,14
+    GROUPBOX        "Kameraliste:",IDC_STATIC,10,35,130,145
     GROUPBOX        "Augpunkt:",IDC_STATIC,155,10,75,75
     LTEXT           "x:",IDC_STATIC,165,25,8,8
     LTEXT           "y:",IDC_STATIC,165,44,8,8
@@ -786,9 +790,10 @@ BEGIN
     LTEXT           "x:",IDC_STATIC,255,25,8,8
     LTEXT           "y:",IDC_STATIC,255,44,8,8
     LTEXT           "z:",IDC_STATIC,255,65,8,8
-    LTEXT           "Brennweite:",IDC_STATIC,165,90,38,8
-    LTEXT           "Breite:",IDC_STATIC,165,120,21,8
-    LTEXT           "Höhe:",IDC_STATIC,215,120,20,8
+    LTEXT           "Brennweite:",IDC_STATIC,171,110,38,8
+    LTEXT           "Breite:",IDC_STATIC,171,140,21,8
+    LTEXT           "Höhe:",IDC_STATIC,221,140,20,8
+    GROUPBOX        "Projektionswerte:",IDC_STATIC,155,95,165,85
 END
 
 
@@ -947,7 +952,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 325
         TOPMARGIN, 7
-        BOTTOMMARGIN, 194
+        BOTTOMMARGIN, 208
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1225,7 +1230,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_MODELLER_INFO        "Geometry-Werte setzen\nGeometrie-Werte setzen"
+    ID_MODELLER_INFO        "Modellierhilfen einstellen\nModellierhilfen"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
     ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
@@ -1250,6 +1255,24 @@ BEGIN
     ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
     ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
     ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
+    ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_B3_ORIGINAL          "Zeigt das Bild in Originalgröße an\nOriginalgröße"
+    ID_B3_WIDTH             "Paßt die Bildausgabe der Fensterbreite an\nAn Fensterbreite anpassen"
+    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
+    ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
+    ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
+    ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
+    ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
+    ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
 END
 
 #endif    // German (Germany) resources

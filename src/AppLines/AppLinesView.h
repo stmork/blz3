@@ -176,6 +176,8 @@ protected:
 	afx_msg void OnCameraDelete();
 	afx_msg void OnCameraProperties();
 	afx_msg void OnUpdateCameraDelete(CCmdUI* pCmdUI);
+	afx_msg void OnCameraEnable();
+	afx_msg void OnUpdateCameraEnable(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

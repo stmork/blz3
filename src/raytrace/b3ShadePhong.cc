@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.5  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.4  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -71,6 +78,17 @@ b3ScenePhong::b3ScenePhong(b3_u32 class_type) : b3Scene(sizeof(b3ScenePhong), cl
 b3ScenePhong::b3ScenePhong(b3_u32 *src) : b3Scene(src)
 {
 	b3PrintF(B3LOG_NORMAL,"  using Phong shading...\n");
+}
+
+b3_bool b3ScenePhong::b3FindObscurer(b3_ray_info *ray,b3_f64 max)
+{
+#if 0
+	ray->shape = null;
+	return false;
+	return b3Scene::b3IsObscured(ray,max);
+#else
+	return b3IsObscured(ray,max);
+#endif
 }
 
 void b3ScenePhong::b3Illuminate(

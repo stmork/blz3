@@ -356,6 +356,10 @@ SOURCE=.\res\bbox_sub_shape.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bbox_wor.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\bboxworld.ico
 # End Source File
 # Begin Source File
@@ -377,6 +381,10 @@ SOURCE=.\res\ico00002.ico
 # Begin Source File
 
 SOURCE=.\res\ico00003.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\raytrace.ico
 # End Source File
 # Begin Source File
 

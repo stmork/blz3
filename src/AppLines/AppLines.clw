@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CB3FloatEdit
+LastClass=CAppLinesView
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=22
+ClassCount=23
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -22,38 +22,39 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=22
-Resource1=IDR_BLZ3TYPE
-Resource2=IDR_MAINFRAME
-Resource3=IDR_TOOLBAR_ACTION
+Resource1=IDR_MAINFRAME
+Resource2=IDR_TOOLBAR_LIGHT
+Resource3=IDR_TOOLBAR_OBJECT
 Resource4=IDD_SCENE
 Resource5=IDD_HIERARCHY
-Resource6=IDD_NEW_ITEM
+Resource6=IDD_ABOUTBOX
 Resource7=IDD_NEBULAR
-Resource8=IDR_TOOLBAR_CAMERA
-Resource9=IDD_ABOUTBOX
-Resource10=IDD_LDC
+Resource8=IDD_NEW_ITEM
+Resource9=IDD_MODELLER_INFO
+Resource10=IDR_DISPLAYTYPE
 Resource11=IDD_LIGHT
-Resource12=IDD_MODELLER_INFO
+Resource12=IDR_TOOLBAR_ACTION
 Resource13=IDD_DISTRIBUTED
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_TOOLBAR_DISPLAY
+Resource14=IDR_TOOLBAR_CAMERA
 Class17=CDlgModellerInfo
 Resource15=IDD_SUPER_SAMPLE
 Resource16=IDD_SEARCH_PATH_LIST
-Resource17=IDR_DISPLAYTYPE
-Resource18=IDR_TOOLBAR_LIGHT
+Resource17=IDR_BLZ3TYPE
+Resource18=IDR_TOOLBAR_VIEW
 Class18=CDlgCreateItem
-Resource19=IDR_TOOLBAR_OBJECT
+Resource19=IDR_TOOLBAR_DISPLAY
 Class19=CDlgLight
 Class20=CB3ControlLDC
-Resource20=IDR_TOOLBAR_VIEW
+Resource20=IDD_LDC
 Class21=CDlgLDC
 Resource21=IDD_LENS_FLARE
 Class22=CDlgCamera
+Class23=CB3ShowImage
 Resource22=IDD_CAMERA
 
 [CLS:CAppLinesApp]
@@ -112,7 +113,9 @@ Type=0
 BaseClass=CB3ShowImage
 HeaderFile=b3ShowRaytrace.h
 ImplementationFile=b3ShowRaytrace.cpp
+Filter=W
 LastObject=CB3ShowRaytrace
+VirtualFilter=WC
 
 [CLS:CChildFrame]
 Type=0
@@ -179,7 +182,7 @@ Control12=IDC_YRES,edit,1350631552
 Control13=IDC_YRES_SPIN,msctls_updown32,1342177334
 Control14=IDC_RAYDEPTH,msctls_trackbar32,1342242817
 Control15=IDC_SHADOW_BRIGHTNESS,msctls_trackbar32,1342242817
-Control16=IDC_PREVIEW_RAYTRACE,static,1342181383
+Control16=IDC_PREVIEW_RAYTRACE,static,1342181639
 Control17=IDC_PREVIEW_BGIMAGE,static,1342181383
 Control18=IDC_RAYDEPTH_LEGEND,static,1342308352
 Control19=IDC_SHADOW_BRIGHTNESS_LEGEND,static,1342308352
@@ -317,51 +320,52 @@ Command28=ID_CAMERA_NEW
 Command29=ID_CAMERA_DELETE
 Command30=ID_CAMERA_PROPERTIES
 Command31=ID_VIEW_TO_FULCRUM
-Command32=ID_LIGHT_NEW
-Command33=ID_LIGHT_DELETE
-Command34=ID_LIGHT_PROPERTIES
-Command35=ID_LIGHT_LDC
-Command36=ID_LIGHT_ENABLE
-Command37=ID_LIGHT_SOFT
-Command38=ID_LIGHT_SPOT
-Command39=ID_VIEW_TOOLBAR
-Command40=IDM_BAR_VIEW
-Command41=IDM_BAR_ACTION
-Command42=IDM_BAR_CAMERA
-Command43=IDM_BAR_LIGHT
-Command44=IDM_BAR_DISPLAY
-Command45=IDM_BAR_SCENE
-Command46=ID_CUST_MAIN
-Command47=ID_CUST_VIEW
-Command48=ID_CUST_ACTION
-Command49=ID_CUST_CAMERA
-Command50=ID_CUST_LIGHT
-Command51=ID_CUST_DISPLAY
-Command52=ID_CUST_SCENE
-Command53=ID_VIEW_STATUS_BAR
-Command54=ID_VIEW_ANTIALIAS
-Command55=ID_VIEW_PERSPECTIVE
-Command56=ID_VIEW_TOP
-Command57=ID_VIEW_FRONT
-Command58=ID_VIEW_RIGHT
-Command59=ID_VIEW_BACK
-Command60=ID_VIEW_LEFT
-Command61=ID_VIEW_BIGGER
-Command62=ID_VIEW_SMALLER
-Command63=ID_VIEW_SELECT
-Command64=ID_VIEW_POP
-Command65=ID_VIEW_ORIGINAL
-Command66=ID_DLG_SCENE
+Command32=ID_CAMERA_ENABLE
+Command33=ID_LIGHT_NEW
+Command34=ID_LIGHT_DELETE
+Command35=ID_LIGHT_PROPERTIES
+Command36=ID_LIGHT_LDC
+Command37=ID_LIGHT_ENABLE
+Command38=ID_LIGHT_SOFT
+Command39=ID_LIGHT_SPOT
+Command40=ID_VIEW_TOOLBAR
+Command41=IDM_BAR_VIEW
+Command42=IDM_BAR_ACTION
+Command43=IDM_BAR_CAMERA
+Command44=IDM_BAR_LIGHT
+Command45=IDM_BAR_DISPLAY
+Command46=IDM_BAR_SCENE
+Command47=ID_CUST_MAIN
+Command48=ID_CUST_VIEW
+Command49=ID_CUST_ACTION
+Command50=ID_CUST_CAMERA
+Command51=ID_CUST_LIGHT
+Command52=ID_CUST_DISPLAY
+Command53=ID_CUST_SCENE
+Command54=ID_VIEW_STATUS_BAR
+Command55=ID_VIEW_ANTIALIAS
+Command56=ID_VIEW_PERSPECTIVE
+Command57=ID_VIEW_TOP
+Command58=ID_VIEW_FRONT
+Command59=ID_VIEW_RIGHT
+Command60=ID_VIEW_BACK
+Command61=ID_VIEW_LEFT
+Command62=ID_VIEW_BIGGER
+Command63=ID_VIEW_SMALLER
+Command64=ID_VIEW_SELECT
+Command65=ID_VIEW_POP
+Command66=ID_VIEW_ORIGINAL
 Command67=ID_HIERACHY
 Command68=ID_RAYTRACE
-Command69=ID_MODELLER_INFO
-Command70=ID_WINDOW_NEW
-Command71=ID_WINDOW_CASCADE
-Command72=ID_WINDOW_TILE_VERT
-Command73=ID_WINDOW_TILE_HORZ
-Command74=ID_WINDOW_ARRANGE
-Command75=ID_APP_ABOUT
-CommandCount=75
+Command69=ID_DLG_SCENE
+Command70=ID_MODELLER_INFO
+Command71=ID_WINDOW_NEW
+Command72=ID_WINDOW_CASCADE
+Command73=ID_WINDOW_TILE_VERT
+Command74=ID_WINDOW_TILE_HORZ
+Command75=ID_WINDOW_ARRANGE
+Command76=ID_APP_ABOUT
+CommandCount=76
 
 [MNU:IDR_DISPLAYTYPE]
 Type=1
@@ -535,11 +539,11 @@ VirtualFilter=dWC
 
 [CLS:CB3FloatEdit]
 Type=0
-HeaderFile=..\..\include_win32\blz3\system\b3floatedit.h
-ImplementationFile=..\system_win32\b3floatedit.cpp
+HeaderFile=..\..\include_win32\blz3\system\b3FloatEdit.h
+ImplementationFile=..\system_win32\b3FloatEdit.cpp
 BaseClass=CEdit
 Filter=W
-LastObject=CB3FloatEdit
+LastObject=ID_CAMERA_ENABLE
 VirtualFilter=WC
 
 [DLG:IDD_MODELLER_INFO]
@@ -592,8 +596,9 @@ Command1=ID_CAMERA_NEW
 Command2=ID_CAMERA_DELETE
 Command3=ID_CAMERA_PROPERTIES
 Command4=ID_VIEW_TO_FULCRUM
-Command5=ID_CAM_SELECT
-CommandCount=5
+Command5=ID_CAMERA_ENABLE
+Command6=ID_CAM_SELECT
+CommandCount=6
 
 [TB:IDR_TOOLBAR_LIGHT]
 Type=1
@@ -706,7 +711,7 @@ LastObject=CDlgLDC
 [DLG:IDD_CAMERA]
 Type=1
 Class=CDlgCamera
-ControlCount=27
+ControlCount=28
 Control1=IDC_CAMERA_LIST,combobox,1344340289
 Control2=IDC_CAMERA_POS_X,edit,1350631552
 Control3=IDC_CAMERA_POS_Y,edit,1350631552
@@ -734,6 +739,7 @@ Control24=IDC_STATIC,static,1342308352
 Control25=IDC_STATIC,static,1342308352
 Control26=IDC_STATIC,static,1342308352
 Control27=IDC_STATIC,static,1342308352
+Control28=IDC_STATIC,button,1342177287
 
 [CLS:CDlgCamera]
 Type=0
@@ -743,4 +749,14 @@ BaseClass=CDialog
 Filter=D
 LastObject=CDlgCamera
 VirtualFilter=dWC
+
+
+[CLS:CB3ShowImage]
+Type=0
+HeaderFile=..\..\include_win32\blz3\system\b3ShowImage.h
+ImplementationFile=..\system_win32\b3ShowImage.cpp
+BaseClass=CStatic
+Filter=W
+VirtualFilter=WC
+LastObject=CB3ShowImage
 

@@ -33,11 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.14  2001/10/17 21:09:06  sm
 **	- Triangle support added for intersections, normal computations. So
 **	  Spline shapes can be computed, too. Now only CSG is missing.
@@ -1204,7 +1211,7 @@ b3_bool b3BBox::b3Intersect(b3_ray *ray)
 }
 
 
-b3Shape *b3Scene::b3Intersect(
+inline b3Shape *b3Scene::b3Intersect(
 	b3BBox      *BBox,
 	b3_ray_info *ray)
 {
@@ -1278,4 +1285,69 @@ b3_bool b3Scene::b3Intersect(b3_ray_info *ray,b3_f64 max)
 	}
 
 	return found;
+}
+
+b3Shape *b3Scene::b3IsObscured(
+	b3BBox      *BBox,
+	b3_ray_info *ray)
+{
+	b3Base<b3Item> *Shapes;
+	b3Base<b3Item> *BBoxes;
+	b3Shape        *Shape;
+	b3Item         *item;
+	b3_polar        polar;
+	b3_f64          Result;
+
+	while (BBox != null)
+	{
+		if (BBox->b3Intersect(ray))
+		{
+			Shapes = BBox->b3GetShapeHead();
+			BBoxes = BBox->b3GetBBoxHead();
+			if (BBoxes->First != null)
+			{
+				Shape = b3Intersect ((b3BBox *)BBoxes->First,ray);
+				if (Shape != null)
+				{
+					return Shape;
+				}
+			}
+
+			if (Shapes->b3GetClass() == CLASS_SHAPE)
+			{
+				B3_FOR_BASE(Shapes,item)
+				{
+					Shape  = (b3Shape *)item;
+					Result = Shape->b3Intersect(ray,&polar);
+					if ((Result > 0) && (Result <= ray->Q))
+					{
+						return Shape;
+					}
+				} /* for shape*/
+			}     /* if CLASS_SHAPE */
+
+
+#if 0
+			// CLASS_SHAPE
+			if (Shapes->b3GetClass() == CLASS_CSG)
+			{
+				BackShape = BBox->b3IntersectCSG (BackShape,ray,Q);
+			}
+#endif
+		}
+		BBox = (b3BBox *)BBox->Succ;
+	}
+	return null;
+}
+
+b3_bool b3Scene::b3IsObscured(b3_ray_info *ray,b3_f64 max)
+{
+	ray->Q     = max;
+	ray->shape = b3Intersect(b3GetFirstBBox(),ray);
+	return ray->shape != null;
+}
+
+b3_bool b3Scene::b3FindObscurer(b3_ray_info *ray,b3_f64 max)
+{
+	return b3Intersect(ray,max);
 }

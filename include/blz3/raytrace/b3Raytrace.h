@@ -1607,6 +1607,7 @@ protected:
 
 struct b3_ray_info : public b3_ray
 {
+	b3_index   depth;
 	b3_color   color;
 	b3Shape   *shape;
 	b3BBox    *bbox;
@@ -2082,8 +2083,10 @@ public:
 		    void            b3Raytrace(b3Display *display);
 		    void            b3AbortRaytrace();
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
-	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+			b3_bool         b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
 	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
 
 protected:
@@ -2093,6 +2096,7 @@ protected:
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
 		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
+		    b3Shape        *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);
 
 	friend class b3RayRow;
@@ -2105,8 +2109,9 @@ public:
 	B3_ITEM_INIT(b3ScenePhong);
 	B3_ITEM_LOAD(b3ScenePhong);
 
-	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
 	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
+	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 };
 
 class b3SceneMork : public b3Scene
@@ -2115,7 +2120,7 @@ public:
 	B3_ITEM_INIT(b3SceneMork);
 	B3_ITEM_LOAD(b3SceneMork);
 
-	b3_bool b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
 	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
 
 private:

@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.1  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
 **	- New toolbars introduced.
-**
+**	
 **
 */
 
@@ -57,10 +64,7 @@ CDlgCreateItem::CDlgCreateItem(CWnd* pParent /*=NULL*/)
 	m_ClassType  = 0;
 	m_ItemBase   = null;
 	m_MaxNameLen = 0;
-	if (m_Suggest == null)
-	{
-		m_Suggest = "";
-	}
+	m_Suggest    = "";
 }
 
 

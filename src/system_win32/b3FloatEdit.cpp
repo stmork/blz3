@@ -31,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.3  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
-**
+**	
 **	Revision 1.2  2001/12/02 16:30:39  sm
 **	- CDlgScene draw error fix
 **	
@@ -68,6 +75,7 @@ CB3FloatEdit::~CB3FloatEdit()
 BEGIN_MESSAGE_MAP(CB3FloatEdit, CEdit)
 	//{{AFX_MSG_MAP(CB3FloatEdit)
 	ON_WM_KILLFOCUS()
+	ON_CONTROL_REFLECT(EN_UPDATE, OnUpdate)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -150,4 +158,18 @@ void CB3FloatEdit::OnKillFocus(CWnd* pNewWnd)
 {
 	b3Check();
 	CEdit::OnKillFocus(pNewWnd);
+}
+
+void CB3FloatEdit::OnUpdate() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CEdit::OnInitDialog()
+	// function to send the EM_SETEVENTMASK message to the control
+	// with the ENM_UPDATE flag ORed into the lParam mask.
+	
+	// TODO: Add your control notification handler code here
+	if (!b3Check())
+	{
+//		B3_BEEP;
+	}
 }

@@ -39,10 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.22  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
-**
+**	
 **	Revision 1.21  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -233,6 +240,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
 	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
+	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -994,13 +1003,14 @@ void CAppLinesView::OnViewToFulcrum()
 	{
 		m_RenderView.b3SetViewMode(B3_VIEW_3D);
 		b3UnsetMagnification();
-		pDoc->UpdateAllViews(this,B3_UPDATE_VIEW|B3_UPDATE_CAMERA);
+		OnUpdate(this,B3_UPDATE_VIEW|B3_UPDATE_CAMERA,0);
 	}
 	else
 	{
 
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
+	pDoc->SetModifiedFlag();
 }
 
 void CAppLinesView::OnCameraNew() 
@@ -1076,6 +1086,12 @@ void CAppLinesView::OnCameraProperties()
 	}
 }
 
+void CAppLinesView::OnCameraEnable() 
+{
+	// TODO: Add your command handler code here
+	m_Camera->b3Activate(!m_Camera->b3IsActive());
+}
+
 void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
@@ -1090,4 +1106,10 @@ void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI)
 		}
 	}
 	pCmdUI->Enable(count > 1);
+}
+
+void CAppLinesView::OnUpdateCameraEnable(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_Camera->b3IsActive());
 }

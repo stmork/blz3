@@ -186,6 +186,18 @@ SOURCE=.\b3ViewParam.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3App.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ColorField.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ComboBox.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\b3Config.h
 # End Source File
 # Begin Source File
@@ -226,7 +238,19 @@ SOURCE=..\..\include_win32\blz3\system\b3Print.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3Reg.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3ScrollView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ShowColor.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ShowImage.h
 # End Source File
 # Begin Source File
 
@@ -235,6 +259,10 @@ SOURCE=..\..\include_win32\blz3\system\b3Thread.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3Time.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Toolbar.h
 # End Source File
 # Begin Source File
 

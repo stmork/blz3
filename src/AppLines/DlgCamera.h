@@ -73,12 +73,10 @@ protected:
 	afx_msg void OnCameraDelete();
 	afx_msg void OnSelchangeCamera();
 	afx_msg void OnKillfocusCamera();
-	virtual void OnOK();
 	afx_msg void OnCameraState();
-	afx_msg void OnKillfocusCameraFocalLength();
-	afx_msg void OnKillfocusCameraWidth();
-	afx_msg void OnKillfocusCameraHeight();
+	afx_msg void OnKillfocusCameraType();
 	afx_msg void OnSelchangeCameraTypes();
+	virtual void OnOK();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

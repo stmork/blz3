@@ -69,6 +69,7 @@ public:
 protected:
 	//{{AFX_MSG(CB3FloatEdit)
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
+	afx_msg void OnUpdate();
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

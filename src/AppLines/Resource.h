@@ -231,6 +231,7 @@
 #define ID_CAMERA_PROPERTIES            32833
 #define ID_LIGHT_LDC                    32834
 #define ID_LIGHT_SPOT                   32835
+#define ID_CAMERA_ENABLE                32840
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -257,7 +258,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        151
-#define _APS_NEXT_COMMAND_VALUE         32840
+#define _APS_NEXT_COMMAND_VALUE         32841
 #define _APS_NEXT_CONTROL_VALUE         1075
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

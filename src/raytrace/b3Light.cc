@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2001/12/22 21:08:35  sm
+**      - Tidied up some dialogs
+**      - Designed new icons for document templates
+**      - Toolbars got adjusted and beautified
+**      - Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**      - Found and fixed some minor bugs
+**
 **      Revision 1.19  2001/12/02 17:38:17  sm
 **      - Removing nasty CR/LF
 **      - Added b3ExtractExt()
@@ -351,7 +358,7 @@ b3_bool b3Light::b3PointIllumination(
 	}
 	Jit.LightDist = LightDist;
 
-	scene->b3Intersect(&Jit,UpperBound - epsilon);
+	scene->b3FindObscurer(&Jit,UpperBound - epsilon);
 	scene->b3Illuminate(this,&Jit,surface,&surface->incoming->color);
 	return true;
 }
@@ -506,7 +513,7 @@ b3Shape *b3Light::b3CheckSinglePoint (
 
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
-		scene->b3Intersect(Jit,Jit->LightDist / UpperBound - epsilon);
+		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - epsilon);
 		scene->b3Illuminate(this,Jit,surface,&Jit->Result);
 	}
 	else

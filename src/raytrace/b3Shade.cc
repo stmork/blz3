@@ -35,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/22 21:08:35  sm
+**	- Tidied up some dialogs
+**	- Designed new icons for document templates
+**	- Toolbars got adjusted and beautified
+**	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
+**	- Found and fixed some minor bugs
+**
 **	Revision 1.14  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.13  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
@@ -386,7 +393,7 @@ void b3Scene::b3Illuminate(
 	b3_illumination *surface,
 	b3_color        *result)
 {
-	register double ShapeAngle;
+	b3_f64 ShapeAngle;
 
 	if ((ShapeAngle =
 		surface->incoming->normal.x * Jit->dir.x +
@@ -399,9 +406,7 @@ void b3Scene::b3Illuminate(
 	}
 }
 
-b3_bool b3Scene::b3Shade(
-	b3_ray_info *ray,
-	b3_count     depth_count)
+b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 {
 	b3Item          *item;
 	b3Light         *light;
