@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/09/23 18:50:27  sm
+**	- Created first raytracing image with Blizzard III. It shows
+**	  simply "hit" or "no hit". Spheres and boxes aren't running
+**	  yet. Next step: shading!
+**
 **	Revision 1.3  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
-**
+**	
 **	Revision 1.2  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -190,19 +195,24 @@ b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 	if ((Discriminant = p * p + m_QuadRadius -
 		xDiff * xDiff -
 		yDiff * yDiff -
-		zDiff * zDiff) < 0) return -1;
+		zDiff * zDiff) < 0)
+	{
+		return -1;
+	}
 
 	Discriminant = sqrt(Discriminant);
 
-	// l1 <= l2, alwasy!
+	// l1 <= l2, always!
 	l1 = -p - Discriminant;
 	l2 = -p + Discriminant;
 
 	// check against limit
 	if (l1  < epsilon) l1 = -2;
 	if (l2  < epsilon) l2 = -1;
-	if ((l1 < 0) && (l2 < 0)) return (-3);
-
+	if ((l1 < 0) && (l2 < 0))
+	{
+		return -3;
+	}
 
 	// now compute "north pole" - radius is point on equator
 	if ((m_Dir.x == 0) && (m_Dir.y == 0))
@@ -227,7 +237,10 @@ b3_f64 b3Sphere::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l1 > 0)
 	{
-		if (l1 > Q) return -2;
+		if (l1 > Q)
+		{
+			return -2;
+		}
 		n.x = ray->pos.x + l1 * ray->dir.x - m_Base.x;
 		n.y = ray->pos.y + l1 * ray->dir.y - m_Base.y;
 		n.z = ray->pos.z + l1 * ray->dir.z - m_Base.z;
@@ -358,7 +371,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 
 	if (l2 > 0)
 	{
-		if (l2 > Q) return (-1);
+		if (l2 > Q)
 		{
 			return -1;
 		}
@@ -492,7 +505,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 		BTLine.dir.z * BTLine.dir.z;
 	if (a == 0)
 	{
-		return (-1);
+		return -1;
 	}
 
 	a = 1 / a;
@@ -504,7 +517,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 		 BTLine.pos.y * BTLine.pos.y +
 		 BTLine.pos.z * BTLine.pos.z - 1) * a) < 0)
 	{
-		return (-1);
+		return -1;
 	}
 	z  = sqrt(Discriminant);
 	l1 = -z - p;

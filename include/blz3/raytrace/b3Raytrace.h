@@ -24,6 +24,7 @@
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
+#include "blz3/image/b3Tx.h"
 
 #include <float.h>
 
@@ -52,7 +53,7 @@ class b3ObsoleteTx : public b3Link<b3Tx>
 	b3_s32      xSize,ySize;      // resolution
 	b3_s32      LastAccess;       // last access count
 public:
-	b3Tx();
+	b3ObsoleteTx();
 };
 
 typedef struct b3Polar
@@ -911,14 +912,14 @@ public:
 class b3Torus : public b3RenderShape
 {
 protected:
-	b3_vector         Normals[3];       // cross products, unused
-	b3_vector         Base;             // size
-	b3_vector         Dir1,Dir2,Dir3;
-	b3_s32            lSize;
-	b3_f32            Denom;            // denominator of lin. system
-	b3_f32            DirLen[3];        // squared lengths of direction vectors
-	b3_f32            aRad,bRad;        // radiuses of torus
-	b3_f32            aQuad,bQuad;      // squared lengths of aRad, bRad
+	b3_vector         m_Normals[3];       // cross products, unused
+	b3_vector         m_Base;             // size
+	b3_vector         m_Dir1,m_Dir2,m_Dir3;
+	b3_s32            m_lSize;
+	b3_f32            m_Denom;            // denominator of lin. system
+	b3_f32            m_DirLen[3];        // squared lengths of direction vectors
+	b3_f32            m_aRad, m_bRad;     // radiuses of torus
+	b3_f32            m_aQuad,m_bQuad;    // squared lengths of aRad, bRad
 
 public:
 	B3_ITEM_INIT(b3Torus);

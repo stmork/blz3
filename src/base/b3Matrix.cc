@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/09/23 18:50:27  sm
+**	- Created first raytracing image with Blizzard III. It shows
+**	  simply "hit" or "no hit". Spheres and boxes aren't running
+**	  yet. Next step: shading!
+**
 **	Revision 1.10  2001/09/22 16:19:51  sm
 **	- Adding basic shape intersection routines
-**
+**	
 **	Revision 1.9  2001/09/04 20:37:53  sm
 **	- Some minor updates
 **	
@@ -167,6 +172,14 @@ b3_f64 b3Length (b3_vector *Vector)
 		Vector->x * Vector->x +
 		Vector->y * Vector->y +
 		Vector->z * Vector->z);
+}
+
+b3_f64 b3QuadLength (b3_vector *Vector)
+{
+	return 
+		Vector->x * Vector->x +
+		Vector->y * Vector->y +
+		Vector->z * Vector->z;
 }
 
 b3_f64 b3Distance(b3_vector *from,b3_vector *to)

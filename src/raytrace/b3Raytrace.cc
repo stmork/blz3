@@ -32,10 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/09/23 18:50:27  sm
+**	- Created first raytracing image with Blizzard III. It shows
+**	  simply "hit" or "no hit". Spheres and boxes aren't running
+**	  yet. Next step: shading!
+**
 **	Revision 1.2  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
-**
+**	
 **	Revision 1.1  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -75,7 +80,7 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	buffer = row->b3GetBuffer();
 	xSize  = row->m_xSize;
 	fx     = -1.0;
-	fy     = row->m_y * 2.0 / (double)row->m_ySize - 1.0;
+	fy     =  1.0 - row->m_y * 2.0 / (double)row->m_ySize;
 	fxStep =  2.0 / (double)xSize;
 
 	// Init eye position
@@ -202,8 +207,8 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// We want to see the computed picture until we make input
 		// into the display window.
-//		display->b3Wait();
-//		delete display;
+		display->b3Wait();
+		delete display;
 	}
 	catch(b3DisplayException *e)
 	{

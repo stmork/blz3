@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/09/23 18:50:27  sm
+**      - Created first raytracing image with Blizzard III. It shows
+**        simply "hit" or "no hit". Spheres and boxes aren't running
+**        yet. Next step: shading!
+**
 **      Revision 1.15  2001/09/22 16:19:52  sm
 **      - Adding basic shape intersection routines
 **
@@ -245,6 +250,8 @@ b3Shape3::b3Shape3(b3_u32 class_type) : b3RenderShape(sizeof(b3Shape3), class_ty
 
 b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 {
+	b3_f64 denom;
+
 	b3InitVector();  // This is Base[0]
 	b3InitVector();  // This is Base[1]
 	b3InitVector();  // This is Base[2]
@@ -253,21 +260,24 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector(&m_Dir2);
 	b3InitVector(&m_Dir3);
 
-	m_Normals[0].x = m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y;
-	m_Normals[0].y = m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z;
-	m_Normals[0].z = m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x;
+	denom   = b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
+	m_Denom = 1.0 / denom;
 
-	m_Normals[1].x = m_Dir1.y * m_Dir3.z - m_Dir1.z * m_Dir3.y;
-	m_Normals[1].y = m_Dir1.z * m_Dir3.x - m_Dir1.x * m_Dir3.z;
-	m_Normals[1].z = m_Dir1.x * m_Dir3.y - m_Dir1.y * m_Dir3.x;
+	m_Normals[0].x = m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y / denom;
+	m_Normals[0].y = m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z / denom;
+	m_Normals[0].z = m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x / denom;
 
-	m_Normals[2].x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y;
-	m_Normals[2].y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z;
-	m_Normals[2].z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x;
+	m_Normals[1].x = m_Dir3.y * m_Dir1.z - m_Dir3.z * m_Dir1.y / denom;
+	m_Normals[1].y = m_Dir3.z * m_Dir1.x - m_Dir3.x * m_Dir1.z / denom;
+	m_Normals[1].z = m_Dir3.x * m_Dir1.y - m_Dir3.y * m_Dir1.x / denom;
 
-	m_DirLen[0] = b3Length(&m_Dir1);
-	m_DirLen[1] = b3Length(&m_Dir2);
-	m_DirLen[2] = b3Length(&m_Dir3);
+	m_Normals[2].x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y / denom;
+	m_Normals[2].y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z / denom;
+	m_Normals[2].z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x / denom;
+
+	m_DirLen[0] = b3QuadLength(&m_Dir1);
+	m_DirLen[1] = b3QuadLength(&m_Dir2);
+	m_DirLen[2] = b3QuadLength(&m_Dir3);
 }
 
 void b3Shape3::b3BaseTrans(
