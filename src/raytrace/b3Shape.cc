@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.21  2001/10/06 19:24:17  sm
 **      - New torus intersection routines and support routines
 **      - Added further shading support from materials
@@ -407,8 +413,8 @@ void b3ShapeBaseTrans::b3InitBaseTrans()
 }
 
 void b3ShapeBaseTrans::b3BaseTrans(
-	b3_dLine *in,
-	b3_dLine *out)
+	b3_line64 *in,
+	b3_line64 *out)
 {
 	b3_f64 xPos,yPos,zPos;
 	b3_f64 xDir,yDir,zDir;

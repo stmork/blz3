@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.12  2001/10/10 17:52:24  sm
 **      - Texture loading (only reading into memory) running.
 **      - Raytracing without OpenGL must be possible!
@@ -208,7 +214,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	b3_vector *Vector;
 	b3_count   CurveNum,Points;
 	b3_index   x,y;
-	b3_spline  MySpline;
+	b3Spline   MySpline;
 
 	Points        = 0;
 	Vector        = (b3_vector *)glVertices;
@@ -229,7 +235,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	// ... then create real horizontal spline curve.
 	for (y = 0;y < CurveNum;y++)
 	{
-		Points         = b3DeBoor (&MySpline,Vector,y);
+		Points         = MySpline.b3DeBoor (Vector,y);
 		Vector        += Points;
 	}
 
@@ -243,7 +249,7 @@ void b3SplineShape::b3ComputeGridVertices()
 	// ... then create real vertical spline curve.
 	for (x = 0;x < CurveNum;x++)
 	{
-		Points         = b3DeBoor (&MySpline,Vector,x);
+		Points         = MySpline.b3DeBoor (Vector,x);
 		Vector        += Points;
 	}
 #endif
@@ -252,7 +258,7 @@ void b3SplineShape::b3ComputeGridVertices()
 void b3SplineShape::b3ComputeSolidVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_spline  MySpline;
+	b3Spline   MySpline;
 	b3_index   x,y;
 	b3_count   SubDiv,index,count;
 	b3_vector *Vector;
@@ -262,7 +268,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	SubDiv = Spline[0].subdiv + 1;
 	for (x = 0;x < SubDiv;x++)
 	{
-		Vector += b3DeBoor (&Spline[1],Vector,x * Spline[0].offset);
+		Vector += Spline[1].b3DeBoor (Vector,x * Spline[0].offset);
 	}
 
 	// Create aux BSpline
@@ -274,7 +280,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	index  = 0;
 	for (y = 0;y < ySubDiv;y++)
 	{
-		count   = b3DeBoor (&MySpline,Vector,y);
+		count   = MySpline.b3DeBoor (Vector,y);
 		Vector += count;
 		index  += count;
 	}

@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.5  2001/09/22 16:19:53  sm
 **      - Adding basic shape intersection routines
 **
@@ -80,7 +86,7 @@ void b3SplineCurveShape::b3GetCount(
 void b3SplineCurveShape::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	b3DeBoor (&Spline,(b3_vector *)glVertices,0L);
+	Spline.b3DeBoor ((b3_vector *)glVertices,0L);
 
 	xSize  = Spline.subdiv;
 	ySize  = 0;

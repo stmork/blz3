@@ -35,9 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/11 16:06:32  sm
+**	- Cleaning up b3BSpline with including isolated methods.
+**	- Cleaning up endian conversion routines and collecting into
+**	  b3Endian
+**	- Cleaning up some datatypes for proper display in Together.
+**
 **	Revision 1.2  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
-**
+**	
 **	Revision 1.1  2001/10/07 20:17:26  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -78,7 +84,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_spline     marbleSpline;
+static b3Spline      marbleSpline;
 static b3_f32        marbleKnots[16];
 static b3_vector     marbleControls[8] =
 {
@@ -92,7 +98,7 @@ static b3_vector     marbleControls[8] =
 	{10.0f,0.5f,0}
 };
 
-static b3_spline     woodSpline;
+static b3Spline      woodSpline;
 static b3_f32        woodKnots[16];
 static b3_vector     woodControls[8] =
 {
@@ -106,7 +112,7 @@ static b3_vector     woodControls[8] =
 	{10.0f,0.4f,0}
 };
 
-static b3_spline     waveSpline;
+static b3Spline      waveSpline;
 static b3_f32        waveKnots[14];
 static b3_vector     waveControls[10];
 
@@ -374,7 +380,7 @@ static b3_color MarbleColors[4] =
 };
 
 static void marbleCurve (
-	b3_spline *Spline,
+	b3Spline  *Spline,
 	b3_vector *result,
 	b3_f64  x)
 {
@@ -384,7 +390,7 @@ static void marbleCurve (
 	knots = Spline->knots;
 	q =         x  * knots[Spline->degree] +
 	     (1.0 - x) * knots[Spline->control_num];
-	b3DeBoorOpened (Spline,result,0,q);
+	Spline->b3DeBoorOpened (result,0,q);
 }
 
 void b3Noise::b3Marble(b3_vector *d,b3_color *mask)
@@ -507,7 +513,7 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 
 	n = b3NoiseVector(point->x * 0.5,point->y,point->z);
 	q =  b3Frac(point->x * 0.5 + n,(b3_f64)waveSpline.control_max);
-	b3DeBoorClosed (&waveSpline,&v,0,q);
+	waveSpline.b3DeBoorClosed (&v,0,q);
 	return mSin(point->y * 10 + v.z * 2);
 }
 

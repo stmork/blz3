@@ -64,13 +64,13 @@ struct b3_polar
 	b3_index  normal_index;
 };
 
-struct b3_ray : public b3_dLine
+struct b3_ray : public b3_line64
 {
-	b3_dVector normal;
-	b3_dVector ipoint;
-	b3_polar   polar;
-	b3_f64     Q;
-	b3_bool    inside;
+	b3_vector64 normal;
+	b3_vector64 ipoint;
+	b3_polar     polar;
+	b3_f64       Q;
+	b3_bool      inside;
 };
 
 
@@ -930,7 +930,7 @@ protected:
 
 protected:
 	void b3InitBaseTrans();
-	void b3BaseTrans(b3_dLine *in,b3_dLine *out);
+	void b3BaseTrans(b3_line64 *in,b3_line64 *out);
 };
 
 // SPHERE
@@ -1138,7 +1138,7 @@ class b3SplineCurve : public b3Shape
 {
 protected:
 	b3_line          Axis;                // for rotation shapes
-	b3_spline        Spline;              // spline curve
+	b3Spline         Spline;              // spline curve
 	b3_s32           rSubDiv;             // sub division for rotation
 	b3_f32           Knots[B3_MAX_KNOTS]; // one knot vector
 	b3_vector       *Controls;
@@ -1190,7 +1190,7 @@ protected:
 	b3_count         xSubDiv,ySubDiv;
 #endif
 	b3_line          Axis;             // for rotation shapes, unused
-	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
+	b3Spline         Spline[2];        // horizontal spline definition, these control points are valid!
 	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
 	b3_vector       *Controls;
 
@@ -1261,25 +1261,25 @@ public:
 #define CSG_MODE_OR		MODE_OR
 
 // structures for CSG use
-typedef struct
+struct b3_csg_point
 {
 	b3_f32      Q;                // distance to intersection points
 	b3Shape    *Shape;            // shape which delivers the intersection points
 	b3_s32      Index;            // surface index
-} b3Point;
+};
 
 
 // interval of intersection points
-typedef struct
+struct b3_csg_interval
 {
-	b3_s32   num;
-	b3Point  x[4];
-} b3Interval;
+	b3_s32        num;
+	b3_csg_point  x[4];
+};
 
-typedef struct
+struct b3_csg_intervals
 {
-	b3Interval *local,*ThisBox1,*ThisBox2;
-} b3Intervals;
+	b3_csg_interval *local,*ThisBox1,*ThisBox2;
+};
 
 
 // CSG_SPHERE
@@ -1317,7 +1317,7 @@ protected:
 
 	b3_s32             Index;
 	b3_s32             Operation;
-	b3_dLine            BTLine;
+	b3_line64          BTLine;
 
 protected:
 	b3CSGShape3(b3_size class_size,b3_u32 class_type);
@@ -1403,7 +1403,7 @@ protected:
 
 	b3_s32             Index;
 	b3_s32             Operation;
-	b3_dLine            BTLine;
+	b3_line64          BTLine;
 
 public:
 	B3_ITEM_INIT(b3CSGTorus);
@@ -1553,7 +1553,7 @@ public:
 	b3_f32           m_Size;         // Auffaecherung
 	b3_s32           m_JitterEdge;   // Kantenaufspaltung
 	b3_vector        m_Direction;    // Abstrahlrichtung
-	b3_spline        m_Spline;       // Spline Kurve
+	b3Spline         m_Spline;       // Spline Kurve
 	b3_f32           m_Knots[B3_MAX_KNOTS];
 	b3_vector        m_Controls[B3_MAX_CONTROLS];
 	b3_bool          m_LightActive;

@@ -127,10 +127,6 @@ SOURCE=b3TxScale.cc
 
 SOURCE=b3TxTIFF.cc
 # End Source File
-# Begin Source File
-
-SOURCE=b3TxTool.cc
-# End Source File
 # End Group
 # Begin Group "Header Files"
 

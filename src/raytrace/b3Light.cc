@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.10  2001/10/07 20:41:32  sm
 **      - Updating MSVC project status
 **
@@ -254,7 +260,7 @@ b3_bool b3Light::b3PointIllumination(
 			q = (LightFrac >= 1 ? epsilon : acos(LightFrac) * 2.0 / M_PI);
 		}
 
-		b3DeBoorOpened (&m_Spline,&point,0,q);
+		m_Spline.b3DeBoorOpened (&point,0,q);
 		Jit.LightFrac = LightDist * m_Distance * point.y;
 	}
 	else
@@ -318,7 +324,7 @@ b3_bool b3Light::b3AreaIllumination (
 			q = (Factor >= 1 ? epsilon : acos(Factor) * 2.0 / M_PI);
 		}
 
-		b3DeBoorOpened (&m_Spline,&point,0,q);
+		m_Spline.b3DeBoorOpened (&point,0,q);
 		Jit.LightFrac  = LightDist * m_Distance * point.y;
 	}
 	else

@@ -40,14 +40,6 @@ public:
 private:
 	       void     b3ReloadTexture(b3Tx *texture,const char *name=null);
 	       long     b3ParseTexture(b3Tx *texture,b3_u08 *buffer,b3_size size);
-	static b3_u16   b3GetShort(void *Ptr);
-	static b3_u32   b3GetLong (void *Ptr);
-	static b3_u16   b3GetMotShort(void *Ptr);
-	static b3_u32   b3GetMotLong (void *Ptr);
-	static b3_u16   b3GetIntelShort(void *Ptr);
-	static b3_u32   b3GetIntelLong (void *Ptr);
-	static b3_size  b3ChangeWord (void *Ptr);
-	static b3_size  b3ChangeLong (void *Ptr);
 };
 
 extern b3TxPool texture_pool;

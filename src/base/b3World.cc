@@ -27,6 +27,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3World.h"
+#include "blz3/base/b3Endian.h"
 #include "blz3/system/b3File.h"
 #include "b3ItemRegister.h"
 
@@ -38,6 +39,12 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.12  2001/10/07 20:17:26  sm
 **      - Prepared texture support.
 **      - Noise procedures added.
@@ -132,14 +139,6 @@ b3World::~b3World()
 	}
 }
 
-void b3World::b3EndianSwap32(b3_u32 *uPtr)
-{
-	b3_u08 *ptr = (b3_u08 *)uPtr;
-
-	B3_SWAP(ptr[0],ptr[3]);
-	B3_SWAP(ptr[1],ptr[2]);
-}
-
 b3_world_error b3World::b3EndianSwapWorld()
 {
 	b3_index i,max_file;
@@ -152,7 +151,7 @@ b3_world_error b3World::b3EndianSwapWorld()
 	while (i < max_file)
 	{
 		// Convert node itself
-		for (k = 0;k < 5;k++) b3World::b3EndianSwap32(&m_Buffer[i+k]);
+		for (k = 0;k < 5;k++) b3Endian::b3ChangeEndian32(&m_Buffer[i+k]);
 
 		// Extract size information
 		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
@@ -163,7 +162,7 @@ b3_world_error b3World::b3EndianSwapWorld()
 		if (max_node < B3_NODE_IDX_MIN) return B3_WORLD_PARSE;
 
 		// Convert header an custom area without appending strings
-		for (k = 5;k < max_offset;k++) b3World::b3EndianSwap32(&m_Buffer[i+k]);
+		for (k = 5;k < max_offset;k++) b3Endian::b3ChangeEndian32(&m_Buffer[i+k]);
 
 		i += max_node;
 	}
@@ -454,8 +453,8 @@ b3_world_error b3World::b3ReadInternal(const char *world_name)
 
 			case B3_ZiLB:
 				m_NeedEndianChange = true;
-				b3EndianSwap32(&header[0]);
-				b3EndianSwap32(&header[1]);
+				b3Endian::b3ChangeEndian32(&header[0]);
+				b3Endian::b3ChangeEndian32(&header[1]);
 				break;
 
 			default:

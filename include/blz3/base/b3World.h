@@ -171,7 +171,6 @@ public:
 	void            b3Dump();
 	b3Item         *b3GetFirst();
 private:
-	void            b3EndianSwap32(b3_u32 *ptr);
 	b3_world_error  b3EndianSwapWorld();
 	b3_world_error  b3ReadInternal(const char *world_name);
 	b3_world_error  b3Parse();

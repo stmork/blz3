@@ -93,6 +93,10 @@ SOURCE=.\b3Cubic.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Endian.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
@@ -146,6 +150,10 @@ SOURCE=..\..\include\blz3\base\b3Aux.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Cubic.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Endian.h
 # End Source File
 # Begin Source File
 

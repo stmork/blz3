@@ -52,10 +52,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/11 16:06:33  sm
+**	- Cleaning up b3BSpline with including isolated methods.
+**	- Cleaning up endian conversion routines and collecting into
+**	  b3Endian
+**	- Cleaning up some datatypes for proper display in Together.
+**
 **	Revision 1.4  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
-**
+**	
 **	Revision 1.3  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -112,143 +118,7 @@ b3TxPool::~b3TxPool()
 
 /*************************************************************************
 **                                                                      **
-**                        get data types in processor manner.           **
-**                                                                      **
-*************************************************************************/
-
-b3_u16 b3TxPool::b3GetShort(void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u16  Value;
-
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
-	{
-		Value =                (long)Pointer[1];
-		Value = (Value << 8) | (long)Pointer[0];
-	}
-	else
-	{
-		Value =                (long)Pointer[0];
-		Value = (Value << 8) | (long)Pointer[1];
-	}
-	return Value;
-}
-
-b3_u32 b3TxPool::b3GetLong (void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u32  Value;
-
-	if (b3Runtime::b3GetCPUType() == B3_LITTLE_ENDIAN)
-	{
-		Value =                (b3_u32)Pointer[3];
-		Value = (Value << 8) | (b3_u32)Pointer[2];
-		Value = (Value << 8) | (b3_u32)Pointer[1];
-		Value = (Value << 8) | (b3_u32)Pointer[0];
-	}
-	else 
-	{
-		Value =                (b3_u32)Pointer[0];
-		Value = (Value << 8) | (b3_u32)Pointer[1];
-		Value = (Value << 8) | (b3_u32)Pointer[2];
-		Value = (Value << 8) | (b3_u32)Pointer[3];
-	}
-	return Value;
-}
-
-/*************************************************************************
-**                                                                      **
-**                  get values in Motorola(R) order                     **
-**                                                                      **
-*************************************************************************/
-
-b3_u16 b3TxPool::b3GetMotShort(void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u16  Value;
-
-	Value =                (b3_u16)Pointer[0];
-	Value = (Value << 8) | (b3_u16)Pointer[1];
-
-	return Value;
-}
-
-b3_u32 b3TxPool::b3GetMotLong (void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u32  Value;
-
-	Value =                (b3_u32)Pointer[0];
-	Value = (Value << 8) | (b3_u32)Pointer[1];
-	Value = (Value << 8) | (b3_u32)Pointer[2];
-	Value = (Value << 8) | (b3_u32)Pointer[3];
-
-	return Value;
-}
-
-/*************************************************************************
-**                                                                      **
-**                    get values in Intel(R) order                      **
-**                                                                      **
-*************************************************************************/
-
-b3_u16 b3TxPool::b3GetIntelShort(void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u16  Value;
-
-	Value =                (b3_u16)Pointer[1];
-	Value = (Value << 8) | (b3_u16)Pointer[0];
-
-	return Value;
-}
-
-b3_u32 b3TxPool::b3GetIntelLong (void *Ptr)
-{
-	b3_u08 *Pointer = (b3_u08 *)Ptr;
-	b3_u32  Value;
-
-	Value =                (b3_u32)Pointer[3];
-	Value = (Value << 8) | (b3_u32)Pointer[2];
-	Value = (Value << 8) | (b3_u32)Pointer[1];
-	Value = (Value << 8) | (b3_u32)Pointer[0];
-
-	return Value;
-}
-
-/*************************************************************************
-**                                                                      **
-**                  Change endian type of data types                    **
-**                                                                      **
-*************************************************************************/
-
-b3_size b3TxPool::b3ChangeWord (void *Ptr)
-{
-	b3_u16 *Pointer = (b3_u16 *)Ptr;
-	b3_u16	Value;
-
-	Value = Pointer[0];
-	Pointer[0] = ((Value & 0xff00) >> 8) | ((Value & 0xff) << 8);
-	return 2;
-}
-
-b3_size b3TxPool::b3ChangeLong (void *Ptr)
-{
-	b3_u32 *Pointer = (b3_u32 *)Ptr;
-	b3_u32  Value;
-
-	Value = Pointer[0];
-	Pointer[0] =
-		((Value & 0xff000000) >> 24) |
-		((Value & 0x00ff0000) >>  8) |
-		((Value & 0x0000ff00) <<  8) |
-		((Value & 0x000000ff) << 24);
-	return 4;
-}
-
-/*************************************************************************
-**                                                                      **
-**                        random functions                              **
+**                        Parsing routines                              **
 **                                                                      **
 *************************************************************************/
 
@@ -481,91 +351,11 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",Texture->b3Name());
 		return;
 	}
-	else
-	{
-		Texture->b3Name(FullName);
-		b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
-			Texture->b3Name(),Data,FileSize);
-	}
 
-#if 0
-/*
-PrintF ("%s (%ld)\n%s (%ld)\n%s (%ld)\n",
-	Texture->Name,strlen(Texture->Name),
-	FullName1,    strlen(FullName1),
-	FullName2,    strlen(FullName2));
-*/
-
-	TextureFile = BOpen (Texture->Name,B_READ);
-	if (TextureFile == null) TextureFile = BOpen (FullName1,B_READ);
-	if (TextureFile == null) TextureFile = BOpen (FullName2,B_READ);
-	if (TextureFile == null)
-	{
-		if (DBUG(1)) PrintF ("%s: not available!\n",Texture->Name);
-		Texture->FileType = FT_ERR_OPEN;
-	}
-	else
-	{
-		FileSize = BSize (TextureFile);
-		if (FileSize < 1)
-		{
-			Texture->FileType = FT_ERR_UNCOMPL;
-			if (DBUG(1)) PrintF ("%s: empty file!\n",Texture->Name);
-		}
-		else
-		{
-			Data = (char *)AllocTextureMem (Texture,FileSize);
-			if (Data==null)
-			{
-				Texture->FileType = FT_ERR_MEM;
-				if (DBUG(1)) PrintF ("%s: not enough memory!!\n",Texture->Name);
-			}
-			else
-			{
-				if (BRead(TextureFile,Data,FileSize)==FileSize)
-				{
-					if ((Texture->Type = ParseTexture(Texture,Data,FileSize))
-						== 0)
-					{
-						FreePartMem (&TextureMem,Texture->Data);
-						FreePartMem (&TextureMem,Texture->Palette);
-						Texture->Data = null;
-						if (DBUG(1)) PrintF ("%s: ",Texture->Name);
-						switch (Texture->FileType)
-						{
-							case FT_ERR_UNSUPP :
-								if (DBUG(1)) PrintF ("unsupported data type!\n");
-								break;
-							case FT_ERR_PACKING :
-								if (DBUG(1)) PrintF ("unsupported packing algorithm!\n");
-								break;
-							case FT_ERR_HEADER :
-								if (DBUG(1)) PrintF ("unknown header!\n");
-								break;
-							case FT_ERR_MEM :
-								if (DBUG(1)) PrintF ("insufficient memory!\n");
-								break;
-							case FT_UNKNOWN :
-								if (DBUG(1)) PrintF ("unknown file format!\n");
-								break;
-							default :
-								if (DBUG(1)) PrintF ("not loaded (%ld)!\n",Texture->FileType);
-								break;
-						}
-					}
-					else
-					{
-						if (DBUG(1)) PrintF ("%s: loaded.\n",Texture->Name);
-						Texture->LastAccess = AccessPos;
-					}
-				}
-				else if (DBUG(1)) PrintF ("%s: not completely loaded!\n",Texture->Name);
-				FreePartMem (&TextureMem,Data);
-			}
-		}
-		BClose (TextureFile);
-	}
-#endif
+	Texture->b3Name(FullName);
+	b3ParseTexture(Texture,Data,FileSize);
+	b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
+		Texture->b3Name(),Data,FileSize);
 }
 
 b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */

@@ -33,12 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/11 16:06:33  sm
+**	- Cleaning up b3BSpline with including isolated methods.
+**	- Cleaning up endian conversion routines and collecting into
+**	  b3Endian
+**	- Cleaning up some datatypes for proper display in Together.
+**
 **	Revision 1.11  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.10  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -333,8 +339,8 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_dLine BTLine;
-	b3_f64   l1,l2,z,Discriminant,a,p;
+	b3_line64 BTLine;
+	b3_f64    l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
 	if ((a =
@@ -435,8 +441,8 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_dLine BTLine;
-	b3_f64   l1,l2,z,Discriminant,a,p;
+	b3_line64 BTLine;
+	b3_f64    l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
 	if ((a =
@@ -538,8 +544,8 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_dLine  BTLine;
-	b3_f64    l1,l2,z,Discriminant,a,p;
+	b3_line64  BTLine;
+	b3_f64     l1,l2,z,Discriminant,a,p;
 
 	b3BaseTrans (ray,&BTLine);
 	a = BTLine.dir.x * BTLine.dir.x +
@@ -615,12 +621,12 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_dLine   BTLine;
-	b3_dVector BasePoint,EndPoint;
-	b3_f64     l[2];
-	b3_f64     x,y,z,m,l1,l2;
-	b3_index   Index;
-	b3_index   n[2];
+	b3_line64    BTLine;
+	b3_vector64  BasePoint,EndPoint;
+	b3_f64       l[2];
+	b3_f64       x,y,z,m,l1,l2;
+	b3_index     Index;
+	b3_index     n[2];
 
 	Index = n[0] = n[1] = 0;
 	b3BaseTrans (ray,&BTLine);
@@ -764,11 +770,11 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_count NumOfX,i,k;
-	b3_f64   Val1,Val2,pQuad,dQuad,pdQuad;
-	b3_f64   xp,yp;
-	b3_f64   Coeff[5],x[4];
-	b3_dLine BTLine;
+	b3_count  NumOfX,i,k;
+	b3_f64    Val1,Val2,pQuad,dQuad,pdQuad;
+	b3_f64    xp,yp;
+	b3_f64    Coeff[5],x[4];
+	b3_line64 BTLine;
 
 	b3BaseTrans (ray,&BTLine);
 	pQuad	= BTLine.pos.z * BTLine.pos.z;

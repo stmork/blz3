@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/10/11 16:06:33  sm
+**      - Cleaning up b3BSpline with including isolated methods.
+**      - Cleaning up endian conversion routines and collecting into
+**        b3Endian
+**      - Cleaning up some datatypes for proper display in Together.
+**
 **      Revision 1.7  2001/09/22 16:19:53  sm
 **      - Adding basic shape intersection routines
 **
@@ -102,7 +108,7 @@ void b3SplineRotShape::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_matrix  Matrix;
-	b3_spline  AuxSpline;
+	b3Spline   AuxSpline;
 	b3_vector  AuxControls[B3_MAX_CONTROLS + 1];
 	b3_vector *Vector;
 	b3_index   i,a;
@@ -122,7 +128,7 @@ void b3SplineRotShape::b3ComputeVertices()
 	for (a = 0;a < SinCosSteps;a++)
 	{
 		// Compute curve
-		Vector += b3DeBoor (&AuxSpline,Vector,0);
+		Vector += AuxSpline.b3DeBoor(Vector,0);
 
 		// Rotate control points
 		for (i = 0;i < AuxSpline.control_num;i++)

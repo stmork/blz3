@@ -33,7 +33,7 @@
 	(s)->control_num :\
 	(s)->control_num - (s)->degree + 1)
 
-typedef struct b3Spline
+struct b3_spline
 {
 	b3_count     control_num,knot_num;
 	b3_count     degree,subdiv;         // values of B-Spline
@@ -42,7 +42,19 @@ typedef struct b3Spline
 	b3_bool      closed;                // open/close curve
 	b3_vector3D *controls;              // control sequence
 	b3_f32      *knots;                 // knot sequence
-} b3_spline;
+};
+
+class b3Spline : public b3_spline
+{
+public:
+	b3_index  b3DeBoor       (b3_vector *Result,b3_index index);
+	b3_index  b3DeBoorOpened (b3_vector *Result,b3_index index,b3_f64 q);
+	b3_index  b3DeBoorClosed (b3_vector *Result,b3_index index,b3_f64 q);
+	b3_index  b3DeBoorControl(b3_vector *,b3_index index);
+
+	b3_index  b3Mansfield           (b3_f64    *,b3_f64);
+	void      b3MansfieldVector     (b3_vector *Result,b3_f64 *,b3_index,b3_index);
+};
 
 typedef struct b3Nurbs
 {
@@ -81,15 +93,11 @@ extern b3_bspline_error b3BSplineErrno();
 **                                                                      **
 *************************************************************************/
 
-b3_index  b3DeBoorOpened        (b3_spline *Spline,b3_vector *Result,b3_index index,b3_f64 q);
-b3_index  b3DeBoorClosed        (b3_spline *Spline,b3_vector *Result,b3_index index,b3_f64 q);
-b3_index  b3DeBoor              (b3_spline *Spline,b3_vector *Result,b3_index index);
 b3_index  b3DeBoorNurbs         (b3_nurbs  *Nurbs, b3_vector *Result,b3_index index);
 b3_index  b3DeBoorControl       (b3_spline *Spline,b3_vector *,b3_index index);
-b3_count  b3DeBoorSurfaceControl(b3_spline *Spline,b3_spline *Curve,b3_vector *Result);
-b3_index  b3Mansfield           (b3_spline *Spline,b3_f64    *,b3_f64);
-void      b3MansfieldVector     (b3_spline *Spline,b3_vector *Result,b3_f64 *,b3_index,b3_index);
-void      b3MansfieldNurbsVector(b3_nurbs  *Spline,b3_vector *Result,b3_f64 *,b3_index,b3_index);
+b3_count  b3DeBoorSurfaceControl(b3Spline *Spline,b3Spline *Curve,b3_vector *Result);
+
+void      b3MansfieldNurbsVector(b3_nurbs  *nurbs,b3_vector *Result,b3_f64 *,b3_index,b3_index);
 
 /*************************************************************************
 **                                                                      **
