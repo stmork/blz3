@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2004/06/21 18:10:53  sm
+**      - Fixed disk drawing problem. The Problem occured in
+**        conjunction with optimizing code with the Visual C++
+**        compiler. Should I install Visual.Net?
+**
 **      Revision 1.28  2004/06/21 09:26:19  sm
 **      - Changed rendering: The constant sin/cos tables are now directly
 **        used from b3ShapeRenderContext.
@@ -337,9 +342,8 @@ void b3Disk::b3ComputeIndices()
 	gPtr = glGrids;
 	pPtr = glPolygons;
 
-	for (i = 0;i < Overhead;i++)
+	for (i = pos = 0;i < Overhead;i++)
 	{
-		pos = i + i;
 		B3_GL_LINIT(gPtr,pos,  pos+2);
 		B3_GL_LINIT(gPtr,pos+1,pos+3);
 
@@ -348,6 +352,7 @@ void b3Disk::b3ComputeIndices()
 
 		glGridCount += 2;
 		glPolyCount += 2;
+		pos += 2;
 	}
 	if (EndLines)
 	{

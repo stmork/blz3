@@ -37,6 +37,11 @@
 
 /*
 **      $Log$
+**      Revision 1.69  2004/06/21 18:10:53  sm
+**      - Fixed disk drawing problem. The Problem occured in
+**        conjunction with optimizing code with the Visual C++
+**        compiler. Should I install Visual.Net?
+**
 **      Revision 1.68  2004/05/28 14:06:29  sm
 **      - Minor optimizations in shader
 **
@@ -879,7 +884,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
 	b3_gl_vector normal;
 	b3_gl_vector xDir,yDir;
-	b3_index     i,k,v1,v2,v3,start,end;
+	b3_index     i,start,end,v1,v2,v3;
 
 	// Clear normals
 	b3GetVertexRange(start,end);
@@ -891,12 +896,11 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 
 	// Collect normals
-	for (i = k = 0;i < glPolyCount;i++)
+	for (i = 0;i < glPolyCount;i++)
 	{
-		v1 = glPolygons[k].a;
-		v2 = glPolygons[k].b;
-		v3 = glPolygons[k].c;
-		k++;
+		v1 = glPolygons[i].a;
+		v2 = glPolygons[i].b;
+		v3 = glPolygons[i].c;
 
 		// Do some semantic checks
 		if ((v1 < start) || (v1 >= end) ||
