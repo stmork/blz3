@@ -86,10 +86,6 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\cdjpeg.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\jcapimin.c
 # End Source File
 # Begin Source File
@@ -262,10 +258,6 @@ SOURCE=.\jmemnobs.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\jpegtran.c
-# End Source File
-# Begin Source File
-
 SOURCE=.\jquant1.c
 # End Source File
 # Begin Source File
@@ -294,10 +286,6 @@ SOURCE=.\jchuff.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\jconfig.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\jdct.h
 # End Source File
 # Begin Source File
@@ -306,27 +294,11 @@ SOURCE=.\jdhuff.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\jerror.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\jinclude.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\jmemsys.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\jmorecfg.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\jpegint.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\jpeglib.h
 # End Source File
 # Begin Source File
 
