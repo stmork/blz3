@@ -301,7 +301,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\lib\win32_i686\SSE2"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\bin\win32_i686/AppLinesSSE2.map"
+				MapFileName=".\..\..\bin\win32_i686\SSE2/AppLines.map"
 				SubSystem="2"
 				TargetMachine="0"/>
 			<Tool
@@ -381,7 +381,7 @@
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\lib\win32_i686\SSE"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\bin\win32_i686/AppLinesSSE.map"
+				MapFileName=".\..\..\bin\win32_i686\SSE/AppLines.map"
 				SubSystem="2"
 				TargetMachine="0"/>
 			<Tool
