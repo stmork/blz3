@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/12/22 12:07:52  sm
+**	- Made some minor accuracy adjustments.
+**
 **	Revision 1.11  2002/12/22 11:52:22  sm
 **	- Ensure minimum volume for bounding boxes even for plain areas.
-**
+**	
 **	Revision 1.10  2002/12/11 14:53:39  sm
 **	- Made some comments
 **	- Changed b3Noise class to s static one.
@@ -515,7 +518,7 @@ void b3Noise::b3Clouds (b3_vector *P,b3_color *Color)
 	b3_vector Dir;
 
 	b3Vector::b3Scale(&Dir,P,scal * 0.08);
-	Dir.x *= 0.3;
+	Dir.x *= 0.3f;
 
 	Color->a = 0;
 	Color->r =
