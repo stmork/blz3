@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2004/05/26 07:20:27  sm
+**	- Renamed transparent member.
+**
 **	Revision 1.44  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
 **	  mixing into two parts.
-**
+**	
 **	Revision 1.43  2004/05/25 12:14:48  sm
 **	- Compute Fresnel term in separate method.
 **	
@@ -274,7 +277,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	surface->refl_ray.pos    = surface->incoming->ipoint;
 	surface->refl_ray.inside = surface->incoming->inside;
 	surface->refl_ray.t      = surface->incoming->t;
-	surface->transparent     = false;
+	surface->m_Transparent   = false;
 
 	// Use only sharp angles
 	if (cos_a >= 0)
@@ -310,7 +313,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 				surface->refr_ray.pos    =  surface->incoming->ipoint;
 				surface->refr_ray.inside = !surface->incoming->inside;
 				surface->refr_ray.t      =  surface->incoming->t;
-				surface->transparent = true;
+				surface->m_Transparent   = true;
 			}
 		}
 		else
@@ -321,7 +324,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 			surface->refr_ray.dir    =  surface->incoming->dir;
 			surface->refr_ray.inside = !surface->incoming->inside;
 			surface->refr_ray.t      =  surface->incoming->t;
-			surface->transparent = true;
+			surface->m_Transparent   = true;
 		}
 	}
 
@@ -331,7 +334,7 @@ b3_f64 b3Shader::b3ComputeFresnel(b3_surface *surface)
 {
 	b3_f64 ica,ica_sqr,ica_pow5,R0;
 
-	ica      = 1.0 - surface->m_CosAlpha; // cos_a was made negative earlier.
+	ica      = 1.0 - surface->m_CosAlpha;
 	ica_sqr  = ica * ica;
 	ica_pow5 = ica * ica_sqr * ica_sqr;
 	R0       = (surface->m_IorComputed - 1.0) / (surface->m_IorComputed + 1);

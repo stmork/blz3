@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/05/26 07:20:27  sm
+**	- Renamed transparent member.
+**
 **	Revision 1.32  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
 **	  mixing into two parts.
-**
+**	
 **	Revision 1.31  2004/05/25 12:14:48  sm
 **	- Compute Fresnel term in separate method.
 **	
@@ -280,7 +283,7 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_f64    refl,refr,factor;
 
 	b3ComputeFresnel(&surface);
-	if (surface.transparent)
+	if (surface.m_Transparent)
 	{
 		surface.m_Reflection *=        surface.m_Fresnel;
 		surface.m_Refraction *= (1.0 - surface.m_Fresnel);
@@ -294,7 +297,7 @@ void b3ShaderMork::b3ShadeSurface(
 		surface.m_Refraction = 0;
 	}
 
-	if (surface.transparent)
+	if (surface.m_Transparent)
 	{
 		if (surface.m_Ior == 1)
 		{
@@ -310,7 +313,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Reflection
-	if (((!ray->inside) || (!surface.transparent)) && (surface.m_Reflection > 0))
+	if (((!ray->inside) || (!surface.m_Transparent)) && (surface.m_Reflection > 0))
 	{
 		refl = surface.m_Reflection;
 		b3Shade(&surface.refl_ray,depth_count + 1);

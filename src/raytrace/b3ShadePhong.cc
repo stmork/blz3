@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/05/26 07:20:27  sm
+**	- Renamed transparent member.
+**
 **	Revision 1.24  2004/05/23 15:04:19  sm
 **	- Some optimizations
-**
+**	
 **	Revision 1.23  2004/05/22 17:02:56  sm
 **	- Decoupled material shader.
 **	
@@ -223,7 +226,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	b3_index     formula = 0;
 
 	ray->color = surface.m_Ambient;
-	if (surface.transparent)
+	if (surface.m_Transparent)
 	{
 		if (surface.m_Ior == 1)
 		{
