@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.84  2005/01/09 19:58:30  sm
+**	- Added more convenient plugin path maintainance
+**
 **	Revision 1.83  2005/01/09 15:04:30  sm
 **	- Added better search path support.
-**
+**	
 **	Revision 1.82  2004/12/23 22:22:41  sm
 **	- Adjusted further Visual C++ options
 **	
@@ -610,31 +613,29 @@ void CAppLinesApp::b3SetupPluginPaths(b3SearchPath &search)
 
 	if (hSecKey)
 	{
-		FILETIME ftLastWriteTime;      // last write time 
-		CHAR     entry[MAX_PATH];
+		TCHAR    entry[MAX_PATH];
 		DWORD    entry_len = sizeof(entry);
-		char     value[MAX_PATH];
+		TCHAR    value[MAX_PATH];
+		DWORD    value_len = sizeof(value);
+		DWORD    mode = 0;
 
-		for (int i = 0;::RegEnumKeyEx(hSecKey, 
+		for (int i = 0;::RegEnumValue(hSecKey, 
                      i, 
                      entry, 
                      &entry_len,
-                     NULL, 
-                     NULL, 
-                     NULL, 
-                     &ftLastWriteTime) == ERROR_SUCCESS;i++)
+					 NULL,
+                     &mode, 
+                     (unsigned char *)value, 
+                     &value_len) == ERROR_SUCCESS;i++)
         {
-			unsigned long mode = 0,len = sizeof(value);
-
-			if (::RegQueryValueEx(hSecKey, entry, NULL, &mode, null, &len) == ERROR_SUCCESS)
+			if (mode == REG_SZ)
 			{
-				if (mode == REG_SZ)
-				{
-					::RegQueryValueEx(hSecKey, entry, NULL, &mode, (unsigned char *)value, &len);
-					search.b3AddPath(value);
-				}
+				search.b3AddPath(value);
 			}
+			entry_len = sizeof(entry);
+			value_len = sizeof(value);
         }
+		::RegCloseKey (hSecKey);
     } 
 }
 

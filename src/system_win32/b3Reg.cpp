@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/01/09 19:58:30  sm
+**	- Added more convenient plugin path maintainance
+**
 **	Revision 1.3  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.2  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -77,7 +80,6 @@ CB3Reg::CB3Reg(
 				&hAppKey, &mode);
 		}
 	}
-
 }
 
 CB3Reg::~CB3Reg()
@@ -98,7 +100,6 @@ CB3Reg::~CB3Reg()
 
 HKEY CB3Reg::b3GetSectionKey(const char *section)
 {
-
 	HKEY hSectionKey = NULL;
 
 	if (hAppKey)
