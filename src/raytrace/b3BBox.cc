@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.101  2004/09/25 08:41:18  sm
+**	- Splitting a branch for VBO development.
+**
 **	Revision 1.100  2004/09/24 20:22:05  sm
 **	- Some VBO adjustments.
-**
+**	
 **	Revision 1.99  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
@@ -929,7 +932,7 @@ void b3Scene::b3Update()
 {
 	b3PrintF(B3LOG_FULL,"    Updating geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateThread, null,false);
+	m_PrepareInfo.b3Prepare(b3UpdateThread);
 }
 
 b3_bool b3Scene::b3UpdateMaterialThread(b3BBox *bbox,void *ptr)
