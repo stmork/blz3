@@ -2,7 +2,7 @@
 # basic makefile to create Blizzard II
 #
 
-CFLAGS		= $(OFLAGS)
+CFLAGS		= $(OFLAGS) -D__$(OSTYPE)__
 CXXFLAGS	= $(CFLAGS)
 
 ifeq ($(HOSTTYPE),m68k-amiga)
@@ -63,7 +63,10 @@ tar:
 
 uncr:	$(BLZ3_BIN)/RemCR
 	find $(BLZ3_HOME) -name "*.cc" -exec RemCR {} \;
-	find $(BLZ3_HOME) -name "*.h"  -exec RemCR {} \;
+	find $(BLZ3_HOME)/include $(BLZ3_HOME)/include_unix -name "*.h" -exec RemCR {} \;
+	@for i in $(SUB_DIRS); do \
+		find $$i -name "*.h" -exec RemCR {} \;;\
+	done
 
 $(BLZ3_LIB):
 	mkdir -p $@

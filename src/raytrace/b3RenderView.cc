@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/11/26 17:16:37  sm
+**	- Linux b3TimeSpan fix
+**
 **	Revision 1.19  2001/11/26 17:12:48  sm
 **	- Far clipping plane fix for Un*x
-**
+**	
 **	Revision 1.18  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented

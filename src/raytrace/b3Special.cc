@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2001/11/26 17:16:37  sm
+**      - Linux b3TimeSpan fix
+**
 **      Revision 1.20  2001/11/25 19:20:32  sm
 **      - Added new acting methods:
 **        o Camera move

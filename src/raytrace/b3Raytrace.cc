@@ -36,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2001/11/26 17:16:37  sm
+**	- Linux b3TimeSpan fix
+**
 **	Revision 1.28  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
 **	  o Camera turn around itself
 **	  o Camera rotate around fulcrum
-**
+**	
 **	Revision 1.27  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -722,7 +725,9 @@ void b3Scene::b3Raytrace(b3Display *display)
 		for (i = 0;i < CPUs;i++)
 		{
 			threads[i].b3Wait();
+#if defined(__linux__) || defined(WIN32)
 			threads[i].b3AddTimeSpan(&span);
+#endif
 		}
 		span.b3Stop();
 		span.b3Print();

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2001/11/26 17:16:37  sm
+**	- Linux b3TimeSpan fix
+**
 **	Revision 1.24  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
 **	  o distributed raytracing
-**
+**	
 **	Revision 1.23  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	
