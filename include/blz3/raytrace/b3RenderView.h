@@ -59,14 +59,26 @@ enum b3_action_mode
 
 class b3RenderView
 {
+	// Camera description
 	b3_view_mode              m_ViewMode;
 	b3_vector                 m_EyePoint;
 	b3_vector                 m_ViewPoint;
 	b3_vector                 m_Width;
 	b3_vector                 m_Height;
 
+	// Dimension of whole scene
 	b3_vector                 m_Lower;
 	b3_vector                 m_Upper;
+
+	// Viewport size
+	b3_res                    m_xRes;
+	b3_res                    m_yRes;
+
+	// View volume dimensions (from mid point to border)
+	b3_f64                    m_vvWidth;
+	b3_f64                    m_vvHeight;
+	b3_vector                 m_vvEye;
+	b3_vector                 m_vvLook;
 
 	b3Base<b3RenderViewItem>  m_ViewStack[B3_VIEW_MAX];
 	b3Base<b3RenderViewItem>  m_Depot;
@@ -96,6 +108,7 @@ public:
 	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *pos);
 	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);
 	void              b3SetupView(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void              b3DrawRaster(b3_f64 grid,b3_f64 intensity=0.75);
 	void              b3SetTranslationStepper(b3_vector *steps,b3_vector *mover,b3_action_mode mode);
 	b3_f64            b3SetRotationStepper(b3_vector *steps,b3_vector *axis_dir,b3_action_mode mode);
 

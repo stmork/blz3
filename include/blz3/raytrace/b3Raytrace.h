@@ -1950,7 +1950,6 @@ enum b3_measure
 
 class b3ModellerInfo : public b3Special
 {
-	b3_f32           m_Unit;
 	b3_u32           m_Flags;
 
 public:
@@ -1964,6 +1963,9 @@ public:
 	b3_bool          m_GridActive;
 	b3_bool          m_AngleActive;
 	b3_bool          m_CameraActive;
+	b3_unit          m_Unit;
+	b3_measure       m_Measure;
+	b3_u32           m_CustomMeasure;
 
 public:
 	B3_ITEM_INIT(b3ModellerInfo);
@@ -1973,13 +1975,10 @@ public:
 	void        b3SnapToGrid(b3_vector *translation);
 	void        b3SnapToAngle(b3_f64 &angle);
 	b3_f64      b3ScaleUnitToMM();
-	void        b3SetUnit(b3_unit unit);
-	b3_unit     b3GetUnit();
 	const char *b3GetUnitDescr();
 	void        b3SetMeasure(b3_u32 measure);
 	void        b3SetMeasure(b3_measure measure);
 	b3_u32      b3GetMeasure(b3_bool force_custom_value=true);
-	b3_measure  b3GetMeasureType();
 };
 
 #define B3_UNIT_MASK           0x0000f

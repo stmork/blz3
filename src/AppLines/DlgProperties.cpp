@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	DlgProperties.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/10 20:03:18  sm
+**	- Added grid raster
+**	- Changed icon colors of shapes
+**
 **	Revision 1.1  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
-**
+**	
 **
 */
 

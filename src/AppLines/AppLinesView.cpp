@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2002/02/10 20:03:18  sm
+**	- Added grid raster
+**	- Changed icon colors of shapes
+**
 **	Revision 1.44  2002/02/05 20:04:12  sm
 **	- Added legend to print hard copy.
-**
+**	
 **	Revision 1.43  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
 **	
@@ -401,13 +405,18 @@ void CAppLinesView::b3Draw(
 	b3_f64 xOffset,
 	b3_f64 yOffset)
 {
-	CAppLinesDoc *pDoc = GetDocument();
+	CAppLinesDoc   *pDoc = GetDocument();
+	b3ModellerInfo *info = pDoc->m_Info;
 
 	pDoc->m_Context.b3StartDrawing();
 
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
-//	m_RenderView.b3UpdateView(0,ySize - 100,100,100);
+	m_RenderView.b3DrawRaster(info->b3ScaleUnitToMM() * info->b3GetMeasure(false),0.7);
+	if (pDoc->m_Info->m_GridActive)
+	{
+		m_RenderView.b3DrawRaster(pDoc->m_Info->m_GridMove);
+	}
 
 	// Then draw objects
 	m_Scene->b3Draw();

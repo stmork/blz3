@@ -1,3 +1,20 @@
+/*
+**
+**	$Filename:	DlgProperties.h $
+**	$Release:	Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:	Steffen A. Mork $
+**
+**	Blizzard III - Dialog for b3Scene properties
+**
+**	(C) Copyright 2001, 2002  Steffen A. Mork
+**	    All Rights Reserved
+**
+**
+*/
+
 #if !defined(AFX_DLGPROPERTIES_H__719C6D93_1C7A_11D6_9D05_080020FDDE74__INCLUDED_)
 #define AFX_DLGPROPERTIES_H__719C6D93_1C7A_11D6_9D05_080020FDDE74__INCLUDED_
 

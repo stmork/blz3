@@ -33,13 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2002/02/10 20:03:19  sm
+**	- Added grid raster
+**	- Changed icon colors of shapes
+**
 **	Revision 1.24  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
 **	- Added support for units in b3ModellerInfo
 **	- Cleaned up some accelerators. Now arrow keys are working
 **	  again. The del key is working correctly inside edit controls again.
-**
+**	
 **	Revision 1.23  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -135,7 +139,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        Implementation                                **
+**                        b3RenderViewItem Implementation               **
 **                                                                      **
 *************************************************************************/
 
@@ -172,6 +176,12 @@ void b3RenderViewItem::b3Set(
 	m_yRelation = 1;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        b3RenderView Implementation                   **
+**                                                                      **
+*************************************************************************/
+
 b3RenderView::b3RenderView()
 {
 	b3_index          i;
@@ -179,6 +189,8 @@ b3RenderView::b3RenderView()
 	m_ViewMode    = B3_VIEW_3D;
 	m_AntiAliased = false;
 	m_AspectRatio = true;
+	m_xRes        = 0;
+	m_yRes        = 0;
 
 	for (i = 0;i < B3_VIEW_MAX;i++)
 	{
@@ -810,16 +822,18 @@ void b3RenderView::b3SetupView(
 	b3_f64   yOffset)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_f64    width,height,nearCP,farCP,distance,factor,relation;
+	b3_f64    nearCP,farCP,distance,factor,relation;
 	GLfloat   aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
 	GLfloat   aspectCamera;
 	GLfloat   min = 0.1f;
-	b3_vector eye,look,up;
+	b3_vector up;
 	b3_vector offset;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
+	m_xRes = xSize;
+	m_yRes = ySize;
 	B3_ASSERT ((m_Actual != null) || (m_ViewMode == B3_VIEW_3D));
 	glViewport(0,0,xSize,ySize);
 	b3Vector::b3Init(&up);
@@ -829,30 +843,30 @@ void b3RenderView::b3SetupView(
 	case B3_VIEW_3D:
 	default:
 		// Prepare glOrtho();
-		distance = b3Vector::b3Distance(&m_ViewPoint,&m_EyePoint);
-		factor   = min / distance;
-		width    = factor * b3Vector::b3Length(&m_Width);
-		height   = factor * b3Vector::b3Length(&m_Height);
-		nearCP   = min;
-		farCP    = b3ComputeFarClippingPlane();
+		distance   = b3Vector::b3Distance(&m_ViewPoint,&m_EyePoint);
+		factor     = min / distance;
+		m_vvWidth  = factor * b3Vector::b3Length(&m_Width);
+		m_vvHeight = factor * b3Vector::b3Length(&m_Height);
+		nearCP     = min;
+		farCP      = b3ComputeFarClippingPlane();
 
 		// Prepare gluLookAt() - it's simple
-		eye  = m_EyePoint;
-		look = m_ViewPoint;
+		m_vvEye  = m_EyePoint;
+		m_vvLook = m_ViewPoint;
 		up   = m_Height;
 		break;
 
 	case B3_VIEW_TOP:
 		// Prepare glOrtho();
-		width  = (m_Actual->m_Size.x) * 0.5;
-		height = (m_Actual->m_Size.y) * 0.5;
-		nearCP = 0;
-		farCP  = (m_Upper.z - m_Lower.z);
+		m_vvWidth  = (m_Actual->m_Size.x) * 0.5;
+		m_vvHeight = (m_Actual->m_Size.y) * 0.5;
+		nearCP     = 0;
+		farCP      = (m_Upper.z - m_Lower.z);
 
 		// Prepare gluLookAt()
-		eye     = look = m_Actual->m_Mid;
-		eye.z   = m_Upper.z;
-		look.z  = m_Lower.z;
+		m_vvEye     = m_vvLook = m_Actual->m_Mid;
+		m_vvEye.z   = m_Upper.z;
+		m_vvLook.z  = m_Lower.z;
 		up.y    = 1;
 
 		// Prepare offset for print tiling
@@ -862,15 +876,15 @@ void b3RenderView::b3SetupView(
 
 	case B3_VIEW_FRONT:
 		// Prepare glOrtho();
-		width  = (m_Actual->m_Size.x) * 0.5;
-		height = (m_Actual->m_Size.z) * 0.5;
-		nearCP = 0;
-		farCP  = (m_Upper.y - m_Lower.y);
+		m_vvWidth  = (m_Actual->m_Size.x) * 0.5;
+		m_vvHeight = (m_Actual->m_Size.z) * 0.5;
+		nearCP     = 0;
+		farCP      = (m_Upper.y - m_Lower.y);
 
 		// Prepare gluLookAt()
-		eye    = look = m_Actual->m_Mid;
-		eye.y  = m_Lower.y;
-		look.y = m_Upper.y;
+		m_vvEye    = m_vvLook = m_Actual->m_Mid;
+		m_vvEye.y  = m_Lower.y;
+		m_vvLook.y = m_Upper.y;
 		up.z   = 1;
 
 		// Prepare offset for print tiling
@@ -880,15 +894,15 @@ void b3RenderView::b3SetupView(
 
 	case B3_VIEW_RIGHT:
 		// Prepare glOrtho();
-		width  = (m_Actual->m_Size.y) * 0.5;
-		height = (m_Actual->m_Size.z) * 0.5;
-		nearCP = 0;
-		farCP  = (m_Upper.x - m_Lower.x);
+		m_vvWidth  = (m_Actual->m_Size.y) * 0.5;
+		m_vvHeight = (m_Actual->m_Size.z) * 0.5;
+		nearCP     = 0;
+		farCP      = (m_Upper.x - m_Lower.x);
 
 		// Prepare gluLookAt()
-		eye    = look = m_Actual->m_Mid;
-		eye.x  = m_Upper.x;
-		look.x = m_Lower.x;
+		m_vvEye    = m_vvLook = m_Actual->m_Mid;
+		m_vvEye.x  = m_Upper.x;
+		m_vvLook.x = m_Lower.x;
 		up.z   = 1;
 
 		// Prepare offset for print tiling
@@ -898,15 +912,15 @@ void b3RenderView::b3SetupView(
 
 	case B3_VIEW_LEFT:
 		// Prepare glOrtho();
-		width  = (m_Actual->m_Size.y) * 0.5;
-		height = (m_Actual->m_Size.z) * 0.5;
-		nearCP = 0;
-		farCP  = (m_Upper.x - m_Lower.x);
+		m_vvWidth  = (m_Actual->m_Size.y) * 0.5;
+		m_vvHeight = (m_Actual->m_Size.z) * 0.5;
+		nearCP     = 0;
+		farCP      = (m_Upper.x - m_Lower.x);
 
 		// Prepare gluLookAt()
-		eye    = look = m_Actual->m_Mid;
-		eye.x  = m_Lower.x;
-		look.x = m_Upper.x;
+		m_vvEye    = m_vvLook = m_Actual->m_Mid;
+		m_vvEye.x  = m_Lower.x;
+		m_vvLook.x = m_Upper.x;
 		up.z   = 1;
 
 		// Prepare offset for print tiling
@@ -916,15 +930,15 @@ void b3RenderView::b3SetupView(
 
 	case B3_VIEW_BACK:
 		// Prepare glOrtho();
-		width  = (m_Actual->m_Size.x) * 0.5;
-		height = (m_Actual->m_Size.z) * 0.5;
-		nearCP = 0;
-		farCP  = (m_Upper.y - m_Lower.y);
+		m_vvWidth  = (m_Actual->m_Size.x) * 0.5;
+		m_vvHeight = (m_Actual->m_Size.z) * 0.5;
+		nearCP     = 0;
+		farCP      = (m_Upper.y - m_Lower.y);
 
 		// Prepare gluLookAt()
-		eye    = look = m_Actual->m_Mid;
-		eye.y  = m_Upper.y;
-		look.y = m_Lower.y;
+		m_vvEye    = m_vvLook = m_Actual->m_Mid;
+		m_vvEye.y  = m_Upper.y;
+		m_vvLook.y = m_Lower.y;
 		up.z   = 1;
 
 		// Prepare offset for print tiling
@@ -936,7 +950,7 @@ void b3RenderView::b3SetupView(
 	// Maintain aspect ratio
 	if (m_AspectRatio)
 	{
-		aspectCamera = (GLfloat)(width / height);
+		aspectCamera = (GLfloat)(m_vvWidth / m_vvHeight);
 		relation     = aspectCamera / aspectWindow;
 		if (relation > 1)
 		{
@@ -945,7 +959,7 @@ void b3RenderView::b3SetupView(
 				m_Actual->m_xRelation = 1;
 				m_Actual->m_yRelation = relation;
 			}
-			height *= relation;
+			m_vvHeight *= relation;
 		}
 		else
 		{
@@ -954,22 +968,22 @@ void b3RenderView::b3SetupView(
 				m_Actual->m_xRelation = relation;
 				m_Actual->m_yRelation = 1;
 			}
-			width /= relation;
+			m_vvWidth /= relation;
 		}
 	}
 
 	// Now initialize view
 	if (m_ViewMode == B3_VIEW_3D)
 	{
-		glFrustum(-width,width,-height,height,nearCP,farCP);
+		glFrustum(-m_vvWidth,m_vvWidth,-m_vvHeight,m_vvHeight,nearCP,farCP);
 	}
 	else
 	{
-		glOrtho(-width,width,-height,height,nearCP,farCP);
+		glOrtho(-m_vvWidth,m_vvWidth,-m_vvHeight,m_vvHeight,nearCP,farCP);
 	}
 	gluLookAt(
-		eye.x, eye.y, eye.z,
-		look.x,look.y,look.z,
+		m_vvEye.x, m_vvEye.y, m_vvEye.z,
+		m_vvLook.x,m_vvLook.y,m_vvLook.z,
 		up.x,  up.y,  up.z);
 	glTranslatef(offset.x,offset.y,offset.z);
 
@@ -992,4 +1006,145 @@ void b3RenderView::b3SetupView(
 	}
 
 #endif
+}
+
+#define B3_RASTER_FLOOR(v,grid)   (floor((v) / (grid)) * (grid))
+#define B3_RASTER_CEIL(v,grid)    (ceil((v) / (grid)) * (grid))
+#define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
+#define B3_RASTER_MINDIST  8
+
+void b3RenderView::b3DrawRaster(b3_f64 grid,b3_f64 intensity)
+{
+	b3_vector xDisp,yDisp;
+	b3_vector a,b,c,d;
+	b3_f64    xStart,xEnd;
+	b3_f64    yStart,yEnd;
+	b3_f64    depth;
+	b3_count  x,y,xCount,yCount;
+
+	if (m_Actual == null)
+	{
+		return;
+	}
+
+	b3Vector::b3Init(&xDisp);
+	b3Vector::b3Init(&yDisp);
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		xDisp.x = grid;
+		yDisp.y = grid;
+		xStart  = m_vvLook.x - m_vvWidth;
+		xEnd    = m_vvLook.x + m_vvWidth;
+		yStart  = m_vvLook.y - m_vvHeight;
+		yEnd    = m_vvLook.y + m_vvHeight;
+		depth   = B3_RASTER_CEIL(m_vvLook.z,grid);
+
+		// horizontal raster
+		b3Vector::b3Init(&a,B3_RASTER_CEIL(xStart,grid),yStart,depth);
+		b3Vector::b3Init(&b,B3_RASTER_CEIL(xStart,grid),yEnd,  depth);
+
+		// vertical raster
+		b3Vector::b3Init(&c,xStart,B3_RASTER_CEIL(yStart,grid),depth);
+		b3Vector::b3Init(&d,xEnd,  B3_RASTER_CEIL(yStart,grid),depth);
+		break;
+
+	case B3_VIEW_FRONT:
+		xDisp.x = grid;
+		yDisp.z = grid;
+		xStart  = m_vvLook.x - m_vvWidth;
+		xEnd    = m_vvLook.x + m_vvWidth;
+		yStart  = m_vvLook.z - m_vvHeight;
+		yEnd    = m_vvLook.z + m_vvHeight;
+		depth   = B3_RASTER_FLOOR(m_vvLook.y,grid);
+
+		// horizontal raster
+		b3Vector::b3Init(&a,B3_RASTER_CEIL(xStart,grid),depth,yStart);
+		b3Vector::b3Init(&b,B3_RASTER_CEIL(xStart,grid),depth,yEnd);
+
+		// vertical raster
+		b3Vector::b3Init(&c,xStart,depth,B3_RASTER_CEIL(yStart,grid));
+		b3Vector::b3Init(&d,xEnd,  depth,B3_RASTER_CEIL(yStart,grid));
+		break;
+
+	case B3_VIEW_BACK:
+		xDisp.x = grid;
+		yDisp.z = grid;
+		xStart  = m_vvLook.x - m_vvWidth;
+		xEnd    = m_vvLook.x + m_vvWidth;
+		yStart  = m_vvLook.z - m_vvHeight;
+		yEnd    = m_vvLook.z + m_vvHeight;
+		depth   = B3_RASTER_CEIL(m_vvLook.y,grid);
+
+		// horizontal raster
+		b3Vector::b3Init(&a,B3_RASTER_CEIL(xStart,grid),depth,yStart);
+		b3Vector::b3Init(&b,B3_RASTER_CEIL(xStart,grid),depth,yEnd);
+
+		// vertical raster
+		b3Vector::b3Init(&c,xStart,depth,B3_RASTER_CEIL(yStart,grid));
+		b3Vector::b3Init(&d,xEnd,  depth,B3_RASTER_CEIL(yStart,grid));
+		break;
+
+	case B3_VIEW_RIGHT:
+		xDisp.y = grid;
+		yDisp.z = grid;
+		xStart  = m_vvLook.y - m_vvWidth;
+		xEnd    = m_vvLook.y + m_vvWidth;
+		yStart  = m_vvLook.z - m_vvHeight;
+		yEnd    = m_vvLook.z + m_vvHeight;
+		depth   = B3_RASTER_CEIL(m_vvLook.x,grid);
+
+		// horizontal raster
+		b3Vector::b3Init(&a,depth,B3_RASTER_CEIL(xStart,grid),yStart);
+		b3Vector::b3Init(&b,depth,B3_RASTER_CEIL(xStart,grid),yEnd);
+
+		// vertical raster
+		b3Vector::b3Init(&c,depth,xStart,B3_RASTER_CEIL(yStart,grid));
+		b3Vector::b3Init(&d,depth,xEnd,  B3_RASTER_CEIL(yStart,grid));
+		break;
+
+	case B3_VIEW_LEFT:
+		xDisp.y = grid;
+		yDisp.z = grid;
+		xStart  = m_vvLook.y - m_vvWidth;
+		xEnd    = m_vvLook.y + m_vvWidth;
+		yStart  = m_vvLook.z - m_vvHeight;
+		yEnd    = m_vvLook.z + m_vvHeight;
+		depth   = B3_RASTER_FLOOR(m_vvLook.x,grid);
+
+		// horizontal raster
+		b3Vector::b3Init(&a,depth,B3_RASTER_CEIL(xStart,grid),yStart);
+		b3Vector::b3Init(&b,depth,B3_RASTER_CEIL(xStart,grid),yEnd);
+
+		// vertical raster
+		b3Vector::b3Init(&c,depth,xStart,B3_RASTER_CEIL(yStart,grid));
+		b3Vector::b3Init(&d,depth,xEnd,  B3_RASTER_CEIL(yStart,grid));
+		break;
+
+	default:
+		return;
+	}
+
+	xCount  = B3_RASTER_COUNT(xStart,xEnd,grid);
+	yCount  = B3_RASTER_COUNT(yStart,yEnd,grid);
+	if (((m_xRes / xCount) >= B3_RASTER_MINDIST) && ((m_yRes / yCount) >= B3_RASTER_MINDIST))
+	{
+		glBegin(GL_LINES);
+		glColor3f(intensity,intensity,intensity);
+		for (x = 0;x < xCount;x++)
+		{
+			glVertex3f(a.x,a.y,a.z);
+			glVertex3f(b.x,b.y,b.z);
+			b3Vector::b3Add(&xDisp,&a);
+			b3Vector::b3Add(&xDisp,&b);
+		}
+		for (y = 0;y < yCount;y++)
+		{
+			glVertex3f(c.x,c.y,c.z);
+			glVertex3f(d.x,d.y,d.z);
+			b3Vector::b3Add(&yDisp,&c);
+			b3Vector::b3Add(&yDisp,&d);
+		}
+		glEnd();
+	}
 }

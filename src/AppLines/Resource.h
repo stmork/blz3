@@ -363,6 +363,20 @@
 #define IDS_PRT_VIEWNAME                61487
 #define IDS_PRT_UNIT                    61488
 #define IDS_PRT_DATE                    61489
+#define IDS_UNKNOWN                     61490
+#define IDS_SHAPE_AREA                  61491
+#define IDS_SHAPE_DISK                  61492
+#define IDS_SHAPE_SPHERE                61493
+#define IDS_SHAPE_CYLINDER              61494
+#define IDS_SHAPE_CONE                  61495
+#define IDS_SHAPE_ELLIPSOID             61496
+#define IDS_SHAPE_BOX                   61497
+#define IDS_SHAPE_TORUS                 61498
+#define IDS_SHAPE_BSPLINE_ROT           61499
+#define IDS_SHAPE_BSPLINE_AREA          61500
+#define IDS_SHAPE_BSPLINE_CYLINDER      61501
+#define IDS_SHAPE_BSPLINE_RING          61502
+#define IDS_SHAPE_TRIANGLES             61503
 
 // Next default values for new objects
 // 

@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2002/02/10 20:03:18  sm
+**	- Added grid raster
+**	- Changed icon colors of shapes
+**
 **	Revision 1.14  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
-**
+**	
 **	Revision 1.13  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
@@ -144,38 +148,73 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgHierarchy message handlers
 
+static int res_icon[] =
+{
+	IDI_BBOX_EMPTY,
+	IDI_BBOX_SUB,
+	IDI_BBOX_SHAPES,
+	IDI_BBOX_SHAPES_SUB,
+	IDI_BBOX_WORLD,
+	IDI_BBOX_EMPTY,
+	IDI_BBOX_SUB,
+	IDI_BBOX_S_SHAPES,
+	IDI_BBOX_S_SHAPES_SUB,
+	IDI_BBOX_WORLD,
+	IDI_SHAPE_AREA,
+	IDI_SHAPE_DISK,
+	IDI_SHAPE_SPHERE,
+	IDI_SHAPE_CYLINDER,
+	IDI_SHAPE_CONE,
+	IDI_SHAPE_ELLIPSOID,
+	IDI_SHAPE_BOX,
+	IDI_SHAPE_TORUS,
+	IDI_SHAPE_TRIANGLES,
+	IDI_SHAPE_BSPLINE_ROT,
+	IDI_SHAPE_BSPLINE_AREA,
+	IDI_SHAPE_BSPLINE_CYLINDER,
+	IDI_SHAPE_BSPLINE_RING
+};
+
+static int res_string[] =
+{
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_UNKNOWN,
+	IDS_SHAPE_AREA,
+	IDS_SHAPE_DISK,
+	IDS_SHAPE_SPHERE,
+	IDS_SHAPE_CYLINDER,
+	IDS_SHAPE_CONE,
+	IDS_SHAPE_ELLIPSOID,
+	IDS_SHAPE_BOX,
+	IDS_SHAPE_TORUS,
+	IDS_SHAPE_TRIANGLES,
+	IDS_SHAPE_BSPLINE_ROT,
+	IDS_SHAPE_BSPLINE_AREA,
+	IDS_SHAPE_BSPLINE_CYLINDER,
+	IDS_SHAPE_BSPLINE_RING
+};
+
 BOOL CDlgHierarchy::OnInitDialog() 
 {
+	int i;
+
 	CWinApp *app = AfxGetApp();
 
 	CB3Dialogbar::OnInitDialog();
 	
 	m_ImageList.Create(16,16,ILC_COLOR8,24,8);
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_EMPTY));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SUB));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SHAPES));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SHAPES_SUB));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_WORLD));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_EMPTY));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SUB));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_S_SHAPES));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_S_SHAPES_SUB));
-	m_ImageList.Add(app->LoadIcon(IDI_BBOX_WORLD));
-
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_AREA));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_DISK));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_SPHERE));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_CYLINDER));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_CONE));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_ELLIPSOID));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BOX));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_TORUS));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_TRIANGLES));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_ROT));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_AREA));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_CYLINDER));
-	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_RING));
-
+	for (i = 0;i < (sizeof(res_icon) / sizeof(int));i++)
+	{
+		m_ImageList.Add(app->LoadIcon(res_icon[i]));
+	}
 	m_Hierarchy.SetImageList (&m_ImageList,TVSIL_NORMAL);
 
 	// TODO: Add extra initialization here
@@ -206,61 +245,49 @@ long CDlgHierarchy::b3ComputeImgNum(b3Shape *Shape,CString &text)
 	{
 	case AREA:
 		imgnum = 10;
-		text = "Fläche";
 		break;
 	case DISK:
 		imgnum = 11;
-		text = "Scheibe";
 		break;
 	case SPHERE:
 		imgnum = 12;
-		text   = "Kugel";
 		break;
 	case CYLINDER:
 		imgnum = 13;
-		text   = "Zylinder";
 		break;
 	case CONE:
 		imgnum = 14;
-		text   = "Kegel";
 		break;
 	case ELLIPSOID:
 		imgnum = 15;
-		text   = "Ellispoid";
 		break;
 	case BOX:
 		imgnum = 16;
-		text = "Quader";
 		break;
 	case TORUS:
 		imgnum = 17;
-		text = "Torus";
 		break;
 	case TRIANGLES:
 		imgnum = 18;
-		text = "Dreiecke";
 		break;
 	case SPLINE_ROT:
 		imgnum = 19;
-		text = "Rotationskörper";
 		break;
 	case SPLINES_AREA:
 		imgnum = 20;
-		text = "BSpline-Fläche";
 		break;
 	case SPLINES_CYL:
 		imgnum = 21;
-		text = "BSPline-Zylinder";
 		break;
 	case SPLINES_RING:
 		imgnum = 22;
-		text = "BSPline-Ring";
 		break;
 	default:
-		text   = "unbekannt";
 		imgnum = 0;
 		break;
 	}
+
+	text.LoadString(res_string[imgnum]);
 	return imgnum;
 }
 

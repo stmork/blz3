@@ -1752,6 +1752,20 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_PRT_UNIT            "Einheit: %s"
     IDS_PRT_DATE            "Datum: %s"
+    IDS_UNKNOWN             "unbekannt"
+    IDS_SHAPE_AREA          "Fläche"
+    IDS_SHAPE_DISK          "Scheibe"
+    IDS_SHAPE_SPHERE        "Kugel"
+    IDS_SHAPE_CYLINDER      "Zylinder"
+    IDS_SHAPE_CONE          "Kegel"
+    IDS_SHAPE_ELLIPSOID     "Ellipsoid"
+    IDS_SHAPE_BOX           "Quader"
+    IDS_SHAPE_TORUS         "Torus"
+    IDS_SHAPE_BSPLINE_ROT   "BSpline-Rotationskörper"
+    IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
+    IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
+    IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
+    IDS_SHAPE_TRIANGLES     "Dreiecke"
 END
 
 #endif    // German (Germany) resources

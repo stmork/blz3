@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2002/02/10 20:03:19  sm
+**      - Added grid raster
+**      - Changed icon colors of shapes
+**
 **      Revision 1.42  2002/02/05 20:04:12  sm
 **      - Added legend to print hard copy.
 **
@@ -482,23 +486,22 @@ static const b3_u32 measure[B3_MEASURE_MAX - 1] =
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
-	m_Center.x     = 0;
-	m_Center.y     = 0;
-	m_Center.z     = 0;
-	m_StepMove.x   =
-	m_StepMove.y   =
-	m_StepMove.z   = 10;
-	m_StepRotate.x =
-	m_StepRotate.y =
-	m_StepRotate.z = 15;
-	b3SetUnit(B3_UNIT_CM);
-	b3SetMeasure(100);
-	b3SetMeasure(B3_MEASURE_100);
-	m_Unit         = b3ScaleUnitToMM();
-	m_GridMove     = 10;
-	m_GridRot      = 15;
-	m_GridActive   = true;
-	m_AngleActive  = true;
+	m_Center.x      = 0;
+	m_Center.y      = 0;
+	m_Center.z      = 0;
+	m_StepMove.x    =
+	m_StepMove.y    =
+	m_StepMove.z    = 10;
+	m_StepRotate.x  =
+	m_StepRotate.y  =
+	m_StepRotate.z  = 15;
+	m_Unit          = B3_UNIT_CM;
+	m_Measure       = B3_MEASURE_100;
+	m_CustomMeasure = 100;
+	m_GridMove      = 10;
+	m_GridRot       = 15;
+	m_GridActive    = true;
+	m_AngleActive   = true;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
@@ -512,17 +515,17 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridActive   =
 	m_AngleActive  = b3InitBool();
 	m_CameraActive = b3InitBool();
-	m_Flags        = B3_UNIT_CM;
 	m_StepMove.x   =
 	m_StepMove.y   =
 	m_StepMove.z   = 10;
 	m_StepRotate.x =
 	m_StepRotate.y =
 	m_StepRotate.z = 15;
+	m_Flags        = 0;
 	if (B3_PARSE_INDEX_VALID)
 	{
 		m_Flags    = b3InitInt();
-		m_Unit     = b3InitFloat();	
+		b3InitFloat();	
 		if (B3_PARSE_INDEX_VALID)
 		{
 			b3InitVector(&m_StepMove);
@@ -530,17 +533,23 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 			m_AngleActive  = b3InitBool();
 		}
 	}
-	if (b3GetMeasure() == 0)
+	m_Unit          =    (b3_unit)((m_Flags & B3_UNIT_MASK)           >> B3_UNIT_SHIFT);
+	m_Measure       = (b3_measure)((m_Flags & B3_MEASURE_MASK)        >> B3_MEASURE_SHIFT);
+	m_CustomMeasure =              (m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT;
+	
+	if (m_CustomMeasure == 0)
 	{
-		b3SetMeasure(100);
-		b3SetMeasure(B3_MEASURE_100);
+		m_CustomMeasure = 100;
+		m_Measure       = B3_MEASURE_100;
 	}
-	m_Unit = b3ScaleUnitToMM();
 }
 
 void b3ModellerInfo::b3Write()
 {
-	m_Unit = b3ScaleUnitToMM();
+	m_Flags =
+		(m_Unit << B3_UNIT_SHIFT) |
+		(m_Measure << B3_MEASURE_SHIFT) |
+		(m_CustomMeasure << B3_CUSTOM_MEASURE_SHIFT);
 	b3StoreVector(&m_Center);
 	b3StoreFloat(m_GridMove  );
 	b3StoreFloat(m_GridRot   );
@@ -549,7 +558,7 @@ void b3ModellerInfo::b3Write()
 	b3StoreBool (m_GridActive);
 	b3StoreBool (m_CameraActive);
 	b3StoreInt  (m_Flags);
-	b3StoreFloat(m_Unit);
+	b3StoreFloat(b3ScaleUnitToMM());
 	b3StoreVector(&m_StepMove);
 	b3StoreVector(&m_StepRotate);
 	b3StoreBool(m_AngleActive);
@@ -578,52 +587,29 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 
 b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
 {
-	return unit_scale[m_Flags & B3_UNIT_MASK];
+	return unit_scale[m_Unit];
 }
 
 const char *b3ModellerInfo::b3GetUnitDescr()
 {
-	return unit_descr[b3GetUnit()];
-}
-
-b3_unit b3ModellerInfo::b3GetUnit()
-{
-	return (b3_unit)(m_Flags & B3_UNIT_MASK);
-}
-
-void b3ModellerInfo::b3SetUnit(b3_unit unit)
-{
-	m_Flags &= (~B3_UNIT_MASK);
-	m_Flags |= (unit << B3_UNIT_SHIFT);
+	return unit_descr[m_Unit];
 }
 
 b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value)
 {
-	b3_measure type;
-
-	type = b3GetMeasureType();
-	return (((type == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
-		((m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT) :
-		measure[type]);
-}
-
-b3_measure b3ModellerInfo::b3GetMeasureType()
-{
-	return (b3_measure)((m_Flags & B3_MEASURE_MASK) >> B3_MEASURE_SHIFT);
+	return ((m_Measure == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
+		m_CustomMeasure : measure[m_Measure];
 }
 
 void b3ModellerInfo::b3SetMeasure(b3_measure measure)
 {
-	m_Flags &= (~B3_MEASURE_MASK);
-	m_Flags |= (measure << B3_MEASURE_SHIFT);
+	m_Measure = measure; 
 }
 
 void b3ModellerInfo::b3SetMeasure(b3_u32 measure)
 {
-	m_Flags &= (~(B3_MEASURE_MASK|B3_CUSTOM_MEASURE_MASK));
-	m_Flags |= (
-		(B3_MEASURE_CUSTOM << B3_MEASURE_SHIFT) |
-		(measure << B3_CUSTOM_MEASURE_SHIFT));
+	m_CustomMeasure = measure;
+	m_Measure       = B3_MEASURE_CUSTOM;
 }
 
 /*************************************************************************

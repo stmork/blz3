@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/02/10 20:03:18  sm
+**	- Added grid raster
+**	- Changed icon colors of shapes
+**
 **	Revision 1.7  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
-**
+**	
 **	Revision 1.6  2002/02/04 17:18:00  sm
 **	- Added Measurement to modeller info.
 **	
@@ -130,9 +134,9 @@ BOOL CDlgModellerInfo::OnInitDialog()
 	m_SnapToAngleCtrl.b3SetValue(m_ModellerInfo->m_GridRot);
 	m_SnapToGrid    = m_ModellerInfo->m_GridActive;
 	m_SnapToAngle   = m_ModellerInfo->m_AngleActive;
-	m_Unit          = m_ModellerInfo->b3GetUnit();
-	m_Measure       = m_ModellerInfo->b3GetMeasureType();
-	m_CustomMeasure = m_ModellerInfo->b3GetMeasure();
+	m_Unit          = m_ModellerInfo->m_Unit;
+	m_Measure       = m_ModellerInfo->m_Measure;
+	m_CustomMeasure = m_ModellerInfo->m_CustomMeasure;
 	UpdateData(FALSE);
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -222,7 +226,7 @@ void CDlgModellerInfo::OnOK()
 	m_ModellerInfo->m_Center.x    = m_xFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.y    = m_yFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Center.z    = m_zFulcrumCtrl.m_Value;
-	m_ModellerInfo->b3SetUnit((b3_unit)m_Unit);
+	m_ModellerInfo->m_Unit        = (b3_unit)m_Unit;
 	if (m_Measure != B3_MEASURE_CUSTOM)
 	{
 		m_ModellerInfo->b3SetMeasure((b3_measure)m_Measure);
