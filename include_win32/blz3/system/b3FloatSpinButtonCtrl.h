@@ -34,13 +34,12 @@
 #define B3_FSBC_DEFAULT_ACCEL     5.0
 #define B3_FSBC_DEFAULT_DIGITS    2
 
-#define WM_B3_FSBC_CHANGED (WM_USER + 3)
-
 class CB3FloatSpinButtonCtrl : public CSpinButtonCtrl
 {
 	b3_f64 m_Increment;
 	b3_f64 m_Min;
 	b3_f64 m_Max;
+	b3_f64 m_Pos;
 	b3_f64 m_Accel;
 	char   m_Format[16];
 
@@ -48,10 +47,13 @@ public:
 	         CB3FloatSpinButtonCtrl();
 	virtual ~CB3FloatSpinButtonCtrl();
 	
-	void     b3SetPos(b3_f64 pos);
+	void     b3DDX(CDataExchange *pDX,b3_f32 &pos);
+	void     b3DDX(CDataExchange *pDX,b3_f64 &pos);
+	b3_f64   b3SetPos(b3_f64 pos);
+	b3_f64   b3SetRange(b3_f64 min,b3_f64 max);
+	void     b3SetDigits(int pre=0,int post = B3_FSBC_DEFAULT_DIGITS);
+	void     b3SetIncrement(b3_f64 increment = B3_FSBC_DEFAULT_INCREMENT);
 	void     b3SetAccel(b3_f64 increment = B3_FSBC_DEFAULT_ACCEL,int secs = 2);
-	void     b3SetRange(b3_f64 min,b3_f64 max,int digits = B3_FSBC_DEFAULT_DIGITS,b3_f64 increment = B3_FSBC_DEFAULT_INCREMENT);
-	void     b3SetDigits(int digits = B3_FSBC_DEFAULT_DIGITS);
 	b3_f64   b3GetPos();
 	b3_f64   b3GetAccel();
 

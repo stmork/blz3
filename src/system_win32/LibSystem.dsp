@@ -142,6 +142,10 @@ SOURCE=.\b3ImageButton.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3IntSpinButtonCtrl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Log.cpp
 # End Source File
 # Begin Source File

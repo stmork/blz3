@@ -33,10 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.3  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.2  2002/01/08 16:21:58  sm
 **	- Added center to copy dialog
 **	
@@ -133,9 +145,9 @@ BOOL CDlgObjectCopy::OnInitDialog()
 	m_xCtrlOffset.b3SetDigits(5,2);
 	m_yCtrlOffset.b3SetDigits(5,2);
 	m_zCtrlOffset.b3SetDigits(5,2);
-	m_xCtrlOffset.b3SetValue(m_xUseOffset ? m_OrigBBox->m_DimSize.x : m_Move.x);
-	m_yCtrlOffset.b3SetValue(m_yUseOffset ? m_OrigBBox->m_DimSize.y : m_Move.y);
-	m_zCtrlOffset.b3SetValue(m_zUseOffset ? m_OrigBBox->m_DimSize.z : m_Move.z);
+	m_xCtrlOffset.b3SetPos(m_xUseOffset ? m_OrigBBox->m_DimSize.x : m_Move.x);
+	m_yCtrlOffset.b3SetPos(m_yUseOffset ? m_OrigBBox->m_DimSize.y : m_Move.y);
+	m_zCtrlOffset.b3SetPos(m_zUseOffset ? m_OrigBBox->m_DimSize.z : m_Move.z);
 
 	m_xCtrlRot.b3SetMin(epsilon);
 	m_yCtrlRot.b3SetMin(epsilon);
@@ -146,16 +158,16 @@ BOOL CDlgObjectCopy::OnInitDialog()
 	m_xCtrlRot.b3SetDigits(5,2);
 	m_yCtrlRot.b3SetDigits(5,2);
 	m_zCtrlRot.b3SetDigits(5,2);
-	m_xCtrlRot.b3SetValue(m_Rotate.x);
-	m_yCtrlRot.b3SetValue(m_Rotate.y);
-	m_zCtrlRot.b3SetValue(m_Rotate.z);
+	m_xCtrlRot.b3SetPos(m_Rotate.x);
+	m_yCtrlRot.b3SetPos(m_Rotate.y);
+	m_zCtrlRot.b3SetPos(m_Rotate.z);
 
 	m_xCtrlCenter.b3SetDigits(5,2);
 	m_yCtrlCenter.b3SetDigits(5,2);
 	m_zCtrlCenter.b3SetDigits(5,2);
-	m_xCtrlCenter.b3SetValue(m_Center->x);
-	m_yCtrlCenter.b3SetValue(m_Center->y);
-	m_zCtrlCenter.b3SetValue(m_Center->z);
+	m_xCtrlCenter.b3SetPos(m_Center->x);
+	m_yCtrlCenter.b3SetPos(m_Center->y);
+	m_zCtrlCenter.b3SetPos(m_Center->z);
 	m_CtrlNumCopies.SetRange(1,1024);
 
 	b3UpdateUI();
@@ -189,9 +201,9 @@ void CDlgObjectCopy::OnUseRotation()
 void CDlgObjectCopy::OnCenterClear() 
 {
 	// TODO: Add your control notification handler code here
-	m_xCtrlCenter.b3SetValue(0);
-	m_yCtrlCenter.b3SetValue(0);
-	m_zCtrlCenter.b3SetValue(0);
+	m_xCtrlCenter.b3SetPos(0);
+	m_yCtrlCenter.b3SetPos(0);
+	m_zCtrlCenter.b3SetPos(0);
 }
 
 void CDlgObjectCopy::OnOffsetXUse() 
@@ -200,7 +212,7 @@ void CDlgObjectCopy::OnOffsetXUse()
 	UpdateData();
 	if (m_xUseOffset)
 	{
-		m_xCtrlOffset.b3SetValue(m_OrigBBox->m_DimSize.x);
+		m_xCtrlOffset.b3SetPos(m_OrigBBox->m_DimSize.x);
 	}
 }
 
@@ -210,7 +222,7 @@ void CDlgObjectCopy::OnOffsetYUse()
 	UpdateData();
 	if (m_yUseOffset)
 	{
-		m_yCtrlOffset.b3SetValue(m_OrigBBox->m_DimSize.y);
+		m_yCtrlOffset.b3SetPos(m_OrigBBox->m_DimSize.y);
 	}
 }
 
@@ -220,7 +232,7 @@ void CDlgObjectCopy::OnOffsetZUse()
 	UpdateData();
 	if (m_zUseOffset)
 	{
-		m_zCtrlOffset.b3SetValue(m_OrigBBox->m_DimSize.z);
+		m_zCtrlOffset.b3SetPos(m_OrigBBox->m_DimSize.z);
 	}
 }
 

@@ -64,10 +64,6 @@ public:
 	CString	m_xEndLegend;
 	CString	m_xStartLegend;
 	int		m_Unit;
-	double	m_xEnd;
-	double	m_xStart;
-	double	m_yEnd;
-	double	m_yStart;
 	//}}AFX_DATA
 
 

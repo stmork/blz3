@@ -39,6 +39,11 @@ class CDlgCreateMaterial : public CPropertyPage
 	b3MatTexture   *m_MatTexture;
 	b3Scene        *m_MatScene;
 	b3Base<b3Item> *m_MatHead;
+	b3_f64          m_RefrValue;
+	b3_f64          m_Reflection;
+	b3_f64          m_Refraction;
+	b3_f64          m_HighLight;
+
 	DECLARE_DYNCREATE(CDlgCreateMaterial)
 
 // Construction
@@ -64,10 +69,6 @@ public:
 	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	BOOL	m_ReallyCreate;
 	BOOL	m_UseTexture;
-	double	m_RefrValue;
-	double	m_Reflection;
-	double	m_Refraction;
-	double	m_HighLight;
 	//}}AFX_DATA
 
 

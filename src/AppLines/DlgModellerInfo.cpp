@@ -32,10 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.8  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
-**
+**	
 **	Revision 1.7  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
@@ -82,6 +94,10 @@ CDlgModellerInfo::CDlgModellerInfo(CWnd* pParent /*=NULL*/)
 	m_Measure = B3_MEASURE_20;
 	m_CustomMeasure = 1;
 	//}}AFX_DATA_INIT
+	m_SnapToGridCtrl.b3SetDigits(3,2);
+	m_SnapToGridCtrl.b3SetMin(epsilon);
+	m_SnapToAngleCtrl.b3SetDigits(3,0);
+	m_SnapToAngleCtrl.b3SetMin(epsilon);
 }
 
 void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
@@ -100,6 +116,9 @@ void CDlgModellerInfo::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CUSTOM_MEASURE, m_CustomMeasure);
 	DDV_MinMaxInt(pDX, m_CustomMeasure, 1, 1000);
 	//}}AFX_DATA_MAP
+	m_CenterCtrl.b3DDX(pDX);
+	m_SnapToGridCtrl.b3DDX (pDX,m_ModellerInfo->m_GridMove);
+	m_SnapToAngleCtrl.b3DDX(pDX,m_ModellerInfo->m_GridRot);
 }
 
 
@@ -117,27 +136,15 @@ END_MESSAGE_MAP()
 
 BOOL CDlgModellerInfo::OnInitDialog() 
 {
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	m_xFulcrumCtrl.b3SetDigits(5,2);
-	m_xFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.x);
-	m_yFulcrumCtrl.b3SetDigits(5,2);
-	m_yFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.y);
-	m_zFulcrumCtrl.b3SetDigits(5,2);
-	m_zFulcrumCtrl.b3SetValue(m_ModellerInfo->m_Center.z);
-	m_SnapToGridCtrl.b3SetDigits(3,2);
-	m_SnapToGridCtrl.b3SetMin(epsilon);
-	m_SnapToGridCtrl.b3SetValue(m_ModellerInfo->m_GridMove);
-	m_SnapToAngleCtrl.b3SetDigits(3,0);
-	m_SnapToAngleCtrl.b3SetMin(epsilon);
-	m_SnapToAngleCtrl.b3SetValue(m_ModellerInfo->m_GridRot);
+	m_CenterCtrl.b3Init(&m_ModellerInfo->m_Center,&m_xFulcrumCtrl,&m_yFulcrumCtrl,&m_zFulcrumCtrl);
 	m_SnapToGrid    = m_ModellerInfo->m_GridActive;
 	m_SnapToAngle   = m_ModellerInfo->m_AngleActive;
 	m_Unit          = m_ModellerInfo->m_Unit;
 	m_Measure       = m_ModellerInfo->m_Measure;
 	m_CustomMeasure = m_ModellerInfo->m_CustomMeasure;
-	UpdateData(FALSE);
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -160,9 +167,9 @@ void CDlgModellerInfo::OnSnap()
 void CDlgModellerInfo::OnFulcrumClear() 
 {
 	// TODO: Add your control notification handler code here
-	m_xFulcrumCtrl.b3SetValue(0);
-	m_yFulcrumCtrl.b3SetValue(0);
-	m_zFulcrumCtrl.b3SetValue(0);
+	m_xFulcrumCtrl.b3SetPos(0);
+	m_yFulcrumCtrl.b3SetPos(0);
+	m_zFulcrumCtrl.b3SetPos(0);
 	m_xFulcrumCtrl.SetFocus();
 }
 
@@ -176,56 +183,10 @@ void CDlgModellerInfo::b3UpdateUI()
 void CDlgModellerInfo::OnOK() 
 {
 	// TODO: Add extra validation here
-	UpdateData();
-
-	if (!m_xFulcrumCtrl.b3Check())
-	{
-		B3_BEEP;
-		m_yFulcrumCtrl.SetFocus();
-		return;
-	}
-
-	if (!m_xFulcrumCtrl.b3Check())
-	{
-		B3_BEEP;
-		m_yFulcrumCtrl.SetFocus();
-		return;
-	}
-	
-	if (!m_zFulcrumCtrl.b3Check())
-	{
-		B3_BEEP;
-		m_zFulcrumCtrl.SetFocus();
-		return;
-	}
-
-	if (m_SnapToGrid)
-	{
-		if (!m_SnapToGridCtrl.b3Check())
-		{
-			B3_BEEP;
-			m_SnapToGridCtrl.SetFocus();
-			return;
-		}
-	}
-
-	if (m_SnapToAngle)
-	{
-		if (!m_SnapToAngleCtrl.b3Check())
-		{
-			B3_BEEP;
-			m_SnapToAngleCtrl.SetFocus();
-			return;
-		}
-	}
+	CDialog::OnOK();
 
 	m_ModellerInfo->m_GridActive  = m_SnapToGrid;
 	m_ModellerInfo->m_AngleActive = m_SnapToAngle;
-	m_ModellerInfo->m_GridMove    = m_SnapToGridCtrl.m_Value;
-	m_ModellerInfo->m_GridRot     = m_SnapToAngleCtrl.m_Value;
-	m_ModellerInfo->m_Center.x    = m_xFulcrumCtrl.m_Value;
-	m_ModellerInfo->m_Center.y    = m_yFulcrumCtrl.m_Value;
-	m_ModellerInfo->m_Center.z    = m_zFulcrumCtrl.m_Value;
 	m_ModellerInfo->m_Unit        = (b3_unit)m_Unit;
 	if (m_Measure != B3_MEASURE_CUSTOM)
 	{
@@ -237,5 +198,4 @@ void CDlgModellerInfo::OnOK()
 	}
 
 	CB3GetApp()->b3SetData();
-	CDialog::OnOK();
 }

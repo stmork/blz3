@@ -34,11 +34,23 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.3  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
 **	  on example camera settings.
-**
+**	
 **	Revision 1.2  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -303,15 +315,15 @@ int CDlgCamera::b3GetCameraType()
 void CDlgCamera::b3GetCamera()
 {
 	m_EnableCamera = m_Camera->b3IsActive();
-	m_xPosCtrl.b3SetValue(m_Camera->m_EyePoint.x);
-	m_yPosCtrl.b3SetValue(m_Camera->m_EyePoint.y);
-	m_zPosCtrl.b3SetValue(m_Camera->m_EyePoint.z);
-	m_xViewCtrl.b3SetValue(m_Camera->m_ViewPoint.x);
-	m_yViewCtrl.b3SetValue(m_Camera->m_ViewPoint.y);
-	m_zViewCtrl.b3SetValue(m_Camera->m_ViewPoint.z);
-	m_FocalLengthCtrl.b3SetValue(b3Vector::b3Distance(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint));
-	m_WidthCtrl.b3SetValue(b3Vector::b3Length(&m_Camera->m_Width));
-	m_HeightCtrl.b3SetValue(b3Vector::b3Length(&m_Camera->m_Height));
+	m_xPosCtrl.b3SetPos(m_Camera->m_EyePoint.x);
+	m_yPosCtrl.b3SetPos(m_Camera->m_EyePoint.y);
+	m_zPosCtrl.b3SetPos(m_Camera->m_EyePoint.z);
+	m_xViewCtrl.b3SetPos(m_Camera->m_ViewPoint.x);
+	m_yViewCtrl.b3SetPos(m_Camera->m_ViewPoint.y);
+	m_zViewCtrl.b3SetPos(m_Camera->m_ViewPoint.z);
+	m_FocalLengthCtrl.b3SetPos(b3Vector::b3Distance(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint));
+	m_WidthCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Width));
+	m_HeightCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Height));
 	m_TypeCtrl.SetCurSel(b3GetCameraType());
 
 	b3UpdateUI();
@@ -355,8 +367,8 @@ void CDlgCamera::OnSelchangeCameraTypes()
 	index = m_TypeCtrl.GetCurSel();
 	if ((index != CB_ERR) && (index < MAX_CAMERA_TYPES))
 	{
-		m_FocalLengthCtrl.b3SetValue(camera_definition[index].m_FocalLength / m_UnitFactor);
-		m_WidthCtrl.b3SetValue(camera_definition[index].m_Width             / m_UnitFactor);
-		m_HeightCtrl.b3SetValue(camera_definition[index].m_Height           / m_UnitFactor);
+		m_FocalLengthCtrl.b3SetPos(camera_definition[index].m_FocalLength / m_UnitFactor);
+		m_WidthCtrl.b3SetPos(camera_definition[index].m_Width             / m_UnitFactor);
+		m_HeightCtrl.b3SetPos(camera_definition[index].m_Height           / m_UnitFactor);
 	}
 }

@@ -34,9 +34,21 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.3  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.2  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -61,6 +73,9 @@ CDlgFulcrum::CDlgFulcrum(CWnd* pParent /*=NULL*/)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_pDoc = null;
+	m_xCtrl.b3SetDigits(5,2);
+	m_yCtrl.b3SetDigits(5,2);
+	m_zCtrl.b3SetDigits(5,2);
 }
 
 
@@ -72,6 +87,12 @@ void CDlgFulcrum::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FULCRUM_Y, m_yCtrl);
 	DDX_Control(pDX, IDC_FULCRUM_X, m_xCtrl);
 	//}}AFX_DATA_MAP
+	if (m_pDoc != null)
+	{
+		m_xCtrl.b3DDX(pDX,m_pDoc->m_Info->m_Center.x);
+		m_yCtrl.b3DDX(pDX,m_pDoc->m_Info->m_Center.y);
+		m_zCtrl.b3DDX(pDX,m_pDoc->m_Info->m_Center.z);
+	}
 }
 
 
@@ -86,26 +107,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgFulcrum message handlers
 
-BOOL CDlgFulcrum::OnInitDialog()
-{
-	if (!CB3Dialogbar::OnInitDialog())
-	{
-		return FALSE;
-	}
-	m_xCtrl.b3SetDigits(5,2);
-	m_yCtrl.b3SetDigits(5,2);
-	m_zCtrl.b3SetDigits(5,2);
-	return TRUE;
-}
-
 void CDlgFulcrum::b3GetData()
 {
-	if (m_pDoc != null)
-	{
-		m_pDoc->m_Info->m_Center.x = m_xCtrl.m_Value;
-		m_pDoc->m_Info->m_Center.y = m_yCtrl.m_Value;
-		m_pDoc->m_Info->m_Center.z = m_zCtrl.m_Value;
-	}
+	UpdateData();
 }
 
 void CDlgFulcrum::b3SetData()
@@ -115,9 +119,7 @@ void CDlgFulcrum::b3SetData()
 	m_zCtrl.EnableWindow(m_pDoc != null);
 	if (m_pDoc != null)
 	{
-		m_xCtrl.b3SetValue(m_pDoc->m_Info->m_Center.x);
-		m_yCtrl.b3SetValue(m_pDoc->m_Info->m_Center.y);
-		m_zCtrl.b3SetValue(m_pDoc->m_Info->m_Center.z);
+		UpdateData(FALSE);
 	}
 	else
 	{

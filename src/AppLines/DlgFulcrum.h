@@ -49,7 +49,6 @@ public:
 	//}}AFX_DATA
 
 public:
-	virtual BOOL  OnInitDialog();
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CDlgFulcrum)

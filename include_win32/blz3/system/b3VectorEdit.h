@@ -33,11 +33,10 @@ protected:
 
 public:
 	     CB3PosGroup();
+	void b3DDX(CDataExchange *pDX);
 	void b3Init(b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl);
 	void b3Read(const char *title);
 	void b3Write(const char *title);
-	void b3Set(b3_bool init=false);
-	void b3Update();
 };
 
 class CB3DirGroup : public CB3PosGroup
@@ -56,7 +55,7 @@ public:
 public:
 	     CB3DirGroup();
 	void b3Init(b3_vector *base,b3_vector *vector,CB3FloatEdit *xCtrl,CB3FloatEdit *yCtrl,CB3FloatEdit *zCtrl,CB3FloatEdit *lenCtrl);
-	void b3Set(int mode,b3_bool init=false);
+	void b3Set(int mode);
 	void b3Update(int mode);
 	void b3UpdateLen(int mode);
 };

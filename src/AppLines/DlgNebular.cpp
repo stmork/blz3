@@ -33,10 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.4  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.3  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
@@ -111,7 +123,7 @@ BOOL CDlgNebular::OnInitDialog()
 	// TODO: Add extra initialization here
 	m_NebularDistanceCtrl.b3SetMin(epsilon);
 	m_NebularDistanceCtrl.b3SetDigits(3,0);
-	m_NebularDistanceCtrl.b3SetValue(fabs(m_Nebular->m_NebularVal));
+	m_NebularDistanceCtrl.b3SetPos(fabs(m_Nebular->m_NebularVal));
 	m_NebularPreviewCtrl.b3Update(m_NebularScene);
 	m_NebularColorCtrl.b3Init(&m_EditNebular->m_NebularColor,this);
 	b3UpdateUI();
@@ -158,20 +170,8 @@ void CDlgNebular::b3UpdateUI()
 BOOL CDlgNebular::OnApply()
 {
 	// TODO: Add extra validation here
-	BOOL result;
-
-	if (m_NebularDistanceCtrl.b3Check())
-	{
-		m_Nebular->m_NebularVal   = m_NebularDistanceCtrl.m_Value;
-		m_Nebular->m_NebularColor = m_EditNebular->m_NebularColor;
-		m_Nebular->b3Activate(m_ActNebular);
-		result = CPropertyPage::OnApply();
-	}
-	else
-	{
-		B3_BEEP;
-		m_NebularDistanceCtrl.SetFocus();
-		result = FALSE;
-	}
-	return result;
+	m_Nebular->m_NebularVal   = m_NebularDistanceCtrl.b3GetPos();
+	m_Nebular->m_NebularColor = m_EditNebular->m_NebularColor;
+	m_Nebular->b3Activate(m_ActNebular);
+	return CPropertyPage::OnApply();
 }

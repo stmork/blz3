@@ -43,7 +43,7 @@ class CB3FloatEdit : public CEdit
 	b3_bool m_MinActive;
 	b3_bool m_MaxActive;
 public:
-	b3_f64 m_Value;
+	b3_f64  m_Value;
 	CB3FloatEdit();
 
 // Attributes
@@ -51,13 +51,15 @@ public:
 
 // Operations
 public:
-	b3_bool b3Check();
-	void    b3SetMin(b3_f64 min);
-	void    b3SetMax(b3_f64 max);
-	void    b3SetRange(b3_f64 min,b3_f64 max);
+	void    b3DDX(CDataExchange *pDX,b3_f32 &pos);
+	void    b3DDX(CDataExchange *pDX,b3_f64 &pos);
+	b3_f64  b3SetMin(b3_f64 min);
+	b3_f64  b3SetMax(b3_f64 max);
+	b3_f64  b3SetRange(b3_f64 min,b3_f64 max);
 	void    b3DisableBound();
 	void    b3SetDigits(int pre,int post);
-	void    b3SetValue(b3_f64 value);
+	b3_f64  b3SetPos(b3_f64 value);
+	b3_f64  b3GetPos();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -72,10 +74,11 @@ public:
 protected:
 	//{{AFX_MSG(CB3FloatEdit)
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
-	afx_msg void OnUpdate();
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()
+private:
+	b3_f64 b3Check();
 };
 
 /////////////////////////////////////////////////////////////////////////////

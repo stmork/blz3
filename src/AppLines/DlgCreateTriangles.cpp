@@ -32,10 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.1  2002/03/03 21:22:21  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
-**
+**	
 **
 */
 
@@ -60,6 +72,8 @@ CDlgCreateTriangles::CDlgCreateTriangles(CWnd* pParent /*=NULL*/)
 	m_ySize   = app->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".vertical count"),   m_ySize);
 	m_xClosed = app->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".closed horizontal"),m_xClosed);
 	m_Phong   = app->GetProfileInt(CB3ClientString(),b3GetSection() + CString(".phong"),            m_Phong);
+	m_HorzCtrl.b3SetDigits(5,2);
+	m_VertCtrl.b3SetDigits(5,2);
 }
 
 
@@ -101,13 +115,10 @@ BOOL CDlgCreateTriangles::OnInitDialog()
 	CB3ShapeDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_HorzCtrl.b3SetDigits(5,2);
-	m_HorzCtrl.b3SetValue(app->b3ReadProfileFloat(b3GetSection() + CString(".horizontal length"),100));
-	m_VertCtrl.b3SetDigits(5,2);
-	m_VertCtrl.b3SetValue(app->b3ReadProfileFloat(b3GetSection() + CString(".vertical length"),100));
-
-	b3UpdateUI();
+	m_HorzCtrl.b3SetPos(app->b3ReadProfileFloat(b3MakeSection("horizontal length"),100));
+	m_VertCtrl.b3SetPos(app->b3ReadProfileFloat(b3MakeSection("vertical length"),  100));
 	m_ySizeCtrl.SetRange(1,64);
+	b3UpdateUI();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -126,12 +137,12 @@ void CDlgCreateTriangles::b3PostProcess()
 
 	CB3ShapeDialog::b3PostProcess();
 
-	app->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".horizontal count"), m_xSize);
-	app->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".vertical count"),   m_ySize);
-	app->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".closed horizontal"),m_xClosed);
-	app->WriteProfileInt(CB3ClientString(),b3GetSection() + CString(".phong"),            m_Phong);
-	app->b3WriteProfileFloat(b3GetSection() + CString(".horizontal length"),m_HorzCtrl.m_Value);
-	app->b3WriteProfileFloat(b3GetSection() + CString(".vertical length"),  m_VertCtrl.m_Value);
+	app->WriteProfileInt(CB3ClientString(),b3MakeSection("horizontal count"), m_xSize);
+	app->WriteProfileInt(CB3ClientString(),b3MakeSection("vertical count"),   m_ySize);
+	app->WriteProfileInt(CB3ClientString(),b3MakeSection("closed horizontal"),m_xClosed);
+	app->WriteProfileInt(CB3ClientString(),b3MakeSection("phong"),            m_Phong);
+	app->b3WriteProfileFloat(b3MakeSection("horizontal length"),m_HorzCtrl.m_Value);
+	app->b3WriteProfileFloat(b3MakeSection("vertical length"),  m_VertCtrl.m_Value);
 
 	xSize = m_xSize;
 	ySize = m_ySize;

@@ -33,10 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.4  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.3  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -68,11 +80,24 @@ CDlgStepRotate::CDlgStepRotate(CWnd* pParent /*=NULL*/)
 	m_CtrlRotLeft.m_hIcon   = app->LoadIcon(IDI_ROT_LEFT);
 	m_CtrlRotRight.m_hIcon  = app->LoadIcon(IDI_ROT_RIGHT);
 	m_pDoc = null;
+
+	// Init float edit controls
+	m_xCtrl.b3SetMin(epsilon);
+	m_yCtrl.b3SetMin(epsilon);
+	m_zCtrl.b3SetMin(epsilon);
+	m_xCtrl.b3SetMax(180);
+	m_yCtrl.b3SetMax(180);
+	m_zCtrl.b3SetMax(180);
+	m_xCtrl.b3SetDigits(5,2);
+	m_yCtrl.b3SetDigits(5,2);
+	m_zCtrl.b3SetDigits(5,2);
 }
 
 
 void CDlgStepRotate::DoDataExchange(CDataExchange* pDX)
 {
+	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
+
 	CB3Dialogbar::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgStepRotate)
 	DDX_Control(pDX, IDC_STEP_ROT_Z, m_zCtrl);
@@ -81,6 +106,12 @@ void CDlgStepRotate::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ROT_RIGHT, m_CtrlRotRight);
 	DDX_Control(pDX, IDC_ROT_LEFT, m_CtrlRotLeft);
 	//}}AFX_DATA_MAP
+	if (info != null)
+	{
+		m_xCtrl.b3DDX(pDX,info->m_StepRotate.x);
+		m_yCtrl.b3DDX(pDX,info->m_StepRotate.y);
+		m_zCtrl.b3DDX(pDX,info->m_StepRotate.z);
+	}
 }
 
 
@@ -95,34 +126,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgStepRotate message handlers
 
-BOOL CDlgStepRotate::OnInitDialog()
-{
-	if (!CB3Dialogbar::OnInitDialog())
-	{
-		return FALSE;
-	}
-	m_xCtrl.b3SetMin(epsilon);
-	m_yCtrl.b3SetMin(epsilon);
-	m_zCtrl.b3SetMin(epsilon);
-	m_xCtrl.b3SetMax(180);
-	m_yCtrl.b3SetMax(180);
-	m_zCtrl.b3SetMax(180);
-	m_xCtrl.b3SetDigits(5,2);
-	m_yCtrl.b3SetDigits(5,2);
-	m_zCtrl.b3SetDigits(5,2);
-	return TRUE;
-}
-
 void CDlgStepRotate::b3GetData()
 {
-	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
-
-	if (info != null)
-	{
-		info->m_StepRotate.x = m_xCtrl.m_Value;
-		info->m_StepRotate.y = m_yCtrl.m_Value;
-		info->m_StepRotate.z = m_zCtrl.m_Value;
-	}
+	UpdateData();
 }
 
 void CDlgStepRotate::b3SetData()
@@ -134,9 +140,7 @@ void CDlgStepRotate::b3SetData()
 	m_zCtrl.EnableWindow(info != null);
 	if (info != null)
 	{
-		m_xCtrl.b3SetValue(info->m_StepRotate.x);
-		m_yCtrl.b3SetValue(info->m_StepRotate.y);
-		m_zCtrl.b3SetValue(info->m_StepRotate.z);
+		UpdateData(FALSE);
 	}
 	else
 	{

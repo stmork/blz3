@@ -25,8 +25,8 @@
 //
 
 #include "b3ProfileShapeDialog.h"
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
-#include "blz3/system/b3FloatEdit.h"
 #include "b3SplinePreview.h"
 #include "b3VectorEdit.h"
 
@@ -38,6 +38,12 @@ class CDlgProfileBevelSpline : public CB3ProfileShapeDialog
 	b3Spline       m_Spline;
 	b3_vector      m_Controls[B3_MAX_CONTROLS];
 	b3_f32         m_Knots[B3_MAX_KNOTS];
+	b3_f64         m_xEdge;
+	b3_f64         m_yEdge;
+	b3_f64         m_Height;
+	b3_f64         m_Oblique;
+	b3_s32         m_yControls;
+	b3_s32         m_yDegree;
 // Construction
 public:
 	virtual void b3PostProcess();
@@ -46,19 +52,13 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgProfileBevelSpline)
 	enum { IDD = IDD_PROFILE_BEVEL_SPLINE };
-	CSpinButtonCtrl	m_yControlsCtrl;
-	CSpinButtonCtrl	m_yDegreeCtrl;
+	CB3IntSpinButtonCtrl	m_yControlsCtrl;
+	CB3IntSpinButtonCtrl	m_yDegreeCtrl;
 	CB3SplinePreview	m_Preview;
 	CB3FloatSpinButtonCtrl	m_ObliqueCtrl;
 	CB3FloatSpinButtonCtrl	m_HeightCtrl;
 	CB3FloatSpinButtonCtrl	m_xEdgeCtrl;
 	CB3FloatSpinButtonCtrl	m_yEdgeCtrl;
-	double	m_xEdge;
-	double	m_yEdge;
-	double	m_Height;
-	double	m_Oblique;
-	int		m_yControls;
-	int		m_yDegree;
 	//}}AFX_DATA
 
 

@@ -31,12 +31,24 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/03/08 16:46:15  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.2  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **	Revision 1.1  2002/03/03 21:22:22  sm
 **	- Added support for creating surfaces using profile curves.
 **	- Added simple creating of triangle fields.
@@ -69,6 +81,7 @@ void CB3ProfileShapeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BASE_X, m_zBaseCtrl);
 	DDX_Radio(pDX, IDC_ALIGN_UP, m_Align);
 	//}}AFX_DATA_MAP
+	m_BaseGroup.b3DDX(pDX);
 }
 
 CB3ProfileShapeDialog::~CB3ProfileShapeDialog()
@@ -101,7 +114,6 @@ BOOL CB3ProfileShapeDialog::OnInitDialog()
 	CB3ShapeDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_BaseGroup.b3Set(true);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE

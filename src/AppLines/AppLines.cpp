@@ -16,6 +16,10 @@
 **
 */
 
+#ifdef _DEBUG
+#define B3_USE_SPIN_TEST
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Lines III includes                            **
@@ -47,12 +51,24 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.29  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
 **	- Added simple control to display 2 dimensional spline.
 **	- Fine tuned the profile dialogs.
-**
+**	
 **	Revision 1.28  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
@@ -493,11 +509,20 @@ BOOL CAboutDlg::OnInitDialog()
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
 
+#ifdef B3_USE_SPIN_TEST
+#include "DlgSpinTest.h"
+#endif
+
 // App command to run the dialog
 void CAppLinesApp::OnAppAbout()
 {
+#ifndef B3_USE_SPIN_TEST
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
+#else
+	CDlgSpinTest dlg;
+	dlg.DoModal();
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

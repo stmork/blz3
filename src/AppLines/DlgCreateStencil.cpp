@@ -32,10 +32,22 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.3  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **	Revision 1.2  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -86,10 +98,6 @@ CDlgCreateStencil::CDlgCreateStencil() : CPropertyPage(CDlgCreateStencil::IDD)
 	m_xEndLegend = _T("");
 	m_xStartLegend = _T("");
 	m_Unit = 1;
-	m_xEnd = 0.0;
-	m_xStart = 0.0;
-	m_yEnd = 0.0;
-	m_yStart = 0.0;
 	//}}AFX_DATA_INIT
 	m_Stencil = null;
 
@@ -119,10 +127,6 @@ void CDlgCreateStencil::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_X_END_LEGEND, m_xEndLegend);
 	DDX_Text(pDX, IDC_X_START_LEGEND, m_xStartLegend);
 	DDX_Radio(pDX, IDC_RELATIVE, m_Unit);
-	DDX_Text(pDX, IDC_X_END, m_xEnd);
-	DDX_Text(pDX, IDC_X_START, m_xStart);
-	DDX_Text(pDX, IDC_Y_END, m_yEnd);
-	DDX_Text(pDX, IDC_Y_START, m_yStart);
 	//}}AFX_DATA_MAP
 }
 
@@ -216,24 +220,46 @@ void CDlgCreateStencil::b3UpdateUI()
 {
 	if (m_Unit == 0)
 	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin,m_Bound.xMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin,m_Bound.xMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
-		m_yStartCtrl.b3SetRange(m_Bound.yMin,m_Bound.yMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin,m_Bound.yMax,m_Digits[B3_STENCIL_UNIT],m_Increments[B3_STENCIL_UNIT]);
+		m_xStartCtrl.b3SetRange(m_Bound.xMin,m_Bound.xMax);
+		m_xStartCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
+		m_xStartCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
 		m_xStartCtrl.b3SetPos(m_Limit.x1);
+		
+		m_xEndCtrl.b3SetRange(  m_Bound.xMin,m_Bound.xMax);
+		m_xEndCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
+		m_xEndCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
 		m_xEndCtrl.b3SetPos(  m_Limit.x2);
+		
+		m_yStartCtrl.b3SetRange(m_Bound.yMin,m_Bound.yMax);
+		m_yStartCtrl.b3SetDigits(0,m_Digits[B3_STENCIL_UNIT]);
+		m_yStartCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
 		m_yStartCtrl.b3SetPos(m_Limit.y1);
+		
+		m_yEndCtrl.b3SetRange(  m_Bound.yMin,m_Bound.yMax);
+		m_yEndCtrl.b3SetDigits(m_Digits[B3_STENCIL_UNIT]);
+		m_yEndCtrl.b3SetIncrement(m_Increments[B3_STENCIL_UNIT]);
 		m_yEndCtrl.b3SetPos(  m_Limit.y2);
 	}
 	else
 	{
-		m_xStartCtrl.b3SetRange(m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor,m_Digits[m_Bound.xUnit],m_Increments[m_Bound.xUnit]);
-		m_xEndCtrl.b3SetRange(  m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor,m_Digits[m_Bound.xUnit],m_Increments[m_Bound.xUnit]);
-		m_yStartCtrl.b3SetRange(m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor,m_Digits[m_Bound.yUnit],m_Increments[m_Bound.yUnit]);
-		m_yEndCtrl.b3SetRange(  m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor,m_Digits[m_Bound.yUnit],m_Increments[m_Bound.yUnit]);
+		m_xStartCtrl.b3SetRange(m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
+		m_xStartCtrl.b3SetDigits(0,m_Digits[m_Bound.xUnit]);
+		m_xStartCtrl.b3SetIncrement(m_Increments[m_Bound.xUnit]);
 		m_xStartCtrl.b3SetPos(m_Limit.x1 * m_Bound.xFactor);
+
+		m_xEndCtrl.b3SetRange(  m_Bound.xMin * m_Bound.xFactor,m_Bound.xMax * m_Bound.xFactor);
+		m_xEndCtrl.b3SetDigits(0,m_Digits[m_Bound.xUnit]);
+		m_xEndCtrl.b3SetIncrement(m_Increments[m_Bound.xUnit]);
 		m_xEndCtrl.b3SetPos(  m_Limit.x2 * m_Bound.xFactor);
+
+		m_yStartCtrl.b3SetRange(m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
+		m_yStartCtrl.b3SetDigits(0,m_Digits[m_Bound.yUnit]);
+		m_yStartCtrl.b3SetIncrement(m_Increments[m_Bound.yUnit]);
 		m_yStartCtrl.b3SetPos(m_Limit.y1 * m_Bound.yFactor);
+		
+		m_yEndCtrl.b3SetRange(  m_Bound.yMin * m_Bound.yFactor,m_Bound.yMax * m_Bound.yFactor);
+		m_yEndCtrl.b3SetDigits(0,m_Digits[m_Bound.yUnit]);
+		m_yEndCtrl.b3SetIncrement(m_Increments[m_Bound.yUnit]);
 		m_yEndCtrl.b3SetPos(  m_Limit.y2 * m_Bound.yFactor);
 	}
 }

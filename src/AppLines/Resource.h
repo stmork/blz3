@@ -98,6 +98,7 @@
 #define IDD_CREATE_SHAPE_PROFILE        198
 #define IDD_PROFILE_BEVEL_SPLINE        199
 #define IDI_PROFILE_BEVEL_SPLINE        200
+#define IDD_SPINTEST                    201
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -245,6 +246,7 @@
 #define IDC_EDIT1                       1144
 #define IDC_TRIA_XSIZE                  1144
 #define IDC_OBLIQUE                     1144
+#define IDC_FLOAT_EDIT                  1144
 #define IDC_CUSTOM_MEASURE              1145
 #define IDC_PRT_BUFFER                  1146
 #define IDC_REFLECTANCE                 1147
@@ -332,6 +334,11 @@
 #define IDC_ALIGN_DOWN                  1226
 #define IDC_YCONTROLS                   1227
 #define IDC_YCONTROLS_SPIN              1228
+#define IDC_FLOAT_SPIN                  1229
+#define IDC_INT_EDIT                    1230
+#define IDC_INT_SPIN                    1231
+#define IDC_FLOAT_EDIT_MIN              1232
+#define IDC_FLOAT_EDIT_MAX              1233
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -515,9 +522,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        201
+#define _APS_NEXT_RESOURCE_VALUE        202
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1229
+#define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           60076
 #endif
 #endif

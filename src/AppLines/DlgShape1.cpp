@@ -32,6 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.5  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -39,7 +51,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.4  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -98,6 +110,7 @@ void CDlgShape1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DIR1_Z,   m_zDir1Ctrl);
 	DDX_Control(pDX, IDC_DIR1_LEN, m_lenDir1Ctrl);
 	//}}AFX_DATA_MAP
+	m_Base.b3DDX(pDX);
 }
 
 
@@ -138,17 +151,16 @@ void CDlgShape1::b3Init()
 
 BOOL CDlgShape1::OnInitDialog() 
 {
-	CB3SpanningShapeDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
 	if (m_Creation)
 	{
 		m_Base.b3Read(b3GetSection() + CString(".base"));
 		m_Dir1.b3Read(b3GetSection() + CString(".dir1"));
 	}
 
-	m_Base.b3Set(true);
-	m_Dir1.b3Set(m_DirMode,true);
+	CB3SpanningShapeDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	m_Dir1.b3Set(m_DirMode);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -156,7 +168,6 @@ BOOL CDlgShape1::OnInitDialog()
 void CDlgShape1::b3SetDirMode(int dirmode)
 {
 	CB3SpanningShapeDialog::b3SetDirMode(dirmode);
-	m_Base.b3Set();
 	m_Dir1.b3Set(m_DirMode);
 }
 
@@ -169,7 +180,6 @@ void CDlgShape1::b3UpdateBase()
 void CDlgShape1::OnChangedBase() 
 {
 	// TODO: Add your control notification handler code here
-	m_Base.b3Update();
 	b3UpdateBase();
 }
 

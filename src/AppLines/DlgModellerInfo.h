@@ -26,12 +26,14 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "b3VectorEdit.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgModellerInfo dialog
 
 class CDlgModellerInfo : public CDialog
 {
+	CB3PosGroup     m_CenterCtrl;
 // Construction
 public:
 	b3ModellerInfo *m_ModellerInfo;

@@ -340,6 +340,10 @@ SOURCE=.\DlgShape3.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgSpinTest.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgStepMove.cpp
 # End Source File
 # Begin Source File
@@ -593,6 +597,10 @@ SOURCE=.\DlgShape2.h
 # Begin Source File
 
 SOURCE=.\DlgShape3.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSpinTest.h
 # End Source File
 # Begin Source File
 

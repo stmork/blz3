@@ -34,11 +34,23 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.6  2002/03/01 21:25:36  sm
 **	- Fixed a problem in create material dialog: Use the
 **	  correct function proto types depending on the
 **	  message type!
-**
+**	
 **	Revision 1.5  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -82,10 +94,6 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	//{{AFX_DATA_INIT(CDlgCreateMaterial)
 	m_ReallyCreate = TRUE;
 	m_UseTexture = FALSE;
-	m_Reflection = 0.0;
-	m_Refraction = 0.0;
-	m_RefrValue = 1.0;
-	m_HighLight = 1000.0;
 	//}}AFX_DATA_INIT
 	
 	// Init Blizzard materials
@@ -106,6 +114,15 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_UseTexture   = app->GetProfileInt(CB3ClientString(),"material.use texture",  FALSE);
 	strcpy(m_MatTexture->m_Name,app->GetProfileString(CB3ClientString(),"material.texture",""));
 	b3CheckTexture(&m_MatTexture->m_Texture,m_MatTexture->m_Name);
+
+	m_ReflectionCtrl.b3SetRange(0.0,100.0);
+	m_RefractionCtrl.b3SetRange(0.0,100.0);
+	m_RefrValueCtrl.b3SetRange(-5.0,5.0);
+	m_RefrValueCtrl.b3SetDigits(0,2);
+	m_RefrValueCtrl.b3SetIncrement(0.01);
+	m_HighLightCtrl.b3SetRange(1.0,100000);
+	m_HighLightCtrl.b3SetDigits(0,1);
+	m_HighLightCtrl.b3SetIncrement(10.0);
 }
 
 CDlgCreateMaterial::~CDlgCreateMaterial()
@@ -131,15 +148,11 @@ void CDlgCreateMaterial::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COLOR_AMBIENT, m_AmbCtrl);
 	DDX_Check(pDX, IDC_REALLY_CREATE, m_ReallyCreate);
 	DDX_Check(pDX, IDC_TEXTURE, m_UseTexture);
-	DDX_Text(pDX, IDC_INDEX_OF_REFRACTION, m_RefrValue);
-	DDV_MinMaxDouble(pDX, m_RefrValue, -5., 5.);
-	DDX_Text(pDX, IDC_REFLECTANCE, m_Reflection);
-	DDV_MinMaxDouble(pDX, m_Reflection, 0., 100.);
-	DDX_Text(pDX, IDC_REFRACTANCE, m_Refraction);
-	DDV_MinMaxDouble(pDX, m_Refraction, 0., 100.);
-	DDX_Text(pDX, IDC_SPEC_EXPONENT, m_HighLight);
-	DDV_MinMaxDouble(pDX, m_HighLight, 1., 100000.);
 	//}}AFX_DATA_MAP
+	m_ReflectionCtrl.b3DDX(pDX,m_Reflection);
+	m_RefractionCtrl.b3DDX(pDX,m_Refraction);
+	m_RefrValueCtrl.b3DDX(pDX,m_RefrValue);
+	m_HighLightCtrl.b3DDX(pDX,m_HighLight);
 }
 
 
@@ -173,17 +186,9 @@ BOOL CDlgCreateMaterial::OnInitDialog()
 	m_DiffCtrl.b3Init(&m_MatNormal->m_DiffColor,this);
 	m_SpecCtrl.b3Init(&m_MatNormal->m_SpecColor,this);
 
-	m_ReflectionCtrl.b3SetRange(0.0,100.0);
-	m_ReflectionCtrl.b3SetPos(m_Reflection);
 	m_ReflectionCtrl.b3SetAccel(1.0);
-	m_RefractionCtrl.b3SetRange(0.0,100.0);
-	m_RefractionCtrl.b3SetPos(m_Refraction);
 	m_RefractionCtrl.b3SetAccel(1.0);
-	m_RefrValueCtrl.b3SetRange(-5.0,5.0,2,0.01);
-	m_RefrValueCtrl.b3SetPos(m_RefrValue);
 	m_RefrValueCtrl.b3SetAccel(0.1);
-	m_HighLightCtrl.b3SetRange(1.0,100000.0,1,10.0);
-	m_HighLightCtrl.b3SetPos(m_HighLight);
 	m_HighLightCtrl.b3SetAccel(50.0);
 
 	m_PreviewTexture.b3Copy(m_MatTexture->m_Texture);

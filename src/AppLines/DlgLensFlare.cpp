@@ -33,10 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.4  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
-**
+**	
 **	Revision 1.3  2001/11/18 13:49:26  sm
 **	- Introduced new CB3FloatEdit derived from CEdit
 **	- DlgNebular implemented
@@ -119,7 +131,7 @@ BOOL CDlgLensFlare::OnInitDialog()
 	// TODO: Add extra initialization here
 	m_LensFlareExponCtrl.b3SetMin(epsilon);
 	m_LensFlareExponCtrl.b3SetDigits(3,0);
-	m_LensFlareExponCtrl.b3SetValue(fabs(m_LensFlare->m_Expon));
+	m_LensFlareExponCtrl.b3SetPos(fabs(m_LensFlare->m_Expon));
 	m_LensFlarePreviewCtrl.b3Update(m_LensFlareScene);
 	m_LensFlareColorCtrl.b3Init(&m_EditLensFlare->m_Color,this);
 	b3UpdateUI();
@@ -166,35 +178,15 @@ void CDlgLensFlare::b3UpdateUI()
 BOOL CDlgLensFlare::OnApply()
 {
 	// TODO: Add extra validation here
-	BOOL result;
-
-	if (m_LensFlareExponCtrl.b3Check())
-	{
-		m_LensFlare->m_Expon = m_LensFlareExponCtrl.m_Value;
-		m_LensFlare->m_Color = m_EditLensFlare->m_Color;
-		m_LensFlare->b3Activate(m_ActLensFlare);
-		result = CPropertyPage::OnApply();
-	}
-	else
-	{
-		B3_BEEP;
-		m_LensFlareExponCtrl.SetFocus();
-		result = FALSE;
-	}
-	return result;
+	m_LensFlare->m_Expon = m_LensFlareExponCtrl.b3GetPos();
+	m_LensFlare->m_Color = m_EditLensFlare->m_Color;
+	m_LensFlare->b3Activate(m_ActLensFlare);
+	return CPropertyPage::OnApply();
 }
 
 void CDlgLensFlare::OnLensFlareExponChanged() 
 {
 	// TODO: Add your control notification handler code here
-	if (m_LensFlareExponCtrl.b3Check())
-	{
-		m_EditLensFlare->m_Expon = m_LensFlareExponCtrl.m_Value;
-		m_LensFlarePreviewCtrl.b3Update(m_LensFlareScene);
-	}
-	else
-	{
-		B3_BEEP;
-		m_LensFlareExponCtrl.SetFocus();
-	}
+	m_EditLensFlare->m_Expon = m_LensFlareExponCtrl.b3GetPos();
+	m_LensFlarePreviewCtrl.b3Update(m_LensFlareScene);
 }

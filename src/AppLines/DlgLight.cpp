@@ -34,11 +34,23 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.9  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
 **	  *** And now: Testing! Testing! Testing! ***
-**
+**	
 **	Revision 1.8  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
@@ -86,6 +98,16 @@ CDlgLight::CDlgLight(CWnd* pParent /*=NULL*/)
 	m_SampleLabel = _T("");
 	//}}AFX_DATA_INIT
 	m_CtrlDiagram.b3SetMode(LDC_DIAGRAM);
+	m_xPosCtrl.b3SetDigits(5,2);
+	m_yPosCtrl.b3SetDigits(5,2);
+	m_zPosCtrl.b3SetDigits(5,2);
+	m_xDirCtrl.b3SetDigits(5,2);
+	m_yDirCtrl.b3SetDigits(5,2);
+	m_zDirCtrl.b3SetDigits(5,2);
+	m_DistanceCtrl.b3SetDigits(5,2);
+	m_DistanceCtrl.b3SetMin(epsilon);
+	m_SoftSizeCtrl.b3SetDigits(5,2);
+	m_SoftSizeCtrl.b3SetMin(epsilon);
 }
 
 
@@ -112,6 +134,14 @@ void CDlgLight::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_LIGHT_SOFT, m_EnableSoft);
 	DDX_Text(pDX, IDC_LIGHT_SAMPLE_LABEL, m_SampleLabel);
 	//}}AFX_DATA_MAP
+	m_xPosCtrl.b3DDX(pDX,    m_Light->m_Position.x);
+	m_yPosCtrl.b3DDX(pDX,    m_Light->m_Position.y);
+	m_zPosCtrl.b3DDX(pDX,    m_Light->m_Position.z);
+	m_xDirCtrl.b3DDX(pDX,    m_Light->m_Direction.x);
+	m_yDirCtrl.b3DDX(pDX,    m_Light->m_Direction.y);
+	m_zDirCtrl.b3DDX(pDX,    m_Light->m_Direction.z);
+	m_DistanceCtrl.b3DDX(pDX,m_Light->m_Distance);
+	m_SoftSizeCtrl.b3DDX(pDX,m_Light->m_Size);
 }
 
 
@@ -125,8 +155,6 @@ BEGIN_MESSAGE_MAP(CDlgLight, CDialog)
 	ON_CBN_KILLFOCUS(IDC_LIGHT_LIST, OnKillfocusLight)
 	ON_BN_CLICKED(IDC_LIGHT_SOFT, OnLightState)
 	ON_BN_CLICKED(IDC_LIGHT_LDC, OnLightState)
-//	ON_MESSAGE(WM_B3_LDC_MOVED, b3UpdateDiagram)
-//	ON_MESSAGE(WM_B3_LDC_CHANGED, b3UpdatePreview)
 	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -153,20 +181,9 @@ BOOL CDlgLight::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_SoftSizeCtrl.b3SetMin(epsilon);
 	m_SampleCtrl.SetRange(1,10);
 	m_SampleCtrl.SetPageSize (  1);
 	m_SampleCtrl.SetTicFreq  (  1);
-	m_xPosCtrl.b3SetDigits(5,2);
-	m_yPosCtrl.b3SetDigits(5,2);
-	m_zPosCtrl.b3SetDigits(5,2);
-	m_xDirCtrl.b3SetDigits(5,2);
-	m_yDirCtrl.b3SetDigits(5,2);
-	m_zDirCtrl.b3SetDigits(5,2);
-	m_DistanceCtrl.b3SetDigits(5,2);
-	m_DistanceCtrl.b3SetMin(epsilon);
-	m_SoftSizeCtrl.b3SetDigits(5,2);
-	m_SoftSizeCtrl.b3SetMin(epsilon);
 	b3RefreshList();
 	b3GetLight();
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -341,15 +358,7 @@ void CDlgLight::b3GetLight()
 	m_EnableLight = m_Light->m_LightActive;
 	m_EnableSoft  = m_Light->m_SoftShadow;
 	m_EnableLDC   = m_Light->m_SpotActive;
-	m_xPosCtrl.b3SetValue(m_Light->m_Position.x);
-	m_yPosCtrl.b3SetValue(m_Light->m_Position.y);
-	m_zPosCtrl.b3SetValue(m_Light->m_Position.z);
-	m_xDirCtrl.b3SetValue(m_Light->m_Direction.x);
-	m_yDirCtrl.b3SetValue(m_Light->m_Direction.y);
-	m_zDirCtrl.b3SetValue(m_Light->m_Direction.z);
-	m_DistanceCtrl.b3SetValue(m_Light->m_Distance);
 	m_SampleCtrl.SetPos(m_Light->m_JitterEdge);
-	m_SoftSizeCtrl.b3SetValue(m_Light->m_Size);
 	m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
@@ -368,15 +377,7 @@ void CDlgLight::b3SetLight()
 	m_Light->m_LightActive = m_EnableLight;
 	m_Light->m_SoftShadow  = m_EnableSoft;
 	m_Light->m_SpotActive  = m_EnableLDC;
-	m_Light->m_Position.x  = m_xPosCtrl.m_Value;
-	m_Light->m_Position.y  = m_yPosCtrl.m_Value;
-	m_Light->m_Position.z  = m_zPosCtrl.m_Value;
-	m_Light->m_Direction.x = m_xDirCtrl.m_Value;
-	m_Light->m_Direction.y = m_yDirCtrl.m_Value;
-	m_Light->m_Direction.z = m_zDirCtrl.m_Value;
-	m_Light->m_Distance    = m_DistanceCtrl.m_Value;
 	m_Light->m_JitterEdge  = m_SampleCtrl.GetPos();
-	m_Light->m_Size        = m_SoftSizeCtrl.m_Value;
 }
 
 BOOL CDlgLight::PreTranslateMessage(MSG* pMsg) 

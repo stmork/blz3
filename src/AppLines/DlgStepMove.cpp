@@ -33,10 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.4  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.3  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
 **	
@@ -70,11 +82,21 @@ CDlgStepMove::CDlgStepMove(CWnd* pParent /*=NULL*/)
 	m_CtrlMoveUp.m_hIcon    = app->LoadIcon(IDI_UP);
 	m_CtrlMoveDown.m_hIcon  = app->LoadIcon(IDI_DOWN);
 	m_pDoc = null;
+
+	// Init float edit controls
+	m_xCtrl.b3SetMin(epsilon);
+	m_yCtrl.b3SetMin(epsilon);
+	m_zCtrl.b3SetMin(epsilon);
+	m_xCtrl.b3SetDigits(5,2);
+	m_yCtrl.b3SetDigits(5,2);
+	m_zCtrl.b3SetDigits(5,2);
 }
 
 
 void CDlgStepMove::DoDataExchange(CDataExchange* pDX)
 {
+	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
+
 	CB3Dialogbar::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgStepMove)
 	DDX_Control(pDX, IDC_STEP_MOVE_Z, m_zCtrl);
@@ -85,6 +107,12 @@ void CDlgStepMove::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MOVE_UP, m_CtrlMoveUp);
 	DDX_Control(pDX, IDC_MOVE_DOWN, m_CtrlMoveDown);
 	//}}AFX_DATA_MAP
+	if (info != null)
+	{
+		m_xCtrl.b3DDX(pDX,info->m_StepMove.x);
+		m_yCtrl.b3DDX(pDX,info->m_StepMove.y);
+		m_zCtrl.b3DDX(pDX,info->m_StepMove.z);
+	}
 }
 
 
@@ -99,31 +127,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgStepMove message handlers
 
-BOOL CDlgStepMove::OnInitDialog()
-{
-	if (!CB3Dialogbar::OnInitDialog())
-	{
-		return FALSE;
-	}
-	m_xCtrl.b3SetMin(epsilon);
-	m_yCtrl.b3SetMin(epsilon);
-	m_zCtrl.b3SetMin(epsilon);
-	m_xCtrl.b3SetDigits(5,2);
-	m_yCtrl.b3SetDigits(5,2);
-	m_zCtrl.b3SetDigits(5,2);
-	return TRUE;
-}
-
 void CDlgStepMove::b3GetData()
 {
-	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
-
-	if (info != null)
-	{
-		info->m_StepMove.x = m_xCtrl.m_Value;
-		info->m_StepMove.y = m_yCtrl.m_Value;
-		info->m_StepMove.z = m_zCtrl.m_Value;
-	}
+	UpdateData();
 }
 
 void CDlgStepMove::b3SetData()
@@ -135,9 +141,7 @@ void CDlgStepMove::b3SetData()
 	m_zCtrl.EnableWindow(info != null);
 	if (info != null)
 	{
-		m_xCtrl.b3SetValue(info->m_StepMove.x);
-		m_yCtrl.b3SetValue(info->m_StepMove.y);
-		m_zCtrl.b3SetValue(info->m_StepMove.z);
+		UpdateData(FALSE);
 	}
 	else
 	{

@@ -35,10 +35,10 @@
 class CDlgLensFlare : public CPropertyPage
 {
 // Construction
-	b3Scene   *m_LensFlareScene;
+	b3Scene     *m_LensFlareScene;
 	b3LensFlare *m_EditLensFlare;
 public:
-	b3LensFlare * m_LensFlare;
+	b3LensFlare *m_LensFlare;
 	CDlgLensFlare(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

@@ -32,6 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/08 16:46:14  sm
+**	- Added new CB3IntSpinButtonCtrl. This is much
+**	  better than standard integer CSpinButtonCtrl.
+**	- Added a test control to test spin button controls
+**	  and float control.
+**	- Made spin button controls and float edit control
+**	  DDXable. The spin button controls need only
+**	  a simple edit field without any DDX CEdit reference
+**	  or value reference inside a dialog.
+**	- Changed dialogs to reflect new controls. This was a
+**	  major cleanup which shortens the code in an elegant way.
+**
 **	Revision 1.4  2002/02/28 16:58:45  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -39,7 +51,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.3  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -127,17 +139,17 @@ void CDlgCSG3::b3Init()
 
 BOOL CDlgCSG3::OnInitDialog() 
 {
+	if (m_Creation)
+	{
+		m_Dir2.b3Read(b3MakeSection("dir2"));
+		m_Dir3.b3Read(b3MakeSection("dir3"));
+	}
+
 	CDlgCSG1::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	if (m_Creation)
-	{
-		m_Dir2.b3Read(b3GetSection() + CString(".dir2"));
-		m_Dir3.b3Read(b3GetSection() + CString(".dir3"));
-	}
-
-	m_Dir2.b3Set(m_DirMode,true);
-	m_Dir3.b3Set(m_DirMode,true);
+	m_Dir2.b3Set(m_DirMode);
+	m_Dir3.b3Set(m_DirMode);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -188,7 +200,7 @@ void CDlgCSG3::b3PostProcess()
 	CDlgCSG1::b3PostProcess();
 	if (m_Creation)
 	{
-		m_Dir2.b3Write(b3GetSection() + CString(".dir2"));
-		m_Dir3.b3Write(b3GetSection() + CString(".dir3"));
+		m_Dir2.b3Write(b3MakeSection("dir2"));
+		m_Dir3.b3Write(b3MakeSection("dir3"));
 	}
 }

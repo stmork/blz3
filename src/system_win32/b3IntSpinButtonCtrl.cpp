@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	b3FloatSpinButtonCtrl.cpp $
+**	$Filename:	b3IntSpinButtonCtrl.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - Spin button control for float values
+**	Blizzard III - Spin button control for int values
 **
 **	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
@@ -21,9 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3FloatSpinButtonCtrl.h"
-
-#define B3_VAL_TO_RANGE(x) ((int)floor(((x) - m_Min) / m_Increment + 0.5))
+#include "blz3/system/b3IntSpinButtonCtrl.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,7 +31,7 @@
 
 /*
 **	$Log$
-**	Revision 1.4  2002/03/08 16:46:15  sm
+**	Revision 1.1  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
 **	- Added a test control to test spin button controls
@@ -45,21 +43,6 @@
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
 **
-**	Revision 1.3  2002/03/05 20:38:25  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
-**	Revision 1.2  2002/03/01 21:25:36  sm
-**	- Fixed a problem in create material dialog: Use the
-**	  correct function proto types depending on the
-**	  message type!
-**	
-**	Revision 1.1  2002/03/01 20:26:41  sm
-**	- Added CB3FloatSpinButtonCtrl for conveniant input.
-**	- Made some minor changes and tests.
-**	
 **
 */
 
@@ -69,23 +52,22 @@
 **                                                                      **
 *************************************************************************/
 
-CB3FloatSpinButtonCtrl::CB3FloatSpinButtonCtrl()
+CB3IntSpinButtonCtrl::CB3IntSpinButtonCtrl()
 {
 	m_Min   = 0;
 	m_Max   = 0;
 	m_Pos   = 0;
-	m_Accel = B3_FSBC_DEFAULT_ACCEL;
+	m_Accel = B3_ISBC_DEFAULT_ACCEL;
 	b3SetIncrement();
-	b3SetDigits();
 }
 
-CB3FloatSpinButtonCtrl::~CB3FloatSpinButtonCtrl()
+CB3IntSpinButtonCtrl::~CB3IntSpinButtonCtrl()
 {
 }
 
 
-BEGIN_MESSAGE_MAP(CB3FloatSpinButtonCtrl, CSpinButtonCtrl)
-	//{{AFX_MSG_MAP(CB3FloatSpinButtonCtrl)
+BEGIN_MESSAGE_MAP(CB3IntSpinButtonCtrl, CSpinButtonCtrl)
+	//{{AFX_MSG_MAP(CB3IntSpinButtonCtrl)
 	ON_NOTIFY_REFLECT(UDN_DELTAPOS, OnDeltapos)
 	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
@@ -94,15 +76,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CB3FloatSpinButtonCtrl message handlers
 
-void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f32 &pos)
-{
-	b3_f64 value = pos;
-
-	b3DDX(pDX,value);
-	pos = (b3_f32)value;
-}
-
-void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
+void CB3IntSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_s32 &pos)
 {
 	if (pDX->m_bSaveAndValidate)
 	{
@@ -110,11 +84,11 @@ void CB3FloatSpinButtonCtrl::b3DDX(CDataExchange *pDX,b3_f64 &pos)
 	}
 	else
 	{
-		pos = b3SetPos(pos);
+		b3SetPos(pos);
 	}
 }
 
-void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult) 
+void CB3IntSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
 	// TODO: Add your control notification handler code here
@@ -127,7 +101,7 @@ void CB3FloatSpinButtonCtrl::OnDeltapos(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 1;
 }
 
-void CB3FloatSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
+void CB3IntSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
 	CWnd *parent = GetParent();
@@ -151,48 +125,28 @@ void CB3FloatSpinButtonCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 **                                                                      **
 *************************************************************************/
 
-b3_f64 CB3FloatSpinButtonCtrl::b3SetRange(b3_f64 min, b3_f64 max)
+b3_s32 CB3IntSpinButtonCtrl::b3SetRange(b3_s32 min, b3_s32 max)
 {
 	// Ensure something...
 	B3_ASSERT(min < max);
 
-	m_Min = min;
-	m_Max = max;
+	m_Min       = min;
+	m_Max       = max;
 	
 	return b3GetPos();
 }
 
-void CB3FloatSpinButtonCtrl::b3SetIncrement(b3_f64 increment)
+void CB3IntSpinButtonCtrl::b3SetIncrement(b3_s32 increment)
 {
 	B3_ASSERT(increment > 0);
 	m_Increment = increment;
 }
 
-void CB3FloatSpinButtonCtrl::b3SetDigits(int pre,int post)
-{
-	char digit[16];
-	
-	B3_ASSERT((post >= 0) && (post < 6));
-
-	strcpy (m_Format,"%");
-	if (pre >= 0)
-	{
-		sprintf(digit,"%d",pre);
-		strcat(m_Format,digit);
-	}
-	if (post >= 0)
-	{
-		sprintf(digit,".%d",post);
-		strcat(m_Format,digit);
-	}
-	strcat (m_Format,"lf");
-}
-
-b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
+b3_s32 CB3IntSpinButtonCtrl::b3GetPos()
 {
 	CWnd    *edit;
 	CString  value;
-	b3_f64   pos;
+	b3_s32   pos;
 
 	if (::IsWindow(*this))
 	{
@@ -200,7 +154,7 @@ b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 		edit = GetBuddy();
 		B3_ASSERT(edit != null);
 		edit->GetWindowText(value);
-		m_Pos = pos = atof(value);
+		m_Pos = pos = atoi(value);
 		B3_LIMIT(m_Pos,m_Min,m_Max);
 		if (m_Pos != pos)
 		{
@@ -214,36 +168,32 @@ b3_f64 CB3FloatSpinButtonCtrl::b3GetPos()
 	return m_Pos;
 }
 
-b3_f64 CB3FloatSpinButtonCtrl::b3SetPos(b3_f64 pos)
+b3_s32 CB3IntSpinButtonCtrl::b3SetPos(b3_s32 pos)
 {
 	CWnd    *edit = GetBuddy();
 	CString  value;
-	b3_f64   diff;
-	int      maxint;
-
+	
 	B3_ASSERT(edit != null);
 
 	// Set range
-	diff   = (m_Max - m_Min) / m_Increment;
-	maxint = (int)(diff > INT_MAX ? INT_MAX : diff);
-	SetRange32(0,maxint);
+	SetRange32(m_Min,m_Max);
 
 	// Set position
 	m_Pos = pos;
 	B3_LIMIT(m_Pos,m_Min,m_Max);
-	value.Format(m_Format,m_Pos);
+	value.Format("%d",m_Pos);
 	edit->SetWindowText(value);
-	SetPos(B3_VAL_TO_RANGE(m_Pos));
+	SetPos(m_Pos);
 	return m_Pos;
 }
 
-void CB3FloatSpinButtonCtrl::b3SetAccel(b3_f64 increment,int secs)
+void CB3IntSpinButtonCtrl::b3SetAccel(b3_s32 increment,int secs)
 {
 	UDACCEL  accel[10];
 	b3_count count,i;
 
-	count = GetAccel(10,accel);
-	accel[1].nInc = (int)floor(increment / m_Increment + 0.5);
+	count = GetAccel(sizeof(accel) / sizeof(UDACCEL),accel);
+	accel[1].nInc = increment;
 	accel[1].nSec = secs;
 	for (i = 2;i < count;i++)
 	{
@@ -253,10 +203,10 @@ void CB3FloatSpinButtonCtrl::b3SetAccel(b3_f64 increment,int secs)
 	SetAccel(count,accel);
 }
 
-b3_f64 CB3FloatSpinButtonCtrl::b3GetAccel()
+b3_s32 CB3IntSpinButtonCtrl::b3GetAccel()
 {
 	UDACCEL accel;
 
 	GetAccel(1,&accel);
-	return (b3_f64)accel.nInc * m_Increment;
+	return accel.nInc;
 }
