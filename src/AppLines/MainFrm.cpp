@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/01/09 19:03:53  sm
+**	- Docking bar order changed.
+**
 **	Revision 1.25  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
-**
+**	
 **	Revision 1.24  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
 **	
@@ -284,15 +287,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
 	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
+	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
 	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
-	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
 	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
 	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
 	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
-	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
+	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
 	if (!app->b3CreateToolbars(this))
 	{
