@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2003/07/20 10:10:16  sm
+**      - Fixed typo.
+**
 **      Revision 1.9  2003/07/20 09:21:18  sm
 **      - Added item register dump.
 **
@@ -176,7 +179,7 @@ void b3ItemRegister::b3Dump()
 	b3ItemRegisterEntry *entry;
 
 	b3PrintF(B3LOG_FULL,"Item register contains following classes:\n");
-	B3_FOR_BASE(&m_Register.m_Entries,entry)
+	B3_FOR_BASE(&m_Register,entry)
 	{
 		entry->b3Dump();
 	}
