@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2003/03/22 14:38:41  sm
+**      - Some optimizations continued concerning triangles.
+**
 **      Revision 1.40  2003/03/20 21:04:58  sm
 **      - Made some triangle intersection optimizations.
 **
@@ -469,10 +472,22 @@ b3_bool b3TriangleShape::b3Prepare()
 		P2 = m_Triangles[i].P2;		/* Dir1 */
 		P3 = m_Triangles[i].P3;		/* Dir2 */
 
-		info.O  = m_Vertices[P1].Point;
-		b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point,&info.R1);
-		b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point,&info.R2);
-		b3Vector::b3CrossProduct(&info.R1,&info.R2,&info.Normal);
+		info.O.x  = m_Vertices[P1].Point.x;
+		info.O.y  = m_Vertices[P1].Point.y;
+		info.O.z  = m_Vertices[P1].Point.z;
+
+		info.R1.x = m_Vertices[P2].Point.x - m_Vertices[P1].Point.x;
+		info.R1.y = m_Vertices[P2].Point.y - m_Vertices[P1].Point.y;
+		info.R1.z = m_Vertices[P2].Point.z - m_Vertices[P1].Point.z;
+
+		info.R2.x = m_Vertices[P3].Point.x - m_Vertices[P1].Point.x;
+		info.R2.y = m_Vertices[P3].Point.y - m_Vertices[P1].Point.y;
+		info.R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
+
+		info.Normal.x = info.R1.y * info.R2.z - info.R1.z * info.R2.y;
+		info.Normal.y = info.R1.z * info.R2.x - info.R1.x * info.R2.z;
+		info.Normal.z = info.R1.x * info.R2.y - info.R1.y * info.R2.x;
+
 		m_TriaInfos.b3Add(info);
 
 		if ((m_Flags & NORMAL_FACE_VALID)==0)
