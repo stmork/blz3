@@ -23,20 +23,29 @@
 
 #define B3_MAX_RENDER_SUBDIV 48
 
-class b3RenderContext : protected b3Mem
-{
-public:
-	                 b3RenderContext();
-	virtual void     b3Init();
-	virtual void     b3StartDrawing();
-};
-
 typedef enum
 {
 	B3_RENDER_NOTHING,
 	B3_RENDER_LINE,
 	B3_RENDER_FILLED
 } b3_render_mode;
+
+typedef enum
+{
+	B3_MATRIX_OBJECT,
+	B3_MATRIX_PROJECTION
+} b3_matrix_mode;
+
+class b3RenderContext : protected b3Mem
+{
+public:
+	                 b3RenderContext();
+	virtual void     b3Init();
+	virtual void     b3StartDrawing();
+
+	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
+	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
+};
 
 class b3RenderObject : public b3Mem
 {

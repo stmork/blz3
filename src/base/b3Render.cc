@@ -1,4 +1,4 @@
-/*
+#/*
 **
 **      $Filename:      b3Render.cc $
 **      $Release:       Dortmund 2001 $
@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/09/01 06:16:42  sm
+**      - Some merges
+**      - Exchanging matrices between OpenGL nd Blizzard III.
+**
 **      Revision 1.14  2001/08/20 19:35:08  sm
 **      - Index correction introduced (This is a hack!)
 **      - Some OpenGL cleanups
@@ -171,6 +175,110 @@ void b3RenderContext::b3StartDrawing()
 #endif
 }
 
+b3_bool b3RenderContext::b3GetMatrix(
+	b3_matrix_mode  mode,
+	b3_matrix      *matrix)
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_bool result = false;
+	GLfloat values[16];
+
+	switch(mode)
+	{
+	case B3_MATRIX_OBJECT:
+		glGetFloatv(GL_MODELVIEW_MATRIX,values);
+		result = true;
+		break;
+
+	case B3_MATRIX_PROJECTION:
+		glGetFloatv(GL_PROJECTION_MATRIX,values);
+		result = true;
+		break;
+
+	default:
+		result = false;
+		break;
+	}
+	if (result)
+	{
+		matrix->m11 = values[ 0];
+		matrix->m12 = values[ 4];
+		matrix->m13 = values[ 8];
+		matrix->m14 = values[12];
+
+		matrix->m21 = values[ 1];
+		matrix->m22 = values[ 5];
+		matrix->m23 = values[ 9];
+		matrix->m24 = values[13];
+
+		matrix->m31 = values[ 2];
+		matrix->m32 = values[ 6];
+		matrix->m33 = values[10];
+		matrix->m34 = values[14];
+
+		matrix->m41 = values[ 3];
+		matrix->m42 = values[ 7];
+		matrix->m43 = values[11];
+		matrix->m44 = values[15];
+	}
+	return result;
+#else
+	return false;
+#endif
+}
+
+b3_bool b3RenderContext::b3PutMatrix(
+	b3_matrix_mode  mode,
+	b3_matrix      *matrix)
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_bool result = false;
+	GLfloat values[16];
+
+	values[ 0] = matrix->m11;
+	values[ 1] = matrix->m21;
+	values[ 2] = matrix->m31;
+	values[ 3] = matrix->m41;
+
+	values[ 4] = matrix->m12;
+	values[ 5] = matrix->m22;
+	values[ 6] = matrix->m32;
+	values[ 7] = matrix->m42;
+
+	values[ 8] = matrix->m13;
+	values[ 9] = matrix->m23;
+	values[10] = matrix->m33;
+	values[11] = matrix->m43;
+
+	values[12] = matrix->m14;
+	values[13] = matrix->m24;
+	values[14] = matrix->m34;
+	values[15] = matrix->m44;
+
+	switch(mode)
+	{
+	case B3_MATRIX_OBJECT:
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(values);
+		result = true;
+		break;
+
+	case B3_MATRIX_PROJECTION:
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(values);
+		result = true;
+		break;
+
+	default:
+		result = false;
+		break;
+	}
+	return result;
+#else
+	return false;
+#endif
+}
+	
 /*************************************************************************
 **                                                                      **
 **                        Implementation                                **

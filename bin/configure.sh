@@ -24,4 +24,5 @@ find $BLZ3_HOME -name "*.mak" -exec rm {} \;
 find $BLZ3_HOME -name "*.bak" -exec rm {} \;
 find $BLZ3_HOME -name "*~"    -exec rm {} \;
 find $BLZ3_HOME -name ".#*"   -exec rm {} \;
+find $BLZ3_HOME -name DEADJOE -exec rm {} \;
 rm -rf $BLZ3_HOME/Debug $BLZ3_HOME/Release
