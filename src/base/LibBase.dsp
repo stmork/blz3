@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /FR /YX /FD /GZ /TP /c
+# ADD CPP /nologo /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "..\..\include_win32" /D "_AFXDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_LIB" /FR /YX /FD /GZ /TP /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x407 /d "_DEBUG" /d "_AFXDLL"
 BSC32=bscmake.exe
@@ -85,51 +85,15 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=b3FileList.cc
-
-!IF  "$(CFG)" == "LibBase - Win32 Release"
-
-# PROP Intermediate_Dir "..\..\Release"
-# ADD CPP /G6 /MT /I "include"
-
-!ELSEIF  "$(CFG)" == "LibBase - Win32 Debug"
-
-# ADD CPP /G6 /Zp8 /MTd /Ze /I "..\include" /FR
-
-!ENDIF 
-
+SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
 
-SOURCE=b3Node.cc
-
-!IF  "$(CFG)" == "LibBase - Win32 Release"
-
-# PROP Intermediate_Dir "..\..\Release"
-# ADD CPP /G6 /MT /I "include"
-
-!ELSEIF  "$(CFG)" == "LibBase - Win32 Debug"
-
-# ADD CPP /G6 /Zp8 /MTd /Ze /I "..\include" /FR
-
-!ENDIF 
-
+SOURCE=.\b3Node.cc
 # End Source File
 # Begin Source File
 
-SOURCE=b3World.cc
-
-!IF  "$(CFG)" == "LibBase - Win32 Release"
-
-# PROP Intermediate_Dir "..\..\Release"
-# ADD CPP /G6 /MT /I "include"
-
-!ELSEIF  "$(CFG)" == "LibBase - Win32 Debug"
-
-# ADD CPP /G6 /Zp8 /MTd /Ze /I "..\include" /FR
-
-!ENDIF 
-
+SOURCE=.\b3World.cc
 # End Source File
 # End Group
 # Begin Group "Header Files"

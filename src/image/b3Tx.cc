@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/03 18:14:08  sm
+**	- Now having running threads. The system lib
+**	  needed the appropriate project options
+**
 **	Revision 1.2  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -56,10 +60,10 @@
 **	  o saving main frame window format
 **	  o size & position of toolbar
 **	- New controls introduced:
-**	  o CBlizzard IIIShowGauss    for removing Gauss artefacts
+**	  o CMauiShowGauss    for removing Gauss artefacts
 **	                      from image
-**	  o CBlizzard IIIShowColor    for showing HSV color selection
-**	  o CBlizzard IIIHSVField     for slider legend of HSV color
+**	  o CMauiShowColor    for showing HSV color selection
+**	  o CMauiHSVField     for slider legend of HSV color
 **	                      selection
 **	  Controls added to libIntGUI
 **	- Added image anhancement for RGB8 images inside

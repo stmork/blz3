@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/07/03 18:14:08  sm
+**	- Now having running threads. The system lib
+**	  needed the appropriate project options
+**
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
-**
+**	
 **	Revision 1.2  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
@@ -218,24 +222,24 @@ b3_bool b3Thread::b3Start(
 
 void b3Thread::b3Wait()
 {
-	threadMutex.b3Lock();
 	if (thread != null)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Thrd # waiting for thread %02lX to stop (%s).\n",
 			thread->m_nThreadID,
 			name != null ? name : "no name");
 		::WaitForSingleObject (thread->m_hThread,INFINITE);
+
+		threadMutex.b3Lock();
 		delete thread;
 		thread = null;
+		threadMutex.b3Unlock();
 	}
-	threadMutex.b3Unlock();
 }
 
 b3_bool b3Thread::b3Stop()
 {
 	b3_bool was_running;
 
-	threadMutex.b3Lock();
 	was_running = is_running;
 	if (thread != null) 
 	{
@@ -245,14 +249,13 @@ b3_bool b3Thread::b3Stop()
 		::TerminateThread (thread->m_hThread,0);
 		is_running = false;
 		
+		threadMutex.b3Lock();
 		delete thread;
 		thread = null;
 
-		threadMutex.b3Lock();
 		threadCount--;
 		threadMutex.b3Unlock();
 	}
-	threadMutex.b3Unlock();
 	return was_running;
 }
 
