@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.6  2004/04/09 14:11:58  sm
+**  - Removed CRs
+**
 **  Revision 1.5  2004/04/09 11:09:01  sm
 **  - Removed any display reference from sampler
 **
@@ -58,7 +61,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WOOD_RES   200
+#define WOOD_RES   320
 
 class b3WoodSampler : public b3MaterialSampler
 {

@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2004/04/09 14:11:58  sm
+**      - Removed CRs
+**
 **      Revision 1.50  2004/04/07 16:07:17  sm
 **      - Moved wood computing outside b3MatWood for use in its own bump map.
 **

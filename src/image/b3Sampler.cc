@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.5  2004/04/09 14:11:58  sm
+**  - Removed CRs
+**
 **  Revision 1.4  2004/04/09 14:09:36  sm
 **  - Wood sampling corrected.
 **  - b3FloatSliderCtrls range computation corrected.
