@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/01/21 16:56:46  sm
+**      - Showing splash dialog only in release version.
+**      - Prepared shape icons.
+**
 **      Revision 1.23  2002/01/20 12:48:51  sm
 **      - Added splash screen
 **      - Corrected repeat buttons (capture change)

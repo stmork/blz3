@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/01/21 16:56:46  sm
+**	- Showing splash dialog only in release version.
+**	- Prepared shape icons.
+**
 **	Revision 1.30  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.29  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
 **	
@@ -691,7 +695,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 		b3PrintF (B3LOG_NORMAL,"Using %d CPU%s.\n",
 			CPUs,
 			CPUs > 1 ? "'s" : "");
-
+		
 		// Allocate some instances
 		infos       = new b3_rt_info[CPUs];
 		threads     = new b3Thread[CPUs];

@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2002/01/21 16:56:46  sm
+**	- Showing splash dialog only in release version.
+**	- Prepared shape icons.
+**
 **	Revision 1.42  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -40,7 +44,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.41  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.

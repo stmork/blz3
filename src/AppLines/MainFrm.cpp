@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2002/01/21 16:56:46  sm
+**	- Showing splash dialog only in release version.
+**	- Prepared shape icons.
+**
 **	Revision 1.28  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
-**
+**	
 **	Revision 1.27  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -336,7 +340,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_menuManager.Install(this);
 	m_menuManager.LoadToolbars(toolbar_bitmaps,sizeof(toolbar_bitmaps) / sizeof(UINT));
 
+#ifndef _DEBUG
 	CSplashWnd::ShowSplashScreen(this);
+#endif
 	return 0;
 }
 

@@ -45,10 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/01/21 16:56:46  sm
+**	- Showing splash dialog only in release version.
+**	- Prepared shape icons.
+**
 **	Revision 1.22  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
-**
+**	
 **	Revision 1.21  2002/01/19 19:57:55  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -238,7 +242,9 @@ BOOL CAppLinesApp::InitInstance()
 	// Parse command line for standard shell commands, DDE, file open
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
+#ifndef _DEBUG
 	CSplashWnd::EnableSplashScreen(cmdInfo.m_bShowSplash);
+#endif
 
 	// Initialize OLE libraries
 	if (!AfxOleInit())
