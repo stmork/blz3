@@ -35,6 +35,8 @@
 
 #ifdef BLZ3_USE_OPENGL
 #include <GL/glut.h>
+
+#define no_GLU_NURBS
 #endif
 
 #define USE_JPEGLIB_LOAD

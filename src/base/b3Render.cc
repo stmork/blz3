@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/08/17 14:08:34  sm
+**      - Now trying to draw BSPline surfaces with own routines.
+**
 **      Revision 1.11  2001/08/17 04:16:43  sm
 **      - Using OpenGL NURBS zu render BSpline areas. But
 **        I think mi tessalation is faster.

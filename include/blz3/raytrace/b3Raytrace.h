@@ -982,7 +982,12 @@ class b3SplineShape : public b3Shape
 {
 protected:
 #ifdef BLZ3_USE_OPENGL
-	GLUnurbsObj      *glNURBS;
+#ifdef GLU_NURBS
+	GLUnurbsObj     *glNURBS;
+#endif
+	b3_count         GridVertexCount;
+	b3_count         SolidVertexCount;
+	b3_count         xSubDiv,ySubDiv;
 #endif
 	b3_line          Axis;             // for rotation shapes, unused
 	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
@@ -1000,9 +1005,17 @@ public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
 
+#ifdef GLU_NURBS
 	void b3AllocVertices(b3RenderContext *context);
 	void b3FreeVertices();
 	void b3Draw();
+#endif
+
+private:
+	void b3ComputeGridVertices();
+	void b3ComputeSolidVertices();
+	void b3ComputeGridIndices();
+	void b3ComputeSolidIndices();
 };
 
 class b3SplineArea : public b3SplineShape

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/17 14:08:34  sm
+**      - Now trying to draw BSPline surfaces with own routines.
+**
 **      Revision 1.9  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -299,10 +302,10 @@ b3_f64 *b3RenderShapeContext::b3GetCosTable()
 
 b3_vector *b3RenderShapeContext::b3GetSplineAux()
 {
+	b3_count factor = B3_MAX(B3_MAX_CONTROLS,B3_MAX_SUBDIV);
 	if (Between == null)
 	{
-		Between = (b3_vector *)b3Alloc(
-			B3_MAX_CONTROLS * B3_MAX_CONTROLS * sizeof(b3_vector));
+		Between = (b3_vector *)b3Alloc(factor * factor * sizeof(b3_vector));
 	}
 	return Between;
 }

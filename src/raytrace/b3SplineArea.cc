@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/17 14:08:34  sm
+**      - Now trying to draw BSPline surfaces with own routines.
+**
 **      Revision 1.4  2001/08/17 04:16:43  sm
 **      - Using OpenGL NURBS zu render BSpline areas. But
 **        I think mi tessalation is faster.
@@ -66,7 +69,6 @@ b3SplineArea::b3SplineArea(b3_u32 class_type) : b3SplineShape(sizeof(b3SplineAre
 
 b3SplineArea::b3SplineArea(b3_u32 *src) : b3SplineShape(src)
 {
-	glSolid = true;
 }
 
 void b3SplineArea::b3Intersect()
