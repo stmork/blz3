@@ -52,9 +52,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/10 17:52:24  sm
+**	- Texture loading (only reading into memory) running.
+**	- Raytracing without OpenGL must be possible!
+**
 **	Revision 1.3  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.2  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
 **	
@@ -93,6 +97,17 @@ b3TxPool::b3TxPool()
 {
 	m_SearchPath.b3InitBase();
 	m_Pool.b3InitBase();
+}
+
+b3TxPool::~b3TxPool()
+{
+	b3TxPath *path_item;
+
+	while(path_item = m_SearchPath.First)
+	{
+		m_SearchPath.b3Remove(path_item);
+		delete path_item;
+	}
 }
 
 /*************************************************************************
@@ -423,46 +438,53 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	b3_u08   *Data = null;
 	b3_size   FileSize;
 
-	try
+	if ((Name != null) && (strlen(Name) > 0))
 	{
-		strcpy(FullName,Name);
-		b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(char *)FullName);
-		Data = TextureFile.b3ReadBuffer(FullName,FileSize);
-	}
-	catch(...)
-	{
-		B3_FOR_BASE(&m_SearchPath,path)
+		try
 		{
-			try
+			strcpy(FullName,Name);
+			b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(char *)FullName);
+			Data = TextureFile.b3ReadBuffer(FullName,FileSize);
+		}
+		catch(...)
+		{
+			B3_FOR_BASE(&m_SearchPath,path)
 			{
-				b3Path::b3LinkFileName(
-					(char *)FullName,
-					(const char *)*path,Name);
-				b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
-				Data = TextureFile.b3ReadBuffer(FullName,FileSize);
+				try
+				{
+					b3Path::b3LinkFileName(
+						(char *)FullName,
+						(const char *)*path,Name);
+					b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
+					Data = TextureFile.b3ReadBuffer(FullName,FileSize);
 
-				// OK! Texture loaded -> leave search loop!
-				break;
-			}
-			catch(b3FileException *f)
-			{
-				// An exception we expected.
-				b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
+					// OK! Texture loaded -> leave search loop!
+					break;
+				}
+				catch(b3FileException *f)
+				{
+					// An exception we expected.
+					b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
+				}
 			}
 		}
 	}
+	else
+	{
+		Name = "<unnamed>";
+	}
 
 	// Check result of texture load
-	Texture->b3Name(FullName);
 	if (Data == null)
 	{
-		b3PrintF (B3LOG_NORMAL,"\"%s\" not available!\n",
-			Texture->b3Name());
+		Texture->b3Name(Name);
+		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",Texture->b3Name());
 		return;
 	}
 	else
 	{
-		b3PrintF(B3LOG_NORMAL,"Texture \"%s\" loaded. [%p,%d bytes]\n",
+		Texture->b3Name(FullName);
+		b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
 			Texture->b3Name(),Data,FileSize);
 	}
 
@@ -548,15 +570,29 @@ PrintF ("%s (%ld)\n%s (%ld)\n%s (%ld)\n",
 
 b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
 {
-	b3Tx *Texture;
+	b3Tx       *Texture;
+	const char *txName;
+	b3_size     txLen,nameLen,diff;
 
 	// find existing texture
 	B3_FOR_BASE(&m_Pool,Texture)
 	{
-		if (strcmp(Texture->b3Name(),Name) == 0)
+		txName  = Texture->b3Name();
+		txLen   = strlen(txName);
+		nameLen = strlen(Name);
+		diff    = txLen - nameLen;
+		if (strcmp(&txName[diff >= 0 ? diff : 0],Name) == 0)
 		{
-			if (Texture->b3GetData() == null) b3ReloadTexture (Texture);
-			else b3PrintF (B3LOG_NORMAL,"%s: found.\n",Name);
+			if (Texture->b3GetData() == null)
+			{
+#if 0
+				b3ReloadTexture (Texture);
+			}
+			else
+			{
+#endif
+				b3PrintF (B3LOG_DEBUG,"%s: found.\n",Name);
+			}
 			return Texture;
 		}
 	}

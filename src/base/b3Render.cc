@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/10/10 17:52:24  sm
+**      - Texture loading (only reading into memory) running.
+**      - Raytracing without OpenGL must be possible!
+**
 **      Revision 1.17  2001/09/30 15:53:19  sm
 **      - Removing nasty CR/LF
 **
@@ -130,6 +134,7 @@
 **                                                                      **
 *************************************************************************/
 
+#ifdef BLZ3_USE_OPENGL
 static GLfloat ambient[] =
 {
 	0.25f,0.25f,0.25f,1.0f
@@ -144,6 +149,7 @@ static GLfloat light0[] =
 {
 	1000.0f,-2500.0f,2000.0f,1.0f
 };
+#endif
 
 b3RenderContext::b3RenderContext()
 {
@@ -433,6 +439,7 @@ void b3RenderObject::b3ComputeIndices()
 
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_vector *nPtr = (b3_vector *)glNormals;
 	b3_vector *vPtr = (b3_vector *)glVertices;
 	GLushort  *pPtr = glPolygons;
@@ -514,12 +521,15 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 			}
 		}
 	}
+#endif
 }
 
 void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 {
+#ifdef BLZ3_USE_OPENGL
 	start = 0;
 	end   = glVertexCount;
+#endif
 }
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)

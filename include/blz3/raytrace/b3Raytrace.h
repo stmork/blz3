@@ -913,7 +913,9 @@ protected:
 	void b3ComputeTorusIndices();
 
 private:
+#ifdef BLZ3_USE_OPENGL
 	b3_index b3FindVertex(GLushort vIndex);
+#endif
 	void b3CorrectIndices();
 };
 

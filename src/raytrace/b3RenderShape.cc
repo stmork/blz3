@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/10/10 17:52:24  sm
+**      - Texture loading (only reading into memory) running.
+**      - Raytracing without OpenGL must be possible!
+**
 **      Revision 1.16  2001/09/30 15:53:19  sm
 **      - Removing nasty CR/LF
 **
@@ -438,6 +442,7 @@ b3RenderShape::b3RenderShape(b3_u32 *src) : b3Shape(src)
 {
 }
 
+#ifdef BLZ3_USE_OPENGL
 b3_index b3RenderShape::b3FindVertex(GLushort vertex)
 {
 	b3_vector *point;
@@ -457,9 +462,11 @@ b3_index b3RenderShape::b3FindVertex(GLushort vertex)
 	B3_ASSERT(false);
 	return vertex;
 }
+#endif
 
 void b3RenderShape::b3CorrectIndices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_index  i;
 	GLushort *pPtr = glPolygons;
 
@@ -471,6 +478,7 @@ void b3RenderShape::b3CorrectIndices()
 
 		pPtr += 3;
 	}
+#endif
 }
 
 void b3RenderShape::b3ComputeSphereVertices(

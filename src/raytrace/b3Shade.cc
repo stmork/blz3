@@ -32,12 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/10/10 17:52:24  sm
+**	- Texture loading (only reading into memory) running.
+**	- Raytracing without OpenGL must be possible!
+**
 **	Revision 1.9  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.8  2001/10/06 19:56:00  sm
 **	- Fixing bugs concerning reflection and
 **	  refraction computation (both: direction

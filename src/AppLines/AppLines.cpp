@@ -28,6 +28,7 @@
 #include "AppLinesView.h"
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
+#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -37,11 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/10 17:52:24  sm
+**	- Texture loading (only reading into memory) running.
+**	- Raytracing without OpenGL must be possible!
+**
 **	Revision 1.4  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.3  2001/08/11 19:59:15  sm
 **	- Added orthogonal projection
 **	
@@ -135,7 +140,10 @@ BOOL CAppLinesApp::InitInstance()
 	b3Log_SetLevel(B3LOG_FULL);
 #endif
 	b3InitRaytrace::b3Init();
-
+	texture_pool.b3AddPath("H:\\Blizzard\\Textures");
+	texture_pool.b3AddPath("M:\\Blizzard\\Textures");
+	texture_pool.b3AddPath("H:\\Blizzard\\Pictures");
+	texture_pool.b3AddPath("M:\\Blizzard\\Pictures");
 
 	pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,

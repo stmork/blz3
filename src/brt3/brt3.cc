@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/10 17:52:24  sm
+**	- Texture loading (only reading into memory) running.
+**	- Raytracing without OpenGL must be possible!
+**
 **	Revision 1.4  2001/10/09 20:47:01  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.3  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -72,7 +76,7 @@ int main(int argc,char *argv[])
 		b3InitRaytrace::b3Init();
 
 //		b3Log_SetLevel(B3LOG_NORMAL);
-//		b3Log_SetLevel(B3LOG_DEBUG);
+		b3Log_SetLevel(B3LOG_DEBUG);
 //		b3Log_SetLevel(B3LOG_FULL);
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
@@ -87,7 +91,9 @@ int main(int argc,char *argv[])
 			     item  = scene->Succ)
 			{
 				scene = (b3Scene *)item;
+#ifdef BLZ3_USE_OPENGL
 				scene->b3Reorg();
+#endif
 				if (scene->b3GetDisplaySize(xSize,ySize))
 				{
 					display = new b3Display(xSize,ySize);

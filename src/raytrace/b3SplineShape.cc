@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/10/10 17:52:24  sm
+**      - Texture loading (only reading into memory) running.
+**      - Raytracing without OpenGL must be possible!
+**
 **      Revision 1.11  2001/09/30 15:53:20  sm
 **      - Removing nasty CR/LF
 **
@@ -177,6 +181,7 @@ void b3SplineShape::b3GetCount(
 	Between   = context->b3GetSplineAux();
 
 	// Compute number of grid vertices
+#ifdef BLZ3_USE_OPENGL
 	GridVertexCount = (B3_MAX_CONTROLS + B3_MAX_CONTROLS) * (B3_MAX_SUBDIV + 1);
 
 	// Compute number of solid vertices. That
@@ -194,6 +199,7 @@ void b3SplineShape::b3GetCount(
 		B3_BSPLINE_SEGMENTKNOTS(&Spline[1]) * Spline[0].subdiv +
 		B3_BSPLINE_SEGMENTKNOTS(&Spline[0]) * Spline[1].subdiv;
 	polyCount = Spline[0].subdiv * Spline[1].subdiv * 2;
+#endif
 }
 
 void b3SplineShape::b3ComputeGridVertices()
@@ -245,6 +251,7 @@ void b3SplineShape::b3ComputeGridVertices()
 
 void b3SplineShape::b3ComputeSolidVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	b3_spline  MySpline;
 	b3_index   x,y;
 	b3_count   SubDiv,index,count;
@@ -272,12 +279,15 @@ void b3SplineShape::b3ComputeSolidVertices()
 		index  += count;
 	}
 	B3_ASSERT(index <= SolidVertexCount);
+#endif
 }
 
 void b3SplineShape::b3ComputeVertices()
 {
+#ifdef BLZ3_USE_OPENGL
 	if (GridVertexCount  > 0) b3ComputeGridVertices();
 	if (SolidVertexCount > 0) b3ComputeSolidVertices();
+#endif
 }
 
 void b3SplineShape::b3ComputeGridIndices()
@@ -357,8 +367,10 @@ void b3SplineShape::b3ComputeIndices()
 
 void b3SplineShape::b3GetVertexRange(b3_index &start,b3_index &end)
 {
+#ifdef BLZ3_USE_OPENGL
 	start = GridVertexCount;
 	end   = GridVertexCount + ySubDiv * (Spline[0].subdiv + 1);
+#endif
 }
 
 #ifdef GLU_NURBS
