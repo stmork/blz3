@@ -73,6 +73,14 @@ public:
 		*dst   = 1.0 - src->a;
 	}
 
+	static inline void b3ColorToGL(b3_color *src,GLubyte *dst)
+	{
+		*dst++ = (GLubyte)(src->r * 255);
+		*dst++ = (GLubyte)(src->g * 255);
+		*dst++ = (GLubyte)(src->b * 255);
+		*dst   = (GLubyte)(src->a * 255) ^ 0xff;
+	}
+
 	static inline void b3PkdColorToGL(b3_pkd_color input,GLubyte *buffer)
 	{
 		*buffer++ = (GLubyte)((input & 0x00ff0000) >> 16);

@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2002/07/22 18:45:16  sm
+**      - Further probing of texture stencil via alpha channel.
+**      - Why does Mesa loose the first texture?
+**      - Nasty uncr.
+**
 **      Revision 1.32  2002/07/22 16:27:45  sm
 **      - Fixed some errors concerning texture stencil
 **
@@ -962,8 +967,10 @@ void b3RenderObject::b3Draw()
 				b3Color::b3Init(&diffuse, B3_WHITE);
 				b3Color::b3Init(&specular,B3_WHITE);
 
+				B3_ASSERT(glIsTexture(glTextureId));
 				glBindTexture(  GL_TEXTURE_2D,glTextureId);
 				glEnable(       GL_TEXTURE_2D);
+
 				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_DECAL);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -1023,8 +1030,13 @@ void b3RenderObject::b3CreateTexture(
 	b3RenderContext *context,
 	b3_res           size)
 {
+
 	if (size != glTextureSize)
 	{
+		b3PrintF(B3LOG_FULL,"b3RenderObject::b3CreateTexture(...,%4d) # previous: %4d\n",
+			size,
+			glTextureSize);
+
 		if (glTextureData != null)
 		{
 			glDeleteTextures(1,&glTextureId);
@@ -1050,17 +1062,14 @@ void b3RenderObject::b3CreateChess(
 	b3_color        *bColor,
 	b3_color        *wColor)
 {
-	b3_pkd_color  black,white;
-	GLubyte      *ptr = glTextureData;
+	GLubyte *ptr = glTextureData;
 
 	b3CreateTexture(null,2);
-	black = b3Color::b3GetColor(bColor);
-	white = b3Color::b3GetColor(wColor);
 
-	b3RenderContext::b3PkdColorToGL(black,&glTextureData[ 0]);
-	b3RenderContext::b3PkdColorToGL(white,&glTextureData[ 4]);
-	b3RenderContext::b3PkdColorToGL(white,&glTextureData[ 8]);
-	b3RenderContext::b3PkdColorToGL(black,&glTextureData[12]);
+	b3RenderContext::b3ColorToGL(wColor,&glTextureData[ 0]);
+	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 4]);
+	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 8]);
+	b3RenderContext::b3ColorToGL(wColor,&glTextureData[12]);
 }
 
 void b3RenderObject::b3CreateImage(

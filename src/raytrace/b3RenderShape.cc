@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2002/07/22 18:45:16  sm
+**      - Further probing of texture stencil via alpha channel.
+**      - Why does Mesa loose the first texture?
+**      - Nasty uncr.
+**
 **      Revision 1.37  2002/07/22 16:27:45  sm
 **      - Fixed some errors concerning texture stencil
 **
@@ -650,13 +655,13 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 		b3_bool           loop;
 
 		b3ComputeBound(&limit);
-		fxStep = (limit.x2 - limit.x1) / (image->xSize - 1);
-		fyStep = (limit.y2 - limit.y1) / (image->ySize - 1);
+		fxStep = (limit.x2 - limit.x1 - 2 * epsilon) / image->xSize;
+		fyStep = (limit.y2 - limit.y1 - 2 * epsilon) / image->ySize;
 
-		fy = limit.y1;
+		fy = limit.y1 + epsilon;
 		for (y = 0;y < image->ySize;y++)
 		{
-			fx = limit.x1;
+			fx = limit.x1 + epsilon;
 			for (x = 0;x < image->xSize;x++)
 			{
 				b3Vector::b3Init(&polar.box_polar,   fx,fy);
@@ -670,8 +675,14 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 				{
 					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
+#if 1
 						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
 						color     = b3Color::b3GetColor(&diffuse);
+#else
+						color = b3CheckStencil(&polar) ?
+							b3Color::b3GetColor(&diffuse) :
+							0xffff1144;
+#endif
 						loop      = false;
 					}
 				}

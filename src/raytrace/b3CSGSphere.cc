@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/07/22 18:45:16  sm
+**      - Further probing of texture stencil via alpha channel.
+**      - Why does Mesa loose the first texture?
+**      - Nasty uncr.
+**
 **      Revision 1.19  2002/07/22 12:46:08  sm
 **      - Added Windows Lines III support for textures
 **      - Fixed sphere computation

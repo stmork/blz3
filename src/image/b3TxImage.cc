@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/07/22 18:45:16  sm
+**	- Further probing of texture stencil via alpha channel.
+**	- Why does Mesa loose the first texture?
+**	- Nasty uncr.
+**
 **	Revision 1.3  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
 **	  a new shape.
 **	- Some minor fixes done.
-**
+**	
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.

@@ -61,11 +61,16 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.15  2002/07/22 18:45:16  sm
+**	- Further probing of texture stencil via alpha channel.
+**	- Why does Mesa loose the first texture?
+**	- Nasty uncr.
+**
 **	Revision 1.14  2002/07/21 17:02:36  sm
 **	- Finished advanced color mix support (correct Phong/Mork shading)
 **	- Added first texture mapping support. Further development on
 **	  Windows now...
-**
+**	
 **	Revision 1.13  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
