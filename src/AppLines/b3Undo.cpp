@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/01/12 10:39:45  sm
+**	- Fixed proper delete for undo/redo.
+**
 **	Revision 1.3  2003/01/11 17:16:15  sm
 **	- Object handling with undo/redo
 **	- Light handling with undo/redo
-**
+**	
 **	Revision 1.2  2003/01/07 16:14:38  sm
 **	- Lines III: object editing didn't prepared any more. Fixed.
 **	- Some prepare optimizations.
@@ -65,10 +68,29 @@ b3UndoBuffer::~b3UndoBuffer()
 	b3Clear();
 }
 
+void b3UndoBuffer::b3Delete(b3Operation *op)
+{
+	if (op->b3IsInitialized())
+	{
+		op->b3Delete();
+	}
+	delete op;
+}
+
+void b3UndoBuffer::b3Delete(b3Base<b3Operation> *buffer)
+{
+	b3Operation *op;
+
+	while((op = buffer->b3RemoveFirst()) != null)
+	{
+		b3Delete(op);
+	}
+}
+
 void b3UndoBuffer::b3Clear()
 {
-	m_UndoBuffer.b3Free();
-	m_RedoBuffer.b3Free();
+	b3Delete(&m_UndoBuffer);
+	b3Delete(&m_RedoBuffer);
 }
 
 b3_bool b3UndoBuffer::b3Do(b3Operation *op)
@@ -80,12 +102,12 @@ b3_bool b3UndoBuffer::b3Do(b3Operation *op)
 		op->b3Do();
 		op->b3Done(true);
 		op->b3Prepare(m_Doc);
-		m_RedoBuffer.b3Free();
+		b3Delete(&m_RedoBuffer);
 		m_UndoBuffer.b3Append(op);
 	}
 	else
 	{
-		delete op;
+		b3Delete(op);
 	}
 	return result;
 }
@@ -142,10 +164,6 @@ b3Operation::b3Operation() : b3Link<b3Operation>(sizeof(b3Operation))
 
 b3Operation::~b3Operation()
 {
-	if (b3IsInitialized())
-	{
-		b3Delete();
-	}
 }
 
 void b3Operation::b3Delete()

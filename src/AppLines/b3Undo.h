@@ -84,6 +84,10 @@ public:
 	void     b3Redo();
 	b3_bool  b3HasUndo();
 	b3_bool  b3HasRedo();
+
+private:
+	void     b3Delete(b3Operation *op);
+	void     b3Delete(b3Base<b3Operation> *buffer);
 };
 
 #endif
