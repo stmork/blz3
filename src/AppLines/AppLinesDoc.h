@@ -102,6 +102,7 @@ protected:
 	afx_msg void OnUpdateGlobal(CCmdUI* pCmdUI);
 	afx_msg void OnActivate();
 	afx_msg void OnDeactivate();
+	afx_msg void OnDeactivateRest();
 	afx_msg void OnAllDeactivate();
 	afx_msg void OnAllActivate();
 	afx_msg void OnUpdateSelectedBBox(CCmdUI* pCmdUI);

@@ -50,9 +50,12 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2002/01/01 19:14:53  sm
+**	- Added "rest deactivate"
+**
 **	Revision 1.34  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.33  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -256,8 +259,10 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
 	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
 	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
+	ON_COMMAND(ID_DEACTIVATE_REST, OnDeactivateRest)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -902,6 +907,29 @@ void CAppLinesDoc::OnDeactivate()
 	if (BBox != null)
 	{
 		BBox->b3Activate(false);
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
+}
+
+void CAppLinesDoc::OnDeactivateRest() 
+{
+	// TODO: Add your control notification handler code here
+	b3BBox *BBox = CB3GetMainFrame()->b3GetSelectedBBox();
+	b3BBox *aux;
+
+	if (BBox != null)
+	{
+		BBox->b3Activate(true);
+		for (aux = (b3BBox *)BBox->Prev;aux != null;aux = (b3BBox *)aux->Prev)
+		{
+			aux->b3Activate(false);
+		}
+		for (aux = (b3BBox *)BBox->Succ;aux != null;aux = (b3BBox *)aux->Succ)
+		{
+			aux->b3Activate(false);
+		}
+
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/01/01 19:14:53  sm
+**      - Added "rest deactivate"
+**
 **      Revision 1.8  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -115,7 +118,6 @@ void b3SplineCurveShape::b3ComputeIndices()
 	b3_index   i;
 
 	SubDiv   = m_Spline.subdiv;
-	b3RenderObject::b3Free(Index);
 	Index    = (GLushort *)b3RenderObject::b3Alloc(SubDiv * 2 * sizeof(GLushort));
 	glGrids = Index;
 	if (Index != null)

@@ -151,6 +151,7 @@ BEGIN
     SEPARATOR
     BUTTON      ID_ACTIVATE
     BUTTON      ID_DEACTIVATE
+    BUTTON      ID_DEACTIVATE_REST
     BUTTON      ID_ALL_ACTIVATE
     BUTTON      ID_ALL_DEACTIVATE
 END
@@ -282,6 +283,11 @@ BEGIN
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Ak&tivieren",                 ID_ACTIVATE
+        MENUITEM "&Deaktivieren",               ID_DEACTIVATE
+        MENUITEM "Rest deaktivieren\tStrg+R",   ID_DEACTIVATE_REST
+        MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
     END
     POPUP "Betriebsmodus"
     BEGIN
@@ -462,12 +468,16 @@ END
 
 IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
 BEGIN
+    "A",            ID_ACTIVATE_ALL,        VIRTKEY, CONTROL, NOINVERT
+    "A",            ID_DEACTIVATE_ALL,      VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_ORIGINAL,       VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
     "R",            ID_RAYTRACE,            VIRTKEY, CONTROL, NOINVERT
+    "R",            ID_DEACTIVATE_REST,     VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
     VK_ADD,         ID_VIEW_BIGGER,         VIRTKEY, NOINVERT
@@ -1353,6 +1363,7 @@ BEGIN
     IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
     IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
     IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
+    ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
 END
 
 STRINGTABLE DISCARDABLE 

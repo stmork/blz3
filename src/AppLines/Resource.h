@@ -244,7 +244,9 @@
 #define IDM_BAR_FULCRUM                 32841
 #define IDM_BAR_STEP_MOVE               32842
 #define IDM_BAR_STEP_ROTATE             32843
-#define ID_BUTTON32844                  32844
+#define ID_DEACTIVATE_REST              32845
+#define ID_ACTIVATE_ALL                 32846
+#define ID_DEACTIVATE_ALL               32847
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -283,7 +285,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        154
-#define _APS_NEXT_COMMAND_VALUE         32845
+#define _APS_NEXT_COMMAND_VALUE         32848
 #define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
