@@ -20,6 +20,8 @@
 
 #include "blz3/system/b3PluginBase.h"
 
+#define B3_PLUGIN_INIT_FUNC "b3Init"
+
 class b3Loader : public b3LoaderBase
 {
 protected:

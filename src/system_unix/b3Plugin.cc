@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/06/07 11:58:07  sm
+**	- Changed plugin init method name to b3Init()
+**
 **	Revision 1.4  2003/06/01 13:03:45  sm
 **	- Is this the final plugin version?
-**
+**	
 **	Revision 1.3  2003/06/01 12:07:01  sm
 **	- Minor plugin changes
 **	
@@ -82,7 +85,7 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 
 		b3PrintF(B3LOG_DEBUG,"Plugin %s loaded.\n",(const char *)m_PluginPath);
 
-		init = (b3_plugin_init_func)dlsym(m_Handle,"init");
+		init = (b3_plugin_init_func)dlsym(m_Handle,B3_PLUGIN_INIT_FUNC);
 		if(init != null)
 		{
 			init();
