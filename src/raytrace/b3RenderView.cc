@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/12 19:47:48  sm
+**      - Now having correct orthogonal projection incl. aspect ratio
+**
 **      Revision 1.4  2001/08/11 20:17:22  sm
 **      - Updated OpenGL on Un*x platform.
 **      - This was a great day!
@@ -91,13 +94,19 @@ void b3RenderView::b3SetCamera(b3Scene *scene)
 	m_Height    = scene->Height;
 }
 
+b3_bool b3RenderView::b3SetBounds(b3Scene *scene)
+{
+	return scene->b3ComputeBounds(&m_Lower,&m_Upper);
+}
+
 void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 {
 #ifdef BLZ3_USE_OPENGL
-	b3_f64  width,height,distance,factor,relation;
-	GLfloat aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
-	GLfloat aspectCamera;
-	GLfloat min = 0.1f;
+	b3_f64    width,height,nearCP,farCP,distance,factor,relation;
+	GLfloat   aspectWindow = (GLfloat)xSize / (GLfloat)ySize;
+	GLfloat   aspectCamera;
+	GLfloat   min = 0.1f;
+	b3_vector eye,look,up,mid;
 
 	if (m_AntiAliased)
 	{
@@ -119,52 +128,113 @@ void b3RenderView::b3UpdateView(b3_res xSize,b3_res ySize)
 	width    = factor * b3Length(&m_Width);
 	height   = factor * b3Length(&m_Height);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glViewport(0,0,xSize,ySize);
+	eye.x = look.x = mid.x = (m_Lower.x + m_Upper.x) * 0.5;
+	eye.y = look.y = mid.y = (m_Lower.y + m_Upper.y) * 0.5;
+	eye.z = look.z = mid.z = (m_Lower.z + m_Upper.z) * 0.5;
+	up.x  =
+	up.y  =
+	up.z  = 0;
+	switch (m_ViewMode)
+	{
+	case B3_VIEW_3D:
+	default:
+		nearCP = min;
+		farCP  = 10000;
+
+		// Prepare gluLookAt() - it's simple
+		eye  = m_EyePoint;
+		look = m_ViewPoint;
+		up   = m_Height;
+		break;
+	case B3_VIEW_TOP:
+		// Prepare glOrtho();
+		width  = (m_Upper.x - m_Lower.x) * 0.5;
+		height = (m_Upper.y - m_Lower.y) * 0.5;
+		nearCP = 0;
+		farCP  = (m_Upper.z - m_Lower.z);
+
+		// Prepare gluLookAt()
+		eye.z  = m_Upper.z;
+		look.z = m_Lower.z;
+		up.y   = 1;
+		break;
+
+	case B3_VIEW_FRONT:
+		// Prepare glOrtho();
+		width  = (m_Upper.x - m_Lower.x) * 0.5;
+		height = (m_Upper.z - m_Lower.z) * 0.5;
+		nearCP = 0;
+		farCP  = (m_Upper.y - m_Lower.y);
+
+		// Prepare gluLookAt()
+		eye.y  = m_Lower.y;
+		look.y = m_Upper.y;
+		up.z   = 1;
+		break;
+
+	case B3_VIEW_RIGHT:
+		// Prepare glOrtho();
+		width  = (m_Upper.y - m_Lower.y) * 0.5;
+		height = (m_Upper.z - m_Lower.z) * 0.5;
+		nearCP = 0;
+		farCP  = (m_Upper.x - m_Lower.x);
+
+		// Prepare gluLookAt()
+		eye.x  = m_Upper.x;
+		look.x = m_Lower.x;
+		up.z   = 1;
+		break;
+
+	case B3_VIEW_LEFT:
+		// Prepare glOrtho();
+		width  = (m_Upper.y - m_Lower.y) * 0.5;
+		height = (m_Upper.z - m_Lower.z) * 0.5;
+		nearCP = 0;
+		farCP  = (m_Upper.x - m_Lower.x);
+
+		// Prepare gluLookAt()
+		eye.x  = m_Lower.x;
+		look.x = m_Upper.x;
+		up.z   = 1;
+		break;
+
+	case B3_VIEW_BACK:
+		// Prepare glOrtho();
+		width  = (m_Upper.x - m_Lower.x) * 0.5;
+		height = (m_Upper.z - m_Lower.z) * 0.5;
+		nearCP = 0;
+		farCP  = (m_Upper.y - m_Lower.y);
+
+		// Prepare gluLookAt()
+		eye.y  = m_Upper.y;
+		look.y = m_Lower.y;
+		up.z   = 1;
+		break;
+	}
+
+	// Maintain aspect ratio
 	aspectCamera = (GLfloat)(width / height);
 	relation     = aspectCamera / aspectWindow;
 	if (relation > 1) height *= relation;
 	else              width  /= relation;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glViewport(0,0,xSize,ySize);
-	switch (m_ViewMode)
+	// Now initialize view
+	if (m_ViewMode == B3_VIEW_3D)
 	{
-	case B3_VIEW_3D:
-	default:
-		glFrustum(-width,width,-height,height,min,10000.0f);
-		gluLookAt(
-			m_EyePoint.x, m_EyePoint.y, m_EyePoint.z,
-			m_ViewPoint.x,m_ViewPoint.y,m_ViewPoint.z,
-			m_Height.x,   m_Height.y,   m_Height.z);
-		break;
-	case B3_VIEW_TOP:
-		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
-		break;
-
-	case B3_VIEW_FRONT:
-		glRotated(90.0,1.0,0.0,0.0);
-		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
-		break;
-
-	case B3_VIEW_RIGHT:
-		glRotated( 90.0,1.0,0.0,0.0);
-		glRotated(-90.0,0.0,0.0,1.0);
-		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
-		break;
-
-	case B3_VIEW_LEFT:
-		glRotated(90.0,1.0,0.0,0.0);
-		glRotated(90.0,0.0,0.0,1.0);
-		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
-		break;
-
-	case B3_VIEW_BACK:
-		glRotated( 90.0,1.0,0.0,0.0);
-		glRotated(180.0,0.0,0.0,1.0);
-		glOrtho(-1000.0,1000.0,-1000.0,1000.0,-1000.0,1000.0);
-		break;
+		glFrustum(-width,width,-height,height,nearCP,farCP);
 	}
+	else
+	{
+		glOrtho(-width,width,-height,height,nearCP,farCP);
+	}
+	gluLookAt(
+		eye.x, eye.y, eye.z,
+		look.x,look.y,look.z,
+		up.x,  up.y,  up.z);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();	

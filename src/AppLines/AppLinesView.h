@@ -24,9 +24,11 @@
 
 #include "blz3/raytrace/b3RenderView.h"
 
-#define B3_UPDATE_DRAW 1
-#define B3_UPDATE_VIEW 2
-#define B3_UPDATE_ALL  (B3_UPDATE_DRAW|B3_UPDATE_VIEW)
+#define B3_UPDATE_VIEW     1
+#define B3_UPDATE_CAMERA   2
+#define B3_UPDATE_GEOMETRY 4
+
+#define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
 
 class CAppLinesView : public CScrollView
 {

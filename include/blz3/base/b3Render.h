@@ -55,6 +55,7 @@ public:
 	virtual void     b3ComputeVertices();
 	virtual void     b3ComputeIndices();
 	        void     b3Draw();
+	        b3_bool  b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 };
 
 #endif

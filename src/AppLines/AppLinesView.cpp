@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/08/12 19:47:47  sm
+**	- Now having correct orthogonal projection incl. aspect ratio
+**
 **	Revision 1.5  2001/08/11 19:59:15  sm
 **	- Added orthogonal projection
-**
+**	
 **	Revision 1.4  2001/08/11 16:29:07  sm
 **	- Nasty UnCR done
 **	- Compiling but not running OpenGL under Unix
@@ -149,6 +152,7 @@ void CAppLinesView::OnInitialUpdate()
 	// TODO: calculate the total size of this view
 	sizeTotal.cx = sizeTotal.cy = 100;
 	SetScrollSizes(MM_TEXT, sizeTotal);
+	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -268,22 +272,31 @@ BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC)
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
+	CAppLinesDoc *pDoc  = GetDocument();
+	b3Scene      *scene = pDoc->b3GetScene();
+	b3_bool       doInvalidate = false;
+
+	if ((lHint & B3_UPDATE_CAMERA) && (scene != null))
+	{
+		m_RenderView.b3SetCamera(scene);
+		doInvalidate = true;
+	}
+	if ((lHint & B3_UPDATE_GEOMETRY) && (scene != null))
+	{
+		m_RenderView.b3SetBounds(scene);
+		doInvalidate = true;
+	}
 	if (lHint & B3_UPDATE_VIEW)
 	{
-		CAppLinesDoc *pDoc  = GetDocument();
-		CRect         rect;
-		b3Scene      *scene = pDoc->b3GetScene();
+		CRect rect;
 
-		if (scene != null)
-		{
-			GetClientRect(&rect);
-			wglMakeCurrent(m_DC,m_GC);
-			m_RenderView.b3SetCamera(scene);
-			m_RenderView.b3UpdateView(rect.Width(),rect.Height());
-		}
-		Invalidate();
+		GetClientRect(&rect);
+		wglMakeCurrent(m_DC,m_GC);
+		m_RenderView.b3UpdateView(rect.Width(),rect.Height());
+		doInvalidate = true;
 	}
-	if (lHint & B3_UPDATE_DRAW)
+
+	if (doInvalidate)
 	{
 		Invalidate();
 	}

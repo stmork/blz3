@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/12 19:47:47  sm
+**      - Now having correct orthogonal projection incl. aspect ratio
+**
 **      Revision 1.4  2001/08/11 20:17:22  sm
 **      - Updated OpenGL on Un*x platform.
 **      - This was a great day!
@@ -279,4 +282,32 @@ void b3RenderObject::b3ComputeVertices()
 
 void b3RenderObject::b3ComputeIndices()
 {
+}
+
+b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
+{
+	b3_vector *ptr;
+	b3_bool    result = false;
+	b3_index   i;
+
+#ifdef BLZ3_USE_OPENGL
+	if (glComputed && (glVertices != null) && (VertexCount > 0))
+	{
+		ptr = (b3_vector *)glVertices;
+		for (i = 0;i < VertexCount;i++)
+		{
+			// Check lower bound
+			if (ptr[i].x < lower->x) lower->x = ptr[i].x;
+			if (ptr[i].y < lower->y) lower->y = ptr[i].y;
+			if (ptr[i].z < lower->z) lower->z = ptr[i].z;
+
+			// Check upper bound
+			if (ptr[i].x > upper->x) upper->x = ptr[i].x;
+			if (ptr[i].y > upper->y) upper->y = ptr[i].y;
+			if (ptr[i].z > upper->z) upper->z = ptr[i].z;
+		}
+		result = true;
+	}
+#endif
+	return result;
 }

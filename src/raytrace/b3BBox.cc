@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include <float.h>
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/08/12 19:47:48  sm
+**      - Now having correct orthogonal projection incl. aspect ratio
+**
 **      Revision 1.11  2001/08/11 20:17:22  sm
 **      - Updated OpenGL on Un*x platform.
 **      - This was a great day!
@@ -237,16 +241,16 @@ void b3BBox::b3FreeVertices()
 	glGrids    = null;
 	glPolygons = null;
 
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3FreeVertices();
+	}
 	B3_FOR_BASE(&heads[1],item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3FreeVertices();
 
-	}
-	B3_FOR_BASE(&heads[0],item)
-	{
-		shape = (b3Shape *)item;
-		shape->b3FreeVertices();
 	}
 
 	b3RenderObject::b3FreeVertices();
@@ -292,6 +296,78 @@ void b3BBox::b3ComputeVertices()
 	glComputed = true;
 }
 
+b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
+{
+	b3_vector subLower;
+	b3_vector subUpper;
+	b3Item    *item;
+	b3BBox    *bbox;
+	b3Shape   *shape;
+	b3_bool    result = false;
+
+	subLower.x =  FLT_MAX;
+	subLower.y =  FLT_MAX;
+	subLower.z =  FLT_MAX;
+	subUpper.x = -FLT_MAX;
+	subUpper.y = -FLT_MAX;
+	subUpper.z = -FLT_MAX;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape   = (b3Shape *)item;
+		result |= shape->b3ComputeBounds(&subLower,&subUpper);
+	}
+
+	if (result)
+	{
+		// Use fresh data
+		Size.x      = (subUpper.x - subLower.x) * tolerance * 0.5;
+		Size.y      = (subUpper.y - subLower.y) * tolerance * 0.5;
+		Size.z      = (subUpper.z - subLower.z) * tolerance * 0.5;
+		subLower.x -= Size.x;
+		subLower.y -= Size.y;
+		subLower.z -= Size.z;
+		subUpper.x += Size.x;
+		subUpper.y += Size.y;
+		subUpper.z += Size.z;
+	}
+	else
+	{
+		// Use predefined data
+		subLower   = Base;
+		subUpper.x = Base.x + Size.x;
+		subUpper.y = Base.y + Size.y;
+		subUpper.z = Base.z + Size.z;
+		result     = true;
+	}
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		bbox    = (b3BBox *)item;
+		result |= bbox->b3ComputeBounds(&subLower,&subUpper,tolerance);
+	}
+
+	// Check lower bound
+	if (subLower.x < lower->x) lower->x = subLower.x;
+	if (subLower.y < lower->y) lower->y = subLower.y;
+	if (subLower.z < lower->z) lower->z = subLower.z;
+
+	// Check upper bound
+	if (subUpper.x > upper->x) upper->x = subUpper.x;
+	if (subUpper.y > upper->y) upper->y = subUpper.y;
+	if (subUpper.z > upper->z) upper->z = subUpper.z;
+
+	// Compute bounds of thos BBox
+	if (result)
+	{
+		Size.x = subUpper.x - subLower.x;
+		Size.y = subUpper.y - subLower.y;
+		Size.z = subUpper.z - subLower.z;
+		Base   = subLower;
+	}
+
+	return result;
+}
 
 void b3Scene::b3Reorg()
 {
@@ -328,6 +404,27 @@ void b3Scene::b3Draw()
 #ifdef BLZ3_USE_OPENGL
 	glPopMatrix();
 #endif
+}
+
+b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+	b3_bool  result = false;
+
+	lower->x =  FLT_MAX;
+	lower->y =  FLT_MAX;
+	lower->z =  FLT_MAX;
+	upper->x = -FLT_MAX;
+	upper->y = -FLT_MAX;
+	upper->z = -FLT_MAX;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		bbox    = (b3BBox *)item;
+		result |= bbox->b3ComputeBounds(lower,upper,BBoxOverSize);
+	}
+	return result;
 }
 
 void b3Scene::b3AllocVertices(b3RenderContext *context)

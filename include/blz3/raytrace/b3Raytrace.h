@@ -1213,12 +1213,13 @@ public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
-	       void b3Dump(b3_count level);
-	       void b3AllocVertices(b3RenderContext *context);
-	       void b3FreeVertices();
-	       void b3ComputeVertices();
-	       void b3Draw();
- 	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
+	       void    b3Dump(b3_count level);
+	       void    b3AllocVertices(b3RenderContext *context);
+	       void    b3FreeVertices();
+	       void    b3ComputeVertices();
+	       void    b3Draw();
+		   b3_bool b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
+ 	static void    b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 };
 
 #define BBB_HTML         0
@@ -1631,6 +1632,7 @@ public:
 		   void     b3AllocVertices(b3RenderContext *context);
 		   void     b3FreeVertices();
 	       void     b3Draw();
+		   b3_bool  b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

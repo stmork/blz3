@@ -38,8 +38,11 @@ class b3RenderView
 	b3_vector    m_Width;
 	b3_vector    m_Height;
 
+	b3_vector    m_Lower;
+	b3_vector    m_Upper;
+
 public:
-	b3_bool          m_AntiAliased;
+	b3_bool      m_AntiAliased;
 
 public:
 	        b3RenderView();
@@ -47,6 +50,7 @@ public:
 	b3_bool b3IsViewMode(b3_view_mode mode);
 	void    b3SetCamera(b3CameraPart *camera);
 	void    b3SetCamera(b3Scene *scene);
+	b3_bool b3SetBounds(b3Scene *scene);
 	void    b3UpdateView(b3_res xSize,b3_res ySize);
 };
 
