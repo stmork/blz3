@@ -66,11 +66,11 @@ struct b3_polar
 
 struct b3_ray : public b3_dLine
 {
-	b3_vector normal;
-	b3_vector ipoint;
-	b3_polar  polar;
-	b3_f64    Q;
-	b3_bool   inside;
+	b3_dVector normal;
+	b3_dVector ipoint;
+	b3_polar   polar;
+	b3_f64     Q;
+	b3_bool    inside;
 };
 
 

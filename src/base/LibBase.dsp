@@ -89,6 +89,10 @@ SOURCE=.\b3Aux.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Cubic.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3FileList.cc
 # End Source File
 # Begin Source File
@@ -98,6 +102,10 @@ SOURCE=.\b3Item.cc
 # Begin Source File
 
 SOURCE=.\b3ItemRegister.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ItemRegister.h
 # End Source File
 # Begin Source File
 

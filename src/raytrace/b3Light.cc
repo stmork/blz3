@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/10/06 19:56:00  sm
+**      - Fixing bugs concerning reflection and
+**        refraction computation (both: direction
+**        computation and shading)
+**
 **      Revision 1.7  2001/10/05 20:30:45  sm
 **      - Introducing Mork and Phong shading.
 **      - Using light source when shading
@@ -134,7 +139,7 @@ void b3Light::b3Init()
 	m_Position.x  =  10000.0;
 	m_Position.y  = -10000.0;
 	m_Position.z  =  10000.0;
-	m_Size        =      0.02;
+	m_Size        =      0.02f;
 	m_JitterEdge  =      5;
 	m_Flags       =      0;
 	m_Direction.x =   -100.0;

@@ -189,6 +189,14 @@ SOURCE=.\b3Shade.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ShadeMork.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ShadePhong.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Shape.cc
 # End Source File
 # Begin Source File

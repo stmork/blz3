@@ -32,13 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/06 19:56:00  sm
+**	- Fixing bugs concerning reflection and
+**	  refraction computation (both: direction
+**	  computation and shading)
+**
 **	Revision 1.7  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.6  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -68,7 +73,7 @@
 
 b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 {
-	b3_vector  *Normal       = &surface->incoming->normal;
+	b3_dVector *Normal       = &surface->incoming->normal;
 	b3_dVector *incoming_dir = &surface->incoming->dir;
 	b3_dVector *refl_dir     = &surface->refl_ray.dir;
 	b3_dVector *refr_dir;
@@ -89,8 +94,8 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 	refl_dir->x *= Factor;
 	refl_dir->y *= Factor;
 	refl_dir->z *= Factor;
-	surface->refl_ray.pos    =  surface->incoming->pos;
-	surface->refl_ray.inside = !surface->incoming->inside;
+	surface->refl_ray.pos    = surface->incoming->ipoint;
+	surface->refl_ray.inside = surface->incoming->inside;
 
 	//Use only sharp angles
 	if (cos_a >= 0)
@@ -103,14 +108,16 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 
 	if (surface->refr > 0)
 	{
-		ior      = surface->incoming->inside ? 1.0 / surface->ior : surface->ior;
+		ior      = surface->incoming->inside ? surface->ior : 1.0 / surface->ior;
 		refr_dir = &surface->refr_ray.dir;
 
 		if (fabs(cos_a) < 1)
 		{
 			d = ior * ior;
 			Factor = 1 - d + d * cos_a * cos_a;
-			if (Factor >= 0)	/* Test auf Totalreflexion */
+
+			// Test total reflection
+			if (Factor >= 0)
 			{
 				Factor = sqrt(Factor) + ior * cos_a;
 				refr_dir->x = Factor * Normal->x - incoming_dir->x * ior;
@@ -125,14 +132,16 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 				refr_dir->y *= Factor;
 				refr_dir->z *= Factor;
 
-				surface->refr_ray.pos    =  surface->incoming->pos;
+				surface->refr_ray.pos    =  surface->incoming->ipoint;
 				surface->refr_ray.inside = !surface->incoming->inside;
 				transparent = true;
 			}
 		}
-		else					/* Einfall senkrecht -> Richtung bleibt */
+		else
 		{
-			surface->refr_ray.pos    =  surface->incoming->pos;
+			// Perpendicular incoming ray so refracting ray is
+			// upside down.
+			surface->refr_ray.pos    =  surface->incoming->ipoint;
 			surface->refr_ray.dir    =  surface->incoming->dir;
 			surface->refr_ray.inside = !surface->incoming->inside;
 			transparent = true;
@@ -146,7 +155,7 @@ void b3Scene::b3Illuminate(
 	b3_light_info   *Jit,
 	b3_illumination *surface)
 {
-	register double ShapeAngle,Factor;
+	register double ShapeAngle;
 
 	if ((ShapeAngle =
 		surface->incoming->normal.x * Jit->dir.x +
