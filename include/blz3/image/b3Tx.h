@@ -189,12 +189,32 @@ typedef b3Exception<b3_tx_error,'TX'> b3TxException;
 **                                                                      **
 *************************************************************************/
 
+class b3_tx_quad
+{
+	       b3_pkd_color quad256[512];
+	
+	b3_tx_quad()
+	{
+		b3_loop i;
+
+		for (i = 0;i < 256;i++)
+		{
+			quad256[256 - i] =
+			quad256[256 + i] = i * i;
+		}
+	}
+
+	friend class b3ColorIndices;
+};
+
 // Auxiliary class for color indexing (private use of class b3Tx)
 class B3_PLUGIN b3ColorIndices : public b3Mem
 {
-	b3_count       num;
-	b3_count       max;
-	b3_index      *indices;
+	static b3_tx_quad  m_TxQuad;
+
+	       b3_count    num;
+	       b3_count    max;
+	       b3_index   *indices;
 public:
 	          b3ColorIndices ();
 	void      b3AddColorIndex(b3_index);
@@ -247,6 +267,11 @@ public:
 // one single image and its methods
 class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 {
+	static const b3_u08 m_Bits[8];
+	static const b3_u08 m_RightMaskLeftByte[16];
+	static const b3_u08 m_RightMaskRightByte[16];
+	static const b3_u08 m_RightBorder[];
+
 private:           
 	b3_pkd_color     *palette;
 	b3_count         *histogramme;
@@ -352,6 +377,26 @@ public:
 	void           b3ScaleToGrey(b3Tx *srcTx);
 	void           b3Scale      (b3Tx *srcTx);
 
+	static unsigned int b3ScaleBW2BW(void *ptr);
+	static unsigned int b3ScaleBW2Grey(void *ptr);
+	static unsigned int b3RGB8ScaleToRGB8(void *ptr);
+	static void         b3RGB8ComputeLineSmaller(
+		b3_count *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex, b3_pkd_color *src, b3_res xDstSize);
+	static void         b3RGB8ComputeLineBigger(
+		b3_count *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex, b3_pkd_color *src, b3_res xDstSize);
+	static void         b3ComputeLineSmaller(
+		b3_count *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex, b3_u08       *src, b3_res xDstSize);
+	static void         b3ComputeLineBigger(
+		b3_count *TxRowCounter,
+		b3_count *TxRowCells,
+		b3_count *rIndex, b3_u08       *src, b3_res xDstSize);
+
 	// b3TxMirror.cc
 	void           b3MirrorHorizontal();
 	void           b3MirrorVertical();
@@ -386,7 +431,6 @@ private:
 	void           b3TurnRightRGB8();
 
 	// b3TxScale.cc
-	void           b3DivTableInit    ();
 	void           b3MonoScaleToGrey (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToGrey  (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScaleToVGA   (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
@@ -452,7 +496,6 @@ private:
 	void           b3EHBPalette();
 	void           b3ConvertILBMLine (b3_u08 *Line,b3_u08 *Interleave,b3_res xMax,b3_count Planes);
 	void           b3HamPalette (b3_bool HAM8);
-	b3_bool        b3CalcYUVTable();
 
 	// b3TxGIF.cc
 	b3_result      b3ParseGIF  (b3_u08 *buffer);

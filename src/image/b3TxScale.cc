@@ -61,9 +61,12 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.21  2005/01/24 14:21:00  smork
+**	- Moved some static variables.
+**
 **	Revision 1.20  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.19  2003/11/23 13:14:13  sm
 **	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
 **	  bit wide integers.
@@ -181,18 +184,11 @@ struct b3_rect_info
 
 /*************************************************************************
 **                                                                      **
-**                        some constant tables                          **
-**                                                                      **
-*************************************************************************/
-
-static b3_pkd_color quad256[512];
-static b3_bool      quadValid = false;
-
-/*************************************************************************
-**                                                                      **
 **                        color index computing                         **
 **                                                                      **
 *************************************************************************/
+
+b3_tx_quad b3ColorIndices::m_TxQuad;
 
 b3ColorIndices::b3ColorIndices()
 {
@@ -242,9 +238,9 @@ b3_index b3ColorIndices::b3ColorIndex(
 
 		// Compute difference and test
 		actDiff  =
-			quad256[rDiff + 256] +
-			quad256[gDiff + 256] +
-			quad256[bDiff + 256];
+			m_TxQuad.quad256[rDiff + 256] +
+			m_TxQuad.quad256[gDiff + 256] +
+			m_TxQuad.quad256[bDiff + 256];
 		if (actDiff < diff)
 		{
 			// take smallest difference
@@ -261,8 +257,6 @@ b3_index b3ColorIndices::b3ColorIndex(
 **                                                                      **
 *************************************************************************/
 
-static b3_bool          divTableValid = false;
-
 #if 1
 
 #define B3_TX_MAX_DIVIDENT_BITS 12
@@ -270,51 +264,55 @@ static b3_bool          divTableValid = false;
 #define B3_TX_MAX_DIVISOR_BITS   4
 #define B3_TX_MAX_DIVISOR       (1 << B3_TX_MAX_DIVISOR_BITS)
 #define B3_TX_DIV_INDEX(value,divisor) (((value) << B3_TX_MAX_DIVISOR_BITS) | (divisor))
+
 #define B3_TX_DIV(value,divisor)\
 	((((value) < B3_TX_MAX_DIVIDENT) && ((divisor) < B3_TX_MAX_DIVISOR)) ?\
-		divTable[B3_TX_DIV_INDEX(value,divisor)] :\
+		b3_tx_divide::TxDivide.DivTable[B3_TX_DIV_INDEX(value,divisor)] :\
 		((value) / (divisor)))
 #define B3_TX_DIV2(value,divisor)\
 	(((value) < B3_TX_MAX_DIVIDENT) ?\
-		divTable[B3_TX_DIV_INDEX(value,divisor)] :\
+		b3_tx_divide::TxDivide.DivTable[B3_TX_DIV_INDEX(value,divisor)] :\
 		((value) / (divisor)))
 #define B3_TX_MUL255_DIV(value,divisor)\
 	((((value) < B3_TX_MAX_DIVIDENT) && ((divisor) < B3_TX_MAX_DIVISOR)) ?\
-		divTable255[B3_TX_DIV_INDEX(value,divisor)] :\
+		b3_tx_divide::TxDivide.DivTable255[B3_TX_DIV_INDEX(value,divisor)] :\
 		((value) * 255 / (divisor)))
-			
-static b3_u08 divTable[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
-static b3_u08 divTable255[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
 
-void b3Tx::b3DivTableInit()
+class b3_tx_divide
 {
-	b3_u32 value,divisor,result;
+	static b3_tx_divide TxDivide;
 
-	for (value = 1;value < B3_TX_MAX_DIVIDENT;value++)
+	       b3_u08       DivTable[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
+	       b3_u08       DivTable255[B3_TX_MAX_DIVIDENT * B3_TX_MAX_DIVISOR];
+
+	b3_tx_divide()
 	{
-		divTable[B3_TX_DIV_INDEX(value,0)] = 0xff;
-		for (divisor = 1;divisor < B3_TX_MAX_DIVISOR;divisor++)
-		{
-			result = value / divisor;
-			divTable[B3_TX_DIV_INDEX(value,divisor)] = (b3_u08)(result > 0xff ? 0xff : result);
+		b3_u32 value,divisor,result;
 
-			result = value * 255/ divisor;
-			divTable255[B3_TX_DIV_INDEX(value,divisor)] = (b3_u08)(result > 0xff ? 0xff : result);
+		for (value = 1;value < B3_TX_MAX_DIVIDENT;value++)
+		{
+			DivTable[B3_TX_DIV_INDEX(value,0)] = 0xff;
+			for (divisor = 1;divisor < B3_TX_MAX_DIVISOR;divisor++)
+			{
+				result = value / divisor;
+				DivTable[B3_TX_DIV_INDEX(value,divisor)] = (b3_u08)(result > 0xff ? 0xff : result);
+
+				result = value * 255/ divisor;
+				DivTable255[B3_TX_DIV_INDEX(value,divisor)] = (b3_u08)(result > 0xff ? 0xff : result);
+			}
 		}
 	}
-	divTableValid = true;
-}
+
+	friend class b3Tx;
+};
+
+b3_tx_divide b3_tx_divide::TxDivide;
 
 #else
 
 #define B3_TX_DIV(value,divisor)        ((value) / (divisor))
 #define B3_TX_DIV2(value,divisor)       ((value) / (divisor))
 #define B3_TX_MUL255_DIV(value,divisor) ((value) * 255 / (divisor))
-
-void b3Tx::b3DivTableInit()
-{
-	divTableValid = true;
-}
 
 #endif
 
@@ -323,13 +321,6 @@ void b3Tx::b3DivTableInit()
 **                        bit table                                     **
 **                                                                      **
 *************************************************************************/
-
-// Bit ordering in a byte. We see onto the byte starting from
-// left. So the first bit is the left most bit (No. 7)
-static const b3_u08 Bits[8] =
-{
-	128,64,32,16,8,4,2,1
-};
 
 // Now: Isn't it magic what the "Pixel Wizard" is doing here? If you
 // don't know what's going up here. Don't matter! I want to explain it
@@ -355,40 +346,20 @@ static const b3_u08 Bits[8] =
 
 #define BOOM
 
-static b3_bool TxBitCountValid = false;
-static b3_u08  TxBitCount[256];
-static b3_u08  TxBitCountInv[256];
-static b3_u08  TxMaskLeft[8] =
+class b3_tx_mask
 {
-	0xff,		// 11111111
-	0x7f,		// 01111111
-	0x3f,		// 00111111
-	0x1f,		// 00011111
-	0x0f,		// 00001111
-	0x07,		// 00000111
-	0x03,		// 00000011
-	0x01        // 00000001
-};
+	static       b3_tx_mask TxMask;
 
-static b3_u08 TxMaskRight[8] =
-{
-	0x00,		// 00000000
-	0x80,		// 10000000
-	0xc0,		// 11000000
-	0xe0,		// 11100000
-	0xf0,		// 11110000
-	0xf8,		// 11111000
-	0xfc,		// 11111100
-	0xfe		// 11111110
-};
+	             b3_u08     TxBitCount[256];
+	             b3_u08     TxBitCountInv[256];
+	static const b3_u08     TxMaskLeft[8];
+	static const b3_u08     TxMaskRight[8];
 
-static void BitCount()
-{
-	b3_loop  i,bit;
-	b3_u08   count;
-
-	if (!TxBitCountValid)
+	b3_tx_mask()
 	{
+		b3_loop  i,bit;
+		b3_u08   count;
+		
 		// For each possible value...
 		for (i = 0;i < 256;i++)
 		{
@@ -405,18 +376,43 @@ static void BitCount()
 			TxBitCount[i]    = count;
 			TxBitCountInv[i] = (b3_u08)(8 - count);
 		}
-
-		// Now we can use the tables
-		TxBitCountValid = true;
 	}
-}
+	
+	friend class b3Tx;
+};
+
+b3_tx_mask b3_tx_mask::TxMask;
+
+const b3_u08 b3_tx_mask::TxMaskLeft[8] =
+{
+	0xff,		// 11111111
+	0x7f,		// 01111111
+	0x3f,		// 00111111
+	0x1f,		// 00011111
+	0x0f,		// 00001111
+	0x07,		// 00000111
+	0x03,		// 00000011
+	0x01        // 00000001
+};
+
+const b3_u08 b3_tx_mask::TxMaskRight[8] =
+{
+	0x00,		// 00000000
+	0x80,		// 10000000
+	0xc0,		// 11000000
+	0xe0,		// 11100000
+	0xf0,		// 11110000
+	0xf8,		// 11111000
+	0xfc,		// 11111100
+	0xfe		// 11111110
+};
 
 #ifndef SLOW
 // NOTE:
 // Now the fast part begins here...
 
 // If a line is to be scaled up (means: destination is bigger)...
-static void b3ComputeLineBigger(
+void b3Tx::b3ComputeLineBigger(
 	b3_count *TxRowCounter,
 	b3_count *TxRowCells,
 	b3_count *rIndex,
@@ -429,7 +425,7 @@ static void b3ComputeLineBigger(
 	for (xDst = 0;xDst < xDstSize;xDst++)
 	{
 		index = rIndex[xDst];
-		if (src[index >> 3] & Bits[index & 7])
+		if (src[index >> 3] & m_Bits[index & 7])
 		{
 			TxRowCounter[xDst]++;
 		}
@@ -481,7 +477,7 @@ static void b3ComputeLineBigger(
 */
 
 // If a line is to be scaled down (means: destination is smaller)...
-static void b3ComputeLineSmaller(
+void b3Tx::b3ComputeLineSmaller(
 	b3_count *TxRowCounter,
 	b3_count *TxRowCells,
 	b3_count *rIndex,
@@ -507,8 +503,8 @@ static void b3ComputeLineSmaller(
 		{
 			// Case (1)
 			// start byte and end byte is the same byte
-			mask = (b3_u08)(TxMaskLeft[xStart & 7] & TxMaskRight[xEnd & 7]);
-			TxRowCounter[xDst] += TxBitCount[src[xByteStart] & mask];
+			mask = (b3_u08)(b3_tx_mask::TxMaskLeft[xStart & 7] & b3_tx_mask::TxMaskRight[xEnd & 7]);
+			TxRowCounter[xDst] += b3_tx_mask::TxMask.TxBitCount[src[xByteStart] & mask];
 		}
 		else
 		{
@@ -519,29 +515,29 @@ static void b3ComputeLineSmaller(
 			// Process end byte
 
 			// Start byte
-			mask = TxMaskLeft[xStart & 7];
-			TxRowCounter[xDst] += TxBitCount[src[xByteStart] & mask];
+			mask = b3_tx_mask::TxMaskLeft[xStart & 7];
+			TxRowCounter[xDst] += b3_tx_mask::TxMask.TxBitCount[src[xByteStart] & mask];
 
 			// count unmasked bytes between border...
 			xByteStart++;
 			while (xByteStart < xByteEnd)
 			{
-				TxRowCounter[xDst] += TxBitCount[src[xByteStart]];
+				TxRowCounter[xDst] += b3_tx_mask::TxMask.TxBitCount[src[xByteStart]];
 				xByteStart++;
 			}
 
 			// End byte
-			mask = TxMaskRight[xEnd & 7];
+			mask = b3_tx_mask::TxMaskRight[xEnd & 7];
 			if (mask != 0)
 			{
 				// xByteStart =!= xByteEnd
-				TxRowCounter[xDst] += TxBitCount[src[xByteStart] & mask];
+				TxRowCounter[xDst] += b3_tx_mask::TxMask.TxBitCount[src[xByteStart] & mask];
 			}
 		}
 	}
 }
 
-static unsigned int b3ScaleBW2Grey(void *ptr)
+unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 {
 	b3_rect_info *RectInfo;
 	b3_tx_type    dstType;
@@ -565,9 +561,6 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 		b3_count *rIndex,
 		b3_u08   *src,
 		b3_res    dstSize);
-
-	// Init some tables
-	BitCount();
 
 	// ... and some values
 	RectInfo = (b3_rect_info *)ptr;
@@ -719,7 +712,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 **                                                                      **
 *************************************************************************/
 
-static unsigned int b3ScaleBW2Grey(void *ptr)
+unsigned int b3Tx::b3ScaleBW2Grey(void *ptr)
 {
 	b3_rect_info *RectInfo;
 	b3_count     *rIndex;
@@ -733,7 +726,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 	b3_coord      x,y,sx,sy,ix,iy,rx,cy;
 	b3_res        xSize,yMin,yMax;
 
-	RectInfo = (b3RectInfo *)ptr;
+	RectInfo = (b3_rect_info *)ptr;
 
 	rIndex   = RectInfo->rIndex;
 	cIndex   = RectInfo->cIndex;
@@ -747,7 +740,8 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ScaleBW2Grey(%5ld - %5ld)\n",
 		yMin,yMax);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # palette %06lx %06lx\n",pal[0],pal[1]);
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # palette %06lx %06lx\n",
+		tx_pal[0],tx_pal[1]);
 
 
 	// For each new pixel in x- and y-direction...
@@ -769,7 +763,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 			{
 				// Adjust bits and bytes
 				rx    = rIndex[x];
-				bit   = Bits[rx & 7];
+				bit   = m_Bits[rx & 7];
 				num   = sy * srcBytes + (rx >> 3);
 
 				// First:  Find sample area greater zero [ri(x)..ri(x+ix)[.
@@ -780,7 +774,7 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 					 sx++)
 				{
 					byte   = src[num];
-					value += pal[byte & bit ? 1 : 0];
+					value += tx_pal[byte & bit ? 1 : 0];
 					bit    = bit >> 1;
 					if (bit == 0)
 					{
@@ -898,7 +892,7 @@ void b3Tx::b3MonoScaleToGrey(
 }
 
 // If a line is to be scaled up (means: destination is bigger)...
-static void b3RGB8ComputeLineBigger(
+void b3Tx::b3RGB8ComputeLineBigger(
 	b3_count     *TxRowCounter,
 	b3_count     *TxRowCells,
 	b3_count     *rIndex,
@@ -923,7 +917,7 @@ static void b3RGB8ComputeLineBigger(
 
 
 // If a line is to be scaled down (means: destination is smaller)...
-static void b3RGB8ComputeLineSmaller(
+void b3Tx::b3RGB8ComputeLineSmaller(
 	b3_count     *TxRowCounter,
 	b3_count     *TxRowCells,
 	b3_count     *rIndex,
@@ -953,7 +947,7 @@ static void b3RGB8ComputeLineSmaller(
 	}
 }
 
-static unsigned int b3RGB8ScaleToRGB8(void *ptr)
+unsigned int b3Tx::b3RGB8ScaleToRGB8(void *ptr)
 {
 	b3_rect_info *RectInfo;
 	b3_tx_type    dstType;
@@ -1269,17 +1263,6 @@ void b3Tx::b3ColorGrid()
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
-	// compute squares in range [0;255]
-	if (!quadValid)
-	{
-		for (i = 0;i < 256;i++)
-		{
-			quad256[256 - i] =
-			quad256[256 + i] = i * i;
-		}
-		quadValid = true;
-	}
-
 	// "Check in" palette
 	for (i = 0;i < pSize;i++)
 	{
@@ -1504,11 +1487,6 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
-	if (!divTableValid)
-	{
-		b3DivTableInit();
-	}
-
 	// Compute resampled start coordinates
 	b3PrintT("ScaleToGrey: start");
 	for (x = 0;x <= xSize;x++) rIndex[x] = x * srcTx->xSize / xSize;
@@ -1542,7 +1520,7 @@ void b3Tx::b3ScaleToGrey(b3Tx *srcTx)
 **                                                                      **
 *************************************************************************/
 
-static unsigned int b3ScaleBW2BW(void *ptr)
+unsigned int b3Tx::b3ScaleBW2BW(void *ptr)
 {
 	b3_rect_info *RectInfo;
 	b3_count     *rIndex;
@@ -1581,7 +1559,7 @@ static unsigned int b3ScaleBW2BW(void *ptr)
 		for (x = 0;x < xSize;x++)
 		{
 			rx     = rIndex[x];
-			srcBit = Bits[rx & 7];
+			srcBit = m_Bits[rx & 7];
 
 			// Copy bit
 			if (src[num + (rx >> 3)] & srcBit)
@@ -1654,8 +1632,8 @@ void b3Tx::b3MonoScale(
 			num = cIndex[y] * bytes;
 			for (x = 0;x < xSize;x++)
 			{
-				rx  = rIndex[x];
-				bit = Bits[rx & 7];
+				rx    = rIndex[x];
+				bit   = m_Bits[rx & 7];
 				value = pal[cData[num + (rx >> 3)] & bit ? 1 : 0];
 
 				data[index++] = (b3_u08)value;
@@ -1672,7 +1650,7 @@ void b3Tx::b3MonoScale(
 			for (x = 0;x < xSize;x++)
 			{
 				rx  = rIndex[x];
-				bit = Bits[rx & 7];
+				bit = m_Bits[rx & 7];
 
 				value = tx_pal[cData[num + (rx >> 3)] & bit ? 1 : 0];
 
@@ -1822,7 +1800,7 @@ b3_index b3Tx::b3ILBMPlaneValue (
 	PlaneValue   = 0;
 	Address      = (b3_u08 *)data;
 	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
-	Bit          = Bits[x & 7];
+	Bit          = m_Bits[x & 7];
 	for (i = 0;i < depth;i++)
 	{
 		Address     -= BytesPerLine;

@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2005/01/24 14:21:00  smork
+**      - Moved some static variables.
+**
 **      Revision 1.56  2005/01/18 11:49:05  smork
 **      - Added support for single buffered OpenGL drawing.
 **
@@ -612,7 +615,7 @@ int main(int argc,char *argv[])
 
 			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0)|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
-			glutCreateWindow("Greetinxx");
+			glutCreateWindow(filename);
 			glutDisplayFunc (&b3DisplayFunc);
 			glutKeyboardFunc(&b3KeyboardFunc);
 			glutReshapeFunc (&b3ReshapeFunc);

@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/01/24 14:21:00  smork
+**	- Moved some static variables.
+**
 **	Revision 1.12  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -103,10 +106,65 @@
 **                                                                      **
 *************************************************************************/
 
-static b3_yuv_table mult_yuv_table;
-static b3_bool      mult_yuv_table_loaded = false;
+class b3_yuv_table
+{
+	static b3_yuv_table  m_MultYuvTable;
+	static b3_u08        m_ConvertBits[8];
 
-static b3_u08 ConvertBits[8] =
+	       b3_s16 MultRV[256];
+	       b3_s16 MultGU[256];
+	       b3_s16 MultGV[256];
+	       b3_s16 MultBU[256];
+	       b3_u32 MultR[768];
+	       b3_u32 MultG[768];
+	       b3_u32 MultB[768];
+
+	inline b3_yuv_table()
+	{
+		long				 i;
+		double				 Rad;
+
+		for (i = 0;i < 256;i++)
+		{
+			Rad = (i - 128.0) * 0.8588;
+			MultRV[i] = 256 + (long)(Rad *  1.587);  /*  = 156 / 112 *  1.14  */
+			MultGU[i] = 128 + (long)(Rad * -0.394);  /*  = 112 / 112 * -0.394 */
+			MultGV[i] = 128 + (long)(Rad * -0.8092); /*  = 156 / 112 * -0.581 */
+			MultBU[i] = 256 + (long)(Rad *  2.028);  /*  = 112 / 112 *  2.028 */
+
+			Rad = i -  16.0;
+			MultR[i+256] = (b3_u32)(Rad * 1.1644) << 16; /*  = 255 / (235 - 16) */
+			MultG[i+256] = (b3_u32)(Rad * 1.1644) <<  8; /*  = 255 / (235 - 16) */
+			MultB[i+256] = (b3_u32)(Rad * 1.1644);       /*  = 255 / (235 - 16) */
+
+			if (i <  16)
+			{
+				MultR[i+256] =   0;
+				MultG[i+256] =   0;
+				MultB[i+256] =   0;
+			}
+			if (i > 235)
+			{
+				MultR[i+256] = 0xff0000;
+				MultG[i+256] = 0x00ff00;
+				MultB[i+256] = 0x0000ff;
+			}
+
+			MultR[i]     = 0;
+			MultG[i]     = 0;
+			MultB[i]     = 0;
+			MultR[i+512] = 0xff0000; 
+			MultG[i+512] = 0x00ff00; 
+			MultB[i+512] = 0x0000ff; 
+		}
+	}
+
+	friend class b3Tx;
+};
+
+b3_yuv_table b3_yuv_table::m_MultYuvTable;
+
+b3_u08 b3_yuv_table::m_ConvertBits[8] =
 {
 	128,64,32,16,8,4,2,1
 };
@@ -307,13 +365,19 @@ void b3Tx::b3ConvertILBMLine (
 	{
 		Color = 0;
 		Interleave += offset;
-		for (p=0;p<Planes;p++)
+		for (p = 0; p < Planes; p++)
 		{
 			Interleave -= Width;
 			Color      += Color;
-			if (ConvertBits[x & 7] & Interleave[0]) Color |= 1;
+			if (b3_yuv_table::m_ConvertBits[x & 7] & Interleave[0])
+			{
+				Color |= 1;
+			}
 		}
-		if ((x & 7)==7) Interleave++;
+		if ((x & 7) == 7)
+		{
+			Interleave++;
+		}
 		Line[0] = Color;
 		Line++;
 	}
@@ -590,50 +654,6 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Tx::b3CalcYUVTable ()
-{
-	long				 i;
-	double				 Rad;
-
-	if (!mult_yuv_table_loaded)
-	{
-		for (i = 0;i < 256;i++)
-		{
-			Rad = (i - 128.0) * 0.8588;
-			mult_yuv_table.MultRV[i] = 256 + (long)(Rad *  1.587);  /*  = 156 / 112 *  1.14  */
-			mult_yuv_table.MultGU[i] = 128 + (long)(Rad * -0.394);  /*  = 112 / 112 * -0.394 */
-			mult_yuv_table.MultGV[i] = 128 + (long)(Rad * -0.8092); /*  = 156 / 112 * -0.581 */
-			mult_yuv_table.MultBU[i] = 256 + (long)(Rad *  2.028);  /*  = 112 / 112 *  2.028 */
-
-			Rad = i -  16.0;
-			mult_yuv_table.MultR[i+256] = (b3_u32)(Rad * 1.1644) << 16; /*  = 255 / (235 - 16) */
-			mult_yuv_table.MultG[i+256] = (b3_u32)(Rad * 1.1644) <<  8; /*  = 255 / (235 - 16) */
-			mult_yuv_table.MultB[i+256] = (b3_u32)(Rad * 1.1644);       /*  = 255 / (235 - 16) */
-			if (i <  16)
-			{
-				mult_yuv_table.MultR[i+256] =   0;
-				mult_yuv_table.MultG[i+256] =   0;
-				mult_yuv_table.MultB[i+256] =   0;
-			}
-			if (i > 235)
-			{
-				mult_yuv_table.MultR[i+256] = 0xff0000;
-				mult_yuv_table.MultG[i+256] = 0x00ff00;
-				mult_yuv_table.MultB[i+256] = 0x0000ff;
-			}
-
-			mult_yuv_table.MultR[i]     = 0;
-			mult_yuv_table.MultG[i]     = 0;
-			mult_yuv_table.MultB[i]     = 0;
-			mult_yuv_table.MultR[i+512] = 0xff0000; 
-			mult_yuv_table.MultG[i+512] = 0x00ff00; 
-			mult_yuv_table.MultB[i+512] = 0x0000ff; 
-		}
-		mult_yuv_table_loaded = true;
-	}
-	return true;
-}
-
 static inline b3_u32 b3ShiftCount(b3_count Count)
 {
 	b3_u32 Shift = 0;
@@ -763,12 +783,6 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			B3_THROW(b3TxException,B3_TX_ERR_HEADER);
 		}
-		if (!b3CalcYUVTable())
-		{
-			b3FreeTx();
-			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
-			B3_THROW(b3TxException,B3_TX_MEMORY);
-		}
 		if (!b3AllocTx(xSize,ySize,24))
 		{
 			b3FreeTx();
@@ -792,9 +806,9 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 				u = Uprop >> Shift;
 				v = Vprop >> Shift;
 				*LongData++ =
-					mult_yuv_table.MultR[y + mult_yuv_table.MultRV[v]] |
-					mult_yuv_table.MultG[y + mult_yuv_table.MultGU[u] + mult_yuv_table.MultGV[v]] |
-					mult_yuv_table.MultB[y + mult_yuv_table.MultBU[u]];
+					b3_yuv_table::m_MultYuvTable.MultR[y + b3_yuv_table::m_MultYuvTable.MultRV[v]] |
+					b3_yuv_table::m_MultYuvTable.MultG[y + b3_yuv_table::m_MultYuvTable.MultGU[u] + b3_yuv_table::m_MultYuvTable.MultGV[v]] |
+					b3_yuv_table::m_MultYuvTable.MultB[y + b3_yuv_table::m_MultYuvTable.MultBU[u]];
 
 				Uprop -= Uprev;
 				Vprop -= Vprev;

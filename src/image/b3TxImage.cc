@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/24 14:21:00  smork
+**	- Moved some static variables.
+**
 **	Revision 1.13  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.12  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -157,17 +160,6 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3Tx shrink dark bars (BW only)               **
-**                                                                      **
-*************************************************************************/
-
-static const b3_u08 Bits[8] =
-{
-	128,64,32,16,8,4,2,1
-};
-
-/*************************************************************************
-**                                                                      **
 **                        b3Tx imaging                                  **
 **                                                                      **
 *************************************************************************/
@@ -252,7 +244,7 @@ void b3Tx::b3BuildRow(
 	for (k = 0;k < num;k += 2)
 	{
 		i      = count >> 3;
-		bit    = Bits[count & 7];
+		bit    = m_Bits[count & 7];
 		byte   = 0;
 		for (b = 0;b < line[k];b++)
 		{
@@ -337,113 +329,43 @@ void b3Tx::b3RemoveBlackBorder()
 
 #else
 
-// That's fine here. It's warm and faaaast.
-
-/********************************
-Set right border for rotation
-to prevent outside bits to be
-converted into new image (memory
-underflow!)
-
-xSize & %1111 =  0: XXXXXXXX XXXXXXXX -> 11111111 11111111 (not used)
-xSize & %1111 =  1: Xnnnnnnn nnnnnnnn -> 10000000 00000000
-xSize & %1111 =  2: XXnnnnnn nnnnnnnn -> 11000000 00000000
-xSize & %1111 =  3: XXXnnnnn nnnnnnnn -> 11100000 00000000
-xSize & %1111 =  4: XXXXnnnn nnnnnnnn -> 11110000 00000000
-xSize & %1111 =  5: XXXXXnnn nnnnnnnn -> 11111000 00000000
-xSize & %1111 =  6: XXXXXXnn nnnnnnnn -> 11111100 00000000
-xSize & %1111 =  7: XXXXXXXn nnnnnnnn -> 11111110 00000000
-
-xSize & %1111 =  8: XXXXXXXX nnnnnnnn -> 11111111 00000000
-xSize & %1111 =  9: XXXXXXXX Xnnnnnnn -> 11111111 10000000
-xSize & %1111 = 10: XXXXXXXX XXnnnnnn -> 11111111 11000000
-xSize & %1111 = 11: XXXXXXXX XXXnnnnn -> 11111111 11100000
-xSize & %1111 = 12: XXXXXXXX XXXXnnnn -> 11111111 11110000
-xSize & %1111 = 13: XXXXXXXX XXXXXnnn -> 11111111 11111000
-xSize & %1111 = 14: XXXXXXXX XXXXXXnn -> 11111111 11111100
-xSize & %1111 = 15: XXXXXXXX XXXXXXXn -> 11111111 11111110
-
-********************************/
-static b3_u08 rightMaskLeftByte[16] =
+class b3_tx_border
 {
-	0xff,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe,
-	0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
-};
+	static b3_tx_border TxBorder;
 
-static b3_u08 rightMaskRightByte[16] =
-{
-	0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-	0x00,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe
-};
+	/********************************
+	  left border
+	0XXXXXXX -> 0XXXXXXX (end case)
+	10XXXXXX -> 00XXXXXX      "
+	110XXXXX -> 000XXXXX      "
+	1110XXXX -> 0000XXXX      "
+	11110XXX ->	00000XXX      "
+	111110XX -> 000000XX      "
+	1111110X -> 0000000X      "
+	11111110 -> 00000000      "
+	11111111 -> 00000000 (loop case)
+	*********************************/
+	       b3_u08       lRemoval[256];
 
-/********************************
-Set right border for right
-correction (n=not inside image) in
-case the pixel width is not
-byte aligned
-
-Xnnnnnnn -> X1111111
-XXnnnnnn -> XX111111
-XXXnnnnn -> XXX11111
-XXXXnnnn -> XXXX1111
-XXXXXnnn -> XXXXX111
-XXXXXXnn -> XXXXXX11
-XXXXXXXn -> XXXXXXX1
-XXXXXXXX -> XXXXXXXX
-********************************/
-static b3_u08 rightBorder[] =
-{
-	0xff,0x7f,0x3f,0x1f,0x0f,0x07,0x03,0x01
-};
-
-/********************************
-  left border
-0XXXXXXX -> 0XXXXXXX (end case)
-10XXXXXX -> 00XXXXXX      "
-110XXXXX -> 000XXXXX      "
-1110XXXX -> 0000XXXX      "
-11110XXX ->	00000XXX      "
-111110XX -> 000000XX      "
-1111110X -> 0000000X      "
-11111110 -> 00000000      "
-11111111 -> 00000000 (loop case)
-*********************************/
-static b3_u08 lRemoval[256];
-
-/********************************
-  right border
-XXXXXXX0 -> XXXXXXX0 (end case)
-XXXXXX01 -> XXXXXX00      "
-XXXXX011 -> XXXXX000      "
-XXXX0111 -> XXXX0000      "
-XXX01111 -> XXX00000      "
-XX011111 -> XX000000      "
-X0111111 -> X0000000      "
-01111111 -> 00000000      "
-11111111 -> 00000000 (loop case)
-*********************************/
-static b3_u08 rRemoval[256];
-
-static b3_bool           removalTable = false;
-
-// This is the nice version...
-
-void b3Tx::b3RemoveBlackBorder()
-{
-	b3_coord x,y;
-	b3_res   xEnd;
-	b3_count xBytes,b,byte;
-	b3_u08   *cPtr;
-	b3_bool   loop;
-
-	// Do nothing if image has no width.
-	if (!b3IsBW()) return;
-	if (xSize == 0) return;
-
-	// Initialize mask tables
-	// Do this only once!
-	if (!removalTable)
+	/********************************
+	  right border
+	XXXXXXX0 -> XXXXXXX0 (end case)
+	XXXXXX01 -> XXXXXX00      "
+	XXXXX011 -> XXXXX000      "
+	XXXX0111 -> XXXX0000      "
+	XXX01111 -> XXX00000      "
+	XX011111 -> XX000000      "
+	X0111111 -> X0000000      "
+	01111111 -> 00000000      "
+	11111111 -> 00000000 (loop case)
+	*********************************/
+	       b3_u08       rRemoval[256];
+	
+	b3_tx_border()
 	{
+		b3_loop x,b;
+		b3_u08  byte;
+
 		for (x = 0;x < 256;x++)
 		{
 			// compute left mask
@@ -476,7 +398,91 @@ void b3Tx::b3RemoveBlackBorder()
 			}
 			rRemoval[x] = (b3_u08)(byte & 0xff);
 		}
-		removalTable = true;
+	}
+
+	friend class b3Tx;
+};
+
+b3_tx_border b3_tx_border::TxBorder;
+
+// That's fine here. It's warm and faaaast.
+
+/********************************
+Set right border for rotation
+to prevent outside bits to be
+converted into new image (memory
+underflow!)
+
+xSize & %1111 =  0: XXXXXXXX XXXXXXXX -> 11111111 11111111 (not used)
+xSize & %1111 =  1: Xnnnnnnn nnnnnnnn -> 10000000 00000000
+xSize & %1111 =  2: XXnnnnnn nnnnnnnn -> 11000000 00000000
+xSize & %1111 =  3: XXXnnnnn nnnnnnnn -> 11100000 00000000
+xSize & %1111 =  4: XXXXnnnn nnnnnnnn -> 11110000 00000000
+xSize & %1111 =  5: XXXXXnnn nnnnnnnn -> 11111000 00000000
+xSize & %1111 =  6: XXXXXXnn nnnnnnnn -> 11111100 00000000
+xSize & %1111 =  7: XXXXXXXn nnnnnnnn -> 11111110 00000000
+
+xSize & %1111 =  8: XXXXXXXX nnnnnnnn -> 11111111 00000000
+xSize & %1111 =  9: XXXXXXXX Xnnnnnnn -> 11111111 10000000
+xSize & %1111 = 10: XXXXXXXX XXnnnnnn -> 11111111 11000000
+xSize & %1111 = 11: XXXXXXXX XXXnnnnn -> 11111111 11100000
+xSize & %1111 = 12: XXXXXXXX XXXXnnnn -> 11111111 11110000
+xSize & %1111 = 13: XXXXXXXX XXXXXnnn -> 11111111 11111000
+xSize & %1111 = 14: XXXXXXXX XXXXXXnn -> 11111111 11111100
+xSize & %1111 = 15: XXXXXXXX XXXXXXXn -> 11111111 11111110
+
+********************************/
+const b3_u08 b3Tx::m_RightMaskLeftByte[16] =
+{
+	0xff,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe,
+	0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff
+};
+
+const b3_u08 b3Tx::m_RightMaskRightByte[16] =
+{
+	0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+	0x00,0x80,0xc0,0xe0,0xf0,0xf8,0xfc,0xfe
+};
+
+/********************************
+Set right border for right
+correction (n=not inside image) in
+case the pixel width is not
+byte aligned
+
+Xnnnnnnn -> X1111111
+XXnnnnnn -> XX111111
+XXXnnnnn -> XXX11111
+XXXXnnnn -> XXXX1111
+XXXXXnnn -> XXXXX111
+XXXXXXnn -> XXXXXX11
+XXXXXXXn -> XXXXXXX1
+XXXXXXXX -> XXXXXXXX
+********************************/
+const b3_u08 b3Tx::m_RightBorder[] =
+{
+	0xff,0x7f,0x3f,0x1f,0x0f,0x07,0x03,0x01
+};
+
+
+// This is the nice version...
+
+void b3Tx::b3RemoveBlackBorder()
+{
+	b3_coord x,y;
+	b3_res   xEnd;
+	b3_count xBytes,b,byte;
+	b3_u08   *cPtr;
+	b3_bool   loop;
+
+	// Do nothing if image has no width.
+	if (!b3IsBW())
+	{
+		return;
+	}
+	if (xSize == 0)
+	{
+		return;
 	}
 
 	// Init some values...
@@ -490,8 +496,8 @@ void b3Tx::b3RemoveBlackBorder()
 	{
 		for (y = 0;y < ySize;y++)
 		{
-			cPtr[xEnd] |= rightBorder[x];
-			cPtr += xBytes;
+			cPtr[xEnd] |= m_RightBorder[x];
+			cPtr       += xBytes;
 		}
 	}			
 	else
@@ -509,9 +515,12 @@ void b3Tx::b3RemoveBlackBorder()
 		do
 		{
 			loop    = cPtr[x] == 255;
-			cPtr[x] = lRemoval[cPtr[x]];
+			cPtr[x] = b3_tx_border::TxBorder.lRemoval[cPtr[x]];
 			x++;
-			if (x >= xBytes) loop = false;
+			if (x >= xBytes)
+			{
+				loop = false;
+			}
 		}
 		while (loop);
 
@@ -521,9 +530,12 @@ void b3Tx::b3RemoveBlackBorder()
 		do
 		{
 			loop    = cPtr[x] == 255;
-			cPtr[x] = rRemoval[cPtr[x]];
+			cPtr[x] = b3_tx_border::TxBorder.rRemoval[cPtr[x]];
 			x--;
-			if (x >= xBytes) loop = false;
+			if (x >= xBytes)
+			{
+				loop = false;
+			}
 		}
 		while (loop);
 
@@ -788,7 +800,7 @@ void b3Tx::b3TurnRightILBM()
 	{
 		// set start position
 		dstPos = (b3_coord)(y >> 3);
-		dstBit = Bits[y &  7];
+		dstBit = m_Bits[y &  7];
 		for (x = 0;x < xBytes;x++)
 		{
 			srcByte = oldData[x];
@@ -1019,8 +1031,8 @@ void b3Tx::b3TurnLeftILBM()
 		ptr = &oldData[xBytes - 2];
 		for (y = 0;y < ySize;y++)
 		{
-			ptr[0] &= rightMaskLeftByte[maskPos];
-			ptr[1] &= rightMaskRightByte[maskPos];
+			ptr[0] &= m_RightMaskLeftByte[maskPos];
+			ptr[1] &= m_RightMaskRightByte[maskPos];
 			ptr    += xBytes;
 		}
 	}
@@ -1031,7 +1043,7 @@ void b3Tx::b3TurnLeftILBM()
 	{
 		// set start position
 		dstPos = dstStart + (b3_coord)(y >> 3);
-		dstBit = Bits[y &  7];
+		dstBit = m_Bits[y &  7];
 		for (x = 0;x < xBytes;x++)
 		{
 			srcByte = oldData[x];
@@ -1217,24 +1229,15 @@ void b3Tx::b3TurnLeft()
 **                                                                      **
 *************************************************************************/
 
-static b3_u08 Turnbytes[256];
-static b3_bool          TurnbytesValid;
-
-void b3Tx::b3Turn()
+class b3_tx_turn
 {
-	b3_u08        cBack,*cfPtr,*cbPtr,*cPtr;
-	b3_u16        sBack,*sfPtr,*sbPtr;
-	b3_pkd_color  lBack,*lfPtr,*lbPtr;
-	b3_coord      y;
-	b3_index      i,d;
-	b3_count      max,size;
-
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Turn()\n");
-	size = xSize * ySize;
-	max  = size >> 1;
-	if (!TurnbytesValid)
+	static b3_tx_turn TxTurn;
+	       b3_u08     Turnbytes[256];
+	
+	b3_tx_turn()
 	{
 		b3_coord bit,byte,turn;
+		b3_loop  i;
 
 		for(i = 0;i < 256;i++)
 		{
@@ -1248,8 +1251,25 @@ void b3Tx::b3Turn()
 			}
 			Turnbytes[i] = (b3_u08)(turn & 0xff);
 		}
-		TurnbytesValid = true;
 	}
+
+	friend class b3Tx;
+};
+
+b3_tx_turn b3_tx_turn::TxTurn;
+
+void b3Tx::b3Turn()
+{
+	b3_u08        cBack,*cfPtr,*cbPtr,*cPtr;
+	b3_u16        sBack,*sfPtr,*sbPtr;
+	b3_pkd_color  lBack,*lfPtr,*lbPtr;
+	b3_coord      y;
+	b3_index      i,d;
+	b3_count      max,size;
+
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Turn()\n");
+	size = xSize * ySize;
+	max  = size >> 1;
 
 	switch (type)
 	{
@@ -1277,8 +1297,8 @@ void b3Tx::b3Turn()
 				for (x = 0;x < max;x++)
 				{
 					cbPtr--;
-					cBack  = Turnbytes[*cbPtr];
-					*cbPtr = Turnbytes[*cfPtr];
+					cBack  = b3_tx_turn::TxTurn.Turnbytes[*cbPtr];
+					*cbPtr = b3_tx_turn::TxTurn.Turnbytes[*cfPtr];
 					*cfPtr =  cBack;
 					cfPtr++;
 				}

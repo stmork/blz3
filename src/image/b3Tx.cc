@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2005/01/24 14:21:00  smork
+**	- Moved some static variables.
+**
 **	Revision 1.30  2004/06/27 11:36:54  sm
 **	- Changed texture dialog for editing negative direction in
 **	  contrast to length.
@@ -44,7 +47,7 @@
 **	- Check for empty textures inside OpenGL subsystem. May this
 **	  be ticket no. 21?
 **	- Animation values initialization fix.
-**
+**	
 **	Revision 1.29  2004/01/18 13:51:57  sm
 **	- Done further security issues.
 **	
@@ -255,7 +258,7 @@
 **                                                                      **
 *************************************************************************/
 
-static const b3_u08 Bits[8] =
+const b3_u08 b3Tx::m_Bits[8] =
 {
 	128,64,32,16,8,4,2,1
 };
@@ -792,7 +795,7 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	PlaneValue   = 0;
 	Address      = (b3_u08 *)data;
 	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
-	Bit          = Bits[x & 7];
+	Bit          = m_Bits[x & 7];
 	for (i = 0;i < depth;i++)
 	{
 		Address     -= BytesPerLine;
@@ -870,7 +873,7 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 			cPtr   = (b3_u08 *)data;
 			cPtr  += ((y + 1) * xBytes * depth + (x >> 3));
 			result = 0;
-			bit    = Bits[x & 7];
+			bit    = m_Bits[x & 7];
 			for (i = 0;i < depth;i++)
 			{
 				cPtr    -= xBytes;
@@ -924,7 +927,7 @@ inline void b3Tx::b3GetILBM (
 			Data   = (b3_u08 *)data;
 			Data  += ((y+1) * BytesPerLine * depth + (x >> 3));
 			Color  = 0;
-			Bit    = Bits[x & 7];
+			Bit    = m_Bits[x & 7];
 			for (d = 0;d < depth;d++)
 			{
 				Data   -= BytesPerLine;
@@ -945,7 +948,7 @@ inline void b3Tx::b3GetILBM (
 			Data   = data;
 			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3));
 			Color  = 0;
-			Bit    = Bits[x & 7];
+			Bit    = m_Bits[x & 7];
 			for (d = 0;d < depth;d++)
 			{
 				Data   -= BytesPerLine;

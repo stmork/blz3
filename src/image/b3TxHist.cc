@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/01/24 14:21:00  smork
+**	- Moved some static variables.
+**
 **	Revision 1.8  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -113,11 +116,6 @@
 **                                                                      **
 *************************************************************************/
 
-static const b3_u08 Bits[8] =
-{
-	128,64,32,16,8,4,2,1
-};
-
 /*****************************
 
 bits     bwBitsSet bwBitsClear
@@ -136,9 +134,37 @@ bits     bwBitsSet bwBitsClear
 
 *****************************/
 
-static b3_bool bwInit = false;
-static b3_u08  bwBitsSet[256];
-static b3_u08  bwBitsClr[256];
+class b3_fill_bits
+{
+	static b3_fill_bits m_FillBits;
+
+	inline b3_fill_bits()
+	{
+		b3_coord      x;
+		b3_pkd_color  bit;
+		b3_u08        set,clr;
+
+		for (x = 0;x < 256;x++)
+		{
+			set = 0;
+			clr = 0;
+			for (bit = 128;bit != 0;bit = bit >> 1)
+			{
+				if (x & bit) set++;
+				else         clr++;
+			}
+			bwBitsSet[x] = set;
+			bwBitsClr[x] = clr;
+		}
+	}
+
+	b3_u08  bwBitsSet[256];
+	b3_u08  bwBitsClr[256];
+
+	friend class b3Tx;
+};
+
+b3_fill_bits b3_fill_bits::m_FillBits;
 
 /*************************************************************************
 **                                                                      **
@@ -204,28 +230,6 @@ b3_bool b3Tx::b3AddHist(
 {
 	b3_u08 *cPtr;
 
-	// Compute bit set/cleared table
-	if (!bwInit)
-	{
-		b3_coord      x;
-		b3_pkd_color  bit;
-		b3_u08        set,clr;
-
-		for (x = 0;x < 256;x++)
-		{
-			set = 0;
-			clr = 0;
-			for (bit = 128;bit != 0;bit = bit >> 1)
-			{
-				if (x & bit) set++;
-				else         clr++;
-			}
-			bwBitsSet[x] = set;
-			bwBitsClr[x] = clr;
-		}
-		bwInit = true;
-	}
-		
 	// if Tx is type of direct palette entries
 	if (type == B3_TX_VGA)
 	{
@@ -291,8 +295,8 @@ b3_bool b3Tx::b3AddHist(
 			cPtr = &data[y * xBytes];
 			for (x = 0;x < xBytes;x++)
 			{
-				histogramme[0] += bwBitsClr[cPtr[x]];
-				histogramme[1] += bwBitsSet[cPtr[x]];
+				histogramme[0] += b3_fill_bits::m_FillBits.bwBitsClr[cPtr[x]];
+				histogramme[1] += b3_fill_bits::m_FillBits.bwBitsSet[cPtr[x]];
 			}
 		}
 		return true;
