@@ -23,6 +23,7 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
@@ -33,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/10/19 18:27:28  sm
+**	- Fixing LDC bug
+**	- Optimizing color routines
+**
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.14  2001/10/18 15:16:28  sm
 **	- Testing with an appropriate system - and it's good!
 **	
@@ -139,7 +144,7 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	b3_dVector    preDir;
 	b3_f64        fx,fxStep;
 	b3_f64        fy;
-	b3_pkd_color *buffer,r,g,b;
+	b3_pkd_color *buffer;
 
 	buffer = row->b3GetBuffer();
 	xSize  = row->m_xSize;
@@ -169,13 +174,8 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 		{
 			b3GetBackgroundColor(&ray.color);
 		}
-		r = (b3_pkd_color)(ray.color.r * 255);
-		g = (b3_pkd_color)(ray.color.g * 255);
-		b = (b3_pkd_color)(ray.color.b * 255);
-		buffer[x] =
-			((r > 255 ? 255 : r) << 16) |
-			((g > 255 ? 255 : g) <<  8) |
-			 (b > 255 ? 255 : b);
+
+		buffer[x] = b3Color::b3GetSatColor(&ray.color);
 
 		fx += fxStep;
 	}

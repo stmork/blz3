@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/10/19 18:27:28  sm
+**      - Fixing LDC bug
+**      - Optimizing color routines
+**
 **      Revision 1.15  2001/10/19 14:46:57  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -235,6 +239,22 @@ b3_bool b3Light::b3Prepare()
 				m_SoftShadow = false;
 			}
 		}
+		if (m_SpotActive)
+		{
+			b3_f64 length;
+
+			length = b3Vector::b3Length(&m_Direction);
+			if (length > 0)
+			{
+				m_SpotDir.x = m_Direction.x / length;
+				m_SpotDir.y = m_Direction.y / length;
+				m_SpotDir.z = m_Direction.z / length;
+			}
+			else
+			{
+				m_SpotActive = false;
+			}
+		}
 	}
 	return true;
 }
@@ -285,9 +305,9 @@ b3_bool b3Light::b3PointIllumination(
 	if (m_SpotActive)
 	{
 		LightFrac = -(
-			Jit.dir.x * m_Direction.x +
-			Jit.dir.y * m_Direction.y +
-			Jit.dir.z * m_Direction.z);
+			Jit.dir.x * m_SpotDir.x +
+			Jit.dir.y * m_SpotDir.y +
+			Jit.dir.z * m_SpotDir.z);
 		if (LightFrac <= 0)
 		{
 			q = 1.0 - epsilon;
@@ -344,9 +364,9 @@ b3_bool b3Light::b3AreaIllumination (
 	if (m_SpotActive)
 	{
 		Factor = -(
-			Jit.LightView.x * m_Direction.x +
-			Jit.LightView.y * m_Direction.y +
-			Jit.LightView.z * m_Direction.z);
+			Jit.LightView.x * m_SpotDir.x +
+			Jit.LightView.y * m_SpotDir.y +
+			Jit.LightView.z * m_SpotDir.z);
 		if (Factor <= 0) q = 1.0 - epsilon;
 		else
 		{

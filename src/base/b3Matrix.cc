@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/10/19 18:27:28  sm
+**	- Fixing LDC bug
+**	- Optimizing color routines
+**
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.14  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -185,60 +189,6 @@ b3_bool b3NormalizeRow (
 **                           global part                                **
 **                                                                      **
 *************************************************************************/
-
-#if 0
-b3_f64 b3Normalize(b3_vector *vector)
-{
-	b3_f64 length;
-
-	length = sqrt(
-		vector->x * vector->x +
-		vector->y * vector->y +
-		vector->z * vector->z);
-	vector->x /= length;
-	vector->y /= length;
-	vector->z /= length;
-	return length;
-}
-
-b3_f64 b3Length (b3_vector *Vector)
-{
-	return sqrt(
-		Vector->x * Vector->x +
-		Vector->y * Vector->y +
-		Vector->z * Vector->z);
-}
-
-b3_f64 b3QuadLength (b3_vector *Vector)
-{
-	return 
-		Vector->x * Vector->x +
-		Vector->y * Vector->y +
-		Vector->z * Vector->z;
-}
-
-b3_f64 b3Distance(b3_vector *from,b3_vector *to)
-{
-	b3_f64 x,y,z;
-
-	x = to->x - from->x;
-	y = to->y - from->y;
-	z = to->z - from->z;
-
-	return sqrt(x * x + y * y + z * z);
-}
-
-b3_vector *b3CrossProduct (
-	b3_vector *a,
-	b3_vector *b,
-	b3_vector *c)
-{
-	c->x = a->y * b->z - a->z * b->y;
-	c->y = a->z * b->x - a->x * b->z;
-	c->z = a->x * b->y - a->y * b->x;
-	return c;
-}
-#endif
 
 b3_f64 b3AngleOfVectors(
 	b3_vector *Vector1,

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Aux.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/image/b3TxPool.h"
 
@@ -33,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/10/19 18:27:28  sm
+**      - Fixing LDC bug
+**      - Optimizing color routines
+**
 **      Revision 1.12  2001/10/19 14:46:57  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -324,10 +329,7 @@ b3_bool b3MatTexture::b3GetColors(
 	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
 	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
 
-	result      = m_Texture->b3GetValue(x,y);
-	diffuse->r  = (b3_f32)((result & 0xff0000) >> 16) / 255;
-	diffuse->g  = (b3_f32)((result & 0x00ff00) >>  8) / 255;
-	diffuse->b  = (b3_f32)( result & 0x0000ff)        / 255;
+	b3Color::b3GetColor(diffuse,m_Texture->b3GetValue(x,y));
 	ambient->r  = diffuse->r * 0.3;
 	ambient->g  = diffuse->g * 0.3;
 	ambient->b  = diffuse->b * 0.3;
@@ -442,13 +444,8 @@ b3_bool b3MatWrapTexture::b3GetColors(
 		return false;
 	}
 
-	result      = m_Texture->b3GetValue(x,y);
-	diffuse->r  = (b3_f32)((result & 0xff0000) >> 16) / 255;
-	diffuse->g  = (b3_f32)((result & 0x00ff00) >>  8) / 255;
-	diffuse->b  = (b3_f32)( result & 0x0000ff)        / 255;
-	ambient->r  = diffuse->r * 0.3;
-	ambient->g  = diffuse->g * 0.3;
-	ambient->b  = diffuse->b * 0.3;
+	b3Color::b3GetColor(diffuse,m_Texture->b3GetValue(x,y));
+	b3Color::b3Scale(diffuse,0.3,ambient);
 	specular->r =
 	specular->g =
 	specular->b = 0.7f;

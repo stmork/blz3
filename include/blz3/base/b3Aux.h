@@ -34,6 +34,95 @@ public:
 	void          operator=(const b3_pkd_color &);
 };
 
+class b3Color
+{
+public:
+	static inline b3_pkd_color b3GetColor(b3_color *color)
+	{
+		register b3_pkd_color r,g,b;
+
+		r = (b3_pkd_color)(color->r * 255);
+		g = (b3_pkd_color)(color->g * 255);
+		b = (b3_pkd_color)(color->b * 255);
+		return (r << 16) | (g << 8) | b;
+	}
+
+	static inline b3_pkd_color b3GetSatColor(b3_color *color)
+	{
+		register b3_pkd_color r,g,b;
+
+		r = (b3_pkd_color)(color->r * 255);
+		g = (b3_pkd_color)(color->g * 255);
+		b = (b3_pkd_color)(color->b * 255);
+		return
+			((r > 255 ? 255 : r) << 16) |
+			((g > 255 ? 255 : g) <<  8) |
+			 (b > 255 ? 255 : b);
+	}
+
+	static inline b3_color *b3GetColor(b3_color *color,b3_pkd_color input)
+	{
+		color->r = (b3_f64)((input & 0xff0000) >> 16) * 0.0039215686;
+		color->g = (b3_f64)((input & 0x00ff00) >>  8) * 0.0039215686;
+		color->b = (b3_f64)((input & 0x0000ff))       * 0.0039215686;
+
+		return color;
+	}
+
+	static inline b3_color *b3Scale(b3_color *color,b3_f64 factor)
+	{
+		color->a *= factor;
+		color->r *= factor;
+		color->g *= factor;
+		color->b *= factor;
+		return color;
+	}
+
+	static inline b3_color *b3Scale(b3_color *input,b3_f64 factor,b3_color *result)
+	{
+		result->a = input->a * factor;
+		result->r = input->r * factor;
+		result->g = input->g * factor;
+		result->b = input->b * factor;
+		return result;
+	}
+
+	static inline b3_color *b3Add(b3_color *input,b3_color *result)
+	{
+		result->a += input->a;
+		result->r += input->r;
+		result->g += input->g;
+		result->b += input->b;
+
+		return result;
+	}
+
+	static inline b3_color *b3AddScaled(b3_color *input,b3_color *result,b3_f64 factor)
+	{
+		result->a += (input->a * factor);
+		result->r += (input->r * factor);
+		result->g += (input->g * factor);
+		result->b += (input->b * factor);
+
+		return result;
+	}
+
+	static inline b3_color *b3LinearCombine(
+		b3_color *coeff2,
+		b3_color *coeff1,
+		b3_color *coeff0,
+		b3_f64    factor1,
+		b3_f64    factor0,
+		b3_color *result)
+	{
+		result->a = coeff2->a + factor1 * coeff1->a + factor0 * coeff0->a;
+		result->r = coeff2->r + factor1 * coeff1->r + factor0 * coeff0->r;
+		result->g = coeff2->g + factor1 * coeff1->g + factor0 * coeff0->g;
+		result->b = coeff2->b + factor1 * coeff1->b + factor0 * coeff0->b;
+		return result;
+	}
+};
+
 class b3Rect
 {
 public:
