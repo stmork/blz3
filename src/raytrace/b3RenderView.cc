@@ -31,10 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/09/19 15:36:18  sm
+**	- Changed polygon/grid index data type from short (Hey! Are we
+**	  on Windows 3.11???) to long.
+**
 **	Revision 1.39  2004/08/19 19:25:55  sm
 **	- Fixed ticket no. 7. The perspective unprojection is
 **	  correct now.
-**
+**	
 **	Revision 1.38  2004/08/19 10:12:23  sm
 **	- Test if one animation run is enough - but is not.
 **	- Using gluUnProject for ticket no. 7.

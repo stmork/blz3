@@ -44,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.89  2004/09/19 15:36:18  sm
+**      - Changed polygon/grid index data type from short (Hey! Are we
+**        on Windows 3.11???) to long.
+**
 **      Revision 1.88  2004/09/11 13:30:50  sm
 **      - Corrected link libraries in makefiles.
 **      - Corrected GLint to GLenum for light control.
@@ -1029,7 +1033,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		b3Vector::b3Sub(&glVertex[v2].v,&glVertex[v1].v,&xDir);
 		b3Vector::b3Sub(&glVertex[v3].v,&glVertex[v1].v,&yDir);
 		b3Vector::b3CrossProduct(&xDir,&yDir,&normal);
-		if (b3Vector::b3Normalize(&normal) > 0.001)
+		if (b3Vector::b3Normalize(&normal) > 1e-5)
 		{
 			b3Vector::b3Add(&normal,&glVertex[v1].n);
 			b3Vector::b3Add(&normal,&glVertex[v2].n);
@@ -1650,8 +1654,22 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
 	B3_ASSERT(glVertex != null);
 
+#ifndef _DEBUG
 	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
+	glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+#else
+	b3PrintF(B3LOG_FULL,"### b3Draw lined:  %d vertices, %d lines\n",
+		glVertexCount,glGridCount);
+
+	GLenum error = glGetError();
+	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	error = glGetError();
+	if (error == GL_NO_ERROR)
+	{
+		glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+		error = glGetError();
+	}
+#endif
 }
 
 void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
@@ -1660,14 +1678,17 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 
 #ifndef _DEBUG
 	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+	glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
 #else
+	b3PrintF(B3LOG_FULL,"### b3Draw filled: %d vertices, %d polygons\n",
+		glVertexCount,glPolyCount);
+
 	GLenum error = glGetError();
 	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
 		error = glGetError();
 	}
 #endif

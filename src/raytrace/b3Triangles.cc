@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2004/09/19 15:36:18  sm
+**      - Changed polygon/grid index data type from short (Hey! Are we
+**        on Windows 3.11???) to long.
+**
 **      Revision 1.12  2004/08/18 15:03:46  sm
 **      - Added render support for flat triangle field (no Phong interpolation)
 **
@@ -268,11 +272,12 @@ void b3Triangles::b3ComputeVertices()
 	b3_vertex    *Vertex;
 	b3_index      i;
 
-	Vertex        = m_Vertices;
-	Vector        = glVertex;
+	Vertex = m_Vertices;
+	Vector = glVertex;
 	
 	if (m_Flags & PHONG)
 	{
+		// Copy positions
 		for (i = 0;i < m_VertexCount;i++)
 		{
 			Vector->v.x = Vertex->Point.x;
@@ -282,7 +287,8 @@ void b3Triangles::b3ComputeVertices()
 			Vector++;
 		}
 
-		if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize + 1) * (m_ySize + 1) == m_VertexCount))
+		// Copy texture coordinates if usable
+		if ((m_xSize > 0) && (m_ySize > 0) && (((m_xSize + 1) * (m_ySize + 1)) == m_VertexCount))
 		{
 			b3_index x,y;
 			b3_f64   fx,fxStep;
@@ -308,6 +314,7 @@ void b3Triangles::b3ComputeVertices()
 	}
 	else
 	{
+		// Copy position
 		for (i = 0;i < m_TriaCount;i++)
 		{
 			Vertex = &m_Vertices[m_Triangles[i].P1];
@@ -329,7 +336,8 @@ void b3Triangles::b3ComputeVertices()
 			Vector++;
 		}
 
-		if ((m_xSize > 0) && (m_ySize > 0) && (m_xSize * m_ySize * 2 == m_TriaCount))
+		// Copy texture coordinates if usable
+		if ((m_xSize > 0) && (m_ySize > 0) && ((m_xSize * m_ySize * 2) == m_TriaCount))
 		{
 			b3_index x,y;
 			b3_f64   fx,fxStep;
@@ -390,7 +398,7 @@ void b3Triangles::b3ComputeIndices()
 	b3_triangle   *Triangle;
 	b3_vertex     *Vertex;
 	b3_count       i;
-	b3_u16         p1,p2,p3;
+	b3_u32         p1,p2,p3;
 
 	Vertex   = m_Vertices;
 	Triangle = m_Triangles;
@@ -401,9 +409,9 @@ void b3Triangles::b3ComputeIndices()
 	{
 		for (i = 0;i < m_TriaCount;i++)
 		{
-			p1 = (b3_u16)Triangle->P1;
-			p2 = (b3_u16)Triangle->P2;
-			p3 = (b3_u16)Triangle->P3;
+			p1 = (b3_u32)Triangle->P1;
+			p2 = (b3_u32)Triangle->P2;
+			p3 = (b3_u32)Triangle->P3;
 			Triangle++;
 		
 			B3_GL_LINIT(gPtr,p1,p2);
@@ -412,26 +420,23 @@ void b3Triangles::b3ComputeIndices()
 		
 			B3_GL_PINIT(pPtr,p1,p2,p3);
 		}
-		glGridCount = m_TriaCount * 3;
-		glPolyCount = m_TriaCount;
 	}
 	else
 	{
+		p1 = 0;
+		p2 = 1;
+		p3 = 2;
 		for (i = 0;i < m_TriaCount;i++)
 		{
-			p1 = i * 3;
-			p2 = p1 + 1;
-			p3 = p2 + 1;
-			Triangle++;
-		
 			B3_GL_LINIT(gPtr,p1,p2);
 			B3_GL_LINIT(gPtr,p2,p3);
 			B3_GL_LINIT(gPtr,p3,p1);
 		
 			B3_GL_PINIT(pPtr,p1,p2,p3);
+			p1 += 3;
+			p2 += 3;
+			p3 += 3;
 		}
-		glGridCount = m_TriaCount * 3;
-		glPolyCount = m_TriaCount;
 	}
 }
 

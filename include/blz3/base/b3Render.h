@@ -146,18 +146,18 @@ struct b3_gl_vertex
 struct b3_gl_line
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort a,b;
+	GLuint   a,b;
 #else
-	b3_u16   a,b;
+	b3_u32   a,b;
 #endif
 };
 
 struct b3_gl_polygon
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort a,b,c;
+	GLuint   a,b,c;
 #else
-	b3_u16   a,b,c;
+	b3_u32   a,b,c;
 #endif
 };
 
