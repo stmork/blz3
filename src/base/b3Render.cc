@@ -43,6 +43,10 @@
 
 /*
 **      $Log$
+**      Revision 1.76  2004/07/14 09:07:40  sm
+**      - Disabling FSAA = multi sampling
+**      - Some more b3Sampler initializations.
+**
 **      Revision 1.75  2004/07/05 12:15:53  sm
 **      - Added multi threaded sampler for OpenGL image creation.
 **
@@ -508,6 +512,7 @@ void b3RenderContext::b3Init()
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_COLOR_MATERIAL);
+	glDisable(GL_MULTISAMPLE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_BLEND);

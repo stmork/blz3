@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.76  2004/07/14 09:07:40  sm
+**      - Disabling FSAA = multi sampling
+**      - Some more b3Sampler initializations.
+**
 **      Revision 1.75  2004/07/05 12:15:53  sm
 **      - Added multi threaded sampler for OpenGL image creation.
 **
@@ -800,6 +804,7 @@ private:
 	{
 		b3Material       *material;
 		b3_ray            ray;
+		b3BBox            bbox = BBOX;
 		b3_surface        surface;
 		b3_stencil_limit  limit;
 		b3_pkd_color     *data = info->m_Data;
@@ -814,6 +819,10 @@ private:
 		fyStep = (limit.y2 - limit.y1 - 2 * b3Scene::epsilon) / info->m_yMax;
 
 		surface.incoming = &ray;
+		ray.bbox = &bbox;
+		ray.shape = m_Shape;
+		bbox.b3Prepare();
+
 		fy = limit.y1 + info->m_yStart * fyStep + b3Scene::epsilon;
 		ray.polar.m_BoxPolar.z =
 		ray.polar.m_ObjectPolar.z =
