@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2002/08/21 10:16:40  sm
+**	- Made some changes to the Un*x OpenGL renderer:
+**	  o Added animations
+**	  o Added camera switching
+**	  o Corrected far clipping plane computation.
+**	- Configure script tidied up.
+**
 **	Revision 1.31  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
 **	  saves memory allocation calls and is an investment into
 **	  faster Lines III object transformation.
-**
+**	
 **	Revision 1.30  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
@@ -859,6 +866,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	b3_f64    farCP = 1,denom,l;
 	b3_vector edge,look,cross;
 
+	B3_ASSERT(b3Vector::b3Distance(&m_Lower,&m_Upper) > epsilon);
 	b3Vector::b3Sub(&m_ViewPoint,&m_EyePoint,&look);
 	b3Vector::b3CrossProduct(&m_Width,&m_Height,&cross);
 	denom = b3Vector::b3Length(&look) / (cross.x * look.x + cross.y * look.y + cross.z * look.z);
@@ -895,7 +903,7 @@ inline b3_f64 b3RenderView::b3ComputeFarClippingPlane()
 	l      = (cross.x * edge.x + cross.y * edge.y + cross.z * edge.z) * denom;
 	if (l > farCP) farCP = l;
 
-	return farCP * 2 + 4;
+ 	return farCP;// * 2 + 4;
 #else
 	return 10000;
 #endif

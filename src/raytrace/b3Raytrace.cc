@@ -37,11 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2002/08/21 10:16:40  sm
+**	- Made some changes to the Un*x OpenGL renderer:
+**	  o Added animations
+**	  o Added camera switching
+**	  o Corrected far clipping plane computation.
+**	- Configure script tidied up.
+**
 **	Revision 1.39  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
 **	  class.
-**
+**	
 **	Revision 1.38  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -628,6 +635,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_DiffColor.g = (m_TopColor.g    - m_AvrgColor.g);
 	m_DiffColor.b = (m_TopColor.b    - m_AvrgColor.b);
 
+	B3_ASSERT(m_ActualCamera != null);
 	xDenom = b3Vector::b3Length(&m_Width);
 	yDenom = b3Vector::b3Length(&m_Height);
 	if ((xDenom == 0) || (yDenom == 0))
@@ -737,10 +745,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 	try
 	{
-		if (m_ActualCamera != null)
-		{
-			b3SetCamera(m_ActualCamera);
-		}
+		b3UpdateCamera();
 
 		// What resolution to use
 		display->b3GetRes(xSize,ySize);

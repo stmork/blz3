@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/08/21 10:16:40  sm
+**      - Made some changes to the Un*x OpenGL renderer:
+**        o Added animations
+**        o Added camera switching
+**        o Corrected far clipping plane computation.
+**      - Configure script tidied up.
+**
 **      Revision 1.13  2002/08/19 16:50:39  sm
 **      - Now having animation running, running, running...
 **      - Activation handling modified to reflect animation
@@ -313,6 +320,8 @@ void b3Scene::b3ResetAnimation()
 
 	if (animation != null)
 	{
+		b3PrintF(B3LOG_DEBUG,"Resetting animation...\n");
+		b3Update();
 		animation->b3ResetAnimation(this);
 		b3Animate(b3Activation::B3_ANIM_DISABLED);
 	}
@@ -379,6 +388,7 @@ void b3Scene::b3SetAnimation(b3_f64 t)
 	if (animation != null)
 	{
 		animation->b3SetAnimation(this,t);
+		b3UpdateCamera();
 		b3Animate(b3Activation::B3_ANIM_DISABLED);
 	}
 }

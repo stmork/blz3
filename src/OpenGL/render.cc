@@ -34,6 +34,13 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/08/21 10:16:40  sm
+**      - Made some changes to the Un*x OpenGL renderer:
+**        o Added animations
+**        o Added camera switching
+**        o Corrected far clipping plane computation.
+**      - Configure script tidied up.
+**
 **      Revision 1.24  2002/08/09 08:00:32  sm
 **      - Reimplemented b3Mem::b3Realloc and made checks.
 **
@@ -143,8 +150,9 @@ static b3World              *world = null;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
 static b3_bool               spot_light = false;
+static b3_res                xWinSize,yWinSize;
 
-void RenderScene()
+static void b3RenderScene()
 {
 	b3Scene  *scene;
 
@@ -155,16 +163,58 @@ void RenderScene()
 	glutSwapBuffers();
 }
 
-void ChangeSize(GLsizei xSize,GLsizei ySize)
+static void b3PlayAnimation()
 {
-	b3Scene  *scene;
+	b3Scene     *scene;
+	b3Animation *animation;
 
 	scene = (b3Scene *)world->b3GetFirst();
-	view.b3SetCamera(scene);
-	view.b3SetupView(xSize,ySize);
+	animation = scene->b3GetAnimation();
+	if (animation == null)
+	{
+		return;
+	}
+	if (animation->m_Flags & ANIMF_ON)
+	{
+		b3Time    start,now,last;
+		b3_vector lower,upper;
+		b3_f64    t,span;
+		b3_count  count = 0;
+		b3_res    xSize,ySize;
+
+		b3PrintF(B3LOG_FULL,"Playing animation...\n");
+		last = start;
+		scene->b3GetDisplaySize(xSize,ySize);
+		do
+		{
+			now.b3Now();
+			t = animation->m_Start + now - start;
+			scene->b3SetAnimation(t);
+			scene->b3ComputeBounds(&lower,&upper);
+
+			context.b3StartDrawing();
+			view.b3SetBounds(&lower,&upper);
+			view.b3SetCamera(scene);
+			view.b3SetupView(xWinSize,yWinSize);
+			scene->b3Draw(&context);
+
+			glutSwapBuffers();
+			count++;
+		}
+		while(t < animation->m_End);
+		
+		span = now - start;
+		b3PrintF(B3LOG_NORMAL,"Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
+			count,span,(double)count / span);
+	}
 }
 
-void SetLights()
+static void b3ChangeSize(GLsizei xSize,GLsizei ySize)
+{
+	view.b3SetupView(xWinSize = xSize,yWinSize = ySize);
+}
+
+static void b3SetLights()
 {
 	context.b3LightSpotEnable(spot_light);
 	if (all_lights)
@@ -183,13 +233,37 @@ void SetLights()
 	}
 }
 
-void SetupRC()
+static void b3NextCamera(b3Scene *scene)
+{
+	b3CameraPart *camera,*act;
+
+	act = scene->b3GetActualCamera();
+	if (act != null)
+	{
+		camera = scene->b3GetNextCamera(act);
+		if (camera == null)
+		{
+			// Take first camera
+			camera = scene->b3GetCamera(false);
+		}
+		if (camera != null)
+		{
+			b3PrintF(B3LOG_NORMAL,"Using camera %s\n",camera->b3GetName());
+			scene->b3SetCamera(camera);
+			view.b3SetCamera(scene);
+			view.b3SetupView(xWinSize,yWinSize);
+		}
+	}
+}
+
+static void b3SetupRC()
 {
 	context.b3SetBGColor(0.7,0.7,1.0);
 	context.b3Init();
+	b3SetLights();
 }
 
-void Keyboard(unsigned char key,int x,int y)
+static void b3Keyboard(unsigned char key,int x,int y)
 {
 	b3Scene  *scene;
 	b3_bool   refresh = false;
@@ -199,13 +273,13 @@ void Keyboard(unsigned char key,int x,int y)
 	{
 	case 'l':
 		all_lights = !all_lights;
-		SetLights();
+		b3SetLights();
 		refresh = true;
 		break;
 
 	case 's':
 		spot_light = !spot_light;
-		SetLights();
+		b3SetLights();
 		refresh = true;
 		break;
 
@@ -221,7 +295,7 @@ void Keyboard(unsigned char key,int x,int y)
 		b3PrintF(B3LOG_DEBUG,"Deactivating all...\n");
 		break;
 
-	case 'n':
+	case 'c':
 		b3Log_SetLevel(B3LOG_NORMAL);
 		b3PrintF(B3LOG_NORMAL,"Normal logging...\n");
 		break;
@@ -234,6 +308,15 @@ void Keyboard(unsigned char key,int x,int y)
 	case 'f':
 		b3Log_SetLevel(B3LOG_FULL);
 		b3PrintF(B3LOG_NORMAL,"Full logging...\n");
+		break;
+
+	case 'p':
+		b3PlayAnimation();
+		break;
+
+	case 'n':
+		b3NextCamera(scene);
+		refresh = true;
 		break;
 
 	case 'r':
@@ -255,15 +338,17 @@ void Keyboard(unsigned char key,int x,int y)
 
 int main(int argc,char *argv[])
 {
-	b3Item    *item;
-	b3Scene   *scene;
-	char      *HOME         = getenv("HOME");
-	b3Path     textures;
-	b3Path     pictures;
-	b3Path     data;
-	b3_res     xSize,ySize;
+	b3Item         *item;
+	b3Scene        *scene;
+	b3ModellerInfo *info;
+	char           *HOME = getenv("HOME");
+	b3Path          textures;
+	b3Path          pictures;
+	b3Path          data;
+	b3_vector       lower,upper;
+	b3_res          xSize,ySize;
 
-	if (argc > 1)
+	if (argc > 1) try
 	{
 		b3InitRaytrace::b3Init();
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
@@ -271,9 +356,11 @@ int main(int argc,char *argv[])
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 
-//		b3Log_SetLevel(B3LOG_NORMAL);
-		b3Log_SetLevel(B3LOG_DEBUG);
-//		b3Log_SetLevel(B3LOG_FULL);
+#ifndef _DEBUG
+		b3Log_SetLevel(B3LOG_NORMAL);
+#else
+		b3Log_SetLevel(B3LOG_FULL);
+#endif
 
 		texture_pool.b3AddPath(textures);
 		texture_pool.b3AddPath(pictures);
@@ -288,27 +375,46 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
 			scene->b3GetDisplaySize(xSize,ySize);
+			scene->b3SetCamera(scene->b3GetCamera(false));
 			scene->b3Prepare(xSize,ySize);
 			scene->b3AllocVertices(&context);
+			scene->b3ResetAnimation();
+			scene->b3ComputeBounds(&lower,&upper);
 
+			info = scene->b3GetModellerInfo();
+			if (info != null)
+			{
+				all_lights = info->m_UseSceneLights;
+			}
+			
 			b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 			b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
 			b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
+			view.b3SetBounds(&lower,&upper);
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
-			view.b3SetupView(xSize,ySize);
+			b3ChangeSize(xSize,ySize);
 		}
 
 		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
-		glutInitWindowSize(xSize,ySize);
+		glutInitWindowSize(xWinSize,yWinSize);
 		glutCreateWindow("Greetinxx");
-		glutDisplayFunc(RenderScene);
-		glutKeyboardFunc(Keyboard);
-		glutReshapeFunc(ChangeSize);
+		glutDisplayFunc (&b3RenderScene);
+		glutKeyboardFunc(&b3Keyboard);
+		glutReshapeFunc (&b3ChangeSize);
 
-		context.b3Init();
-		SetLights();
+		b3SetupRC();
 		glutMainLoop();
+	}
+	catch(b3ExceptionBase &e)
+	{
+		b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[1]);
+		b3PrintF(B3LOG_NORMAL,"Error code: %d\n",e.b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",e.b3GetErrorMsg());
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"Unknown error occured processing %s\n",argv[1]);
 	}
 	return 0;
 }

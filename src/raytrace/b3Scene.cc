@@ -34,12 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2002/08/21 10:16:40  sm
+**	- Made some changes to the Un*x OpenGL renderer:
+**	  o Added animations
+**	  o Added camera switching
+**	  o Corrected far clipping plane computation.
+**	- Configure script tidied up.
+**
 **	Revision 1.40  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.39  2002/08/18 13:05:17  sm
 **	- First try to animate. We have to relink the control points which
 **	  are stored in separate Blizzard classes to the b3AnimElement
@@ -584,6 +591,16 @@ b3CameraPart *b3Scene::b3GetCameraByName(const char *camera_name)
 	return null;
 }
 
+b3CameraPart *b3Scene::b3GetActualCamera()
+{
+	if (m_ActualCamera == null)
+	{
+		b3SetCamera(b3GetCamera(false));
+	}
+
+	return m_ActualCamera;
+}
+
 b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 {
 	while ((camera = (b3CameraPart *)camera->Succ) != null)
@@ -596,21 +613,34 @@ b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 	return null;
 }
 
+b3CameraPart *b3Scene::b3UpdateCamera()
+{
+	if (m_ActualCamera != null)
+	{
+		m_EyePoint 	= m_ActualCamera->m_EyePoint;
+		m_ViewPoint = m_ActualCamera->m_ViewPoint;
+		m_Width     = m_ActualCamera->m_Width;
+		m_Height    = m_ActualCamera->m_Height;
+	}
+	return m_ActualCamera;
+}
+
 void b3Scene::b3SetCamera(b3CameraPart *camera,b3_bool reorder)
 {
+	if ((m_ActualCamera != camera) && (camera != null))
+	{
+		b3PrintF(B3LOG_DEBUG,"Using camera %s\n",camera->b3GetName());
+	}
+	m_ActualCamera = camera;
 	if (camera != null)
 	{
-		m_EyePoint 	= camera->m_EyePoint;
-		m_ViewPoint = camera->m_ViewPoint;
-		m_Width     = camera->m_Width;
-		m_Height    = camera->m_Height;
+		b3UpdateCamera();
 		if (reorder)
 		{
 			b3GetSpecialHead()->b3Remove(camera);
 			b3GetSpecialHead()->b3First(camera);
 		}
 	}
-	m_ActualCamera = camera;
 }
 
 void b3Scene::b3SetFilename(const char *filename)
