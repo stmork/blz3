@@ -22,6 +22,10 @@
 #include "blz3/system/b3Thread.h"
 #include "blz3/base/b3Exception.h"
 
+#define LOOP_B       4
+#define LOOP_INSIDE (1 << LOOP_B)
+#define LOOP_MASK   (LOOP_INSIDE - 1)
+
 struct b3MemNode
 {
 	b3MemNode *m_Succ;
@@ -202,6 +206,86 @@ public:
 				node->m_ChunkSize);
 		}
 		m_Mutex.b3Unlock();
+	}
+
+	inline static void b3LongMemSet(
+		      b3_u32   *data,
+		const b3_count  max,
+		const b3_u32    value)
+	{
+		b3_index  i;
+		b3_count  long_max,short_max;
+
+		// Compute loop sizes
+		long_max  = max >> LOOP_B;
+		short_max = max &  LOOP_MASK;
+
+		// Long copy
+		for (i = 0;i < long_max;i++)
+		{
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+			*data++ = value;
+		}
+
+		// Copy rest
+		for (i = 0;i < short_max;i++)
+		{
+			*data++ = value;
+		}
+	}
+	
+	inline static void b3LongMemCopy(
+		      b3_u32   *dst,
+		const b3_u32   *src,
+		const b3_count  max)
+	{
+		b3_index  i;
+		b3_count  long_max,short_max;
+
+		// Compute loop sizes
+		long_max  = max >> LOOP_B;
+		short_max = max &  LOOP_MASK;
+
+		// Long copy
+		for (i = 0;i < long_max;i++)
+		{
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+			*dst++ = *src++;
+		}
+
+		// Copy rest
+		for (i = 0;i < short_max;i++)
+		{
+			*dst++ = *src++;
+		}
 	}
 
 private:

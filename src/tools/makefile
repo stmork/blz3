@@ -28,7 +28,7 @@ RemDepend:	$(REMDEPEND_OBJS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
-RemCR:	$(REMCR_OBJS)
+RemCR:	$(REMCR_OBJS) $(BLZ3_LIB)/libB3Base.a
 	$(LINK.cc) -o $@ $(REMCR_OBJS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)

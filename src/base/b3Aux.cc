@@ -23,10 +23,6 @@
 
 #include "blz3/base/b3Aux.h"
 
-#define LOOP_B       4
-#define LOOP_INSIDE (1 << LOOP_B)
-#define LOOP_MASK   (LOOP_INSIDE - 1)
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -35,10 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/10 14:36:31  sm
+**	- Some shapes had cleared the vertex array whenever the
+**	  b3AllocVertices() method were called. Without calling
+**	  b3Recomute() the shapes disoccured.
+**	- Some methods moved as static methods into the
+**	  b3Mem class.
+**
 **	Revision 1.5  2001/10/31 14:46:35  sm
 **	- Filling b3IsCancelled() with sense.
 **	- Inlining b3RGB
-**
+**	
 **	Revision 1.4  2001/07/08 13:02:19  sm
 **	- Merging with Windoze stuff.
 **	
@@ -62,86 +65,6 @@
 **                        routines                                      **
 **                                                                      **
 *************************************************************************/
-
-void b3LongMemSet(
-	b3_u32   *data,
-	b3_count  max,
-	b3_u32    value)
-{
-	b3_index  i;
-	b3_count  long_max,short_max;
-
-	// Compute loop sizes
-	long_max  = max >> LOOP_B;
-	short_max = max &  LOOP_MASK;
-
-	// Long copy
-	for (i = 0;i < long_max;i++)
-	{
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-		*data++ = value;
-	}
-
-	// Copy rest
-	for (i = 0;i < short_max;i++)
-	{
-		*data++ = value;
-	}
-}
-
-void b3LongMemCopy(
-	b3_u32   *dst,
-	b3_u32   *src,
-	b3_count  max)
-{
-	b3_index  i;
-	b3_count  long_max,short_max;
-
-	// Compute loop sizes
-	long_max  = max >> LOOP_B;
-	short_max = max &  LOOP_MASK;
-
-	// Long copy
-	for (i = 0;i < long_max;i++)
-	{
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-		*dst++ = *src++;
-	}
-
-	// Copy rest
-	for (i = 0;i < short_max;i++)
-	{
-		*dst++ = *src++;
-	}
-}
 
 /*************************************************************************
 **                                                                      **

@@ -86,7 +86,7 @@ uncr:	$(BLZ3_BIN)/RemCR
 $(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
 	+@make -C tools RemDepend
 
-$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
+$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Base.a
 	+@make -C tools RemCR
 
 #########################################################

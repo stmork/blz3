@@ -15,6 +15,8 @@
 **
 */
 
+#define not_VERBOSE
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -33,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/10 14:36:32  sm
+**	- Some shapes had cleared the vertex array whenever the
+**	  b3AllocVertices() method were called. Without calling
+**	  b3Recomute() the shapes disoccured.
+**	- Some methods moved as static methods into the
+**	  b3Mem class.
+**
 **	Revision 1.5  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.4  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -153,7 +162,7 @@ void b3TimeSpan::b3Start()
 		&start_time,&exit_time,
 		&m_sStart,&m_uStart);
 	ftime(&m_RealTime);
-#ifdef _DEBUG
+#ifdef _VERBOSE
 	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
 		m_uStart.dwLowDateTime,
 		m_uStart.dwHighDateTime);
@@ -170,7 +179,7 @@ void b3TimeSpan::b3Stop()
 		&start_time,&exit_time,
 		&system_usage,&user_usage);
 	ftime(&real_stop);
-#ifdef _DEBUG
+#ifdef _VERBOSE
 	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
 		user_usage.dwLowDateTime,
 		user_usage.dwHighDateTime);

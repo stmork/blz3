@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2002/08/10 14:36:31  sm
+**      - Some shapes had cleared the vertex array whenever the
+**        b3AllocVertices() method were called. Without calling
+**        b3Recomute() the shapes disoccured.
+**      - Some methods moved as static methods into the
+**        b3Mem class.
+**
 **      Revision 1.52  2002/08/07 12:38:43  sm
 **      - Modified exception definition. Exceptions are identified with
 **        a three character code to unify error codes. This is necessary
@@ -1094,8 +1101,8 @@ void b3RenderObject::b3UpdateMaterial()
 			b3RenderContext::b3ColorToGL(&diffuse, glDiffuse);
 			b3RenderContext::b3ColorToGL(&specular,glSpecular);
 		}
+		glMaterialComputed = true;
 	}
-	glMaterialComputed = true;
 #endif
 }
 

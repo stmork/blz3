@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/08/10 14:36:31  sm
+**      - Some shapes had cleared the vertex array whenever the
+**        b3AllocVertices() method were called. Without calling
+**        b3Recomute() the shapes disoccured.
+**      - Some methods moved as static methods into the
+**        b3Mem class.
+**
 **      Revision 1.21  2002/07/27 18:51:31  sm
 **      - Drawing changed to glInterleavedArrays(). This means that
 **        extra normal and texture arrays are omitted. This simplifies
@@ -183,8 +190,6 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 	glVertexCount = 4;
 	glGridCount   = 4;
 	glPolyCount   = 2;
-
-	memset(area_vertex,0,sizeof(area_vertex));
 #endif
 }
 

@@ -20,9 +20,6 @@
 
 #include "blz3/b3Config.h"
 
-extern void b3LongMemSet(b3_u32 *data,b3_count DWordCount,b3_u32 pattern);
-extern void b3LongMemCopy(b3_u32 *dst,b3_u32 *src,b3_count DWordCount);
-
 class b3RGB
 {
 public:

@@ -32,6 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2002/08/10 14:36:31  sm
+**	- Some shapes had cleared the vertex array whenever the
+**	  b3AllocVertices() method were called. Without calling
+**	  b3Recomute() the shapes disoccured.
+**	- Some methods moved as static methods into the
+**	  b3Mem class.
+**
 **	Revision 1.63  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -39,7 +46,7 @@
 **	- Added some additional b3Hash methods.
 **	- Added -Wall compiler option to all C++ files.
 **	- Removed some compiler warnings.
-**
+**	
 **	Revision 1.62  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -588,8 +595,6 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	glVertex   = bbox_vertex;
 	glGrids    = bbox_indices;
 	glPolygons = null;
-
-	memset(bbox_vertex,0,sizeof(bbox_vertex));
 #endif
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/08/10 14:36:31  sm
+**      - Some shapes had cleared the vertex array whenever the
+**        b3AllocVertices() method were called. Without calling
+**        b3Recomute() the shapes disoccured.
+**      - Some methods moved as static methods into the
+**        b3Mem class.
+**
 **      Revision 1.15  2002/07/31 07:30:44  sm
 **      - New normal computation. Textures are rendered correctly and
 **        quadrics are shaded correctly. Spheres and doughnuts have
@@ -125,8 +132,6 @@ void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 	glVertexCount = 24;
 	glGridCount   = 12;
 	glPolyCount   = 12;
-
-	memset(box_vertex,0,sizeof(box_vertex));
 #endif
 }
 
