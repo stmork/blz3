@@ -21,7 +21,7 @@
 #define B3_SHOWRAYTRACE_H
 
 #include "blz3/system/b3ShowImage.h"
-#include "blz3/base/b3Display.h"
+#include "blz3/system/b3Display.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
 class CB3ShowRaytrace : public CB3ShowImage

@@ -44,7 +44,7 @@ public:
 	        void    b3Print(b3_log_level level = B3LOG_NORMAL);
 
 private:
-	static char   *b3PrintTime(char *buffer,b3_s32 time_needed);
+	static char    *b3PrintTime(char *buffer,b3_s32 time_needed);
 };
 
 #endif

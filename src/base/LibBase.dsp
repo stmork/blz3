@@ -174,19 +174,7 @@ SOURCE=..\..\include\blz3\base\b3Cubic.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include\blz3\base\b3DirAbstract.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\include\blz3\base\b3Endian.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\blz3\base\b3Exception.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\include\blz3\base\b3FileAbstract.h
 # End Source File
 # Begin Source File
 

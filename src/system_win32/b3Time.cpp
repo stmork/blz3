@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/11 11:53:37  sm
+**	- It compiles!
+**
 **	Revision 1.7  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.6  2002/08/10 14:36:32  sm
 **	- Some shapes had cleared the vertex array whenever the
 **	  b3AllocVertices() method were called. Without calling
@@ -152,9 +155,6 @@ void b3TimeAccum::b3Get(
 
 b3TimeSpan::b3TimeSpan()
 {
-	m_uTime = 0;
-	m_sTime = 0;
-	m_rTime = 0;
 	m_ThreadHandle = GetCurrentThread();
 }
 
@@ -167,7 +167,7 @@ void b3TimeSpan::b3Start()
 		&m_sStart,&m_uStart);
 	ftime(&m_RealTime);
 #ifdef _VERBOSE
-	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+	b3PrintF(B3LOG_NORMAL,"Thread time: %d,%d\n",
 		m_uStart.dwLowDateTime,
 		m_uStart.dwHighDateTime);
 #endif
@@ -184,24 +184,11 @@ void b3TimeSpan::b3Stop()
 		&system_usage,&user_usage);
 	ftime(&real_stop);
 #ifdef _VERBOSE
-	b3PrintF(B3LOG_NORMAL,"%d,%d\n",
+	b3PrintF(B3LOG_NORMAL,"Thread time: %d,%d\n",
 		user_usage.dwLowDateTime,
 		user_usage.dwHighDateTime);
 #endif
 
-/*
-	m_uTime += (
-		 usage_stop.ru_utime.tv_sec  * 1000 + 
-		 usage_stop.ru_utime.tv_usec / 1000 -
-		m_UsageTime.ru_utime.tv_sec  * 1000 -
-		m_UsageTime.ru_utime.tv_usec / 1000);
-
-	m_sTime += (
-		 usage_stop.ru_stime.tv_sec  * 1000 + 
-		 usage_stop.ru_stime.tv_usec / 1000 -
-		m_UsageTime.ru_stime.tv_sec  * 1000 -
-		m_UsageTime.ru_stime.tv_usec / 1000);
-*/
 	m_uTime += b3DiffDiv10000(&m_uStart,&user_usage);
 	m_sTime += b3DiffDiv10000(&m_sStart,&system_usage);
 	m_rTime += (
