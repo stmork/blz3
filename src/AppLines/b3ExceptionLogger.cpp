@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/06/01 12:35:43  sm
+**	- added invalid increment exception to b3Array
+**
 **	Revision 1.8  2003/02/02 14:22:32  sm
 **	- Added TGF import facility.
-**
+**	
 **	Revision 1.7  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -119,6 +122,7 @@ static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 	{ B3_MK_ERRNO(B3_BSPLINE_CLOSED,                'SPL'), IDS_PRGERR_BSPLINE_CLOSED },
 	{ B3_MK_ERRNO(B3_BSPLINE_TOO_LOW_MULTIPLICATION,'SPL'), IDS_PRGERR_BSPLINE_TOO_LOW_MULTIPLICATION },
 	{ B3_MK_ERRNO(B3_ARRAY_OUT_OF_BOUNDS,           'ARR'),	IDS_PRGERR_OUT_OF_BOUNDS },
+	{ B3_MK_ERRNO(B3_ARRAY_INVALID_INCREMENT,       'ARR'),	IDS_PRGERR_INVALID_INCREMENT },
 	{ B3_MK_ERRNO(B3_HASH_DUPLICATE_KEY,            'HSH'), IDS_PRGERR_HASH_DUPLICATE_KEY },
 	{ B3_MK_ERRNO(B3_HASH_INVALID,				    'HSH'), IDS_PRGERR_HASH_INVALID },
 	{ B3_MK_ERRNO(B3_FILE_NOT_FOUND,                'FIL'), IDS_ERR_FILE_NOT_FOUND },

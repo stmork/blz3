@@ -43,11 +43,11 @@ template <class T> class B3_PLUGIN b3Array : protected b3Mem
 	T        *m_Buffer;
 
 public:
-	inline b3Array(b3_count increment = B3_ARRAY_INVALID_INCREMENT)
+	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
 		if (increment <= 0)
 		{
-			B3_THROW(b3ArrayException,B3_ARRAY_NO_MEMORY);
+			B3_THROW(b3ArrayException,B3_ARRAY_INVALID_INCREMENT);
 		}
 		m_Increment = increment;
 		m_Index     = 0;
