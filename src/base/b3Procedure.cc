@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/04/06 12:17:46  sm
+**	- Optimized some noise methods.
+**
 **	Revision 1.20  2004/04/05 09:47:58  sm
 **	- Some noise optimization
-**
+**	
 **	Revision 1.19  2004/04/05 09:16:03  sm
 **	- Added test wood for Lines wood dialog
 **	- Optimized noise a little bit.
@@ -403,33 +406,43 @@ inline b3_f64 b3Noise::b3GradNoise (
 	b3_f64    z,
 	b3_index  i)
 {
-	register b3_f64    n00,n01,n10,n11,n0,n1;
-	register b3_f64    ox,oy,oz;
-	register b3_noisetype n;
-	register b3_index      ix,iy,iz;
+	b3_f32  B3_ALIGN_16 a[4],b[4],c[4];
+	b3_index ix = (b3_index)floor(x);
+	b3_index iy = (b3_index)floor(y);
+	b3_index iz = (b3_index)floor(z);
+	b3_f32   fx = x   - ix;
+	b3_f32   fy = y   - iy;
+	b3_f32   fz = z   - iz;
+	b3_f32   rx = 1.0 - fx;
+	b3_f32   ry = 1.0 - fy;
+	b3_f32   rz = 1.0 - fz;
+	b3_loop  l;
 
-	ix = (b3_index)floor(x); ox = x - ix;
-	iy = (b3_index)floor(y); oy = y - iy;
-	iz = (b3_index)floor(z); oz = z - iz;
+	a[0] = b3GetDiff(ix,iy,iz,i,0);
+	b[0] = b3GetDiff(ix,iy,iz,i,4);
+	a[1] = b3GetDiff(ix,iy,iz,i,1);
+	b[1] = b3GetDiff(ix,iy,iz,i,5);
+	a[2] = b3GetDiff(ix,iy,iz,i,2);
+	b[2] = b3GetDiff(ix,iy,iz,i,6);
+	a[3] = b3GetDiff(ix,iy,iz,i,3);
+	b[3] = b3GetDiff(ix,iy,iz,i,7);
 
-	// trilinear interpolation
-	// first dimension
-	  n =                b3GetDiff(ix,iy,iz,i,0);
-	n00 =    n   + ox * (b3GetDiff(ix,iy,iz,i,4) - n);
-	  n =                b3GetDiff(ix,iy,iz,i,1);
-	n01 =    n   + ox * (b3GetDiff(ix,iy,iz,i,5) - n);
-	  n =                b3GetDiff(ix,iy,iz,i,2);
-	n10 =    n   + ox * (b3GetDiff(ix,iy,iz,i,6) - n);
-	  n =                b3GetDiff(ix,iy,iz,i,3);
-	n11 =    n   + ox * (b3GetDiff(ix,iy,iz,i,7) - n);
+	for (l = 0;l < 4;l++)
+	{
+		c[l] = a[l] * rx + b[l] * fx;
+	}
 
+	a[0] = c[0];
+	b[0] = c[1];
+	a[1] = c[2];
+	b[1] = c[3];
 
-	// second dimension
-	n0  =    n00 + oy * (n10 - n00);
-	n1  =    n01 + oy * (n11 - n01);
+	for (l = 0;l < 2;l++)
+	{
+		c[l] = a[l] * ry + b[l] * fy;
+	}
 
-	// third and last dimension
-	return ((n0 + oz * (n1 - n0)) * 2 - 1);
+	return c[0] * rz + c[1] * fz;
 }
 
 void b3Noise::b3NoiseDeriv (
@@ -444,28 +457,6 @@ void b3Noise::b3NoiseDeriv (
 	RVec->x = b3GradNoise (dx,dy,dz,0);
 	RVec->y = b3GradNoise (dx,dy,dz,1);
 	RVec->z = b3GradNoise (dx,dy,dz,2);
-}
-
-b3_f64 b3Noise::b3Turbulence (b3_vector *P)
-{
-	b3_f64   x,y,z,s,t;
-	b3_count i;
-
-	t = 0;
-	s = 1;
-	x = P->x;
-	y = P->y;
-	z = P->z;
-
-	for (i = 0;i < 10;i++)
-	{
-		t += b3NoiseVector(x,y,z) * s;
-		s *= 0.5;
-		x += x;
-		y += y;
-		z += z;
-	}
-	return t;
 }
 
 /*************************************************************************

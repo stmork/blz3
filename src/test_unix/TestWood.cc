@@ -35,6 +35,9 @@
 
 /*
 **  $Log$
+**  Revision 1.2  2004/04/06 12:17:46  sm
+**  - Optimized some noise methods.
+**
 **  Revision 1.1  2004/04/05 09:16:03  sm
 **  - Added test wood for Lines wood dialog
 **  - Optimized noise a little bit.
@@ -48,7 +51,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WOOD_RES   200
+#define WOOD_RES   800
 #define WOOD_TILES   3
 
 class b3WoodSampler

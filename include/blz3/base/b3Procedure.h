@@ -67,7 +67,27 @@ public:
 		result->z = result->z * 2 - 1;
 	}
 
-	static b3_f64  b3Turbulence  (b3_vector *P);
+	static inline b3_f64  b3Turbulence  (b3_vector *P)
+	{
+		b3_f64   x,y,z,s,t;
+		b3_loop i;
+
+		t = 0;
+		s = 1;
+		x = P->x;
+		y = P->y;
+		z = P->z;
+
+		for (i = 0;i < 10;i++)
+		{
+			t += b3NoiseVector(x,y,z) * s;
+			s *= 0.5;
+			x += x;
+			y += y;
+			z += z;
+		}
+		return t;
+	}
 
 	static inline b3_f64  b3FBm(b3_vector &p,b3_f64 width,b3_f64 octaves,b3_f64 lacunarity,b3_f64 gain)
 	{
