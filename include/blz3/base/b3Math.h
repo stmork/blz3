@@ -21,8 +21,8 @@
 #include "blz3/b3Config.h"
 
 #ifndef __ICC
-#define FINE_MATH
 #endif
+#define FINE_MATH
 
 class b3Math
 {
