@@ -39,6 +39,10 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2002/01/08 16:04:08  sm
+**      - New copy dialog added
+**      - Merge with daily work
+**
 **      Revision 1.21  2002/01/07 16:18:51  sm
 **      - Added b3Item clone
 **      - Added Drag & Drop
@@ -584,6 +588,8 @@ void b3World::b3CloneBase(
 				b3CloneBase(&srcItem->m_Heads[i],&dstItem->m_Heads[i]);
 			}
 			srcItem->b3Free(srcItem->m_StoreBuffer);
+			srcItem->m_StoreBuffer = null;
+			srcItem->m_StoreSize   = 0;
 		}
 		else
 		{
@@ -608,6 +614,8 @@ b3Item *b3World::b3Clone(b3Item *original)
 			b3CloneBase(&original->m_Heads[i],&item->m_Heads[i]);
 		}
 		original->b3Free(original->m_StoreBuffer);
+		original->m_StoreBuffer = null;
+		original->m_StoreSize   = 0;
 	}
 	else
 	{

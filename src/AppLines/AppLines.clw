@@ -92,7 +92,7 @@ HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
 Filter=N
 VirtualFilter=DC
-LastObject=ID_OBJECT_COPY
+LastObject=IDC_NUM_COPIES
 
 [CLS:CAppLinesView]
 Type=0
@@ -893,6 +893,29 @@ BaseClass=CDialogBar
 Filter=D
 VirtualFilter=dWC
 LastObject=CB3Dialogbar
+
+[DLG:IDD_OBJECT_COPY]
+Type=1
+Class=CDlgObjectCopy
+ControlCount=9
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_OFFSET_X,edit,1350631552
+Control4=IDC_OFFSET_Y,edit,1350631552
+Control5=IDC_OFFSET_Z,edit,1350631552
+Control6=IDC_ROT_X,edit,1350631552
+Control7=IDC_ROT_Y,edit,1350631552
+Control8=IDC_ROT_Z,edit,1350631552
+Control9=IDC_NUM_COPIES,edit,1350631552
+
+[CLS:CDlgObjectCopy]
+Type=0
+HeaderFile=DlgObjectCopy.h
+ImplementationFile=DlgObjectCopy.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+LastObject=CDlgObjectCopy
 
 [CLS:CB3ImageButton]
 Type=0

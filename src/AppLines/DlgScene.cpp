@@ -9,7 +9,7 @@
 **
 **	Blizzard III - Dialog for b3Scene properties
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/08 16:04:08  sm
+**	- New copy dialog added
+**	- Merge with daily work
+**
 **	Revision 1.5  2001/11/11 15:09:56  sm
 **	- Introduced scene properties for:
 **	  o scene itself (done)
@@ -41,7 +45,7 @@
 **	  o super sampling (controls layouted)
 **	  o nebular (controls layouted)
 **	  o lens flares (controls layouted)
-**
+**	
 **	Revision 1.4  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)

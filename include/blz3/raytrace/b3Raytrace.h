@@ -1573,7 +1573,7 @@ public:
 	       void            b3ComputeVertices();
 		   void            b3ComputeNormals(b3_bool normalize = true);
 	       void            b3Draw();
-		   b3_bool         b3Transform(b3_matrix *transformation);
+		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool force_action = false);
 		   void            b3Activate(b3_bool activate=true);
 		   b3_bool         b3IsActive();
 		   void            b3Expand(b3_bool expand=true);
@@ -2167,10 +2167,10 @@ public:
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
 		    b3ModellerInfo *b3GetModellerInfo();
-			b3Distribute   *b3GetDistributed(b3_bool force=true);
-		    b3Nebular      *b3GetNebular    (b3_bool force=true);
-		    b3SuperSample  *b3GetSuperSample(b3_bool force=false);
-		    b3LensFlare    *b3GetLensFlare  (b3_bool force=false);
+			b3Distribute   *b3GetDistributed(b3_bool force = true);
+		    b3Nebular      *b3GetNebular    (b3_bool force = true);
+		    b3SuperSample  *b3GetSuperSample(b3_bool force = false);
+		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 			void            b3SetFilename(const char *filename);
@@ -2180,7 +2180,7 @@ public:
 		    b3BBox         *b3GetFirstBBox();
 		    b3_count        b3GetBBoxCount();
 		    void            b3Activate(b3_bool activate=true);
-		    void            b3Transform(b3_matrix *transformation);
+		    void            b3Transform(b3_matrix *transformation,b3_bool force_action = false);
 		    b3_bool         b3Prepare(b3_res xSize,b3_res ySize);
 		    void            b3Raytrace(b3Display *display);
 		    void            b3AbortRaytrace();

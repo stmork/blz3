@@ -200,6 +200,10 @@ SOURCE=.\DlgNebular.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgObjectCopy.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgScene.cpp
 # End Source File
 # Begin Source File
@@ -317,6 +321,10 @@ SOURCE=.\DlgModellerInfo.h
 # Begin Source File
 
 SOURCE=.\DlgNebular.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgObjectCopy.h
 # End Source File
 # Begin Source File
 

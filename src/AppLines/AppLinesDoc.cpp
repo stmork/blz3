@@ -39,6 +39,7 @@
 #include "DlgLight.h"
 #include "DlgLDC.h"
 #include "DlgCreateItem.h"
+#include "DlgObjectCopy.h"
 
 #include "b3ExampleScene.h"
 #include "blz3/system/b3Dir.h"
@@ -54,9 +55,13 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2002/01/08 16:04:08  sm
+**	- New copy dialog added
+**	- Merge with daily work
+**
 **	Revision 1.43  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
-**
+**	
 **	Revision 1.42  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop
@@ -1189,6 +1194,7 @@ void CAppLinesDoc::OnObjectDelete()
 		base->b3Remove(selected);
 		delete selected;
 
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
 
 		SetModifiedFlag();
@@ -1609,28 +1615,32 @@ void CAppLinesDoc::OnObjectCopy()
 	// TODO: Add your command handler code here
 	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
 	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
+	CDlgObjectCopy  dlg;
 	b3BBox         *selected;
 	b3BBox         *bbox;
 	b3BBox         *cloned;
 	b3Base<b3Item> *base;
 	b3_matrix       transformation;
-	b3_vector       move;
-	b3_count        i,max = 3;
+	b3_count        i;
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
 	B3_ASSERT(selected != null);
 	base     = m_Scene->b3FindBBoxHead(selected);
-	if (true)
+	dlg.m_OrigBBox = selected;
+	if (dlg.DoModal() == IDOK)
 	{
-		b3Vector::b3Init(&move,100);
-		b3MatrixMove(null,&transformation,&move);
+		CWaitCursor     wait;
+	
+		b3MatrixMove(null,&transformation,&dlg.m_Move);
+		b3MatrixRotX(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.x);
+		b3MatrixRotY(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.y);
+		b3MatrixRotZ(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.z);
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
 		bbox = selected;
-		for (i = 0;i < max;i++)
+		for (i = 0;i < dlg.m_NumCopies;i++)
 		{
 			cloned = (b3BBox *)b3World::b3Clone(bbox);
-			cloned->b3Transform(&transformation);
+			cloned->b3Transform(&transformation,true);
 			cloned->b3Prepare();
 			base->b3Insert(bbox,cloned);
 			bbox = cloned;

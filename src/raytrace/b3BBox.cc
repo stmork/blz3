@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/01/08 16:04:08  sm
+**	- New copy dialog added
+**	- Merge with daily work
+**
 **	Revision 1.35  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop
-**
+**	
 **	Revision 1.34  2002/01/06 21:38:18  sm
 **	- Nasty Un CR/LF
 **	- b3Dir fix. Not tested, yet!
@@ -631,7 +635,7 @@ b3_count b3BBox::b3Count()
 	return count;
 }
 
-b3_bool b3BBox::b3Transform(b3_matrix *transformation)
+b3_bool b3BBox::b3Transform(b3_matrix *transformation,b3_bool force_action)
 {
 	b3Item  *item;
 	b3Shape *shape;
@@ -641,7 +645,7 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation)
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
-		if (shape->b3IsActivated())
+		if (force_action || shape->b3IsActivated())
 		{
 			shape->b3Transform(transformation);
 			transformed = true;
@@ -665,6 +669,18 @@ b3_bool b3BBox::b3Transform(b3_matrix *transformation)
 	return transformed;
 }
 
+void b3Scene::b3Transform(b3_matrix *transformation,b3_bool force_action)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Transform(transformation,force_action);
+	}
+}
+
 char *b3Scene::b3GetName()
 {
 	return m_Filename;
@@ -679,18 +695,6 @@ void b3Scene::b3Draw()
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
-	}
-}
-
-void b3Scene::b3Transform(b3_matrix *transformation)
-{
-	b3Item         *item;
-	b3BBox         *bbox;
-
-	B3_FOR_BASE(b3GetBBoxHead(),item)
-	{
-		bbox = (b3BBox *)item;
-		bbox->b3Transform(transformation);
 	}
 }
 
