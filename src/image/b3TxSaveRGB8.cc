@@ -30,13 +30,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/01/01 12:46:43  sm
+**	- Fixed RGB8 image writing
+**	- Added RGB8 image saving to brt3 and display all command line options.
+**
 **	Revision 1.7  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.6  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -89,6 +93,8 @@ b3InfoRGB8::b3InfoRGB8(b3Tx *tx,const char *filename) :
 {
 	m_File.b3Write (m_SaveBuffer,48);
 	DataRGB8  =  40;
+	OldAmount =   0;
+	OldValue  =   0;
 }
 
 void b3InfoRGB8::b3Write()
@@ -121,7 +127,11 @@ void b3InfoRGB8::b3Write()
 				OldAmount = 1;
 				OldValue  = m_ThisRow[x];
 			}
-			else OldAmount++;			/* Wiederholungsfall */
+			else
+			{
+				// Repeat
+				OldAmount++;
+			}
 		}
 	}
 }

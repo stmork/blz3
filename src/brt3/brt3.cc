@@ -38,12 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2004/01/01 12:46:43  sm
+**	- Fixed RGB8 image writing
+**	- Added RGB8 image saving to brt3 and display all command line options.
+**
 **	Revision 1.49  2003/08/28 14:44:26  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.48  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -341,7 +345,7 @@ static void b3Banner(const char *command)
 	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-n][-j][-i][-g] {Blizzard World Data files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-j][-i][-g][-r] {Blizzard World Data files}\n",command);
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
@@ -350,6 +354,7 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL,"  -r  RGB8 image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
@@ -446,6 +451,9 @@ int main(int argc,char *argv[])
 					break;
 				case 'g':
 					strcpy(BLZ3_EXTENSION,".tga");
+					break;
+				case 'r':
+					strcpy(BLZ3_EXTENSION,".rgb8");
 					break;
 
 				case 'v' :
