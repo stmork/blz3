@@ -7,14 +7,18 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 LIBS			= libB3xxx.a
-PRGS			= TestIo TestThread Mandel TestData TestUtil
+PRGS			= TestIo TestThread Mandel TestData TestUtil TestFilter
+TESTDATA_OBJS		= TestData.o
+TESTFILTER_OBJS		= TestFilter.o
 TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
-TESTTHREAD_OBJS	= TestThread.o
+TESTTHREAD_OBJS		= TestThread.o
+TESTUTIL_OBJS		= TestUtil.o
 MANDEL_OBJS		= Mandel.o b3Mandel.o
 PRG_SOURCE		=\
 	TestIo.cc\
 	TestMem.cc\
 	TestFile.cc\
+	TestFilter.cc\
 	TestDir.cc\
 	TestThread.cc\
 	Mandel.cc\
@@ -31,16 +35,19 @@ depend:
 clean:
 	rm -f *.o *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
-TestIo:	$(TESTIO_OBJS)
+TestIo:	$(TESTIO_OBJS) $(BLZ3_LIB)/libB3System.a
 	$(LINK.cc) -o $@ $(TESTIO_OBJS) $(LDLIBS)
 
-TestData:	TestData.o
-	$(LINK.cc) -o $@ TestData.o $(LDLIBS)
+TestData:	$(TESTDATA_OBJS) $(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Base.a
+	$(LINK.cc) -o $@ $(TESTDATA_OBJS) $(LDLIBS)
 
-TestUtil:	TestUtil.o
-	$(LINK.cc) -o $@ TestUtil.o $(LDLIBS)
+TestFilter:	$(TESTFILTER_OBJS) $(BLZ3_LIB)/libB3Base.a
+	$(LINK.cc) -o $@ $(TESTFILTER_OBJS) $(LDLIBS)
 
-TestThread:	$(TESTTHREAD_OBJS)
+TestUtil:	$(TESTUTIL_OBJS) $(BLZ3_LIB)/libB3Base.a
+	$(LINK.cc) -o $@ $(TESTUTIL_OBJS) $(LDLIBS)
+
+TestThread:	$(TESTTHREAD_OBJS) $(BLZ3_LIB)/libB3System.a
 	$(LINK.cc) -o $@ $(TESTTHREAD_OBJS) $(LDLIBS)
 
 Mandel:	$(MANDEL_OBJS)

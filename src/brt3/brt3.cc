@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2002/08/22 14:06:32  sm
+**	- Corrected filter support and added test suite.
+**	- Added animation computing to brt3. Now we are near to
+**	  real time raytracing: 8 fps for Animationtest.
+**
 **	Revision 1.28  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **	Revision 1.27  2002/08/16 13:20:13  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
@@ -242,6 +247,7 @@ int main(int argc,char *argv[])
 	b3World              *world;
 	b3Display            *display;
 	b3Scene              *scene;
+	b3Animation          *animation;
 	b3CameraPart         *camera;
 	b3Item               *item;
 	b3_vector             lower,upper;
@@ -299,8 +305,20 @@ int main(int argc,char *argv[])
 						scene = (b3Scene *)item;
 						scene->b3Reorg();
 						scene->b3AllocVertices(&context);
-						scene->b3ComputeBounds(&lower,&upper);
 						scene->b3SetFilename(argv[i]);
+						animation = scene->b3GetAnimation();
+						if (animation != null)
+						{
+							if (!animation->b3IsActive())
+							{
+								b3PrintF(B3LOG_DEBUG,"Animation deactivated...\n");
+								animation = null;
+							}
+							else
+							{
+								b3PrintF(B3LOG_DEBUG,"Using animation...\n");
+							}
+						}
 
 						display = b3AllocDisplay(scene,force_no_display);
 						if ((camera = scene->b3GetCamera(false)) != null)
@@ -313,10 +331,34 @@ int main(int argc,char *argv[])
 									b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
 										camera->m_CameraName);
 									scene->b3SetCamera(camera);
-									scene->b3Raytrace(display);
-									b3SaveRaytracedImage(
-										display,
-										picture_home,camera->b3GetName());
+									if (animation != null)
+									{
+										b3_f64   t,step;
+										b3Path   img_name;
+										b3_count count = 0;
+
+										scene->b3ResetAnimation();
+										step = 1.0 / animation->m_FramesPerSecond;
+										for (t = animation->m_Start;t <= animation->m_End;t += step)
+										{
+											scene->b3SetAnimation(t);
+											scene->b3ComputeBounds(&lower,&upper);
+											scene->b3Raytrace(display);
+											sprintf((char *)img_name,"%s_%04d",
+												camera->b3GetName(),count++);
+											b3SaveRaytracedImage(
+												display,
+												picture_home,img_name);
+										}
+									}
+									else
+									{
+										scene->b3ComputeBounds(&lower,&upper);
+										scene->b3Raytrace(display);
+										b3SaveRaytracedImage(
+											display,
+											picture_home,camera->b3GetName());
+										}
 								}
 								else
 								{
@@ -329,6 +371,9 @@ int main(int argc,char *argv[])
 						}
 						else
 						{
+							// Default camera without any camera
+							// in special list
+							scene->b3ComputeBounds(&lower,&upper);
 							scene->b3Raytrace(display);
 							b3SaveRaytracedImage(
 								display,

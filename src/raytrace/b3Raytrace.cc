@@ -37,12 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/08/22 14:06:32  sm
+**	- Corrected filter support and added test suite.
+**	- Added animation computing to brt3. Now we are near to
+**	  real time raytracing: 8 fps for Animationtest.
+**
 **	Revision 1.41  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **	Revision 1.40  2002/08/21 10:16:40  sm
 **	- Made some changes to the Un*x OpenGL renderer:
 **	  o Added animations
@@ -362,7 +367,7 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	if (distributed->b3IsActive())
 	{
 		m_Distributed = distributed;
-		m_Distributed->b3Prepare();
+		m_Distributed->b3Prepare(xSize);
 		m_SuperSample = null;
 	}
 	else

@@ -35,12 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/22 14:06:32  sm
+**	- Corrected filter support and added test suite.
+**	- Added animation computing to brt3. Now we are near to
+**	  real time raytracing: 8 fps for Animationtest.
+**
 **	Revision 1.1  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **	
 **
 */
@@ -382,97 +387,16 @@ b3DistributedRayRow::b3DistributedRayRow(
 	b3_res     ySize) :
 		b3RayRow(scene,display,y,xSize,ySize)
 {
-	b3_f32       *samples;
-	b3_f64        start,step;
-	b3_coord      i,sx,sy;
-	b3_coord      spp;
-	b3_sample     type;
-	
 	m_Distr    = scene->m_Distributed;
-	m_Filter   = m_Distr->m_FilterPixel;
-	type       = SAMPLE_GET_TYPE(m_Distr);
-	spp        = m_Distr->m_SamplesPerPixel;
-	m_SPP      = type == SAMPLE_SEPARATED ? spp : spp * spp;
+	m_Samples  = m_Distr->m_Samples;
+	m_SPP      = m_Distr->m_SPP;
 	m_SPF      = m_Distr->m_SamplesPerFrame;
 	m_xHalfDir = &scene->m_xHalfDir;
 	m_yHalfDir = &scene->m_yHalfDir;
-	m_Samples  = (b3_f32 *)b3Alloc(m_xSize * m_SPP * sizeof(b3_f32) * 2);
-	if (m_Samples == null)
-	{
-		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
-	}
-
-	samples = m_Samples;
-	start   = 1.0;
-	step    = 2.0 / spp;
-	for (i = 0;i < m_xSize;i++)
-	{
-		switch(type)
-		{
-		case SAMPLE_REGULAR:
-			start = 1.0 - step * 0.5;
-			for (sy = 0;sy < spp;sy++)
-			{
-				for (sx = 0;sx < spp;sx++)
-				{
-					*samples++ = b3Integral(sx * step - start);
-					*samples++ = b3Integral(sy * step - start);
-				}
-			}
-			break;
-
-		case SAMPLE_RANDOM:
-			for (sy = 0;sy < spp;sy++)
-			{
-				for (sx = 0;sx < spp;sx++)
-				{
-					*samples++ = b3Integral(B3_FRAN(2.0) - 1.0);
-					*samples++ = b3Integral(B3_FRAN(2.0) - 1.0);
-				}
-			}
-			break;
-
-		case SAMPLE_JITTER:
-			for (sy = 0;sy < spp;sy++)
-			{
-				for (sx = 0;sx < spp;sx++)
-				{
-					*samples++ = b3Integral(B3_FRAN(step) - sx * step - start);
-					*samples++ = b3Integral(B3_FRAN(step) - sy * step - start);
-				}
-			}
-			break;
-
-		case SAMPLE_SEMI_JITTER:
-			start = 1.0 - step * 0.25;
-			for (sy = 0;sy < spp;sy++)
-			{
-				for (sx = 0;sx < spp;sx++)
-				{
-					*samples++ = b3Integral(B3_FRAN(step * 0.5) - sx * step - start);
-					*samples++ = b3Integral(B3_FRAN(step * 0.5) - sy * step - start);
-				}
-			}
-			break;
-
-		case SAMPLE_SEPARATED:
-			for (sx = 0;sx < spp;sx++)
-			{
-				*samples++ = b3Integral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
-				*samples++ = b3Integral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
-			}
-			break;
-		}
-	}
 }
 
 b3DistributedRayRow::~b3DistributedRayRow()
 {
-}
-
-b3_f64 b3DistributedRayRow::b3Integral(b3_f64 value)
-{
-	return m_Filter->b3Integral(value);
 }
 
 void b3DistributedRayRow::b3Raytrace()

@@ -2158,6 +2158,8 @@ public:
 public:
 	       b3Base<b3Item> *b3GetAnimElementHead();
 	       void            b3SetAnimElement (b3AnimElement *Element);
+	       b3_bool         b3IsActive();
+	       void            b3Activate(b3_bool activate = true);
 
 	       void            b3SetAnimation (b3Scene *Global,b3_f64 t);
 	       void            b3ResetAnimation (b3Scene *Global);
@@ -2201,6 +2203,8 @@ public:
 	b3_filter        m_FrameAperture;
 	b3Filter        *m_FilterPixel;
 	b3Filter        *m_FilterFrame;
+	b3_f32          *m_Samples;
+	b3_count         m_SPP;
 
 public:
 	B3_ITEM_INIT(b3Distribute);
@@ -2210,7 +2214,7 @@ public:
 	void     b3Write();
 	b3_bool  b3IsActive();
 	b3_bool  b3IsMotionBlur();
-	void     b3Prepare();
+	void     b3Prepare(b3_res xSize);
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -2512,7 +2516,6 @@ private:
 class b3DistributedRayRow : public b3RayRow
 {
 	b3Distribute *m_Distr;
-	b3Filter     *m_Filter;
 	b3_count      m_SPP;
 	b3_count      m_SPF;
 	b3_vector64  *m_xHalfDir;
@@ -2523,9 +2526,6 @@ public:
 	                b3DistributedRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
 	virtual        ~b3DistributedRayRow();
 	virtual void    b3Raytrace();
-
-private:
-	        b3_f64  b3Integral(b3_f64 value);
 };
 
 // m_Flags

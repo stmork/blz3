@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2002/08/22 14:06:32  sm
+**      - Corrected filter support and added test suite.
+**      - Added animation computing to brt3. Now we are near to
+**        real time raytracing: 8 fps for Animationtest.
+**
 **      Revision 1.55  2002/08/21 20:13:32  sm
 **      - Introduced distributed raytracing with all sampling methods
 **        and filter computations. This made some class movements
@@ -952,8 +957,14 @@ b3_bool b3Distribute::b3IsMotionBlur()
 	return b3IsActive() && ((m_Type & SAMPLE_MOTION_BLUR) != 0);
 }
 
-void b3Distribute::b3Prepare()
+void b3Distribute::b3Prepare(b3_res xSize)
 {
+	b3_f32       *samples;
+	b3_f64        start,step;
+	b3_coord      i,sx,sy;
+	b3_coord      spp;
+	b3_sample     type;
+
 	if (m_FilterPixel != null)
 	{
 		delete m_FilterPixel;
@@ -965,6 +976,80 @@ void b3Distribute::b3Prepare()
 		delete m_FilterFrame;
 	}
 	m_FilterFrame = b3Filter::b3New(m_FrameAperture);
+
+	type    = SAMPLE_GET_TYPE(this);
+	spp     = m_SamplesPerPixel;
+	m_SPP   = type == SAMPLE_SEPARATED ? spp : spp * spp;
+
+	m_Samples  = (b3_f32 *)b3Alloc(xSize * m_SPP * sizeof(b3_f32) * 2);
+	if (m_Samples == null)
+	{
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
+	}
+
+	samples = m_Samples;
+	start   = 1.0;
+	step    = 2.0 / spp;
+	for (i = 0;i < xSize;i++)
+	{
+		switch(type)
+		{
+		case SAMPLE_REGULAR:
+			start = 1.0 - step * 0.5;
+			for (sy = 0;sy < spp;sy++)
+			{
+				for (sx = 0;sx < spp;sx++)
+				{
+					*samples++ = m_FilterPixel->b3InvIntegral(sx * step - start);
+					*samples++ = m_FilterPixel->b3InvIntegral(sy * step - start);
+				}
+			}
+			break;
+
+		case SAMPLE_RANDOM:
+			for (sy = 0;sy < spp;sy++)
+			{
+				for (sx = 0;sx < spp;sx++)
+				{
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - 1.0);
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - 1.0);
+				}
+			}
+			break;
+
+		case SAMPLE_JITTER:
+			for (sy = 0;sy < spp;sy++)
+			{
+				for (sx = 0;sx < spp;sx++)
+				{
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step) - sx * step - start);
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step) - sy * step - start);
+				}
+			}
+			break;
+
+		case SAMPLE_SEMI_JITTER:
+			start = 1.0 - step * 0.25;
+			for (sy = 0;sy < spp;sy++)
+			{
+				for (sx = 0;sx < spp;sx++)
+				{
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step * 0.5) - sx * step - start);
+					*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(step * 0.5) - sy * step - start);
+				}
+			}
+			break;
+
+		case SAMPLE_SEPARATED:
+			for (sx = 0;sx < spp;sx++)
+			{
+				*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
+				*samples++ = m_FilterPixel->b3InvIntegral(B3_FRAN(2.0) - B3_IRAN(spp) * step - start);
+			}
+			break;
+		}
+	}
+
 }
 
 /*************************************************************************
@@ -1028,6 +1113,23 @@ void b3Animation::b3Write()
 	b3StoreCount(m_WTracks);
 	b3StoreCount(m_WFrames);
 	b3StorePtr  (m_Element);
+}
+
+b3_bool b3Animation::b3IsActive()
+{
+	return (m_Flags & ANIMF_ON) != 0;
+}
+
+void b3Animation::b3Activate(b3_bool activate)
+{
+	if (activate)
+	{
+		m_Flags |= ANIMF_ON;
+	}
+	else
+	{
+		m_Flags ^= (~ANIMF_ON);
+	}
 }
 
 /*************************************************************************

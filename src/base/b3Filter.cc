@@ -31,18 +31,23 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/08/22 14:06:32  sm
+**	- Corrected filter support and added test suite.
+**	- Added animation computing to brt3. Now we are near to
+**	  real time raytracing: 8 fps for Animationtest.
+**
 **	Revision 1.1  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
 **	  inside files necessary. The next step would be to integrate
 **	  motion blur.
-**
+**	
 **
 */
 
 /*************************************************************************
 **                                                                      **
-**                        implementation                                **
+**                        b3Filter implementation                       **
 **                                                                      **
 *************************************************************************/
 
@@ -62,61 +67,155 @@ b3Filter *b3Filter::b3New(b3_filter filter)
 	return null;
 }
 
-#define GAUSS_ND_ENTRIES  ((int)(GAUSS_ND_MAX / GAUSS_ND_STEP) + 2)
+b3_f64 b3Filter::b3InvIntegral(b3_f64 val,b3_bool throw_exception)
+{
+	b3_f64 y,xLower,xMid,xUpper,diff;
+
+	if (fabs(val) > 1)
+	{
+		if (throw_exception)
+		{
+			B3_THROW(b3FilterException,B3_FILTER_OUT_OF_RANGE);
+		}
+		return val;
+	}
+
+	y      = (val + 1) * 0.5;
+	xLower = -1;
+	xUpper =  1;
+
+	do
+	{
+		xMid = (xLower + xUpper) * 0.5;
+
+		if (b3Integral(xMid) < y)
+		{
+			xLower = xMid;
+		}
+		else
+		{
+			xUpper = xMid;
+		}
+		diff = xUpper - xLower;
+	}
+	while(diff > 0.001);
+
+	return xMid;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3GaussFilter implementation                  **
+**                                                                      **
+*************************************************************************/
+
+#define GAUSS_ND_MAX      3.0
+#define GAUSS_ND_STEP     (1.0 / 128.0) 
+
+#define GAUSS_ND_ENTRIES  ((b3_count)(GAUSS_ND_MAX / GAUSS_ND_STEP) + 2)
+
+#define GAUSS_ND_INDEX(x) (((x) + GAUSS_ND_MAX) /  GAUSS_ND_STEP)
 
 b3Array<b3_f64> b3GaussFilter::m_GaussNDTable;
+b3_f64          b3GaussFilter::m_Area;
 
-b3GaussFilter::b3GaussFilter(b3_f64 step,b3_f64 max)
+b3GaussFilter::b3GaussFilter()
 {
 	if (m_GaussNDTable.b3GetCount() == 0)
 	{
-		b3_f64   start=0.5,i,x,val,c;
+		b3_f64 x;
 
-		c = 1.0 / sqrt(M_PI * 2.0);
-		for (i = 0;i <= max;i += step)
+		b3PrintF(B3LOG_FULL,"Init b3GaussFilter...\n");
+		m_Area = 0;
+		for (x = -GAUSS_ND_MAX; x <= (GAUSS_ND_MAX + GAUSS_ND_STEP * 0.5);x += GAUSS_ND_STEP)
 		{
-			m_GaussNDTable.b3Add(start);
-			x      = i + 0.5 * step;
-			val    = c * exp(-x * x * 0.5);
-			start += step * val;
+			m_GaussNDTable.b3Add(m_Area);
+			m_Area += b3Func(x) * GAUSS_ND_STEP;
 		}
-		m_GaussNDTable.b3Add(1.0);
+		b3PrintF(B3LOG_FULL,"  area: %3.8f %d entries\n",m_Area,m_GaussNDTable.b3GetCount());
 	}
 }
 
-b3_f64 b3GaussFilter::b3Func(b3_f64 val)
+b3_f64 b3GaussFilter::b3Func(b3_f64 x)
 {
-	return exp(-val * val * 0.5) / sqrt(M_PI * 2.0);
+	return exp(-x * x * M_PI);
 }
 
 b3_f64 b3GaussFilter::b3Integral(b3_f64 val)
 {
-	b3_count lower,upper,half,diff;
-	b3_f64   q,x,xl,xu;
-	b3_f64   result;
+	b3_f64   lower,result;
+	b3_index index;
 
-	x     = (val < 0.5 ? 1.0 - val : val);
-	lower = 0;
-	upper = GAUSS_ND_ENTRIES - 1;
-	do
+	if (val <=  -GAUSS_ND_MAX) return 0;
+	if (val >=   GAUSS_ND_MAX) return 1;
+
+	lower = GAUSS_ND_INDEX(val);
+	index = (b3_index)floor(lower);
+
+	if (lower == index)
 	{
-		half = (lower + upper) >> 1;
-		if ((m_GaussNDTable[lower] <= x) && (x <= m_GaussNDTable[half]))
-		{
-			upper = half;
-		}
-		else
-		{
-			lower = half;
-		}
-		diff =  upper - lower;
+		result = m_GaussNDTable[index];
 	}
-	while (diff > 1);
-	xl = lower * GAUSS_ND_STEP;
-	xu = upper * GAUSS_ND_STEP;
-	q  = (x - m_GaussNDTable[lower]) / (m_GaussNDTable[upper] - m_GaussNDTable[lower]);
-	if (val < 0.5) result =  - xu * q - xl * (1.0 - q);
-	else           result =    xu * q + xl * (1.0 - q);
-	
-	return result / GAUSS_ND_MAX + 0.5;
+	else
+	{
+		b3_f64 a,b;
+
+		a = lower - index;
+		b = 1 - a;
+		result = b * m_GaussNDTable[index] + a * m_GaussNDTable[index + 1];
+	}
+	return result / m_Area;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3ShutterFilter implementation                **
+**                                                                      **
+*************************************************************************/
+
+b3ShutterFilter::b3ShutterFilter(b3_f64 max)
+{
+	m_Max   = max * 2;
+	m_lMax  = max * 2 - 1;
+	m_uMax  = 1 - max * 2;
+	m_Slope = 0.5 / max;
+	m_Area  = 2.0 - 2.0 * max;
+}
+
+b3_f64 b3ShutterFilter::b3Func(b3_f64 x)
+{
+	b3_f64 ax = fabs(x);
+
+	if (ax > 1) return 0;
+	if (ax < m_uMax) return 1;
+	return (1 - ax) * m_Slope;
+}
+
+b3_f64 b3ShutterFilter::b3Integral(b3_f64 x)
+{
+	b3_f64 result;
+
+	if (x < -1) return 0;
+	if (x >  1) return 1;
+
+	if (x < m_lMax)
+	{
+		// Rising edge
+		b3_f64 y = (x + 1) / m_Max;
+
+		result = (x + 1) * y * 0.5;
+	}
+	else if (x > m_uMax)
+	{
+		// Falling edge
+		b3_f64 y = (1 - x) / m_Max;
+
+		result = m_Area - (1 - x) * y * 0.5;
+	}	
+	else	
+	{
+		// High level
+		result = x + 1 - 0.5 * m_Max;
+	}
+	return result / m_Area;
 }
