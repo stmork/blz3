@@ -18,7 +18,7 @@ setenv LIBS      "$LIB_X3 $LIB_S3 $LIB_OGL3 -lB3tiff -lB3jpeg"
 setenv PROF_DIR   /tmp/profdir
 setenv PROF_FILES "../data/*.bwd GeoNebel.bwd AllShapes.bwd"
 setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
-setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd ../data/Lichttest.bwd"
+setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd ../data/Lichttest.bwd ../data/Animationstest.bwd"
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
