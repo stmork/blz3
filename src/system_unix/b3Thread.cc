@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2003/10/16 08:25:55  sm
+**	- Moved CPU bit count into b3CPUBase class
+**
 **	Revision 1.16  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
-**
+**	
 **	Revision 1.15  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -398,7 +401,7 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 
 b3CPU::b3CPU()
 {
-	if (num == 0)
+	if (cpu_count == 0)
 	{
 		long    result;
 
@@ -409,11 +412,11 @@ b3CPU::b3CPU()
 #endif
 		if ((result < 1) || (errno == EINVAL))
 		{
-			num = 1;
+			cpu_count = 1;
 		}
 		else
 		{
-			num = result;
+			cpu_count = result;
 		}
 	}
 }
@@ -423,9 +426,9 @@ b3_count b3CPU::b3GetNumThreads()
 	b3_count resuming;
 
 	threadMutex.b3Lock();
-	if (num > threadCount)
+	if (cpu_count > threadCount)
 	{
-		resuming = num - threadCount;
+		resuming = cpu_count - threadCount;
 	}
 	else
 	{

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2003/10/16 08:25:55  sm
+**	- Moved CPU bit count into b3CPUBase class
+**
 **	Revision 1.15  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.14  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -352,15 +355,15 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 
 b3CPU::b3CPU()
 {
-	if (num == 0)
+	if (cpu_count == 0)
 	{
 		SYSTEM_INFO  info;
 
 		GetSystemInfo(&info);
-		num = info.dwNumberOfProcessors;
+		cpu_count = info.dwNumberOfProcessors;
 		if (info.dwNumberOfProcessors < 1)
 		{
-			num = 1;
+			cpu_count = 1;
 		}
 	}
 }
@@ -370,9 +373,9 @@ b3_count b3CPU::b3GetNumThreads()
 	b3_count resuming;
 
 	threadMutex.b3Lock();
-	if (num > threadCount)
+	if (cpu_count > threadCount)
 	{
-		resuming = num - threadCount;
+		resuming = cpu_count - threadCount;
 	}
 	else
 	{

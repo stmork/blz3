@@ -31,21 +31,27 @@ enum B3_PLUGIN b3_cpu_type
 class B3_PLUGIN b3CPUBase
 {
 	static b3_cpu_type cpu_type;
+	static b3_count    cpu_bits;
 
 protected:
-	static b3_count    num;
+	static b3_count    cpu_count;
 
 public:
 	                b3CPUBase();
 
 	static inline b3_count b3GetNumCPUs()
 	{
-		return num;
+		return cpu_count;
 	}
 
 	static inline b3_cpu_type b3GetCPUType()
 	{
 		return cpu_type;
+	}
+
+	static inline b3_count b3GetCPUBits()
+	{
+		return cpu_bits;
 	}
 };
 

@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/10/16 08:25:55  sm
+**	- Moved CPU bit count into b3CPUBase class
+**
 **	Revision 1.13  2003/10/15 13:12:19  sm
 **	- Making 64 bit sure. I've got running the brt3 in 64 bit mode on
 **	  a sun ultra sparc sucessfully!!
-**
+**	
 **	Revision 1.12  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -98,6 +101,7 @@ int main(int argc,char *argv[])
 
 	b3Log::b3SetLevel(B3LOG_FULL);
 
+	b3PrintF (B3LOG_NORMAL,"%d-Bit-CPU\n",b3Runtime::b3GetCPUBits());
 	switch(b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
@@ -114,7 +118,6 @@ int main(int argc,char *argv[])
 	}
 
 	b3PrintF (B3LOG_NORMAL,"size of some basic data types:\n");
-	b3PrintF (B3LOG_NORMAL,"Pointer: %3d\n",sizeof(void *));
 	b3PrintF (B3LOG_NORMAL,"        uns. sgn.\n");
 	b3PrintF (B3LOG_NORMAL,"Integer:\n");
 	b3PrintF (B3LOG_NORMAL," 8 bit: %3d  %3d (should be 1)\n",sizeof(b3_u08),sizeof(b3_s08));
