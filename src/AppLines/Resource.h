@@ -28,6 +28,7 @@
 #define IDI_BBOX_S_SHAPES               153
 #define IDI_BBOX_EMPTY                  155
 #define IDM_BAR_VIEW                    252
+#define IDD_SEARCH_PATH_LIST            509
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -94,6 +95,14 @@
 #define IDC_DEACTIVATE                  1056
 #define IDC_ALL_ACTIVATE                1057
 #define IDC_ALL_DEACTIVATE              1058
+#define IDC_PATH_FIRST                  1059
+#define IDC_PATH_PREV                   1060
+#define IDC_PATH_SUCC                   1061
+#define IDC_PATH_LAST                   1062
+#define IDC_PATH_NEW                    1063
+#define IDC_PATH_DELETE                 1064
+#define IDC_PATH_LIST                   1065
+#define IDC_PATH_EDIT                   1066
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -154,6 +163,8 @@
 #define ID_CUST_SCENE                   32815
 #define ID_MODELLER_INFO                32816
 #define ID_VIEW_TO_FULCRUM              32817
+#define ID_IMG_SAVE                     32818
+#define ID_CHANGE_TEXTURE_PATH          32819
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -169,6 +180,8 @@
 #define IDS_SS4_RED_LEGEND              61456
 #define IDS_SS4_GREEN_LEGEND            61457
 #define IDS_SS4_BLUE_LEGEND             61458
+#define IDS_SAVE_IMAGE_FILTER           61459
+#define IDS_SELECT_TEXTURE_PATH         61460
 
 // Next default values for new objects
 // 
@@ -176,7 +189,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32818
+#define _APS_NEXT_COMMAND_VALUE         32820
 #define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

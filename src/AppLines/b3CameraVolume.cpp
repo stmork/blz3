@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/12/01 17:48:42  sm
+**      - Added raytraced image saving
+**      - Added texture search path configuration
+**      - Always drawing fulcrum and view volume. The
+**        depth buffer problem persists
+**
 **      Revision 1.3  2001/11/03 16:24:16  sm
 **      - Added scene property dialog
 **      - Added raytrace view title
@@ -143,4 +149,18 @@ void b3CameraVolume::b3GetGridColor(b3_color *color)
 	color->g = 0.1f;
 	color->b = 0.4f;
 	color->a = 0.0f;
+}
+
+void b3CameraVolume::b3Draw()
+{
+	int func;
+
+	glDisable(GL_DEPTH_TEST);
+	glGetIntegerv(GL_DEPTH_FUNC,&func);
+	glDepthFunc(GL_ALWAYS);
+//	glDepthMask(GL_FALSE);
+	b3RenderObject::b3Draw();
+//	glDepthMask(GL_TRUE);
+	glDepthFunc(func);
+	glEnable(GL_DEPTH_TEST);
 }

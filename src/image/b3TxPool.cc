@@ -32,9 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.18  2001/11/11 14:07:15  sm
 **	- Adjusted b3Path to Un*x port.
-**
+**	
 **	Revision 1.17  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
@@ -130,7 +136,7 @@
 
 b3TxPool::b3TxPool()
 {
-	m_Pool.b3InitBase();
+	m_Pool.b3InitBase(CLASS_TEXTURE);
 }
 
 b3TxPool::~b3TxPool()

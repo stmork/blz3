@@ -69,6 +69,8 @@ protected:
 	//{{AFX_MSG(CAppRaytraceDoc)
 	afx_msg void OnRaytrace();
 	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
+	afx_msg void OnSaveImage();
+	afx_msg void OnUpdateSaveImage(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

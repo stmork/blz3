@@ -37,12 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.1  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
 **	  their own area.
 **	- Fixed JPEG to support b3Tx::b3AllocTx()
-**
+**	
 **	
 */
 
@@ -289,4 +295,47 @@ b3_result b3Tx::b3LoadImage(const char *name)
 			name);
 	}
 	return error_code;
+}
+
+b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
+{
+	if (stricmp(ext,"tif")  == 0) return FT_TIFF;
+	if (stricmp(ext,"tiff") == 0) return FT_TIFF;
+	if (stricmp(ext,"tga")  == 0) return FT_TGA;
+	if (stricmp(ext,"jpg")  == 0) return FT_JPEG;
+	if (stricmp(ext,"jpeg") == 0) return FT_JPEG;
+	if (stricmp(ext,"gif")  == 0) return FT_GIF;
+	if (stricmp(ext,"rgb8") == 0) return FT_RGB8;
+	if (stricmp(ext,"rgb4") == 0) return FT_RGB4;
+	if (stricmp(ext,"rgbn") == 0) return FT_RGB4;
+	if (stricmp(ext,"pcx")  == 0) return FT_PCX8;
+	if (stricmp(ext,"lbm")  == 0) return FT_ILBM;
+	if (stricmp(ext,"iff")  == 0) return FT_ILBM;
+	if (stricmp(ext,"ilbm") == 0) return FT_ILBM;
+	if (stricmp(ext,"img")  == 0) return FT_SGI_RLE;
+	if (stricmp(ext,"ps")   == 0) return FT_PS;
+	if (stricmp(ext,"bmp")  == 0) return FT_BMP;
+
+	return FT_UNKNOWN;
+}
+
+b3_result b3Tx::b3SaveImage(const char *filename)
+{
+	b3Path         ext;
+	b3_tx_filetype filetype;
+
+	b3Path::b3ExtractExt(filename,ext);
+	filetype = b3GetFileType(ext);
+	switch(filetype)
+	{
+	case FT_JPEG:
+		return b3SaveJPEG(filename);
+	case FT_TIFF:
+		return b3SaveTIFF(filename);
+	case FT_TGA:
+		return b3SaveTGA(filename);
+	case FT_RGB8:
+		return b3SaveRGB8(filename);
+	}
+	return B3_ERROR;
 }

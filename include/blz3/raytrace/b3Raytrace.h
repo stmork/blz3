@@ -39,24 +39,6 @@
 **                                                                      **
 *************************************************************************/
 
-#define CLASS_TEXTURE       0x20000000
-#define TYPE_USUAL          0x00000001
-#define USUAL_TEXTURE       (CLASS_TEXTURE|TYPE_USUAL)
-
-class b3ObsoleteTx : public b3Link<b3Tx>
-{
-	char       *Name;             // name reference 
-	b3_u08     *Data;             // plane data
-	b3_u32     *Palette;          // palette (if needed)
-	b3_s32      Planes;           // number of planes
-	b3_s32      Type;             // internal type 
-	b3_s32      FileType;         // file type
-	b3_s32      xSize,ySize;      // resolution
-	b3_s32      LastAccess;       // last access count
-public:
-	b3ObsoleteTx();
-};
-
 struct b3_polar
 {
 	b3_vector polar;
@@ -64,8 +46,6 @@ struct b3_polar
 	b3_vector box_polar;
 	b3_index  normal_index;
 };
-
-class b3Shape;
 
 struct b3_ray : public b3_line64
 {
@@ -955,11 +935,13 @@ private:
 class b3ShapeBaseTrans
 {
 protected:
-	b3_vector         m_Base;
-	b3_vector         m_Dir1,m_Dir2,m_Dir3;
 	b3_vector         m_Normals[3];       // cross products
 	b3_f64            m_Denom;            // denominator of lin. system
 	b3_f64            m_DirLen[3];        // length of direction vectors
+
+public:
+	b3_vector         m_Base;
+	b3_vector         m_Dir1,m_Dir2,m_Dir3;
 
 public:
 	b3_bool b3NormalDeriv(b3_ray *ray);
@@ -1128,8 +1110,10 @@ class b3Torus : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
 	b3_s32            m_lSize;
-	b3_f32            m_aRad, m_bRad;     // radiuses of torus
 	b3_f32            m_aQuad,m_bQuad;    // squared lengths of aRad, bRad
+
+public:
+	b3_f32            m_aRad, m_bRad;     // radiuses of torus
 
 public:
 	B3_ITEM_INIT(b3Torus);

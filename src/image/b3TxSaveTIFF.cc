@@ -35,11 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.2  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -317,7 +323,7 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 	if (tiff)
 	{
 		b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx:  # saving TIFF (%s)\n",
-			name);
+			(char *)name);
 		// Now select the saving version we need.
 		if (depth == 1)
 		{

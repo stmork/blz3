@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.2  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.1  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -130,7 +136,6 @@ void b3InfoTGA::b3Write()
 				}
 			}
 		}
-		m_ThisRow += m_Tx->xSize;
 	}
 }
 

@@ -38,11 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.3  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.2  2001/07/02 19:28:25  sm
 **	- Applying console application on Windows 32
 **	- Added further Windows environment
@@ -497,6 +503,27 @@ void b3Path::b3RemoveExt(char *name)
 		}
 	}
 	b3LinkFileName  (name,actPath,actName);
+}
+
+// Extract an extension from a filename;
+void b3Path::b3ExtractExt(const char *filename,char *ext)
+{
+	char     actPath[B3_FILESTRINGLEN];
+	char     actName[B3_FILESTRINGLEN];
+	b3_index i;
+	b3_count len;
+
+	b3SplitFileName (filename,actPath,actName);
+	len = strlen(actName);
+	for (i = 0;i < len;i++)
+	{
+		if (actName[i] == '.')
+		{
+			strcpy(ext,&actName[i+1]);
+			return;
+		}
+	}
+	ext[0] = 0;
 }
 
 static b3_bool b3FileDialog(

@@ -30,6 +30,7 @@ public:
 
 class b3SearchPath
 {
+public:
 	b3Base<b3PathEntry> m_SearchPath;
 
 public:

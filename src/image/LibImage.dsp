@@ -153,6 +153,18 @@ SOURCE=.\b3TxSaveJPEG.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxSavePS.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxSaveRGB8.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3TxSaveTGA.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3TxSaveTIFF.cc
 # End Source File
 # Begin Source File

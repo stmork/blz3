@@ -27,12 +27,6 @@
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -41,9 +35,15 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.6  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
-**
+**	
 **	Revision 1.5  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
@@ -79,6 +79,8 @@ BEGIN_MESSAGE_MAP(CAppRaytraceDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppRaytraceDoc)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
+	ON_COMMAND(ID_IMG_SAVE, OnSaveImage)
+	ON_UPDATE_COMMAND_UI(ID_IMG_SAVE, OnUpdateSaveImage)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -194,4 +196,28 @@ void CAppRaytraceDoc::OnUpdateRaytrace(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck(m_LinesDoc->b3IsRaytracing());
+}
+
+void CAppRaytraceDoc::OnSaveImage() 
+{
+	// TODO: Add your command handler code here
+	CString  suggest;
+	CString  ext;
+	CString  filter;
+	b3Path   result;
+	CWinApp *app = AfxGetApp();
+
+	suggest = app->GetProfileString(CB3ClientString(),"Saved image filename","");
+	filter.LoadString(IDS_SAVE_IMAGE_FILTER);
+	if (b3SaveDialog(suggest,ext,filter,result))
+	{
+		app->WriteProfileString(CB3ClientString(),"Saved image filename",result);
+		m_Tx->b3SaveImage(result);
+	}
+}
+
+void CAppRaytraceDoc::OnUpdateSaveImage(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!m_LinesDoc->b3IsRaytracing());
 }

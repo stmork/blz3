@@ -172,6 +172,10 @@ SOURCE=.\DlgScene.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgSearchPathList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgSuperSampling.cpp
 # End Source File
 # Begin Source File
@@ -249,6 +253,10 @@ SOURCE=.\DlgScene.h
 # Begin Source File
 
 SOURCE=.\DlgSuperSampling.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgTexturePathList.h
 # End Source File
 # Begin Source File
 

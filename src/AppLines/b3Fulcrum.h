@@ -34,6 +34,7 @@ public:
 	void     b3Update(b3_vector *fulcrum);
 	void     b3AllocVertices(b3RenderContext *context);
 	void     b3FreeVertices();
+	void     b3Draw();
 
 protected:
 	void     b3GetGridColor(b3_color *color);

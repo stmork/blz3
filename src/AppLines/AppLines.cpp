@@ -30,6 +30,8 @@
 #include "AppRaytraceView.h"
 #include "blz3/image/b3TxPool.h"
 
+#include "DlgSearchPathList.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -38,10 +40,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.5  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
-**
+**	
 **	Revision 1.4  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
@@ -71,8 +79,7 @@
 BEGIN_MESSAGE_MAP(CAppLinesApp, CWinApp)
 	//{{AFX_MSG_MAP(CAppLinesApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
+	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
@@ -140,10 +147,16 @@ BOOL CAppLinesApp::InitInstance()
 	b3Log_SetLevel(B3LOG_FULL);
 #endif
 	b3InitRaytrace::b3Init();
-	texture_pool.b3AddPath("H:\\Blizzard\\Textures");
-	texture_pool.b3AddPath("M:\\Blizzard\\Textures");
-	texture_pool.b3AddPath("H:\\Blizzard\\Pictures");
-	texture_pool.b3AddPath("M:\\Blizzard\\Pictures");
+
+	CString path = GetProfileString(b3ClientName(),"texture search path","");
+	CString sub;
+
+	while(!path.IsEmpty())
+	{
+		sub = path.SpanExcluding(";");
+		texture_pool.b3AddPath(sub);
+		path = path.Right(path.GetLength() - sub.GetLength() - 1);
+	}
 
 	pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,
@@ -281,4 +294,25 @@ CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 	pImageTemplate->InitialUpdateFrame(frame,pDoc);
 
 	return pDoc;
+}
+
+void CAppLinesApp::OnChangeTexturePath() 
+{
+	// TODO: Add your command handler code here
+	CDlgSearchPathList  dlg;
+	CString             path  = "";
+	b3PathEntry        *entry;
+	b3_count            count = 0;
+
+	dlg.m_SearchPath = &texture_pool;
+	dlg.DoModal();
+	B3_FOR_BASE(&texture_pool.m_SearchPath,entry)
+	{
+		if (count++ > 0)
+		{
+			path += ";";
+		}
+		path += ((const char *)((b3Path *)entry));
+	}
+	WriteProfileString(b3ClientName(),"texture search path",path);
 }

@@ -184,6 +184,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
+        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
+        MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "&Beenden",                    ID_APP_EXIT
@@ -230,6 +232,8 @@ BEGIN
         MENUITEM "&Drucken...\tStrg+P",         ID_FILE_PRINT
         MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -322,6 +326,7 @@ BEGIN
         MENUITEM "&Schließen",                  ID_FILE_CLOSE
         MENUITEM "S&peichern\tStrg+S",          ID_FILE_SAVE
         MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
+        MENUITEM "&Bild speichern unter...",    ID_IMG_SAVE
         MENUITEM SEPARATOR
         MENUITEM "Fensterposition jetzt &speichern", ID_PREF_SAVE
         MENUITEM "Fensterposition &automatisch speichern", ID_PREF_AUTOSAVE
@@ -329,6 +334,8 @@ BEGIN
         MENUITEM "&Drucken...\tStrg+P",         ID_FILE_PRINT
         MENUITEM "Sei&tenansicht",              ID_FILE_PRINT_PREVIEW
         MENUITEM "Drucker&einrichtung...",      ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Suchpfade für Texturen...",   ID_CHANGE_TEXTURE_PATH
         MENUITEM SEPARATOR
         MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -603,6 +610,23 @@ BEGIN
     PUSHBUTTON      "Abbrechen",IDCANCEL,170,125,50,14
 END
 
+IDD_SEARCH_PATH_LIST DIALOG DISCARDABLE  0, 0, 312, 196
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Suchpfad einstellen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,10,170,60,15
+    PUSHBUTTON      "Neu",IDC_PATH_NEW,240,100,60,15
+    PUSHBUTTON      "Löschen",IDC_PATH_DELETE,240,120,60,15
+    PUSHBUTTON      "Anfang",IDC_PATH_FIRST,240,10,60,15
+    PUSHBUTTON      "Ende",IDC_PATH_LAST,240,70,60,15
+    PUSHBUTTON      "Aufwärts",IDC_PATH_PREV,240,30,60,15
+    PUSHBUTTON      "Abwärts",IDC_PATH_SUCC,240,50,60,15
+    COMBOBOX        IDC_PATH_LIST,10,10,215,145,CBS_SIMPLE | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Ändern...",IDC_PATH_EDIT,240,140,60,15
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -721,6 +745,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 144
     END
+
+    IDD_SEARCH_PATH_LIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 305
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 189
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -747,7 +779,7 @@ STRINGTABLE PRELOAD DISCARDABLE
 BEGIN
     IDR_MAINFRAME           "Lines III"
     IDR_BLZ3TYPE            "\nBLZ3\nBLZ3\nBlizzard III Geometrie (*.bwd)\n.bwd\nBlizzard3.Document\nBlizzard III Dokument"
-    IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nTIFF-Datei\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
+    IDR_DISPLAYTYPE         "Blizzard III Viewer\nSeitenansicht\nBerechnetes Bild\nTIFF-Bilddatei (*.tif)\n.tif\n\n"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -955,12 +987,16 @@ BEGIN
     IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
     IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
     IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
+    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
+    IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_MODELLER_INFO        "Geometry-Werte setzen\nGeometrie-Werte setzen"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
+    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
 END
 
 #endif    // German (Germany) resources

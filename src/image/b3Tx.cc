@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/12/01 17:48:42  sm
+**	- Added raytraced image saving
+**	- Added texture search path configuration
+**	- Always drawing fulcrum and view volume. The
+**	  depth buffer problem persists
+**
 **	Revision 1.11  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.10  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -187,7 +193,7 @@ static void b3TIFFWarnHandler(
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);
 }
 
-b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx))
+b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 {
 	data        = null;
 	palette     = null;
@@ -221,7 +227,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx))
 #endif
 }
 
-b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx))
+b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 {
 	name.b3Empty();
 	histogramme = null;
@@ -645,7 +651,7 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 **                                                                      **
 *************************************************************************/
 
-void b3Tx::b3GetILBM (
+inline void b3Tx::b3GetILBM (
 	b3_pkd_color  *ColorLine,
 	b3_coord   y)
 {
@@ -695,9 +701,9 @@ void b3Tx::b3GetILBM (
 	}
 }
 
-void b3Tx::b3GetRGB8 (
-	b3_pkd_color  *dst,
-	b3_coord   y)
+inline void b3Tx::b3GetRGB8 (
+	b3_pkd_color *dst,
+	b3_coord      y)
 {
 	b3_pkd_color *src;
 
@@ -730,7 +736,7 @@ void b3Tx::b3GetRGB8 (
 #endif
 }
 
-void b3Tx::b3GetRGB4 (
+inline void b3Tx::b3GetRGB4 (
 	b3_pkd_color *ColorLine,
 	b3_coord      y)
 {
@@ -751,7 +757,7 @@ void b3Tx::b3GetRGB4 (
 	}
 }
 
-void b3Tx::b3GetVGA (
+inline void b3Tx::b3GetVGA (
 	b3_pkd_color *ColorLine,
 	b3_coord      y)
 {

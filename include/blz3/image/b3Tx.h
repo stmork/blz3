@@ -118,7 +118,8 @@ enum b3_tx_filetype
 	FT_PGM,
 	FT_PBM,
 	FT_JPEG,
-	FT_BMF
+	FT_BMF,
+	FT_PS
 };
 
 enum b3_tx_threshold
@@ -160,7 +161,8 @@ typedef enum
 	B3_TX_UNSUPP,
 	B3_TX_ERR_PACKING,
 	B3_TX_UNCOMPL,
-	B3_TX_ERR_HEADER
+	B3_TX_ERR_HEADER,
+	B3_TX_UNKNOWN_FILETYPE
 } b3_tx_error;
 
 class b3TxException
@@ -224,6 +226,10 @@ public:
 	void b3Init(b3_res xSize,b3_res ySize,b3_res depth);
 	void b3Print();
 };
+
+#define CLASS_TEXTURE       0x20000000
+#define TYPE_USUAL          0x00000001
+#define USUAL_TEXTURE       (CLASS_TEXTURE|TYPE_USUAL)
 
 // one single image and its methods
 class b3Tx : public b3Link<b3Tx>, public b3Mem
@@ -320,8 +326,10 @@ public:
 		b3_f64 ratio=0.5,b3_tx_threshold mode = B3_THRESHOLD_USE);
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
+	b3_tx_filetype b3GetFileType(const char *extension);
 	b3_result      b3LoadImage(const char *ImageName);
 	b3_result      b3LoadImage(b3_u08 *buffer,b3_size size);
+	b3_result      b3SaveImage(const char *filename);
 
 	// b3TxScale.cc
 	void           b3TransToGrey();

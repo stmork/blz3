@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/12/01 17:48:42  sm
+**      - Added raytraced image saving
+**      - Added texture search path configuration
+**      - Always drawing fulcrum and view volume. The
+**        depth buffer problem persists
+**
 **      Revision 1.2  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -134,4 +140,18 @@ void b3Fulcrum::b3GetGridColor(b3_color *color)
 	color->g = 0.1f;
 	color->b = 0.4f;
 	color->a = 0.0f;
+}
+
+void b3Fulcrum::b3Draw()
+{
+	int func;
+
+	glDisable(GL_DEPTH_TEST);
+	glGetIntegerv(GL_DEPTH_FUNC,&func);
+	glDepthFunc(GL_ALWAYS);
+//	glDepthMask(GL_FALSE);
+	b3RenderObject::b3Draw();
+//	glDepthMask(GL_TRUE);
+	glDepthFunc(func);
+	glEnable(GL_DEPTH_TEST);
 }
