@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2002/08/05 17:46:41  sm
+**      - Some merges...
+**
 **      Revision 1.50  2002/08/05 16:04:55  sm
 **      - Found first texture init bug. This wasn't an OpenGL bug. This
 **        couldn't be because every implementation had got the same
@@ -707,7 +710,6 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 	context->glVertexCount += glVertexCount;
 	context->glPolyCount   += glPolyCount;
 	context->glGridCount   += glGridCount;
-	context->glTextureSize += glTextureSize;
 }
 
 /*************************************************************************
