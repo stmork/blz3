@@ -41,8 +41,8 @@ class b3RenderView
 public:
 	void    b3SetViewMode(b3_view_mode mode);
 	b3_bool b3IsViewMode(b3_view_mode mode);
-	void    b3GetCamera(b3CameraPart *camera);
-	void    b3GetCamera(b3Scene *scene);
+	void    b3SetCamera(b3CameraPart *camera);
+	void    b3SetCamera(b3Scene *scene);
 	void    b3UpdateView(b3_res xSize,b3_res ySize);
 };
 

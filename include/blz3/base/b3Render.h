@@ -29,7 +29,7 @@ public:
 	b3RenderContext();
 };
 
-class b3RenderObject : protected b3Mem
+class b3RenderObject : public b3Mem
 {
 protected:
 	b3_count         VertexCount;

@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/11 16:29:08  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
 **      Revision 1.5  2001/08/11 15:59:59  sm
 **      - Rendering cleaned up
 **      - CWinApp/CMainFrm derived from Blizzard III classes

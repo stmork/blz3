@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/08/11 16:29:07  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
 **      Revision 1.1  2001/08/11 15:59:59  sm
 **      - Rendering cleaned up
 **      - CWinApp/CMainFrm derived from Blizzard III classes
@@ -58,7 +62,7 @@ b3_bool b3RenderView::b3IsViewMode(b3_view_mode mode)
 	return m_ViewMode == mode;
 }
 
-void b3RenderView::b3GetCamera(b3CameraPart *camera)
+void b3RenderView::b3SetCamera(b3CameraPart *camera)
 {
 	m_EyePoint  = camera->EyePoint;
 	m_ViewPoint = camera->ViewPoint;
@@ -66,7 +70,7 @@ void b3RenderView::b3GetCamera(b3CameraPart *camera)
 	m_Height    = camera->Height;
 }
 
-void b3RenderView::b3GetCamera(b3Scene *scene)
+void b3RenderView::b3SetCamera(b3Scene *scene)
 {
 	m_EyePoint  = scene->EyePoint;
 	m_ViewPoint = scene->ViewPoint;

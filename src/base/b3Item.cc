@@ -43,6 +43,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/11 16:29:07  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
 **      Revision 1.5  2001/08/10 18:28:58  sm
 **      - Some bug fixing
 **      - Update functions per view inserted. Now with redraw when loading.

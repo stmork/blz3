@@ -24,8 +24,8 @@
 *************************************************************************/
   
 #include "blz3/b3Config.h" 
-#include "blz3/base/b3World.h"
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3RenderView.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/11 16:29:07  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
 **      Revision 1.5  2001/08/08 20:12:59  sm
 **      - Fixing some makefiles
 **      - introducing check/BlzDump (BlzDump moved from tools)
@@ -55,7 +59,8 @@
 **
 */
 
-static b3World *world = null;
+static b3World      *world = null;
+static b3RenderView  view;
 
 void RenderScene()
 {
@@ -78,6 +83,8 @@ void ChangeSize(GLsizei xSize,GLsizei ySize)
 
 	scene = (b3Scene *)world->b3GetFirst();
 	scene->b3SetView((b3_res)xSize,(b3_res)ySize);
+	view.b3SetCamera(scene);
+	view.b3UpdateView(xSize,ySize);
 }
 
 void SetupRC()
@@ -88,10 +95,10 @@ void SetupRC()
 
 int main(int argc,char *argv[])
 {
-	b3Item          *item;
-	b3Scene         *scene;
-	b3_res           xSize,ySize;
-	b3RenderContext  context;
+	b3Item               *item;
+	b3Scene              *scene;
+	b3_res                xSize,ySize;
+	b3RenderShapeContext  context;
 
 	if (argc > 1)
 	{
@@ -107,7 +114,9 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
 			scene->b3AllocVertices(&context);
-			scene->b3GetView(xSize,ySize);
+			view.b3SetCamera(scene);
+			view.b3SetViewMode(B3_VIEW_3D);
+			view.b3UpdateView(xSize,ySize);
 		}
 
 		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);

@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/08/11 16:29:07  sm
+**      - Nasty UnCR done
+**      - Compiling but not running OpenGL under Unix
+**
 **      Revision 1.3  2001/08/10 15:14:36  sm
 **      - Now having all shapes implemented for drawing lines.
 **

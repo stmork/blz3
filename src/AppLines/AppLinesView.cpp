@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/08/11 16:29:07  sm
+**	- Nasty UnCR done
+**	- Compiling but not running OpenGL under Unix
+**
 **	Revision 1.3  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
 **	  supporting more effective GUI.
-**
+**	
 **	Revision 1.2  2001/08/10 18:28:58  sm
 **	- Some bug fixing
 **	- Update functions per view inserted. Now with redraw when loading.
@@ -107,6 +111,7 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
+	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 }
 
 CAppLinesView::~CAppLinesView()
@@ -272,7 +277,7 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		{
 			GetClientRect(&rect);
 			wglMakeCurrent(m_DC,m_GC);
-			m_RenderView.b3GetCamera(scene);
+			m_RenderView.b3SetCamera(scene);
 			m_RenderView.b3UpdateView(rect.Width(),rect.Height());
 		}
 		Invalidate();
