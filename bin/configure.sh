@@ -8,7 +8,7 @@ make -C src clean
 chgrp -R blz3 *
 rm -f lib/*/lib*.a
 rm -f lib/*/*.lib
-rm -f bin/*/*
+rm -f bin/linux*/* bin/solaris*/* bin/win32/*
 
 chmod 770 bin/*
 chmod 775 bin/*/*
