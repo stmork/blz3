@@ -966,6 +966,7 @@ public:
 	virtual b3_bool     b3Prepare();
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void        b3SetupPicking(b3PickInfo *pick_info);
+	virtual void        b3SetupGrid(b3PickInfo *pick_info);
 
 	inline b3Base<b3Item> *b3GetBumpHead()
 	{
@@ -1352,6 +1353,7 @@ public:
 	void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	b3_bool b3Prepare();
 	void    b3SetupPicking(b3PickInfo *pick_info);
+	void    b3SetupGrid(b3PickInfo *pick_info);
 
 protected:
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -1383,6 +1385,7 @@ public:
 	void b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	void b3Init(b3_count hDegree,b3_count vDegree,b3_count hControlNum,b3_count vControlNum);
 	void b3SetupPicking(b3PickInfo *pick_info);
+	void b3SetupGrid(b3PickInfo *pick_info);
 
 protected:
 	void b3StoreShape();

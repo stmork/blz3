@@ -47,6 +47,7 @@ public:
 	                 b3PickInfo();
 	virtual         ~b3PickInfo();
 	        b3_bool  b3SetShape(b3Shape *shape);
+	        void     b3Modified();
 
 	virtual void     b3AddPickPoint(b3_vector *point,const char *title = null) = 0;
 	virtual void     b3AddPickDir(b3_vector *point,b3_vector *dir,const char *title = null) = 0;

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2003/02/25 19:26:07  sm
+**      - Fixed missing grid update on pick move
+**
 **      Revision 1.52  2003/02/23 21:15:41  sm
 **      - First shape picking
 **
@@ -591,6 +594,10 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 }
 
 void b3Shape::b3SetupPicking(b3PickInfo *info)
+{
+}
+
+void b3Shape::b3SetupGrid(b3PickInfo *info)
 {
 }
 

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2003/02/25 19:26:07  sm
+**      - Fixed missing grid update on pick move
+**
 **      Revision 1.43  2003/02/25 15:56:21  sm
 **      - Added SplineRot to control grid drawing.
 **      - Added support for pixel format selection in dialog items
@@ -635,6 +638,27 @@ void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 {
 	b3_vector    *control;
 	b3_index      offset;
+	b3_index      x,y;
+
+	control = m_Spline[0].controls;
+	offset  = m_Spline[0].offset;
+
+	// Transform control points
+	for (y = 0;y < m_Spline[1].control_num;y++)
+	{
+		control  = &m_Spline[0].controls[y * m_Spline[1].offset];
+		for (x = 0;x < m_Spline[0].control_num;x++)
+		{
+			info->b3AddPickPoint(control);
+			control += offset;
+		}
+	}
+}
+
+void b3SplineShape::b3SetupGrid(b3PickInfo *info)
+{
+	b3_vector    *control;
+	b3_index      offset;
 	b3_index      x,y,start;
 
 	control = m_Spline[0].controls;
@@ -647,12 +671,9 @@ void b3SplineShape::b3SetupPicking(b3PickInfo *info)
 		for (x = 0;x < m_Spline[0].control_num;x++)
 		{
 			info->b3AddVertex(control);
-
-			info->b3AddPickPoint(control);
 			control += offset;
 		}
 	}
-
 	// Compute horizontal grid lines
 	for (y = 0;y < m_Spline[1].control_num;y++)
 	{
