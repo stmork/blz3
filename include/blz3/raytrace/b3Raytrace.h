@@ -61,13 +61,24 @@ struct b3_polar
 	b3_vector polar;
 	b3_vector object_polar;
 	b3_vector box_polar;
+	b3_index  normal_index;
 };
 
-struct b3_ray :public b3_dLine
+struct b3_ray : public b3_dLine
 {
 	b3_vector normal;
+	b3_vector ipoint;
 	b3_polar  polar;
 	b3_f64    Q;
+	b3_bool   inside;
+};
+
+
+// aux. structure for computing illumination
+struct b3_surface
+{
+	b3_color  diffuse,ambient,specular;
+	b3_f64    refl,refr,ior,se;
 };
 
 /*************************************************************************
@@ -325,6 +336,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3Bump);
 	B3_ITEM_LOAD(b3Bump);
+
+	virtual void b3BumpNormal(b3_ray *ray);
 };
 
 // BUMP_NOISE, BUMP_MARBLE
@@ -434,6 +447,10 @@ public:
 	B3_ITEM_INIT(b3Material);
 	B3_ITEM_LOAD(b3Material);
 
+	virtual b3_f64  b3GetReflection();
+	virtual b3_f64  b3GetRefraction();
+	virtual b3_f64  b3GetIndexOfRefraction();
+	virtual b3_f64  b3GetSpecularExponent();
 	virtual b3_bool b3GetColors(
 		b3_color *diff,
 		b3_color *amb,
@@ -680,20 +697,26 @@ protected:
 class b3Shape : public b3Item, public b3RenderShapeObject
 {
 protected:
-	b3_count         xSize,ySize;
+	b3_count            xSize,ySize;
 
 protected:
-	        b3Shape(b3_size class_size,b3_u32 class_type);
-	b3_bool b3CheckStencil(b3_polar *polar);
+	                    b3Shape(b3_size class_size,b3_u32 class_type);
+	b3_bool             b3CheckStencil(b3_polar *polar);
+	b3Base<b3Item>     *b3GetBumpHead();
+	b3Base<b3Item>     *b3GetConditionHead();
+	b3Base<b3Item>     *b3GetMaterialHead();
 
 public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
-	        void   b3ComputeBound(b3CondLimit *limit);
-	        void   b3GetDiffuseColor(b3_color *color);
-	virtual b3_f64 b3Intersect(b3_ray *ray);
-	virtual void   b3Transform(b3_matrix *transformation);
+	        void        b3ComputeBound(b3CondLimit *limit);
+	        void        b3GetDiffuseColor(b3_color *color);
+	        b3Material *b3GetColors(b3_surface *surface);
+	        void        b3BumpNormal(b3_ray *ray);
+	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
+	virtual void        b3Normal(b3_ray *ray);
+	virtual void        b3Transform(b3_matrix *transformation);
 };
 
 class b3RenderShape : public b3Shape
@@ -781,7 +804,8 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 
 	void b3Transform(b3_matrix *transformation);
 };
@@ -803,6 +827,7 @@ public:
 	B3_ITEM_LOAD(b3Shape2);
 
 	void b3Transform(b3_matrix *transformation);
+	void b3Normal(b3_ray *ray);
 };
 
 class b3Area : public b3Shape2
@@ -820,7 +845,7 @@ public:
 	void   b3FreeVertices();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3Disk : public b3Shape2
@@ -832,7 +857,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
@@ -867,7 +892,8 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 };
 
 class b3Cone : public b3Shape3
@@ -880,7 +906,8 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 };
 
 class b3Ellipsoid : public b3Shape3
@@ -892,7 +919,8 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 };
 
 class b3Box : public b3Shape3
@@ -910,7 +938,8 @@ public:
 	void   b3FreeVertices();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 };
 
 // DOUGHNUT, TORUS
@@ -933,7 +962,8 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void   b3Normal(b3_ray *ray);
 	void   b3Transform(b3_matrix *transformation);
 };
 
@@ -959,7 +989,7 @@ public:
 	void   b3ComputeVertices();
 	void   b3ComputeNormals(b3_bool normalize=true);
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Transform(b3_matrix *transformation);
 };
 
@@ -1000,7 +1030,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineRotShape : b3SplineCurve
@@ -1010,7 +1040,7 @@ public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
 
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 
 protected:
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
@@ -1059,7 +1089,7 @@ public:
 	B3_ITEM_INIT(b3SplineArea);
 	B3_ITEM_LOAD(b3SplineArea);
 
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineCylinder : public b3SplineShape 
@@ -1068,7 +1098,7 @@ public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
 
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3SplineRing : public b3SplineShape 
@@ -1077,7 +1107,7 @@ public:
 	B3_ITEM_INIT(b3SplineRing);
 	B3_ITEM_LOAD(b3SplineRing);
 
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 /*************************************************************************
@@ -1138,7 +1168,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Transform(b3_matrix *transformation);
 };
 
@@ -1178,7 +1208,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3CSGCone : public b3CSGShape3
@@ -1192,7 +1222,7 @@ public:
 	void   b3AllocVertices(b3RenderContext *context);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3CSGEllipsoid : public b3CSGShape3
@@ -1205,7 +1235,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 class b3CSGBox : public b3CSGShape3
@@ -1223,7 +1253,7 @@ public:
 	void   b3FreeVertices();
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // CSG_TORUS
@@ -1250,7 +1280,7 @@ public:
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray);
+	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 	void   b3Transform(b3_matrix *transformation);
 };
 
@@ -1358,17 +1388,17 @@ protected:
 class b3Light : public b3Item
 {
 public:
-	b3_vector        Position;     // Position
-	b3_color         Color;        // Farbe
-	b3_f32           Distance;     // rel. Reichweite
-	b3_s32           Flags;        // Lampentyp
-	b3_f32           Size;         // Auffaecherung
-	b3_s32           JitterEdge;   // Kantenaufspaltung
-	b3_vector        Direction;    // Abstrahlrichtung
-	b3_spline        Spline;       // Spline Kurve
-	b3_f32           Knots[B3_MAX_KNOTS];
-	b3_vector        Controls[B3_MAX_CONTROLS];
-	char             Name[B3_BOXSTRINGLEN]; // Lampenname
+	b3_vector        m_Position;     // Position
+	b3_color         m_Color;        // Farbe
+	b3_f32           m_Distance;     // rel. Reichweite
+	b3_s32           m_Flags;        // Lampentyp
+	b3_f32           m_Size;         // Auffaecherung
+	b3_s32           m_JitterEdge;   // Kantenaufspaltung
+	b3_vector        m_Direction;    // Abstrahlrichtung
+	b3_spline        m_Spline;       // Spline Kurve
+	b3_f32           m_Knots[B3_MAX_KNOTS];
+	b3_vector        m_Controls[B3_MAX_CONTROLS];
+	char             m_Name[B3_BOXSTRINGLEN]; // Lampenname
 
 public:
 	B3_ITEM_INIT(b3Light);
@@ -1526,12 +1556,16 @@ public:
 // NEBULAR
 class b3Nebular : public b3Special
 {
-	b3_color         NebularColor;
-	b3_f32           NebularVal;
+public:
+	b3_color         m_NebularColor;
+	b3_f32           m_NebularVal;
 
 public:
 	B3_ITEM_INIT(b3Nebular);
 	B3_ITEM_LOAD(b3Nebular);
+
+	void b3GetNebularColor(b3_color *result);
+	void b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
 };
 
 // LINES_INFO
@@ -1687,20 +1721,17 @@ public:
 
 struct b3_ray_info : public b3_ray
 {
-	b3_color  color;
-	b3Shape  *shape;
+	b3_color   color;
+	b3Shape   *shape;
+	b3BBox    *BBox;
 };
 
-// aux. structure for computing illumination
-typedef struct
+struct b3_illumination : public b3_surface
 {
-	b3_vector  IPoint;
-	b3_vector  Normal;
-	b3_ray     Refl;
-	b3_ray     Refr;
-	b3_color   Diff,Amb,Spec;
-	b3_f64     Reflection,Refraction,RefrValue,HighLight;
-} b3SurfaceInfo;
+	b3_ray_info *incoming;
+	b3_ray_info  refl_ray;
+	b3_ray_info  refr_ray;
+};
 
 class b3Scene : public b3Item
 {
@@ -1731,6 +1762,9 @@ public:
 	b3_f32           m_Epsilon;             // Schwellenwert
 	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
 
+protected:
+	b3Nebular       *m_Nebular;
+
 public:
 	                       b3Scene(b3_u32  class_type);
 	                       b3Scene(b3_u32 *src);
@@ -1745,6 +1779,7 @@ public:
 	       void            b3Draw();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 		   b3ModellerInfo *b3GetModellerInfo();
+		   b3Nebular      *b3GetNebular();
 		   b3CameraPart   *b3GetCamera(b3_bool must_active = false);
 		   b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 		   b3Light        *b3GetLight(b3_bool must_active = false);
@@ -1753,13 +1788,17 @@ public:
 		   void            b3Activate(b3_bool activate=true);
 		   void            b3Transform(b3_matrix *transformation);
 		   void            b3Raytrace(b3Display *display);
-		   void            b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
+		   b3_bool         b3Shade(b3_ray_info *ray,b3_count trace_depth=1);
 		   b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+
+protected:
+		   b3_bool         b3ComputeOutputRays(b3_illumination *surface);
 
 private:
 	       void            b3RaytraceOneRow(b3RayRow *row);
 	static b3_u32          b3RaytraceThread(void *ptr);
 		   b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
+		   void            b3Illuminate(b3Light *light,b3_color *result,b3_surface *surface);
 
 	friend class b3RayRow;
 };

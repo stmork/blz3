@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/10/03 18:46:45  sm
+**      - Adding illumination and recursive raytracing
+**
 **      Revision 1.3  2001/08/16 04:28:29  sm
 **      - Solving conflicts
 **
@@ -70,6 +73,26 @@ b3Material::b3Material(b3_u32 class_type) : b3Item(sizeof(b3Material),class_type
 
 b3Material::b3Material(b3_u32 *src) : b3Item(src)
 {
+}
+
+b3_f64 b3Material::b3GetReflection()
+{
+	return 0.0;
+}
+
+b3_f64 b3Material::b3GetRefraction()
+{
+	return 0.0;
+}
+
+b3_f64 b3Material::b3GetIndexOfRefraction()
+{
+	return 1.0;
+}
+
+b3_f64 b3Material::b3GetSpecularExponent()
+{
+	return 100000.0;
 }
 
 b3_bool b3Material::b3GetColors(

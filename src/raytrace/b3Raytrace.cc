@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/03 18:46:45  sm
+**	- Adding illumination and recursive raytracing
+**
 **	Revision 1.7  2001/10/02 16:01:58  sm
 **	- Moving b3Polar into b3Ray but that's not right at all. The
 **	  result must be placed there but a simple result from one
 **	  intersection must be placed into a temp instance. The same
 **	  must be done for surface normals as they result from using
 **	  the b3Polar class.
-**
+**	
 **	Revision 1.6  2001/09/30 16:27:48  sm
 **	- Raytracing with diffuse color without shading
 **	- Sphere intersection fixed (now using normalized rays)
@@ -117,17 +120,10 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	// Loop one row...
 	for (x = 0;x < xSize;x++)
 	{
-		ray.dir.x = preDir.x + fx * m_Width.x;
-		ray.dir.y = preDir.y + fx * m_Width.y;
-		ray.dir.z = preDir.z + fx * m_Width.z;
-
-		denom = sqrt(
-			ray.dir.x * ray.dir.x +
-			ray.dir.y * ray.dir.y +
-			ray.dir.z * ray.dir.z);
-		ray.dir.x /= denom;
-		ray.dir.y /= denom;
-		ray.dir.z /= denom;
+		ray.dir.x  = preDir.x + fx * m_Width.x;
+		ray.dir.y  = preDir.y + fx * m_Width.y;
+		ray.dir.z  = preDir.z + fx * m_Width.z;
+		ray.inside = false;
 
 		b3Shade(&ray);
 		r = (b3_pkd_color)(ray.color.r * 255.0);
@@ -180,6 +176,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 	b3_f64       fy,fyStep;
 
+	m_Nebular = b3GetNebular();
 	try
 	{
 		// What resolution to use

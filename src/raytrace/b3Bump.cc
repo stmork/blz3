@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/10/03 18:46:45  sm
+**      - Adding illumination and recursive raytracing
+**
 **      Revision 1.3  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects
@@ -77,6 +80,10 @@ b3Bump::b3Bump(b3_u32 class_type) : b3Item(sizeof(b3Bump),class_type)
 }
 
 b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
+{
+}
+
+void b3Bump::b3BumpNormal(b3_ray *ray)
 {
 }
 

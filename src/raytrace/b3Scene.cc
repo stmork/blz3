@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/03 18:46:45  sm
+**	- Adding illumination and recursive raytracing
+**
 **	Revision 1.11  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **	Revision 1.10  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -125,6 +128,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_Epsilon          = b3InitFloat();
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
+	m_Nebular          = null;
 }
 
 b3Item *b3Scene::b3Init(b3_u32 class_type)
@@ -159,6 +163,24 @@ b3ModellerInfo *b3Scene::b3GetModellerInfo()
 	info = new b3ModellerInfo(LINES_INFO);
 	heads[2].b3Append(info);
 	return info;
+}
+
+b3Nebular *b3Scene::b3GetNebular()
+{
+	b3Nebular *nebular;
+	b3Item    *item;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		if (item->b3GetClassType() == NEBULAR)
+		{
+			return (b3Nebular *)item;
+		}
+	}
+
+	nebular = new b3Nebular(NEBULAR);
+	heads[2].b3Append(nebular);
+	return nebular;
 }
 
 b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
@@ -220,7 +242,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	B3_FOR_BASE(&heads[1],item)
 	{
 		light = (b3Light *)item;
-		if ((!must_active) || ((light->Flags & LIGHT_OFF) == 0))
+		if ((!must_active) || ((light->m_Flags & LIGHT_OFF) == 0))
 		{
 			return light;
 		}
@@ -229,7 +251,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	if (heads[1].First == null)
 	{
 		light = new b3Light(SPOT_LIGHT);
-		strcpy(light->Name,"Light");
+		strcpy(light->m_Name,"Light");
 		heads[1].b3Append(light);
 	}
 

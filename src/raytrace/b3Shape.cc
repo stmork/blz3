@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/10/03 18:46:45  sm
+**      - Adding illumination and recursive raytracing
+**
 **      Revision 1.17  2001/10/02 16:01:58  sm
 **      - Moving b3Polar into b3Ray but that's not right at all. The
 **        result must be placed there but a simple result from one
@@ -160,6 +163,21 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
+b3Base<b3Item> *b3Shape::b3GetBumpHead()
+{
+	return &heads[0];
+}
+
+b3Base<b3Item> *b3Shape::b3GetConditionHead()
+{
+	return &heads[1];
+}
+
+b3Base<b3Item> *b3Shape::b3GetMaterialHead()
+{
+	return &heads[2];
+}
+
 void b3Shape::b3ComputeBound(b3CondLimit *limit)
 {
 	b3Item      *item;
@@ -170,7 +188,7 @@ void b3Shape::b3ComputeBound(b3CondLimit *limit)
 	limit->x2 =  1;
 	limit->y2 =  1;
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
 		cond = (b3Condition *)item;
 		cond->b3ComputeBound(limit);
@@ -182,12 +200,38 @@ b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 	b3Item      *item;
 	b3Condition *cond;
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
 		cond = (b3Condition *)item;
 		cond->b3CheckStencil(polar);
 	}
 	return true;
+}
+
+void b3Shape::b3BumpNormal(b3_ray *ray)
+{
+	b3Item *item;
+	b3Bump *bump;
+	b3_f64  denom;
+
+	b3Normal(ray);
+	B3_FOR_BASE(b3GetBumpHead(),item)
+	{
+		bump = (b3Bump *)item;
+		bump->b3BumpNormal(ray);
+	}
+
+	denom =
+		ray->normal.x * ray->normal.x +
+		ray->normal.y * ray->normal.y +
+		ray->normal.z * ray->normal.z;
+	if ((denom != 0) && (denom != 1))
+	{
+		denom = 1.0 / sqrt(denom);
+		ray->normal.x *= denom;
+		ray->normal.y *= denom;
+		ray->normal.z *= denom;
+	}
 }
 
 void b3Shape::b3GetDiffuseColor(b3_color *color)
@@ -201,7 +245,7 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 	color->b = 1.0f;
 	color->a = 0.0f;
 
-	B3_FOR_BASE(&heads[2],item)
+	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
 		if (material->b3GetColors(color,&ambient,&specular))
@@ -209,6 +253,40 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 			return;
 		}
 	}
+}
+
+b3Material *b3Shape::b3GetColors(b3_surface *surface)
+{
+	b3Item     *item;
+	b3Material *material;
+
+	surface->diffuse.r = 0.1f;
+	surface->diffuse.g = 0.5f;
+	surface->diffuse.b = 1.0f;
+	surface->diffuse.a = 0.0f;
+
+	surface->ambient.r = 0.05f;
+	surface->ambient.g = 0.25f;
+	surface->ambient.b = 0.5f;
+	surface->ambient.a = 0.0f;
+
+	surface->specular.r = 0.1f;
+	surface->specular.g = 0.1f;
+	surface->specular.b = 0.1f;
+	surface->specular.a = 0.0f;
+
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetColors(
+			&surface->diffuse,
+			&surface->ambient,
+			&surface->specular))
+		{
+			return material;
+		}
+	}
+	return null;
 }
 
 void b3Shape::b3Transform(b3_matrix *transformation)

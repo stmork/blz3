@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/10/03 18:46:45  sm
+**      - Adding illumination and recursive raytracing
+**
 **      Revision 1.8  2001/09/30 15:53:19  sm
 **      - Removing nasty CR/LF
 **
@@ -193,10 +196,28 @@ b3Nebular::b3Nebular(b3_u32 class_type) :
 b3Nebular::b3Nebular(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitColor(&NebularColor);
-	NebularVal = b3InitFloat();
+	b3InitColor(&m_NebularColor);
+	m_NebularVal = b3InitFloat();
 }
 
+void b3Nebular::b3GetNebularColor(b3_color *result)
+{
+	*result = m_NebularColor;
+}
+
+void b3Nebular::b3ComputeNebular(
+	b3_color *input,
+	b3_color *result,
+	b3_f64    distance)
+{
+	b3_f64 NebularIndex = exp (-distance * m_NebularVal);
+	b3_f64 NebularDenom = 1 - NebularIndex;
+
+	result->a = NebularIndex * input->a + NebularDenom * m_NebularColor.a;
+	result->r = NebularIndex * input->r + NebularDenom * m_NebularColor.r;
+	result->g = NebularIndex * input->g + NebularDenom * m_NebularColor.g;
+	result->b = NebularIndex * input->b + NebularDenom * m_NebularColor.b;
+}
 
 b3Animation::b3Animation(b3_u32 class_type) :
 	b3Special(sizeof(b3Animation),class_type)

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/10/03 18:46:45  sm
+**      - Adding illumination and recursive raytracing
+**
 **      Revision 1.5  2001/09/30 15:53:19  sm
 **      - Removing nasty CR/LF
 **
@@ -67,33 +70,33 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 {
 	b3_index i;
 
-	b3InitVector(&Position);
-	b3InitColor(&Color);
-	Distance = b3InitFloat();
-	Flags    = b3InitInt();
+	b3InitVector(&m_Position);
+	b3InitColor(&m_Color);
+	m_Distance = b3InitFloat();
+	m_Flags    = b3InitInt();
 
 	if (b3GetClassType() >= AREA_LIGHT)
 	{
-		Size       = b3InitFloat();
-		JitterEdge = b3InitInt();
+		m_Size       = b3InitFloat();
+		m_JitterEdge = b3InitInt();
 		if (b3GetClassType() >= SPOT_LIGHT)
 		{
-			b3InitVector(&Direction);
+			b3InitVector(&m_Direction);
 
-			b3InitSpline(&Spline,Controls,Knots);
-			for (i = 0;i < B3_MAX_KNOTS;i++)    Knots[i] = b3InitFloat();
-			for (i = 0;i < B3_MAX_CONTROLS;i++) b3InitVector(&Controls[i]);
+			b3InitSpline(&m_Spline,m_Controls,m_Knots);
+			for (i = 0;i < B3_MAX_KNOTS;i++)    m_Knots[i] = b3InitFloat();
+			for (i = 0;i < B3_MAX_CONTROLS;i++) b3InitVector(&m_Controls[i]);
 		}
 	}
 
 	if (m_ItemOffset > 0)
 	{
-		b3InitString(Name,m_ItemSize - (m_ParseIndex << 2));
-		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n",Name);
+		b3InitString(m_Name,m_ItemSize - (m_ParseIndex << 2));
+		b3PrintF(B3LOG_DEBUG,"Light %s loaded.\n",m_Name);
 	}
 	else
 	{
-		strcpy(Name,"Light");
+		strcpy(m_Name,"Light");
 		b3PrintF(B3LOG_DEBUG,"Unnamed light loaded.\n");
 	}
 }
