@@ -37,12 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.5  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.4  2002/07/22 18:45:16  sm
 **	- Further probing of texture stencil via alpha channel.
 **	- Why does Mesa loose the first texture?
@@ -514,7 +521,7 @@ void b3Tx::b3Shrink(long shrink)
 	line = (b3_count *)b3Alloc(xSize * sizeof(b3_count));
 	if (line == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	cPtr   = (b3_u08 *)data;
@@ -744,7 +751,7 @@ void b3Tx::b3TurnRightILBM()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnRightILBM() NOT ENOUGH MEMORY!\n");
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -823,7 +830,7 @@ void b3Tx::b3TurnRightVGA()
 	newData   = (b3_u08 *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -859,7 +866,7 @@ void b3Tx::b3TurnRightRGB4()
 	newData   = (b3_u16 *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -895,7 +902,7 @@ void b3Tx::b3TurnRightRGB8()
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -969,7 +976,7 @@ void b3Tx::b3TurnLeftILBM()
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3TurnLeftILBM() NOT ENOUGH MEMORY!\n");
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -1065,7 +1072,7 @@ void b3Tx::b3TurnLeftVGA()
 	newData   = (b3_u08 *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -1100,7 +1107,7 @@ void b3Tx::b3TurnLeftRGB4()
 	newData   = (b3_u16 *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer
@@ -1135,7 +1142,7 @@ void b3Tx::b3TurnLeftRGB8()
 	newData   = (b3_pkd_color *)b3Alloc(dSize);
 	if (newData == null)
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	// change data pointer

@@ -37,12 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.9  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -110,7 +117,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	if (buffer_size < 4)
 	{
 		b3FreeTx();
-		throw b3TxException(B3_TX_ERR_HEADER);
+		B3_THROW(b3TxException,B3_TX_ERR_HEADER);
 	}
 
 	// schon mal irgend ein IFF
@@ -124,7 +131,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case IFF_YUVN : return b3ParseIFF_YUVN(buffer,buffer_size);
 			default :
 				b3FreeTx();
-				throw b3TxException(B3_TX_ERR_HEADER);
+				B3_THROW(b3TxException,B3_TX_ERR_HEADER);
 		}
 	}
 
@@ -211,7 +218,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 3 :
 			default :
 				b3FreeTx();
-				throw b3TxException(B3_TX_UNSUPP);
+				B3_THROW(b3TxException,B3_TX_UNSUPP);
 		}
 	}
 
@@ -291,14 +298,14 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 1 	: return b3ParsePCX4(buffer);
 			default :
 				b3FreeTx();
-				throw b3TxException(B3_TX_UNSUPP);
+				B3_THROW(b3TxException,B3_TX_UNSUPP);
 		}
 	}
 
 
 	// really unknown
 	b3FreeTx();
-	throw b3TxException(B3_TX_UNSUPP);
+	B3_THROW(b3TxException,B3_TX_UNSUPP);
 }
 
 b3_result b3Tx::b3LoadImage(const char *name)

@@ -34,12 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.6  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
@@ -184,7 +191,7 @@ b3_bool b3Tx::b3Histogramme()
 {
 	if (!b3StartHist()) 
 	{
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	return b3AddHist(0,0,xSize,ySize);
 }

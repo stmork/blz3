@@ -26,20 +26,20 @@
 #define B3_TUESDAY    2
 #define B3_WEDNESDAY  3
 #define B3_THURSDAY   4
-#define B3_FRIDAY	    5
+#define B3_FRIDAY	  5
 #define B3_SATURDAY   6
 #define B3_SUNDAY     0
 
 // months
-#define B3_JANUARY	1
-#define B3_FEBRUARY	2
-#define B3_MARCH		3
-#define B3_APRIL		4
-#define B3_MAY		5
-#define B3_JUNE		6
-#define B3_JULY		7
-#define B3_AUGUST		8
-#define B3_SEPTEMBER	9
+#define B3_JANUARY    1
+#define B3_FEBRUARY   2
+#define B3_MARCH      3
+#define B3_APRIL      4
+#define B3_MAY        5
+#define B3_JUNE       6
+#define B3_JULY       7
+#define B3_AUGUST     8
+#define B3_SEPTEMBER  9
 #define B3_OCTOBER   10
 #define B3_NOVEMBER  11
 #define B3_DECEMBER  12

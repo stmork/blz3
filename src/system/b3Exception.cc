@@ -34,6 +34,13 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2002/08/15 13:56:44  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.4  2002/08/11 06:38:54  sm
 **      - Started some library reorganizations: Moved folowing classes into
 **        system lib. Introduced new system library which is platform
@@ -77,21 +84,27 @@ b3ExceptionLogger  b3ExceptionBase::m_Logger;
 b3ExceptionMsgFunc b3ExceptionBase::m_GetMessage;
 
 b3ExceptionBase::b3ExceptionBase(
-	const b3_errno ErrNo,
-	const b3_excno ExcNo)
+	const b3_errno  ErrNo,
+	const b3_excno  ExcNo,
+	const b3_count  lineno,
+	const char     *filename)
 {
 	m_ErrorCode     = ErrNo;
 	m_ExceptionType = ExcNo;
+	m_LineNo        = lineno;
+	m_FileName      = filename;
 
 	if (m_Logger == null)     b3SetLogger(null);
 	if (m_GetMessage == null) b3SetMsgFunc(null);
 
-	m_Logger(m_ExceptionType,m_ErrorCode);	
+	m_Logger(this);	
 }
 
-void b3ExceptionBase::b3Log(const b3_excno ExcNo,const b3_errno ErrNo)
+void b3ExceptionBase::b3Log(const b3ExceptionBase *exception)
 {
-	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(ErrNo));
+	b3PrintF(B3LOG_NORMAL,"EXCEPTION: %s\n",m_GetMessage(exception->m_ErrorCode));
+	b3PrintF(B3LOG_FULL,  "     file: %s\n", exception->m_FileName);
+	b3PrintF(B3LOG_FULL,  "     line: %5d\n",exception->m_LineNo);
 }
 
 void b3ExceptionBase::b3SetLogger(b3ExceptionLogger logger)

@@ -34,6 +34,8 @@
 **                                                                      **
 *************************************************************************/
 
+#define B3_DISPLAY_ROWREFRESHCOUNT 32
+
 class b3DisplayView : public b3Display
 {
 	char               *m_Title;
@@ -42,6 +44,7 @@ class b3DisplayView : public b3Display
 	b3_count            m_RowCounter;
 	CB3ScrollView      *m_View;
 	b3Document         *m_Doc;
+	b3_count            m_RowRefreshCount;
 
 public:
 	                    b3DisplayView(CB3ScrollView *view,const char *title = null);
@@ -50,6 +53,7 @@ public:
 	void                b3PutRow(b3Row *row);
 	void                b3PutTx(b3Tx *tx);
 	void                b3Wait();
+	void                b3SetRowRefreshCount(b3_count refresh_count = B3_DISPLAY_ROWREFRESHCOUNT);
 
 private:
 	       void         b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize);

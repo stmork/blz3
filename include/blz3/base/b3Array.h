@@ -70,7 +70,7 @@ public:
 			}
 			else
 			{
-				throw b3ArrayException(B3_ARRAY_NO_MEMORY);
+				B3_THROW(b3ArrayException,B3_ARRAY_NO_MEMORY);
 			}
 		}
 		m_Buffer[m_Index++] = element;
@@ -96,7 +96,7 @@ public:
 	{
 		if ((index < 0) || (index >= m_Index))
 		{
-			throw b3ArrayException(B3_ARRAY_OUT_OF_BOUNDS);
+			B3_THROW(b3ArrayException,B3_ARRAY_OUT_OF_BOUNDS);
 		}
 		return m_Buffer[index];
 	}

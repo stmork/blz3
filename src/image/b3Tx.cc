@@ -36,12 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.22  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.21  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
@@ -312,21 +319,17 @@ b3_bool b3Tx::b3AllocTx(
 	b3_res y,
 	b3_res d)
 {
+	void *new_ptr;
+
 	if ((d == 0) || (x == 0) || (y == 0))
 	{
 		// This meens, we need an empty image, so
-		// free memory and everything is OK!
+		// free memory and nothing is OK!
 		b3FreeTx();
-		return true;
+		return false;
 	}
 
 	b3EndHist();
-
-	dSize   = 0;
-	pSize   = 0;
-	xSize   = 0;
-	ySize   = 0;
-	depth   = 0;
 
 	if (d == 1)
 	{
@@ -350,29 +353,25 @@ b3_bool b3Tx::b3AllocTx(
 		dSize = (x * y) * sizeof(b3_pkd_color);
 		type  = B3_TX_RGB8;
 	}
+
 	if (type == B3_TX_UNDEFINED)
 	{
 		b3FreeTx();
 		return false;
 	}
 
-	if (dSize > 0)
-	{
-		void *new_ptr;
+	B3_ASSERT(dSize > 0);
 
-		new_ptr = b3Realloc(data,dSize);
-		if (new_ptr == null)
-		{
-			b3FreeTx();
-			return false;
-		}
-		data = (unsigned char *)new_ptr;
+	new_ptr = b3Realloc(data,dSize);
+	if (new_ptr == null)
+	{
+		b3FreeTx();
+		return false;
 	}
+	data = (unsigned char *)new_ptr;
 
 	if (pSize > 0)
 	{
-		void *new_ptr;
-
 		new_ptr = b3Realloc(palette,pSize * sizeof(b3_pkd_color));
 		if (new_ptr == null)
 		{
@@ -394,6 +393,7 @@ b3_bool b3Tx::b3AllocTx(
 		palette[1] = 0x00000000;
 	}
 
+	// Initialize grey ramp
 	if (depth == 8)
 	{
 		long i;
@@ -407,7 +407,7 @@ b3_bool b3Tx::b3AllocTx(
 	measure.b3Init(xSize,ySize,depth);
 	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3AllocTx(%ldx%ld, %ld bits)\n",
 		xSize,ySize,depth);
-	return data != null;
+	return true;
 }
 
 void b3Tx::b3FreeTx()
@@ -633,7 +633,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3Copy(): NOT ENOUGH MEMORY!\n");
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW( b3TxException,B3_TX_MEMORY);
 	}
 
 	xDPI        = srcTx->xDPI;
@@ -740,8 +740,7 @@ b3_pkd_color b3Tx::b3GetValue (
 		case B3_TX_VGA  : return b3VGAValue  (x,y);
 
 		default :
-			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
-			return 0;
+			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 	return 0;
 }
@@ -863,8 +862,7 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 			return cPtr[x + y * xSize] != 0;
 			
 		default:
-			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
-			return false;
+			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 	return false;
 }
@@ -1024,7 +1022,6 @@ void b3Tx::b3GetRow (
 			break;
 
 		default:
-			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
-			break;
+			B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 }

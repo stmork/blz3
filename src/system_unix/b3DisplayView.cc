@@ -40,11 +40,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.7  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.6  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -208,7 +215,7 @@ void b3DisplayView::b3Open(
 		b3Free (m_Buffer);
 		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
 		b3PrintF (B3LOG_NORMAL,"no memory for image buffer!\n");
-		throw b3DisplayException(B3_DISPLAY_MEMORY);
+		B3_THROW(b3DisplayException,B3_DISPLAY_MEMORY);
 	}
 
 	if (!b3CreateColormap())
@@ -218,7 +225,7 @@ void b3DisplayView::b3Open(
 		b3PrintF (B3LOG_NORMAL,"no colormap available!\n");
 		XFreePixmap (m_Display,m_Image);
 
-		throw b3DisplayException(B3_DISPLAY_NO_COLORMAP);
+		B3_THROW(b3DisplayException,B3_DISPLAY_NO_COLORMAP);
 	}
 
 	m_GC = XCreateGC (m_Display,m_Window,GCPlaneMask|GCFunction,&Values);

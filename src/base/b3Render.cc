@@ -36,6 +36,13 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2002/08/15 13:56:43  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.53  2002/08/10 14:36:31  sm
 **      - Some shapes had cleared the vertex array whenever the
 **        b3AllocVertices() method were called. Without calling
@@ -1134,7 +1141,7 @@ void b3RenderObject::b3CreateTexture(
 
 				if (ptr == null)
 				{
-					throw b3TxException(B3_TX_MEMORY);
+					B3_THROW(b3TxException,B3_TX_MEMORY);
 				}
 				glTextureData  = (GLubyte *)ptr;
 				glTextureSize  =  size;
@@ -1150,7 +1157,7 @@ void b3RenderObject::b3CreateTexture(
 					if (error != GL_NO_ERROR)
 					{
 						b3PrintF(B3LOG_NORMAL,"  glGetError() = %d\n",error);
-						throw b3TxException(B3_TX_MEMORY);
+						B3_THROW(b3TxException,B3_TX_MEMORY);
 					}
 
 					glBindTexture(GL_TEXTURE_2D,glTextureId);

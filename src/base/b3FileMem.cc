@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/15 13:56:42  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.3  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.2  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
 **	
@@ -77,7 +84,7 @@ b3FileMem::b3FileMem (const b3_access_mode access_mode)
 	m_BufferInc  = 0;
 	if (!b3Open(access_mode))
 	{
-		throw b3FileException(B3_FILE_NOT_FOUND);
+		B3_THROW(b3FileException,B3_FILE_NOT_FOUND);
 	}
 }
 
@@ -91,7 +98,7 @@ b3FileMem::b3FileMem (const char *file_name,const b3_access_mode access_mode)
 	m_BufferInc  = 0;
 	if (!b3Open(file_name,access_mode))
 	{
-		throw b3FileException(B3_FILE_NOT_FOUND);
+		B3_THROW(b3FileException,B3_FILE_NOT_FOUND);
 	}
 }
 
@@ -126,7 +133,7 @@ b3_bool b3FileMem::b3Open (const b3_access_mode access_mode)
 		case T_APPEND:
 			break;
 	}
-	throw b3FileException(error);
+	B3_THROW(b3FileException,error);
 }
 
 // Open a file for reading, writing or appending
@@ -164,7 +171,7 @@ b3_bool b3FileMem::b3Open (const char *file_name,const b3_access_mode access_mod
 			}
 			break;
 	}
-	throw b3FileException(error);
+	B3_THROW(b3FileException,error);
 }
 
 // Guess what
@@ -287,7 +294,7 @@ b3_bool b3FileMem::b3EnsureBufferSize(b3_size new_size)
 		new_buffer = (b3_u08 *)b3Alloc(new_size);
 		if (new_buffer == null)
 		{
-			throw b3FileException(B3_FILE_MEMORY);
+			B3_THROW(b3FileException,B3_FILE_MEMORY);
 		}
 		memcpy(new_buffer,m_Buffer,m_BufferMax);
 		b3Free(m_Buffer);

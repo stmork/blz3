@@ -31,9 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.2  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -75,8 +82,7 @@ void b3Tx::b3Deskew()
 		break;
 
 	default:
-		b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
-		break;
+		B3_THROW(b3TxException,B3_TX_UNKNOWN_DATATYPE);
 	}
 }
 

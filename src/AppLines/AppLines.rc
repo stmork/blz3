@@ -1154,18 +1154,23 @@ BEGIN
     LTEXT           "",1119,0,0,2,133
 END
 
-IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 152, 81
+IDD_PROPERTIES DIALOG DISCARDABLE  0, 0, 157, 151
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Einstellungen"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,10,55,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,90,55,50,14
-    EDITTEXT        IDC_PRT_BUFFER,10,20,35,15,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_PRT_BUFFER,20,30,45,15,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_PRT_BUFFER_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,45,20,10,15
-    LTEXT           "Druckpuffer",IDC_STATIC,10,10,38,8
+                    UDS_ARROWKEYS,65,30,11,15
+    CONTROL         "Slider1",IDC_ROW_REFRESH,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,15,90,130,25
+    DEFPUSHBUTTON   "OK",IDOK,10,130,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,100,130,50,14
+    GROUPBOX        "Druckpuffer in MB:",IDC_STATIC,10,10,140,45
+    GROUPBOX        "Zeilenrefresh beim Raytracing:",IDC_STATIC,10,65,140,55
+    LTEXT           "1 (langsam)",IDC_STATIC,20,80,37,8
+    RTEXT           "32 (schnell)",IDC_STATIC,100,80,37,8
 END
 
 IDD_NEW_OBJECT DIALOGEX 0, 0, 382, 255
@@ -1983,9 +1988,9 @@ BEGIN
     IDD_PROPERTIES, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 145
+        RIGHTMARGIN, 150
         TOPMARGIN, 7
-        BOTTOMMARGIN, 74
+        BOTTOMMARGIN, 144
     END
 
     IDD_NEW_OBJECT, DIALOG
@@ -2605,7 +2610,7 @@ BEGIN
     IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
     IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
     IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
-    IDS_PRGERR_DATATYPE     "Das interne Datenformat ist unbekannt!"
+    IDS_PRGERR_DATATYPE     "Programmfehler!\nDas interne Datenformat ist unbekannt!"
     IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
                             "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
     IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS 
@@ -2637,6 +2642,9 @@ BEGIN
     IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
     IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
     IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
+    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
+    IDS_PRGERR_ILLEGAL_DATEMODE 
+                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
 END
 
 #endif    // German (Germany) resources

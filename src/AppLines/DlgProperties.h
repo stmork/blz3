@@ -24,11 +24,14 @@
 // DlgProperties.h : header file
 //
 
+#include "blz3/system/b3IntSpinButtonCtrl.h"
+
 /////////////////////////////////////////////////////////////////////////////
 // CDlgProperties dialog
 
 class CDlgProperties : public CDialog
 {
+	CAppLinesApp *m_App;
 // Construction
 public:
 	CDlgProperties(CWnd* pParent = NULL);   // standard constructor
@@ -36,8 +39,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgProperties)
 	enum { IDD = IDD_PROPERTIES };
-	CSpinButtonCtrl	m_PrtBufferCtrl;
-	int		m_PrtBuffer;
+	CSliderCtrl	m_RowRefreshCtrl;
+	CB3IntSpinButtonCtrl	m_PrtBufferCtrl;
 	//}}AFX_DATA
 
 

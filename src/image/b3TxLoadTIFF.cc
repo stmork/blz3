@@ -45,12 +45,19 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.9  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -502,7 +509,7 @@ b3_result b3Tx::b3LoadTIFF(
 #endif
 	if (tiff == null) 
 	{
-		throw b3TxException(B3_TX_NOT_FOUND);
+		B3_THROW(b3TxException,B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3LoadTIFF(%s)\n",(const char *)image_name);
@@ -547,7 +554,7 @@ b3_result b3Tx::b3LoadTIFF(
 	if (type == B3_TX_UNDEFINED)
 	{
 		b3FreeTx();
-		throw b3TxException(B3_TX_NOT_FOUND);
+		B3_THROW(b3TxException,B3_TX_NOT_FOUND);
 	}
 
 	return B3_OK;

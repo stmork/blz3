@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.9  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.8  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -210,9 +217,7 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 	{
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL,"IMG TGA  # Error allocating memory:\n");
-		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
-		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 	return B3_OK;
 }

@@ -37,12 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.7  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.6  2002/02/20 20:23:58  sm
 **	- Some type cleanups done.
 **	
@@ -96,7 +103,7 @@ b3File::b3File (
 
 	if (!b3Open(Name,AccessMode))
 	{
-		throw b3FileException(B3_FILE_NOT_FOUND);
+		B3_THROW(b3FileException,B3_FILE_NOT_FOUND);
 	}
 }
 
@@ -410,7 +417,7 @@ b3_u08 *b3File::b3ReadBuffer(const char *filename,b3_size &file_size)
 			// We don't need the read buffer any more.
 			b3Free(file_buffer);
 		}
-		throw b3FileException(error);
+		B3_THROW(b3FileException,error);
 	}
 
 	return file_buffer;

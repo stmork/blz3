@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2002/08/15 13:56:43  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.9  2002/08/09 13:20:19  sm
 **      - b3Mem::b3Realloc was a mess! Now fixed to have the same
 **        behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -125,7 +132,7 @@ b3AnimControl::b3AnimControl(b3_u32 *src) : b3Item(src)
 	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
 	if (m_Controls == null)
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 	for (i = 0;i < m_Max;i++)
 	{

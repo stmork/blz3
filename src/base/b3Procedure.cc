@@ -35,12 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/15 13:56:42  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.8  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.7  2002/05/08 14:43:30  sm
 **	- Changed some output from B3LOG_NORMAL to B3LOG_DEBUG
 **	
@@ -170,7 +177,7 @@ b3Noise::b3Noise ()
 		NOISEMAXALLOC * sizeof(b3_noisetype));
 	if (NoiseTable == null)
 	{
-		throw b3NoiseException(B3_NOISE_MEMORY);
+		B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
 	}
 
 	for (x = 0;x < NOISEMAX;x++)

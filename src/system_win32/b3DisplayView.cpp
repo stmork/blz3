@@ -41,11 +41,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.5  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.4  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -74,6 +81,8 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 {
 	// We should make sure, that we've collected some data
 	// about us.
+	B3_ASSERT(view != null);
+
 	if (view->IsKindOf(RUNTIME_CLASS(CB3ScrollView)))
 	{
 		m_View = view;
@@ -81,11 +90,10 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 	}
 	else
 	{
-		throw b3DisplayException(B3_DISPLAY_OPEN);
+		B3_THROW(b3DisplayException,B3_DISPLAY_OPEN);
 	}
 
-	ASSERT(m_View != null);
-
+	b3SetRowRefreshCount();
 	m_xMax  = xSize;
 	m_yMax  = ySize;
 	m_depth = 24;
@@ -139,10 +147,15 @@ b3DisplayView::~b3DisplayView()
 	b3PrintF(B3LOG_FULL,"Closing view display...\n");
 }
 
+void b3DisplayView::b3SetRowRefreshCount(b3_count refresh_count)
+{
+	m_RowRefreshCount = refresh_count;
+}
+
 void b3DisplayView::b3PutRow(b3Row *row)
 {
 	b3Display::b3PutRow(row);
-	if ((m_RowCounter++ & 0x1f) == 0)
+	if ((m_RowCounter++ % m_RowRefreshCount) == 0)
 	{
 		m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
 	}

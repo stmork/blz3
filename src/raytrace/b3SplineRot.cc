@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2002/08/15 13:56:43  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.17  2002/08/09 13:20:20  sm
 **      - b3Mem::b3Realloc was a mess! Now fixed to have the same
 **        behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -219,7 +226,7 @@ b3_bool b3SplineRotShape::b3Prepare()
 	// Reallocating new tria shape
 	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.subdiv))
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 

@@ -34,12 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.11  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.10  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -148,7 +155,7 @@ b3Dir::b3Dir (const char *path)
 {
 	if (!b3OpenDir(path))
 	{
-		throw b3DirException(B3_DIR_NOT_FOUND);
+		B3_THROW(b3DirException,B3_DIR_NOT_FOUND);
 	}
 }
 

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2002/08/15 13:56:44  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.30  2002/08/09 13:20:20  sm
 **      - b3Mem::b3Realloc was a mess! Now fixed to have the same
 **        behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -255,7 +262,7 @@ b3_bool b3TriangleShape::b3AddCubicItem (
 	TriaInfo = new b3TriangleRef(index);
 	if (TriaInfo==null)
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 	GridList->b3First(TriaInfo);
@@ -521,7 +528,7 @@ b3_bool b3TriangleShape::b3Prepare()
 		(m_GridSize * m_GridSize * m_GridSize * sizeof(b3Base<b3TriangleRef>));
 	if (m_GridList == null)
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 	b3PrepareGridList();
 	return b3Shape::b3Prepare();

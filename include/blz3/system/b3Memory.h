@@ -71,7 +71,7 @@ public:
 		if (node == null)
 		{
 #ifndef _DEBUG
-			throw b3MemException(B3_MEM_MEMORY);
+			B3_THROW(b3MemException,B3_MEM_MEMORY);
 #else
 			return null;
 #endif
@@ -136,7 +136,7 @@ public:
 					b3LinkChunk(node);
 					m_Mutex.b3Unlock();
 #ifndef _DEBUG
-					throw b3MemException(B3_MEM_MEMORY);
+					B3_THROW(b3MemException,B3_MEM_MEMORY);
 #else
 					return null;
 #endif

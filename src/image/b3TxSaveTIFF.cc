@@ -35,12 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/15 13:56:43  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.6  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.5  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
 **	
@@ -175,7 +182,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 
 	if (result != B3_TX_OK)
 	{
-		throw b3TxException(result);
+		B3_THROW(b3TxException,result);
 	}
 	return B3_OK;
 }
@@ -220,7 +227,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 
 	if (result != B3_TX_OK)
 	{
-		throw b3TxException(result);
+		B3_THROW(b3TxException,result);
 	}
 	return B3_OK;
 }
@@ -258,7 +265,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3SaveTIFFTrueColor(): Not enough memory to allocate row\n");
-		throw b3TxException(B3_TX_MEMORY);
+		B3_THROW(b3TxException,B3_TX_MEMORY);
 	}
 
 	lPtr = (b3_pkd_color *)data;
@@ -308,7 +315,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 
 	if (result != B3_TX_OK)
 	{
-		throw b3TxException(result);
+		B3_THROW(b3TxException,result);
 	}
 	return B3_OK;
 }
@@ -320,14 +327,14 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 
 	if ((xSize == 0) || (ySize == 0))
 	{
-		throw b3TxException(B3_TX_NOT_SAVED);
+		B3_THROW(b3TxException,B3_TX_NOT_SAVED);
 	}
 
 	if (nameTx == null)
 	{
 		if (strlen(image_name) == 0)
 		{
-			throw b3TxException(B3_TX_NOT_SAVED);
+			B3_THROW(b3TxException,B3_TX_NOT_SAVED);
 		}
 	}
 	else
@@ -366,7 +373,7 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 
 	if (result != B3_TX_OK)
 	{
-		throw b3TxException(result);
+		B3_THROW(b3TxException,result);
 	}
 	return B3_OK;
 }

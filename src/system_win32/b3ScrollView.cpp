@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.10  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry
 **	- b3ExtractExt searches from right instead from left.
 **	- Made some cleanup inside CB3ScrollView
-**
+**	
 **	Revision 1.9  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -524,7 +531,9 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 					DoRescale =
 						((m_TxScale->xSize != (b3_res)sizeTotal.cx) ||
 						 (m_TxScale->ySize != (b3_res)sizeTotal.cy) ||
-						 (m_TxScale->depth != depth));
+						 (m_TxScale->depth != depth)) &&
+						 (sizeTotal.cx > 0) &&
+						 (sizeTotal.cy > 0);
 					m_MutexScaling.b3Unlock();
 				}
 				else
@@ -557,6 +566,14 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 								m_TxScale->b3ScaleToGrey(pDoc->m_Tx);
 							}
 							b3ViewParamChanged();
+						}
+						else
+						{
+							// Check for memory problem
+							if ((sizeTotal.cx > 0) || (sizeTotal.cy > 0))
+							{
+								B3_THROW(b3TxException,B3_TX_MEMORY);
+							}
 						}
 					}
 					catch (b3TxException &t)

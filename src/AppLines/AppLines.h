@@ -61,6 +61,7 @@ class CAppLinesApp : public CB3App
 	CMultiDocTemplate *pObjectTemplate;
 
 public:
+	b3_count           m_RowRefreshCount;
 	b3_size            m_PrintBufferSize;
 
 public:

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2002/08/15 13:56:43  sm
+**      - Introduced B3_THROW macro which supplies filename
+**        and line number of source code.
+**      - Fixed b3AllocTx when allocating a zero sized image.
+**        This case is definitely an error!
+**      - Added row refresh count into Lines
+**
 **      Revision 1.53  2002/08/09 13:20:19  sm
 **      - b3Mem::b3Realloc was a mess! Now fixed to have the same
 **        behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -478,7 +485,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 	else
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 	m_ConeIndices  = (GLushort *)b3Alloc
@@ -504,7 +511,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 	else
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 #endif
 }
@@ -1450,7 +1457,7 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 	s = 0;
@@ -1801,7 +1808,7 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		throw b3WorldException(B3_WORLD_MEMORY);
+		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
 
 	s = 0;

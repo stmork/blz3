@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/15 13:56:42  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.2  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
-**
+**	
 **	Revision 1.1  2002/02/08 15:53:37  sm
 **	- Cleaned up makefiles for Un*x
 **	- New dialog for print buffer size.
@@ -53,8 +60,8 @@ CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgProperties::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgProperties)
-	m_PrtBuffer = CB3GetLinesApp()->m_PrintBufferSize;
 	//}}AFX_DATA_INIT
+	m_App = CB3GetLinesApp();
 }
 
 
@@ -62,9 +69,8 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgProperties)
+	DDX_Control(pDX, IDC_ROW_REFRESH, m_RowRefreshCtrl);
 	DDX_Control(pDX, IDC_PRT_BUFFER_SPIN, m_PrtBufferCtrl);
-	DDX_Text(pDX, IDC_PRT_BUFFER, m_PrtBuffer);
-	DDV_MinMaxInt(pDX, m_PrtBuffer, 1, 128);
 	//}}AFX_DATA_MAP
 }
 
@@ -82,7 +88,11 @@ BOOL CDlgProperties::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_PrtBufferCtrl.SetRange(1,128);
+	m_PrtBufferCtrl.b3SetRange(1,128);
+	m_PrtBufferCtrl.b3SetPos(m_App->m_PrintBufferSize);
+
+	m_RowRefreshCtrl.SetRange(1,32);
+	m_RowRefreshCtrl.SetPos(m_App->m_RowRefreshCount);
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -90,9 +100,9 @@ BOOL CDlgProperties::OnInitDialog()
 void CDlgProperties::OnOK() 
 {
 	// TODO: Add extra validation here
-	CAppLinesApp * app = CB3GetLinesApp();
-
 	CDialog::OnOK();
-	app->m_PrintBufferSize = m_PrtBuffer;
-	app->WriteProfileInt(app->b3ClientName(),"print buffer size",m_PrtBuffer);
+	m_App->m_PrintBufferSize = m_PrtBufferCtrl.b3GetPos();
+	m_App->m_RowRefreshCount = m_RowRefreshCtrl.GetPos();
+	m_App->WriteProfileInt(m_App->b3ClientName(),"print buffer size",m_App->m_PrintBufferSize);
+	m_App->WriteProfileInt(m_App->b3ClientName(),"row refresh count",m_App->m_RowRefreshCount);
 }

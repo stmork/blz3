@@ -36,6 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/08/15 13:56:42  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.11  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -43,7 +50,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.10  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -198,21 +205,27 @@ b3_bool CAppRaytraceDoc::b3IsRaytracing()
 b3Display *CAppRaytraceDoc::b3GetDisplay(b3_res xSize,b3_res ySize,const char *title)
 {
 	CAppRaytraceView *pView;
+	b3DisplayView    *display;
 	POSITION          pos;
 
-	pos   = GetFirstViewPosition();
-	pView = (CAppRaytraceView *)GetNextView(pos);
-	return new b3DisplayView(pView,xSize,ySize,title);
+	pos     = GetFirstViewPosition();
+	pView   = (CAppRaytraceView *)GetNextView(pos);
+	display = new b3DisplayView(pView,xSize,ySize,title);
+	display->b3SetRowRefreshCount(CB3GetLinesApp()->m_RowRefreshCount);
+	return display;
 }
 
 b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
 {
 	CAppRaytraceView *pView;
+	b3DisplayView    *display;
 	POSITION          pos;
 
-	pos   = GetFirstViewPosition();
-	pView = (CAppRaytraceView *)GetNextView(pos);
-	return new b3DisplayView(pView,title);
+	pos     = GetFirstViewPosition();
+	pView   = (CAppRaytraceView *)GetNextView(pos);
+	display = new b3DisplayView(pView,title);
+	display->b3SetRowRefreshCount(CB3GetLinesApp()->m_RowRefreshCount);
+	return display;
 }
 
 void CAppRaytraceDoc::b3ActivateDoc()

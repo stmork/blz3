@@ -54,11 +54,18 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2002/08/15 13:56:42  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.42  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.41  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
@@ -484,6 +491,7 @@ BOOL CAppLinesApp::InitInstance()
 	}
 
 	m_PrintBufferSize = GetProfileInt(b3ClientName(),"print buffer size",32);
+	m_RowRefreshCount = GetProfileInt(b3ClientName(),"row refresh count",B3_DISPLAY_ROWREFRESHCOUNT);
 
 	if (m_pDocManager == NULL)
 	{
@@ -687,7 +695,9 @@ void CAppLinesApp::OnProperties()
 	// TODO: Add your command handler code here
 	CDlgProperties dlg;
 
-	dlg.DoModal();
+	if (dlg.DoModal() == IDOK)
+	{
+	}
 }
 
 void CAppLinesApp::OnFileOpen() 

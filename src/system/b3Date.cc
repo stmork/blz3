@@ -48,9 +48,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.4  2002/08/11 08:17:41  sm
 **	- Renamed system_independend to system like include
-**
+**	
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -85,7 +92,7 @@ b3Date::b3Date(
 {
 	if (!b3SetDate(newDay,newMonth,newYear))
 	{
-		throw b3DateException(B3_DATE_ILLEGAL);
+		B3_THROW(b3DateException,B3_DATE_ILLEGAL);
 	}
 }
 
@@ -441,7 +448,7 @@ void b3Date::operator+=(const b3Date &diff)
 		// 2) diff  = diff + diff
 		// 3) ERROR = date + date
 		// 4) ERROR = diff + date
-		throw b3DateException(B3_DATE_ILLEGAL_MODE);
+		B3_THROW(b3DateException,B3_DATE_ILLEGAL_MODE);
 	}
 	time_code += diff.time_code;
 	b3SetMode (mode);

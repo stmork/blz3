@@ -38,12 +38,19 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.8  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry
 **	- b3ExtractExt searches from right instead from left.
 **	- Made some cleanup inside CB3ScrollView
-**
+**	
 **	Revision 1.7  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -248,7 +255,7 @@ b3Dir::b3Dir (const char *path)
 {
 	if (!b3OpenDir(path))
 	{
-		throw b3DirException(B3_DIR_NOT_FOUND);
+		B3_THROW(b3DirException,B3_DIR_NOT_FOUND);
 	}
 }
 

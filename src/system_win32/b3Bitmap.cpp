@@ -32,12 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/15 13:56:44  sm
+**	- Introduced B3_THROW macro which supplies filename
+**	  and line number of source code.
+**	- Fixed b3AllocTx when allocating a zero sized image.
+**	  This case is definitely an error!
+**	- Added row refresh count into Lines
+**
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.2  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -117,7 +124,7 @@ CB3BitmapDIB::CB3BitmapDIB(
 
 	if (!b3SetDIB(new_dib,new_row))
 	{
-		throw b3ViewException(B3_VIEW_INIT_DIB);
+		B3_THROW(b3ViewException,B3_VIEW_INIT_DIB);
 	}
 }
 
@@ -637,7 +644,7 @@ CB3BitmapDDB::CB3BitmapDDB()
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw b3ViewException(B3_VIEW_PALETTE);
+		B3_THROW(b3ViewException,B3_VIEW_PALETTE);
 	}
 }
 
@@ -652,7 +659,7 @@ CB3BitmapDDB::CB3BitmapDDB(CDC *srcDC)
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw b3ViewException(B3_VIEW_PALETTE);
+		B3_THROW(b3ViewException,B3_VIEW_PALETTE);
 	}
 }
 
