@@ -36,13 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/02/14 16:51:49  sm
+**	- Done some cleanups concernig doubly linked lists. Moved
+**	  obsolete b3Node/b3Head into their own include.
+**
 **	Revision 1.32  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
 **	  hierarchy dialog.
 **	- Some print cleanups done.
 **	- Fixed activation of b3SuperSample.
-**
+**	
 **	Revision 1.31  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
@@ -714,8 +718,6 @@ void b3Scene::b3Raytrace(b3Display *display)
 		// add rows to list
 		fy     = 1.0;
 		fyStep = 2.0 / (double)ySize;
-		m_RowPool.b3InitBase();
-		m_TrashPool.b3InitBase();
 		for (i = 0;i < ySize;i++)
 		{
 			if (m_SuperSample != null)

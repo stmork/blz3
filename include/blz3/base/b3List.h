@@ -28,53 +28,6 @@
 #define B3_NODE_SUCC    8
 #define B3_NODE_LAST   16
 
-class b3Head;
-
-class b3Node
-{
-public:
-	b3Node      *Succ;
-	b3Node      *Prev;
-protected:
-	b3_u32       ClassType;
-	b3_size      Size;
-	b3_offset    Offset;
-public:
-	               b3Node(b3_u32 size,b3_u32 new_class = 0);
-	              ~b3Node();
-
-	unsigned long  b3ClassType();
-	void           b3Append(b3Head *);
-	void           b3First(b3Head *);
-	void           b3Remove(b3Head *);
-	void           b3Insert(b3Head *,b3Node *);
-};
-
-typedef int  (*bsortFunc)(b3Node *,b3Node *,void *);
-
-class b3Head
-{
-protected:
-	b3_u32       Class;
-public:
-	b3Node      *First;
-	b3Node      *Last;
-public:
-	                       b3Head(b3_u32 new_class = 0);
-	                      ~b3Head();
-
-	       void            b3InitHead(b3_u32 new_class = 0);
-	       long  b3State(b3Node *);
-	friend void  b3Node::b3Append(b3Head *);
-	friend void  b3Node::b3First(b3Head *);
-	friend void  b3Node::b3Remove(b3Head *);
-	friend void  b3Node::b3Insert(b3Head *,b3Node *);
-	       void            b3Sort(bsortFunc,void *);
-};
-
-#define CLASSOF(node) (((b3Node *)(node))->ClassType & 0xffff0000)
-#define TYPEOF(node)  (((b3Node *)(node))->ClassType & 0x0000ffff)
-
 template <class T> class b3Link
 {
 public:
@@ -118,8 +71,8 @@ public:
 	}
 };
 
-#define B3_FOR_BASE(b,n) for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
-#define B3_DELETE_BASE(b,n) while (((n) = (b)->b3RemoveFirst()) != null) { delete (n); }
+#define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
+#define B3_DELETE_BASE(b,n) ((b)->b3Free())
 
 template <class T> class b3Base
 {
@@ -154,12 +107,10 @@ public:
 	{
 		T *node,*succ;
 
-		node = First;
-		while (node != null)
+		for(node = First;node != null;node = succ)
 		{
 			succ = node->Succ;
 			delete node;
-			node = succ;
 		}
 		First = null;
 		Last  = null;
@@ -195,7 +146,7 @@ public:
 		return count;
 	}
 
-	inline void b3Append  (T *ptr)
+	inline void b3Append(T *ptr)
 	{
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
 #ifndef B3_NO_CLASS_CHECK
@@ -218,7 +169,7 @@ public:
 		Last      = ptr;
 	}
 
-	inline void b3First   (T *ptr)
+	inline void b3First(T *ptr)
 	{
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
 #ifndef B3_NO_CLASS_CHECK
@@ -241,7 +192,7 @@ public:
 		First     = ptr;
 	}
 
-	inline void b3Remove  (T *ptr)
+	inline void b3Remove(T *ptr)
 	{
 #ifndef B3_NO_CLASS_CHECK
 		if (ptr->b3GetClass() != Class)
@@ -307,7 +258,7 @@ public:
 		return removed;
 	}
 
-	inline void b3Insert  (T *pre,T *ptr)
+	inline void b3Insert(T *pre,T *ptr)
 	{
 		T *succ;
 
@@ -354,13 +305,13 @@ public:
 		}
 	}
 
-	inline long b3State   (T *ptr)
+	inline long b3State(T *ptr)
 	{
 		b3_u32  flags = 0;
 
-		if (ptr == First)   flags |= B3_NODE_FIRST;
-		if (ptr == Last)    flags |= B3_NODE_LAST;
-		if (ptr == null)    flags |= B3_NODE_NULL;
+		if (ptr == First)  flags |= B3_NODE_FIRST;
+		if (ptr == Last)   flags |= B3_NODE_LAST;
+		if (ptr == null)   flags |= B3_NODE_NULL;
 		else
 		{
 			if (ptr->Prev) flags |= B3_NODE_PREV;
@@ -369,7 +320,9 @@ public:
 		return flags;
 	}
 
-	inline void b3Sort    (int (*func)(T *,T *,void *),void *Ptr)
+	// This is a nice piece of code! An in situ merge sort on
+	// doubly linked list.
+	inline void b3Sort(int (*func)(T *,T *,void *),void *Ptr)
 	{
 		b3Base    Right;
 		T        *start,*end;

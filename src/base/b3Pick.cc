@@ -34,6 +34,10 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/02/14 16:51:49  sm
+**	- Done some cleanups concernig doubly linked lists. Moved
+**	  obsolete b3Node/b3Head into their own include.
+**
 **	Revision 1.4  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -41,7 +45,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.3  2001/12/06 19:45:06  sm
 **	- Minor bug fixes in DlgLight
 **	
@@ -63,7 +67,6 @@
 
 b3PickBase::b3PickBase()
 {
-	b3InitBase();
 	m_Selected = null;
 }
 

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/02/14 16:51:49  sm
+**	- Done some cleanups concernig doubly linked lists. Moved
+**	  obsolete b3Node/b3Head into their own include.
+**
 **	Revision 1.27  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
-**
+**	
 **	Revision 1.26  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -195,19 +199,12 @@ void b3RenderViewItem::b3Set(
 
 b3RenderView::b3RenderView()
 {
-	b3_index          i;
-
 	m_ViewMode    = B3_VIEW_3D;
 	m_AntiAliased = false;
 	m_AspectRatio = true;
 	m_xRes        = 0;
 	m_yRes        = 0;
-
-	for (i = 0;i < B3_VIEW_MAX;i++)
-	{
-		m_ViewStack[i].b3InitBase();
-	}
-	m_Depot.b3InitBase();
+	m_Actual      = null;
 }
 
 b3RenderView::~b3RenderView()

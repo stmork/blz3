@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3List.h"
+#include "blz3/base/b3Node.h"
 #include "blz3/system/b3Log.h"
 
 /*
@@ -46,9 +46,13 @@ We are using a doubly linked list in the following manner:
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:58  sm
-**	Initial revision
+**	Revision 1.2  2002/02/14 16:51:49  sm
+**	- Done some cleanups concernig doubly linked lists. Moved
+**	  obsolete b3Node/b3Head into their own include.
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:58  sm
+**	Blizzard III is born
+**	
 */
 
 /*************************************************************************

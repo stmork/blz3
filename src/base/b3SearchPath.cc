@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/14 16:51:49  sm
+**	- Done some cleanups concernig doubly linked lists. Moved
+**	  obsolete b3Node/b3Head into their own include.
+**
 **	Revision 1.5  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.4  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
 **	
@@ -81,7 +85,6 @@ void b3SearchPath::b3AddPath(const char *path)
 
 b3SearchPath::b3SearchPath()
 {
-	m_SearchPath.b3InitBase();
 }
 
 b3SearchPath::~b3SearchPath()
