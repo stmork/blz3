@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2005/01/12 14:25:38  smork
+**	- Added some ReleaseDC for wine.
+**
 **	Revision 1.38  2004/12/29 14:41:45  sm
 **	- Beautified Installation
-**
+**	
 **	Revision 1.37  2004/12/28 15:44:35  sm
 **	- Adjusted compiler settings
 **	- Some 64 bit corrections
@@ -301,14 +304,21 @@ BOOL CAppRenderView::PreCreateWindow(CREATESTRUCT& cs)
 
 int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
+	CDC dc;
+
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
 	{
 		return -1;
 	}
 	
 	// TODO: Add your specialized creation code here
-	m_glDC = GetDC()->GetSafeHdc();
-	m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
+	dc = GetDC();
+	if (dc != null)
+	{
+		m_glDC = dc->GetSafeHdc();
+		m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
+		ReleaseDC(dc);
+	}
 	return 0;
 }
 

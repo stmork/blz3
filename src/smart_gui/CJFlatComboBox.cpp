@@ -256,32 +256,31 @@ void CCJFlatComboBox::DrawCombo(STATE eState, COLORREF clrTopLeft, COLORREF clrB
 	rcItem.DeflateRect(1,1);
 	pDC->Draw3dRect( rcItem, m_clrBtnFace, m_clrBtnFace );
 	
-	if (!IsWindowEnabled()) {
-		return;
-	}
-
-	switch (eState)
+	if (IsWindowEnabled())
 	{
-	case normal:
-		rcItem.top -= 1;
-		rcItem.bottom += 1;
-		pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnHilite );
-		rcItem.left -= 1;
-		pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnHilite );
-		break;
+		switch (eState)
+		{
+		case normal:
+			rcItem.top -= 1;
+			rcItem.bottom += 1;
+			pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnHilite );
+			rcItem.left -= 1;
+			pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnHilite );
+			break;
 
-	case raised:
-		rcItem.top -= 1;
-		rcItem.bottom += 1;
-		pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnShadow);
-		break;
+		case raised:
+			rcItem.top -= 1;
+			rcItem.bottom += 1;
+			pDC->Draw3dRect( rcItem, m_clrBtnHilite, m_clrBtnShadow);
+			break;
 
-	case pressed:
-		rcItem.top -= 1;
-		rcItem.bottom += 1;
-		rcItem.OffsetRect(1,1);
-		pDC->Draw3dRect( rcItem, m_clrBtnShadow, m_clrBtnHilite );
-		break;
+		case pressed:
+			rcItem.top -= 1;
+			rcItem.bottom += 1;
+			rcItem.OffsetRect(1,1);
+			pDC->Draw3dRect( rcItem, m_clrBtnShadow, m_clrBtnHilite );
+			break;
+		}
 	}
 
 	ReleaseDC(pDC);
