@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/05/28 20:54:02  sm
+**	- Fixed scene dialog concerning new Mork shading
+**
 **	Revision 1.21  2004/05/28 19:57:24  sm
 **	- Added new world data file for soft shadow testing.
 **	- Added enhanced Mork shading model to scene dialog.
-**
+**	
 **	Revision 1.20  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -400,6 +403,10 @@ void CDlgScene::OnOK()
 	{
 	case 0:
 		m_Scene->b3SetShading(TRACEPHOTO_PHONG);
+		break;
+	
+	case 2:
+		m_Scene->b3SetShading(TRACEPHOTO_MORK2);
 		break;
 	
 	case 1:
