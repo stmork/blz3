@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.8  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -88,6 +91,7 @@ b3Cone::b3Cone(b3_u32 class_type) : b3Shape3(sizeof(b3Cone),class_type)
 
 b3Cone::b3Cone(b3_u32 *src) : b3Shape3(src)
 {
+	glSolid = true;
 }
 
 void b3Cone::b3GetCount(
@@ -111,7 +115,9 @@ void b3Cone::b3AllocVertices(b3RenderContext *ctx)
 	b3RenderObject::b3AllocVertices(context);
 #ifdef BLZ3_USE_OPENGL
 	GridsCyl  = context->b3GetCylinderIndices();
+	PolysCyl  = context->b3GetCylinderPolygons();
 	GridsCone = context->b3GetConeIndices();
+	PolysCone = context->b3GetConePolygons();
 #endif
 }
 

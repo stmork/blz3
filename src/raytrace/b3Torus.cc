@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.6  2001/08/11 16:29:08  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -94,6 +97,8 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[2]
 	aRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir1 and Dir2
 	bRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir3
+
+	glSolid = true;
 }
 
 void b3Torus::b3GetCount(

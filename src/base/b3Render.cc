@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.9  2001/08/16 04:28:29  sm
 **      - Solving conflicts
 **
@@ -98,17 +101,17 @@
 
 static GLfloat ambient[] =
 {
-	1.0f,1.0f,1.0f,1.0f
+	0.25f,0.25f,0.25f,1.0f
 };
 
 static GLfloat diffuse[] =
 {
-	1.0f,1.0f,0.95f,1.0f
+	0.8f,0.8f,0.8f,1.0f
 };
 
 static GLfloat light0[] =
 {
-	1000.0f,1500.0f,2000.0f,1.0f
+	1000.0f,-2500.0f,2000.0f,1.0f
 };
 
 b3RenderContext::b3RenderContext()
@@ -130,10 +133,15 @@ void b3RenderContext::b3StartDrawing()
 	glEnable(GL_DEPTH_TEST);
 
 	// Enable light
+	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
 	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
 	glLightfv(GL_LIGHT0,GL_POSITION,light0);
+
+	// Some material settings
+	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
@@ -284,7 +292,7 @@ void b3RenderObject::b3ComputeIndices()
 {
 }
 
-void b3RenderObject::b3ComputeNormals()
+void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
 	b3_vector *nPtr = (b3_vector *)glNormals;
 	b3_vector *vPtr = (b3_vector *)glVertices;
@@ -294,58 +302,67 @@ void b3RenderObject::b3ComputeNormals()
 	b3_f64     len;
 	b3_index   i,p1,p2,p3;
 
-	if ((PolyCount > 0) && (nPtr != null))
+	if (nPtr == null)
 	{
-		for (i = 0;i < VertexCount;i++)
+		// Do nothing!
+		return;
+	}
+
+	// Clear normals
+	for (i = 0;i < VertexCount;i++)
+	{
+		nPtr[i].x = 0;
+		nPtr[i].y = 0;
+		nPtr[i].z = 0;
+	}
+
+	// Collect normals
+	for (i = 0;i < PolyCount;i++)
+	{
+		p1 = *pPtr++;
+		p2 = *pPtr++;
+		p3 = *pPtr++;
+
+		// Do some semantic checks
+		B3_ASSERT(p1 < VertexCount);
+		B3_ASSERT(p2 < VertexCount);
+		B3_ASSERT(p3 < VertexCount);
+
+		xDir.x = vPtr[p2].x - vPtr[p1].x;
+		xDir.y = vPtr[p2].y - vPtr[p1].y;
+		xDir.z = vPtr[p2].z - vPtr[p1].z;
+
+		yDir.x = vPtr[p3].x - vPtr[p1].x;
+		yDir.y = vPtr[p3].y - vPtr[p1].y;
+		yDir.z = vPtr[p3].z - vPtr[p1].z;
+
+		normal.x = xDir.y * yDir.z - xDir.z * yDir.y;
+		normal.y = xDir.z * yDir.x - xDir.x * yDir.z;
+		normal.z = xDir.x * yDir.y - xDir.y * yDir.x;
+		len = b3Length(&normal);
+		if (len > 0)
 		{
-			nPtr[i].x = 0;
-			nPtr[i].y = 0;
-			nPtr[i].z = 0;
+			normal.x /= len;
+			normal.y /= len;
+			normal.z /= len;
+
+			nPtr[p1].x += normal.x;
+			nPtr[p1].y += normal.y;
+			nPtr[p1].z += normal.z;
+
+			nPtr[p2].x += normal.x;
+			nPtr[p2].y += normal.y;
+			nPtr[p2].z += normal.z;
+
+			nPtr[p3].x += normal.x;
+			nPtr[p3].y += normal.y;
+			nPtr[p3].z += normal.z;
 		}
+	}
 
-		for (i = 0;i < PolyCount;i++)
-		{
-			p1 = *pPtr++;
-			p2 = *pPtr++;
-			p3 = *pPtr++;
-
-			// Do some semantic checks
-			B3_ASSERT(p1 < VertexCount);
-			B3_ASSERT(p2 < VertexCount);
-			B3_ASSERT(p3 < VertexCount);
-
-			xDir.x = vPtr[p2].x - vPtr[p1].x;
-			xDir.y = vPtr[p2].y - vPtr[p1].y;
-			xDir.z = vPtr[p2].z - vPtr[p1].z;
-
-			yDir.x = vPtr[p3].x - vPtr[p1].x;
-			yDir.y = vPtr[p3].y - vPtr[p1].y;
-			yDir.z = vPtr[p3].z - vPtr[p1].z;
-
-			normal.x = xDir.y * yDir.z - xDir.z * yDir.y;
-			normal.y = xDir.z * yDir.x - xDir.x * yDir.z;
-			normal.z = xDir.x * yDir.y - xDir.y * yDir.x;
-			len = b3Length(&normal);
-			if (len > 0)
-			{
-				normal.x /= len;
-				normal.y /= len;
-				normal.z /= len;
-
-				nPtr[p1].x += normal.x;
-				nPtr[p1].y += normal.y;
-				nPtr[p1].z += normal.z;
-
-				nPtr[p2].x += normal.x;
-				nPtr[p2].y += normal.y;
-				nPtr[p2].z += normal.z;
-
-				nPtr[p3].x += normal.x;
-				nPtr[p3].y += normal.y;
-				nPtr[p3].z += normal.z;
-			}
-		}
-
+	// Normalize
+	if (normalize)
+	{
 		for (i = 0;i < VertexCount;i++)
 		{
 			len = b3Length(&nPtr[i]);
@@ -443,9 +460,7 @@ void b3RenderObject::b3Draw()
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"---------- OpenGL start solid drawing\n");
 #endif
-			glEnable(GL_LIGHTING);
 			glEnable(GL_COLOR_MATERIAL);
-			glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
 			glColor3f(color.r,color.g,color.b);
 			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 #ifdef VERBOSE
@@ -457,7 +472,6 @@ void b3RenderObject::b3Draw()
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"---------- OpenGL start line drawing\n");
 #endif
-			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
 			glColor3f(0.2f,0.2f,0.2f);
 			glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);

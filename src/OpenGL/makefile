@@ -25,5 +25,7 @@ clean:
 
 render:	$(RENDER_OBJ)
 	$(LINK.cc) -o $@ $(RENDER_OBJ) $(LDLIBS)
+	chmod 775 $@
+	cp $@ $(BLZ3_BIN)
 
 -include .dep

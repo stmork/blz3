@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.7  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -119,6 +122,8 @@ b3TriangleShape::b3TriangleShape(b3_u32 *src) : b3Shape(src)
 		triangles[i].P2 = b3InitInt();
 		triangles[i].P3 = b3InitInt();
 	}
+
+	glSolid = true;
 }
 
 void b3TriangleShape::b3GetCount(
@@ -153,27 +158,39 @@ void b3TriangleShape::b3ComputeVertices()
 #endif
 }
 
+void b3TriangleShape::b3ComputeNormals(b3_bool normalize)
+{
+	b3RenderObject::b3ComputeNormals(normalize);
+}
+
 void b3TriangleShape::b3ComputeIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort    *Index;
+	GLushort    *gPtr;
+	GLushort    *pPtr;
 	b3_triangle *Triangle;
 	b3_vertex   *Vertex;
 	b3_count     i;
 
-	Index    = glGrids;
 	Vertex   = vertices;
 	Triangle = triangles;
+	gPtr     = glGrids;
+	pPtr     = glPolygons;
 	for (i = 0;i < TriaCount;i++)
 	{
-		*Index++ = (short)Triangle->P1;
-		*Index++ = (short)Triangle->P2;
+		*gPtr++ = (unsigned short)Triangle->P1;
+		*gPtr++ = (unsigned short)Triangle->P2;
 
-		*Index++ = (short)Triangle->P2;
-		*Index++ = (short)Triangle->P3;
+		*gPtr++ = (unsigned short)Triangle->P2;
+		*gPtr++ = (unsigned short)Triangle->P3;
 
-		*Index++ = (short)Triangle->P3;
-		*Index++ = (short)Triangle->P1;
+		*gPtr++ = (unsigned short)Triangle->P3;
+		*gPtr++ = (unsigned short)Triangle->P1;
+
+		*pPtr++ = (unsigned short)Triangle->P1;
+		*pPtr++ = (unsigned short)Triangle->P2;
+		*pPtr++ = (unsigned short)Triangle->P3;
+
 		Triangle++;
 	}
 #endif

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.8  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -88,6 +91,7 @@ b3Disk::b3Disk(b3_u32 class_type) : b3Shape2(sizeof(b3Disk),class_type)
 
 b3Disk::b3Disk(b3_u32 *src) : b3Shape2(src)
 {
+	glSolid = true;
 }
 
 void b3Disk::b3GetCount(
@@ -236,7 +240,8 @@ void b3Disk::b3ComputeVertices()
 void b3Disk::b3ComputeIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort *Index;
+	GLushort *gPtr;
+	GLushort *pPtr;
 	b3_bool   EndLines = false;
 	b3_index  i,Number = 0;
 	b3_count  Overhead;
@@ -252,16 +257,20 @@ void b3Disk::b3ComputeIndices()
 	Number += Overhead;
 	if (Limit.y1 > 0) Number += Overhead;
 
-	glGrids = Index = (GLushort *)b3RenderObject::b3Alloc
+	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 2 * sizeof(GLushort));
-	if (Index == null)
+	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
+		(Number * 3 * sizeof(GLushort));
+	if ((gPtr == null) || (pPtr == null))
 	{
 		GridCount = 0;
+		PolyCount = 0;
 		return;
 	}
 	else
 	{
 		GridCount = Number;
+		PolyCount = Overhead * (Limit.y1 > 0 ? 2 : 1);
 	}
 
 	if (Limit.y1 > 0)
@@ -271,35 +280,47 @@ void b3Disk::b3ComputeIndices()
 		for (i = 0;i < Overhead;i++)
 		{
 			pos = i + i;
-			*Index++ = pos;
-			*Index++ = pos + 2;
+			*gPtr++ = pos;
+			*gPtr++ = pos + 2;
 
-			*Index++ = pos + 1;
-			*Index++ = pos + 3;
+			*gPtr++ = pos + 1;
+			*gPtr++ = pos + 3;
+
+			*pPtr++ = pos;
+			*pPtr++ = pos + 2;
+			*pPtr++ = pos + 1;
+
+			*pPtr++ = pos + 3;
+			*pPtr++ = pos + 1;
+			*pPtr++ = pos + 2;
 		}
 		if (EndLines)
 		{
-			*Index++ = 0;
-			*Index++ = 1;
+			*gPtr++ = 0;
+			*gPtr++ = 1;
 
-			*Index++ = Overhead + Overhead;
-			*Index++ = Overhead + Overhead + 1;
+			*gPtr++ = Overhead + Overhead;
+			*gPtr++ = Overhead + Overhead + 1;
 		}
 	}
 	else
 	{
 		for (i = 1;i <= Overhead;i++)
 		{
-			*Index++ = i;
-			*Index++ = i + 1;
+			*gPtr++ = i;
+			*gPtr++ = i + 1;
+
+			*pPtr++ = i;
+			*pPtr++ = i + 1;
+			*pPtr++ = 0;
 		}
 		if (EndLines)
 		{
-			*Index++ = 0;
-			*Index++ = 1;
+			*gPtr++ = 0;
+			*gPtr++ = 1;
 
-			*Index++ = 0;
-			*Index++ = Overhead + 1;
+			*gPtr++ = 0;
+			*gPtr++ = Overhead + 1;
 		}
 	}
 	/*

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.9  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -69,18 +72,16 @@
 */
 
 #ifdef BLZ3_USE_OPENGL
-static b3World      *world = null;
-static b3RenderView  view;
+
+static b3RenderShapeContext  context;
+static b3World              *world = null;
+static b3RenderView          view;
 
 void RenderScene()
 {
 	b3Scene  *scene;
 
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-
+	context.b3StartDrawing();
 	scene = (b3Scene *)world->b3GetFirst();
 	scene->b3Draw();
 
@@ -107,7 +108,6 @@ int main(int argc,char *argv[])
 	b3Item               *item;
 	b3Scene              *scene;
 	b3_res                xSize,ySize;
-	b3RenderShapeContext  context;
 
 	if (argc > 1)
 	{
@@ -134,8 +134,6 @@ int main(int argc,char *argv[])
 		glutDisplayFunc(RenderScene);
 		glutReshapeFunc(ChangeSize);
 
-		context.b3StartDrawing();
-	
 		glutMainLoop();
 	}
 	return 0;

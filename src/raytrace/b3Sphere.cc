@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.5  2001/08/11 16:29:08  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -72,6 +75,7 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&Base);
 	b3InitVector(&Dir);
+	glSolid = true;
 }
 
 void b3Sphere::b3GetCount(

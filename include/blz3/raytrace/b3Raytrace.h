@@ -607,7 +607,9 @@ class b3RenderShapeContext : public b3RenderContext
 	b3_vector *Between;
 #ifdef BLZ3_USE_OPENGL
 	GLushort  *CylinderIndices;
+	GLushort  *CylinderPolygons;
 	GLushort  *ConeIndices;
+	GLushort  *ConePolygons;
 #endif
 
 public:
@@ -620,7 +622,9 @@ public:
 
 #ifdef BLZ3_USE_OPENGL
 	GLushort  *b3GetCylinderIndices();
+	GLushort  *b3GetCylinderPolygons();
 	GLushort  *b3GetConeIndices();
+	GLushort  *b3GetConePolygons();
 #endif
 };
 
@@ -674,7 +678,9 @@ class b3RenderShape : public b3Shape
 protected:
 #ifdef BLZ3_USE_OPENGL
 	GLushort *GridsCyl;
+	GLushort *PolysCyl;
 	GLushort *GridsCone;
+	GLushort *PolysCone;
 #endif
 
 protected:
@@ -915,6 +921,7 @@ public:
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
+	void b3ComputeNormals(b3_bool normalize=true);
 	void b3ComputeIndices();
 	void b3Intersect();
 };
@@ -1214,7 +1221,8 @@ class b3BBox : public b3Item, public b3RenderObject
 	char             BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
 #ifdef BLZ3_USE_OPENGL
-	GLfloat          vertices[8 * 3];
+	GLfloat          bbox_vertices[8 * 3];
+	GLfloat          bbox_normals[8 * 3];
 #endif
 
 public:

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.13  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -85,7 +88,7 @@
 *************************************************************************/
 
 #ifdef BLZ3_USE_OPENGL
-static GLushort indices[12 * 2] =
+static GLushort bbox_indices[12 * 2] =
 {
 	0,1,
 	1,2,
@@ -217,9 +220,9 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	PolyCount   =  0;
 
 #ifdef BLZ3_USE_OPENGL
-	glVertices = vertices;
-	glNormals  = null;
-	glGrids    = indices;
+	glVertices = bbox_vertices;
+	glNormals  = bbox_normals;
+	glGrids    = bbox_indices;
 	glPolygons = null;
 #endif
 
@@ -269,37 +272,37 @@ void b3BBox::b3ComputeVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3_index        i = 0;
 
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z;
+	bbox_vertices[i++] = Base.x;
+	bbox_vertices[i++] = Base.y;
+	bbox_vertices[i++] = Base.z;
 
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = Base.x;
+	bbox_vertices[i++] = Base.y;
+	bbox_vertices[i++] = Base.z + Size.z;
 
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = Base.x + Size.x;
+	bbox_vertices[i++] = Base.y;
+	bbox_vertices[i++] = Base.z + Size.z;
 
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y;
-	vertices[i++] = Base.z;
+	bbox_vertices[i++] = Base.x + Size.x;
+	bbox_vertices[i++] = Base.y;
+	bbox_vertices[i++] = Base.z;
 
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z;
+	bbox_vertices[i++] = Base.x;
+	bbox_vertices[i++] = Base.y + Size.y;
+	bbox_vertices[i++] = Base.z;
 
-	vertices[i++] = Base.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = Base.x;
+	bbox_vertices[i++] = Base.y + Size.y;
+	bbox_vertices[i++] = Base.z + Size.z;
 
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z + Size.z;
+	bbox_vertices[i++] = Base.x + Size.x;
+	bbox_vertices[i++] = Base.y + Size.y;
+	bbox_vertices[i++] = Base.z + Size.z;
 
-	vertices[i++] = Base.x + Size.x;
-	vertices[i++] = Base.y + Size.y;
-	vertices[i++] = Base.z;
+	bbox_vertices[i++] = Base.x + Size.x;
+	bbox_vertices[i++] = Base.y + Size.y;
+	bbox_vertices[i++] = Base.z;
 
 	glComputed = true;
 #endif

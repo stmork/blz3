@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.8  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -89,6 +92,7 @@ b3Ellipsoid::b3Ellipsoid(b3_u32 class_type) : b3Shape3(sizeof(b3Ellipsoid),class
 
 b3Ellipsoid::b3Ellipsoid(b3_u32 *src) : b3Shape3(src)
 {
+	glSolid = true;
 }
 
 void b3Ellipsoid::b3GetCount(

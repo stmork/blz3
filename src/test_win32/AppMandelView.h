@@ -50,7 +50,6 @@ protected:
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppMandelView)
-	//{{AFX_MSG(CMauiImageView)
 	afx_msg void OnUnfiltered();
 	afx_msg void OnFiltered();
 	afx_msg void OnOriginal();

@@ -16,7 +16,7 @@
 */
 
 #ifndef B3_SYSTEM_APP_H
-#define MAUIAB3_SYSTEM_APP_HPP_H
+#define B3_SYSTEM_APP_H
 
 #include "blz3/system/b3Reg.h"
 #include "blz3/system/b3Toolbar.h"

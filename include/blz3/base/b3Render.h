@@ -60,7 +60,7 @@ protected:
 	virtual void     b3GetDiffuseColor(b3_color *color);
 	virtual void     b3ComputeVertices();
 	virtual void     b3ComputeIndices();
-	virtual void     b3ComputeNormals();
+	virtual void     b3ComputeNormals(b3_bool normalize=true);
 };
 
 #endif

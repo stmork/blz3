@@ -31,15 +31,8 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN)
 
 clean:	remdepend
 	echo "Cleaning up..."
-	find   $(BLZ3_HOME) -name "*.log" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*.ncb" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*.plg" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*.mak" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*.bak" -exec rm {} \;
-	find   $(BLZ3_HOME) -name "*~"    -exec rm {} \;
-	find   $(BLZ3_HOME) -name ".#*"   -exec rm {} \;
-	find   $(BLZ3_HOME) -name "core"  -exec rm {} \;
-	@rm -rf $(BLZ3_HOME)/Debug $(BLZ3_HOME)/Release
+	find  $(BLZ3_HOME) -name "*.log" -exec rm {} \;
+	find  $(BLZ3_HOME) -name "core"  -exec rm {} \;
 
 	+@for i in $(SUB_DIRS); do \
 		echo ""; \

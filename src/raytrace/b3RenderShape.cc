@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/16 14:41:24  sm
+**      - Some more shading shapes added (only BSPline shapes are missing)
+**
 **      Revision 1.8  2001/08/16 04:28:29  sm
 **      - Solving conflicts
 **
@@ -137,18 +140,18 @@ static GLushort box_grids[] =
 
 static GLushort box_polygons[] =
 {
-	 0, 1, 3, // front
-	 2, 3, 1,
-	 6, 7, 5, // back
+	 6, 7, 5, // top
 	 4, 5, 7,
-	 9,14,10, // right
-	13,10,14,
-	 7, 8,12, // left
-	11,12, 8,
-	19,18,20, // top
-	21,20,18,
-	17,16,22, // bottom
-	23, 6,16
+	 0, 1, 3, // bottom
+	 2, 3, 1,
+	13,12,10, // back
+	11,10,12,
+	 9, 8,14, // front
+	15,14, 8,
+	16,19,23, // right
+	20,23,19,
+	18,17,21, // left
+	22,21,17
 };
 #endif
 
@@ -161,8 +164,10 @@ static GLushort box_polygons[] =
 b3RenderShapeContext::b3RenderShapeContext(b3_count new_subdiv)
 {
 #ifdef BLZ3_USE_OPENGL
-	CylinderIndices = null;
-	ConeIndices     = null;
+	CylinderIndices  = null;
+	CylinderPolygons = null;
+	ConeIndices      = null;
+	ConePolygons     = null;
 #endif
 	Between         = null;
 	b3InitSubdiv(new_subdiv);
@@ -187,27 +192,39 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 
 #ifdef BLZ3_USE_OPENGL
-	GLushort *ptr;
+	GLushort *gPtr;
+	GLushort *pPtr;
 	b3_index  a;
 
 	if (CylinderIndices != null)
 	{
 		b3Free(CylinderIndices);
 	}
+	if (CylinderPolygons != null)
+	{
+		b3Free(CylinderPolygons);
+	}
 	if (ConeIndices != null)
 	{
 		b3Free(ConeIndices);
 	}
-
-	CylinderIndices = (GLushort *)b3Alloc
-			((subdiv + 1) * 3 * 2 * sizeof(GLushort));
-	if (CylinderIndices != null)
+	if (ConePolygons != null)
 	{
-		ptr = CylinderIndices;
+		b3Free(ConePolygons);
+	}
+
+	CylinderIndices  = (GLushort *)b3Alloc
+			((subdiv + 1) * 3 * 2 * sizeof(GLushort));
+	CylinderPolygons = (GLushort *)b3Alloc
+			((subdiv + 1) * 2 * 3 * sizeof(GLushort));
+	if ((CylinderIndices != null) && (CylinderPolygons != null))
+	{
+		gPtr = CylinderIndices;
+		pPtr = CylinderPolygons;
 		a = 0;
 		for (i = 0;i <= subdiv;i++)
 		{
-			// Conactinate vertices in this ascending order:
+			// Concatinate vertices in this ascending order:
 			//
 			//   (c)
 			// 1-----3
@@ -218,32 +235,48 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 			//   (b)
 
 			// (a)
-			*ptr++ = a;
-			*ptr++ = a + 1;
+			*gPtr++ = a;
+			*gPtr++ = a + 1;
 
 			// (b)
-			*ptr++ = a;
-			*ptr++ = a + 2;
+			*gPtr++ = a;
+			*gPtr++ = a + 2;
 
 			// (c)
-			*ptr++ = a + 1;
-			*ptr++ = a + 3;
+			*gPtr++ = a + 1;
+			*gPtr++ = a + 3;
+
+			*pPtr++ = a;
+			*pPtr++ = a + 2;
+			*pPtr++ = a + 1;
+
+			*pPtr++ = a + 3;
+			*pPtr++ = a + 1;
+			*pPtr++ = a + 2;
+
 			a += 2;
 		}
 	}
 
-	ConeIndices = (GLushort *)b3Alloc
+	ConeIndices  = (GLushort *)b3Alloc
 		((subdiv + 1) * 2 * 2 * sizeof(GLushort));
-	if (ConeIndices != null)
+	ConePolygons = (GLushort *)b3Alloc
+		((subdiv + 1) * 1 * 3 * sizeof(GLushort));
+	if ((ConeIndices != null) && (ConePolygons != null))
 	{
-		ptr = ConeIndices;
+		gPtr = ConeIndices;
+		pPtr = ConePolygons;
 		for (i = 0;i <= subdiv;i++)
 		{
-			*ptr++ = 0;
-			*ptr++ = i+1;
+			*gPtr++ = 0;
+			*gPtr++ = i+1;
 
-			*ptr++ = i+1;
-			*ptr++ = i+2;
+			*gPtr++ = i+1;
+			*gPtr++ = i+2;
+
+			*pPtr++ = i+1;
+			*pPtr++ = i+2;
+			*pPtr++ =   0;
 		}
 	}
 #endif
@@ -280,9 +313,19 @@ GLushort *b3RenderShapeContext::b3GetCylinderIndices()
 	return CylinderIndices;
 }
 
+GLushort *b3RenderShapeContext::b3GetCylinderPolygons()
+{
+	return CylinderPolygons;
+}
+
 GLushort *b3RenderShapeContext::b3GetConeIndices()
 {
 	return ConeIndices;
+}
+
+GLushort *b3RenderShapeContext::b3GetConePolygons()
+{
+	return ConePolygons;
 }
 #endif
 
@@ -495,6 +538,7 @@ void b3RenderShape::b3ComputeCylinderIndices()
 		GridCount = 0;
 	}
 	GridCount += Overhead * 3;
+	PolyCount  = Overhead * 2;
 #endif
 }
 
@@ -649,12 +693,16 @@ void b3RenderShape::b3ComputeConeIndices()
 	if (Limit.y2 < 1)
 	{
 		glGrids    = GridsCyl;
+		glPolygons = PolysCyl;
 		GridCount += Overhead * 3;
+		PolyCount  = Overhead * 2;
 	}
 	else
 	{
 		glGrids    = GridsCone;
+		glPolygons = PolysCone;
 		GridCount += Overhead * 2;
+		PolyCount  = Overhead;
 	}
 #endif
 }
@@ -774,7 +822,8 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 void b3RenderShape::b3ComputeEllipsoidIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort *Index;
+	GLushort *gPtr;
+	GLushort *pPtr;
 	b3_bool   EndLine = false;
 	b3_index  i,j,Number,s,ys,ye;
 	b3_count  Heights,Widths,Overhead;
@@ -801,11 +850,13 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 	if ((SinCosSteps * 0.5 - y2) > Epsilon) Widths++;
 	if (                     y1  > Epsilon) Widths++;
 
-	if (EndLine) Number = (Widths + Heights) * Overhead + Heights;
-	else         Number = (Widths + Heights) * Overhead;
-	glGrids = Index = (GLushort *)b3RenderObject::b3Alloc
+	if (EndLine) Number = (Widths + Heights + 1) * Overhead + Heights;
+	else         Number = (Widths + Heights + 1) * Overhead;
+	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 2 * sizeof(GLushort));
-	if (Index == null)
+	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
+		(Number * 3 * sizeof(GLushort));
+	if ((gPtr == null) || (pPtr == null))
 	{
 		return;
 	}
@@ -815,24 +866,35 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + 1;
 		}
 		GridCount += Heights;
 
 		if (y1 <= Epsilon) j = 1;
 		else               j = 0;
-		if ((SinCosSteps * 0.5 - y2) <= Epsilon) while (j < Heights)
+		while (j < Heights)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + Heights + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + Heights + 1;
+
 			GridCount++;
+
+			*pPtr++ = s + j;
+			*pPtr++ = s + j + 1;
+			*pPtr++ = s + j + Heights + 1;
+
+			*pPtr++ = s + j + Heights + 2;
+			*pPtr++ = s + j + Heights + 1;
+			*pPtr++ = s + j + 1;
+
+			PolyCount += 2;
 			j++;
 		}
-		else  while (j <= Heights)
+		if ((SinCosSteps * 0.5 - y2) > Epsilon)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + Heights + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + Heights + 1;
 			GridCount++;
 			j++;
 		}
@@ -843,8 +905,8 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + 1;
 		}
 		GridCount += Heights;
 	}
@@ -874,47 +936,40 @@ void b3RenderShape::b3ComputeBoxVertices(
 	Vector = (b3_vector *)glVertices;
 
 	*Vector = Aux = Base;
-	Vector++;
 
-	Vector->x = (Aux.x += Dir1.x);
-	Vector->y = (Aux.y += Dir1.y);
-	Vector->z = (Aux.z += Dir1.z);
-	Vector++;
+	Vector[1].x = (Aux.x += Dir1.x);
+	Vector[1].y = (Aux.y += Dir1.y);
+	Vector[1].z = (Aux.z += Dir1.z);
 
-	Vector->x = (Aux.x += Dir2.x);
-	Vector->y = (Aux.y += Dir2.y);
-	Vector->z = (Aux.z += Dir2.z);
-	Vector++;
+	Vector[2].x = (Aux.x += Dir2.x);
+	Vector[2].y = (Aux.y += Dir2.y);
+	Vector[2].z = (Aux.z += Dir2.z);
 
-	Vector->x = (Aux.x -= Dir1.x);
-	Vector->y = (Aux.y -= Dir1.y);
-	Vector->z = (Aux.z -= Dir1.z);
-	Vector++;
+	Vector[3].x = (Aux.x -= Dir1.x);
+	Vector[3].y = (Aux.y -= Dir1.y);
+	Vector[3].z = (Aux.z -= Dir1.z);
 
-	Vector->x = (Aux.x += Dir3.x);
-	Vector->y = (Aux.y += Dir3.y);
-	Vector->z = (Aux.z += Dir3.z);
-	Vector++;
+	Vector[4].x = (Aux.x += Dir3.x);
+	Vector[4].y = (Aux.y += Dir3.y);
+	Vector[4].z = (Aux.z += Dir3.z);
 
-	Vector->x = (Aux.x += Dir1.x);
-	Vector->y = (Aux.y += Dir1.y);
-	Vector->z = (Aux.z += Dir1.z);
-	Vector++;
+	Vector[5].x = (Aux.x += Dir1.x);
+	Vector[5].y = (Aux.y += Dir1.y);
+	Vector[5].z = (Aux.z += Dir1.z);
 
-	Vector->x = (Aux.x -= Dir2.x);
-	Vector->y = (Aux.y -= Dir2.y);
-	Vector->z = (Aux.z -= Dir2.z);
-	Vector++;
+	Vector[6].x = (Aux.x -= Dir2.x);
+	Vector[6].y = (Aux.y -= Dir2.y);
+	Vector[6].z = (Aux.z -= Dir2.z);
 
-	Vector->x = (Aux.x -= Dir1.x);
-	Vector->y = (Aux.y -= Dir1.y);
-	Vector->z = (Aux.z -= Dir1.z);
+	Vector[7].x = (Aux.x -= Dir1.x);
+	Vector[7].y = (Aux.y -= Dir1.y);
+	Vector[7].z = (Aux.z -= Dir1.z);
 
 	xSize = ySize = 1;
 
 	for (i = 0;i < 8;i++)
 	{
-		Vector[i +  8] = Vector[i + 16] = Vector[i];
+		Vector[i + 8] = Vector[i + 16] = Vector[i];
 	}
 #endif
 }
@@ -924,6 +979,7 @@ void b3RenderShape::b3ComputeBoxIndices()
 #ifdef BLZ3_USE_OPENGL
 	glGrids    = box_grids;
 	glPolygons = box_polygons;
+	glSolid    = true;
 #endif
 }
 
@@ -1053,7 +1109,8 @@ void b3RenderShape::b3ComputeTorusVertices(
 void b3RenderShape::b3ComputeTorusIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort *Index;
+	GLushort *gPtr;
+	GLushort *pPtr;
 	b3_bool   EndLine = false,EndCol = false;
 	b3_index  i,j,Number,s,ys,ye;
 	b3_count  Heights,Widths,Overhead;
@@ -1082,13 +1139,15 @@ void b3RenderShape::b3ComputeTorusIndices()
 	Widths = Heights;
 	if (EndCol) Widths++;
 
-	Number = (Widths + Heights) * Overhead;
+	Number = (Widths + Heights + 1) * Overhead;
 	if (EndLine) Number += Heights;
 
 	GridCount = 0;
-	glGrids = Index = (GLushort *)b3RenderObject::b3Alloc
+	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 2 * sizeof(GLushort));
-	if (Index == null)
+	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
+		(Number * 3 * sizeof(GLushort));
+	if ((gPtr == null) || (pPtr == null))
 	{
 		return;
 	}
@@ -1098,15 +1157,25 @@ void b3RenderShape::b3ComputeTorusIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + 1;
 		}
 		GridCount += Heights;
 
 		for (j = 0;j < Widths;j++)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + Heights + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + Heights + 1;
+
+			*pPtr++ = s + j;
+			*pPtr++ = s + j + 1;
+			*pPtr++ = s + j + Heights + 1;
+
+			*pPtr++ = s + j + Heights + 2;
+			*pPtr++ = s + j + Heights + 1;
+			*pPtr++ = s + j + 1;
+
+			PolyCount += 2;
 		}
 		GridCount += Widths;
 
@@ -1117,8 +1186,8 @@ void b3RenderShape::b3ComputeTorusIndices()
 	{
 		for (j = 0;j < Heights;j++)
 		{
-			*Index++ = s + j;
-			*Index++ = s + j + 1;
+			*gPtr++ = s + j;
+			*gPtr++ = s + j + 1;
 		}
 		GridCount += Heights;
 	}

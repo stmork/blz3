@@ -42,12 +42,15 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/08/16 14:41:24  sm
+**	- Some more shading shapes added (only BSPline shapes are missing)
+**
 **	Revision 1.2  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.1  2001/08/11 15:59:59  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -58,7 +61,7 @@
 
 /*************************************************************************
 **                                                                      **
-**                        MAUI: b3App                                 **
+**                        Blizzard III: b3App                           **
 **                                                                      **
 *************************************************************************/
 
@@ -119,7 +122,7 @@ void CB3App::b3GfxType(CWnd *wnd)
 	pSize  = dc->GetDeviceCaps(NUMCOLORS);
 	width  = (double)xSize / dc->GetDeviceCaps(LOGPIXELSX);
 	height = (double)ySize / dc->GetDeviceCaps(LOGPIXELSY);
-	b3PrintF (B3LOG_NORMAL,"### MAUI DUMPING SCREEN INFORMATION...\n");
+	b3PrintF (B3LOG_NORMAL,"### Blizzard III DUMPING SCREEN INFORMATION...\n");
 	b3PrintF (B3LOG_NORMAL,"### B3 Screen dimensions: %ldx%ld pixels\n",
 		xSize,ySize);
 	b3PrintF (B3LOG_NORMAL,"### B3 Monitor dimensions: %2.2fx%2.2f inches "
