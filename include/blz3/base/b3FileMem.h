@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3File.h $
+**	$Filename:	b3FileMem.h $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
@@ -15,8 +15,8 @@
 **
 */
 
-#ifndef B3_SYSTEM_FILE_H
-#define B3_SYSTEM_FILE_H
+#ifndef B3_BASE_FILEMEM_H
+#define B3_BASE_FILEMEM_H
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Mem.h"
@@ -24,20 +24,20 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3File itself                                 **
+**                        b3FileMem itself                              **
 **                                                                      **
 *************************************************************************/
 
-class b3File : public b3FileAbstract, public b3Mem
+class b3FileMem : public b3FileAbstract, public b3Mem
 {
 	b3_u08     *Cache;		// cache buffer
 	b3_offset   Index;		// index in cache
 	b3_size     Size;		// size of cache
 	int         File;		// fileno
 public:
-	      b3File  ();
-	      b3File  (const char *file_name,const b3_access_mode mode);
-	     ~b3File  ();
+	      b3FileMem  ();
+	      b3FileMem  (const char *file_name,const b3_access_mode mode);
+	     ~b3FileMem  ();
 
 	b3_bool  b3Open      (const char *file_name,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);

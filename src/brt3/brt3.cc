@@ -34,9 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.14  2001/12/08 21:37:38  sm
 **	- Added "No Gfx" support
-**
+**	
 **	Revision 1.13  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
@@ -130,68 +137,85 @@ int main(int argc,char *argv[])
 
 		for (i = 1;i < argc;i++)
 		{
-			world->b3Read(argv[i]);
-			for (item  = world->b3GetFirst();
-			     item != null;
-			     item  = scene->Succ)
+			try
 			{
-				scene = (b3Scene *)item;
+				world->b3Read(argv[i]);
+				for (item  = world->b3GetFirst();
+				     item != null;
+				     item  = scene->Succ)
+				{
+					scene = (b3Scene *)item;
 #ifdef BLZ3_USE_OPENGL
-				scene->b3Reorg();
+					scene->b3Reorg();
 #endif
-				scene->b3SetFilename(argv[i]);
-				if (scene->b3GetDisplaySize(xSize,ySize))
-				{
-					if (scene->m_Flags & TP_NO_GFX)
+					scene->b3SetFilename(argv[i]);
+					if (scene->b3GetDisplaySize(xSize,ySize))
 					{
-						display = new b3Display(xSize,ySize);
-					}
-					else
-					{
-						display = new b3DisplayView(xSize,ySize);
-					}
-				}
-				else
-				{
-					if (scene->m_Flags & TP_NO_GFX)
-					{
-						display = new b3Display();
-					}
-					else
-					{
-						display = new b3DisplayView();
-					}
-				}
-
-				if ((camera = scene->b3GetCamera(false)) != null)
-				{
-					do
-					{
-						scene->b3GetTitle(camera_name);
-						if (camera->m_Flags & CAMERA_ACTIVE)
+						if (scene->m_Flags & TP_NO_GFX)
 						{
-							b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
-								camera->m_CameraName);
-							scene->b3SetCamera(camera);
-
-							scene->b3Raytrace(display);
+							display = new b3Display(xSize,ySize);
 						}
 						else
 						{
-							b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
-								camera->m_CameraName);
+							display = new b3DisplayView(xSize,ySize);
 						}
-						camera = scene->b3GetNextCamera(camera);
 					}
-					while (camera != null);
-				}
-				else
-				{
-					scene->b3Raytrace(display);
-				}
+					else
+					{
+						if (scene->m_Flags & TP_NO_GFX)
+						{
+							display = new b3Display();
+						}
+						else
+						{
+							display = new b3DisplayView();
+						}
+					}
 
-				display->b3Wait();
-				delete display;
+					if ((camera = scene->b3GetCamera(false)) != null)
+					{
+						do
+						{
+							scene->b3GetTitle(camera_name);
+							if (camera->m_Flags & CAMERA_ACTIVE)
+							{
+								b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
+									camera->m_CameraName);
+								scene->b3SetCamera(camera);
+
+								scene->b3Raytrace(display);
+							}
+							else
+							{
+								b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
+									camera->m_CameraName);
+							}
+							camera = scene->b3GetNextCamera(camera);
+						}
+						while (camera != null);
+					}
+					else
+					{
+						scene->b3Raytrace(display);
+					}
+
+					display->b3Wait();
+					delete display;
+				}
+			}
+			catch(b3WorldException *w)
+			{
+				b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[i]);
+				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w->b3GetError());
+			}
+			catch(b3FileException *f)
+			{
+				b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
+				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f->b3GetError());
+			}
+			catch(...)
+			{
+				b3PrintF(B3LOG_NORMAL,"Unknown error occured loading %s\n",argv[i]);
 			}
 		}
 		delete world;

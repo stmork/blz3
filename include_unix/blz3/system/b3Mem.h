@@ -62,8 +62,9 @@ protected:
 public:
 	           b3Mem();
 	virtual   ~b3Mem();
-	void      *b3Alloc(const b3_size);
-	b3_bool    b3Free(const void *);
+	void      *b3Alloc(const b3_size new_size);
+	void      *b3Realloc(const void *old_ptr,const b3_size new_size);
+	b3_bool    b3Free(const void *ptr);
 	b3_bool    b3Free();
 	void       b3Dump();
 };

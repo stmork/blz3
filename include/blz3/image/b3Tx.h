@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3File.h"
+#include "blz3/base/b3FileAbstract.h"
 
 #include "tiff.h"
 #include "tiffio.h"
@@ -494,7 +494,7 @@ public:
 	void b3Init(char *);
 	long b3Size(long);
 	long b3Offset();
-	long b3WriteData (b3File *,long);
+	long b3WriteData (b3FileAbstract *file_handle,long);
 	long b3OrgTags   (long);
 	long b3OrgStrips (long);
 	void b3Traverse(
@@ -517,8 +517,8 @@ class b3TIFF_Entry : public b3Link<b3TIFF_Entry>, public b3Mem
 public:
 	             b3TIFF_Entry(b3TIFF_Dir *,struct TagTIFF *,char *);
 				~b3TIFF_Entry();
-	       long  b3WriteTag  (b3File *,b3Base<b3TIFF_Strip> *,long,long);
-	       long  b3WriteData (b3File *,long);
+	       long  b3WriteTag  (b3FileAbstract *file_handle,b3Base<b3TIFF_Strip> *,long,long);
+	       long  b3WriteData (b3FileAbstract *file_handle,long);
 		   void  b3Traverse  (
 			   b3Base<class T> *head,
 			   void             (*func)(b3Base<class T> *,b3Link<class T> *,void *),
@@ -560,7 +560,7 @@ public:
 	void            b3SetStrips(b3TIFF_Strip *);
 	long            b3OrgTags   (long);
 	void            b3OrgStrips ();
-	long            b3WriteTags(b3File *,long);
+	long            b3WriteTags(b3FileAbstract *file_handle,long);
 public:
 	class           b3Error {};
 };

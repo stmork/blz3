@@ -32,10 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.7  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
-**
+**	
 **	Revision 1.6  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -273,7 +280,7 @@ b3_bool b3ScenePhong::b3Shade(
 			break;
 		}
 
-		B3_FOR_BASE(&heads[1],item)
+		B3_FOR_BASE(b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);

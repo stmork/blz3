@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.14  2001/12/02 17:38:17  sm
 **      - Removing nasty CR/LF
 **      - Added b3ExtractExt()
@@ -126,9 +133,14 @@ b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
 	m_ItemSize   = 0;
 	m_ItemOffset = 0;
 	m_Buffer     = null;
-	head_count   = 0;
-	heads        = null;
+	m_HeadCount  = 0;
+	m_Heads      = null;
 	m_ParseIndex = 0;
+
+	m_StoreIndex  = 0;
+	m_StoreOffset = 0;
+	m_StoreBuffer = null;
+	m_StoreSize   = 0;
 }
 
 b3Item::b3Item(
@@ -139,9 +151,14 @@ b3Item::b3Item(
 	m_ItemSize   = 0;
 	m_ItemOffset = 0;
 	m_Buffer     = null;
-	head_count   = 0;
-	heads        = null;
+	m_HeadCount  = 0;
+	m_Heads      = null;
 	m_ParseIndex = 0;
+
+	m_StoreIndex  = 0;
+	m_StoreOffset = 0;
+	m_StoreBuffer = null;
+	m_StoreSize   = 0;
 }
 
 b3Item::b3Item(b3_u32 *src) :
@@ -154,7 +171,7 @@ b3Item::b3Item(b3_u32 *src) :
 	m_ItemSize   = src[B3_NODE_IDX_SIZE];
 	m_ItemOffset = src[B3_NODE_IDX_OFFSET];
 	m_Buffer     = (b3_u32 *)b3Alloc(m_ItemSize);
-	head_count   = 0;
+	m_HeadCount  = 0;
 	memcpy (m_Buffer,src,m_ItemSize);
 
 	// Count heads
@@ -162,28 +179,33 @@ b3Item::b3Item(b3_u32 *src) :
 	     m_Buffer[i + B3_HEAD_IDX_CLASS] != 0;
 		 i += B3_HEAD_SIZE)
 	{
-		head_count++;
+		m_HeadCount++;
 	}
 
 	// Init subclasses' heads
-	if (head_count > 0)
+	if (m_HeadCount > 0)
 	{
-		heads = (b3Base<b3Item> *)b3Alloc(head_count * sizeof(b3Base<b3Item>));
-		if (heads != null)
+		m_Heads = (b3Base<b3Item> *)b3Alloc(m_HeadCount * sizeof(b3Base<b3Item>));
+		if (m_Heads != null)
 		{
 			k = B3_NODE_IDX_FIRSTHEAD_CLASS + B3_HEAD_IDX_CLASS;
-			for (i = 0;i < head_count;i++)
+			for (i = 0;i < m_HeadCount;i++)
 			{
-				heads[i].b3InitBase(m_Buffer[k]);
+				m_Heads[i].b3InitBase(m_Buffer[k]);
 				k += B3_HEAD_SIZE;
 			}
 		}
 	}
 	else
 	{
-		heads = null;
+		m_Heads = null;
 	}
 	b3Init();
+
+	m_StoreIndex  = 0;
+	m_StoreOffset = 0;
+	m_StoreBuffer = null;
+	m_StoreSize   = 0;
 }
 
 b3Item::~b3Item()
@@ -191,9 +213,9 @@ b3Item::~b3Item()
 	b3_index  i;
 	b3Item   *item;
 
-	for (i = 0;i < head_count;i++)
+	for (i = 0;i < m_HeadCount;i++)
 	{
-		B3_DELETE_BASE(&heads[i],item);
+		B3_DELETE_BASE(&m_Heads[i],item);
 	}
 }
 
@@ -201,16 +223,16 @@ b3_bool b3Item::b3AllocHeads(b3_count new_head_count)
 {
 	b3_index  i;
 
-	heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
-	if (heads != null)
+	m_Heads = (b3Base<b3Item> *)b3Alloc(new_head_count * sizeof(b3Base<b3Item>));
+	if (m_Heads != null)
 	{
-		head_count = new_head_count;
-		for (i = 0;i < head_count;i++)
+		m_HeadCount = new_head_count;
+		for (i = 0;i < m_HeadCount;i++)
 		{
-			heads[i].b3InitBase();
+			m_Heads[i].b3InitBase();
 		}
 	}
-	return heads != null;
+	return m_Heads != null;
 }
 
 void b3Item::b3Read()
@@ -219,6 +241,12 @@ void b3Item::b3Read()
 
 void b3Item::b3Write()
 {
+	b3PrintF(B3LOG_NORMAL,"ERROR: b3Item::b3Write() not implememnted:\n");
+	b3PrintF(B3LOG_NORMAL,"       CLASS TYPE: %08x\n",b3GetClassType());
+	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",Size);
+	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",Offset);
+
+	throw new b3WorldException(B3_WORLD_STORAGE_NOT_IMPLEMENTED);
 }
 
 char *b3Item::b3GetName()
@@ -242,11 +270,11 @@ void b3Item::b3Dump(b3_count level)
 	b3DumpSpace(level);
 	b3PrintF (B3LOG_NORMAL,"%08lx %7d\n",ClassType,Size);
 
-	for (i = 0;i < head_count;i++)
+	for (i = 0;i < m_HeadCount;i++)
 	{
 		b3DumpSpace(level);
-		b3PrintF (B3LOG_NORMAL,"%08lx -------------\n",heads[i].b3GetClass());
-		B3_FOR_BASE(&heads[i],node)
+		b3PrintF (B3LOG_NORMAL,"%08lx -------------\n",m_Heads[i].b3GetClass());
+		B3_FOR_BASE(&m_Heads[i],node)
 		{
 			node->b3Dump(level + 1);
 		}
@@ -260,17 +288,23 @@ void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 	b3DumpSpace(level,log_level);
 	b3PrintF (log_level,"%08lx %7d #",ClassType,Size);
 
-	for (i = 0;i < head_count;i++)
+	for (i = 0;i < m_HeadCount;i++)
 	{
-		b3PrintF (log_level,"  %08lx",heads[i].b3GetClass());
+		b3PrintF (log_level,"  %08lx",m_Heads[i].b3GetClass());
 	}
 	b3PrintF (log_level,"\n");
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Read initialization routines                  **
+**                                                                      **
+*************************************************************************/
+
 void b3Item::b3Init()
 {
-	m_ParseIndex = B3_NODE_IDX_MIN + head_count * B3_HEAD_SIZE;
+	m_ParseIndex = B3_NODE_IDX_MIN + m_HeadCount * B3_HEAD_SIZE;
 }
 
 b3_s32 b3Item::b3InitInt()
@@ -436,3 +470,337 @@ void b3Item::b3InitNOP()
 }
 
 
+/*************************************************************************
+**                                                                      **
+**                        Storage routines                              **
+**                                                                      **
+*************************************************************************/
+
+b3_size b3Item::b3Store()
+{
+	b3Item   *item;
+	b3_size   size = 0;
+	b3_count  i;
+
+	// Write b3Link data later
+	m_StoreIndex  = B3_NODE_IDX_FIRSTHEAD_CLASS;
+	m_StoreOffset = 0;
+
+	// Allocate store buffer
+	if (m_StoreBuffer == null)
+	{
+		if ((Size >> 2) < (B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
+		{
+			m_StoreSize = 8192;
+		}
+		else
+		{
+			m_StoreSize = Size;
+		}
+		m_StoreBuffer = (b3_u32 *)b3Alloc(m_StoreSize);
+		if (m_StoreBuffer == null)
+		{
+		}
+	}
+
+	// Prepare heads
+	for (i = 0;i < m_HeadCount;i++)
+	{
+		b3StoreInt(m_Heads[i].b3GetClass());
+		b3StorePtr(m_Heads[i].First);
+		b3StorePtr(m_Heads[i].Last);
+		B3_FOR_BASE(&m_Heads[i],item)
+		{
+			size += item->b3Store();
+		}
+	}
+	b3StoreNull();
+
+	// Store Data
+	b3Write();
+
+	// Prepare b3Link
+	m_StoreBuffer[B3_NODE_IDX_SUCC]      = (b3_u32)Succ;
+	m_StoreBuffer[B3_NODE_IDX_PREV]      = (b3_u32)Prev;
+	m_StoreBuffer[B3_NODE_IDX_CLASSTYPE] = b3GetClassType();
+	m_StoreBuffer[B3_NODE_IDX_SIZE]      = Size   = m_StoreIndex  << 2;
+	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = Offset = m_StoreOffset << 2;
+
+	return size + Size;
+}
+
+b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
+{
+	b3Item         *item;
+	b3_world_error  error = B3_WORLD_WRITE;
+	b3_index        i;
+
+	if (m_StoreBuffer != null)
+	{
+		if (file->b3Write(m_StoreBuffer,Size) == Size)
+		{
+			for (i = 0;i < m_HeadCount;i++)
+			{
+				B3_FOR_BASE(&m_Heads[i],item)
+				{
+					error = item->b3StoreFile(file);
+					if (error != B3_WORLD_OK)
+					{
+						b3Free(m_StoreBuffer);
+						m_StoreBuffer = null;
+						m_StoreSize   = 0;
+						return error;
+					}
+				}
+			}
+			error = B3_WORLD_OK;
+		}
+	}
+	else
+	{
+		error = B3_WORLD_MEMORY;
+	}
+
+	b3Free(m_StoreBuffer);
+	m_StoreBuffer = null;
+	m_StoreSize   = 0;
+	return error;
+}
+
+void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
+{
+	b3_size new_size;
+
+	// Clearify some things...
+	if ((m_StoreOffset != 0) && (is_data))
+	{
+		throw new b3WorldException(B3_WORLD_OUT_OF_ORDER);
+	}
+
+	if ((m_StoreIndex + needed) > (m_StoreSize >> 2))
+	{
+		b3_size new_size = m_StoreSize += 16384;
+#if 1
+		b3_u32  *new_buffer;
+
+		new_buffer = (b3_u32 *)b3Alloc(new_size);
+		if (new_buffer != null)
+		{
+			memcpy (new_buffer,m_StoreBuffer,m_StoreIndex << 2);
+			b3Free(m_StoreBuffer);
+		}
+		m_StoreBuffer = new_buffer;
+#else
+		m_StoreBuffer = (b3_u32 *)b3Realloc(m_StoreBuffer,new_size);
+#endif
+		if (m_StoreBuffer == null)
+		{
+			m_StoreSize   = 0;
+			m_StoreIndex  = 0;
+			m_StoreOffset = 0;
+			throw new b3WorldException(B3_WORLD_MEMORY);
+		}
+		m_StoreSize = new_size;
+	}
+}
+
+void b3Item::b3StoreInt(const b3_u32 value)
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreBuffer[m_StoreIndex++] = value;
+}
+
+void b3Item::b3StoreInt(const b3_s32 value)
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreBuffer[m_StoreIndex++] = (b3_u32)value;
+}
+
+void b3Item::b3StoreRes(const b3_res value)
+{
+	b3_res *ptr = (b3_res *)&m_StoreBuffer[m_StoreIndex++];
+
+	b3EnsureStoreBuffer(1);
+	*ptr = value;
+}
+
+void b3Item::b3StoreCount(const b3_count value)
+{
+	b3_count *ptr = (b3_count *)&m_StoreBuffer[m_StoreIndex++];
+
+	b3EnsureStoreBuffer(1);
+	*ptr = value;
+}
+
+void b3Item::b3StoreIndex(const b3_index value)
+{
+	b3_index *ptr = (b3_index *)&m_StoreBuffer[m_StoreIndex++];
+
+	b3EnsureStoreBuffer(1);
+	*ptr = value;
+}
+
+void b3Item::b3StoreFloat(const b3_f32 value)
+{
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex++];
+
+	b3EnsureStoreBuffer(1);
+	*ptr = value;
+}
+
+void b3Item::b3StoreBool(const b3_bool value)
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreBuffer[m_StoreIndex++] = (b3_u32)value;
+}
+
+void b3Item::b3StorePtr(const void *ptr)
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreBuffer[m_StoreIndex++] = (b3_u32)ptr;
+}
+
+void b3Item::b3StoreVector(const b3_vector *vec)
+{
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+
+	b3EnsureStoreBuffer(3);
+
+	if (vec != null)
+	{
+		*ptr++ = vec->x;
+		*ptr++ = vec->y;
+		*ptr++ = vec->z;
+	}
+	else
+	{
+		*ptr++ = 0;
+		*ptr++ = 0;
+		*ptr++ = 0;
+	}
+	m_StoreIndex += 3;
+}
+
+void b3Item::b3StoreVector4D(const b3_vector4D *vec)
+{
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+
+	b3EnsureStoreBuffer(4);
+
+	if (vec != null)
+	{
+		*ptr++ = vec->x;
+		*ptr++ = vec->y;
+		*ptr++ = vec->z;
+		*ptr++ = vec->w;
+	}
+	else
+	{
+		*ptr++ = 0;
+		*ptr++ = 0;
+		*ptr++ = 0;
+		*ptr++ = 0;
+	}
+	m_StoreIndex += 4;
+}
+
+void b3Item::b3StoreMatrix(const b3_matrix *mat)
+{
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+
+	b3EnsureStoreBuffer(16);
+
+	*ptr++ = mat->m11;
+	*ptr++ = mat->m12;
+	*ptr++ = mat->m13;
+	*ptr++ = mat->m14;
+
+	*ptr++ = mat->m21;
+	*ptr++ = mat->m22;
+	*ptr++ = mat->m23;
+	*ptr++ = mat->m24;
+
+	*ptr++ = mat->m31;
+	*ptr++ = mat->m32;
+	*ptr++ = mat->m33;
+	*ptr++ = mat->m34;
+
+	*ptr++ = mat->m41;
+	*ptr++ = mat->m42;
+	*ptr++ = mat->m43;
+	*ptr++ = mat->m44;
+
+	m_StoreIndex += 16;
+}
+
+void b3Item::b3StoreSpline(const b3_spline *spline)
+{
+	b3StoreInt((b3_u32)spline->control_num);
+	b3StoreInt((b3_u32)spline->knot_num);
+	b3StoreInt((b3_u32)spline->degree);
+	b3StoreInt((b3_u32)spline->subdiv);
+	b3StoreInt((b3_u32)spline->control_max);
+	b3StoreInt((b3_u32)spline->knot_max);
+	b3StoreInt((b3_u32)spline->offset);
+	b3StoreBool(spline->closed);
+	b3StorePtr( spline->controls);
+	b3StorePtr( spline->knots);
+}
+
+void b3Item::b3StoreNurbs(const b3_nurbs *nurbs)
+{
+	b3StoreInt((b3_u32)nurbs->control_num);
+	b3StoreInt((b3_u32)nurbs->knot_num);
+	b3StoreInt((b3_u32)nurbs->degree);
+	b3StoreInt((b3_u32)nurbs->subdiv);
+	b3StoreInt((b3_u32)nurbs->control_max);
+	b3StoreInt((b3_u32)nurbs->knot_max);
+	b3StoreInt((b3_u32)nurbs->offset);
+	b3StoreBool(nurbs->closed);
+	b3StorePtr( nurbs->controls);
+	b3StorePtr( nurbs->knots);
+}
+
+void b3Item::b3StoreColor(const b3_color *col)
+{
+	b3_f32 *ptr = (b3_f32 *)&m_StoreBuffer[m_StoreIndex];
+
+	b3EnsureStoreBuffer(4);
+
+	*ptr++ = col->a;
+	*ptr++ = col->r;
+	*ptr++ = col->g;
+	*ptr++ = col->b;
+
+	m_StoreIndex += 4;
+}
+
+void b3Item::b3StoreString(const char *name,const b3_size len)
+{
+	b3EnsureStoreBuffer(len >> 2,false);
+
+	if(m_StoreOffset == 0)
+	{
+		m_StoreOffset = m_StoreIndex;
+	}
+	memcpy(&m_StoreBuffer[m_StoreIndex],name,len);
+	m_StoreIndex += (len >> 2);
+}
+
+void b3Item::b3StoreNull()
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreBuffer[m_StoreIndex++] = 0;
+}
+
+void b3Item::b3StoreNOP()
+{
+	b3EnsureStoreBuffer(1);
+
+	m_StoreIndex++;
+}

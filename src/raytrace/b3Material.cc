@@ -34,6 +34,13 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.18  2001/11/08 19:31:33  sm
 **      - Nasty CR/LF removal!
 **      - Added TGA/RGB8/PostScript image saving.
@@ -209,6 +216,18 @@ b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 	m_Flags      = b3InitInt();
 }
 
+void b3MatNormal::b3Write()
+{
+	b3StoreColor(&m_DiffColor);
+	b3StoreColor(&m_AmbColor);
+	b3StoreColor(&m_SpecColor);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+}
+
 b3_bool b3MatNormal::b3GetColors(
 	b3_polar *polar,
 	b3_color *diffuse,
@@ -288,6 +307,27 @@ b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 	m_yTimes        = b3InitInt();
 }
 
+void b3MatChess::b3Write()
+{
+	b3StoreColor(&m_DiffColor[0]);
+	b3StoreColor(&m_AmbColor[0]);
+	b3StoreColor(&m_SpecColor[0]);
+	b3StoreColor(&m_DiffColor[1]);
+	b3StoreColor(&m_AmbColor[1]);
+	b3StoreColor(&m_SpecColor[1]);
+	b3StoreFloat(m_Reflection[0]);
+	b3StoreFloat(m_Reflection[1]);
+	b3StoreFloat(m_Refraction[0]);
+	b3StoreFloat(m_Refraction[1]);
+	b3StoreFloat(m_RefrValue[0]);
+	b3StoreFloat(m_RefrValue[1]);
+	b3StoreFloat(m_HighLight[0]);
+	b3StoreFloat(m_HighLight[1]);
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+}
+
 #define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
 
 b3_bool b3MatChess::b3GetColors(
@@ -351,6 +391,23 @@ b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 	m_Texture    = (b3Tx *)b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+}
+
+void b3MatTexture::b3Write()
+{
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreNull();
+	b3StoreInt(m_Flags);
+	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
 b3_bool b3MatTexture::b3Prepare()
@@ -438,6 +495,21 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 	m_Texture    = (b3Tx *)b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+}
+
+void b3MatWrapTexture::b3Write()
+{
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xEnd);
+	b3StoreFloat(m_yEnd);
+	b3StoreNull();
+	b3StoreInt(m_Flags);
+	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
 b3_bool b3MatWrapTexture::b3Prepare()
@@ -557,6 +629,23 @@ b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 	m_ModeFlag   = b3InitInt();
 }
 
+void b3MatSlide::b3Write()
+{
+	b3StoreColor(&m_Diffuse[0]);
+	b3StoreColor(&m_Ambient[0]);
+	b3StoreColor(&m_Specular[0]);
+	b3StoreColor(&m_Diffuse[1]);
+	b3StoreColor(&m_Ambient[1]);
+	b3StoreColor(&m_Specular[1]);
+	b3StoreFloat(m_From);
+	b3StoreFloat(m_To);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt(m_ModeFlag);
+}
+
 b3_bool b3MatSlide::b3GetColors(
 	b3_polar *polar,
 	b3_color *diffuse,
@@ -655,6 +744,21 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 	m_yTimes     = b3InitInt();
 }
 
+void b3MatMarble::b3Write()
+{
+	b3StoreColor(&m_DiffColor);
+	b3StoreColor(&m_AmbColor);
+	b3StoreColor(&m_SpecColor);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+}
+
 b3_bool b3MatMarble::b3GetColors(
 	b3_polar *polar,
 	b3_color *diffuse,
@@ -731,6 +835,21 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 	m_Flags      = b3InitInt();
 	m_xTimes     = b3InitInt();
 	m_yTimes     = b3InitInt();
+}
+
+void b3MatWood::b3Write()
+{
+	b3StoreColor(&m_DiffColor);
+	b3StoreColor(&m_AmbColor);
+	b3StoreColor(&m_SpecColor);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
 }
 
 b3_bool b3MatWood::b3GetColors(

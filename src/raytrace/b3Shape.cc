@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.30  2001/11/08 19:31:33  sm
 **      - Nasty CR/LF removal!
 **      - Added TGA/RGB8/PostScript image saving.
@@ -220,17 +227,17 @@ void b3InitShape::b3Init()
 b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
 	b3AllocHeads(3);
-	heads[0].b3InitBase(CLASS_BUMP);
-	heads[1].b3InitBase(CLASS_CONDITION);
-	heads[2].b3InitBase(CLASS_MATERIAL);
+	m_Heads[0].b3InitBase(CLASS_BUMP);
+	m_Heads[1].b3InitBase(CLASS_CONDITION);
+	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
 b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
 {
 	b3AllocHeads(3);
-	heads[0].b3InitBase(CLASS_BUMP);
-	heads[1].b3InitBase(CLASS_CONDITION);
-	heads[2].b3InitBase(CLASS_MATERIAL);
+	m_Heads[0].b3InitBase(CLASS_BUMP);
+	m_Heads[1].b3InitBase(CLASS_CONDITION);
+	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
 b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
@@ -242,19 +249,28 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
+void b3Shape::b3Write()
+{
+	b3StoreVector(); // This is the normal
+	b3StoreVector(); // This is Polar.Polar
+	b3StoreVector(); // This is Polar.ObjectPolar
+	b3StoreVector(); // This is Polar.BoxPolar
+	b3StoreNull();   // This is Custom
+}
+
 b3Base<b3Item> *b3Shape::b3GetBumpHead()
 {
-	return &heads[0];
+	return &m_Heads[0];
 }
 
 b3Base<b3Item> *b3Shape::b3GetConditionHead()
 {
-	return &heads[1];
+	return &m_Heads[1];
 }
 
 b3Base<b3Item> *b3Shape::b3GetMaterialHead()
 {
-	return &heads[2];
+	return &m_Heads[2];
 }
 
 void b3Shape::b3ComputeBound(b3CondLimit *limit)
@@ -482,6 +498,15 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&m_Dir2);
 }
 
+void b3Shape2::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir1);
+	b3StoreVector(&m_Dir2);
+	b3StoreFloat(m_NormalLength);
+}
+
 b3_bool b3Shape2::b3Prepare()
 {
 	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
@@ -515,6 +540,23 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
 	b3InitVector(&m_Dir3);
+}
+
+void b3Shape3::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Normals[0]);
+	b3StoreVector(&m_Normals[1]);
+	b3StoreVector(&m_Normals[2]);
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir1);
+	b3StoreVector(&m_Dir2);
+	b3StoreVector(&m_Dir3);
+	b3StoreInt(0); // This is lSize
+	b3StoreFloat(m_Denom);
+	b3StoreFloat(m_DirLen[0]);
+	b3StoreFloat(m_DirLen[1]);
+	b3StoreFloat(m_DirLen[2]);
 }
 
 b3_bool b3Shape3::b3Prepare()
@@ -625,10 +667,10 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
 	b3InitVector();  // This is Normals[2]
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
-	b3InitVector(&Dir3);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir1);
+	b3InitVector(&m_Dir2);
+	b3InitVector(&m_Dir3);
 
 	b3InitFloat(); // This is lSize
 	b3InitFloat(); // This is Denom
@@ -638,14 +680,36 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3RenderShape(src)
 
 	b3InitInt();   // This Index
 
-	Operation = b3InitInt();
+	m_Operation = b3InitInt();
+}
+
+void b3CSGShape3::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Normals[0]);
+	b3StoreVector(&m_Normals[1]);
+	b3StoreVector(&m_Normals[2]);
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir1);
+	b3StoreVector(&m_Dir2);
+	b3StoreVector(&m_Dir3);
+
+	b3StoreInt(0); // This is lSize
+	b3StoreFloat(m_Denom);
+	b3StoreFloat(m_DirLen[0]);
+	b3StoreFloat(m_DirLen[1]);
+	b3StoreFloat(m_DirLen[2]);
+	b3StoreInt(m_Index);
+	b3StoreInt(m_Operation);
+	b3StoreVector(); // This is BTLine.pos
+	b3StoreVector(); // This is BTLine.dir
 }
 
 void b3CSGShape3::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
-	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
-	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3Recompute();
 }

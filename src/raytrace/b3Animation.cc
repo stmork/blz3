@@ -31,8 +31,15 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -76,4 +83,28 @@ b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 
 	b3InitString(name,  B3_ANIMSTRINGLEN);
 	b3InitString(object,B3_BOXSTRINGLEN);
+}
+
+void b3AnimElement::b3Write()
+{
+	b3StoreVector(&center);
+	b3StoreMatrix(&actual);
+	b3StoreMatrix(&neutralInverse);
+	b3StoreFloat(ratio);
+	b3StoreInt  (empty);
+	b3StoreFloat(start);
+	b3StoreFloat(end);
+	b3StoreInt(flags);
+	b3StoreInt(trackIndex);
+	b3StoreInt(curveUse);
+
+	// Init nurbs
+	b3StoreNurbs(&param);
+	for (b3_index i = 0;i < B3_MAX_KNOTS;i++)
+	{
+		b3StoreFloat(knots[i]);
+	}
+
+	b3StoreString(name,  B3_ANIMSTRINGLEN);
+	b3StoreString(object,B3_BOXSTRINGLEN);
 }

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.21  2001/12/23 09:43:26  sm
 **      - Inlining some methods.
 **
@@ -163,7 +170,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 			b3InitSpline(&m_Spline,m_Controls,m_Knots);
 			for (i = 0;i < B3_MAX_KNOTS;i++)    m_Knots[i] = b3InitFloat();
 			for (i = 0;i < B3_MAX_CONTROLS;i++) b3InitVector(&m_Controls[i]);
-			m_SpotActive = true;
+			m_SpotActive = (m_Flags & LIGHT_SPOT_OFF ? false : true);
 		}
 		else
 		{
@@ -195,6 +202,31 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 		}
 		b3PrintF(B3LOG_NORMAL,".\n");
 	}
+}
+
+void b3Light::b3Write()
+{
+	b3_index i;
+
+	m_Flags = 0;
+	ClassType = SPOT_LIGHT;
+	if (!m_LightActive) m_Flags |= LIGHT_OFF;
+	if  (m_SoftShadow)  m_Flags |= LIGHT_PENUMBRA;
+	if (!m_SpotActive)  m_Flags |= LIGHT_SPOT_OFF;
+
+	b3StoreVector(&m_Position);
+	b3StoreColor(&m_Color);
+	b3StoreFloat(m_Distance);
+	b3StoreInt(m_Flags);
+	b3StoreFloat(m_Size);
+	b3StoreInt(m_JitterEdge);
+	b3StoreVector(&m_Direction);
+
+	b3StoreSpline(&m_Spline);
+	for (i = 0;i < B3_MAX_KNOTS;i++)    b3StoreFloat(m_Knots[i]);
+	for (i = 0;i < B3_MAX_CONTROLS;i++) b3StoreVector(&m_Controls[i]);
+
+	b3StoreString(m_Name,B3_BOXSTRINGLEN);
 }
 
 #define INIT_DEGREE      3

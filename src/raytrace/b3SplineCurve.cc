@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.6  2001/10/11 16:06:33  sm
 **      - Cleaning up b3BSpline with including isolated methods.
 **      - Cleaning up endian conversion routines and collecting into
@@ -86,9 +93,9 @@ void b3SplineCurveShape::b3GetCount(
 void b3SplineCurveShape::b3ComputeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	Spline.b3DeBoor ((b3_vector *)glVertices,0L);
+	m_Spline.b3DeBoor ((b3_vector *)glVertices,0L);
 
-	xSize  = Spline.subdiv;
+	xSize  = m_Spline.subdiv;
 	ySize  = 0;
 #endif
 }
@@ -100,7 +107,7 @@ void b3SplineCurveShape::b3ComputeIndices()
 	b3_count   SubDiv;
 	b3_index   i;
 
-	SubDiv   = Spline.subdiv;
+	SubDiv   = m_Spline.subdiv;
 	Index    = (GLushort *)b3RenderObject::b3Alloc(SubDiv * 2 * sizeof(GLushort));
 	glGrids = Index;
 	if (Index)
@@ -112,7 +119,7 @@ void b3SplineCurveShape::b3ComputeIndices()
 		}
 
 		*Index++ = i - 1;
-		*Index++ = (Spline.closed ? 0 : i);
+		*Index++ = (m_Spline.closed ? 0 : i);
 		glGridCount  = SubDiv;
 	}
 	else

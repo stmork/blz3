@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.25  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
 **	- Added stricmp() for Un*x
 **	- Fixed some defines
-**
+**	
 **	Revision 1.24  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -170,8 +177,8 @@ void b3InitBBox::b3Init()
 b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 {
 	b3AllocHeads(2);
-	heads[0].b3InitBase(CLASS_SHAPE);
-	heads[1].b3InitBase(CLASS_BBOX);
+	m_Heads[0].b3InitBase(CLASS_SHAPE);
+	m_Heads[1].b3InitBase(CLASS_BBOX);
 
 	b3MatrixUnit(&m_Matrix);
 	m_Type       = 0;
@@ -206,17 +213,28 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 		b3InitString(m_BoxName,B3_BOXSTRINGLEN);
 		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
 	}
+}
 
+void b3BBox::b3Write()
+{
+	b3StoreInt(m_Type);
+	b3StoreVector(&m_DimBase);
+	b3StoreVector(&m_DimSize);
+	b3StoreNull(); // This is Custom
+	b3StoreMatrix(&m_Matrix);
+
+	b3StoreString(m_BoxName,B3_BOXSTRINGLEN);
+	b3StoreString(m_BoxURL, B3_BOXSTRINGLEN);
 }
 
 b3Base<b3Item> *b3BBox::b3GetShapeHead()
 {
-	return &heads[0];
+	return &m_Heads[0];
 }
 
 b3Base<b3Item> *b3BBox::b3GetBBoxHead()
 {
-	return &heads[1];
+	return &m_Heads[1];
 }
 
 b3_bool b3BBox::b3Prepare()
@@ -572,12 +590,12 @@ void b3Scene::b3Reorg()
 	b3Link<b3Item> *first;
 	b3_count        level;
 
-	depot = heads[0];
-	heads[0].b3InitBase(CLASS_BBOX);
+	depot = *b3GetBBoxHead();
+	b3GetBBoxHead()->b3InitBase(CLASS_BBOX);
 	if ((first = depot.First) != null)
 	{
 		level = first->b3GetClassType() & 0xffff;
-		b3BBox::b3Reorg(&depot,&heads[0],level,1);
+		b3BBox::b3Reorg(&depot,b3GetBBoxHead(),level,1);
 	}
 }
 
@@ -591,7 +609,7 @@ void b3Scene::b3Draw()
 	b3Item         *item;
 	b3BBox         *bbox;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
@@ -603,7 +621,7 @@ void b3Scene::b3Transform(b3_matrix *transformation)
 	b3Item         *item;
 	b3BBox         *bbox;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Transform(transformation);
@@ -623,7 +641,7 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	upper->y = -FLT_MAX;
 	upper->z = -FLT_MAX;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox    = (b3BBox *)item;
 		result |= bbox->b3ComputeBounds(lower,upper,m_BBoxOverSize);
@@ -639,7 +657,7 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	context->glVertexCount = 0;
 	context->glPolyCount   = 0;
 	context->glGridCount   = 0;
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3AllocVertices(context);
@@ -652,7 +670,7 @@ void b3Scene::b3Activate(b3_bool activate)
 	b3Item  *item;
 	b3BBox  *bbox;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Activate(activate);
@@ -665,7 +683,7 @@ b3_count b3Scene::b3GetBBoxCount()
 	b3BBox   *bbox;
 	b3_count  count = 0;
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		count += bbox->b3Count();

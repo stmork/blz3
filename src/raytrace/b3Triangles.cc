@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.3  2001/10/18 14:48:26  sm
 **      - Fixing refracting problem on some scenes with glasses.
 **      - Fixing overlighting problem when using Mork shading.
@@ -162,6 +169,46 @@ b3Triangles::b3Triangles(b3_u32 *src) : b3TriangleShape(src)
 		m_Triangles[i].Normal.x = b3InitFloat();
 		m_Triangles[i].Normal.y = b3InitFloat();
 		m_Triangles[i].Normal.z = b3InitFloat();
+	}
+}
+
+void b3Triangles::b3Write()
+{
+	b3_index i;
+
+	b3Shape::b3Write();
+
+	b3StoreNull(); // This is m_GridList
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Size);
+	b3StoreRes(m_GridSize);
+	b3StoreCount(m_TriaCount);
+	b3StoreCount(m_VertexCount);
+	b3StoreRes(m_xSize);
+	b3StoreRes(m_ySize);
+	b3StoreInt(m_Flags);
+	b3StoreNOP(); // This is IndexHit
+	b3StoreNOP(); // This is aValue
+	b3StoreNOP(); // This is bValue
+
+	for (i = 0;i < m_VertexCount;i++)
+	{
+		b3StoreFloat(m_Vertices[i].Point.x);
+		b3StoreFloat(m_Vertices[i].Point.y);
+		b3StoreFloat(m_Vertices[i].Point.z);
+		b3StoreFloat(m_Vertices[i].Normal.x);
+		b3StoreFloat(m_Vertices[i].Normal.y);
+		b3StoreFloat(m_Vertices[i].Normal.z);
+	}
+
+	for (i = 0;i < m_TriaCount;i++)
+	{
+		b3StoreIndex(m_Triangles[i].P1);
+		b3StoreIndex(m_Triangles[i].P2);
+		b3StoreIndex(m_Triangles[i].P3);
+		b3StoreFloat(m_Triangles[i].Normal.x);
+		b3StoreFloat(m_Triangles[i].Normal.y);
+		b3StoreFloat(m_Triangles[i].Normal.z);
 	}
 }
 

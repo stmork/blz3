@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.7  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -79,13 +86,23 @@ b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGSphere),
 
 b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3RenderShape(src)
 {
-	b3InitVector(&Base);
-	b3InitVector(&Dir);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir);
 
 	b3InitFloat(); // This is QuadRadius
 	b3InitInt();   // This is Index
 
-	Operation = b3InitInt();
+	m_Operation = b3InitInt();
+}
+
+void b3CSGSphere::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir);
+	b3StoreFloat(m_QuadRadius);
+	b3StoreInt(m_Index);
+	b3StoreInt(m_Operation);
 }
 
 void b3CSGSphere::b3GetCount(
@@ -104,7 +121,7 @@ void b3CSGSphere::b3GetCount(
 
 void b3CSGSphere::b3ComputeVertices()
 {
-	b3ComputeSphereVertices(Base,Dir);
+	b3ComputeSphereVertices(m_Base,m_Dir);
 }
 
 void b3CSGSphere::b3ComputeIndices()
@@ -114,7 +131,7 @@ void b3CSGSphere::b3ComputeIndices()
 
 void b3CSGSphere::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir, &Dir, false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir, &m_Dir, false);
 	b3Recompute();
 }

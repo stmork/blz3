@@ -173,6 +173,7 @@ public:
 	B3_ITEM_INIT(b3CondRectangle);
 	B3_ITEM_LOAD(b3CondRectangle);
 
+	void    b3Write();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -196,6 +197,7 @@ public:
 	B3_ITEM_INIT(b3Cond2);
 	B3_ITEM_LOAD(b3Cond2);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 };
@@ -229,6 +231,7 @@ public:
 	B3_ITEM_INIT(b3CondCircle);
 	B3_ITEM_LOAD(b3CondCircle);
 
+	void    b3Write();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -245,6 +248,7 @@ public:
 	B3_ITEM_INIT(b3CondSegment);
 	B3_ITEM_LOAD(b3CondSegment);
 
+	void    b3Write();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -262,6 +266,7 @@ public:
 	B3_ITEM_INIT(b3CondEllipse);
 	B3_ITEM_LOAD(b3CondEllipse);
 
+	void    b3Write();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
 };
@@ -281,6 +286,7 @@ public:
 	B3_ITEM_INIT(b3CondTexture);
 	B3_ITEM_LOAD(b3CondTexture);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
@@ -300,6 +306,7 @@ public:
 	B3_ITEM_INIT(b3CondWrapTexture);
 	B3_ITEM_LOAD(b3CondWrapTexture);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3ComputeBound(b3CondLimit *limit);
 	b3_bool b3CheckStencil(b3_polar *polar);
@@ -360,6 +367,7 @@ public:
 	B3_ITEM_INIT(b3BumpNoise);
 	B3_ITEM_LOAD(b3BumpNoise);
 
+	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
 
@@ -373,6 +381,7 @@ public:
 	B3_ITEM_INIT(b3BumpMarble);
 	B3_ITEM_LOAD(b3BumpMarble);
 
+	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
 
@@ -391,6 +400,7 @@ public:
 	B3_ITEM_INIT(b3BumpTexture);
 	B3_ITEM_LOAD(b3BumpTexture);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3BumpNormal(b3_ray *ray);
 	b3_bool b3NeedDeriv();
@@ -411,6 +421,7 @@ public:
 	B3_ITEM_INIT(b3BumpWater);
 	B3_ITEM_LOAD(b3BumpWater);
 
+	void    b3Write();
 	void    b3BumpNormal(b3_ray *ray);
 };
 
@@ -425,6 +436,7 @@ public:
 	B3_ITEM_INIT(b3BumpWave);
 	B3_ITEM_LOAD(b3BumpWave);
 
+	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
 
@@ -439,6 +451,7 @@ public:
 	B3_ITEM_INIT(b3BumpGroove);
 	B3_ITEM_LOAD(b3BumpGroove);
 
+	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
 
@@ -452,6 +465,7 @@ public:
 	B3_ITEM_INIT(b3BumpGlossy);
 	B3_ITEM_LOAD(b3BumpGlossy);
 
+	void b3Write();
 	void b3BumpNormal(b3_ray *ray);
 };
 
@@ -530,6 +544,7 @@ public:
 	B3_ITEM_INIT(b3MatNormal);
 	B3_ITEM_LOAD(b3MatNormal);
 
+	void    b3Write();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -560,6 +575,7 @@ public:
 	B3_ITEM_INIT(b3MatChess);
 	B3_ITEM_LOAD(b3MatChess);
 
+	void    b3Write();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -589,6 +605,7 @@ public:
 	B3_ITEM_INIT(b3MatMarble);
 	B3_ITEM_LOAD(b3MatMarble);
 
+	void    b3Write();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -618,6 +635,7 @@ public:
 	B3_ITEM_INIT(b3MatWood);
 	B3_ITEM_LOAD(b3MatWood);
 
+	void    b3Write();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -647,6 +665,7 @@ public:
 	B3_ITEM_INIT(b3MatTexture);
 	B3_ITEM_LOAD(b3MatTexture);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
@@ -676,6 +695,7 @@ public:
 	B3_ITEM_INIT(b3MatWrapTexture);
 	B3_ITEM_LOAD(b3MatWrapTexture);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
@@ -705,6 +725,7 @@ public:
 	B3_ITEM_INIT(b3MatSlide);
 	B3_ITEM_LOAD(b3MatSlide);
 
+	void    b3Write();
 	b3_f64  b3GetReflection(b3_polar *polar);
 	b3_f64  b3GetRefraction(b3_polar *polar);
 	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
@@ -842,6 +863,7 @@ public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
+	virtual void        b3Write();
 	        void        b3ComputeBound(b3CondLimit *limit);
 	        void        b3GetDiffuseColor(b3_color *color);
 	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
@@ -964,6 +986,7 @@ public:
 	B3_ITEM_INIT(b3Sphere);
 	B3_ITEM_LOAD(b3Sphere);
 
+	void    b3Write();
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
@@ -992,6 +1015,7 @@ public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 	void    b3Normal(b3_ray *ray);
@@ -1032,15 +1056,13 @@ public:
 class b3Shape3 : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
-	b3_s32            m_lSize;
-
-protected:
 	     b3Shape3(b3_size class_size,b3_u32 class_type);
 
 public:
 	B3_ITEM_INIT(b3Shape3);
 	B3_ITEM_LOAD(b3Shape3);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 };
@@ -1119,6 +1141,7 @@ public:
 	B3_ITEM_INIT(b3Torus);
 	B3_ITEM_LOAD(b3Torus);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
@@ -1217,6 +1240,7 @@ public:
 	B3_ITEM_INIT(b3Triangles);
 	B3_ITEM_LOAD(b3Triangles);
 
+	        void   b3Write();
 	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize=true);
@@ -1234,12 +1258,12 @@ public:
 // SPLINE, SPLINE_ROT
 class b3SplineCurve : public b3TriangleShape
 {
-protected:
-	b3_line          Axis;                // for rotation shapes
-	b3Spline         Spline;              // spline curve
-	b3_s32           rSubDiv;             // sub division for rotation
-	b3_f32           Knots[B3_MAX_KNOTS]; // one knot vector
-	b3_vector       *Controls;
+public:
+	b3_line          m_Axis;                // for rotation shapes
+	b3Spline         m_Spline;              // spline curve
+	b3_s32           m_rSubDiv;             // sub division for rotation
+	b3_f32           m_Knots[B3_MAX_KNOTS]; // one knot vector
+	b3_vector       *m_Controls;
 
 protected:
 	b3SplineCurve(b3_size class_size,b3_u32 class_type);
@@ -1248,6 +1272,7 @@ public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
 
+	void    b3Write();
 	void    b3Transform(b3_matrix *transformation);
 	b3_bool b3Prepare();
 };
@@ -1265,7 +1290,7 @@ public:
 
 class b3SplineRotShape : b3SplineCurve
 {
-	b3_count xSubDiv,ySubDiv;
+	b3_count m_xSubDiv,m_ySubDiv;
 public:
 	B3_ITEM_INIT(b3SplineRotShape);
 	B3_ITEM_LOAD(b3SplineRotShape);
@@ -1281,18 +1306,19 @@ class b3SplineShape : public b3TriangleShape
 {
 protected:
 #ifdef BLZ3_USE_OPENGL
-	b3_count         GridVertexCount;
-	b3_count         SolidVertexCount;
-	b3_count         xSubDiv,ySubDiv;
+	b3_count         m_GridVertexCount;
+	b3_count         m_SolidVertexCount;
+	b3_count         m_xSubDiv,m_ySubDiv;
 #endif
-	b3_line          Axis;             // for rotation shapes, unused
-	b3Spline         Spline[2];        // horizontal spline definition, these control points are valid!
-	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
-	b3_vector       *Controls;
+	b3_line          m_Axis;             // for rotation shapes, unused
+	b3Spline         m_Spline[2];        // horizontal spline definition, these control points are valid!
+	b3_f32           m_Knots[2][B3_MAX_KNOTS];  // two knot vectors
+	b3_vector       *m_Controls;
 
 protected:
 	     b3SplineShape(b3_size class_size,b3_u32 class_type);
 
+	void b3Write();
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3GetVertexRange(b3_index &start,b3_index &end);
 	void b3ComputeVertices();
@@ -1378,17 +1404,21 @@ struct b3_csg_intervals
 class b3CSGSphere : public b3RenderShape
 {
 protected:
-	b3_vector         Base;             // mid of sphere
-	b3_vector         Dir;              // direction
-	b3_f32            QuadRadius;       // squared radius
+	b3_f32            m_QuadRadius;       // squared radius
 
-	b3_s32            Index;
-	b3_s32            Operation;
+	b3_s32            m_Index;
+public:
+	b3_s32            m_Operation;
+
+public:
+	b3_vector         m_Base;             // mid of sphere
+	b3_vector         m_Dir;              // direction
 
 public:
 	B3_ITEM_INIT(b3CSGSphere);
 	B3_ITEM_LOAD(b3CSGSphere);
 
+	void   b3Write();
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
@@ -1397,19 +1427,13 @@ public:
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
-class b3CSGShape3 : public b3RenderShape
+class b3CSGShape3 : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
-	b3_vector          Normals[3];       // cross products
-	b3_vector          Base;             // size
-	b3_vector          Dir1,Dir2,Dir3;
-	b3_s32             lSize;
-	b3_f32             Denom;            // denominator of lin. system
-	b3_f32             DirLen[3];        // length of direction vectors
+	b3_s32             m_Index;
 
-	b3_s32             Index;
-	b3_s32             Operation;
-	b3_line64          BTLine;
+public:
+	b3_s32             m_Operation;
 
 protected:
 	b3CSGShape3(b3_size class_size,b3_u32 class_type);
@@ -1418,6 +1442,7 @@ public:
 	B3_ITEM_INIT(b3CSGShape3);
 	B3_ITEM_LOAD(b3CSGShape3);
 
+	void b3Write();
 	void b3Transform(b3_matrix *transformation);
 };
 
@@ -1481,26 +1506,22 @@ public:
 };
 
 // CSG_TORUS
-class b3CSGTorus : public b3RenderShape
+class b3CSGTorus : public b3RenderShape, public b3ShapeBaseTrans
 {
 protected:
-	b3_vector          Normals[3];       // cross products, unused
-	b3_vector          Base;             // size
-	b3_vector          Dir1,Dir2,Dir3;
-	b3_s32             lSize;
-	b3_f32             Denom;            // denominator of lin. system
-	b3_f32             DirLen[3];        // squared lengths of direction vectors
-	b3_f32             aRad,bRad;        // radiuses of torus
-	b3_f32             aQuad,bQuad;      // squared lengths of aRad, bRad
+	b3_f32             m_aRad, m_bRad;       // radiuses of torus
+	b3_f32             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
 
-	b3_s32             Index;
-	b3_s32             Operation;
-	b3_line64          BTLine;
+	b3_s32             m_Index;
+
+public:
+	b3_s32             m_Operation;
 
 public:
 	B3_ITEM_INIT(b3CSGTorus);
 	B3_ITEM_LOAD(b3CSGTorus);
 
+	void   b3Write();
 	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void   b3ComputeVertices();
 	void   b3ComputeIndices();
@@ -1543,6 +1564,7 @@ public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
+	       void            b3Write();
 	       void            b3Dump(b3_count level);
 	       void            b3AllocVertices(b3RenderContext *context);
 	       void            b3FreeVertices();
@@ -1599,6 +1621,7 @@ protected:
 
 #define LIGHT_OFF               1L
 #define LIGHT_PENUMBRA          2L
+#define LIGHT_SPOT_OFF          4L
 
 #define LIGHT_NAMEOFF(Node) ((char *)(Node)+BINDEX_OFFSET(Node))
 #define LIGHT_NAMELEN(Node) (BINDEX_OFFSET(Node) > 0 ? \
@@ -1664,6 +1687,7 @@ public:
 	B3_ITEM_INIT(b3Light);
 	B3_ITEM_LOAD(b3Light);
 
+	void     b3Write();
 	b3_bool  b3Illuminate(b3Scene *scene,b3_illumination *surface);
 	b3_bool  b3Prepare();
 	char    *b3GetName();
@@ -1746,6 +1770,8 @@ class b3AnimElement : b3Item
 public:
 	B3_ITEM_INIT(b3AnimElement);
 	B3_ITEM_LOAD(b3AnimElement);
+
+	void b3Write();
 };
 
 /*************************************************************************
@@ -1762,6 +1788,7 @@ public:
 #define TYPE_ANIMATION          0x00000005
 #define TYPE_DISTRIBUTE         0x00000006
 #define TYPE_LENSFLARE          0x00000007
+#define TYPE_CAUSTIC            0x00000008
 #define SUPERSAMPLE4            (CLASS_SPECIAL|TYPE_SUPERSAMPLE4)
 #define NEBULAR                 (CLASS_SPECIAL|TYPE_NEBULAR)
 #define CAMERA                  (CLASS_SPECIAL|TYPE_CAMERA)
@@ -1769,6 +1796,7 @@ public:
 #define ANIMATION               (CLASS_SPECIAL|TYPE_ANIMATION)
 #define DISTRIBUTE              (CLASS_SPECIAL|TYPE_DISTRIBUTE)
 #define LENSFLARE               (CLASS_SPECIAL|TYPE_LENSFLARE)
+#define CAUSTIC                 (CLASS_SPECIAL|TYPE_CAUSTIC)
 
 class b3InitSpecial
 {
@@ -1796,6 +1824,7 @@ public:
 	B3_ITEM_INIT(b3SuperSample);
 	B3_ITEM_LOAD(b3SuperSample);
 
+	void    b3Write();
 	b3_bool b3IsActive();
 	void    b3Activate(b3_bool activate=true);
 };
@@ -1815,6 +1844,7 @@ public:
 	B3_ITEM_INIT(b3CameraPart);
 	B3_ITEM_LOAD(b3CameraPart);
 
+	void     b3Write();
 	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
 	void     b3ComputeFocalLength(b3_f64 length);
 	void     b3Transform(b3_matrix *transformation);
@@ -1838,6 +1868,7 @@ public:
 	B3_ITEM_INIT(b3Nebular);
 	B3_ITEM_LOAD(b3Nebular);
 
+	void    b3Write();
 	b3_bool b3Prepare();
 	b3_bool b3IsActive();
 	void    b3Activate(b3_bool activate=true);
@@ -1866,6 +1897,7 @@ public:
 	B3_ITEM_INIT(b3ModellerInfo);
 	B3_ITEM_LOAD(b3ModellerInfo);
 
+	void       b3Write();
 	b3_vector *b3GetFulcrum();
 	void       b3SnapToGrid(b3_vector *translation);
 	void       b3SnapToAngle(b3_f64 &angle);
@@ -1881,13 +1913,6 @@ public:
 // ANIMATION
 class b3Animation : public b3Special
 {
-	b3_f32   start;           // start time (one unit per frame)
-	b3_f32   end;             // end time (one unit per frame)
-	b3_f32   time;            // time point
-	b3_f32   neutral;         // neutral point
-	b3_s32   framesPerSecond;
-	b3_s32   flags;
-
 	// OK, the following values are only for "Lines"
 	b3_s32          frames;          // computed number of frames
 	b3_s32          tracks;          // number of visible tracks
@@ -1898,8 +1923,18 @@ class b3Animation : public b3Special
 	b3AnimElement  *Element;         // actual animation element
 
 public:
+	b3_f32   start;           // start time (one unit per frame)
+	b3_f32   end;             // end time (one unit per frame)
+	b3_f32   time;            // time point
+	b3_f32   neutral;         // neutral point
+	b3_s32   framesPerSecond;
+	b3_s32   flags;
+
+public:
 	B3_ITEM_INIT(b3Animation);
 	B3_ITEM_LOAD(b3Animation);
+
+	void b3Write();
 };
 
 #define ANIMB_ON     1
@@ -1927,6 +1962,8 @@ public:
 public:
 	B3_ITEM_INIT(b3Distribute);
 	B3_ITEM_LOAD(b3Distribute);
+
+	void b3Write();
 };
 
 #define SAMPLE_MOTION_BLUR_B     0
@@ -1960,11 +1997,30 @@ public:
 	B3_ITEM_INIT(b3LensFlare);
 	B3_ITEM_LOAD(b3LensFlare);
 
+	void    b3Write();
 	b3_bool b3IsActive();
 	void    b3Activate(b3_bool activate=true);
 };
 
 #define LENSFLARE_ACTIVE 1
+
+// CAUSTIC
+class b3Caustic : public b3Special
+{
+public:
+	b3_u32   m_Flags;
+	b3_count m_NumPhotons;
+	b3_count m_TraceDepth;
+
+public:
+	B3_ITEM_INIT(b3Caustic);
+	B3_ITEM_LOAD(b3Caustic);
+
+	void b3Write();
+};
+
+#define CAUSTIC_ENABLE_B 0
+#define CAUSTIC_ENABLE   (1 << CAUSTIC_ENABLE_B)
 
 /*************************************************************************
 **                                                                      **
@@ -2056,6 +2112,7 @@ public:
 	B3_ITEM_INIT(b3Scene);
 	B3_ITEM_LOAD(b3Scene);
 
+	        void            b3Write();
 	        void            b3Reorg();
 	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
 		    void            b3AllocVertices(b3RenderContext *context);

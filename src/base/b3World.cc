@@ -39,6 +39,13 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.16  2001/11/12 16:50:29  sm
 **      - Scene properties dialog coding
 **
@@ -124,17 +131,21 @@ b3FirstItem::b3FirstItem(b3_u32 *src) : b3Item(src)
 
 void b3FirstItem::b3InitBase(b3_u32 class_value)
 {
-	heads[0].b3InitBase(class_value);
+	m_Heads[0].b3InitBase(class_value);
+}
+
+void b3FirstItem::b3Write()
+{
 }
 
 void b3FirstItem::b3Append(b3Item *item)
 {
-	heads[0].b3Append(item);
+	m_Heads[0].b3Append(item);
 }
 
 b3Item *b3FirstItem::b3GetFirst()
 {
-	return heads[0].First;
+	return m_Heads[0].First;
 }
 
 /*************************************************************************
@@ -248,9 +259,9 @@ b3_world_error b3Item::b3ParseLinkuage(
 	b3Space(level);
 	b3PrintF (B3LOG_FULL,"---- %08lx %08lx Start\n",b3GetClass(),my_class_limit);
 #endif
-	for (i = 0;i < head_count;i++)
+	for (i = 0;i < m_HeadCount;i++)
 	{
-		cmp_class = heads[i].b3GetClass();
+		cmp_class = m_Heads[i].b3GetClass();
 #ifdef _DEBUG_VERBOSE
 		b3Space(level);
 		b3PrintF (B3LOG_FULL,"       %08lx\n",cmp_class);
@@ -267,7 +278,7 @@ b3_world_error b3Item::b3ParseLinkuage(
 #endif
 			if (act_class == cmp_class)
 			{
-				heads[i].b3Append(array[pos]);
+				m_Heads[i].b3Append(array[pos]);
 #ifdef _DEBUG_VERBOSE
 				b3PrintF (B3LOG_FULL," appended.\n");
 #endif
@@ -387,10 +398,20 @@ b3_bool b3World::b3Read(const char *name)
 	}
 	else
 	{
-		error = b3ReadInternal(world_name);
-		if (error == B3_WORLD_OK)
+		b3File file;
+
+		if (file.b3Open(world_name,B_READ))
 		{
-			error = b3Parse();
+			error = b3Read(&file);
+			if (error == B3_WORLD_OK)
+			{
+				error = b3Parse();
+			}
+			file.b3Close();
+		}
+		else
+		{
+			error = B3_WORLD_OPEN;
 		}
 	}
 
@@ -409,61 +430,70 @@ b3_bool b3World::b3Read(const char *name)
 
 b3_bool b3World::b3ReadDump(const char *world_name)
 {
+	b3File         file;
 	b3_world_error error;
 	b3_index       i,max_file;
 	b3_index       k,max_node,max_offset;
 
-	error = b3ReadInternal(world_name);
-	if (error == B3_WORLD_OK)
+	if (file.b3Open(world_name,B_READ))
 	{
-		error = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
+		error = b3Read(&file);
+		if (error == B3_WORLD_OK)
+		{
+			error = (m_NeedEndianChange ? b3World::b3EndianSwapWorld() : B3_WORLD_OK);
+		}
+		file.b3Close();
+
+		// Cleanup any occured error
+		if (error == B3_WORLD_OK)
+		{
+			i        = 0;
+			max_file = m_BufferSize >> 2;
+			while (i < max_file)
+			{
+				// Extract size information
+				max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
+				max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
+				if (max_offset == 0) max_offset = max_node;
+
+				// Print node class/type
+				b3PrintF(B3LOG_NORMAL,"%04lx:%04lx s:%6lu o:%6lu # ",
+					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
+					m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
+					m_Buffer[i + B3_NODE_IDX_SIZE],
+					m_Buffer[i + B3_NODE_IDX_OFFSET]);
+
+				// Print heads
+				for (k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
+				{
+					b3PrintF(B3LOG_NORMAL,"%08lx ",m_Buffer[i+k]);
+				}
+				k++;
+				b3PrintF(B3LOG_NORMAL,"\n");
+
+				// Print custom area (longs)
+				// Print strings at node end
+				i += max_node;
+			}
+		}
+	}
+	else
+	{
+		error = B3_WORLD_OPEN;
 	}
 
-	// Cleanup any occured error
+	b3Free(m_Buffer);
+	m_Buffer     = null;
+	m_BufferSize = 0;
 	if (error != B3_WORLD_OK)
 	{
-		m_BufferSize = 0;
 		throw new b3WorldException(error);
 	}
-
-	i        = 0;
-	max_file = m_BufferSize >> 2;
-	while (i < max_file)
-	{
-		// Extract size information
-		max_node   = m_Buffer[i + B3_NODE_IDX_SIZE] >> 2;
-		max_offset = m_Buffer[i + B3_NODE_IDX_OFFSET] >> 2;
-		if (max_offset == 0) max_offset = max_node;
-
-		// Print node class/type
-		b3PrintF(B3LOG_NORMAL,"%04lx:%04lx s:%6lu o:%6lu # ",
-			m_Buffer[i + B3_NODE_IDX_CLASSTYPE] >> 16,
-			m_Buffer[i + B3_NODE_IDX_CLASSTYPE] & 0xffff,
-			m_Buffer[i + B3_NODE_IDX_SIZE],
-			m_Buffer[i + B3_NODE_IDX_OFFSET]);
-
-		// Print heads
-		for (k = B3_NODE_IDX_MIN;m_Buffer[i+k] != null;k += 3)
-		{
-			b3PrintF(B3LOG_NORMAL,"%08lx ",m_Buffer[i+k]);
-		}
-		k++;
-		b3PrintF(B3LOG_NORMAL,"\n");
-
-		// Print custom area (longs)
-		// Print strings at node end
-		i += max_node;
-	}
-	
-	b3Free(m_Buffer);
-	m_Buffer = null;
-
-	return true;
+	return error == B3_WORLD_OK;
 }
 
-b3_world_error b3World::b3ReadInternal(const char *world_name)
+b3_world_error b3World::b3Read(b3FileAbstract *file)
 {
-	b3File         file;
 	b3_u32         header[2];
 	b3_world_error error = B3_WORLD_ERROR;
 
@@ -473,61 +503,117 @@ b3_world_error b3World::b3ReadInternal(const char *world_name)
 	m_Start      = null;
 
 	// Read specified file into buffer
-	if (file.b3Open(world_name,B_READ))
+	if (file->b3Read(header,sizeof(header)) == sizeof(header))
 	{
-		if (file.b3Read(header,sizeof(header)) == sizeof(header))
+		switch(header[0])
 		{
-			switch(header[0])
+		case B3_BLiZ:
+			m_NeedEndianChange = false;
+			break;
+
+		case B3_ZiLB:
+			m_NeedEndianChange = true;
+			b3Endian::b3ChangeEndian32(&header[0]);
+			b3Endian::b3ChangeEndian32(&header[1]);
+			break;
+
+		default:
+			error = B3_WORLD_PARSE;
+			break;
+		}
+
+		if (error != B3_WORLD_PARSE)
+		{
+			m_BufferSize = header[1];
+			m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
+			if (m_Buffer != null)
 			{
-			case B3_BLiZ:
-				m_NeedEndianChange = false;
-				break;
-
-			case B3_ZiLB:
-				m_NeedEndianChange = true;
-				b3Endian::b3ChangeEndian32(&header[0]);
-				b3Endian::b3ChangeEndian32(&header[1]);
-				break;
-
-			default:
-				error = B3_WORLD_PARSE;
-				break;
-			}
-
-			if (error != B3_WORLD_PARSE)
-			{
-				m_BufferSize = header[1];
-				m_Buffer     = (b3_u32 *)b3Alloc(m_BufferSize);
-				if (m_Buffer != null)
+				if (file->b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
 				{
-					if (file.b3Read(m_Buffer,m_BufferSize) == m_BufferSize)
-					{
-						error = B3_WORLD_OK;
-					}
-					else
-					{
-						error = B3_WORLD_READ;
-						b3Free(m_Buffer);
-						m_Buffer = null;
-					}
+					error = B3_WORLD_OK;
 				}
 				else
 				{
-					error = B3_WORLD_MEMORY;
+					error = B3_WORLD_READ;
+					b3Free(m_Buffer);
+					m_Buffer = null;
 				}
 			}
+			else
+			{
+				error = B3_WORLD_MEMORY;
+			}
 		}
-		else
-		{
-			error = B3_WORLD_READ;
-		}
+	}
+	else
+	{
+		error = B3_WORLD_READ;
+	}
+
+	return error;
+}
+
+b3_bool b3World::b3Write(const char *filename)
+{
+	b3File          file;
+	b3_world_error  error;
+
+	if(file.b3Open(filename,B_WRITE))
+	{
+		error = b3Write(&file);
 		file.b3Close();
 	}
 	else
 	{
-		error = B3_WORLD_OPEN;
+		error = B3_WORLD_WRITE;
 	}
 
+	if (error != B3_WORLD_OK)
+	{
+		throw new b3WorldException(error);
+	}
+	return true;
+}
+
+b3_world_error b3World::b3Write(b3FileAbstract *file)
+{
+	b3Item         *item;
+	b3_size         size;
+	b3_u32          header[2];
+	b3_world_error  error = B3_WORLD_OK;
+
+	header[0] = B3_BLiZ;
+	header[1] = 0;
+
+	// Prepare each item's buffer
+	for (item = m_Start;item != null;item = item->Succ)
+	{
+		size = item->b3Store();
+		if (size == 0)
+		{
+			error = B3_WORLD_MEMORY;
+			break;
+		}
+		header[1] += size;
+	}
+
+	// Write buffers to file
+	if ((error == B3_WORLD_OK) &&
+	    (file->b3Write(header,sizeof(header)) == sizeof(header)))
+	{
+		for (item = m_Start;item != null;item = item->Succ)
+		{
+			error = item->b3StoreFile(file);
+			if (error != B3_WORLD_OK)
+			{
+				break;
+			}
+		}
+	}
+	else
+	{
+		error = B3_WORLD_WRITE;
+	}
 	return error;
 }
 

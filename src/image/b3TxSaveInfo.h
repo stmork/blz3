@@ -20,6 +20,7 @@
 #define B3_IMAGE_TXSAVEINFO_H
 
 #include "blz3/image/b3Tx.h"
+#include "blz3/system/b3File.h"
 
 class b3TxSaveInfo : protected b3Mem
 {

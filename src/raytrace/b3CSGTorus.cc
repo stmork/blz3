@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.7  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -82,10 +89,10 @@ b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
 	b3InitVector();  // This is Normals[2]
-	b3InitVector(&Base);
-	b3InitVector(&Dir1);
-	b3InitVector(&Dir2);
-	b3InitVector(&Dir3);
+	b3InitVector(&m_Base);
+	b3InitVector(&m_Dir1);
+	b3InitVector(&m_Dir2);
+	b3InitVector(&m_Dir3);
 
 	b3InitFloat(); // This is lSize
 	b3InitFloat(); // This is Denom
@@ -93,14 +100,43 @@ b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[1]
 	b3InitFloat(); // This is DirLen[2]
 
-	aRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir1 and Dir2
-	bRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir3
+	m_aRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir1 and Dir2
+	m_bRad = b3InitFloat(); // Is this a real saved value? it could be computed from Dir3
 
 	b3InitFloat(); // This is aQuad
 	b3InitFloat(); // This is bQuad
 	b3InitInt();   // This Index
 
-	Operation = b3InitInt();
+	m_Operation = b3InitInt();
+}
+
+void b3CSGTorus::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Normals[0]);
+	b3StoreVector(&m_Normals[1]);
+	b3StoreVector(&m_Normals[2]);
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir1);
+	b3StoreVector(&m_Dir2);
+	b3StoreVector(&m_Dir3);
+
+	b3StoreInt  (0);
+	b3StoreFloat(m_Denom);
+	b3StoreFloat(m_DirLen[0]);
+	b3StoreFloat(m_DirLen[1]);
+	b3StoreFloat(m_DirLen[2]);
+
+	b3StoreFloat(m_aRad);
+	b3StoreFloat(m_bRad);
+
+	b3StoreFloat(m_aQuad);
+	b3StoreFloat(m_bQuad);
+	b3StoreInt(m_Index);
+
+	b3StoreInt(m_Operation);
+	b3StoreVector();
+	b3StoreVector();
 }
 
 void b3CSGTorus::b3GetCount(
@@ -119,7 +155,7 @@ void b3CSGTorus::b3GetCount(
 
 void b3CSGTorus::b3ComputeVertices()
 {
-	b3ComputeTorusVertices(Base,Dir1,Dir2,Dir3,aRad,bRad);
+	b3ComputeTorusVertices(m_Base,m_Dir1,m_Dir2,m_Dir3,m_aRad,m_bRad);
 }
 
 void b3CSGTorus::b3ComputeIndices()
@@ -129,9 +165,9 @@ void b3CSGTorus::b3ComputeIndices()
 
 void b3CSGTorus::b3Transform(b3_matrix *transformation)
 {
-	b3MatrixVMul (transformation,&Base,&Base,true);
-	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
-	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
-	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
+	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
+	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
+	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3Recompute();
 }

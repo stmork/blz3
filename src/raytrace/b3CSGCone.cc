@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/12/30 14:16:57  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.9  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -114,7 +121,7 @@ void b3CSGCone::b3AllocVertices(b3RenderContext *ctx)
 
 void b3CSGCone::b3ComputeVertices()
 {
-	b3ComputeConeVertices(Base,Dir1,Dir2,Dir3);
+	b3ComputeConeVertices(m_Base,m_Dir1,m_Dir2,m_Dir3);
 }
 
 void b3CSGCone::b3ComputeIndices()

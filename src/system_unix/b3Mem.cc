@@ -35,13 +35,20 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.5  2001/08/08 20:12:59  sm
 **	- Fixing some makefiles
 **	- introducing check/BlzDump (BlzDump moved from tools)
 **	- Some further line drawing added
 **	- b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
 **	  b3RenderObject.
-**
+**	
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -177,6 +184,57 @@ b3_bool b3Mem::b3Free(const void *ptr)
 	}
 #endif
 	return false;
+}
+
+void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
+{
+	struct b3MemNode *act,*next,*new_act;
+
+	if (old_ptr == null)
+	{
+		return b3Alloc(new_size);
+	}
+
+	mutex.b3Lock();
+	for (act  = ChunkNext;
+	     act != null;
+	     act  = next)
+	{
+		next = act->ChunkNext;
+		if ((act->Chunk == old_ptr) && (act->ChunkSize < new_size))
+		{
+			new_act = (struct b3MemNode *)realloc(act,new_size);
+			if (new_act == null)
+			{
+				mutex.b3Unlock();
+#ifdef no_DEBUG
+				throw new b3MemException(B3_MEM_MEMORY);
+#endif
+			}
+			else
+			{
+				// Set values
+				new_act->ChunkSize = new_size;
+				new_act->Chunk     = (void *)&new_act[1];
+				if (next != null)
+				{
+					next->ChunkLast = new_act;
+				}
+				new_act->ChunkLast->ChunkNext  = new_act;
+			}
+
+			mutex.b3Unlock();
+			return new_act;
+		}
+	}
+	mutex.b3Unlock();
+#ifdef _DEBUG
+	if (ptr != null)
+	{
+		throw new b3MemException(B3_MEM_UNKNOWN_PTR);
+	}
+#endif
+	return null;
 }
 
 // If we need debugging output...

@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.27  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
 **	- Added stricmp() for Un*x
 **	- Fixed some defines
-**
+**	
 **	Revision 1.26  2001/12/02 15:43:49  sm
 **	- Creation/Deletion/Editing of lights
 **	- Creation/Deletion of cameras
@@ -178,9 +185,9 @@ b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
 
 	b3AllocHeads(3);
-	heads[0].b3InitBase(CLASS_BBOX);
-	heads[1].b3InitBase(CLASS_LIGHT);
-	heads[2].b3InitBase(CLASS_SPECIAL);
+	m_Heads[0].b3InitBase(CLASS_BBOX);
+	m_Heads[1].b3InitBase(CLASS_LIGHT);
+	m_Heads[2].b3InitBase(CLASS_SPECIAL);
 
 	m_TopColor.a = 0;
 	m_TopColor.r = 0.5;
@@ -209,9 +216,9 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
 
 	b3AllocHeads(3);
-	heads[0].b3InitBase(CLASS_BBOX);
-	heads[1].b3InitBase(CLASS_LIGHT);
-	heads[2].b3InitBase(CLASS_SPECIAL);
+	m_Heads[0].b3InitBase(CLASS_BBOX);
+	m_Heads[1].b3InitBase(CLASS_LIGHT);
+	m_Heads[2].b3InitBase(CLASS_SPECIAL);
 
 	m_TopColor.a = 0;
 	m_TopColor.r = 0.5;
@@ -269,6 +276,35 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_SuperSample      = null;
 }
 
+void b3Scene::b3Write()
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III scene storage.\n");
+
+	// Background color
+	b3StoreColor(&m_TopColor);
+	b3StoreColor(&m_BottomColor);
+
+	// Camera
+	b3StoreVector(&m_EyePoint);
+	b3StoreVector(&m_ViewPoint);
+	b3StoreVector(&m_Width);
+	b3StoreVector(&m_Height);
+
+	// Some other values
+	b3StoreNull  ();
+	b3StoreFloat (m_xAngle);
+	b3StoreFloat (m_yAngle);
+	b3StoreFloat (m_BBoxOverSize);
+	b3StoreInt   (m_BackgroundType);
+	b3StoreCount (m_TraceDepth);
+	b3StoreInt   (m_Flags);
+	b3StoreFloat (m_ShadowBrightness);
+	b3StoreFloat (m_Epsilon);
+	b3StoreRes   (m_xSize);
+	b3StoreRes   (m_ySize);
+	b3StoreString(m_TextureName,B3_TEXSTRINGLEN);
+}
+
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
 	xSize = this->m_xSize;
@@ -278,17 +314,17 @@ b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 
 b3Base<b3Item> *b3Scene::b3GetBBoxHead()
 {
-	return &heads[0];
+	return &m_Heads[0];
 }
 
 b3Base<b3Item> *b3Scene::b3GetLightHead()
 {
-	return &heads[1];
+	return &m_Heads[1];
 }
 
 b3Base<b3Item> *b3Scene::b3GetSpecialHead()
 {
-	return &heads[2];
+	return &m_Heads[2];
 }
 
 b3ModellerInfo *b3Scene::b3GetModellerInfo()
@@ -511,7 +547,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	{
 		light = new b3Light(SPOT_LIGHT);
 		strcpy(light->m_Name,"Light");
-		heads[1].b3Append(light);
+		b3GetLightHead()->b3Append(light);
 	}
 
 	return light;

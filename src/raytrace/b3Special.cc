@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.30  2001/12/28 18:55:09  sm
 **      - Nasty un cr/lf
 **
@@ -186,6 +193,7 @@ void b3InitSpecial::b3Init()
 	b3Item::b3Register(&b3Animation::b3Init,    &b3Animation::b3Init,    ANIMATION );
 	b3Item::b3Register(&b3Distribute::b3Init,   &b3Distribute::b3Init,   DISTRIBUTE );
 	b3Item::b3Register(&b3LensFlare::b3Init,    &b3LensFlare::b3Init,    LENSFLARE );
+	b3Item::b3Register(&b3Caustic::b3Init,      &b3Caustic::b3Init,      CAUSTIC );
 }
 
 /*************************************************************************
@@ -228,6 +236,11 @@ b3SuperSample::b3SuperSample(b3_u32 *src) :
 	b3InitColor(&m_Limit);
 }
 
+void b3SuperSample::b3Write()
+{
+	b3StoreColor(&m_Limit);
+}
+
 b3_bool b3SuperSample::b3IsActive()
 {
 	return true;
@@ -263,6 +276,16 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 	b3InitVector(&m_ViewPoint);
 	m_Flags = b3InitInt();
 	b3InitString(m_CameraName,B3_CAMERANAMELEN);
+}
+
+void b3CameraPart::b3Write()
+{
+	b3StoreVector(&m_Width);
+	b3StoreVector(&m_Height);
+	b3StoreVector(&m_EyePoint);
+	b3StoreVector(&m_ViewPoint);
+	b3StoreInt(m_Flags);
+	b3StoreString(m_CameraName,B3_CAMERANAMELEN);
 }
 
 b3_bool b3CameraPart::b3IsActive()
@@ -372,8 +395,25 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 		{
 			b3InitVector(&m_StepMove);
 			b3InitVector(&m_StepRotate);
+			m_AngleActive  = b3InitBool();
 		}
 	}
+}
+
+void b3ModellerInfo::b3Write()
+{
+	b3StoreVector(&m_Center);
+	b3StoreFloat(m_GridMove  );
+	b3StoreFloat(m_GridRot   );
+	b3StoreBool (m_ResizeFlag);
+	b3StoreBool (m_BBoxTitles);
+	b3StoreBool (m_GridActive);
+	b3StoreBool (m_CameraActive);
+	b3StoreInt  (m_Flags);
+	b3StoreFloat(m_Unit);
+	b3StoreVector(&m_StepMove);
+	b3StoreVector(&m_StepRotate);
+	b3StoreBool(m_AngleActive);
 }
 
 b3_vector *b3ModellerInfo::b3GetFulcrum()
@@ -420,6 +460,12 @@ b3Nebular::b3Nebular(b3_u32 *src) :
 {
 	b3InitColor(&m_NebularColor);
 	m_NebularVal = b3InitFloat();
+}
+
+void b3Nebular::b3Write()
+{
+	b3StoreColor(&m_NebularColor);
+	b3StoreFloat(m_NebularVal);
 }
 
 b3_bool b3Nebular::b3Prepare()
@@ -481,6 +527,13 @@ b3LensFlare::b3LensFlare(b3_u32 *src) :
 	m_Expon = b3InitFloat();
 }
 
+void b3LensFlare::b3Write()
+{
+	b3StoreInt(m_Flags);
+	b3StoreColor(&m_Color);
+	b3StoreFloat(m_Expon);
+}
+
 b3_bool b3LensFlare::b3IsActive()
 {
 	return (m_Flags & LENSFLARE_ACTIVE) != 0;
@@ -530,6 +583,16 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 	}
 }
 
+void b3Distribute::b3Write()
+{
+	b3StoreInt(m_Type);
+	b3StoreCount(m_SamplesPerPixel);
+	b3StoreCount(m_SamplesPerFrame);
+	b3StoreFloat(m_DepthOfField);
+	b3StoreInt(m_PixelAperture);
+	b3StoreInt(m_FrameAperture);
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Animation root definition                     **
@@ -559,4 +622,49 @@ b3Animation::b3Animation(b3_u32 *src) :
 	WTracks    = b3InitInt();
 	WFrames    = b3InitInt();
 	Element    = (b3AnimElement *)b3InitNull();
+}
+
+void b3Animation::b3Write()
+{
+	b3StoreFloat(start);
+	b3StoreFloat(end);
+	b3StoreFloat(time);
+	b3StoreFloat(neutral);
+	b3StoreInt(framesPerSecond);
+	b3StoreInt(flags);
+
+	// OK, the following values are only for "Lines"
+	b3StoreInt(frames);
+	b3StoreInt(tracks);
+	b3StoreInt(trackIndex);
+	b3StoreInt(frameIndex);
+	b3StoreInt(WTracks);
+	b3StoreInt(WFrames);
+	b3StorePtr(Element);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        b3Caustic definition                          **
+**                                                                      **
+*************************************************************************/
+
+b3Caustic::b3Caustic(b3_u32 class_type) :
+	b3Special(sizeof(b3Caustic),class_type)
+{
+}
+
+b3Caustic::b3Caustic(b3_u32 *src) :
+	b3Special(src)
+{
+	m_Flags      = b3InitInt();
+	m_NumPhotons = b3InitInt();
+	m_TraceDepth = b3InitInt();
+}
+
+void b3Caustic::b3Write()
+{
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_NumPhotons);
+	b3StoreCount(m_TraceDepth);
 }

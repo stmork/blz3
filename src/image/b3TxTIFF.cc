@@ -25,6 +25,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/base/b3Endian.h"
+#include "blz3/system/b3File.h"
 #include "blz3/system/b3Log.h"
 
 /*************************************************************************
@@ -35,11 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.3  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
 **	
@@ -260,8 +268,8 @@ static long TAFcorrectOffset (long offset)
 }
 
 static long TAFwriteGap (
-	b3File *out,
-	long      offset)
+	b3FileAbstract *out,
+	long            offset)
 {
 #ifdef FILL_GAP
 	char gap[8];
@@ -479,14 +487,14 @@ void b3TIFF_Dir::b3OrgStrips()
 	}
 }
 
-long b3TIFF_Dir::b3WriteTags(b3File *out,long act_offset)
+long b3TIFF_Dir::b3WriteTags(b3FileAbstract *out,long act_offset)
 {
-	b3TIFF_Entry *tTIFF;
+	b3TIFF_Entry   *tTIFF;
 	volatile short  write_num;
 
 	// Write number of tags
 	write_num = (short)(num & 0xffff);
-	out->b3Write ((const void *)&write_num,sizeof(write_num));
+	out->b3Write((const void *)&write_num,sizeof(write_num));
 	b3LogTIFF ("  D:   %6ld - %6ld\n",offset,act_offset);
 	act_offset += sizeof(short);
 	
@@ -671,10 +679,10 @@ long b3TIFF_Entry::b3OrgStrips(long act_offset)
 }
 
 long b3TIFF_Entry::b3WriteTag(
-	b3File                 *out,
+	b3FileAbstract       *out,
 	b3Base<b3TIFF_Strip> *strips,
-	long                      act_offset,
-	long                      stripNum)
+	long                  act_offset,
+	long                  stripNum)
 {
 	b3TIFF_Strip *sTIFF;
 
@@ -699,14 +707,14 @@ long b3TIFF_Entry::b3WriteTag(
 	}
 
 	// Write and make debug output
-	out->b3Write (&tag,sizeof(tag));
+	out->b3Write(&tag,sizeof(tag));
 	b3LogTIFF ("    T: %6ld - %6ld : %6ld %4lx\n",
 		offset,act_offset,buffer ? act : 0,tag.Code);
 	act_offset += sizeof(struct TagTIFF);
 	return act_offset;
 }
 
-long b3TIFF_Entry::b3WriteData(b3File *out,long act_offset)
+long b3TIFF_Entry::b3WriteData(b3FileAbstract *out,long act_offset)
 {
 	if (buffer)
 	{
@@ -771,11 +779,11 @@ long b3TIFF_Strip::b3OrgStrips(long act_offset)
 	return act_offset;
 }
 
-long b3TIFF_Strip::b3WriteData(b3File *out,long act_offset)
+long b3TIFF_Strip::b3WriteData(b3FileAbstract *out,long act_offset)
 {
 	act_offset = TAFwriteGap (out,act_offset);
 
-	out->b3Write ((const void *)buffer,size);
+	out->b3Write(buffer,size);
 	b3LogTIFF ("  S:   %6ld - %6ld :             %6ld\n",
 		offset,act_offset,size);
 	act_offset += size;
@@ -1096,7 +1104,7 @@ static b3_bool GetIFW (
 
 #if 0
 static long WriteIFW (
-	b3File       *out,
+	b3FileAbstract *out,
 	void           *ptr,
 	struct TagTIFF *tag)
 {
@@ -1223,8 +1231,8 @@ void b3TIFF::b3Write (char *name)
 	b3TIFF_Entry     *tTIFF;
 	b3TIFF_Strip     *sTIFF;
 	b3File            out(name,B_WRITE);
-	b3Base<b3TIFF>  root;
-	long                act_offset = 0;
+	b3Base<b3TIFF>    root;
+	long              act_offset = 0;
 
 	// firt remove containing TAF tags
 	root.b3InitBase(CLASS_TIFF_HEAD);
@@ -1574,9 +1582,9 @@ static long UnCodeTIFF (
 }
 
 long ParseTIFF (
-	b3File          *out,
-	struct HeaderTIFF *TIFF,
-	unsigned long      Size)
+	const b3FileAbstract *out,
+	struct HeaderTIFF    *TIFF,
+	unsigned long         Size)
 {
 	register long            offset,i,Tags,Compression = 0;
 	register long            PixelSamples = 0xabadcafe;

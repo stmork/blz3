@@ -14,6 +14,7 @@ PRG_SOURCE =\
 	b3Display.cc\
 	b3Endian.cc\
 	b3FileList.cc\
+	b3FileMem.cc\
 	b3Item.cc\
 	b3ItemRegister.cc\
 	b3ItemRegisterEntry.cc\
@@ -33,6 +34,7 @@ PRG_OBJ	=\
 	b3Display.o\
 	b3Endian.o\
 	b3FileList.o\
+	b3FileMem.o\
 	b3Item.o\
 	b3ItemRegister.o\
 	b3ItemRegisterEntry.o\

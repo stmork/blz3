@@ -34,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.8  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.7  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -133,6 +140,12 @@ b3BumpNoise::b3BumpNoise(b3_u32 *src) : b3Bump(src)
 	m_Size = b3InitFloat();
 }
 
+void b3BumpNoise::b3Write()
+{
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Size);
+}
+
 void b3BumpNoise::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector n;
@@ -168,6 +181,12 @@ b3BumpMarble::b3BumpMarble(b3_u32 *src) : b3Bump(src)
 {
 	b3InitVector(&m_Scale);
 	m_Size = b3InitFloat();
+}
+
+void b3BumpMarble::b3Write()
+{
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Size);
 }
 
 void b3BumpMarble::b3BumpNormal(b3_ray *ray)
@@ -226,6 +245,20 @@ b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 	m_Texture   = (b3Tx *)b3InitNull();
 	m_Flags     = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+}
+
+void b3BumpTexture::b3Write()
+{
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreFloat(m_Intensity);
+	b3StoreNull();
+	b3StoreInt(m_Flags);
+	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
 b3_bool b3BumpTexture::b3Prepare()
@@ -315,6 +348,14 @@ b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
 	}
 }
 
+void b3BumpWater::b3Write()
+{
+	b3StoreInt(m_ScaleFlag);
+	b3StoreVector(&m_ScaleIPoint);
+	b3StoreFloat(m_ScaleRad);
+	b3StoreFloat(m_ScaleTime);
+}
+
 void b3BumpWater::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector point,ox,oy,n;
@@ -381,6 +422,13 @@ b3BumpWave::b3BumpWave(b3_u32 *src) : b3Bump(src)
 	m_Flags     = b3InitInt();
 	b3InitVector(&m_Scale);
 	m_Amplitude = b3InitFloat();
+}
+
+void b3BumpWave::b3Write()
+{
+	b3StoreInt(m_Flags);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Amplitude);
 }
 
 void b3BumpWave::b3BumpNormal(b3_ray *ray)
@@ -450,6 +498,13 @@ b3BumpGroove::b3BumpGroove(b3_u32 *src) : b3Bump(src)
 	m_Amplitude = b3InitFloat();
 }
 
+void b3BumpGroove::b3Write()
+{
+	b3StoreInt(m_Flags);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Amplitude);
+}
+
 void b3BumpGroove::b3BumpNormal(b3_ray *ray)
 {
 	b3_vector point,ox,oy,n;
@@ -508,6 +563,12 @@ b3BumpGlossy::b3BumpGlossy(b3_u32 *src) : b3Bump(src)
 {
 	m_Flags     = b3InitInt();
 	m_Intensity = b3InitFloat();
+}
+
+void b3BumpGlossy::b3Write()
+{
+	b3StoreInt(m_Flags);
+	b3StoreFloat(m_Intensity);
 }
 
 void b3BumpGlossy::b3BumpNormal(b3_ray *ray)

@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.15  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	Revision 1.14  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -130,6 +137,14 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);
+}
+
+void b3Sphere::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir);
+	b3StoreFloat(m_QuadRadius);
 }
 
 b3_bool b3Sphere::b3Prepare()

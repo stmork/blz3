@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.16  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.15  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -152,6 +159,27 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is DirLen[2]
 	m_aRad = b3InitFloat();
 	m_bRad = b3InitFloat();
+}
+
+void b3Torus::b3Write()
+{
+	b3Shape::b3Write();
+	b3StoreVector(&m_Normals[0]);
+	b3StoreVector(&m_Normals[1]);
+	b3StoreVector(&m_Normals[2]);
+	b3StoreVector(&m_Base);
+	b3StoreVector(&m_Dir1);
+	b3StoreVector(&m_Dir2);
+	b3StoreVector(&m_Dir3);
+	b3StoreInt  (0);
+	b3StoreFloat(m_Denom);
+	b3StoreFloat(m_DirLen[0]);
+	b3StoreFloat(m_DirLen[1]);
+	b3StoreFloat(m_DirLen[2]);
+	b3StoreFloat(m_aRad);
+	b3StoreFloat(m_bRad);
+	b3StoreFloat(m_aQuad);
+	b3StoreFloat(m_bQuad);
 }
 
 b3_bool b3Torus::b3Prepare()

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/12/30 14:16:58  sm
+**      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**      - b3Item writing implemented and updated all raytracing classes
+**        to work properly.
+**      - Cleaned up spline shapes and CSG shapes.
+**      - Added b3Caustic class for compatibility reasons.
+**
 **      Revision 1.8  2001/10/11 16:06:33  sm
 **      - Cleaning up b3BSpline with including isolated methods.
 **      - Cleaning up endian conversion routines and collecting into
@@ -95,13 +102,16 @@ void b3SplineRotShape::b3GetCount(
 
 	SinCosSteps = context->b3GetSubdiv();
 
-	ySubDiv   = Spline.subdiv;
-	xSubDiv   = SinCosSteps;
-	if (!Spline.closed) ySubDiv++;
+	m_ySubDiv   = m_Spline.subdiv;
+	m_xSubDiv   = SinCosSteps;
+	if (!m_Spline.closed)
+	{
+		m_ySubDiv++;
+	}
 
-	vertCount = (Spline.subdiv + 1) * SinCosSteps;
-	gridCount = SinCosSteps * (Spline.subdiv + ySubDiv);
-	polyCount = SinCosSteps *  Spline.subdiv * 2;
+	vertCount = (m_Spline.subdiv + 1) * SinCosSteps;
+	gridCount = SinCosSteps * (m_Spline.subdiv + m_ySubDiv);
+	polyCount = SinCosSteps *  m_Spline.subdiv * 2;
 }
 
 void b3SplineRotShape::b3ComputeVertices()
@@ -114,14 +124,14 @@ void b3SplineRotShape::b3ComputeVertices()
 	b3_index   i,a;
 
 	// Build rotation matrix
-	b3MatrixRotVec (null,&Matrix,&Axis,M_PI * 2 / SinCosSteps);
+	b3MatrixRotVec (null,&Matrix,&m_Axis,M_PI * 2 / SinCosSteps);
 
 	// Copy BSpline
-	AuxSpline          = Spline;
+	AuxSpline          = m_Spline;
 	AuxSpline.controls = AuxControls;
 	for (i = 0;i < AuxSpline.control_num;i++)
 	{
-		AuxControls[i] = Controls[i];
+		AuxControls[i] = m_Controls[i];
 	}
 
 	Vector = (b3_vector *)glVertices;
@@ -151,8 +161,8 @@ void b3SplineRotShape::b3ComputeIndices()
 	b3_count   yStep;
 	b3_f64     sStep;
 
-	yStep = Spline.subdiv + 1;
-	sStep = (b3_f64)Spline.subdiv / SinCosSteps;
+	yStep = m_Spline.subdiv + 1;
+	sStep = (b3_f64)m_Spline.subdiv / SinCosSteps;
 
 	gPtr  = glGrids;
 	pPtr  = glPolygons;
@@ -164,9 +174,9 @@ void b3SplineRotShape::b3ComputeIndices()
 		x2 = (a + 1) % SinCosSteps * yStep;
 
 		// curve itself
-		for (y1 = 0;y1 < Spline.subdiv;y1++)
+		for (y1 = 0;y1 < m_Spline.subdiv;y1++)
 		{
-			y2 = (y1 + 1) % ySubDiv;
+			y2 = (y1 + 1) % m_ySubDiv;
 
 			*gPtr++ = x1 + y1;
 			*gPtr++ = x1 + y2;
@@ -181,7 +191,7 @@ void b3SplineRotShape::b3ComputeIndices()
 		}
 
 		// lines between curves
-		for (y1 = 0;y1 < ySubDiv;y1++)
+		for (y1 = 0;y1 < m_ySubDiv;y1++)
 		{
 			*gPtr++ = x1 + y1;
 			*gPtr++ = x2 + y1;

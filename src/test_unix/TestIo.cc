@@ -15,16 +15,47 @@
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III includes                         **
+**                                                                      **
+*************************************************************************/
+
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Date.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3World.h"
+#include "blz3/base/b3FileMem.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
+/*************************************************************************
+**                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.7  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
+**
+*/
+
+/*************************************************************************
+**                                                                      **
+**                        implementation                                **
+**                                                                      **
+*************************************************************************/
+
 extern void b3TestMem();
-extern void b3TestFile();
+extern void b3TestFile(b3FileAbstract &file);
 extern void b3TestDir();
 extern void b3TestThread();
 
@@ -33,6 +64,7 @@ int main(int argc,char *argv[])
 	b3_index  i;
 	b3_u32    v1,v2;
 	b3Date    date;
+	b3File    file;
 	b3World   world;
 	b3Item   *item;
 	b3Scene  *scene;
@@ -82,7 +114,7 @@ int main(int argc,char *argv[])
 	date.b3Y2K_Selftest();
 
 	b3TestMem();
-	b3TestFile();
+	b3TestFile(file);
 	b3TestDir();
 
 	for (i = 1;i < argc;i++)
@@ -90,7 +122,7 @@ int main(int argc,char *argv[])
 		b3PrintF(B3LOG_NORMAL,"Checking >%s<\n",argv[i]);
 		try
 		{
-#ifdef WIN32
+#ifndef WIN32
 			world.b3Read(argv[i]);
 #else
 			world.b3Read("M:\\Blizzard\\Data\\AllShapes");
@@ -103,6 +135,7 @@ int main(int argc,char *argv[])
 				scene->b3Reorg();
 			}
 			world.b3Dump();
+			world.b3Write("/tmp/test.bwd");
 			b3PrintF(B3LOG_NORMAL,"  File OK!\n");
 		}
 		catch(b3WorldException *e)
@@ -116,12 +149,22 @@ int main(int argc,char *argv[])
 			case B3_WORLD_READ:
 				b3PrintF(B3LOG_NORMAL,"  Cannot read file.\n");
 				break;
+			case B3_WORLD_WRITE:
+				b3PrintF(B3LOG_NORMAL,"  Cannot write file.\n");
+				break;
 			case B3_WORLD_PARSE:
 				b3PrintF(B3LOG_NORMAL,"  Cannot parse file.\n");
 				break;
 			case B3_WORLD_MEMORY:
 				b3PrintF(B3LOG_NORMAL,"  Cannot allocate memory.\n");
 				break;
+			case B3_WORLD_STORAGE_NOT_IMPLEMENTED:
+				b3PrintF(B3LOG_NORMAL,"  Cannot call unimplemented b3Item::b3Write().\n");
+				break;
+			case B3_WORLD_OUT_OF_ORDER:
+				b3PrintF(B3LOG_NORMAL,"  Data and string written out of order.\n");
+				break;
+
 			default:
 				b3PrintF(B3LOG_NORMAL,"  unknown error (%d).\n",e->b3GetError());
 				break;

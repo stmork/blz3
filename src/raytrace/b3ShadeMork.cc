@@ -33,11 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.7  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.6  2001/10/19 19:43:15  sm
 **	- Searching for 5 percent performance lost...
 **	
@@ -199,7 +206,7 @@ void b3SceneMork::b3LightFlare (b3_ray_info *Ray)
 	b3_color   result;
 	b3_f64     angle,reverse;
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetLightHead(),item)
 	{
 		Light = (b3Light *)item;
 
@@ -316,7 +323,7 @@ b3_bool b3SceneMork::b3Shade(
 		}
 
 		// For each light source
-		B3_FOR_BASE(&heads[1],item)
+		B3_FOR_BASE(b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
@@ -374,7 +381,7 @@ b3_bool b3SceneMork::b3Shade(
 		}
 		else
 		{
-			B3_FOR_BASE(&heads[1],item)
+			B3_FOR_BASE(b3GetLightHead(),item)
 			{
 				b3IsPointLightBackground((b3Light *)item,ray);
 			}

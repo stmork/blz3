@@ -23,6 +23,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/system/b3File.h"
 
 #include <math.h>
 
@@ -44,11 +45,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.

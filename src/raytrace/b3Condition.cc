@@ -32,11 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/12/30 14:16:57  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.13  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.12  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -225,6 +232,15 @@ b3CondRectangle::b3CondRectangle(b3_u32 *src) : b3Condition(src)
 	}
 }
 
+void b3CondRectangle::b3Write()
+{
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xEnd);
+	b3StoreFloat(m_yEnd);
+	b3StoreInt(m_Flags);
+}
+
 void b3CondRectangle::b3ComputeBound(b3CondLimit *Limit)
 {
 	b3CondLimit Bound;
@@ -324,6 +340,13 @@ b3CondCircle::b3CondCircle(b3_u32 *src) :
 	m_Radius  = b3InitFloat();
 }
 
+void b3CondCircle::b3Write()
+{
+	b3StoreFloat(m_xCenter);
+	b3StoreFloat(m_yCenter);
+	b3StoreFloat(m_Radius);
+}
+
 void b3CondCircle::b3ComputeBound(b3CondLimit *Limit)
 {
 	b3CondLimit Bound;
@@ -375,6 +398,16 @@ b3CondSegment::b3CondSegment(b3_u32 *src) : b3Condition(src)
 	m_RadEnd     = b3InitFloat();
 	m_AngleStart = b3InitFloat();
 	m_AngleEnd   = b3InitFloat();
+}
+
+void b3CondSegment::b3Write()
+{
+	b3StoreFloat(m_xCenter);
+	b3StoreFloat(m_yCenter);
+	b3StoreFloat(m_RadStart);
+	b3StoreFloat(m_RadEnd);
+	b3StoreFloat(m_AngleStart);
+	b3StoreFloat(m_AngleEnd);
 }
 
 void b3CondSegment::b3ComputeBound(b3CondLimit *Limit)
@@ -459,6 +492,17 @@ b3Cond2::b3Cond2(b3_u32 *src) : b3Condition(src)
 	m_yDir1 = b3InitFloat();
 	m_xDir2 = b3InitFloat();
 	m_yDir2 = b3InitFloat();
+}
+
+void b3Cond2::b3Write()
+{
+	b3StoreFloat(m_xPos);
+	b3StoreFloat(m_yPos);
+	b3StoreFloat(m_xDir1);
+	b3StoreFloat(m_yDir1);
+	b3StoreFloat(m_xDir2);
+	b3StoreFloat(m_yDir2);
+	b3StoreFloat(m_Denom);
 }
 
 b3_bool b3Cond2::b3Prepare()
@@ -597,6 +641,19 @@ b3CondTexture::b3CondTexture(b3_u32 *src) : b3Condition(src)
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
 }
 
+void b3CondTexture::b3Write()
+{
+	b3StoreNull();
+	b3StoreInt(m_Flags);
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreString(m_Name,B3_TEXSTRINGLEN);
+}
+
 b3_bool b3CondTexture::b3Prepare()
 {
 	return b3CheckTexture(&m_Texture,m_Name);
@@ -670,6 +727,17 @@ b3CondWrapTexture::b3CondWrapTexture(b3_u32 *src) : b3Condition(src)
 	m_xEnd    = b3InitFloat();
 	m_yEnd    = b3InitFloat();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+}
+
+void b3CondWrapTexture::b3Write()
+{
+	b3StoreNull();
+	b3StoreInt(m_Flags);
+	b3StoreFloat(m_xStart);
+	b3StoreFloat(m_yStart);
+	b3StoreFloat(m_xEnd);
+	b3StoreFloat(m_yEnd);
+	b3StoreString(m_Name,B3_TEXSTRINGLEN);
 }
 
 b3_bool b3CondWrapTexture::b3Prepare()
@@ -783,6 +851,18 @@ b3CondEllipse::b3CondEllipse(b3_u32 *src) : b3Condition(src)
 	m_RadEnd     = b3InitFloat();
 	m_AngleStart = b3InitFloat();
 	m_AngleEnd   = b3InitFloat();
+}
+
+void b3CondEllipse::b3Write()
+{
+	b3StoreFloat(m_xCenter);
+	b3StoreFloat(m_yCenter);
+	b3StoreFloat(m_xRadius);
+	b3StoreFloat(m_yRadius);
+	b3StoreFloat(m_RadStart);
+	b3StoreFloat(m_RadEnd);
+	b3StoreFloat(m_AngleStart);
+	b3StoreFloat(m_AngleEnd);
 }
 
 void b3CondEllipse::b3ComputeBound(b3CondLimit *Limit)

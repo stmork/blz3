@@ -35,13 +35,20 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.15  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
 **	- Toolbars got adjusted and beautified
 **	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
 **	- Found and fixed some minor bugs
-**
+**	
 **	Revision 1.14  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
@@ -537,7 +544,7 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 			break;
 		}
 
-		B3_FOR_BASE(&heads[1],item)
+		B3_FOR_BASE(b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);

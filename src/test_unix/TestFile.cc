@@ -24,7 +24,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/system/b3File.h"
+#include "blz3/base/b3FileAbstract.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,11 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/12/30 14:16:58  sm
+**	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
+**	- b3Item writing implemented and updated all raytracing classes
+**	  to work properly.
+**	- Cleaned up spline shapes and CSG shapes.
+**	- Added b3Caustic class for compatibility reasons.
+**
 **	Revision 1.2  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **
 */
 
@@ -48,9 +55,8 @@
 **                                                                      **
 *************************************************************************/
 
-void b3TestFile()
+void b3TestFile(b3FileAbstract &file)
 {
-	b3File       file;
 	b3_path_type code;
 	char         array[1024];
 
