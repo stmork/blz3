@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/02 21:18:34  sm
+**	- Changed version output
+**
 **	Revision 1.13  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.12  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
 **	
@@ -668,7 +671,7 @@ void b3Path::b3RemoveDelimiter(char *name)
 {
 	b3_offset i, len;
 
-	len = strlen(name);
+	len = (b3_offset)strlen(name);
 	for (i = len - 1;i >= 0;i--)
 	{
 		if ((name[i] == '/') || (name[i] == '\\')) len--;

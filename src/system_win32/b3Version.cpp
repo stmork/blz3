@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/01/02 21:18:34  sm
+**	- Changed version output
+**
 **	Revision 1.3  2003/08/28 14:44:27  sm
 **	- Further buffer overflow prevention:
 **	  o added b3Path::b3Format
 **	  o added b3Path::b3Append
 **	- Further strcat/strcpy removal necessary
-**
+**	
 **	Revision 1.2  2002/08/10 16:07:46  sm
 **	- Added some OS version output
 **	- Corrected language specifiers for version output.
@@ -180,8 +183,8 @@ void CB3Version::b3DumpOS()
 	b3PrintF (B3LOG_NORMAL,"### Blizzard III started on %02ld.%02ld.%ld - %02ld:%02ld:%02ld\n",
 		today.day, today.month,today.year,
 		today.hour,today.min,  today.sec);
-	b3PrintF (B3LOG_NORMAL,"      Compiled with MS VC++: %d (= V%2.2f)\n",
-		_MSC_VER,(double)_MSC_VER / 200.0);
+	b3PrintF (B3LOG_NORMAL,"      Compiled with MS VC++: V%2.02f\n",
+		(double)_MSC_VER / 100.0);
 	b3PrintF (B3LOG_NORMAL,"      Optimized for an i%d processor.\n",_M_IX86 + 86);
 	b3PrintF (B3LOG_NORMAL,"      OS-Version: %ld.%ld Build: %ld %s%s%s\n",
 		version_info.dwMajorVersion,version_info.dwMinorVersion,
@@ -193,6 +196,8 @@ void CB3Version::b3DumpOS()
 				" [Windows 95]" :
 				" [Windows 98]") :
 			"");
+	b3PrintF (B3LOG_NORMAL,"      MFC version: %d.%02d\n",
+		_MFC_VER >> 8, _MFC_VER & 0xff);
 
 	switch (CPUs)
 	{
