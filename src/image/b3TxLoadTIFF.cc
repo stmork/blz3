@@ -45,13 +45,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/10/24 23:59:09  sm
+**	- Some TIFF version adjustments.
+**
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -420,12 +423,12 @@ long b3Tx::b3TIFFDecode(
 
 	if ((depth > 8) && (type != B3_TX_UNDEFINED))
 	{
-		unsigned long *fPtr,*bPtr;
+		unsigned int  *fPtr,*bPtr;
 		b3_pkd_color   fSwp, bSwp;
 		b3_count       max;
 
 		max  = xSize * ySize;
-		fPtr = (unsigned long *)data;
+		fPtr = (unsigned int *)data;
 		bPtr = fPtr + max;
 		max  = ySize >> 1;
 		if (TIFFReadRGBAImage (tiff,xSize,ySize,fPtr) == 0)
