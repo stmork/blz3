@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/05/25 19:17:23  sm
+**	- Some reflection spin controls didn't map input.
+**	- Divided Fresnel computation and reflection/refraction
+**	  mixing into two parts.
+**
 **	Revision 1.31  2004/05/25 12:14:48  sm
 **	- Compute Fresnel term in separate method.
-**
+**	
 **	Revision 1.30  2004/05/23 20:52:34  sm
 **	- Done some Fresnel formula experiments.
 **	
@@ -274,7 +279,21 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_ray   *ray = surface.incoming;
 	b3_f64    refl,refr,factor;
 
-	b3ComputeFresnel(&surface,surface.m_Reflection,surface.m_Refraction);
+	b3ComputeFresnel(&surface);
+	if (surface.transparent)
+	{
+		surface.m_Reflection *=        surface.m_Fresnel;
+		surface.m_Refraction *= (1.0 - surface.m_Fresnel);
+	}
+	else if (surface.m_Ior != 1.0)
+	{
+		surface.m_Reflection = b3Math::b3Mix(
+			surface.m_Fresnel,
+			surface.m_Reflection,
+			surface.m_Reflection);
+		surface.m_Refraction = 0;
+	}
+
 	if (surface.transparent)
 	{
 		if (surface.m_Ior == 1)

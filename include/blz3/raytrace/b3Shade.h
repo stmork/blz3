@@ -51,7 +51,7 @@ protected:
 
 protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
-	void                    b3ComputeFresnel(b3_surface *surface,b3_f64 &refl,b3_f64 refr);
+	b3_f64                  b3ComputeFresnel(b3_surface *surface);
 };
 
 ///////////////

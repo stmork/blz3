@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/25 19:17:23  sm
+**	- Some reflection spin controls didn't map input.
+**	- Divided Fresnel computation and reflection/refraction
+**	  mixing into two parts.
+**
 **	Revision 1.6  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
-**
+**	
 **	Revision 1.5  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
@@ -149,7 +154,7 @@ BEGIN_MESSAGE_MAP(CDlgMatTexture, CB3SimplePreviewDialog)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_START_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_SCALE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_Y_TIMES_SPIN, OnSpin)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnSpin)

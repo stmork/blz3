@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2004/05/25 19:17:23  sm
+**	- Some reflection spin controls didn't map input.
+**	- Divided Fresnel computation and reflection/refraction
+**	  mixing into two parts.
+**
 **	Revision 1.43  2004/05/25 12:14:48  sm
 **	- Compute Fresnel term in separate method.
-**
+**	
 **	Revision 1.42  2004/05/24 20:25:13  sm
 **	- Fresnel experiments
 **	
@@ -322,7 +327,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 
 }
 
-void b3Shader::b3ComputeFresnel(b3_surface *surface,b3_f64 &refl,b3_f64 refr)
+b3_f64 b3Shader::b3ComputeFresnel(b3_surface *surface)
 {
 	b3_f64 ica,ica_sqr,ica_pow5,R0;
 
@@ -331,29 +336,8 @@ void b3Shader::b3ComputeFresnel(b3_surface *surface,b3_f64 &refl,b3_f64 refr)
 	ica_pow5 = ica * ica_sqr * ica_sqr;
 	R0       = (surface->m_IorComputed - 1.0) / (surface->m_IorComputed + 1);
 	R0      *= R0;
-	surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
 
-	if (surface->transparent)
-	{
-		refl = surface->m_Reflection *        surface->m_Fresnel;
-		refr = surface->m_Refraction * (1.0 - surface->m_Fresnel);
-	}
-	else if (surface->m_Ior != 1.0)
-	{
-		refl = b3Math::b3Mix(
-			surface->m_Fresnel,
-			surface->m_Reflection,
-			surface->m_Reflection);
-		refr = b3Math::b3Mix(
-			1.0 - surface->m_Fresnel,
-			surface->m_Refraction,
-			surface->m_Reflection);
-	}
-	else
-	{
-		refl = surface->m_Reflection;
-		refr = surface->m_Refraction;
-	}
+	return surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
 }
 
 b3_bool b3Shader::b3Shade(

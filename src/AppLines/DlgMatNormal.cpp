@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/25 19:17:23  sm
+**	- Some reflection spin controls didn't map input.
+**	- Divided Fresnel computation and reflection/refraction
+**	  mixing into two parts.
+**
 **	Revision 1.9  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.8  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -129,7 +134,7 @@ BEGIN_MESSAGE_MAP(CDlgMatNormal, CB3SimplePreviewDialog)
 	ON_EN_KILLFOCUS(IDC_REFRACTANCE, OnEdit)
 	ON_EN_KILLFOCUS(IDC_INDEX_OF_REFRACTION, OnEdit)
 	ON_EN_KILLFOCUS(IDC_SPEC_EXPONENT, OnEdit)
-	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_REFLECTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_REFRACTANCE_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_INDEX_OF_REFRACTION_SPIN, OnSpin)
 	ON_NOTIFY(WM_LBUTTONUP,IDC_SPEC_EXPONENT_SPIN, OnSpin)
