@@ -33,13 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/11 13:48:54  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.4  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -252,7 +257,7 @@ void CDlgProfileBevelSpline::b3PostProcess()
 
 	// Init spline
 	m_Profile->b3ComputeProfile(&m_Spline,m_xEdge,m_yEdge,m_Oblique);
-	m_Profile->b3ComputeShape(&m_Spline,m_Shape,m_xEdge,m_yEdge,m_Height,m_Oblique,m_yDegree,m_yControls);
+	m_Profile->b3ComputeShape(&m_Spline,m_Shape,m_Height,m_yDegree,m_yControls);
 
 	CB3ProfileShapeDialog::b3PostProcess();
 }

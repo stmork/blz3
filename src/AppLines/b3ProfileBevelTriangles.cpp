@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	b3ProfileBevelSpline.cpp $
+**	$Filename:	b3ProfileBevelTriangles.cpp $
 **	$Release:	Dortmund 2002 $
 **	$Revision$
 **	$Date$
@@ -22,8 +22,8 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "b3ProfileBevelSpline.h"
-#include "DlgProfileBevelSpline.h"
+#include "b3ProfileBevelTriangles.h"
+#include "DlgProfileBevelTriangles.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,25 +33,11 @@
 
 /*
 **	$Log$
-**	Revision 1.3  2002/03/11 13:48:54  sm
+**	Revision 1.1  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
 **
-**	Revision 1.2  2002/03/09 19:48:14  sm
-**	- Added a second profile for spline cylinders.
-**	- BSpline shape creation dialog added.
-**	- Added some features to b3SplineTemplate class:
-**	  o call b3ThroughEndControl() for open splines
-**	  o optimize subdivision on b3InitCurve()
-**	- Fine tuing and fixed much minor bugs.
-**	
-**	Revision 1.1  2002/03/05 20:38:25  sm
-**	- Added first profile (beveled spline shape).
-**	- Added some features to b3SplineTemplate class.
-**	- Added simple control to display 2 dimensional spline.
-**	- Fine tuned the profile dialogs.
-**	
 **
 */
 
@@ -61,36 +47,37 @@
 **                                                                      **
 *************************************************************************/
 
-b3ProfileBevelSpline static_profile_bevel_spline;
+b3ProfileBevelTriangles static_profile_bevel_triangles;
 
-b3ProfileBevelSpline::b3ProfileBevelSpline()
+b3ProfileBevelTriangles::b3ProfileBevelTriangles()
 {
 }
 
-b3_bool b3ProfileBevelSpline::b3Create()
+b3_bool b3ProfileBevelTriangles::b3Create()
 {
-	m_Dlg = new CDlgProfileBevelSpline;
-	m_Title.LoadString(IDS_PROFILE_BEVEL_SPLINE);
+	m_Dlg = new CDlgProfileBevelTriangles;
+	m_Title.LoadString(IDS_PROFILE_BEVEL_TRIANGLES);
 	return m_Dlg != null;
 }
 
-b3_bool b3ProfileBevelSpline::b3MatchClassType(b3_u32 class_type)
+b3_bool b3ProfileBevelTriangles::b3MatchClassType(b3_u32 class_type)
 {
-	return class_type == SPLINES_CYL;
+	return class_type == TRIANGLES;
 }
 
-int b3ProfileBevelSpline::b3AddImage(CImageList *images)
+int b3ProfileBevelTriangles::b3AddImage(CImageList *images)
 {
-	return images->Add(AfxGetApp()->LoadIcon(IDI_PROFILE_BEVEL_SPLINE));
+	return images->Add(AfxGetApp()->LoadIcon(IDI_PROFILE_BEVEL_TRIANGLES));
 }
 
-b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
+b3_bool b3ProfileBevelTriangles::b3ComputeProfile(b3Spline *spline,...)
 {
 	va_list    args;
 	b3_f64     xEdge;
 	b3_f64     yEdge;
 	b3_f64     oblique;
 	b3_vector *c = spline->controls;
+	b3_f64     factor = 1 - sqrt(0.5);
 	int        i;
 
 	B3_ASSERT(c != null);
@@ -101,14 +88,15 @@ b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
 	oblique = va_arg(args,b3_f64);
 	va_end(args);
 
-	spline->b3InitCurve(2,12,true);
+	spline->b3InitCurve(1,12,true);
 	spline->b3ClearControls();
+	spline->subdiv = 12;
 
 	c[0].x = xEdge;
-	c[0].y = yEdge - oblique * 2;
-	c[1].x = xEdge;
-	c[1].y = yEdge;
-	c[2].x = xEdge - oblique * 2;
+	c[0].y = yEdge - oblique;
+	c[1].x = xEdge - oblique * factor;
+	c[1].y = yEdge - oblique * factor;
+	c[2].x = xEdge - oblique;
 	c[2].y = yEdge;
 
 	// mirror horizontally
@@ -127,37 +115,60 @@ b3_bool b3ProfileBevelSpline::b3ComputeProfile(b3Spline *spline,...)
 	return true;
 }
 
-b3_bool b3ProfileBevelSpline::b3ComputeShape(b3Spline *spline,b3Shape *base_shape,...)
+b3_bool b3ProfileBevelTriangles::b3ComputeShape(b3Spline *spline,b3Shape *base_shape,...)
 {
-	va_list        args;
-	b3SplineShape *shape = (b3SplineShape *)base_shape;
-	b3_index       index,x,y;
-	b3_f64         z;
-	b3_f64         height;
-	b3_count       yDegree;
-	b3_count       yControls;
-	b3_vector     *c = spline->controls;
-
+	va_list      args;
+	b3Triangles *shape = (b3Triangles *)base_shape;
+	b3_index     index,x,y;
+	b3_f64       height;
+	b3_count     xCount,yCount;
+	b3_count     VertexCount,TriaCount;
+	b3_vector   *c = spline->controls;
+	b3_vertex   *vertex;
+	b3_triangle *tria;
+				
 	B3_ASSERT(c != null);
-
 	va_start(args,base_shape);
-	height    = va_arg(args,b3_f64);
-	yDegree   = va_arg(args,b3_count);
-	yControls = va_arg(args,b3_count);
+	height  = va_arg(args,b3_f64);
+	yCount  = va_arg(args,b3_count);
 	va_end(args);
 
-	shape->b3Init(spline->degree,yDegree,spline->control_num,yControls);
+	// Init/allocate triangle shape
+	xCount      = spline->control_num;
+	VertexCount = xCount * yCount + xCount;
+	TriaCount   = xCount * yCount * 2;
+	shape->b3Init(VertexCount,TriaCount,xCount,yCount);
 
-	// Init control points
-	for (y = 0;y < shape->m_Spline[1].control_num;y++)
+	// Init vertices
+	vertex = shape->m_Vertices;
+	for (y = 0;y <= yCount;y++)
 	{
-		index = y * shape->m_Spline[1].offset;
-		z     = b3Spline::b3ArcLengthParameter(y,yDegree,yControls,height);
-		for (x = 0;x < shape->m_Spline[0].control_num;x++)
+		for (x = 0;x < xCount;x++)
 		{
-			shape->m_Controls[index + x]   = c[x];
-			shape->m_Controls[index + x].z = z;
+			vertex->Point.x = c[x].x;
+			vertex->Point.y = c[x].y;
+			vertex->Point.z = height * y / yCount;
+			vertex++;
 		}
+	}
+
+	// Init triangles
+	tria  = shape->m_Triangles;
+	index = 0;
+	for (y = 0;y < yCount;y++)
+	{
+		for (x = 0;x < xCount;x++)
+		{
+			tria[0].P1 = index +  x;
+			tria[0].P2 = index + (x + 1) % xCount;
+			tria[0].P3 = index +  x + xCount;
+
+			tria[1].P1 = index + (x + 1) % xCount + xCount;
+			tria[1].P2 = index +  x + xCount;
+			tria[1].P3 = index + (x + 1) % xCount;
+			tria += 2;
+		}
+		index += xCount;
 	}
 	return true;
 }

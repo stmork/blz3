@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/03/11 13:48:55  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.17  2002/01/10 20:18:54  sm
 **	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
 **	  what to do...
-**
+**	
 **	Revision 1.16  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -547,7 +552,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 		}
 		if (palette != null)
 		{
-			memcpy (palette,srcTx->b3GetPalette(),pSize * sizeof(b3_pkd_color));
+			memcpy (palette,srcTx->b3GetPalette(),B3_MIN(pSize,srcTx->pSize) * sizeof(b3_pkd_color));
 			b3PrintF(B3LOG_FULL," [palette - %ld]",pSize);
 		}
 

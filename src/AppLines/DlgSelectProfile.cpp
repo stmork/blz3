@@ -36,11 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/11 13:48:54  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.4  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -72,11 +77,12 @@ CDlgSelectProfile::CDlgSelectProfile(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgSelectProfile::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgSelectProfile)
-	m_CreateMode = 0;
+	m_CreateMode = 1;
 	//}}AFX_DATA_INIT
 	m_Shape        = null;
 	m_ShapeCreator = null;
-	m_CreateMode = AfxGetApp()->GetProfileInt(CB3ClientString(),"profile select mode",m_CreateMode);
+	m_Count        = 0;
+	m_CreateMode   = AfxGetApp()->GetProfileInt(CB3ClientString(),"profile select mode",m_CreateMode);
 }
 
 
@@ -196,9 +202,25 @@ BOOL CDlgSelectProfile::OnInitDialog()
 				item.lParam  = (LPARAM)profile;
 				item.state   = (index == selected ? item.stateMask : 0); // Preselection see CB3ImageList
 				item.pszText = (char *)profile->b3GetTitle();
-				m_ListCtrl.InsertItem(&item);
+				if (m_ListCtrl.InsertItem(&item) != -1)
+				{
+					// Everything went good!
+					m_Count++;
+				}
 			}
 		}
+	}
+
+	// Disable profile list and make only default creation available.
+	if (m_Count == 0)
+	{
+		// Force default creation mode
+		m_CreateMode = 1;
+		UpdateData(FALSE);
+		GetDlgItem(IDC_CREATE_PROFILE)->EnableWindow(FALSE);
+
+		// Disable profile list
+		m_ListCtrl.EnableWindow(FALSE);
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

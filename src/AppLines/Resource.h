@@ -101,8 +101,10 @@
 #define IDD_SPINTEST                    201
 #define IDI_PROFILE_BEVELSTUMP_SPLINE   201
 #define IDD_PROFILE_BEVELSTUMP_SPLINE   202
+#define IDI_PROFILE_BEVEL_TRIANGLES     202
 #define IDD_CREATE_SPLINESHAPE          203
 #define IDD_CREATE_ROTSHAPE             204
+#define IDD_PROFILE_BEVEL_TRIANGLES     205
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -354,6 +356,8 @@
 #define IDC_CLOSED                      1242
 #define IDC_SUBDIV                      1243
 #define IDC_SUBDIV_SPIN                 1244
+#define IDC_YCOUNT                      1245
+#define IDC_YCOUNT_SPIN                 1246
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -532,6 +536,9 @@
 #define IDS_RADIUS                      60078
 #define IDS_PROFILE_BEVEL_SPLINE        60079
 #define IDS_PROFILE_BEVELSTUMP_SPLINE   60080
+#define IDS_TITLE_CREATE                60081
+#define IDS_TITLE_EDIT                  60082
+#define IDS_PROFILE_BEVEL_TRIANGLES     60083
 
 // Next default values for new objects
 // 
@@ -540,7 +547,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        205
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1245
+#define _APS_NEXT_CONTROL_VALUE         1247
 #define _APS_NEXT_SYMED_VALUE           60081
 #endif
 #endif

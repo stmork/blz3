@@ -17,7 +17,7 @@
 */
 
 #ifdef _DEBUG
-#define B3_USE_SPIN_TEST
+#define NO__B3_USE_SPIN_TEST
 #endif
 
 /*************************************************************************
@@ -51,6 +51,11 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2002/03/11 13:48:54  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.30  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -62,7 +67,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.29  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.

@@ -61,13 +61,18 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/03/11 13:48:54  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.9  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.8  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -158,7 +163,7 @@ int CB3ShapeDialog::b3Edit(
 	CDlgCSGMode         dlg_csg;
 	CDlgCreateMaterial  dlg_material;
 	CDlgCreateStencil   dlg_stencil;
-	CString             text;
+	CString             shape_text,title;
 	b3Shape            *shape;
 	int                 result;
 
@@ -202,8 +207,9 @@ int CB3ShapeDialog::b3Edit(
 			break;
 		}
 
-		CB3ImageList::b3ComputeText(item,text);
-		sheet.SetTitle(text);
+		CB3ImageList::b3ComputeText(item,shape_text);
+		title.Format(create ? IDS_TITLE_CREATE : IDS_TITLE_EDIT,shape_text);
+		sheet.SetTitle(title);
 		result = sheet.DoModal();
 
 		if (result == IDOK)

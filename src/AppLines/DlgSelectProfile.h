@@ -33,6 +33,7 @@
 class CDlgSelectProfile : public CDialog
 {
 	CString         m_Section;
+	b3_count        m_Count;
 public:
 	b3Shape        *m_Shape;
 	CB3ShapeDialog *m_ShapeCreator;

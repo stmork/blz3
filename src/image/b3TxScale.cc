@@ -61,10 +61,15 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.11  2002/03/11 13:48:55  sm
+**	- Cleaned up dialog titles
+**	- Fixed some texture bugs concerning palette copying.
+**	- Added a triangles profile.
+**
 **	Revision 1.10  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.9  2002/01/17 19:17:03  sm
 **	- Fixed ILBM to other unfiltered scaling
 **	
@@ -1283,7 +1288,7 @@ void b3Tx::b3VGAScaleToVGA(
 	b3_pkd_color rVal,gVal,bVal,value,color;
 
 #if 1
-	memcpy (palette,srcTx->b3GetPalette(),pSize * sizeof(b3_pkd_color));
+	memcpy (palette,srcTx->b3GetPalette(),B3_MIN(pSize,srcTx->pSize) * sizeof(b3_pkd_color));
 #else
 	b3_pkd_color *srcpal = srcTx->b3GetPalette();
 	for (int i = 0;i < pSize;i++)
@@ -1799,7 +1804,7 @@ void b3Tx::b3ILBMScale(
 	{
 	case B3_TX_VGA:
 		cDst = (b3_u08 *)data;
-		memcpy(palette,srcTx->b3GetPalette(),pSize * sizeof(b3_pkd_color));
+		memcpy(palette,srcTx->b3GetPalette(),B3_MIN(pSize,srcTx->pSize) * sizeof(b3_pkd_color));
 		for (y = 0;y < ySize;y++)
 		{
 			for (x = 0;x < xSize;x++)

@@ -110,6 +110,7 @@ IDI_CSGMODE_SUB         ICON    DISCARDABLE     "res\\csgmode_sub.ico"
 IDI_CSGMODE_UNION       ICON    DISCARDABLE     "res\\csgmode_union.ico"
 IDI_PROFILE_BEVEL_SPLINE ICON    DISCARDABLE     "res\\profile_bevel_spline.ico"
 IDI_PROFILE_BEVELSTUMP_SPLINE ICON    DISCARDABLE     "res\\profile_bevelstump_spline.ico"
+IDI_PROFILE_BEVEL_TRIANGLES ICON    DISCARDABLE     "res\\profile_bevel_triangles.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1363,7 +1364,7 @@ BEGIN
 END
 
 IDD_CREATE_STENCIL DIALOG DISCARDABLE  0, 0, 222, 146
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE WS_POPUP | WS_CAPTION
 CAPTION "Ausschnitt"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -1445,7 +1446,7 @@ END
 
 IDD_CREATE_TRIANGLES DIALOG DISCARDABLE  0, 0, 212, 130
 STYLE WS_POPUP | WS_CAPTION
-CAPTION "Dreiecksfeld anlegen"
+CAPTION "Geometrie"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_TRIA_XSIZE,25,30,40,12,ES_AUTOHSCROLL
@@ -1488,8 +1489,8 @@ END
 
 IDD_PROFILE_BEVEL_SPLINE DIALOGEX 0, 0, 272, 246
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Rund abgeschrägte Kanten"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+CAPTION "Geometrie"
+FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_OBLIQUE,20,30,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_OBLIQUE_SPIN,"msctls_updown32",
@@ -1568,8 +1569,8 @@ END
 
 IDD_PROFILE_BEVELSTUMP_SPLINE DIALOGEX 0, 0, 272, 246
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Rund abgeschrägte Kanten und Kopfenden"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+CAPTION "Geometrie"
+FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_OBLIQUE,20,30,40,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_OBLIQUE_SPIN,"msctls_updown32",
@@ -1618,7 +1619,7 @@ END
 
 IDD_CREATE_SPLINESHAPE DIALOG DISCARDABLE  0, 0, 202, 250
 STYLE WS_POPUP | WS_CAPTION
-CAPTION "BSpline-Körper anlegen"
+CAPTION "Geometrie"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_XDEGREE,20,35,40,12,ES_AUTOHSCROLL
@@ -1671,7 +1672,7 @@ END
 
 IDD_CREATE_ROTSHAPE DIALOG DISCARDABLE  0, 0, 202, 215
 STYLE WS_POPUP | WS_CAPTION
-CAPTION "Rotationskörper anlegen"
+CAPTION "Geometrie"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_YDEGREE,20,34,40,12,ES_AUTOHSCROLL
@@ -1716,6 +1717,62 @@ BEGIN
     LTEXT           "z:",IDC_STATIC,120,150,10,8,NOT WS_GROUP
     LTEXT           "Radius:",IDC_STATIC,140,55,25,8
     LTEXT           "Unterteilung:",IDC_STATIC,80,55,41,8
+END
+
+IDD_PROFILE_BEVEL_TRIANGLES DIALOGEX 0, 0, 272, 246
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Geometrie"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_OBLIQUE,20,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_OBLIQUE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,60,30,11,14
+    EDITTEXT        IDC_XEDGE,20,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_XEDGE_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,60,11,
+                    14
+    EDITTEXT        IDC_YEDGE,20,90,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin2",IDC_YEDGE_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,60,90,11,
+                    14
+    EDITTEXT        IDC_HEIGHT,105,30,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin3",IDC_HEIGHT_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,145,30,
+                    11,14
+    EDITTEXT        IDC_YCOUNT,105,60,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin5",IDC_YCOUNT_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,145,60,
+                    11,14
+    EDITTEXT        IDC_BASE_X,200,20,45,12,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_BASE_Y,200,40,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_BASE_Z,200,60,45,11,ES_AUTOHSCROLL | ES_WANTRETURN
+    CONTROL         "aufrecht",IDC_ALIGN_UP,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,20,140,42,10
+    CONTROL         "rechts",IDC_ALIGN_RIGHT,"Button",BS_AUTORADIOBUTTON,20,
+                    155,35,10
+    CONTROL         "vorne",IDC_ALIGN_FRONT,"Button",BS_AUTORADIOBUTTON,20,
+                    170,34,10
+    CONTROL         "links",IDC_ALIGN_LEFT,"Button",BS_AUTORADIOBUTTON,20,
+                    185,30,10
+    CONTROL         "hinten",IDC_ALIGN_BACK,"Button",BS_AUTORADIOBUTTON,20,
+                    200,35,10
+    CONTROL         "abwärts",IDC_ALIGN_DOWN,"Button",BS_AUTORADIOBUTTON,20,
+                    215,41,10
+    CONTROL         "",IDC_PROFILE_PREVIEW,"Static",SS_BLACKFRAME | WS_GROUP,
+                    95,95,165,140,WS_EX_CLIENTEDGE
+    GROUPBOX        "Profilwerte:",-1,10,5,75,110
+    LTEXT           "Schräge:",-1,20,20,30,8
+    LTEXT           "Kantenbreite:",-1,20,50,43,8
+    LTEXT           "Höhe",-1,105,20,18,8
+    LTEXT           "Kantentiefe:",-1,20,80,39,8
+    GROUPBOX        "Höhenausrichtung",-1,95,5,75,75
+    GROUPBOX        "Ausrichtung:",-1,10,125,75,110
+    GROUPBOX        " Basis: ",-1,180,5,80,75
+    LTEXT           "x:",-1,190,20,10,8,NOT WS_GROUP
+    LTEXT           "y:",-1,190,40,10,8,NOT WS_GROUP
+    LTEXT           "z:",-1,190,60,10,8,NOT WS_GROUP
+    LTEXT           "Dreieckszahl:",-1,105,50,44,8
 END
 
 
@@ -2044,6 +2101,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 208
     END
+
+    IDD_PROFILE_BEVEL_TRIANGLES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 265
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 239
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -2343,6 +2408,9 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_PROFILE_BEVELSTUMP_SPLINE 
                             "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
+    IDS_TITLE_CREATE        "%s anlegen"
+    IDS_TITLE_EDIT          "%s ändern"
+    IDS_PROFILE_BEVEL_TRIANGLES "Abgerundete Kante"
 END
 
 STRINGTABLE DISCARDABLE 

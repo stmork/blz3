@@ -192,6 +192,10 @@ SOURCE=.\b3ProfileBevelStumpSpline.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ProfileBevelTriangles.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ProfileShapeDialog.cpp
 # End Source File
 # Begin Source File
@@ -328,6 +332,10 @@ SOURCE=.\DlgProfileBevelStumpSpline.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgProfileBevelTriangles.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgProperties.cpp
 # End Source File
 # Begin Source File
@@ -461,6 +469,10 @@ SOURCE=.\b3ProfileBevelSpline.h
 # Begin Source File
 
 SOURCE=.\b3ProfileBevelStumpSpline.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3ProfileBevelTriangles.h
 # End Source File
 # Begin Source File
 
@@ -601,6 +613,10 @@ SOURCE=.\DlgProfileBevelSpline.h
 # Begin Source File
 
 SOURCE=.\DlgProfileBevelStumpSpline.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProfileBevelTriangles.h
 # End Source File
 # Begin Source File
 
@@ -765,6 +781,10 @@ SOURCE=.\res\object.ico
 # Begin Source File
 
 SOURCE=.\res\profile_bevel_spline.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\profile_bevel_triangles.ico
 # End Source File
 # Begin Source File
 
