@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.94  2004/07/18 08:44:20  sm
+**	- Removed recomputation marker for transformations.
+**
 **	Revision 1.93  2004/07/18 08:28:44  sm
 **	- Added transformation optimazation: We don't need to recompute
 **	  vertices on unit matrix transformation. This simple test makes
 **	  animation a lot faster!
-**
+**	
 **	Revision 1.92  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -1093,7 +1096,6 @@ b3_bool b3BBox::b3Transform(
 		if (force_action || shape->b3IsActive())
 		{
 			shape->b3Transform(transformation,is_affine);
-			shape->b3Recompute();
 			transformed = true;
 		}
 	}
