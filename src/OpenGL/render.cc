@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/08/21 14:24:14  sm
+**      - New selecting code added.
+**
 **      Revision 1.10  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -134,6 +137,7 @@ int main(int argc,char *argv[])
 		glutDisplayFunc(RenderScene);
 		glutReshapeFunc(ChangeSize);
 
+		context.b3Init();
 		glutMainLoop();
 	}
 	return 0;

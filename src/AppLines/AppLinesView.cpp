@@ -25,6 +25,7 @@
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
 #include "MainFrm.h"
+#include "b3Action.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/08/21 14:24:14  sm
+**	- New selecting code added.
+**
 **	Revision 1.11  2001/08/20 19:35:08  sm
 **	- Index correction introduced (This is a hack!)
 **	- Some OpenGL cleanups
-**
+**	
 **	Revision 1.10  2001/08/20 14:16:48  sm
 **	- Putting data into cmaera and light combobox.
 **	- Selecting camera and light.
@@ -172,6 +176,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_CAM_ROTATE, OnUpdateCamRotate)
 	ON_UPDATE_COMMAND_UI(ID_CAM_VIEW, OnUpdateCamView)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -187,7 +193,6 @@ CAppLinesView::CAppLinesView()
 	// TODO: add construction code here
 	m_PreviousMode =
 	m_SelectMode   = B3_OBJECT_SELECT;
-	m_Selecting    = false;
 }
 
 CAppLinesView::~CAppLinesView()
@@ -300,6 +305,12 @@ int CAppLinesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CAppLinesView::OnDestroy() 
 {
+	b3_index i;
+
+	for (i = 0;i < B3_MODE_MAX;i++)
+	{
+		delete m_Action[i];
+	}
 	CScrollView::OnDestroy();
 	
 	// TODO: Add your message handler code here
@@ -316,11 +327,21 @@ void CAppLinesView::OnInitialUpdate()
 	pDoc->m_Context.b3Init();
 	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 	m_Scene      = pDoc->m_Scene;
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	B3_ASSERT(m_Scene != null);
 	m_Camera     = m_Scene->b3GetCamera(true);
 	m_Light      = m_Scene->b3GetLight(true);
+	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 
+	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
+	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
+	m_Action[B3_OBJECT_MOVE]          = new CB3ActionObjectMove(this);
+	m_Action[B3_OBJECT_ROTATE]        = new CB3ActionObjectRotate(this);
+	m_Action[B3_OBJECT_SCALE]         = new CB3ActionObjectScale(this);
+	m_Action[B3_CAMERA_MOVE]          = new CB3ActionCameraMove(this);
+	m_Action[B3_CAMERA_TURN]          = new CB3ActionCameraTurn(this);
+	m_Action[B3_CAMERA_ROTATE]        = new CB3ActionCameraRotate(this);
+	m_Action[B3_CAMERA_VIEW]          = new CB3ActionCameraView(this);
+	m_Action[B3_LIGHT_TURN]           = new CB3ActionLightTurn(this);
 	CScrollView::OnInitialUpdate();
 
 	// TODO: calculate the total size of this view
@@ -370,6 +391,11 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	{
 		Invalidate();
 	}
+}
+
+void CAppLinesView::b3Update(b3_u32 update_mask)
+{
+	OnUpdate(this,update_mask,NULL);
 }
 
 void CAppLinesView::OnSize(UINT nType, int cx, int cy) 
@@ -424,76 +450,57 @@ void CAppLinesView::OnPaint()
 	ValidateRect(NULL);
 }
 
-void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
+void CAppLinesView::b3DrawRect(
+	b3_coord x1,
+	b3_coord y1,
+	b3_coord x2,
+	b3_coord y2)
 {
-	// TODO: Add your message handler code here and/or call default
-	CScrollView::OnLButtonDown(nFlags, point);
-	switch(m_SelectMode)
-	{
-	case B3_SELECT_MAGNIFICATION:
-		SetCapture();
-		m_SelectStart = point;
-		m_SelectAct   = point;
-		m_Selecting   = true;
-		break;
-	}
+	CDC *dc = CDC::FromHandle(m_DC);
+	CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
+
+	dc->SetROP2(R2_NOTXORPEN);
+	dc->SelectObject(&red);
+	dc->MoveTo(x1,y1);
+	dc->LineTo(x2,y1);
+	dc->LineTo(x2,y2);
+	dc->LineTo(x1,y2);
+	dc->LineTo(x1,y1);
 }
 
 void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	
 	CScrollView::OnMouseMove(nFlags, point);
+	m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
+}
 
-	if ((m_Selecting) && (m_SelectStart != point)) switch(m_SelectMode)
-	{
-	case B3_SELECT_MAGNIFICATION:
-		CDC *dc = CDC::FromHandle(m_DC);
-		CPen red(PS_SOLID,1,RGB(0xff,0x11,0x44));
-
-		dc->SetROP2(R2_NOTXORPEN);
-		dc->SelectObject(&red);
-		dc->MoveTo(m_SelectStart);
-		dc->LineTo(m_SelectStart.x,m_SelectAct.y);
-		dc->LineTo(m_SelectAct);
-		dc->LineTo(m_SelectAct.x,m_SelectStart.y);
-		dc->LineTo(m_SelectStart);
-
-		m_SelectAct = point;
-
-		dc->MoveTo(m_SelectStart);
-		dc->LineTo(m_SelectStart.x,m_SelectAct.y);
-		dc->LineTo(m_SelectAct);
-		dc->LineTo(m_SelectAct.x,m_SelectStart.y);
-		dc->LineTo(m_SelectStart);
-		break;
-	}
+void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CScrollView::OnLButtonDown(nFlags, point);
+	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y);
 }
 
 void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	if (m_Selecting) switch(m_SelectMode)
-	{
-	case B3_SELECT_MAGNIFICATION:
-		CRect  rect;
-		b3_f64 xSize,ySize;
-
-		GetClientRect(&rect);
-		xSize = rect.Width();
-		ySize = rect.Height();
-		m_RenderView.b3Select(
-			m_SelectStart.x / xSize,
-			m_SelectStart.y / ySize,
-			point.x / xSize,
-			point.y / ySize);
-		m_Selecting = false;
-		::ReleaseCapture();
-		OnUpdate(this,B3_UPDATE_VIEW,NULL);
-		b3UnsetMagnification();
-		break;
-	}
 	CScrollView::OnLButtonUp(nFlags, point);
+	m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+}
+
+void CAppLinesView::OnRButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CScrollView::OnRButtonDown(nFlags, point);
+	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y);
+}
+
+void CAppLinesView::OnRButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	CScrollView::OnRButtonUp(nFlags, point);
+	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
 }
 
 void CAppLinesView::OnViewPerspective() 

@@ -22,6 +22,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "AppLinesDoc.h"
+
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 
@@ -44,24 +46,29 @@ typedef enum b3SelectMode
 	B3_CAMERA_TURN,
 	B3_CAMERA_ROTATE,
 	B3_CAMERA_VIEW,
-	B3_LIGHT_TURN
+	B3_LIGHT_TURN,
+	B3_MODE_MAX
 } b3_select_mode;
+
+class CB3Action;
 
 class CAppLinesView : public CScrollView
 {
 	HDC             m_DC;
 	HGLRC           m_GC;
 	int             m_PixelFormatIndex;
+	b3_select_mode  m_PreviousMode;
+	b3_select_mode  m_SelectMode;
+	CPoint          m_SelectStart;
+	CPoint          m_SelectAct;
+	CB3Action      *m_Action[B3_MODE_MAX];
+protected:
 	b3Scene        *m_Scene;
 	b3RenderView    m_RenderView;
 	b3CameraPart   *m_Camera;
 	b3CameraVolume  m_CameraVolume;
 	b3Light        *m_Light;
-	b3_select_mode  m_PreviousMode;
-	b3_select_mode  m_SelectMode;
-	b3_bool         m_Selecting;
-	CPoint          m_SelectStart;
-	CPoint          m_SelectAct;
+
 protected: // create from serialization only
 	CAppLinesView();
 	DECLARE_DYNCREATE(CAppLinesView)
@@ -161,11 +168,19 @@ protected:
 	afx_msg void OnUpdateCamRotate(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCamView(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightTurn(CCmdUI* pCmdUI);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
-private:
+public:
+	void b3DrawRect(b3_coord x1,b3_coord y1,b3_coord x2,b3_coord y2);
+	void b3Update(b3_u32 update_mask);
+
+protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
+
+	friend class CB3ActionMagnify;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

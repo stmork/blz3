@@ -19,6 +19,7 @@
 #define B3_RAYTRACE_RENDERVIEW_H
 
 #include "blz3/b3Config.h"
+#include "blz3/raytrace/b3Raytrace.h"
 
 typedef enum b3ViewMode
 {
