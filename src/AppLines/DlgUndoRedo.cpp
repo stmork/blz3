@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/01/31 16:49:39  sm
+**	- Further dialog programming.
+**
 **	Revision 1.2  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
-**
+**	
 **	Revision 1.1  2003/01/30 16:19:58  sm
 **	- Added undo/redo list support.
 **	
@@ -72,11 +75,25 @@ void CDlgUndoRedo::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDlgUndoRedo, CDialog)
 	//{{AFX_MSG_MAP(CDlgUndoRedo)
 	ON_LBN_SELCHANGE(IDC_UNDO_REDO_LIST, OnSelectOperation)
+	ON_WM_CREATE()
+	ON_WM_NCHITTEST( )
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgUndoRedo message handlers
+
+int CDlgUndoRedo::OnCreate(LPCREATESTRUCT lpCreateStruct) 
+{
+	if (CDialog::OnCreate(lpCreateStruct) == -1)
+	{
+		return -1;
+	}
+	
+	// TODO: Add your specialized creation code here
+	
+	return 0;
+}
 
 BOOL CDlgUndoRedo::OnInitDialog() 
 {
@@ -125,4 +142,32 @@ void CDlgUndoRedo::OnSelectOperation()
 	}
 
 	CDialog::OnOK();
+}
+
+BOOL CDlgUndoRedo::PreCreateWindow(CREATESTRUCT& cs) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	
+	return CDialog::PreCreateWindow(cs);
+}
+
+UINT CDlgUndoRedo::OnNcHitTest( CPoint point )
+{
+	return CDialog::OnNcHitTest(point);
+}
+
+LRESULT CDlgUndoRedo::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if ( message == WM_ACTIVATE )
+	{
+		if ( wParam == 0 )
+		{
+			//PostMessage( WM_CLOSEDLG );
+			CDialog::OnCancel();
+			return FALSE;
+		}
+
+	}
+	return CDialog::DefWindowProc(message, wParam, lParam);
 }

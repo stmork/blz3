@@ -55,6 +55,8 @@ public:
 	//{{AFX_VIRTUAL(CDlgUndoRedo)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -64,7 +66,8 @@ protected:
 	//{{AFX_MSG(CDlgUndoRedo)
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSelectOperation();
-	afx_msg BOOL OnActivateApp( BOOL bActive );
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg UINT OnNcHitTest( CPoint point );
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
