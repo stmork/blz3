@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/13 16:13:08  sm
+**	- Created spotlight view
+**	- Changed camera properties dialog to reflect scene units
+**	  on example camera settings.
+**
 **	Revision 1.1  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **
 */
 
@@ -592,6 +597,16 @@ void CB3ActionCameraView::b3RUp(b3_coord x,b3_coord y)
 *************************************************************************/
 
 CB3ActionLightTurn::CB3ActionLightTurn(CAppLinesView *window) :
-	CB3Action(window)
+	CB3CameraRotateAction(window)
 {
+	m_Sign       = -1;
+	m_LinesDoc   = window->GetDocument();
+	m_UpdateHint = B3_UPDATE_LIGHTVIEW;
+}
+
+void CB3ActionLightTurn::b3LDown(b3_coord x,b3_coord y)
+{
+	m_Camera = m_LinesDoc->m_CameraLight;
+	m_Center = &m_Camera->m_EyePoint;
+	CB3CameraRotateAction::b3LDown(x,y);
 }

@@ -54,36 +54,36 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=30
-Resource1=IDD_DISTRIBUTED
+Resource1=IDD_LIGHT
 Resource2=IDR_TOOLBAR_OBJECT
-Resource3=IDD_LDC
+Resource3=IDR_BLZ3TYPE
 Resource4=IDR_TOOLBAR_CAMERA
 Resource5=IDR_TOOLBAR_LIGHT
 Resource6=IDR_TOOLBAR_VIEW
 Resource7=IDR_TOOLBAR_ACTION
-Resource8=IDD_SEARCH_PATH_LIST
-Resource9=IDD_LIGHT
-Resource10=IDD_STEP_ROTATE
-Resource11=IDD_OBJECT_COPY
+Resource8=IDR_MAINFRAME
+Resource9=IDR_CONTEXT_SCENE
+Resource10=IDD_NEW_ITEM
+Resource11=IDD_SCENE
 Resource12=IDR_TOOLBAR_DISPLAY
-Resource13=IDR_BLZ3TYPE
-Resource14=IDD_ABOUTBOX
-Resource15=IDD_NEBULAR
-Resource16=IDD_STEP_MOVE
-Resource17=IDD_SUPER_SAMPLE
-Resource18=IDR_CONTEXT_SCENE
-Resource19=IDD_NEW_ITEM
-Resource20=IDD_FILEOPENPREVIEW
-Resource21=IDD_MODELLER_INFO
+Resource13=IDD_HIERARCHY
+Resource14=IDD_NEBULAR
+Resource15=IDD_ABOUTBOX
+Resource16=IDD_SEARCH_PATH_LIST
+Resource17=IDR_OBJECT
+Resource18=IDD_STEP_MOVE
+Resource19=IDD_SUPER_SAMPLE
+Resource20=IDD_LENS_FLARE
+Resource21=IDD_FILEOPENPREVIEW
 Resource22=IDR_DISPLAYTYPE
-Resource23=IDD_CAMERA
-Resource24=IDD_SCENE
-Resource25=IDD_FULCRUM
-Resource26=IDR_MAINFRAME
-Resource27=IDD_LENS_FLARE
+Resource23=IDD_OBJECT_COPY
+Resource24=IDD_CAMERA
+Resource25=IDD_MODELLER_INFO
+Resource26=IDD_DISTRIBUTED
+Resource27=IDD_STEP_ROTATE
 Class44=CB3TreeCtrl
-Resource28=IDR_OBJECT
-Resource29=IDD_HIERARCHY
+Resource28=IDD_FULCRUM
+Resource29=IDD_LDC
 Class45=CDlgProperties
 Resource30=IDD_PROPERTIES
 
@@ -205,7 +205,7 @@ HeaderFile=AppLinesView.h
 ImplementationFile=AppLinesView.cpp
 Filter=C
 VirtualFilter=VWC
-LastObject=CAppLinesView
+LastObject=ID_LIGHT_TURN
 
 [CLS:CAppObjectDoc]
 Type=0
@@ -295,6 +295,8 @@ BaseClass=CDialog
 HeaderFile=DlgCamera.h
 ImplementationFile=DlgCamera.cpp
 LastObject=CDlgCamera
+Filter=D
+VirtualFilter=dWC
 
 [CLS:CDlgCreateItem]
 Type=0
@@ -416,7 +418,7 @@ Control4=IDOK,button,1342373889
 [DLG:IDD_CAMERA]
 Type=1
 Class=CDlgCamera
-ControlCount=28
+ControlCount=29
 Control1=IDC_CAMERA_LIST,combobox,1344340289
 Control2=IDC_CAMERA_POS_X,edit,1350631552
 Control3=IDC_CAMERA_POS_Y,edit,1350631552
@@ -445,6 +447,7 @@ Control25=IDC_STATIC,static,1342308352
 Control26=IDC_STATIC,static,1342308352
 Control27=IDC_STATIC,static,1342308352
 Control28=IDC_STATIC,button,1342177287
+Control29=IDC_CAMERA_UNIT,static,1342308352
 
 [DLG:IDD_NEW_ITEM]
 Type=1

@@ -105,6 +105,7 @@ private:
 class CB3CameraRotateAction : public CB3Action
 {
 protected:
+	LPARAM         m_UpdateHint;
 	b3CameraPart  *m_Camera;
 	b3_vector     *m_Center;
 	b3_vector      m_StartPoint;
@@ -280,10 +281,13 @@ public:
 **                                                                      **
 *************************************************************************/
 
-class CB3ActionLightTurn : public CB3Action
+class CB3ActionLightTurn : public CB3CameraRotateAction
 {
+	CAppLinesDoc *m_LinesDoc;
 public:
 	CB3ActionLightTurn(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
 };
 
 /*************************************************************************

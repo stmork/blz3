@@ -227,6 +227,7 @@
 #define IDC_PRT_BUFFER                  1112
 #define IDC_MEASURE                     1113
 #define IDC_PRT_BUFFER_SPIN             1114
+#define IDC_CAMERA_UNIT                 1115
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -377,6 +378,7 @@
 #define IDS_SHAPE_BSPLINE_CYLINDER      61501
 #define IDS_SHAPE_BSPLINE_RING          61502
 #define IDS_SHAPE_TRIANGLES             61503
+#define IDS_CAMERA_UNIT                 61504
 
 // Next default values for new objects
 // 
@@ -385,7 +387,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        175
 #define _APS_NEXT_COMMAND_VALUE         32867
-#define _APS_NEXT_CONTROL_VALUE         1115
+#define _APS_NEXT_CONTROL_VALUE         1116
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

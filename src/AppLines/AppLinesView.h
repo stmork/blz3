@@ -32,7 +32,8 @@
 #include "b3PickVector.h"
 #include "AppRenderView.h"
 
-#define B3_UPDATE_PICK 256
+#define B3_UPDATE_PICK      256
+#define B3_UPDATE_LIGHTVIEW 512
 
 class CB3Action;
 
@@ -42,7 +43,6 @@ class CAppLinesView : public CAppRenderView
 
 protected:
 	b3Scene        *m_Scene;
-	b3Light        *m_Light;
 
 protected: // create from serialization only
 	CAppLinesView();
@@ -92,7 +92,6 @@ protected:
 	afx_msg void OnCamView();
 	afx_msg void OnCamSelect();
 	afx_msg void OnLightTurn();
-	afx_msg void OnLightSelect();
 	afx_msg void OnUpdateObjSelect(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateObjMove(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateObjRotate(CCmdUI* pCmdUI);
@@ -138,6 +137,7 @@ private:
 	friend class CB3ActionCameraTurn;
 	friend class CB3ActionCameraRotate;
 	friend class CB3ActionCameraView;
+	friend class CB3ActionLightTurn;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

@@ -56,6 +56,11 @@
 
 /*
 **	$Log$
+**	Revision 1.59  2002/02/13 16:13:08  sm
+**	- Created spotlight view
+**	- Changed camera properties dialog to reflect scene units
+**	  on example camera settings.
+**
 **	Revision 1.58  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -63,7 +68,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.57  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
@@ -346,6 +351,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_COMMAND(ID_LIGHT_PROPERTIES, OnLightProperties)
 	ON_COMMAND(ID_LIGHT_ENABLE, OnLightEnable)
 	ON_COMMAND(ID_LIGHT_SOFT, OnLightSoft)
+	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_DELETE, OnUpdateLightDelete)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_ENABLE, OnUpdateLightEnable)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SOFT, OnUpdateLightSoft)
@@ -429,11 +435,13 @@ CAppLinesDoc::CAppLinesDoc()
 	EnableAutomation();
 
 	AfxOleLockApp();
+	m_CameraLight = new b3CameraPart(CAMERA);
 }
 
 CAppLinesDoc::~CAppLinesDoc()
 {
 	AfxOleUnlockApp();
+	delete m_CameraLight;
 }
 
 BOOL CAppLinesDoc::OnNewDocument()
@@ -462,7 +470,8 @@ BOOL CAppLinesDoc::OnNewDocument()
 		strcat(filename,".bwd");
 
 		m_Scene = b3ExampleScene::b3CreateNew(filename);
-		m_Info = m_Scene->b3GetModellerInfo();
+		m_Info  = m_Scene->b3GetModellerInfo();
+		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 		
 		main->b3SetStatusMessage(IDS_DOC_REORG);
@@ -504,7 +513,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_World.b3Read(lpszPathName);
 		m_Scene = (b3Scene *)m_World.b3GetFirst();
 		m_Scene->b3SetFilename(lpszPathName);
-		m_Info = m_Scene->b3GetModellerInfo();
+		m_Info  = m_Scene->b3GetModellerInfo();
+		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
 		main->b3SetStatusMessage(IDS_DOC_REORG);
@@ -928,22 +938,19 @@ void CAppLinesDoc::OnLightNew()
 {
 	// TODO: Add your command handler code here
 	CDlgCreateItem  dlg;
-	CMainFrame     *main;
-	b3Light        *light;
 
-	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	dlg.m_Label.LoadString(IDS_NEW_LIGHT);
 	dlg.m_ItemBase   = m_Scene->b3GetLightHead();
 	dlg.m_MaxNameLen = B3_BOXSTRINGLEN;
-	dlg.m_Suggest    = main->b3GetSelectedLight()->b3GetName();
+	dlg.m_Suggest    = m_Light->b3GetName();
 	if (dlg.DoModal() == IDOK)
 	{
-		light = new b3Light(AREA_LIGHT);
-		strcpy (light->b3GetName(),dlg.m_NewName);
-		m_Scene->b3GetLightHead()->b3Append(light);
+		m_Light = new b3Light(AREA_LIGHT);
+		strcpy (m_Light->b3GetName(),dlg.m_NewName);
+		m_Scene->b3GetLightHead()->b3Append(m_Light);
 
 		SetModifiedFlag();
-		main->b3UpdateLightBox(m_Scene,light);
+		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
 }
@@ -951,24 +958,25 @@ void CAppLinesDoc::OnLightNew()
 void CAppLinesDoc::OnLightDelete() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main;
-	b3Light        *light,*select;
+	b3Light *select;
 
 	if (AfxMessageBox(IDS_ASK_DELETE_LIGHT,MB_ICONQUESTION|MB_YESNO) == IDYES)
 	{
-		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-		
-		light = main->b3GetSelectedLight();
-		select = (b3Light *)light->Prev;
+		// Determine new light
+		select = (b3Light *)m_Light->Prev;
 		if (select == null)
 		{
-			select = (b3Light *)light->Succ;
+			select = (b3Light *)m_Light->Succ;
 		}
-		m_Scene->b3GetLightHead()->b3Remove(light);
-		delete light;
+		m_Scene->b3GetLightHead()->b3Remove(m_Light);
+		delete m_Light;
 
+		// Select new light
+		m_Light = select;
+		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
+
+		// Set document to right state
 		SetModifiedFlag();
-		main->b3UpdateLightBox(m_Scene,select);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
 }
@@ -977,15 +985,15 @@ void CAppLinesDoc::OnLightProperties()
 {
 	// TODO: Add your command handler code here
 	CDlgLight   dlg;
-	CMainFrame *main;
 
-	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	dlg.m_LightBase = m_Scene->b3GetLightHead();
-	dlg.m_Light     = main->b3GetSelectedLight();
+	dlg.m_Light     = m_Light;
 	if (dlg.DoModal() == IDOK)
 	{
+		m_Light = dlg.m_Light;
+		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,m_Light);
+
 		SetModifiedFlag();
-		main->b3UpdateLightBox(m_Scene,dlg.m_Light);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
 }
@@ -994,14 +1002,12 @@ void CAppLinesDoc::OnLightLDC()
 {
 	// TODO: Add your command handler code here
 	CDlgLDC     dlg;
-	CMainFrame *main;
 
-	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	dlg.m_Light     = main->b3GetSelectedLight();
+	dlg.m_Light = m_Light;
 	if (dlg.DoModal() == IDOK)
 	{
 		SetModifiedFlag();
-		main->b3UpdateLightBox(m_Scene,dlg.m_Light);
+		CB3GetMainFrame()->b3UpdateLightBox(m_Scene,dlg.m_Light);
 		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	}
 }
@@ -1009,12 +1015,7 @@ void CAppLinesDoc::OnLightLDC()
 void CAppLinesDoc::OnLightEnable() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main;
-	b3Light        *light;
-
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
-	light->m_LightActive = !light->m_LightActive;
+	m_Light->m_LightActive = !m_Light->m_LightActive;
 	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
 }
@@ -1022,24 +1023,23 @@ void CAppLinesDoc::OnLightEnable()
 void CAppLinesDoc::OnLightSoft() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main;
-	b3Light        *light;
-
-	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
-	light = main->b3GetSelectedLight();
-	light->m_SoftShadow = !light->m_SoftShadow;
+	m_Light->m_SoftShadow = !m_Light->m_SoftShadow;
 	SetModifiedFlag();
 }
 
 void CAppLinesDoc::OnLightSpot() 
 {
 	// TODO: Add your command handler code here
-	b3Light *light;
-
-	light = CB3GetMainFrame()->b3GetSelectedLight();
-	light->m_SpotActive = !light->m_SpotActive;
+	m_Light->m_SpotActive = !m_Light->m_SpotActive;
 	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 	SetModifiedFlag();
+}
+
+void CAppLinesDoc::OnLightSelect() 
+{
+	// TODO: Add your command handler code here
+	m_Light = CB3GetMainFrame()->b3GetSelectedLight();
+	UpdateAllViews(NULL,B3_UPDATE_LIGHT);
 }
 
 void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI) 
@@ -1051,12 +1051,12 @@ void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	b3Light *light;
-
-	light = CB3GetMainFrame()->b3GetSelectedLight();
-	if (light != null)
+	if (m_Light != null)
 	{
-		pCmdUI->Enable(light->m_LightActive && light->m_SpotActive && (!b3IsRaytracing()));
+		pCmdUI->Enable(
+			m_Light->m_LightActive && 
+			m_Light->m_SpotActive &&
+			(!b3IsRaytracing()));
 	}
 	else
 	{
@@ -1067,23 +1067,17 @@ void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	b3Light *light;
-
-	light = CB3GetMainFrame()->b3GetSelectedLight();
 	pCmdUI->Enable(!b3IsRaytracing());
-	pCmdUI->SetCheck(light != null ? light->m_LightActive : FALSE);
+	pCmdUI->SetCheck(m_Light != null ? m_Light->m_LightActive : FALSE);
 }
 
 void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	b3Light *light;
-
-	light = CB3GetMainFrame()->b3GetSelectedLight();
-	if (light != null)
+	if (m_Light != null)
 	{
-		pCmdUI->Enable(light->m_LightActive && (!b3IsRaytracing()));
-		pCmdUI->SetCheck(light->m_SoftShadow);
+		pCmdUI->Enable(m_Light->m_LightActive && (!b3IsRaytracing()));
+		pCmdUI->SetCheck(m_Light->m_SoftShadow);
 	}
 	else
 	{
@@ -1094,14 +1088,10 @@ void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI)
 void CAppLinesDoc::OnUpdateLightSpot(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	CMainFrame *main = CB3GetMainFrame();
-	b3Light    *light;
-
-	light = main->b3GetSelectedLight();
-	if (light != null)
+	if (m_Light != null)
 	{
-		pCmdUI->Enable(light->m_LightActive && (!b3IsRaytracing()));
-		pCmdUI->SetCheck(light->m_SpotActive);
+		pCmdUI->Enable(m_Light->m_LightActive && (!b3IsRaytracing()));
+		pCmdUI->SetCheck(m_Light->m_SpotActive);
 	}
 	else
 	{

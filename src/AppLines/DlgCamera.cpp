@@ -34,13 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/02/13 16:13:08  sm
+**	- Created spotlight view
+**	- Changed camera properties dialog to reflect scene units
+**	  on example camera settings.
+**
 **	Revision 1.2  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
 **	- Toolbars got adjusted and beautified
 **	- Introduced b3Scene::b3IsObscured() for faster Phong illumination
 **	- Found and fixed some minor bugs
-**
+**	
 **	Revision 1.1  2001/12/21 16:46:16  sm
 **	- New dialog for camera properties
 **	- Done some bugfixes concerning CB3FloatEdit
@@ -59,6 +64,7 @@ CDlgCamera::CDlgCamera(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CDlgCamera)
 	m_EnableCamera = FALSE;
+	m_UnitString = _T("");
 	//}}AFX_DATA_INIT
 }
 
@@ -79,6 +85,7 @@ void CDlgCamera::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CAMERA_POS_Y, m_yPosCtrl);
 	DDX_Control(pDX, IDC_CAMERA_POS_X, m_xPosCtrl);
 	DDX_Check(pDX, IDC_CAMERA_ACTIVATION, m_EnableCamera);
+	DDX_Text(pDX, IDC_CAMERA_UNIT, m_UnitString);
 	//}}AFX_DATA_MAP
 }
 
@@ -118,8 +125,16 @@ static struct b3_predefined_camera
 
 BOOL CDlgCamera::OnInitDialog() 
 {
+	b3ModellerInfo *info;
+
+	// Get unit in mm
+	B3_ASSERT(m_Scene != null);
+	info         = m_Scene->b3GetModellerInfo();
+	m_UnitFactor = info->b3ScaleUnitToMM();
+	m_UnitString.Format(IDS_CAMERA_UNIT,info->b3GetUnitDescr());
+
 	CDialog::OnInitDialog();
-	
+
 	// TODO: Add extra initialization here
 	m_xPosCtrl.b3SetDigits(5,2);
 	m_yPosCtrl.b3SetDigits(5,2);
@@ -275,9 +290,9 @@ int CDlgCamera::b3GetCameraType()
 
 	for (i = 0;i < MAX_CAMERA_TYPES;i++)
 	{
-		if ((fabs(camera_definition[i].m_FocalLength - m_FocalLengthCtrl.m_Value) < epsilon) &&
-		    (fabs(camera_definition[i].m_Width       - m_WidthCtrl.m_Value)       < epsilon) &&
-		    (fabs(camera_definition[i].m_Height      - m_HeightCtrl.m_Value)      < epsilon))
+		if ((fabs(camera_definition[i].m_FocalLength / m_UnitFactor - m_FocalLengthCtrl.m_Value) < epsilon) &&
+		    (fabs(camera_definition[i].m_Width       / m_UnitFactor - m_WidthCtrl.m_Value)       < epsilon) &&
+		    (fabs(camera_definition[i].m_Height      / m_UnitFactor - m_HeightCtrl.m_Value)      < epsilon))
 		{
 			return i;
 		}
@@ -340,8 +355,8 @@ void CDlgCamera::OnSelchangeCameraTypes()
 	index = m_TypeCtrl.GetCurSel();
 	if ((index != CB_ERR) && (index < MAX_CAMERA_TYPES))
 	{
-		m_FocalLengthCtrl.b3SetValue(camera_definition[index].m_FocalLength);
-		m_WidthCtrl.b3SetValue(camera_definition[index].m_Width);
-		m_HeightCtrl.b3SetValue(camera_definition[index].m_Height);
+		m_FocalLengthCtrl.b3SetValue(camera_definition[index].m_FocalLength / m_UnitFactor);
+		m_WidthCtrl.b3SetValue(camera_definition[index].m_Width             / m_UnitFactor);
+		m_HeightCtrl.b3SetValue(camera_definition[index].m_Height           / m_UnitFactor);
 	}
 }

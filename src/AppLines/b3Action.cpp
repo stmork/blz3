@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/02/13 16:13:08  sm
+**	- Created spotlight view
+**	- Changed camera properties dialog to reflect scene units
+**	  on example camera settings.
+**
 **	Revision 1.19  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -40,7 +45,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.18  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -590,14 +595,16 @@ void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
 CB3CameraRotateAction::CB3CameraRotateAction(CAppRenderView *window) :
 	CB3Action(window)
 {
-	m_Sign      = 0;
-	m_Camera    = null;
+	m_Sign       = 0;
+	m_Camera     = null;
+	m_UpdateHint = B3_UPDATE_CAMERA;
 }
 
 void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
 {
 	b3_f64 xRel,yRel;
 
+	B3_ASSERT(m_Camera != null);
 	m_StartPoint = *m_Center;
 	m_Axis.pos   = *m_Center;
 	b3GetRelCoord(x,y,xRel,yRel);
@@ -613,17 +620,22 @@ void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
 	{
 		b3_vector view;
 
-		m_Axis.dir.x = 0;
-		m_Axis.dir.y = 0;
-		m_Axis.dir.z = 1;
 		m_UpDown.pos = *m_Center;
 		b3Vector::b3Sub(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint,&view);
+		if ((view.x != 0) || (view.y != 0))
+		{
+			B3_ASSERT(view.z != 0);
+			b3Vector::b3Init(&m_Axis.dir,0,0,1);
+		}
+		else
+		{
+			b3Vector::b3Init(&m_Axis.dir,1,0,0);
+		}
 		b3Vector::b3CrossProduct(&view,&m_Axis.dir,&m_UpDown.dir);
 
 		m_xRelStart = xRel;
 		m_yRelStart = yRel;
 	}
-	m_Camera = m_View->m_Camera;
 }
 
 void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
@@ -677,7 +689,7 @@ void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
 	{
 		b3MatrixMMul(&inv,&m_Transformation,&activity);
 		m_Camera->b3Transform(&activity);
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+		m_Doc->UpdateAllViews(NULL,m_UpdateHint);
 	}
 }
 
@@ -714,7 +726,7 @@ void CB3CameraRotateAction::b3LUp(b3_coord x,b3_coord y)
 	{
 		b3MatrixMMul(&inv,&m_Transformation,&activity);
 		m_Camera->b3Transform(&activity);
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+		m_Doc->UpdateAllViews(NULL,m_UpdateHint);
 		m_Doc->SetModifiedFlag();
 	}
 	m_Camera = null;

@@ -32,6 +32,7 @@
 
 class CDlgCamera : public CDialog
 {
+	b3_f64        m_UnitFactor;
 // Construction
 public:
 	b3Scene      *m_Scene;
@@ -53,6 +54,7 @@ public:
 	CB3FloatEdit	m_yPosCtrl;
 	CB3FloatEdit	m_xPosCtrl;
 	BOOL	m_EnableCamera;
+	CString	m_UnitString;
 	//}}AFX_DATA
 
 

@@ -32,6 +32,8 @@ protected:
 // Attributes
 public:
 	b3Scene              *m_Scene;
+	b3Light              *m_Light;
+	b3CameraPart         *m_CameraLight;
 
 // Operations
 protected: // create from serialization only
@@ -79,6 +81,7 @@ protected:
 	afx_msg void OnLightProperties();
 	afx_msg void OnLightEnable();
 	afx_msg void OnLightSoft();
+	afx_msg void OnLightSelect();
 	afx_msg void OnUpdateLightDelete(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightEnable(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightSoft(CCmdUI* pCmdUI);

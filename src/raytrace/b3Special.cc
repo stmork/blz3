@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2002/02/13 16:13:08  sm
+**      - Created spotlight view
+**      - Changed camera properties dialog to reflect scene units
+**        on example camera settings.
+**
 **      Revision 1.43  2002/02/10 20:03:19  sm
 **      - Added grid raster
 **      - Changed icon colors of shapes
@@ -420,7 +425,15 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Sub(view,eye,&dir);
 	b3Vector::b3Normalize(&dir,focal_length);
 	b3Vector::b3Add(eye,&dir,&m_ViewPoint);
-	b3Vector::b3Init(&up,0,0,1);
+	if ((dir.x != 0) || (dir.y != 0))
+	{
+		B3_ASSERT(dir.z != 0);
+		b3Vector::b3Init(&up,0,0,1);
+	}
+	else
+	{
+		b3Vector::b3Init(&up,1,0,0);
+	}
 	b3Vector::b3CrossProduct(&dir,&up,&m_Width);
 	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
 	b3Vector::b3Normalize(&m_Width,width);

@@ -39,6 +39,11 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2002/02/13 16:13:08  sm
+**	- Created spotlight view
+**	- Changed camera properties dialog to reflect scene units
+**	  on example camera settings.
+**
 **	Revision 1.46  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -46,7 +51,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.45  2002/02/10 20:03:18  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
@@ -274,7 +279,6 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_COMMAND(ID_CAMERA_VIEW, OnCamView)
 	ON_CBN_SELCHANGE(ID_CAMERA_SELECT, OnCamSelect)
 	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
-	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_SELECT, OnUpdateObjSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_MOVE, OnUpdateObjMove)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_ROTATE, OnUpdateObjRotate)
@@ -358,7 +362,6 @@ void CAppLinesView::OnInitialUpdate()
 	m_Scene      = pDoc->m_Scene;
 	B3_ASSERT(m_Scene != null);
 	m_Camera     = m_Scene->b3GetCamera(true);
-	m_Light      = m_Scene->b3GetLight(true);
 
 	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
 	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
@@ -380,7 +383,8 @@ void CAppLinesView::OnInitialUpdate()
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	CAppLinesDoc *pDoc         = GetDocument();
+	CAppLinesDoc *pDoc   = GetDocument();
+	b3CameraPart *camera = pDoc->m_CameraLight;
 	b3Item       *item;
 	b3Light      *light;
 	b3Pick       *pick;
@@ -392,9 +396,39 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		doInvalidate = true;
 	}
 
+	if (lHint & B3_UPDATE_LIGHT)
+	{
+		b3_vector  look;
+		b3_f64     len;
+
+		light = pDoc->m_Light;
+		len   = b3Vector::b3Length(&light->m_Direction);
+		b3Vector::b3Add(&light->m_Position,&light->m_Direction,&look);
+		camera->b3Orientate(&light->m_Position,&look,len,len,len);
+		lHint |= B3_UPDATE_LIGHTVIEW;
+		doInvalidate = true;
+	}
+
+	if(lHint & B3_UPDATE_LIGHTVIEW)
+	{
+		if (m_SelectMode == B3_LIGHT_TURN)
+		{
+			// Supercede camera handling
+			lHint &= (~B3_UPDATE_CAMERA);
+
+			// Setup display
+			m_RenderView.b3SetCamera(camera);
+
+			// Update light itself
+			b3Vector::b3Sub(&camera->m_ViewPoint,&camera->m_EyePoint,&pDoc->m_Light->m_Direction);
+		}
+		doInvalidate = true;
+	}
+
 	CAppRenderView::OnUpdate(pSender,lHint,pHint);
 
-	if ((lHint & (B3_UPDATE_LIGHT | B3_UPDATE_VIEW)) != 0)
+	// We have to update the pick list if we change view.
+	if ((lHint & (B3_UPDATE_LIGHT|B3_UPDATE_VIEW)) && !m_PickBaseLight.b3IsActive())
 	{
 		// Update on changed light _or_ view!
 		m_PickBaseLight.b3Free();
@@ -468,7 +502,7 @@ void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			CAppLinesDoc *pDoc = GetDocument();
 
-			pDoc->UpdateAllViews(NULL,B3_UPDATE_PICK);
+			pDoc->UpdateAllViews(NULL,B3_UPDATE_PICK | B3_UPDATE_LIGHT);
 			pDoc->SetModifiedFlag();
 		}
 		CScrollView::OnMouseMove(nFlags, point);
@@ -624,7 +658,7 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	if (bActivate)
 	{
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
-		main->b3UpdateLightBox(m_Scene,m_Light);
+		main->b3UpdateLightBox(m_Scene,GetDocument()->m_Light);
 		main->b3UpdateModellerInfo(GetDocument());
 		m_Scene->b3SetCamera(m_Camera,true);
 		app->b3SetData();
@@ -646,54 +680,64 @@ void CAppLinesView::OnObjSelect()
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_OBJECT_SELECT;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnObjMove() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_OBJECT_MOVE;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnObjRotate() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_OBJECT_ROTATE;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnObjScale() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_OBJECT_SCALE;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnCamMove() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_CAMERA_MOVE;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnCamTurn() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_CAMERA_TURN;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnCamRotate() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_CAMERA_ROTATE;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnCamView() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_CAMERA_VIEW;
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnLightTurn() 
 {
 	// TODO: Add your command handler code here
 	m_SelectMode = B3_LIGHT_TURN;
+	m_RenderView.b3SetViewMode(B3_VIEW_3D);
+	OnUpdate(this,B3_UPDATE_CAMERA | B3_UPDATE_LIGHT,NULL);
 }
 
 void CAppLinesView::OnUpdateObjSelect(CCmdUI* pCmdUI) 
@@ -764,15 +808,6 @@ void CAppLinesView::OnCamSelect()
 		GetDocument()->SetModifiedFlag();
 		OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 	}
-}
-
-void CAppLinesView::OnLightSelect() 
-{
-	// TODO: Add your command handler code here
-	CMainFrame *main = CB3GetMainFrame();
-
-	m_Light = main->b3GetSelectedLight();
-	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
 
 void CAppLinesView::OnViewToFulcrum() 
