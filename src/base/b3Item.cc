@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/08/19 18:38:47  sm
+**      - Adjusted b3Animate to read/write correctly
+**        into Blizzard data file.
+**
 **      Revision 1.25  2002/08/15 13:56:42  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -362,6 +366,18 @@ void b3Item::b3Init()
 }
 
 b3_s32 b3Item::b3InitInt()
+{
+	B3_ASSERT_INDEX;
+	return m_Buffer[m_ParseIndex++];
+}
+
+b3_index b3Item::b3InitIndex()
+{
+	B3_ASSERT_INDEX;
+	return m_Buffer[m_ParseIndex++];
+}
+
+b3_count b3Item::b3InitCount()
 {
 	B3_ASSERT_INDEX;
 	return m_Buffer[m_ParseIndex++];

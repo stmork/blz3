@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2002/08/19 18:38:47  sm
+**      - Adjusted b3Animate to read/write correctly
+**        into Blizzard data file.
+**
 **      Revision 1.53  2002/08/19 16:50:39  sm
 **      - Now having animation running, running, running...
 **      - Activation handling modified to reflect animation
@@ -934,28 +938,33 @@ b3Animation::b3Animation(b3_u32 *src) :
 	b3AllocHeads(1);
 	m_Heads[0].b3InitBase(CLASS_ANIMATION);
 
+	b3InitNOP();
 	m_Start           = b3InitFloat();
 	m_End             = b3InitFloat();
 	m_Time            = b3InitFloat();
 	m_Neutral         = b3InitFloat();
-	m_FramesPerSecond = b3InitInt();
+	m_FramesPerSecond = b3InitCount();
 	m_Flags           = b3InitInt();;
 
 	if (B3_PARSE_INDEX_VALID)
 	{
 		// OK, the following values are only for "Lines"
-		m_Frames     = b3InitInt();
-		m_Tracks     = b3InitInt();
-		m_TrackIndex = b3InitInt();
-		m_FrameIndex = b3InitInt();
-		m_WTracks    = b3InitInt();
-		m_WFrames    = b3InitInt();
-		m_Element    = (b3AnimElement *)b3InitNull();
+		m_Frames     = b3InitCount();
+		m_Tracks     = b3InitCount();
+		m_TrackIndex = b3InitIndex();
+		m_FrameIndex = b3InitIndex();
+		m_WTracks    = b3InitCount();
+		m_WFrames    = b3InitCount();
+		if (B3_PARSE_INDEX_VALID)
+		{
+			m_Element    = (b3AnimElement *)b3InitNull();
+		}
 	}
 }
 
 void b3Animation::b3Write()
 {
+	b3StorePtr(null);
 	b3StoreFloat(m_Start);
 	b3StoreFloat(m_End);
 	b3StoreFloat(m_Time);

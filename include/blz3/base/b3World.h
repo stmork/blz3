@@ -197,6 +197,8 @@ protected:
 	// Parsing routines
 	void     b3Init();
 	b3_s32   b3InitInt();
+	b3_index b3InitIndex();
+	b3_count b3InitCount();
 	b3_f32   b3InitFloat();
 	b3_bool  b3InitBool();
 	void     b3InitVector  (b3_vector   *vec = null);
