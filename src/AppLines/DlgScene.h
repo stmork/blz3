@@ -26,6 +26,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3ShowImage.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgScene dialog
@@ -34,7 +35,8 @@ class CDlgScene : public CDialog
 {
 // Construction
 public:
-	b3Scene * m_Scene;
+	b3Scene *m_Scene;
+	b3Scene *m_PreviewScene;
 	CDlgScene(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -43,8 +45,8 @@ public:
 	CSpinButtonCtrl	m_yResSpin;
 	CSpinButtonCtrl	m_xResSpin;
 	CSliderCtrl	m_RayDepth;
-	CB3ShowImage	m_PreviewScene;
-	CB3ShowImage	m_PreviewImage;
+	CB3ShowRaytrace	m_PreviewSceneCtrl;
+	CB3ShowImage	m_PreviewImageCtrl;
 	BOOL	m_ResValid;
 	CString	m_RayDepthLegend;
 	int		m_BackgroundMode;

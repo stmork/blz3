@@ -41,9 +41,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/04 21:12:14  sm
+**	- New CB3ShowRaytrace control
+**
 **	Revision 1.1  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
-**
+**	
 **	
 */
 
@@ -79,15 +82,13 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 	b3PrintF (B3LOG_NORMAL,"dep:   %4ld\n",m_depth);
 #endif
 
-	b3Tx *tx = m_Doc->m_Tx;
-
-	tx->b3AllocTx(m_xs,m_ys,m_depth);
-	m_Buffer = (b3_pkd_color *)tx->b3GetData();
+	m_Tx->b3AllocTx(m_xs,m_ys,m_depth);
+	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
 }
 
 b3DisplayView::b3DisplayView(
 	CB3ScrollView *view,
-	const char    *title)
+	const char    *title) : b3Display(view->b3GetDocument()->m_Tx)
 {
 	b3_coord xSize;
 	b3_coord ySize;
@@ -110,7 +111,7 @@ b3DisplayView::b3DisplayView(
 	CB3ScrollView *view,
 	b3_res         xSize,
 	b3_res         ySize,
-	const char    *title)
+	const char    *title) : b3Display(view->b3GetDocument()->m_Tx)
 {
 	m_Title = (char *)title;
 	b3Open(view,xSize,ySize);
@@ -121,6 +122,7 @@ b3DisplayView::b3DisplayView(
 
 b3DisplayView::~b3DisplayView()
 {
+	b3PrintF(B3LOG_FULL,"Closing view display...\n");
 }
 
 

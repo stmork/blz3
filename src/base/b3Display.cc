@@ -42,10 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/04 21:12:14  sm
+**	- New CB3ShowRaytrace control
+**
 **	Revision 1.2  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.1  2001/11/04 10:54:14  sm
 **	- Redesigned b3Display for control use.
 **	
@@ -57,6 +60,24 @@
 **                        color display routines                        **
 **                                                                      **
 *************************************************************************/
+
+b3Display::b3Display()
+{
+	m_xs     = 0;
+	m_ys     = 0;
+	m_depth  = 0;
+	m_Buffer = null;
+	m_Tx     = new b3Tx();
+}
+
+b3Display::b3Display(b3Tx *tx)
+{
+	m_xs     = tx->xSize;
+	m_ys     = tx->ySize;
+	m_depth  = tx->depth;
+	m_Buffer = (b3_pkd_color *)tx->b3GetData();
+	m_Tx     = tx;
+}
 
 b3Display::b3Display(const char *title)
 {
@@ -78,14 +99,6 @@ b3Display::b3Display(b3_res xSize,b3_res ySize,const char *title)
 	b3Init(xSize,ySize,title);
 }
 
-b3Display::b3Display()
-{
-	m_xs     = 0;
-	m_ys     = 0;
-	m_depth  = 0;
-	m_Buffer = null;
-}
-
 void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 {
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
@@ -94,12 +107,14 @@ void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 	m_xs    = xSize;
 	m_ys    = ySize;
 	m_depth = 24;
-	m_Tx.b3AllocTx(xSize,ySize,m_depth);
-	m_Buffer = (b3_pkd_color *)m_Tx.b3GetData();
+	m_Tx    = new b3Tx();
+	m_Tx->b3AllocTx(xSize,ySize,m_depth);
+	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
 }
 
 b3Display::~b3Display()
 {
+	b3PrintF(B3LOG_FULL,"Closing display...\n");
 }
 
 

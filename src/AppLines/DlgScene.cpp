@@ -21,15 +21,9 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
-#include "applines.h"
+#include "AppLines.h"
 #include "DlgScene.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include "b3ExampleScene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -39,11 +33,14 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/04 21:12:14  sm
+**	- New CB3ShowRaytrace control
+**
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **
 */
 
@@ -90,8 +87,8 @@ void CDlgScene::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_YRES_SPIN, m_yResSpin);
 	DDX_Control(pDX, IDC_XRES_SPIN, m_xResSpin);
 	DDX_Control(pDX, IDC_RAYDEPTH, m_RayDepth);
-	DDX_Control(pDX, IDC_PREVIEW_RAYTRACE, m_PreviewScene);
-	DDX_Control(pDX, IDC_PREVIEW_BGIMAGE, m_PreviewImage);
+	DDX_Control(pDX, IDC_PREVIEW_RAYTRACE, m_PreviewSceneCtrl);
+	DDX_Control(pDX, IDC_PREVIEW_BGIMAGE, m_PreviewImageCtrl);
 	DDX_Check(pDX, IDC_RES_VALID, m_ResValid);
 	DDX_Text(pDX, IDC_RAYDEPTH_LEGEND, m_RayDepthLegend);
 	DDX_Radio(pDX, IDC_BG_LIGHT, m_BackgroundMode);
@@ -136,6 +133,8 @@ BOOL CDlgScene::OnInitDialog()
 	m_RayDepth.SetPos      (m_Scene->m_TraceDepth);
 	b3UpdateUI();
 	b3PrintRayDepth();
+	m_PreviewScene = b3ExampleScene::b3GetNull();
+	m_PreviewSceneCtrl.b3Update(m_PreviewScene = m_Scene);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -152,6 +151,8 @@ void CDlgScene::OnBgModeChanged()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
+	m_Scene->m_BackgroundType = dialog_to_scene[m_BackgroundMode];
+	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	b3UpdateUI();
 }
 

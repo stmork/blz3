@@ -26,7 +26,7 @@
 #include "blz3/system/b3ComboBox.h"
 #include "../smart_gui/CoolMenu.h"
 
-#define WM_USER_UPDATE_CONTROLS (WM_USER + 1)
+#define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
 
 class CMainFrame : public CMDIFrameWnd
 {

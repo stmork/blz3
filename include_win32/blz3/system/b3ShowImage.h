@@ -26,6 +26,7 @@
 
 class CB3ShowImage : public CStatic
 {
+	DECLARE_DYNAMIC(CB3ShowImage)
 protected:
 	CRect         m_Rect;
 	CB3BitmapDDB  m_DDB;

@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/04 21:12:14  sm
+**	- New CB3ShowRaytrace control
+**
 **	Revision 1.1  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	
 */
 
@@ -47,6 +50,8 @@
 **                                      a static control                **
 **                                                                      **
 *************************************************************************/
+
+IMPLEMENT_DYNAMIC(CB3ShowImage, CStatic)
 
 BEGIN_MESSAGE_MAP(CB3ShowImage, CStatic)
 	//{{AFX_MSG_MAP(CB3ShowImage)

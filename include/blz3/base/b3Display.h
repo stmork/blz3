@@ -70,11 +70,12 @@ protected:
 	b3_res                m_depth;
 	b3_pkd_color         *m_Buffer;
 	b3Mutex               m_Mutex;
-	b3Tx                  m_Tx;
+	b3Tx                 *m_Tx;
 
 public:
 						  b3Display();
 	                      b3Display(const char *title);
+						  b3Display(b3Tx *image);
 	                      b3Display(b3_res xSize,b3_res ySize,const char *title = null);
 	virtual              ~b3Display();
 	virtual void          b3GetRes(b3_res &xSize,b3_res &ySize);

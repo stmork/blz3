@@ -2,34 +2,35 @@
 
 [General Info]
 Version=1
-LastClass=CDlgScene
+LastClass=CB3ShowRaytrace
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=10
+ClassCount=11
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
 Class4=CAppLinesView
 Class5=CAppRaytraceDoc
 Class6=CAppRaytraceView
-Class7=CChildFrame
-Class8=CDlgHierarchy
-Class9=CMainFrame
+Class7=CB3ShowRaytrace
+Class8=CChildFrame
+Class9=CDlgHierarchy
+Class10=CDlgScene
+Class11=CMainFrame
 
 ResourceCount=10
-Resource1=IDR_TOOLBAR_DISPLAY
-Resource2=IDD_ABOUTBOX
-Resource3=IDR_TOOLBAR_VIEW
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
-Resource6=IDD_HIERARCHY
-Resource7=IDR_MAINFRAME
-Resource8=IDR_DISPLAYTYPE
-Resource9=IDR_BLZ3TYPE
-Class10=CDlgScene
+Resource1=IDR_MAINFRAME
+Resource2=IDR_TOOLBAR_VIEW
+Resource3=IDR_TOOLBAR_ACTION
+Resource4=IDR_TOOLBAR_OBJECT
+Resource5=IDR_TOOLBAR_DISPLAY
+Resource6=IDR_BLZ3TYPE
+Resource7=IDR_DISPLAYTYPE
+Resource8=IDD_ABOUTBOX
+Resource9=IDD_HIERARCHY
 Resource10=IDD_SCENE
 
 [CLS:CAppLinesApp]
@@ -50,36 +51,31 @@ Type=0
 BaseClass=CDocument
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
-Filter=N
-VirtualFilter=DC
-LastObject=CAppLinesDoc
 
 [CLS:CAppLinesView]
 Type=0
 BaseClass=CScrollView
 HeaderFile=AppLinesView.h
 ImplementationFile=AppLinesView.cpp
-LastObject=CAppLinesView
-Filter=C
-VirtualFilter=VWC
 
 [CLS:CAppRaytraceDoc]
 Type=0
 BaseClass=CDocument
 HeaderFile=AppRaytraceDoc.h
 ImplementationFile=AppRaytraceDoc.cpp
-LastObject=ID_RAYTRACE
-Filter=N
-VirtualFilter=DC
 
 [CLS:CAppRaytraceView]
 Type=0
 BaseClass=CB3ScrollView
 HeaderFile=AppRaytraceView.h
 ImplementationFile=AppRaytraceView.cpp
-Filter=C
-VirtualFilter=VWC
-LastObject=CAppRaytraceView
+
+[CLS:CB3ShowRaytrace]
+Type=0
+BaseClass=CB3ShowImage
+HeaderFile=b3ShowRaytrace.h
+ImplementationFile=b3ShowRaytrace.cpp
+LastObject=CB3ShowRaytrace
 
 [CLS:CChildFrame]
 Type=0
@@ -93,12 +89,17 @@ BaseClass=CDialog
 HeaderFile=DlgHierarchy.h
 ImplementationFile=DlgHierarchy.cpp
 
+[CLS:CDlgScene]
+Type=0
+BaseClass=CDialog
+HeaderFile=DlgScene.h
+ImplementationFile=DlgScene.cpp
+
 [CLS:CMainFrame]
 Type=0
 BaseClass=CMDIFrameWnd
 HeaderFile=MainFrm.h
 ImplementationFile=MainFrm.cpp
-LastObject=CMainFrame
 
 [DLG:IDD_ABOUTBOX]
 Type=1
@@ -118,6 +119,31 @@ Control2=IDC_ACTIVATE,button,1342242816
 Control3=IDC_DEACTIVATE,button,1342242816
 Control4=IDC_ALL_ACTIVATE,button,1342242816
 Control5=IDC_ALL_DEACTIVATE,button,1342242816
+
+[DLG:IDD_SCENE]
+Type=1
+Class=CDlgScene
+ControlCount=20
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_BG_LIGHT,button,1342308361
+Control4=IDC_BG_COLOR,button,1342177289
+Control5=IDC_BG_SKY,button,1342177289
+Control6=IDC_BG_IMAGE,button,1342177289
+Control7=IDC_BG_IMAGE_SELECT,button,1342242816
+Control8=IDC_RES_VALID,button,1342242819
+Control9=IDC_XRES,edit,1350631552
+Control10=IDC_XRES_SPIN,msctls_updown32,1342177334
+Control11=IDC_YRES,edit,1350631552
+Control12=IDC_YRES_SPIN,msctls_updown32,1342177334
+Control13=IDC_RAYDEPTH,msctls_trackbar32,1342242817
+Control14=IDC_PREVIEW_RAYTRACE,static,1342181383
+Control15=IDC_PREVIEW_BGIMAGE,static,1342181383
+Control16=IDC_RAYDEPTH_LEGEND,static,1342308352
+Control17=IDC_STATIC,button,1342177287
+Control18=IDC_STATIC,static,1342308352
+Control19=IDC_STATIC,static,1342308352
+Control20=IDC_STATIC,button,1342177287
 
 [TB:IDR_MAINFRAME]
 Type=1
@@ -166,7 +192,7 @@ CommandCount=11
 
 [TB:IDR_TOOLBAR_OBJECT]
 Type=1
-Class=CAppLinesDoc
+Class=?
 Command1=ID_HIERACHY
 Command2=ID_RAYTRACE
 Command3=ID_DLG_SCENE
@@ -339,38 +365,4 @@ Command18=ID_VIEW_MOVE_TOP
 Command19=ID_EDIT_CUT
 Command20=ID_EDIT_UNDO
 CommandCount=20
-
-[DLG:IDD_SCENE]
-Type=1
-Class=CDlgScene
-ControlCount=20
-Control1=IDOK,button,1342242817
-Control2=IDCANCEL,button,1342242816
-Control3=IDC_BG_LIGHT,button,1342308361
-Control4=IDC_BG_COLOR,button,1342177289
-Control5=IDC_BG_SKY,button,1342177289
-Control6=IDC_BG_IMAGE,button,1342177289
-Control7=IDC_BG_IMAGE_SELECT,button,1342242816
-Control8=IDC_RES_VALID,button,1342242819
-Control9=IDC_XRES,edit,1350631552
-Control10=IDC_XRES_SPIN,msctls_updown32,1342177334
-Control11=IDC_YRES,edit,1350631552
-Control12=IDC_YRES_SPIN,msctls_updown32,1342177334
-Control13=IDC_RAYDEPTH,msctls_trackbar32,1342242817
-Control14=IDC_PREVIEW_RAYTRACE,static,1342181383
-Control15=IDC_PREVIEW_BGIMAGE,static,1342181383
-Control16=IDC_RAYDEPTH_LEGEND,static,1342308352
-Control17=IDC_STATIC,button,1342177287
-Control18=IDC_STATIC,static,1342308352
-Control19=IDC_STATIC,static,1342308352
-Control20=IDC_STATIC,button,1342177287
-
-[CLS:CDlgScene]
-Type=0
-HeaderFile=DlgScene.h
-ImplementationFile=DlgScene.cpp
-BaseClass=CDialog
-Filter=D
-LastObject=CDlgScene
-VirtualFilter=dWC
 

@@ -39,11 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/11/04 21:12:14  sm
+**	- New CB3ShowRaytrace control
+**
 **	Revision 1.17  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.16  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -309,6 +312,12 @@ void CAppLinesDoc::OnRaytrace()
 	b3ToggleRaytrace();
 }
 
+void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(b3IsRaytracing());
+}
+
 void CAppLinesDoc::b3ToggleRaytrace()
 {
 	if (!b3IsRaytracing())
@@ -325,6 +334,7 @@ b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
 {
 	CAppLinesDoc *pDoc = (CAppLinesDoc *)ptr;
 	CWinApp      *app  = AfxGetApp();
+	CMainFrame   *main = (CMainFrame *)app->m_pMainWnd;
 
 	pDoc->m_Scene->b3Raytrace(pDoc->m_Display);
 
@@ -338,10 +348,9 @@ b3_u32 CAppLinesDoc::b3RaytracingThread(void *ptr)
 		pDoc->m_Display = null;
 
 		// Update some controls...
-		app->m_pMainWnd->PostMessage(WM_USER_UPDATE_CONTROLS);
+//		main->PostMessage(WM_USER_UPDATE_CONTROLS);
 	}
-
-	return 0;
+	return 42;
 }
 
 void CAppLinesDoc::b3StartRaytrace()
@@ -408,10 +417,4 @@ void CAppLinesDoc::OnDlgScene()
 
 	dlg.m_Scene = m_Scene;
 	dlg.DoModal();
-}
-
-void CAppLinesDoc::OnUpdateRaytrace(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(b3IsRaytracing());
 }
