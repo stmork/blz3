@@ -28,7 +28,6 @@
 #include "DlgHierarchy.h"
 #include "DlgFulcrum.h"
 #include "DlgStepMove.h"
-#include "DlgAction.h"
 #include "DlgStepRotate.h"
 
 #define WM_USER_UPDATE_CONTROLS ((WM_USER) + 100)
@@ -80,7 +79,6 @@ protected:  // control bar embedded members
 
 public:
 	CDlgHierarchy      m_dlgHierarchy;
-	CDlgAction         m_dlgAction;
 
 // Generated message map functions
 protected:

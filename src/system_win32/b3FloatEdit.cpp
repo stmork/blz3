@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/09 17:47:54  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.5  2001/12/31 16:39:41  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.4  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -173,7 +177,7 @@ void CB3FloatEdit::OnUpdate()
 	// with the ENM_UPDATE flag ORed into the lParam mask.
 	
 	// TODO: Add your control notification handler code here
-	if (!b3Check())
+//	if (!b3Check())
 	{
 //		B3_BEEP;
 	}

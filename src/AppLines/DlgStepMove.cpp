@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/09 17:47:54  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.3  2001/12/31 16:39:40  sm
 **	- Made hierarchy dialog a CDialogBar
-**
+**	
 **	Revision 1.2  2001/12/26 18:17:56  sm
 **	- More status bar information displayed (e.g. coordinates)
 **	- Some minor UI updates
@@ -59,7 +63,13 @@ CDlgStepMove::CDlgStepMove(CWnd* pParent /*=NULL*/)
 	//{{AFX_DATA_INIT(CDlgStepMove)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
-	m_Info = null;
+	CWinApp *app = AfxGetApp();
+
+	m_CtrlMoveLeft.m_hIcon  = app->LoadIcon(IDI_LEFT);
+	m_CtrlMoveRight.m_hIcon = app->LoadIcon(IDI_RIGHT);
+	m_CtrlMoveUp.m_hIcon    = app->LoadIcon(IDI_UP);
+	m_CtrlMoveDown.m_hIcon  = app->LoadIcon(IDI_DOWN);
+	m_pDoc = null;
 }
 
 
@@ -70,12 +80,19 @@ void CDlgStepMove::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STEP_MOVE_Z, m_zCtrl);
 	DDX_Control(pDX, IDC_STEP_MOVE_Y, m_yCtrl);
 	DDX_Control(pDX, IDC_STEP_MOVE_X, m_xCtrl);
+	DDX_Control(pDX, IDC_MOVE_LEFT, m_CtrlMoveLeft);
+	DDX_Control(pDX, IDC_MOVE_RIGHT, m_CtrlMoveRight);
+	DDX_Control(pDX, IDC_MOVE_UP, m_CtrlMoveUp);
+	DDX_Control(pDX, IDC_MOVE_DOWN, m_CtrlMoveDown);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgStepMove, CB3Dialogbar)
 	//{{AFX_MSG_MAP(CDlgStepMove)
+	ON_EN_KILLFOCUS(IDC_STEP_MOVE_X, OnKillfocusStep)
+	ON_EN_KILLFOCUS(IDC_STEP_MOVE_Y, OnKillfocusStep)
+	ON_EN_KILLFOCUS(IDC_STEP_MOVE_Z, OnKillfocusStep)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -99,29 +116,43 @@ BOOL CDlgStepMove::OnInitDialog()
 
 void CDlgStepMove::b3GetData()
 {
-	if (m_Info != null)
+	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
+
+	if (info != null)
 	{
-		m_Info->m_StepMove.x = m_xCtrl.m_Value;
-		m_Info->m_StepMove.y = m_yCtrl.m_Value;
-		m_Info->m_StepMove.z = m_zCtrl.m_Value;
+		info->m_StepMove.x = m_xCtrl.m_Value;
+		info->m_StepMove.y = m_yCtrl.m_Value;
+		info->m_StepMove.z = m_zCtrl.m_Value;
 	}
 }
 
 void CDlgStepMove::b3SetData()
 {
-	m_xCtrl.EnableWindow(m_Info != null);
-	m_yCtrl.EnableWindow(m_Info != null);
-	m_zCtrl.EnableWindow(m_Info != null);
-	if (m_Info != null)
+	b3ModellerInfo *info = m_pDoc != null ? m_pDoc->m_Info : null;
+
+	m_xCtrl.EnableWindow(info != null);
+	m_yCtrl.EnableWindow(info != null);
+	m_zCtrl.EnableWindow(info != null);
+	if (info != null)
 	{
-		m_xCtrl.b3SetValue(m_Info->m_StepMove.x);
-		m_yCtrl.b3SetValue(m_Info->m_StepMove.y);
-		m_zCtrl.b3SetValue(m_Info->m_StepMove.z);
+		m_xCtrl.b3SetValue(info->m_StepMove.x);
+		m_yCtrl.b3SetValue(info->m_StepMove.y);
+		m_zCtrl.b3SetValue(info->m_StepMove.z);
 	}
 	else
 	{
 		m_xCtrl.SetWindowText("");
 		m_yCtrl.SetWindowText("");
 		m_zCtrl.SetWindowText("");
+	}
+}
+
+void CDlgStepMove::OnKillfocusStep() 
+{
+	// TODO: Add your control notification handler code here
+	b3GetData();
+	if (m_pDoc != null)
+	{
+		m_pDoc->SetModifiedFlag();
 	}
 }

@@ -26,6 +26,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3FloatEdit.h"
+#include "blz3/system/b3ImageButton.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgStepMove dialog
@@ -34,7 +35,7 @@ class CDlgStepMove : public CB3Dialogbar
 {
 // Construction
 public:
-	b3ModellerInfo *m_Info;
+	CAppLinesDoc *m_pDoc;
 	     CDlgStepMove(CWnd* pParent = NULL);   // standard constructor
 	void b3SetData();
 	void b3GetData();
@@ -45,6 +46,10 @@ public:
 	CB3FloatEdit	m_zCtrl;
 	CB3FloatEdit	m_yCtrl;
 	CB3FloatEdit	m_xCtrl;
+	CB3ImageButton	m_CtrlMoveLeft;
+	CB3ImageButton	m_CtrlMoveRight;
+	CB3ImageButton	m_CtrlMoveUp;
+	CB3ImageButton	m_CtrlMoveDown;
 	//}}AFX_DATA
 
 public:
@@ -61,6 +66,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgStepMove)
+	afx_msg void OnKillfocusStep();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

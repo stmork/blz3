@@ -179,6 +179,8 @@ protected:
 	afx_msg void OnMoveRight();
 	afx_msg void OnMoveDown();
 	afx_msg void OnMoveUp();
+	afx_msg void OnRotateLeft();
+	afx_msg void OnRotateRight();
 	afx_msg void OnUpdateMovement(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -192,6 +194,7 @@ protected:
 
 private:
 	void b3Move(b3_action_mode mode);
+	void b3Rotate(b3_action_mode mode);
 
 	friend class CB3Action;
 	friend class CB3MoveAction;

@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2002/01/09 17:47:54  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.36  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
-**
+**	
 **	Revision 1.35  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop

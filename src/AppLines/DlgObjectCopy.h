@@ -34,15 +34,15 @@ class CDlgObjectCopy : public CDialog
 {
 // Construction
 public:
-	b3_vector  m_Move;
-	b3_vector  m_Rotate;
 	b3_vector *m_Center;
+	b3_matrix  m_Transformation;
 	b3BBox    *m_OrigBBox;
 	CDlgObjectCopy(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgObjectCopy)
 	enum { IDD = IDD_OBJECT_COPY };
+	CSpinButtonCtrl	m_CtrlNumCopies;
 	CB3FloatEdit	m_xCtrlOffset;
 	CB3FloatEdit	m_yCtrlOffset;
 	CB3FloatEdit	m_zCtrlOffset;
@@ -53,6 +53,13 @@ public:
 	CB3FloatEdit	m_yCtrlCenter;
 	CB3FloatEdit	m_zCtrlCenter;
 	b3_count	m_NumCopies;
+	BOOL	m_CopyBack;
+	BOOL	m_xUseOffset;
+	BOOL	m_yUseOffset;
+	BOOL	m_zUseOffset;
+	BOOL	m_xUseRot;
+	BOOL	m_yUseRot;
+	BOOL	m_zUseRot;
 	//}}AFX_DATA
 
 
@@ -69,8 +76,24 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CDlgObjectCopy)
 	virtual BOOL OnInitDialog();
+	virtual void OnOK();
+	afx_msg void OnCenterClear();
+	afx_msg void OnOffsetXUse();
+	afx_msg void OnOffsetYUse();
+	afx_msg void OnOffsetZUse();
+	afx_msg void OnKillfocusOffsetX();
+	afx_msg void OnKillfocusOffsetY();
+	afx_msg void OnKillfocusOffsetZ();
+	afx_msg void OnUseRotation();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+private:
+	b3_vector  m_Move;
+	b3_vector  m_Rotate;
+
+	void b3UpdateUI();
+	void b3WriteProfileFloat(const char *keyword,b3_f64 value);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -39,9 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/01/09 17:47:53  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.33  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
-**
+**	
 **	Revision 1.32  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
@@ -297,6 +301,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_BN_CLICKED(IDC_MOVE_RIGHT, OnMoveRight)
 	ON_BN_CLICKED(IDC_MOVE_DOWN, OnMoveDown)
 	ON_BN_CLICKED(IDC_MOVE_UP, OnMoveUp)
+	ON_BN_CLICKED(IDC_ROT_LEFT, OnRotateLeft)
+	ON_BN_CLICKED(IDC_ROT_RIGHT, OnRotateRight)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_LEFT, OnUpdateMovement)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_RIGHT, OnUpdateMovement)
 	ON_UPDATE_COMMAND_UI(IDC_MOVE_UP, OnUpdateMovement)
@@ -633,13 +639,11 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
 		main->b3UpdateModellerInfo(GetDocument());
-		main->m_dlgAction.m_pView = this;
 		m_Scene->b3SetCamera(m_Camera,true);
 		app->b3SetData();
 	}
 	else
 	{
-		main->m_dlgAction.m_pView = null;
 		main->b3Clear();
 		main->b3UpdateModellerInfo();
 		app->b3GetData();
@@ -1204,28 +1208,57 @@ void CAppLinesView::b3Move(b3_action_mode mode)
 	pDoc->UpdateAllViews(null,B3_UPDATE_GEOMETRY);
 }
 
+void CAppLinesView::b3Rotate(b3_action_mode mode)
+{
+	CAppLinesDoc *pDoc = GetDocument();
+	b3_line       axis;
+	b3_matrix     transformation;
+	b3_f64        angle;
+
+	axis.pos = *pDoc->b3GetFulcrum();
+	angle    = m_RenderView.b3SetRotationStepper(
+		pDoc->b3GetStepRotate(),&axis.dir,mode);
+	b3MatrixRotVec(null,&transformation,&axis,angle * M_PI / 180);
+	m_Scene->b3Transform(&transformation);
+	pDoc->b3ComputeBounds();
+	pDoc->SetModifiedFlag();
+	pDoc->UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+}
+
 void CAppLinesView::OnMoveLeft() 
 {
 	// TODO: Add your control notification handler code here
-	b3Move(B3_ACTION_LEFT);
+	b3Move(B3_ACTION_MOVE_LEFT);
 }
 
 void CAppLinesView::OnMoveRight() 
 {
 	// TODO: Add your control notification handler code here
-	b3Move(B3_ACTION_RIGHT);
+	b3Move(B3_ACTION_MOVE_RIGHT);
 }
 
 void CAppLinesView::OnMoveDown() 
 {
 	// TODO: Add your control notification handler code here
-	b3Move(B3_ACTION_DOWN);
+	b3Move(B3_ACTION_MOVE_DOWN);
 }
 
 void CAppLinesView::OnMoveUp() 
 {
 	// TODO: Add your control notification handler code here
-	b3Move(B3_ACTION_UP);
+	b3Move(B3_ACTION_MOVE_UP);
+}
+
+void CAppLinesView::OnRotateLeft() 
+{
+	// TODO: Add your control notification handler code here
+	b3Rotate(B3_ACTION_ROT_LEFT);
+}
+
+void CAppLinesView::OnRotateRight() 
+{
+	// TODO: Add your control notification handler code here
+	b3Rotate(B3_ACTION_ROT_RIGHT);
 }
 
 void CAppLinesView::OnUpdateMovement(CCmdUI* pCmdUI) 

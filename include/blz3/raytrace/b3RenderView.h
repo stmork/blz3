@@ -49,10 +49,12 @@ public:
 
 enum b3_action_mode
 {
-	B3_ACTION_RIGHT,
-	B3_ACTION_LEFT,
-	B3_ACTION_UP,
-	B3_ACTION_DOWN
+	B3_ACTION_MOVE_RIGHT,
+	B3_ACTION_MOVE_LEFT,
+	B3_ACTION_MOVE_UP,
+	B3_ACTION_MOVE_DOWN,
+	B3_ACTION_ROT_LEFT,
+	B3_ACTION_ROT_RIGHT
 };
 
 class b3RenderView
@@ -94,6 +96,7 @@ public:
 	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);
 	void              b3UpdateView(b3_coord xPos,b3_coord yPos,b3_res xSize,b3_res ySize);
 	void              b3SetTranslationStepper(b3_vector *steps,b3_vector *mover,b3_action_mode mode);
+	b3_f64            b3SetRotationStepper(b3_vector *steps,b3_vector *axis_dir,b3_action_mode mode);
 
 private:
 	b3RenderViewItem *b3NewRenderViewItem(b3RenderViewItem *lastItem = null);

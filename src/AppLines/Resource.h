@@ -42,6 +42,12 @@
 #define IDD_OBJECT_COPY                 154
 #define IDD_ACTION                      155
 #define IDI_BBOX_EMPTY                  156
+#define IDI_LEFT                        157
+#define IDI_RIGHT                       158
+#define IDI_UP                          159
+#define IDI_DOWN                        160
+#define IDI_ROT_LEFT                    161
+#define IDI_ROT_RIGHT                   162
 #define IDM_BAR_VIEW                    252
 #define IDD_SEARCH_PATH_LIST            509
 #define IDD_LDC                         510
@@ -180,6 +186,17 @@
 #define IDC_CENTER_X                    1093
 #define IDC_CENTER_Y                    1094
 #define IDC_CENTER_Z                    1095
+#define IDC_CENTER_COPYBACK             1096
+#define IDC_CENTER_CLEAR                1097
+#define IDC_NUM_COPYIES_SPIN            1098
+#define IDC_ROT_X_USE                   1099
+#define IDC_ROT_Y_USE                   1100
+#define IDC_ROT_Z_USE                   1101
+#define IDC_OFFSET_X_USE                1103
+#define IDC_OFFSET_Y_USE                1104
+#define IDC_ROT_LEFT                    1104
+#define IDC_OFFSET_Z_USE                1105
+#define IDC_ROT_RIGHT                   1105
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -313,9 +330,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        157
+#define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         32862
-#define _APS_NEXT_CONTROL_VALUE         1094
+#define _APS_NEXT_CONTROL_VALUE         1105
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

@@ -140,10 +140,6 @@ SOURCE=.\b3Fulcrum.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3ImageButton.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\b3SelectTexture.cpp
 # End Source File
 # Begin Source File
@@ -153,10 +149,6 @@ SOURCE=.\b3ShowRaytrace.cpp
 # Begin Source File
 
 SOURCE=.\ChildFrm.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\DlgAction.cpp
 # End Source File
 # Begin Source File
 
@@ -272,15 +264,7 @@ SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3ImageButton.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ChildFrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\DlgAction.h
 # End Source File
 # Begin Source File
 
@@ -416,6 +400,10 @@ SOURCE=.\res\Display.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\down.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\H_move.cur
 # End Source File
 # Begin Source File
@@ -432,7 +420,23 @@ SOURCE=.\res\ico00003.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\left.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\raytrace.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\right.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\rot_left.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\rot_right.ico
 # End Source File
 # Begin Source File
 
@@ -461,6 +465,10 @@ SOURCE=.\res\toolbar_light.bmp
 # Begin Source File
 
 SOURCE=.\res\toolbar_object.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\up.ico
 # End Source File
 # End Group
 # Begin Source File

@@ -55,9 +55,13 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2002/01/09 17:47:53  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.45  2002/01/08 16:21:58  sm
 **	- Added center to copy dialog
-**
+**	
 **	Revision 1.44  2002/01/08 16:04:08  sm
 **	- New copy dialog added
 **	- Merge with daily work
@@ -1623,7 +1627,6 @@ void CAppLinesDoc::OnObjectCopy()
 	b3BBox         *bbox;
 	b3BBox         *cloned;
 	b3Base<b3Item> *base;
-	b3_matrix       transformation;
 	b3_count        i;
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
@@ -1635,16 +1638,12 @@ void CAppLinesDoc::OnObjectCopy()
 	{
 		CWaitCursor     wait;
 	
-		b3MatrixMove(null,&transformation,&dlg.m_Move);
-		b3MatrixRotX(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.x * M_PI / 180);
-		b3MatrixRotY(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.y * M_PI / 180);
-		b3MatrixRotZ(&transformation,&transformation,b3GetFulcrum(),dlg.m_Rotate.z * M_PI / 180);
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
 		bbox = selected;
 		for (i = 0;i < dlg.m_NumCopies;i++)
 		{
 			cloned = (b3BBox *)b3World::b3Clone(bbox);
-			cloned->b3Transform(&transformation,true);
+			cloned->b3Transform(&dlg.m_Transformation,true);
 			cloned->b3Prepare();
 			base->b3Insert(bbox,cloned);
 			bbox = cloned;

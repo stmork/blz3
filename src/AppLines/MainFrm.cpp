@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2002/01/09 17:47:54  sm
+**	- Finished CB3ImageButton implementation.
+**	- Finished CDlgObjectCopy
+**
 **	Revision 1.24  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
-**
+**	
 **	Revision 1.23  2002/01/05 22:17:47  sm
 **	- Recomputing bounding boxes correctly
 **	- Found key input bug: The accelerator are the problem
@@ -289,7 +293,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
 	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
 	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
-	app->b3AddDialogbar(&m_dlgAction,    IDD_ACTION,         IDS_DIALOGBAR_ACTION);
 	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
 	if (!app->b3CreateToolbars(this))
 	{
@@ -607,8 +610,8 @@ b3Light *CMainFrame::b3GetSelectedLight()
 void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
 {
 	m_dlgFulcrum.m_pDoc    = pDoc;
-	m_dlgStepMove.m_Info   = pDoc != null ? pDoc->m_Info : null;
-	m_dlgStepRotate.m_Info = pDoc != null ? pDoc->m_Info : null;
+	m_dlgStepMove.m_pDoc   = pDoc;
+	m_dlgStepRotate.m_pDoc = pDoc;
 	if (pDoc != null)
 	{
 		m_dlgHierarchy.b3InitTree(pDoc);
