@@ -2434,6 +2434,7 @@ private:
 	        void            b3DoRaytrace(b3Display *display,b3_count CPUs);
 	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
+	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
 	static  b3_u32          b3PrepareThread(b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread( b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray_info *ray);
