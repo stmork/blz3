@@ -90,26 +90,26 @@ public:
 	inline b3Color(const b3_pkd_color input)
 	{
 		       b3_pkd_color       mask  = 0xff000000;
-		       int                shift = 24;
+		       int                shift = 24,i;
 		       b3_s16 B3_ALIGN_16 c[4];
 		static b3_f32 B3_ALIGN_16 f[4]  = 
 		{
 			0.0039215686f,0.0039215686f,0.0039215686f,0.0039215686f
 		};
 
-		for (int i = 0;i < 4;i++)
+		for (i = 0;i < 4;i++)
 		{
 			c[i]   = ((input & mask) >> shift);
 			mask >>= 8;
 			shift -= 8;
 		}
 
-		for (int i = 0;i < 4;i++)
+		for (i = 0;i < 4;i++)
 		{
 			v[i] = (b3_f32)c[i];
 		}
 
-		for (int i = 0;i < 4;i++)
+		for (i = 0;i < 4;i++)
 		{
 			v[i] *= f[i];
 		}
