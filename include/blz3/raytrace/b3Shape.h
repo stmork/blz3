@@ -420,6 +420,7 @@ class B3_PLUGIN b3TriangleShape : public b3SimpleShape
 {
 	b3Array<b3_index>     *m_GridList;       // list of grids
 	b3Array<b3_triainfo>   m_TriaInfos;
+	b3_bool                m_GridComputed;
 
 protected:
 	b3_vector              m_Base,m_Size;    // size of bounding box of all triangles
@@ -459,6 +460,7 @@ public:
 protected:
 	        void    b3FreeTriaRefs();
 private:
+	        void    b3Clear();
 	        void    b3PrepareGridList();
 	        void    b3AddCubicItem(b3_count trianum,b3_index index);
 	        void    b3SearchCubicItem(

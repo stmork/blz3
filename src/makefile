@@ -3,7 +3,7 @@
 #
 
 CFLAGS		= $(OFLAGS) -D__$(OSTYPE)__
-CXXFLAGS	= $(CFLAGS) -Wall -Wno-multichar
+CXXFLAGS	= $(CFLAGS)
 
 ifeq ($(HOSTTYPE),m68k-amiga)
 	SUB_DIRS := system_amiga

@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.44  2004/07/11 11:05:15  sm
+**      - Triangle preparation optimized to build grid only if new or
+**        transformed.
+**
 **      Revision 1.43  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -207,51 +211,39 @@
 b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
 	b3SimpleShape(class_size, class_type)
 {
-	m_Vertices    = null;
-	m_Triangles   = null;
-	m_GridList    = null;
-	m_GridCount   = 0;
-	m_GridSize    = 0;
-	m_VertexCount = 0;
-	m_TriaCount   = 0;
-	m_xSize       = 0;
-	m_ySize       = 0;
-	m_Flags       = 0;
+	b3Clear();
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 	b3SimpleShape(sizeof(b3TriangleShape), class_type)
 {
-	m_Vertices    = null;
-	m_Triangles   = null;
-	m_GridList    = null;
-	m_GridCount   = 0;
-	m_GridSize    = 0;
-	m_VertexCount = 0;
-	m_TriaCount   = 0;
-	m_xSize       = 0;
-	m_ySize       = 0;
-	m_Flags       = 0;
+	b3Clear();
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 *src) :
 	b3SimpleShape(src)
 {
-	m_Vertices    = null;
-	m_Triangles   = null;
-	m_GridList    = null;
-	m_GridCount   = 0;
-	m_GridSize    = 0;
-	m_VertexCount = 0;
-	m_TriaCount   = 0;
-	m_xSize       = 0;
-	m_ySize       = 0;
-	m_Flags       = 0;
+	b3Clear();
 }
 
 b3TriangleShape::~b3TriangleShape()
 {
 	b3FreeTriaRefs();
+}
+
+void b3TriangleShape::b3Clear()
+{
+	m_GridComputed = false;
+	m_Vertices     = null;
+	m_Triangles    = null;
+	m_GridList     = null;
+	m_GridCount    = 0;
+	m_GridSize     = 0;
+	m_VertexCount  = 0;
+	m_TriaCount    = 0;
+	m_xSize        = 0;
+	m_ySize        = 0;
+	m_Flags        = 0;
 }
 
 b3_bool b3TriangleShape::b3Init(
@@ -284,6 +276,7 @@ void b3TriangleShape::b3Transform(b3_matrix *transformation,b3_bool is_affine)
 	b3_index   i;
 	b3_vertex *ptr = m_Vertices;
 
+	m_GridComputed = false;
 	for (i = 0;i < m_VertexCount;i++)
 	{
 		b3Vector::b3MatrixMul4D (transformation,&ptr->Point);
@@ -472,106 +465,110 @@ b3_bool b3TriangleShape::b3Prepare()
 		B3_ASSERT(b3GetConditionHead()->First == null);
 	}
 
-	m_TriaInfos.b3Clear();
-	for (i = 0;i < m_TriaCount;i++)
+	if (!m_GridComputed)
 	{
-		P1 = m_Triangles[i].P1;		/* Base */
-		P2 = m_Triangles[i].P2;		/* Dir1 */
-		P3 = m_Triangles[i].P3;		/* Dir2 */
-
-		info.O.x  = m_Vertices[P1].Point.x;
-		info.O.y  = m_Vertices[P1].Point.y;
-		info.O.z  = m_Vertices[P1].Point.z;
-
-		info.R1.x = m_Vertices[P2].Point.x - m_Vertices[P1].Point.x;
-		info.R1.y = m_Vertices[P2].Point.y - m_Vertices[P1].Point.y;
-		info.R1.z = m_Vertices[P2].Point.z - m_Vertices[P1].Point.z;
-
-		info.R2.x = m_Vertices[P3].Point.x - m_Vertices[P1].Point.x;
-		info.R2.y = m_Vertices[P3].Point.y - m_Vertices[P1].Point.y;
-		info.R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
-
-		info.Normal.x = info.R1.y * info.R2.z - info.R1.z * info.R2.y;
-		info.Normal.y = info.R1.z * info.R2.x - info.R1.x * info.R2.z;
-		info.Normal.z = info.R1.x * info.R2.y - info.R1.y * info.R2.x;
-
-		m_TriaInfos.b3Add(info);
-
-		if ((m_Flags & NORMAL_FACE_VALID)==0)
+		m_TriaInfos.b3Clear();
+		for (i = 0;i < m_TriaCount;i++)
 		{
-			disp.x = m_Triangles[i].Normal.x = info.Normal.x;
-			disp.y = m_Triangles[i].Normal.y = info.Normal.y;
-			disp.z = m_Triangles[i].Normal.z = info.Normal.z;
-			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+			P1 = m_Triangles[i].P1;		/* Base */
+			P2 = m_Triangles[i].P2;		/* Dir1 */
+			P3 = m_Triangles[i].P3;		/* Dir2 */
+
+			info.O.x  = m_Vertices[P1].Point.x;
+			info.O.y  = m_Vertices[P1].Point.y;
+			info.O.z  = m_Vertices[P1].Point.z;
+
+			info.R1.x = m_Vertices[P2].Point.x - m_Vertices[P1].Point.x;
+			info.R1.y = m_Vertices[P2].Point.y - m_Vertices[P1].Point.y;
+			info.R1.z = m_Vertices[P2].Point.z - m_Vertices[P1].Point.z;
+
+			info.R2.x = m_Vertices[P3].Point.x - m_Vertices[P1].Point.x;
+			info.R2.y = m_Vertices[P3].Point.y - m_Vertices[P1].Point.y;
+			info.R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
+
+			info.Normal.x = info.R1.y * info.R2.z - info.R1.z * info.R2.y;
+			info.Normal.y = info.R1.z * info.R2.x - info.R1.x * info.R2.z;
+			info.Normal.z = info.R1.x * info.R2.y - info.R1.y * info.R2.x;
+
+			m_TriaInfos.b3Add(info);
+
+			if ((m_Flags & NORMAL_FACE_VALID)==0)
 			{
+				disp.x = m_Triangles[i].Normal.x = info.Normal.x;
+				disp.y = m_Triangles[i].Normal.y = info.Normal.y;
+				disp.z = m_Triangles[i].Normal.z = info.Normal.z;
+				if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+				{
 #ifdef NORMAL_NORMALIZED
-				b3Vector::b3Normalize(&disp);
+					b3Vector::b3Normalize(&disp);
 #endif
-				b3Vector::b3Add(&disp,&m_Vertices[P1].Normal);
-				b3Vector::b3Add(&disp,&m_Vertices[P2].Normal);
-				b3Vector::b3Add(&disp,&m_Vertices[P3].Normal);
+					b3Vector::b3Add(&disp,&m_Vertices[P1].Normal);
+					b3Vector::b3Add(&disp,&m_Vertices[P2].Normal);
+					b3Vector::b3Add(&disp,&m_Vertices[P3].Normal);
+				}
 			}
 		}
-	}
 
-	b3Vector::b3InitBound(&Start,&End);
-	for (i = 0;i < m_VertexCount;i++)
-	{
-		b3Vector::b3AdjustBound(&m_Vertices[i].Point,&Start,&End);
-
-		if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+		b3Vector::b3InitBound(&Start,&End);
+		for (i = 0;i < m_VertexCount;i++)
 		{
-			b3Vector::b3Normalize(&m_Vertices[i].Normal);
+			b3Vector::b3AdjustBound(&m_Vertices[i].Point,&Start,&End);
+
+			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
+			{
+				b3Vector::b3Normalize(&m_Vertices[i].Normal);
+			}
 		}
-	}
 
 #	ifndef ONE_GRID
-	m_GridSize = (b3_count)b3Math::b3Cbrt (0.125 * m_TriaCount);
-	if (m_GridSize < 1)
-	{
-		m_GridSize = 1;
-	}
+		m_GridSize = (b3_count)b3Math::b3Cbrt (0.125 * m_TriaCount);
+		if (m_GridSize < 1)
+		{
+			m_GridSize = 1;
+		}
 #	else
-	m_GridSize = 1;
+		m_GridSize = 1;
 #	endif
 
-	if (((End.x - Start.x) < 0.1) ||
-	    ((End.y - Start.y) < 0.1) ||
-	    ((End.z - Start.z) < 0.1))
-	{
-		m_GridSize = 1;
-	}
-	Start.x -= 0.1f;
-	Start.y -= 0.1f;
-	Start.z -= 0.1f;
-	End.x   += 0.1f;
-	End.y   += 0.1f;
-	End.z   += 0.1f;
-
-	Denom    = 1.0 / m_GridSize;
-	m_Base   = Start;
-	m_Size.x = (End.x - Start.x) * Denom;
-	m_Size.y = (End.y - Start.y) * Denom;
-	m_Size.z = (End.z - Start.z) * Denom;
-	b3Vector::b3SetMinimum(&m_Size,b3Scene::epsilon);
-
-	max = m_GridSize * m_GridSize * m_GridSize;
-	if (max != m_GridCount)
-	{
-		b3FreeTriaRefs();
-	}
-	if (m_GridList == null)
-	{
-		m_GridList  = new b3Array<b3_index>[max];
-		m_GridCount = max;
-	}
-	else
-	{
-		for (i = 0;i < max;i++)
+		if (((End.x - Start.x) < 0.1) ||
+		    ((End.y - Start.y) < 0.1) ||
+		    ((End.z - Start.z) < 0.1))
 		{
-			m_GridList[i].b3Clear();
+			m_GridSize = 1;
 		}
+		Start.x -= 0.1f;
+		Start.y -= 0.1f;
+		Start.z -= 0.1f;
+		End.x   += 0.1f;
+		End.y   += 0.1f;
+		End.z   += 0.1f;
+
+		Denom    = 1.0 / m_GridSize;
+		m_Base   = Start;
+		m_Size.x = (End.x - Start.x) * Denom;
+		m_Size.y = (End.y - Start.y) * Denom;
+		m_Size.z = (End.z - Start.z) * Denom;
+		b3Vector::b3SetMinimum(&m_Size,b3Scene::epsilon);
+
+		max = m_GridSize * m_GridSize * m_GridSize;
+		if (max != m_GridCount)
+		{
+			b3FreeTriaRefs();
+		}
+		if (m_GridList == null)
+		{
+			m_GridList  = new b3Array<b3_index>[max];
+			m_GridCount = max;
+		}
+		else
+		{
+			for (i = 0;i < max;i++)
+			{
+				m_GridList[i].b3Clear();
+			}
+		}
+		b3PrepareGridList();
+		m_GridComputed = true;
 	}
-	b3PrepareGridList();
 	return b3Shape::b3Prepare();
 }
