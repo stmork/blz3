@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2002/07/23 07:04:05  sm
+**      - Added torus support
+**      - Precompute surface colors. So we don't need to collect
+**        colors during mesh draw.
+**      - Added simple texturing with appropriate scaling.
+**
 **      Revision 1.40  2002/07/22 18:47:01  sm
 **      - Marion nerves.
 **
@@ -624,6 +630,36 @@ b3_bool b3ShapeRenderObject::b3GetChess(
 		}
 	}
 	return result;
+}
+
+b3Tx *b3ShapeRenderObject::b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale)
+{
+	b3Item *item;
+	b3Tx   *tx = null;
+
+	item = b3GetMaterialHead()->First;
+	if ((item != null) && (item->b3GetClassType() == TEXTURE) && (item->Succ == null))
+	{
+		b3MatTexture     *mat = (b3MatTexture *)item;
+		b3_stencil_limit  limit;
+		b3_f64            xLocSize;
+		b3_f64            yLocSize;
+
+		B3_ASSERT(mat->m_Texture != null);
+		b3ComputeBound(&limit);
+		xLocSize = limit.x2 - limit.x1;
+		yLocSize = limit.y2 - limit.y1;
+
+		tx     = mat->m_Texture;
+		xTrans = (mat->m_xStart - limit.x1) / xLocSize;
+		yTrans = (mat->m_yStart - limit.y1) / yLocSize;
+		xScale =  mat->m_xScale / xLocSize;
+		yScale =  mat->m_yScale / yLocSize;
+
+		b3PrintF(B3LOG_FULL,"b3ShapeRenderObject::b3GetTexture(%2.2f,%2.2f,%2.2f,%2.2f) = %s\n",
+			xTrans,yTrans,xScale,yScale,tx->b3Name());
+	}
+	return tx;
 }
 
 b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
@@ -1489,30 +1525,37 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
-	b3_f64     RadX,RadY,sx,sy,start,end,a;
-	b3_f64     LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	GLfloat   *Tex;
+	b3_f64     start,end,a;
+	b3_f64     sx,RadX,LocalSin[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64     sy,RadY,LocalCos[B3_MAX_RENDER_SUBDIV+1];
+	b3_f64     relTex[B3_MAX_RENDER_SUBDIV+1];
 	b3_index   i,j;
 	b3_count   iMax,Circles=0;
 	b3_vector  Aux;
 
 	Vector = (b3_vector *)glVertices;
+	Tex    = glTexCoord;
 	start  = Limit.y1 * SinCosSteps;
 	end    = Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
 	iMax   = (b3_count)floor(end);
 	if ((i - start) > epsilon)	/* underflow */
 	{
+		relTex[Circles]   = 0;
 		LocalSin[Circles] = Limit.y1;
 		Circles++;
 	}
 	a = 1.0 / SinCosSteps;
 	for (j = i;j <= iMax;j++)		/* integers */
 	{
+		relTex[Circles]   = ((double)j / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
 		LocalSin[Circles] = j * a - 1;
 		Circles++;
 	}
 	if ((end - iMax) > epsilon)	/* Overflow */
 	{
+		relTex[Circles]   = 1;
 		LocalSin[Circles] = Limit.y2;
 		Circles++;
 	}
@@ -1520,7 +1563,7 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 	ySize = Circles;
 	glVertexCount = 0;
 
-	for (j=0;j<Circles;j++)		/* Calculate Values */
+	for (j = 0;j < Circles;j++)		/* Calculate Values */
 	{
 		LocalCos[j] = cos(LocalSin[j] * M_PI * 2) * bRad;
 		LocalSin[j] = sin(LocalSin[j] * M_PI * 2) * bRad;
@@ -1549,6 +1592,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
+
+			*Tex++  = 0;
+			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;
@@ -1571,6 +1617,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
+
+			*Tex++  = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
+			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;
@@ -1594,6 +1643,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 			Vector->y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
 			Vector->z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
 			Vector++;
+
+			*Tex++  = 1;
+			*Tex++  = relTex[j];
 		}
 		glVertexCount += Circles;
 		xSize++;

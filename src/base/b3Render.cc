@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2002/07/23 07:04:05  sm
+**      - Added torus support
+**      - Precompute surface colors. So we don't need to collect
+**        colors during mesh draw.
+**      - Added simple texturing with appropriate scaling.
+**
 **      Revision 1.33  2002/07/22 18:45:16  sm
 **      - Further probing of texture stencil via alpha channel.
 **      - Why does Mesa loose the first texture?
@@ -510,7 +516,10 @@ b3RenderObject::b3RenderObject()
 	glTexCoord    = null;
 	glGrids       = null;
 	glPolygons    = null;
-	glComputed    = false;
+
+	glComputed        = false;
+	glMaterialInitial = true;
+
 	glTextureId   = 0;
 	glTextureData = null;
 	glTextureSize = null;
@@ -778,6 +787,11 @@ b3_bool b3RenderObject::b3GetChess(
 	return false;
 }
 
+b3Tx *b3RenderObject::b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale)
+{
+	return null;
+}
+
 b3_bool b3RenderObject::b3GetImage(b3Tx *image)
 {
 	return false;
@@ -795,32 +809,6 @@ void b3RenderObject::b3Recompute()
 #endif
 }
 
-static b3Tx glTextureBuffer;
-
-void b3RenderObject::b3UpdateTexture()
-{
-	b3_color black,white;
-
-	if (b3GetChess(&black,&white,glTextureRepeatX,glTextureRepeatY))
-	{
-		b3CreateChess(null,&black,&white);
-	}
-	else
-	{
-		glTextureRepeatX = 2;
-		glTextureRepeatY = 2;
-		if (b3GetImage(&glTextureBuffer))
-		{
-			b3CreateImage(null,&glTextureBuffer);
-		}
-		else
-		{
-			// Free memory
-			b3CreateTexture(null,0);
-		}
-	}
-}
-
 void b3RenderObject::b3Update()
 {
 #ifdef BLZ3_USE_OPENGL
@@ -830,9 +818,72 @@ void b3RenderObject::b3Update()
 		b3ComputeVertices();
 		b3ComputeNormals();
 		glComputed = true;
-		b3UpdateTexture();
+
+		if (glMaterialInitial)
+		{
+			b3UpdateMaterial();
+			glMaterialInitial = false;
+		}
 	}
 #endif
+}
+
+static b3Tx glTextureBuffer;
+
+void b3RenderObject::b3UpdateMaterial()
+{
+	b3Tx     *tx;
+	b3_color  black,white;
+	b3_color  ambient,diffuse,specular;
+	b3_res    xRep,yRep;
+
+	glShininess = b3GetColors(&ambient,&diffuse,&specular);
+	glTextureTransX = 0;
+	glTextureTransY = 0;
+	if (b3GetChess(&black,&white,xRep,yRep))
+	{
+		glTextureScaleX = 0.5 * xRep;
+		glTextureScaleY = 0.5 * yRep;
+		b3CreateChess(null,&black,&white);
+	}
+	else
+	{
+		tx = b3GetTexture(glTextureTransX,glTextureTransY,glTextureScaleX,glTextureScaleY);
+		if (tx != null)
+		{
+			b3CopyTexture(null,tx);
+		}
+		else
+		{
+			glTextureScaleX = 1;
+			glTextureScaleY = 1;
+			if (b3GetImage(&glTextureBuffer))
+			{
+				b3CreateImage(null,&glTextureBuffer);
+			}
+			else
+			{
+				// Free memory
+				b3CreateTexture(null,0);
+			}
+		}
+	}
+
+	if (glTextureSize > 0)
+	{
+		b3RenderContext::b3PkdColorToGL(B3_WHITE,glAmbient);
+		b3RenderContext::b3PkdColorToGL(B3_WHITE,glDiffuse);
+		b3RenderContext::b3PkdColorToGL(B3_WHITE,glSpecular);
+	}
+	else
+	{
+#if 1
+		ambient = specular = diffuse;
+#endif
+		b3RenderContext::b3ColorToGL(&ambient, glAmbient);
+		b3RenderContext::b3ColorToGL(&diffuse, glDiffuse);
+		b3RenderContext::b3ColorToGL(&specular,glSpecular);
+	}
 }
 
 void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
@@ -867,7 +918,6 @@ void b3RenderObject::b3Draw()
 	b3_color       ambient;
 	b3_color       diffuse;
 	b3_color       specular;
-	b3_f64         shininess;
 
 #ifdef BLZ3_USE_OPENGL
 	b3Update();
@@ -956,17 +1006,9 @@ void b3RenderObject::b3Draw()
 	case B3_RENDER_FILLED:
 		if (glPolyCount > 0)
 		{
-			GLfloat color[4];
-
 			glEnable(GL_LIGHTING);
-			shininess = b3GetColors(&ambient,&diffuse,&specular);
-
 			if (glTextureSize > 0)
 			{
-				b3Color::b3Init(&ambient, B3_WHITE);
-				b3Color::b3Init(&diffuse, B3_WHITE);
-				b3Color::b3Init(&specular,B3_WHITE);
-
 				B3_ASSERT(glIsTexture(glTextureId));
 				glBindTexture(  GL_TEXTURE_2D,glTextureId);
 				glEnable(       GL_TEXTURE_2D);
@@ -984,25 +1026,18 @@ void b3RenderObject::b3Draw()
 				// coordinates.
 				glMatrixMode(GL_TEXTURE);
 				glPushMatrix();
-				glScalef(0.5 * glTextureRepeatX,0.5 * glTextureRepeatY,1);
+				glTranslatef(glTextureTransX,glTextureTransY,0);
+				glScalef(    glTextureScaleX,glTextureScaleY,1);
 			}
 			else
 			{
-#if 1
-				ambient = specular = diffuse;
-#endif
 				glDisable(GL_TEXTURE_2D);
 			}
 
-			b3RenderContext::b3ColorToGL(&ambient,color);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,color);
-
-			b3RenderContext::b3ColorToGL(&diffuse,color);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
-
-			b3RenderContext::b3ColorToGL(&specular,color);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,color);
-			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,shininess);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,  glAmbient);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,  glDiffuse);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, glSpecular);
+			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,glShininess);
 
 			// Put geometry :-)
 			B3_ASSERT(glTexCoord != null);
@@ -1070,6 +1105,39 @@ void b3RenderObject::b3CreateChess(
 	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 4]);
 	b3RenderContext::b3ColorToGL(bColor,&glTextureData[ 8]);
 	b3RenderContext::b3ColorToGL(wColor,&glTextureData[12]);
+}
+
+void b3RenderObject::b3CopyTexture(
+	b3RenderContext *context,
+	b3Tx            *input)
+{
+	b3Tx          scale;
+	b3_pkd_color *lPtr;
+#ifndef _DEBUG
+	b3_res        max  = 256;
+#else
+	b3_res        max  =   8;
+#endif
+	b3_res        size;
+	b3_coord      x,y,i = 0;
+
+	// Limit size
+	B3_ASSERT(input != null);
+	for (size = B3_MAX(input->xSize,input->ySize);max > size;max /= 2);
+	b3PrintF(B3LOG_FULL,"b3RenderObject::b3CopyTexture(...) # size: %4d max: %4d\n",size,max);
+	scale.b3AllocTx(max,max,24);
+	scale.b3Scale(input);
+	b3CreateTexture(context,max);
+
+	lPtr = (b3_pkd_color *)scale.b3GetData();
+	for (y = 0;y < max;y++)
+	{
+		for (x = 0;x < max;x++)
+		{
+			b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i]);
+			i += 4;
+		}
+	}
 }
 
 void b3RenderObject::b3CreateImage(

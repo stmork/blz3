@@ -965,6 +965,7 @@ protected:
 	void            b3GetDiffuseColor(b3_color *color);
 	b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
 	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
+	b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
 

@@ -89,6 +89,14 @@ public:
 		*buffer   = (GLubyte)((input & 0xff000000) >> 24) ^ 0xff;
 	}
 
+	static inline void b3PkdColorToGL(b3_pkd_color input,GLfloat *dst)
+	{
+		*dst++ =       ((input & 0x00ff0000) >> 16) * 0.0039215686;
+		*dst++ =       ((input & 0x0000ff00) >>  8) * 0.0039215686;
+		*dst++ =       ((input & 0x000000ff))       * 0.0039215686;
+		*dst   = 1.0 - ((input & 0xff000000) >> 24) * 0.0039215686;
+	}
+
 	static inline void b3VectorToGL(b3_vector *src,GLfloat *dst)
 	{
 		*dst++ = src->x;
@@ -121,12 +129,21 @@ protected:
 	GLushort        *glGrids;
 	GLushort        *glPolygons;
 
+	// Some material values
+	b3_bool          glMaterialInitial;
+	GLfloat          glAmbient[4];
+	GLfloat          glDiffuse[4];
+	GLfloat          glSpecular[4];
+	GLfloat          glShininess;
+	
 	// Some texture values
 	GLuint           glTextureId;
 	GLubyte         *glTextureData;
 	b3_res           glTextureSize;
-	b3_res           glTextureRepeatX;
-	b3_res           glTextureRepeatY;
+	b3_f64           glTextureTransX;
+	b3_f64           glTextureTransY;
+	b3_f64           glTextureScaleX;
+	b3_f64           glTextureScaleY;
 #endif
 
 protected:
@@ -134,7 +151,7 @@ protected:
 	                        b3RenderObject();
 	virtual                ~b3RenderObject();
 	        void            b3Update();
-	        void            b3UpdateTexture();
+	        void            b3UpdateMaterial();
 public:
 	        void            b3AddCount(b3RenderContext *context);
 	virtual void            b3AllocVertices(b3RenderContext *context);
@@ -156,13 +173,15 @@ protected:
 	virtual void            b3GetDiffuseColor(b3_color *diffuse);
 	virtual b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
 	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
+	virtual b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	virtual b3_bool         b3GetImage(b3Tx *image);
 	        void            b3TransformVertices(b3_matrix *transformation);
 
 private:
 	        void            b3CreateTexture(b3RenderContext *context,b3_res size = 128);
-	        void            b3CreateChess(b3RenderContext *context,b3_color *bColor,b3_color *wColor);
-	        void            b3CreateImage(b3RenderContext *context,b3Tx *image);
+	        void            b3CreateChess(  b3RenderContext *context,b3_color *bColor,b3_color *wColor);
+	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
+	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
 };
 
 #endif
