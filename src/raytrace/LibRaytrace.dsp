@@ -174,6 +174,10 @@ SOURCE=b3Material.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3MaterialSampler.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Normal.cc
 # End Source File
 # Begin Source File

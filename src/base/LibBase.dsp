@@ -162,6 +162,10 @@ SOURCE=.\b3UndoOperation.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Wood.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3World.cc
 # End Source File
 # End Group
@@ -259,6 +263,10 @@ SOURCE=..\..\include\blz3\base\b3UndoOperation.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Vector.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Wood.h
 # End Source File
 # Begin Source File
 

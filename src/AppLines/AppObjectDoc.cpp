@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/04/10 20:05:12  sm
+**	- Introduced bump map editing in Lines III
+**
 **	Revision 1.27  2003/07/20 07:48:30  sm
 **	- Added legend to object printing
-**
+**	
 **	Revision 1.26  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
@@ -185,13 +188,15 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
 	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateObjectEdit)
+	ON_COMMAND(ID_EDIT_MATERIAL, OnEditMaterial)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL, OnUpdateEditMaterial)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_EDIT_MATERIAL, OnEditMaterial)
-	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL, OnUpdateEditMaterial)
+	ON_COMMAND(ID_EDIT_BUMP, OnEditBump)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_BUMP, OnUpdateEditBump)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -830,6 +835,28 @@ void CAppObjectDoc::OnEditMaterial()
 }
 
 void CAppObjectDoc::OnUpdateEditMaterial(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	pCmdUI->Enable(shape != null);
+}
+
+void CAppObjectDoc::OnEditBump() 
+{
+	// TODO: Add your command handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	if (shape != null)
+	{
+		CDlgItemMaintain dlg(shape->b3GetBumpHead());
+
+		dlg.DoModal();
+		dlg.b3SetModified(this);
+	}
+}
+
+void CAppObjectDoc::OnUpdateEditBump(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();

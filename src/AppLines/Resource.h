@@ -255,6 +255,7 @@
 #define ID_BUTTON10123                  10123
 #define ID_BUTTON10124                  10124
 #define ID_BUTTON10125                  10125
+#define ID_EDIT_BUMP                    10126
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -758,7 +759,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         10126
+#define _APS_NEXT_COMMAND_VALUE         10127
 #define _APS_NEXT_CONTROL_VALUE         32299
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif

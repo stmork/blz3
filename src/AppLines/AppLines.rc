@@ -747,6 +747,7 @@ BEGIN
         MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
         MENUITEM SEPARATOR
         MENUITEM "&Material...",                ID_EDIT_MATERIAL
+        MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
     END
 END
 
@@ -3188,6 +3189,7 @@ BEGIN
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_EDIT_MATERIAL        "Editiert das Körpermaterial.\nMaterial editieren"
+    ID_EDIT_BUMP            "Editiert die Oberflächenstruktur.\nOberflächenstruktur editieren"
 END
 
 STRINGTABLE DISCARDABLE 
