@@ -28,6 +28,15 @@
 
 class b3Vector
 {
+	enum b3_vector_index
+	{
+		X = 0,
+		Y,
+		Z,
+		W,
+		B3_MAX_DIM
+	};
+
 public:
 	static inline b3_vector *b3Init(
 		      b3_vector *vec,
@@ -323,14 +332,28 @@ public:
 	}
 
 	static inline b3_vector *b3CrossProduct(
-		const b3_vector *a,
-		const b3_vector *b,
+		const b3_vector *aVec,
+		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		result->x = a->y * b->z - a->z * b->y;
-		result->y = a->z * b->x - a->x * b->z;
-		result->z = a->x * b->y - a->y * b->x;
+#ifdef B3_SSE
+		b3_f32 B3_ALIGN_16 *r = &result->x;
+		b3_f32 B3_ALIGN_16  a[4],b[4],c[4],d[4];
 
+		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
+		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
+		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
+		a[W] = c[W] =          b[W] = d[W] = 0;
+
+		for (int i = 0;i < B3_SSE_DIM;i++)
+		{
+			r[i] = a[i] * b[i] - c[i] * d[i];
+		}
+#else
+		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
+		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
+		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
+#endif
 		return result;
 	}
 
