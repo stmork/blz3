@@ -140,7 +140,7 @@ private:
 	b3_pkd_color     *palette;
 	b3_count         *histogramme;
 	b3_u08           *data;
-	b3_size           dSize,pSize;
+	b3_count          dSize,pSize;
 	b3_tx_type        type;
 	b3_f64            whiteRatio;
 	b3Path            name;

@@ -44,9 +44,12 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 17:04:09  sm
+**	- Solved some signed/unsigned mismatches
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.5  2000/09/25 06:42:48  smork
 **	- Excessive usage of enum b3_result to prevent type conflicts.
 **	
@@ -278,7 +281,7 @@ long b3Tx::b3TIFFDecode(
 	TIFF  *tiff,
 	short  PlanarConfig)
 {
-	unsigned long x,y;
+	b3_coord x,y;
 
 	// Reset number of loaded scanlines
 	ScanLines = 0;
@@ -304,9 +307,12 @@ long b3Tx::b3TIFFDecode(
 
 	if ((depth > 1) && (depth <= 8) && (type != B3_TX_UNDEFINED))
 	{
-		unsigned long  max,pos,bit,b;
-		b3_u08 *lPtr,lVal;
-		b3_u08 *cPtr,cVal;
+		b3_res    b;
+		b3_count  max;
+		b3_index  pos;
+		b3_u32    bit;
+		b3_u08   *lPtr,lVal;
+		b3_u08   *cPtr,cVal;
 
 		max = TIFFScanlineSize(tiff);
 		switch (PlanarConfig)
@@ -360,7 +366,8 @@ long b3Tx::b3TIFFDecode(
 	if ((depth > 8) && (type != B3_TX_UNDEFINED))
 	{
 		unsigned long *fPtr,*bPtr;
-		unsigned long  fSwp, bSwp,max;
+		b3_pkd_color   fSwp, bSwp;
+		b3_count       max;
 
 		max  = xSize * ySize;
 		fPtr = (unsigned long *)data;
@@ -408,6 +415,8 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 	}
 	catch (b3FileException *e)
 	{
+		b3PrintF(B3LOG_NORMAL,"Error loading %s (error code: %d)\n",
+			tiff_name,e->b3GetError());
 		error_code = B3_ERROR;
 	}
 
@@ -416,14 +425,14 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 
 b3_result b3Tx::b3LoadTIFF(const char *tiff_name,const b3_u08 *tiff_buffer,size_t tiff_size)
 {
-	TIFF            *tiff;
+	TIFF    *tiff;
 	b3_u16   bps = 1,spp = 1,pm = PHOTOMETRIC_MINISWHITE,pc = 0;
 	b3_u16   compression = 0,fillorder = 0;
-	char            *my_hostname = null;
-	char            *my_username = null;
-	char            *my_software = null;
-	float            xDoubleDPI  = 200;
-	float            yDoubleDPI  = 200;
+	char    *my_hostname = null;
+	char    *my_username = null;
+	char    *my_software = null;
+	b3_f32   xDoubleDPI  = 200;
+	b3_f32   yDoubleDPI  = 200;
 
 #if 1
 	b3MemTiffInfo  tiff_info(tiff_buffer,tiff_size);

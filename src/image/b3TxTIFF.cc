@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 17:04:09  sm
+**	- Solved some signed/unsigned mismatches
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.3  2000/09/21 10:22:27  smork
 **	- Setting Blizzard III projects to warning level 3: Found
 **	  some uninitialized variables.
@@ -188,16 +191,16 @@ static long GetTIFFValue (
 	struct TagTIFF *DataTag,
 	long            Index)
 {
-	b3_u08  *TIFF = (b3_u08 *)PtrTIFF;
-	b3_u08  *Char;
+	b3_u08 *TIFF = (b3_u08 *)PtrTIFF;
+	b3_u08 *Char;
 	b3_u16 *Short;
-	unsigned long  *Long,value;
+	b3_u32 *Long,value;
 
 	switch (DataTag->Type)
 	{
 		case MODE_BYTE :					/* char, ASCII */
 		case MODE_ASCII :
-			if (GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
 				TIFF += GetLong (&DataTag->Data[1]);
 				Char  = TIFF;
@@ -206,7 +209,7 @@ static long GetTIFFValue (
 			Char += Index;
 			return (Char[0]);
 		case MODE_SHORT :					/* short */
-			if (GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)GetLong (&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
 				TIFF += GetLong (&DataTag->Data[1]);
 				Short = (b3_u16 *)TIFF;
@@ -215,17 +218,17 @@ static long GetTIFFValue (
 			Short += Index;
 			return (GetShort(Short));
 		case MODE_LONG :					/* long */
-			if (GetLong(&DataTag->Data[0]) > GetTIFFSize(DataTag))
+			if ((b3_s32)GetLong(&DataTag->Data[0]) > GetTIFFSize(DataTag))
 			{
 				TIFF += GetLong (&DataTag->Data[1]);
-				Long  = (unsigned long *)TIFF;
+				Long  = (b3_u32 *)TIFF;
 			}
-			else Long = (unsigned long *)&DataTag->Data[1];
+			else Long = (b3_u32 *)&DataTag->Data[1];
 			Long += Index;
 			return (GetLong(Long));
 		case MODE_RATIONAL :
 			TIFF += GetLong (&DataTag->Data[1]);
-			Long  = (unsigned long *)TIFF;
+			Long  = (b3_u32 *)TIFF;
 			Long += (Index * 2);
 			value = GetLong(Long);
 			Long++;

@@ -61,9 +61,12 @@ typedef struct
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 17:04:09  sm
+**	- Solved some signed/unsigned mismatches
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.6  2000/10/11 11:43:24  smork
 **	- Some updates done in b3DocBase
 **	- b3TxTranformTable used for filtering and contrasting. It's
@@ -1145,7 +1148,7 @@ void b3Tx::b3ColorGrid()
 	// Compare palette entries.
 	for (i = 0;i < pSize;i++)
 	{
-		if (palette[i] == (0x010101 * i))
+		if (palette[i] == (b3_pkd_color)(0x010101 * i))
 		{
 			count++;
 		}

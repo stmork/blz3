@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/07/01 17:04:09  sm
+**	- Solved some signed/unsigned mismatches
+**
 **	Revision 1.2  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -471,10 +474,10 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	b3_pkd_color  *lPtr;
 	b3_coord       x,y;
 	b3_count       xBytes,newSize;
-	b3_index       i;
+	b3_index       i,grey;
 	b3_u08         byte;
 	b3_f64         r,g,b;
-	b3_pkd_color   color,grey,bit;
+	b3_pkd_color   color,bit;
 	b3_bool        grey_palette;
 	b3_bool        result = false;
 
@@ -661,6 +664,8 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
+		b3PrintF(B3LOG_NORMAL,
+			"### CLASS: b3Tx   #               error code: %d\n",e->b3GetError());
 	}
 	catch (...)
 	{
