@@ -43,15 +43,19 @@ public:
 
 class B3_PLUGIN b3ItemRegister
 {
-	b3Base<b3ItemRegisterEntry> classes;
-public:
-	                     b3ItemRegister();
-	                    ~b3ItemRegister();
-	void                 b3Append(b3ItemRegisterEntry *new_entry);
-	b3_bool              b3IsEmpty();
-	b3ItemRegisterEntry *b3Find(b3_u32 class_type);
-};
+private:
+	static b3Base<b3ItemRegisterEntry> m_Classes;
 
-extern b3ItemRegister b3_item_register;
+public:
+	                            b3ItemRegister();
+	                           ~b3ItemRegister();
+	static void                 b3Append(b3ItemRegisterEntry *new_entry);
+	static b3ItemRegisterEntry *b3Find(b3_u32 class_type);
+
+	static inline b3_bool       b3IsEmpty()
+	{
+		return m_Classes.b3IsEmpty();
+	}
+};
 
 #endif

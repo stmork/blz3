@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2003/06/26 08:15:43  sm
+**      - Cleaned up b3ItemRegister
+**      - Added writing support for unregistered b3Item instances.
+**
 **      Revision 1.34  2003/06/24 06:26:43  sm
 **      - Added read/write support for unknown b3Item instances.
 **
@@ -210,7 +214,7 @@ void b3Item::b3Register(
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
 	}
-	b3_item_register.b3Append(entry);
+	b3ItemRegister::b3Append(entry);
 }
 
 b3Item::b3Item() : b3Link<b3Item>(sizeof(b3Item))
@@ -669,13 +673,13 @@ void b3Item::b3Write()
 	b3EnsureStoreBuffer(((m_ItemSize - m_ItemOffset) >> 2) - m_StoreIndex,false);
 
 	memcpy(&m_StoreBuffer[m_StoreIndex],&m_Buffer[m_StoreIndex],m_ItemSize - m_StoreIndex);
-	m_StoreIndex  = m_ItemSize;
-	m_StoreOffset = m_ItemOffset;
+	m_StoreIndex  = m_ItemSize >> 2;
+	m_StoreOffset = m_ItemOffset >> 2;
 
-	b3PrintF(B3LOG_NORMAL,"WARN: b3Item::b3Write() not implemented:\n");
-	b3PrintF(B3LOG_NORMAL,"      CLASS TYPE: %08x\n",b3GetClassType());
-	b3PrintF(B3LOG_NORMAL,"      Size:       %8d\n",m_ItemSize);
-	b3PrintF(B3LOG_NORMAL,"      Offset:     %8d\n",m_ItemOffset);
+	b3PrintF(B3LOG_DEBUG,"WARN: b3Item::b3Write() not implemented:\n");
+	b3PrintF(B3LOG_DEBUG,"      CLASS TYPE: %08x\n",b3GetClassType());
+	b3PrintF(B3LOG_DEBUG,"      Size:       %8d\n",m_ItemSize);
+	b3PrintF(B3LOG_DEBUG,"      Offset:     %8d\n",m_ItemOffset);
 }
 
 b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)

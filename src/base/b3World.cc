@@ -37,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2003/06/26 08:15:43  sm
+**      - Cleaned up b3ItemRegister
+**      - Added writing support for unregistered b3Item instances.
+**
 **      Revision 1.28  2002/08/23 11:35:23  sm
 **      - Added motion blur raytracing. The image creation looks very
 **        nice! The algorithm is not as efficient as it could be.
@@ -241,7 +245,7 @@ b3Item *b3World::b3AllocNode(b3_u32 class_value)
 {
 	b3ItemRegisterEntry *entry;
 
-	entry = b3_item_register.b3Find(class_value);
+	entry = b3ItemRegister::b3Find(class_value);
 	if (entry != null)
 	{
 		return entry->b3Init();
@@ -254,7 +258,7 @@ b3Item *b3World::b3AllocNode(b3_u32 *buffer)
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
 
-	entry = b3_item_register.b3Find(buffer[B3_NODE_IDX_CLASSTYPE]);
+	entry = b3ItemRegister::b3Find(buffer[B3_NODE_IDX_CLASSTYPE]);
 	if (entry != null)
 	{
 		item = entry->b3Load(buffer);
@@ -347,7 +351,7 @@ b3_world_error b3World::b3Parse()
 		return result;
 	}
 
-	if (b3_item_register.b3Find(B3_CLASS_MAX) == null)
+	if (b3ItemRegister::b3Find(B3_CLASS_MAX) == null)
 	{
 		b3PrintF(B3LOG_FULL,"Initializing item registry...\n");
 		b3Item::b3Register(&b3FirstItem::b3StaticInit,&b3FirstItem::b3StaticInit,B3_CLASS_MAX,true);
@@ -592,7 +596,7 @@ void b3World::b3CloneBase(
 
 	B3_FOR_BASE(srcBase,srcItem)
 	{
-		entry = b3_item_register.b3Find(srcItem->b3GetClassType());
+		entry = b3ItemRegister::b3Find(srcItem->b3GetClassType());
 		if (entry != null)
 		{
 			dstItem = entry->b3Load(srcItem->m_StoreBuffer);
@@ -619,7 +623,7 @@ b3Item *b3World::b3Clone(b3Item *original)
 	b3_index             i;
 
 	original->b3Store();
-	entry = b3_item_register.b3Find(original->b3GetClassType());
+	entry = b3ItemRegister::b3Find(original->b3GetClassType());
 	if (entry != null)
 	{
 		item = entry->b3Load(original->m_StoreBuffer);
