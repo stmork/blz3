@@ -45,6 +45,9 @@
 
 /*
 **      $Log$
+**      Revision 1.98  2004/10/16 20:36:34  sm
+**      - Fixed redraw problem after action in Lines.
+**
 **      Revision 1.97  2004/09/25 08:56:53  sm
 **      - Removed VBOs from source.
 **
@@ -649,7 +652,7 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 		{
 			glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
 		}
-		glVerticesComputed = false;
+		glIndicesComputed = false;
 	}
 
 	if (glPolyCount != new_polyCount)
@@ -662,7 +665,7 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 		{
 			glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
 		}
-		glVerticesComputed = false;
+		glIndicesComputed = false;
 	}
 }
 
