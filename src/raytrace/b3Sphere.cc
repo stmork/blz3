@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/12/07 13:20:59  smork
+**	- Computing spheres correctly
+**
 **	Revision 1.34  2004/07/02 19:28:04  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
 **	  faster compilation.
 **	- Removed intersection counter completely because of a mysterious
 **	  destruction problem of b3Mutex.
-**
+**	
 **	Revision 1.33  2004/06/21 09:26:19  sm
 **	- Changed rendering: The constant sin/cos tables are now directly
 **	  used from b3ShapeRenderContext.
@@ -255,6 +258,7 @@ void b3Sphere::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = ((SinCosSteps >> 1) + 1) * (SinCosSteps + 1);
+	b3GetEllipsoidIndexCount(gridCount,polyCount);
 }
 
 void b3Sphere::b3GetStencilBoundInfo(b3_stencil_bound *info)

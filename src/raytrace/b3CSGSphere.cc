@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2004/12/07 13:20:58  smork
+**      - Computing spheres correctly
+**
 **      Revision 1.28  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -219,6 +222,7 @@ void b3CSGSphere::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = ((SinCosSteps >> 1) + 1) * (SinCosSteps + 1);
+	b3GetEllipsoidIndexCount(gridCount,polyCount);
 }
 
 void b3CSGSphere::b3GetStencilBoundInfo(b3_stencil_bound *info)
