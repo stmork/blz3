@@ -45,16 +45,11 @@
 #include <stdio.h>
 
 /*
- * NB: define PURIFY if you're using purify and you want
- * to avoid some harmless array bounds complaints that
- * can happen in the _TIFFFax3fillruns routine.
- */
-
-/*
  * Compression+decompression state blocks are
  * derived from this ``base state'' block.
  */
 typedef struct {
+        int     rw_mode;                /* O_RDONLY for decode, else encode */
 	int	mode;			/* operating mode */
 	uint32	rowbytes;		/* bytes in a decoded scanline */
 	uint32	rowpixels;		/* pixels in a scanline */
@@ -171,7 +166,7 @@ Fax3PreDecode(TIFF* tif, tsample_t s)
 	sp->bitmap =
 	    TIFFGetBitRevTable(tif->tif_dir.td_fillorder != FILLORDER_LSB2MSB);
 	if (sp->refruns) {		/* init reference line to white */
-		sp->refruns[0] = (uint16) sp->b.rowpixels;
+		sp->refruns[0] = (uint32) sp->b.rowpixels;
 		sp->refruns[1] = 0;
 	}
 	return (1);
@@ -320,7 +315,7 @@ Fax3Decode2D(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
  * this is <8 bytes.  We optimize the code here to reflect the
  * machine characteristics.
  */
-#if defined(__alpha) || _MIPS_SZLONG == 64
+#if defined(__alpha) || _MIPS_SZLONG == 64 || defined(__LP64__)
 #define FILL(n, cp)							    \
     switch (n) {							    \
     case 15:(cp)[14] = 0xff; case 14:(cp)[13] = 0xff; case 13: (cp)[12] = 0xff;\
@@ -374,7 +369,7 @@ _TIFFFax3fillruns(u_char* buf, uint32* runs, uint32* erun, uint32 lastx)
 	for (; runs < erun; runs += 2) {
 	    run = runs[0];
 	    if (x+run > lastx || run > lastx )
-		run = runs[0] = (uint16) (lastx - x);
+		run = runs[0] = (uint32) (lastx - x);
 	    if (run) {
 		cp = buf + (x>>3);
 		bx = x&7;
@@ -401,12 +396,8 @@ _TIFFFax3fillruns(u_char* buf, uint32* runs, uint32* erun, uint32 lastx)
 			ZERO(n, cp);
 			run &= 7;
 		    }
-#ifdef PURIFY
 		    if (run)
 			cp[0] &= 0xff >> run;
-#else
-		    cp[0] &= 0xff >> run;
-#endif
 		} else
 		    cp[0] &= ~(_fillmasks[run]>>bx);
 		x += runs[0];
@@ -440,12 +431,8 @@ _TIFFFax3fillruns(u_char* buf, uint32* runs, uint32* erun, uint32 lastx)
 			FILL(n, cp);
 			run &= 7;
 		    }
-#ifdef PURIFY
 		    if (run)
 			cp[0] |= 0xff00 >> run;
-#else
-		    cp[0] |= 0xff00 >> run;
-#endif
 		} else
 		    cp[0] |= _fillmasks[run]>>bx;
 		x += runs[1];
@@ -455,6 +442,21 @@ _TIFFFax3fillruns(u_char* buf, uint32* runs, uint32* erun, uint32 lastx)
 }
 #undef	ZERO
 #undef	FILL
+
+static char *
+CheckMalloc(TIFF* tif, size_t nmemb, size_t elem_size, const char* what)
+{
+	char	*cp = NULL;
+	tsize_t	bytes = nmemb * elem_size;
+
+	if (elem_size && bytes / elem_size == nmemb)
+		cp = (char*) _TIFFmalloc(bytes);
+
+	if (cp == NULL)
+		TIFFError(tif->tif_name, "No space %s", what);
+	
+	return (cp);
+}
 
 /*
  * Setup G3/G4-related compression/decompression state
@@ -495,40 +497,15 @@ Fax3SetupState(TIFF* tif)
 	    (sp->groupoptions & GROUP3OPT_2DENCODING) ||
 	    td->td_compression == COMPRESSION_CCITTFAX4
 	);
-	if (tif->tif_mode == O_RDONLY) {	/* 1d/2d decoding */
+	if (sp->rw_mode == O_RDONLY) {	/* 1d/2d decoding */
 		Fax3DecodeState* dsp = DecoderState(tif);
 		uint32 nruns = needsRefLine ?
 		     2*TIFFroundup(rowpixels,32) : rowpixels;
 
-                /* 
-Problem
--------
-
-Decoding the file frle_bug.tif causes a crash (such as with tiff2rgba). 
-
-In particular the array dsp->runs allocated in Fax3SetupState() is overrun 
-by 4-8 bytes.  This occurs when Fax3DecodeRLE() processes the first
-scanline.  The EXPAND1D() macro advances "pa" to be thisrun+512 (an
-alias for dsp->runs), pointing just beyond the end of the array.  Then 
-the call to _TIFFFax3fillruns() does an "*erun++ = 0;" which writes beyond 
-the end of the array.
-
-In the short term I have modified the dsp->runs allocation to add eight
-extra bytes to the runs buffer; however, I am only doing this because I
-don't understand the algorithm well enough to change it without risking
-more adverse side effects.
-
-Frank Warmerdam (warmerda@home.com)
-
-                */
-
-		dsp->runs = (uint32*) _TIFFmalloc(8+nruns*sizeof (uint32));
-		if (dsp->runs == NULL) {
-			TIFFError("Fax3SetupState",
-			    "%s: No space for Group 3/4 run arrays",
-			    tif->tif_name);
+		dsp->runs = (uint32*) CheckMalloc(tif, 2*nruns+3, sizeof (uint32),
+						  "for Group 3/4 run arrays");
+		if (dsp->runs == NULL)
 			return (0);
-		}
 		dsp->curruns = dsp->runs;
 		if (needsRefLine)
 			dsp->refruns = dsp->runs + (nruns>>1);
@@ -1099,7 +1076,7 @@ static void
 Fax3Cleanup(TIFF* tif)
 {
 	if (tif->tif_data) {
-		if (tif->tif_mode == O_RDONLY) {
+		if (Fax3State(tif)->rw_mode == O_RDONLY) {
 			Fax3DecodeState* sp = DecoderState(tif);
 			if (sp->runs)
 				_TIFFfree(sp->runs);
@@ -1166,7 +1143,7 @@ Fax3VSetField(TIFF* tif, ttag_t tag, va_list ap)
 		sp->mode = va_arg(ap, int);
 		return (1);			/* NB: pseudo tag */
 	case TIFFTAG_FAXFILLFUNC:
-		if (tif->tif_mode == O_RDONLY)
+		if (sp->rw_mode == O_RDONLY)
 			DecoderState(tif)->fill = va_arg(ap, TIFFFaxFillFunc);
 		return (1);			/* NB: pseudo tag */
 	case TIFFTAG_GROUP3OPTIONS:
@@ -1209,7 +1186,7 @@ Fax3VGetField(TIFF* tif, ttag_t tag, va_list ap)
 		*va_arg(ap, int*) = sp->mode;
 		break;
 	case TIFFTAG_FAXFILLFUNC:
-		if (tif->tif_mode == O_RDONLY)
+		if (sp->rw_mode == O_RDONLY)
 			*va_arg(ap, TIFFFaxFillFunc*) = DecoderState(tif)->fill;
 		break;
 	case TIFFTAG_GROUP3OPTIONS:
@@ -1310,13 +1287,15 @@ InitCCITTFax3(TIFF* tif)
 	else
 		tif->tif_data = (tidata_t)
                     _TIFFmalloc(sizeof (Fax3EncodeState));
-        
+
 	if (tif->tif_data == NULL) {
 		TIFFError("TIFFInitCCITTFax3",
 		    "%s: No space for state block", tif->tif_name);
 		return (0);
 	}
+
 	sp = Fax3State(tif);
+        sp->rw_mode = tif->tif_mode;
 
 	/*
 	 * Merge codec-specific tag information and
@@ -1332,7 +1311,7 @@ InitCCITTFax3(TIFF* tif)
 	sp->recvparams = 0;
 	sp->subaddress = NULL;
 
-	if (tif->tif_mode == O_RDONLY) {
+	if (sp->rw_mode == O_RDONLY) {
 		tif->tif_flags |= TIFF_NOBITREV;/* decoder does bit reversal */
 		DecoderState(tif)->runs = NULL;
 		TIFFSetField(tif, TIFFTAG_FAXFILLFUNC, _TIFFFax3fillruns);
@@ -1401,6 +1380,8 @@ Fax4Decode(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
 		fflush(stdout);
 #endif
 		EXPAND2D(EOFG4);
+                if (EOLcnt)
+                    goto EOFG4;
 		(*sp->fill)(buf, thisrun, pa, lastx);
 		SETVAL(0);		/* imaginary change for reference */
 		SWAP(uint32*, sp->curruns, sp->refruns);
@@ -1410,6 +1391,13 @@ Fax4Decode(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
 			tif->tif_row++;
 		continue;
 	EOFG4:
+                NeedBits16( 13, BADG4 );
+        BADG4:
+#ifdef FAX3_DEBUG
+                if( GetBits(13) != 0x1001 )
+                    fputs( "Bad RTC\n", stderr );
+#endif                
+                ClrBits( 13 );
 		(*sp->fill)(buf, thisrun, pa, lastx);
 		UNCACHE_STATE(tif, sp);
 		return (-1);

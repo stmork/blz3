@@ -31,14 +31,25 @@
  */
 #include "tiffiop.h"
 #include <stdlib.h>
+#include <assert.h>
+#include <stdio.h>
 
 /*
  * NB: NB: THIS ARRAY IS ASSUMED TO BE SORTED BY TAG.
  *     If a tag can have both LONG and SHORT types
  *     then the LONG must be placed before the SHORT for
  *     writing to work properly.
+ *
+ * NOTE: The second field (field_readcount) and third field (field_writecount)
+ *       sometimes use the values TIFF_VARIABLE (-1), TIFF_VARIABLE2 (-3)
+ *       and TIFFTAG_SPP (-2). The macros should be used but would throw off 
+ *       the formatting of the code, so please interprete the -1, -2 and -3 
+ *       values accordingly.
  */
-static const TIFFFieldInfo tiffFieldInfo[] = {
+#ifndef VMS
+static 
+#endif
+const TIFFFieldInfo tiffFieldInfo[] = {
     { TIFFTAG_SUBFILETYPE,	 1, 1, TIFF_LONG,	FIELD_SUBFILETYPE,
       TRUE,	FALSE,	"SubfileType" },
 /* XXX SHORT for compatibility w/ old versions of the library */
@@ -216,27 +227,6 @@ static const TIFFFieldInfo tiffFieldInfo[] = {
     { TIFFTAG_TILEDEPTH,	 1, 1, TIFF_SHORT,	FIELD_TILEDEPTH,
       FALSE,	FALSE,	"TileDepth" },
 /* end SGI tags */
-#ifdef IPTC_SUPPORT
-#ifdef PHOTOSHOP_SUPPORT
-    { TIFFTAG_RICHTIFFIPTC, -1,-1, TIFF_LONG,   FIELD_RICHTIFFIPTC, 
-      FALSE,    TRUE,   "RichTIFFIPTC" },
-#else
-    { TIFFTAG_RICHTIFFIPTC, -1,-3, TIFF_UNDEFINED, FIELD_RICHTIFFIPTC, 
-      FALSE,    TRUE,   "RichTIFFIPTC" },
-#endif
-#endif
-#ifdef PHOTOSHOP_SUPPORT
-    { TIFFTAG_PHOTOSHOP,    -1,-3, TIFF_UNDEFINED, FIELD_PHOTOSHOP, 
-      FALSE,    TRUE,   "Photoshop" },
-    { TIFFTAG_PHOTOSHOP,    -1,-1, TIFF_BYTE,   FIELD_PHOTOSHOP, 
-      FALSE,    TRUE,   "Photoshop" },
-#endif
-#ifdef ICC_SUPPORT
-    { TIFFTAG_ICCPROFILE,	-1,-3, TIFF_UNDEFINED,	FIELD_ICCPROFILE,
-      FALSE,	TRUE,	"ICC Profile" },
-#endif
-    { TIFFTAG_STONITS,		 1, 1, TIFF_DOUBLE,	FIELD_STONITS,
-      FALSE,	FALSE,	"StoNits" },
 /* begin Pixar tags */
     { TIFFTAG_PIXAR_IMAGEFULLWIDTH,  1, 1, TIFF_LONG,	FIELD_IMAGEFULLWIDTH,
       TRUE,	FALSE,	"ImageFullWidth" },
@@ -252,7 +242,28 @@ static const TIFFFieldInfo tiffFieldInfo[] = {
       FIELD_MATRIX_WORLDTOSCREEN,	TRUE,	FALSE,	"MatrixWorldToScreen" },
     { TIFFTAG_PIXAR_MATRIX_WORLDTOCAMERA,	16,16,	TIFF_FLOAT,
        FIELD_MATRIX_WORLDTOCAMERA,	TRUE,	FALSE,	"MatrixWorldToCamera" },
+    { TIFFTAG_COPYRIGHT,	-1,-1, TIFF_ASCII,	FIELD_COPYRIGHT,
+      TRUE,	FALSE,	"Copyright" },
 /* end Pixar tags */
+#ifdef IPTC_SUPPORT
+#ifdef PHOTOSHOP_SUPPORT
+    { TIFFTAG_RICHTIFFIPTC, -1,-1, TIFF_LONG,   FIELD_RICHTIFFIPTC, 
+      FALSE,    TRUE,   "RichTIFFIPTC" },
+#else
+    { TIFFTAG_RICHTIFFIPTC, -1,-3, TIFF_UNDEFINED, FIELD_RICHTIFFIPTC, 
+      FALSE,    TRUE,   "RichTIFFIPTC" },
+#endif
+#endif
+#ifdef PHOTOSHOP_SUPPORT
+    { TIFFTAG_PHOTOSHOP,    -1,-3, TIFF_BYTE,   FIELD_PHOTOSHOP, 
+      FALSE,    TRUE,   "Photoshop" },
+#endif
+#ifdef ICC_SUPPORT
+    { TIFFTAG_ICCPROFILE,	-1,-3, TIFF_UNDEFINED,	FIELD_ICCPROFILE,
+      FALSE,	TRUE,	"ICC Profile" },
+#endif
+    { TIFFTAG_STONITS,		 1, 1, TIFF_DOUBLE,	FIELD_STONITS,
+      FALSE,	FALSE,	"StoNits" },
 };
 #define	N(a)	(sizeof (a) / sizeof (a[0]))
 
@@ -292,6 +303,7 @@ _TIFFMergeFieldInfo(TIFF* tif, const TIFFFieldInfo info[], int n)
 		tif->tif_fieldinfo = (TIFFFieldInfo**)
 		    _TIFFmalloc(n * sizeof (TIFFFieldInfo*));
 	}
+	assert(tif->tif_fieldinfo != NULL);
 	tp = &tif->tif_fieldinfo[tif->tif_nfields];
 	for (i = 0; i < n; i++)
 		tp[i] = (TIFFFieldInfo*) &info[i];	/* XXX */
@@ -348,7 +360,7 @@ const int tiffDataWidth[] = {
 TIFFDataType
 _TIFFSampleToTagType(TIFF* tif)
 {
-	int bps = (int) TIFFhowmany(tif->tif_dir.td_bitspersample, 8);
+	uint32 bps = TIFFhowmany8(tif->tif_dir.td_bitspersample);
 
 	switch (tif->tif_dir.td_sampleformat) {
 	case SAMPLEFORMAT_IEEEFP:
@@ -384,9 +396,6 @@ _TIFFFindFieldInfo(TIFF* tif, ttag_t tag, TIFFDataType dt)
 	}
 	return ((const TIFFFieldInfo *)0);
 }
-
-#include <assert.h>
-#include <stdio.h>
 
 const TIFFFieldInfo*
 _TIFFFieldWithTag(TIFF* tif, ttag_t tag)

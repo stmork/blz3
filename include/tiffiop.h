@@ -152,6 +152,9 @@ struct tiff {
 	TIFFVSetMethod	tif_vsetfield;	/* tag set routine */
 	TIFFVGetMethod	tif_vgetfield;	/* tag get routine */
 	TIFFPrintMethod	tif_printdir;	/* directory print routine */
+
+	int		tif_decodestatus;
+	int		tif_encodestatus;
 };
 
 #define	isPseudoTag(t)	(t > 0xffff)	/* is tag value normal or pseudo */
@@ -165,7 +168,7 @@ struct tiff {
 #define	TIFFWriteFile(tif, buf, size) \
 	((*(tif)->tif_writeproc)((tif)->tif_clientdata,buf,size))
 #define	TIFFSeekFile(tif, off, whence) \
-	((*(tif)->tif_seekproc)((tif)->tif_clientdata,(toff_t)(off),whence))
+	((tif)->tif_seekproc?((*(tif)->tif_seekproc)((tif)->tif_clientdata,(toff_t)(off),whence)):0)
 #define	TIFFCloseFile(tif) \
 	((*(tif)->tif_closeproc)((tif)->tif_clientdata))
 #define	TIFFGetFileSize(tif) \
@@ -192,8 +195,9 @@ struct tiff {
 #endif
 
 /* NB: the uint32 casts are to silence certain ANSI-C compilers */
-#define	TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
-#define	TIFFroundup(x, y) (TIFFhowmany(x,y)*((uint32)(y)))
+#define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
+#define TIFFhowmany8(x) (((x)&0x07)?((uint32)(x)>>3)+1:(uint32)(x)>>3)
+#define	TIFFroundup(x, y) (TIFFhowmany(x,y)*(y))
 
 #if defined(__cplusplus)
 extern "C" {

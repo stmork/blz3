@@ -31,6 +31,32 @@
  */
 #include "tiffiop.h"
 
+static uint32
+summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
+{
+	uint32	bytes = summand1 + summand2;
+
+	if (bytes - summand1 != summand2) {
+		TIFFError(tif->tif_name, "Integer overflow in %s", where);
+		bytes = 0;
+	}
+
+	return (bytes);
+}
+
+static uint32
+multiply(TIFF* tif, size_t nmemb, size_t elem_size, const char* where)
+{
+	uint32	bytes = nmemb * elem_size;
+
+	if (elem_size && bytes / elem_size != nmemb) {
+		TIFFError(tif->tif_name, "Integer overflow in %s", where);
+		bytes = 0;
+	}
+
+	return (bytes);
+}
+
 /*
  * Compute which strip a (row,sample) value is in.
  */
@@ -66,7 +92,8 @@ TIFFNumberOfStrips(TIFF* tif)
 	     (td->td_imagelength != 0 ? 1 : 0) :
 	     TIFFhowmany(td->td_imagelength, td->td_rowsperstrip));
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE)
-		nstrips *= td->td_samplesperpixel;
+		nstrips = multiply(tif, nstrips, td->td_samplesperpixel,
+				   "TIFFNumberOfStrips");
 	return (nstrips);
 }
 
@@ -94,16 +121,20 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 		 */
 		tsize_t w =
 		    TIFFroundup(td->td_imagewidth, td->td_ycbcrsubsampling[0]);
-		tsize_t scanline = TIFFhowmany(w*td->td_bitspersample, 8);
+		tsize_t scanline =
+		    TIFFhowmany8(multiply(tif, w, td->td_bitspersample, "TIFFVStripSize"));
 		tsize_t samplingarea =
 		    td->td_ycbcrsubsampling[0]*td->td_ycbcrsubsampling[1];
 		nrows = TIFFroundup(nrows, td->td_ycbcrsubsampling[1]);
 		/* NB: don't need TIFFhowmany here 'cuz everything is rounded */
+		scanline = multiply(tif, nrows, scanline, "TIFFVStripSize");
 		return ((tsize_t)
-		    (nrows*scanline + 2*(nrows*scanline / samplingarea)));
+		    summarize(tif, scanline,
+			      multiply(tif, 2, scanline / samplingarea,
+				       "TIFFVStripSize"), "TIFFVStripSize"));
 	} else
 #endif
-		return ((tsize_t)(nrows * TIFFScanlineSize(tif)));
+		return ((tsize_t) multiply(tif, nrows, TIFFScanlineSize(tif), "TIFFVStripSize"));
 }
 
 /*
@@ -164,10 +195,12 @@ TIFFScanlineSize(TIFF* tif)
 	TIFFDirectory *td = &tif->tif_dir;
 	tsize_t scanline;
 	
-	scanline = td->td_bitspersample * td->td_imagewidth;
+	scanline = multiply (tif, td->td_bitspersample, td->td_imagewidth,
+			     "TIFFScanlineSize");
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG)
-		scanline *= td->td_samplesperpixel;
-	return ((tsize_t) TIFFhowmany(scanline, 8));
+		scanline = multiply (tif, scanline, td->td_samplesperpixel,
+				     "TIFFScanlineSize");
+	return ((tsize_t) TIFFhowmany8(scanline));
 }
 
 /*
@@ -182,11 +215,14 @@ TIFFRasterScanlineSize(TIFF* tif)
 	TIFFDirectory *td = &tif->tif_dir;
 	tsize_t scanline;
 	
-	scanline = td->td_bitspersample * td->td_imagewidth;
+	scanline = multiply (tif, td->td_bitspersample, td->td_imagewidth,
+			     "TIFFRasterScanlineSize");
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG) {
-		scanline *= td->td_samplesperpixel;
-		return ((tsize_t) TIFFhowmany(scanline, 8));
+		scanline = multiply (tif, scanline, td->td_samplesperpixel,
+				     "TIFFRasterScanlineSize");
+		return ((tsize_t) TIFFhowmany8(scanline));
 	} else
-		return ((tsize_t)
-		    TIFFhowmany(scanline, 8)*td->td_samplesperpixel);
+		return ((tsize_t) multiply (tif, TIFFhowmany8(scanline),
+					    td->td_samplesperpixel,
+					    "TIFFRasterScanlineSize"));
 }

@@ -185,6 +185,12 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		case SAMPLEFORMAT_IEEEFP:
 			fprintf(fd, "IEEE floating point\n");
 			break;
+		case SAMPLEFORMAT_COMPLEXINT:
+			fprintf(fd, "complex signed integer\n");
+			break;
+		case SAMPLEFORMAT_COMPLEXIEEEFP:
+			fprintf(fd, "complex IEEE floating point\n");
+			break;
 		default:
 			fprintf(fd, "%u (0x%x)\n",
 			    td->td_sampleformat, td->td_sampleformat);
@@ -347,6 +353,8 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		_TIFFprintAsciiTag(fd, "Host Computer", td->td_hostcomputer);
 	if (TIFFFieldSet(tif,FIELD_SOFTWARE))
 		_TIFFprintAsciiTag(fd, "Software", td->td_software);
+	if (TIFFFieldSet(tif,FIELD_COPYRIGHT))
+		_TIFFprintAsciiTag(fd, "Copyright", td->td_copyright);
 	if (TIFFFieldSet(tif,FIELD_DOCUMENTNAME))
 		_TIFFprintAsciiTag(fd, "Document Name", td->td_documentname);
 	if (TIFFFieldSet(tif,FIELD_IMAGEDESCRIPTION))

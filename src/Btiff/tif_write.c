@@ -511,7 +511,11 @@ TIFFWriteCheck(TIFF* tif, int tiles, const char* module)
 		    tif->tif_name, isTiled(tif) ? "tile" : "strip");
 		return (0);
 	}
-	tif->tif_tilesize = TIFFTileSize(tif);
+	if (tiles) 
+		tif->tif_tilesize = TIFFTileSize(tif);
+	else
+		tif->tif_tilesize = (tsize_t) -1;
+		
 	tif->tif_scanlinesize = TIFFScanlineSize(tif);
 	tif->tif_flags |= TIFF_BEENWRITING;
 	return (1);
@@ -566,21 +570,30 @@ TIFFWriteBufferSetup(TIFF* tif, tdata_t bp, tsize_t size)
 static int
 TIFFGrowStrips(TIFF* tif, int delta, const char* module)
 {
-	TIFFDirectory *td = &tif->tif_dir;
+	TIFFDirectory	*td = &tif->tif_dir;
+	uint32		*new_stripoffset, *new_stripbytecount;
 
 	assert(td->td_planarconfig == PLANARCONFIG_CONTIG);
-	td->td_stripoffset = (uint32*)_TIFFrealloc(td->td_stripoffset,
-	    (td->td_nstrips + delta) * sizeof (uint32));
-	td->td_stripbytecount = (uint32*)_TIFFrealloc(td->td_stripbytecount,
-	    (td->td_nstrips + delta) * sizeof (uint32));
-	if (td->td_stripoffset == NULL || td->td_stripbytecount == NULL) {
+	new_stripoffset = (uint32*)_TIFFrealloc(td->td_stripoffset,
+		(td->td_nstrips + delta) * sizeof (uint32));
+	new_stripbytecount = (uint32*)_TIFFrealloc(td->td_stripbytecount,
+		(td->td_nstrips + delta) * sizeof (uint32));
+	if (new_stripoffset == NULL || new_stripbytecount == NULL) {
+		if (new_stripoffset)
+			_TIFFfree(new_stripoffset);
+		if (new_stripbytecount)
+			_TIFFfree(new_stripbytecount);
 		td->td_nstrips = 0;
 		TIFFError(module, "%s: No space to expand strip arrays",
-		    tif->tif_name);
+			  tif->tif_name);
 		return (0);
 	}
-	_TIFFmemset(td->td_stripoffset+td->td_nstrips, 0, delta*sizeof (uint32));
-	_TIFFmemset(td->td_stripbytecount+td->td_nstrips, 0, delta*sizeof (uint32));
+	td->td_stripoffset = new_stripoffset;
+	td->td_stripbytecount = new_stripbytecount;
+	_TIFFmemset(td->td_stripoffset + td->td_nstrips,
+		    0, delta*sizeof (uint32));
+	_TIFFmemset(td->td_stripbytecount + td->td_nstrips,
+		    0, delta*sizeof (uint32));
 	td->td_nstrips += delta;
 	return (1);
 }

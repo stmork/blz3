@@ -40,26 +40,33 @@
 #define DATATYPE_UINT		2       /* !unsigned integer data */
 #define DATATYPE_IEEEFP		3       /* !IEEE floating point data */
 
-void
-_TIFFsetByteArray(void** vpp, void* vp, long n)
+static void
+setByteArray(void** vpp, void* vp, size_t nmemb, size_t elem_size)
 {
 	if (*vpp)
 		_TIFFfree(*vpp), *vpp = 0;
-	if (vp && (*vpp = (void*) _TIFFmalloc(n)))
-		_TIFFmemcpy(*vpp, vp, n);
+	if (vp) {
+		tsize_t	bytes = nmemb * elem_size;
+		if (elem_size && bytes / elem_size == nmemb)
+			*vpp = (void*) _TIFFmalloc(bytes);
+		if (*vpp)
+			_TIFFmemcpy(*vpp, vp, bytes);
+	}
 }
+void _TIFFsetByteArray(void** vpp, void* vp, long n)
+    { setByteArray(vpp, vp, n, 1); }
 void _TIFFsetString(char** cpp, char* cp)
-    { _TIFFsetByteArray((void**) cpp, (void*) cp, (long) (strlen(cp)+1)); }
+    { setByteArray((void**) cpp, (void*) cp, strlen(cp)+1, 1); }
 void _TIFFsetNString(char** cpp, char* cp, long n)
-    { _TIFFsetByteArray((void**) cpp, (void*) cp, n); }
+    { setByteArray((void**) cpp, (void*) cp, n, 1); }
 void _TIFFsetShortArray(uint16** wpp, uint16* wp, long n)
-    { _TIFFsetByteArray((void**) wpp, (void*) wp, n*sizeof (uint16)); }
+    { setByteArray((void**) wpp, (void*) wp, n, sizeof (uint16)); }
 void _TIFFsetLongArray(uint32** lpp, uint32* lp, long n)
-    { _TIFFsetByteArray((void**) lpp, (void*) lp, n*sizeof (uint32)); }
+    { setByteArray((void**) lpp, (void*) lp, n, sizeof (uint32)); }
 void _TIFFsetFloatArray(float** fpp, float* fp, long n)
-    { _TIFFsetByteArray((void**) fpp, (void*) fp, n*sizeof (float)); }
+    { setByteArray((void**) fpp, (void*) fp, n, sizeof (float)); }
 void _TIFFsetDoubleArray(double** dpp, double* dp, long n)
-    { _TIFFsetByteArray((void**) dpp, (void*) dp, n*sizeof (double)); }
+    { setByteArray((void**) dpp, (void*) dp, n, sizeof (double)); }
 
 /*
  * Install extra samples information.
@@ -127,13 +134,19 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		td->td_subfiletype = va_arg(ap, uint32);
 		break;
 	case TIFFTAG_IMAGEWIDTH:
-		td->td_imagewidth = va_arg(ap, uint32);
+		v32 = va_arg(ap, uint32);
+		if (v32 > 0x7fff)
+			goto badvalue32;
+		td->td_imagewidth = v32;
 		break;
 	case TIFFTAG_IMAGELENGTH:
 		td->td_imagelength = va_arg(ap, uint32);
 		break;
 	case TIFFTAG_BITSPERSAMPLE:
-		td->td_bitspersample = (uint16) va_arg(ap, int);
+		v = (uint16) va_arg(ap, int);
+		if (v > 0xff)
+			goto badvalue;
+		td->td_bitspersample = v;
 		/*
 		 * If the data require post-decoding processing
 		 * to byte-swap samples, set it up here.  Note
@@ -167,16 +180,10 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		/*
 		 * Setup new compression routine state.
 		 */
-		if ( ! tif->tif_mode == O_RDONLY ) { 
-		  /* Handle removal of LZW compression */ 
-		  if ( v == COMPRESSION_LZW ) { 
-		    TIFFError(tif->tif_name, 
-			      "LZW compression no longer supported due to Unisys patent enforcement"); 
-		    v=COMPRESSION_NONE;
-		  }
-		}
 		if( (status = TIFFSetCompressionScheme(tif, v)) != 0 )
-		  td->td_compression = v;
+                    td->td_compression = v;
+                else
+                    status = 0;
 		break;
 	case TIFFTAG_PHOTOMETRIC:
 		td->td_photometric = (uint16) va_arg(ap, int);
@@ -214,6 +221,9 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 	case TIFFTAG_SOFTWARE:
 		_TIFFsetString(&td->td_software, va_arg(ap, char*));
 		break;
+	case TIFFTAG_COPYRIGHT:
+		_TIFFsetString(&td->td_copyright, va_arg(ap, char*));
+		break;
 	case TIFFTAG_ORIENTATION:
 		v = va_arg(ap, int);
 		if (v < ORIENTATION_TOPLEFT || ORIENTATION_LEFTBOT < v) {
@@ -226,7 +236,7 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 	case TIFFTAG_SAMPLESPERPIXEL:
 		/* XXX should cross check -- e.g. if pallette, then 1 */
 		v = va_arg(ap, int);
-		if (v == 0)
+		if (v <= 0 || v > 0xff)
 			goto badvalue;
 		td->td_samplesperpixel = (uint16) v;
 		break;
@@ -345,7 +355,7 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		break;
 	case TIFFTAG_SAMPLEFORMAT:
 		v = va_arg(ap, int);
-		if (v < SAMPLEFORMAT_UINT || SAMPLEFORMAT_VOID < v)
+		if (v < SAMPLEFORMAT_UINT || SAMPLEFORMAT_COMPLEXIEEEFP < v)
 			goto badvalue;
 		td->td_sampleformat = (uint16) v;
 		break;
@@ -641,6 +651,9 @@ _TIFFVGetField(TIFF* tif, ttag_t tag, va_list ap)
 	case TIFFTAG_SOFTWARE:
 		*va_arg(ap, char**) = td->td_software;
 		break;
+	case TIFFTAG_COPYRIGHT:
+		*va_arg(ap, char**) = td->td_copyright;
+		break;
 	case TIFFTAG_ORIENTATION:
 		*va_arg(ap, uint16*) = td->td_orientation;
 		break;
@@ -917,6 +930,7 @@ TIFFFreeDirectory(TIFF* tif)
 	CleanupField(td_make);
 	CleanupField(td_model);
 	CleanupField(td_software);
+	CleanupField(td_copyright);
 	CleanupField(td_pagename);
 	CleanupField(td_sampleinfo);
 #if SUBIFD_SUPPORT
@@ -1041,6 +1055,14 @@ TIFFDefaultDirectory(TIFF* tif)
 	 * (i.e. TIFFSetField).
 	 */
 	tif->tif_flags &= ~TIFF_DIRTYDIRECT;
+
+        /*
+         * As per http://bugzilla.remotesensing.org/show_bug.cgi?id=19
+         * we clear the ISTILED flag when setting up a new directory.
+         * Should we also be clearing stuff like INSUBIFD?
+         */
+        tif->tif_flags &= ~TIFF_ISTILED;
+
 	return (1);
 }
 

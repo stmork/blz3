@@ -481,6 +481,9 @@ TIFFWriteNormalTag(TIFF* tif, TIFFDirEntry* dir, const TIFFFieldInfo* fip)
                     if (wc == (u_short) TIFF_VARIABLE) {
                         TIFFGetField(tif, fip->field_tag, &wc, &cp);
                         dir->tdir_count = wc;
+                    } else if (wc == (u_short) TIFF_VARIABLE2) {
+			TIFFGetField(tif, fip->field_tag, &wc2, &cp);
+			dir->tdir_count = wc2;
                     } else
                         TIFFGetField(tif, fip->field_tag, &cp);
                     if (!TIFFWriteByteArray(tif, dir, cp))
@@ -561,8 +564,14 @@ TIFFWritePerSampleShorts(TIFF* tif, ttag_t tag, TIFFDirEntry* dir)
 	uint16* w = buf;
 	int i, status, samples = tif->tif_dir.td_samplesperpixel;
 
-	if (samples > NITEMS(buf))
+	if (samples > NITEMS(buf)) {
 		w = (uint16*) _TIFFmalloc(samples * sizeof (uint16));
+		if (w == NULL) {
+			TIFFError(tif->tif_name,
+			    "No space to write per-sample shorts");
+			return (0);
+		}
+	}
 	TIFFGetField(tif, tag, &v);
 	for (i = 0; i < samples; i++)
 		w[i] = v;
@@ -586,8 +595,14 @@ TIFFWritePerSampleAnys(TIFF* tif,
 	int i, status;
 	int samples = (int) tif->tif_dir.td_samplesperpixel;
 
-	if (samples > NITEMS(buf))
+	if (samples > NITEMS(buf)) {
 		w = (double*) _TIFFmalloc(samples * sizeof (double));
+		if (w == NULL) {
+			TIFFError(tif->tif_name,
+			    "No space to write per-sample values");
+			return (0);
+		}
+	}
 	TIFFGetField(tif, tag, &v);
 	for (i = 0; i < samples; i++)
 		w[i] = v;
@@ -709,6 +724,11 @@ TIFFWriteRationalArray(TIFF* tif,
 	dir->tdir_type = (short) type;
 	dir->tdir_count = n;
 	t = (uint32*) _TIFFmalloc(2*n * sizeof (uint32));
+	if (t == NULL) {
+		TIFFError(tif->tif_name,
+		    "No space to write RATIONAL array");
+		return (0);
+	}
 	for (i = 0; i < n; i++) {
 		float fv = v[i];
 		int sign = 1;
@@ -779,8 +799,13 @@ TIFFWriteAnyArray(TIFF* tif,
 	char* w = buf;
 	int i, status = 0;
 
-	if (n * tiffDataWidth[type] > sizeof buf)
+	if (n * tiffDataWidth[type] > sizeof buf) {
 		w = (char*) _TIFFmalloc(n * tiffDataWidth[type]);
+		if (w == NULL) {
+			TIFFError(tif->tif_name, "No space to write array");
+			return (0);
+		}
+	}
 	switch (type) {
 	case TIFF_BYTE:
 		{ uint8* bp = (uint8*) w;
@@ -938,6 +963,83 @@ TIFFWriteData(TIFF* tif, TIFFDirEntry* dir, char* cp)
 	    _TIFFFieldWithTag(tif, dir->tdir_tag)->field_name);
 	return (0);
 }
+
+/*
+ * Similar to TIFFWriteDirectory(), but if the directory has already
+ * been written once, it is relocated to the end of the file, in case it
+ * has changed in size.  Note that this will result in the loss of the 
+ * previously used directory space. 
+ */ 
+
+int 
+TIFFRewriteDirectory( TIFF *tif )
+{
+    static const char module[] = "TIFFRewriteDirectory";
+
+    /* We don't need to do anything special if it hasn't been written. */
+    if( tif->tif_diroff == 0 )
+        return TIFFWriteDirectory( tif );
+
+    /*
+    ** Find and zero the pointer to this directory, so that TIFFLinkDirectory
+    ** will cause it to be added after this directories current pre-link.
+    */
+    
+    /* Is it the first directory in the file? */
+    if (tif->tif_header.tiff_diroff == tif->tif_diroff) 
+    {
+        tif->tif_header.tiff_diroff = 0;
+        tif->tif_diroff = 0;
+
+#define	HDROFF(f)	((toff_t) &(((TIFFHeader*) 0)->f))
+        TIFFSeekFile(tif, HDROFF(tiff_diroff), SEEK_SET);
+        if (!WriteOK(tif, &(tif->tif_header.tiff_diroff), 
+                     sizeof (tif->tif_diroff))) 
+        {
+            TIFFError(tif->tif_name, "Error updating TIFF header");
+            return (0);
+        }
+    }
+    else
+    {
+        toff_t  nextdir, off;
+
+	nextdir = tif->tif_header.tiff_diroff;
+	do {
+		uint16 dircount;
+
+		if (!SeekOK(tif, nextdir) ||
+		    !ReadOK(tif, &dircount, sizeof (dircount))) {
+			TIFFError(module, "Error fetching directory count");
+			return (0);
+		}
+		if (tif->tif_flags & TIFF_SWAB)
+			TIFFSwabShort(&dircount);
+		(void) TIFFSeekFile(tif,
+		    dircount * sizeof (TIFFDirEntry), SEEK_CUR);
+		if (!ReadOK(tif, &nextdir, sizeof (nextdir))) {
+			TIFFError(module, "Error fetching directory link");
+			return (0);
+		}
+		if (tif->tif_flags & TIFF_SWAB)
+			TIFFSwabLong(&nextdir);
+	} while (nextdir != tif->tif_diroff && nextdir != 0);
+        off = TIFFSeekFile(tif, 0, SEEK_CUR); /* get current offset */
+        (void) TIFFSeekFile(tif, off - (toff_t)sizeof(nextdir), SEEK_SET);
+        tif->tif_diroff = 0;
+	if (!WriteOK(tif, &(tif->tif_diroff), sizeof (nextdir))) {
+		TIFFError(module, "Error writing directory link");
+		return (0);
+	}
+    }
+
+    /*
+    ** Now use TIFFWriteDirectory() normally.
+    */
+
+    return TIFFWriteDirectory( tif );
+}
+
 
 /*
  * Link the current directory into the

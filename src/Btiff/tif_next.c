@@ -87,7 +87,7 @@ NeXTDecode(TIFF* tif, tidata_t buf, tsize_t occ, tsample_t s)
 			 */
 			off = (bp[0] * 256) + bp[1];
 			n = (bp[2] * 256) + bp[3];
-			if (cc < 4+n)
+			if (cc < 4+n || off+n > scanline)
 				goto bad;
 			_TIFFmemcpy(row+off, bp+4, n);
 			bp += 4+n;
