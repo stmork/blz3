@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.3  2001/10/13 09:56:44  sm
 **	- Minor corrections
-**
+**	
 **	Revision 1.2  2001/10/13 09:54:32  sm
 **	- Making include extern "C"
 **	
@@ -54,6 +59,10 @@
 
 #ifdef GLOBAL
 #undef GLOBAL /* ausser JPEG brauchen wir sowieso nur noch ANSI-C */
+#endif
+
+#ifdef FAR
+#undef FAR
 #endif
 
 extern "C"

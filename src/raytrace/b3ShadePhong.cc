@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.3  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.2  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
@@ -169,6 +174,10 @@ b3_bool b3ScenePhong::b3Shade(
 				b3GetInfiniteColor(&surface.refr_ray.color);
 			}
 			formula |= 1;
+		}
+		else
+		{
+			refr = 0;
 		}
 
 		refl = surface.refl;

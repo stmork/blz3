@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.10  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -39,7 +44,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.9  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -91,10 +96,11 @@ static b3_u32 logic_ops[] =
 
 void b3InitCondition::b3Init()
 {
-	b3_u32 mode;
+	b3_u32  mode;
+	b3_size i;
 
 	b3PrintF(B3LOG_DEBUG,"Registering stencil classes...\n");
-	for (int i = 0;i < (sizeof(logic_ops) / sizeof(b3_u32));i++)
+	for (i = 0;i < (sizeof(logic_ops) / sizeof(b3_u32));i++)
 	{
 		mode = logic_ops[i];
 

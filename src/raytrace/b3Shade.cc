@@ -23,6 +23,7 @@
   
 #include "blz3/b3Config.h" 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.11  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -39,7 +45,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.10  2001/10/10 17:52:24  sm
 **	- Texture loading (only reading into memory) running.
 **	- Raytracing without OpenGL must be possible!
@@ -105,13 +111,8 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_illumination *surface)
 	refl_dir->x = incoming_dir->x - Factor * Normal->x;
 	refl_dir->y = incoming_dir->y - Factor * Normal->y;
 	refl_dir->z = incoming_dir->z - Factor * Normal->z;
-	Factor = 1.0 / sqrt(
-		refl_dir->x * refl_dir->x +
-		refl_dir->y * refl_dir->y +
-		refl_dir->z * refl_dir->z);
-	refl_dir->x *= Factor;
-	refl_dir->y *= Factor;
-	refl_dir->z *= Factor;
+
+	b3Vector::b3Normalize(refl_dir);
 	surface->refl_ray.pos    = surface->incoming->ipoint;
 	surface->refl_ray.inside = surface->incoming->inside;
 
@@ -212,7 +213,6 @@ b3_bool b3Scene::b3Shade(
 	b3Shape         *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
-	b3_f64           denom;
 	b3_index         formula = 0;
 	b3_bool          transparent;
 	b3_bool          result = false;
@@ -228,18 +228,7 @@ b3_bool b3Scene::b3Shade(
 	}
 
 	// Normalize incoming ray
-	denom =
-		ray->dir.x * ray->dir.x +
-		ray->dir.y * ray->dir.y +
-		ray->dir.z * ray->dir.z;
-	if (denom != 0)
-	{
-		denom       = 1.0 / sqrt(denom);
-		ray->dir.x *= denom;
-		ray->dir.y *= denom;
-		ray->dir.z *= denom;
-	}
-	else
+	if (b3Vector::b3Normalize(&ray->dir) == 0)
 	{
 		ray->color.r =
 		ray->color.g =
@@ -274,6 +263,10 @@ b3_bool b3Scene::b3Shade(
 				b3GetInfiniteColor(&surface.refr_ray.color);
 			}
 			formula |= 1;
+		}
+		else
+		{
+			refr = 0;
 		}
 
 		refl = surface.refl;

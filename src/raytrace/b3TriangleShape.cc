@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/10/19 14:46:58  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.14  2001/10/18 14:48:26  sm
 **      - Fixing refracting problem on some scenes with glasses.
 **      - Fixing overlighting problem when using Mork shading.
@@ -222,10 +227,12 @@ void b3TriangleShape::b3PrepareGridList ()
 	b3_index  i,MaxRec;
 	b3_count  max;
 	b3_vector P1,P2,P3;
+#ifdef _DEBUG
+	b3_count  degenerated = 0;
+#endif
 
-	MaxRec      = IntLog3(m_GridSize);
-	MaxRec     += MaxRec;
-	max         = m_GridSize * m_GridSize * m_GridSize;
+	MaxRec = IntLog3(m_GridSize) << 1;
+	max    = m_GridSize * m_GridSize * m_GridSize;
 
 	for (i = 0;i < max;i++)
 	{
@@ -242,11 +249,26 @@ void b3TriangleShape::b3PrepareGridList ()
 		P3.x = (m_Vertices[m_Triangles[i].P3].Point.x - m_Base.x) / m_Size.x;
 		P3.y = (m_Vertices[m_Triangles[i].P3].Point.y - m_Base.y) / m_Size.y;
 		P3.z = (m_Vertices[m_Triangles[i].P3].Point.z - m_Base.z) / m_Size.z;
-		if ((fabs(m_Triangles->Normal.x) > 0.01)||
-		    (fabs(m_Triangles->Normal.y) > 0.01)||
-		    (fabs(m_Triangles->Normal.z) > 0.01))
-			b3SearchCubicItem (&P1,&P2,&P3,i,-1L,MaxRec);	
+		if ((
+			m_Triangles[i].Normal.x * m_Triangles[i].Normal.x +
+			m_Triangles[i].Normal.y * m_Triangles[i].Normal.y +
+			m_Triangles[i].Normal.z * m_Triangles[i].Normal.z) > epsilon)
+		{
+			b3SearchCubicItem (&P1,&P2,&P3,i,-1,MaxRec);
+		}
+#ifdef _DEBUG
+		else
+		{
+			degenerated++;
+		}
+#endif
 	}
+#ifdef _DEBUG
+	if (degenerated > 0)
+	{
+		b3PrintF(B3LOG_DEBUG,"%d triangles degenerated.\n",degenerated);
+	}
+#endif
 }
 
 void b3TriangleShape::b3FreeTriaRefs()
@@ -257,7 +279,7 @@ void b3TriangleShape::b3FreeTriaRefs()
 	CubeSize = m_GridSize * m_GridSize * m_GridSize;
 	for (i = 0;i < CubeSize;i++)
 	{
-		while(ref = m_GridList[i].First)
+		while((ref = m_GridList[i].First) != null)
 		{
 			m_GridList[i].b3Remove(ref);
 			delete ref;
@@ -297,31 +319,33 @@ b3_bool b3TriangleShape::b3Prepare()
 		R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
 		if ((m_Flags & NORMAL_FACE_VALID)==0)
 		{
-			m_Triangles[i].Normal.x = x = R1.y * R2.z - R1.z * R2.y;
-			m_Triangles[i].Normal.y = y = R1.z * R2.x - R1.x * R2.z;
-			m_Triangles[i].Normal.z = z = R1.x * R2.y - R1.y * R2.x;
-		}
-		if ((m_Flags & NORMAL_VERTEX_VALID)==0)
-		{
-#ifdef NORMAL_NORMALIZED
-			Denom = x * x + y * y + z * z;
-			if (Denom != 0)
+			b3Vector::b3CrossProduct(&R1,&R2,&m_Triangles[i].Normal);
+			x = m_Triangles[i].Normal.x;
+			y = m_Triangles[i].Normal.y;
+			z = m_Triangles[i].Normal.z;
+			if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 			{
-				Denom = 1 / sqrt(Denom);
-				x *= Denom;
-				y *= Denom;
-				z *= Denom;
-			}
+			
+#ifdef NORMAL_NORMALIZED
+				Denom = x * x + y * y + z * z;
+				if (Denom != 0)
+				{
+					Denom = 1 / sqrt(Denom);
+					x *= Denom;
+					y *= Denom;
+					z *= Denom;
+				}
 #endif
-			m_Vertices[P1].Normal.x += x;
-			m_Vertices[P1].Normal.y += y;
-			m_Vertices[P1].Normal.z += z;
-			m_Vertices[P2].Normal.x += x;
-			m_Vertices[P2].Normal.y += y;
-			m_Vertices[P2].Normal.z += z;
-			m_Vertices[P3].Normal.x += x;
-			m_Vertices[P3].Normal.y += y;
-			m_Vertices[P3].Normal.z += z;
+				m_Vertices[P1].Normal.x += x;
+				m_Vertices[P1].Normal.y += y;
+				m_Vertices[P1].Normal.z += z;
+				m_Vertices[P2].Normal.x += x;
+				m_Vertices[P2].Normal.y += y;
+				m_Vertices[P2].Normal.z += z;
+				m_Vertices[P3].Normal.x += x;
+				m_Vertices[P3].Normal.y += y;
+				m_Vertices[P3].Normal.z += z;
+			}
 		}
 	}
 
@@ -336,17 +360,7 @@ b3_bool b3TriangleShape::b3Prepare()
 
 		if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 		{
-			x = m_Vertices[i].Normal.x;
-			y = m_Vertices[i].Normal.y;
-			z = m_Vertices[i].Normal.z;
-			Denom = x * x + y * y + z * z;
-			if (Denom != 0)
-			{
-				Denom = 1 / sqrt(Denom);
-				m_Vertices[i].Normal.x = x * Denom;
-				m_Vertices[i].Normal.y = y * Denom;
-				m_Vertices[i].Normal.z = z * Denom;
-			}
+			b3Vector::b3Normalize(&m_Vertices[i].Normal);
 		}
 	}
 

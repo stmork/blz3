@@ -64,7 +64,7 @@ protected:
 protected:
 
 	                        b3RenderObject();
-	                       ~b3RenderObject();
+	virtual                ~b3RenderObject();
 	        void            b3Recompute();
 	        void            b3Update();
 public:

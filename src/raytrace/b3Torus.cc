@@ -32,13 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.13  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.12  2001/10/02 16:01:58  sm
 **	- Moving b3Polar into b3Ray but that's not right at all. The
 **	  result must be placed there but a simple result from one
@@ -136,26 +141,14 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	m_aRad = b3InitFloat();
 	m_bRad = b3InitFloat();
 
-	denom = b3Length (&m_Dir1);
-	if (denom != 0)
-	{
-		scale     = denom;
-		m_Dir1.x /= denom;
-		m_Dir1.y /= denom;
-		m_Dir1.z /= denom;
-	}
-	else
+	if ((scale = b3Vector::b3Normalize(&m_Dir1)) == 0)
 	{
 		scale = 1;
 	}
 
-	denom = b3Length (&m_Dir2);
-	if (denom != 0)
+	if ((denom = b3Vector::b3Normalize(&m_Dir2)) != 0)
 	{
-		scale    += denom;
-		m_Dir2.x /= denom;
-		m_Dir2.y /= denom;
-		m_Dir2.z /= denom;
+		scale += denom;
 	}
 	else
 	{
@@ -163,13 +156,10 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 	}
 	m_aRad *= (scale * 0.5);
 
-	denom = b3Length (&m_Dir3);
+	denom = b3Vector::b3Normalize(&m_Dir3);
 	if ((denom != 1) && (denom != 0))
 	{
 		m_bRad   *= denom;
-		m_Dir3.x /= m_bRad;
-		m_Dir3.y /= m_bRad;
-		m_Dir3.z /= m_bRad;
 	}
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;

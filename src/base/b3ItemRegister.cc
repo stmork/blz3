@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.4  2001/08/14 07:03:28  sm
 **      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
 **        B3_ASSERT(condition) abort()s when condition is false.
@@ -83,7 +88,7 @@ b3ItemRegister::~b3ItemRegister()
 {
 	b3ItemRegisterEntry *item;
 
-	while(item = classes.First)
+	while((item = classes.First) != null)
 	{
 		classes.b3Remove(item);
 		delete item;

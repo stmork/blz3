@@ -48,11 +48,16 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/19 14:46:58  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.1  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **
 */
 
@@ -89,7 +94,7 @@ public:
 		b3_coord     x;
 		b3_count     count;
 		b3_f64       Xval,Yval,Xquad,Yquad;
-		b3_pkd_color color;
+		b3_pkd_color color = 0;
 
 		for (x = 0;x < xSize;x++)
 		{
@@ -160,7 +165,7 @@ static b3_u32 compute(void *ptr)
 	{
 		// Enter critical section
 		row_mutex.b3Lock();
-		if (row = rows.First)
+		if ((row = rows.First) != null)
 		{
 			rows.b3Remove(row);
 		}

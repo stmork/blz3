@@ -39,6 +39,11 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/19 14:46:58  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.5  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -46,7 +51,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.4  2001/07/08 13:02:19  sm
 **	- Merging with Windoze stuff.
 **	
@@ -147,13 +152,12 @@ void b3Display::b3FreeColormap()
 **                                                                      **
 *************************************************************************/
 
-static long dithercount = 111111;
-static long dithermatrix[4][4] =
+static b3_pkd_color dithermatrix[4][4] =
 {
-	 0, 8, 1, 9,
-	12, 4,13, 5, 
-	 3,11, 2,10,
-	15, 7,14, 6
+	{  0, 8, 1, 9 },
+	{ 12, 4,13, 5 }, 
+	{  3,11, 2,10 },
+	{ 15, 7,14, 6 }
 };
 
 #define MASK0 0xff
@@ -274,11 +278,8 @@ b3_pkd_color b3Display::b3ARGBtoPIXEL_16 (
 
 void b3Display::b3Open(b3_res xSize,b3_res ySize)
 {
-	Arg            args[10];
-	Cardinal       n;
 	XGCValues      Values;
 	XEvent         report;
-	b3_res         xMax,yMax;
 	b3_bool        Loop = true;
 	XTextProperty  CInfoName;
 
@@ -442,9 +443,8 @@ void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
 void b3Display::b3PutRow(b3Row *row)
 {
 	b3_pkd_color *ptr = row->buffer;
-	b3_pkd_color  pixel,Color;
-	b3_coord      x;
-	b3_coord      y = row->y;
+	b3_pkd_color  pixel;
+	b3_coord      x,y = row->y;
 
 	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
 	if (m_Opened)

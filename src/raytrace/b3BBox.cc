@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.18  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **	Revision 1.17  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -167,7 +172,7 @@ void b3BBox::b3Dump(b3_count level)
 	b3DumpSpace(level);
 	b3PrintF(B3LOG_NORMAL,"Object %s (level %d)\n",m_BoxName,level);
 
-	B3_FOR_BASE(&heads[1],bbox)
+	B3_FOR_BASE(b3GetBBoxHead(),bbox)
 	{
 		bbox->b3Dump(level);
 	}
@@ -181,9 +186,9 @@ void b3BBox::b3Reorg(
 {
 	b3_count        new_level;
 	b3BBox         *bbox;
-	b3Base<b3Item> *sub_base;
+	b3Base<b3Item> *sub_base = null;
 
-	while (bbox = (b3BBox *)depot->First)
+	while ((bbox = (b3BBox *)depot->First) != null)
 	{
 		new_level = bbox->b3GetClassType() & 0xffff;
 		if (new_level < level)
@@ -194,10 +199,11 @@ void b3BBox::b3Reorg(
 		{
 			depot->b3Remove(bbox);
 			base->b3Append(bbox);
-			sub_base = &bbox->heads[1];
+			sub_base = bbox->b3GetBBoxHead();
 		}
 		else
 		{
+			B3_ASSERT(sub_base != null);
 			b3Reorg(depot,sub_base,new_level,rec + 1);
 		}
 	}
@@ -220,13 +226,13 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	glPolygons = null;
 #endif
 
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3AllocVertices(context);
 
 	}
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3AllocVertices(context);
@@ -246,12 +252,12 @@ void b3BBox::b3FreeVertices()
 	glPolygons = null;
 #endif
 
-	B3_FOR_BASE(&heads[0],item)
+	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3FreeVertices();
 	}
-	B3_FOR_BASE(&heads[1],item)
+	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3FreeVertices();
@@ -490,7 +496,7 @@ void b3Scene::b3Reorg()
 
 	depot = heads[0];
 	heads[0].b3InitBase(CLASS_BBOX);
-	if (first = depot.First)
+	if ((first = depot.First) != null)
 	{
 		level = first->b3GetClassType() & 0xffff;
 		b3BBox::b3Reorg(&depot,&heads[0],level,1);

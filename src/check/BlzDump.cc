@@ -22,10 +22,7 @@
 int main(int argc,char *argv[])
 {
 	b3_index  i;
-	b3_u32    v1,v2;
 	b3World   world;
-	b3Item   *item;
-	b3Scene  *scene;
 
 	b3InitRaytrace::b3Init();
 

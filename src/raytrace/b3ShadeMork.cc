@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.4  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -40,7 +45,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.3  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -152,18 +157,11 @@ b3_bool b3SceneMork::b3IsPointLightBackground (
 	LightDir.x = Light->m_Position.x - Ray->pos.x;
 	LightDir.y = Light->m_Position.y - Ray->pos.y;
 	LightDir.z = Light->m_Position.z - Ray->pos.z;
-	LightDist  =
-		LightDir.x * LightDir.x +
-		LightDir.y * LightDir.y +
-		LightDir.z * LightDir.z;
-	if (LightDist == 0)
+	if ((LightDist = b3Vector::b3Normalize(&LightDir)) == 0)
 	{
 		return false;
 	}
- 	LightDist   = 1.0 / sqrt(LightDist);
-	LightDir.x *= LightDist;
-	LightDir.y *= LightDist;
-	LightDir.z *= LightDist;
+ 	LightDist = 1.0 / LightDist;
 
 	ReflexAngle =
 		(LightDir.x * Ray->dir.x +
@@ -230,8 +228,6 @@ b3_bool b3SceneMork::b3Shade(
 	b3Shape         *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
-	b3_f64           denom;
-	b3_index         formula = 0;
 	b3_bool          transparent;
 	b3_bool          result = false;
 
@@ -241,18 +237,7 @@ b3_bool b3SceneMork::b3Shade(
 	surface.specular_sum.b = ray->color.a = 0;
 
 	// Normalize incoming ray
-	denom =
-		ray->dir.x * ray->dir.x +
-		ray->dir.y * ray->dir.y +
-		ray->dir.z * ray->dir.z;
-	if (denom != 0)
-	{
-		denom       = 1.0 / sqrt(denom);
-		ray->dir.x *= denom;
-		ray->dir.y *= denom;
-		ray->dir.z *= denom;
-	}
-	else
+	if (b3Vector::b3Normalize(&ray->dir) == 0)
 	{
 		return false;
 	}

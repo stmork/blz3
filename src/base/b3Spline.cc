@@ -31,9 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.6  2001/10/13 09:56:44  sm
 **	- Minor corrections
-**
+**	
 **	Revision 1.5  2001/10/11 16:06:32  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
@@ -679,8 +684,8 @@ static b3_bool b3InternalInsertControl (
 	b3_index   index,
 	b3_bool    useNurbs)
 {
-	b3_vector   *Controls;
-	b3_vector4D *Controls4D;
+	b3_vector   *Controls   = null;
+	b3_vector4D *Controls4D = null;
 	b3_f32      *knots;
 	b3_index     l,m,i;
 	b3_count     degree,KnotNum,Count;
@@ -723,8 +728,11 @@ static b3_bool b3InternalInsertControl (
 			/* insert o[x] into control points */
 		if (!useNurbs)
 		{
-			for (l=m-1;l>i;l--)
+			for (l = m - 1;l > i;l--)
+			{
 				Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
+			}
+
 			for (l=i-degree+1;l <= i;l++)
 			{
 				Controls[((l + m) % m) * Spline->offset].x = o[(l + (m-1)) % (m-1)].x;
@@ -734,8 +742,10 @@ static b3_bool b3InternalInsertControl (
 		}
 		else
 		{
-			for (l=m-1;l>i;l--)
+			for (l = m - 1;l > i;l--)
+			{
 				Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
+			}
 
 			for (l=i-degree+1;l <= i;l++)
 			{
@@ -758,8 +768,10 @@ static b3_bool b3InternalInsertControl (
 			/* insert o[x] into control points */
 		if (!useNurbs)
 		{
-			for (l=m;l>i;l--)
+			for (l = m;l > i;l--)
+			{
 				Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
+			}
 
 			for (l=i-degree+1;l <= i;l++)
 			{
@@ -770,10 +782,12 @@ static b3_bool b3InternalInsertControl (
 		}
 		else
 		{
-			for (l=m;l>i;l--)
+			for (l = m;l > i;l--)
+			{
 				Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
+			}
 
-			for (l=i-degree+1;l <= i;l++)
+			for (l = i - degree + 1;l <= i;l++)
 			{
 				Controls4D[l * Spline->offset].x = o[l].x;
 				Controls4D[l * Spline->offset].y = o[l].y;
@@ -828,19 +842,25 @@ b3_bool b3InternalSurfaceInsertControl(
 	b3_vector   *Controls;
 	b3_vector4D *Controls4D;
 	b3_f32      *knots;
-	b3_index     l,m,i,index,y;
+	b3_index     l,m,i = 0,index,y;
 	b3_count     degree,KnotNum,Count;
 	b3_f64	     start,end;
 	b3_vector4D  o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
 	bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
-	if (Mult < 1) return false;
+	if (Mult < 1)
+	{
+		return false;
+	}
 
 	m        =  Spline->control_num;
 	KnotNum  =  Spline->knot_num;
 	degree   =  Spline->degree;
 	knots    =  Spline->knots;
-	if (Mult > (degree + 1)) Mult = degree + 1;
+	if (Mult > (degree + 1))
+	{
+		Mult = degree + 1;
+	}
 
 	bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
 	if ((m       + Mult) > Spline->control_max) return false;
@@ -864,9 +884,12 @@ b3_bool b3InternalSurfaceInsertControl(
 				Controls = &Spline->controls[index];
 
 					/* insert o[x] into control points */
-				for (l=m-1;l>i;l--)
+				for (l = m - 1;l > i;l--)
+				{
 					Controls[l * Spline->offset] = Controls[(l - 1) * Spline->offset];
-				for (l=i-degree+1;l <= i;l++)
+				}
+
+				for (l = i - degree + 1;l <= i;l++)
 				{
 					Controls[((l + m) % m) * Spline->offset].x = o[(l + (m-1)) % (m-1)].x;
 					Controls[((l + m) % m) * Spline->offset].y = o[(l + (m-1)) % (m-1)].y;
@@ -878,21 +901,28 @@ b3_bool b3InternalSurfaceInsertControl(
 				Controls4D = &((b3_nurbs *)Spline)->controls[index = y * ControlOffset];
 
 					/* insert o[x] into control points */
-				for (l=m-1;l>i;l--)
+				for (l = m - 1;l > i;l--)
+				{
 					Controls4D[l * Spline->offset] = Controls4D[(l - 1) * Spline->offset];
-				for (l=i-degree+1;l <= i;l++)
+				}
+				for (l = i - degree+1;l <= i;l++)
+				{
 					Controls4D[((l + m) % m) * Spline->offset] = o[(l + (m-1)) % (m-1)];
+				}
 			}
 			m--;
 		}
 			/* insert new knot */
-		for (l = KnotNum;l > i;l--) knots[l] = knots[l-1];
-		knots[i+1]       = (b3_f32)q;
+		for (l = KnotNum;l > i;l--)
+		{
+			knots[l] = knots[l-1];
+		}
+		knots[i + 1]     = (b3_f32)q;
 		Spline->knot_num = ++KnotNum;
 		Spline->control_num = ++m;
-		for (l=0;l<=degree;l++)
+		for (l = 0;l <= degree;l++)
 		{
-			knots[l+m] = (b3_f32)(knots[l] - start + end);
+			knots[l + m] = (b3_f32)(knots[l] - start + end);
 		}
 	}
 	else for (Count = 0;Count < Mult;Count++)

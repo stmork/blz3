@@ -37,6 +37,11 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.11  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -44,7 +49,7 @@
 **	- Adding texture support to conditions (stencil mapping).
 **	  Now conditions are ready to work compatible with
 **	  Blizzard II.
-**
+**	
 **	Revision 1.10  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -126,13 +131,13 @@ b3TxPool::~b3TxPool()
 	b3TxPath *path_item;
 	b3Tx     *tx;
 
-	while(path_item = m_SearchPath.First)
+	while((path_item = m_SearchPath.First) != null)
 	{
 		m_SearchPath.b3Remove(path_item);
 		delete path_item;
 	}
 
-	while (tx = m_Pool.First)
+	while((tx = m_Pool.First) != null)
 	{
 		m_Pool.b3Remove(tx);
 		delete tx;
@@ -223,7 +228,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 
 	// PPM6
 	pos = 0;
-	i   = sscanf((const char *)buffer,"P%ld %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
+	i   = sscanf((const char *)buffer,"P%d %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
 	b3PrintF (B3LOG_FULL,"PxM (%ld): (%ld,%ld - %ld) %d\n",ppm_type,x,y,i,pos);
 	if (i >= 2)
 	{

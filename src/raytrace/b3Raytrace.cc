@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.14  2001/10/18 15:16:28  sm
 **	- Testing with an appropriate system - and it's good!
-**
+**	
 **	Revision 1.13  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -186,7 +191,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 	{
 		// Enter critical section
 		scene->m_RowMutex.b3Lock();
-		if (row = scene->m_Rows.First)
+		if ((row = scene->m_Rows.First) != null)
 		{
 			scene->m_Rows.b3Remove(row);
 		}
@@ -260,6 +265,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 	m_LightCount = 0;
 	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
 	{
+		light->b3Prepare();
 		if (light->m_LightActive)
 		{
 			m_LightCount++;

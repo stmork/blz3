@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	
 */
 
@@ -370,7 +375,7 @@ b3_tx_type b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 	b3_u32   Max,k,Colour,Pos = 12;
 	b3_u32  *Set;
 	b3_u32  *LongData;
-	b3_bool  Compressed,Ham=false,EHB=false,Ham8=false;
+	b3_bool  Compressed=false,Ham=false,EHB=false,Ham8=false;
 
 	palette	= null;
 	FileType	= FT_ILBM;
@@ -561,9 +566,9 @@ static b3_u32 b3ShiftCount(b3_count Count)
 
 b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 {
-	b3_u08 *Y;
-	b3_u08 *U;
-	b3_u08 *V;
+	b3_u08 *Y = null;
+	b3_u08 *U = null;
+	b3_u08 *V = null;
 	b3_u08 *CharData;
 	b3_u32 *LongData;
 	b3_u08  y,u,v,Uprev,Vprev;
@@ -647,7 +652,10 @@ b3_tx_type b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 
 	if (Count == 0)		/* schwarz weiss  */
 	{
-		if (Y==null) return B3_TX_UNDEFINED;
+		if (Y == null)
+		{
+			return B3_TX_UNDEFINED;
+		}
 		LongData = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
 		if (LongData == null)
 		{

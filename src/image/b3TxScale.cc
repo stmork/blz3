@@ -61,9 +61,14 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
-**
+**	
 **	Revision 1.1.1.1  2001/07/01 12:24:59  sm
 **	Blizzard III is born
 **	
@@ -566,6 +571,9 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 					lDst++;
 				}
 				break;
+
+			default:
+				break;
 			}
 		}
 	}
@@ -610,6 +618,9 @@ static unsigned int b3ScaleBW2Grey(void *ptr)
 					}
 					lDst++;
 				}
+				break;
+
+			default:
 				break;
 			}
 		}
@@ -993,6 +1004,9 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 					dst++;
 				}
 				break;
+
+			default:
+				break;
 			}
 		}
 	}
@@ -1060,6 +1074,9 @@ static unsigned int b3RGB8ScaleToRGB8(void *ptr)
 					}
 					dst++;
 				}
+				break;
+
+			default:
 				break;
 			}
 		}
@@ -1369,6 +1386,9 @@ void b3Tx::b3VGAScaleToGrey(
 
 	case B3_TX_RGB8:
 		b3VGAScaleToRGB8(srcTx,rIndex,cIndex);
+		break;
+
+	default:
 		break;
 	}
 }
@@ -1894,6 +1914,9 @@ void b3Tx::b3TransToGrey()
 				*cPtr++ = (b3_u08)(r + b + g);
 			}
 		}
+		break;
+
+	default:
 		break;
 	}
 

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.11  2001/10/15 14:45:08  sm
 **      - Materials are accessing textures now.
 **      - Created image viewer "bimg3"
@@ -532,6 +537,10 @@ b3_bool b3MatSlide::b3GetColors(
 				return false;
 			}
             break;
+
+		default:
+			Factor = 0.5;
+			break;
 	}
 
 	diffuse->r  = m_Diffuse[0].r  + Factor * (m_Diffuse[1].r  - m_Diffuse[0].r);

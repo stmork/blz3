@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.15  2001/09/30 15:53:19  sm
 **	- Removing nasty CR/LF
-**
+**	
 **	Revision 1.14  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
 **	
@@ -152,14 +157,14 @@ b3RenderView::~b3RenderView()
 
 	for (i = 1;i < B3_VIEW_MAX;i++)
 	{
-		while(item = m_ViewStack[i].First)
+		while((item = m_ViewStack[i].First) != null)
 		{
 			m_ViewStack[i].b3Remove(item);
 			delete item;
 		}
 	}
 
-	while(item = m_Depot.First)
+	while((item = m_Depot.First) != null)
 	{
 		m_Depot.b3Remove(item);
 		delete item;
@@ -285,7 +290,7 @@ void b3RenderView::b3Original()
 	if (m_ViewMode != B3_VIEW_3D)
 	{
 		// Empty stack
-		while(item = m_ViewStack[m_ViewMode].First)
+		while((item = m_ViewStack[m_ViewMode].First) != null)
 		{
 			m_ViewStack[m_ViewMode].b3Remove(item);
 			m_Depot.b3Append(item);
@@ -346,6 +351,8 @@ void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 			m_Actual->m_Mid.y -= (m_Actual->m_Size.y * xDir);
 			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
 			break;
+		default:
+			break;
 		}
 	}
 }
@@ -379,6 +386,8 @@ void b3RenderView::b3GetViewDirection(b3_vector *dir)
 		dir->y =  0;
 		dir->z =  0;
 		break;
+	default:
+		break;
 	}
 }
 
@@ -404,6 +413,8 @@ b3_f64 b3RenderView::b3GetPositionAngle(b3_vector *center,b3_vector *position)
 		break;
 	case B3_VIEW_LEFT:
 		result = atan2(position->z - center->z,center->y - position->y);
+		break;
+	default:
 		break;
 	}
 	return result;
@@ -436,6 +447,8 @@ void b3RenderView::b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point)
 		case B3_VIEW_BACK:
 			point->x = m_Actual->m_Mid.x - m_Actual->m_Size.x * xRel;
 			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			break;
+		default:
 			break;
 		}
 	}
@@ -504,6 +517,8 @@ void b3RenderView::b3Select(
 				m_Actual->m_Size.y *= xDiff;
 				m_Actual->m_Size.z *= yDiff;
 				break;
+			default:
+				break;
 			}
 		}
 		else
@@ -539,10 +554,10 @@ void b3RenderView::b3UpdateView(
 	case B3_VIEW_3D:
 	default:
 		// Prepare glOrtho();
-		distance = b3Distance(&m_ViewPoint,&m_EyePoint);
+		distance = b3Vector::b3Distance(&m_ViewPoint,&m_EyePoint);
 		factor   = min / distance;
-		width    = factor * b3Length(&m_Width);
-		height   = factor * b3Length(&m_Height);
+		width    = factor * b3Vector::b3Length(&m_Width);
+		height   = factor * b3Vector::b3Length(&m_Height);
 		nearCP   = min;
 		farCP    = 10000;
 

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.1  2001/10/15 14:46:11  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **
 */
 
@@ -98,6 +103,9 @@ int main(int argc,char *argv[])
 			case B3_TYPE_FILE:
 				texture_pool.b3LoadTexture(argv[i]);
 				b3PrintF(B3LOG_NORMAL,".");
+				break;
+
+			default:
 				break;
 			}
 		}

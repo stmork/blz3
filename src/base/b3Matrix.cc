@@ -35,13 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.14  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.13  2001/10/05 20:30:45  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -181,6 +186,7 @@ b3_bool b3NormalizeRow (
 **                                                                      **
 *************************************************************************/
 
+#if 0
 b3_f64 b3Normalize(b3_vector *vector)
 {
 	b3_f64 length;
@@ -221,6 +227,18 @@ b3_f64 b3Distance(b3_vector *from,b3_vector *to)
 
 	return sqrt(x * x + y * y + z * z);
 }
+
+b3_vector *b3CrossProduct (
+	b3_vector *a,
+	b3_vector *b,
+	b3_vector *c)
+{
+	c->x = a->y * b->z - a->z * b->y;
+	c->y = a->z * b->x - a->x * b->z;
+	c->z = a->x * b->y - a->y * b->x;
+	return c;
+}
+#endif
 
 b3_f64 b3AngleOfVectors(
 	b3_vector *Vector1,
@@ -278,17 +296,6 @@ b3_f64 b3AngleOfPoints(
 		result = 0.0;
 	}
 	return result;
-}
-
-b3_vector *b3CrossProduct (
-	b3_vector *a,
-	b3_vector *b,
-	b3_vector *c)
-{
-	c->x = a->y * b->z - a->z * b->y;
-	c->y = a->z * b->x - a->x * b->z;
-	c->z = a->x * b->y - a->y * b->x;
-	return c;
 }
 
 b3_f64 b3Det2(

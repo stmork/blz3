@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.10  2001/09/23 18:50:27  sm
 **	- Created first raytracing image with Blizzard III. It shows
 **	  simply "hit" or "no hit". Spheres and boxes aren't running
 **	  yet. Next step: shading!
-**
+**	
 **	Revision 1.9  2001/09/22 16:19:53  sm
 **	- Adding basic shape intersection routines
 **
@@ -96,7 +101,7 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);
-	m_QuadRadius = b3QuadLength(&m_Dir);
+	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
 }
 
 void b3Sphere::b3GetCount(

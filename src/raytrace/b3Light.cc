@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.14  2001/10/17 21:09:06  sm
 **      - Triangle support added for intersections, normal computations. So
 **        Spline shapes can be computed, too. Now only CSG is missing.
@@ -213,6 +219,26 @@ void b3Light::b3Init()
 	m_SpotActive  = false;
 }
 
+b3_bool b3Light::b3Prepare()
+{
+	if (m_LightActive)
+	{
+		if (m_SoftShadow)
+		{
+			if (m_JitterEdge > 1)
+			{
+				m_HalfJitter = 0.5 / (b3_f64)(m_JitterEdge - 1);
+				m_FullJitter = 1.0 / (b3_f64)(m_JitterEdge * m_JitterEdge);
+			}
+			else
+			{
+				m_SoftShadow = false;
+			}
+		}
+	}
+	return true;
+}
+
 b3_bool b3Light::b3Illuminate(
 	b3Scene         *scene,
 	b3_illumination *surface)
@@ -247,20 +273,12 @@ b3_bool b3Light::b3PointIllumination(
 	Jit.dir.x = m_Position.x - surface->incoming->ipoint.x;
 	Jit.dir.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.dir.z = m_Position.z - surface->incoming->ipoint.z;
-	LightDist =
-		Jit.dir.x * Jit.dir.x +
-		Jit.dir.y * Jit.dir.y +
-		Jit.dir.z * Jit.dir.z;
-	if (LightDist == 0)
+
+	if ((UpperBound = b3Vector::b3Normalize(&Jit.dir)) == 0)
 	{
 		return false;
 	}
-
-	// Normalize direction
-	LightDist = 1.0 / (UpperBound = sqrt(LightDist));
-	Jit.dir.x	*= LightDist;
-	Jit.dir.y	*= LightDist;
-	Jit.dir.z	*= LightDist;
+	LightDist = 1.0 / UpperBound;
 
 	// Compute relative brightness via LDC
 	// (= light distribution curve)
@@ -314,21 +332,13 @@ b3_bool b3Light::b3AreaIllumination (
 	Jit.LightView.x = m_Position.x - surface->incoming->ipoint.x;
 	Jit.LightView.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
-	denomLightDist =
-		Jit.LightView.x * Jit.LightView.x +
-		Jit.LightView.y * Jit.LightView.y +
-		Jit.LightView.z * Jit.LightView.z;
-	if (denomLightDist == 0)
+	if ((denomLightDist = b3Vector::b3Normalize(&Jit.LightView)) == 0)
 	{
 		return false;
 	}
 
 	// normalizing light axis
-	denomLightDist = 1.0 / (Jit.LightDist = sqrt(denomLightDist));
-	Jit.LightView.x	*= denomLightDist;
-	Jit.LightView.y	*= denomLightDist;
-	Jit.LightView.z	*= denomLightDist;
-
+	denomLightDist = 1.0 / (Jit.LightDist = denomLightDist);
 
 	// inserted Nov. 1994, SAM
 	if (m_SpotActive)
@@ -358,13 +368,8 @@ b3_bool b3Light::b3AreaIllumination (
 	Jit.xDir.y	=  Jit.LightView.x * Factor;
 	Jit.xDir.z	=  0;
 
-	Jit.yDir.x	=  Jit.LightView.y * Jit.xDir.z - Jit.LightView.z * Jit.xDir.y;
-	Jit.yDir.y	=  Jit.LightView.z * Jit.xDir.x - Jit.LightView.x * Jit.xDir.z;
-	Jit.yDir.z	=  Jit.LightView.x * Jit.xDir.y - Jit.LightView.y * Jit.xDir.x;
-	Factor = denomLightDist / sqrt(
-		Jit.yDir.x * Jit.yDir.x +
-		Jit.yDir.y * Jit.yDir.y +
-		Jit.yDir.z * Jit.yDir.z);
+	b3Vector::b3CrossProduct(&Jit.LightView,&Jit.xDir,&Jit.yDir);
+	Factor = denomLightDist / b3Vector::b3Length(&Jit.yDir);
 	Jit.yDir.x *= Factor;
 	Jit.yDir.y *= Factor;
 	Jit.yDir.z *= Factor;
@@ -383,7 +388,7 @@ b3_bool b3Light::b3AreaIllumination (
 	for (x = xs;x <= Distr;x += 2)
 	{
 		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,x,0);
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr-x);
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - x);
 
 		equal   &= (Edge1 == Edge2);
 		if (x != xs) equal &= (Edge1 == LastEdge);
@@ -392,7 +397,7 @@ b3_bool b3Light::b3AreaIllumination (
 	for (y = 2 - xs;y < Distr;y += 2)
 	{
 		Edge1 = b3CheckSinglePoint (scene,surface,&Jit,0,y);
-		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr-y);
+		Edge2 =	b3CheckSinglePoint (scene,surface,&Jit,Distr,Distr - y);
 
 		equal   &= ((Edge1 == Edge2) && (Edge1 == LastEdge));
 		LastEdge = Edge1;
@@ -402,7 +407,7 @@ b3_bool b3Light::b3AreaIllumination (
 	// This part computes the untested points in the light raster.
 	if (equal)
 	{
-		Factor = 0.5 / Distr;
+		Factor = m_HalfJitter;
 	}
 	else
 	{
@@ -423,7 +428,7 @@ b3_bool b3Light::b3AreaIllumination (
 			xs ^= 1;
 		}
 
-		Factor = 1.0 / (m_JitterEdge * m_JitterEdge);
+		Factor = m_FullJitter;
 	}
 
 	surface->incoming->color.r += Jit.Result.r * Factor;
@@ -439,7 +444,7 @@ b3Shape *b3Light::b3CheckSinglePoint (
 	b3_coord         x,
 	b3_coord         y)
 {
-	b3_f64   jx,jy,LightDist,UpperBound;
+	b3_f64   jx,jy,UpperBound;
 
 	jx = (((b3_f64)x + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
 	jy = (((b3_f64)y + 0.25 + B3_FRAN(0.5)) - 0.5 * Jit->Distr) * Jit->Size;
@@ -448,18 +453,9 @@ b3Shape *b3Light::b3CheckSinglePoint (
 	Jit->dir.y = Jit->LightView.y + jx * Jit->xDir.y + jy * Jit->yDir.y;
 	Jit->dir.z = Jit->LightView.z + jx * Jit->xDir.z + jy * Jit->yDir.z;
 
-	LightDist =
-		Jit->dir.x * Jit->dir.x +
-		Jit->dir.y * Jit->dir.y +
-		Jit->dir.z * Jit->dir.z;
-	if (LightDist != 0)
+	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
-		LightDist   = 1.0 / (UpperBound = sqrt(LightDist));
-		Jit->dir.x *= LightDist;
-		Jit->dir.y *= LightDist;
-		Jit->dir.z *= LightDist;
-
-		scene->b3Intersect(Jit,LightDist * Jit->LightDist - epsilon);
+		scene->b3Intersect(Jit,Jit->LightDist / UpperBound - epsilon);
 		scene->b3Illuminate(this,Jit,surface,&Jit->Result);
 	}
 	else

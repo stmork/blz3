@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.14  2001/10/17 21:09:06  sm
 **	- Triangle support added for intersections, normal computations. So
 **	  Spline shapes can be computed, too. Now only CSG is missing.
-**
+**	
 **	Revision 1.13  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -283,9 +288,7 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 		aux.x  = -m_Dir.y;
 		aux.y  =  m_Dir.x;
 		aux.z  =  0;
-		pole.x =  m_Dir.y * aux.z - m_Dir.z * aux.y;
-		pole.y =  m_Dir.z * aux.x - m_Dir.x * aux.z;
-		pole.z =  m_Dir.x * aux.y - m_Dir.y * aux.x;
+		b3Vector::b3CrossProduct(&m_Dir,&aux,&pole);
 	}
 
 	if (l1 > 0)
@@ -310,10 +313,10 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 		if (b3CheckStencil(polar))
 		{
-			p = sqrt(m_QuadRadius);
-			polar->object_polar.x = n.x / p;
-			polar->object_polar.y = n.y / p;
-			polar->object_polar.z = n.z / p;
+			p = 1.0 / sqrt(m_QuadRadius);
+			polar->object_polar.x = n.x * p;
+			polar->object_polar.y = n.y * p;
+			polar->object_polar.z = n.z * p;
 			return l1;
 		}
 	}
@@ -340,10 +343,10 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 		if (b3CheckStencil(polar))
 		{
-			p = sqrt(m_QuadRadius);
-			polar->object_polar.x = n.x / p;
-			polar->object_polar.y = n.y / p;
-			polar->object_polar.z = n.z / p;
+			p = 1.0 / sqrt(m_QuadRadius);
+			polar->object_polar.x = n.x * p;
+			polar->object_polar.y = n.y * p;
+			polar->object_polar.z = n.z * p;
 			return l2;
 		}
 	}
@@ -886,7 +889,7 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 			Triangle->Normal.y * ray->dir.y +
 			Triangle->Normal.z * ray->dir.z) != 0)
 		{
-			Denom = -1 / Denom;
+			Denom = -1.0 / Denom;
 			if ((lValue=(
 				Triangle->Normal.x * (Dir.x = ray->pos.x-Base.x) +
 				Triangle->Normal.y * (Dir.y = ray->pos.y-Base.y) +
@@ -942,14 +945,14 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 
 b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 {
-	b3_index               gx,gy,gz,sx,sy,sz,index;
-	b3_f64        start,end,tn,tf,m,result = -1;
-	b3_vector64       pos;
-	b3_vector64       d;
-	b3_vector64       denom;
-	b3_vector64       dmax;
+	b3_index     gx,gy,gz,sx,sy,sz,index;
+	b3_f64       start,end,tn,tf,m,result = -1;
+	b3_vector64  pos;
+	b3_vector64  d;
+	b3_vector64  denom;
+	b3_vector64  dmax;
 #ifdef _DEBUG
-	b3_count   GridMax;
+	b3_count     GridMax;
 #endif
 
 #ifdef _DEBUG
@@ -1021,17 +1024,17 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 
 
 	// correct start point
-	if (d.x > 0.0001)
+	if (d.x > epsilon)
 	{
 		if (ray->dir.x >= 0) d.x = (1.0 - d.x) * dmax.x;
-		else                  d.x *= dmax.x;
+		else                 d.x *= dmax.x;
 	}
 	else
 	{
 		d.x = dmax.x;
 		if (gx == m_GridSize) gx--;
 	}
-	if (d.y > 0.0001)
+	if (d.y > epsilon)
 	{
 		if (ray->dir.y >= 0) d.y = (1.0 - d.y) * dmax.y;
 		else                  d.y *= dmax.y;
@@ -1041,7 +1044,7 @@ b3_f64 b3TriangleShape::b3Intersect(b3_ray *ray,b3_polar *polar)
 		d.y = dmax.y;
 		if (gy == m_GridSize) gy--;
 	}
-	if (d.z > 0.0001)
+	if (d.z > epsilon)
 	{
 		if (ray->dir.z >= 0) d.z = (1.0 - d.z) * dmax.z;
 		else                  d.z *= dmax.z;

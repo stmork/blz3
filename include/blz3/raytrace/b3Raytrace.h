@@ -1613,6 +1613,9 @@ protected:
 class b3Scene;
 class b3Light : public b3Item
 {
+	b3_f64           m_HalfJitter;
+	b3_f64           m_FullJitter;
+
 public:
 	b3_vector        m_Position;     // Position
 	b3_color         m_Color;        // Farbe
@@ -1634,6 +1637,7 @@ public:
 	B3_ITEM_LOAD(b3Light);
 
 	b3_bool b3Illuminate(b3Scene *scene,b3_illumination *surface);
+	b3_bool b3Prepare();
 
 private:
 	void     b3Init();

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.17  2001/10/10 17:52:24  sm
 **      - Texture loading (only reading into memory) running.
 **      - Raytracing without OpenGL must be possible!
@@ -452,7 +457,7 @@ b3_index b3RenderShape::b3FindVertex(GLushort vertex)
 	point = &ptr[vertex];
 	for (i = 0;i < glVertexCount;i++)
 	{
-		if (b3Distance(point,ptr) < Epsilon)
+		if (b3Vector::b3Distance(point,ptr) < Epsilon)
 		{
 			return i;
 		}
@@ -496,7 +501,7 @@ void b3RenderShape::b3ComputeSphereVertices(
 
 	Vector = (b3_vector *)glVertices;
 	Aux    = Base;
-	Dir1.x = Rad = b3Length (&Dir);
+	Dir1.x = Rad = b3Vector::b3Length (&Dir);
 	Dir1.y = 0;
 	Dir1.z = 0;
 	Dir2.x = 0;

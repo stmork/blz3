@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.8  2000/10/11 11:43:24  smork
 **	- Some updates done in b3DocBase
 **	- b3TxTranformTable used for filtering and contrasting. It's
@@ -587,6 +592,9 @@ void b3Tx::b3Negate()
 			lPtr++;
 		}
 		break;
+
+	default:
+		break;
 	}
 }
 
@@ -896,6 +904,8 @@ void b3Tx::b3TurnRight()
 	case B3_TX_RGB8 :
 		b3TurnRightRGB8();
 		break;
+	default:
+		break;
 	}
 }
 
@@ -1124,6 +1134,8 @@ void b3Tx::b3TurnLeft()
 	case B3_TX_RGB8 :
 		b3TurnLeftRGB8();
 		break;
+	default:
+		break;
 	}
 }
 
@@ -1265,6 +1277,9 @@ void b3Tx::b3Turn()
 			*lfPtr =  lBack;
 			lfPtr++;
 		}
+		break;
+
+	default:
 		break;
 	}
 }

@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.18  2001/10/10 17:52:24  sm
 **      - Texture loading (only reading into memory) running.
 **      - Raytracing without OpenGL must be possible!
@@ -486,7 +491,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 		normal.x = xDir.y * yDir.z - xDir.z * yDir.y;
 		normal.y = xDir.z * yDir.x - xDir.x * yDir.z;
 		normal.z = xDir.x * yDir.y - xDir.y * yDir.x;
-		len = b3Length(&normal);
+		len = b3Vector::b3Length(&normal);
 		if (len > 0)
 		{
 			normal.x /= len;
@@ -512,7 +517,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	{
 		for (i = 0;i < glVertexCount;i++)
 		{
-			len = b3Length(&nPtr[i]);
+			len = b3Vector::b3Length(&nPtr[i]);
 			if (len > 0)
 			{
 				nPtr[i].x /= len;
@@ -642,8 +647,8 @@ void b3RenderObject::b3Draw()
 			cPoint.y = glVertices[c++];
 			cPoint.z = glVertices[c++];
 
-			aLen = b3Distance(&aPoint,&bPoint);
-			bLen = b3Distance(&aPoint,&cPoint);
+			aLen = b3Vector::b3Distance(&aPoint,&bPoint);
+			bLen = b3Vector::b3Distance(&aPoint,&cPoint);
 		}
 		break;
 
@@ -664,7 +669,7 @@ void b3RenderObject::b3Draw()
 			bPoint.y = glVertices[b++];
 			bPoint.z = glVertices[b++];
 
-			len = b3Distance(&aPoint,&bPoint);
+			len = b3Vector::b3Distance(&aPoint,&bPoint);
 		}
 		break;
 	}

@@ -60,7 +60,7 @@ protected:
 
 public:
 	           b3Mem();
-	          ~b3Mem();
+	virtual   ~b3Mem();
 	void      *b3Alloc(const b3_size);
 	b3_bool    b3Free(const void *);
 	b3_bool    b3Free();

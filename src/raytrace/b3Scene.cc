@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/10/19 14:46:57  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.16  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -42,7 +47,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.15  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -247,7 +252,7 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 
 b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 {
-	while (camera = (b3CameraPart *)camera->Succ)
+	while ((camera = (b3CameraPart *)camera->Succ) != null)
 	{
 		if (camera->b3GetClassType() == CAMERA)
 		{
@@ -271,7 +276,7 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 		}
 	}
 
-	if (heads[1].First == null)
+	if ((light = (b3Light *)heads[1].First) == null)
 	{
 		light = new b3Light(SPOT_LIGHT);
 		strcpy(light->m_Name,"Light");

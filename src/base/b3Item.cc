@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/10/19 14:46:56  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.9  2001/09/30 15:53:19  sm
 **      - Removing nasty CR/LF
 **
@@ -166,7 +171,7 @@ b3Item::~b3Item()
 
 	for (i = 0;i < head_count;i++)
 	{
-		while (item = heads[i].First)
+		while ((item = heads[i].First) != null)
 		{
 			heads[i].b3Remove(item);
 			delete item;

@@ -23,16 +23,94 @@
 #define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
 #define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * 180.0 / M_PI + ((v) < 0 ? 360.0 : 0))
 
-b3_f64     b3Length             (b3_vector *vec);
-b3_f64     b3Normalize          (b3_vector *vec);
-b3_f64     b3QuadLength         (b3_vector *vec);
-b3_f64     b3Distance           (b3_vector *from,b3_vector *to);
+class b3Vector
+{
+public:
+	static inline b3_f64 b3Normalize(b3_vector *vector)
+	{
+		register b3_f64 x,y,z,denom,result = 0;
+
+		x = vector->x;
+		y = vector->y;
+		z = vector->z;
+		denom = x * x + y * y + z * z;
+		if (denom > 0)
+		{
+			denom = 1.0 / (result = sqrt(denom));
+			vector->x = x * denom;
+			vector->y = y * denom;
+			vector->z = z * denom;
+		}
+		return result;
+	}
+
+	static inline b3_f64 b3Normalize(b3_vector64 *vector)
+	{
+		register b3_f64 x,y,z,denom,result = 0;
+
+		x = vector->x;
+		y = vector->y;
+		z = vector->z;
+		denom = x * x + y * y + z * z;
+		if (denom > 0)
+		{
+			denom = 1.0 / (result = sqrt(denom));
+			vector->x = x * denom;
+			vector->y = y * denom;
+			vector->z = z * denom;
+		}
+		return result;
+	}
+
+	static inline b3_vector *b3CrossProduct(b3_vector *a,b3_vector *b,b3_vector *result)
+	{
+		result->x = a->y * b->z - a->z * b->y;
+		result->y = a->z * b->x - a->x * b->z;
+		result->z = a->x * b->y - a->y * b->x;
+
+		return result;
+	}
+
+	static inline b3_f64 b3Length(b3_vector *vector)
+	{
+		return sqrt(
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z);
+	}
+
+	static inline b3_f64 b3Length(b3_vector64 *vector)
+	{
+		return sqrt(
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z);
+	}
+
+	static inline b3_f64 b3QuadLength(b3_vector *vector)
+	{
+		return
+			vector->x * vector->x +
+			vector->y * vector->y +
+			vector->z * vector->z;
+	}
+
+	static inline b3_f64 b3Distance(b3_vector *from,b3_vector *to)
+	{
+		register b3_f64 x,y,z;
+
+		x = to->x - from->x;
+		y = to->y - from->y;
+		z = to->z - from->z;
+		return sqrt(x * x + y * y + z * z);
+	}
+};
+
 b3_f64     b3AngleOfVectors     (b3_vector *dir1,b3_vector *dir2);
 b3_f64     b3AngleOfPoints      (b3_vector *base,b3_vector *dir1,b3_vector *dir2);
 b3_bool    b3IsEqual            (b3_vector *vec1,b3_vector *vec2);
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
 b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
-b3_vector *b3CrossProduct       (b3_vector *a,b3_vector *b,b3_vector *result);
 b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);
 b3_f64     b3Det3               (b3_vector *left,b3_vector *mid,b3_vector *right);
 b3_f64     b3Det4               (b3_matrix *Matrix);

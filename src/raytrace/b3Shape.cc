@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2001/10/19 14:46:57  sm
+**      - Rotation spline shape bug found.
+**      - Major optimizations done.
+**      - Cleanups
+**
 **      Revision 1.24  2001/10/18 14:48:26  sm
 **      - Fixing refracting problem on some scenes with glasses.
 **      - Fixing overlighting problem when using Mork shading.
@@ -368,10 +373,8 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&m_Dir1);
 	b3InitVector(&m_Dir2);
 
-	m_Normal.x = m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y;
-	m_Normal.y = m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z;
-	m_Normal.z = m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x;
-	m_NormalLength = b3Length(&m_Normal);
+	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
+	m_NormalLength = b3Vector::b3Length(&m_Normal);
 }
 
 void b3Shape2::b3Transform(b3_matrix *transformation)
@@ -430,9 +433,9 @@ void b3ShapeBaseTrans::b3InitBaseTrans()
 		b3PrintF(B3LOG_NORMAL,"A quadric has zero volume!\n");
 	}
 
-	m_DirLen[0] = b3QuadLength(&m_Dir1);
-	m_DirLen[1] = b3QuadLength(&m_Dir2);
-	m_DirLen[2] = b3QuadLength(&m_Dir3);
+	m_DirLen[0] = b3Vector::b3QuadLength(&m_Dir1);
+	m_DirLen[1] = b3Vector::b3QuadLength(&m_Dir2);
+	m_DirLen[2] = b3Vector::b3QuadLength(&m_Dir3);
 }
 
 void b3ShapeBaseTrans::b3BaseTrans(

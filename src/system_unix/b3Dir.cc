@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/19 14:46:58  sm
+**	- Rotation spline shape bug found.
+**	- Major optimizations done.
+**	- Cleanups
+**
 **	Revision 1.4  2001/10/17 14:46:03  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -42,7 +47,7 @@
 **	- Only scene loading background image when activated.
 **	- Fixing LDC spline initialization.
 **	- Converting Windows paths into right paths on Un*x
-**
+**	
 **	Revision 1.3  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -124,7 +129,7 @@ b3Dir::~b3Dir()
 // Open a directory list
 b3_bool b3Dir::b3OpenDir (const char *open_path)
 {
-	if (dir = opendir (open_path))
+	if ((dir = opendir (open_path)) != null)
 	{
 		strcpy (path, open_path);
 	}
@@ -143,7 +148,7 @@ b3_path_type b3Dir::b3DirNext (char *name)
 	{
 		loop = false;
 		type = B3_NOT_EXISTANT;
-		if (entry = readdir(dir))
+		if ((entry = readdir(dir)) != null)
 		{
 			strcpy(name, entry->d_name);
 			b3LinkFileName (fileName,path, name);
