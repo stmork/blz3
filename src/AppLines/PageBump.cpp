@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/04/23 08:23:14  sm
+**	- Adjusted wood dialog.
+**	- Updated copyright in splash window.
+**
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
 **	  pages.
-**
+**	
 **	
 */
 
@@ -55,7 +59,7 @@ CPageBump::CPageBump() : CPropertyPage(CPageBump::IDD)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_AmplitudeCtrl.b3SetRange(0.0,1.0);
-	m_AmplitudeCtrl.b3SetIncrement(0.001);
+	m_AmplitudeCtrl.b3SetIncrement(0.0001);
 	m_AmplitudeCtrl.b3SetUnit(CB3FloatSpinButtonCtrl::B3_UNIT_PERMILLE);
 }
 
