@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/10/12 19:54:19  sm
+**	- Some camera/light resort. We have to draw the
+**	  light just after the camera to ensure a proper
+**	  view matrix as part of the model view matrix.
+**
 **	Revision 1.2  2003/02/25 17:07:43  sm
 **	- Fixed wrong include
-**
+**	
 **	Revision 1.1  2003/02/25 15:56:21  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -206,17 +211,25 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
 	SetPixelFormat(dc,PixelFormatIndex,&m_glPixelFormat[0].desc);
 	gc = wglCreateContext(dc);
 
-	CB3GetApp()->b3SelectRenderContext(dc,gc);
+	if (gc != null)
+	{
+		CB3GetApp()->b3SelectRenderContext(dc,gc);
 
-	b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
-		PixelFormatIndex);
-	
-	b3RenderContext::b3Init();
-	glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
-	glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
-	glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);
-	glGetIntegerv(GL_ALPHA_BITS,&value); b3PrintF(B3LOG_DEBUG,"A: %2d\n",value);
-	glGetIntegerv(GL_DEPTH_BITS,&value); b3PrintF(B3LOG_DEBUG,"Z: %2d\n",value);
+		b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
+			PixelFormatIndex);
+		
+		b3RenderContext::b3Init();
+		glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
+		glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
+		glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);
+		glGetIntegerv(GL_ALPHA_BITS,&value); b3PrintF(B3LOG_DEBUG,"A: %2d\n",value);
+		glGetIntegerv(GL_DEPTH_BITS,&value); b3PrintF(B3LOG_DEBUG,"Z: %2d\n",value);
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Cannot allocate GC for píxel format index %d.\n",
+			PixelFormatIndex);
+	}
 
 	return gc;
 }

@@ -35,10 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2004/10/12 19:54:19  sm
+**	- Some camera/light resort. We have to draw the
+**	  light just after the camera to ensure a proper
+**	  view matrix as part of the model view matrix.
+**
 **	Revision 1.32  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
-**
+**	
 **	Revision 1.31  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -346,16 +351,16 @@ void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppRenderDoc *pDoc         = GetDocument();
 	b3_bool        doInvalidate = false;
 
-	if (lHint & B3_UPDATE_LIGHT)
-	{
-		b3UpdateLight();
-	}
-
 	if (lHint & B3_UPDATE_CAMERA)
 	{
 		m_RenderView.b3SetCamera(m_Camera);
 		m_CameraVolume.b3Update(m_Camera);
 		doInvalidate = true;
+	}
+
+	if (lHint & B3_UPDATE_LIGHT)
+	{
+		b3UpdateLight();
 	}
 
 	if (lHint & B3_UPDATE_GEOMETRY)
