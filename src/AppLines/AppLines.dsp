@@ -276,6 +276,10 @@ SOURCE=.\res\toolbar_action.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\toolbar_display.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\toolbar_object.bmp
 # End Source File
 # End Group
