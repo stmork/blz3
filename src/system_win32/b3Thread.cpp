@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/25 13:01:11  sm
+**	- b3ShowImage updated to handle empty images.
+**
 **	Revision 1.10  2002/08/24 13:07:34  sm
 **	- Added error message for errornous thread starting.
-**
+**	
 **	Revision 1.9  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
@@ -253,7 +256,7 @@ b3_bool b3Thread::b3Start(
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread not started!\n",
-			m_Thread);
+			thread);
 	}
 	return thread != null;
 }

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/25 13:01:11  sm
+**	- b3ShowImage updated to handle empty images.
+**
 **	Revision 1.7  2002/08/09 14:05:51  sm
 **	- Minor bug fixes.
-**
+**	
 **	Revision 1.6  2002/02/27 20:14:52  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -149,36 +152,39 @@ b3_bool CB3ShowImage::b3Update(
 	b3Tx      scaled;
 	b3_count  depth;
 
-	b3Aspect(&m_Tx,m_xPos,m_yPos,m_xSize,m_ySize,keep_aspect);
+	if (m_Tx.b3IsLoaded())
+	{
+		b3Aspect(&m_Tx,m_xPos,m_yPos,m_xSize,m_ySize,keep_aspect);
 
-	depth = m_Tx.depth;
-	if ((m_xSize == m_Tx.xSize) && (m_ySize == m_Tx.ySize))
-	{
-		scaled.b3Copy(&m_Tx);
-	}
-	else
-	{
-		if (filtered)
+		depth = m_Tx.depth;
+		if ((m_xSize == m_Tx.xSize) && (m_ySize == m_Tx.ySize))
 		{
-#if 1
-			// Use optimal color depth
-			scaled.b3AllocTx(m_xSize,m_ySize,depth <= 8 ? 8 : depth);
-#else
-			// Force true color
-			scaled.b3AllocTx(m_xSize,m_ySize,24);
-#endif
-			scaled.b3ScaleToGrey(&m_Tx);
+			scaled.b3Copy(&m_Tx);
 		}
 		else
 		{
-			scaled.b3AllocTx(m_xSize,m_ySize,m_Tx.depth);
-			scaled.b3Scale(&m_Tx);
+			if (filtered)
+			{
+#if 1
+				// Use optimal color depth
+				scaled.b3AllocTx(m_xSize,m_ySize,depth <= 8 ? 8 : depth);
+#else
+				// Force true color
+				scaled.b3AllocTx(m_xSize,m_ySize,24);
+#endif
+				scaled.b3ScaleToGrey(&m_Tx);
+			}
+			else
+			{
+				scaled.b3AllocTx(m_xSize,m_ySize,m_Tx.depth);
+				scaled.b3Scale(&m_Tx);
+			}
 		}
+		dc = GetDC();
+		m_DDB.b3InitImage(&scaled,dc);
+		ReleaseDC(dc);
+		Invalidate();
 	}
-	dc = GetDC();
-	m_DDB.b3InitImage(&scaled,dc);
-	ReleaseDC(dc);
-	Invalidate();
 	return false;
 }
 
