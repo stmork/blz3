@@ -21,6 +21,17 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Aux.h"
 
+struct b3_door
+{
+	b3_index a,b;
+	b3_f64   pos,base,width,height;
+	enum b3_door_type
+	{
+		BHC_DOOR,
+		BHC_WINDOW
+	} type;
+};
+
 class b3BHDParser
 {
 	enum b3_bhd_token
@@ -38,6 +49,7 @@ class b3BHDParser
 
 	static const char *m_TokenNames[];
 	b3Array<b3Point> m_Points;
+	b3Array<b3_door> m_Openings;
 	b3_index    m_Pos;
 	char        m_Line[1024];
 	FILE       *m_BHD;
@@ -54,6 +66,7 @@ private:
 	void            b3ParseLevel();
 	void            b3ParsePoint();
 	void            b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height);
+	void            b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b);
 	void            b3ParseDoor();
 	void            b3ParseWindow();
 

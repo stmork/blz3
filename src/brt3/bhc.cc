@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/07/09 18:54:10  sm
+**	- Added doors and windows.
+**
 **	Revision 1.3  2003/07/09 16:15:06  sm
 **	- Fixed empty line bug.
-**
+**	
 **	Revision 1.2  2003/07/09 12:57:18  sm
 **	- Further house buiding...
 **	
@@ -191,6 +194,7 @@ void b3BHDParser::b3ParseLevel()
 
 	b3CheckToken(TKN_BEGIN);
 	m_Points.b3Clear();
+	m_Openings.b3Clear();
 	do
 	{
 		token = b3ReadLine();
@@ -277,6 +281,24 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 		if (y > yMax) yMax = y;
 	}
 
+	for (i = 0;i < args;i++)
+	{
+		area = new b3Area(AREA);
+		area->m_Base.x = m_Points[index[i]].x;
+		area->m_Base.y = m_Points[index[i]].y;
+		area->m_Base.z = base;
+		area->m_Dir1.x = m_Points[index[i+1]].x - m_Points[index[i]].x;
+		area->m_Dir1.y = m_Points[index[i+1]].y - m_Points[index[i]].y;
+		area->m_Dir2.x = 0;
+		area->m_Dir2.y = 0;
+		area->m_Dir2.z = height;
+		b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
+		b3Vector::b3Normalize(&normal,-10.0);
+		b3Vector::b3Add(&normal,&area->m_Base);
+
+		room->b3GetShapeHead()->b3Append(area);
+	}
+
 	// floor
 	area = new b3Area(AREA);
 	area->m_Base.x = xMin;
@@ -295,23 +317,6 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 	area->m_Dir2.y = yMax - yMin;
 	room->b3GetShapeHead()->b3Append(area);
 
-	for (i = 0;i < args;i++)
-	{
-		area = new b3Area(AREA);
-		area->m_Base.x = m_Points[index[i]].x;
-		area->m_Base.y = m_Points[index[i]].y;
-		area->m_Base.z = base;
-		area->m_Dir1.x = m_Points[index[i+1]].x - m_Points[index[i]].x;
-		area->m_Dir1.y = m_Points[index[i+1]].y - m_Points[index[i]].y;
-		area->m_Dir2.y = 0;
-		area->m_Dir2.z = height;
-		b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
-		b3Vector::b3Normalize(&normal,-10.0);
-		b3Vector::b3Add(&normal,&area->m_Base);
-
-		room->b3GetShapeHead()->b3Append(area);
-	}
-
 	B3_FOR_BASE(room->b3GetShapeHead(),item)
 	{
 		area = (b3Area *)item;
@@ -322,16 +327,143 @@ void b3BHDParser::b3ParseRoom(b3BBox *level,b3_f64 base,b3_f64 height)
 		cond->m_yEnd   = 1;
 		area->b3GetConditionHead()->b3Append(cond);
 	}
+
+	area = (b3Area *)room->b3GetShapeHead()->First;
+	for (i = 0;i < args;i++)
+	{
+		b3CheckOpenings(room,area,index[i],index[i+1]);
+		area = (b3Area *)area->Succ;
+	}
+}
+
+void b3BHDParser::b3CheckOpenings(b3BBox *bbox,b3Area *area,int a,int b)
+{
+	b3Area          *left,*right,*top,*bottom;
+	b3CondRectangle *cond;
+	b3_vector normal;
+	b3_index  i;
+	b3_f64    width,height;
+
+	width  = b3Vector::b3Length(&area->m_Dir1);
+	height = b3Vector::b3Length(&area->m_Dir2);
+	for (i = 0;i < m_Openings.b3GetCount();i++)
+	{
+		if ((m_Openings[i].a == a) && (m_Openings[i].b == b))
+		{
+			cond = new b3CondRectangle(COND_NRECTANGLE);
+			cond->m_xStart =  m_Openings[i].pos   / width;
+			cond->m_yStart =  m_Openings[i].base  / height;
+			cond->m_xEnd   = (m_Openings[i].pos  + m_Openings[i].width)   / width;
+			cond->m_yEnd   = (m_Openings[i].base + m_Openings[i].height)  / height;
+			area->b3GetConditionHead()->b3Append(cond);
+
+			b3Vector::b3CrossProduct(&area->m_Dir1,&area->m_Dir2,&normal);
+			b3Vector::b3Normalize(&normal,10.0);
+
+			left = new b3Area(AREA);
+			left->m_Base.x = m_Points[a].x + area->m_Dir1.x * cond->m_xStart;
+			left->m_Base.y = m_Points[a].y + area->m_Dir1.y * cond->m_xStart;
+			left->m_Base.z = area->m_Base.z + m_Openings[i].base;
+			left->m_Dir1   = normal;
+			left->m_Dir2.x = 0;
+			left->m_Dir2.y = 0;
+			left->m_Dir2.z = m_Openings[i].height;
+			bbox->b3GetShapeHead()->b3Append(left);
+
+			right = new b3Area(AREA);
+			right->m_Base.x = m_Points[a].x + area->m_Dir1.x * cond->m_xEnd;
+			right->m_Base.y = m_Points[a].y + area->m_Dir1.y * cond->m_xEnd;
+			right->m_Base.z = area->m_Base.z + m_Openings[i].base;
+			right->m_Dir1   = normal;
+			right->m_Dir2.x = 0;
+			right->m_Dir2.y = 0;
+			right->m_Dir2.z = m_Openings[i].height;
+			bbox->b3GetShapeHead()->b3Append(right);
+
+			top = new b3Area(AREA);
+			top->m_Base.x = (left->m_Base.x + right->m_Base.x) * 0.5;
+			top->m_Base.y = (left->m_Base.y + right->m_Base.y) * 0.5;
+			top->m_Base.z =  area->m_Base.z + m_Openings[i].base + m_Openings[i].height;
+			top->m_Dir2   = normal;
+			top->m_Dir1.x = (right->m_Base.x - left->m_Base.x) * 0.5;
+			top->m_Dir1.y = (right->m_Base.y - left->m_Base.y) * 0.5;
+			top->m_Dir1.z = 0;
+			bbox->b3GetShapeHead()->b3Append(top);
+
+			if (m_Openings[i].type == b3_door::BHC_WINDOW)
+			{
+				bottom = new b3Area(AREA);
+				bottom->m_Base = top->m_Base;
+				bottom->m_Base.z = area->m_Base.z + m_Openings[i].base;
+				bottom->m_Dir1   = top->m_Dir1;
+				bottom->m_Dir2   = top->m_Dir2;
+				bbox->b3GetShapeHead()->b3Append(bottom);
+			}
+
+			cond = new b3CondRectangle(COND_ARECTANGLE);
+			cond->m_xStart = -1;
+			cond->m_yStart =  0;
+			cond->m_xEnd   =  1;
+			cond->m_yEnd   =  1;
+			left->b3GetConditionHead()->b3Append(cond);
+
+			cond = new b3CondRectangle(COND_ARECTANGLE);
+			cond->m_xStart = -1;
+			cond->m_yStart =  0;
+			cond->m_xEnd   =  1;
+			cond->m_yEnd   =  1;
+			right->b3GetConditionHead()->b3Append(cond);
+		}
+
+		if ((m_Openings[i].a == b) && (m_Openings[i].b == a))
+		{
+			cond = new b3CondRectangle(COND_NRECTANGLE);
+			cond->m_xStart = 0.0 -  m_Openings[i].pos   / width;
+			cond->m_yStart =        m_Openings[i].base  / height;
+			cond->m_xEnd   = 0.0 - (m_Openings[i].pos  + m_Openings[i].width)   / width;
+			cond->m_yEnd   =       (m_Openings[i].base + m_Openings[i].height)  / height;
+			area->b3GetConditionHead()->b3Append(cond);
+		}
+	}
 }
 
 void b3BHDParser::b3ParseWindow()
 {
+	b3_door window;
+
 	b3PrintF(B3LOG_DEBUG,"    creating window...\n");
+	if (sscanf(&m_Line[m_Pos],"%*s %d %d %lf %lf %lf %lf\n",
+		&window.a,&window.b,
+		&window.pos,&window.base,
+		&window.width,&window.height) != 6)
+	{
+		throw b3ParseException("Invalid number of arguments",m_LineNo);
+	}
+	window.pos    *= m_Scale;
+	window.base   *= m_Scale;
+	window.width  *= m_Scale;
+	window.height *= m_Scale;
+	window.type = b3_door::BHC_WINDOW;
+	m_Openings.b3Add(window);
 }
 
 void b3BHDParser::b3ParseDoor()
 {
+	b3_door  door;
+
 	b3PrintF(B3LOG_DEBUG,"    creating door...\n");
+	if (sscanf(&m_Line[m_Pos],"%*s %d %d %lf %lf\n",
+		&door.a,&door.b,
+		&door.pos,&door.width) != 4)
+	{
+		throw b3ParseException("Invalid number of arguments",m_LineNo);
+	}
+	door.pos    *= m_Scale;
+	door.width  *= m_Scale;
+	door.height  = 200;
+	door.base    =   0;
+	door.type = b3_door::BHC_DOOR;
+	m_Openings.b3Add(door);
 }
 
 b3Scene *b3BHDParser::b3Parse(const char *filename)
