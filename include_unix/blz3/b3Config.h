@@ -99,7 +99,7 @@ typedef enum
 } b3_cpu_type;
 
 #define B3_MAXHOSTNAMELEN (MAXHOSTNAMELEN)
-#define B3_FILESTRINGLEN  (NAME_MAX)
+#define B3_FILESTRINGLEN  (MAXNAMLEN)
 
 class b3Runtime : public b3CPU
 {

@@ -124,7 +124,9 @@ public:
 			{
 				// After realloc node may be invalid
 				b3UnlinkChunk(node);
-				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,new_size + sizeof(b3MemNode));
+				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,
+					node->m_ChunkSize + sizeof(b3MemNode),
+					new_size + sizeof(b3MemNode));
 				if (new_node != null)
 				{
 					new_node->m_ChunkSize = new_size;

@@ -38,7 +38,10 @@ protected:
 #endif
 	}
 	
-	static inline void *b3Realloc(void *ptr,b3_size new_size)
+	static inline void *b3Realloc(
+		void    *ptr,
+		b3_size  old_size,
+		b3_size  new_size)
 	{
 #if 0
 		return ::GlobalReAlloc(ptr,new_size,GPTR);
@@ -55,8 +58,6 @@ protected:
 			new_ptr = ::GlobalAlloc(GPTR,new_size);
 			if (new_ptr != null)
 			{
-				b3_size old_size = ::GlobalSize(ptr);
-
 				memcpy(new_ptr,ptr,B3_MIN(old_size,new_size));
 				::GlobalFree(ptr);
 			}
