@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxSaveInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -30,11 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.1  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	
 */
 
@@ -44,57 +49,37 @@
 **                                                                      **
 *************************************************************************/
 
-class b3InfoPS : protected b3Mem
+class b3InfoPS : protected b3TxSaveInfo
 {
-	FILE         *m_File;
-	b3Tx         *m_Tx;
-	b3_pkd_color *m_ThisRow;
-
 public:
 	      b3InfoPS(b3Tx *tx,const char *filename);
 	     ~b3InfoPS();
 	void  b3Write();
 };
 
-b3InfoPS::b3InfoPS(b3Tx *tx,const char *filename)
+b3InfoPS::b3InfoPS(b3Tx *tx,const char *filename) :
+	b3TxSaveInfo(tx,filename,TWRITE)
 {
 	b3_res  xSize,ySize;
 	b3_f64  xScale,yScale,width=20;
-
-	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
-	if (m_ThisRow == null)
-	{
-		b3PrintF (B3LOG_NORMAL,"Save RGB8: not enough memory!\n");
-		throw new b3TxException(B3_TX_MEMORY);
-	}
-
-	m_Tx = tx;
-	m_Tx->b3Name(filename);
-	m_File = fopen (filename,TWRITE);
-	if (m_File == null)
-	{
-		b3Free();
-		b3PrintF (B3LOG_NORMAL,"Save PS: not enough memory!\n");
-		throw new b3TxException(B3_TX_NOT_SAVED);
-	}
 
 	xSize  = m_Tx->xSize;
 	ySize  = m_Tx->ySize;
 	xScale = width * 72 / 2.54;
 	yScale = xScale * ySize / xSize;
 
-	fprintf (m_File, "%%!PS-Adobe-2.0\n");
-	fprintf (m_File, "%%%%Creator: Blizzard III - Steffen A. Mork\n");
-	fprintf (m_File, "%%%%EndComments\n\n");
+	fprintf (m_FileHandle, "%%!PS-Adobe-2.0\n");
+	fprintf (m_FileHandle, "%%%%Creator: Blizzard III - Steffen A. Mork\n");
+	fprintf (m_FileHandle, "%%%%EndComments\n\n");
 
-	fprintf (m_File, "gsave\n");
-	fprintf (m_File, "/picstr %ld string def\n", xSize + xSize + xSize);
-	fprintf (m_File, "30 120 translate\n");
-	fprintf (m_File, "%f %f scale\n", xScale, yScale);
-	fprintf (m_File, "%ld %ld 8\n",xSize,ySize);
-	fprintf (m_File, "[%ld 0 0 -%ld 0 %ld]\n",xSize,ySize,ySize);
-	fprintf (m_File, "{currentfile picstr readhexstring pop}\n");
-	fprintf (m_File, "image\n");
+	fprintf (m_FileHandle, "gsave\n");
+	fprintf (m_FileHandle, "/picstr %ld string def\n", xSize + xSize + xSize);
+	fprintf (m_FileHandle, "30 120 translate\n");
+	fprintf (m_FileHandle, "%f %f scale\n", xScale, yScale);
+	fprintf (m_FileHandle, "%ld %ld 8\n",xSize,ySize);
+	fprintf (m_FileHandle, "[%ld 0 0 -%ld 0 %ld]\n",xSize,ySize,ySize);
+	fprintf (m_FileHandle, "{currentfile picstr readhexstring pop}\n");
+	fprintf (m_FileHandle, "image\n");
 }
 
 void b3InfoPS::b3Write()
@@ -111,19 +96,17 @@ void b3InfoPS::b3Write()
 			g = (m_ThisRow[x] & 0x00f000) >>  8;
 			b = (m_ThisRow[x] & 0x0000ff);
 
-			fprintf (m_File, "%02xu",
+			fprintf (m_FileHandle, "%02xu",
 				(b3_pkd_color)(r * 0.35 + g * 0.51 + b * 0.14));
 		}
 	}
-	fprintf (m_File,"\n");
+	fprintf (m_FileHandle,"\n");
 }
 
 b3InfoPS::~b3InfoPS()
 {
-	fprintf (m_File, "grestore\n");
-	fprintf (m_File, "showpage\n");
-
-	fclose  (m_File);
+	fprintf (m_FileHandle, "grestore\n");
+	fprintf (m_FileHandle, "showpage\n");
 }
 
 b3_result b3Tx::b3SavePS(const char *filename)

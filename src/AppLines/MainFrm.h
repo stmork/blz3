@@ -99,7 +99,7 @@ public:
 	b3CameraPart *b3GetSelectedCamera();
 	void          b3UpdateLightBox(b3Scene *scene,b3Light *light);
 	b3Light      *b3GetSelectedLight();
-	void          b3SetPerformance(CView *drawing_window,long millis);
+	void          b3SetPerformance(CView *drawing_window,long millis,b3_count poly_count);
 };
 
 /////////////////////////////////////////////////////////////////////////////

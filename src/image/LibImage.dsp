@@ -145,6 +145,10 @@ SOURCE=.\b3TxPool.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3TxSaveInfo.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3TxSaveJPEG.cc
 # End Source File
 # Begin Source File
@@ -177,11 +181,11 @@ SOURCE=.\b3TxIFF.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3TxIMG.h
+SOURCE=..\..\include\blz3\image\b3TxPool.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\include\blz3\image\b3TxPool.h
+SOURCE=.\b3TxSaveInfo.h
 # End Source File
 # End Group
 # End Target

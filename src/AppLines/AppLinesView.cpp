@@ -36,11 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.16  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.15  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -492,7 +497,7 @@ void CAppLinesView::OnPaint()
 	{
 		CMainFrame *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
 	
-		main->b3SetPerformance(this,mDiff);
+		main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
 	}
 }
 

@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxSaveInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -30,11 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.1  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	
 */
 
@@ -44,15 +49,10 @@
 **                                                                      **
 *************************************************************************/
 
-class b3InfoRGB8 : protected b3Mem
+class b3InfoRGB8 : protected b3TxSaveInfo
 {
 	b3_pkd_color  DataRGB8,OldValue;
 	b3_count      OldAmount;
-	b3_pkd_color *m_ThisRow;
-	b3File        m_File;
-	b3Tx         *m_Tx;
-	b3_u08        m_SaveBuffer[128];
-	b3_coord      m_SaveYPos;
 
 public:
 	      b3InfoRGB8(b3Tx *tx,const char *filename);
@@ -60,25 +60,9 @@ public:
 	void  b3Write();
 };
 
-b3InfoRGB8::b3InfoRGB8(b3Tx *tx,const char *filename)
+b3InfoRGB8::b3InfoRGB8(b3Tx *tx,const char *filename) :
+	b3TxSaveInfo(tx,filename)
 {
-	m_Tx = tx;
-	m_Tx->b3Name(filename);
-
-	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
-	if (m_ThisRow == null)
-	{
-		b3PrintF (B3LOG_NORMAL,"Save RGB8: not enough memory!\n");
-		throw new b3TxException(B3_TX_MEMORY);
-	}
-
-	if (!m_File.b3Open(filename,B_WRITE))
-	{
-		b3Free();
-		b3PrintF(B3LOG_NORMAL,"Save RGB8: file \"%s\" not created!\n",filename);
-		throw new b3TxException(B3_TX_NOT_SAVED);
-	}
-	memset(m_SaveBuffer,0,sizeof(m_SaveBuffer));
 	m_File.b3Write (m_SaveBuffer,48);
 	DataRGB8  =  40;
 }
@@ -180,7 +164,6 @@ b3InfoRGB8::~b3InfoRGB8()
 
 	m_File.b3Seek (0,B3_SEEK_START);
 	m_File.b3Write(m_SaveBuffer,48);
-	m_File.b3Close();
 }
 
 b3_result b3Tx::b3SaveRGB8(const char *filename)

@@ -39,6 +39,11 @@ typedef enum
 class b3RenderContext : protected b3Mem
 {
 public:
+	b3_count         glVertexCount;
+	b3_count         glPolyCount;
+	b3_count         glGridCount;
+
+public:
 	                 b3RenderContext();
 	virtual void     b3Init();
 	virtual void     b3StartDrawing();
@@ -68,6 +73,7 @@ protected:
 	        void            b3Recompute();
 	        void            b3Update();
 public:
+	        void            b3AddCount(b3RenderContext *context);
 	virtual void            b3AllocVertices(b3RenderContext *context);
 	virtual void            b3FreeVertices();
 	virtual void            b3Draw();

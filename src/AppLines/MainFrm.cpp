@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.10  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.9  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -435,16 +440,19 @@ b3Light *CMainFrame::b3GetSelectedLight()
 *************************************************************************/
 
 void CMainFrame::b3SetPerformance(
-	CView *drawer,
-	long   millis)
+	CView    *drawer,
+	long      millis,
+	b3_count  poly_count)
 {
-	b3_f64 frame_rate;
+	b3_f64  frame_rate;
+	b3_f64  polygon_rate;
 	CString text;
 
 	if (GetActiveFrame()->GetActiveView() == drawer)
 	{
-		frame_rate = 1000.0 / (b3_f64)millis;
-		text.Format(IDS_FRAME_RATE,frame_rate);
+		frame_rate   = 1000.0 / (b3_f64)millis;
+		polygon_rate = poly_count * frame_rate;
+		text.Format(IDS_FRAME_RATE,frame_rate,polygon_rate);
 		m_wndStatusBar.SetPaneText(1,text);
 	}
 }

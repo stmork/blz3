@@ -23,6 +23,7 @@
 
 #include "blz3/system/b3Time.h"
 #include "blz3/system/b3Log.h"
+#include "blz3/b3Config.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.4  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.3  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -183,8 +189,8 @@ void b3TimeSpan::b3Stop()
 		m_UsageTime.ru_stime.tv_sec  * 1000 -
 		m_UsageTime.ru_stime.tv_usec / 1000);
 */
-	m_uTime += b3Diff(&m_uStart,&user_usage)   / 10000;
-	m_sTime += b3Diff(&m_sStart,&system_usage) / 10000;
+	m_uTime += b3DiffDiv10000(&m_uStart,&user_usage);
+	m_sTime += b3DiffDiv10000(&m_sStart,&system_usage);
 	m_rTime += (
 		 real_stop.time    * 1000 + 
 		 real_stop.millitm        -
@@ -207,12 +213,65 @@ char *b3TimeSpan::b3PrintTime(char *buffer,b3_s32 time_needed)
 	return buffer;
 }
 
-b3_u32 b3TimeSpan::b3Diff(FILETIME *first,FILETIME *last)
+static inline void b3_64_div_16(b3_u32 &high,b3_u32 &low,b3_u16 divisor)
 {
-	b3_s32 highDiff,lowDiff;
+#if 0
+	// This one is nice and fast
+	b3_u32   digits[4];
+	b3_u32   result[4];
+	b3_u32   diff = 0;
+	b3_count i;
 
+	digits[0] = (high & 0xffff0000) >> 16;
+	digits[1] = (high & 0x0000ffff);
+	digits[2] =  (low & 0xffff0000) >> 16;
+	digits[3] =  (low & 0x0000ffff);
+
+	for (i = 0;i < 4;i++)
+	{
+		diff      += digits[i];
+		result[i]  =  diff / divisor;
+		diff       = (diff - result[i] * divisor) << 16;
+	}
+	high = (result[0] << 16) + result[1];
+	low  = (result[2] << 16) + result[3];
+#else
+	// This one is ugly and faster
+	b3_u32   aux;
+	b3_u32   diff = 0;
+
+	diff  =  (high & 0xffff0000) >> 16;
+	aux   =   diff / divisor;
+	diff  = ((diff - aux * divisor) << 16) + (high & 0x0000ffff);
+	high  =   diff / divisor;
+	diff  = ((diff - high * divisor) << 16) + ((low & 0xffff0000) >> 16);
+	high +=  (aux << 16);
+	aux   =   diff / divisor;
+	diff  = ((diff - aux * divisor) << 16) + (low & 0x0000ffff);
+	low   =  (diff / divisor) + (aux << 16);
+#endif
+}
+
+b3_u32 b3TimeSpan::b3DiffDiv10000(FILETIME *first,FILETIME *last)
+{
+	b3_u32 highDiff,lowDiff;
+
+	// Make difference
 	lowDiff  = last->dwLowDateTime  - first->dwLowDateTime;
 	highDiff = last->dwHighDateTime - first->dwHighDateTime;
+
+	// Check carry
+	if (last->dwLowDateTime < first->dwLowDateTime)
+	{
+		highDiff--;
+	}
+
+	// Divide by 10,000
+	b3_64_div_16(highDiff,lowDiff,10000);
+
+	// highDiff is greater 0 when 49 days time span are measured.
+	// I think debugging a session would not take at least 49 days...
+	B3_ASSERT(highDiff == 0);
 	return lowDiff;
 }
 

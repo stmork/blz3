@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.22  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	Revision 1.21  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -296,12 +301,13 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3AllocVertices(context);
-
+		bbox->b3AddCount(context);
 	}
 	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3AllocVertices(context);
+		shape->b3AddCount(context);
 	}
 }
 
@@ -609,10 +615,14 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	b3Item  *item;
 	b3BBox  *bbox;
 
+	context->glVertexCount = 0;
+	context->glPolyCount   = 0;
+	context->glGridCount   = 0;
 	B3_FOR_BASE(&heads[0],item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3AllocVertices(context);
+		bbox->b3AddCount(context);
 	}
 }
 

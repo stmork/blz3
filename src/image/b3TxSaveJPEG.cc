@@ -20,8 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
-#include "blz3/system/b3File.h"
+#include "b3TxSaveInfo.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,11 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.2  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	
 */
 
@@ -77,12 +81,9 @@ typedef struct
 
 typedef my_destination_mgr * my_dest_ptr;
 
-class b3InfoJPEG : public b3Mem
+class b3InfoJPEG : protected b3TxSaveInfo
 {
-	b3Tx                        *JPEGtx;
-	b3File                       JPEGoutfile;
 	b3_u08                      *JPEGrow;
-	b3_pkd_color                *JPEGsrc;
 	struct jpeg_compress_struct  JPEGcinfo;
 	struct jpeg_error_mgr        JPEGjerr;
 	JDIMENSION                   JPEGline;
@@ -161,27 +162,22 @@ void b3InfoJPEG::b3JpegStdioDestPrivate (j_compress_ptr  cinfo)
 	dest->pub.init_destination    = b3InitDestination;
 	dest->pub.empty_output_buffer = b3EmptyOutputBuffer;
 	dest->pub.term_destination    = b3TermDestination;
-	dest->outfile                 = &JPEGoutfile;
+	dest->outfile                 = &m_File;
 }
 
-b3InfoJPEG::b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality)
+b3InfoJPEG::b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality) :
+	b3TxSaveInfo(tx,filename)
 {
 	b3_coord i;
 
-	JPEGtx         = tx;
 	JPEGrow_stride = tx->xSize * 3;
 	JPEGline       = 0;
 	JPEGwritten    = 0;
-	JPEGsrc        = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
-	if (JPEGsrc == null)
-	{
-		b3PrintF (B3LOG_NORMAL,"Save JPEG: no row mem!\n");
-		throw new b3TxException(B3_TX_MEMORY);
-	}
 
 	JPEGrow        = (b3_u08 *)b3Alloc(JPEGrow_stride * JPEG_ROWS);
 	if (JPEGrow == null)
 	{
+		m_File.b3Close();
 		b3Free();
 		b3PrintF (B3LOG_NORMAL,"Save JPEG: no row mem!\n");
 		throw new b3TxException(B3_TX_MEMORY);
@@ -193,12 +189,6 @@ b3InfoJPEG::b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality)
 
 	JPEGcinfo.err = jpeg_std_error(&JPEGjerr);
 	jpeg_create_compress(&JPEGcinfo);
-	if(!JPEGoutfile.b3Open(filename, B_WRITE))
-	{
-		b3Free();
-		b3PrintF (B3LOG_NORMAL,"Save JPEG: file (%s) not created!\n",JPEGtx->b3Name());
-		throw new b3TxException(B3_TX_NOT_SAVED);
-	}
 
 	b3JpegStdioDestPrivate(&JPEGcinfo);
 	JPEGcinfo.image_width      = tx->xSize;
@@ -209,8 +199,6 @@ b3InfoJPEG::b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality)
 	jpeg_set_defaults   (&JPEGcinfo);
 	jpeg_set_quality    (&JPEGcinfo, quality, TRUE );
 	jpeg_start_compress (&JPEGcinfo, TRUE);
-	
-	tx->b3Name(filename);
 }
 
 void b3InfoJPEG::b3Write()
@@ -218,7 +206,7 @@ void b3InfoJPEG::b3Write()
 	b3_u08       *line;
 	b3_coord      x,y,xMax;
 
-	for (y = 0;y < JPEGtx->ySize;y++)
+	for (y = 0;y < m_Tx->ySize;y++)
 	{
 		line = (b3_u08 *)JPEGrow_pointer[JPEGline++];
 		if (JPEGline >= JPEG_ROWS)
@@ -226,13 +214,13 @@ void b3InfoJPEG::b3Write()
 			JPEGline = 0;
 		}
 
-		xMax = JPEGtx->xSize;
-		JPEGtx->b3GetRow(JPEGsrc,y);
+		xMax = m_Tx->xSize;
+		m_Tx->b3GetRow(m_ThisRow,y);
 		for (x = 0;x < xMax;x++)
 		{
-			*line++ = (JPEGsrc[x] & 0xff0000) >> 16;
-			*line++ = (JPEGsrc[x] & 0x00ff00) >>  8;
-			*line++ = (JPEGsrc[x] & 0x0000ff);
+			*line++ = (m_ThisRow[x] & 0xff0000) >> 16;
+			*line++ = (m_ThisRow[x] & 0x00ff00) >>  8;
+			*line++ = (m_ThisRow[x] & 0x0000ff);
 		}
 		if (JPEGline == 0)
 		{
@@ -253,16 +241,16 @@ b3InfoJPEG::~b3InfoJPEG()
 		JPEGwritten += JPEGline;
 	}
 
-	if (JPEGwritten < (JDIMENSION)JPEGtx->ySize)
+	if (JPEGwritten < (JDIMENSION)m_Tx->ySize)
 	{
 		line = (b3_u08 *)JPEGrow_pointer[0];
-		for (x = 0;x < JPEGtx->xSize;x++)
+		for (x = 0;x < m_Tx->xSize;x++)
 		{
 			*line++ = 0;
 			*line++ = 0;
 			*line++ = 0;
 		}
-		for (y = JPEGwritten;y < JPEGtx->ySize;y++)
+		for (y = JPEGwritten;y < m_Tx->ySize;y++)
 		{
 			jpeg_write_scanlines(&JPEGcinfo, JPEGrow_pointer, 1);
 		}
@@ -270,7 +258,6 @@ b3InfoJPEG::~b3InfoJPEG()
 
 	jpeg_finish_compress (&JPEGcinfo);
 	jpeg_destroy_compress(&JPEGcinfo);
-	JPEGoutfile.b3Close();
 }
 
 b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)

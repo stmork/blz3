@@ -57,7 +57,7 @@ public:
 	       void    b3Print(b3_log_level level = B3LOG_NORMAL);
 	       b3_f64  b3GetUsage();
 private:
-	static b3_u32  b3Diff(FILETIME *first,FILETIME *last);
+	static b3_u32  b3DiffDiv10000(FILETIME *first,FILETIME *last);
 	static char   *b3PrintTime(char *buffer,b3_s32 time_needed);
 };
 

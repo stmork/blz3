@@ -20,7 +20,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/image/b3Tx.h"
+#include "b3TxSaveInfo.h"
 
 #define BUFFERSIZE 64000
 
@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/11/09 16:15:35  sm
+**	- Image file encoder
+**	- Performance meter for triangles / second added.
+**	- Corrected Windows b3TimeSpan computation
+**
 **	Revision 1.1  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
 **	- Hoping to win Peter H. for powerful MFC programming...
-**
+**	
 **	
 */
 
@@ -46,14 +51,10 @@
 **                                                                      **
 *************************************************************************/
 
-class b3InfoTGA : protected b3Mem
+class b3InfoTGA : protected b3TxSaveInfo
 {
-	b3File        m_File;
-	b3Tx         *m_Tx;
 	b3_u08       *m_SaveData;
-	b3_pkd_color *m_ThisRow;
-	b3_u08        m_SaveBuffer[128];
-	b3_index      m_SaveAs,m_SaveIndex,m_SaveYPos;
+	b3_index      m_SaveAs,m_SaveIndex;
 
 public:
 	      b3InfoTGA(b3Tx *tx,const char *filename);
@@ -61,30 +62,16 @@ public:
 	void  b3Write();
 };
 
-b3InfoTGA::b3InfoTGA(b3Tx *tx,const char *filename)
+b3InfoTGA::b3InfoTGA(b3Tx *tx,const char *filename) :
+	b3TxSaveInfo(tx,filename)
 {
 	m_SaveData = (b3_u08 *)b3Alloc(BUFFERSIZE + 16);
 	if (m_SaveData == null)
 	{
-		b3PrintF (B3LOG_NORMAL,"Save Targa 24: not enough memory!\n");
-		throw new b3TxException(B3_TX_MEMORY);
-	}
-
-	m_ThisRow = (b3_pkd_color *)b3Alloc(tx->xSize * sizeof(b3_pkd_color));
-	if (m_ThisRow == null)
-	{
+		m_File.b3Close();
 		b3Free();
 		b3PrintF (B3LOG_NORMAL,"Save Targa 24: not enough memory!\n");
 		throw new b3TxException(B3_TX_MEMORY);
-	}
-
-	m_Tx = tx;
-	m_Tx->b3Name(filename);
-	if(!m_File.b3Open(filename,B_WRITE))
-	{
-		b3Free();
-		b3PrintF(B3LOG_NORMAL,"Save Targa: file \"%s\" not created!\n",filename);
-		throw new b3TxException(B3_TX_NOT_SAVED);
 	}
 
 	m_File.b3Write (m_SaveData,m_SaveIndex = 18);
@@ -170,7 +157,6 @@ b3InfoTGA::~b3InfoTGA()
 
 	m_File.b3Seek (0,B3_SEEK_START);
 	m_File.b3Write(m_SaveData,18);
-	m_File.b3Close();
 }
 
 b3_result b3Tx::b3SaveTGA(const char *filename)

@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/11/09 16:15:35  sm
+**      - Image file encoder
+**      - Performance meter for triangles / second added.
+**      - Corrected Windows b3TimeSpan computation
+**
 **      Revision 1.14  2001/11/01 09:43:11  sm
 **      - Some image logging cleanups.
 **      - Texture preparing now in b3Prepare().
@@ -149,6 +154,10 @@ int main(int argc,char *argv[])
 			scene->b3Prepare(xSize,ySize);
 			scene->b3AllocVertices(&context);
 			scene->b3Activate();
+
+			b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
+			b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
+			b3PrintF(B3LOG_NORMAL,"%d grids\n",    context.glGridCount);
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
 			view.b3UpdateView(0,0,xSize,ySize);

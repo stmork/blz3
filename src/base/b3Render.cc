@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2001/11/09 16:15:35  sm
+**      - Image file encoder
+**      - Performance meter for triangles / second added.
+**      - Corrected Windows b3TimeSpan computation
+**
 **      Revision 1.19  2001/10/19 14:46:57  sm
 **      - Rotation spline shape bug found.
 **      - Major optimizations done.
@@ -333,6 +338,13 @@ void b3RenderObject::b3GetCount(
 	vertCount = 0;
 	gridCount = 0;
 	polyCount = 0;
+}
+
+void b3RenderObject::b3AddCount(b3RenderContext *context)
+{
+	context->glVertexCount += glVertexCount;
+	context->glPolyCount   += glPolyCount;
+	context->glGridCount   += glGridCount;
 }
 
 void b3RenderObject::b3AllocVertices(b3RenderContext *context)
