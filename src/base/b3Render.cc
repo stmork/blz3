@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.29  2002/07/21 21:09:37  sm
+**      - Now having texture mapping! Texture mapping is only applied to
+**        areas and cylinders.
+**
 **      Revision 1.28  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -770,18 +774,9 @@ void b3RenderObject::b3Recompute()
 
 static b3Tx glTextureBuffer;
 
-void b3RenderObject::b3Update()
+void b3RenderObject::b3UpdateTexture()
 {
-#ifdef BLZ3_USE_OPENGL
 	b3_color black,white;
-
-	if (!glComputed)
-	{
-		b3ComputeIndices();
-		b3ComputeVertices();
-		b3ComputeNormals();
-		glComputed = true;
-	}
 
 	if (b3GetChess(&black,&white))
 	{
@@ -791,6 +786,19 @@ void b3RenderObject::b3Update()
 	if (b3GetImage(&glTextureBuffer))
 	{
 		b3CreateImage(null,&glTextureBuffer);
+	}
+}
+
+void b3RenderObject::b3Update()
+{
+#ifdef BLZ3_USE_OPENGL
+	if (!glComputed)
+	{
+		b3ComputeIndices();
+		b3ComputeVertices();
+		b3ComputeNormals();
+		glComputed = true;
+		b3UpdateTexture();
 	}
 #endif
 }
@@ -824,6 +832,7 @@ void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
 void b3RenderObject::b3Draw()
 {
 	b3_render_mode render_mode = b3GetRenderMode();
+	b3_color       blend;
 	b3_color       ambient;
 	b3_color       diffuse;
 	b3_color       specular;
@@ -926,31 +935,43 @@ void b3RenderObject::b3Draw()
 
 			glEnable(GL_LIGHTING);
 			shininess = b3GetColors(&ambient,&diffuse,&specular);
-#if 1
-			ambient = specular = diffuse;
-#endif
-			b3RenderContext::b3ColorToGL(&ambient,color);
-			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,color);
-
 			if (glTextureSize > 0)
 			{
+				b3Color::b3Init(&blend,   0xff000000);
+				b3Color::b3Init(&ambient, B3_WHITE);
+				b3Color::b3Init(&diffuse, B3_WHITE);
+				b3Color::b3Init(&specular,B3_WHITE);
+
+				b3RenderContext::b3ColorToGL(&blend,color);
+				glBindTexture(  GL_TEXTURE_2D,glTextureId);
+				glTexEnvi(GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,GL_DECAL);
+				glTexEnvfv(GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR,color);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+				glTexImage2D(   GL_TEXTURE_2D,
+					0,GL_RGBA,glTextureSize,glTextureSize,
+					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
 				glEnable(GL_TEXTURE_2D);
-				glBindTexture(GL_TEXTURE_2D,glTextureId);
-				glTexImage2D(GL_TEXTURE_2D,
-					0,GL_RGBA,glTextureSize,
-					0,GL_RGBA,glTextureSize,
-					GL_UNSIGNED_BYTE,glTextureData);
 			}
 			else
 			{
-				b3RenderContext::b3ColorToGL(&diffuse,color);
-				glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
+#if 1
+				ambient = specular = diffuse;
+#endif
+				glDisable(GL_TEXTURE_2D);
 			}
+
+			b3RenderContext::b3ColorToGL(&ambient,color);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,color);
+
+			b3RenderContext::b3ColorToGL(&diffuse,color);
+			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
 
 			b3RenderContext::b3ColorToGL(&specular,color);
 			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,color);
 			glMaterialf (GL_FRONT_AND_BACK,GL_SHININESS,shininess);
-
 
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 		}
@@ -967,8 +988,6 @@ void b3RenderObject::b3CreateTexture(
 	b3RenderContext *context,
 	b3_res           size)
 {
-	b3PrintF(B3LOG_DEBUG,"b3RenderObject::b3CreateTexture(%p,%d)\n",context,size);
-
 	if (size != glTextureSize)
 	{
 		if (glTextureData != null)
@@ -1015,7 +1034,7 @@ void b3RenderObject::b3CreateImage(
 {
 	b3_pkd_color *lPtr = (b3_pkd_color *)input->b3GetData();
 #ifndef _DEBUG
-	b3_res        max  = 128;
+	b3_res        max  = 256;
 #else
 	b3_res        max  =   8;
 #endif
@@ -1034,10 +1053,8 @@ void b3RenderObject::b3CreateImage(
 	{
 		for (x = 0;x < max;x++)
 		{
-b3PrintF(B3LOG_NORMAL,"%06x ",*lPtr);
 			b3RenderContext::b3PkdColorToGL(*lPtr++,&glTextureData[i]);
 			i += 4;
 		}
-b3PrintF(B3LOG_NORMAL,"\n");
 	}
 }

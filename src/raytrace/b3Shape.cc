@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2002/07/21 21:09:37  sm
+**      - Now having texture mapping! Texture mapping is only applied to
+**        areas and cylinders.
+**
 **      Revision 1.44  2002/03/10 13:55:15  sm
 **      - Added creation dialog for rotation shapes.
 **      - Cleaned up derivation of b3SplineRotShape.
@@ -495,6 +499,11 @@ b3Material *b3Shape::b3GetColors(
 	surface->se   = 100000.0f;
 
 	return null;
+}
+
+b3_bool b3Shape::b3CheckStencil(b3_polar_precompute *polar)
+{
+	return true;
 }
 
 void b3Shape::b3GetStencilBoundInfo(b3_stencil_bound *info)

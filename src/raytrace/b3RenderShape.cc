@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2002/07/21 21:09:37  sm
+**      - Now having texture mapping! Texture mapping is only applied to
+**        areas and cylinders.
+**
 **      Revision 1.33  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -481,13 +485,15 @@ b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
 
 void b3ShapeRenderObject::b3ComputeBound(b3_stencil_limit *limit)
 {
-	b3Item      *item;
-	b3Condition *cond;
+	b3Item           *item;
+	b3Condition      *cond;
+	b3_stencil_bound  info;
 
-	limit->x1 = -1;
-	limit->y1 = -1;
-	limit->x2 =  1;
-	limit->y2 =  1;
+	b3GetStencilBoundInfo(&info);
+	limit->x1 = info.xMin;
+	limit->y1 = info.yMin;
+	limit->x2 = info.xMax;
+	limit->y2 = info.yMax;
 
 	B3_FOR_BASE(b3GetConditionHead(),item)
 	{
@@ -595,7 +601,7 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 
 	if (b3GetClassType() != AREA)
 	{
-		return false;
+//		return false;
 	}
 
 	for( item  = b3GetMaterialHead()->First;
@@ -610,39 +616,45 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 	{
 		b3Item           *item;
 		b3Material       *material;
-		b3_stencil_bound  info;
+		b3_stencil_limit  limit;
 		b3_polar          polar;
 		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
+		b3_pkd_color      color;
 		b3_color          diffuse;
 		b3_color          ambient;
 		b3_color          specular;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
+		b3_bool           loop;
 
-		b3GetStencilBoundInfo(&info);
-		fxStep = (info.xMax - info.xMin) / (image->xSize - 1);
-		fyStep = (info.yMax - info.yMin) / (image->ySize - 1);
-		fy     = info.yMin;
-		
+		b3ComputeBound(&limit);
+		fxStep = (limit.x2 - limit.x1) / (image->xSize - 1);
+		fyStep = (limit.y2 - limit.y1) / (image->ySize - 1);
+
+		fy = limit.y1;
 		for (y = 0;y < image->ySize;y++)
 		{
-			fx = info.xMin;
+			fx = limit.x1;
 			for (x = 0;x < image->xSize;x++)
 			{
 				b3Vector::b3Init(&polar.box_polar,   fx,fy);
 				b3Vector::b3Init(&polar.object_polar,fx,fy);
 				b3Vector::b3Init(&polar.polar,       fx,fy);
 
-				B3_FOR_BASE(b3GetMaterialHead(),item)
+				color = B3_BLACK;
+				for(material = (b3Material *)b3GetMaterialHead()->First,loop = true;
+				    (material != null) && loop;
+				    material = (b3Material *)material->Succ)
 				{
-					material = (b3Material *)item;
-					if (material->b3GetColors(&polar,
-						&diffuse,&ambient,&specular))
+					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
 					{
-						*lPtr++ = b3Color::b3GetColor(&diffuse);
+						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
+						color = b3Color::b3GetColor(&diffuse);
+						loop  = false;
 					}
 				}
+				*lPtr++ = color;
 				fx += fxStep;
 			}
 			fy += fyStep;
@@ -779,6 +791,7 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Dir3)
 {
 #ifdef BLZ3_USE_OPENGL
+	GLfloat   *Tex;
 	b3_vector *Vector;
 	b3_f64     sx,sy,b,h,start,end;
 	b3_index   i;
@@ -786,6 +799,7 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector  Bottom;
 
 	Vector = (b3_vector *)glVertices;
+	Tex    = glTexCoord;
 	h      = Limit.y2 - Limit.y1;
 	b      = Limit.y1;
 
@@ -802,7 +816,7 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 
 	if ((i - start) > epsilon)
 	{
-		b = Limit.x1 * M_PI * 2;
+		b  = Limit.x1 * M_PI * 2;
 		sx = cos(b);
 		sy = sin(b);
 
@@ -815,6 +829,11 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
 		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
+
+		*Tex++ = 0;
+		*Tex++ = 0;
+		*Tex++ = 0;
+		*Tex++ = 1;
 
 		glVertexCount += 2;
 		xSize++;
@@ -837,6 +856,11 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 
 		glVertexCount += 2;
 		xSize++;
+
+		Tex[0] = Tex[2] = (double)i / SinCosSteps - Limit.x1;
+		Tex[1] = 0;
+		Tex[3] = 1;
+		Tex += 4;
 	}
 
 	if ((end - iMax) > epsilon)
@@ -854,6 +878,11 @@ void b3ShapeRenderObject::b3ComputeCylinderVertices(
 		Vector->y = Bottom.y + sx * Dir1.y + sy * Dir2.y + h * Dir3.y;
 		Vector->z = Bottom.z + sx * Dir1.z + sy * Dir2.z + h * Dir3.z;
 		Vector++;
+
+		*Tex++ = 1;
+		*Tex++ = 0;
+		*Tex++ = 1;
+		*Tex++ = 1;
 
 		glVertexCount += 2;
 		xSize++;

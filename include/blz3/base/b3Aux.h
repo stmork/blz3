@@ -83,7 +83,7 @@ public:
 class b3Color
 {
 public:
-	static inline b3_color *b3Init(b3_color *col,b3_f64 a=0,b3_f64 r=0,b3_f64 g=0,b3_f64 b=0)
+	static inline b3_color *b3Init(b3_color *col,b3_f64 r=0,b3_f64 g=0,b3_f64 b=0,b3_f64 a=0)
 	{
 		col->a = a;
 		col->r = r;
@@ -91,6 +91,11 @@ public:
 		col->b = b;
 
 		return col;
+	}
+
+	static inline b3_color *b3Init(b3_color *col,b3_pkd_color input)
+	{
+		return b3GetColor(col,input);
 	}
 
 	static inline b3_pkd_color b3GetColor(const b3_color *color)

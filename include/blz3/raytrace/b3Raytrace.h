@@ -919,6 +919,7 @@ public:
 	        b3_bool     b3IsActive();
 	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
+	virtual b3_bool     b3CheckStencil(b3_polar_precompute *polar);
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation);
 	virtual b3_bool     b3Prepare();
@@ -962,6 +963,9 @@ protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
 	void            b3GetGridColor(b3_color *color);
 	void            b3GetDiffuseColor(b3_color *color);
+	b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
+	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor);
+	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
 
 	// Sphere
@@ -1088,6 +1092,7 @@ class b3Area : public b3Shape2
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  area_vertices[4 * 3];
 	GLfloat  area_normals[4 * 3];
+	GLfloat  area_texcoord[4 * 3];
 #endif
 
 public:
@@ -1178,6 +1183,7 @@ class b3Box : public b3Shape3
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  box_vertices[8 * 3 * 3];
 	GLfloat  box_normals[8 * 3 * 3];
+	GLfloat  box_texcoord[8 * 3 * 3];
 #endif
 
 public:
@@ -1568,6 +1574,7 @@ class b3CSGBox : public b3CSGShape3
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  box_vertices[8 * 3 * 3];
 	GLfloat  box_normals[8 * 3 * 3];
+	GLfloat  box_texcoord[8 * 3 * 3];
 #endif
 
 public:
@@ -1642,6 +1649,7 @@ public:
 #ifdef BLZ3_USE_OPENGL
 	GLfloat          bbox_vertices[8 * 3];
 	GLfloat          bbox_normals[8 * 3];
+	GLfloat          bbox_texcoord[8 * 3];
 #endif
 
 public:
@@ -2291,9 +2299,13 @@ public:
 	        void            b3Write();
 	        void            b3Reorg();
 	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+
+			// Drawing routines
 		    void            b3AllocVertices(b3RenderContext *context);
 		    void            b3FreeVertices();
+	virtual void            b3SetLights(b3RenderContext *context);
 	        void            b3Draw();
+
 			char           *b3GetName();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 	        b3_bool         b3BacktraceRecompute(b3BBox *search);
@@ -2360,8 +2372,9 @@ public:
 	B3_ITEM_INIT(b3SceneMork);
 	B3_ITEM_LOAD(b3SceneMork);
 
-	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
+	virtual void    b3SetLights(b3RenderContext *context);
+	        b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
+	        void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);

@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2002/07/21 21:09:37  sm
+**      - Now having texture mapping! Texture mapping is only applied to
+**        areas and cylinders.
+**
 **      Revision 1.18  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -135,8 +139,8 @@ static GLushort area_grids[] =
 
 static GLushort area_polygons[] =
 {
-	0,1,3,
-	2,3,1
+	0,3,1,
+	2,1,3
 };
 #endif
 
