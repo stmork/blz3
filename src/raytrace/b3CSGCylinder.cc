@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2004/12/09 08:38:29  smork
+**      - Corrected Grid for CSG cylinder/CSG cone.
+**
 **      Revision 1.23  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -176,7 +179,7 @@ void b3CSGCylinder::b3GetCount(
 	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	vertCount   = SinCosSteps * 4 + 2;
-	gridCount   = SinCosSteps * 3;
+	gridCount   = SinCosSteps * 5;
 	polyCount   = SinCosSteps * 4;
 }
 
@@ -225,6 +228,8 @@ void b3CSGCylinder::b3ComputeIndices()
 		B3_GL_LINIT(gPtr,i,  (i + 2) % offset);
 		B3_GL_LINIT(gPtr,i,i+1);
 		B3_GL_LINIT(gPtr,i+1,(i + 3) % offset);
+		B3_GL_LINIT(gPtr,i,  mid);
+		B3_GL_LINIT(gPtr,i+1,mid + 1);
 
 		B3_GL_PINIT(pPtr,offset +  i,offset + (i + 2) % offset,mid);
 		B3_GL_PINIT(pPtr,i,(i + 2) % offset,i+1);

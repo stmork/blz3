@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2004/12/09 08:38:29  smork
+**      - Corrected Grid for CSG cylinder/CSG cone.
+**
 **      Revision 1.22  2004/11/21 14:56:58  sm
 **      - Merged VBO development into main trunk.
 **
@@ -170,11 +173,11 @@ void b3CSGCone::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv << 1;
+	b3_count SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
-	vertCount   = SinCosSteps + 2;
-	gridCount   = SinCosSteps;
-	polyCount   = SinCosSteps;
+	vertCount   = SinCosSteps * 2 + 2;
+	gridCount   = SinCosSteps * 3;
+	polyCount   = SinCosSteps * 2;
 }
 
 void b3CSGCone::b3ComputeVertices()
@@ -190,12 +193,11 @@ void b3CSGCone::b3ComputeVertices()
 			b3ShapeRenderContext::m_Sin[i],&Vector[i].v);
 		Vector[i + SinCosSteps] = Vector[i];
 	}
-	Vector += SinCosSteps;
-	Vector += SinCosSteps;
+	Vector += (SinCosSteps << 1);
 
-	Vector[1].v.x = (Vector[0].v.x = m_Base.x) + m_Base.x;
-	Vector[1].v.y = (Vector[0].v.y = m_Base.y) + m_Base.y;
-	Vector[1].v.z = (Vector[0].v.z = m_Base.z) + m_Base.z;
+	Vector[1].v.x = (Vector[0].v.x = m_Base.x) + m_Dir3.x;
+	Vector[1].v.y = (Vector[0].v.y = m_Base.y) + m_Dir3.y;
+	Vector[1].v.z = (Vector[0].v.z = m_Base.z) + m_Dir3.z;
 }
 
 void b3CSGCone::b3ComputeIndices()
@@ -203,16 +205,17 @@ void b3CSGCone::b3ComputeIndices()
 	b3_gl_line    *gPtr        = *glGridElements;
 	b3_gl_polygon *pPtr        = *glPolygonElements;
 	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
-	b3_index       offset = SinCosSteps * 2;
+	b3_index       offset = SinCosSteps << 1;
 	b3_index       i;
 
 	for (i = 0;i < SinCosSteps;i++)
 	{
 		B3_GL_LINIT(gPtr,i,(i + 1) % SinCosSteps);
-		B3_GL_LINIT(gPtr,i,i + offset + 1);
+		B3_GL_LINIT(gPtr,i,offset);
+		B3_GL_LINIT(gPtr,i,offset + 1);
 
 		B3_GL_PINIT(pPtr,i,(i + 1) % SinCosSteps,offset);
-		B3_GL_PINIT(pPtr,SinCosSteps +  i,SinCosSteps + (i + 1) % SinCosSteps,offset + 1);
+		B3_GL_PINIT(pPtr,i + SinCosSteps,(i + 1) % SinCosSteps + SinCosSteps,offset + 1);
 	}
 }
 
