@@ -31,6 +31,15 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/12/31 11:05:17  sm
+**      - Added TestData for testing Blizzard data structures for reading
+**        and writing.
+**      - Fixed bugs found with previous mentioned tool:
+**        o Some b3AnimElement errors found to be fixed under Windows.
+**        o b3TriangleShape destructor handled unchecked m_GridList pointer
+**      - Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**        B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **      Revision 1.4  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -137,6 +146,7 @@ b3AnimElement::b3AnimElement(b3_u32 class_type) : b3Item(sizeof (b3AnimElement),
 
 b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 {
+	b3InitNOP();
 	b3InitVector(&center);
 	b3InitMatrix(&actual);
 	b3InitMatrix(&neutralInverse);
@@ -161,6 +171,7 @@ b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 
 void b3AnimElement::b3Write()
 {
+	b3StorePtr   (null);
 	b3StoreVector(&center);
 	b3StoreMatrix(&actual);
 	b3StoreMatrix(&neutralInverse);

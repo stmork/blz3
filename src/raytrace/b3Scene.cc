@@ -33,9 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2001/12/31 11:05:18  sm
+**	- Added TestData for testing Blizzard data structures for reading
+**	  and writing.
+**	- Fixed bugs found with previous mentioned tool:
+**	  o Some b3AnimElement errors found to be fixed under Windows.
+**	  o b3TriangleShape destructor handled unchecked m_GridList pointer
+**	- Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**	  B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **	Revision 1.30  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
-**
+**	
 **	Revision 1.29  2001/12/30 18:24:35  sm
 **	- Added missing b3AnimControl class
 **	- Some minor bug fixes done:
@@ -193,7 +202,7 @@ void b3InitScene::b3Init()
 
 b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
+	b3PrintF(B3LOG_DEBUG,"Blizzard III scene init.\n");
 
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BBOX);
@@ -224,7 +233,7 @@ b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 
 b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III scene init.\n");
+	b3PrintF(B3LOG_DEBUG,"Blizzard III scene init.\n");
 
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BBOX);
@@ -255,7 +264,7 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 
 b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III scene load.\n");
+	b3PrintF(B3LOG_DEBUG,"Blizzard III scene load.\n");
 
 	// Background color
 	b3InitColor(&m_TopColor);
@@ -289,7 +298,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 
 void b3Scene::b3Write()
 {
-	b3PrintF(B3LOG_NORMAL,"Blizzard III scene storage.\n");
+	b3PrintF(B3LOG_DEBUG,"Blizzard III scene storage.\n");
 
 	// Background color
 	b3StoreColor(&m_TopColor);

@@ -33,13 +33,22 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/12/31 11:05:18  sm
+**	- Added TestData for testing Blizzard data structures for reading
+**	  and writing.
+**	- Fixed bugs found with previous mentioned tool:
+**	  o Some b3AnimElement errors found to be fixed under Windows.
+**	  o b3TriangleShape destructor handled unchecked m_GridList pointer
+**	- Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**	  B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **	Revision 1.8  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.7  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
@@ -84,12 +93,12 @@
 
 b3SceneMork::b3SceneMork(b3_u32 class_type) : b3Scene(sizeof(b3SceneMork), class_type)
 {
-	b3PrintF(B3LOG_NORMAL,"Using Mork shading...\n");
+	b3PrintF(B3LOG_DEBUG,"Using Mork shading...\n");
 }
 
 b3SceneMork::b3SceneMork(b3_u32 *src) : b3Scene(src)
 {
-	b3PrintF(B3LOG_NORMAL,"Using Mork shading...\n");
+	b3PrintF(B3LOG_DEBUG,"Using Mork shading...\n");
 }
 
 void b3SceneMork::b3Illuminate(

@@ -35,13 +35,22 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/31 11:05:18  sm
+**	- Added TestData for testing Blizzard data structures for reading
+**	  and writing.
+**	- Fixed bugs found with previous mentioned tool:
+**	  o Some b3AnimElement errors found to be fixed under Windows.
+**	  o b3TriangleShape destructor handled unchecked m_GridList pointer
+**	- Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**	  B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **	Revision 1.6  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.5  2001/08/08 20:12:59  sm
 **	- Fixing some makefiles
 **	- introducing check/BlzDump (BlzDump moved from tools)
@@ -229,7 +238,7 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 	}
 	mutex.b3Unlock();
 #ifdef _DEBUG
-	if (ptr != null)
+	if (old_ptr != null)
 	{
 		throw new b3MemException(B3_MEM_UNKNOWN_PTR);
 	}

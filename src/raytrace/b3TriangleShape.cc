@@ -33,6 +33,15 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/12/31 11:05:18  sm
+**      - Added TestData for testing Blizzard data structures for reading
+**        and writing.
+**      - Fixed bugs found with previous mentioned tool:
+**        o Some b3AnimElement errors found to be fixed under Windows.
+**        o b3TriangleShape destructor handled unchecked m_GridList pointer
+**      - Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**        B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **      Revision 1.17  2001/11/01 09:43:11  sm
 **      - Some image logging cleanups.
 **      - Texture preparing now in b3Prepare().
@@ -287,13 +296,12 @@ void b3TriangleShape::b3FreeTriaRefs()
 	b3TriangleRef *ref;
 	b3_count       i,CubeSize;
 
-	CubeSize = m_GridSize * m_GridSize * m_GridSize;
-	for (i = 0;i < CubeSize;i++)
+	if (m_GridList != null)
 	{
-		while((ref = m_GridList[i].First) != null)
+		CubeSize = m_GridSize * m_GridSize * m_GridSize;
+		for (i = 0;i < CubeSize;i++)
 		{
-			m_GridList[i].b3Remove(ref);
-			delete ref;
+			m_GridList[i].b3Free();
 		}
 	}
 }

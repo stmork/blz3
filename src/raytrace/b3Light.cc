@@ -32,6 +32,15 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2001/12/31 11:05:18  sm
+**      - Added TestData for testing Blizzard data structures for reading
+**        and writing.
+**      - Fixed bugs found with previous mentioned tool:
+**        o Some b3AnimElement errors found to be fixed under Windows.
+**        o b3TriangleShape destructor handled unchecked m_GridList pointer
+**      - Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**        B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **      Revision 1.22  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -191,16 +200,16 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 
 	if (m_LightActive)
 	{
-		b3PrintF(B3LOG_NORMAL,"  Light \"%s\" is active",m_Name);
+		b3PrintF(B3LOG_DEBUG,"  Light \"%s\" is active",m_Name);
 		if (m_SoftShadow)
 		{
-			b3PrintF(B3LOG_NORMAL," and uses soft shadows");
+			b3PrintF(B3LOG_DEBUG," and uses soft shadows");
 		}
 		if (m_SpotActive)
 		{
-			b3PrintF(B3LOG_NORMAL," and uses light distribution curve");
+			b3PrintF(B3LOG_DEBUG," and uses light distribution curve");
 		}
-		b3PrintF(B3LOG_NORMAL,".\n");
+		b3PrintF(B3LOG_DEBUG,".\n");
 	}
 }
 

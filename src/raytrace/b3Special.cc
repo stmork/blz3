@@ -33,6 +33,15 @@
 
 /*
 **      $Log$
+**      Revision 1.34  2001/12/31 11:05:18  sm
+**      - Added TestData for testing Blizzard data structures for reading
+**        and writing.
+**      - Fixed bugs found with previous mentioned tool:
+**        o Some b3AnimElement errors found to be fixed under Windows.
+**        o b3TriangleShape destructor handled unchecked m_GridList pointer
+**      - Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
+**        B3LOG_NORMAL to B3LOG_DEBUG.
+**
 **      Revision 1.33  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -626,14 +635,17 @@ b3Animation::b3Animation(b3_u32 *src) :
 	framesPerSecond = b3InitInt();
 	flags           = b3InitInt();;
 
-	// OK, the following values are only for "Lines"
-	frames     = b3InitInt();
-	tracks     = b3InitInt();
-	trackIndex = b3InitInt();
-	frameIndex = b3InitInt();
-	WTracks    = b3InitInt();
-	WFrames    = b3InitInt();
-	Element    = (b3AnimElement *)b3InitNull();
+	if (B3_PARSE_INDEX_VALID)
+	{
+		// OK, the following values are only for "Lines"
+		frames     = b3InitInt();
+		tracks     = b3InitInt();
+		trackIndex = b3InitInt();
+		frameIndex = b3InitInt();
+		WTracks    = b3InitInt();
+		WFrames    = b3InitInt();
+		Element    = (b3AnimElement *)b3InitNull();
+	}
 }
 
 void b3Animation::b3Write()
