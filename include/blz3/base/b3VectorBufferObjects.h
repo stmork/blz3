@@ -22,7 +22,6 @@
 
 class B3_PLUGIN b3VectorBufferObjects
 {
-	static b3_bool                   glAllowVBO;
 	static b3_bool                   glHasVBO;
 
 #ifdef BLZ3_USE_OPENGL
@@ -37,16 +36,14 @@ protected:
 #endif
 
 public:
+	static b3_bool                   glAllowVBO;
+
+public:
 	static        void    b3Init(const char *extension);
 
 	static inline b3_bool b3HasVBO()
 	{
 		return glHasVBO;
-	}
-
-	static inline void b3AllowVBO(b3_bool allow = true)
-	{
-		glAllowVBO = allow;
 	}
 };
 

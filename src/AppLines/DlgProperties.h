@@ -64,6 +64,7 @@ public:
 	CSliderCtrl	m_RowRefreshCtrl;
 	CB3IntSpinButtonCtrl	m_PrtBufferCtrl;
 	BOOL	m_BBoxVisible;
+	BOOL	m_AllowVBO;
 	//}}AFX_DATA
 
 

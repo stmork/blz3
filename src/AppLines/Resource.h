@@ -721,6 +721,7 @@
 #define IDC_EDIT_METALLIC               32429
 #define IDC_SPIN_METALLIC               32430
 #define IDC_METALLIC                    32431
+#define IDC_ALLOW_VBO                   32432
 #define IDS_ARCON_FILTER                60000
 #define IDS_ASK_DELETE_CAMERA           60001
 #define IDS_ASK_DELETE_ITEM             60002
@@ -941,7 +942,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         10128
-#define _APS_NEXT_CONTROL_VALUE         32432
+#define _APS_NEXT_CONTROL_VALUE         32433
 #define _APS_NEXT_SYMED_VALUE           60209
 #endif
 #endif

@@ -1296,17 +1296,17 @@ BEGIN
     PUSHBUTTON      "Ändern...",IDC_CHANGE_SELECTED,85,226,50,15
     PUSHBUTTON      "Ändern...",IDC_CHANGE_OBJECT,85,256,50,15
     CONTROL         "Objektrahmen sichtbar",IDC_BBOX_VISIBLE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,20,276,87,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,165,265,87,10
     CONTROL         "Slider1",IDC_PICK_SIZE,"msctls_trackbar32",
                     TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,171,35,130,25
     PUSHBUTTON      "Ändern...",IDC_CHANGE_PICK,241,75,50,15
     PUSHBUTTON      "Ändern...",IDC_CHANGE_GRID,241,105,50,15
     CONTROL         "Slider1",IDC_ROW_REFRESH,"msctls_trackbar32",
                     TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,171,170,130,25
-    EDITTEXT        IDC_PRT_BUFFER,175,270,45,15,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_PRT_BUFFER,175,230,45,15,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_PRT_BUFFER_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,221,270,11,15
+                    UDS_ARROWKEYS,221,230,11,15
     DEFPUSHBUTTON   "OK",IDOK,10,305,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,255,305,50,14
     GROUPBOX        "Farbeinstellungen:",IDC_STATIC,10,10,140,285
@@ -1335,7 +1335,7 @@ BEGIN
                     55
     LTEXT           "1 (langsam)",IDC_STATIC,175,160,37,8
     RTEXT           "32 (schnell)",IDC_STATIC,255,160,37,8
-    GROUPBOX        "Druckpuffer in MB:",IDC_STATIC,165,255,140,40
+    GROUPBOX        "Druckpuffer in MB:",IDC_STATIC,165,215,140,40
     LTEXT           "3 (klein)",IDC_STATIC,176,25,26,8
     RTEXT           "9 (groß)",IDC_STATIC,270,25,25,8
     LTEXT           "",IDC_COLOR_UNIT,20,75,50,15,SS_SUNKEN | NOT WS_GROUP
@@ -1344,6 +1344,8 @@ BEGIN
     PUSHBUTTON      "Ändern...",IDC_CHANGE_MOVE,85,105,50,15
     LTEXT           "Maßeinheit",IDC_STATIC,20,65,36,8
     LTEXT           "Schrittweite",IDC_STATIC,20,95,38,8
+    CONTROL         "VBO erlauben (OpenGL)",IDC_ALLOW_VBO,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,165,280,93,10
 END
 
 IDD_NEW_OBJECT DIALOGEX 0, 0, 382, 255

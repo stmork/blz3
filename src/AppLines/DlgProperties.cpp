@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/11/30 19:30:26  sm
+**	- Added VBO support settings in properties dialog.
+**
 **	Revision 1.9  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.8  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -93,6 +96,7 @@ CDlgProperties::CDlgProperties(CWnd* pParent /*=NULL*/)
 {
 	//{{AFX_DATA_INIT(CDlgProperties)
 	m_BBoxVisible = FALSE;
+	m_AllowVBO = FALSE;
 	//}}AFX_DATA_INIT
 	m_App = CB3GetLinesApp();
 }
@@ -102,8 +106,6 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgProperties)
-	DDX_Control(pDX, IDC_COLOR_UNIT, m_CtrlColorUnit);
-	DDX_Control(pDX, IDC_COLOR_MOVE, m_CtrlColorMove);
 	DDX_Control(pDX, IDC_PICK_SIZE, m_PickSizeCtrl);
 	DDX_Control(pDX, IDC_COLOR_SHAPE, m_CtrlColorShape);
 	DDX_Control(pDX, IDC_COLOR_SELECTED, m_CtrlColorSelected);
@@ -113,9 +115,12 @@ void CDlgProperties::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COLOR_FULCRUM, m_CtrlColorFulcrum);
 	DDX_Control(pDX, IDC_COLOR_CAMERA, m_CtrlColorCamera);
 	DDX_Control(pDX, IDC_COLOR_BG, m_CtrlColorBg);
+	DDX_Control(pDX, IDC_COLOR_UNIT, m_CtrlColorUnit);
+	DDX_Control(pDX, IDC_COLOR_MOVE, m_CtrlColorMove);
 	DDX_Control(pDX, IDC_ROW_REFRESH, m_RowRefreshCtrl);
 	DDX_Control(pDX, IDC_PRT_BUFFER_SPIN, m_PrtBufferCtrl);
 	DDX_Check(pDX, IDC_BBOX_VISIBLE, m_BBoxVisible);
+	DDX_Check(pDX, IDC_ALLOW_VBO, m_AllowVBO);
 	//}}AFX_DATA_MAP
 }
 
@@ -141,6 +146,7 @@ END_MESSAGE_MAP()
 BOOL CDlgProperties::OnInitDialog() 
 {
 	m_BBoxVisible = b3BBox::m_GridVisible;
+	m_AllowVBO    = b3VectorBufferObjects::glAllowVBO;
 
 	CDialog::OnInitDialog();
 	
@@ -245,26 +251,29 @@ void CDlgProperties::OnOK()
 	// TODO: Add extra validation here
 	CDialog::OnOK();
 	
-	CAppRenderDoc::m_BgColor        = m_ColorBg;
-	CAppLinesView::m_GridColorUnit  = m_ColorUnit;
-	CAppLinesView::m_GridColorMove  = m_ColorMove;
-	b3CameraVolume::m_GridColor     = m_ColorCamera;
-	b3Fulcrum::m_GridColor          = m_ColorFulcrum;
-	b3BBox::m_GridColor             = m_ColorObject;
-	b3BBox::m_GridVisible           = m_BBoxVisible;
-	b3RenderObject::m_GridColor     = m_ColorShape;
-	b3RenderObject::m_SelectedColor = m_ColorSelected;
-	b3PickInfo::m_GridColor         = m_ColorGrid;
-	b3PickInfo::m_PickSize          = m_PickSizeCtrl.GetPos();
-	b3PickPoint::m_PickColor        = m_ColorPick.b3GetColorref();
+	CAppRenderDoc::m_BgColor          = m_ColorBg;
+	CAppLinesView::m_GridColorUnit    = m_ColorUnit;
+	CAppLinesView::m_GridColorMove    = m_ColorMove;
+	b3CameraVolume::m_GridColor       = m_ColorCamera;
+	b3Fulcrum::m_GridColor            = m_ColorFulcrum;
+	b3BBox::m_GridColor               = m_ColorObject;
+	b3BBox::m_GridVisible             = m_BBoxVisible;
+	b3RenderObject::m_GridColor       = m_ColorShape;
+	b3RenderObject::m_SelectedColor   = m_ColorSelected;
+	b3PickInfo::m_GridColor           = m_ColorGrid;
+	b3PickInfo::m_PickSize            = m_PickSizeCtrl.GetPos();
+	b3PickPoint::m_PickColor          = m_ColorPick.b3GetColorref();
+	b3VectorBufferObjects::glAllowVBO = m_AllowVBO;
 
 	m_App->m_PrintBufferSize = m_PrtBufferCtrl.b3GetPos();
 	m_App->m_RowRefreshCount = m_RowRefreshCtrl.GetPos();
 	m_App->WriteProfileInt(m_App->b3ClientName(),"print buffer size",m_App->m_PrintBufferSize);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"row refresh count",m_App->m_RowRefreshCount);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
-	m_App->WriteProfileInt(m_App->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
+	m_App->WriteProfileInt(m_App->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
+	m_App->WriteProfileInt(m_App->b3ClientName(),"allow vbo",b3VectorBufferObjects::glAllowVBO);
+
 	m_App->b3WriteProfileColor("default color.object grid",b3BBox::m_GridColor);
 	m_App->b3WriteProfileColor("default color.unit grid",CAppLinesView::m_GridColorUnit);
 	m_App->b3WriteProfileColor("default color.move grid",CAppLinesView::m_GridColorMove);
@@ -286,6 +295,9 @@ void CDlgProperties::b3ReadConfig()
 	b3PickPoint::m_PickColor = app->GetProfileInt(app->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
 	b3PickInfo::m_PickSize   = app->GetProfileInt(app->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
 	b3BBox::m_GridVisible    = app->GetProfileInt(app->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
+	b3VectorBufferObjects::glAllowVBO =
+		app->GetProfileInt(app->b3ClientName(),"allow vbo", b3VectorBufferObjects::glAllowVBO);
+
 	app->b3ReadProfileColor("default color.object grid",b3BBox::m_GridColor);
 	app->b3ReadProfileColor("default color.unit grid",CAppLinesView::m_GridColorUnit);
 	app->b3ReadProfileColor("default color.move grid",CAppLinesView::m_GridColorMove);

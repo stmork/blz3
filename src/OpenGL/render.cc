@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2004/11/30 19:30:26  sm
+**      - Added VBO support settings in properties dialog.
+**
 **      Revision 1.51  2004/11/30 10:16:14  smork
 **      - Added a working VBO version which computes vertices/indices
 **        completely in CPU memory and only updates the results into
@@ -529,7 +532,7 @@ int main(int argc,char *argv[])
 		switch(argv[i][1])
 		{
 		case 'v' :
-			b3VectorBufferObjects::b3AllowVBO(false);
+			b3VectorBufferObjects::glAllowVBO = false;
 			break;
 		case 'd' :
 			b3Log::b3SetLevel(B3LOG_DEBUG);
