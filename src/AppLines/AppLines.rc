@@ -112,6 +112,13 @@ IDI_PROFILE_BEVEL_SPLINE ICON    DISCARDABLE     "res\\profile_bevel_spline.ico"
 IDI_PROFILE_BEVELSTUMP_SPLINE ICON    DISCARDABLE     "res\\profile_bevelstump_spline.ico"
 IDI_PROFILE_BEVEL_TRIANGLES ICON    DISCARDABLE     "res\\profile_bevel_triangles.ico"
 IDI_ITEM_UNKNOWN        ICON    DISCARDABLE     "res\\item_unknown.ico"
+IDI_MAT_NORMAL          ICON    DISCARDABLE     "res\\mat_normal.ico"
+IDI_MAT_CHESS           ICON    DISCARDABLE     "res\\mat_chess.ico"
+IDI_MAT_MARBLE          ICON    DISCARDABLE     "res\\mat_marble.ico"
+IDI_MAT_WOOD            ICON    DISCARDABLE     "res\\mat_wood.ico"
+IDI_MAT_SLIDE           ICON    DISCARDABLE     "res\\mat_slide.ico"
+IDI_MAT_TEXTURE         ICON    DISCARDABLE     "res\\mat_texture.ico"
+IDI_MAT_WRAP_TEXTURE    ICON    DISCARDABLE     "res\\mat_wrap_texture.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1924,7 +1931,7 @@ END
 
 IDD_ITEM_MAINTAIN DIALOGEX 0, 0, 357, 191
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,10,165,50,15
     PUSHBUTTON      "Neu...",IDC_ITEM_NEW,295,10,50,15
@@ -1943,7 +1950,7 @@ END
 IDD_ITEM_CREATE DIALOGEX 0, 0, 382, 206
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Erzeugen"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,15,180,50,15
     PUSHBUTTON      "Abbrechen",IDCANCEL,315,180,50,15
@@ -2895,6 +2902,13 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_MAT_NORMAL          "Normales Material"
+    IDS_MAT_CHESS           "Schachbrett"
+    IDS_MAT_MARBLE          "Marmor"
+    IDS_MAT_WOOD            "Holz"
+    IDS_MAT_SLIDE           "Farbverlauf"
+    IDS_MAT_TEXTURE         "Textur"
+    IDS_MAT_WRAP_TEXTURE    "Wickeltextur"
 END
 
 STRINGTABLE DISCARDABLE 

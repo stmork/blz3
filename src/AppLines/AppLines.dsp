@@ -905,6 +905,34 @@ SOURCE=.\res\left.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\mat_chess.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_marble.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_normal.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_slide.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_texture.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_wood.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\mat_wrap_texture.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\object.ico
 # End Source File
 # Begin Source File

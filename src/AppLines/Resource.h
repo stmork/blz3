@@ -18,6 +18,13 @@
 #define IDR_TOOLBAR_VIEW                122
 #define IDD_ITEM_CREATE                 123
 #define IDI_ITEM_UNKNOWN                124
+#define IDI_MAT_NORMAL                  125
+#define IDI_MAT_CHESS                   126
+#define IDI_MAT_MARBLE                  127
+#define IDI_MAT_WOOD                    128
+#define IDI_MAT_SLIDE                   129
+#define IDI_MAT_TEXTURE                 130
+#define IDI_MAT_WRAP_TEXTURE            131
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -689,13 +696,20 @@
 #define IDS_TOOLBAR_OBJECT              60167
 #define IDS_TOOLBAR_VIEW                60168
 #define IDS_UNKNOWN                     60169
+#define IDS_MAT_NORMAL                  61446
+#define IDS_MAT_CHESS                   61447
+#define IDS_MAT_MARBLE                  61448
+#define IDS_MAT_WOOD                    61449
+#define IDS_MAT_SLIDE                   61450
+#define IDS_MAT_TEXTURE                 61451
+#define IDS_MAT_WRAP_TEXTURE            61452
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        125
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         10118
 #define _APS_NEXT_CONTROL_VALUE         32292
 #define _APS_NEXT_SYMED_VALUE           60170
