@@ -28,6 +28,8 @@
 #include "b3Action.h"
 #include <sys/timeb.h>
 
+#include "DlgCreateItem.h"
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -36,10 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.20  2001/11/30 18:08:00  sm
 **	- View to fulcrum implemented
 **	- Some menus updated
-**
+**	
 **	Revision 1.19  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
@@ -217,6 +224,10 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_VIEW_TO_FULCRUM, OnViewToFulcrum)
+	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
+	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
+	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -985,4 +996,81 @@ void CAppLinesView::OnViewToFulcrum()
 
 		OnUpdate(this,B3_UPDATE_CAMERA,0);
 	}
+}
+
+void CAppLinesView::OnCameraNew() 
+{
+	// TODO: Add your command handler code here
+	CDlgCreateItem  dlg;
+	CMainFrame     *main;
+	b3CameraPart   *camera;
+
+	dlg.m_Label.LoadString(IDS_NEW_CAMERA);
+	dlg.m_ItemBase   = m_Scene->b3GetSpecialHead();
+	dlg.m_ClassType  = CAMERA;
+	dlg.m_MaxNameLen = B3_CAMERANAMELEN;
+	dlg.m_Suggest    = m_Camera->b3GetName();
+	if (dlg.DoModal() == IDOK)
+	{
+		camera = new b3CameraPart(CAMERA);
+		camera->m_EyePoint  = m_Camera->m_EyePoint;
+		camera->m_ViewPoint = m_Camera->m_ViewPoint;
+		camera->m_Width     = m_Camera->m_Width;
+		camera->m_Height    = m_Camera->m_Height;
+		camera->m_Flags     = CAMERA_ACTIVE;
+		strcpy (camera->b3GetName(),dlg.m_NewName);
+		m_Scene->b3GetSpecialHead()->b3Append(m_Camera = camera);
+
+		GetDocument()->SetModifiedFlag();
+		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		main->b3UpdateCameraBox(m_Scene,m_Camera);
+		OnUpdate(this,B3_UPDATE_CAMERA,0);
+	}
+}
+
+void CAppLinesView::OnCameraDelete() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame   *main;
+	b3CameraPart *camera,*select;
+
+	if (AfxMessageBox(IDS_ASK_DELETE_CAMERA,MB_ICONQUESTION|MB_YESNO) == IDYES)
+	{
+		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		
+		camera = main->b3GetSelectedCamera();
+		select = m_Scene->b3GetNextCamera(camera);
+		if (select == null)
+		{
+			select = m_Scene->b3GetCamera();
+		}
+		m_Scene->b3GetSpecialHead()->b3Remove(camera);
+		delete camera;
+
+		GetDocument()->SetModifiedFlag();
+		main->b3UpdateCameraBox(m_Scene,m_Camera = select);
+		OnUpdate(this,B3_UPDATE_CAMERA,0);
+	}
+}
+
+void CAppLinesView::OnCameraProperties() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CAppLinesView::OnUpdateCameraDelete(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Item   *item;
+	b3_count  count= 0;
+
+	B3_FOR_BASE(m_Scene->b3GetSpecialHead(),item)
+	{
+		if (item->b3GetClassType() == CAMERA)
+		{
+			count++;
+		}
+	}
+	pCmdUI->Enable(count > 1);
 }

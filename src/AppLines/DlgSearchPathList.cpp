@@ -40,12 +40,17 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.1  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	
 */
 
@@ -118,8 +123,8 @@ BOOL CDlgSearchPathList::OnInitDialog()
 void CDlgSearchPathList::b3RefreshList()
 {
 	b3PathEntry *entry;
-	char          *string;
-	int            index;
+	char        *string;
+	int          index;
 
 	m_List.ResetContent();
 	B3_FOR_BASE(m_ListBase,entry)

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/12/02 15:43:49  sm
+**      - Creation/Deletion/Editing of lights
+**      - Creation/Deletion of cameras
+**      - New toolbars introduced.
+**
 **      Revision 1.17  2001/10/19 19:43:15  sm
 **      - Searching for 5 percent performance lost...
 **
@@ -260,6 +265,11 @@ b3_bool b3Light::b3Prepare()
 		}
 	}
 	return true;
+}
+
+char *b3Light::b3GetName()
+{
+	return m_Name;
 }
 
 b3_bool b3Light::b3Illuminate(

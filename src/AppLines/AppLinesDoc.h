@@ -88,6 +88,16 @@ protected:
 	afx_msg void OnDlgScene();
 	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
 	afx_msg void OnModellerInfo();
+	afx_msg void OnLightNew();
+	afx_msg void OnLightDelete();
+	afx_msg void OnLightProperties();
+	afx_msg void OnLightEnable();
+	afx_msg void OnLightSoft();
+	afx_msg void OnUpdateLightDelete(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLightEnable(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLightSoft(CCmdUI* pCmdUI);
+	afx_msg void OnLightLDC();
+	afx_msg void OnUpdateLightLDC(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

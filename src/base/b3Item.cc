@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/12/02 15:43:49  sm
+**      - Creation/Deletion/Editing of lights
+**      - Creation/Deletion of cameras
+**      - New toolbars introduced.
+**
 **      Revision 1.12  2001/11/08 19:31:33  sm
 **      - Nasty CR/LF removal!
 **      - Added TGA/RGB8/PostScript image saving.
@@ -208,6 +213,11 @@ void b3Item::b3Read()
 
 void b3Item::b3Write()
 {
+}
+
+char *b3Item::b3GetName()
+{
+	return null;
 }
 
 void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)

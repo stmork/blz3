@@ -87,6 +87,8 @@ IDR_TOOLBAR_VIEW        BITMAP  DISCARDABLE     "res\\toolbar1.bmp"
 IDR_TOOLBAR_ACTION      BITMAP  DISCARDABLE     "res\\toolbar_action.bmp"
 IDR_TOOLBAR_OBJECT      BITMAP  DISCARDABLE     "res\\toolbar_object.bmp"
 IDR_TOOLBAR_DISPLAY     BITMAP  DISCARDABLE     "res\\toolbar_display.bmp"
+IDR_TOOLBAR_CAMERA      BITMAP  DISCARDABLE     "res\\toolbar_camera.bmp"
+IDR_TOOLBAR_LIGHT       BITMAP  DISCARDABLE     "res\\toolbar_light.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -136,11 +138,7 @@ BEGIN
     BUTTON      ID_CAM_ROTATE
     BUTTON      ID_CAM_VIEW
     SEPARATOR
-    BUTTON      ID_VIEW_TO_FULCRUM
-    BUTTON      ID_CAM_SELECT
-    SEPARATOR
     BUTTON      ID_LIGHT_TURN
-    BUTTON      ID_LIGHT_SELECT
 END
 
 IDR_TOOLBAR_OBJECT TOOLBAR DISCARDABLE  16, 15
@@ -164,6 +162,26 @@ BEGIN
     BUTTON      ID_B3_MORE
     BUTTON      ID_B3_LESS
     BUTTON      ID_B3_MAGNIFY
+END
+
+IDR_TOOLBAR_CAMERA TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_CAMERA_NEW
+    BUTTON      ID_CAMERA_DELETE
+    BUTTON      ID_CAMERA_PROPERTIES
+    BUTTON      ID_VIEW_TO_FULCRUM
+    BUTTON      ID_CAM_SELECT
+END
+
+IDR_TOOLBAR_LIGHT TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_LIGHT_NEW
+    BUTTON      ID_LIGHT_DELETE
+    BUTTON      ID_LIGHT_PROPERTIES
+    BUTTON      ID_LIGHT_ENABLE
+    BUTTON      ID_LIGHT_SOFT
+    BUTTON      ID_LIGHT_LDC
+    BUTTON      ID_LIGHT_SELECT
 END
 
 
@@ -197,6 +215,8 @@ BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Kamera-Symbolleiste",        IDM_BAR_CAMERA
+            MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
@@ -205,6 +225,8 @@ BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Kamera...",                  ID_CUST_CAMERA
+            MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
             MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
@@ -269,6 +291,8 @@ BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Kamera-Symbolleiste",        IDM_BAR_CAMERA
+            MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
@@ -277,6 +301,8 @@ BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Kamera...",                  ID_CUST_CAMERA
+            MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
             MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
@@ -348,6 +374,8 @@ BEGIN
             MENUITEM "Haupt&symbolleiste",          ID_VIEW_TOOLBAR
             MENUITEM "&Ansicht-Symbolleiste",       IDM_BAR_VIEW
             MENUITEM "&Betriebsmodus-Symbolleiste", IDM_BAR_ACTION
+            MENUITEM "&Kamera-Symbolleiste",        IDM_BAR_CAMERA
+            MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
         END
@@ -356,6 +384,8 @@ BEGIN
             MENUITEM "Da&tei...",                   ID_CUST_MAIN
             MENUITEM "&Ansicht...",                 ID_CUST_VIEW
             MENUITEM "&Betriebsmodi...",            ID_CUST_ACTION
+            MENUITEM "&Kamera...",                  ID_CUST_CAMERA
+            MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
             MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
         END
@@ -627,6 +657,63 @@ BEGIN
     PUSHBUTTON      "Ändern...",IDC_PATH_EDIT,240,140,60,15
 END
 
+IDD_NEW_ITEM DIALOG DISCARDABLE  0, 0, 186, 71
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Anlegen"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_NEW_ITEM_NAME,10,20,165,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,10,45,50,15
+    PUSHBUTTON      "Abbrechen",IDCANCEL,125,45,50,15
+    LTEXT           "Static",IDC_ITEM_CREATE_LABEL,10,10,165,8
+END
+
+IDD_LIGHT DIALOG DISCARDABLE  0, 0, 332, 271
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "y"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "aktiviert",IDC_LIGHT_ENABLE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,25,25,41,10
+    CONTROL         "Weiche Schatten",IDC_LIGHT_SOFT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,41,71,10
+    CONTROL         "Lichtstärkeverteilungskurve",IDC_LIGHT_LDC,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,55,103,10
+    EDITTEXT        IDC_LIGHT_POS_X,175,25,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_POS_Y,175,45,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_POS_Z,175,65,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_DIR_X,265,25,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_DIR_Y,265,45,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_DIR_Z,265,65,40,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_LIGHT_LIST,25,110,100,75,CBS_SIMPLE | 
+                    CBS_AUTOHSCROLL | CBS_SORT | WS_TABSTOP
+    PUSHBUTTON      "Neu...",IDC_LIGHT_NEW,25,190,50,14
+    PUSHBUTTON      "Löschen...",IDC_LIGHT_DELETE,25,210,50,14
+    PUSHBUTTON      "Ändern...",IDC_LIGHT_COLOR_CHANGE,255,110,50,15
+    EDITTEXT        IDC_LIGHT_DISTANCE,175,140,40,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_LIGHT_SOFT_SIZE,175,205,40,12,ES_AUTOHSCROLL
+    CONTROL         "Slider1",IDC_LIGHT_DISTR,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,235,205,70,25
+    DEFPUSHBUTTON   "OK",IDOK,25,245,50,14
+    GROUPBOX        "Aktivierungen:",IDC_STATIC,10,10,130,75
+    GROUPBOX        "Position:",IDC_STATIC,150,10,80,75
+    LTEXT           "x:",IDC_STATIC,160,27,8,8
+    LTEXT           "y:",IDC_STATIC,160,47,8,8
+    LTEXT           "z:",IDC_STATIC,160,67,8,8
+    GROUPBOX        "Abstrahlrichtung:",IDC_STATIC,240,10,80,75
+    LTEXT           "x:",IDC_STATIC,250,26,8,8
+    LTEXT           "y:",IDC_STATIC,250,47,8,8
+    LTEXT           "z:",IDC_STATIC,250,67,8,8
+    GROUPBOX        "Lichtfarbe:",IDC_STATIC,150,95,170,70
+    LTEXT           "",IDC_LIGHT_COLOR,175,110,40,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    LTEXT           "Intensität:",IDC_STATIC,175,130,32,8
+    GROUPBOX        "Lichtquellen-Liste:",IDC_STATIC,10,95,130,140
+    GROUPBOX        "Weiche Schatten:",IDC_STATIC,150,175,170,60
+    LTEXT           "Auffächerung:",IDC_STATIC,175,195,46,8
+    LTEXT           "Samples:",IDC_LIGHT_SAMPLE_LABEL,240,194,55,8
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -753,6 +840,22 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 189
     END
+
+    IDD_NEW_ITEM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 64
+    END
+
+    IDD_LIGHT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 325
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 264
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -773,6 +876,13 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDP_OLE_INIT_FAILED     "Fehler bei der OLE-Initialisierung. Überprüfen Sie, ob die OLE-Bibliotheken in der richtigen Version vorliegen."
     ID_DRAWING_PERF         "#####################################"
+    IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
+    IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
+    IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
+    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
+    IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
+    IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
+    IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -947,10 +1057,13 @@ BEGIN
     ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
     ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
     ID_CAM_VIEW             "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
+    IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
     ID_OBJ_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
     ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
+    IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
     ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
+    IDM_BAR_SCENE           "Blendet die Szenenwerkzeug-Symbolleiste ein oder aus.\nSzenenwerkzeug-Symbolleiste ein-/ausschalten"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -989,6 +1102,8 @@ BEGIN
     IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
     IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
     IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
+    IDS_TOOLBAR_CAMERA      "Kamera..."
+    IDS_TOOLBAR_LIGHT       "Lichtquelle..."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -997,6 +1112,26 @@ BEGIN
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
     ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
+    IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
+    IDM_BAR_LIGHT           "Blendet die Lichtquellen-Symbolleiste ein oder aus.\nLichtquellen-Symbolleiste ein-/ausschalten"
+    ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
+    ID_LIGHT_DELETE         "Löscht eine Lichtquelle.\nLichtqielle löschen"
+    ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
+    ID_LIGHT_ENABLE         "Schaltet Lichtquelle ein oder aus.\nLichtquelle ein-/ausschalten"
+    ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
+    ID_CAMERA_NEW           "Erzeugt eine neue Kamera.\nNeue Kamera erzeugen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_BAR_VIEW            "Blendet die Ansicht-Symbolleiste ein oder aus.\nAnsicht-Symbolleiste ein-/ausschalten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
+    ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
+    ID_LIGHT_LDC            "Schaltet Nutzung der Lichtstärkeverteilungskurve ein oder aus.\nLichtstärkeverteilungskurve ein-/ausschalten"
 END
 
 #endif    // German (Germany) resources

@@ -172,6 +172,10 @@ protected:
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnViewToFulcrum();
+	afx_msg void OnCameraNew();
+	afx_msg void OnCameraDelete();
+	afx_msg void OnCameraProperties();
+	afx_msg void OnUpdateCameraDelete(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:

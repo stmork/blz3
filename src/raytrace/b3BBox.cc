@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.23  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
 **	- Corrected Windows b3TimeSpan computation
-**
+**	
 **	Revision 1.22  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -233,6 +238,11 @@ b3_bool b3BBox::b3Prepare()
 	}
 
 	return true;
+}
+
+char *b3BBox::b3GetName()
+{
+	return m_BoxName;
 }
 
 void b3BBox::b3Dump(b3_count level)
@@ -563,6 +573,11 @@ void b3Scene::b3Reorg()
 		level = first->b3GetClassType() & 0xffff;
 		b3BBox::b3Reorg(&depot,&heads[0],level,1);
 	}
+}
+
+char *b3Scene::b3GetName()
+{
+	return m_Filename;
 }
 
 void b3Scene::b3Draw()

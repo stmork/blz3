@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2001/12/02 15:43:49  sm
+**      - Creation/Deletion/Editing of lights
+**      - Creation/Deletion of cameras
+**      - New toolbars introduced.
+**
 **      Revision 1.22  2001/11/28 16:54:55  sm
 **      - Dialog for modeller info.
 **
@@ -258,6 +263,11 @@ void b3CameraPart::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul(transformation,&m_ViewPoint,&m_ViewPoint,true);
 	b3MatrixVMul(transformation,&m_Width,    &m_Width,    false);
 	b3MatrixVMul(transformation,&m_Height,   &m_Height,   false);
+}
+
+char *b3CameraPart::b3GetName()
+{
+	return m_CameraName;
 }
 
 /*************************************************************************

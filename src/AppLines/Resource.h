@@ -5,6 +5,13 @@
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define ID_DRAWING_PERF                 101
+#define IDS_NEW_CAMERA                  102
+#define IDS_NEW_LIGHT                   103
+#define IDS_NAME_EXISTS                 104
+#define IDS_EMPTY_NAME                  105
+#define IDS_ASK_DELETE_LIGHT            106
+#define IDS_ASK_DELETE_CAMERA           107
+#define IDS_LIGHT_SAMPLE_LABEL          108
 #define IDR_MAINFRAME                   128
 #define IDR_BLZ3TYPE                    129
 #define IDR_TOOLBAR_VIEW                130
@@ -18,9 +25,13 @@
 #define IDD_SCENE                       138
 #define IDD_SUPER_SAMPLE                139
 #define IDD_MODELLER_INFO               140
+#define IDR_TOOLBAR_CAMERA              141
+#define IDR_TOOLBAR_LIGHT               143
 #define IDD_HIERARCHY                   145
 #define IDD_LENS_FLARE                  146
+#define IDD_NEW_ITEM                    147
 #define IDI_BBOX_WORLD                  148
+#define IDD_LIGHT                       148
 #define IDI_BBOX_SUB                    149
 #define IDI_BBOX_SHAPES                 150
 #define IDI_BBOX_SHAPES_SUB             151
@@ -80,19 +91,39 @@
 #define IDC_FULCRUM_Y                   1034
 #define IDC_FULCRUM_Z                   1035
 #define IDC_FULCRUM_CLR                 1036
+#define IDC_NEW_ITEM_NAME               1037
+#define IDC_ITEM_CREATE_LABEL           1038
 #define IDC_ACT_LENS_FLARE              1039
+#define IDC_LIGHT_LIST                  1039
 #define IDC_LF_CHANGE                   1040
+#define IDC_LIGHT_NEW                   1040
 #define IDC_LF_COLOR                    1041
+#define IDC_LIGHT_DELETE                1041
 #define IDC_LF_VALUE                    1042
+#define IDC_LIGHT_ENABLE                1042
 #define IDC_NEB_COLOR                   1043
+#define IDC_LIGHT_SOFT                  1043
 #define ID_NEB_CHANGE                   1044
+#define IDC_LIGHT_LDC                   1044
+#define IDC_LIGHT_COLOR_CHANGE          1045
 #define IDC_SS4_ACTIVE                  1046
+#define IDC_LIGHT_COLOR                 1046
 #define IDC_SS4_RED                     1047
+#define IDC_LIGHT_POS_X                 1047
 #define IDC_SS4_GREEN                   1048
+#define IDC_LIGHT_POS_Y                 1048
 #define IDC_SS4_BLUE                    1049
+#define IDC_LIGHT_POS_Z                 1049
 #define IDC_HIERARCHY                   1050
+#define IDC_LIGHT_DISTR                 1050
+#define IDC_LIGHT_DISTANCE              1051
+#define IDC_LIGHT_SOFT_SIZE             1052
+#define IDC_LIGHT_DIR_X                 1053
+#define IDC_LIGHT_DIR_Y                 1054
 #define IDC_ACTIVATE                    1055
+#define IDC_LIGHT_DIR_Z                 1055
 #define IDC_DEACTIVATE                  1056
+#define IDC_LIGHT_SAMPLE_LABEL          1056
 #define IDC_ALL_ACTIVATE                1057
 #define IDC_ALL_DEACTIVATE              1058
 #define IDC_PATH_FIRST                  1059
@@ -165,6 +196,19 @@
 #define ID_VIEW_TO_FULCRUM              32817
 #define ID_IMG_SAVE                     32818
 #define ID_CHANGE_TEXTURE_PATH          32819
+#define IDM_BAR_CAMERA                  32822
+#define IDM_BAR_LIGHT                   32823
+#define ID_CUST_CAMERA                  32824
+#define ID_CUST_LIGHT                   32825
+#define ID_LIGHT_NEW                    32826
+#define ID_LIGHT_DELETE                 32827
+#define ID_LIGHT_PROPERTIES             32828
+#define ID_LIGHT_ENABLE                 32829
+#define ID_LIGHT_SOFT                   32830
+#define ID_CAMERA_NEW                   32831
+#define ID_CAMERA_DELETE                32832
+#define ID_CAMERA_PROPERTIES            32833
+#define ID_LIGHT_LDC                    32834
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -182,15 +226,17 @@
 #define IDS_SS4_BLUE_LEGEND             61458
 #define IDS_SAVE_IMAGE_FILTER           61459
 #define IDS_SELECT_TEXTURE_PATH         61460
+#define IDS_TOOLBAR_CAMERA              61461
+#define IDS_TOOLBAR_LIGHT               61462
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32820
-#define _APS_NEXT_CONTROL_VALUE         1037
+#define _APS_NEXT_RESOURCE_VALUE        149
+#define _APS_NEXT_COMMAND_VALUE         32835
+#define _APS_NEXT_CONTROL_VALUE         1057
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

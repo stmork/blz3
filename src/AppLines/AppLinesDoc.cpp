@@ -35,6 +35,9 @@
 #include "DlgLensFlare.h"
 #include "DlgModellerInfo.h"
 #include "DlgDistributed.h"
+#include "DlgCreateItem.h"
+#include "DlgLight.h"
+
 #include "b3ExampleScene.h"
 
 /*************************************************************************
@@ -45,9 +48,14 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.24  2001/11/28 16:54:55  sm
 **	- Dialog for modeller info.
-**
+**	
 **	Revision 1.23  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
@@ -174,6 +182,16 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
 	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
+	ON_COMMAND(ID_LIGHT_NEW, OnLightNew)
+	ON_COMMAND(ID_LIGHT_DELETE, OnLightDelete)
+	ON_COMMAND(ID_LIGHT_PROPERTIES, OnLightProperties)
+	ON_COMMAND(ID_LIGHT_ENABLE, OnLightEnable)
+	ON_COMMAND(ID_LIGHT_SOFT, OnLightSoft)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_DELETE, OnUpdateLightDelete)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_ENABLE, OnUpdateLightEnable)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_SOFT, OnUpdateLightSoft)
+	ON_COMMAND(ID_LIGHT_LDC, OnLightLDC)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_LDC, OnUpdateLightLDC)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -501,4 +519,147 @@ void CAppLinesDoc::OnModellerInfo()
 		UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
 		SetModifiedFlag();
 	}
+}
+
+void CAppLinesDoc::OnLightNew() 
+{
+	// TODO: Add your command handler code here
+	CDlgCreateItem  dlg;
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	dlg.m_Label.LoadString(IDS_NEW_LIGHT);
+	dlg.m_ItemBase   = m_Scene->b3GetLightHead();
+	dlg.m_MaxNameLen = B3_BOXSTRINGLEN;
+	dlg.m_Suggest    = main->b3GetSelectedLight()->b3GetName();
+	if (dlg.DoModal() == IDOK)
+	{
+		light = new b3Light(AREA_LIGHT);
+		strcpy (light->b3GetName(),dlg.m_NewName);
+		m_Scene->b3GetLightHead()->b3Append(light);
+
+		SetModifiedFlag();
+		main->b3UpdateLightBox(m_Scene,light);
+		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
+	}
+}
+
+void CAppLinesDoc::OnLightDelete() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main;
+	b3Light        *light,*select;
+
+	if (AfxMessageBox(IDS_ASK_DELETE_LIGHT,MB_ICONQUESTION|MB_YESNO) == IDYES)
+	{
+		main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+		
+		light = main->b3GetSelectedLight();
+		select = (b3Light *)light->Prev;
+		if (select == null)
+		{
+			select = (b3Light *)light->Succ;
+		}
+		m_Scene->b3GetLightHead()->b3Remove(light);
+		delete light;
+
+		SetModifiedFlag();
+		main->b3UpdateLightBox(m_Scene,select);
+		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
+	}
+}
+
+void CAppLinesDoc::OnLightProperties() 
+{
+	// TODO: Add your command handler code here
+	CDlgLight   dlg;
+	CMainFrame *main;
+
+	main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	dlg.m_LightBase = m_Scene->b3GetLightHead();
+	dlg.m_Light     = main->b3GetSelectedLight();
+	if (dlg.DoModal() == IDOK)
+	{
+		SetModifiedFlag();
+		main->b3UpdateLightBox(m_Scene,dlg.m_Light);
+		UpdateAllViews(NULL,B3_UPDATE_LIGHT);
+	}
+}
+
+void CAppLinesDoc::OnLightEnable() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	light->m_LightActive = !light->m_LightActive;
+	SetModifiedFlag();
+}
+
+void CAppLinesDoc::OnLightSoft() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	light->m_SoftShadow = !light->m_SoftShadow;
+	SetModifiedFlag();
+}
+
+void CAppLinesDoc::OnLightLDC() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	light->m_SpotActive = !light->m_SpotActive;
+	SetModifiedFlag();
+}
+
+void CAppLinesDoc::OnUpdateLightDelete(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_Scene->b3GetLightHead()->b3Count() > 1);
+}
+
+void CAppLinesDoc::OnUpdateLightEnable(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	pCmdUI->SetCheck(light->m_LightActive);
+}
+
+void CAppLinesDoc::OnUpdateLightSoft(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	pCmdUI->Enable(light->m_LightActive);
+	pCmdUI->SetCheck(light->m_SoftShadow);
+}
+
+void CAppLinesDoc::OnUpdateLightLDC(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	CMainFrame     *main;
+	b3Light        *light;
+
+	main  = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+	light = main->b3GetSelectedLight();
+	pCmdUI->Enable(light->m_LightActive);
+	pCmdUI->SetCheck(light->m_SpotActive);
 }

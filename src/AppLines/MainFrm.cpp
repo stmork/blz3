@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.12  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.11  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -110,14 +115,20 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_CUST_VIEW, OnCustView)
 	ON_COMMAND(ID_CUST_DISPLAY, OnCustDisplay)
 	ON_COMMAND(ID_CUST_ACTION, OnCustAction)
+	ON_COMMAND(ID_CUST_CAMERA, OnCustCamera)
+	ON_COMMAND(ID_CUST_LIGHT, OnCustLight)
 	ON_COMMAND(ID_CUST_SCENE, OnCustScene)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
 	ON_COMMAND(IDM_BAR_DISPLAY, OnBarDisplay)
 	ON_COMMAND(IDM_BAR_ACTION, OnBarAction)
+	ON_COMMAND(IDM_BAR_CAMERA, OnBarCamera)
+	ON_COMMAND(IDM_BAR_LIGHT, OnBarLight)
 	ON_COMMAND(IDM_BAR_SCENE, OnBarScene)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_DISPLAY, OnUpdateBarDisplay)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_ACTION, OnUpdateBarAction)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_CAMERA, OnUpdateBarCamera)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_LIGHT, OnUpdateBarLight)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_SCENE, OnUpdateBarScene)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
@@ -139,6 +150,8 @@ static UINT toolbar_bitmaps[] =
 	IDR_MAINFRAME,
 	IDR_TOOLBAR_VIEW,
 	IDR_TOOLBAR_ACTION,
+	IDR_TOOLBAR_CAMERA,
+	IDR_TOOLBAR_LIGHT,
 	IDR_TOOLBAR_OBJECT,
 	IDR_TOOLBAR_DISPLAY
 };
@@ -208,6 +221,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
 	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
 	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
+	app->b3AddToolbar(&m_wndCamrBar,IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
+	app->b3AddToolbar(&m_wndLghtBar,IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
 	app->b3AddToolbar(&m_wndObjtBar,IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
 	app->b3AddToolbar(&m_wndDispBar,IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
 	if (!app->b3CreateToolbars(this))
@@ -225,8 +240,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	m_wndStatusBar.SetPaneText(1,"");
 
-	m_cameraBox.b3Create(&m_wndActnBar,ID_CAM_SELECT);
-	m_lightBox.b3Create(&m_wndActnBar,ID_LIGHT_SELECT);
+	m_cameraBox.b3Create(&m_wndCamrBar,ID_CAM_SELECT);
+	m_lightBox.b3Create(&m_wndLghtBar,ID_LIGHT_SELECT);
 
 	// Set docking mode
 	app->b3LoadState();
@@ -303,6 +318,18 @@ void CMainFrame::OnCustAction()
 	m_wndActnBar.b3Customize();
 }
 
+void CMainFrame::OnCustCamera() 
+{
+	// TODO: Add your command handler code here
+	m_wndCamrBar.b3Customize();
+}
+
+void CMainFrame::OnCustLight() 
+{
+	// TODO: Add your command handler code here
+	m_wndLghtBar.b3Customize();
+}
+
 void CMainFrame::OnCustScene() 
 {
 	// TODO: Add your command handler code here
@@ -327,6 +354,18 @@ void CMainFrame::OnBarAction()
 	m_wndActnBar.b3ToggleVisibility();
 }
 
+void CMainFrame::OnBarCamera() 
+{
+	// TODO: Add your command handler code here
+	m_wndCamrBar.b3ToggleVisibility();
+}
+
+void CMainFrame::OnBarLight() 
+{
+	// TODO: Add your command handler code here
+	m_wndLghtBar.b3ToggleVisibility();
+}
+
 void CMainFrame::OnBarScene() 
 {
 	// TODO: Add your command handler code here
@@ -349,6 +388,18 @@ void CMainFrame::OnUpdateBarAction(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndActnBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarCamera(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndCamrBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarLight(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndLghtBar.b3IsVisible());
 }
 
 void CMainFrame::OnUpdateBarScene(CCmdUI* pCmdUI) 

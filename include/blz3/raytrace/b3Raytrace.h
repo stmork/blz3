@@ -1554,6 +1554,7 @@ public:
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
 		   b3_bool         b3Prepare();
+		   char           *b3GetName();
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
@@ -1662,8 +1663,9 @@ public:
 	B3_ITEM_INIT(b3Light);
 	B3_ITEM_LOAD(b3Light);
 
-	b3_bool b3Illuminate(b3Scene *scene,b3_illumination *surface);
-	b3_bool b3Prepare();
+	b3_bool  b3Illuminate(b3Scene *scene,b3_illumination *surface);
+	b3_bool  b3Prepare();
+	char    *b3GetName();
 
 private:
 	void     b3Init();
@@ -1812,8 +1814,9 @@ public:
 	B3_ITEM_INIT(b3CameraPart);
 	B3_ITEM_LOAD(b3CameraPart);
 
-	void b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
-	void b3Transform(b3_matrix *transformation);
+	void  b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
+	void  b3Transform(b3_matrix *transformation);
+	char *b3GetName();
 };
 
 #define CAMERA_TITLE  1
@@ -2052,6 +2055,7 @@ public:
 		    void            b3AllocVertices(b3RenderContext *context);
 		    void            b3FreeVertices();
 	        void            b3Draw();
+			char           *b3GetName();
 		    b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 			b3Base<b3Item> *b3GetBBoxHead();
 			b3Base<b3Item> *b3GetLightHead();

@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2001/12/02 15:43:49  sm
+**	- Creation/Deletion/Editing of lights
+**	- Creation/Deletion of cameras
+**	- New toolbars introduced.
+**
 **	Revision 1.25  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
-**
+**	
 **	Revision 1.24  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
@@ -428,8 +433,8 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 		camera->m_Width     = m_Width;
 		camera->m_Height    = m_Height;
 		camera->m_Flags     = CAMERA_ACTIVE;
-		strcpy(camera->m_CameraName,"Camera");
-		heads[2].b3Append(camera);
+		b3GetTitle(camera->m_CameraName);
+		b3GetSpecialHead()->b3Append(camera);
 	}
 	else
 	{

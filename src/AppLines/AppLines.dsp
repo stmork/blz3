@@ -148,6 +148,10 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateItem.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgDistributed.cpp
 # End Source File
 # Begin Source File
@@ -157,6 +161,10 @@ SOURCE=.\DlgHierarchy.cpp
 # Begin Source File
 
 SOURCE=.\DlgLensFlare.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgLight.cpp
 # End Source File
 # Begin Source File
 
@@ -228,6 +236,10 @@ SOURCE=.\ChildFrm.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateItem.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgDistributed.h
 # End Source File
 # Begin Source File
@@ -237,6 +249,10 @@ SOURCE=.\DlgHierarchy.h
 # Begin Source File
 
 SOURCE=.\DlgLensFlare.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgLight.h
 # End Source File
 # Begin Source File
 
@@ -352,7 +368,15 @@ SOURCE=.\res\toolbar_action.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\toolbar_camera.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\toolbar_display.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\toolbar_light.bmp
 # End Source File
 # Begin Source File
 
