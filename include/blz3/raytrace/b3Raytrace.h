@@ -18,6 +18,10 @@
 #ifndef B3_RAYTRACE_RAYTRACE_H
 #define B3_RAYTRACE_RAYTRACE_H
 
+#ifdef BLZ3_USE_OPENGL
+#include <GL/glut.h>
+#endif
+
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3List.h"
@@ -782,6 +786,7 @@ protected:
 
 class b3BBox : public b3Item
 {
+	// Inherited from Blizzard II
 	b3_u32           Type;               // texture type
 	b3_vector        Base;
 	b3_vector        Size;
@@ -789,11 +794,17 @@ class b3BBox : public b3Item
 	char             BoxName[B3_BOXSTRINGLEN];   // object name
 	char             BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
+	// Some new stuff
+#ifdef BLZ3_USE_OPENGL
+	GLfloat          vertices[8 * 3];
+#endif
+
 public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
 	       void b3Dump(b3_count level);
+	       void b3Draw();
 	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 };
 
@@ -1201,6 +1212,8 @@ public:
 	static b3Item  *b3Init(b3_u32 *src);
 
 	       void     b3Reorg();
+	       void     b3SetView(b3_res xSize,b3_res ySize);
+	       void     b3Draw();
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

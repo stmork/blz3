@@ -31,8 +31,11 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/08/02 15:21:54  sm
+**      - Some minor changes
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -94,4 +97,25 @@ b3Item *b3Scene::b3Init(b3_u32 class_type)
 b3Item *b3Scene::b3Init(b3_u32 *src)
 {
 	return new b3Scene(src);
+}
+
+void b3Scene::b3SetView(b3_res xSize,b3_res ySize)
+{
+#ifdef BLZ3_USE_OPENGL
+b3PrintF(B3LOG_NORMAL,"view...\n");
+	GLfloat aspect = (GLfloat)xSize / (GLfloat)ySize;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glViewport(0,0,xSize,ySize);
+	gluPerspective (90.0f, aspect, 0.1f,10000.0f);
+	gluLookAt(
+		EyePoint.x, EyePoint.y, EyePoint.z,
+		ViewPoint.x,ViewPoint.y,ViewPoint.z,
+		Height.x,   Height.y,   Height.z);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();	
+#endif
 }
