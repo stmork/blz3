@@ -6,7 +6,8 @@ setenv OFLAGS "-O3 -mcpu=pentium4 -w"
 #setenv OFLAGS "-O3 -tpp6 -xMiKW -w"
 
 # Copy some options
-setenv CFLAGS    "$OFLAGS"
+#setenv CFLAGS    "$OFLAGS"
+setenv CFLAGS    "@CFLAGS@"
 setenv CXXFLAGS  "$CFLAGS -xM -axiKW"
 
 # Some global vars
@@ -16,7 +17,8 @@ setenv CXX iccbin
 
 # Files and directories
 setenv SRC       "image/*.cc base/*.cc raytrace/*.cc system/*.cc system_unix/*.cc"
-setenv LIBS      "$LIB_X3 $LIB_S3 $LIB_OGL3 -lB3tiff -lB3jpeg"
+#setenv LIBS      "$LIB_X3 $LIB_S3 $LIB_OGL3 -lB3tiff -lB3jpeg"
+setenv LIBS       "@LIBS@ -lB3tiff -lB3jpeg"
 setenv PROF_DIR   /tmp/profdir
 setenv PROF_FILES "../data/*.bwd GeoNebel.bwd AllShapes.bwd"
 setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd Vase.bwd Wassersockel.bwd AllShapes.bwd"
@@ -41,14 +43,14 @@ switch ( $1 )
        make -C Bjpeg -j 4 libB3jpeg.a
        echo "Build options: "$CXXFLAGS
        echo "Building with -ipo..."
-       $CXX -ipo $CXXFLAGS -D_DEBUG $STDINC $LDFLAGS $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
+       $CXX -ipo $CXXFLAGS -D_DEBUG @CPPFLAGS@ @LDFLAGS@ $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
        breaksw
 
    case "asm" :
        make clean
        echo "Build options: $ASMFLAGS"
        echo "Building with -ipo..."
-       $CXX $ASMFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc
+       $CXX $ASMFLAGS @CPPFLAGS@ @LDFLAGS@ $SRC brt3/brt3.cc
        breaksw
 
    case "pgo" :
@@ -65,7 +67,7 @@ switch ( $1 )
        test -d $PROF_DIR || mkdir -p $PROF_DIR || exit 1
        echo "Build options: "$CFLAGS
        echo "Building with -prof_gen..."
-       $CXX -prof_genx -prof_dir$PROF_DIR $CFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
+       $CXX -prof_genx -prof_dir$PROF_DIR $CFLAGS @CPPFLAGS@ @LDFLAGS@ $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
        breaksw
 
    case "pgo_render" :
@@ -81,7 +83,7 @@ switch ( $1 )
    case "pgo_end" :
        echo "Build options: "$CXXFLAGS
        echo "Building with -ipo -prof_use..."
-       $CXX -ipo -prof_use -prof_dir$PROF_DIR $CXXFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
+       $CXX -ipo -prof_use -prof_dir$PROF_DIR $CXXFLAGS @CPPFLAGS@ @LDFLAGS@ $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
        breaksw
 
    case "codecov" :

@@ -81,6 +81,7 @@ AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqr
 
 AC_CONFIG_FILES([
 	src/Makefile
+	src/icc.make
 	src/system_unix/Makefile
 	src/system/Makefile
 	src/Btiff/Makefile
