@@ -40,9 +40,12 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.6  2004/12/23 22:22:42  sm
+**	- Adjusted further Visual C++ options
+**
 **	Revision 1.5  2004/12/22 21:36:37  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.4  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -300,7 +303,7 @@ void CDlgSearchPathList::OnSelchangePath()
 	if (m_Index >= 0)
 	{
 		m_PathEntry = (b3PathEntry *)m_List.GetItemDataPtr(m_Index);
-		if ((long int)m_PathEntry == -1)
+		if ((long long)m_PathEntry == -1)
 		{
 			m_PathEntry = null;
 		}

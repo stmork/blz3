@@ -133,6 +133,13 @@
 			</File>
 			<File
 				RelativePath="b3Area.cc">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						BufferSecurityCheck="FALSE"
+						EnableEnhancedInstructionSet="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="b3BBox.cc">

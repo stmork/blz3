@@ -22,12 +22,16 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				EnableFiberSafeOptimizations="FALSE"
 				OptimizeForProcessor="2"
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
+				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
+				SmallerTypeCheck="TRUE"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="TRUE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Debug/AppLines.pch"
 				AssemblerOutput="1"
@@ -47,7 +51,7 @@
 				AdditionalDependencies="LibSystem_dbg.lib LibBase_dbg.lib LibRaytrace_dbg.lib opengl32.lib glu32.lib version.lib"
 				OutputFile=".\..\..\Debug/AppLines.exe"
 				Version="3.0"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="..\..\lib\win32_i386"
 				GenerateDebugInformation="TRUE"
@@ -92,7 +96,8 @@
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
@@ -102,9 +107,11 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\include_win32,$(CG_INC_PATH)"
 				PreprocessorDefinitions="NDEBUG;_WINDOWS;BLZ3_USE_OPENGL;_B3_EXPORT;WIN32"
 				StringPooling="TRUE"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
+				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\..\..\Release/AppLines.pch"
 				AssemblerListingLocation=".\..\..\Release/"
@@ -113,7 +120,6 @@
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="0"
 				CompileAs="2"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -3613,5 +3619,8 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="AppLines.rc"/>
 	</Globals>
 </VisualStudioProject>

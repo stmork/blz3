@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/12/23 22:22:42  sm
+**	- Adjusted further Visual C++ options
+**
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.5  2002/08/24 13:06:17  sm
 **	- Enhanced test suite for threading.
 **	
@@ -243,6 +246,7 @@ static b3_u32 b3CounterThread(void *ptr)
 
 static void b3TestThreadStart1()
 {
+#ifndef _WINDOWS
 	pthread_t thread;
 	int       counter = 0;
 	int       i;
@@ -268,6 +272,7 @@ static void b3TestThreadStart1()
 	}
 	b3PrintF(B3LOG_NORMAL,"  Counter: %d\n",counter);
 	b3PrintF(B3LOG_NORMAL,"Done.\n\n");
+#endif
 }
 
 static void b3TestThreadStart2()

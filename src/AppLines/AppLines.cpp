@@ -58,9 +58,12 @@
 
 /*
 **	$Log$
+**	Revision 1.82  2004/12/23 22:22:41  sm
+**	- Adjusted further Visual C++ options
+**
 **	Revision 1.81  2004/12/22 21:36:36  sm
 **	- Changed development environment to Visual C++ .net 2003
-**
+**	
 **	Revision 1.80  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -620,17 +623,6 @@ BOOL CAppLinesApp::InitInstance()
 	}
 
 	AfxEnableControlContainer();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	//  of your final executable, you should remove from the following
-	//  the specific initialization routines you do not need.
-
-#ifdef _AFXDLL
-//	Enable3dControls();			// Call this when using MFC in a shared DLL
-#else
-//	Enable3dControlsStatic();	// Call this when linking to MFC statically
-#endif
 
 	// Change the registry key under which our settings are stored.
 	// TODO: You should modify this string to be something appropriate

@@ -12,6 +12,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+using namespace std;
+
 /////////////////////////////////////////////////////////////////////////////
 // The one and only application object
 

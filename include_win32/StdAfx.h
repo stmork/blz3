@@ -46,4 +46,8 @@
 
 #include <afxsock.h>		// MFC-Socket-Erweiterungen
 
+// Blizzard III add-ons
+#include <iostream>
+#include <fstream>
+
 #endif

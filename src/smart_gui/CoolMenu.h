@@ -111,7 +111,7 @@ protected:
 
 		if (lookup)
 		{
-			long int liVal = (long int)val;
+			long long liVal = (long long)val;
 
 			result = (int)(liVal & 0xffffffff);
 		}
