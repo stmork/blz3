@@ -88,7 +88,7 @@ switch ( $1 )
         test -d $CODECOV_DIR || mkdir $CODECOV_DIR
         echo "Building code coverage summary into: "$CODECOV_DIR
         (cd $CODECOV_DIR;umask 002;/opt/intel/compiler80/bin/codecov -dpi /tmp/profdir/pgopti.dpi -spi /tmp/profdir/pgopti.spi -counts\
-             -prj "Blizzard III" -mname "Blizzard Development Group" -maddr "blz3dev@morknet.de")
+             -prj "Blizzard III" -mname "Blizzard Development Group" -maddr "blz3-dev@morknet.de")
        breaksw
 
    case "pgo_install" :

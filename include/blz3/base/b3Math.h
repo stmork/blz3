@@ -177,6 +177,32 @@ public:
 		return result;
 	}
 
+	static inline b3_f64 b3Asin(b3_f64 x)
+	{
+		if (x <= -1)
+		{
+			return -M_PI * 0.5;
+		}
+		else if (x >= 1)
+		{
+			return M_PI * 0.5;
+		}
+		return asin(x);
+	}
+
+	static inline b3_f64 b3Acos(b3_f64 x)
+	{
+		if (x <= -1)
+		{
+			return M_PI;
+		}
+		else if (x >= 1)
+		{
+			return 0;
+		}
+		return acos(x);
+	}
+
 #ifndef CBRT_SYS
 #ifdef  CBRT_SLOW
 	static inline b3_f64 b3Cbrt(b3_f64 x)

@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.83  2004/06/22 12:35:42  sm
+**      - Fixed ticket no. 25: Rounding problems at shadow edges forces
+**        black borders on objects. Now safe implementations of asin/acos
+**        added to b3Math.
+**      - Fixed mail address in icc make script.
+**
 **      Revision 1.82  2004/06/18 12:03:12  sm
 **      - Removed default values from some b3Color methods.
 **
@@ -1500,7 +1506,7 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b
 	b3Vector::b3Init(&L,&jit->dir);
 	b3Vector::b3Normalize(&L);
 
-	b3_f64 nl = b3Math::b3Limit(b3Vector::b3SMul(&ray->normal,&L));
+	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
 
 #if 1
 	b3Color Rf;
@@ -1532,12 +1538,12 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b
 		}
 		G = b3Math::b3Limit(G);
 
-		b3_f64 alpha = acos(nh);
+		b3_f64 alpha = b3Math::b3Acos(nh);
 		b3_f64 nh_q  = nh * nh;
 		b3_f64 D     = exp(-b3Math::b3Sqr(tan(alpha) / m_m)) / (m_m * m_m * nh_q * nh_q);
 		b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
 
-		b3_f64 phi = asin(nl);
+		b3_f64 phi = b3Math::b3Asin(nl);
 		for (b3_loop i = b3Color::R;i <= b3Color::B;i++)
 		{
 			b3Color::b3_color_index l = (b3Color::b3_color_index)i;

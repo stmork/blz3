@@ -33,9 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2004/06/22 12:35:42  sm
+**	- Fixed ticket no. 25: Rounding problems at shadow edges forces
+**	  black borders on objects. Now safe implementations of asin/acos
+**	  added to b3Math.
+**	- Fixed mail address in icc make script.
+**
 **	Revision 1.65  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
-**
+**	
 **	Revision 1.64  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -484,6 +490,7 @@ void b3Scene::b3ReallocateShader()
 		m_Shader = null;
 		break;
 	}
+	b3PrintF(B3LOG_DEBUG,"Using shader type %08x with instance %p\n",b3GetClassType(),m_Shader);
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
