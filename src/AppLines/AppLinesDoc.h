@@ -138,6 +138,8 @@ protected:
 	afx_msg void OnCobLoad();
 	afx_msg void OnTgfLoad();
 	afx_msg void OnMaintainSpecial();
+	afx_msg void OnDeleteTransformHistory();
+	afx_msg void OnUpdateDeleteTransformHistory(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

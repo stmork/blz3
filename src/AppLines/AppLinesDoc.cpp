@@ -60,11 +60,17 @@
 
 /*
 **	$Log$
+**	Revision 1.97  2004/05/11 14:01:14  sm
+**	- Added unified invert/revert for object editing.
+**	- Added deletion of transform history in scene
+**	  editor (= transformed history) and object editor
+**	  (= original form)
+**
 **	Revision 1.96  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.95  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -584,6 +590,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_ANIM_PROPERTIES, OnUpdateAnimProperties)
 	ON_COMMAND(ID_COB_LOAD, OnCobLoad)
 	ON_COMMAND(ID_TGF_LOAD, OnTgfLoad)
+	ON_COMMAND(ID_MAINTAIN_SPECIAL, OnMaintainSpecial)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
@@ -608,7 +615,8 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
-	ON_COMMAND(ID_MAINTAIN_SPECIAL, OnMaintainSpecial)
+	ON_COMMAND(ID_DELETE_TRANSFORM_HISTORY, OnDeleteTransformHistory)
+	ON_UPDATE_COMMAND_UI(ID_DELETE_TRANSFORM_HISTORY, OnUpdateDeleteTransformHistory)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1717,6 +1725,7 @@ void CAppLinesDoc::b3FinishEdit(
 		base->b3Remove(original);
 		b3BBox::b3Recount(base);
 		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
 }
 
@@ -1916,4 +1925,27 @@ void CAppLinesDoc::OnMaintainSpecial()
 	CDlgItemMaintain dlg(this,m_Scene->b3GetSpecialHead());
 
 	dlg.DoModal();
+}
+
+void CAppLinesDoc::OnDeleteTransformHistory() 
+{
+	// TODO: Add your command handler code here
+	b3BBox *selected = m_DlgHierarchy->b3GetSelectedBBox();
+
+	if (selected != null)
+	{
+		if (b3Runtime::b3MessageBox(IDS_ASK_DELETE_TRANSFORMATION_HISTORY,B3_MSGBOX_YES_NO) == B3_MSG_YES)
+		{
+			selected->b3ResetTransformation();
+			SetModifiedFlag();
+		}
+	}
+}
+
+void CAppLinesDoc::OnUpdateDeleteTransformHistory(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3BBox *selected = m_DlgHierarchy->b3GetSelectedBBox();
+
+	pCmdUI->Enable(selected != null);
 }

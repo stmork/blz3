@@ -36,6 +36,12 @@
 
 /*
 **      $Log$
+**      Revision 1.75  2004/05/11 14:01:15  sm
+**      - Added unified invert/revert for object editing.
+**      - Added deletion of transform history in scene
+**        editor (= transformed history) and object editor
+**        (= original form)
+**
 **      Revision 1.74  2004/05/10 15:12:09  sm
 **      - Unified condition legends for conditions and
 **        texture materials.
@@ -985,7 +991,6 @@ b3_bool b3MatMarble::b3Prepare()
 
 b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	b3Color   mask;
 	b3_vector point;
 
 	b3Scale(ray,&m_Scale,&point,M_PI);

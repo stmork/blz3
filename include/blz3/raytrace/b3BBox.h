@@ -67,6 +67,9 @@ public:
 		   void            b3ComputeNormals(b3_bool normalize = true);
 	       void            b3Draw(b3RenderContext *context);
 		   b3_bool         b3Transform(b3_matrix *transformation,b3_bool is_affine,b3_bool force_action = false);
+		   b3_bool         b3Inverse(b3_matrix *);
+		   b3_bool         b3Reverse(b3_matrix *);
+		   void            b3ResetTransformation();
 		   void            b3Activate(b3_bool activate=true,b3_bool recurse=true);
 		   void            b3Animate(b3Activation::b3_anim_activation animate = b3Activation::B3_ANIM_ACTIVE,b3_bool recurse=true);
 		   b3_bool         b3IsActive();

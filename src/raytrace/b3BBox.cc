@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.89  2004/05/11 14:01:14  sm
+**	- Added unified invert/revert for object editing.
+**	- Added deletion of transform history in scene
+**	  editor (= transformed history) and object editor
+**	  (= original form)
+**
 **	Revision 1.88  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.87  2004/04/21 20:44:56  sm
 **	- Added bump sampler to their dialogs.
 **	- Added bbox dimensions for bump sampler
@@ -940,6 +946,55 @@ b3_count b3BBox::b3Count()
 		count += bbox->b3Count();
 	}
 	return count;
+}
+
+void b3BBox::b3ResetTransformation()
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+    b3Matrix::b3Unit(&m_Matrix);
+	b3Matrix::b3Unit(&m_Inverse);
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3ResetTransformation();
+	}
+}
+
+b3_bool b3BBox::b3Inverse(b3_matrix *original)
+{
+	b3_matrix inverse;
+	b3_bool   success;
+
+	success = b3Matrix::b3Inverse(&m_Matrix,&inverse) != null;
+	if (success)
+	{
+		if (original != null)
+		{
+			*original = m_Matrix;
+		}
+		b3Transform(&inverse,true,true);
+
+		// This is not necessary but it removes
+		// round errors.
+        b3Matrix::b3Unit(&m_Matrix);
+		b3Matrix::b3Unit(&m_Inverse);
+	}
+	return success;
+}
+
+b3_bool b3BBox::b3Reverse(b3_matrix *original)
+{
+	b3_bool   success;
+
+	success = b3Matrix::b3Inverse(original,&m_Inverse) != null;
+	if (success)
+	{
+		m_Matrix = *original;
+		b3Transform(&m_Matrix,true,true);
+	}
+	return success;
 }
 
 b3_bool b3BBox::b3Transform(

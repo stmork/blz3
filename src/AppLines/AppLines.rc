@@ -629,6 +629,8 @@ BEGIN
         MENUITEM "&Material...",                ID_EDIT_MATERIAL
         MENUITEM "Bum&p Mapping...",            ID_EDIT_BUMP
         MENUITEM "Eigenschaften verteilen...",  ID_COPY_PROPERTIES
+        MENUITEM "Transformationsablauf löschen", 
+                                                ID_DELETE_TRANSFORM_HISTORY
     END
     POPUP "&Ansicht"
     BEGIN
@@ -717,6 +719,8 @@ BEGIN
             MENUITEM "Caligari-Objekt importieren...", ID_COB_LOAD
             MENUITEM "ArCon-Objekt importieren...", ID_TGF_LOAD
         END
+        MENUITEM "Transformationsablauf löschen", 
+                                                ID_DELETE_TRANSFORM_HISTORY
     END
 END
 
@@ -3555,6 +3559,8 @@ BEGIN
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_COPY_PROPERTIES      "Verteilt die Körpereigenschaften auf andere Körper\nKörpereigenschaften verteilen"
+    ID_DELETE_TRANSFORM_HISTORY 
+                            "Löscht die bisher abgelaufenen Transformationen.\nTransformationsablauf löschen"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -3804,6 +3810,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_STENCIL_DIR_ANGLE   "Winkelrichtung"
     IDS_STENCIL_LEN_ANGLE   "Winkel"
+    IDS_ASK_DELETE_TRANSFORMATION_HISTORY 
+                            "Soll der Transformationsablauf gelöscht werden?"
 END
 
 #endif    // German (Germany) resources

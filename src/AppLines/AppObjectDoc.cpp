@@ -40,9 +40,15 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/05/11 14:01:14  sm
+**	- Added unified invert/revert for object editing.
+**	- Added deletion of transform history in scene
+**	  editor (= transformed history) and object editor
+**	  (= original form)
+**
 **	Revision 1.31  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
-**
+**	
 **	Revision 1.30  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -216,6 +222,7 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
+	ON_COMMAND(ID_DELETE_TRANSFORM_HISTORY, OnDeleteTransformHistory)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -299,7 +306,6 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 {
 	CMainFrame     *main = CB3GetMainFrame();
 	CString         message;
-	b3_matrix       inverse;
 
 	main->b3SetStatusMessage(IDS_DOC_REORG);
 	b3BBox::b3Recount(
@@ -311,10 +317,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
 	bbox->b3Prepare(true);
-
-	m_OriginalPosition = bbox->m_Matrix;
-	b3Matrix::b3Inverse(&bbox->m_Matrix,&inverse);
-	bbox->b3Transform(&inverse,true,true);
+	bbox->b3Inverse(&m_OriginalPosition);
 
 	// Now everything necessary is initialized. So we can mark this
 	// document as valid
@@ -414,7 +417,7 @@ void CAppObjectDoc::OnCloseDocument()
 			if (IsModified())
 			{
 				m_LinesDoc->b3FinishEdit(m_Original,m_BBox);
-				m_BBox->b3Transform(&m_OriginalPosition,true,true);
+				m_BBox->b3Reverse(&m_OriginalPosition);
 				m_LinesDoc->b3ComputeBounds();
 				delete m_Original;
 			}
@@ -906,4 +909,15 @@ void CAppObjectDoc::OnUpdateCopyProperties(CCmdUI* pCmdUI)
 	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
 
 	pCmdUI->Enable(shape != null);
+}
+
+void CAppObjectDoc::OnDeleteTransformHistory() 
+{
+	// TODO: Add your command handler code here
+	if (b3Runtime::b3MessageBox(IDS_ASK_DELETE_TRANSFORMATION_HISTORY,B3_MSGBOX_YES_NO) == B3_MSG_YES)
+	{
+		b3Matrix::b3Unit(&m_OriginalPosition);
+		m_BBox->b3ResetTransformation();
+		SetModifiedFlag();
+	}
 }

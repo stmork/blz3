@@ -260,6 +260,7 @@
 #define ID_VIEW_TOP                     10118
 #define ID_VIEW_TO_FULCRUM              10119
 #define ID_COPY_PROPERTIES              10120
+#define ID_DELETE_TRANSFORM_HISTORY     10124
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -861,6 +862,7 @@
 #define IDS_STENCIL_LEN_LENGTH          61455
 #define IDS_STENCIL_DIR_ANGLE           61456
 #define IDS_STENCIL_LEN_ANGLE           61457
+#define IDS_ASK_DELETE_TRANSFORMATION_HISTORY 61458
 
 // Next default values for new objects
 // 
@@ -868,7 +870,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        125
-#define _APS_NEXT_COMMAND_VALUE         10124
+#define _APS_NEXT_COMMAND_VALUE         10125
 #define _APS_NEXT_CONTROL_VALUE         32393
 #define _APS_NEXT_SYMED_VALUE           60186
 #endif

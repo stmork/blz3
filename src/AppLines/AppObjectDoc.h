@@ -87,6 +87,7 @@ protected:
 	afx_msg void OnUpdateEditBump(CCmdUI* pCmdUI);
 	afx_msg void OnCopyProperties();
 	afx_msg void OnUpdateCopyProperties(CCmdUI* pCmdUI);
+	afx_msg void OnDeleteTransformHistory();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

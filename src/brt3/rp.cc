@@ -37,9 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/05/11 14:01:14  sm
+**	- Added unified invert/revert for object editing.
+**	- Added deletion of transform history in scene
+**	  editor (= transformed history) and object editor
+**	  (= original form)
+**
 **	Revision 1.4  2004/05/08 18:40:20  sm
 **	- Fixed minor compile warnings.
-**
+**	
 **	Revision 1.3  2004/05/08 11:41:59  sm
 **	- Now have a Utah spoon, a Utah Teacup and the Utah teapot!!!
 **	
@@ -132,6 +138,11 @@ public:
 						if (sscanf(line,"%f,%f,%f",
 							&vertex.x,&vertex.y,&vertex.z) == 3)
 						{
+							b3_f64 factor = 20;
+
+							vertex.x *= factor;
+							vertex.y *= factor;
+							vertex.z *= factor;
 							m_Vertices.b3Add(vertex);
 						}
 					}
@@ -158,8 +169,6 @@ public:
 
 	void b3Create()
 	{
-		b3_matrix transform;
-
 		b3PrintF(B3LOG_NORMAL,"Creating Blizzard objects...\n");
 
 #if 1
@@ -172,9 +181,6 @@ public:
 		{
 			b3CreateObject();
 		}
-		
-		b3Matrix::b3Scale(null,&transform,null,20,20,20);
-		m_BBox->b3Transform(&transform,true,true);
 	}
 
 	void b3SaveObject(const char *filename)
