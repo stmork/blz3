@@ -25,6 +25,22 @@
 
 /*************************************************************************
 **                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.2  2001/11/08 19:31:33  sm
+**	- Nasty CR/LF removal!
+**	- Added TGA/RGB8/PostScript image saving.
+**	- Hoping to win Peter H. for powerful MFC programming...
+**
+**	
+*/
+
+/*************************************************************************
+**                                                                      **
 **                        JPEG                                          **
 **                                                                      **
 *************************************************************************/
@@ -261,6 +277,5 @@ b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)
 {
 	b3InfoJPEG info(this,filename,quality);
 	info.b3Write();
-
 	return B3_OK;
 }

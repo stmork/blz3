@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2001/11/08 19:31:33  sm
+**	- Nasty CR/LF removal!
+**	- Added TGA/RGB8/PostScript image saving.
+**	- Hoping to win Peter H. for powerful MFC programming...
+**
 **	Revision 1.21  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
-**
+**	
 **	Revision 1.20  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title

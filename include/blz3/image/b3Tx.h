@@ -338,8 +338,11 @@ public:
 		const b3_u08  *ImageBuffer,
 		const b3_size  BufferSize);
 
-	// b3TxSaveJPEG.cc
+	// b3TxSaveXXX.cc
 	b3_result      b3SaveJPEG (const char *ImageName,b3_u32 quality = 75);
+	b3_result      b3SavePS   (const char *ImageName);
+	b3_result      b3SaveRGB8 (const char *ImageName);
+	b3_result      b3SaveTGA  (const char *ImageName);
 
 private:
 	// b3TxTurn.cc
@@ -387,7 +390,7 @@ private:
 	long           b3TIFFDecode (TIFF *handle,short PlanarConfig);
 	long           nauiTIFFAlloc  ();
 
-	// maioTxSaveTIFF.cc
+	// b3TxSaveTIFF.cc
 	void           b3GetSampleValues  (long &BitsPerPixel,long &SamplesPerPixel);
 	b3_result      b3SaveTIFFFax      (TIFF *handle);
 	b3_result      b3SaveTIFFPalette  (TIFF *handle);

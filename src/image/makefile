@@ -25,6 +25,9 @@ LIB_SOURCE		=\
 	b3TxPCX.cc\
 	b3TxPool.cc\
 	b3TxSaveJPEG.cc\
+	b3TxSavePS.cc\
+	b3TxSaveRGB8.cc\
+	b3TxSaveTGA.cc\
 	b3TxSaveTIFF.cc\
 	b3TxScale.cc\
 	b3TxTGA.cc\
@@ -47,6 +50,9 @@ LIB_OBJ			=\
 	b3TxPCX.o\
 	b3TxPool.o\
 	b3TxSaveJPEG.o\
+	b3TxSavePS.o\
+	b3TxSaveRGB8.o\
+	b3TxSaveTGA.o\
 	b3TxSaveTIFF.o\
 	b3TxScale.o\
 	b3TxTGA.o\

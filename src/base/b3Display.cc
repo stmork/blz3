@@ -42,9 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/08 19:31:33  sm
+**	- Nasty CR/LF removal!
+**	- Added TGA/RGB8/PostScript image saving.
+**	- Hoping to win Peter H. for powerful MFC programming...
+**
 **	Revision 1.3  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
-**
+**	
 **	Revision 1.2  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display

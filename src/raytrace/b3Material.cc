@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2001/11/08 19:31:33  sm
+**      - Nasty CR/LF removal!
+**      - Added TGA/RGB8/PostScript image saving.
+**      - Hoping to win Peter H. for powerful MFC programming...
+**
 **      Revision 1.17  2001/11/05 16:57:39  sm
 **      - Creating demo scenes.
 **      - Initializing some b3Item derived objects
