@@ -38,8 +38,11 @@
 #include "blz3/system/b3Thread.h"
 
 #ifdef BLZ3_USE_OPENGL
-#include <GL/glu.h>
-#endif
+#define __glext_h_
+#include "GL/glu.h"
+
+#undef __glext_h_
+#include "blz3/glext.h"
 
 #ifdef BLZ3_USE_GLUT
 #include <GL/glut.h>
@@ -50,6 +53,7 @@
 #ifdef BLZ3_USE_CG
 #include <Cg/cg.h>
 #include <Cg/cgGL.h>
+#endif
 #endif
 
 #define USE_JPEGLIB_LOAD

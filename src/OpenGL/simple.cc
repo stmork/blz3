@@ -16,6 +16,7 @@
 */
 
 #include "blz3/b3Config.h"
+#include <dlfcn.h>
 
 /*************************************************************************
 **                                                                      **
@@ -25,6 +26,11 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2004/09/22 15:02:59  sm
+**      - Experimenting with OpenGL extensions. Especially the VBOs
+**        are interesting to avoid a data copy everytime when
+**        drawing is needed.
+**
 **      Revision 1.4  2004/08/26 07:08:10  sm
 **      - Higher bitrate in DivX encoder.
 **      - Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
@@ -164,6 +170,58 @@ GLfloat light0[] =
 	10.0,15.0,20.0,1.0
 };
 
+typedef void      (*procBindBufferARB)(GLenum target, GLuint buffer);
+typedef void      (*procDeleteBuffersARB)(GLsizei n, const GLuint *buffers);
+typedef void      (*procGenBuffersARB)(GLsizei n, GLuint *buffers);
+typedef GLboolean (*procIsBufferARB)(GLuint buffer);
+typedef void      (*procBufferDataARB)(GLenum target, GLsizei size, const GLvoid *data, GLenum usage);
+typedef void      (*procBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, const GLvoid *data);
+typedef void      (*procGetBufferSubDataARB)(GLenum target, GLint *offset, GLsizei *size, GLvoid *data);
+typedef void *    (*procMapBufferARB)(GLenum target, GLenum access);
+typedef void      (*procUnmapBufferARB)(GLenum target);
+typedef void      (*procGetBufferParameterivARB)(GLenum target, GLenum pname, GLint *params);
+typedef void      (*procGetBufferPointervARB)(GLenum target, GLenum pname, void **params);
+
+procBindBufferARB    glBindBufferARB;
+procDeleteBuffersARB glDeleteBuffersARB;
+procGenBuffersARB    glGenBuffersARB;
+procBufferDataARB    glBufferDataARB;
+procMapBufferARB     glMapBufferARB;
+procUnmapBufferARB   glUnmapBufferARB;
+
+GLuint  vbo[2];
+b3_bool has_vbo;
+
+void init_vbo()
+{
+	void *handle;
+
+	char *extensions = glGetString(GL_EXTENSIONS);
+	if (strstr(extensions,"vertex_buffer_object") != 0)
+	{
+		handle = dlopen("libGL.so",RTLD_LAZY);
+		if (handle != null)
+		{
+			glBindBufferARB  = dlsym(handle, "glBindBufferARB");
+			glGenBuffersARB  = dlsym(handle, "glGenBuffersARB");
+			glBufferDataARB  = dlsym(handle, "glBufferDataARB");
+			glMapBufferARB   = dlsym(handle, "glMapBufferARB");
+			glUnmapBufferARB = dlsym(handle, "glUnmapBufferARB");
+
+			has_vbo = true;
+		}
+		else
+		{
+			has_vbo = false;
+		}
+	}
+	else
+	{
+		has_vbo = false;
+	}
+}
+
+
 void RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -189,8 +247,21 @@ void RenderScene()
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glColor3f(1.0f,1.0f,1.0f);
-	glVertexPointer(3, GL_FLOAT, 0, boxVertices);
-	glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE,boxIndices);
+
+	if (has_vbo)
+	{
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
+		glVertexPointer(3, GL_FLOAT, 0, 0);
+
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB,vbo[1]);
+		glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE,0);
+	}
+	else
+	{
+		glVertexPointer(3, GL_FLOAT, 0, boxVertices);
+		glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE, boxIndices);
+	}
+	
 	glPopMatrix();	
 #endif
 	glutSwapBuffers();
@@ -245,6 +316,31 @@ void SetupRC()
 	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
 	glLightfv(GL_LIGHT0,GL_POSITION,light0);
+
+	init_vbo();
+	if (has_vbo)
+	{
+		void *ptr;
+
+		printf("Vertex buffer objects available.\n");
+		glGenBuffersARB(2,vbo);
+
+		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(boxVertices), NULL, GL_DYNAMIC_DRAW_ARB);
+		ptr = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
+		memcpy(ptr,boxVertices,sizeof(boxVertices));
+		glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
+
+		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
+		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, sizeof(boxIndices), NULL, GL_DYNAMIC_DRAW_ARB);
+		ptr = glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
+		memcpy(ptr,boxIndices,sizeof(boxIndices));
+		glUnmapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB);
+	}
+	else
+	{
+		printf("No vertex buffer objects available.\n");
+	}
 }
 
 int main(int argc,char *argv[])
