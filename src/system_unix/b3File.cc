@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include "blz3/system/b3File.h"
 
 #define DEFAULT_CACHESIZE 64000
@@ -36,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/16 15:21:24  sm
+**	- Minor changes to compile with GCC 3.x
+**
 **	Revision 1.4  2001/10/09 20:47:02  sm
 **	- some further texture handling.
-**
+**	
 **	Revision 1.3  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles

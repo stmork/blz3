@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/16 15:21:24  sm
+**	- Minor changes to compile with GCC 3.x
+**
 **	Revision 1.7  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.6  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -142,10 +145,10 @@ static b3_bool errorHandlerInstalled = false;
 void b3TIFFErrorHandler(
 	const char *module,
 	const char *fmt,
-	char       *va)
+	void       *va)
 {
 	char    message[512];
-	va_list args = (va_list)va;
+	va_list args = va;
 
 	vsprintf (message,fmt,args);
 	b3PrintF(B3LOG_NORMAL,"ERROR: %s %s\n",module,message);
@@ -154,10 +157,10 @@ void b3TIFFErrorHandler(
 void b3TIFFWarnHandler(
 	const char *module,
 	const char *fmt,
-	char       *va)
+	void       *va)
 {
 	char    message[512];
-	va_list args = (va_list)va;
+	va_list args = va;
 
 	vsprintf (message,fmt,args);
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);
