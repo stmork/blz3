@@ -38,6 +38,11 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2004/03/18 13:43:05  sm
+**      - Some better granite:
+**        o Introduced configurable overtones.
+**        o Better turbulence computation.
+**
 **      Revision 1.42  2004/03/15 18:49:57  sm
 **      - New example material created.
 **
@@ -1129,16 +1134,16 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
-	m_DarkColor  = b3Color(b3_pkd_color(0xd0dde0));
-	m_LightColor = b3Color(B3_BLACK);
+	m_DarkColor  = b3Color(B3_BLACK);
+	m_LightColor = b3Color(b3_pkd_color(0xd0dde0));
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
 	m_AmbColor   = b3Color(0.1, 0.1, 0.1);
 	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
-	b3Vector::b3Init(&m_Scale,2.0,2.0,2.0);
 	m_Reflection =   0.0;
 	m_Refraction =   0.0;
 	m_RefrValue  =   1.0;
 	m_HighLight  = 100.0;
+	m_Overtone   =   2;
 	m_Flags      =   0;
 }
 
@@ -1155,6 +1160,12 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 	m_RefrValue  = b3InitFloat();
 	m_HighLight  = b3InitFloat();
 	m_Flags      = b3InitInt();
+	m_Overtone   = b3InitCount();
+
+	b3Vector::b3Init(&m_Scale,4.0,4.0,4.0);
+	m_DarkColor  = b3Color(B3_BLACK);
+	m_LightColor = b3Color(b3_pkd_color(0xd0dde0));
+	m_Overtone   = 2;
 }
 
 void b3MatGranite::b3Write()
@@ -1170,6 +1181,7 @@ void b3MatGranite::b3Write()
 	b3StoreFloat(m_RefrValue);
 	b3StoreFloat(m_HighLight);
 	b3StoreInt  (m_Flags);
+	b3StoreCount(m_Overtone);
 }
 
 b3_bool b3MatGranite::b3GetColors(
@@ -1188,14 +1200,15 @@ b3_bool b3MatGranite::b3GetColors(
 	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
 	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
 
-	for (i = 0;i < 6;i++)
+	for (i = 0;i < m_Overtone;i++)
 	{
-		sum += (fabs(0.5 - b3Noise::b3NoiseVector(
+		sum += b3Noise::b3NoiseVector(
 			4 * freq * d.x,
 			4 * freq * d.y,
-			4 * freq * d.z)) / freq);
+			4 * freq * d.z) / freq;
 		freq += freq; // = freq *= 2;
 	}
+
 	if (sum < 0)
 	{
 		mask = m_DarkColor;

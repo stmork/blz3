@@ -889,7 +889,8 @@ public:
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
-	b3_s32            m_Flags;
+	b3_u32            m_Flags;
+	b3_count          m_Overtone;
 
 public:
 	B3_ITEM_INIT(b3MatGranite);
