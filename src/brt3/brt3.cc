@@ -27,6 +27,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3DisplayView.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3Plugin.h"
 #include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
@@ -37,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2003/05/24 16:37:06  sm
+**	- Added plugin support for Un*x
+**
 **	Revision 1.39  2003/02/22 19:39:34  sm
 **	- Fixed some GCC compile errors in b3TIFF stuff.
-**
+**	
 **	Revision 1.38  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -299,12 +303,15 @@ int main(int argc,char *argv[])
 	b3CameraPart         *camera;
 	b3Item               *item;
 	b3_vector             lower,upper;
-	char                 *picture_home = getenv("BLZ3_PICTURES");
-	char                 *HOME         = getenv("HOME");
+	char                 *BLZ3_PICTURES = getenv("BLZ3_PICTURES");
+	char                 *BLZ3_PLUGINS  = getenv("BLZ3_PLUGINS");
+	char                 *BLZ3_BIN      = getenv("BLZ3_BIN");
+	char                 *HOME          = getenv("HOME");
 	b3Path                textures;
 	b3Path                pictures;
 	b3Path                data;
 	b3Path                camera_name;
+	b3Loader              loader;
 	b3_bool               force_no_anim    = false;
 	b3_bool               force_no_display = false;
 	b3_bool               force_no_wait    = false;
@@ -314,13 +321,25 @@ int main(int argc,char *argv[])
 	{
 		b3InitRaytrace::b3Init();
 
-		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
-		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
-		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
-		b3Scene::m_TexturePool.b3AddPath(textures);
-		b3Scene::m_TexturePool.b3AddPath(pictures);
 		world = new b3World();
-		world->b3AddPath(data);
+		if (HOME != null)
+		{
+			b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
+			b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
+			b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
+			b3Scene::m_TexturePool.b3AddPath(textures);
+			b3Scene::m_TexturePool.b3AddPath(pictures);
+			world->b3AddPath(data);
+		}
+		if (BLZ3_BIN != null)
+		{
+			loader.b3AddPath(BLZ3_BIN);
+		}
+		if (BLZ3_PLUGINS != null)
+		{
+			loader.b3AddPath(BLZ3_PLUGINS);
+		}
+		loader.b3Load();
 
 		for (i = 1;i < argc;i++)
 		{
@@ -415,7 +434,7 @@ int main(int argc,char *argv[])
 												camera->b3GetName(),count++);
 											b3SaveRaytracedImage(
 												display,
-												picture_home,img_name);
+												BLZ3_PICTURES,img_name);
 										}
 									}
 									else
@@ -424,7 +443,7 @@ int main(int argc,char *argv[])
 										scene->b3Raytrace(display);
 										b3SaveRaytracedImage(
 											display,
-											picture_home,camera->b3GetName());
+											BLZ3_PICTURES,camera->b3GetName());
 										}
 								}
 								else
@@ -444,7 +463,7 @@ int main(int argc,char *argv[])
 							scene->b3Raytrace(display);
 							b3SaveRaytracedImage(
 								display,
-								picture_home,scene->b3GetName());
+								BLZ3_PICTURES,scene->b3GetName());
 						}
 
 						if (!force_no_wait)

@@ -17,7 +17,7 @@ setenv BLZ3_BIN      "$BLZ3_HOME/bin/$OSTYPE"_"$CPUTYPE"
 
 setenv LIB_B3        "-lB3Raytrace -lB3Base"
 setenv LIB_X3        "-lX11 -lXt"
-setenv LIB_S3        "-lm -lpthread"
+setenv LIB_S3        "-lm -lpthread -ldl"
 
 setenv STDINC        "$ARCHFLAG -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 

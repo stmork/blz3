@@ -14,6 +14,7 @@ LIB_SOURCE		=\
 	b3DisplayView.cc\
 	b3File.cc\
 	b3Log.cc\
+	b3Plugin.cc\
 	b3Thread.cc\
 	b3Time.cc
 
@@ -23,6 +24,7 @@ LIB_OBJ			=\
 	b3DisplayView.o\
 	b3File.o\
 	b3Log.o\
+	b3Plugin.o\
 	b3Thread.o\
 	b3Time.o
 
