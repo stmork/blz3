@@ -31,9 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/11/24 10:58:02  smork
+**	- Added missing log entry
+**
 **	Revision 1.4  2004/11/24 10:32:18  smork
 **	- Optimized VBO mapping.
-**
+**	
+**	revision 1.3  2004/11/23 09:01:10  smork
+**	- Bump revision
+**	- Added non OpenGL compiling for VBOs.
+**	
 **	Revision 1.2  2004/11/21 14:56:58  sm
 **	- Merged VBO development into main trunk.
 **	
