@@ -20,9 +20,9 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
+#include "blz3/raytrace/b3Render.h"
 
 #define B3_TEXSTRINGLEN  128
 #define B3_BOXSTRINGLEN   96
@@ -111,12 +111,6 @@ public:
 #define COND_ATEXTUREWRAP       (CLASS_CONDITION|MODE_AND|TYPE_CTEXTUREWRAP)
 #define COND_AELLIPSE           (CLASS_CONDITION|MODE_AND|TYPE_ELLIPSE)
 
-
-// used for geometry.c
-typedef struct
-{
-	b3_f32 x1,y1,x2,y2;
-} b3CondLimit;
 
 class b3InitCondition
 {
@@ -597,20 +591,12 @@ protected:
 };
 
 // same structure entries for all shapes
-class b3Shape : public b3Item
+class b3Shape : public b3Item, public b3RenderObject
 {
 protected:
 	b3_vector        Normal;
 	b3_polar         Polar;
 	b3_count         VertexCount;
-	b3_count         GridCount;
-	b3_count         PolyCount;
-#ifdef BLZ3_USE_OPENGL
-	GLfloat         *Vertices;
-	GLushort        *Grids;
-	GLushort        *Polygons;
-	b3_bool          Computed;
-#endif
 
 	b3_count         xSize,ySize;
 
@@ -624,12 +610,7 @@ public:
 	        void b3ComputeBound(b3CondLimit *limit);
 	        void b3GetColor();
 	        void b3GetNormal();
-	virtual void b3AllocVertices();
-	virtual void b3FreeVertices();
-	virtual void b3ComputeVertices();
-	virtual void b3ComputeIndices();
 	virtual void b3Intersect();
-	        void b3Draw();
 };
 
 // SPHERE
@@ -643,6 +624,7 @@ public:
 	B3_ITEM_INIT(b3Sphere);
 	B3_ITEM_LOAD(b3Sphere);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -668,17 +650,18 @@ class b3Area : public b3Shape2
 {
 #ifdef BLZ3_USE_OPENGL
 	GLfloat  area_vertices[4 * 3];
+	GLfloat  area_normals[4 * 3];
 #endif
 
 public:
 	B3_ITEM_INIT(b3Area);
 	B3_ITEM_LOAD(b3Area);
 
-	virtual void b3AllocVertices();
-	virtual void b3FreeVertices();
-	virtual void b3ComputeVertices();
-	virtual void b3ComputeIndices();
-	virtual void b3Intersect();
+	void b3AllocVertices(b3RenderContext *context);
+	void b3FreeVertices();
+	void b3ComputeVertices();
+	void b3ComputeIndices();
+	void b3Intersect();
 };
 
 class b3Disk : public b3Shape2
@@ -687,6 +670,7 @@ public:
 	B3_ITEM_INIT(b3Disk);
 	B3_ITEM_LOAD(b3Disk);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -717,6 +701,8 @@ public:
 	B3_ITEM_INIT(b3Cylinder);
 	B3_ITEM_LOAD(b3Cylinder);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3AllocVertices(b3RenderContext *context);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -728,6 +714,7 @@ public:
 	B3_ITEM_INIT(b3Cone);
 	B3_ITEM_LOAD(b3Cone);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -739,6 +726,7 @@ public:
 	B3_ITEM_INIT(b3Ellipsoid);
 	B3_ITEM_LOAD(b3Ellipsoid);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -750,6 +738,7 @@ public:
 	B3_ITEM_INIT(b3Box);
 	B3_ITEM_LOAD(b3Box);
 
+	void b3AllocateVertices(b3RenderContext *context);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -772,6 +761,7 @@ public:
 	B3_ITEM_INIT(b3Torus);
 	B3_ITEM_LOAD(b3Torus);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -793,6 +783,7 @@ public:
 	B3_ITEM_INIT(b3TriangleShape);
 	B3_ITEM_LOAD(b3TriangleShape);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -827,6 +818,7 @@ protected:
 	b3_line          Axis;             // for rotation shapes, unused
 	b3_spline        Spline[2];        // horizontal spline definition, these control points are valid!
 	b3_f32           Knots[2][B3_MAX_KNOTS];  // two knot vectors
+	b3_vector       *Controls;
 
 protected:
 	b3SplineShape(b3_size class_size,b3_u32 class_type);
@@ -834,6 +826,10 @@ protected:
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
+
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3ComputeVertices();
+	void b3ComputeIndices();
 };
 
 class b3SplineArea : public b3SplineShape
@@ -842,8 +838,6 @@ public:
 	B3_ITEM_INIT(b3SplineArea);
 	B3_ITEM_LOAD(b3SplineArea);
 
-	void b3ComputeVertices();
-	void b3ComputeIndices();
 	void b3Intersect();
 };
 
@@ -853,8 +847,6 @@ public:
 	B3_ITEM_INIT(b3SplineCylinder);
 	B3_ITEM_LOAD(b3SplineCylinder);
 
-	void b3ComputeVertices();
-	void b3ComputeIndices();
 	void b3Intersect();
 };
 
@@ -864,8 +856,6 @@ public:
 	B3_ITEM_INIT(b3SplineRing);
 	B3_ITEM_LOAD(b3SplineRing);
 
-	void b3ComputeVertices();
-	void b3ComputeIndices();
 	void b3Intersect();
 };
 
@@ -924,6 +914,7 @@ public:
 	B3_ITEM_INIT(b3CSGSphere);
 	B3_ITEM_LOAD(b3CSGSphere);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -959,6 +950,7 @@ public:
 	B3_ITEM_INIT(b3CSGCylinder);
 	B3_ITEM_LOAD(b3CSGCylinder);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -971,6 +963,7 @@ public:
 	B3_ITEM_INIT(b3CSGCone);
 	B3_ITEM_LOAD(b3CSGCone);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -983,6 +976,7 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid);
 	B3_ITEM_LOAD(b3CSGEllipsoid);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -1021,6 +1015,7 @@ public:
 	B3_ITEM_INIT(b3CSGTorus);
 	B3_ITEM_LOAD(b3CSGTorus);
 
+	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
@@ -1041,7 +1036,7 @@ protected:
 	static void b3Init();
 };
 
-class b3BBox : public b3Item
+class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
 	b3_u32           Type;               // texture type
@@ -1051,7 +1046,6 @@ class b3BBox : public b3Item
 	char             BoxName[B3_BOXSTRINGLEN];   // object name
 	char             BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
-	// Some new stuff
 #ifdef BLZ3_USE_OPENGL
 	GLfloat          vertices[8 * 3];
 #endif
@@ -1061,7 +1055,9 @@ public:
 	B3_ITEM_LOAD(b3BBox);
 
 	       void b3Dump(b3_count level);
-		   void b3AllocVertices();
+	       void b3AllocVertices(b3RenderContext *context);
+	       void b3FreeVertices();
+	       void b3ComputeVertices();
 	       void b3Draw();
  	static void b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 };
@@ -1472,7 +1468,8 @@ public:
 	       void     b3Reorg();
 	       void     b3SetView(b3_res  xSize,b3_res  ySize);
 	       void     b3GetView(b3_res &xSize,b3_res &ySize);
-		   void     b3AllocVertices();
+		   void     b3AllocVertices(b3RenderContext *context);
+		   void     b3FreeVertices();
 	       void     b3Draw();
 };
 
