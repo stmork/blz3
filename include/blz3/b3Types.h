@@ -26,20 +26,30 @@
 typedef enum
 {
 	B3_ERROR = -1,
-	B3_OK = 0
+	B3_OK    = 0
 } b3_result;
 
 // Unsigned integer
 typedef unsigned char       b3_u08;
 typedef unsigned short      b3_u16;
 typedef unsigned int        b3_u32;
+
+#ifndef _WINDOWS
 typedef unsigned long long  b3_u64;
+#else
+typedef unsigned long       b3_u64;
+#endif
 
 // Signed integer
 typedef   signed char       b3_s08;
 typedef   signed short      b3_s16;
 typedef   signed int        b3_s32;
+
+#ifndef _WINDOWS
 typedef   signed long long  b3_s64;
+#else
+typedef   signed long       b3_s64;
+#endif
 
 // Boolean
 typedef b3_u32              b3_bool;

@@ -106,7 +106,7 @@ public:
 	virtual void            b3Read();
 	virtual void            b3Write();
 	virtual void            b3Dump(b3_count level);
-	        void            b3DumpSimple(b3_count level = 0,b3_log_level level = B3LOG_NORMAL);
+	        void            b3DumpSimple(b3_count level = 0,b3_log_level log_level = B3LOG_NORMAL);
 
 	        b3_world_error  b3ParseLinkuage(b3Item **array,b3_count node_count,b3_u32 class_limit,b3_count level = 0);
 
@@ -126,7 +126,7 @@ protected:
 	void     b3InitNOP();
 
 protected:
-	void     b3DumpSpace(b3_count level,b3_log_level level = B3LOG_NORMAL);
+	void     b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
 };
 
 #define B3_ITEM_INIT(item_class)  item_class(b3_u32 class_type); static b3Item *b3Init(b3_u32  class_type) { return new (item_class)(class_type); }

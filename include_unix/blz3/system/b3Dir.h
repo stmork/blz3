@@ -26,9 +26,9 @@
 #include <dirent.h>
 #include <unistd.h>
 
-#define FILESTRINGLEN 128
+#define B3_FILESTRINGLEN 128
 
-	typedef enum
+typedef enum
 {
 	B3_NOT_EXISTANT = 0,
 	B3_TYPE_DIR,
@@ -63,7 +63,7 @@ public:
 class b3Path
 {
 public:
-	char path[FILESTRINGLEN];
+	char path[B3_FILESTRINGLEN];
 
 public:
 	static void b3LinkFileName (char *full,const char *path,const char *name);

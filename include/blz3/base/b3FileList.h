@@ -20,7 +20,7 @@
 #ifndef B3_BASE_FILELIST_H
 #define B3_BASE_FILELIST_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3List.h"
 

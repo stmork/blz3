@@ -18,7 +18,7 @@
 #ifndef B3_IMAGE_TX_H
 #define B3_IMAGE_TX_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/system/b3File.h"

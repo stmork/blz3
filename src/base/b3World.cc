@@ -37,8 +37,12 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:58  sm
-**      Initial revision
+**      Revision 1.2  2001/07/01 16:31:52  sm
+**      - Creating MSVC Projects
+**      - Welcome to Windows 32
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:58  sm
+**      Blizzard III is born
 **
 */
 
@@ -80,8 +84,6 @@ public:
 
 	b3_bool b3IsClassType(b3_u32 class_type_to_check)
 	{
-		b3_bool result;
-
 		if (is_class)
 		{
 			return (class_type_to_check & 0xffff0000) == class_type;
@@ -228,7 +230,7 @@ void b3Item::b3DumpSpace(b3_count level,b3_log_level log_level)
 void b3Item::b3Dump(b3_count level)
 {
 	b3Item   *node;
-	b3_count  i,l;
+	b3_count  i;
 
 	b3DumpSpace(level);
 	b3PrintF (B3LOG_NORMAL,"%08lx %7d\n",ClassType,Size);
@@ -246,8 +248,7 @@ void b3Item::b3Dump(b3_count level)
 
 void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 {
-	b3Item   *node;
-	b3_count  i,l;
+	b3_count  i;
 
 	b3DumpSpace(level,log_level);
 	b3PrintF (log_level,"%08lx %7d #",ClassType,Size);
@@ -509,7 +510,6 @@ b3_world_error b3Item::b3ParseLinkuage(
 	b3_count  level)
 {
 	b3_index  pos,i;
-	b3Item   *search,*aux;
 	b3_u32    act_class;
 	b3_u32    cmp_class;
 
@@ -562,7 +562,7 @@ b3_world_error b3World::b3Parse()
 {
 	b3_world_error  result;
 	b3_index        i,max_file;
-	b3_index        k,max_node,max_offset;
+	b3_index        max_node,max_offset;
 	b3_count        node_count = 0;
 	b3Base<b3Item>  node_list;
 	b3Item         *node;

@@ -18,7 +18,6 @@
 #ifndef B3_SYSTEM_MEM_H
 #define B3_SYSTEM_MEM_H
 
-#include "blz3/b3Types.h"
 #include "blz3/system/b3Thread.h"
 
 struct b3MemNode
@@ -69,3 +68,4 @@ public:
 };
 
 #endif
+

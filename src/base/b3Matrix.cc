@@ -15,6 +15,7 @@
 **
 */
 
+#if 0
 #ifndef BLIZZARD_MATRIX_C
 #define BLIZZARD_MATRIX_C
 
@@ -37,9 +38,13 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:58  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 16:31:51  sm
+**	- Creating MSVC Projects
+**	- Welcome to Windows 32
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:58  sm
+**	Blizzard III is born
+**	
 */
 
 /*************************************************************************
@@ -678,3 +683,4 @@ matrix *MatrixMirrorPlane (
 }
 
 #endif
+'ENDIF

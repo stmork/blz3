@@ -18,7 +18,7 @@
 #ifndef B3_RAYTRACE_RAYTRACE_H
 #define B3_RAYTRACE_RAYTRACE_H
 
-#include "blz3/b3Types.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"

@@ -31,8 +31,12 @@
 
 /*
 **      $Log$
-**      Revision 1.1  2001/07/01 12:24:59  sm
-**      Initial revision
+**      Revision 1.2  2001/07/01 16:31:52  sm
+**      - Creating MSVC Projects
+**      - Welcome to Windows 32
+**
+**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**      Blizzard III is born
 **
 */
 
@@ -169,7 +173,7 @@ b3SplineCurve::b3SplineCurve(b3_u32 class_type) : b3Shape(sizeof(b3SplineCurve),
 b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3Shape(src)
 {
 	rSubDiv = b3InitInt();
-	for (b3_index i;i < B3_MAX_KNOTS;i++) Knots[i] = b3InitFloat();
+	for (b3_index i = 0;i < B3_MAX_KNOTS;i++) Knots[i] = b3InitFloat();
 	b3InitSpline(&Spline,null,Knots);
 	b3InitVector(&Axis.pos);
 	b3InitVector(&Axis.dir);
@@ -180,15 +184,17 @@ b3SplineShape::b3SplineShape(b3_u32 class_type) : b3Shape(sizeof(b3SplineShape),
 }
 
 b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
-{
+{				 
+	b3_index i;
+
 	b3InitVector(&Axis.pos);
 	b3InitVector(&Axis.dir);
 	b3InitSpline(&Spline[0],null,Knots[0]);
 	b3InitSpline(&Spline[1],null,Knots[1]);
 
 	// FIX ME: Is the order right?
-	for (b3_index i;i < B3_MAX_KNOTS;i++) Knots[0][i] = b3InitFloat();
-	for (b3_index i;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
+	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[0][i] = b3InitFloat();
+	for (i = 0;i < B3_MAX_KNOTS;i++) Knots[1][i] = b3InitFloat();
 }
 
 b3CSGShape1::b3CSGShape1(b3_u32 class_type) : b3Shape(sizeof(b3CSGShape1), class_type)

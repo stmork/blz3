@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 16:31:52  sm
+**	- Creating MSVC Projects
+**	- Welcome to Windows 32
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.8  2000/10/06 14:23:38  smork
 **	- Palette handling for b3TxContrast() and b3TxColorFilter()
 **	  added.
@@ -287,7 +291,8 @@ b3_bool b3Tx::b3AllocTx(
 b3_bool b3Tx::b3IsGreyPalette()
 {
 	b3_index     i;
-	b3_pkd_color mul,max,step;
+	b3_count     max;
+	b3_pkd_color mul,step;
 
 	if (type != B3_TX_VGA)
 	{
@@ -482,7 +487,8 @@ b3_pkd_color b3Tx::b3ILBMValue (
 {
 	b3_u08       *Address;
 	b3_pkd_color  Bit,PlaneValue;
-	b3_index      BytesPerLine,i;
+	b3_index      BytesPerLine;
+	b3_res        i;
 
 	BytesPerLine = TX_BWA(xSize);
 	PlaneValue   = 0;

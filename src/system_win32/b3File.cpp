@@ -21,37 +21,35 @@
 **                                                                      **
 *************************************************************************/
 
-#include <fcntl.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "stdafx.h"
 #include "blz3/system/b3File.h"
+#include "io.h"
+#include "fcntl.h"
 
 #define DEFAULT_CACHESIZE 64000
 
 /*************************************************************************
 **                                                                      **
-**                        Blizzard III development log                  **
+**                        Maui development log                          **
 **                                                                      **
 *************************************************************************/
 
 /*
 **	$Log$
-**	Revision 1.2  2001/07/01 16:31:52  sm
+**	Revision 1.1  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
 **
-**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**	Blizzard III is born
 **	
+*/
 
 /*************************************************************************
 **                                                                      **
-**                        b3File implementation                         **
+**                        b3File implementation                       **
 **                                                                      **
 *************************************************************************/
 
-static b3Mutex        files_opened_mutex;
-static unsigned long  files_opened;
+static unsigned long b3Opened;
 
 // Initialize an instance only
 b3File::b3File()
@@ -95,12 +93,11 @@ b3_bool b3File::b3Open (
 	{
 		case B_READ :
 		case T_READ :
-			File = open(Name,O_RDONLY);
+			File = _open(Name,O_RDONLY|
+					(AccessMode == B_READ ? O_BINARY : O_TEXT));
 			if (File != -1)
 			{
-				files_opened_mutex.b3Lock();
-				files_opened++;
-				files_opened_mutex.b3Unlock();
+				b3Opened++;
 				return true;
 			}
 			break;
@@ -108,12 +105,12 @@ b3_bool b3File::b3Open (
 		case B_WRITE :
 		case T_WRITE :
 			remove (Name);
-			File = open(Name,O_WRONLY|O_CREAT,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
+			File = _open(Name,O_WRONLY|O_CREAT|
+				(AccessMode == B_WRITE ? O_BINARY : O_TEXT),
+				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (File != -1)
 			{
-				files_opened_mutex.b3Lock();
-				files_opened++;
-				files_opened_mutex.b3Unlock();
+				b3Opened++;
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -121,12 +118,12 @@ b3_bool b3File::b3Open (
 
 		case B_APPEND :
 		case T_APPEND :
-			File = open(Name,O_WRONLY|O_APPEND,S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
+			File = _open(Name,O_WRONLY|O_APPEND|
+				(AccessMode == B_WRITE ? O_BINARY : O_TEXT),
+				S_IWUSR|S_IRUSR|S_IRGRP|S_IROTH);
 			if (File != -1)
 			{
-				files_opened_mutex.b3Lock();
-				files_opened++;
-				files_opened_mutex.b3Unlock();
+				b3Opened++;
 				b3Buffer (DEFAULT_CACHESIZE);
 				return true;
 			}
@@ -145,9 +142,9 @@ b3_size b3File::b3Read (
 	const b3_size  buffer_size)
 
 {
-	long readBytes;
+	b3_size readBytes;
 
-	readBytes = read (File,buffer,buffer_size);
+	readBytes = _read (File,(void *)buffer,buffer_size);
 	return readBytes;
 }
 
@@ -169,8 +166,8 @@ b3_size b3File::b3Write (
 	}
 
 	// Other case: We must flush cache buffer first
-	written = write (File,Cache,Index);
-	if (written < Index)
+	written = _write (File,Cache,Index);
+	if (written < (b3_size)Index)
 	{
 		b3_index i;
 		b3_size  num;
@@ -212,7 +209,7 @@ b3_size b3File::b3Write (
 	Index = 0;
 
 	// The write buffer is greater than the cache buffer
-	return (write(File,buffer,buffer_size));
+	return (_write(File,buffer,buffer_size));
 }
 
 b3_bool b3File::b3Flush ()
@@ -226,10 +223,10 @@ b3_bool b3File::b3Flush ()
 	}
 
 	// Write buffer contents
-	written = write (File,Cache,Index);
+	written = _write (File,Cache,Index);
 
 	// Handle case that not the whole buffer was written
-	if (written < Index)
+	if (written < (b3_size)Index)
 	{
 		k     = written;
 		Size  = Index - written;
@@ -255,23 +252,23 @@ b3_size b3File::b3Seek (
 {
 	b3_size OldPos;
 
-	OldPos = lseek(File,0L,SEEK_CUR);
+	OldPos = _lseek(File,0L,SEEK_CUR);
 	if (b3Flush())
 	{
 		switch (SeekMode)
 		{
 			case B3_SEEK_START :
-				lseek(File,offset,SEEK_SET);
+				_lseek(File,offset,SEEK_SET);
 				return OldPos;
 			case B3_SEEK_CURRENT :
-				lseek(File,offset,SEEK_CUR);
+				_lseek(File,offset,SEEK_CUR);
 				return OldPos;
 			case B3_SEEK_END :
-				lseek(File,offset,SEEK_END);
+				_lseek(File,offset,SEEK_END);
 				return OldPos;
 		}
 	}
-	lseek(File,0L,SEEK_CUR);
+	_lseek(File,0L,SEEK_CUR);
 	return OldPos;
 }
 
@@ -282,16 +279,16 @@ b3_size b3File::b3Size ()
 	b3Flush ();
 
 	// save old position
-	OldPos = lseek (File,0L,SEEK_CUR);
+	OldPos = _lseek (File,0L,SEEK_CUR);
 
 	// Run to EOF
-	         lseek (File,0L,SEEK_END);
+	         _lseek (File,0L,SEEK_END);
 
 	// save end position (= file size)
-	Size   = lseek (File,0L,SEEK_CUR);
+	Size   = _lseek (File,0L,SEEK_CUR);
 
 	// Remember old position
-	         lseek (File,OldPos,SEEK_SET);
+	         _lseek (File,OldPos,SEEK_SET);
 	return Size;
 }
 
@@ -326,10 +323,8 @@ void b3File::b3Close ()
 	if (File != -1)
 	{
 		b3Flush ();
-		close  (File);
-		files_opened_mutex.b3Lock();
-		files_opened--;
-		files_opened_mutex.b3Unlock();
+		_close  (File);
+		b3Opened--;
 		File  = -1;
 	}
 

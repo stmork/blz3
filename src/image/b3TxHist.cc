@@ -34,9 +34,13 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2001/07/01 16:31:52  sm
+**	- Creating MSVC Projects
+**	- Welcome to Windows 32
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.6  2000/10/09 06:51:52  smork
 **	- Main work: Changing scanning via b3ScanLoop to b3ScanBase
 **	  o Adding some b3ScanContainer overridables
@@ -174,7 +178,7 @@ b3_bool b3Tx::b3AddHist(
 	// Compute bit set/cleared table
 	if (!bwInit)
 	{
-		b3_coord long x;
+		b3_coord      x;
 		b3_pkd_color  bit;
 		b3_u08        set,clr;
 
