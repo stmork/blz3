@@ -36,10 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/13 08:14:29  sm
+**	- Fixed some uninitialized variables.
+**
 **	Revision 1.6  2004/05/13 07:53:26  sm
 **	- Fixed b3File caching problem which occured becaus
 **	  of a variable hiding problem.
-**
+**	
 **	Revision 1.5  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -195,37 +198,37 @@ b3_size b3File::b3Write (
 	if (m_Index > 0)
 	{
 		written = _write (m_File,m_Cache,m_Index);
-	}
-	if (written < (b3_size)m_Index)
-	{
-		b3_index i;
-		b3_size  num;
-
-		// Overwrite written bytes
-		for (i = written;i < m_Index;i++)
+		if (written < (b3_size)m_Index)
 		{
-			m_Cache[i-written] = m_Cache[i];
+			b3_index i;
+			b3_size  num;
+
+			// Overwrite written bytes
+			for (i = written;i < m_Index;i++)
+			{
+				m_Cache[i-written] = m_Cache[i];
+			}
+
+			// Set new write position inside cache
+			m_Index = written;
+
+			// First compute the rest space of the cache. Then
+			// check if buffer_size is lower than rest space.
+			num = m_BufferSize - written;
+			if (buffer_size < num)
+			{
+				num = buffer_size;
+			}
+
+			// Copy as much as possible
+			for (i = 0;i < 0;i++)
+			{
+				m_Cache[m_Index++] = buffer[i];
+			}
+
+			// That's it. The caller must check this condition!
+			return num;
 		}
-
-		// Set new write position inside cache
-		m_Index = written;
-
-		// First compute the rest space of the cache. Then
-		// check if buffer_size is lower than rest space.
-		num = m_BufferSize - written;
-		if (buffer_size < num)
-		{
-			num = buffer_size;
-		}
-
-		// Copy as much as possible
-		for (i = 0;i < 0;i++)
-		{
-			m_Cache[m_Index++] = buffer[i];
-		}
-
-		// That's it. The caller must check this condition!
-		return num;
 	}
 
 	// Write buffer is cachable but cache buffer is too full
@@ -261,24 +264,24 @@ b3_bool b3File::b3Flush ()
 	if (m_Index > 0)
 	{
 		written = _write (m_File,m_Cache,m_Index);
-	}
 
-	// Handle case that not the whole buffer was written
-	if (written < (b3_size)m_Index)
-	{
-		k     = written;
-		size  = m_Index - written;
-
-		// Copy data to front of buffer
-		for (i = 0;i < size;i++)
+		// Handle case that not the whole buffer was written
+		if (written < (b3_size)m_Index)
 		{
-			m_Cache[i] = m_Cache[k++];
+			k     = written;
+			size  = m_Index - written;
+
+			// Copy data to front of buffer
+			for (i = 0;i < size;i++)
+			{
+				m_Cache[i] = m_Cache[k++];
+			}
+			m_Index = size;
 		}
-		m_Index = size;
-	}
-	else
-	{
-		m_Index = 0;
+		else
+		{
+			m_Index = 0;
+		}
 	}
 
 	return m_Index == 0;
