@@ -24,7 +24,7 @@
 
 #include "blz3/base/b3VectorBufferObjects.h"
 
-#define nUSE_VBOS
+#define USE_VBOS
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/11/21 16:44:46  sm
+**	- Corrected fulcrum drawing problem: The fulcrum was
+**	  updated before first initialization. And even the initialization
+**	  was before RenderContext init. So the fulcrum was not
+**	  able to use VBOs and used vertex arrays as fallback.
+**	  The vertex array drawing cannot be combined with
+**	  VBOs due to binding problems. Its likely that any VBO
+**	  is bound so a simple vertex array call should go wrong.
+**
 **	Revision 1.6  2004/11/21 14:56:58  sm
 **	- Merged VBO development into main trunk.
-**
+**	
 **	Revision 1.5  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.

@@ -41,6 +41,7 @@ public:
 
 protected:
 	void     b3GetCount(b3RenderContext *ctx,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeIndices();
 	void     b3ComputeVertices();
 
 	inline void b3GetGridColor(b3Color &color)

@@ -76,6 +76,7 @@ public:
 	        b3_vector *b3GetFulcrum();
 	        b3_vector *b3GetStepMove();
 	        b3_vector *b3GetStepRotate();
+
 	        void       b3DrawFulcrum();
 	        void       b3ToggleRaytrace();
 	        b3_bool    b3IsRaytracing();

@@ -35,13 +35,22 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/11/21 16:44:46  sm
+**	- Corrected fulcrum drawing problem: The fulcrum was
+**	  updated before first initialization. And even the initialization
+**	  was before RenderContext init. So the fulcrum was not
+**	  able to use VBOs and used vertex arrays as fallback.
+**	  The vertex array drawing cannot be combined with
+**	  VBOs due to binding problems. Its likely that any VBO
+**	  is bound so a simple vertex array call should go wrong.
+**
 **	Revision 1.34  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.33  2004/10/12 19:54:19  sm
 **	- Some camera/light resort. We have to draw the
 **	  light just after the camera to ensure a proper
@@ -343,6 +352,7 @@ void CAppRenderView::OnInitialUpdate()
 	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	m_CameraVolume.b3SetupVertexMemory(&pDoc->m_Context);
+	pDoc->m_Fulcrum.b3SetupVertexMemory(&pDoc->m_Context);
 
 	CScrollView::OnInitialUpdate();
 }

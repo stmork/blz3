@@ -31,6 +31,15 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2004/11/21 16:44:46  sm
+**      - Corrected fulcrum drawing problem: The fulcrum was
+**        updated before first initialization. And even the initialization
+**        was before RenderContext init. So the fulcrum was not
+**        able to use VBOs and used vertex arrays as fallback.
+**        The vertex array drawing cannot be combined with
+**        VBOs due to binding problems. Its likely that any VBO
+**        is bound so a simple vertex array call should go wrong.
+**
 **      Revision 1.14  2004/11/21 14:56:57  sm
 **      - Merged VBO development into main trunk.
 **
@@ -150,7 +159,10 @@ b3Fulcrum::b3Fulcrum()
 void b3Fulcrum::b3Update(b3_vector *fulcrum)
 {
 	m_Position = *fulcrum;
-	b3Recompute();
+	if (glVertexElements != null)
+	{
+		b3Recompute();
+	}
 }
 
 void b3Fulcrum::b3GetCount(b3RenderContext *ctx,

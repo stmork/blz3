@@ -31,6 +31,15 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2004/11/21 16:44:46  sm
+**      - Corrected fulcrum drawing problem: The fulcrum was
+**        updated before first initialization. And even the initialization
+**        was before RenderContext init. So the fulcrum was not
+**        able to use VBOs and used vertex arrays as fallback.
+**        The vertex array drawing cannot be combined with
+**        VBOs due to binding problems. Its likely that any VBO
+**        is bound so a simple vertex array call should go wrong.
+**
 **      Revision 1.14  2004/11/21 14:56:56  sm
 **      - Merged VBO development into main trunk.
 **
@@ -118,6 +127,7 @@ b3Color b3CameraVolume::m_GridColor(1.0f,0.1f,0.25f);
 
 b3CameraVolume::b3CameraVolume()
 {
+	m_Camera = null;
 }
 
 void b3CameraVolume::b3Update(b3CameraPart *camera)
