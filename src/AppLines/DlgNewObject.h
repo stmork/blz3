@@ -34,8 +34,9 @@ class CDlgNewObject : public CDialog
 {
 // Construction
 public:
-	b3Shape * m_InsertAfter;
-	b3BBox * m_BBox;
+	b3Shape *m_InsertAfter;
+	b3BBox  *m_BBox;
+	b3Item  *m_NewItem;
 	CDlgNewObject(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

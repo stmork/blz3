@@ -77,16 +77,17 @@ public:
 	void           b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
 	b3_bool        b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
 	void           b3UpdateActivation();
+	b3Item        *b3GetSelectedItem();
 	b3BBox        *b3GetSelectedBBox();
 	b3Shape       *b3GetSelectedShape();
-	void           b3SelectBBox(b3BBox *BBox);
+	HTREEITEM      b3SelectItem(b3Item *item);
 	void           b3GetData();
 	void           b3SetData();
 	LPARAM         b3GetLParam(HTREEITEM item);
 
 private:
 	b3_count       b3GetExpansion (HTREEITEM parent);
-	HTREEITEM      b3FindBBox (HTREEITEM parent,b3BBox *BBox);
+	HTREEITEM      b3FindItem (HTREEITEM parent,b3Item *item);
 	void           b3UpdateIcons(HTREEITEM parent);
 };
 

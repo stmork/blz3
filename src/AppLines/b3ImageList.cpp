@@ -23,7 +23,9 @@
 *************************************************************************/
 
 #include "b3ImageList.h"
-#include "Resource.h"
+#include "DlgShape1.h"
+#include "DlgShape2.h"
+#include "DlgShape3.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,11 +35,21 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.1  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **
 */
 
@@ -129,6 +141,8 @@ b3_u32 CB3ImageList::m_ClassTypes[] =
 	0,
 	0,
 	0,
+
+	// Simple shapes
 	AREA,
 	DISK,
 	SPHERE,
@@ -152,6 +166,43 @@ b3_u32 CB3ImageList::m_ClassTypes[] =
 	CSG_TORUS
 };
 
+b3ItemEditCall CB3ImageList::m_EditCalls[] =
+{
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+
+	// Simple Shapes
+	CDlgShape2::b3Edit,
+	CDlgShape2::b3Edit,
+	CDlgShape1::b3Edit,
+	CDlgShape3::b3Edit,
+	CDlgShape3::b3Edit,
+	CDlgShape3::b3Edit,
+	CDlgShape3::b3Edit,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+
+	// CSG shapes
+	null,
+	null,
+	null,
+	null,
+	null,
+	null
+};
+
 void CB3ImageList::b3Create(b3_res size)
 {
 	int i;
@@ -163,49 +214,26 @@ void CB3ImageList::b3Create(b3_res size)
 		Add(app->LoadIcon(m_ResIcon[i]));
 	}
 }
-	
-long CB3ImageList::b3ComputeImgNum(b3BBox *BBox)
+
+long CB3ImageList::b3ComputeImgNum(b3Item *item)
 {
-	b3BBox *sub;
-	long    imgNum = 0;
+	long imgnum = 0;
 
-	sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
-	if ((sub != null) || (BBox->b3GetShapeHead()->First != null))
+	if (item->b3GetClass() == CLASS_BBOX)
 	{
-		if (sub != null)        imgNum += 1;
-		imgNum += 2;
-		if (BBox->b3IsActive()) imgNum += 5;
-	}
-	return imgNum;
-}
+		b3BBox *BBox = (b3BBox *)item;
+		b3BBox *sub;
 
-long CB3ImageList::b3ComputeImgNum(b3Shape *Shape,CString &text)
-{
-	CString mode;
-	long    imgnum;
-
-	if (Shape->b3GetClass() == CLASS_CSG)
-	{
-		b3CSGShape *csg = (b3CSGShape *)Shape;
-		switch(csg->m_Operation)
+		sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
+		if ((sub != null) || (BBox->b3GetShapeHead()->First != null))
 		{
-		case B3_CSG_UNION:
-			mode.LoadString(IDS_CSG_MODE_UNION);
-			break;
-		case B3_CSG_INTERSECT:
-			mode.LoadString(IDS_CSG_MODE_INTERSECT);
-			break;
-		case B3_CSG_SUB:
-			mode.LoadString(IDS_CSG_MODE_SUB);
-			break;
+			if (sub != null)        imgnum += 1;
+			imgnum += 2;
+			if (BBox->b3IsActive()) imgnum += 5;
 		}
+		return imgnum;
 	}
-	else
-	{
-		mode.LoadString(IDS_CSG_MODE_NONE);
-	}
-
-	switch(Shape->b3GetClassType())
+	else switch(item->b3GetClassType())
 	{
 	case AREA:
 		imgnum = 10;
@@ -270,21 +298,78 @@ long CB3ImageList::b3ComputeImgNum(b3Shape *Shape,CString &text)
 		imgnum = 0;
 		break;
 	}
-
-	text.Format(m_ResString[imgnum],(const char *)mode);
 	return imgnum;
+}
+
+long CB3ImageList::b3ComputeText(b3Item *item,CString &text)
+{
+	CString  mode;
+	b3BBox  *bbox;
+	long     imgnum = b3ComputeImgNum(item);
+
+	switch(item->b3GetClass())
+	{
+	case CLASS_BBOX:
+		bbox = (b3BBox *)item;
+		text = bbox->b3GetName();
+		break;
+
+	case CLASS_SHAPE:
+	case CLASS_CSG:
+		if (item->b3GetClass() == CLASS_CSG)
+		{
+			b3CSGShape *csg = (b3CSGShape *)item;
+			switch(csg->m_Operation)
+			{
+			case B3_CSG_UNION:
+				mode.LoadString(IDS_CSG_MODE_UNION);
+				break;
+			case B3_CSG_INTERSECT:
+				mode.LoadString(IDS_CSG_MODE_INTERSECT);
+				break;
+			case B3_CSG_SUB:
+				mode.LoadString(IDS_CSG_MODE_SUB);
+				break;
+			}
+		}
+		else
+		{
+			mode.LoadString(IDS_CSG_MODE_NONE);
+		}
+
+		text.Format(m_ResString[imgnum],(const char *)mode);
+		break;
+	}
+	return imgnum;
+}
+
+b3ItemEditCall CB3ImageList::b3GetEditCall(b3Item *item)
+{
+	b3_u32 ClassType = item->b3GetClassType();
+	int    i;
+
+	for (i = 0;i < (sizeof(m_ClassTypes) / sizeof(b3_u32));i++)
+	{
+		if (m_ClassTypes[i] == ClassType)
+		{
+			return m_EditCalls[i];
+		}
+	}
+	return null;
 }
 
 void CB3ImageList::b3InsertListEntries(
 	CListCtrl *list_ctrl,
-	b3_u32     shape_class)
+	b3_u32     shape_class,
+	b3_u32     select_class_type)
 {
 	LVITEM  item;
 	CString text;
 	int     i;
 
 	memset(&item,0,sizeof(item));
-	item.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
+	item.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
+	item.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
 	for (i = 0;i < (sizeof(m_ClassTypes) / sizeof(b3_u32));i++)
 	{
 		if ((m_ClassTypes[i] & 0xffff0000) == shape_class)
@@ -293,6 +378,7 @@ void CB3ImageList::b3InsertListEntries(
 
 			item.iImage  = i;
 			item.lParam  = m_ClassTypes[i];
+			item.state   = (m_ClassTypes[i] == select_class_type ? item.stateMask : 0);
 			item.pszText = (char *)((const char *)text);
 			list_ctrl->InsertItem(&item);
 		}

@@ -32,11 +32,21 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.22  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
 **	- renamed classes appropriate.
-**
+**	
 **	Revision 1.21  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -166,6 +176,12 @@
 
 b3Torus::b3Torus(b3_u32 class_type) : b3SimpleShape(sizeof(b3Torus), class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0,10);
+	m_aRad = 1;
+	m_bRad = 1;
 }
 
 b3Torus::b3Torus(b3_u32 *src) : b3SimpleShape(src)

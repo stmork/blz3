@@ -70,6 +70,16 @@ public:
 protected:
 	//{{AFX_MSG(CAppObjectDoc)
 	afx_msg void OnObjectNew();
+	afx_msg void OnAllActivate();
+	afx_msg void OnAllDeactivate();
+	afx_msg void OnAllDeactivateRest();
+	afx_msg void OnDeactivateRest();
+	afx_msg void OnActivate();
+	afx_msg void OnDeactivate();
+	afx_msg void OnUpdateSelectedItem(CCmdUI* pCmdUI);
+	afx_msg void OnObjectDelete();
+	afx_msg void OnObjectEdit();
+	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -92,6 +102,7 @@ public:
 
 private:
 	void    b3SetBBox(b3BBox *bbox);
+	void    b3ActivateItem(b3Item *item,b3_bool activate=true);
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -57,9 +57,19 @@
 
 /*
 **	$Log$
+**	Revision 1.61  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.60  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
-**
+**	
 **	Revision 1.59  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
@@ -1120,7 +1130,7 @@ void CAppLinesDoc::OnActivate()
 		m_DlgHierarchy->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
-			m_DlgHierarchy->b3SelectBBox((b3BBox *)BBox->Succ);
+			m_DlgHierarchy->b3SelectItem(BBox->Succ);
 		}
 
 		SetModifiedFlag();
@@ -1139,7 +1149,7 @@ void CAppLinesDoc::OnDeactivate()
 		m_DlgHierarchy->b3UpdateActivation();
 		if (BBox->Succ != null)
 		{
-			m_DlgHierarchy->b3SelectBBox((b3BBox *)BBox->Succ);
+			m_DlgHierarchy->b3SelectItem(BBox->Succ);
 		}
 		
 		SetModifiedFlag();
@@ -1334,7 +1344,7 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		m_DlgHierarchy->b3InitTree(this,true);
-		m_DlgHierarchy->b3SelectBBox(bbox);
+		m_DlgHierarchy->b3SelectItem(bbox);
 	}
 }
 
@@ -1355,13 +1365,13 @@ void CAppLinesDoc::OnObjectDelete()
 	// TODO: Add your command handler code here
 	CMainFrame     *main    = CB3GetMainFrame();
 	b3Base<b3Item> *base;
-	b3BBox         *select;
+	b3Item         *select;
 	b3BBox         *selected;
 
 	if (AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO) == IDYES)
 	{
 		selected = m_DlgHierarchy->b3GetSelectedBBox();
-		select   = (b3BBox *)(selected->Succ != null ? selected->Succ : selected->Prev);
+		select   = (selected->Succ != null ? selected->Succ : selected->Prev);
 		B3_ASSERT(selected != null);
 		base = m_Scene->b3FindBBoxHead(selected);
 
@@ -1376,7 +1386,7 @@ void CAppLinesDoc::OnObjectDelete()
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		m_DlgHierarchy->b3InitTree(this,true);
-		m_DlgHierarchy->b3SelectBBox(select);
+		m_DlgHierarchy->b3SelectItem(select);
 	}
 }
 
@@ -1440,7 +1450,7 @@ void CAppLinesDoc::OnEditCut()
 {
 	// TODO: Add your command handler code here
 	b3BBox         *bbox = m_DlgHierarchy->b3GetSelectedBBox();
-	b3BBox         *select;
+	b3Item         *select;
 	b3Item         *prev;
 	b3Base<b3Item> *base;
 
@@ -1449,7 +1459,7 @@ void CAppLinesDoc::OnEditCut()
 	{
 		base   = m_Scene->b3FindBBoxHead(bbox);
 		prev   = bbox->Prev;
-		select = (b3BBox *)(bbox->Succ != null ? bbox->Succ : bbox->Prev);
+		select = (bbox->Succ != null ? bbox->Succ : bbox->Prev);
 		m_Scene->b3BacktraceRecompute(bbox);
 		base->b3Remove(bbox);
 		if(!b3PutClipboard(bbox))
@@ -1465,7 +1475,7 @@ void CAppLinesDoc::OnEditCut()
 			SetModifiedFlag();
 			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 			m_DlgHierarchy->b3InitTree(this,true);
-			m_DlgHierarchy->b3SelectBBox(select);
+			m_DlgHierarchy->b3SelectItem(select);
 		}
 	}
 }
@@ -1553,7 +1563,7 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 					SetModifiedFlag();
 					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 					m_DlgHierarchy->b3InitTree(this,true);
-					m_DlgHierarchy->b3SelectBBox(bbox);
+					m_DlgHierarchy->b3SelectItem(bbox);
 				}
 			}
 			catch(b3FileException *f)
@@ -1654,7 +1664,7 @@ void CAppLinesDoc::OnObjectLoad()
 				SetModifiedFlag();
 				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 				m_DlgHierarchy->b3InitTree(this,true);
-				m_DlgHierarchy->b3SelectBBox(bbox);
+				m_DlgHierarchy->b3SelectItem(bbox);
 			}
 		}
 		catch(b3FileException *f)
@@ -1804,7 +1814,7 @@ void CAppLinesDoc::OnObjectReplace()
 				SetModifiedFlag();
 				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 				m_DlgHierarchy->b3InitTree(this,true);
-				m_DlgHierarchy->b3SelectBBox(bbox);
+				m_DlgHierarchy->b3SelectItem(bbox);
 			}
 		}
 		catch(b3FileException *f)

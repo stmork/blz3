@@ -33,11 +33,21 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.1  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **
 */
 
@@ -62,6 +72,7 @@ CDlgNewObject::CDlgNewObject(CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	m_BBox = null;
 	m_InsertAfter = null;
+	m_NewItem = null;
 }
 
 
@@ -87,6 +98,8 @@ END_MESSAGE_MAP()
 BOOL CDlgNewObject::OnInitDialog() 
 {
 	b3Base<b3Item> *ShapeBase;
+	CWinApp        *app = AfxGetApp();
+	b3_u32          ClassType = 0;
 
 	CDialog::OnInitDialog();
 	m_ImageList.b3Create(64);
@@ -95,34 +108,42 @@ BOOL CDlgNewObject::OnInitDialog()
 	B3_ASSERT(m_BBox != null);
 
 	m_ListCtrl.SetImageList(&m_ImageList,LVSIL_NORMAL);
-	m_ListCtrl.SetIconSpacing(96,96);
-	if (m_InsertAfter == null)
-	{
-		// Add BBox
-		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_BBOX);
-	}
+	m_ListCtrl.SetIconSpacing(128,96);
+
 	ShapeBase = m_BBox->b3GetShapeHead();
 	if (ShapeBase->First == null)
 	{
-		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_SHAPE);
-		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_CSG);
+		ClassType = app->GetProfileInt(CB3ClientString(),"new item.all shapes",SPHERE);
+		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_SHAPE,ClassType);
+		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_CSG,  ClassType);
+		m_ModeCSG = app->GetProfileInt(CB3ClientString(),"new item.csg mode",0);
 	}
 	else
 	{
 		switch(ShapeBase->b3GetClass())
 		{
 		case CLASS_SHAPE:
-			m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_SHAPE);
+			ClassType = app->GetProfileInt(CB3ClientString(),"new item.simple shape",SPHERE);
+			m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_SHAPE,ClassType);
 			break;
 		case CLASS_CSG:
-			m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_CSG);
+			m_ModeCSG = app->GetProfileInt(CB3ClientString(),"new item.csg mode",0);
+			ClassType = app->GetProfileInt(CB3ClientString(),"new item.csg shape",CSG_SPHERE);
+			m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_CSG,ClassType);
 			break;
 
 		default:
+			ClassType = 0;
 			b3PrintF(B3LOG_NORMAL,"Unknown shape class: %08x\n",
 				ShapeBase->b3GetClass());
 			return FALSE;
 		}
+	}
+
+	// Add BBox
+	if (m_InsertAfter == null)
+	{
+		m_ImageList.b3InsertListEntries(&m_ListCtrl,CLASS_BBOX,ClassType);
 	}
 	b3UpdateUI();
 
@@ -172,6 +193,7 @@ void CDlgNewObject::OnOK()
 	b3SimpleShape  *shape;
 	b3CSGShape     *csg;
 	CDlgCreateItem  dlg;
+	CWinApp        *app = AfxGetApp();
 
 	CDialog::OnOK();
 	ClassType = b3GetSelectedClassType();
@@ -184,6 +206,7 @@ void CDlgNewObject::OnOK()
 		// If shape list of BBox is empty we can init
 		// with the selected shape class.
 		shapes->b3InitBase(Class);
+		app->WriteProfileInt(CB3ClientString(),"new item.all shapes",ClassType);
 	}
 
 	// Create object and append into parent BBox
@@ -197,21 +220,35 @@ void CDlgNewObject::OnOK()
 		dlg.m_Suggest.LoadString(IDS_NEW_OBJECT);
 		if (dlg.DoModal() == IDOK)
 		{
-			bbox = new b3BBox(BBOX | ((m_BBox->b3GetClassType() & 0xffff) + 1));
+			m_NewItem = b3World::b3AllocNode(BBOX | ((m_BBox->b3GetClassType() & 0xffff) + 1));
+			bbox = (b3BBox *)m_NewItem;
 			strcpy (bbox->m_BoxName,dlg.m_NewName);
 			bboxes->b3Append(bbox);
+		}
+		else
+		{
+			m_NewItem = null;
 		}
 		break;
 
 	case CLASS_SHAPE:
-		shape = (b3SimpleShape *)b3World::b3AllocNode(ClassType);
+		m_NewItem = b3World::b3AllocNode(ClassType);
+		shape = (b3SimpleShape *)m_NewItem;
 		shapes->b3Insert(m_InsertAfter,shape);
+		app->WriteProfileInt(CB3ClientString(),"new item.simple shape",ClassType);
 		break;
 
 	case CLASS_CSG:
-		csg = (b3CSGShape *)b3World::b3AllocNode(ClassType);
+		m_NewItem = b3World::b3AllocNode(ClassType);
+		csg = (b3CSGShape *)m_NewItem;
 		csg->m_Operation = csg_modes[m_ModeCSG];
 		shapes->b3Insert(m_InsertAfter,csg);
+		app->WriteProfileInt(CB3ClientString(),"new item.csg mode",m_ModeCSG);
+		app->WriteProfileInt(CB3ClientString(),"new item.csg shape",ClassType);
+		break;
+
+	default:
+		m_NewItem = null;
 		break;
 	}
 }

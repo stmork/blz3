@@ -32,6 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2002/02/23 22:02:49  sm
+**      - Added shape/object edit.
+**      - Added shape/object deletion.
+**      - Added (de-)activation even for shapes.
+**      - Added create/change dialogs for following shapes:
+**        o sphere
+**        o area, disk
+**        o cylinder, cone, ellipsoid, box
+**      - Changed hierarchy to reflect these changes.
+**
 **      Revision 1.15  2002/02/19 16:26:49  sm
 **      - Further CSG interval computing cleanup done.
 **
@@ -114,6 +124,8 @@
 
 b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGSphere), class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir,50);
 }
 
 b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3CSGShape(src)

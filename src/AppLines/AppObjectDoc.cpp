@@ -38,11 +38,21 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.12  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.11  2002/02/01 17:22:44  sm
 **	- Added icons for shapes
 **	- Added shape support for hierarchy when shape editing
@@ -102,6 +112,21 @@ IMPLEMENT_DYNCREATE(CAppObjectDoc, CAppRenderDoc)
 BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	//{{AFX_MSG_MAP(CAppObjectDoc)
 	ON_COMMAND(ID_OBJECT_NEW, OnObjectNew)
+	ON_COMMAND(ID_ALL_ACTIVATE, OnAllActivate)
+	ON_COMMAND(ID_ALL_DEACTIVATE, OnAllDeactivate)
+	ON_COMMAND(ID_ALL_DEACTIVATE_REST, OnAllDeactivateRest)
+	ON_COMMAND(ID_DEACTIVATE_REST, OnDeactivateRest)
+	ON_COMMAND(ID_ACTIVATE, OnActivate)
+	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedItem)
+	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
+	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
+	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
+	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
+	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
+	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateObjectEdit)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -199,7 +224,7 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 
 	UpdateAllViews(NULL,B3_UPDATE_ALL|B3_UPDATE_OBJECT);
 	m_DlgHierarchy->b3InitTree(this,true);
-	m_DlgHierarchy->b3SelectBBox(m_BBox);
+	m_DlgHierarchy->b3SelectItem(m_BBox);
 }
 
 BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
@@ -421,29 +446,268 @@ b3_bool CAppObjectDoc::b3IsObjectAlreadyOpen(
 	return is_open;
 }
 
+void CAppObjectDoc::OnUpdateSelectedItem(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_DlgHierarchy->b3GetSelectedItem() != null);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Object maintainance                           **
+**                                                                      **
+*************************************************************************/
+
+void CAppObjectDoc::OnObjectEdit() 
+{
+	// TODO: Add your command handler code here
+	b3Item         *selected = m_DlgHierarchy->b3GetSelectedItem();
+	b3ItemEditCall  call;
+
+	if (selected != null)
+	{
+		call = CB3ImageList::b3GetEditCall(selected);
+		if (call != null)
+		{
+			if (call(selected,false) == IDOK)
+			{
+				SetModifiedFlag();
+				UpdateAllViews(null,B3_UPDATE_GEOMETRY);
+			}
+		}
+	}
+}
+
 void CAppObjectDoc::OnObjectNew() 
 {
 	// TODO: Add your command handler code here
-	b3BBox        *bbox;
-	b3Shape       *shape;
-	CDlgNewObject  dlg;
+	b3BBox         *bbox;
+	b3Shape        *shape;
+	b3ItemEditCall  call;
+	CDlgNewObject   dlg;
+	int             result;
 
 	shape = m_DlgHierarchy->b3GetSelectedShape();
 	bbox  = (shape != null ?
 		m_BBox->b3FindParentBBox(shape) :
 		m_DlgHierarchy->b3GetSelectedBBox());
-	dlg.m_InsertAfter = shape;
-	dlg.m_BBox = bbox;
-	if (dlg.DoModal() == IDOK)
+	if (bbox != null)
 	{
-		m_DlgHierarchy->b3GetData();
-		m_BBox->b3Prepare();
-		m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
-		m_BBox->b3BacktraceRecompute(bbox);
-		b3ComputeBounds();
+		dlg.m_InsertAfter = shape;
+		dlg.m_BBox = bbox;
+		if (dlg.DoModal() == IDOK)
+		{
+			// Open edit dialog if available
+			call   = CB3ImageList::b3GetEditCall(dlg.m_NewItem);
+			result = (call != null ? call(dlg.m_NewItem,false) : IDOK);
+
+			// Init data
+			m_DlgHierarchy->b3GetData();
+			m_BBox->b3Prepare();
+			m_BBox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+			m_BBox->b3BacktraceRecompute(bbox);
+			b3ComputeBounds();
+
+			SetModifiedFlag();
+			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			m_DlgHierarchy->b3InitTree(this,true);
+			m_DlgHierarchy->b3SelectItem(dlg.m_NewItem);
+		}
+	}
+}
+
+void CAppObjectDoc::OnObjectDelete() 
+{
+	// TODO: Add your command handler code here
+	CMainFrame     *main    = CB3GetMainFrame();
+	b3Base<b3Item> *base;
+	b3BBox         *parent;
+	b3Item         *select;
+	b3Item         *selected;
+	int             answere;
+
+	selected = m_DlgHierarchy->b3GetSelectedItem();
+	if (selected != null)
+	{
+		// Security question depending on item type
+		switch(selected->b3GetClass())
+		{
+		case CLASS_BBOX:
+			answere = AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO);
+			base    = m_BBox->b3FindBBoxHead((b3BBox *)selected);
+			m_BBox->b3BacktraceRecompute((b3BBox *)selected);
+			break;
+
+		case CLASS_SHAPE:
+		case CLASS_CSG:
+			answere = AfxMessageBox(IDS_ASK_DELETE_SHAPE,MB_ICONQUESTION|MB_YESNO);
+			parent  = m_BBox->b3FindParentBBox((b3Shape *)selected);
+			base    = parent->b3GetShapeHead();
+			m_BBox->b3BacktraceRecompute(parent);
+			break;
+
+		default:
+			answere = IDCANCEL;
+			base    = null;
+			break;
+		}
+
+		// If the user really wants to delete item...
+		if(answere == IDYES)
+		{
+			B3_ASSERT(base != null);
+			select   = (selected->Succ != null ? selected->Succ : selected->Prev);
+
+			main->b3SetStatusMessage(IDS_DOC_BOUND);
+			base->b3Remove(selected);
+			delete selected;
+
+			main->b3SetStatusMessage(IDS_DOC_BOUND);
+			b3ComputeBounds();
+
+			SetModifiedFlag();
+			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+			m_DlgHierarchy->b3InitTree(this,true);
+			m_DlgHierarchy->b3SelectItem(select);
+		}
+	}
+}
+
+void CAppObjectDoc::OnUpdateObjectEdit(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Item *selected = m_DlgHierarchy->b3GetSelectedItem();
+	b3ItemEditCall  call = null;
+
+	if (selected != null)
+	{
+		call = CB3ImageList::b3GetEditCall(selected);
+	}
+	pCmdUI->Enable(call != null);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Object activation                             **
+**                                                                      **
+*************************************************************************/
+
+void CAppObjectDoc::b3ActivateItem(
+	b3Item  *item,
+	b3_bool  activate)
+{
+	b3BBox  *bbox;
+	b3Shape *shape;
+
+	switch (item->b3GetClass())
+	{
+	case CLASS_BBOX:
+		bbox = (b3BBox *)item;
+		bbox->b3Activate(activate);
+		break;
+	case CLASS_SHAPE:
+	case CLASS_CSG:
+		shape = (b3Shape *)item;
+		shape->b3Activate(activate);
+		break;
+	}
+}
+
+void CAppObjectDoc::OnAllActivate() 
+{
+	// TODO: Add your command handler code here
+	m_BBox->b3Activate();
+	m_DlgHierarchy->b3UpdateActivation();
+
+	SetModifiedFlag();
+	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppObjectDoc::OnAllDeactivate() 
+{
+	// TODO: Add your command handler code here
+	m_BBox->b3Activate(false);
+	m_DlgHierarchy->b3UpdateActivation();
+
+	SetModifiedFlag();
+	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppObjectDoc::OnAllDeactivateRest() 
+{
+	// TODO: Add your command handler code here
+	b3Item *item;
+
+	m_BBox->b3Activate(false);
+	item = m_DlgHierarchy->b3GetSelectedItem();
+	if (item != null)
+	{
+		b3ActivateItem(item);
+	}
+	m_DlgHierarchy->b3UpdateActivation();
+
+	SetModifiedFlag();
+	UpdateAllViews(null,B3_UPDATE_VIEW);
+}
+
+void CAppObjectDoc::OnDeactivateRest() 
+{
+	// TODO: Add your command handler code here
+	b3Item *item = m_DlgHierarchy->b3GetSelectedItem();
+	b3Item *aux;
+
+	if (item != null)
+	{
+		b3ActivateItem(item);
+		for (aux = item->Prev;aux != null;aux = aux->Prev)
+		{
+			b3ActivateItem(item,false);
+		}
+		for (aux = item->Succ;aux != null;aux = aux->Succ)
+		{
+			b3ActivateItem(item,false);
+		}
+		m_DlgHierarchy->b3UpdateActivation();
 
 		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		m_DlgHierarchy->b3InitTree(this,true);
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
+}
+
+void CAppObjectDoc::OnActivate() 
+{
+	// TODO: Add your command handler code here
+	b3Item *item = m_DlgHierarchy->b3GetSelectedItem();
+
+	if (item != null)
+	{
+		b3ActivateItem(item);
+		m_DlgHierarchy->b3UpdateActivation();
+		if (item->Succ != null)
+		{
+			m_DlgHierarchy->b3SelectItem(item->Succ);
+		}
+
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
+	}
+}
+
+void CAppObjectDoc::OnDeactivate() 
+{
+	// TODO: Add your command handler code here
+	b3Item *item = m_DlgHierarchy->b3GetSelectedItem();
+
+	if (item != null)
+	{
+		b3ActivateItem(item,false);
+		m_DlgHierarchy->b3UpdateActivation();
+		if (item->Succ != null)
+		{
+			m_DlgHierarchy->b3SelectItem(item->Succ);
+		}
+
+		SetModifiedFlag();
+		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}
 }

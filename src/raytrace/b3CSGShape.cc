@@ -32,6 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2002/02/23 22:02:49  sm
+**      - Added shape/object edit.
+**      - Added shape/object deletion.
+**      - Added (de-)activation even for shapes.
+**      - Added create/change dialogs for following shapes:
+**        o sphere
+**        o area, disk
+**        o cylinder, cone, ellipsoid, box
+**      - Changed hierarchy to reflect these changes.
+**
 **      Revision 1.4  2002/02/19 16:26:49  sm
 **      - Further CSG interval computing cleanup done.
 **
@@ -60,10 +70,12 @@
 
 b3CSGShape::b3CSGShape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
 {
+	m_Operation = B3_CSG_UNION;
 }
 
 b3CSGShape::b3CSGShape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3CSGShape), class_type)
 {
+	m_Operation = B3_CSG_UNION;
 }
 
 b3CSGShape::b3CSGShape(b3_u32 *src) : b3ShapeRenderObject(src)
@@ -162,10 +174,18 @@ b3_count b3CSGShape::b3GetMaxIntersections()
 
 b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3CSGShape(class_size, class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0,50);
 }
 
 b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGShape3), class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0,50);
 }
 
 b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3CSGShape(src)

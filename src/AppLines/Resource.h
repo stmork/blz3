@@ -59,7 +59,6 @@
 #define IDM_BAR_STEP_ROTATE             159
 #define IDR_CONTEXT_SCENE               166
 #define IDI_SHAPE_CYLINDER              167
-#define IDR_CONTEXT_SCENE1              167
 #define IDR_CONTEXT_OBJECT              167
 #define IDI_SHAPE_SPHERE                168
 #define IDI_SHAPE_CONE                  169
@@ -84,7 +83,10 @@
 #define IDI_CSG_SPHERE                  185
 #define IDI_CSGMODE_INTERSECT           186
 #define IDI_CSGMODE_SUB                 187
+#define IDD_SHAPE3                      187
 #define IDI_CSGMODE_UNION               188
+#define IDD_SHAPE1                      188
+#define IDD_SHAPE2                      189
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002
@@ -244,6 +246,23 @@
 #define IDC_CSGMODE_UNION               1117
 #define IDC_CSGMODE_INTERSECT           1118
 #define IDC_CSGMODE_SUB                 1119
+#define IDC_DIRECTION                   3000
+#define IDC_POSITION                    3001
+#define IDC_BASE_X                      3002
+#define IDC_BASE_Y                      3003
+#define IDC_BASE_Z                      3004
+#define IDC_DIR1_X                      3005
+#define IDC_DIR1_Y                      3006
+#define IDC_DIR1_Z                      3007
+#define IDC_DIR2_X                      3008
+#define IDC_DIR2_Y                      3009
+#define IDC_DIR2_Z                      3010
+#define IDC_DIR3_X                      3011
+#define IDC_DIR3_Y                      3012
+#define IDC_DIR3_Z                      3013
+#define IDC_DIR1_LEN                    3016
+#define IDC_DIR2_LEN                    3017
+#define IDC_DIR3_LEN                    3018
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -406,13 +425,14 @@
 #define IDS_CSG_MODE_INTERSECT          61513
 #define IDS_CSG_MODE_SUB                61514
 #define IDS_BBOX                        61515
+#define IDS_ASK_DELETE_SHAPE            61516
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        187
+#define _APS_NEXT_RESOURCE_VALUE        188
 #define _APS_NEXT_COMMAND_VALUE         32867
 #define _APS_NEXT_CONTROL_VALUE         1118
 #define _APS_NEXT_SYMED_VALUE           102

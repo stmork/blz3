@@ -34,11 +34,21 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/23 22:02:49  sm
+**	- Added shape/object edit.
+**	- Added shape/object deletion.
+**	- Added (de-)activation even for shapes.
+**	- Added create/change dialogs for following shapes:
+**	  o sphere
+**	  o area, disk
+**	  o cylinder, cone, ellipsoid, box
+**	- Changed hierarchy to reflect these changes.
+**
 **	Revision 1.18  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
 **	- Created new class for image list maintainance.
-**
+**	
 **	Revision 1.17  2002/02/18 17:50:31  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -220,9 +230,9 @@ void CDlgHierarchy::b3AddBBoxes (
 		{
 			B3_FOR_BASE(BBox->b3GetShapeHead(),item)
 			{
-				shape = (b3Shape     *)item;
+				shape = (b3Shape *)item;
 
-				imgNum = CB3ImageList::b3ComputeImgNum(shape,shape_title);
+				imgNum = CB3ImageList::b3ComputeText(shape,shape_title);
 				insert.hParent      = new_treeitem;
 				insert.hInsertAfter = TVI_LAST;
 				insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
@@ -284,7 +294,7 @@ void CDlgHierarchy::b3UpdateIcons(HTREEITEM parent)
 	    item != NULL;
 		item  = m_Hierarchy.GetNextItem(item,TVGN_NEXT))
 	{
-		imgnum = CB3ImageList::b3ComputeImgNum((b3BBox *)m_Hierarchy.GetItemData(item));
+		imgnum = CB3ImageList::b3ComputeImgNum((b3Item *)m_Hierarchy.GetItemData(item));
 		info.hItem          = item;
 		info.iImage         = imgnum;
 		info.iSelectedImage = imgnum;
@@ -304,9 +314,9 @@ void CDlgHierarchy::b3UpdateActivation()
 	}
 }
 
-HTREEITEM CDlgHierarchy::b3FindBBox (HTREEITEM parent,b3BBox *BBox)
+HTREEITEM CDlgHierarchy::b3FindItem(HTREEITEM parent,b3Item *item)
 {
-	return m_Hierarchy.b3FindLParam(parent,(LPARAM)BBox);
+	return m_Hierarchy.b3FindLParam(parent,(LPARAM)item);
 }
 
 b3_count CDlgHierarchy::b3GetExpansion(HTREEITEM parent)
@@ -364,15 +374,28 @@ void CDlgHierarchy::b3SetData()
 {
 }
 
-void CDlgHierarchy::b3SelectBBox(b3BBox *BBox)
+HTREEITEM CDlgHierarchy::b3SelectItem(b3Item *item)
 {
-	HTREEITEM item;
+	HTREEITEM treeitem;
 
-	item = b3FindBBox(m_Hierarchy.GetRootItem(),BBox);
-	if (item != null)
+	treeitem = b3FindItem(m_Hierarchy.GetRootItem(),item);
+	if (treeitem != null)
 	{
-		m_Hierarchy.SelectItem(item);
+		m_Hierarchy.SelectItem(treeitem);
 	}
+	return treeitem;
+}
+
+b3Item *CDlgHierarchy::b3GetSelectedItem()
+{
+	HTREEITEM  treeitem = m_Hierarchy.GetSelectedItem();
+	b3Item    *item = null;
+
+	if (treeitem != NULL)
+	{
+		item = (b3Item *)m_Hierarchy.GetItemData(treeitem);
+	}
+	return item;
 }
 
 b3BBox *CDlgHierarchy::b3GetSelectedBBox()

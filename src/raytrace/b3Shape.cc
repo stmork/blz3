@@ -32,6 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2002/02/23 22:02:49  sm
+**      - Added shape/object edit.
+**      - Added shape/object deletion.
+**      - Added (de-)activation even for shapes.
+**      - Added create/change dialogs for following shapes:
+**        o sphere
+**        o area, disk
+**        o cylinder, cone, ellipsoid, box
+**      - Changed hierarchy to reflect these changes.
+**
 **      Revision 1.39  2002/02/22 20:18:09  sm
 **      - Added shape/bbox creation in object editor. So bigger
 **        icons (64x64) for shape selection are created.
@@ -505,28 +515,16 @@ b3_bool b3SimpleShape::b3CheckStencil(b3_polar_precompute *polar)
 
 b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
-	m_Base.x =  0;
-	m_Base.y =  0;
-	m_Base.z =  0;
-	m_Dir1.x = 50;
-	m_Dir1.y =  0;
-	m_Dir1.z =  0;
-	m_Dir2.x =  0;
-	m_Dir2.y = 50;
-	m_Dir2.z =  0;
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
 }
 
 b3Shape2::b3Shape2(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape2), class_type)
 {
-	m_Base.x =  0;
-	m_Base.y =  0;
-	m_Base.z =  0;
-	m_Dir1.x = 50;
-	m_Dir1.y =  0;
-	m_Dir1.z =  0;
-	m_Dir2.x =  0;
-	m_Dir2.y = 50;
-	m_Dir2.z =  0;
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
 }
 
 b3Shape2::b3Shape2(b3_u32 *src) : b3SimpleShape(src)
@@ -564,10 +562,18 @@ void b3Shape2::b3Transform(b3_matrix *transformation)
 
 b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3SimpleShape(class_size, class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0,50);
 }
 
 b3Shape3::b3Shape3(b3_u32 class_type) : b3SimpleShape(sizeof(b3Shape3), class_type)
 {
+	b3Vector::b3Init(&m_Base);
+	b3Vector::b3Init(&m_Dir1,50, 0, 0);
+	b3Vector::b3Init(&m_Dir2, 0,50, 0);
+	b3Vector::b3Init(&m_Dir3, 0, 0,50);
 }
 
 b3Shape3::b3Shape3(b3_u32 *src) : b3SimpleShape(src)

@@ -188,6 +188,10 @@ SOURCE=.\b3SelectTexture.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ShapeDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ShowRaytrace.cpp
 # End Source File
 # Begin Source File
@@ -257,6 +261,18 @@ SOURCE=.\DlgScene.cpp
 # Begin Source File
 
 SOURCE=.\DlgSearchPathList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape1.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape3.cpp
 # End Source File
 # Begin Source File
 
@@ -356,6 +372,10 @@ SOURCE=.\b3SelectTexture.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ShapeDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3ShowRaytrace.h
 # End Source File
 # Begin Source File
@@ -429,6 +449,18 @@ SOURCE=.\DlgScene.h
 # Begin Source File
 
 SOURCE=.\DlgSearchPathList.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape2.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgShape3.h
 # End Source File
 # Begin Source File
 
