@@ -37,6 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.9  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -44,7 +50,7 @@
 **	- Added some additional b3Hash methods.
 **	- Added -Wall compiler option to all C++ files.
 **	- Removed some compiler warnings.
-**
+**	
 **	Revision 1.8  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
 **	
@@ -104,7 +110,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	if (buffer_size < 4)
 	{
 		b3FreeTx();
-		throw new b3TxException(B3_TX_ERR_HEADER);
+		throw b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	// schon mal irgend ein IFF
@@ -118,7 +124,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case IFF_YUVN : return b3ParseIFF_YUVN(buffer,buffer_size);
 			default :
 				b3FreeTx();
-				throw new b3TxException(B3_TX_ERR_HEADER);
+				throw b3TxException(B3_TX_ERR_HEADER);
 		}
 	}
 
@@ -205,7 +211,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 3 :
 			default :
 				b3FreeTx();
-				throw new b3TxException(B3_TX_UNSUPP);
+				throw b3TxException(B3_TX_UNSUPP);
 		}
 	}
 
@@ -285,14 +291,14 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 			case 1 	: return b3ParsePCX4(buffer);
 			default :
 				b3FreeTx();
-				throw new b3TxException(B3_TX_UNSUPP);
+				throw b3TxException(B3_TX_UNSUPP);
 		}
 	}
 
 
 	// really unknown
 	b3FreeTx();
-	throw new b3TxException(B3_TX_UNSUPP);
+	throw b3TxException(B3_TX_UNSUPP);
 }
 
 b3_result b3Tx::b3LoadImage(const char *name)
@@ -310,15 +316,15 @@ b3_result b3Tx::b3LoadImage(const char *name)
 		b3Name(name);
 		error_code = B3_OK;
 	}
-	catch (b3FileException *e)
+	catch (b3FileException &e)
 	{
-		b3PrintF(B3LOG_NORMAL,"Error loading %s (error code: %d)\n",
-			name,e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Error loading %s (%s)\n",
+			name,e.b3GetErrorMsg());
 	}
-	catch(b3TxException *e)
+	catch(b3TxException &e)
 	{
-		b3PrintF(B3LOG_NORMAL,"Error parsing %s (error code: %d)\n",
-			name,e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Error parsing %s (%s)\n",
+			name,e.b3GetErrorMsg());
 	}
 	catch(...)
 	{

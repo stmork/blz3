@@ -36,10 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.21  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
-**
+**	
 **	Revision 1.20  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -627,7 +633,7 @@ void b3Tx::b3Copy(b3Tx *srcTx)
 	else
 	{
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Tx # b3Copy(): NOT ENOUGH MEMORY!\n");
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 
 	xDPI        = srcTx->xDPI;

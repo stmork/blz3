@@ -55,12 +55,12 @@
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_seek_type
 {
 	B3_SEEK_START = 0,
 	B3_SEEK_CURRENT,
 	B3_SEEK_END
-} b3_seek_type;
+};
 
 /*************************************************************************
 **                                                                      **
@@ -68,7 +68,7 @@ typedef enum
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_access_mode
 {
 	B_READ   = 0x6272,
 	T_READ   = 0x7472,
@@ -76,7 +76,7 @@ typedef enum
 	T_WRITE  = 0x7477,
 	B_APPEND = 0x6261,
 	T_APPEND = 0x7461
-} b3_access_mode;
+};
 
 /*************************************************************************
 **                                                                      **
@@ -84,7 +84,7 @@ typedef enum
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_file_error
 {
 	B3_FILE_ERROR = -1,
 	B3_FILE_OK    =  0,
@@ -93,7 +93,7 @@ typedef enum
 	B3_FILE_NOT_WRITTEN,
 	B3_FILE_MEMORY,
 	B3_FILE_NOT_OPEN
-} b3_file_error;
+};
 
 typedef b3Exception<b3_file_error,'FIL'> b3FileException;
 

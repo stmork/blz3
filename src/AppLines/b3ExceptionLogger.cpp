@@ -36,10 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/09 13:20:18  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.3  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
-**
+**	
 **	Revision 1.2  2002/08/07 17:25:01  sm
 **	- Added new error messages
 **	- Changed exception handling a little bit
@@ -61,7 +67,7 @@ static CString                        LocalMessageString;
 static b3HashMap<b3_errno,UINT>       LocalMessageMap;
 static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 {
-	{ B3_MK_ERRNO(B3_TX_MEMORY,                     'TX'),  IDS_ERR_MEMORY },
+	{ B3_MK_ERRNO(B3_MEM_MEMORY,                    'MEM'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_WORLD_OPEN,                    'BLZ'), IDS_ERR_OPEN },
 	{ B3_MK_ERRNO(B3_WORLD_READ,                    'BLZ'), IDS_ERR_READ },
 	{ B3_MK_ERRNO(B3_WORLD_MEMORY,                  'BLZ'), IDS_ERR_MEMORY },
@@ -70,6 +76,7 @@ static b3HashContainer<b3_errno,UINT> LocalMessages[] =
 	{ B3_MK_ERRNO(B3_WORLD_STORAGE_NOT_IMPLEMENTED, 'BLZ'), IDS_ERR_STORAGE },
 	{ B3_MK_ERRNO(B3_WORLD_OUT_OF_ORDER,            'BLZ'), IDS_ERR_ORDER },
 	{ B3_MK_ERRNO(B3_WORLD_CLASSTYPE_UNKNOWN,       'BLZ'), IDS_ERR_CLASSTYPE_UNKNOWN },
+	{ B3_MK_ERRNO(B3_TX_MEMORY,                      'TX'), IDS_ERR_MEMORY },
 	{ B3_MK_ERRNO(B3_TX_NOT_FOUND,					 'TX'), IDS_ERR_NOT_FOUND },
 	{ B3_MK_ERRNO(B3_TX_NOT_SAVED,					 'TX'), IDS_ERR_NOT_SAVED },
 	{ B3_MK_ERRNO(B3_TX_UNSUPP,						 'TX'), IDS_ERR_UNPACK },

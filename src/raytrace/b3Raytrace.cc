@@ -37,12 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.37  2002/08/03 18:05:10  sm
 **	- Cleaning up BL3_USE_OPENGL for linux/m68k without OpenGL
 **	- Moved b3PrepareInfo into b3Scene class as member. This
 **	  saves memory allocation calls and is an investment into
 **	  faster Lines III object transformation.
-**
+**	
 **	Revision 1.36  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
@@ -798,9 +804,9 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		b3PrintF (B3LOG_NORMAL,"Done.\n");
 	}
-	catch(b3DisplayException *e)
+	catch(b3DisplayException &e)
 	{
-		b3PrintF(B3LOG_NORMAL,"### Error occured: %d\n",e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 	}
 }
 

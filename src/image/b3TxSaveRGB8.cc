@@ -30,10 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.5  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.4  2002/02/01 16:08:26  sm
 **	- Corrected assert in saving routines for formats which
 **	  only support resolutions less than 65536.
@@ -101,7 +107,7 @@ void b3InfoRGB8::b3Write()
 
 				if (m_File.b3Write(m_SaveBuffer,4) < 4)
 				{
-					throw new b3TxException(B3_TX_NOT_SAVED);
+					throw b3TxException(B3_TX_NOT_SAVED);
 				}
 				DataRGB8 += 4;
 

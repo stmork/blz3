@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/08/09 13:20:19  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.20  2002/07/29 12:32:56  sm
 **      - Full disk draws textures correctly now
 **      - Windows selects the correct pixel format for
@@ -304,7 +310,7 @@ void b3Disk::b3ComputeIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	for (i = 0;i < Overhead;i++)

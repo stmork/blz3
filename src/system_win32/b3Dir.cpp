@@ -38,10 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.6  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.5  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
@@ -219,17 +225,25 @@ b3_bool b3Dir::b3CreatePath(
 **                                                                      **
 *************************************************************************/
 
-b3Dir::b3Dir()
+b3DirSystem::b3DirSystem()
 {
 	handle = INVALID_HANDLE_VALUE;
+}
+
+b3Dir::b3Dir()
+{
 	type   = B3_NOT_EXISTANT;
+	b3Empty();
 }
 
 // This constructor opens a dir entry directly when
 // instantiated
 b3Dir::b3Dir (const char *path)
 {
-	if (!b3OpenDir(path)) throw b3DirException(B3_DIR_NOT_FOUND);
+	if (!b3OpenDir(path))
+	{
+		throw b3DirException(B3_DIR_NOT_FOUND);
+	}
 }
 
 // The destructor deinitializes the dir entry if necessary
@@ -313,13 +327,13 @@ void b3Dir::b3CloseDir ()
 
 void b3Path::b3Empty()
 {
-	path[0] = 0;
+	m_Path[0] = 0;
 }
 
 // Non static one...
 void b3Path::b3Correct()
 {
-	b3Correct(path);
+	b3Correct(m_Path);
 }
 
 // Static input=output
@@ -331,7 +345,7 @@ void b3Path::b3Correct(char *input)
 // Non static one...
 void b3Path::b3Correct(const char *input)
 {
-	b3Correct(input,path);
+	b3Correct(input,m_Path);
 }
 
 // Static filename correction
@@ -339,7 +353,8 @@ void b3Path::b3Correct(const char *input,char *output)
 {
 	b3_index i,len;
 
-	ASSERT((input != null) && (output != null));
+	B3_ASSERT(input != null);
+	B3_ASSERT(output != null);
 	len = strlen(input);
 	for (i = 0;i < len;i++)
 	{
@@ -353,7 +368,7 @@ void b3Path::b3LinkFileName(
 	const char *param_path,
 	const char *param_name)
 {
-	b3LinkFileName(path,param_path,param_name);
+	b3LinkFileName(m_Path,param_path,param_name);
 }
 
 // link a name to an existing file path to create a
@@ -370,7 +385,7 @@ void b3Path::b3LinkFileName(
 	char nExt[_MAX_EXT];
 	long i,len;
 
-	ASSERT(full != null);
+	B3_ASSERT(full != null);
 
 	nFullPath[0] = 0;
 	if (path)
@@ -400,7 +415,7 @@ void b3Path::b3SplitFileName(
 	char *param_path,
 	char *param_name)
 {
-	b3SplitFileName(path,param_path,param_name);
+	b3SplitFileName(m_Path,param_path,param_name);
 }
 
 // This routine splits a full qualified filename into
@@ -459,7 +474,7 @@ void b3Path::b3SplitFileName(
 // Non static one...
 void b3Path::b3ParentName()
 {
-	b3ParentName(path);
+	b3ParentName(m_Path);
 }
 
 // Source and destination are the same (static one)
@@ -471,7 +486,7 @@ void b3Path::b3ParentName(char *param_path)
 // Static one...
 void b3Path::b3ParentName(const char *param_path)
 {
-	b3ParentName(param_path,path);
+	b3ParentName(param_path,m_Path);
 }
 
 // Get the parent directory of a directory or file
@@ -526,7 +541,7 @@ void b3Path::b3ParentName(
 // Non static one...
 void b3Path::b3RemoveExt()
 {
-	b3RemoveExt(path);
+	b3RemoveExt(m_Path);
 }
 
 // Static one
@@ -538,7 +553,7 @@ void b3Path::b3RemoveExt(char *input)
 // Non static one...
 void b3Path::b3RemoveExt(const char *input)
 {
-	b3RemoveExt(input,path);
+	b3RemoveExt(input,m_Path);
 }
 
 // Remove extension of a file. This routine is needed
@@ -568,7 +583,7 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 // Non static one...
 void b3Path::b3ExtractExt()
 {
-	b3ExtractExt(path);
+	b3ExtractExt(m_Path);
 }
 
 // Static one
@@ -580,7 +595,7 @@ void b3Path::b3ExtractExt(char *input)
 // Non static one...
 void b3Path::b3ExtractExt(const char *input)
 {
-	b3ExtractExt(input,path);
+	b3ExtractExt(input,m_Path);
 }
 
 // Extract an extension from a filename;
@@ -775,19 +790,19 @@ b3_bool b3Folder::b3SelectFolder(CString &param,const char *title,const char *ro
 	b3_index    i;
 	b3_count    len;
 
-	strcpy (path,param);
-	len = strlen(path);
+	strcpy (m_Path,param);
+	len = strlen(m_Path);
 	for (i = 0;i < len;i++)
 	{
-		if (path[i] == '/')
+		if (m_Path[i] == '/')
 		{
-			path[i] = '\\';
+			m_Path[i] = '\\';
 		}
 	}
 
 	root_id = b3ConvertItemIDList(root);
 	info.pidlRoot       = root_id;
-	info.pszDisplayName = path;
+	info.pszDisplayName = m_Path;
 	info.lpszTitle      = title;
 	info.ulFlags        = 0;
 	info.lpfn           = b3Callback;
@@ -796,9 +811,9 @@ b3_bool b3Folder::b3SelectFolder(CString &param,const char *title,const char *ro
 	result = ::SHBrowseForFolder(&info);
 	if (result != null)
 	{
-		if (SUCCEEDED(::SHGetPathFromIDList(result, path)))
+		if (SUCCEEDED(::SHGetPathFromIDList(result, m_Path)))
 		{
-			param = path;
+			param = m_Path;
 		}
 
 		//Retrieve a pointer to the shell's IMalloc interface

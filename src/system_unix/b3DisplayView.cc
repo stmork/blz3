@@ -40,11 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.5  2002/08/05 17:42:58  sm
 **	- Displaying brt3 options.
 **	- Clearing XBuffer which displayed garbage from previous X applications
 **	  (This is a security leak inside X!!!)
-**
+**	
 **	Revision 1.4  2002/03/13 19:01:59  sm
 **	- Fixed some GCC warnings.
 **	
@@ -197,7 +203,7 @@ void b3DisplayView::b3Open(
 		b3Free (m_Buffer);
 		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
 		b3PrintF (B3LOG_NORMAL,"no memory for image buffer!\n");
-		throw new b3DisplayException(B3_DISPLAY_MEMORY);
+		throw b3DisplayException(B3_DISPLAY_MEMORY);
 	}
 
 	if (!b3CreateColormap())
@@ -207,7 +213,7 @@ void b3DisplayView::b3Open(
 		b3PrintF (B3LOG_NORMAL,"no colormap available!\n");
 		XFreePixmap (m_Display,m_Image);
 
-		throw new b3DisplayException(B3_DISPLAY_NO_COLORMAP);
+		throw b3DisplayException(B3_DISPLAY_NO_COLORMAP);
 	}
 
 	m_GC = XCreateGC (m_Display,m_Window,GCPlaneMask|GCFunction,&Values);

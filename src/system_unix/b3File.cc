@@ -37,9 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.6  2002/02/20 20:23:58  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.5  2001/10/16 15:21:24  sm
 **	- Minor changes to compile with GCC 3.x
 **	
@@ -90,7 +96,7 @@ b3File::b3File (
 
 	if (!b3Open(Name,AccessMode))
 	{
-		throw new b3FileException(B3_FILE_NOT_FOUND);
+		throw b3FileException(B3_FILE_NOT_FOUND);
 	}
 }
 
@@ -404,7 +410,7 @@ b3_u08 *b3File::b3ReadBuffer(const char *filename,b3_size &file_size)
 			// We don't need the read buffer any more.
 			b3Free(file_buffer);
 		}
-		throw new b3FileException(error);
+		throw b3FileException(error);
 	}
 
 	return file_buffer;

@@ -48,27 +48,11 @@ int main(int argc,char *argv[])
 		{
 			world.b3ReadDump(argv[i]);
 		}
-		catch(b3WorldException *e)
+		catch(b3WorldException &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"Error catched loading %s\n",argv[i]);
-			switch (e->b3GetError())
-			{
-			case B3_WORLD_OPEN:
-				b3PrintF(B3LOG_NORMAL,"  Cannot open file.\n");
-				break;
-			case B3_WORLD_READ:
-				b3PrintF(B3LOG_NORMAL,"  Cannot read file.\n");
-				break;
-			case B3_WORLD_PARSE:
-				b3PrintF(B3LOG_NORMAL,"  Cannot parse file.\n");
-				break;
-			case B3_WORLD_MEMORY:
-				b3PrintF(B3LOG_NORMAL,"  Cannot allocate memory.\n");
-				break;
-			default:
-				b3PrintF(B3LOG_NORMAL,"  unknown error (%d).\n",e->b3GetError());
-				break;
-			}
+			b3PrintF(B3LOG_NORMAL,"  Error code: %d\n",e.b3GetError());
+			b3PrintF(B3LOG_NORMAL,"  Error msg:  %s\n",e.b3GetErrorMsg());
 		}
 	}
 	return 0;

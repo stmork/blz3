@@ -48,10 +48,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.4  2001/11/02 19:05:36  sm
 **	- Introducing time mearuring.
 **	- Fixed wrong lens flare handling.
-**
+**	
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
@@ -83,7 +89,7 @@ b3Date::b3Date(
 {
 	if (!b3SetDate(newDay,newMonth,newYear))
 	{
-		throw new b3DateException(B3_DATE_ILLEGAL);
+		throw b3DateException(B3_DATE_ILLEGAL);
 	}
 }
 
@@ -439,7 +445,7 @@ void b3Date::operator+=(const b3Date &diff)
 		// 2) diff  = diff + diff
 		// 3) ERROR = date + date
 		// 4) ERROR = diff + date
-		throw new b3DateException(B3_DATE_ILLEGAL_MODE);
+		throw b3DateException(B3_DATE_ILLEGAL_MODE);
 	}
 	time_code += diff.time_code;
 	b3SetMode (mode);

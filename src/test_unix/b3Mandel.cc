@@ -32,12 +32,12 @@
 #include <stdlib.h>
 
 // This struct is transfered to the thread procedure
-typedef struct
+struct mandel_info
 {
 	b3Display *display;
 	b3_count   iter;
 	b3_res     xSize;
-} mandel_info;
+};
 
 /*************************************************************************
 **                                                                      **
@@ -47,10 +47,16 @@ typedef struct
 
 /*
 **	$Log$
+**	Revision 1.6  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.5  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.4  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.

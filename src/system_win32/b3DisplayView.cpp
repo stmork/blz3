@@ -41,9 +41,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.3  2001/12/23 14:59:05  sm
 **	- Updated new b3Display interface
-**
+**	
 **	Revision 1.2  2001/11/04 21:12:14  sm
 **	- New CB3ShowRaytrace control
 **	
@@ -70,7 +76,7 @@ void b3DisplayView::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
 	}
 	else
 	{
-		throw new b3DisplayException(B3_DISPLAY_OPEN);
+		throw b3DisplayException(B3_DISPLAY_OPEN);
 	}
 
 	ASSERT(m_View != null);

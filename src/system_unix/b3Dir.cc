@@ -34,10 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.10  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.9  2002/01/06 21:38:18  sm
 **	- Nasty Un CR/LF
 **	- b3Dir fix. Not tested, yet!
@@ -132,8 +138,8 @@ b3_bool b3Dir::b3MkDir (const char *Name)
 
 b3Dir::b3Dir()
 {
-	dir     = null;
-	path[0] = 0;
+	dir       = null;
+	b3Empty();
 }
 
 // This constructor opens a dir entry directly when
@@ -142,7 +148,7 @@ b3Dir::b3Dir (const char *path)
 {
 	if (!b3OpenDir(path))
 	{
-		throw new b3DirException(B3_DIR_NOT_FOUND);
+		throw b3DirException(B3_DIR_NOT_FOUND);
 	}
 }
 
@@ -157,7 +163,7 @@ b3_bool b3Dir::b3OpenDir (const char *open_path)
 {
 	if ((dir = opendir (open_path)) != null)
 	{
-		strcpy (path, open_path);
+		strcpy (m_Path, open_path);
 	}
 	return dir != null;
 }
@@ -177,7 +183,7 @@ b3_path_type b3Dir::b3DirNext (char *name)
 		if ((entry = readdir(dir)) != null)
 		{
 			strcpy(name, entry->d_name);
-			b3LinkFileName (fileName,path, name);
+			b3LinkFileName (fileName,m_Path, name);
 			type = b3Exists (fileName);
 			if (type == B3_TYPE_DIR)
 			{
@@ -209,12 +215,12 @@ void b3Dir::b3CloseDir ()
 
 void b3Path::b3Empty()
 {
-	path[0] = 0;
+	m_Path[0] = 0;
 }
 
 void b3Path::b3Correct()
 {
-	b3Correct(path);
+	b3Correct(m_Path);
 }
 
 void b3Path::b3Correct(char *input)
@@ -224,7 +230,7 @@ void b3Path::b3Correct(char *input)
 
 void b3Path::b3Correct(const char *input)
 {
-	b3Correct(input,path);
+	b3Correct(input,m_Path);
 }
 
 void b3Path::b3Correct(const char *input,char *output)
@@ -245,7 +251,7 @@ void b3Path::b3LinkFileName(
 	const char *param_path,
 	const char *param_name)
 {
-	b3LinkFileName(path,param_path,param_name);
+	b3LinkFileName(m_Path,param_path,param_name);
 }
 
 // link a name to an existing file path to create a
@@ -279,7 +285,7 @@ void b3Path::b3SplitFileName(
 	char *param_path,
 	char *param_name)
 {
-	b3SplitFileName(path,param_path,param_name);
+	b3SplitFileName(m_Path,param_path,param_name);
 }
 
 // This routine splits a full qualified filename into
@@ -333,7 +339,7 @@ void b3Path::b3SplitFileName(
 // Non static one...
 void b3Path::b3ParentName()
 {
-	b3ParentName(path);
+	b3ParentName(m_Path);
 }
 
 // Source and destination are the same (static one)
@@ -345,7 +351,7 @@ void b3Path::b3ParentName(char *param_path)
 // Static one...
 void b3Path::b3ParentName(const char *param_path)
 {
-	b3ParentName(param_path,path);
+	b3ParentName(param_path,m_Path);
 }
 
 // Get the parent directory of a directory or file
@@ -395,7 +401,7 @@ void b3Path::b3ParentName(
 // Non static one...
 void b3Path::b3RemoveExt()
 {
-	b3RemoveExt(path);
+	b3RemoveExt(m_Path);
 }
 
 // Static one
@@ -407,7 +413,7 @@ void b3Path::b3RemoveExt(char *input)
 // Non static one...
 void b3Path::b3RemoveExt(const char *input)
 {
-	b3RemoveExt(input,path);
+	b3RemoveExt(input,m_Path);
 }
 
 // Remove extension of a file. This routine is needed
@@ -437,7 +443,7 @@ void b3Path::b3RemoveExt(const char *name,char *output)
 // Non static one...
 void b3Path::b3ExtractExt()
 {
-	b3ExtractExt(path);
+	b3ExtractExt(m_Path);
 }
 
 // Static one
@@ -449,7 +455,7 @@ void b3Path::b3ExtractExt(char *input)
 // Non static one...
 void b3Path::b3ExtractExt(const char *input)
 {
-	b3ExtractExt(input,path);
+	b3ExtractExt(input,m_Path);
 }
 
 // Remove extension of a file. This routine is needed

@@ -37,6 +37,12 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/08/09 13:20:19  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.25  2002/08/05 16:04:55  sm
 **      - Found first texture init bug. This wasn't an OpenGL bug. This
 **        couldn't be because every implementation had got the same
@@ -431,7 +437,7 @@ b3_bool b3World::b3Read(const char *name)
 	if (error != B3_WORLD_OK)
 	{
 		m_BufferSize = 0;
-		throw new b3WorldException(error);
+		throw b3WorldException(error);
 	}
 
 	b3Free(m_Buffer);
@@ -559,7 +565,7 @@ b3_bool b3World::b3ReadDump(const char *world_name)
 	m_BufferSize = 0;
 	if (error != B3_WORLD_OK)
 	{
-		throw new b3WorldException(error);
+		throw b3WorldException(error);
 	}
 	return error == B3_WORLD_OK;
 }
@@ -590,7 +596,7 @@ void b3World::b3CloneBase(
 		}
 		else
 		{
-			throw new b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
+			throw b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
 		}
 	}
 }
@@ -616,7 +622,7 @@ b3Item *b3World::b3Clone(b3Item *original)
 	}
 	else
 	{
-		throw new b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
+		throw b3WorldException(B3_WORLD_CLASSTYPE_UNKNOWN);
 	}
 	return item;
 }
@@ -638,7 +644,7 @@ b3_bool b3World::b3Write(const char *filename)
 
 	if (error != B3_WORLD_OK)
 	{
-		throw new b3WorldException(error);
+		throw b3WorldException(error);
 	}
 	return true;
 }

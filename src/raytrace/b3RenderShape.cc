@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2002/08/09 13:20:19  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.52  2002/08/05 16:04:55  sm
 **      - Found first texture init bug. This wasn't an OpenGL bug. This
 **        couldn't be because every implementation had got the same
@@ -472,7 +478,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 	else
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	m_ConeIndices  = (GLushort *)b3Alloc
@@ -498,7 +504,7 @@ void b3ShapeRenderContext::b3InitSubdiv(b3_count new_subdiv)
 	}
 	else
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 #endif
 }
@@ -1444,7 +1450,7 @@ void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	s = 0;
@@ -1795,7 +1801,7 @@ void b3ShapeRenderObject::b3ComputeTorusIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	s = 0;

@@ -32,10 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.6  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
-**
+**	
 **	Revision 1.5  2002/02/01 16:08:26  sm
 **	- Corrected assert in saving routines for formats which
 **	  only support resolutions less than 65536.
@@ -88,7 +94,7 @@ b3InfoTGA::b3InfoTGA(b3Tx *tx,const char *filename) :
 		m_File.b3Close();
 		b3Free();
 		b3PrintF (B3LOG_NORMAL,"Save Targa 24: not enough memory!\n");
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 
 	m_File.b3Write (m_SaveData,m_SaveIndex = 18);

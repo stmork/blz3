@@ -30,9 +30,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.4  2001/11/09 18:58:53  sm
 **	- Fixed JPEG handling
-**
+**	
 **	Revision 1.3  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -182,7 +188,7 @@ b3InfoJPEG::b3InfoJPEG(b3Tx *tx,const char *filename,b3_u32 quality) :
 		m_File.b3Close();
 		b3Free();
 		b3PrintF (B3LOG_NORMAL,"Save JPEG: no row mem!\n");
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	for (i = 0;i < JPEG_ROWS;i++)
 	{

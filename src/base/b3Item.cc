@@ -35,6 +35,12 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/08/09 13:20:18  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.23  2002/02/17 21:25:06  sm
 **      - Introduced CSG
 **        o Heavily reorganized shape inheritance
@@ -165,7 +171,7 @@ void b3Item::b3Register(
 	entry = new b3ItemRegisterEntry(init_func,load_func,class_type,is_class);
 	if (entry == null)
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 	b3_item_register.b3Append(entry);
 }
@@ -287,7 +293,7 @@ void b3Item::b3Write()
 	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",m_ItemSize);
 	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",m_ItemOffset);
 
-	throw new b3WorldException(B3_WORLD_STORAGE_NOT_IMPLEMENTED);
+	throw b3WorldException(B3_WORLD_STORAGE_NOT_IMPLEMENTED);
 }
 
 char *b3Item::b3GetName()
@@ -542,7 +548,7 @@ b3_size b3Item::b3Store()
 		m_StoreBuffer = (b3_u32 *)b3Alloc(m_StoreSize);
 		if (m_StoreBuffer == null)
 		{
-			throw new b3WorldException(B3_WORLD_MEMORY);
+			throw b3WorldException(B3_WORLD_MEMORY);
 		}
 	}
 
@@ -617,7 +623,7 @@ void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
 	// Clearify some things...
 	if ((m_StoreOffset != 0) && (is_data))
 	{
-		throw new b3WorldException(B3_WORLD_OUT_OF_ORDER);
+		throw b3WorldException(B3_WORLD_OUT_OF_ORDER);
 	}
 
 	if ((m_StoreIndex + needed) > (b3_index)(m_StoreSize >> 2))
@@ -641,7 +647,7 @@ void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
 			m_StoreSize   = 0;
 			m_StoreIndex  = 0;
 			m_StoreOffset = 0;
-			throw new b3WorldException(B3_WORLD_MEMORY);
+			throw b3WorldException(B3_WORLD_MEMORY);
 		}
 		m_StoreSize = new_size;
 	}

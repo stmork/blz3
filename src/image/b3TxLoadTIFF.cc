@@ -45,13 +45,19 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.9  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.8  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -455,10 +461,10 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 		buffer     = tiff_file.b3ReadBuffer(tiff_name,size);
 		error_code = b3LoadTIFF(tiff_name,buffer,size);
 	}
-	catch (b3FileException *e)
+	catch (b3FileException &e)
 	{
-		b3PrintF(B3LOG_NORMAL,"IMG TIFF # Error loading %s (error code: %d)\n",
-			tiff_name,e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"IMG TIFF # Error loading %s (%s)\n",
+			tiff_name,e.b3GetErrorMsg());
 		error_code = B3_ERROR;
 	}
 
@@ -496,7 +502,7 @@ b3_result b3Tx::b3LoadTIFF(
 #endif
 	if (tiff == null) 
 	{
-		throw new b3TxException(B3_TX_NOT_FOUND);
+		throw b3TxException(B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
 	b3PrintF(B3LOG_FULL,"IMG TIFF # b3LoadTIFF(%s)\n",(const char *)image_name);
@@ -541,7 +547,7 @@ b3_result b3Tx::b3LoadTIFF(
 	if (type == B3_TX_UNDEFINED)
 	{
 		b3FreeTx();
-		throw new b3TxException(B3_TX_NOT_FOUND);
+		throw b3TxException(B3_TX_NOT_FOUND);
 	}
 
 	return B3_OK;

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.39  2002/08/09 13:20:20  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.38  2002/08/07 12:38:43  sm
 **      - Modified exception definition. Exceptions are identified with
 **        a three character code to unify error codes. This is necessary
@@ -633,7 +639,7 @@ b3_bool b3SplineShape::b3Prepare()
 		(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
 	if (Between == null)
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	xSize       = m_Spline[0].subdiv;
@@ -647,7 +653,7 @@ b3_bool b3SplineShape::b3Prepare()
 	// Reallocating new tria shape
 	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_Spline[0].subdiv,m_Spline[1].subdiv))
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	// building horizontal splines

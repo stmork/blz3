@@ -186,6 +186,10 @@ SOURCE=..\..\include\blz3\base\b3Cubic.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3DirAbstract.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Display.h
 # End Source File
 # Begin Source File

@@ -31,6 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.3  2002/08/07 12:38:43  sm
 **	- Modified exception definition. Exceptions are identified with
 **	  a three character code to unify error codes. This is necessary
@@ -38,7 +44,7 @@
 **	- Added some additional b3Hash methods.
 **	- Added -Wall compiler option to all C++ files.
 **	- Removed some compiler warnings.
-**
+**	
 **	Revision 1.2  2002/08/06 16:16:59  sm
 **	- Added support for custom hash functions.
 **	
@@ -128,7 +134,7 @@ int main(int argc,char *argv[])
 	{
 		hash.b3Add(0,"Exception");
 	}
-	catch(b3HashException *e)
+	catch(b3HashException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Exception caught correctly.\n");
 	}

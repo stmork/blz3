@@ -38,10 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/08/09 13:20:18  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.17  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
-**
+**	
 **	Revision 1.16  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
@@ -275,16 +281,16 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_LinesDoc = null;
 		result = TRUE;
 	}
-	catch(b3FileException *f)
+	catch(b3FileException &f)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
-		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",f->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",f.b3GetError());
 		B3_MSG_ERROR(f);
 	}
-	catch(b3WorldException *e)
+	catch(b3WorldException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
-		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",e->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",e.b3GetError());
 		B3_MSG_ERROR(e);
 	}
 	catch(...)

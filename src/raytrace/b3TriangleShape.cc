@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2002/08/09 13:20:20  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.29  2002/08/04 13:24:56  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -249,7 +255,7 @@ b3_bool b3TriangleShape::b3AddCubicItem (
 	TriaInfo = new b3TriangleRef(index);
 	if (TriaInfo==null)
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	GridList->b3First(TriaInfo);
@@ -515,7 +521,7 @@ b3_bool b3TriangleShape::b3Prepare()
 		(m_GridSize * m_GridSize * m_GridSize * sizeof(b3Base<b3TriangleRef>));
 	if (m_GridList == null)
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 	b3PrepareGridList();
 	return b3Shape::b3Prepare();

@@ -34,12 +34,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.6  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
 **	  a new shape.
 **	- Some minor fixes done.
-**
+**	
 **	Revision 1.5  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
 **	
@@ -178,7 +184,7 @@ b3_bool b3Tx::b3Histogramme()
 {
 	if (!b3StartHist()) 
 	{
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	return b3AddHist(0,0,xSize,ySize);
 }
@@ -676,12 +682,14 @@ b3_bool b3Tx::b3TransToBW(b3_index threshold)
 		b3Free(data);
 		b3Free(palette);
 	}
-	catch (b3MemException *e)
+	catch (b3MemException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,
 			"### CLASS: b3Tx   # b3Trans2BW(): foreign pointer found - not freeing.\n");
 		b3PrintF(B3LOG_NORMAL,
-			"### CLASS: b3Tx   #               error code: %d\n",e->b3GetError());
+			"### CLASS: b3Tx   #               error code: %d\n",e.b3GetError());
+		b3PrintF(B3LOG_NORMAL,
+			"### CLASS: b3Tx   #               error msg:  %s\n",e.b3GetErrorMsg());
 	}
 	catch (...)
 	{

@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.24  2002/08/05 17:42:58  sm
 **	- Displaying brt3 options.
 **	- Clearing XBuffer which displayed garbage from previous X applications
 **	  (This is a security leak inside X!!!)
-**
+**	
 **	Revision 1.23  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -308,15 +314,17 @@ int main(int argc,char *argv[])
 						delete display;
 					}
 				}
-				catch(b3WorldException *w)
+				catch(b3WorldException &w)
 				{
 					b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[i]);
-					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w->b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w.b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",w.b3GetErrorMsg());
 				}
-				catch(b3FileException *f)
+				catch(b3FileException &f)
 				{
 					b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
-					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f->b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f.b3GetError());
+					b3PrintF(B3LOG_NORMAL,"Error msg:  %s\n",f.b3GetErrorMsg());
 				}
 				catch(...)
 				{

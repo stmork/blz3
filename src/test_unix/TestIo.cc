@@ -38,9 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.8  2002/01/03 15:50:15  sm
 **	- Added cut/copy/paste
-**
+**	
 **	Revision 1.7  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -156,9 +162,13 @@ int main(int argc,char *argv[])
 		}
 		b3TestDir();
 	}
-	catch(b3FileException *f)
+	catch(b3MemException &m)
 	{
-		b3PrintF(B3LOG_NORMAL,"I/O Error - code %d\n",f->b3GetError());
+		b3PrintF(B3LOG_NORMAL,"Memory Error - %s\n",m.b3GetErrorMsg());
+	}
+	catch(b3FileException &f)
+	{
+		b3PrintF(B3LOG_NORMAL,"I/O Error - %s\n",f.b3GetErrorMsg());
 	}
 	catch(...)
 	{
@@ -186,10 +196,12 @@ int main(int argc,char *argv[])
 			world.b3Write("/tmp/test.bwd");
 			b3PrintF(B3LOG_NORMAL,"  File OK!\n");
 		}
-		catch(b3WorldException *e)
+		catch(b3WorldException &e)
 		{
 			b3PrintF(B3LOG_NORMAL,"Error catched loading %s\n",argv[i]);
-			switch (e->b3GetError())
+			b3PrintF(B3LOG_NORMAL,"  Error code: %d\n",e.b3GetError());
+			b3PrintF(B3LOG_NORMAL,"  Error msg:  %s\n",e.b3GetErrorMsg());
+			switch (e.b3GetError())
 			{
 			case B3_WORLD_OPEN:
 				b3PrintF(B3LOG_NORMAL,"  Cannot open file.\n");
@@ -214,7 +226,7 @@ int main(int argc,char *argv[])
 				break;
 
 			default:
-				b3PrintF(B3LOG_NORMAL,"  unknown error (%d).\n",e->b3GetError());
+				b3PrintF(B3LOG_NORMAL,"  unknown error (%s).\n",e.b3GetErrorMsg());
 				break;
 			}
 		}

@@ -33,13 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.7  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.6  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -177,7 +183,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 			b3PrintF(B3LOG_NORMAL,"IMG GIF  # Parsing error:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_ERR_HEADER);
+			throw b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	// Compute image resolution
@@ -189,7 +195,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	out = (b3_u08 *)data;
 
@@ -239,7 +245,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	suffix =           &charstack[4096]; // pixel byte
 	prefix = (b3_u32 *)&charstack[8192]; // predecessor
@@ -252,7 +258,7 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Decompression format error:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_ERR_HEADER);
+		throw b3TxException(B3_TX_ERR_HEADER);
 	}
 
 	currsize    = size + 1;

@@ -39,12 +39,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.7  2002/01/22 17:11:18  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
 **	- Better b3DisplayView in Un*x port.
 **	- Fixed stricmp() in Un*x port.
-**
+**	
 **	Revision 1.6  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -105,9 +111,9 @@ int main(int argc,char *argv[])
 			// Delete Display
 			delete display;
 		}
-		catch(b3DisplayException *e)
+		catch(b3DisplayException &e)
 		{
-			b3PrintF(B3LOG_NORMAL,"### Error occured: %d\n",e->b3GetError());
+			b3PrintF(B3LOG_NORMAL,"### Error occured: %s\n",e.b3GetErrorMsg());
 		}
 	}
 	return 0;

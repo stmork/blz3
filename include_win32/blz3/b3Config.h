@@ -87,12 +87,18 @@ typedef CDC b3DrawContext;
 
 /*
 **	$Log$
+**	Revision 1.23  2002/08/09 13:20:18  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.22  2002/07/31 11:57:08  sm
 **	- The nVidia OpenGL init bug fixed by using following work
 **	  around: The wglMakeCurrent() method is invoked on
 **	  every OnPaint(). This is configurable depending on the
 **	  hostname.
-**
+**	
 **	Revision 1.21  2002/04/07 12:59:37  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
@@ -278,6 +284,7 @@ enum b3_msgbox_type
 };
 
 #define B3_MAXHOSTNAMELEN ((MAX_COMPUTERNAME_LENGTH) + 1)
+#define B3_FILESTRINGLEN  (_MAX_PATH)
 
 class b3Runtime : public b3CPU
 {

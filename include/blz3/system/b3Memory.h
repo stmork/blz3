@@ -67,7 +67,7 @@ public:
 		if (node == null)
 		{
 #ifndef _DEBUG
-			throw new b3MemException(B3_MEM_MEMORY);
+			throw b3MemException(B3_MEM_MEMORY);
 #else
 			return null;
 #endif
@@ -91,10 +91,24 @@ public:
 		b3MemNode *new_node,*node;
 		void      *new_ptr  = null;
 
+		B3_ASSERT((old_ptr != null) || (new_size > 0));
 		if (old_ptr == null)
 		{
 			// Allocate on the standard way...
 			return b3Alloc(new_size);
+		}
+		if (new_size == 0)
+		{
+			// Free on the standard way
+			m_Mutex.b3Lock();
+			node = b3FindNode(old_ptr);
+			if (node != null)
+			{
+				b3UnlinkChunk(node);
+				b3MemAccess::b3Free(node);
+			}
+			m_Mutex.b3Unlock();
+			return null;
 		}
 
 		m_Mutex.b3Lock();
@@ -103,19 +117,24 @@ public:
 		{
 			if (node->m_ChunkSize < new_size)
 			{
+				// After realloc node may be invalid
+				b3UnlinkChunk(node);
 				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,new_size + sizeof(b3MemNode));
 				if (new_node != null)
 				{
 					new_node->m_ChunkSize = new_size;
 					new_node->m_Chunk     = (void *)&new_node[1];
-					b3UnlinkChunk(node);
 					b3LinkChunk(new_node);
 				}
 				else
 				{
+					// node is still valid -> relink
+					b3LinkChunk(node);
 					m_Mutex.b3Unlock();
 #ifndef _DEBUG
-					throw new b3MemException(B3_MEM_MEMORY);
+					throw b3MemException(B3_MEM_MEMORY);
+#else
+					return null;
 #endif
 				}
 				node = new_node;

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2002/08/09 13:20:20  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.16  2002/08/04 13:24:56  sm
 **      - Found transformation bug: Normals have to be treated as
 **        direction vectors, aren't them?
@@ -213,7 +219,7 @@ b3_bool b3SplineRotShape::b3Prepare()
 	// Reallocating new tria shape
 	if (!b3TriangleShape::b3Init(VertexCount,TriaCount,m_rSubDiv,MySpline.subdiv))
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 
 

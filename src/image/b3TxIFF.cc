@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/09 13:20:19  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.9  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.8  2002/01/17 19:17:02  sm
 **	- Fixed ILBM to other unfiltered scaling
 **	
@@ -129,7 +135,7 @@ b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 					b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 					b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-					throw new b3TxException(B3_TX_MEMORY);
+					throw b3TxException(B3_TX_MEMORY);
 				}
 				Max = xSize * ySize;
 				dstPtr = (b3_pkd_color *)data;
@@ -207,7 +213,7 @@ b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 					b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 					b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-					throw new b3TxException(B3_TX_MEMORY);
+					throw b3TxException(B3_TX_MEMORY);
 				}
 				dstPtr = (b3_u16 *)data;
                 
@@ -264,7 +270,7 @@ void b3Tx::b3EHBPalette ()
 		b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	OldPalette = palette;
 	for (i = 0;i < 32;i++)
@@ -333,7 +339,7 @@ void b3Tx::b3HamPalette (b3_bool HAM8)
 		b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	Line    = (b3_u08 *)b3Alloc(xSize);
 	if (Line==null)
@@ -343,7 +349,7 @@ void b3Tx::b3HamPalette (b3_bool HAM8)
 		b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-		throw new b3TxException(B3_TX_MEMORY);
+		throw b3TxException(B3_TX_MEMORY);
 	}
 	OldData = data;
 	sData   = NewData;
@@ -461,7 +467,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
 						b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 						b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-						throw new b3TxException(B3_TX_ERR_PACKING);
+						throw b3TxException(B3_TX_ERR_PACKING);
 				}
 				break;
 			case IFF_CMAP :
@@ -474,7 +480,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 					b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 					b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 					b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-					throw new b3TxException(B3_TX_MEMORY);
+					throw b3TxException(B3_TX_MEMORY);
 				}
 				Set = (b3_u32 *)palette;
 				CharData += 8;
@@ -516,7 +522,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 						b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 						b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-						throw new b3TxException(B3_TX_MEMORY);
+						throw b3TxException(B3_TX_MEMORY);
 					}
 
 					Copy = (b3_u08 *)data;
@@ -558,7 +564,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 						b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 						b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-						throw new b3TxException(B3_TX_MEMORY);
+						throw b3TxException(B3_TX_MEMORY);
 					}
 					Copy = (b3_u08 *)data;
 					CharData += 8;
@@ -681,7 +687,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 						b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong packing algorithm:\n");
 						b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 						b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-						throw new b3TxException(B3_TX_ERR_PACKING);
+						throw b3TxException(B3_TX_ERR_PACKING);
 				}
 				switch (CharData[24])
 				{
@@ -704,7 +710,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 							b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
 							b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 							b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-							throw new b3TxException(B3_TX_ERR_HEADER);
+							throw b3TxException(B3_TX_ERR_HEADER);
 						}
 						break;
 
@@ -716,7 +722,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 							b3PrintF(B3LOG_NORMAL,"IMG IFF  # Wrong resolution:\n");
 							b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 							b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-							throw new b3TxException(B3_TX_ERR_HEADER);
+							throw b3TxException(B3_TX_ERR_HEADER);
 						}
 						break;
 
@@ -750,7 +756,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_MEMORY);
+			throw b3TxException(B3_TX_MEMORY);
 		}
 		if (!b3AllocTx(xSize,ySize,8))
 		{
@@ -758,7 +764,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_MEMORY);
+			throw b3TxException(B3_TX_MEMORY);
 		}
 		memcpy(data,Y,Max);
 	}
@@ -770,7 +776,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_ERR_HEADER);
+			throw b3TxException(B3_TX_ERR_HEADER);
 		}
 		if (!b3CalcYUVTable())
 		{
@@ -778,7 +784,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_MEMORY);
+			throw b3TxException(B3_TX_MEMORY);
 		}
 		if (!b3AllocTx(xSize,ySize,24))
 		{
@@ -786,7 +792,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
 			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
-			throw new b3TxException(B3_TX_MEMORY);
+			throw b3TxException(B3_TX_MEMORY);
 		}
 		LongData = (b3_pkd_color *)data;
 

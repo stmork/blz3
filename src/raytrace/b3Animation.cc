@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/08/09 13:20:19  sm
+**      - b3Mem::b3Realloc was a mess! Now fixed to have the same
+**        behaviour on all platforms. The Windows method ::GlobalReAlloc
+**        seems to be broken:-(
+**      - Introduced b3DirAbstract and b3PathAbstract classes
+**
 **      Revision 1.8  2002/03/03 21:22:22  sm
 **      - Added support for creating surfaces using profile curves.
 **      - Added simple creating of triangle fields.
@@ -119,7 +125,7 @@ b3AnimControl::b3AnimControl(b3_u32 *src) : b3Item(src)
 	m_Controls  = (b3_vector4D *)b3Alloc(m_Max * sizeof(b3_vector4D));
 	if (m_Controls == null)
 	{
-		throw new b3WorldException(B3_WORLD_MEMORY);
+		throw b3WorldException(B3_WORLD_MEMORY);
 	}
 	for (i = 0;i < m_Max;i++)
 	{

@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
   
-#include "blz3/system/b3Log.h"
+#include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 
 /*************************************************************************
@@ -32,11 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.2  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **
 */
 

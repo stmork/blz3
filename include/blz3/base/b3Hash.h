@@ -127,7 +127,7 @@ public:
 		{
 			if (pair->m_Key == key)
 			{
-				throw new b3HashException(B3_HASH_DUPLICATE_KEY);
+				throw b3HashException(B3_HASH_DUPLICATE_KEY);
 			}
 		}
 		pair = new b3HashPair<Key,Object>(key,object);
@@ -257,7 +257,7 @@ private:
 
 		if ((hash < 0) || (hash >= B3_MAX_HASH_INDEX))
 		{
-			throw new b3HashException(B3_HASH_INVALID);
+			throw b3HashException(B3_HASH_INVALID);
 		}
 		return hash;
 	}

@@ -32,6 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.2  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -40,7 +46,7 @@
 **	  o open maximized window
 **	  o fixed some UpdateUI methods
 **	  o changed exception handling in CB3ScrollView and CB3BitmapDxB
-**
+**	
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
@@ -111,7 +117,7 @@ CB3BitmapDIB::CB3BitmapDIB(
 
 	if (!b3SetDIB(new_dib,new_row))
 	{
-		throw new b3ViewException(B3_VIEW_INIT_DIB);
+		throw b3ViewException(B3_VIEW_INIT_DIB);
 	}
 }
 
@@ -631,7 +637,7 @@ CB3BitmapDDB::CB3BitmapDDB()
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw new b3ViewException(B3_VIEW_PALETTE);
+		throw b3ViewException(B3_VIEW_PALETTE);
 	}
 }
 
@@ -646,7 +652,7 @@ CB3BitmapDDB::CB3BitmapDDB(CDC *srcDC)
 	// Init palette
 	if (!b3InitPalette())
 	{
-		throw new b3ViewException(B3_VIEW_PALETTE);
+		throw b3ViewException(B3_VIEW_PALETTE);
 	}
 }
 

@@ -20,32 +20,14 @@
 
 #include "blz3/system/b3Mem.h"
 #include "blz3/base/b3Exception.h"
+#include "blz3/base/b3DirAbstract.h"
 
 #define S_ISDIR(m)          ((m) & S_IFDIR)
 
-#define B3_FILESTRINGLEN 128
-
-typedef enum
-{
-	B3_NOT_EXISTANT = 0,
-	B3_TYPE_DIR,
-	B3_TYPE_FILE
-} b3_path_type;
-
-typedef enum
-{
-	B3_DIR_ERROR = -1,
-	B3_DIR_OK    =  0,
-	B3_DIR_NOT_FOUND
-} b3_dir_error;
-
 typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 
-class b3Path
+class b3Path : public b3PathAbstract
 {
-protected:
-	char path[B3_FILESTRINGLEN];
-
 public:
 	       void b3Empty();
 		   void b3LinkFileName (const char *path,const char *name);
@@ -69,16 +51,6 @@ public:
 	static void b3Correct      (const char *path,char *result);
 	static void b3Correct      (char *path);
 
-	inline operator char * ()
-	{
-		return path;
-	}
-
-	inline operator const char *()
-	{
-		return path;
-	}
-
 private:
 	static void b3RemoveDelimiter(char *path);
 };
@@ -88,15 +60,18 @@ class b3DirSystem
 protected:
 	HANDLE           handle;	// handle of FindFirstFile
 	WIN32_FIND_DATA  entry;		// structure with file information
+
+protected:
+	b3DirSystem();
 };
 
-class b3Dir : public b3Mem, public b3Path, public b3DirSystem
+class b3Dir : public b3DirAbstract, public b3Mem, public b3Path, protected b3DirSystem
 {
 	b3_path_type  type;		// type like BExists()
 public:
 	              b3Dir();
 	              b3Dir(const char *);
-	             ~b3Dir();
+	virtual      ~b3Dir();
 	b3_bool       b3OpenDir(const char *);
 	b3_path_type  b3DirNext(char *);
 	void          b3CloseDir();

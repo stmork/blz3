@@ -33,10 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/09 13:20:20  sm
+**	- b3Mem::b3Realloc was a mess! Now fixed to have the same
+**	  behaviour on all platforms. The Windows method ::GlobalReAlloc
+**	  seems to be broken:-(
+**	- Introduced b3DirAbstract and b3PathAbstract classes
+**
 **	Revision 1.7  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
-**
+**	
 **	Revision 1.6  2002/01/17 19:17:03  sm
 **	- Fixed ILBM to other unfiltered scaling
 **	
@@ -544,11 +550,11 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 							b3ViewParamChanged();
 						}
 					}
-					catch (b3TxException *t)
+					catch (b3TxException &t)
 					{
 						b3PrintF (B3LOG_NORMAL,
 							"### CLASS: b3View # Texture exception occured: %s!\n",
-							t->b3GetErrorMsg());
+							t.b3GetErrorMsg());
 						m_MutexScaling.b3Unlock();
 						throw;
 					}

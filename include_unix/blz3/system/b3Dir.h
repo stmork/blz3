@@ -18,39 +18,20 @@
 #ifndef B3_SYSTEM_DIR_H
 #define B3_SYSTEM_DIR_H
 
-#include "blz3/b3Types.h"
-#include "blz3/system/b3Mem.h"
-#include "blz3/base/b3Exception.h"
-
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <unistd.h>
 
-#define B3_FILESTRINGLEN 128
-
-typedef enum
-{
-	B3_NOT_EXISTANT = 0,
-	B3_TYPE_DIR,
-	B3_TYPE_FILE
-} b3_path_type;
-
-
-typedef enum
-{
-	B3_DIR_ERROR = -1,
-	B3_DIR_OK    =  0,
-	B3_DIR_NOT_FOUND
-} b3_dir_error;
+#include "blz3/b3Types.h"
+#include "blz3/system/b3Mem.h"
+#include "blz3/base/b3Exception.h"
+#include "blz3/base/b3DirAbstract.h"
 
 typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 
-class b3Path
+class b3Path : public b3PathAbstract
 {
-protected:
-	char path[B3_FILESTRINGLEN];
-
 public:
 	       void b3Empty();
 		   void b3LinkFileName (const char *path,const char *name);
@@ -73,19 +54,9 @@ public:
 	static void b3ExtractExt   (char *ext);
 	static void b3Correct      (const char *path,char *result);
 	static void b3Correct      (char *path);
-
-	inline operator char * ()
-	{
-		return path;
-	}
-
-	inline operator const char *()
-	{
-		return path;
-	}
 };
 
-class b3Dir : public b3Mem, public b3Path
+class b3Dir : public b3DirAbstract, public b3Mem, public b3Path
 {
 protected:
 	DIR                 *dir;
