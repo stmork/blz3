@@ -31,10 +31,10 @@
 
 class CB3ImageButton : public CButton
 {
-	unsigned long m_PressedCount;
-	unsigned long m_RepeatCount;
-	unsigned long m_FirstRepeatMillies;
-	unsigned long m_FurtherRepeatMillies;
+	unsigned long  m_RepeatCount;
+	unsigned long  m_FirstRepeatMillies;
+	unsigned long  m_FurtherRepeatMillies;
+	CWnd          *m_MainFrame;
 
 public:
 	HICON         m_hIcon;
@@ -65,6 +65,7 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnCaptureChanged(CWnd *pWnd);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

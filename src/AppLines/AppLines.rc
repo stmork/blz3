@@ -97,6 +97,7 @@ IDR_TOOLBAR_OBJECT      BITMAP  DISCARDABLE     "res\\toolbar_object.bmp"
 IDR_TOOLBAR_DISPLAY     BITMAP  DISCARDABLE     "res\\toolbar_display.bmp"
 IDR_TOOLBAR_CAMERA      BITMAP  DISCARDABLE     "res\\toolbar_camera.bmp"
 IDR_TOOLBAR_LIGHT       BITMAP  DISCARDABLE     "res\\toolbar_light.bmp"
+IDB_SPLASH              BITMAP  DISCARDABLE     "res\\splash.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

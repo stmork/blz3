@@ -35,12 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2002/01/20 12:48:51  sm
+**	- Added splash screen
+**	- Corrected repeat buttons (capture change)
+**
 **	Revision 1.17  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
 **	  o Camera turn around itself
 **	  o Camera rotate around fulcrum
-**
+**	
 **	Revision 1.16  2001/10/19 18:27:28  sm
 **	- Fixing LDC bug
 **	- Optimizing color routines
@@ -480,31 +484,6 @@ b3_matrix * b3MatrixSMul (
 	B->m44 = (b3_f32)(A->m44 * Value);
 
 	return (B);
-}
-
-b3_vector * b3MatrixVMul (
-	b3_matrix *A,
-	b3_vector *V1,
-	b3_vector *V2,
-	b3_bool    FourDim)
-{
-	b3_vector Result;
-
-	if (FourDim)
-	{
-		Result.x = A->m11 * V1->x + A->m12 * V1->y + A->m13 * V1->z + A->m14;
-		Result.y = A->m21 * V1->x + A->m22 * V1->y + A->m23 * V1->z + A->m24;
-		Result.z = A->m31 * V1->x + A->m32 * V1->y + A->m33 * V1->z + A->m34;
-	}
-	else
-	{
-		Result.x = A->m11 * V1->x + A->m12 * V1->y + A->m13 * V1->z;
-		Result.y = A->m21 * V1->x + A->m22 * V1->y + A->m23 * V1->z;
-		Result.z = A->m31 * V1->x + A->m32 * V1->y + A->m33 * V1->z;
-	}
-	*V2 = Result;
-
-	return (V2);
 }
 
 b3_matrix * b3MatrixMAdd (

@@ -42,9 +42,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/20 12:48:51  sm
+**	- Added splash screen
+**	- Corrected repeat buttons (capture change)
+**
 **	Revision 1.4  2001/12/26 12:00:36  sm
 **	- Fixed modeller info dialog
-**
+**	
 **	Revision 1.3  2001/08/16 14:41:24  sm
 **	- Some more shading shapes added (only BSPline shapes are missing)
 **	
@@ -67,6 +71,16 @@
 **                        Blizzard III: b3App                           **
 **                                                                      **
 *************************************************************************/
+
+BEGIN_MESSAGE_MAP(CB3App, CWinApp)
+	//{{AFX_MSG_MAP(CB3App)
+	//}}AFX_MSG_MAP
+	// Standard file based document commands
+	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
+	ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
+	// Standard print setup command
+	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
+END_MESSAGE_MAP()
 
 CB3App::CB3App(const char *appName) : 
 	CWinApp(),

@@ -88,6 +88,7 @@ protected:
 	virtual b3_render_mode  b3GetRenderMode();
 	virtual void            b3GetGridColor(b3_color *color);
 	virtual void            b3GetDiffuseColor(b3_color *color);
+	        void            b3TransformVertices(b3_matrix *transformation);
 };
 
 #endif

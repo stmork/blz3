@@ -184,6 +184,10 @@ SOURCE=.\b3ShowRaytrace.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Splash.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
@@ -493,6 +497,10 @@ SOURCE=.\res\rot_left.ico
 # Begin Source File
 
 SOURCE=.\res\rot_right.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Splsh16.bmp
 # End Source File
 # Begin Source File
 

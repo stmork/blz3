@@ -194,6 +194,32 @@ public:
 		vector->y *= factor;
 		vector->z *= factor;
 	}
+
+	static inline b3_vector *b3MatrixMul3D(b3_matrix *A,b3_vector *vector)
+	{
+		register b3_f64 x,y,z;
+
+		x = vector->x;
+		y = vector->y;
+		z = vector->z;
+		vector->x = x * A->m11 + y * A->m12 + z * A->m13;
+		vector->y = x * A->m21 + y * A->m22 + z * A->m23;
+		vector->z = x * A->m31 + y * A->m32 + z * A->m33;
+		return vector;
+	}
+
+	static inline b3_vector *b3MatrixMul4D(b3_matrix *A,b3_vector *vector)
+	{
+		register b3_f64 x,y,z;
+
+		x = vector->x;
+		y = vector->y;
+		z = vector->z;
+		vector->x = x * A->m11 + y * A->m12 + z * A->m13 + A->m14;
+		vector->y = x * A->m21 + y * A->m22 + z * A->m23 + A->m24;
+		vector->z = x * A->m31 + y * A->m32 + z * A->m33 + A->m34;
+		return vector;
+	}
 };
 
 b3_f64     b3AngleOfVectors     (b3_vector *dir1,b3_vector *dir2);
@@ -219,8 +245,13 @@ b3_matrix *b3MatrixMirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis, 
 b3_matrix *b3MatrixMirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *base,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
 b3_matrix *b3MatrixMMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
 b3_matrix *b3MatrixSMul         (b3_matrix *Src,b3_matrix *Dst,b3_f64     factor);
-b3_vector *b3MatrixVMul         (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D);
 b3_matrix *b3MatrixMAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
 b3_matrix *b3MatrixRotVec       (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);
+
+inline b3_vector *b3MatrixVMul  (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
+{
+	*Dst = *Src;
+	return (Use4D ? b3Vector::b3MatrixMul4D(Mat,Dst) : b3Vector::b3MatrixMul3D(Mat,Dst));
+}
 
 #endif

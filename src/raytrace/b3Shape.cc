@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2002/01/20 12:48:51  sm
+**      - Added splash screen
+**      - Corrected repeat buttons (capture change)
+**
 **      Revision 1.34  2002/01/10 17:31:11  sm
 **      - Some minor GUI updates.
 **      - b3BBox::b3Transform() changes m_Matrix member.
@@ -547,7 +551,7 @@ void b3Shape2::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3Recompute();
+	b3TransformVertices(transformation);
 }
 
 
@@ -683,7 +687,7 @@ void b3Shape3::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3Recompute();
+	b3TransformVertices(transformation);
 }
 
 
@@ -746,5 +750,5 @@ void b3CSGShape3::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3Recompute();
+	b3TransformVertices(transformation);
 }

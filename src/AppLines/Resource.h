@@ -4,6 +4,7 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             101
+#define IDB_SPLASH                      102
 #define IDS_ASK_DELETE_CAMERA           108
 #define IDS_LIGHT_SAMPLE_LABEL          109
 #define IDR_MAINFRAME                   110

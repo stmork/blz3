@@ -35,6 +35,7 @@
 #include "blz3/system/b3Date.h"
 
 #include "DlgSearchPathList.h"
+#include "b3Splash.h"
 
 /*************************************************************************
 **                                                                      **
@@ -44,6 +45,10 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2002/01/20 12:48:51  sm
+**	- Added splash screen
+**	- Corrected repeat buttons (capture change)
+**
 **	Revision 1.21  2002/01/19 19:57:55  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -51,7 +56,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.20  2002/01/18 16:49:34  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -145,7 +150,7 @@
 **                                                                      **
 *************************************************************************/
 
-BEGIN_MESSAGE_MAP(CAppLinesApp, CWinApp)
+BEGIN_MESSAGE_MAP(CAppLinesApp, CB3App)
 	//{{AFX_MSG_MAP(CAppLinesApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_CHANGE_TEXTURE_PATH, OnChangeTexturePath)
@@ -153,10 +158,6 @@ BEGIN_MESSAGE_MAP(CAppLinesApp, CWinApp)
 	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
 	//}}AFX_MSG_MAP
 	// Standard file based document commands
-	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
-	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 /*************************************************************************
@@ -234,6 +235,11 @@ static const CLSID object_clsid =
 
 BOOL CAppLinesApp::InitInstance()
 {
+	// Parse command line for standard shell commands, DDE, file open
+	CCommandLineInfo cmdInfo;
+	ParseCommandLine(cmdInfo);
+	CSplashWnd::EnableSplashScreen(cmdInfo.m_bShowSplash);
+
 	// Initialize OLE libraries
 	if (!AfxOleInit())
 	{
@@ -325,10 +331,6 @@ BOOL CAppLinesApp::InitInstance()
 	EnableShellOpen();
 	RegisterShellFileTypes(TRUE);
 	m_ClipboardFormatForBlizzardObject = ::RegisterClipboardFormat("Blizzard Object");
-
-	// Parse command line for standard shell commands, DDE, file open
-	CCommandLineInfo cmdInfo;
-	ParseCommandLine(cmdInfo);
 
 	// Check to see if launched as OLE server
 	if (cmdInfo.m_bRunEmbedded || cmdInfo.m_bRunAutomated)

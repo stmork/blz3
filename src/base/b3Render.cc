@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/01/20 12:48:51  sm
+**      - Added splash screen
+**      - Corrected repeat buttons (capture change)
+**
 **      Revision 1.22  2002/01/03 19:07:27  sm
 **      - Cleaned up cut/paste
 **
@@ -418,8 +422,8 @@ void b3RenderObject::b3FreeVertices()
 	b3Free(glGrids);
 	b3Free(glPolygons);
 	glVertices = null;
-	glNormals = null;
-	glGrids = null;
+	glNormals  = null;
+	glGrids    = null;
 	glPolygons = null;
 #endif
 	glVertexCount = 0;
@@ -597,6 +601,32 @@ void b3RenderObject::b3Update()
 		b3ComputeVertices();
 		b3ComputeNormals();
 		glComputed = true;
+	}
+#endif
+}
+
+void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
+{
+#ifdef BLZ3_USE_OPENGL
+	b3_vector *ptr;
+	b3_count   i;
+
+	if (glVertices != null)
+	{
+		ptr = (b3_vector *)glVertices;
+		for (i = 0;i < glVertexCount;i++)
+		{
+			b3Vector::b3MatrixMul4D(transformation,ptr++);
+		}
+	}
+
+	if (glNormals != null)
+	{
+		ptr = (b3_vector *)glNormals;
+		for (i = 0;i < glVertexCount;i++)
+		{
+			b3Vector::b3MatrixMul3D(transformation,ptr++);
+		}
 	}
 #endif
 }

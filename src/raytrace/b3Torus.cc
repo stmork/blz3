@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/01/20 12:48:51  sm
+**	- Added splash screen
+**	- Corrected repeat buttons (capture change)
+**
 **	Revision 1.19  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
-**
+**	
 **	Revision 1.18  2001/12/30 16:54:15  sm
 **	- Inserted safe b3Write() into Lines III
 **	- Fixed b3World saving: b3StoreXXX() methods must ensure
@@ -260,5 +264,5 @@ void b3Torus::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3Recompute();
+	b3TransformVertices(transformation);
 }

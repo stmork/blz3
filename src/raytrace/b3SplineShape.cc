@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2002/01/20 12:48:51  sm
+**      - Added splash screen
+**      - Corrected repeat buttons (capture change)
+**
 **      Revision 1.24  2002/01/06 21:38:18  sm
 **      - Nasty Un CR/LF
 **      - b3Dir fix. Not tested, yet!
@@ -312,10 +316,9 @@ void b3SplineCurve::b3Transform(b3_matrix *transformation)
 	// Transform control points
 	for (x = 0;x < m_Spline.control_num;x++)
 	{
-		b3MatrixVMul (transformation,control,control,true);
+		b3Vector::b3MatrixMul4D(transformation,control);
 		control += offset;
 	}
-	b3Recompute();
 	b3TriangleShape::b3Transform(transformation);
 }
 
@@ -643,11 +646,10 @@ void b3SplineShape::b3Transform(b3_matrix *transformation)
 		control  = &m_Spline[0].controls[y * m_Spline[1].offset];
 		for (x = 0;x < m_Spline[0].control_num;x++)
 		{
-			b3MatrixVMul (transformation,control,control,true);
+			b3Vector::b3MatrixMul4D(transformation,control);
 			control += offset;
 		}
 	}
-	b3Recompute();
 	b3TriangleShape::b3Transform(transformation);
 }
 

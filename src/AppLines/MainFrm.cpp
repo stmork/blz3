@@ -23,6 +23,7 @@
 
 #include "AppLines.h"
 #include "MainFrm.h"
+#include "b3Splash.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2002/01/20 12:48:51  sm
+**	- Added splash screen
+**	- Corrected repeat buttons (capture change)
+**
 **	Revision 1.27  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -39,7 +44,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.26  2002/01/09 19:03:53  sm
 **	- Docking bar order changed.
 **	
@@ -331,6 +336,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_menuManager.Install(this);
 	m_menuManager.LoadToolbars(toolbar_bitmaps,sizeof(toolbar_bitmaps) / sizeof(UINT));
 
+	CSplashWnd::ShowSplashScreen(this);
 	return 0;
 }
 

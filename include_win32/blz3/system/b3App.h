@@ -41,8 +41,16 @@ public:
 			void  b3CoolEnable(bool enable=true);
 
 // From CWinApp
+// Overrides
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CB3App)
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	//}}AFX_VIRTUAL
+
+	//{{AFX_MSG(CAppLinesApp)
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 };
 
 #define CB3GetApp()       ((CB3App *)AfxGetApp())

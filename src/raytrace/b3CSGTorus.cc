@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2002/01/20 12:48:51  sm
+**      - Added splash screen
+**      - Corrected repeat buttons (capture change)
+**
 **      Revision 1.10  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -182,5 +186,5 @@ void b3CSGTorus::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3Recompute();
+	b3TransformVertices(transformation);
 }

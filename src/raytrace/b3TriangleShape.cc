@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/20 12:48:51  sm
+**      - Added splash screen
+**      - Corrected repeat buttons (capture change)
+**
 **      Revision 1.20  2002/01/01 13:50:22  sm
 **      - Fixed some memory leaks:
 **        o concerning triangle shape and derived spline shapes
@@ -136,16 +140,15 @@ b3TriangleShape::~b3TriangleShape()
 
 void b3TriangleShape::b3Transform(b3_matrix *transformation)
 {
-	b3_index i;
+	b3_index   i;
+	b3_vertex *ptr = m_Vertices;
 
 	for (i = 0;i < m_VertexCount;i++)
 	{
-		b3MatrixVMul (
-			transformation,
-			&m_Vertices[i].Point,
-			&m_Vertices[i].Point,true);
+		b3Vector::b3MatrixMul4D (transformation,&ptr->Point);
+		ptr++;
 	}
-	b3Recompute();
+	b3TransformVertices(transformation);
 }
 
 b3_bool b3TriangleShape::b3AddCubicItem (
