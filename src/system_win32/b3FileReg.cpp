@@ -32,12 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/09 16:37:59  sm
+**	- Added scaling property page to oak plank material
+**	- Corrected so,e input parameters.
+**
 **	Revision 1.1  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	
 */
 
@@ -138,8 +142,8 @@ b3_u08 *b3FileReg::b3ReadBuffer(const char *filename,b3_size &filesize)
 
 b3_size  b3FileReg::b3Write     (const void * write_buffer,const b3_size size)
 {
-	const b3_u08   *buffer = (const b3_u08 *)write_buffer;
-	b3_size   i;
+	const b3_u08 *buffer = (const b3_u08 *)write_buffer;
+	b3_size       i;
 
 	for (i = 0;i < size;i++)
 	{
@@ -153,7 +157,7 @@ b3_size  b3FileReg::b3Write     (const void * write_buffer,const b3_size size)
 			m_Pos++;
 		}
 	}
-	return 0;
+	return i;
 }
 
 b3_bool  b3FileReg::b3Flush     ()

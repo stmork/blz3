@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/09 16:37:59  sm
+**	- Added scaling property page to oak plank material
+**	- Corrected so,e input parameters.
+**
 **	Revision 1.11  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.10  2004/05/07 16:30:33  sm
 **	- Bug #13 fixed. The BBox hierarchy is recounted on every
 **	  object edit finish.
@@ -153,6 +157,7 @@ void CDlgMatOakPlank::b3InitDialog()
 	m_PageLight.b3AddToSheet(&m_PropertySheet);
 	m_PageWood.b3AddToSheet(&m_PropertySheet);
 	m_PageOakPlank.b3AddToSheet(&m_PropertySheet);
+	m_PageScaling.b3AddToSheet(&m_PropertySheet);
 }
 
 void CDlgMatOakPlank::b3UpdateUI()

@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/09 16:37:59  sm
+**	- Added scaling property page to oak plank material
+**	- Corrected so,e input parameters.
+**
 **	Revision 1.5  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
-**
+**	
 **	Revision 1.4  2004/04/26 12:27:43  sm
 **	- Added following dialogs:
 **	  o granite
@@ -77,14 +81,23 @@ CPageWood::CPageWood() : CB3PropertyPage(CPageWood::IDD)
 	m_RingyCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
 	m_GrainyCtrl.b3SetUnit(b3ControlUnits::B3_UNIT_PERCENT);
 	m_GrainFrequencyCtrl.b3SetRange(0,50);
+	m_GrainFrequencyCtrl.b3SetIncrement(0.5);
 	m_RingSpacingCtrl.b3SetRange(0,2);
+	m_RingSpacingCtrl.b3SetIncrement(0.01);
 	m_RingFrequencyCtrl.b3SetRange(0,2);
+	m_RingFrequencyCtrl.b3SetIncrement(0.01);
 	m_RingNoiseCtrl.b3SetRange(0,2);
+	m_RingNoiseCtrl.b3SetIncrement(0.01);
 	m_RingNoiseFrequencyCtrl.b3SetRange(0,2);
+	m_RingNoiseFrequencyCtrl.b3SetIncrement(0.01);
 	m_TrunkWobbleCtrl.b3SetRange(0,2);
+	m_TrunkWobbleCtrl.b3SetIncrement(0.01);
 	m_TrunkWobbleFrequencyCtrl.b3SetRange(0,0.025);
+	m_TrunkWobbleFrequencyCtrl.b3SetIncrement(0.01);
 	m_AngularWobbleCtrl.b3SetRange(0,1);
+	m_AngularWobbleCtrl.b3SetIncrement(0.01);
 	m_AngularWobbleFrequencyCtrl.b3SetRange(0,1);
+	m_AngularWobbleFrequencyCtrl.b3SetIncrement(0.01);
 }
 
 CPageWood::~CPageWood()
