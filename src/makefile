@@ -103,20 +103,20 @@ $(BLZ3_BIN):
 	mkdir -p $@
 
 $(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB) lib_system lib_system_ind
-	$(AR) $(ARFLAGS) $@ system_unix/*.o system_independend/*.o
+	$(AR) $(ARFLAGS) $@ system_unix/*.o system/*.o
 	$(RANLIB) $@
 
 $(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB) lib_raytrace
 
 $(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_base lib_image lib_tiff lib_jpeg lib_system lib_system_ind
-	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o system_independend/*.o
+	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o system/*.o
 	$(RANLIB) $@
 
 lib_system:
 	+@make -C system_unix
 	
 lib_system_ind:
-	+@make -C system_independend
+	+@make -C system
 	
 lib_base:
 	+@make -C base

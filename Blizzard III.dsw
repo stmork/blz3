@@ -180,7 +180,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "LibSystemInd"=.\src\system_independend\LibSystemIndependend.dsp - Package Owner=<4>
+Project: "LibSystemInd"=.\src\system\LibSystemIndependend.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

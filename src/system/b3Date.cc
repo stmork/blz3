@@ -48,12 +48,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/08/11 08:17:41  sm
+**	- Renamed system_independend to system like include
+**
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.2  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
