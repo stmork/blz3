@@ -36,13 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/05/13 11:22:19  sm
+**	- Added animated clouds.
+**
 **	Revision 1.33  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
 **	- Moved b3Scaling in its own files.
 **	- Added property pages for scaling and removed
 **	  scaling input fields from dialogs.
-**
+**	
 **	Revision 1.32  2004/04/22 14:35:16  sm
 **	- Optimized clouds by making them inline.
 **	
@@ -345,7 +348,7 @@ void b3Scene::b3GetBackgroundColor(
 			break;
 
 		case TP_SKY_N_HELL :
-			sight      = b3Noise::b3Clouds(&ray->dir,r);
+ 			sight      = b3Noise::b3Clouds(ray,r,b3GetTimePoint());
 			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
 
 #ifdef SKY_SLIDE

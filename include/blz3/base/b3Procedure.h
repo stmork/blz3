@@ -148,33 +148,37 @@ public:
 		}
 	}
 
-	static inline b3_f64 b3Clouds (b3_vector64 *P,b3_f64 &r)
+	static inline b3_f64 b3Clouds (b3_line64 *ray,b3_f64 &r,b3_f64 time)
 	{
 		b3_vector Dir;
+		b3_vector Anim;
+		b3_vector PosScale;
 		b3_f64    scaling   =   5.0;
 		b3_f64    R         = EARTH_RADIUS_KM;
 		b3_f64    sharpness =  10.2;
 		b3_f64    sight;
 
-		if (P->z > 0)
+		b3Vector::b3Init(&Anim, 0.1, 0.1, 0.05);
+		b3Vector::b3Init(&PosScale,0.01f,0.01f,0.01f);
+		if (ray->dir.z > 0)
 		{
 			b3_f64 Rc,p,D,len;
 
 			Rc = R + 1;
 
-			p     = P->z * -R;
+			p     = ray->dir.z * -R;
 			D     = p * p + Rc * Rc - R * R;
 			len   = (-p - sqrt(D)) * scaling;
-			Dir.x = P->x * len;
-			Dir.y = P->y * len;
-			Dir.z = P->z * len;
+			Dir.x = ray->pos.x * PosScale.x + ray->dir.x * len + Anim.x * time;
+			Dir.y = ray->pos.y * PosScale.y + ray->dir.y * len + Anim.y * time;
+			Dir.z = ray->pos.z * PosScale.z + ray->dir.z * len + Anim.z * time;
 
 			r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
 			if (r < 0)
 			{
 				r = 0;
 			}
-			sight = P->z;
+			sight = ray->dir.z;
 		}
 		else
 		{
