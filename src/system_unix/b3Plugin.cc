@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/06/01 12:07:01  sm
+**	- Minor plugin changes
+**
 **	Revision 1.2  2003/05/25 16:47:31  sm
 **	- Added error messages in case a plugin fails.
-**
+**	
 **	Revision 1.1  2003/05/24 16:37:06  sm
 **	- Added plugin support for Un*x
 **	
@@ -69,7 +72,11 @@ b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
 
 b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 {
-	m_Handle = dlopen(library,RTLD_LAZY | RTLD_GLOBAL);
+}
+
+void b3Plugin::b3Load()
+{
+	m_Handle = dlopen(m_PluginPath,RTLD_LAZY | RTLD_GLOBAL);
 	if (m_Handle != null)
 	{
 		b3_plugin_init_func init;
@@ -96,7 +103,7 @@ b3Plugin::b3Plugin(b3Path &library) : b3PluginBase(library)
 	}
 }
 
-b3Plugin::~b3Plugin()
+void b3Plugin::b3Unload()
 {
 	if (m_Handle != null)
 	{
