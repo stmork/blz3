@@ -36,6 +36,9 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/30 20:43:19  sm
+**	- Fixed casting error under intel compiler.
+**
 **	Revision 1.11  2004/05/30 20:25:00  sm
 **	- Set paging size in supersampling dialog to 1 instead of 10.
 **	- Added support for debugging super sampling.
@@ -43,7 +46,7 @@
 **	- Fixed animation problem when using rotating elements on
 **	  time bounds because of rounding problems. Now using
 **	  b3_f32 for time points.
-**
+**	
 **	Revision 1.10  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
@@ -395,7 +398,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		fxRight   += m_fxStep;
 		fxLeft    += m_fxStep;
 
-		m_buffer[x] = m_Debug ? result : m_ThisResult[x];
+		m_buffer[x] = m_Debug ? result : (b3_pkd_color)m_ThisResult[x];
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();
