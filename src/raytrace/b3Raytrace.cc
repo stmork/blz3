@@ -37,6 +37,10 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2002/11/16 14:24:00  sm
+**	- Added a CPU benchmark
+**	- Removed system dependend #IF from raytracing
+**
 **	Revision 1.48  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -46,7 +50,7 @@
 **	  which I only can assume what they are doing;-)
 **	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
 **	  and corrected upper time limit.
-**
+**	
 **	Revision 1.47  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
@@ -407,9 +411,7 @@ void b3Scene::b3DoRaytrace(b3Display *display,b3_count CPUs)
 	for (i = 0;i < CPUs;i++)
 	{
 		threads[i].b3Wait();
-#if defined(__linux__) || defined(WIN32)
 		threads[i].b3AddTimeSpan(&span);
-#endif
 	}
 	span.b3Stop();
 	span.b3Print();
@@ -502,9 +504,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 	for (i = 0;i < CPUs;i++)
 	{
 		threads[i].b3Wait();
-#if defined(__linux__) || defined(WIN32)
 		threads[i].b3AddTimeSpan(&span);
-#endif
 	}
 
 	span.b3Stop();

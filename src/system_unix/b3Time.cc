@@ -35,12 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/11/16 14:24:00  sm
+**	- Added a CPU benchmark
+**	- Removed system dependend #IF from raytracing
+**
 **	Revision 1.5  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.4  2002/08/16 13:20:14  sm
 **	- Removed some unused methods.
 **	- Allocation bug found in brt3 - the Un*x version of the
@@ -96,22 +100,16 @@ void b3TimeSpan::b3Stop()
 #endif
 
 	m_uTime += (
-		 usage_stop.ru_utime.tv_sec  * 1000 + 
-		 usage_stop.ru_utime.tv_usec / 1000 -
-		m_UsageTime.ru_utime.tv_sec  * 1000 -
-		m_UsageTime.ru_utime.tv_usec / 1000);
+		 usage_stop.ru_utime.tv_sec + (b3_f64)usage_stop.ru_utime.tv_usec  / 1000000.0 -
+		m_UsageTime.ru_utime.tv_sec - (b3_f64)m_UsageTime.ru_utime.tv_usec / 1000000.0);
 
 	m_sTime += (
-		 usage_stop.ru_stime.tv_sec  * 1000 + 
-		 usage_stop.ru_stime.tv_usec / 1000 -
-		m_UsageTime.ru_stime.tv_sec  * 1000 -
-		m_UsageTime.ru_stime.tv_usec / 1000);
+		 usage_stop.ru_stime.tv_sec + (b3_f64)usage_stop.ru_stime.tv_usec  / 1000000.0 -
+		m_UsageTime.ru_stime.tv_sec - (b3_f64)m_UsageTime.ru_stime.tv_usec / 1000000.0);
 
 	m_rTime += (
-		 real_stop.time    * 1000 + 
-		 real_stop.millitm        -
-		m_RealTime.time    * 1000 -
-		m_RealTime.millitm);
+		real_stop.time  + (b3_f64)real_stop.millitm  / 1000.0  -
+		m_RealTime.time - (b3_f64)m_RealTime.millitm / 1000.0);
 }
 
 /*************************************************************************

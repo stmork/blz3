@@ -37,11 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/11/16 14:24:00  sm
+**	- Added a CPU benchmark
+**	- Removed system dependend #IF from raytracing
+**
 **	Revision 1.12  2002/09/16 16:49:59  sm
 **	- Done some setup cleanups
 **	- Using _SC_NPROC_ONLN instead of _SC_NPROCESSORS_ONLN if
 **	  available.
-**
+**	
 **	Revision 1.11  2002/09/15 09:08:30  sm
 **	- Some adjustments to compile on SGI Mips R10000:-) Which seems
 **	  to be the most efficient CPU on world...
@@ -359,8 +363,10 @@ b3_u32 b3Thread::b3Wait()
 
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 {
+#ifdef __linux__
 	span->m_uTime += m_Span.m_uTime;
 	span->m_sTime += m_Span.m_sTime;
+#endif
 } 
 
 /*************************************************************************

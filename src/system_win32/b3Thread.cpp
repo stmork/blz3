@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/11/16 14:24:00  sm
+**	- Added a CPU benchmark
+**	- Removed system dependend #IF from raytracing
+**
 **	Revision 1.12  2002/08/25 13:32:20  sm
 **	- Renamed members in b3Thread of Windows implementation.
-**
+**	
 **	Revision 1.10  2002/08/24 13:07:34  sm
 **	- Added error message for errornous thread starting.
 **	
@@ -325,8 +329,10 @@ b3_bool b3Thread::b3IsRunning()
 
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 {
+#ifdef WIN32
 	span->m_uTime += m_Span.m_uTime;
 	span->m_sTime += m_Span.m_sTime;
+#endif
 } 
 
 /*************************************************************************
