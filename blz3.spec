@@ -8,7 +8,7 @@ Version: %{ver}
 Release: %{rel}
 Copyright: GPL
 Source: blz3.tar.gz
-Group: Applications/Multimedia
+Group: Productivity/Graphics/Visualization/Raytracers
 BuildRoot: /var/tmp/%{name}-buildroot
 
 %package devel
