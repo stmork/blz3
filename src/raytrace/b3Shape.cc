@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.57  2004/04/11 18:21:36  sm
+**      - Raytracer redesign:
+**        o The complete set of surface values moved into
+**          the b3_surface data structure when calling b3GetColors()
+**
 **      Revision 1.56  2004/04/11 14:05:11  sm
 **      - Raytracer redesign:
 **        o The reflection/refraction/ior/specular exponent getter
@@ -627,27 +632,19 @@ b3Material *b3Shape::b3GetColors(
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(
-			ray,
-			surface->diffuse,
-			surface->ambient,
-			surface->specular,
-			surface->refl,
-			surface->refr,
-			surface->ior,
-			surface->se))
+		if (material->b3GetColors(ray,surface))
 		{
 			return material;
 		}
 	}
-	surface->diffuse.b3Init( 0.1f, 0.5f, 1.0f,0.0f);
-	surface->ambient.b3Init( 0.05f,0.25f,0.5f,0.0f);
-	surface->specular.b3Init(0.1f, 0.1f, 0.1f,0.0f);
+	surface->m_Diffuse.b3Init( 0.1f, 0.5f, 1.0f,0.0f);
+	surface->m_Ambient.b3Init( 0.05f,0.25f,0.5f,0.0f);
+	surface->m_Specular.b3Init(0.1f, 0.1f, 0.1f,0.0f);
 
-	surface->refl =      0.0f;
-	surface->refr =      0.0f;
-	surface->ior  =      1.0f;
-	surface->se   = 100000.0f;
+	surface->m_Reflection  =      0.0f;
+	surface->m_Refraction  =      0.0f;
+	surface->m_Ior         =      1.0f;
+	surface->m_SpecularExp = 100000.0f;
 
 	return null;
 }

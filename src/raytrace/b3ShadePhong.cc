@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/04/11 18:21:36  sm
+**	- Raytracer redesign:
+**	  o The complete set of surface values moved into
+**	    the b3_surface data structure when calling b3GetColors()
+**
 **	Revision 1.16  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -40,7 +45,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.15  2004/03/01 14:00:32  sm
 **	- Ready to go for Cook/Torrance reflectance model.
 **	
@@ -175,9 +180,9 @@ void b3ScenePhong::b3Illuminate(
 					surface->refl_ray.dir.x * Jit->dir.x +
 					surface->refl_ray.dir.y * Jit->dir.y +
 					surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
-				Factor = exp(Factor * surface->se) * Jit->LightFrac;
+				Factor = exp(Factor * surface->m_SpecularExp) * Jit->LightFrac;
 
-				result += (surface->specular * Factor +	surface->diffuse * ShapeAngle) * light->m_Color;
+				result += (surface->m_Specular * Factor + surface->m_Diffuse * ShapeAngle) * light->m_Color;
 			}
 		}
 	}
@@ -244,17 +249,17 @@ b3_bool b3ScenePhong::b3Shade(
 		material = shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 
-		ray->color = surface.ambient;
+		ray->color = surface.m_Ambient;
 
 		transparent = b3ComputeOutputRays(&surface);
 		if (transparent)
 		{
-			if (surface.ior == 1)
+			if (surface.m_Ior == 1)
 			{
 				surface.refr_ray.inside = false;
 				surface.refl_ray.inside = false;
 			}
-			refr = surface.refr;
+			refr = surface.m_Refraction;
 			if (!b3Shade(&surface.refr_ray,depth_count + 1))
 			{
 				b3GetInfiniteColor(&surface.refr_ray);
@@ -266,7 +271,7 @@ b3_bool b3ScenePhong::b3Shade(
 			refr = 0;
 		}
 
-		refl = surface.refl;
+		refl = surface.m_Reflection;
 		if (refl > 0)
 		{
 			if (!b3Shade(&surface.refl_ray,depth_count + 1))

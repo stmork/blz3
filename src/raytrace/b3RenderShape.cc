@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.65  2004/04/11 18:21:36  sm
+**      - Raytracer redesign:
+**        o The complete set of surface values moved into
+**          the b3_surface data structure when calling b3GetColors()
+**
 **      Revision 1.64  2004/04/11 14:05:11  sm
 **      - Raytracer redesign:
 **        o The reflection/refraction/ior/specular exponent getter
@@ -604,53 +609,6 @@ void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3GetDiffuseColor(b3Color &color)
-{
-	b3Item     *item;
-	b3Material *material;
-	b3Color     ambient,specular;
-	b3_ray      ray;
-	b3_f64      reflection;
-	b3_f64      refraction;
-	b3_f64      ior;
-	b3_f64      spec_exp;
-
-	color.b3Init(0.1f,0.5f,1.0f,0.0f);
-	B3_FOR_BASE(b3GetMaterialHead(),item)
-	{
-		material = (b3Material *)item;
-		if (material->b3GetColors(&ray,color,ambient,specular,reflection,refraction,ior,spec_exp))
-		{
-			return;
-		}
-	}
-}
-
-b3_f64 b3Shape::b3GetColors(
-	b3Color  &ambient,
-	b3Color  &diffuse,
-	b3Color  &specular)
-{
-	b3Item     *item;
-	b3Material *material;
-	b3_ray      ray;
-	b3_f64      reflection;
-	b3_f64      refraction;
-	b3_f64      ior;
-	b3_f64      spec_exp;
-
-	B3_FOR_BASE(b3GetMaterialHead(),item)
-	{
-		material = (b3Material *)item;
-		if (material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp))
-		{
-			return spec_exp;
-		}
-	}
-
-	return b3RenderObject::b3GetColors(ambient,diffuse,specular);
-}
-
 b3_bool b3Shape::b3GetChess(
 	b3Color  &black,
 	b3Color  &white,
@@ -730,15 +688,9 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 		b3Material       *material;
 		b3_stencil_limit  limit;
 		b3_ray            ray;
+		b3_surface        surface;
 		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
 		b3_pkd_color      color;
-		b3Color           diffuse;
-		b3Color           ambient;
-		b3Color           specular;
-		b3_f64            reflection;
-		b3_f64            refraction;
-		b3_f64            ior;
-		b3_f64            spec_exp;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
@@ -763,10 +715,10 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
-					if (material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp))
+					if (material->b3GetColors(&ray,&surface))
 					{
-						diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
-						color     = diffuse;
+						surface.m_Diffuse.b3SetAlpha(b3CheckStencil(&ray.polar) ? 0 : 1);
+						color     = surface.m_Diffuse;
 						loop      = false;
 					}
 				}

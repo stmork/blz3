@@ -31,6 +31,11 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/11 18:21:36  sm
+**	- Raytracer redesign:
+**	  o The complete set of surface values moved into
+**	    the b3_surface data structure when calling b3GetColors()
+**
 **	Revision 1.2  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -39,7 +44,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.1  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
@@ -100,11 +105,7 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 	b3Material *material = (b3Material *)info->m_Ptr;
 	b3_coord              x,y;
 	b3_ray                ray;
-	b3Color               ambient,diffuse,specular;
-	b3_f64                reflection;
-	b3_f64                refraction;
-	b3_f64                ior;
-	b3_f64                spec_exp;
+	b3_surface            surface;
 	b3_f64                fy;
 	b3_pkd_color         *data = info->m_Data;
 
@@ -125,9 +126,9 @@ void b3MaterialSampler::b3SampleTask(b3SampleInfo *info)
 			ray.ipoint.x = 100 * ray.polar.m_BoxPolar.x;
 			ray.ipoint.y = 100 * ray.polar.m_BoxPolar.y;
 			ray.ipoint.z = 100 * ray.polar.m_BoxPolar.z;
-			material->b3GetColors(&ray,diffuse,ambient,specular,reflection,refraction,ior,spec_exp);
+			material->b3GetColors(&ray,&surface);
 
-			*data++ = diffuse;
+			*data++ = surface.m_Diffuse;
 		}
 	}
 }

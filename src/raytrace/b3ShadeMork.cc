@@ -35,6 +35,11 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/04/11 18:21:36  sm
+**	- Raytracer redesign:
+**	  o The complete set of surface values moved into
+**	    the b3_surface data structure when calling b3GetColors()
+**
 **	Revision 1.20  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -43,7 +48,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.19  2004/02/29 18:44:55  sm
 **	- Further shader development
 **	
@@ -180,7 +185,7 @@ void b3SceneMork::b3Illuminate(
 		b3Color  filter;
 
 		// Real absorption
-		result += (surface->diffuse * m_ShadowFactor);
+		result += (surface->m_Diffuse * m_ShadowFactor);
 
 		filter.b3Init();
 
@@ -193,15 +198,15 @@ void b3SceneMork::b3Illuminate(
 				surface->incoming->normal.y * Jit->dir.y +
 				surface->incoming->normal.z * Jit->dir.z) >= 0)
 			{
-				if (surface->se < 100000)
+				if (surface->m_SpecularExp < 100000)
 				{
 					Factor = log ((
 						surface->refl_ray.dir.x * Jit->dir.x +
 						surface->refl_ray.dir.y * Jit->dir.y +
 						surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
 
-					Factor = exp (Factor * surface->se) * Jit->LightFrac;
-					surface->specular_sum += (light->m_Color * Factor);
+					Factor = exp (Factor * surface->m_SpecularExp) * Jit->LightFrac;
+					surface->m_SpecularSum += (light->m_Color * Factor);
 				}
 			}
 			else
@@ -216,7 +221,7 @@ void b3SceneMork::b3Illuminate(
 			}
 		}
 
-		result += (surface->diffuse * filter);
+		result += (surface->m_Diffuse * filter);
 	}
 }
 
@@ -308,7 +313,7 @@ b3_bool b3SceneMork::b3Shade(
 	b3_bool      transparent;
 	b3_bool      result = false;
 
-	surface.specular_sum.b3Init();
+	surface.m_SpecularSum.b3Init();
 	ray->color.b3Init();
 
 	// Normalize incoming ray
@@ -346,12 +351,12 @@ b3_bool b3SceneMork::b3Shade(
 		transparent = b3ComputeOutputRays(&surface);
 		if (transparent)
 		{
-			if (surface.ior == 1)
+			if (surface.m_Ior == 1)
 			{
 				surface.refr_ray.inside = false;
 				surface.refl_ray.inside = false;
 			}
-			refr = surface.refr;
+			refr = surface.m_Refraction;
 		}
 		else
 		{
@@ -362,9 +367,9 @@ b3_bool b3SceneMork::b3Shade(
 		if (depth_count <= m_TraceDepth)
 		{
 			// Reflection
-			if (((!ray->inside) || (!transparent)) && (surface.refl > 0))
+			if (((!ray->inside) || (!transparent)) && (surface.m_Reflection > 0))
 			{
-				refl = surface.refl;
+				refl = surface.m_Reflection;
 				if (!b3Shade(&surface.refl_ray,depth_count + 1))
 				{
 					b3GetInfiniteColor(&surface.refl_ray);
@@ -415,7 +420,7 @@ b3_bool b3SceneMork::b3Shade(
 			ray->color += (surface.refr_ray.color * refr);
 		}
 
-		ray->color += surface.specular_sum;
+		ray->color += surface.m_SpecularSum;
 
 		if (m_Nebular != null)
 		{

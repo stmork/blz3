@@ -77,8 +77,14 @@ struct b3_ray : public b3_line64
 // aux. structure for computing illumination
 struct b3_surface
 {
-	b3Color   diffuse,ambient,specular,specular_sum;
-	b3_f64    refl,refr,ior,se;
+	b3Color   m_Diffuse;
+	b3Color   m_Ambient;
+	b3Color   m_Specular;
+	b3Color   m_SpecularSum;
+	b3_f64    m_Reflection;
+	b3_f64    m_Refraction;
+	b3_f64    m_Ior;
+	b3_f64    m_SpecularExp;
 };
 
 struct b3_ray_info : public b3_ray
@@ -642,15 +648,7 @@ public:
 		return false;
 	}
 
-	virtual b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	virtual b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // MATERIAL or MAT_NORMAL
@@ -674,15 +672,7 @@ public:
 	B3_ITEM_LOAD(b3MatNormal);
 
 	        void    b3Write();
-	virtual b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	virtual b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // CHESS
@@ -705,15 +695,7 @@ public:
 	B3_ITEM_LOAD(b3MatChess);
 
 	void    b3Write();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // MARBLE
@@ -735,15 +717,7 @@ public:
 	B3_ITEM_LOAD(b3MatMarble);
 
 	void    b3Write();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // WOOD
@@ -767,15 +741,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 
 private:
 	void    b3Init();
@@ -807,15 +773,7 @@ public:
 
 	void     b3Write();
 	b3_bool  b3Prepare();
-	b3_bool  b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 
 private:
 	void     b3Init();
@@ -843,15 +801,7 @@ public:
 	void    b3Write();
 	b3_bool b3Prepare();
 	void    b3SetTexture(const char *name);
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // WRAPTEXTURE
@@ -874,15 +824,7 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 // SLIDE
@@ -903,15 +845,7 @@ public:
 	B3_ITEM_LOAD(b3MatSlide);
 
 	void    b3Write();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 #define DIR_SLIDE_BIT       0
@@ -973,15 +907,7 @@ public:
 	B3_ITEM_LOAD(b3MatGranite);
 
 	void    b3Write();
-	b3_bool b3GetColors(
-		b3_ray   *ray,
-		b3Color  &diff,
-		b3Color  &amb,
-		b3Color  &spec,
-		b3_f64   &reflection,
-		b3_f64   &refraction,
-		b3_f64   &index_of_refraction,
-		b3_f64   &specular_exponent);
+	b3_bool b3GetColors(b3_ray *ray,b3_surface *surface);
 };
 
 /*************************************************************************
@@ -1137,8 +1063,6 @@ public:
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void            b3GetDiffuseColor(b3Color &color);
-	b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
 	b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
 	b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	b3_bool         b3GetImage(b3Tx *image);

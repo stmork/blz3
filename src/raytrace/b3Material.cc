@@ -38,6 +38,11 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2004/04/11 18:21:36  sm
+**      - Raytracer redesign:
+**        o The complete set of surface values moved into
+**          the b3_surface data structure when calling b3GetColors()
+**
 **      Revision 1.55  2004/04/11 14:05:11  sm
 **      - Raytracer redesign:
 **        o The reflection/refraction/ior/specular exponent getter
@@ -304,20 +309,12 @@ b3_bool b3Material::b3Prepare()
 	return true;
 }
 
-b3_bool b3Material::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3Material::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
-	reflection = 0.0;
-	refraction = 0.0;
-	index_of_refraction = 1.0;
-	specular_exponent = 100000.0;
+	surface->m_Reflection  =      0.0;
+	surface->m_Refraction  =      0.0;
+	surface->m_Ior         =      1.0;
+	surface->m_SpecularExp = 100000.0;
 
 	return false;
 }
@@ -376,24 +373,16 @@ void b3MatNormal::b3Write()
 	b3StoreInt  (m_Flags);
 }
 
-b3_bool b3MatNormal::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatNormal::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
-	diffuse  = m_DiffColor;
-	ambient  = m_AmbColor;
-	specular = m_SpecColor;
+	surface->m_Diffuse  = m_DiffColor;
+	surface->m_Ambient  = m_AmbColor;
+	surface->m_Specular = m_SpecColor;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -468,27 +457,19 @@ void b3MatChess::b3Write()
 
 #define CHESS_INDEX(x,y) (((b3_index)(((x) + 1) * m_xTimes) + (b3_index)(((y) + 1) * m_yTimes) + 1) & 1)
 
-b3_bool b3MatChess::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatChess::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_index index;
 
 	index    = CHESS_INDEX(ray->polar.m_Polar.x,ray->polar.m_Polar.y);
-	diffuse  = m_DiffColor[index];
-	ambient  = m_AmbColor[index];
-	specular = m_SpecColor[index];
+	surface->m_Diffuse  = m_DiffColor[index];
+	surface->m_Ambient  = m_AmbColor[index];
+	surface->m_Specular = m_SpecColor[index];
 	
-	reflection          = m_Reflection[index];
-	refraction          = m_Refraction[index];
-	index_of_refraction = m_RefrValue[index];
-	specular_exponent   = m_HighLight[index];
+	surface->m_Reflection  = m_Reflection[index];
+	surface->m_Refraction  = m_Refraction[index];
+	surface->m_Ior         = m_RefrValue[index];
+	surface->m_SpecularExp = m_HighLight[index];
 
 	return true;
 }
@@ -565,15 +546,7 @@ void b3MatTexture::b3SetTexture(const char *name)
 	m_Name.b3Format("%s",name);
 }
 
-b3_bool b3MatTexture::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatTexture::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy;
@@ -594,14 +567,14 @@ b3_bool b3MatTexture::b3GetColors(
 	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
 	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
 
-	diffuse = b3Color(m_Texture->b3GetValue(x,y));
-	ambient = diffuse * 0.3;
-	specular.b3Init(0.7f,0.7f,0.7f);
+	surface->m_Diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	surface->m_Ambient = surface->m_Diffuse * 0.3;
+	surface->m_Specular.b3Init(0.7f,0.7f,0.7f);
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -652,15 +625,7 @@ b3_bool b3MatWrapTexture::b3Prepare()
 	return b3Scene::b3CheckTexture(&m_Texture,m_Name);
 }
 
-b3_bool b3MatWrapTexture::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatWrapTexture::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
@@ -712,14 +677,14 @@ b3_bool b3MatWrapTexture::b3GetColors(
 		return false;
 	}
 
-	diffuse = b3Color(m_Texture->b3GetValue(x,y));
-	ambient = diffuse * 0.3;
-	specular.b3Init(0.7f,0.7f,0.7f);
+	surface->m_Diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	surface->m_Ambient = surface->m_Diffuse * 0.3;
+	surface->m_Specular.b3Init(0.7f,0.7f,0.7f);
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -768,15 +733,7 @@ void b3MatSlide::b3Write()
 	b3StoreInt(m_ModeFlag);
 }
 
-b3_bool b3MatSlide::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatSlide::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_f64 Factor;
 
@@ -812,14 +769,14 @@ b3_bool b3MatSlide::b3GetColors(
 			break;
 	}
 
-	diffuse  = m_Diffuse[0]  + (m_Diffuse[1]  - m_Diffuse[0]) * Factor;
-	ambient  = m_Ambient[0]  + (m_Ambient[1]  - m_Ambient[0]) * Factor;
-	specular = m_Specular[0] + (m_Specular[1] - m_Specular[0]) * Factor;
+	surface->m_Diffuse  = m_Diffuse[0]  + (m_Diffuse[1]  - m_Diffuse[0]) * Factor;
+	surface->m_Ambient  = m_Ambient[0]  + (m_Ambient[1]  - m_Ambient[0]) * Factor;
+	surface->m_Specular = m_Specular[0] + (m_Specular[1] - m_Specular[0]) * Factor;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -864,15 +821,7 @@ void b3MatMarble::b3Write()
 	b3StoreCount(m_yTimes);
 }
 
-b3_bool b3MatMarble::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatMarble::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3Color   mask;
 	b3_vector d;
@@ -883,14 +832,14 @@ b3_bool b3MatMarble::b3GetColors(
 
 	b3Noise::b3Marble(&d,mask);
 
-	diffuse  = m_DiffColor * mask;
-	ambient  = m_AmbColor  * mask;
-	specular = m_SpecColor * mask;
+	surface->m_Diffuse  = m_DiffColor * mask;
+	surface->m_Ambient  = m_AmbColor  * mask;
+	surface->m_Specular = m_SpecColor * mask;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -999,15 +948,7 @@ void b3MatWood::b3Write()
 	b3StoreColor(m_DarkWood);
 }
 
-b3_bool b3MatWood::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatWood::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_vector point;
 	b3_f64    mix;
@@ -1017,14 +958,14 @@ b3_bool b3MatWood::b3GetColors(
 	
 	mix = b3ComputeWood(&point);
 
-	diffuse  = b3Color::b3Mix(m_LightWood,m_DarkWood,mix);
-	ambient  = m_AmbColor;
-	specular = m_SpecColor;
+	surface->m_Diffuse  = b3Color::b3Mix(m_LightWood,m_DarkWood,mix);
+	surface->m_Ambient  = m_AmbColor;
+	surface->m_Specular = m_SpecColor;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -1194,27 +1135,19 @@ void b3MatOakPlank::b3Write()
 	b3StoreFloat(m_Ringy);
 }
 
-b3_bool b3MatOakPlank::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatOakPlank::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3_index index;
 	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_ObjectPolar,index);
 
-	diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
-	ambient  = m_AmbColor;
-	specular = m_SpecColor;
+	surface->m_Diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
+	surface->m_Ambient  = m_AmbColor;
+	surface->m_Specular = m_SpecColor;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }
@@ -1393,15 +1326,7 @@ void b3MatGranite::b3Write()
 	b3StoreCount(m_Overtone);
 }
 
-b3_bool b3MatGranite::b3GetColors(
-	b3_ray   *ray,
-	b3Color  &diffuse,
-	b3Color  &ambient,
-	b3Color  &specular,
-	b3_f64   &reflection,
-	b3_f64   &refraction,
-	b3_f64   &index_of_refraction,
-	b3_f64   &specular_exponent)
+b3_bool b3MatGranite::b3GetColors(b3_ray *ray,b3_surface *surface)
 {
 	b3Color   mask;
 	b3_vector d;
@@ -1435,14 +1360,14 @@ b3_bool b3MatGranite::b3GetColors(
 		mask = b3Color::b3Mix(m_DarkColor,m_LightColor,sum);
 	}
 	
-	diffuse  = m_DiffColor * mask;
-	ambient  = m_AmbColor  * mask;
-	specular = m_SpecColor * mask;
+	surface->m_Diffuse  = m_DiffColor * mask;
+	surface->m_Ambient  = m_AmbColor  * mask;
+	surface->m_Specular = m_SpecColor * mask;
 
-	reflection          = m_Reflection;
-	refraction          = m_Refraction;
-	index_of_refraction = m_RefrValue;
-	specular_exponent   = m_HighLight;
+	surface->m_Reflection  = m_Reflection;
+	surface->m_Refraction  = m_Refraction;
+	surface->m_Ior         = m_RefrValue;
+	surface->m_SpecularExp = m_HighLight;
 
 	return true;
 }

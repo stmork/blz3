@@ -35,6 +35,11 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/04/11 18:21:36  sm
+**	- Raytracer redesign:
+**	  o The complete set of surface values moved into
+**	    the b3_surface data structure when calling b3GetColors()
+**
 **	Revision 1.27  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -43,7 +48,7 @@
 **	  o The polar members are renamed.
 **	  o The shape/bbox pointers moved into the ray structure
 **	- Introduced wood bump mapping.
-**
+**	
 **	Revision 1.26  2004/04/03 14:07:18  sm
 **	- Resolved internal compiler error problem of VC++
 **	
@@ -410,9 +415,9 @@ b3_bool b3Scene::b3ComputeOutputRays(b3_ray_fork *surface)
 		cos_a     = -cos_a;
 	}
 
-	if (surface->refr > 0)
+	if (surface->m_Refraction > 0)
 	{
-		ior      = surface->incoming->inside ? surface->ior : 1.0 / surface->ior;
+		ior      = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
 		refr_dir = &surface->refr_ray.dir;
 
 		if (fabs(cos_a) < 1)
@@ -476,7 +481,7 @@ void b3Scene::b3Illuminate(
 		surface->incoming->normal.y * Jit->dir.y +
 		surface->incoming->normal.z * Jit->dir.z) >= 0)
 	{
-		result += surface->diffuse * light->m_Color * ShapeAngle;
+		result += surface->m_Diffuse * light->m_Color * ShapeAngle;
 	}
 }
 
@@ -526,17 +531,17 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 		material = shape->b3GetColors(ray,&surface);
 		shape->b3BumpNormal(ray);
 
-		ray->color = surface.ambient;
+		ray->color = surface.m_Ambient;
 
 		transparent = b3ComputeOutputRays(&surface);
 		if (transparent)
 		{
-			if (surface.ior == 1)
+			if (surface.m_Ior == 1)
 			{
 				surface.refr_ray.inside = false;
 				surface.refl_ray.inside = false;
 			}
-			refr = surface.refr;
+			refr = surface.m_Refraction;
 			if (!b3Shade(&surface.refr_ray,depth_count + 1))
 			{
 				b3GetInfiniteColor(&surface.refr_ray);
@@ -548,7 +553,7 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 			refr = 0;
 		}
 
-		refl = surface.refl;
+		refl = surface.m_Reflection;
 		if (refl > 0)
 		{
 			if (!b3Shade(&surface.refl_ray,depth_count + 1))
