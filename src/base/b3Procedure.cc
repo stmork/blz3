@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/04/07 16:07:17  sm
+**	- Moved wood computing outside b3MatWood for use in its own bump map.
+**
 **	Revision 1.22  2004/04/07 11:38:25  sm
 **	- Minor bugfix
-**
+**	
 **	Revision 1.21  2004/04/06 12:17:46  sm
 **	- Optimized some noise methods.
 **	
@@ -275,7 +278,7 @@ b3Noise::~b3Noise ()
 
 /*************************************************************************
 **                                                                      **
-**                        random functions                              **
+**                        Perlin noise implementation                   **
 **                                                                      **
 *************************************************************************/
 
@@ -661,85 +664,103 @@ b3_f64 b3Noise::b3PGauss()
 	return v1 * sqrt((-2.0 * log(s)) / s);
 }
 
-#ifdef BLIZZARD2_ON_AMIGA
+/*************************************************************************
+**                                                                      **
+**                        Perlin noise implementation                   **
+**                                                                      **
+*************************************************************************/
 
-/*
-** This is an nice code fragment from Blizzard II which
-** was coded some time ago...
-*/
-
-/*
-#ifdef YESTURBO
-long WoodGrain ();
-
-#asm
-	public	_WoodGrain
-_WoodGrain:
-	fmove.d	4(sp),fp0					;u holen
-	fmove.d	20(sp),fp1					;w holen
-	fmul.s	#"$42800000",fp0			;u *= 64
-	fmul.s	#"$42800000",fp1			;w *= 64
-	fmove.x	fp0,fp2
-	fmove.x	fp1,fp3
-	fmul.x	fp2,fp0						;Komponenten multiplizieren
-	fmul.x	fp3,fp1
-	fadd.x	fp0,fp1						;Komponenten addieren
-	fsqrt.x	fp1							;Radius berechnen
-	fbne	.nopi
-	fmove.s	#"$3fc90fda",fp0			;PI/2 holen 
-	bra	.yespi
-.nopi	fmove.x	fp3,fp0					;w holen
-	fdiv.x	fp2,fp0						;/= u
-	fatan.x	fp0							;Bogenmaß berechnen
-
-.yespi	fmove.d	12(sp),fp2				;v holen
-	fmul.s	#"$42800000",fp2			;v *= 64
-	fmul.s	#"$41a00000",fp0			;atan *= 20
-	fdiv.s	#"$43160000",fp2			;v /= 150
-	fadd.x	fp0,fp2
-	fsin.x	fp2
-	fadd.x	fp2,fp2						;*= 2;
-	fadd.x	fp2,fp1						;Radius += 2*sin()
-	fmove.l	fp1,d1						;nach Integer wandeln
-	and.l	#63,d1						;ausmaskieren
-
-	moveq	#3,d0						;Farbe wählen
-	cmp.l	#51,d1						;Rest vergleichen
-	bge	.wg1L
-	moveq	#2,d0
-	cmp.l	#38,d1
-	bge	.wg1L
-	moveq	#1,d0
-	cmp.l	#20,d1
-	bge	.wg1L
-	moveq	#0,d0
-.wg1L
-	rts
-#endasm
-#else
-
-long WoodGrain (u,v,w)
-
-register b3_f64 u,v,w;
-
+void b3Wood::b3InitWood()
 {
-	register b3_f64  radius,angle;
-	register long    grain,Modulo = 80;
-
-	u *= 64;
-	v *= 64;
-	w *= 64;
-	radius = sqrt(u * u + w * w);
-	if (w==0) angle = PId2;
-	else      angle = atan (w/u);
-	radius = radius + 2 * sin(20 * angle + v / 150);
-	grain = (long)radius % Modulo;
-	if (grain > 60) return 2;
-	if (grain > 40) return 1;
-	else            return 0;
+	b3Vector::b3Init(&m_Scale,40,40,40);
+	m_yRot                   = (b3_f32)(  0.5 * M_PI );
+	m_zRot                   = (b3_f32)( -0.5 * M_PI );
+	m_RingSpacing            =   0.2f;
+	m_RingFrequency          =   0.2f;
+	m_RingNoise              =   0.2f;
+	m_RingNoiseFrequency     =   1;
+	m_TrunkWobble            =   0.1f;
+	m_TrunkWobbleFrequency   =   0.025f;
+	m_AngularWobble          =   0.1f;
+	m_AngularWobbleFrequency =   0.9f;
+	m_GrainFrequency         =  25;
+	m_Grainy                 =   1;
+	m_Ringy                  =   1;
 }
-#endif
-*/
 
-#endif
+void b3Wood::b3PrepareWood()
+{
+	b3Matrix::b3Move   (null,   &m_Warp,-0.5,-0.5,-0.5);
+	b3Matrix::b3Scale  (&m_Warp,&m_Warp,null,m_Scale.x * M_PI,m_Scale.y * M_PI,m_Scale.z * M_PI);
+	b3Matrix::b3RotateZ(&m_Warp,&m_Warp,null,m_zRot);
+	b3Matrix::b3RotateY(&m_Warp,&m_Warp,null,m_yRot);
+}
 
+b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
+{
+	b3_vector d;
+	b3_vector offset;
+	b3_vector Pring;
+	b3_vector aux;
+	b3_vector Pgrain;
+	b3_f64    dPshad = 1; // FIXME
+	b3_f64    dPgrain;
+	b3_f64    inring;
+	b3_f64    grain = 0;
+	b3_f64    amp = 1;
+	b3_loop   i;
+
+	b3Matrix::b3VMul(&m_Warp,polar,&d,true);
+	b3Noise::b3VFBm(&d,dPshad * m_RingNoiseFrequency,2,4,0.5,&offset);
+
+	b3Noise::b3SignedNoiseDeriv(0,0,d.z * m_TrunkWobbleFrequency,&aux);
+	Pring.x = d.x + m_RingNoise * offset.x + m_TrunkWobble * aux.x;
+	Pring.y = d.y + m_RingNoise * offset.y + m_TrunkWobble * aux.y;
+	Pring.z = d.z + m_RingNoise * offset.z;
+
+	// Calculate radius from center
+	b3_f64 r2 = Pring.x * Pring.x + Pring.y * Pring.y;
+	b3_f64 r  = sqrt(r2) * m_RingFrequency;
+
+	// For unround rings...
+	r += m_AngularWobble * b3Math::b3Smoothstep(0,5,r) * b3Noise::b3SignedNoiseVector(
+		Pring.x * m_AngularWobbleFrequency,
+		Pring.y * m_AngularWobbleFrequency,
+		Pring.z * m_AngularWobbleFrequency * 0.1);
+	
+	// Ensure unequally spaced rings
+	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseVector(0,0,r);
+
+	inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
+
+	Pgrain.x = d.x * m_GrainFrequency;
+	Pgrain.y = d.y * m_GrainFrequency;
+	Pgrain.z = d.z * m_GrainFrequency * 0.05;
+	dPgrain = 1; // FIXME
+
+	for (i = 0;i < 2;i++)
+	{
+		b3_f64 grain1valid = 1 - b3Math::b3Smoothstep(0.2,0.6,dPgrain);
+		if (grain1valid > 0)
+		{
+			b3_f64 g = grain1valid * b3Noise::b3SignedNoiseVector(Pgrain.x,Pgrain.y,Pgrain.z);
+
+			g *= (0.3 + 0.7 * inring);
+			g  = b3Math::b3Limit(0.8 - g,0,1);
+			g *= g;
+			g  = m_Grainy * b3Math::b3Smoothstep(0.5,1,g);
+			if (i == 0)
+			{
+				inring *= (1 - 0.4 * grain1valid);
+			}
+			grain = B3_MAX(grain,g);
+		}
+		Pgrain.x += Pgrain.x;
+		Pgrain.y += Pgrain.y;
+		Pgrain.z += Pgrain.z;
+		dPgrain  += dPgrain;
+		amp      *= 0.5;
+	}
+
+	return inring * m_Ringy * (1 - grain) + grain;
+}

@@ -150,4 +150,31 @@ private:
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
 };
 
+class b3Wood
+{
+protected:
+	b3_matrix         m_Warp;
+
+public:
+	b3_vector         m_Scale;
+	b3_f32            m_yRot;
+	b3_f32            m_zRot;
+	b3_f32            m_RingSpacing;
+	b3_f32            m_RingFrequency;
+	b3_f32            m_RingNoise;
+	b3_f32            m_RingNoiseFrequency;
+	b3_f32            m_TrunkWobble;
+	b3_f32            m_TrunkWobbleFrequency;
+	b3_f32            m_AngularWobble;
+	b3_f32            m_AngularWobbleFrequency;
+	b3_f32            m_GrainFrequency;
+	b3_f32            m_Grainy;
+	b3_f32            m_Ringy;
+
+public:
+	b3_f64 b3ComputeWood(b3_vector *polar);
+	void   b3InitWood();
+	void   b3PrepareWood();
+};
+
 #endif

@@ -23,8 +23,9 @@
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
-#include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Filter.h"
+#include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
@@ -716,36 +717,20 @@ public:
 };
 
 // WOOD
-class B3_PLUGIN b3MatWood : public b3Material 
+class B3_PLUGIN b3MatWood : public b3Material, public b3Wood
 {
-	b3_matrix         m_Warp;
-
 public:
 	b3Color           m_DiffColor;
 	b3Color           m_AmbColor;
 	b3Color           m_SpecColor;
-	b3_vector         m_Scale;
+	b3Color           m_LightWood;
+	b3Color           m_DarkWood;
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes; // not used
-	b3_f32            m_yRot;
-	b3_f32            m_zRot;
-	b3_f32            m_RingSpacing;
-	b3_f32            m_RingFrequency;
-	b3_f32            m_RingNoise;
-	b3_f32            m_RingNoiseFrequency;
-	b3_f32            m_TrunkWobble;
-	b3_f32            m_TrunkWobbleFrequency;
-	b3_f32            m_AngularWobble;
-	b3_f32            m_AngularWobbleFrequency;
-	b3_f32            m_GrainFrequency;
-	b3_f32            m_Grainy;
-	b3_f32            m_Ringy;
-	b3Color           m_LightWood;
-	b3Color           m_DarkWood;
 
 public:
 	B3_ITEM_INIT(b3MatWood);
