@@ -43,7 +43,7 @@ protected:
 
 protected:
 	       void  b3ListPixelFormats(HDC dc,const char *title = "");
-	       HGLRC b3CreateContext(HDC dc,b3PixelFormatSortFunc func);
+	       HGLRC b3CreateContext(HDC dc,b3PixelFormatSortFunc func, b3_bool &double_buffered);
 	static void  b3FlagsString(CString &desc,int flags);
 	static int   b3ComputePixelFormatMode(const PIXELFORMATDESCRIPTOR *input,const PIXELFORMATDESCRIPTOR *templ);
 	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);

@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.56  2005/01/18 11:49:05  smork
+**      - Added support for single buffered OpenGL drawing.
+**
 **      Revision 1.55  2004/12/30 16:27:38  sm
 **      - Removed assertion problem when starting Lines III: The
 **        image list were initialized twice due to double calling
@@ -271,6 +274,7 @@ static b3RenderLight         lights;
 static b3RenderView          view;
 static b3_bool               all_lights = true;
 static b3_bool               spot_light = true;
+static b3_bool               double_buffered = true;
 static b3_res                xWinSize,yWinSize;
 
 static void b3SetLights()
@@ -345,7 +349,10 @@ static void b3PlayAnimation()
 			view.b3SetCamera(scene);
 			b3ReshapeFunc(xWinSize,yWinSize);
 			scene->b3Draw(&context);
-			glutSwapBuffers();
+			if (double_buffered)
+			{
+				glutSwapBuffers();
+			}
 			count++;
 		}
 		while(t < animation->m_End);
@@ -382,7 +389,7 @@ static void b3NextCamera(b3Scene *scene)
 static void b3SetupRC()
 {
 	context.glBgColor.b3Init(0.7f,0.7f,1.0f);
-	context.b3Init();
+	context.b3Init(double_buffered);
 }
 
 static void b3KeyboardFunc(unsigned char key,int x,int y)
@@ -512,10 +519,11 @@ static void b3Banner(const char *command)
 	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v] BWD-file\n", command);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v][-s] BWD-file\n", command);
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");
+		b3PrintF(B3LOG_NORMAL,"  -s  draw with single buffer\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
 		b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
@@ -556,6 +564,9 @@ int main(int argc,char *argv[])
 			break;
 		case 'f' :
 			b3Log::b3SetLevel(B3LOG_FULL);
+			break;
+		case 's' :
+			double_buffered = false;
 			break;
 		}
 	}
@@ -599,7 +610,7 @@ int main(int argc,char *argv[])
 			scene = (b3Scene *)item;
 			b3Prepare(scene);
 
-			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
+			glutInitDisplayMode((double_buffered ? GLUT_DOUBLE : 0)|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow("Greetinxx");
 			glutDisplayFunc (&b3DisplayFunc);

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/01/18 11:49:05  smork
+**	- Added support for single buffered OpenGL drawing.
+**
 **	Revision 1.6  2005/01/18 11:09:49  smork
 **	- More informative pixel format.
-**
+**	
 **	Revision 1.5  2005/01/13 20:05:16  sm
 **	- Some Lines bugfixes
 **	
@@ -198,7 +201,7 @@ void CB3PixelFormat::b3FlagsString(CString &desc,int flags)
 	if (flags & PFD_SUPPORT_DIRECTDRAW)  desc += " PFD_SUPPORT_DIRECTDRAW";
 }
 
-HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
+HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func,b3_bool &double_buffered)
 {
 	CB3PixelFormatDescriptor format;
 	CString                  flags;
@@ -235,7 +238,8 @@ HGLRC CB3PixelFormat::b3CreateContext(HDC dc,b3PixelFormatSortFunc func)
 		b3PrintF(B3LOG_DEBUG,"Pixel values of chosen pixel format index: %d:\n",
 			PixelFormatIndex);
 		
-		b3RenderContext::b3Init();
+		double_buffered = (m_glPixelFormat[PixelFormatIndex].desc.dwFlags & PFD_DOUBLEBUFFER) != 0;
+		b3RenderContext::b3Init(double_buffered);
 		glGetIntegerv(GL_RED_BITS,  &value); b3PrintF(B3LOG_DEBUG,"R: %2d\n",value);
 		glGetIntegerv(GL_GREEN_BITS,&value); b3PrintF(B3LOG_DEBUG,"G: %2d\n",value);
 		glGetIntegerv(GL_BLUE_BITS, &value); b3PrintF(B3LOG_DEBUG,"B: %2d\n",value);

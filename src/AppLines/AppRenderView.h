@@ -90,6 +90,7 @@ class CAppRenderView : public CScrollView, public CB3PixelFormat
 	b3_res          m_prtLineWidth;
 	b3_res          m_prtLineHeight;
 	b3_count        m_prtLineNum;
+	b3_bool         m_DoubleBuffered;
 	
 protected:
 	CB3DashPen      m_RedDash;

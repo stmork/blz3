@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2005/01/18 11:49:05  smork
+**	- Added support for single buffered OpenGL drawing.
+**
 **	Revision 1.44  2005/01/14 19:49:05  sm
 **	- Switchable device context for OpenGL rendering
-**
+**	
 **	Revision 1.43  2005/01/13 20:52:05  sm
 **	- Fixed Lines III drawing problem.
 **	
@@ -292,12 +295,13 @@ CAppRenderView::CAppRenderView()
 	// TODO: add construction code here
 	b3_index i;
 
-	m_prtGC     = null;
-	m_prtDC     = null;
-	m_prtBitmap = null;
-	m_prtScale  = 20; // Meaning 1:100 measure
-	m_PreviousMode =
-	m_SelectMode   = B3_OBJECT_SELECT;
+	m_prtGC          = null;
+	m_prtDC          = null;
+	m_prtBitmap      = null;
+	m_prtScale       = 20; // Meaning 1:100 measure
+	m_PreviousMode   =
+	m_SelectMode     = B3_OBJECT_SELECT;
+	m_DoubleBuffered = false;
 	for (i = 0;i < B3_MODE_MAX;i++)
 	{
 		m_Action[i] = null;
@@ -335,7 +339,7 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (dc != null)
 	{
 		m_glDC = dc->GetSafeHdc();
-		m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter);
+		m_glGC = b3CreateContext(m_glDC,&b3WindowPixelFormatSorter, m_DoubleBuffered);
 #ifndef USE_OWN_DC
 		ReleaseDC(dc);
 #endif
@@ -552,9 +556,12 @@ void CAppRenderView::OnPaint()
 
 	// Flush OpenGL buffer to screen
 	glFinish();
-	if (!SwapBuffers(dc))
+	if (m_DoubleBuffered)
 	{
-		b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
+		if (!SwapBuffers(dc))
+		{
+			b3PrintF(B3LOG_NORMAL,"Cannot swap buffers!!!\n");
+		}
 	}
 
 	// Do post drawings using Windows DC

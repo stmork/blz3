@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/01/18 11:49:05  smork
+**	- Added support for single buffered OpenGL drawing.
+**
 **	Revision 1.18  2004/12/06 15:14:56  smork
 **	- Minor changes
-**
+**	
 **	Revision 1.17  2004/12/04 12:54:07  sm
 **	- Disabling VBO check box if VBO not available.
 **	
@@ -155,7 +158,7 @@ b3RenderContext::b3RenderContext()
 	glBgColor.b3Init(0.8f,0.8f,0.8f);
 }
 
-void b3RenderContext::b3Init()
+void b3RenderContext::b3Init(b3_bool double_buffered)
 {
 #ifdef BLZ3_USE_OPENGL
 	const char *extensions = (const char *)glGetString(GL_EXTENSIONS);
@@ -209,7 +212,7 @@ void b3RenderContext::b3Init()
 		b3MultiSample::b3Enable(true);
 	}
 
-	glDrawBuffer(GL_BACK);
+	glDrawBuffer(double_buffered ? GL_BACK : GL_FRONT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_COLOR_MATERIAL);
 

@@ -77,7 +77,7 @@ public:
 
 public:
 	                 b3RenderContext();
-	static  void     b3Init();
+	static  void     b3Init(b3_bool double_buffered = true);
 	virtual void     b3StartDrawing();
 
 	static  void     b3SetAntiAliasing(b3_bool enable = false);
