@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2002/12/27 12:55:38  sm
+**      - Trying to optimize vectorization for ICC.
+**
 **      Revision 1.57  2002/08/24 13:22:02  sm
 **      - Extensive debugging on threading code done!
 **        o Cleaned up POSIX threads
@@ -850,9 +853,9 @@ void b3RenderObject::b3ComputeIndices()
 
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
-	b3_vector normal;
-	b3_vector xDir,yDir;
-	b3_index  i,k,v1,v2,v3,start,end;
+	b3_gl_vector normal;
+	b3_gl_vector xDir,yDir;
+	b3_index     i,k,v1,v2,v3,start,end;
 
 	B3_ASSERT(glVertex != null);
 
@@ -860,7 +863,9 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3GetVertexRange(start,end);
 	for (i = start;i < end;i++)
 	{
-		b3Vector::b3Init(&glVertex[i].n);
+		glVertex[i].n.x =
+		glVertex[i].n.y =
+		glVertex[i].n.z = 0;
 	}
 
 	// Collect normals
@@ -946,15 +951,15 @@ void b3RenderObject::b3TransformVertices(
 		{
 			for (i = 0;i < glVertexCount;i++)
 			{
-				b3Vector::b3MatrixMul4D(transformation,&glVertex[i].v);
-				b3Vector::b3MatrixMul3D(transformation,&glVertex[i].n);
+				b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
+				b3Vector::b3MatrixMul3D(transformation,(b3_vector *)&glVertex[i].n);
 			}
 		}
 		else
 		{
 			for (i = 0;i < glVertexCount;i++)
 			{
-				b3Vector::b3MatrixMul4D(transformation,&glVertex[i].v);
+				b3Vector::b3MatrixMul4D(transformation,(b3_vector *)&glVertex[i].v);
 			}
 			b3ComputeNormals();
 		}

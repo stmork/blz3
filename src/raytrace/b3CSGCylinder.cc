@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2002/12/27 12:55:38  sm
+**      - Trying to optimize vectorization for ICC.
+**
 **      Revision 1.17  2002/08/16 11:40:38  sm
 **      - Changed vertex handling for use without OpenGL. Vertex computation
 **        is needed for bound computation which is needed for animation. There
@@ -155,7 +158,10 @@ void b3CSGCylinder::b3ComputeVertices()
 	for (i = 0;i < SinCosSteps;i++)
 	{
 		b3Vector::b3LinearCombine(&m_Base,&m_Dir1,&m_Dir2,Cos[i],Sin[i],&Vector[0].v);
-		b3Vector::b3Add(&Vector[0].v,&m_Dir3,&Vector[1].v);
+		Vector[1].v.x = Vector[0].v.x + m_Dir3.x;
+		Vector[1].v.y = Vector[0].v.y + m_Dir3.y;
+		Vector[1].v.z = Vector[0].v.z + m_Dir3.z;
+
 		Vector += 2;
 	}
 

@@ -123,14 +123,12 @@ public:
 /*
 ** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));
 */
+
 struct b3_gl_vertex
 {
-	struct
-	{
-		b3_f32 s,t;
-	}         t;
-	b3_vector n;
-	b3_vector v;
+	b3_gl_texture t;
+	b3_gl_vector  n;
+	b3_gl_vector  v;
 };
 
 struct b3_gl_line

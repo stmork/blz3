@@ -27,7 +27,7 @@ make -C Bjpeg -j 4 libB3jpeg.a
 
 # Build raytracer
 switch ( $1 )
-   case "ipo", "*" :
+   case "ipo" :
        echo "Build options: "$CXXFLAGS
        echo "Building with -ipo..."
        $CXX -ipo $CXXFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -o brt3/brt3 $LIBS

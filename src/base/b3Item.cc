@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2002/12/27 12:55:38  sm
+**      - Trying to optimize vectorization for ICC.
+**
 **      Revision 1.26  2002/08/19 18:38:47  sm
 **      - Adjusted b3Animate to read/write correctly
 **        into Blizzard data file.
@@ -404,9 +407,10 @@ void b3Item::b3InitVector(b3_vector *vec)
 	{
 		b3_f32 *ptr = (b3_f32 *)&m_Buffer[m_ParseIndex];
 
-		vec->x = *ptr++;
-		vec->y = *ptr++;
-		vec->z = *ptr++;
+		vec->x   = *ptr++;
+		vec->y   = *ptr++;
+		vec->z   = *ptr++;
+		vec->pad = 0;
 	}
 	m_ParseIndex += 3;
 }

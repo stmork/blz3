@@ -33,9 +33,10 @@ public:
 		const b3_f64     y = 0,
 		const b3_f64     z = 0)
 	{
-		vec->x = (b3_f32)x;
-		vec->y = (b3_f32)y;
-		vec->z = (b3_f32)z;
+		vec->x   = (b3_f32)x;
+		vec->y   = (b3_f32)y;
+		vec->z   = (b3_f32)z;
+		vec->pad = 0;
 
 		return vec;
 	}
@@ -46,9 +47,10 @@ public:
 		const b3_f64       y = 0,
 		const b3_f64       z = 0)
 	{
-		vec->x = x;
-		vec->y = y;
-		vec->z = z;
+		vec->x   = x;
+		vec->y   = y;
+		vec->z   = z;
+		vec->pad = 0;
 
 		return vec;
 	}
@@ -65,9 +67,10 @@ public:
 
 	static inline b3_vector *b3Negate(b3_vector *negate)
 	{
-		negate->x = -negate->x;
-		negate->y = -negate->y;
-		negate->z = -negate->z;
+		negate->x   = -negate->x;
+		negate->y   = -negate->y;
+		negate->z   = -negate->z;
+		negate->pad = -negate->pad;
 		return negate;
 	}
 
@@ -111,13 +114,33 @@ public:
 		return result;
 	}
 
+	static inline b3_f64 b3Normalize(
+		      b3_gl_vector *vector,
+		const b3_f64        length = 1.0)
+	{
+		register b3_f64 x,y,z,denom,result = 0;
+
+		x = vector->x;
+		y = vector->y;
+		z = vector->z;
+		denom = x * x + y * y + z * z;
+		if (denom > 0)
+		{
+			denom     = length / (result = sqrt(denom));
+			vector->x = (b3_f32)(x * denom);
+			vector->y = (b3_f32)(y * denom);
+			vector->z = (b3_f32)(z * denom);
+		}
+		return result;
+	}
+
 	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] += a[i];
 		}
@@ -139,7 +162,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] = a[i] + b[i];
 		}
@@ -151,13 +174,32 @@ public:
 		return result;
 	}
 
+	static inline b3_gl_vector *b3Add(const b3_gl_vector *aVec,b3_gl_vector *result)
+	{
+		result->x += aVec->x;
+		result->y += aVec->y;
+		result->z += aVec->z;
+		return result;
+	}
+
+	static inline b3_gl_vector *b3Add(
+		const b3_gl_vector *aVec,
+		const b3_gl_vector *bVec,
+		      b3_gl_vector *result)
+	{
+		result->x = aVec->x + bVec->x;
+		result->y = aVec->y + bVec->y;
+		result->z = aVec->z + bVec->z;
+		return result;
+	}
+
 	static inline b3_vector *b3Sub(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] -= a[i];
 		}
@@ -180,7 +222,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -189,6 +231,17 @@ public:
 		result->y = aVec->y - bVec->y;
 		result->z = aVec->z - bVec->z;
 #endif
+		return result;
+	}
+
+	static inline b3_gl_vector *b3Sub(
+		const b3_gl_vector *aVec,
+		const b3_gl_vector *bVec,
+		      b3_gl_vector *result)
+	{
+		result->x = aVec->x - bVec->x;
+		result->y = aVec->y - bVec->y;
+		result->z = aVec->z - bVec->z;
 		return result;
 	}
 
@@ -228,13 +281,25 @@ public:
 		return result;
 	}
 
+	static inline b3_gl_vector *b3CrossProduct(
+		const b3_gl_vector *a,
+		const b3_gl_vector *b,
+		      b3_gl_vector *result)
+	{
+		result->x = a->y * b->z - a->z * b->y;
+		result->y = a->z * b->x - a->x * b->z;
+		result->z = a->x * b->y - a->y * b->x;
+
+		return result;
+	}
+
 	static inline b3_f64 b3Length(const b3_vector *vector)
 	{
 #ifdef B3_SSE
 		b3_f32 *v = &vector->x;
 		b3_f64  r = 0;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r += v[i] * v[i];
 		}
@@ -281,7 +346,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			v[i] *= f;
 		}
@@ -302,7 +367,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] = v[i] * f;
 		}
@@ -319,7 +384,7 @@ public:
 #ifdef B3_SSE
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			v[i] *= factor;
 		}
@@ -339,7 +404,7 @@ public:
 		b3_f64 *r = &result->x;
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < 3;i++)
+		for(int i = 0;i < 4;i++)
 		{
 			r[i] = v[i] * factor;
 		}
@@ -438,8 +503,32 @@ public:
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
-		const b3_f64     b,
+		const b3_f64     factor,
 		      b3_vector *result)
+	{
+#ifdef B3_SSE
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+		b3_f32 *r = &result->x;
+		b3_f32  f = (b3_f32)factor;
+
+		for (int i = 0;i < 4;i++)
+		{
+			r[i] = a[i] + f * b[i];
+		}
+#else
+		result->x = (b3_f32)(aVec->x + factor * bVec->x);
+		result->y = (b3_f32)(aVec->y + factor * bVec->y);
+		result->z = (b3_f32)(aVec->z + factor * bVec->z);
+#endif
+		return result;
+	}
+
+	static inline b3_gl_vector *b3LinearCombine(
+		const b3_vector    *aVec,
+		const b3_vector    *bVec,
+		const b3_f64        b,
+		      b3_gl_vector *result)
 	{
 		result->x = (b3_f32)(aVec->x + b * bVec->x);
 		result->y = (b3_f32)(aVec->y + b * bVec->y);
@@ -451,9 +540,37 @@ public:
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_vector *cVec,
-		const b3_f64     b,
-		const b3_f64     c,
+		const b3_f64     xFactor,
+		const b3_f64     yFactor,
 		      b3_vector *result)
+	{
+#ifdef B3_SSE
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+		b3_f32 *c = &bVec->x;
+		b3_f32 *r = &result->x;
+		b3_f32  x = (b3_f32)xFactor;
+		b3_f32  y = (b3_f32)yFactor;
+
+		for (int i = 0;i < 4;i++)
+		{
+			r[i] = a[i] + xFactor * b[i] + yFactor * c[i];
+		}
+#else
+		result->x = (b3_f32)(aVec->x + xFactor * bVec->x + yFactor * cVec->x);
+		result->y = (b3_f32)(aVec->y + xFactor * bVec->y + yFactor * cVec->y);
+		result->z = (b3_f32)(aVec->z + xFactor * bVec->z + yFactor * cVec->z);
+#endif
+		return result;
+	}
+
+	static inline b3_gl_vector *b3LinearCombine(
+		const b3_vector   *aVec,
+		const b3_vector   *bVec,
+		const b3_vector   *cVec,
+		const b3_f64       b,
+		const b3_f64       c,
+		      b3_gl_vector *result)
 	{
 		result->x = (b3_f32)(aVec->x + b * bVec->x + c * cVec->x);
 		result->y = (b3_f32)(aVec->y + b * bVec->y + c * cVec->y);

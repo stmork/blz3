@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2002/12/27 12:55:38  sm
+**      - Trying to optimize vectorization for ICC.
+**
 **      Revision 1.57  2002/08/24 13:22:02  sm
 **      - Extensive debugging on threading code done!
 **        o Cleaned up POSIX threads
@@ -930,10 +933,24 @@ void b3ShapeRenderObject::b3ComputeSphereNormals(b3_vector &base,b3_bool normali
 
 	for (i = 0;i < glVertexCount;i++)
 	{
-		b3Vector::b3Sub(&base,&glVertex[i].v,&glVertex[i].n);
 		if (normalize)
 		{
-			b3Vector::b3Normalize(&glVertex[i].n);
+			b3_f64 x,y,z,r;
+
+			x = base.x - glVertex[i].v.x;
+			y = base.y - glVertex[i].v.y;
+			z = base.z - glVertex[i].v.z;
+			r = 1.0 / sqrt(x * x + y * y + z * z);
+			
+			glVertex[i].n.x = x * r;
+			glVertex[i].n.y = y * r;
+			glVertex[i].n.z = z * r;
+		}
+		else
+		{
+			glVertex[i].n.x = base.x - glVertex[i].v.x;
+			glVertex[i].n.y = base.y - glVertex[i].v.y;
+			glVertex[i].n.z = base.z - glVertex[i].v.z;
 		}
 	}
 }
@@ -1647,10 +1664,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 
 			Vector->t.s = 0;
 			Vector->t.t = relTex[j];
-			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
-			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
+			Vector->n.x = Aux.x - (Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x);
+			Vector->n.y = Aux.y - (Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y);
+			Vector->n.z = Aux.z - (Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z);
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1672,10 +1688,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 
 			Vector->t.s = ((double)i / SinCosSteps) / (Limit.x2 - Limit.x1) - Limit.x1;
 			Vector->t.t = relTex[j];
-			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
-			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
+			Vector->n.x = Aux.x - (Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x);
+			Vector->n.y = Aux.y - (Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y);
+			Vector->n.z = Aux.z - (Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z);
 			Vector++;
 		}
 		glVertexCount += Circles;
@@ -1698,10 +1713,9 @@ void b3ShapeRenderObject::b3ComputeTorusVertices(
 
 			Vector->t.s = 1;
 			Vector->t.t = relTex[j];
-			Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x;
-			Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y;
-			Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z;
-			b3Vector::b3Sub(&Aux,&Vector->v,&Vector->n);
+			Vector->n.x = Aux.x - (Vector->v.x = Aux.x + sx * RadX * Dir1.x + sy * RadX * Dir2.x + RadY * Dir3.x);
+			Vector->n.y = Aux.y - (Vector->v.y = Aux.y + sx * RadX * Dir1.y + sy * RadX * Dir2.y + RadY * Dir3.y);
+			Vector->n.z = Aux.z - (Vector->v.z = Aux.z + sx * RadX * Dir1.z + sy * RadX * Dir2.z + RadY * Dir3.z);
 			Vector++;
 		}
 		glVertexCount += Circles;
