@@ -36,12 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/01 15:49:23  sm
+**	- Added "force no display" for remote Un*x raytracing
+**	- Converted BWDs to binary
+**
 **	Revision 1.18  2002/01/22 17:11:17  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
 **	- Better b3DisplayView in Un*x port.
 **	- Fixed stricmp() in Un*x port.
-**
+**	
 **	Revision 1.17  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
@@ -123,7 +127,7 @@
 **
 */
 
-#define BLZ3_EXTENSION ".jpg"
+#define BLZ3_EXTENSION ".tga"
 
 static void b3SaveRaytracedImage(
 	b3Display  *display,
@@ -145,6 +149,41 @@ static void b3SaveRaytracedImage(
 	display->b3SaveImage(imagename);
 }
 
+static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
+{
+	b3Display *display;
+	b3_res     xSize,ySize;
+
+#ifdef DEBUG_VIEW
+	// Show a small display in every case
+	display = new b3DisplayView(200,150);
+#else
+	if (scene->b3GetDisplaySize(xSize,ySize))
+	{
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		{
+			display = new b3Display(xSize,ySize);
+		}
+		else
+		{
+			display = new b3DisplayView(xSize,ySize);
+		}
+	}
+	else
+	{
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		{
+			display = new b3Display();
+		}
+		else
+		{
+			display = new b3DisplayView();
+		}
+	}
+#endif
+	return display;
+}
+
 int main(int argc,char *argv[])
 {
 	b3Item       *item;
@@ -153,13 +192,13 @@ int main(int argc,char *argv[])
 	b3CameraPart *camera;
 	b3Display    *display;
 	char         *picture_home = getenv("BLZ3_PICTURES");
-	b3_res        xSize,ySize;
 	b3_index      i;
 	char         *HOME = getenv("HOME");
 	b3Path        textures;
 	b3Path        pictures;
 	b3Path        data;
 	b3Path        camera_name;
+	b3_bool       force_no_display = false;
 
 	if (argc > 1)
 	{
@@ -178,96 +217,85 @@ int main(int argc,char *argv[])
 
 		for (i = 1;i < argc;i++)
 		{
-			try
+			if (argv[i][0] == '-')
 			{
-				world->b3Read(argv[i]);
-				for (item  = world->b3GetFirst();
-				     item != null;
-				     item  = scene->Succ)
+				switch(argv[i][1])
 				{
-					scene = (b3Scene *)item;
-#ifdef BLZ3_USE_OPENGL
-					scene->b3Reorg();
-#endif
-					scene->b3SetFilename(argv[i]);
-
-#ifdef DEBUG_VIEW
-					// Show a small display in every case
-					display = new b3DisplayView(200,150);
-#else
-					if (scene->b3GetDisplaySize(xSize,ySize))
-					{
-						if (scene->m_Flags & TP_NO_GFX)
-						{
-							display = new b3Display(xSize,ySize);
-						}
-						else
-						{
-							display = new b3DisplayView(xSize,ySize);
-						}
-					}
-					else
-					{
-						if (scene->m_Flags & TP_NO_GFX)
-						{
-							display = new b3Display();
-						}
-						else
-						{
-							display = new b3DisplayView();
-						}
-					}
-#endif
-
-					if ((camera = scene->b3GetCamera(false)) != null)
-					{
-						do
-						{
-							scene->b3GetTitle(camera_name);
-							if (camera->m_Flags & CAMERA_ACTIVE)
-							{
-								b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
-									camera->m_CameraName);
-								scene->b3SetCamera(camera);
-								scene->b3Raytrace(display);
-								b3SaveRaytracedImage(
-									display,
-									picture_home,camera->b3GetName());
-							}
-							else
-							{
-								b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
-									camera->m_CameraName);
-							}
-							camera = scene->b3GetNextCamera(camera);
-						}
-						while (camera != null);
-					}
-					else
-					{
-						scene->b3Raytrace(display);
-						b3SaveRaytracedImage(
-						display,
-						picture_home,scene->b3GetName());
-					}
-
-					display->b3Wait();
-					delete display;
+				case 'n' :
+					force_no_display = true;
+					b3PrintF(B3LOG_NORMAL,"Forcing no display output\n");
+					break;
+				case 'v' :
+					b3PrintF(B3LOG_NORMAL,"Blizzard III Raytracing software\n");
+					break;
 				}
 			}
-			catch(b3WorldException *w)
+			else
 			{
-				b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[i]);
-				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w->b3GetError());
-			}
-			catch(b3FileException *f)
-			{
-				b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
-				b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f->b3GetError());
-			}
-			catch(...)
-			{
-				b3PrintF(B3LOG_NORMAL,"Unknown error occured loading %s\n",argv[i]);
+				try
+				{
+					world->b3Read(argv[i]);
+					for (item  = world->b3GetFirst();
+					     item != null;
+					     item  = scene->Succ)
+					{
+						scene = (b3Scene *)item;
+#ifdef BLZ3_USE_OPENGL
+						scene->b3Reorg();
+#endif
+						scene->b3SetFilename(argv[i]);
+
+						display = b3AllocDisplay(scene,force_no_display);
+						if ((camera = scene->b3GetCamera(false)) != null)
+						{
+							do
+							{
+								scene->b3GetTitle(camera_name);
+								if (camera->m_Flags & CAMERA_ACTIVE)
+								{
+								b3PrintF(B3LOG_NORMAL,"Rendering \"%s\"...\n",
+										camera->m_CameraName);
+									scene->b3SetCamera(camera);
+									scene->b3Raytrace(display);
+									b3SaveRaytracedImage(
+										display,
+										picture_home,camera->b3GetName());
+								}
+								else
+								{
+									b3PrintF(B3LOG_NORMAL,"Skipping \"%s\"...\n",
+										camera->m_CameraName);
+								}
+								camera = scene->b3GetNextCamera(camera);
+							}
+							while (camera != null);
+						}
+						else
+						{
+							scene->b3Raytrace(display);
+							b3SaveRaytracedImage(
+							display,
+							picture_home,scene->b3GetName());
+						}
+	
+						display->b3Wait();
+						delete display;
+					}
+				}
+				catch(b3WorldException *w)
+				{
+					b3PrintF(B3LOG_NORMAL,"Error parsing %s\n",argv[i]);
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",w->b3GetError());
+				}
+				catch(b3FileException *f)
+				{
+					b3PrintF(B3LOG_NORMAL,"File IO error using %s\n",argv[i]);
+					b3PrintF(B3LOG_NORMAL,"Error code: %d\n",f->b3GetError());
+				}
+				catch(...)
+				{
+					b3PrintF(B3LOG_NORMAL,"Unknown error occured loading %s\n",argv[i]);
+				}
 			}
 		}
 		delete world;
