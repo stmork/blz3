@@ -93,17 +93,14 @@ uncr:
 		find $$i -name "*.h" -exec $(DOS2UNIX) -k -q -o {} \;;\
 	done
 
-resource.h:	$(BLZ3_BIN)/CleanRes tools
+resource.h:	$(BLZ3_BIN)/CleanRes
 	$(BLZ3_BIN)/CleanRes AppLines/Resource.h >/tmp/Resource.h
 	mv /tmp/Resource.h AppLines/Resource.h
 
 $(BLZ3_BIN)/CleanRes:	tools
 
-tools:	$(BLZ3_BIN) $(BLZ3_LIB) libs
-	+@make -C tools
-
-divx:
-	+@make -C tools divx
+tools:	$(BLZ3_BIN) libs
+	+@make -C tools install
 	
 #########################################################
 #                                                       #
