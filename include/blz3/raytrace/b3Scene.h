@@ -44,9 +44,11 @@
 #define	MORK                    0x00001000      // Mork's illumination
 #define	PHONG_ILLUM             0x00002000      // Phong's illumination
 #define ALBRECHT                0x00003000      // Jens' coherence algo
+#define MORK2                   0x00004000      // Mork's enhanced illumination
 
 #define TRACEANGLE_MORK         (CLASS_GLOBAL|TYPE_TRACEANGLE|MORK)
 #define TRACEPHOTO_MORK         (CLASS_GLOBAL|TYPE_TRACEPHOTO|MORK)
+#define TRACEPHOTO_MORK2        (CLASS_GLOBAL|TYPE_TRACEPHOTO|MORK2)
 #define TRACEANGLE_PHONG        (CLASS_GLOBAL|TYPE_TRACEANGLE|PHONG_ILLUM)
 #define TRACEPHOTO_PHONG        (CLASS_GLOBAL|TYPE_TRACEPHOTO|PHONG_ILLUM)
 #define TRACEPHOTO_ALBRECHT     (CLASS_GLOBAL|TYPE_TRACEPHOTO|ALBRECHT)

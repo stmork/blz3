@@ -33,21 +33,9 @@
 
 /*
 **	$Log$
-**	Revision 1.39  2004/05/28 14:39:01  sm
-**	- Changed spacular exponent to integer value inside shader.
+**	Revision 1.40  2004/05/28 19:35:39  sm
+**	- Added Mork shader enhancement as new extra shader.
 **
-**	Revision 1.38  2004/05/28 14:06:29  sm
-**	- Minor optimizations in shader
-**	
-**	Revision 1.37  2004/05/28 13:15:39  sm
-**	- Major optimizations inside shader. But why is the intel brt3
-**	  5 minutes slower than the unoptimized version?
-**	
-**	Revision 1.36  2004/05/27 13:13:56  sm
-**	- Optimized Mork shader
-**	- Removed b3ShadePostMaterial
-**	- Removed m_SpecularSum
-**	
 **	Revision 1.35  2004/05/26 14:30:02  sm
 **	- Added Fresnel energy distribution to transparent materials
 **	  with index of refraction > 0.
@@ -243,69 +231,44 @@ void b3ShaderMork::b3ShadeLight(
 	b3_surface    *surface,
 	b3Color       &result)
 {
-	b3Color illumination = m_ShadowFactor;
+	b3_f64   ShapeAngle,Factor;
+	b3Color  filter;
+
+	// Real absorption
+	result += (surface->m_Diffuse * m_ShadowFactor);
+
+	filter.b3Init();
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
 	{
-		b3_f64 ShapeAngle = b3Vector::b3SMul(&surface->incoming->normal, &Jit->dir);
-		b3_f32 factor;
-
 		// specular high light
-		if (ShapeAngle >= 0)
+		if ((ShapeAngle =
+			surface->incoming->normal.x * Jit->dir.x +
+			surface->incoming->normal.y * Jit->dir.y +
+			surface->incoming->normal.z * Jit->dir.z) >= 0)
 		{
-			b3_u32 spec_exp = (b3_u32)surface->m_SpecularExp;
+			b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
 
-			if (spec_exp < 100000) // test if surface if rough
+			if ((surface->m_SpecularExp < 100000) && (lambda > 0))
 			{
-				b3_f64 lambda = b3Vector::b3SMul(&surface->refl_ray.dir,&Jit->dir);
-				
-				factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
-				surface->m_SpecularSum += (light->m_Color * factor);
+				Factor = b3Math::b3FastPow(lambda, (b3_u32)surface->m_SpecularExp) * Jit->m_LightFrac;
+				surface->m_SpecularSum += (light->m_Color * Factor);
 			}
 		}
 		else
 		{
-			// test for far side to light
 			ShapeAngle = 0;
 		}
 
 		// surface illumination (diffuse color)
-		factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor;
-		if (factor >= 0)
+		if ((Factor = ShapeAngle * Jit->m_LightFrac - m_ShadowFactor) > 0)
 		{
-			illumination += (light->m_Color * factor);
+			filter = light->m_Color * Factor;
 		}
 	}
 
-	result += (surface->m_Diffuse * illumination);
-}
-
-void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr)
-{
-    b3_f64 alpha    = acos(surface->m_CosAlpha);
-	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
-	b3_f64 beta     = asin(sin_beta);
-	b3_f64 apb      = alpha + beta;
-	b3_f64 amb      = alpha - beta;
-	b3_f64 s_apb    = sin(apb);
-	b3_f64 s_amb    = sin(amb);
-	b3_f64 c_apb    = cos(apb);
-	b3_f64 c_amb    = cos(amb);
-
-	// compute perpendicular (s = senkrecht) component of polarized light
-	b3_f64 Ers   = s_amb / s_apb;
-	b3_f64 Ets   = 2.0 * sin_beta * surface->m_CosAlpha / s_apb;
-
-	// compute parallel component of polarized light
-	b3_f64 Erp   = (s_amb * c_apb) / (c_amb * s_apb);
-	b3_f64 Etp   = 2.0 * sin_beta * surface->m_CosAlpha / (s_apb * c_amb);
-
-	b3ComputeFresnel(surface);
-
-	// Mix to unpolarized light
-	refl = (Ers + Erp) * surface->m_Reflection * 0.5;
-	refr = (Ets + Etp) * surface->m_Refraction * 0.5;
+	result += (surface->m_Diffuse * filter);
 }
 
 void b3ShaderMork::b3ShadeSurface(
@@ -316,7 +279,7 @@ void b3ShaderMork::b3ShadeSurface(
 	b3Item   *item;
 	b3Light  *light;
 	b3_ray   *ray = surface.incoming;
-	b3_f32    refl,refr,factor;
+	b3_f64    refl,refr,factor;
 
 	// Refraction
 	if (surface.m_Transparent)
@@ -326,27 +289,15 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
-		b3ComputeInt(&surface,refl,refr);
+		refl = surface.m_Reflection;
+		refr = surface.m_Refraction;
 
 		b3Shade(&surface.refr_ray,depth_count + 1);
 		result = (surface.refr_ray.color * refr);
 	}
 	else
 	{
-		if (surface.m_Ior != 1.0)
-		{
-			// simulate dielectric metal
-			b3ComputeFresnel(&surface);
-			refl = b3Math::b3Mix(
-				surface.m_Fresnel,
-				surface.m_Reflection,
-				surface.m_Reflection);
-		}
-		else
-		{
-			// plastic reflection
-			refl = surface.m_Reflection;
-		}
+		refl = surface.m_Reflection;
 		refr = 0;
 		result.b3Init();
 	}
@@ -367,7 +318,7 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Mix colors
-	factor = (1.0 - refl - refr);
+	factor = (1.0 - refl - refr) * 0.5;
 	if (factor > 0)
 	{
 		// For each light source
@@ -378,7 +329,10 @@ void b3ShaderMork::b3ShadeSurface(
 			light = (b3Light *)item;
 			light->b3Illuminate(this,&surface);
 		}
-		ray->color = ray->color * factor + result + surface.m_SpecularSum;
+		ray->color =
+			ray->color * factor +
+			result +
+			surface.m_SpecularSum;
 	}
 	else
 	{

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2004/05/28 19:35:39  sm
+**	- Added Mork shader enhancement as new extra shader.
+**
 **	Revision 1.64  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.63  2004/05/20 20:15:45  sm
 **	- Added missing Albrecht and gloabl illumination shader.
 **	
@@ -333,6 +336,7 @@ void b3Scene::b3Register()
 	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_MORK);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_MORK);
+	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_MORK2);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEANGLE_PHONG);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_PHONG);
 	b3Item::b3Register(&b3Scene::b3StaticInit, &b3Scene::b3StaticInit, TRACEPHOTO_ALBRECHT);
@@ -470,6 +474,10 @@ void b3Scene::b3ReallocateShader()
 	case TRACEPHOTO_PHONG:
 	case TRACEANGLE_PHONG:
 		m_Shader = new b3ShaderPhong(this);
+		break;
+
+	case TRACEPHOTO_MORK2:
+		m_Shader = new b3ShaderMork2(this);
 		break;
 
 	default:

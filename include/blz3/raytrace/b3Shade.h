@@ -81,6 +81,23 @@ public:
 protected:
 	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
 	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
+};
+
+///////////////////////
+// Enhanced Mork shader
+///////////////////////
+class B3_PLUGIN b3ShaderMork2 : public b3Shader
+{
+	b3_f32 m_ShadowFactor;
+
+public:
+	         b3ShaderMork2(b3Scene *scene);
+
+	void     b3Prepare();
+
+protected:
+	void     b3ShadeSurface(b3_surface &surface,b3_count depth);
+	void     b3ShadeLight(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result);
 
 private:
 	void     b3ComputeInt(b3_surface *surface, b3_f32 &refl, b3_f32 &refr);

@@ -47,6 +47,7 @@ PRG_SOURCE		=\
 	b3Scene.cc\
 	b3Shade.cc\
 	b3ShadeMork.cc\
+	b3ShadeMork2.cc\
 	b3ShadePhong.cc\
 	b3Shape.cc\
 	b3Special.cc\
@@ -99,6 +100,7 @@ PRG_OBJ			=\
 	b3Scene.o\
 	b3Shade.o\
 	b3ShadeMork.o\
+	b3ShadeMork2.o\
 	b3ShadePhong.o\
 	b3Shape.o\
 	b3Special.o\

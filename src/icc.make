@@ -22,6 +22,7 @@ setenv PROF_FILES "../data/Material.bwd ../data/Shapes.bwd"
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
+#setenv ASMFLAGS "-O3 -w -march=pentiumiii"
 setenv ASMFLAGS "-O3 -w -march=pentium4"
 
 # Build raytracer
@@ -62,6 +63,7 @@ switch ( $1 )
    case "pgo_render" :
 #       brt3/brt3 -a -w -n AlleObjekte.bwd
        brt3/brt3 -a -w -n Chair.bwd Planks.bwd Blockkugel.bwd Wassersockel.bwd
+#       bet3/brt3 -a -w -n Band.bwd
        brt3/brt3 -a -w -n $PROF_FILES
        brt3/brt3 -a -w    GeoNebel.bwd VarioNebel.bwd
        breaksw

@@ -47,6 +47,7 @@ class B3_PLUGIN b3Color
 	b3_f32 B3_ALIGN_16 v[4];
 
 	static b3_f32 B3_ALIGN_16 m_Limit_m000[4];
+	static b3_f32 B3_ALIGN_16 m_Limit_m001[4];
 	static b3_f32 B3_ALIGN_16 m_Limit_m255[4];
 	static b3_f32 B3_ALIGN_16 m_Limit_d255[4];
 
@@ -407,15 +408,16 @@ public:
 
 		for (i = 0;i < 4;i++)
 		{
-			sat[i] = v[i] * m_Limit_m255[i];
+			sat[i] = v[i];
 			if (sat[i] < m_Limit_m000[i])
 			{
 				sat[i] = m_Limit_m000[i];
 			}
-			if (sat[i] > m_Limit_m255[i])
+			if (sat[i] > m_Limit_m001[i])
 			{
-				sat[i] = m_Limit_m255[i];
+				sat[i] = m_Limit_m001[i];
 			}
+			sat[i] *= m_Limit_m255[i];
 		}
 
 		for (i = 0;i < 4;i++)
