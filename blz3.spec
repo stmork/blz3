@@ -50,7 +50,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/share/blizzard
 make install
 install -m 755 bin/blz3.csh $RPM_BUILD_ROOT/etc/profile.d/blz3.csh
 
-test -d $HOME/Blizzard && tar cf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT/usr/share/blizzard
+test -d $HOME/Blizzard && tar chf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT/usr/share/blizzard
 
 cp -a include/blz3 $RPM_BUILD_ROOT/usr/include
 cp -a include_unix/blz3 $RPM_BUILD_ROOT/usr/include
