@@ -21,5 +21,6 @@
 #define B3_PLUGINDEF_H
 
 #define B3_PLUGIN
+#define B3_PLUGIN_EXPORT
 
 #endif
