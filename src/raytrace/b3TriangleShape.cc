@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.48  2004/09/10 09:42:17  sm
+**      - Optimized triangle gridding.
+**
 **      Revision 1.47  2004/09/08 06:48:08  sm
 **      - Triangle building corrected.
 **
@@ -458,7 +461,7 @@ void b3TriangleShape::b3PrepareGridList ()
 
 	max    = m_GridSize * m_GridSize * m_GridSize;
 #ifdef USE_NEW_GRID
-	MaxRec = b3IntLog2(m_GridSize) << 1;
+	MaxRec = b3IntLog2(m_GridSize) + 1;
 #else
 	MaxRec = b3IntLog3(m_GridSize) << 1;
 #endif
