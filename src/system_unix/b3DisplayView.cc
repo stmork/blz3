@@ -40,10 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/09/01 11:18:55  sm
+**	- Fixed ticket no. 9: A missing DISPLAY variable doesn't crash
+**	  the apps.
+**
 **	Revision 1.9  2002/08/29 16:25:38  sm
 **	- Added RGB and BGR color support which fixes the red/blue swap
 **	  problem on Sun machines.
-**
+**	
 **	Revision 1.8  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -352,8 +356,13 @@ void b3DisplayView::b3Open(
 	}
 
 	m_Display = XOpenDisplay(NULL);
+	if (m_Display == 0)
+	{
+		B3_THROW(b3DisplayException,B3_DISPLAY_OPEN);
+	}
 	m_Screen  = DefaultScreen (m_Display);
 	m_depth   = DefaultDepth  (m_Display,m_Screen);
+
 	m_xMax    = xSize;
 	m_yMax    = ySize;
 	xScr      = DisplayWidth  (m_Display,m_Screen) - 20;
@@ -379,6 +388,7 @@ void b3DisplayView::b3Open(
 		0,0,m_xs,m_ys,0,
 		WhitePixel (m_Display,m_Screen),
 		BlackPixel (m_Display,m_Screen));
+b3PrintF (B3LOG_NORMAL,"Window: %d\n",m_Window);
 
 	XStringListToTextProperty(&m_Title,1,&CInfoName);
 	XSetWMName(m_Display,m_Window,&CInfoName);
