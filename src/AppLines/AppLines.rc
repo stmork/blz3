@@ -125,6 +125,7 @@ IDR_TOOLBAR_DISPLAY     BITMAP  DISCARDABLE     "res\\toolbar_display.bmp"
 IDR_TOOLBAR_CAMERA      BITMAP  DISCARDABLE     "res\\toolbar_camera.bmp"
 IDR_TOOLBAR_LIGHT       BITMAP  DISCARDABLE     "res\\toolbar_light.bmp"
 IDB_SPLASH              BITMAP  DISCARDABLE     "res\\splash.bmp"
+IDR_TOOLBAR_ANIMATION   BITMAP  DISCARDABLE     "res\\toolbar_animation.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -240,6 +241,15 @@ BEGIN
     BUTTON      ID_LIGHT_SELECT
 END
 
+IDR_TOOLBAR_ANIMATION TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_ANIM_START
+    BUTTON      ID_ANIM_STOP
+    BUTTON      ID_ANIM_PLAY
+    BUTTON      ID_ANIM_PAUSE
+    BUTTON      ID_ANIM_END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -276,6 +286,7 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM "Ani&mations-Symbolleiste",    IDM_BAR_ANIM
             MENUITEM SEPARATOR
             MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
             MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
@@ -289,7 +300,8 @@ BEGIN
             MENUITEM "&Kamera...",                  ID_CUST_CAMERA
             MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
-            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
+            MENUITEM "&Szenenwerkzeuge...",         ID_CUST_SCENE
+            MENUITEM "Ani&mation...",               ID_CUST_ANIM
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
     END
@@ -350,7 +362,7 @@ BEGIN
         MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
         MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
     END
-    POPUP "Betriebsmodus"
+    POPUP "Be&triebsmodus"
     BEGIN
         MENUITEM "Objekt &selektieren",         ID_OBJECT_SELECT
         MENUITEM "Objekt &bewegen",             ID_OBJECT_MOVE
@@ -365,7 +377,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Licht&quelle ausrichten",     ID_LIGHT_TURN
     END
-    POPUP "Kamera"
+    POPUP "&Kamera"
     BEGIN
         MENUITEM "Erzeuge&n...",                ID_CAMERA_NEW
         MENUITEM "&Löschen",                    ID_CAMERA_DELETE
@@ -373,7 +385,7 @@ BEGIN
         MENUITEM "&Auf Drehkreuz ausrichten",   ID_VIEW_TO_FULCRUM
         MENUITEM "Einge&schaltet",              ID_CAMERA_ENABLE
     END
-    POPUP "Lichtquelle"
+    POPUP "&Lichtquelle"
     BEGIN
         MENUITEM "Erzeuge&n...",                ID_LIGHT_NEW
         MENUITEM "&Löschen",                    ID_LIGHT_DELETE
@@ -383,6 +395,14 @@ BEGIN
         MENUITEM "Einge&schaltet",              ID_LIGHT_ENABLE
         MENUITEM "&Weiche Schatten",            ID_LIGHT_SOFT
         MENUITEM "Spot&licht",                  ID_LIGHT_SPOT
+    END
+    POPUP "Ani&mation"
+    BEGIN
+        MENUITEM "&Anfang",                     ID_ANIM_START
+        MENUITEM "&Stop",                       ID_ANIM_STOP
+        MENUITEM "Abs&pielen",                  ID_ANIM_PLAY
+        MENUITEM "Pau&se",                      ID_ANIM_PAUSE
+        MENUITEM "&Ende",                       ID_ANIM_END
     END
     POPUP "&Ansicht"
     BEGIN
@@ -395,6 +415,7 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM "Ani&mations-Symbolleiste",    IDM_BAR_ANIM
             MENUITEM SEPARATOR
             MENUITEM "&Hierarchie-Dialog",          ID_HIERACHY
             MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
@@ -409,7 +430,8 @@ BEGIN
             MENUITEM "&Kamera...",                  ID_CUST_CAMERA
             MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
-            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
+            MENUITEM "&Szenenwerkzeuge...",         ID_CUST_SCENE
+            MENUITEM "Ani&mation...",               ID_CUST_ANIM
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
@@ -426,7 +448,7 @@ BEGIN
         MENUITEM "&Verheriger Ausschnitt",      ID_VIEW_POP
         MENUITEM "&Gesamtansicht\tStrg+F",      ID_VIEW_ORIGINAL
     END
-    POPUP "Extras"
+    POPUP "E&xtras"
     BEGIN
         MENUITEM "&Objekthierarchie...",        ID_HIERACHY
         MENUITEM "&Raytracing-Vorschau...\tStrg+R", ID_RAYTRACE
@@ -480,6 +502,7 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM "Ani&mations-Symbolleiste",    IDM_BAR_ANIM
             MENUITEM SEPARATOR
             MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
             MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
@@ -494,6 +517,7 @@ BEGIN
             MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
             MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
+            MENUITEM "Ani&mation...",               ID_CUST_ANIM
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
@@ -566,6 +590,7 @@ BEGIN
             MENUITEM "&Lichtquellen-Symbolleiste",  IDM_BAR_LIGHT
             MENUITEM "&Raytracing-Anzeige",         IDM_BAR_DISPLAY
             MENUITEM "S&zenenwerkzeug-Symolleiste", IDM_BAR_SCENE
+            MENUITEM "Ani&mations-Symbolleiste",    IDM_BAR_ANIM
             MENUITEM SEPARATOR
             MENUITEM "&Drehkreuz-Dialog",           IDM_BAR_FULCRUM
             MENUITEM "Schritt&längen-Dialog",       IDM_BAR_STEP_MOVE
@@ -579,7 +604,8 @@ BEGIN
             MENUITEM "&Kamera...",                  ID_CUST_CAMERA
             MENUITEM "&Lichtquellen...",            ID_CUST_LIGHT
             MENUITEM "&Raytracing-Anzeige",         ID_CUST_DISPLAY
-            MENUITEM "Szenenwerkzeuge...",          ID_CUST_SCENE
+            MENUITEM "&Szenenwerkzeuge...",         ID_CUST_SCENE
+            MENUITEM "Ani&mation...",               ID_CUST_ANIM
         END
         MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
         MENUITEM SEPARATOR
@@ -2199,79 +2225,274 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDP_OLE_INIT_FAILED     "Fehler bei der OLE-Initialisierung. Überprüfen Sie, ob die OLE-Bibliotheken in der richtigen Version vorliegen."
-    IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
-    IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
     IDR_MAINFRAME           "Lines III"
     IDR_BLZ3TYPE            "Blizzard III Lines\nUnbenannt\nBlizzard III Geometrie\nBlizzard III Geometrie (*.bwd)\n.bwd\nblz3scn.Document\nBlizzard III Szene"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_ASK_DELETE_CAMERA   "Soll die aktuelle Kamera wirklich gelöscht werden?"
+    IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
+    IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
+    IDS_ASK_DELETE_SHAPE    "Soll der aktuelle Körper wirklich gelöscht werden?"
+    IDS_BBOX                "Objekt"
+    IDS_CAMERA_UNIT         "Maßeinheit: %s"
+    IDS_CSG_BOX             "CSG Quader (%s)"
+    IDS_CSG_CONE            "CSG Kegel (%s)"
+    IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
+    IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
+    IDS_CSG_MODE_INTERSECT  "Schnittmenge"
+    IDS_CSG_MODE_NONE       " "
+    IDS_CSG_MODE_SUB        "Abzug"
+    IDS_CSG_MODE_UNION      "Vereinigung"
+    IDS_CSG_SPHERE          "CSG Kugel (%s)"
+    IDS_CSG_TORUS           "CSG Torus (%s)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
+    IDS_LENGTH              "Länge:"
+    IDS_LIGHT_SAMPLE_LABEL  "Samples: %d"
+    IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
+    IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
+    IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
+    IDS_NEW_OBJECT          "Neues Objekt"
+    IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
+    IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
+    IDS_PRGERR_BSPLINE_MISSING_KNOTS 
+                            "Programmfehler!\nDem BSpline fehlt der Knotenvektor! Ohne dem geht's nicht;-)"
+    IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS 
+                            "Programmfehler!\nDer angegebene BSpline hat zu wenig Kontrollpunkte!"
+    IDS_PRGERR_BSPLINE_TOO_FEW_MAXCONTROLS 
+                            "Programmfehler!\nDie Maximalzahl der Kontrollpunkte ist zu niedrig!"
+    IDS_PRGERR_BSPLINE_TOO_FEW_MAXKNOTS 
+                            "Programmfehler!\nDie Begrenzung des Knotenvektors ist zu niedrig!"
+    IDS_PRGERR_BSPLINE_TOO_LOW_MULTIPLICATION 
+                            "Programmfehler!\nDer Multiplikator für diesen Knoten ist zu niedrig!"
+    IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
+                            "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
+    IDS_PRGERR_DATATYPE     "Programmfehler!\nDas interne Datenformat ist unbekannt!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CUST_ANIM2           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
+    ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
+    ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
+    ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
+    ID_DRAWING_PERF         "#####################################"
     ID_EDIT_PASTE_SUB       "Fügt den Inhalt der Zwischenablage als Unterobjekt ein.\nEinfügen als Unterobjekt"
-    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
+    ID_FRONT                "Frontansicht (Aufriß)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nAktivierung zeigen"
+    ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
+    ID_LIGHT_DELETE         "Löscht eine Lichtquelle.\nLichtqielle löschen"
+    ID_LIGHT_ENABLE         "Schaltet Lichtquelle ein oder aus.\nLichtquelle ein-/ausschalten"
+    ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
+    ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
+    ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
+    ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
+    ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
+    ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
+    ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
+    ID_MODELLER_INFO        "Modellierhilfen einstellen\nModellierhilfen"
+    ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
     ID_OBJECT_DELETE        "Löscht das selektierte Objekt.\nObjekt löschen"
+    ID_OBJECT_EDIT          "Editiert ein Objekt.\nObjekt editieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
+    ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
+    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
+    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+    ID_ALL_DEACTIVATE_REST  "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte der Szene.\nObjekt aktivieren, restliche Objekte der Szene deaktivieren"
+    ID_ANIM_END             "Spult die Animation an das Ende.\nAn das Ende spulen"
+    ID_ANIM_PLAY            "Spielt die Animation ab.\nAnimation abspielen"
+    ID_ANIM_START           "Spult die Animation an den Anfang.\nZurückspulen"
+    ID_ANIM_STOP            "Hält die Animation an.\nAnimation anhalten"
+    ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
+    ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
+    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
+    ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
+    ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
+    ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_B3_ORIGINAL          "Zeigt das Bild in Originalgröße an\nOriginalgröße"
+    ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
+    ID_B3_WIDTH             "Paßt die Bildausgabe der Fensterbreite an\nAn Fensterbreite anpassen"
+    ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
+    ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
+    ID_CAMERA_MOVE          "Bewegt die Kamera\nKamera bewegen"
+    ID_CAMERA_NEW           "Erzeugt eine neue Kamera.\nNeue Kamera erzeugen"
+    ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
+    ID_CAMERA_ROTATE        "Rotiert die Kamera um das Folkrum\nKamera rotieren"
+    ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
+    ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
+    ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
+    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
+    ID_COORD_X              "x: 00000000.00"
+    ID_COORD_Y              "y: 00000000.00"
+    ID_COORD_Z              "z: 00000000.00"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
+    ID_OBJECT_MOVE          "Bewegt aktivierte Objekte\nObjekte bewegen"
     ID_OBJECT_NEW           "Erzeugt ein Objekt.\nObjekt erzeugen"
     ID_OBJECT_NEW_SUB       "Erzeugt ein Objekt.\nObjekt erzeugen"
-    ID_OBJECT_LOAD          "Lädt ein Objekt.\nObjekt laden"
-    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
-    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
-    ID_OBJECT_COPY          "Kopiert das selektierte Objekt.ßnObjekt kopieren"
-    ID_DRAWING_PERF         "#####################################"
-    ID_OBJECT_EDIT          "Editiert ein Objekt.\nObjekt editieren"
     ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
+    ID_OBJECT_REPLACE       "Ersetzt das selektierte Objekt.\nObjekt ersetzen"
+    ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
+    ID_OBJECT_SAVE          "Speichert das selektierte Objekt.\nObjekt speichern"
+    ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
+    ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
+    ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
+    ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
+    ID_PREF_AUTOSAVE        "Speichert die Fensterpostion beim Verlassen des Programms"
+    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
+    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
+    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
-    ID_PROPERTIES           "Globale Einstellungen.\nGlobale Einstellungen"
-    ID_COORD_X              "x: 00000000.00"
-    ID_COORD_Y              "y: 00000000.00"
-    ID_COORD_Z              "z: 00000000.00"
-    ID_ACTIVATE             "Aktiviert das selektierte Objekt\nObjekt aktivieren"
-    ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
-    ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
-    ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
+    ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
+    ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
+    ID_VIEW_BIGGER          "Vergrößert die Ansicht.\nVergrößern"
+    ID_VIEW_FRONT           "Zeigt die Szene von vorne (Aufriß).\nAnsicht von vorne (Aufriß)"
+    ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
+    ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
+    ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
+    ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
+    ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
+    ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
+    IDM_BAR_ANIM            "Blendet die Animations-Symbolleiste ein oder aus.\nAnimations-Symbolleiste ein-/ausschalten"
+    IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
+    IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
+    IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
+    IDM_BAR_LIGHT           "Blendet die Lichtquellen-Symbolleiste ein oder aus.\nLichtquellen-Symbolleiste ein-/ausschalten"
+    IDM_BAR_SCENE           "Blendet die Szenenwerkzeug-Symbolleiste ein oder aus.\nSzenenwerkzeug-Symbolleiste ein-/ausschalten"
+    IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
+    IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
+    IDM_BAR_VIEW            "Blendet die Ansicht-Symbolleiste ein oder aus.\nAnsicht-Symbolleiste ein-/ausschalten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PRT_VIEWNAME        "Ansicht: %s"
+    IDS_RADIUS              "Radius:"
+    IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
+    IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
+    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
+    IDS_SCENE_NEW           "Unbenannt"
     IDS_SELECT_TEXTURE_PATH "Neuen Texturpfad auswählen"
+    IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
+    IDS_SHAPE_AREA          "Fläche"
+    IDS_SHAPE_BOX           "Quader"
+    IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
+    IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
+    IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
+    IDS_SHAPE_BSPLINE_ROT   "BSpline-Rotationskörper"
+    IDS_SHAPE_CONE          "Kegel"
+    IDS_SHAPE_CYLINDER      "Zylinder"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TITLE_EDIT          "%s ändern"
+    IDS_TITLE_SCENE         "Sceneneigenschaften"
+    IDS_TOOLBAR_ACTION      "Betriebsmodi.."
+    IDS_TOOLBAR_ANIMATION   "Animationssymbolleiste"
     IDS_TOOLBAR_CAMERA      "Kamera..."
+    IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
     IDS_TOOLBAR_LIGHT       "Lichtquelle..."
+    IDS_TOOLBAR_MAINFRAME   "Datei..."
+    IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
+    IDS_TOOLBAR_VIEW        "Ansicht..."
+    IDS_UNKNOWN             "unbekannt"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_DIALOGBAR_ACTION    "Bewegungen"
     IDS_DIALOGBAR_FULCRUM   "Drehkreuz"
+    IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
     IDS_DIALOGBAR_STEP_MOVE "Schrittweite"
     IDS_DIALOGBAR_STEP_ROTATE "Winkelschritte"
+    IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
+    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
     IDS_DOC_READ            "Datei %s wird geladen..."
     IDS_DOC_REORG           "Die Objekthierarchien werden rekonstruiert..."
     IDS_DOC_VERTICES        "Die Darstellung wird vorbereitet..."
-    IDS_DOC_PREPARE         "Die Szene wird initialisiert..."
-    IDS_DOC_BOUND           "Die Objektgrößen werden angepaßt..."
-    IDS_DIALOGBAR_HIERARCHY "Szenenhierarchie"
-    IDS_NEW_OBJECT          "Neues Objekt"
-    IDS_ASK_DELETE_OBJECT   "Soll das aktuelle Objekt wirklich gelöscht werden?"
-    IDS_OBJECT_FILTER       "Blizzard Objekt (*.bod)|*.bod|Alle Dateien (*.*)|*.*||"
-    IDS_DIALOGBAR_ACTION    "Bewegungen"
+    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
+    IDS_ERR_CLASSTYPE_UNKNOWN 
+                            "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
+    IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
+    IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
+    IDS_ERR_FILE_NOT_FOUND  "Die Datei konnte nicht geöffnet werden!"
+    IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_NEW_CAMERA          "Neue Kamerabezeichnung:"
-    IDS_NEW_LIGHT           "Neue Lichtquellenbezeichnung:"
-    IDS_NAME_EXISTS         "Der eingegebene Name existiert bereits. Bitte geben Sie einen anderen Namen ein!"
-    IDS_EMPTY_NAME          "Sie haben keinen Namen eingegeben. Bitte geben Sie einen Namen ein!"
-    IDS_ASK_DELETE_LIGHT    "Soll die aktuelle Lichtquelle wirklich gelöscht werden?"
+    IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
+    IDS_PRGERR_FILE_NOT_OPEN 
+                            "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
+    IDS_PRGERR_HASH_DUPLICATE_KEY 
+                            "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
+    IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
+    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
+    IDS_PRGERR_ILLEGAL_DATEMODE 
+                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
+    IDS_PRGERR_OUT_OF_BOUNDS 
+                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
+    IDS_PROFILE             "Profil"
+    IDS_PROFILE_BEVELSTUMP_SPLINE 
+                            "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
+    IDS_PROFILE_BEVEL_SPLINE "Runde BSpline-Kante (quadr.)"
+    IDS_PROFILE_BEVEL_TRIANGLES "Abgerundete Kante"
+    IDS_PRT_DATE            "Datum: %s"
+    IDS_PRT_FILENAME        "Dateiname: %s"
     IDS_PRT_LEGEND          "Legende:"
     IDS_PRT_MEASURE         "Maßstab: 1:%d"
-    IDS_PRT_FILENAME        "Dateiname: %s"
-    IDS_PRT_VIEWNAME        "Ansicht: %s"
     IDS_PRT_UNIT            "Einheit: %s"
-    IDS_PRT_DATE            "Datum: %s"
-    IDS_UNKNOWN             "unbekannt"
-    IDS_SHAPE_AREA          "Fläche"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_SHAPE_DISK          "Scheibe"
+    IDS_SHAPE_ELLIPSOID     "Ellipsoid"
     IDS_SHAPE_SPHERE        "Kugel"
-    IDS_SHAPE_CYLINDER      "Zylinder"
+    IDS_SHAPE_TORUS         "Torus"
+    IDS_SHAPE_TRIANGLES     "Dreiecke"
+    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
+    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
+    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
+    IDS_STENCIL_END_ANGLE   "Endwinkel"
+    IDS_STENCIL_END_LENGTH  "Endlänge"
+    IDS_STENCIL_END_UNIT    "rel. Maximum"
+    IDS_STENCIL_START_ANGLE "Startwinkel"
+    IDS_STENCIL_START_LENGTH "Startlänge"
+    IDS_STENCIL_START_UNIT  "rel. Minimum"
+    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
+    IDS_TITLE_CREATE        "%s anlegen"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 
@@ -2393,258 +2614,44 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
-    IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERR_FILE_NOT_WRITTEN 
+                            "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
+    IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
     IDS_ERR_MEMORY          "Es ist nicht genug Speicher vorhanden!"
-    IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
-    IDS_ERR_READ            "Die Blizzard Datei ließ sich nicht lesen!"
-    IDS_ERR_PARSE           "Die Blizzard-Datei ist nicht im richtigen Format!"
-    IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
-    IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht speichern läßt."
-    IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
-    IDS_ERR_CLASSTYPE_UNKNOWN 
-                            "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
     IDS_ERR_NOT_FOUND       "Die Textur konnte nicht gefunden werden."
+    IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
+    IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
+    IDS_ERR_OPEN            "Die Blizzard-Datei konnte nicht geöffnet werden!"
+    IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
+    IDS_ERR_PACKING         "Das Bild enthält gepackte Daten im unbekanntem Format!"
+    IDS_ERR_PARSE           "Die Blizzard-Datei ist nicht im richtigen Format!"
+    IDS_ERR_READ            "Die Blizzard Datei ließ sich nicht lesen!"
+    IDS_ERR_STORAGE         "Es wurde ein Blizzard-Element gefunden, das sich nicht speichern läßt."
+    IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
+    IDS_ERR_UNKNOWN         "Es ist ein unbekannter Fehler mit der Nummer %x aufgetaucht!"
+    IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
+    IDS_ERR_WRITE           "Es konnte nicht in die Blizzard-Datei geschrieben werden. Vermutlich ist der Datenspeicher voll."
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_CSG_MODE_NONE       " "
-    IDS_CSG_MODE_UNION      "Vereinigung"
-    IDS_CSG_MODE_INTERSECT  "Schnittmenge"
-    IDS_CSG_MODE_SUB        "Abzug"
-    IDS_BBOX                "Objekt"
-    IDS_ASK_DELETE_SHAPE    "Soll der aktuelle Körper wirklich gelöscht werden?"
-    IDS_STENCIL_START_UNIT  "rel. Minimum"
-    IDS_STENCIL_END_UNIT    "rel. Maximum"
-    IDS_STENCIL_START_LENGTH "Startlänge"
-    IDS_STENCIL_END_LENGTH  "Endlänge"
-    IDS_STENCIL_START_ANGLE "Startwinkel"
-    IDS_STENCIL_END_ANGLE   "Endwinkel"
-    IDS_PROFILE             "Profil"
-    IDS_LENGTH              "Länge:"
-    IDS_RADIUS              "Radius:"
-    IDS_PROFILE_BEVEL_SPLINE "Runde BSpline-Kante (quadr.)"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_PROFILE_BEVELSTUMP_SPLINE 
-                            "Runde BSpline-Kante mit abgeschrägten Stümpfen (quadr.)"
-    IDS_TITLE_CREATE        "%s anlegen"
-    IDS_TITLE_EDIT          "%s ändern"
-    IDS_PROFILE_BEVEL_TRIANGLES "Abgerundete Kante"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_TEXTURE_FILTER      "BMP-Datei (*.bmp)|*.bmp|GIF-Datei (*.gif)|*.gif|IFF-Datei (*.iff,*.lbm)|*.iff;*.lbm|JPEG-Datei (*.jpg,*.jpeg)|*.jpg;*.jpeg|PCX-Datei (*.pcx)|*.pcx|Impulse-Datei (*.RGB8)|*.rgb8)|SGI-RLE-Datei (*.sgi;*.rle;*.img)|*.img;*.rle;*.sgi|Targa-Datei (*.tga)|*.tga|TIFF-Datei (*.tif)|*.tif;*.tiff|Alle Dateien (*.*)|*.*||"
-    IDS_TOOLBAR_MAINFRAME   "Datei..."
-    IDS_TOOLBAR_ACTION      "Betriebsmodi.."
-    IDS_TOOLBAR_OBJECT      "Objekt-Werkzeuge"
-    IDS_TOOLBAR_DISPLAY     "Raytracing-Anzeige"
-    IDS_FRAME_RATE          "%3.2f Frames/sec. %5.2f Dreiecke/sec"
-    IDS_RAYTRACE_TITLE      "Raytracing ""%s"" [%dx%d]..."
-    IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
-    IDS_SCENE_NEW           "Unbenannt"
-    IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
-    IDS_TITLE_SCENE         "Sceneneigenschaften"
-    IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
-    IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
-    IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
-    IDS_SAVE_IMAGE_FILTER   "JPEG-Datei (*.jpg)|*.jpg|TIFF-Datei (*.tif)|*.tif|Targa-Datei (*.tga)|*.tga|RGB98-Datei (*.rgb8)|*.rgb8||"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_FRONT                "Frontansicht (Aufriß)"
-    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
-    ID_VIEW_BACK            "Zeigt die Szene von hinten.\nAnsicht von hinten"
-    ID_VIEW_LEFT            "Zeigt die Szene von links.\nAnsicht von links"
-    ID_VIEW_PERSPECTIVE     "Zeigt die Szene in perspektivischer Ansicht.\nPerspektivische Ansicht"
-    ID_VIEW_FRONT           "Zeigt die Szene von vorne (Aufriß).\nAnsicht von vorne (Aufriß)"
-    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
-    ID_VIEW_ANTIALIAS       "Schaltet Anti-Aliasing um.\nAnti-Aliasing"
-    ID_VIEW_BIGGER          "Vergrößert die Ansicht.\nVergrößern"
-    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_PREF_SAVE            "Speichert sofort die aktuelle Fensterposition"
-    ID_PREF_AUTOSAVE        "Speichert die Fensterpostion beim Verlassen des Programms"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
-    ID_VIEW_ORIGINAL        "Paßt die Anzeige den Größenverhältnissen der Szene an.\nGesamtansicht"
     ID_VIEW_POP             "Holt den verherige Ausschnitt wieder zurück.\nVerheriger Ausschnitt"
-    ID_ACT_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
-    ID_OBJECT_MOVE          "Bewegt aktivierte Objekte\nObjekte bewegen"
-    ID_OBJECT_ROTATE        "Rotiert aktivierte Objekte um das Fulkrum\nObjekte rotieren"
-    ID_OBJECT_SCALE         "Skaliert aktivierte Objekte\nObjekte skalieren"
-    ID_CAMERA_TURN          "Schwenkt die Kamera am Augpunkt.\nKamera schwenken"
-    ID_CAMERA_ROTATE        "Rotiert die Kamera um das Folkrum\nKamera rotieren"
-    ID_CAMERA_MOVE          "Bewegt die Kamera\nKamera bewegen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_CAMERA_SELECT        "Liste der Kameras\nKameras"
-    ID_LIGHT_SELECT         "Liste der Lichtquellen\nLichtquellen"
-    ID_LIGHT_TURN           "Richtet die Lichtquelle aus\nLichtquelle ausrichten"
-    ID_CAMERA_VIEW          "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
-    ID_OBJECT_SELECT        "(De-)selektiert Objekte.\nObjekte selektieren"
-    ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
-    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
-    ID_DLG_SCENE            "Szeneneigenschaften ändern.\nSzeneneigenschaften"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDM_BAR_ACTION          "Blendet die Betriebsmodus-Symbolleiste ein oder aus.\nBetriebsmodus-Symbolleiste ein-/ausschalten"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDM_BAR_VIEW            "Blendet die Ansicht-Symbolleiste ein oder aus.\nAnsicht-Symbolleiste ein-/ausschalten"
-    IDM_BAR_DISPLAY         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
-    IDM_BAR_SCENE           "Blendet die Szenenwerkzeug-Symbolleiste ein oder aus.\nSzenenwerkzeug-Symbolleiste ein-/ausschalten"
-    IDM_BAR_CAMERA          "Blendet die Kamera-Symbolleiste ein oder aus.\nKamera-Symbolleiste ein-/ausschalten"
-    IDM_BAR_LIGHT           "Blendet die Lichtquellen-Symbolleiste ein oder aus.\nLichtquellen-Symbolleiste ein-/ausschalten"
-    IDM_BAR_FULCRUM         "Blendet den Drehkreuzdialog ein oder aus.\nDrehkreuzdialog ein-/ausschalten"
-    IDM_BAR_STEP_MOVE       "Blendet den Schrittlängendialog ein oder aus.\nSchrittlängendialog ein-/ausschalten"
-    IDM_BAR_STEP_ROTATE     "Blendet den Winkelschrittdialog ein oder aus.\nWinkelschrittdialog ein-/ausschalten"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_PAGE_SAVE            "Speichert die aktuelle Seite\nSeite speichern"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
+    ID_VIEW_RIGHT           "Zeigt die Szene von rechts (Seitenriß).\nAnsicht von rechts (Seitenriß)"
+    ID_VIEW_SELECT          "Selektiert einen Bereich für die Ausschnittvergrößerung\nAusschnitt auswählen"
+    ID_VIEW_SMALLER         "Verkleinert die Ansicht.\nVerkleinern"
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
-    ID_PAGE_SAVE_ALL        "Speichert alle veränderten Seiten\nAlle Seiten speichern"
+    ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
+    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_ANIM_PAUSE           "Pausiert eine laufende Animation.\nPause"
 END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_VIEW_PARAM_DEFINE    "Definiert einen Anzeige-Parametersatz.\nAnzeige-Parameter definieren"
-    ID_VIEW_PARAM_SET       "Übernimmt einen Anzeige-Parametersatz auf die aktive Seitenansicht.\nAnzeige-Parameter anwenden"
-    ID_VIEW_PARAM_DELETE    "Löscht den aktuell ausgewählten Anzeige-Parametersatz.\nAnzeige-Parameter löschen"
-    ID_SHOW_RES             "Zeigt die Auflösung des Bilds im Titel an.\nAuflösung anzeigen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_MODELLER_INFO        "Modellierhilfen einstellen\nModellierhilfen"
-    ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
-    ID_IMG_SAVE             "Speichert das berechnete Bild ab.\nBild speichern"
-    ID_CHANGE_TEXTURE_PATH  "Stellt die Suchpfade für Texturen ein.\nSuchpfade für Texturen einstellen"
-    ID_LIGHT_NEW            "Erzeugt eine neue Lichtquelle.\nLichtquelle erzeugen"
-    ID_LIGHT_DELETE         "Löscht eine Lichtquelle.\nLichtqielle löschen"
-    ID_LIGHT_PROPERTIES     "Eigenschaften der Lichtquellen ändern.\nLichtquellen-Eigenschaften"
-    ID_LIGHT_ENABLE         "Schaltet Lichtquelle ein oder aus.\nLichtquelle ein-/ausschalten"
-    ID_LIGHT_SOFT           "Schaltet weiche Schatten ein oder aus.\nWeiche Schatten ein-/ausschalten"
-    ID_CAMERA_NEW           "Erzeugt eine neue Kamera.\nNeue Kamera erzeugen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_CAMERA_DELETE        "Löscht eine Kamera\nKamera löschen"
-    ID_CAMERA_PROPERTIES    "Eigenschaften der Kameras ändern.\nKamera-Eigenschaften ändern"
-    ID_LIGHT_LDC            "Ändert die Lichtstärkeverteilungskurve.\nLichtstärkeverteilungskurve ändern"
-    ID_LIGHT_SPOT           "Schaltet die Lichtquelle als Spotlicht ein oder aus..\nSpotlicht (de-)aktivieren"
-    ID_CAMERA_ENABLE        "(De-)aktiviert Kamera\nKamera (de-)aktivieren"
-    ID_DEACTIVATE_REST      "Aktiviert das selektierte Objekt und deaktiviert alle restlichen Objekte.\nObjekt aktivieren, restliche Objekte deaktivieren"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_B3_ORIGINAL          "Zeigt das Bild in Originalgröße an\nOriginalgröße"
-    ID_B3_WIDTH             "Paßt die Bildausgabe der Fensterbreite an\nAn Fensterbreite anpassen"
-    ID_B3_HEIGHT            "Paßt die Bildausgabe der Fensterhöhe an\nAn Fensterhöhe anpassen"
-    ID_B3_FULL              "Paßt das Bild optimal an die Fenstergröße an\nAn Fenstergröße optimal anpassen"
-    ID_B3_MORE              "Vergrößert die Bildausgabe\nBild vergrößern"
-    ID_B3_LESS              "Verkleinert die Bildausgabe\nBild verkleinern"
-    ID_B3_MAGNIFY           "Wählt einen Bildausschnitt\nBildausschnitt wählen"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_B3_UNFILTERED        "Bild ungefiltert anzeigen (Schnellere Bildausgabe)\nUngefilterte Bildausgabe"
-    ID_B3_FILTERED          "Bild gefiltert anzeigen (Bessere Bildausgabe)\nGefilterte Bildausgabe"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_SHAPE_CONE          "Kegel"
-    IDS_SHAPE_ELLIPSOID     "Ellipsoid"
-    IDS_SHAPE_BOX           "Quader"
-    IDS_SHAPE_TORUS         "Torus"
-    IDS_SHAPE_BSPLINE_ROT   "BSpline-Rotationskörper"
-    IDS_SHAPE_BSPLINE_AREA  "BSpline-Fläche"
-    IDS_SHAPE_BSPLINE_CYLINDER "BSpline-Zylinder"
-    IDS_SHAPE_BSPLINE_RING  "BSpline-Ring"
-    IDS_SHAPE_TRIANGLES     "Dreiecke"
-    IDS_CAMERA_UNIT         "Maßeinheit: %s"
-    IDS_CSG_SPHERE          "CSG Kugel (%s)"
-    IDS_CSG_CYLINDER        "CSG Zylinder (%s)"
-    IDS_CSG_CONE            "CSG Kegel (%s)"
-    IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
-    IDS_CSG_BOX             "CSG Quader (%s)"
-    IDS_CSG_TORUS           "CSG Torus (%s)"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
-    IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
-    IDS_ERR_PACKING         "Das Bild enthält gepackte Daten im unbekanntem Format!"
-    IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
-    IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
-    IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
-    IDS_PRGERR_DATATYPE     "Programmfehler!\nDas interne Datenformat ist unbekannt!"
-    IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
-                            "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
-    IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS 
-                            "Programmfehler!\nDer angegebene BSpline hat zu wenig Kontrollpunkte!"
-    IDS_PRGERR_BSPLINE_TOO_FEW_MAXKNOTS 
-                            "Programmfehler!\nDie Begrenzung des Knotenvektors ist zu niedrig!"
-    IDS_PRGERR_BSPLINE_TOO_FEW_MAXCONTROLS 
-                            "Programmfehler!\nDie Maximalzahl der Kontrollpunkte ist zu niedrig!"
-    IDS_PRGERR_BSPLINE_MISSING_KNOTS 
-                            "Programmfehler!\nDem BSpline fehlt der Knotenvektor! Ohne dem geht's nicht;-)"
-    IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
-    IDS_PRGERR_BSPLINE_TOO_LOW_MULTIPLICATION 
-                            "Programmfehler!\nDer Multiplikator für diesen Knoten ist zu niedrig!"
-    IDS_PRGERR_OUT_OF_BOUNDS 
-                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    IDS_PRGERR_HASH_DUPLICATE_KEY 
-                            "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
-    IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
-    IDS_ERR_FILE_NOT_FOUND  "ie Datei wurde nicht gefunden!"
-    IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
-    IDS_ERR_FILE_NOT_WRITTEN 
-                            "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
-    IDS_PRGERR_FILE_NOT_OPEN 
-                            "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
-    IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
-    IDS_ERR_NO_COLORMAP     "Es konnte keine Farbpalette bereitgestellt werden!"
-    IDS_PRGERR_DISPLAY_OPEN "Programmfehler!\nDer Typ der zu öffnenden Ansicht ist ungültig!"
-    IDS_PRGERR_ILLEGAL_DATE "Programmfehler!\nDie Datumsangabe ist falsch!"
-    IDS_PRGERR_ILLEGAL_DATEMODE 
-                            "Programmfehler!\nDer Datgumsmodus ist falsch!"
 END
 
 #endif    // German (Germany) resources

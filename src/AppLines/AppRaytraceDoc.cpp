@@ -36,13 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2002/08/17 17:31:22  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.12  2002/08/15 13:56:42  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.11  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -145,7 +148,19 @@ BOOL CAppRaytraceDoc::OnNewDocument()
 BOOL CAppRaytraceDoc::OnOpenDocument(LPCTSTR lpszPathName) 
 {
 	// TODO: Add your specialized creation code here
-	return m_Tx->b3LoadImage(lpszPathName) == B3_TX_OK;
+	BOOL result = false;
+
+	try
+	{
+		result = m_Tx->b3LoadImage(lpszPathName,true) == B3_TX_OK;
+	}
+	catch(b3ExceptionBase &e)
+	{
+		b3PrintF(B3LOG_NORMAL,"ERROR: Opening image %s (code: %d)\n",
+			(const char *)result,e.b3GetError());
+		B3_MSG_ERROR(e);
+	}
+	return result;
 }
 
 void CAppRaytraceDoc::OnCloseDocument() 

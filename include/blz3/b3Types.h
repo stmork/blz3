@@ -27,7 +27,7 @@
 typedef enum
 {
 	B3_ERROR = -1,
-	B3_OK    = 0
+	B3_OK    =  0
 } b3_result;
 
 // Unsigned integer

@@ -781,6 +781,10 @@ SOURCE=.\res\H_move.cur
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\ico00001.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\left.ico
 # End Source File
 # Begin Source File
@@ -890,6 +894,10 @@ SOURCE=.\res\toolbar1.bmp
 # Begin Source File
 
 SOURCE=.\res\toolbar_action.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\toolbar_animation.bmp
 # End Source File
 # Begin Source File
 

@@ -71,6 +71,7 @@ protected:  // control bar embedded members
 	CB3Toolbar         m_wndLghtBar;
 	CB3Toolbar         m_wndObjtBar;
 	CB3Toolbar         m_wndDispBar;
+	CB3Toolbar         m_wndAnimBar;
 	CDlgFulcrum        m_dlgFulcrum;
 	CDlgStepMove       m_dlgStepMove;
 	CDlgStepRotate     m_dlgStepRotate;
@@ -95,12 +96,14 @@ protected:
 	afx_msg void OnCustCamera();
 	afx_msg void OnCustLight();
 	afx_msg void OnCustScene();
+	afx_msg void OnCustAnim();
 	afx_msg void OnBarView();
 	afx_msg void OnBarDisplay();
 	afx_msg void OnBarAction();
 	afx_msg void OnBarCamera();
 	afx_msg void OnBarLight();
 	afx_msg void OnBarScene();
+	afx_msg void OnBarAnim();
 	afx_msg void OnBarFulcrum();
 	afx_msg void OnBarStepMove();
 	afx_msg void OnBarStepRotate();
@@ -110,6 +113,7 @@ protected:
 	afx_msg void OnUpdateBarCamera(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarLight(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarScene(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarAnim(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarFulcrum(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarStepMove(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateBarStepRotate(CCmdUI* pCmdUI);

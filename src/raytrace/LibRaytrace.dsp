@@ -90,6 +90,10 @@ SOURCE=b3Animation.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3AnimElement.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Area.cc
 # End Source File
 # Begin Source File

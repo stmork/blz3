@@ -212,9 +212,9 @@ protected:
 	// Storing routines
 	void     b3StoreInt     (const b3_s32       value);
 	void     b3StoreInt     (const b3_u32       value);
+	void     b3StoreIndex   (const b3_index     value);
 	void     b3StoreRes     (const b3_res       value);
 	void     b3StoreCount   (const b3_count     value);
-	void     b3StoreIndex   (const b3_index     value);
 	void     b3StoreFloat   (const b3_f32       value);
 	void     b3StoreBool    (const b3_bool      value);
 	void     b3StorePtr     (const void        *ptr);

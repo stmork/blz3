@@ -338,7 +338,7 @@ public:
 	b3_index       b3ComputeThreshold(b3_f64 ratio,b3_tx_threshold mode);
 
 	static b3_tx_filetype b3GetFileType(const char *extension);
-	b3_result             b3LoadImage(const char *ImageName);
+	b3_result             b3LoadImage(const char *ImageName,b3_bool throw_exception = false);
 	b3_result             b3LoadImage(b3_u08 *buffer,b3_size size);
 	b3_result             b3SaveImage(const char *filename);
 

@@ -10,6 +10,7 @@ PRGS			=
 LIBS			= $(BLZ3_LIB)/libB3Raytrace.a
 PRG_SOURCE		=\
 	b3Animation.cc\
+	b3AnimElement.cc\
 	b3Area.cc\
 	b3BBox.cc\
 	b3Box.cc\
@@ -54,6 +55,7 @@ PRG_SOURCE		=\
 
 PRG_OBJ			=\
 	b3Animation.o\
+	b3AnimElement.o\
 	b3Area.o\
 	b3BBox.o\
 	b3Box.o\

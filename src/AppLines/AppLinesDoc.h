@@ -28,11 +28,13 @@
 class CAppLinesDoc : public CAppRenderDoc
 {
 	b3Array<b3BBox *>     m_HitBBoxes;
+	b3_bool               m_Playing;
 
 protected:
 	b3World               m_World;
 // Attributes
 public:
+	b3Animation          *m_Anim;
 	b3Scene              *m_Scene;
 	b3Light              *m_Light;
 	b3CameraPart         *m_CameraLight;
@@ -113,6 +115,16 @@ protected:
 	afx_msg void OnObjectCopy();
 	afx_msg void OnObjectEdit();
 	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
+	afx_msg void OnAnimStart();
+	afx_msg void OnAnimStop();
+	afx_msg void OnAnimPlay();
+	afx_msg void OnAnimPause();
+	afx_msg void OnAnimEnd();
+	afx_msg void OnUpdateAnimStart(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimStop(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimPlay(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimPause(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateAnimEnd(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
@@ -144,6 +156,8 @@ private:
 	b3_bool        b3PutClipboard(b3BBox *bbox);
 	void           b3PasteClipboard(b3_bool insert_sub);
 	void           b3ObjectCreate(b3_bool insert_sub);
+	b3_bool        b3HasAnimation();
+	b3_bool        b3IsPlaying();
 };
 
 /////////////////////////////////////////////////////////////////////////////

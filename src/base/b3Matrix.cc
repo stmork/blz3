@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2002/08/17 17:31:22  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.23  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.22  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -247,7 +250,7 @@ b3_f64 b3Det3(
 		a->x * c->y * b->z;
 }
 
-b3_f64 Det4(b3_matrix *Matrix)
+b3_f64 b3Det4(b3_matrix *Matrix)
 {
 	b3_vector Row1,Row2,Row3,Row4;
 	b3_f64    Result;
@@ -302,8 +305,11 @@ b3_matrix * b3MatrixInv (
 		b3_f64    Denom;
 		b3_vector Row1,Row2,Row3,Row4;
 
-		Denom = Det4 (From);
-		if (Denom == 0) return (null);
+		Denom = b3Det4 (From);
+		if (Denom == 0)
+		{
+			return (null);
+		}
 		Denom = 1 /Denom;
 
 		Row1.x  = From->m12;	Row2.x  = From->m22;
@@ -822,4 +828,66 @@ b3_matrix *b3MatrixMirrorPlane (
 	b3MatrixMMul (&Result,  &Mirror,   &Mirrored);
 	b3MatrixMMul (&Mirrored,&System,   B);
 	return B;
+}
+
+/* This routine creates a transformation matrix where an object is dressed */
+/* along a specified vector. This vector is comparable to a x axis in */
+/* an basis transformation. The other orthonormal basises are computed to. */
+/* An additional position is specified to so this transformation moves the */
+/* object, too, and you mustn't move the Object via MatrixMove()! */
+/* ----------------------------------------------------------------------- */
+/* prev:      the previous matrix where the transformation is linked to */
+/* transform: the result transformation including prev */
+/* center:    the base of the orthonormal basis */
+/* dir:       equal to the new x axis. */
+
+b3_matrix * b3MatrixDress (
+	b3_matrix *prev,
+	b3_matrix *transform,
+	b3_vector *center,
+	b3_vector *dir1,
+	b3_vector *dir2,
+	b3_bool    negate)
+{
+	b3_matrix lookTo;
+	b3_vector normal;
+
+	// dress vector is x axis
+	lookTo.m11 = dir1->x;
+	lookTo.m21 = dir1->y;
+	lookTo.m31 = dir1->z;
+	lookTo.m41 = 0;
+	b3NormalizeCol (&lookTo,0);
+
+	// now compute z axis from dress vector and direction vector
+	normal.x = dir1->y * dir2->z    - dir1->z * dir2->y; 
+	normal.y = dir1->z * dir2->x    - dir1->x * dir2->z; 
+	normal.z = dir1->x * dir2->y    - dir1->y * dir2->x; 
+
+	if (negate)
+	{
+		b3Vector::b3Negate(&normal);
+	}
+	lookTo.m13 = normal.x;
+	lookTo.m23 = normal.y;
+	lookTo.m33 = normal.z;
+	lookTo.m43 = 0;
+	b3NormalizeCol (&lookTo,2);
+
+	// now compute y axis from x and z axis
+	lookTo.m12 = dir1->y * lookTo.m33 - dir1->z * lookTo.m23; 
+	lookTo.m22 = dir1->z * lookTo.m13 - dir1->x * lookTo.m33; 
+	lookTo.m32 = dir1->x * lookTo.m23 - dir1->y * lookTo.m13; 
+	lookTo.m42 = 0;
+	b3NormalizeCol (&lookTo,1);
+
+	// reposition object
+	lookTo.m14 = center->x;
+	lookTo.m24 = center->y;
+	lookTo.m34 = center->z;
+	lookTo.m44 = 1;
+
+	// "undo" from transformation, "do" to transformation
+	b3MatrixMMul (prev,&lookTo,transform);
+	return transform;
 }

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.51  2002/08/17 17:31:23  sm
+**      - Introduced animation support (Puh!)
+**
 **      Revision 1.50  2002/07/31 11:57:11  sm
 **      - The nVidia OpenGL init bug fixed by using following work
 **        around: The wglMakeCurrent() method is invoked on
@@ -507,6 +510,88 @@ char *b3CameraPart::b3GetName()
 	return m_CameraName;
 }
 
+b3_f64 b3CameraPart::b3GetFocalLength()
+{
+	return b3Vector::b3Distance(&m_ViewPoint,&m_EyePoint);
+}
+
+b3_f64 b3CameraPart::b3GetTwirl()
+{
+	b3_vector ViewDir,Right,Vup;
+
+	// compute view up vector
+	ViewDir.x = m_ViewPoint.x - m_EyePoint.x;
+	ViewDir.y = m_ViewPoint.y - m_EyePoint.y;
+	ViewDir.z = m_ViewPoint.z - m_EyePoint.z;
+
+	if ((ViewDir.x == 0) && (ViewDir.y == 0))
+	{
+		return 0;
+	}
+
+	Right.x   =  ViewDir.y;
+	Right.y   = -ViewDir.x;
+	Right.z   =  0;
+
+
+	// this is real VUP
+	b3Vector::b3CrossProduct(&Right,&ViewDir,&Vup);
+
+	// compute twirl
+	return asin ((
+		Vup.x * m_Width.x +
+		Vup.y * m_Width.y +
+		Vup.z * m_Width.z) /
+			(b3Vector::b3Length(&m_Width) * b3Vector::b3Length(&Vup)));
+}
+
+void b3CameraPart::b3SetTwirl(b3_f64 twirl)
+{
+	b3_line   RotLine;
+	b3_matrix RotMatrix;
+	b3_f64    width  = b3Vector::b3Length(&m_Width);
+	b3_f64    height = b3Vector::b3Length(&m_Height);
+	b3_f64    focal  = b3GetFocalLength();
+	b3_f64    factor;
+
+	RotLine.pos   = m_EyePoint;
+	RotLine.dir.x = m_ViewPoint.x - m_EyePoint.x;
+	RotLine.dir.y = m_ViewPoint.y - m_EyePoint.y;
+	RotLine.dir.z = m_ViewPoint.z - m_EyePoint.z;
+
+	factor = focal / b3Vector::b3Length (&RotLine.dir);
+	m_ViewPoint.x = m_EyePoint.x + factor * RotLine.dir.x;
+	m_ViewPoint.y = m_EyePoint.y + factor * RotLine.dir.y;
+	m_ViewPoint.z = m_EyePoint.z + factor * RotLine.dir.z;
+
+	if ((RotLine.dir.x == 0) && (RotLine.dir.y == 0))
+	{
+		m_Width.x =  1;
+		m_Width.y =  0;
+		m_Width.z =  0;
+	}
+	else
+	{
+		m_Width.x =  RotLine.dir.y;
+		m_Width.y = -RotLine.dir.x;
+		m_Width.z =  0;
+	}
+
+	// now compute new projection plane with
+	// specified parameters.
+	b3Vector::b3CrossProduct(&m_Width,&RotLine.dir,&m_Height);
+	b3Vector::b3Normalize(&m_Width, width);
+	b3Vector::b3Normalize(&m_Height,height);
+
+	// set to the old twirl
+	if (twirl != 0.0)
+	{
+		b3MatrixRotVec (null,&RotMatrix,&RotLine,-twirl);
+		b3MatrixVMul   (&RotMatrix,&m_Width, &m_Width, false);
+		b3MatrixVMul   (&RotMatrix,&m_Height,&m_Height,false);
+	}
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Some infos for Lines III                      **
@@ -835,43 +920,43 @@ b3Animation::b3Animation(b3_u32 class_type) :
 b3Animation::b3Animation(b3_u32 *src) :
 	b3Special(src)
 {
-	start           = b3InitFloat();
-	end             = b3InitFloat();
-	time            = b3InitFloat();
-	neutral         = b3InitFloat();
-	framesPerSecond = b3InitInt();
-	flags           = b3InitInt();;
+	m_Start           = b3InitFloat();
+	m_End             = b3InitFloat();
+	m_Time            = b3InitFloat();
+	m_Neutral         = b3InitFloat();
+	m_FramesPerSecond = b3InitInt();
+	m_Flags           = b3InitInt();;
 
 	if (B3_PARSE_INDEX_VALID)
 	{
 		// OK, the following values are only for "Lines"
-		frames     = b3InitInt();
-		tracks     = b3InitInt();
-		trackIndex = b3InitInt();
-		frameIndex = b3InitInt();
-		WTracks    = b3InitInt();
-		WFrames    = b3InitInt();
-		Element    = (b3AnimElement *)b3InitNull();
+		m_Frames     = b3InitInt();
+		m_Tracks     = b3InitInt();
+		m_TrackIndex = b3InitInt();
+		m_FrameIndex = b3InitInt();
+		m_WTracks    = b3InitInt();
+		m_WFrames    = b3InitInt();
+		m_Element    = (b3AnimElement *)b3InitNull();
 	}
 }
 
 void b3Animation::b3Write()
 {
-	b3StoreFloat(start);
-	b3StoreFloat(end);
-	b3StoreFloat(time);
-	b3StoreFloat(neutral);
-	b3StoreInt(framesPerSecond);
-	b3StoreInt(flags);
+	b3StoreFloat(m_Start);
+	b3StoreFloat(m_End);
+	b3StoreFloat(m_Time);
+	b3StoreFloat(m_Neutral);
+	b3StoreCount(m_FramesPerSecond);
+	b3StoreInt  (m_Flags);
 
 	// OK, the following values are only for "Lines"
-	b3StoreInt(frames);
-	b3StoreInt(tracks);
-	b3StoreInt(trackIndex);
-	b3StoreInt(frameIndex);
-	b3StoreInt(WTracks);
-	b3StoreInt(WFrames);
-	b3StorePtr(Element);
+	b3StoreCount(m_Frames);
+	b3StoreCount(m_Tracks);
+	b3StoreIndex(m_TrackIndex);
+	b3StoreIndex(m_FrameIndex);
+	b3StoreCount(m_WTracks);
+	b3StoreCount(m_WFrames);
+	b3StorePtr  (m_Element);
 }
 
 /*************************************************************************

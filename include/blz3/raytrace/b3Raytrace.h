@@ -1890,28 +1890,33 @@ public:
 	void b3Write();
 };
 
-class b3AnimElement : b3Item
+class b3AnimElement : public b3Item
 {
-	b3_vector           center;               // rotation center
-	b3_matrix           actual;               // actual transformation
-	b3_matrix           neutralInverse;       // inverse of neutral position
-	b3_f32              ratio;                // parametrisation ratio
-	b3_s32              empty;                // empty entry
-	b3_f32              start;                // start of action
-	b3_f32              end;                  // end of action
-	b3_s32              flags;                // ANIMF_xxx flags
-	b3_s32              trackIndex;           // start track number
-	b3_s32              curveUse;             // number of curves used
-	b3_nurbs            param;                // param. curves
-	b3_f32              knots[B3_MAX_KNOTS];     // knot vectors
-	char                name[B3_ANIMSTRINGLEN];  // element name
-	char                object[B3_BOXSTRINGLEN]; // name of destination object
+	b3_s32              m_Empty;                   // empty entry
+public:
+	b3_vector           m_Center;                  // rotation center
+	b3_matrix           m_Actual;                  // actual transformation
+	b3_matrix           m_NeutralInverse;          // inverse of neutral position
+	b3_f64              m_Ratio;                   // parametrisation ratio
+	b3_f64              m_Start;                   // start of action
+	b3_f64              m_End;                     // end of action
+	b3_u32              m_Flags;                   // ANIMF_xxx flags
+	b3_index            m_TrackIndex;              // start track number
+	b3_bool             m_CurveUse;                // number of curves used
+	b3Nurbs             m_Param;                   // param. curves
+	b3_f32              m_Knots[B3_MAX_KNOTS];     // knot vectors
+	char                m_Name[B3_ANIMSTRINGLEN];  // element name
+	char                m_Object[B3_BOXSTRINGLEN]; // name of destination object
 
 public:
 	B3_ITEM_INIT(b3AnimElement);
 	B3_ITEM_LOAD(b3AnimElement);
 
 	void b3Write();
+
+public:
+	void b3GetPosition(b3_vector32_4D *position,b3_f64 t);
+	void b3GetPosition(b3_vector      *position,b3_f64 t);
 };
 
 /*************************************************************************
@@ -1990,6 +1995,9 @@ public:
 	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
 	void     b3Overview(b3_vector *center,b3_vector *size,b3_f64 xAngle,b3_f64 yAngle);
 	void     b3ComputeFocalLength(b3_f64 length);
+	b3_f64   b3GetFocalLength();
+	b3_f64   b3GetTwirl();
+	void     b3SetTwirl(b3_f64 twirl);
 	void     b3ScaleFocalLength(b3_f64 factor);
 	void     b3Transform(b3_matrix *transformation);
 	char    *b3GetName();
@@ -2093,27 +2101,51 @@ public:
 class b3Animation : public b3Special
 {
 	// OK, the following values are only for "Lines"
-	b3_s32          frames;          // computed number of frames
-	b3_s32          tracks;          // number of visible tracks
-	b3_s32          trackIndex;      // start track in window 
-	b3_s32          frameIndex;      // start frame in window
-	b3_s32          WTracks;         // actual number of tracks
-	b3_s32          WFrames;         // whole of frames
-	b3AnimElement  *Element;         // actual animation element
+	b3_count        m_Frames;          // computed number of frames
+	b3_count        m_Tracks;          // number of visible tracks
+	b3_index        m_TrackIndex;      // start track in window 
+	b3_index        m_FrameIndex;      // start frame in window
+	b3_count        m_WTracks;         // actual number of tracks
+	b3_count        m_WFrames;         // whole of frames
+	b3AnimElement  *m_Element;         // actual animation element
+	b3_vector       m_AnimCenter;
 
 public:
-	b3_f32   start;           // start time (one unit per frame)
-	b3_f32   end;             // end time (one unit per frame)
-	b3_f32   time;            // time point
-	b3_f32   neutral;         // neutral point
-	b3_s32   framesPerSecond;
-	b3_s32   flags;
+	b3_f64   m_Start;           // start time (one unit per frame)
+	b3_f64   m_End;             // end time (one unit per frame)
+	b3_f64   m_Time;            // time point
+	b3_f64   m_Neutral;         // neutral point
+	b3_count m_FramesPerSecond;
+	b3_u32   m_Flags;
 
 public:
 	B3_ITEM_INIT(b3Animation);
 	B3_ITEM_LOAD(b3Animation);
 
 	void b3Write();
+
+public:
+	b3Base<b3Item> *b3GetAnimElementHead();
+	void            b3SetAnimElement (b3AnimElement *Element);
+
+	void            b3SetAnimation (b3Scene *Global,b3_f64 t);
+	void            b3ResetAnimation (b3Scene *Global);
+	b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
+	b3_f64          b3AnimTimeCode (b3_index index);
+	b3_index        b3AnimFrameIndex (b3_f64 t);
+
+private:
+	       void           b3RecomputeNeutralInverse (b3AnimElement *Element);
+		   void           b3GetNeutralPosition(b3AnimElement *Element,b3_vector *neutral);
+		   void           b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+		   void           b3ApplyTransformation (b3Scene *Global,b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	static b3_bool        b3SelectAnimElement (b3Scene *Global,b3AnimElement *Element);
+	static b3AnimElement *b3FindSameTrack(b3AnimElement *Element);
+	static b3_f64         b3ClipValue(b3_f64 val,b3_f64 min,b3_f64 max);
+	       void           b3ComputeTransformationMatrix(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void           b3AnimateMove  (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void           b3AnimateRotate(b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
+	       void           b3AnimateScale (b3AnimElement *Anim,b3_matrix *transform,b3_f64 t);
 };
 
 #define ANIMB_ON     1
@@ -2320,17 +2352,20 @@ public:
 			b3Base<b3Item> *b3GetBBoxHead();
 			b3Base<b3Item> *b3GetLightHead();
 			b3Base<b3Item> *b3GetSpecialHead();
+			b3Animation    *b3GetAnimation();
 		    b3ModellerInfo *b3GetModellerInfo();
 			b3Distribute   *b3GetDistributed(b3_bool force = true);
 		    b3Nebular      *b3GetNebular    (b3_bool force = true);
 		    b3SuperSample  *b3GetSuperSample(b3_bool force = true);
 		    b3LensFlare    *b3GetLensFlare  (b3_bool force = false);
 		    b3CameraPart   *b3GetCamera(b3_bool must_active = false);
+			b3CameraPart   *b3GetCamera(const char *camera_name);
 		    b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
 			void            b3SetFilename(const char *filename);
 			b3_bool         b3GetTitle(char *title);
 			void            b3SetCamera(b3CameraPart *camera,b3_bool reorder=false);
 		    b3Light        *b3GetLight(b3_bool must_active = false);
+			b3Light        *b3GetLight(const char *light_name);
 		    b3BBox         *b3GetFirstBBox();
 		    b3_count        b3GetBBoxCount();
 		    void            b3Activate(b3_bool activate=true);

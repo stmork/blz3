@@ -74,6 +74,7 @@ public:
 };
 
 #define B3_FOR_BASE(b,n)    for((n) = (b)->First;(n)!= null;(n) = (n)->Succ)
+#define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= null;(n) = (n)->Prev)
 #define B3_DELETE_BASE(b,n) ((b)->b3Free())
 
 template <class T> class b3Base

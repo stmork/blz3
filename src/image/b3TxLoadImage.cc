@@ -37,13 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2002/08/17 17:31:22  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -308,7 +311,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	B3_THROW(b3TxException,B3_TX_UNSUPP);
 }
 
-b3_result b3Tx::b3LoadImage(const char *name)
+b3_result b3Tx::b3LoadImage(const char *name,b3_bool throw_exception)
 {
 	b3File     file;
 	b3_u08    *buffer;
@@ -327,16 +330,28 @@ b3_result b3Tx::b3LoadImage(const char *name)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error loading %s (%s)\n",
 			name,e.b3GetErrorMsg());
+		if (throw_exception)
+		{
+			throw;
+		}
 	}
 	catch(b3TxException &e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Error parsing %s (%s)\n",
 			name,e.b3GetErrorMsg());
+		if (throw_exception)
+		{
+			throw;
+		}
 	}
 	catch(...)
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown error parsing %s\n",
 			name);
+		if (throw_exception)
+		{
+			throw;
+		}
 	}
 	return error_code;
 }

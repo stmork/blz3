@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/08/17 17:31:23  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.37  2002/07/26 09:13:33  sm
 **	- Found alpha problem: the Linux OpenGL renderer didn't use the
 **	  b3RenderContext::b3Init() method! Now everything function very well:-)
 **	- The Un*x OpenGL renderer has got a key press interface now.
 **	- Corrected spot lights
 **	- Textures needn't to be square any more (some less memory usage)
-**
+**	
 **	Revision 1.36  2002/07/25 13:22:32  sm
 **	- Introducing spot light
 **	- Optimized light settings when drawing
@@ -377,6 +380,20 @@ b3Base<b3Item> *b3Scene::b3GetSpecialHead()
 	return &m_Heads[2];
 }
 
+b3Animation *b3Scene::b3GetAnimation()
+{
+	b3Item      *item;
+
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if (item->b3GetClassType() == LINES_INFO)
+		{
+			return (b3Animation *)item;
+		}
+	}
+	return null;
+}
+
 b3ModellerInfo *b3Scene::b3GetModellerInfo()
 {
 	b3ModellerInfo *info;
@@ -536,6 +553,26 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 	return camera;
 }
 
+
+b3CameraPart *b3Scene::b3GetCamera(const char *camera_name)
+{
+	b3CameraPart *camera,*first = null;
+	b3Item       *item;
+
+	B3_FOR_BASE(b3GetSpecialHead(),item)
+	{
+		if (item->b3GetClassType() == CAMERA)
+		{
+			camera = (b3CameraPart *)item;
+			if (stricmp(camera->b3GetName(),camera_name) == 0)
+			{
+				return camera;
+			}
+		}
+	}
+	return null;
+}
+
 b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
 {
 	while ((camera = (b3CameraPart *)camera->Succ) != null)
@@ -582,6 +619,22 @@ b3_bool b3Scene::b3GetTitle(char *title)
 		b3Dir::b3SplitFileName(m_Filename,null,title);
 	}
 	return strlen(title) > 0;
+}
+
+b3Light *b3Scene::b3GetLight(const char *light_name)
+{
+	b3Light *light;
+	b3Item  *item;
+
+	B3_FOR_BASE(b3GetLightHead(),item)
+	{
+		light = (b3Light *)item;
+		if (stricmp(light->b3GetName(),light_name) == 0)
+		{
+			return light;
+		}
+	}
+	return null;
 }
 
 b3Light *b3Scene::b3GetLight(b3_bool must_active)

@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/08/17 17:31:22  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.29  2002/01/21 16:56:46  sm
 **	- Showing splash dialog only in release version.
 **	- Prepared shape icons.
-**
+**	
 **	Revision 1.28  2002/01/20 12:48:51  sm
 **	- Added splash screen
 **	- Corrected repeat buttons (capture change)
@@ -190,12 +193,14 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_COMMAND(ID_CUST_CAMERA, OnCustCamera)
 	ON_COMMAND(ID_CUST_LIGHT, OnCustLight)
 	ON_COMMAND(ID_CUST_SCENE, OnCustScene)
+	ON_COMMAND(ID_CUST_ANIM, OnCustAnim)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
 	ON_COMMAND(IDM_BAR_DISPLAY, OnBarDisplay)
 	ON_COMMAND(IDM_BAR_ACTION, OnBarAction)
 	ON_COMMAND(IDM_BAR_CAMERA, OnBarCamera)
 	ON_COMMAND(IDM_BAR_LIGHT, OnBarLight)
 	ON_COMMAND(IDM_BAR_SCENE, OnBarScene)
+	ON_COMMAND(IDM_BAR_ANIM, OnBarAnim)
 	ON_COMMAND(IDM_BAR_FULCRUM, OnBarFulcrum)
 	ON_COMMAND(IDM_BAR_STEP_MOVE, OnBarStepMove)
 	ON_COMMAND(IDM_BAR_STEP_ROTATE, OnBarStepRotate)
@@ -205,6 +210,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_CAMERA, OnUpdateBarCamera)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_LIGHT, OnUpdateBarLight)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_SCENE, OnUpdateBarScene)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_ANIM, OnUpdateBarAnim)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_FULCRUM, OnUpdateBarFulcrum)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_MOVE, OnUpdateBarStepMove)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_STEP_ROTATE, OnUpdateBarStepRotate)
@@ -238,7 +244,8 @@ static UINT toolbar_bitmaps[] =
 	IDR_TOOLBAR_CAMERA,
 	IDR_TOOLBAR_LIGHT,
 	IDR_TOOLBAR_OBJECT,
-	IDR_TOOLBAR_DISPLAY
+	IDR_TOOLBAR_DISPLAY,
+	IDR_TOOLBAR_ANIMATION
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -303,17 +310,18 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3MoveWindow(this);
 
 	app->b3AddMenubar(&m_wndMenuBar,     IDR_MAINFRAME);
-	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,      IDS_TOOLBAR_MAINFRAME);
-	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT, IDS_TOOLBAR_OBJECT);
-	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,   IDS_TOOLBAR_VIEW);
-	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,IDS_TOOLBAR_DISPLAY);
-	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION, IDS_TOOLBAR_ACTION);
-	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA, IDS_TOOLBAR_CAMERA);
-	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,  IDS_TOOLBAR_LIGHT);
-	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,      IDS_DIALOGBAR_HIERARCHY);
-	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,      IDS_DIALOGBAR_STEP_MOVE);
-	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,        IDS_DIALOGBAR_FULCRUM);
-	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,    IDS_DIALOGBAR_STEP_ROTATE);
+	app->b3AddToolbar(&m_wndToolBar,     IDR_MAINFRAME,         IDS_TOOLBAR_MAINFRAME);
+	app->b3AddToolbar(&m_wndObjtBar,     IDR_TOOLBAR_OBJECT,    IDS_TOOLBAR_OBJECT);
+	app->b3AddToolbar(&m_wndViewBar,     IDR_TOOLBAR_VIEW,      IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndDispBar,     IDR_TOOLBAR_DISPLAY,   IDS_TOOLBAR_DISPLAY);
+	app->b3AddToolbar(&m_wndActnBar,     IDR_TOOLBAR_ACTION,    IDS_TOOLBAR_ACTION);
+	app->b3AddToolbar(&m_wndCamrBar,     IDR_TOOLBAR_CAMERA,    IDS_TOOLBAR_CAMERA);
+	app->b3AddToolbar(&m_wndLghtBar,     IDR_TOOLBAR_LIGHT,     IDS_TOOLBAR_LIGHT);
+	app->b3AddToolbar(&m_wndAnimBar,     IDR_TOOLBAR_ANIMATION, IDS_TOOLBAR_ANIMATION);
+	app->b3AddDialogbar(&m_dlgHierarchy, IDD_HIERARCHY,         IDS_DIALOGBAR_HIERARCHY);
+	app->b3AddDialogbar(&m_dlgStepMove,  IDD_STEP_MOVE,         IDS_DIALOGBAR_STEP_MOVE);
+	app->b3AddDialogbar(&m_dlgFulcrum,   IDD_FULCRUM,           IDS_DIALOGBAR_FULCRUM);
+	app->b3AddDialogbar(&m_dlgStepRotate,IDD_STEP_ROTATE,       IDS_DIALOGBAR_STEP_ROTATE);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
@@ -429,6 +437,12 @@ void CMainFrame::OnCustScene()
 	m_wndObjtBar.b3Customize();
 }
 
+void CMainFrame::OnCustAnim() 
+{
+	// TODO: Add your command handler code here
+	m_wndAnimBar.b3Customize();
+}
+
 void CMainFrame::OnBarView() 
 {
 	// TODO: Add your command handler code here
@@ -463,6 +477,12 @@ void CMainFrame::OnBarScene()
 {
 	// TODO: Add your command handler code here
 	m_wndObjtBar.b3ToggleVisibility();
+}
+
+void CMainFrame::OnBarAnim() 
+{
+	// TODO: Add your command handler code here
+	m_wndAnimBar.b3ToggleVisibility();
 }
 
 void CMainFrame::OnBarFulcrum() 
@@ -523,6 +543,12 @@ void CMainFrame::OnUpdateBarScene(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndObjtBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarAnim(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndAnimBar.b3IsVisible());
 }
 
 void CMainFrame::OnUpdateBarFulcrum(CCmdUI* pCmdUI) 

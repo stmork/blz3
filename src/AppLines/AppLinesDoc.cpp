@@ -57,12 +57,15 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2002/08/17 17:31:22  sm
+**	- Introduced animation support (Puh!)
+**
 **	Revision 1.68  2002/08/09 13:20:18  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.67  2002/08/08 15:14:22  sm
 **	- Some problems concerning b3Mem::b3Realloc fixed.
 **	- Further error messages added.
@@ -463,6 +466,16 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedBBox)
+	ON_COMMAND(ID_ANIM_START, OnAnimStart)
+	ON_COMMAND(ID_ANIM_STOP, OnAnimStop)
+	ON_COMMAND(ID_ANIM_PLAY, OnAnimPlay)
+	ON_COMMAND(ID_ANIM_PAUSE, OnAnimPause)
+	ON_COMMAND(ID_ANIM_END, OnAnimEnd)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_START, OnUpdateAnimStart)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_STOP, OnUpdateAnimStop)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PLAY, OnUpdateAnimPlay)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_PAUSE, OnUpdateAnimPause)
+	ON_UPDATE_COMMAND_UI(ID_ANIM_END, OnUpdateAnimEnd)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -491,6 +504,8 @@ END_INTERFACE_MAP()
 CAppLinesDoc::CAppLinesDoc()
 {
 	m_Scene        = null;
+	m_Anim         = null;
+	m_Playing      = false;
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -529,6 +544,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 		strcat(filename,".bwd");
 
 		m_Scene = b3ExampleScene::b3CreateNew(filename);
+		m_Anim  = m_Scene->b3GetAnimation();
 		m_Info  = m_Scene->b3GetModellerInfo();
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
@@ -1973,4 +1989,80 @@ void CAppLinesDoc::b3FinishEdit(
 		base->b3Remove(original);
 		SetModifiedFlag();
 	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Animation methods                             **
+**                                                                      **
+*************************************************************************/
+
+b3_bool CAppLinesDoc::b3HasAnimation()
+{
+	return m_Anim != null;
+}
+
+b3_bool CAppLinesDoc::b3IsPlaying()
+{
+	return b3HasAnimation() && m_Playing;
+}
+
+void CAppLinesDoc::OnAnimStart() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CAppLinesDoc::OnAnimStop() 
+{
+	// TODO: Add your command handler code here
+	m_Playing = false;
+}
+
+void CAppLinesDoc::OnAnimPlay() 
+{
+	// TODO: Add your command handler code here
+	m_Playing = true;
+}
+
+void CAppLinesDoc::OnAnimPause() 
+{
+	// TODO: Add your command handler code here
+	m_Playing = false;
+}
+
+void CAppLinesDoc::OnAnimEnd() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CAppLinesDoc::OnUpdateAnimStart(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimStop(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimPlay(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimPause(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(b3IsPlaying());
+}
+
+void CAppLinesDoc::OnUpdateAnimEnd(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(!b3IsPlaying());
 }

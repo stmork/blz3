@@ -63,6 +63,14 @@ public:
 			(vec1->z == vec2->z);
 	}
 
+	static inline b3_vector *b3Negate(b3_vector *negate)
+	{
+		negate->x = -negate->x;
+		negate->y = -negate->y;
+		negate->z = -negate->z;
+		return negate;
+	}
+
 	static inline b3_f64 b3Normalize(
 		      b3_vector *vector,
 		const b3_f64     length = 1.0)
@@ -434,6 +442,7 @@ b3_matrix *b3MatrixMMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result
 b3_matrix *b3MatrixSMul         (b3_matrix *Src,b3_matrix *Dst,b3_f64     factor);
 b3_matrix *b3MatrixMAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
 b3_matrix *b3MatrixRotVec       (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);
+b3_matrix *b3MatrixDress        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Dir1,b3_vector *Dir2,b3_bool negate);
 
 inline b3_vector *b3MatrixVMul  (b3_matrix *Mat,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
 {
