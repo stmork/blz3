@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgLDC
+LastClass=CAboutDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,37 +22,37 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=21
-Resource1=IDR_MAINFRAME
-Resource2=IDD_DISTRIBUTED
-Resource3=IDR_TOOLBAR_DISPLAY
-Resource4=IDD_MODELLER_INFO
-Resource5=IDD_SCENE
-Resource6=IDR_DISPLAYTYPE
-Resource7=IDD_LIGHT
-Resource8=IDR_TOOLBAR_VIEW
-Resource9=IDD_NEBULAR
-Resource10=IDD_LENS_FLARE
-Resource11=IDD_SUPER_SAMPLE
-Resource12=IDD_HIERARCHY
-Resource13=IDD_LDC
+Resource1=IDR_DISPLAYTYPE
+Resource2=IDD_SUPER_SAMPLE
+Resource3=IDR_TOOLBAR_VIEW
+Resource4=IDD_NEBULAR
+Resource5=IDR_MAINFRAME
+Resource6=IDD_LIGHT
+Resource7=IDD_SEARCH_PATH_LIST
+Resource8=IDR_TOOLBAR_DISPLAY
+Resource9=IDD_HIERARCHY
+Resource10=IDD_SCENE
+Resource11=IDD_ABOUTBOX
+Resource12=IDD_NEW_ITEM
+Resource13=IDD_MODELLER_INFO
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDR_TOOLBAR_LIGHT
+Resource14=IDR_TOOLBAR_OBJECT
 Class17=CDlgModellerInfo
-Resource15=IDD_NEW_ITEM
-Resource16=IDD_SEARCH_PATH_LIST
-Resource17=IDD_ABOUTBOX
-Resource18=IDR_TOOLBAR_ACTION
+Resource15=IDD_DISTRIBUTED
+Resource16=IDD_LENS_FLARE
+Resource17=IDR_BLZ3TYPE
+Resource18=IDR_TOOLBAR_CAMERA
 Class18=CDlgCreateItem
-Resource19=IDR_TOOLBAR_CAMERA
+Resource19=IDR_TOOLBAR_ACTION
 Class19=CDlgLight
 Class20=CB3ControlLDC
-Resource20=IDR_TOOLBAR_OBJECT
+Resource20=IDR_TOOLBAR_LIGHT
 Class21=CDlgLDC
-Resource21=IDR_BLZ3TYPE
+Resource21=IDD_LDC
 
 [CLS:CAppLinesApp]
 Type=0
@@ -69,6 +69,8 @@ BaseClass=CDialog
 HeaderFile=AppLines.cpp
 ImplementationFile=AppLines.cpp
 LastObject=CAboutDlg
+Filter=D
+VirtualFilter=dWC
 
 [CLS:CAppLinesDoc]
 Type=0
@@ -142,8 +144,8 @@ Type=1
 Class=CAboutDlg
 ControlCount=4
 Control1=IDC_STATIC,static,1342177283
-Control2=IDC_STATIC,static,1342308480
-Control3=IDC_STATIC,static,1342308352
+Control2=IDC_VERSION,static,1342308480
+Control3=IDC_COPYRIGHT,static,1342308352
 Control4=IDOK,button,1342373889
 
 [DLG:IDD_HIERARCHY]

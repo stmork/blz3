@@ -2,7 +2,6 @@
 // Microsoft Developer Studio generated include file.
 // Used by AppLines.rc
 //
-
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define ID_DRAWING_PERF                 101
@@ -132,7 +131,9 @@
 #define IDC_LIGHT_PREVIEW               1058
 #define IDC_PATH_FIRST                  1059
 #define IDC_LIGHT_LDC_DIAGRAM           1059
+#define IDC_COPYRIGHT                   1059
 #define IDC_PATH_PREV                   1060
+#define IDC_VERSION                     1060
 #define IDC_PATH_SUCC                   1061
 #define IDC_PATH_LAST                   1062
 #define IDC_PATH_NEW                    1063
@@ -242,7 +243,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
 #define _APS_NEXT_COMMAND_VALUE         32840
-#define _APS_NEXT_CONTROL_VALUE         1059
+#define _APS_NEXT_CONTROL_VALUE         1061
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

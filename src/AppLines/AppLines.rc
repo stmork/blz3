@@ -236,7 +236,7 @@ BEGIN
     END
     POPUP "&?"
     BEGIN
-        MENUITEM "Inf&o über AppLines...",      ID_APP_ABOUT
+        MENUITEM "Inf&o über Lines III...",     ID_APP_ABOUT
     END
 END
 
@@ -359,7 +359,7 @@ BEGIN
     END
     POPUP "&?"
     BEGIN
-        MENUITEM "Inf&o über AppLines...",      ID_APP_ABOUT
+        MENUITEM "Inf&o über Lines III...",     ID_APP_ABOUT
     END
 END
 
@@ -433,7 +433,7 @@ BEGIN
     END
     POPUP "&?"
     BEGIN
-        MENUITEM "Inf&o über AppLines...",      ID_APP_ABOUT
+        MENUITEM "Inf&o über Lines III...",     ID_APP_ABOUT
     END
 END
 
@@ -473,16 +473,16 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 182, 86
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Info über AppLines"
+CAPTION "Info über Lines III"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "AppLines Version 1.0",IDC_STATIC,40,10,119,8,
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,21,20
+    LTEXT           "AppLines Version 1.0",IDC_VERSION,40,10,119,8,
                     SS_NOPREFIX
-    LTEXT           "Copyright (C) 2001",IDC_STATIC,40,25,119,8
-    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "Copyright (C) 2001",IDC_COPYRIGHT,40,25,119,25
+    DEFPUSHBUTTON   "OK",IDOK,35,60,50,14,WS_GROUP
 END
 
 IDD_HIERARCHY DIALOG DISCARDABLE  0, 0, 186, 250
@@ -812,9 +812,9 @@ BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 228
+        RIGHTMARGIN, 175
         TOPMARGIN, 7
-        BOTTOMMARGIN, 48
+        BOTTOMMARGIN, 79
     END
 
     IDD_HIERARCHY, DIALOG

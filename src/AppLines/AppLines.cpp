@@ -29,6 +29,7 @@
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
 #include "blz3/image/b3TxPool.h"
+#include "blz3/system/b3Date.h"
 
 #include "DlgSearchPathList.h"
 
@@ -40,9 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/12/09 12:53:02  sm
+**	- Added tag name
+**	- Added watches for test purposes
+**	- Customized about dialog
+**
 **	Revision 1.7  2001/12/09 12:36:34  sm
 **	- Adding Tag name
-**
+**	
 **	Revision 1.6  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -234,7 +240,7 @@ BOOL CAppLinesApp::InitInstance()
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
 
-const char AppLinesVersionString = "$Name$";
+const char AppLinesVersionString[] = "$Name$";
 
 class CAboutDlg : public CDialog
 {
@@ -244,7 +250,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CAboutDlg)
 	enum { IDD = IDD_ABOUTBOX };
-	CStatic	m_CtrlCopyRight;
+	CStatic	m_CtrlCopyright;
 	CStatic	m_CtrlVersion;
 	//}}AFX_DATA
 
@@ -272,7 +278,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CAboutDlg)
-	DDX_Control(pDX, IDC_COPYRIGHT, m_CtrlCopyRight);
+	DDX_Control(pDX, IDC_COPYRIGHT, m_CtrlCopyright);
 	DDX_Control(pDX, IDC_VERSION, m_CtrlVersion);
 	//}}AFX_DATA_MAP
 }
@@ -287,7 +293,28 @@ BOOL CAboutDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	
+	char buffer[1024];
+	CString copyright;
+	b3Date  today;
+
+	copyright.Format("Copyright (C) %lu by\nBlizzard III",today.year);
+#ifdef _DEBUG
+	copyright += " (Debug version)";
+#endif
+	if (sscanf(AppLinesVersionString,"$Name$",buffer) != 1)
+	{
+		buffer[0] = 0;
+	}
+	else
+	{
+		if (strcmp(buffer,"$") == 0)
+		{
+			buffer[0] = 0;
+		}
+	}
+	m_CtrlVersion.SetWindowText(buffer);
+	m_CtrlCopyright.SetWindowText(copyright);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
