@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/09/04 15:15:57  sm
+**      - Added rotating objects
+**
 **      Revision 1.11  2001/09/02 18:54:56  sm
 **      - Moving objects
 **      - BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -337,6 +340,63 @@ void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 			break;
 		}
 	}
+}
+
+void b3RenderView::b3GetViewDirection(b3_vector *dir)
+{
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		dir->x =  0;
+		dir->y =  0;
+		dir->z = -1;
+		break;
+	case B3_VIEW_FRONT:
+		dir->x =  0;
+		dir->y =  1;
+		dir->z =  0;
+		break;
+	case B3_VIEW_RIGHT:
+		dir->x = -1;
+		dir->y =  0;
+		dir->z =  0;
+		break;
+	case B3_VIEW_BACK:
+		dir->x =  0;
+		dir->y = -1;
+		dir->z =  0;
+		break;
+	case B3_VIEW_LEFT:
+		dir->x =  1;
+		dir->y =  0;
+		dir->z =  0;
+		break;
+	}
+}
+
+b3_f64 b3RenderView::b3GetPositionAngle(b3_vector *center,b3_vector *position)
+{
+	b3_f64 result = 0;
+
+	switch(m_ViewMode)
+	{
+	case B3_VIEW_TOP:
+		result = atan2(position->y - center->y,position->x - center->x);
+		break;
+	case B3_VIEW_FRONT:
+		result = atan2(position->z - center->z,position->x - center->x);
+		break;
+	case B3_VIEW_RIGHT:
+		result = atan2(position->z - center->z,position->y - center->y);
+		break;
+	case B3_VIEW_BACK:
+		result = atan2(position->z - center->z,center->x - position->x);
+		break;
+	case B3_VIEW_LEFT:
+		result = atan2(position->z - center->z,center->y - position->y);
+		break;
+	}
+	return result;
 }
 
 void b3RenderView::b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point)

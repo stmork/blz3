@@ -101,8 +101,16 @@ public:
 
 class CB3ActionObjectRotate : public CB3Action
 {
+	b3_vector *m_Center;
+	b3_vector  m_StartPoint;
+	b3_f64     m_StartAngle;
+	b3_line    m_Axis;
 public:
 	CB3ActionObjectRotate(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
+	void b3LMove(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
 };
 
 class CB3ActionObjectScale : public CB3Action

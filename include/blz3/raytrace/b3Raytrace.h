@@ -1527,21 +1527,23 @@ public:
 // LINES_INFO
 class b3ModellerInfo : public b3Special
 {
-	b3_vector        Center;
-	b3_f32           GridMove;
-	b3_f32           GridRot;
-	b3_bool          ResizeFlag;
-	b3_bool          BBoxTitles;
-	b3_bool          GridActive;
-	b3_bool          CameraActive;
-	b3_s32           Flags;
-	b3_f32           Unit;
+	b3_vector        m_Center;
+	b3_f32           m_GridMove;
+	b3_f32           m_GridRot;
+	b3_bool          m_ResizeFlag;
+	b3_bool          m_BBoxTitles;
+	b3_bool          m_GridActive;
+	b3_bool          m_CameraActive;
+	b3_s32           m_Flags;
+	b3_f32           m_Unit;
 
 public:
 	B3_ITEM_INIT(b3ModellerInfo);
 	B3_ITEM_LOAD(b3ModellerInfo);
 
 	b3_vector *b3GetFulcrum();
+	void       b3SnapToGrid(b3_vector *translation);
+	void       b3SnapToAngle(b3_f64 &angle);
 };
 
 #define RULE_MM 0

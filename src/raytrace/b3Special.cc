@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/09/04 15:15:57  sm
+**      - Added rotating objects
+**
 **      Revision 1.6  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects
@@ -131,31 +134,52 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
-	Center.x = 0;
-	Center.y = 0;
-	Center.z = 0;
+	m_Center.x = 0;
+	m_Center.y = 0;
+	m_Center.z = 0;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitVector(&Center);
-	GridMove     = b3InitFloat();
-	GridRot      = b3InitFloat();
-	ResizeFlag   = b3InitBool();
-	BBoxTitles   = b3InitBool();
-	GridActive   = b3InitBool();
-	CameraActive = b3InitBool();
+	b3InitVector(&m_Center);
+	m_GridMove     = b3InitFloat();
+	m_GridRot      = b3InitFloat();
+	m_ResizeFlag   = b3InitBool();
+	m_BBoxTitles   = b3InitBool();
+	m_GridActive   = b3InitBool();
+	m_CameraActive = b3InitBool();
 	if (B3_PARSE_INDEX_VALID)
 	{
-		Flags    = b3InitInt();
-		Unit     = b3InitFloat();	
+		m_Flags    = b3InitInt();
+		m_Unit     = b3InitFloat();	
 	}
 }
 
 b3_vector *b3ModellerInfo::b3GetFulcrum()
 {
-	return &Center;
+	return &m_Center;
+}
+
+void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)
+{
+	if (m_GridActive)
+	{
+		vector->x = floor(vector->x / m_GridMove + 0.5) * m_GridMove;
+		vector->y = floor(vector->y / m_GridMove + 0.5) * m_GridMove;
+		vector->z = floor(vector->z / m_GridMove + 0.5) * m_GridMove;
+	}
+}
+
+void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
+{
+	if (m_GridActive)
+	{
+		// Convert to radians
+		b3_f64 GridStep = m_GridRot * M_PI / 180.0;
+
+		angle = floor(angle / GridStep + 0.5) * GridStep;
+	}
 }
 
 b3Nebular::b3Nebular(b3_u32 class_type) :

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/09/04 15:15:57  sm
+**      - Added rotating objects
+**
 **      Revision 1.11  2001/08/21 14:24:14  sm
 **      - New selecting code added.
 **
@@ -126,6 +129,7 @@ int main(int argc,char *argv[])
 			scene->b3Reorg();
 			scene->b3AllocVertices(&context);
 			scene->b3GetDisplaySize(xSize,ySize);
+			scene->b3Activate();
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);
 			view.b3UpdateView(0,0,xSize,ySize);

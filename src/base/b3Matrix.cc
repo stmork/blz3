@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/09/04 15:15:57  sm
+**	- Added rotating objects
+**
 **	Revision 1.7  2001/08/10 15:14:36  sm
 **	- Now having all shapes implemented for drawing lines.
-**
+**	
 **	Revision 1.6  2001/08/05 19:53:43  sm
 **	- Removing some nasty CR/LF
 **	
@@ -160,6 +163,39 @@ b3_f64 b3Distance(b3_vector *from,b3_vector *to)
 	z = to->z - from->z;
 
 	return sqrt(x * x + y * y + z * z);
+}
+
+b3_f64 b3AngleOfPoints(
+	b3_vector *base,
+	b3_vector *dir1,
+	b3_vector *dir2)
+{
+	b3_vector a,b;
+	b3_f64    denom,result;
+
+	a.x = dir1->x - base->x;
+	a.y = dir1->y - base->y;
+	a.z = dir1->z - base->z;
+
+	b.x = dir2->x - base->x;
+	b.y = dir2->y - base->y;
+	b.z = dir2->z - base->z;
+
+	denom =
+		sqrt(a.x * a.x + a.y * a.y + a.z * a.z) *
+		sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
+	if (denom != 0.0)
+	{
+		result = (
+			a.x * b.x +
+			a.y * b.y +
+			a.z * b.z) / denom;
+	}
+	else
+	{
+		result = 0.0;
+	}
+	return result;
 }
 
 b3_f64 b3Det2(

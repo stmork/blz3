@@ -21,6 +21,7 @@
 
 b3_f64     b3Length             (b3_vector *vec);
 b3_f64     b3Distance           (b3_vector *from,b3_vector *to);
+b3_f64     b3AngleOfPoints      (b3_vector *base,b3_vector *dir1,b3_vector *dir2);
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);
 b3_bool    b3NormalizeRow       (b3_matrix *Dst,b3_index row_num);
 b3_f64     b3Det2               (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d);

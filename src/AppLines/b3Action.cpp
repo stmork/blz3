@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/09/04 15:15:57  sm
+**	- Added rotating objects
+**
 **	Revision 1.5  2001/09/03 19:31:21  sm
 **	- Now able to scale active objects
-**
+**	
 **	Revision 1.4  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
@@ -320,9 +323,11 @@ void CB3ActionObjectMove::b3LMove(b3_coord x,b3_coord y)
 
 		if (b3MatrixInv(&m_Transformation,&inv))
 		{
+			m_Doc->m_Info->b3SnapToGrid(&diff);
 			b3MatrixMove(null,&m_Transformation,&diff);
 			b3MatrixMMul(&inv,&m_Transformation,&activity);
 			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
 			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 		}
 	}
@@ -348,6 +353,7 @@ void CB3ActionObjectMove::b3LUp(b3_coord x,b3_coord y)
 
 		if (b3MatrixInv(&m_Transformation,&inv))
 		{
+			m_Doc->m_Info->b3SnapToGrid(&diff);
 			b3MatrixMove(null,&m_Transformation,&diff);
 			b3MatrixMMul(&inv,&m_Transformation,&activity);
 			m_Doc->m_Scene->b3Transform(&activity);
@@ -367,6 +373,78 @@ void CB3ActionObjectMove::b3LUp(b3_coord x,b3_coord y)
 CB3ActionObjectRotate::CB3ActionObjectRotate(CAppLinesView *window) :
 	CB3Action(window)
 {
+}
+
+void CB3ActionObjectRotate::b3LDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_Center     = m_Doc->b3GetFulcrum();
+		m_StartPoint = *m_Center;
+		m_Axis.pos   = *m_Center;
+		m_View->m_RenderView.b3GetViewDirection(&m_Axis.dir);
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
+		m_StartAngle = m_View->m_RenderView.b3GetPositionAngle(m_Center,&m_StartPoint);
+	}
+}
+
+void CB3ActionObjectRotate::b3LMove(b3_coord x,b3_coord y)
+{
+	b3_vector point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+	b3_f64    angle;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			m_Doc->m_Info->b3SnapToAngle(angle);
+			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
+}
+
+void CB3ActionObjectRotate::b3LUp(b3_coord x,b3_coord y)
+{
+	b3_vector point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+	b3_f64    angle;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			m_Doc->m_Info->b3SnapToAngle(angle);
+			b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
+			m_Doc->SetModifiedFlag();
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
 }
 
 /*************************************************************************
