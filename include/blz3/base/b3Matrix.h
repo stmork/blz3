@@ -223,8 +223,8 @@ public:
 	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
+		const b3_f32 *a = &aVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -244,9 +244,9 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -266,9 +266,9 @@ public:
 		      b3_vector64 *result)
 	{
 #ifdef B3_SSE
-		b3_f64 *r = &result->x;
-		b3_f64 *a = &aVec->x;
-		b3_f64 *b = &bVec->x;
+		const b3_f64 *a = &aVec->x;
+		const b3_f64 *b = &bVec->x;
+		      b3_f64 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -304,8 +304,8 @@ public:
 	static inline b3_vector *b3Sub(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
+		const b3_f32 *a = &aVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -326,9 +326,9 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -356,8 +356,8 @@ public:
 	static inline b3_vector *b3Mul(const b3_vector *aVec,b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
+		const b3_f32 *a = &aVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -377,9 +377,9 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -541,9 +541,9 @@ public:
 		const b3_f64     factor)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *v = &vector->x;
-		b3_f32  f = (b3_f32)factor;
+		const b3_f32 *v = &vector->x;
+		      b3_f32 *r = &result->x;
+		      b3_f32  f = (b3_f32)factor;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -579,8 +579,8 @@ public:
 		const b3_f64       factor)
 	{
 #ifdef B3_SSE
-		b3_f64 *r = &result->x;
-		b3_f64 *v = &vector->x;
+		const b3_f64 *v = &vector->x;
+		      b3_f64 *r = &result->x;
 
 		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -662,10 +662,10 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
-		b3_f32 *r = &result->x;
-		b3_f32  f = (b3_f32)factor;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
+		      b3_f32  f = (b3_f32)factor;
 
 		for (b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
@@ -700,12 +700,12 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
-		b3_f32 *c = &bVec->x;
-		b3_f32 *r = &result->x;
-		b3_f32  x = (b3_f32)xFactor;
-		b3_f32  y = (b3_f32)yFactor;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		const b3_f32 *c = &bVec->x;
+		      b3_f32 *r = &result->x;
+		      b3_f32  x = (b3_f32)xFactor;
+		      b3_f32  y = (b3_f32)yFactor;
 
 		for (b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{

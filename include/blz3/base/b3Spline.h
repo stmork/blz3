@@ -109,9 +109,9 @@ public:
 		      b3_vector *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -130,9 +130,9 @@ public:
 		      b3_vector4D *result)
 	{
 #ifdef B3_SSE
-		b3_f32 *r = &result->x;
-		b3_f32 *a = &aVec->x;
-		b3_f32 *b = &bVec->x;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
 
 		for(b3_loop i = 0;i < 4;i++)
 		{
@@ -152,8 +152,8 @@ public:
 		      b3_vector *vector)
 	{
 #ifdef B3_SSE
-		b3_f32 *v = &vector->x;
-		b3_f32 *o = &offset->x;
+		const b3_f32 *o = &offset->x;
+		      b3_f32 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -172,8 +172,8 @@ public:
 		      b3_vector4D *vector)
 	{
 #ifdef B3_SSE
-		b3_f32 *v = &vector->x;
-		b3_f32 *o = &offset->x;
+		const b3_f32 *o = &offset->x;
+		      b3_f32 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 4;i++)
 		{
