@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/09/24 19:07:27  sm
+**	- VBOs on ATI running - or better: crawling.
+**
 **	Revision 1.8  2004/09/24 15:39:31  sm
 **	- Added multisampling support which doesn't work.
-**
+**	
 **	Revision 1.7  2004/09/24 13:54:24  sm
 **	- Some comment output.
 **	
@@ -152,7 +155,7 @@ void b3RenderContext::b3Init()
 	b3MultiSample::b3Init(extensions);
 	if (b3MultiSample::b3HasMS())
 	{
-		b3PrintF(B3LOG_NORMAL, "Having multisampling.\n");
+		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
 	}
 
 	glDrawBuffer(GL_BACK);
