@@ -32,9 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.26  2002/01/09 19:03:53  sm
 **	- Docking bar order changed.
-**
+**	
 **	Revision 1.25  2002/01/09 17:47:54  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -610,7 +618,7 @@ b3Light *CMainFrame::b3GetSelectedLight()
 	return index != CB_ERR ? (b3Light *)m_lightBox.GetItemDataPtr(index) : null;
 }
 
-void CMainFrame::b3UpdateModellerInfo(CAppLinesDoc *pDoc)
+void CMainFrame::b3UpdateModellerInfo(CAppRenderDoc *pDoc)
 {
 	m_dlgFulcrum.m_pDoc    = pDoc;
 	m_dlgStepMove.m_pDoc   = pDoc;

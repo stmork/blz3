@@ -48,6 +48,8 @@ public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 	virtual void OnCloseDocument();
+	protected:
+	virtual BOOL SaveModified();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -116,6 +118,11 @@ protected:
 	//}}AFX_DISPATCH
 	DECLARE_DISPATCH_MAP()
 	DECLARE_INTERFACE_MAP()
+
+public:
+	void           b3FinishEdit(b3BBox *original = null,b3BBox *bbox = null);
+	void           b3InitTree();
+	void           b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 
 private:
 	b3_bool        b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);

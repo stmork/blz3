@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CAppLinesDoc
+LastClass=CAppRenderDoc
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,33 +54,33 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=28
-Resource1=IDR_OBJECT
-Resource2=IDR_TOOLBAR_LIGHT
-Resource3=IDD_SUPER_SAMPLE
-Resource4=IDR_TOOLBAR_ACTION
-Resource5=IDR_TOOLBAR_OBJECT
-Resource6=IDR_TOOLBAR_DISPLAY
-Resource7=IDR_TOOLBAR_CAMERA
-Resource8=IDD_ABOUTBOX
+Resource1=IDD_DISTRIBUTED
+Resource2=IDR_TOOLBAR_ACTION
+Resource3=IDD_LDC
+Resource4=IDR_TOOLBAR_DISPLAY
+Resource5=IDR_TOOLBAR_CAMERA
+Resource6=IDR_TOOLBAR_LIGHT
+Resource7=IDR_TOOLBAR_VIEW
+Resource8=IDD_SEARCH_PATH_LIST
 Resource9=IDR_DISPLAYTYPE
-Resource10=IDR_BLZ3TYPE
-Resource11=IDD_HIERARCHY
-Resource12=IDR_TOOLBAR_VIEW
-Resource13=IDD_SCENE
-Resource14=IDD_NEBULAR
-Resource15=IDD_LENS_FLARE
-Resource16=IDD_DISTRIBUTED
-Resource17=IDD_MODELLER_INFO
-Resource18=IDD_SEARCH_PATH_LIST
-Resource19=IDD_NEW_ITEM
-Resource20=IDD_LIGHT
-Resource21=IDD_LDC
-Resource22=IDD_CAMERA
-Resource23=IDD_FULCRUM
-Resource24=IDD_STEP_MOVE
-Resource25=IDD_STEP_ROTATE
-Resource26=IDD_OBJECT_COPY
-Resource27=IDR_MAINFRAME
+Resource10=IDD_MODELLER_INFO
+Resource11=IDD_NEW_ITEM
+Resource12=IDR_TOOLBAR_OBJECT
+Resource13=IDD_LIGHT
+Resource14=IDD_CAMERA
+Resource15=IDD_FULCRUM
+Resource16=IDD_STEP_MOVE
+Resource17=IDD_STEP_ROTATE
+Resource18=IDD_OBJECT_COPY
+Resource19=IDR_MAINFRAME
+Resource20=IDR_OBJECT
+Resource21=IDR_BLZ3TYPE
+Resource22=IDD_ABOUTBOX
+Resource23=IDD_HIERARCHY
+Resource24=IDD_SCENE
+Resource25=IDD_SUPER_SAMPLE
+Resource26=IDD_NEBULAR
+Resource27=IDD_LENS_FLARE
 Resource28=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
@@ -186,7 +186,7 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
-LastObject=ID_OBJECT_EDIT
+LastObject=CAppLinesDoc
 Filter=N
 VirtualFilter=DC
 
@@ -201,6 +201,9 @@ Type=0
 BaseClass=CAppRenderDoc
 HeaderFile=AppObjectDoc.h
 ImplementationFile=AppObjectDoc.cpp
+LastObject=CAppObjectDoc
+Filter=N
+VirtualFilter=DC
 
 [CLS:CAppObjectView]
 Type=0
@@ -223,12 +226,18 @@ Type=0
 BaseClass=CB3ScrollView
 HeaderFile=AppRaytraceView.h
 ImplementationFile=AppRaytraceView.cpp
+Filter=C
+VirtualFilter=VWC
+LastObject=CAppRaytraceView
 
 [CLS:CAppRenderDoc]
 Type=0
 BaseClass=CDocument
 HeaderFile=AppRenderDoc.h
 ImplementationFile=AppRenderDoc.cpp
+Filter=N
+VirtualFilter=DC
+LastObject=CAppRenderDoc
 
 [CLS:CAppRenderView]
 Type=0

@@ -34,11 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.10  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
 **	- Fixed Preview selection dialog.
-**
+**	
 **	Revision 1.9  2002/01/07 16:18:51  sm
 **	- Added b3Item clone
 **	- Added Drag & Drop
@@ -89,8 +97,8 @@ CDlgHierarchy::CDlgHierarchy(CWnd* pParent /*=NULL*/)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	m_pDoc     = null;
-	m_Scene    = null;
 	m_DragItem = null;
+	m_DropItem = null;
 }
 
 CDlgHierarchy::~CDlgHierarchy()
@@ -195,13 +203,11 @@ void CDlgHierarchy::b3AddBBoxes (
 	}
 }
 
-b3_bool CDlgHierarchy::b3InitTree(CAppLinesDoc *pDoc,b3_bool force_refresh)
+b3_bool CDlgHierarchy::b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh)
 {
-	TV_INSERTSTRUCT insert;
-	HTREEITEM       root;
-
 #ifdef _DEBUG
-	b3PrintF(B3LOG_NORMAL,"CDlgHierarchy::b3InitTree(%p) [%p]\n",pDoc,m_pDoc);
+	b3PrintF(B3LOG_NORMAL,"CDlgHierarchy::b3InitTree(%p,%s) [%p]\n",
+		pDoc,force_refresh ? "TRUE" : "FALSE",m_pDoc);
 #endif
 	
 	if ((m_pDoc == pDoc) && (!force_refresh))
@@ -209,23 +215,13 @@ b3_bool CDlgHierarchy::b3InitTree(CAppLinesDoc *pDoc,b3_bool force_refresh)
 		return false;
 	}
 	m_pDoc  = pDoc;
-	m_Scene = (m_pDoc != null ? m_pDoc->m_Scene : null);
 	m_Hierarchy.DeleteAllItems();
 	b3Free();
-	if (m_Scene != null)
+	if (m_pDoc != null)
 	{
-		insert.hParent      = TVI_ROOT;
-		insert.hInsertAfter = TVI_FIRST;
-		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-		insert.item.pszText = m_Scene->b3GetName();
-		insert.item.lParam  = 0;
-		insert.item.iImage         = 4;
-		insert.item.iSelectedImage = 9;
-		root = m_Hierarchy.InsertItem (&insert);
-
-		b3AddBBoxes (root,m_Scene->b3GetFirstBBox());
-		m_Hierarchy.Expand(root,TVE_EXPAND);
+		m_pDoc->b3InitTree();
 	}
+
 	return true;
 }
 
@@ -253,9 +249,11 @@ void CDlgHierarchy::b3UpdateIcons(HTREEITEM parent)
 
 void CDlgHierarchy::b3UpdateActivation()
 {
-	if (m_Scene != null)
+	HTREEITEM root = m_Hierarchy.GetRootItem();
+	
+	if (root != null)
 	{
-		b3UpdateIcons(m_Hierarchy.GetRootItem());
+		b3UpdateIcons(root);
 	}
 }
 
@@ -299,29 +297,34 @@ b3_count CDlgHierarchy::b3Traverse(HTREEITEM parent)
 		index += b3Traverse(item);
 		index++;
 		BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
-		BBox->b3Expand(m_Hierarchy.GetItemState(item,0) & TVIS_EXPANDED);
+		if (BBox != null)
+		{
+			BBox->b3Expand(m_Hierarchy.GetItemState(item,0) & TVIS_EXPANDED);
+		}
 	}
 	return index;
 }
 
 void CDlgHierarchy::b3GetData()
 {
-	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
-
-	if (m_Scene == null)
+	if (m_pDoc == null)
 	{
 		m_Hierarchy.DeleteAllItems();
 		b3Free();
 	}
 	else
 	{
-		b3Traverse(m_Hierarchy.GetRootItem());
+		HTREEITEM root = m_Hierarchy.GetRootItem();
+
+		if (root != null)
+		{
+			b3Traverse(root);
+		}
 	}
 }
 
 void CDlgHierarchy::b3SetData()
 {
-	m_Scene = (m_pDoc == null ? null : m_pDoc->m_Scene);
 }
 
 void CDlgHierarchy::b3SelectBBox(b3BBox *BBox)
@@ -339,14 +342,11 @@ b3BBox *CDlgHierarchy::b3GetSelectedBBox()
 {
 	b3BBox *BBox = null;
 
-	if (m_Scene != null)
-	{
-		HTREEITEM  item = m_Hierarchy.GetSelectedItem();
+	HTREEITEM  item = m_Hierarchy.GetSelectedItem();
 
-		if (item != NULL)
-		{
-			BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
-		}
+	if (item != NULL)
+	{
+		BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
 	}
 	return BBox;
 }
@@ -416,26 +416,6 @@ void CDlgHierarchy::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = (m_DragItem != null);
 }
 
-b3_bool CDlgHierarchy::b3FindBBox(b3Base<b3Item> *base,b3BBox *search)
-{
-	b3Item  *item;
-	b3BBox  *bbox;
-
-	B3_FOR_BASE(base,item)
-	{
-		bbox = (b3BBox *)item;
-		if (bbox == search)
-		{
-			return true;
-		}
-		if (b3FindBBox(bbox->b3GetBBoxHead(),search))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
@@ -453,7 +433,7 @@ void CDlgHierarchy::OnMouseMove(UINT nFlags, CPoint point)
 			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
 			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(item);
 			m_DropItem =
-				(b3FindBBox(srcBBox->b3GetBBoxHead(),dstBBox) ||
+				(b3BBox::b3FindBBox(srcBBox->b3GetBBoxHead(),dstBBox) ||
 				(srcBBox == dstBBox) ? null : item);
 			m_Hierarchy.SelectDropTarget(m_DropItem);
 		}
@@ -466,9 +446,6 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 	// TODO: Add your message handler code here and/or call default
 	b3BBox         *srcBBox;
 	b3BBox         *dstBBox;
-	b3Base<b3Item> *srcBase;
-	b3Base<b3Item> *dstBase;
-
 	if (m_DragItem != null)
 	{
 		::ReleaseCapture();
@@ -479,14 +456,7 @@ void CDlgHierarchy::OnLButtonUp(UINT nFlags, CPoint point)
 
 			srcBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DragItem);
 			dstBBox = (b3BBox *)m_Hierarchy.GetItemData(m_DropItem);
-			srcBase = m_Scene->b3FindBBoxHead(srcBBox);
-			dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
-
-			m_Scene->b3BacktraceRecompute(srcBBox);
-			srcBase->b3Remove(srcBBox);
-			dstBase->b3Append(srcBBox);
-			m_Scene->b3BacktraceRecompute(srcBBox);
-			b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
+			m_pDoc->b3DropBBox(srcBBox,dstBBox);
 
 			m_pDoc->b3ComputeBounds();
 			m_pDoc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);

@@ -45,11 +45,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.4  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.3  2001/07/02 19:52:03  sm
 **	- Cleaning up comments
 **	
@@ -123,8 +131,8 @@ void b3PrintT(const char *comment)
 		timebuffer.time,timebuffer.millitm,comment ? comment : "-");
 }
 
-/* MPrintF() has got the same proto types as printf(). This routine */
-/* is defined because MS-Windows has got no stdout. So MPrintF() */
+/* b3PrintF() has got the same proto types as printf(). This routine */
+/* is defined because MS-Windows has got no stdout. So b3PrintF() */
 /* makes it possible... */
 /* ---------------------------------------------------------------- */
 /* level:  debug level which decides if output is performed. */

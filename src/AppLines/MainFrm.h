@@ -129,7 +129,7 @@ public:
 	b3CameraPart *b3GetSelectedCamera();
 	void          b3UpdateLightBox(b3Scene *scene,b3Light *light);
 	b3Light      *b3GetSelectedLight();
-	void          b3UpdateModellerInfo(CAppLinesDoc *pDoc = null);
+	void          b3UpdateModellerInfo(CAppRenderDoc *pDoc = null);
 	void          b3UpdateFulcrum();
 	void          b3SetStatusMessage(const char *message);
 	void          b3SetStatusMessage(const int message_id);

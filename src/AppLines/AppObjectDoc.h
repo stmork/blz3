@@ -28,18 +28,16 @@ class CDlgHierarchy;
 
 class CAppObjectDoc : public CAppRenderDoc
 {
+	CAppLinesDoc         *m_LinesDoc;
+	b3BBox               *m_Original;
 	b3_matrix             m_OriginalPosition;
-	b3_bool               m_Edit;
 
 protected:
 	b3World               m_World;
-	b3Thread             *m_Raytracer;
-	b3Display            *m_Display;
 
 	// Attributes
 public:
 	b3BBox               *m_BBox;
-	void       b3ComputeBounds();
 
 // Operations
 protected: // create from serialization only
@@ -56,6 +54,8 @@ public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 	virtual void OnCloseDocument();
+	protected:
+	virtual BOOL SaveModified();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -81,7 +81,15 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 public:
-	void b3SetBBox(b3BBox *bbox);
+	void    b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
+	void    b3ComputeBounds();
+	void    b3InitTree();
+	void    b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	b3_bool b3IsLinesDoc(CAppLinesDoc *LinesDoc);
+	b3_bool b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+
+private:
+	void    b3SetBBox(b3BBox *bbox);
 };
 
 /////////////////////////////////////////////////////////////////////////////

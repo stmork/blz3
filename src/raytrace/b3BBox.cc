@@ -33,10 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.41  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.40  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -797,6 +805,26 @@ b3_count b3Scene::b3GetBBoxCount()
 		count += bbox->b3Count();
 	}
 	return count;
+}
+
+b3_bool b3BBox::b3FindBBox(b3Base<b3Item> *base,b3BBox *search)
+{
+	b3Item  *item;
+	b3BBox  *bbox;
+
+	B3_FOR_BASE(base,item)
+	{
+		bbox = (b3BBox *)item;
+		if (bbox == search)
+		{
+			return true;
+		}
+		if (b3FindBBox(bbox->b3GetBBoxHead(),search))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 b3Base<b3Item> *b3BBox::b3FindBBoxHead(b3BBox *bbox)

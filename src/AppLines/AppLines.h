@@ -52,7 +52,8 @@ class CAppLinesApp : public CB3App
 public:
 	CAppLinesApp();
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
-	CAppObjectDoc   *b3CreateObjectDoc(b3BBox *bbox);
+	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);
 
 	UINT m_ClipboardFormatForBlizzardObject;
 // Overrides
@@ -75,7 +76,7 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#define CB3GetLinesApp()  ((CB3AppLinesApp *)AfxGetApp())
+#define CB3GetLinesApp()  ((CAppLinesApp *)AfxGetApp())
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -39,9 +39,17 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.38  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
-**
+**	
 **	Revision 1.37  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -425,8 +433,8 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	}
 	else
 	{
-		main->b3Clear();
-		main->b3UpdateModellerInfo();
+//		main->b3Clear();
+//		main->b3UpdateModellerInfo();
 		app->b3GetData();
 	}
 }

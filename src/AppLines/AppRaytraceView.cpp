@@ -36,10 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.5  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.4  2001/12/28 15:17:44  sm
 **	- Added clipboard-copy to raytraced view
 **	- Added printing to raytraced view
@@ -125,6 +133,34 @@ BOOL CAppRaytraceView::PreCreateWindow(CREATESTRUCT& cs)
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppRaytraceView drawing
+
+void CAppRaytraceView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	CB3App     *app  = CB3GetApp();
+	CMainFrame *main = CB3GetMainFrame();
+
+	CB3ScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"CAppRaytraceView::OnActivateView(%s,%p,%p)\n",
+		bActivate ? "TRUE " : "FALSE",
+		pActivateView, pDeactiveView);
+#endif
+	
+	if (bActivate)
+	{
+		main->b3Clear();
+		GetDocument()->b3ActivateDoc();
+		app->b3SetData();
+	}
+	else
+	{
+//		main->b3Clear();
+//		main->b3UpdateModellerInfo();
+		app->b3GetData();
+	}
+}
 
 void CAppRaytraceView::OnDraw(CDC* pDC)
 {

@@ -197,8 +197,8 @@
 #define IDC_ROT_Z_USE                   1101
 #define IDC_OFFSET_X_USE                1102
 #define IDC_OFFSET_Y_USE                1103
-#define IDC_ROT_LEFT                    1104
-#define IDC_OFFSET_Z_USE                1105
+#define IDC_OFFSET_Z_USE                1104
+#define IDC_ROT_LEFT                    1105
 #define IDC_ROT_RIGHT                   1106
 #define IDC_PREVIEW                     1107
 #define IDC_IMAGE                       1108

@@ -35,7 +35,7 @@ class CDlgStepRotate : public CB3Dialogbar
 {
 // Construction
 public:
-	CAppLinesDoc *m_pDoc;
+	CAppRenderDoc *m_pDoc;
 	     CDlgStepRotate(CWnd* pParent = NULL);   // standard constructor
 	void b3SetData();
 	void b3GetData();

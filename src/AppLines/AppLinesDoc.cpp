@@ -56,10 +56,18 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2002/01/19 19:57:55  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.54  2002/01/18 16:49:34  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.53  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -354,6 +362,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CAppRenderDoc)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW_SUB, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_COPY, OnUpdateSelectedBBox)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_LOAD, OnUpdateGlobal)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_SAVE, OnUpdateSelectedBBox)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_REPLACE, OnUpdateSelectedBBox)
@@ -418,7 +427,7 @@ BOOL CAppLinesDoc::OnNewDocument()
 	b3Path      filepath;
 	BOOL        result = FALSE;
 
-	if (!CDocument::OnNewDocument())
+	if (!CAppRenderDoc::OnNewDocument())
 	{
 		return result;
 	}
@@ -510,6 +519,13 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return result;
 }
 
+BOOL CAppLinesDoc::SaveModified() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	CB3GetLinesApp()->b3CloseObjectDoc(this);
+	return CAppRenderDoc::SaveModified();
+}
+
 BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName) 
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -573,8 +589,7 @@ void CAppLinesDoc::OnCloseDocument()
 		m_RaytraceDoc->OnCloseDocument();
 		m_RaytraceDoc = null;
 	}
-	m_DlgHierarchy->b3InitTree(null,true);
-	CDocument::OnCloseDocument();
+	CAppRenderDoc::OnCloseDocument();
 }
 
 
@@ -600,12 +615,12 @@ void CAppLinesDoc::Serialize(CArchive& ar)
 #ifdef _DEBUG
 void CAppLinesDoc::AssertValid() const
 {
-	CDocument::AssertValid();
+	CAppRenderDoc::AssertValid();
 }
 
 void CAppLinesDoc::Dump(CDumpContext& dc) const
 {
-	CDocument::Dump(dc);
+	CAppRenderDoc::Dump(dc);
 }
 #endif //_DEBUG
 
@@ -640,6 +655,39 @@ void CAppLinesDoc::OnUpdateGlobal(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!b3IsRaytracing());
+}
+
+void CAppLinesDoc::b3InitTree()
+{
+	TV_INSERTSTRUCT insert;
+	HTREEITEM       root;
+
+	insert.hParent      = TVI_ROOT;
+	insert.hInsertAfter = TVI_FIRST;
+	insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+	insert.item.pszText = m_Scene->b3GetName();
+	insert.item.lParam  = 0;
+	insert.item.iImage         = 4;
+	insert.item.iSelectedImage = 9;
+	root = m_DlgHierarchy->m_Hierarchy.InsertItem (&insert);
+
+	m_DlgHierarchy->b3AddBBoxes (root,m_Scene->b3GetFirstBBox());
+	m_DlgHierarchy->m_Hierarchy.Expand(root,TVE_EXPAND);
+}
+
+void CAppLinesDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
+{
+	b3Base<b3Item> *srcBase;
+	b3Base<b3Item> *dstBase;
+
+	srcBase = m_Scene->b3FindBBoxHead(srcBBox);
+	dstBase = (dstBBox != null ? dstBBox->b3GetBBoxHead() : m_Scene->b3GetBBoxHead());
+
+	m_Scene->b3BacktraceRecompute(srcBBox);
+	srcBase->b3Remove(srcBBox);
+	dstBase->b3Append(srcBBox);
+	m_Scene->b3BacktraceRecompute(srcBBox);
+	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
 }
 
 /*************************************************************************
@@ -1686,5 +1734,24 @@ void CAppLinesDoc::OnObjectEdit()
 	b3BBox        *selected;
 
 	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	pDoc = app->b3CreateObjectDoc(selected);
+	if (selected != null)
+	{
+		B3_ASSERT(b3BBox::b3FindBBox(m_Scene->b3GetBBoxHead(),selected));
+		pDoc = app->b3CreateObjectDoc(this,selected);
+	}
+}
+
+void CAppLinesDoc::b3FinishEdit(
+	b3BBox *original,
+	b3BBox *bbox)
+{
+	b3Base<b3Item> *base;
+
+	if ((original != null) && (bbox != null))
+	{
+		base = m_Scene->b3FindBBoxHead(original);
+		base->b3Insert(original,bbox);
+		base->b3Remove(original);
+		SetModifiedFlag();
+	}
 }

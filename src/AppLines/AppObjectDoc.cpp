@@ -36,10 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.9  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.8  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -110,9 +118,10 @@ END_INTERFACE_MAP()
 CAppObjectDoc::CAppObjectDoc()
 {
 	// TODO: add one-time construction code here
-	m_BBox = null;
-	m_Info = new b3ModellerInfo(LINES_INFO);
-	m_Edit = false;
+	m_Info     = new b3ModellerInfo(LINES_INFO);
+	m_LinesDoc = null;
+	m_BBox     = null;
+	m_Original = null;
 	b3MatrixUnit(&m_OriginalPosition);
 	EnableAutomation();
 
@@ -127,16 +136,24 @@ CAppObjectDoc::~CAppObjectDoc()
 
 BOOL CAppObjectDoc::OnNewDocument()
 {
-	BOOL        result = FALSE;
-
-	if (!CDocument::OnNewDocument())
+	if (!CAppRenderDoc::OnNewDocument())
 	{
-		return result;
+		return FALSE;
 	}
-	m_Edit = false;
+	m_LinesDoc = null;
+	m_Original = null;
+	m_BBox     = null;
 
 	// TODO: Add your specialized creation code here
-	return result;
+	return TRUE;
+}
+
+void CAppObjectDoc::b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original)
+{
+	m_Original = original;
+	m_LinesDoc = LinesDoc;
+	b3SetBBox((b3BBox *)b3World::b3Clone(original));
+	SetPathName(m_BBox->b3GetName(),FALSE);
 }
 
 void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
@@ -145,29 +162,32 @@ void CAppObjectDoc::b3SetBBox(b3BBox *bbox)
 	CString         message;
 	b3_matrix       inverse;
 
-	B3_ASSERT(m_BBox == null);
-	m_BBox = bbox;
-
 	main->b3SetStatusMessage(IDS_DOC_REORG);
 	b3BBox::b3Recount(
-		m_BBox->b3GetBBoxHead(),
-		m_BBox->b3GetClassType() & 0xffff);
+		bbox->b3GetBBoxHead(),
+		bbox->b3GetClassType() & 0xffff);
 
-	m_OriginalPosition = m_BBox->m_Matrix;
-	b3MatrixInv(&m_BBox->m_Matrix,&inverse);
-	m_BBox->b3Transform(&inverse,true);
 	main->b3SetStatusMessage(IDS_DOC_PREPARE);
-	m_BBox->b3Prepare();
+	bbox->b3Prepare();
 
 	main->b3SetStatusMessage(IDS_DOC_VERTICES);
-	m_BBox->b3AllocVertices(&m_Context);
+	bbox->b3AllocVertices(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
+
+	m_OriginalPosition = bbox->m_Matrix;
+	b3MatrixInv(&bbox->m_Matrix,&inverse);
+	bbox->b3Transform(&inverse,true);
+
+	// Now everything necessary is initialized. So we can mark this
+	// document as valid
+	B3_ASSERT(m_BBox == null);
+	m_BBox = bbox;
 
 	main->b3SetStatusMessage(IDS_DOC_BOUND);
 	b3ComputeBounds();
 
 	UpdateAllViews(NULL,B3_UPDATE_ALL|B3_UPDATE_OBJECT);
-//	m_DlgHierarchy->b3InitTree(this,true);
-//	m_DlgHierarchy->b3SelectBBox(bbox);
+	m_DlgHierarchy->b3InitTree(this,true);
+	m_DlgHierarchy->b3SelectBBox(m_BBox);
 }
 
 BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
@@ -192,13 +212,12 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 			level  = first->b3GetClassType() & 0xffff;
 			b3BBox::b3Reorg(m_World.b3GetHead(),&base,level,1);
 			b3SetBBox((b3BBox *)first);
-			m_Edit = false;
 		}
 		else
 		{
-			m_Edit = true;
 			b3PrintF(B3LOG_FULL,"Preparing CAppObjectDoc for scene object editing...\n");
 		}
+		m_LinesDoc = null;
 		result = TRUE;
 	}
 	catch(b3FileException *f)
@@ -218,32 +237,63 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	return result;
 }
 
+BOOL CAppObjectDoc::SaveModified() 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	return (m_LinesDoc == null ? CAppRenderDoc::SaveModified() : TRUE);
+}
+
 BOOL CAppObjectDoc::OnSaveDocument(LPCTSTR lpszPathName) 
 {
 	// TODO: Add your specialized code here and/or call the base class
 	BOOL     result = false;
+	
+	if (m_LinesDoc != null)
+	{
+		// Give it back to scene!
+		result = true;
+	}
+	else
+	{
+		// Ordinary save
+	}
 	return result;
 }
 
 void CAppObjectDoc::OnCloseDocument() 
 {
 	// TODO: Add your specialized code here and/or call the base class
+	CWaitCursor waiting_for_good_weather;
+
 	if (m_BBox != null)
 	{
-		m_BBox->b3Transform(&m_OriginalPosition,true);
-		if (m_Edit)
+		if (m_LinesDoc != null)
 		{
 			// We have to give back this object
-			delete m_BBox;
-			m_BBox = null;
+			if (IsModified())
+			{
+				m_LinesDoc->b3FinishEdit(m_Original,m_BBox);
+				m_BBox->b3Transform(&m_OriginalPosition,true);
+				m_LinesDoc->b3ComputeBounds();
+				delete m_Original;
+			}
+			else
+			{
+				delete m_BBox;
+			}
+			m_Original = null;
+			m_BBox     = null;
+			m_LinesDoc = null;
 		}
 		else
 		{
+			// The framework is responsible to save a modified
+			// object which was loaded stand alone.
 			delete m_BBox;
 			m_BBox = null;
 		}
 	}
-	CDocument::OnCloseDocument();
+	CAppRenderDoc::OnCloseDocument();
 }
 
 
@@ -269,12 +319,12 @@ void CAppObjectDoc::Serialize(CArchive& ar)
 #ifdef _DEBUG
 void CAppObjectDoc::AssertValid() const
 {
-	CDocument::AssertValid();
+	CAppRenderDoc::AssertValid();
 }
 
 void CAppObjectDoc::Dump(CDumpContext& dc) const
 {
-	CDocument::Dump(dc);
+	CAppRenderDoc::Dump(dc);
 }
 #endif //_DEBUG
 
@@ -294,4 +344,62 @@ void CAppObjectDoc::b3ComputeBounds()
 	m_Upper.z = -FLT_MAX;
 
 	m_BBox->b3ComputeBounds(&m_Lower,&m_Upper,0.02);
+}
+
+void CAppObjectDoc::b3InitTree()
+{
+	TV_INSERTSTRUCT insert;
+	HTREEITEM       root;
+	long            num;
+
+	if (m_BBox != null)
+	{
+		num = m_DlgHierarchy->b3ComputeImgNum(m_BBox);
+		insert.hParent      = TVI_ROOT;
+		insert.hInsertAfter = TVI_FIRST;
+		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+		insert.item.pszText = m_BBox->b3GetName();
+		insert.item.lParam  = (LPARAM)m_BBox;
+		insert.item.iImage         = num;
+		insert.item.iSelectedImage = num;
+		root = m_DlgHierarchy->m_Hierarchy.InsertItem (&insert);
+
+		m_DlgHierarchy->b3AddBBoxes (root,(b3BBox *)m_BBox->b3GetBBoxHead()->First);
+		m_DlgHierarchy->m_Hierarchy.Expand(root,TVE_EXPAND);
+	}
+}
+
+void CAppObjectDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
+{
+	b3Base<b3Item> *srcBase;
+	b3Base<b3Item> *dstBase;
+
+	srcBase = m_BBox->b3FindBBoxHead(srcBBox);
+	dstBase = dstBBox->b3GetBBoxHead();
+
+	srcBase->b3Remove(srcBBox);
+	dstBase->b3Append(srcBBox);
+	b3BBox::b3Recount(
+		m_BBox->b3GetBBoxHead(),
+		m_BBox->b3GetClassType() & 0xffff);
+}
+
+b3_bool CAppObjectDoc::b3IsLinesDoc(CAppLinesDoc *LinesDoc)
+{
+	return m_LinesDoc == LinesDoc;
+}
+
+b3_bool CAppObjectDoc::b3IsObjectAlreadyOpen(
+	CAppLinesDoc *LinesDoc,
+	b3BBox       *bbox)
+{
+	b3_bool is_open = false;
+
+	if (m_Original != null)
+	{
+		is_open = ((bbox == m_Original) ||
+			(b3BBox::b3FindBBox(m_Original->b3GetBBoxHead(),bbox)) ||
+			(b3BBox::b3FindBBox(bbox->b3GetBBoxHead(),m_Original)));
+	}
+	return is_open;
 }

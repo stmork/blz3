@@ -54,6 +54,7 @@ public:
 	//{{AFX_VIRTUAL(CAppRenderDoc)
 	public:
 	virtual void Serialize(CArchive& ar);
+	virtual void OnCloseDocument();
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -67,6 +68,8 @@ public:
 	virtual void       b3StartRaytrace();
 	virtual void       b3StopRaytrace();
 	virtual void       b3ComputeBounds();
+	virtual void       b3InitTree();
+	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 
 	virtual   ~CAppRenderDoc();
 #ifdef _DEBUG

@@ -35,10 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.6  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.5  2002/01/16 16:17:12  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -87,6 +95,7 @@ CAppObjectView::CAppObjectView()
 	{
 		m_Action[i] = null;
 	}
+	m_BBox   = null;
 	m_Camera = new b3CameraPart(CAMERA);
 	m_xAngle = 225 * M_PI / 180;
 	m_yAngle =  30 * M_PI / 180;
@@ -182,42 +191,49 @@ void CAppObjectView::OnPaint()
 	struct _timeb  start,stop;
 	long           sDiff,mDiff;
 
-	_ftime(&start);
-
-	// Init Drawing
-	wglMakeCurrent(m_DC,m_GC);
-	pDoc->m_Context.b3StartDrawing();
-
-	pos = GetScrollPosition();
-	GetClientRect(&rect);
-
-	// Setup view first
-	m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
-
-	// Then draw objects
-	pDoc->m_BBox->b3Draw();
-	pDoc->b3DrawFulcrum();
-	_ftime(&stop);
-
-	// Done...
-	SwapBuffers(m_DC);
-	ValidateRect(NULL);
-
-	mDiff = stop.millitm - start.millitm;
-	sDiff = stop.time    - start.time;
-	if (mDiff < 0)
+	if (m_BBox != null)
 	{
-		mDiff += 1000;
-		sDiff -=    1;
+		_ftime(&start);
+
+		// Init Drawing
+		wglMakeCurrent(m_DC,m_GC);
+		pDoc->m_Context.b3StartDrawing();
+
+		pos = GetScrollPosition();
+		GetClientRect(&rect);
+
+		// Setup view first
+		m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
+
+		// Then draw objects
+		m_BBox->b3Draw();
+		pDoc->b3DrawFulcrum();
+		_ftime(&stop);
+
+		// Done...
+		SwapBuffers(m_DC);
+		ValidateRect(NULL);
+
+		mDiff = stop.millitm - start.millitm;
+		sDiff = stop.time    - start.time;
+		if (mDiff < 0)
+		{
+			mDiff += 1000;
+			sDiff -=    1;
+		}
+		mDiff += (sDiff * 1000);
+		sDiff  = 0;
+
+		if (mDiff > 0)
+		{
+			CMainFrame *main = CB3GetMainFrame();
+		
+			main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
+		}
 	}
-	mDiff += (sDiff * 1000);
-	sDiff  = 0;
-
-	if (mDiff > 0)
+	else
 	{
-		CMainFrame *main = CB3GetMainFrame();
-	
-		main->b3SetPerformance(this,mDiff,pDoc->m_Context.glPolyCount);
+		ValidateRect(NULL);
 	}
 }
 
@@ -240,15 +256,15 @@ void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView*
 /*
 		main->b3UpdateCameraBox(m_Scene,m_Camera);
 		main->b3UpdateLightBox(m_Scene,m_Light);
-		main->b3UpdateModellerInfo(GetDocument());
 		m_Scene->b3SetCamera(m_Camera,true);
 */
+		main->b3UpdateModellerInfo(GetDocument());
 		app->b3SetData();
 	}
 	else
 	{
-		main->b3Clear();
-		main->b3UpdateModellerInfo();
+//		main->b3Clear();
+//		main->b3UpdateModellerInfo();
 		app->b3GetData();
 	}
 }

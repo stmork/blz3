@@ -44,10 +44,18 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/01/19 19:57:55  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.20  2002/01/18 16:49:34  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
-**
+**	
 **	Revision 1.19  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -453,18 +461,54 @@ CAppRaytraceDoc *CAppLinesApp::b3CreateRaytraceDoc()
 	return (CAppRaytraceDoc *)pImageTemplate->OpenDocumentFile(NULL);
 }
 
-CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(b3BBox *bbox)
+CAppObjectDoc *CAppLinesApp::b3CreateObjectDoc(
+	CAppLinesDoc *LinesDoc,
+	b3BBox       *bbox)
 {
 	CAppObjectDoc *pDoc;
-	b3BBox        *cloned_bbox;
+	CWaitCursor    waiting_for_Isabella;
+	POSITION       pos;
 
-	pDoc = (CAppObjectDoc *)pObjectTemplate->OpenDocumentFile("");
+	// Look if there is any open object edit -> use it.
+	pos = pObjectTemplate->GetFirstDocPosition();
+	while(pos != NULL)
+	{
+		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		if (pDoc->b3IsObjectAlreadyOpen(LinesDoc,bbox))
+		{
+			pos = pDoc->GetFirstViewPosition();
+			pDoc->GetNextView(pos)->GetParentFrame()->BringWindowToTop();
+			return pDoc;
+		}
+	}
+
+	// We didn't found the appropriate document -> create new one.
+	pDoc = (CAppObjectDoc *)pObjectTemplate->OpenDocumentFile(NULL);
 	if (pDoc != null)
 	{
-		cloned_bbox = (b3BBox *)b3World::b3Clone(bbox);
-		pDoc->b3SetBBox(cloned_bbox);
+		pDoc->b3EditBBox(LinesDoc,bbox);
 	}
 	return pDoc;
+}
+
+void CAppLinesApp::b3CloseObjectDoc(CAppLinesDoc *LinesDoc)
+{
+	POSITION       pos;
+	CAppObjectDoc *pDoc;
+
+	pos = pObjectTemplate->GetFirstDocPosition();
+	while(pos != NULL)
+	{
+		pDoc = (CAppObjectDoc *)pObjectTemplate->GetNextDoc(pos);
+		if (pDoc->b3IsLinesDoc(LinesDoc))
+		{
+			if (pDoc->IsModified())
+			{
+				LinesDoc->SetModifiedFlag();
+			}
+			pDoc->OnCloseDocument();
+		}
+	}
 }
 
 void CAppLinesApp::OnChangeTexturePath() 

@@ -23,6 +23,7 @@
 
 #include "stdafx.h"
 #include "AppLines.h"
+#include "MainFrm.h"
 
 #include "AppRaytraceDoc.h"
 #include "AppRaytraceView.h"
@@ -35,10 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/01/19 19:57:56  sm
+**	- Further clean up of CAppRenderDoc derivates done. Especially:
+**	  o Moved tree build from CDlgHierarchy into documents.
+**	  o All views react on activating.
+**	  o CAppObjectDoc creation cleaned up.
+**	  o Fixed some ugly drawing dependencies during initialization.
+**	     Note: If you don't need Windows -> You're fine!
+**
 **	Revision 1.10  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.9  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -139,6 +148,7 @@ void CAppRaytraceDoc::OnCloseDocument()
 	{
 		m_RenderDoc->b3ClearRaytraceDoc();
 	}
+	CB3GetMainFrame()->b3UpdateModellerInfo();
 	CDocument::OnCloseDocument();
 }
 
@@ -203,6 +213,14 @@ b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
 	pos   = GetFirstViewPosition();
 	pView = (CAppRaytraceView *)GetNextView(pos);
 	return new b3DisplayView(pView,title);
+}
+
+void CAppRaytraceDoc::b3ActivateDoc()
+{
+	CMainFrame *main = CB3GetMainFrame();
+
+	main->b3UpdateModellerInfo();
+	main->m_dlgHierarchy.b3InitTree(m_RenderDoc);
 }
 
 void CAppRaytraceDoc::b3ActivateView()
