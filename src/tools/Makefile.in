@@ -40,30 +40,30 @@ clean:
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
 RestoreExt:	$(RESTOREEXT_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 CleanRes:	$(CLEANRES_OBJS) $(B3_LIB_SYSTEM)
-	$(LINK.cc) -o $@ $^ -lB3System -lpthread
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 scale:	$(SCALE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 half:	$(HALF_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 pw:	$(PW_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS) @DIVXLIBS@
+	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
 
 testimg:	$(TESTIMG_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 calibrate:	$(CALIBRATE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 reduce:	$(REDUCE_OBJS) $(B3_LIB_BASE)
-	$(LINK.cc) -o $@ $^ -lB3Base $(LIBS)
+	$(LINK.cc) -o $@ $^ $(LIBS)
 
 -include .dep

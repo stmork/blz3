@@ -44,6 +44,10 @@
 
 /*
 **      $Log$
+**      Revision 1.88  2004/09/11 13:30:50  sm
+**      - Corrected link libraries in makefiles.
+**      - Corrected GLint to GLenum for light control.
+**
 **      Revision 1.87  2004/08/26 07:08:10  sm
 **      - Higher bitrate in DivX encoder.
 **      - Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
@@ -486,7 +490,7 @@ static b3Color light0_ambient( 0.25f,0.25f,0.25f);
 static b3Color light0_diffuse( 0.8f, 0.8f, 0.8f);
 static b3Color light0_specular(1.0f, 1.0f, 1.0f);
 
-static GLint light_num[] =
+static GLenum light_num[] =
 {
 	GL_LIGHT0,
 	GL_LIGHT1,
@@ -666,7 +670,7 @@ b3_bool b3RenderContext::b3LightSet(
 	GLfloat gl_ambient[4];
 	GLfloat gl_diffuse[4];
 	GLfloat gl_specular[4];
-	GLint   light;
+	GLenum  light;
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{

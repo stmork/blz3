@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3Scene.cc $
+**      $filename:      b3Scene.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.67  2004/09/11 13:30:50  sm
+**	- Corrected link libraries in makefiles.
+**	- Corrected GLint to GLenum for light control.
+**
 **	Revision 1.66  2004/06/22 12:35:42  sm
 **	- Fixed ticket no. 25: Rounding problems at shadow edges forces
 **	  black borders on objects. Now safe implementations of asin/acos
 **	  added to b3Math.
 **	- Fixed mail address in icc make script.
-**
+**	
 **	Revision 1.65  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
 **	
@@ -1133,15 +1137,17 @@ b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
 
 	if (light->m_SpotActive)
 	{
-		for (i = 0;(i < max) && loop;i++)
+		i = 0;
+
+		do
 		{
 			angle = (double)i / (double)max;
 			loop  = light->b3GetSpotFactor(angle) > 0.25;
 		}
+		while ((i < max) && loop);
 		p = - 1.0 / log10(cos(angle * 0.5 * M_PI));
-		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f at lambda: %2.2f\n",
-			light->b3GetName(),
-			p,angle);
+		b3PrintF(B3LOG_FULL,"b3Scene::b3ComputeSpotExponent(%s) = %3.2f lambda=%3.2f\n",
+			light->b3GetName(),p,angle);
 	}
 	return p;
 }
