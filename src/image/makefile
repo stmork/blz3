@@ -13,15 +13,19 @@ LIB_SOURCE		=\
 	b3Tx.cc\
 	b3TxBlit.cc\
 	b3TxDeskew.cc\
+	b3TxEasy.cc\
 	b3TxGIF.cc\
 	b3TxHist.cc\
 	b3TxIFF.cc\
+	b3TxIMG.cc\
 	b3TxImage.cc\
 	b3TxJPG.cc\
 	b3TxLoadTIFF.cc\
+	b3TxPCX.cc\
 	b3TxPool.cc\
 	b3TxSaveTIFF.cc\
 	b3TxScale.cc\
+	b3TxTGA.cc\
 	b3TxTIFF.cc
 
 LIB_OBJ			=\
@@ -29,15 +33,19 @@ LIB_OBJ			=\
 	b3Tx.o\
 	b3TxBlit.o\
 	b3TxDeskew.o\
+	b3TxEasy.o\
 	b3TxGIF.o\
 	b3TxHist.o\
 	b3TxIFF.o\
+	b3TxIMG.o\
 	b3TxImage.o\
 	b3TxJPG.o\
 	b3TxLoadTIFF.o\
+	b3TxPCX.o\
 	b3TxPool.o\
 	b3TxSaveTIFF.o\
 	b3TxScale.o\
+	b3TxTGA.o\
 	b3TxTIFF.o
 
 all:	lib

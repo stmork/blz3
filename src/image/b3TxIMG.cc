@@ -22,9 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include <blz3/image/b3Tx.h>
-
-#include "b3TxIMG.h"
+#include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Endian.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/10/13 15:35:32  sm
+**	- Adding further image file format support.
+**
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	
 */
 
@@ -47,28 +49,28 @@
 *************************************************************************/
 
 static void UnpackSGI (
-	register unsigned char  *buffer,
-	register void           *inPtr,
-	register long            count,
-	register unsigned long   bytes,
-	register long            offset)
+	b3_u08    *buffer,
+	void      *inPtr,
+	b3_count   count,
+	b3_count   bytes,
+	b3_offset  offset)
 {
-	register unsigned short *sBuffer;
-	register unsigned char  *bBuffer;
-	register unsigned short  pixel;
+	b3_u16  *sBuffer;
+	b3_u08  *bBuffer;
+	b3_u16   pixel;
 
 	switch (bytes)
 	{
 		case 1 :
 			if (count != 0)
 			{
-				bBuffer  = inPtr;
+				bBuffer  = (b3_u08 *)inPtr;
 				bBuffer += (512 / sizeof(unsigned char) + offset);
 				while (count-- > 0) *buffer++ = *bBuffer++;
 			}
 			else
 			{
-				bBuffer  = inPtr;
+				bBuffer  = (b3_u08 *)inPtr;
 				bBuffer += offset;
 				do
 				{
@@ -92,13 +94,16 @@ static void UnpackSGI (
 		case 2 :
 			if (count != 0)
 			{
-				bBuffer  = inPtr;
+				bBuffer  = (b3_u08 *)inPtr;
 				bBuffer += (512 / sizeof(unsigned short) + offset);
-				while (count-- > 0) *buffer++ = *bBuffer++;
+				while (count-- > 0)
+				{
+					*buffer++ = *bBuffer++;
+				}
 			}
 			else
 			{
-				sBuffer  = inPtr;
+				sBuffer  = (b3_u16 *)inPtr;
 				sBuffer += offset;
 				do
 				{
@@ -122,80 +127,90 @@ static void UnpackSGI (
 }
 
 static void ConvertSGILine(
-	register unsigned short *Data,
-	register long            offset,
-	register long            size,
-	register long            bytes)
+	b3_u16    *buffer,
+	b3_offset  offset,
+	b3_size    size,
+	b3_count   bytes)
 {
-	if (bytes != 2) return;
-	Data += offset;
-	while (size-- > 0) ChangeWord (Data++);
+	if (bytes == 2)
+	{
+		buffer += offset;
+		while (size-- > 0)
+		{
+			b3Endian::b3ChangeEndian16 (buffer++);
+		}
+	}
 }
 
-static long ParseSGI3(
-	struct HeaderSGI *HeaderSGI,
-	unsigned char    *Data,
-	unsigned char    *new,
-	long              type,
-	long              xSize,
-	long              ySize,
-	long              zSize)
+void b3Tx::b3ParseSGI3(
+	HeaderSGI *HeaderSGI,
+	b3_u08    *buffer)
 {
-	register unsigned long     *lineTable;
-	register unsigned long     *lineSizes;
-	register unsigned long     *lPtr,value;
-	register unsigned char     *line;
-	register long               x,y,z;
-	register long               rle,bytes,block;
+	b3_pkd_color *lineTable;
+	b3_pkd_color *lineSizes;
+	b3_pkd_color *lPtr,value;
+	b3_u08       *line;
+	b3_u08       *cPtr;
+	b3_res        zSize = depth >> 3;
+	long               x,y,z;
+	long               rle,bytes,block;
 
 	bytes =   HeaderSGI->type & 0x00ff; /* check bytes per pixel */
 	rle   = ((HeaderSGI->type & 0xff00) == 0x0100) ? 0 : xSize; /* check RLE */
 
 		/* line buffer */
-	line = (unsigned char *)AllocKeyMem(&TextureMem,xSize * zSize * bytes);
-	if (line == null) return 0;
+	line = (b3_u08 *)b3Alloc(xSize * zSize * bytes);
+	if (line == null)
+	{
+		type = B3_TX_UNDEFINED;
+		return;
+	}
 
 
 		/* convert line offsets */
-	lineTable = (unsigned long *)&Data[512];
-	lineSizes = (unsigned long *)&lineTable[zSize * ySize];
+	lineTable = (b3_pkd_color *)&buffer[512];
+	lineSizes = (b3_pkd_color *)&lineTable[zSize * ySize];
 	if (HeaderSGI->imagic == IMAGIC2) /* check for converting endian */
 	{
 		if (rle <= 0) /* RLE data */
-			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
 		{
-			ChangeLong (&lineTable[y + z * ySize]);
-			ChangeLong (&lineSizes[y + z * ySize]);
-			ConvertSGILine ((unsigned short *)Data,
-				lineTable[y + z * ySize],
-				lineSizes[y + z * ySize],bytes);
+			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
+			{
+				b3Endian::b3ChangeEndian32 (&lineTable[y + z * ySize]);
+				b3Endian::b3ChangeEndian32 (&lineSizes[y + z * ySize]);
+				ConvertSGILine ((unsigned short *)buffer,
+					lineTable[y + z * ySize],
+					lineSizes[y + z * ySize],bytes);
+			}
 		}
 		else /* raw (VERBATIM) data */
-			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
 		{
-			ConvertSGILine ((unsigned short *)Data,
-				256 + y * xSize * zSize + z * xSize,xSize,bytes);
+			for (y=0;y<ySize;y++) for (z=0;z<zSize;z++)
+			{
+				ConvertSGILine ((b3_u16 *)buffer,
+					256 + y * xSize * zSize + z * xSize,xSize,bytes);
+			}
 		}
 	}
 	
 	switch (type)
 	{
-		case RGB8 :
-			lPtr  = (unsigned long *)new;
+		case B3_TX_RGB8 :
+			lPtr  = (b3_pkd_color *)data;
 			block = xSize * ySize;
 			for (y = ySize - 1;y >= 0;y--)
 			{
 				if (rle > 0) /* read raw data */
 				{
-					UnpackSGI(&line[0],          Data,rle,bytes,y * xSize);
-					UnpackSGI(&line[xSize],      Data,rle,bytes,y * xSize + block);
-					UnpackSGI(&line[xSize+xSize],Data,rle,bytes,y * xSize + block + block);
+					UnpackSGI(&line[0],          buffer,rle,bytes,y * xSize);
+					UnpackSGI(&line[xSize],      buffer,rle,bytes,y * xSize + block);
+					UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,y * xSize + block + block);
 				}
 				else /* read RLE packed data */
 				{
-					UnpackSGI(&line[0],          Data,rle,bytes,lineTable[y]);
-					UnpackSGI(&line[xSize],      Data,rle,bytes,lineTable[y+ySize]);
-					UnpackSGI(&line[xSize+xSize],Data,rle,bytes,lineTable[y+ySize+ySize]);
+					UnpackSGI(&line[0],          buffer,rle,bytes,lineTable[y]);
+					UnpackSGI(&line[xSize],      buffer,rle,bytes,lineTable[y+ySize]);
+					UnpackSGI(&line[xSize+xSize],buffer,rle,bytes,lineTable[y+ySize+ySize]);
 				}
 				for (x=0;x<xSize;x++)
 				{
@@ -206,120 +221,114 @@ static long ParseSGI3(
 			}
 			break;
 
-		case PCX8 :
+		case B3_TX_VGA :
+			cPtr = data;
 			for (y = ySize - 1;y >= 0;y--)
 			{
-				if (rle > 0) UnpackSGI (new,Data,rle,bytes,y * xSize);
-				else         UnpackSGI (new,Data,rle,bytes,lineTable[y]);
-				new += xSize;
+				if (rle > 0) UnpackSGI (cPtr,buffer,rle,bytes,y * xSize);
+				else         UnpackSGI (cPtr,buffer,rle,bytes,lineTable[y]);
+				cPtr += xSize;
 			}
 			break;
 
 		default :
-			type = 0;
+			type = B3_TX_UNDEFINED;
 			break;
 	}
-	FreePartMem (&TextureMem,line);
-	return type;
+	b3Free(line);
 }
 
-long ParseSGI (
-	struct Texture *Texture,
-	unsigned char  *Data)
+b3_tx_type b3Tx::b3ParseSGI (b3_u08 *buffer)
 {
-	register struct HeaderSGI  *HeaderSGI;
-	register unsigned char     *new;
-	register long               type = 0,need = 0,xSize,ySize,zSize,c;
+	HeaderSGI *HeaderSGI;
+	b3_u08    *newPtr;
+	b3_bool    success = false;
+	b3_res     xNewSize,yNewSize;
+	b3_index   c;
 
-	HeaderSGI = (struct HeaderSGI *)Data;
+	HeaderSGI = (struct HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)
 	{
-		ChangeWord (&HeaderSGI->type);
-		ChangeWord (&HeaderSGI->dim);
-		ChangeWord (&HeaderSGI->xsize);
-		ChangeWord (&HeaderSGI->ysize);
-		ChangeWord (&HeaderSGI->zsize);
-		ChangeLong (&HeaderSGI->min);
-		ChangeLong (&HeaderSGI->max);
-		ChangeLong (&HeaderSGI->wastebytes);
-		ChangeLong (&HeaderSGI->colormap);
+		b3Endian::b3ChangeEndian16 (&HeaderSGI->type);
+		b3Endian::b3ChangeEndian16 (&HeaderSGI->dim);
+		b3Endian::b3ChangeEndian16 (&HeaderSGI->xsize);
+		b3Endian::b3ChangeEndian16 (&HeaderSGI->ysize);
+		b3Endian::b3ChangeEndian16 (&HeaderSGI->zsize);
+		b3Endian::b3ChangeEndian32 (&HeaderSGI->min);
+		b3Endian::b3ChangeEndian32 (&HeaderSGI->max);
+		b3Endian::b3ChangeEndian32 (&HeaderSGI->wastebytes);
+		b3Endian::b3ChangeEndian32 (&HeaderSGI->colormap);
 	}
 
-	Texture->xSize  =  xSize = HeaderSGI->xsize;
-	Texture->ySize  =  ySize = HeaderSGI->ysize;
-	Texture->Planes = (zSize = HeaderSGI->zsize) << 3;
+	xNewSize = HeaderSGI->xsize;
+	yNewSize = HeaderSGI->ysize;
+	depth    = HeaderSGI->zsize << 3;
 
 
-		/* get texture type */
+	// get texture type
 	switch (HeaderSGI->colormap)
 	{
 		case 0 :
 			switch (HeaderSGI->zsize)
 			{
 				case 1 :
-					Texture->Palette = (unsigned long *)AllocTextureMem
-						(Texture,256 * sizeof(unsigned long));
-					if (Texture->Palette == null)
-					{
-						Texture->FileType = FT_ERR_MEM;
-						return 0;
-					}
-					for (c=0;c<256;c++) Texture->Palette[c] = 0x010101 * c;
-					type = PCX8;
-					need = xSize * ySize * sizeof(unsigned char *);
+					success = b3AllocTx(xNewSize,yNewSize,8);
 					break;
 				case 3 :
-					type = RGB8;
-					need = xSize * ySize * sizeof(unsigned long *);
+					success = b3AllocTx(xNewSize,yNewSize,24);
+					break;
+
+				default :
+					FileType = FT_ERR_UNSUPP;
 					break;
 			}
 			break;
 
 		case 3 :
-			Texture->Palette = (unsigned long *)AllocTextureMem
-				(Texture,256 * sizeof(unsigned long));
-			if (Texture->Palette == null)
+			success = b3AllocTx(xNewSize,yNewSize,8);
+			if (success)
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				for (c=0;c<256;c++)
+				{
+					palette[c] =
+						((c & 0xe0) << 16) |
+						((c & 0x1c) << 11) |
+						((c & 0x03) <<  6);
+				}
 			}
-			for (c=0;c<256;c++) Texture->Palette[c] =
-				((c & 0xe0) << 16) |
-				((c & 0x1c) << 11) |
-				((c & 0x03) <<  6);
-			type = PCX8;
-			need = xSize * ySize * sizeof(unsigned char *);
 			break;
 
 		default :
-			Texture->FileType = FT_ERR_UNSUPP;
+			FileType = FT_ERR_UNSUPP;
 			break;
 	}
-	if (type == 0) return type;
-
-	Texture->Data = new = (unsigned char *)AllocTextureMem(Texture,need);
-	if (new  == null)
+	if (success)
 	{
-		Texture->FileType = FT_ERR_MEM;
-		return 0;
-	}
-
-
 		/* how are rows saved? */
-	switch (HeaderSGI->dim)
-	{
-		case 3 :
-			Texture->FileType = FT_ERR_MEM; /* default */
-			type = ParseSGI3(HeaderSGI,Data,new,type,xSize,ySize,zSize);
-			break;
+		switch (HeaderSGI->dim)
+		{
+			case 3 :
+				FileType = FT_ERR_MEM; /* default */
+				b3ParseSGI3(HeaderSGI,buffer);
+				break;
 
-		case 1 :
-		case 2 :
-		default :
-			Texture->FileType = FT_ERR_PACKING;
-			type = 0;
-			break;
+			case 1 :
+			case 2 :
+			default :
+				FileType = FT_ERR_PACKING;
+				type     = B3_TX_UNDEFINED;
+				break;
+		}
+
+		// Success
+		if (type != B3_TX_UNDEFINED)
+		{
+			FileType = FT_SGI_RLE;
+		}
+		else
+		{
+			b3FreeTx();
+		}
 	}
-	if (type != 0) Texture->FileType = FT_SGI_RLE;
 	return type;
 }

@@ -26,6 +26,59 @@
 #include "tiff.h"
 #include "tiffio.h"
 
+/*************************************************************************
+**                                                                      **
+**                        TIFF structures and definitions               **
+**                                                                      **
+*************************************************************************/
+
+#define TIFF_INTEL    0x4949
+#define TIFF_MOTOROLA 0x4d4d
+
+struct HeaderTIFF
+{
+	short          TypeCPU;
+	short          VersionTIFF;
+	long           FirstTag;
+};
+
+struct TagTIFF
+{
+	unsigned short Code;
+	unsigned short Type;
+	long           Data[2];
+};
+
+/*************************************************************************
+**                                                                      **
+**                        SGI RLE structures                            **
+**                                                                      **
+*************************************************************************/
+
+struct HeaderSGI
+{
+    b3_u16	imagic;		/* stuff saved on disk . . */
+    b3_u16 	type;
+    b3_u16 	dim;
+    b3_u16 	xsize;
+    b3_u16 	ysize;
+    b3_u16 	zsize;
+    b3_u32 	min;
+    b3_u32 	max;
+    b3_u32	wastebytes;	
+    char 	name[80];
+    b3_u32	colormap;
+};
+
+#define IMAGIC1 	0x01da
+#define IMAGIC2 	0xda01
+
+/*************************************************************************
+**                                                                      **
+**                        Imaging structures, classes and defines       **
+**                                                                      **
+*************************************************************************/
+
 enum b3_tx_type
 {
 	B3_TX_UNDEFINED = -1,
@@ -345,10 +398,10 @@ private:
 	void           b3DeskewVGA();
 
 	// b3TxEasy.cc
-	long           b3ParseRAW (b3_u08 *buffer,long,long,long);
-	long           b3ParseBMP (b3_u08 *buffer);
-	long           b3ParseMTV (b3_u08 *buffer);
-	long           b3ParseBMF (b3_u08 *buffer,unsigned long);
+	b3_tx_type     b3ParseRAW (b3_u08 *buffer,b3_res x,b3_res y,b3_s32 type);
+	b3_tx_type     b3ParseBMP (b3_u08 *buffer);
+	b3_tx_type     b3ParseMTV (b3_u08 *buffer);
+	b3_tx_type     b3ParseBMF (b3_u08 *buffer,b3_size buffer_size);
 
 	// b3TxIFF.cc
 	b3_tx_type     b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size);
@@ -368,7 +421,8 @@ private:
 	b3_tx_type     b3ParsePCX8 (b3_u08 *buffer);
 
 	// b3TxIMG.cc
-	b3_tx_type     b3ParseIMG  (b3_u08 *buffer);
+	b3_tx_type     b3ParseSGI  (b3_u08 *buffer);
+	void           b3ParseSGI3 (HeaderSGI *HeaderSGI,b3_u08 *Data);
 
 	// b3TxTGA.cc
 	b3_tx_type     b3ParseTGA  (b3_u08 *buffer);
@@ -378,29 +432,6 @@ private:
 };
 
 extern b3_f64        b3Gamma(b3_f64 h,b3_f64 s,b3_f64 gamma,b3_f64 value,b3_f64 scale=1.0);
-
-/*************************************************************************
-**                                                                      **
-**                        TIFF structures and definitions               **
-**                                                                      **
-*************************************************************************/
-
-#define TIFF_INTEL    0x4949
-#define TIFF_MOTOROLA 0x4d4d
-
-struct HeaderTIFF
-{
-	short          TypeCPU;
-	short          VersionTIFF;
-	long           FirstTag;
-};
-
-struct TagTIFF
-{
-	unsigned short Code;
-	unsigned short Type;
-	long           Data[2];
-};
 
 /*************************************************************************
 **                                                                      **
@@ -465,12 +496,12 @@ class b3TIFF_Dir : public b3Link<b3TIFF_Dir>
 {
 	b3Base<b3TIFF_Entry>  tags;
 	b3Base<b3TIFF_Strip>  strips;
-	unsigned long             end;
-	b3TIFF_Strip           *stripArray;
-	long                      num;			// number of tags inside directory
-	long                      stripNum;		// number of strips
-	long                      offset;		// offset of this dir structure
-	long                      next;			// offset of next dir structure
+	unsigned long         end;
+	b3TIFF_Strip         *stripArray;
+	long                  num;			// number of tags inside directory
+	long                  stripNum;		// number of strips
+	long                  offset;		// offset of this dir structure
+	long                  next;			// offset of next dir structure
 public:
 	                b3TIFF_Dir(char *,struct TagTIFF *,long);
 	               ~b3TIFF_Dir();
@@ -497,9 +528,9 @@ public:
 class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 {
 	b3Base<b3TIFF_Dir>  dirs;
-	unsigned long           end;
-	struct HeaderTIFF       head;
-	long                    offset;	// offset of this header (= 0)
+	unsigned long       end;
+	HeaderTIFF          head;
+	long                offset;	// offset of this header (= 0)
 
 public:
 	      b3TIFF      (struct HeaderTIFF *);

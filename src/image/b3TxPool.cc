@@ -28,23 +28,6 @@
 #include "blz3/base/b3Endian.h"
 
 #include "b3TxIFF.h"
-#include "b3TxIMG.h"
-/*
-#include <blizzard/system/config.h>
-#include <blizzard/system/tdisplay.h>
-#include <blizzard/system/bio.h>
-#include <blizzard/btools.h>
-#include <blizzard/bimage.h>
-
-#include "tx_main.h"
-#include "tx_easy.h"
-#include "tx_gif.h"
-#include "tx_img.h"
-#include "tx_jpeg.h"
-#include "tx_pcx.h"
-#include "tx_tga.h"
-#include "tx_tiff.h"
-*/
 
 /*************************************************************************
 **                                                                      **
@@ -54,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/10/13 15:35:32  sm
+**	- Adding further image file format support.
+**
 **	Revision 1.6  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
-**
+**	
 **	Revision 1.5  2001/10/11 16:06:33  sm
 **	- Cleaning up b3BSpline with including isolated methods.
 **	- Cleaning up endian conversion routines and collecting into
@@ -129,16 +115,17 @@ b3TxPool::~b3TxPool()
 
 b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 {
-	long              *LongData;
-	struct HeaderTIFF *TIFF;
-	struct HeaderSGI  *HeaderSGI;
-	b3_offset          pos;
-	b3_coord           x,y;
-	b3_tx_type         type;
-	b3_index           i;
+	b3_pkd_color *LongData;
+	HeaderTIFF   *TIFF;
+	HeaderSGI    *HeaderSGI;
+	b3_offset     pos;
+	b3_coord      x,y;
+	b3_tx_type    result;
+	b3_s32        ppm_type;
+	b3_index      i;
 
 	b3FreeTx();
-	LongData = (long *)buffer;
+	LongData = (b3_pkd_color *)buffer;
 	if (buffer_size < 4)
 	{
 		return type = B3_TX_UNDEFINED;
@@ -177,11 +164,10 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		return type = b3ParseGIF (buffer);
 	}
 
-#if 0
 
 	// TIFF
-	TIFF = (struct HeaderTIFF *)buffer;
-	if ((TIFF->TypeCPU == 0x4d4d)||(TIFF->TypeCPU == 0x4949))
+	TIFF = (HeaderTIFF *)buffer;
+	if ((TIFF->TypeCPU == B3_BIG_ENDIAN) || (TIFF->TypeCPU == B3_LITTLE_ENDIAN))
 	{
 #ifndef USE_TIFFLIB_LOAD
 		if (TIFF->VersionTIFF == 0x2a00)
@@ -193,25 +179,26 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 			return type = b3ParseTIFF(TIFF,Size);
 		}
 #else
-		return type = b3ParseTIFF(TIFF,Size);
+		b3LoadTIFF(b3Name(),buffer,buffer_size);
+		return type;
 #endif
 	}
 
 
 	// PPM6
 	pos = 0;
-	i   = sscanf(buffer,"P%ld %ld %ld %*d%n",&type,&x,&y,&pos);
-/*	if (DBUG(2)) PrintF ("PxM (%ld): (%ld,%ld - %ld) %d\n",type,x,y,i,pos); */
+	i   = sscanf((const char *)buffer,"P%ld %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
+	b3PrintF (B3LOG_FULL,"PxM (%ld): (%ld,%ld - %ld) %d\n",ppm_type,x,y,i,pos);
 	if (i >= 2)
 	{
-		switch (type)
+		switch (ppm_type)
 		{
 			case 4 :
 				if ((((x + 7) >> 3) * y + pos) <= Size)
 				{
 					pos = Size - ((x + 7) >> 3) * y;
 					FileType = FT_PBM;
-					return type = b3ParseRAW (&buffer[pos],x,y,type);
+					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 
@@ -220,7 +207,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 				{
 					pos = Size - x * y;
 					FileType = FT_PGM;
-					return type = b3ParseRAW (&buffer[pos],x,y,type);
+					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 				
@@ -229,7 +216,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 				{
 					pos = Size - 3 * x * y;
 					FileType = FT_PPM;
-					return type = b3ParseRAW (&buffer[pos],x,y,type);
+					return type = b3ParseRAW (&buffer[pos],x,y,ppm_type);
 				}
 				break;
 
@@ -252,8 +239,8 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 	}
 
 
-		/* MTV */
-	if (sscanf(buffer,"%ld %ld",&x,&y) == 2)
+	// MTV
+	if (sscanf((const char *)buffer,"%ld %ld",&x,&y) == 2)
 	{
 		for (pos = 0;(pos < 100) && (buffer[pos] != 10);pos++);
 		if (buffer[pos++] == 10)
@@ -282,13 +269,16 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 			i = 0;
 			break;
 	}
-	if ((x * y * i + 16) == Size) return type = b3ParseBMF(buffer,buffer_size);
+	if ((x * y * i + 16) == Size)
+	{
+		return type = b3ParseBMF(buffer,buffer_size);
+	}
 	
 	// SGI RLE
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if ((HeaderSGI->imagic == IMAGIC1) || (HeaderSGI->imagic == IMAGIC2))
 	{
-		return type = b3ParseSGI (buffer,buffer_size);
+		return type = b3ParseSGI(buffer);
 	}
 
 
@@ -317,7 +307,7 @@ b3_tx_type b3Tx::b3ParseTexture (b3_u08 *buffer,b3_size buffer_size)
 		}
 	}
 
-#endif
+
 	// really unknown
 	return type = B3_TX_UNDEFINED;
 }

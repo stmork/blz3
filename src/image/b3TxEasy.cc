@@ -22,7 +22,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include <blz3/image/b3Tx.h>
+#include "blz3/image/b3Tx.h"
+#include "blz3/base/b3Endian.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/13 15:35:32  sm
+**	- Adding further image file format support.
+**
 **	Revision 1.2  2001/10/13 09:56:44  sm
 **	- Minor corrections
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -47,97 +51,70 @@
 **                                                                      **
 *************************************************************************/
 
-long ParseRAW (
-	struct Texture *Texture,
-	unsigned char  *Data,
-	long            x,
-	long            y,
-	long            type)
+b3_tx_type b3Tx::b3ParseRAW (
+	b3_u08 *buffer,
+	b3_res  x,
+	b3_res  y,
+	b3_s32  ppm_type)
 {
-	register unsigned char *newCData;
-	register unsigned long *newLData,value;
-	register long           i,Max;
+	b3_u08       *newCData;
+	b3_pkd_color *newLData,value;
+	b3_count      i,Max;
 
-	switch (type)
+	switch (ppm_type)
 	{
 		case 4 : /* bitmap */
-			Texture->xSize  = x;
-			Texture->ySize  = y;
-			Texture->Planes = 1;
-			Max             = ((x + 7) >> 3) * y;
-
-			Texture->Palette = AllocTextureMem
-				(Texture,2 * sizeof(unsigned long));
-			if (Texture->Palette == null)
+			if (b3AllocTx(x,y,1))
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
-			}
-			Texture->Palette[0] = 0x00ffffff;
-			Texture->Palette[1] = 0x00000000;
+				b3_count xSrcBytes = TX_BBA(x);
+				b3_count xDstBytes = TX_BWA(x);
 
-			newCData = AllocTextureMem (Texture,Max * sizeof(unsigned char));
-			if (newCData == null)
+				for (y = 0;y < ySize;y++)
+				{
+					memcpy (newCData,buffer,xSrcBytes);
+					buffer   += xSrcBytes;
+					newCData += xDstBytes;
+				}
+				palette[0] = 0x00ffffff;
+				palette[1] = 0x00000000;
+			}
+			else
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				FileType = FT_ERR_MEM;
 			}
-			Texture->Data   = newCData;
-
-			for (i = 0;i < Max;i++) *newCData++ = *Data++;
-			return ILBM;
+			return type;
 
 		case 5 : /* grey */
-			Texture->xSize  = x;
-			Texture->ySize  = y;
-			Texture->Planes = 8;
-			Max             = x * y;
-
-			Texture->Palette = AllocTextureMem
-				(Texture,256 * sizeof(unsigned long));
-			if (Texture->Palette == null)
+			if (b3AllocTx(x,y,8))
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				memcpy(data,buffer,x * y);
 			}
-
-			newCData = AllocTextureMem (Texture,Max * sizeof(unsigned char));
-			if (newCData == null)
+			else
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				FileType = FT_ERR_MEM;
 			}
-			Texture->Data   = newCData;
-
-			for (i = 0;i < 256;i++) Texture->Palette[i] = 0x00010101 * i;
-			for (i = 0;i < Max;i++) *newCData++ = *Data++;
-
-			return PCX8;
+			return type;
 
 		case 6 : /* 24 Bit */
-			Texture->xSize  = x;
-			Texture->ySize  = y;
-			Texture->Planes = 24;
-			Max             = x * y;
-
-			newLData = AllocTextureMem (Texture,Max * sizeof(unsigned long));
-			if (newLData == null)
+			if(b3AllocTx(x,y,24))
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				newLData = (b3_u32 *)data;
+				Max      = x * y;
+				for (i = 0;i < Max;i++)
+				{
+					value       =                 *buffer++;
+					value       = (value << 8) | (*buffer++);
+					*newLData++ = (value << 8) | (*buffer++);
+				}
 			}
-			Texture->Data = (unsigned char *)newLData;
-
-			for (i = 0;i < Max;i++)
+			else
 			{
-				value       =                 *Data++;
-				value       = (value << 8) | (*Data++);
-				*newLData++ = (value << 8) | (*Data++);
+				FileType = FT_ERR_MEM;
 			}
-			return RGB8;
+			return type;
 
 		default :
-			return 0;
+			return B3_TX_UNDEFINED;
 	}
 }
 
@@ -147,170 +124,144 @@ long ParseRAW (
 **                                                                      **
 *************************************************************************/
 
-long ParseBMP(
-	struct Texture *Texture,
-	unsigned char  *data)
+b3_tx_type b3Tx::b3ParseBMP(b3_u08 *buffer)
 {
-	register long           xSize,ySize,colors,i,x,y,offset,planes,size,value;
-	register unsigned long *palette,*Long;
-	register unsigned char *new;
+	b3_pkd_color *palette,*Long;
+	b3_u08       *cPtr;
+	b3_res        xNewSize,yNewSize;
+	b3_coord      x,y;
+	b3_count      numPlanes,numColors;
+	b3_count      i,offset,value;
 
-	if (GetIntelLong (&data[30]) != 0)
+	if (b3Endian::b3GetIntel32(&buffer[30]) != 0)
 	{
-		Texture->FileType = FT_ERR_PACKING;
-		return 0;
+		FileType = FT_ERR_PACKING;
+		return B3_TX_UNDEFINED;
 	}
-	xSize  = GetIntelShort (&data[18]);
-	ySize  = GetIntelShort (&data[22]);
-	colors = GetIntelLong  (&data[46]);
-	planes = GetIntelLong  (&data[28]);
-	if (colors == 0) colors = (GetIntelLong(&data[10]) - 54) >> 2;
-
-	if (planes <= 8)
+	xNewSize  = b3Endian::b3GetIntel16(&buffer[18]);
+	yNewSize  = b3Endian::b3GetIntel16(&buffer[22]);
+	numColors = b3Endian::b3GetIntel32(&buffer[46]);
+	numPlanes = b3Endian::b3GetIntel32(&buffer[28]);
+	if (numColors == 0)
 	{
-		if (colors > 0)
+		numColors = (b3Endian::b3GetIntel32(&buffer[10]) - 54) >> 2;
+	}
+
+	if (!b3AllocTx(xNewSize,yNewSize,numPlanes))
+	{
+		FileType = FT_ERR_MEM;
+		return type;
+	}
+	FileType = FT_BMP;
+
+	if (numPlanes <= 8)
+	{
+		if (numColors > 0)
 		{
-			palette = (unsigned long *)AllocTextureMem(Texture,
-				colors * sizeof(unsigned long));
-			if (palette == null)
+			for (i = 0;i < numColors;i++)
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				palette[i] = 
+					((b3_pkd_color)buffer[(i << 2) + 56] << 16) |
+					((b3_pkd_color)buffer[(i << 2) + 55] <<  8) |
+					((b3_pkd_color)buffer[(i << 2) + 54]);
 			}
-			for (i=0;i<colors;i++) palette[i] = 
-				((unsigned long)data[(i << 2) + 56] << 16) |
-				((unsigned long)data[(i << 2) + 55] <<  8) |
-				((unsigned long)data[(i << 2) + 54]);
 		}
 		else
 		{
-			colors = 1 << planes;
-			value  = 8  - planes;
-			palette = (unsigned long *)AllocTextureMem(Texture,
-				colors * sizeof(unsigned long));
-			if (palette == null)
+			numColors = 1 << numPlanes;
+			value     = 8  - numPlanes;
+			for (i = 0;i < numColors;i++)
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				palette[i] = 0x00010101 * (i << value);
 			}
-			for (i=0;i<colors;i++) palette[i] = 0x00010101 * (i << value);
 		}
 	}
 
-	switch (planes)
-	{
-		case  1 :
-			size = ((xSize + 7) >> 3) * ySize * sizeof(unsigned char);
-			break;
-
-		case  4 :
-			if (xSize & 1) xSize++;
-			size = xSize * ySize * sizeof(unsigned char) >> 1;
-			break;
-
-		case  8 :
-			size = xSize * ySize * sizeof(unsigned char);
-			break;
-
-		case 24 :
-			size = xSize * ySize * sizeof(unsigned long);
-			break;
-	}
-
-	new = (unsigned char *)AllocTextureMem (Texture,size);
-	if (new == null)
-	{
-		Texture->FileType = FT_ERR_MEM;
-		return 0;
-	}
-
-	Texture->xSize    = xSize;
-	Texture->ySize    = ySize;
-	Texture->Palette  = palette;
-	Texture->Data     = new;
-	Texture->FileType = FT_BMP;
-	Texture->Planes   = planes;
 
 
 		/* checking bits per pixel */
-	data  += GetIntelLong (&data[10]);
-	switch (planes)
+	buffer += b3Endian::b3GetIntel32 (&buffer[10]);
+	switch (numPlanes)
 	{
 		case  1 :
-			offset = ((xSize + 7) >> 3);
-			new   += size;
-			for (y=0;y<ySize;y++)
+			offset = TX_BBA(xSize);
+			cPtr   = data + dSize;
+			for (y = 0;y < ySize;y++)
 			{
-				new -= offset;
-				for (x=0;x<xSize;x+=8) *new++ = *data++;
-				new -= offset;
+				cPtr -= offset;
+				for (x = 0;x < xSize;x += 8)
+				{
+					*cPtr++ = *buffer++;
+				}
+				cPtr -= offset;
 			}
-			return ILBM;
+			return type;
 
 		case  4 :
 			offset = (xSize + 7) >> 3;
-			new   += size;
-			for (y=0;y<ySize;y++)
+			cPtr   = data;
+			cPtr  += dSize;
+			for (y = 0;y < ySize;y++)
 			{
-				new -= (offset << 2);
+				cPtr -= (offset << 2);
 				for (x=0;x<xSize;x+=2)
 				{
 					value = 128 >> (x & 7);
 					i     =  (x >> 3) + offset + offset + offset;
-					if (data[0] & 0x80) new[i] |= value;
+					if (buffer[0] & 0x80) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x40) new[i] |= value;
+					if (buffer[0] & 0x40) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x20) new[i] |= value;
+					if (buffer[0] & 0x20) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x10) new[i] |= value;
+					if (buffer[0] & 0x10) cPtr[i] |= value;
 
 					value = value >> 1;
 					i     =  (x >> 3) + offset + offset + offset;
-					if (data[0] & 0x08) new[i] |= value;
+					if (buffer[0] & 0x08) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x04) new[i] |= value;
+					if (buffer[0] & 0x04) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x02) new[i] |= value;
+					if (buffer[0] & 0x02) cPtr[i] |= value;
 					i -= offset;
-					if (data[0] & 0x01) new[i] |= value;
-					data++;
+					if (buffer[0] & 0x01) cPtr[i] |= value;
+					buffer++;
 				}
 			}
-			return ILBM;
+			return type;
 
 		case  8 :
-			new += size;
-			for (y=0;y<ySize;y++)
+			cPtr = data + dSize;
+			for (y = 0;y < ySize;y++)
 			{
-				new -= xSize;
-				for (x=0;x<xSize;x++) *new++ = *data++;
-				new -= xSize;
+				cPtr   -= xSize;
+				memcpy (cPtr,buffer,xSize);
+				buffer += xSize;
 			}
-			return PCX8;
+			return type;
 
 		case 24 :
 			offset = xSize & 3;
-			Long = (unsigned long *)new;
-			Long += (xSize * ySize);
-			for (y=0;y<ySize;y++)
+			Long   = (b3_pkd_color *)data;
+			Long  += (xSize * ySize);
+			for (y = 0;y < ySize;y++)
 			{
 				Long -= xSize;
-				for (x=0;x<xSize;x++)
+				for (x = 0;x < xSize;x++)
 				{
-					value   =                data[2];
-					value   = (value << 8) | data[1];
-					*Long++ = (value << 8) | data[0];
-					data += 3;
+					value   =                buffer[2];
+					value   = (value << 8) | buffer[1];
+					*Long++ = (value << 8) | buffer[0];
+					buffer += 3;
 				}
-				Long -= xSize;
-				data += offset;
+				Long   -= xSize;
+				buffer += offset;
 			}
-			return RGB8;
+			return type;
 	}
 
-	if (DBUG(2)) PrintF ("that's it\n");
-	return 0;
+	b3PrintF (B3LOG_FULL,"that's it\n");
+	return type;
 }
 
 /*************************************************************************
@@ -319,75 +270,60 @@ long ParseBMP(
 **                                                                      **
 *************************************************************************/
 
-long ParseBMF (
-	struct Texture *Texture,
-	unsigned char  *Data,
-	unsigned long   Size)
+b3_tx_type b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 {
-	long           x,y,xSize,ySize,Type,lSize;
-	unsigned long *pixel;
-	unsigned char *gray;
+	b3_pkd_color *pixel;
+	b3_u08       *gray;
+	b3_coord      x,y;
+	b3_res        xNewSize,yNewSize;
+	b3_count      lSize;
 
-	Texture->FileType = FT_BMF;
-	Texture->xSize    = xSize = GetIntelShort (&Data[2]);
-	Texture->ySize    = ySize = GetIntelShort (&Data[4]);
-	switch (Type = Data[6])
+	FileType = FT_BMF;
+	xNewSize = b3Endian::b3GetIntel16 (&buffer[2]);
+	yNewSize = b3Endian::b3GetIntel16 (&buffer[4]);
+	switch (buffer[6])
 	{
 		case 2 :
-			Texture->Planes = 8;
-			Texture->Data   = AllocTextureMem (Texture,
-				xSize * ySize +
-				sizeof(long) * 256);
-			if (Texture->Data == null)
+			if (b3AllocTx(xNewSize,yNewSize,8))
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
+				buffer += buffer_size;
+				gray    = data;
+				for (y = 0;y < ySize;y++)
+				{
+					buffer -= xSize;
+					memcpy (gray,buffer,xSize);
+					gray += xSize;
+				}
 			}
-
-				/* creating gray ramp */
-			Texture->Palette = (unsigned long *)Texture->Data;
-			for (x=0;x<256;x++) Texture->Palette[x] = 0x010101 * x;
-
-				/* copying Data */
-			Texture->Data += (sizeof(unsigned long) * 256);
-			Data += Size;
-			gray  = Texture->Data;
-			for (y = 0;y < ySize;y++)
+			else
 			{
-				Data -= xSize;
-				for (x = 0;x < xSize;x++) *gray++ = Data[x];
+				FileType = FT_ERR_MEM;
 			}
-			Type = PCX8;
 			break;
 
 		case 4 :
-			Texture->Planes   = 24;
-			Texture->Data     = AllocTextureMem (Texture,
-				xSize * ySize * sizeof(long));
-			if (Texture->Data == null)
+			if (b3AllocTx(xNewSize,yNewSize,24))
 			{
-				Texture->FileType = FT_ERR_MEM;
-				return 0;
-			}
-			pixel = (unsigned long *)Texture->Data;
-			Data += Size;
-			lSize = xSize + xSize + xSize;
-			for (y=0;y < ySize;y++)
-			{
-				Data -= lSize;
-				for (x = 0;x < xSize;x++)
+				pixel   = (b3_pkd_color *)data;
+				buffer += buffer_size;
+				lSize   = xSize + xSize + xSize;
+				for (y = 0;y < xSize;y++)
 				{
-					*pixel++ =
-						(Data[x]                 <<  0) |
-						(Data[x + xSize]         <<  8) |
-						(Data[x + xSize + xSize] << 16);
+					buffer -= lSize;
+					for (x = 0;x < xSize;x++)
+					{
+						*pixel++ =
+							(buffer[x]                 <<  0) |
+							(buffer[x + xSize]         <<  8) |
+							(buffer[x + xSize + xSize] << 16);
+					}
 				}
 			}
-			Type = RGB8;
-			break;
-		default :
-			Type = 0;
+			else
+			{
+				FileType = FT_ERR_MEM;
+			}
 			break;
 	}
-	return Type;
+	return type;
 }

@@ -44,10 +44,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/13 15:35:32  sm
+**	- Adding further image file format support.
+**
 **	Revision 1.3  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
-**
+**	
 **	Revision 1.2  2001/07/01 17:04:09  sm
 **	- Solved some signed/unsigned mismatches
 **	
@@ -80,9 +83,9 @@
 class b3MemTiffInfo
 {
 public:
-	b3_u08 *ptr;
-	tsize_t        size;
-	toff_t         pos;
+	b3_u08  *ptr;
+	tsize_t  size;
+	toff_t   pos;
 
 public:
 	b3MemTiffInfo(const b3_u08 *InitBuffer,size_t InitSize)
@@ -427,7 +430,10 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 	return error_code;
 }
 
-b3_result b3Tx::b3LoadTIFF(const char *tiff_name,const b3_u08 *tiff_buffer,size_t tiff_size)
+b3_result b3Tx::b3LoadTIFF(
+	const char   *tiff_name,
+	const b3_u08 *tiff_buffer,
+	size_t        tiff_size)
 {
 	TIFF    *tiff;
 	b3_u16   bps = 1,spp = 1,pm = PHOTOMETRIC_MINISWHITE,pc = 0;
