@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/11/25 13:31:47  sm
+**	- Changed b3_loop to int (best performance)
+**
 **	Revision 1.11  2003/09/01 19:03:34  sm
 **	- Removed debug output
-**
+**	
 **	Revision 1.10  2003/09/01 11:18:55  sm
 **	- Fixed ticket no. 9: A missing DISPLAY variable doesn't crash
 **	  the apps.
@@ -523,8 +526,8 @@ b3_bool b3DisplayView::b3CreateColormap ()
 	}
 	else
 	{
-		b3_index i,iMax;
-		XColor   NewColors[256];
+		b3_loop i,iMax;
+		XColor  NewColors[256];
 
 		// create color map
 		cmap = XCreateColormap(

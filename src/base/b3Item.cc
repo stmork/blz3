@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2003/11/25 13:31:43  sm
+**      - Changed b3_loop to int (best performance)
+**
 **      Revision 1.37  2003/10/15 13:12:19  sm
 **      - Making 64 bit sure. I've got running the brt3 in 64 bit mode on
 **        a sun ultra sparc sucessfully!!
@@ -667,8 +670,8 @@ b3_size b3Item::b3Store()
 	b3Write();
 
 	// Prepare b3Link
-	m_StoreBuffer[B3_NODE_IDX_SUCC]      = (b3_u32)Succ;
-	m_StoreBuffer[B3_NODE_IDX_PREV]      = (b3_u32)Prev;
+	m_StoreBuffer[B3_NODE_IDX_SUCC]      = Succ != null ? 0xabadcafe : null;
+	m_StoreBuffer[B3_NODE_IDX_PREV]      = Prev != null ? 0xdeadbeef : null;
 	m_StoreBuffer[B3_NODE_IDX_CLASSTYPE] = b3GetClassType();
 	m_StoreBuffer[B3_NODE_IDX_SIZE]      = m_ItemSize   = m_StoreIndex  << 2;
 	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = m_ItemOffset = m_StoreOffset << 2;
@@ -826,7 +829,7 @@ void b3Item::b3StorePtr(const void *ptr)
 {
 	b3EnsureStoreBuffer(1);
 
-	m_StoreBuffer[m_StoreIndex++] = (b3_u32)ptr;
+	m_StoreBuffer[m_StoreIndex++] = ptr != null ? 0xbadc0ded : null;
 }
 
 void b3Item::b3StoreVector(const b3_vector *vec)

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2003/11/25 13:31:43  sm
+**	- Changed b3_loop to int (best performance)
+**
 **	Revision 1.35  2003/03/22 14:38:41  sm
 **	- Some optimizations continued concerning triangles.
-**
+**	
 **	Revision 1.34  2003/03/20 21:04:58  sm
 **	- Made some triangle intersection optimizations.
 **	
@@ -882,7 +885,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 
 b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar_precompute *polar)
 {
-	b3_count  NumOfX,i,k;
+	b3_loop   NumOfX,i,k;
 	b3_f64    Val1,Val2,pQuad,dQuad,pdQuad;
 	b3_f64    xp,yp;
 	b3_f64    Coeff[5],x[4];
@@ -1614,7 +1617,7 @@ b3_bool b3CSGTorus::b3Intersect(
 	b3_shape_intervals *interval,
 	b3_line64          *BTLine)
 {
-	b3_count      NumOfX;
+	b3_loop       NumOfX;
 	b3_index      i,k,t = 0;
 	b3_f64        Val1,Val2,pQuad,dQuad,pdQuad;
 	b3_f64        Coeff[5],x[4];
