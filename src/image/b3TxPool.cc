@@ -37,11 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/23 15:50:31  sm
+**	- Now parsing PCX4 correctly
+**	- Found TGA parsing bug.
+**	- Correcting path following behaviour.
+**
 **	Revision 1.12  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.11  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -360,6 +365,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	b3Path    FullName;
 	b3_u08   *Data = null;
 	b3_size   FileSize;
+	b3_bool   found = false;
 
 	if ((Name != null) && (strlen(Name) > 0))
 	{
@@ -374,15 +380,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 				b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
 				if (b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
 				{
-					try
-					{
-						Data = TextureFile.b3ReadBuffer(FullName,FileSize);
-					}
-					catch(b3FileException *f)
-					{
-						// An exception we expected.
-						b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
-					}
+					found = true;
 					break;
 				}
 			}
@@ -390,6 +388,24 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 		else
 		{
 			strcpy(FullName,Name);
+			found = true;
+		}
+
+		try
+		{
+			if (found)
+			{
+				Data = TextureFile.b3ReadBuffer(FullName,FileSize);
+				Texture->b3Name(FullName);
+				Texture->b3ParseTexture(Data,FileSize);
+				b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
+					Texture->b3Name(),Data,FileSize);
+			}
+		}
+		catch(b3FileException *f)
+		{
+			// An exception we expected.
+			b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
 		}
 	}
 	else
@@ -402,13 +418,7 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 	{
 		Texture->b3Name(Name);
 		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",Texture->b3Name());
-		return;
 	}
-
-	Texture->b3Name(FullName);
-	Texture->b3ParseTexture(Data,FileSize);
-	b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded. [%p,%d bytes]\n",
-		Texture->b3Name(),Data,FileSize);
 }
 
 b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
@@ -446,5 +456,6 @@ b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
 	// load data and insert in internal list
 	b3ReloadTexture (Texture,Name);
 	m_Pool.b3Append(Texture);
+
 	return Texture;
 }

@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/23 15:50:31  sm
+**	- Now parsing PCX4 correctly
+**	- Found TGA parsing bug.
+**	- Correcting path following behaviour.
+**
 **	Revision 1.2  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.1  2001/10/15 14:46:11  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -65,15 +70,16 @@ static void display(b3Tx *tx)
 	b3ImageRow  *row;
 	b3_coord     y;
 
+	b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
+		tx->b3Name(),tx->xSize,tx->ySize);
 	display = new b3Display(tx->xSize,tx->ySize,tx->b3Name());
-	row = new b3ImageRow(tx->xSize);
+	row     = new b3ImageRow(tx->xSize);
 	for (y = 0;y < tx->ySize;y++)
 	{
 		row->b3SetRow(tx,y);
 		display->b3PutRow(row);
 	}
 	delete row;
-	b3PrintF(B3LOG_NORMAL,"%s\n",tx->b3Name());
 	display->b3Wait();
 	delete display;
 }

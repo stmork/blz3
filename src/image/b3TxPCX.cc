@@ -33,9 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/23 15:50:31  sm
+**	- Now parsing PCX4 correctly
+**	- Found TGA parsing bug.
+**	- Correcting path following behaviour.
+**
 **	Revision 1.2  2001/10/13 15:35:32  sm
 **	- Adding further image file format support.
-**
+**	
 **	Revision 1.1  2001/10/13 09:20:49  sm
 **	- Adding multi image file format support
 **	
@@ -102,64 +107,65 @@ b3_tx_type b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 	return type;
 }
 
-b3_tx_type b3Tx::b3ParsePCX4 (b3_u08 *Data)
+b3_tx_type b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 {
-	b3_u08       *CharData;
-	b3_u08       *Set,Col;
-	b3_size       DataSize,u,i, BytesProZeile;			 
-	b3_res        xNewSize,yNewSize;
+	b3_u08       *srcPtr;
+	b3_u08       *dstPtr,Col;
+	b3_count      u, xSrcBytes,DataSize;
 	b3_pkd_color  t;
+	b3_index      i;
 
-	xNewSize    = b3Endian::b3GetIntel16(&Data[ 8]) + 1;
-	yNewSize    = b3Endian::b3GetIntel16(&Data[10]) + 1;
+	xSize = b3Endian::b3GetIntel16(&buffer[ 8]) + 1;
+	ySize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
+	depth = buffer[65];
+	dSize = TX_BWA(xSize) * ySize * depth;
+	pSize = 1 << depth;
 
-	if (b3AllocTx(xNewSize,yNewSize,4))
+	data    = (b3_u08 *)b3Alloc(dSize);
+	palette = (b3_pkd_color *)b3Alloc(pSize * sizeof(b3_pkd_color));
+	if ((data != null) && (palette != null))
 	{
-#if 0
-	Planes   = Data[65];
-	FileType = FT_PCX4;
-	BytesProZeile     = Data[66];
+		type      = B3_TX_ILBM;
+		FileType  = FT_PCX4;
+		xSrcBytes = buffer[66];
 
-	CharData = (unsigned char *)&Data[128];
-	DataSize = Texture->ySize * BytesProZeile * Texture->Planes;
+		srcPtr   = (b3_u08 *)&buffer[128];
+		DataSize = ySize * xSrcBytes * depth;
 
-	Texture->Palette = (unsigned long *)AllocTextureMem (Texture,DataSize + 64);
-	if (Texture->Palette == null) return (0L);
-	Texture->Data = (unsigned char *)(Texture->Palette + 16);
-
-	u = 16;
-	for (i=0; i<16; i++)
-	{
-		t  = (b3_pkd_color)Data[u++] << 16;
-		t += (b3_pkd_color)Data[u++] <<  8;
-		t += (b3_pkd_color)Data[u++];
-		palette[i] = t;
-	}
-
-	Set = (unsigned char *)Texture->Data;
-
-	i = 0;
-	while (i < DataSize)
-	{
-		Col = CharData[0];
-		CharData++;
-
-		if ((Col & 192)==192)
+		u = 16;
+		for (i = 0;i < pSize; i++)
 		{
-			t = (Col & 63);
-			Col = CharData[0];
-			CharData++;
+			t  = (b3_pkd_color)buffer[u++] << 16;
+			t += (b3_pkd_color)buffer[u++] <<  8;
+			t += (b3_pkd_color)buffer[u++];
+			palette[i] = t;
 		}
-		else t = 1;
 
-		for (i += t;t > 0;t--) *Set++ = Col;
-	}             
+		dstPtr = (b3_u08 *)data;
 
-	return ILBM;
-#endif
+		i = 0;
+		while (i < DataSize)
+		{
+			Col = *srcPtr++;
+			if ((Col & 192) == 192)
+			{
+				t   = (Col & 63);
+				Col = *srcPtr++;
+				for (i += t;t > 0;t--)
+				{
+					*dstPtr++ = Col;
+				}
+			}
+			else
+			{
+				*dstPtr++ = Col;
+				i++;
+			}
+		}             
 	}
 	else
 	{
+		b3FreeTx();
 		FileType = FT_ERR_MEM;
 	}
 	return type;
