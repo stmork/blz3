@@ -81,6 +81,13 @@ protected:
 	afx_msg void OnWindowTileVert();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+public:
+	void          b3Clear();
+	void          b3UpdateCameraBox(b3Scene *scene,b3CameraPart *camera);
+	b3CameraPart *b3GetSelectedCamera();
+	void          b3UpdateLightBox(b3Scene *scene,b3Light *light);
+	b3Light      *b3GetSelectedLight();
 };
 
 /////////////////////////////////////////////////////////////////////////////

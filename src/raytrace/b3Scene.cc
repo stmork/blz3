@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/20 14:16:48  sm
+**      - Putting data into cmaera and light combobox.
+**      - Selecting camera and light.
+**
 **      Revision 1.8  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -148,26 +152,77 @@ b3ModellerInfo *b3Scene::b3GetModellerInfo()
 	return info;
 }
 
-b3CameraPart *b3Scene::b3GetCamera()
+b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 {
-	b3CameraPart *camera;
+	b3CameraPart *camera,*first = null;
 	b3Item       *item;
 
 	B3_FOR_BASE(&heads[2],item)
 	{
 		if (item->b3GetClassType() == CAMERA)
 		{
-			return (b3CameraPart *)item;
+			camera = (b3CameraPart *)item;
+			if (first == null)
+			{
+				first = camera;
+			}
+			if ((!must_active) || (camera->Flags & CAMERA_ACTIVE))
+			{
+				return camera;
+			}
 		}
 	}
 
-	camera = new b3CameraPart(CAMERA);
-	camera->EyePoint  = EyePoint;
-	camera->ViewPoint = ViewPoint;
-	camera->Width     = Width;
-	camera->Height    = Height;
-	strcpy(camera->CameraName,"Camera");
+	if (first == null)
+	{
+		camera = new b3CameraPart(CAMERA);
+		camera->EyePoint  = EyePoint;
+		camera->ViewPoint = ViewPoint;
+		camera->Width     = Width;
+		camera->Height    = Height;
+		strcpy(camera->CameraName,"Camera");
+		heads[2].b3Append(camera);
+	}
+	else
+	{
+		camera = first;
+	}
 
-	heads[2].b3Append(camera);
 	return camera;
+}
+
+b3CameraPart *b3Scene::b3GetNextCamera(b3CameraPart *camera)
+{
+	while (camera = (b3CameraPart *)camera->Succ)
+	{
+		if (camera->b3GetClassType() == CAMERA)
+		{
+			return camera;
+		}
+	}
+	return null;
+}
+
+b3Light *b3Scene::b3GetLight(b3_bool must_active)
+{
+	b3Light *light;
+	b3Item  *item;
+
+	B3_FOR_BASE(&heads[1],item)
+	{
+		light = (b3Light *)item;
+		if ((!must_active) || ((light->Flags & LIGHT_OFF) == 0))
+		{
+			return light;
+		}
+	}
+
+	if (heads[1].First == null)
+	{
+		light = new b3Light(SPOT_LIGHT);
+		strcpy(light->Name,"Light");
+		heads[1].b3Append(light);
+	}
+
+	return light;
 }

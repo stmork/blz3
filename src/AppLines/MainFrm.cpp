@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/08/20 14:16:48  sm
+**	- Putting data into cmaera and light combobox.
+**	- Selecting camera and light.
+**
 **	Revision 1.4  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
 **	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
 **	- Some RenderObject redesignes
 **	- Color selecting bug fix in RenderObject
-**
+**	
 **	Revision 1.3  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -286,4 +290,48 @@ void CMainFrame::OnWindowTileVert()
 	CWaitCursor wait;
 
 	MDITile (MDITILE_VERTICAL);
+}
+
+void CMainFrame::b3Clear()
+{
+	m_cameraBox.b3Clear();
+	m_lightBox.b3Clear();
+}
+
+void CMainFrame::b3UpdateCameraBox(b3Scene *scene,b3CameraPart *act)
+{
+	b3CameraPart *camera;
+
+	m_cameraBox.b3Clear();
+	for (camera = scene->b3GetCamera();camera != null;camera = scene->b3GetNextCamera(camera))
+	{
+		m_cameraBox.b3AddString(camera->CameraName,camera);
+	}
+	m_cameraBox.b3SetString(act->CameraName);
+}
+
+b3CameraPart *CMainFrame::b3GetSelectedCamera()
+{
+	b3_s32 index = m_cameraBox.GetCurSel();
+
+	return (b3CameraPart *)m_cameraBox.GetItemDataPtr(index);
+}
+
+void CMainFrame::b3UpdateLightBox(b3Scene *scene,b3Light *act)
+{
+	b3Light *light;
+
+	m_lightBox.b3Clear();
+	for (light = scene->b3GetLight();light != null;light = (b3Light *)light->Succ)
+	{
+		m_lightBox.b3AddString(light->Name,light);
+	}
+	m_lightBox.b3SetString(act->Name);
+}
+
+b3Light *CMainFrame::b3GetSelectedLight()
+{
+	b3_s32 index = m_lightBox.GetCurSel();
+
+	return (b3Light *)m_lightBox.GetItemDataPtr(index);
 }

@@ -28,6 +28,7 @@
 #define B3_UPDATE_VIEW     1
 #define B3_UPDATE_CAMERA   2
 #define B3_UPDATE_GEOMETRY 4
+#define B3_UPDATE_LIGHT    8
 
 #define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
 
@@ -55,6 +56,7 @@ class CAppLinesView : public CScrollView
 	b3RenderView    m_RenderView;
 	b3CameraPart   *m_Camera;
 	b3CameraVolume  m_CameraVolume;
+	b3Light        *m_Light;
 	b3_select_mode  m_PreviousMode;
 	b3_select_mode  m_SelectMode;
 	b3_bool         m_Selecting;
@@ -83,6 +85,7 @@ public:
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+	virtual void OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView);
 	//}}AFX_VIRTUAL
 
 // Implementation

@@ -1304,10 +1304,11 @@ protected:
 // POINT_LIGHT
 class b3Light : public b3Item
 {
+public:
 	b3_vector        Position;     // Position
 	b3_color         Color;        // Farbe
 	b3_f32           Distance;     // rel. Reichweite
-	b3_s32           Type;         // Lampentyp
+	b3_s32           Flags;        // Lampentyp
 	b3_f32           Size;         // Auffaecherung
 	b3_s32           JitterEdge;   // Kantenaufspaltung
 	b3_vector        Direction;    // Abstrahlrichtung
@@ -1669,7 +1670,9 @@ public:
 	       void            b3Draw();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 		   b3ModellerInfo *b3GetModellerInfo();
-		   b3CameraPart   *b3GetCamera();
+		   b3CameraPart   *b3GetCamera(b3_bool must_active = false);
+		   b3CameraPart   *b3GetNextCamera(b3CameraPart *act);
+		   b3Light        *b3GetLight(b3_bool must_active = false);
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

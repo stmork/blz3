@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.3  2001/08/20 14:16:48  sm
+**      - Putting data into cmaera and light combobox.
+**      - Selecting camera and light.
+**
 **      Revision 1.2  2001/08/02 15:37:17  sm
 **      - Now we are able to draw Blizzard Scenes with OpenGL.
 **
@@ -59,7 +63,8 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	b3InitVector(&Position);
 	b3InitColor(&Color);
 	Distance = b3InitFloat();
-	Type     = b3InitInt();
+	Flags    = b3InitInt();
+Name[0] = 0;
 return;
 	if (b3GetClassType() >= AREA_LIGHT)
 	{

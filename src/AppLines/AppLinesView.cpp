@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
+#include "MainFrm.h"
 
 /*************************************************************************
 **                                                                      **
@@ -33,13 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/08/20 14:16:48  sm
+**	- Putting data into cmaera and light combobox.
+**	- Selecting camera and light.
+**
 **	Revision 1.9  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
 **	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
 **	- Some RenderObject redesignes
 **	- Color selecting bug fix in RenderObject
-**
+**	
 **	Revision 1.8  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
@@ -151,9 +156,9 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_COMMAND(ID_CAM_TURN, OnCamTurn)
 	ON_COMMAND(ID_CAM_ROTATE, OnCamRotate)
 	ON_COMMAND(ID_CAM_VIEW, OnCamView)
-	ON_COMMAND(ID_CAM_SELECT, OnCamSelect)
+	ON_CBN_SELCHANGE(ID_CAM_SELECT, OnCamSelect)
 	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
-	ON_COMMAND(ID_LIGHT_SELECT, OnLightSelect)
+	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJ_SELECT, OnUpdateObjSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJ_MOVE, OnUpdateObjMove)
 	ON_UPDATE_COMMAND_UI(ID_OBJ_ROTATE, OnUpdateObjRotate)
@@ -307,7 +312,8 @@ void CAppLinesView::OnInitialUpdate()
 	m_Scene      = pDoc->m_Scene;
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
 	B3_ASSERT(m_Scene != null);
-	m_Camera     = m_Scene->b3GetCamera();
+	m_Camera     = m_Scene->b3GetCamera(true);
+	m_Light      = m_Scene->b3GetLight(true);
 
 	CScrollView::OnInitialUpdate();
 
@@ -326,6 +332,9 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		m_RenderView.b3SetCamera(m_Camera);
 		m_CameraVolume.b3Update(m_Camera);
 		doInvalidate = true;
+	}
+	if (lHint & B3_UPDATE_LIGHT)
+	{
 	}
 	if (lHint & B3_UPDATE_GEOMETRY)
 	{
@@ -750,7 +759,11 @@ void CAppLinesView::OnCamView()
 void CAppLinesView::OnCamSelect() 
 {
 	// TODO: Add your command handler code here
-	
+	CMainFrame *main;
+
+	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	m_Camera = main->b3GetSelectedCamera();
+	OnUpdate(this,B3_UPDATE_CAMERA,NULL);
 }
 
 void CAppLinesView::OnLightTurn() 
@@ -762,7 +775,11 @@ void CAppLinesView::OnLightTurn()
 void CAppLinesView::OnLightSelect() 
 {
 	// TODO: Add your command handler code here
-	
+	CMainFrame *main;
+
+	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	m_Light = main->b3GetSelectedLight();
+	OnUpdate(this,B3_UPDATE_LIGHT,NULL);
 }
 
 void CAppLinesView::OnUpdateObjSelect(CCmdUI* pCmdUI) 
@@ -817,4 +834,23 @@ void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command handler code here
 	pCmdUI->SetRadio(m_SelectMode == B3_LIGHT_TURN);
+}
+
+void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
+{
+// TODO: Add your specialized code here and/or call the base class
+	CMainFrame *main;
+
+	CScrollView::OnActivateView(bActivate, pActivateView, pDeactiveView);
+
+	main = (CMainFrame *)b3GetApp()->m_pMainWnd;
+	if (bActivate)
+	{
+		main->b3UpdateCameraBox(m_Scene,m_Camera);
+		main->b3UpdateLightBox(m_Scene,m_Light);
+	}
+	else
+	{
+		main->b3Clear();
+	}
 }
