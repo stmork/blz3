@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	AppLines.cpp $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -10,7 +10,7 @@
 **
 **	Blizzard III - Lines application
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -52,11 +52,14 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/08/05 07:32:24  sm
+**	- Key word test
+**
 **	Revision 1.37  2002/08/01 15:02:55  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.36  2002/07/31 16:29:40  sm
 **	- Minor changes
 **	
@@ -536,109 +539,6 @@ BOOL CAppLinesApp::InitInstance()
 	return TRUE;
 }
 
-
-/////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
-
-const char AppLinesVersionString[] = "$Name$";
-
-class CAboutDlg : public CDialog
-{
-public:
-	CAboutDlg();
-
-// Dialog Data
-	//{{AFX_DATA(CAboutDlg)
-	enum { IDD = IDD_ABOUTBOX };
-	CStatic	m_CtrlCopyright;
-	CStatic	m_CtrlVersion;
-	//}}AFX_DATA
-
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CAboutDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
-{
-	//{{AFX_DATA_INIT(CAboutDlg)
-	//}}AFX_DATA_INIT
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDlg)
-	DDX_Control(pDX, IDC_COPYRIGHT, m_CtrlCopyright);
-	DDX_Control(pDX, IDC_VERSION, m_CtrlVersion);
-	//}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-BOOL CAboutDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	// TODO: Add extra initialization here
-	char buffer[1024];
-	CString pattern;
-	CString copyright;
-	CString version;
-	b3Date  today;
-
-	copyright.Format("Copyright (C) %lu by\nBlizzard III",today.year);
-#ifdef _DEBUG
-	copyright += " (Debug version)";
-#endif
-	pattern.Format("%cName: %%s %c",'$','$');
-	if (sscanf(AppLinesVersionString,pattern,buffer) != 1)
-	{
-		buffer[0] = 0;
-	}
-	else
-	{
-		if (strcmp(buffer,"$") == 0)
-		{
-			buffer[0] = 0;
-		}
-	}
-	version.Format("%s %s",CB3ClientString(),buffer);
-	m_CtrlVersion.SetWindowText(version);
-	m_CtrlCopyright.SetWindowText(copyright);
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX Property Pages should return FALSE
-}
-
-#ifdef B3_USE_SPIN_TEST
-#include "DlgSpinTest.h"
-#endif
-
-// App command to run the dialog
-void CAppLinesApp::OnAppAbout()
-{
-#ifndef B3_USE_SPIN_TEST
-	CAboutDlg aboutDlg;
-	aboutDlg.DoModal();
-#else
-	CDlgSpinTest dlg;
-	dlg.DoModal();
-#endif
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesApp message handlers
 
@@ -775,3 +675,98 @@ void CAppLinesApp::OnFileOpen()
 		OpenDocumentFile(filename);
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// CAboutDlg dialog used for App About
+
+const char AppLinesVersionString[] = "$Revision$";
+const char AppLinesNameString[] = "$Name$";
+
+class CAboutDlg : public CDialog
+{
+public:
+	CAboutDlg();
+
+// Dialog Data
+	//{{AFX_DATA(CAboutDlg)
+	enum { IDD = IDD_ABOUTBOX };
+	CStatic	m_CtrlCopyright;
+	CStatic	m_CtrlVersion;
+	//}}AFX_DATA
+
+	// ClassWizard generated virtual function overrides
+	//{{AFX_VIRTUAL(CAboutDlg)
+	protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	//}}AFX_VIRTUAL
+
+// Implementation
+protected:
+	//{{AFX_MSG(CAboutDlg)
+	virtual BOOL OnInitDialog();
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
+};
+
+CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
+{
+	//{{AFX_DATA_INIT(CAboutDlg)
+	//}}AFX_DATA_INIT
+}
+
+void CAboutDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CDialog::DoDataExchange(pDX);
+	//{{AFX_DATA_MAP(CAboutDlg)
+	DDX_Control(pDX, IDC_COPYRIGHT, m_CtrlCopyright);
+	DDX_Control(pDX, IDC_VERSION, m_CtrlVersion);
+	//}}AFX_DATA_MAP
+}
+
+BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
+	//{{AFX_MSG_MAP(CAboutDlg)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+BOOL CAboutDlg::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	char buffer[1024];
+	CString pattern;
+	CString copyright;
+	CString version;
+	b3Date  today;
+
+	copyright.Format("Copyright (C) %lu by\nBlizzard III",today.year);
+#ifdef _DEBUG
+	copyright += " (Debug version)";
+#endif
+	pattern.Format("%cName: %%s %c",'$','$');
+	if (sscanf(AppLinesVersionString,pattern,buffer) != 1)
+	{
+		buffer[0] = 0;
+	}
+	else
+	{
+		if (strcmp(buffer,"$") == 0)
+		{
+			buffer[0] = 0;
+		}
+	}
+	version.Format("%s %s",CB3ClientString(),buffer);
+	m_CtrlVersion.SetWindowText(version);
+	m_CtrlCopyright.SetWindowText(copyright);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+// App command to run the dialog
+void CAppLinesApp::OnAppAbout()
+{
+	CAboutDlg aboutDlg;
+	aboutDlg.DoModal();
+}
+
