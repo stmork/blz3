@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/19 19:43:15  sm
+**	- Searching for 5 percent performance lost...
+**
 **	Revision 1.5  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.4  2001/10/18 14:48:26  sm
 **	- Fixing refracting problem on some scenes with glasses.
 **	- Fixing overlighting problem when using Mork shading.
@@ -148,20 +151,24 @@ b3_bool b3SceneMork::b3IsPointLightBackground (
 {
 	b3_vector LightDir;
 	b3_f64    LightDist,Factor,ReflexAngle;
+	b3_f64    x,y,z;
 
 	if (!Light->m_LightActive)
 	{
 		return false;
 	}
 
-	LightDir.x = Light->m_Position.x - Ray->pos.x;
-	LightDir.y = Light->m_Position.y - Ray->pos.y;
-	LightDir.z = Light->m_Position.z - Ray->pos.z;
-	if ((LightDist = b3Vector::b3Normalize(&LightDir)) == 0)
+	x = Light->m_Position.x - Ray->pos.x;
+	y = Light->m_Position.y - Ray->pos.y;
+	z = Light->m_Position.z - Ray->pos.z;
+	if ((LightDist = x * x + y * y + z * z) == 0)
 	{
 		return false;
 	}
- 	LightDist = 1.0 / LightDist;
+ 	LightDist  = 1.0 / sqrt(LightDist);
+ 	LightDir.x = x * LightDist;
+ 	LightDir.y = x * LightDist;
+ 	LightDir.z = x * LightDist;
 
 	ReflexAngle =
 		(LightDir.x * Ray->dir.x +

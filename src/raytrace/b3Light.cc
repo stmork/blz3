@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/10/19 19:43:15  sm
+**      - Searching for 5 percent performance lost...
+**
 **      Revision 1.16  2001/10/19 18:27:28  sm
 **      - Fixing LDC bug
 **      - Optimizing color routines
@@ -294,11 +297,17 @@ b3_bool b3Light::b3PointIllumination(
 	Jit.dir.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.dir.z = m_Position.z - surface->incoming->ipoint.z;
 
-	if ((UpperBound = b3Vector::b3Normalize(&Jit.dir)) == 0)
+	if ((UpperBound =
+		Jit.dir.x * Jit.dir.x +
+		Jit.dir.y * Jit.dir.y +
+		Jit.dir.z * Jit.dir.z) == 0)
 	{
 		return false;
 	}
-	LightDist = 1.0 / UpperBound;
+	LightDist = 1.0 / (UpperBound = sqrt(UpperBound));
+	Jit.dir.x *= LightDist;
+	Jit.dir.y *= LightDist;
+	Jit.dir.z *= LightDist;
 
 	// Compute relative brightness via LDC
 	// (= light distribution curve)
@@ -352,13 +361,19 @@ b3_bool b3Light::b3AreaIllumination (
 	Jit.LightView.x = m_Position.x - surface->incoming->ipoint.x;
 	Jit.LightView.y = m_Position.y - surface->incoming->ipoint.y;
 	Jit.LightView.z = m_Position.z - surface->incoming->ipoint.z;
-	if ((denomLightDist = b3Vector::b3Normalize(&Jit.LightView)) == 0)
+
+	// normalizing light axis
+	if ((denomLightDist =
+		Jit.LightView.x * Jit.LightView.x +
+		Jit.LightView.y * Jit.LightView.y +
+		Jit.LightView.z * Jit.LightView.z) == 0)
 	{
 		return false;
 	}
-
-	// normalizing light axis
-	denomLightDist = 1.0 / (Jit.LightDist = denomLightDist);
+	denomLightDist = 1.0 / (Jit.LightDist = sqrt(denomLightDist));
+	Jit.LightView.x *= denomLightDist;
+	Jit.LightView.y *= denomLightDist;
+	Jit.LightView.z *= denomLightDist;
 
 	// inserted Nov. 1994, SAM
 	if (m_SpotActive)
