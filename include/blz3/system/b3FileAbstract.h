@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3FileAbstract.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,17 +9,17 @@
 **
 **	Blizzard III - Basic Input Output Functions
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
 */
 
-#ifndef B3_BASE_FILEABSTRACT_H
-#define B3_BASE_FILEABSTRACT_H
+#ifndef B3_SYSTEM_FILEABSTRACT_H
+#define B3_SYSTEM_FILEABSTRACT_H
 
 #include "blz3/b3Types.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 
 /*************************************************************************
 **                                                                      **

@@ -15,8 +15,8 @@
 **
 */
 
-#ifndef B3_BASE_EXCEPTION_H
-#define B3_BASE_EXCEPTION_H
+#ifndef B3_SYSTEM_EXCEPTION_H
+#define B3_SYSTEM_EXCEPTION_H
 
 #include "blz3/b3Config.h"
 
@@ -41,8 +41,15 @@ protected:
 	static const char *b3GetMessage(const b3_errno ErrNo);
 
 public:
-	const  b3_errno    b3GetError();
-	const  char       *b3GetErrorMsg();
+	inline const b3_errno b3GetError()
+	{
+		return m_ErrorCode;
+	}
+
+	inline const char *b3GetErrorMsg()
+	{
+		return m_GetMessage(m_ErrorCode);
+	}
 
 	static void        b3SetLogger(b3ExceptionLogger logger = null);
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
@@ -50,8 +57,6 @@ public:
 
 template <class T,b3_excno C> class b3Exception : public b3ExceptionBase
 {
-protected:
-
 public:
 	b3Exception(const T error) : b3ExceptionBase(B3_MK_ERRNO(error,C),C)
 	{

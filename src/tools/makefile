@@ -6,7 +6,7 @@
 
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 CXX			= g++
-LDLIBS			= -lB3System -lB3Base -lpthread
+LDLIBS			= -lB3System -lpthread
 PRGS			= RemDepend RemCR
 REMDEPEND_OBJS	= RemDepend.o
 REMCR_OBJS		= RemCR.o
@@ -28,7 +28,7 @@ RemDepend:	$(REMDEPEND_OBJS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)
 
-RemCR:	$(REMCR_OBJS) $(BLZ3_LIB)/libB3Base.a
+RemCR:	$(REMCR_OBJS)
 	$(LINK.cc) -o $@ $(REMCR_OBJS) $(LDLIBS)
 	chmod 775 $@
 	cp $@ $(BLZ3_BIN)

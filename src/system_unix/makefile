@@ -7,7 +7,7 @@
 CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
-LIBS			= $(BLZ3_LIB)/libB3System.a
+LIBS			= libB3System.a
 LIB_SOURCE		=\
 	b3Config.cc\
 	b3Date.cc\

@@ -19,8 +19,8 @@
 #define B3_SYSTEM_DIR_H
 
 #include "blz3/system/b3Mem.h"
-#include "blz3/base/b3Exception.h"
-#include "blz3/base/b3DirAbstract.h"
+#include "blz3/system/b3Exception.h"
+#include "blz3/system/b3DirAbstract.h"
 
 #define S_ISDIR(m)          ((m) & S_IFDIR)
 

@@ -19,7 +19,7 @@
 #define B3_BASE_ARRAY_H
 
 #include "blz3/system/b3Mem.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Compare.h"
 
 #define B3_ARRAY_DEFAULT_INCREMENT 128

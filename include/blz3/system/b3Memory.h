@@ -20,7 +20,7 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Thread.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 
 #define LOOP_B       4
 #define LOOP_INSIDE (1 << LOOP_B)

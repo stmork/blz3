@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Mem.h"
-#include "blz3/base/b3FileAbstract.h"
+#include "blz3/system/b3FileAbstract.h"
 
 /*************************************************************************
 **                                                                      **

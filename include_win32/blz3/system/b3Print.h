@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3View.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 
 enum b3_print_error
 {

@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Log.h"

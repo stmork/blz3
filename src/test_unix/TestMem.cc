@@ -32,12 +32,25 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/11 06:38:54  sm
+**	- Started some library reorganizations: Moved folowing classes into
+**	  system lib. Introduced new system library which is platform
+**	  independend but part of platform dependend library.
+**	  o b3FileAbstract
+**	  o b3DirAbstract
+**	  o b3Exception
+**	- The following classes should be reorganized with abstract
+**	  base classes to:
+**	  o b3Date
+**	  o b3Time
+**	  o b3Log
+**
 **	Revision 1.4  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.3  2002/08/09 08:00:32  sm
 **	- Reimplemented b3Mem::b3Realloc and made checks.
 **	
@@ -97,13 +110,13 @@ void b3TestMem()
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1,ptr2,
 		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
-	b3PrintF (B3LOG_NORMAL,"   Memory buffer was %s\n",
+	b3PrintF (B3LOG_NORMAL,"   Memory buffer is %s\n",
 		memcmp(buffer,ptr1,MEM_MIN) == 0 ? "preserved" : "corrupted");
 	for (i = MEM_MIN;i < (MEM_MIN * MEM_HIGH_MULT);i++)
 	{
 		count += ((char *)ptr1)[i];
 	}
-	b3PrintF (B3LOG_NORMAL,"   Rest memory buffer was %s\n",
+	b3PrintF (B3LOG_NORMAL,"   Rest memory buffer is %s\n",
 		count == 0 ? "zero initialized" : "garbled");
 
 	ptr2 = mem.b3Realloc(ptr1,     0);

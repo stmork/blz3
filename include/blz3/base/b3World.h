@@ -27,14 +27,14 @@
 *************************************************************************/
 
 #include "blz3/b3Types.h"
-#include "blz3/base/b3Exception.h"
-#include "blz3/base/b3FileAbstract.h"
+#include "blz3/system/b3Exception.h"
+#include "blz3/system/b3Log.h"
+#include "blz3/system/b3Mem.h"
+#include "blz3/system/b3FileAbstract.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Nurbs.h"
 #include "blz3/base/b3SearchPath.h"
-#include "blz3/system/b3Log.h"
-#include "blz3/system/b3Mem.h"
 
 /*************************************************************************
 **                                                                      **

@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Aux.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 #include "blz3/image/b3Tx.h"
 
 /*************************************************************************

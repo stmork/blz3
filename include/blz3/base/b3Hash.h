@@ -19,7 +19,7 @@
 #define B3_BASE_HASH_H
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3List.h"
 

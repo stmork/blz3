@@ -23,7 +23,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 #include <ctype.h>
 
 /*************************************************************************
@@ -34,6 +34,19 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2002/08/11 06:38:54  sm
+**      - Started some library reorganizations: Moved folowing classes into
+**        system lib. Introduced new system library which is platform
+**        independend but part of platform dependend library.
+**        o b3FileAbstract
+**        o b3DirAbstract
+**        o b3Exception
+**      - The following classes should be reorganized with abstract
+**        base classes to:
+**        o b3Date
+**        o b3Time
+**        o b3Log
+**
 **      Revision 1.3  2002/08/07 17:25:01  sm
 **      - Added new error messages
 **      - Changed exception handling a little bit
@@ -74,16 +87,6 @@ b3ExceptionBase::b3ExceptionBase(
 	if (m_GetMessage == null) b3SetMsgFunc(null);
 
 	m_Logger(m_ExceptionType,m_ErrorCode);	
-}
-
-const b3_errno b3ExceptionBase::b3GetError()
-{
-	return m_ErrorCode;
-}
-
-const char *b3ExceptionBase::b3GetErrorMsg()
-{
-	return m_GetMessage(m_ErrorCode);
 }
 
 void b3ExceptionBase::b3Log(const b3_excno ExcNo,const b3_errno ErrNo)

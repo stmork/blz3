@@ -19,7 +19,7 @@
 #define B3_SYSTEM_DATE_H
 
 #include <time.h>
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 
 // week days
 #define B3_MONDAY     1

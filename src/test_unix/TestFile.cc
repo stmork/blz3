@@ -24,7 +24,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Dir.h"
-#include "blz3/base/b3FileAbstract.h"
+#include "blz3/system/b3FileAbstract.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,9 +34,22 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/08/11 06:38:54  sm
+**	- Started some library reorganizations: Moved folowing classes into
+**	  system lib. Introduced new system library which is platform
+**	  independend but part of platform dependend library.
+**	  o b3FileAbstract
+**	  o b3DirAbstract
+**	  o b3Exception
+**	- The following classes should be reorganized with abstract
+**	  base classes to:
+**	  o b3Date
+**	  o b3Time
+**	  o b3Log
+**
 **	Revision 1.4  2002/01/03 15:50:15  sm
 **	- Added cut/copy/paste
-**
+**	
 **	Revision 1.3  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes

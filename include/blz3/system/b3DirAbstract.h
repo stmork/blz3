@@ -15,11 +15,11 @@
 **
 */
 
-#ifndef B3_BASE_DIRABSTRACT_H
-#define B3_BASE_DIRABSTRACT_H
+#ifndef B3_SYSTEM_DIRABSTRACT_H
+#define B3_SYSTEM_DIRABSTRACT_H
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3Exception.h"
+#include "blz3/system/b3Exception.h"
 
 enum b3_path_type
 {

@@ -25,8 +25,8 @@
 
 #include "blz3/b3Types.h"
 #include "blz3/system/b3Mem.h"
-#include "blz3/base/b3Exception.h"
-#include "blz3/base/b3DirAbstract.h"
+#include "blz3/system/b3Exception.h"
+#include "blz3/system/b3DirAbstract.h"
 
 typedef b3Exception<b3_dir_error,'DIR'> b3DirException;
 

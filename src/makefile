@@ -12,6 +12,7 @@ else
 endif
 
 SUB_DIRS +=\
+	system_independend\
 	tools\
 	Btiff\
 	Bjpeg\
@@ -86,7 +87,7 @@ uncr:	$(BLZ3_BIN)/RemCR
 $(BLZ3_BIN)/RemDepend:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
 	+@make -C tools RemDepend
 
-$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Base.a
+$(BLZ3_BIN)/RemCR:	$(BLZ3_BIN) $(BLZ3_LIB) $(BLZ3_LIB)/libB3System.a
 	+@make -C tools RemCR
 
 #########################################################
@@ -101,21 +102,30 @@ $(BLZ3_LIB):
 $(BLZ3_BIN):
 	mkdir -p $@
 
-$(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
-	+@make -C system_unix
-
-$(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB)
-	+@make -C raytrace
-
-$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_base lib_image lib_tiff lib_jpeg $(BLZ3_LIB)/libB3System.a
-	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o
+$(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB) lib_system lib_system_ind
+	$(AR) $(ARFLAGS) $@ system_unix/*.o system_independend/*.o
 	$(RANLIB) $@
 
+$(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB) lib_raytrace
+
+$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_base lib_image lib_tiff lib_jpeg lib_system lib_system_ind
+	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o system_independend/*.o
+	$(RANLIB) $@
+
+lib_system:
+	+@make -C system_unix
+	
+lib_system_ind:
+	+@make -C system_independend
+	
 lib_base:
 	+@make -C base
 
 lib_image:
 	+@make -C image
+
+lib_raytrace:
+	+@make -C raytrace
 
 lib_tiff:
 	+@make -C Btiff
