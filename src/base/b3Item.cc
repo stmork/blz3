@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2003/07/24 16:21:51  sm
+**      - Fixed Ticketno. 15: A simple point light wasn't initialized
+**        properly.
+**
 **      Revision 1.35  2003/06/26 08:15:43  sm
 **      - Cleaned up b3ItemRegister
 **      - Added writing support for unregistered b3Item instances.
@@ -372,14 +376,20 @@ void b3Item::b3Dump(b3_count level)
 
 void b3Item::b3DumpSimple(b3_count level,b3_log_level log_level)
 {
-	b3_count  i;
+	b3_count  i,max = (b3_count)(m_ItemSize >> 2);
 
 	b3DumpSpace(level,log_level);
-	b3PrintF (log_level,"%08lx %7d #",ClassType,Size);
+	b3PrintF (log_level,"%08lx %7d # %7d %7d # %7d",ClassType,Size,m_ItemSize,m_ItemOffset,m_ParseIndex);
 
 	for (i = 0;i < m_HeadCount;i++)
 	{
 		b3PrintF (log_level,"  %08lx",m_Heads[i].b3GetClass());
+	}
+	b3PrintF (log_level," #");
+
+	for (i = 0;i < max;i++)
+	{
+		 b3PrintF (log_level,"  %08lx",m_Buffer[i]);
 	}
 	b3PrintF (log_level,"\n");
 }

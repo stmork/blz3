@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2003/07/24 16:21:51  sm
+**      - Fixed Ticketno. 15: A simple point light wasn't initialized
+**        properly.
+**
 **      Revision 1.34  2003/07/20 09:25:11  sm
 **      - Init light name in every case
 **
@@ -224,7 +228,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	{
 		m_Size       = b3InitFloat();
 		m_JitterEdge = b3InitInt();
-		if (b3GetClassType() >= SPOT_LIGHT)
+		if (b3GetClassType() >= SPOT_LIGHT && B3_PARSE_INDEX_VALID)
 		{
 			b3InitVector(&m_Direction);
 
@@ -242,6 +246,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 	else
 	{
 		m_SoftShadow = false;
+		m_SpotActive = false;
 	}
 	m_LightActive = ((m_Flags & LIGHT_OFF) == 0);
 
