@@ -42,9 +42,12 @@
 
 /*
 **	$Log$
-**	Revision 1.67  2003/05/05 08:02:18  sm
-**	- Some comments added.
+**	Revision 1.68  2003/05/10 09:03:50  sm
+**	- Wrong update/commit made
 **
+**	Revision 1.66  2003/04/05 13:57:21  sm
+**	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
+**	
 **	Revision 1.65  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -659,10 +662,13 @@ void CAppLinesView::b3Draw(
 	CAppLinesDoc   *pDoc = GetDocument();
 	b3ModellerInfo *info = pDoc->m_Info;
 
-	pDoc->m_Context.b3StartDrawing();
-
 	// Setup view first
 	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+
+	// Clear buffer
+	pDoc->m_Context.b3StartDrawing();
+
+	// Draw background grid
 	m_RenderView.b3DrawRaster(info->b3ScaleUnitToMM() * info->b3GetMeasure(false),m_GridColorUnit);
 	if (pDoc->m_Info->m_GridActive)
 	{
@@ -671,10 +677,14 @@ void CAppLinesView::b3Draw(
 
 	// Then draw objects
 	m_Scene->b3Draw(&pDoc->m_Context);
+
+	// Draw camera volume
 	if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		m_CameraVolume.b3Draw(&pDoc->m_Context);
 	}
+
+	// Draw fulcrum
 	pDoc->b3DrawFulcrum();
 }
 
