@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/03/03 08:13:59  sm
+**	- Cook/Torrance examples ready with vases.
+**
 **	Revision 1.1  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
 **	- Fixed camera name handling if camera name is empty.
-**
+**	
 */
 
 /*************************************************************************
@@ -80,20 +83,30 @@ class b3TestMaterial
 public:
 	inline static b3Scene *b3CreateMaterial(b3Material *material)
 	{
-		b3Scene      *scene = new b3SceneMork(TRACEPHOTO_MORK);
-		b3BBox       *bbox  = new b3BBox(BBOX);
-		b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
-		b3Area       *area  = new b3Area(AREA);
-		b3MatChess   *chess = new b3MatChess(CHESS);
-		b3Light      *light = new b3Light(SPOT_LIGHT);
-		b3CameraPart *camera;
-		b3_matrix     transform;
+		b3Scene          *scene = new b3SceneMork(TRACEPHOTO_MORK);
+		b3BBox           *bbox  = new b3BBox(BBOX);
+		b3SplineRotShape *big = new b3SplineRotShape(SPLINE_ROT);
+		b3Area           *area  = new b3Area(AREA);
+		b3MatChess       *chess = new b3MatChess(CHESS);
+		b3Light          *light = new b3Light(SPOT_LIGHT);
+		b3CameraPart     *camera;
+		b3_matrix         transform;
 
 		scene->b3GetBBoxHead()->b3Append(bbox);
 		scene->b3GetLightHead()->b3Append(light);
 		scene->m_xSize =
-		scene->m_ySize = 160;
+		scene->m_ySize = 256;
 
+		big->b3Init(2,9,false,30);
+		b3Vector::b3Init(&big->m_Controls[0],50,0,-50);
+		b3Vector::b3Init(&big->m_Controls[1],50,0,-30);
+		b3Vector::b3Init(&big->m_Controls[2],15,0, 10);
+		b3Vector::b3Init(&big->m_Controls[3],15,0, 30);
+		b3Vector::b3Init(&big->m_Controls[4],25,0, 40);
+ 		b3Vector::b3Init(&big->m_Controls[5],25,0, 50);
+		b3Vector::b3Init(&big->m_Controls[6],10,0, 50);
+		b3Vector::b3Init(&big->m_Controls[7],10,0, 40);
+		b3Vector::b3Init(&big->m_Controls[8],15,0, 40);
 		bbox->b3GetShapeHead()->b3Append(area);
 		bbox->b3GetShapeHead()->b3Append(big);
 	
@@ -101,7 +114,7 @@ public:
 
 		// Transform ellipsoid
 		b3Matrix::b3Scale(null,&transform,null,0.4,0.4,0.4);
-		b3Matrix::b3Move(&transform,&transform,0,0,20);
+		b3Matrix::b3Move(&transform,&transform,5,5,20);
 		big->b3Transform(&transform,true);
 
 		// Enlarge whole scene
@@ -115,6 +128,7 @@ public:
 		scene->b3SetCamera(camera);
 
 		big->b3GetMaterialHead()->b3Append(material);
+
 		return scene;
 	}
 };
@@ -130,7 +144,7 @@ static void b3SaveOneColor(b3Color &color,int y)
 		b3World            world;
 		b3Path             name;
 
-		material->m_m         = 0.1 * i + 0.1;
+		material->m_m         = 0.05 * i + 0.1;
 		material->m_DiffColor = color;
 
 		name.b3Format("/tmp/material_%d_%d.bwd",y,i);
