@@ -24,6 +24,7 @@
 
 #include "AppRenderDoc.h"
 #include "blz3/raytrace/b3RenderView.h"
+#include "blz3/base/b3Array.h"
 #include "b3CameraVolume.h"
 
 #define B3_UPDATE_VIEW      1
@@ -59,6 +60,8 @@ typedef enum b3SelectMode
 
 class CB3Action;
 
+typedef int (*b3PixelFormatSortFunc)(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
+
 class CAppRenderView : public CScrollView
 {
 	// OpenGL printing values
@@ -83,6 +86,8 @@ class CAppRenderView : public CScrollView
 	b3_res          m_prtLineWidth;
 	b3_res          m_prtLineHeight;
 	b3_count        m_prtLineNum;
+	
+	b3Array<PIXELFORMATDESCRIPTOR> m_glPixelFormat;
 
 protected:
 	// OpenGL window display values
@@ -197,7 +202,12 @@ protected:
 	void b3UnsetMagnification();
 
 private:
-	void b3ListPixelFormats(HDC dc);
+	       void  b3ListPixelFormats(HDC dc);
+	       int   b3GetPixelFormat(HDC dc,b3PixelFormatSortFunc func);
+	static void  b3FlagsString(CString &desc,int flags);
+	static int   b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat);
+	static int   b3WindowPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
+	static int   b3PrinterPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b);
 
 	friend class CB3Action;
 	friend class CB3MoveAction;

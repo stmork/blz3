@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/07/30 21:46:24  sm
+**	- More powerful pixel format selection.
+**	- Added b3Comparator class for sorting.
+**
 **	Revision 1.5  2002/01/03 15:50:14  sm
 **	- Added cut/copy/paste
-**
+**	
 **	Revision 1.4  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -1126,9 +1130,9 @@ static long WriteIFW (
 #endif
 
 int b3SortTags (
-	b3TIFF_Entry *a,
-	b3TIFF_Entry *b,
-	void           *ptr)
+	      b3TIFF_Entry *a,
+	      b3TIFF_Entry *b,
+	const void         *ptr)
 {
 	if (a->tag.Code < b->tag.Code) return -1;
 	if (a->tag.Code > b->tag.Code) return  1;

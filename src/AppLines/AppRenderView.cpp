@@ -35,13 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/07/30 21:46:24  sm
+**	- More powerful pixel format selection.
+**	- Added b3Comparator class for sorting.
+**
 **	Revision 1.15  2002/07/29 12:32:56  sm
 **	- Full disk draws textures correctly now
 **	- Windows selects the correct pixel format for
 **	  the nVidia driver.
 **	- Some problems concerning first drawing and lighting
 **	  aren't fixed, yet. This seems to be a nVidia problem
-**
+**	
 **	Revision 1.14  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
@@ -130,7 +134,7 @@ static PIXELFORMATDESCRIPTOR print_pixelformat =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),
 	1,
-	PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
+	PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL | PFD_GENERIC_FORMAT,
 	PFD_TYPE_RGBA,
 	24,          // color bits
 	0,0,0,0,0,0, // rgb bits/shift
@@ -143,6 +147,7 @@ static PIXELFORMATDESCRIPTOR print_pixelformat =
 	0,           // reserverd
 	0,0,0        // layer/visible/damage mask
 };
+
 
 IMPLEMENT_DYNCREATE(CAppRenderView, CScrollView)
 
@@ -223,48 +228,140 @@ CAppRenderView::~CAppRenderView()
 {
 }
 
-void CAppRenderView::b3ListPixelFormats(HDC dc)
+
+int CAppRenderView::b3PixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b,const PIXELFORMATDESCRIPTOR *templFormat)
+{
+	int mask =  templFormat->dwFlags |  PFD_GENERIC_FORMAT;
+	int acc  = (templFormat->dwFlags & 	PFD_GENERIC_FORMAT) ^ PFD_GENERIC_FORMAT;
+	int dst;
+	int af,bf;
+	int result = 0;
+
+	if (templFormat->dwFlags & PFD_DOUBLEBUFFER)
+	{
+		mask |= PFD_SWAP_EXCHANGE;
+	}
+	dst = (templFormat->dwFlags & PFD_DRAW_TO_BITMAP ? (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW) : 0);
+
+	result = a->iPixelType - b->iPixelType;
+	if (result == 0)
+	{
+		result = ((b->dwFlags ^ acc) & mask) - ((a->dwFlags ^ acc) & mask);
+		if (result == 0)
+		{
+			af = (a->dwFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)) ^ dst;
+			bf = (b->dwFlags & (PFD_DRAW_TO_BITMAP | PFD_DRAW_TO_WINDOW)) ^ dst;
+			result = (bf - af);
+			if (result == 0)
+			{
+				result = b->cColorBits - a->cColorBits;
+				if (result == 0)
+				{
+					result = b->cDepthBits - a->cDepthBits;
+				}
+			}
+		}
+	}
+	return result;
+}
+
+int CAppRenderView::b3WindowPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b)
+{
+	return b3PixelFormatSorter(a,b,&window_pixelformat);
+}
+
+int CAppRenderView::b3PrinterPixelFormatSorter(PIXELFORMATDESCRIPTOR *a,PIXELFORMATDESCRIPTOR *b)
+{
+	return b3PixelFormatSorter(a,b,&print_pixelformat);
+}
+
+void CAppRenderView::b3FlagsString(CString &desc,int flags)
+{
+	desc = "";
+
+	if (flags & PFD_GENERIC_FORMAT)      desc += " PFD_GENERIC_FORMAT";
+	if (flags & PFD_DRAW_TO_WINDOW)      desc += " PFD_DRAW_TO_WINDOW";
+	if (flags & PFD_DRAW_TO_BITMAP)      desc += " PFD_DRAW_TO_BITMAP";
+	if (flags & PFD_SUPPORT_GDI)         desc += " PFD_SUPPORT_GDI";
+	if (flags & PFD_SUPPORT_OPENGL)      desc += " PFD_SUPPORT_OPENGL";
+	if (flags & PFD_DOUBLEBUFFER)        desc += " PFD_DOUBLEBUFFER";
+	if (flags & PFD_SWAP_EXCHANGE)       desc += " PFD_SWAP_EXCHANGE";
+	if (flags & PFD_SWAP_COPY)           desc += " PFD_SWAP_COPY";
+	if (flags & PFD_STEREO)              desc += " PFD_STEREO";
+	if (flags & PFD_NEED_PALETTE)        desc += " PFD_NEED_PALETTE";
+	if (flags & PFD_NEED_SYSTEM_PALETTE) desc += " PFD_NEED_SYSTEM_PALETTE";
+	if (flags & PFD_SWAP_LAYER_BUFFERS)  desc += " PFD_SWAP_LAYER_BUFFERS";
+	if (flags & PFD_GENERIC_ACCELERATED) desc += " PFD_GENERIC_ACCELERATED";
+	if (flags & PFD_SUPPORT_DIRECTDRAW)  desc += " PFD_SUPPORT_DIRECTDRAW";
+}
+
+int CAppRenderView::b3GetPixelFormat(HDC dc,b3PixelFormatSortFunc func)
 {
 	int                   max,i;
 	PIXELFORMATDESCRIPTOR format;
 	CString               flags;
 
 	max = DescribePixelFormat(dc,1,0,NULL);
-	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
-	b3PrintF(B3LOG_DEBUG,"Known OpenGL pixel formats:\n");
-	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
 	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	m_glPixelFormat.b3Clear();
 	for (i = 1;i <= max;i++)
 	{
 		DescribePixelFormat(dc,i,format.nSize,&format);
-		flags = "";
-		if (format.dwFlags & PFD_DOUBLEBUFFER)        flags += " PFD_DOUBLEBUFFER";
-		if (format.dwFlags & PFD_STEREO)              flags += " PFD_STEREO";
-		if (format.dwFlags & PFD_DRAW_TO_WINDOW)      flags += " PFD_DRAW_TO_WINDOW";
-		if (format.dwFlags & PFD_DRAW_TO_BITMAP)      flags += " PFD_DRAW_TO_BITMAP";
-		if (format.dwFlags & PFD_SUPPORT_GDI)         flags += " PFD_SUPPORT_GDI";
-		if (format.dwFlags & PFD_SUPPORT_OPENGL)      flags += " PFD_SUPPORT_OPENGL";
-		if (format.dwFlags & PFD_GENERIC_FORMAT)      flags += " PFD_GENERIC_FORMAT";
-		if (format.dwFlags & PFD_NEED_PALETTE)        flags += " PFD_NEED_PALETTE";
-		if (format.dwFlags & PFD_NEED_SYSTEM_PALETTE) flags += " PFD_NEED_SYSTEM_PALETTE";
-		if (format.dwFlags & PFD_SWAP_EXCHANGE)       flags += " PFD_SWAP_EXCHANGE";
-		if (format.dwFlags & PFD_SWAP_COPY)           flags += " PFD_SWAP_COPY";
-		if (format.dwFlags & PFD_SWAP_LAYER_BUFFERS)  flags += " PFD_SWAP_LAYER_BUFFERS";
-		if (format.dwFlags & PFD_GENERIC_ACCELERATED) flags += " PFD_GENERIC_ACCELERATED";
-		if (format.dwFlags & PFD_SUPPORT_DIRECTDRAW)  flags += " PFD_SUPPORT_DIRECTDRAW";
+		m_glPixelFormat.b3Add(format);
+	}
+	m_glPixelFormat.b3Sort(func);
+#ifdef _DEBUG
+	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
+	b3PrintF(B3LOG_DEBUG,"Sorted OpenGL pixel formats:\n");
+	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
+	for (i = 0;i < m_glPixelFormat.b3GetCount();i++)
+	{
+		b3FlagsString(flags,m_glPixelFormat[i].dwFlags);
 		b3PrintF(B3LOG_DEBUG,
 			"%3x: %8lx %8lx %2ld %2ld %2ld%s\n",i,
-			format.dwFlags,format.iPixelType,
-			format.cColorBits,format.cDepthBits,format.cAccumBits,flags);
+			m_glPixelFormat[i].dwFlags,
+			m_glPixelFormat[i].iPixelType,
+			m_glPixelFormat[i].cColorBits,
+			m_glPixelFormat[i].cDepthBits,
+			m_glPixelFormat[i].cAccumBits,flags);
 	}
 	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
+#endif
+	return ChoosePixelFormat(dc,&m_glPixelFormat[0]);
+}
+
+void CAppRenderView::b3ListPixelFormats(HDC dc)
+{
+#ifdef _DEBUG
+	int                   max,i;
+	PIXELFORMATDESCRIPTOR format;
+	CString               flags;
+
+	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	max = DescribePixelFormat(dc,1,0,NULL);
+
+	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
+	b3PrintF(B3LOG_DEBUG,"Known OpenGL pixel formats:\n");
+	b3PrintF(B3LOG_DEBUG,"(index) (flags) (pixeltype) (color bits) (depth) (accum bits):\n");
+	for (i = 1;i <= max;i++)
+	{
+		DescribePixelFormat(dc,i,format.nSize,&format);
+		b3FlagsString(flags,format.dwFlags);
+
+		b3PrintF(B3LOG_DEBUG,
+			"%3x: %8lx %8lx %2ld %2ld %2ld%s\n",i,
+			format.dwFlags,
+			format.iPixelType,
+			format.cColorBits,
+			format.cDepthBits,
+			format.cAccumBits,flags);
+	}
+	b3PrintF(B3LOG_DEBUG,"-------------------------------\n");
+#endif
 }
 
 int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	PIXELFORMATDESCRIPTOR dFormat,iFormat;
-	int                   depth = 0,i,PixelFormatIndex;
-
 	if (CScrollView::OnCreate(lpCreateStruct) == -1)
 	{
 		return -1;
@@ -275,24 +372,8 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 #ifdef _DEBUG
 	b3ListPixelFormats(m_glDC);
 #endif
-
-	iFormat.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	for (i = 0;i < 3;i++)
-	{
-		dFormat = window_pixelformat;
-		dFormat.cDepthBits = 32 - i * 8;
-		PixelFormatIndex = ChoosePixelFormat(m_glDC,&dFormat);
-		DescribePixelFormat(m_glDC,PixelFormatIndex,iFormat.nSize,&iFormat);
-		if (iFormat.cDepthBits > depth)
-		{
-			depth = iFormat.cDepthBits;
-		}
-	}
-
-	// Select pixel format with best found depth bits
-	window_pixelformat.cDepthBits = depth;
-	m_glPixelFormatIndex = ChoosePixelFormat(m_glDC,&window_pixelformat);
-	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&window_pixelformat);
+	m_glPixelFormatIndex = b3GetPixelFormat(m_glDC,&b3WindowPixelFormatSorter);
+	SetPixelFormat(m_glDC,m_glPixelFormatIndex,&m_glPixelFormat[0]);
 	m_glGC = wglCreateContext(m_glDC);
 
 #ifdef _DEBUG
@@ -701,8 +782,13 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	b3ListPixelFormats(m_glDC);
 #endif
 
+#if 1
+	PixelFormatIndex = b3GetPixelFormat(m_glDC,&b3PrinterPixelFormatSorter);
+	SetPixelFormat(m_prtDC,PixelFormatIndex,&m_glPixelFormat[0]);
+#else
 	PixelFormatIndex = ChoosePixelFormat(m_prtDC,&print_pixelformat);
 	SetPixelFormat(m_prtDC,PixelFormatIndex,&print_pixelformat);
+#endif
 	m_prtGC = wglCreateContext(m_prtDC);
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
 

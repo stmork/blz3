@@ -165,7 +165,15 @@ SOURCE=.\b3World.cc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Array.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Aux.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Compare.h
 # End Source File
 # Begin Source File
 
@@ -181,7 +189,19 @@ SOURCE=..\..\include\blz3\base\b3Endian.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Exception.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3FileAbstract.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3FileList.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3FileMem.h
 # End Source File
 # Begin Source File
 
@@ -190,6 +210,10 @@ SOURCE=..\..\include\blz3\base\b3List.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Matrix.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3Node.h
 # End Source File
 # Begin Source File
 

@@ -20,6 +20,7 @@
 
 #include "blz3/system/b3Mem.h"
 #include "blz3/base/b3Exception.h"
+#include "blz3/base/b3Compare.h"
 
 #define B3_ARRAY_DEFAULT_INCREMENT 128
 
@@ -98,6 +99,21 @@ public:
 			throw new b3ArrayException(B3_ARRAY_OUT_OF_BOUNDS);
 		}
 		return m_Buffer[index];
+	}
+
+	inline void b3Sort(int (*sorter)(T *a,T *b,const void *ptr),const void *ptr)
+	{
+		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
+	}
+
+	inline void b3Sort(int (*sorter)(T *a,T *b))
+	{
+		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
+	}
+
+	inline void b3Sort(b3Comparator<T> comparator,const void *ptr = null)
+	{
+		qsort(m_Buffer,b3GetCount(),sizeof(T),comparator.b3Sort,ptr);
 	}
 };
 

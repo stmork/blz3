@@ -515,7 +515,7 @@ public:
 		   void  b3RemoveIFW (b3Base<b3TIFF_Entry> *);
 		   long  b3OrgTags   (long);
 		   long  b3OrgStrips (long);
-	friend int   b3SortTags  (b3TIFF_Entry *a,b3TIFF_Entry *b,void *ptr);
+	friend int   b3SortTags  (b3TIFF_Entry *a,b3TIFF_Entry *b,const void *ptr);
 
 public:
 	class b3Error {};

@@ -22,15 +22,16 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/base/b3Compare.h"
 #include "blz3/base/b3List.h"
 
-class b3FileEntry : public b3Link<b3FileEntry>
+class b3FileEntry : public b3Link<b3FileEntry>, public b3Comparator<b3FileEntry>
 {
 	b3Path       name;
 public:
 	             b3FileEntry(const char *new_name);
 	int          b3Cmp(b3FileEntry *compare);
-	char        *b3Name();
+	const char  *b3Name();
 };
 
 class b3FileList

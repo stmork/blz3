@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/07/30 21:46:24  sm
+**	- More powerful pixel format selection.
+**	- Added b3Comparator class for sorting.
+**
 **	Revision 1.3  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
-**
+**	
 **	Revision 1.2  2001/07/01 20:29:21  sm
 **	- Changing some comments
 **	
@@ -59,10 +63,10 @@ b3FileEntry::b3FileEntry (const char *new_name) :
 
 int b3FileEntry::b3Cmp(b3FileEntry *compare)
 {
-	return strcmp(name,compare->name);
+	return strcmp(b3Name(),compare->b3Name());
 }
 
-char *b3FileEntry::b3Name()
+const char *b3FileEntry::b3Name()
 {
 	return name;
 }
@@ -76,7 +80,7 @@ char *b3FileEntry::b3Name()
 static int b3SortFiles (
 	b3FileEntry *a,
 	b3FileEntry *b,
-	void          *ptr)
+	const void        *ptr)
 {
 	return a->b3Cmp(b);
 }
@@ -170,5 +174,5 @@ b3_bool b3FileList::b3Add(const char *name)
 
 void b3FileList::b3Sort()
 {
-	list.b3Sort(b3SortFiles,null);
+	list.b3Sort(&b3FileEntry::b3Sort);
 }

@@ -36,12 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/07/30 21:46:24  sm
+**	- More powerful pixel format selection.
+**	- Added b3Comparator class for sorting.
+**
 **	Revision 1.6  2002/05/10 15:24:23  sm
 **	- Corrected some exceptions in b3Tx
 **	- Added double click support in list controls when creating
 **	  a new shape.
 **	- Some minor fixes done.
-**
+**	
 **	Revision 1.5  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
@@ -198,7 +202,7 @@ BOOL CDlgSelectProfile::OnInitDialog()
 	memset(&item,0,sizeof(item));
 	item.mask      = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM | LVIF_STATE;
 	item.stateMask = LVIS_SELECTED | LVIS_FOCUSED;
-	LinesProfileBase.b3Sort(b3Profile::b3Compare);
+	LinesProfileBase.b3Sort(b3Profile::b3Sort);
 	B3_FOR_BASE(&LinesProfileBase,profile)
 	{
 		if (profile->b3MatchClassType(class_type))

@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/07/30 21:46:24  sm
+**	- More powerful pixel format selection.
+**	- Added b3Comparator class for sorting.
+**
 **	Revision 1.3  2002/03/09 19:48:14  sm
 **	- Added a second profile for spline cylinders.
 **	- BSpline shape creation dialog added.
@@ -39,7 +43,7 @@
 **	  o call b3ThroughEndControl() for open splines
 **	  o optimize subdivision on b3InitCurve()
 **	- Fine tuing and fixed much minor bugs.
-**
+**	
 **	Revision 1.2  2002/03/05 20:38:24  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -103,9 +107,9 @@ CB3ProfileShapeDialog *b3Profile::b3GetCreateDialog()
 	return m_Dlg;
 }
 
-int b3Profile::b3Compare(b3Profile *a,b3Profile *b,void *ptr)
+int b3Profile::b3Cmp(b3Profile *b)
 {
-	return stricmp(a->b3GetTitle(),b->b3GetTitle());
+	return stricmp(b3GetTitle(),b->b3GetTitle());
 }
 
 b3_bool b3Profile::b3ComputeProfile(b3Spline *spline,...)

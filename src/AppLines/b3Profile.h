@@ -20,9 +20,10 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Array.h"
+#include "blz3/base/b3Compare.h"
 #include "b3ProfileShapeDialog.h"
 
-class b3Profile : public b3Link<b3Profile>
+class b3Profile : public b3Link<b3Profile>, public b3Comparator<b3Profile>
 {
 protected:
 	CB3ProfileShapeDialog *m_Dlg;
@@ -43,7 +44,7 @@ public:
 	        const char            *b3GetTitle();
 	        CB3ProfileShapeDialog *b3GetCreateDialog();
 
-	static  int                    b3Compare(b3Profile *a,b3Profile *b,void *ptr);
+	        int                    b3Cmp(b3Profile *b);
 };
 
 extern b3Base<b3Profile> LinesProfileBase;

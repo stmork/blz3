@@ -21,6 +21,7 @@
 #define B3_NO_CLASS_CHECK
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Compare.h"
 
 #define B3_NODE_FIRST   1
 #define B3_NODE_PREV    2
@@ -322,7 +323,7 @@ public:
 
 	// This is a nice piece of code! An in situ merge sort on
 	// doubly linked list.
-	inline void b3Sort(int (*func)(T *,T *,void *),void *Ptr = null)
+	inline void b3Sort(int (*func)(T *,T *,const void *),const void *Ptr = null)
 	{
 		b3Base    Right;
 		T        *start,*end;
