@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/07/25 19:06:21  sm
+**      - Why does not alpha channel function?
+**
 **      Revision 1.19  2002/07/21 17:02:36  sm
 **      - Finished advanced color mix support (correct Phong/Mork shading)
 **      - Added first texture mapping support. Further development on
@@ -188,7 +191,7 @@ int main(int argc,char *argv[])
 			scene->b3GetDisplaySize(xSize,ySize);
 			scene->b3Prepare(xSize,ySize);
 			scene->b3AllocVertices(&context);
-			scene->b3Activate();
+//			scene->b3Activate();
 
 			b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 			b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
@@ -198,7 +201,7 @@ int main(int argc,char *argv[])
 			view.b3SetupView(xSize,ySize);
 		}
 
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 		glutInitWindowSize(xSize,ySize);
 		glutCreateWindow("Greetinxx");
 		glutDisplayFunc(RenderScene);

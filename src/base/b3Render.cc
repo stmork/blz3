@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2002/07/25 19:06:21  sm
+**      - Why does not alpha channel function?
+**
 **      Revision 1.36  2002/07/25 16:29:35  sm
 **      - Further developing of texturing
 **
@@ -914,24 +917,14 @@ void b3RenderObject::b3UpdateMaterial()
 		if (glTextureSize > 0)
 		{
 			// Set texture parameter
-			if (glTextureId != 0)
-			{
-				GLfloat blend[4];
-
-				b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
-
-				glBindTexture(  GL_TEXTURE_2D,glTextureId);
-				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
-				glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
-				glTexImage2D(   GL_TEXTURE_2D,
-					0,GL_RGBA,glTextureSize,glTextureSize,
-					0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
-				glMaterialComputed = true;
-			}
+			glBindTexture(  GL_TEXTURE_2D,glTextureId);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,    GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,    GL_REPEAT);
+			glTexImage2D(   GL_TEXTURE_2D,
+				0,GL_RGBA,glTextureSize,glTextureSize,
+				0,GL_RGBA,GL_UNSIGNED_BYTE,glTextureData);
 
 			// Set material parameter
 			b3RenderContext::b3PkdColorToGL(B3_WHITE,glAmbient);
@@ -946,10 +939,10 @@ void b3RenderObject::b3UpdateMaterial()
 			b3RenderContext::b3ColorToGL(&ambient, glAmbient);
 			b3RenderContext::b3ColorToGL(&diffuse, glDiffuse);
 			b3RenderContext::b3ColorToGL(&specular,glSpecular);
-			glMaterialComputed = true;
 		}
 	}
 #endif
+	glMaterialComputed = true;
 }
 
 void b3RenderObject::b3TransformVertices(b3_matrix *transformation)
@@ -1072,16 +1065,22 @@ void b3RenderObject::b3Draw()
 		if (glPolyCount > 0)
 		{
 			glEnable(GL_LIGHTING);
-			if ((glTextureSize > 0) && (glTextureId != 0))
+			if (glTextureSize > 0)
 			{
+				GLfloat blend[4];
+
+				b3RenderContext::b3PkdColorToGL(B3_TRANSPARENT | B3_WHITE,blend);
+
 				B3_ASSERT(glIsTexture(glTextureId));
 				glBindTexture(GL_TEXTURE_2D,glTextureId);
 				glEnable(     GL_TEXTURE_2D);
+				glTexEnvi(      GL_TEXTURE_2D,GL_TEXTURE_ENV_MODE,  GL_BLEND);
+				glTexEnvfv(     GL_TEXTURE_2D,GL_TEXTURE_ENV_COLOR, blend);
 
 				// Set repitition of chess fields by scaling texture
 				// coordinates.
 				glMatrixMode(GL_TEXTURE);
-				glPushMatrix();
+				glLoadIdentity();
 				glTranslatef(glTextureTransX,glTextureTransY,0.0);
 				glScalef(    glTextureScaleX,glTextureScaleY,1.0);
 			}
@@ -1090,6 +1089,7 @@ void b3RenderObject::b3Draw()
 				glDisable(GL_TEXTURE_2D);
 			}
 
+			// Set material
 			glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,  glAmbient);
 			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,  glDiffuse);
 			glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR, glSpecular);
@@ -1101,12 +1101,6 @@ void b3RenderObject::b3Draw()
 			glNormalPointer(     GL_FLOAT, 0, glNormals);
 			glTexCoordPointer(2, GL_FLOAT, 0, glTexCoord);
 			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
-
-			if (glTextureSize > 0)
-			{
-				glPopMatrix();
-				glMatrixMode(GL_MODELVIEW);
-			}
 		}
 		break;
 
@@ -1135,6 +1129,7 @@ void b3RenderObject::b3CreateTexture(
 			b3Free(glTextureData);
 			glTextureData = null;
 			glTextureSize = 0;
+			glTextureId   = 0;
 		}
 
 		if (size > 0)
@@ -1144,7 +1139,6 @@ void b3RenderObject::b3CreateTexture(
 			{
 				GLenum error;
 
-				glTextureSize = size;
 				glGenTextures(1,&glTextureId);
 				error = glGetError();
 
@@ -1154,6 +1148,7 @@ void b3RenderObject::b3CreateTexture(
 				}
 				else
 				{
+					glTextureSize = size;
 					b3PrintF(B3LOG_FULL,"   Allocated texture id %d\n",glTextureId);
 				}
 			}
