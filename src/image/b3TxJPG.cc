@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/25 08:46:10  smork
+**	- Removed global static variables/functions from JPEG load code.
+**
 **	Revision 1.13  2004/08/24 08:50:39  sm
 **	- Adjusting JPG loading.
 **	- New RPM package blz3-data split from blz3 base package.
-**
+**	
 **	Revision 1.12  2003/09/26 07:23:16  sm
 **	- New JPEG library
 **	
@@ -117,132 +120,165 @@ extern "C"
 #	include <setjmp.h>
 }
 
-struct my_error_mgr
+struct b3_jpeg_error_mgr
 {
-	struct jpeg_error_mgr pub;
-	jmp_buf               setjmp_buffer;
+	struct jpeg_error_mgr m_ErrorMgr;
+	jmp_buf               m_SetjmpBuffer;
 };
 
-typedef struct my_error_mgr *my_error_ptr;
-
-static struct jpeg_source_mgr my_source_mgr;
-
-static void my_error_exit (j_common_ptr cinfo)
+class b3JPEG
 {
-	my_error_ptr myerr = (my_error_ptr) cinfo->err;
-	(*cinfo->err->output_message) (cinfo);
-	longjmp(myerr->setjmp_buffer, 1);
-}
+	struct jpeg_decompress_struct  m_Decompress;
+	struct jpeg_source_mgr         m_SourceMgr;
+	struct b3_jpeg_error_mgr       m_Error;
+	JSAMPARRAY                     m_SampleArray;
 
-static void JPEGinit_source(j_decompress_ptr cinfo)
-{
-}
+	static void b3ErrorHandler (j_common_ptr cinfo)
+	{
+		struct b3_jpeg_error_mgr *myerr = (struct b3_jpeg_error_mgr *) cinfo->err;
 
-static boolean JPEGfill_input_buffer (j_decompress_ptr cinfo)
-{
-	return TRUE;
-}
+		(*cinfo->err->output_message) (cinfo);
+		longjmp(myerr->m_SetjmpBuffer, 1);
+	}
 
-static void JPEGskip_input_data (
-	j_decompress_ptr cinfo,
-	long             num_bytes)
-{
-	my_source_mgr.next_input_byte += (size_t)num_bytes;
-	my_source_mgr.bytes_in_buffer -= (size_t)num_bytes;
-}
+	static void b3JpegInitSource(j_decompress_ptr cinfo)
+	{
+	}
 
-static void JPEGterm_source (j_decompress_ptr cinfo)
-{
-}
+	static boolean b3JpegFillInputBuffer (j_decompress_ptr cinfo)
+	{
+		return TRUE;
+	}
+
+	static void b3JpegSkipInputData (
+		j_decompress_ptr cinfo,
+		long             num_bytes)
+	{
+		struct jpeg_source_mgr *source = cinfo->src;
+
+		source->next_input_byte += (size_t)num_bytes;
+		source->bytes_in_buffer -= (size_t)num_bytes;
+	}
+
+	static void b3JpegTermSource (j_decompress_ptr cinfo)
+	{
+	}
+
+public:
+	b3JpegSourceMgr()
+	{
+		memset(&m_Decompress, 0, sizeof(m_Decompress));
+		memset(&m_SourceMgr,  0, sizeof(m_SourceMgr));
+	}
+
+	b3_bool b3Init(b3_u08 *buffer,b3_size buffer_size)
+	{
+		int row_stride;
+
+		m_Decompress.err                     = jpeg_std_error(&m_Error.m_ErrorMgr);
+		m_Error.m_ErrorMgr.error_exit = b3ErrorHandler;
+
+		if (setjmp(m_Error.m_SetjmpBuffer) != 0)
+		{
+			return false;
+		}
+		jpeg_create_decompress(&m_Decompress);
+		m_SourceMgr.init_source       = b3JpegInitSource;
+		m_SourceMgr.fill_input_buffer = b3JpegFillInputBuffer;
+		m_SourceMgr.skip_input_data   = b3JpegSkipInputData;
+		m_SourceMgr.term_source       = b3JpegTermSource;
+		m_SourceMgr.resync_to_restart = jpeg_resync_to_restart;
+		m_SourceMgr.next_input_byte   = buffer;
+		m_SourceMgr.bytes_in_buffer   = buffer_size;
+
+		m_Decompress.src  = &m_SourceMgr;
+		jpeg_read_header      (&m_Decompress, TRUE);
+		jpeg_start_decompress (&m_Decompress);
+		row_stride    = m_Decompress.output_width * m_Decompress.output_components;
+		m_SampleArray = (*m_Decompress.mem->alloc_sarray)
+			((j_common_ptr) &m_Decompress, JPOOL_IMAGE, row_stride, 1);
+		
+		return true;
+	}
+
+	b3_bool b3Decompress(b3Tx *tx)
+	{
+		b3_u08 *line;
+
+		if (m_Decompress.out_color_space != JCS_GRAYSCALE)
+		{
+			b3_pkd_color *out;
+
+			if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,24))
+			{
+				return false;
+			}
+			out = (b3_pkd_color *)tx->b3GetData();
+
+			while (m_Decompress.output_scanline < m_Decompress.output_height)
+			{
+				b3_coord x;
+
+				jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
+				line = (b3_u08 *)m_SampleArray[0];
+				for (x = 0;x < (b3_coord)m_Decompress.output_width;x++)
+				{
+					*out++ =
+						((b3_pkd_color)line[0] << 16) |
+						((b3_pkd_color)line[1] <<  8) |
+						 (b3_pkd_color)line[2];
+					line += 3;
+				}
+			}
+		}
+		else
+		{
+			if (!tx->b3AllocTx(m_Decompress.output_width,m_Decompress.output_height,8))
+			{
+				return false;
+			}
+
+			line = (b3_u08 *)tx->b3GetData();
+			while (m_Decompress.output_scanline < m_Decompress.output_height)
+			{
+				jpeg_read_scanlines(&m_Decompress, m_SampleArray, 1);
+				memcpy (line,m_SampleArray[0],m_Decompress.output_width);
+				line += m_Decompress.output_width;
+			}
+		}
+		return true;
+	}
+
+	void b3Deinit()
+	{
+		jpeg_finish_decompress (&m_Decompress);
+		jpeg_destroy_decompress(&m_Decompress);
+	}
+};
 
 b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
-	struct jpeg_decompress_struct  cinfo;
-	struct my_error_mgr            jerr;
-	JSAMPARRAY                     sample_array;
-	int                            row_stride;
-	b3_u08                        *line;
-	b3_pkd_color                  *out;
-	b3_coord                       x;
+	b3JPEG jpeg;
 
 	b3PrintF(B3LOG_FULL,"IMG JPEG # b3ParseJPEG(%s)\n",
 		(const char *)image_name);
 
-	cinfo.err           = jpeg_std_error(&jerr.pub);
-	jerr.pub.error_exit = my_error_exit;
-	if (setjmp(jerr.setjmp_buffer) != 0)
+	// NOTE: this is only dummy because the data is completly loaded.
+	if (!jpeg.b3Init(buffer,buffer_size))
 	{
-		jpeg_destroy_decompress(&cinfo);
 		b3FreeTx();
 		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error configuring JPEG decoder:\n");
 		return B3_ERROR;
 	}
-	jpeg_create_decompress(&cinfo);
 
-	// NOTE: this is only dummy because the data is completly loaded.
-	my_source_mgr.init_source       = JPEGinit_source;
-	my_source_mgr.fill_input_buffer = JPEGfill_input_buffer;
-	my_source_mgr.skip_input_data   = JPEGskip_input_data;
-	my_source_mgr.term_source       = JPEGterm_source;
-	my_source_mgr.resync_to_restart = jpeg_resync_to_restart;
-	my_source_mgr.next_input_byte   = buffer;
-	my_source_mgr.bytes_in_buffer   = buffer_size;
-	cinfo.src = &my_source_mgr;
-
-	jpeg_read_header      (&cinfo, TRUE);
-	jpeg_start_decompress (&cinfo);
-	row_stride   = cinfo.output_width * cinfo.output_components;
-	sample_array = (*cinfo.mem->alloc_sarray)
-		((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-	if (cinfo.out_color_space != JCS_GRAYSCALE)
+	if (!jpeg.b3Decompress(this))
 	{
-		if (!b3AllocTx(cinfo.output_width,cinfo.output_height,24))
-		{
-			jpeg_finish_decompress (&cinfo);
-			jpeg_destroy_decompress(&cinfo);
+		jpeg.b3Deinit();
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
 			B3_THROW(b3TxException,B3_TX_MEMORY);
-		}
-
-		out = (b3_pkd_color *)data;
-		while (cinfo.output_scanline < cinfo.output_height)
-		{
-			jpeg_read_scanlines(&cinfo, sample_array, 1);
-			line = (b3_u08 *)sample_array[0];
-			for (x = 0;x < (b3_coord)cinfo.output_width;x++)
-			{
-				*out++ =
-					((b3_pkd_color)line[0] << 16) |
-					((b3_pkd_color)line[1] <<  8) |
-					 (b3_pkd_color)line[2];
-				line += 3;
-			}
-		}
 	}
-	else
-	{
-		if (!b3AllocTx(cinfo.output_width,cinfo.output_height,8))
-		{
-			jpeg_finish_decompress (&cinfo);
-			jpeg_destroy_decompress(&cinfo);
-			b3FreeTx();
-			b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
-			B3_THROW(b3TxException,B3_TX_MEMORY);
-		}
-
-		line = (b3_u08 *)data;
-		while (cinfo.output_scanline < cinfo.output_height)
-		{
-			jpeg_read_scanlines(&cinfo, sample_array, 1);
-			memcpy (line,sample_array[0],cinfo.output_width);
-			line += cinfo.output_width;
-		}
-	}
-
-	jpeg_finish_decompress (&cinfo);
-	jpeg_destroy_decompress(&cinfo);
+	jpeg.b3Deinit();
 
 	FileType = FT_JPEG;
 	return B3_OK;
