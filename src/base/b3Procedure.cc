@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.40  2004/08/03 19:55:02  sm
+**	- Changed thin film animation parameter.
+**
 **	Revision 1.39  2004/08/02 13:57:59  sm
 **	- Changed thin film animation to closed spline computation.
-**
+**	
 **	Revision 1.38  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
@@ -728,8 +731,8 @@ void b3Noise::b3AnimThinFilm(b3_f64 t, b3_vector *result)
 {
 	b3_f64   q,div;
 
-	div = (b3_f64)waveSpline.control_max;
-	q   = b3Math::b3Frac(t * 0.25 / div,div);
+	div = (b3_f64)waveSpline.control_num;
+	q   = b3Math::b3Frac(t * 0.05f,div);
 	waveSpline.b3DeBoorClosed (result,0,q);
 }
 
