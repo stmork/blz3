@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CAppRenderView
+LastClass=CDlgModellerInfo
 LastTemplate=CTreeCtrl
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,36 +54,36 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=29
-Resource1=IDD_SEARCH_PATH_LIST
-Resource2=IDR_TOOLBAR_CAMERA
-Resource3=IDD_STEP_MOVE
-Resource4=IDR_TOOLBAR_VIEW
-Resource5=IDR_TOOLBAR_ACTION
-Resource6=IDR_TOOLBAR_OBJECT
-Resource7=IDR_TOOLBAR_DISPLAY
-Resource8=IDD_LIGHT
+Resource1=IDR_OBJECT
+Resource2=IDR_TOOLBAR_DISPLAY
+Resource3=IDD_SCENE
+Resource4=IDR_TOOLBAR_LIGHT
+Resource5=IDR_TOOLBAR_VIEW
+Resource6=IDR_TOOLBAR_ACTION
+Resource7=IDR_TOOLBAR_OBJECT
+Resource8=IDR_BLZ3TYPE
 Resource9=IDD_HIERARCHY
-Resource10=IDD_FILEOPENPREVIEW
-Resource11=IDD_ABOUTBOX
-Resource12=IDR_TOOLBAR_LIGHT
+Resource10=IDD_DISTRIBUTED
+Resource11=IDD_MODELLER_INFO
+Resource12=IDR_TOOLBAR_CAMERA
 Resource13=IDD_CAMERA
-Resource14=IDD_SUPER_SAMPLE
-Resource15=IDD_LENS_FLARE
-Resource16=IDD_OBJECT_COPY
-Resource17=IDD_DISTRIBUTED
-Resource18=IDD_SCENE
-Resource19=IDD_LDC
-Resource20=IDR_OBJECT
-Resource21=IDD_NEW_ITEM
+Resource14=IDD_FULCRUM
+Resource15=IDD_OBJECT_COPY
+Resource16=IDD_LENS_FLARE
+Resource17=IDD_STEP_ROTATE
+Resource18=IDD_LDC
+Resource19=IDD_ABOUTBOX
+Resource20=IDD_SEARCH_PATH_LIST
+Resource21=IDR_CONTEXT_SCENE
 Resource22=IDR_DISPLAYTYPE
-Resource23=IDD_FULCRUM
-Resource24=IDD_STEP_ROTATE
+Resource23=IDD_SUPER_SAMPLE
+Resource24=IDD_STEP_MOVE
 Resource25=IDD_NEBULAR
-Resource26=IDR_MAINFRAME
-Resource27=IDD_MODELLER_INFO
+Resource26=IDD_NEW_ITEM
+Resource27=IDR_MAINFRAME
 Class44=CB3TreeCtrl
-Resource28=IDR_BLZ3TYPE
-Resource29=IDR_CONTEXT_SCENE
+Resource28=IDD_LIGHT
+Resource29=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
 Type=0
@@ -347,7 +347,7 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DlgModellerInfo.h
 ImplementationFile=DlgModellerInfo.cpp
-LastObject=IDC_UNIT
+LastObject=IDC_MEASURE
 Filter=D
 VirtualFilter=dWC
 
@@ -559,7 +559,7 @@ Control36=IDC_LIGHT_LDC_DIAGRAM,static,1342181639
 [DLG:IDD_MODELLER_INFO]
 Type=1
 Class=CDlgModellerInfo
-ControlCount=17
+ControlCount=21
 Control1=IDC_FULCRUM_X,edit,1350631552
 Control2=IDC_FULCRUM_Y,edit,1350631552
 Control3=IDC_FULCRUM_Z,edit,1350631552
@@ -577,6 +577,10 @@ Control14=IDOK,button,1342242817
 Control15=IDCANCEL,button,1342242816
 Control16=IDC_STATIC,button,1342177287
 Control17=IDC_UNIT,combobox,1344339971
+Control18=IDC_STATIC,button,1342177287
+Control19=IDC_MEASURE,combobox,1344339971
+Control20=IDC_CUSTOM_MEASURE,edit,1350639744
+Control21=IDC_STATIC,static,1342308864
 
 [DLG:IDD_NEBULAR]
 Type=1

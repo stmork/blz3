@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.41  2002/02/04 17:18:01  sm
+**      - Added Measurement to modeller info.
+**
 **      Revision 1.40  2002/02/03 21:42:30  sm
 **      - Added measurement printing. The measure itself is missing yet.
 **        The support is done in b3RenderView and CAppRenderView.
@@ -453,6 +456,21 @@ char *b3CameraPart::b3GetName()
 **                                                                      **
 *************************************************************************/
 
+static b3_f64 unit_scale[B3_UNIT_MAX] =
+{
+	1.0,   // B3_UNIT_MM
+	10.0,  // B3_UNIT_CM
+	25.4,  // B3_UNIT_IN
+	100.0, // B3_UNIT_DM
+	308.4, // B3_UNIT_FT
+	1000.0 // B3_UNIT_M
+};
+
+static b3_u32 measure[B3_MEASURE_MAX - 1] =
+{
+	1,10,20,50,100,200,500,1000
+};
+
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
@@ -465,7 +483,9 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	m_StepRotate.x =
 	m_StepRotate.y =
 	m_StepRotate.z = 15;
-	m_Flags        = B3_UNIT_CM;
+	b3SetUnit(B3_UNIT_CM);
+	b3SetMeasure(100);
+	b3SetMeasure(B3_MEASURE_100);
 	m_Unit         = b3ScaleUnitToMM();
 	m_GridMove     = 10;
 	m_GridRot      = 15;
@@ -501,6 +521,11 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 			b3InitVector(&m_StepRotate);
 			m_AngleActive  = b3InitBool();
 		}
+	}
+	if (b3GetMeasure() == 0)
+	{
+		b3SetMeasure(100);
+		b3SetMeasure(B3_MEASURE_100);
 	}
 	m_Unit = b3ScaleUnitToMM();
 }
@@ -543,19 +568,49 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 	}
 }
 
-static b3_f64 unit_scale[B3_UNIT_MAX] =
-{
-	1.0,   // B3_UNIT_MM
-	10.0,  // B3_UNIT_CM
-	25.4,  // B3_UNIT_IN
-	100.0, // B3_UNIT_DM
-	308.4, // B3_UNIT_FT
-	1000.0 // B3_UNIT_M
-};
-
 b3_f64 b3ModellerInfo::b3ScaleUnitToMM()
 {
 	return unit_scale[m_Flags & B3_UNIT_MASK];
+}
+
+b3_unit b3ModellerInfo::b3GetUnit()
+{
+	return (b3_unit)(m_Flags & B3_UNIT_MASK);
+}
+
+void b3ModellerInfo::b3SetUnit(b3_unit unit)
+{
+	m_Flags &= (~B3_UNIT_MASK);
+	m_Flags |= (unit << B3_UNIT_SHIFT);
+}
+
+b3_u32 b3ModellerInfo::b3GetMeasure(b3_bool force_custom_value)
+{
+	b3_measure type;
+
+	type = b3GetMeasureType();
+	return (((type == B3_MEASURE_CUSTOM) || (force_custom_value)) ?
+		((m_Flags & B3_CUSTOM_MEASURE_MASK) >> B3_CUSTOM_MEASURE_SHIFT) :
+		measure[type]);
+}
+
+b3_measure b3ModellerInfo::b3GetMeasureType()
+{
+	return (b3_measure)((m_Flags & B3_MEASURE_MASK) >> B3_MEASURE_SHIFT);
+}
+
+void b3ModellerInfo::b3SetMeasure(b3_measure measure)
+{
+	m_Flags &= (~B3_MEASURE_MASK);
+	m_Flags |= (measure << B3_MEASURE_SHIFT);
+}
+
+void b3ModellerInfo::b3SetMeasure(b3_u32 measure)
+{
+	m_Flags &= (~(B3_MEASURE_MASK|B3_CUSTOM_MEASURE_MASK));
+	m_Flags |= (
+		(B3_MEASURE_CUSTOM << B3_MEASURE_SHIFT) |
+		(measure << B3_CUSTOM_MEASURE_SHIFT));
 }
 
 /*************************************************************************

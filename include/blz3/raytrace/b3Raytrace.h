@@ -1923,32 +1923,6 @@ public:
 };
 
 // LINES_INFO
-class b3ModellerInfo : public b3Special
-{
-	b3_f32           m_Unit;
-public:
-	b3_vector        m_Center;
-	b3_vector        m_StepMove;
-	b3_vector        m_StepRotate;
-	b3_f32           m_GridMove;
-	b3_f32           m_GridRot;
-	b3_bool          m_ResizeFlag;
-	b3_bool          m_BBoxTitles;
-	b3_bool          m_GridActive;
-	b3_bool          m_AngleActive;
-	b3_bool          m_CameraActive;
-	b3_u32           m_Flags;
-
-public:
-	B3_ITEM_INIT(b3ModellerInfo);
-	B3_ITEM_LOAD(b3ModellerInfo);
-
-	void       b3Write();
-	void       b3SnapToGrid(b3_vector *translation);
-	void       b3SnapToAngle(b3_f64 &angle);
-	b3_f64     b3ScaleUnitToMM();
-};
-
 enum b3_unit
 {
 	B3_UNIT_MM = 0,
@@ -1960,7 +1934,60 @@ enum b3_unit
 	B3_UNIT_MAX
 };
 
-#define B3_UNIT_MASK 0xf
+enum b3_measure
+{
+	B3_MEASURE_1 = 0,
+	B3_MEASURE_10,
+	B3_MEASURE_20,
+	B3_MEASURE_50,
+	B3_MEASURE_100,
+	B3_MEASURE_200,
+	B3_MEASURE_500,
+	B3_MEASURE_1000,
+	B3_MEASURE_CUSTOM,
+	B3_MEASURE_MAX
+};
+
+class b3ModellerInfo : public b3Special
+{
+	b3_f32           m_Unit;
+	b3_u32           m_Flags;
+
+public:
+	b3_vector        m_Center;
+	b3_vector        m_StepMove;
+	b3_vector        m_StepRotate;
+	b3_f32           m_GridMove;
+	b3_f32           m_GridRot;
+	b3_bool          m_ResizeFlag;
+	b3_bool          m_BBoxTitles;
+	b3_bool          m_GridActive;
+	b3_bool          m_AngleActive;
+	b3_bool          m_CameraActive;
+
+public:
+	B3_ITEM_INIT(b3ModellerInfo);
+	B3_ITEM_LOAD(b3ModellerInfo);
+
+	void       b3Write();
+	void       b3SnapToGrid(b3_vector *translation);
+	void       b3SnapToAngle(b3_f64 &angle);
+	b3_f64     b3ScaleUnitToMM();
+	void       b3SetUnit(b3_unit unit);
+	b3_unit    b3GetUnit();
+	void       b3SetMeasure(b3_u32 measure);
+	void       b3SetMeasure(b3_measure measure);
+	b3_u32     b3GetMeasure(b3_bool force_custom_value=true);
+	b3_measure b3GetMeasureType();
+};
+
+#define B3_UNIT_MASK           0x0000f
+#define B3_MEASURE_MASK        0x000f0
+#define B3_CUSTOM_MEASURE_MASK 0x3ff00
+
+#define B3_UNIT_SHIFT                0
+#define B3_MEASURE_SHIFT             4
+#define B3_CUSTOM_MEASURE_SHIFT      8
 
 // ANIMATION
 class b3Animation : public b3Special

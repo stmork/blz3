@@ -135,7 +135,7 @@ public:
 
 protected:
 	virtual b3_bool b3IsMouseActionAllowed();
-	virtual b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit);
+	virtual b3_bool b3GetDimension(b3_f64 &xSize,b3_f64 &ySize,b3_f64 &unit,b3_f64 &measure);
 	virtual void    b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
 
 // Generated message map functions

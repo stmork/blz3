@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/02/04 17:18:00  sm
+**	- Added Measurement to modeller info.
+**
 **	Revision 1.10  2002/02/03 21:42:30  sm
 **	- Added measurement printing. The measure itself is missing yet.
 **	  The support is done in b3RenderView and CAppRenderView.
 **	- Added support for units in b3ModellerInfo
 **	- Cleaned up some accelerators. Now arrow keys are working
 **	  again. The del key is working correctly inside edit controls again.
-**
+**	
 **	Revision 1.9  2002/01/31 19:30:31  sm
 **	- Some OpenGL print optimizations done.
 **	- Object renaming inside hierarchy tree added.
@@ -387,9 +390,11 @@ void CAppRenderView::OnSize(UINT nType, int cx, int cy)
 b3_bool CAppRenderView::b3GetDimension(
 	b3_f64 &xSize,
 	b3_f64 &ySize,
-	b3_f64 &unit)
+	b3_f64 &unit,
+	b3_f64 &measure)
 {
-	unit = 1.0;
+	unit    = 1.0;
+	measure = 1.0;
 	return m_RenderView.b3GetDimension(xSize,ySize);
 }
 
@@ -498,7 +503,7 @@ BOOL CAppRenderView::OnPreparePrinting(CPrintInfo* pInfo)
 		DevMode = (DEVMODE *)::GlobalLock(prtDlg->hDevMode);
 		if (DevMode != null)
 		{
-			if (b3GetDimension(m_prtWidth,m_prtHeight,m_prtUnit))
+			if (b3GetDimension(m_prtWidth,m_prtHeight,m_prtUnit,m_prtScale))
 			{
 				DevMode->dmOrientation =
 					(short)(m_prtHeight > m_prtWidth ? DMORIENT_PORTRAIT : DMORIENT_LANDSCAPE);

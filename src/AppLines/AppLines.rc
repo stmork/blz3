@@ -8,6 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
+#include "dlgs.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -35,6 +36,7 @@ END
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
     "#include ""afxres.h""\r\n"
+    "#include ""dlgs.h""\r\n"
     "\0"
 END
 
@@ -824,7 +826,7 @@ BEGIN
     LTEXT           "Samples pro Frame (2er Potenz)",IDC_STATIC,5,145,101,8
 END
 
-IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 151
+IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 201
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Modellierhilfen"
 FONT 8, "MS Sans Serif"
@@ -844,11 +846,17 @@ BEGIN
     LTEXT           "y:",IDC_STATIC,20,45,8,8
     LTEXT           "z:",IDC_STATIC,20,65,8,8
     GROUPBOX        "Raster:",IDC_STATIC,90,10,130,60
-    DEFPUSHBUTTON   "OK",IDOK,20,125,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,170,125,50,14
+    DEFPUSHBUTTON   "OK",IDOK,20,175,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,170,175,50,14
     GROUPBOX        "Einheit:",IDC_STATIC,90,75,130,40
     COMBOBOX        IDC_UNIT,100,90,110,90,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
+    GROUPBOX        "Maﬂstab:",IDC_STATIC,90,125,130,40
+    COMBOBOX        IDC_MEASURE,100,140,55,110,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    EDITTEXT        IDC_CUSTOM_MEASURE,175,140,35,15,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "1:",IDC_STATIC,165,140,8,15,SS_CENTERIMAGE
 END
 
 IDD_SEARCH_PATH_LIST DIALOG DISCARDABLE  0, 0, 312, 196
@@ -1213,7 +1221,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 225
         TOPMARGIN, 7
-        BOTTOMMARGIN, 144
+        BOTTOMMARGIN, 194
     END
 
     IDD_SEARCH_PATH_LIST, DIALOG
@@ -1343,6 +1351,25 @@ BEGIN
 0x7546, 0x00df, 
     IDC_UNIT, 0x403, 6, 0
 0x654d, 0x6574, 0x0072, 
+    IDC_MEASURE, 0x403, 4, 0
+0x3a31, 0x0031, 
+    IDC_MEASURE, 0x403, 5, 0
+0x3a31, 0x3031, "\000" 
+    IDC_MEASURE, 0x403, 5, 0
+0x3a31, 0x3032, "\000" 
+    IDC_MEASURE, 0x403, 5, 0
+0x3a31, 0x3035, "\000" 
+    IDC_MEASURE, 0x403, 6, 0
+0x3a31, 0x3031, 0x0030, 
+    IDC_MEASURE, 0x403, 6, 0
+0x3a31, 0x3032, 0x0030, 
+    IDC_MEASURE, 0x403, 6, 0
+0x3a31, 0x3035, 0x0030, 
+    IDC_MEASURE, 0x403, 7, 0
+0x3a31, 0x3031, 0x3030, "\000" 
+    IDC_MEASURE, 0x403, 18, 0
+0x6562, 0x756e, 0x7a74, 0x7265, 0x6564, 0x6966, 0x696e, 0x7265, 0x0074, 
+
     0
 END
 

@@ -64,6 +64,7 @@
 #define IDI_SHAPE_ELLIPSOID             170
 #define IDI_SHAPE_AREA                  171
 #define IDI_SHAPE_DISK                  172
+#define IDD_PRINTDIALOG                 172
 #define IDI_SHAPE_BOX                   173
 #define IDI_SHAPE_TORUS                 174
 #define IDI_SHAPE_TRIANGLES             175
@@ -219,6 +220,10 @@
 #define IDC_IMAGE                       1108
 #define IDC_PREVIEW_IMAGE               1109
 #define IDC_UNIT                        1110
+#define IDC_PRTDLG_MEASURE              1111
+#define IDC_EDIT1                       1112
+#define IDC_CUSTOM_MEASURE              1112
+#define IDC_MEASURE                     1113
 #define ID_PREF_SAVE                    30005
 #define ID_PREF_AUTOSAVE                30006
 #define ID_CUST_VIEW                    30026
@@ -354,9 +359,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        172
+#define _APS_NEXT_RESOURCE_VALUE        174
 #define _APS_NEXT_COMMAND_VALUE         32866
-#define _APS_NEXT_CONTROL_VALUE         1111
+#define _APS_NEXT_CONTROL_VALUE         1114
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif

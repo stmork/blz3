@@ -45,9 +45,11 @@ public:
 	CB3FloatEdit	m_zFulcrumCtrl;
 	CB3FloatEdit	m_yFulcrumCtrl;
 	CB3FloatEdit	m_xFulcrumCtrl;
-	BOOL	m_SnapToAngle;
-	BOOL	m_SnapToGrid;
-	int		m_Unit;
+	BOOL			m_SnapToAngle;
+	BOOL			m_SnapToGrid;
+	b3_unit			m_Unit;
+	b3_measure		m_Measure;
+	b3_u32			m_CustomMeasure;
 	//}}AFX_DATA
 
 
@@ -67,6 +69,7 @@ protected:
 	virtual void OnOK();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnFulcrumClear();
+	afx_msg void OnSelchangeMeasure();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
