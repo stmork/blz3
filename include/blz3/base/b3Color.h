@@ -58,7 +58,7 @@ public:
 
 	inline b3Color(const b3_f32 init)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] = init;
 		}
@@ -75,7 +75,7 @@ public:
 
 	inline b3Color(const b3Color &color)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] = color.v[i];
 		}
@@ -95,7 +95,7 @@ public:
 	{
 		b3_pkd_color       color = input;
 		b3_s32 B3_ALIGN_16 c[4];
-		int                i;
+		b3_loop                i;
 
 		for (i = 0;i < 4;i++)
 		{
@@ -151,7 +151,7 @@ public:
 
 	inline b3Color &operator+=(const b3Color &a)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] += a.v[i];
 		}
@@ -162,7 +162,7 @@ public:
 	{
 		b3Color result;
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] + a.v[i];
 		}
@@ -171,7 +171,7 @@ public:
 
 	inline b3Color &operator-=(const b3Color &a)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] -= a.v[i];
 		}
@@ -182,7 +182,7 @@ public:
 	{
 		b3Color result;
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] - a.v[i];
 		}
@@ -191,7 +191,7 @@ public:
 
 	inline b3Color &operator*=(const b3Color &a)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] *= a.v[i];
 		}
@@ -202,7 +202,7 @@ public:
 	{
 		b3Color result;
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] * a.v[i];
 		}
@@ -213,7 +213,7 @@ public:
 	{
 		b3Color prod(value);
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -224,7 +224,7 @@ public:
 	{
 		b3Color prod((b3_f32)value);
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] *= prod.v[i];
 		}
@@ -235,7 +235,7 @@ public:
 	{
 		b3Color result,multiplicator(value);
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -246,7 +246,7 @@ public:
 	{
 		b3Color result,multiplicator((b3_f32)value);
 
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] * multiplicator.v[i];
 		}
@@ -258,7 +258,7 @@ public:
 		b3Color prod(value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -270,7 +270,7 @@ public:
 		b3Color prod((b3_f32)value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] /= prod.v[i];
 		}
@@ -282,7 +282,7 @@ public:
 		b3Color divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] /= divisor.v[i];
 		}
@@ -294,7 +294,7 @@ public:
 		b3Color result,divisor(value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -306,7 +306,7 @@ public:
 		b3Color result,divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -319,7 +319,7 @@ public:
 		b3Color divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			result.v[i] = v[i] / divisor.v[i];
 		}
@@ -333,7 +333,7 @@ public:
 
 	inline void b3Abs()
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			v[i] = fabs(v[i]);
 		}
@@ -342,7 +342,7 @@ public:
 	inline operator b3_pkd_color()
 	{
 		b3_pkd_color       result = 0;
-		int                i;
+		b3_loop                i;
 		b3_s32 B3_ALIGN_16 c[4];
 		b3_f32 B3_ALIGN_16 sat[4];
 
@@ -384,7 +384,7 @@ public:
 
 	inline void b3Sat(b3_f32 sat = 1.0)
 	{
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = 0;i < 4;i++)
 		{
 			if (v[i] > sat)
 			{

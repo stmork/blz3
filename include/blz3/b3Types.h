@@ -83,6 +83,7 @@ typedef long                b3_count;
 typedef long                b3_res;
 typedef b3_u32              b3_pkd_color;
 typedef long                b3_coord;
+typedef b3_s16              b3_loop;
 
 // Some vectors
 typedef struct B3_ALIGN_16 b3_vector32_3D

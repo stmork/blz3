@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2003/11/23 13:14:13  sm
+**	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
+**	  bit wide integers.
+**
 **	Revision 1.27  2003/08/31 08:56:23  sm
 **	- Windows support for the snprintf functions
-**
+**	
 **	Revision 1.26  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -413,7 +417,7 @@ b3_bool b3Tx::b3AllocTx(
 	// Initialize grey ramp
 	if (depth == 8)
 	{
-		long i;
+		b3_loop i;
 
 		for (i = 0;i < 256;i++)
 		{
@@ -460,8 +464,7 @@ void b3Tx::b3FreeTx()
 
 b3_bool b3Tx::b3IsGreyPalette()
 {
-	b3_index     i;
-	b3_count     max;
+	b3_loop      i,max;
 	b3_pkd_color mul,step;
 
 	if (type != B3_TX_VGA)

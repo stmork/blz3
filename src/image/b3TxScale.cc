@@ -61,9 +61,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.19  2003/11/23 13:14:13  sm
+**	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
+**	  bit wide integers.
+**
 **	Revision 1.18  2003/09/28 20:33:20  sm
 **	- Ensure CPU count in image scaling methods.
-**
+**	
 **	Revision 1.17  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -378,8 +382,7 @@ static b3_u08 TxMaskRight[8] =
 
 static void BitCount()
 {
-	b3_index i;
-	b3_u32   bit;
+	b3_loop  i,bit;
 	b3_u08   count;
 
 	if (!TxBitCountValid)

@@ -42,7 +42,7 @@ enum b3_vector_error
 
 typedef b3Exception<b3_vector_error,'VEC'> b3VectorException;
 
-template<class F,int dim> class B3_PLUGIN b3VectorTemplate
+template<class F,b3_loop dim> class B3_PLUGIN b3VectorTemplate
 {
 	F B3_ALIGN_16 v[dim];
 
@@ -76,12 +76,12 @@ public:
 
 	inline b3VectorTemplate(const b3VectorTemplate<b3_f32,B3_MAX_DIM> &src)
 	{
-		for (int i = 0;i < dim;i++) v[i] = src.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
 	inline b3VectorTemplate(const b3VectorTemplate<b3_f64,B3_MAX_DIM> &src)
 	{
-		for (int i = 0;i < dim;i++) v[i] = src.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
 	inline b3VectorTemplate(const b3_vector32 &vec)
@@ -116,12 +116,12 @@ public:
 
 	inline void b3Value(b3_f32 value = 0)
 	{
-		for (int i = 0;i < dim;i++) v[i] = (F)value;
+		for (b3_loop i = 0;i < dim;i++) v[i] = (F)value;
 	}
 
 	inline void b3Value(b3_f64 value = 0)
 	{
-		for (int i = 0;i < dim;i++) v[i] = (F)value;
+		for (b3_loop i = 0;i < dim;i++) v[i] = (F)value;
 	}
 
 	inline void b3Init(
@@ -181,7 +181,7 @@ public:
 
 	inline b3VectorTemplate<F,dim> &operator+=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (int i = 0;i < dim;i++) v[i] += a.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] += a.v[i];
 		return *this;
 	}
 
@@ -189,13 +189,13 @@ public:
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] + (F)a.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] + (F)a.v[i];
 		return result;
 	}
 
 	inline b3VectorTemplate<F,dim> &operator-=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (int i = 0;i < dim;i++) v[i] -= a.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] -= a.v[i];
 		return *this;
 	}
 
@@ -203,7 +203,7 @@ public:
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] - (F)a.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] - (F)a.v[i];
 		return result;
 	}
 
@@ -211,13 +211,13 @@ public:
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (int i = 0;i < dim;i++) result.v[i] = -v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = -v[i];
 		return result;
 	}
 
 	inline b3VectorTemplate<F,dim> &operator*=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (int i = 0;i < dim;i++) v[i] *= a.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] *= a.v[i];
 		return *this;
 	}
 
@@ -225,7 +225,7 @@ public:
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] * a.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] * a.v[i];
 		return result;
 	}
 
@@ -233,7 +233,7 @@ public:
 	{
 		b3VectorTemplate<F,dim> prod(value);
 
-		for (int i = 0;i < dim;i++) v[i] *= prod.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] *= prod.v[i];
 		return *this;
 	}
 
@@ -241,13 +241,13 @@ public:
 	{
 		b3VectorTemplate<F,dim> result,multiplicator(value);
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] * multiplicator.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] * multiplicator.v[i];
 		return result;
 	}
 
 	inline b3VectorTemplate<F,dim> &operator/=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (int i = 0;i < dim;i++) v[i] /= a.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] /= a.v[i];
 		return *this;
 	}
 
@@ -255,7 +255,7 @@ public:
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] / a.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] / a.v[i];
 		return result;
 	}
 
@@ -263,7 +263,7 @@ public:
 	{
 		b3VectorTemplate<F,dim> prod(value);
 
-		for (int i = 0;i < dim;i++) v[i] /= prod.v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] /= prod.v[i];
 		return *this;
 	}
 
@@ -271,13 +271,13 @@ public:
 	{
 		b3VectorTemplate<F,dim> result,divisor(value);
 
-		for (int i = 0;i < dim;i++) result.v[i] = v[i] / divisor.v[i];
+		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] / divisor.v[i];
 		return result;
 	}
 
 	inline void b3Negate()
 	{
-		for (int i = 0;i < dim;i++) v[i] = -v[i];
+		for (b3_loop i = 0;i < dim;i++) v[i] = -v[i];
 	}
 
 	inline F b3Length()
@@ -291,7 +291,7 @@ public:
 	{
 		F B3_ALIGN_16 r[dim];
 
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			r[i] = a.v[i] * b.v[i];
 		}
@@ -303,7 +303,7 @@ public:
 	{
 		F result = 0;
 
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			result += (a.v[i] * v[i]);
 		}
@@ -333,7 +333,7 @@ public:
 	{
 		F result = 0;
 
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			result += (v[i] * v[i]);
 		}
@@ -353,7 +353,7 @@ public:
 	{
 		F old = b3Length();
 
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			v[i] = v[i] * len / old;
 		}
@@ -370,7 +370,7 @@ public:
 
 	inline void b3SetMinimum(F min)
 	{
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			if (v[i] < min) v[i] = min;
 		}
@@ -378,7 +378,7 @@ public:
 
 	inline void b3CheckLowerBound(const b3VectorTemplate<F,dim> &lower)
 	{
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			if (v[i] > lower.v[i]) v[i] = lower.v[i];
 		}
@@ -386,7 +386,7 @@ public:
 
 	inline void b3SetMaximum(F max)
 	{
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			if (v[i] > max) v[i] = max;
 		}
@@ -394,7 +394,7 @@ public:
 
 	inline void b3CheckUpperBound(const b3VectorTemplate<F,dim> &upper)
 	{
-		for (int i = 0;i < dim;i++)
+		for (b3_loop i = 0;i < dim;i++)
 		{
 			if (v[i] < upper.v[i]) v[i] = upper.v[i];
 		}
@@ -446,7 +446,10 @@ public:
 		{
 			b3PrintF(B3LOG_NORMAL,comment);
 		}
-		for (int i = 0;i < dim;i++) b3PrintF(B3LOG_NORMAL,"%3.5f ",v[i]);
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			b3PrintF(B3LOG_NORMAL,"%3.5f ",v[i]);
+		}
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 };

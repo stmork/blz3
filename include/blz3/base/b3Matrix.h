@@ -167,7 +167,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] += a[i];
 		}
@@ -189,7 +189,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + b[i];
 		}
@@ -226,7 +226,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] -= a[i];
 		}
@@ -249,7 +249,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] - b[i];
 		}
@@ -278,7 +278,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32 *a = &aVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] *= a[i];
 		}
@@ -300,7 +300,7 @@ public:
 		b3_f32 *a = &aVec->x;
 		b3_f32 *b = &bVec->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] * b[i];
 		}
@@ -345,7 +345,7 @@ public:
 		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
 		a[W] = c[W] =          b[W] = d[W] = 0;
 
-		for (int i = 0;i < B3_SSE_DIM;i++)
+		for (b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] * b[i] - c[i] * d[i];
 		}
@@ -443,7 +443,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			v[i] *= f;
 		}
@@ -464,7 +464,7 @@ public:
 		b3_f32 *v = &vector->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = v[i] * f;
 		}
@@ -481,7 +481,7 @@ public:
 #ifdef B3_SSE
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			v[i] *= factor;
 		}
@@ -501,7 +501,7 @@ public:
 		b3_f64 *r = &result->x;
 		b3_f64 *v = &vector->x;
 
-		for(int i = 0;i < B3_SSE_DIM;i++)
+		for(b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = v[i] * factor;
 		}
@@ -609,7 +609,7 @@ public:
 		b3_f32 *r = &result->x;
 		b3_f32  f = (b3_f32)factor;
 
-		for (int i = 0;i < B3_SSE_DIM;i++)
+		for (b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + f * b[i];
 		}
@@ -649,7 +649,7 @@ public:
 		b3_f32  x = (b3_f32)xFactor;
 		b3_f32  y = (b3_f32)yFactor;
 
-		for (int i = 0;i < B3_SSE_DIM;i++)
+		for (b3_loop i = 0;i < B3_SSE_DIM;i++)
 		{
 			r[i] = a[i] + xFactor * b[i] + yFactor * c[i];
 		}
