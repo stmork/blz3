@@ -19,6 +19,11 @@
 #define B3_RAYTRACE_SHADE_H
 
 #include "blz3/raytrace/b3Base.h"
+#include "blz3/raytrace/b3Material.h"
+#include "blz3/raytrace/b3Scene.h"
+
+class b3Light;
+class b3Nebular;
 
 class B3_PLUGIN b3Shader
 {
@@ -46,6 +51,7 @@ protected:
 
 protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
+	void                    b3ComputeFresnel(b3_surface *surface,b3_f64 &refl,b3_f64 refr);
 };
 
 ///////////////

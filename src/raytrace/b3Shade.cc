@@ -15,10 +15,6 @@
 **
 */
 
-#ifdef _DEBUG
-#define USE_FRESNEL
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -39,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2004/05/25 12:14:48  sm
+**	- Compute Fresnel term in separate method.
+**
 **	Revision 1.42  2004/05/24 20:25:13  sm
 **	- Fresnel experiments
-**
+**	
 **	Revision 1.41  2004/05/23 20:52:34  sm
 **	- Done some Fresnel formula experiments.
 **	
@@ -256,10 +255,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 	b3_vector64 *incoming_dir = &surface->incoming->dir;
 	b3_vector64 *refl_dir     = &surface->refl_ray.dir;
 	b3_vector64 *refr_dir     = &surface->refr_ray.dir;
-	b3_f64       Factor,d,cos_a,ior;
-#ifdef USE_FRESNEL
-	b3_f64       ica,ica_sqr,ica_pow5,R0;
-#endif
+	b3_f64       Factor,cos_a,ior,ior_sqr;
 
 	Factor = 2 * (cos_a =
 		incoming_dir->x * Normal->x +
@@ -283,25 +279,18 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 		Normal->z = -Normal->z;
 		cos_a     = -cos_a;
 	}
+	surface->m_CosAlpha = -cos_a;
 
 	// Compute Fresnel factor for unpolarized light using
 	// Christphe Schlick's hack.
-	ior      = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
-#ifdef USE_FRESNEL
-	ica      = 1.0 + cos_a; // cos_a was made negative earlier.
-	ica_sqr  = ica * ica;
-	ica_pow5 = ica * ica_sqr * ica_sqr;
-	R0       = (ior - 1.0) / (ior + 1);
-	R0      *= R0;
-	surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
-#endif
+	surface->m_IorComputed = ior = surface->incoming->inside ? surface->m_Ior : 1.0 / surface->m_Ior;
 
 	if (surface->m_Refraction > 0)
 	{
 		if (fabs(cos_a) < 1)
 		{
-			d = ior * ior;
-			Factor = 1 - d + d * cos_a * cos_a;
+			ior_sqr = ior * ior;
+			Factor = 1 - ior_sqr + ior_sqr * cos_a * cos_a;
 
 			// Test total reflection
 			if (Factor >= 0)
@@ -331,13 +320,40 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 		}
 	}
 
-#ifdef USE_FRESNEL
-//	if (surface->transparent)
+}
+
+void b3Shader::b3ComputeFresnel(b3_surface *surface,b3_f64 &refl,b3_f64 refr)
+{
+	b3_f64 ica,ica_sqr,ica_pow5,R0;
+
+	ica      = 1.0 - surface->m_CosAlpha; // cos_a was made negative earlier.
+	ica_sqr  = ica * ica;
+	ica_pow5 = ica * ica_sqr * ica_sqr;
+	R0       = (surface->m_IorComputed - 1.0) / (surface->m_IorComputed + 1);
+	R0      *= R0;
+	surface->m_Fresnel = R0 + (1.0 - R0) * ica_pow5;
+
+	if (surface->transparent)
 	{
-		surface->m_Reflection = surface->m_Fresnel;
-		surface->m_Refraction = (1.0 - surface->m_Fresnel);
+		refl = surface->m_Reflection *        surface->m_Fresnel;
+		refr = surface->m_Refraction * (1.0 - surface->m_Fresnel);
 	}
-#endif
+	else if (surface->m_Ior != 1.0)
+	{
+		refl = b3Math::b3Mix(
+			surface->m_Fresnel,
+			surface->m_Reflection,
+			surface->m_Reflection);
+		refr = b3Math::b3Mix(
+			1.0 - surface->m_Fresnel,
+			surface->m_Refraction,
+			surface->m_Reflection);
+	}
+	else
+	{
+		refl = surface->m_Reflection;
+		refr = surface->m_Refraction;
+	}
 }
 
 b3_bool b3Shader::b3Shade(
@@ -424,12 +440,12 @@ b3_bool b3Shader::b3Shade(
 
 void b3Shader::b3Shade(b3Light *light,b3_light_info *jit,b3_surface *surface,b3Color &result)
 {
-	b3Color     aux = b3Color(0,0,0);
+	b3Color     accumulate = b3Color(0,0,0);
 	b3Material *material = surface->incoming->material;
 
-	if ((material != null) && material->b3Illuminate(surface,jit,aux))
+	if ((material != null) && material->b3Illuminate(surface,jit,accumulate))
 	{
-		b3ShadePostMaterial(light, jit, surface, aux, result);
+		b3ShadePostMaterial(light, jit, surface, accumulate, result);
 	}
 	else
 	{

@@ -42,11 +42,13 @@
 #define LIGHT_NAMELEN(Node) (BINDEX_OFFSET(Node) > 0 ? \
 	BINDEX_LENGTH(Node) - BINDEX_OFFSET(Node) : 0)
 
-// POINT_LIGHT
 class b3Material;
 class b3Shader;
 class b3Scene;
 
+struct b3_surface;
+
+// POINT_LIGHT
 class B3_PLUGIN b3Light : public b3Item
 {
 	b3_f64            m_HalfJitter;

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2004/05/25 12:14:48  sm
+**	- Compute Fresnel term in separate method.
+**
 **	Revision 1.30  2004/05/23 20:52:34  sm
 **	- Done some Fresnel formula experiments.
-**
+**	
 **	Revision 1.29  2004/05/23 15:04:19  sm
 **	- Some optimizations
 **	
@@ -271,6 +274,7 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_ray   *ray = surface.incoming;
 	b3_f64    refl,refr,factor;
 
+	b3ComputeFresnel(&surface,surface.m_Reflection,surface.m_Refraction);
 	if (surface.transparent)
 	{
 		if (surface.m_Ior == 1)

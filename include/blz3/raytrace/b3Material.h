@@ -54,6 +54,29 @@
 #define GRANITE             (CLASS_MATERIAL|TYPE_MAT_GRANITE)
 #define OAKPLANK            (CLASS_MATERIAL|TYPE_MAT_OAKPLANK)
 
+struct b3_material
+{
+	b3Color     m_Diffuse;
+	b3Color     m_Ambient;
+	b3Color     m_Specular;
+	b3_f64      m_Reflection;
+	b3_f64      m_Refraction;
+	b3_f64      m_Ior;
+	b3_f64      m_SpecularExp;
+};
+
+struct b3_surface : public b3_material
+{
+	b3_ray      *incoming;
+	b3_ray       refl_ray;
+	b3_ray       refr_ray;
+	b3_bool      transparent;
+	b3_f64       m_Fresnel;
+	b3_f64       m_IorComputed;
+	b3_f64       m_CosAlpha;
+	b3Color      m_SpecularSum;
+};
+
 class B3_PLUGIN b3Material : public b3Item
 {
 protected:

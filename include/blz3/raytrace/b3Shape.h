@@ -121,6 +121,8 @@ class b3Material;
 class b3Condition;
 class b3Bump;
 
+struct b3_surface;
+
 // same structure entries for all shapes
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
