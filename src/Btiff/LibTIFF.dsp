@@ -106,10 +106,6 @@ SOURCE=.\tif_dir.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\tif_dir.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\tif_dirinfo.c
 # End Source File
 # Begin Source File
@@ -131,10 +127,6 @@ SOURCE=.\tif_error.c
 # Begin Source File
 
 SOURCE=.\tif_fax3.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\tif_fax3.h
 # End Source File
 # Begin Source File
 
@@ -228,6 +220,82 @@ SOURCE=.\tif_zip.c
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\jconfig.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\jerror.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\jinclude.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\jmorecfg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\jpegint.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\jpeglib.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\t4.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tif_dir.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_dir.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tif_fax3.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\tif_predict.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiff.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiffcomp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiffconf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiffio.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiffiop.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\tiffvers.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\uvcode.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\version.h
+# End Source File
 # End Group
 # End Target
 # End Project
