@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2003/07/25 07:24:04  sm
+**      - Classical refactoring error: The effects of ticket no. 15 are
+**        caused due to refactoring b3Light. An old method b3Init was
+**        renamed to b3InitValues and an additional new method b3Init
+**        was introduced not doing the same than before. This caused
+**        the m_Spline member not to be initialized.
+**
 **      Revision 1.35  2003/07/24 16:21:51  sm
 **      - Fixed Ticketno. 15: A simple point light wasn't initialized
 **        properly.
@@ -218,7 +225,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 {
 	b3_index i;
 
-	b3Init();
+	b3InitValues();
 	b3InitVector(&m_Position);
 	b3InitColor(m_Color);
 	m_Distance = b3InitFloat();
