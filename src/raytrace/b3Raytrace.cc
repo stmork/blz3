@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.22  2001/10/31 14:46:35  sm
 **	- Filling b3IsCancelled() with sense.
 **	- Inlining b3RGB
-**
+**	
 **	Revision 1.21  2001/10/29 19:34:02  sm
 **	- Added new define B3_DELETE_BASE.
 **	- Added support to abort raytrace processing.
@@ -586,14 +591,6 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 		b3PrintF(B3LOG_NORMAL,"Using simple sampling.\n");
 	}
 
-	for(bbox = b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
-	{
-		if (!bbox->b3Prepare())
-		{
-			return false;
-		}
-	}
-
 	// Init lights
 	m_LightCount = 0;
 	for (light = b3GetLight();light != null;light = (b3Light *)light->Succ)
@@ -609,7 +606,18 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	}
 	m_ShadowFactor = (b3_f64)m_ShadowBrightness / (b3_f64)m_LightCount;
 
-	return true;
+	// Init geometry
+	for(bbox = b3GetFirstBBox();bbox != null;bbox = (b3BBox *)bbox->Succ)
+	{
+		if (!bbox->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	return (m_BackgroundType & TP_TEXTURE ?
+		b3CheckTexture(&m_BackTexture,m_TextureName) :
+		true);
 }
 
 void b3Scene::b3Raytrace(b3Display *display)

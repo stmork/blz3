@@ -44,11 +44,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.5  2001/10/17 14:46:02  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -116,7 +121,7 @@ static tsize_t b3ReadProc(thandle_t fd, tdata_t buf, tsize_t size)
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ProcRead: ");
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcRead: ");
 #endif
 	
 	memcpy (buf,&value->ptr[value->pos],size);
@@ -133,7 +138,7 @@ static tsize_t b3WriteProc(thandle_t fd, tdata_t buf, tsize_t size)
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ProcWrte: ");
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcWrte: ");
 #endif
 	
 	memcpy (&value->ptr[value->pos],buf,size);
@@ -151,7 +156,7 @@ static toff_t b3SeekProc(thandle_t fd, toff_t off, int whence)
 	toff_t                  offset = value->pos;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ProcSeek: ");
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcSeek: ");
 #endif
 	
 	switch (whence)
@@ -184,7 +189,7 @@ static toff_t b3SeekProc(thandle_t fd, toff_t off, int whence)
 static int b3CloseProc(thandle_t fd)
 {
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ProcClos:\n");
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcClos:\n");
 #endif
 	return 0;
 }
@@ -194,7 +199,7 @@ static toff_t b3SizeProc(thandle_t fd)
 	b3MemTiffInfo *value = (b3MemTiffInfo *)fd;
 
 #ifdef _DEBUG
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3ProcSize: %ld\n",value->size);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3ProcSize: %ld\n",value->size);
 #endif
 	return value->size;
 }
@@ -437,7 +442,7 @@ b3_result b3Tx::b3LoadTIFF (const char *tiff_name)
 	}
 	catch (b3FileException *e)
 	{
-		b3PrintF(B3LOG_NORMAL,"Error loading %s (error code: %d)\n",
+		b3PrintF(B3LOG_NORMAL,"IMG TIFF # Error loading %s (error code: %d)\n",
 			tiff_name,e->b3GetError());
 		error_code = B3_ERROR;
 	}
@@ -479,7 +484,7 @@ b3_result b3Tx::b3LoadTIFF(
 		throw new b3TxException(B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
-	b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx   # b3LoadTIFF(%s)\n",(const char *)name);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3LoadTIFF(%s)\n",(const char *)name);
 
 	TIFFGetField (tiff,TIFFTAG_IMAGEWIDTH,      &xSize);
 	TIFFGetField (tiff,TIFFTAG_IMAGELENGTH,     &ySize);
@@ -498,16 +503,16 @@ b3_result b3Tx::b3LoadTIFF(
 	yDPI = (long)yDoubleDPI;
 
 	depth = spp * bps;
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # xmax:              %4lu\n",xSize);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # ymax:              %4lu\n",ySize);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # samples per pixel: %4hu\n",spp);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # bits per sample:   %4hu\n",bps);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # photometric:       %4hu\n",pm);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # planar config:     %4hu\n",pc);
-	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # compression:       %4hu\n",compression);
-	if (my_username) b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # creator:           %s\n",my_username);
-	if (my_software) b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # creator software:  %s\n",my_software);
-	if (my_hostname) b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # creator host:      %s\n",my_hostname);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # xmax:              %4lu\n",xSize);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # ymax:              %4lu\n",ySize);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # samples per pixel: %4hu\n",spp);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # bits per sample:   %4hu\n",bps);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # photometric:       %4hu\n",pm);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # planar config:     %4hu\n",pc);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # compression:       %4hu\n",compression);
+	if (my_username) b3PrintF(B3LOG_FULL,"IMG TIFF # creator:           %s\n",my_username);
+	if (my_software) b3PrintF(B3LOG_FULL,"IMG TIFF # creator software:  %s\n",my_software);
+	if (my_hostname) b3PrintF(B3LOG_FULL,"IMG TIFF # creator host:      %s\n",my_hostname);
 
 	if (b3AllocTx (xSize,ySize,depth))
 	{

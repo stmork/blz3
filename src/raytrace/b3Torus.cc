@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.15  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -40,7 +45,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.14  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -151,7 +156,8 @@ b3Torus::b3Torus(b3_u32 *src) : b3RenderShape(src)
 
 b3_bool b3Torus::b3Prepare()
 {
-	b3_f64 denom,scale;
+	b3_f64  denom,scale;
+	b3_bool result = false;
 
 	if ((scale = b3Vector::b3Normalize(&m_Dir1)) == 0)
 	{
@@ -176,7 +182,11 @@ b3_bool b3Torus::b3Prepare()
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;
 
-	return b3ShapeBaseTrans::b3Prepare();
+	if (b3ShapeBaseTrans::b3Prepare())
+	{
+		result = b3Shape::b3Prepare();
+	}
+	return result;
 }
 
 void b3Torus::b3GetCount(

@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/11/01 09:43:11  sm
+**      - Some image logging cleanups.
+**      - Texture preparing now in b3Prepare().
+**      - Done some minor fixes.
+**
 **      Revision 1.16  2001/10/20 16:15:00  sm
 **      - Some runtime environment cleanups. The CPU count is determined
 **        only once.
@@ -413,5 +418,5 @@ b3_bool b3TriangleShape::b3Prepare()
 		b3FreeTriaRefs();
 	}
 	b3PrepareGridList();
-	return true;
+	return b3Shape::b3Prepare();
 }

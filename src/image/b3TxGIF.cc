@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.5  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.4  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
@@ -140,6 +145,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	b3_bool        interlaced;
 	b3GifDecoder   decoder;
 
+	b3PrintF(B3LOG_FULL,"IMG GIF  # b3ParseGIF(%s)\n",
+		(const char *)name);
+
 	NewDepth = (pPtr[10] & 0x07) + 1;
 	Colors   = (1 << NewDepth);
 	buffer  += (13 + (Colors * 3));
@@ -159,6 +167,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 		default :
 			 // Error or end of GIF dataset */
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG GIF  # Parsing error:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
@@ -168,6 +179,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	if (!b3AllocTx(xNewSize,yNewSize,8))
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	out = (b3_u08 *)data;
@@ -215,6 +229,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	if (charstack==null)
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	suffix =           &charstack[4096]; // pixel byte
@@ -225,6 +242,9 @@ b3_result b3Tx::b3ParseGIF (b3_u08 *buffer)
 	{
 		b3Free (charstack);
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG GIF  # Decompression format error:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 

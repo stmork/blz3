@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.4  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.3  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
@@ -65,6 +70,9 @@ b3_result b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 	b3_pkd_color  t;
 	b3_res        xNewSize,yNewSize;
 	b3_index      i = 0;
+
+	b3PrintF(B3LOG_FULL,"IMG PCX  # b3ParsePCX8(%s)\n",
+		(const char *)name);
 
 	xNewSize = b3Endian::b3GetIntel16(&buffer[ 8]) + 1;
 	yNewSize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
@@ -108,6 +116,9 @@ b3_result b3Tx::b3ParsePCX8 (b3_u08 *buffer)
 	else
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG PCX  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	return B3_OK;
@@ -120,6 +131,9 @@ b3_result b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 	b3_count      u, xSrcBytes,DataSize;
 	b3_pkd_color  t;
 	b3_index      i;
+
+	b3PrintF(B3LOG_FULL,"IMG PCX  # b3ParsePCX4(%s)\n",
+		(const char *)name);
 
 	xSize = b3Endian::b3GetIntel16(&buffer[ 8]) + 1;
 	ySize = b3Endian::b3GetIntel16(&buffer[10]) + 1;
@@ -172,6 +186,9 @@ b3_result b3Tx::b3ParsePCX4 (b3_u08 *buffer)
 	else
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG PCX  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	return B3_OK;

@@ -34,11 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.7  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.6  2001/10/09 20:47:01  sm
 **	- some further texture handling.
 **	
@@ -99,6 +104,11 @@ b3Bump::b3Bump(b3_u32 class_type) : b3Item(sizeof(b3Bump),class_type)
 
 b3Bump::b3Bump(b3_u32 *src) : b3Item(src)
 {
+}
+
+b3_bool b3Bump::b3Prepare()
+{
+	return true;
 }
 
 void b3Bump::b3BumpNormal(b3_ray *ray)
@@ -213,10 +223,14 @@ b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 	m_xTimes    = b3InitInt();
 	m_yTimes    = b3InitInt();
 	m_Intensity = b3InitFloat();
-	b3InitNull();
+	m_Texture   = (b3Tx *)b3InitNull();
 	m_Flags     = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
-	m_Texture   = texture_pool.b3LoadTexture(m_Name);
+}
+
+b3_bool b3BumpTexture::b3Prepare()
+{
+	return b3CheckTexture(&m_Texture,m_Name);
 }
 
 inline b3_bool b3BumpTexture::b3GetNormalDeriv(

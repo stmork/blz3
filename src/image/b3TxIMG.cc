@@ -33,12 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.5  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
 **	  their own area.
 **	- Fixed JPEG to support b3Tx::b3AllocTx()
-**
+**	
 **	Revision 1.4  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -177,6 +182,9 @@ void b3Tx::b3ParseSGI3(
 	if (line == null)
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG SGI  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 
@@ -247,6 +255,9 @@ void b3Tx::b3ParseSGI3(
 
 		default :
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_UNSUPP);
 	}
 	b3Free(line);
@@ -258,6 +269,9 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 	b3_bool    success = false;
 	b3_res     xNewSize,yNewSize;
 	b3_index   c;
+
+	b3PrintF(B3LOG_FULL,"IMG SGI  # b3ParseSGI(%s)\n",
+		(const char *)name);
 
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)
@@ -293,6 +307,9 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 
 				default :
 					b3FreeTx();
+					b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
+					b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+					b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 					throw new b3TxException(B3_TX_UNSUPP);
 					break;
 			}
@@ -314,6 +331,9 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 
 		default :
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Unsupported format:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_UNSUPP);
 			break;
 	}
@@ -330,6 +350,9 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 			case 2 :
 			default :
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG SGI  # Wrong packing algorithms:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_ERR_PACKING);
 		}
 
@@ -341,6 +364,9 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 		else
 		{
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG SGI  # Error allocating memory:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
 	}

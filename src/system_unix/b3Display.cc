@@ -39,10 +39,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.8  2001/10/31 14:46:35  sm
 **	- Filling b3IsCancelled() with sense.
 **	- Inlining b3RGB
-**
+**	
 **	Revision 1.7  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
@@ -401,10 +406,12 @@ void b3Display::b3RefreshAll ()
 {
 	if (m_Opened)
 	{
+		m_Mutex.b3Lock();
 		XCopyArea (m_Display,
 			m_Image,m_Window,
 			m_GC,0,0,
 			m_xs,m_ys,0,0);
+		m_Mutex.b3Unlock();
 	}
 }
 
@@ -569,11 +576,14 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 
 	do	/* check pending events */
 	{
+		m_Mutex.b3Lock();
 		if (XPending  (m_Display) <= 0)
 		{
+			m_Mutex.b3Unlock();
 			return result;
 		}
 		XCheckIfEvent (m_Display,&report,&b3SetPredicate,0);
+		m_Mutex.b3Unlock();
 		switch (report.type)
 		{
 			case Expose :

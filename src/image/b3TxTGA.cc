@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.5  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
@@ -76,6 +81,8 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 	xNewSize = b3Endian::b3GetIntel16(&buffer[12]);
 	yNewSize = b3Endian::b3GetIntel16(&buffer[14]);
 
+	b3PrintF(B3LOG_FULL,"IMG TGA  # b3ParseTGA(%s)\n",
+		(const char *)name);
 	if (b3AllocTx(xNewSize,yNewSize,24))
 	{
 		DataSize = xSize * ySize;
@@ -189,6 +196,9 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 	else
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG TGA  # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	return B3_OK;

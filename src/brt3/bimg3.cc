@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.4  2001/10/24 14:59:08  sm
 **	- Some GIG bug fixes
 **	- An image viewing bug fixed in bimg3
-**
+**	
 **	Revision 1.3  2001/10/23 15:50:31  sm
 **	- Now parsing PCX4 correctly
 **	- Found TGA parsing bug.
@@ -53,6 +58,8 @@
 **	
 **
 */
+
+static b3TxPool texture_pool;
 
 class b3ImageRow : public b3Row
 {

@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.15  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
 **	  their own area.
 **	- Fixed JPEG to support b3Tx::b3AllocTx()
-**
+**	
 **	Revision 1.14  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -115,8 +120,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3TxPool texture_pool;
-
 b3TxPool::b3TxPool()
 {
 	m_Pool.b3InitBase();
@@ -126,11 +129,7 @@ b3TxPool::~b3TxPool()
 {
 	b3Tx     *tx;
 
-	while((tx = m_Pool.First) != null)
-	{
-		m_Pool.b3Remove(tx);
-		delete tx;
-	}
+	B3_DELETE_BASE(&m_Pool,tx);
 }
 
 b3Base<b3Tx> *b3TxPool::b3GetTxHead()
@@ -149,53 +148,58 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 *
 	if (result)
 	{
 		Texture->b3LoadImage(FullName);
-		b3PrintF(B3LOG_DEBUG,"Texture \"%s\" loaded.\n",
+		b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" loaded.\n",
 			Texture->b3Name());
 	}
 	else
 	{
 		Texture->b3Name(Name);
-		b3PrintF (B3LOG_DEBUG,"\"%s\" not available!\n",
+		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" not available!\n",
 			Texture->b3Name());
 	}
 	return result;
 }
 
-b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
+b3Tx *b3TxPool::b3FindTexture(const char *Name)
 {
-	b3Tx       *Texture;
+	b3Tx       *tx;
 	const char *txName;
 	b3_size     txLen,nameLen,diff;
 
-	// find existing texture
-	B3_FOR_BASE(&m_Pool,Texture)
+	B3_FOR_BASE(&m_Pool,tx)
 	{
-		txName  = Texture->b3Name();
+		txName  = tx->b3Name();
 		txLen   = strlen(txName);
 		nameLen = strlen(Name);
 		diff    = txLen - nameLen;
 		if (strcmp(&txName[diff >= 0 ? diff : 0],Name) == 0)
 		{
-			if (Texture->b3GetData() == null)
-			{
-#if 0
-				b3ReloadTexture (Texture);
-			}
-			else
-			{
-#endif
-				b3PrintF (B3LOG_DEBUG,"%s: found.\n",Name);
-			}
-			return Texture;
+			return tx;
 		}
 	}
+	return tx;
+}
 
-	// OK, create new texture
-	Texture = new b3Tx();
+b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
+{
+	b3Tx *tx;
 
-	// load data and insert in internal list
-	b3ReloadTexture (Texture,Name);
-	m_Pool.b3Append(Texture);
+	// find existing texture
+	tx = b3FindTexture(Name);
+	if (tx == null)
+	{
+		// OK, create new texture
+		tx = new b3Tx();
 
-	return Texture;
+		// load data and insert in internal list
+		b3ReloadTexture (tx,Name);
+		m_Pool.b3Append(tx);
+	}
+	else
+	{
+		b3PrintF (B3LOG_DEBUG,"IMG POOL # Image \"%s\" found.\n",
+			tx->b3Name());
+	}
+
+	return tx;
 }

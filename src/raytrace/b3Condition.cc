@@ -32,11 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.12  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.11  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -131,6 +136,11 @@ b3Condition::b3Condition(b3_u32 class_type) : b3Item(sizeof(b3Condition), class_
 
 b3Condition::b3Condition(b3_u32 *src) : b3Item(src)
 {
+}
+
+b3_bool b3Condition::b3Prepare()
+{
+	return true;
 }
 
 b3_bool b3Condition::b3Conditionate(
@@ -449,7 +459,12 @@ b3Cond2::b3Cond2(b3_u32 *src) : b3Condition(src)
 	m_yDir1 = b3InitFloat();
 	m_xDir2 = b3InitFloat();
 	m_yDir2 = b3InitFloat();
+}
+
+b3_bool b3Cond2::b3Prepare()
+{
 	m_Denom = m_xDir1 * m_yDir2 - m_yDir1 * m_xDir2;
+	return true;
 }
 
 void b3Cond2::b3ComputeBound(b3CondLimit *Limit)
@@ -571,7 +586,7 @@ b3CondTexture::b3CondTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondTextu
 
 b3CondTexture::b3CondTexture(b3_u32 *src) : b3Condition(src)
 {
-	b3InitNull();
+	m_Texture = (b3Tx *)b3InitNull();
 	m_Flags   = b3InitInt();
 	m_xStart  = b3InitFloat();
 	m_yStart  = b3InitFloat();
@@ -580,7 +595,11 @@ b3CondTexture::b3CondTexture(b3_u32 *src) : b3Condition(src)
 	m_xTimes  = b3InitInt();
 	m_yTimes  = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
-	m_Texture = texture_pool.b3LoadTexture(m_Name);
+}
+
+b3_bool b3CondTexture::b3Prepare()
+{
+	return b3CheckTexture(&m_Texture,m_Name);
 }
 
 void b3CondTexture::b3ComputeBound(b3CondLimit *Limit)
@@ -644,14 +663,18 @@ b3CondWrapTexture::b3CondWrapTexture(b3_u32 class_type) : b3Condition(sizeof(b3C
 
 b3CondWrapTexture::b3CondWrapTexture(b3_u32 *src) : b3Condition(src)
 {
-	b3InitNull();
+	m_Texture = (b3Tx *)b3InitNull();
 	m_Flags   = b3InitInt();
 	m_xStart  = b3InitFloat();
 	m_yStart  = b3InitFloat();
 	m_xEnd    = b3InitFloat();
 	m_yEnd    = b3InitFloat();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
-	m_Texture = texture_pool.b3LoadTexture(m_Name);
+}
+
+b3_bool b3CondWrapTexture::b3Prepare()
+{
+	return b3CheckTexture(&m_Texture,m_Name);
 }
 
 void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)

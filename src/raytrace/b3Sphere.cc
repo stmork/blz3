@@ -32,6 +32,11 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.12  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -40,7 +45,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.11  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -115,7 +120,7 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 b3_bool b3Sphere::b3Prepare()
 {
 	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
-	return true;
+	return b3Shape::b3Prepare();
 }
 
 void b3Sphere::b3GetCount(

@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/11/01 09:43:11  sm
+**      - Some image logging cleanups.
+**      - Texture preparing now in b3Prepare().
+**      - Done some minor fixes.
+**
 **      Revision 1.15  2001/10/22 14:47:38  sm
 **      - Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **        on Windows.
@@ -129,6 +134,11 @@ b3Material::b3Material(b3_u32 class_type) : b3Item(sizeof(b3Material),class_type
 
 b3Material::b3Material(b3_u32 *src) : b3Item(src)
 {
+}
+
+b3_bool b3Material::b3Prepare()
+{
+	return true;
 }
 
 b3_bool b3Material::b3GetColors(
@@ -305,10 +315,14 @@ b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 	m_yScale     = b3InitFloat();
 	m_xTimes     = b3InitInt();
 	m_yTimes     = b3InitInt();
-	b3InitNull();
+	m_Texture    = (b3Tx *)b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
-	m_Texture = texture_pool.b3LoadTexture(m_Name);
+}
+
+b3_bool b3MatTexture::b3Prepare()
+{
+	return b3CheckTexture(&m_Texture,m_Name);
 }
 
 b3_bool b3MatTexture::b3GetColors(
@@ -388,10 +402,14 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 	m_yStart     = b3InitFloat();
 	m_xEnd       = b3InitFloat();
 	m_yEnd       = b3InitFloat();
-	b3InitNull();
+	m_Texture    = (b3Tx *)b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
-	m_Texture = texture_pool.b3LoadTexture(m_Name);
+}
+
+b3_bool b3MatWrapTexture::b3Prepare()
+{
+	return b3CheckTexture(&m_Texture,m_Name);
 }
 
 b3_bool b3MatWrapTexture::b3GetColors(

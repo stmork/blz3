@@ -34,6 +34,11 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/11/01 09:43:11  sm
+**      - Some image logging cleanups.
+**      - Texture preparing now in b3Prepare().
+**      - Done some minor fixes.
+**
 **      Revision 1.13  2001/10/31 14:46:35  sm
 **      - Filling b3IsCancelled() with sense.
 **      - Inlining b3RGB
@@ -140,8 +145,9 @@ int main(int argc,char *argv[])
 		{
 			scene = (b3Scene *)item;
 			scene->b3Reorg();
-			scene->b3AllocVertices(&context);
 			scene->b3GetDisplaySize(xSize,ySize);
+			scene->b3Prepare(xSize,ySize);
+			scene->b3AllocVertices(&context);
 			scene->b3Activate();
 			view.b3SetCamera(scene);
 			view.b3SetViewMode(B3_VIEW_3D);

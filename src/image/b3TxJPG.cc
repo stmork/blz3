@@ -32,12 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.6  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
 **	  their own area.
 **	- Fixed JPEG to support b3Tx::b3AllocTx()
-**
+**	
 **	Revision 1.5  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -130,12 +135,18 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	b3_pkd_color                  *out;
 	b3_coord                       x;
 
+	b3PrintF(B3LOG_FULL,"IMG JPEG # b3ParseJPEG(%s)\n",
+		(const char *)name);
+
 	cinfo.err           = jpeg_std_error(&jerr.pub);
 	jerr.pub.error_exit = my_error_exit;
 	if (setjmp(jerr.setjmp_buffer))
 	{
 		jpeg_destroy_decompress(&cinfo);
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	jpeg_create_decompress(&cinfo);
@@ -163,6 +174,9 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
 
@@ -188,6 +202,9 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 			jpeg_finish_decompress (&cinfo);
 			jpeg_destroy_decompress(&cinfo);
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG JPEG # Error allocating memory:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
 
@@ -212,6 +229,9 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 {
 	b3FreeTx();
+	b3PrintF(B3LOG_NORMAL,"IMG JPEG # Missing JPEG support:\n");
+	b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+	b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 	throw new b3TxException(B3_TX_UNSUPP);
 }
 

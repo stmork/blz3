@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
 **	- Added bump mapping
-**
+**	
 **	Revision 1.5  2001/10/15 14:45:07  sm
 **	- Materials are accessing textures now.
 **	- Created image viewer "bimg3"
@@ -73,6 +78,9 @@ b3_result b3Tx::b3ParseRAW (
 	b3_pkd_color *newLData,value;
 	b3_count      i,Max;
 
+	b3PrintF(B3LOG_FULL,"IMG RAW  # b3ParseRAW(%s)\n",
+		(const char *)name);
+
 	switch (ppm_type)
 	{
 		case 4 : /* bitmap */
@@ -94,6 +102,9 @@ b3_result b3Tx::b3ParseRAW (
 			else
 			{
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG RAW  # Error allocating memory:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
@@ -106,6 +117,9 @@ b3_result b3Tx::b3ParseRAW (
 			else
 			{
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG RAW  # Error allocating memory:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
@@ -125,12 +139,18 @@ b3_result b3Tx::b3ParseRAW (
 			else
 			{
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG RAW  # Error allocating memory:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
 
 		default :
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG RAW  # Unknown format:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_UNSUPP);
 	}
 	return B3_OK;
@@ -151,9 +171,15 @@ b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 	b3_count      numPlanes,numColors;
 	b3_count      i,offset,value;
 
+	b3PrintF(B3LOG_FULL,"IMG BMP  # b3ParseBMP(%s)\n",
+		(const char *)name);
+
 	if (b3Endian::b3GetIntel32(&buffer[30]) != 0)
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG BMP  # Unsupported packing:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_ERR_PACKING);
 	}
 	xNewSize  = b3Endian::b3GetIntel16(&buffer[18]);
@@ -168,6 +194,9 @@ b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 	if (!b3AllocTx(xNewSize,yNewSize,numPlanes))
 	{
 		b3FreeTx();
+		b3PrintF(B3LOG_NORMAL,"IMG BMP  # Unsupported color format:\n");
+		b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+		b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 		throw new b3TxException(B3_TX_MEMORY);
 	}
 	FileType = FT_BMP;
@@ -279,6 +308,9 @@ b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 
 		default:
 			b3FreeTx();
+			b3PrintF(B3LOG_NORMAL,"IMG BMP  # Unsupported color format:\n");
+			b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_ERR_HEADER);
 	}
 
@@ -299,9 +331,12 @@ b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 	b3_res        xNewSize,yNewSize;
 	b3_count      lSize;
 
-	FileType = FT_BMF;
+	b3PrintF(B3LOG_FULL,"IMG BMF  # b3ParseBMF(%s)\n",
+		(const char *)name);
+
 	xNewSize = b3Endian::b3GetIntel16 (&buffer[2]);
 	yNewSize = b3Endian::b3GetIntel16 (&buffer[4]);
+
 	switch (buffer[6])
 	{
 		case 2 :
@@ -319,6 +354,9 @@ b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 			else
 			{
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG BMF  # Error allocating memory:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
@@ -344,9 +382,13 @@ b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 			else
 			{
 				b3FreeTx();
+				b3PrintF(B3LOG_NORMAL,"IMG BMF  # Error allocating memory:\n");
+				b3PrintF(B3LOG_NORMAL,"           file: %s\n",__FILE__);
+				b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 				throw new b3TxException(B3_TX_MEMORY);
 			}
 			break;
 	}
+	FileType = FT_BMF;
 	return B3_OK;
 }

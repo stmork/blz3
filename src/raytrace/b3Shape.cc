@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2001/11/01 09:43:11  sm
+**      - Some image logging cleanups.
+**      - Texture preparing now in b3Prepare().
+**      - Done some minor fixes.
+**
 **      Revision 1.27  2001/10/25 17:41:32  sm
 **      - Documenting stencils
 **      - Cleaning up image parsing routines with using exceptions.
@@ -269,6 +274,38 @@ b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 
 b3_bool b3Shape::b3Prepare()
 {
+	b3Item      *item;
+	b3Condition *cond;
+	b3Bump      *bump;
+	b3Material  *material;
+
+	B3_FOR_BASE(b3GetConditionHead(),item)
+	{
+		cond = (b3Condition *)item;
+		if (!cond->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	B3_FOR_BASE(b3GetBumpHead(),item)
+	{
+		bump = (b3Bump *)item;
+		if (!bump->b3Prepare())
+		{
+			return false;
+		}
+	}
+
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (!material->b3Prepare())
+		{
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -414,7 +451,7 @@ b3_bool b3Shape2::b3Prepare()
 {
 	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&m_Normal);
 	m_NormalLength = b3Vector::b3Length(&m_Normal);
-	return true;
+	return b3Shape::b3Prepare();
 }
 
 void b3Shape2::b3Transform(b3_matrix *transformation)
@@ -447,7 +484,13 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 
 b3_bool b3Shape3::b3Prepare()
 {
-	return b3ShapeBaseTrans::b3Prepare();
+	b3_bool result = false;
+
+	if (b3ShapeBaseTrans::b3Prepare())
+	{
+		result = b3Shape::b3Prepare();
+	}
+	return result;
 }
 
 b3_bool b3ShapeBaseTrans::b3Prepare()

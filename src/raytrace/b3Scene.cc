@@ -33,11 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/11/01 09:43:11  sm
+**	- Some image logging cleanups.
+**	- Texture preparing now in b3Prepare().
+**	- Done some minor fixes.
+**
 **	Revision 1.18  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
 **	- Introducing different types of row sampling.
-**
+**	
 **	Revision 1.17  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -169,8 +174,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
 	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
-	m_BackTexture = (m_BackgroundType & TP_TEXTURE ?
-		texture_pool.b3LoadTexture(m_TextureName) : null);
+	m_BackTexture      = null;
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
