@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/02/17 21:58:11  sm
+**      - Done UnCR
+**      - Modified makefiles
+**
 **      Revision 1.11  2002/02/17 21:25:06  sm
 **      - Introduced CSG
 **        o Heavily reorganized shape inheritance

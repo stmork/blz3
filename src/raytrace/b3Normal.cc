@@ -32,11 +32,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.3  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.2  2001/10/17 21:09:06  sm
 **	- Triangle support added for intersections, normal computations. So
 **	  Spline shapes can be computed, too. Now only CSG is missing.

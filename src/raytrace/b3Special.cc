@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.45  2002/02/17 21:58:11  sm
+**      - Done UnCR
+**      - Modified makefiles
+**
 **      Revision 1.44  2002/02/13 16:13:08  sm
 **      - Created spotlight view
 **      - Changed camera properties dialog to reflect scene units

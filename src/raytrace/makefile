@@ -20,6 +20,7 @@ PRG_SOURCE		=\
 	b3CSGCone.cc\
 	b3CSGCylinder.cc\
 	b3CSGEllipsoid.cc\
+	b3CSGShape.cc\
 	b3CSGSphere.cc\
 	b3CSGTorus.cc\
 	b3Cylinder.cc\
@@ -63,6 +64,7 @@ PRG_OBJ			=\
 	b3CSGCone.o\
 	b3CSGCylinder.o\
 	b3CSGEllipsoid.o\
+	b3CSGShape.o\
 	b3CSGSphere.o\
 	b3CSGTorus.o\
 	b3Cylinder.o\

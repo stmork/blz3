@@ -36,10 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.33  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
-**
+**	
 **	Revision 1.32  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in

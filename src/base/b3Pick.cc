@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.5  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
-**
+**	
 **	Revision 1.4  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!

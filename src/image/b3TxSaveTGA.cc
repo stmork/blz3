@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.5  2002/02/01 16:08:26  sm
 **	- Corrected assert in saving routines for formats which
 **	  only support resolutions less than 65536.
-**
+**	
 **	Revision 1.4  2002/02/01 15:41:52  sm
 **	- Fixed saving TGA and RGB8 missing last line to save
 **	

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.29  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.28  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/02/17 21:58:11  sm
+**	- Done UnCR
+**	- Modified makefiles
+**
 **	Revision 1.20  2002/02/17 21:25:07  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
 **	  o New file b3CSGShape added
-**
+**	
 **	Revision 1.19  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
 **	

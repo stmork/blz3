@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2002/02/17 21:58:11  sm
+**      - Done UnCR
+**      - Modified makefiles
+**
 **      Revision 1.25  2002/01/30 19:46:41  sm
 **      - Trying to print in debug mode (and want to see anything)
 **
