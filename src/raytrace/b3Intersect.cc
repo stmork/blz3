@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/09/23 15:37:15  sm
+**	- Introducing raytracing for Lines III. There is much work
+**	  for a b3Display-CScrollView.
+**
 **	Revision 1.2  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **	Revision 1.1  2001/09/22 16:19:52  sm
 **	- Adding basic shape intersection routines
 **	
@@ -50,6 +54,7 @@ static b3_f64 epsilon = 0.001;
 
 b3_f64 b3Shape::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 {
+	return -1;
 }
 
 b3_f64 b3Area::b3Intersect(b3_dLine *ray,b3_f64 &Q)

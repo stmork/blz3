@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
-typedef enum b3ViewMode
+enum b3_view_mode
 {
 	B3_VIEW_3D = 0,
 	B3_VIEW_TOP,
@@ -31,7 +31,7 @@ typedef enum b3ViewMode
 	B3_VIEW_BACK,
 
 	B3_VIEW_MAX            // Number of valid view modes
-} b3_view_mode;
+};
 
 class b3RenderViewItem : public b3Link<b3RenderViewItem>
 {

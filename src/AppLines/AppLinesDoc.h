@@ -25,7 +25,7 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "b3Fulcrum.h"
 
-class CAppLinesDoc : public CDocument
+class CAppLinesDoc : public CDocument, public b3Document
 {
 protected:
 	b3World  m_World;
@@ -71,6 +71,7 @@ protected:
 protected:
 	//{{AFX_MSG(CAppLinesDoc)
 	afx_msg void OnHierachy();
+	afx_msg void OnRaytrace();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

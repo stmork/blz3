@@ -41,7 +41,7 @@
 #define TYPE_USUAL          0x00000001
 #define USUAL_TEXTURE       (CLASS_TEXTURE|TYPE_USUAL)
 
-class b3Tx : public b3Link<b3Tx>
+class b3ObsoleteTx : public b3Link<b3Tx>
 {
 	char       *Name;             // name reference 
 	b3_u08     *Data;             // plane data

@@ -143,6 +143,7 @@ END
 IDR_TOOLBAR_OBJECT TOOLBAR DISCARDABLE  16, 15
 BEGIN
     BUTTON      ID_HIERACHY
+    BUTTON      ID_RAYTRACE
 END
 
 
@@ -588,6 +589,7 @@ BEGIN
     ID_CAM_VIEW             "Richtet die Projektion der Kamera aus.\nProjektion ausrichten"
     ID_OBJ_SELECT           "(De-)selektiert Objekte.\nObjekte selektieren"
     ID_HIERACHY             "Zeigt die Aktivierungshierarchie der Objekte\nKativierung zeigen"
+    ID_RAYTRACE             "Raytraced die Szene\nRaytrace!"
 END
 
 #endif    // German (Germany) resources

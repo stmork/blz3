@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/09/23 15:37:15  sm
+**	- Introducing raytracing for Lines III. There is much work
+**	  for a b3Display-CScrollView.
+**
 **	Revision 1.3  2001/08/05 19:51:56  sm
 **	- Now having OpenGL software for Windows NT and created
 **	  new Lines III.
-**
+**	
 **	Revision 1.2  2001/07/08 12:56:43  sm
 **	- Now displaying Mandelbrot set. It's like switching all light on together.
 **	
@@ -757,7 +761,7 @@ b3_bool CB3ScrollView::b3IsMagnifying()
 	return m_DoMagnify;
 }
 
-void CB3ScrollView::b3ViewMode(b3_view_mode mode)
+void CB3ScrollView::b3ViewMode(b3_display_mode mode)
 {
 	// TODO: Add your command handler code here
 	if (m_Mode != mode)

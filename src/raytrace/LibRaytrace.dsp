@@ -153,11 +153,19 @@ SOURCE=b3Init.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Intersect.cc
+# End Source File
+# Begin Source File
+
 SOURCE=b3Light.cc
 # End Source File
 # Begin Source File
 
 SOURCE=b3Material.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Raytrace.cc
 # End Source File
 # Begin Source File
 
@@ -170,6 +178,10 @@ SOURCE=.\b3RenderView.cc
 # Begin Source File
 
 SOURCE=b3Scene.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Shade.cc
 # End Source File
 # Begin Source File
 

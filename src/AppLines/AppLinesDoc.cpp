@@ -24,6 +24,8 @@
 #include "AppLines.h"
 #include "AppLinesDoc.h"
 #include "AppLinesView.h"
+#include "AppRaytraceView.h"
+#include "MainFrm.h"
 
 #include "DlgHierarchy.h"
 
@@ -35,12 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/09/23 15:37:15  sm
+**	- Introducing raytracing for Lines III. There is much work
+**	  for a b3Display-CScrollView.
+**
 **	Revision 1.10  2001/09/02 18:54:56  sm
 **	- Moving objects
 **	- BBox size recomputing fixed. Further cleanups in b3RenderObject
 **	  are necessary.
 **	- It's really nice to see!
-**
+**	
 **	Revision 1.9  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
@@ -100,6 +106,7 @@ IMPLEMENT_DYNCREATE(CAppLinesDoc, CDocument)
 BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppLinesDoc)
 	ON_COMMAND(ID_HIERACHY, OnHierachy)
+	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -231,4 +238,19 @@ void CAppLinesDoc::OnHierachy()
 void CAppLinesDoc::b3ComputeBounds()
 {
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
+}
+
+void CAppLinesDoc::OnRaytrace() 
+{
+	// TODO: Add your command handler code here
+	CAppRaytraceView *view = new CAppRaytraceView();
+	CMainFrame       *main = (CMainFrame *)AfxGetApp()->m_pMainWnd;
+
+	view->Create(NULL, NULL, AFX_WS_DEFAULT_VIEW,
+		CFrameWnd::rectDefault, main, AFX_IDW_PANE_FIRST + 1, NULL);
+	view->ShowWindow(SW_SHOW);
+	AddView(view);
+	main->SetActiveView(view);
+	main->RecalcLayout();
+	m_Scene->b3Raytrace();
 }

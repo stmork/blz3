@@ -46,28 +46,28 @@ protected: // create from serialization only
 
 // Attributes
 	// Cursor
-	b3_bool        m_InitialUpdate;
-	b3_f64         m_xScale;
-	b3_f64         m_yScale;
+	b3_bool          m_InitialUpdate;
+	b3_f64           m_xScale;
+	b3_f64           m_yScale;
 
 	// Panning    
-	CPoint         m_OldAct;
-	CPoint         m_Position;
-	CPoint         m_Start;
-	CB3View       *m_View;
-	CB3Print      *m_Print;
-	b3_bool        m_Panning;
+	CPoint           m_OldAct;
+	CPoint           m_Position;
+	CPoint           m_Start;
+	CB3View         *m_View;
+	CB3Print        *m_Print;
+	b3_bool          m_Panning;
 
 	// Draw mode
-	b3Tx          *m_TxScale;
-	b3_bool        m_ViewScan;
-	b3_bool        m_ScaleGrey;
-	b3_bool        m_Filtered;
-	b3_view_mode   m_Mode;
+	b3Tx            *m_TxScale;
+	b3_bool          m_ViewScan;
+	b3_bool          m_ScaleGrey;
+	b3_bool          m_Filtered;
+	b3_display_mode  m_Mode;
 
 public:
-	HCURSOR        m_Cursor;
-	b3_bool        m_UseCursor;
+	HCURSOR          m_Cursor;
+	b3_bool          m_UseCursor;
 
 	// Operations
 public:
@@ -89,7 +89,7 @@ protected:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
 	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
 	protected:
-	virtual int OnCreate( LPCREATESTRUCT lpCreateStruct );
+	virtual int  OnCreate( LPCREATESTRUCT lpCreateStruct );
 	virtual void OnInitialUpdate(); // called first time after construct
 	virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
@@ -117,7 +117,7 @@ protected:
 	        void          b3ShowView();
 	        void          b3ScaleGrey();
 	        void          b3ScaleBW();
-	        void          b3ViewMode(b3_view_mode mode);
+	        void          b3ViewMode(b3_display_mode mode);
 			void          b3FilterMode(b3_bool filter_enable);
 			void          b3Scale(b3_f64 xScale,b3_f64 yScale);
 	        void          b3MagnifyMore();

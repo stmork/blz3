@@ -70,7 +70,7 @@ void CDlgHierarchy::AddBBoxes (
 		item.hParent      = parent;
 		item.hInsertAfter = TVI_LAST;
 		item.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-		item.item.pszText        = BBox->BoxName;
+		item.item.pszText        = BBox->m_BoxName;
 		item.item.cchTextMax     = B3_BOXSTRINGLEN;
 		item.item.lParam         = (long)BBox;
 		item.item.iImage         = imgNum;
@@ -182,10 +182,10 @@ void CDlgHierarchy::OnEndLabelEditHierarchy(NMHDR* pNMHDR, LRESULT* pResult)
 	b3BBox     *BBox;
 	// TODO: Add your control notification handler code here
 	
-	if (BBox->BoxName,pTVDispInfo->item.pszText)
+	if (BBox->m_BoxName,pTVDispInfo->item.pszText)
 	{
 		BBox = (b3BBox *)pTVDispInfo->item.lParam;
-		strcpy (BBox->BoxName,pTVDispInfo->item.pszText);
+		strcpy (BBox->m_BoxName,pTVDispInfo->item.pszText);
 		m_Doc->SetModifiedFlag();
 		m_Doc->UpdateAllViews(null,B3_UPDATE_VIEW);
 		*pResult = 1;

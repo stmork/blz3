@@ -112,6 +112,10 @@ SOURCE=.\AppLinesView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\AppRaytraceView.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Action.cpp
 # End Source File
 # Begin Source File
@@ -192,7 +196,19 @@ SOURCE=.\res\AppLinesDoc.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bbox_empty.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\bbox_s_s.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bbox_sel_shape.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bbox_sel_sub_shape.ico
 # End Source File
 # Begin Source File
 
@@ -200,7 +216,15 @@ SOURCE=.\res\bbox_sha.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bbox_shape.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\bbox_sub.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\bbox_sub_shape.ico
 # End Source File
 # Begin Source File
 

@@ -54,7 +54,8 @@ void b3Display::b3Init()
 		display_init   = true;
 	}
 
-	if (is_mdi)
+//	if (is_mdi)
+	if (false)
 	{
 		// Here we should open a new CDocument
 		throw new b3DisplayException(B3_DISPLAY_ERROR);

@@ -76,12 +76,12 @@ public:
 	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
 };
 
-class b3Point
+class b3TxPoint
 {
 public:
 	b3_coord x,y;
 
-	b3Point(b3_coord new_x = 0,b3_coord new_y = 0)
+	b3TxPoint(b3_coord new_x = 0,b3_coord new_y = 0)
 	{
 		x = new_x;
 		y = new_y;
@@ -94,12 +94,12 @@ class b3Measure
 {
 public:
 	b3_bool   valid;
-	b3Point   left[B3_MEASURE_EDGE];
-	b3Point   top[B3_MEASURE_EDGE];
-	b3Point   right[B3_MEASURE_EDGE];
-	b3Point   bottom[B3_MEASURE_EDGE];
+	b3TxPoint left[B3_MEASURE_EDGE];
+	b3TxPoint top[B3_MEASURE_EDGE];
+	b3TxPoint right[B3_MEASURE_EDGE];
+	b3TxPoint bottom[B3_MEASURE_EDGE];
 
-	b3Point   points[(B3_MEASURE_EDGE - 1) * 4];
+	b3TxPoint points[(B3_MEASURE_EDGE - 1) * 4];
 	b3_count  num;
 public:
 	     b3Measure();

@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/09/23 15:37:15  sm
+**	- Introducing raytracing for Lines III. There is much work
+**	  for a b3Display-CScrollView.
+**
 **	Revision 1.1  2001/09/23 14:11:18  sm
 **	- A new raytrace is born! But it isn't raytracing yet.
-**
+**	
 **
 */
 
@@ -65,7 +69,7 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	b3_ray        ray;
 	b3_dVector    preDir;
 	b3_f64        fx,fxStep;
-	b3_f64        fy,fyStep;
+	b3_f64        fy;
 	b3_pkd_color *buffer,r,g,b;
 
 	buffer = row->b3GetBuffer();
@@ -146,8 +150,8 @@ void b3Scene::b3Raytrace(b3Display *display)
 	{
 		if (display == null)
 		{
+			b3GetDisplaySize(xSize,ySize);
 			display = new b3Display(xSize,ySize);
-			display->b3GetRes(xSize,ySize);
 		}
 		else
 		{
@@ -170,7 +174,7 @@ void b3Scene::b3Raytrace(b3Display *display)
 		m_Rows.b3InitBase();
 		for (i = 0;i < ySize;i++)
 		{
-			row = new b3RayRow(i,xSize,fy);
+			row = new b3RayRow(i,xSize,ySize);
 			m_Rows.b3Append(row);
 			fy -= fyStep;
 		}
@@ -198,8 +202,8 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// We want to see the computed picture until we make input
 		// into the display window.
-		display->b3Wait();
-		delete display;
+//		display->b3Wait();
+//		delete display;
 	}
 	catch(b3DisplayException *e)
 	{

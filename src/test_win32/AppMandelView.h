@@ -69,7 +69,6 @@ protected:
 	afx_msg void OnUpdateLess(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateMagnify(CCmdUI* pCmdUI);
 	//}}AFX_MSG
-	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
 

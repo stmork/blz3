@@ -21,7 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/base/b3List.h"
 
-enum b3_view_mode
+enum b3_display_mode
 {
 	B3_VIEWMODE_FIT_BEST     = 0,
 	B3_VIEWMODE_FIT_WIDTH    = 1,
@@ -47,7 +47,7 @@ class CB3ViewParam : public b3Link<CB3ViewParam>
 	char name[VIEW_PARAM_NAME_LEN];
 public:
 	// Direct view mode
-	b3_view_mode    m_Mode;
+	b3_display_mode m_Mode;
 	b3_bool         m_Filtered;
 
 	// Part of image

@@ -59,6 +59,7 @@
 #define IDM_BAR_ACTION                  32805
 #define ID_OBJ_SELECT                   32806
 #define ID_HIERACHY                     32808
+#define ID_RAYTRACE                     32809
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
 #define IDS_TOOLBAR_ACTION              61447
@@ -70,7 +71,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32809
+#define _APS_NEXT_COMMAND_VALUE         32810
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
