@@ -713,7 +713,9 @@ BEGIN
     LTEXT           "Auffächerung:",IDC_STATIC,175,195,46,8
     LTEXT           "Samples:",IDC_LIGHT_SAMPLE_LABEL,240,194,55,8
     CONTROL         "",IDC_LIGHT_LDC_CONTROL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,330,15,80,70
+                    SS_NOTIFY | SS_SUNKEN,330,15,80,70
+    CONTROL         "",IDC_LIGHT_PREVIEW,"Static",SS_BLACKFRAME | SS_SUNKEN,
+                    330,100,80,65
 END
 
 

@@ -28,6 +28,7 @@
 #include "blz3/system/b3ColorField.h"
 #include "blz3/system/b3FloatEdit.h"
 #include "b3ControlLDC.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgLight dialog
@@ -35,6 +36,7 @@
 class CDlgLight : public CDialog
 {
 // Construction
+	b3Scene   *m_LightScene;
 public:
 	b3Base<b3Item> *m_LightBase;
 	b3Light        *m_Light;
@@ -43,6 +45,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgLight)
 	enum { IDD = IDD_LIGHT };
+	CB3ShowRaytrace	m_CtrlPreview;
 	CB3ControlLDC	m_CtrlLDC;
 	CComboBox	m_LightListCtrl;
 	CB3FloatEdit	m_SoftSizeCtrl;
@@ -84,9 +87,11 @@ protected:
 	afx_msg void OnSelchangeLight();
 	afx_msg void OnKillfocusLight();
 	virtual void OnOK();
+	afx_msg void OnDestroy();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
+	void b3UpdatePreview();
 	void b3SetLight();
 	void b3GetLight();
 	void b3UpdateUI();

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
+#include "b3ExampleScene.h"
 #include "DlgLight.h"
 #include "DlgCreateItem.h"
 
@@ -33,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/12/06 07:08:55  sm
+**	- Further control programming
+**
 **	Revision 1.3  2001/12/04 18:23:25  sm
 **	- Drawing LDC correctly
 **	- Added pick point support.
-**
+**	
 **	Revision 1.2  2001/12/03 18:37:51  sm
 **	- Added light distribution curve control.
 **	
@@ -70,6 +74,7 @@ void CDlgLight::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgLight)
+	DDX_Control(pDX, IDC_LIGHT_PREVIEW, m_CtrlPreview);
 	DDX_Control(pDX, IDC_LIGHT_LDC_CONTROL, m_CtrlLDC);
 	DDX_Control(pDX, IDC_LIGHT_LIST, m_LightListCtrl);
 	DDX_Control(pDX, IDC_LIGHT_SOFT_SIZE, m_SoftSizeCtrl);
@@ -96,10 +101,11 @@ BEGIN_MESSAGE_MAP(CDlgLight, CDialog)
 	ON_BN_CLICKED(IDC_LIGHT_NEW, OnLightNew)
 	ON_BN_CLICKED(IDC_LIGHT_DELETE, OnLightDelete)
 	ON_BN_CLICKED(IDC_LIGHT_ENABLE, OnLightState)
-	ON_BN_CLICKED(IDC_LIGHT_SOFT, OnLightState)
-	ON_BN_CLICKED(IDC_LIGHT_LDC, OnLightState)
 	ON_CBN_SELCHANGE(IDC_LIGHT_LIST, OnSelchangeLight)
 	ON_CBN_KILLFOCUS(IDC_LIGHT_LIST, OnKillfocusLight)
+	ON_BN_CLICKED(IDC_LIGHT_SOFT, OnLightState)
+	ON_BN_CLICKED(IDC_LIGHT_LDC, OnLightState)
+	ON_WM_DESTROY()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -108,6 +114,19 @@ END_MESSAGE_MAP()
 
 BOOL CDlgLight::OnInitDialog() 
 {
+	b3Light *light;
+
+	m_LightScene = b3ExampleScene::b3CreateGlobal();
+	light = m_LightScene->b3GetLight();
+	B3_ASSERT(light != null);
+	light->m_Position.x  =   0;
+	light->m_Position.y  =   0;
+	light->m_Position.z  = 200;
+	light->m_Distance    = 500;
+	light->m_Direction.x = -light->m_Position.x;
+	light->m_Direction.y = -light->m_Position.y;
+	light->m_Direction.z = -light->m_Position.z;
+
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -125,12 +144,36 @@ BOOL CDlgLight::OnInitDialog()
 	m_DistanceCtrl.b3SetMax(epsilon);
 	m_SoftSizeCtrl.b3SetDigits(5,2);
 	m_SoftSizeCtrl.b3SetMin(epsilon);
-	m_CtrlLDC.b3Init(m_Light);
 	b3RefreshList();
 	b3GetLight();
 	b3UpdateUI();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
+}
+
+void CDlgLight::b3UpdatePreview()
+{
+	b3Light  *light = m_LightScene->b3GetLight();
+	b3_index  i;
+
+	B3_ASSERT(light != null);
+	light->m_Color        = m_Light->m_Color;
+	light->m_LightActive  = m_Light->m_LightActive;
+	light->m_SoftShadow   = m_Light->m_SoftShadow;
+	light->m_SpotActive   = m_Light->m_SpotActive;
+	for (i = 0;i < m_Light->m_Spline.control_num;i++)
+	{
+		light->m_Spline.controls[i] = m_Light->m_Spline.controls[i];
+	}
+	m_CtrlPreview.b3Update(m_LightScene);
+}
+
+void CDlgLight::OnDestroy() 
+{
+	CDialog::OnDestroy();
+	
+	// TODO: Add your message handler code here
+	delete m_LightScene;
 }
 
 void CDlgLight::OnLightColorChange() 
@@ -268,10 +311,12 @@ void CDlgLight::b3UpdateUI()
 	m_SampleCtrl.EnableWindow(m_EnableSoft && m_EnableLight);
 
 	GetDlgItem(IDC_LIGHT_DELETE)->EnableWindow(m_LightBase->b3Count() > 1);
+	b3UpdatePreview();
 }
 
 void CDlgLight::b3GetLight()
 {
+	m_CtrlLDC.b3Init(m_Light);
 	m_EnableLight = m_Light->m_LightActive;
 	m_EnableSoft  = m_Light->m_SoftShadow;
 	m_EnableLDC   = m_Light->m_SpotActive;
@@ -287,7 +332,8 @@ void CDlgLight::b3GetLight()
 	m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
-	m_CtrlLDC.b3Update();
+	m_CtrlLDC.b3Init(m_Light);
+	b3UpdatePreview();
 	UpdateData(FALSE);
 }
 

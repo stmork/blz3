@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CB3ControlLDC
+LastClass=CDlgLight
 LastTemplate=CStatic
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -22,18 +22,18 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=20
-Resource1=IDD_MODELLER_INFO
-Resource2=IDD_SCENE
+Resource1=IDR_MAINFRAME
+Resource2=IDD_LENS_FLARE
 Resource3=IDR_TOOLBAR_DISPLAY
-Resource4=IDD_SUPER_SAMPLE
+Resource4=IDD_DISTRIBUTED
 Resource5=IDR_TOOLBAR_OBJECT
 Resource6=IDR_DISPLAYTYPE
-Resource7=IDD_DISTRIBUTED
+Resource7=IDD_NEW_ITEM
 Resource8=IDR_TOOLBAR_VIEW
 Resource9=IDR_TOOLBAR_CAMERA
-Resource10=IDD_HIERARCHY
-Resource11=IDR_MAINFRAME
-Resource12=IDD_NEW_ITEM
+Resource10=IDD_NEBULAR
+Resource11=IDD_SCENE
+Resource12=IDD_HIERARCHY
 Resource13=IDR_TOOLBAR_LIGHT
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
@@ -42,12 +42,12 @@ Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
 Resource14=IDR_BLZ3TYPE
 Class17=CDlgModellerInfo
-Resource15=IDD_LENS_FLARE
-Resource16=IDD_NEBULAR
-Resource17=IDD_SEARCH_PATH_LIST
+Resource15=IDD_SEARCH_PATH_LIST
+Resource16=IDD_MODELLER_INFO
+Resource17=IDD_ABOUTBOX
 Resource18=IDR_TOOLBAR_ACTION
 Class18=CDlgCreateItem
-Resource19=IDD_ABOUTBOX
+Resource19=IDD_SUPER_SAMPLE
 Class19=CDlgLight
 Class20=CB3ControlLDC
 Resource20=IDD_LIGHT
@@ -611,7 +611,7 @@ LastObject=CDlgCreateItem
 [DLG:IDD_LIGHT]
 Type=1
 Class=CDlgLight
-ControlCount=34
+ControlCount=35
 Control1=IDC_LIGHT_ENABLE,button,1342242819
 Control2=IDC_LIGHT_SOFT,button,1342242819
 Control3=IDC_LIGHT_LDC,button,1342242819
@@ -645,7 +645,8 @@ Control30=IDC_STATIC,button,1342177287
 Control31=IDC_STATIC,button,1342177287
 Control32=IDC_STATIC,static,1342308352
 Control33=IDC_LIGHT_SAMPLE_LABEL,static,1342308352
-Control34=IDC_LIGHT_LDC_CONTROL,static,1342181383
+Control34=IDC_LIGHT_LDC_CONTROL,static,1342181639
+Control35=IDC_LIGHT_PREVIEW,static,1342181383
 
 [CLS:CDlgLight]
 Type=0
