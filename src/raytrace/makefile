@@ -31,6 +31,7 @@ PRG_SOURCE		=\
 	b3Intersect.cc\
 	b3Light.cc\
 	b3Material.cc\
+	b3MaterialSampler.cc\
 	b3Normal.cc\
 	b3NormalDeriv.cc\
 	b3PickInfo.cc\
@@ -80,6 +81,7 @@ PRG_OBJ			=\
 	b3Intersect.o\
 	b3Light.o\
 	b3Material.o\
+	b3MaterialSampler.o\
 	b3Normal.o\
 	b3NormalDeriv.o\
 	b3PickInfo.o\

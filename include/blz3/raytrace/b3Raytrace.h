@@ -24,7 +24,7 @@
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Filter.h"
-#include "blz3/base/b3Procedure.h"
+#include "blz3/base/b3Wood.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"

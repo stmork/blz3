@@ -38,6 +38,12 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2004/04/10 19:12:46  sm
+**      - Splitted up some header/source files:
+**        o b3Wood/b3OakPlank
+**        o b3MaterialSampler
+**      - Cleaneup
+**
 **      Revision 1.53  2004/04/10 14:33:25  sm
 **      - Added oak plank support.
 **
