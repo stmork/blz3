@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/08/22 18:29:31  sm
+**	- Fixed prototype error.
+**
 **	Revision 1.15  2004/08/22 09:39:26  sm
 **	- Found TGA file as JPEG. Fixed.
 **	- Some exception handling problems found in bimg3.
-**
+**	
 **	Revision 1.14  2003/09/26 07:23:16  sm
 **	- New JPEG library
 **	
@@ -155,7 +158,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
-			if (strstr(&buffer[i],"JFIF") != null)
+			if (strstr((const char *)&buffer[i],"JFIF") != null)
 			{
 				return b3ParseJPEG(&buffer[i],buffer_size - i);
 			}
