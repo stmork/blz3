@@ -146,6 +146,7 @@ BEGIN
     BUTTON      ID_HIERACHY
     BUTTON      ID_RAYTRACE
     BUTTON      ID_DLG_SCENE
+    BUTTON      ID_MODELLER_INFO
 END
 
 IDR_TOOLBAR_DISPLAY TOOLBAR DISCARDABLE  16, 17
@@ -574,6 +575,30 @@ BEGIN
     LTEXT           "Samples pro Frame (2er Potenz)",IDC_STATIC,5,145,101,8
 END
 
+IDD_MODELLER_INFO DIALOG DISCARDABLE  0, 0, 232, 151
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_FULCRUM_X,30,25,35,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FULCRUM_Y,30,45,35,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_FULCRUM_Z,30,65,35,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Löschen",IDC_FULCRUM_CLR,20,90,50,15
+    CONTROL         "Snap to Grid",IDC_SNAP_TO_GRID,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,100,25,55,10
+    CONTROL         "Snap to angle",IDC_SNAP_TO_ANGLE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,100,46,60,10
+    EDITTEXT        IDC_STEP_GRID,170,25,35,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_STEP_ANGLE,170,46,35,12,ES_AUTOHSCROLL
+    GROUPBOX        "Drehkreuz:",IDC_STATIC,10,10,70,105
+    LTEXT           "x:",IDC_STATIC,20,25,8,8
+    LTEXT           "y:",IDC_STATIC,20,45,8,8
+    LTEXT           "z:",IDC_STATIC,20,65,8,8
+    GROUPBOX        "Raster:",IDC_STATIC,90,10,130,60
+    DEFPUSHBUTTON   "OK",IDOK,20,125,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,170,125,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -683,6 +708,14 @@ BEGIN
         RIGHTMARGIN, 257
         TOPMARGIN, 7
         BOTTOMMARGIN, 174
+    END
+
+    IDD_MODELLER_INFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 225
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 144
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -918,6 +951,11 @@ BEGIN
     IDS_SS4_RED_LEGEND      "Kontrastschwelle rot: %3d%%"
     IDS_SS4_GREEN_LEGEND    "Kontrastschwelle grün: %3d%%"
     IDS_SS4_BLUE_LEGEND     "Kontrastschwelle blau: %3d%%"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_MODELLER_INFO        "Geometry-Werte setzen\nGeometrie-Werte setzen"
 END
 
 #endif    // German (Germany) resources

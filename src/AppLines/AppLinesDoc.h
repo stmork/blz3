@@ -87,6 +87,7 @@ protected:
 	afx_msg void OnRaytrace();
 	afx_msg void OnDlgScene();
 	afx_msg void OnUpdateRaytrace(CCmdUI* pCmdUI);
+	afx_msg void OnModellerInfo();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

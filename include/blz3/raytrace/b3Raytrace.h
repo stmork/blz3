@@ -1857,12 +1857,14 @@ public:
 // LINES_INFO
 class b3ModellerInfo : public b3Special
 {
+public:
 	b3_vector        m_Center;
 	b3_f32           m_GridMove;
 	b3_f32           m_GridRot;
 	b3_bool          m_ResizeFlag;
 	b3_bool          m_BBoxTitles;
 	b3_bool          m_GridActive;
+	b3_bool          m_AngleActive;
 	b3_bool          m_CameraActive;
 	b3_s32           m_Flags;
 	b3_f32           m_Unit;

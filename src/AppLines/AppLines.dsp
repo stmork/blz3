@@ -160,6 +160,10 @@ SOURCE=.\DlgLensFlare.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgModellerInfo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgNebular.cpp
 # End Source File
 # Begin Source File
@@ -229,6 +233,10 @@ SOURCE=.\DlgHierarchy.h
 # Begin Source File
 
 SOURCE=.\DlgLensFlare.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgModellerInfo.h
 # End Source File
 # Begin Source File
 

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2001/11/28 16:54:55  sm
+**      - Dialog for modeller info.
+**
 **      Revision 1.21  2001/11/26 17:16:37  sm
 **      - Linux b3TimeSpan fix
 **
@@ -279,7 +282,8 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	m_GridRot      = b3InitFloat();
 	m_ResizeFlag   = b3InitBool();
 	m_BBoxTitles   = b3InitBool();
-	m_GridActive   = b3InitBool();
+	m_GridActive   =
+	m_AngleActive  = b3InitBool();
 	m_CameraActive = b3InitBool();
 	if (B3_PARSE_INDEX_VALID)
 	{
@@ -305,7 +309,7 @@ void b3ModellerInfo::b3SnapToGrid(b3_vector *vector)
 
 void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 {
-	if (m_GridActive)
+	if (m_AngleActive)
 	{
 		// Convert to radians
 		b3_f64 GridStep = m_GridRot * M_PI / 180.0;
@@ -313,7 +317,6 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 		angle = floor(angle / GridStep + 0.5) * GridStep;
 	}
 }
-
 
 /*************************************************************************
 **                                                                      **

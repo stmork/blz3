@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CDlgDistributed
-LastTemplate=CEdit
+LastClass=CDlgModellerInfo
+LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
 LastPage=0
 
-ClassCount=16
+ClassCount=17
 Class1=CAppLinesApp
 Class2=CAboutDlg
 Class3=CAppLinesDoc
@@ -21,26 +21,28 @@ Class9=CDlgHierarchy
 Class10=CDlgScene
 Class11=CMainFrame
 
-ResourceCount=14
-Resource1=IDD_ABOUTBOX
+ResourceCount=15
+Resource1=IDD_NEBULAR
 Resource2=IDR_TOOLBAR_ACTION
-Resource3=IDR_TOOLBAR_OBJECT
+Resource3=IDR_MAINFRAME
 Resource4=IDR_TOOLBAR_DISPLAY
-Resource5=IDR_TOOLBAR_VIEW
+Resource5=IDD_LENS_FLARE
 Resource6=IDR_DISPLAYTYPE
 Resource7=IDR_BLZ3TYPE
-Resource8=IDD_SUPER_SAMPLE
-Resource9=IDD_NEBULAR
-Resource10=IDR_MAINFRAME
-Resource11=IDD_SCENE
-Resource12=IDD_LENS_FLARE
-Resource13=IDD_HIERARCHY
+Resource8=IDR_TOOLBAR_OBJECT
+Resource9=IDD_ABOUTBOX
+Resource10=IDD_SUPER_SAMPLE
+Resource11=IDD_DISTRIBUTED
+Resource12=IDD_HIERARCHY
+Resource13=IDR_TOOLBAR_VIEW
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
 Class15=CDlgSuperSampling
 Class16=CB3FloatEdit
-Resource14=IDD_DISTRIBUTED
+Resource14=IDD_SCENE
+Class17=CDlgModellerInfo
+Resource15=IDD_MODELLER_INFO
 
 [CLS:CAppLinesApp]
 Type=0
@@ -60,6 +62,8 @@ Type=0
 BaseClass=CDocument
 HeaderFile=AppLinesDoc.h
 ImplementationFile=AppLinesDoc.cpp
+Filter=N
+VirtualFilter=DC
 
 [CLS:CAppLinesView]
 Type=0
@@ -211,7 +215,8 @@ Class=?
 Command1=ID_HIERACHY
 Command2=ID_RAYTRACE
 Command3=ID_DLG_SCENE
-CommandCount=3
+Command4=ID_MODELLER_INFO
+CommandCount=4
 
 [TB:IDR_TOOLBAR_DISPLAY]
 Type=1
@@ -484,4 +489,33 @@ ImplementationFile=..\system_win32\b3floatedit.cpp
 BaseClass=CEdit
 Filter=W
 LastObject=CB3FloatEdit
+
+[DLG:IDD_MODELLER_INFO]
+Type=1
+Class=CDlgModellerInfo
+ControlCount=15
+Control1=IDC_FULCRUM_X,edit,1350631552
+Control2=IDC_FULCRUM_Y,edit,1350631552
+Control3=IDC_FULCRUM_Z,edit,1350631552
+Control4=IDC_FULCRUM_CLR,button,1342242816
+Control5=IDC_SNAP_TO_GRID,button,1342242819
+Control6=IDC_SNAP_TO_ANGLE,button,1342242819
+Control7=IDC_STEP_GRID,edit,1350631552
+Control8=IDC_STEP_ANGLE,edit,1350631552
+Control9=IDC_STATIC,button,1342177287
+Control10=IDC_STATIC,static,1342308352
+Control11=IDC_STATIC,static,1342308352
+Control12=IDC_STATIC,static,1342308352
+Control13=IDC_STATIC,button,1342177287
+Control14=IDOK,button,1342242817
+Control15=IDCANCEL,button,1342242816
+
+[CLS:CDlgModellerInfo]
+Type=0
+HeaderFile=DlgModellerInfo.h
+ImplementationFile=DlgModellerInfo.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+LastObject=IDC_FULCRUM_CLR
 

@@ -33,6 +33,7 @@
 #include "DlgSuperSampling.h"
 #include "DlgNebular.h"
 #include "DlgLensFlare.h"
+#include "DlgModellerInfo.h"
 #include "DlgDistributed.h"
 #include "b3ExampleScene.h"
 
@@ -44,11 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2001/11/28 16:54:55  sm
+**	- Dialog for modeller info.
+**
 **	Revision 1.23  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
 **	  o distributed raytracing
-**
+**	
 **	Revision 1.22  2001/11/12 16:50:29  sm
 **	- Scene properties dialog coding
 **	
@@ -169,6 +173,7 @@ BEGIN_MESSAGE_MAP(CAppLinesDoc, CDocument)
 	ON_COMMAND(ID_RAYTRACE, OnRaytrace)
 	ON_COMMAND(ID_DLG_SCENE, OnDlgScene)
 	ON_UPDATE_COMMAND_UI(ID_RAYTRACE, OnUpdateRaytrace)
+	ON_COMMAND(ID_MODELLER_INFO, OnModellerInfo)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -481,6 +486,19 @@ void CAppLinesDoc::OnDlgScene()
 	dlg_sheets.SetTitle(title);
 	if (dlg_sheets.DoModal() == IDOK)
 	{
+		SetModifiedFlag();
+	}
+}
+
+void CAppLinesDoc::OnModellerInfo() 
+{
+	// TODO: Add your command handler code here
+	CDlgModellerInfo dlg;
+
+	dlg.m_ModellerInfo = m_Info;
+	if (dlg.DoModal() == IDOK)
+	{
+		UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
 		SetModifiedFlag();
 	}
 }
