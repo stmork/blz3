@@ -23,6 +23,13 @@
 
 #include "AppLines.h"
 #include "b3StaticPluginInfoInit.h"
+#include "DlgMatNormal.h"
+#include "DlgMatChess.h"
+#include "DlgMatMarble.h"
+#include "DlgMatWood.h"
+#include "DlgMatSlide.h"
+#include "DlgMatTexture.h"
+#include "DlgMatWrapTexture.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,9 +39,14 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.1  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 */
 
 /*************************************************************************
@@ -47,20 +59,30 @@ b3HashMap<b3_u32,b3_class_name> b3StaticPluginInfoInit::m_ClassNames;
 
 void b3StaticPluginInfoInit::b3Init()
 {
+	b3Loader::b3SetUnknownIds(IDS_UNKNOWN,IDI_ITEM_UNKNOWN);
+
 	b3AddClass(CLASS_SPECIAL,   IDS_CLASSDESC_SPECIAL);
 	b3AddClass(CLASS_LIGHT,     IDS_CLASSDESC_LIGHT);
 	b3AddClass(CLASS_MATERIAL,  IDS_CLASSDESC_MATERIAL);
 	b3AddClass(CLASS_BUMP,      IDS_CLASSDESC_BUMP);
 	b3AddClass(CLASS_CONDITION, IDS_CLASSDESC_CONDITION);
 
-	b3AddClassType(CAMERA,       IDS_ITEMDESC_CAMERA);
-	b3AddClassType(SUPERSAMPLE4, IDS_ITEMDESC_SUPERSAMPLE4);
-	b3AddClassType(NEBULAR,      IDS_ITEMDESC_NEBULAR);
-	b3AddClassType(LINES_INFO,   IDS_ITEMDESC_LINES_INFO);
-	b3AddClassType(ANIMATION,    IDS_ITEMDESC_ANIMATION);
-	b3AddClassType(DISTRIBUTE,   IDS_ITEMDESC_DISTRIBUTE);
-	b3AddClassType(LENSFLARE,    IDS_ITEMDESC_LENSFLARE);
-	b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
+	b3Loader::b3AddClassType(CAMERA,       IDS_ITEMDESC_CAMERA);
+	b3Loader::b3AddClassType(SUPERSAMPLE4, IDS_ITEMDESC_SUPERSAMPLE4);
+	b3Loader::b3AddClassType(NEBULAR,      IDS_ITEMDESC_NEBULAR);
+	b3Loader::b3AddClassType(LINES_INFO,   IDS_ITEMDESC_LINES_INFO);
+	b3Loader::b3AddClassType(ANIMATION,    IDS_ITEMDESC_ANIMATION);
+	b3Loader::b3AddClassType(DISTRIBUTE,   IDS_ITEMDESC_DISTRIBUTE);
+	b3Loader::b3AddClassType(LENSFLARE,    IDS_ITEMDESC_LENSFLARE);
+	b3Loader::b3AddClassType(CAUSTIC,      IDS_ITEMDESC_CAUSTIC);
+
+	CDlgMatNormal::b3Register();
+	CDlgMatChess::b3Register();
+	CDlgMatMarble::b3Register();
+	CDlgMatWood::b3Register();
+	CDlgMatSlide::b3Register();
+	CDlgMatTexture::b3Register();
+	CDlgMatWrapTexture::b3Register();
 }
 
 const char *b3StaticPluginInfoInit::b3GetClassName(b3_u32 class_id)
@@ -78,19 +100,4 @@ void b3StaticPluginInfoInit::b3AddClass(
 	aux.LoadString(DescID);
 	strcpy(name.name,aux);
 	m_ClassNames.b3Add(class_id,name);
-}
-
-void b3StaticPluginInfoInit::b3AddClassType(
-	b3_u32    class_type,
-	int       DescID)
-{
-	b3_plugin_info info;
-	CString        description;
-	
-	b3Plugin::b3InitPluginInfo(&info);
-	description.LoadString(DescID);
-	info.m_ClassType = class_type;
-	strcpy(info.m_Description,description);
-	b3Plugin::b3SetChecksum(&info);
-	b3Loader::b3GetLoader().b3AddPluginInfo(&info);
 }

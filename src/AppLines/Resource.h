@@ -25,6 +25,7 @@
 #define IDI_MAT_SLIDE                   129
 #define IDI_MAT_TEXTURE                 130
 #define IDI_MAT_WRAP_TEXTURE            131
+#define IDD_MAT_NORMAL                  132
 #define IDB_SPLASH                      400
 #define IDM_BAR_ACTION                  500
 #define IDM_BAR_ANIM                    501
@@ -78,6 +79,12 @@
 #define IDD_SUPER_SAMPLE                639
 #define IDD_TORUS                       640
 #define IDD_UNDO_REDO                   641
+#define IDD_MAT_CHESS                   642
+#define IDD_MAT_SLIDE                   643
+#define IDD_MAT_TEXTURE                 644
+#define IDD_MAT_MARBLE                  645
+#define IDD_MAT_WOOD                    646
+#define IDD_MAT_WRAP_TEXTURE            647
 #define IDI_BBOX_EMPTY                  1001
 #define IDI_BBOX_SHAPES                 1002
 #define IDI_BBOX_SHAPES_SUB             1003
@@ -234,6 +241,7 @@
 #define ID_VIEW_THUMB                   10115
 #define ID_VIEW_TOP                     10116
 #define ID_VIEW_TO_FULCRUM              10117
+#define ID_EDIT_MATERIAL                10118
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -709,8 +717,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        132
-#define _APS_NEXT_COMMAND_VALUE         10118
+#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_COMMAND_VALUE         10119
 #define _APS_NEXT_CONTROL_VALUE         32292
 #define _APS_NEXT_SYMED_VALUE           60170
 #endif

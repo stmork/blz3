@@ -34,12 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.5  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.4  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -328,8 +333,8 @@ void CDlgCamera::b3GetCamera()
 	m_yViewCtrl.b3SetPos(m_Camera->m_ViewPoint.y);
 	m_zViewCtrl.b3SetPos(m_Camera->m_ViewPoint.z);
 	m_FocalLengthCtrl.b3SetPos(b3Vector::b3Distance(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint));
-	m_WidthCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Width));
-	m_HeightCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Height));
+	m_WidthCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Width)   * 2);
+	m_HeightCtrl.b3SetPos(b3Vector::b3Length(&m_Camera->m_Height) * 2);
 	m_TypeCtrl.SetCurSel(b3GetCameraType());
 
 	b3UpdateUI();
@@ -348,7 +353,12 @@ void CDlgCamera::b3SetCamera()
 	view.x = m_xViewCtrl.m_Value;
 	view.y = m_yViewCtrl.m_Value;
 	view.z = m_zViewCtrl.m_Value;
-	m_Camera->b3Orientate(&eye,&view,m_FocalLengthCtrl.m_Value,m_WidthCtrl.m_Value,m_HeightCtrl.m_Value);
+	m_Camera->b3Orientate(
+		&eye,
+		&view,
+		m_FocalLengthCtrl.m_Value,
+		m_WidthCtrl.m_Value  * 0.5,
+		m_HeightCtrl.m_Value * 0.5);
 
 }
 

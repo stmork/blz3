@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.62  2003/06/20 09:02:45  sm
+**      - Added material dialog skeletons
+**      - Fixed ticket no. 10 (camera dialog handled camera
+**        dimension wring)
+**
 **      Revision 1.61  2003/06/09 08:53:49  sm
 **      - Added preparation support for all b3Item objects.
 **
@@ -556,6 +561,15 @@ void b3CameraPart::b3Transform(b3_matrix *transformation)
 char *b3CameraPart::b3GetName()
 {
 	return m_CameraName;
+}
+
+b3_bool b3CameraPart::b3Prepare()
+{
+	b3PrintF(B3LOG_DEBUG,"Camera %s, %sactive\n",b3GetName(),b3IsActive() ? "" : "not ");
+	b3PrintF(B3LOG_DEBUG," W: %3.5f\n",b3Vector::b3Length(&m_Width));
+	b3PrintF(B3LOG_DEBUG," H: %3.5f\n",b3Vector::b3Length(&m_Height));
+	b3PrintF(B3LOG_DEBUG," F: %3.5f\n",b3GetFocalLength());
+	return true;
 }
 
 b3_f64 b3CameraPart::b3GetFocalLength()

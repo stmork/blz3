@@ -81,6 +81,8 @@ protected:
 	afx_msg void OnObjectDelete();
 	afx_msg void OnObjectEdit();
 	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
+	afx_msg void OnEditMaterial();
+	afx_msg void OnUpdateEditMaterial(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

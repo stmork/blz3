@@ -365,6 +365,34 @@ SOURCE=.\DlgLight.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgMatChess.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatMarble.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatNormal.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatSlide.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatTexture.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatWood.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatWrapTexture.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgModellerInfo.cpp
 # End Source File
 # Begin Source File
@@ -585,6 +613,10 @@ SOURCE=.\b3SplinePreview.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3StaticPluginInfoInit.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Undo.h
 # End Source File
 # Begin Source File
@@ -702,6 +734,34 @@ SOURCE=.\DlgLensFlare.h
 # Begin Source File
 
 SOURCE=.\DlgLight.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatChess.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatMarble.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatNormal.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatSlide.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatTexture.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatWood.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgMatWrapTexture.h
 # End Source File
 # Begin Source File
 

@@ -36,7 +36,6 @@ public:
 
 private:
 	static void b3AddClass    (b3_u32 class_id,  int DescID);
-	static void b3AddClassType(b3_u32 class_type,int DescID);
 };
 
 #endif

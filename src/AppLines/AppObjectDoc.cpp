@@ -27,6 +27,7 @@
 #include "MainFrm.h"
 
 #include "DlgNewObject.h"
+#include "DlgItemMaintain.h"
 
 #include "blz3/base/b3Matrix.h"
 
@@ -38,11 +39,16 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.24  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
 **	- Restructured b3PickInfo
-**
+**	
 **	Revision 1.23  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	
@@ -170,13 +176,15 @@ BEGIN_MESSAGE_MAP(CAppObjectDoc, CAppRenderDoc)
 	ON_COMMAND(ID_DEACTIVATE, OnDeactivate)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_NEW, OnUpdateSelectedItem)
 	ON_COMMAND(ID_OBJECT_DELETE, OnObjectDelete)
+	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
+	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateObjectEdit)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_DELETE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ALL_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE_REST, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_ACTIVATE, OnUpdateSelectedItem)
 	ON_UPDATE_COMMAND_UI(ID_DEACTIVATE, OnUpdateSelectedItem)
-	ON_COMMAND(ID_OBJECT_EDIT, OnObjectEdit)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_EDIT, OnUpdateObjectEdit)
+	ON_COMMAND(ID_EDIT_MATERIAL, OnEditMaterial)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_MATERIAL, OnUpdateEditMaterial)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -461,7 +469,7 @@ void CAppObjectDoc::b3ContextMenu(HTREEITEM item)
 	CMenu         *submenu;
 	CPoint point;
 
-	if (menu.LoadMenu(IDR_CONTEXT_SCENE))
+	if (menu.LoadMenu(IDR_CONTEXT_OBJECT))
 	{
 		submenu = menu.GetSubMenu(0);
 		ASSERT(submenu != NULL);
@@ -790,4 +798,26 @@ void CAppObjectDoc::OnDeactivate()
 		SetModifiedFlag();
 		UpdateAllViews(null,B3_UPDATE_VIEW);
 	}
+}
+
+void CAppObjectDoc::OnEditMaterial() 
+{
+	// TODO: Add your command handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	if (shape != null)
+	{
+		CDlgItemMaintain dlg(shape->b3GetMaterialHead());
+
+		dlg.DoModal();
+		dlg.b3SetModified(this);
+	}
+}
+
+void CAppObjectDoc::OnUpdateEditMaterial(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+
+	pCmdUI->Enable(shape != null);
 }

@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.10  2003/06/15 09:24:25  sm
 **	- Added item creation dialog
-**
+**	
 **	Revision 1.9  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
 **	
@@ -77,6 +82,8 @@
 *************************************************************************/
 
 b3Loader b3Loader::m_Loader;
+CString  b3Loader::m_UnknownDesc;
+HICON    b3Loader::m_UnknownIcon = null;
 
 b3Loader::b3Loader()
 {
@@ -197,6 +204,46 @@ b3_bool b3Loader::b3AddPluginInfo(b3_plugin_info *info)
 		}
 	}
 	return result;
+}
+
+void b3Loader::b3SetUnknownIds(
+	int                   DescID,
+	int                   IconID)
+{
+	m_UnknownDesc.LoadString(DescID);
+	m_UnknownIcon = AfxGetApp()->LoadIcon(IconID);
+}
+
+void b3Loader::b3AddClassType(
+	b3_u32                class_type,
+	int                   DescID,
+	int                   IconID,
+	b3_plugin_create_func CreateFunc,
+	b3_plugin_edit_func   EditFunc)
+{
+	b3_plugin_info info;
+	CString        description;
+	
+	b3Plugin::b3InitPluginInfo(&info);
+
+	if (DescID != 0)
+	{
+		description.LoadString(DescID);
+		strcpy(info.m_Description,description);
+	}
+	else
+	{
+		strcpy(info.m_Description,m_UnknownDesc);
+	}
+
+	info.m_Icon       = (IconID != 0 ? AfxGetApp()->LoadIcon(IconID) : m_UnknownIcon);
+	info.m_CreateFunc = CreateFunc;
+	info.m_EditFunc   = EditFunc;
+	info.m_ClassType  = class_type;
+	
+	b3Plugin::b3SetChecksum(&info);
+	
+	b3GetLoader().b3AddPluginInfo(&info);
 }
 
 /*************************************************************************

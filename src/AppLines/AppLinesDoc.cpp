@@ -60,9 +60,14 @@
 
 /*
 **	$Log$
+**	Revision 1.89  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.88  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 **	Revision 1.87  2003/06/08 18:57:02  sm
 **	- Added list editing to Lines
 **	
@@ -1866,4 +1871,5 @@ void CAppLinesDoc::OnMaintainSpecial()
 	CDlgItemMaintain dlg(m_Scene->b3GetSpecialHead());
 
 	dlg.DoModal();
+	dlg.b3SetModified(this);
 }

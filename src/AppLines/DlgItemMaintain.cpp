@@ -34,10 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/06/20 09:02:45  sm
+**	- Added material dialog skeletons
+**	- Fixed ticket no. 10 (camera dialog handled camera
+**	  dimension wring)
+**
 **	Revision 1.5  2003/06/15 14:18:17  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
-**
+**	
 **	Revision 1.4  2003/06/15 09:24:21  sm
 **	- Added item creation dialog
 **	
@@ -70,6 +75,7 @@ CDlgItemMaintain::CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 	m_Head = head;
 	m_Plugins = &b3Loader::b3GetLoader();
+	m_Changed = false;
 }
 
 
@@ -224,6 +230,7 @@ void CDlgItemMaintain::OnItemNew()
 	{
 		m_Head->b3Insert(selected,item);
 		b3UpdateList(item);
+		m_Changed = true;
 	}
 }
 
@@ -237,6 +244,7 @@ void CDlgItemMaintain::OnItemEdit()
 		if (b3Loader::b3GetLoader().b3Edit(item))
 		{
 			b3UpdateList(item);
+			m_Changed = true;
 		}
 	}
 }
@@ -265,6 +273,7 @@ void CDlgItemMaintain::OnItemDelete()
 		m_Head->b3Remove(item);
 		delete item;
 		b3UpdateList(item);
+		m_Changed = true;
 	}
 }
 
@@ -278,6 +287,7 @@ void CDlgItemMaintain::OnItemFirst()
 		m_Head->b3Remove(item);
 		m_Head->b3First(item);
 		b3UpdateList(item);
+		m_Changed = true;
 	}
 }
 
@@ -295,6 +305,7 @@ void CDlgItemMaintain::OnItemUp()
 			m_Head->b3Remove(prev);
 			m_Head->b3Insert(item,prev);
 			b3UpdateList(item);
+			m_Changed = true;
 		}
 	}
 }
@@ -313,6 +324,7 @@ void CDlgItemMaintain::OnItemDown()
 			m_Head->b3Remove(item);
 			m_Head->b3Insert(succ,item);
 			b3UpdateList(item);
+			m_Changed = true;
 		}
 	}
 }
@@ -327,6 +339,7 @@ void CDlgItemMaintain::OnItemLast()
 		m_Head->b3Remove(item);
 		m_Head->b3Append(item);
 		b3UpdateList(item);
+		m_Changed = true;
 	}
 }
 
@@ -335,4 +348,13 @@ void CDlgItemMaintain::OnOK()
 	// TODO: Add extra validation here
 	
 	CDialog::OnOK();
+}
+
+b3_bool CDlgItemMaintain::b3SetModified(CDocument *pDoc)
+{
+	if (m_Changed)
+	{
+		pDoc->SetModifiedFlag();
+	}
+	return m_Changed;
 }

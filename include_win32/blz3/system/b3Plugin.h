@@ -51,6 +51,8 @@ class b3Loader : public b3LoaderBase
 {
 	       b3Array<b3_plugin_info> m_InfoArray;
 	static b3Loader                m_Loader;
+	static CString                 m_UnknownDesc;
+	static HICON                   m_UnknownIcon;
 
 	                b3Loader();
 public:
@@ -60,6 +62,13 @@ public:
 	b3_plugin_info *b3FindInfo(b3Item *item);
 	b3_plugin_info *b3FindInfo(b3_u32 class_type);
 	b3_count        b3GetClassTypes(b3Array<b3_u32> &array,b3_u32 class_id);
+
+	static void     b3SetUnknownIds(int unknown_desc_id,int unknown_icon_id);
+	static void     b3AddClassType(b3_u32 class_type,
+		int DescID = 0,
+		int IconID = 0,
+		b3_plugin_create_func create_func = null,
+		b3_plugin_edit_func   edit_func = null);
 
 	static inline b3Loader &b3GetLoader()
 	{

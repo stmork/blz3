@@ -2080,6 +2080,7 @@ public:
 	void     b3ScaleFocalLength(b3_f64 factor);
 	void     b3Transform(b3_matrix *transformation);
 	char    *b3GetName();
+	b3_bool  b3Prepare();
 	b3_bool  b3IsActive();
 	void     b3Activate(b3_bool activate = true);
 };

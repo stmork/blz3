@@ -618,6 +618,8 @@ BEGIN
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
         MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "&Material...",                ID_EDIT_MATERIAL
     END
     POPUP "&Ansicht"
     BEGIN
@@ -732,6 +734,8 @@ BEGIN
         MENUITEM "Alles aktivieren\tStrg+A",    ID_ALL_ACTIVATE
         MENUITEM "Alles deaktivieren\tAlt+A",   ID_ALL_DEACTIVATE
         MENUITEM "Rest der Szene deaktivieren", ID_ALL_DEACTIVATE_REST
+        MENUITEM SEPARATOR
+        MENUITEM "&Material...",                ID_EDIT_MATERIAL
     END
 END
 
@@ -1960,6 +1964,69 @@ BEGIN
                     WS_BORDER | WS_TABSTOP,15,15,350,150,WS_EX_CLIENTEDGE
 END
 
+IDD_MAT_NORMAL DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Material"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_CHESS DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Schachmuster"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_SLIDE DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Farbverlauf"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_TEXTURE DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Textur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_MARBLE DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Marmor"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_WOOD DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Holz"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
+IDD_MAT_WRAP_TEXTURE DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wickeltextur"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2325,6 +2392,62 @@ BEGIN
         RIGHTMARGIN, 375
         TOPMARGIN, 7
         BOTTOMMARGIN, 199
+    END
+
+    IDD_MAT_NORMAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_CHESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_SLIDE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_TEXTURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_MARBLE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_WOOD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_MAT_WRAP_TEXTURE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2713,6 +2836,7 @@ BEGIN
     ID_VIEW_THUMB           "Zeigt die Briefmarkenansicht\nBriefmarkenansicht"
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
+    ID_EDIT_MATERIAL        "Editiert das Körpermaterial.\nMaterial editieren"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -34,9 +34,11 @@ class CDlgItemMaintain : public CDialog
 	b3Base<b3Item>        *m_Head;
 	b3HashMap<b3_u32,int>  m_ClassTypesToImg;
 	b3Loader              *m_Plugins;
+	b3_bool                m_Changed;
 	CImageList             m_ImageList;
 
 public:
+	b3_bool b3SetModified(CDocument *pDoc);
 	CDlgItemMaintain(b3Base<b3Item> *head,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
