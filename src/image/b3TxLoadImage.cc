@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/17 19:17:03  sm
+**	- Fixed ILBM to other unfiltered scaling
+**
 **	Revision 1.4  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
-**
+**	
 **	Revision 1.3  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
@@ -322,6 +325,7 @@ b3_tx_filetype b3Tx::b3GetFileType(const char *ext)
 	if (stricmp(ext,"lbm")  == 0) return FT_ILBM;
 	if (stricmp(ext,"iff")  == 0) return FT_ILBM;
 	if (stricmp(ext,"ilbm") == 0) return FT_ILBM;
+	if (stricmp(ext,"yuv")  == 0) return FT_YUV;
 	if (stricmp(ext,"img")  == 0) return FT_SGI_RLE;
 	if (stricmp(ext,"ps")   == 0) return FT_PS;
 	if (stricmp(ext,"bmp")  == 0) return FT_BMP;

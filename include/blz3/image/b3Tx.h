@@ -398,8 +398,10 @@ private:
 	void           b3ColorScaleToGrey(b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 
 	void           b3MonoScale       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	void           b3ILBMScale       (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3VGAScale        (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
 	void           b3ColorScale      (b3Tx *srcTx,b3_index *rIndex,b3_index *cIndex);
+	b3_index       b3ILBMPlaneValue  (b3_coord x,b3_coord y);
 
 	// b3Tx.cc
 	b3_pkd_color   b3ILBMValue(b3_coord x,b3_coord y);

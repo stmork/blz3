@@ -61,10 +61,13 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/17 19:17:03  sm
+**	- Fixed ILBM to other unfiltered scaling
+**
 **	Revision 1.8  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.7  2002/01/11 16:14:39  sm
 **	- Fixed damaged b3Transform() by correcting used parameter vor
 **	  b3MatrixMMul and the b3BBox::m_Matrix meber.
@@ -1752,13 +1755,76 @@ void b3Tx::b3VGAScale(
 	}
 }
 
+
+inline b3_index b3Tx::b3ILBMPlaneValue (
+	b3_coord x,
+	b3_coord y)
+{
+	b3_u08       *Address;
+	b3_index  Bit,PlaneValue;
+	b3_index      BytesPerLine;
+	b3_res        i;
+
+	BytesPerLine = TX_BWA(xSize);
+	PlaneValue   = 0;
+	Address      = (b3_u08 *)data;
+	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
+	Bit          = Bits[x & 7];
+	for (i = 0;i < depth;i++)
+	{
+		Address     -= BytesPerLine;
+		PlaneValue <<= 1;
+		if (Address[0] & Bit)
+		{
+			PlaneValue |= 1;
+		}
+	}
+	return PlaneValue;
+}
+
+void b3Tx::b3ILBMScale(
+	b3Tx     *srcTx,
+	b3_count *rIndex,
+	b3_count *cIndex)
+{
+	b3_coord      x,y;
+	b3_u08       *cDst;
+	b3_pkd_color *lDst;
+
+	switch(type)
+	{
+	case B3_TX_VGA:
+		cDst = (b3_u08 *)data;
+		memcpy(palette,srcTx->b3GetPalette(),pSize * sizeof(b3_pkd_color));
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xSize;x++)
+			{
+				*cDst++ = (b3_u08)(srcTx->b3ILBMPlaneValue(rIndex[x],cIndex[y]) & 0xff);
+			}
+		}
+		break;
+
+	case B3_TX_RGB8:
+		lDst = (b3_pkd_color *)data;
+		for (y = 0;y < ySize;y++)
+		{
+			for (x = 0;x < xSize;x++)
+			{
+				*lDst++ = srcTx->b3GetValue(rIndex[x],cIndex[y]);
+			}
+		}
+		break;
+
+	default:
+		throw new b3TxException(B3_TX_UNSUPP);
+	}
+}
+
 void b3Tx::b3Scale(b3Tx *srcTx)
 {
-	b3_coord      x,y,sx,sy;
-	b3_index      index = 0,value;
-	b3_count      count;
-	b3_pkd_color  color;
-	b3_f64        r,g,b;
+	b3_coord      x,y;
+	b3_index      index = 0;
 	b3_count     *rIndex,*cIndex;
 
 	// Check if there is nothing to do
@@ -1799,31 +1865,9 @@ void b3Tx::b3Scale(b3Tx *srcTx)
 		{
 			b3VGAScale(srcTx,rIndex,cIndex);
 		}
-		else for (y = 0;y < ySize;y++)
+		else
 		{
-			for (x = 0;x < xSize;x++)
-			{
-				value  = 0;
-				count  = 0;
-				for (sy = cIndex[y];
-				     sy < cIndex[y+1];
-					 sy++)
-				{
-					for (sx = rIndex[x];
-					     sx < rIndex[x+1];
-						 sx++)
-					{
-						color = srcTx->b3GetValue(sx,sy);
-						r = (color & 0xff0000) >> 16;
-						g = (color & 0x00ff00) >>  8;
-						b = (color & 0x0000ff);
-						value += (b3_index)(r * 0.35 + g * 0.51 + b * 0.14);
-						count++;
-					}
-				}
-
-				data[index++] = (b3_u08)(value / count);
-			}
+			b3ILBMScale(srcTx,rIndex,cIndex);
 		}
 		break;
 	}

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/17 19:17:03  sm
+**	- Fixed ILBM to other unfiltered scaling
+**
 **	Revision 1.5  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.4  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
@@ -90,7 +93,7 @@ CB3ScrollView::CB3ScrollView()
 	m_Panning        = false;
 	m_UseCursor      = false;
 	m_ViewScan       = true;
-	m_Mode           = B3_VIEWMODE_FIT_BEST;
+	m_Mode           = B3_VIEWMODE_ORIGINAL;
 	m_xScale         = 1.0;
 	m_yScale         = 1.0;
 	m_PaletteDisplay = false;

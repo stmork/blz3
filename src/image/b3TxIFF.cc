@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/17 19:17:02  sm
+**	- Fixed ILBM to other unfiltered scaling
+**
 **	Revision 1.7  2002/01/01 13:50:21  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.6  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
@@ -460,6 +463,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 			case IFF_CMAP :
 				Max = b3Endian::b3GetMot32(&LongData[1]) / 3;
 				palette = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
+				pSize = Max;
 				if (palette==null)
 				{
 					b3FreeTx();
