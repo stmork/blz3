@@ -35,12 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.13  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.12  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -252,7 +256,7 @@ void CDlgScene::OnBgImageSelect()
 void CDlgScene::OnTopColor() 
 {
 	// TODO: Add your control notification handler code here
-	if (CB3ColorFieldSelector::b3Select(&m_PreviewScene->m_TopColor,this))
+	if (CB3ColorFieldSelector::b3Select(m_PreviewScene->m_TopColor,this))
 	{
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	}
@@ -261,7 +265,7 @@ void CDlgScene::OnTopColor()
 void CDlgScene::OnBottomColor() 
 {
 	// TODO: Add your control notification handler code here
-	if (CB3ColorFieldSelector::b3Select(&m_PreviewScene->m_BottomColor,this))
+	if (CB3ColorFieldSelector::b3Select(m_PreviewScene->m_BottomColor,this))
 	{
 		m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 	}

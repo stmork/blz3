@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.82  2003/03/04 20:37:37  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.81  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.80  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -449,11 +453,7 @@ static b3_gl_line m_BBoxIndices[12 * 2] =
 	{ 3,7 }
 };
 
-b3_color b3BBox::m_GridColor =
-{
-	0,0.4f,0.4f,0.4f
-};
-
+b3Color b3BBox::m_GridColor(0.4f,0.4f,0.4f,0.0f);
 b3_bool b3BBox::m_GridVisible = true;
 
 void b3InitBBox::b3Init()

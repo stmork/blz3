@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2003/03/04 20:37:39  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.53  2003/02/25 19:26:07  sm
 **      - Fixed missing grid update on pick move
 **
@@ -613,9 +617,9 @@ b3Material *b3Shape::b3GetColors(
 		material = (b3Material *)item;
 		if (material->b3GetColors(
 			&ray->polar,
-			&surface->diffuse,
-			&surface->ambient,
-			&surface->specular))
+			surface->diffuse,
+			surface->ambient,
+			surface->specular))
 		{
 			surface->refl = material->b3GetReflection(&ray->polar);
 			surface->refr = material->b3GetRefraction(&ray->polar);
@@ -624,20 +628,9 @@ b3Material *b3Shape::b3GetColors(
 			return material;
 		}
 	}
-	surface->diffuse.r = 0.1f;
-	surface->diffuse.g = 0.5f;
-	surface->diffuse.b = 1.0f;
-	surface->diffuse.a = 0.0f;
-
-	surface->ambient.r = 0.05f;
-	surface->ambient.g = 0.25f;
-	surface->ambient.b = 0.5f;
-	surface->ambient.a = 0.0f;
-
-	surface->specular.r = 0.1f;
-	surface->specular.g = 0.1f;
-	surface->specular.b = 0.1f;
-	surface->specular.a = 0.0f;
+	surface->diffuse.b3Init( 0.1f, 0.5f, 1.0f,0.0f);
+	surface->ambient.b3Init( 0.05f,0.25f,0.5f,0.0f);
+	surface->specular.b3Init(0.1f, 0.1f, 0.1f,0.0f);
 
 	surface->refl =      0.0f;
 	surface->refr =      0.0f;

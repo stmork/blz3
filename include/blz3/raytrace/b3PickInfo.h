@@ -42,7 +42,7 @@ protected:
 
 public:
 	b3_pick_mode     m_AllowedMode;
-	static b3_color  m_GridColor;
+	static b3Color   m_GridColor;
 
 public:
 	                 b3PickInfo();
@@ -60,7 +60,7 @@ protected:
 	        void     b3FreeVertices();
 	        void     b3ComputeVertices();
 	        void     b3ComputeIndices();
-	        void     b3GetGridColor(b3_color *color);
+	        void     b3GetGridColor(b3Color &color);
 };
 
 #endif

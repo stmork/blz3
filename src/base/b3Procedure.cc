@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.12  2002/12/22 12:07:52  sm
 **	- Made some minor accuracy adjustments.
-**
+**	
 **	Revision 1.11  2002/12/22 11:52:22  sm
 **	- Ensure minimum volume for bounding boxes even for plain areas.
 **	
@@ -411,12 +415,12 @@ b3_f64 b3Noise::b3Turbulence (b3_vector *P)
 **                                                                      **
 *************************************************************************/
 
-static b3_color MarbleColors[4] =
+static b3Color MarbleColors[4] =
 {
-	{ 0, 0.2f, 0.1f, 0.1f },
-	{ 0, 0.1f, 0.8f, 0.2f },
-	{ 0, 1.0f, 0.9f, 1.0f },
-	{ 0, 0.4f, 0.9f, 0.1f }
+	b3Color( 0.2f, 0.1f, 0.1f ),
+	b3Color( 0.1f, 0.8f, 0.2f ),
+	b3Color( 1.0f, 0.9f, 1.0f ),
+	b3Color( 0.4f, 0.9f, 0.1f )
 };
 
 static inline void marbleCurve (
@@ -433,20 +437,17 @@ static inline void marbleCurve (
 	Spline->b3DeBoorOpened (result,0,q);
 }
 
-void b3Noise::b3Marble(b3_vector *d,b3_color *mask)
+void b3Noise::b3Marble(b3_vector *d,b3Color &mask)
 {
 	b3_vector result;
 
 	marbleCurve(&marbleSpline,&result,
 		mSin(d->x + 0.5 * d->y + 0.3 * d->z + b3Turbulence(d)));
 
-	mask->a = 0;
-	mask->r =
-	mask->g =
-	mask->b = result.y;
+	mask.b3Init(result.y,result.y,result.y);
 }
 
-void b3Noise::b3OldMarble (b3_vector *P,b3_color *Color)
+void b3Noise::b3OldMarble (b3_vector *P,b3Color &Color)
 {
 	b3_count  s,e;
 	b3_f64    t,frac;
@@ -461,10 +462,8 @@ void b3Noise::b3OldMarble (b3_vector *P,b3_color *Color)
 	s        = (long)(t * 4)     & 3;
 	e        = (long)(t * 4 + 1) & 3;
 	frac     = t - s;
-	Color->a = 0;
-	Color->r = frac *  MarbleColors[s].r + (1 - frac) * MarbleColors[e].r;
-	Color->g = frac *  MarbleColors[s].g + (1 - frac) * MarbleColors[e].g;
-	Color->b = frac *  MarbleColors[s].b + (1 - frac) * MarbleColors[e].b;
+
+	Color = MarbleColors[s] * frac + MarbleColors[e] * (1.0 - frac);
 }
 
 /*************************************************************************
@@ -473,18 +472,16 @@ void b3Noise::b3OldMarble (b3_vector *P,b3_color *Color)
 **                                                                      **
 *************************************************************************/
 
-void b3Noise::b3Wood(b3_vector *d,b3_color *mask)
+void b3Noise::b3Wood(b3_vector *d,b3Color &mask)
 {
 	b3_vector result;
-	b3_f64 s;
+	b3_f64    s,r;
 
 	s   = 2 * sqrt(d->x * d->x + d->z * d->z) - 0.15 * d->y;
 	marbleCurve(&woodSpline,&result,mMod(s + b3Turbulence(d)));
 
-	mask->a = 0;
-	mask->r =
-	mask->g =
-	mask->b = 1.0 - result.y;
+	r = 1.0 - result.y;
+	mask.b3Init(r,r,r);
 }
 
 /*************************************************************************
@@ -493,15 +490,15 @@ void b3Noise::b3Wood(b3_vector *d,b3_color *mask)
 **                                                                      **
 *************************************************************************/
 
-static b3_color HellColors[4] =
+static b3Color HellColors[4] =
 {
-	{ 0, 0.8f, 0.2f, 0.1f },
-	{ 0, 0.8f, 0.9f, 0.2f },
-	{ 0, 1.0f, 0.9f, 1.0f },
-	{ 0, 0.7f, 0.2f, 0.0f }
+	b3Color(0.8f, 0.2f, 0.1f),
+	b3Color(0.8f, 0.9f, 0.2f),
+	b3Color(1.0f, 0.9f, 1.0f),
+	b3Color(0.7f, 0.2f, 0.0f)
 };
 
-void b3Noise::b3Hell (b3_vector *P,b3_color *Color)
+void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 {
 	b3_f64    t;
 	b3_vector Dir;
@@ -510,20 +507,19 @@ void b3Noise::b3Hell (b3_vector *P,b3_color *Color)
 
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;
-	*Color = HellColors[(int)(t * 4)];
+	Color = HellColors[(int)(t * 4)];
 }
 
-void b3Noise::b3Clouds (b3_vector *P,b3_color *Color)
+void b3Noise::b3Clouds (b3_vector *P,b3Color &Color)
 {
 	b3_vector Dir;
+	b3_f64    r;
 
 	b3Vector::b3Scale(&Dir,P,scal * 0.08);
 	Dir.x *= 0.3f;
 
-	Color->a = 0;
-	Color->r =
-	Color->g = b3Turbulence (&Dir) - 0.45;
-	Color->b = 1;
+	r = b3Turbulence (&Dir) - 0.45;
+	Color.b3Init(r,r,1.0);
 }
 
 inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)

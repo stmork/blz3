@@ -174,6 +174,10 @@ SOURCE=..\..\include\blz3\base\b3Aux.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Color.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Compare.h
 # End Source File
 # Begin Source File

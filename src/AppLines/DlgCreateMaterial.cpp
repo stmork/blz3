@@ -34,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.11  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.10  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
 **	
@@ -122,9 +126,9 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_Material   = null;
 
 	// Read previous used values
-	app->b3ReadProfileColor("material.ambient",  &m_MatNormal->m_AmbColor);
-	app->b3ReadProfileColor("material.diffuse",  &m_MatNormal->m_DiffColor);
-	app->b3ReadProfileColor("material.specular", &m_MatNormal->m_SpecColor);
+	app->b3ReadProfileColor("material.ambient",  m_MatNormal->m_AmbColor);
+	app->b3ReadProfileColor("material.diffuse",  m_MatNormal->m_DiffColor);
+	app->b3ReadProfileColor("material.specular", m_MatNormal->m_SpecColor);
 	m_Reflection   = app->b3ReadProfileFloat("material.reflection",   0);
 	m_Refraction   = app->b3ReadProfileFloat("material.refraction",   0);
 	m_RefrValue    = app->b3ReadProfileFloat("material.ior",          1);
@@ -345,9 +349,9 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 			normal->m_AmbColor   = m_MatNormal->m_AmbColor;
 			normal->m_DiffColor  = m_MatNormal->m_DiffColor;
 			normal->m_SpecColor  = m_MatNormal->m_SpecColor;
-			app->b3WriteProfileColor("material.ambient", &m_MatNormal->m_AmbColor);
-			app->b3WriteProfileColor("material.diffuse", &m_MatNormal->m_DiffColor);
-			app->b3WriteProfileColor("material.specular",&m_MatNormal->m_SpecColor);
+			app->b3WriteProfileColor("material.ambient", m_MatNormal->m_AmbColor);
+			app->b3WriteProfileColor("material.diffuse", m_MatNormal->m_DiffColor);
+			app->b3WriteProfileColor("material.specular",m_MatNormal->m_SpecColor);
 		}
 
 		B3_ASSERT((m_MatNormal->m_RefrValue != 0) && (m_MatNormal->m_HighLight != 0));

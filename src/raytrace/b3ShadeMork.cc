@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2003/03/04 20:37:39  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.16  2002/12/31 16:01:03  sm
 **	- Fixed wrong vector multiplication.
-**
+**	
 **	Revision 1.15  2002/07/26 09:13:33  sm
 **	- Found alpha problem: the Linux OpenGL renderer didn't use the
 **	  b3RenderContext::b3Init() method! Now everything function very well:-)
@@ -145,21 +149,15 @@ void b3SceneMork::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3_color      *result)
+	b3Color       &result)
 {
 	b3_f64   ShapeAngle,Factor;
-	b3_color filter;
+	b3Color  filter;
 
 	// Real absorption
-	result->a  = 0;
-	result->r += (surface->diffuse.r * m_ShadowFactor);
-	result->g += (surface->diffuse.g * m_ShadowFactor);
-	result->b += (surface->diffuse.b * m_ShadowFactor);
+	result += (surface->diffuse * m_ShadowFactor);
 
-	filter.a =
-	filter.r =
-	filter.g =
-	filter.b = 0;
+	filter.b3Init();
 
 	// No shadow => surface in light
 	if (Jit->shape == null)
@@ -178,9 +176,7 @@ void b3SceneMork::b3Illuminate(
 					surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
 
 				Factor = exp (Factor * surface->se) * Jit->LightFrac;
-				surface->specular_sum.r += (Factor * light->m_Color.r);
-				surface->specular_sum.g += (Factor * light->m_Color.g);
-				surface->specular_sum.b += (Factor * light->m_Color.b);
+				surface->specular_sum += (light->m_Color * Factor);
 			}
 		}
 		else
@@ -191,16 +187,11 @@ void b3SceneMork::b3Illuminate(
 		// surface illumination (diffuse color)
 		if ((Factor = ShapeAngle * Jit->LightFrac - m_ShadowFactor) > 0)
 		{
-			filter.r = light->m_Color.r * Factor;
-			filter.g = light->m_Color.g * Factor;
-			filter.b = light->m_Color.b * Factor;
+			filter = light->m_Color * Factor;
 		}
 	}
 
-	result->a += (surface->diffuse.r * filter.a);	
-	result->r += (surface->diffuse.r * filter.r);
-	result->g += (surface->diffuse.g * filter.g);
-	result->b += (surface->diffuse.b * filter.b);
+	result += (surface->diffuse * filter);
 }
 
 
@@ -238,9 +229,7 @@ b3_bool b3SceneMork::b3IsPointLightBackground (
 		Factor = 1;
 	}
 
-	Ray->color.r = Factor * Light->m_Color.r;
-	Ray->color.g = Factor * Light->m_Color.g;
-	Ray->color.b = Factor * Light->m_Color.b;
+	Ray->color = Light->m_Color * Factor;
 	return true;
 }
 
@@ -249,7 +238,6 @@ void b3SceneMork::b3LightFlare (b3_ray_info *Ray)
 	b3Item    *item;
 	b3Light   *Light;
 	b3_vector  toLight;
-	b3_color   result;
 	b3_f64     angle,reverse;
 
 	B3_FOR_BASE(b3GetLightHead(),item)
@@ -277,10 +265,7 @@ void b3SceneMork::b3LightFlare (b3_ray_info *Ray)
 		angle *= angle;
 
 		reverse    = 1.0 - angle;
-		result.r   = angle * Light->m_Color.r + reverse * Ray->color.r;
-		result.g   = angle * Light->m_Color.g + reverse * Ray->color.g;
-		result.b   = angle * Light->m_Color.b + reverse * Ray->color.b;
-		Ray->color = result;
+		Ray->color = Light->m_Color * angle + Ray->color * reverse;
 	}
 }
 
@@ -296,10 +281,8 @@ b3_bool b3SceneMork::b3Shade(
 	b3_bool      transparent;
 	b3_bool      result = false;
 
-	surface.specular_sum.a = ray->color.r =
-	surface.specular_sum.r = ray->color.g =
-	surface.specular_sum.g = ray->color.b =
-	surface.specular_sum.b = ray->color.a = 0;
+	surface.specular_sum.b3Init();
+	ray->color.b3Init();
 
 	// Normalize incoming ray
 	if (b3Vector::b3Normalize(&ray->dir) == 0)
@@ -379,42 +362,27 @@ b3_bool b3SceneMork::b3Shade(
 		factor = (1.0 - refl - refr) * 0.5;
 		if (factor > 0)
 		{
-			ray->color.r *= factor;
-			ray->color.g *= factor;
-			ray->color.b *= factor;
-			ray->color.a *= factor;
+			ray->color *= factor;
 		}
 		else
 		{
-			ray->color.r =
-			ray->color.g =
-			ray->color.b =
-			ray->color.a = 0;
+			ray->color.b3Init();
 		}
 
 		if (refl > 0)
 		{
-			ray->color.r += (refl * surface.refl_ray.color.r);
-			ray->color.g += (refl * surface.refl_ray.color.g);
-			ray->color.b += (refl * surface.refl_ray.color.b);
-			ray->color.a += (refl * surface.refl_ray.color.a);
+			ray->color += (surface.refl_ray.color * refl);
 		}
 		if (refr > 0)
 		{
-			ray->color.r += (refr * surface.refr_ray.color.r);
-			ray->color.g += (refr * surface.refr_ray.color.g);
-			ray->color.b += (refr * surface.refr_ray.color.b);
-			ray->color.a += (refr * surface.refr_ray.color.a);
+			ray->color += (surface.refr_ray.color * refr);
 		}
 
-		ray->color.r += surface.specular_sum.r;
-		ray->color.g += surface.specular_sum.g;
-		ray->color.b += surface.specular_sum.b;
-		ray->color.a += surface.specular_sum.a;
+		ray->color += surface.specular_sum;
 
 		if (m_Nebular != null)
 		{
-			m_Nebular->b3ComputeNebular(&ray->color,&ray->color,ray->Q);
+			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
 		}
 		result = true;
 	}
@@ -422,7 +390,7 @@ b3_bool b3SceneMork::b3Shade(
 	{
 		if (m_Nebular != null)
 		{
-			m_Nebular->b3GetNebularColor(&ray->color);
+			m_Nebular->b3GetNebularColor(ray->color);
 			result = true;
 		}
 		else
@@ -442,13 +410,13 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 {
 	b3Item   *item;
 	b3Light  *light;
-	b3_color  ambient;
-	b3_color  diffuse;
-	b3_color  black;
+	b3Color   ambient;
+	b3Color   diffuse;
+	b3Color   black;
 	b3_count  count = 0;
 
-	b3Color::b3Init(&black);
-	b3Color::b3Init(&ambient,m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
+	black.b3Init();
+	ambient.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
 
 	context->b3LightNum();
 	context->b3LightReset();
@@ -458,7 +426,7 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 		if (light->b3IsActive())
 		{
 			// Use the same color for diffuse and specular
-			b3Color::b3Scale(&light->m_Color,0.5,&diffuse);
+			diffuse = light->m_Color * 0.5;
 			if (context->b3LightAdd(
 				&light->m_Position,
 				light->m_SpotActive ? &light->m_Direction : null,
@@ -473,7 +441,7 @@ void b3SceneMork::b3SetLights(b3RenderContext *context)
 	}
 	if (count > 0)
 	{
-		b3Color::b3Scale(&ambient,1.0 / (double)count);
-		context->b3SetAmbient(&ambient);
+		ambient = ambient / count;
+		context->b3SetAmbient(ambient);
 	}
 }

@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2003/03/04 20:37:39  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.47  2003/02/17 16:57:46  sm
 **	- Inlining head pointer computation.
-**
+**	
 **	Revision 1.46  2003/02/05 18:42:32  sm
 **	- Changed TGF to scene/bbox import
 **	- Resorted some menus
@@ -282,14 +286,8 @@ b3Scene::b3Scene(b3_size class_size,b3_u32 class_type) : b3Item(class_size, clas
 	m_Heads[1].b3InitBase(CLASS_LIGHT);
 	m_Heads[2].b3InitBase(CLASS_SPECIAL);
 
-	m_TopColor.a = 0;
-	m_TopColor.r = 0.5;
-	m_TopColor.g = 0;
-	m_TopColor.b = 1;
-	m_BottomColor.a = 0;
-	m_BottomColor.r = 0;
-	m_BottomColor.g = 0;
-	m_BottomColor.b = 1;
+	m_TopColor.b3Init   (0.5f,0.0f,1.0f);
+	m_BottomColor.b3Init(0.0f,0.0f,1.0f);
 
 	m_xAngle           = 0;
 	m_yAngle           = 0;
@@ -315,14 +313,8 @@ b3Scene::b3Scene(b3_u32 class_type) : b3Item(sizeof(b3Scene),class_type)
 	m_Heads[1].b3InitBase(CLASS_LIGHT);
 	m_Heads[2].b3InitBase(CLASS_SPECIAL);
 
-	m_TopColor.a = 0;
-	m_TopColor.r = 0.5;
-	m_TopColor.g = 0;
-	m_TopColor.b = 1;
-	m_BottomColor.a = 0;
-	m_BottomColor.r = 0;
-	m_BottomColor.g = 0;
-	m_BottomColor.b = 1;
+	m_TopColor.b3Init   (0.5f,0.0f,1.0f);
+	m_BottomColor.b3Init(0.0f,0.0f,1.0f);
 
 	m_xAngle           = 0;
 	m_yAngle           = 0;
@@ -342,8 +334,8 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	b3PrintF(B3LOG_DEBUG,"Blizzard III scene load.\n");
 
 	// Background color
-	b3InitColor(&m_TopColor);
-	b3InitColor(&m_BottomColor);
+	b3InitColor(m_TopColor);
+	b3InitColor(m_BottomColor);
 
 	// Camera
 	b3InitVector(&m_EyePoint);
@@ -376,8 +368,8 @@ void b3Scene::b3Write()
 	b3PrintF(B3LOG_DEBUG,"Blizzard III scene storage.\n");
 
 	// Background color
-	b3StoreColor(&m_TopColor);
-	b3StoreColor(&m_BottomColor);
+	b3StoreColor(m_TopColor);
+	b3StoreColor(m_BottomColor);
 
 	// Camera
 	b3StoreVector(&m_EyePoint);
@@ -756,11 +748,11 @@ b3_f64 b3Scene::b3ComputeSpotExponent(b3Light *light)
 }
 void b3Scene::b3SetLights(b3RenderContext *context)
 {
-	b3Item   *item;
-	b3Light  *light;
-	b3_color  ambient;
+	b3Item  *item;
+	b3Light *light;
+	b3Color  ambient;
 
-	b3Color::b3Init(&ambient,
+	ambient.b3Init(
 		m_ShadowBrightness,
 		m_ShadowBrightness,
 		m_ShadowBrightness);

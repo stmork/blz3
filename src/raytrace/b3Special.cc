@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.60  2003/03/04 20:37:39  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.59  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -366,10 +370,7 @@ b3Special::b3Special(b3_u32 *src) : b3Item(src)
 b3SuperSample::b3SuperSample(b3_u32 class_type) :
 	b3Special(sizeof(b3SuperSample),class_type)
 {
-	m_Limit.a = 0;
-	m_Limit.r = 0.2f;
-	m_Limit.g = 0.2f;
-	m_Limit.b = 0.2f;
+	m_Limit.b3Init(0.2f,0.2f,0.2f);
 	m_Active  = true;
 }
 
@@ -379,10 +380,11 @@ b3SuperSample::b3SuperSample(b3_u32 *src) :
 	b3_color limit;
 
 	b3InitColor(&limit);
-	m_Limit.a = fabs(limit.a);
-	m_Limit.r = fabs(limit.r);
-	m_Limit.g = fabs(limit.g);
-	m_Limit.b = fabs(limit.b);
+	m_Limit.b3Init(
+		fabs(limit.r),
+		fabs(limit.g),
+		fabs(limit.b),
+		fabs(limit.a));
 
 	// This looks a little bit ugly but is for compatibility reasons.
 	// This instantiation uses an easy way to determine activation.
@@ -397,17 +399,17 @@ void b3SuperSample::b3Write()
 	// This instantiation uses an easy way to determine activation.
 	if (m_Active)
 	{
-		limit.a =  fabs(m_Limit.a);
-		limit.r =  fabs(m_Limit.r);
-		limit.g =  fabs(m_Limit.g);
-		limit.b =  fabs(m_Limit.b);
+		limit.a =  fabs(m_Limit[b3Color::A]);
+		limit.r =  fabs(m_Limit[b3Color::R]);
+		limit.g =  fabs(m_Limit[b3Color::G]);
+		limit.b =  fabs(m_Limit[b3Color::B]);
 	}
 	else
 	{
-		limit.a = -fabs(m_Limit.a);
-		limit.r = -fabs(m_Limit.r);
-		limit.g = -fabs(m_Limit.g);
-		limit.b = -fabs(m_Limit.b);
+		limit.a = -fabs(m_Limit[b3Color::A]);
+		limit.r = -fabs(m_Limit[b3Color::R]);
+		limit.g = -fabs(m_Limit[b3Color::G]);
+		limit.b = -fabs(m_Limit[b3Color::B]);
 	}
 	b3StoreColor(&limit);
 }
@@ -807,19 +809,19 @@ b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)
 {
 	m_NebularVal = -100.0;
-	b3Color::b3Init(&m_NebularColor,0.8f,0.9f,1.0f);
+	m_NebularColor.b3Init(0.8f,0.9f,1.0f);
 }
 
 b3Nebular::b3Nebular(b3_u32 *src) :
 	b3Special(src)
 {
-	b3InitColor(&m_NebularColor);
+	b3InitColor(m_NebularColor);
 	m_NebularVal = b3InitFloat();
 }
 
 void b3Nebular::b3Write()
 {
-	b3StoreColor(&m_NebularColor);
+	b3StoreColor(m_NebularColor);
 	b3StoreFloat(m_NebularVal);
 }
 
@@ -842,23 +844,20 @@ void b3Nebular::b3Activate(b3_bool flag)
 	m_NebularVal = (flag ? fabs(m_NebularVal) : -fabs(m_NebularVal));
 }
 
-void b3Nebular::b3GetNebularColor(b3_color *result)
+void b3Nebular::b3GetNebularColor(b3Color &result)
 {
-	*result = m_NebularColor;
+	result = m_NebularColor;
 }
 
 void b3Nebular::b3ComputeNebular(
-	b3_color *input,
-	b3_color *result,
-	b3_f64    distance)
+	b3Color &input,
+	b3Color &result,
+	b3_f64   distance)
 {
 	b3_f64 NebularIndex = exp (-distance * m_NebularDenom);
 	b3_f64 NebularDenom = 1 - NebularIndex;
 
-	result->a = NebularIndex * input->a + NebularDenom * m_NebularColor.a;
-	result->r = NebularIndex * input->r + NebularDenom * m_NebularColor.r;
-	result->g = NebularIndex * input->g + NebularDenom * m_NebularColor.g;
-	result->b = NebularIndex * input->b + NebularDenom * m_NebularColor.b;
+	result = input * NebularIndex + m_NebularColor * NebularDenom;
 }
 
 /*************************************************************************
@@ -871,21 +870,22 @@ b3LensFlare::b3LensFlare(b3_u32 class_type) :
 	b3Special(sizeof(b3LensFlare),class_type)
 {
 	b3Activate(false);
-	b3Color::b3Init(&m_Color,0,1,1,1);
+	m_Color.b3Init(0.0,1.0,1.0,0.0);
+	m_Expon = 13;
 }
 
 b3LensFlare::b3LensFlare(b3_u32 *src) :
 	b3Special(src)
 {
 	m_Flags = b3InitInt();
-	b3InitColor(&m_Color);
+	b3InitColor(m_Color);
 	m_Expon = b3InitFloat();
 }
 
 void b3LensFlare::b3Write()
 {
 	b3StoreInt(m_Flags);
-	b3StoreColor(&m_Color);
+	b3StoreColor(m_Color);
 	b3StoreFloat(m_Expon);
 }
 

@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2003/03/04 20:37:36  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.29  2003/01/19 15:14:08  sm
 **      - Bound checking in b3VectorXX and b3Array only in debug version.
 **      - Added operator [] in b3VectorXX
@@ -541,6 +545,14 @@ void b3Item::b3InitColor(b3_color *col)
 	m_ParseIndex += 4;
 }
 
+void b3Item::b3InitColor(b3Color &col)
+{
+	b3_color  aux;
+
+	b3InitColor(&aux);
+	col = b3Color(aux);
+}
+
 void b3Item::b3InitString(char *name,b3_size len)
 {
 	b3_index pos = m_ParseIndex << 2;
@@ -904,6 +916,13 @@ void b3Item::b3StoreColor(const b3_color *col)
 	*ptr++ = col->b;
 
 	m_StoreIndex += 4;
+}
+
+void b3Item::b3StoreColor(b3Color &col)
+{
+	b3_color aux = col;
+	
+	b3StoreColor(&aux);
 }
 
 void b3Item::b3StoreString(const char *name,const b3_size len)

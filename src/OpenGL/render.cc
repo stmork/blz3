@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2003/03/04 20:37:36  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.34  2003/02/26 16:36:16  sm
 **      - Sorted drawing colors and added configuration support
 **        to dialog.
@@ -291,7 +295,7 @@ static void b3NextCamera(b3Scene *scene)
 
 static void b3SetupRC()
 {
-	b3Color::b3Init(&context.glBgColor,0.7f,0.7f,1.0f);
+	context.glBgColor.b3Init(0.7f,0.7f,1.0f);
 	context.b3Init();
 	b3SetLights();
 }

@@ -32,6 +32,10 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/03/04 20:37:39  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.12  2002/02/28 16:58:46  sm
 **	- Added torus dialogs.
 **	- Fixed material and stencil handling when not activating
@@ -39,7 +43,7 @@
 **	- Further cleanup of edit dialogs done.
 **	- Corrected shading of CSG cylinder and CSG cone (added
 **	  shaded top and bottom plate).
-**
+**	
 **	Revision 1.11  2002/02/18 17:50:32  sm
 **	- Corrected some intersection problems concerning CSG
 **	- Added CSG shape icons
@@ -131,7 +135,7 @@ void b3ScenePhong::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3_color      *result)
+	b3Color       &result)
 {
 	b3_f64 ShapeAngle,Factor;
 
@@ -148,15 +152,7 @@ void b3ScenePhong::b3Illuminate(
 				surface->refl_ray.dir.z * Jit->dir.z + 1) * 0.5);
 			Factor = exp(Factor * surface->se) * Jit->LightFrac;
 
-			result->r += (
-				Factor     * surface->specular.r +
-				ShapeAngle * surface->diffuse.r) * light->m_Color.r;
-			result->g += (
-				Factor     * surface->specular.g +
-				ShapeAngle * surface->diffuse.g) * light->m_Color.g;
-			result->b += (
-				Factor     * surface->specular.b +
-				ShapeAngle * surface->diffuse.b) * light->m_Color.b;
+			result += (surface->specular * Factor +	surface->diffuse * ShapeAngle) * light->m_Color;
 		}
 	}
 }
@@ -179,10 +175,7 @@ b3_bool b3ScenePhong::b3Shade(
 	// If max raytrace depth is reached leave!
 	if (depth_count > m_TraceDepth)
 	{
-		ray->color.r =
-		ray->color.g =
-		ray->color.b = 0.0f;
-		ray->color.a = 0.0f;
+		ray->color.b3Init();
 		return false;
 	}
 
@@ -200,10 +193,7 @@ b3_bool b3ScenePhong::b3Shade(
 	}
 	else
 	{
-		ray->color.r =
-		ray->color.g =
-		ray->color.b = 0.0f;
-		ray->color.a = 0.0f;
+		ray->color.b3Init();
 		return false;
 	}
 
@@ -254,56 +244,22 @@ b3_bool b3ScenePhong::b3Shade(
 		case 1:
 			// Only refraction
 			factor = (1.0 - refr);
-			ray->color.r =
-				surface.refr_ray.color.r * refr +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refr_ray.color.g * refr +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refr_ray.color.b * refr +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refr_ray.color.a * refr +
-				            ray->color.a * factor;
+			ray->color = surface.refr_ray.color * refr + ray->color * factor;
 			break;
 
 		case 2:
 			// Only reflection
 			factor = (1.0 - refr);
-			ray->color.r =
-				surface.refl_ray.color.r * refl +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refl_ray.color.g * refl +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refl_ray.color.b * refl +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refl_ray.color.a * refl +
-				            ray->color.a * factor;
+			ray->color = surface.refl_ray.color * refl + ray->color * factor;
 			break;
 
 		case 3:
 			// Reflection and refraction
 			factor = (1.0 - refl - refr);
-			ray->color.r =
-				surface.refl_ray.color.r * refl +
-				surface.refr_ray.color.r * refr +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refl_ray.color.g * refl +
-				surface.refr_ray.color.g * refr +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refl_ray.color.b * refl +
-				surface.refr_ray.color.b * refr +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refl_ray.color.a * refl +
-				surface.refr_ray.color.a * refr +
-				            ray->color.a * factor;
+			ray->color =
+				surface.refl_ray.color * refl +
+				surface.refr_ray.color * refr +
+				            ray->color * factor;
 			break;
 		}
 
@@ -315,14 +271,14 @@ b3_bool b3ScenePhong::b3Shade(
 
 		if (m_Nebular != null)
 		{
-			m_Nebular->b3ComputeNebular(&ray->color,&ray->color,ray->Q);
+			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
 		}
 		result = true;
 	}
 
 	if (m_Nebular != null)
 	{
-		m_Nebular->b3GetNebularColor(&ray->color);
+		m_Nebular->b3GetNebularColor(ray->color);
 		result = true;
 	}
 	return result;

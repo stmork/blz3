@@ -22,6 +22,7 @@
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Array.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Filter.h"
 #include "blz3/base/b3World.h"
@@ -74,7 +75,7 @@ struct b3_ray : public b3_line64
 // aux. structure for computing illumination
 struct b3_surface
 {
-	b3_color  diffuse,ambient,specular,specular_sum;
+	b3Color   diffuse,ambient,specular,specular_sum;
 	b3_f64    refl,refr,ior,se;
 };
 
@@ -599,18 +600,18 @@ public:
 	virtual b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	virtual b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // MATERIAL or MAT_NORMAL
 class b3MatNormal : public b3Material
 {
 public:
-	b3_color          m_DiffColor;
-	b3_color          m_AmbColor;
-	b3_color          m_SpecColor;
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
 	b3_f32            m_Reflection;          // self explaining
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
@@ -628,18 +629,18 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // CHESS
 class b3MatChess : public b3Material 
 {
 public:
-	b3_color m_DiffColor[2];
-	b3_color m_AmbColor[2];
-	b3_color m_SpecColor[2];
+	b3Color  m_DiffColor[2];
+	b3Color  m_AmbColor[2];
+	b3Color  m_SpecColor[2];
 	b3_f32   m_Reflection[2];         // same like NormMaterial, but
 	b3_f32   m_Refraction[2];
 	b3_f32   m_RefrValue[2];
@@ -659,17 +660,17 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // MARBLE
 class b3MatMarble : public b3Material 
 {
-	b3_color          m_DiffColor;
-	b3_color          m_AmbColor;
-	b3_color          m_SpecColor;
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
 	b3_vector         m_Scale;
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
@@ -689,17 +690,17 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // WOOD
 class b3MatWood : public b3Material 
 {
-	b3_color          m_DiffColor;
-	b3_color          m_AmbColor;
-	b3_color          m_SpecColor;
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
 	b3_vector         m_Scale;
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
@@ -719,9 +720,9 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // TEXTURE
@@ -751,9 +752,9 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // WRAPTEXTURE
@@ -782,17 +783,17 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 // SLIDE
 class b3MatSlide : public b3Material 
 {
-	b3_color          m_Diffuse[2];        // colors for start/end
-	b3_color          m_Ambient[2];
-	b3_color          m_Specular[2];
+	b3Color           m_Diffuse[2];        // colors for start/end
+	b3Color           m_Ambient[2];
+	b3Color           m_Specular[2];
 	b3_f32            m_From,m_To;           // rel. polar values of start, end
 	b3_f32            m_Reflection;          // normal material definitions
 	b3_f32            m_Refraction;
@@ -811,9 +812,9 @@ public:
 	b3_f64  b3GetSpecularExponent(b3_polar *polar);
 	b3_bool b3GetColors(
 		b3_polar *polar,
-		b3_color *diff,
-		b3_color *amb,
-		b3_color *spec);
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
 };
 
 #define DIR_SLIDE_BIT       0
@@ -990,9 +991,9 @@ public:
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void            b3GetDiffuseColor(b3_color *color);
-	b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
-	b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
+	void            b3GetDiffuseColor(b3Color &color);
+	b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
+	b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
 	b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	b3_bool         b3GetImage(b3Tx *image);
 	b3_render_mode  b3GetRenderMode();
@@ -1673,7 +1674,7 @@ public:
 
 	b3_gl_vertex     m_BBoxVertex[8];
 
-	static b3_color  m_GridColor;
+	static b3Color   m_GridColor;
 	static b3_bool   m_GridVisible;
 
 public:
@@ -1725,9 +1726,9 @@ public:
 	}
 
 protected:
-	inline void            b3GetGridColor(b3_color *color)
+	inline void b3GetGridColor(b3Color &color)
 	{
-		*color = m_GridColor;
+		color = m_GridColor;
 	}
 
 	inline b3_render_mode  b3GetRenderMode()
@@ -1788,7 +1789,7 @@ protected:
 struct b3_ray_info : public b3_ray
 {
 	b3_index     depth;
-	b3_color     color;
+	b3Color      color;
 	b3Shape     *shape;
 	b3BBox      *bbox;
 };
@@ -1804,7 +1805,7 @@ struct b3_ray_fork : public b3_surface
 struct b3_light_info : public b3_ray_info
 {
 	b3_vector LightView,xDir,yDir;
-	b3_color  Result;
+	b3Color   Result;
 	b3_f64    Size,LightFrac,LightDist;
 	b3_s32    Distr;
 };
@@ -1825,7 +1826,7 @@ class b3Light : public b3Item
 
 public:
 	b3_vector        m_Position;     // Position
-	b3_color         m_Color;        // Farbe
+	b3Color          m_Color;        // Farbe
 	b3_f32           m_Distance;     // rel. Reichweite
 	b3_s32           m_Flags;        // Lampentyp
 	b3_f32           m_Size;         // Auffaecherung
@@ -2035,7 +2036,7 @@ class b3SuperSample : public b3Special
 	b3_bool     m_Active;
 
 public:
-	b3_color    m_Limit;
+	b3Color     m_Limit;
 
 public:
 	B3_ITEM_INIT(b3SuperSample);
@@ -2083,7 +2084,7 @@ class b3Nebular : public b3Special
 {
 	b3_f64           m_NebularDenom;
 public:
-	b3_color         m_NebularColor;
+	b3Color          m_NebularColor;
 	b3_f32           m_NebularVal;
 
 public:
@@ -2094,8 +2095,8 @@ public:
 	b3_bool b3Prepare();
 	b3_bool b3IsActive();
 	void    b3Activate(b3_bool activate=true);
-	void    b3GetNebularColor(b3_color *result);
-	void    b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
+	void    b3GetNebularColor(b3Color &result);
+	void    b3ComputeNebular(b3Color &input,b3Color &result,b3_f64 distance);
 };
 
 // LINES_INFO
@@ -2280,7 +2281,7 @@ class b3LensFlare : public b3Special
 {
 public:
 	b3_s32         m_Flags;
-	b3_color       m_Color;
+	b3Color        m_Color;
 	b3_f32         m_Expon;
 
 public:
@@ -2375,8 +2376,8 @@ protected:
 	b3LensFlare     *m_LensFlare;
 	b3CameraPart    *m_ActualCamera;
 	b3_f64           m_ShadowFactor;        // Schattenhelligkeit
-	b3_color         m_AvrgColor;
-	b3_color         m_DiffColor;
+	b3Color          m_AvrgColor;
+	b3Color          m_DiffColor;
 	b3_vector64      m_xHalfDir;
 	b3_vector64      m_yHalfDir;
 	b3_vector64      m_xStepDir;
@@ -2392,8 +2393,8 @@ public:
 	b3_f32           m_xAngle,m_yAngle;     // Blickwinkel
 
 	// Background
-	b3_color         m_TopColor;
-	b3_color         m_BottomColor;
+	b3Color          m_TopColor;
+	b3Color          m_BottomColor;
 	b3Tx            *m_BackTexture;         //
 	b3_bg_type       m_BackgroundType;      // Hintergrund: Farbe/Datei/...
 
@@ -2459,7 +2460,7 @@ public:
 		    b3_bool         b3Intersect(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 			b3_bool         b3IsObscured(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
+	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
 	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
 	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
@@ -2519,7 +2520,7 @@ public:
 	B3_ITEM_LOAD(b3ScenePhong);
 
 	b3_bool b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
+	void    b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
 	b3_bool b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
 };
 
@@ -2531,7 +2532,7 @@ public:
 
 	virtual void     b3SetLights(b3RenderContext *context);
 	        b3_bool  b3Shade(b3_ray_info *ray,b3_count depth = 0);
-	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3_color *result);
+	        void     b3Illuminate(b3Light *light,b3_light_info *jit,b3_ray_fork *surface,b3Color &result);
 
 private:
 	b3_bool b3IsPointLightBackground(b3Light *light,b3_ray_info *ray);
@@ -2543,8 +2544,8 @@ class b3RayRow : public b3Row
 protected:
 	b3Display   *m_Display;
 	b3Scene     *m_Scene;
-	b3_color    *m_LastResult;
-	b3_color    *m_ThisResult;
+	b3Color     *m_LastResult;
+	b3Color     *m_ThisResult;
 	b3_vector64  m_preDir;
 	b3_coord     m_y;
 	b3_res       m_xSize;
@@ -2572,11 +2573,11 @@ class b3SupersamplingRayRow : public b3RayRow
 {
 	b3SupersamplingRayRow *m_PrevRow;
 	b3SupersamplingRayRow *m_SuccRow;
-	b3_color              *m_Limit;
+	b3Color                m_Limit;
 	b3_row_state           m_RowState;
 public:
 	              b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
-	virtual      ~b3SupersamplingRayRow() {}
+	virtual      ~b3SupersamplingRayRow();
 	virtual void  b3Raytrace();
 
 private:
@@ -2607,7 +2608,7 @@ class b3MotionBlurRayRow : public b3DistributedRayRow
 	b3_index        m_Index;
 	b3_index        m_Modulo;
 	b3_index        m_Start;
-	b3_color       *m_Color;
+	b3Color        *m_Color;
 	b3_vector64     m_BackupDir;
 
 public:

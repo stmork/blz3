@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.4  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
-**
+**	
 **	Revision 1.3  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
@@ -116,7 +120,7 @@ void b3RayRow::b3Raytrace()
 		m_preDir.z += m_Scene->m_xStepDir.z;
 		fx         += m_fxStep;
 
-		m_buffer[x] = b3Color::b3GetSatColor(&ray.color);
+		m_buffer[x] = ray.color;
 	}
 	m_Display->b3PutRow(this);
 	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
@@ -141,8 +145,8 @@ b3SupersamplingRayRow::b3SupersamplingRayRow(
 	b3SupersamplingRayRow *last) :
 		b3RayRow(scene,display,y,xSize,ySize)
 {
-	m_Limit      = &m_Scene->m_SuperSample->m_Limit;
-	m_ThisResult = (b3_color *)b3Alloc(xSize * sizeof(b3_color));
+	m_Limit      = m_Scene->m_SuperSample->m_Limit;
+	m_ThisResult = new b3Color[xSize];
 	m_RowState   = B3_STATE_NOT_STARTED;
 
 	m_PrevRow = last;
@@ -156,6 +160,11 @@ b3SupersamplingRayRow::b3SupersamplingRayRow(
 	{
 		m_LastResult = null;
 	}
+}
+
+b3SupersamplingRayRow::~b3SupersamplingRayRow()
+{
+	delete [] m_ThisResult;
 }
 
 void b3SupersamplingRayRow::b3Raytrace()
@@ -193,7 +202,8 @@ void b3SupersamplingRayRow::b3Raytrace()
 		dir.y   += m_Scene->m_xStepDir.y;
 		dir.z   += m_Scene->m_xStepDir.z;
 
-		b3Color::b3Sat(&ray.color,&m_ThisResult[x]);
+		m_ThisResult[x] = ray.color;
+//		m_ThisResult[x].b3Sat();
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();
@@ -233,13 +243,9 @@ void b3SupersamplingRayRow::b3Raytrace()
 
 inline b3_bool b3SupersamplingRayRow::b3Test(b3_res x)
 {
-	if(fabs(m_LastResult[x].r   - m_ThisResult[x].r) >= m_Limit->r) return true;
-	if(fabs(m_LastResult[x].g   - m_ThisResult[x].g) >= m_Limit->g) return true;
-	if(fabs(m_LastResult[x].b   - m_ThisResult[x].b) >= m_Limit->b) return true;
-	if(fabs(m_ThisResult[x-1].r - m_ThisResult[x].r) >= m_Limit->r) return true;
-	if(fabs(m_ThisResult[x-1].g - m_ThisResult[x].g) >= m_Limit->g) return true;
-	if(fabs(m_ThisResult[x-1].b - m_ThisResult[x].b) >= m_Limit->b) return true;
-	return false;
+	b3Color diff = m_LastResult[x] - m_ThisResult[x];
+
+	return diff.b3IsGreater(m_Limit);
 }
 
 inline void b3SupersamplingRayRow::b3Convert()
@@ -249,9 +255,9 @@ inline void b3SupersamplingRayRow::b3Convert()
 	for (x = 0;x < m_xSize;x++)
 	{
 #ifndef DEBUG_SS4
-		m_buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+		m_buffer[x] = m_ThisResult[x];
 #else
-		m_buffer[x] = 0x0000ff;
+		m_buffer[x] = B3_BLUE;
 #endif
 	}
 
@@ -296,9 +302,9 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 #ifdef DEBUG_SS4
 			result = (add ?
 				(this_row ?
-					0x00ff00 :
-					0xff0000) :
-				0x808080);
+					B3_GREEN :
+					B3_RED) :
+				B3_GREY);
 #endif
 		}
 		else
@@ -321,7 +327,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxRight,fyUp);
 			}
-			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
+			m_ThisResult[x] += ray.color;
 
 			ray.dir.x  = (dir.x -= m_Scene->m_xHalfDir.x);
 			ray.dir.y  = (dir.y -= m_Scene->m_xHalfDir.y);
@@ -332,7 +338,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyUp);
 			}
-			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
+			m_ThisResult[x] += ray.color;
 
 			ray.dir.x  = (dir.x -= m_Scene->m_yHalfDir.x);
 			ray.dir.y  = (dir.y -= m_Scene->m_yHalfDir.y);
@@ -343,13 +349,13 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
 			}
-			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
+			m_ThisResult[x] += ray.color;
 
 			ray.dir.x = (dir.x += m_Scene->m_xHalfDir.x);
 			ray.dir.y = (dir.y += m_Scene->m_xHalfDir.y);
 			ray.dir.z = (dir.z += m_Scene->m_xHalfDir.z);
-			b3Color::b3Scale(&m_ThisResult[x],0.25);
-			b3Color::b3Sat(&m_ThisResult[x]);
+			m_ThisResult[x] *= 0.25;
+//			m_ThisResult[x].b3Sat();
 		}
 		ray.dir.x  = (dir.x += m_Scene->m_xStepDir.x);
 		ray.dir.y  = (dir.y += m_Scene->m_xStepDir.y);
@@ -358,7 +364,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		fxLeft    += m_fxStep;
 
 #ifndef DEBUG_SS4
-		m_buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+		m_buffer[x] = m_ThisResult[x];
 #else
 		m_buffer[x] = result;
 #endif
@@ -416,7 +422,7 @@ void b3DistributedRayRow::b3Raytrace()
 {
 	b3_ray_info   ray;
 	b3_coord      x,s;
-	b3_color      result;
+	b3Color       result;
 	b3_f64        fx,sx,sy;
 	b3_f32       *samples = m_Samples;
 
@@ -428,7 +434,7 @@ void b3DistributedRayRow::b3Raytrace()
 
 	for (x = 0;x < m_xSize;x++)
 	{
-		b3Color::b3Init(&result);
+		result.b3Init();
 		for (s = 0;s < m_SPP;s++)
 		{
 			sx = *samples++;
@@ -444,15 +450,14 @@ void b3DistributedRayRow::b3Raytrace()
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
 			}
-			b3Color::b3Add(&ray.color,&result);
+			result += ray.color;
 		}
 		m_preDir.x += m_Scene->m_xStepDir.x;
 		m_preDir.y += m_Scene->m_xStepDir.y;
 		m_preDir.z += m_Scene->m_xStepDir.z;
 		fx         += m_fxStep;
 
-		b3Color::b3Scale(&result,1.0 / m_SPP);
-		m_buffer[x] = b3Color::b3GetSatColor(&result);
+		m_buffer[x] = result / m_SPP;
 	}
 	m_Display->b3PutRow(this);
 	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
@@ -476,7 +481,13 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 	b3_res     ySize) :
 		b3DistributedRayRow(scene,display,y,xSize,ySize)
 {
-	m_Color = (b3_color *)b3Alloc(m_xSize * sizeof(b3_color));
+	b3_coord x;
+
+	m_Color = new b3Color[m_xSize];
+	for (x = 0;x < m_xSize;x++)
+	{
+		m_Color[x].b3Init();
+	}
 	if (m_Color == null)
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -491,6 +502,7 @@ b3MotionBlurRayRow::b3MotionBlurRayRow(
 
 b3MotionBlurRayRow::~b3MotionBlurRayRow()
 {
+	delete [] m_Color;
 }
 
 void b3MotionBlurRayRow::b3SetTimePoint(b3_f64 t)
@@ -502,7 +514,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 {
 	b3_ray_info   ray;
 	b3_coord      x,s;
-	b3_color      result;
+	b3Color       result;
 	b3_f64        fx,sx,sy;
 	b3_f32       *samples = m_Samples;
 	b3_index      count = 0;
@@ -534,9 +546,14 @@ void b3MotionBlurRayRow::b3Raytrace()
 					m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
 				}
 
+				m_Color[x] += ray.color;
+				result      = m_Color[x] / m_SPP;
+
+/*
 				b3Color::b3Add(&ray.color,&m_Color[x]);
 				b3Color::b3Scale(&m_Color[x],1.0 / m_SPP,&result);
-				m_buffer[x] = b3Color::b3GetSatColor(&result);
+*/
+				m_buffer[x] = result;
 			}
 			else
 			{

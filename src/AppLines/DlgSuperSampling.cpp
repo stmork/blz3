@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.4  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.3  2001/11/25 12:25:31  sm
 **	- Completing some dialogs:
 **	  o super sampling
@@ -98,9 +102,9 @@ END_MESSAGE_MAP()
 
 BOOL CDlgSuperSampling::OnInitDialog() 
 {
-	m_LastRed   = floor(m_SuperSample->m_Limit.r * 100.0 + 0.5);
-	m_LastGreen = floor(m_SuperSample->m_Limit.g * 100.0 + 0.5);
-	m_LastBlue  = floor(m_SuperSample->m_Limit.b * 100.0 + 0.5);
+	m_LastRed   = floor(m_SuperSample->m_Limit[b3Color::R] * 100.0 + 0.5);
+	m_LastGreen = floor(m_SuperSample->m_Limit[b3Color::G] * 100.0 + 0.5);
+	m_LastBlue  = floor(m_SuperSample->m_Limit[b3Color::B] * 100.0 + 0.5);
 
 	m_ActSuperSampling = m_SuperSample->b3IsActive();
 	m_RedLegend.Format(IDS_SS4_RED_LEGEND,m_LastRed);
@@ -183,8 +187,9 @@ void CDlgSuperSampling::OnOK()
 {
 	// TODO: Add extra validation here
 	CPropertyPage::OnOK();
-	m_SuperSample->m_Limit.r = m_RedCtrl.GetPos()   * 0.01f;
-	m_SuperSample->m_Limit.g = m_GreenCtrl.GetPos() * 0.01f;
-	m_SuperSample->m_Limit.b = m_BlueCtrl.GetPos()  * 0.01f;
+	m_SuperSample->m_Limit.b3Init(
+		m_RedCtrl.GetPos()   * 0.01f,
+		m_GreenCtrl.GetPos() * 0.01f,
+		m_BlueCtrl.GetPos()  * 0.01f);
 	m_SuperSample->b3Activate(m_ActSuperSampling);
 }

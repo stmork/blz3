@@ -46,8 +46,8 @@ protected: // create from serialization only
 	DECLARE_DYNCREATE(CAppLinesView)
 
 public:
-	static b3_color m_GridColorUnit;
-	static b3_color m_GridColorMove;
+	static b3Color  m_GridColorUnit;
+	static b3Color  m_GridColorMove;
 
 // Attributes
 public:

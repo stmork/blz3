@@ -37,10 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.7  2003/02/27 19:39:05  sm
 **	- Added two grid colors for configuration.
 **	- Beautified properties dialog.
-**
+**	
 **	Revision 1.6  2003/02/26 19:13:05  sm
 **	- Update scene/object views after color redefinition.
 **	- Beautofied the app properties dialog.
@@ -142,7 +146,7 @@ BOOL CDlgProperties::OnInitDialog()
 	m_ColorShape    = b3RenderObject::m_GridColor;
 	m_ColorSelected = b3RenderObject::m_SelectedColor;
 	m_ColorGrid     = b3PickInfo::m_GridColor;
-	b3Color::b3GetColorref(&m_ColorPick,b3PickPoint::m_PickColor);
+	m_ColorPick.b3SetColorref(b3PickPoint::m_PickColor);
 
 	m_CtrlColorBg.b3Init(&m_ColorBg,this);
 	m_CtrlColorUnit.b3Init(&m_ColorUnit,this);
@@ -244,7 +248,7 @@ void CDlgProperties::OnOK()
 	b3RenderObject::m_SelectedColor = m_ColorSelected;
 	b3PickInfo::m_GridColor         = m_ColorGrid;
 	b3PickInfo::m_PickSize          = m_PickSizeCtrl.GetPos();
-	b3PickPoint::m_PickColor        = b3Color::b3GetColorref(&m_ColorPick);
+	b3PickPoint::m_PickColor        = m_ColorPick.b3GetColorref();
 
 	m_App->m_PrintBufferSize = m_PrtBufferCtrl.b3GetPos();
 	m_App->m_RowRefreshCount = m_RowRefreshCtrl.GetPos();
@@ -253,15 +257,15 @@ void CDlgProperties::OnOK()
 	m_App->WriteProfileInt(m_App->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
 	m_App->WriteProfileInt(m_App->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
-	m_App->b3WriteProfileColor("default color.object grid",&b3BBox::m_GridColor);
-	m_App->b3WriteProfileColor("default color.unit grid",&CAppLinesView::m_GridColorUnit);
-	m_App->b3WriteProfileColor("default color.move grid",&CAppLinesView::m_GridColorMove);
-	m_App->b3WriteProfileColor("default color.fulcrum",&b3Fulcrum::m_GridColor);
-	m_App->b3WriteProfileColor("default color.camera",&b3CameraVolume::m_GridColor);
-	m_App->b3WriteProfileColor("default color.background",&CAppRenderDoc::m_BgColor);
-	m_App->b3WriteProfileColor("default color.shape grid",&b3RenderObject::m_GridColor);
-	m_App->b3WriteProfileColor("default color.shape selection",&b3RenderObject::m_SelectedColor);
-	m_App->b3WriteProfileColor("default color.control grid",&b3PickInfo::m_GridColor);
+	m_App->b3WriteProfileColor("default color.object grid",b3BBox::m_GridColor);
+	m_App->b3WriteProfileColor("default color.unit grid",CAppLinesView::m_GridColorUnit);
+	m_App->b3WriteProfileColor("default color.move grid",CAppLinesView::m_GridColorMove);
+	m_App->b3WriteProfileColor("default color.fulcrum",b3Fulcrum::m_GridColor);
+	m_App->b3WriteProfileColor("default color.camera",b3CameraVolume::m_GridColor);
+	m_App->b3WriteProfileColor("default color.background",CAppRenderDoc::m_BgColor);
+	m_App->b3WriteProfileColor("default color.shape grid",b3RenderObject::m_GridColor);
+	m_App->b3WriteProfileColor("default color.shape selection",b3RenderObject::m_SelectedColor);
+	m_App->b3WriteProfileColor("default color.control grid",b3PickInfo::m_GridColor);
 	m_App->b3UpdateAllViews();
 }
 
@@ -274,13 +278,13 @@ void CDlgProperties::b3ReadConfig()
 	b3PickPoint::m_PickColor = app->GetProfileInt(app->b3ClientName(),"default color.picker",b3PickPoint::m_PickColor);
 	b3PickInfo::m_PickSize   = app->GetProfileInt(app->b3ClientName(),"pick size",b3PickInfo::m_PickSize);
 	b3BBox::m_GridVisible    = app->GetProfileInt(app->b3ClientName(),"grid visible",b3BBox::m_GridVisible);
-	app->b3ReadProfileColor("default color.object grid",&b3BBox::m_GridColor);
-	app->b3ReadProfileColor("default color.unit grid",&CAppLinesView::m_GridColorUnit);
-	app->b3ReadProfileColor("default color.move grid",&CAppLinesView::m_GridColorMove);
-	app->b3ReadProfileColor("default color.fulcrum",&b3Fulcrum::m_GridColor);
-	app->b3ReadProfileColor("default color.camera",&b3CameraVolume::m_GridColor);
-	app->b3ReadProfileColor("default color.background",&CAppRenderDoc::m_BgColor);
-	app->b3ReadProfileColor("default color.shape grid",&b3RenderObject::m_GridColor);
-	app->b3ReadProfileColor("default color.shape selection",&b3RenderObject::m_SelectedColor);
-	app->b3ReadProfileColor("default color.control grid",&b3PickInfo::m_GridColor);
+	app->b3ReadProfileColor("default color.object grid",b3BBox::m_GridColor);
+	app->b3ReadProfileColor("default color.unit grid",CAppLinesView::m_GridColorUnit);
+	app->b3ReadProfileColor("default color.move grid",CAppLinesView::m_GridColorMove);
+	app->b3ReadProfileColor("default color.fulcrum",b3Fulcrum::m_GridColor);
+	app->b3ReadProfileColor("default color.camera",b3CameraVolume::m_GridColor);
+	app->b3ReadProfileColor("default color.background",CAppRenderDoc::m_BgColor);
+	app->b3ReadProfileColor("default color.shape grid",b3RenderObject::m_GridColor);
+	app->b3ReadProfileColor("default color.shape selection",b3RenderObject::m_SelectedColor);
+	app->b3ReadProfileColor("default color.control grid",b3PickInfo::m_GridColor);
 }

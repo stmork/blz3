@@ -153,7 +153,10 @@ struct B3_ALIGN_16 b3_point
 
 typedef struct B3_ALIGN_16 b3_color32
 {
-	b3_f32    a,r,g,b;
+	b3_f32 a;
+	b3_f32 r;
+	b3_f32 g;
+	b3_f32 b;
 } b3_color;
 
 // Some OpenGL data structures

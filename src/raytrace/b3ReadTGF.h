@@ -54,7 +54,7 @@ enum b3_tgf_vertex
 struct b3_tgf_material
 {
 	b3_index m_Index;
-	b3_color m_Color;
+	b3Color  m_Color;
 };
 
 struct b3_tgf_facette

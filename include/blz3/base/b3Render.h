@@ -19,6 +19,7 @@
 #define B3_RAYTRACE_RENDER_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
 
@@ -52,18 +53,18 @@ public:
 	b3_count         glTextureSize;
 	b3_bool          glUseSpotLight;
 	b3_bool          glDrawCachedTextures;
-	b3_color         glBgColor;
+	b3Color          glBgColor;
 
 public:
 	                 b3RenderContext();
 	static  void     b3Init();
 	virtual void     b3StartDrawing();
-	static  void     b3SetAmbient(b3_color *ambient);
+	static  void     b3SetAmbient(b3Color &ambient);
 	static  void     b3LightReset();
 	        void     b3LightDefault();
 			void     b3LightNum(b3_index light_num = 0);
-	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null,b3_index light_num = 0);
-			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3_color *diffuse = null,b3_color *ambient = null,b3_color *specular = null);
+	static  b3_bool  b3LightSet(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null,b3_index light_num = 0);
+			b3_bool  b3LightAdd(b3_vector *pos,b3_vector *dir,b3_f64 spot,b3Color *diffuse = null,b3Color *ambient = null,b3Color *specular = null);
 			void     b3LightSpotEnable(b3_bool enable = true);
 
 	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
@@ -81,20 +82,20 @@ public:
 
 #ifdef BLZ3_USE_OPENGL
 	// Some inlines :-)
-	static inline void b3ColorToGL(b3_color *src,GLfloat *dst)
+	static inline void b3ColorToGL(b3Color &src,GLfloat *dst)
 	{
-		*dst++ =       src->r;
-		*dst++ =       src->g;
-		*dst++ =       src->b;
-		*dst   = 1.0 - src->a;
+		*dst++ =       src[b3Color::R];
+		*dst++ =       src[b3Color::G];
+		*dst++ =       src[b3Color::B];
+		*dst   = 1.0 - src[b3Color::A];
 	}
 
-	static inline void b3ColorToGL(b3_color *src,GLubyte *dst)
+	static inline void b3ColorToGL(b3Color &src,GLubyte *dst)
 	{
-		*dst++ = (GLubyte)(src->r * 255);
-		*dst++ = (GLubyte)(src->g * 255);
-		*dst++ = (GLubyte)(src->b * 255);
-		*dst   = (GLubyte)(src->a * 255) ^ 0xff;
+		*dst++ = (GLubyte)(src[b3Color::R] * 255);
+		*dst++ = (GLubyte)(src[b3Color::G] * 255);
+		*dst++ = (GLubyte)(src[b3Color::B] * 255);
+		*dst   = (GLubyte)(src[b3Color::A] * 255) ^ 0xff;
 	}
 
 	static inline void b3PkdColorToGL(b3_pkd_color input,GLubyte *buffer)
@@ -195,8 +196,8 @@ protected:
 #endif
 
 public:
-	static b3_color  m_GridColor;
-	static b3_color  m_SelectedColor;
+	static b3Color   m_GridColor;
+	static b3Color   m_SelectedColor;
 
 protected:
 
@@ -226,20 +227,20 @@ protected:
 		return B3_RENDER_LINE;
 	}
 
-	virtual inline void b3GetGridColor(b3_color *color)
+	virtual inline void b3GetGridColor(b3Color &color)
 	{
-		*color = m_GridColor;
+		color = m_GridColor;
 	}
 
-	virtual inline void b3GetSelectedColor(b3_color *color)
+	virtual inline void b3GetSelectedColor(b3Color &color)
 	{
-		*color = m_SelectedColor;
+		color = m_SelectedColor;
 	}
 
-	virtual void            b3GetDiffuseColor(b3_color *diffuse);
+	virtual void            b3GetDiffuseColor(b3Color &diffuse);
 
-	virtual b3_f64          b3GetColors(b3_color *ambient,b3_color *diffuse,b3_color *specular);
-	virtual b3_bool         b3GetChess(b3_color *bColor,b3_color *wColor,b3_res &xRepeat,b3_res &yRepeat);
+	virtual b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
+	virtual b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
 	virtual b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	virtual b3_bool         b3GetImage(b3Tx *image);
 	        void            b3TransformVertices(b3_matrix *transformation,b3_bool is_affine);
@@ -247,7 +248,7 @@ protected:
 private:
 	        void            b3DefineTexture();
 	        void            b3CreateTexture(b3RenderContext *context,b3_res xSize = 128,b3_res ySize = 0);
-	        void            b3CreateChess(  b3RenderContext *context,b3_color *bColor,b3_color *wColor);
+	        void            b3CreateChess(  b3RenderContext *context,b3Color &bColor,b3Color &wColor);
 	        void            b3CopyTexture(  b3RenderContext *context,b3Tx *image);
 	        void            b3CreateImage(  b3RenderContext *context,b3Tx *image);
 };

@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.2  2002/02/27 20:14:51  sm
 **	- Added stencil creation for creating simple shapes.
 **	- Fixed material creation.
@@ -58,34 +62,34 @@ CB3ColorFieldSelector::CB3ColorFieldSelector()
 	m_Parent = null;
 }
 
-void CB3ColorFieldSelector::b3Init(b3_color *color,CWnd *parent)
+void CB3ColorFieldSelector::b3Init(b3Color *color,CWnd *parent)
 {
 	m_Color  = color;
 	m_Parent = parent;
-	b3SetColor(b3Color::b3GetColor(color));
+	b3SetColor(*color);
 }
 
 b3_bool CB3ColorFieldSelector::b3Select()
 {
 	b3_bool result;
 
-	result = b3Select(m_Color,m_Parent);
+	result = b3Select(*m_Color,m_Parent);
 	if (result)
 	{
-		b3SetColor(b3Color::b3GetColor(m_Color));
+		b3SetColor(*m_Color);
 	}
 	return result;
 }
 
-b3_bool CB3ColorFieldSelector::b3Select(b3_color *color,CWnd *parent)
+b3_bool CB3ColorFieldSelector::b3Select(b3Color &color,CWnd *parent)
 {
-	CColorDialog dlg(b3Color::b3GetColorref(color),CC_FULLOPEN,parent);
+	CColorDialog dlg(color.b3GetColorref(),CC_FULLOPEN,parent);
 	b3_bool      result;
 
 	result = dlg.DoModal() == IDOK;
 	if (result)
 	{
-		b3Color::b3GetColorref(color,dlg.GetColor());
+		color.b3SetColorref(dlg.GetColor());
 	}
 	return result;
 }

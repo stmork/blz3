@@ -20,6 +20,7 @@
 
 #include "blz3/system/b3Reg.h"
 #include "blz3/system/b3Toolbar.h"
+#include "blz3/base/b3Color.h"
 
 class CB3App : public CWinApp, public CB3Reg, public CB3ToolbarState
 {
@@ -49,8 +50,8 @@ public:
 	        b3_bool     b3WriteProfileFloat(const char *title,b3_f64 default_value);
 	        void        b3ReadProfileVector(const char *title,b3_vector *default_vector);
 	        b3_bool     b3WriteProfileVector(const char *title,const b3_vector *vector);
-	        void        b3ReadProfileColor(const char *title,b3_color *default_vector);
-	        b3_bool     b3WriteProfileColor(const char *title,const b3_color *vector);
+	        void        b3ReadProfileColor(const char *title,b3Color &default_vector);
+	        b3_bool     b3WriteProfileColor(const char *title,b3Color &vector);
 
 // From CWinApp
 // Overrides

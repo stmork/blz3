@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.22  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.21  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -151,10 +155,7 @@ BEGIN_MESSAGE_MAP(CAppRenderDoc, CB3LinesDocument)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-b3_color CAppRenderDoc::m_BgColor =
-{
-	0,0.9f,0.9f,0.9f
-};
+b3Color CAppRenderDoc::m_BgColor(0.9f,0.9f,0.9f);
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppRenderDoc construction/destruction

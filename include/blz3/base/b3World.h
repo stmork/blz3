@@ -31,6 +31,7 @@
 #include "blz3/system/b3Log.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/system/b3FileAbstract.h"
+#include "blz3/base/b3Color.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3Nurbs.h"
@@ -209,6 +210,7 @@ protected:
 	void     b3InitVector4D(b3Vector32  &vec);
 	void     b3InitMatrix  (b3_matrix   *mat);
 	void     b3InitColor   (b3_color    *col);
+	void     b3InitColor   (b3Color     &color);
 	void     b3InitSpline  (b3_spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
 	void     b3InitNurbs   (b3_nurbs    *nurbs, b3_vector4D *controls = null,b3_f32 *knots = null);
 	void     b3InitString  (char        *name,b3_size len);
@@ -230,6 +232,7 @@ protected:
 	void     b3StoreVector4D(      b3Vector32  &vec);
 	void     b3StoreMatrix  (const b3_matrix   *mat);
 	void     b3StoreColor   (const b3_color    *col);
+	void     b3StoreColor   (      b3Color     &col);
 	void     b3StoreSpline  (const b3_spline   *spline);
 	void     b3StoreNurbs   (const b3_nurbs    *nurbs);
 	void     b3StoreString  (const char        *name,const b3_size len);

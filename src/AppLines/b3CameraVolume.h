@@ -29,7 +29,7 @@ class b3CameraVolume : public b3RenderObject
 	b3_gl_vertex m_Vertex[B3_CV_VERTEX_COUNT];
 
 public:
-	static b3_color m_GridColor;
+	static b3Color m_GridColor;
 
 public:
 	         b3CameraVolume();
@@ -39,9 +39,9 @@ public:
 	void     b3Draw(b3RenderContext *context);
 
 protected:
-	inline void b3GetGridColor(b3_color *color)
+	inline void b3GetGridColor(b3Color &color)
 	{
-		*color = m_GridColor;
+		color = m_GridColor;
 	}
 };
 

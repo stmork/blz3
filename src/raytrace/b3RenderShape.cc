@@ -33,6 +33,10 @@
 
 /*
 **      $Log$
+**      Revision 1.63  2003/03/04 20:37:38  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.62  2003/02/26 16:36:16  sm
 **      - Sorted drawing colors and added configuration support
 **        to dialog.
@@ -591,22 +595,18 @@ void b3Shape::b3ComputeBound(b3_stencil_limit *limit)
 **                                                                      **
 *************************************************************************/
 
-void b3Shape::b3GetDiffuseColor(b3_color *color)
+void b3Shape::b3GetDiffuseColor(b3Color &color)
 {
 	b3Item     *item;
 	b3Material *material;
-	b3_color    ambient,specular;
+	b3Color     ambient,specular;
 	b3_polar    polar;
 
-	color->r = 0.1f;
-	color->g = 0.5f;
-	color->b = 1.0f;
-	color->a = 0.0f;
-
+	color.b3Init(0.1f,0.5f,1.0f,0.0f);
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(&polar,color,&ambient,&specular))
+		if (material->b3GetColors(&polar,color,ambient,specular))
 		{
 			return;
 		}
@@ -614,9 +614,9 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 }
 
 b3_f64 b3Shape::b3GetColors(
-	b3_color *ambient,
-	b3_color *diffuse,
-	b3_color *specular)
+	b3Color  &ambient,
+	b3Color  &diffuse,
+	b3Color  &specular)
 {
 	b3Item     *item;
 	b3Material *material;
@@ -635,8 +635,8 @@ b3_f64 b3Shape::b3GetColors(
 }
 
 b3_bool b3Shape::b3GetChess(
-	b3_color *black,
-	b3_color *white,
+	b3Color  &black,
+	b3Color  &white,
 	b3_res   &xRepeat,
 	b3_res   &yRepeat)
 {
@@ -650,8 +650,8 @@ b3_bool b3Shape::b3GetChess(
 		if (result)
 		{
 			b3MatChess *chess = (b3MatChess *)item;
-			*black  = chess->m_DiffColor[0];
-			*white  = chess->m_DiffColor[1];
+			black   = chess->m_DiffColor[0];
+			white   = chess->m_DiffColor[1];
 			xRepeat = chess->m_xTimes;
 			yRepeat = chess->m_yTimes;
 		}
@@ -715,9 +715,9 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 		b3_polar          polar;
 		b3_pkd_color     *lPtr = (b3_pkd_color *)image->b3GetData();
 		b3_pkd_color      color;
-		b3_color          diffuse;
-		b3_color          ambient;
-		b3_color          specular;
+		b3Color           diffuse;
+		b3Color           ambient;
+		b3Color           specular;
 		b3_coord          x,y;
 		b3_f64            fx,fxStep;
 		b3_f64            fy,fyStep;
@@ -742,10 +742,10 @@ b3_bool b3Shape::b3GetImage(b3Tx *image)
 				   (material != null) && loop;
 				    material  = (b3Material *)material->Succ)
 				{
-					if (material->b3GetColors(&polar,&diffuse,&ambient,&specular))
+					if (material->b3GetColors(&polar,diffuse,ambient,specular))
 					{
-						diffuse.a = b3CheckStencil(&polar) ? 0 : 1;
-						color     = b3Color::b3GetColor(&diffuse);
+						diffuse.b3SetAlpha(b3CheckStencil(&polar) ? 0 : 1);
+						color     = diffuse;
 						loop      = false;
 					}
 				}

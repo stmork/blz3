@@ -25,7 +25,7 @@
 
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
-#include "blz3/base/b3Aux.h"
+#include "blz3/base/b3Color.h"
 
 #include <math.h>
 
@@ -37,12 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2003/03/04 20:37:37  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.24  2002/12/10 20:14:59  sm
 **	- Added some new brt3 features:
 **	  o no wait after display output
 **	  o disable animation
 **	- Fixed some image exceptions
-**
+**	
 **	Revision 1.23  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.

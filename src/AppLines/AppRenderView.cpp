@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.25  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.24  2003/02/25 15:56:20  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -640,7 +644,7 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 
 	// Do it!
 	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
-	b3Color::b3Init(&pDoc->m_Context.glBgColor,1,1,1);
+	pDoc->m_Context.glBgColor.b3Init(1.0f,1.0f,1.0f);
 	pDoc->m_Context.glDrawCachedTextures = false;
 
 	// The pages are enumerated from [1..max]

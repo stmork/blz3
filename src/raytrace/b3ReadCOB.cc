@@ -38,12 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.6  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.5  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -260,23 +264,19 @@ b3Item *b3COBReader::b3COB_Reconstruct()
 }
 
 void b3COBReader::b3COB_ComputeAvrgColor (
-	b3Tx     *texture,
-	b3_color *Color)
+	b3Tx    *texture,
+	b3Color &color)
 {
-	b3_pkd_color value;
 	b3_coord     x,y,xMax,yMax;
 
-	Color->r =
-	Color->g =
-	Color->b = 0;
+	color.b3Init();
 	xMax = texture->xSize;
 	yMax = texture->ySize;
 	for (y = 0;y < yMax;y++)
 	{
 		for (x = 0;x < xMax;x++)
 		{
-			value = texture->b3GetValue(x,y);
-			b3Color::b3GetColor(Color,value);
+			color = b3Color(texture->b3GetValue(x,y));
 		}
 	}
 }
@@ -635,7 +635,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 	b3_size      len,size,i;
 	b3_count     ver,rev;
 	b3_cob_id    id,parent;
-	b3_f32       ambient = 0,specular = 0,alpha;
+	b3_f32       ambient = 0,specular = 0,alpha,r,g,b;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
 	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08d",
@@ -661,10 +661,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		for (i = len+1;i < size;i += (len+1))
 		{
 			len = b3COB_GetLine (line,&buffer[i],sizeof(line));
-			sscanf(line,"rgb %f , %f , %f",
-				&Mat->m_DiffColor.r,
-				&Mat->m_DiffColor.g,
-				&Mat->m_DiffColor.b);
+			sscanf(line,"rgb %f , %f , %f",&r,&g,&b);
 			sscanf(line,"alpha %f ka %f ks %f exp %f ior %f",
 				&alpha,
 				&ambient,
@@ -672,7 +669,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 				&Mat->m_HighLight,
 				&Mat->m_RefrValue);
 			sscanf(line,"texture: %s",name);
-			Mat->m_DiffColor.a = 0;
+			Mat->m_DiffColor.b3Init(r,g,b);
 		}
 		if ((Mat->m_RefrValue == 0) || (Mat->m_RefrValue == 1))
 		{
@@ -692,15 +689,11 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
 			if (texture != null)
 			{
-				b3COB_ComputeAvrgColor (texture,&Mat->m_DiffColor);
+				b3COB_ComputeAvrgColor (texture,Mat->m_DiffColor);
 			}
 		}
-		Mat->m_AmbColor.r  = ambient  * Mat->m_DiffColor.r;
-		Mat->m_AmbColor.g  = ambient  * Mat->m_DiffColor.g;
-		Mat->m_AmbColor.b  = ambient  * Mat->m_DiffColor.b;
-		Mat->m_SpecColor.r = specular * Mat->m_DiffColor.r;
-		Mat->m_SpecColor.g = specular * Mat->m_DiffColor.g;
-		Mat->m_SpecColor.b = specular * Mat->m_DiffColor.b;
+		Mat->m_AmbColor  = Mat->m_DiffColor * ambient;
+		Mat->m_SpecColor = Mat->m_DiffColor * specular;
 	}
 	return size;
 }

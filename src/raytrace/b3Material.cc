@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.25  2003/03/04 20:37:38  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.24  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -182,9 +186,9 @@ b3_bool b3Material::b3Prepare()
 
 b3_bool b3Material::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
 	return false;
 }
@@ -217,9 +221,9 @@ b3_f64 b3Material::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),class_type)
 {
-	b3Color::b3Init(&m_AmbColor);
-	b3Color::b3Init(&m_DiffColor);
-	b3Color::b3Init(&m_SpecColor);
+	m_AmbColor.b3Init();
+	m_DiffColor.b3Init();
+	m_SpecColor.b3Init();
 	m_Reflection =    0;
 	m_Refraction =    0;
 	m_RefrValue  =    1;
@@ -229,9 +233,9 @@ b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),cla
 
 b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&m_DiffColor);
-	b3InitColor(&m_AmbColor);
-	b3InitColor(&m_SpecColor);
+	b3InitColor(m_DiffColor);
+	b3InitColor(m_AmbColor);
+	b3InitColor(m_SpecColor);
 	m_Reflection = b3InitFloat();
 	m_Refraction = b3InitFloat();
 	m_RefrValue  = b3InitFloat();
@@ -241,9 +245,9 @@ b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 
 void b3MatNormal::b3Write()
 {
-	b3StoreColor(&m_DiffColor);
-	b3StoreColor(&m_AmbColor);
-	b3StoreColor(&m_SpecColor);
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
 	b3StoreFloat(m_RefrValue);
@@ -253,13 +257,13 @@ void b3MatNormal::b3Write()
 
 b3_bool b3MatNormal::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
-	*diffuse  = m_DiffColor;
-	*ambient  = m_AmbColor;
-	*specular = m_SpecColor;
+	diffuse  = m_DiffColor;
+	ambient  = m_AmbColor;
+	specular = m_SpecColor;
 	return true;
 }
 
@@ -291,14 +295,14 @@ b3_f64 b3MatNormal::b3GetSpecularExponent(b3_polar *polar)
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_type) 
 {
-	b3Color::b3GetColor(&m_AmbColor[0], B3_GREY);
-	b3Color::b3GetColor(&m_DiffColor[0],B3_BLACK);
-	b3Color::b3GetColor(&m_SpecColor[0],B3_GREY);
-	
-	b3Color::b3GetColor(&m_AmbColor[1], B3_GREY);
-	b3Color::b3GetColor(&m_DiffColor[1],B3_WHITE);
-	b3Color::b3GetColor(&m_SpecColor[1],B3_GREY);
+	m_AmbColor[0]  = b3Color(B3_GREY);
+	m_DiffColor[0] = b3Color(B3_BLACK);
+	m_SpecColor[0] = b3Color(B3_GREY);
 
+	m_AmbColor[1]  = b3Color(B3_GREY);
+	m_DiffColor[1] = b3Color(B3_WHITE);
+	m_SpecColor[1] = b3Color(B3_GREY);
+	
 	m_Reflection[0] = m_Reflection[1] =    0;
 	m_Refraction[0] = m_Refraction[1] =    0;
 	m_RefrValue[0]  = m_RefrValue[1]  =    1;
@@ -311,12 +315,12 @@ b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_
 
 b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&m_DiffColor[0]);
-	b3InitColor(&m_AmbColor[0]);
-	b3InitColor(&m_SpecColor[0]);
-	b3InitColor(&m_DiffColor[1]);
-	b3InitColor(&m_AmbColor[1]);
-	b3InitColor(&m_SpecColor[1]);
+	b3InitColor(m_DiffColor[0]);
+	b3InitColor(m_AmbColor[0]);
+	b3InitColor(m_SpecColor[0]);
+	b3InitColor(m_DiffColor[1]);
+	b3InitColor(m_AmbColor[1]);
+	b3InitColor(m_SpecColor[1]);
 	m_Reflection[0] = b3InitFloat();
 	m_Reflection[1] = b3InitFloat();
 	m_Refraction[0] = b3InitFloat();
@@ -332,12 +336,12 @@ b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 
 void b3MatChess::b3Write()
 {
-	b3StoreColor(&m_DiffColor[0]);
-	b3StoreColor(&m_AmbColor[0]);
-	b3StoreColor(&m_SpecColor[0]);
-	b3StoreColor(&m_DiffColor[1]);
-	b3StoreColor(&m_AmbColor[1]);
-	b3StoreColor(&m_SpecColor[1]);
+	b3StoreColor(m_DiffColor[0]);
+	b3StoreColor(m_AmbColor[0]);
+	b3StoreColor(m_SpecColor[0]);
+	b3StoreColor(m_DiffColor[1]);
+	b3StoreColor(m_AmbColor[1]);
+	b3StoreColor(m_SpecColor[1]);
 	b3StoreFloat(m_Reflection[0]);
 	b3StoreFloat(m_Reflection[1]);
 	b3StoreFloat(m_Refraction[0]);
@@ -355,16 +359,16 @@ void b3MatChess::b3Write()
 
 b3_bool b3MatChess::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
 	b3_index index;
 
 	index = CHESS_INDEX(polar->polar.x,polar->polar.y);
-	*diffuse  = m_DiffColor[index];
-	*ambient  = m_AmbColor[index];
-	*specular = m_SpecColor[index];
+	diffuse  = m_DiffColor[index];
+	ambient  = m_AmbColor[index];
+	specular = m_SpecColor[index];
 
 	return true;
 }
@@ -458,9 +462,9 @@ b3_bool b3MatTexture::b3Prepare()
 
 b3_bool b3MatTexture::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy;
@@ -481,13 +485,9 @@ b3_bool b3MatTexture::b3GetColors(
 	x = (b3_coord)((fx - (b3_coord)fx) * m_Texture->xSize);
 	y = (b3_coord)((fy - (b3_coord)fy) * m_Texture->ySize);
 
-	b3Color::b3GetColor(diffuse,m_Texture->b3GetValue(x,y));
-	ambient->r  = diffuse->r * 0.3;
-	ambient->g  = diffuse->g * 0.3;
-	ambient->b  = diffuse->b * 0.3;
-	specular->r =
-	specular->g =
-	specular->b = 0.7f;
+	diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	ambient = diffuse * 0.3;
+	specular.b3Init(0.7f,0.7f,0.7f);
 
 	return true;
 }
@@ -560,9 +560,9 @@ b3_bool b3MatWrapTexture::b3Prepare()
 
 b3_bool b3MatWrapTexture::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
 	b3_coord     x,y;
 	b3_f64       fx,fy,xEnd,xPolar;
@@ -614,11 +614,9 @@ b3_bool b3MatWrapTexture::b3GetColors(
 		return false;
 	}
 
-	b3Color::b3GetColor(diffuse,m_Texture->b3GetValue(x,y));
-	b3Color::b3Scale(diffuse,0.3,ambient);
-	specular->r =
-	specular->g =
-	specular->b = 0.7f;
+	diffuse = b3Color(m_Texture->b3GetValue(x,y));
+	ambient = diffuse * 0.3;
+	specular.b3Init(0.7f,0.7f,0.7f);
 
 	return true;
 }
@@ -655,12 +653,12 @@ b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_
 
 b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&m_Diffuse[0]);
-	b3InitColor(&m_Ambient[0]);
-	b3InitColor(&m_Specular[0]);
-	b3InitColor(&m_Diffuse[1]);
-	b3InitColor(&m_Ambient[1]);
-	b3InitColor(&m_Specular[1]);
+	b3InitColor(m_Diffuse[0]);
+	b3InitColor(m_Ambient[0]);
+	b3InitColor(m_Specular[0]);
+	b3InitColor(m_Diffuse[1]);
+	b3InitColor(m_Ambient[1]);
+	b3InitColor(m_Specular[1]);
 	m_From       = b3InitFloat();
 	m_To         = b3InitFloat();
 	m_Reflection = b3InitFloat();
@@ -672,12 +670,12 @@ b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 
 void b3MatSlide::b3Write()
 {
-	b3StoreColor(&m_Diffuse[0]);
-	b3StoreColor(&m_Ambient[0]);
-	b3StoreColor(&m_Specular[0]);
-	b3StoreColor(&m_Diffuse[1]);
-	b3StoreColor(&m_Ambient[1]);
-	b3StoreColor(&m_Specular[1]);
+	b3StoreColor(m_Diffuse[0]);
+	b3StoreColor(m_Ambient[0]);
+	b3StoreColor(m_Specular[0]);
+	b3StoreColor(m_Diffuse[1]);
+	b3StoreColor(m_Ambient[1]);
+	b3StoreColor(m_Specular[1]);
 	b3StoreFloat(m_From);
 	b3StoreFloat(m_To);
 	b3StoreFloat(m_Reflection);
@@ -689,9 +687,9 @@ void b3MatSlide::b3Write()
 
 b3_bool b3MatSlide::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
 	b3_f64 Factor;
 
@@ -727,15 +725,9 @@ b3_bool b3MatSlide::b3GetColors(
 			break;
 	}
 
-	diffuse->r  = m_Diffuse[0].r  + Factor * (m_Diffuse[1].r  - m_Diffuse[0].r);
-	diffuse->g  = m_Diffuse[0].g  + Factor * (m_Diffuse[1].g  - m_Diffuse[0].g);
-	diffuse->b  = m_Diffuse[0].b  + Factor * (m_Diffuse[1].b  - m_Diffuse[0].b);
-	ambient->r  = m_Ambient[0].r  + Factor * (m_Ambient[1].r  - m_Ambient[0].r);
-	ambient->g  = m_Ambient[0].g  + Factor * (m_Ambient[1].g  - m_Ambient[0].g);
-	ambient->b  = m_Ambient[0].b  + Factor * (m_Ambient[1].b  - m_Ambient[0].b);
-	specular->r = m_Specular[0].r + Factor * (m_Specular[1].r - m_Specular[0].r);
-	specular->g = m_Specular[0].g + Factor * (m_Specular[1].g - m_Specular[0].g);
-	specular->b = m_Specular[0].b + Factor * (m_Specular[1].b - m_Specular[0].b);
+	diffuse  = m_Diffuse[0]  + (m_Diffuse[1]  - m_Diffuse[0]) * Factor;
+	ambient  = m_Ambient[0]  + (m_Ambient[1]  - m_Ambient[0]) * Factor;
+	specular = m_Specular[0] + (m_Specular[1] - m_Specular[0]) * Factor;
 
 	return true;
 }
@@ -772,9 +764,9 @@ b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),cla
 
 b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&m_DiffColor);
-	b3InitColor(&m_AmbColor);
-	b3InitColor(&m_SpecColor);
+	b3InitColor(m_DiffColor);
+	b3InitColor(m_AmbColor);
+	b3InitColor(m_SpecColor);
 	b3InitVector(&m_Scale);
 	m_Reflection = b3InitFloat();
 	m_Refraction = b3InitFloat();
@@ -787,9 +779,9 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 
 void b3MatMarble::b3Write()
 {
-	b3StoreColor(&m_DiffColor);
-	b3StoreColor(&m_AmbColor);
-	b3StoreColor(&m_SpecColor);
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
@@ -802,33 +794,22 @@ void b3MatMarble::b3Write()
 
 b3_bool b3MatMarble::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
-	b3_color   mask;
-	b3_vector  d;
+	b3Color   mask;
+	b3_vector d;
 
 	d.x = polar->box_polar.x * m_Scale.x * M_PI;
 	d.y = polar->box_polar.y * m_Scale.y * M_PI;
 	d.z = polar->box_polar.z * m_Scale.z * M_PI;
 
-	b3Noise::b3Marble (&d,&mask);
+	b3Noise::b3Marble(&d,mask);
 
-	diffuse->a  = 0;
-	diffuse->r  = m_DiffColor.r * mask.r;
-	diffuse->g  = m_DiffColor.g * mask.g;
-	diffuse->b  = m_DiffColor.b * mask.b;
-
-	ambient->a  = 0;
-	ambient->r  = m_AmbColor.r  * mask.r;
-	ambient->g  = m_AmbColor.g  * mask.g;
-	ambient->b  = m_AmbColor.b  * mask.b;
-
-	specular->a	= 0;
-	specular->r	= m_SpecColor.r * mask.r;
-	specular->g	= m_SpecColor.g * mask.g;
-	specular->b	= m_SpecColor.b * mask.b;
+	diffuse  = m_DiffColor * mask;
+	ambient  = m_AmbColor  * mask;
+	specular = m_SpecColor * mask;
 
 	return true;
 }
@@ -865,9 +846,9 @@ b3MatWood::b3MatWood(b3_u32 class_type) : b3Material(sizeof(b3MatWood),class_typ
 
 b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&m_DiffColor);
-	b3InitColor(&m_AmbColor);
-	b3InitColor(&m_SpecColor);
+	b3InitColor(m_DiffColor);
+	b3InitColor(m_AmbColor);
+	b3InitColor(m_SpecColor);
 	b3InitVector(&m_Scale);
 	m_Reflection = b3InitFloat();
 	m_Refraction = b3InitFloat();
@@ -880,9 +861,9 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 
 void b3MatWood::b3Write()
 {
-	b3StoreColor(&m_DiffColor);
-	b3StoreColor(&m_AmbColor);
-	b3StoreColor(&m_SpecColor);
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
@@ -895,33 +876,22 @@ void b3MatWood::b3Write()
 
 b3_bool b3MatWood::b3GetColors(
 	b3_polar *polar,
-	b3_color *diffuse,
-	b3_color *ambient,
-	b3_color *specular)
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
 {
-	b3_color  mask;
+	b3Color   mask;
 	b3_vector d;
 
 	d.x = ((polar->box_polar.x - 0.5) * m_Scale.x * M_PI);
 	d.y = ((polar->box_polar.y - 0.5) * m_Scale.y * M_PI);
 	d.z = ((polar->box_polar.z - 0.5) * m_Scale.z * M_PI);
 
-	b3Noise::b3Wood (&d,&mask);
+	b3Noise::b3Wood (&d,mask);
 
-	diffuse->a  = 0;
-	diffuse->r  = m_DiffColor.r * mask.r;
-	diffuse->g  = m_DiffColor.g * mask.g;
-	diffuse->b  = m_DiffColor.b * mask.b;
-
-	ambient->a  = 0;
-	ambient->r  = m_AmbColor.r  * mask.r;
-	ambient->g  = m_AmbColor.g  * mask.g;
-	ambient->b  = m_AmbColor.b  * mask.b;
-
-	specular->a = 0;
-	specular->r = m_SpecColor.r * mask.r;
-	specular->g = m_SpecColor.g * mask.g;
-	specular->b = m_SpecColor.b * mask.b;
+	diffuse  = m_DiffColor * mask;
+	ambient  = m_AmbColor  * mask;
+	specular = m_SpecColor * mask;
 
 	return true;
 }

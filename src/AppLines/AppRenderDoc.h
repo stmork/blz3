@@ -50,7 +50,7 @@ public:
 	b3_vector             m_Lower;
 	b3_vector             m_Upper;
 
-	static b3_color       m_BgColor;
+	static b3Color        m_BgColor;
 
 // Operations
 protected: // create from serialization only

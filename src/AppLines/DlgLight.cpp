@@ -34,12 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/03/04 20:37:36  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.14  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.13  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -259,12 +263,12 @@ void CDlgLight::OnDestroy()
 void CDlgLight::OnLightColorChange() 
 {
 	// TODO: Add your control notification handler code here
-	CColorDialog dlg(b3Color::b3GetColorref(&m_Light->m_Color),CC_FULLOPEN,this);
+	CColorDialog dlg(m_Light->m_Color.b3GetColorref(),CC_FULLOPEN,this);
 
 	if (dlg.DoModal() == IDOK)
 	{
-		b3Color::b3GetColorref(&m_Light->m_Color,dlg.GetColor());
-		m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
+		m_Light->m_Color.b3SetColorref(dlg.GetColor());
+		m_ColorCtrl.b3SetColor(m_Light->m_Color);
 		b3UpdatePreview();
 	}
 }
@@ -378,7 +382,7 @@ void CDlgLight::b3GetLight()
 	m_EnableSoft  = m_Light->m_SoftShadow;
 	m_EnableLDC   = m_Light->m_SpotActive;
 	m_SampleCtrl.SetPos(m_Light->m_JitterEdge);
-	m_ColorCtrl.b3SetColor(b3Color::b3GetColor(&m_Light->m_Color));
+	m_ColorCtrl.b3SetColor(m_Light->m_Color);
 	m_SampleLabel.Format(IDS_LIGHT_SAMPLE_LABEL,m_Light->m_JitterEdge * m_Light->m_JitterEdge);
 
 	m_CtrlLDC.b3Init(m_Light);

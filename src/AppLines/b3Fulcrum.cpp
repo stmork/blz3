@@ -31,6 +31,10 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2003/03/04 20:37:36  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.9  2003/02/26 16:36:16  sm
 **      - Sorted drawing colors and added configuration support
 **        to dialog.
@@ -118,10 +122,7 @@ static b3_gl_line FulcrumIndices[B3_FULCRUM_INDEX_COUNT] =
 	{ 17,19 },   { 19,16 },   { 16,18 }                             // z
 };
 
-b3_color b3Fulcrum::m_GridColor =
-{
-	0,1.0f,0.1f,0.25f
-};
+b3Color b3Fulcrum::m_GridColor(1.0f,0.1f,0.25f);
 
 b3Fulcrum::b3Fulcrum()
 {

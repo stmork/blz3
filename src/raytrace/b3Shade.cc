@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/03/04 20:37:39  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.21  2002/12/11 14:47:58  sm
 **	- Changed noise handling to static
 **	- Fixed some error cases when image not loaded.
 **	- Added some brt3 flags
-**
+**	
 **	Revision 1.20  2002/08/23 15:34:28  sm
 **	- Added time support to water animation.
 **	- Added multiple file format types to brt3.
@@ -176,7 +180,7 @@ void b3Scene::b3MixLensFlare(b3_ray_info *ray)
 {
 	b3Light   *light;
 	b3_vector  view,central,toLight,nLight,nView;
-	b3_color   result;
+	b3Color    result;
 	b3_f64     factor,distance,weight = 0.6;
 	b3_count   i;
 
@@ -251,16 +255,14 @@ void b3Scene::b3MixLensFlare(b3_ray_info *ray)
 			reverse  = 1.0 - angle;
 			if (i < LENSFLARE_RING)
 			{
-				
-				result.r = angle * light->m_Color.r * m_LensFlare->m_Color.r + reverse * ray->color.r;
-				result.g =         ray->color.g;
-				result.b =         ray->color.b;
+				result.b3Init(
+					ray->color[b3Color::R] * reverse + angle * light->m_Color[b3Color::R] * m_LensFlare->m_Color[b3Color::R],
+					ray->color[b3Color::G],
+					ray->color[b3Color::B]);
 			}
 			else
 			{
-				result.r = angle * light->m_Color.r * m_LensFlare->m_Color.r + reverse * ray->color.r;
-				result.g = angle * light->m_Color.g * m_LensFlare->m_Color.g + reverse * ray->color.g;
-				result.b = angle * light->m_Color.b * m_LensFlare->m_Color.b + reverse * ray->color.b;
+				result = light->m_Color * m_LensFlare->m_Color * angle + ray->color * reverse;
 			}
 			ray->color = result;
 		}
@@ -278,7 +280,7 @@ void b3Scene::b3GetBackgroundColor(
 	b3_f64       lx,
 	b3_f64       ly)
 {
-	b3_coord     x,y;
+	b3_coord  x,y;
 
 	switch (m_BackgroundType)
 	{
@@ -290,7 +292,7 @@ void b3Scene::b3GetBackgroundColor(
 			if (y < 0)                     y = 0;
 			if (y >= m_BackTexture->ySize) y = m_BackTexture->ySize - 1;
 
-			b3Color::b3GetColor(&ray->color,m_BackTexture->b3GetValue(x,y));
+			ray->color = b3Color(m_BackTexture->b3GetValue(x,y));
 			break;
 
 		case TP_SKY_N_HELL :
@@ -298,24 +300,18 @@ void b3Scene::b3GetBackgroundColor(
 			dir.x = ray->dir.x;
 			dir.y = ray->dir.y;
 			dir.z = ray->dir.z;
-			b3Noise::b3Clouds (&dir,&ray->color);
+			b3Noise::b3Clouds (&dir,ray->color);
 #ifdef SKY_SLIDE
-			ly = ray->color.r * 2.0 - 1.0;
+			ly = ray->color[b3Color::R] * 2.0 - 1.0;
 #else
 			break;
 #endif
 		case TP_SLIDE :
-			ray->color.a = 0;
-			ray->color.r = m_AvrgColor.r + ly * m_DiffColor.r;
-			ray->color.g = m_AvrgColor.g + ly * m_DiffColor.g;
-			ray->color.b = m_AvrgColor.b + ly * m_DiffColor.b;
+			ray->color = m_AvrgColor + m_DiffColor * ly;
 			break;
 
 		default:
-			ray->color.a = 0;
-			ray->color.r =
-			ray->color.g =
-			ray->color.b = m_ShadowBrightness;
+			ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
 			break;
 	}
 
@@ -428,7 +424,7 @@ void b3Scene::b3Illuminate(
 	b3Light       *light,
 	b3_light_info *Jit,
 	b3_ray_fork   *surface,
-	b3_color      *result)
+	b3Color       &result)
 {
 	b3_f64 ShapeAngle;
 
@@ -437,9 +433,7 @@ void b3Scene::b3Illuminate(
 		surface->incoming->normal.y * Jit->dir.y +
 		surface->incoming->normal.z * Jit->dir.z) >= 0)
 	{
-		result->r += ShapeAngle * surface->diffuse.r * light->m_Color.r;
-		result->g += ShapeAngle * surface->diffuse.g * light->m_Color.g;
-		result->b += ShapeAngle * surface->diffuse.b * light->m_Color.b;
+		result += surface->diffuse * light->m_Color * ShapeAngle;
 	}
 }
 
@@ -457,20 +451,14 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 	// If max raytrace depth is reached leave!
 	if (depth_count > m_TraceDepth)
 	{
-		ray->color.r =
-		ray->color.g =
-		ray->color.b = 0.0f;
-		ray->color.a = 0.0f;
+		ray->color.b3Init();
 		return false;
 	}
 
 	// Normalize incoming ray
 	if (b3Vector::b3Normalize(&ray->dir) == 0)
 	{
-		ray->color.r =
-		ray->color.g =
-		ray->color.b = 0.0f;
-		ray->color.a = 0.0f;
+		ray->color.b3Init();
 		return false;
 	}
 
@@ -521,56 +509,19 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 		case 1:
 			// Only refraction
 			factor = (1.0 - refr);
-			ray->color.r =
-				surface.refr_ray.color.r * refr +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refr_ray.color.g * refr +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refr_ray.color.b * refr +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refr_ray.color.a * refr +
-				            ray->color.a * factor;
+			ray->color = surface.refr_ray.color * refr + ray->color * factor;
 			break;
 
 		case 2:
 			// Only reflection
 			factor = (1.0 - refr);
-			ray->color.r =
-				surface.refl_ray.color.r * refl +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refl_ray.color.g * refl +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refl_ray.color.b * refl +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refl_ray.color.a * refl +
-				            ray->color.a * factor;
+			ray->color = surface.refl_ray.color * refl + ray->color * factor;
 			break;
 
 		case 3:
 			// Reflection and refraction
 			factor = (1.0 - refl - refr);
-			ray->color.r =
-				surface.refl_ray.color.r * refl +
-				surface.refr_ray.color.r * refr +
-				            ray->color.r * factor;
-			ray->color.g =
-				surface.refl_ray.color.g * refl +
-				surface.refr_ray.color.g * refr +
-				            ray->color.g * factor;
-			ray->color.b =
-				surface.refl_ray.color.b * refl +
-				surface.refr_ray.color.b * refr +
-				            ray->color.b * factor;
-			ray->color.a =
-				surface.refl_ray.color.a * refl +
-				surface.refr_ray.color.a * refr +
-				            ray->color.a * factor;
+			ray->color = surface.refl_ray.color * refl + surface.refr_ray.color * refr + ray->color * factor;
 			break;
 		}
 
@@ -582,14 +533,14 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 
 		if (m_Nebular != null)
 		{
-			m_Nebular->b3ComputeNebular(&ray->color,&ray->color,ray->Q);
+			m_Nebular->b3ComputeNebular(ray->color,ray->color,ray->Q);
 		}
 		result = true;
 	}
 
 	if (m_Nebular != null)
 	{
-		m_Nebular->b3GetNebularColor(&ray->color);
+		m_Nebular->b3GetNebularColor(ray->color);
 		result = true;
 	}
 	return result;

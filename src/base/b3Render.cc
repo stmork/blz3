@@ -1,3 +1,4 @@
+
 /*
 **
 **      $Filename:      b3Render.cc $
@@ -24,7 +25,7 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Spline.h"
-#include "blz3/base/b3Aux.h"
+#include "blz3/base/b3Color.h"
 
 #define not_VERBOSE
 
@@ -36,6 +37,10 @@
 
 /*
 **      $Log$
+**      Revision 1.65  2003/03/04 20:37:37  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.64  2003/02/26 16:36:16  sm
 **      - Sorted drawing colors and added configuration support
 **        to dialog.
@@ -385,25 +390,10 @@ static b3_vector light0_position =
 };
 
 #ifdef BLZ3_USE_OPENGL
-static b3_color world_ambient =
-{
-	0.0f,0.25f,0.25f,0.25f
-};
-
-static b3_color light0_ambient =
-{
-	0.0f,0.25f,0.25f,0.25f
-};
-
-static b3_color light0_diffuse =
-{
-	0.0f,0.8f,0.8f,0.8f
-};
-
-static b3_color light0_specular =
-{
-	0.0f,1.0f,1.0f,1.0f
-};
+static b3Color world_ambient(  0.25f,0.25f,0.25f);
+static b3Color light0_ambient( 0.25f,0.25f,0.25f);
+static b3Color light0_diffuse( 0.8f, 0.8f, 0.8f);
+static b3Color light0_specular(1.0f, 1.0f, 1.0f);
 
 static GLint light_num[] =
 {
@@ -428,7 +418,7 @@ b3RenderContext::b3RenderContext()
 	b3LightSpotEnable(false);
 	glDrawCachedTextures = true;
 	glSelectedObject     = null;
-	b3Color::b3Init(&glBgColor,0.8,0.8,0.8);
+	glBgColor.b3Init(0.8,0.8,0.8);
 }
 
 void b3RenderContext::b3Init()
@@ -456,13 +446,13 @@ void b3RenderContext::b3Init()
 #endif
 }
 
-void b3RenderContext::b3SetAmbient(b3_color *ambient)
+void b3RenderContext::b3SetAmbient(b3Color &ambient)
 {
 #ifdef BLZ3_USE_OPENGL
 	GLfloat gl_ambient[4];
 
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3SetAmbient(%08lx)\n",
-		b3Color::b3GetColor(ambient));
+		(b3_pkd_color)ambient);
 	b3ColorToGL(ambient,gl_ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,gl_ambient);
 #endif
@@ -480,7 +470,7 @@ void b3RenderContext::b3LightReset()
 #endif
 
 	// Disable all other lights
-	b3SetAmbient(&world_ambient);
+	b3SetAmbient(world_ambient);
 	for (b3_size i = 0;i < (sizeof(light_num) / sizeof(GLint));i++)
 	{
 		glDisable(light_num[i]);
@@ -520,9 +510,9 @@ b3_bool b3RenderContext::b3LightAdd(
 	b3_vector *b3_position,
 	b3_vector *b3_direction,
 	b3_f64     spot_exp,
-	b3_color  *b3_diffuse,
-	b3_color  *b3_ambient,
-	b3_color  *b3_specular)
+	b3Color   *b3_diffuse,
+	b3Color   *b3_ambient,
+	b3Color   *b3_specular)
 {
 	b3_bool  result = false;
 
@@ -540,9 +530,9 @@ b3_bool b3RenderContext::b3LightSet(
 	b3_vector *b3_position,
 	b3_vector *b3_direction,
 	b3_f64     spot_exp,
-	b3_color  *b3_diffuse,
-	b3_color  *b3_ambient,
-	b3_color  *b3_specular,
+	b3Color   *b3_diffuse,
+	b3Color   *b3_ambient,
+	b3Color   *b3_specular,
 	b3_index   num)
 {
 	b3_bool result = false;
@@ -560,9 +550,9 @@ b3_bool b3RenderContext::b3LightSet(
 
 		b3VectorToGL(b3_position,gl_position);
 
-		b3ColorToGL(b3_ambient  != null ? b3_ambient  : &light0_ambient, gl_ambient);
-		b3ColorToGL(b3_diffuse  != null ? b3_diffuse  : &light0_diffuse, gl_diffuse);
-		b3ColorToGL(b3_specular != null ? b3_specular : &light0_specular,gl_specular);
+		b3ColorToGL(b3_ambient  != null ? *b3_ambient  : light0_ambient, gl_ambient);
+		b3ColorToGL(b3_diffuse  != null ? *b3_diffuse  : light0_diffuse, gl_diffuse);
+		b3ColorToGL(b3_specular != null ? *b3_specular : light0_specular,gl_specular);
 
 		glEnable( light);
 
@@ -610,9 +600,10 @@ void b3RenderContext::b3StartDrawing()
 	b3PrintF(B3LOG_FULL,"b3RenderContext::b3StartDrawing()\n");
 
 	glClearColor(
-		glBgColor.r,
-		glBgColor.g,
-		glBgColor.b,1.0 - glBgColor.a);
+		glBgColor[b3Color::R],
+		glBgColor[b3Color::G],
+		glBgColor[b3Color::B],
+		1.0 - glBgColor[b3Color::A]);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 #endif
 }
@@ -977,15 +968,8 @@ void b3RenderObject::b3TransformVertices(
 static b3Tx    glTextureBuffer;
 static b3Mutex glTextureMutex;
 
-b3_color b3RenderObject::m_GridColor =
-{
-	0,0.2f,0.2f,0.2f
-};
-
-b3_color b3RenderObject::m_SelectedColor =
-{
-	0,1.0f,0.1f,0.25f
-};
+b3Color b3RenderObject::m_GridColor(0.2f,0.2f,0.2f,0.0f);
+b3Color b3RenderObject::m_SelectedColor(1.0f,0.1f,0.25f,0.0f);
 
 void b3RenderObject::b3RecomputeMaterial()
 {
@@ -994,27 +978,27 @@ void b3RenderObject::b3RecomputeMaterial()
 #endif
 }
 
-void b3RenderObject::b3GetDiffuseColor(b3_color *diffuse)
+void b3RenderObject::b3GetDiffuseColor(b3Color &diffuse)
 {
-	b3Color::b3Init(diffuse,0.0f, 0.5f, 1.0f);
+	diffuse.b3Init(0.0f, 0.5f, 1.0f);
 }
 
 b3_f64 b3RenderObject::b3GetColors(
-	b3_color *ambient,
-	b3_color *diffuse,
-	b3_color *specular)
+	b3Color &ambient,
+	b3Color &diffuse,
+	b3Color &specular)
 {
-	b3Color::b3Init(ambient,  0.5, 0.5, 0.5);
-	b3Color::b3Init(diffuse,  0.0, 0.5, 1.0);
-	b3Color::b3Init(specular, 1.0, 1.0, 1.0);
+	ambient.b3Init(  0.5, 0.5, 0.5);
+	diffuse.b3Init(  0.0, 0.5, 1.0);
+	specular.b3Init( 1.0, 1.0, 1.0);
 	return 1.0;
 }
 
 b3_bool b3RenderObject::b3GetChess(
-	b3_color *bColor,
-	b3_color *wColor,
-	b3_res   &xRepeat,
-	b3_res   &yRepeat)
+	b3Color &bColor,
+	b3Color &wColor,
+	b3_res  &xRepeat,
+	b3_res  &yRepeat)
 {
 	return false;
 }
@@ -1054,19 +1038,19 @@ void b3RenderObject::b3UpdateMaterial()
 #ifdef BLZ3_USE_OPENGL
 	if (!glMaterialComputed)
 	{
-		b3Tx     *tx;
-		b3_color  black,white;
-		b3_color  ambient,diffuse,specular;
-		b3_res    xRep,yRep;
+		b3Tx    *tx;
+		b3Color  black,white;
+		b3Color  ambient,diffuse,specular;
+		b3_res   xRep,yRep;
 
-		glShininess = b3GetColors(&ambient,&diffuse,&specular);
+		glShininess = b3GetColors(ambient,diffuse,specular);
 		glTextureTransX = 0;
 		glTextureTransY = 0;
-		if (b3GetChess(&black,&white,xRep,yRep))
+		if (b3GetChess(black,white,xRep,yRep))
 		{
 			glTextureScaleX = 0.5 * xRep;
 			glTextureScaleY = 0.5 * yRep;
-			b3CreateChess(null,&black,&white);
+			b3CreateChess(null,black,white);
 		}
 		else
 		{
@@ -1125,9 +1109,9 @@ void b3RenderObject::b3UpdateMaterial()
 #if 1
 			ambient = specular = diffuse;
 #endif
-			b3RenderContext::b3ColorToGL(&ambient, glAmbient);
-			b3RenderContext::b3ColorToGL(&diffuse, glDiffuse);
-			b3RenderContext::b3ColorToGL(&specular,glSpecular);
+			b3RenderContext::b3ColorToGL(ambient, glAmbient);
+			b3RenderContext::b3ColorToGL(diffuse, glDiffuse);
+			b3RenderContext::b3ColorToGL(specular,glSpecular);
 		}
 		glMaterialComputed = true;
 	}
@@ -1231,8 +1215,8 @@ void b3RenderObject::b3CreateTexture(
 
 void b3RenderObject::b3CreateChess(
 	b3RenderContext *context,
-	b3_color        *bColor,
-	b3_color        *wColor)
+	b3Color         &bColor,
+	b3Color         &wColor)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3CreateTexture(null,2);
@@ -1313,7 +1297,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_render_mode render_mode = b3GetRenderMode();
-	b3_color       diffuse;
+	b3Color        diffuse;
 #endif
 
 	b3Update();
@@ -1397,13 +1381,13 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 
 			if (context->b3GetSelected() == this)
 			{
-				b3GetSelectedColor(&diffuse);
+				b3GetSelectedColor(diffuse);
 			}
 			else
 			{
-				b3GetGridColor(&diffuse);
+				b3GetGridColor(diffuse);
 			}
-			glColor3f(diffuse.r,diffuse.g,diffuse.b);
+			glColor3f(diffuse[b3Color::R],diffuse[b3Color::G],diffuse[b3Color::B]);
 
 			// Put geometry :-)
 			B3_ASSERT(glVertex != null);

@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.6  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.5  2003/02/25 19:26:07  sm
 **	- Fixed missing grid update on pick move
 **	
@@ -62,10 +66,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3_color b3PickInfo::m_GridColor =
-{
-	0,0.7f,0.7f,0.7f
-};
+b3Color b3PickInfo::m_GridColor(0.7f,0.7f,0.7f);
 
 b3PickInfo::b3PickInfo()
 {
@@ -153,7 +154,7 @@ void b3PickInfo::b3ComputeIndices()
 	glGridCount = m_Grid.b3GetCount();
 }
 
-void b3PickInfo::b3GetGridColor(b3_color *color)
+void b3PickInfo::b3GetGridColor(b3Color &color)
 {
-	*color = m_GridColor;
+	color = m_GridColor;
 }

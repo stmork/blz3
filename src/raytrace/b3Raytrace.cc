@@ -37,12 +37,16 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.50  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.49  2002/11/16 14:24:00  sm
 **	- Added a CPU benchmark
 **	- Removed system dependend #IF from raytracing
@@ -543,12 +547,8 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 
 	b3PrintF(B3LOG_FULL,"b3Scene::b3Prepare(%d,%d)\n",xSize,ySize);
 	b3PrintF(B3LOG_FULL,"  preparing background color...\n");
-	m_AvrgColor.r = (m_BottomColor.r + m_TopColor.r) * 0.5;
-	m_AvrgColor.g = (m_BottomColor.g + m_TopColor.g) * 0.5;
-	m_AvrgColor.b = (m_BottomColor.b + m_TopColor.b) * 0.5;
-	m_DiffColor.r = (m_TopColor.r    - m_AvrgColor.r);
-	m_DiffColor.g = (m_TopColor.g    - m_AvrgColor.g);
-	m_DiffColor.b = (m_TopColor.b    - m_AvrgColor.b);
+	m_AvrgColor = (m_BottomColor + m_TopColor) * 0.5;
+	m_DiffColor = (m_TopColor    - m_AvrgColor);
 
 	xDenom = b3Vector::b3Length(&m_Width);
 	yDenom = b3Vector::b3Length(&m_Height);

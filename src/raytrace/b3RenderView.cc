@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.34  2003/02/27 19:39:05  sm
 **	- Added two grid colors for configuration.
 **	- Beautified properties dialog.
-**
+**	
 **	Revision 1.33  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -1123,7 +1127,7 @@ void b3RenderView::b3SetupView(
 #define B3_RASTER_COUNT(a,e,grid) ((b3_count)(floor((e) / (grid)) - ceil((a) / (grid)) + 1))
 #define B3_RASTER_MINDIST  8
 
-void b3RenderView::b3DrawRaster(b3_f64 grid,b3_color *color)
+void b3RenderView::b3DrawRaster(b3_f64 grid,b3Color &color)
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector xDisp,yDisp;
@@ -1242,7 +1246,7 @@ void b3RenderView::b3DrawRaster(b3_f64 grid,b3_color *color)
 	    (yCount == 0 ? true : (m_yRes / yCount) >= B3_RASTER_MINDIST))
 	{
 		glBegin(GL_LINES);
-		glColor3f(color->r,color->g,color->b);
+		glColor3f(color[b3Color::R],color[b3Color::G],color[b3Color::B]);
 		for (x = 0;x < xCount;x++)
 		{
 			glVertex3f(a.x,a.y,a.z);

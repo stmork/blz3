@@ -33,16 +33,16 @@
 class CDlgProperties : public CDialog
 {
 	CAppLinesApp *m_App;
-	b3_color      m_ColorBg;
-	b3_color      m_ColorUnit;
-	b3_color      m_ColorMove;
-	b3_color      m_ColorCamera;
-	b3_color      m_ColorFulcrum;
-	b3_color      m_ColorObject;
-	b3_color      m_ColorShape;
-	b3_color      m_ColorSelected;
-	b3_color      m_ColorGrid;
-	b3_color      m_ColorPick;
+	b3Color      m_ColorBg;
+	b3Color      m_ColorUnit;
+	b3Color      m_ColorMove;
+	b3Color      m_ColorCamera;
+	b3Color      m_ColorFulcrum;
+	b3Color      m_ColorObject;
+	b3Color      m_ColorShape;
+	b3Color      m_ColorSelected;
+	b3Color      m_ColorGrid;
+	b3Color      m_ColorPick;
 // Construction
 public:
 	CDlgProperties(CWnd* pParent = NULL);   // standard constructor

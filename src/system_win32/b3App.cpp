@@ -43,10 +43,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2003/03/04 20:37:39  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.10  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.9  2003/02/25 15:56:21  sm
 **	- Added SplineRot to control grid drawing.
 **	- Added support for pixel format selection in dialog items
@@ -313,18 +317,18 @@ b3_bool CB3App::b3WriteProfileVector(const char *title,const b3_vector *vector)
 	return success;
 };
 
-void CB3App::b3ReadProfileColor(const char *title,b3_color *default_color)
+void CB3App::b3ReadProfileColor(const char *title,b3Color &color)
 {
-	b3_pkd_color pkd = b3Color::b3GetColor(default_color);
+	b3_pkd_color pkd = color;
 
 	pkd = GetProfileInt(b3ClientName(),title,pkd);
 
-	b3Color::b3GetColor(default_color,pkd);
+	color = pkd;
 }
 
-b3_bool CB3App::b3WriteProfileColor(const char *title,const b3_color *color)
+b3_bool CB3App::b3WriteProfileColor(const char *title,b3Color &default_color)
 {
-	b3_pkd_color pkd = b3Color::b3GetColor(color);
+	b3_pkd_color pkd = default_color;
 	
 	return WriteProfileInt(b3ClientName(),title,pkd);
 }

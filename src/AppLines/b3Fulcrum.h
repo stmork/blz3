@@ -1,3 +1,4 @@
+
 /*
 **
 **	$Filename:	b3Fulcrum.h $
@@ -30,7 +31,7 @@ class b3Fulcrum : public b3RenderObject
 	b3_gl_vertex  m_Vertex[B3_FULCRUM_VERTEX_COUNT];
 
 public:
-	static b3_color m_GridColor;
+	static b3Color m_GridColor;
  
 public:
 	         b3Fulcrum();
@@ -42,9 +43,9 @@ public:
 protected:
 	void     b3ComputeVertices();
 
-	inline void b3GetGridColor(b3_color *color)
+	inline void b3GetGridColor(b3Color &color)
 	{
-		*color = m_GridColor;
+		color = m_GridColor;
 	}
 };
 

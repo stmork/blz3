@@ -32,6 +32,10 @@
 
 /*
 **      $Log$
+**      Revision 1.32  2003/03/04 20:37:37  sm
+**      - Introducing new b3Color which brings some
+**        performance!
+**
 **      Revision 1.31  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -206,7 +210,7 @@ b3Light::b3Light(b3_u32 *src) : b3Item(src)
 
 	b3Init();
 	b3InitVector(&m_Position);
-	b3InitColor(&m_Color);
+	b3InitColor(m_Color);
 	m_Distance = b3InitFloat();
 	m_Flags    = b3InitInt();
 
@@ -266,7 +270,7 @@ void b3Light::b3Write()
 	if (!m_SpotActive)  m_Flags |= LIGHT_SPOT_OFF;
 
 	b3StoreVector(&m_Position);
-	b3StoreColor(&m_Color);
+	b3StoreColor(m_Color);
 	b3StoreFloat(m_Distance);
 	b3StoreInt(m_Flags);
 	b3StoreFloat(m_Size);
@@ -287,9 +291,7 @@ void b3Light::b3Init()
 {
 	b3_index i;
 
-	m_Color.r     =      1.0;
-	m_Color.g     =      1.0;
-	m_Color.b     =      1.0;
+	m_Color.b3Init(1.0,1.0,1.0);
 	m_Distance    =  50000.0;
 	m_Position.x  =  10000.0;
 	m_Position.y  = -10000.0;
@@ -447,7 +449,7 @@ inline b3_bool b3Light::b3PointIllumination(
 	Jit.LightDist = LightDist;
 
 	scene->b3FindObscurer(&Jit,UpperBound - b3Scene::epsilon);
-	scene->b3Illuminate(this,&Jit,surface,&surface->incoming->color);
+	scene->b3Illuminate(this,&Jit,surface,surface->incoming->color);
 	return true;
 }
 
@@ -517,10 +519,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.yDir.y *= Factor;
 	Jit.yDir.z *= Factor;
 
-	Jit.Result.a =
-	Jit.Result.r =
-	Jit.Result.g =
-	Jit.Result.b = 0;
+	Jit.Result.b3Init();
 
 	// The following loops check every second point of the outline
 	// of the light raster. If every sample hits the same shape the
@@ -579,9 +578,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 		Factor = m_FullJitter;
 	}
 
-	surface->incoming->color.r += Jit.Result.r * Factor;
-	surface->incoming->color.g += Jit.Result.g * Factor;
-	surface->incoming->color.b += Jit.Result.b * Factor;
+	surface->incoming->color += Jit.Result * Factor;
 	return true;
 }
 
@@ -604,7 +601,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	if ((UpperBound = b3Vector::b3Normalize(&Jit->dir)) != 0)
 	{
 		scene->b3FindObscurer(Jit,Jit->LightDist / UpperBound - b3Scene::epsilon);
-		scene->b3Illuminate(this,Jit,surface,&Jit->Result);
+		scene->b3Illuminate(this,Jit,surface,Jit->Result);
 	}
 	else
 	{

@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/03/04 20:37:38  sm
+**	- Introducing new b3Color which brings some
+**	  performance!
+**
 **	Revision 1.4  2003/02/09 13:58:14  sm
 **	- cleaned up file selection dialogs
-**
+**	
 **	Revision 1.3  2003/02/08 21:42:13  sm
 **	- Removed some unused variables.
 **	
@@ -149,10 +153,10 @@ b3_bool b3TGFReader::b3ParseLight(char *ptr)
 	b3Vector::b3Init(&light->m_Direction,dir.x,dir.y,dir.z);
 	ptr += 48;
 
-	light->m_Color.a = 0;
-	light->m_Color.r = b3Endian::b3GetIntelFloat(&ptr[0]);
-	light->m_Color.g = b3Endian::b3GetIntelFloat(&ptr[4]);
-	light->m_Color.b = b3Endian::b3GetIntelFloat(&ptr[8]);
+	light->m_Color.b3Init(
+		b3Endian::b3GetIntelFloat(&ptr[0]),
+		b3Endian::b3GetIntelFloat(&ptr[4]),
+		b3Endian::b3GetIntelFloat(&ptr[8]));
 	ptr += 12;
 
 	attenuation = b3Endian::b3GetIntelDouble(&ptr[ 0]);
@@ -399,12 +403,11 @@ b3_bool b3TGFReader::b3ParseMaterial(char *ptr)
 	ptr += strlen(ptr) + 1;
 
 	mat.m_Index = b3Endian::b3GetIntel32(ptr);
+	mat.m_Color.b3Init(
+		b3Endian::b3GetIntelFloat(&ptr[ 4]),
+		b3Endian::b3GetIntelFloat(&ptr[ 8]),
+		b3Endian::b3GetIntelFloat(&ptr[12]));
 
-	mat.m_Color.a = 0;
-	mat.m_Color.r = b3Endian::b3GetIntelFloat(&ptr[ 4]);
-	mat.m_Color.g = b3Endian::b3GetIntelFloat(&ptr[ 8]);
-	mat.m_Color.b = b3Endian::b3GetIntelFloat(&ptr[12]);
-	
 	m_Materials.b3Add(mat);
 	return true;
 }
