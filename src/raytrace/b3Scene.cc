@@ -31,46 +31,49 @@
 *************************************************************************/
 
 /*
-**      $Log$
-**      Revision 1.10  2001/09/02 18:54:56  sm
-**      - Moving objects
-**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
-**        are necessary.
-**      - It's really nice to see!
+**	$Log$
+**	Revision 1.11  2001/09/23 14:11:18  sm
+**	- A new raytrace is born! But it isn't raytracing yet.
 **
-**      Revision 1.9  2001/08/20 14:16:48  sm
-**      - Putting data into cmaera and light combobox.
-**      - Selecting camera and light.
+**	Revision 1.10  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
 **
-**      Revision 1.8  2001/08/18 15:38:27  sm
-**      - New action toolbar
-**      - Added comboboxes for camera and lights (but not filled in)
-**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
-**      - Some RenderObject redesignes
-**      - Color selecting bug fix in RenderObject
+**	Revision 1.9  2001/08/20 14:16:48  sm
+**	- Putting data into cmaera and light combobox.
+**	- Selecting camera and light.
 **
-**      Revision 1.7  2001/08/11 19:59:16  sm
-**      - Added orthogonal projection
+**	Revision 1.8  2001/08/18 15:38:27  sm
+**	- New action toolbar
+**	- Added comboboxes for camera and lights (but not filled in)
+**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**	- Some RenderObject redesignes
+**	- Color selecting bug fix in RenderObject
 **
-**      Revision 1.6  2001/08/11 15:59:59  sm
-**      - Rendering cleaned up
-**      - CWinApp/CMainFrm derived from Blizzard III classes
-**        supporting more effective GUI.
+**	Revision 1.7  2001/08/11 19:59:16  sm
+**	- Added orthogonal projection
 **
-**      Revision 1.5  2001/08/05 09:23:22  sm
-**      - Introducing vectors, matrices, Splines and NURBS
+**	Revision 1.6  2001/08/11 15:59:59  sm
+**	- Rendering cleaned up
+**	- CWinApp/CMainFrm derived from Blizzard III classes
+**	  supporting more effective GUI.
 **
-**      Revision 1.4  2001/08/03 15:54:09  sm
-**      - Compilation of OpenGL under Windows NT
+**	Revision 1.5  2001/08/05 09:23:22  sm
+**	- Introducing vectors, matrices, Splines and NURBS
 **
-**      Revision 1.3  2001/08/02 15:37:17  sm
-**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**	Revision 1.4  2001/08/03 15:54:09  sm
+**	- Compilation of OpenGL under Windows NT
 **
-**      Revision 1.2  2001/08/02 15:21:54  sm
-**      - Some minor changes
+**	Revision 1.3  2001/08/02 15:37:17  sm
+**	- Now we are able to draw Blizzard Scenes with OpenGL.
 **
-**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**      Blizzard III is born
+**	Revision 1.2  2001/08/02 15:21:54  sm
+**	- Some minor changes
+**
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
 **
 */
 
@@ -101,27 +104,27 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	b3PrintF(B3LOG_NORMAL,"Blizzard III scene load.\n");
 
 	// Background color
-	b3InitColor(&Top);
-	b3InitColor(&Bottom);
+	b3InitColor(&m_TopColor);
+	b3InitColor(&m_BottomColor);
 
 	// Camera
-	b3InitVector(&EyePoint);
-	b3InitVector(&ViewPoint);
-	b3InitVector(&Width);
-	b3InitVector(&Height);
+	b3InitVector(&m_EyePoint);
+	b3InitVector(&m_ViewPoint);
+	b3InitVector(&m_Width);
+	b3InitVector(&m_Height);
 
 	// Some other values
-	BackTexture      = (b3Tx *)b3InitNull();
-	xAngle           = b3InitFloat();
-	yAngle           = b3InitFloat();
-	BBoxOverSize     = b3InitFloat();
-	BackgroundType   = b3InitInt();
-	TraceDepth       = b3InitInt();
-	Flags            = b3InitInt();
-	ShadowBrightness = b3InitFloat();
-	Limit            = b3InitFloat();
-	xSize            = b3InitInt();
-	ySize            = b3InitInt();
+	m_BackTexture      = (b3Tx *)b3InitNull();
+	m_xAngle           = b3InitFloat();
+	m_yAngle           = b3InitFloat();
+	m_BBoxOverSize     = b3InitFloat();
+	m_BackgroundType   = b3InitInt();
+	m_TraceDepth       = b3InitInt();
+	m_Flags            = b3InitInt();
+	m_ShadowBrightness = b3InitFloat();
+	m_Epsilon          = b3InitFloat();
+	m_xSize            = b3InitInt();
+	m_ySize            = b3InitInt();
 }
 
 b3Item *b3Scene::b3Init(b3_u32 class_type)
@@ -136,8 +139,8 @@ b3Item *b3Scene::b3Init(b3_u32 *src)
 
 void b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
-	xSize = this->xSize;
-	ySize = this->ySize;
+	xSize = this->m_xSize;
+	ySize = this->m_ySize;
 }
 
 b3ModellerInfo *b3Scene::b3GetModellerInfo()
@@ -182,10 +185,10 @@ b3CameraPart *b3Scene::b3GetCamera(b3_bool must_active)
 	if (first == null)
 	{
 		camera = new b3CameraPart(CAMERA);
-		camera->EyePoint  = EyePoint;
-		camera->ViewPoint = ViewPoint;
-		camera->Width     = Width;
-		camera->Height    = Height;
+		camera->EyePoint  = m_EyePoint;
+		camera->ViewPoint = m_ViewPoint;
+		camera->Width     = m_Width;
+		camera->Height    = m_Height;
 		strcpy(camera->CameraName,"Camera");
 		heads[2].b3Append(camera);
 	}

@@ -20,9 +20,12 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/system/b3Display.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
+
+#include <float.h>
 
 #define B3_BOXSTRINGLEN  128
 #define B3_TEXSTRINGLEN   96
@@ -51,6 +54,13 @@ class b3Tx : public b3Link<b3Tx>
 public:
 	b3Tx();
 };
+
+typedef struct b3Polar
+{
+	b3_vector polar;
+	b3_vector object_polar;
+	b3_vector box_polar;
+} b3_polar;
 
 /*************************************************************************
 **                                                                      **
@@ -1256,13 +1266,13 @@ protected:
 class b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
-	b3_u32           Type;               // texture type
+	b3_u32           m_Type;               // texture type
 public:
-	b3_vector        DimBase;
-	b3_vector        DimSize;
-	b3_matrix        Matrix;             // all composed transformations
-	char             BoxName[B3_BOXSTRINGLEN];   // object name
-	char             BoxURL[B3_BOXSTRINGLEN]; // HTML link
+	b3_vector        m_DimBase;
+	b3_vector        m_DimSize;
+	b3_matrix        m_Matrix;             // all composed transformations
+	char             m_BoxName[B3_BOXSTRINGLEN];   // object name
+	char             m_BoxURL[B3_BOXSTRINGLEN]; // HTML link
 
 #ifdef BLZ3_USE_OPENGL
 	GLfloat          bbox_vertices[8 * 3];
@@ -1285,9 +1295,11 @@ public:
 		   b3_count        b3Count();
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
- 	static void    b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
+	       b3_bool         b3Intersect(b3_dLine *ray,b3_f64 &Q);
+
+ 	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
 protected:
-	       void    b3GetGridColor(b3_color *color);
+	       void            b3GetGridColor(b3_color *color);
 };
 
 #define BBB_HTML         0
@@ -1356,17 +1368,6 @@ public:
 	B3_ITEM_INIT(b3Light);
 	B3_ITEM_LOAD(b3Light);
 };
-
-// aux. structure for computing illumination
-typedef struct
-{
-	b3_vector  IPoint;
-	b3_vector  Normal;
-	b3_ray     Refl;
-	b3_ray     Refr;
-	b3_color   Diff,Amb,Spec;
-	b3_f64     Reflection,Refraction,RefrValue,HighLight;
-} b3SurfaceInfo;
 
 // aux. structure for JitterLight
 typedef struct
@@ -1667,31 +1668,64 @@ protected:
 	static void b3Init();
 };
 
-class b3Scene : public b3Item
+class b3RayRow : public b3Row
 {
 public:
+	b3_coord m_y;
+	b3_res   m_xSize;
+	b3_res   m_ySize;
+public:
+	              b3RayRow(b3_coord y,b3_res xSize,b3_res ySize);
+	b3_pkd_color *b3GetBuffer();
+};
+
+typedef struct b3Ray
+{
+	b3_dLine  ray;
+	b3_color  color;
+	b3_f64    Q;
+	b3Shape  *shape;
+} b3_ray;
+
+// aux. structure for computing illumination
+typedef struct
+{
+	b3_vector  IPoint;
+	b3_vector  Normal;
+	b3_ray     Refl;
+	b3_ray     Refr;
+	b3_color   Diff,Amb,Spec;
+	b3_f64     Reflection,Refraction,RefrValue,HighLight;
+} b3SurfaceInfo;
+
+class b3Scene : public b3Item
+{
+	b3CPU            m_CPU;
+	b3Base<b3RayRow> m_Rows;
+	b3Mutex          m_RowMutex;
+public:
 	// Camera
-	b3_vector        EyePoint;
-	b3_vector        ViewPoint;
-	b3_vector        Width;                 // Bildschirmvektor X
-	b3_vector        Height;                // Bildschirmvektor Y
-	b3_s32           xSize,ySize;           // Rechenaufloesung
-	b3_f32           xAngle,yAngle;         // Blickwinkel
+	b3_vector        m_EyePoint;
+	b3_vector        m_ViewPoint;
+	b3_vector        m_Width;               // Bildschirmvektor X
+	b3_vector        m_Height;              // Bildschirmvektor Y
+	b3_res           m_xSize,m_ySize;       // Rechenaufloesung
+	b3_f32           m_xAngle,m_yAngle;     // Blickwinkel
 
 	// Background
-	b3_color         Top;
-	b3_color         Bottom;
-	b3Tx            *BackTexture;           //
-	b3_s32           BackgroundType;        // Hintergrund: Farbe/Datei/...
+	b3_color         m_TopColor;
+	b3_color         m_BottomColor;
+	b3Tx            *m_BackTexture;         //
+	b3_s32           m_BackgroundType;      // Hintergrund: Farbe/Datei/...
 
-	b3_s32           TraceDepth;            // Rekursionstiefe
-	b3_s32           Flags;                 // beschreibt, welche Werte gueltig sind
-	b3_f32           ShadowBrightness;      // Schattenhelligkeit
+	b3_s32           m_TraceDepth;          // Rekursionstiefe
+	b3_s32           m_Flags;               // beschreibt, welche Werte gueltig sind
+	b3_f32           m_ShadowBrightness;    // Schattenhelligkeit
 
 	// Some limits
-	b3_f32           BBoxOverSize;          // BBox-Ueberziehun
-	b3_f32           Limit;                 // Schwellenwert
-	char             TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
+	b3_f32           m_BBoxOverSize;        // BBox-Ueberziehung
+	b3_f32           m_Epsilon;             // Schwellenwert
+	char             m_TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
 
 public:
 	                       b3Scene(b3_u32  class_type);
@@ -1714,6 +1748,16 @@ public:
 		   b3_count        b3GetBBoxCount();
 		   void            b3Activate(b3_bool activate=true);
 		   void            b3Transform(b3_matrix *transformation);
+		   void            b3Raytrace(b3Display *display = null);
+		   void            b3Shade(b3_ray *ray,b3_count trace_depth=1);
+		   b3_bool         b3Intersect(b3_ray *ray,b3_f64 max = DBL_MAX);
+
+private:
+	       void            b3RaytraceOneRow(b3RayRow *row);
+	static b3_u32          b3RaytraceThread(void *ptr);
+		   b3Shape        *b3Intersect(b3BBox *bbox,b3_dLine *ray,b3_f64 &Q);
+
+	friend class b3RayRow;
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

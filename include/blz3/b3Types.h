@@ -153,19 +153,6 @@ typedef struct b3ColorARGB
 	b3_f32    a,r,g,b;
 } b3_color;
 
-typedef struct b3Polar
-{
-	b3_vector polar;
-	b3_vector object_polar;
-	b3_vector box_polar;
-} b3_polar;
-
-typedef struct b3Ray
-{
-	b3_line   ray;
-	b3_color  color;
-} b3_ray;
-
 // Some definitions
 #ifndef null
 #define null 0

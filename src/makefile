@@ -20,6 +20,7 @@ SUB_DIRS +=\
 	raytrace\
 	test_unix\
 	OpenGL\
+	brt3\
 	check
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN)

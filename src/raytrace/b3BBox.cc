@@ -31,70 +31,73 @@
 *************************************************************************/
 
 /*
-**      $Log$
-**      Revision 1.17  2001/09/02 18:54:56  sm
-**      - Moving objects
-**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
-**        are necessary.
-**      - It's really nice to see!
+**	$Log$
+**	Revision 1.18  2001/09/23 14:11:18  sm
+**	- A new raytrace is born! But it isn't raytracing yet.
 **
-**      Revision 1.16  2001/09/01 15:54:54  sm
-**      - Tidy up Size confusion in b3Item/b3World and derived classes
-**      - Made (de-)activation of objects
+**	Revision 1.17  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
 **
-**      Revision 1.15  2001/08/18 15:38:27  sm
-**      - New action toolbar
-**      - Added comboboxes for camera and lights (but not filled in)
-**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
-**      - Some RenderObject redesignes
-**      - Color selecting bug fix in RenderObject
+**	Revision 1.16  2001/09/01 15:54:54  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
 **
-**      Revision 1.14  2001/08/16 14:41:24  sm
-**      - Some more shading shapes added (only BSPline shapes are missing)
+**	Revision 1.15  2001/08/18 15:38:27  sm
+**	- New action toolbar
+**	- Added comboboxes for camera and lights (but not filled in)
+**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**	- Some RenderObject redesignes
+**	- Color selecting bug fix in RenderObject
 **
-**      Revision 1.13  2001/08/14 15:37:50  sm
-**      - Made some cleanups when OpenGL isn't available.
+**	Revision 1.14  2001/08/16 14:41:24  sm
+**	- Some more shading shapes added (only BSPline shapes are missing)
 **
-**      Revision 1.12  2001/08/12 19:47:48  sm
-**      - Now having correct orthogonal projection incl. aspect ratio
+**	Revision 1.13  2001/08/14 15:37:50  sm
+**	- Made some cleanups when OpenGL isn't available.
 **
-**      Revision 1.11  2001/08/11 20:17:22  sm
-**      - Updated OpenGL on Un*x platform.
-**      - This was a great day!
+**	Revision 1.12  2001/08/12 19:47:48  sm
+**	- Now having correct orthogonal projection incl. aspect ratio
 **
-**      Revision 1.10  2001/08/11 19:59:16  sm
-**      - Added orthogonal projection
+**	Revision 1.11  2001/08/11 20:17:22  sm
+**	- Updated OpenGL on Un*x platform.
+**	- This was a great day!
 **
-**      Revision 1.9  2001/08/10 15:14:36  sm
-**      - Now having all shapes implemented for drawing lines.
+**	Revision 1.10  2001/08/11 19:59:16  sm
+**	- Added orthogonal projection
 **
-**      Revision 1.8  2001/08/08 20:12:59  sm
-**      - Fixing some makefiles
-**      - introducing check/BlzDump (BlzDump moved from tools)
-**      - Some further line drawing added
-**      - b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
-**        b3RenderObject.
+**	Revision 1.9  2001/08/10 15:14:36  sm
+**	- Now having all shapes implemented for drawing lines.
 **
-**      Revision 1.7  2001/08/06 20:52:56  sm
-**      - Some CR/LF removal
+**	Revision 1.8  2001/08/08 20:12:59  sm
+**	- Fixing some makefiles
+**	- introducing check/BlzDump (BlzDump moved from tools)
+**	- Some further line drawing added
+**	- b3RenderContext and b3RenderObject introduced. Every b3Shape inherit from
+**	  b3RenderObject.
 **
-**      Revision 1.6  2001/08/06 19:58:58  sm
-**      - Drawing area - the first shape we can see with OpenGL
+**	Revision 1.7  2001/08/06 20:52:56  sm
+**	- Some CR/LF removal
 **
-**      Revision 1.5  2001/08/06 16:35:35  sm
-**      - Drawing first area
+**	Revision 1.6  2001/08/06 19:58:58  sm
+**	- Drawing area - the first shape we can see with OpenGL
 **
-**      Revision 1.4  2001/08/02 15:37:17  sm
-**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**	Revision 1.5  2001/08/06 16:35:35  sm
+**	- Drawing first area
 **
-**      Revision 1.3  2001/08/02 15:21:54  sm
-**      - Some minor changes
+**	Revision 1.4  2001/08/02 15:37:17  sm
+**	- Now we are able to draw Blizzard Scenes with OpenGL.
 **
-**      Revision 1.2  2001/07/02 16:09:46  sm
-**      - Added bounding box reorganization.
+**	Revision 1.3  2001/08/02 15:21:54  sm
+**	- Some minor changes
 **
-**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**      Blizzard III is born
+**	Revision 1.2  2001/07/02 16:09:46  sm
+**	- Added bounding box reorganization.
+**
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
 **
 */
 
@@ -136,22 +139,22 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 {
 	b3_size diff;
 
-	Type = b3InitInt();
-	b3InitVector(&DimBase);
-	b3InitVector(&DimSize);
+	m_Type = b3InitInt();
+	b3InitVector(&m_DimBase);
+	b3InitVector(&m_DimSize);
 	b3InitNOP();
-	b3InitMatrix(&Matrix);
+	b3InitMatrix(&m_Matrix);
 
 	diff = m_ItemSize - (b3_size)(m_ParseIndex << 2);
 	if (diff < B3_BOXSTRINGLEN)
 	{
-		b3InitString(BoxName,diff);
-		BoxURL[0] = 0;
+		b3InitString(m_BoxName,diff);
+		m_BoxURL[0] = 0;
 	}
 	else
 	{
-		b3InitString(BoxName,B3_BOXSTRINGLEN);
-		b3InitString(BoxURL, B3_BOXSTRINGLEN);
+		b3InitString(m_BoxName,B3_BOXSTRINGLEN);
+		b3InitString(m_BoxURL, B3_BOXSTRINGLEN);
 	}
 
 }
@@ -162,7 +165,7 @@ void b3BBox::b3Dump(b3_count level)
 
 	level = b3GetClassType() & 0xffff;
 	b3DumpSpace(level);
-	b3PrintF(B3LOG_NORMAL,"Object %s (level %d)\n",BoxName,level);
+	b3PrintF(B3LOG_NORMAL,"Object %s (level %d)\n",m_BoxName,level);
 
 	B3_FOR_BASE(&heads[1],bbox)
 	{
@@ -263,37 +266,37 @@ void b3BBox::b3ComputeVertices()
 #ifdef BLZ3_USE_OPENGL
 	b3_index        i = 0;
 
-	bbox_vertices[i++] = DimBase.x;
-	bbox_vertices[i++] = DimBase.y;
-	bbox_vertices[i++] = DimBase.z;
+	bbox_vertices[i++] = m_DimBase.x;
+	bbox_vertices[i++] = m_DimBase.y;
+	bbox_vertices[i++] = m_DimBase.z;
 
-	bbox_vertices[i++] = DimBase.x;
-	bbox_vertices[i++] = DimBase.y;
-	bbox_vertices[i++] = DimBase.z + DimSize.z;
+	bbox_vertices[i++] = m_DimBase.x;
+	bbox_vertices[i++] = m_DimBase.y;
+	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = DimBase.x + DimSize.x;
-	bbox_vertices[i++] = DimBase.y;
-	bbox_vertices[i++] = DimBase.z + DimSize.z;
+	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
+	bbox_vertices[i++] = m_DimBase.y;
+	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = DimBase.x + DimSize.x;
-	bbox_vertices[i++] = DimBase.y;
-	bbox_vertices[i++] = DimBase.z;
+	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
+	bbox_vertices[i++] = m_DimBase.y;
+	bbox_vertices[i++] = m_DimBase.z;
 
-	bbox_vertices[i++] = DimBase.x;
-	bbox_vertices[i++] = DimBase.y + DimSize.y;
-	bbox_vertices[i++] = DimBase.z;
+	bbox_vertices[i++] = m_DimBase.x;
+	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
+	bbox_vertices[i++] = m_DimBase.z;
 
-	bbox_vertices[i++] = DimBase.x;
-	bbox_vertices[i++] = DimBase.y + DimSize.y;
-	bbox_vertices[i++] = DimBase.z + DimSize.z;
+	bbox_vertices[i++] = m_DimBase.x;
+	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
+	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = DimBase.x + DimSize.x;
-	bbox_vertices[i++] = DimBase.y + DimSize.y;
-	bbox_vertices[i++] = DimBase.z + DimSize.z;
+	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
+	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
+	bbox_vertices[i++] = m_DimBase.z + m_DimSize.z;
 
-	bbox_vertices[i++] = DimBase.x + DimSize.x;
-	bbox_vertices[i++] = DimBase.y + DimSize.y;
-	bbox_vertices[i++] = DimBase.z;
+	bbox_vertices[i++] = m_DimBase.x + m_DimSize.x;
+	bbox_vertices[i++] = m_DimBase.y + m_DimSize.y;
+	bbox_vertices[i++] = m_DimBase.z;
 
 	glVertexCount = 8;
 	glComputed    = true;
@@ -362,15 +365,15 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	if (result)
 	{
 		// Use fresh data
-		DimSize.x   = (subUpper.x - subLower.x) * tolerance * 0.5;
-		DimSize.y   = (subUpper.y - subLower.y) * tolerance * 0.5;
-		DimSize.z   = (subUpper.z - subLower.z) * tolerance * 0.5;
-		subLower.x -= DimSize.x;
-		subLower.y -= DimSize.y;
-		subLower.z -= DimSize.z;
-		subUpper.x += DimSize.x;
-		subUpper.y += DimSize.y;
-		subUpper.z += DimSize.z;
+		m_DimSize.x  = (subUpper.x - subLower.x) * tolerance * 0.5;
+		m_DimSize.y  = (subUpper.y - subLower.y) * tolerance * 0.5;
+		m_DimSize.z  = (subUpper.z - subLower.z) * tolerance * 0.5;
+		subLower.x  -= m_DimSize.x;
+		subLower.y  -= m_DimSize.y;
+		subLower.z  -= m_DimSize.z;
+		subUpper.x  += m_DimSize.x;
+		subUpper.y  += m_DimSize.y;
+		subUpper.z  += m_DimSize.z;
 	}
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
@@ -392,10 +395,10 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 	// Compute bounds of thos BBox
 	if (result)
 	{
-		DimSize.x = subUpper.x - subLower.x;
-		DimSize.y = subUpper.y - subLower.y;
-		DimSize.z = subUpper.z - subLower.z;
-		DimBase   = subLower;
+		m_DimSize.x = subUpper.x - subLower.x;
+		m_DimSize.y = subUpper.y - subLower.y;
+		m_DimSize.z = subUpper.z - subLower.z;
+		m_DimBase   = subLower;
 	}
 
 	return result;
@@ -534,7 +537,7 @@ b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	B3_FOR_BASE(&heads[0],item)
 	{
 		bbox    = (b3BBox *)item;
-		result |= bbox->b3ComputeBounds(lower,upper,BBoxOverSize);
+		result |= bbox->b3ComputeBounds(lower,upper,m_BBoxOverSize);
 	}
 	return result;
 }

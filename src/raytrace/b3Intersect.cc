@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/09/23 14:11:18  sm
+**	- A new raytrace is born! But it isn't raytracing yet.
+**
 **	Revision 1.1  2001/09/22 16:19:52  sm
 **	- Adding basic shape intersection routines
-**
+**	
 */
 
 /*************************************************************************
@@ -762,4 +765,119 @@ b3_f64 b3CSGBox::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 b3_f64 b3CSGTorus::b3Intersect(b3_dLine *ray,b3_f64 &Q)
 {
 	return -1;
+}
+
+b3_bool b3BBox::b3Intersect(b3_dLine *ray,b3_f64 &Q)
+{
+	b3_f64 start,end,t_near,t_far,m,pos;
+
+	m       = 1.0 / ray->dir.x;
+	pos     = (ray->pos.x  - m_DimBase.x);
+	start   = (            - pos) * m;
+	end     = (m_DimSize.x - pos) * m;
+	if (start > end)
+	{
+		m     = start;
+		start = end;
+		end   = m;
+	}
+
+	m       = 1.0 / ray->dir.y;
+	pos     = (ray->pos.y  - m_DimBase.y);
+	t_near  = (            - pos) * m;
+	t_far   = (m_DimSize.y - pos) * m;
+	if (t_near > t_far)
+	{
+		m      = t_near;
+		t_near = t_far;
+		t_far  = m;
+	}
+	if (t_near > start) start = t_near;
+	if (t_far  < end)   end   = t_far;
+	if (start  > end) return false;
+
+	// Is it OK?
+	if (end    < 0)   return false;
+
+	m       = 1.0 / ray->dir.z;
+	pos     = (ray->pos.z  - m_DimBase.z);
+	t_near  = (            - pos) * m;
+	t_far   = (m_DimSize.z - pos) * m;
+	if (t_near > t_far)
+	{
+		m      = t_near;
+		t_near = t_far;
+		t_far  = m;
+	}
+	if (t_near > start) start = t_near;
+	if (t_far  < end)   end   = t_far;
+	if (start  > end) return false;
+
+	if (end   < 0)   return false;
+	if (start > Q)   return false;
+	return true;
+}
+
+
+b3Shape *b3Scene::b3Intersect(
+	b3BBox   *BBox,
+	b3_dLine *ray,
+	b3_f64   &Q)
+{
+	b3Base<b3Item> *Shapes;
+	b3Base<b3Item> *BBoxes;
+	b3Shape        *Shape,*BackShape = null,*Found;
+	b3Item         *item;
+	b3_f64          Result;
+
+	while (BBox != null)
+	{
+		Shapes = BBox->b3GetShapeHead();
+		BBoxes = BBox->b3GetBBoxHead();
+		if (BBox->b3Intersect(ray,Q))
+		{
+			if (BBoxes->First)
+			{
+				Found = b3Intersect ((b3BBox *)BBoxes->First,ray,Q);
+				if (Found != null)
+				{
+					BackShape = Found;
+				}
+			}
+
+			if (Shapes->b3GetClass() == CLASS_SHAPE)
+			{
+				B3_FOR_BASE(Shapes,item)
+				{
+					Shape  = (b3Shape *)item;
+					Result = Shape->b3Intersect(ray,Q);
+					if ((Result > 0) && (Result <= Q))
+					{
+						BackShape  = Shape;
+//						GlobalBBox = BBox;
+						Q          = Result;
+					}
+				} /* for shape*/
+			}     /* if CLASS_SHAPE */
+
+
+			// CLASS_SHAPE
+#if 0
+			if (Shapes->b3GetClass() == CLASS_CSG)
+			{
+				BackShape = BBox->b3IntersectCSG (BackShape,ray,Q);
+			}
+#endif
+		}
+		BBox = (b3BBox *)BBox->Succ;
+	}
+	return BackShape;
+}
+
+b3_bool b3Scene::b3Intersect(b3_ray *ray,b3_f64 max)
+{
+	ray->Q     = max;
+	ray->shape = b3Intersect(b3GetFirstBBox(),&ray->ray,ray->Q);
+
+	return ray->shape != null;
 }

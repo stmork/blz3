@@ -32,56 +32,58 @@
 *************************************************************************/
 
 /*
-**      $Log$
-**      Revision 1.13  2001/09/05 15:21:34  sm
-**      - Now object moving/rotating on perspective view.
+**	$Log$
+**	Revision 1.14  2001/09/23 14:11:18  sm
+**	- A new raytrace is born! But it isn't raytracing yet.
 **
-**      Revision 1.12  2001/09/04 15:15:57  sm
-**      - Added rotating objects
+**	Revision 1.13  2001/09/05 15:21:34  sm
+**	- Now object moving/rotating on perspective view.
+**	   Revision 1.12  2001/09/04 15:15:57  sm
+**	- Added rotating objects
 **
-**      Revision 1.11  2001/09/02 18:54:56  sm
-**      - Moving objects
-**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
-**        are necessary.
-**      - It's really nice to see!
+**	Revision 1.11  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
 **
-**      Revision 1.10  2001/08/15 19:52:57  sm
-**      - First polygon rendering with Blizzard III (areas only)
+**	Revision 1.10  2001/08/15 19:52:57  sm
+**	- First polygon rendering with Blizzard III (areas only)
 **
-**      Revision 1.9  2001/08/14 15:37:50  sm
-**      - Made some cleanups when OpenGL isn't available.
+**	Revision 1.9  2001/08/14 15:37:50  sm
+**	- Made some cleanups when OpenGL isn't available.
 **
-**      Revision 1.8  2001/08/14 13:34:40  sm
-**      - Corredted aspect ratio handling when doing somethiing with
-**        the view
-**      - New application icon
-**      - Minor GUI bug fixes.
+**	Revision 1.8  2001/08/14 13:34:40  sm
+**	- Corredted aspect ratio handling when doing somethiing with
+**	  the view
+**	- New application icon
+**	- Minor GUI bug fixes.
 **
-**      Revision 1.7  2001/08/14 07:03:28  sm
-**      - Made some ASSERT cleanups. New define when _DEBUG is switched on:
-**        B3_ASSERT(condition) abort()s when condition is false.
+**	Revision 1.7  2001/08/14 07:03:28  sm
+**	- Made some ASSERT cleanups. New define when _DEBUG is switched on:
+**	  B3_ASSERT(condition) abort()s when condition is false.
 **
-**      Revision 1.6  2001/08/13 15:05:01  sm
-**      - Now we can scale and move around with stacked views.
+**	Revision 1.6  2001/08/13 15:05:01  sm
+**	- Now we can scale and move around with stacked views.
 **
-**      Revision 1.5  2001/08/12 19:47:48  sm
-**      - Now having correct orthogonal projection incl. aspect ratio
+**	Revision 1.5  2001/08/12 19:47:48  sm
+**	- Now having correct orthogonal projection incl. aspect ratio
 **
-**      Revision 1.4  2001/08/11 20:17:22  sm
-**      - Updated OpenGL on Un*x platform.
-**      - This was a great day!
+**	Revision 1.4  2001/08/11 20:17:22  sm
+**	- Updated OpenGL on Un*x platform.
+**	- This was a great day!
 **
-**      Revision 1.3  2001/08/11 19:59:16  sm
-**      - Added orthogonal projection
+**	Revision 1.3  2001/08/11 19:59:16  sm
+**	- Added orthogonal projection
 **
-**      Revision 1.2  2001/08/11 16:29:07  sm
-**      - Nasty UnCR done
-**      - Compiling but not running OpenGL under Unix
+**	Revision 1.2  2001/08/11 16:29:07  sm
+**	- Nasty UnCR done
+**	- Compiling but not running OpenGL under Unix
 **
-**      Revision 1.1  2001/08/11 15:59:59  sm
-**      - Rendering cleaned up
-**      - CWinApp/CMainFrm derived from Blizzard III classes
-**        supporting more effective GUI.
+**	Revision 1.1  2001/08/11 15:59:59  sm
+**	- Rendering cleaned up
+**	- CWinApp/CMainFrm derived from Blizzard III classes
+**	  supporting more effective GUI.
 **
 **
 */
@@ -215,10 +217,10 @@ void b3RenderView::b3SetCamera(b3CameraPart *camera)
 
 void b3RenderView::b3SetCamera(b3Scene *scene)
 {
-	m_EyePoint  = scene->EyePoint;
-	m_ViewPoint = scene->ViewPoint;
-	m_Width     = scene->Width;
-	m_Height    = scene->Height;
+	m_EyePoint  = scene->m_EyePoint;
+	m_ViewPoint = scene->m_ViewPoint;
+	m_Width     = scene->m_Width;
+	m_Height    = scene->m_Height;
 }
 
 b3_bool b3RenderView::b3SetBounds(b3Scene *scene)
