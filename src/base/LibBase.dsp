@@ -234,6 +234,10 @@ SOURCE=..\..\include\blz3\base\b3Spline.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3Vector.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3World.h
 # End Source File
 # End Group
