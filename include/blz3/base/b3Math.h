@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 
-#ifndef n__ICC
+#ifndef __ICC
 #define FINE_MATH
 #endif
 
