@@ -26,6 +26,7 @@
 #include "AppObjectView.h"
 #include "MainFrm.h"
 
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -35,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/16 16:17:12  sm
+**	- Introducing object edit painting and acting.
+**
 **	Revision 1.5  2002/01/15 16:17:31  sm
 **	- Checked OLE support
 **	- Checked icons
 **	- Added two bwd files which create icons
-**
+**	
 **	Revision 1.4  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
@@ -97,6 +101,7 @@ CAppObjectDoc::CAppObjectDoc()
 	// TODO: add one-time construction code here
 	m_BBox         = null;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
+	b3MatrixUnit(&m_OriginalPosition);
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -123,10 +128,12 @@ BOOL CAppObjectDoc::OnNewDocument()
 
 BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName) 
 {
-	CMainFrame *main = CB3GetMainFrame();
-	CString     message;
-	BOOL        result = FALSE;
-	b3_count    level;
+	CMainFrame     *main = CB3GetMainFrame();
+	CString         message;
+	BOOL            result = FALSE;
+	b3Base<b3Item>  base;
+	b3_count        level;
+	b3_matrix       inverse;
 
 	if (!CDocument::OnOpenDocument(lpszPathName))
 	{
@@ -142,9 +149,12 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		main->b3SetStatusMessage(IDS_DOC_REORG);
 		m_BBox = (b3BBox *)m_World.b3GetFirst();
 		level  = m_BBox->b3GetClassType() & 0xffff;
-//		b3BBox::b3Reorg(m_World.b3GetHead(),base,level,1,selected);
+		b3BBox::b3Reorg(m_World.b3GetHead(),&base,level,1);
 		b3BBox::b3Recount(m_BBox->b3GetBBoxHead());
 
+		m_OriginalPosition = m_BBox->m_Matrix;
+		b3MatrixInv(&m_BBox->m_Matrix,&inverse);
+		m_BBox->b3Transform(&inverse,true);
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
 		m_BBox->b3Prepare();
 
@@ -154,7 +164,6 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		main->b3SetStatusMessage(IDS_DOC_BOUND);
 		b3ComputeBounds();
 
-		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 //		m_DlgHierarchy->b3InitTree(this,true);
 //		m_DlgHierarchy->b3SelectBBox(bbox);
@@ -182,6 +191,9 @@ BOOL CAppObjectDoc::OnSaveDocument(LPCTSTR lpszPathName)
 void CAppObjectDoc::OnCloseDocument() 
 {
 	// TODO: Add your specialized code here and/or call the base class
+	m_BBox->b3Transform(&m_OriginalPosition,true);
+	delete m_BBox;
+	m_BBox = null;
 	CDocument::OnCloseDocument();
 }
 
@@ -216,3 +228,21 @@ void CAppObjectDoc::Dump(CDumpContext& dc) const
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
+
+/*************************************************************************
+**                                                                      **
+**                        General scene commands                        **
+**                                                                      **
+*************************************************************************/
+
+void CAppObjectDoc::b3ComputeBounds()
+{
+	m_Lower.x =  FLT_MAX;
+	m_Lower.y =  FLT_MAX;
+	m_Lower.z =  FLT_MAX;
+	m_Upper.x = -FLT_MAX;
+	m_Upper.y = -FLT_MAX;
+	m_Upper.z = -FLT_MAX;
+
+	m_BBox->b3ComputeBounds(&m_Lower,&m_Upper,0.02);
+}

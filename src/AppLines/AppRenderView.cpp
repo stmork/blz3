@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/16 16:17:12  sm
+**	- Introducing object edit painting and acting.
+**
 **	Revision 1.3  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.2  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -272,6 +275,7 @@ void CAppRenderView::OnInitialUpdate()
 	wglMakeCurrent(m_DC,m_GC);
 	pDoc->m_Context.b3Init();
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
+	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
 	CScrollView::OnInitialUpdate();
 
@@ -284,6 +288,13 @@ void CAppRenderView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	// TODO: Add your specialized code here and/or call the base class
 	CAppRenderDoc *pDoc         = GetDocument();
 	b3_bool        doInvalidate = false;
+
+	if (lHint & B3_UPDATE_CAMERA)
+	{
+		m_RenderView.b3SetCamera(m_Camera);
+		m_CameraVolume.b3Update(m_Camera);
+		doInvalidate = true;
+	}
 
 	if (lHint & B3_UPDATE_GEOMETRY)
 	{

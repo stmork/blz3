@@ -47,6 +47,13 @@ typedef enum b3SelectMode
 	B3_CAMERA_ROTATE,
 	B3_CAMERA_VIEW,
 	B3_LIGHT_TURN,
+	B3_SHAPE_MOVE,
+	B3_SHAPE_ROTATE_POINT,
+	B3_SHAPE_ROTATE_AXIS,
+	B3_SHAPE_SCALE,
+	B3_SHAPE_MIRROR_POINT,
+	B3_SHAPE_MIRROR_AXIS,
+	B3_SHAPE_MIRROR_AREA,
 	B3_MODE_MAX
 } b3_select_mode;
 
@@ -55,15 +62,22 @@ class CB3Action;
 class CAppRenderView : public CScrollView
 {
 protected:
+	// OpenGL values
 	HDC             m_DC;
 	HGLRC           m_GC;
 	int             m_PixelFormatIndex;
+
+	// Acting modes
 	b3_select_mode  m_PreviousMode;
 	b3_select_mode  m_SelectMode;
-	b3RenderView    m_RenderView;
 	CPoint          m_SelectStart;
 	CPoint          m_SelectAct;
 	CB3Action      *m_Action[B3_MODE_MAX];
+
+	// camera data
+	b3RenderView    m_RenderView;
+	b3CameraPart   *m_Camera;
+	b3CameraVolume  m_CameraVolume;
 
 protected: // create from serialization only
 	CAppRenderView();
@@ -153,9 +167,9 @@ protected:
 	friend class CB3Action;
 	friend class CB3MoveAction;
 	friend class CB3CameraRotateAction;
+	friend class CB3ShapeAction;
 
 	friend class CB3ActionMagnify;
-	friend class CB3ActionObjectMove;
 	friend class CB3ActionObjectRotate;
 	friend class CB3ActionObjectScale;
 	friend class CB3ActionCameraMove;

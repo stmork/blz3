@@ -28,6 +28,7 @@ class CDlgHierarchy;
 
 class CAppObjectDoc : public CAppRenderDoc
 {
+	b3_matrix             m_OriginalPosition;
 protected:
 	b3World               m_World;
 	b3Thread             *m_Raytracer;
@@ -36,6 +37,7 @@ protected:
 	// Attributes
 public:
 	b3BBox               *m_BBox;
+	void       b3ComputeBounds();
 
 // Operations
 protected: // create from serialization only

@@ -33,6 +33,12 @@ typedef enum
 	B3_MB_RIGHT
 } b3_mouse_button;
 
+/*************************************************************************
+**                                                                      **
+**                        Some base classes                             **
+**                                                                      **
+*************************************************************************/
+
 class CB3Action
 {
 protected:
@@ -74,7 +80,6 @@ protected:
 class CB3MoveAction : public CB3Action
 {
 protected:
-	CAppLinesView *m_LinesView;
 	b3_f64         m_xRelStart,m_yRelStart;
 	b3_vector      m_xDir,m_yDir,m_zDir;
 	b3_vector      m_StartPoint;
@@ -82,7 +87,7 @@ protected:
 	b3_vector      m_LastDiff;
 
 protected:
-	             CB3MoveAction(CAppLinesView *window);
+	             CB3MoveAction(CAppRenderView *window);
 	virtual void b3Transform(b3_matrix *transformation);
 
 	virtual void b3LDown(b3_coord x,b3_coord y);
@@ -97,6 +102,51 @@ private:
 	        void b3InitTranslation(b3_f64 xRel,b3_f64 yRel);
 };
 
+class CB3CameraRotateAction : public CB3Action
+{
+protected:
+	b3CameraPart  *m_Camera;
+	b3_vector     *m_Center;
+	b3_vector      m_StartPoint;
+	b3_f64         m_StartAngle;
+	b3_f64         m_xRelStart;
+	b3_f64         m_yRelStart;
+	b3_f64         m_xLastAngle;
+	b3_f64         m_yLastAngle;
+	b3_line        m_Axis;
+	b3_line        m_UpDown;
+	b3_f64         m_Sign;
+
+public:
+	             CB3CameraRotateAction(CAppRenderView *window);
+	virtual void b3LDown(b3_coord x,b3_coord y);
+	virtual void b3LMove(b3_coord x,b3_coord y);
+	virtual void b3LUp(b3_coord x,b3_coord y);
+};
+
+class CB3ShapeAction : public CB3Action
+{
+	b3_f64          m_xStartAngle;
+	b3_f64          m_yStartAngle;
+
+protected:
+	b3_f64          m_xRelStart;
+	b3_f64          m_yRelStart;
+	CAppObjectView *m_ObjectView;
+
+public:
+	             CB3ShapeAction(CAppObjectView *window);
+	virtual void b3LDown(b3_coord x,b3_coord y);
+	virtual void b3LMove(b3_coord x,b3_coord y);
+	virtual void b3LUp(b3_coord x,b3_coord y);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Magnify selection action                      **
+**                                                                      **
+*************************************************************************/
+
 class CB3ActionMagnify : public CB3Action
 {
 public:
@@ -105,6 +155,12 @@ public:
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
 };
+
+/*************************************************************************
+**                                                                      **
+**                        Object actions                                **
+**                                                                      **
+*************************************************************************/
 
 class CB3ActionObjectSelect : public CB3Action
 {
@@ -120,6 +176,8 @@ public:
 
 class CB3ActionObjectMove : public CB3MoveAction
 {
+	CAppLinesView *m_LinesView;
+
 public:
 	CB3ActionObjectMove(CAppLinesView *window);
 
@@ -158,12 +216,18 @@ public:
 	void b3LUp(b3_coord x,b3_coord y);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Camera actions                                **
+**                                                                      **
+*************************************************************************/
+
 class CB3ActionCameraMove : public CB3MoveAction
 {
 	b3CameraPart *m_Camera;
 
 public:
-	     CB3ActionCameraMove(CAppLinesView *window);
+	     CB3ActionCameraMove(CAppRenderView *window);
 
 	void b3Transform(b3_matrix *transformation);
 
@@ -174,33 +238,10 @@ public:
 	void b3RUp(b3_coord x,b3_coord y);
 };
 
-class CB3CameraRotateAction : public CB3Action
-{
-protected:
-	CAppLinesView *m_LinesView;
-	b3CameraPart  *m_Camera;
-	b3_vector     *m_Center;
-	b3_vector      m_StartPoint;
-	b3_f64         m_StartAngle;
-	b3_f64         m_xRelStart;
-	b3_f64         m_yRelStart;
-	b3_f64         m_xLastAngle;
-	b3_f64         m_yLastAngle;
-	b3_line        m_Axis;
-	b3_line        m_UpDown;
-	b3_f64         m_Sign;
-
-public:
-	             CB3CameraRotateAction(CAppLinesView *window);
-	virtual void b3LDown(b3_coord x,b3_coord y);
-	virtual void b3LMove(b3_coord x,b3_coord y);
-	virtual void b3LUp(b3_coord x,b3_coord y);
-};
-
 class CB3ActionCameraTurn : public CB3CameraRotateAction
 {
 public:
-	CB3ActionCameraTurn(CAppLinesView *window);
+	CB3ActionCameraTurn(CAppRenderView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
 };
@@ -208,14 +249,13 @@ public:
 class CB3ActionCameraRotate : public CB3CameraRotateAction
 {
 public:
-	CB3ActionCameraRotate(CAppLinesView *window);
+	CB3ActionCameraRotate(CAppRenderView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
 };
 
 class CB3ActionCameraView : public CB3Action
 {
-	CAppLinesView *m_LinesView;
 	b3CameraPart  *m_Camera;
 	b3_line        m_Axis;
 	b3_f64         m_xRelStart;
@@ -224,7 +264,7 @@ class CB3ActionCameraView : public CB3Action
 	b3_res         m_ySize;
 
 public:
-	     CB3ActionCameraView(CAppLinesView *window);
+	     CB3ActionCameraView(CAppRenderView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
 	void b3LMove(b3_coord x,b3_coord y);
@@ -234,10 +274,64 @@ public:
 	void b3RUp(b3_coord x,b3_coord y);
 };
 
+/*************************************************************************
+**                                                                      **
+**                        Light actions                                 **
+**                                                                      **
+*************************************************************************/
+
 class CB3ActionLightTurn : public CB3Action
 {
 public:
 	CB3ActionLightTurn(CAppLinesView *window);
+};
+
+/*************************************************************************
+**                                                                      **
+**                        Shape actions                                 **
+**                                                                      **
+*************************************************************************/
+
+class CB3ActionShapeMove : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeMove(CAppObjectView *window);
+};
+
+class CB3ActionShapeRotatePoint : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeRotatePoint(CAppObjectView *window);
+};
+
+class CB3ActionShapeRotateAxis : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeRotateAxis(CAppObjectView *window);
+};
+
+class CB3ActionShapeScale : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeScale(CAppObjectView *window);
+};
+
+class CB3ActionShapeMirrorPoint : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeMirrorPoint(CAppObjectView *window);
+};
+
+class CB3ActionShapeMirrorAxis : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeMirrorAxis(CAppObjectView *window);
+};
+
+class CB3ActionShapeMirrorArea : public CB3ShapeAction
+{
+public:
+	CB3ActionShapeMirrorArea(CAppObjectView *window);
 };
 
 #endif

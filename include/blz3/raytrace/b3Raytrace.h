@@ -1888,6 +1888,7 @@ public:
 
 	void     b3Write();
 	void     b3Orientate(b3_vector *eye,b3_vector *view,b3_f64 focal_length,b3_f64 width,b3_f64 height);
+	void     b3Overview(b3_vector *center,b3_vector *size,b3_f64 xAngle,b3_f64 yAngle);
 	void     b3ComputeFocalLength(b3_f64 length);
 	void     b3Transform(b3_matrix *transformation);
 	char    *b3GetName();

@@ -32,6 +32,9 @@ class CB3Action;
 class CAppObjectView : public CAppRenderView
 {
 protected: // create from serialization only
+	b3BBox *m_BBox;
+	b3_f64  m_xAngle;
+	b3_f64  m_yAngle;
 	CAppObjectView();
 	DECLARE_DYNCREATE(CAppObjectView)
 
@@ -67,6 +70,8 @@ protected:
 	afx_msg void OnPaint();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	friend class CB3ShapeAction;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

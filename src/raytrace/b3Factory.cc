@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2002/01/16 16:17:13  sm
+**	- Introducing object edit painting and acting.
+**
 **	Revision 1.5  2002/01/10 17:31:11  sm
 **	- Some minor GUI updates.
 **	- b3BBox::b3Transform() changes m_Matrix member.
 **	- Added image selection with image preview.
-**
+**	
 **	Revision 1.4  2002/01/06 16:30:47  sm
 **	- Added Load/Save/Replace object
 **	- Enhanced "New world"
@@ -164,7 +167,7 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
 	b3BBox       *bbox  = (b3BBox *)b3World::b3Clone(original);
 	b3Light      *light = new b3Light(SPOT_LIGHT);
 	b3CameraPart *camera = new b3CameraPart(CAMERA);
-	b3_vector     eye,view;
+	b3_vector     center;
 	b3_f64        rad;
 	b3_f64        xAngle = 225 * M_PI / 180;
 	b3_f64        yAngle =  30 * M_PI / 180;
@@ -173,16 +176,10 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original)
 	scene->b3GetLightHead()->b3Append(light);
 	scene->b3GetSpecialHead()->b3Append(camera);
 
-	view.x = bbox->m_DimBase.x + 0.5 * bbox->m_DimSize.x;
-	view.y = bbox->m_DimBase.y + 0.5 * bbox->m_DimSize.y;
-	view.z = bbox->m_DimBase.z + 0.5 * bbox->m_DimSize.z;
-
-	rad    = 0.4 * b3Vector::b3Length(&bbox->m_DimSize);
-	eye.x  = view.x + 8.0 * rad * cos(xAngle) * cos(yAngle);
-	eye.y  = view.y + 8.0 * rad * sin(xAngle) * cos(yAngle);
-	eye.z  = view.z + 8.0 * rad * sin(yAngle);
-
-	camera->b3Orientate(&eye,&view,7.0 * rad,rad,rad);
+	center.x = bbox->m_DimBase.x + 0.5 * bbox->m_DimSize.x;
+	center.y = bbox->m_DimBase.y + 0.5 * bbox->m_DimSize.y;
+	center.z = bbox->m_DimBase.z + 0.5 * bbox->m_DimSize.z;
+	camera->b3Overview(&center,&bbox->m_DimSize,xAngle,yAngle);
 	scene->b3SetCamera(camera);
 
 	rad = b3Vector::b3Length(&bbox->m_DimSize);

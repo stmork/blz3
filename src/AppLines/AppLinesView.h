@@ -34,8 +34,6 @@ class CAppLinesView : public CAppRenderView
 {
 protected:
 	b3Scene        *m_Scene;
-	b3CameraPart   *m_Camera;
-	b3CameraVolume  m_CameraVolume;
 	b3Light        *m_Light;
 
 protected: // create from serialization only

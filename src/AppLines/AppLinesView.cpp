@@ -39,10 +39,13 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2002/01/16 16:17:12  sm
+**	- Introducing object edit painting and acting.
+**
 **	Revision 1.37  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.36  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -221,11 +224,6 @@ IMPLEMENT_DYNCREATE(CAppLinesView, CAppRenderView)
 BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppLinesView)
 	ON_WM_PAINT()
-	ON_WM_MOUSEMOVE()
-	ON_WM_LBUTTONDOWN()
-	ON_WM_LBUTTONUP()
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_OBJECT_SELECT, OnObjSelect)
 	ON_COMMAND(ID_OBJECT_MOVE, OnObjMove)
 	ON_COMMAND(ID_OBJECT_ROTATE, OnObjRotate)
@@ -327,7 +325,6 @@ void CAppLinesView::OnInitialUpdate()
 	m_Action[B3_LIGHT_TURN]           = new CB3ActionLightTurn(this);
 
 	CAppRenderView::OnInitialUpdate();
-	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
 
 	// TODO: calculate the total size of this view
 	OnUpdate(this,B3_UPDATE_ALL,0);
@@ -339,12 +336,6 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	CAppLinesDoc *pDoc         = GetDocument();
 	b3_bool       doInvalidate = false;
 
-	if (lHint & B3_UPDATE_CAMERA)
-	{
-		m_RenderView.b3SetCamera(m_Camera);
-		m_CameraVolume.b3Update(m_Camera);
-		doInvalidate = true;
-	}
 	if (lHint & B3_UPDATE_LIGHT)
 	{
 	}

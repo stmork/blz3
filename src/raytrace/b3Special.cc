@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2002/01/16 16:17:13  sm
+**      - Introducing object edit painting and acting.
+**
 **      Revision 1.37  2002/01/08 15:45:50  sm
 **      - Added support for repeating CButtons for button movement/rotation mode.
 **
@@ -368,6 +371,23 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
 	b3Vector::b3Normalize(&m_Width,width);
 	b3Vector::b3Normalize(&m_Height,height);
+}
+
+void b3CameraPart::b3Overview(
+	b3_vector *center,
+	b3_vector *size,
+	b3_f64     xAngle,
+	b3_f64     yAngle)
+{
+	b3_vector eye;
+	b3_f64    rad;
+
+	rad    = 0.4 * b3Vector::b3Length(size);
+	eye.x  = center->x + 8.0 * rad * cos(xAngle) * cos(yAngle);
+	eye.y  = center->y + 8.0 * rad * sin(xAngle) * cos(yAngle);
+	eye.z  = center->z + 8.0 * rad * sin(yAngle);
+
+	b3Orientate(&eye,center,7.0 * rad,rad,rad);
 }
 
 void b3CameraPart::b3Transform(b3_matrix *transformation)

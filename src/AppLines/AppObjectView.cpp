@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/16 16:17:12  sm
+**	- Introducing object edit painting and acting.
+**
 **	Revision 1.4  2002/01/14 16:13:02  sm
 **	- Some further cleanups done.
 **	- Icon reordering done.
-**
+**	
 **	Revision 1.3  2002/01/13 20:50:51  sm
 **	- Done more CAppRenderDoc/View cleanups
 **	
@@ -63,11 +66,6 @@ IMPLEMENT_DYNCREATE(CAppObjectView, CAppRenderView)
 BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppObjectView)
 	ON_WM_PAINT()
-	ON_WM_MOUSEMOVE()
-	ON_WM_LBUTTONDOWN()
-	ON_WM_LBUTTONUP()
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -80,15 +78,19 @@ CAppObjectView::CAppObjectView()
 	b3_index i;
 
 	m_PreviousMode =
-	m_SelectMode   = B3_OBJECT_SELECT;
+	m_SelectMode   = B3_SHAPE_MOVE;
 	for (i = 0;i < B3_MODE_MAX;i++)
 	{
 		m_Action[i] = null;
 	}
+	m_Camera = new b3CameraPart(CAMERA);
+	m_xAngle = 225 * M_PI / 180;
+	m_yAngle =  30 * M_PI / 180;
 }
 
 CAppObjectView::~CAppObjectView()
 {
+	delete m_Camera;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,14 +123,40 @@ CAppObjectDoc* CAppObjectView::GetDocument() // non-debug version is inline
 void CAppObjectView::OnInitialUpdate()
 {
 	// Do necessary Blizzard III stuff!
+	CAppObjectDoc *pDoc         = GetDocument();
+
+	m_BBox = pDoc->m_BBox;
+	B3_ASSERT(m_BBox != null);
+
+	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
+	m_Action[B3_SHAPE_MOVE]           = new CB3ActionShapeMove(this);
+	m_Action[B3_SHAPE_ROTATE_POINT]   = new CB3ActionShapeRotatePoint(this);
+	m_Action[B3_SHAPE_ROTATE_AXIS]    = new CB3ActionShapeRotateAxis(this);
+	m_Action[B3_SHAPE_SCALE]          = new CB3ActionShapeScale(this);
+	m_Action[B3_SHAPE_MIRROR_POINT]   = new CB3ActionShapeMirrorPoint(this);
+	m_Action[B3_SHAPE_MIRROR_AXIS]    = new CB3ActionShapeMirrorAxis(this);
+	m_Action[B3_SHAPE_MIRROR_AREA]    = new CB3ActionShapeMirrorArea(this);
+
 	CAppRenderView::OnInitialUpdate();
+
+	// TODO: calculate the total size of this view
+	OnUpdate(this,B3_UPDATE_ALL,0);
 }
 
 void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	CAppObjectDoc *pDoc         = GetDocument();
-	b3_bool        doInvalidate = false;
+	b3_bool     doInvalidate = false;
+	b3_vector   center;
+
+	if ((lHint & B3_UPDATE_CAMERA) && (m_BBox != null))
+	{
+		center.x = m_BBox->m_DimBase.x + 0.5 * m_BBox->m_DimSize.x;
+		center.y = m_BBox->m_DimBase.y + 0.5 * m_BBox->m_DimSize.y;
+		center.z = m_BBox->m_DimBase.z + 0.5 * m_BBox->m_DimSize.z;
+		m_Camera->b3Overview(&center,&m_BBox->m_DimSize,m_xAngle,m_yAngle);
+		doInvalidate = true;
+	}
 
 	if (doInvalidate)
 	{
