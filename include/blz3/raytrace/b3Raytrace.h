@@ -855,12 +855,14 @@ public:
 // TYPE_COOK_TORRANCE
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
+	b3Color     m_Ra;
+	b3Color     m_Mu;
+
+public:
 	b3_f64      m_ka;
 	b3_f64      m_ks;
 	b3_f64      m_kd;
 	b3_f64      m_m;
-	b3Color     m_Ra;
-	b3Color     m_Mu;
 
 public:
 	B3_ITEM_INIT(b3MatCookTorrance);
