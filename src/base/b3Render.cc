@@ -44,6 +44,9 @@
 
 /*
 **      $Log$
+**      Revision 1.81  2004/08/09 07:43:12  sm
+**      - Some display list optimizations.
+**
 **      Revision 1.80  2004/08/07 09:17:22  sm
 **      - Reflect new Cg compiler SDK
 **
@@ -886,6 +889,7 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 void b3RenderObject::b3Recompute()
 {
 	glComputed = false;
+	b3DeleteDisplayList();
 }
 
 void b3RenderObject::b3Update()
@@ -1089,6 +1093,7 @@ void b3RenderObject::b3RecomputeMaterial()
 {
 #ifdef BLZ3_USE_OPENGL
 	glMaterialComputed = false;
+	b3DeleteDisplayList();
 #endif
 }
 
@@ -1403,32 +1408,40 @@ void b3RenderObject::b3CreateImage(
 
 void b3RenderObject::b3Draw(b3RenderContext *context)
 {
+	b3_render_mode render_mode = b3GetRenderMode();
+
+#ifdef BLZ3_USE_OPENGL
 #ifdef B3_DISPLAY_LIST
 	if (!b3IsUpToDate())
 	{
 		b3Update();
 		b3UpdateMaterial();
-		b3DeleteDisplayList();
 		glDisplayList = glGenLists(2);
 
-		glNewList(glDisplayList,GL_COMPILE);
+		glNewList(glDisplayList,render_mode == B3_RENDER_LINE ? GL_COMPILE_AND_EXECUTE : GL_COMPILE);
 		b3DrawIntoDisplayList(context,B3_RENDER_LINE);
 		glEndList();
 
-		glNewList(glDisplayList + 1,GL_COMPILE);
+		glNewList(glDisplayList + 1,render_mode == B3_RENDER_FILLED ? GL_COMPILE_AND_EXECUTE : GL_COMPILE);
 		b3DrawIntoDisplayList(context,B3_RENDER_FILLED);
 		glEndList();
 	}
-
-	switch (b3GetRenderMode())
+	else
 	{
-	case B3_RENDER_LINE:
-		glCallList(glDisplayList);
-		break;
+		switch (render_mode)
+		{
+		case B3_RENDER_LINE:
+			glCallList(glDisplayList);
+			break;
 
-	case B3_RENDER_FILLED:
-		glCallList(glDisplayList + 1);
-		break;
+		case B3_RENDER_FILLED:
+			glCallList(glDisplayList + 1);
+			break;
+
+		default:
+			// Do nothing!
+			break;
+		}
 	}
 #else
 	if (!b3IsUpToDate())
@@ -1437,7 +1450,8 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 		b3UpdateMaterial();
 	}
 	
-	b3DrawIntoDisplayList(context,b3GetRenderMode());
+	b3DrawIntoDisplayList(context,render_mode);
+#endif
 #endif
 }
 
