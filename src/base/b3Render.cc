@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.63  2003/02/24 19:18:06  sm
+**      - spline control grid drawing completed.
+**
 **      Revision 1.62  2003/02/22 15:17:18  sm
 **      - Added support for selected shapes in object modeller
 **      - Glued b3Shape and b3ShapeRenderObject. There was no
@@ -874,8 +877,6 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3_gl_vector normal;
 	b3_gl_vector xDir,yDir;
 	b3_index     i,k,v1,v2,v3,start,end;
-
-	B3_ASSERT(glVertex != null);
 
 	// Clear normals
 	b3GetVertexRange(start,end);

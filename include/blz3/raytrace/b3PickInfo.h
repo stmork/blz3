@@ -42,7 +42,7 @@ public:
 	void b3AllocVertices(b3RenderContext *context);
 	void b3FreeVertices();
 	void b3ComputeVertices();
-	void b3ComputeGrid();
+	void b3ComputeIndices();
 	void b3GetGridColor(b3_color *color);
 	void b3Clear();
 };

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/02/24 19:18:06  sm
+**	- spline control grid drawing completed.
+**
 **	Revision 1.2  2003/02/24 17:32:38  sm
 **	- Added further picking support.
 **	- Fixed geometry update delay.
-**
+**	
 **	Revision 1.1  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	
@@ -69,8 +72,6 @@ b3_bool b3PickInfo::b3SetShape(b3Shape *shape)
 		if (m_Shape != null)
 		{
 			m_Shape->b3SetupPicking(this);
-			m_Grid.b3ComputeVertices();
-			m_Grid.b3ComputeGrid();
 		}
 		result = true;
 	}
@@ -97,7 +98,7 @@ void b3ControlGrid::b3ComputeVertices()
 	glVertexCount = m_Vertices.b3GetCount();
 }
 
-void b3ControlGrid::b3ComputeGrid()
+void b3ControlGrid::b3ComputeIndices()
 {
 	glGrids     = m_Grid.b3GetBuffer();
 	glGridCount = m_Grid.b3GetCount();
