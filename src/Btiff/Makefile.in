@@ -2,6 +2,7 @@
 
 BLZ3_LIB	= @BLZ3_LIB@
 BLZ3_BIN	= @BLZ3_BIN@
+CC			= @CC@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3tiff.o
 PRGS		= mkversion mkg3states

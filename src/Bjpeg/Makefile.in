@@ -3,6 +3,7 @@
 # Optionen
 
 BLZ3_LIB    = @BLZ3_LIB@
+CC			= @CC@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3jpeg.o
 

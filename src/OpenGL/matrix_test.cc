@@ -25,10 +25,6 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/base/b3Matrix.h"
 
-#ifdef BLZ3_USE_OPENGL
-#include "GL/glut.h"
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -37,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2004/08/18 07:15:33  sm
+**      - Done some GLUT updates.
+**
 **      Revision 1.3  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -49,6 +48,12 @@
 **
 **
 */
+
+/*************************************************************************
+**                                                                      **
+**                        Implementation                                **
+**                                                                      **
+*************************************************************************/
 
 static void b3PrintMatrix(b3_f32 *values)
 {
@@ -67,6 +72,7 @@ static void b3PrintMatrix(b3_f32 *values)
 
 int main(int argc,char *argv[])
 {
+#if defined(BLZ3_USE_OPENGL) && defined(BLZ3_USE_GLUT)
 	b3_matrix b3;
 	b3_matrix gl;
 	b3_vector move;
@@ -75,7 +81,6 @@ int main(int argc,char *argv[])
 	move.y = 2;
 	move.z = 3;
 
-#ifdef BLZ3_USE_OPENGL
 	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
 	glutCreateWindow("Matrix Test");
 	glClearColor(0.7f,0.7f,1.0f,1.0f);
@@ -84,7 +89,6 @@ int main(int argc,char *argv[])
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslated(1.0,2.0,3.0);
-#endif
 
 	b3RenderContext::b3GetMatrix(B3_MATRIX_OBJECT,&gl);
 	b3Matrix::b3Move(null,&b3,&move);
@@ -93,4 +97,7 @@ int main(int argc,char *argv[])
 	b3PrintMatrix(&gl.m11);
 	b3PrintF(B3LOG_NORMAL,"Blizzard III Matrix\n");
 	b3PrintMatrix(&b3.m11);
+#else
+	b3PrintF(B3LOG_NORMAL,"No OpenGL or GLUT support available.\n");
+#endif
 }
