@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/02/01 12:57:17  sm
+**	- Ready to undo/redo!
+**
 **	Revision 1.6  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
-**
+**	
 **	Revision 1.5  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
 **	
@@ -160,7 +163,12 @@ void b3Operation::b3Prepare(b3UndoPrepareInfo *info)
 {
 	b3LinesUndoPrepareInfo *lupi = (b3LinesUndoPrepareInfo *)info;
 
-	lupi->m_pDoc->b3Prepare(
+	b3Prepare(lupi->m_pDoc);
+}
+
+void b3Operation::b3Prepare(CAppRenderDoc *pDoc)
+{
+	pDoc->b3Prepare(
 		m_PrepareGeometry,
 		m_PrepareChangedStructure);
 }

@@ -51,7 +51,8 @@ public:
 protected:
 	virtual void     b3Undo();
 	virtual void     b3Redo();
-	virtual void     b3Prepare(b3UndoPrepareInfo *pDoc);
+	virtual void     b3Prepare(b3UndoPrepareInfo *info);
+	virtual void     b3Prepare(CAppRenderDoc *pDoc);
 };
 
 class b3LinesUndoBuffer : public b3UndoBuffer

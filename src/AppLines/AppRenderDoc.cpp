@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2003/02/01 12:57:17  sm
+**	- Ready to undo/redo!
+**
 **	Revision 1.18  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
-**
+**	
 **	Revision 1.17  2003/01/30 16:19:58  sm
 **	- Added undo/redo list support.
 **	
@@ -335,16 +338,16 @@ void CAppRenderDoc::b3ClearOp()
 	m_UndoBuffer->b3Clear();
 }
 
-void CAppRenderDoc::b3UndoList()
+void CAppRenderDoc::b3UndoList(CRect *rect)
 {
-	CDlgUndoRedo dlg(m_UndoBuffer,B3_LIST_UNDO);
+	CDlgUndoRedo dlg(m_UndoBuffer,B3_LIST_UNDO,rect);
 
 	dlg.DoModal();
 }
 
-void CAppRenderDoc::b3RedoList()
+void CAppRenderDoc::b3RedoList(CRect *rect)
 {
-	CDlgUndoRedo dlg(m_UndoBuffer,B3_LIST_REDO);
+	CDlgUndoRedo dlg(m_UndoBuffer,B3_LIST_REDO,rect);
 
 	dlg.DoModal();
 }

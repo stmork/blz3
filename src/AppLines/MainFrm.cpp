@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2003/02/01 12:57:17  sm
+**	- Ready to undo/redo!
+**
 **	Revision 1.33  2003/01/30 16:19:59  sm
 **	- Added undo/redo list support.
-**
+**	
 **	Revision 1.32  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -413,18 +416,25 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 void CMainFrame::OnToolbarDropDown(NMTOOLBAR* pnmtb, LRESULT *plr)
 {
-//	CAppRenderDoc *pDoc = (CAppRenderDoc *)GetActiveDocument();
-	CAppRenderDoc *pDoc = (CAppRenderDoc *)GetActiveFrame()->GetActiveView()->GetDocument();
+	CView         *view = GetActiveFrame()->GetActiveView();
+	CAppRenderDoc *pDoc = (CAppRenderDoc *)view->GetDocument();
+	CRect          rect;
 	
 	// Switch on button command id's.
 	switch (pnmtb->iItem)
 	{
 	case ID_EDIT_UNDO:
-		pDoc->b3UndoList();
+		m_wndToolBar.GetItemRect(m_wndToolBar.CommandToIndex(pnmtb->iItem),&rect);
+		m_wndToolBar.ClientToScreen(&rect);
+		pDoc->b3UndoList(&rect);
+		CB3GetMainFrame()->SetActiveWindow();
 		break;
 	
 	case ID_EDIT_REDO:
-		pDoc->b3RedoList();
+		m_wndToolBar.GetItemRect(m_wndToolBar.CommandToIndex(pnmtb->iItem),&rect);
+		m_wndToolBar.ClientToScreen(&rect);
+		pDoc->b3RedoList(&rect);
+		CB3GetMainFrame()->SetActiveWindow();
 		break;
 
 	default:

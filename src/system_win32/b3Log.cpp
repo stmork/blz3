@@ -45,11 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/01 12:57:17  sm
+**	- Ready to undo/redo!
+**
 **	Revision 1.7  2002/08/02 14:52:13  sm
 **	- Vertex/normal computation is now multithreaded, too.
 **	- Minor changes on b3PrepareInfo class.
 **	- Last changes to Windows port.
-**
+**	
 **	Revision 1.6  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
@@ -102,7 +105,7 @@ static b3_log_level logLevel          = B3LOG_NORMAL;	// normal version
 static b3_log_level logLevel          = B3LOG_FULL;	// debug version
 #endif
 
-static b3IPCMutex LogMutex;
+static b3Mutex LogMutex;
 
 /*************************************************************************
 **                                                                      **

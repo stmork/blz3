@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/02/01 12:57:17  sm
+**	- Ready to undo/redo!
+**
 **	Revision 1.3  2003/01/31 16:49:39  sm
 **	- Further dialog programming.
-**
+**	
 **	Revision 1.2  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
 **	
@@ -52,11 +55,13 @@
 CDlgUndoRedo::CDlgUndoRedo(
 	b3LinesUndoBuffer *buffer,
 	b3_list_mode       mode,
+	CRect             *rect,
 	CWnd              *pParent /*=NULL*/)
 	: CDialog(CDlgUndoRedo::IDD, pParent)
 {
 	m_UndoBuffer = buffer;
 	m_ListMode   = mode;
+	m_ParentRect = rect;
 	//{{AFX_DATA_INIT(CDlgUndoRedo)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
@@ -76,7 +81,6 @@ BEGIN_MESSAGE_MAP(CDlgUndoRedo, CDialog)
 	//{{AFX_MSG_MAP(CDlgUndoRedo)
 	ON_LBN_SELCHANGE(IDC_UNDO_REDO_LIST, OnSelectOperation)
 	ON_WM_CREATE()
-	ON_WM_NCHITTEST( )
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -99,6 +103,12 @@ BOOL CDlgUndoRedo::OnInitDialog()
 {
 	CString title;
 
+	if (m_ParentRect != null)
+	{
+		SetWindowPos(null,
+			m_ParentRect->left,
+			m_ParentRect->bottom,0,0,SWP_NOZORDER|SWP_NOSIZE);
+	}
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
@@ -144,30 +154,20 @@ void CDlgUndoRedo::OnSelectOperation()
 	CDialog::OnOK();
 }
 
+LRESULT CDlgUndoRedo::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if ((message == WM_NCACTIVATE) && (wParam == 0))
+	{
+		CDialog::OnCancel();
+		return FALSE;
+	}
+	return CDialog::DefWindowProc(message, wParam, lParam);
+}
+
 BOOL CDlgUndoRedo::PreCreateWindow(CREATESTRUCT& cs) 
 {
 	// TODO: Add your specialized code here and/or call the base class
 	
 	return CDialog::PreCreateWindow(cs);
-}
-
-UINT CDlgUndoRedo::OnNcHitTest( CPoint point )
-{
-	return CDialog::OnNcHitTest(point);
-}
-
-LRESULT CDlgUndoRedo::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
-{
-	// TODO: Add your specialized code here and/or call the base class
-	if ( message == WM_ACTIVATE )
-	{
-		if ( wParam == 0 )
-		{
-			//PostMessage( WM_CLOSEDLG );
-			CDialog::OnCancel();
-			return FALSE;
-		}
-
-	}
-	return CDialog::DefWindowProc(message, wParam, lParam);
 }

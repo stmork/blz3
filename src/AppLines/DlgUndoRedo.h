@@ -36,12 +36,17 @@ enum b3_list_mode
 
 class CDlgUndoRedo : public CDialog
 {
+	CRect             *m_ParentRect;
 	b3LinesUndoBuffer *m_UndoBuffer;
 	b3_list_mode       m_ListMode;
 
 // Construction
 public:
-	CDlgUndoRedo(b3LinesUndoBuffer * buffer,b3_list_mode mode,CWnd* pParent = NULL);   // standard constructor
+	CDlgUndoRedo(
+		b3LinesUndoBuffer *buffer,
+		b3_list_mode       mode,
+		CRect             *rect = null,
+		CWnd              *pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgUndoRedo)
@@ -55,8 +60,8 @@ public:
 	//{{AFX_VIRTUAL(CDlgUndoRedo)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -67,7 +72,6 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSelectOperation();
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg UINT OnNcHitTest( CPoint point );
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
