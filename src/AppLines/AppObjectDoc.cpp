@@ -40,9 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.37  2004/06/27 11:36:54  sm
+**	- Changed texture dialog for editing negative direction in
+**	  contrast to length.
+**	- Set document to modified if materials or bumps are changed.
+**	- Check for empty textures inside OpenGL subsystem. May this
+**	  be ticket no. 21?
+**	- Animation values initialization fix.
+**
 **	Revision 1.36  2004/06/20 15:33:10  sm
 **	- Update material when edited.
-**
+**	
 **	Revision 1.35  2004/06/06 14:45:57  sm
 **	- Added quick material/bump edit support.
 **	- Added material to bump copy on wooden materials.
@@ -876,6 +884,7 @@ void CAppObjectDoc::OnEditMaterial()
 		CDlgItemMaintain dlg(this,shape->b3GetMaterialHead());
 
 		dlg.DoModal();
+		SetModifiedFlag();
 	}
 }
 
@@ -897,6 +906,7 @@ void CAppObjectDoc::OnEditBump()
 		CDlgItemMaintain dlg(this,shape->b3GetBumpHead());
 
 		dlg.DoModal();
+		SetModifiedFlag();
 	}
 }
 
@@ -962,6 +972,7 @@ void CAppObjectDoc::OnEditMaterialDirect()
 				shape->b3RecomputeMaterial();
 				shape->b3UpdateMaterial();
 				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+				SetModifiedFlag();
 			}
 		}
 	}
@@ -983,6 +994,7 @@ void CAppObjectDoc::OnEditBumpDirect()
 				shape->b3RecomputeMaterial();
 				shape->b3UpdateMaterial();
 				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+				SetModifiedFlag();
 			}
 		}
 	}

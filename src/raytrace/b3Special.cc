@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.70  2004/06/27 11:36:54  sm
+**      - Changed texture dialog for editing negative direction in
+**        contrast to length.
+**      - Set document to modified if materials or bumps are changed.
+**      - Check for empty textures inside OpenGL subsystem. May this
+**        be ticket no. 21?
+**      - Animation values initialization fix.
+**
 **      Revision 1.69  2004/05/15 10:09:13  sm
 **      - Added b3CloudBackground to b3Special item list.
 **
@@ -992,6 +1000,12 @@ b3Distribute::b3Distribute(b3_u32 *src) :
 		m_DepthOfField    = b3InitFloat();
 		m_PixelAperture   = (b3_filter)b3InitInt();
 		m_FrameAperture   = (b3_filter)b3InitInt();
+	}
+	else
+	{
+		m_DepthOfField  = 0;
+		m_PixelAperture = B3_FILTER_BOX;
+		m_FrameAperture = B3_FILTER_GAUSS;
 	}
 	m_FilterPixel     = null;
 	m_FilterFrame     = null;

@@ -32,10 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/06/27 11:36:54  sm
+**	- Changed texture dialog for editing negative direction in
+**	  contrast to length.
+**	- Set document to modified if materials or bumps are changed.
+**	- Check for empty textures inside OpenGL subsystem. May this
+**	  be ticket no. 21?
+**	- Animation values initialization fix.
+**
 **	Revision 1.2  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
-**
+**	
 **	Revision 1.1  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -140,7 +148,7 @@ void b3ConditionControl::b3SetPos(
 {
 	b3_f64 min,max;
 
-	switch (m_Info->unit)
+	switch (m_Mode)
 	{
 	case B3_COND_CTRL_START:
 	case B3_COND_CTRL_END:

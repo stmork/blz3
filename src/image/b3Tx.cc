@@ -37,9 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2004/06/27 11:36:54  sm
+**	- Changed texture dialog for editing negative direction in
+**	  contrast to length.
+**	- Set document to modified if materials or bumps are changed.
+**	- Check for empty textures inside OpenGL subsystem. May this
+**	  be ticket no. 21?
+**	- Animation values initialization fix.
+**
 **	Revision 1.29  2004/01/18 13:51:57  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.28  2003/11/23 13:14:13  sm
 **	- Made some count ranges smaller. Counting from 0 to 4 doesn't need 64
 **	  bit wide integers.
@@ -673,7 +681,7 @@ void *b3Tx::b3GetData()
 
 b3_bool b3Tx::b3IsLoaded()
 {
-	return ((xSize != 0) && (ySize != 0) && (data != null));
+	return ((xSize != 0) && (ySize != 0) && (data != null) && (type != B3_TX_UNDEFINED));
 }
 
 const char *b3Tx::b3Name()

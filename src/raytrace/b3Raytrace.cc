@@ -37,10 +37,18 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2004/06/27 11:36:54  sm
+**	- Changed texture dialog for editing negative direction in
+**	  contrast to length.
+**	- Set document to modified if materials or bumps are changed.
+**	- Check for empty textures inside OpenGL subsystem. May this
+**	  be ticket no. 21?
+**	- Animation values initialization fix.
+**
 **	Revision 1.59  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.58  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -642,8 +650,10 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	distributed = b3GetDistributed();
 	if (distributed->b3IsActive())
 	{
+		b3Animation *animation = b3GetAnimation();
+
 		m_Distributed = distributed;
-		m_Distributed->b3PrepareAnimation(xSize,b3GetAnimation());
+		m_Distributed->b3PrepareAnimation(xSize,animation);
 		m_SuperSample = null;
 	}
 	else

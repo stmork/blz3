@@ -37,6 +37,14 @@
 
 /*
 **      $Log$
+**      Revision 1.70  2004/06/27 11:36:54  sm
+**      - Changed texture dialog for editing negative direction in
+**        contrast to length.
+**      - Set document to modified if materials or bumps are changed.
+**      - Check for empty textures inside OpenGL subsystem. May this
+**        be ticket no. 21?
+**      - Animation values initialization fix.
+**
 **      Revision 1.69  2004/06/21 18:10:53  sm
 **      - Fixed disk drawing problem. The Problem occured in
 **        conjunction with optimizing code with the Visual C++
@@ -1083,7 +1091,7 @@ void b3RenderObject::b3UpdateMaterial()
 			b3_f64 yScale = 1;
 
 			tx = b3GetTexture(glTextureTransX,glTextureTransY,xScale,yScale);
-			if (tx != null)
+			if ((tx != null) && (tx->b3IsLoaded()))
 			{
 				glTextureScaleX = 1.0 / xScale;
 				glTextureScaleY = 1.0 / yScale;

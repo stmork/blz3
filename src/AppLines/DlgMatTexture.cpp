@@ -35,9 +35,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/06/27 11:36:54  sm
+**	- Changed texture dialog for editing negative direction in
+**	  contrast to length.
+**	- Set document to modified if materials or bumps are changed.
+**	- Check for empty textures inside OpenGL subsystem. May this
+**	  be ticket no. 21?
+**	- Animation values initialization fix.
+**
 **	Revision 1.8  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.7  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
@@ -183,9 +191,9 @@ BOOL CDlgMatTexture::OnInitDialog()
 {
 	// Init legends
 	m_xStart.b3Init(&m_xStartCtrl, &m_xStartLegend, &m_Bound.xInfo,B3_COND_CTRL_START);
-	m_xScale.b3Init(&m_xScaleCtrl, &m_xScaleLegend, &m_Bound.xInfo,B3_COND_CTRL_LEN);
+	m_xScale.b3Init(&m_xScaleCtrl, &m_xScaleLegend, &m_Bound.xInfo,B3_COND_CTRL_DIR);
 	m_yStart.b3Init(&m_yStartCtrl, &m_yStartLegend, &m_Bound.yInfo,B3_COND_CTRL_START);
-	m_yScale.b3Init(&m_yScaleCtrl, &m_yScaleLegend, &m_Bound.yInfo,B3_COND_CTRL_LEN);
+	m_yScale.b3Init(&m_yScaleCtrl, &m_yScaleLegend, &m_Bound.yInfo,B3_COND_CTRL_DIR);
 
 	CB3SimplePreviewDialog::OnInitDialog();
 	
