@@ -60,6 +60,11 @@ public:
 	        void b3DispatchMButtonUp  (b3_coord x,b3_coord y);
 			void b3DispatchRButtonDown(b3_coord x,b3_coord y,b3_u32 flags);
 	        void b3DispatchRButtonUp  (b3_coord x,b3_coord y);
+
+			b3_matrix *b3GetTransformation();
+	virtual b3_bool    b3IsObject();
+	virtual b3_bool    b3IsCamera();
+
 protected:
 	        void b3GetRelCoord(b3_coord x,b3_coord y,b3_f64 &xRel,b3_f64 &yRel);
 	virtual void b3MouseMove(b3_coord x,b3_coord y);
@@ -190,6 +195,11 @@ public:
 
 protected:
 	void b3Transform(b3_matrix *transformation);
+
+	inline b3_bool b3IsObject()
+	{
+		return true;
+	}
 };
 
 class CB3ActionObjectRotate : public CB3Action
@@ -207,6 +217,11 @@ public:
 	void b3LDown(b3_coord x,b3_coord y);
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsObject()
+	{
+		return true;
+	}
 };
 
 class CB3ActionObjectScale : public CB3Action
@@ -221,6 +236,11 @@ public:
 	void b3LDown(b3_coord x,b3_coord y);
 	void b3LMove(b3_coord x,b3_coord y);
 	void b3LUp(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsObject()
+	{
+		return true;
+	}
 };
 
 /*************************************************************************
@@ -243,6 +263,11 @@ public:
 
 	void b3RDown(b3_coord x,b3_coord y);
 	void b3RUp(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsCamera()
+	{
+		return true;
+	}
 };
 
 class CB3ActionCameraTurn : public CB3CameraRotateAction
@@ -251,6 +276,11 @@ public:
 	CB3ActionCameraTurn(CAppRenderView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsCamera()
+	{
+		return true;
+	}
 };
 
 class CB3ActionCameraRotate : public CB3CameraRotateAction
@@ -259,6 +289,11 @@ public:
 	CB3ActionCameraRotate(CAppRenderView *window);
 
 	void b3LDown(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsCamera()
+	{
+		return true;
+	}
 };
 
 class CB3ActionCameraView : public CB3Action
@@ -279,6 +314,11 @@ public:
 	void b3RDown(b3_coord x,b3_coord y);
 	void b3RMove(b3_coord x,b3_coord y);
 	void b3RUp(b3_coord x,b3_coord y);
+
+	inline b3_bool b3IsCamera()
+	{
+		return true;
+	}
 };
 
 /*************************************************************************

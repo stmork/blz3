@@ -237,6 +237,18 @@ SOURCE=.\b3SplinePreview.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Undo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoAction.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3UndoCutPaste.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3VectorEdit.cpp
 # End Source File
 # Begin Source File

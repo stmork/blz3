@@ -25,9 +25,11 @@
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/system/b3Document.h"
 #include "b3Fulcrum.h"
+#include "b3Undo.h"
 
 class CAppRaytraceDoc;
 class CDlgHierarchy;
+class CB3Action;
 
 class CAppRenderDoc : public CDocument, public b3Document
 {
@@ -36,6 +38,7 @@ protected:
 	CAppRaytraceDoc      *m_RaytraceDoc;
 	b3Thread             *m_Raytracer;
 	b3Display            *m_Display;
+	b3UndoBuffer         *m_UndoBuffer;
 
 public:
 	LPARAM                m_FirstVisible;
@@ -70,10 +73,14 @@ public:
 	        void       b3ClearRaytraceDoc();
 	virtual void       b3StartRaytrace();
 	virtual void       b3StopRaytrace();
+
+	virtual void       b3Prepare(b3_bool update = true);
 	virtual void       b3ComputeBounds();
 	virtual void       b3InitTree();
 	virtual void       b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	virtual void       b3ContextMenu(HTREEITEM item);
+
+	virtual void       b3AddUndoAction(CB3Action *action);
 
 	// Drag & drop operations
 	virtual void       b3DragBegin();
@@ -91,6 +98,10 @@ protected:
 	//{{AFX_MSG(CAppRenderDoc)
 	afx_msg void OnRename();
 	afx_msg void OnUpdateRename(CCmdUI* pCmdUI);
+	afx_msg void OnEditUndo();
+	afx_msg void OnEditRedo();
+	afx_msg void OnUpdateEditUndo(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEditRedo(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

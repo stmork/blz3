@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.71  2003/01/05 16:13:24  sm
+**	- First undo/redo implementations
+**
 **	Revision 1.70  2002/12/31 15:11:03  sm
 **	- Fixed bound checking.
 **	- Added a vector test module.
-**
+**	
 **	Revision 1.69  2002/12/22 11:52:22  sm
 **	- Ensure minimum volume for bounding boxes even for plain areas.
 **	
@@ -1084,6 +1087,47 @@ b3Base<b3Item> *b3Scene::b3FindBBoxHead(b3BBox *bbox)
 		}
 	}
 	return null;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Collect all (de-)activated BBoxes             **
+**                                                                      **
+*************************************************************************/
+
+void b3BBox::b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+
+	if (b3IsActive() == activation)
+	{
+		array->b3Add(this);
+	}
+
+	base = b3GetBBoxHead();
+	B3_FOR_BASE(base,item)
+	{
+		bbox   = (b3BBox *)item;
+		bbox->b3CollectActiveBBoxes(array,activation);
+	}
+}
+
+void b3Scene::b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3Base<b3Item> *base;
+
+	array->b3Clear();
+
+	base = b3GetBBoxHead();
+	B3_FOR_BASE(base,item)
+	{
+		bbox   = (b3BBox *)item;
+		bbox->b3CollectActiveBBoxes(array,activation);
+	}
 }
 
 /*************************************************************************

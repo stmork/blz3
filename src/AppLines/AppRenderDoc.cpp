@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/01/05 16:13:24  sm
+**	- First undo/redo implementations
+**
 **	Revision 1.11  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
 **	  Now fixed!
-**
+**	
 **	Revision 1.10  2002/02/22 20:18:09  sm
 **	- Added shape/bbox creation in object editor. So bigger
 **	  icons (64x64) for shape selection are created.
@@ -104,6 +107,10 @@ BEGIN_MESSAGE_MAP(CAppRenderDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppRenderDoc)
 	ON_COMMAND(ID_RENAME, OnRename)
 	ON_UPDATE_COMMAND_UI(ID_RENAME, OnUpdateRename)
+	ON_COMMAND(ID_EDIT_UNDO, OnEditUndo)
+	ON_COMMAND(ID_EDIT_REDO, OnEditRedo)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_UNDO, OnUpdateEditUndo)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_REDO, OnUpdateEditRedo)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -120,11 +127,13 @@ CAppRenderDoc::CAppRenderDoc()
 	m_Display      = null;
 	m_FirstVisible = null;
 	m_Selected     = null;
+	m_UndoBuffer   = new b3UndoBuffer(this);
 }
 
 CAppRenderDoc::~CAppRenderDoc()
 {
 	delete m_Raytracer;
+	delete m_UndoBuffer;
 }
 
 void CAppRenderDoc::OnCloseDocument() 
@@ -189,6 +198,10 @@ b3_vector *CAppRenderDoc::b3GetStepRotate()
 void CAppRenderDoc::b3DrawFulcrum()
 {
 	m_Fulcrum.b3Draw(&m_Context);
+}
+
+void CAppRenderDoc::b3Prepare(b3_bool update)
+{
 }
 
 void CAppRenderDoc::b3ComputeBounds()
@@ -272,4 +285,32 @@ void CAppRenderDoc::b3ClearRaytraceDoc()
 {
 	b3StopRaytrace();
 	m_RaytraceDoc = null;
+}
+
+void CAppRenderDoc::b3AddUndoAction(CB3Action *action)
+{
+}
+
+void CAppRenderDoc::OnEditUndo() 
+{
+	// TODO: Add your command handler code here
+	m_UndoBuffer->b3Undo();
+}
+
+void CAppRenderDoc::OnEditRedo() 
+{
+	// TODO: Add your command handler code here
+	m_UndoBuffer->b3Redo();
+}
+
+void CAppRenderDoc::OnUpdateEditUndo(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_UndoBuffer->b3HasUndo());
+}
+
+void CAppRenderDoc::OnUpdateEditRedo(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_UndoBuffer->b3HasRedo());
 }

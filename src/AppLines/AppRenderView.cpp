@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2003/01/05 16:13:24  sm
+**	- First undo/redo implementations
+**
 **	Revision 1.20  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
 **	  and user transformation actions.
 **	- Made some architectual redesigns.
-**
+**	
 **	Revision 1.19  2002/08/01 15:02:56  sm
 **	- Found texture missing bug when printing. There weren't any
 **	  selected textures inside an other OpenGL rendering context.
@@ -1018,6 +1021,7 @@ void CAppRenderView::OnLButtonUp(UINT nFlags, CPoint point)
 	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
 	{
 		m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+		GetDocument()->b3AddUndoAction(m_Action[m_SelectMode]);
 	}
 }
 
@@ -1038,6 +1042,7 @@ void CAppRenderView::OnRButtonUp(UINT nFlags, CPoint point)
 	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
 	{
 		m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
+		GetDocument()->b3AddUndoAction(m_Action[m_SelectMode]);
 	}
 }
 

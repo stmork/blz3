@@ -42,8 +42,11 @@
 #include "DlgCreateItem.h"
 #include "DlgObjectCopy.h"
 #include "b3SelectObject.h"
-
+#include "b3UndoCutPaste.h"
+#include "b3UndoAction.h"
 #include "b3ExampleScene.h"
+#include "b3Action.h"
+
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
 #include "blz3/base/b3Array.h"
@@ -58,10 +61,13 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2003/01/05 16:13:23  sm
+**	- First undo/redo implementations
+**
 **	Revision 1.73  2002/08/23 11:35:23  sm
 **	- Added motion blur raytracing. The image creation looks very
 **	  nice! The algorithm is not as efficient as it could be.
-**
+**	
 **	Revision 1.72  2002/08/21 20:13:32  sm
 **	- Introduced distributed raytracing with all sampling methods
 **	  and filter computations. This made some class movements
@@ -576,22 +582,8 @@ BOOL CAppLinesDoc::OnNewDocument()
 		m_Info  = m_Scene->b3GetModellerInfo();
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
-		
-		main->b3SetStatusMessage(IDS_DOC_REORG);
-		m_Scene->b3Reorg();
-
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_Scene->b3Prepare(0,0);
-
-		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_Scene->b3AllocVertices(&m_Context);
 		m_World.b3SetFirst(m_Scene);
-		b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);
-		b3PrintF(B3LOG_DEBUG,"# %d triangles\n",m_Context.glPolyCount);
-		b3PrintF(B3LOG_DEBUG,"# %d lines\n",    m_Context.glGridCount);
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		b3ComputeBounds();
+		b3Prepare(false);
 		SetPathName(filename);
 		result = TRUE;
 	}
@@ -628,20 +620,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
-		main->b3SetStatusMessage(IDS_DOC_REORG);
-		m_Scene->b3Reorg();
-
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_Scene->b3Prepare(0,0);
-
-		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_Scene->b3AllocVertices(&m_Context);
-		b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);
-		b3PrintF(B3LOG_DEBUG,"# %d triangles\n",m_Context.glPolyCount);
-		b3PrintF(B3LOG_DEBUG,"# %d lines\n",    m_Context.glGridCount);
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		b3ComputeBounds();
+		b3Prepare(false);
 		result = TRUE;
 	}
 	catch(b3ExceptionBase &e)
@@ -773,6 +752,35 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 **                                                                      **
 *************************************************************************/
 
+void CAppLinesDoc::b3Prepare(b3_bool update)
+{
+	CMainFrame *main = CB3GetMainFrame();
+
+	main->b3SetStatusMessage(IDS_DOC_REORG);
+	m_Scene->b3Reorg();
+
+	main->b3SetStatusMessage(IDS_DOC_PREPARE);
+	m_Scene->b3Prepare(0,0);
+
+	main->b3SetStatusMessage(IDS_DOC_VERTICES);
+	m_Scene->b3AllocVertices(&m_Context);
+
+	main->b3SetStatusMessage(IDS_DOC_BOUND);
+	b3ComputeBounds();
+
+	if (update)
+	{
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY|B3_UPDATE_CAMERA);
+		m_DlgHierarchy->b3InitTree(this,true);
+	}
+
+	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);
+	b3PrintF(B3LOG_DEBUG,"# %d triangles\n",m_Context.glPolyCount);
+	b3PrintF(B3LOG_DEBUG,"# %d lines\n",    m_Context.glGridCount);
+	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
+}
+
 void CAppLinesDoc::b3ComputeBounds()
 {
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
@@ -884,12 +892,25 @@ void CAppLinesDoc::b3Drop(HTREEITEM dragitem,HTREEITEM dropitem)
 
 	// Some recomputations...
 	b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-	b3ComputeBounds();
+	b3Prepare();
+}
 
-	// ... with some UI updates
-	UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-	SetModifiedFlag();
-	m_DlgHierarchy->b3InitTree(this,true);
+void CAppLinesDoc::b3AddUndoAction(CB3Action *action)
+{
+	b3Operation *op;
+
+	if (action->b3IsObject())
+	{
+		op = new b3OpObjectAction(m_Scene,action->b3GetTransformation());
+		m_UndoBuffer->b3Do(op);
+	}
+	if (action->b3IsCamera())
+	{
+		op = new b3OpCameraAction(
+			CB3GetMainFrame()->b3GetSelectedCamera(),
+			action->b3GetTransformation());
+		m_UndoBuffer->b3Do(op);
+	}
 }
 
 /*************************************************************************
@@ -1325,7 +1346,10 @@ void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI)
 	pCmdUI->Enable(m_DlgHierarchy->b3GetSelectedBBox() != null);
 }
 
-void CAppLinesDoc::b3Select(b3_line *dir,b3_bool activate,b3_bool add)
+void CAppLinesDoc::b3Select(
+	b3_line *dir,
+	b3_bool  activate,
+	b3_bool  add)
 {
 	b3BBox    *bbox;
 	b3_line64  line;
@@ -1434,20 +1458,8 @@ void CAppLinesDoc::b3ObjectCreate(b3_bool insert_sub)
 		strcpy (bbox->m_BoxName,dlg.m_NewName);
 		base->b3Insert(insert_after,bbox);
 		b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-
-		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		bbox->b3Prepare();
-
-		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_Scene->b3AllocVertices(&m_Context);
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		b3ComputeBounds();
-
-		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		m_DlgHierarchy->b3InitTree(this,true);
 		m_DlgHierarchy->b3SelectItem(bbox);
+		b3Prepare();
 	}
 }
 
@@ -1606,87 +1618,7 @@ void CAppLinesDoc::OnEditCopy()
 void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub) 
 {
 	// TODO: Add your command handler code here
-	CAppLinesApp   *app  = (CAppLinesApp *)AfxGetApp();
-	CMainFrame     *main = CB3GetMainFrame();
-	CWaitCursor     wait;
-	b3BBox         *selected;
-	b3BBox         *bbox;
-	b3Item         *insert_after;
-	b3Base<b3Item> *base;
-	b3_size         size;
-	b3_count        level;
-	void           *ptr;
-	HANDLE          handle;
-
-	selected = m_DlgHierarchy->b3GetSelectedBBox();
-	B3_ASSERT(selected != null);
-	if (insert_sub)
-	{
-		base = selected->b3GetBBoxHead();
-		insert_after = base->Last;
-	}
-	else
-	{
-		base = m_Scene->b3FindBBoxHead(selected);
-		insert_after = selected;
-	}
-	B3_ASSERT(base != null);
-
-	if (main->OpenClipboard())
-	{
-		handle = ::GetClipboardData(app->m_ClipboardFormatForBlizzardObject);
-		if (handle != 0)
-		{
-			size = ::GlobalSize(handle);
-			ptr  = ::GlobalLock(handle);
-			try
-			{
-				b3FileMem file(B_WRITE);
-				b3World   world;
-
-				file.b3Write(ptr,size);
-				file.b3Seek(0,B3_SEEK_START);
-
-				if(world.b3Read(&file) == B3_WORLD_OK)
-				{
-					main->b3SetStatusMessage(IDS_DOC_REORG);
-					bbox  = (b3BBox *)world.b3GetFirst();
-					level = bbox->b3GetClassType() & 0xffff;
-					b3BBox::b3Reorg(world.b3GetHead(),base,level,1,insert_after);
-					b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-
-					main->b3SetStatusMessage(IDS_DOC_PREPARE);
-					bbox->b3Prepare();
-
-					main->b3SetStatusMessage(IDS_DOC_VERTICES);
-					m_Scene->b3AllocVertices(&m_Context);
-
-					main->b3SetStatusMessage(IDS_DOC_BOUND);
-					m_Scene->b3BacktraceRecompute(bbox);
-					b3ComputeBounds();
-
-					SetModifiedFlag();
-					UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-					m_DlgHierarchy->b3InitTree(this,true);
-					m_DlgHierarchy->b3SelectItem(bbox);
-				}
-			}
-			catch(b3FileException &f)
-			{
-				b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from clipboard (code: %d)\n",
-					f.b3GetError());
-				B3_MSG_ERROR(f);
-			}
-			catch(b3WorldException &w)
-			{
-				b3PrintF(B3LOG_NORMAL,"ERROR: reading object from clipboard (code: %d)\n",
-					w.b3GetError());
-				B3_MSG_ERROR(w);
-			}
-			::GlobalUnlock(handle);
-		}
-		::CloseClipboard();
-	}
+	m_UndoBuffer->b3Do(new b3OpPaste(m_DlgHierarchy,m_Scene,insert_sub));
 }
 
 void CAppLinesDoc::OnEditPaste() 
@@ -1757,21 +1689,9 @@ void CAppLinesDoc::OnObjectLoad()
 				level = bbox->b3GetClassType() & 0xffff;
 				b3BBox::b3Reorg(world.b3GetHead(),base,level,1,selected);
 				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-
-				main->b3SetStatusMessage(IDS_DOC_PREPARE);
-				bbox->b3Prepare();
-
-				main->b3SetStatusMessage(IDS_DOC_VERTICES);
-				m_Scene->b3AllocVertices(&m_Context);
-
-				main->b3SetStatusMessage(IDS_DOC_BOUND);
 				m_Scene->b3BacktraceRecompute(bbox);
-				b3ComputeBounds();
-
-				SetModifiedFlag();
-				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-				m_DlgHierarchy->b3InitTree(this,true);
 				m_DlgHierarchy->b3SelectItem(bbox);
+				b3Prepare();
 			}
 		}
 		catch(b3FileException &f)
@@ -1913,21 +1833,9 @@ void CAppLinesDoc::OnObjectReplace()
 				base->b3Remove(selected);
 				delete selected;
 				b3BBox::b3Recount(m_Scene->b3GetBBoxHead());
-
-				main->b3SetStatusMessage(IDS_DOC_PREPARE);
-				bbox->b3Prepare();
-
-				main->b3SetStatusMessage(IDS_DOC_VERTICES);
-				m_Scene->b3AllocVertices(&m_Context);
-
-				main->b3SetStatusMessage(IDS_DOC_BOUND);
 				m_Scene->b3BacktraceRecompute(bbox);
-				b3ComputeBounds();
-
-				SetModifiedFlag();
-				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-				m_DlgHierarchy->b3InitTree(this,true);
 				m_DlgHierarchy->b3SelectItem(bbox);
+				b3Prepare();
 			}
 		}
 		catch(b3FileException &f)
@@ -1976,17 +1884,7 @@ void CAppLinesDoc::OnObjectCopy()
 			base->b3Insert(bbox,cloned);
 			bbox = cloned;
 		}
-
-		main->b3SetStatusMessage(IDS_DOC_VERTICES);
-		m_Scene->b3AllocVertices(&m_Context);
-
-		main->b3SetStatusMessage(IDS_DOC_BOUND);
-		m_Scene->b3BacktraceRecompute(selected);
-		b3ComputeBounds();
-
-		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		m_DlgHierarchy->b3InitTree(this,true);
+		b3Prepare();
 	}
 }
 

@@ -62,6 +62,7 @@ public:
 
 // Implementation
 public:
+	void       b3Prepare(b3_bool update = true);
 	void       b3ComputeBounds();
 	void       b3StartRaytrace();
 	void       b3StopRaytrace();
@@ -148,6 +149,7 @@ public:
 	void           b3FinishEdit(b3BBox *original = null,b3BBox *bbox = null);
 	void           b3InitTree();
 	void           b3ContextMenu(HTREEITEM item);
+	void           b3AddUndoAction(CB3Action *action);
 
 	// De-/select bboxes
 	void           b3Select(b3_line *dir,b3_bool activate,b3_bool add);

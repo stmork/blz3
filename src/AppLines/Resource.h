@@ -212,6 +212,8 @@
 #define ID_VIEW_TOP                     10104
 #define ID_VIEW_TO_FULCRUM              10105
 #define ID_ANIM_PROPERTIES              10107
+#define ID_UNDO                         10109
+#define ID_REDO                         10110
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -595,6 +597,11 @@
 #define IDS_TOOLBAR_OBJECT              60120
 #define IDS_TOOLBAR_VIEW                60121
 #define IDS_UNKNOWN                     60122
+#define IDS_OP_CUT                      61446
+#define IDS_OP_PASTE                    61447
+#define IDS_OP_LOAD                     61448
+#define IDS_OP_REPLACE                  61449
+#define IDS_OP_ACTION                   61450
 
 // Next default values for new objects
 // 
@@ -602,7 +609,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
-#define _APS_NEXT_COMMAND_VALUE         10109
+#define _APS_NEXT_COMMAND_VALUE         10111
 #define _APS_NEXT_CONTROL_VALUE         32260
 #define _APS_NEXT_SYMED_VALUE           60123
 #endif

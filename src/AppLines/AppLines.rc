@@ -150,6 +150,9 @@ BEGIN
     BUTTON      ID_EDIT_COPY
     BUTTON      ID_EDIT_PASTE
     SEPARATOR
+    BUTTON      ID_EDIT_UNDO
+    BUTTON      ID_EDIT_REDO
+    SEPARATOR
     BUTTON      ID_FILE_PRINT
     SEPARATOR
     BUTTON      ID_APP_ABOUT
@@ -2425,6 +2428,8 @@ BEGIN
     ID_VIEW_TOP             "Zeigt die Szene von oben (Grundriß).\nAnsicht von oben (Grundriß)"
     ID_VIEW_TO_FULCRUM      "Richtet Ansicht auf das Drehkreuz aus.\nAnsicht auf Drehkreuz richten"
     ID_ANIM_PROPERTIES      "Animationseigenschaften.\nAnimationseigenschaften"
+    ID_UNDO                 "\nUndo"
+    ID_REDO                 "\nRedo"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2661,6 +2666,11 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+    IDS_OP_CUT              "Ausschneiden"
+    IDS_OP_PASTE            "Einfügen"
+    IDS_OP_LOAD             "Objekt laden"
+    IDS_OP_REPLACE          "Objekt ersetzen"
+    IDS_OP_ACTION           "Mausaktion"
 END
 
 STRINGTABLE DISCARDABLE 

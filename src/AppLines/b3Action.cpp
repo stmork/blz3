@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2003/01/05 16:13:24  sm
+**	- First undo/redo implementations
+**
 **	Revision 1.21  2002/03/01 20:26:40  sm
 **	- Added CB3FloatSpinButtonCtrl for conveniant input.
 **	- Made some minor changes and tests.
-**
+**	
 **	Revision 1.20  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
@@ -132,6 +135,21 @@ CB3Action::CB3Action(CAppRenderView *window)
 	m_View   = window;
 	m_Doc    = m_View->GetDocument();
 	m_Button = B3_MB_UP;
+}
+
+b3_matrix *CB3Action::b3GetTransformation()
+{
+	return &m_Transformation;
+}
+
+b3_bool CB3Action::b3IsObject()
+{
+	return false;
+}
+
+b3_bool CB3Action::b3IsCamera()
+{
+	return false;
 }
 
 void CB3Action::b3DispatchMouseMove  (b3_coord x,b3_coord y)
