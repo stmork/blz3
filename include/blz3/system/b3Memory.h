@@ -230,11 +230,8 @@ public:
 	inline static void b3SetString(
 		char *buffer,size_t size,const char *src)
 	{
-		for (size_t i = 0;(i < size) && (src[i] != 0);i++)
-		{
-			*buffer++ = *src++;
-		}
-		*buffer = 0;
+		strncpy(buffer,src,size);
+		buffer[size-1] = 0;
 	}
 
 	inline static void b3LongMemSet(
