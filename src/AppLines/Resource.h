@@ -17,6 +17,7 @@
 #define IDC_PANNING                     137
 #define IDD_SCENE                       138
 #define IDD_SUPER_SAMPLE                139
+#define IDD_MODELLER_INFO               140
 #define IDD_HIERARCHY                   145
 #define IDD_LENS_FLARE                  146
 #define IDI_BBOX_WORLD                  148
@@ -70,6 +71,14 @@
 #define IDC_SPP_SPIN                    1026
 #define IDC_SCAN_PARA                   1027
 #define IDC_SPF_SPIN                    1028
+#define IDC_SNAP_TO_GRID                1029
+#define IDC_SNAP_TO_ANGLE               1030
+#define IDC_STEP_GRID                   1031
+#define IDC_STEP_ANGLE                  1032
+#define IDC_FULCRUM_X                   1033
+#define IDC_FULCRUM_Y                   1034
+#define IDC_FULCRUM_Z                   1035
+#define IDC_FULCRUM_CLR                 1036
 #define IDC_ACT_LENS_FLARE              1039
 #define IDC_LF_CHANGE                   1040
 #define IDC_LF_COLOR                    1041
@@ -143,6 +152,7 @@
 #define ID_DLG_SCENE                    32813
 #define IDM_BAR_SCENE                   32814
 #define ID_CUST_SCENE                   32815
+#define ID_MODELLER_INFO                32816
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -164,9 +174,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        139
-#define _APS_NEXT_COMMAND_VALUE         32816
-#define _APS_NEXT_CONTROL_VALUE         1029
+#define _APS_NEXT_RESOURCE_VALUE        141
+#define _APS_NEXT_COMMAND_VALUE         32817
+#define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           102
 #endif
 #endif
