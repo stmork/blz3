@@ -41,10 +41,13 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.2  2004/08/04 13:56:24  sm
+**	- More quiet divx encoder
+**
 **	Revision 1.1  2004/08/03 10:46:26  sm
 **	- Added simgle frame to DivX/AVI conversion tool
 **	- Added image mirror (not completely implemented yet)
-**
+**	
 **
 */
 
@@ -86,12 +89,13 @@ int main(int argc,char *argv[])
 		{
 			encoding.x_dim     = img.xSize;
 			encoding.y_dim     = img.ySize;
-			encoding.framerate = 25;
-			encoding.quality   =  5;
+			encoding.framerate =      25.0;
+			encoding.quality   =       5;
+			encoding.bitrate   = 1600000;
 
-			size             = img.xSize * img.ySize;
-			buffer           = (b3_u08 *)malloc(size * 3);
-			bitstream        = (char *)malloc(size * 6);
+			size               = img.xSize * img.ySize;
+			buffer             = (b3_u08 *)malloc(size * 3);
+			bitstream          = (char *)malloc(size * 6);
 
 			error = encore(0,ENC_OPT_INIT,&encoding,0);
 			if ((error != ENC_OK) || (encoding.handle == 0))
@@ -100,7 +104,7 @@ int main(int argc,char *argv[])
 			}
 			else
 			{
-				printf("Start encoding...\n");
+				b3PrintF(B3LOG_DEBUG,"Start encoding...");
 			}
 
 			AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
@@ -127,23 +131,24 @@ int main(int argc,char *argv[])
 		error = encore(encoding.handle,ENC_OPT_ENCODE,&frame,&result);
 		if (error != ENC_OK)
 		{
-			fprintf(stderr,"ERROR CODE: %d (encoding frame %d)\nexiting...\n",error,i-2);
+			fprintf(stderr,"\nERROR CODE: %d (encoding frame %d)\nexiting...\n",error,i-2);
 		}
 		else
 		{
 			AVI_write_frame(out,bitstream,frame.length,0);
-			printf(" encoded frame %s (%d bytes)\n",argv[i],frame.length);
+			b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
+			b3PrintF(B3LOG_NORMAL,".");
 		}
 	}
 
 	error = encore(encoding.handle,ENC_OPT_RELEASE,0,0);
 	if (error != ENC_OK)
 	{
-		fprintf(stderr,"ERROR CODE: %d (finishing encoding)\nexiting...\n",error);
+		fprintf(stderr,"\nERROR CODE: %d (finishing encoding)\nexiting...\n",error);
 	}
 	else
 	{
-		printf("Done.\n");
+		b3PrintF(B3LOG_NORMAL,"\nDone.\n");
 	}
 
 	AVI_close(out);
