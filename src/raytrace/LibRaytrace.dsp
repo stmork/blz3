@@ -182,6 +182,10 @@ SOURCE=.\b3NormalDeriv.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PickInfo.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3PrepareInfo.cc
 # End Source File
 # Begin Source File
@@ -272,6 +276,10 @@ SOURCE=.\b3TriangleShape.cc
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\include\blz3\raytrace\b3PickInfo.h
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\include\blz3\raytrace\b3PrepareInfo.h

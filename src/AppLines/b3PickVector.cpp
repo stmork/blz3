@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/02/23 21:15:41  sm
+**	- First shape picking
+**
 **	Revision 1.4  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 **	Revision 1.3  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -77,8 +80,10 @@ void b3PickPoint::b3Draw(b3DrawContext *dc)
 	m_RenderView->b3Project(m_Pos,m_x,m_y);
 
 	dc->FillSolidRect(
-		m_x - B3_PICK_SIZE,m_y - B3_PICK_SIZE,
-		B3_PICK_SIZE * 2 + 1,B3_PICK_SIZE * 2 + 1,
+		m_x - b3PickBase::m_PickSize,
+		m_y - b3PickBase::m_PickSize,
+		b3PickBase::m_PickSize * 2 + 1,
+		b3PickBase::m_PickSize * 2 + 1,
 		RGB(255,16,64));
 	dc->TextOut(m_x + 3,m_y - 4,m_Text);
 }

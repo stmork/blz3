@@ -22,8 +22,6 @@
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3UndoOperation.h"
 
-#define B3_PICK_SIZE 2
-
 class b3Pick : public b3Link<b3Pick>
 {
 protected:
@@ -42,7 +40,10 @@ public:
 class b3PickBase : public b3Base<b3Pick>
 {
 protected:
-	b3Pick *m_Selected;
+	b3Pick          *m_Selected;
+
+public:
+	static b3_coord  m_PickSize;
 
 public:
 	                 b3PickBase();

@@ -185,6 +185,10 @@ SOURCE=.\b3LinesDocument.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PickInfoObject.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3PickVector.cpp
 # End Source File
 # Begin Source File
@@ -506,6 +510,10 @@ SOURCE=.\b3ImagePreviewFileDlg.h
 # Begin Source File
 
 SOURCE=.\b3LinesDocument.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3PickInfoObject.h
 # End Source File
 # Begin Source File
 

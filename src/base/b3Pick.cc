@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/02/23 21:15:41  sm
+**	- First shape picking
+**
 **	Revision 1.7  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 **	Revision 1.6  2002/02/17 21:58:11  sm
 **	- Done UnCR
 **	- Modified makefiles
@@ -71,6 +74,10 @@
 **                        b3Pick implementation                         **
 **                                                                      **
 *************************************************************************/
+
+#define B3_PICK_SIZE 2
+
+b3_coord b3PickBase::m_PickSize = B3_PICK_SIZE;
 
 b3PickBase::b3PickBase()
 {
@@ -169,7 +176,9 @@ b3_bool b3Pick::b3Hit(b3_coord x,b3_coord y)
 	b3_coord xDiff = m_x - x;
 	b3_coord yDiff = m_y - y;
 
-	return (B3_ABS(xDiff) <= B3_PICK_SIZE) && (B3_ABS(yDiff) <= B3_PICK_SIZE);
+	return
+		(B3_ABS(xDiff) <= b3PickBase::m_PickSize) &&
+		(B3_ABS(yDiff) <= b3PickBase::m_PickSize);
 }
 
 b3_bool b3Pick::b3Moved(b3_coord x,b3_coord y)

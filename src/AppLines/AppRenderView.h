@@ -23,15 +23,19 @@
 #endif // _MSC_VER > 1000
 
 #include "AppRenderDoc.h"
+#include "blz3/system/b3DashPen.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Array.h"
 #include "b3CameraVolume.h"
 
-#define B3_UPDATE_VIEW      1
-#define B3_UPDATE_CAMERA    2
-#define B3_UPDATE_GEOMETRY  4
-#define B3_UPDATE_LIGHT     8
-#define B3_UPDATE_FULCRUM  16
+#define B3_UPDATE_VIEW        1
+#define B3_UPDATE_CAMERA      2
+#define B3_UPDATE_GEOMETRY    4
+#define B3_UPDATE_LIGHT       8
+#define B3_UPDATE_FULCRUM    16
+#define B3_UPDATE_PICK      256
+#define B3_UPDATE_LIGHTVIEW 512
+
 
 #define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA|B3_UPDATE_LIGHT)
 
@@ -96,6 +100,8 @@ class CAppRenderView : public CScrollView
 	b3Array<CB3PixelFormatDescriptor> m_glPixelFormat;
 
 protected:
+	CB3DashPen      m_RedDash;
+
 	// OpenGL window display values
 	HDC             m_glDC;
 	HGLRC           m_glGC;

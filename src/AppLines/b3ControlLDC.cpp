@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/02/23 21:15:41  sm
+**	- First shape picking
+**
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.7  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
@@ -93,8 +96,10 @@ public:
 	void b3Draw(b3DrawContext *dc)
 	{
 		dc->FillSolidRect(
-			m_x - B3_PICK_SIZE,m_y - B3_PICK_SIZE,
-			B3_PICK_SIZE * 2 + 1,B3_PICK_SIZE * 2 + 1,
+			m_x - b3PickBase::m_PickSize,
+			m_y - b3PickBase::m_PickSize,
+			b3PickBase::m_PickSize * 2 + 1,
+			b3PickBase::m_PickSize * 2 + 1,
 			RGB(255,16,64));
 	}
 

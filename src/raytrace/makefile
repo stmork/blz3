@@ -33,6 +33,7 @@ PRG_SOURCE		=\
 	b3Material.cc\
 	b3Normal.cc\
 	b3NormalDeriv.cc\
+	b3PickInfo.cc\
 	b3PrepareInfo.cc\
 	b3RayRow.cc\
 	b3Raytrace.cc\
@@ -81,6 +82,7 @@ PRG_OBJ			=\
 	b3Material.o\
 	b3Normal.o\
 	b3NormalDeriv.o\
+	b3PickInfo.o\
 	b3PrepareInfo.o\
 	b3RayRow.o\
 	b3Raytrace.o\

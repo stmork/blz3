@@ -218,6 +218,11 @@
 #define ID_COB_LOAD                     10109
 #define ID_IMPORT_ARCON                 10110
 #define ID_TGF_LOAD                     10111
+#define ID_PICK_ALL                     10113
+#define ID_PICK_HORZ                    10114
+#define ID_PICK_VERT                    10115
+#define ID_PICK_PREV                    10116
+#define ID_PICK_SUCK                    10117
 #define IDC_ACT_DISTRIBUTED             32000
 #define IDC_ACT_LENS_FLARE              32001
 #define IDC_ACT_MOTION_BLUR             32002
@@ -642,7 +647,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        124
-#define _APS_NEXT_COMMAND_VALUE         10113
+#define _APS_NEXT_COMMAND_VALUE         10118
 #define _APS_NEXT_CONTROL_VALUE         32263
 #define _APS_NEXT_SYMED_VALUE           60145
 #endif

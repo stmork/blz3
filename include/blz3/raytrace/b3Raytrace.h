@@ -28,6 +28,7 @@
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxPool.h"
+#include "blz3/raytrace/b3PickInfo.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
 
 #include <float.h>
@@ -964,6 +965,7 @@ public:
 	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
+	virtual void        b3SetupPicking(b3PickInfo *pick_info);
 
 	inline b3Base<b3Item> *b3GetBumpHead()
 	{
@@ -1113,6 +1115,7 @@ public:
 	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	        void    b3Normal(b3_ray *ray);
 	        b3_bool b3NormalDeriv(b3_ray *ray);
+			void    b3SetupPicking(b3PickInfo *pick_info);
 };
 
 class b3Area : public b3Shape2
@@ -1159,6 +1162,7 @@ public:
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3Transform(b3_matrix *transformation,b3_bool is_affine);
+			void    b3SetupPicking(b3PickInfo *pick_info);
 };
 
 class b3Cylinder : public b3Shape3

@@ -97,6 +97,7 @@ public:
 	void        b3ComputeBounds();
 	void        b3InitTree();
 	void        b3HierarchySelectionChanged();
+	b3Shape    *b3GetSelectedShape();
 	void        b3ContextMenu(HTREEITEM item);
 	void        b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
 	b3_bool     b3IsLinesDoc(CAppLinesDoc *LinesDoc);

@@ -26,6 +26,7 @@
 #include "AppRenderView.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
+#include "b3PickInfoObject.h"
 
 #define B3_UPDATE_OBJECT 256
 
@@ -33,6 +34,7 @@ class CB3Action;
 
 class CAppObjectView : public CAppRenderView
 {
+	b3PickInfoObject m_PickList;
 protected: // create from serialization only
 	b3BBox *m_BBox;
 	b3_f64  m_xAngle;
@@ -66,10 +68,14 @@ public:
 
 protected:
 	void b3Draw(b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
+	void b3DrawDC(HDC hDC,b3_res xSize,b3_res ySize,b3_f64 xOffset = 0.0,b3_f64 yOffset = 0.0);
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppObjectView)
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

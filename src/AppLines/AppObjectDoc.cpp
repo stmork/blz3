@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2003/02/23 21:15:41  sm
+**	- First shape picking
+**
 **	Revision 1.22  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.21  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -441,11 +444,16 @@ void CAppObjectDoc::b3InitTree()
 	}
 }
 
+b3Shape *CAppObjectDoc::b3GetSelectedShape()
+{
+	return m_DlgHierarchy->b3GetSelectedShape();
+}
+
 void CAppObjectDoc::b3HierarchySelectionChanged()
 {
-	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
+	b3Shape *shape = b3GetSelectedShape();
 	m_Context.b3SetSelected(shape);
-	UpdateAllViews(NULL,B3_UPDATE_VIEW);
+	UpdateAllViews(NULL,B3_UPDATE_VIEW|B3_UPDATE_PICK);
 }
 
 void CAppObjectDoc::b3ContextMenu(HTREEITEM item)

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/02/23 21:15:41  sm
+**	- First shape picking
+**
 **	Revision 1.12  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.11  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
 **	
@@ -98,13 +101,16 @@ IMPLEMENT_DYNCREATE(CAppObjectView, CAppRenderView)
 
 BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppObjectView)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONUP()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CAppObjectView construction/destruction
 
-CAppObjectView::CAppObjectView()
+CAppObjectView::CAppObjectView() : m_PickList(&m_RenderView)
 {
 	// TODO: add construction code here
 	b3_index i;
@@ -193,6 +199,11 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		doInvalidate = true;
 	}
 
+	if (lHint & B3_UPDATE_PICK)
+	{
+		doInvalidate |= m_PickList.b3SetShape(GetDocument()->b3GetSelectedShape());
+	}
+
 	if (doInvalidate)
 	{
 		Invalidate();
@@ -228,6 +239,32 @@ void CAppObjectView::b3Draw(
 	}
 }
 
+void CAppObjectView::b3DrawDC(
+	HDC    hDC,
+	b3_res xSize,
+	b3_res ySize,
+	b3_f64 xOffset,
+	b3_f64 yOffset)
+{
+	CDC        *dc = CDC::FromHandle(hDC);
+	CPen       *old;
+
+	// Setup view first
+	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+
+	// Set attributes to DC
+	old = dc->SelectObject(&m_RedDash);
+	dc->SetROP2(R2_COPYPEN);
+	dc->SetTextColor(RGB(0xff,0x11,0x44));
+	dc->SetBkMode(TRANSPARENT);
+
+	// Draw pick points
+	m_PickList.b3Draw(dc);
+
+	// Puhh! And only to draw stippled lines...
+	dc->SelectObject(old);
+}
+
 void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDeactiveView) 
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -258,5 +295,73 @@ void CAppObjectView::OnActivateView(BOOL bActivate, CView* pActivateView, CView*
 //		main->b3Clear();
 //		main->b3UpdateModellerInfo();
 		app->b3GetData();
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Handle picking                                **
+**                                                                      **
+*************************************************************************/
+
+void CAppObjectView::OnLButtonDown(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!m_PickList.b3Down(point.x,point.y))
+	{
+		// Do standard action
+		CAppRenderView::OnLButtonDown(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		SetCapture();
+		CScrollView::OnLButtonDown(nFlags, point);
+	}
+}
+
+void CAppObjectView::OnMouseMove(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (!m_PickList.b3IsActive())
+	{
+		// Do standard action
+		CAppRenderView::OnMouseMove(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		if (m_PickList.b3Move(point.x,point.y))
+		{
+			CAppObjectDoc *pDoc = GetDocument();
+
+			m_PickList.b3Modified();
+			pDoc->UpdateAllViews(NULL,B3_UPDATE_VIEW|B3_UPDATE_GEOMETRY);
+			pDoc->SetModifiedFlag();
+		}
+		CScrollView::OnMouseMove(nFlags, point);
+	}
+}
+
+void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point) 
+{
+	// TODO: Add your message handler code here and/or call default
+	b3UndoOperation *op = m_PickList.b3GetOperation();
+
+	if (!m_PickList.b3Up(point.x,point.y))
+	{
+		// Do standard action
+		CAppRenderView::OnLButtonUp(nFlags, point);
+	}
+	else
+	{
+		// Do MFC mouse handling when picking
+		::ReleaseCapture();
+		CScrollView::OnLButtonUp(nFlags, point);
+
+		if (op != null)
+		{
+			GetDocument()->b3AddOp(op);
+		}
 	}
 }

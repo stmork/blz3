@@ -190,6 +190,13 @@ BEGIN
     BUTTON      ID_CAMERA_VIEW
     SEPARATOR
     BUTTON      ID_LIGHT_TURN
+    SEPARATOR
+    BUTTON      ID_PICK_ALL
+    BUTTON      ID_PICK_HORZ
+    BUTTON      ID_PICK_VERT
+    SEPARATOR
+    BUTTON      ID_PICK_PREV
+    BUTTON      ID_PICK_SUCK
 END
 
 IDR_TOOLBAR_OBJECT TOOLBAR DISCARDABLE  16, 15
@@ -2773,6 +2780,15 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_PICK_ALL             "Alle Picker benutzen\nAlle Picker"
+    ID_PICK_HORZ            "Eine horizontale Pickerzeile verwenden.\nHorizontale Pickerzeile"
+    ID_PICK_VERT            "Eine vertikale Pickerzeile verwenden.\nVertikale Pickerzeile"
+    ID_PICK_PREV            "Pickerzeile vorher auswählen.\nVorherige Pickerzeile"
+    ID_PICK_SUCK            "Nächste Pickerzeile auswählen.\nNächste Pickerzeile"
 END
 
 #endif    // German (Germany) resources
