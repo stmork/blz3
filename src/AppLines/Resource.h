@@ -2,7 +2,6 @@
 // Microsoft Developer Studio generated include file.
 // Used by AppLines.rc
 //
-
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define ID_DRAWING_PERF                 101
