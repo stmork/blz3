@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2004/04/05 09:47:58  sm
+**	- Some noise optimization
+**
 **	Revision 1.19  2004/04/05 09:16:03  sm
 **	- Added test wood for Lines wood dialog
 **	- Optimized noise a little bit.
-**
+**	
 **	Revision 1.18  2004/04/04 13:50:38  sm
 **	- Optimized noise
 **	- Added filtered noise
@@ -318,9 +321,9 @@ b3_f64 b3Noise::b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	iz = (b3_index)floor(z);
 
 	return b3Interpolate(ix,iy,iz,
-		x - ix,
-		y - iy,
-		z - iz);
+		(b3_f32)x - ix,
+		(b3_f32)y - iy,
+		(b3_f32)z - iz);
 }
 
 b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
@@ -332,20 +335,23 @@ b3_f64 b3Noise::b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	iz = (b3_index)floor(z);
 
 	return b3Interpolate(ix,iy,iz,
-		b3Math::b3Smoothstep(x - ix),
-		b3Math::b3Smoothstep(y - iy),
-		b3Math::b3Smoothstep(z - iz));
+		(b3_f32)(b3Math::b3Smoothstep(x - ix)),
+		(b3_f32)(b3Math::b3Smoothstep(y - iy)),
+		(b3_f32)(b3Math::b3Smoothstep(z - iz)));
 }
 
 inline b3_f64 b3Noise::b3Interpolate(
 	b3_index ix,
 	b3_index iy,
 	b3_index iz,
-	b3_f64   fx,
-	b3_f64   fy,
-	b3_f64   fz)
+	b3_f32   fx,
+	b3_f32   fy,
+	b3_f32   fz)
 {
-	b3_f64  B3_ALIGN_16 a[4],b[4],c[4];
+	b3_f32  B3_ALIGN_16 a[4],b[4],c[4];
+	b3_f32  rx = 1.0 - fx;
+	b3_f32  ry = 1.0 - fy;
+	b3_f32  rz = 1.0 - fz;
 	b3_loop i;
 
 	a[0] = NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
@@ -359,7 +365,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 
 	for (i = 0;i < 4;i++)
 	{
-		c[i] = a[i] * (1.0 - fx) + b[i] * fx;
+		c[i] = a[i] * rx + b[i] * fx;
 	}
 
 	a[0] = c[0];
@@ -369,10 +375,10 @@ inline b3_f64 b3Noise::b3Interpolate(
 
 	for (i = 0;i < 2;i++)
 	{
-		c[i] = a[i] * (1.0 - fy) + b[i] * fy;
+		c[i] = a[i] * ry + b[i] * fy;
 	}
 
-	return b3Math::b3Mix(c[0],c[1],fz);
+	return c[0] * rz + c[1] * fz;
 }
 
 inline b3_noisetype b3Noise::b3GetDiff(
