@@ -40,13 +40,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/08/29 16:25:38  sm
+**	- Added RGB and BGR color support which fixes the red/blue swap
+**	  problem on Sun machines.
+**
 **	Revision 1.8  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.7  2002/08/11 11:03:40  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
@@ -122,6 +126,173 @@
 
 /*************************************************************************
 **                                                                      **
+**                        color access routines access                  **
+**                                                                      **
+*************************************************************************/
+
+#define MASK0 0xff
+#define MASK1 0xfe
+#define MASK2 0xfc
+#define MASK3 0xf8
+#define MASK4 0xf0
+#define MASK5 0xe0
+#define MASK6 0xc0
+#define MASK7 0x80
+
+class b3DisplayPixelImpl : public b3DisplayPixel
+{
+	static b3_pkd_color dithermatrix[4][4];
+	static b3_pkd_color dithermask[8];
+
+protected:
+	inline static b3_bool b3Dither (
+		b3_pkd_color Byte,
+		b3_count     shift,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		b3_u32 mask;
+
+		Byte &= 0xff;
+		mask  = dithermask[shift];
+		if ((Byte & mask) >= mask) return false;
+		return (((Byte >> (shift - 4)) & 15) >= (dithermatrix[x & 3][y & 3]));
+	}
+
+	inline static b3_bool b3Dither2 (b3_pkd_color Byte,b3_coord x,b3_coord y)
+	{
+		Byte &= 0xff;
+		if ((Byte & MASK2) >= MASK2) return false;
+		return (((Byte << 2) & 15) >= (dithermatrix[x & 3][y & 3]));
+	}
+
+	inline static b3_bool b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	{
+		Byte &= 0xff;
+		if ((Byte & MASK3) >= MASK3) return false;
+		return (((Byte << 1) & 15) >= (dithermatrix[x & 3][y & 3]));
+	}
+
+	inline static b3_bool b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	{
+		Byte &= 0xff;
+		if ((Byte & MASK5) >= MASK5) return false;
+		return (((Byte >> 1) & 15) >= (dithermatrix[x & 3][y & 3]));
+	}
+
+	inline static b3_bool b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y)
+	{
+		Byte &= 0xff;
+		if ((Byte & MASK6) >= MASK6) return false;
+		return (((Byte >> 2) & 15) >= (dithermatrix[x & 3][y & 3]));
+	}
+};
+
+b3_pkd_color b3DisplayPixelImpl::dithermatrix[4][4] =
+{
+	{  0, 8, 1, 9 },
+	{ 12, 4,13, 5 }, 
+	{  3,11, 2,10 },
+	{ 15, 7,14, 6 }
+};
+
+b3_pkd_color b3DisplayPixelImpl::dithermask[8] =
+{
+	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
+};
+
+class b3DisplayPixel08 : public b3DisplayPixelImpl
+{
+public:
+	b3_pkd_color b3ARGBtoPixel (
+		b3_pkd_color ARGB,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		b3_pkd_color r,g,b;
+
+		r = ARGB & 0xe00000;
+		g = ARGB & 0x00e000;
+		b = ARGB & 0x0000c0;
+
+		if (b3Dither5(ARGB >> 16,x,y)) r += 0x200000;
+		if (b3Dither5(ARGB >>  8,x,y)) g += 0x002000;
+		if (b3Dither6(ARGB      ,x,y)) b += 0x000040;
+
+		return ((r >> 16) | (g >> 11) | (b >>  6));
+	}
+};
+
+class b3DisplayPixel15 : public b3DisplayPixelImpl
+{
+public:
+	b3_pkd_color b3ARGBtoPixel (
+		b3_pkd_color ARGB,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		b3_pkd_color r,g,b;
+
+		r = ARGB & 0xf80000;
+		g = ARGB & 0x00f800;
+		b = ARGB & 0x0000f8;
+
+		if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
+		if (b3Dither3(ARGB >>  8,x,y)) g += 0x000800;
+		if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
+
+		return ((r >> 9) | (g >> 6) | (b >>  3));
+	}
+};
+
+class b3DisplayPixel16 : public b3DisplayPixelImpl
+{
+public:
+	b3_pkd_color b3ARGBtoPixel (
+		b3_pkd_color ARGB,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		b3_pkd_color r,g,b;
+
+		r = ARGB & 0xf80000;
+		g = ARGB & 0x00fc00;
+		b = ARGB & 0x0000f8;
+
+		if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
+		if (b3Dither2(ARGB >>  8,x,y)) g += 0x000400;
+		if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
+
+		return ((r >> 8) | (g >> 5) | (b >>  3));
+	}
+};
+
+class b3DisplayPixel24 : public b3DisplayPixelImpl
+{
+public:
+	b3_pkd_color b3ARGBtoPixel(
+		b3_pkd_color ARGB,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		return ARGB;
+	}
+};
+
+class b3DisplayPixel24Inv : public b3DisplayPixelImpl
+{
+public:
+	b3_pkd_color b3ARGBtoPixel(
+		b3_pkd_color ARGB,
+		b3_coord     x,
+		b3_coord     y)
+	{
+		return ((ARGB & 0xff0000) >> 16) | (ARGB & 0x00ff00) | ((ARGB & 0x0000ff) << 16);
+	}
+};
+
+/*************************************************************************
+**                                                                      **
 **                        color display routines                        **
 **                                                                      **
 *************************************************************************/
@@ -154,6 +325,10 @@ b3DisplayView::b3DisplayView(
 
 b3DisplayView::~b3DisplayView()
 {
+	if (m_Pixel != null)
+	{
+		delete m_Pixel;
+	}
 	b3FreeColormap();
 	XFreeGC       (m_Display,m_GC);
 	XFreePixmap   (m_Display,m_Image);
@@ -260,18 +435,75 @@ void b3DisplayView::b3Open(
 
 b3_bool b3DisplayView::b3CreateColormap ()
 {
-	b3_bool  result = false;
+	XVisualInfo *info;
+	XVisualInfo  temp;
+	b3_bool      result = false;
+	int          count,i;
 
 	// use existing color map
 	m_Colormap = null;
-	if (m_depth == 15) return true;
-	if (m_depth == 16) return true;
-	if (m_depth == 24) return true;
-	if (m_depth == 32) return true;
-	if (m_depth !=  8) return false;
+	m_Pixel    = null;
+	switch (m_depth)
+	{
+	case  8:
+		m_Pixel = new b3DisplayPixel08();
+		break;
+		// No return since we have to create a colormap!
+
+	case 15:
+		m_Pixel = new b3DisplayPixel15();
+		return true;
+
+	case 16:
+		m_Pixel = new b3DisplayPixel16();
+		return true;
+
+	case 24:
+	case 32:
+		memset(&temp,0,sizeof(temp));
+		temp.visual   = DefaultVisual(m_Display,m_Screen);
+		temp.visualid = XVisualIDFromVisual(temp.visual);
+		temp.screen   = m_Screen;
+		temp.depth    = m_depth;
+		info = XGetVisualInfo(m_Display,VisualIDMask | VisualScreenMask | VisualDepthMask,&temp,&count);
+		b3PrintF(B3LOG_FULL,"%d visuals (%p) found - depth: %d.\n",count,info,m_depth);
+		for (i = 0;i < count;i++)
+		{
+			b3PrintF(B3LOG_FULL,"%2d: %08x %08x %08x # %4d %4d # %08x\n",i,
+				info[i].red_mask,
+				info[i].green_mask,
+				info[i].blue_mask,
+				info[i].colormap_size,
+				info[i].bits_per_rgb,
+				info[i].c_class);
+		}
+
+		if (info != null)
+		{
+			if ((info->red_mask  == 0x0000ff) &&
+			    (info->blue_mask == 0xff0000))
+			{
+				// BGR format (e.g. Sun Ultra 10)
+				m_Pixel = new b3DisplayPixel24Inv();
+			}
+			if ((info->red_mask  == 0xff0000) &&
+			    (info->blue_mask == 0x0000ff))
+			{
+				// RGB format (Blizzard III native)
+				m_Pixel = new b3DisplayPixel24();
+			}
+			
+			XFree(info);
+		}
+		return m_Pixel != null;
+		
+	default:
+		b3PrintF(B3LOG_NORMAL,"Unsupported color depth!\n");
+		return false;
+	}
 
 	display_mutex.b3Lock();
-	if (cmap)
+	if (cmap != null)
 	{
 		cmap_count++;
 		m_Colormap = cmap;
@@ -328,130 +560,6 @@ void b3DisplayView::b3FreeColormap()
 	display_mutex.b3Unlock();
 }
 
-/*************************************************************************
-**                                                                      **
-**                        color access routines access                  **
-**                                                                      **
-*************************************************************************/
-
-static b3_pkd_color dithermatrix[4][4] =
-{
-	{  0, 8, 1, 9 },
-	{ 12, 4,13, 5 }, 
-	{  3,11, 2,10 },
-	{ 15, 7,14, 6 }
-};
-
-#define MASK0 0xff
-#define MASK1 0xfe
-#define MASK2 0xfc
-#define MASK3 0xf8
-#define MASK4 0xf0
-#define MASK5 0xe0
-#define MASK6 0xc0
-#define MASK7 0x80
-
-static unsigned long dithermask[8] =
-{
-	MASK0,MASK1,MASK2,MASK3,MASK4,MASK5,MASK6,MASK7
-};
-
-inline b3_bool b3DisplayView::b3Dither (
-	b3_pkd_color Byte,
-	b3_count     shift,
-	b3_coord     x,
-	b3_coord     y)
-{
-	b3_u32 mask;
-
-	Byte &= 0xff;
-	mask  = dithermask[shift];
-	if ((Byte & mask) >= mask) return false;
-	return (((Byte >> (shift - 4)) & 15) >= (dithermatrix[x & 3][y & 3]));
-}
-
-inline b3_bool b3DisplayView::b3Dither2 (b3_pkd_color Byte,b3_coord x,b3_coord y)
-{
-	Byte &= 0xff;
-	if ((Byte & MASK2) >= MASK2) return false;
-	return (((Byte << 2) & 15) >= (dithermatrix[x & 3][y & 3]));
-}
-
-inline b3_bool b3DisplayView::b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y)
-{
-	Byte &= 0xff;
-	if ((Byte & MASK3) >= MASK3) return false;
-	return (((Byte << 1) & 15) >= (dithermatrix[x & 3][y & 3]));
-}
-
-inline b3_bool b3DisplayView::b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y)
-{
-	Byte &= 0xff;
-	if ((Byte & MASK5) >= MASK5) return false;
-	return (((Byte >> 1) & 15) >= (dithermatrix[x & 3][y & 3]));
-}
-
-inline b3_bool b3DisplayView::b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y)
-{
-	Byte &= 0xff;
-	if ((Byte & MASK6) >= MASK6) return false;
-	return (((Byte >> 2) & 15) >= (dithermatrix[x & 3][y & 3]));
-}
-
-inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_08 (
-	b3_pkd_color ARGB,
-	b3_coord     x,
-	b3_coord     y)
-{
-	b3_pkd_color r,g,b;
-
-	r = ARGB & 0xe00000;
-	g = ARGB & 0x00e000;
-	b = ARGB & 0x0000c0;
-
-	if (b3Dither5(ARGB >> 16,x,y)) r += 0x200000;
-	if (b3Dither5(ARGB >>  8,x,y)) g += 0x002000;
-	if (b3Dither6(ARGB      ,x,y)) b += 0x000040;
-
-	return ((r >> 16) | (g >> 11) | (b >>  6));
-}
-
-inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_15 (
-	b3_pkd_color ARGB,
-	b3_coord     x,
-	b3_coord     y)
-{
-	b3_pkd_color r,g,b;
-
-	r = ARGB & 0xf80000;
-	g = ARGB & 0x00f800;
-	b = ARGB & 0x0000f8;
-
-	if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
-	if (b3Dither3(ARGB >>  8,x,y)) g += 0x000800;
-	if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
-
-	return ((r >> 9) | (g >> 6) | (b >>  3));
-}
-
-inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_16 (
-	b3_pkd_color ARGB,
-	b3_coord     x,
-	b3_coord     y)
-{
-	b3_pkd_color r,g,b;
-
-	r = ARGB & 0xf80000;
-	g = ARGB & 0x00fc00;
-	b = ARGB & 0x0000f8;
-
-	if (b3Dither3(ARGB >> 16,x,y)) r += 0x080000;
-	if (b3Dither2(ARGB >>  8,x,y)) g += 0x000400;
-	if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
-
-	return ((r >> 8) | (g >> 5) | (b >>  3));
-}
-
 inline void b3DisplayView::b3FirstDrawing ()
 {
 	m_Opened = true;
@@ -501,70 +609,23 @@ void b3DisplayView::b3PutTx(b3Tx *tx)
 inline void b3DisplayView::b3RefreshRow(b3_coord y)
 {
 	b3_pkd_color *ptr = &m_Buffer[y * m_xMax];
-	b3_pkd_color  pixel;
 	b3_coord      x;
 	
-	switch (m_depth)
+	for (x = 0;x < m_xs;x++)
 	{
-		case  8 :
-			for (x = 0;x < m_xs;x++)
-			{
-				pixel = b3ARGBtoPIXEL_08 (ptr[x],x,y);
-				XSetForeground (m_Display,m_GC,pixel);
-				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-			}
-			break;
-		case 15 :
-			for (x = 0;x < m_xs;x++)
-			{
-				pixel = b3ARGBtoPIXEL_15 (ptr[x],x,y);
-				XSetForeground (m_Display,m_GC,pixel);
-				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-			}
-			break;
-		case 16 :
-			for (x = 0;x < m_xs;x++)
-			{
-				pixel = b3ARGBtoPIXEL_16 (ptr[x],x,y);
-				XSetForeground (m_Display,m_GC,pixel);
-				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-			}
-			break;
-		default :
-			for (x = 0;x < m_xs;x++)
-			{
-				XSetForeground (m_Display,m_GC,ptr[x]);
-				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-			}
-			break;
+		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel(*ptr++,x,y));
+		XDrawPoint     (m_Display,m_Image,m_GC,x,y);
 	}
 }
 
 void b3DisplayView::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
 {
-	b3_pkd_color pixel;
-
 	b3Display::b3PutPixel(x,y,Color);
 
 	if (m_Opened)
 	{
-		switch (m_depth)
-		{
-			case  8 :
-				pixel = b3ARGBtoPIXEL_08 (Color,x,y);
-				break;
-			case 15 :
-				pixel = b3ARGBtoPIXEL_15 (Color,x,y);
-				break;
-			case 16 :
-				pixel = b3ARGBtoPIXEL_16 (Color,x,y);
-				break;
-			default :
-				pixel = Color;
-				break;
-		}
 		m_Mutex.b3Lock();
-		XSetForeground (m_Display,m_GC,pixel);
+		XSetForeground (m_Display,m_GC,m_Pixel->b3ARGBtoPixel (Color,x,y));
 		XDrawPoint     (m_Display,m_Window,m_GC,x,y);
 		XDrawPoint     (m_Display,m_Image, m_GC,x,y);
 		m_Mutex.b3Unlock();

@@ -46,20 +46,27 @@
 **                                                                      **
 *************************************************************************/
 
+class b3DisplayPixel
+{
+public:
+	virtual b3_pkd_color b3ARGBtoPixel(b3_pkd_color ARGB,b3_coord x,b3_coord y) = 0;
+};
+
 class b3DisplayView : public b3Display
 {
-	b3_res        m_xs,m_ys; // This is the max. visible size
-	char         *m_Title;
+	b3_res          m_xs,m_ys; // This is the max. visible size
+	char           *m_Title;
+	b3DisplayPixel *m_Pixel;
 
 	// Some X values
-	b3_bool       m_Opened;
-	b3_bool       m_Closed;
-	Display      *m_Display;
-	int           m_Screen;
-	Window        m_Window;
-	Colormap      m_Colormap;
-	Pixmap        m_Image;
-	GC            m_GC;
+	b3_bool         m_Opened;
+	b3_bool         m_Closed;
+	Display        *m_Display;
+	int             m_Screen;
+	Window          m_Window;
+	Colormap        m_Colormap;
+	Pixmap          m_Image;
+	GC              m_GC;
 
 public:
 	                    b3DisplayView(const char *title = null);
@@ -73,14 +80,6 @@ public:
 
 private:
 	       void         b3RefreshRow(b3_coord y);
-	static b3_bool      b3Dither( b3_pkd_color Byte,b3_count shift,b3_coord x,b3_coord y);
-	static b3_bool      b3Dither2(b3_pkd_color Byte,b3_coord x,b3_coord y);
-	static b3_bool      b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y);
-	static b3_bool      b3Dither5(b3_pkd_color Byte,b3_coord x,b3_coord y);
-	static b3_bool      b3Dither6(b3_pkd_color Byte,b3_coord x,b3_coord y);
-	static b3_pkd_color b3ARGBtoPIXEL_08(b3_pkd_color color,b3_coord x,b3_coord y);
-	static b3_pkd_color b3ARGBtoPIXEL_15(b3_pkd_color color,b3_coord x,b3_coord y);
-	static b3_pkd_color b3ARGBtoPIXEL_16(b3_pkd_color color,b3_coord x,b3_coord y);
 
 	       void         b3Open(b3_res xSize,b3_res ySize);
 	       b3_bool      b3CreateColormap();
