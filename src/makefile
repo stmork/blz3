@@ -35,7 +35,7 @@ all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 		make -C $$i; \
 	done
 
-clean:	remdepend
+clean:	remdepend $(BLZ3_LIB)
 	echo "Cleaning up..."
 	find  $(BLZ3_LIB)  -name "*.a"   -exec rm {} \;
 	find  $(BLZ3_HOME) -name "*.log" -exec rm {} \;

@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/09/15 09:08:30  sm
+**	- Some adjustments to compile on SGI Mips R10000:-) Which seems
+**	  to be the most efficient CPU on world...
+**
 **	Revision 1.10  2002/08/24 13:59:54  sm
 **	- Corrected timing inside threads
-**
+**	
 **	Revision 1.9  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -364,7 +368,11 @@ b3CPU::b3CPU()
 {
 	long result;
 
+#ifdef _SC_NPROCESSORS_ONLN
 	result = sysconf(_SC_NPROCESSORS_ONLN);
+#else
+	result = 1;
+#endif
 	if ((result < 1) || (errno == EINVAL))
 	{
 		num = 1;

@@ -14,22 +14,23 @@ setenv BLZ3_SYSINC   $BLZ3_HOME/include_unix
 setenv BLZ3_LIB      "$BLZ3_HOME/lib/$OSTYPE"_"$CPUTYPE"
 setenv BLZ3_BIN      "$BLZ3_HOME/bin/$OSTYPE"_"$CPUTYPE"
 
-#setenv LIB_B3        "-lB3Raytrace -lB3Image -lB3System -lB3Base -lB3System -lB3Image -lB3jpeg -lB3tiff -lB3Base -lB3System"
 setenv LIB_B3        "-lB3Raytrace -lB3Base"
 setenv LIB_X3        "-lX11 -lXt"
 setenv LIB_S3        "-lm -lpthread"
 
+setenv STDINC        "$ARCHFLAG -I$BLZ3_SYSINC -I$BLZ3_INCLUDE -I$MOTIF_INCLUDE"
+setenv LDFLAGS       "-L$BLZ3_LIB -L$MOTIF_LIB"
+
 if ( $?BLZ3_USE_OPENGL ) then
-  setenv LIB_OGL3    "-lGL -lglut -lGLU -lXmu"
+  setenv LIB_OGL3    "-lglut -lGLU -lXmu -lGL"
+  setenv LDFLAGS     "$LDFLAGS -L$GLUT_LIB"
+  setenv STDINC      "$STDINC  -I$GLUT_INCLUDE"
 else
   setenv LIB_OGL3    ""
 endif
 
-setenv STDINC        "$ARCHFLAG -I$BLZ3_SYSINC -I$MOTIF_INCLUDE"
-setenv LDFLAGS       "-L$BLZ3_LIB -L$MOTIF_LIB"
-
-if ( `echo $INH_PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
-   setenv INH_PATH   "$BLZ3_BIN $INH_PATH"
+if ( `echo $PATH | fgrep $BLZ3_BIN | wc -l` == "0") then
+   setenv PATH   "$BLZ3_BIN":"$PATH"
 endif
 
 if ( $?MANPATH ) then

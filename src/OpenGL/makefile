@@ -4,7 +4,7 @@
 
 # Optionen
 
-CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
+CPPFLAGS		= $(STDINC)
 
 SIMPLE_OBJ		= simple.o
 SIMPLE_SRC		= simple.cc
@@ -14,7 +14,7 @@ MATRIX_TEST_SRC		= matrix_test.cc
 MATRIX_TEST_OBJ		= matrix_test.o
 PRG_SOURCE		= $(SIMPLE_SRC) $(RENDER_SRC) $(MATRIX_TEST_SRC)
 
-LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
+LDLIBS			= $(LIB_B3) $(LIB_OGL3) $(LIB_X3) $(LIB_S3)
 
 PRGS			= simple render matrix_test
 

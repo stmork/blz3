@@ -4,8 +4,7 @@
 
 # Optionen
 
-CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-CXX			= g++
+CPPFLAGS		= $(STDINC)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 PRGS			= RemDepend RemCR RestoreExt CleanRes
 REMDEPEND_OBJS		= RemDepend.o

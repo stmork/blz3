@@ -4,7 +4,7 @@
 
 # Optionen
 
-CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
+CPPFLAGS		= $(STDINC)
 
 BRT3_OBJS		= brt3.o
 BIMG3_OBJS		= bimg3.o

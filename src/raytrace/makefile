@@ -4,7 +4,7 @@
 
 # Optionen
 
-CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
+CPPFLAGS		= $(STDINC)
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3)
 PRGS			= 
 LIBS			= libB3Raytrace.o

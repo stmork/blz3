@@ -2,10 +2,7 @@
 
 # Optionen
 
-CPPFLAGS        = $(STDINC) -I$(BLZ3_INCLUDE)
-
-DOCDIR		= $(BLZ3_DOC)
-MANDIR		= $(BLZ3_MAN)
+CPPFLAGS        = $(STDINC)
 LIBS		= libB3tiff.o
 PRGS		= mkversion mkg3states
 AUTO		= tif_fax3sm.c version.h

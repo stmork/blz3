@@ -4,8 +4,7 @@
 
 # Optionen
 
-CPPFLAGS		= $(STDINC) -I$(BLZ3_INCLUDE)
-CXX			= g++
+CPPFLAGS		= $(STDINC)
 LDLIBS			= -lB3System -lpthread
 PRGS			= BlzDump
 BLZDUMP_OBJS		= BlzDump.o
