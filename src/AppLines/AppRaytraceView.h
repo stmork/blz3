@@ -60,6 +60,7 @@ public:
 #endif
 
 protected:
+	virtual void b3ViewParamChanged();
 
 // Generated message map functions
 protected:

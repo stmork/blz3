@@ -222,11 +222,23 @@ SOURCE=..\..\include_win32\blz3\system\b3DashPen.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3Dir.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3Display.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3DisplayView.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Document.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3File.h
 # End Source File
 # Begin Source File
 
@@ -250,7 +262,23 @@ SOURCE=..\..\include_win32\blz3\system\b3IntSpinButtonCtrl.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3Log.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Mem.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Print.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3Reg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ScrollView.h
 # End Source File
 # Begin Source File
 
@@ -262,7 +290,19 @@ SOURCE=..\..\include_win32\blz3\system\b3ShowImage.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include_win32\blz3\system\b3Thread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Time.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include_win32\blz3\system\b3Toolbar.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3Tracker.h
 # End Source File
 # Begin Source File
 
@@ -271,6 +311,14 @@ SOURCE=..\..\include_win32\blz3\system\b3TreeCtrl.h
 # Begin Source File
 
 SOURCE=..\..\include_win32\blz3\system\b3Version.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3View.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include_win32\blz3\system\b3ViewParam.h
 # End Source File
 # End Group
 # End Target

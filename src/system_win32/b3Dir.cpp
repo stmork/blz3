@@ -38,12 +38,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/14 16:48:49  sm
+**	- The last view mode/filter mode for image views are stored in
+**	  registry
+**	- b3ExtractExt searches from right instead from left.
+**	- Made some cleanup inside CB3ScrollView
+**
 **	Revision 1.7  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.6  2002/01/17 15:46:00  sm
 **	- CAppRaytraceDoc.cpp cleaned up for later use from CAppObjectDoc.
 **	- Opening a CAppRaytraceDoc for all image extensions.
@@ -607,7 +613,7 @@ void b3Path::b3ExtractExt(const char *filename,char *ext)
 
 	b3SplitFileName (filename,null,actName);
 	len = strlen(actName);
-	for (i = 0;i < len;i++)
+	for (i = len - 1;i >= 0;i--)
 	{
 		if (actName[i] == '.')
 		{

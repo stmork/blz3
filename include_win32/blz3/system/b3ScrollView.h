@@ -61,7 +61,6 @@ protected: // create from serialization only
 	// Draw mode
 	b3Tx            *m_TxScale;
 	b3_bool          m_ViewScan;
-	b3_bool          m_ScaleGrey;
 	b3_bool          m_Filtered;
 	b3_display_mode  m_Mode;
 
@@ -115,11 +114,9 @@ protected:
 	virtual b3_bool       b3IsMagnifying();
 	virtual void          b3SetMagnifying(b3_bool DoMagnify=true);
 	        void          b3ShowView();
-	        void          b3ScaleGrey();
-	        void          b3ScaleBW();
-	        void          b3ViewMode(b3_display_mode mode);
-			void          b3FilterMode(b3_bool filter_enable);
-			void          b3Scale(b3_f64 xScale,b3_f64 yScale);
+	        void          b3SetViewMode(b3_display_mode mode);
+			void          b3SetFilterMode(b3_bool filter_enable);
+			void          b3SetScale(b3_f64 xScale,b3_f64 yScale);
 	        void          b3MagnifyMore();
 	        void          b3MagnifyLess();
 			void          b3ViewRubber();

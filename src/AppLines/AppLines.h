@@ -51,6 +51,10 @@ class CAppLinesApp : public CB3App
 	HGLRC           m_lastGC;
 	HDC             m_lastDC;
 
+	// Last view parameter
+	b3_bool          m_Filtered;
+	b3_display_mode  m_Mode;
+
 	// Document templates (we can handle many file types!)
 	CMultiDocTemplate *pImageTemplate;
 	CMultiDocTemplate *pSceneTemplate;

@@ -33,11 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/14 16:48:49  sm
+**	- The last view mode/filter mode for image views are stored in
+**	  registry
+**	- b3ExtractExt searches from right instead from left.
+**	- Made some cleanup inside CB3ScrollView
+**
 **	Revision 1.9  2002/08/11 11:03:41  sm
 **	- Moved b3Display and b3Row classes from base lib into system
 **	  independend lib.
 **	- Made b3TimeSpan more system independend;-)
-**
+**	
 **	Revision 1.8  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -114,7 +120,7 @@ CB3ScrollView::CB3ScrollView()
 	m_PaletteDisplay = false;
 
 	// set initial window dimensions
-	m_ScaleGrey      = false;
+	m_Filtered       = false;
 
 	try
 	{
@@ -238,7 +244,7 @@ void CB3ScrollView::b3GetViewParam(CB3ViewParam *param,CWnd *client)
 	// Copy global of Blizzard III values
 	point = GetScrollPosition();
 	param->m_Mode      = m_Mode;
-	param->m_Filtered  = m_ScaleGrey;
+	param->m_Filtered  = m_Filtered;
 	param->m_xImgPos   = point.x;
 	param->m_yImgPos   = point.y;
 	param->m_xImgScale = m_xScale;
@@ -281,7 +287,7 @@ void CB3ScrollView::b3SetViewParam(CB3ViewParam *param)
 	CWaitCursor  wait_for_Michael_Hoelscher;
 
 	// Copy global Blizzard III values
-	m_ScaleGrey	= param->m_Filtered;
+	m_Filtered 	= param->m_Filtered;
 	m_Mode      = param->m_Mode;
 	m_xScale    = param->m_xImgScale;
 	m_yScale    = param->m_yImgScale;
@@ -490,7 +496,7 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 				if (!pDoc->m_Tx->b3IsTrueColor())
 				{
 					// We have a palette...
-					if (m_ScaleGrey)
+					if (m_Filtered)
 					{
 						if (ScaleBigger)
 						{
@@ -518,8 +524,7 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 					DoRescale =
 						((m_TxScale->xSize != (b3_res)sizeTotal.cx) ||
 						 (m_TxScale->ySize != (b3_res)sizeTotal.cy) ||
-						 (m_TxScale->depth != depth) ||
-						 (m_Filtered       != m_ScaleGrey));
+						 (m_TxScale->depth != depth));
 					m_MutexScaling.b3Unlock();
 				}
 				else
@@ -536,7 +541,7 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 					{
 						if (m_TxScale->b3AllocTx(sizeTotal.cx,sizeTotal.cy,depth))
 						{
-							if ((!m_ScaleGrey) || (ScaleBigger))
+							if ((!m_Filtered) || (ScaleBigger))
 							{
 								if (m_Mode == B3_VIEWMODE_ORIGINAL)
 								{
@@ -551,7 +556,6 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 							{
 								m_TxScale->b3ScaleToGrey(pDoc->m_Tx);
 							}
-							m_Filtered = m_ScaleGrey;
 							b3ViewParamChanged();
 						}
 					}
@@ -738,37 +742,17 @@ void CB3ScrollView::b3ShowView()
 	b3ViewParamChanged();
 }
 
-void CB3ScrollView::b3ScaleBW() 
+void CB3ScrollView::b3SetFilterMode(b3_bool filter_enable)
 {
-	// TODO: Add your command handler code here
 	CWaitCursor wait;
-	b3_bool     oldScaling = m_ScaleGrey;
+	b3_bool     oldScaling = m_Filtered;
 
-	m_ScaleGrey = false;
-	if (oldScaling ^ m_ScaleGrey)
+	m_Filtered = filter_enable;
+	if (oldScaling ^ m_Filtered)
 	{
 		OnUpdate(this,B3_UPDATE_TX,null);
 		b3ViewParamChanged();
 	}
-}
-
-void CB3ScrollView::b3ScaleGrey() 
-{
-	// TODO: Add your command handler code here
-	CWaitCursor wait;
-	b3_bool     oldScaling = m_ScaleGrey;
-
-	m_ScaleGrey = true;
-	if (oldScaling ^ m_ScaleGrey)
-	{
-		OnUpdate(this,B3_UPDATE_TX,null);
-		b3ViewParamChanged();
-	}
-}
-
-void CB3ScrollView::b3FilterMode(b3_bool filter_enable)
-{
-	m_ScaleGrey = filter_enable;
 }
 
 void CB3ScrollView::OnSize(UINT nType, int cx, int cy) 
@@ -800,7 +784,7 @@ b3_bool CB3ScrollView::b3IsMagnifying()
 	return m_DoMagnify;
 }
 
-void CB3ScrollView::b3ViewMode(b3_display_mode mode)
+void CB3ScrollView::b3SetViewMode(b3_display_mode mode)
 {
 	// TODO: Add your command handler code here
 	if (m_Mode != mode)
@@ -902,7 +886,7 @@ void CB3ScrollView::b3MagnifyLess()
 	b3ViewParamChanged();
 }
 
-void CB3ScrollView::b3Scale(double xScale,double yScale) 
+void CB3ScrollView::b3SetScale(double xScale,double yScale) 
 {
 	// TODO: Add your command handler code here
 	CWaitCursor wait;

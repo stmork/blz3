@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/08/14 16:48:49  sm
+**	- The last view mode/filter mode for image views are stored in
+**	  registry
+**	- b3ExtractExt searches from right instead from left.
+**	- Made some cleanup inside CB3ScrollView
+**
 **	Revision 1.7  2002/01/31 11:50:53  sm
 **	- Now we can print OpenGL scenes (Note: We have to do basic
 **	  initialization prior to render a scene. Then we can see the scene
 **	  on paper)
-**
+**	
 **	Revision 1.6  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -121,7 +127,11 @@ END_MESSAGE_MAP()
 CAppRaytraceView::CAppRaytraceView()
 {
 	// TODO: add construction code here
-	m_Cursor = AfxGetApp()->LoadCursor(IDC_PANNING);
+	CB3App *app = CB3GetApp();
+
+	m_Filtered =                  app->GetProfileInt(app->b3ClientName(),"view.filter",m_Filtered) != 0;
+	m_Mode     = (b3_display_mode)app->GetProfileInt(app->b3ClientName(),"view.mode",  m_Mode);
+	m_Cursor = app->LoadCursor(IDC_PANNING);
 }
 
 CAppRaytraceView::~CAppRaytraceView()
@@ -232,43 +242,51 @@ void CAppRaytraceView::OnUpdatePrintable(CCmdUI *pCmdUI)
 	pCmdUI->Enable(!GetDocument()->b3IsRaytracing());
 }
 
+void CAppRaytraceView::b3ViewParamChanged()
+{
+	CB3App *app = CB3GetApp();
+
+	app->WriteProfileInt(app->b3ClientName(),"view.filter",m_Filtered);
+	app->WriteProfileInt(app->b3ClientName(),"view.mode",  m_Mode);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // CAppRaytraceView message handlers
 
 void CAppRaytraceView::OnUnfiltered() 
 {
 	// TODO: Add your command handler code here
-	b3ScaleBW();
+	b3SetFilterMode(false);
 }
 
 void CAppRaytraceView::OnFiltered() 
 {
 	// TODO: Add your command handler code here
-	b3ScaleGrey();
+	b3SetFilterMode(true);
 }
 
 void CAppRaytraceView::OnOriginal() 
 {
 	// TODO: Add your command handler code here
-	b3ViewMode(B3_VIEWMODE_ORIGINAL);
+	b3SetViewMode(B3_VIEWMODE_ORIGINAL);
 }
 
 void CAppRaytraceView::OnWidth() 
 {
 	// TODO: Add your command handler code here
-	b3ViewMode(B3_VIEWMODE_FIT_WIDTH);
+	b3SetViewMode(B3_VIEWMODE_FIT_WIDTH);
 }
 
 void CAppRaytraceView::OnHeight() 
 {
 	// TODO: Add your command handler code here
-	b3ViewMode(B3_VIEWMODE_FIT_HEIGHT);
+	b3SetViewMode(B3_VIEWMODE_FIT_HEIGHT);
 }
 
 void CAppRaytraceView::OnFull() 
 {
 	// TODO: Add your command handler code here
-	b3ViewMode(B3_VIEWMODE_BESTFIT);
+	b3SetViewMode(B3_VIEWMODE_BESTFIT);
 }
 
 void CAppRaytraceView::OnMore() 
@@ -292,13 +310,13 @@ void CAppRaytraceView::OnMagnify()
 void CAppRaytraceView::OnUpdateUnfiltered(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio (!m_ScaleGrey);
+	pCmdUI->SetRadio (!m_Filtered);
 }
 
 void CAppRaytraceView::OnUpdateFiltered(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio (m_ScaleGrey);
+	pCmdUI->SetRadio (m_Filtered);
 }
 
 void CAppRaytraceView::OnUpdateOriginal(CCmdUI* pCmdUI) 
