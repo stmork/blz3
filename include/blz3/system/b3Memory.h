@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Mem.h $
-**	$Release:	Dortmund 2001 $
+**	$Release:	Dortmund 2001, 2002 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - memory routines
 **
-**	(C) Copyright 2001  Steffen A. Mork
+**	(C) Copyright 2001, 2002  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -24,34 +24,33 @@
 
 struct b3MemNode
 {
-	b3MemNode *ChunkNext;
-	b3MemNode *ChunkLast;
-	void      *Chunk;
-	b3_size    ChunkSize;
+	b3MemNode *m_Succ;
+	b3MemNode *m_Prev;
+	void      *m_Chunk;
+	b3_size    m_ChunkSize;
 };
 
-typedef enum
+enum b3_mem_error
 {
 	B3_MEM_ERROR = -1,
 	B3_MEM_OK    =  0,
 	B3_MEM_MEMORY,
 	B3_MEM_UNKNOWN_PTR
-} b3_mem_error;
+};
 
 typedef b3Exception<b3_mem_error,'MEM'> b3MemException;
 
 class b3Mem : protected b3MemNode, protected b3MemAccess
 {
-private:
-	b3Mutex    mutex;
+	b3Mutex m_Mutex;
 
 public:
 	inline b3Mem()
 	{
-		ChunkLast = null;
-		ChunkNext = null;
-		ChunkSize = 0;
-		Chunk     = null;
+		m_Prev = null;
+		m_Succ = null;
+		m_ChunkSize = 0;
+		m_Chunk     = null;
 	}
 
 	virtual ~b3Mem()
@@ -61,11 +60,11 @@ public:
 	
 	void *b3Alloc(const b3_size size)
 	{
-		struct b3MemNode *act;
+		b3MemNode *node;
 
 		// allocate memory block
-		act = (struct b3MemNode *)b3MemAccess::b3Alloc(size + sizeof(struct b3MemNode));
-		if (act == null)
+		node = (b3MemNode *)b3MemAccess::b3Alloc(size + sizeof(b3MemNode));
+		if (node == null)
 		{
 #ifndef _DEBUG
 			throw new b3MemException(B3_MEM_MEMORY);
@@ -75,27 +74,22 @@ public:
 		}
 
 		// Set values
-		act->ChunkSize = size;
-		act->Chunk     = (void *)&act[1];
+		node->m_ChunkSize = size;
+		node->m_Chunk     = (void *)&node[1];
 
 		// link into MemNode chain
-		mutex.b3Lock();
-		if (ChunkNext)
-		{
-			ChunkNext->ChunkLast = act;
-		}
-		act->ChunkNext = ChunkNext;
-		act->ChunkLast = this;
-		ChunkNext      = act;
-		mutex.b3Unlock();
+		m_Mutex.b3Lock();
+		b3LinkChunk(node);
+		m_Mutex.b3Unlock();
 
 		// Done...
-		return act->Chunk;
+		return node->m_Chunk;
 	}
 
 	void *b3Realloc(const void *old_ptr,const b3_size new_size)
 	{
-		struct b3MemNode *act,*next,*new_act;
+		b3MemNode *new_node,*node;
+		void      *new_ptr  = null;
 
 		if (old_ptr == null)
 		{
@@ -103,92 +97,73 @@ public:
 			return b3Alloc(new_size);
 		}
 
-		mutex.b3Lock();
-		for (act  = ChunkNext;
-		     act != null;
-		     act  = next)
+		m_Mutex.b3Lock();
+		node = b3FindNode(old_ptr);
+		if (node != null)
 		{
-			next = act->ChunkNext;
-			if ((act->Chunk == old_ptr) && (act->ChunkSize < new_size))
+			if (node->m_ChunkSize < new_size)
 			{
-				new_act = (struct b3MemNode *)b3MemAccess::b3Realloc(act,new_size);
-				if (new_act == null)
+				new_node = (b3MemNode *)b3MemAccess::b3Realloc(node,new_size + sizeof(b3MemNode));
+				if (new_node != null)
 				{
-					mutex.b3Unlock();
+					new_node->m_ChunkSize = new_size;
+					new_node->m_Chunk     = (void *)&new_node[1];
+					b3UnlinkChunk(node);
+					b3LinkChunk(new_node);
+				}
+				else
+				{
+					m_Mutex.b3Unlock();
 #ifndef _DEBUG
 					throw new b3MemException(B3_MEM_MEMORY);
 #endif
 				}
-				else
-				{
-					// Relink new chunk
-					new_act->ChunkSize = new_size;
-					new_act->Chunk     = (void *)&new_act[1];
-					if (next != null)
-					{
-						next->ChunkLast = new_act;
-					}
-					new_act->ChunkLast->ChunkNext  = new_act;
-				}  
-
-				mutex.b3Unlock();
-				return new_act;
+				node = new_node;
 			}
+			new_ptr = node->m_Chunk;
 		}
-		mutex.b3Unlock();
+		m_Mutex.b3Unlock();
 
 		// Pointer not found. This shouldn't be but it's failsafe!
-		return b3Alloc(new_size);
+		return node != null ? new_ptr : b3Alloc(new_size);
 	}
 
 	b3_bool b3Free(const void *ptr)
 	{
-		struct b3MemNode *act,*next;
+		b3MemNode *node;
 
-		mutex.b3Lock();
-		for (act  = ChunkNext;
-		     act != null;
-		     act  = next)
+		m_Mutex.b3Lock();
+		node = b3FindNode(ptr);
+		if (node != null)
 		{
-			next = act->ChunkNext;
-			if (act->Chunk == ptr)
-			{
-				// Found! Unlink and free!
-				if (next)
-				{
-					next->ChunkLast = act->ChunkLast;
-				}
-				act->ChunkLast->ChunkNext  = next;
-				b3MemAccess::b3Free(act);
-				mutex.b3Unlock();
-				return true;
-			}
+			// Found! Unlink and free!
+			b3UnlinkChunk(node);
+			b3MemAccess::b3Free(node);
 		}
-		mutex.b3Unlock();
+		m_Mutex.b3Unlock();
 
-		// Pointer not found
-		return false;
+		return node != null;
 	}
 
 	b3_bool b3Free()
 	{
-		struct b3MemNode *next,*act;
+		b3MemNode *next,*node;
 
-		mutex.b3Lock();
-		for (act  = ChunkNext;
-		     act != null;
-		     act  = next)
+		m_Mutex.b3Lock();
+		for (node  = m_Succ;
+		     node != null;
+		     node  = next)
 		{
-			next = act->ChunkNext;
-			b3MemAccess::b3Free (act);
+			next = node->m_Succ;
+			b3MemAccess::b3Free (node);
 		}
 		
 		// Clear head entries
-		ChunkNext = null;
-		ChunkLast = null;
-		ChunkSize = 0;
-		Chunk     = null;
-		mutex.b3Unlock();
+		m_Succ      = null;
+		m_Prev      = null;
+		m_ChunkSize = 0;
+		m_Chunk     = null;
+		m_Mutex.b3Unlock();
 
 		// Done...
 		return true;
@@ -196,17 +171,61 @@ public:
 
 	void b3Dump()
 	{
-		struct b3MemNode *act,*next;
+		b3MemNode *node;
 
-		for (act  = ChunkNext;
-		     act != null;
-		     act  = next)
+		m_Mutex.b3Lock();
+		for (node  = m_Succ;
+		     node != null;
+		     node  = node->m_Succ)
 		{
-			next = act->ChunkNext;
-			b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # %08lx: %9ld Bytes.\n",
-				act->Chunk,
-				act->ChunkSize);
+			b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # %p: %9ld Bytes.\n",
+				node->m_Chunk,
+				node->m_ChunkSize);
 		}
+		m_Mutex.b3Unlock();
+	}
+
+private:
+	inline b3MemNode *b3FindNode(const void *ptr)
+	{
+		b3MemNode *node;
+
+		for (node = m_Succ;node != null;node = node->m_Succ)
+		{
+			if (node->m_Chunk == ptr)
+			{
+				return node;
+			}
+		}
+		return null;
+	}
+
+	inline void b3LinkChunk(b3MemNode *node)
+	{
+		B3_ASSERT(node != null);
+
+		// node pointer
+		node->m_Succ = m_Succ;
+		node->m_Prev = this;
+
+		// pointer to node
+		if (m_Succ != null) m_Succ->m_Prev = node;
+		m_Succ = node;
+	}
+
+	inline void b3UnlinkChunk(b3MemNode *node)
+	{
+		b3MemNode *prev,*succ;
+
+		B3_ASSERT(node != null);
+
+		// Get node pointer
+		prev = node->m_Prev;
+		succ = node->m_Succ;
+
+		// Cross connect those pointer
+		if (prev != null) prev->m_Succ = succ;
+		if (succ != null) succ->m_Prev = prev;
 	}
 };
 

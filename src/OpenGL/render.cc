@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/08/09 08:00:32  sm
+**      - Reimplemented b3Mem::b3Realloc and made checks.
+**
 **      Revision 1.23  2002/08/07 12:38:43  sm
 **      - Modified exception definition. Exceptions are identified with
 **        a three character code to unify error codes. This is necessary
@@ -296,7 +299,7 @@ int main(int argc,char *argv[])
 			view.b3SetupView(xSize,ySize);
 		}
 
-		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH|GLUT_ALPHA);
+		glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 		glutInitWindowSize(xSize,ySize);
 		glutCreateWindow("Greetinxx");
 		glutDisplayFunc(RenderScene);

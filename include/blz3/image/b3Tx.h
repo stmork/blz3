@@ -19,8 +19,8 @@
 #define B3_IMAGE_TX_H
 
 #include "blz3/b3Config.h"
-#include "blz3/base/b3List.h"
 #include "blz3/system/b3Dir.h"
+#include "blz3/base/b3List.h"
 #include "blz3/base/b3FileAbstract.h"
 #include "blz3/base/b3Exception.h"
 
@@ -510,8 +510,8 @@ public:
 	       long  b3WriteData (b3FileAbstract *file_handle,long);
 		   void  b3Traverse  (
 			   b3Base<class T> *head,
-			   void             (*func)(b3Base<class T> *,b3Link<class T> *,void *),
-			   void              *ptr);
+			   void           (*func)(b3Base<class T> *base,b3Link<class T> *link,void *ptr),
+			   void            *ptr);
 		   void  b3RemoveIFW (b3Base<b3TIFF_Entry> *);
 		   long  b3OrgTags   (long);
 		   long  b3OrgStrips (long);
@@ -575,8 +575,8 @@ public:
 	void  b3TravRemoveIFW();
 	void  b3Traverse  (
 		b3Base<class T>  *head,
-		void              (*func)(b3Base<class T> *,b3Link<class T> *,void *),
-		void               *ptr);
+		void            (*func)(b3Base<class T> *,b3Link<class T> *,void *),
+		void             *ptr);
 
 public:
 	class b3Error {};
