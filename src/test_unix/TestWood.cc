@@ -33,6 +33,9 @@
 
 /*
 **  $Log$
+**  Revision 1.12  2004/05/13 17:11:35  sm
+**  - Fixed make tar bug
+**
 **  Revision 1.11  2004/04/25 16:22:40  sm
 **  - Added some colors for convenience.
 **  - Added some initial values to materials.
@@ -85,7 +88,7 @@
 **                                                                      **
 *************************************************************************/
 
-#define WOOD_RES   320
+#define WOOD_RES   800
 #define no_CREATE_ICON
 
 class b3MatWoodSampler : public b3MaterialSampler
@@ -186,9 +189,9 @@ int main(int argc,char *argv[])
 		
 		tx.b3AllocTx(xMax,yMax,24);
 		
-//		b3MatWoodSampler      sampler(&tx);
+		b3MatWoodSampler      sampler(&tx);
 //		b3MatOakPlankSampler  sampler(&tx);
-		b3BumpWoodSampler     sampler(&tx);
+//		b3BumpWoodSampler     sampler(&tx);
 //		b3BumpOakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();

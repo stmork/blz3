@@ -8,9 +8,7 @@ make -C src clean
 echo "Setting groups..."
 chgrp -R blz3 .
 
-foreach binfiles ( bin/*_*/* lib/*_*/* )
-  test -d $binfiles || rm $binfiles
-end
+rm -f bin/*_*/* lib/*_*/* || echo "No files to delete"
 
 echo "Setting permissions..."
 chmod 770 bin/*
