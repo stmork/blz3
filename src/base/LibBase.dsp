@@ -242,6 +242,10 @@ SOURCE=..\..\include\blz3\base\b3Matrix.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3MultiSample.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3Node.h
 # End Source File
 # Begin Source File
@@ -275,6 +279,10 @@ SOURCE=..\..\include\blz3\base\b3UndoOperation.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3Vector.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3VectorBufferObjects.h
 # End Source File
 # Begin Source File
 
