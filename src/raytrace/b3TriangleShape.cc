@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/12/31 12:15:55  sm
+**      - Fixed obsolete b3AnimElement handling
+**
 **      Revision 1.18  2001/12/31 11:05:18  sm
 **      - Added TestData for testing Blizzard data structures for reading
 **        and writing.
@@ -293,8 +296,7 @@ void b3TriangleShape::b3PrepareGridList ()
 
 void b3TriangleShape::b3FreeTriaRefs()
 {
-	b3TriangleRef *ref;
-	b3_count       i,CubeSize;
+	b3_count i,CubeSize;
 
 	if (m_GridList != null)
 	{

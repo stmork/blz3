@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/12/31 12:15:55  sm
+**      - Fixed obsolete b3AnimElement handling
+**
 **      Revision 1.5  2001/12/31 11:05:17  sm
 **      - Added TestData for testing Blizzard data structures for reading
 **        and writing.
@@ -147,16 +151,25 @@ b3AnimElement::b3AnimElement(b3_u32 class_type) : b3Item(sizeof (b3AnimElement),
 b3AnimElement::b3AnimElement(b3_u32 *src) : b3Item(src)
 {
 	b3InitNOP();
-	b3InitVector(&center);
-	b3InitMatrix(&actual);
-	b3InitMatrix(&neutralInverse);
+	if (m_ItemSize > 0x1ec)
+	{
+		b3InitVector(&center);
+		b3InitMatrix(&actual);
+		b3InitMatrix(&neutralInverse);
+	}
+	else
+	{
+		b3Vector::b3Init(&center);
+		b3InitMatrix(&actual);
+		b3MatrixUnit(&neutralInverse);
+	}
 	ratio      = b3InitFloat();
 	empty      = b3InitInt();
 	start      = b3InitFloat();
 	end        = b3InitFloat();
 	flags      = b3InitInt();
 	trackIndex = b3InitInt();
-	curveUse   = b3InitInt();
+	curveUse   = (m_ItemSize > 0x1ec ? b3InitInt() : 0);
 
 	// Init nurbs
 	b3InitNurbs(&param,null,knots);

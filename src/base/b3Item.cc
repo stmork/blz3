@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/12/31 12:15:55  sm
+**      - Fixed obsolete b3AnimElement handling
+**
 **      Revision 1.18  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -262,8 +265,8 @@ void b3Item::b3Write()
 {
 	b3PrintF(B3LOG_NORMAL,"ERROR: b3Item::b3Write() not implemented:\n");
 	b3PrintF(B3LOG_NORMAL,"       CLASS TYPE: %08x\n",b3GetClassType());
-	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",Size);
-	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",Offset);
+	b3PrintF(B3LOG_NORMAL,"       Size:       %8d\n",m_ItemSize);
+	b3PrintF(B3LOG_NORMAL,"       Offset:     %8d\n",m_ItemOffset);
 
 	throw new b3WorldException(B3_WORLD_STORAGE_NOT_IMPLEMENTED);
 }
@@ -438,6 +441,7 @@ void b3Item::b3InitNurbs(
 	nurbs->subdiv      = b3InitInt();
 	nurbs->control_max = b3InitInt();
 	nurbs->knot_max    = b3InitInt();
+	nurbs->offset      = b3InitInt();
 	nurbs->closed      = b3InitBool();
 	nurbs->controls    = new_controls;
 	nurbs->knots       = new_knots;
@@ -508,13 +512,13 @@ b3_size b3Item::b3Store()
 	// Allocate store buffer
 	if (m_StoreBuffer == null)
 	{
-		if ((Size >> 2) < (b3_size)(B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
+		if ((m_ItemSize >> 2) < (b3_size)(B3_NODE_IDX_FIRSTHEAD_CLASS + m_HeadCount * B3_HEAD_SIZE))
 		{
 			m_StoreSize = 8192;
 		}
 		else
 		{
-			m_StoreSize = Size;
+			m_StoreSize = m_ItemSize;
 		}
 		m_StoreBuffer = (b3_u32 *)b3Alloc(m_StoreSize);
 		if (m_StoreBuffer == null)
@@ -534,6 +538,8 @@ b3_size b3Item::b3Store()
 			size += item->b3Store();
 		}
 	}
+
+	// Head end marker
 	b3StoreNull();
 
 	// Store Data
@@ -543,10 +549,10 @@ b3_size b3Item::b3Store()
 	m_StoreBuffer[B3_NODE_IDX_SUCC]      = (b3_u32)Succ;
 	m_StoreBuffer[B3_NODE_IDX_PREV]      = (b3_u32)Prev;
 	m_StoreBuffer[B3_NODE_IDX_CLASSTYPE] = b3GetClassType();
-	m_StoreBuffer[B3_NODE_IDX_SIZE]      = Size   = m_StoreIndex  << 2;
-	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = Offset = m_StoreOffset << 2;
+	m_StoreBuffer[B3_NODE_IDX_SIZE]      = m_ItemSize   = m_StoreIndex  << 2;
+	m_StoreBuffer[B3_NODE_IDX_OFFSET]    = m_ItemOffset = m_StoreOffset << 2;
 
-	return size + Size;
+	return size + m_ItemSize;
 }
 
 b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
@@ -557,7 +563,7 @@ b3_world_error b3Item::b3StoreFile(b3FileAbstract *file)
 
 	if (m_StoreBuffer != null)
 	{
-		if (file->b3Write(m_StoreBuffer,Size) == Size)
+		if (file->b3Write(m_StoreBuffer,m_ItemSize) == m_ItemSize)
 		{
 			for (i = 0;i < m_HeadCount;i++)
 			{
@@ -597,7 +603,7 @@ void b3Item::b3EnsureStoreBuffer(b3_index needed,b3_bool is_data)
 
 	if ((m_StoreIndex + needed) > (b3_index)(m_StoreSize >> 2))
 	{
-		b3_size new_size = m_StoreSize + 16384;
+		b3_size new_size = m_StoreSize + (needed << 2) + 16384;
 #if 1
 		b3_u32  *new_buffer;
 
