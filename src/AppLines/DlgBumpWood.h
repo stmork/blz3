@@ -45,6 +45,7 @@ public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgBumpWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgBumpWood();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpWood)

@@ -33,11 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/04/23 16:51:09  sm
+**	- Color renaming finished.
+**	- Bug #18 fixed: The bump amplitude is read out correctly now.
+**
 **	Revision 1.5  2004/04/22 20:23:55  sm
 **	- Fixed wrong ON_MESSAGE signature on call function.
 **	- Reordered context menu of object editor.
 **	- Expand root item of tree view in object editor
-**
+**	
 **	Revision 1.4  2004/04/19 09:00:52  sm
 **	- Added bump sampler.
 **	- Reactivated bump sampler in bump dialogs.
@@ -76,6 +80,10 @@ CDlgBumpWood::CDlgBumpWood(b3Item *item,CWnd* pParent /*=NULL*/)
 	//}}AFX_DATA_INIT
 }
 
+CDlgBumpWood::~CDlgBumpWood()
+{
+	delete m_BumpSampler;
+}
 
 void CDlgBumpWood::DoDataExchange(CDataExchange* pDX)
 {

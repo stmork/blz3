@@ -47,6 +47,7 @@ public:
 	static b3_bool b3Edit(b3Item *item);
 	static void b3Register();
 	CDlgBumpOakPlank(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	~CDlgBumpOakPlank();
 
 // Dialog Data
 	//{{AFX_DATA(CDlgBumpOakPlank)

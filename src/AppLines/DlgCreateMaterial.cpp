@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/04/23 16:51:09  sm
+**	- Color renaming finished.
+**	- Bug #18 fixed: The bump amplitude is read out correctly now.
+**
 **	Revision 1.15  2004/04/23 13:17:17  sm
 **	- Added simple material page and renamed wood material page.
 **	- Reflect material member renaming.
-**
+**	
 **	Revision 1.14  2004/04/10 18:43:30  sm
 **	- Changed simple material creation dialog to reflect units in
 **	  some controls
@@ -137,9 +141,9 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	m_Material   = null;
 
 	// Read previous used values
-	app->b3ReadProfileColor("material.ambient",  m_MatNormal->m_AmbColor);
-	app->b3ReadProfileColor("material.diffuse",  m_MatNormal->m_DiffColor);
-	app->b3ReadProfileColor("material.specular", m_MatNormal->m_SpecColor);
+	app->b3ReadProfileColor("material.ambient",  m_MatNormal->m_Ambient);
+	app->b3ReadProfileColor("material.diffuse",  m_MatNormal->m_Diffuse);
+	app->b3ReadProfileColor("material.specular", m_MatNormal->m_Specular);
 	m_Reflection   = app->b3ReadProfileFloat("material.reflection",   0);
 	m_Refraction   = app->b3ReadProfileFloat("material.refraction",   0);
 	m_Ior          = app->b3ReadProfileFloat("material.ior",          1);
@@ -226,9 +230,9 @@ BOOL CDlgCreateMaterial::OnInitDialog()
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_AmbCtrl.b3Init( &m_MatNormal->m_AmbColor, this);
-	m_DiffCtrl.b3Init(&m_MatNormal->m_DiffColor,this);
-	m_SpecCtrl.b3Init(&m_MatNormal->m_SpecColor,this);
+	m_AmbCtrl.b3Init( &m_MatNormal->m_Ambient, this);
+	m_DiffCtrl.b3Init(&m_MatNormal->m_Diffuse,this);
+	m_SpecCtrl.b3Init(&m_MatNormal->m_Specular,this);
 
 	m_ReflectionCtrl.b3SetAccel(0.01);
 	m_RefractionCtrl.b3SetAccel(0.01);
@@ -363,12 +367,12 @@ void CDlgCreateMaterial::b3PostProcess(b3CondRectangle *rect)
 			normal->m_Refraction  = m_Refraction;
 			normal->m_Ior         = m_Ior;
 			normal->m_SpecularExp = m_SpecularExp;
-			normal->m_AmbColor    = m_MatNormal->m_AmbColor;
-			normal->m_DiffColor   = m_MatNormal->m_DiffColor;
-			normal->m_SpecColor   = m_MatNormal->m_SpecColor;
-			app->b3WriteProfileColor("material.ambient", m_MatNormal->m_AmbColor);
-			app->b3WriteProfileColor("material.diffuse", m_MatNormal->m_DiffColor);
-			app->b3WriteProfileColor("material.specular",m_MatNormal->m_SpecColor);
+			normal->m_Ambient     = m_MatNormal->m_Ambient;
+			normal->m_Diffuse     = m_MatNormal->m_Diffuse;
+			normal->m_Specular    = m_MatNormal->m_Specular;
+			app->b3WriteProfileColor("material.ambient", m_MatNormal->m_Ambient);
+			app->b3WriteProfileColor("material.diffuse", m_MatNormal->m_Diffuse);
+			app->b3WriteProfileColor("material.specular",m_MatNormal->m_Specular);
 		}
 
 		B3_ASSERT((m_MatNormal->m_Ior != 0) && (m_MatNormal->m_SpecularExp != 0));

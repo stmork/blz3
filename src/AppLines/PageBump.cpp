@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/23 16:51:09  sm
+**	- Color renaming finished.
+**	- Bug #18 fixed: The bump amplitude is read out correctly now.
+**
 **	Revision 1.2  2004/04/23 08:23:14  sm
 **	- Adjusted wood dialog.
 **	- Updated copyright in splash window.
-**
+**	
 **	Revision 1.1  2004/04/18 16:58:14  sm
 **	- Changed definitions for base classes of raytracing objects.
 **	- Put wood material and wood bump dialogs into property
@@ -79,9 +83,34 @@ void CPageBump::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CPageBump, CPropertyPage)
 	//{{AFX_MSG_MAP(CPageBump)
-		// NOTE: the ClassWizard will add message map macros here
+	ON_EN_KILLFOCUS(IDC_EDIT_AMPLITUDE, OnSurfaceEdit)
+	ON_NOTIFY(WM_LBUTTONUP,IDC_SPIN_AMPLITUDE, OnSurfaceSpin)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPageBump message handlers
+
+void CPageBump::OnSurfaceEdit()
+{
+	UpdateData();
+	b3UpdateUI();
+}
+
+void CPageBump::OnSurfaceSpin(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	NM_UPDOWN* pNMUpDown = (NM_UPDOWN*)pNMHDR;
+	// TODO: Add your control notification handler code here
+	OnSurfaceEdit();
+	*pResult = 0;
+}
+			  
+void CPageBump::b3UpdateUI()
+{
+	CWnd *parent = GetParent();
+
+	if (parent != null)
+	{
+		parent->PostMessage(WM_USER);
+	}
+}
