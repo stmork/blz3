@@ -36,6 +36,11 @@
 
 /*
 **      $Log$
+**      Revision 1.84  2004/07/27 10:21:12  sm
+**      - Added two new materials:
+**        o car paint
+**        o thin film interference
+**
 **      Revision 1.83  2004/06/22 12:35:42  sm
 **      - Fixed ticket no. 25: Rounding problems at shadow edges forces
 **        black borders on objects. Now safe implementations of asin/acos
@@ -398,6 +403,8 @@ void b3Material::b3Register()
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
 	b3Item::b3Register(&b3MatOakPlank::b3StaticInit,     &b3MatOakPlank::b3StaticInit,     OAKPLANK);
 	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
+	b3Item::b3Register(&b3MatCarPaint::b3StaticInit,     &b3MatCarPaint::b3StaticInit,     CAR_PAINT);
+	b3Item::b3Register(&b3MatThinFilm::b3StaticInit,     &b3MatThinFilm::b3StaticInit,     THIN_FILM);
 #ifndef DEBUG_MATERIAL
 	b3Item::b3Register(&b3MatGranite::b3StaticInit,      &b3MatGranite::b3StaticInit,      GRANITE);
 #else
@@ -1671,5 +1678,85 @@ b3_bool b3MatGranite::b3GetSurfaceValues(b3_surface *surface)
 	
 	b3Mix(surface,&m_DarkMaterial,&m_LightMaterial, granite);
 
+	return true;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Car paint material                            **
+**                                                                      **
+*************************************************************************/
+
+b3MatCarPaint::b3MatCarPaint(b3_u32 class_type) : b3Material(sizeof(b3MatCarPaint),class_type) 
+{
+}
+
+b3MatCarPaint::b3MatCarPaint(b3_u32 *src) : b3Material(src)
+{
+}
+
+void b3MatCarPaint::b3Write()
+{
+}
+
+b3_bool b3MatCarPaint::b3Prepare()
+{
+	return true;
+}
+
+b3_bool b3MatCarPaint::b3GetSurfaceValues(b3_surface *surface)
+{
+	return true;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Thin film material                            **
+**                                                                      **
+*************************************************************************/
+
+b3Color b3MatThinFilm::m_WaveLength(480.0,520,780.0,0); // in nano meter
+
+b3MatThinFilm::b3MatThinFilm(b3_u32 class_type) : b3Material(sizeof(b3MatThinFilm),class_type) 
+{
+	m_Diffuse     = B3_BLUE;
+	m_Ambient     = m_Diffuse * 0.2;
+	m_Specular    = B3_GREY;
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1.5;
+	m_SpecularExp = 1000;
+	m_Flags       =    0;
+	m_Thickness   = 0.01; // in milli meter
+}
+
+b3MatThinFilm::b3MatThinFilm(b3_u32 *src) : b3Material(src)
+{
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
+	m_Thickness   = b3InitFloat();
+}
+
+void b3MatThinFilm::b3Write()
+{
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
+	b3StoreInt  (m_Flags);
+	b3StoreFloat(m_Thickness);
+}
+
+b3_bool b3MatThinFilm::b3GetSurfaceValues(b3_surface *surface)
+{
 	return true;
 }

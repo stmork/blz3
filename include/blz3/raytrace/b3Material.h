@@ -40,6 +40,8 @@
 #define TYPE_MAT_COOK_TORRANCE 0x00000008
 #define TYPE_MAT_GRANITE       0x00000009
 #define TYPE_MAT_OAKPLANK      0x0000000a
+#define TYPE_MAT_CAR_PAINT     0x0000000b
+#define TYPE_MAT_THIN_FILM     0x0000000c
 
 // WARNING: GL uses define MATERIAL, too!
 #define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
@@ -53,6 +55,8 @@
 #define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_MAT_COOK_TORRANCE)
 #define GRANITE             (CLASS_MATERIAL|TYPE_MAT_GRANITE)
 #define OAKPLANK            (CLASS_MATERIAL|TYPE_MAT_OAKPLANK)
+#define CAR_PAINT           (CLASS_MATERIAL|TYPE_MAT_CAR_PAINT)
+#define THIN_FILM           (CLASS_MATERIAL|TYPE_MAT_THIN_FILM)
 
 struct b3_material
 {
@@ -352,6 +356,37 @@ public:
 
 	void    b3Write();
 	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_surface *surface);
+};
+
+// CAR_PAINT
+
+class B3_PLUGIN b3MatCarPaint : public b3Material
+{
+
+public:
+	B3_ITEM_INIT(b3MatCarPaint);
+	B3_ITEM_LOAD(b3MatCarPaint);
+
+	void    b3Write();
+	b3_bool b3Prepare();
+	b3_bool b3GetSurfaceValues(b3_surface *surface);
+};
+
+// THIN_FILM
+class B3_PLUGIN b3MatThinFilm : public b3Material, public b3_material
+{
+	static b3Color m_WaveLength;
+
+public:
+	b3_s32         m_Flags;
+	b3_f32         m_Thickness;
+
+public:
+	B3_ITEM_INIT(b3MatThinFilm);
+	B3_ITEM_LOAD(b3MatThinFilm);
+
+	void    b3Write();
 	b3_bool b3GetSurfaceValues(b3_surface *surface);
 };
 
