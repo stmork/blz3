@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.5  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.4  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -183,12 +186,12 @@ void CB3FloatSpinButtonCtrl::b3SetDigits(int pre,int post)
 	strcpy (m_Format,"%");
 	if (pre >= 0)
 	{
-		sprintf(digit,"%d",pre);
+		snprintf(digit,sizeof(digit),"%d",pre);
 		strcat(m_Format,digit);
 	}
 	if (post >= 0)
 	{
-		sprintf(digit,".%d",post);
+		snprintf(digit,sizeof(digit),".%d",post);
 		strcat(m_Format,digit);
 	}
 	strcat (m_Format,"lf");

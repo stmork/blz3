@@ -60,11 +60,14 @@
 
 /*
 **	$Log$
+**	Revision 1.90  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.89  2003/06/20 09:02:45  sm
 **	- Added material dialog skeletons
 **	- Fixed ticket no. 10 (camera dialog handled camera
 **	  dimension wring)
-**
+**	
 **	Revision 1.88  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
 **	
@@ -760,7 +763,7 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		name.b3RemoveExt();
 		do
 		{
-			sprintf(new_name,"%s-new%d.bwd",(const char *)name,i++);
+			snprintf(new_name,B3_PATHSTRINGLEN,"%s-new%d.bwd",(const char *)name,i++);
 			filename.b3LinkFileName(path,new_name);
 		}
 		while(b3Dir::b3Exists(filename) != B3_NOT_EXISTANT);

@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.47  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
-**
+**	
 **	Revision 1.46  2003/07/26 14:03:14  sm
 **	- Fixed ICC version: The b3Vector classes computed a wrong value
 **	  in b3Length() because of using the uninitialized fourth vector
@@ -284,7 +287,7 @@ static void b3SaveRaytracedImage(
 	}
 	else
 	{	
-		sprintf((char *)imagename,"%s%s",
+		snprintf((char *)imagename,B3_FILESTRINGLEN,"%s%s",
 			(const char *)filename,BLZ3_EXTENSION);
 	}
 	display->b3SaveImage(imagename);
@@ -502,7 +505,7 @@ int main(int argc,char *argv[])
 											b3PrintF(B3LOG_NORMAL,"Rendering frame t=%1.2f\n",t);
 											scene->b3SetAnimation(t);
 											scene->b3Raytrace(display);
-											sprintf((char *)img_name,"%s_%04ld",
+											snprintf((char *)img_name,B3_FILESTRINGLEN,"%s_%04ld",
 												camera->b3GetName(),count++);
 											b3SaveRaytracedImage(
 												display,

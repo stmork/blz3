@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.2  2003/05/18 14:59:01  sm
 **	- Fixed predefined constat MAX
 **	- Fixed typo
-**
+**	
 **	Revision 1.1  2003/05/17 21:09:48  sm
 **	- Added feeder scanning calibration
 **	
@@ -207,7 +210,7 @@ int main(int argc,char *argv[])
 	{
 		image.b3LoadImage(entry->b3Name());
 		calibrate->b3Adjust(image);
-		sprintf(name,"%08x.tif",++count);
+		snprintf(name,sizeof(name),"%08x.tif",++count);
 		file.b3LinkFileName(dest,name);
 		image.b3SaveTIFF(file);
 		b3PrintF(B3LOG_NORMAL,"%s\n",(const char *)file);

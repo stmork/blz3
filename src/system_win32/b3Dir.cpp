@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.9  2002/08/15 13:56:44  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.8  2002/08/14 16:48:49  sm
 **	- The last view mode/filter mode for image views are stored in
 **	  registry
@@ -103,7 +106,7 @@ b3_path_type b3Dir::b3Exists (const char *Name)
 
 	if ((strlen(Name) == 2) && (Name[1] == ':'))
 	{
-		sprintf (aux,"%s\\",Name);
+		snprintf (aux,B3_FILESTRINGLEN,"%s\\",Name);
 		Name = aux;
 	}
 
@@ -476,12 +479,15 @@ void b3Path::b3SplitFileName(
 
 		/* split into path and file */
 	_splitpath (full,nDrive,nPath,nName,nExt);
-	if (path)
+	if (path != null)
 	{
-		sprintf (path,"%s%s",nDrive,nPath);
+		snprintf (path,B3_FILESTRINGLEN,"%s%s",nDrive,nPath);
 		b3RemoveDelimiter(path);
 	}
-	if (name) sprintf (name,"%s%s",nName,nExt);
+	if (name != null)
+	{
+		snprintf (name,B3_FILESTRINGLEN,"%s%s",nName,nExt);
+	}
 }
 
 // Non static one...

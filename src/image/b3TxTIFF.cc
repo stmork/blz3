@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.8  2003/02/22 19:39:34  sm
 **	- Fixed some GCC compile errors in b3TIFF stuff.
-**
+**	
 **	Revision 1.7  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -319,7 +322,7 @@ static void b3LogTIFF(const char *format,...)
 	va_list list;
 
 	va_start(list,format);
-	vsprintf(message,format,list);
+	vsnprintf(message,sizeof(message),format,list);
 	va_end(list);
 	b3PrintF(B3LOG_FULL,message);
 

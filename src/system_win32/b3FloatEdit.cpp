@@ -31,6 +31,9 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.8  2002/03/08 16:46:15  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -42,7 +45,7 @@
 **	  or value reference inside a dialog.
 **	- Changed dialogs to reflect new controls. This was a
 **	  major cleanup which shortens the code in an elegant way.
-**
+**	
 **	Revision 1.7  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -164,12 +167,12 @@ void CB3FloatEdit::b3SetDigits(int pre, int post)
 	strcpy (m_Format,"%");
 	if (pre >= 0)
 	{
-		sprintf(digit,"%d",pre);
+		snprintf(digit,sizeof(digit),"%d",pre);
 		strcat(m_Format,digit);
 	}
 	if (post >= 0)
 	{
-		sprintf(digit,".%d",post);
+		snprintf(digit,sizeof(digit),".%d",post);
 		strcat(m_Format,digit);
 	}
 	strcat (m_Format,"lf");
@@ -179,7 +182,7 @@ b3_f64 CB3FloatEdit::b3SetPos(b3_f64 value)
 {
 	m_Value = value;
 	b3Check();
-	sprintf(m_Buffer,m_Format,m_Value);
+	snprintf(m_Buffer,sizeof(m_Buffer),m_Format,m_Value);
 	SetLimitText(sizeof(m_Buffer));
 	SetWindowText(m_Buffer);
 	return m_Value;

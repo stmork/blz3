@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.5  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
-**
+**	
 **	Revision 1.4  2002/12/20 15:32:55  sm
 **	- Made some ICC optimazations :-)
 **	
@@ -70,14 +73,14 @@ b3Runtime::b3Runtime()
 {
 #ifdef __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	sprintf(compiler,"GCC V%d.%d.%d",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
+	snprintf(compiler,sizeof(compiler),"GCC V%d.%d.%d",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__);
 #	else
-	sprintf(compiler,"GCC V%d.%d",__GNUC__,__GNUC_MINOR__);
+	snprintf(compiler,sizeof(compiler),"GCC V%d.%d",__GNUC__,__GNUC_MINOR__);
 #	endif
 #elif __ICC
-	sprintf(compiler,"Intel CC V%d.%d",__ICC / 100,(__ICC / 10) % 10);
+	snprintf(compiler,sizeof(compiler),"Intel CC V%d.%d",__ICC / 100,(__ICC / 10) % 10);
 #else
-	sprintf(compiler,"Unknown compiler");
+	snprintf(compiler,sizeof(compiler),"Unknown compiler");
 #endif
 }
 

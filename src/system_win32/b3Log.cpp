@@ -40,10 +40,13 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.12  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
-**
+**	
 **	Revision 1.11  2003/05/30 14:44:09  sm
 **	- Plugin support for Windows added. All exported classes got an
 **	  additional keyword: B3_PLUGIN
@@ -149,7 +152,7 @@ void b3Log::b3LogFunction (
 
 		va_start (argptr,format);
 #ifdef _DEBUG
-		vsprintf(m_Message,format,argptr);
+		vsnprintf(m_Message,sizeof(m_Message),format,argptr);
 		OutputDebugString(m_Message);
 #endif
 		if (m_Out != null)

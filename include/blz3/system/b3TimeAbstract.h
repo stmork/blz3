@@ -45,7 +45,7 @@ public:
 	        void    b3Print(b3_log_level level = B3LOG_NORMAL);
 
 private:
-	static char    *b3PrintTime(char *buffer,b3_f64 time_needed);
+	static char    *b3PrintTime(char *buffer,b3_size size,b3_f64 time_needed);
 };
 
 class B3_PLUGIN b3TimeAbstract

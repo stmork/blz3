@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.7  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.6  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -154,7 +157,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,ySize);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_CONTIG);
 
-	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
+	snprintf (software,sizeof(software),"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	// setting palette
@@ -211,7 +214,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,ySize);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_CONTIG);
 
-	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
+	snprintf (software,sizeof(software),"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	xBytes = TX_BWA(xSize);
@@ -256,7 +259,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,1);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_SEPARATE);
 
-	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
+	snprintf (software,sizeof(software),"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	// alloc memory for three channels of one row

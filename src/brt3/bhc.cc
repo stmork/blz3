@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.9  2003/07/20 09:38:30  sm
 **	- Registering raytracing items manually.
-**
+**	
 **	Revision 1.8  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
@@ -407,7 +410,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			{
 				char message[1024];
 
-				sprintf(message,"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
+				snprintf(message,sizeof(message),"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
 					cond->m_xStart,cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
 				throw b3ParseException(message,m_Openings[i].line);
 			}
@@ -485,7 +488,7 @@ void b3BHDParser::b3CheckOpenings(b3BBox *room,b3Area *area,b3_index a,b3_index 
 			{
 				char message[1024];
 
-				sprintf(message,"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
+				snprintf(message,sizeof(message),"Door/window definition oversized: (%1.3f - %1.3f,%1.3f - %1.3f)",
 			         -cond->m_xStart,-cond->m_xEnd,cond->m_yStart,cond->m_yEnd);
 				throw b3ParseException(message,m_Openings[i].line);
 			}

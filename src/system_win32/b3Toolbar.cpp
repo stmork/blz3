@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.13  2003/02/08 14:04:18  sm
 **	- Started support for document wise bar state
-**
+**	
 **	Revision 1.12  2003/01/30 16:19:59  sm
 **	- Added undo/redo list support.
 **	
@@ -105,7 +108,7 @@ CB3ToolbarState::CB3ToolbarState(const char *appName)
 	m_MainFrame = null;
 	m_MenuCount = 0;
 	m_ToolCount = 0;
-	sprintf (m_Code,"_ToolbarState of %s",appName);
+	snprintf (m_Code,sizeof(m_Code),"_ToolbarState of %s",appName);
 }
 
 void CB3ToolbarState::b3AddToolbar(

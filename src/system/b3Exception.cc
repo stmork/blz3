@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2003/08/27 14:54:23  sm
+**      - sprintf changed into snprintf to avoid buffer overflows.
+**
 **      Revision 1.5  2002/08/15 13:56:44  sm
 **      - Introduced B3_THROW macro which supplies filename
 **        and line number of source code.
@@ -124,7 +127,7 @@ const char *b3ExceptionBase::b3GetMessage(const b3_errno ErrNo)
 	b = (ErrNo >> 16) & 0xff;
 	c = (ErrNo >>  8) & 0xff;
 
-	sprintf(LocalMessageBuffer,"errno: %c%c%c:%02x",
+	snprintf(LocalMessageBuffer,sizeof(LocalMessageBuffer),"errno: %c%c%c:%02x",
 		isprint(a) ? a : '_',
 		isprint(b) ? b : '_',
 		isprint(c) ? c : '_',

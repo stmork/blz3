@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.6  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.5  2003/02/18 16:52:57  sm
 **	- Fixed no name error on new scenes (ticket no. 4).
 **	- Introduced new b3Matrix class and renamed methods.
@@ -271,7 +274,7 @@ void CDlgObjectCopy::b3WriteProfileFloat(const char *keyword,b3_f64 value)
 {
 	char buffer[64];
 
-	sprintf(buffer,"%f",value);
+	snprintf(buffer,sizeof(buffer),"%f",value);
 	AfxGetApp()->WriteProfileString(CB3ClientString(),keyword,buffer);
 }
 

@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.25  2003/03/04 20:37:37  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.24  2002/12/10 20:14:59  sm
 **	- Added some new brt3 features:
 **	  o no wait after display output
@@ -254,7 +257,7 @@ static void b3TIFFErrorHandler(
 {
 	char message[512];
 
-	vsprintf (message,fmt,args);
+	vsnprintf (message,sizeof(message),fmt,args);
 	b3PrintF(B3LOG_NORMAL,"ERROR: %s %s\n",module,message);
 }
 
@@ -265,7 +268,7 @@ static void b3TIFFWarnHandler(
 {
 	char    message[512];
 
-	vsprintf (message,fmt,args);
+	vsnprintf (message,sizeof(message),fmt,args);
 	b3PrintF(B3LOG_NORMAL,"WARNING: %s %s\n",module,message);
 }
 

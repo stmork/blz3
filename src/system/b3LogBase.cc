@@ -25,10 +25,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.4  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
-**
+**	
 **	Revision 1.3  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
@@ -72,7 +75,7 @@ b3LogBase::b3LogBase()
 		remove (m_LogFile);
 
 		// Prepare startup message
-		sprintf (m_Message,
+		snprintf (m_Message,sizeof(m_Message),
 			"*** Blizzard III V%d.%02d # Debug log file ***\n"
 			"Debug file:  %s\n"
 			"Debug level: %d = 0x%x\n\n",

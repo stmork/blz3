@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2003/08/27 14:54:23  sm
+**	- sprintf changed into snprintf to avoid buffer overflows.
+**
 **	Revision 1.4  2003/05/17 21:09:48  sm
 **	- Added feeder scanning calibration
-**
+**	
 **	Revision 1.3  2003/03/30 13:31:19  sm
 **	- Added title support for image page scaler.
 **	
@@ -167,7 +170,7 @@ public:
 private:
 	static inline void b3ImgName(char *name,int num)
 	{
-		sprintf(name,"img_%04d.%s",num,b3Tx::b3GetExt(FT_JPEG));
+		snprintf(name,B3_FILESTRINGLEN,"img_%04d.%s",num,b3Tx::b3GetExt(FT_JPEG));
 	}
 
 	b3_bool b3CopyImage(b3Tx *image,const char *full_normal)
