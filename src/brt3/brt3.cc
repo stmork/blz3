@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2004/05/16 09:21:50  sm
+**	- Corrected camera access methods.
+**
 **	Revision 1.53  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
 **	- Fixed camera name handling if camera name is empty.
-**
+**	
 **	Revision 1.52  2004/01/18 13:51:57  sm
 **	- Done further security issues.
 **	
@@ -504,7 +507,7 @@ int main(int argc,char *argv[])
 						}
 
 						display = b3AllocDisplay(scene,force_no_display);
-						if ((camera = scene->b3GetCamera(false)) != null)
+						if ((camera = scene->b3GetFirstCamera(false)) != null)
 						{
 							do
 							{

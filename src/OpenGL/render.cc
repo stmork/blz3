@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.40  2004/05/16 09:21:50  sm
+**      - Corrected camera access methods.
+**
 **      Revision 1.39  2004/01/05 08:01:55  sm
 **      - Added new year.
 **
@@ -294,7 +297,7 @@ static void b3NextCamera(b3Scene *scene)
 		if (camera == null)
 		{
 			// Take first camera
-			camera = scene->b3GetCamera(false);
+			camera = scene->b3GetFirstCamera(false);
 		}
 		if (camera != null)
 		{
@@ -394,7 +397,7 @@ static void b3Prepare(b3Scene *scene)
 
 	scene->b3Reorg();
 	scene->b3GetDisplaySize(xSize,ySize);
-	scene->b3SetCamera(scene->b3GetCamera(false));
+	scene->b3SetCamera(scene->b3GetFirstCamera(false));
 	scene->b3PrepareScene(xSize,ySize);
 	scene->b3AllocVertices(&context);
 	scene->b3ResetAnimation();

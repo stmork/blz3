@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/05/16 09:21:50  sm
+**	- Corrected camera access methods.
+**
 **	Revision 1.14  2004/04/23 11:09:04  sm
 **	- Refectored b3Materials for better dialog use.
-**
+**	
 **	Revision 1.13  2003/11/01 09:47:26  sm
 **	- Added CPU bit version with compiler version string.
 **	
@@ -187,7 +190,7 @@ void b3BHDParser::b3ParseHouse()
 
 	b3Vector::b3Init(&eye,-200.0,-750,170);
 	b3Vector::b3Init(&view, 250,0,300);
-	camera = m_Scene->b3GetCamera();
+	camera = m_Scene->b3GetFirstCamera();
 	camera->b3Orientate(&eye,&view,5,3.2,2.4);
 	do
 	{
