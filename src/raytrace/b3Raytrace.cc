@@ -34,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2001/10/28 21:22:52  sm
+**	- Added one level simple adaptive super sampling. It was
+**	  tricky to implement this on SMP machines but got it now.
+**
 **	Revision 1.19  2001/10/22 14:47:38  sm
 **	- Type correction vor b3Base/b3Link. So fixed a bad behaviour
 **	  on Windows.
 **	- Some minor fixes.
-**
+**	
 **	Revision 1.18  2001/10/21 16:55:20  sm
 **	- Introducing lens flares.
 **	- Introducing different modes of background computation.
@@ -148,15 +152,17 @@ struct b3_rt_info
 *************************************************************************/
 
 b3RayRow::b3RayRow(
-	b3Scene  *scene,
-	b3_coord  y,
-	b3_res    xSize,
-	b3_res    ySize) : b3Row(y,xSize)
+	b3Scene   *scene,
+	b3Display *display,
+	b3_coord   y,
+	b3_res     xSize,
+	b3_res     ySize) : b3Row(y,xSize)
 {
-	m_Scene = scene;
-	m_y     = y;
-	m_xSize = xSize;
-	m_ySize = ySize;
+	m_Scene   = scene;
+	m_Display = display;
+	m_y       = y;
+	m_xSize   = xSize;
+	m_ySize   = ySize;
 
 
 	// Init direction
@@ -198,6 +204,7 @@ void b3RayRow::b3Raytrace()
 
 		buffer[x] = b3Color::b3GetSatColor(&ray.color);
 	}
+	m_Display->b3PutRow(this);
 }
 
 /*************************************************************************
@@ -208,27 +215,143 @@ void b3RayRow::b3Raytrace()
 *************************************************************************/
 
 b3SupersamplingRayRow::b3SupersamplingRayRow(
-	b3Scene  *scene,
-	b3_coord  y,
-	b3_res    xSize,
-	b3_res    ySize) :
-		b3RayRow(scene,y,xSize,ySize)
+	b3Scene               *scene,
+	b3Display             *display,
+	b3_coord               y,
+	b3_res                 xSize,
+	b3_res                 ySize,
+	b3SupersamplingRayRow *last) :
+		b3RayRow(scene,display,y,xSize,ySize)
 {
-	m_Limit = m_Scene->m_SuperSample->m_Limit;
+	m_Limit      = &m_Scene->m_SuperSample->m_Limit;
+	m_ThisResult = (b3_color *)b3Alloc(xSize * sizeof(b3_color));
+	m_RowState   = B3_STATE_NOT_STARTED;
+
+	m_PrevRow = last;
+	m_SuccRow = null;
+	if (m_PrevRow != null)
+	{
+		m_LastResult = m_PrevRow->m_ThisResult;
+		m_PrevRow->m_SuccRow = this;
+	}
+	else
+	{
+		m_LastResult = null;
+	}
 }
 
 void b3SupersamplingRayRow::b3Raytrace()
 {
 	b3_res        x;
 	b3_ray_info   ray;
-	b3_color      accum,last;
+	b3_f64        fxRight;
+	b3_vector64   dir;
+	b3_bool       do_convert = false;
+	b3_bool       do_refine  = false;
+
+	// Init eye position
+	m_RowState = B3_STATE_COMPUTING;
+	ray.pos.x  =  m_Scene->m_EyePoint.x;
+	ray.pos.y  =  m_Scene->m_EyePoint.y;
+	ray.pos.z  =  m_Scene->m_EyePoint.z;
+	dir        =  m_preDir;
+
+	// Loop one row...
+	for (x = 0;x < xSize;x++)
+	{
+		ray.dir.x  = dir.x;
+		ray.dir.y  = dir.y;
+		ray.dir.z  = dir.z;
+		ray.inside = false;
+
+		if (!m_Scene->b3Shade(&ray))
+		{
+			m_Scene->b3GetBackgroundColor(&ray,fxRight,m_fy);
+		}
+		fxRight += m_fxStep;
+		dir.x   += m_Scene->m_xStepDir.x;
+		dir.y   += m_Scene->m_xStepDir.y;
+		dir.z   += m_Scene->m_xStepDir.z;
+
+		b3Color::b3Sat(&ray.color,&m_ThisResult[x]);
+	}
+
+	m_Scene->m_RowMutex.b3Lock();
+	m_RowState = B3_STATE_CHECK;
+
+	if (m_PrevRow == null)
+	{
+		// This is the first row...
+		do_convert = true;
+		m_RowState = B3_STATE_READY;
+	}
+	else
+	{
+		// The previous one is already OK -> Refine this.
+		if (m_PrevRow->m_RowState == B3_STATE_READY)
+		{
+			do_refine = true;
+			m_RowState = B3_STATE_REFINING;
+		}
+	}
+	m_Scene->m_RowMutex.b3Unlock();
+
+	if (do_convert) b3Convert();
+	if (do_refine)  b3Refine(true);
+
+	if (m_RowState == B3_STATE_CHECK)
+	{
+		b3Convert();
+	}
+}
+
+inline b3_bool b3SupersamplingRayRow::b3Test(b3_res x)
+{
+	if(fabs(m_LastResult[x].r   - m_ThisResult[x].r) >= m_Limit->r) return true;
+	if(fabs(m_LastResult[x].g   - m_ThisResult[x].g) >= m_Limit->g) return true;
+	if(fabs(m_LastResult[x].b   - m_ThisResult[x].b) >= m_Limit->b) return true;
+	if(fabs(m_ThisResult[x-1].r - m_ThisResult[x].r) >= m_Limit->r) return true;
+	if(fabs(m_ThisResult[x-1].g - m_ThisResult[x].g) >= m_Limit->g) return true;
+	if(fabs(m_ThisResult[x-1].b - m_ThisResult[x].b) >= m_Limit->b) return true;
+	return false;
+}
+
+#define nDEBUG_SS4
+
+inline void b3SupersamplingRayRow::b3Convert()
+{
+	b3_res x;
+
+	for (x = 0;x < m_xSize;x++)
+	{
+#ifndef DEBUG_SS4
+		buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+#else
+		buffer[x] = 0x0000ff;
+#endif
+	}
+	m_Display->b3PutRow(this);
+}
+
+inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
+{
+	b3_ray_info   ray;
+	b3_res        x;
 	b3_bool       add;
+	b3_vector64   dir;
 	b3_f64        fxLeft,fxRight,fyUp,fyDown;
+	b3_bool       do_refine_succ = false;
+#ifdef DEBUG_SS4
+	b3_pkd_color  result;
+#endif
+
+	B3_ASSERT(m_RowState != B3_STATE_READY);
 
 	// Init eye position
 	ray.pos.x =  m_Scene->m_EyePoint.x;
 	ray.pos.y =  m_Scene->m_EyePoint.y;
 	ray.pos.z =  m_Scene->m_EyePoint.z;
+	ray.dir   = dir = m_preDir;
 
 	// Init coord values
 	fxRight = -1;
@@ -236,78 +359,94 @@ void b3SupersamplingRayRow::b3Raytrace()
 	fyDown  = m_fy;
 	fyUp    = fyDown + 1.0 / (b3_f64)m_ySize;
 
-	// Loop one row...
-	for (x = 0;x < xSize;x++)
+	for (x = 0;x < m_xSize;x++)
 	{
-		ray.dir.x  = m_preDir.x;
-		ray.dir.y  = m_preDir.y;
-		ray.dir.z  = m_preDir.z;
-		ray.inside = false;
-
-		if (!m_Scene->b3Shade(&ray))
-		{
-			m_Scene->b3GetBackgroundColor(&ray,fxRight,fyDown);
-		}
-
 		if (x > 0)
 		{
-			add =
-				(fabs(last.r - ray.color.r) >= m_Limit.r) ||
-				(fabs(last.g - ray.color.g) >= m_Limit.g) ||
-				(fabs(last.b - ray.color.b) >= m_Limit.b);
+			add    = b3Test(x);
+#ifdef DEBUG_SS4
+			result = (add ?
+				(this_row ?
+					0x00ff00 :
+					0xff0000) :
+				0x808080);
+#endif
 		}
 		else
 		{
-			add = false;
+			add    = false;
+#ifdef DEBUG_SS4
+			result = 0x0000ff;
+#endif
 		}
+
+		// Do the additional computations...
 		if (add)
 		{
-			accum = ray.color;
-
-			ray.dir.x  = (m_preDir.x += m_Scene->m_yHalfDir.x);
-			ray.dir.y  = (m_preDir.y += m_Scene->m_yHalfDir.y);
-			ray.dir.z  = (m_preDir.z += m_Scene->m_yHalfDir.z);
+			ray.dir.x  = (dir.x += m_Scene->m_yHalfDir.x);
+			ray.dir.y  = (dir.y += m_Scene->m_yHalfDir.y);
+			ray.dir.z  = (dir.z += m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxRight,fyUp);
 			}
-			b3Color::b3Add(&ray.color,&accum);
+			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
 
-			ray.dir.x  = (m_preDir.x -= m_Scene->m_xHalfDir.x);
-			ray.dir.y  = (m_preDir.y -= m_Scene->m_xHalfDir.y);
-			ray.dir.z  = (m_preDir.z -= m_Scene->m_xHalfDir.z);
+			ray.dir.x  = (dir.x -= m_Scene->m_xHalfDir.x);
+			ray.dir.y  = (dir.y -= m_Scene->m_xHalfDir.y);
+			ray.dir.z  = (dir.z -= m_Scene->m_xHalfDir.z);
 			ray.inside = false;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyUp);
 			}
-			b3Color::b3Add(&ray.color,&accum);
+			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
 
-			ray.dir.x  = (m_preDir.x -= m_Scene->m_yHalfDir.x);
-			ray.dir.y  = (m_preDir.y -= m_Scene->m_yHalfDir.y);
-			ray.dir.z  = (m_preDir.z -= m_Scene->m_yHalfDir.z);
+			ray.dir.x  = (dir.x -= m_Scene->m_yHalfDir.x);
+			ray.dir.y  = (dir.y -= m_Scene->m_yHalfDir.y);
+			ray.dir.z  = (dir.z -= m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			if (!m_Scene->b3Shade(&ray))
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
 			}
-			b3Color::b3Add(&ray.color,&accum);
+			b3Color::b3Add(&ray.color,&m_ThisResult[x]);
 
-			ray.dir.x = (m_preDir.x += m_Scene->m_xHalfDir.x);
-			ray.dir.y = (m_preDir.y += m_Scene->m_xHalfDir.y);
-			ray.dir.z = (m_preDir.z += m_Scene->m_xHalfDir.z);
-			b3Color::b3Scale(&accum,0.25,&ray.color);
+			ray.dir.x = (dir.x += m_Scene->m_xHalfDir.x);
+			ray.dir.y = (dir.y += m_Scene->m_xHalfDir.y);
+			ray.dir.z = (dir.z += m_Scene->m_xHalfDir.z);
+			b3Color::b3Scale(&m_ThisResult[x],0.25);
+			b3Color::b3Sat(&m_ThisResult[x]);
 		}
-		m_preDir.x += m_Scene->m_xStepDir.x;
-		m_preDir.y += m_Scene->m_xStepDir.y;
-		m_preDir.z += m_Scene->m_xStepDir.z;
-		fxRight    += m_fxStep;
-		fxLeft     += m_fxStep;
+		ray.dir.x  = (dir.x += m_Scene->m_xStepDir.x);
+		ray.dir.y  = (dir.y += m_Scene->m_xStepDir.y);
+		ray.dir.z  = (dir.z += m_Scene->m_xStepDir.z);
+		fxRight   += m_fxStep;
+		fxLeft    += m_fxStep;
 
-		buffer[x] = b3Color::b3GetSatColor(&ray.color);
-		last = ray.color;
+#ifndef DEBUG_SS4
+		buffer[x] = b3Color::b3GetColor(&m_ThisResult[x]);
+#else
+		buffer[x] = result;
+#endif
 	}
+
+	m_Scene->m_RowMutex.b3Lock();
+	m_RowState = B3_STATE_READY;
+	if ((m_SuccRow != null) && (m_SuccRow->m_RowState == B3_STATE_CHECK) && (m_RowState == B3_STATE_READY))
+	{
+		do_refine_succ = true;
+		m_SuccRow->m_RowState = B3_STATE_REFINING;
+	}
+	m_Scene->m_RowMutex.b3Unlock();
+
+	if (do_refine_succ)
+	{
+		m_SuccRow->b3Refine(false);
+	}
+
+	m_Display->b3PutRow(this);
 }
 
 /*************************************************************************
@@ -337,8 +476,6 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 		{
 			// We can handle the row for its own!
 			row->b3Raytrace();
-			info->display->b3PutRow(row);
-			delete row;
 		}
 	}
 	while(row != null);
@@ -378,7 +515,6 @@ b3_bool b3Scene::b3Prepare(b3_res xSize,b3_res ySize)
 	m_Nebular     = (nebular->b3IsActive() ? nebular : null);
 	m_LensFlare   = b3GetLensFlare();
 	m_SuperSample = b3GetSuperSample();
-m_SuperSample = null;
 
 	if (m_SuperSample != null)
 	{
@@ -468,11 +604,12 @@ void b3Scene::b3Raytrace(b3Display *display)
 		{
 			if (m_SuperSample != null)
 			{
-				row = new b3SupersamplingRayRow(this,i,xSize,ySize);
+				row = new b3SupersamplingRayRow(this,display,i,xSize,ySize,
+					(b3SupersamplingRayRow *)m_Rows.Last);
 			}
 			else
 			{
-				row = new b3RayRow(this,i,xSize,ySize);
+				row = new b3RayRow(this,display,i,xSize,ySize);
 			}
 			m_Rows.b3Append(row);
 			fy -= fyStep;
