@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.2  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **	Revision 1.1  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
@@ -84,7 +87,6 @@ CAppObjectDoc::CAppObjectDoc()
 {
 	// TODO: add one-time construction code here
 	m_BBox         = null;
-	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
 	EnableAutomation();
 

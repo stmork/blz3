@@ -56,9 +56,12 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.50  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **	Revision 1.49  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
@@ -386,10 +389,8 @@ CAppLinesDoc::CAppLinesDoc()
 {
 	// TODO: add one-time construction code here
 	m_Scene        = null;
-	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
 	m_RaytraceDoc  = null;
 	m_Raytracer    = new b3Thread("Raytracing master thread");
-	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
 	AfxOleLockApp();

@@ -29,11 +29,13 @@ class CDlgHierarchy;
 
 class CAppRenderDoc : public CDocument, public b3Document
 {
-	// Attributes
+protected:
+	CDlgHierarchy        *m_DlgHierarchy;
+
 public:
-	b3Fulcrum             m_Fulcrum;
 	b3ModellerInfo       *m_Info;
 	b3RenderShapeContext  m_Context;
+	b3Fulcrum             m_Fulcrum;
 	b3_vector             m_Lower;
 	b3_vector             m_Upper;
 

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.2  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **	Revision 1.1  2002/01/12 18:14:39  sm
 **	- Created object document template
 **	- Some menu fixes done
@@ -51,63 +54,14 @@
 **                                                                      **
 *************************************************************************/
 
-static PIXELFORMATDESCRIPTOR pixelformat =
-{
-	sizeof(PIXELFORMATDESCRIPTOR),
-	1,
-	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-	PFD_TYPE_RGBA,
-	32,
-	0,0,0,0,0,0,
-	0,0,
-	0,0,0,0,0,
-	32,
-	0,
-	0,
-	0,
-	0,
-	0,0,0
-};
-
 IMPLEMENT_DYNCREATE(CAppObjectView, CAppRenderView)
 
 BEGIN_MESSAGE_MAP(CAppObjectView, CAppRenderView)
 	//{{AFX_MSG_MAP(CAppObjectView)
-	ON_WM_CREATE()
-	ON_WM_DESTROY()
 	ON_WM_PAINT()
-	ON_WM_SIZE()
-	ON_WM_ERASEBKGND()
-	ON_COMMAND(ID_VIEW_PERSPECTIVE, OnViewPerspective)
-	ON_COMMAND(ID_VIEW_TOP, OnViewTop)
-	ON_COMMAND(ID_VIEW_FRONT, OnViewFront)
-	ON_COMMAND(ID_VIEW_RIGHT, OnViewRight)
-	ON_COMMAND(ID_VIEW_LEFT, OnViewLeft)
-	ON_COMMAND(ID_VIEW_BACK, OnViewBack)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_PERSPECTIVE, OnUpdateViewPerspective)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_TOP, OnUpdateViewTop)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_FRONT, OnUpdateViewFront)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_RIGHT, OnUpdateViewRight)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_LEFT, OnUpdateViewLeft)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_BACK, OnUpdateViewBack)
-	ON_COMMAND(ID_VIEW_SMALLER, OnViewSmaller)
-	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
-	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
-	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_SMALLER, OnUpdateViewSmaller)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_SELECT, OnUpdateViewSelect)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_BIGGER, OnUpdateViewBigger)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
-	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
-	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
-	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
-	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
-	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
-	ON_COMMAND(ID_VIEW_POP, OnViewPop)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
 	ON_WM_RBUTTONDOWN()
 	ON_WM_RBUTTONUP()
 	//}}AFX_MSG_MAP
@@ -160,79 +114,10 @@ CAppObjectDoc* CAppObjectView::GetDocument() // non-debug version is inline
 /////////////////////////////////////////////////////////////////////////////
 // CAppObjectView message handlers
 
-int CAppObjectView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
-{
-	if (CScrollView::OnCreate(lpCreateStruct) == -1)
-		return -1;
-	
-	// TODO: Add your specialized creation code here
-	m_DC = GetDC()->m_hDC;
-#ifdef _DEBUG
-	int                   max,i;
-	PIXELFORMATDESCRIPTOR format;
-
-	format.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	max = DescribePixelFormat(m_DC,1,0,NULL);
-	for (i = 1;i <= max;i++)
-	{
-		DescribePixelFormat(m_DC,i,format.nSize,&format);
-		b3PrintF(B3LOG_DEBUG,"%3ld: %8lx %8lx %2ld %2ld %2ld\n",i,
-			format.dwFlags,format.iPixelType,
-			format.cColorBits,format.cDepthBits,format.cAccumBits);
-	}
-#endif
-	m_PixelFormatIndex = ChoosePixelFormat(m_DC,&pixelformat);
-	SetPixelFormat(m_DC,m_PixelFormatIndex,&pixelformat);
-	m_GC = wglCreateContext(m_DC);
-
-
-	return 0;
-}
-
-void CAppObjectView::OnDestroy() 
-{
-	b3_index i;
-
-	for (i = 0;i < B3_MODE_MAX;i++)
-	{
-		if (m_Action[i] != null)
-		{
-			delete m_Action[i];
-		}
-	}
-	CScrollView::OnDestroy();
-	
-	// TODO: Add your message handler code here
-	wglMakeCurrent(m_DC,NULL);
-	wglDeleteContext(m_GC);
-}
-
 void CAppObjectView::OnInitialUpdate()
 {
 	// Do necessary Blizzard III stuff!
-	CAppObjectDoc *pDoc = GetDocument();
-
-	wglMakeCurrent(m_DC,m_GC);
-	pDoc->m_Context.b3Init();
-	B3_ASSERT(pDoc->m_BBox != null);
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-
-/*
-	m_Action[B3_SELECT_MAGNIFICATION] = new CB3ActionMagnify(this);
-	m_Action[B3_OBJECT_SELECT]        = new CB3ActionObjectSelect(this);
-	m_Action[B3_OBJECT_MOVE]          = new CB3ActionObjectMove(this);
-	m_Action[B3_OBJECT_ROTATE]        = new CB3ActionObjectRotate(this);
-	m_Action[B3_OBJECT_SCALE]         = new CB3ActionObjectScale(this);
-	m_Action[B3_CAMERA_MOVE]          = new CB3ActionCameraMove(this);
-	m_Action[B3_CAMERA_TURN]          = new CB3ActionCameraTurn(this);
-	m_Action[B3_CAMERA_ROTATE]        = new CB3ActionCameraRotate(this);
-	m_Action[B3_CAMERA_VIEW]          = new CB3ActionCameraView(this);
-	m_Action[B3_LIGHT_TURN]           = new CB3ActionLightTurn(this);
-*/
-	CScrollView::OnInitialUpdate();
-
-	// TODO: calculate the total size of this view
-	OnUpdate(this,B3_UPDATE_ALL,0);
+	CAppRenderView::OnInitialUpdate();
 }
 
 void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
@@ -373,191 +258,4 @@ void CAppObjectView::OnRButtonUp(UINT nFlags, CPoint point)
 
 	CScrollView::OnRButtonUp(nFlags, point);
 	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
-}
-
-void CAppObjectView::OnViewPerspective() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnViewTop() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnViewFront() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnViewRight() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnViewLeft() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnViewBack() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,0);
-}
-
-void CAppObjectView::OnUpdateViewPerspective(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppObjectView::OnUpdateViewTop(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_TOP));
-}
-
-void CAppObjectView::OnUpdateViewFront(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_FRONT));
-}
-
-void CAppObjectView::OnUpdateViewRight(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_RIGHT));
-}
-
-void CAppObjectView::OnUpdateViewLeft(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_LEFT));
-}
-
-void CAppObjectView::OnUpdateViewBack(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetRadio(m_RenderView.b3IsViewMode(B3_VIEW_BACK));
-}
-
-void CAppObjectView::OnViewSmaller() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Scale(1.25);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewBigger() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Scale(0.8);
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewSelect() 
-{
-	// TODO: Add your command handler code here
-	b3SetMagnification();
-}
-
-void CAppObjectView::OnViewPop() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3PopView();
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewOptimal() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Original();
-	b3UnsetMagnification();
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnUpdateViewSmaller(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppObjectView::OnUpdateViewBigger(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppObjectView::OnUpdateViewSelect(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-	pCmdUI->SetCheck(m_SelectMode == B3_SELECT_MAGNIFICATION);
-}
-
-void CAppObjectView::OnUpdateViewPop(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(m_RenderView.b3ViewStackNotEmpty());
-}
-
-void CAppObjectView::OnUpdateViewOptimal(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
-}
-
-void CAppObjectView::OnViewMoveRight() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.2,0.0);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewMoveLeft() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(-0.2,0.0);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewMoveUp() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.0,0.2);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnViewMoveDown() 
-{
-	// TODO: Add your command handler code here
-	m_RenderView.b3Move(0.0,-0.2);
-	OnUpdate(this,B3_UPDATE_VIEW,NULL);
-}
-
-void CAppObjectView::OnUpdateViewMove(CCmdUI* pCmdUI) 
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
 }

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.1  2002/01/13 19:24:12  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **
 */
 
@@ -71,41 +74,43 @@ BEGIN_MESSAGE_MAP(CAppRenderView, CScrollView)
 	//{{AFX_MSG_MAP(CAppRenderView)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
-	ON_WM_PAINT()
 	ON_WM_SIZE()
 	ON_WM_ERASEBKGND()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_RBUTTONDOWN()
+	ON_WM_RBUTTONUP()
 	ON_COMMAND(ID_VIEW_PERSPECTIVE, OnViewPerspective)
 	ON_COMMAND(ID_VIEW_TOP, OnViewTop)
 	ON_COMMAND(ID_VIEW_FRONT, OnViewFront)
 	ON_COMMAND(ID_VIEW_RIGHT, OnViewRight)
 	ON_COMMAND(ID_VIEW_LEFT, OnViewLeft)
 	ON_COMMAND(ID_VIEW_BACK, OnViewBack)
+	ON_COMMAND(ID_VIEW_SMALLER, OnViewSmaller)
+	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
+	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
+	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
+	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
+	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
+	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
+	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
+	ON_COMMAND(ID_VIEW_POP, OnViewPop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PERSPECTIVE, OnUpdateViewPerspective)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_TOP, OnUpdateViewTop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_FRONT, OnUpdateViewFront)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_RIGHT, OnUpdateViewRight)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_LEFT, OnUpdateViewLeft)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BACK, OnUpdateViewBack)
-	ON_COMMAND(ID_VIEW_SMALLER, OnViewSmaller)
-	ON_COMMAND(ID_VIEW_SELECT, OnViewSelect)
-	ON_COMMAND(ID_VIEW_BIGGER, OnViewBigger)
-	ON_COMMAND(ID_VIEW_ORIGINAL, OnViewOptimal)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SMALLER, OnUpdateViewSmaller)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SELECT, OnUpdateViewSelect)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_BIGGER, OnUpdateViewBigger)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ORIGINAL, OnUpdateViewOptimal)
-	ON_COMMAND(ID_VIEW_MOVE_RIGHT, OnViewMoveRight)
-	ON_COMMAND(ID_VIEW_MOVE_LEFT, OnViewMoveLeft)
-	ON_COMMAND(ID_VIEW_MOVE_UP, OnViewMoveUp)
-	ON_COMMAND(ID_VIEW_MOVE_DOWN, OnViewMoveDown)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_RIGHT, OnUpdateViewMove)
-	ON_WM_LBUTTONDOWN()
-	ON_WM_MOUSEMOVE()
-	ON_WM_LBUTTONUP()
-	ON_COMMAND(ID_VIEW_POP, OnViewPop)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_LEFT, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_UP, OnUpdateViewMove)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MOVE_DOWN, OnUpdateViewMove)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -234,7 +239,6 @@ int CAppRenderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetPixelFormat(m_DC,m_PixelFormatIndex,&pixelformat);
 	m_GC = wglCreateContext(m_DC);
 
-
 	return 0;
 }
 
@@ -360,49 +364,59 @@ void CAppRenderView::b3DrawRect(
 	dc->LineTo(x1,y1);
 }
 
+b3_bool CAppRenderView::b3IsMouseActionAllowed()
+{
+	return true;
+}
+
 void CAppRenderView::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppRenderDoc *pDoc = GetDocument();
-
 	CScrollView::OnMouseMove(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
+	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
+	{
+		m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
+	}
 }
 
 void CAppRenderView::OnLButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppRenderDoc *pDoc = GetDocument();
-
 	CScrollView::OnLButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
+	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
+	{
+		m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
+	}
 }
 
 void CAppRenderView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppRenderDoc *pDoc = GetDocument();
-
 	CScrollView::OnLButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
+	{
+		m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+	}
 }
 
 void CAppRenderView::OnRButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppRenderDoc *pDoc = GetDocument();
-
 	CScrollView::OnRButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
+	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
+	{
+		m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
+	}
 }
 
 void CAppRenderView::OnRButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	CAppRenderDoc *pDoc = GetDocument();
-
 	CScrollView::OnRButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
+	if ((m_Action[m_SelectMode] != null) && b3IsMouseActionAllowed())
+	{
+		m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
+	}
 }
 
 void CAppRenderView::OnViewPerspective() 

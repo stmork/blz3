@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CDlgFulcrum
+LastClass=CAppRenderView
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "applines.h"
@@ -54,33 +54,33 @@ Class42=CDlgSuperSampling
 Class43=CMainFrame
 
 ResourceCount=28
-Resource1=IDD_ABOUTBOX
-Resource2=IDR_TOOLBAR_ACTION
-Resource3=IDR_TOOLBAR_OBJECT
-Resource4=IDR_TOOLBAR_DISPLAY
-Resource5=IDR_TOOLBAR_CAMERA
-Resource6=IDR_TOOLBAR_LIGHT
-Resource7=IDR_TOOLBAR_VIEW
-Resource8=IDD_SCENE
+Resource1=IDR_OBJECT
+Resource2=IDR_TOOLBAR_LIGHT
+Resource3=IDR_TOOLBAR_VIEW
+Resource4=IDR_TOOLBAR_ACTION
+Resource5=IDR_TOOLBAR_OBJECT
+Resource6=IDR_TOOLBAR_DISPLAY
+Resource7=IDR_TOOLBAR_CAMERA
+Resource8=IDD_ABOUTBOX
 Resource9=IDR_DISPLAYTYPE
-Resource10=IDD_HIERARCHY
-Resource11=IDD_SUPER_SAMPLE
-Resource12=IDD_NEBULAR
-Resource13=IDD_LENS_FLARE
-Resource14=IDD_DISTRIBUTED
-Resource15=IDD_MODELLER_INFO
-Resource16=IDD_SEARCH_PATH_LIST
-Resource17=IDD_NEW_ITEM
-Resource18=IDD_LIGHT
-Resource19=IDD_LDC
-Resource20=IDD_CAMERA
-Resource21=IDD_FULCRUM
-Resource22=IDD_STEP_MOVE
-Resource23=IDD_STEP_ROTATE
-Resource24=IDD_OBJECT_COPY
-Resource25=IDR_MAINFRAME
-Resource26=IDR_OBJECT
-Resource27=IDR_BLZ3TYPE
+Resource10=IDR_BLZ3TYPE
+Resource11=IDD_HIERARCHY
+Resource12=IDD_SCENE
+Resource13=IDD_SUPER_SAMPLE
+Resource14=IDD_NEBULAR
+Resource15=IDD_LENS_FLARE
+Resource16=IDD_DISTRIBUTED
+Resource17=IDD_MODELLER_INFO
+Resource18=IDD_SEARCH_PATH_LIST
+Resource19=IDD_NEW_ITEM
+Resource20=IDD_LIGHT
+Resource21=IDD_LDC
+Resource22=IDD_CAMERA
+Resource23=IDD_FULCRUM
+Resource24=IDD_STEP_MOVE
+Resource25=IDD_STEP_ROTATE
+Resource26=IDD_OBJECT_COPY
+Resource27=IDR_MAINFRAME
 Resource28=IDD_FILEOPENPREVIEW
 
 [CLS:CB3ColorField]
@@ -226,6 +226,7 @@ Type=0
 BaseClass=CScrollView
 HeaderFile=AppRenderView.h
 ImplementationFile=AppRenderView.cpp
+LastObject=CAppRenderView
 
 [CLS:CB3ControlLDC]
 Type=0

@@ -68,16 +68,12 @@ public:
 #endif
 
 protected:
+	b3_bool b3IsMouseActionAllowed();
 
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CAppLinesView)
 	afx_msg void OnPaint();
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnViewPop();
-	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
 	afx_msg void OnObjSelect();
 	afx_msg void OnObjMove();
 	afx_msg void OnObjRotate();
@@ -98,8 +94,6 @@ protected:
 	afx_msg void OnUpdateCamRotate(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateCamView(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateLightTurn(CCmdUI* pCmdUI);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnViewToFulcrum();
 	afx_msg void OnCameraNew();
 	afx_msg void OnCameraDelete();

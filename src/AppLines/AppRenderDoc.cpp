@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.1  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **
 */
 
@@ -59,6 +62,8 @@ END_MESSAGE_MAP()
 CAppRenderDoc::CAppRenderDoc()
 {
 	// TODO: add one-time construction code here
+	m_DlgHierarchy = &CB3GetMainFrame()->m_dlgHierarchy;
+	m_Fulcrum.b3AllocVertices(&m_Context);
 }
 
 CAppRenderDoc::~CAppRenderDoc()

@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2002/01/13 20:50:51  sm
+**	- Done more CAppRenderDoc/View cleanups
+**
 **	Revision 1.35  2002/01/13 19:24:11  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **	Revision 1.34  2002/01/09 17:47:53  sm
 **	- Finished CB3ImageButton implementation.
 **	- Finished CDlgObjectCopy
@@ -227,8 +230,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_COMMAND(ID_CAMERA_TURN, OnCamTurn)
 	ON_COMMAND(ID_CAMERA_ROTATE, OnCamRotate)
 	ON_COMMAND(ID_CAMERA_VIEW, OnCamView)
-	ON_CBN_SELCHANGE(ID_CAMERA_SELECT, OnCamSelect)
 	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
+	ON_CBN_SELCHANGE(ID_CAMERA_SELECT, OnCamSelect)
 	ON_CBN_SELCHANGE(ID_LIGHT_SELECT, OnLightSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_SELECT, OnUpdateObjSelect)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_MOVE, OnUpdateObjMove)
@@ -243,8 +246,8 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CAppRenderView)
 	ON_COMMAND(ID_CAMERA_NEW, OnCameraNew)
 	ON_COMMAND(ID_CAMERA_DELETE, OnCameraDelete)
 	ON_COMMAND(ID_CAMERA_PROPERTIES, OnCameraProperties)
-	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	ON_COMMAND(ID_CAMERA_ENABLE, OnCameraEnable)
+	ON_UPDATE_COMMAND_UI(ID_CAMERA_DELETE, OnUpdateCameraDelete)
 	ON_UPDATE_COMMAND_UI(ID_CAMERA_ENABLE, OnUpdateCameraEnable)
 	ON_BN_CLICKED(IDC_MOVE_LEFT, OnMoveLeft)
 	ON_BN_CLICKED(IDC_MOVE_RIGHT, OnMoveRight)
@@ -433,64 +436,9 @@ void CAppLinesView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* 
 	}
 }
 
-void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
+b3_bool CAppLinesView::b3IsMouseActionAllowed()
 {
-	// TODO: Add your message handler code here and/or call default
-	CAppLinesDoc *pDoc = GetDocument();
-
-	CScrollView::OnMouseMove(nFlags, point);
-	if (!pDoc->b3IsRaytracing())
-	{
-		m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
-	}
-}
-
-void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppLinesDoc *pDoc = GetDocument();
-
-	CScrollView::OnLButtonDown(nFlags, point);
-	if (!pDoc->b3IsRaytracing())
-	{
-		m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
-	}
-}
-
-void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppLinesDoc *pDoc = GetDocument();
-
-	CScrollView::OnLButtonUp(nFlags, point);
-	if (!pDoc->b3IsRaytracing())
-	{
-		m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
-	}
-}
-
-void CAppLinesView::OnRButtonDown(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppLinesDoc *pDoc = GetDocument();
-
-	CScrollView::OnRButtonDown(nFlags, point);
-	if (!pDoc->b3IsRaytracing())
-	{
-		m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
-	}
-}
-
-void CAppLinesView::OnRButtonUp(UINT nFlags, CPoint point) 
-{
-	// TODO: Add your message handler code here and/or call default
-	CAppLinesDoc *pDoc = GetDocument();
-
-	CScrollView::OnRButtonUp(nFlags, point);
-	if (!pDoc->b3IsRaytracing())
-	{
-		m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
-	}
+	return !GetDocument()->b3IsRaytracing();
 }
 
 void CAppLinesView::OnObjSelect() 

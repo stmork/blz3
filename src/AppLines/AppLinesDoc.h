@@ -49,8 +49,8 @@ public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesDoc)
 	public:
-	virtual BOOL OnNewDocument();
 	virtual void Serialize(CArchive& ar);
+	virtual BOOL OnNewDocument();
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 	virtual void OnCloseDocument();
@@ -125,7 +125,6 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 private:
-	CDlgHierarchy *m_DlgHierarchy;
 	b3_bool        b3WriteBBox(b3BBox *bbox,b3FileAbstract *file);
 	b3_bool        b3WriteBBox(b3BBox *bbox,const char *filename);
 	b3_bool        b3PutClipboard(b3BBox *bbox);

@@ -99,6 +99,7 @@ public:
 #endif
 
 protected:
+	virtual b3_bool b3IsMouseActionAllowed();
 
 // Generated message map functions
 protected:
@@ -107,38 +108,38 @@ protected:
 	afx_msg void OnDestroy();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnViewPerspective();
 	afx_msg void OnViewTop();
 	afx_msg void OnViewFront();
 	afx_msg void OnViewRight();
 	afx_msg void OnViewLeft();
 	afx_msg void OnViewBack();
+	afx_msg void OnViewSmaller();
+	afx_msg void OnViewSelect();
+	afx_msg void OnViewBigger();
+	afx_msg void OnViewOptimal();
+	afx_msg void OnViewPop();
+	afx_msg void OnViewMoveRight();
+	afx_msg void OnViewMoveLeft();
+	afx_msg void OnViewMoveUp();
+	afx_msg void OnViewMoveDown();
 	afx_msg void OnUpdateViewPerspective(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewTop(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewFront(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewRight(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewLeft(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewBack(CCmdUI* pCmdUI);
-	afx_msg void OnViewSmaller();
-	afx_msg void OnViewSelect();
-	afx_msg void OnViewBigger();
-	afx_msg void OnViewOptimal();
-	afx_msg void OnViewPop();
 	afx_msg void OnUpdateViewSmaller(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewSelect(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewBigger(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewOptimal(CCmdUI* pCmdUI);
-	afx_msg void OnViewMoveRight();
-	afx_msg void OnViewMoveLeft();
-	afx_msg void OnViewMoveUp();
-	afx_msg void OnViewMoveDown();
 	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateViewMove(CCmdUI* pCmdUI);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
