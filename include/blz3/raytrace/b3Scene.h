@@ -26,6 +26,7 @@
 #include "blz3/image/b3Tx.h"
 #include "blz3/image/b3TxPool.h"
 #include "blz3/system/b3Display.h"
+#include "blz3/system/b3Atomic.h"
 
 /*************************************************************************
 **                                                                      **
@@ -99,7 +100,6 @@ protected:
 	b3LensFlare     *m_LensFlare;
 	b3CameraPart    *m_ActualCamera;
 	b3Clouds        *m_Clouds;
-	//b3_f64           m_ShadowFactor;        // Schattenhelligkeit
 	b3Color          m_AvrgColor;
 	b3Color          m_DiffColor;
 	b3_vector64      m_xHalfDir;
@@ -133,6 +133,13 @@ public:
 
 	static b3TxPool  m_TexturePool;
 	static b3_f64    epsilon;
+
+public:
+	// Some counters
+	static b3AtomicCounter    m_IntersectBBox;
+	static b3AtomicCounter    m_IntersectBBoxSuccess;
+	static b3AtomicCounter    m_IntersectShape;
+	static b3AtomicCounter    m_IntersectShapeSuccess;
 
 public:
 	B3_ITEM_INIT(b3Scene);
