@@ -98,7 +98,7 @@ SOURCE=.\b3ComboBox.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Config.cc
+SOURCE=.\b3Config.cpp
 # End Source File
 # Begin Source File
 

@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/10/20 16:25:07  sm
+**      - Windows compile check an minor fixes
+**
 **      Revision 1.13  2001/10/19 18:27:28  sm
 **      - Fixing LDC bug
 **      - Optimizing color routines
@@ -309,7 +312,6 @@ b3_bool b3MatTexture::b3GetColors(
 	b3_color *ambient,
 	b3_color *specular)
 {
-	b3_pkd_color result;
 	b3_coord     x,y;
 	b3_f64       fx,fy;
 

@@ -42,6 +42,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "blz3/system/b3Thread.h"
+
 #ifdef _DEBUG
 #include <assert.h>
 #define B3_ASSERT(cond) ASSERT(cond)
@@ -83,6 +85,9 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2001/10/20 16:25:07  sm
+**	- Windows compile check an minor fixes
+**
 **	Revision 1.15  2001/10/20 16:14:59  sm
 **	- Some runtime environment cleanups. The CPU count is determined
 **	  only once.
@@ -91,7 +96,7 @@
 **	  bug fxing of the rotation spline shapes. (Phuu!)
 **	- The next job is to implement different row sampler. Then we
 **	  should implemented the base set of the Blizzard II raytracer.
-**
+**	
 **	Revision 1.14  2001/10/17 21:09:06  sm
 **	- Triangle support added for intersections, normal computations. So
 **	  Spline shapes can be computed, too. Now only CSG is missing.
