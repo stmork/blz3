@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/08/22 09:39:26  sm
+**	- Found TGA file as JPEG. Fixed.
+**	- Some exception handling problems found in bimg3.
+**
 **	Revision 1.22  2002/08/02 11:59:25  sm
 **	- b3Thread::b3Wait now returns thread result.
 **	- b3Log_SetLevel returns old log level.
 **	- Introduced b3PrepareInfo class for multithreaded initialization
 **	  support. Should be used for b3AllocVertices and b3ComputeVertices:-)
 **	- b3TxPool class is now thread safe.
-**
+**	
 **	Revision 1.21  2002/02/17 21:25:06  sm
 **	- Introduced CSG
 **	  o Heavily reorganized shape inheritance
@@ -225,7 +229,7 @@ b3Tx *b3TxPool::b3FindTextureUnsafe(const char *ParamName)
 	return tx;
 }
 
-b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
+b3Tx *b3TxPool::b3LoadTexture(const char *Name)
 {
 	b3Tx *tx;
 

@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/08/22 09:39:26  sm
+**	- Found TGA file as JPEG. Fixed.
+**	- Some exception handling problems found in bimg3.
+**
 **	Revision 1.17  2004/01/05 08:01:55  sm
 **	- Added new year.
-**
+**	
 **	Revision 1.16  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
@@ -139,6 +143,23 @@ static void display(b3Tx *tx)
 	}
 }
 
+static void load(const char *name)
+{
+	try
+	{
+		texture_pool.b3LoadTexture(name);
+		b3PrintF(B3LOG_NORMAL,".");
+	}
+	catch(b3TxException &txe)
+	{
+		b3PrintF(B3LOG_NORMAL,"\nImage Exception of file %s!\n",name);
+	}
+	catch(...)
+	{
+		b3PrintF(B3LOG_NORMAL,"\nError of file %s!\n",name);
+	}
+}
+
 int main(int argc,char *argv[])
 {
 	b3FileList   list;
@@ -156,14 +177,12 @@ int main(int argc,char *argv[])
 				list.b3CreateList(argv[i]);
 				for (entry = list.b3First();entry != null;entry = entry->Succ)
 				{
-					texture_pool.b3LoadTexture(entry->b3Name());
-					b3PrintF(B3LOG_NORMAL,".");
+					load(entry->b3Name());
 				}
 				break;
 
 			case B3_TYPE_FILE:
-				texture_pool.b3LoadTexture(argv[i]);
-				b3PrintF(B3LOG_NORMAL,".");
+				load(argv[i]);
 				break;
 
 			default:
