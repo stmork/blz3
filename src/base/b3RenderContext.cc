@@ -33,10 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/09/24 13:54:24  sm
+**	- Some comment output.
+**
 **	Revision 1.6  2004/09/24 13:45:36  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
-**
+**	
 **	Revision 1.5  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
 **	
@@ -137,6 +140,10 @@ void b3RenderContext::b3Init()
 	}
 
 	b3VectorBufferObjects::b3Init(extensions);
+	if (b3VectorBufferObjects::b3HasVBO())
+	{
+		b3PrintF(B3LOG_DEBUG, "Havin vector buffer objects.\n");
+	}
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

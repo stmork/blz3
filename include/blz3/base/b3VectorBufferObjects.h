@@ -35,8 +35,6 @@ protected:
 
 public:
 	static        void    b3Init(char *extension);
-
-protected:
 	static inline b3_bool b3HasVBO()
 	{
 		return glHasVBO;
