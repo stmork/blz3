@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/04/18 08:53:04  sm
+**	- Put temporiraly some hardwired values into the oakplank.
+**
 **	Revision 1.2  2004/04/13 13:44:27  sm
 **	- Replaced some divisions by multiplications of their reciprocals.
-**
+**	
 **	Revision 1.1  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
@@ -204,6 +207,10 @@ void b3OakPlank::b3PrepareOakPlank()
 	b3_count x,y;
 	b3_index index;
 
+b3InitOakPlank();
+m_xScale /= 2;
+m_yScale /= 2;
+m_xOffset /= 2;
 	b3PrepareWood();
 	if (m_Planks != null)
 	{

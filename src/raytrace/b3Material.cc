@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.60  2004/04/18 08:53:05  sm
+**      - Put temporiraly some hardwired values into the oakplank.
+**
 **      Revision 1.59  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -1146,7 +1149,8 @@ b3_bool b3MatOakPlank::b3Prepare()
 b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
 	b3_index index;
-	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_ObjectPolar,index);
+	b3_vector point;
+	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_BoxPolar,index);
 
 	surface->m_Diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
 	surface->m_Ambient  = m_AmbColor;

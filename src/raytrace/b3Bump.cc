@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.24  2004/04/18 08:53:05  sm
+**	- Put temporiraly some hardwired values into the oakplank.
+**
 **	Revision 1.23  2004/04/17 19:17:44  sm
 **	- Minor changes
-**
+**	
 **	Revision 1.22  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
@@ -666,6 +669,7 @@ b3BumpWood::b3BumpWood(b3_u32 class_type) : b3Bump(sizeof(b3BumpWood),class_type
 	m_Amplitude = 0.3f;
 	m_dX = 1.0 / BUMP_dX;
 	m_dY = 1.0 / BUMP_dY;
+
 	b3InitWood();
 }
 
@@ -728,7 +732,6 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 	b3_vector   xWood,yWood;
 	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 
-//	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
 	wood = b3Wood::b3ComputeWood(&point);
 
@@ -841,6 +844,7 @@ b3_bool b3BumpOakPlank::b3Prepare()
 	b3_index x,y;
 	b3_f64   fx,fy,wobble;
 
+m_Amplitude = 0.001f;
 	b3PrepareOakPlank();
 
 	m_dX = 1.0 / BUMP_dX;
@@ -870,7 +874,6 @@ void b3BumpOakPlank::b3BumpNormal(b3_ray *ray)
 	b3_f64      Denom,wood,dX,dY,x,y,xLen,yLen;
 	b3_index    index,iX,iY;
 
-//	b3Vector::b3Init(&point,&ray->ipoint);
 	b3Vector::b3Init(&point,&ray->polar.m_BoxPolar);
 	wood = b3OakPlank::b3ComputeOakPlank(&point,index);
 
