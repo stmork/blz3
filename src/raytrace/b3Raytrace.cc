@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2001/11/25 19:20:32  sm
+**	- Added new acting methods:
+**	  o Camera move
+**	  o Camera turn around itself
+**	  o Camera rotate around fulcrum
+**
 **	Revision 1.27  2001/11/07 15:55:09  sm
 **	- Introducing b3TimeSpan to Windows to get computation time on
 **	  Windows as well.
 **	- Changed some include dependencies.
-**
+**	
 **	Revision 1.26  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
@@ -657,6 +663,11 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 	try
 	{
+		if (m_ActualCamera != null)
+		{
+			b3SetCamera(m_ActualCamera);
+		}
+
 		// What resolution to use
 		display->b3GetRes(xSize,ySize);
 

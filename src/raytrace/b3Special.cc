@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2001/11/25 19:20:32  sm
+**      - Added new acting methods:
+**        o Camera move
+**        o Camera turn around itself
+**        o Camera rotate around fulcrum
+**
 **      Revision 1.19  2001/11/25 12:25:31  sm
 **      - Completing some dialogs:
 **        o super sampling
@@ -238,6 +244,14 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3CrossProduct(&m_Width,&dir,&m_Height);
 	b3Vector::b3Normalize(&m_Width,width);
 	b3Vector::b3Normalize(&m_Height,height);
+}
+
+void b3CameraPart::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul(transformation,&m_EyePoint, &m_EyePoint, true);
+	b3MatrixVMul(transformation,&m_ViewPoint,&m_ViewPoint,true);
+	b3MatrixVMul(transformation,&m_Width,    &m_Width,    false);
+	b3MatrixVMul(transformation,&m_Height,   &m_Height,   false);
 }
 
 /*************************************************************************

@@ -36,11 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2001/11/25 19:20:32  sm
+**	- Added new acting methods:
+**	  o Camera move
+**	  o Camera turn around itself
+**	  o Camera rotate around fulcrum
+**
 **	Revision 1.18  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.17  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -385,6 +391,7 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	if (lHint & B3_UPDATE_CAMERA)
 	{
 		m_RenderView.b3SetCamera(m_Camera);
+//		m_Scene->b3SetCamera(m_Camera);
 		m_CameraVolume.b3Update(m_Camera);
 		doInvalidate = true;
 	}
@@ -527,36 +534,61 @@ void CAppLinesView::b3DrawRect(
 void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	CAppLinesDoc *pDoc = GetDocument();
+
 	CScrollView::OnMouseMove(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
+	if (!pDoc->b3IsRaytracing())
+	{
+		m_Action[m_SelectMode]->b3DispatchMouseMove(point.x,point.y);
+	}
 }
 
 void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	CAppLinesDoc *pDoc = GetDocument();
+
 	CScrollView::OnLButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
+	if (!pDoc->b3IsRaytracing())
+	{
+		m_Action[m_SelectMode]->b3DispatchLButtonDown(point.x,point.y,nFlags);
+	}
 }
 
 void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	CAppLinesDoc *pDoc = GetDocument();
+
 	CScrollView::OnLButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+	if (!pDoc->b3IsRaytracing())
+	{
+		m_Action[m_SelectMode]->b3DispatchLButtonUp(point.x,point.y);
+	}
 }
 
 void CAppLinesView::OnRButtonDown(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	CAppLinesDoc *pDoc = GetDocument();
+
 	CScrollView::OnRButtonDown(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
+	if (!pDoc->b3IsRaytracing())
+	{
+		m_Action[m_SelectMode]->b3DispatchRButtonDown(point.x,point.y,nFlags);
+	}
 }
 
 void CAppLinesView::OnRButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
+	CAppLinesDoc *pDoc = GetDocument();
+
 	CScrollView::OnRButtonUp(nFlags, point);
-	m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
+	if (!pDoc->b3IsRaytracing())
+	{
+		m_Action[m_SelectMode]->b3DispatchRButtonUp(point.x,point.y);
+	}
 }
 
 void CAppLinesView::OnViewPerspective() 

@@ -182,10 +182,16 @@ protected:
 	void b3UnsetMagnification();
 
 	friend class CB3Action;
+	friend class CB3MoveAction;
+	friend class CB3CameraRotateAction;
+
 	friend class CB3ActionMagnify;
 	friend class CB3ActionObjectMove;
 	friend class CB3ActionObjectRotate;
 	friend class CB3ActionObjectScale;
+	friend class CB3ActionCameraMove;
+	friend class CB3ActionCameraTurn;
+	friend class CB3ActionCameraRotate;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2001/11/25 19:20:32  sm
+**	- Added new acting methods:
+**	  o Camera move
+**	  o Camera turn around itself
+**	  o Camera rotate around fulcrum
+**
 **	Revision 1.16  2001/10/19 18:27:28  sm
 **	- Fixing LDC bug
 **	- Optimizing color routines
-**
+**	
 **	Revision 1.15  2001/10/19 14:46:57  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
@@ -217,19 +223,19 @@ b3_f64 b3AngleOfVectors(
 
 b3_f64 b3AngleOfPoints(
 	b3_vector *base,
-	b3_vector *dir1,
-	b3_vector *dir2)
+	b3_vector *point1,
+	b3_vector *point2)
 {
 	b3_vector a,b;
 	b3_f64    denom,result;
 
-	a.x = dir1->x - base->x;
-	a.y = dir1->y - base->y;
-	a.z = dir1->z - base->z;
+	a.x = point1->x - base->x;
+	a.y = point1->y - base->y;
+	a.z = point1->z - base->z;
 
-	b.x = dir2->x - base->x;
-	b.y = dir2->y - base->y;
-	b.z = dir2->z - base->z;
+	b.x = point2->x - base->x;
+	b.y = point2->y - base->y;
+	b.z = point2->z - base->z;
 
 	denom =
 		sqrt(a.x * a.x + a.y * a.y + a.z * a.z) *

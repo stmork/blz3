@@ -69,6 +69,31 @@ protected:
 	virtual void b3RUp(b3_coord x,b3_coord y);
 };
 
+class CB3MoveAction : public CB3Action
+{
+protected:
+	b3_f64    m_xRelStart,m_yRelStart;
+	b3_vector m_xDir,m_yDir,m_zDir;
+	b3_vector m_StartPoint;
+	b3_vector m_LastPoint;
+	b3_vector m_LastDiff;
+
+protected:
+	             CB3MoveAction(CAppLinesView *window);
+	virtual void b3Transform(b3_matrix *transformation);
+
+	virtual void b3LDown(b3_coord x,b3_coord y);
+	virtual void b3LMove(b3_coord x,b3_coord y);
+	virtual void b3LUp(b3_coord x,b3_coord y);
+	        
+	virtual void b3RDown(b3_coord x,b3_coord y);
+	virtual void b3RMove(b3_coord x,b3_coord y);
+	virtual void b3RUp(b3_coord x,b3_coord y);
+
+private:
+	        void b3InitTranslation(b3_f64 xRel,b3_f64 yRel);
+};
+
 class CB3ActionMagnify : public CB3Action
 {
 public:
@@ -90,27 +115,13 @@ public:
 	void b3RUp(b3_coord x,b3_coord y);
 };
 
-class CB3ActionObjectMove : public CB3Action
+class CB3ActionObjectMove : public CB3MoveAction
 {
-	b3_vector m_StartPoint;
-	b3_vector m_xDir,m_yDir,m_zDir;
-	b3_f64    m_xRelStart,m_yRelStart;
-	b3_vector m_LastPoint;
-	b3_vector m_LastDiff;
-
 public:
 	CB3ActionObjectMove(CAppLinesView *window);
 
-	void b3LDown(b3_coord x,b3_coord y);
-	void b3LMove(b3_coord x,b3_coord y);
-	void b3LUp(b3_coord x,b3_coord y);
-
-	void b3RDown(b3_coord x,b3_coord y);
-	void b3RMove(b3_coord x,b3_coord y);
-	void b3RUp(b3_coord x,b3_coord y);
-
-private:
-	void b3InitTranslation(b3_f64 xRel,b3_f64 yRel);
+protected:
+	void b3Transform(b3_matrix *transformation);
 };
 
 class CB3ActionObjectRotate : public CB3Action
@@ -142,22 +153,58 @@ public:
 	void b3LUp(b3_coord x,b3_coord y);
 };
 
-class CB3ActionCameraMove : public CB3Action
+class CB3ActionCameraMove : public CB3MoveAction
 {
+	b3CameraPart *m_Camera;
+
 public:
-	CB3ActionCameraMove(CAppLinesView *window);
+	     CB3ActionCameraMove(CAppLinesView *window);
+
+	void b3Transform(b3_matrix *transformation);
+
+	void b3LDown(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
+
+	void b3RDown(b3_coord x,b3_coord y);
+	void b3RUp(b3_coord x,b3_coord y);
 };
 
-class CB3ActionCameraTurn : public CB3Action
+class CB3CameraRotateAction : public CB3Action
+{
+protected:
+	b3CameraPart *m_Camera;
+	b3_vector *m_Center;
+	b3_vector  m_StartPoint;
+	b3_f64     m_StartAngle;
+	b3_f64     m_xRelStart;
+	b3_f64     m_yRelStart;
+	b3_f64     m_xLastAngle;
+	b3_f64     m_yLastAngle;
+	b3_line    m_Axis;
+	b3_line    m_UpDown;
+	b3_f64     m_Sign;
+
+public:
+	             CB3CameraRotateAction(CAppLinesView *window);
+	virtual void b3LDown(b3_coord x,b3_coord y);
+	virtual void b3LMove(b3_coord x,b3_coord y);
+	virtual void b3LUp(b3_coord x,b3_coord y);
+};
+
+class CB3ActionCameraTurn : public CB3CameraRotateAction
 {
 public:
 	CB3ActionCameraTurn(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
 };
 
-class CB3ActionCameraRotate : public CB3Action
+class CB3ActionCameraRotate : public CB3CameraRotateAction
 {
 public:
 	CB3ActionCameraRotate(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
 };
 
 class CB3ActionCameraView : public CB3Action

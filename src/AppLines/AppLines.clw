@@ -22,19 +22,19 @@ Class10=CDlgScene
 Class11=CMainFrame
 
 ResourceCount=14
-Resource1=IDR_MAINFRAME
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_TOOLBAR_ACTION
 Resource3=IDR_TOOLBAR_OBJECT
 Resource4=IDR_TOOLBAR_DISPLAY
 Resource5=IDR_TOOLBAR_VIEW
 Resource6=IDR_DISPLAYTYPE
 Resource7=IDR_BLZ3TYPE
-Resource8=IDD_SCENE
-Resource9=IDD_SUPER_SAMPLE
-Resource10=IDD_LENS_FLARE
-Resource11=IDD_HIERARCHY
-Resource12=IDD_NEBULAR
-Resource13=IDD_ABOUTBOX
+Resource8=IDD_SUPER_SAMPLE
+Resource9=IDD_NEBULAR
+Resource10=IDR_MAINFRAME
+Resource11=IDD_SCENE
+Resource12=IDD_LENS_FLARE
+Resource13=IDD_HIERARCHY
 Class12=CDlgDistributed
 Class13=CDlgLensFlare
 Class14=CDlgNebular
@@ -447,7 +447,7 @@ HeaderFile=DlgDistributed.h
 ImplementationFile=DlgDistributed.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_ACT_DISTRIBUTED
+LastObject=CDlgDistributed
 VirtualFilter=dWC
 
 [CLS:CDlgLensFlare]

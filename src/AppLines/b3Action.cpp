@@ -31,11 +31,17 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2001/11/25 19:20:32  sm
+**	- Added new acting methods:
+**	  o Camera move
+**	  o Camera turn around itself
+**	  o Camera rotate around fulcrum
+**
 **	Revision 1.10  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.9  2001/09/05 18:31:07  sm
 **	- Fix some minor bugs
 **	
@@ -238,6 +244,397 @@ void CB3Action::b3RUp(b3_coord x,b3_coord y)
 
 /*************************************************************************
 **                                                                      **
+**                        CB3MoveAction implementation                  **
+**                                                                      **
+*************************************************************************/
+
+CB3MoveAction::CB3MoveAction(CAppLinesView *window) :
+	CB3Action(window)
+{
+}
+
+void CB3MoveAction::b3Transform(b3_matrix *transformation)
+{
+}
+
+void CB3MoveAction::b3InitTranslation(b3_f64 xRel,b3_f64 yRel)
+{
+	b3_f64 max = 100,size;
+
+	// Compute max. extend in any direction
+	max  = m_Doc->m_Upper.x - m_Doc->m_Lower.x;
+	size = m_Doc->m_Upper.y - m_Doc->m_Lower.y;
+	if (size > max) max = size;
+	size = m_Doc->m_Upper.z - m_Doc->m_Lower.z;
+	if (size > max) max = size;
+
+	if (false)
+	{
+		m_xDir.x    = max;
+		m_xDir.y    = 0;
+		m_xDir.z    = 0;
+
+		m_yDir.x    = 0;
+		m_yDir.y    = max;
+		m_yDir.z    = 0;
+	}
+	else
+	{
+		b3CameraPart *camera = m_View->m_Camera;
+		b3_f64        x,y,denom;
+
+		x        = camera->m_Width.x;
+		y        = camera->m_Width.y;
+		B3_ASSERT((x != 0.0) && (y != 0.0));
+		denom    = max / sqrt(x * x + y * y);
+		m_xDir.x = x * denom;
+		m_xDir.y = y * denom;
+		m_xDir.z = 0;
+
+		x        = camera->m_ViewPoint.x - camera->m_EyePoint.x;
+		y        = camera->m_ViewPoint.y - camera->m_EyePoint.y;
+		B3_ASSERT((x != 0.0) && (y != 0.0));
+		denom    = max / sqrt(x * x + y * y);
+		m_yDir.x = x * denom;
+		m_yDir.y = y * denom;
+		m_yDir.z = 0;
+	}
+
+	m_zDir.x    = 0;
+	m_zDir.y    = 0;
+	m_zDir.z    = max;
+
+	m_xRelStart = xRel;
+	m_yRelStart = yRel;
+}
+
+void CB3MoveAction::b3LDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_StartPoint.x = 0;
+		m_StartPoint.y = 0;
+		m_StartPoint.z = 0;
+		m_LastPoint    = m_StartPoint;
+
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
+	}
+	else
+	{
+		b3InitTranslation(xRel,yRel);
+	}
+}
+
+void CB3MoveAction::b3LMove(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		diff.x = 0;
+		diff.y = 0;
+		diff.z = 0;
+
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
+		diff.x -= m_StartPoint.x;
+		diff.y -= m_StartPoint.y;
+		diff.z -= m_StartPoint.z;
+	}
+	else
+	{
+		// Compute delta coefficionts
+		b3_f64 xFactor = xRel - m_xRelStart;
+		b3_f64 yFactor = m_yRelStart - yRel;
+
+		// Compute moving vector;
+		diff.x = xFactor * m_xDir.x + yFactor * m_yDir.x;
+		diff.y = xFactor * m_xDir.y + yFactor * m_yDir.y;
+		diff.z = xFactor * m_xDir.z + yFactor * m_yDir.z;
+	}
+
+	// Do action!
+	m_Doc->m_Info->b3SnapToGrid(&diff);
+	if (!b3IsEqual(&diff,&m_LastDiff))
+	{
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			m_LastDiff = diff;
+			b3MatrixMove(null,&m_Transformation,&diff);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Transform(&activity);
+		}
+	}
+}
+
+void CB3MoveAction::b3LUp(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		diff.x = 0;
+		diff.y = 0;
+		diff.z = 0;
+
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
+		diff.x -= m_StartPoint.x;
+		diff.y -= m_StartPoint.y;
+		diff.z -= m_StartPoint.z;
+	}
+	else
+	{
+		// Compute delta coefficionts
+		b3_f64 xFactor = xRel - m_xRelStart;
+		b3_f64 yFactor = m_yRelStart - yRel;
+
+		// Compute moving vector;
+		diff.x = xFactor * m_xDir.x + yFactor * m_yDir.x;
+		diff.y = xFactor * m_xDir.y + yFactor * m_yDir.y;
+		diff.z = xFactor * m_xDir.z + yFactor * m_yDir.z;
+	}
+
+	// Do action!
+	if (b3MatrixInv(&m_Transformation,&inv))
+	{
+		m_Doc->m_Info->b3SnapToGrid(&diff);
+		b3MatrixMove(null,&m_Transformation,&diff);
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Transform(&activity);
+		m_Doc->SetModifiedFlag();
+	}
+}
+
+void CB3MoveAction::b3RDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CB3Action::b3RDown(x,y);
+		return;
+	}
+	else
+	{
+		b3InitTranslation(xRel,yRel);
+	}
+}
+
+void CB3MoveAction::b3RMove(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel,yFactor;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		// Do default!
+		CB3Action::b3RMove(x,y);
+		return;
+	}
+
+	// Compute delta coefficionts
+	b3GetRelCoord(x,y,xRel,yRel);
+	yFactor = m_yRelStart - yRel;
+
+	// Compute moving vector;
+	diff.x = yFactor * m_zDir.x;
+	diff.y = yFactor * m_zDir.y;
+	diff.z = yFactor * m_zDir.z;
+
+	// Do action!
+	m_Doc->m_Info->b3SnapToGrid(&diff);
+	if (!b3IsEqual(&diff,&m_LastDiff))
+	{
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			m_LastDiff = diff;
+			b3MatrixMove(null,&m_Transformation,&diff);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			b3Transform(&activity);
+		}
+	}
+}
+
+void CB3MoveAction::b3RUp(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel,yFactor;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		// Do default!
+		CB3Action::b3RUp(x,y);
+		return;
+	}
+
+	// Compute delta coefficionts
+	b3GetRelCoord(x,y,xRel,yRel);
+	yFactor = m_yRelStart - yRel;
+
+	// Compute moving vector;
+	diff.x = yFactor * m_zDir.x;
+	diff.y = yFactor * m_zDir.y;
+	diff.z = yFactor * m_zDir.z;
+
+	if (b3MatrixInv(&m_Transformation,&inv))
+	{
+		b3MatrixMove(null,&m_Transformation,&diff);
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		b3Transform(&activity);
+		m_Doc->SetModifiedFlag();
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        CB3CameraRotateAction implementation          **
+**                                                                      **
+*************************************************************************/
+
+CB3CameraRotateAction::CB3CameraRotateAction(CAppLinesView *window) :
+	CB3Action(window)
+{
+	m_Sign = 0;
+}
+
+void CB3CameraRotateAction::b3LDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	m_StartPoint = *m_Center;
+	m_Axis.pos   = *m_Center;
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_View->m_RenderView.b3GetViewDirection(&m_Axis.dir);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
+	
+		m_StartAngle = m_View->m_RenderView.b3GetPositionAngle(m_Center,&m_StartPoint);
+		m_xLastAngle = m_StartAngle;
+	}
+	else
+	{
+		b3_vector view;
+
+		m_Axis.dir.x = 0;
+		m_Axis.dir.y = 0;
+		m_Axis.dir.z = 1;
+		m_UpDown.pos = *m_Center;
+		b3Vector::b3Sub(&m_Camera->m_ViewPoint,&m_Camera->m_EyePoint,&view);
+		b3Vector::b3CrossProduct(&view,&m_Axis.dir,&m_UpDown.dir);
+
+		m_xRelStart = xRel;
+		m_yRelStart = yRel;
+	}
+}
+
+void CB3CameraRotateAction::b3LMove(b3_coord x,b3_coord y)
+{
+	b3_vector point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+	b3_f64    angle;
+	b3_f64    xAngle,yAngle;
+	b3_bool   compute = false;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		if (angle != m_xLastAngle)
+		{
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_xLastAngle = angle;
+				b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+				compute = true;
+			}
+		}
+	}
+	else
+	{
+		xAngle = (xRel - m_xRelStart) * M_PI * 2;
+		yAngle = (yRel - m_yRelStart) * M_PI * 2;
+		m_Doc->m_Info->b3SnapToAngle(xAngle);
+		m_Doc->m_Info->b3SnapToAngle(yAngle);
+		if ((xAngle != m_xLastAngle) || (yAngle != m_yLastAngle))
+		{
+			if (b3MatrixInv(&m_Transformation,&inv))
+			{
+				m_xLastAngle = xAngle;
+				m_yLastAngle = yAngle;
+				b3MatrixRotVec(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
+				b3MatrixRotVec(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
+				compute = true;
+			}
+		}
+	}
+
+	if (compute)
+	{
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		m_Camera->b3Transform(&activity);
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+	}
+}
+
+void CB3CameraRotateAction::b3LUp(b3_coord x,b3_coord y)
+{
+	b3_vector point;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+	b3_f64    angle;
+	b3_f64    xAngle,yAngle;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		point = *m_Center;
+
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+
+		angle = m_StartAngle - m_View->m_RenderView.b3GetPositionAngle(m_Center,&point);
+		m_Doc->m_Info->b3SnapToAngle(angle);
+		b3MatrixRotVec(null,&m_Transformation,&m_Axis,angle);
+	}
+	else
+	{
+		xAngle = (xRel - m_xRelStart) * M_PI * 2;
+		yAngle = (yRel - m_yRelStart) * M_PI * 2;
+		m_Doc->m_Info->b3SnapToAngle(xAngle);
+		m_Doc->m_Info->b3SnapToAngle(yAngle);
+		b3MatrixRotVec(null,             &m_Transformation,&m_UpDown, yAngle * m_Sign);
+		b3MatrixRotVec(&m_Transformation,&m_Transformation,&m_Axis,   xAngle * m_Sign);
+	}
+
+	if (b3MatrixInv(&m_Transformation,&inv))
+	{
+		b3MatrixMMul(&inv,&m_Transformation,&activity);
+		m_Camera->b3Transform(&activity);
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+		m_Doc->SetModifiedFlag();
+	}
+	m_Camera = null;
+}
+
+/*************************************************************************
+**                                                                      **
 **                        CB3ActionMagnify implementation               **
 **                                                                      **
 *************************************************************************/
@@ -304,255 +701,15 @@ void CB3ActionObjectSelect::b3RUp(b3_coord x,b3_coord y)
 *************************************************************************/
 
 CB3ActionObjectMove::CB3ActionObjectMove(CAppLinesView *window) :
-	CB3Action(window)
+	CB3MoveAction(window)
 {
 }
 
-void CB3ActionObjectMove::b3InitTranslation(b3_f64 xRel,b3_f64 yRel)
+void CB3ActionObjectMove::b3Transform(b3_matrix *transformation)
 {
-	b3_f64 max = 100,size;
-
-	// Compute max. extend in any direction
-	max  = m_Doc->m_Upper.x - m_Doc->m_Lower.x;
-	size = m_Doc->m_Upper.y - m_Doc->m_Lower.y;
-	if (size > max) max = size;
-	size = m_Doc->m_Upper.z - m_Doc->m_Lower.z;
-	if (size > max) max = size;
-
-	if (false)
-	{
-		m_xDir.x    = max;
-		m_xDir.y    = 0;
-		m_xDir.z    = 0;
-
-		m_yDir.x    = 0;
-		m_yDir.y    = max;
-		m_yDir.z    = 0;
-	}
-	else
-	{
-		b3CameraPart *camera = m_View->m_Camera;
-		b3_f64        x,y,denom;
-
-		x        = camera->m_Width.x;
-		y        = camera->m_Width.y;
-		B3_ASSERT((x != 0.0) && (y != 0.0));
-		denom    = max / sqrt(x * x + y * y);
-		m_xDir.x = x * denom;
-		m_xDir.y = y * denom;
-		m_xDir.z = 0;
-
-		x        = camera->m_ViewPoint.x - camera->m_EyePoint.x;
-		y        = camera->m_ViewPoint.y - camera->m_EyePoint.y;
-		B3_ASSERT((x != 0.0) && (y != 0.0));
-		denom    = max / sqrt(x * x + y * y);
-		m_yDir.x = x * denom;
-		m_yDir.y = y * denom;
-		m_yDir.z = 0;
-	}
-
-	m_zDir.x    = 0;
-	m_zDir.y    = 0;
-	m_zDir.z    = max;
-
-	m_xRelStart = xRel;
-	m_yRelStart = yRel;
-}
-
-void CB3ActionObjectMove::b3LDown(b3_coord x,b3_coord y)
-{
-	b3_f64 xRel,yRel;
-
-	b3GetRelCoord(x,y,xRel,yRel);
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		m_StartPoint.x = 0;
-		m_StartPoint.y = 0;
-		m_StartPoint.z = 0;
-		m_LastPoint    = m_StartPoint;
-
-		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
-	}
-	else
-	{
-		b3InitTranslation(xRel,yRel);
-	}
-}
-
-void CB3ActionObjectMove::b3LMove(b3_coord x,b3_coord y)
-{
-	b3_vector diff;
-	b3_matrix inv,activity;
-	b3_f64    xRel,yRel;
-
-	b3GetRelCoord(x,y,xRel,yRel);
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		diff.x = 0;
-		diff.y = 0;
-		diff.z = 0;
-
-		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
-		diff.x -= m_StartPoint.x;
-		diff.y -= m_StartPoint.y;
-		diff.z -= m_StartPoint.z;
-	}
-	else
-	{
-		// Compute delta coefficionts
-		b3_f64 xFactor = xRel - m_xRelStart;
-		b3_f64 yFactor = m_yRelStart - yRel;
-
-		// Compute moving vector;
-		diff.x = xFactor * m_xDir.x + yFactor * m_yDir.x;
-		diff.y = xFactor * m_xDir.y + yFactor * m_yDir.y;
-		diff.z = xFactor * m_xDir.z + yFactor * m_yDir.z;
-	}
-
-	// Do action!
-	m_Doc->m_Info->b3SnapToGrid(&diff);
-	if (!b3IsEqual(&diff,&m_LastDiff))
-	{
-		if (b3MatrixInv(&m_Transformation,&inv))
-		{
-			m_LastDiff = diff;
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		}
-	}
-}
-
-void CB3ActionObjectMove::b3LUp(b3_coord x,b3_coord y)
-{
-	b3_vector diff;
-	b3_matrix inv,activity;
-	b3_f64    xRel,yRel;
-
-	b3GetRelCoord(x,y,xRel,yRel);
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		diff.x = 0;
-		diff.y = 0;
-		diff.z = 0;
-
-		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
-		diff.x -= m_StartPoint.x;
-		diff.y -= m_StartPoint.y;
-		diff.z -= m_StartPoint.z;
-	}
-	else
-	{
-		// Compute delta coefficionts
-		b3_f64 xFactor = xRel - m_xRelStart;
-		b3_f64 yFactor = m_yRelStart - yRel;
-
-		// Compute moving vector;
-		diff.x = xFactor * m_xDir.x + yFactor * m_yDir.x;
-		diff.y = xFactor * m_xDir.y + yFactor * m_yDir.y;
-		diff.z = xFactor * m_xDir.z + yFactor * m_yDir.z;
-	}
-
-	// Do action!
-	if (b3MatrixInv(&m_Transformation,&inv))
-	{
-		m_Doc->m_Info->b3SnapToGrid(&diff);
-		b3MatrixMove(null,&m_Transformation,&diff);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
-		m_Doc->m_Scene->b3Transform(&activity);
-		m_Doc->b3ComputeBounds();
-		m_Doc->SetModifiedFlag();
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-	}
-}
-
-void CB3ActionObjectMove::b3RDown(b3_coord x,b3_coord y)
-{
-	b3_f64 xRel,yRel;
-
-	b3GetRelCoord(x,y,xRel,yRel);
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		CB3Action::b3RDown(x,y);
-		return;
-	}
-	else
-	{
-		b3InitTranslation(xRel,yRel);
-	}
-}
-
-void CB3ActionObjectMove::b3RMove(b3_coord x,b3_coord y)
-{
-	b3_vector diff;
-	b3_matrix inv,activity;
-	b3_f64    xRel,yRel,yFactor;
-
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		// Do default!
-		CB3Action::b3RMove(x,y);
-		return;
-	}
-
-	// Compute delta coefficionts
-	b3GetRelCoord(x,y,xRel,yRel);
-	yFactor = m_yRelStart - yRel;
-
-	// Compute moving vector;
-	diff.x = yFactor * m_zDir.x;
-	diff.y = yFactor * m_zDir.y;
-	diff.z = yFactor * m_zDir.z;
-
-	// Do action!
-	m_Doc->m_Info->b3SnapToGrid(&diff);
-	if (!b3IsEqual(&diff,&m_LastDiff))
-	{
-		if (b3MatrixInv(&m_Transformation,&inv))
-		{
-			m_LastDiff = diff;
-			b3MatrixMove(null,&m_Transformation,&diff);
-			b3MatrixMMul(&inv,&m_Transformation,&activity);
-			m_Doc->m_Scene->b3Transform(&activity);
-			m_Doc->b3ComputeBounds();
-			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-		}
-	}
-}
-
-void CB3ActionObjectMove::b3RUp(b3_coord x,b3_coord y)
-{
-	b3_vector diff;
-	b3_matrix inv,activity;
-	b3_f64    xRel,yRel,yFactor;
-
-	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
-	{
-		// Do default!
-		CB3Action::b3RUp(x,y);
-		return;
-	}
-
-	// Compute delta coefficionts
-	b3GetRelCoord(x,y,xRel,yRel);
-	yFactor = m_yRelStart - yRel;
-
-	// Compute moving vector;
-	diff.x = yFactor * m_zDir.x;
-	diff.y = yFactor * m_zDir.y;
-	diff.z = yFactor * m_zDir.z;
-
-	if (b3MatrixInv(&m_Transformation,&inv))
-	{
-		b3MatrixMove(null,&m_Transformation,&diff);
-		b3MatrixMMul(&inv,&m_Transformation,&activity);
-		m_Doc->m_Scene->b3Transform(&activity);
-		m_Doc->b3ComputeBounds();
-		m_Doc->SetModifiedFlag();
-		m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-	}
+	m_Doc->m_Scene->b3Transform(transformation);
+	m_Doc->b3ComputeBounds();
+	m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 }
 
 /*************************************************************************
@@ -803,8 +960,41 @@ void CB3ActionObjectScale::b3LUp(b3_coord x,b3_coord y)
 *************************************************************************/
 
 CB3ActionCameraMove::CB3ActionCameraMove(CAppLinesView *window) :
-	CB3Action(window)
+	CB3MoveAction(window)
 {
+	m_Camera = null;
+}
+
+void CB3ActionCameraMove::b3Transform(b3_matrix *transformation)
+{
+	m_Camera->b3Transform(transformation);
+	m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+}
+
+void CB3ActionCameraMove::b3LDown(b3_coord x,b3_coord y)
+{
+	m_Camera = m_View->m_Camera;
+	CB3MoveAction::b3LDown(x,y);
+}
+
+void CB3ActionCameraMove::b3LUp(b3_coord x,b3_coord y)
+{
+	CB3MoveAction::b3LUp(x,y);
+	m_Camera = null;
+}
+
+void CB3ActionCameraMove::b3RDown(b3_coord x,b3_coord y)
+{
+	CB3MoveAction::b3RDown(x,y);
+	if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_Camera = m_View->m_Camera;
+	}
+}
+void CB3ActionCameraMove::b3RUp(b3_coord x,b3_coord y)
+{
+	CB3MoveAction::b3RUp(x,y);
+	m_Camera = null;
 }
 
 /*************************************************************************
@@ -814,8 +1004,16 @@ CB3ActionCameraMove::CB3ActionCameraMove(CAppLinesView *window) :
 *************************************************************************/
 
 CB3ActionCameraTurn::CB3ActionCameraTurn(CAppLinesView *window) :
-	CB3Action(window)
+	CB3CameraRotateAction(window)
 {
+	m_Sign = -1;
+}
+
+void CB3ActionCameraTurn::b3LDown(b3_coord x,b3_coord y)
+{
+	m_Camera = m_View->m_Camera;
+	m_Center = &m_Camera->m_EyePoint;
+	CB3CameraRotateAction::b3LDown(x,y);
 }
 
 /*************************************************************************
@@ -825,8 +1023,16 @@ CB3ActionCameraTurn::CB3ActionCameraTurn(CAppLinesView *window) :
 *************************************************************************/
 
 CB3ActionCameraRotate::CB3ActionCameraRotate(CAppLinesView *window) :
-	CB3Action(window)
+	CB3CameraRotateAction(window)
 {
+	m_Sign = -1;
+}
+
+void CB3ActionCameraRotate::b3LDown(b3_coord x,b3_coord y)
+{
+	m_Camera = m_View->m_Camera;
+	m_Center = m_Doc->b3GetFulcrum();
+	CB3CameraRotateAction::b3LDown(x,y);
 }
 
 /*************************************************************************
