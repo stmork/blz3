@@ -1,4 +1,3 @@
-
 /*
 **
 **      $Filename:      b3Render.cc $
@@ -44,6 +43,9 @@
 
 /*
 **      $Log$
+**      Revision 1.83  2004/08/10 09:25:20  sm
+**      - Merging
+**
 **      Revision 1.82  2004/08/09 10:09:05  sm
 **      - Added color palette reduction and its tool.
 **
