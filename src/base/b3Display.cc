@@ -42,9 +42,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/23 10:58:38  sm
+**	- Accelerated b3Display.
+**	- Fixed YUV conversion.
+**	- Accelerated ILBM access to image  pixel/row.
+**
 **	Revision 1.5  2001/12/08 21:37:38  sm
 **	- Added "No Gfx" support
-**
+**	
 **	Revision 1.4  2001/11/08 19:31:33  sm
 **	- Nasty CR/LF removal!
 **	- Added TGA/RGB8/PostScript image saving.
@@ -72,22 +77,22 @@
 b3Display::b3Display()
 {
 #ifdef LOW_RES
-	m_xs = 240;
-	m_ys = 180;
+	m_xMax   = 240;
+	m_yMax   = 180;
 #else
-	m_xs = 768;
-	m_ys = 576;
+	m_xMax   = 768;
+	m_yMax   = 576;
 #endif
 	m_depth  = 24;
 	m_Tx     = new b3Tx();
-	m_Tx->b3AllocTx(m_xs,m_ys,m_depth);
+	m_Tx->b3AllocTx(m_xMax,m_yMax,m_depth);
 	m_Buffer = (b3_pkd_color *)m_Tx->b3GetData();
 }
 
 b3Display::b3Display(b3Tx *tx)
 {
-	m_xs     = tx->xSize;
-	m_ys     = tx->ySize;
+	m_xMax   = tx->xSize;
+	m_yMax   = tx->ySize;
 	m_depth  = tx->depth;
 	m_Buffer = (b3_pkd_color *)tx->b3GetData();
 	m_Tx     = tx;
@@ -118,8 +123,8 @@ void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
 		title,
 		xSize,ySize);
-	m_xs    = xSize;
-	m_ys    = ySize;
+	m_xMax  = xSize;
+	m_yMax  = ySize;
 	m_depth = 24;
 	m_Tx    = new b3Tx();
 	m_Tx->b3AllocTx(xSize,ySize,m_depth);
@@ -134,8 +139,8 @@ b3Display::~b3Display()
 
 void b3Display::b3GetRes(b3_res &xSize,b3_res &ySize)
 {
-	xSize = m_xs;
-	ySize = m_ys;
+	xSize = m_xMax;
+	ySize = m_yMax;
 }
 
 void b3Display::b3PutRow(b3Row *row)
@@ -145,27 +150,37 @@ void b3Display::b3PutRow(b3Row *row)
 
 	B3_ASSERT(m_Buffer != null);
 	src = row->m_buffer;
-	dst = &m_Buffer[y * m_xs];
+	dst = &m_Buffer[y * m_xMax];
 	if (src != dst)
 	{
-		b3LongMemCopy(dst,src,m_xs);
+		b3LongMemCopy(dst,src,m_xMax);
+	}
+}
+
+void b3Display::b3PutTx(b3Tx *tx)
+{
+	b3_coord y;
+
+	for (y = 0;y < m_yMax;y++)
+	{
+		tx->b3GetRow(&m_Buffer[y * m_xMax],y);
 	}
 }
 
 void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
 {
 	B3_ASSERT(m_Buffer != null);
-	if ((x < 0) || (x >= m_xs)) return;
-	if ((y < 0) || (y >= m_ys)) return;
-	m_Buffer[y * m_xs + x] = Color;
+	if ((x < 0) || (x >= m_xMax)) return;
+	if ((y < 0) || (y >= m_yMax)) return;
+	m_Buffer[y * m_xMax + x] = Color;
 }
 
 b3_pkd_color  b3Display::b3GetPixel(b3_coord x,b3_coord y)
 {
 	B3_ASSERT(m_Buffer != null);
-	if ((x < 0) || (x >= m_xs)) return 0;
-	if ((y < 0) || (y >= m_ys)) return 0;
-	return (m_Buffer[y * m_xs + x]);
+	if ((x < 0) || (x >= m_xMax)) return 0;
+	if ((y < 0) || (y >= m_yMax)) return 0;
+	return (m_Buffer[y * m_xMax + x]);
 }
 
 b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)

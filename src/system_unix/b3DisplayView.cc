@@ -40,10 +40,15 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2001/12/23 10:58:38  sm
+**	- Accelerated b3Display.
+**	- Fixed YUV conversion.
+**	- Accelerated ILBM access to image  pixel/row.
+**
 **	Revision 1.1  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.9  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -267,7 +272,7 @@ inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_15 (
 	if (b3Dither3(ARGB >>  8,x,y)) g += 0x000800;
 	if (b3Dither3(ARGB      ,x,y)) b += 0x000008;
 
-return ((r >> 9) | (g >> 6) | (b >>  3));
+	return ((r >> 9) | (g >> 6) | (b >>  3));
 }
 
 inline b3_pkd_color b3DisplayView::b3ARGBtoPIXEL_16 (
@@ -300,6 +305,7 @@ void b3DisplayView::b3Open(b3_res xSize,b3_res ySize)
 	XEvent         report;
 	b3_bool        Loop = true;
 	XTextProperty  CInfoName;
+	b3_res         xScr,yScr;
 
 	if (m_Title == null)
 	{
@@ -309,11 +315,13 @@ void b3DisplayView::b3Open(b3_res xSize,b3_res ySize)
 	m_Display = XOpenDisplay(NULL);
 	m_Screen  = DefaultScreen (m_Display);
 	m_depth   = DefaultDepth  (m_Display,m_Screen);
-	m_xMax    = DisplayWidth  (m_Display,m_Screen) - 20;
-	m_yMax    = DisplayHeight (m_Display,m_Screen) - 15;
+	m_xMax    = xSize;
+	m_yMax    = ySize;
+	xScr      = DisplayWidth  (m_Display,m_Screen) - 20;
+	yScr      = DisplayHeight (m_Display,m_Screen) - 15;
 
-	m_xs      = B3_MIN(xSize,m_xMax);
-	m_ys      = B3_MIN(ySize,m_yMax);
+	m_xs      = B3_MIN(m_xMax,xScr);
+	m_ys      = B3_MIN(m_yMax,yScr);
 	m_Opened  = false;
 	m_Closed  = false;
 
@@ -321,13 +329,13 @@ void b3DisplayView::b3Open(b3_res xSize,b3_res ySize)
 	Values.function      = GXcopy;
 
 #ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",xSize);
-	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",ySize);
+	b3PrintF (B3LOG_NORMAL,"xMax:   %4ld\n",m_xMax);
+	b3PrintF (B3LOG_NORMAL,"yMax:   %4ld\n",m_yMax);
 	b3PrintF (B3LOG_NORMAL,"dep:    %4ld\n",m_depth);
 	b3PrintF (B3LOG_NORMAL,"planes: %4ld\n",DisplayPlanes (m_Display,m_Screen));
 #endif
 
-	m_Buffer = (b3_pkd_color *)b3Alloc(sizeof(b3_pkd_color) * m_xs * m_ys);
+	m_Buffer = (b3_pkd_color *)b3Alloc(sizeof(b3_pkd_color) * m_xMax * m_yMax);
 	if (m_Buffer == null)
 	{
 		b3PrintF (B3LOG_NORMAL,"Blizzard III ERROR:\n");
@@ -402,12 +410,12 @@ void b3DisplayView::b3Close()
 	XCloseDisplay (m_Display);
 }
 
-void b3DisplayView::b3FirstDrawing ()
+inline void b3DisplayView::b3FirstDrawing ()
 {
 	m_Opened = true;
 }
 
-void b3DisplayView::b3RefreshAll ()
+inline void b3DisplayView::b3RefreshAll ()
 {
 	if (m_Opened)
 	{
@@ -453,58 +461,74 @@ b3DisplayView::~b3DisplayView()
 	b3Close();
 }
 
-
 void b3DisplayView::b3PutRow(b3Row *row)
 {
 	b3_pkd_color *ptr = row->m_buffer;
-	b3_pkd_color  pixel;
-	b3_coord      x,y = row->m_y;
-
-	if (y >= m_ys)
-	{
-		return;
-	}
+	b3_coord      y = row->m_y;
 
 	b3Display::b3PutRow(row);
-	if (m_Opened)
+	if (m_Opened && (y < m_ys))
 	{
 		m_Mutex.b3Lock();
-		switch (m_depth)
-		{
-			case  8 :
-				for (x = 0;x < m_xs;x++)
-				{
-					pixel = b3ARGBtoPIXEL_08 (ptr[x],x,y);
-					XSetForeground (m_Display,m_GC,pixel);
-					XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-				}
-				break;
-			case 15 :
-				for (x = 0;x < m_xs;x++)
-				{
-					pixel = b3ARGBtoPIXEL_15 (ptr[x],x,y);
-					XSetForeground (m_Display,m_GC,pixel);
-					XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-				}
-				break;
-			case 16 :
-				for (x = 0;x < m_xs;x++)
-				{
-					pixel = b3ARGBtoPIXEL_16 (ptr[x],x,y);
-					XSetForeground (m_Display,m_GC,pixel);
-					XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-				}
-				break;
-			default :
-				for (x = 0;x < m_xs;x++)
-				{
-					XSetForeground (m_Display,m_GC,ptr[x]);
-					XDrawPoint     (m_Display,m_Image,m_GC,x,y);
-				}
-				break;
-		}
+		b3RefreshRow(y);
 		XCopyArea (m_Display,m_Image,m_Window,m_GC,0,y,m_xs,1,0,y);
 		m_Mutex.b3Unlock();
+	}
+}
+
+void b3DisplayView::b3PutTx(b3Tx *tx)
+{
+	b3_coord y;
+
+	b3Display::b3PutTx(tx);
+	m_Mutex.b3Lock();
+	for (y = 0;y < m_ys;y++)
+	{
+		b3RefreshRow(y);
+	}
+	XCopyArea (m_Display,m_Image,m_Window,m_GC,0,0,m_xs,m_ys,0,0);
+	m_Mutex.b3Unlock();
+}
+
+inline void b3DisplayView::b3RefreshRow(b3_coord y)
+{
+	b3_pkd_color *ptr = &m_Buffer[y * m_xMax];
+	b3_pkd_color  pixel;
+	b3_coord      x;
+	
+	switch (m_depth)
+	{
+		case  8 :
+			for (x = 0;x < m_xs;x++)
+			{
+				pixel = b3ARGBtoPIXEL_08 (ptr[x],x,y);
+				XSetForeground (m_Display,m_GC,pixel);
+				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
+			}
+			break;
+		case 15 :
+			for (x = 0;x < m_xs;x++)
+			{
+				pixel = b3ARGBtoPIXEL_15 (ptr[x],x,y);
+				XSetForeground (m_Display,m_GC,pixel);
+				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
+			}
+			break;
+		case 16 :
+			for (x = 0;x < m_xs;x++)
+			{
+				pixel = b3ARGBtoPIXEL_16 (ptr[x],x,y);
+				XSetForeground (m_Display,m_GC,pixel);
+				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
+			}
+			break;
+		default :
+			for (x = 0;x < m_xs;x++)
+			{
+				XSetForeground (m_Display,m_GC,ptr[x]);
+				XDrawPoint     (m_Display,m_Image,m_GC,x,y);
+			}
+			break;
 	}
 }
 

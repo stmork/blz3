@@ -48,7 +48,7 @@
 
 class b3DisplayView : public b3Display
 {
-	b3_res        m_xMax,m_yMax; // This is the max. visible size
+	b3_res        m_xs,m_ys; // This is the max. visible size
 	char         *m_Title;
 
 	// Some X values
@@ -67,10 +67,12 @@ public:
 	                   ~b3DisplayView();
 	void                b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
 	void                b3PutRow(b3Row *row);
+	void                b3PutTx(b3Tx *tx);
 	b3_bool             b3IsCancelled(b3_coord x,b3_coord y);
 	void                b3Wait();
 
 private:
+	       void         b3RefreshRow(b3_coord y);
 	static b3_bool      b3Dither( b3_pkd_color Byte,b3_count shift,b3_coord x,b3_coord y);
 	static b3_bool      b3Dither2(b3_pkd_color Byte,b3_coord x,b3_coord y);
 	static b3_bool      b3Dither3(b3_pkd_color Byte,b3_coord x,b3_coord y);

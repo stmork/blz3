@@ -36,10 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/12/23 10:58:38  sm
+**	- Accelerated b3Display.
+**	- Fixed YUV conversion.
+**	- Accelerated ILBM access to image  pixel/row.
+**
 **	Revision 1.14  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
-**
+**	
 **	Revision 1.13  2001/12/16 11:07:45  sm
 **	- Fixed b3Tx::b3Copy from ILBM images with color depth from 2 to 8.
 **	  These images are converted into B3_TX_VGA now
@@ -690,15 +695,21 @@ inline b3_pkd_color b3Tx::b3ILBMValue (
 	BytesPerLine = TX_BWA(xSize);
 	PlaneValue   = 0;
 	Address      = (b3_u08 *)data;
-	Address     += ((y+1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
-	Bit = Bits[x & 7];
+	Address     += ((y + 1) * BytesPerLine * depth + (x >> 3));
+	Bit          = Bits[x & 7];
 	for (i = 0;i < depth;i++)
 	{
-		PlaneValue *= 2;
-		if (Address[0] & Bit) PlaneValue |= 1;
-		Address -= BytesPerLine;
+		Address     -= BytesPerLine;
+		PlaneValue <<= 1;
+		if (Address[0] & Bit)
+		{
+			PlaneValue |= 1;
+		}
 	}
-	if (palette != null) return palette[PlaneValue];
+	if (palette != null)
+	{
+		return palette[PlaneValue];
+	}
 
 	if (depth >= 24)
 	{
@@ -740,8 +751,7 @@ inline b3_pkd_color b3Tx::b3VGAValue (
 	b3_coord x,
 	b3_coord y)
 {
-	if (palette == null) return 0;
-	return palette[data[y * xSize + x]];
+	return palette == null ? 0 : palette[data[y * xSize + x]];
 }
 
 /*************************************************************************
@@ -762,14 +772,17 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 		case B3_TX_ILBM :
 			xBytes = TX_BWA(xSize);
 			cPtr   = (b3_u08 *)data;
-			cPtr  += ((y + 1) * xBytes * depth + (x >> 3) - xBytes);
+			cPtr  += ((y + 1) * xBytes * depth + (x >> 3));
 			result = 0;
-			bit    = 128 >> (x & 7);
+			bit    = Bits[x & 7];
 			for (i = 0;i < depth;i++)
 			{
-				result *= 2;
-				if (*cPtr & bit) result |= 1;
-				cPtr -= xBytes;
+				cPtr    -= xBytes;
+				result <<= 1;
+				if (*cPtr & bit)
+				{
+					result |= 1;
+				}
 			}
 
 			return result != 0;
@@ -809,14 +822,17 @@ inline void b3Tx::b3GetILBM (
 		for (x = 0;x < xSize;x++)
 		{
 			Data   = (b3_u08 *)data;
-			Data  += ((y+1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
+			Data  += ((y+1) * BytesPerLine * depth + (x >> 3));
 			Color  = 0;
-			Bit    = 128 >> (x & 7);
+			Bit    = Bits[x & 7];
 			for (d = 0;d < depth;d++)
 			{
-				Color *= 2;
-				if (Data[0] & Bit) Color |= 1;
-				Data -= BytesPerLine;
+				Data   -= BytesPerLine;
+				Color <<= 1;
+				if (Data[0] & Bit)
+				{
+					Color |= 1;
+				}
 			}
 			ColorLine[0] = palette[Color];
 			ColorLine++;
@@ -827,14 +843,17 @@ inline void b3Tx::b3GetILBM (
 		for (x = 0;x < xSize;x++)
 		{
 			Data   = data;
-			Data  += ((y+1) * BytesPerLine * depth + (x >> 3) - BytesPerLine);
-			Color  = 0L;
-			Bit    = 128 >> (x & 7L);
+			Data  += ((y + 1) * BytesPerLine * depth + (x >> 3));
+			Color  = 0;
+			Bit    = Bits[x & 7];
 			for (d = 0;d < depth;d++)
 			{
-				Color *= 2;
-				if (Data[0] & Bit) Color |= 1;
-				Data -= BytesPerLine;
+				Data   -= BytesPerLine;
+				Color <<= 1;
+				if (Data[0] & Bit)
+				{
+					Color |= 1;
+				}
 			}
 			ColorLine[0] =
 				((Color & 0x0000ff) << 16) |

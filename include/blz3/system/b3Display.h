@@ -66,7 +66,7 @@ class b3Row;
 class b3Display : public b3Mem
 {
 protected:
-	b3_res                m_xs,m_ys;
+	b3_res                m_xMax,m_yMax;
 	b3_res                m_depth;
 	b3_pkd_color         *m_Buffer;
 	b3Mutex               m_Mutex;
@@ -82,6 +82,7 @@ public:
 	virtual void          b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
 	virtual b3_pkd_color  b3GetPixel(b3_coord x,b3_coord y);
 	virtual void          b3PutRow(b3Row *row);
+	virtual void          b3PutTx(b3Tx *tx);
 	virtual b3_bool       b3IsCancelled(b3_coord x,b3_coord y);
 	virtual void          b3Wait();
 

@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2001/12/23 10:58:38  sm
+**	- Accelerated b3Display.
+**	- Fixed YUV conversion.
+**	- Accelerated ILBM access to image  pixel/row.
+**
 **	Revision 1.6  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
-**
+**	
 **	Revision 1.5  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -82,21 +87,13 @@ public:
 static void display(b3Tx *tx)
 {
 	b3Display   *display;
-	b3ImageRow  *row;
-	b3_coord     y;
 
 	if (tx->b3IsLoaded())
 	{
 		b3PrintF(B3LOG_NORMAL,"%s: %dx%d\n",
 			tx->b3Name(),tx->xSize,tx->ySize);
 		display = new b3DisplayView(tx->xSize,tx->ySize,tx->b3Name());
-		row     = new b3ImageRow(tx->xSize);
-		for (y = 0;y < tx->ySize;y++)
-		{
-			row->b3SetRow(tx,y);
-			display->b3PutRow(row);
-		}
-		delete row;
+		display->b3PutTx(tx);
 		display->b3Wait();
 		delete display;
 	}

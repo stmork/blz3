@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/12/23 10:58:38  sm
+**	- Accelerated b3Display.
+**	- Fixed YUV conversion.
+**	- Accelerated ILBM access to image  pixel/row.
+**
 **	Revision 1.5  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
-**
+**	
 **	Revision 1.4  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -732,8 +737,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
-		LongData = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
-		if (LongData == null)
+		if (!b3AllocTx(xSize,ySize,8))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
@@ -741,13 +745,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
-		data = (b3_u08 *)LongData;
-
-		for (k = 0;k < Max;k++)
-		{
-			LongData++;
-			Y++;
-		}
+		memcpy(data,Y,Max);
 	}
 	else					/* bunt */
 	{
@@ -767,8 +765,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
-		LongData = (b3_u32 *)b3Alloc(Max * sizeof(b3_u32));
-		if (LongData==null)
+		if (!b3AllocTx(xSize,ySize,24))
 		{
 			b3FreeTx();
 			b3PrintF(B3LOG_NORMAL,"IMG IFF  # Error allocating memory:\n");
@@ -776,7 +773,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			b3PrintF(B3LOG_NORMAL,"           line: %d\n",__LINE__);
 			throw new b3TxException(B3_TX_MEMORY);
 		}
-		data = (b3_u08 *)LongData;
+		LongData = (b3_pkd_color *)data;
 
 		Uprev = U[0];
 		Vprev = V[0];
@@ -792,12 +789,11 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 				y = Y[0];
 				u = Uprop >> Shift;
 				v = Vprop >> Shift;
-				LongData[0] =
+				*LongData++ =
 					mult_yuv_table.MultR[y + mult_yuv_table.MultRV[v]] |
 					mult_yuv_table.MultG[y + mult_yuv_table.MultGU[u] + mult_yuv_table.MultGV[v]] |
 					mult_yuv_table.MultB[y + mult_yuv_table.MultBU[u]];
 
-				LongData++;
 				Uprop -= Uprev;
 				Vprop -= Vprev;
 				Uprop += U[0];
@@ -808,5 +804,6 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 			Vprev  = *V++;
 		}
 	}
+
 	return B3_OK;
 }
