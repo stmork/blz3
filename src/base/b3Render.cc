@@ -44,6 +44,9 @@
 
 /*
 **      $Log$
+**      Revision 1.80  2004/08/07 09:17:22  sm
+**      - Reflect new Cg compiler SDK
+**
 **      Revision 1.79  2004/08/07 07:13:32  sm
 **      - Added OpenGL display list support. The display lists under Linux
 **        are slower than the raw draw array variant.
