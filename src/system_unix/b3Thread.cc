@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/08/24 13:59:54  sm
+**	- Corrected timing inside threads
+**
 **	Revision 1.9  2002/08/24 13:22:02  sm
 **	- Extensive debugging on threading code done!
 **	  o Cleaned up POSIX threads
@@ -46,7 +49,7 @@
 **	  which I only can assume what they are doing;-)
 **	- Time window in motion blur moved from [-0.5,0.5] to [0,1]
 **	  and corrected upper time limit.
-**
+**	
 **	Revision 1.8  2002/08/23 13:40:28  sm
 **	- b3Event on Un*x platforms were broken.
 **	
@@ -233,11 +236,10 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Inc()
 {
-	m_Span.b3Start();
-
 	threadMutex.b3Lock();
 	if (!m_IsRunning)
 	{
+		m_Span.b3Start();
 		m_IsRunning = true;
 		threadCount++;
 	}
@@ -251,10 +253,10 @@ void b3Thread::b3Dec()
 	{
 		threadCount--;
 		m_IsRunning = false;
+		m_Span.b3Stop();
 	}
 	threadMutex.b3Unlock();
 
-	m_Span.b3Stop();
 }
 
 void b3Thread::b3Name(const char *task_name)
