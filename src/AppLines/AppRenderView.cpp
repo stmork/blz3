@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2003/04/05 13:57:33  sm
+**	- Fixed ticket no. 6. Problem fixed when enlarging the draw area.
+**
 **	Revision 1.26  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.25  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -449,6 +452,7 @@ void CAppRenderView::OnPaint()
 	pDoc->m_Context.glBgColor = CAppRenderDoc::m_BgColor;
 	pDoc->m_Context.glDrawCachedTextures = true;
 
+	// Make OpenGL drawings
 	GetClientRect(&rect);
 	start.b3Now();
 	b3Draw(rect.Width(),rect.Height());
