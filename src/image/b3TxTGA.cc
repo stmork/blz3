@@ -33,11 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/01 13:50:22  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -82,7 +89,7 @@ b3_result b3Tx::b3ParseTGA (b3_u08 *buffer)
 	yNewSize = b3Endian::b3GetIntel16(&buffer[14]);
 
 	b3PrintF(B3LOG_FULL,"IMG TGA  # b3ParseTGA(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 	if (b3AllocTx(xNewSize,yNewSize,24))
 	{
 		DataSize = xSize * ySize;

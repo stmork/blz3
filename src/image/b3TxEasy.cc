@@ -33,11 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.6  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -79,7 +86,7 @@ b3_result b3Tx::b3ParseRAW (
 	b3_count      i,Max;
 
 	b3PrintF(B3LOG_FULL,"IMG RAW  # b3ParseRAW(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	switch (ppm_type)
 	{
@@ -172,7 +179,7 @@ b3_result b3Tx::b3ParseBMP(b3_u08 *buffer)
 	b3_count      i,offset,value;
 
 	b3PrintF(B3LOG_FULL,"IMG BMP  # b3ParseBMP(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	if (b3Endian::b3GetIntel32(&buffer[30]) != 0)
 	{
@@ -332,7 +339,7 @@ b3_result b3Tx::b3ParseBMF (b3_u08 *buffer,b3_size buffer_size)
 	b3_count      lSize;
 
 	b3PrintF(B3LOG_FULL,"IMG BMF  # b3ParseBMF(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	xNewSize = b3Endian::b3GetIntel16 (&buffer[2]);
 	yNewSize = b3Endian::b3GetIntel16 (&buffer[4]);

@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.4  2001/12/06 16:21:56  sm
 **	- Finished CB3ControlLDC - very nice!
-**
+**	
 **	Revision 1.3  2001/11/11 14:07:15  sm
 **	- Adjusted b3Path to Un*x port.
 **	
@@ -112,10 +119,15 @@ b3_bool b3SearchPath::b3IsValid(const char *Name,char *FullName)
 				b3Path::b3LinkFileName(
 					(char *)FullName,
 					(const char *)*path,Name);
-				b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
+				b3PrintF(B3LOG_FULL,"Trying \"%s\"...",(const char *)FullName);
 				if (b3Dir::b3Exists(FullName) == B3_TYPE_FILE)
 				{
+					b3PrintF(B3LOG_FULL," OK!\n");
 					return true;
+				}
+				else
+				{
+					b3PrintF(B3LOG_FULL,"\n");
 				}
 			}
 		}

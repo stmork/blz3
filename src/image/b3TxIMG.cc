@@ -33,11 +33,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.6  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
 **	- Done some minor fixes.
-**
+**	
 **	Revision 1.5  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into
@@ -271,7 +278,7 @@ b3_result b3Tx::b3ParseSGI (b3_u08 *buffer)
 	b3_index   c;
 
 	b3PrintF(B3LOG_FULL,"IMG SGI  # b3ParseSGI(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	HeaderSGI = (struct HeaderSGI *)buffer;
 	if (HeaderSGI->imagic == IMAGIC2)

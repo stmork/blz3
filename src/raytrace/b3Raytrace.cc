@@ -36,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.30  2002/01/01 13:50:22  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.29  2001/11/26 17:16:37  sm
 **	- Linux b3TimeSpan fix
-**
+**	
 **	Revision 1.28  2001/11/25 19:20:32  sm
 **	- Added new acting methods:
 **	  o Camera move
@@ -673,7 +680,6 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 		// What resolution to use
 		display->b3GetRes(xSize,ySize);
-
 		if (!b3Prepare(xSize,ySize))
 		{
 			b3PrintF(B3LOG_NORMAL,"Cannot initialize raytracing!\n");

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2002/01/01 13:50:22  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.13  2001/10/20 16:14:59  sm
 **      - Some runtime environment cleanups. The CPU count is determined
 **        only once.
@@ -302,7 +309,7 @@ void b3Disk::b3ComputeIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		return;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	if (Limit.y1 > 0)

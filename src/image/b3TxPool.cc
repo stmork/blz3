@@ -32,12 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2002/01/01 13:50:22  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.19  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.18  2001/11/11 14:07:15  sm
 **	- Adjusted b3Path to Un*x port.
 **	
@@ -176,12 +183,14 @@ b3_bool b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 *
 	return result;
 }
 
-b3Tx *b3TxPool::b3FindTexture(const char *Name)
+b3Tx *b3TxPool::b3FindTexture(const char *ParamName)
 {
+	b3Path      Name;
 	b3Tx       *tx;
 	const char *txName;
 	b3_size     txLen,nameLen,diff;
 
+	Name.b3Correct(ParamName);
 	B3_FOR_BASE(&m_Pool,tx)
 	{
 		txName  = tx->b3Name();
@@ -201,6 +210,7 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name) /* 06.12.92 */
 	b3Tx *tx;
 
 	// find existing texture
+	b3PrintF(B3LOG_DEBUG,"IMG POOL # Image \"%s\" to load.\n",Name);
 	tx = b3FindTexture(Name);
 	if (tx == null)
 	{

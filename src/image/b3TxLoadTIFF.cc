@@ -45,13 +45,20 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/01 13:50:22  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.8  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -492,7 +499,7 @@ b3_result b3Tx::b3LoadTIFF(
 		throw new b3TxException(B3_TX_NOT_FOUND);
 	}
 	b3Name(tiff_name);
-	b3PrintF(B3LOG_FULL,"IMG TIFF # b3LoadTIFF(%s)\n",(const char *)name);
+	b3PrintF(B3LOG_FULL,"IMG TIFF # b3LoadTIFF(%s)\n",(const char *)image_name);
 
 	TIFFGetField (tiff,TIFFTAG_IMAGEWIDTH,      &xSize);
 	TIFFGetField (tiff,TIFFTAG_IMAGELENGTH,     &ySize);

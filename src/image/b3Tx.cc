@@ -36,11 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.15  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
 **	- Accelerated ILBM access to image  pixel/row.
-**
+**	
 **	Revision 1.14  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
@@ -223,7 +230,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 	depth       = 0;
 	ScanLines   = 0;
 
-	name.b3Empty();
+	image_name.b3Empty();
 	whiteRatio  = 0.025;
 	xDPI        = 1;
 	yDPI        = 1;
@@ -243,7 +250,7 @@ b3Tx::b3Tx() : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 
 b3Tx::b3Tx(b3Tx *orig) : b3Link<b3Tx>(sizeof(b3Tx),USUAL_TEXTURE)
 {
-	name.b3Empty();
+	image_name.b3Empty();
 	histogramme = null;
 	grid        = null;
 	data        = null;
@@ -598,12 +605,14 @@ b3_bool b3Tx::b3IsLoaded()
 
 char *b3Tx::b3Name()
 {
-	return (char *)name;
+	return (char *)image_name;
 }
 
 void b3Tx::b3Name(const char *ImageName)
 {
-	strcpy (name,ImageName);
+	strcpy (image_name,ImageName != null ? ImageName : "");
+	b3PrintF(B3LOG_FULL,"### CLASS: b3Tx   # b3Name(%s)\n",
+		(const char *)image_name);
 }
 
 b3Measure *b3Tx::b3GetMeasure()

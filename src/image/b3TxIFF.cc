@@ -35,11 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.6  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
 **	- Accelerated ILBM access to image  pixel/row.
-**
+**	
 **	Revision 1.5  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -93,7 +100,7 @@ b3_result b3Tx::b3ParseIFF_RGB8 (b3_u08 *buffer,b3_size buffer_size)
 	b3_index      Pos = 12,i = 0,k;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_RGB8(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	palette	 = null;
 	while (Pos < (b3_index)buffer_size)
@@ -169,7 +176,7 @@ b3_result b3Tx::b3ParseIFF_RGB4 (b3_u08 *buffer,b3_size buffer_size)
 	b3_u16  Color;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_RGB4(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	palette  = null;
 	FileType = FT_RGB4;
@@ -420,7 +427,7 @@ b3_result b3Tx::b3ParseIFF_ILBM (b3_u08 *buffer,b3_size buffer_size)
 	b3_bool  Compressed=false,Ham=false,EHB=false,Ham8=false;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_ILBM(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	palette	 = null;
 	FileType = FT_ILBM;
@@ -640,7 +647,7 @@ b3_result b3Tx::b3ParseIFF_YUVN (b3_u08 *buffer,b3_size buffer_size)
 	b3_u32  i,k,Max,Pos = 12,Count = 0,Shift;
 
 	b3PrintF(B3LOG_FULL,"IMG IFF  # b3ParseIFF_YUVN(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	palette  = null;
 	FileType = FT_YUV;

@@ -33,6 +33,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/01/01 13:50:22  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.19  2001/12/31 12:15:55  sm
 **      - Fixed obsolete b3AnimElement handling
 **
@@ -98,22 +105,28 @@
 b3TriangleShape::b3TriangleShape(b3_size class_size, b3_u32 class_type) :
 	b3Shape(class_size, class_type)
 {
-	m_GridList = null;
-	m_GridSize = 0;
+	m_Vertices  = null;
+	m_Triangles = null;
+	m_GridList  = null;
+	m_GridSize  = 0;
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 class_type) :
 	b3Shape(sizeof(b3TriangleShape), class_type)
 {
-	m_GridList = null;
-	m_GridSize = 0;
+	m_Vertices  = null;
+	m_Triangles = null;
+	m_GridList  = null;
+	m_GridSize  = 0;
 }
 
 b3TriangleShape::b3TriangleShape(b3_u32 *src) :
 	b3Shape(src)
 {
-	m_GridList = null;
-	m_GridSize = 0;
+	m_Vertices  = null;
+	m_Triangles = null;
+	m_GridList  = null;
+	m_GridSize  = 0;
 }
 
 b3TriangleShape::~b3TriangleShape()
@@ -155,7 +168,7 @@ b3_bool b3TriangleShape::b3AddCubicItem (
 	TriaInfo = new b3TriangleRef(index);
 	if (TriaInfo==null)
 	{
-		return false;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	GridList->b3First(TriaInfo);
@@ -305,6 +318,8 @@ void b3TriangleShape::b3FreeTriaRefs()
 		{
 			m_GridList[i].b3Free();
 		}
+		b3Item::b3Free(m_GridList);
+		m_GridList = null;
 	}
 }
 
@@ -414,18 +429,12 @@ b3_bool b3TriangleShape::b3Prepare()
 	if (m_Size.y < epsilon) m_Size.y = epsilon;
 	if (m_Size.z < epsilon) m_Size.z = epsilon;
 
+	b3FreeTriaRefs();
+	m_GridList = (b3Base<b3TriangleRef> *)b3Item::b3Alloc
+		(m_GridSize * m_GridSize * m_GridSize * sizeof(b3Base<b3TriangleRef>));
 	if (m_GridList == null)
 	{
-		m_GridList = (b3Base<b3TriangleRef> *)b3Item::b3Alloc
-			(m_GridSize * m_GridSize * m_GridSize * sizeof(b3Base<b3TriangleRef>));
-		if (m_GridList==null)
-		{
-			return false;
-		}
-	}
-	else
-	{
-		b3FreeTriaRefs();
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 	b3PrepareGridList();
 	return b3Shape::b3Prepare();

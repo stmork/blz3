@@ -35,12 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/01/01 13:50:22  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.3  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.2  2001/10/25 17:41:32  sm
 **	- Documenting stencils
 **	- Cleaning up image parsing routines with using exceptions.
@@ -309,21 +316,21 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 
 	if (nameTx == null)
 	{
-		if (strlen(name) == 0)
+		if (strlen(image_name) == 0)
 		{
 			throw new b3TxException(B3_TX_NOT_SAVED);
 		}
 	}
 	else
 	{
-		strcpy (name,nameTx);
+		b3Name(nameTx);
 	}
 
-	tiff = TIFFOpen(name,"w");
+	tiff = TIFFOpen(image_name,"w");
 	if (tiff)
 	{
 		b3PrintF(B3LOG_DEBUG,"### CLASS: b3Tx:  # saving TIFF (%s)\n",
-			(char *)name);
+			(char *)image_name);
 		// Now select the saving version we need.
 		if (depth == 1)
 		{

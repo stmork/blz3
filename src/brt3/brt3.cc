@@ -15,6 +15,8 @@
 **
 */
 
+#define no_DEBUG_VIEW
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III includes                         **
@@ -34,9 +36,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.16  2001/12/30 22:52:35  sm
 **	- Made b3Scene::b3SetCamera() compatible to earlier versions.
-**
+**	
 **	Revision 1.15  2001/12/30 14:16:57  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -152,6 +161,11 @@ int main(int argc,char *argv[])
 					scene->b3Reorg();
 #endif
 					scene->b3SetFilename(argv[i]);
+
+#ifdef DEBUG_VIEW
+					// Show a small display in every case
+					display = new b3DisplayView(200,150);
+#else
 					if (scene->b3GetDisplaySize(xSize,ySize))
 					{
 						if (scene->m_Flags & TP_NO_GFX)
@@ -174,6 +188,7 @@ int main(int argc,char *argv[])
 							display = new b3DisplayView();
 						}
 					}
+#endif
 
 					if ((camera = scene->b3GetCamera(false)) != null)
 					{

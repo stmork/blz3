@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/01/01 13:50:22  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.19  2001/10/20 16:14:59  sm
 **      - Some runtime environment cleanups. The CPU count is determined
 **        only once.
@@ -213,12 +220,12 @@ static GLushort box_polygons[] =
 b3RenderShapeContext::b3RenderShapeContext(b3_count new_subdiv)
 {
 #ifdef BLZ3_USE_OPENGL
-	CylinderIndices  = null;
-	CylinderPolygons = null;
-	ConeIndices      = null;
-	ConePolygons     = null;
+	m_CylinderIndices  = null;
+	m_CylinderPolygons = null;
+	m_ConeIndices      = null;
+	m_ConePolygons     = null;
 #endif
-	Between         = null;
+	m_Between          = null;
 	b3InitSubdiv(new_subdiv);
 }
 
@@ -227,17 +234,17 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 	b3_f64   aux;
 	b3_index i;
 
-	subdiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
-	if (subdiv < 8)
+	m_SubDiv = (new_subdiv > B3_MAX_RENDER_SUBDIV ? B3_MAX_RENDER_SUBDIV : new_subdiv);
+	if (m_SubDiv < 8)
 	{
-		subdiv = 8;
+		m_SubDiv = 8;
 	}
 
-	for (i = 0;i <= subdiv;i++)
+	for (i = 0;i <= m_SubDiv;i++)
 	{
-		aux    = i * M_PI * 2 / subdiv;
-		Sin[i] = sin(aux);
-		Cos[i] = cos(aux);
+		aux    = i * M_PI * 2 / m_SubDiv;
+		m_Sin[i] = sin(aux);
+		m_Cos[i] = cos(aux);
 	}
 
 #ifdef BLZ3_USE_OPENGL
@@ -245,33 +252,21 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 	GLushort *pPtr;
 	b3_index  a;
 
-	if (CylinderIndices != null)
-	{
-		b3Free(CylinderIndices);
-	}
-	if (CylinderPolygons != null)
-	{
-		b3Free(CylinderPolygons);
-	}
-	if (ConeIndices != null)
-	{
-		b3Free(ConeIndices);
-	}
-	if (ConePolygons != null)
-	{
-		b3Free(ConePolygons);
-	}
+	b3Free(m_CylinderIndices);
+	b3Free(m_CylinderPolygons);
+	b3Free(m_ConeIndices);
+	b3Free(m_ConePolygons);
 
-	CylinderIndices  = (GLushort *)b3Alloc
-			((subdiv + 1) * 3 * 2 * sizeof(GLushort));
-	CylinderPolygons = (GLushort *)b3Alloc
-			((subdiv + 1) * 2 * 3 * sizeof(GLushort));
-	if ((CylinderIndices != null) && (CylinderPolygons != null))
+	m_CylinderIndices  = (GLushort *)b3Alloc
+			((m_SubDiv + 1) * 3 * 2 * sizeof(GLushort));
+	m_CylinderPolygons = (GLushort *)b3Alloc
+			((m_SubDiv + 1) * 2 * 3 * sizeof(GLushort));
+	if ((m_CylinderIndices != null) && (m_CylinderPolygons != null))
 	{
-		gPtr = CylinderIndices;
-		pPtr = CylinderPolygons;
+		gPtr = m_CylinderIndices;
+		pPtr = m_CylinderPolygons;
 		a = 0;
-		for (i = 0;i <= subdiv;i++)
+		for (i = 0;i <= m_SubDiv;i++)
 		{
 			// Concatinate vertices in this ascending order:
 			//
@@ -306,16 +301,20 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 			a += 2;
 		}
 	}
-
-	ConeIndices  = (GLushort *)b3Alloc
-		((subdiv + 1) * 2 * 2 * sizeof(GLushort));
-	ConePolygons = (GLushort *)b3Alloc
-		((subdiv + 1) * 1 * 3 * sizeof(GLushort));
-	if ((ConeIndices != null) && (ConePolygons != null))
+	else
 	{
-		gPtr = ConeIndices;
-		pPtr = ConePolygons;
-		for (i = 0;i <= subdiv;i++)
+		throw new b3WorldException(B3_WORLD_MEMORY);
+	}
+
+	m_ConeIndices  = (GLushort *)b3Alloc
+		((m_SubDiv + 1) * 2 * 2 * sizeof(GLushort));
+	m_ConePolygons = (GLushort *)b3Alloc
+		((m_SubDiv + 1) * 1 * 3 * sizeof(GLushort));
+	if ((m_ConeIndices != null) && (m_ConePolygons != null))
+	{
+		gPtr = m_ConeIndices;
+		pPtr = m_ConePolygons;
+		for (i = 0;i <= m_SubDiv;i++)
 		{
 			*gPtr++ = 0;
 			*gPtr++ = i+1;
@@ -328,55 +327,63 @@ void b3RenderShapeContext::b3InitSubdiv(b3_count new_subdiv)
 			*pPtr++ =   0;
 		}
 	}
+	else
+	{
+		throw new b3WorldException(B3_WORLD_MEMORY);
+	}
 #endif
 }
 
 b3_count b3RenderShapeContext::b3GetSubdiv()
 {
-	return subdiv;
+	return m_SubDiv;
 }
 
 b3_f64 *b3RenderShapeContext::b3GetSinTable()
 {
-	return Sin;
+	return m_Sin;
 }
 
 b3_f64 *b3RenderShapeContext::b3GetCosTable()
 {
-	return Cos;
+	return m_Cos;
 }
 
 b3_vector *b3RenderShapeContext::b3GetSplineAux()
 {
 	b3_count factor;
 
-	if (Between == null)
+	if (m_Between == null)
 	{
 		factor  = B3_MAX(B3_MAX_CONTROLS,B3_MAX_SUBDIV) + 1;
-		Between = (b3_vector *)b3Alloc(factor * factor * sizeof(b3_vector));
+		m_Between = (b3_vector *)b3Alloc(factor * factor * sizeof(b3_vector));
+		if (m_Between == null)
+		{
+			throw new b3WorldException(B3_WORLD_MEMORY);
+		}
 	}
-	return Between;
+	return m_Between;
 }
 
 #ifdef BLZ3_USE_OPENGL
 GLushort *b3RenderShapeContext::b3GetCylinderIndices()
 {
-	return CylinderIndices;
+	return m_CylinderIndices;
 }
 
 GLushort *b3RenderShapeContext::b3GetCylinderPolygons()
 {
-	return CylinderPolygons;
+	return m_CylinderPolygons;
 }
 
 GLushort *b3RenderShapeContext::b3GetConeIndices()
 {
-	return ConeIndices;
+	return m_ConeIndices;
 }
 
 GLushort *b3RenderShapeContext::b3GetConePolygons()
 {
-	return ConePolygons;
+	return m_ConePolygons;
 }
 #endif
 
@@ -989,6 +996,8 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 
 	if (EndLine) Number = (Widths + Heights + 1) * Overhead + Heights;
 	else         Number = (Widths + Heights + 1) * Overhead;
+
+	// Realloc buffers
 	b3RenderObject::b3Free(glGrids);
 	b3RenderObject::b3Free(glPolygons);
 	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
@@ -997,7 +1006,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		return;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	s = 0;
@@ -1284,7 +1293,7 @@ void b3RenderShape::b3ComputeTorusIndices()
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		return;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	s = 0;

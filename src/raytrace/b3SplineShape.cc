@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/01 13:50:22  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.20  2001/12/30 22:52:35  sm
 **      - Made b3Scene::b3SetCamera() compatible to earlier versions.
 **
@@ -216,14 +223,14 @@ b3_bool b3SplineCurve::b3Prepare()
 	if (!MySpline.closed) ySize++;
 	m_VertexCount = xSize * ySize;
 
-
-
-	// allocating new tria shape
+	// Reallocating new tria shape
+	b3Item::b3Free(m_Vertices);
+	b3Item::b3Free(m_Triangles);
 	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
 	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
 	if ((m_Vertices == null) || (m_Triangles == null))
 	{
-		return false;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 
@@ -642,7 +649,7 @@ b3_bool b3SplineShape::b3Prepare()
 		(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1));
 	if (Between == null)
 	{
-		return false;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 
 	xSize       = m_Spline[0].subdiv;
@@ -653,13 +660,15 @@ b3_bool b3SplineShape::b3Prepare()
 	if (!m_Spline[1].closed) ySize++;
 	m_VertexCount = xSize * ySize;
 
+	// Reallocating new tria shape
+	b3Item::b3Free(m_Vertices);
+	b3Item::b3Free(m_Triangles);
 	m_Vertices  = (b3_vertex *)b3Item::b3Alloc(m_VertexCount * sizeof(b3_vertex));
 	m_Triangles = (b3_triangle *)b3Item::b3Alloc(m_TriaCount * sizeof(b3_triangle));
 	if ((m_Vertices == null) || (m_Triangles == null))
 	{
-		return false;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
-
 
 	// building horizontal splines
 	Vector = Between;

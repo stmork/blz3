@@ -32,9 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/01 13:50:21  sm
+**	- Fixed some memory leaks:
+**	  o concerning triangle shape and derived spline shapes
+**	  o concerning image pool handling. Images with windows
+**	    path weren't found inside the image pool requesting
+**	    further image load.
+**
 **	Revision 1.8  2001/11/09 18:58:53  sm
 **	- Fixed JPEG handling
-**
+**	
 **	Revision 1.7  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
@@ -139,7 +146,7 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	b3_coord                       x;
 
 	b3PrintF(B3LOG_FULL,"IMG JPEG # b3ParseJPEG(%s)\n",
-		(const char *)name);
+		(const char *)image_name);
 
 	cinfo.err           = jpeg_std_error(&jerr.pub);
 	jerr.pub.error_exit = my_error_exit;

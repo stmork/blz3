@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2002/01/01 13:50:21  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.19  2001/12/31 12:15:55  sm
 **      - Fixed obsolete b3AnimElement handling
 **

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2002/01/01 13:50:22  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.7  2001/12/30 14:16:58  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -108,9 +115,10 @@ void b3SplineCurveShape::b3ComputeIndices()
 	b3_index   i;
 
 	SubDiv   = m_Spline.subdiv;
+	b3RenderObject::b3Free(Index);
 	Index    = (GLushort *)b3RenderObject::b3Alloc(SubDiv * 2 * sizeof(GLushort));
 	glGrids = Index;
-	if (Index)
+	if (Index != null)
 	{
 		for (i = 1;i < SubDiv;i++)
 		{
@@ -124,7 +132,7 @@ void b3SplineCurveShape::b3ComputeIndices()
 	}
 	else
 	{
-		glGridCount = 0;
+		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 #endif
 }

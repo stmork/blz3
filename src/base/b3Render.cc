@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.21  2002/01/01 13:50:21  sm
+**      - Fixed some memory leaks:
+**        o concerning triangle shape and derived spline shapes
+**        o concerning image pool handling. Images with windows
+**          path weren't found inside the image pool requesting
+**          further image load.
+**
 **      Revision 1.20  2001/11/09 16:15:35  sm
 **      - Image file encoder
 **      - Performance meter for triangles / second added.
@@ -358,17 +365,10 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 	if (glVertexCount != new_vertCount)
 	{
-		if (glVertexCount > 0)
-		{
-			if (b3Free(glVertices))
-			{
-				glNormals = null;
-			}
-			if (b3Free(glNormals))
-			{
-				glNormals = null;
-			}
-		}
+		b3Free(glVertices);
+		b3Free(glNormals);
+		glVertices = null;
+		glNormals  = null;
 		glVertexCount = new_vertCount;
 
 		if (glVertexCount > 0)
@@ -381,31 +381,21 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 	if (glGridCount != new_gridCount)
 	{
-		if (glGridCount > 0)
-		{
-			if (b3Free(glGrids))
-			{
-				glGrids = null;
-			}
-		}
+		b3Free(glGrids);
+		glGrids     = null;
 		glGridCount = new_gridCount;
 
 		if (glGridCount > 0)
 		{
-			glGrids    = (GLushort *)b3Alloc(glGridCount   * 2 * sizeof(GLushort));
+			glGrids = (GLushort *)b3Alloc(glGridCount   * 2 * sizeof(GLushort));
 		}
 		glComputed = false;
 	}
 
 	if (glPolyCount != new_polyCount)
 	{
-		if (glPolyCount > 0)
-		{
-			if (b3Free(glPolygons))
-			{
-				glPolygons = null;
-			}
-		}
+		b3Free(glPolygons);
+		glPolygons  = null;
 		glPolyCount = new_polyCount;
 
 		if (glPolyCount > 0)
@@ -420,26 +410,14 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 void b3RenderObject::b3FreeVertices()
 {
 #ifdef BLZ3_USE_OPENGL
-	if (glVertices != null)
-	{
-		b3Free(glVertices);
-		glVertices = null;
-	}
-	if (glNormals != null)
-	{
-		b3Free(glNormals);
-		glNormals = null;
-	}
-	if (glGrids != null)
-	{
-		b3Free(glGrids);
-		glGrids = null;
-	}
-	if (glPolygons != null)
-	{
-		b3Free(glPolygons);
-		glPolygons = null;
-	}
+	b3Free(glVertices);
+	b3Free(glNormals);
+	b3Free(glGrids);
+	b3Free(glPolygons);
+	glVertices = null;
+	glNormals = null;
+	glGrids = null;
+	glPolygons = null;
 #endif
 	glVertexCount = 0;
 	glGridCount   = 0;

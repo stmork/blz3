@@ -266,7 +266,7 @@ private:
 	b3_tx_type        type;
 	b3_tx_filetype    FileType;
 	b3_f64            whiteRatio;
-	b3Path            name;
+	b3Path            image_name;
 	b3ColorIndices   *grid;
 	b3Measure         measure;
 

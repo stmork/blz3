@@ -794,15 +794,15 @@ public:
 
 class b3RenderShapeContext : public b3RenderContext
 {
-	b3_count   subdiv;
-	b3_f64     Sin[B3_MAX_RENDER_SUBDIV + 1];
-	b3_f64     Cos[B3_MAX_RENDER_SUBDIV + 1];
-	b3_vector *Between;
+	b3_count   m_SubDiv;
+	b3_f64     m_Sin[B3_MAX_RENDER_SUBDIV + 1];
+	b3_f64     m_Cos[B3_MAX_RENDER_SUBDIV + 1];
+	b3_vector *m_Between;
 #ifdef BLZ3_USE_OPENGL
-	GLushort  *CylinderIndices;
-	GLushort  *CylinderPolygons;
-	GLushort  *ConeIndices;
-	GLushort  *ConePolygons;
+	GLushort  *m_CylinderIndices;
+	GLushort  *m_CylinderPolygons;
+	GLushort  *m_ConeIndices;
+	GLushort  *m_ConePolygons;
 #endif
 
 public:
@@ -1595,6 +1595,7 @@ protected:
 #define BBB_SANSSERIF    4
 #define BBB_TYPEWRITER   5
 #define BBB_ACTIVE       6
+#define BBB_EXPANDED     7
 
 #define BBF_HTML        (1 << BBB_HTML)
 #define BBF_TEXT        (1 << BBB_TEXT)
@@ -1604,6 +1605,7 @@ protected:
 #define BBF_SANSSERIF   (1 << BBB_SANSSERIF)
 #define BBF_TYPEWRITER  (1 << BBB_TYPEWRITER)
 #define BBF_ACTIVE      (1 << BBB_ACTIVE)
+#define BBF_EXPANDED    (1 << BBB_EXPANDED)
 
 #define BB_GETTEXTSIZE(BBox)      (((BBox)->Type & 0x0ff00) >>  8)
 #define BB_SETTEXTSIZE(BBox,Size)  ((BBox)->Type = ((BBox)->Type & 0xffff00ff) |  ((Size) << 8))
