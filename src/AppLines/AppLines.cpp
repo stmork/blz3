@@ -52,12 +52,16 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2002/04/07 19:51:27  sm
+**	- Added new CB3DocManager to open new
+**	  CB3FileFialog...
+**
 **	Revision 1.32  2002/04/07 12:59:38  sm
 **	- Added support for file dialog with Windows 2000 place bars (Cb3FileDialog)
 **	- CB3FileDialog used for CWinApp::OnFileOpen()
 **	- Image buttons changed to draw disabled state correctly using
 **	  CDC::DrawState()
-**
+**	
 **	Revision 1.31  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
@@ -237,6 +241,76 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 
 CAppLinesApp theApp;
 
+class CB3DocManager : public CDocManager
+{
+	DECLARE_DYNAMIC(CB3DocManager)
+
+public:
+	virtual BOOL DoPromptFileName(
+		CString      &fileName,
+		UINT          nIDSTitle,
+		DWORD         lFlags,
+		BOOL          bOpenFileDialog,
+		CDocTemplate *pTemplate)
+	{
+#if 0
+		return CDocManager::DoPromptFileName(fileName,nIDSTitle,lFlags,bOpenFileDialog,pTemplate);
+#else
+		CString title;
+		CString strFilter;
+		CString strDefault;
+		CString suggest = fileName;
+		CString allFilter;
+		BOOL    result;
+
+		VERIFY(title.LoadString(nIDSTitle));
+
+		if (pTemplate != NULL)
+		{
+			CString filterName,filterExt;
+
+			ASSERT_VALID(pTemplate);
+			pTemplate->GetDocString(filterName,CDocTemplate::filterName);
+			pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
+			strFilter += (filterName + "|*" + filterExt + "|");
+		}
+		else
+		{
+			// do for all doc template
+			POSITION pos = m_templateList.GetHeadPosition();
+			CString filterName,filterExt;
+
+			while (pos != NULL)
+			{
+				CDocTemplate* pTemplate = (CDocTemplate*)m_templateList.GetNext(pos);
+
+				ASSERT_VALID(pTemplate);
+				pTemplate->GetDocString(filterName,CDocTemplate::filterName);
+				pTemplate->GetDocString(filterExt,CDocTemplate::filterExt);
+				strFilter += (filterName + "|*" + filterExt + "|");
+			}
+		}
+
+		// append the "*.*" all files filter
+		allFilter.LoadString(AFX_IDS_ALLFILTER);
+		strFilter += (allFilter + "|*.*||");
+
+		CB3FileDialog dlgFile(bOpenFileDialog,"",suggest,OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | lFlags,strFilter);
+		dlgFile.m_ofn.lpstrTitle = title;
+
+		result = dlgFile.DoModal() == IDOK;
+		if (result)
+		{
+			fileName = dlgFile.GetPathName();
+		}
+		return result;
+#endif
+	}
+};
+
+IMPLEMENT_DYNAMIC(CB3DocManager,CDocManager)
+
+
 class CImageMultiDocTemplate : public CMultiDocTemplate
 {
 	DECLARE_DYNAMIC(CImageMultiDocTemplate)
@@ -345,6 +419,12 @@ BOOL CAppLinesApp::InitInstance()
 	}
 
 	m_PrintBufferSize = GetProfileInt(b3ClientName(),"print buffer size",32);
+
+	if (m_pDocManager == NULL)
+	{
+		// Add custom doc manager
+		m_pDocManager = new CB3DocManager;
+	}
 
 	pSceneTemplate = new CMultiDocTemplate(
 		IDR_BLZ3TYPE,
@@ -668,7 +748,7 @@ void CAppLinesApp::OnFileOpen()
 	if (dlg.DoModal())
 	{
 		// and load document
-		filename = dlg.GetFileName();
+		filename = dlg.GetPathName();
 		OpenDocumentFile(filename);
 	}
 }
