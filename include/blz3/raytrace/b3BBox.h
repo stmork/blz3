@@ -116,6 +116,7 @@ protected:
 		return m_GridVisible ? B3_RENDER_LINE : B3_RENDER_NOTHING;
 	}
 
+	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3AllocVertexMemory(b3RenderContext *context);
 	void    b3ComputeVertices();
 	void    b3ComputeNormals(b3_bool normalize = true);

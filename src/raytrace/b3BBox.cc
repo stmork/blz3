@@ -33,9 +33,20 @@
 
 /*
 **	$Log$
+**	Revision 1.103  2004/11/21 14:56:58  sm
+**	- Merged VBO development into main trunk.
+**
 **	Revision 1.102  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
-**
+**	
+**	Revision 1.101.2.2  2004/11/19 19:38:43  sm
+**	- OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**	  something. The draw buffer seams to be defective. Now we should
+**	  look what nVIDIA is doing with my code.
+**	
+**	Revision 1.101.2.1  2004/09/25 09:08:45  sm
+**	- Deactivating multithreading for VBOs
+**	
 **	Revision 1.101  2004/09/25 08:41:18  sm
 **	- Splitting a branch for VBO development.
 **	
@@ -795,10 +806,26 @@ void b3Scene::b3AllocVertices(b3RenderContext *context)
 	}
 }
 
+void b3BBox::b3GetCount(
+	b3RenderContext *ctx,
+	b3_count        &vertCount,
+	b3_count        &gridCount,
+	b3_count        &polyCount)
+{
+	vertCount = 8;
+}
+
 void b3BBox::b3AllocVertexMemory(b3RenderContext *context)
 {
-	glVertex      = m_BBoxVertex;
-	glVertexCount = 8;
+	if (b3HasVBO())
+	{
+		b3RenderObject::b3AllocVertexMemory(context);
+	}
+	else
+	{
+		glVertexElements->b3SetVertices(m_BBoxVertex);
+		glVertexElements->b3SetCount(8);
+	}
 }
 
 void b3BBox::b3FreeVertexMemory()
@@ -824,6 +851,8 @@ void b3BBox::b3FreeVertexMemory()
 
 void b3BBox::b3ComputeVertices()
 {
+	b3_gl_vertex *glVertex = *glVertexElements;
+
 	glVertex[0].v.x = m_DimBase.x;
 	glVertex[0].v.y = m_DimBase.y;
 	glVertex[0].v.z = m_DimBase.z;
@@ -856,7 +885,7 @@ void b3BBox::b3ComputeVertices()
 	glVertex[7].v.y = m_DimBase.y + m_DimSize.y;
 	glVertex[7].v.z = m_DimBase.z;
 
-	glVertexCount   = 8;
+	glVertexElements->b3SetCount(8);
 }
 
 void b3BBox::b3ComputeNormals(b3_bool normalize)
@@ -865,11 +894,11 @@ void b3BBox::b3ComputeNormals(b3_bool normalize)
 
 void b3BBox::b3ComputeIndices()
 {
-	glGridCount   = 12;
-	glPolyCount   =  0;
+	glGridElements->b3SetGrids(m_BBoxIndices);
+	glGridElements->b3SetCount(12);
 
-	glGrids    = m_BBoxIndices;
-	glPolygons = null;
+	glPolygonElements->b3SetPolygons(null);
+	glPolygonElements->b3SetCount(0);
 }
 
 void b3BBox::b3Draw(b3RenderContext *context)
@@ -919,7 +948,7 @@ void b3Scene::b3Update()
 {
 	b3PrintF(B3LOG_FULL,"    Updating geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateThread);
+	m_PrepareInfo.b3Prepare(b3UpdateThread, null, false);
 }
 
 b3_bool b3Scene::b3UpdateMaterialThread(b3BBox *bbox,void *ptr)

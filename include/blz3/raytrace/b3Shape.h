@@ -320,7 +320,7 @@ public:
 	        b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
 
 protected:
-	        void   b3AllocVertexMemory(b3RenderContext *context);
+	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeIndices();
 };
@@ -456,7 +456,7 @@ public:
 	        void   b3Normal(b3_ray *ray);
 
 protected:
-	        void   b3AllocVertexMemory(b3RenderContext *context);
+	        void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void   b3ComputeVertices();
 	        void   b3ComputeNormals(b3_bool normalize = true);
 	        void   b3ComputeIndices();
@@ -1001,7 +1001,7 @@ public:
 	virtual void    b3GetStencilBoundInfo(b3_stencil_bound *info);
 
 protected:
-	        void    b3AllocVertexMemory(b3RenderContext *context);
+	        void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	        void    b3ComputeVertices();
 	        void    b3ComputeNormals(b3_bool normalize = true);
 	        void    b3ComputeIndices();

@@ -33,9 +33,25 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/11/21 14:56:58  sm
+**	- Merged VBO development into main trunk.
+**
 **	Revision 1.11  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
-**
+**	
+**	Revision 1.10.2.2  2004/11/21 10:17:32  sm
+**	- We have to map the object before getting the pointer. Then the
+**	  bounding boxes can be computed correctly to setup the far and
+**	  near clipping plane correctly. When mapping correctly the
+**	  transformation can occur correctly which plays the ananimation
+**	  in a way we expect ;-)
+**	  ** That's it **
+**	
+**	Revision 1.10.2.1  2004/11/19 19:38:43  sm
+**	- OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**	  something. The draw buffer seams to be defective. Now we should
+**	  look what nVIDIA is doing with my code.
+**	
 **	Revision 1.10  2004/09/24 11:42:14  sm
 **	- First VBO run under Linux.
 **	
@@ -150,26 +166,16 @@ void b3PickInfo::b3AddLine(b3_index a,b3_index b)
 	m_Grid.b3Add(line);
 }
 
-void b3PickInfo::b3AllocVertexMemory(b3RenderContext *context)
-{
-	glVertex      = m_Vertices.b3GetBuffer();
-	glVertexCount = m_Vertices.b3GetCount();
-	glGrids       = m_Grid.b3GetBuffer();
-	glGridCount   = m_Grid.b3GetCount();
-	glPolygons    = null;
-	glPolyCount   = 0;
-}
-
-void b3PickInfo::b3FreeVertexMemory()
-{
-}
-
 void b3PickInfo::b3ComputeVertices()
 {
+	glVertexElements->b3SetVertices(m_Vertices.b3GetBuffer());
+	glVertexElements->b3SetCount(   m_Vertices.b3GetCount());
 }
 
 void b3PickInfo::b3ComputeIndices()
 {
+	glGridElements->b3SetGrids(m_Grid.b3GetBuffer());
+	glGridElements->b3SetCount(m_Grid.b3GetCount());
 }
 
 void b3PickInfo::b3GetGridColor(b3Color &color)

@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.22  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.21.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.21  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -172,7 +180,7 @@ void b3CSGCone::b3GetCount(
 void b3CSGCone::b3ComputeVertices()
 {
 	b3_index      i;
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 
 	for (i = 0;i < SinCosSteps;i++)
@@ -192,9 +200,9 @@ void b3CSGCone::b3ComputeVertices()
 
 void b3CSGCone::b3ComputeIndices()
 {
-	b3_gl_line    *gPtr   = glGrids;
-	b3_gl_polygon *pPtr   = glPolygons;
-	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
+	b3_gl_line    *gPtr        = *glGridElements;
+	b3_gl_polygon *pPtr        = *glPolygonElements;
+	b3_count       SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index       offset = SinCosSteps * 2;
 	b3_index       i;
 

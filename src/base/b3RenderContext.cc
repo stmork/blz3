@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2004/11/21 14:56:57  sm
+**	- Merged VBO development into main trunk.
+**
 **	Revision 1.15  2004/11/13 19:47:15  sm
 **	- Corrected some OpenGL exclusions.
-**
+**	
 **	Revision 1.14  2004/10/17 09:08:41  sm
 **	- Moved camera setup into b3RenderContext.
 **	- Moved Antialiasing setup into b3RenderContext.
@@ -60,6 +63,15 @@
 **	
 **	Revision 1.10  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
+**	
+**	Revision 1.9.2.3  2004/11/20 13:24:17  sm
+**	- Searching for VBO bug.
+**	
+**	Revision 1.9.2.2  2004/11/16 07:14:55  sm
+**	- Added OO-version of vertex buffer objects.
+**	
+**	Revision 1.9.2.1  2004/09/25 09:08:45  sm
+**	- Deactivating multithreading for VBOs
 **	
 **	Revision 1.9  2004/09/24 19:07:27  sm
 **	- VBOs on ATI running - or better: crawling.
@@ -183,14 +195,13 @@ void b3RenderContext::b3Init()
 	if (b3MultiSample::b3HasMS())
 	{
 		b3PrintF(B3LOG_DEBUG, "Having multisampling.\n");
+		b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n",b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
+		b3MultiSample::b3Enable(false);
 	}
 
 	glDrawBuffer(GL_BACK);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDisable(GL_COLOR_MATERIAL);
-
-	b3PrintF(B3LOG_NORMAL, "Multisampling: %s\n",b3MultiSample::b3IsEnabled() ? "enabled" : "disabled");
-	b3MultiSample::b3Enable(false);
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_AUTO_NORMAL);
@@ -198,6 +209,7 @@ void b3RenderContext::b3Init()
 	glEnable(GL_ALPHA_TEST);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glAlphaFunc(GL_GREATER,0.5);
+	glEnableClientState(GL_INDEX_ARRAY);
 
 	b3LightReset();
 #endif

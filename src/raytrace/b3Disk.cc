@@ -33,6 +33,14 @@
 
 /*
 **      $Log$
+**      Revision 1.31  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.30.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.30  2004/07/02 19:28:03  sm
 **      - Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **      - Recoupled b3Scene include from CApp*Doc header files to allow
@@ -231,11 +239,12 @@ void b3Disk::b3GetCount(
 
 void b3Disk::b3ComputeVertices()
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,a,h,start,end;
 	b3_index      i;
 	b3_count      iMax;
+	b3_count      vertex_count = 0;
 
 	h = m_Limit.y2;
 	b = m_Limit.y1;
@@ -246,8 +255,6 @@ void b3Disk::b3ComputeVertices()
 	iMax  = (b3_count)floor(end);
 	xSize = 0;
 	ySize = 1;
-
-	glVertexCount = 0;
 
 	// This is a ring formed disk
 	if ((i - start) > b3Scene::epsilon)
@@ -271,7 +278,7 @@ void b3Disk::b3ComputeVertices()
 		Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 		Vector++;
 
-		glVertexCount += 2;
+		vertex_count += 2;
 		xSize++;
 	}
 
@@ -299,7 +306,7 @@ void b3Disk::b3ComputeVertices()
 		Vector->v.z = m_Base.z + sx * m_Dir1.z + sy * m_Dir2.z;
 		Vector++;
 
-		glVertexCount += 2;
+		vertex_count += 2;
 		xSize++;
 	}
 
@@ -323,9 +330,11 @@ void b3Disk::b3ComputeVertices()
 		Vector->v.y = m_Base.y + b * sx * m_Dir1.y + b * sy * m_Dir2.y;
 		Vector->v.z = m_Base.z + b * sx * m_Dir1.z + b * sy * m_Dir2.z;
 
-		glVertexCount += 2;
+		vertex_count += 2;
 		xSize++;
 	}
+
+	glVertexElements->b3SetCount(vertex_count);
 }
 
 void b3Disk::b3ComputeIndices()
@@ -335,6 +344,8 @@ void b3Disk::b3ComputeIndices()
 	b3_bool        EndLines = false;
 	b3_index       i,pos;
 	b3_count       Overhead;
+	b3_count       grid_count = 0;
+	b3_count       poly_count = 0;
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -344,11 +355,8 @@ void b3Disk::b3ComputeIndices()
 		Overhead = -Overhead;
 	}
 
-	glGridCount = 0;
-	glPolyCount = 0;
-
-	gPtr = glGrids;
-	pPtr = glPolygons;
+	gPtr = *glGridElements;
+	pPtr = *glPolygonElements;
 
 	for (i = pos = 0;i < Overhead;i++)
 	{
@@ -358,17 +366,21 @@ void b3Disk::b3ComputeIndices()
 		B3_GL_PINIT(pPtr,pos,  pos+2,pos+1);
 		B3_GL_PINIT(pPtr,pos+3,pos+1,pos+2);
 
-		glGridCount += 2;
-		glPolyCount += 2;
+		grid_count += 2;
+		poly_count += 2;
 		pos += 2;
 	}
+
 	if (EndLines)
 	{
 		B3_GL_LINIT(gPtr,0,1);
 		B3_GL_LINIT(gPtr,Overhead + Overhead,Overhead + Overhead + 1);
 
-		glGridCount += 2;
+		grid_count += 2;
 	}
+
+	glGridElements->b3SetCount(grid_count);
+	glPolygonElements->b3SetCount(poly_count);
 }
 
 void b3Disk::b3GetStencilBoundInfo(b3_stencil_bound *info)

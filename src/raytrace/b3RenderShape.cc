@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.79  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
 **      Revision 1.78  2004/10/05 09:29:22  sm
 **      - Donw some documentations.
 **
@@ -43,6 +46,11 @@
 **      - Made some optimizations concerning light.
 **      - Added material dependend possibility for color
 **        mixing instead of mixing inside shader.
+**
+**      Revision 1.76.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
 **
 **      Revision 1.76  2004/07/14 09:07:40  sm
 **      - Disabling FSAA = multi sampling
@@ -1021,7 +1029,7 @@ void b3Shape::b3ComputeSphereVertices(
 	b3_f32        Rad;
 	b3_vector     Aux,Dir1,Dir2,Dir3;
 
-	Vector = glVertex;
+	Vector = *glVertexElements;
 	Aux    = Base;
 	Dir1.x = Rad = b3Vector::b3Length (&Dir);
 	Dir1.y = 0;
@@ -1064,9 +1072,10 @@ void b3Shape::b3ComputeSphereVertices(
 
 void b3Shape::b3ComputeSphereNormals(b3_vector &base,b3_bool normalize)
 {
+	b3_gl_vertex *glVertex = *glVertexElements;
 	b3_index i;
 
-	for (i = 0;i < glVertexCount;i++)
+	for (i = 0;i < glVertexElements->b3GetCount();i++)
 	{
 		if (normalize)
 		{
@@ -1102,12 +1111,13 @@ void b3Shape::b3ComputeCylinderVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,h,start,end;
 	b3_index      i;
 	b3_count      iMax;
 	b3_vector     Bottom;
+	b3_count      glVertexCount = 0;
 
 	h        = m_Limit.y2 - m_Limit.y1;
 	b        = m_Limit.y1;
@@ -1120,7 +1130,6 @@ void b3Shape::b3ComputeCylinderVertices(
 	iMax     = (b3_count)floor(end);
 	xSize    = 0;
 	ySize    = 2;
-	glVertexCount = 0;
 
 	if ((i - start) > b3Scene::epsilon)
 	{
@@ -1194,11 +1203,14 @@ void b3Shape::b3ComputeCylinderVertices(
 		glVertexCount += 2;
 		xSize++;
 	}
+
+	glVertexElements->b3SetCount(glVertexCount);
 }
 
 void b3Shape::b3ComputeCylinderIndices()
 {
 	b3_count Overhead;
+	b3_count glGridCount;
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -1211,8 +1223,9 @@ void b3Shape::b3ComputeCylinderIndices()
 	{
 		glGridCount = 0;
 	}
-	glGridCount += Overhead * 3;
-	glPolyCount  = Overhead * 2;
+
+	glGridElements->b3SetCount(glGridCount + Overhead * 3);
+	glPolygonElements->b3SetCount(Overhead * 2);
 }
 
 /*************************************************************************
@@ -1227,12 +1240,13 @@ void b3Shape::b3ComputeConeVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_f64        sx,sy,b,h,d,a,start,end;
 	b3_index      i;
 	b3_count      iMax;
 	b3_vector     Bottom;
+ 	b3_count      glVertexCount = 0;
 
 	d        = m_Limit.y2 - m_Limit.y1;
 	b        = m_Limit.y1;
@@ -1247,7 +1261,6 @@ void b3Shape::b3ComputeConeVertices(
 	iMax   = (b3_count)floor(end);
 	xSize  = 0;
 	ySize  = 1;
-	glVertexCount = 0;
 
 	if (m_Limit.y2 < 1)
 	{
@@ -1387,11 +1400,14 @@ void b3Shape::b3ComputeConeVertices(
 			xSize++;
 		}
 	}
+	glVertexElements->b3SetCount(glVertexCount);
 }
 
 void b3Shape::b3ComputeConeIndices()
 {
 	b3_count Overhead;
+	b3_count glGridCount;
+	b3_count glPolyCount;
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -1406,18 +1422,21 @@ void b3Shape::b3ComputeConeIndices()
 	}
 	if (m_Limit.y2 < 1)
 	{
-		glGrids      = GridsCyl;
-		glPolygons   = PolysCyl;
+		glGridElements->b3SetGrids(GridsCyl);
+		glPolygonElements->b3SetPolygons(PolysCyl);
 		glGridCount += Overhead * 3;
 		glPolyCount  = Overhead * 2;
 	}
 	else
 	{
-		glGrids      = GridsCone;
-		glPolygons   = PolysCone;
+		glGridElements->b3SetGrids(GridsCone);
+		glPolygonElements->b3SetPolygons(PolysCone);
 		glGridCount += Overhead * 2;
 		glPolyCount  = Overhead;
 	}
+
+	glGridElements->b3SetCount(glGridCount);
+	glPolygonElements->b3SetCount(glPolyCount);
 }
 
 /*************************************************************************
@@ -1432,13 +1451,14 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	b3_vector   &Dir2,
 	b3_vector   &Dir3)
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector      = *glVertexElements;
 	b3_count      SinCosSteps = b3ShapeRenderContext::m_SubDiv;
 	b3_index      i,j;
 	b3_count      iMax,Circles = 0;
 	b3_f64        RadX,RadY,sx,sy;
 	b3_f64        LocalSin[B3_MAX_RENDER_SUBDIV+1],LocalCos[B3_MAX_RENDER_SUBDIV+1];
 	b3_f32        start,end,a;
+	b3_count      glVertexCount = 0;
 
 	start  = (m_Limit.y1 + 1) * SinCosSteps * 0.25;
 	end    = (m_Limit.y2 + 1) * SinCosSteps * 0.25;
@@ -1473,7 +1493,6 @@ void b3Shape::b3ComputeEllipsoidVertices(
 	iMax   = (b3_count)floor(end);
 	xSize = 0;
 	ySize = Circles;
-	glVertexCount = 0;
 
 	if ((i - start) > b3Scene::epsilon)
 	{
@@ -1539,6 +1558,8 @@ void b3Shape::b3ComputeEllipsoidVertices(
 		glVertexCount += Circles;
 		xSize++;
 	}
+
+	glVertexElements->b3SetCount(glVertexCount);
 }
 
 void b3Shape::b3ComputeEllipsoidIndices()
@@ -1550,9 +1571,9 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	b3_index       i,j,Number,s,ys,ye;
 	b3_count       Heights,Widths,Overhead;
 	b3_f64         y1,y2;
+	b3_count       glGridCount = 0;
+	b3_count       glPolyCount = 0;
 
-	glGridCount = 0;
-	glPolyCount = 0;
 	b3ComputeBound(&m_Limit);
 	Overhead  = b3GetIndexOverhead (0.0,-1.0);
 	if (Overhead < 0)
@@ -1577,12 +1598,17 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	else         Number = (Widths + Heights + 1) * Overhead;
 
 	// Realloc buffers
-	b3RenderObject::b3Free(glGrids);
-	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
+	b3RenderObject::b3Free(*glGridElements);
+	b3RenderObject::b3Free(*glPolygonElements);
+	gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
 		(Number * sizeof(b3_gl_line));
-	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
+	pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
 		(Number * sizeof(b3_gl_polygon));
+
+	// Set before test!
+	glGridElements->b3SetGrids(gPtr);
+	glPolygonElements->b3SetPolygons(pPtr);
+
 	if ((gPtr == null) || (pPtr == null))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -1643,6 +1669,9 @@ void b3Shape::b3ComputeEllipsoidIndices()
 	{
 		b3PrintF(B3LOG_NORMAL,"######## %d -> %d (%d)\n",glGridCount,Number,SinCosSteps);
 	}
+
+	glGridElements->b3SetCount(glGridCount);
+	glPolygonElements->b3SetCount(glPolyCount);
 	B3_ASSERT(glGridCount <= Number);
 }
 
@@ -1661,6 +1690,7 @@ void b3Shape::b3ComputeBoxVertices(
 	b3_f32    *tex_coord = box_texcoord;
 	b3_vector  Aux;
 	b3_index   i;
+	b3_gl_vertex *glVertex = *glVertexElements;
 
 	glVertex[0].t.s = *tex_coord++;
 	glVertex[0].t.t = *tex_coord++;
@@ -1721,8 +1751,8 @@ void b3Shape::b3ComputeBoxVertices(
 
 void b3Shape::b3ComputeBoxIndices()
 {
-	glGrids    = box_grids;
-	glPolygons = box_polygons;
+	glGridElements->b3SetGrids(box_grids);
+	glPolygonElements->b3SetPolygons(box_polygons);
 }
 
 /*************************************************************************
@@ -1748,8 +1778,9 @@ void b3Shape::b3ComputeTorusVertices(
 	b3_index      i,j;
 	b3_count      iMax,Circles=0;
 	b3_vector     Aux;
+	b3_count      glVertexCount = 0;
 
-	Vector = glVertex;
+	Vector = *glVertexElements;
 	start  = m_Limit.y1 * SinCosSteps;
 	end    = m_Limit.y2 * SinCosSteps;
 	i      = (b3_index)ceil(start);
@@ -1775,7 +1806,6 @@ void b3Shape::b3ComputeTorusVertices(
 	}
 	xSize = 0;
 	ySize = Circles;
-	glVertexCount = 0;
 
 	for (j = 0;j < Circles;j++)		/* Calculate Values */
 	{
@@ -1861,11 +1891,15 @@ void b3Shape::b3ComputeTorusVertices(
 		glVertexCount += Circles;
 		xSize++;
 	}
+
+	glVertexElements->b3SetCount(glVertexCount);
 }
 
 void b3Shape::b3ComputeTorusNormals()
 {
-	for (int i = 0;i < glVertexCount;i++)
+	b3_gl_vertex *glVertex = *glVertexElements;
+
+	for (int i = 0;i < glVertexElements->b3GetCount();i++)
 	{
 		b3Vector::b3Normalize(&glVertex[i].n);
 	}
@@ -1880,6 +1914,8 @@ void b3Shape::b3ComputeTorusIndices()
 	b3_index       i,j,Number,s,ys,ye;
 	b3_count       Heights,Widths,Overhead;
 	b3_f64         y1,y2;
+	b3_count       glGridCount = 0;
+	b3_count       glPolyCount = 0;
 
 	b3ComputeBound(&m_Limit);
 	Overhead = b3GetIndexOverhead (0.0,0.0);
@@ -1907,14 +1943,18 @@ void b3Shape::b3ComputeTorusIndices()
 	Number = (Widths + Heights + 1) * Overhead;
 	if (EndLine) Number += Heights;
 
-	glGridCount = 0;
-	glPolyCount = 0;
-	b3RenderObject::b3Free(glGrids);
-	b3RenderObject::b3Free(glPolygons);
-	glGrids    = gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
+	b3RenderObject::b3Free(*glGridElements);
+	b3RenderObject::b3Free(*glPolygonElements);
+
+	gPtr = (b3_gl_line *)b3RenderObject::b3Alloc
 		(Number * sizeof(b3_gl_line));
-	glPolygons = pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
+	pPtr = (b3_gl_polygon *)b3RenderObject::b3Alloc
 		(Number * sizeof(b3_gl_polygon));
+
+	// Set before test
+	glGridElements->b3SetGrids(gPtr);
+	glPolygonElements->b3SetPolygons(pPtr);
+
 	if ((gPtr == null) || (pPtr == null))
 	{
 		B3_THROW(b3WorldException,B3_WORLD_MEMORY);
@@ -1951,4 +1991,7 @@ void b3Shape::b3ComputeTorusIndices()
 		}
 		glGridCount += Heights;
 	}
+
+	glGridElements->b3SetCount(glGridCount);
+	glPolygonElements->b3SetCount(glPolyCount);
 }

@@ -31,8 +31,16 @@
 
 /*
 **      $Log$
+**      Revision 1.30  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
 **      Revision 1.29  2004/09/25 10:48:47  sm
 **      - Setting to static fixed size arrays.
+**
+**      Revision 1.28.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
 **
 **      Revision 1.28  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
@@ -208,20 +216,14 @@ b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
 }
 
-void b3Area::b3AllocVertexMemory(b3RenderContext *context)
+void b3Area::b3GetCount(b3RenderContext *context,b3_count &verts,b3_count &grids,b3_count &polys)
 {
-	glVertex   = m_AreaVertex;
-	glGrids    = m_AreaGrids;
-	glPolygons = m_AreaPolygons;
-
-	glVertexCount = 4;
-	glGridCount   = 4;
-	glPolyCount   = 2;
+	verts = 4;
 }
 
 void b3Area::b3ComputeVertices()
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector = *glVertexElements;
 	b3_f32        x1,y1,x2,y2;
 
 	x1 = m_Limit.x1;
@@ -263,6 +265,12 @@ void b3Area::b3ComputeVertices()
 
 void b3Area::b3ComputeIndices()
 {
+	glGridElements->b3SetGrids(m_AreaGrids);
+	glGridElements->b3SetCount(4);
+
+	glPolygonElements->b3SetPolygons(m_AreaPolygons);
+	glPolygonElements->b3SetCount(2);
+
 	b3ComputeBound(&m_Limit);
 }
 

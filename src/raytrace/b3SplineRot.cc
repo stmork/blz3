@@ -31,6 +31,14 @@
 
 /*
 **      $Log$
+**      Revision 1.27  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.26.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.26  2004/06/21 09:26:19  sm
 **      - Changed rendering: The constant sin/cos tables are now directly
 **        used from b3ShapeRenderContext.
@@ -420,7 +428,7 @@ void b3SplineRotShape::b3ComputeVertices()
 		AuxControls[i] = m_Controls[i];
 	}
 
-	Vector = glVertex;
+	Vector = *glVertexElements;
 	fy     = 0;
 	fyStep = 1.0 / (b3_f64)m_rSubDiv;
 	for (a = 0;a < m_rSubDiv;a++)
@@ -464,8 +472,8 @@ void b3SplineRotShape::b3ComputeIndices()
 	yStep = m_Spline.subdiv + 1;
 	sStep = (b3_f64)m_Spline.subdiv / m_rSubDiv;
 
-	gPtr  = glGrids;
-	pPtr  = glPolygons;
+	gPtr  = *glGridElements;
+	pPtr  = *glPolygonElements;
 	x1    = 0;
 	
 	// for each curve

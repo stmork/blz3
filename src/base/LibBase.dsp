@@ -174,6 +174,10 @@ SOURCE=.\b3VectorBufferObjects.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3VertexBuffer.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Wood.cc
 # End Source File
 # Begin Source File
@@ -266,6 +270,10 @@ SOURCE=..\..\include\blz3\base\b3Render.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\include\blz3\base\b3RenderTypes.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\include\blz3\base\b3SearchPath.h
 # End Source File
 # Begin Source File
@@ -283,6 +291,10 @@ SOURCE=..\..\include\blz3\base\b3Vector.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\base\b3VectorBufferObjects.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\base\b3VertexBuffer.h
 # End Source File
 # Begin Source File
 

@@ -31,6 +31,14 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.45.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.45  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -393,7 +401,7 @@ void b3SplineShape::b3GetCount(
 
 void b3SplineShape::b3ComputeGridVertices()
 {
-	b3_gl_vertex *Vector = glVertex;
+	b3_gl_vertex *Vector = *glVertexElements;
 	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
 	b3_vector     Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
 	b3_count      CurveNum,Points = 0;
@@ -454,6 +462,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 	b3_f64        fy,fyStep;
 	b3_count      SubDiv,index,count;
 	b3_gl_vertex *Vector;
+	b3_gl_vertex *glVertex = *glVertexElements;
 	b3_vector    *Aux;
 	b3_vector     SplVector[B3_MAX_SUBDIV + 1];
 	b3_vector     Between[(B3_MAX_SUBDIV + 1) * (B3_MAX_SUBDIV + 1)];
@@ -510,7 +519,7 @@ void b3SplineShape::b3ComputeGridIndices()
 	b3_count    max;
 
 	// horizontal splines
-	gPtr = glGrids;
+	gPtr = *glGridElements;
 	max = B3_BSPLINE_SEGMENTKNOTS(&m_Spline[1]);
 	for (y = 0;y < max;y++)
 	{
@@ -547,7 +556,7 @@ void b3SplineShape::b3ComputeSolidIndices()
 	b3_count       xSubDiv = m_Spline[0].subdiv,xModulo,xOffset;
 	b3_count       ySubDiv = m_Spline[1].subdiv,yModulo;
 
-	pPtr = glPolygons;
+	pPtr = *glPolygonElements;
 	xModulo = m_Spline[0].closed ? xSubDiv : xSubDiv + 1;
 	yModulo = m_Spline[1].closed ? ySubDiv : ySubDiv + 1;
 	xOffset = m_Spline[0].subdiv + 1;
@@ -566,13 +575,13 @@ void b3SplineShape::b3ComputeSolidIndices()
 				m_GridVertexCount + (x+1) % xModulo + xOffset *   y);
 		}
 	}
-	glPolyCount = xSubDiv * ySubDiv * 2;
+	glPolygonElements->b3SetCount(xSubDiv * ySubDiv * 2);
 }
 
 void b3SplineShape::b3ComputeIndices()
 {
-	if (glGridCount > 0) b3ComputeGridIndices();
-	if (glPolyCount > 0) b3ComputeSolidIndices();
+	if (glGridElements->b3GetCount() > 0) b3ComputeGridIndices();
+	if (glPolygonElements->b3GetCount() > 0) b3ComputeSolidIndices();
 }
 
 void b3SplineShape::b3GetVertexRange(b3_index &start,b3_index &end)

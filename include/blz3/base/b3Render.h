@@ -20,25 +20,11 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3RenderTypes.h"
+#include "blz3/base/b3VectorBufferObjects.h"
+#include "blz3/base/b3VertexBuffer.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
-
-#define B3_MAX_RENDER_SUBDIV 48
-
-typedef enum
-{
-	B3_RENDER_UNDIFINED = -1,
-	B3_RENDER_NOTHING   =  0,
-	B3_RENDER_LINE,
-	B3_RENDER_FILLED
-} b3_render_mode;
-
-typedef enum
-{
-	B3_MATRIX_OBJECT,
-	B3_MATRIX_PROJECTION
-} b3_matrix_mode;
-
 class b3RenderObject;
 
 struct b3_render_view_info
@@ -185,52 +171,15 @@ public:
 #endif
 };
 
-/*
-** for use with glInterleavedArrays(GL_T2F_N3F_V3F,0, b3_vertex *));
-*/
-
-struct b3_gl_vertex
+class B3_PLUGIN b3RenderObject : public b3Mem, protected b3VectorBufferObjects
 {
-	b3_gl_texture t;
-	b3_gl_vector  n;
-	b3_gl_vector  v;
-};
-
-struct b3_gl_line
-{
-#ifdef BLZ3_USE_OPENGL
-	GLuint   a,b;
-#else
-	b3_u32   a,b;
-#endif
-};
-
-struct b3_gl_polygon
-{
-#ifdef BLZ3_USE_OPENGL
-	GLuint   a,b,c;
-#else
-	b3_u32   a,b,c;
-#endif
-};
-
-#define B3_GL_LINIT(l,ai,bi)    { (l)->a = (ai); (l)->b = (bi); (l)++; }
-#define B3_GL_PINIT(p,ai,bi,ci) { (p)->a = (ai); (p)->b = (bi); (p)->c = (ci); (p)++; }
-
-class b3RenderObject : public b3Mem
-{
-	// Actuality flags
-	b3_bool          glVerticesComputed;
-	b3_bool          glIndicesComputed;
-	b3_bool          glMaterialComputed;
+	b3_bool            glMaterialComputed;
+	b3_bool            glInit;
 
 protected:
-	b3_count         glVertexCount;
-	b3_count         glGridCount;
-	b3_count         glPolyCount;
-	b3_gl_vertex    *glVertex;
-	b3_gl_line      *glGrids;
-	b3_gl_polygon   *glPolygons;
+	b3VertexElements  *glVertexElements;
+	b3GridElements    *glGridElements;
+	b3PolygonElements *glPolygonElements;
 
 #ifdef BLZ3_USE_OPENGL
 	GLuint           glDisplayList;
@@ -322,6 +271,11 @@ private:
 	        void            b3SelectMaterialForFilledDrawing(b3RenderContext *context);
 	        void            b3DrawLinedGeometry(b3RenderContext *context);
 	        void            b3DrawFilledGeometry(b3RenderContext *context);
+
+			void            b3MapIndices(GLenum map_mode = GL_READ_WRITE_ARB);
+			void            b3MapVertices(GLenum map_mode = GL_READ_WRITE_ARB);
+			void            b3UnmapIndices();
+			void            b3UnmapVertices();
 };
 
 #endif

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/base/b3Render.h"
+#include "blz3/base/b3VertexBuffer.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Color.h"
 
@@ -45,11 +46,33 @@
 
 /*
 **      $Log$
+**      Revision 1.99  2004/11/21 14:56:57  sm
+**      - Merged VBO development into main trunk.
+**
 **      Revision 1.98  2004/10/16 20:36:34  sm
 **      - Fixed redraw problem after action in Lines.
 **
 **      Revision 1.97  2004/09/25 08:56:53  sm
 **      - Removed VBOs from source.
+**
+**      Revision 1.96.2.4  2004/11/21 10:17:32  sm
+**      - We have to map the object before getting the pointer. Then the
+**        bounding boxes can be computed correctly to setup the far and
+**        near clipping plane correctly. When mapping correctly the
+**        transformation can occur correctly which plays the ananimation
+**        in a way we expect ;-)
+**        ** That's it **
+**
+**      Revision 1.96.2.3  2004/11/20 11:37:15  sm
+**      - Added Windows VBO support
+**
+**      Revision 1.96.2.2  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
+**      Revision 1.96.2.1  2004/11/16 07:14:55  sm
+**      - Added OO-version of vertex buffer objects.
 **
 **      Revision 1.96  2004/09/24 20:22:05  sm
 **      - Some VBO adjustments.
@@ -522,17 +545,9 @@
 
 b3RenderObject::b3RenderObject()
 {
-	glVertexCount = 0;
-	glGridCount   = 0;
-	glPolyCount   = 0;
-
-	glVertex      = null;
-	glGrids       = null;
-	glPolygons    = null;
-
-	b3Recompute();
-	b3RecomputeIndices();
 	b3RecomputeMaterial();
+
+	glInit = false;
 
 #ifdef BLZ3_USE_OPENGL
 	glDisplayList  = 0;
@@ -541,11 +556,26 @@ b3RenderObject::b3RenderObject()
 	glTextureSize  = 0;
 	glTextureSizeX = 0;
 	glTextureSizeY = 0;
+	glVertexElements  = null;
+	glGridElements    = null;
+	glPolygonElements = null;
 #endif
 }
 
 b3RenderObject::~b3RenderObject()
 {
+	if (glVertexElements != null)
+	{
+		delete glVertexElements;
+	}
+	if (glGridElements != null)
+	{
+		delete glGridElements;
+	}
+	if (glPolygonElements != null)
+	{
+		delete glPolygonElements;
+	}
 	b3CreateTexture(null,0);
 	b3DeleteDisplayList();
 }
@@ -574,9 +604,9 @@ void b3RenderObject::b3GetCount(
 
 void b3RenderObject::b3AddCount(b3RenderContext *context)
 {
-	context->glVertexCount += glVertexCount;
-	context->glPolyCount   += glPolyCount;
-	context->glGridCount   += glGridCount;
+	context->glVertexCount += glVertexElements->b3GetCount();
+	context->glPolyCount   += glPolygonElements->b3GetCount();
+	context->glGridCount   += glGridElements->b3GetCount();
 }
 
 /*************************************************************************
@@ -585,14 +615,37 @@ void b3RenderObject::b3AddCount(b3RenderContext *context)
 **                                                                      **
 *************************************************************************/
 
+void b3RenderObject::b3MapIndices(GLenum map_mode)
+{
+	glGridElements->b3Map(map_mode);
+	glPolygonElements->b3Map(map_mode);
+}
+
+void b3RenderObject::b3MapVertices(GLenum map_mode)
+{
+	glVertexElements->b3Map(map_mode);
+}
+
+void b3RenderObject::b3UnmapIndices()
+{
+	glGridElements->b3Unmap();
+	glPolygonElements->b3Unmap();
+}
+
+void b3RenderObject::b3UnmapVertices()
+{
+	glVertexElements->b3Unmap();
+}
+
 void b3RenderObject::b3Recompute()
 {
-	glVerticesComputed = false;
+	glVertexElements->b3Recompute();
 }
 
 void b3RenderObject::b3RecomputeIndices()
 {
-	glIndicesComputed = false;
+	glGridElements->b3Recompute();
+	glPolygonElements->b3Recompute();
 }
 
 void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
@@ -600,18 +653,53 @@ void b3RenderObject::b3SetupVertexMemory(b3RenderContext *context)
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3SetupVertexMemory() this = %p\n",this);
 #endif
+
 	b3PreAlloc();
 	b3AllocVertexMemory(context);
+
 #ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"       %5d vertices: %p\n",glVertexCount, glVertex);
-	b3PrintF(B3LOG_FULL,"       %5d grids:    %p\n",glGridCount,   glGrids);
-	b3PrintF(B3LOG_FULL,"       %5d polygons: %p\n",glPolyCount,   glPolygons);
+	b3MapVertices(GL_READ_ONLY_ARB);
+	b3MapIndices(GL_READ_ONLY_ARB);
+
+	b3_gl_vertex  *glVertex   = *glVertexElements;
+	b3_gl_line    *glGrids    = *glGridElements;
+	b3_gl_polygon *glPolygons = *glPolygonElements;
+
+	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+		 glVertexElements->b3GetCount(), glVertex,
+		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
+		 glGridElements->b3GetCount(), glGrids,
+		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
+		 glPolygonElements->b3GetCount(), glPolygons,
+		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+
+	b3UnmapVertices();
+	b3UnmapIndices();
+
 	b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3SetupVertexMemory() this = %p\n",this);
 #endif
 }
 
 void b3RenderObject::b3PreAlloc()
 {
+	if (!glInit)
+	{
+		if (b3HasVBO())
+		{
+			glVertexElements  = new b3VboVertexElements();
+			glGridElements    = new b3VboGridElements();
+			glPolygonElements = new b3VboPolygonElements();
+		}
+		else
+		{
+			glVertexElements  = new b3ArrayVertexElements();
+			glGridElements    = new b3ArrayGridElements();
+			glPolygonElements = new b3ArrayPolygonElements();
+		}
+		glInit = true;
+	}
 }
 
 void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
@@ -626,90 +714,82 @@ void b3RenderObject::b3AllocVertexMemory(b3RenderContext *context)
 	b3PrintF(B3LOG_FULL,"       b3GetCount(NV=%d, NG=%d, NP=%d)\n",
 		new_vertCount,new_gridCount,new_polyCount);
 	b3PrintF(B3LOG_FULL,"      >b3AllocVertexMemory( V=%d,  G=%d,  P=%d)\n",
-		glVertexCount,glGridCount,glPolyCount);
+		glVertexElements->b3GetCount(),
+		glGridElements->b3GetCount(),
+		glPolygonElements->b3GetCount());
 #endif
 
-	if (glVertexCount != new_vertCount)
-	{
-		b3Free(glVertex);
-		glVertex      = null;
-		glVertexCount = new_vertCount;
+	glVertexElements->b3AllocVertexMemory( context,new_vertCount);
+	glVertexElements->b3SetCustom(new_vertCount <= 0);
 
-		if (glVertexCount > 0)
-		{
-			glVertex = (b3_gl_vertex *)b3Alloc(glVertexCount * sizeof(b3_gl_vertex));
-		}
-		glVerticesComputed = false;
-	}
+	glGridElements->b3AllocVertexMemory(   context,new_gridCount);
+	glGridElements->b3SetCustom(new_gridCount <= 0);
 
-	if (glGridCount != new_gridCount)
-	{
-		b3Free(glGrids);
-		glGrids     = null;
-		glGridCount = new_gridCount;
-
-		if (glGridCount > 0)
-		{
-			glGrids = (b3_gl_line *)b3Alloc(glGridCount * sizeof(b3_gl_line));
-		}
-		glIndicesComputed = false;
-	}
-
-	if (glPolyCount != new_polyCount)
-	{
-		b3Free(glPolygons);
-		glPolygons  = null;
-		glPolyCount = new_polyCount;
-
-		if (glPolyCount > 0)
-		{
-			glPolygons = (b3_gl_polygon *)b3Alloc(glPolyCount * sizeof(b3_gl_polygon));
-		}
-		glIndicesComputed = false;
-	}
+	glPolygonElements->b3AllocVertexMemory(context,new_polyCount);
+	glPolygonElements->b3SetCustom(new_polyCount <= 0);
 }
 
 void b3RenderObject::b3FreeVertexMemory()
 {
-	b3Free(glVertex);
-	b3Free(glGrids);
-	b3Free(glPolygons);
-	glVertex      = null;
-	glGrids       = null;
-	glPolygons    = null;
-	glVertexCount = 0;
-	glGridCount   = 0;
-	glPolyCount   = 0;
+	glVertexElements->b3FreeVertexMemory();
+	glGridElements->b3FreeVertexMemory();
+	glPolygonElements->b3FreeVertexMemory();
 }
 
 void b3RenderObject::b3Update()
 {
-	if (!glIndicesComputed)
+	if ((!glGridElements->b3IsComputed()) || (!glPolygonElements->b3IsComputed()))
 	{
+		b3MapIndices(GL_WRITE_ONLY_ARB);
 #ifdef VERBOSE
+		b3_gl_line    *glGrids    = *glGridElements;
+		b3_gl_polygon *glPolygons = *glPolygonElements;
+		
 		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateIndices() this = %p\n",this);
-		b3PrintF(B3LOG_FULL,"       %5d grids:    %p\n",glGridCount,   glGrids);
-		b3PrintF(B3LOG_FULL,"       %5d polygons: %p\n",glPolyCount,   glPolygons);
+		b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
+			 glGridElements->b3GetCount(), glGrids,
+			 glGridElements->b3IsCustom() ? "custom" : "buffer");
+		b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
+			 glPolygonElements->b3GetCount(), glPolygons,
+			 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 		b3ComputeIndices();
-		glIndicesComputed = true;
 
+		glGridElements->b3CustomData();
+		glPolygonElements->b3CustomData();
+
+		b3UnmapIndices();
+
+		glGridElements->b3Recomputed();
+		glPolygonElements->b3Recomputed();
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateIndices()\n");
 #endif
 	}
 
-	if (!glVerticesComputed)
+	if (!glVertexElements->b3IsComputed())
 	{
+		b3MapVertices(GL_WRITE_ONLY_ARB);
+		b3MapIndices(GL_READ_ONLY_ARB);
+
 #ifdef VERBOSE
+		b3_gl_vertex  *glVertex   = *glVertexElements;
+
 		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3UpdateVertices() this = %p\n",this);
-		b3PrintF(B3LOG_FULL,"       %5d vertices: %p\n",glVertexCount, glVertex);
+		b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+			 glVertexElements->b3GetCount(), glVertex,
+			 glVertexElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 		b3ComputeVertices();
 		b3ComputeNormals();
 
-		glVerticesComputed = true;
+		glVertexElements->b3CustomData();
+
+		b3UnmapVertices();
+		b3UnmapIndices();
+
+		glVertexElements->b3Recomputed();
 #ifdef VERBOSE
 		b3PrintF(B3LOG_FULL,"##### <b3RenderObject::b3UpdateVertices()\n");
 #endif
@@ -726,15 +806,28 @@ void b3RenderObject::b3ComputeIndices()
 
 void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 {
-	b3_gl_vector normal;
-	b3_gl_vector xDir,yDir;
-	b3_index     i,start,end,v1,v2,v3;
+	b3_gl_vector   normal;
+	b3_gl_vector   xDir,yDir;
+	b3_gl_vertex  *glVertex      = *glVertexElements;
+	b3_gl_polygon *glPolygons    = *glPolygonElements;
+	b3_count       glVertexCount =  glVertexElements->b3GetCount();
+	b3_count       glGridCount   =  glGridElements->b3GetCount();
+	b3_count       glPolyCount   =  glPolygonElements->b3GetCount();
+	b3_index       i,start,end,v1,v2,v3;
 
 #ifdef VERBOSE
-		b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3ComputeNormals() this = %p\n",this);
-		b3PrintF(B3LOG_FULL,"       %5d vertices: %p\n",glVertexCount, glVertex);
-		b3PrintF(B3LOG_FULL,"       %5d grids:    %p\n",glGridCount,   glGrids);
-		b3PrintF(B3LOG_FULL,"       %5d polygons: %p\n",glPolyCount,   glPolygons);
+	b3_gl_line    *glGrids    = *glGridElements;
+
+	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+		 glVertexElements->b3GetCount(), glVertex,
+		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
+		 glGridElements->b3GetCount(), glGrids,
+		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
+		 glPolygonElements->b3GetCount(), glPolygons,
+		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"##### >b3RenderObject::b3ComputeNormals() this = %p\n",this);
 #endif
 
 	// Clear normals
@@ -791,17 +884,20 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
 {
 	start = 0;
-	end   = glVertexCount;
+	end   = glVertexElements->b3GetCount();
 }
 
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
-	b3_bool   result = false;
-	b3_index  i,start,end;
-
 	b3Update();
 
-	if (glVerticesComputed && (glVertex != null) && (glVertexCount > 0))
+	b3MapVertices(GL_READ_ONLY_ARB);
+
+	b3_gl_vertex *glVertex = *glVertexElements;
+	b3_bool       result = false;
+	b3_index      i,start,end;
+
+	if (glVertexElements->b3IsComputed() && (glVertex != null) && (glVertexElements->b3GetCount() > 0))
 	{
 		b3GetVertexRange(start,end);
 		for (i = start;i < end;i++)
@@ -810,6 +906,8 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 		}
 		result = true;
 	}
+	b3UnmapVertices();
+
 	return result;
 }
 
@@ -817,7 +915,12 @@ void b3RenderObject::b3TransformVertices(
 	b3_matrix *transformation,
 	b3_bool    is_affine)
 {
-	b3_count i;
+	b3MapVertices(GL_READ_WRITE_ARB);
+	b3MapIndices(GL_READ_ONLY_ARB);
+
+	b3_count      glVertexCount =  glVertexElements->b3GetCount();
+	b3_gl_vertex *glVertex      = *glVertexElements;
+	b3_count      i;
 
 	if (glVertex != null)
 	{
@@ -838,6 +941,8 @@ void b3RenderObject::b3TransformVertices(
 			b3ComputeNormals();
 		}
 	}
+	b3UnmapVertices();
+	b3UnmapIndices();
 }
 
 /*************************************************************************
@@ -1213,7 +1318,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
-		if (glGridCount > 0)
+		if (glGridElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForLineDrawing(context);
 			b3DrawLinedGeometry(context);
@@ -1221,7 +1326,7 @@ void b3RenderObject::b3Draw(b3RenderContext *context)
 		break;
 
 	case B3_RENDER_FILLED:
-		if (glGridCount > 0)
+		if (glPolygonElements->b3GetCount() > 0)
 		{
 			glCallList(glDisplayList);
 			b3DrawFilledGeometry(context);
@@ -1255,12 +1360,24 @@ void b3RenderObject::b3CheckGeometry(
 	b3_render_mode   render_mode)
 {
 #ifdef _DEBUG
+	b3MapVertices(GL_READ_ONLY_ARB);
+	b3MapIndices(GL_READ_ONLY_ARB);
+
+	b3_gl_vertex  *glVertex   = *glVertexElements;
+	b3_gl_line    *glGrids    = *glGridElements;
+	b3_gl_polygon *glPolygons = *glPolygonElements;
 	b3_index       i;
 
 #ifdef VERBOSE
-	b3PrintF(B3LOG_FULL,"       %5d vertices: %p\n",glVertexCount, glVertex);
-	b3PrintF(B3LOG_FULL,"       %5d grids:    %p\n",glGridCount,   glGrids);
-	b3PrintF(B3LOG_FULL,"       %5d polygons: %p\n",glPolyCount,   glPolygons);
+	b3PrintF(B3LOG_FULL,"       %5d vertices: %p - %s\n",
+		 glVertexElements->b3GetCount(), glVertex,
+		 glVertexElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d grids:    %p - %s\n",
+		 glGridElements->b3GetCount(), glGrids,
+		 glGridElements->b3IsCustom() ? "custom" : "buffer");
+	b3PrintF(B3LOG_FULL,"       %5d polygons: %p - %s\n",
+		 glPolygonElements->b3GetCount(), glPolygons,
+		 glPolygonElements->b3IsCustom() ? "custom" : "buffer");
 #endif
 
 	if (glVertex != null)
@@ -1273,7 +1390,7 @@ void b3RenderObject::b3CheckGeometry(
 			// makes it possible to catch to faulty
 			// index data. The access simply compute
 			// the length of the lines to be drawn.
-			for (i = 0;i < glGridCount;i++)
+			for (i = 0;i < glGridElements->b3GetCount();i++)
 			{
 				b3_vector aPoint,bPoint;
 				b3_index  a,b;
@@ -1294,7 +1411,7 @@ void b3RenderObject::b3CheckGeometry(
 			break;
 
 		case B3_RENDER_FILLED:
-			for (i = 0;i < glPolyCount;i++)
+			for (i = 0;i < glPolygonElements->b3GetCount();i++)
 			{
 				b3_vector aPoint,bPoint,cPoint;
 				b3_index  a,b,c;
@@ -1329,6 +1446,8 @@ void b3RenderObject::b3CheckGeometry(
 			break;
 		}
 	}
+	b3UnmapVertices();
+	b3UnmapIndices();
 #endif
 }
 
@@ -1340,7 +1459,7 @@ void b3RenderObject::b3DrawGeometry(
 	switch (render_mode)
 	{
 	case B3_RENDER_LINE:
-		if (glGridCount > 0)
+		if (glGridElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForLineDrawing(context);
 			b3DrawLinedGeometry(context);
@@ -1348,7 +1467,7 @@ void b3RenderObject::b3DrawGeometry(
 		break;
 
 	case B3_RENDER_FILLED:
-		if (glPolyCount > 0)
+		if (glPolygonElements->b3GetCount() > 0)
 		{
 			b3SelectMaterialForFilledDrawing(context);
 			b3DrawFilledGeometry(context);
@@ -1424,22 +1543,21 @@ void b3RenderObject::b3DrawLinedGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+	glVertexElements->b3Draw();
+	glGridElements->b3Draw();
 #else
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw lined:  %d vertices, %d lines\n",
-		glVertexCount,glGridCount);
+		glVertexElements->b3GetCount(),
+		glGridElements->b3GetCount());
 #endif
 
 	GLenum error = glGetError();
-	B3_ASSERT(glVertex != null);
-
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
+	glVertexElements->b3Draw();
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_INT,glGrids);
+		glGridElements->b3Draw();
 		error = glGetError();
 	}
 #endif
@@ -1450,22 +1568,22 @@ void b3RenderObject::b3DrawFilledGeometry(b3RenderContext *context)
 {
 #ifdef BLZ3_USE_OPENGL
 #ifndef _DEBUG
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
-	glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+	glVertexElements->b3Draw();
+	glPolygonElements->b3Draw();
 #else
 #ifdef VERBOSE
 	b3PrintF(B3LOG_FULL,"       b3Draw filled: %d vertices, %d polygons\n",
-		glVertexCount,glPolyCount);
+		glVertexElements->b3GetCount(),
+		glPolygonElements->b3GetCount());
 #endif
 
 	GLenum error = glGetError();
-	B3_ASSERT(glVertex != null);
+	glVertexElements->b3Draw();
 
-	glInterleavedArrays(GL_T2F_N3F_V3F,0, glVertex);
 	error = glGetError();
 	if (error == GL_NO_ERROR)
 	{
-		glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_INT,glPolygons);
+		glPolygonElements->b3Draw();
 		error = glGetError();
 	}
 #endif

@@ -25,6 +25,17 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2004/11/21 14:56:57  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.9.2.1  2004/11/21 10:17:32  sm
+**      - We have to map the object before getting the pointer. Then the
+**        bounding boxes can be computed correctly to setup the far and
+**        near clipping plane correctly. When mapping correctly the
+**        transformation can occur correctly which plays the ananimation
+**        in a way we expect ;-)
+**        ** That's it **
+**
 **      Revision 1.9  2004/09/24 11:42:13  sm
 **      - First VBO run under Linux.
 **
@@ -257,7 +268,7 @@ void RenderScene()
 
 	if (has_vbo)
 	{
-		printf("drawing...\n");
+		printf("drawing vertex buffer objects...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
 		glVertexPointer(3, GL_FLOAT, 0, 0);
 
@@ -266,6 +277,7 @@ void RenderScene()
 	}
 	else
 	{
+		printf("Drawing vertex array...\n");
 		glVertexPointer(3, GL_FLOAT, 0, boxVertices);
 		glDrawElements(GL_LINES,24,GL_UNSIGNED_BYTE, boxIndices);
 	}
@@ -335,11 +347,12 @@ void SetupRC()
 
 		printf("Setup vertices...\n");
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, vbo[0]);
-		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(boxVertices), NULL, GL_DYNAMIC_DRAW_ARB);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(boxVertices), boxVertices, GL_DYNAMIC_DRAW_ARB);
+/*
 		ptr = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY);
 		memcpy(ptr,boxVertices,sizeof(boxVertices));
 		glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
-
+*/
 		printf("Setup indices...\n");
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vbo[1]);
 		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, sizeof(boxIndices), NULL, GL_DYNAMIC_DRAW_ARB);

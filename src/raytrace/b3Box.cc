@@ -32,8 +32,16 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
 **      Revision 1.23  2004/09/25 10:48:47  sm
 **      - Setting to static fixed size arrays.
+**
+**      Revision 1.22.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
 **
 **      Revision 1.22  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
@@ -162,10 +170,9 @@ void b3BBox::b3SetName(const char *name)
 	b3Item::b3SetString(m_BoxName,sizeof(m_BoxName),name);
 }
 
-void b3Box::b3AllocVertexMemory(b3RenderContext *context)
+void b3Box::b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount)
 {
-	glVertex      = m_BoxVertex;
-	glVertexCount = 24;
+	vertCount = 24;
 }
 
 void b3Box::b3ComputeVertices()
@@ -180,8 +187,8 @@ void b3Box::b3ComputeNormals(b3_bool normalize)
 
 void b3Box::b3ComputeIndices()
 {
-	glGridCount   = 12;
-	glPolyCount   = 12;
+	glGridElements->b3SetCount(12);
+	glPolygonElements->b3SetCount(12);
 
 	b3ComputeBoxIndices();
 }

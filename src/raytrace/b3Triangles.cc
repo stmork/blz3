@@ -31,6 +31,14 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2004/11/21 14:56:59  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.13.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.13  2004/09/19 15:36:18  sm
 **      - Changed polygon/grid index data type from short (Hey! Are we
 **        on Windows 3.11???) to long.
@@ -273,7 +281,7 @@ void b3Triangles::b3ComputeVertices()
 	b3_index      i;
 
 	Vertex = m_Vertices;
-	Vector = glVertex;
+	Vector = *glVertexElements;
 	
 	if (m_Flags & PHONG)
 	{
@@ -294,7 +302,7 @@ void b3Triangles::b3ComputeVertices()
 			b3_f64   fx,fxStep;
 			b3_f64   fy,fyStep;
 
-			Vector = glVertex;
+			Vector = *glVertexElements;
 			fy     = 0;
 			fxStep = 1.0 / m_xSize;
 			fyStep = 1.0 / m_ySize;
@@ -343,7 +351,7 @@ void b3Triangles::b3ComputeVertices()
 			b3_f64   fx,fxStep;
 			b3_f64   fy,fyStep;
 
-			Vector = glVertex;
+			Vector = *glVertexElements;
 			fy     = 0;
 			fxStep = 1.0 / m_xSize;
 			fyStep = 1.0 / m_ySize;
@@ -402,8 +410,8 @@ void b3Triangles::b3ComputeIndices()
 
 	Vertex   = m_Vertices;
 	Triangle = m_Triangles;
-	gPtr     = glGrids;
-	pPtr     = glPolygons;
+	gPtr     = *glGridElements;
+	pPtr     = *glPolygonElements;
 
 	if (m_Flags & PHONG)
 	{

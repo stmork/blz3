@@ -32,6 +32,14 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2004/11/21 14:56:58  sm
+**      - Merged VBO development into main trunk.
+**
+**      Revision 1.18.2.1  2004/11/19 19:38:43  sm
+**      - OK. The arrays are drawing correctly and the ATi VBOs are drawing
+**        something. The draw buffer seams to be defective. Now we should
+**        look what nVIDIA is doing with my code.
+**
 **      Revision 1.18  2004/09/24 11:42:14  sm
 **      - First VBO run under Linux.
 **
@@ -159,8 +167,8 @@ void b3Cylinder::b3AllocVertexMemory(b3RenderContext *ctx)
 	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
 
 	b3RenderObject::b3AllocVertexMemory(context);
-	glGrids    = context->b3GetCylinderIndices();
-	glPolygons = context->b3GetCylinderPolygons();
+	glGridElements->b3SetGrids(context->b3GetCylinderIndices());
+	glPolygonElements->b3SetPolygons(context->b3GetCylinderPolygons());
 }
 
 void b3Cylinder::b3ComputeVertices()

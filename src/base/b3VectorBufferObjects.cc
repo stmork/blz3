@@ -24,7 +24,7 @@
 
 #include "blz3/base/b3VectorBufferObjects.h"
 
-#define USE_VBOS
+#define nUSE_VBOS
 
 /*************************************************************************
 **                                                                      **
@@ -34,13 +34,16 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/11/21 14:56:58  sm
+**	- Merged VBO development into main trunk.
+**
 **	Revision 1.5  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **	Revision 1.4  2004/09/24 20:22:05  sm
 **	- Some VBO adjustments.
 **	
