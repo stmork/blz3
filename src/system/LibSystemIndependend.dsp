@@ -106,6 +106,10 @@ SOURCE=.\b3LogBase.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3PluginBase.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Row.cc
 # End Source File
 # Begin Source File
@@ -147,6 +151,10 @@ SOURCE=..\..\include\blz3\system\b3LogBase.h
 # Begin Source File
 
 SOURCE=..\..\include\blz3\system\b3Memory.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\include\blz3\system\b3PluginBase.h
 # End Source File
 # Begin Source File
 

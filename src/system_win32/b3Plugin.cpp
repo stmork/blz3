@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2003/05/24 14:10:45  sm
+**	- Updated platform independend support
+**
 **	Revision 1.2  2003/05/24 14:00:36  sm
 **	- Added plugin base classes for system independend support
-**
+**	
 **	Revision 1.1  2003/05/24 13:46:49  sm
 **	- Added plugin support
 **	- Fixed b3FileList on non existing directory.
@@ -54,6 +57,11 @@ b3_bool b3Loader::b3IsPlugin(b3Path &library)
 
 	ext.b3ExtractExt();
 	return stricmp(ext,"dll") == 0;
+}
+
+b3PluginBase *b3Loader::b3CreatePlugin(b3Path &library)
+{
+	return new b3Plugin(library);
 }
 
 /*************************************************************************
