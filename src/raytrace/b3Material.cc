@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.72  2004/05/09 18:27:23  sm
+**      - Fixed granite
+**
 **      Revision 1.71  2004/05/09 15:06:56  sm
 **      - Added inverse transformation for mapping.
 **      - Unified scale mapping source via b3Scaling.
@@ -1505,46 +1508,57 @@ b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),
 
 b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_DarkMaterial.m_Ambient);
+	b3Color light_diffuse,dummy;
+
 	b3InitColor(m_DarkMaterial.m_Diffuse);
+	b3InitColor(light_diffuse);
+	b3InitColor(dummy);
+	b3InitColor(m_DarkMaterial.m_Ambient);
 	b3InitColor(m_DarkMaterial.m_Specular);
-	b3InitColor(m_LightMaterial.m_Ambient);
-	b3InitColor(m_LightMaterial.m_Diffuse);
-	b3InitColor(m_LightMaterial.m_Specular);
+	b3InitVector(&m_Scale);
 	m_DarkMaterial.m_Reflection  = b3InitFloat();
 	m_DarkMaterial.m_Refraction  = b3InitFloat();
 	m_DarkMaterial.m_Ior         = b3InitFloat();
 	m_DarkMaterial.m_SpecularExp = b3InitFloat();
-	m_LightMaterial.m_Reflection  = b3InitFloat();
-	m_LightMaterial.m_Refraction  = b3InitFloat();
-	m_LightMaterial.m_Ior         = b3InitFloat();
-	m_LightMaterial.m_SpecularExp = b3InitFloat();
-	b3InitVector(&m_Scale);
-	m_ScaleFlags  = (b3_scaling_mode)b3InitInt();
-	m_Overtone    = b3InitCount();
+	m_ScaleFlags    = (b3_scaling_mode)b3InitInt();
+	m_Overtone      = b3InitCount();
+
+	m_LightMaterial = m_DarkMaterial;
+	m_LightMaterial.m_Diffuse = light_diffuse;
+	if (B3_PARSE_INDEX_VALID)
+	{
+		b3InitColor(m_LightMaterial.m_Ambient);
+		b3InitColor(m_LightMaterial.m_Specular);
+		m_LightMaterial.m_Reflection  = b3InitFloat();
+		m_LightMaterial.m_Refraction  = b3InitFloat();
+		m_LightMaterial.m_Ior         = b3InitFloat();
+		m_LightMaterial.m_SpecularExp = b3InitFloat();
+	}
 }
 
 void b3MatGranite::b3Write()
 {
-	b3StoreColor(m_DarkMaterial.m_Ambient);
 	b3StoreColor(m_DarkMaterial.m_Diffuse);
-	b3StoreColor(m_DarkMaterial.m_Specular);
-	b3StoreColor(m_LightMaterial.m_Ambient);
 	b3StoreColor(m_LightMaterial.m_Diffuse);
-	b3StoreColor(m_LightMaterial.m_Specular);
-	
+	b3StoreColor(m_DarkMaterial.m_Diffuse);
+	b3StoreColor(m_DarkMaterial.m_Ambient);
+	b3StoreColor(m_DarkMaterial.m_Specular);
 	b3StoreFloat(m_DarkMaterial.m_Reflection);
 	b3StoreFloat(m_DarkMaterial.m_Refraction);
 	b3StoreFloat(m_DarkMaterial.m_Ior);
 	b3StoreFloat(m_DarkMaterial.m_SpecularExp);
-	b3StoreFloat(m_LightMaterial.m_Reflection);
-	b3StoreFloat(m_LightMaterial.m_Refraction);
-	b3StoreFloat(m_LightMaterial.m_Ior);
-	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 
 	b3StoreVector(&m_Scale);
 	b3StoreInt  (m_ScaleFlags);
 	b3StoreCount(m_Overtone);
+
+	// Granite extension
+	b3StoreColor(m_LightMaterial.m_Ambient);
+	b3StoreColor(m_LightMaterial.m_Specular);
+	b3StoreFloat(m_LightMaterial.m_Reflection);
+	b3StoreFloat(m_LightMaterial.m_Refraction);
+	b3StoreFloat(m_LightMaterial.m_Ior);
+	b3StoreFloat(m_LightMaterial.m_SpecularExp);
 }
 
 b3_bool b3MatGranite::b3Prepare()
