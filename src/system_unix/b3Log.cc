@@ -41,12 +41,15 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/13 19:01:59  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.4  2001/12/02 17:38:17  sm
 **	- Removing nasty CR/LF
 **	- Added b3ExtractExt()
 **	- Added stricmp() for Un*x
 **	- Fixed some defines
-**
+**	
 **	Revision 1.3  2001/07/02 16:09:46  sm
 **	- Added bounding box reorganization.
 **	
@@ -171,9 +174,9 @@ void b3PrintF (
 #else
 			fprintf (bout,
 #endif
-				"*** Blizzard III V%ld.%02ld # Debug log file ***\n"
+				"*** Blizzard III V%d.%02d # Debug log file ***\n"
 				"Debug file:  %s\n"
-				"Debug level: %ld = 0x%lx\n\n",
+				"Debug level: %d = 0x%x\n\n",
 				B3_VERSION,B3_REVISION,
 				B3_OUT,
 				logLevel,logLevel);

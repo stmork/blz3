@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/03/13 19:01:58  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.18  2002/03/11 13:48:55  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.17  2002/01/10 20:18:54  sm
 **	- CFileDlg runs but CB3ImagePreviewFileDlg not! I don't know
 **	  what to do...
@@ -697,6 +700,10 @@ b3_pkd_color b3Tx::b3GetValue (
 		case B3_TX_RGB4 : return b3RGB4Value (x,y);
 		case B3_TX_RGB8 : return b3RGB8Value (x,y);
 		case B3_TX_VGA  : return b3VGAValue  (x,y);
+
+		default :
+			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
+			return 0;
 	}
 	return 0;
 }
@@ -816,6 +823,10 @@ b3_bool b3Tx::b3IsBackground(b3_coord x,b3_coord y)
 		case B3_TX_VGA	:
 			cPtr = (b3_u08 *)data;
 			return cPtr[x + y * xSize] != 0;
+			
+		default:
+			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
+			return false;
 	}
 	return false;
 }
@@ -972,6 +983,10 @@ void b3Tx::b3GetRow (
 			break;
 		case B3_TX_VGA :
 			b3GetVGA  (Line,y);
+			break;
+
+		default:
+			b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
 			break;
 	}
 }

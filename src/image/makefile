@@ -60,7 +60,7 @@ LIB_OBJ			=\
 	b3TxTGA.o\
 	b3TxTIFF.o
 
-all:	lib
+all:	$(LIBS)
 
 depend:
 #	makedepend -- $(CPPFLAGS) -- $(LIB_SOURCE)
@@ -69,9 +69,7 @@ depend:
 clean:
 	rm -f *.o *.a *.bak *~ core $(PRGS) $(LIBS) ALL QUIET
 
-lib:	$(LIBS)
- 
-$(LIBS):	$(LIB_OBJ)
+libB3image.a:	$(LIB_OBJ)
 	rm -f core
 	$(AR)     $(ARFLAGS) $@ $^
 	$(RANLIB) $@

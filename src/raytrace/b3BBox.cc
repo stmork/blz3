@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.53  2002/03/13 19:01:59  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.52  2002/03/10 13:55:15  sm
 **	- Added creation dialog for rotation shapes.
 **	- Cleaned up derivation of b3SplineRotShape.
 **	- Added support for foreign BLZ3_HOME directories.
-**
+**	
 **	Revision 1.51  2002/03/05 20:38:25  sm
 **	- Added first profile (beveled spline shape).
 **	- Added some features to b3SplineTemplate class.
@@ -1016,8 +1019,9 @@ b3_bool b3BBox::b3BacktraceRecompute(b3BBox *search)
 	// Search children
 	B3_FOR_BASE(b3GetBBoxHead(),item)
 	{
-		bbox = (b3BBox *)item;
-		if (result = bbox->b3BacktraceRecompute(search))
+		bbox   = (b3BBox *)item;
+		result = bbox->b3BacktraceRecompute(search);
+		if (result)
 		{
 			bbox->b3Recompute();
 			return result;

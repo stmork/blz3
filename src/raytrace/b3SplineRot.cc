@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2002/03/13 19:01:59  sm
+**      - Fixed some GCC warnings.
+**
 **      Revision 1.12  2002/03/10 21:14:41  sm
 **      - Fixed rotation shapes with custom subdivision for rotation.
 **
@@ -271,8 +274,6 @@ void b3SplineRotShape::b3GetCount(
 	b3_count        &gridCount,
 	b3_count        &polyCount)
 {
-	b3ShapeRenderContext *context = (b3ShapeRenderContext *)ctx;
-
 	SinCosSteps = m_rSubDiv;
 	m_ySubDiv   = m_Spline.subdiv;
 	m_xSubDiv   = m_rSubDiv;

@@ -117,7 +117,7 @@ mkversion:	mkversion.o
 
 mkg3states:	mkg3states.o
 	$(LINK.c) -o $@ mkg3states.o $(LIB_S)
-	cp -a mkg3states $(BLZ3_BIN)
+	cp mkg3states $(BLZ3_BIN)
 	chmod 775 $@ $(BLZ3_BIN)/$@
 
 -include .dep

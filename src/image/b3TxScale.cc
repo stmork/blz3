@@ -61,11 +61,14 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.12  2002/03/13 19:01:58  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.11  2002/03/11 13:48:55  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
 **	- Added a triangles profile.
-**
+**	
 **	Revision 1.10  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -1832,9 +1835,8 @@ void b3Tx::b3ILBMScale(
 
 void b3Tx::b3Scale(b3Tx *srcTx)
 {
-	b3_coord      x,y;
-	b3_index      index = 0;
-	b3_count     *rIndex,*cIndex;
+	b3_coord  x,y;
+	b3_count *rIndex,*cIndex;
 
 	// Check if there is nothing to do
 	if (srcTx->type == B3_TX_UNDEFINED)

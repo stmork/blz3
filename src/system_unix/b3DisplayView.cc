@@ -40,12 +40,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2002/03/13 19:01:59  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.3  2002/01/22 17:11:18  sm
 **	- brt3 is now able to save images. The selection of image type
 **	  is unsoved yet.
 **	- Better b3DisplayView in Un*x port.
 **	- Fixed stricmp() in Un*x port.
-**
+**	
 **	Revision 1.2  2001/12/23 10:58:38  sm
 **	- Accelerated b3Display.
 **	- Fixed YUV conversion.
@@ -444,8 +447,7 @@ inline void b3DisplayView::b3RefreshAll ()
 
 void b3DisplayView::b3PutRow(b3Row *row)
 {
-	b3_pkd_color *ptr = row->m_buffer;
-	b3_coord      y = row->m_y;
+	b3_coord y = row->m_y;
 
 	b3Display::b3PutRow(row);
 	if (m_Opened && (y < m_ys))

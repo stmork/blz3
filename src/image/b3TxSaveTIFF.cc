@@ -35,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2002/03/13 19:01:58  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.4  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.3  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -138,7 +141,7 @@ b3_result b3Tx::b3SaveTIFFPalette(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,ySize);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_CONTIG);
 
-	sprintf (software,"Blizzard III V%ld.%02ld",B3_VERSION,B3_REVISION);
+	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	// setting palette
@@ -195,7 +198,7 @@ b3_result b3Tx::b3SaveTIFFFax(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,ySize);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_CONTIG);
 
-	sprintf (software,"Blizzard III V%ld.%02ld",B3_VERSION,B3_REVISION);
+	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	xBytes = TX_BWA(xSize);
@@ -240,7 +243,7 @@ b3_result b3Tx::b3SaveTIFFTrueColor(TIFF *tiff)
 	TIFFSetField(tiff,TIFFTAG_ROWSPERSTRIP,1);
 	TIFFSetField(tiff,TIFFTAG_PLANARCONFIG,PLANARCONFIG_SEPARATE);
 
-	sprintf (software,"Blizzard III V%ld.%02ld",B3_VERSION,B3_REVISION);
+	sprintf (software,"Blizzard III V%d.%02d",B3_VERSION,B3_REVISION);
 	TIFFSetField( tiff, TIFFTAG_SOFTWARE, software );
 
 	// alloc memory for three channels of one row

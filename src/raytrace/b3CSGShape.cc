@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/03/13 19:01:59  sm
+**      - Fixed some GCC warnings.
+**
 **      Revision 1.8  2002/03/02 19:52:39  sm
 **      - Nasty UnCR
 **      - Fixed some compile bugs due to incompatibilities to Visual C++
@@ -104,7 +107,7 @@ b3CSGShape::b3CSGShape(b3_u32 *src) : b3ShapeRenderObject(src)
 
 int b3CSGShape::b3GetOperationIndex(b3_csg_operation mode)
 {
-	int i;
+	size_t i;
 
 	for (i = 0;i < (sizeof(m_CSGMode) / sizeof(b3_csg_operation));i++)
 	{

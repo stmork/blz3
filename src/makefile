@@ -107,20 +107,20 @@ $(BLZ3_LIB)/libB3System.a:	$(BLZ3_LIB)
 $(BLZ3_LIB)/libB3Raytrace.a:	$(BLZ3_LIB)
 	+@make -C raytrace
 
-base/libB3base.a:
-	+@make -C base
-
-image/libB3image.a:
-	+@make -C image
-
-Btiff/libB3tiff.a:
-	+@make -C Btiff
-
-Bjpeg/libB3jpeg.a:
-	+@make -C Bjpeg
-
-$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) $(BLZ3_TMP) base/libB3base.a image/libB3image.a Btiff/libB3tiff.a Bjpeg/libB3jpeg.a $(BLZ3_LIB)/libB3System.a
+$(BLZ3_LIB)/libB3Base.a:	$(BLZ3_LIB) lib_base lib_image lib_tiff lib_jpeg $(BLZ3_LIB)/libB3System.a
 	$(AR) $(ARFLAGS) $@ Bjpeg/*.o Btiff/*.o image/*.o base/*.o system_unix/*.o
 	$(RANLIB) $@
+
+lib_base:
+	+@make -C base
+
+lib_image:
+	+@make -C image
+
+lib_tiff:
+	+@make -C Btiff
+
+lib_jpeg:
+	+@make -C Bjpeg
 
 libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Raytrace.a $(BLZ3_LIB)/libB3Base.a

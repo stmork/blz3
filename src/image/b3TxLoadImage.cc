@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2002/03/13 19:01:58  sm
+**	- Fixed some GCC warnings.
+**
 **	Revision 1.7  2002/02/20 20:23:57  sm
 **	- Some type cleanups done.
-**
+**	
 **	Revision 1.6  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -156,7 +159,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	x   = 0;
 	y   = 0;
 	ppm_type = 0;
-	i   = sscanf((const char *)buffer,"P%ld %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
+	i   = sscanf((const char *)buffer,"P%d %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
 	b3PrintF (B3LOG_FULL,"PxM (%ld): (%ld,%ld - %ld) %d\n",ppm_type,x,y,i,pos);
 	if (i >= 2)
 	{

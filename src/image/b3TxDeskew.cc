@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
-**	Revision 1.1  2001/07/01 12:24:59  sm
-**	Initial revision
+**	Revision 1.2  2002/03/13 19:01:58  sm
+**	- Fixed some GCC warnings.
 **
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
+**	
 **	Revision 1.3  2000/09/21 10:22:27  smork
 **	- Setting Blizzard III projects to warning: Found
 **	  some uninitialized variables.
@@ -69,6 +72,10 @@ void b3Tx::b3Deskew()
 		break;
 	case B3_TX_VGA:
 		b3DeskewVGA();
+		break;
+
+	default:
+		b3PrintF(B3LOG_NORMAL,"Unknown type %d: file %s line %d\n",type,__FILE__,__LINE__);
 		break;
 	}
 }
