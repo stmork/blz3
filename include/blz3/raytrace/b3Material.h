@@ -423,6 +423,7 @@ private:
 class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 {
 	b3Color     m_Ra;
+	b3Color     m_Rd;
 	b3Color     m_Mu;
 
 public:

@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.100  2004/10/07 12:09:43  sm
+**      - Added new temporary variable for precomputation.
+**
 **      Revision 1.99  2004/10/07 10:33:08  sm
 **      - Added some GIF tools and made them usable with Blizzard III.
 **
@@ -1529,6 +1532,7 @@ void b3MatCookTorrance::b3Write()
 b3_bool b3MatCookTorrance::b3Prepare()
 {
 	m_Ra   = m_Ambient * m_ka;
+	m_Rd   = m_Diffuse * m_kd;
 	m_Mu   = b3Color(
 		b3Math::b3GetMu(m_Diffuse[b3Color::R]),
 		b3Math::b3GetMu(m_Diffuse[b3Color::G]),
@@ -1595,14 +1599,10 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit)
 		Rf.b3SetAlpha(0);
 		Rf.b3Min();
 
-		jit->m_DiffuseSum  += m_Diffuse * nl * m_kd;
-	}
-	else
-	{
-		Rf.b3Init();
+		jit->m_DiffuseSum  += m_Rd * nl;
+		jit->m_SpecularSum += Rf * m_ks;
 	}
 
-	jit->m_SpecularSum += Rf * m_ks;
 #else
 	b3_f64 rl = b3Vector::b3SMul(&surface->m_ReflRay.dir,&L);
 
