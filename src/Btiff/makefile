@@ -113,11 +113,11 @@ version.h:	mkversion
 mkversion:	mkversion.o
 	$(LINK.c) -o $@ mkversion.o $(LIB_S)
 	chmod 775 mkversion
-	cp mkversion $(BLZ3_BIN)
+	cp -a mkversion $(BLZ3_BIN)
 
 mkg3states:	mkg3states.o
 	$(LINK.c) -o $@ mkg3states.o $(LIB_S)
 	chmod 775 mkg3states
-	cp mkg3states $(BLZ3_BIN)
+	cp -a mkg3states $(BLZ3_BIN)
 
 -include .dep
