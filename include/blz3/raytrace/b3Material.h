@@ -74,16 +74,9 @@ public:
 };
 
 // MATERIAL or MAT_NORMAL
-class B3_PLUGIN b3MatNormal : public b3Material
+class B3_PLUGIN b3MatNormal : public b3Material, public b3_material
 {
 public:
-	b3Color           m_DiffColor;
-	b3Color           m_AmbColor;
-	b3Color           m_SpecColor;
-	b3_f32            m_Reflection;          // self explaining
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 
 protected:
@@ -95,22 +88,19 @@ public:
 
 	        void    b3Write();
 	virtual b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
+
+private:
+	        void    b3Init();
 };
 
 // CHESS
 class B3_PLUGIN b3MatChess : public b3Material 
 {
 public:
-	b3Color  m_DiffColor[2];
-	b3Color  m_AmbColor[2];
-	b3Color  m_SpecColor[2];
-	b3_f32   m_Reflection[2];         // same like NormMaterial, but
-	b3_f32   m_Refraction[2];
-	b3_f32   m_RefrValue[2];
-	b3_f32   m_HighLight[2];
-	b3_s32   m_Flags;
-	b3_s32   m_xTimes;
-	b3_s32   m_yTimes;
+	b3_material m_Material[2];
+	b3_s32      m_Flags;
+	b3_s32      m_xTimes;
+	b3_s32      m_yTimes;
 
 public:
 	B3_ITEM_INIT(b3MatChess);
@@ -121,16 +111,9 @@ public:
 };
 
 // MARBLE
-class B3_PLUGIN b3MatMarble : public b3Material 
+class B3_PLUGIN b3MatMarble : public b3Material, public b3_material
 {
-	b3Color           m_DiffColor;
-	b3Color           m_AmbColor;
-	b3Color           m_SpecColor;
 	b3_vector         m_Scale;
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes;
 
@@ -142,18 +125,11 @@ public:
 	b3_bool b3GetSurfaceValues(b3_ray *ray,b3_surface *surface);
 };
 
-class B3_PLUGIN b3MaterialWooden : public b3Material
+class B3_PLUGIN b3MaterialWooden : public b3Material, public b3_material
 {
 public:
-	b3Color           m_DiffColor;
-	b3Color           m_AmbColor;
-	b3Color           m_SpecColor;
 	b3Color           m_LightWood;
 	b3Color           m_DarkWood;
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
 
 protected:
 	B3_ITEM_BASE(b3MaterialWooden);
@@ -210,8 +186,8 @@ class B3_PLUGIN b3MatTexture : public b3Material
 public:
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
+	b3_f32            m_Ior;
+	b3_f32            m_SpecularExp;
 	b3_f32            m_xStart,m_yStart;    // surface coordinate start
 	b3_f32            m_xScale,m_yScale;    // texture scale
 	b3_s32            m_xTimes,m_yTimes;    // repetition in x- y-direction
@@ -236,8 +212,8 @@ class B3_PLUGIN b3MatWrapTexture : public b3Material
 public:
 	b3_f32            m_Reflection;
 	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
+	b3_f32            m_Ior;
+	b3_f32            m_SpecularExp;
 	b3_f32            m_xStart,m_yStart;  // surface coordinate start
 	b3_f32            m_xEnd,m_yEnd;      // surface coordinate end
 	b3_s32            m_Flags;
@@ -255,13 +231,8 @@ public:
 // SLIDE
 class B3_PLUGIN b3MatSlide : public b3Material 
 {
-	b3Color           m_Diffuse[2];        // colors for start/end
-	b3Color           m_Ambient[2];
-	b3Color           m_Specular[2];
+	b3_material       m_Material[2];
 	b3_f32            m_From,m_To;           // rel. polar values of start, end
-	b3_f32            m_Reflection;          // normal material definitions
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
 	b3_s32            m_ModeFlag;            // direction and cut flags, see below
 
@@ -311,19 +282,12 @@ public:
 };
 
 // GRANITE
-class B3_PLUGIN b3MatGranite : public b3Material 
+class B3_PLUGIN b3MatGranite : public b3Material, public b3_material
 {
 public:
 	b3Color           m_DarkColor;
 	b3Color           m_LightColor;
-	b3Color           m_DiffColor;
-	b3Color           m_AmbColor;
-	b3Color           m_SpecColor;
 	b3_vector         m_Scale;
-	b3_f32            m_Reflection;
-	b3_f32            m_Refraction;
-	b3_f32            m_RefrValue;
-	b3_f32            m_HighLight;
 	b3_u32            m_Flags;
 	b3_count          m_Overtone;
 

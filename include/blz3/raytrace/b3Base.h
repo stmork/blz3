@@ -68,17 +68,21 @@ struct b3_ray : public b3_line64
 	b3BBox     *bbox;
 };
 
-// aux. structure for computing illumination
-struct b3_surface
+struct b3_material
 {
 	b3Color     m_Diffuse;
 	b3Color     m_Ambient;
 	b3Color     m_Specular;
-	b3Color     m_SpecularSum;
 	b3_f64      m_Reflection;
 	b3_f64      m_Refraction;
 	b3_f64      m_Ior;
 	b3_f64      m_SpecularExp;
+};
+
+// aux. structure for computing illumination
+struct b3_surface : public b3_material
+{
+	b3Color     m_SpecularSum;
 };
 
 struct b3_ray_info : public b3_ray

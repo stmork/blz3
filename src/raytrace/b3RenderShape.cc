@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.69  2004/04/23 11:09:04  sm
+**      - Refectored b3Materials for better dialog use.
+**
 **      Revision 1.68  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -679,8 +682,8 @@ b3_bool b3Shape::b3GetChess(
 		if (result)
 		{
 			b3MatChess *chess = (b3MatChess *)item;
-			black   = chess->m_DiffColor[0];
-			white   = chess->m_DiffColor[1];
+			black   = chess->m_Material[0].m_Diffuse;
+			white   = chess->m_Material[1].m_Diffuse;
 			xRepeat = chess->m_xTimes;
 			yRepeat = chess->m_yTimes;
 		}

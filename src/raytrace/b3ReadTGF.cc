@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/23 11:09:04  sm
+**	- Refectored b3Materials for better dialog use.
+**
 **	Revision 1.6  2004/01/18 13:51:57  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.5  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -194,7 +197,7 @@ b3_bool b3TGFReader::b3ProcessMaterial(b3Shape *shape,b3_index index)
 		{
 			b3MatNormal *material = new b3MatNormal(MATERIAL);
 
-			material->m_DiffColor = m_Materials[i].m_Color;
+			material->m_Diffuse = m_Materials[i].m_Color;
 			shape->b3GetMaterialHead()->b3Append(material);
 			return true;
 		}

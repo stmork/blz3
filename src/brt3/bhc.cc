@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/04/23 11:09:04  sm
+**	- Refectored b3Materials for better dialog use.
+**
 **	Revision 1.13  2003/11/01 09:47:26  sm
 **	- Added CPU bit version with compiler version string.
-**
+**	
 **	Revision 1.12  2003/10/23 10:12:42  sm
 **	- Added more room indexes.
 **	
@@ -398,11 +401,11 @@ void b3BHDParser::b3AddWall(b3BBox *room)
 	{
 		shape = (b3Shape *)item;
 		material = new b3MatNormal(MATERIAL);
-		material->m_DiffColor.b3Init(1,1,1);
-		material->m_AmbColor.b3Init(0.2,0.2,0.2);
-		material->m_SpecColor.b3Init(1,1,1);
+		material->m_Diffuse.b3Init(1,1,1);
+		material->m_Ambient.b3Init(0.2,0.2,0.2);
+		material->m_Specular.b3Init(1,1,1);
 		material->m_Reflection = 0.0;
-		material->m_HighLight = 100000.0;
+		material->m_SpecularExp = 100000.0;
 		shape->b3GetMaterialHead()->b3Append(material);
 	}
 }

@@ -2047,6 +2047,42 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,129,74,50,14
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,80,30,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,80,65,60,15
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,80,100,60,15
+    LTEXT           "",IDC_COLOR_AMBIENT,10,30,60,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    LTEXT           "",IDC_COLOR_DIFFUSE,10,65,60,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    LTEXT           "",IDC_COLOR_SPECULAR,10,100,60,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    LTEXT           "Ambient",IDC_STATIC,10,20,26,8
+    LTEXT           "Diffuse",IDC_STATIC,10,55,23,8
+    LTEXT           "Specular",IDC_STATIC,10,90,29,8
+    GROUPBOX        "Farben:",IDC_STATIC,0,5,210,120
+    EDITTEXT        IDC_REFLECTANCE,10,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,45,160,11,15
+    EDITTEXT        IDC_REFRACTANCE,10,190,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,45,190,11,15
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,81,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,115,160,11,15
+    EDITTEXT        IDC_SPEC_EXPONENT,81,190,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,115,190,11,15
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,234,7,210,205
+    LTEXT           "Verspiegelung",IDC_STATIC,10,150,46,8
+    GROUPBOX        "Materialwerte",IDC_STATIC,0,135,210,80
+    LTEXT           "Verglasung",IDC_STATIC,10,180,36,8
+    LTEXT           "Brechungsindex",IDC_STATIC,80,150,52,8
+    LTEXT           "Spek. Exponent",IDC_STATIC,80,180,52,8
 END
 
 IDD_MAT_WRAP_TEXTURE DIALOG DISCARDABLE  0, 0, 186, 95

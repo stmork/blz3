@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/04/23 11:09:04  sm
+**	- Refectored b3Materials for better dialog use.
+**
 **	Revision 1.8  2004/01/18 13:51:57  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.7  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -672,12 +675,12 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 				&alpha,
 				&ambient,
 				&specular,
-				&Mat->m_HighLight,
-				&Mat->m_RefrValue);
+				&Mat->m_SpecularExp,
+				&Mat->m_Ior);
 			sscanf(line,"texture: %s",name);
-			Mat->m_DiffColor.b3Init(r,g,b);
+			Mat->m_Diffuse.b3Init(r,g,b);
 		}
-		if ((Mat->m_RefrValue == 0) || (Mat->m_RefrValue == 1))
+		if ((Mat->m_Ior == 0) || (Mat->m_Ior == 1))
 		{
 			Mat->m_Refraction = 0;
 		}
@@ -685,9 +688,9 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 		{
 			Mat->m_Refraction = 0.5;
 		}
-		Mat->m_HighLight  *= 100000;
-		if (Mat->m_HighLight <     20) Mat->m_HighLight =     20;
-		if (Mat->m_HighLight > 100000) Mat->m_HighLight = 100000;
+		Mat->m_SpecularExp  *= 100000;
+		if (Mat->m_SpecularExp <     20) Mat->m_SpecularExp =     20;
+		if (Mat->m_SpecularExp > 100000) Mat->m_SpecularExp = 100000;
 		if (strlen(name) > 0)
 		{
 			b3Tx *texture;
@@ -695,11 +698,11 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 			texture = b3Scene::m_TexturePool.b3LoadTexture(name);
 			if (texture != null)
 			{
-				b3COB_ComputeAvrgColor (texture,Mat->m_DiffColor);
+				b3COB_ComputeAvrgColor (texture,Mat->m_Diffuse);
 			}
 		}
-		Mat->m_AmbColor  = Mat->m_DiffColor * ambient;
-		Mat->m_SpecColor = Mat->m_DiffColor * specular;
+		Mat->m_Ambient  = Mat->m_Diffuse * ambient;
+		Mat->m_Specular = Mat->m_Diffuse * specular;
 	}
 	return size;
 }

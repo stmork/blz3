@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.63  2004/04/23 11:09:04  sm
+**      - Refectored b3Materials for better dialog use.
+**
 **      Revision 1.62  2004/04/18 16:58:14  sm
 **      - Changed definitions for base classes of raytracing objects.
 **      - Put wood material and wood bump dialogs into property
@@ -346,62 +349,60 @@ b3_bool b3Material::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MatNormal::b3MatNormal(b3_size class_size,b3_u32 class_type) : b3Material(class_size,class_type)
 {
-	m_AmbColor.b3Init();
-	m_DiffColor.b3Init();
-	m_SpecColor.b3Init();
-	m_Reflection =    0;
-	m_Refraction =    0;
-	m_RefrValue  =    1;
-	m_HighLight  = 1000;
-	m_Flags      =    0;
+	b3Init();
 }
 
 b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),class_type)
 {
-	m_AmbColor.b3Init();
-	m_DiffColor.b3Init();
-	m_SpecColor.b3Init();
-	m_Reflection =    0;
-	m_Refraction =    0;
-	m_RefrValue  =    1;
-	m_HighLight  = 1000;
-	m_Flags      =    0;
+	b3Init();
 }
 
 b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_DiffColor);
-	b3InitColor(m_AmbColor);
-	b3InitColor(m_SpecColor);
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_Flags      = b3InitInt();
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
 }
 
 void b3MatNormal::b3Write()
 {
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
+}
+
+void b3MatNormal::b3Init()
+{
+	m_Ambient.b3Init();
+	m_Diffuse.b3Init();
+	m_Specular.b3Init();
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1;
+	m_SpecularExp = 1000;
+	m_Flags       =    0;
 }
 
 b3_bool b3MatNormal::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	surface->m_Diffuse  = m_DiffColor;
-	surface->m_Ambient  = m_AmbColor;
-	surface->m_Specular = m_SpecColor;
+	surface->m_Diffuse  = m_Diffuse;
+	surface->m_Ambient  = m_Ambient;
+	surface->m_Specular = m_Specular;
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -414,18 +415,18 @@ b3_bool b3MatNormal::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_type) 
 {
-	m_AmbColor[0]  = b3Color(B3_GREY);
-	m_DiffColor[0] = b3Color(B3_BLACK);
-	m_SpecColor[0] = b3Color(B3_GREY);
+	m_Material[0].m_Ambient  = b3Color(B3_GREY);
+	m_Material[0].m_Diffuse = b3Color(B3_BLACK);
+	m_Material[0].m_Specular = b3Color(B3_GREY);
 
-	m_AmbColor[1]  = b3Color(B3_GREY);
-	m_DiffColor[1] = b3Color(B3_WHITE);
-	m_SpecColor[1] = b3Color(B3_GREY);
+	m_Material[1].m_Ambient  = b3Color(B3_GREY);
+	m_Material[1].m_Diffuse = b3Color(B3_WHITE);
+	m_Material[1].m_Specular = b3Color(B3_GREY);
 	
-	m_Reflection[0] = m_Reflection[1] =    0;
-	m_Refraction[0] = m_Refraction[1] =    0;
-	m_RefrValue[0]  = m_RefrValue[1]  =    1;
-	m_HighLight[0]  = m_HighLight[1]  = 1000;
+	m_Material[0].m_Reflection  = m_Material[1].m_Reflection  =    0;
+	m_Material[0].m_Refraction  = m_Material[1].m_Refraction  =    0;
+	m_Material[0].m_Ior         = m_Material[1].m_Ior         =    1;
+	m_Material[0].m_SpecularExp = m_Material[1].m_SpecularExp = 1000;
 
 	m_Flags         =    0;
 	m_xTimes        =    8;
@@ -434,20 +435,20 @@ b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_
 
 b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_DiffColor[0]);
-	b3InitColor(m_AmbColor[0]);
-	b3InitColor(m_SpecColor[0]);
-	b3InitColor(m_DiffColor[1]);
-	b3InitColor(m_AmbColor[1]);
-	b3InitColor(m_SpecColor[1]);
-	m_Reflection[0] = b3InitFloat();
-	m_Reflection[1] = b3InitFloat();
-	m_Refraction[0] = b3InitFloat();
-	m_Refraction[1] = b3InitFloat();
-	m_RefrValue[0]  = b3InitFloat();
-	m_RefrValue[1]  = b3InitFloat();
-	m_HighLight[0]  = b3InitFloat();
-	m_HighLight[1]  = b3InitFloat();
+	b3InitColor(m_Material[0].m_Diffuse);
+	b3InitColor(m_Material[0].m_Ambient);
+	b3InitColor(m_Material[0].m_Specular);
+	b3InitColor(m_Material[1].m_Diffuse);
+	b3InitColor(m_Material[1].m_Ambient);
+	b3InitColor(m_Material[1].m_Specular);
+	m_Material[0].m_Reflection  = b3InitFloat();
+	m_Material[1].m_Reflection  = b3InitFloat();
+	m_Material[0].m_Refraction  = b3InitFloat();
+	m_Material[1].m_Refraction  = b3InitFloat();
+	m_Material[0].m_Ior         = b3InitFloat();
+	m_Material[1].m_Ior         = b3InitFloat();
+	m_Material[0].m_SpecularExp = b3InitFloat();
+	m_Material[1].m_SpecularExp = b3InitFloat();
 	m_Flags         = b3InitInt();
 	m_xTimes        = b3InitInt();
 	m_yTimes        = b3InitInt();
@@ -455,20 +456,20 @@ b3MatChess::b3MatChess(b3_u32 *src) : b3Material(src)
 
 void b3MatChess::b3Write()
 {
-	b3StoreColor(m_DiffColor[0]);
-	b3StoreColor(m_AmbColor[0]);
-	b3StoreColor(m_SpecColor[0]);
-	b3StoreColor(m_DiffColor[1]);
-	b3StoreColor(m_AmbColor[1]);
-	b3StoreColor(m_SpecColor[1]);
-	b3StoreFloat(m_Reflection[0]);
-	b3StoreFloat(m_Reflection[1]);
-	b3StoreFloat(m_Refraction[0]);
-	b3StoreFloat(m_Refraction[1]);
-	b3StoreFloat(m_RefrValue[0]);
-	b3StoreFloat(m_RefrValue[1]);
-	b3StoreFloat(m_HighLight[0]);
-	b3StoreFloat(m_HighLight[1]);
+	b3StoreColor(m_Material[0].m_Diffuse);
+	b3StoreColor(m_Material[0].m_Ambient);
+	b3StoreColor(m_Material[0].m_Specular);
+	b3StoreColor(m_Material[1].m_Diffuse);
+	b3StoreColor(m_Material[1].m_Ambient);
+	b3StoreColor(m_Material[1].m_Specular);
+	b3StoreFloat(m_Material[0].m_Reflection);
+	b3StoreFloat(m_Material[1].m_Reflection);
+	b3StoreFloat(m_Material[0].m_Refraction);
+	b3StoreFloat(m_Material[1].m_Refraction);
+	b3StoreFloat(m_Material[0].m_Ior);
+	b3StoreFloat(m_Material[1].m_Ior);
+	b3StoreFloat(m_Material[0].m_SpecularExp);
+	b3StoreFloat(m_Material[1].m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -478,17 +479,16 @@ void b3MatChess::b3Write()
 
 b3_bool b3MatChess::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 {
-	b3_index index;
+	b3_index index = CHESS_INDEX(ray->polar.m_Polar.x,ray->polar.m_Polar.y);
 
-	index    = CHESS_INDEX(ray->polar.m_Polar.x,ray->polar.m_Polar.y);
-	surface->m_Diffuse  = m_DiffColor[index];
-	surface->m_Ambient  = m_AmbColor[index];
-	surface->m_Specular = m_SpecColor[index];
+	surface->m_Diffuse  = m_Material[index].m_Diffuse;
+	surface->m_Ambient  = m_Material[index].m_Ambient;
+	surface->m_Specular = m_Material[index].m_Specular;
 	
-	surface->m_Reflection  = m_Reflection[index];
-	surface->m_Refraction  = m_Refraction[index];
-	surface->m_Ior         = m_RefrValue[index];
-	surface->m_SpecularExp = m_HighLight[index];
+	surface->m_Reflection  = m_Material[index].m_Reflection;
+	surface->m_Refraction  = m_Material[index].m_Refraction;
+	surface->m_Ior         = m_Material[index].m_Ior;
+	surface->m_SpecularExp = m_Material[index].m_SpecularExp;
 
 	return true;
 }
@@ -502,10 +502,10 @@ b3_bool b3MatChess::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture),class_type) 
 {
 	// Init material values
-	m_Reflection =    0;
-	m_Refraction =    0;
-	m_RefrValue  =    1;
-	m_HighLight  = 1000;
+	m_Reflection  =    0;
+	m_Refraction  =    0;
+	m_Ior         =    1;
+	m_SpecularExp = 1000;
 
 	// Init texture repetition values
 	m_xStart     =  0;
@@ -523,18 +523,18 @@ b3MatTexture::b3MatTexture(b3_u32 class_type) : b3Material(sizeof(b3MatTexture),
 
 b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 {
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_xStart     = b3InitFloat();
-	m_yStart     = b3InitFloat();
-	m_xScale     = b3InitFloat();
-	m_yScale     = b3InitFloat();
-	m_xTimes     = b3InitInt();
-	m_yTimes     = b3InitInt();
-	m_Texture    = (b3Tx *)b3InitNull();
-	m_Flags      = b3InitInt();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_xStart      = b3InitFloat();
+	m_yStart      = b3InitFloat();
+	m_xScale      = b3InitFloat();
+	m_yScale      = b3InitFloat();
+	m_xTimes      = b3InitInt();
+	m_yTimes      = b3InitInt();
+	m_Texture     = (b3Tx *)b3InitNull();
+	m_Flags       = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
 }
 
@@ -542,8 +542,8 @@ void b3MatTexture::b3Write()
 {
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreFloat(m_xStart);
 	b3StoreFloat(m_yStart);
 	b3StoreFloat(m_xScale);
@@ -592,8 +592,8 @@ b3_bool b3MatTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -611,16 +611,16 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 class_type) :
 
 b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 {
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_xStart     = b3InitFloat();
-	m_yStart     = b3InitFloat();
-	m_xEnd       = b3InitFloat();
-	m_yEnd       = b3InitFloat();
-	m_Texture    = (b3Tx *)b3InitNull();
-	m_Flags      = b3InitInt();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_xStart      = b3InitFloat();
+	m_yStart      = b3InitFloat();
+	m_xEnd        = b3InitFloat();
+	m_yEnd        = b3InitFloat();
+	m_Texture     = (b3Tx *)b3InitNull();
+	m_Flags       = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
 }
 
@@ -628,8 +628,8 @@ void b3MatWrapTexture::b3Write()
 {
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreFloat(m_xStart);
 	b3StoreFloat(m_yStart);
 	b3StoreFloat(m_xEnd);
@@ -702,8 +702,8 @@ b3_bool b3MatWrapTexture::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -720,35 +720,39 @@ b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_
 
 b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_Diffuse[0]);
-	b3InitColor(m_Ambient[0]);
-	b3InitColor(m_Specular[0]);
-	b3InitColor(m_Diffuse[1]);
-	b3InitColor(m_Ambient[1]);
-	b3InitColor(m_Specular[1]);
-	m_From       = b3InitFloat();
-	m_To         = b3InitFloat();
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_ModeFlag   = b3InitInt();
+	b3InitColor(m_Material[0].m_Diffuse);
+	b3InitColor(m_Material[0].m_Ambient);
+	b3InitColor(m_Material[0].m_Specular);
+	b3InitColor(m_Material[1].m_Diffuse);
+	b3InitColor(m_Material[1].m_Ambient);
+	b3InitColor(m_Material[1].m_Specular);
+	m_From        = b3InitFloat();
+	m_To          = b3InitFloat();
+	m_Material[0].m_Reflection  =
+	m_Material[1].m_Reflection  = b3InitFloat();
+	m_Material[0].m_Refraction  =
+	m_Material[1].m_Refraction  = b3InitFloat();
+	m_Material[0].m_Ior         =
+	m_Material[1].m_Ior         = b3InitFloat();
+	m_Material[0].m_SpecularExp =
+	m_Material[1].m_SpecularExp = b3InitFloat();
+	m_ModeFlag    = b3InitInt();
 }
 
 void b3MatSlide::b3Write()
 {
-	b3StoreColor(m_Diffuse[0]);
-	b3StoreColor(m_Ambient[0]);
-	b3StoreColor(m_Specular[0]);
-	b3StoreColor(m_Diffuse[1]);
-	b3StoreColor(m_Ambient[1]);
-	b3StoreColor(m_Specular[1]);
+	b3StoreColor(m_Material[0].m_Diffuse);
+	b3StoreColor(m_Material[0].m_Ambient);
+	b3StoreColor(m_Material[0].m_Specular);
+	b3StoreColor(m_Material[1].m_Diffuse);
+	b3StoreColor(m_Material[1].m_Ambient);
+	b3StoreColor(m_Material[1].m_Specular);
 	b3StoreFloat(m_From);
 	b3StoreFloat(m_To);
-	b3StoreFloat(m_Reflection);
-	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Material[0].m_Reflection);
+	b3StoreFloat(m_Material[0].m_Refraction);
+	b3StoreFloat(m_Material[0].m_Ior);
+	b3StoreFloat(m_Material[0].m_SpecularExp);
 	b3StoreInt(m_ModeFlag);
 }
 
@@ -788,14 +792,14 @@ b3_bool b3MatSlide::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 			break;
 	}
 
-	surface->m_Diffuse  = m_Diffuse[0]  + (m_Diffuse[1]  - m_Diffuse[0]) * Factor;
-	surface->m_Ambient  = m_Ambient[0]  + (m_Ambient[1]  - m_Ambient[0]) * Factor;
-	surface->m_Specular = m_Specular[0] + (m_Specular[1] - m_Specular[0]) * Factor;
+	surface->m_Diffuse  = b3Color::b3Mix(m_Material[0].m_Diffuse,  m_Material[1].m_Diffuse,  Factor);
+	surface->m_Ambient  = b3Color::b3Mix(m_Material[0].m_Ambient,  m_Material[1].m_Ambient,  Factor);
+	surface->m_Specular = b3Color::b3Mix(m_Material[0].m_Specular, m_Material[1].m_Specular, Factor);
 
-	surface->m_Reflection  = m_Reflection;
-	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Reflection  = b3Math::b3Mix(m_Material[0].m_Reflection,  m_Material[0].m_Reflection,  Factor);
+	surface->m_Refraction  = b3Math::b3Mix(m_Material[0].m_Refraction,  m_Material[0].m_Refraction,  Factor);
+	surface->m_Ior         = b3Math::b3Mix(m_Material[0].m_Ior,         m_Material[0].m_Ior,         Factor);
+	surface->m_SpecularExp = b3Math::b3Mix(m_Material[0].m_SpecularExp, m_Material[0].m_SpecularExp, Factor);
 
 	return true;
 }
@@ -812,29 +816,29 @@ b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),cla
 
 b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(m_DiffColor);
-	b3InitColor(m_AmbColor);
-	b3InitColor(m_SpecColor);
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
 	b3InitVector(&m_Scale);
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_Flags      = b3InitInt();
-	m_xTimes     = b3InitInt();
-	m_yTimes     = b3InitInt();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
+	m_xTimes      = b3InitInt();
+	m_yTimes      = b3InitInt();
 }
 
 void b3MatMarble::b3Write()
 {
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -851,14 +855,14 @@ b3_bool b3MatMarble::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 
 	b3Noise::b3Marble(&d,mask);
 
-	surface->m_Diffuse  = m_DiffColor * mask;
-	surface->m_Ambient  = m_AmbColor  * mask;
-	surface->m_Specular = m_SpecColor * mask;
+	surface->m_Diffuse  = m_Diffuse * mask;
+	surface->m_Ambient  = m_Ambient  * mask;
+	surface->m_Specular = m_Specular * mask;
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -883,16 +887,16 @@ b3MaterialWooden::b3MaterialWooden(b3_u32 *src) : b3Material(src)
 
 void b3MaterialWooden::b3Init()
 {
-	m_AmbColor.b3Init(0.2,0.2,0.2);
-	m_DiffColor.b3Init(0.1,0.2,0.9);
-	m_SpecColor.b3Init(0.8,0.8,0.8);
+	m_Ambient.b3Init(0.2,0.2,0.2);
+	m_Diffuse.b3Init(0.1,0.2,0.9);
+	m_Specular.b3Init(0.8,0.8,0.8);
 	m_LightWood.b3Init(0.5,0.2,0.067);
 //	m_DarkWood.b3Init(0.15,0.077,0.028);
-	m_DarkWood = m_LightWood * 0.7;
-	m_Reflection =   0;
-	m_Refraction =   0;
-	m_RefrValue  =   1;
-	m_HighLight  = 200;
+	m_DarkWood    = m_LightWood * 0.7;
+	m_Reflection  =   0;
+	m_Refraction  =   0;
+	m_Ior         =   1;
+	m_SpecularExp = 200;
 }
 
 /*************************************************************************
@@ -909,17 +913,17 @@ b3MatWood::b3MatWood(b3_u32 class_type) : b3MaterialWooden(sizeof(b3MatWood),cla
 b3MatWood::b3MatWood(b3_u32 *src) : b3MaterialWooden(src)
 {
 	b3Init();
-	b3InitColor(m_DiffColor);
-	b3InitColor(m_AmbColor);
-	b3InitColor(m_SpecColor);
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
 	b3InitVector(&m_Scale);
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_Flags      = b3InitInt();
-	m_xTimes     = b3InitInt();
-	m_yTimes     = b3InitInt();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
+	m_xTimes      = b3InitInt();
+	m_yTimes      = b3InitInt();
 
 	// Load extensions if available
 	if (B3_PARSE_INDEX_VALID)
@@ -955,14 +959,14 @@ void b3MatWood::b3Init()
 
 void b3MatWood::b3Write()
 {
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -1002,13 +1006,13 @@ b3_bool b3MatWood::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	mix = b3ComputeWood(&point);
 
 	surface->m_Diffuse  = b3Color::b3Mix(m_LightWood,m_DarkWood,mix);
-	surface->m_Ambient  = m_AmbColor;
-	surface->m_Specular = m_SpecColor;
+	surface->m_Ambient  = m_Ambient;
+	surface->m_Specular = m_Specular;
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -1031,22 +1035,22 @@ b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
 b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3MaterialWooden(src), b3OakPlank()
 {
 	b3Init();
-	b3InitColor(m_DiffColor);
-	b3InitColor(m_AmbColor);
-	b3InitColor(m_SpecColor);
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
 
 	b3InitVector(&m_Scale);
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_Flags      = b3InitInt();
-	m_xTimes     = b3InitInt();
-	m_yTimes     = b3InitInt();
-	m_xOffset    = b3InitFloat();
-	m_xScale     = b3InitFloat();
-	m_yScale     = b3InitFloat();
-	m_Wobble     = b3InitFloat();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
+	m_xTimes      = b3InitInt();
+	m_yTimes      = b3InitInt();
+	m_xOffset     = b3InitFloat();
+	m_xScale      = b3InitFloat();
+	m_yScale      = b3InitFloat();
+	m_Wobble      = b3InitFloat();
 
 	// Wood basic definition
 	b3InitColor(m_LightWood);
@@ -1093,14 +1097,14 @@ void b3MatOakPlank::b3Init()
 
 void b3MatOakPlank::b3Write()
 {
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_xTimes);
 	b3StoreCount(m_yTimes);
@@ -1176,13 +1180,13 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 	b3_f64   mix = b3ComputeOakPlank(&ray->polar.m_BoxPolar,index);
 
 	surface->m_Diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
-	surface->m_Ambient  = m_AmbColor;
-	surface->m_Specular = m_SpecColor;
+	surface->m_Ambient  = m_Ambient;
+	surface->m_Specular = m_Specular;
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }
@@ -1196,10 +1200,9 @@ b3_bool b3MatOakPlank::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	b3MatNormal(sizeof(b3MatCookTorrance),class_type)
 {
-	m_DiffColor = b3Color(0.79,0.54,0.2);
-//	m_DiffColor = b3Color(0.7,0.32,0.2);
-	m_SpecColor = b3Color(0.8,0.8,0.8);
-	m_AmbColor  = m_DiffColor * 0.2;
+	m_Diffuse = b3Color(0.79,0.54,0.2);
+	m_Specular = b3Color(0.8,0.8,0.8);
+	m_Ambient  = m_Diffuse * 0.2;
 	m_ka   = 0.1;
 	m_ks   = 0.6;
 	m_kd   = 0.6;
@@ -1226,11 +1229,11 @@ void b3MatCookTorrance::b3Write()
 
 b3_bool b3MatCookTorrance::b3Prepare()
 {
-	m_Ra   = m_AmbColor * m_ka;
+	m_Ra   = m_Ambient * m_ka;
 	m_Mu   = b3Color(
-		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
-		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
-		b3Math::b3GetMu(m_DiffColor[b3Color::B]));
+		b3Math::b3GetMu(m_Diffuse[b3Color::R]),
+		b3Math::b3GetMu(m_Diffuse[b3Color::G]),
+		b3Math::b3GetMu(m_Diffuse[b3Color::B]));
 
 	return true;
 }
@@ -1295,11 +1298,11 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 		Rf = 0;
 	}
 	
-	result = m_Ra + m_DiffColor * nl * m_kd + Rf * m_ks;
+	result = m_Ra + m_Diffuse * nl * m_kd + Rf * m_ks;
 #else
 	b3_f64 rl = b3Vector::b3SMul(&ray->refl_ray.dir,&L);
 
-	result = m_Ra + m_DiffColor * nl + m_SpecColor * pow(fabs(rl),m_HighLight);
+	result = m_Ra + m_Diffuse * nl + m_Specular * pow(fabs(rl),m_SpecularExp);
 #endif
 
 	acc += result;
@@ -1315,17 +1318,17 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_ray_fork *ray,b3_light_info *jit,b3Co
 
 b3MatGranite::b3MatGranite(b3_u32 class_type) : b3Material(sizeof(b3MatGranite),class_type) 
 {
-	m_DarkColor  = b3Color(B3_BLACK);
-	m_LightColor = b3Color(b3_pkd_color(0xd0dde0));
-	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
-	m_AmbColor   = b3Color(0.1, 0.1, 0.1);
-	m_DiffColor  = b3Color(0.8, 0.8, 0.8);
-	m_Reflection =   0.0;
-	m_Refraction =   0.0;
-	m_RefrValue  =   1.0;
-	m_HighLight  = 100.0;
-	m_Overtone   =   2;
-	m_Flags      =   0;
+	m_DarkColor   = b3Color(B3_BLACK);
+	m_LightColor  = b3Color(b3_pkd_color(0xd0dde0));
+	m_Diffuse     = b3Color(0.8, 0.8, 0.8);
+	m_Ambient     = b3Color(0.1, 0.1, 0.1);
+	m_Diffuse     = b3Color(0.8, 0.8, 0.8);
+	m_Reflection  =   0.0;
+	m_Refraction  =   0.0;
+	m_Ior         =   1.0;
+	m_SpecularExp = 100.0;
+	m_Overtone    =   2;
+	m_Flags       =   0;
 	b3Vector::b3Init(&m_Scale,10,10,10);
 }
 
@@ -1333,30 +1336,30 @@ b3MatGranite::b3MatGranite(b3_u32 *src) : b3Material(src)
 {
 	b3InitColor(m_DarkColor);
 	b3InitColor(m_LightColor);
-	b3InitColor(m_DiffColor);
-	b3InitColor(m_AmbColor);
-	b3InitColor(m_SpecColor);
+	b3InitColor(m_Diffuse);
+	b3InitColor(m_Ambient);
+	b3InitColor(m_Specular);
 	b3InitVector(&m_Scale);
-	m_Reflection = b3InitFloat();
-	m_Refraction = b3InitFloat();
-	m_RefrValue  = b3InitFloat();
-	m_HighLight  = b3InitFloat();
-	m_Flags      = b3InitInt();
-	m_Overtone   = b3InitCount();
+	m_Reflection  = b3InitFloat();
+	m_Refraction  = b3InitFloat();
+	m_Ior         = b3InitFloat();
+	m_SpecularExp = b3InitFloat();
+	m_Flags       = b3InitInt();
+	m_Overtone    = b3InitCount();
 }
 
 void b3MatGranite::b3Write()
 {
 	b3StoreColor(m_DarkColor);
 	b3StoreColor(m_LightColor);
-	b3StoreColor(m_DiffColor);
-	b3StoreColor(m_AmbColor);
-	b3StoreColor(m_SpecColor);
+	b3StoreColor(m_Diffuse);
+	b3StoreColor(m_Ambient);
+	b3StoreColor(m_Specular);
 	b3StoreVector(&m_Scale);
 	b3StoreFloat(m_Reflection);
 	b3StoreFloat(m_Refraction);
-	b3StoreFloat(m_RefrValue);
-	b3StoreFloat(m_HighLight);
+	b3StoreFloat(m_Ior);
+	b3StoreFloat(m_SpecularExp);
 	b3StoreInt  (m_Flags);
 	b3StoreCount(m_Overtone);
 }
@@ -1395,14 +1398,14 @@ b3_bool b3MatGranite::b3GetSurfaceValues(b3_ray *ray,b3_surface *surface)
 		mask = b3Color::b3Mix(m_DarkColor,m_LightColor,sum);
 	}
 	
-	surface->m_Diffuse  = m_DiffColor * mask;
-	surface->m_Ambient  = m_AmbColor  * mask;
-	surface->m_Specular = m_SpecColor * mask;
+	surface->m_Diffuse  = m_Diffuse  * mask;
+	surface->m_Ambient  = m_Ambient  * mask;
+	surface->m_Specular = m_Specular * mask;
 
 	surface->m_Reflection  = m_Reflection;
 	surface->m_Refraction  = m_Refraction;
-	surface->m_Ior         = m_RefrValue;
-	surface->m_SpecularExp = m_HighLight;
+	surface->m_Ior         = m_Ior;
+	surface->m_SpecularExp = m_SpecularExp;
 
 	return true;
 }

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2004/04/23 11:09:04  sm
+**	- Refectored b3Materials for better dialog use.
+**
 **	Revision 1.4  2004/03/15 10:38:37  sm
 **	- Found good values for granite.
-**
+**	
 **	Revision 1.3  2004/03/05 13:20:21  sm
 **	- Some additional test materials added.
 **	
@@ -166,8 +169,8 @@ static void b3SaveCookTorrance(b3Color &color,int y)
 		b3World            world;
 		b3Path             name;
 
-		material->m_m         = 0.05 * i + 0.1;
-		material->m_DiffColor = color;
+		material->m_m       = 0.05 * i + 0.1;
+		material->m_Diffuse = color;
 
 		name.b3Format("/tmp/material_%d_%d.bwd",y,i);
 
