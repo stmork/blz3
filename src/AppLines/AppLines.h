@@ -45,6 +45,11 @@
 
 class CAppLinesApp : public CB3App
 {
+	// OpenGL general values
+	HGLRC           m_lastGC;
+	HDC             m_lastDC;
+
+	// Document templates (we can handle many file types!)
 	CMultiDocTemplate *pImageTemplate;
 	CMultiDocTemplate *pSceneTemplate;
 	CMultiDocTemplate *pObjectTemplate;
@@ -54,6 +59,7 @@ public:
 	CAppRaytraceDoc *b3CreateRaytraceDoc();
 	CAppObjectDoc   *b3CreateObjectDoc(CAppLinesDoc *LinesDoc,b3BBox *bbox);
 	void             b3CloseObjectDoc(CAppLinesDoc *LinesDoc);
+	void             b3SelectRenderContext(HDC dc,HGLRC gc);
 
 	UINT m_ClipboardFormatForBlizzardObject;
 // Overrides

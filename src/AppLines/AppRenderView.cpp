@@ -35,11 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2002/01/31 19:30:31  sm
+**	- Some OpenGL print optimizations done.
+**	- Object renaming inside hierarchy tree added.
+**
 **	Revision 1.8  2002/01/31 11:50:53  sm
 **	- Now we can print OpenGL scenes (Note: We have to do basic
 **	  initialization prior to render a scene. Then we can see the scene
 **	  on paper)
-**
+**	
 **	Revision 1.7  2002/01/30 19:46:41  sm
 **	- Trying to print in debug mode (and want to see anything)
 **	
@@ -97,7 +101,7 @@ static PIXELFORMATDESCRIPTOR print_pixelformat =
 	PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL,
 	PFD_TYPE_RGBA,
 	24,
-	8,0,8,0,8,0,
+	0,0,0,0,0,0,
 	0,0,
 	0,0,0,0,0,
 	32,
@@ -249,7 +253,7 @@ void CAppRenderView::OnDestroy()
 	CScrollView::OnDestroy();
 	
 	// TODO: Add your message handler code here
-	wglMakeCurrent(m_glDC,NULL);
+	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,NULL);
 	wglDeleteContext(m_glGC);
 }
 
@@ -299,7 +303,7 @@ void CAppRenderView::OnPaint()
 	long           sDiff,mDiff;
 
 	// Init Drawing
-	wglMakeCurrent(m_glDC,m_glGC);
+	CB3GetLinesApp()->b3SelectRenderContext(m_glDC,m_glGC);
 	GetClientRect(&rect);
 	GetDocument()->m_Context.b3SetBGColor(0.8,0.8,0.8);
 
@@ -373,7 +377,9 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 	// Init Drawing
 	m_prtWidth   = pDC->GetDeviceCaps(HORZRES);
 	m_prtHeight  = pDC->GetDeviceCaps(VERTRES);
-	for (denom = 1;((m_prtWidth * m_prtHeight * 3) / (denom * 1024 * 1024)) > limit;denom++);
+
+	// Use at least 1/3 size to give the printer driver the chance to dither appropriately.
+	for (denom = 3;((m_prtWidth * m_prtHeight * 3) / (denom * 1024 * 1024)) > limit;denom++);
 	m_prtWidth  /= denom;
 	m_prtHeight /= denom;
 
@@ -395,10 +401,11 @@ void CAppRenderView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo)
 #ifdef _DEBUG
 	b3ListPixelFormats(m_glDC);
 #endif
+
 	PixelFormatIndex = ChoosePixelFormat(m_prtDC,&print_pixelformat);
 	SetPixelFormat(m_prtDC,PixelFormatIndex,&print_pixelformat);
 	m_prtGC = wglCreateContext(m_prtDC);
-	wglMakeCurrent(m_prtDC,m_prtGC);
+	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
 
 	// Make initialization to this (dummy) Blizzad III context
 	b3RenderContext::b3Init();
@@ -410,6 +417,7 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 	CWaitCursor wait;
 
 	// Do it!
+	CB3GetLinesApp()->b3SelectRenderContext(m_prtDC,m_prtGC);
 	GetDocument()->m_Context.b3SetBGColor(1,1,1);
 	b3Draw(m_prtWidth,m_prtHeight);
 	glFinish();
@@ -420,6 +428,8 @@ void CAppRenderView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 		0,0,pDC->GetDeviceCaps(HORZRES),pDC->GetDeviceCaps(VERTRES),
 		CDC::FromHandle(m_prtDC),
 		0,0,m_prtWidth,m_prtHeight,SRCCOPY);
+
+	// Make this valid
 	ValidateRect(NULL);
 }
 
@@ -430,7 +440,7 @@ void CAppRenderView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo)
 	
 	if (m_prtGC != 0)
 	{
-		wglMakeCurrent(NULL,NULL);
+		CB3GetLinesApp()->b3SelectRenderContext(NULL,NULL);
 		wglDeleteContext(m_prtGC);
 		m_prtGC = 0;
 

@@ -61,6 +61,7 @@ class CB3Action;
 
 class CAppRenderView : public CScrollView
 {
+	// OpenGL printing values
 	HGLRC           m_prtGC;
 	HDC             m_prtDC;
 	HBITMAP         m_prtBitmap;
@@ -69,7 +70,7 @@ class CAppRenderView : public CScrollView
 	b3_res          m_prtHeight;
 
 protected:
-	// OpenGL values
+	// OpenGL window display values
 	HDC             m_glDC;
 	HGLRC           m_glGC;
 	int             m_glPixelFormatIndex;

@@ -302,6 +302,7 @@ BEGIN
     BEGIN
         MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
         MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
+        MENUITEM "Um&benennen",                 ID_RENAME
         MENUITEM SEPARATOR
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
@@ -581,6 +582,7 @@ BEGIN
     POPUP "Szene"
     BEGIN
         MENUITEM "&Editieren\tStrg+E",          ID_OBJECT_EDIT
+        MENUITEM "Um&benennen",                 ID_RENAME
         MENUITEM SEPARATOR
         MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
         MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
@@ -1650,6 +1652,12 @@ BEGIN
     ID_DEACTIVATE           "Deaktiviert das selektierte Objekt\nObjekt deaktivieren"
     ID_ALL_ACTIVATE         "Aktiviert alle Objekte der Szene\nAlle Objekte aktivieren"
     ID_ALL_DEACTIVATE       "Deaktiviert alle Objekte der Szene\nAlle Objekte deaktivieren"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_OBJECT_RENAME        "Benennt das Objekt um.\nObjekt umbenennenn"
+    ID_RENAME               "Benennt das Objekt um.\nObjekt umbenennenn"
 END
 
 #endif    // German (Germany) resources

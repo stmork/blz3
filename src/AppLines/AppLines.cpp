@@ -45,9 +45,13 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2002/01/31 19:30:31  sm
+**	- Some OpenGL print optimizations done.
+**	- Object renaming inside hierarchy tree added.
+**
 **	Revision 1.25  2002/01/30 19:46:41  sm
 **	- Trying to print in debug mode (and want to see anything)
-**
+**	
 **	Revision 1.24  2002/01/25 16:34:46  sm
 **	- Added printer support (not running yet)
 **	
@@ -179,6 +183,8 @@ CAppLinesApp::CAppLinesApp() : CB3App("Lines III")
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 	m_ClipboardFormatForBlizzardObject = 0;
+	m_lastGC = 0;
+	m_lastDC = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -542,6 +548,16 @@ void CAppLinesApp::OnChangeTexturePath()
 		path += ((const char *)((b3Path *)entry));
 	}
 	WriteProfileString(b3ClientName(),"texture search path",path);
+}
+
+void CAppLinesApp::b3SelectRenderContext(HDC dc,HGLRC gc)
+{
+	if ((dc != m_lastDC) || (gc != m_lastGC) || (dc == 0) || (gc == 0))
+	{
+		wglMakeCurrent(dc,gc);
+		m_lastDC = dc;
+		m_lastGC = gc;
+	}
 }
 
 void CAppLinesApp::OnFileNew() 

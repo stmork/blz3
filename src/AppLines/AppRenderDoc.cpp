@@ -34,10 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/01/31 19:30:31  sm
+**	- Some OpenGL print optimizations done.
+**	- Object renaming inside hierarchy tree added.
+**
 **	Revision 1.6  2002/01/24 15:55:57  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
-**
+**	
 **	Revision 1.5  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -73,6 +77,8 @@ IMPLEMENT_DYNCREATE(CAppRenderDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CAppRenderDoc, CDocument)
 	//{{AFX_MSG_MAP(CAppRenderDoc)
+	ON_COMMAND(ID_RENAME, OnRename)
+	ON_UPDATE_COMMAND_UI(ID_RENAME, OnUpdateRename)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -172,6 +178,23 @@ void CAppRenderDoc::b3DropBBox(b3BBox *srcBBox,b3BBox *dstBBox)
 
 void CAppRenderDoc::b3ContextMenu(HTREEITEM item)
 {
+}
+
+void CAppRenderDoc::OnRename() 
+{
+	// TODO: Add your command handler code here
+	HTREEITEM  item = m_DlgHierarchy->m_Hierarchy.GetSelectedItem();
+
+	if (item != null)
+	{
+		m_DlgHierarchy->m_Hierarchy.EditLabel(item);
+	}
+}
+
+void CAppRenderDoc::OnUpdateRename(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->Enable(m_DlgHierarchy->m_Hierarchy.GetSelectedItem() != null);
 }
 
 /*************************************************************************

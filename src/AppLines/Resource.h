@@ -292,6 +292,8 @@
 #define ID_OBJECT_COPY                  32861
 #define ID_DRAWING_PERF                 32862
 #define ID_OBJECT_EDIT                  32863
+#define ID_OBJECT_RENAME                32864
+#define ID_RENAME                       32865
 #define IDS_TEXTURE_FILTER              60013
 #define IDS_TOOLBAR_MAINFRAME           61446
 #define IDS_TOOLBAR_VIEW                61447
@@ -339,7 +341,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        167
-#define _APS_NEXT_COMMAND_VALUE         32864
+#define _APS_NEXT_COMMAND_VALUE         32866
 #define _APS_NEXT_CONTROL_VALUE         1110
 #define _APS_NEXT_SYMED_VALUE           102
 #endif

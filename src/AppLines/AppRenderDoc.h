@@ -81,6 +81,8 @@ public:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRenderDoc)
+	afx_msg void OnRename();
+	afx_msg void OnUpdateRename(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
