@@ -24,6 +24,7 @@
 #include <math.h>
 
 #ifdef __ICC
+#	include <xmmintrin.h>
 #	define B3_SSE
 
 #	define B3_ALIGN_16  __declspec(align(16))

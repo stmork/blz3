@@ -39,6 +39,8 @@ clean:	remdepend $(BLZ3_LIB)
 	echo "Cleaning up..."
 	find  $(BLZ3_LIB)  -name "*.a"   -exec rm {} \;
 	find  $(BLZ3_HOME) -name "*.log" -exec rm {} \;
+	find  $(BLZ3_HOME) -name "*.s"   -exec rm {} \;
+	find  $(BLZ3_HOME) -name "*.il"  -exec rm {} \;
 	find  $(BLZ3_HOME) -name "core*" -exec rm {} \;
 
 	+@for i in $(SUB_DIRS); do \

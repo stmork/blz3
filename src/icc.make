@@ -33,6 +33,12 @@ switch ( $1 )
        $CXX -ipo $CXXFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -o brt3/brt3 $LIBS
        breaksw
 
+   case "asm" :
+       echo "Build options: -O3 -w -march=pentium4"
+       echo "Building with -ipo..."
+       $CXX -ipo -O3 -w -march=pentium4 $STDINC $LDFLAGS $SRC brt3/brt3.cc -S
+       breaksw
+
    case "pgo" :
        test -d $PROF_DIR || mkdir -p $PROF_DIR || exit 1
        echo "Build options: "$CFLAGS

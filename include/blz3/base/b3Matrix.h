@@ -55,6 +55,18 @@ public:
 		return vec;
 	}
 
+	static inline b3_vector *b3Init(
+		      b3_vector   *vec,
+		const b3_vector64 *src)
+	{
+		vec->x   = (b3_f32)src->x;
+		vec->y   = (b3_f32)src->y;
+		vec->z   = (b3_f32)src->z;
+		vec->pad = 0;
+
+		return vec;
+	}
+
 	static inline b3_bool b3IsEqual(
 		const b3_vector *vec1,
 		const b3_vector *vec2)
@@ -131,6 +143,27 @@ public:
 			vector->y = (b3_f32)(y * denom);
 			vector->z = (b3_f32)(z * denom);
 		}
+		return result;
+	}
+
+	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
+	{
+		b3_f64  result;
+#ifdef B3_SSE
+		b3_f32 *a = &aVec->x;
+		b3_f32 *b = &bVec->x;
+
+		result = 0;
+		for(int i = 0;i < 4;i++)
+		{
+			result += a[i] * b[i];
+		}
+#else
+		result =
+			aVec->x * bVec->x +
+			aVec->y * bVec->y +
+			aVec->z * bVec->z;
+#endif
 		return result;
 	}
 
