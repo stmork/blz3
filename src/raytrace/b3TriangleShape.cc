@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/02/17 21:25:07  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.22  2002/01/21 16:56:46  sm
 **      - Showing splash dialog only in release version.
 **      - Prepared shape icons.
@@ -427,11 +432,11 @@ b3_bool b3TriangleShape::b3Prepare()
 	End.y   += 0.1f;
 	End.z   += 0.1f;
 
-	Denom = 1.0 / m_GridSize;
-	m_Base     = Start;
-	m_Size.x	= (End.x - Start.x) * Denom;
-	m_Size.y	= (End.y - Start.y) * Denom;
-	m_Size.z	= (End.z - Start.z) * Denom;
+	Denom    = 1.0 / m_GridSize;
+	m_Base   = Start;
+	m_Size.x = (End.x - Start.x) * Denom;
+	m_Size.y = (End.y - Start.y) * Denom;
+	m_Size.z = (End.z - Start.z) * Denom;
 	if (m_Size.x < epsilon) m_Size.x = epsilon;
 	if (m_Size.y < epsilon) m_Size.y = epsilon;
 	if (m_Size.z < epsilon) m_Size.z = epsilon;
@@ -444,5 +449,5 @@ b3_bool b3TriangleShape::b3Prepare()
 		throw new b3WorldException(B3_WORLD_MEMORY);
 	}
 	b3PrepareGridList();
-	return b3Shape::b3Prepare();
+	return b3ShapeBase::b3Prepare();
 }

@@ -793,6 +793,31 @@ public:
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
+class b3InitShape
+{
+protected:
+	static void b3Init();
+};
+
+class b3ShapeBaseTrans
+{
+protected:
+	b3_vector         m_Normals[3];       // cross products
+	b3_f64            m_Denom;            // denominator of lin. system
+	b3_f64            m_DirLen[3];        // length of direction vectors
+
+public:
+	b3_vector         m_Base;
+	b3_vector         m_Dir1,m_Dir2,m_Dir3;
+
+public:
+	b3_bool b3NormalDeriv(b3_ray *ray);
+
+protected:
+	b3_bool b3Prepare();
+	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
+};
+
 class b3RenderShapeContext : public b3RenderContext
 {
 	b3_count   m_SubDiv;
@@ -822,56 +847,24 @@ public:
 #endif
 };
 
-class b3RenderShapeObject : public b3RenderObject
-{
-protected:
-	b3_count         SinCosSteps;
-	b3_bool          m_Activated;
-	b3_vector       *Between;
-	b3_f64          *Cos;
-	b3_f64          *Sin;
-
-	b3CondLimit      Limit;
-
-public:
-	                b3RenderShapeObject();
-	void            b3Activate(b3_bool activate=true);
-	b3_bool         b3IsActive();
-
-protected:
-	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void            b3GetGridColor(b3_color *color);
-	b3_render_mode  b3GetRenderMode();
-};
-
-class b3InitShape
-{
-protected:
-	static void b3Init();
-};
-
 // same structure entries for all shapes
-class b3Shape : public b3Item, public b3RenderShapeObject
+class b3ShapeBase : public b3Item
 {
+	b3_bool             m_Activated;
 protected:
-	b3_count            xSize,ySize;
-
-protected:
-	                    b3Shape(b3_size class_size,b3_u32 class_type);
-	b3_bool             b3CheckStencil(b3_polar *polar);
+	                    b3ShapeBase(b3_size class_size,b3_u32 class_type);
 
 public:
-	B3_ITEM_INIT(b3Shape);
-	B3_ITEM_LOAD(b3Shape);
+	B3_ITEM_INIT(b3ShapeBase);
+	B3_ITEM_LOAD(b3ShapeBase);
 
 	        void        b3Write();
 	virtual void        b3StoreShape();
 	        void        b3InitActivation();
-	        void        b3ComputeBound(b3CondLimit *limit);
-	        void        b3GetDiffuseColor(b3_color *color);
+	        void        b3Activate(b3_bool activate=true);
+	        b3_bool     b3IsActive();
 	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
-	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation);
 	virtual b3_bool     b3Prepare();
@@ -885,99 +878,109 @@ public:
 	}
 };
 
-class b3RenderShape : public b3Shape
+class b3ShapeRenderObject : public b3ShapeBase, public b3RenderObject
 {
 protected:
+	b3_count        xSize,ySize;
+	b3_count        SinCosSteps;
+	b3_vector      *Between;
+	b3_f64         *Cos;
+	b3_f64         *Sin;
+	b3CondLimit     Limit;
+
 #ifdef BLZ3_USE_OPENGL
-	GLushort *GridsCyl;
-	GLushort *PolysCyl;
-	GLushort *GridsCone;
-	GLushort *PolysCone;
+	GLushort       *GridsCyl;
+	GLushort       *PolysCyl;
+	GLushort       *GridsCone;
+	GLushort       *PolysCone;
 #endif
 
 protected:
-	b3RenderShape(b3_size class_size,b3_u32 class_type);
+	b3ShapeRenderObject(b3_size class_size,b3_u32 class_type);
 
 public:
-	B3_ITEM_INIT(b3RenderShape);
-	B3_ITEM_LOAD(b3RenderShape);
+	B3_ITEM_INIT(b3ShapeRenderObject);
+	B3_ITEM_LOAD(b3ShapeRenderObject);
+	void            b3ComputeBound(b3CondLimit *limit);
 
 protected:
+	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
+	void            b3GetGridColor(b3_color *color);
+	void            b3GetDiffuseColor(b3_color *color);
+	b3_render_mode  b3GetRenderMode();
+
 	// Sphere
-	void b3ComputeSphereVertices(
+	void            b3ComputeSphereVertices(
 		b3_vector &base,
 		b3_vector &dir);
 
 	// Cylinder
-	void b3ComputeCylinderVertices(
+	void            b3ComputeCylinderVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
-	void b3ComputeCylinderIndices();
+	void            b3ComputeCylinderIndices();
 
 	// Cone
-	void b3ComputeConeVertices(
+	void            b3ComputeConeVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
-	void b3ComputeConeIndices();
+	void            b3ComputeConeIndices();
 
-	// Ellipsoid
+	// El           lipsoid
 	void b3ComputeEllipsoidVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
-	void b3ComputeEllipsoidIndices();
+	void            b3ComputeEllipsoidIndices();
 
 	// Box
-	void b3ComputeBoxVertices(
+	void            b3ComputeBoxVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3);
-	void b3ComputeBoxIndices();
+	void            b3ComputeBoxIndices();
 
 	// Torus
-	void b3ComputeTorusVertices(
+	void            b3ComputeTorusVertices(
 		b3_vector &base,
 		b3_vector &dir1,
 		b3_vector &dir2,
 		b3_vector &dir3,
 		b3_f64    aRad,
 		b3_f64    bRad);
-	void b3ComputeTorusIndices();
+	void            b3ComputeTorusIndices();
 
 private:
 #ifdef BLZ3_USE_OPENGL
-	b3_index b3FindVertex(GLushort vIndex);
+	b3_index        b3FindVertex(GLushort vIndex);
 #endif
-	void b3CorrectIndices();
+	void            b3CorrectIndices();
 };
 
-class b3ShapeBaseTrans
+class b3Shape : public b3ShapeRenderObject
 {
 protected:
-	b3_vector         m_Normals[3];       // cross products
-	b3_f64            m_Denom;            // denominator of lin. system
-	b3_f64            m_DirLen[3];        // length of direction vectors
-
-public:
-	b3_vector         m_Base;
-	b3_vector         m_Dir1,m_Dir2,m_Dir3;
-
-public:
-	b3_bool b3NormalDeriv(b3_ray *ray);
+	b3_bool             b3CheckStencil(b3_polar *polar);
 
 protected:
-	b3_bool b3Prepare();
-	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
+	b3Shape(b3_size class_size,b3_u32 class_type);
+
+public:
+	B3_ITEM_INIT(b3Shape);
+	B3_ITEM_LOAD(b3Shape);
+
+public:
+	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 };
 
 // SPHERE
-class b3Sphere : public b3RenderShape    // Kugel
+class b3Sphere : public b3Shape    // Kugel
 {
 	b3_f64               m_QuadRadius;   // Quadrat vom Radius
 
@@ -1056,7 +1059,7 @@ public:
 };
 
 // CYLINDER, CONE, ELLIPSOID, BOX
-class b3Shape3 : public b3RenderShape, public b3ShapeBaseTrans
+class b3Shape3 : public b3Shape, public b3ShapeBaseTrans
 {
 protected:
 	     b3Shape3(b3_size class_size,b3_u32 class_type);
@@ -1131,7 +1134,7 @@ public:
 };
 
 // DOUGHNUT, TORUS
-class b3Torus : public b3RenderShape, public b3ShapeBaseTrans
+class b3Torus : public b3Shape, public b3ShapeBaseTrans
 {
 protected:
 	b3_s32            m_lSize;
@@ -1145,12 +1148,14 @@ public:
 	B3_ITEM_LOAD(b3Torus);
 
 	void    b3StoreShape();
-	b3_bool b3Prepare();
+
 	void    b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
 	void    b3ComputeVertices();
 	void    b3ComputeIndices();
 	b3_f64  b3Intersect(b3_ray *ray,b3_polar *polar);
 	void    b3Normal(b3_ray *ray);
+
+	b3_bool b3Prepare();
 	void    b3Transform(b3_matrix *transformation);
 };
 
@@ -1377,41 +1382,72 @@ public:
 #define CSG_BOX             (CLASS_CSG | TYPE_BOX)
 #define CSG_TORUS           (CLASS_CSG | TYPE_TORUS)
 
-#define CSG_MODE_SUB	MODE_NOT
-#define CSG_MODE_AND	MODE_AND
-#define CSG_MODE_OR		MODE_OR
+class b3CSGShape;
+
+enum b3_csg_operation
+{
+	B3_CSG_SUB = MODE_NOT,
+	B3_CSG_AND = MODE_AND,
+	B3_CSG_OR  = MODE_OR
+};
+
+enum b3_csg_index
+{
+	B3_CSG_SIDE = 0,   // CSG box only
+	B3_CSG_FRONT,      // CSG box only
+	B3_CSG_NORMAL,     // every CSG shape
+	B3_CSG_BOTTOM,     // CSG cylinder and cone
+	B3_CSG_TOP         // CSG cylinder only
+};
 
 // structures for CSG use
 struct b3_csg_point
 {
-	b3_f32      Q;                // distance to intersection points
-	b3Shape    *Shape;            // shape which delivers the intersection points
-	b3_s32      Index;            // surface index
+	b3_f32        m_Q;          // distance to intersection points
+	b3CSGShape   *m_Shape;      // shape which delivers the intersection points
+	b3_line64    *m_BTLine;
+	b3_csg_index  m_Index;      // surface index
 };
 
 
 // interval of intersection points
 struct b3_csg_interval
 {
-	b3_s32        num;
-	b3_csg_point  x[4];
+	b3_count      m_Count;
+	b3_csg_point  m_x[4];
+	b3_line64    *m_BTLine;
 };
 
-struct b3_csg_intervals
+struct b3_csg_tree
 {
 	b3_csg_interval *local,*ThisBox1,*ThisBox2;
 };
 
-
-// CSG_SPHERE
-class b3CSGSphere : public b3RenderShape
+class b3CSGShape : public b3ShapeRenderObject
 {
 protected:
-	b3_f32            m_QuadRadius;       // squared radius
+	b3_s32           m_Index;
 
-	b3_s32            m_Index;
 public:
-	b3_s32            m_Operation;
+	b3_csg_operation m_Operation;
+
+protected:
+	b3CSGShape(b3_size class_size,b3_u32 class_type);
+
+public:
+	B3_ITEM_INIT(b3CSGShape);
+	B3_ITEM_LOAD(b3CSGShape);
+
+public:
+	virtual b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	        void     b3Operate(b3_csg_tree *intervals);
+	virtual void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+};
+
+// CSG_SPHERE
+class b3CSGSphere : public b3CSGShape
+{
+	b3_f32            m_QuadRadius;       // squared radius
 
 public:
 	b3_vector         m_Base;             // mid of sphere
@@ -1421,23 +1457,20 @@ public:
 	B3_ITEM_INIT(b3CSGSphere);
 	B3_ITEM_LOAD(b3CSGSphere);
 
-	void   b3StoreShape();
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	void   b3Transform(b3_matrix *transformation);
+	void     b3StoreShape();
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
+	b3_bool  b3Prepare();
+	void     b3Transform(b3_matrix *transformation);
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
-class b3CSGShape3 : public b3RenderShape, public b3ShapeBaseTrans
+class b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
 {
-protected:
-	b3_s32             m_Index;
-
-public:
-	b3_s32             m_Operation;
-
 protected:
 	b3CSGShape3(b3_size class_size,b3_u32 class_type);
 
@@ -1445,8 +1478,9 @@ public:
 	B3_ITEM_INIT(b3CSGShape3);
 	B3_ITEM_LOAD(b3CSGShape3);
 
-	void b3StoreShape();
-	void b3Transform(b3_matrix *transformation);
+	void    b3StoreShape();
+	b3_bool b3Prepare();
+	void    b3Transform(b3_matrix *transformation);
 };
 
 class b3CSGCylinder : public b3CSGShape3
@@ -1456,11 +1490,13 @@ public:
 	B3_ITEM_INIT(b3CSGCylinder);
 	B3_ITEM_LOAD(b3CSGCylinder);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3AllocVertices(b3RenderContext *context);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3AllocVertices(b3RenderContext *context);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
 };
 
 class b3CSGCone : public b3CSGShape3
@@ -1470,11 +1506,13 @@ public:
 	B3_ITEM_INIT(b3CSGCone);
 	B3_ITEM_LOAD(b3CSGCone);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3AllocVertices(b3RenderContext *context);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3AllocVertices(b3RenderContext *context);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
 };
 
 class b3CSGEllipsoid : public b3CSGShape3
@@ -1484,10 +1522,12 @@ public:
 	B3_ITEM_INIT(b3CSGEllipsoid);
 	B3_ITEM_LOAD(b3CSGEllipsoid);
 
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
 };
 
 class b3CSGBox : public b3CSGShape3
@@ -1501,35 +1541,35 @@ public:
 	B3_ITEM_INIT(b3CSGBox);
 	B3_ITEM_LOAD(b3CSGBox);
 
-	void   b3AllocVertices(b3RenderContext *context);
-	void   b3FreeVertices();
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
+	void     b3AllocVertices(b3RenderContext *context);
+	void     b3FreeVertices();
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
 };
 
 // CSG_TORUS
-class b3CSGTorus : public b3RenderShape, public b3ShapeBaseTrans
+class b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
 {
-protected:
 	b3_f32             m_aRad, m_bRad;       // radiuses of torus
 	b3_f32             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
-
-	b3_s32             m_Index;
-
-public:
-	b3_s32             m_Operation;
 
 public:
 	B3_ITEM_INIT(b3CSGTorus);
 	B3_ITEM_LOAD(b3CSGTorus);
 
-	void   b3StoreShape();
-	void   b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
-	void   b3ComputeVertices();
-	void   b3ComputeIndices();
-	b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar);
-	void   b3Transform(b3_matrix *transformation);
+	void     b3StoreShape();
+	void     b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void     b3ComputeVertices();
+	void     b3ComputeIndices();
+	b3_bool  b3Intersect(b3_ray *ray,b3_csg_interval *interval);
+	void     b3InverseMap(b3_ray *ray,b3_csg_point *point);
+	void     b3Normal(b3_ray *ray);
+
+	b3_bool  b3Prepare();
+	void     b3Transform(b3_matrix *transformation);
 };
 
 /*************************************************************************
@@ -1588,6 +1628,7 @@ public:
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
+		   b3CSGShape     *b3IntersectCSG(b3_ray *ray);
 		   void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
 		   void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 
@@ -1649,10 +1690,10 @@ protected:
 
 struct b3_ray_info : public b3_ray
 {
-	b3_index   depth;
-	b3_color   color;
-	b3Shape   *shape;
-	b3BBox    *bbox;
+	b3_index       depth;
+	b3_color       color;
+	b3ShapeBase   *shape;
+	b3BBox        *bbox;
 };
 
 struct b3_illumination : public b3_surface
@@ -1712,10 +1753,10 @@ public:
 	char    *b3GetName();
 
 private:
-	void     b3Init();
-	b3_bool  b3PointIllumination(b3Scene *scene,b3_illumination *surface);
-	b3_bool  b3AreaIllumination(b3Scene  *scene,b3_illumination *surface);
-	b3Shape *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
+	void         b3Init();
+	b3_bool      b3PointIllumination(b3Scene *scene,b3_illumination *surface);
+	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_illumination *surface);
+	b3ShapeBase *b3CheckSinglePoint (b3Scene *scene,b3_illumination *surface,
 		b3_light_info *Jit,b3_coord x,b3_coord y);
 };
 
@@ -2240,8 +2281,8 @@ protected:
 
 private:
 	static  b3_u32          b3RaytraceThread(void *ptr);
-		    b3Shape        *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
-		    b3Shape        *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
+		    b3ShapeBase    *b3Intersect(b3BBox *bbox,b3_ray_info *ray);
+		    b3ShapeBase    *b3IsObscured(b3BBox *bbox,b3_ray_info *ray);
 		    void            b3MixLensFlare(b3_ray_info *ray);
 
 	friend class b3RayRow;

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.8  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -103,7 +108,7 @@ void b3CSGBox::b3FreeVertices()
 	glGrids    = null;
 	glPolygons = null;
 #endif
-	b3Shape::b3FreeVertices();
+	b3FreeVertices();
 }
 
 void b3CSGBox::b3ComputeVertices()
@@ -114,4 +119,24 @@ void b3CSGBox::b3ComputeVertices()
 void b3CSGBox::b3ComputeIndices()
 {
 	b3ComputeBoxIndices();
+}
+
+void b3CSGBox::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+{
+	b3_polar  *polar  = &ray->polar;
+	b3_line64 *BTLine = point->m_BTLine;
+	b3_f64     Q      = ray->Q;
+	b3_f64     x,y;
+
+	x = BTLine->pos.x + Q * BTLine->dir.x;
+	y = BTLine->pos.y + Q * BTLine->dir.y;
+	if (x < 0)               x = 0;
+	else if (x >= 0.9999999) x = 0.9999999;
+	if (y < 0)               y = 0;
+	else if (y >= 0.9999999) y = 0.9999999;
+
+	polar->polar.x = polar->object_polar.x = x;
+	polar->polar.y = polar->object_polar.y = y;
+	polar->polar.z = polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
+	polar->normal_index = point->m_Index;
 }

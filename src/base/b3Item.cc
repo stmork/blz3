@@ -35,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.23  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.22  2002/01/09 17:47:54  sm
 **      - Finished CB3ImageButton implementation.
 **      - Finished CDlgObjectCopy
@@ -248,11 +253,10 @@ b3Item::b3Item(b3_u32 *src) :
 b3Item::~b3Item()
 {
 	b3_index  i;
-	b3Item   *item;
 
 	for (i = 0;i < m_HeadCount;i++)
 	{
-		B3_DELETE_BASE(&m_Heads[i],item);
+		m_Heads[i].b3Free();
 	}
 }
 

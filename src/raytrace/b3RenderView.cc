@@ -33,10 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2002/02/17 21:25:07  sm
+**	- Introduced CSG
+**	  o Heavily reorganized shape inheritance
+**	  o New file b3CSGShape added
+**
 **	Revision 1.28  2002/02/14 16:51:49  sm
 **	- Done some cleanups concernig doubly linked lists. Moved
 **	  obsolete b3Node/b3Head into their own include.
-**
+**	
 **	Revision 1.27  2002/02/14 16:32:33  sm
 **	- Added activation via mouse selection
 **	
@@ -680,8 +685,8 @@ void b3RenderView::b3Project(
 	b3_f64 xRel,yRel;
 
 	b3Project(point,xRel,yRel);
-	x = xRel * m_xRes;
-	y = yRel * m_yRes;
+	x = (b3_coord)floor(xRel * m_xRes + 0.5);
+	y = (b3_coord)floor(yRel * m_yRes + 0.5);
 }
 
 void b3RenderView::b3Project(

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/02/17 21:25:07  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.23  2002/01/10 17:31:11  sm
 **      - Some minor GUI updates.
 **      - b3BBox::b3Transform() changes m_Matrix member.
@@ -411,13 +416,42 @@ GLushort *b3RenderShapeContext::b3GetConePolygons()
 **                                                                      **
 *************************************************************************/
 
-b3RenderShapeObject::b3RenderShapeObject()
+b3ShapeRenderObject::b3ShapeRenderObject(b3_size class_size,b3_u32 class_type) :
+	b3ShapeBase(class_size, class_type)
 {
 	Between     = null;
-	m_Activated = false;
 }
 
-b3_count b3RenderShapeObject::b3GetIndexOverhead (
+b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 class_type) :
+	b3ShapeBase(sizeof(b3ShapeRenderObject), class_type)
+{
+	Between     = null;
+}
+
+b3ShapeRenderObject::b3ShapeRenderObject(b3_u32 *src) :
+	b3ShapeBase(src)
+{
+	Between     = null;
+}
+
+void b3ShapeRenderObject::b3ComputeBound(b3CondLimit *limit)
+{
+	b3Item      *item;
+	b3Condition *cond;
+
+	limit->x1 = -1;
+	limit->y1 = -1;
+	limit->x2 =  1;
+	limit->y2 =  1;
+
+	B3_FOR_BASE(b3GetConditionHead(),item)
+	{
+		cond = (b3Condition *)item;
+		cond->b3ComputeBound(limit);
+	}
+}
+
+b3_count b3ShapeRenderObject::b3GetIndexOverhead (
 	b3_f64 xLeft,
 	b3_f64 yLeft)
 {
@@ -438,22 +472,34 @@ b3_count b3RenderShapeObject::b3GetIndexOverhead (
 	return ((xs > 0) || (xe < SinCosSteps)) ? -Overhead : Overhead;
 }
 
-void b3RenderShapeObject::b3Activate(b3_bool activate)
+void b3ShapeRenderObject::b3GetDiffuseColor(b3_color *color)
 {
-	m_Activated = activate;
-}
-											
-b3_bool b3RenderShapeObject::b3IsActive()
-{
-	return m_Activated;
+	b3Item     *item;
+	b3Material *material;
+	b3_color    ambient,specular;
+	b3_polar    polar;
+
+	color->r = 0.1f;
+	color->g = 0.5f;
+	color->b = 1.0f;
+	color->a = 0.0f;
+
+	B3_FOR_BASE(b3GetMaterialHead(),item)
+	{
+		material = (b3Material *)item;
+		if (material->b3GetColors(&polar,color,&ambient,&specular))
+		{
+			return;
+		}
+	}
 }
 
-b3_render_mode b3RenderShapeObject::b3GetRenderMode()
+b3_render_mode b3ShapeRenderObject::b3GetRenderMode()
 {
-	return m_Activated ? B3_RENDER_FILLED : B3_RENDER_LINE;
+	return b3IsActive() ? B3_RENDER_FILLED : B3_RENDER_LINE;
 }
 
-void b3RenderShapeObject::b3GetGridColor(b3_color *color)
+void b3ShapeRenderObject::b3GetGridColor(b3_color *color)
 {
 	color->r = 0.2f;
 	color->g = 0.2f;
@@ -467,20 +513,8 @@ void b3RenderShapeObject::b3GetGridColor(b3_color *color)
 **                                                                      **
 *************************************************************************/
 
-b3RenderShape::b3RenderShape(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
-{
-}
-
-b3RenderShape::b3RenderShape(b3_u32 class_type) : b3Shape(sizeof(b3RenderShape), class_type)
-{
-}
-
-b3RenderShape::b3RenderShape(b3_u32 *src) : b3Shape(src)
-{
-}
-
 #ifdef BLZ3_USE_OPENGL
-b3_index b3RenderShape::b3FindVertex(GLushort vertex)
+b3_index b3ShapeRenderObject::b3FindVertex(GLushort vertex)
 {
 	b3_vector *point;
 	b3_vector *ptr = (b3_vector *)glVertices;
@@ -501,7 +535,7 @@ b3_index b3RenderShape::b3FindVertex(GLushort vertex)
 }
 #endif
 
-void b3RenderShape::b3CorrectIndices()
+void b3ShapeRenderObject::b3CorrectIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_index  i;
@@ -518,7 +552,7 @@ void b3RenderShape::b3CorrectIndices()
 #endif
 }
 
-void b3RenderShape::b3ComputeSphereVertices(
+void b3ShapeRenderObject::b3ComputeSphereVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir)
 {
@@ -577,7 +611,7 @@ void b3RenderShape::b3ComputeSphereVertices(
 #endif
  }
 
-void b3RenderShape::b3ComputeCylinderVertices(
+void b3ShapeRenderObject::b3ComputeCylinderVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -668,7 +702,7 @@ void b3RenderShape::b3ComputeCylinderVertices(
 #endif
 }
 
-void b3RenderShape::b3ComputeCylinderIndices()
+void b3ShapeRenderObject::b3ComputeCylinderIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
@@ -689,7 +723,7 @@ void b3RenderShape::b3ComputeCylinderIndices()
 #endif
 }
 
-void b3RenderShape::b3ComputeConeVertices(
+void b3ShapeRenderObject::b3ComputeConeVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -833,7 +867,7 @@ void b3RenderShape::b3ComputeConeVertices(
 #endif
 }
 
-void b3RenderShape::b3ComputeConeIndices()
+void b3ShapeRenderObject::b3ComputeConeIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_count Overhead;
@@ -866,7 +900,7 @@ void b3RenderShape::b3ComputeConeIndices()
 #endif
 }
 
-void b3RenderShape::b3ComputeEllipsoidVertices(
+void b3ShapeRenderObject::b3ComputeEllipsoidVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -979,7 +1013,7 @@ void b3RenderShape::b3ComputeEllipsoidVertices(
 #endif
 }
 
-void b3RenderShape::b3ComputeEllipsoidIndices()
+void b3ShapeRenderObject::b3ComputeEllipsoidIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	GLushort *gPtr;
@@ -1093,7 +1127,7 @@ void b3RenderShape::b3ComputeEllipsoidIndices()
 #endif
 }
 
-void b3RenderShape::b3ComputeBoxVertices(
+void b3ShapeRenderObject::b3ComputeBoxVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1145,7 +1179,7 @@ void b3RenderShape::b3ComputeBoxVertices(
 #endif
 }
 
-void b3RenderShape::b3ComputeBoxIndices()
+void b3ShapeRenderObject::b3ComputeBoxIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	glGrids    = box_grids;
@@ -1153,7 +1187,7 @@ void b3RenderShape::b3ComputeBoxIndices()
 #endif
 }
 
-void b3RenderShape::b3ComputeTorusVertices(
+void b3ShapeRenderObject::b3ComputeTorusVertices(
 	b3_vector   &Base,
 	b3_vector   &Dir1,
 	b3_vector   &Dir2,
@@ -1277,7 +1311,7 @@ void b3RenderShape::b3ComputeTorusVertices(
 #endif
 }
 
-void b3RenderShape::b3ComputeTorusIndices()
+void b3ShapeRenderObject::b3ComputeTorusIndices()
 {
 #ifdef BLZ3_USE_OPENGL
 	GLushort *gPtr;

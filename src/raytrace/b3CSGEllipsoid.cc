@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.8  2001/12/30 14:16:57  sm
 **      - Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **      - b3Item writing implemented and updated all raytracing classes
@@ -108,4 +114,21 @@ void b3CSGEllipsoid::b3ComputeVertices()
 void b3CSGEllipsoid::b3ComputeIndices()
 {
 	b3ComputeEllipsoidIndices();
+}
+
+void b3CSGEllipsoid::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+{
+	b3_polar  *polar  = &ray->polar;
+	b3_line64 *BTLine = point->m_BTLine;
+	b3_f64     Q      = ray->Q;
+	
+	polar->object_polar.x = BTLine->pos.x + Q * BTLine->dir.x;
+	polar->object_polar.y = BTLine->pos.y + Q * BTLine->dir.y;
+	polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
+
+	polar->polar.x = b3RelAngleOfScalars(
+		polar->object_polar.x,
+		polar->object_polar.y);
+	polar->polar.y = asin(polar->object_polar.z) * 2.0 / M_PI;
+	polar->polar.z = 0;
 }

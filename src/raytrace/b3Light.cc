@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.24  2002/02/17 21:25:07  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.23  2001/12/31 11:05:18  sm
 **      - Added TestData for testing Blizzard data structures for reading
 **        and writing.
@@ -411,7 +416,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3Scene         *scene,
 	b3_illumination *surface)
 {
-	b3Shape       *Edge1,*Edge2,*LastEdge = null;
+	b3ShapeBase   *Edge1,*Edge2,*LastEdge = null;
 	b3_light_info  Jit;
 	b3_vector      point;
 	b3_f64         Factor,denomLightDist,q;
@@ -539,7 +544,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 	return true;
 }
 
-inline b3Shape *b3Light::b3CheckSinglePoint (
+inline b3ShapeBase *b3Light::b3CheckSinglePoint (
 	b3Scene         *scene,                                
 	b3_illumination *surface,
 	b3_light_info   *Jit,

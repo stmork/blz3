@@ -129,6 +129,10 @@ SOURCE=.\b3CSGEllipsoid.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3CSGShape.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3CSGSphere.cc
 # End Source File
 # Begin Source File

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.11  2002/01/20 12:48:51  sm
 **      - Added splash screen
 **      - Corrected repeat buttons (capture change)
@@ -95,11 +100,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGTorus), class_type)
+b3CSGTorus::b3CSGTorus(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGTorus), class_type)
 {
 }
 
-b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3RenderShape(src)
+b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3CSGShape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -122,7 +127,7 @@ b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is bQuad
 	b3InitInt();   // This Index
 
-	m_Operation = b3InitInt();
+	m_Operation = (b3_csg_operation)b3InitInt();
 	b3InitVector(); // This is BTLine.pos
 	b3InitVector(); // This is BTLine.dir
 	b3InitActivation();
@@ -187,4 +192,57 @@ void b3CSGTorus::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
 	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
 	b3TransformVertices(transformation);
+}
+
+b3_bool b3CSGTorus::b3Prepare()
+{
+	b3_f64  denom,scale;
+	b3_bool result = false;
+
+	if ((scale = b3Vector::b3Normalize(&m_Dir1)) == 0)
+	{
+		scale = 1;
+	}
+
+	if ((denom = b3Vector::b3Normalize(&m_Dir2)) != 0)
+	{
+		scale += denom;
+	}
+	else
+	{
+		scale += 1;
+	}
+	m_aRad *= (scale * 0.5);
+
+	denom = b3Vector::b3Normalize(&m_Dir3);
+	if ((denom != 1) && (denom != 0))
+	{
+		m_bRad   *= denom;
+	}
+	m_aQuad = m_aRad * m_aRad;
+	m_bQuad = m_bRad * m_bRad;
+
+	if (b3ShapeBaseTrans::b3Prepare())
+	{
+		result = b3ShapeBase::b3Prepare();
+	}
+	return result;
+}
+
+void b3CSGTorus::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+{
+	b3_polar  *polar  = &ray->polar;
+	b3_line64 *BTLine = point->m_BTLine;
+	b3_f64     Q      = ray->Q;
+	b3_f64     aQuad,bQuad,val;
+
+	aQuad = polar->object_polar.x = BTLine->pos.x + Q * BTLine->dir.x;
+	bQuad = polar->object_polar.y = BTLine->pos.y + Q * BTLine->dir.y;
+	        polar->object_polar.z = BTLine->pos.z + Q * BTLine->dir.z;
+
+	val = m_aRad - m_aQuad / sqrt(aQuad * aQuad + bQuad * bQuad);
+
+	polar->polar.x = b3RelAngleOfScalars(aQuad,bQuad);
+	polar->polar.y = b3RelAngleOfScalars (val,polar->object_polar.z);
+	polar->polar.z = 0;
 }

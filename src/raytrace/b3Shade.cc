@@ -35,13 +35,18 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/02/17 21:25:07  sm
+**	- Introduced CSG
+**	  o Heavily reorganized shape inheritance
+**	  o New file b3CSGShape added
+**
 **	Revision 1.16  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
 **	  to work properly.
 **	- Cleaned up spline shapes and CSG shapes.
 **	- Added b3Caustic class for compatibility reasons.
-**
+**	
 **	Revision 1.15  2001/12/22 21:08:35  sm
 **	- Tidied up some dialogs
 **	- Designed new icons for document templates
@@ -417,7 +422,7 @@ b3_bool b3Scene::b3Shade(b3_ray_info *ray,b3_count depth_count)
 {
 	b3Item          *item;
 	b3Light         *light;
-	b3Shape         *shape;
+	b3ShapeBase     *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
 	b3_index         formula = 0;

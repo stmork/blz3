@@ -33,6 +33,11 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2002/02/17 21:25:07  sm
+**	- Introduced CSG
+**	  o Heavily reorganized shape inheritance
+**	  o New file b3CSGShape added
+**
 **	Revision 1.9  2001/12/31 11:05:18  sm
 **	- Added TestData for testing Blizzard data structures for reading
 **	  and writing.
@@ -41,7 +46,7 @@
 **	  o b3TriangleShape destructor handled unchecked m_GridList pointer
 **	- Changed some output levels in b3Light, b3Scene and b3ShadeXXX from
 **	  B3LOG_NORMAL to B3LOG_DEBUG.
-**
+**	
 **	Revision 1.8  2001/12/30 14:16:58  sm
 **	- Abstracted b3File to b3FileAbstract to implement b3FileMem (not done yet).
 **	- b3Item writing implemented and updated all raytracing classes
@@ -253,7 +258,7 @@ b3_bool b3SceneMork::b3Shade(
 {
 	b3Item          *item;
 	b3Light         *light;
-	b3Shape         *shape;
+	b3ShapeBase     *shape;
 	b3_illumination  surface;
 	b3_f64           refl,refr,factor;
 	b3_bool          transparent;

@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2002/02/17 21:25:07  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.35  2002/01/20 12:48:51  sm
 **      - Added splash screen
 **      - Corrected repeat buttons (capture change)
@@ -244,24 +249,27 @@ void b3InitShape::b3Init()
 	b3Item::b3Register(&b3CSGTorus::b3Init,         &b3CSGTorus::b3Init,         CSG_TORUS);
 }
 
-b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
+b3ShapeBase::b3ShapeBase(b3_size class_size,b3_u32 class_type) : b3Item(class_size, class_type)
 {
+	m_Activated = false;
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
 	m_Heads[1].b3InitBase(CLASS_CONDITION);
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3Shape::b3Shape(b3_u32 class_type) : b3Item(sizeof(b3Shape), class_type)
+b3ShapeBase::b3ShapeBase(b3_u32 class_type) : b3Item(sizeof(b3ShapeBase), class_type)
 {
+	m_Activated = false;
 	b3AllocHeads(3);
 	m_Heads[0].b3InitBase(CLASS_BUMP);
 	m_Heads[1].b3InitBase(CLASS_CONDITION);
 	m_Heads[2].b3InitBase(CLASS_MATERIAL);
 }
 
-b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
+b3ShapeBase::b3ShapeBase(b3_u32 *src) : b3Item(src)
 {
+	m_Activated = false;
 	b3InitVector(); // This is the normal
 	b3InitVector(); // This is Polar.Polar
 	b3InitVector(); // This is Polar.ObjectPolar
@@ -269,56 +277,53 @@ b3Shape::b3Shape(b3_u32 *src) : b3Item(src)
 	b3InitNOP();    // This is Custom
 }
 
-void b3Shape::b3InitActivation()
+void b3ShapeBase::b3Activate(b3_bool activate)
+{
+	m_Activated = activate;
+}
+											
+b3_bool b3ShapeBase::b3IsActive()
+{
+	return m_Activated;
+}
+
+void b3ShapeBase::b3InitActivation()
 {
 	b3Activate(B3_PARSE_INDEX_VALID ? b3InitBool() : false);
 }
 
-void b3Shape::b3Write()
+void b3ShapeBase::b3Write()
 {
 	b3StoreVector(); // This is the normal
 	b3StoreVector(); // This is Polar.Polar
 	b3StoreVector(); // This is Polar.ObjectPolar
 	b3StoreVector(); // This is Polar.BoxPolar
 	b3StoreNull();   // This is Custom
+
+	// Trick! Store custom shape data...
 	b3StoreShape();
+
+	// and append activation
 	b3StoreBool(b3IsActive());
 }
 
-void b3Shape::b3StoreShape()
+void b3ShapeBase::b3StoreShape()
 {
 }
 
-b3Base<b3Item> *b3Shape::b3GetBumpHead()
+b3Base<b3Item> *b3ShapeBase::b3GetBumpHead()
 {
 	return &m_Heads[0];
 }
 
-b3Base<b3Item> *b3Shape::b3GetConditionHead()
+b3Base<b3Item> *b3ShapeBase::b3GetConditionHead()
 {
 	return &m_Heads[1];
 }
 
-b3Base<b3Item> *b3Shape::b3GetMaterialHead()
+b3Base<b3Item> *b3ShapeBase::b3GetMaterialHead()
 {
 	return &m_Heads[2];
-}
-
-void b3Shape::b3ComputeBound(b3CondLimit *limit)
-{
-	b3Item      *item;
-	b3Condition *cond;
-
-	limit->x1 = -1;
-	limit->y1 = -1;
-	limit->x2 =  1;
-	limit->y2 =  1;
-
-	B3_FOR_BASE(b3GetConditionHead(),item)
-	{
-		cond = (b3Condition *)item;
-		cond->b3ComputeBound(limit);
-	}
 }
 
 b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
@@ -336,7 +341,7 @@ b3_bool b3Shape::b3CheckStencil(b3_polar *polar)
 	return result;
 }
 
-b3_bool b3Shape::b3Prepare()
+b3_bool b3ShapeBase::b3Prepare()
 {
 	b3Item      *item;
 	b3Condition *cond;
@@ -373,7 +378,7 @@ b3_bool b3Shape::b3Prepare()
 	return true;
 }
 
-void b3Shape::b3BumpNormal(b3_ray *ray)
+void b3ShapeBase::b3BumpNormal(b3_ray *ray)
 {
 	b3Item  *item;
 	b3Bump  *bump;
@@ -421,29 +426,7 @@ void b3Shape::b3BumpNormal(b3_ray *ray)
 	}
 }
 
-void b3Shape::b3GetDiffuseColor(b3_color *color)
-{
-	b3Item     *item;
-	b3Material *material;
-	b3_color    ambient,specular;
-	b3_polar    polar;
-
-	color->r = 0.1f;
-	color->g = 0.5f;
-	color->b = 1.0f;
-	color->a = 0.0f;
-
-	B3_FOR_BASE(b3GetMaterialHead(),item)
-	{
-		material = (b3Material *)item;
-		if (material->b3GetColors(&polar,color,&ambient,&specular))
-		{
-			return;
-		}
-	}
-}
-
-b3Material *b3Shape::b3GetColors(
+b3Material *b3ShapeBase::b3GetColors(
 	b3_ray     *ray,
 	b3_surface *surface)
 {
@@ -489,11 +472,22 @@ b3Material *b3Shape::b3GetColors(
 	return null;
 }
 
-void b3Shape::b3Transform(b3_matrix *transformation)
+void b3ShapeBase::b3Transform(b3_matrix *transformation)
 {
 	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
 	B3_ASSERT(true);
-	b3Recompute();
+}
+
+b3Shape::b3Shape(b3_size class_size,b3_u32 class_type) : b3ShapeRenderObject(class_size, class_type)
+{
+}
+
+b3Shape::b3Shape(b3_u32 class_type) : b3ShapeRenderObject(sizeof(b3Shape), class_type)
+{
+}
+
+b3Shape::b3Shape(b3_u32 *src) : b3ShapeRenderObject(src)
+{
 }
 
 b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
@@ -555,15 +549,15 @@ void b3Shape2::b3Transform(b3_matrix *transformation)
 }
 
 
-b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3RenderShape(class_size, class_type)
+b3Shape3::b3Shape3(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
 {
 }
 
-b3Shape3::b3Shape3(b3_u32 class_type) : b3RenderShape(sizeof(b3Shape3), class_type)
+b3Shape3::b3Shape3(b3_u32 class_type) : b3Shape(sizeof(b3Shape3), class_type)
 {
 }
 
-b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
+b3Shape3::b3Shape3(b3_u32 *src) : b3Shape(src)
 {
 	b3InitVector();  // This is Normals[0]
 	b3InitVector();  // This is Normals[1]
@@ -602,7 +596,7 @@ b3_bool b3Shape3::b3Prepare()
 
 	if (b3ShapeBaseTrans::b3Prepare())
 	{
-		result = b3Shape::b3Prepare();
+		result = b3ShapeBase::b3Prepare();
 	}
 	return result;
 }
@@ -690,65 +684,3 @@ void b3Shape3::b3Transform(b3_matrix *transformation)
 	b3TransformVertices(transformation);
 }
 
-
-b3CSGShape3::b3CSGShape3(b3_size class_size,b3_u32 class_type) : b3RenderShape(class_size, class_type)
-{
-}
-
-b3CSGShape3::b3CSGShape3(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGShape3), class_type)
-{
-}
-
-b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3RenderShape(src)
-{
-	b3InitVector();  // This is Normals[0]
-	b3InitVector();  // This is Normals[1]
-	b3InitVector();  // This is Normals[2]
-	b3InitVector(&m_Base);
-	b3InitVector(&m_Dir1);
-	b3InitVector(&m_Dir2);
-	b3InitVector(&m_Dir3);
-
-	b3InitFloat(); // This is lSize
-	b3InitFloat(); // This is Denom
-	b3InitFloat(); // This is DirLen[0]
-	b3InitFloat(); // This is DirLen[1]
-	b3InitFloat(); // This is DirLen[2]
-
-	b3InitInt();   // This Index
-	m_Operation = b3InitInt();
-
-	b3InitVector(); // This is BTLine.pos
-	b3InitVector(); // This is BTLine.dir
-	b3InitActivation();
-}
-
-void b3CSGShape3::b3StoreShape()
-{
-	b3StoreVector(&m_Normals[0]);
-	b3StoreVector(&m_Normals[1]);
-	b3StoreVector(&m_Normals[2]);
-	b3StoreVector(&m_Base);
-	b3StoreVector(&m_Dir1);
-	b3StoreVector(&m_Dir2);
-	b3StoreVector(&m_Dir3);
-
-	b3StoreInt(0); // This is lSize
-	b3StoreFloat(m_Denom);
-	b3StoreFloat(m_DirLen[0]);
-	b3StoreFloat(m_DirLen[1]);
-	b3StoreFloat(m_DirLen[2]);
-	b3StoreInt(m_Index);
-	b3StoreInt(m_Operation);
-	b3StoreVector(); // This is BTLine.pos
-	b3StoreVector(); // This is BTLine.dir
-}
-
-void b3CSGShape3::b3Transform(b3_matrix *transformation)
-{
-	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
-	b3MatrixVMul (transformation,&m_Dir1,&m_Dir1,false);
-	b3MatrixVMul (transformation,&m_Dir2,&m_Dir2,false);
-	b3MatrixVMul (transformation,&m_Dir3,&m_Dir3,false);
-	b3TransformVertices(transformation);
-}

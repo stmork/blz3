@@ -32,13 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/02/17 21:25:06  sm
+**	- Introduced CSG
+**	  o Heavily reorganized shape inheritance
+**	  o New file b3CSGShape added
+**
 **	Revision 1.20  2002/01/01 13:50:22  sm
 **	- Fixed some memory leaks:
 **	  o concerning triangle shape and derived spline shapes
 **	  o concerning image pool handling. Images with windows
 **	    path weren't found inside the image pool requesting
 **	    further image load.
-**
+**	
 **	Revision 1.19  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
@@ -148,8 +153,6 @@ b3TxPool::b3TxPool()
 
 b3TxPool::~b3TxPool()
 {
-	b3Tx     *tx;
-
 	m_Mutex.b3Lock();
 	B3_DELETE_BASE(&m_Pool,tx);
 	m_Mutex.b3Unlock();

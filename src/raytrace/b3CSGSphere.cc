@@ -32,6 +32,11 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.11  2002/01/20 12:48:51  sm
 **      - Added splash screen
 **      - Corrected repeat buttons (capture change)
@@ -95,11 +100,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3RenderShape(sizeof(b3CSGSphere), class_type)
+b3CSGSphere::b3CSGSphere(b3_u32 class_type) : b3CSGShape(sizeof(b3CSGSphere), class_type)
 {
 }
 
-b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3RenderShape(src)
+b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3CSGShape(src)
 {
 	b3InitVector(&m_Base);
 	b3InitVector(&m_Dir);
@@ -107,7 +112,7 @@ b3CSGSphere::b3CSGSphere(b3_u32 *src) : b3RenderShape(src)
 	b3InitFloat(); // This is QuadRadius
 	b3InitInt();   // This is Index
 
-	m_Operation = b3InitInt();
+	m_Operation = (b3_csg_operation)b3InitInt();
 	b3InitActivation();
 }
 
@@ -149,4 +154,14 @@ void b3CSGSphere::b3Transform(b3_matrix *transformation)
 	b3MatrixVMul (transformation,&m_Base,&m_Base,true);
 	b3MatrixVMul (transformation,&m_Dir, &m_Dir, false);
 	b3TransformVertices(transformation);
+}
+
+b3_bool b3CSGSphere::b3Prepare()
+{
+	m_QuadRadius = b3Vector::b3QuadLength(&m_Dir);
+	return b3ShapeBase::b3Prepare();
+}
+
+void b3CSGSphere::b3InverseMap(b3_ray *ray,b3_csg_point *point)
+{
 }

@@ -31,6 +31,11 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2002/02/17 21:25:06  sm
+**      - Introduced CSG
+**        o Heavily reorganized shape inheritance
+**        o New file b3CSGShape added
+**
 **      Revision 1.14  2001/09/22 16:19:51  sm
 **      - Adding basic shape intersection routines
 **
@@ -150,7 +155,7 @@ void b3Area::b3FreeVertices()
 	glGrids    = null;
 	glPolygons = null;
 #endif
-	b3Shape::b3FreeVertices();
+	b3FreeVertices();
 }
 
 void b3Area::b3ComputeVertices()
