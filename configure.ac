@@ -21,11 +21,11 @@ AC_CHECK_TOOL([DOS2UNIX], [dos2unix], [echo >/dev/null])
 #  LDFLAGS="-Ur -Wl,-E"
 #fi
 
-AC_SUBST(BLZ3_HOME, "$PWD", [This home directory of Blizzard III])
-AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The system dependend include path])
-AC_SUBST(BLZ3_INCLUDE, "$BLZ3_HOME/include", [The system independend include path])
-AC_SUBST(BLZ3_LIB, "$BLZ3_HOME/lib", [Ths Blizzard III library directory])
-AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [Ths Blizzard III exutable directory])
+AC_SUBST(BLZ3_HOME, "$PWD", [This is the Blizzard III home directory])
+AC_SUBST(BLZ3_SYSINC, "$BLZ3_HOME/include_unix", [The Blizzard III system dependend include path])
+AC_SUBST(BLZ3_INCLUDE, "$BLZ3_HOME/include", [The Blizzard III system independend include path])
+AC_SUBST(BLZ3_LIB, "$BLZ3_HOME/lib", [The Blizzard III library directory])
+AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III exutable directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
 

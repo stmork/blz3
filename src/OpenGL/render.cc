@@ -36,6 +36,10 @@
 
 /*
 **      $Log$
+**      Revision 1.46  2004/10/12 09:15:46  smork
+**      - Some more debug information.
+**      - Moved light init after camera init.
+**
 **      Revision 1.45  2004/09/23 15:47:03  sm
 **      - Splitted b3RenderContext into own file.
 **      - Added vertex buffer object support which does not
@@ -224,15 +228,44 @@ static b3_bool               all_lights = true;
 static b3_bool               spot_light = false;
 static b3_res                xWinSize,yWinSize;
 
-static void b3RenderScene()
+static void b3SetLights()
+{
+	context.b3LightSpotEnable(spot_light);
+	if (all_lights)
+	{
+		b3Scene  *scene;
+
+		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
+			spot_light ? "" : "out");
+		scene = (b3Scene *)world->b3GetFirst();
+		scene->b3SetLights(&context);
+	}
+	else
+	{
+		b3PrintF(B3LOG_DEBUG,"Using one light...\n");
+		context.b3LightDefault();
+	}
+}
+
+static void b3ReshapeFunc(GLsizei xSize,GLsizei ySize)
+{
+	b3PrintF(B3LOG_FULL,">b3ReshapeFunc(%d, %d );\n",xSize, ySize);
+	view.b3SetupView(xWinSize = xSize,yWinSize = ySize);
+	b3SetLights();
+	b3PrintF(B3LOG_FULL,"<b3ReshapeFunc()\n");
+}
+
+static void b3DisplayFunc()
 {
 	b3Scene  *scene;
 
+	b3PrintF(B3LOG_FULL,">b3DisplayFunc()\n");
 	context.b3StartDrawing();
 	scene = (b3Scene *)world->b3GetFirst();
 	scene->b3Draw(&context);
 
 	glutSwapBuffers();
+	b3PrintF(B3LOG_FULL,"<b3DisplayFunc()\n");
 }
 
 static void b3PlayAnimation()
@@ -266,7 +299,7 @@ static void b3PlayAnimation()
 			context.b3StartDrawing();
 			view.b3SetBounds(&lower,&upper);
 			view.b3SetCamera(scene);
-			view.b3SetupView(xWinSize,yWinSize);
+			b3ReshapeFunc(xWinSize,yWinSize);
 			scene->b3Draw(&context);
 			glutSwapBuffers();
 			count++;
@@ -276,30 +309,6 @@ static void b3PlayAnimation()
 		span = now - start;
 		b3PrintF(B3LOG_NORMAL,"Rendered %d frames in %3.2lf seconds with %3.3lf frames/sec.\n",
 			count,span,(double)count / span);
-	}
-}
-
-static void b3ChangeSize(GLsizei xSize,GLsizei ySize)
-{
-	view.b3SetupView(xWinSize = xSize,yWinSize = ySize);
-}
-
-static void b3SetLights()
-{
-	context.b3LightSpotEnable(spot_light);
-	if (all_lights)
-	{
-		b3Scene  *scene;
-
-		b3PrintF(B3LOG_DEBUG,"Using multiple lights with%s spots...\n",
-			spot_light ? "" : "out");
-		scene = (b3Scene *)world->b3GetFirst();
-		scene->b3SetLights(&context);
-	}
-	else
-	{
-		b3PrintF(B3LOG_DEBUG,"Using one light...\n");
-		context.b3LightDefault();
 	}
 }
 
@@ -321,7 +330,7 @@ static void b3NextCamera(b3Scene *scene)
 			b3PrintF(B3LOG_NORMAL,"Using camera %s\n",camera->b3GetName());
 			scene->b3SetCamera(camera);
 			view.b3SetCamera(scene);
-			view.b3SetupView(xWinSize,yWinSize);
+			b3ReshapeFunc(xWinSize,yWinSize);
 		}
 	}
 }
@@ -330,10 +339,9 @@ static void b3SetupRC()
 {
 	context.glBgColor.b3Init(0.7f,0.7f,1.0f);
 	context.b3Init();
-	b3SetLights();
 }
 
-static void b3Keyboard(unsigned char key,int x,int y)
+static void b3KeyboardFunc(unsigned char key,int x,int y)
 {
 	b3Scene  *scene;
 	b3_bool   refresh = false;
@@ -343,13 +351,13 @@ static void b3Keyboard(unsigned char key,int x,int y)
 	{
 	case 'l':
 		all_lights = !all_lights;
-		b3SetLights();
+		b3ReshapeFunc(xWinSize,yWinSize);
 		refresh = true;
 		break;
 
 	case 's':
 		spot_light = !spot_light;
-		b3SetLights();
+		b3ReshapeFunc(xWinSize,yWinSize);
 		refresh = true;
 		break;
 
@@ -413,6 +421,7 @@ static void b3Update(b3Scene *scene)
 	scene->b3AllocVertices(&context);
 	scene->b3ResetAnimation();
 	scene->b3ComputeBounds(&lower,&upper);
+	scene->b3Prepare();
 			
 	b3PrintF(B3LOG_NORMAL,"%d vertices\n", context.glVertexCount);
 	b3PrintF(B3LOG_NORMAL,"%d triangles\n",context.glPolyCount);
@@ -420,7 +429,7 @@ static void b3Update(b3Scene *scene)
 	view.b3SetBounds(&lower,&upper);
 	view.b3SetCamera(scene);
 	view.b3SetViewMode(B3_VIEW_3D);
-	view.b3SetupView(xWinSize,yWinSize);
+	glutPostRedisplay();
 }
 
 static void b3Prepare(b3Scene *scene)
@@ -507,9 +516,9 @@ int main(int argc,char *argv[])
 			glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA|GLUT_DEPTH);
 			glutInitWindowSize(xWinSize,yWinSize);
 			glutCreateWindow("Greetinxx");
-			glutDisplayFunc (&b3RenderScene);
-			glutKeyboardFunc(&b3Keyboard);
-			glutReshapeFunc (&b3ChangeSize);
+			glutDisplayFunc (&b3DisplayFunc);
+			glutKeyboardFunc(&b3KeyboardFunc);
+			glutReshapeFunc (&b3ReshapeFunc);
 
 			b3SetupRC();
 			b3Update (scene);

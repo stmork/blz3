@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/10/12 09:15:46  smork
+**	- Some more debug information.
+**	- Moved light init after camera init.
+**
 **	Revision 1.10  2004/09/25 08:56:53  sm
 **	- Removed VBOs from source.
-**
+**	
 **	Revision 1.9  2004/09/24 19:07:27  sm
 **	- VBOs on ATI running - or better: crawling.
 **	
@@ -252,12 +256,20 @@ b3_bool b3RenderContext::b3LightAdd(
 {
 	b3_bool  result = false;
 
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightAdd(%d)\n",
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,">b3RenderContext::b3LightAdd(%d)\n",
 		glLightNum);
+#endif
+
 	result = b3LightSet(
 		b3_position,glUseSpotLight ? b3_direction : null,
 		spot_exp,
 		b3_diffuse,b3_ambient,b3_specular,glLightNum++);
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,">b3RenderContext::b3LightAdd(%d)\n",
+		glLightNum);
+#endif
 
 	return result;
 }
@@ -279,6 +291,10 @@ b3_bool b3RenderContext::b3LightSet(
 	GLfloat gl_diffuse[4];
 	GLfloat gl_specular[4];
 	GLenum  light;
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,">b3RenderContext::b3LightSet(...)\n");
+#endif
 
 	if (VALIDATE_LIGHT_NUM(num))
 	{
@@ -316,15 +332,13 @@ b3_bool b3RenderContext::b3LightSet(
 		glLightf (light,GL_QUADRATIC_ATTENUATION, 0.0);
 		result = true;
 	}
-	b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet(%d) = %s\n",
-		num,result ? "true" : "false");
+
 #ifdef _DEBUG
-	if (result)
-	{
-		b3PrintF(B3LOG_FULL,"b3RenderContext::b3LightSet() # Light %d: %3.2f %3.2f %3.2f\n",
-			light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
-	}
+	b3PrintF(B3LOG_FULL,"<b3RenderContext::b3LightSet() = %s # Light %d: %3.2f %3.2f %3.2f\n",
+		result ? "true" : "false",
+		light - GL_LIGHT0,gl_position[0],gl_position[1],gl_position[2]);
 #endif
+
 #endif
 	return result;
 }

@@ -33,12 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2004/10/12 09:15:46  smork
+**	- Some more debug information.
+**	- Moved light init after camera init.
+**
 **	Revision 1.68  2004/09/28 15:07:40  sm
 **	- Support for car paint is complete.
 **	- Made some optimizations concerning light.
 **	- Added material dependend possibility for color
 **	  mixing instead of mixing inside shader.
-**
+**	
 **	Revision 1.67  2004/09/11 13:30:50  sm
 **	- Corrected link libraries in makefiles.
 **	- Corrected GLint to GLenum for light control.
@@ -920,6 +924,10 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 		m_ShadowBrightness,
 		m_ShadowBrightness);
 
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,">b3Scene::b3SetLights()\n");
+#endif
+
 	context->b3LightNum();
 	context->b3LightReset();
 	B3_FOR_BASE(b3GetLightHead(),item)
@@ -937,6 +945,10 @@ void b3Scene::b3SetLights(b3RenderContext *context)
 				&light->m_Color);
 		}
 	}
+
+#ifdef _DEBUG
+	b3PrintF(B3LOG_FULL,"<b3Scene::b3SetLights()\n");
+#endif
 }
 
 /*************************************************************************
