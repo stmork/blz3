@@ -500,7 +500,23 @@ SOURCE=.\res\shape_area.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\shape_bo.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\shape_box.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_bspline_area.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_bspline_cylinder.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_bspline_rot.ico
 # End Source File
 # Begin Source File
 
@@ -525,6 +541,10 @@ SOURCE=.\res\shape_sphere.ico
 # Begin Source File
 
 SOURCE=.\res\shape_torus.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\shape_triangles.ico
 # End Source File
 # Begin Source File
 

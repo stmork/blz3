@@ -56,10 +56,14 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2002/02/01 17:22:44  sm
+**	- Added icons for shapes
+**	- Added shape support for hierarchy when shape editing
+**
 **	Revision 1.56  2002/01/24 15:55:57  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
-**
+**	
 **	Revision 1.55  2002/01/19 19:57:55  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -675,7 +679,7 @@ void CAppLinesDoc::b3InitTree()
 	insert.item.iSelectedImage = 9;
 	root = m_DlgHierarchy->m_Hierarchy.InsertItem (&insert);
 
-	m_DlgHierarchy->b3AddBBoxes (root,m_Scene->b3GetFirstBBox());
+	m_DlgHierarchy->b3AddBBoxes (root,m_Scene->b3GetFirstBBox(),false);
 	m_DlgHierarchy->m_Hierarchy.Expand(root,TVE_EXPAND);
 }
 

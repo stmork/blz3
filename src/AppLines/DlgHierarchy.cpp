@@ -34,13 +34,17 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2002/02/01 17:22:44  sm
+**	- Added icons for shapes
+**	- Added shape support for hierarchy when shape editing
+**
 **	Revision 1.13  2002/02/01 15:04:09  sm
 **	- Prepared shapes for icon conversion
 **	- Added to save selected/first visible item in
 **	  hierarchy dialog.
 **	- Some print cleanups done.
 **	- Fixed activation of b3SuperSample.
-**
+**	
 **	Revision 1.12  2002/01/24 15:55:58  sm
 **	- Fixed key handling on TreeCtrl (hierarchy dialog bar)
 **	- Added support for conext menu depending on scene/object edit.
@@ -142,19 +146,35 @@ END_MESSAGE_MAP()
 
 BOOL CDlgHierarchy::OnInitDialog() 
 {
+	CWinApp *app = AfxGetApp();
+
 	CB3Dialogbar::OnInitDialog();
 	
-	m_ImageList.Create(16,16,ILC_COLOR8,5,5);
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_EMPTY));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_SUB));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_SHAPES));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_SHAPES_SUB));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_WORLD));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_EMPTY));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_SUB));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_S_SHAPES));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_S_SHAPES_SUB));
-	m_ImageList.Add (AfxGetApp()->LoadIcon(IDI_BBOX_WORLD));
+	m_ImageList.Create(16,16,ILC_COLOR8,24,8);
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_EMPTY));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SUB));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SHAPES));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SHAPES_SUB));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_WORLD));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_EMPTY));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_SUB));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_S_SHAPES));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_S_SHAPES_SUB));
+	m_ImageList.Add(app->LoadIcon(IDI_BBOX_WORLD));
+
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_AREA));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_DISK));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_SPHERE));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_CYLINDER));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_CONE));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_ELLIPSOID));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BOX));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_TORUS));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_TRIANGLES));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_ROT));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_AREA));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_CYLINDER));
+	m_ImageList.Add(app->LoadIcon(IDI_SHAPE_BSPLINE_RING));
 
 	m_Hierarchy.SetImageList (&m_ImageList,TVSIL_NORMAL);
 
@@ -178,15 +198,89 @@ long CDlgHierarchy::b3ComputeImgNum(b3BBox *BBox)
 	return imgNum;
 }
 
+long CDlgHierarchy::b3ComputeImgNum(b3Shape *Shape,CString &text)
+{
+	long imgnum;
+
+	switch(Shape->b3GetClassType())
+	{
+	case AREA:
+		imgnum = 10;
+		text = "Fläche";
+		break;
+	case DISK:
+		imgnum = 11;
+		text = "Scheibe";
+		break;
+	case SPHERE:
+		imgnum = 12;
+		text   = "Kugel";
+		break;
+	case CYLINDER:
+		imgnum = 13;
+		text   = "Zylinder";
+		break;
+	case CONE:
+		imgnum = 14;
+		text   = "Kegel";
+		break;
+	case ELLIPSOID:
+		imgnum = 15;
+		text   = "Ellispoid";
+		break;
+	case BOX:
+		imgnum = 16;
+		text = "Quader";
+		break;
+	case TORUS:
+		imgnum = 17;
+		text = "Torus";
+		break;
+	case TRIANGLES:
+		imgnum = 18;
+		text = "Dreiecke";
+		break;
+	case SPLINE_ROT:
+		imgnum = 19;
+		text = "Rotationskörper";
+		break;
+	case SPLINES_AREA:
+		imgnum = 20;
+		text = "BSpline-Fläche";
+		break;
+	case SPLINES_CYL:
+		imgnum = 21;
+		text = "BSPline-Zylinder";
+		break;
+	case SPLINES_RING:
+		imgnum = 22;
+		text = "BSPline-Ring";
+		break;
+	default:
+		text   = "unbekannt";
+		imgnum = 0;
+		break;
+	}
+	return imgnum;
+}
+
 void CDlgHierarchy::b3AddBBoxes (
 	HTREEITEM  parent,
-	b3BBox    *BBox)
+	b3BBox    *BBox,
+	b3_bool    AddShapes)
 {
 	TV_INSERTSTRUCT  insert;
-	HTREEITEM        item;
+	HTREEITEM        new_treeitem;
+	CString          shape_title;
+	b3Item          *item;
 	b3BBox          *sub;
+	b3Shape         *shape;
 	long             imgNum;
 
+	if (parent == null)
+	{
+		parent = TVI_ROOT;
+	}
 	while (BBox != null)
 	{
 		imgNum = b3ComputeImgNum(BBox);
@@ -199,14 +293,32 @@ void CDlgHierarchy::b3AddBBoxes (
 		insert.item.iImage         = imgNum;
 		insert.item.iSelectedImage = imgNum;
 
-		item = m_Hierarchy.InsertItem (&insert);
+		new_treeitem = m_Hierarchy.InsertItem (&insert);
 		sub = (b3BBox *)BBox->b3GetBBoxHead()->First;
 		if (sub != null)
 		{
-			b3AddBBoxes (item,sub);
+			b3AddBBoxes (new_treeitem,sub,AddShapes);
 			if (BBox->b3IsExpanded())
 			{
-				m_Hierarchy.Expand(item,TVE_EXPAND);
+				m_Hierarchy.Expand(new_treeitem,TVE_EXPAND);
+			}
+		}
+		if (AddShapes)
+		{
+			B3_FOR_BASE(BBox->b3GetShapeHead(),item)
+			{
+				shape = (b3Shape *)item;
+
+				imgNum = b3ComputeImgNum(shape,shape_title);
+				insert.hParent      = new_treeitem;
+				insert.hInsertAfter = TVI_LAST;
+				insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+				insert.item.pszText        = (char *)((const char *)shape_title);
+				insert.item.cchTextMax     = B3_BOXSTRINGLEN;
+				insert.item.lParam         = (long)shape;
+				insert.item.iImage         = imgNum;
+				insert.item.iSelectedImage = imgNum;
+				m_Hierarchy.InsertItem (&insert);
 			}
 		}
 
@@ -352,15 +464,42 @@ void CDlgHierarchy::b3SelectBBox(b3BBox *BBox)
 
 b3BBox *CDlgHierarchy::b3GetSelectedBBox()
 {
-	b3BBox *BBox = null;
+	HTREEITEM  treeitem = m_Hierarchy.GetSelectedItem();
+	b3Item    *item = null;
 
-	HTREEITEM  item = m_Hierarchy.GetSelectedItem();
-
-	if (item != NULL)
+	if (treeitem != NULL)
 	{
-		BBox = (b3BBox *)m_Hierarchy.GetItemData(item);
+		item = (b3Item *)m_Hierarchy.GetItemData(treeitem);
+		if (item != null)
+		{
+			if (item->b3GetClass() != CLASS_BBOX)
+			{
+				item = null;
+			}
+		}
 	}
-	return BBox;
+	return (b3BBox *)item;
+}
+
+b3Shape *CDlgHierarchy::b3GetSelectedShape()
+{
+	HTREEITEM  treeitem = m_Hierarchy.GetSelectedItem();
+	b3Item    *item = null;
+
+	if (treeitem != NULL)
+	{
+		item = (b3Item *)m_Hierarchy.GetItemData(treeitem);
+		if (item != null)
+		{
+			b3_u32 item_class = item->b3GetClass();
+
+			if ((item_class != CLASS_SHAPE) && (item_class != CLASS_CSG))
+			{
+				item = null;
+			}
+		}
+	}
+	return (b3Shape *)item;
 }
 
 void CDlgHierarchy::OnBeginlabeleditHierarchy(NMHDR* pNMHDR, LRESULT* pResult) 

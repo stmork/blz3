@@ -66,6 +66,11 @@
 #define IDI_SHAPE_DISK                  172
 #define IDI_SHAPE_BOX                   173
 #define IDI_SHAPE_TORUS                 174
+#define IDI_SHAPE_TRIANGLES             175
+#define IDI_SHAPE_BSPLINE_ROT           176
+#define IDI_SHAPE_BSPLINE_AREA          177
+#define IDI_SHAPE_BSPLINE_CYLINDER      178
+#define IDI_SHAPE_BSPLINE_RING          179
 #define IDC_PREVIEW_RAYTRACE            1000
 #define IDC_PREVIEW_BGIMAGE             1001
 #define IDC_BG_LIGHT                    1002

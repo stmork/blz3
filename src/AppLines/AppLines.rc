@@ -92,6 +92,11 @@ IDI_SHAPE_AREA          ICON    DISCARDABLE     "res\\shape_area.ico"
 IDI_SHAPE_DISK          ICON    DISCARDABLE     "res\\shape_disk.ico"
 IDI_SHAPE_BOX           ICON    DISCARDABLE     "res\\shape_box.ico"
 IDI_SHAPE_TORUS         ICON    DISCARDABLE     "res\\shape_torus.ico"
+IDI_SHAPE_TRIANGLES     ICON    DISCARDABLE     "res\\shape_triangles.ico"
+IDI_SHAPE_BSPLINE_ROT   ICON    DISCARDABLE     "res\\shape_bspline_rot.ico"
+IDI_SHAPE_BSPLINE_AREA  ICON    DISCARDABLE     "res\\shape_bspline_area.ico"
+IDI_SHAPE_BSPLINE_CYLINDER ICON    DISCARDABLE     "res\\shape_bspline_cylinder.ico"
+IDI_SHAPE_BSPLINE_RING  ICON    DISCARDABLE     "res\\shape_bspline_ring.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

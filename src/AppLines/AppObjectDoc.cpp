@@ -36,6 +36,10 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/02/01 17:22:44  sm
+**	- Added icons for shapes
+**	- Added shape support for hierarchy when shape editing
+**
 **	Revision 1.10  2002/01/19 19:57:56  sm
 **	- Further clean up of CAppRenderDoc derivates done. Especially:
 **	  o Moved tree build from CDlgHierarchy into documents.
@@ -43,7 +47,7 @@
 **	  o CAppObjectDoc creation cleaned up.
 **	  o Fixed some ugly drawing dependencies during initialization.
 **	     Note: If you don't need Windows -> You're fine!
-**
+**	
 **	Revision 1.9  2002/01/18 16:49:35  sm
 **	- Further development of the object edit from scene branch. This needs
 **	  much more logics for handling scenes and open object edits properly.
@@ -348,24 +352,10 @@ void CAppObjectDoc::b3ComputeBounds()
 
 void CAppObjectDoc::b3InitTree()
 {
-	TV_INSERTSTRUCT insert;
-	HTREEITEM       root;
-	long            num;
-
 	if (m_BBox != null)
 	{
-		num = m_DlgHierarchy->b3ComputeImgNum(m_BBox);
-		insert.hParent      = TVI_ROOT;
-		insert.hInsertAfter = TVI_FIRST;
-		insert.item.mask    = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-		insert.item.pszText = m_BBox->b3GetName();
-		insert.item.lParam  = (LPARAM)m_BBox;
-		insert.item.iImage         = num;
-		insert.item.iSelectedImage = num;
-		root = m_DlgHierarchy->m_Hierarchy.InsertItem (&insert);
-
-		m_DlgHierarchy->b3AddBBoxes (root,(b3BBox *)m_BBox->b3GetBBoxHead()->First);
-		m_DlgHierarchy->m_Hierarchy.Expand(root,TVE_EXPAND);
+		B3_ASSERT((m_BBox->Prev == null) && (m_BBox->Succ == null));
+		m_DlgHierarchy->b3AddBBoxes (null,m_BBox,true);
 	}
 }
 

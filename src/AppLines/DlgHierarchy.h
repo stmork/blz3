@@ -73,10 +73,12 @@ protected:
 
 public:
 	long           b3ComputeImgNum(b3BBox *BBox);
-	void           b3AddBBoxes(HTREEITEM parent,b3BBox *BBox);
+	long           b3ComputeImgNum(b3Shape *Shape,CString &text);
+	void           b3AddBBoxes(HTREEITEM parent,b3BBox *BBox,b3_bool AddShapes);
 	b3_bool        b3InitTree(CAppRenderDoc *pDoc,b3_bool force_refresh = false);
 	void           b3UpdateActivation();
 	b3BBox        *b3GetSelectedBBox();
+	b3Shape       *b3GetSelectedShape();
 	void           b3SelectBBox(b3BBox *BBox);
 	void           b3GetData();
 	void           b3SetData();
