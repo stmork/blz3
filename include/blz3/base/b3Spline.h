@@ -608,7 +608,7 @@ public:
 				for (j = 0;j < l;j++)
 				{
 					denom      = knots[k+l] - knots[k];
-					r          = (q - knots[k]) / denom;
+					r          = (denom != 0 ? (q - knots[k]) / denom : 0);
 					it[l-j]   += r * it[l-j-1];
 					it[l-j-1] *= (1 - r);
 					if (--k < 0) /* check underflow of knots */
@@ -629,7 +629,7 @@ public:
 				for (j = 0;j < l;j++)
 				{
 					denom      = knots[i-j+l]      - knots[i-j];
-					r          = (qStart - knots[i-j]) / denom;
+					r          = (denom != 0 ? (qStart - knots[i-j]) / denom : 0);
 					it[l-j]   += r * it[l-j-1];
 					it[l-j-1] *= (1 - r);
 				}
@@ -693,7 +693,7 @@ public:
 			for (j = 0;j < l;j++)
 			{
 				denom      = knots[i-j+l] - knots[i-j];
-				r          = (q - knots[i-j]) / denom;
+				r          = (denom != 0 ? (q - knots[i-j]) / denom : 0);
 				it[l-j]   += r * it[l-j-1];
 				it[l-j-1] *= (1 - r);
 			}
@@ -732,7 +732,7 @@ public:
 			for (j = 0;j < l;j++)
 			{
 				denom      = knots[k+l] - knots[k];
-				r          = (q - knots[k]) / denom;
+				r          = (denom != 0 ? (q - knots[k]) / denom : 0);
 				it[l-j]   += r * it[l-j-1];
 				it[l-j-1] *= (1 - r);
 				if (--k < 0) /* check underflow of knots */
@@ -1290,7 +1290,7 @@ private:
 		if (!closed)
 		{
 			i--;
-			while (b3Math::b3IsEqual(knots[i-1], knots[i]))
+			while (knots[i-1] == knots[i])
 			{
 				i--;
 			}

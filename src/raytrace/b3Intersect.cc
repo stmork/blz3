@@ -25,6 +25,7 @@
 #include "blz3/raytrace/b3BBox.h"
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/base/b3Cubic.h"
+#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -34,13 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.45  2005/01/06 10:02:37  smork
+**	- Spline animation fix.
+**
 **	Revision 1.44  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.43  2004/07/22 12:17:31  sm
 **	- Fixed triangle into grid insertion problem.
 **	

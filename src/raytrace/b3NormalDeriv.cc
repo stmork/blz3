@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Shape.h"
+#include "blz3/base/b3Math.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/01/06 10:02:37  smork
+**	- Spline animation fix.
+**
 **	Revision 1.4  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.3  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.

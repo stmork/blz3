@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2005/01/06 10:02:37  smork
+**      - Spline animation fix.
+**
 **      Revision 1.14  2005/01/03 10:34:29  smork
 **      - Rebalanced some floating point comparisons:
 **        a == 0  -> b3Math::b3NearZero
@@ -339,7 +342,7 @@ void b3AnimElement::b3AnimateRotate(
 
 	t1 = b3Math::b3Round(b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End),epsilon);
 	t2 = b3Math::b3Round(b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End),epsilon);
-	if (!b3Math::b3IsEqual(t1, t2))
+	if (t1 != t2)
 	{
 		// Compute present orientation
 		b3GetPosition (&lookTo, t);
@@ -348,7 +351,7 @@ void b3AnimElement::b3AnimateRotate(
 		lookTo.z -= m_Center.z;
 
 		// Which reference to use.
-		future = b3Math::b3IsEqual(t, t1);
+		future = (t == t1);
 
 		// Use future or past reference time?
 		tRef = future ? t2 : t1;
