@@ -35,6 +35,10 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2004/06/18 14:49:05  sm
+**      - Some probes concerning the anim rotation problem. Should I use
+**        quaternions?
+**
 **      Revision 1.9  2004/05/31 08:14:17  sm
 **      - Added autorun infos
 **      - Fixed rounding problem of animation.
@@ -257,7 +261,7 @@ void b3AnimElement::b3GetPosition(b3_vector32_4D *position,b3_f64 t)
 		// compute position at time t
 		ratio = (t - m_Start) / (m_End - m_Start);
 		pos = m_Param.b3Mansfield (coeffs,qStart + q * ratio);
-		m_Param.b3MansfieldVector(position,coeffs,pos,0L);
+		m_Param.b3MansfieldVector(position,coeffs,pos,0);
 	}
 }
 

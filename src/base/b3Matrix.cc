@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.29  2004/06/18 14:49:05  sm
+**	- Some probes concerning the anim rotation problem. Should I use
+**	  quaternions?
+**
 **	Revision 1.28  2004/05/17 13:00:33  sm
 **	- Fixed inverse/reverse handling of object editing.
 **	- Added diverse handling vor object loading/replacing.
-**
+**	
 **	Revision 1.27  2003/03/20 21:04:58  sm
 **	- Made some triangle intersection optimizations.
 **	
@@ -917,9 +921,9 @@ b3_matrix * b3Matrix::b3Dress (
 	b3NormalizeCol (&lookTo,0);
 
 	// now compute z axis from dress vector and direction vector
-	normal.x = dir1->y * dir2->z    - dir1->z * dir2->y; 
-	normal.y = dir1->z * dir2->x    - dir1->x * dir2->z; 
-	normal.z = dir1->x * dir2->y    - dir1->y * dir2->x; 
+	normal.x = dir1->y * dir2->z - dir1->z * dir2->y; 
+	normal.y = dir1->z * dir2->x - dir1->x * dir2->z; 
+	normal.z = dir1->x * dir2->y - dir1->y * dir2->x; 
 
 	if (negate)
 	{
@@ -948,6 +952,7 @@ b3_matrix * b3Matrix::b3Dress (
 	b3MMul (prev,&lookTo,transform);
 	return transform;
 }
+
 b3_matrix *b3Matrix::b3Dump(b3_matrix *m,const char *title)
 {
 	b3PrintF(B3LOG_FULL,"%s (m=%p)\n",title != null ? title : "b3Matrix::b3Dump",m);

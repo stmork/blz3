@@ -34,6 +34,10 @@
 
 /*
 **      $Log$
+**      Revision 1.20  2004/06/18 14:49:05  sm
+**      - Some probes concerning the anim rotation problem. Should I use
+**        quaternions?
+**
 **      Revision 1.19  2004/05/30 20:25:00  sm
 **      - Set paging size in supersampling dialog to 1 instead of 10.
 **      - Added support for debugging super sampling.
@@ -361,6 +365,7 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 	b3_matrix      resetMatrix;
 	b3_f64         tClipped;
 
+	b3PrintF(B3LOG_FULL,"<-- TIME POINT %3.3f -->\n",t);
 	m_Time         = t; /* this is the time point you wish */
 	m_FrameIndex   = b3AnimFrameIndex(t);
 	b3Vector::b3Init(&m_AnimCenter);
