@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/11/11 14:07:15  sm
+**	- Adjusted b3Path to Un*x port.
+**
 **	Revision 1.2  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.1  2001/10/26 18:37:14  sm
 **	- Creating search path support
 **	- Splitting image pool support and image loading into

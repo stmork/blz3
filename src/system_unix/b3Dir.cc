@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/11 14:07:15  sm
+**	- Adjusted b3Path to Un*x port.
+**
 **	Revision 1.5  2001/10/19 14:46:58  sm
 **	- Rotation spline shape bug found.
 **	- Major optimizations done.
 **	- Cleanups
-**
+**	
 **	Revision 1.4  2001/10/17 14:46:03  sm
 **	- Adding triangle support.
 **	- Renaming b3TriangleShape into b3Triangles and introducing
@@ -181,6 +184,28 @@ void b3Dir::b3CloseDir ()
 **                                                                      **
 *************************************************************************/
 
+void b3Path::b3Empty()
+{
+	path[0] = 0;
+}
+
+void b3Path::b3Correct(const char *input)
+{
+	b3_index i,len;
+
+	if (input == null)
+	{
+		input = path;
+	}
+
+	len = strlen(input);
+	for (i = 0;i < len;i++)
+	{
+		path[i] = (input[i] == '\\' ? '/' : input[i]);
+	}
+	path[len] = 0;
+}
+
 // link a name to an existing file path to create a
 // new full qualified filepath
 void b3Path::b3LinkFileName(
@@ -252,6 +277,59 @@ void b3Path::b3SplitFileName(
 	}
 }
 
+void b3Path::b3ParentName(char *path)
+{
+	b3ParentName(path,null);
+}
+
+// Get the parent directory of a directory or file
+void b3Path::b3ParentName(
+	const char *file,
+	      char *parent)
+{
+	b3Path   actDir;
+	b3_index i;
+	b3_count len;
+
+	// No source dir
+	if (file == null)
+	{
+		return;
+	}
+
+	// Source is a file so split directory first
+	if (b3Dir::b3Exists(file) == B3_TYPE_FILE)
+	{
+		b3SplitFileName (file,actDir,null);
+	}
+	else
+	{
+		actDir.b3Correct(file);
+		for (len = strlen(actDir) - 1;(len >= 0) && (((char *)actDir)[len] == '/');len--)
+		{
+			((char *)actDir)[len] = 0;
+		}
+	}
+
+	// Remove trailing "/" or "\"
+	len = strlen(actDir);
+	for (i = len - 1;i >= 0;i--) switch(((char *)actDir)[i])
+	{
+		case '/' :
+			((char *)actDir)[i] = 0;
+			i = 0;
+			break;
+
+		default :
+			((char *)actDir)[i] = 0;
+			break;
+	}
+
+	// Copy to destination if available else
+	// overwrite source
+	strcpy (parent != null ? parent : (char *)file,actDir);
+}
+
 // Remove extension of a file. This routine is needed
 // for creating a new extension.
 void b3Path::b3RemoveExt(char *name)
@@ -271,9 +349,4 @@ void b3Path::b3RemoveExt(char *name)
 		}
 	}
 	b3Path::b3LinkFileName (name,actPath,actName);
-}
-
-void b3Path::b3Empty()
-{
-	path[0] = 0;
 }

@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2001/11/11 14:07:15  sm
+**	- Adjusted b3Path to Un*x port.
+**
 **	Revision 1.17  2001/11/11 11:51:21  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.16  2001/11/01 09:43:11  sm
 **	- Some image logging cleanups.
 **	- Texture preparing now in b3Prepare().
