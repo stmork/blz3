@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Aux.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/image/b3TxPool.h"
 
@@ -34,6 +35,11 @@
 
 /*
 **      $Log$
+**      Revision 1.28  2004/02/28 13:51:53  sm
+**      - Added Cook/Torrance material. But this is not a material
+**        it is a shader! Further reading is necessary to redesign
+**        Blizzard III to use programmable shader.
+**
 **      Revision 1.27  2003/08/31 10:44:07  sm
 **      - Further buffer overflow avoidments.
 **
@@ -158,13 +164,14 @@
 void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
-	b3Item::b3Register(&b3MatNormal::b3StaticInit,      &b3MatNormal::b3StaticInit,      MAT_NORMAL);
-	b3Item::b3Register(&b3MatTexture::b3StaticInit,     &b3MatTexture::b3StaticInit,     TEXTURE);
-	b3Item::b3Register(&b3MatChess::b3StaticInit,       &b3MatChess::b3StaticInit,       CHESS);
-	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit, &b3MatWrapTexture::b3StaticInit, WRAPTEXTURE);
-	b3Item::b3Register(&b3MatMarble::b3StaticInit,      &b3MatMarble::b3StaticInit,      MARBLE);
-	b3Item::b3Register(&b3MatSlide::b3StaticInit,       &b3MatSlide::b3StaticInit,       SLIDE);
-	b3Item::b3Register(&b3MatWood::b3StaticInit,        &b3MatWood::b3StaticInit,        WOOD);
+	b3Item::b3Register(&b3MatNormal::b3StaticInit,       &b3MatNormal::b3StaticInit,       MAT_NORMAL);
+	b3Item::b3Register(&b3MatTexture::b3StaticInit,      &b3MatTexture::b3StaticInit,      TEXTURE);
+	b3Item::b3Register(&b3MatChess::b3StaticInit,        &b3MatChess::b3StaticInit,        CHESS);
+	b3Item::b3Register(&b3MatWrapTexture::b3StaticInit,  &b3MatWrapTexture::b3StaticInit,  WRAPTEXTURE);
+	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
+	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
+	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
+	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
 }
 
 /*************************************************************************
@@ -224,6 +231,18 @@ b3_f64 b3Material::b3GetSpecularExponent(b3_polar *polar)
 **                        Standard material                             **
 **                                                                      **
 *************************************************************************/
+
+b3MatNormal::b3MatNormal(b3_size class_size,b3_u32 class_type) : b3Material(class_size,class_type)
+{
+	m_AmbColor.b3Init();
+	m_DiffColor.b3Init();
+	m_SpecColor.b3Init();
+	m_Reflection =    0;
+	m_Refraction =    0;
+	m_RefrValue  =    1;
+	m_HighLight  = 1000;
+	m_Flags      =    0;
+}
 
 b3MatNormal::b3MatNormal(b3_u32 class_type) : b3Material(sizeof(b3MatNormal),class_type)
 {
@@ -925,4 +944,44 @@ b3_f64 b3MatWood::b3GetIndexOfRefraction(b3_polar *polar)
 b3_f64 b3MatWood::b3GetSpecularExponent(b3_polar *polar)
 {
 	return m_HighLight;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Cook and Torrance reflection model            **
+**                                                                      **
+*************************************************************************/
+
+b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
+	b3MatNormal(sizeof(b3MatCookTorrance),class_type)
+{
+}
+
+b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
+{
+}
+
+b3_bool b3MatCookTorrance::b3Prepare()
+{
+	m_Il   = 650000;
+	m_dw   = 0.0001;
+	m_ks   = 1.0;
+	m_kd   = 0.0;
+	m_m    = 0.3;
+	m_Ia   = 0.00001 * m_Il;
+	m_Ra   = m_DiffColor * M_PI;
+	m_Mu = b3Color(
+		b3Math::b3GetMu(m_DiffColor[b3Color::R]),
+		b3Math::b3GetMu(m_DiffColor[b3Color::G]),
+		b3Math::b3GetMu(m_DiffColor[b3Color::B]));
+	return true;
+}
+
+b3_bool b3MatCookTorrance::b3GetColors(
+	b3_polar *polar,
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
+{
+	return true;
 }

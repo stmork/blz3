@@ -38,6 +38,7 @@ typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 class b3Noise : public b3Mem
 {
 	static b3_noisetype *NoiseTable;
+	static b3_f64        epsilon;
 
 public:
 	               b3Noise();
@@ -60,7 +61,7 @@ private:
 	static b3_noisetype b3GetDiff   (b3_index xs,b3_index ys,b3_index zs,b3_index k,b3_index i);
 	static b3_f64       b3GradNoise (b3_f64 x,b3_f64 y,b3_f64 z,b3_index i);
 
-	static void    b3OldMarble   (b3_vector *P,b3Color &Color);
+	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
 };
 
 #endif

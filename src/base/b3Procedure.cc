@@ -22,6 +22,7 @@
 **                                                                      **
 *************************************************************************/
 
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Matrix.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Spline.h"
@@ -36,10 +37,15 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2004/02/28 13:51:53  sm
+**	- Added Cook/Torrance material. But this is not a material
+**	  it is a shader! Further reading is necessary to redesign
+**	  Blizzard III to use programmable shader.
+**
 **	Revision 1.13  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.12  2002/12/22 12:07:52  sm
 **	- Made some minor accuracy adjustments.
 **	
@@ -167,6 +173,8 @@ static b3_u08 oM[4][8][3] =
 	{{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}}
 };
 
+b3_f64  b3Noise::epsilon = 0.005;
+b3_f64  b3Math::epsilon = 0.005;
 b3Noise noise_procedures;
 
 /*************************************************************************

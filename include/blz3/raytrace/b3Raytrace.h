@@ -557,6 +557,7 @@ public:
 #define TYPE_MARBLE_MAT     0x00000005
 #define TYPE_SLIDE          0x00000006
 #define TYPE_WOOD           0x00000007
+#define TYPE_COOK_TORRANCE  0x00000008
 
 // WARNING: GL uses define MATERIAL, too!
 #define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
@@ -567,6 +568,7 @@ public:
 #define MARBLE              (CLASS_MATERIAL|TYPE_MARBLE_MAT)
 #define SLIDE               (CLASS_MATERIAL|TYPE_SLIDE)
 #define WOOD                (CLASS_MATERIAL|TYPE_WOOD)
+#define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_COOK_TORRANCE)
 
 class B3_PLUGIN b3Material : public b3Item
 {
@@ -603,16 +605,19 @@ public:
 	b3_f32            m_HighLight;
 	b3_s32            m_Flags;
 
+protected:
+	     b3MatNormal(b3_size class_size,b3_u32 class_type);
+
 public:
 	B3_ITEM_INIT(b3MatNormal);
 	B3_ITEM_LOAD(b3MatNormal);
 
-	void    b3Write();
-	b3_f64  b3GetReflection(b3_polar *polar);
-	b3_f64  b3GetRefraction(b3_polar *polar);
-	b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
-	b3_f64  b3GetSpecularExponent(b3_polar *polar);
-	b3_bool b3GetColors(
+	        void    b3Write();
+	        b3_f64  b3GetReflection(b3_polar *polar);
+	        b3_f64  b3GetRefraction(b3_polar *polar);
+	        b3_f64  b3GetIndexOfRefraction(b3_polar *polar);
+	        b3_f64  b3GetSpecularExponent(b3_polar *polar);
+	virtual b3_bool b3GetColors(
 		b3_polar *polar,
 		b3Color  &diff,
 		b3Color  &amb,
@@ -818,6 +823,31 @@ public:
 #define YSLIDE              0x00000001
 #define XSLIDE_CUT          (XSLIDE|SLIDE_CUT)
 #define YSLIDE_CUT          (YSLIDE|SLIDE_CUT)
+
+// TYPE_COOK_TORRANCE
+class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
+{
+	b3_f64  m_Il;
+	b3_f64  m_dw;
+	b3_f64  m_ks;
+	b3_f64  m_kd;
+	b3_f64  m_m;
+	b3_f64  m_Ia;
+	b3Color m_Ra;
+	b3Color m_Rd;
+	b3Color m_Mu;
+
+public:
+	B3_ITEM_INIT(b3MatCookTorrance);
+	B3_ITEM_LOAD(b3MatCookTorrance);
+
+	b3_bool b3Prepare();
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
+};
 
 /*************************************************************************
 **                                                                      **
