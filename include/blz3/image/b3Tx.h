@@ -163,7 +163,7 @@ enum b3_tx_threshold
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+enum b3_tx_error
 {
 	B3_TX_ERROR = -1,
 	B3_TX_OK    =  0,
@@ -175,7 +175,7 @@ typedef enum
 	B3_TX_UNCOMPL,
 	B3_TX_ERR_HEADER,
 	B3_TX_UNKNOWN_FILETYPE
-} b3_tx_error;
+};
 
 class b3TxException
 {

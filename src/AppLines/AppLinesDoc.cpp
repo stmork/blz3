@@ -45,6 +45,7 @@
 #include "b3ExampleScene.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3File.h"
+#include "blz3/base/b3Array.h"
 #include "blz3/base/b3FileMem.h"
 #include "blz3/base/b3Matrix.h"
 
@@ -56,11 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.60  2002/02/14 16:32:33  sm
+**	- Added activation via mouse selection
+**
 **	Revision 1.59  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
 **	  on example camera settings.
-**
+**	
 **	Revision 1.58  2002/02/12 18:39:02  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -1206,6 +1210,74 @@ void CAppLinesDoc::OnAllDeactivateRest()
 void CAppLinesDoc::OnUpdateSelectedBBox(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable(m_DlgHierarchy->b3GetSelectedBBox() != null);
+}
+
+void CAppLinesDoc::b3Select(b3_line *dir,b3_bool activate,b3_bool add)
+{
+	b3BBox    *bbox;
+	b3_line64  line;
+	int        i,max;
+
+	if (!add)
+	{
+		// Deactivate all bboxes first
+		m_Scene->b3Activate(false);
+	}
+
+	// Prepare search criteria
+	b3Vector::b3Init(&line.pos,dir->pos.x,dir->pos.y,dir->pos.z);
+	b3Vector::b3Init(&line.dir,dir->dir.x,dir->dir.y,dir->dir.z);
+
+	// Search!
+	m_Scene->b3CollectBBoxes(&line,&m_HitBBoxes);
+
+	// Make selection on found bboxes
+	max = m_HitBBoxes.b3GetCount();
+	for (i = 0;i < max;i++)
+	{
+		bbox = m_HitBBoxes[i];
+		bbox->b3Activate(activate);
+	}
+
+	// Mark as modified and update
+	SetModifiedFlag();
+	m_DlgHierarchy->b3UpdateActivation();
+	UpdateAllViews(NULL,B3_UPDATE_VIEW);
+}
+
+void CAppLinesDoc::b3Select(
+	b3_vector *lower,
+	b3_vector *upper,
+	b3_bool    activate,
+	b3_bool    add)
+{
+	b3BBox *bbox;
+	int     i,max;
+
+	if (!add)
+	{
+		// Deactivate all bboxes first
+		m_Scene->b3Activate(false);
+	}
+
+	// Prepare search criteria
+	b3Vector::b3Sort(lower,upper);
+
+	// Search!
+	m_Scene->b3CollectBBoxes(lower,upper,&m_HitBBoxes);
+
+	// Make selection on found bboxes
+	max = m_HitBBoxes.b3GetCount();
+	for (i = 0;i < max;i++)
+	{
+		bbox = m_HitBBoxes[i];
+		bbox->b3Activate(activate);
+	}
+
+	// Mark as modified and update
+	SetModifiedFlag();
+	m_DlgHierarchy->b3UpdateActivation();
+	UpdateAllViews(NULL,B3_UPDATE_VIEW);
 }
 
 /*************************************************************************

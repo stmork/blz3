@@ -104,10 +104,11 @@ public:
 	void              b3Original();
 	void              b3Scale(b3_f64 scale);
 	void              b3Move(b3_f64 xDir,b3_f64 yDir);
-	void              b3Project(b3_coord &x,b3_coord &y,const b3_vector *point);
-	void              b3Project(b3_f64 &xRel,b3_f64 &yRel,const b3_vector *point);
+	void              b3Project(const b3_vector *point,b3_coord &x,b3_coord &y);
+	void              b3Project(const b3_vector *point,b3_f64 &xRel,b3_f64 &yRel);
 	void              b3Unproject(const b3_coord x, const b3_coord y, b3_vector *point);
 	void              b3Unproject(const b3_f64 xRel,const b3_f64 yRel,b3_vector *point);
+	void              b3GetProjectionBase(b3_vector *eye);
 	void              b3GetViewDirection(b3_vector *direction);
 	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *pos);
 	void              b3Select(b3_f64 xStart,b3_f64 yStart,b3_f64 xEnd,b3_f64 yEnd);

@@ -286,6 +286,58 @@ public:
 		}
 		return result;
 	}
+
+	static inline b3_vector *b3LinearCombine(
+		b3_vector *pVec,
+		b3_f64     a,b3_vector *aVec,
+		b3_f64     b,b3_vector *bVec,
+		b3_vector *result)
+	{
+		result->x = pVec->x + a * aVec->x + b * bVec->x;
+		result->y = pVec->y + a * aVec->y + b * bVec->y;
+		result->z = pVec->z + a * aVec->z + b * bVec->z;
+		return result;
+	}
+
+	static inline void b3Sort(b3_vector *lower,b3_vector *upper)
+	{
+		b3_f32 aux;
+
+		if (lower->x > upper->x)
+		{
+			aux = lower->x; lower->x = upper->x; upper->x = aux;
+		}
+
+		if (lower->y > upper->y)
+		{
+			aux = lower->y; lower->y = upper->y; upper->y = aux;
+		}
+
+		if (lower->z > upper->z)
+		{
+			aux = lower->z; lower->z = upper->z; upper->z = aux;
+		}
+	}
+
+	static inline void b3Sort(b3_vector64 *lower,b3_vector64 *upper)
+	{
+		b3_f64 aux;
+
+		if (lower->x > upper->x)
+		{
+			aux = lower->x; lower->x = upper->x; upper->x = aux;
+		}
+
+		if (lower->y > upper->y)
+		{
+			aux = lower->y; lower->y = upper->y; upper->y = aux;
+		}
+
+		if (lower->z > upper->z)
+		{
+			aux = lower->z; lower->z = upper->z; upper->z = aux;
+		}
+	}
 };
 
 b3_bool    b3NormalizeCol       (b3_matrix *Dst,b3_index col_num);

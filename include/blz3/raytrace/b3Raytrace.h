@@ -21,6 +21,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Dir.h"
 #include "blz3/system/b3Display.h"
+#include "blz3/base/b3Array.h"
 #include "blz3/base/b3Spline.h"
 #include "blz3/base/b3World.h"
 #include "blz3/base/b3Render.h"
@@ -1587,6 +1588,8 @@ public:
 		   b3Base<b3Item> *b3GetShapeHead();
 		   b3Base<b3Item> *b3GetBBoxHead();
 	       b3_bool         b3Intersect(b3_ray *ray);
+		   void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
+		   void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 
  	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
 	static void            b3Recount(b3Base<b3Item> *base,b3_count level = 1);
@@ -2227,6 +2230,8 @@ public:
 	virtual b3_bool         b3Shade(b3_ray_info *ray,b3_count depth = 0);
 	virtual void            b3Illuminate(b3Light *light,b3_light_info *jit,b3_illumination *surface,b3_color *result);
 	virtual b3_bool         b3FindObscurer(b3_ray_info *ray,b3_f64 max = DBL_MAX);
+	        void            b3CollectBBoxes(b3_line64 *line,b3Array<b3BBox *> *array,b3_f64 max = DBL_MAX);
+	        void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
 		    void            b3GetBackgroundColor(b3_ray_info *ray,b3_f64 fx,b3_f64 fy);
 
 protected:

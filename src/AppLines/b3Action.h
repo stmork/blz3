@@ -165,6 +165,8 @@ public:
 
 class CB3ActionObjectSelect : public CB3Action
 {
+	CAppLinesDoc *m_LinesDoc;
+
 public:
 	CB3ActionObjectSelect(CAppLinesView *window);
 
@@ -173,6 +175,10 @@ public:
 
 	void b3RMove(b3_coord x,b3_coord y);
 	void b3RUp(b3_coord x,b3_coord y);
+
+private:
+	b3_bool b3IsPointSelection(b3_coord x,b3_coord y);
+	void    b3ComputeSelectionDir(b3_coord x,b3_coord y,b3_line *selection_dir);
 };
 
 class CB3ActionObjectMove : public CB3MoveAction
@@ -284,6 +290,7 @@ public:
 class CB3ActionLightTurn : public CB3CameraRotateAction
 {
 	CAppLinesDoc *m_LinesDoc;
+
 public:
 	CB3ActionLightTurn(CAppLinesView *window);
 

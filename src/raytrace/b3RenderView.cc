@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2002/02/14 16:32:33  sm
+**	- Added activation via mouse selection
+**
 **	Revision 1.26  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -40,7 +43,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.25  2002/02/10 20:03:19  sm
 **	- Added grid raster
 **	- Changed icon colors of shapes
@@ -439,6 +442,11 @@ void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 	}
 }
 
+void b3RenderView::b3GetProjectionBase(b3_vector *eye)
+{
+	*eye = m_vvEye;
+}
+
 void b3RenderView::b3GetViewDirection(b3_vector *dir)
 {
 	switch(m_ViewMode)
@@ -667,16 +675,22 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 	return 0;
 }
 
-void b3RenderView::b3Project(b3_coord &x,b3_coord &y,const b3_vector *point)
+void b3RenderView::b3Project(
+	const b3_vector *point,
+	      b3_coord  &x,
+		  b3_coord  &y)
 {
 	b3_f64 xRel,yRel;
 
-	b3Project(xRel,yRel,point);
+	b3Project(point,xRel,yRel);
 	x = xRel * m_xRes;
 	y = yRel * m_yRes;
 }
 
-void b3RenderView::b3Project(b3_f64 &xRel,b3_f64 &yRel,const b3_vector *point)
+void b3RenderView::b3Project(
+	const b3_vector *point,
+	      b3_f64    &xRel,
+		  b3_f64    &yRel)
 {
 	if (m_ViewMode != B3_VIEW_3D)
 	{

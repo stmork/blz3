@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2002/02/14 16:32:33  sm
+**	- Added activation via mouse selection
+**
 **	Revision 1.18  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -40,7 +43,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **	Revision 1.17  2001/12/23 08:57:21  sm
 **	- Fixed recursive calling bug in b3IsObscured(...)
 **	- Minor intersection optimazations done.
@@ -1357,4 +1360,115 @@ b3_bool b3Scene::b3IsObscured(b3_ray_info *ray,b3_f64 max)
 b3_bool b3Scene::b3FindObscurer(b3_ray_info *ray,b3_f64 max)
 {
 	return b3Intersect(ray,max);
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Find bboxes by ray                            **
+**                                                                      **
+*************************************************************************/
+
+void b3BBox::b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array)
+{
+	b3Item   *item;
+	b3Shape  *shape;
+	b3BBox   *bbox;
+	b3_polar  polar;
+
+	if (b3Intersect(ray))
+	{
+		// Is any shape hit?
+		B3_FOR_BASE(b3GetShapeHead(),item)
+		{
+			shape = (b3Shape *)item;
+			if (shape->b3Intersect(ray,&polar) > 0)
+			{
+				array->b3Add(this);
+
+				// Leave loop
+				break;
+			}
+		}
+
+		// Collect sub bboxes
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3CollectBBoxes(ray,array);
+		}
+	}
+}
+
+void b3Scene::b3CollectBBoxes(
+	b3_line64         *line,
+	b3Array<b3BBox *> *array,
+	b3_f64             max)
+{
+	b3Item *item;
+	b3BBox *bbox;
+	b3_ray  ray;
+
+	array->b3Clear();
+	ray.pos = line->pos;
+	ray.dir = line->dir;
+	ray.Q   = max;
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3CollectBBoxes(&ray,array);
+	}
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Find bboxes by area                           **
+**                                                                      **
+*************************************************************************/
+
+void b3BBox::b3CollectBBoxes(
+	b3_vector         *lower,
+	b3_vector         *upper,
+	b3Array<b3BBox *> *array)
+{
+	b3Item    *item;
+	b3BBox    *bbox;
+	b3_vector  lLower,lUpper;
+
+	// Compute local dimensions
+	lLower = m_DimBase;
+	b3Vector::b3Add(&m_DimBase,&m_DimSize,&lUpper);
+
+	// Are we completely inside the defined search area?
+	// And do we contain any shape?
+	if ((lower->x <= lLower.x) && (lUpper.x <= upper->x) &&
+	    (lower->y <= lLower.y) && (lUpper.y <= upper->y) &&
+        (lower->z <= lLower.z) && (lUpper.z <= upper->z) &&
+		(b3GetShapeHead()->First != null))
+	{
+		// Yes!
+		array->b3Add(this);
+	}
+
+	// Search for sub bboxes
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3CollectBBoxes(lower,upper,array);
+	}
+}
+
+void b3Scene::b3CollectBBoxes(
+	b3_vector         *lower,
+	b3_vector         *upper,
+	b3Array<b3BBox *> *array)
+{
+	b3Item *item;
+	b3BBox *bbox;
+
+	array->b3Clear();
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3CollectBBoxes(lower,upper,array);
+	}
 }

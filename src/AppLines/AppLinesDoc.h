@@ -27,6 +27,8 @@
 
 class CAppLinesDoc : public CAppRenderDoc
 {
+	b3Array<b3BBox *>     m_HitBBoxes;
+
 protected:
 	b3World               m_World;
 // Attributes
@@ -126,6 +128,10 @@ public:
 	void           b3FinishEdit(b3BBox *original = null,b3BBox *bbox = null);
 	void           b3InitTree();
 	void           b3ContextMenu(HTREEITEM item);
+
+	// De-/select bboxes
+	void           b3Select(b3_line *dir,b3_bool activate,b3_bool add);
+	void           b3Select(b3_vector *lower,b3_vector *upper,b3_bool activate,b3_bool add);
 
 	// Drag & drop operation
 	void           b3DragBegin();

@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2002/02/14 16:32:33  sm
+**	- Added activation via mouse selection
+**
 **	Revision 1.1  2002/02/12 18:39:03  sm
 **	- Some b3ModellerInfo cleanups concerning measurement.
 **	- Added raster drawing via OpenGL. Nice!
@@ -39,7 +42,7 @@
 **	- Added support for post OpenGL rendering for Win DC. This
 **	  is needed for drawing pick points. Note that there is a
 **	  slight offset when drawing pick points into a printer DC.
-**
+**	
 **
 */
 
@@ -64,7 +67,7 @@ b3PickPoint::b3PickPoint(
 void b3PickPoint::b3Draw(b3DrawContext *dc)
 {
 	// Compute window coords
-	m_RenderView->b3Project(m_x,m_y,m_Pos);
+	m_RenderView->b3Project(m_Pos,m_x,m_y);
 
 	dc->FillSolidRect(
 		m_x - B3_PICK_SIZE,m_y - B3_PICK_SIZE,
@@ -125,7 +128,7 @@ void b3PickDir::b3Draw(b3DrawContext *dc)
 	b3Vector::b3Add(m_OrigPos,m_OrigDir,&m_AuxPos);
 	b3PickPoint::b3Draw(dc);
 	
-	m_RenderView->b3Project(x,y,m_OrigPos);
+	m_RenderView->b3Project(m_OrigPos,x,y);
 	dc->MoveTo(m_x,m_y);
 	dc->LineTo(x,y);
 }

@@ -204,6 +204,7 @@ private:
 	friend class CB3ShapeAction;
 
 	friend class CB3ActionMagnify;
+	friend class CB3ActionObjectSelect;
 	friend class CB3ActionObjectRotate;
 	friend class CB3ActionObjectScale;
 	friend class CB3ActionCameraMove;

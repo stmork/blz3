@@ -33,11 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2002/02/14 16:32:33  sm
+**	- Added activation via mouse selection
+**
 **	Revision 1.2  2002/02/13 16:13:08  sm
 **	- Created spotlight view
 **	- Changed camera properties dialog to reflect scene units
 **	  on example camera settings.
-**
+**	
 **	Revision 1.1  2002/01/16 16:17:13  sm
 **	- Introducing object edit painting and acting.
 **	
@@ -81,6 +84,42 @@ void CB3ActionMagnify::b3LUp(b3_coord x,b3_coord y)
 CB3ActionObjectSelect::CB3ActionObjectSelect(CAppLinesView *window) :
 	CB3Action(window)
 {
+	m_LinesDoc = window->GetDocument();
+}
+
+b3_bool CB3ActionObjectSelect::b3IsPointSelection(b3_coord x,b3_coord y)
+{
+	return (m_xStart == x) && (m_yStart == y);
+}
+
+void CB3ActionObjectSelect::b3ComputeSelectionDir(
+	b3_coord  x,
+	b3_coord  y,
+	b3_line  *selection_dir)
+{
+	b3_f64 xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+	if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		b3CameraPart *camera = m_View->m_Camera;
+		b3_vector     view;
+
+		// Adjust relations to camera values (0,0) in the middle
+		xRel =       xRel * 2.0 - 1.0;
+		yRel = 1.0 - yRel * 2.0;
+
+		// Compute selection direction
+		selection_dir->pos = camera->m_EyePoint;
+		b3Vector::b3Sub(&camera->m_ViewPoint,&camera->m_EyePoint,&view);
+		b3Vector::b3LinearCombine(&view,xRel,&camera->m_Width,yRel,&camera->m_Height,&selection_dir->dir);
+	}
+	else
+	{
+		m_View->m_RenderView.b3GetProjectionBase(&selection_dir->pos);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&selection_dir->pos);
+		m_View->m_RenderView.b3GetViewDirection(&selection_dir->dir);
+	}
 }
 
 void CB3ActionObjectSelect::b3LMove(b3_coord x,b3_coord y)
@@ -91,7 +130,29 @@ void CB3ActionObjectSelect::b3LMove(b3_coord x,b3_coord y)
 
 void CB3ActionObjectSelect::b3LUp(b3_coord x,b3_coord y)
 {
-	m_View->b3Update(B3_UPDATE_VIEW);
+	if (b3IsPointSelection(x,y))
+	{
+		b3_line selection_dir;
+	
+		b3ComputeSelectionDir(x,y,&selection_dir);
+		m_LinesDoc->b3Select(&selection_dir,true,m_PressedCtrl);
+	}
+	else
+	{
+		if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+		{
+			b3_vector lower = m_LinesDoc->m_Lower;
+			b3_vector upper = m_LinesDoc->m_Upper;
+
+			m_View->m_RenderView.b3Unproject(  x,       y,     &lower);
+			m_View->m_RenderView.b3Unproject(m_xStart,m_yStart,&upper);
+			m_LinesDoc->b3Select(&lower,&upper,true,m_PressedCtrl);
+		}
+		else
+		{
+			m_View->b3DrawRect(m_xStart,m_yStart,m_xLast,m_yLast);
+		}
+	}
 }
 
 void CB3ActionObjectSelect::b3RMove(b3_coord x,b3_coord y)
@@ -102,7 +163,29 @@ void CB3ActionObjectSelect::b3RMove(b3_coord x,b3_coord y)
 
 void CB3ActionObjectSelect::b3RUp(b3_coord x,b3_coord y)
 {
-	m_View->b3Update(B3_UPDATE_VIEW);
+	b3_line selection_dir;
+
+	if (b3IsPointSelection(x,y))
+	{
+		b3ComputeSelectionDir(x,y,&selection_dir);
+		m_LinesDoc->b3Select(&selection_dir,false,m_PressedCtrl);
+	}
+	else
+	{
+		if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+		{
+			b3_vector lower = m_LinesDoc->m_Lower;
+			b3_vector upper = m_LinesDoc->m_Upper;
+
+			m_View->m_RenderView.b3Unproject(  x,       y,     &lower);
+			m_View->m_RenderView.b3Unproject(m_xStart,m_yStart,&upper);
+			m_LinesDoc->b3Select(&lower,&upper,false,m_PressedCtrl);
+		}
+		else
+		{
+			m_View->b3DrawRect(m_xStart,m_yStart,m_xLast,m_yLast);
+		}
+	}
 }
 
 /*************************************************************************
@@ -263,14 +346,12 @@ void CB3ActionObjectScale::b3LMove(b3_coord x,b3_coord y)
 {
 	b3_vector diff,scale,point;
 	b3_matrix inv,activity;
-	b3_f64    xRel,yRel;
 
 	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
 	{
 		point = *m_Center;
 
-		b3GetRelCoord(x,y,xRel,yRel);
-		m_View->m_RenderView.b3Unproject(xRel,yRel,&point);
+		m_View->m_RenderView.b3Unproject(x,y,&point);
 
 		diff.x = m_Center->x - point.x;
 		if (m_StartDiff.x == 0)
