@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.15  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.14  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -183,32 +190,6 @@ void b3BBox::b3Reorg(
 	}
 }
 
-void b3BBox::b3Draw()
-{
-	b3Item         *item;
-	b3BBox         *bbox;
-	b3Shape        *shape;
-
-#ifdef BLZ3_USE_OPENGL
-	glColor3f(0.5f,0.5f,0.5f);
-	b3RenderObject::b3Draw();
-#endif
-	B3_FOR_BASE(&heads[1],item)
-	{
-		bbox = (b3BBox *)item;
-		bbox->b3Draw();
-
-	}
-#ifdef BLZ3_USE_OPENGL
-	glColor3f(0.2f,0.2f,0.2f);
-#endif
-	B3_FOR_BASE(&heads[0],item)
-	{
-		shape = (b3Shape *)item;
-		shape->b3Draw();
-	}
-}
-
 void b3BBox::b3AllocVertices(b3RenderContext *context)
 {
 	b3Item         *item;
@@ -308,6 +289,39 @@ void b3BBox::b3ComputeVertices()
 #endif
 }
 
+void b3BBox::b3GetGridColor(b3_color *color)
+{
+	color->r = 0.5;
+	color->g = 0.5;
+	color->b = 0.5;
+	color->a = 0.0;
+}
+
+void b3BBox::b3Draw()
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+	b3Shape        *shape;
+
+	// Draw this
+	b3RenderObject::b3Draw();
+
+	// Draw our shapes
+	B3_FOR_BASE(&heads[0],item)
+	{
+		shape = (b3Shape *)item;
+		shape->b3Draw();
+	}
+
+	// Draw subsequent BBoxes
+	B3_FOR_BASE(&heads[1],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Draw();
+
+	}
+}
+
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
 {
 	b3_vector subLower;
@@ -401,21 +415,11 @@ void b3Scene::b3Draw()
 	b3Item         *item;
 	b3BBox         *bbox;
 
-#ifdef BLZ3_USE_OPENGL
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FLAT); 
-	glEnableClientState(GL_VERTEX_ARRAY);
-#endif
-
 	B3_FOR_BASE(&heads[0],item)
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
 	}
-#ifdef BLZ3_USE_OPENGL
-	glPopMatrix();
-#endif
 }
 
 b3_bool b3Scene::b3ComputeBounds(b3_vector *lower,b3_vector *upper)

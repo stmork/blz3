@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.4  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -120,6 +127,9 @@ b3CameraPart::b3CameraPart(b3_u32 *src) :
 b3ModellerInfo::b3ModellerInfo(b3_u32 class_type) :
 	b3Special(sizeof(b3ModellerInfo),class_type)
 {
+	Center.x = 0;
+	Center.y = 0;
+	Center.z = 0;
 }
 
 b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
@@ -139,6 +149,10 @@ b3ModellerInfo::b3ModellerInfo(b3_u32 *src) :
 	}
 }
 
+b3_vector *b3ModellerInfo::b3GetFulcrum()
+{
+	return &Center;
+}
 
 b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)

@@ -23,6 +23,7 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/raytrace/b3RenderView.h"
+#include "b3CameraVolume.h"
 
 #define B3_UPDATE_VIEW     1
 #define B3_UPDATE_CAMERA   2
@@ -32,8 +33,17 @@
 
 typedef enum b3SelectMode
 {
-	B3_SELECT_NOTHING = 0,
-	B3_SELECT_MAGNIFICATION
+	B3_SELECT_NOTHING = -1,
+	B3_SELECT_MAGNIFICATION = 0,
+	B3_OBJECT_SELECT,
+	B3_OBJECT_MOVE,
+	B3_OBJECT_ROTATE,
+	B3_OBJECT_SCALE,
+	B3_CAMERA_MOVE,
+	B3_CAMERA_TURN,
+	B3_CAMERA_ROTATE,
+	B3_CAMERA_VIEW,
+	B3_LIGHT_TURN
 } b3_select_mode;
 
 class CAppLinesView : public CScrollView
@@ -41,7 +51,10 @@ class CAppLinesView : public CScrollView
 	HDC             m_DC;
 	HGLRC           m_GC;
 	int             m_PixelFormatIndex;
+	b3Scene        *m_Scene;
 	b3RenderView    m_RenderView;
+	b3CameraPart   *m_Camera;
+	b3CameraVolume  m_CameraVolume;
 	b3_select_mode  m_PreviousMode;
 	b3_select_mode  m_SelectMode;
 	b3_bool         m_Selecting;
@@ -125,8 +138,31 @@ protected:
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnViewPop();
 	afx_msg void OnUpdateViewPop(CCmdUI* pCmdUI);
+	afx_msg void OnObjSelect();
+	afx_msg void OnObjMove();
+	afx_msg void OnObjRotate();
+	afx_msg void OnObjScale();
+	afx_msg void OnCamMove();
+	afx_msg void OnCamTurn();
+	afx_msg void OnCamRotate();
+	afx_msg void OnCamView();
+	afx_msg void OnCamSelect();
+	afx_msg void OnLightTurn();
+	afx_msg void OnLightSelect();
+	afx_msg void OnUpdateObjSelect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateObjMove(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateObjRotate(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateObjScale(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCamMove(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCamTurn(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCamRotate(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateCamView(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateLightTurn(CCmdUI* pCmdUI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+	void b3SetMagnification();
+	void b3UnsetMagnification();
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp

@@ -35,6 +35,13 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.12  2001/08/17 14:08:34  sm
 **      - Now trying to draw BSPline surfaces with own routines.
 **
@@ -141,7 +148,6 @@ void b3RenderContext::b3StartDrawing()
 	glEnable(GL_AUTO_NORMAL);
 
 	// Enable light
-	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
 	glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
@@ -173,7 +179,6 @@ b3RenderObject::b3RenderObject()
 	glNormals  = null;
 	glGrids    = null;
 	glPolygons = null;
-	glSolid    = false;
 	glComputed = false;
 #endif
 }
@@ -412,12 +417,25 @@ b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 	return result;
 }
 
+void b3RenderObject::b3GetGridColor(b3_color *color)
+{
+	color->r = 0.2f;
+	color->g = 0.2f;
+	color->b = 0.2f;
+	color->a = 0.0f;
+}
+
 void b3RenderObject::b3GetDiffuseColor(b3_color *color)
 {
-	color->r = 1.0f;
-	color->g = 0.1f;
-	color->b = 0.4f;
+	color->r = 0.0f;
+	color->g = 0.5f;
+	color->b = 1.0f;
 	color->a = 0.0f;
+}
+
+b3_bool b3RenderObject::b3IsSolid()
+{
+	return false;
 }
 
 void b3RenderObject::b3Draw()
@@ -441,33 +459,64 @@ void b3RenderObject::b3Draw()
 		// makes it possible to catch to faulty
 		// index data. The access simply compute
 		// the length of the lines to be drawn.
-		for (b3_index i = 0;i < GridCount;i++)
+		if (b3IsSolid())
 		{
-			b3_vector aPoint,bPoint;
-			b3_index  a,b;
-			b3_f64    len;
+			for (b3_index i = 0;i < PolyCount;i++)
+			{
+				b3_vector aPoint,bPoint,cPoint;
+				b3_index  a,b,c;
+				b3_f64    aLen,bLen;
 
-			a = glGrids[i + i]     * 3;
-			aPoint.x = glVertices[a++];
-			aPoint.y = glVertices[a++];
-			aPoint.z = glVertices[a++];
+				a = glPolygons[i * 3]     * 3;
+				aPoint.x = glVertices[a++];
+				aPoint.y = glVertices[a++];
+				aPoint.z = glVertices[a++];
 
-			b = glGrids[i + i + 1] * 3;
-			bPoint.x = glVertices[b++];
-			bPoint.y = glVertices[b++];
-			bPoint.z = glVertices[b++];
+				b = glPolygons[i * 3] * 3;
+				bPoint.x = glVertices[b++];
+				bPoint.y = glVertices[b++];
+				bPoint.z = glVertices[b++];
 
-			len = b3Distance(&aPoint,&bPoint);
+				c = glPolygons[i * 3] * 3;
+				cPoint.x = glVertices[c++];
+				cPoint.y = glVertices[c++];
+				cPoint.z = glVertices[c++];
+
+				aLen = b3Distance(&aPoint,&bPoint);
+				bLen = b3Distance(&aPoint,&cPoint);
+			}
+		}
+		else
+		{
+			for (b3_index i = 0;i < GridCount;i++)
+			{
+				b3_vector aPoint,bPoint;
+				b3_index  a,b;
+				b3_f64    len;
+
+				a = glGrids[i + i]     * 3;
+				aPoint.x = glVertices[a++];
+				aPoint.y = glVertices[a++];
+				aPoint.z = glVertices[a++];
+
+				b = glGrids[i + i + 1] * 3;
+				bPoint.x = glVertices[b++];
+				bPoint.y = glVertices[b++];
+				bPoint.z = glVertices[b++];
+
+				len = b3Distance(&aPoint,&bPoint);
+			}
 		}
 #endif
-		b3GetDiffuseColor(&color);
 		glVertexPointer(3, GL_FLOAT, 0, glVertices);
 		glNormalPointer(GL_FLOAT, 0, glNormals);
-		if (glSolid)
+		if (b3IsSolid())
 		{
+			b3GetDiffuseColor(&color);
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"---------- OpenGL start solid drawing\n");
 #endif
+			glEnable(GL_LIGHTING);
 			glEnable(GL_COLOR_MATERIAL);
 			glColor3f(color.r,color.g,color.b);
 			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
@@ -477,11 +526,13 @@ void b3RenderObject::b3Draw()
 		}
 		else
 		{
+			b3GetGridColor(&color);
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"---------- OpenGL start line drawing\n");
 #endif
+			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
-			glColor3f(0.2f,0.2f,0.2f);
+			glColor3f(color.r,color.g,color.b);
 			glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 #ifdef VERBOSE
 			b3PrintF(B3LOG_FULL,"---------- OpenGL stop line drawing\n");

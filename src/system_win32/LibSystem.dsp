@@ -94,6 +94,10 @@ SOURCE=.\b3Bitmap.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3ComboBox.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Config.cc
 # End Source File
 # Begin Source File

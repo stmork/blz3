@@ -23,21 +23,27 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "b3Fulcrum.h"
 
 class CAppLinesDoc : public CDocument
 {
+protected:
+	b3World  m_World;
+// Attributes
+public:
+	b3Fulcrum             m_Fulcrum;
+	b3Scene              *m_Scene;
+	b3ModellerInfo       *m_Info;
+	b3RenderShapeContext  m_Context;
+	b3_vector             m_Lower;
+	b3_vector             m_Upper;
+
+// Operations
 protected: // create from serialization only
 	CAppLinesDoc();
 	DECLARE_DYNCREATE(CAppLinesDoc)
 
-// Attributes
 public:
-	b3_vector m_Lower;
-	b3_vector m_Upper;
-
-// Operations
-public:
-
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAppLinesDoc)
@@ -50,8 +56,8 @@ public:
 
 // Implementation
 public:
-	b3RenderShapeContext m_Context;
-	b3Scene * b3GetScene();
+	b3_vector *b3GetFulcrum();
+	void       b3DrawFulcrum();
 	virtual ~CAppLinesDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;
@@ -62,8 +68,6 @@ protected:
 
 // Generated message map functions
 protected:
-	b3World  m_World;
-	b3Scene *m_Scene;
 	//{{AFX_MSG(CAppLinesDoc)
 		// NOTE - the ClassWizard will add and remove member functions here.
 		//    DO NOT EDIT what you see in these blocks of generated code !

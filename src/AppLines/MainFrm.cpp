@@ -32,12 +32,19 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/08/18 15:38:27  sm
+**	- New action toolbar
+**	- Added comboboxes for camera and lights (but not filled in)
+**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**	- Some RenderObject redesignes
+**	- Color selecting bug fix in RenderObject
+**
 **	Revision 1.3  2001/08/14 13:34:40  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.2  2001/08/11 15:59:58  sm
 **	- Rendering cleaned up
 **	- CWinApp/CMainFrm derived from Blizzard III classes
@@ -67,8 +74,11 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_PREF_AUTOSAVE, OnUpdatePrefAutosave)
 	ON_COMMAND(ID_CUST_MAIN, OnCustMain)
 	ON_COMMAND(ID_CUST_VIEW, OnCustView)
+	ON_COMMAND(ID_CUST_ACTION, OnCustAction)
 	ON_COMMAND(IDM_BAR_VIEW, OnBarView)
+	ON_COMMAND(IDM_BAR_ACTION, OnBarAction)
 	ON_UPDATE_COMMAND_UI(IDM_BAR_VIEW, OnUpdateBarView)
+	ON_UPDATE_COMMAND_UI(IDM_BAR_ACTION, OnUpdateBarAction)
 	ON_COMMAND(ID_WINDOW_TILE_HORZ, OnWindowTileHorz)
 	ON_COMMAND(ID_WINDOW_TILE_VERT, OnWindowTileVert)
 	//}}AFX_MSG_MAP
@@ -85,7 +95,8 @@ static UINT indicators[] =
 static UINT toolbar_bitmaps[] =
 {
 	IDR_MAINFRAME,
-	IDR_TOOLBAR_VIEW
+	IDR_TOOLBAR_VIEW,
+	IDR_TOOLBAR_ACTION
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -150,8 +161,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	app->b3MoveWindow(this);
 
 	app->b3AddMenubar(&m_wndMenuBar,IDR_MAINFRAME);
-	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,   IDS_TOOLBAR_MAINFRAME);
-	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndToolBar,IDR_MAINFRAME,     IDS_TOOLBAR_MAINFRAME);
+	app->b3AddToolbar(&m_wndViewBar,IDR_TOOLBAR_VIEW,  IDS_TOOLBAR_VIEW);
+	app->b3AddToolbar(&m_wndActnBar,IDR_TOOLBAR_ACTION,IDS_TOOLBAR_ACTION);
 	if (!app->b3CreateToolbars(this))
 	{
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
@@ -165,6 +177,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
+
+	m_cameraBox.b3Create(&m_wndActnBar,ID_CAM_SELECT);
+	m_lightBox.b3Create(&m_wndActnBar,ID_LIGHT_SELECT);
 
 	// Set docking mode
 	app->b3LoadState();
@@ -227,16 +242,34 @@ void CMainFrame::OnCustView()
 	m_wndViewBar.b3Customize();
 }
 
+void CMainFrame::OnCustAction() 
+{
+	// TODO: Add your command handler code here
+	m_wndActnBar.b3Customize();
+}
+
 void CMainFrame::OnBarView() 
 {
 	// TODO: Add your command handler code here
 	m_wndViewBar.b3ToggleVisibility();
 }
 
+void CMainFrame::OnBarAction() 
+{
+	// TODO: Add your command handler code here
+	m_wndActnBar.b3ToggleVisibility();
+}
+
 void CMainFrame::OnUpdateBarView(CCmdUI* pCmdUI) 
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->SetCheck (m_wndViewBar.b3IsVisible());
+}
+
+void CMainFrame::OnUpdateBarAction(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck (m_wndActnBar.b3IsVisible());
 }
 
 void CMainFrame::OnWindowTileHorz() 

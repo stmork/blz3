@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.7  2001/08/11 19:59:16  sm
 **      - Added orthogonal projection
 **
@@ -121,4 +128,46 @@ void b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)
 {
 	xSize = this->xSize;
 	ySize = this->ySize;
+}
+
+b3ModellerInfo *b3Scene::b3GetModellerInfo()
+{
+	b3ModellerInfo *info;
+	b3Item         *item;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		if (item->b3GetClassType() == LINES_INFO)
+		{
+			return (b3ModellerInfo *)item;
+		}
+	}
+
+	info = new b3ModellerInfo(LINES_INFO);
+	heads[2].b3Append(info);
+	return info;
+}
+
+b3CameraPart *b3Scene::b3GetCamera()
+{
+	b3CameraPart *camera;
+	b3Item       *item;
+
+	B3_FOR_BASE(&heads[2],item)
+	{
+		if (item->b3GetClassType() == CAMERA)
+		{
+			return (b3CameraPart *)item;
+		}
+	}
+
+	camera = new b3CameraPart(CAMERA);
+	camera->EyePoint  = EyePoint;
+	camera->ViewPoint = ViewPoint;
+	camera->Width     = Width;
+	camera->Height    = Height;
+	strcpy(camera->CameraName,"Camera");
+
+	heads[2].b3Append(camera);
+	return camera;
 }

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.5  2001/08/17 19:28:54  sm
 **      - Now able to draw every shape by lines or shaded.
 **        It's great!
@@ -67,7 +74,6 @@ b3SplineRotShape::b3SplineRotShape(b3_u32 class_type) :
 
 b3SplineRotShape::b3SplineRotShape(b3_u32 *src) : b3SplineCurve(src)
 {
-	glSolid = true;
 }
 
 void b3SplineRotShape::b3GetCount(

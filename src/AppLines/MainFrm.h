@@ -23,6 +23,7 @@
 #endif // _MSC_VER > 1000
 
 #include "blz3/system/b3Toolbar.h"
+#include "blz3/system/b3ComboBox.h"
 #include "../smart_gui/CoolMenu.h"
 
 class CMainFrame : public CMDIFrameWnd
@@ -57,6 +58,9 @@ protected:  // control bar embedded members
 	CB3Menubar         m_wndMenuBar;
 	CB3Toolbar         m_wndToolBar;
 	CB3Toolbar         m_wndViewBar;
+	CB3Toolbar         m_wndActnBar;
+	CB3ComboBox        m_cameraBox;
+	CB3ComboBox        m_lightBox;
 
 // Generated message map functions
 protected:
@@ -68,8 +72,11 @@ protected:
 	afx_msg void OnUpdatePrefAutosave(CCmdUI* pCmdUI);
 	afx_msg void OnCustMain();
 	afx_msg void OnCustView();
+	afx_msg void OnCustAction();
 	afx_msg void OnBarView();
+	afx_msg void OnBarAction();
 	afx_msg void OnUpdateBarView(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateBarAction(CCmdUI* pCmdUI);
 	afx_msg void OnWindowTileHorz();
 	afx_msg void OnWindowTileVert();
 	//}}AFX_MSG

@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/08/18 15:38:27  sm
+**	- New action toolbar
+**	- Added comboboxes for camera and lights (but not filled in)
+**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**	- Some RenderObject redesignes
+**	- Color selecting bug fix in RenderObject
+**
 **	Revision 1.8  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.7  2001/08/13 15:05:01  sm
 **	- Now we can scale and move around with stacked views.
 **	
@@ -136,6 +143,26 @@ BEGIN_MESSAGE_MAP(CAppLinesView, CScrollView)
 	ON_WM_LBUTTONUP()
 	ON_COMMAND(ID_VIEW_POP, OnViewPop)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_POP, OnUpdateViewPop)
+	ON_COMMAND(ID_OBJ_SELECT, OnObjSelect)
+	ON_COMMAND(ID_OBJ_MOVE, OnObjMove)
+	ON_COMMAND(ID_OBJ_ROTATE, OnObjRotate)
+	ON_COMMAND(ID_OBJ_SCALE, OnObjScale)
+	ON_COMMAND(ID_CAM_MOVE, OnCamMove)
+	ON_COMMAND(ID_CAM_TURN, OnCamTurn)
+	ON_COMMAND(ID_CAM_ROTATE, OnCamRotate)
+	ON_COMMAND(ID_CAM_VIEW, OnCamView)
+	ON_COMMAND(ID_CAM_SELECT, OnCamSelect)
+	ON_COMMAND(ID_LIGHT_TURN, OnLightTurn)
+	ON_COMMAND(ID_LIGHT_SELECT, OnLightSelect)
+	ON_UPDATE_COMMAND_UI(ID_OBJ_SELECT, OnUpdateObjSelect)
+	ON_UPDATE_COMMAND_UI(ID_OBJ_MOVE, OnUpdateObjMove)
+	ON_UPDATE_COMMAND_UI(ID_OBJ_ROTATE, OnUpdateObjRotate)
+	ON_UPDATE_COMMAND_UI(ID_OBJ_SCALE, OnUpdateObjScale)
+	ON_UPDATE_COMMAND_UI(ID_CAM_MOVE, OnUpdateCamMove)
+	ON_UPDATE_COMMAND_UI(ID_CAM_TURN, OnUpdateCamTurn)
+	ON_UPDATE_COMMAND_UI(ID_CAM_ROTATE, OnUpdateCamRotate)
+	ON_UPDATE_COMMAND_UI(ID_CAM_VIEW, OnUpdateCamView)
+	ON_UPDATE_COMMAND_UI(ID_LIGHT_TURN, OnUpdateLightTurn)
 	//}}AFX_MSG_MAP
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, CScrollView::OnFilePrint)
@@ -149,13 +176,34 @@ END_MESSAGE_MAP()
 CAppLinesView::CAppLinesView()
 {
 	// TODO: add construction code here
-	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	m_SelectMode = B3_SELECT_NOTHING;
-	m_Selecting  = false;
+	m_PreviousMode =
+	m_SelectMode   = B3_OBJECT_SELECT;
+	m_Selecting    = false;
 }
 
 CAppLinesView::~CAppLinesView()
 {
+}
+
+void CAppLinesView::b3UnsetMagnification()
+{
+	if (m_SelectMode == B3_SELECT_MAGNIFICATION)
+	{
+		m_SelectMode = m_PreviousMode;
+	}
+}
+
+void CAppLinesView::b3SetMagnification()
+{
+	if (m_SelectMode != B3_SELECT_MAGNIFICATION)
+	{
+		m_PreviousMode = m_SelectMode;
+		m_SelectMode   = B3_SELECT_MAGNIFICATION;
+	}
+	else
+	{
+		m_SelectMode = m_PreviousMode;
+	}
 }
 
 BOOL CAppLinesView::PreCreateWindow(CREATESTRUCT& cs)
@@ -250,49 +298,17 @@ void CAppLinesView::OnDestroy()
 	wglDeleteContext(m_GC);
 }
 
-void CAppLinesView::OnDraw(CDC* pDC)
-{
-	CAppLinesDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	// TODO: add draw code for native data here
-}
-
-void CAppLinesView::OnPaint() 
-{
-	// We have already an HDC, you remember?
-	// So we don't need OnDraw();
-	CAppLinesDoc *pDoc = GetDocument();
-	b3Scene      *scene = pDoc->b3GetScene();
-
-	if (scene != null)
-	{
-		CRect  rect;
-		CPoint pos;
-
-		// Init Drawing
-		wglMakeCurrent(m_DC,m_GC);
-		pDoc->m_Context.b3StartDrawing();
-
-		pos = GetScrollPosition();
-		GetClientRect(&rect);
-//		m_RenderView.b3UpdateView(pos.x,750 - pos.y - rect.Height(),1000,750);
-		m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
-		scene->b3Draw();
-
-		// Done...
-		SwapBuffers(m_DC);
-		ValidateRect(NULL);
-	}
-}
-
-BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
-{
-	// TODO: Add your message handler code here and/or call default
-	return FALSE;
-}
-
 void CAppLinesView::OnInitialUpdate()
 {
+	// Do necessary Blizzard III stuff!
+	CAppLinesDoc *pDoc = GetDocument();
+
+	m_CameraVolume.b3AllocVertices(&pDoc->m_Context);
+	m_Scene      = pDoc->m_Scene;
+	m_RenderView.b3SetViewMode(B3_VIEW_3D);
+	B3_ASSERT(m_Scene != null);
+	m_Camera     = m_Scene->b3GetCamera();
+
 	CScrollView::OnInitialUpdate();
 
 	// TODO: calculate the total size of this view
@@ -302,13 +318,13 @@ void CAppLinesView::OnInitialUpdate()
 void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	CAppLinesDoc *pDoc  = GetDocument();
-	b3Scene      *scene = pDoc->b3GetScene();
+	CAppLinesDoc *pDoc         = GetDocument();
 	b3_bool       doInvalidate = false;
 
-	if ((lHint & B3_UPDATE_CAMERA) && (scene != null))
+	if (lHint & B3_UPDATE_CAMERA)
 	{
-		m_RenderView.b3SetCamera(scene);
+		m_RenderView.b3SetCamera(m_Camera);
+		m_CameraVolume.b3Update(m_Camera);
 		doInvalidate = true;
 	}
 	if (lHint & B3_UPDATE_GEOMETRY)
@@ -347,6 +363,50 @@ void CAppLinesView::OnSize(UINT nType, int cx, int cy)
 	
 	// TODO: Add your message handler code here
 	OnUpdate(this,B3_UPDATE_VIEW,0);
+}
+
+BOOL CAppLinesView::OnEraseBkgnd(CDC* pDC) 
+{
+	// TODO: Add your message handler code here and/or call default
+	return FALSE;
+}
+
+void CAppLinesView::OnDraw(CDC* pDC)
+{
+	CAppLinesDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	// TODO: add draw code for native data here
+}
+
+void CAppLinesView::OnPaint() 
+{
+	// We have already an HDC, you remember?
+	// So we don't need OnDraw();
+	CAppLinesDoc *pDoc = GetDocument();
+	CRect         rect;
+	CPoint        pos;
+
+	// Init Drawing
+	wglMakeCurrent(m_DC,m_GC);
+	pDoc->m_Context.b3StartDrawing();
+
+	pos = GetScrollPosition();
+	GetClientRect(&rect);
+
+	// Setup view first
+	m_RenderView.b3UpdateView(0,0,rect.Width(),rect.Height());
+
+	// Then draw objects
+	m_Scene->b3Draw();
+	if (!m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_CameraVolume.b3Draw();
+	}
+	pDoc->b3DrawFulcrum();
+
+	// Done...
+	SwapBuffers(m_DC);
+	ValidateRect(NULL);
 }
 
 void CAppLinesView::OnLButtonDown(UINT nFlags, CPoint point) 
@@ -415,7 +475,7 @@ void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point)
 		m_Selecting = false;
 		::ReleaseCapture();
 		OnUpdate(this,B3_UPDATE_VIEW,NULL);
-		m_SelectMode = m_PreviousMode;
+		b3UnsetMagnification();
 		break;
 	}
 	CScrollView::OnLButtonUp(nFlags, point);
@@ -425,7 +485,7 @@ void CAppLinesView::OnViewPerspective()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_3D);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -433,7 +493,7 @@ void CAppLinesView::OnViewTop()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_TOP);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -441,7 +501,7 @@ void CAppLinesView::OnViewFront()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_FRONT);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -449,7 +509,7 @@ void CAppLinesView::OnViewRight()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_RIGHT);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -457,7 +517,7 @@ void CAppLinesView::OnViewLeft()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_LEFT);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -465,7 +525,7 @@ void CAppLinesView::OnViewBack()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3SetViewMode(B3_VIEW_BACK);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,0);
 }
 
@@ -522,7 +582,7 @@ void CAppLinesView::OnViewSmaller()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(1.25);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
@@ -530,22 +590,21 @@ void CAppLinesView::OnViewBigger()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Scale(0.8);
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
 void CAppLinesView::OnViewSelect() 
 {
 	// TODO: Add your command handler code here
-	m_PreviousMode = m_SelectMode;
-	m_SelectMode   = B3_SELECT_MAGNIFICATION;
+	b3SetMagnification();
 }
 
 void CAppLinesView::OnViewPop() 
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3PopView();
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
@@ -553,7 +612,7 @@ void CAppLinesView::OnViewOptimal()
 {
 	// TODO: Add your command handler code here
 	m_RenderView.b3Original();
-	m_SelectMode = m_PreviousMode;
+	b3UnsetMagnification();
 	OnUpdate(this,B3_UPDATE_VIEW,NULL);
 }
 
@@ -638,4 +697,124 @@ void CAppLinesView::OnUpdateViewMoveBottom(CCmdUI* pCmdUI)
 {
 	// TODO: Add your command update UI handler code here
 	pCmdUI->Enable(!m_RenderView.b3IsViewMode(B3_VIEW_3D));
+}
+
+void CAppLinesView::OnObjSelect() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_OBJECT_SELECT;
+}
+
+void CAppLinesView::OnObjMove() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_OBJECT_MOVE;
+}
+
+void CAppLinesView::OnObjRotate() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_OBJECT_ROTATE;
+}
+
+void CAppLinesView::OnObjScale() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_OBJECT_SCALE;
+}
+
+void CAppLinesView::OnCamMove() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_CAMERA_MOVE;
+}
+
+void CAppLinesView::OnCamTurn() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_CAMERA_TURN;
+}
+
+void CAppLinesView::OnCamRotate() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_CAMERA_ROTATE;
+}
+
+void CAppLinesView::OnCamView() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_CAMERA_VIEW;
+}
+
+void CAppLinesView::OnCamSelect() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CAppLinesView::OnLightTurn() 
+{
+	// TODO: Add your command handler code here
+	m_SelectMode = B3_LIGHT_TURN;
+}
+
+void CAppLinesView::OnLightSelect() 
+{
+	// TODO: Add your command handler code here
+	
+}
+
+void CAppLinesView::OnUpdateObjSelect(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_OBJECT_SELECT);
+}
+
+void CAppLinesView::OnUpdateObjMove(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_OBJECT_MOVE);
+}
+
+void CAppLinesView::OnUpdateObjRotate(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_OBJECT_ROTATE);
+}
+
+void CAppLinesView::OnUpdateObjScale(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_OBJECT_SCALE);
+}
+
+void CAppLinesView::OnUpdateCamMove(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_CAMERA_MOVE);
+}
+
+void CAppLinesView::OnUpdateCamTurn(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_CAMERA_TURN);
+}
+
+void CAppLinesView::OnUpdateCamRotate(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_CAMERA_ROTATE);
+}
+
+void CAppLinesView::OnUpdateCamView(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_CAMERA_VIEW);
+}
+
+void CAppLinesView::OnUpdateLightTurn(CCmdUI* pCmdUI) 
+{
+	// TODO: Add your command handler code here
+	pCmdUI->SetRadio(m_SelectMode == B3_LIGHT_TURN);
 }

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.8  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -122,8 +129,6 @@ b3TriangleShape::b3TriangleShape(b3_u32 *src) : b3Shape(src)
 		triangles[i].P2 = b3InitInt();
 		triangles[i].P3 = b3InitInt();
 	}
-
-	glSolid = true;
 }
 
 void b3TriangleShape::b3GetCount(

@@ -33,12 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/08/18 15:38:27  sm
+**	- New action toolbar
+**	- Added comboboxes for camera and lights (but not filled in)
+**	- Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**	- Some RenderObject redesignes
+**	- Color selecting bug fix in RenderObject
+**
 **	Revision 1.7  2001/08/14 13:34:39  sm
 **	- Corredted aspect ratio handling when doing somethiing with
 **	  the view
 **	- New application icon
 **	- Minor GUI bug fixes.
-**
+**	
 **	Revision 1.6  2001/08/13 15:05:01  sm
 **	- Now we can scale and move around with stacked views.
 **	
@@ -111,6 +118,7 @@ CAppLinesDoc::CAppLinesDoc()
 {
 	// TODO: add one-time construction code here
 	m_Scene = null;
+	m_Fulcrum.b3AllocVertices(&m_Context);
 	EnableAutomation();
 
 	AfxOleLockApp();
@@ -142,6 +150,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3AllocVertices(&m_Context);
 	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
+	m_Info = m_Scene->b3GetModellerInfo();
+	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
 	return TRUE;
 }
 
@@ -180,9 +190,14 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 /////////////////////////////////////////////////////////////////////////////
 // CAppLinesDoc commands
 
-b3Scene * CAppLinesDoc::b3GetScene()
+b3_vector *CAppLinesDoc::b3GetFulcrum()
 {
-	return m_Scene;
+	return m_Info->b3GetFulcrum();
+}
+
+void CAppLinesDoc::b3DrawFulcrum()
+{
+	m_Fulcrum.b3Draw();
 }
 
 BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName) 

@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.7  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.6  2001/08/16 14:41:24  sm
 **      - Some more shading shapes added (only BSPline shapes are missing)
 **
@@ -75,7 +82,6 @@ b3Sphere::b3Sphere(b3_u32 *src) : b3RenderShape(src)
 {
 	b3InitVector(&Base);
 	b3InitVector(&Dir);
-	glSolid = true;
 }
 
 void b3Sphere::b3GetCount(

@@ -31,6 +31,13 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.11  2001/08/16 04:28:29  sm
 **      - Solving conflicts
 **
@@ -110,7 +117,6 @@ b3Area::b3Area(b3_u32 class_type) : b3Shape2(sizeof(b3Area),class_type)
 
 b3Area::b3Area(b3_u32 *src) : b3Shape2(src)
 {
-	glSolid = true;
 }
 
 void b3Area::b3AllocVertices(b3RenderContext *context)

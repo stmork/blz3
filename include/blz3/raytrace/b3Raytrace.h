@@ -644,6 +644,8 @@ public:
 
 protected:
 	b3_count b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
+	void     b3GetGridColor(b3_color *color);
+	b3_bool  b3IsSolid();
 };
 
 class b3InitShape
@@ -1249,6 +1251,8 @@ public:
 	       void    b3Draw();
 		   b3_bool b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
  	static void    b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec);
+protected:
+	       void    b3GetGridColor(b3_color *color);
 };
 
 #define BBB_HTML         0
@@ -1503,6 +1507,8 @@ class b3ModellerInfo : public b3Special
 public:
 	B3_ITEM_INIT(b3ModellerInfo);
 	B3_ITEM_LOAD(b3ModellerInfo);
+
+	b3_vector *b3GetFulcrum();
 };
 
 #define RULE_MM 0
@@ -1650,18 +1656,20 @@ public:
 	char             TextureName[B3_TEXSTRINGLEN]; // Name des Hintergrundbildes
 
 public:
-	                b3Scene(b3_u32  class_type);
-	                b3Scene(b3_u32 *src);
+	                       b3Scene(b3_u32  class_type);
+	                       b3Scene(b3_u32 *src);
 
-	static b3Item  *b3Init(b3_u32  class_type);
-	static b3Item  *b3Init(b3_u32 *src);
+	static b3Item         *b3Init(b3_u32  class_type);
+	static b3Item         *b3Init(b3_u32 *src);
 
-	       void     b3Reorg();
-	       void     b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
-		   void     b3AllocVertices(b3RenderContext *context);
-		   void     b3FreeVertices();
-	       void     b3Draw();
-		   b3_bool  b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+	       void            b3Reorg();
+	       void            b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+		   void            b3AllocVertices(b3RenderContext *context);
+		   void            b3FreeVertices();
+	       void            b3Draw();
+		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+		   b3ModellerInfo *b3GetModellerInfo();
+		   b3CameraPart   *b3GetCamera();
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

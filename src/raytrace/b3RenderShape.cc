@@ -32,6 +32,13 @@
 
 /*
 **      $Log$
+**      Revision 1.12  2001/08/18 15:38:27  sm
+**      - New action toolbar
+**      - Added comboboxes for camera and lights (but not filled in)
+**      - Drawing Fulcrum and view volume (Clipping plane adaption is missing)
+**      - Some RenderObject redesignes
+**      - Color selecting bug fix in RenderObject
+**
 **      Revision 1.11  2001/08/17 19:28:54  sm
 **      - Now able to draw every shape by lines or shaded.
 **        It's great!
@@ -370,6 +377,19 @@ b3_count b3RenderShapeObject::b3GetIndexOverhead (
 	if ((x2 - xe) > Epsilon) Overhead++;
 
 	return ((xs > 0)||(xe < SinCosSteps)) ? -Overhead : Overhead;
+}
+
+b3_bool b3RenderShapeObject::b3IsSolid()
+{
+	return true;
+}
+
+void b3RenderShapeObject::b3GetGridColor(b3_color *color)
+{
+	color->r = 0.2f;
+	color->g = 0.2f;
+	color->b = 0.2f;
+	color->a = 0.0f;
 }
 
 /*************************************************************************
@@ -988,7 +1008,6 @@ void b3RenderShape::b3ComputeBoxIndices()
 #ifdef BLZ3_USE_OPENGL
 	glGrids    = box_grids;
 	glPolygons = box_polygons;
-	glSolid    = true;
 #endif
 }
 

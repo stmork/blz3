@@ -112,6 +112,14 @@ SOURCE=.\AppLinesView.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3CameraVolume.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Fulcrum.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
@@ -133,6 +141,10 @@ SOURCE=.\AppLinesDoc.h
 # Begin Source File
 
 SOURCE=.\AppLinesView.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Fulcrum.h
 # End Source File
 # Begin Source File
 
@@ -169,6 +181,10 @@ SOURCE=.\res\Toolbar.bmp
 # Begin Source File
 
 SOURCE=.\res\toolbar1.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\toolbar_action.bmp
 # End Source File
 # End Group
 # Begin Source File
