@@ -36,9 +36,10 @@ class CDlgScene : public CPropertyPage
 {
 // Construction
 public:
+	b3_u32   m_ShadingClassType;
 	b3Scene *m_Scene;
 	b3Scene *m_PreviewScene;
-	CDlgScene(CWnd* pParent = NULL);   // standard constructor
+	CDlgScene(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgScene)
@@ -83,6 +84,7 @@ protected:
 	afx_msg void OnBottomColor();
 	afx_msg void OnChangedResolution();
 	afx_msg void OnEditedResolution();
+	afx_msg void OnShading();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
@@ -92,6 +94,7 @@ private:
 	void    b3UpdateUI();
 	b3_bool b3SetResolution(b3_res xRes,b3_res yRes);
 	void    b3SetShading();
+	b3_u32  b3GetShading();
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/29 13:38:10  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.2  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
-**
+**	
 **	Revision 1.1  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -62,14 +65,14 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpWater::CDlgBumpWater(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpWater::CDlgBumpWater(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgBumpWater::IDD, pParent)
 {
 	m_Bump                  = (b3BumpWater *)item;
 	m_PageBump.m_Bump       = m_Bump;
 	m_PageScaling.m_Scaling = m_Bump;
 
-	m_BumpScene = b3ExampleScene::b3CreateBump(&m_BumpHead);
+	m_BumpScene = b3ExampleScene::b3CreateBump(&m_BumpHead, pDoc->b3GetParentShading());
 	m_BumpHead->b3Append(m_Bump);
 	//{{AFX_DATA_INIT(CDlgBumpWater)
 		// NOTE: the ClassWizard will add member initialization here
@@ -133,7 +136,7 @@ void CDlgBumpWater::b3Register()
 
 b3_bool CDlgBumpWater::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpWater dlg(item);
+	CDlgBumpWater dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

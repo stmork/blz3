@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.20  2004/05/28 15:32:06  sm
 **	- Corrected class wizard file
-**
+**	
 **	Revision 1.19  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -173,9 +176,9 @@ inline void b3ExampleScene::b3SetObjectName(b3BBox *bbox,int id)
 	bbox->b3SetName(name);
 }
 
-b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
+b3Scene *b3ExampleScene::b3CreateNew(const char *filename, b3_u32 class_type)
 {
-	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox   = new b3BBox(BBOX);
 	b3Area       *area   = new b3Area(AREA);
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
@@ -202,9 +205,9 @@ b3Scene *b3ExampleScene::b3CreateNew(const char *filename)
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateGlobal()
+b3Scene *b3ExampleScene::b3CreateGlobal(b3_u32 class_type)
 {
-	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox1  = new b3BBox(BBOX);
 	b3BBox       *bbox2  = new b3BBox(BBOX);
 	b3Sphere     *medium = new b3Sphere(SPHERE);
@@ -280,9 +283,9 @@ b3CameraPart *b3ExampleScene::b3CreateCamera(
 	return camera;
 }
 
-b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera)
+b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera, b3_u32 class_type)
 {
-	b3Scene      *scene  = new b3Scene(TRACEPHOTO_MORK);
+	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);
 	b3Light      *light  = new b3Light(SPOT_LIGHT);
 	b3CameraPart *camera;
@@ -315,9 +318,9 @@ b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *origin
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
+b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_type)
 {
-	b3Scene      *scene = new b3Scene(TRACEPHOTO_MORK);
+	b3Scene      *scene = new b3Scene(class_type);
 	b3BBox       *bbox  = new b3BBox(BBOX);
 	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
 	b3Area       *area  = new b3Area(AREA);
@@ -353,9 +356,9 @@ b3Scene *b3ExampleScene::b3CreateMaterial(b3Base<b3Item> **ptrMatHead)
 	return scene;
 }
 
-b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead)
+b3Scene *b3ExampleScene::b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type)
 {
-	b3Scene      *scene = new b3Scene(TRACEPHOTO_MORK);
+	b3Scene      *scene = new b3Scene(class_type);
 	b3BBox       *bbox  = new b3BBox(BBOX);
 	b3Ellipsoid  *big   = new b3Ellipsoid(ELLIPSOID);
 	b3Area       *area  = new b3Area(AREA);

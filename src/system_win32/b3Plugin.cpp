@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.14  2004/05/10 15:12:09  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.13  2004/04/25 19:28:21  sm
 **	- Added available b3Items as list to maintain dialog.
 **	- Preview is done only on auto refresh activated.
@@ -142,7 +145,7 @@ b3Item *b3Loader::b3EditCreation(b3Item *item,void *ptr,b3_bool edit)
 		{
 			if (info->m_CreateFunc != null)
 			{
-				if (!info->m_CreateFunc(item,ptr))
+				if (!info->m_CreateFunc(item, ptr))
 				{
 					delete item;
 					item = null;
@@ -165,7 +168,7 @@ b3_bool b3Loader::b3Edit(b3Item *item,void *ptr)
 		{
 			if (info->m_EditFunc != null)
 			{
-				result = info->m_EditFunc(item,ptr);
+				result = info->m_EditFunc(item, ptr);
 			}
 		}
 	}

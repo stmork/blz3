@@ -35,11 +35,12 @@
 class CDlgLensFlare : public CPropertyPage
 {
 // Construction
+	b3_u32       m_ShadingClassType;
 	b3Scene     *m_LensFlareScene;
 	b3LensFlare *m_EditLensFlare;
 public:
 	b3LensFlare *m_LensFlare;
-	CDlgLensFlare(CWnd* pParent = NULL);   // standard constructor
+	CDlgLensFlare(b3_u32 class_type,CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgLensFlare)

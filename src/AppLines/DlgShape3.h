@@ -39,7 +39,7 @@ protected:
 public:
 	CDlgShape3(CWnd* pParent = NULL);   // standard constructor
 
-	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
 	virtual void b3PostProcess();
 
 // Dialog Data

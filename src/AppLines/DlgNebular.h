@@ -36,11 +36,13 @@
 class CDlgNebular : public CPropertyPage
 {
 // Construction
-	b3Scene   *m_NebularScene;
-	b3Nebular *m_EditNebular;
+	b3_u32       m_ShadingClassType;
+	b3Scene     *m_NebularScene;
+	b3Nebular   *m_EditNebular;
+
 public:
-	b3Nebular * m_Nebular;
-	CDlgNebular(CWnd* pParent = NULL);   // standard constructor
+	b3Nebular   *m_Nebular;
+	CDlgNebular(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgNebular)

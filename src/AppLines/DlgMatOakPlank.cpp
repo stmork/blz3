@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.14  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
-**
+**	
 **	Revision 1.13  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -104,7 +107,7 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatOakPlank::CDlgMatOakPlank(b3Item *item, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatOakPlank::IDD, pParent)
 {
 	m_Material                = (b3MatOakPlank *)item;

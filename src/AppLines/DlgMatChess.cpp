@@ -34,6 +34,9 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.8  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -48,7 +51,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.7  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
@@ -90,13 +93,13 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatChess::CDlgMatChess(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatChess::CDlgMatChess(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatChess::IDD, pParent)
 {
 	m_Material             = (b3MatChess *)item;
 	m_PageBlack.m_Material = &m_Material->m_Material[b3MatChess::BLACK];
 	m_PageWhite.m_Material = &m_Material->m_Material[b3MatChess::WHITE];
-	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatChess)
 		// NOTE: the ClassWizard will add member initialization here
@@ -144,7 +147,7 @@ void CDlgMatChess::b3Register()
 
 b3_bool CDlgMatChess::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatChess dlg(item);
+	CDlgMatChess dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

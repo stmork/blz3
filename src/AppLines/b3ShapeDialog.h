@@ -30,7 +30,7 @@
 #include "blz3/system/b3FloatEdit.h"
 #include "blz3/base/b3Matrix.h"
 
-typedef int (*b3ItemEditCall)(b3Item *item,b3_bool create);
+typedef int (*b3ItemEditCall)(b3_u32 shading_class_type, b3Item *item,b3_bool create);
 
 /////////////////////////////////////////////////////////////////////////////
 // CB3ShapeDialog dialog
@@ -48,7 +48,7 @@ public:
 	     CB3ShapeDialog(UINT IDD,CWnd* pParent = NULL);   // standard constructor
 
 	virtual void b3PostProcess();
-	static  int  b3Edit(CB3ShapeDialog *page,b3Item *item,b3_bool create);
+	static  int  b3Edit(CB3ShapeDialog *page,b3_u32 class_type, b3Item *item,b3_bool create);
 
 // Dialog Data
 	//{{AFX_DATA(CB3ShapeDialog)

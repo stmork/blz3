@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/29 13:38:10  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.7  2002/03/10 20:34:16  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
 **	  o Made registry entries of stencil creation unique for
 **	    each shape.
 **	  o Fixed some bugs.
-**
+**	
 **	Revision 1.6  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -133,11 +136,11 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgCSG1 message handlers
 
-int CDlgCSG1::b3Edit(b3Item *item,b3_bool create)
+int CDlgCSG1::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create)
 {
 	CDlgCSG1 dlg;
 
-	return CB3SpanningShapeDialog::b3Edit(&dlg,item,create);
+	return CB3SpanningShapeDialog::b3Edit(&dlg, shading_class_type, item, create);
 }
 
 void CDlgCSG1::b3Init()

@@ -61,13 +61,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.11  2003/02/22 15:17:18  sm
 **	- Added support for selected shapes in object modeller
 **	- Glued b3Shape and b3ShapeRenderObject. There was no
 **	  distinct access method in use.
 **	- Made some b3Shape methods inline and/or static which
 **	  saves some memory.
-**
+**	
 **	Revision 1.10  2002/03/11 13:48:54  sm
 **	- Cleaned up dialog titles
 **	- Fixed some texture bugs concerning palette copying.
@@ -163,12 +166,13 @@ END_MESSAGE_MAP()
 
 int CB3ShapeDialog::b3Edit(
 	CB3ShapeDialog *page,
+	b3_u32          shading_class_type,
 	b3Item         *item,
 	b3_bool         create)
 {
 	CPropertySheet      sheet;
 	CDlgCSGMode         dlg_csg;
-	CDlgCreateMaterial  dlg_material;
+	CDlgCreateMaterial  dlg_material(shading_class_type);
 	CDlgCreateStencil   dlg_stencil;
 	CString             shape_text,title;
 	b3Shape            *shape;

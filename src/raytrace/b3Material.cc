@@ -36,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.81  2004/05/29 13:38:11  sm
+**      - Made shading model visible to material an bump dialogs.
+**
 **      Revision 1.80  2004/05/28 14:06:29  sm
 **      - Minor optimizations in shader
 **
@@ -503,7 +506,7 @@ b3_bool b3MatNormal::b3GetSurfaceValues(b3_surface *surface)
 
 b3MatChess::b3MatChess(b3_u32 class_type) : b3Material(sizeof(b3MatChess),class_type) 
 {
-	m_Material[BLACK].m_Ambient  = B3_GREY;
+	m_Material[BLACK].m_Ambient  = B3_BLACK;
 	m_Material[BLACK].m_Diffuse  = B3_BLACK;
 	m_Material[BLACK].m_Specular = B3_GREY;
 
@@ -1459,10 +1462,10 @@ b3MatCookTorrance::b3MatCookTorrance(b3_u32 class_type) :
 	m_SpecularExp = 1000.0;
 
 	// Cook & Torrance values
-	m_ka   = 0.1;
-	m_ks   = 0.6;
-	m_kd   = 0.6;
-	m_m    = 0.3;
+	m_ka   = 0.1f;
+	m_ks   = 0.6f;
+	m_kd   = 0.6f;
+	m_m    = 0.3f;
 }
 
 b3MatCookTorrance::b3MatCookTorrance(b3_u32 *src) : b3MatNormal(src)
@@ -1505,10 +1508,11 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b
 	b3Vector::b3Init(&L,&jit->dir);
 	b3Vector::b3Normalize(&L);
 
-	b3_f64 nl = b3Vector::b3SMul(&ray->normal,&L);
+	b3_f64 nl = b3Math::b3Limit(b3Vector::b3SMul(&ray->normal,&L));
 
 #if 1
 	b3Color Rf;
+
 	if (jit->shape == null)
 	{
 		b3_vector64 H;
@@ -1542,17 +1546,18 @@ b3_bool b3MatCookTorrance::b3Illuminate(b3_surface *surface,b3_light_info *jit,b
 		b3_f64 Rs    = (D * G) / (M_PI * nv * nl);
 
 		b3_f64 phi = asin(nl);
-		for (int i = 0;i < 4;i++)
+		for (b3_loop i = b3Color::R;i <= b3Color::B;i++)
 		{
 			b3Color::b3_color_index l = (b3Color::b3_color_index)i;
 
 			Rf[l] = b3Math::b3GetFresnel(phi,m_Mu[l]) * Rs;
 		}
+		Rf.b3SetAlpha(0);
 		Rf.b3Min();
 	}
 	else
 	{
-		Rf = 0;
+		Rf.b3Init();
 	}
 	
 	result = m_Ra + m_Diffuse * nl * m_kd + Rf * m_ks;

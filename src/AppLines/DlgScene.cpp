@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.22  2004/05/28 20:54:02  sm
 **	- Fixed scene dialog concerning new Mork shading
-**
+**	
 **	Revision 1.21  2004/05/28 19:57:24  sm
 **	- Added new world data file for soft shadow testing.
 **	- Added enhanced Mork shading model to scene dialog.
@@ -185,9 +188,10 @@ shading[] =
 	{ TRACEPHOTO_MORK2, 2 }
 };
 
-CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
+CDlgScene::CDlgScene(b3_u32 class_type, CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgScene::IDD)
 {
+	m_ShadingClassType = class_type;
 	//{{AFX_DATA_INIT(CDlgScene)
 	m_RayDepthLegend = _T("");
 	m_ShadowBrightnessLegend = _T("");
@@ -232,11 +236,14 @@ BEGIN_MESSAGE_MAP(CDlgScene, CPropertyPage)
 	ON_BN_CLICKED(IDC_BG_TOP_SELECT, OnTopColor)
 	ON_BN_CLICKED(IDC_BG_BOTTOM_SELECT, OnBottomColor)
 	ON_CBN_SELCHANGE(IDC_RES, OnChangedResolution)
+	ON_EN_KILLFOCUS(IDC_XRES, OnEditedResolution)
 	ON_BN_CLICKED(IDC_BG_COLOR, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_SKY, OnBgModeChanged)
 	ON_BN_CLICKED(IDC_BG_IMAGE, OnBgModeChanged)
-	ON_EN_KILLFOCUS(IDC_XRES, OnEditedResolution)
 	ON_EN_KILLFOCUS(IDC_YRES, OnEditedResolution)
+	ON_BN_CLICKED(IDC_SHADING_PHONG, OnShading)
+	ON_BN_CLICKED(IDC_SHADING_MORK, OnShading)
+	ON_BN_CLICKED(IDC_SHADING_MORK2, OnShading)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -254,7 +261,7 @@ BOOL CDlgScene::OnInitDialog()
 	CPropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_PreviewScene = b3ExampleScene::b3CreateGlobal();
+	m_PreviewScene = b3ExampleScene::b3CreateGlobal(m_ShadingClassType);
 	m_PreviewScene->m_Flags          = m_Scene->m_Flags;
 	m_PreviewScene->m_BackgroundType = m_Scene->m_BackgroundType;
 	m_PreviewScene->m_TopColor       = m_Scene->m_TopColor;
@@ -399,22 +406,7 @@ void CDlgScene::OnOK()
 {
 	// TODO: Add extra validation here
 	CPropertyPage::OnOK();
-	switch(m_Shading)
-	{
-	case 0:
-		m_Scene->b3SetShading(TRACEPHOTO_PHONG);
-		break;
-	
-	case 2:
-		m_Scene->b3SetShading(TRACEPHOTO_MORK2);
-		break;
-	
-	case 1:
-		// Walk through!!!
-	default:
-		m_Scene->b3SetShading(TRACEPHOTO_MORK);
-		break;
-	}
+	m_Scene->b3SetShading(b3GetShading());
 	m_Scene->m_BackgroundType   = m_PreviewScene->m_BackgroundType;
 	m_Scene->m_TopColor         = m_PreviewScene->m_TopColor;
 	m_Scene->m_BottomColor      = m_PreviewScene->m_BottomColor;
@@ -483,4 +475,35 @@ void CDlgScene::b3SetShading()
 		}
 	}
 	m_Shading = 1;
+}
+
+b3_u32 CDlgScene::b3GetShading()
+{
+	b3_u32 class_type;
+
+	switch(m_Shading)
+	{
+	case 0:
+		class_type = TRACEPHOTO_PHONG;
+		break;
+	
+	case 2:
+		class_type = TRACEPHOTO_MORK2;
+		break;
+	
+	case 1:
+		// Walk through!!!
+	default:
+		class_type = TRACEPHOTO_MORK;
+		break;
+	}
+	return class_type;
+}
+
+void CDlgScene::OnShading() 
+{
+	// TODO: Add your control notification handler code here
+	UpdateData();
+	m_PreviewScene->b3SetShading(b3GetShading());
+	m_PreviewSceneCtrl.b3Update(m_PreviewScene);
 }

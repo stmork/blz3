@@ -318,10 +318,10 @@ class B3_PLUGIN b3MatCookTorrance : public b3MatNormal
 	b3Color     m_Mu;
 
 public:
-	b3_f64      m_ka;
-	b3_f64      m_ks;
-	b3_f64      m_kd;
-	b3_f64      m_m;
+	b3_f32      m_ka;
+	b3_f32      m_ks;
+	b3_f32      m_kd;
+	b3_f32      m_m;
 
 public:
 	B3_ITEM_INIT(b3MatCookTorrance);

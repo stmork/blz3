@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.7  2002/03/10 20:34:17  sm
 **	- Cleaned up and tested CB3ShapeDialgo derivates:
 **	  o Ordered meaning of methods
@@ -139,11 +142,11 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgShape1 message handlers
 
-int CDlgShape1::b3Edit(b3Item *item,b3_bool create)
+int CDlgShape1::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create)
 {
 	CDlgShape1 dlg;
 
-	return CB3ShapeDialog::b3Edit(&dlg,item,create);
+	return CB3ShapeDialog::b3Edit(&dlg,shading_class_type, item,create);
 }
 
 void CDlgShape1::b3Init()

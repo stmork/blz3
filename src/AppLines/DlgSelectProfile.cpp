@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.7  2002/07/30 21:46:24  sm
 **	- More powerful pixel format selection.
 **	- Added b3Comparator class for sorting.
@@ -118,7 +121,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDlgSelectProfile message handlers
 
-int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
+int CDlgSelectProfile::b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create)
 {
 	CDlgSelectProfile      dlg;
 	CDlgCreateTriangles    dlg_triangles;
@@ -180,7 +183,7 @@ int CDlgSelectProfile::b3Edit(b3Item *item,b3_bool create)
 	}
 
 	// Customize shape values
-	result = CB3ShapeDialog::b3Edit(page,item,create);
+	result = CB3ShapeDialog::b3Edit(page,shading_class_type, item,create);
 	return result;
 }
 

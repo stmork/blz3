@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.34  2004/05/29 13:38:10  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.33  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.32  2004/05/11 14:01:14  sm
 **	- Added unified invert/revert for object editing.
 **	- Added deletion of transform history in scene
@@ -278,6 +281,11 @@ const char *CAppObjectDoc::b3GetDocumentName()
 b3Scene *CAppObjectDoc::b3GetParentScene()
 {
 	return m_LinesDoc != null ? m_LinesDoc->m_Scene : null;
+}
+
+b3_u32 CAppObjectDoc::b3GetParentShading()
+{
+	return m_LinesDoc != null ? m_LinesDoc->m_Scene->b3GetClassType() : TRACEPHOTO_MORK;
 }
 
 BOOL CAppObjectDoc::OnNewDocument()
@@ -585,7 +593,7 @@ void CAppObjectDoc::OnObjectEdit()
 		call = CB3ImageList::b3GetEditCall(selected);
 		if (call != null)
 		{
-			if (call(selected,false) == IDOK)
+			if (call(m_LinesDoc->m_Scene->b3GetClassType(),selected,false) == IDOK)
 			{
 				// Init data
 				m_DlgHierarchy->b3GetData();
@@ -622,7 +630,7 @@ void CAppObjectDoc::OnObjectNew()
 		{
 			// Open edit dialog if available
 			call   = CB3ImageList::b3GetEditCall(dlg.m_NewItem);
-			result = (call != null ? call(dlg.m_NewItem,true) : IDOK);
+			result = (call != null ? call(m_LinesDoc->m_Scene->b3GetClassType(), dlg.m_NewItem,true) : IDOK);
 			if (result == IDOK)
 			{
 				// Manually insert to prevent uninitialized redraw

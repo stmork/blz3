@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.18  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.17  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
@@ -134,9 +137,7 @@
 **                                                                      **
 *************************************************************************/
 
-IMPLEMENT_DYNCREATE(CDlgCreateMaterial, CPropertyPage)
-
-CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD)
+CDlgCreateMaterial::CDlgCreateMaterial(b3_u32 class_type) : CPropertyPage(CDlgCreateMaterial::IDD)
 {
 	CB3App *app = CB3GetApp();
 
@@ -148,7 +149,7 @@ CDlgCreateMaterial::CDlgCreateMaterial() : CPropertyPage(CDlgCreateMaterial::IDD
 	// Init Blizzard materials
 	m_MatNormal  = new b3MatNormal(MATERIAL);
 	m_MatTexture = new b3MatTexture(TEXTURE);
-	m_MatScene   = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene   = b3ExampleScene::b3CreateMaterial(&m_MatHead,class_type);
 	m_Material   = null;
 
 	// Read previous used values

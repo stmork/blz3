@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.9  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.8  2004/05/06 18:13:51  sm
 **	- Added support for changed only b3Items for a
 **	  better preview performance.
@@ -81,13 +84,13 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatSlide::CDlgMatSlide(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatSlide::CDlgMatSlide(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatSlide::IDD, pParent)
 {
 	m_Material             = (b3MatSlide *)item;
 	m_PageLeft.m_Material  = &m_Material->m_Material[0];
 	m_PageRight.m_Material = &m_Material->m_Material[1];
-	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene             = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatSlide)
 	//}}AFX_DATA_INIT
@@ -138,7 +141,7 @@ void CDlgMatSlide::b3Register()
 
 b3_bool CDlgMatSlide::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatSlide dlg(item);
+	CDlgMatSlide dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.12  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
 **	  mixing into two parts.
-**
+**	
 **	Revision 1.11  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -88,11 +91,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatCookTorrance::CDlgMatCookTorrance(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatCookTorrance::CDlgMatCookTorrance(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item, CDlgMatCookTorrance::IDD, pParent)
 {
 	m_Material = (b3MatCookTorrance *)item;
-	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatCookTorrance)
 		// NOTE: the ClassWizard will add member initialization here
@@ -176,7 +179,7 @@ void CDlgMatCookTorrance::b3Register()
 
 b3_bool CDlgMatCookTorrance::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatCookTorrance dlg(item);
+	CDlgMatCookTorrance dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

@@ -45,7 +45,7 @@ class CDlgBumpNoise : public CB3SimplePropertyPreviewDialog
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void    b3Register();
-	CDlgBumpNoise(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpNoise(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
 	~CDlgBumpNoise();
 
 // Dialog Data

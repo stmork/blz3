@@ -42,7 +42,7 @@ class CDlgBumpGlossy : public CB3SimplePreviewDialog
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void    b3Register();
-	CDlgBumpGlossy(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpGlossy(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent = NULL);   // standard constructor
 	~CDlgBumpGlossy();
 
 // Dialog Data

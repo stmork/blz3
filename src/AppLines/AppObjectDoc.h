@@ -111,6 +111,7 @@ public:
 	b3_bool     b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
 	const char *b3GetDocumentName();
 	b3Scene    *b3GetParentScene();
+	b3_u32      b3GetParentShading();
 
 private:
 	void    b3SetBBox(b3BBox *bbox);

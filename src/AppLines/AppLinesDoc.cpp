@@ -60,9 +60,12 @@
 
 /*
 **	$Log$
+**	Revision 1.100  2004/05/29 13:38:10  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.99  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
-**
+**	
 **	Revision 1.98  2004/05/12 16:28:16  sm
 **	- Beautified bump icons
 **	- Missing return type for b3Material::b3Mix added
@@ -1173,10 +1176,10 @@ void CAppLinesDoc::OnDlgScene()
 {
 	// TODO: Add your command handler code here
 	CPropertySheet    dlg_sheets;
-	CDlgScene         dlg_scene;
-	CDlgNebular       dlg_nebular;
+	CDlgScene         dlg_scene(m_Scene->b3GetClassType());
+	CDlgNebular       dlg_nebular(m_Scene->b3GetClassType());
 	CDlgSuperSampling dlg_super_sampling;
-	CDlgLensFlare     dlg_lens_flare;
+	CDlgLensFlare     dlg_lens_flare(m_Scene->b3GetClassType());
 	CDlgDistributed   dlg_distributed;
 	CString           title;
 
@@ -1242,7 +1245,7 @@ void CAppLinesDoc::OnLightDelete()
 void CAppLinesDoc::OnLightProperties() 
 {
 	// TODO: Add your command handler code here
-	CDlgLight   dlg;
+	CDlgLight   dlg(m_Scene->b3GetClassType());
 
 	dlg.m_LightBase = m_Scene->b3GetLightHead();
 	dlg.m_Light     = m_Light;

@@ -35,11 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.6  2004/05/25 19:17:23  sm
 **	- Some reflection spin controls didn't map input.
 **	- Divided Fresnel computation and reflection/refraction
 **	  mixing into two parts.
-**
+**	
 **	Revision 1.5  2004/05/10 17:05:37  sm
 **	- Added texture material dialog. Now we have completed all
 **	  material dialogs. I Continue completing bump mapping dialogs.
@@ -72,15 +75,16 @@
 *************************************************************************/
 
 CDlgMatWrapTexture::CDlgMatWrapTexture(
+	b3Item        *item,
 	CAppObjectDoc *pDoc,
-	b3Item        *item,CWnd* pParent /*=NULL*/)
+	CWnd          *pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item,CDlgMatWrapTexture::IDD, pParent)
 {
 	m_Shape    = pDoc->b3GetSelectedShape();
 	m_Shape->b3GetStencilBoundInfo(&m_Bound);
 	m_BBox     = pDoc->m_BBox;
 	m_Material = (b3MatWrapTexture *)item;
-	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead,pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	b3Scene::b3CheckTexture(&m_Material->m_Texture,m_Material->m_Name);
 	//{{AFX_DATA_INIT(CDlgMatWrapTexture)
@@ -159,7 +163,7 @@ void CDlgMatWrapTexture::b3Register()
 
 b3_bool CDlgMatWrapTexture::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatWrapTexture dlg((CAppObjectDoc *)ptr,item);
+	CDlgMatWrapTexture dlg(item,(CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

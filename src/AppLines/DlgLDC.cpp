@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.3  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.2  2002/03/02 15:24:35  sm
 **	- Templetized splines (uhff).
 **	- Prepared spline shapes for their creation.
@@ -88,7 +91,7 @@ BOOL CDlgLDC::OnInitDialog()
 {
 	b3Light *light;
 
-	m_LightScene = b3ExampleScene::b3CreateGlobal();
+	m_LightScene = b3ExampleScene::b3CreateGlobal(m_ShadingClassType);
 	light = m_LightScene->b3GetLight();
 	B3_ASSERT(light != null);
 	m_LightScene->m_ShadowBrightness = 0.1f;

@@ -47,7 +47,7 @@ class CDlgBumpWood : public CB3SimplePropertyPreviewDialog
 public:
 	static b3_bool b3Edit(b3Item *item,void *ptr);
 	static void    b3Register();
-	CDlgBumpWood(b3Item *item,CWnd* pParent = NULL);   // standard constructor
+	CDlgBumpWood(b3Item *item, CWnd* pParent = NULL);   // standard constructor
 	~CDlgBumpWood();
 
 // Dialog Data

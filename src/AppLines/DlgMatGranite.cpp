@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.7  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.6  2004/05/08 17:36:39  sm
 **	- Unified scaling for materials and bumps.
 **	
@@ -72,7 +75,7 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatGranite::CDlgMatGranite(b3Item *item,CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatGranite::IDD, pParent)
 {
 	m_Material              = (b3MatGranite *)item;
@@ -80,7 +83,7 @@ CDlgMatGranite::CDlgMatGranite(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_PageLight.m_Material  = &m_Material->m_LightMaterial;
 	m_PageScaling.m_Scaling =  m_Material;
 
-	m_MatScene              = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene              = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatGranite)
 		// NOTE: the ClassWizard will add member initialization here
@@ -117,7 +120,7 @@ void CDlgMatGranite::b3Register()
 
 b3_bool CDlgMatGranite::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatGranite dlg(item);
+	CDlgMatGranite dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

@@ -36,9 +36,10 @@
 class CDlgLDC : public CDialog
 {
 // Construction
+	b3_u32     m_ShadingClassType;
 	b3Scene   *m_LightScene;
 public:
-	b3Light        *m_Light;
+	b3Light   *m_Light;
 	CDlgLDC(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data

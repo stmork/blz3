@@ -40,7 +40,7 @@ public:
 	CDlgShape2(CWnd* pParent = NULL);   // standard constructor
 	CDlgShape2(UINT id,CWnd* pParent = NULL);
 
-	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
 	virtual void b3PostProcess();
 
 // Dialog Data

@@ -41,7 +41,7 @@ public:
 public:
 	CDlgSelectProfile(CWnd* pParent = NULL);   // standard constructor
 
-	static  int  b3Edit(b3Item *item,b3_bool create=true);
+	static  int  b3Edit(b3_u32 shading_class_type, b3Item *item,b3_bool create=true);
 // Dialog Data
 	//{{AFX_DATA(CDlgSelectProfile)
 	enum { IDD = IDD_CREATE_SHAPE_PROFILE };

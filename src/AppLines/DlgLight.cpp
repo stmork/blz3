@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.16  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.15  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -112,9 +115,10 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgLight::CDlgLight(CWnd* pParent /*=NULL*/)
+CDlgLight::CDlgLight(b3_u32 class_type, CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgLight::IDD, pParent)
 {
+	m_ShadingClassType = class_type;
 	//{{AFX_DATA_INIT(CDlgLight)
 	m_EnableLight = FALSE;
 	m_EnableLDC = FALSE;
@@ -191,7 +195,7 @@ BOOL CDlgLight::OnInitDialog()
 {
 	b3Light *light;
 
-	m_LightScene = b3ExampleScene::b3CreateGlobal();
+	m_LightScene = b3ExampleScene::b3CreateGlobal(m_ShadingClassType);
 	light = m_LightScene->b3GetLight();
 	B3_ASSERT(light != null);
 	m_LightScene->m_ShadowBrightness = 0.1f;

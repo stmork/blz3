@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.2  2004/05/28 20:33:05  sm
 **	- Backported Mork shader
-**
+**	
 **	Revision 1.1  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
 **	
@@ -84,18 +87,13 @@ void b3ShaderMork2::b3ShadeLight(
 				factor = b3Math::b3FastPow(lambda, spec_exp) * Jit->m_LightFrac;
 				surface->m_SpecularSum += (light->m_Color * factor);
 			}
-		}
-		else
-		{
-			// test for far side to light
-			ShapeAngle = 0;
-		}
 
-		// surface illumination (diffuse color)
-		factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor;
-		if (factor >= 0)
-		{
-			illumination += (light->m_Color * factor);
+			// surface illumination (diffuse color)
+			factor = ShapeAngle * Jit->m_LightFrac * 0.5 - m_ShadowFactor;
+			if (factor >= 0)
+			{
+				illumination += (light->m_Color * factor);
+			}
 		}
 	}
 

@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.8  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
 **	- Added wrap texture material dialog.
-**
+**	
 **	Revision 1.7  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -79,7 +82,7 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgMatMarble::CDlgMatMarble(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgMatMarble::CDlgMatMarble(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePropertyPreviewDialog(item, CDlgMatMarble::IDD, pParent)
 {
 	m_Material = (b3MatMarble *)item;
@@ -87,7 +90,7 @@ CDlgMatMarble::CDlgMatMarble(b3Item *item,CWnd* pParent /*=NULL*/)
 	m_PageLight.m_Material  = &m_Material->m_LightMaterial;
 	m_PageScaling.m_Scaling =  m_Material;
 
-	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead);
+	m_MatScene = b3ExampleScene::b3CreateMaterial(&m_MatHead, pDoc->b3GetParentShading());
 	m_MatHead->b3Append(m_Material);
 	//{{AFX_DATA_INIT(CDlgMatMarble)
 		// NOTE: the ClassWizard will add member initialization here
@@ -124,7 +127,7 @@ void CDlgMatMarble::b3Register()
 
 b3_bool CDlgMatMarble::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgMatMarble dlg(item);
+	CDlgMatMarble dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

@@ -25,11 +25,11 @@
 class b3ExampleScene
 {
 public:
-	static b3Scene      *b3CreateNew(const char *filename);
-	static b3Scene      *b3CreateGlobal();
-	static b3Scene      *b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera = null);
-	static b3Scene      *b3CreateMaterial(b3Base<b3Item> **ptrMatHead);
-	static b3Scene      *b3CreateBump(b3Base<b3Item> **ptrBumpHead);
+	static b3Scene      *b3CreateNew(const char *filename, b3_u32 class_type = TRACEPHOTO_MORK);
+	static b3Scene      *b3CreateGlobal(b3_u32 class_type);
+	static b3Scene      *b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera = null, b3_u32 class_type = TRACEPHOTO_MORK);
+	static b3Scene      *b3CreateMaterial(b3Base<b3Item> **ptrMatHead, b3_u32 class_type);
+	static b3Scene      *b3CreateBump(b3Base<b3Item> **ptrBumpHead, b3_u32 class_type);
 
 private:
 	static void          b3Consolidate(b3Scene *scene);

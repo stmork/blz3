@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/05/29 13:38:11  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.6  2003/02/22 17:21:32  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.5  2002/03/08 16:46:14  sm
 **	- Added new CB3IntSpinButtonCtrl. This is much
 **	  better than standard integer CSpinButtonCtrl.
@@ -81,9 +84,10 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgLensFlare::CDlgLensFlare(CWnd* pParent /*=NULL*/)
+CDlgLensFlare::CDlgLensFlare(b3_u32 class_type,CWnd* pParent /*=NULL*/)
 	: CPropertyPage(CDlgLensFlare::IDD)
 {
+	m_ShadingClassType = class_type;
 	//{{AFX_DATA_INIT(CDlgLensFlare)
 	m_ActLensFlare = FALSE;
 	//}}AFX_DATA_INIT
@@ -117,7 +121,8 @@ END_MESSAGE_MAP()
 BOOL CDlgLensFlare::OnInitDialog() 
 {
 	b3Light *light;
-	m_LensFlareScene = b3ExampleScene::b3CreateGlobal();
+
+	m_LensFlareScene = b3ExampleScene::b3CreateGlobal(m_ShadingClassType);
 	m_EditLensFlare  = new b3LensFlare(LENSFLARE);
 	m_EditLensFlare->m_Color = m_LensFlare->m_Color;
 	m_EditLensFlare->m_Expon = m_LensFlare->m_Expon;

@@ -36,11 +36,12 @@
 class CDlgLight : public CDialog
 {
 // Construction
+	b3_u32     m_ShadingClassType;
 	b3Scene   *m_LightScene;
 public:
 	b3Base<b3Item> *m_LightBase;
 	b3Light        *m_Light;
-	CDlgLight(CWnd* pParent = NULL);   // standard constructor
+	CDlgLight(b3_u32 class_type, CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
 	//{{AFX_DATA(CDlgLight)

@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2004/05/29 13:38:10  sm
+**	- Made shading model visible to material an bump dialogs.
+**
 **	Revision 1.2  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
-**
+**	
 **	Revision 1.1  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -61,11 +64,11 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgBumpGlossy::CDlgBumpGlossy(b3Item *item,CWnd* pParent /*=NULL*/)
+CDlgBumpGlossy::CDlgBumpGlossy(b3Item *item, CAppObjectDoc *pDoc, CWnd* pParent /*=NULL*/)
 	: CB3SimplePreviewDialog(item,CDlgBumpGlossy::IDD, pParent)
 {
 	m_Bump = (b3BumpGlossy *)item;
-	m_BumpScene = b3ExampleScene::b3CreateBump(&m_BumpHead);
+	m_BumpScene = b3ExampleScene::b3CreateBump(&m_BumpHead, pDoc->b3GetParentShading());
 	m_BumpHead->b3Append(m_Bump);
 	//{{AFX_DATA_INIT(CDlgBumpGlossy)
 		// NOTE: the ClassWizard will add member initialization here
@@ -107,7 +110,7 @@ void CDlgBumpGlossy::b3Register()
 
 b3_bool CDlgBumpGlossy::b3Edit(b3Item *item,void *ptr)
 {
-	CDlgBumpGlossy dlg(item);
+	CDlgBumpGlossy dlg(item, (CAppObjectDoc *)ptr);
 
 	return dlg.DoModal() == IDOK;
 }

@@ -44,14 +44,12 @@ class CDlgCreateMaterial : public CPropertyPage
 	b3_f64          m_Refraction;
 	b3_f64          m_SpecularExp;
 
-	DECLARE_DYNCREATE(CDlgCreateMaterial)
-
 // Construction
 public:
 	b3Material   *m_Material;
 
 public:
-	              CDlgCreateMaterial();
+	              CDlgCreateMaterial(b3_u32 shading_class_type);
 	             ~CDlgCreateMaterial();
 	void          b3Init();
 	void          b3PostProcess(b3CondRectangle *stencil = null);
