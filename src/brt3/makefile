@@ -16,7 +16,7 @@ PRG_SOURCE		= brt3.cc bimg3.cc bconv3.cc bhc.cc rp.cc
 LDLIBS			= $(LIB_B3) $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
 #IMGLIBS			= -lB3Base -lB3Image -lB3Base -lB3System -lB3Base -lB3tiff -lB3jpeg $(LIB_X3) $(LIB_S3)
 IMGLIBS			= -lB3Base  $(LIB_X3) $(LIB_S3) $(LIB_OGL3)
-PRGS			= brt3 bimg3 bconv3 bhc
+PRGS			= brt3 bimg3 bconv3 bhc rp
 
 all:	$(PRGS)
 
