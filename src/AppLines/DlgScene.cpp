@@ -34,11 +34,19 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/11/11 15:09:56  sm
+**	- Introduced scene properties for:
+**	  o scene itself (done)
+**	  o distributed raytracing (controls layouted)
+**	  o super sampling (controls layouted)
+**	  o nebular (controls layouted)
+**	  o lens flares (controls layouted)
+**
 **	Revision 1.4  2001/11/11 11:51:20  sm
 **	- Added image select feature
 **	- Cleaned up scene dialog (Now ready to improve it)
 **	- some b3Path fixes
-**
+**	
 **	Revision 1.3  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -77,7 +85,7 @@ static int dialog_to_scene[4] =
 };
 
 CDlgScene::CDlgScene(CWnd* pParent /*=NULL*/)
-	: CDialog(CDlgScene::IDD, pParent)
+	: CPropertyPage(CDlgScene::IDD)
 {
 	//{{AFX_DATA_INIT(CDlgScene)
 	m_ResValid = false;
@@ -292,7 +300,7 @@ void CDlgScene::b3UpdateUI()
 void CDlgScene::OnOK() 
 {
 	// TODO: Add extra validation here
-	CDialog::OnOK();
+	CPropertyPage::OnOK();
 	m_Scene->m_BackgroundType   = m_PreviewScene->m_BackgroundType;
 	m_Scene->m_TopColor         = m_PreviewScene->m_TopColor;
 	m_Scene->m_BottomColor      = m_PreviewScene->m_BottomColor;

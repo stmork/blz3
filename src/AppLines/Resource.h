@@ -11,10 +11,14 @@
 #define IDR_DISPLAYTYPE                 130
 #define IDR_TOOLBAR_ACTION              132
 #define IDR_TOOLBAR_OBJECT              134
+#define IDD_NEBULAR                     134
+#define IDD_DISTRIBUTED                 135
 #define IDR_TOOLBAR_DISPLAY             137
 #define IDC_PANNING                     137
 #define IDD_SCENE                       138
+#define IDD_SUPER_SAMPLE                139
 #define IDD_HIERARCHY                   145
+#define IDD_LENS_FLARE                  146
 #define IDI_BBOX_WORLD                  148
 #define IDI_BBOX_SUB                    149
 #define IDI_BBOX_SHAPES                 150
@@ -33,16 +37,40 @@
 #define IDC_XRES                        1008
 #define IDC_YRES                        1009
 #define IDC_XRES_SPIN                   1010
+#define IDC_ACT_NEBULAR                 1010
 #define IDC_YRES_SPIN                   1011
+#define IDC_SPP                         1011
 #define IDC_RAYDEPTH                    1012
+#define IDC_ACT_DISTRIBUTED             1012
 #define IDC_RAYDEPTH_LEGEND             1013
+#define IDC_TFLTR_BOX                   1013
 #define IDC_BG_IMAGE_SELECT             1014
+#define IDC_TFLTR_GAUSS                 1014
 #define IDC_BG_TOP_SELECT               1015
+#define IDC_TFLTR_SHUTTER               1015
 #define IDC_BG_BOTTOM_SELECT            1016
+#define IDC_ACT_MOTION_BLUR             1016
 #define IDC_OPEN_GFX                    1017
+#define IDC_SPF                         1017
 #define IDC_SHADOW_BRIGHTNESS           1018
+#define IDC_SMP_REGULAR                 1018
 #define IDC_SHADOW_BRIGHTNESS_LEGEND    1019
+#define IDC_SMP_RANDOM                  1019
+#define IDC_SMP_JITTER                  1020
+#define IDC_SMP_SEMI                    1021
+#define IDC_SMP_SEPARATED               1022
+#define IDC_PFLTR_BOX                   1023
+#define IDC_PFLTR_GAUSS                 1024
 #define IDC_SCAN_PARA                   1027
+#define IDC_ACT_LENS_FLARE              1039
+#define IDC_LF_CHANGE                   1040
+#define IDC_LF_COLOR                    1041
+#define IDC_LF_VALUE                    1042
+#define IDC_NEB_COLOR                   1043
+#define ID_NEB_CHANGE                   1044
+#define IDC_SS4_RED                     1047
+#define IDC_SS4_GREEN                   1048
+#define IDC_SS4_BLUE                    1049
 #define IDC_HIERARCHY                   1050
 #define IDC_ACTIVATE                    1055
 #define IDC_DEACTIVATE                  1056
@@ -117,6 +145,7 @@
 #define IDS_RAYDEPTH                    61452
 #define IDS_SCENE_NEW                   61453
 #define IDS_SHADOW_BRIGHTNESS           61454
+#define IDS_TITLE_SCENE                 61455
 
 // Next default values for new objects
 // 

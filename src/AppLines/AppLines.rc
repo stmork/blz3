@@ -437,13 +437,11 @@ BEGIN
     PUSHBUTTON      "alles deaktivieren",IDC_ALL_DEACTIVATE,70,230,55,15
 END
 
-IDD_SCENE DIALOG DISCARDABLE  0, 0, 327, 346
+IDD_SCENE DIALOG DISCARDABLE  0, 0, 297, 321
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Szeneneigenschaften"
+CAPTION "Hintergrund"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,25,315,50,15
-    PUSHBUTTON      "Abbrechen",IDCANCEL,170,315,50,15
     CONTROL         "Helligkeitsverlauf",IDC_BG_LIGHT,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP,135,30,69,10
     CONTROL         "Farbverlauf",IDC_BG_COLOR,"Button",BS_AUTORADIOBUTTON,
@@ -453,8 +451,12 @@ BEGIN
     CONTROL         "Hintergrundbild",IDC_BG_IMAGE,"Button",
                     BS_AUTORADIOBUTTON,135,75,63,10
     PUSHBUTTON      "Auswahl...",IDC_BG_IMAGE_SELECT,140,125,50,15
+    PUSHBUTTON      "Obere Farbe...",IDC_BG_TOP_SELECT,140,150,50,14
+    PUSHBUTTON      "Untere Farbe...",IDC_BG_BOTTOM_SELECT,140,175,50,14
     CONTROL         "Auflösung benutzen",IDC_RES_VALID,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,25,210,79,10
+    CONTROL         "Grafik beim Raytracen anzeigen",IDC_OPEN_GFX,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,110,210,117,10
     EDITTEXT        IDC_XRES,25,235,35,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_XRES_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,61,235,11,
@@ -465,23 +467,99 @@ BEGIN
                     11,15
     CONTROL         "Slider1",IDC_RAYDEPTH,"msctls_trackbar32",TBS_AUTOTICKS | 
                     WS_TABSTOP,20,280,120,25
+    CONTROL         "Slider1",IDC_SHADOW_BRIGHTNESS,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_TABSTOP,165,280,120,25
     CONTROL         "",IDC_PREVIEW_RAYTRACE,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,25,25,100,65
     CONTROL         "",IDC_PREVIEW_BGIMAGE,"Static",SS_BLACKFRAME | 
                     SS_SUNKEN,25,125,100,66
     LTEXT           "Rekursionstiefe:",IDC_RAYDEPTH_LEGEND,25,265,115,8
+    LTEXT           "Ambienter Faktor:",IDC_SHADOW_BRIGHTNESS_LEGEND,171,265,
+                    115,8
+    GROUPBOX        "Hintergrundverarbeitung:",IDC_STATIC,15,15,200,85
     GROUPBOX        "Hintergrundbild",IDC_STATIC,15,110,200,90
     LTEXT           "Breite:",IDC_STATIC,25,225,21,8
     LTEXT           "Höhe:",IDC_STATIC,90,225,20,8
-    GROUPBOX        "Hintergrundverarbeitung:",IDC_STATIC,15,15,200,85
-    PUSHBUTTON      "Obere Farbe...",IDC_BG_TOP_SELECT,140,150,50,14
-    PUSHBUTTON      "Untere Farbe...",IDC_BG_BOTTOM_SELECT,140,175,50,14
-    CONTROL         "Grafik beim Raytracen anzeigen",IDC_OPEN_GFX,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,110,210,117,10
-    CONTROL         "Slider1",IDC_SHADOW_BRIGHTNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,165,280,120,25
-    LTEXT           "Ambienter Faktor:",IDC_SHADOW_BRIGHTNESS_LEGEND,171,265,
-                    115,8
+END
+
+IDD_SUPER_SAMPLE DIALOG DISCARDABLE  0, 0, 128, 117
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Super Sampling"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Slider1",IDC_SS4_RED,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,8,16,104,24
+    CONTROL         "Slider2",IDC_SS4_GREEN,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_TABSTOP,8,48,104,24
+    CONTROL         "Slider3",IDC_SS4_BLUE,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,8,80,104,24
+    LTEXT           "Kontrastschwelle rot",IDC_STATIC,16,8,72,8
+    LTEXT           "Kontrastschwelle grün",IDC_STATIC,16,40,72,8
+    LTEXT           "Kontrastschwelle blau",IDC_STATIC,16,72,72,8
+END
+
+IDD_NEBULAR DIALOGEX 0, 0, 80, 81
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Nebel"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "aktiviert",IDC_ACT_NEBULAR,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,10,48,10
+    PUSHBUTTON      "Farbe ändern...",ID_NEB_CHANGE,10,55,60,15
+    LTEXT           "",IDC_NEB_COLOR,10,25,60,20,NOT WS_GROUP,
+                    WS_EX_CLIENTEDGE
+END
+
+IDD_LENS_FLARE DIALOGEX 0, 0, 132, 66
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Lens Flare"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "aktiviert",IDC_ACT_LENS_FLARE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,10,41,10
+    EDITTEXT        IDC_LF_VALUE,10,40,50,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "Farbe ändern...",IDC_LF_CHANGE,70,40,55,15
+    LTEXT           "Flare-Stärke",IDC_STATIC,10,30,39,8
+    LTEXT           "",IDC_LF_COLOR,70,10,55,25,NOT WS_GROUP,
+                    WS_EX_CLIENTEDGE
+END
+
+IDD_DISTRIBUTED DIALOG DISCARDABLE  0, 0, 264, 181
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Distributed Raytracing"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "aktiviert",IDC_ACT_DISTRIBUTED,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,8,8,41,10
+    CONTROL         "Motion Blur",IDC_ACT_MOTION_BLUR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,8,24,51,10
+    CONTROL         "regelmäßig",IDC_SMP_REGULAR,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,80,24,50,10
+    CONTROL         "zufällig",IDC_SMP_RANDOM,"Button",BS_AUTORADIOBUTTON,80,
+                    40,37,10
+    CONTROL         "Jitter",IDC_SMP_JITTER,"Button",BS_AUTORADIOBUTTON,80,
+                    56,31,10
+    CONTROL         "Semi Jitter",IDC_SMP_SEMI,"Button",BS_AUTORADIOBUTTON,
+                    80,72,48,10
+    CONTROL         "separiert",IDC_SMP_SEPARATED,"Button",
+                    BS_AUTORADIOBUTTON,80,88,43,10
+    CONTROL         "Boxfilter",IDC_PFLTR_BOX,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,192,24,41,10
+    CONTROL         "Gaußfilter",IDC_PFLTR_GAUSS,"Button",BS_AUTORADIOBUTTON,
+                    192,40,46,10
+    CONTROL         "Boxfilter",IDC_TFLTR_BOX,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,192,88,41,10
+    CONTROL         "Gaußfilter",IDC_TFLTR_GAUSS,"Button",BS_AUTORADIOBUTTON,
+                    192,104,46,10
+    CONTROL         "Shutter",IDC_TFLTR_SHUTTER,"Button",BS_AUTORADIOBUTTON,
+                    192,120,39,10
+    CONTROL         "Slider1",IDC_SPP,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,16,120,144,24
+    CONTROL         "Slider2",IDC_SPF,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    WS_TABSTOP,16,152,144,24
+    GROUPBOX        " Zeitfilter: ",IDC_STATIC,176,72,80,64
+    GROUPBOX        " Pixel-Filter: ",IDC_STATIC,176,8,80,48
+    GROUPBOX        " Sampling-Methode: ",IDC_STATIC,64,8,96,96
 END
 
 
@@ -558,9 +636,41 @@ BEGIN
     IDD_SCENE, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 320
+        RIGHTMARGIN, 290
         TOPMARGIN, 7
-        BOTTOMMARGIN, 339
+        BOTTOMMARGIN, 314
+    END
+
+    IDD_SUPER_SAMPLE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 121
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 110
+    END
+
+    IDD_NEBULAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 73
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
+    END
+
+    IDD_LENS_FLARE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 125
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 59
+    END
+
+    IDD_DISTRIBUTED, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 257
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 174
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -713,6 +823,7 @@ BEGIN
     IDS_RAYDEPTH            "Raytrace-Tiefe: %2d"
     IDS_SCENE_NEW           "Unbenannt"
     IDS_SHADOW_BRIGHTNESS   "Ambienter Faktor: %3d"
+    IDS_TITLE_SCENE         "Sceneneigenschaften"
 END
 
 STRINGTABLE DISCARDABLE 

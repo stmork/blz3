@@ -30,6 +30,10 @@
 
 #include "DlgHierarchy.h"
 #include "DlgScene.h"
+#include "DlgSuperSampling.h"
+#include "DlgNebular.h"
+#include "DlgLensFlare.h"
+#include "DlgDistributed.h"
 #include "b3ExampleScene.h"
 
 /*************************************************************************
@@ -40,9 +44,17 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2001/11/11 15:09:56  sm
+**	- Introduced scene properties for:
+**	  o scene itself (done)
+**	  o distributed raytracing (controls layouted)
+**	  o super sampling (controls layouted)
+**	  o nebular (controls layouted)
+**	  o lens flares (controls layouted)
+**
 **	Revision 1.20  2001/11/09 18:58:52  sm
 **	- Fixed JPEG handling
-**
+**	
 **	Revision 1.19  2001/11/05 16:57:39  sm
 **	- Creating demo scenes.
 **	- Initializing some b3Item derived objects
@@ -436,8 +448,30 @@ void CAppLinesDoc::b3ClearRaytraceDoc()
 void CAppLinesDoc::OnDlgScene() 
 {
 	// TODO: Add your command handler code here
-	CDlgScene dlg;
+	CPropertySheet    dlg_sheets;
+	CDlgScene         dlg_scene;
+	CDlgNebular       dlg_nebular;
+	CDlgSuperSampling dlg_super_sampling;
+	CDlgLensFlare     dlg_lens_flare;
+	CDlgDistributed   dlg_distributed;
+	CString           title;
 
-	dlg.m_Scene = m_Scene;
-	dlg.DoModal();
+	dlg_scene.m_Scene                = m_Scene;
+	dlg_distributed.m_Distributed    = null;
+	dlg_super_sampling.m_SuperSample = m_Scene->b3GetSuperSample();
+	dlg_nebular.m_Nebular            = m_Scene->b3GetNebular();
+	dlg_lens_flare.m_LensFlare       = m_Scene->b3GetLensFlare();
+
+	dlg_sheets.AddPage(&dlg_scene);
+	dlg_sheets.AddPage(&dlg_distributed);
+	dlg_sheets.AddPage(&dlg_super_sampling);
+	dlg_sheets.AddPage(&dlg_nebular);
+	dlg_sheets.AddPage(&dlg_lens_flare);
+
+	title.LoadString(IDS_TITLE_SCENE);
+	dlg_sheets.SetTitle(title);
+	if (dlg_sheets.DoModal() == IDOK)
+	{
+		SetModifiedFlag();
+	}
 }

@@ -1,13 +1,13 @@
 /*
 **
-**	$Filename:	DlgScene.cpp $
+**	$Filename:	DlgHierarchy.cpp $
 **	$Release:	Dortmund 2001 $
 **	$Revision$
 **	$Date$
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - CView part
+**	Blizzard III - Object (de-)activating
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -26,12 +26,6 @@
 #include "AppLinesView.h"
 #include "DlgHierarchy.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -40,11 +34,19 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.4  2001/11/11 15:09:56  sm
+**	- Introduced scene properties for:
+**	  o scene itself (done)
+**	  o distributed raytracing (controls layouted)
+**	  o super sampling (controls layouted)
+**	  o nebular (controls layouted)
+**	  o lens flares (controls layouted)
+**
 **	Revision 1.3  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **
 */
 

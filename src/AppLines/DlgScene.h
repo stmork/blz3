@@ -31,7 +31,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // CDlgScene dialog
 
-class CDlgScene : public CDialog
+class CDlgScene : public CPropertyPage
 {
 // Construction
 public:

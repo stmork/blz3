@@ -148,11 +148,27 @@ SOURCE=.\ChildFrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgDistributed.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgHierarchy.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgLensFlare.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgNebular.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgScene.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSuperSampling.cpp
 # End Source File
 # Begin Source File
 
@@ -200,11 +216,27 @@ SOURCE=.\ChildFrm.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgDistributed.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgHierarchy.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgLensFlare.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgNebular.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgScene.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgSuperSampling.h
 # End Source File
 # Begin Source File
 
