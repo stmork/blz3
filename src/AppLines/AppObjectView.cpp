@@ -36,9 +36,17 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.22  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
-**
+**	
 **	Revision 1.21  2003/07/20 07:48:30  sm
 **	- Added legend to object printing
 **	
@@ -460,7 +468,7 @@ void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point)
 void CAppObjectView::OnRaytrace() 
 {
 	// TODO: Add your command handler code here
-	CDlgObjectPreview preview(m_BBox,m_Camera);
+	CDlgObjectPreview preview(GetDocument()->b3GetParentShading(), m_BBox,m_Camera);
 
 	preview.DoModal();
 }

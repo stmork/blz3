@@ -33,9 +33,17 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.1  2004/05/11 09:58:25  sm
 **	- Added raytraced quick preview for bject editing.
-**
+**	
 **	
 */
 
@@ -45,10 +53,10 @@
 **                                                                      **
 *************************************************************************/
 
-CDlgObjectPreview::CDlgObjectPreview(b3BBox *bbox,b3CameraPart *camera,CWnd* pParent /*=NULL*/)
+CDlgObjectPreview::CDlgObjectPreview(b3_u32 shading_class_type,b3BBox *bbox,b3CameraPart *camera,CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgObjectPreview::IDD, pParent)
 {
-	m_PreviewScene = b3ExampleScene::b3CreateBBox(bbox,camera);
+	m_PreviewScene = b3ExampleScene::b3CreateBBox(bbox, shading_class_type,camera);
 	//{{AFX_DATA_INIT(CDlgObjectPreview)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT

@@ -26,7 +26,7 @@
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
 
-#define no_DEBUG_SS4
+#define DEBUG_SS4
 
 /*************************************************************************
 **                                                                      **
@@ -36,10 +36,18 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.10  2004/05/22 14:17:31  sm
 **	- Merging some basic raytracing structures and gave them some
 **	  self explaining names. Also cleaned up some parameter lists.
-**
+**	
 **	Revision 1.9  2004/05/20 19:10:30  sm
 **	- Separated shader from scene. this is easier
 **	  to handle.
@@ -180,6 +188,11 @@ b3SupersamplingRayRow::b3SupersamplingRayRow(
 	{
 		m_LastResult = null;
 	}
+#ifndef DEBUG_SS4
+	m_Debug = true;
+#else
+	m_Debug = false;
+#endif
 }
 
 b3SupersamplingRayRow::~b3SupersamplingRayRow()
@@ -271,13 +284,19 @@ inline void b3SupersamplingRayRow::b3Convert()
 {
 	b3_res x;
 
-	for (x = 0;x < m_xSize;x++)
+	if (!m_Debug)
 	{
-#ifndef DEBUG_SS4
-		m_buffer[x] = m_ThisResult[x];
-#else
-		m_buffer[x] = B3_BLUE;
-#endif
+		for (x = 0;x < m_xSize;x++)
+		{
+			m_buffer[x] = m_ThisResult[x];
+		}
+	}
+	else
+	{
+		for (x = 0;x < m_xSize;x++)
+		{
+			m_buffer[x] = B3_BLUE;
+		}
 	}
 
 	m_Display->b3PutRow(this);
@@ -295,9 +314,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 	b3_vector64   dir;
 	b3_f64        fxLeft,fxRight,fyUp,fyDown;
 	b3_bool       do_refine_succ = false;
-#ifdef DEBUG_SS4
 	b3_pkd_color  result;
-#endif
 
 	B3_ASSERT(m_RowState != B3_STATE_READY);
 
@@ -315,23 +332,21 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 
 	for (x = 0;x < m_xSize;x++)
 	{
-		if (x > 0)
+		add = (x > 0 ? b3Test(x) : false);
+		if (m_Debug)
 		{
-			add    = b3Test(x);
-#ifdef DEBUG_SS4
-			result = (add ?
-				(this_row ?
-					B3_GREEN :
-					B3_RED) :
-				B3_GREY);
-#endif
-		}
-		else
-		{
-			add    = false;
-#ifdef DEBUG_SS4
-			result = B3_BLUE;
-#endif
+			if (x > 0)
+			{
+				result = (add ?
+					(this_row ?
+						B3_GREEN :
+						B3_RED) :
+					B3_GREY);
+			}
+			else
+			{
+				result = B3_BLUE;
+			}
 		}
 
 		// Do the additional computations...
@@ -380,11 +395,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		fxRight   += m_fxStep;
 		fxLeft    += m_fxStep;
 
-#ifndef DEBUG_SS4
-		m_buffer[x] = m_ThisResult[x];
-#else
-		m_buffer[x] = result;
-#endif
+		m_buffer[x] = m_Debug ? result : m_ThisResult[x];
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();

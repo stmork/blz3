@@ -37,9 +37,17 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.21  2004/05/29 13:38:11  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.20  2004/05/28 15:32:06  sm
 **	- Corrected class wizard file
 **	
@@ -283,7 +291,7 @@ b3CameraPart *b3ExampleScene::b3CreateCamera(
 	return camera;
 }
 
-b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox,b3CameraPart *original_camera, b3_u32 class_type)
+b3Scene *b3ExampleScene::b3CreateBBox(b3BBox *original_bbox, b3_u32 class_type,b3CameraPart *original_camera)
 {
 	b3Scene      *scene  = new b3Scene(class_type);
 	b3BBox       *bbox   = (b3BBox *)b3World::b3Clone(original_bbox);

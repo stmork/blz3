@@ -307,6 +307,8 @@ class B3_PLUGIN b3SupersamplingRayRow : public b3RayRow
 	b3SupersamplingRayRow *m_SuccRow;
 	b3Color                m_Limit;
 	b3_row_state           m_RowState;
+	b3_bool                m_Debug;
+
 public:
 	              b3SupersamplingRayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize,b3SupersamplingRayRow *previous);
 	virtual      ~b3SupersamplingRayRow();

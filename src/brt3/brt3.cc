@@ -38,9 +38,17 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.54  2004/05/16 09:21:50  sm
 **	- Corrected camera access methods.
-**
+**	
 **	Revision 1.53  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
@@ -526,7 +534,7 @@ int main(int argc,char *argv[])
 										b3PrintF(B3LOG_NORMAL,"Animating!!!\n\n");
 										scene->b3ResetAnimation();
 										step = 1.0 / animation->m_FramesPerSecond;
-										for (t = animation->m_Start;t < animation->m_End;t += step)
+										for (t = animation->m_Start;t <= animation->m_End;t += step)
 										{
 											b3PrintF(B3LOG_NORMAL,"Rendering frame t=%1.2f\n",t);
 											scene->b3SetAnimation(t);

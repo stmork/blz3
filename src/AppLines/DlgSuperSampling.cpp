@@ -32,10 +32,18 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.5  2003/03/04 20:37:36  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.4  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -114,23 +122,23 @@ BOOL CDlgSuperSampling::OnInitDialog()
 	CDialog::OnInitDialog();
 	
 	// TODO: Add extra initialization here
-	m_RedCtrl.SetRangeMin (   0);
-	m_RedCtrl.SetRangeMax ( 100);
-	m_RedCtrl.SetPageSize (  10);
-	m_RedCtrl.SetTicFreq  (  10);
-	m_RedCtrl.SetPos      (m_LastRed);
+	m_RedCtrl.SetRangeMin   (   0);
+	m_RedCtrl.SetRangeMax   ( 100);
+	m_RedCtrl.SetPageSize   (   1);
+	m_RedCtrl.SetTicFreq    (  10);
+	m_RedCtrl.SetPos        (m_LastRed);
 	
 	m_GreenCtrl.SetRangeMin (   0);
 	m_GreenCtrl.SetRangeMax ( 100);
-	m_GreenCtrl.SetPageSize (  10);
+	m_GreenCtrl.SetPageSize (   1);
 	m_GreenCtrl.SetTicFreq  (  10);
 	m_GreenCtrl.SetPos      (m_LastGreen);
 	
-	m_BlueCtrl.SetRangeMin (   0);
-	m_BlueCtrl.SetRangeMax ( 100);
-	m_BlueCtrl.SetPageSize (  10);
-	m_BlueCtrl.SetTicFreq  (  10);
-	m_BlueCtrl.SetPos      (m_LastBlue);
+	m_BlueCtrl.SetRangeMin  (   0);
+	m_BlueCtrl.SetRangeMax  ( 100);
+	m_BlueCtrl.SetPageSize  (   1);
+	m_BlueCtrl.SetTicFreq   (  10);
+	m_BlueCtrl.SetPos       (m_LastBlue);
 	
 	UpdateData();
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -37,6 +37,14 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2004/05/30 20:25:00  sm
+**      - Set paging size in supersampling dialog to 1 instead of 10.
+**      - Added support for debugging super sampling.
+**      - The object preview uses the shading model of its owning world.
+**      - Fixed animation problem when using rotating elements on
+**        time bounds because of rounding problems. Now using
+**        b3_f32 for time points.
+**
 **      Revision 1.7  2004/04/17 09:40:54  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -291,14 +299,14 @@ void b3AnimElement::b3AnimateRotate(
 	b3_matrix   *transform,
 	b3_f64       tParam)
 {
-	b3_f64     t1,t2,t = tParam;
+	b3_f32     t1,t2,t = tParam;
 	b3_bool    negate;
 	b3_vector  lookTo;
 	b3_vector  oldDir;
 	b3_vector  oldCenter;
 
-	t1 = b3Animation::b3ClipTimePoint (t - ANIM_STEP,m_Start,m_End);
-	t2 = b3Animation::b3ClipTimePoint (t + ANIM_STEP,m_Start,m_End);
+	t1 = b3Math::b3Limit (t - ANIM_STEP,m_Start,m_End);
+	t2 = b3Math::b3Limit (t + ANIM_STEP,m_Start,m_End);
 	if (t1 != t2)
 	{
 		b3GetPosition (&lookTo, t);
@@ -474,7 +482,7 @@ void b3Animation::b3ApplyTransformation (
 		{
 			b3PrintF(B3LOG_FULL,"  ANIM light %s\n",Anim->m_Object);
 			Anim->b3GetPosition (&Light->m_Position,
-				b3ClipTimePoint(t,Anim->m_Start,Anim->m_End));
+				b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
 			if ((Light->m_SpotActive) &&
 			    ( Anim->b3GetClassType() == ANIM_ROTATE))
 			{
@@ -496,7 +504,7 @@ void b3Animation::b3ApplyTransformation (
 			height = b3Vector::b3Length (&Camera->m_Height);
 			diff   = Camera->m_EyePoint;
 			Anim->b3GetPosition (&Camera->m_EyePoint,
-				b3ClipTimePoint(t,Anim->m_Start,Anim->m_End));
+				b3Math::b3Limit(t,Anim->m_Start,Anim->m_End));
 
 			if (Anim->b3GetClassType() == ANIM_ROTATE)
 			{

@@ -34,6 +34,14 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2004/05/30 20:25:00  sm
+**      - Set paging size in supersampling dialog to 1 instead of 10.
+**      - Added support for debugging super sampling.
+**      - The object preview uses the shading model of its owning world.
+**      - Fixed animation problem when using rotating elements on
+**        time bounds because of rounding problems. Now using
+**        b3_f32 for time points.
+**
 **      Revision 1.18  2004/04/17 09:40:55  sm
 **      - Splitting b3Raytrace.h into their components for
 **        better oversightment.
@@ -226,7 +234,7 @@ void b3Animation::b3RecomputeCenter (
 		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
-			tClipped = b3Animation::b3ClipTimePoint(t,Anim->m_Start,Anim->m_End);
+			tClipped = b3Math::b3Limit(t,Anim->m_Start,Anim->m_End);
 			Anim->b3GetPosition (center,tClipped);
 		}
 	}
@@ -252,7 +260,7 @@ void b3Animation::b3RecomputeNeutralInverse (b3AnimElement *Element)
 		Anim->m_Center = m_AnimCenter;
 		if (Anim == Element)
 		{
-			t = b3ClipTimePoint(m_Neutral,Anim->m_Start,Anim->m_End);
+			t = b3Math::b3Limit(m_Neutral,Anim->m_Start,Anim->m_End);
 			b3Matrix::b3Unit (&Anim->m_NeutralInverse);
 			Anim->b3ComputeTransformationMatrix (this,&resetMatrix,t);
 			b3Matrix::b3Inverse (&resetMatrix,&Anim->m_NeutralInverse);
@@ -262,7 +270,7 @@ void b3Animation::b3RecomputeNeutralInverse (b3AnimElement *Element)
 		// compute rotation center if necessary
 		if ((Anim->m_Flags & flagmask) == flagmask)
 		{
-			t = b3ClipTimePoint (m_Neutral,Anim->m_Start,Anim->m_End);
+			t = b3Math::b3Limit (m_Neutral,Anim->m_Start,Anim->m_End);
 			Anim->b3GetPosition (&m_AnimCenter,t);
 		}
 	}
@@ -378,7 +386,7 @@ void b3Animation::b3SetAnimation (b3Scene *Global,b3_f64 t)
 		Anim->m_Center = m_AnimCenter;
 		if (Anim->m_Flags & ANIMFLAGF_ACTIVE)
 		{
-			tClipped = b3ClipTimePoint(t,Anim->m_Start,Anim->m_End);
+			tClipped = b3Math::b3Limit(t,Anim->m_Start,Anim->m_End);
 			Anim->b3ComputeTransformationMatrix (this,&Anim->m_Actual,tClipped);
 			b3ApplyTransformation (Global,Anim,&Anim->m_Actual,t);
 
@@ -426,47 +434,4 @@ b3_bool b3Animation::b3ActivateAnimation (
 	}
 
 	return oldActivation;
-}
-
-
-/*************************************************************************
-**                                                                      **
-**                        some auxiliary routines                       **
-**                                                                      **
-*************************************************************************/
-
-
-/* This routine converts an frame index starting at 0 to the time */
-/* in seconds specified by the animation structure. */
-/* -------------------------------------------------------------- */
-/* AnimRoot: animation root structure */
-/* index:    frame index */
-
-b3_f64 b3Animation::b3AnimTimeCode (b3_index index)
-{
-	return m_Start + (b3_f64)index / m_FramesPerSecond;
-}
-
-/* This routine converts a time code to frame index starting at 0. */
-/* -------------------------------------------------------------- */
-/* AnimRoot: animation root structure */
-/* t:        time code */
-
-b3_index b3Animation::b3AnimFrameIndex (b3_f64 t)
-{
-	return (b3_index)((t - m_Start) * m_FramesPerSecond);
-}
-
-b3_f64 b3Animation::b3ClipTimePoint(b3_f64 val)
-{
-	if (val < m_Start) return m_Start;
-	if (val > m_End)   return m_End;
-	return val;
-}
-
-b3_f64 b3Animation::b3ClipTimePoint(b3_f64 val,b3_f64 min,b3_f64 max)
-{
-	if (val < min) return min;
-	if (val > max) return max;
-	return val;
 }

@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/base/b3Array.h"
 #include "blz3/base/b3Filter.h"
+#include "blz3/base/b3Math.h"
 #include "blz3/base/b3Procedure.h"
 
 /*************************************************************************
@@ -241,11 +242,22 @@ public:
 	       void            b3SetAnimation (b3Scene *Global,b3_f64 t);
 	       void            b3ResetAnimation (b3Scene *Global);
 	       b3_bool         b3ActivateAnimation(b3Scene *scene,b3_bool activate = true);
-	       b3_f64          b3AnimTimeCode (b3_index index);
-	       b3_index        b3AnimFrameIndex (b3_f64 t);
-	static b3_f64          b3ClipTimePoint(b3_f64 val,b3_f64 min,b3_f64 max);
-	       b3_f64          b3ClipTimePoint(b3_f64);
 		   void            b3RecomputeCenter (b3AnimElement *Element,b3_vector *center,b3_f64 t);
+	       
+		   inline b3_f64   b3AnimTimeCode (b3_index index)
+		   {
+	           return m_Start + (b3_f64)index / m_FramesPerSecond;
+		   }
+
+	       inline b3_index b3AnimFrameIndex (b3_f64 t)
+		   {
+			   return (b3_index)((t - m_Start) * m_FramesPerSecond);
+		   }
+
+	       inline b3_f64   b3ClipTimePoint(b3_f64 val)
+		   {
+			   	return b3Math::b3Limit(val,m_Start,m_End);
+		   }
 
 	inline b3Base<b3Item> *b3GetAnimElementHead()
 	{

@@ -60,9 +60,17 @@
 
 /*
 **	$Log$
+**	Revision 1.101  2004/05/30 20:25:00  sm
+**	- Set paging size in supersampling dialog to 1 instead of 10.
+**	- Added support for debugging super sampling.
+**	- The object preview uses the shading model of its owning world.
+**	- Fixed animation problem when using rotating elements on
+**	  time bounds because of rounding problems. Now using
+**	  b3_f32 for time points.
+**
 **	Revision 1.100  2004/05/29 13:38:10  sm
 **	- Made shading model visible to material an bump dialogs.
-**
+**	
 **	Revision 1.99  2004/05/19 15:35:03  sm
 **	- Hope of having fixed ticket no. 13.
 **	
@@ -1647,7 +1655,7 @@ void CAppLinesDoc::OnObjectSave()
 
 			tx.b3AllocTx(120,120,24);
 			display = new b3Display(&tx);
-			scene = b3ExampleScene::b3CreateBBox(selected);
+			scene = b3ExampleScene::b3CreateBBox(selected,m_Scene->b3GetClassType());
 			scene->b3Raytrace(display);
 			result.b3RemoveExt();
 			result.b3Append(".tga");

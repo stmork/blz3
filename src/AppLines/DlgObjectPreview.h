@@ -35,7 +35,7 @@ class CDlgObjectPreview : public CDialog
 
 // Construction
 public:
-	CDlgObjectPreview(b3BBox *bbox,b3CameraPart *camera,CWnd* pParent = NULL);   // standard constructor
+	CDlgObjectPreview(b3_u32 shading_class_type, b3BBox *bbox,b3CameraPart *camera,CWnd* pParent = NULL);   // standard constructor
 	~CDlgObjectPreview();
 	
 // Dialog Data
