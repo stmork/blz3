@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2004/05/05 15:41:17  sm
+**	- Working on bug 17.
+**
 **	Revision 1.55  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.54  2004/03/02 09:07:17  sm
 **	- Added read/write support for Cook/Torrance material.
 **	- Added test module for Cook/Torrance reflection model.
@@ -416,6 +419,13 @@ void b3Scene::b3Write()
 	b3StoreRes   (m_xSize);
 	b3StoreRes   (m_ySize);
 	b3StoreString(m_TextureName,B3_TEXSTRINGLEN);
+}
+
+char *b3Scene::b3GetName()
+{
+	m_FileName.b3SplitFileName(null,m_SceneName);
+	m_SceneName.b3RemoveExt();
+	return m_SceneName;
 }
 
 char *b3Scene::b3GetFilename()

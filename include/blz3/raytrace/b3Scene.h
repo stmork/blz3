@@ -79,6 +79,7 @@ class B3_PLUGIN b3Scene : public b3Item
 	b3PrepareInfo    m_PrepareInfo;
 	b3_vector        m_NormWidth;
 	b3_vector        m_NormHeight;
+	b3Path           m_SceneName;
 
 protected:
 	b3Path           m_Filename;
@@ -136,6 +137,7 @@ public:
 	        void            b3Write();
 	        void            b3Reorg();
 	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
+	        char           *b3GetName();
 
 			// Drawing routines
 		    void            b3AllocVertices(b3RenderContext *context);
