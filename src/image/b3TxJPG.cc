@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/09/26 07:23:16  sm
+**	- New JPEG library
+**
 **	Revision 1.11  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.10  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -172,7 +175,7 @@ b3_result b3Tx::b3ParseJPEG (b3_u08 *buffer,b3_size buffer_size)
 	}
 	jpeg_create_decompress(&cinfo);
 
-		/* NOTE: this is only dummy because the data is completly loaded. */
+	// NOTE: this is only dummy because the data is completly loaded.
 	my_source_mgr.init_source       = JPEGinit_source;
 	my_source_mgr.fill_input_buffer = JPEGfill_input_buffer;
 	my_source_mgr.skip_input_data   = JPEGskip_input_data;

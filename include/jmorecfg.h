@@ -1,7 +1,7 @@
 /*
  * jmorecfg.h
  *
- * Copyright (C) 1991-1996, Thomas G. Lane.
+ * Copyright (C) 1991-1997, Thomas G. Lane.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -224,7 +224,7 @@ typedef unsigned int JDIMENSION;
  */
 
 #ifndef HAVE_BOOLEAN
-typedef unsigned char boolean;
+typedef int boolean;
 #endif
 #ifndef FALSE			/* in case these macros already exist */
 #define FALSE	0		/* values of boolean */
@@ -285,6 +285,7 @@ typedef unsigned char boolean;
 #undef  D_ARITH_CODING_SUPPORTED    /* Arithmetic coding back end? */
 #define D_MULTISCAN_FILES_SUPPORTED /* Multiple-scan JPEG files? */
 #define D_PROGRESSIVE_SUPPORTED	    /* Progressive JPEG? (Requires MULTISCAN)*/
+#define SAVE_MARKERS_SUPPORTED	    /* jpeg_save_markers() needed? */
 #define BLOCK_SMOOTHING_SUPPORTED   /* Block smoothing? (Progressive only) */
 #define IDCT_SCALING_SUPPORTED	    /* Output rescaling via IDCT? */
 #undef  UPSAMPLE_SCALING_SUPPORTED  /* Output rescaling at upsample stage? */

@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2003/09/26 07:23:16  sm
+**	- New JPEG library
+**
 **	Revision 1.13  2002/08/25 13:03:02  sm
 **	- Added a tool to restore correct file extensions.
 **	- b3Tx can determine the image types' file extension.
-**
+**	
 **	Revision 1.12  2002/08/17 17:31:22  sm
 **	- Introduced animation support (Puh!)
 **	
@@ -148,10 +151,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	{
 		if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8) && (buffer[i+2] == 0xff))
 		{
-			if (strncmp ((const char *)&buffer[i+6],"JFIF",4) == 0)
-			{
-				return b3ParseJPEG(&buffer[i],buffer_size - i);
-			}
+			return b3ParseJPEG(&buffer[i],buffer_size - i);
 		}
 	}
 
