@@ -70,7 +70,9 @@ depend:	$(BLZ3_LIB) $(BLZ3_BIN)
 		make -C $$i depend; \
 	done
 
-install:	all
+install:	all install-bin
+
+install-bin:
 	+@for i in $(PRGS); do \
 		echo ""; \
 		echo "Installing "$$i"..."; \
