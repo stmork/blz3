@@ -1,6 +1,6 @@
 /*
 **
-**	$Filename:	TestWood.cc $
+**	$Filename:	TestSampler.cc $
 **	$Release:	Dortmund 2004 $
 **	$Revision$
 **	$Date$
@@ -25,9 +25,6 @@
 #include "blz3/raytrace/b3BumpSampler.h"
 #include "blz3/raytrace/b3MaterialSampler.h"
 
-#define WOOD_RES   400
-#define no_CREATE_ICON
-
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -36,7 +33,7 @@
 
 /*
 **  $Log$
-**  Revision 1.14  2004/06/25 11:25:34  sm
+**  Revision 1.1  2004/06/25 11:25:34  sm
 **  - Added pure wooden sampler.
 **
 **  Revision 1.13  2004/05/16 18:50:59  sm
@@ -94,94 +91,92 @@
 
 /*************************************************************************
 **                                                                      **
-**                        b3WoodSampler implementation                  **
+**                        b3TestWood implementation                     **
 **                                                                      **
 *************************************************************************/
 
-class b3WoodSampler : public b3ImageSampler, public b3Wood
+#define WOOD_RES   400
+#define no_CREATE_ICON
+
+class b3MatWoodSampler : public b3MaterialSampler
 {
-	b3_coord m_Translate;
-	b3Color  m_Dark;
-	b3Color  m_Light;
-
 public:
-	b3WoodSampler(b3Tx *tx) : b3ImageSampler(tx)
+	b3MatWoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
 	{
-		b3_vector scale;
-		b3_f64    scalar = 200.0 / WOOD_RES;
-
-		m_Translate = WOOD_RES >> 1;
-		m_Dark      = B3_BLACK;
-		m_Light     = B3_WHITE;
-
-		b3InitWood();
-		b3Vector::b3Init(&scale,scalar,scalar,scalar);
-		b3PrepareWood(&scale);
+		// Init material
+		m_Material = new b3MatWood(WOOD);
+		m_Material->b3Prepare();
 	}
-
-protected:
-	inline b3_pkd_color b3SamplePixel(b3_coord x,b3_coord y)
+	
+	virtual ~b3MatWoodSampler()
 	{
-		b3_vector    sample;
-		b3_pkd_color result;
-
-		sample.y = x - m_Translate;
-		sample.x = m_Translate - y;
-		sample.z = m_Translate - x * 0.02;
-		
-		b3_f64 mix = b3ComputeWood(&sample);
-		result = b3Color::b3Mix(m_Dark,m_Light,mix);
-//		b3PrintF(B3LOG_FULL,"%3d %3d: %06lx - %1.4f %2.3f %2.3f %2.3f\n",x,y,result,mix,sample.x,sample.y,sample.z);
-		return result;
+		delete m_Material;
 	}
 };
 
-/*************************************************************************
-**                                                                      **
-**                        b3PlankSampler implementation                 **
-**                                                                      **
-*************************************************************************/
-
-class b3PlankSampler : public b3ImageSampler, public b3OakPlank
+class b3MatOakPlankSampler : public b3MaterialSampler
 {
-	b3_f64   m_Scale;
-	b3Color  m_Dark;
-	b3Color  m_Light;
-
 public:
-	b3PlankSampler(b3Tx *tx) : b3ImageSampler(tx)
+	b3MatOakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx,1)
 	{
-		b3_vector scale;
-		b3_f64    scalar = 10;
+		b3MatOakPlank *material = new b3MatOakPlank(OAKPLANK);
 
-		m_Scale     = 1.0 / WOOD_RES;
-		m_Dark      = B3_BLACK;
-		m_Light     = B3_WHITE;
-
-		b3InitOakPlank();
 #ifdef CREATE_ICON
-		m_xOffset = 0.52;
-		m_RingFrequency *= 0.1;
+		material->m_LightWood = material->m_DarkWood * 2.0;
+		material->m_xScale *= 7;
+		material->m_yScale *= 8;
+		material->m_xOffset = 0.52;
+		material->m_RingFrequency *= 0.1;
+#else
+		material->m_xScale *= 2;
+		material->m_yScale *= 2;
 #endif
-		b3Vector::b3Init(&scale,scalar,scalar,scalar);
-		b3PrepareOakPlank(&scale);
+
+		// Init material
+		m_Material = material;
+		m_Material->b3Prepare();
 	}
-
-protected:
-	inline b3_pkd_color b3SamplePixel(b3_coord x,b3_coord y)
+	
+	virtual ~b3MatOakPlankSampler()
 	{
-		b3_vector    sample;
-		b3_pkd_color result;
-		b3_index     index;
+		delete m_Material;
+	}
+};
 
-		sample.x = x * m_Scale;
-		sample.y = y * m_Scale;
-		sample.z = 0;
-		
-		b3_f64 mix = b3ComputeOakPlank(&sample,index);
-		result = b3Color::b3Mix(m_Dark,m_Light,mix);
-//		b3PrintF(B3LOG_NORMAL,"%3d %3d: %06lx - %1.4f / %2d - %2.3f %2.3f %2.3f\n",x,y,result,mix,index,sample.x,sample.y,sample.z);
-		return result;
+class b3BumpWoodSampler : public b3BumpSampler
+{
+public:
+	b3BumpWoodSampler(b3Tx *tx) : b3BumpSampler(tx,1)
+	{
+		// Init material
+		m_Bump = (b3Bump *)b3World::b3AllocNode(BUMP_WATER);
+		m_Bump->b3Prepare();
+	}
+	
+	virtual ~b3BumpWoodSampler()
+	{
+		delete m_Bump;
+	}
+};
+
+class b3BumpOakPlankSampler : public b3BumpSampler
+{
+public:
+	b3BumpOakPlankSampler(b3Tx *tx) : b3BumpSampler(tx,1)
+	{
+		b3BumpOakPlank *bump = new b3BumpOakPlank(BUMP_OAKPLANK);
+
+		bump->m_xScale *= 4;
+		bump->m_yScale *= 4;
+
+		// Init material
+		m_Bump = bump;
+		m_Bump->b3Prepare();
+	}
+	
+	virtual ~b3BumpOakPlankSampler()
+	{
+		delete m_Bump;
 	}
 };
 
@@ -200,17 +195,14 @@ int main(int argc,char *argv[])
 		display->b3GetRes(xMax,yMax);
 		
 		tx.b3AllocTx(xMax,yMax,24);
+		
+		b3MatWoodSampler      sampler(&tx);
+//		b3MatOakPlankSampler  sampler(&tx);
+//		b3BumpWoodSampler     sampler(&tx);
+//		b3BumpOakPlankSampler sampler(&tx);
 
-#if 1
-		b3WoodSampler  sampler(&tx);
-#else
-		b3PlankSampler  sampler(&tx);
-#endif
-
-		b3Time span;
 		sampler.b3Sample();
-		b3_f64 used = b3Time() - span;
-		b3PrintF(B3LOG_NORMAL,"Time used: %1.3fs = %1.5fms/px\n",used,used * 1000/ (tx.xSize * tx.ySize));
+
 		// We want to see the computed picture until we make input
 		// into the display window.
 		display->b3PutTx(&tx);
