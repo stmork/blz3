@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2004/08/18 07:32:00  sm
+**	- Fixed b3Thread::b3Stop() bug on gcc 2.95 systems.
+**
 **	Revision 1.17  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
-**
+**	
 **	Revision 1.16  2003/08/11 08:21:40  sm
 **	- Added priority scheduling to b3Thread class.
 **	- Cleaned up brt3 comments.
@@ -354,7 +357,10 @@ b3_bool b3Thread::b3Stop()
 {
 	b3_bool was_running;
 
-	pthread_cancel(m_Thread);
+	if (b3IsRunning())
+	{
+		pthread_cancel(m_Thread);
+	}
 	was_running = m_IsRunning;
 	if (m_IsRunning)
 	{
@@ -366,6 +372,7 @@ b3_bool b3Thread::b3Stop()
 	b3Dec();
 	m_CallProc  = null;
 	m_CallArg   = 0;
+	m_Thread    = 0;
 
 	return was_running;
 }

@@ -38,7 +38,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
 
 AC_CHECK_LIB([dl], [main])
-AC_CHECK_LIB([pthread], [main], [CPPFLAGS="-D_REENTRANT $CPPFLAGS" CFLAGS="$CFLAGS -pthread" CXXFLAGS="$CXXFLAGS -pthread"],[AC_MSG_ERROR([No POSIX threads available!])])
+AC_CHECK_LIB([pthread], [main], [CPPFLAGS="-D_REENTRANT $CPPFLAGS" CFLAGS="$CFLAGS -pthread" CXXFLAGS="$CXXFLAGS -pthread" LDFLAGS="$LDFLAGS -lpthread"],[AC_MSG_ERROR([No POSIX threads available!])])
 
 AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$LIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
 AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
