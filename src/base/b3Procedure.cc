@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.41  2004/08/10 09:23:13  sm
+**	- Noise indexing optimized
+**	- Added b3Color::b3Pow() method.
+**
 **	Revision 1.40  2004/08/03 19:55:02  sm
 **	- Changed thin film animation parameter.
-**
+**	
 **	Revision 1.39  2004/08/02 13:57:59  sm
 **	- Changed thin film animation to closed spline computation.
 **	
@@ -215,9 +219,9 @@
 #define NOISEDIM         3
 
 #define INDEX3D(x,y,z)   ((((\
-	((x) & NOISEMASK)  << NOISEBITS) +\
+	((z) & NOISEMASK)  << NOISEBITS) +\
 	((y) & NOISEMASK)) << NOISEBITS) +\
-	((z) & NOISEMASK))
+	((x) & NOISEMASK))
 
 #define DIMSIZE          (NOISEMAXALLOC * NOISEMAXALLOC * NOISEMAXALLOC)
 
@@ -366,8 +370,8 @@ b3_f64 b3Noise::b3NoiseScalar(b3_f64 x)
 	ix = (b3_index)floor(x);
 	fx = (b3_f32)x - ix;
 
-	a = m_NoiseTable[INDEX3D(ix  ,0,0  )];
-	b = m_NoiseTable[INDEX3D(ix+1,0,0  )];
+	a = m_NoiseTable[ix];
+	b = m_NoiseTable[(ix+1) & NOISEMASK];
 
 	return a * (1.0 - fx) + b * fx;
 }
@@ -380,8 +384,8 @@ b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
 	ix = (b3_index)floor(x);
 	fx = b3Math::b3Smoothstep(x - ix);
 
-	a = m_NoiseTable[INDEX3D(ix  ,0,0  )];
-	b = m_NoiseTable[INDEX3D(ix+1,0,0  )];
+	a = m_NoiseTable[ix];
+	b = m_NoiseTable[(ix+1) & NOISEMASK];
 
 	return a * (1.0 - fx) + b * fx;
 }

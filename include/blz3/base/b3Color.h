@@ -418,6 +418,18 @@ public:
 		return result;
 	}
 
+	inline b3Color b3Pow(b3_f32 exp)
+	{
+		b3Color result,exponent;
+		
+		exponent.b3Init(exp);
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			result.v[i] = pow(v[i],exponent.v[i]);
+		}
+		return result;
+	}
+
 	inline b3_bool b3IsGreater(b3Color &limit)
 	{
 		return (fabs(v[R]) >= limit[R]) || (fabs(v[G]) >= limit[G]) || (fabs(v[B]) >= limit[B]);
