@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2004/04/17 19:17:44  sm
+**	- Minor changes
+**
 **	Revision 1.22  2004/04/17 17:18:33  sm
 **	- Made some include adjustments
 **	- Added oakplank bump as dialog
 **	- Fixed b3BumpWood and b3BumpOakPlank
 **	  bump computation
-**
+**	
 **	Revision 1.21  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -765,7 +768,7 @@ void b3BumpWood::b3BumpNormal(b3_ray *ray)
 b3BumpOakPlank::b3BumpOakPlank(b3_u32 class_type) : b3Bump(sizeof(b3BumpOakPlank),class_type)
 {
 	m_Flags = 0;
-	m_Amplitude = 0.3f;
+	m_Amplitude = 0.025f;
 	m_dX = 1.0 / BUMP_dX;
 	m_dY = 1.0 / BUMP_dY;
 	b3InitOakPlank();
