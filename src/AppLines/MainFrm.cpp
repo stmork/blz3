@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2001/10/03 20:17:55  sm
+**	- Minor bugfixes
+**
 **	Revision 1.7  2001/09/30 15:46:07  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.6  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
@@ -358,9 +361,9 @@ void CMainFrame::b3UpdateLightBox(b3Scene *scene,b3Light *act)
 	m_lightBox.b3Clear();
 	for (light = scene->b3GetLight();light != null;light = (b3Light *)light->Succ)
 	{
-		m_lightBox.b3AddString(light->Name,light);
+		m_lightBox.b3AddString(light->m_Name,light);
 	}
-	m_lightBox.b3SetString(act->Name);
+	m_lightBox.b3SetString(act->m_Name);
 }
 
 b3Light *CMainFrame::b3GetSelectedLight()

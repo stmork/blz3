@@ -66,6 +66,7 @@ public:
 	void       b3DrawFulcrum();
 	void       b3ComputeBounds();
 	void       b3ClearRaytraceDoc();
+	void       b3Raytrace();
 	virtual   ~CAppLinesDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;

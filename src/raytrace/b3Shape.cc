@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.19  2001/10/03 20:17:56  sm
+**      - Minor bugfixes
+**
 **      Revision 1.18  2001/10/03 18:46:45  sm
 **      - Adding illumination and recursive raytracing
 **
@@ -239,6 +242,7 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 	b3Item     *item;
 	b3Material *material;
 	b3_color    ambient,specular;
+	b3_polar    polar;
 
 	color->r = 0.1f;
 	color->g = 0.5f;
@@ -248,14 +252,16 @@ void b3Shape::b3GetDiffuseColor(b3_color *color)
 	B3_FOR_BASE(b3GetMaterialHead(),item)
 	{
 		material = (b3Material *)item;
-		if (material->b3GetColors(color,&ambient,&specular))
+		if (material->b3GetColors(&polar,color,&ambient,&specular))
 		{
 			return;
 		}
 	}
 }
 
-b3Material *b3Shape::b3GetColors(b3_surface *surface)
+b3Material *b3Shape::b3GetColors(
+	b3_ray     *ray,
+	b3_surface *surface)
 {
 	b3Item     *item;
 	b3Material *material;
@@ -279,6 +285,7 @@ b3Material *b3Shape::b3GetColors(b3_surface *surface)
 	{
 		material = (b3Material *)item;
 		if (material->b3GetColors(
+			&ray->polar,
 			&surface->diffuse,
 			&surface->ambient,
 			&surface->specular))

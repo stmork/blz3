@@ -452,6 +452,7 @@ public:
 	virtual b3_f64  b3GetIndexOfRefraction();
 	virtual b3_f64  b3GetSpecularExponent();
 	virtual b3_bool b3GetColors(
+		b3_polar *polar,
 		b3_color *diff,
 		b3_color *amb,
 		b3_color *spec);
@@ -471,7 +472,12 @@ public:
 	B3_ITEM_INIT(b3MatNormal);
 	B3_ITEM_LOAD(b3MatNormal);
 
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
 	b3_bool b3GetColors(
+		b3_polar *polar,
 		b3_color *diff,
 		b3_color *amb,
 		b3_color *spec);
@@ -508,6 +514,11 @@ class b3MatMarble : public b3Material
 public:
 	B3_ITEM_INIT(b3MatMarble);
 	B3_ITEM_LOAD(b3MatMarble);
+
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
 };
 
 // WOOD
@@ -525,6 +536,11 @@ class b3MatWood : public b3Material
 public:
 	B3_ITEM_INIT(b3MatWood);
 	B3_ITEM_LOAD(b3MatWood);
+
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
 };
 
 // TEXTURE
@@ -544,6 +560,11 @@ class b3MatTexture : public b3Material
 public:
 	B3_ITEM_INIT(b3MatTexture);
 	B3_ITEM_LOAD(b3MatTexture);
+
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
 };
 
 // WRAPTEXTURE
@@ -562,22 +583,39 @@ class b3MatWrapTexture : public b3Material
 public:
 	B3_ITEM_INIT(b3MatWrapTexture);
 	B3_ITEM_LOAD(b3MatWrapTexture);
+
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
 };
 
 // SLIDE
 class b3MatSlide : public b3Material 
 {
-	b3_color          DiffColor[2],AmbColor[2],SpecColor[2]; // start color
-	b3_f32            From,To;             // rel. polar values of start, end
-	b3_f32            Reflection;          // normal material definitions
-	b3_f32            Refraction;
-	b3_f32            RefrValue;
-	b3_f32            HighLight;
-	b3_s32            ModeFlag;            // direction and cut flags, see below
+	b3_color          m_Diffuse[2];        // colors for start/end
+	b3_color          m_Ambient[2];
+	b3_color          m_Specular[2];
+	b3_f32            m_From,m_To;           // rel. polar values of start, end
+	b3_f32            m_Reflection;          // normal material definitions
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+	b3_s32            m_ModeFlag;            // direction and cut flags, see below
 
 public:
 	B3_ITEM_INIT(b3MatSlide);
 	B3_ITEM_LOAD(b3MatSlide);
+
+	b3_f64  b3GetReflection();
+	b3_f64  b3GetRefraction();
+	b3_f64  b3GetIndexOfRefraction();
+	b3_f64  b3GetSpecularExponent();
+	b3_bool b3GetColors(
+		b3_polar *polar,
+		b3_color *diff,
+		b3_color *amb,
+		b3_color *spec);
 };
 
 #define DIR_SLIDE_BIT       0
@@ -712,7 +750,7 @@ public:
 
 	        void        b3ComputeBound(b3CondLimit *limit);
 	        void        b3GetDiffuseColor(b3_color *color);
-	        b3Material *b3GetColors(b3_surface *surface);
+	        b3Material *b3GetColors(b3_ray *ray,b3_surface *surface);
 	        void        b3BumpNormal(b3_ray *ray);
 	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
 	virtual void        b3Normal(b3_ray *ray);
@@ -1564,8 +1602,9 @@ public:
 	B3_ITEM_INIT(b3Nebular);
 	B3_ITEM_LOAD(b3Nebular);
 
-	void b3GetNebularColor(b3_color *result);
-	void b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
+	b3_bool b3IsActive();
+	void    b3GetNebularColor(b3_color *result);
+	void    b3ComputeNebular(b3_color *input,b3_color *result,b3_f64 distance);
 };
 
 // LINES_INFO
@@ -1793,6 +1832,8 @@ public:
 
 protected:
 		   b3_bool         b3ComputeOutputRays(b3_illumination *surface);
+		   void            b3GetInfiniteColor(b3_color *infinite);
+		   void            b3GetBackgroundColor(b3_color *background);
 
 private:
 	       void            b3RaytraceOneRow(b3RayRow *row);

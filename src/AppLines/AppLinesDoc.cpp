@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/10/03 20:17:55  sm
+**	- Minor bugfixes
+**
 **	Revision 1.12  2001/09/30 15:46:06  sm
 **	- Displaying raytracing under Windows
 **	- Major cleanups in Lines III with introducing CAppRaytraceDoc/
 **	  CAppRaytraceView pair for displaying Raytracing
-**
+**	
 **	Revision 1.11  2001/09/23 15:37:15  sm
 **	- Introducing raytracing for Lines III. There is much work
 **	  for a b3Display-CScrollView.
@@ -265,18 +268,22 @@ b3_bool CAppLinesDoc::b3IsRaytracing()
 	return m_Raytracer->b3IsRunning();
 }
 
-
 void CAppLinesDoc::OnRaytrace() 
 {
 	// TODO: Add your command handler code here
 	CAppLinesApp *app = (CAppLinesApp *)AfxGetApp();
-	b3_res        xSize,ySize;
 
 	if (m_RaytraceDoc == null)
 	{
 		m_RaytraceDoc = (CAppRaytraceDoc *)app->b3CreateRaytraceDoc();
 		m_RaytraceDoc->b3SetLinesDoc(this);
 	}
+	b3Raytrace();
+}
+
+void CAppLinesDoc::b3Raytrace()
+{
+	b3_res        xSize,ySize;
 
 	if (!b3IsRaytracing())
 	{

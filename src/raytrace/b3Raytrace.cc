@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2001/10/03 20:17:56  sm
+**	- Minor bugfixes
+**
 **	Revision 1.8  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
-**
+**	
 **	Revision 1.7  2001/10/02 16:01:58  sm
 **	- Moving b3Polar into b3Ray but that's not right at all. The
 **	  result must be placed there but a simple result from one
@@ -98,7 +101,6 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 	b3_dVector    preDir;
 	b3_f64        fx,fxStep;
 	b3_f64        fy;
-	b3_f64        denom;
 	b3_pkd_color *buffer,r,g,b;
 
 	buffer = row->b3GetBuffer();
@@ -125,7 +127,10 @@ void b3Scene::b3RaytraceOneRow(b3RayRow *row)
 		ray.dir.z  = preDir.z + fx * m_Width.z;
 		ray.inside = false;
 
-		b3Shade(&ray);
+		if (!b3Shade(&ray))
+		{
+			b3GetBackgroundColor(&ray.color);
+		}
 		r = (b3_pkd_color)(ray.color.r * 255.0);
 		g = (b3_pkd_color)(ray.color.g * 255.0);
 		b = (b3_pkd_color)(ray.color.b * 255.0);
@@ -169,6 +174,7 @@ b3_u32 b3Scene::b3RaytraceThread(void *ptr)
 void b3Scene::b3Raytrace(b3Display *display)
 {
 	b3RayRow    *row;
+	b3Nebular   *nebular;
 	b3Thread    *threads;
 	b3_res       xSize,ySize;
 	b3_count     CPUs,i;
@@ -176,7 +182,11 @@ void b3Scene::b3Raytrace(b3Display *display)
 
 	b3_f64       fy,fyStep;
 
-	m_Nebular = b3GetNebular();
+	nebular = b3GetNebular();
+	if (nebular->b3IsActive())
+	{
+		m_Nebular = nebular;
+	}
 	try
 	{
 		// What resolution to use

@@ -65,6 +65,7 @@ protected:
 	// Generated message map functions
 protected:
 	//{{AFX_MSG(CAppRaytraceDoc)
+	afx_msg void OnRaytrace();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

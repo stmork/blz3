@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.5  2001/10/03 20:17:55  sm
+**      - Minor bugfixes
+**
 **      Revision 1.4  2001/10/03 18:46:45  sm
 **      - Adding illumination and recursive raytracing
 **
@@ -96,6 +99,7 @@ b3_f64 b3Material::b3GetSpecularExponent()
 }
 
 b3_bool b3Material::b3GetColors(
+	b3_polar *polar,
 	b3_color *diffuse,
 	b3_color *ambient,
 	b3_color *specular)
@@ -120,6 +124,7 @@ b3MatNormal::b3MatNormal(b3_u32 *src) : b3Material(src)
 }
 
 b3_bool b3MatNormal::b3GetColors(
+	b3_polar *polar,
 	b3_color *diffuse,
 	b3_color *ambient,
 	b3_color *specular)
@@ -128,6 +133,26 @@ b3_bool b3MatNormal::b3GetColors(
 	*ambient  = AmbColor;
 	*specular = SpecColor;
 	return true;
+}
+
+b3_f64 b3MatNormal::b3GetReflection()
+{
+	return Reflection;
+}
+
+b3_f64 b3MatNormal::b3GetRefraction()
+{
+	return Refraction;
+}
+
+b3_f64 b3MatNormal::b3GetIndexOfRefraction()
+{
+	return RefrValue;
+}
+
+b3_f64 b3MatNormal::b3GetSpecularExponent()
+{
+	return HighLight;
 }
 
 
@@ -150,6 +175,26 @@ b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 	Texture    = (b3Tx *)b3InitNull();
 	Flags      = b3InitInt();
 	b3InitString(Name,B3_TEXSTRINGLEN);
+}
+
+b3_f64 b3MatTexture::b3GetReflection()
+{
+	return Reflection;
+}
+
+b3_f64 b3MatTexture::b3GetRefraction()
+{
+	return Refraction;
+}
+
+b3_f64 b3MatTexture::b3GetIndexOfRefraction()
+{
+	return RefrValue;
+}
+
+b3_f64 b3MatTexture::b3GetSpecularExponent()
+{
+	return HighLight;
 }
 
 
@@ -198,6 +243,26 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 	b3InitString(Name,B3_TEXSTRINGLEN);
 }
 
+b3_f64 b3MatWrapTexture::b3GetReflection()
+{
+	return Reflection;
+}
+
+b3_f64 b3MatWrapTexture::b3GetRefraction()
+{
+	return Refraction;
+}
+
+b3_f64 b3MatWrapTexture::b3GetIndexOfRefraction()
+{
+	return RefrValue;
+}
+
+b3_f64 b3MatWrapTexture::b3GetSpecularExponent()
+{
+	return HighLight;
+}
+
 
 b3MatMarble::b3MatMarble(b3_u32 class_type) : b3Material(sizeof(b3MatMarble),class_type) 
 {
@@ -218,6 +283,26 @@ b3MatMarble::b3MatMarble(b3_u32 *src) : b3Material(src)
 	yTimes     = b3InitInt();
 }
 
+b3_f64 b3MatMarble::b3GetReflection()
+{
+	return Reflection;
+}
+
+b3_f64 b3MatMarble::b3GetRefraction()
+{
+	return Refraction;
+}
+
+b3_f64 b3MatMarble::b3GetIndexOfRefraction()
+{
+	return RefrValue;
+}
+
+b3_f64 b3MatMarble::b3GetSpecularExponent()
+{
+	return HighLight;
+}
+
 
 b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_type) 
 {
@@ -225,19 +310,91 @@ b3MatSlide::b3MatSlide(b3_u32 class_type) : b3Material(sizeof(b3MatSlide),class_
 
 b3MatSlide::b3MatSlide(b3_u32 *src) : b3Material(src)
 {
-	b3InitColor(&DiffColor[0]);
-	b3InitColor(&AmbColor[0]);
-	b3InitColor(&SpecColor[0]);
-	b3InitColor(&DiffColor[1]);
-	b3InitColor(&AmbColor[1]);
-	b3InitColor(&SpecColor[1]);
-	From       = b3InitFloat();
-	To         = b3InitFloat();
-	Reflection = b3InitFloat();
-	Refraction = b3InitFloat();
-	RefrValue  = b3InitFloat();
-	HighLight  = b3InitFloat();
-	ModeFlag   = b3InitInt();
+	b3InitColor(&m_Diffuse[0]);
+	b3InitColor(&m_Ambient[0]);
+	b3InitColor(&m_Specular[0]);
+	b3InitColor(&m_Diffuse[1]);
+	b3InitColor(&m_Ambient[1]);
+	b3InitColor(&m_Specular[1]);
+	m_From       = b3InitFloat();
+	m_To         = b3InitFloat();
+	m_Reflection = b3InitFloat();
+	m_Refraction = b3InitFloat();
+	m_RefrValue  = b3InitFloat();
+	m_HighLight  = b3InitFloat();
+	m_ModeFlag   = b3InitInt();
+}
+
+b3_f64 b3MatSlide::b3GetReflection()
+{
+	return m_Reflection;
+}
+
+b3_f64 b3MatSlide::b3GetRefraction()
+{
+	return m_Refraction;
+}
+
+b3_f64 b3MatSlide::b3GetIndexOfRefraction()
+{
+	return m_RefrValue;
+}
+
+b3_f64 b3MatSlide::b3GetSpecularExponent()
+{
+	return m_HighLight;
+}
+
+b3_bool b3MatSlide::b3GetColors(
+	b3_polar *polar,
+	b3_color *diffuse,
+	b3_color *ambient,
+	b3_color *specular)
+{
+	b3_f64 Factor;
+
+	switch (m_ModeFlag)
+	{
+		case XSLIDE :
+			Factor = (polar->polar.x - m_From) / (m_To - m_From);
+			if (Factor < 0) Factor = 0;
+			if (Factor > 1) Factor = 1;
+            break;
+		case YSLIDE :
+			Factor = (polar->polar.y - m_From) / (m_To - m_From);
+			if (Factor < 0) Factor = 0;
+			if (Factor > 1) Factor = 1;
+            break;
+		case XSLIDE_CUT :
+			Factor = (polar->polar.x - m_From) / (m_To - m_From);
+			if ((Factor < 0) || (Factor > 1))
+			{
+				return false;
+			}
+			break;
+		case YSLIDE_CUT :
+			Factor = (polar->polar.y - m_From) / (m_To - m_From);
+			if ((Factor < 0) || (Factor > 1))
+			{
+				return false;
+			}
+            break;
+	}
+
+	diffuse->r = m_Diffuse[0].r + Factor * (m_Diffuse[1].r - m_Diffuse[0].r);
+	diffuse->g = m_Diffuse[0].g + Factor * (m_Diffuse[1].g - m_Diffuse[0].g);
+	diffuse->b = m_Diffuse[0].b + Factor * (m_Diffuse[1].b - m_Diffuse[0].b);
+	if (specular != null)
+	{
+		ambient->r  = m_Ambient[0].r  + Factor * (m_Ambient[1].r  - m_Ambient[0].r);
+		ambient->g  = m_Ambient[0].g  + Factor * (m_Ambient[1].g  - m_Ambient[0].g);
+		ambient->b  = m_Ambient[0].b  + Factor * (m_Ambient[1].b  - m_Ambient[0].b);
+		specular->r = m_Specular[0].r + Factor * (m_Specular[1].r - m_Specular[0].r);
+		specular->g = m_Specular[0].g + Factor * (m_Specular[1].g - m_Specular[0].g);
+		specular->b = m_Specular[0].b + Factor * (m_Specular[1].b - m_Specular[0].b);
+	}
+
+	return (true);
 }
 
 
@@ -258,4 +415,24 @@ b3MatWood::b3MatWood(b3_u32 *src) : b3Material(src)
 	Flags      = b3InitInt();
 	xTimes     = b3InitInt();
 	yTimes     = b3InitInt();
+}
+
+b3_f64 b3MatWood::b3GetReflection()
+{
+	return Reflection;
+}
+
+b3_f64 b3MatWood::b3GetRefraction()
+{
+	return Refraction;
+}
+
+b3_f64 b3MatWood::b3GetIndexOfRefraction()
+{
+	return RefrValue;
+}
+
+b3_f64 b3MatWood::b3GetSpecularExponent()
+{
+	return HighLight;
 }

@@ -31,6 +31,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/10/03 20:17:56  sm
+**      - Minor bugfixes
+**
 **      Revision 1.9  2001/10/03 18:46:45  sm
 **      - Adding illumination and recursive raytracing
 **
@@ -191,6 +194,7 @@ void b3ModellerInfo::b3SnapToAngle(b3_f64 &angle)
 b3Nebular::b3Nebular(b3_u32 class_type) :
 	b3Special(sizeof(b3Nebular),class_type)
 {
+	m_NebularVal = -1;
 }
 
 b3Nebular::b3Nebular(b3_u32 *src) :
@@ -198,6 +202,11 @@ b3Nebular::b3Nebular(b3_u32 *src) :
 {
 	b3InitColor(&m_NebularColor);
 	m_NebularVal = b3InitFloat();
+}
+
+b3_bool b3Nebular::b3IsActive()
+{
+	return m_NebularVal > 0;
 }
 
 void b3Nebular::b3GetNebularColor(b3_color *result)

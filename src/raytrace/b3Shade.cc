@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2001/10/03 20:17:56  sm
+**	- Minor bugfixes
+**
 **	Revision 1.4  2001/10/03 18:46:45  sm
 **	- Adding illumination and recursive raytracing
-**
+**	
 **	Revision 1.3  2001/10/02 16:01:58  sm
 **	- Moving b3Polar into b3Ray but that's not right at all. The
 **	  result must be placed there but a simple result from one
@@ -138,6 +141,22 @@ void b3Scene::b3Illuminate(
 	result->a += surface->diffuse.a * light->m_Color.a;
 }
 
+void b3Scene::b3GetBackgroundColor(b3_color *bg)
+{
+	bg->r = (m_TopColor.r + m_BottomColor.r) * 0.5;
+	bg->g = (m_TopColor.g + m_BottomColor.g) * 0.5;
+	bg->b = (m_TopColor.b + m_BottomColor.b) * 0.5;
+	bg->a = (m_TopColor.a + m_BottomColor.a) * 0.5;
+}
+
+void b3Scene::b3GetInfiniteColor(b3_color *inf)
+{
+	inf->r = 0.5f;
+	inf->g = 0.5f;
+	inf->b = 0.5f;
+	inf->a = 0.0f;
+}
+
 b3_bool b3Scene::b3Shade(
 	b3_ray_info *ray,
 	b3_count     depth_count)
@@ -191,7 +210,7 @@ b3_bool b3Scene::b3Shade(
 		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
 		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
 		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
-		material = shape->b3GetColors(&surface);
+		material = shape->b3GetColors(ray,&surface);
 		if (material == null)
 		{
 			material = &dummy;
@@ -213,14 +232,20 @@ b3_bool b3Scene::b3Shade(
 				surface.refl_ray.inside = false;
 			}
 			refr = surface.refr;
-			b3Shade(&surface.refr_ray,depth_count + 1);
+			if (!b3Shade(&surface.refr_ray,depth_count + 1))
+			{
+				b3GetInfiniteColor(&surface.refr_ray.color);
+			}
 			formula |= 1;
 		}
 
 		refl = surface.refl;
 		if (refl > 0)
 		{
-			b3Shade(&surface.refr_ray,depth_count + 1);
+			if (!b3Shade(&surface.refr_ray,depth_count + 1))
+			{
+				b3GetInfiniteColor(&surface.refl_ray.color);
+			}
 			formula |= 2;
 		}
 
