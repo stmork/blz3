@@ -47,6 +47,7 @@ public:
 	b3_count         glPolyCount;
 	b3_count         glGridCount;
 	b3_color         glBGColor;
+	b3_bool          glUseSpotLight;
 
 public:
 	                 b3RenderContext();
@@ -130,7 +131,7 @@ protected:
 	GLushort        *glPolygons;
 
 	// Some material values
-	b3_bool          glMaterialInitial;
+	b3_bool          glMaterialComputed;
 	GLfloat          glAmbient[4];
 	GLfloat          glDiffuse[4];
 	GLfloat          glSpecular[4];
@@ -166,6 +167,7 @@ protected:
 	virtual void            b3ComputeVertices();
 	virtual void            b3ComputeIndices();
 	virtual void            b3ComputeNormals(b3_bool normalize=true);
+	        void            b3RecomputeMaterial();
 
 	// Some render overridables
 	virtual b3_render_mode  b3GetRenderMode();

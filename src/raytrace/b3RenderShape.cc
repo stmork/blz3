@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.43  2002/07/25 16:29:35  sm
+**      - Further developing of texturing
+**
 **      Revision 1.42  2002/07/25 13:22:32  sm
 **      - Introducing spot light
 **      - Optimized light settings when drawing
@@ -637,7 +640,11 @@ b3_bool b3ShapeRenderObject::b3GetChess(
 	return result;
 }
 
-b3Tx *b3ShapeRenderObject::b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale)
+b3Tx *b3ShapeRenderObject::b3GetTexture(
+	b3_f64 &xTrans,
+	b3_f64 &yTrans,
+	b3_f64 &xScale,
+	b3_f64 &yScale)
 {
 	b3Item *item;
 	b3Tx   *tx = null;
@@ -723,25 +730,17 @@ b3_bool b3ShapeRenderObject::b3GetImage(b3Tx *image)
 #else
 						color = b3CheckStencil(&polar) ?
 							b3Color::b3GetColor(&diffuse) :
-							0xffff1144;
+							(B3_TRANSPARENT | 0xff1144);
 #endif
 						loop      = false;
 					}
 				}
-#ifdef _DEBUG
-				b3PrintF(B3LOG_FULL,color > 0xffffff ? "." : "#");
-#endif
 				*lPtr++ = color;
 				fx += fxStep;
 			}
 			fy += fyStep;
-#ifdef _DEBUG
-			b3PrintF(B3LOG_FULL,"\n");
-#endif
 		}
-#ifdef _DEBUG
-		b3PrintF(B3LOG_FULL,"\n");
-#endif
+		b3PrintF(B3LOG_FULL,"b3ShapeRenderObject::b3GetImage()\n");
 	}
 	return result;
 }
