@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/10/15 18:35:22  sm
+**	- Moved illumination loop into base class
+**
 **	Revision 1.14  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
-**
+**	
 **	Revision 1.13  2004/09/28 16:04:43  sm
 **	- Fixed material ponter problem inside all shader.
 **	
@@ -176,8 +179,6 @@ void b3ShaderMork2::b3ShadeSurface(
 	b3_surface *surface,
 	b3_count    depth_count)
 {
-	b3Item   *item;
-	b3Light  *light;
 	b3_ray   *ray = surface->m_Incoming;
 	b3_f32    refl,refr,factor;
 
@@ -228,11 +229,9 @@ void b3ShaderMork2::b3ShadeSurface(
 		surface->m_AmbientSum.b3Init();
 		surface->m_DiffuseSum.b3Init();
 		surface->m_SpecularSum.b3Init();
-		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
-		{
-			light = (b3Light *)item;
-			light->b3Illuminate(this,surface);
-		}
+
+		// For each light source...
+		b3Illuminate(surface);
 		if (!b3Material::b3MixComponents(surface, refl, refr))
 		{
 			ray->color =

@@ -51,6 +51,18 @@ protected:
 protected:
 	void                    b3ComputeOutputRays(b3_surface *surface);
 	b3_f64                  b3ComputeFresnel(b3_surface *surface);
+
+	inline void b3Illuminate(b3_surface *surface)
+	{
+		b3Item      *item;
+		b3Light     *light;
+		
+		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
+		{
+			light = (b3Light *)item;
+			light->b3Illuminate(this,surface);
+		}
+	}
 };
 
 ///////////////
