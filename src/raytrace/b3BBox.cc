@@ -35,10 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.83  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.82  2003/03/04 20:37:37  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
-**
+**	
 **	Revision 1.81  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -456,7 +459,7 @@ static b3_gl_line m_BBoxIndices[12 * 2] =
 b3Color b3BBox::m_GridColor(0.4f,0.4f,0.4f,0.0f);
 b3_bool b3BBox::m_GridVisible = true;
 
-void b3InitBBox::b3Init()
+void b3BBox::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bounding boxes...\n");
 	b3Item::b3Register(&b3BBox::b3StaticInit,&b3BBox::b3StaticInit,CLASS_BBOX,true);

@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.54  2003/03/04 20:37:39  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -310,7 +313,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitShape::b3Init()
+void b3Shape::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering shapes...\n");
 	b3Item::b3Register(&b3Sphere::b3StaticInit,           &b3Sphere::b3StaticInit,           SPHERE);

@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.14  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
 **	  o b3Scene::m_TexturePool et. al.
 **	  o b3SplineTemplate<class VECTOR>::bspline_errno
-**
+**	
 **	Revision 1.13  2002/12/11 14:53:39  sm
 **	- Made some comments
 **	- Changed b3Noise class to s static one.
@@ -110,7 +113,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitBump::b3Init()
+void b3Bump::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering bump mapping...\n");
 	b3Item::b3Register(&b3BumpNoise::b3StaticInit,   &b3BumpNoise::b3StaticInit,   BUMP_NOISE);

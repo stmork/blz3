@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.42  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.41  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
 **	- Added house creating support ;-)
-**
+**	
 **	Revision 1.40  2003/05/24 16:37:06  sm
 **	- Added plugin support for Un*x
 **	
@@ -330,8 +333,6 @@ int main(int argc,char *argv[])
 
 	if (argc > 1)
 	{
-		b3InitRaytrace::b3Init();
-
 		world = new b3World();
 		if (HOME != null)
 		{

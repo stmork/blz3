@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.6  2003/07/10 08:03:16  sm
 **	- Some further error messages added.
-**
+**	
 **	Revision 1.5  2003/07/09 19:04:22  sm
 **	- Added white walls and ceils
 **	
@@ -559,7 +562,6 @@ int main(int argc,char *argv[])
 {
 	int i;
 
-	b3InitRaytrace::b3Init();
 	b3Log::b3SetLevel(B3LOG_FULL);	
 	for (i = 1;i < argc;i++)
 	{

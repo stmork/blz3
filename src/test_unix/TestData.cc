@@ -33,12 +33,15 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.3  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.2  2002/01/03 15:50:15  sm
 **	- Added cut/copy/paste
 **	
@@ -122,7 +125,6 @@ int main(int argc,char *argv[])
 {
 	b3_index i;
 
-	b3InitRaytrace::b3Init();
 	for (i = 1;i < argc;i++)
 	{
 		b3FileList   list(argv[i]);

@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.49  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
 **	- Added house creating support ;-)
-**
+**	
 **	Revision 1.48  2003/03/04 20:37:39  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -271,7 +274,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitScene::b3Init()
+void b3Scene::b3Register()
 {
 	b3PrintF(B3LOG_DEBUG,"Registering scene classes...\n");
 	b3Item::b3Register(&b3SceneMork::b3StaticInit, &b3SceneMork::b3StaticInit, TRACEANGLE_MORK);

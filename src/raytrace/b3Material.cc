@@ -34,6 +34,9 @@
 
 /*
 **      $Log$
+**      Revision 1.26  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.25  2003/03/04 20:37:38  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -149,7 +152,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitMaterial::b3Init()
+void b3Material::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering materials...\n");
 	b3Item::b3Register(&b3MatNormal::b3StaticInit,      &b3MatNormal::b3StaticInit,      MAT_NORMAL);

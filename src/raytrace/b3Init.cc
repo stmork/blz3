@@ -31,6 +31,9 @@
     
 /*
 **      $Log$
+**      Revision 1.8  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.7  2003/02/22 17:21:34  sm
 **      - Changed some global variables into static class members:
 **        o b3Scene::epsilon
@@ -68,17 +71,19 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitRaytrace::b3Init()
+b3RegisterRaytracingItems b3RegisterRaytracingItems::m_RaytracingItems;
+
+b3RegisterRaytracingItems::b3RegisterRaytracingItems()
 {
-	b3InitScene::b3Init();
-	b3InitSpecial::b3Init();
-	b3InitAnimation::b3Init();
-	b3InitLight::b3Init();
-	b3InitBBox::b3Init();
-	b3InitShape::b3Init();
-	b3InitMaterial::b3Init();
-	b3InitBump::b3Init();
-	b3InitCondition::b3Init();
+	b3Scene::b3Register();
+	b3Special::b3Register();
+	b3Animation::b3Register();
+	b3Light::b3Register();
+	b3BBox::b3Register();
+	b3Shape::b3Register();
+	b3Material::b3Register();
+	b3Bump::b3Register();
+	b3Condition::b3Register();
 }
 
 b3_bool b3Scene::b3CheckTexture(b3Tx **tx,const char *name)

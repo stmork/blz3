@@ -61,9 +61,12 @@
 
 /*
 **	$Log$
+**	Revision 1.56  2003/07/12 17:44:46  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.55  2003/06/09 17:33:30  sm
 **	- New item maintainance dialog added.
-**
+**	
 **	Revision 1.54  2003/05/24 13:46:49  sm
 **	- Added plugin support
 **	- Fixed b3FileList on non existing directory.
@@ -545,8 +548,6 @@ BOOL CAppLinesApp::InitInstance()
 #ifdef _DEBUG
 	today.b3Y2K_Selftest();
 #endif
-
-	b3InitRaytrace::b3Init();
 
 	CString path = GetProfileString(b3ClientName(),"texture search path","");
 	b3SetupSearchPath(b3Scene::m_TexturePool,path);

@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.11  2003/02/20 16:34:47  sm
 **	- Some logging cleanup
 **	- New base class for b3CPU (b3CPUBase)
 **	- b3Realloc bug fix on Solaris
-**
+**	
 **	Revision 1.10  2003/02/19 16:52:53  sm
 **	- Cleaned up logging
 **	- Clean up b3CPU/b3Runtime
@@ -90,7 +93,6 @@ int main(int argc,char *argv[])
 	b3_path_type  code;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
-	b3InitRaytrace::b3Init();
 
 	switch(b3Runtime::b3GetCPUType())
 	{

@@ -213,12 +213,6 @@ struct b3_stencil_bound
 	b3_stencil_unit yUnit;
 };
 
-class b3InitCondition
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3Condition : public b3Item
 {
 protected:
@@ -229,6 +223,7 @@ public:
 	B3_ITEM_INIT(b3Condition);
 	B3_ITEM_LOAD(b3Condition);
 
+	static  void    b3Register();
 	virtual b3_bool b3Prepare();
 	virtual void    b3ComputeBound(b3_stencil_limit *limit);
 	virtual b3_bool b3CheckStencil(b3_polar_precompute *polar);
@@ -412,12 +407,6 @@ public:
 #define BUMP_GLOSSY         (CLASS_BUMP|TYPE_GLOSSY)
 #define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
 
-class b3InitBump
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3Bump : public b3Item
 {
 protected:
@@ -427,6 +416,7 @@ public:
 	B3_ITEM_INIT(b3Bump);
 	B3_ITEM_LOAD(b3Bump);
 
+	static         void    b3Register();
 	virtual        b3_bool b3Prepare();
 	virtual        void    b3BumpNormal(b3_ray *ray);
 	virtual inline b3_bool b3NeedDeriv()
@@ -578,12 +568,6 @@ public:
 #define SLIDE               (CLASS_MATERIAL|TYPE_SLIDE)
 #define WOOD                (CLASS_MATERIAL|TYPE_WOOD)
 
-class b3InitMaterial
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3Material : public b3Item
 {
 protected:
@@ -593,6 +577,7 @@ public:
 	B3_ITEM_INIT(b3Material);
 	B3_ITEM_LOAD(b3Material);
 
+	static  void    b3Register();
 	virtual b3_bool b3Prepare();
 	virtual b3_f64  b3GetReflection(b3_polar *polar);
 	virtual b3_f64  b3GetRefraction(b3_polar *polar);
@@ -872,12 +857,6 @@ public:
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
-class b3InitShape
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3ShapeBaseTrans
 {
 protected:
@@ -955,6 +934,7 @@ public:
 	B3_ITEM_INIT(b3Shape);
 	B3_ITEM_LOAD(b3Shape);
 
+	static  void        b3Register();
 	        void        b3Write();
 	virtual void        b3StoreShape();
 	        void        b3InitActivation();
@@ -1660,12 +1640,6 @@ public:
 #define CLASS_BBOX  0x60000000
 #define BBOX        CLASS_BBOX
 
-class B3_PLUGIN b3InitBBox
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 {
 	// Inherited from Blizzard II
@@ -1689,6 +1663,7 @@ public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);
 
+	static void            b3Register();
 	       void            b3Write();
 	       void            b3Dump(b3_count level);
 	       void            b3AllocVertices(b3RenderContext *context);
@@ -1818,12 +1793,6 @@ struct b3_light_info : public b3_ray_info
 	b3_s32    Distr;
 };
 
-class b3InitLight
-{
-protected:
-	static void b3Init();
-};
-
 // POINT_LIGHT
 class b3Scene;
 class B3_PLUGIN b3Light : public b3Item
@@ -1852,11 +1821,12 @@ public:
 	B3_ITEM_INIT(b3Light);
 	B3_ITEM_LOAD(b3Light);
 
-	void     b3Write();
-	b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface);
-	b3_bool  b3Prepare();
-	b3_bool  b3IsActive();
-	char    *b3GetName();
+	static void     b3Register();
+	       void     b3Write();
+	       b3_bool  b3Illuminate(b3Scene *scene,b3_ray_fork *surface);
+	       b3_bool  b3Prepare();
+	       b3_bool  b3IsActive();
+	       char    *b3GetName();
 
 	inline b3_f64 b3GetSpotFactor(b3_f64 angle) // angle inside [0..1]
 	{
@@ -1874,7 +1844,7 @@ public:
 	}
 
 private:
-	void         b3Init();
+	void         b3InitValues();
 	b3_bool      b3PointIllumination(b3Scene *scene,b3_ray_fork *surface);
 	b3_bool      b3AreaIllumination(b3Scene  *scene,b3_ray_fork *surface);
 	b3Shape     *b3CheckSinglePoint (b3Scene *scene,b3_ray_fork *surface,
@@ -1937,12 +1907,6 @@ private:
 
 #define B3_ANIMSTRINGLEN       32
 
-class b3InitAnimation
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3AnimControl : public b3Item
 {
 	b3_size       m_Dimension;           // vector dimension
@@ -1982,7 +1946,7 @@ public:
 	B3_ITEM_INIT(b3AnimElement);
 	B3_ITEM_LOAD(b3AnimElement);
 
-	void b3Write();
+	       void b3Write();
 
 public:
 	       char           *b3GetName();
@@ -2022,12 +1986,6 @@ private:
 #define LENSFLARE               (CLASS_SPECIAL|TYPE_LENSFLARE)
 #define CAUSTIC                 (CLASS_SPECIAL|TYPE_CAUSTIC)
 
-class b3InitSpecial
-{
-protected:
-	static void b3Init();
-};
-
 class B3_PLUGIN b3Special : public b3Item
 {
 protected:
@@ -2036,6 +1994,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3Special);
 	B3_ITEM_LOAD(b3Special);
+
+	static void b3Register();
 };
 
 // SUPERSAMPLE4
@@ -2050,9 +2010,9 @@ public:
 	B3_ITEM_INIT(b3SuperSample);
 	B3_ITEM_LOAD(b3SuperSample);
 
-	void    b3Write();
-	b3_bool b3IsActive();
-	void    b3Activate(b3_bool activate=true);
+	       void    b3Write();
+	       b3_bool b3IsActive();
+	       void    b3Activate(b3_bool activate=true);
 };
 
 // CAMERA
@@ -2202,6 +2162,7 @@ public:
 	B3_ITEM_INIT(b3Animation);
 	B3_ITEM_LOAD(b3Animation);
 
+	static void            b3Register();
 	       void            b3Write();
 
 public:
@@ -2349,12 +2310,6 @@ public:
 
 #define TRACEPHOTO              TRACEPHOTO_MORK	// obsolete
 
-class b3InitScene
-{
-protected:
-	static void b3Init();
-};
-
 // m_BackgroundType
 enum b3_bg_type
 {
@@ -2426,6 +2381,7 @@ public:
 	B3_ITEM_INIT(b3Scene);
 	B3_ITEM_LOAD(b3Scene);
 
+	static  void            b3Register();
 	        void            b3Write();
 	        void            b3Reorg();
 	        b3_bool         b3GetDisplaySize(b3_res &xSize,b3_res &ySize);
@@ -2640,19 +2596,11 @@ public:
 #define RAY_INSIDE       1
 #define RAY_OUTSIDE      0
 
-class b3InitRaytrace :
-	public b3InitScene,
-	public b3InitSpecial,
-	public b3InitAnimation,
-	public b3InitLight,
-	public b3InitBBox,
-	public b3InitShape,
-	public b3InitMaterial,
-	public b3InitBump,
-	public b3InitCondition
+class b3RegisterRaytracingItems
 {
-public:
-	static void b3Init();
+	static b3RegisterRaytracingItems m_RaytracingItems;
+
+	b3RegisterRaytracingItems();
 };
 
 #endif

@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.63  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.62  2003/06/20 09:02:45  sm
 **      - Added material dialog skeletons
 **      - Fixed ticket no. 10 (camera dialog handled camera
@@ -336,7 +339,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitSpecial::b3Init()
+void b3Special::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering special features...\n");
 

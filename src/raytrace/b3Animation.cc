@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.16  2003/02/18 16:52:57  sm
 **      - Fixed no name error on new scenes (ticket no. 4).
 **      - Introduced new b3Matrix class and renamed methods.
@@ -125,7 +128,7 @@
 **                                                                      **
 *************************************************************************/
 
-void b3InitAnimation::b3Init()
+void b3Animation::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering animation elements...\n");
 	b3Item::b3Register(&b3AnimElement::b3StaticInit,&b3AnimElement::b3StaticInit,ANIM_MOVE );

@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2003/07/12 17:44:47  sm
+**  - Cleaned up raytracing b3Item registration
+**
 **  Revision 1.2  2003/02/19 16:52:53  sm
 **  - Cleaned up logging
 **  - Clean up b3CPU/b3Runtime
@@ -114,7 +117,6 @@ int main(int argc,char *argv[])
 {
 	int i;
 
-	b3InitRaytrace::b3Init();
 //	b3Log::b3SetLevel(B3LOG_FULL);
 	for (i = 1;i < argc;i++)
 	{

@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2003/07/12 17:44:47  sm
+**	- Cleaned up raytracing b3Item registration
+**
 **	Revision 1.20  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
 **	- Added house creating support ;-)
-**
+**	
 **	Revision 1.19  2003/02/22 17:21:34  sm
 **	- Changed some global variables into static class members:
 **	  o b3Scene::epsilon
@@ -139,7 +142,7 @@ static b3_u32 logic_ops[] =
 	MODE_OR, MODE_NOT, MODE_AND, MODE_NAND
 };
 
-void b3InitCondition::b3Init()
+void b3Condition::b3Register()
 {
 	b3_u32  mode;
 	b3_size i;

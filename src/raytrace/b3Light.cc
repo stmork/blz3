@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2003/07/12 17:44:47  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.32  2003/03/04 20:37:37  sm
 **      - Introducing new b3Color which brings some
 **        performance!
@@ -190,7 +193,7 @@
 **
 */
 
-void b3InitLight::b3Init()
+void b3Light::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering light sources...\n");
 
@@ -201,7 +204,7 @@ void b3InitLight::b3Init()
 
 b3Light::b3Light(b3_u32 class_type) : b3Item(sizeof(b3Light),class_type)
 {
-	b3Init();
+	b3InitValues();
 }
 
 b3Light::b3Light(b3_u32 *src) : b3Item(src)
@@ -287,7 +290,7 @@ void b3Light::b3Write()
 #define INIT_DEGREE      3
 #define INIT_CONTROL_MAX 7
 
-void b3Light::b3Init()
+void b3Light::b3InitValues()
 {
 	b3_index i;
 

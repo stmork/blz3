@@ -35,6 +35,9 @@
 
 /*
 **      $Log$
+**      Revision 1.37  2003/07/12 17:44:46  sm
+**      - Cleaned up raytracing b3Item registration
+**
 **      Revision 1.36  2003/06/09 08:53:48  sm
 **      - Added preparation support for all b3Item objects.
 **
@@ -430,7 +433,6 @@ int main(int argc,char *argv[])
 
 	try
 	{
-		b3InitRaytrace::b3Init();
 		b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 		b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 		b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");

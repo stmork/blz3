@@ -24,8 +24,6 @@ int main(int argc,char *argv[])
 	b3_index  i;
 	b3World   world;
 
-	b3InitRaytrace::b3Init();
-
 	switch(b3Runtime::b3GetCPUType())
 	{
 	case B3_BIG_ENDIAN:
