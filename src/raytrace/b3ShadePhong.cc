@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2004/05/26 14:30:02  sm
+**	- Added Fresnel energy distribution to transparent materials
+**	  with index of refraction > 0.
+**
 **	Revision 1.26  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.25  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
 **	
@@ -236,7 +240,7 @@ void b3ShaderPhong::b3ShadeSurface(
 			surface.refl_ray.inside = false;
 		}
 		refr = surface.m_Refraction;
-		b3Shade(&surface.refr_ray,depth_count);
+		b3Shade(&surface.refr_ray,depth_count + 1);
 		formula |= MIX_REFRACTION;
 	}
 	else
@@ -247,7 +251,7 @@ void b3ShaderPhong::b3ShadeSurface(
 	refl = surface.m_Reflection;
 	if (refl > 0)
 	{
-		b3Shade(&surface.refl_ray,depth_count);
+		b3Shade(&surface.refl_ray,depth_count + 1);
 		formula |= MIX_REFLECTION;
 	}
 

@@ -35,10 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2004/05/26 14:30:02  sm
+**	- Added Fresnel energy distribution to transparent materials
+**	  with index of refraction > 0.
+**
 **	Revision 1.46  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.45  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
 **	
@@ -399,7 +403,7 @@ b3_bool b3Shader::b3Shade(
 		b3ComputeOutputRays(&surface);
 
 		// This does the shading
-		b3ShadeSurface(surface,depth_count + 1);
+		b3ShadeSurface(surface,depth_count);
 
 		// Post process nebular
 		if (m_Nebular != null)

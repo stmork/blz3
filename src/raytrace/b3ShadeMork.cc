@@ -33,10 +33,14 @@
 
 /*
 **	$Log$
+**	Revision 1.35  2004/05/26 14:30:02  sm
+**	- Added Fresnel energy distribution to transparent materials
+**	  with index of refraction > 0.
+**
 **	Revision 1.34  2004/05/26 12:47:20  sm
 **	- Optimized recursive shading
 **	- Optimized pow to an integer version (b3Math::b3FastPow)
-**
+**	
 **	Revision 1.33  2004/05/26 07:20:27  sm
 **	- Renamed transparent member.
 **	
@@ -274,6 +278,33 @@ void b3ShaderMork::b3ShadeLight(
 	result += (surface->m_Diffuse * filter);
 }
 
+void b3ShaderMork::b3ComputeInt(b3_surface *surface, b3_f64 &refl, b3_f64 &refr)
+{
+    b3_f64 alpha    = acos(surface->m_CosAlpha);
+	b3_f64 sin_beta = sin(alpha) * surface->m_IorComputed;
+	b3_f64 beta     = asin(sin_beta);
+	b3_f64 apb      = alpha + beta;
+	b3_f64 amb      = alpha - beta;
+	b3_f64 s_apb    = sin(apb);
+	b3_f64 s_amb    = sin(amb);
+	b3_f64 c_apb    = cos(apb);
+	b3_f64 c_amb    = cos(amb);
+
+	// compute perpendicular (s = senkrecht) component of polarized light
+	b3_f64 Ers   = s_amb / s_apb;
+	b3_f64 Ets   = 2.0 * sin_beta * surface->m_CosAlpha / s_apb;
+
+	// compute parallel component of polarized light
+	b3_f64 Erp   = (s_amb * c_apb) / (c_amb * s_apb);
+	b3_f64 Etp   = 2.0 * sin_beta * surface->m_CosAlpha / (s_apb * c_amb);
+
+	b3ComputeFresnel(surface);
+
+	// Mix to unpolarized light
+	refl = (Ers + Erp) * surface->m_Reflection *        surface->m_Fresnel  * 0.5;
+	refr = (Ets + Etp) * surface->m_Refraction * (1.0 - surface->m_Fresnel) * 0.5;
+}
+
 void b3ShaderMork::b3ShadeSurface(
 	b3_surface &surface,
 	b3_count    depth_count)
@@ -284,8 +315,6 @@ void b3ShaderMork::b3ShadeSurface(
 	b3_ray   *ray = surface.incoming;
 	b3_f64    refl,refr,factor;
 
-	b3ComputeFresnel(&surface);
-
 	// Refraction
 	if (surface.m_Transparent)
 	{
@@ -294,15 +323,17 @@ void b3ShaderMork::b3ShadeSurface(
 			surface.refr_ray.inside = false;
 			surface.refl_ray.inside = false;
 		}
-		refl = surface.m_Reflection *        surface.m_Fresnel;
-		refr = surface.m_Refraction * (1.0 - surface.m_Fresnel);
-		b3Shade(&surface.refr_ray,depth_count);
+		b3ComputeInt(&surface,refl,refr);
+
+		b3Shade(&surface.refr_ray,depth_count + 1);
 		result = (surface.refr_ray.color * refr);
 	}
 	else
 	{
 		if (surface.m_Ior != 1.0)
 		{
+			// simulate dielectric metal
+			b3ComputeFresnel(&surface);
 			refl = b3Math::b3Mix(
 				surface.m_Fresnel,
 				surface.m_Reflection,
@@ -310,6 +341,7 @@ void b3ShaderMork::b3ShadeSurface(
 		}
 		else
 		{
+			// plastic reflection
 			refl = surface.m_Reflection;
 		}
 		refr = 0;
@@ -317,9 +349,13 @@ void b3ShaderMork::b3ShadeSurface(
 	}
 
 	// Reflection
+#if 0
 	if (((!ray->inside) || (!surface.m_Transparent)) && (refl > 0))
+#else
+	if (refl > 0)
+#endif
 	{
-		b3Shade(&surface.refl_ray,depth_count);
+		b3Shade(&surface.refl_ray,depth_count + 1);
 		result += (surface.refl_ray.color * refl);
 	}
 	else
