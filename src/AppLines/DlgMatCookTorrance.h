@@ -25,6 +25,10 @@
 //
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/system/b3FloatSpinButtonCtrl.h"
+#include "blz3/system/b3ShowImage.h"
+#include "b3SelectColor.h"
+#include "b3ShowRaytrace.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgMatCookTorrance dialog
@@ -42,7 +46,18 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CDlgMatCookTorrance)
 	enum { IDD = IDD_MAT_COOK_TORRANCE };
-		// NOTE: the ClassWizard will add data members here
+	CB3ColorFieldSelector	m_SpecCtrl;
+	CB3ColorFieldSelector	m_DiffCtrl;
+	CB3ColorFieldSelector	m_AmbCtrl;
+	CB3FloatSpinButtonCtrl	m_ReflectionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefractionCtrl;
+	CB3FloatSpinButtonCtrl	m_RefrValueCtrl;
+	CB3FloatSpinButtonCtrl	m_HighLightCtrl;
+	CB3FloatSpinButtonCtrl	m_KaCtrl;
+	CB3FloatSpinButtonCtrl	m_KdCtrl;
+	CB3FloatSpinButtonCtrl	m_KsCtrl;
+	CB3FloatSpinButtonCtrl	m_MCtrl;
+	CB3ShowRaytrace	m_PreviewMaterialCtrl;
 	//}}AFX_DATA
 
 

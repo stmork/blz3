@@ -673,6 +673,10 @@ SOURCE=.\DlgCamera.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCookTorrance.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCreateItem.h
 # End Source File
 # Begin Source File

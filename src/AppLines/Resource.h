@@ -363,11 +363,17 @@
 #define IDC_INDEX_OF_REFRACTION         32107
 #define IDC_INDEX_OF_REFRACTION_SPIN    32108
 #define IDC_INT_EDIT                    32109
+#define IDC_KA                          32109
 #define IDC_INT_SPIN                    32110
+#define IDC_KA_SPIN                     32110
 #define IDC_ITEM_CREATE_LABEL           32111
+#define IDC_KD                          32111
 #define IDC_ITEM_DELETE                 32112
+#define IDC_KD_SPIN                     32112
 #define IDC_ITEM_DOWN                   32113
+#define IDC_KS                          32113
 #define IDC_ITEM_EDIT                   32114
+#define IDC_KS_SPIN                     32114
 #define IDC_ITEM_FIRST                  32115
 #define IDC_ITEM_LAST                   32116
 #define IDC_ITEM_LIST                   32117
@@ -474,7 +480,9 @@
 #define IDC_SPEC_EXPONENT               32218
 #define IDC_SPEC_EXPONENT_SPIN          32219
 #define IDC_SPF                         32220
+#define IDC_M                           32220
 #define IDC_SPF_SPIN                    32221
+#define IDC_M_SPIN                      32221
 #define IDC_SPP                         32222
 #define IDC_SPP_SPIN                    32223
 #define IDC_SS4_ACTIVE                  32224
