@@ -57,9 +57,12 @@
 
 /*
 **	$Log$
+**	Revision 1.68  2004/04/25 14:56:55  sm
+**	- Completed simple material dialog.
+**
 **	Revision 1.67  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
-**
+**	
 **	Revision 1.66  2004/04/24 15:40:12  sm
 **	- Started slide material dialog implementation
 **	- Added simple property sheet/preview dialog template
@@ -1064,7 +1067,7 @@ BOOL CAboutDlg::OnInitDialog()
 void CAppLinesApp::OnAppAbout()
 {
 #ifdef DLG_TEST
-	b3Item *item = b3World::b3AllocNode(COOK_TORRANCE);
+	b3Item *item = b3World::b3AllocNode(MAT_NORMAL);
 
 	if (item != null)
 	{

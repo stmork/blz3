@@ -34,12 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2004/04/25 14:56:55  sm
+**	- Completed simple material dialog.
+**
 **	Revision 1.6  2004/04/25 13:40:59  sm
 **	- Added file saving into registry
 **	- Added last b3Item state saving for cloned b3Item
 **	  creation.
 **	- Now saving refresh state per b3Item dialog
-**
+**	
 **	Revision 1.5  2004/04/25 10:34:51  sm
 **	- Completed Cook/Torrance dialog
 **	
@@ -129,10 +132,10 @@ void CDlgMatCookTorrance::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_KD_SPIN, m_KdCtrl);
 	DDX_Control(pDX, IDC_KS_SPIN, m_KsCtrl);
 	DDX_Control(pDX, IDC_M_SPIN, m_MCtrl);
-	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
-	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
 	DDX_Control(pDX, IDC_REFLECTANCE_SPIN, m_ReflectionCtrl);
+	DDX_Control(pDX, IDC_REFRACTANCE_SPIN, m_RefractionCtrl);
 	DDX_Control(pDX, IDC_INDEX_OF_REFRACTION_SPIN, m_IorCtrl);
+	DDX_Control(pDX, IDC_SPEC_EXPONENT_SPIN, m_SpecularExpCtrl);
 	DDX_Control(pDX, IDC_PREVIEW_MATERIAL, m_PreviewMaterialCtrl);
 	//}}AFX_DATA_MAP
 	m_KaCtrl.b3DDX(pDX,m_Material->m_ka);

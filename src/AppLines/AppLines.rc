@@ -1968,49 +1968,52 @@ BEGIN
                     WS_BORDER | WS_TABSTOP,15,15,350,150,WS_EX_CLIENTEDGE
 END
 
-IDD_MAT_NORMAL DIALOG DISCARDABLE  0, 0, 460, 252
+IDD_MAT_NORMAL DIALOG DISCARDABLE  0, 0, 297, 250
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Material"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,7,231,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,403,231,50,14
+    GROUPBOX        "Farben:",IDC_STATIC,10,5,140,120
+    LTEXT           "Ambient",IDC_STATIC,20,20,26,8
+    LTEXT           "",IDC_COLOR_AMBIENT,20,30,50,15,SS_SUNKEN | NOT 
+                    WS_GROUP
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,80,30,60,15
+    LTEXT           "Diffuse",IDC_STATIC,20,55,23,8
+    LTEXT           "",IDC_COLOR_DIFFUSE,20,65,50,15,SS_SUNKEN | NOT 
+                    WS_GROUP
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,80,65,60,15
+    LTEXT           "Specular",IDC_STATIC,20,90,29,8
+    LTEXT           "",IDC_COLOR_SPECULAR,20,100,50,15,SS_SUNKEN | NOT 
+                    WS_GROUP
     PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,80,100,60,15
-    LTEXT           "",IDC_COLOR_AMBIENT,10,30,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "",IDC_COLOR_DIFFUSE,10,65,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "",IDC_COLOR_SPECULAR,10,100,60,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "Ambient",IDC_STATIC,10,20,26,8
-    LTEXT           "Diffuse",IDC_STATIC,10,55,23,8
-    LTEXT           "Specular",IDC_STATIC,10,90,29,8
-    GROUPBOX        "Farben:",IDC_STATIC,0,5,210,120
-    EDITTEXT        IDC_REFLECTANCE,10,160,35,12,ES_AUTOHSCROLL
+    GROUPBOX        "Materialwerte",IDC_STATIC,10,135,140,80
+    LTEXT           "Verspiegelung",IDC_STATIC,20,150,46,8
+    EDITTEXT        IDC_REFLECTANCE,20,160,35,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,45,160,11,15
-    EDITTEXT        IDC_REFRACTANCE,10,190,35,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,55,160,11,15
+    LTEXT           "Verglasung",IDC_STATIC,20,180,36,8
+    EDITTEXT        IDC_REFRACTANCE,20,190,35,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,45,190,11,15
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,81,160,35,12,ES_AUTOHSCROLL
+                    UDS_NOTHOUSANDS,55,190,11,15
+    LTEXT           "Brechungsindex",IDC_STATIC,80,150,52,8
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,80,160,35,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,115,160,11,15
-    EDITTEXT        IDC_SPEC_EXPONENT,81,190,35,12,ES_AUTOHSCROLL
+    LTEXT           "Spek. Exponent",IDC_STATIC,80,180,52,8
+    EDITTEXT        IDC_SPEC_EXPONENT,80,190,35,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
                     UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
                     UDS_NOTHOUSANDS,115,190,11,15
+    DEFPUSHBUTTON   "OK",IDOK,10,225,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,235,225,50,14
     CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,234,7,210,205
-    LTEXT           "Verspiegelung",IDC_STATIC,10,150,46,8
-    GROUPBOX        "Materialwerte",IDC_STATIC,0,135,210,80
-    LTEXT           "Verglasung",IDC_STATIC,10,180,36,8
-    LTEXT           "Brechungsindex",IDC_STATIC,80,150,52,8
-    LTEXT           "Spek. Exponent",IDC_STATIC,80,180,52,8
+                    SS_SUNKEN,165,10,120,115
+    CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,165,140,104,10
+    PUSHBUTTON      "Aktualisieren",IDC_REFRESH,165,155,50,14
 END
 
 IDD_MAT_CHESS DIALOG DISCARDABLE  0, 0, 186, 95
@@ -2179,64 +2182,64 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Cook & Torrance Material-Shader"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,10,225,50,14
-    PUSHBUTTON      "Abbrechen",IDCANCEL,290,225,50,14
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,80,30,60,15
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,80,65,60,15
-    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,80,100,60,15
+    GROUPBOX        "Farben:",IDC_STATIC,10,5,200,120
+    LTEXT           "Ambient",IDC_STATIC,20,20,26,8
     LTEXT           "",IDC_COLOR_AMBIENT,20,30,50,15,SS_SUNKEN | NOT 
                     WS_GROUP
-    LTEXT           "",IDC_COLOR_DIFFUSE,20,65,50,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "",IDC_COLOR_SPECULAR,20,100,50,15,SS_SUNKEN | NOT 
-                    WS_GROUP
-    LTEXT           "Ambient",IDC_STATIC,20,20,26,8
-    LTEXT           "Diffuse",IDC_STATIC,20,55,23,8
-    LTEXT           "Specular",IDC_STATIC,20,90,29,8
-    GROUPBOX        "Farben:",IDC_STATIC,10,5,200,120
-    EDITTEXT        IDC_REFLECTANCE,20,160,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,55,160,11,15
-    EDITTEXT        IDC_REFRACTANCE,20,190,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,55,190,11,15
-    EDITTEXT        IDC_INDEX_OF_REFRACTION,80,160,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,115,160,11,15
-    EDITTEXT        IDC_SPEC_EXPONENT,80,190,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,115,190,11,15
-    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
-                    SS_SUNKEN,220,10,120,115
-    LTEXT           "Verspiegelung",IDC_STATIC,20,150,46,8
-    GROUPBOX        "Materialwerte",IDC_STATIC,10,135,200,80
-    LTEXT           "Verglasung",IDC_STATIC,20,180,36,8
-    LTEXT           "Brechungsindex",IDC_STATIC,80,150,52,8
-    LTEXT           "Spek. Exponent",IDC_STATIC,80,180,52,8
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_AMBIENT,80,30,60,15
+    LTEXT           "Ka",IDC_STATIC,150,20,10,8
     EDITTEXT        IDC_KA,150,30,35,12,ES_AUTOHSCROLL | WS_GROUP
     CONTROL         "Spin1",IDC_KA_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,185,30,
                     11,15
-    EDITTEXT        IDC_M,150,160,35,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_M_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,185,160,
-                    11,15
-    LTEXT           "Ka",IDC_STATIC,150,20,10,8
-    LTEXT           "m",IDC_STATIC,150,150,8,8
+    LTEXT           "Diffuse",IDC_STATIC,20,55,23,8
+    LTEXT           "",IDC_COLOR_DIFFUSE,20,65,50,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_DIFFUSE,80,65,60,15
+    LTEXT           "Kd",IDC_STATIC,150,55,10,8
     EDITTEXT        IDC_KD,150,65,35,12,ES_AUTOHSCROLL | WS_GROUP
     CONTROL         "Spin1",IDC_KD_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,185,65,
                     11,15
-    LTEXT           "Kd",IDC_STATIC,150,55,10,8
+    LTEXT           "Specular",IDC_STATIC,20,90,29,8
+    LTEXT           "",IDC_COLOR_SPECULAR,20,100,50,15,SS_SUNKEN | NOT 
+                    WS_GROUP
+    PUSHBUTTON      "Farbe ändern...",IDC_CHANGE_SPECULAR,80,100,60,15
+    LTEXT           "Ks",IDC_STATIC,150,90,9,8
     EDITTEXT        IDC_KS,150,100,35,12,ES_AUTOHSCROLL | WS_GROUP
     CONTROL         "Spin1",IDC_KS_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,185,100,
                     11,15
-    LTEXT           "Ks",IDC_STATIC,150,90,9,8
+    GROUPBOX        "Materialwerte",IDC_STATIC,10,135,200,80
+    LTEXT           "Verspiegelung",IDC_STATIC,20,150,46,8
+    EDITTEXT        IDC_REFLECTANCE,20,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFLECTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,55,160,11,15
+    LTEXT           "Verglasung",IDC_STATIC,20,180,36,8
+    EDITTEXT        IDC_REFRACTANCE,20,190,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_REFRACTANCE_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,55,190,11,15
+    LTEXT           "Brechungsindex",IDC_STATIC,80,150,52,8
+    EDITTEXT        IDC_INDEX_OF_REFRACTION,80,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_INDEX_OF_REFRACTION_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,115,160,11,15
+    LTEXT           "Spek. Exponent",IDC_STATIC,80,180,52,8
+    EDITTEXT        IDC_SPEC_EXPONENT,80,190,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPEC_EXPONENT_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,115,190,11,15
+    LTEXT           "m",IDC_STATIC,150,150,8,8
+    EDITTEXT        IDC_M,150,160,35,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_M_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,185,160,
+                    11,15
+    DEFPUSHBUTTON   "OK",IDOK,10,225,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,290,225,50,14
+    CONTROL         "",IDC_PREVIEW_MATERIAL,"Static",SS_BLACKFRAME | 
+                    SS_SUNKEN,220,10,120,115
     CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,220,140,104,10
     PUSHBUTTON      "Aktualisieren",IDC_REFRESH,220,155,50,14
@@ -2925,9 +2928,9 @@ BEGIN
     IDD_MAT_NORMAL, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 453
+        RIGHTMARGIN, 290
         TOPMARGIN, 7
-        BOTTOMMARGIN, 245
+        BOTTOMMARGIN, 243
     END
 
     IDD_MAT_CHESS, DIALOG

@@ -25,7 +25,6 @@
 //
 
 #include "blz3/system/b3FloatSpinButtonCtrl.h"
-#include "blz3/system/b3ShowImage.h"
 #include "b3SimplePreviewDialog.h"
 #include "b3SelectColor.h"
 #include "b3ShowRaytrace.h"
