@@ -31,6 +31,7 @@
 #define B3_YELLOW      ((b3_pkd_color)0x00ffff00)
 #define B3_MAGENTA     ((b3_pkd_color)0x00ff00ff)
 #define B3_CYAN        ((b3_pkd_color)0x0000ffff)
+#define B3_MARKER      ((b3_pkd_color)0x00ff1144)
 #define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
 
 class b3Color
@@ -88,14 +89,29 @@ public:
 
 	inline b3Color(const b3_pkd_color input)
 	{
-		b3_pkd_color mask  = 0xff000000;
-		int          shift = 24;
+		       b3_pkd_color       mask  = 0xff000000;
+		       int                shift = 24;
+		       b3_s16 B3_ALIGN_16 c[4];
+		static b3_f32 B3_ALIGN_16 f[4]  = 
+		{
+			0.0039215686f,0.0039215686f,0.0039215686f,0.0039215686f
+		};
 
 		for (int i = 0;i < 4;i++)
 		{
-			v[i] = (b3_f32)((input & mask) >> shift) * 0.0039215686f;
+			c[i]   = ((input & mask) >> shift);
 			mask >>= 8;
 			shift -= 8;
+		}
+
+		for (int i = 0;i < 4;i++)
+		{
+			v[i] = (b3_f32)c[i];
+		}
+
+		for (int i = 0;i < 4;i++)
+		{
+			v[i] *= f[i];
 		}
 	}
 
@@ -264,12 +280,12 @@ public:
 
 	inline b3Color &operator/=(const b3_count value)
 	{
-		b3Color prod((b3_f32)value);
+		b3Color divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
 		{
-			v[i] /= prod.v[i];
+			v[i] /= divisor.v[i];
 		}
 		return *this;
 	}
@@ -300,7 +316,8 @@ public:
 
 	inline b3Color operator/(const b3_count value)
 	{
-		b3Color result,divisor((b3_f32)value);
+		b3Color result;
+		b3Color divisor((b3_f32)value);
 
 		B3_ASSERT(value != 0);
 		for (int i = 0;i < 4;i++)
@@ -325,42 +342,33 @@ public:
 
 	inline operator b3_pkd_color()
 	{
-		b3_pkd_color B3_ALIGN_16  result = 0;
-#if 1
-		b3_u16 B3_ALIGN_16 c[4];
-		b3Color            sat(*this);
-		
-		sat *= 255.0;
-		sat.b3Sat(255.0);
-
-		for (int i = 0;i < 4;i++)
+		       b3_pkd_color       result = 0;
+		       int                i;
+		       b3_s16 B3_ALIGN_16 c[4];
+		       b3_f32 B3_ALIGN_16 sat[4];
+		static b3_f32 B3_ALIGN_16 limit[4] = 
 		{
-			c[i] = (b3_u16)sat.v[i];
+			255,255,255,255
+		};
+
+		for (i = 0;i < 4;i++)
+		{
+			sat[i] = v[i] * limit[i];
+			if (sat[i] > limit[i])
+			{
+				sat[i] = limit[i];
+			}
 		}
 
-		result =
-			((c[0] & 0x00ff) << 24) |
-			((c[1] & 0x00ff) << 16) |
-			((c[2] & 0x00ff) <<  8) |
-			 (c[3] & 0x00ff);
-			
-#else
-		float limit = 255.0f;
+		for (i = 0;i < 4;i++)
+		{
+			c[i] = (b3_s16)sat[i];
+		}
 
-		__m128 max = _mm_load_ps1(&limit);
-		__m128 res = _mm_min_ps(
-			_mm_mul_ps(
-				_mm_load_ps(v),
-				max),
-			max);
-
-		__m64 mmx = _mm_packs_pu16(
-			_mm_cvtps_pi16(res),
-			_mm_setzero_si64());
-		result = (b3_pkd_color)_mm_cvtsi64_si32(mmx);
-
-		_mm_empty();
-#endif
+		for (i = 0;i < 4;i++)
+		{
+			result = (result << 8) | c[i];
+		}
 		return result;
 	}
 

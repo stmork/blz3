@@ -22,6 +22,7 @@ setenv PROF_FILES "Test.bwd AlleObjekte.bwd Vase.bwd Wassersockel.bwd AllShapes.
 
 # Build image file libraries
 setenv CFLAGS "-O3 -xM -w"
+setenv ASMFLAGS "-O3 -w -march=pentiumiii"
 make -C Btiff -j 4 libB3tiff.a
 make -C Bjpeg -j 4 libB3jpeg.a
 
@@ -34,9 +35,9 @@ switch ( $1 )
        breaksw
 
    case "asm" :
-       echo "Build options: -O3 -w -march=pentium4"
+       echo "Build options: $ASMFLAGS"
        echo "Building with -ipo..."
-       $CXX -ipo -O3 -w -march=pentium4 $STDINC $LDFLAGS $SRC brt3/brt3.cc -S
+       $CXX -ipo $ASMFLAGS $STDINC $LDFLAGS $SRC brt3/brt3.cc -S
        breaksw
 
    case "pgo" :

@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2003/03/06 15:39:36  sm
+**	- Optimized b3Color for integer conversion
+**
 **	Revision 1.6  2003/03/05 19:08:18  sm
 **	- Trying to optimize b3Color...
-**
+**	
 **	Revision 1.5  2003/03/04 20:37:38  sm
 **	- Introducing new b3Color which brings some
 **	  performance!
@@ -313,7 +316,7 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		{
 			add    = false;
 #ifdef DEBUG_SS4
-			result = 0x0000ff;
+			result = B3_BLUE;
 #endif
 		}
 
@@ -351,12 +354,11 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			{
 				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
 			}
-			m_ThisResult[x] += ray.color;
+			m_ThisResult[x]  = (m_ThisResult[x] + ray.color) * 0.25f;
 
 			ray.dir.x = (dir.x += m_Scene->m_xHalfDir.x);
 			ray.dir.y = (dir.y += m_Scene->m_xHalfDir.y);
 			ray.dir.z = (dir.z += m_Scene->m_xHalfDir.z);
-			m_ThisResult[x] *= 0.25;
 		}
 		ray.dir.x  = (dir.x += m_Scene->m_xStepDir.x);
 		ray.dir.y  = (dir.y += m_Scene->m_xStepDir.y);
