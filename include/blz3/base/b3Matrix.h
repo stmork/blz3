@@ -780,10 +780,10 @@ public:
 	{
 		lower->x =
 		lower->y =
-		lower->z =  MAXFLOAT;
+		lower->z =  FLT_MAX;
 		upper->x =
 		upper->y =
-		upper->z = -MAXFLOAT;
+		upper->z = -FLT_MAX;
 	}
 
 	static inline void b3SetMinimum(

@@ -24,6 +24,7 @@
 #include "blz3/image/b3Tx.h"
 #include "blz3/system/b3Log.h"
 #include "blz3/base/b3Color.h"
+#include <float.h>
 
 #define not_SLOW_N_UGLY
 
@@ -35,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/01/31 21:36:50  sm
+**	- FLT_MAX is correct! And now: include <float.h> for that...
+**
 **	Revision 1.16  2005/01/31 21:20:19  sm
 **	- Changed FLT_MAX to MAX_FLOAT and removed values.h include.
-**
+**	
 **	Revision 1.15  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	
@@ -1612,7 +1616,7 @@ b3_bool b3Tx::b3TxReduce(b3Tx *src)
 	count = xSize * ySize;
 	for (i = 0;i < count;i++)
 	{
-		b3_f32 dist_min = MAXFLOAT;
+		b3_f32 dist_min = FLT_MAX;
 
 		color = *srcPtr++;
 		index = pSize;
