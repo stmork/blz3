@@ -37,6 +37,8 @@ enum b3_noise_error
 
 typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
+#define EARTH_RADIUS_KM 10.0
+
 class b3Noise : public b3Mem
 {
 	static b3_noisetype *NoiseTable;
@@ -82,7 +84,7 @@ public:
 
 	static inline b3_f64  b3Turbulence  (b3_vector *P)
 	{
-		b3_f64   x,y,z,s,t;
+		b3_f64  x,y,z,s,t;
 		b3_loop i;
 
 		t = 0;
@@ -146,10 +148,45 @@ public:
 		}
 	}
 
+	static inline b3_f64 b3Clouds (b3_vector64 *P,b3_f64 &r)
+	{
+		b3_vector Dir;
+		b3_f64    scaling   =   5.0;
+		b3_f64    R         = EARTH_RADIUS_KM;
+		b3_f64    sharpness =  10.2;
+		b3_f64    sight;
+
+		if (P->z > 0)
+		{
+			b3_f64 Rc,p,D,len;
+
+			Rc = R + 1;
+
+			p     = P->z * -R;
+			D     = p * p + Rc * Rc - R * R;
+			len   = (-p - sqrt(D)) * scaling;
+			Dir.x = P->x * len;
+			Dir.y = P->y * len;
+			Dir.z = P->z * len;
+
+			r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
+			if (r < 0)
+			{
+				r = 0;
+			}
+			sight = P->z;
+		}
+		else
+		{
+			r = 1;
+			sight = 0;
+		}
+		return sight;
+	}
+
 	static void    b3Marble      (b3_vector *d,b3Color &mask);
 	static void    b3Wood        (b3_vector *d,b3Color &mask);
 	static void    b3Hell        (b3_vector *P,b3Color &Color);
-	static b3_f64  b3Clouds      (b3_vector *P,b3_f64 &intensity);
 	static b3_f64  b3Wave        (b3_vector *point);
 	static b3_f64  b3Water       (b3_vector *point,b3_f64 time);
 	static b3_f64  b3PGauss      ();

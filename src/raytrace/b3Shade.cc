@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/04/22 14:35:16  sm
+**	- Optimized clouds by making them inline.
+**
 **	Revision 1.31  2004/04/22 14:28:44  sm
 **	- Adjusted clouds.
-**
+**	
 **	Revision 1.30  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -319,7 +322,6 @@ void b3Scene::b3GetBackgroundColor(
 	b3_f64       ly)
 {
 	b3_coord  x,y;
-	b3_vector Dir;
 	b3_f64    r,sight;
 
 	switch (m_BackgroundType)
@@ -336,8 +338,7 @@ void b3Scene::b3GetBackgroundColor(
 			break;
 
 		case TP_SKY_N_HELL :
-			b3Vector::b3Init(&Dir,&ray->dir);
-			sight      = b3Noise::b3Clouds(&Dir,r);
+			sight      = b3Noise::b3Clouds(&ray->dir,r);
 			ray->color = b3Color::b3Mix(m_BottomColor,b3Color(r,r,B3_MAX(r,m_TopColor[b3Color::B])),sight);
 
 #ifdef SKY_SLIDE

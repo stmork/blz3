@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.28  2004/04/22 14:35:16  sm
+**	- Optimized clouds by making them inline.
+**
 **	Revision 1.27  2004/04/22 14:28:44  sm
 **	- Adjusted clouds.
-**
+**	
 **	Revision 1.26  2004/04/10 19:12:46  sm
 **	- Splitted up some header/source files:
 **	  o b3Wood/b3OakPlank
@@ -607,44 +610,6 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;
 	Color = HellColors[(int)(t * 4)];
-}
-
-#define EARTH_RADIUS_KM 10.0
-
-b3_f64 b3Noise::b3Clouds (b3_vector *P,b3_f64 &r)
-{
-	b3_vector Dir;
-	b3_f64    scaling   =   5.0;
-	b3_f64    R         = EARTH_RADIUS_KM;
-	b3_f64    sharpness =  10.2;
-	b3_f64    factor,sight;
-
-	if (P->z > 0)
-	{
-		b3_f64 Rc,p,D,len;
-
-		Rc = R + 1;
-
-		p     = P->z * -R;
-		D     = p * p + Rc * Rc - R * R;
-		len   = (-p - sqrt(D)) * scaling;
-		Dir.x = P->x * len;
-		Dir.y = P->y * len;
-		Dir.z = P->z * len;
-
-		r = 1.0 - pow(b3Turbulence (&Dir),-sharpness);
-		if (r < 0)
-		{
-			r = 0;
-		}
-		sight = P->z;
-	}
-	else
-	{
-		r = 1;
-		sight = 0;
-	}
-	return sight;
 }
 
 inline b3_f64 b3Noise::b3Frac(b3_f64 a,b3_f64 b)
