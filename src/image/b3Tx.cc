@@ -36,6 +36,10 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2002/08/08 15:14:22  sm
+**	- Some problems concerning b3Mem::b3Realloc fixed.
+**	- Further error messages added.
+**
 **	Revision 1.20  2002/08/05 16:04:55  sm
 **	- Found first texture init bug. This wasn't an OpenGL bug. This
 **	  couldn't be because every implementation had got the same
@@ -50,7 +54,7 @@
 **	  prevents printing a warning when this class isn't found. Due to
 **	  the fact that *every* Blizzard data contains this class every
 **	  data read put out this warning.
-**
+**	
 **	Revision 1.19  2002/03/13 19:01:58  sm
 **	- Fixed some GCC warnings.
 **	
@@ -302,6 +306,14 @@ b3_bool b3Tx::b3AllocTx(
 	b3_res y,
 	b3_res d)
 {
+	if ((d == 0) || (x == 0) || (y == 0))
+	{
+		// This meens, we need an empty image, so
+		// free memory and everything is OK!
+		b3FreeTx();
+		return true;
+	}
+
 	b3EndHist();
 
 	dSize   = 0;

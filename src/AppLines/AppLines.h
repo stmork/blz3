@@ -89,6 +89,7 @@ public:
 };
 
 #define CB3GetLinesApp()  ((CAppLinesApp *)AfxGetApp())
+#define B3_MSG_ERROR(exception) (b3Runtime::b3MessageBox((exception)->b3GetErrorMsg(),B3_MSGBOX_ERROR))
 
 /////////////////////////////////////////////////////////////////////////////
 

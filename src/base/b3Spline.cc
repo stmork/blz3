@@ -32,10 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2002/08/08 15:14:22  sm
+**	- Some problems concerning b3Mem::b3Realloc fixed.
+**	- Further error messages added.
+**
 **	Revision 1.10  2002/03/02 19:52:39  sm
 **	- Nasty UnCR
 **	- Fixed some compile bugs due to incompatibilities to Visual C++
-**
+**	
 **	Revision 1.9  2002/03/02 19:19:09  sm
 **	- Heavily cleaned up BSplines. Now ready!
 **	
@@ -77,4 +81,4 @@
 **                                                                      **
 *************************************************************************/
 
-b3_bspline_error bspline_errno = BSPLINE_OK;
+b3_bspline_error bspline_errno = B3_BSPLINE_OK;

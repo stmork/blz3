@@ -49,14 +49,14 @@
 
 enum b3_bspline_error
 {
-	BSPLINE_OK = 0,
-	BSPLINE_TOO_MUCH_CONTROLS,
-	BSPLINE_TOO_FEW_CONTROLS,
-	BSPLINE_TOO_FEW_MAXKNOTS,
-	BSPLINE_TOO_FEW_MAXCONTROLS,
-	BSPLINE_MISSING_KNOTS,
-	BSPLINE_CLOSED,
-	BSPLINE_TOO_LOW_MULTIPLICATION
+	B3_BSPLINE_OK = 0,
+	B3_BSPLINE_TOO_MUCH_CONTROLS,
+	B3_BSPLINE_TOO_FEW_CONTROLS,
+	B3_BSPLINE_TOO_FEW_MAXKNOTS,
+	B3_BSPLINE_TOO_FEW_MAXCONTROLS,
+	B3_BSPLINE_MISSING_KNOTS,
+	B3_BSPLINE_CLOSED,
+	B3_BSPLINE_TOO_LOW_MULTIPLICATION
 };
 
 extern b3_bspline_error bspline_errno;
@@ -281,20 +281,20 @@ public:
 		// Make some checks
 		if (ControlNum > control_max)
 		{
-			bspline_errno = BSPLINE_TOO_MUCH_CONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_MUCH_CONTROLS;
 			return false;
 		}
 		if ((ControlNum + Degree + 1) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
 		if (knots == null)
 		{
-			bspline_errno = BSPLINE_MISSING_KNOTS;
+			bspline_errno = B3_BSPLINE_MISSING_KNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		// Copy values
 		degree      = Degree;
@@ -351,10 +351,10 @@ public:
 
 		if (closed)
 		{
-			bspline_errno = BSPLINE_CLOSED;
+			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		knot_num = control_num + degree + 1;
 		start    = knots[degree];
@@ -374,15 +374,15 @@ public:
 
 		if  (closed)
 		{
-			bspline_errno = BSPLINE_CLOSED;
+			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
 		if ((control_num * 2) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		knot_num = control_num * 2;
 		degree   = control_num - 1;
@@ -403,19 +403,19 @@ public:
 		b3_f32	  start,end;
 		b3_index  i,diff;
 
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 		if (degree == newDegree)
 		{
 			return true;
 		}
 		if (degree >= control_num)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_CONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_CONTROLS;
 			return false;
 		}
 		if ((control_num + newDegree + 1) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
 
@@ -746,7 +746,7 @@ public:
 
 		if (Mult < 1)
 		{
-			bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+			bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 			return false;
 		}
 
@@ -755,12 +755,12 @@ public:
 
 		if ((m + Mult) > control_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
 		if ((KnotNum + Mult) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
 		bspline_errno = BSPLINE_OK;
@@ -845,7 +845,7 @@ public:
 		VECTOR   *Controls;
 		VECTOR    o[B3_MAX_CONTROLS + 1]; /* buffer for knot insertion */
 
-		bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+		bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 		if (Mult < 1)
 		{
 			return false;
@@ -860,15 +860,15 @@ public:
 
 		if ((m + Mult) > control_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
 		if ((KnotNum + Mult) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		if (closed) for (Count = 0;Count < Mult;Count++)
 		{
@@ -951,12 +951,12 @@ public:
 
 		if (closed)
 		{
-			bspline_errno = BSPLINE_CLOSED;
+			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
 		if (Mult < 1)
 		{
-			bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+			bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 			return false;
 		}
 
@@ -966,15 +966,15 @@ public:
 
 		if ((m + Mult) > control_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
 		if ((KnotNum + Mult) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
-		bspline_errno = BSPLINE_OK;
+		bspline_errno = B3_BSPLINE_OK;
 
 		if (append)
 		{
@@ -1040,12 +1040,12 @@ public:
 
 		if (closed)
 		{
-			bspline_errno = BSPLINE_CLOSED;
+			bspline_errno = B3_BSPLINE_CLOSED;
 			return false;
 		}
 		if (Mult < 1)
 		{
-			bspline_errno = BSPLINE_TOO_LOW_MULTIPLICATION;
+			bspline_errno = B3_BSPLINE_TOO_LOW_MULTIPLICATION;
 			return false;
 		}
 
@@ -1058,12 +1058,12 @@ public:
 
 		if ((m       + Mult) > control_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXCONTROLS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXCONTROLS;
 			return false;
 		}
 		if ((KnotNum + Mult) > knot_max)
 		{
-			bspline_errno = BSPLINE_TOO_FEW_MAXKNOTS;
+			bspline_errno = B3_BSPLINE_TOO_FEW_MAXKNOTS;
 			return false;
 		}
 		bspline_errno = BSPLINE_OK;

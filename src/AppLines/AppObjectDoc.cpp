@@ -38,12 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2002/08/08 15:14:22  sm
+**	- Some problems concerning b3Mem::b3Realloc fixed.
+**	- Further error messages added.
+**
 **	Revision 1.16  2002/08/04 13:24:55  sm
 **	- Found transformation bug: Normals have to be treated as
 **	  direction vectors, aren't them?
 **	- b3PrepareInfo::m_PrepareProc initialized not only in
 **	  debug mode.
-**
+**	
 **	Revision 1.15  2002/02/26 20:43:28  sm
 **	- Moved creation dialogs into property sheets
 **	- Added material creation dialog
@@ -275,11 +279,13 @@ BOOL CAppObjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",f->b3GetError());
+		B3_MSG_ERROR(f);
 	}
 	catch(b3WorldException *e)
 	{
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error loading %s\n",lpszPathName);
 		b3PrintF(B3LOG_NORMAL,"Blizzard III Object loader: Error code %d\n",e->b3GetError());
+		B3_MSG_ERROR(e);
 	}
 	catch(...)
 	{

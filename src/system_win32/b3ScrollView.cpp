@@ -33,9 +33,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2002/08/08 15:14:22  sm
+**	- Some problems concerning b3Mem::b3Realloc fixed.
+**	- Further error messages added.
+**
 **	Revision 1.6  2002/01/17 19:17:03  sm
 **	- Fixed ILBM to other unfiltered scaling
-**
+**	
 **	Revision 1.5  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -516,26 +520,44 @@ void CB3ScrollView::b3UpdateTx(LPARAM lHint)
 				{
 					b3PrintF (B3LOG_FULL,
 						"### CLASS: b3View # b3Lock()   - OnUpdateTx [scaling]\n");
-					m_MutexScaling.b3Lock();
-					if (m_TxScale->b3AllocTx(sizeTotal.cx,sizeTotal.cy,depth))
+					m_MutexScaling.b3Lock();									
+					try
 					{
-						if ((!m_ScaleGrey) || (ScaleBigger))
+						if (m_TxScale->b3AllocTx(sizeTotal.cx,sizeTotal.cy,depth))
 						{
-							if (m_Mode == B3_VIEWMODE_ORIGINAL)
+							if ((!m_ScaleGrey) || (ScaleBigger))
 							{
-								m_TxScale->b3Copy(pDoc->m_Tx);
+								if (m_Mode == B3_VIEWMODE_ORIGINAL)
+								{
+									m_TxScale->b3Copy(pDoc->m_Tx);
+								}
+								else
+								{
+									m_TxScale->b3Scale(pDoc->m_Tx);
+								}
 							}
 							else
 							{
-								m_TxScale->b3Scale(pDoc->m_Tx);
+								m_TxScale->b3ScaleToGrey(pDoc->m_Tx);
 							}
+							m_Filtered = m_ScaleGrey;
+							b3ViewParamChanged();
 						}
-						else
-						{
-							m_TxScale->b3ScaleToGrey(pDoc->m_Tx);
-						}
-						m_Filtered = m_ScaleGrey;
-						b3ViewParamChanged();
+					}
+					catch (b3TxException *t)
+					{
+						b3PrintF (B3LOG_NORMAL,
+							"### CLASS: b3View # Texture exception occured: %s!\n",
+							t->b3GetErrorMsg());
+						m_MutexScaling.b3Unlock();
+						throw;
+					}
+					catch(...)
+					{
+						b3PrintF (B3LOG_NORMAL,
+							"### CLASS: b3View # Unknown exception occured!\n");
+						m_MutexScaling.b3Unlock();
+						throw;
 					}
 					m_MutexScaling.b3Unlock();
 					b3PrintF (B3LOG_FULL,

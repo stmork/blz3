@@ -2398,6 +2398,7 @@ BEGIN
     IDS_ERR_ORDER           "Die interne Datenstruktur der Blizzard-Datei stimmt nicht!"
     IDS_ERR_CLASSTYPE_UNKNOWN 
                             "Es wurde versucht eine Blizzard-Datei mit einem unbekanntem Element zu laden!"
+    IDS_ERR_NOT_FOUND       "Die Textur konnte nicht gefunden werden."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -2594,6 +2595,46 @@ BEGIN
     IDS_CSG_ELLIPSOID       "CSG Ellipsoid (%s)"
     IDS_CSG_BOX             "CSG Quader (%s)"
     IDS_CSG_TORUS           "CSG Torus (%s)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ERR_NOT_SAVED       "Das Bild konnte nicht gespeichert werden!"
+    IDS_ERR_UNPACK          "Das Bild konnte nicht entpackt werden!"
+    IDS_ERR_PACKING         "Das Bild enthält gepackte Daten im unbekanntem Format!"
+    IDS_ERR_UNCOMPL         "Die Bilddaten sind nicht komplett!"
+    IDS_ERR_HEADER          "Die Metadaten des Bildes sind nicht korrekt!"
+    IDS_ERR_FILETYPE        "Der Dateityp konnte nicht ermittelt werden!"
+    IDS_PRGERR_DATATYPE     "Das interne Datenformat ist unbekannt!"
+    IDS_PRGERR_BSPLINE_TOO_MUCH_CONTROLS 
+                            "Programmfehler!\nDer angegebene BSpline hat zu viele Kontrollpunkte!"
+    IDS_PRGERR_BSPLINE_TOO_FEW_CONTROLS 
+                            "Programmfehler!\nDer angegebene BSpline hat zu wenig Kontrollpunkte!"
+    IDS_PRGERR_BSPLINE_TOO_FEW_MAXKNOTS 
+                            "Programmfehler!\nDie Begrenzung des Knotenvektors ist zu niedrig!"
+    IDS_PRGERR_BSPLINE_TOO_FEW_MAXCONTROLS 
+                            "Programmfehler!\nDie Maximalzahl der Kontrollpunkte ist zu niedrig!"
+    IDS_PRGERR_BSPLINE_MISSING_KNOTS 
+                            "Programmfehler!\nDem BSpline fehlt der Knotenvektor! Ohne dem geht's nicht;-)"
+    IDS_PRGERR_BSPLINE_CLOSED "Programmfehler!\nDer BSpline ist geschlossen!"
+    IDS_PRGERR_BSPLINE_TOO_LOW_MULTIPLICATION 
+                            "Programmfehler!\nDer Multiplikator für diesen Knoten ist zu niedrig!"
+    IDS_PRGERR_OUT_OF_BOUNDS 
+                            "Programmfehler!\nEs wurde auf Daten außerhalb des Gültigkeitsbereichs zugegriffen!"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PRGERR_HASH_DUPLICATE_KEY 
+                            "Programmfehler!\nEs wurde versucht, Daten zweimal anhand eines Schlüssels zu hinterlegen!"
+    IDS_PRGERR_HASH_INVALID "Programmfehler!\nDie Berechnung des Suchschlüssels führte zu einem ungültigen Ergebnis!"
+    IDS_ERR_FILE_NOT_FOUND  "ie Datei wurde nicht gefunden!"
+    IDS_ERR_FILE_NOT_READ   "Die Daten ließen sich nicht aus der Datei lesen!"
+    IDS_ERR_FILE_NOT_WRITTEN 
+                            "Es konnten nicht alle Daten in die Datei geschrieben werden. Vermutlich ist der Speicherplatz voll!"
+    IDS_PRGERR_FILE_NOT_OPEN 
+                            "Programmfehler!\nEs wurde versucht, Dateioperationen auf einer nicht geöffneten Datei durchzuführen!"
+    IDS_ERR_DIR_NOT_FOUND   "Das Verzeichnis existiert nicht!"
 END
 
 #endif    // German (Germany) resources

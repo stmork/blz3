@@ -57,10 +57,14 @@
 
 /*
 **	$Log$
+**	Revision 1.67  2002/08/08 15:14:22  sm
+**	- Some problems concerning b3Mem::b3Realloc fixed.
+**	- Further error messages added.
+**
 **	Revision 1.66  2002/08/07 17:25:01  sm
 **	- Added new error messages
 **	- Changed exception handling a little bit
-**
+**	
 **	Revision 1.65  2002/08/07 14:26:23  sm
 **	- Introduced mapping from Blizzard III error codes to human
 **	  readable error messages supplied from Windows resources.
@@ -543,7 +547,8 @@ BOOL CAppLinesDoc::OnNewDocument()
 	}
 	catch(b3ExceptionBase *e)
 	{
-		b3Runtime::b3MessageBox(e->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+		b3PrintF(B3LOG_NORMAL,"ERROR creating %s\n",GetPathName());
+		B3_MSG_ERROR(e);
 	}
 	catch(...)
 	{
@@ -590,7 +595,8 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	}
 	catch(b3ExceptionBase *e)
 	{
-		b3Runtime::b3MessageBox(e->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+		b3PrintF(B3LOG_NORMAL,"UNKNOWN ERROR: Loading %s\n",lpszPathName);
+		B3_MSG_ERROR(e);
 	}
 	catch(...)
 	{
@@ -651,11 +657,11 @@ BOOL CAppLinesDoc::OnSaveDocument(LPCTSTR lpszPathName)
 	catch(b3WorldException *w)
 	{
 		remove(filename);
-		b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+		B3_MSG_ERROR(w);
 	}
 	catch(b3ExceptionBase *e)
 	{
-		b3Runtime::b3MessageBox(e->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+		B3_MSG_ERROR(e);
 	}
 	catch(...)
 	{
@@ -1475,13 +1481,13 @@ b3_bool CAppLinesDoc::b3PutClipboard(b3BBox *bbox)
 		{
 			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to clipboard (code: %d)\n",
 				bbox->b3GetName(),f->b3GetError());
-			b3Runtime::b3MessageBox(f->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(f);
 		}
 		catch(b3WorldException *w)
 		{
 			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to clipboard (code: %d)\n",
 				bbox->b3GetName(),w->b3GetError());
-			b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(w);
 		}
 		catch(...)
 		{
@@ -1617,13 +1623,13 @@ void CAppLinesDoc::b3PasteClipboard(b3_bool insert_sub)
 			{
 				b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from clipboard (code: %d)\n",
 					f->b3GetError());
-				b3Runtime::b3MessageBox(f->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+				B3_MSG_ERROR(f);
 			}
 			catch(b3WorldException *w)
 			{
 				b3PrintF(B3LOG_NORMAL,"ERROR: reading object from clipboard (code: %d)\n",
 					w->b3GetError());
-				b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+				B3_MSG_ERROR(w);
 			}
 			::GlobalUnlock(handle);
 		}
@@ -1720,13 +1726,13 @@ void CAppLinesDoc::OnObjectLoad()
 		{
 			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
 				(const char *)result,f->b3GetError());
-			b3Runtime::b3MessageBox(f->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(f);
 		}
 		catch(b3WorldException *w)
 		{
 			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
 				(const char *)result,w->b3GetError());
-			b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(w);
 		}
 	}
 }
@@ -1784,25 +1790,25 @@ void CAppLinesDoc::OnObjectSave()
 		{
 			b3PrintF(B3LOG_NORMAL,"I/O ERROR: Creating object thumbnail %s from %s (code: %d)\n",
 				(const char *)result,selected->b3GetName(),t->b3GetError());
-			b3Runtime::b3MessageBox(t->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(t);
 		}
 		catch(b3DisplayException *d)
 		{
 			b3PrintF(B3LOG_NORMAL,"ERROR: Creating object thumbnail %s (code: %d)\n",
 				selected->b3GetName(),d->b3GetError());
-			b3Runtime::b3MessageBox(d->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(d);
 		}
 		catch(b3FileException *f)
 		{
 			b3PrintF(B3LOG_NORMAL,"I/O ERROR: writing object %s to file %s (code: %d)\n",
 				selected->b3GetName(),(const char *)result,f->b3GetError());
-			b3Runtime::b3MessageBox(f->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(f);
 		}
 		catch(b3WorldException *w)
 		{
 			b3PrintF(B3LOG_NORMAL,"ERROR: writing object %s to file %s (code: %d)\n",
 				selected->b3GetName(),(const char *)result,w->b3GetError());
-			b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(w);
 		}
 		catch(...)
 		{
@@ -1876,13 +1882,13 @@ void CAppLinesDoc::OnObjectReplace()
 		{
 			b3PrintF(B3LOG_NORMAL,"I/O ERROR: reading object from file %s (code: %d)\n",
 				(const char *)result,f->b3GetError());
-			b3Runtime::b3MessageBox(f->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(f);
 		}
 		catch(b3WorldException *w)
 		{
 			b3PrintF(B3LOG_NORMAL,"ERROR: reading object from file %s (code: %d)\n",
 				(const char *)result,w->b3GetError());
-			b3Runtime::b3MessageBox(w->b3GetErrorMsg(),B3_MSGBOX_ERROR);
+			B3_MSG_ERROR(w);
 		}
 	}
 }

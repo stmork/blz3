@@ -137,8 +137,8 @@ public:
 		}
 		mutex.b3Unlock();
 
-		// Pointer not found
-		return null;
+		// Pointer not found. This shouldn't be but it's failsafe!
+		return b3Alloc(new_size);
 	}
 
 	b3_bool b3Free(const void *ptr)
