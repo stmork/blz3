@@ -34,6 +34,9 @@
 
 /*
 **  $Log$
+**  Revision 1.3  2004/05/18 13:34:50  sm
+**  - Cleaned up water animation
+**
 **  Revision 1.2  2004/05/18 10:44:52  sm
 **  - Fine tuning animated water.
 **
@@ -84,7 +87,7 @@ public:
 		m_Km        = 1.0f;
 		m_Octaves   = 2;  
 
-		printf("octaves=%d\n",m_Octaves);
+		printf("octaves=%ld\n",m_Octaves);
 		printf("Km=%3.3f\n",m_Km);
 		printf("wind: frequency=%3.3f min=%3.3f amp=%3.3f\n",
 			m_WindFreq,m_MinWind,m_WindAmp);

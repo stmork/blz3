@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/05/18 13:34:50  sm
+**	- Cleaned up water animation
+**
 **	Revision 1.35  2004/05/18 10:44:52  sm
 **	- Fine tuning animated water.
-**
+**	
 **	Revision 1.34  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
@@ -477,7 +480,7 @@ void b3BumpTexture::b3BumpNormal(b3_ray *ray)
 b3BumpWater::b3BumpWater(b3_u32 class_type) : b3Bump(sizeof(b3BumpWater),class_type)
 {
 	m_Amplitude = 0.2f;
-	b3InitScaling(0.02f,B3_SCALE_IPOINT_ORIGINAL);
+	b3InitScaling(0.006f,B3_SCALE_IPOINT_ORIGINAL);
 }
 
 b3BumpWater::b3BumpWater(b3_u32 *src) : b3Bump(src)
@@ -527,6 +530,7 @@ void b3BumpWater::b3Write()
 b3_bool b3BumpWater::b3Prepare()
 {
 	b3PrepareScaling();
+	b3PrepareWater();
 	return true;
 }
 

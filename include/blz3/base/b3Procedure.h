@@ -182,6 +182,8 @@ private:
 
 class b3Water
 {
+	b3_f64    m_Factor;
+
 public:
 	b3_f32    m_Km;
 	b3_count  m_Octaves;
@@ -192,26 +194,9 @@ public:
 	b3_vector m_Anim;
 
 public:
-	b3Water();
-
-	inline b3_f64 b3ComputeWater(b3_vector *point, b3_f64 time)
-	{
-		b3_vector P;
-		b3_f64    factor  = 10 * m_WindFreq;
-		b3_f64    offset,turbulence;
-
-		P.x = point->x * factor + time * m_ScaleTime * m_Anim.x;
-		P.y = point->y * factor + time * m_ScaleTime * m_Anim.y;
-		P.z = point->z * factor + time * m_ScaleTime * m_Anim.z * m_ScaleTime;
-		offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
-
-		P.x *= 8;
-		P.y *= 8;
-		P.z *= 8;
-		turbulence = b3Noise::b3Turbulence(&P, 3);
-
-		return (m_MinWind + m_WindAmp * turbulence) * offset;
-	}
+	       b3Water();
+	void   b3PrepareWater();
+	b3_f64 b3ComputeWater(b3_vector *point, b3_f64 time);
 };
 
 class b3Clouds
@@ -229,40 +214,9 @@ public:
 	b3_f32    m_Sharpness;
 
 public:
-	     b3Clouds();
-	void b3PrepareClouds();
-
-	inline b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
-	{
-		b3_f64 sight;
-
-		if (ray->dir.z > 0)
-		{
-			b3_vector Dir;
-			b3_f64    p,D,len,t;
-
-			p     = ray->dir.z * -m_EarthRadius;
-			D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;
-			len   = (-p - sqrt(D)) * m_Scaling;
-			Dir.x = ray->pos.x * m_PosScale.x + ray->dir.x * len + m_Anim.x * time;
-			Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
-			Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
-
-			t = b3Noise::b3Turbulence (&Dir);
-			r = 1.0 - pow(t, -m_Sharpness);
-			if (r < 0)
-			{
-				r = 0;
-			}
-			sight = ray->dir.z;
-		}
-		else
-		{
-			r     = 1;
-			sight = 0;
-		}
-		return sight;
-	}
+	       b3Clouds();
+	void   b3PrepareClouds();
+	b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time);
 };
 
 #endif

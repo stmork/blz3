@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2004/05/18 13:34:50  sm
+**	- Cleaned up water animation
+**
 **	Revision 1.14  2004/05/12 19:10:50  sm
 **	- Completed bump mapping dialog.
-**
+**	
 **	Revision 1.13  2004/05/10 15:12:08  sm
 **	- Unified condition legends for conditions and
 **	  texture materials.
@@ -477,7 +480,7 @@ void CDlgItemMaintain::OnOK()
 	// TODO: Add extra validation here
 	
 	CDialog::OnOK();
-	if (m_pDoc != null)
+	if ((m_pDoc != null) && m_Changed)
 	{
 		m_pDoc->SetModifiedFlag();
 	}

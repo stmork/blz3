@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.36  2004/05/18 13:34:50  sm
+**	- Cleaned up water animation
+**
 **	Revision 1.35  2004/05/18 10:44:52  sm
 **	- Fine tuning animated water.
-**
+**	
 **	Revision 1.34  2004/05/16 18:50:59  sm
 **	- Added new simple image sampler.
 **	- We need better water!
@@ -764,6 +767,30 @@ b3Water::b3Water()
 	m_WindAmp   = 0.2f;
 	m_MinWind   = 1.0f;
 	b3Vector::b3Init(&m_Anim,1.5f,1.5f,1.0f);
+	b3PrepareWater();
+}
+
+void b3Water::b3PrepareWater()
+{
+	m_Factor = 10 * m_WindFreq;
+}
+
+b3_f64 b3Water::b3ComputeWater(b3_vector *point, b3_f64 time)
+{
+	b3_vector P;
+	b3_f64    offset,turbulence;
+
+	P.x = point->x * m_Factor + time * m_Anim.x;
+	P.y = point->y * m_Factor + time * m_Anim.y;
+	P.z = point->z * m_Factor + time * m_Anim.z * m_ScaleTime;
+	offset = m_Km * b3Noise::b3FractionalBrownianMotion(&P,m_Octaves,2.0,1.0);
+
+	P.x *= 8;
+	P.y *= 8;
+	P.z *= 8;
+	turbulence = b3Noise::b3Turbulence(&P, 3);
+
+	return (m_MinWind + m_WindAmp * turbulence) * offset;
 }
 
 /*************************************************************************
@@ -793,6 +820,38 @@ void b3Clouds::b3PrepareClouds()
 
 	m_EarthRadiusSqr = m_EarthRadius * m_EarthRadius;
 	m_CloudRadiusSqr = Rc * Rc;
+}
+
+b3_f64 b3Clouds::b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
+{
+	b3_f64 sight;
+
+	if (ray->dir.z > 0)
+	{
+		b3_vector Dir;
+		b3_f64    p,D,len,t;
+
+		p     = ray->dir.z * -m_EarthRadius;
+		D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;
+		len   = (-p - sqrt(D)) * m_Scaling;
+		Dir.x = ray->pos.x * m_PosScale.x + ray->dir.x * len + m_Anim.x * time;
+		Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
+		Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
+
+		t = b3Noise::b3Turbulence (&Dir);
+		r = 1.0 - pow(t, -m_Sharpness);
+		if (r < 0)
+		{
+			r = 0;
+		}
+		sight = ray->dir.z;
+	}
+	else
+	{
+		r     = 1;
+		sight = 0;
+	}
+	return sight;
 }
 
 /*************************************************************************
