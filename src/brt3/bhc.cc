@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2003/07/20 09:38:30  sm
+**	- Registering raytracing items manually.
+**
 **	Revision 1.8  2003/07/13 12:19:07  sm
 **	- Added unit/measurement on object print
 **	- Adjusted bhc tool for level scaling
-**
+**	
 **	Revision 1.7  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
 **	
@@ -569,6 +572,7 @@ int main(int argc,char *argv[])
 	int i;
 
 	b3Log::b3SetLevel(B3LOG_FULL);	
+	b3RaytracingItems::b3Register();
 	for (i = 1;i < argc;i++)
 	{
 		b3BHDParser::b3Parse(argv[i]);

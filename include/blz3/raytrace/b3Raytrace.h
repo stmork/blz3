@@ -2596,11 +2596,10 @@ public:
 #define RAY_INSIDE       1
 #define RAY_OUTSIDE      0
 
-class b3RegisterRaytracingItems
+class b3RaytracingItems
 {
-	static b3RegisterRaytracingItems m_RaytracingItems;
-
-	b3RegisterRaytracingItems();
+public:
+	static void b3Register();
 };
 
 #endif

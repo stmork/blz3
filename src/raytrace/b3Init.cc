@@ -31,6 +31,9 @@
     
 /*
 **      $Log$
+**      Revision 1.9  2003/07/20 09:38:30  sm
+**      - Registering raytracing items manually.
+**
 **      Revision 1.8  2003/07/12 17:44:47  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -71,9 +74,7 @@
 **                                                                      **
 *************************************************************************/
 
-b3RegisterRaytracingItems b3RegisterRaytracingItems::m_RaytracingItems;
-
-b3RegisterRaytracingItems::b3RegisterRaytracingItems()
+void b3RaytracingItems::b3Register()
 {
 	b3Scene::b3Register();
 	b3Special::b3Register();

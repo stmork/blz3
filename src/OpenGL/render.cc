@@ -22,6 +22,7 @@
 *************************************************************************/
   
 #include "blz3/b3Config.h" 
+#include "blz3/system/b3Plugin.h"
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/raytrace/b3RenderView.h"
 #include "blz3/base/b3Aux.h"
@@ -35,6 +36,9 @@
 
 /*
 **      $Log$
+**      Revision 1.38  2003/07/20 09:38:30  sm
+**      - Registering raytracing items manually.
+**
 **      Revision 1.37  2003/07/12 17:44:46  sm
 **      - Cleaned up raytracing b3Item registration
 **
@@ -413,10 +417,13 @@ int main(int argc,char *argv[])
 	const char     *filename;
 	b3Item         *item;
 	b3Scene        *scene;
+	char           *BLZ3_PLUGINS  = getenv("BLZ3_PLUGINS");
+	char           *BLZ3_BIN      = getenv("BLZ3_BIN");
 	char           *HOME = getenv("HOME");
 	b3Path          textures;
 	b3Path          pictures;
 	b3Path          data;
+	b3Loader        loader;
 
 	if (argc <= 1)
 	{
@@ -444,6 +451,18 @@ int main(int argc,char *argv[])
 		filename = (const char *)argv[1];
 		world = new b3World();
 		world->b3AddPath(data);
+
+		b3RaytracingItems::b3Register();
+		if (BLZ3_BIN != null)
+		{
+			loader.b3AddPath(BLZ3_BIN);
+		}
+		if (BLZ3_PLUGINS != null)
+		{
+			loader.b3AddPath(BLZ3_PLUGINS);
+		}
+		loader.b3Load();
+
 		world->b3Read(filename);
 		for (item  = world->b3GetFirst();
 		     item != null;

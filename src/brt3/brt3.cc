@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2003/07/20 09:38:30  sm
+**	- Registering raytracing items manually.
+**
 **	Revision 1.42  2003/07/12 17:44:47  sm
 **	- Cleaned up raytracing b3Item registration
-**
+**	
 **	Revision 1.41  2003/07/09 10:09:38  sm
 **	- Changed brt3's default image file format to JPEG
 **	- Increased default quality of JPEG images from 75 to 85
@@ -343,6 +346,8 @@ int main(int argc,char *argv[])
 			b3Scene::m_TexturePool.b3AddPath(pictures);
 			world->b3AddPath(data);
 		}
+
+		b3RaytracingItems::b3Register();
 		if (BLZ3_BIN != null)
 		{
 			loader.b3AddPath(BLZ3_BIN);
