@@ -281,12 +281,12 @@ public:
 class b3CondTexture : public b3Condition
 {
 protected:
-	b3Tx   *Texture;
-	b3_s32  Flags;               // unused yet
-	b3_f32  xStart,yStart;       // base of texture
-	b3_f32  xScale,yScale;       // scale of texture
-	b3_s32  xTimes,yTimes;       // repetion of texture in x- and y-direction
-	b3Path  Name;  // title
+	b3Tx   *m_Texture;
+	b3_s32  m_Flags;               // unused yet
+	b3_f32  m_xStart,m_yStart;     // base of texture
+	b3_f32  m_xScale,m_yScale;     // scale of texture
+	b3_s32  m_xTimes,m_yTimes;     // repetion of texture in x- and y-direction
+	b3Path  m_Name;  // title
 
 public:
 	B3_ITEM_INIT(b3CondTexture);
@@ -299,11 +299,11 @@ public:
 class b3CondWrapTexture : public b3Condition
 {
 protected:
-	b3Tx   *Texture;
-	b3_s32  Flags;               // unused yet
-	b3_f32  xStart,yStart;       // borders in hor. direction
-	b3_f32  xEnd,yEnd;           // borders in vert. direction
-	b3Path  Name;                // title
+	b3Tx   *m_Texture;
+	b3_s32  m_Flags;               // unused yet
+	b3_f32  m_xStart,m_yStart;     // borders in hor. direction
+	b3_f32  m_xEnd,m_yEnd;         // borders in vert. direction
+	b3Path  m_Name;                // title
 
 public:
 	B3_ITEM_INIT(b3CondWrapTexture);

@@ -36,12 +36,15 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2001/10/09 20:47:01  sm
+**	- some further texture handling.
+**
 **	Revision 1.5  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
 **	- Added bump and material support.
 **	- Added soft shadows.
-**
+**	
 **	Revision 1.4  2001/07/08 12:30:06  sm
 **	- New tool to remove nasty CR/LF from Windoze.
 **	- Removing some nasty CR/LF with that new tool.
@@ -410,7 +413,7 @@ b3_bool b3Tx::b3IsLoaded()
 
 char *b3Tx::b3Name()
 {
-	return name;
+	return (char *)name;
 }
 
 void b3Tx::b3Name(const char *ImageName)

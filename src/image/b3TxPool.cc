@@ -52,9 +52,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2001/10/09 20:47:01  sm
+**	- some further texture handling.
+**
 **	Revision 1.2  2001/10/07 20:41:32  sm
 **	- Updating MSVC project status
-**
+**	
 **	Revision 1.1  2001/10/07 20:17:27  sm
 **	- Prepared texture support.
 **	- Noise procedures added.
@@ -70,7 +73,7 @@
 **                                                                      **
 *************************************************************************/
 
-static b3TxPool texture_pool;
+b3TxPool texture_pool;
 
 b3TxPath::b3TxPath(const char *new_path) : b3Link<b3TxPath>(sizeof(b3TxPath))
 {
@@ -79,7 +82,17 @@ b3TxPath::b3TxPath(const char *new_path) : b3Link<b3TxPath>(sizeof(b3TxPath))
 
 void b3TxPool::b3AddPath(const char *path)
 {
-	m_SearchPath.b3Append(new b3TxPath(path));
+	b3TxPath *path_item = new b3TxPath(path);
+
+	b3PrintF(B3LOG_DEBUG,"Adding texture path \"%s\"\n",
+		(const char *)*path_item);
+	m_SearchPath.b3Append(path_item);
+}
+
+b3TxPool::b3TxPool()
+{
+	m_SearchPath.b3InitBase();
+	m_Pool.b3InitBase();
 }
 
 /*************************************************************************
@@ -404,15 +417,17 @@ long b3TxPool::b3ParseTexture (
 
 void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 {
-	b3File    TextureFile;
 	b3TxPath *path;
+	b3File    TextureFile;
 	b3Path    FullName;
 	b3_u08   *Data = null;
 	b3_size   FileSize;
 
 	try
 	{
-		Data = TextureFile.b3ReadBuffer(Name,FileSize);
+		strcpy(FullName,Name);
+		b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(char *)FullName);
+		Data = TextureFile.b3ReadBuffer(FullName,FileSize);
 	}
 	catch(...)
 	{
@@ -420,23 +435,35 @@ void b3TxPool::b3ReloadTexture (b3Tx *Texture,const char *Name) /* 30.12.94 */
 		{
 			try
 			{
-				b3Path::b3LinkFileName((char *)FullName,(const char *)path,Name);
-				Data = TextureFile.b3ReadBuffer(Name,FileSize);
+				b3Path::b3LinkFileName(
+					(char *)FullName,
+					(const char *)*path,Name);
+				b3PrintF(B3LOG_FULL,"Trying \"%s\"...\n",(const char *)FullName);
+				Data = TextureFile.b3ReadBuffer(FullName,FileSize);
 
 				// OK! Texture loaded -> leave search loop!
 				break;
 			}
-			catch(...)
+			catch(b3FileException *f)
 			{
-			// An exception we expected.
+				// An exception we expected.
+				b3PrintF(B3LOG_FULL,"Error code: %d\n",f->b3GetError());
 			}
 		}
 	}
 
 	// Check result of texture load
+	Texture->b3Name(FullName);
 	if (Data == null)
 	{
-		b3PrintF (B3LOG_NORMAL,"%s: not available!\n",Name);
+		b3PrintF (B3LOG_NORMAL,"\"%s\" not available!\n",
+			Texture->b3Name());
+		return;
+	}
+	else
+	{
+		b3PrintF(B3LOG_NORMAL,"Texture \"%s\" loaded. [%p,%d bytes]\n",
+			Texture->b3Name(),Data,FileSize);
 	}
 
 #if 0
@@ -526,7 +553,7 @@ b3Tx *b3TxPool::b3LoadTexture (const char *Name) /* 06.12.92 */
 	// find existing texture
 	B3_FOR_BASE(&m_Pool,Texture)
 	{
-		if (strcmp(Texture->b3Name(),(const char *)Name) == 0)
+		if (strcmp(Texture->b3Name(),Name) == 0)
 		{
 			if (Texture->b3GetData() == null) b3ReloadTexture (Texture);
 			else b3PrintF (B3LOG_NORMAL,"%s: found.\n",Name);

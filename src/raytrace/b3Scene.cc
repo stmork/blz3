@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Matrix.h"
+#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2001/10/09 20:47:01  sm
+**	- some further texture handling.
+**
 **	Revision 1.14  2001/10/06 19:24:17  sm
 **	- New torus intersection routines and support routines
 **	- Added further shading support from materials
 **	- Added stencil checking
 **	- Changed support for basis transformation for shapes with
 **	  at least three direction vectors.
-**
+**	
 **	Revision 1.13  2001/10/05 20:30:46  sm
 **	- Introducing Mork and Phong shading.
 **	- Using light source when shading
@@ -133,7 +137,7 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	b3InitVector(&m_Height);
 
 	// Some other values
-	m_BackTexture      = (b3Tx *)b3InitNull();
+	b3InitNull();
 	m_xAngle           = b3InitFloat();
 	m_yAngle           = b3InitFloat();
 	m_BBoxOverSize     = b3InitFloat();
@@ -144,7 +148,9 @@ b3Scene::b3Scene(b3_u32 *buffer) : b3Item(buffer)
 	m_Epsilon          = b3InitFloat();
 	m_xSize            = b3InitInt();
 	m_ySize            = b3InitInt();
-	m_Nebular          = null;
+	b3InitString(m_TextureName,B3_TEXSTRINGLEN);
+	m_BackTexture = texture_pool.b3LoadTexture(m_TextureName);
+	m_Nebular     = null;
 }
 
 b3_bool b3Scene::b3GetDisplaySize(b3_res &xSize,b3_res &ySize)

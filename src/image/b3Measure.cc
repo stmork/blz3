@@ -31,10 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.1  2001/10/09 20:47:01  sm
+**	- some further texture handling.
+**
 **	Revision 1.1  2001/07/07 21:21:15  sm
 **	- OK! Imported some display stuff using the CScrollView. After getting linked today
 **	  it should possible to display real things tomorrow.
-**
+**	
 **	
 */
 

@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Procedure.h"
+#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/10/09 20:47:01  sm
+**      - some further texture handling.
+**
 **      Revision 1.9  2001/10/07 20:41:32  sm
 **      - Updating MSVC project status
 **
@@ -279,9 +283,10 @@ b3MatTexture::b3MatTexture(b3_u32 *src) : b3Material(src)
 	m_yScale     = b3InitFloat();
 	m_xTimes     = b3InitInt();
 	m_yTimes     = b3InitInt();
-	m_Texture    = (b3Tx *)b3InitNull();
+	b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	m_Texture = texture_pool.b3LoadTexture(m_Name);
 }
 
 b3_bool b3MatTexture::b3GetColors(
@@ -346,9 +351,10 @@ b3MatWrapTexture::b3MatWrapTexture(b3_u32 *src) : b3Material(src)
 	m_yStart     = b3InitFloat();
 	m_xEnd       = b3InitFloat();
 	m_yEnd       = b3InitFloat();
-	m_Texture    = (b3Tx *)b3InitNull();
+	b3InitNull();
 	m_Flags      = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	m_Texture = texture_pool.b3LoadTexture(m_Name);
 }
 
 b3_bool b3MatWrapTexture::b3GetColors(

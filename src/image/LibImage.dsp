@@ -85,7 +85,7 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cc;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\b3Measure.cpp
+SOURCE=.\b3Measure.cc
 # End Source File
 # Begin Source File
 

@@ -23,6 +23,7 @@
 
 #include "blz3/raytrace/b3Raytrace.h"
 #include "blz3/base/b3Procedure.h"
+#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,33 +32,36 @@
 *************************************************************************/
 
 /*
-**      $Log$
-**      Revision 1.5  2001/10/07 20:17:27  sm
-**      - Prepared texture support.
-**      - Noise procedures added.
-**      - Added bump and material support.
-**      - Added soft shadows.
+**	$Log$
+**	Revision 1.6  2001/10/09 20:47:01  sm
+**	- some further texture handling.
 **
-**      Revision 1.4  2001/10/03 18:46:45  sm
-**      - Adding illumination and recursive raytracing
+**	Revision 1.5  2001/10/07 20:17:27  sm
+**	- Prepared texture support.
+**	- Noise procedures added.
+**	- Added bump and material support.
+**	- Added soft shadows.
 **
-**      Revision 1.3  2001/09/01 15:54:54  sm
-**      - Tidy up Size confusion in b3Item/b3World and derived classes
-**      - Made (de-)activation of objects
+**	Revision 1.4  2001/10/03 18:46:45  sm
+**	- Adding illumination and recursive raytracing
 **
-**      Revision 1.2  2001/08/09 15:27:34  sm
-**      - Following shapes are newly supported now:
-**        o disk
-**        o cylinder
-**        o cone
-**        o ellipsoid
-**        o torus
-**        o triangles
-**      - Done some makefile fixes
-**      - Everything is Windozable
+**	Revision 1.3  2001/09/01 15:54:54  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
 **
-**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**      Blizzard III is born
+**	Revision 1.2  2001/08/09 15:27:34  sm
+**	- Following shapes are newly supported now:
+**	  o disk
+**	  o cylinder
+**	  o cone
+**	  o ellipsoid
+**	  o torus
+**	  o triangles
+**	- Done some makefile fixes
+**	- Everything is Windozable
+**
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
 **
 */
 
@@ -208,9 +212,10 @@ b3BumpTexture::b3BumpTexture(b3_u32 *src) : b3Bump(src)
 	m_xTimes    = b3InitInt();
 	m_yTimes    = b3InitInt();
 	m_Intensity = b3InitFloat();
-	m_Texture   = (b3Tx *)b3InitNull();
+	b3InitNull();
 	m_Flags     = b3InitInt();
 	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	m_Texture   = texture_pool.b3LoadTexture(m_Name);
 }
 
 void b3BumpTexture::b3BumpNormal(b3_ray *ray)

@@ -49,4 +49,6 @@ private:
 	static b3_size  b3ChangeLong (void *Ptr);
 };
 
+extern b3TxPool texture_pool;
+
 #endif

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/image/b3TxPool.h"
 
 /*************************************************************************
 **                                                                      **
@@ -30,39 +31,42 @@
 *************************************************************************/
 
 /*
-**      $Log$
-**      Revision 1.8  2001/10/06 19:24:17  sm
-**      - New torus intersection routines and support routines
-**      - Added further shading support from materials
-**      - Added stencil checking
-**      - Changed support for basis transformation for shapes with
-**        at least three direction vectors.
+**	$Log$
+**	Revision 1.9  2001/10/09 20:47:01  sm
+**	- some further texture handling.
 **
-**      Revision 1.7  2001/10/05 20:30:45  sm
-**      - Introducing Mork and Phong shading.
-**      - Using light source when shading
+**	Revision 1.8  2001/10/06 19:24:17  sm
+**	- New torus intersection routines and support routines
+**	- Added further shading support from materials
+**	- Added stencil checking
+**	- Changed support for basis transformation for shapes with
+**	  at least three direction vectors.
 **
-**      Revision 1.6  2001/09/22 16:19:51  sm
-**      - Adding basic shape intersection routines
+**	Revision 1.7  2001/10/05 20:30:45  sm
+**	- Introducing Mork and Phong shading.
+**	- Using light source when shading
 **
-**      Revision 1.5  2001/09/01 15:54:54  sm
-**      - Tidy up Size confusion in b3Item/b3World and derived classes
-**      - Made (de-)activation of objects
+**	Revision 1.6  2001/09/22 16:19:51  sm
+**	- Adding basic shape intersection routines
 **
-**      Revision 1.4  2001/08/07 16:54:26  sm
-**      - Checking bounds on condition base for line drawing
-**      - Some object reordering
-**      - Bug fix for Mandel makefile
+**	Revision 1.5  2001/09/01 15:54:54  sm
+**	- Tidy up Size confusion in b3Item/b3World and derived classes
+**	- Made (de-)activation of objects
 **
-**      Revision 1.3  2001/08/05 19:51:56  sm
-**      - Now having OpenGL software for Windows NT and created
-**        new Lines III.
+**	Revision 1.4  2001/08/07 16:54:26  sm
+**	- Checking bounds on condition base for line drawing
+**	- Some object reordering
+**	- Bug fix for Mandel makefile
 **
-**      Revision 1.2  2001/08/02 15:37:17  sm
-**      - Now we are able to draw Blizzard Scenes with OpenGL.
+**	Revision 1.3  2001/08/05 19:51:56  sm
+**	- Now having OpenGL software for Windows NT and created
+**	  new Lines III.
 **
-**      Revision 1.1.1.1  2001/07/01 12:24:59  sm
-**      Blizzard III is born
+**	Revision 1.2  2001/08/02 15:37:17  sm
+**	- Now we are able to draw Blizzard Scenes with OpenGL.
+**
+**	Revision 1.1.1.1  2001/07/01 12:24:59  sm
+**	Blizzard III is born
 **
 */
 
@@ -508,15 +512,16 @@ b3CondTexture::b3CondTexture(b3_u32 class_type) : b3Condition(sizeof(b3CondTextu
 
 b3CondTexture::b3CondTexture(b3_u32 *src) : b3Condition(src)
 {
-	Texture = (b3Tx *)b3InitNull();
-	Flags   = b3InitInt();
-	xStart  = b3InitFloat();
-	yStart  = b3InitFloat();
-	xScale  = b3InitFloat();
-	yScale  = b3InitFloat();
-	xTimes  = b3InitInt();
-	yTimes  = b3InitInt();
-	b3InitString(Name,B3_TEXSTRINGLEN);
+	b3InitNull();
+	m_Flags   = b3InitInt();
+	m_xStart  = b3InitFloat();
+	m_yStart  = b3InitFloat();
+	m_xScale  = b3InitFloat();
+	m_yScale  = b3InitFloat();
+	m_xTimes  = b3InitInt();
+	m_yTimes  = b3InitInt();
+	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	m_Texture = texture_pool.b3LoadTexture(m_Name);
 }
 
 void b3CondTexture::b3ComputeBound(b3CondLimit *Limit)
@@ -527,19 +532,19 @@ void b3CondTexture::b3ComputeBound(b3CondLimit *Limit)
 	{
 	case MODE_OR:
 		Bound.x1  =
-		Bound.x2  = xStart;
+		Bound.x2  = m_xStart;
 		Bound.y1  =
-		Bound.y2  = yStart;
-		Bound.x2 += (xScale * xTimes);
-		Bound.y2 += (yScale * yTimes);
+		Bound.y2  = m_yStart;
+		Bound.x2 += (m_xScale * m_xTimes);
+		Bound.y2 += (m_yScale * m_yTimes);
 		b3CheckOuterBound (Limit,&Bound);
 		break;
 
 	case MODE_AND:
-		Bound.x1  = Bound.x2 = xStart;
-		Bound.y1  = Bound.y2 = yStart;
-		Bound.x2 += (xScale * xTimes);
-		Bound.y2 += (yScale * yTimes);
+		Bound.x1  = Bound.x2 = m_xStart;
+		Bound.y1  = Bound.y2 = m_yStart;
+		Bound.x2 += (m_xScale * m_xTimes);
+		Bound.y2 += (m_yScale * m_yTimes);
 		b3CheckInnerBound (Limit,&Bound);
 		break;
 	}
@@ -552,13 +557,14 @@ b3CondWrapTexture::b3CondWrapTexture(b3_u32 class_type) : b3Condition(sizeof(b3C
 
 b3CondWrapTexture::b3CondWrapTexture(b3_u32 *src) : b3Condition(src)
 {
-	Texture = (b3Tx *)b3InitNull();
-	Flags   = b3InitInt();
-	xStart  = b3InitFloat();
-	yStart  = b3InitFloat();
-	xEnd    = b3InitFloat();
-	yEnd    = b3InitFloat();
-	b3InitString(Name,B3_TEXSTRINGLEN);
+	b3InitNull();
+	m_Flags   = b3InitInt();
+	m_xStart  = b3InitFloat();
+	m_yStart  = b3InitFloat();
+	m_xEnd    = b3InitFloat();
+	m_yEnd    = b3InitFloat();
+	b3InitString(m_Name,B3_TEXSTRINGLEN);
+	m_Texture = texture_pool.b3LoadTexture(m_Name);
 }
 
 void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)
@@ -568,12 +574,12 @@ void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)
 	switch(ClassType & MODE_MASK)
 	{
 	case MODE_OR:
-		Bound.y1 = yStart;
-		Bound.y2 = yEnd;
-		if (xStart < xEnd)
+		Bound.y1 = m_yStart;
+		Bound.y2 = m_yEnd;
+		if (m_xStart < m_xEnd)
 		{
-			Bound.x1 = xStart;
-			Bound.x2 = xEnd;
+			Bound.x1 = m_xStart;
+			Bound.x2 = m_xEnd;
 		}
 		else
 		{
@@ -584,12 +590,12 @@ void b3CondWrapTexture::b3ComputeBound(b3CondLimit *Limit)
 		break;
 
 	case MODE_AND:
-		Bound.y1 = yStart;
-		Bound.y2 = yEnd;
-		if (xStart < xEnd)
+		Bound.y1 = m_yStart;
+		Bound.y2 = m_yEnd;
+		if (m_xStart < m_xEnd)
 		{
-			Bound.x1 = xStart;
-			Bound.x2 = xEnd;
+			Bound.x1 = m_xStart;
+			Bound.x2 = m_xEnd;
 		}
 		else
 		{

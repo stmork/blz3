@@ -36,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/10/09 20:47:02  sm
+**	- some further texture handling.
+**
 **	Revision 1.3  2001/07/01 16:48:00  sm
 **	- FILESTRINGLEN -> B3_FILESTRINGLEN
 **	- Cleaned up some makefiles
 **	- Cleaned up some CVS conflicts
-**
+**	
 **	Revision 1.2  2001/07/01 16:31:52  sm
 **	- Creating MSVC Projects
 **	- Welcome to Windows 32
@@ -349,14 +352,16 @@ void b3File::b3Close ()
 	Index =  0;
 }
 
+#include "blz3/system/b3Log.h"
+
 b3_u08 *b3File::b3ReadBuffer(const char *filename,b3_size &file_size)
 {
 	b3_u08        *file_buffer = null;
-	b3_file_error  error;
+	b3_file_error  error = B3_FILE_ERROR;
 
 	if (b3Open(filename,B_READ))
 	{
-		file_size = b3Size();
+		file_size   = b3Size();
 		file_buffer = (b3_u08 *)b3Alloc(file_size);
 		if (file_buffer != null)
 		{
