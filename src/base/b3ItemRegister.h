@@ -1,0 +1,30 @@
+class b3ItemRegisterEntry : public b3Link<b3ItemRegisterEntry>
+{
+	b3_item_init_func init_func;
+	b3_item_load_func load_func;
+	b3_u32            class_type;
+	b3_bool           is_class;
+
+public:
+	b3ItemRegisterEntry(
+		b3_item_init_func new_init_func,
+		b3_item_load_func new_load_func,
+		b3_u32            new_class_type,
+		b3_bool           new_is_class = false);
+
+	b3_bool  b3IsClassType(b3_u32 class_type_to_check);
+	b3Item  *b3Init();
+	b3Item  *b3Load(b3_u32 *buffer);
+};
+
+class b3ItemRegister
+{
+	b3Base<b3ItemRegisterEntry> classes;
+public:
+	                    ~b3ItemRegister();
+	void                 b3Append(b3ItemRegisterEntry *new_entry);
+	b3_bool              b3IsEmpty();
+	b3ItemRegisterEntry *b3Find(b3_u32 class_type);
+};
+
+extern b3ItemRegister b3_item_register;
