@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2003/01/28 16:49:09  sm
+**	- Added undo/redo picking
+**	- Fixed pick drawing problem with nVidia hardware
+**
 **	Revision 1.22  2003/01/11 12:30:29  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.21  2003/01/05 16:13:24  sm
 **	- First undo/redo implementations
 **	
@@ -645,6 +649,7 @@ void CAppRenderView::OnPaint()
 	stop.b3Now();
 
 	// Flush OpenGL buffer to screen
+	glFinish();
 	SwapBuffers(m_glDC);
 
 	// Do post drawings using Windows DC

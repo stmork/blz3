@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2003/01/28 16:49:09  sm
+**	- Added undo/redo picking
+**	- Fixed pick drawing problem with nVidia hardware
+**
 **	Revision 1.1  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 */
 
 /*************************************************************************
@@ -50,6 +54,7 @@ b3OpUndoPick::b3OpUndoPick(
 	m_UndoVec = *undo;
 	m_RedoVec = *redo;
 	m_Vector  =  redo;
+	b3Initialize();
 }
 
 void b3OpUndoPick::b3Do()
