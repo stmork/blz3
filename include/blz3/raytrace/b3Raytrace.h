@@ -423,7 +423,9 @@ public:
 #define TYPE_WAVE           0x00000005
 #define TYPE_GLOSSY         0x00000006
 #define TYPE_GROOVE         0x00000007
-#define TYPE_BUMPWOOD       0x00000008
+#define TYPE_BUMP_WOOD      0x00000008
+#define TYPE_BUMP_OAKPLANK  0x00000009
+
 #define BUMP_NOISE          (CLASS_BUMP|TYPE_NOISE)
 #define BUMP_MARBLE         (CLASS_BUMP|TYPE_MARBLE)
 #define BUMP_TEXTURE        (CLASS_BUMP|TYPE_TEXTURE)
@@ -431,7 +433,8 @@ public:
 #define BUMP_WAVE           (CLASS_BUMP|TYPE_WAVE)
 #define BUMP_GLOSSY         (CLASS_BUMP|TYPE_GLOSSY)
 #define BUMP_GROOVE         (CLASS_BUMP|TYPE_GROOVE)
-#define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMPWOOD);
+#define BUMP_WOOD           (CLASS_BUMP|TYPE_BUMP_WOOD)
+#define BUMP_OAKPLANK       (CLASS_BUMP|TYPE_BUMP_OAKPLANK)
 
 class B3_PLUGIN b3Bump : public b3Item
 {
@@ -570,7 +573,6 @@ public:
 // BUMP_WOOD
 class B3_PLUGIN b3BumpWood : public b3Bump, public b3Wood
 {
-	b3_s32      m_Flags;               // use BBox coords or direct coord
 	b3_f32      m_Amplitude;           // amplitude
 
 public:
@@ -581,7 +583,6 @@ public:
 	void    b3Write();
 	void    b3BumpNormal(b3_ray *ray);
 };
-
 
 //flags for WaterBump, WaveBump
 #define BUMP_IPOINT          1
@@ -594,28 +595,30 @@ public:
 **                                                                      **
 *************************************************************************/
 
-#define CLASS_MATERIAL      0x40000000
-#define TYPE_NORMMATERIAL   0x00000001
-#define TYPE_TEXTUREMAT     0x00000002
-#define TYPE_CHESSMAT       0x00000003
-#define TYPE_WRAPTEXTUREMAT 0x00000004
-#define TYPE_MARBLE_MAT     0x00000005
-#define TYPE_SLIDE          0x00000006
-#define TYPE_WOOD           0x00000007
-#define TYPE_COOK_TORRANCE  0x00000008
-#define TYPE_GRANITE        0x00000009
+#define CLASS_MATERIAL         0x40000000
+#define TYPE_NORMMATERIAL      0x00000001
+#define TYPE_MAT_TEXTURE       0x00000002
+#define TYPE_MAT_CHESS         0x00000003
+#define TYPE_MAT_WRAPTEXTURE   0x00000004
+#define TYPE_MAT_MARBLE        0x00000005
+#define TYPE_MAT_SLIDE         0x00000006
+#define TYPE_MAT_WOOD          0x00000007
+#define TYPE_MAT_COOK_TORRANCE 0x00000008
+#define TYPE_MAT_GRANITE       0x00000009
+#define TYPE_MAT_OAKPLANK      0x0000000a
 
 // WARNING: GL uses define MATERIAL, too!
 #define MAT_NORMAL          (CLASS_MATERIAL|TYPE_NORMMATERIAL)
 #define MATERIAL            (CLASS_MATERIAL|TYPE_NORMMATERIAL)
-#define TEXTURE             (CLASS_MATERIAL|TYPE_TEXTUREMAT)
-#define CHESS               (CLASS_MATERIAL|TYPE_CHESSMAT)
-#define WRAPTEXTURE         (CLASS_MATERIAL|TYPE_WRAPTEXTUREMAT)
-#define MARBLE              (CLASS_MATERIAL|TYPE_MARBLE_MAT)
-#define SLIDE               (CLASS_MATERIAL|TYPE_SLIDE)
-#define WOOD                (CLASS_MATERIAL|TYPE_WOOD)
-#define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_COOK_TORRANCE)
-#define GRANITE             (CLASS_MATERIAL|TYPE_GRANITE)
+#define TEXTURE             (CLASS_MATERIAL|TYPE_MAT_TEXTURE)
+#define CHESS               (CLASS_MATERIAL|TYPE_MAT_CHESS)
+#define WRAPTEXTURE         (CLASS_MATERIAL|TYPE_MAT_WRAPTEXTURE)
+#define MARBLE              (CLASS_MATERIAL|TYPE_MAT_MARBLE)
+#define SLIDE               (CLASS_MATERIAL|TYPE_MAT_SLIDE)
+#define WOOD                (CLASS_MATERIAL|TYPE_MAT_WOOD)
+#define COOK_TORRANCE       (CLASS_MATERIAL|TYPE_MAT_COOK_TORRANCE)
+#define GRANITE             (CLASS_MATERIAL|TYPE_MAT_GRANITE)
+#define OAKPLANK            (CLASS_MATERIAL|TYPE_MAT_OAKPLANK)
 
 class B3_PLUGIN b3Material : public b3Item
 {
@@ -750,7 +753,6 @@ public:
 	b3_f32            m_Refraction;
 	b3_f32            m_RefrValue;
 	b3_f32            m_HighLight;
-	b3_s32            m_Flags;
 	b3_s32            m_xTimes,m_yTimes; // not used
 
 public:
@@ -771,6 +773,46 @@ public:
 
 private:
 	void    b3Init();
+};
+
+// OAKPLANK
+class B3_PLUGIN b3MatOakPlank : public b3Material, public b3OakPlank
+{
+	b3Color          *m_LightColors;
+	b3Color          *m_DarkColors;
+
+public:
+	b3Color           m_DiffColor;
+	b3Color           m_AmbColor;
+	b3Color           m_SpecColor;
+	b3Color           m_LightWood;
+	b3Color           m_DarkWood;
+	b3_f32            m_Reflection;
+	b3_f32            m_Refraction;
+	b3_f32            m_RefrValue;
+	b3_f32            m_HighLight;
+
+
+public:
+	B3_ITEM_INIT(b3MatOakPlank);
+	B3_ITEM_LOAD(b3MatOakPlank);
+
+	virtual ~b3MatOakPlank();
+
+	void     b3Write();
+	b3_bool  b3Prepare();
+	b3_f64   b3GetReflection(b3_polar *polar);
+	b3_f64   b3GetRefraction(b3_polar *polar);
+	b3_f64   b3GetIndexOfRefraction(b3_polar *polar);
+	b3_f64   b3GetSpecularExponent(b3_polar *polar);
+	b3_bool  b3GetColors(
+		b3_polar *polar,
+		b3Color  &diff,
+		b3Color  &amb,
+		b3Color  &spec);
+
+private:
+	void     b3Init();
 };
 
 // TEXTURE

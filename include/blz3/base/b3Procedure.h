@@ -22,6 +22,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/system/b3Exception.h"
+#include "blz3/base/b3Array.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Matrix.h"
 
@@ -45,6 +46,18 @@ public:
 	               b3Noise();
 	              ~b3Noise();
 
+	static        b3_f64        b3NoiseScalar (b3_f64 x);
+	static inline b3_f64  b3SignedNoiseScalar (b3_f64 x)
+	{
+		return b3NoiseScalar(x) * 2 - 1;
+	}
+	
+	static        b3_f64        b3FilteredNoiseScalar (b3_f64 x);
+	static inline b3_f64  b3SignedFilteredNoiseScalar (b3_f64 x)
+	{
+		return b3FilteredNoiseScalar(x) * 2 - 1;
+	}
+	
 	static        b3_f64        b3NoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
 	static inline b3_f64  b3SignedNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	{
@@ -54,7 +67,7 @@ public:
 	static        b3_f64        b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z);
 	static inline b3_f64  b3SignedFilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z)
 	{
-		return b3NoiseVector(x,y,z) * 2 - 1;
+		return b3FilteredNoiseVector(x,y,z) * 2 - 1;
 	}
 	
 	static        void       b3NoiseDeriv (b3_f64 dx,b3_f64 dy,b3_f64 dz,b3_vector *result);
@@ -170,11 +183,34 @@ public:
 	b3_f32            m_GrainFrequency;
 	b3_f32            m_Grainy;
 	b3_f32            m_Ringy;
+	b3_u32            m_Flags;
 
 public:
 	b3_f64 b3ComputeWood(b3_vector *polar);
 	void   b3InitWood();
 	void   b3PrepareWood();
+	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
+};
+
+class b3OakPlank : public b3Wood
+{
+protected:
+	b3Wood           *m_Planks;
+	b3_count          m_PlankCount;
+
+public:
+	b3_s32            m_xTimes,m_yTimes; // Used!
+	b3_f32            m_Wobble;
+	b3_f32            m_xScale;
+	b3_f32            m_yScale;
+	b3_f32            m_xOffset;
+
+public:
+	         b3OakPlank();
+	virtual ~b3OakPlank();
+	b3_f64   b3ComputeOakPlank(b3_vector *polar,b3_index &index);
+	void     b3InitOakPlank();
+	void     b3PrepareOakPlank();
 };
 
 #endif

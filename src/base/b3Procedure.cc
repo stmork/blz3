@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2004/04/10 13:45:30  sm
+**	- Added wooden oak planks.
+**
 **	Revision 1.24  2004/04/09 17:30:31  sm
 **	- Wood dialog fine tuning.
-**
+**	
 **	Revision 1.23  2004/04/07 16:07:17  sm
 **	- Moved wood computing outside b3MatWood for use in its own bump map.
 **	
@@ -284,6 +287,34 @@ b3Noise::~b3Noise ()
 **                        Perlin noise implementation                   **
 **                                                                      **
 *************************************************************************/
+
+b3_f64 b3Noise::b3NoiseScalar(b3_f64 x)
+{
+	b3_index ix;
+	b3_f64   fx,a,b;
+
+	ix = (b3_index)floor(x);
+	fx = (b3_f32)x - ix;
+
+	a = NoiseTable[INDEX3D(ix  ,0,0  )];
+	b = NoiseTable[INDEX3D(ix+1,0,0  )];
+
+	return a * (1.0 - fx) + b * fx;
+}
+
+b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
+{
+	b3_index ix;
+	b3_f64   fx,a,b;
+
+	ix = (b3_index)floor(x);
+	fx = b3Math::b3Smoothstep(x - ix);
+
+	a = NoiseTable[INDEX3D(ix  ,0,0  )];
+	b = NoiseTable[INDEX3D(ix+1,0,0  )];
+
+	return a * (1.0 - fx) + b * fx;
+}
 
 /*
 **  linear interpolation in 3d noise array with random numbers
@@ -669,7 +700,7 @@ b3_f64 b3Noise::b3PGauss()
 
 /*************************************************************************
 **                                                                      **
-**                        Perlin noise implementation                   **
+**                        Wood implementation                           **
 **                                                                      **
 *************************************************************************/
 
@@ -682,7 +713,7 @@ void b3Wood::b3InitWood()
 	m_Grainy                 =   1;
 	m_GrainFrequency         =  25;
 
-	m_RingSpacing            =   0.2f;
+	m_RingSpacing            =   0.3f;
 	m_RingFrequency          =   0.2f;
 	m_RingNoise              =   0.2f;
 	m_RingNoiseFrequency     =   1;
@@ -733,7 +764,7 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 		Pring.z * m_AngularWobbleFrequency * 0.1);
 	
 	// Ensure unequally spaced rings
-	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseVector(0,0,r);
+	r += m_RingSpacing * b3Noise::b3SignedFilteredNoiseScalar(r);
 
 	inring = b3Math::b3SmoothPulse(0.1,0.55,0.7,0.95,fmod(r,1.0));
 
@@ -767,4 +798,97 @@ b3_f64 b3Wood::b3ComputeWood(b3_vector *polar)
 	}
 
 	return inring * m_Ringy * (1 - grain) + grain;
+}
+
+void b3Wood::b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy)
+{
+	m_Scale                  = wood->m_Scale;
+	m_yRot                   = wood->m_yRot + b3Noise::b3SignedFilteredNoiseVector(fx,0,0);
+	m_zRot                   = wood->m_zRot + b3Noise::b3SignedFilteredNoiseVector(0,fy,0) * 0.1;
+	m_Ringy                  = wood->m_Ringy;
+	m_Grainy                 = wood->m_Grainy;
+	m_GrainFrequency         = wood->m_GrainFrequency;
+
+	m_RingSpacing            = wood->m_RingSpacing;
+	m_RingFrequency          = wood->m_RingFrequency;
+	m_RingNoise              = wood->m_RingNoise;
+	m_RingNoiseFrequency     = wood->m_RingNoiseFrequency;
+	m_TrunkWobble            = wood->m_TrunkWobble;
+	m_TrunkWobbleFrequency   = wood->m_TrunkWobbleFrequency;
+	m_AngularWobble          = wood->m_AngularWobble;
+	m_AngularWobbleFrequency = wood->m_AngularWobbleFrequency;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Oak plank implementation                      **
+**                                                                      **
+*************************************************************************/
+
+b3OakPlank::b3OakPlank()
+{
+	m_Planks = null;
+}
+
+b3OakPlank::~b3OakPlank()
+{
+	if (m_Planks != null)
+	{
+		delete [] m_Planks;
+	}
+}
+
+void b3OakPlank::b3InitOakPlank()
+{
+	b3InitWood();
+	m_yRot    = (b3_f32)(M_PI * 0.48);
+	m_zRot    = 0;
+	m_xTimes  = 3;
+	m_yTimes  = 7;
+	m_xOffset = 0.55f;
+	m_xScale  = 0.5f;
+	m_yScale  = 0.05f;
+	m_Wobble  = 0.1f;
+}
+
+void b3OakPlank::b3PrepareOakPlank()
+{
+	b3_count x,y;
+	b3_index index;
+
+	b3PrepareWood();
+	if (m_Planks != null)
+	{
+		delete [] m_Planks;
+	}
+	m_PlankCount = m_xTimes * m_yTimes;
+	m_Planks = new b3Wood[m_PlankCount];
+
+	for (y = 0;y < m_yTimes;y++)
+	{
+		for (x = 0;x < m_xTimes;x++)
+		{
+			index = y * m_xTimes + x;
+			m_Planks[index].b3CopyWobbled(this,m_Wobble,(b3_f64)x / m_xTimes,(b3_f64)y / m_yTimes);
+			m_Planks[index].b3PrepareWood();
+		}
+	}
+}
+
+b3_f64 b3OakPlank::b3ComputeOakPlank(b3_vector *polar,b3_index &index)
+{
+	b3_vector surface;
+	b3_index ix,iy;
+	b3_f64   fx,fy;
+
+	fy = polar->y / m_yScale;
+	fx = polar->x / m_xScale + m_xOffset * floor(fy);
+	surface.x = fx;
+	surface.y = fy;
+	surface.z = 0;
+
+	ix = (b3_index)((fx / m_xTimes - floor(fx / m_xTimes)) * m_xTimes);
+	iy = (b3_index)((fy / m_yTimes - floor(fy / m_yTimes)) * m_yTimes);
+	index = ix * m_yTimes + iy;
+	return m_Planks[index].b3ComputeWood(&surface);
 }

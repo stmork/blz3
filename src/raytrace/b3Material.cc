@@ -38,6 +38,9 @@
 
 /*
 **      $Log$
+**      Revision 1.52  2004/04/10 13:45:30  sm
+**      - Added wooden oak planks.
+**
 **      Revision 1.51  2004/04/09 14:11:58  sm
 **      - Removed CRs
 **
@@ -251,6 +254,7 @@ void b3Material::b3Register()
 	b3Item::b3Register(&b3MatMarble::b3StaticInit,       &b3MatMarble::b3StaticInit,       MARBLE);
 	b3Item::b3Register(&b3MatSlide::b3StaticInit,        &b3MatSlide::b3StaticInit,        SLIDE);
 	b3Item::b3Register(&b3MatWood::b3StaticInit,         &b3MatWood::b3StaticInit,         WOOD);
+	b3Item::b3Register(&b3MatOakPlank::b3StaticInit,     &b3MatOakPlank::b3StaticInit,     OAKPLANK);
 	b3Item::b3Register(&b3MatCookTorrance::b3StaticInit, &b3MatCookTorrance::b3StaticInit, COOK_TORRANCE);
 #ifndef DEBUG_MATERIAL
 	b3Item::b3Register(&b3MatGranite::b3StaticInit,      &b3MatGranite::b3StaticInit,      GRANITE);
@@ -1084,6 +1088,202 @@ b3_f64 b3MatWood::b3GetIndexOfRefraction(b3_polar *polar)
 }
 
 b3_f64 b3MatWood::b3GetSpecularExponent(b3_polar *polar)
+{
+	return m_HighLight;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Oak planks                                    **
+**                                                                      **
+*************************************************************************/
+
+b3MatOakPlank::b3MatOakPlank(b3_u32 class_type) :
+	b3Material(sizeof(b3MatOakPlank),class_type),
+	b3OakPlank()
+{
+	b3Init();
+}
+
+b3MatOakPlank::b3MatOakPlank(b3_u32 *src) : b3Material(src), b3OakPlank()
+{
+	b3Init();
+	b3InitColor(m_DiffColor);
+	b3InitColor(m_AmbColor);
+	b3InitColor(m_SpecColor);
+
+	b3InitVector(&m_Scale);
+	m_Reflection = b3InitFloat();
+	m_Refraction = b3InitFloat();
+	m_RefrValue  = b3InitFloat();
+	m_HighLight  = b3InitFloat();
+	m_Flags      = b3InitInt();
+	m_xTimes     = b3InitInt();
+	m_yTimes     = b3InitInt();
+	m_xOffset    = b3InitFloat();
+	m_xScale     = b3InitFloat();
+	m_yScale     = b3InitFloat();
+	m_Wobble     = b3InitFloat();
+
+	// Wood basic definition
+	b3InitColor(m_LightWood);
+	b3InitColor(m_DarkWood);
+	m_yRot                   = b3InitFloat();
+	m_zRot                   = b3InitFloat();
+	m_RingSpacing            = b3InitFloat();
+	m_RingFrequency          = b3InitFloat();
+	m_RingNoise              = b3InitFloat();
+	m_RingNoiseFrequency     = b3InitFloat();
+	m_TrunkWobble            = b3InitFloat();
+	m_TrunkWobbleFrequency   = b3InitFloat();
+	m_AngularWobble          = b3InitFloat();
+	m_AngularWobbleFrequency = b3InitFloat();
+	m_GrainFrequency         = b3InitFloat();
+	m_Grainy                 = b3InitFloat();
+	m_Ringy                  = b3InitFloat();
+}
+
+b3MatOakPlank::~b3MatOakPlank()
+{
+	if (m_DarkColors != null)
+	{
+		delete [] m_DarkColors;
+	}
+
+	if (m_LightColors != null)
+	{
+		delete [] m_LightColors;
+	}
+}
+
+void b3MatOakPlank::b3Init()
+{
+	// Basic parameters
+	m_AmbColor.b3Init(0.2,0.2,0.2);
+	m_DiffColor.b3Init(0.1,0.2,0.9);
+	m_SpecColor.b3Init(0.8,0.8,0.8);
+	m_LightWood.b3Init(0.5,0.2,0.067);
+//	m_DarkWood.b3Init(0.15,0.077,0.028);
+	m_DarkWood = m_LightWood * 0.7;
+	m_Reflection =   0;
+	m_Refraction =   0;
+	m_RefrValue  =   1;
+	m_HighLight  = 200;
+	m_Flags      =   0;
+	b3InitOakPlank();
+}
+
+b3_bool b3MatOakPlank::b3Prepare()
+{
+	b3_index x,y,index = 0;
+	b3_f64   fx,fy;
+
+	b3PrepareOakPlank();
+	
+	if (m_DarkColors != null)
+	{
+		delete [] m_DarkColors;
+	}
+
+	if (m_LightColors != null)
+	{
+		delete [] m_LightColors;
+	}
+
+	m_DarkColors  = new b3Color[m_PlankCount];
+	m_LightColors = new b3Color[m_PlankCount];
+
+	for (y = 0;y < m_yTimes;y++)
+	{
+		fy = (b3_f64)y / m_yTimes;
+		for (x = 0;x < m_xTimes;x++)
+		{
+			fx = (b3_f64)x / m_xTimes;
+
+			m_DarkColors[index] = m_DarkWood + b3Color(
+				b3Noise::b3SignedFilteredNoiseVector(fx,fy,0),
+				b3Noise::b3SignedFilteredNoiseVector(0,fx,fy),
+				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_DarkWood * m_Wobble * 0.5;
+
+			m_LightColors[index] = m_LightWood + b3Color(
+				b3Noise::b3SignedFilteredNoiseVector(fx,fy,0),
+				b3Noise::b3SignedFilteredNoiseVector(0,fx,fy),
+				b3Noise::b3SignedFilteredNoiseVector(fy,0,fx)) * m_LightWood * m_Wobble * 0.5;
+			index++;
+		}
+	}
+	
+	return true;
+}
+
+void b3MatOakPlank::b3Write()
+{
+	b3StoreColor(m_DiffColor);
+	b3StoreColor(m_AmbColor);
+	b3StoreColor(m_SpecColor);
+	b3StoreVector(&m_Scale);
+	b3StoreFloat(m_Reflection);
+	b3StoreFloat(m_Refraction);
+	b3StoreFloat(m_RefrValue);
+	b3StoreFloat(m_HighLight);
+	b3StoreInt  (m_Flags);
+	b3StoreCount(m_xTimes);
+	b3StoreCount(m_yTimes);
+	b3StoreFloat(m_xOffset);
+	b3StoreFloat(m_xScale);
+	b3StoreFloat(m_yScale);
+	b3StoreFloat(m_Wobble);
+	
+	// Store wood base definitions
+	b3StoreColor(m_LightWood);
+	b3StoreColor(m_DarkWood);
+	b3StoreFloat(m_yRot);
+	b3StoreFloat(m_zRot);
+	b3StoreFloat(m_RingSpacing);
+	b3StoreFloat(m_RingFrequency);
+	b3StoreFloat(m_RingNoise);
+	b3StoreFloat(m_RingNoiseFrequency);
+	b3StoreFloat(m_TrunkWobble);
+	b3StoreFloat(m_TrunkWobbleFrequency);
+	b3StoreFloat(m_AngularWobble);
+	b3StoreFloat(m_AngularWobbleFrequency);
+	b3StoreFloat(m_GrainFrequency);
+	b3StoreFloat(m_Grainy);
+	b3StoreFloat(m_Ringy);
+}
+
+b3_bool b3MatOakPlank::b3GetColors(
+	b3_polar *polar,
+	b3Color  &diffuse,
+	b3Color  &ambient,
+	b3Color  &specular)
+{
+	b3_index index;
+	b3_f64   mix = b3ComputeOakPlank(&polar->object_polar,index);
+
+	diffuse  = b3Color::b3Mix(m_LightColors[index],m_DarkColors[index],mix);
+	ambient  = m_AmbColor;
+	specular = m_SpecColor;
+
+	return true;
+}
+
+b3_f64 b3MatOakPlank::b3GetReflection(b3_polar *polar)
+{
+	return m_Reflection;
+}
+
+b3_f64 b3MatOakPlank::b3GetRefraction(b3_polar *polar)
+{
+	return m_Refraction;
+}
+
+b3_f64 b3MatOakPlank::b3GetIndexOfRefraction(b3_polar *polar)
+{
+	return m_RefrValue;
+}
+
+b3_f64 b3MatOakPlank::b3GetSpecularExponent(b3_polar *polar)
 {
 	return m_HighLight;
 }

@@ -32,6 +32,9 @@
 
 /*
 **  $Log$
+**  Revision 1.7  2004/04/10 13:45:30  sm
+**  - Added wooden oak planks.
+**
 **  Revision 1.6  2004/04/09 14:11:58  sm
 **  - Removed CRs
 **
@@ -62,6 +65,7 @@
 *************************************************************************/
 
 #define WOOD_RES   320
+#define no_CREATE_ICON
 
 class b3WoodSampler : public b3MaterialSampler
 {
@@ -69,11 +73,40 @@ public:
 	b3WoodSampler(b3Tx *tx) : b3MaterialSampler(tx)
 	{
 		// Init material
-		m_Material = new b3MatWood(WOOD);
+		m_Material = new b3MatOakPlank(WOOD);
 		m_Material->b3Prepare();
 	}
 	
 	virtual ~b3WoodSampler()
+	{
+		delete m_Material;
+	}
+};
+
+class b3OakPlankSampler : public b3MaterialSampler
+{
+public:
+	b3OakPlankSampler(b3Tx *tx) : b3MaterialSampler(tx,1)
+	{
+		b3MatOakPlank *material = new b3MatOakPlank(OAKPLANK);
+
+#ifdef CREATE_ICON
+		material->m_LightWood = material->m_DarkWood * 2.0;
+		material->m_xScale *= 7;
+		material->m_yScale *= 8;
+		material->m_xOffset = 0.52;
+		material->m_RingFrequency *= 0.1;
+#else
+		material->m_xScale *= 4;
+		material->m_yScale *= 4;
+#endif
+
+		// Init material
+		m_Material = material;
+		m_Material->b3Prepare();
+	}
+	
+	virtual ~b3OakPlankSampler()
 	{
 		delete m_Material;
 	}
@@ -86,7 +119,7 @@ int main(int argc,char *argv[])
 	b3RaytracingItems::b3Register();
 	try
 	{
-		b3Tx tx;
+		b3Tx   tx;
 		b3_res xMax,yMax;
 		
 		// Create display
@@ -95,7 +128,8 @@ int main(int argc,char *argv[])
 		
 		tx.b3AllocTx(xMax,yMax,24);
 		
-		b3WoodSampler sampler(&tx);
+//		b3WoodSampler sampler(&tx);
+		b3OakPlankSampler sampler(&tx);
 
 		sampler.b3Sample();
 
@@ -103,6 +137,27 @@ int main(int argc,char *argv[])
 		// into the display window.
 		display->b3PutTx(&tx);
 		display->b3Wait();
+
+		if (argc > 1)
+		{
+#ifdef CREATE_ICON
+			if (argc > 3)
+			{
+				b3Tx small,big;
+
+				small.b3AllocTx(32,32,24);
+				small.b3ScaleToGrey(&tx);
+				small.b3SaveTGA(argv[2]);
+			
+				big.b3AllocTx(48,48,24);
+				big.b3ScaleToGrey(&tx);
+				big.b3SaveTGA(argv[3]);
+			}
+			tx.b3SaveTGA(argv[1]);
+#else
+			tx.b3SaveJPEG(argv[1]);
+#endif
+		}
 
 		// Delete Display
 		delete display;

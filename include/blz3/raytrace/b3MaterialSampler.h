@@ -21,16 +21,17 @@
 #include "blz3/image/b3Sampler.h"
 #include "blz3/raytrace/b3Raytrace.h"
 
-#define MATERIAL_TILES 3
+#define DEFAULT_MATERIAL_TILES 3
 
 class b3MaterialSampler : public b3Sampler
 {
 protected:
 	b3Tx       *m_Tx;
 	b3Material *m_Material;
+	b3_count    m_Tiles;
 
 public:
-	b3MaterialSampler(b3Tx *tx)
+	b3MaterialSampler(b3Tx *tx,b3_count tiles = DEFAULT_MATERIAL_TILES)
 	{
 		// Init texture
 		m_Material = null;
@@ -38,6 +39,7 @@ public:
 		m_xMax     = m_Tx->xSize;
 		m_yMax     = m_Tx->ySize;
 		m_Data     = (b3_pkd_color *)m_Tx->b3GetData();
+		m_Tiles    = tiles;
 	}
 	
 	void b3SetMaterial(b3Material *material)
@@ -84,10 +86,13 @@ protected:
 			fy = (b3_f64)y / info->m_yMax;
 			for (x = 0;x < info->m_xMax;x++)
 			{
-				int ix = (MATERIAL_TILES * x) / info->m_xMax;
-				polar.box_polar.x = fmod((b3_f64)x * MATERIAL_TILES / info->m_xMax,1.0);
+				int ix = (m_Tiles * x) / info->m_xMax;
+				polar.box_polar.x = fmod((b3_f64)x * m_Tiles / info->m_xMax,1.0);
 				polar.box_polar.y = 1.0 - fy;
 				polar.box_polar.z = 1.0 - fy * 0.15 * ix;
+				polar.object_polar.x = polar.box_polar.x * 2 - 1;
+				polar.object_polar.y = polar.box_polar.y * 2 - 1;
+				polar.object_polar.z = 0;
 
 				material->b3GetColors(&polar,diffuse,ambient,specular);
 				*data++ = diffuse;
