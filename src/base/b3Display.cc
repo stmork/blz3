@@ -1,6 +1,6 @@
 /*
 **
-**      $Filename:      b3Display.c $
+**      $Filename:      b3Display.cc $
 **      $Release:       Dortmund 2001 $
 **      $Revision$
 **      $Date$
@@ -21,7 +21,7 @@
 **                                                                      **
 *************************************************************************/
 
-#include "blz3/system/b3Display.h"
+#include "blz3/base/b3Display.h"
 #include "blz3/base/b3Aux.h"
 
 #define no_SYNC
@@ -35,51 +35,25 @@
 
 /*************************************************************************
 **                                                                      **
+**                        Blizzard III development log                  **
+**                                                                      **
+*************************************************************************/
+
+/*
+**	$Log$
+**	Revision 1.1  2001/11/04 10:54:14  sm
+**	- Redesigned b3Display for control use.
+**
+**	
+*/
+
+/*************************************************************************
+**                                                                      **
 **                        color display routines                        **
 **                                                                      **
 *************************************************************************/
 
-void b3Display::b3Init(CB3ScrollView *view)
-{
-	if (view->IsKindOf(RUNTIME_CLASS(CB3ScrollView)))
-	{
-		m_View = view;
-		m_Doc  = m_View->b3GetDocument();
-	}
-	else
-	{
-		throw new b3DisplayException(B3_DISPLAY_OPEN);
-	}
-
-	ASSERT(m_View != null);
-}
-
-void b3Display::b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize)
-{
-	// We should make sure, that we've collected some data
-	// about us.
-	b3Init(view);
-
-	m_xs    = xSize;
-	m_ys    = ySize;
-	m_depth = 24;
-#ifdef _DEBUG
-	b3PrintF (B3LOG_NORMAL,"xSize: %4ld\n",m_xs);
-	b3PrintF (B3LOG_NORMAL,"ySize: %4ld\n",m_ys);
-	b3PrintF (B3LOG_NORMAL,"dep:   %4ld\n",m_depth);
-#endif
-
-	b3Tx *tx = m_Doc->m_Tx;
-
-	tx->b3AllocTx(m_xs,m_ys,24);
-	m_Buffer = (b3_pkd_color *)tx->b3GetData();
-}
-
-void b3Display::b3Close()
-{
-}
-
-b3Display::b3Display(CB3ScrollView *view,const char *title)
+b3Display::b3Display(const char *title)
 {
 	b3_coord xSize;
 	b3_coord ySize;
@@ -91,25 +65,36 @@ b3Display::b3Display(CB3ScrollView *view,const char *title)
 	xSize = 768;
 	ySize = 576;
 #endif
-	m_Title = (char *)title;
-	b3Open(view,xSize,ySize);
-	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu (default)\n",
-		m_Title,
-		m_xs,m_ys);
+	b3Init(xSize,ySize,title);
 }
 
-b3Display::b3Display(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title)
+b3Display::b3Display(b3_res xSize,b3_res ySize,const char *title)
 {
-	m_Title = (char *)title;
-	b3Open(view,xSize,ySize);
+	b3Init(xSize,ySize,title);
+}
+
+b3Display::b3Display()
+{
+	m_xs     = 0;
+	m_ys     = 0;
+	m_depth  = 0;
+	m_Buffer = null;
+}
+
+void b3Display::b3Init(b3_res xSize,b3_res ySize,const char *title)
+{
 	b3PrintF (B3LOG_FULL,"Opening display \"%s\" of size %lu,%lu\n",
-		m_Title,
-		m_xs,m_ys);
+		title,
+		xSize,ySize);
+	m_xs    = xSize;
+	m_ys    = ySize;
+	m_depth = 24;
+	m_Tx.b3AllocTx(xSize,ySize,m_depth);
+	m_Buffer = (b3_pkd_color *)m_Tx.b3GetData();
 }
 
 b3Display::~b3Display()
 {
-	b3Close();
 }
 
 
@@ -123,15 +108,13 @@ void b3Display::b3PutRow(b3Row *row)
 {
 	b3_coord y = row->y;
 
+	B3_ASSERT(m_Buffer != null);
 	b3LongMemCopy(&m_Buffer[y * m_xs],row->buffer,m_xs);
-	if ((row->y & 0x1f) == 0)
-	{
-		m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
-	}
 }
 
 void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
 {
+	B3_ASSERT(m_Buffer != null);
 	if ((x < 0) || (x >= m_xs)) return;
 	if ((y < 0) || (y >= m_ys)) return;
 	m_Buffer[y * m_xs + x] = Color;
@@ -139,6 +122,7 @@ void b3Display::b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color Color)
 
 b3_pkd_color  b3Display::b3GetPixel(b3_coord x,b3_coord y)
 {
+	B3_ASSERT(m_Buffer != null);
 	if ((x < 0) || (x >= m_xs)) return 0;
 	if ((y < 0) || (y >= m_ys)) return 0;
 	return (m_Buffer[y * m_xs + x]);
@@ -151,5 +135,4 @@ b3_bool b3Display::b3IsCancelled(b3_coord x,b3_coord y)
 
 void b3Display::b3Wait()
 {
-	m_View->OnRefresh(m_View,B3_UPDATE_TX,null);
 }

@@ -93,6 +93,10 @@ SOURCE=.\b3Cubic.cc
 # End Source File
 # Begin Source File
 
+SOURCE=.\b3Display.cc
+# End Source File
+# Begin Source File
+
 SOURCE=.\b3Endian.cc
 # End Source File
 # Begin Source File
@@ -130,6 +134,10 @@ SOURCE=.\b3Procedure.cc
 # Begin Source File
 
 SOURCE=.\b3Render.cc
+# End Source File
+# Begin Source File
+
+SOURCE=.\b3Row.cc
 # End Source File
 # Begin Source File
 

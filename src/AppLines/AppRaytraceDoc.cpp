@@ -41,11 +41,14 @@ static char THIS_FILE[] = __FILE__;
 
 /*
 **	$Log$
+**	Revision 1.6  2001/11/04 10:54:14  sm
+**	- Redesigned b3Display for control use.
+**
 **	Revision 1.5  2001/11/03 16:24:16  sm
 **	- Added scene property dialog
 **	- Added raytrace view title
 **	- Added raytrace abort on button press
-**
+**	
 **	Revision 1.4  2001/11/01 13:22:43  sm
 **	- Introducing performance meter
 **	
@@ -158,7 +161,7 @@ b3Display *CAppRaytraceDoc::b3GetDisplay(b3_res xSize,b3_res ySize,const char *t
 
 	pos   = GetFirstViewPosition();
 	pView = (CAppRaytraceView *)GetNextView(pos);
-	return new b3Display(pView,xSize,ySize,title);
+	return new b3DisplayView(pView,xSize,ySize,title);
 }
 
 b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
@@ -168,7 +171,7 @@ b3Display *CAppRaytraceDoc::b3GetDisplay(const char *title)
 
 	pos   = GetFirstViewPosition();
 	pView = (CAppRaytraceView *)GetNextView(pos);
-	return new b3Display(pView,title);
+	return new b3DisplayView(pView,title);
 }
 
 void CAppRaytraceDoc::b3ActivateView()

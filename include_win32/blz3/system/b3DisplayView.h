@@ -24,10 +24,8 @@
 **                                                                      **
 *************************************************************************/
 
-#include "stdafx.h"
-#include "blz3/b3Types.h"
-#include "blz3/base/b3List.h"
-#include "blz3/system/b3Mem.h"
+#include "blz3/b3Config.h"
+#include "blz3/base/b3Display.h"
 #include "blz3/system/b3ScrollView.h"
 
 /*************************************************************************
@@ -36,80 +34,24 @@
 **                                                                      **
 *************************************************************************/
 
-typedef enum
+class b3DisplayView : public b3Display
 {
-	B3_DISPLAY_ERROR = -1,
-	B3_DISPLAY_OK    =  0,
-	B3_DISPLAY_MEMORY,
-	B3_DISPLAY_NO_COLORMAP,
-	B3_DISPLAY_OPEN
-} b3_display_error;
-
-class b3DisplayException
-{
-protected:
-	b3_display_error error;
-
-public:
-	b3DisplayException(b3_display_error error)
-	{
-		this->error = error;
-	}
-
-	b3_display_error b3GetError()
-	{
-		return error;
-	}
-};
-
-class b3Row;
-
-class b3Display : public b3Mem
-{
-	b3_res              m_depth;
 	char               *m_Title;
 
-	// Some position values
-	b3_res              m_xs,m_ys; // This is the size we really use
-
 	// Some X values
-	b3_bool             m_Opened;
-	b3_bool             m_Closed;
-	b3Mutex             m_Mutex;
-
+	b3_count            m_RowCounter;
 	CB3ScrollView      *m_View;
 	b3Document         *m_Doc;
-	b3_pkd_color       *m_Buffer;
 
 public:
-	                    b3Display(CB3ScrollView *view,const char *title = null);
-	                    b3Display(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title = null);
-	                   ~b3Display();
-	void                b3GetRes(b3_res &xSize,b3_res &ySize);
-	void                b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
-	b3_pkd_color        b3GetPixel(b3_coord x,b3_coord y);
+	                    b3DisplayView(CB3ScrollView *view,const char *title = null);
+	                    b3DisplayView(CB3ScrollView *view,b3_res xSize,b3_res ySize,const char *title = null);
+	                   ~b3DisplayView();
 	void                b3PutRow(b3Row *row);
-	b3_bool             b3IsCancelled(b3_coord x,b3_coord y);
 	void                b3Wait();
 
 private:
-	       void         b3Init(CB3ScrollView *view);
 	       void         b3Open(CB3ScrollView *view,b3_res xSize,b3_res ySize);
-	       void         b3Close();
-};
-
-class b3Row : public b3Link<b3Row>, public b3Mem
-{
-protected:
-	b3_coord      y;
-	b3_res        xSize;
-	b3_pkd_color *buffer;
-
-public:
-	         b3Row(b3_coord y,b3_res xSize);
-	virtual ~b3Row() {}
-
-	friend void b3Display::b3PutRow(b3Row *row);
 };
 
 #endif

@@ -114,7 +114,7 @@ SOURCE=.\b3Dir.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\b3Display.cpp
+SOURCE=.\b3DisplayView.cpp
 # End Source File
 # Begin Source File
 
@@ -139,10 +139,6 @@ SOURCE=.\b3Print.cpp
 # Begin Source File
 
 SOURCE=.\b3Reg.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\b3Row.cc
 # End Source File
 # Begin Source File
 
