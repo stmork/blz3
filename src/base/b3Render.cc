@@ -35,6 +35,12 @@
 
 /*
 **      $Log$
+**      Revision 1.16  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.15  2001/09/01 06:16:42  sm
 **      - Some merges
 **      - Exchanging matrices between OpenGL nd Blizzard III.
@@ -287,9 +293,9 @@ b3_bool b3RenderContext::b3PutMatrix(
 
 b3RenderObject::b3RenderObject()
 {
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
+	glVertexCount = 0;
+	glGridCount   = 0;
+	glPolyCount   = 0;
 
 #ifdef BLZ3_USE_OPENGL
 	glVertices = null;
@@ -324,9 +330,9 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 
 	b3GetCount(context,new_vertCount,new_gridCount,new_polyCount);
 
-	if (VertexCount != new_vertCount)
+	if (glVertexCount != new_vertCount)
 	{
-		if (VertexCount > 0)
+		if (glVertexCount > 0)
 		{
 			if (b3Free(glVertices))
 			{
@@ -337,48 +343,48 @@ void b3RenderObject::b3AllocVertices(b3RenderContext *context)
 				glNormals = null;
 			}
 		}
-		VertexCount = new_vertCount;
+		glVertexCount = new_vertCount;
 
-		if (VertexCount > 0)
+		if (glVertexCount > 0)
 		{
-			glVertices =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
-			glNormals  =  (GLfloat *)b3Alloc(VertexCount * 3 * sizeof(GLfloat));
+			glVertices =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
+			glNormals  =  (GLfloat *)b3Alloc(glVertexCount * 3 * sizeof(GLfloat));
 		}
 		glComputed = false;
 	}
 
-	if (GridCount != new_gridCount)
+	if (glGridCount != new_gridCount)
 	{
-		if (GridCount > 0)
+		if (glGridCount > 0)
 		{
 			if (b3Free(glGrids))
 			{
 				glGrids = null;
 			}
 		}
-		GridCount = new_gridCount;
+		glGridCount = new_gridCount;
 
-		if (GridCount > 0)
+		if (glGridCount > 0)
 		{
-			glGrids    = (GLushort *)b3Alloc(GridCount   * 2 * sizeof(GLushort));
+			glGrids    = (GLushort *)b3Alloc(glGridCount   * 2 * sizeof(GLushort));
 		}
 		glComputed = false;
 	}
 
-	if (PolyCount != new_polyCount)
+	if (glPolyCount != new_polyCount)
 	{
-		if (PolyCount > 0)
+		if (glPolyCount > 0)
 		{
 			if (b3Free(glPolygons))
 			{
 				glPolygons = null;
 			}
 		}
-		PolyCount = new_polyCount;
+		glPolyCount = new_polyCount;
 
-		if (PolyCount > 0)
+		if (glPolyCount > 0)
 		{
-			glPolygons = (GLushort *)b3Alloc(PolyCount   * 3 * sizeof(GLushort));
+			glPolygons = (GLushort *)b3Alloc(glPolyCount   * 3 * sizeof(GLushort));
 		}
 		glComputed = false;
 	}
@@ -409,9 +415,9 @@ void b3RenderObject::b3FreeVertices()
 		glPolygons = null;
 	}
 #endif
-	VertexCount = 0;
-	GridCount   = 0;
-	PolyCount   = 0;
+	glVertexCount = 0;
+	glGridCount   = 0;
+	glPolyCount   = 0;
 }
 
 void b3RenderObject::b3ComputeVertices()
@@ -430,7 +436,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	b3_vector  normal;
 	b3_vector  xDir,yDir;
 	b3_f64     len;
-	b3_index   i,p1,p2,p3;
+	b3_index   i,p1,p2,p3,start,end;
 
 	if (nPtr == null)
 	{
@@ -439,7 +445,8 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 
 	// Clear normals
-	for (i = 0;i < VertexCount;i++)
+	b3GetVertexRange(start,end);
+	for (i = start;i < end;i++)
 	{
 		nPtr[i].x = 0;
 		nPtr[i].y = 0;
@@ -447,16 +454,16 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 
 	// Collect normals
-	for (i = 0;i < PolyCount;i++)
+	for (i = 0;i < glPolyCount;i++)
 	{
 		p1 = *pPtr++;
 		p2 = *pPtr++;
 		p3 = *pPtr++;
 
 		// Do some semantic checks
-		B3_ASSERT(p1 < VertexCount);
-		B3_ASSERT(p2 < VertexCount);
-		B3_ASSERT(p3 < VertexCount);
+		B3_ASSERT((start <= p1) && (p1 < end));
+		B3_ASSERT((start <= p2) && (p2 < end));
+		B3_ASSERT((start <= p3) && (p3 < end));
 
 		xDir.x = vPtr[p2].x - vPtr[p1].x;
 		xDir.y = vPtr[p2].y - vPtr[p1].y;
@@ -493,7 +500,7 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	// Normalize
 	if (normalize)
 	{
-		for (i = 0;i < VertexCount;i++)
+		for (i = 0;i < glVertexCount;i++)
 		{
 			len = b3Length(&nPtr[i]);
 			if (len > 0)
@@ -506,17 +513,25 @@ void b3RenderObject::b3ComputeNormals(b3_bool normalize)
 	}
 }
 
+void b3RenderObject::b3GetVertexRange(b3_index &start,b3_index &end)
+{
+	start = 0;
+	end   = glVertexCount;
+}
+
 b3_bool b3RenderObject::b3ComputeBounds(b3_vector *lower,b3_vector *upper)
 {
 	b3_vector *ptr;
 	b3_bool    result = false;
-	b3_index   i;
+	b3_index   i,start,end;
 
 #ifdef BLZ3_USE_OPENGL
-	if (glComputed && (glVertices != null) && (VertexCount > 0))
+	b3Update();
+	if (glComputed && (glVertices != null) && (glVertexCount > 0))
 	{
 		ptr = (b3_vector *)glVertices;
-		for (i = 0;i < VertexCount;i++)
+		b3GetVertexRange(start,end);
+		for (i = start;i < end;i++)
 		{
 			// Check lower bound
 			if (ptr[i].x < lower->x) lower->x = ptr[i].x;
@@ -555,11 +570,15 @@ b3_render_mode b3RenderObject::b3GetRenderMode()
 	return B3_RENDER_LINE;
 }
 
-void b3RenderObject::b3Draw()
+void b3RenderObject::b3Recompute()
 {
-	b3_render_mode render_mode = b3GetRenderMode();
-	b3_color       color;
+#ifdef BLZ3_USE_OPENGL
+	glComputed = false;
+#endif
+}
 
+void b3RenderObject::b3Update()
+{
 #ifdef BLZ3_USE_OPENGL
 	if (!glComputed)
 	{
@@ -568,7 +587,16 @@ void b3RenderObject::b3Draw()
 			b3ComputeNormals();
 			glComputed = true;
 	}
+#endif
+}
 
+void b3RenderObject::b3Draw()
+{
+	b3_render_mode render_mode = b3GetRenderMode();
+	b3_color       color;
+
+#ifdef BLZ3_USE_OPENGL
+	b3Update();
 #ifdef _DEBUG
 	b3_index       i;
 
@@ -580,7 +608,7 @@ void b3RenderObject::b3Draw()
 		// makes it possible to catch to faulty
 		// index data. The access simply compute
 		// the length of the lines to be drawn.
-		for (i = 0;i < PolyCount;i++)
+		for (i = 0;i < glPolyCount;i++)
 		{
 			b3_vector aPoint,bPoint,cPoint;
 			b3_index  a,b,c;
@@ -607,7 +635,7 @@ void b3RenderObject::b3Draw()
 		break;
 
 	case B3_RENDER_FILLED:
-		for (i = 0;i < GridCount;i++)
+		for (i = 0;i < glGridCount;i++)
 		{
 			b3_vector aPoint,bPoint;
 			b3_index  a,b;
@@ -628,6 +656,7 @@ void b3RenderObject::b3Draw()
 		break;
 	}
 #endif
+
 	switch (render_mode)
 	{
 	case B3_RENDER_NOTHING:
@@ -635,30 +664,30 @@ void b3RenderObject::b3Draw()
 		break;
 
 	case B3_RENDER_LINE:
-		if (GridCount > 0)
+		if (glGridCount > 0)
 		{
 			glVertexPointer(3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(GL_FLOAT, 0, glNormals);
+			glNormalPointer(GL_FLOAT,    0, glNormals);
 
 			b3GetGridColor(&color);
 			glDisable(GL_LIGHTING);
 			glDisable(GL_COLOR_MATERIAL);
 			glColor3f(color.r,color.g,color.b);
-			glDrawElements(GL_LINES,GridCount * 2,GL_UNSIGNED_SHORT,glGrids);
+			glDrawElements(GL_LINES,glGridCount * 2,GL_UNSIGNED_SHORT,glGrids);
 		}
 		break;
 
 	case B3_RENDER_FILLED:
-		if (PolyCount > 0)
+		if (glPolyCount > 0)
 		{
 			glVertexPointer(3, GL_FLOAT, 0, glVertices);
-			glNormalPointer(GL_FLOAT, 0, glNormals);
+			glNormalPointer(GL_FLOAT,    0, glNormals);
 
 			b3GetDiffuseColor(&color);
 			glEnable(GL_LIGHTING);
 			glEnable(GL_COLOR_MATERIAL);
 			glColor3f(color.r,color.g,color.b);
-			glDrawElements(GL_TRIANGLES, PolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
+			glDrawElements(GL_TRIANGLES, glPolyCount * 3,GL_UNSIGNED_SHORT,glPolygons);
 		}
 		break;
 

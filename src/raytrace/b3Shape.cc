@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.14  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.13  2001/08/16 04:28:29  sm
 **      - Solving conflicts
 **
@@ -180,6 +187,12 @@ void b3Shape::b3Intersect()
 {
 }
 
+void b3Shape::b3Transform(b3_matrix *transformation)
+{
+	b3PrintF(B3LOG_NORMAL,"b3Shape::b3Transform() not overloaded!\n");
+	B3_ASSERT(true);
+	b3Recompute();
+}
 
 b3Shape2::b3Shape2(b3_size class_size,b3_u32 class_type) : b3Shape(class_size, class_type)
 {
@@ -194,6 +207,14 @@ b3Shape2::b3Shape2(b3_u32 *src) : b3Shape(src)
 	b3InitVector(&Base);
 	b3InitVector(&Dir1);
 	b3InitVector(&Dir2);
+}
+
+void b3Shape2::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul (transformation,&Base,&Base,true);
+	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
+	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
+	b3Recompute();
 }
 
 
@@ -214,6 +235,15 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitVector(&Dir1);
 	b3InitVector(&Dir2);
 	b3InitVector(&Dir3);
+}
+
+void b3Shape3::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul (transformation,&Base,&Base,true);
+	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
+	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
+	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3Recompute();
 }
 
 
@@ -244,4 +274,13 @@ b3CSGShape3::b3CSGShape3(b3_u32 *src) : b3RenderShape(src)
 	b3InitInt();   // This Index
 
 	Operation = b3InitInt();
+}
+
+void b3CSGShape3::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul (transformation,&Base,&Base,true);
+	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
+	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
+	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3Recompute();
 }

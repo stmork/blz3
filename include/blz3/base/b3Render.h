@@ -50,9 +50,9 @@ public:
 class b3RenderObject : public b3Mem
 {
 protected:
-	b3_count         VertexCount;
-	b3_count         GridCount;
-	b3_count         PolyCount;
+	b3_count         glVertexCount;
+	b3_count         glGridCount;
+	b3_count         glPolyCount;
 #ifdef BLZ3_USE_OPENGL
 	GLfloat         *glVertices;
 	GLfloat         *glNormals;
@@ -65,6 +65,8 @@ protected:
 
 	                        b3RenderObject();
 	                       ~b3RenderObject();
+	        void            b3Recompute();
+	        void            b3Update();
 public:
 	virtual void            b3AllocVertices(b3RenderContext *context);
 	virtual void            b3FreeVertices();
@@ -73,6 +75,7 @@ public:
 
 protected:
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	virtual void            b3GetVertexRange(b3_index &start,b3_index &end);
 	virtual void            b3ComputeVertices();
 	virtual void            b3ComputeIndices();
 	virtual void            b3ComputeNormals(b3_bool normalize=true);

@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.5  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -73,9 +79,9 @@ void b3CSGBox::b3AllocVertices(b3RenderContext *context)
 	glVertices = box_vertices;
 	glNormals  = box_normals;
 
-	VertexCount = 24;
-	GridCount   = 12;
-	PolyCount   = 12;
+	glVertexCount = 24;
+	glGridCount   = 12;
+	glPolyCount   = 12;
 #endif
 }
 

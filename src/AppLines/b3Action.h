@@ -19,6 +19,7 @@
 #define B3ACTION_H
 
 #include "blz3/b3Config.h"
+#include "blz3/base/b3Matrix.h"
 
 #include "AppLinesView.h"
 
@@ -34,9 +35,11 @@ class CB3Action
 {
 protected:
 	CAppLinesView   *m_View;
+	CAppLinesDoc    *m_Doc;
 	b3_mouse_button  m_Button;
 	b3_coord         m_xStart,m_xLast;
 	b3_coord         m_yStart,m_yLast;
+	b3_matrix        m_Transformation;
 
 public:
 	             CB3Action(CAppLinesView *window);
@@ -87,8 +90,13 @@ public:
 
 class CB3ActionObjectMove : public CB3Action
 {
+	b3_vector m_StartPoint;
 public:
 	CB3ActionObjectMove(CAppLinesView *window);
+
+	void b3LDown(b3_coord x,b3_coord y);
+	void b3LMove(b3_coord x,b3_coord y);
+	void b3LUp(b3_coord x,b3_coord y);
 };
 
 class CB3ActionObjectRotate : public CB3Action

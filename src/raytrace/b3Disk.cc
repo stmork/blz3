@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.10  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -133,6 +139,7 @@ void b3Disk::b3ComputeVertices()
 	xSize = 0;
 	ySize = 1;
 
+	glVertexCount = 0;
 	if (b > 0)
 	{
 		ySize++;
@@ -154,6 +161,7 @@ void b3Disk::b3ComputeVertices()
 			Vector->z = Base.z + b * sx * Dir1.z + b * sy * Dir2.z;
 			Vector++;
 
+			glVertexCount += 2;
 			xSize++;
 		}
 
@@ -173,6 +181,8 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
+
+			glVertexCount += 2;
 			xSize++;
 		}
 
@@ -192,6 +202,7 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = Base.y + b * sx * Dir1.y + b * sy * Dir2.y;
 			Vector->z = Base.z + b * sx * Dir1.z + b * sy * Dir2.z;
 
+			glVertexCount += 2;
 			xSize++;
 		}
 	}
@@ -199,6 +210,7 @@ void b3Disk::b3ComputeVertices()
 	{
 		// Position center first
 		*Vector++ = Base;
+		glVertexCount++;
 
 		// First fractional disk part if any
 		if ((i - start) > Epsilon)
@@ -211,6 +223,8 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
+
+			glVertexCount++;
 			xSize++;
 		}
 
@@ -223,6 +237,8 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
 			Vector++;
+
+			glVertexCount++;
 			xSize++;
 		}
 
@@ -237,6 +253,7 @@ void b3Disk::b3ComputeVertices()
 			Vector->y = Base.y + sx * Dir1.y + sy * Dir2.y;
 			Vector->z = Base.z + sx * Dir1.z + sy * Dir2.z;
 
+			glVertexCount++;
 			xSize++;
 		}
 	}
@@ -263,20 +280,17 @@ void b3Disk::b3ComputeIndices()
 	Number += Overhead;
 	if (Limit.y1 > 0) Number += Overhead;
 
+	glGridCount = 0;
+	glPolyCount = 0;
+	b3RenderObject::b3Free(glGrids);
+	b3RenderObject::b3Free(glPolygons);
 	glGrids    = gPtr = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 2 * sizeof(GLushort));
 	glPolygons = pPtr = (GLushort *)b3RenderObject::b3Alloc
 		(Number * 3 * sizeof(GLushort));
 	if ((gPtr == null) || (pPtr == null))
 	{
-		GridCount = 0;
-		PolyCount = 0;
 		return;
-	}
-	else
-	{
-		GridCount = Number;
-		PolyCount = Overhead * (Limit.y1 > 0 ? 2 : 1);
 	}
 
 	if (Limit.y1 > 0)
@@ -299,6 +313,9 @@ void b3Disk::b3ComputeIndices()
 			*pPtr++ = pos + 3;
 			*pPtr++ = pos + 1;
 			*pPtr++ = pos + 2;
+
+			glGridCount += 2;
+			glPolyCount += 2;
 		}
 		if (EndLines)
 		{
@@ -307,6 +324,8 @@ void b3Disk::b3ComputeIndices()
 
 			*gPtr++ = Overhead + Overhead;
 			*gPtr++ = Overhead + Overhead + 1;
+
+			glGridCount += 2;
 		}
 	}
 	else
@@ -319,6 +338,9 @@ void b3Disk::b3ComputeIndices()
 			*pPtr++ = i;
 			*pPtr++ = i + 1;
 			*pPtr++ = 0;
+
+			glGridCount++;
+			glPolyCount++;
 		}
 		if (EndLines)
 		{
@@ -327,14 +349,10 @@ void b3Disk::b3ComputeIndices()
 
 			*gPtr++ = 0;
 			*gPtr++ = Overhead + 1;
+
+			glGridCount += 2;
 		}
 	}
-	/*
-		PrintF ("\n");
-		PrintF ("Number:   %ld\n",Number);
-		PrintF ("Overhead: %ld\n",Overhead);
-		PrintF ("n:        %ld\n",GridCount);
-	*/
 #endif
 }
 

@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.2  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.1  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -90,7 +96,7 @@ b3Fulcrum::b3Fulcrum()
 void b3Fulcrum::b3Update(b3_vector *fulcrum)
 {
 	m_Position = *fulcrum;
-	glComputed = false;
+	b3Recompute();
 }
 
 void b3Fulcrum::b3AllocVertices(b3RenderContext *cts)
@@ -118,8 +124,8 @@ void b3Fulcrum::b3ComputeVertices()
 		m_Vertices[i].y = fulcrum[i].y * m_Scale + m_Position.y;
 		m_Vertices[i].z = fulcrum[i].z * m_Scale + m_Position.z;
 	}
-	VertexCount = B3_FULCRUM_VERTEX_COUNT;
-	GridCount   = B3_FULCRUM_INDEX_COUNT;
+	glVertexCount = B3_FULCRUM_VERTEX_COUNT;
+	glGridCount   = B3_FULCRUM_INDEX_COUNT;
 }
 
 void b3Fulcrum::b3GetGridColor(b3_color *color)

@@ -31,10 +31,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
+**
 **	Revision 1.3  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
-**
+**	
 **	Revision 1.2  2001/08/21 18:01:11  sm
 **	- Minor updates
 **	
@@ -50,6 +56,7 @@
 CB3Action::CB3Action(CAppLinesView *window)
 {
 	m_View   = window;
+	m_Doc    = m_View->GetDocument();
 	m_Button = B3_MB_UP;
 }
 
@@ -83,6 +90,7 @@ void CB3Action::b3DispatchLButtonDown(b3_coord x,b3_coord y)
 	m_Button = B3_MB_LEFT;
 	m_xStart = m_xLast = x;
 	m_yStart = m_yLast = y;
+	b3MatrixUnit(&m_Transformation);
 	b3LDown(x,y);
 }
 
@@ -99,6 +107,7 @@ void CB3Action::b3DispatchMButtonDown(b3_coord x,b3_coord y)
 	m_Button = B3_MB_MIDDLE;
 	m_xStart = m_xLast = x;
 	m_yStart = m_yLast = y;
+	b3MatrixUnit(&m_Transformation);
 	b3MDown(x,y);
 }
 
@@ -115,6 +124,7 @@ void CB3Action::b3DispatchRButtonDown(b3_coord x,b3_coord y)
 	m_Button = B3_MB_RIGHT;
 	m_xStart = m_xLast = x;
 	m_yStart = m_yLast = y;
+	b3MatrixUnit(&m_Transformation);
 	b3RDown(x,y);
 }
 
@@ -175,10 +185,29 @@ void CB3Action::b3RDown(b3_coord x,b3_coord y)
 
 void CB3Action::b3RMove(b3_coord x,b3_coord y)
 {
+	b3_vector *point = m_Doc->b3GetFulcrum();
+	b3_f64     xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,point);
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+	}
 }
 
 void CB3Action::b3RUp(b3_coord x,b3_coord y)
 {
+	b3_vector *point = m_Doc->b3GetFulcrum();
+	b3_f64     xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,point);
+		m_Doc->UpdateAllViews(NULL,B3_UPDATE_FULCRUM);
+		m_Doc->SetModifiedFlag();
+	}
 }
 
 /*************************************************************************
@@ -251,6 +280,79 @@ void CB3ActionObjectSelect::b3RUp(b3_coord x,b3_coord y)
 CB3ActionObjectMove::CB3ActionObjectMove(CAppLinesView *window) :
 	CB3Action(window)
 {
+}
+
+void CB3ActionObjectMove::b3LDown(b3_coord x,b3_coord y)
+{
+	b3_f64 xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		m_StartPoint.x = 0;
+		m_StartPoint.y = 0;
+		m_StartPoint.z = 0;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&m_StartPoint);
+	}
+}
+
+void CB3ActionObjectMove::b3LMove(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		diff.x = 0;
+		diff.y = 0;
+		diff.z = 0;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
+		diff.x -= m_StartPoint.x;
+		diff.y -= m_StartPoint.y;
+		diff.z -= m_StartPoint.z;
+
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			b3MatrixMove(null,&m_Transformation,&diff);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
+}
+
+void CB3ActionObjectMove::b3LUp(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	if (!m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		diff.x = 0;
+		diff.y = 0;
+		diff.z = 0;
+
+		b3GetRelCoord(x,y,xRel,yRel);
+		m_View->m_RenderView.b3Unproject(xRel,yRel,&diff);
+		diff.x -= m_StartPoint.x;
+		diff.y -= m_StartPoint.y;
+		diff.z -= m_StartPoint.z;
+
+		if (b3MatrixInv(&m_Transformation,&inv))
+		{
+			b3MatrixMove(null,&m_Transformation,&diff);
+			b3MatrixMMul(&inv,&m_Transformation,&activity);
+			m_Doc->m_Scene->b3Transform(&activity);
+			m_Doc->b3ComputeBounds();
+			m_Doc->SetModifiedFlag();
+			m_Doc->UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		}
+	}
 }
 
 /*************************************************************************

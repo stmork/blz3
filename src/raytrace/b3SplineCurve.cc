@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.4  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.3  2001/08/14 15:37:50  sm
 **      - Made some cleanups when OpenGL isn't available.
 **
@@ -98,11 +104,11 @@ void b3SplineCurveShape::b3ComputeIndices()
 
 		*Index++ = i - 1;
 		*Index++ = (Spline.closed ? 0 : i);
-		GridCount  = SubDiv;
+		glGridCount  = SubDiv;
 	}
 	else
 	{
-		GridCount = 0;
+		glGridCount = 0;
 	}
 #endif
 }

@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.9  2001/08/20 14:16:48  sm
 **      - Putting data into cmaera and light combobox.
 **      - Selecting camera and light.
@@ -225,4 +231,9 @@ b3Light *b3Scene::b3GetLight(b3_bool must_active)
 	}
 
 	return light;
+}
+
+b3BBox *b3Scene::b3GetFirstBBox()
+{
+	return (b3BBox *)heads[0].First;
 }

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.10  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.9  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -108,8 +115,6 @@ b3TriangleShape::b3TriangleShape(b3_u32 *src) : b3Shape(src)
 	b3InitNOP();
 	b3InitNOP();
 
-	// FIX ME: We have to convert the indices and vertices to
-	//         and have to initialize the grid!
 	vertices  = (b3_vertex *)b3Item::b3Alloc(VertexCount * sizeof(b3_vertex));
 	triangles = (b3_triangle *)b3Item::b3Alloc(TriaCount * sizeof(b3_triangle));
 
@@ -152,6 +157,7 @@ void b3TriangleShape::b3ComputeVertices()
 	Vertex   = (b3_vertex *)vertices;
 	Vector   = (b3_vector *)glVertices;
 
+	glVertexCount = VertexCount;
 	for (i = 0;i < VertexCount;i++)
 	{
 		Vector->x = Vertex->x;
@@ -198,9 +204,25 @@ void b3TriangleShape::b3ComputeIndices()
 
 		Triangle++;
 	}
+	glGridCount = TriaCount * 3;
+	glPolyCount = TriaCount;
 #endif
 }
 
 void b3TriangleShape::b3Intersect()
 {
+}
+
+void b3TriangleShape::b3Transform(b3_matrix *transformation)
+{
+	b3_vertex *vertex;
+	b3_index   i;
+
+	vertex  = vertices;
+	for (i = 0;i < VertexCount;i++)
+	{
+		b3MatrixVMul (transformation,(b3_vector *)vertex,(b3_vector *)vertex,true);
+		vertex++;
+	}
+	b3Recompute();
 }

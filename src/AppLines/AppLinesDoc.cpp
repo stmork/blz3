@@ -35,10 +35,16 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
+**
 **	Revision 1.9  2001/09/01 15:54:53  sm
 **	- Tidy up Size confusion in b3Item/b3World and derived classes
 **	- Made (de-)activation of objects
-**
+**	
 **	Revision 1.8  2001/08/18 15:38:27  sm
 **	- New action toolbar
 **	- Added comboboxes for camera and lights (but not filled in)
@@ -155,9 +161,9 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_Scene = (b3Scene *)m_World.b3GetFirst();
 	m_Scene->b3Reorg();
 	m_Scene->b3AllocVertices(&m_Context);
-	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 	m_Info = m_Scene->b3GetModellerInfo();
 	m_Fulcrum.b3Update(m_Info->b3GetFulcrum());
+	b3ComputeBounds();
 	return TRUE;
 }
 
@@ -220,4 +226,9 @@ void CAppLinesDoc::OnHierachy()
 
 	dlg.m_Doc   = this;
 	dlg.DoModal();
+}
+
+void CAppLinesDoc::b3ComputeBounds()
+{
+	m_Scene->b3ComputeBounds(&m_Lower,&m_Upper);
 }

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.6  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.5  2001/08/11 16:29:07  sm
 **      - Nasty UnCR done
 **      - Compiling but not running OpenGL under Unix
@@ -119,4 +126,13 @@ void b3CSGTorus::b3ComputeIndices()
 
 void b3CSGTorus::b3Intersect()
 {
+}
+
+void b3CSGTorus::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul (transformation,&Base,&Base,true);
+	b3MatrixVMul (transformation,&Dir1,&Dir1,false);
+	b3MatrixVMul (transformation,&Dir2,&Dir2,false);
+	b3MatrixVMul (transformation,&Dir3,&Dir3,false);
+	b3Recompute();
 }

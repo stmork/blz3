@@ -35,9 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2001/09/02 18:54:56  sm
+**	- Moving objects
+**	- BBox size recomputing fixed. Further cleanups in b3RenderObject
+**	  are necessary.
+**	- It's really nice to see!
+**
 **	Revision 1.12  2001/08/21 14:24:14  sm
 **	- New selecting code added.
-**
+**	
 **	Revision 1.11  2001/08/20 19:35:08  sm
 **	- Index correction introduced (This is a hack!)
 **	- Some OpenGL cleanups
@@ -384,6 +390,12 @@ void CAppLinesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 			size.cy = 10;
 		}
 		SetScrollSizes(MM_TEXT, size);
+		doInvalidate = true;
+	}
+
+	if (lHint & B3_UPDATE_FULCRUM)
+	{
+		pDoc->m_Fulcrum.b3Update(pDoc->b3GetFulcrum());
 		doInvalidate = true;
 	}
 

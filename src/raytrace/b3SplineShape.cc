@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/base/b3Matrix.h"
 
 /*************************************************************************
 **                                                                      **
@@ -31,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.9  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.8  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -100,6 +107,28 @@ b3SplineCurve::b3SplineCurve(b3_u32 *src) : b3Shape(src)
 	}
 }
 
+void b3SplineCurve::b3Transform(b3_matrix *transformation)
+{
+	b3_vector *control;
+	b3_index   offset;
+	b3_index   x;
+
+	control = Spline.controls;
+	offset  = Spline.offset;
+
+	// Transform rotation axis
+	b3MatrixVMul (transformation,&Axis.pos,&Axis.pos,true);
+	b3MatrixVMul (transformation,&Axis.dir,&Axis.dir,false);
+
+	// Transform control points
+	for (x = 0;x < Spline.control_num;x++)
+	{
+		b3MatrixVMul (transformation,control,control,true);
+		control += offset;
+	}
+	b3Recompute();
+}
+
 
 b3SplineShape::b3SplineShape(b3_size class_size,b3_u32 class_type) :
 	b3Shape(class_size, class_type)
@@ -126,7 +155,7 @@ b3SplineShape::b3SplineShape(b3_u32 *src) : b3Shape(src)
 
 	// Copy control points
 	control_count = Spline[0].control_max * Spline[1].control_max;
-	Controls = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
+	Controls      = (b3_vector *)b3Item::b3Alloc(control_count * sizeof(b3_vector));
 	Spline[0].controls =
 	Spline[1].controls = Controls;
 	for (i = 0;i < control_count;i++) b3InitVector(&Controls[i]);
@@ -165,51 +194,45 @@ void b3SplineShape::b3ComputeGridVertices()
 {
 #ifdef BLZ3_USE_OPENGL
 	b3_vector *Vector;
-	b3_spline *xSpline,*ySpline;
 	b3_count   CurveNum,Points;
 	b3_index   x,y;
 	b3_spline  MySpline;
 
-	Points  = 0;
-	Vector  = (b3_vector *)glVertices;
+	Points        = 0;
+	Vector        = (b3_vector *)glVertices;
 
-	xSpline           = &Spline[0];
-	ySpline           = &Spline[1];
-
-	xSpline->controls =  Controls;
-	ySpline->controls =  Controls;
-	xSpline->knots    = &Knots[0][0];
-	ySpline->knots    = &Knots[1][0];
+	Spline[0].controls =  Controls;
+	Spline[1].controls =  Controls;
+	Spline[0].knots    = &Knots[0][0];
+	Spline[1].knots    = &Knots[1][0];
 
 
 	// building horizontal splines
 	// first create controls for segments of vertical spline...
-	b3DeBoorSurfaceControl (xSpline,ySpline,Between);
-	MySpline          = *xSpline;
-	MySpline.offset   =  CurveNum = B3_BSPLINE_SEGMENTKNOTS(ySpline);
-	MySpline.controls =  Between;
+	b3DeBoorSurfaceControl (&Spline[0],&Spline[1],Between);
+	MySpline          = Spline[0];
+	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&Spline[1]);
+	MySpline.controls = Between;
 
 	// ... then create real horizontal spline curve.
 	for (y = 0;y < CurveNum;y++)
 	{
-		Points  = b3DeBoor (&MySpline,Vector,y);
-		Vector += Points;
-		Points += Points;
+		Points         = b3DeBoor (&MySpline,Vector,y);
+		Vector        += Points;
 	}
 
 	// building vertical splines
 	// first create controls for segments of horizontal spline...
-	b3DeBoorSurfaceControl (ySpline,xSpline,Between);
-	MySpline          = *ySpline;
-	MySpline.offset   =  CurveNum = B3_BSPLINE_SEGMENTKNOTS(xSpline);
-	MySpline.controls =  Between;
+	b3DeBoorSurfaceControl (&Spline[1],&Spline[0],Between);
+	MySpline          = Spline[1];
+	MySpline.offset   = CurveNum = B3_BSPLINE_SEGMENTKNOTS(&Spline[0]);
+	MySpline.controls = Between;
 
 	// ... then create real vertical spline curve.
 	for (x = 0;x < CurveNum;x++)
 	{
-		Points  = b3DeBoor (&MySpline,Vector,x);
-		Vector += Points;
-		Points += Points;
+		Points         = b3DeBoor (&MySpline,Vector,x);
+		Vector        += Points;
 	}
 #endif
 }
@@ -218,7 +241,7 @@ void b3SplineShape::b3ComputeSolidVertices()
 {
 	b3_spline  MySpline;
 	b3_index   x,y;
-	b3_count   SubDiv,index;
+	b3_count   SubDiv,index,count;
 	b3_vector *Vector;
 
 	// Building horizontal BSplines
@@ -238,8 +261,9 @@ void b3SplineShape::b3ComputeSolidVertices()
 	index  = 0;
 	for (y = 0;y < ySubDiv;y++)
 	{
-		index += b3DeBoor (&MySpline,Vector,y);
-		Vector += xSubDiv;
+		count   = b3DeBoor (&MySpline,Vector,y);
+		Vector += count;
+		index  += count;
 	}
 	B3_ASSERT(index <= SolidVertexCount);
 }
@@ -253,23 +277,23 @@ void b3SplineShape::b3ComputeVertices()
 void b3SplineShape::b3ComputeGridIndices()
 {
 #ifdef BLZ3_USE_OPENGL
-	GLushort *pPtr;
+	GLushort *gPtr;
 	b3_index  x,y,i=0;
 	b3_count  max;
 
 	// horizontal splines
-	pPtr = glGrids;
+	gPtr = glGrids;
 	max = B3_BSPLINE_SEGMENTKNOTS(&Spline[1]);
 	for (y = 0;y < max;y++)
 	{
 		for (x = 1;x < Spline[0].subdiv;x++)
 		{
-			*pPtr++ = i + x - 1;
-			*pPtr++ = i + x;
+			*gPtr++ = i + x - 1;
+			*gPtr++ = i + x;
 		}
 
-		*pPtr++ = i + x - 1;
-		*pPtr++ = (Spline[0].closed ? i : i + x);
+		*gPtr++ = i + x - 1;
+		*gPtr++ = (Spline[0].closed ? i : i + x);
 
 		i += (Spline[0].subdiv + 1);
 	}
@@ -280,20 +304,16 @@ void b3SplineShape::b3ComputeGridIndices()
 	{
 		for (y = 1;y < Spline[1].subdiv;y++)
 		{
-			*pPtr++ = i + y - 1;
-			*pPtr++ = i + y;
+			*gPtr++ = i + y - 1;
+			*gPtr++ = i + y;
 		}
 
-		*pPtr++ = i + y - 1;
-		*pPtr++ = (Spline[1].closed ? i : i + y);
+		*gPtr++ = i + y - 1;
+		*gPtr++ = (Spline[1].closed ? i : i + y);
 
 		i += (Spline[1].subdiv + 1);
 		
 	}
-
-	/*
-		PrintF ("GridCount: %4ld\n",GridCount);
-	*/
 #endif
 }
 
@@ -317,13 +337,20 @@ void b3SplineShape::b3ComputeSolidIndices()
 			*pPtr++ = GridVertexCount + (x+1) % xSubDiv + xSubDiv *  y;
 		}
 	}
+	glPolyCount = Spline[0].subdiv * Spline[1].subdiv * 2;
 #endif
 }
 
 void b3SplineShape::b3ComputeIndices()
 {
-	if (GridCount > 0) b3ComputeGridIndices();
-	if (PolyCount > 0) b3ComputeSolidIndices();
+	if (glGridCount > 0) b3ComputeGridIndices();
+	if (glPolyCount > 0) b3ComputeSolidIndices();
+}
+
+void b3SplineShape::b3GetVertexRange(b3_index &start,b3_index &end)
+{
+	start = GridVertexCount;
+	end   = GridVertexCount + ySubDiv * (Spline[0].subdiv + 1);
 }
 
 #ifdef GLU_NURBS
@@ -359,3 +386,25 @@ void b3SplineShape::b3Draw()
 	}
 }
 #endif
+
+void b3SplineShape::b3Transform(b3_matrix *transformation)
+{
+	b3_vector *control;
+	b3_index   offset;
+	b3_index   x,y;
+
+	control = Spline[0].controls;
+	offset  = Spline[0].offset;
+
+	// Transform control points
+	for (y = 0;y < Spline[1].control_num;y++)
+	{
+		control  = &Spline[0].controls[y * Spline[1].offset];
+		for (x = 0;x < Spline[0].control_num;x++)
+		{
+			b3MatrixVMul (transformation,control,control,true);
+			control += offset;
+		}
+	}
+	b3Recompute();
+}

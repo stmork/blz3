@@ -31,6 +31,12 @@
 
 /*
 **      $Log$
+**      Revision 1.13  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.12  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -127,9 +133,9 @@ void b3Area::b3AllocVertices(b3RenderContext *context)
 	glGrids    = area_grids;
 	glPolygons = area_polygons;
 
-	VertexCount = 4;
-	GridCount   = 4;
-	PolyCount   = 2;
+	glVertexCount = 4;
+	glGridCount   = 4;
+	glPolyCount   = 2;
 #endif
 }
 

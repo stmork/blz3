@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.17  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.16  2001/09/01 15:54:54  sm
 **      - Tidy up Size confusion in b3Item/b3World and derived classes
 **      - Made (de-)activation of objects
@@ -200,9 +206,9 @@ void b3BBox::b3AllocVertices(b3RenderContext *context)
 	b3BBox         *bbox;
 	b3Shape        *shape;
 
-	VertexCount =  8;
-	GridCount   = 12;
-	PolyCount   =  0;
+	glVertexCount =  8;
+	glGridCount   = 12;
+	glPolyCount   =  0;
 
 #ifdef BLZ3_USE_OPENGL
 	glVertices = bbox_vertices;
@@ -289,8 +295,13 @@ void b3BBox::b3ComputeVertices()
 	bbox_vertices[i++] = DimBase.y + DimSize.y;
 	bbox_vertices[i++] = DimBase.z;
 
-	glComputed = true;
+	glVertexCount = 8;
+	glComputed    = true;
 #endif
+}
+
+void b3BBox::b3ComputeNormals(b3_bool normalize)
+{
 }
 
 void b3BBox::b3GetGridColor(b3_color *color)
@@ -328,11 +339,11 @@ void b3BBox::b3Draw()
 
 b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance)
 {
-	b3_vector subLower;
-	b3_vector subUpper;
 	b3Item    *item;
 	b3BBox    *bbox;
 	b3Shape   *shape;
+	b3_vector  subLower;
+	b3_vector  subUpper;
 	b3_bool    result = false;
 
 	subLower.x =  FLT_MAX;
@@ -360,15 +371,6 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 		subUpper.x += DimSize.x;
 		subUpper.y += DimSize.y;
 		subUpper.z += DimSize.z;
-	}
-	else
-	{
-		// Use predefined data
-		subLower   = DimBase;
-		subUpper.x = DimBase.x + DimSize.x;
-		subUpper.y = DimBase.y + DimSize.y;
-		subUpper.z = DimBase.z + DimSize.z;
-		result     = true;
 	}
 
 	B3_FOR_BASE(b3GetBBoxHead(),item)
@@ -443,6 +445,40 @@ b3_count b3BBox::b3Count()
 	return count;
 }
 
+b3_bool b3BBox::b3Transform(b3_matrix *transformation)
+{
+	b3Item  *item;
+	b3Shape *shape;
+	b3BBox  *bbox;
+	b3_bool  transformed = false;
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
+	{
+		shape = (b3Shape *)item;
+		if (shape->b3IsActivated())
+		{
+			shape->b3Transform(transformation);
+			transformed = true;
+		}
+	}
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox   = (b3BBox *)item;
+		if(bbox->b3Transform(transformation))
+		{
+			transformed = true;
+		}
+	}
+
+	if (transformed)
+	{
+		b3Recompute();
+	}
+
+	return transformed;
+}
+
 void b3Scene::b3Reorg()
 {
 	b3Base<b3Item>  depot;
@@ -467,6 +503,18 @@ void b3Scene::b3Draw()
 	{
 		bbox = (b3BBox *)item;
 		bbox->b3Draw();
+	}
+}
+
+void b3Scene::b3Transform(b3_matrix *transformation)
+{
+	b3Item         *item;
+	b3BBox         *bbox;
+
+	B3_FOR_BASE(&heads[0],item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3Transform(transformation);
 	}
 }
 
@@ -527,9 +575,4 @@ b3_count b3Scene::b3GetBBoxCount()
 		count += bbox->b3Count();
 	}
 	return count;
-}
-
-b3BBox *b3Scene::b3GetFirstBBox()
-{
-	return (b3BBox *)heads[0].First;
 }

@@ -643,6 +643,7 @@ protected:
 public:
 	                b3RenderShapeObject();
 	void            b3Activate(b3_bool activate=true);
+	b3_bool         b3IsActivated();
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
@@ -675,6 +676,7 @@ public:
 
 	        void b3ComputeBound(b3CondLimit *limit);
 	virtual void b3Intersect();
+	virtual void b3Transform(b3_matrix *transformation);
 };
 
 class b3RenderShape : public b3Shape
@@ -763,6 +765,8 @@ public:
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
+
+	void b3Transform(b3_matrix *transformation);
 };
 
 // AREA, DISK
@@ -779,6 +783,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3Shape2);
 	B3_ITEM_LOAD(b3Shape2);
+
+	void b3Transform(b3_matrix *transformation);
 };
 
 class b3Area : public b3Shape2
@@ -828,6 +834,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3Shape3);
 	B3_ITEM_LOAD(b3Shape3);
+
+	void b3Transform(b3_matrix *transformation);
 };
 
 class b3Cylinder : public b3Shape3
@@ -907,6 +915,7 @@ public:
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
+	void b3Transform(b3_matrix *transformation);
 };
 
 // TRIANGLES
@@ -932,6 +941,7 @@ public:
 	void b3ComputeNormals(b3_bool normalize=true);
 	void b3ComputeIndices();
 	void b3Intersect();
+	void b3Transform(b3_matrix *transformation);
 };
 
 // index calculation of triangle grid
@@ -958,6 +968,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3SplineCurve);
 	B3_ITEM_LOAD(b3SplineCurve);
+
+	void b3Transform(b3_matrix *transformation);
 };
 
 class b3SplineCurveShape : b3SplineCurve
@@ -1005,12 +1017,15 @@ protected:
 	     b3SplineShape(b3_size class_size,b3_u32 class_type);
 
 	void b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+	void b3GetVertexRange(b3_index &start,b3_index &end);
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 
 public:
 	B3_ITEM_INIT(b3SplineShape);
 	B3_ITEM_LOAD(b3SplineShape);
+
+	void b3Transform(b3_matrix *transformation);
 
 private:
 	void b3ComputeGridVertices();
@@ -1105,6 +1120,7 @@ public:
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
+	void b3Transform(b3_matrix *transformation);
 };
 
 // CSG_CYLINDER, CSG_CONE, CSG_ELLIPSOID, CSG_BOX
@@ -1128,6 +1144,8 @@ protected:
 public:
 	B3_ITEM_INIT(b3CSGShape3);
 	B3_ITEM_LOAD(b3CSGShape3);
+
+	void b3Transform(b3_matrix *transformation);
 };
 
 class b3CSGCylinder : public b3CSGShape3
@@ -1214,6 +1232,7 @@ public:
 	void b3ComputeVertices();
 	void b3ComputeIndices();
 	void b3Intersect();
+	void b3Transform(b3_matrix *transformation);
 };
 
 /*************************************************************************
@@ -1255,7 +1274,9 @@ public:
 	       void            b3AllocVertices(b3RenderContext *context);
 	       void            b3FreeVertices();
 	       void            b3ComputeVertices();
+		   void            b3ComputeNormals(b3_bool normalize = true);
 	       void            b3Draw();
+		   b3_bool         b3Transform(b3_matrix *transformation);
 		   void            b3Activate(b3_bool activate=true);
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
@@ -1687,6 +1708,7 @@ public:
 		   b3BBox         *b3GetFirstBBox();
 		   b3_count        b3GetBBoxCount();
 		   void            b3Activate(b3_bool activate=true);
+		   void            b3Transform(b3_matrix *transformation);
 };
 
 #define TP_TEXTURE       1L            // Hintergrundbild

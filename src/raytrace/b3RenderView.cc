@@ -33,6 +33,12 @@
 
 /*
 **      $Log$
+**      Revision 1.11  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.10  2001/08/15 19:52:57  sm
 **      - First polygon rendering with Blizzard III (areas only)
 **
@@ -328,6 +334,38 @@ void b3RenderView::b3Move(b3_f64 xDir,b3_f64 yDir)
 		case B3_VIEW_LEFT:
 			m_Actual->m_Mid.y -= (m_Actual->m_Size.y * xDir);
 			m_Actual->m_Mid.z += (m_Actual->m_Size.z * yDir);
+			break;
+		}
+	}
+}
+
+void b3RenderView::b3Unproject(b3_f64 xRel,b3_f64 yRel,b3_vector *point)
+{
+	if (m_ViewMode != B3_VIEW_3D)
+	{
+		xRel = (xRel - 0.5) / m_Actual->m_xRelation;
+		yRel = (yRel - 0.5) * m_Actual->m_yRelation;
+		switch(m_ViewMode)
+		{
+		case B3_VIEW_TOP:
+			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel;
+			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * yRel;
+			break;
+		case B3_VIEW_FRONT:
+			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			break;
+		case B3_VIEW_RIGHT:
+			point->y = m_Actual->m_Mid.y + m_Actual->m_Size.y * xRel;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			break;
+		case B3_VIEW_LEFT:
+			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * xRel;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
+			break;
+		case B3_VIEW_BACK:
+			point->x = m_Actual->m_Mid.x - m_Actual->m_Size.x * xRel;
+			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel;
 			break;
 		}
 	}

@@ -58,6 +58,7 @@ public:
 public:
 	b3_vector *b3GetFulcrum();
 	void       b3DrawFulcrum();
+	void       b3ComputeBounds();
 	virtual ~CAppLinesDoc();
 #ifdef _DEBUG
 	virtual void AssertValid() const;

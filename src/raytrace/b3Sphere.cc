@@ -32,6 +32,12 @@
 
 /*
 **      $Log$
+**      Revision 1.8  2001/09/02 18:54:56  sm
+**      - Moving objects
+**      - BBox size recomputing fixed. Further cleanups in b3RenderObject
+**        are necessary.
+**      - It's really nice to see!
+**
 **      Revision 1.7  2001/08/18 15:38:27  sm
 **      - New action toolbar
 **      - Added comboboxes for camera and lights (but not filled in)
@@ -110,4 +116,11 @@ void b3Sphere::b3ComputeIndices()
 
 void b3Sphere::b3Intersect()
 {
+}
+
+void b3Sphere::b3Transform(b3_matrix *transformation)
+{
+	b3MatrixVMul (transformation,&Base,&Base,true);
+	b3MatrixVMul (transformation,&Dir, &Dir, false);
+	b3Recompute();
 }

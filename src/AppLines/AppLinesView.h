@@ -27,10 +27,11 @@
 #include "blz3/raytrace/b3RenderView.h"
 #include "b3CameraVolume.h"
 
-#define B3_UPDATE_VIEW     1
-#define B3_UPDATE_CAMERA   2
-#define B3_UPDATE_GEOMETRY 4
-#define B3_UPDATE_LIGHT    8
+#define B3_UPDATE_VIEW      1
+#define B3_UPDATE_CAMERA    2
+#define B3_UPDATE_GEOMETRY  4
+#define B3_UPDATE_LIGHT     8
+#define B3_UPDATE_FULCRUM  16
 
 #define B3_UPDATE_ALL  (B3_UPDATE_GEOMETRY|B3_UPDATE_VIEW|B3_UPDATE_CAMERA)
 
@@ -180,7 +181,9 @@ protected:
 	void b3SetMagnification();
 	void b3UnsetMagnification();
 
+	friend class CB3Action;
 	friend class CB3ActionMagnify;
+	friend class CB3ActionObjectMove;
 };
 
 #ifndef _DEBUG  // debug version in AppLinesView.cpp
