@@ -76,6 +76,7 @@ public:
 	b3_bool       b3ToggleVisibility();
 	b3_bool       b3SetVisibility(bool new_visibility=true);
 	b3_bool       b3IsVisible();
+	void          b3AddArrow(int id);
 	void          b3Customize();
 
 protected:

@@ -1843,6 +1843,15 @@ BEGIN
     LTEXT           "Frames pro Sekunde:",IDC_STATIC,10,40,68,8
 END
 
+IDD_UNDO_REDO DIALOGEX 0, 0, 101, 52
+STYLE WS_POPUP | WS_CAPTION
+EXSTYLE WS_EX_TOOLWINDOW
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         IDC_UNDO_REDO_LIST,7,7,87,38,LBS_NOINTEGRALHEIGHT | 
+                    WS_HSCROLL | WS_TABSTOP
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -2184,6 +2193,14 @@ BEGIN
         RIGHTMARGIN, 135
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
+    END
+
+    IDD_UNDO_REDO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 94
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 45
     END
 END
 #endif    // APSTUDIO_INVOKED

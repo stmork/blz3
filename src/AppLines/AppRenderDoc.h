@@ -85,6 +85,8 @@ public:
 	virtual void       b3AddUndoAction(CB3Action *action);
 	        void       b3AddOp(b3UndoOperation *op);
 			void       b3ClearOp();
+			void       b3UndoList();
+			void       b3RedoList();
 
 	// Drag & drop operations
 	virtual void       b3DragBegin();

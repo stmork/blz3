@@ -24,6 +24,7 @@
 #include "AppLines.h"
 #include "AppRenderDoc.h"
 #include "AppRenderView.h"
+#include "DlgUndoRedo.h"
 #include "MainFrm.h"
 
 /*************************************************************************
@@ -34,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2003/01/30 16:19:58  sm
+**	- Added undo/redo list support.
+**
 **	Revision 1.16  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
-**
+**	
 **	Revision 1.15  2003/01/14 19:07:35  sm
 **	- Added some camera undo/redo actions.
 **	
@@ -308,6 +312,12 @@ void CAppRenderDoc::b3ClearRaytraceDoc()
 	m_RaytraceDoc = null;
 }
 
+/*************************************************************************
+**                                                                      **
+**                        Undo/Redo methods                             **
+**                                                                      **
+*************************************************************************/
+
 void CAppRenderDoc::b3AddUndoAction(CB3Action *action)
 {
 }
@@ -320,6 +330,20 @@ void CAppRenderDoc::b3AddOp(b3UndoOperation *op)
 void CAppRenderDoc::b3ClearOp()
 {
 	m_UndoBuffer->b3Clear();
+}
+
+void CAppRenderDoc::b3UndoList()
+{
+	CDlgUndoRedo dlg;
+
+	dlg.DoModal();
+}
+
+void CAppRenderDoc::b3RedoList()
+{
+	CDlgUndoRedo dlg;
+
+	dlg.DoModal();
 }
 
 void CAppRenderDoc::OnEditUndo() 

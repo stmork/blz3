@@ -421,6 +421,10 @@ SOURCE=.\DlgTorus.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgUndoRedo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MainFrm.cpp
 # End Source File
 # End Group
@@ -742,6 +746,10 @@ SOURCE=.\DlgTexturePathList.h
 # Begin Source File
 
 SOURCE=.\DlgTorus.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgUndoRedo.h
 # End Source File
 # Begin Source File
 

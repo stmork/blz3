@@ -40,9 +40,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2003/01/30 16:19:59  sm
+**	- Added undo/redo list support.
+**
 **	Revision 1.11  2002/01/13 19:24:12  sm
 **	- Introduced CAppRenderDoc/View (puuh!)
-**
+**	
 **	Revision 1.10  2002/01/08 15:45:50  sm
 **	- Added support for repeating CButtons for button movement/rotation mode.
 **	
@@ -422,6 +425,17 @@ b3_bool CB3Toolbar::b3Create(CFrameWnd *parent)
 		}
 	}
 	return false;
+}
+
+void CB3Toolbar::b3AddArrow(int id)
+{
+	DWORD dwStyle;
+	int   index;
+
+	GetToolBarCtrl().SetExtendedStyle(TBSTYLE_EX_DRAWDDARROWS);
+	index   = CommandToIndex(id);
+	dwStyle = GetButtonStyle(index);
+	SetButtonStyle(index, dwStyle | TBSTYLE_DROPDOWN);
 }
 
 b3_bool CB3Toolbar::b3InitCustomization()

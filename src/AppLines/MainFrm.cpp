@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.33  2003/01/30 16:19:59  sm
+**	- Added undo/redo list support.
+**
 **	Revision 1.32  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
-**
+**	
 **	Revision 1.31  2002/08/19 16:50:39  sm
 **	- Now having animation running, running, running...
 **	- Activation handling modified to reflect animation
@@ -230,6 +233,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
 	ON_UPDATE_COMMAND_UI(ID_LIGHT_SELECT, OnUpdateLightSelect)
 	ON_COMMAND(ID_HIERACHY, OnHierachy)
 	ON_UPDATE_COMMAND_UI(ID_HIERACHY, OnUpdateHierachy)
+	ON_NOTIFY(TBN_DROPDOWN, AFX_IDW_TOOLBAR, OnToolbarDropDown)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -336,6 +340,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		b3PrintF(B3LOG_NORMAL,"Failed to create toolbar\n");
 		return -1;      // fail to create
 	}
+	m_wndToolBar.b3AddArrow(ID_EDIT_UNDO);
+	m_wndToolBar.b3AddArrow(ID_EDIT_REDO);
 
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
@@ -344,6 +350,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
+
 	b3SetPosition(null);
 	m_wndStatusBar.SetPaneText(4,"");
 
@@ -397,6 +404,47 @@ void CMainFrame::Dump(CDumpContext& dc) const
 }
 
 #endif //_DEBUG
+
+/*************************************************************************
+**                                                                      **
+**                        Toolbar actions for undo/redo                 **
+**                                                                      **
+*************************************************************************/
+
+void CMainFrame::OnToolbarDropDown(NMTOOLBAR* pnmtb, LRESULT *plr)
+{
+//	CAppRenderDoc *pDoc = (CAppRenderDoc *)GetActiveDocument();
+	CAppRenderDoc *pDoc = (CAppRenderDoc *)GetActiveFrame()->GetActiveView()->GetDocument();
+	
+	// Switch on button command id's.
+	switch (pnmtb->iItem)
+	{
+	case ID_EDIT_UNDO:
+		pDoc->b3UndoList();
+		break;
+	
+	case ID_EDIT_REDO:
+		pDoc->b3RedoList();
+		break;
+
+	default:
+		return;
+	}
+/*
+	// load and display popup menu
+	CMenu menu;
+	menu.LoadMenu(nID);
+	CMenu* pPopup = menu.GetSubMenu(0);
+	ASSERT(pPopup);
+	
+	CRect rc;
+	pWnd->SendMessage(TB_GETRECT, pnmtb->iItem, (LPARAM)&rc);
+	pWnd->ClientToScreen(&rc);
+	
+	pPopup->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+		rc.left, rc.bottom, this, &rc);
+*/
+}
 
 /*************************************************************************
 **                                                                      **

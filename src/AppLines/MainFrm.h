@@ -85,6 +85,7 @@ public:
 protected:
 	//{{AFX_MSG(CMainFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnToolbarDropDown(NMTOOLBAR* pnmh, LRESULT* plRes);
 	afx_msg void OnDestroy();
 	afx_msg void OnPrefSave();
 	afx_msg void OnPrefAutosave();
