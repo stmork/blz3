@@ -346,6 +346,10 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath=".\b3Factory.cc"
+				FileType="0">
+			</File>
+			<File
 				RelativePath="b3Init.cc"
 				FileType="0">
 			</File>
@@ -502,6 +506,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\raytrace\b3Condition.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\raytrace\b3Factory.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\raytrace\b3Light.h">

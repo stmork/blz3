@@ -22,7 +22,7 @@
 *************************************************************************/
 
 #include "AppLines.h"
-#include "blz3/raytrace/b3Factory.h"
+#include "b3ExampleScene.h"
 
 /*************************************************************************
 **                                                                      **
@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.25  2005/01/08 15:11:40  sm
+**	- Moved b3ExampleScene into b3Factory
+**
 **	Revision 1.24  2005/01/07 12:38:51  smork
 **	- Bump release.
 **	- Added tool to create object/bbox thumb nails.
 **	- Moved scene factory from Lines to raytrace lib.
-**
+**	
 **	Revision 1.23  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling

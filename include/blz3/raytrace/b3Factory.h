@@ -20,6 +20,8 @@
 #ifndef B3_RAYTRACE_FACTORY_H
 #define B3_RAYTRACE_FACTORY_H
 
+#include "blz3/raytrace/b3BBox.h"
+#include "blz3/raytrace/b3Special.h"
 #include "blz3/raytrace/b3Scene.h"
 
 class b3Factory
