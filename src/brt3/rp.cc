@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2004/05/08 18:40:20  sm
+**	- Fixed minor compile warnings.
+**
 **	Revision 1.3  2004/05/08 11:41:59  sm
 **	- Now have a Utah spoon, a Utah Teacup and the Utah teapot!!!
-**
+**	
 **
 */
 
@@ -83,7 +86,7 @@ public:
 					{
 						b3_patch patch;
 
-						if (sscanf(line,"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+						if (sscanf(line,"%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld,%ld",
 							&patch.m_Indices[ 0],
 							&patch.m_Indices[ 1],
 							&patch.m_Indices[ 2],
@@ -203,8 +206,6 @@ private:
 	void b3CreateTeapot()
 	{
 		b3SplineShape *shape;
-		b3_count       i,xi,xo,xp,x;
-		b3_index       index = 0,pos;
 
 		b3PrintF(B3LOG_NORMAL,"Creating teapot...\n");
 		m_BBox = new b3BBox(BBOX);
