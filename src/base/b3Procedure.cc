@@ -37,10 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2004/05/15 07:51:02  sm
+**	- Some noise optimizations
+**
 **	Revision 1.31  2004/05/14 16:16:52  sm
 **	- Modified water
 **	- Added some water values to its property dialog
-**
+**	
 **	Revision 1.30  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -708,13 +711,14 @@ b3Water::b3Water()
 
 b3Clouds::b3Clouds()
 {
-	b3Vector::b3Init(&m_Anim, 0.1, 0.1, 0.05);
-	b3Vector::b3Init(&m_PosScale,0.01f,0.01f,0.01f);
+	b3Vector::b3Init(&m_Anim,    0.1f,  0.1f,  0.05f);
+	b3Vector::b3Init(&m_PosScale,0.01f, 0.01f, 0.01f);
 	m_EarthRadius = EARTH_RADIUS_KM;
 	m_CloudHeight =   1.0f;
 	m_Scaling     =   5.0f;
 	m_Sharpness   =  10.2f;
 	m_Flags       =   0;
+
 	b3PrepareClouds();
 }
 

@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2004/05/15 07:51:02  sm
+**	- Some noise optimizations
+**
 **	Revision 1.56  2004/05/13 16:17:26  sm
 **	- Added background clouds as special item.
-**
+**	
 **	Revision 1.55  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
@@ -619,6 +622,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	{
 		b3PrintF(B3LOG_FULL,"  preparing clouds...\n");
 		m_Clouds = b3GetCloudBackground(true);
+		m_Clouds->b3PrepareClouds();
 	}
 	else
 	{

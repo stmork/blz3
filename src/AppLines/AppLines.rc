@@ -2794,6 +2794,31 @@ CAPTION "Wasseroberfläche"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "",IDC_PROPERTY,10,15,220,145,NOT WS_GROUP
+    LTEXT           "Windstärke",IDC_STATIC,10,165,37,8
+    EDITTEXT        IDC_EDIT_WIND_AMP,10,175,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_WIND_AMP,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,50,175,11,14
+    LTEXT           "min. Wind",IDC_STATIC,10,195,32,8
+    EDITTEXT        IDC_EDIT_WIND_MIN,10,206,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_WIND_MIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,50,206,11,14
+    LTEXT           "Windfrequenz",IDC_STATIC,70,165,45,8
+    EDITTEXT        IDC_EDIT_WIND_FREQ,70,175,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_WIND_FREQ,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,110,175,11,14
+    LTEXT           "Wasserstärke",IDC_STATIC,70,195,44,8
+    EDITTEXT        IDC_EDIT_KM,70,206,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_KM,"msctls_updown32",UDS_ALIGNRIGHT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,110,206,
+                    11,14
+    LTEXT           "Zeitraffer",IDC_STATIC,130,165,29,8
+    EDITTEXT        IDC_EDIT_SCALE_TIME,130,175,40,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_SPIN_SCALE_TIME,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,170,175,11,14
     CONTROL         "",IDC_PREVIEW_BUMP,"Static",SS_BLACKFRAME | SS_SUNKEN,
                     240,25,160,140
     CONTROL         "automatische Aktualisierung",IDC_AUTO_REFRESH,"Button",
@@ -2801,31 +2826,6 @@ BEGIN
     PUSHBUTTON      "Aktualisieren",IDC_REFRESH,350,175,50,14
     DEFPUSHBUTTON   "OK",IDOK,10,225,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,350,225,50,14
-    EDITTEXT        IDC_EDIT_WIND_AMP,10,175,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPIN_WIND_AMP,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,50,175,11,14
-    LTEXT           "Windstärke",IDC_STATIC,10,165,37,8
-    EDITTEXT        IDC_EDIT_WIND_FREQ,70,175,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPIN_WIND_FREQ,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,110,175,11,14
-    LTEXT           "Windfrequenz",IDC_STATIC,70,165,45,8
-    EDITTEXT        IDC_EDIT_WIND_MIN,10,206,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPIN_WIND_MIN,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,50,206,11,14
-    LTEXT           "min. Wind",IDC_STATIC,10,195,32,8
-    EDITTEXT        IDC_EDIT_KM,70,206,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPIN_KM,"msctls_updown32",UDS_ALIGNRIGHT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,110,206,
-                    11,14
-    LTEXT           "Wasserstärke",IDC_STATIC,70,195,44,8
-    EDITTEXT        IDC_EDIT_SCALE_TIME,130,175,40,12,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_SPIN_SCALE_TIME,"msctls_updown32",
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
-                    UDS_NOTHOUSANDS,170,175,11,14
-    LTEXT           "Zeitraffer",IDC_STATIC,130,165,29,8
 END
 
 IDD_BUMP_NOISE DIALOG DISCARDABLE  0, 0, 367, 191

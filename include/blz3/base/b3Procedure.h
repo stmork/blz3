@@ -85,47 +85,79 @@ public:
 		return b3FractionalBrownianMotion(P,octaves,2.0,0.5);
 	}
 
-	static inline b3_f64  b3FractionalBrownianMotion(b3_vector *p,b3_count octaves,b3_f64 lacunarity,b3_f64 gain)
+	static inline b3_f64  b3FractionalBrownianMotion(
+		b3_vector *p,
+		b3_count   octaves,
+		b3_f32     lacunarity,
+		b3_f32     gain)
 	{
-		b3_f64    sum = 0;
-		b3_f64    x,y,z;
-		b3_f64    amp = 1;
-		b3_loop   i;
+		b3_f32 B3_ALIGN_16 v[4];
+		b3_f32 B3_ALIGN_16 factor[4];
+		b3_f64             sum = 0;
+		b3_loop            i,k;
 
-		x = p->x;
-		y = p->y;
-		z = p->z;
+		v[0] = 1;    // amplification
+		v[1] = p->x;
+		v[2] = p->y;
+		v[3] = p->z;
+		
+		factor[0] = gain;
+		factor[1] = lacunarity;
+		factor[2] = lacunarity;
+		factor[3] = lacunarity;
+
 		for (i = 0;i < octaves;i++)
 		{
-			sum  += amp * b3NoiseVector(x,y,z);
-			amp  *= gain;
-			x    *= lacunarity;
-			y    *= lacunarity;
-			z    *= lacunarity;
+			sum  += v[0] * b3NoiseVector(v[1],v[2],v[3]);
+			for (k = 0;k < 4;k++)
+			{
+				v[k] *= factor[k];
+			}
 		}
 		return sum;
 	}
 
-	static inline void b3FractionalBrownianMotion(b3_vector *p,b3_count octaves,b3_f64 lacunarity,b3_f64 gain,b3_vector *result)
+	static inline void b3FractionalBrownianMotion(
+		b3_vector *p,
+		b3_count   octaves,
+		b3_f32     lacunarity,
+		b3_f32     gain,
+		b3_vector *result)
 	{
-		b3_vector pp  = *p;
-		b3_vector aux;
-		b3_f64    amp = 1;
-		b3_loop   i;
+		b3_f32 B3_ALIGN_16 v[4];
+		b3_f32 B3_ALIGN_16 factor[4];
+		b3_f32 B3_ALIGN_16 aux[4];
+		b3_f32 B3_ALIGN_16 sum[4];
+		b3_loop   i,k;
 
-		b3Vector::b3Init(result);
+		v[0] = 1;    // amplification
+		v[1] = p->x;
+		v[2] = p->y;
+		v[3] = p->z;
+		
+		factor[0] = gain;
+		factor[1] = lacunarity;
+		factor[2] = lacunarity;
+		factor[3] = lacunarity;
+
+		for (k = 0;k < 4;k++)
+		{
+			aux[k] = 0;
+			sum[k] = 0;
+		}
 		for (i = 0;i < octaves;i++)
 		{
-			b3NoiseDeriv(pp.x,pp.y,pp.z,&aux);
+			b3NoiseDeriv(v[1],v[2],v[3],(b3_vector *)&sum[0]);
 
-			result->x += aux.x * amp;
-			result->y += aux.y * amp;
-			result->z += aux.z * amp;
-			amp       *= gain;
-			pp.x *= lacunarity;
-			pp.y *= lacunarity;
-			pp.z *= lacunarity;
+			for (k = 0;k < 4;k++)
+			{
+				sum[k] += aux[k] * v[0];
+				v[k]   *= factor[k];
+			}
 		}
+		result->x = sum[0];
+		result->y = sum[1];
+		result->z = sum[2];
 	}
 
 	static b3_f64  b3Marble      (b3_vector *d);
@@ -199,7 +231,7 @@ public:
 
 	inline b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
 	{
-		b3_f64    sight;
+		b3_f64 sight;
 
 		if (ray->dir.z > 0)
 		{
