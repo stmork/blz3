@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	divx.cc $
-**	$Release:	Dortmund 2004 $
+**	$Release:	Dortmund 2004, 2005 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **      Blizzard III - Encodes single frames into a DivX
 **
-**      (C) Copyright 2004  Steffen A. Mork
+**      (C) Copyright 2004, 2005  Steffen A. Mork
 **          All Rights Reserved
 **
 **
@@ -49,11 +49,15 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.7  2005/01/14 08:51:05  smork
+**	- Corrected lens flares to be in front of any object.
+**	- Added start banner to divx tool.
+**
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.5  2004/08/26 07:08:10  sm
 **	- Higher bitrate in DivX encoder.
 **	- Disbled unnecessary AUTO_NORMAL option in OpenGL renderer.
@@ -81,6 +85,25 @@ extern "C"
 **                                                                      **
 *************************************************************************/
 
+static void b3Banner(const char *command)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III movie maker (DivX)\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+#ifdef BLZ3_USE_DIVX4LINUX
+		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
+		b3PrintF(B3LOG_NORMAL,"%s Divx-File {frame images}\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
+#else
+		b3PrintF(B3LOG_NORMAL,"%s has no DivX support!\n",command);
+#endif
+	}
+	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+}
+
 int main(int argc,char *argv[])
 {
 #ifdef BLZ3_USE_DIVX4LINUX
@@ -97,6 +120,12 @@ int main(int argc,char *argv[])
 #ifdef BLZ3_USE_AVILIB
 	avi_t        *out;
 #endif
+
+	if (argc <= 1)
+	{
+		b3Banner(argv[0]);
+		exit(EXIT_SUCCESS);
+	}
 
 #ifdef BLZ3_USE_AVILIB
 	out = AVI_open_output_file(argv[1]);

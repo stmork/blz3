@@ -298,6 +298,9 @@ public:
 	              b3RayRow(b3Scene *scene,b3Display *display,b3_coord y,b3_res xSize,b3_res ySize);
 	virtual      ~b3RayRow() {}
 	virtual void  b3Raytrace();
+
+protected:
+	        void  b3Shade(b3_ray *ray, b3_f64 fx, b3_f64 fy);
 };
 
 enum b3_row_state

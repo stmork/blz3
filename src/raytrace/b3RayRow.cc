@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/01/14 08:51:05  smork
+**	- Corrected lens flares to be in front of any object.
+**	- Added start banner to divx tool.
+**
 **	Revision 1.13  2004/06/05 09:57:08  sm
 **	- Fixed uninitialized data.
-**
+**	
 **	Revision 1.12  2004/05/30 20:43:19  sm
 **	- Fixed casting error under intel compiler.
 **	
@@ -124,6 +128,19 @@ b3RayRow::b3RayRow(
 	m_preDir.z  = (m_Scene->m_ViewPoint.z - m_Scene->m_EyePoint.z) - m_Scene->m_Width.z + m_fy * m_Scene->m_Height.z;
 }
 
+void b3RayRow::b3Shade(b3_ray *ray,b3_f64 fx, b3_f64 fy)
+{
+	if (!m_Shader->b3Shade(ray))
+	{
+		m_Scene->b3GetBackgroundColor(ray,fx,fy);
+	}
+
+	if (m_Scene->m_LensFlare != null)
+	{
+		m_Scene->b3MixLensFlare(ray);
+	}
+}
+
 void b3RayRow::b3Raytrace()
 {
 	b3_res   x;
@@ -145,16 +162,14 @@ void b3RayRow::b3Raytrace()
 		ray.inside = false;
 		ray.t      = m_t;
 
-		if (!m_Shader->b3Shade(&ray))
-		{
-			m_Scene->b3GetBackgroundColor(&ray,fx,m_fy);
-		}
+		b3Shade(&ray, fx, m_fy);
+		m_buffer[x] = ray.color;
+
 		m_preDir.x += m_Scene->m_xStepDir.x;
 		m_preDir.y += m_Scene->m_xStepDir.y;
 		m_preDir.z += m_Scene->m_xStepDir.z;
 		fx         += m_fxStep;
 
-		m_buffer[x] = ray.color;
 	}
 	m_Display->b3PutRow(this);
 	if (m_Display->b3IsCancelled(m_xSize - 1,m_y))
@@ -232,16 +247,13 @@ void b3SupersamplingRayRow::b3Raytrace()
 		ray.inside = false;
 		ray.t      = m_t;
 
-		if (!m_Shader->b3Shade(&ray))
-		{
-			m_Scene->b3GetBackgroundColor(&ray,fxRight,m_fy);
-		}
+		b3Shade(&ray,fxRight,m_fy);
+		m_ThisResult[x] = ray.color;
+
 		fxRight += m_fxStep;
 		dir.x   += m_Scene->m_xStepDir.x;
 		dir.y   += m_Scene->m_xStepDir.y;
 		dir.z   += m_Scene->m_xStepDir.z;
-
-		m_ThisResult[x] = ray.color;
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();
@@ -363,10 +375,8 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z += m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Shader->b3Shade(&ray))
-			{
-				m_Scene->b3GetBackgroundColor(&ray,fxRight,fyUp);
-			}
+
+			b3Shade(&ray,fxRight,fyUp);
 			m_ThisResult[x] += ray.color;
 
 			ray.dir.x  = (dir.x -= m_Scene->m_xHalfDir.x);
@@ -374,10 +384,8 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z -= m_Scene->m_xHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Shader->b3Shade(&ray))
-			{
-				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyUp);
-			}
+
+			b3Shade(&ray,fxLeft,fyUp);
 			m_ThisResult[x] += ray.color;
 
 			ray.dir.x  = (dir.x -= m_Scene->m_yHalfDir.x);
@@ -385,10 +393,8 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 			ray.dir.z  = (dir.z -= m_Scene->m_yHalfDir.z);
 			ray.inside = false;
 			ray.t      =  m_t;
-			if (!m_Shader->b3Shade(&ray))
-			{
-				m_Scene->b3GetBackgroundColor(&ray,fxLeft,fyDown);
-			}
+
+			b3Shade(&ray,fxLeft,fyDown);
 			m_ThisResult[x]  = (m_ThisResult[x] + ray.color) * 0.25f;
 
 			ray.dir.x = (dir.x += m_Scene->m_xHalfDir.x);
@@ -480,10 +486,7 @@ void b3DistributedRayRow::b3Raytrace()
 			ray.inside = false;
 			ray.t      = m_t;
 
-			if (!m_Shader->b3Shade(&ray))
-			{
-				m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
-			}
+			b3Shade(&ray,fx + sx,m_fy + sy);
 			result += ray.color;
 		}
 		m_preDir.x += m_Scene->m_xStepDir.x;
@@ -574,11 +577,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 				ray.inside = false;
 				ray.t      = m_t;
 
-				if (!m_Shader->b3Shade(&ray))
-				{
-					m_Scene->b3GetBackgroundColor(&ray,fx + sx,m_fy + sy);
-				}
-
+				b3Shade(&ray,fx + sx,m_fy + sy);
 				m_Color[x]  += ray.color;
 				m_buffer[x]  = m_Color[x] / m_SPP;
 			}

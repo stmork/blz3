@@ -33,6 +33,10 @@
 
 /*
 **	$Log$
+**	Revision 1.74  2005/01/14 08:51:05  smork
+**	- Corrected lens flares to be in front of any object.
+**	- Added start banner to divx tool.
+**
 **	Revision 1.73  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -41,7 +45,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.72  2004/12/14 07:40:44  smork
 **	- Put scene/bbox traversion methods into their own source file.
 **	
@@ -1081,11 +1085,6 @@ void b3Scene::b3GetBackgroundColor(
 		default:
 			ray->color.b3Init(m_ShadowBrightness,m_ShadowBrightness,m_ShadowBrightness);
 			break;
-	}
-
-	if (m_LensFlare != null)
-	{
-		b3MixLensFlare (ray);
 	}
 }
 
