@@ -34,6 +34,7 @@ public:
 	       b3Base<b3Tx> *b3GetTxHead();
 private:
 	       b3_bool       b3ReloadTexture(b3Tx *texture,const char *name=null);
+	       b3Tx         *b3FindTextureUnsafe(const char *name);
 };
 
 #endif
