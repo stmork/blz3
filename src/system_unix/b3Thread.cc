@@ -29,6 +29,10 @@
 #include <errno.h>
 #include <string.h>
 
+#ifdef __linux__
+#include <sys/utsname.h>
+#endif
+
 /*************************************************************************
 **                                                                      **
 **                        Blizzard III development log                  **
@@ -37,10 +41,14 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/01/14 14:42:35  smork
+**	- Take into account that getrusage() time measuring was fixed in
+**	  Linux kernel 2.6.9 and later. getrusage() behaves now POSIX conform.
+**
 **	Revision 1.19  2004/11/26 16:28:17  smork
 **	- Equalizing VERBOSE print outs.
 **	- pthread error messages only in _DEBUG version.
-**
+**	
 **	Revision 1.18  2004/08/18 07:32:00  sm
 **	- Fixed b3Thread::b3Stop() bug on gcc 2.95 systems.
 **	
@@ -393,8 +401,27 @@ b3_u32 b3Thread::b3Wait()
 void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 {
 #ifdef __linux__
-	span->m_uTime += m_Span.m_uTime;
-	span->m_sTime += m_Span.m_sTime;
+	struct utsname uinfo;
+	b3_bool        add = true;
+
+	if (uname(&uinfo) == 0)
+	{
+		int a,b,c;
+
+		if (sscanf(uinfo.release,"%d.%d.%d",&a,&b,&c) == 3)
+		{
+			if ((a * 100000 + b * 1000 + c) >= 206009)
+			{
+				add = false;
+			}
+		}
+	}
+	
+	if (add)
+	{
+		span->m_uTime += m_Span.m_uTime;
+		span->m_sTime += m_Span.m_sTime;
+	}
 #endif
 } 
 
