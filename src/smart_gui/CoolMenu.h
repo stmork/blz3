@@ -122,10 +122,20 @@ protected:
 		return result;
 	}
 
+	inline int GetButtonIndex(UINT nID)
+	{
+		return GetButtonIndex(WORD(nID & 0xffff));
+	}
+
 	// Get ACCEL structure associated with a given command ID
 	ACCEL* GetAccel(WORD nID) {
 		void* val;
 		return m_mapIDtoAccel.Lookup(nID, val) ? (ACCEL*)val : NULL;
+	}
+
+	ACCEL* GetAccel(UINT nID)
+	{
+		return GetAccel(WORD(nID & 0xffff));
 	}
 
 	// window proc to hook frame using CSubclassWnd implementation
