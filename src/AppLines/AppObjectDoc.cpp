@@ -45,9 +45,19 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.46  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.45  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -351,7 +361,7 @@ b3Scene *CAppObjectDoc::b3GetParentScene()
 
 b3_u32 CAppObjectDoc::b3GetParentShading()
 {
-	return m_LinesDoc != null ? m_LinesDoc->m_Scene->b3GetClassType() : TRACEPHOTO_MORK;
+	return (m_LinesDoc != null) && (m_LinesDoc->m_Scene != null) ? m_LinesDoc->m_Scene->b3GetClassType() : TRACEPHOTO_MORK;
 }
 
 BOOL CAppObjectDoc::OnNewDocument()

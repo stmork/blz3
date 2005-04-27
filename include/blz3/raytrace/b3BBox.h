@@ -22,6 +22,7 @@
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3PickInfo.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3CameraProjection.h"
 #include "blz3/base/b3Render.h"
 
 /*************************************************************************
@@ -36,6 +37,14 @@
 class B3_PLUGIN b3BBox : public b3Item, public b3RenderObject
 {
 	static const b3_gl_line m_BBoxIndices[12 * 2];
+
+	enum b3_bbox_visibility
+	{
+		B3_BBOX_UNKNOWN,
+		B3_BBOX_INVISIBLE,
+		B3_BBOX_PARTIALLY_VISIBLE,
+		B3_BBOX_VISIBLE
+	}                m_Visibility;
 
 	// Inherited from Blizzard II
 	b3_u32           m_Type;               // texture type
@@ -78,18 +87,18 @@ public:
 	       void            b3Update();
 		   void            b3UpdateBBox();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
-	       void            b3ComputeBoxPolar(b3_ray *ray); 
 		   b3_count        b3Count();
 		   b3_bool         b3PrepareBBox(b3_bool recursive = false);
 		   char           *b3GetName();
 		   b3_bool         b3BacktraceRecompute(b3BBox *search);
 		   b3Base<b3Item> *b3FindBBoxHead(b3BBox  *bbox);
 		   b3BBox         *b3FindParentBBox(b3Shape *shape);
-	       b3_bool         b3Intersect(b3_ray *ray);
+	       b3_bool         b3Intersect(b3_ray *ray, b3_bool check_visibility);
 		   b3CSGShape     *b3IntersectCSG(b3_ray *ray);
 		   void            b3CollectBBoxes(b3Array<b3BBoxReference> &array);
 		   void            b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array);
 		   void            b3CollectBBoxes(b3_vector *lower,b3_vector *upper,b3Array<b3BBox *> *array);
+		   void            b3ComputeVisibility(b3CameraProjection *projection);
 
 		   void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
  	static void            b3Reorg(b3Base<b3Item> *depot,b3Base<b3Item> *base,b3_count level,b3_count rec,b3Item *insert_after=null);
@@ -106,6 +115,21 @@ public:
 	inline b3Base<b3Item> *b3GetBBoxHead()
 	{
 		return &m_Heads[1];
+	}
+
+	inline void            b3ComputeBoxPolar(b3_ray *ray)
+	{
+		b3_f64 x = ray->ipoint.x;
+		b3_f64 y = ray->ipoint.y;
+		b3_f64 z = ray->ipoint.z;
+
+		ray->polar.m_BoxPolar.x = (x - m_DimBase.x) / m_DimSize.x;
+		ray->polar.m_BoxPolar.y = (y - m_DimBase.y) / m_DimSize.y;
+		ray->polar.m_BoxPolar.z = (z - m_DimBase.z) / m_DimSize.z;
+
+		ray->polar.m_BBoxOriginal.x = (b3_f32)(x * m_Inverse.m11 + y * m_Inverse.m12 + z * m_Inverse.m13 + m_Inverse.m14);
+		ray->polar.m_BBoxOriginal.y = (b3_f32)(x * m_Inverse.m21 + y * m_Inverse.m22 + z * m_Inverse.m23 + m_Inverse.m24);
+		ray->polar.m_BBoxOriginal.z = (b3_f32)(x * m_Inverse.m31 + y * m_Inverse.m32 + z * m_Inverse.m33 + m_Inverse.m34);
 	}
 
 protected:

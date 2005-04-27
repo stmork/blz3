@@ -36,9 +36,19 @@
 
 /*
 **	$Log$
+**	Revision 1.43  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.42  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.41  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -303,11 +313,7 @@ CMainFrame::CMainFrame()
 	// TODO: add member initialization code here
 	CB3App       *app   = CB3GetApp();
 #ifndef _DEBUG
-	b3_log_level  level = B3LOG_NORMAL;
-#endif
-
-#ifndef _DEBUG
-	level = (b3_log_level)app->b3ReadInt("Settings","DebugLevel",B3LOG_NORMAL);
+	b3_log_level  level = (b3_log_level)app->b3ReadInt("Settings","DebugLevel",B3LOG_NORMAL);
 	b3Log::b3SetLevel(level);
 #endif
 

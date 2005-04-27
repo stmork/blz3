@@ -32,6 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.3  2004/05/12 14:13:27  sm
 **	- Added bump dialogs:
 **	  o noise
@@ -46,7 +56,7 @@
 **	  toolbar and camera property dialog.
 **	- Added bump example bwd
 **	- Recounted resource.h (full compile necessary)
-**
+**	
 **	Revision 1.2  2004/05/09 15:06:56  sm
 **	- Added inverse transformation for mapping.
 **	- Unified scale mapping source via b3Scaling.
@@ -122,6 +132,9 @@ BOOL CPageScaling::OnInitDialog()
 	CB3PropertyPage::OnInitDialog();
 	
 	// TODO: Add extra initialization here
+	m_xScaleCtrl.b3SetRange(0.0001,10000);
+	m_yScaleCtrl.b3SetRange(0.0001,10000);
+	m_zScaleCtrl.b3SetRange(0.0001,10000);
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE

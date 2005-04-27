@@ -43,19 +43,22 @@ class b3Noise : public b3Mem
 	static       b3Spline      m_MarbleSpline;
 	static       b3_f32        m_MarbleKnots[16];
 	static       b3_vector     m_MarbleControls[8];
+
 	static       b3Spline      m_WoodSpline;
 	static       b3_f32        m_WoodKnots[16];
 	static       b3_vector     m_WoodControls[8];
+
 	static       b3Spline      m_WaveSpline;
 	static       b3_f32        m_WaveKnots[14];
 	static       b3_vector     m_WaveControls[10];
-	static const b3Color m_HellColors[4];
-	static const b3Color m_MarbleColors[4];
-	static const b3_u08  m_OM[4][8][3];
 
-	static b3Noise       m_Noise;
-	static b3_noisetype *m_NoiseTable;
-	static b3_f64        epsilon;
+	static const b3Color       m_HellColors[4];
+	static const b3Color       m_MarbleColors[4];
+	static const b3_u08        m_OM[4][8][3];
+
+	static b3Noise             m_Noise;
+	static b3_noisetype       *m_NoiseTable;
+	static b3_f64              epsilon;
 
 	               b3Noise();
 

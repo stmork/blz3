@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3Condition.h"
 #include "blz3/raytrace/b3PickInfo.h"
+#include "blz3/raytrace/b3BaseTrans.h"
 
 /*************************************************************************
 **                                                                      **
@@ -61,30 +62,10 @@
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
-/*************************************************************************
-**                                                                      **
-**                        Base class for all 3D shapes with base        **
-**                        transformation.                               **
-**                                                                      **
-*************************************************************************/
-
-class B3_PLUGIN b3ShapeBaseTrans
+class B3_PLUGIN b3ShapeBaseTransformation : public b3BaseTransformation
 {
-protected:
-	b3_vector         m_Normals[3];       // cross products
-	b3_f64            m_Denom;            // denominator of lin. system
-	b3_f64            m_DirLen[3];        // length of direction vectors
-
-public:
-	b3_vector         m_Base;
-	b3_vector         m_Dir1,m_Dir2,m_Dir3;
-
 public:
 	b3_bool b3NormalDeriv(b3_ray *ray);
-
-protected:
-	b3_bool b3Prepare();
-	void    b3BaseTrans(b3_line64 *in,b3_line64 *out);
 };
 
 class b3Material;
@@ -361,7 +342,7 @@ protected:
 **                                                                      **
 *************************************************************************/
 
-class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3Shape3 : public b3SimpleShape, public b3ShapeBaseTransformation
 {
 protected:
 	B3_ITEM_BASE(b3Shape3);
@@ -478,7 +459,7 @@ protected:
 **                                                                      **
 *************************************************************************/
 
-class B3_PLUGIN b3Torus : public b3SimpleShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3Torus : public b3SimpleShape, public b3ShapeBaseTransformation
 {
 protected:
 	b3_s32            m_lSize;
@@ -903,7 +884,7 @@ protected:
 **                                                                      **
 *************************************************************************/
 
-class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3CSGShape3 : public b3CSGShape, public b3ShapeBaseTransformation
 {
 protected:
 	B3_ITEM_BASE(b3CSGShape3);
@@ -1024,7 +1005,7 @@ protected:
 **                                                                      **
 *************************************************************************/
 
-class B3_PLUGIN b3CSGTorus : public b3CSGShape, public b3ShapeBaseTrans
+class B3_PLUGIN b3CSGTorus : public b3CSGShape, public b3ShapeBaseTransformation
 {
 	b3_f64             m_aQuad,m_bQuad;      // squared lengths of aRad, bRad
 

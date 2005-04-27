@@ -32,10 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.6  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
-**
+**	
 **	Revision 1.5  2003/02/23 21:15:41  sm
 **	- First shape picking
 **	
@@ -83,7 +93,7 @@ b3PickPoint::b3PickPoint(
 void b3PickPoint::b3Draw(b3DrawContext *dc)
 {
 	// Compute window coords
-	m_RenderView->b3Project(m_Pos,m_x,m_y);
+	m_RenderView->b3Project(m_Pos,m_x,m_y,m_z);
 
 	dc->FillSolidRect(
 		m_x - b3PickBase::m_PickSize,
@@ -103,7 +113,7 @@ b3_bool b3PickPoint::b3Moved(b3_coord x,b3_coord y)
 		b3_vector point = *m_Pos;
 
 		// Unproject and snap to grid if possible
-		m_RenderView->b3Unproject(x,y,&point);
+		m_RenderView->b3Unproject(x,y,m_z,&point);
 		if (m_Info != null)
 		{
 			m_Info->b3SnapToGrid(&point);
@@ -152,7 +162,7 @@ void b3PickDir::b3Draw(b3DrawContext *dc)
 	b3Vector::b3Add(m_OrigPos,m_OrigDir,&m_AuxPos);
 	b3PickPoint::b3Draw(dc);
 	
-	m_RenderView->b3Project(m_OrigPos,x,y);
+	m_RenderView->b3Project(m_OrigPos,x,y,m_z);
 	dc->MoveTo(m_x,m_y);
 	dc->LineTo(x,y);
 }

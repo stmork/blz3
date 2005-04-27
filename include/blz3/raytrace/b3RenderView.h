@@ -102,10 +102,7 @@ public:
 	void              b3Original();
 	void              b3Scale(b3_f64 scale);
 	void              b3Move(b3_f64 xDir,b3_f64 yDir);
-	void              b3Project(const b3_vector *point,b3_coord &x,b3_coord &y);
-	void              b3Project(const b3_vector *point,b3_f64 &xRel,b3_f64 &yRel);
-	void              b3Unproject(const b3_coord x, const b3_coord y, b3_vector *point);
-	void              b3Unproject(const b3_f64 xRel,const b3_f64 yRel,b3_vector *point);
+	void              b3Project(const b3_vector *point,b3_f64 &xRel,b3_f64 &yRel,b3_f64 &zRel);
 	void              b3GetProjectionBase(b3_vector *eye);
 	void              b3GetViewDirection(b3_vector *direction);
 	b3_f64            b3GetPositionAngle(b3_vector *center,b3_vector *pos);
@@ -115,9 +112,45 @@ public:
 	void              b3SetTranslationStepper(b3_vector *steps,b3_vector *mover,b3_action_mode mode);
 	b3_f64            b3SetRotationStepper(b3_vector *steps,b3_vector *axis_dir,b3_action_mode mode);
 
+	inline void       b3Project(const b3_vector *point,b3_coord &x,b3_coord &y,b3_f64 &z)
+	{
+		b3_f64 xRel,yRel;
+
+		b3Project(point,xRel,yRel,z);
+		x = (b3_coord)floor(xRel * m_xRes + 0.5);
+		y = (b3_coord)floor(yRel * m_yRes + 0.5);
+	}
+
+	inline void       b3Unproject(const b3_coord x, const b3_coord y, b3_vector *point)
+	{
+		b3Unproject(x, y, 0.5, point);
+	}
+
+	inline void       b3Unproject(const b3_f64 xRel,const b3_f64 yRel,b3_vector *point)
+	{
+		b3Unproject(xRel, yRel, 0.5, point);
+	}
+
+	inline void       b3Unproject(const b3_coord x, const b3_coord y, const b3_f64 z,b3_vector *point)
+	{
+		b3UnprojectInternal(
+			(b3_f64)x,
+			(b3_f64)(m_yRes - y),
+			z,point);
+	}
+
+	inline void       b3Unproject(const b3_f64 xRelParam, const b3_f64 yRelParam, const b3_f64 zRelParam,b3_vector *point)
+	{
+		b3UnprojectInternal(
+			xRelParam * m_xRes,
+			m_yRes - yRelParam * m_yRes,
+			zRelParam,point);
+	}
+
 private:
 	b3RenderViewItem *b3NewRenderViewItem(b3RenderViewItem *lastItem = null);
 	b3_f64            b3ComputeFarClippingPlane();
+	void              b3UnprojectInternal(const b3_f64 xRel,const b3_f64 yRel,const b3_f64 z, b3_vector *point);
 };
 
 #endif

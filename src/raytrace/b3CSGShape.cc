@@ -31,6 +31,16 @@
 
 /*
 **      $Log$
+**      Revision 1.18  2005/04/27 13:55:01  sm
+**      - Fixed open/new file error when last path is not accessable.
+**      - Divided base transformation into more general version and
+**        some special versions for quadric shapes and camera
+**        projections.
+**      - Optimized noise initialization.
+**      - Added correct picking with project/unproject for all
+**        view modes. This uses GLU projectton methods.
+**      - Added optimization for first level bounding box intersections.
+**
 **      Revision 1.17  2005/01/02 19:15:25  sm
 **      - Fixed signed/unsigned warnings
 **
@@ -345,7 +355,7 @@ b3_bool b3CSGShape3::b3Prepare()
 {
 	b3_bool result = false;
 
-	if (b3ShapeBaseTrans::b3Prepare())
+	if (b3ShapeBaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare();
 	}

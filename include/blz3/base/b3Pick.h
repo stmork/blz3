@@ -26,6 +26,7 @@ class b3Pick : public b3Link<b3Pick>
 {
 protected:
 	b3_coord m_x,m_y;
+	b3_f64   m_z;
 
 public:
 	                         b3Pick(b3_coord x=0,b3_coord y=0);

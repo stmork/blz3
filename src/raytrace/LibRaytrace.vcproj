@@ -286,6 +286,10 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath=".\b3BaseTrans.cc"
+				FileType="0">
+			</File>
+			<File
 				RelativePath="b3BBox.cc"
 				FileType="0">
 			</File>
@@ -299,6 +303,10 @@
 			</File>
 			<File
 				RelativePath="b3BumpSampler.cc"
+				FileType="0">
+			</File>
+			<File
+				RelativePath=".\b3CameraProjection.cc"
 				FileType="0">
 			</File>
 			<File
@@ -500,6 +508,9 @@
 				RelativePath="..\..\include\blz3\raytrace\b3Base.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\raytrace\b3BaseTrans.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\raytrace\b3BBox.h">
 			</File>
 			<File
@@ -507,6 +518,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\raytrace\b3BumpSampler.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\raytrace\b3CameraProjection.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\raytrace\b3Condition.h">

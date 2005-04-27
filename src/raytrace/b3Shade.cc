@@ -35,13 +35,23 @@
 
 /*
 **	$Log$
+**	Revision 1.57  2005/04/27 13:55:02  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.56  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.55  2004/10/05 09:29:22  sm
 **	- Donw some documentations.
 **	
@@ -413,7 +423,7 @@ b3_bool b3Shader::b3Shade(
 	ray->dir.y *= denom;
 	ray->dir.z *= denom;
 
-	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray))
+	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, (b3_bool)(depth_count == 0)))
 	{
 		bbox  = ray->bbox;
 		shape = ray->shape;

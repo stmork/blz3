@@ -37,9 +37,19 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.46  2005/02/02 09:08:25  smork
 **	- Fine tuning of epsilon.
-**
+**	
 **	Revision 1.45  2004/12/30 16:27:38  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -240,18 +250,14 @@
 #define NOISEMAXALLOC    (NOISEMAX)
 #define NOISEMASK        ((NOISEMAX) - 1)
 #define NOISEDIM         3
+#define NOISESIZE        (NOISEMAX * NOISEMAX * NOISEMAX)
 
 #define INDEX3D(x,y,z)   ((((\
 	((z) & NOISEMASK)  << NOISEBITS) +\
 	((y) & NOISEMASK)) << NOISEBITS) +\
 	((x) & NOISEMASK))
 
-#define DIMSIZE          (NOISEMAXALLOC * NOISEMAXALLOC * NOISEMAXALLOC)
-
 #define MAXVAL           255
-#define mul4b(a,b,c,d)   ((a)*(b)*(c)*(d))
-#define scal             (NOISEMAX)
-
 #define mSin(x)          ((sin(x) + 1.0) * 0.5)
 #define mMod(x)          ((fabs(x) * 0.5 / M_PI) - floor(fabs(x) * 0.5 / M_PI))
 
@@ -313,29 +319,19 @@ b3_f64        b3Noise::epsilon      = FLT_EPSILON;
 
 b3Noise::b3Noise ()
 {
-	b3_noisetype *Table;
-	b3_coord      x,y,z,d;
-	b3_count      i;
-
 	if (m_NoiseTable == null)
 	{
-		m_NoiseTable = (b3_noisetype *)b3Alloc(
-			NOISEDIM      *
-			NOISEMAXALLOC *
-			NOISEMAXALLOC *
-			NOISEMAXALLOC * sizeof(b3_noisetype));
+		b3_count i,max = NOISEDIM * NOISESIZE;
+
+		m_NoiseTable = (b3_noisetype *)b3Alloc(max * sizeof(b3_noisetype));
 		if (m_NoiseTable == null)
 		{
 			B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
 		}
 
-		for (d = 0;d < NOISEDIM;d++)
-		for (x = 0;x < NOISEMAX;x++)
-		for (y = 0;y < NOISEMAX;y++)
-		for (z = 0;z < NOISEMAX;z++)
+		for (i = 0;i < max;i++)
 		{
-			Table = &m_NoiseTable[d * DIMSIZE];
-			Table[INDEX3D(x,y,z)] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
+			m_NoiseTable[i] = (b3_noisetype)B3_IRAN(MAXVAL) / MAXVAL;
 		}
 
 		// init marble spline
@@ -535,7 +531,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 	b3_f32   fz,
 	b3_index d)
 {
-	b3_noisetype *NoiseTable = &m_NoiseTable[d *DIMSIZE];
+	b3_noisetype *NoiseTable = &m_NoiseTable[d * NOISESIZE];
 	b3_f32        B3_ALIGN_16 a[4],b[4],c[4];
 	b3_f32        rx = 1.0 - fx;
 	b3_f32        ry = 1.0 - fy;
@@ -636,9 +632,9 @@ void b3Noise::b3NoiseDeriv (
 	b3_f64     dz,
 	b3_vector *RVec)
 {
-	dx = fabs(dx * scal + 15000);
-	dy = fabs(dy * scal + 15000);
-	dz = fabs(dz * scal + 15000);
+	dx = fabs(dx * NOISEMAX + 15000);
+	dy = fabs(dy * NOISEMAX + 15000);
+	dz = fabs(dz * NOISEMAX + 15000);
 	RVec->x = b3GradNoise (dx,dy,dz,0);
 	RVec->y = b3GradNoise (dx,dy,dz,1);
 	RVec->z = b3GradNoise (dx,dy,dz,2);
@@ -753,6 +749,7 @@ b3_f64 b3Noise::b3Wave(b3_vector *point)
 	n = b3NoiseVector(point->x * 0.5,point->y,point->z);
 	q = b3Math::b3Frac(point->x * 0.5 + n,(b3_f64)m_WaveSpline.control_max);
 	m_WaveSpline.b3DeBoorClosed (&v,0,q);
+
 	return mSin(point->y * 10 + v.z * 2);
 }
 

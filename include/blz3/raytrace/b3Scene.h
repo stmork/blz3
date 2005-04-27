@@ -167,10 +167,10 @@ public:
 		    b3_bool          b3PrepareScene(b3_res xSize,b3_res ySize);
 		    void             b3Raytrace(b3Display *display);
 		    void             b3AbortRaytrace();
-		    inline b3_bool   b3Intersect(b3_ray *ray,b3_f64 max = DBL_MAX)
+		    inline b3_bool   b3Intersect(b3_ray *ray,b3_bool check_visibility,b3_f64 max = DBL_MAX)
 			{
 				ray->Q     = max;
-				ray->shape = b3Intersect(b3GetFirstBBox(),ray);
+				ray->shape = b3Intersect(b3GetFirstBBox(),ray,check_visibility);
 
 				return ray->shape != null;
 			}
@@ -267,7 +267,7 @@ private:
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
 	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateMaterialThread(   b3BBox *bbox,void *ptr);
-		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray);
+		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);
 	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
 
 	friend class b3Shader;

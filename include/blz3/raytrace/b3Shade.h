@@ -41,7 +41,7 @@ public:
 
 	inline  b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX)
 	{
-		return m_Scene->b3Intersect(ray,max);
+		return m_Scene->b3Intersect(ray,false,max);
 	}
 
 protected:

@@ -32,13 +32,23 @@
 
 /*
 **	$Log$
+**	Revision 1.38  2005/04/27 13:55:02  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.37  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.36  2004/12/03 12:34:10  smork
 **	- Grid and polygon count computation added for torus and ellipsoid.
 **	
@@ -313,7 +323,7 @@ b3_bool b3Torus::b3Prepare()
 	m_aQuad = m_aRad * m_aRad;
 	m_bQuad = m_bRad * m_bRad;
 
-	if (b3ShapeBaseTrans::b3Prepare())
+	if (b3BaseTransformation::b3Prepare())
 	{
 		result = b3Shape::b3Prepare();
 	}

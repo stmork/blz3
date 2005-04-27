@@ -35,9 +35,19 @@
 
 /*
 **	$Log$
+**	Revision 1.46  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.45  2005/01/06 10:02:37  smork
 **	- Spline animation fix.
-**
+**	
 **	Revision 1.44  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
@@ -486,7 +496,7 @@ b3_f64 b3Cylinder::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_line64 BTLine;
 	b3_f64    l1,l2,z,Discriminant,a,p;
 
-	b3BaseTrans (ray,&BTLine);
+	b3BaseTransform (ray,&BTLine);
 	a = 1.0 / (BTLine.dir.x * BTLine.dir.x + BTLine.dir.y * BTLine.dir.y);
 
 	p = (
@@ -582,7 +592,7 @@ b3_f64 b3Cone::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_line64 BTLine;
 	b3_f64    l1,l2,z,Discriminant,a,p;
 
-	b3BaseTrans (ray,&BTLine);
+	b3BaseTransform (ray,&BTLine);
 	a = 1.0 / (
 		BTLine.dir.x * BTLine.dir.x +
 		BTLine.dir.y * BTLine.dir.y -
@@ -681,7 +691,7 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_line64  BTLine;
 	b3_f64     l1,l2,z,Discriminant,a,p;
 
-	b3BaseTrans (ray,&BTLine);
+	b3BaseTransform (ray,&BTLine);
 	a = 1.0 / (
 		BTLine.dir.x * BTLine.dir.x +
 		BTLine.dir.y * BTLine.dir.y +
@@ -762,7 +772,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_index     n[2];
 
 	Index = n[0] = n[1] = 0;
-	b3BaseTrans (ray,&BTLine);
+	b3BaseTransform (ray,&BTLine);
 
 	EndPoint.x = (BasePoint.x = -BTLine.pos.x) + 1;
 	EndPoint.y = (BasePoint.y = -BTLine.pos.y) + 1;
@@ -919,7 +929,7 @@ b3_f64 b3Torus::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64    Coeff[5],x[4];
 	b3_line64 BTLine;
 
-	b3BaseTrans (ray,&BTLine);
+	b3BaseTransform (ray,&BTLine);
 	pQuad	= BTLine.pos.z * BTLine.pos.z;
 	dQuad	= BTLine.dir.z * BTLine.dir.z;
 	pdQuad	= BTLine.pos.z * BTLine.dir.z;
@@ -1301,7 +1311,7 @@ b3_bool b3CSGCylinder::b3Intersect(
 
 	interval->m_Count = 0;
 
-	b3BaseTrans (ray,BTLine);
+	b3BaseTransform (ray,BTLine);
 
 	// Compute normal cylinder intersection
 	a = 1.0 / (
@@ -1399,7 +1409,7 @@ b3_bool b3CSGCone::b3Intersect(
 	b3_index   Index = 0;
 
 	interval->m_Count = 0;
-	b3BaseTrans (ray,BTLine);
+	b3BaseTransform (ray,BTLine);
 	a = 1.0 / (
 		BTLine->dir.x * BTLine->dir.x +
 		BTLine->dir.y * BTLine->dir.y -
@@ -1473,7 +1483,7 @@ b3_bool b3CSGEllipsoid::b3Intersect(
 	b3_f64  z,Discriminant,a,p;
 
 	interval->m_Count = 0;
-	b3BaseTrans (ray,BTLine);
+	b3BaseTransform (ray,BTLine);
 	a = 1.0 / (
 		BTLine->dir.x * BTLine->dir.x +
 		BTLine->dir.y * BTLine->dir.y +
@@ -1512,7 +1522,7 @@ b3_bool b3CSGBox::b3Intersect(
 	b3_index      Index = 0;
 
 	interval->m_Count = 0;
-	b3BaseTrans (ray,BTLine);
+	b3BaseTransform (ray,BTLine);
 
 	EndPoint.x = (BasePoint.x = -BTLine->pos.x) + 1;
 	EndPoint.y = (BasePoint.y = -BTLine->pos.y) + 1;
@@ -1641,7 +1651,7 @@ b3_bool b3CSGTorus::b3Intersect(
 	b3_f64        Coeff[5],x[4];
 
 	interval->m_Count = 0;
-	b3BaseTrans (ray,BTLine);
+	b3BaseTransform (ray,BTLine);
 	pQuad  = BTLine->pos.z * BTLine->pos.z;
 	dQuad  = BTLine->dir.z * BTLine->dir.z;
 	pdQuad = BTLine->pos.z * BTLine->dir.z;
@@ -1692,9 +1702,17 @@ b3_bool b3CSGTorus::b3Intersect(
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3BBox::b3Intersect(b3_ray *ray)
+b3_bool b3BBox::b3Intersect(b3_ray *ray, b3_bool check_visibility)
 {
 	b3_f64 start,end,t_near,t_far,m,pos;
+
+#if 1
+	if ((check_visibility) && (m_Visibility == B3_BBOX_INVISIBLE))
+	{
+		// Early exit
+		return false;
+	}
+#endif
 
 	m       = 1.0 / ray->dir.x;
 	pos     = (ray->pos.x  - m_DimBase.x);
@@ -1784,8 +1802,9 @@ b3CSGShape *b3BBox::b3IntersectCSG(b3_ray *ray)
 }
 
 b3Shape *b3Scene::b3Intersect(
-	b3BBox *BBox,
-	b3_ray *ray)
+	b3BBox  *BBox,
+	b3_ray  *ray,
+	b3_bool  check_visibility)
 {
 	b3Base<b3Item> *Shapes;
 	b3Base<b3Item> *BBoxes;
@@ -1797,13 +1816,13 @@ b3Shape *b3Scene::b3Intersect(
 
 	while (BBox != null)
 	{
-		if (BBox->b3Intersect(ray))
+		if (BBox->b3Intersect(ray, check_visibility))
 		{
 			//Check recursively
 			BBoxes = BBox->b3GetBBoxHead();
 			if (BBoxes->First)
 			{
-				aux = b3Intersect ((b3BBox *)BBoxes->First,ray);
+				aux = b3Intersect ((b3BBox *)BBoxes->First, ray, check_visibility);
 				if (aux != null)
 				{
 					ResultShape = aux;
@@ -1864,7 +1883,7 @@ b3Shape *b3Scene::b3IsObscured(
 
 	while (BBox != null)
 	{
-		if (BBox->b3Intersect(ray))
+		if (BBox->b3Intersect(ray, false))
 		{
 			Shapes = BBox->b3GetShapeHead();
 			switch (Shapes->b3GetClass())
@@ -1927,7 +1946,7 @@ void b3BBox::b3CollectBBoxes(b3_ray *ray,b3Array<b3BBox *> *array)
 	b3BBox         *bbox;
 	b3_polar        polar;
 
-	if (b3Intersect(ray))
+	if (b3Intersect(ray, false))
 	{
 		// Is any shape hit?
 		Shapes = b3GetShapeHead();

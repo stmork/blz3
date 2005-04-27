@@ -26,6 +26,7 @@
 #include "blz3/raytrace/b3Special.h"  
 #include "blz3/raytrace/b3Scene.h"
 #include "blz3/raytrace/b3Shade.h"
+#include "blz3/raytrace/b3CameraProjection.h"
 #include "blz3/base/b3Math.h"
 
 #define no_DEBUG_SS4
@@ -38,9 +39,19 @@
 
 /*
 **	$Log$
+**	Revision 1.69  2005/04/27 13:55:02  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.68  2005/02/02 09:08:25  smork
 **	- Fine tuning of epsilon.
-**
+**	
 **	Revision 1.67  2005/01/14 14:22:45  smork
 **	- Corrected thread priority for motion blur raytracing.
 **	
@@ -613,6 +624,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 
 b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 {
+	bbox->b3ComputeVisibility((b3CameraProjection *)ptr);
 	return bbox->b3PrepareBBox();
 }
 
@@ -758,9 +770,11 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	}
 
 	// Init geometry
+	b3CameraProjection projection(b3GetActualCamera());
+
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareThread))
+	if(!m_PrepareInfo.b3Prepare(b3PrepareThread,&projection))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;

@@ -32,10 +32,20 @@
 
 /*
 **	$Log$
+**	Revision 1.44  2005/04/27 13:55:02  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.43  2004/10/17 09:08:41  sm
 **	- Moved camera setup into b3RenderContext.
 **	- Moved Antialiasing setup into b3RenderContext.
-**
+**	
 **	Revision 1.42  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -742,113 +752,48 @@ b3_f64 b3RenderView::b3SetRotationStepper(
 
 void b3RenderView::b3Project(
 	const b3_vector *point,
-	      b3_coord  &x,
-		  b3_coord  &y)
-{
-	b3_f64 xRel,yRel;
-
-	b3Project(point,xRel,yRel);
-	x = (b3_coord)floor(xRel * m_xRes + 0.5);
-	y = (b3_coord)floor(yRel * m_yRes + 0.5);
-}
-
-void b3RenderView::b3Project(
-	const b3_vector *point,
 	      b3_f64    &xRel,
-		  b3_f64    &yRel)
-{
-	if (m_ViewMode != B3_VIEW_3D)
-	{
-		switch(m_ViewMode)
-		{
-		case B3_VIEW_TOP:
-			xRel =  (point->x - m_Actual->m_Mid.x - m_ViewInfo.offset.x) / m_Actual->m_Size.x;
-			yRel = -(point->y - m_Actual->m_Mid.y - m_ViewInfo.offset.y) / m_Actual->m_Size.y;
-			break;								                
-		case B3_VIEW_FRONT:						                
-			xRel =  (point->x - m_Actual->m_Mid.x - m_ViewInfo.offset.x) / m_Actual->m_Size.x;
-			yRel = -(point->z - m_Actual->m_Mid.z - m_ViewInfo.offset.z) / m_Actual->m_Size.z;
-			break;								                
-		case B3_VIEW_RIGHT:						                
-			xRel =  (point->y - m_Actual->m_Mid.y - m_ViewInfo.offset.y) / m_Actual->m_Size.y;
-			yRel = -(point->z - m_Actual->m_Mid.z - m_ViewInfo.offset.z) / m_Actual->m_Size.z;
-			break;								                
-		case B3_VIEW_LEFT:						                
-			xRel = -(point->y - m_Actual->m_Mid.y - m_ViewInfo.offset.y) / m_Actual->m_Size.y;
-			yRel = -(point->z - m_Actual->m_Mid.z - m_ViewInfo.offset.z) / m_Actual->m_Size.z;
-			break;								                
-		case B3_VIEW_BACK:						                
-			xRel = -(point->x - m_Actual->m_Mid.x - m_ViewInfo.offset.x) / m_Actual->m_Size.x;
-			yRel = -(point->z - m_Actual->m_Mid.z - m_ViewInfo.offset.z) / m_Actual->m_Size.z;
-			break;
-		default:
-			break;
-		}
-		xRel = xRel * m_Actual->m_xRelation + 0.5;
-		yRel = yRel / m_Actual->m_yRelation + 0.5;
-	}
-}
-
-void b3RenderView::b3Unproject(const b3_coord x,const b3_coord y,b3_vector *point)
+		  b3_f64    &yRel,
+		  b3_f64    &zRel)
 {
 #ifdef BLZ3_USE_OPENGL
 	GLint    viewport[4];
 	GLdouble modelview[16];
 	GLdouble projection[16];
-	GLfloat  winX, winY, winZ;
+	GLdouble winX, winY, winZ;
+	
+	glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+	glGetDoublev( GL_PROJECTION_MATRIX, projection );
+	glGetIntegerv( GL_VIEWPORT, viewport );
+	
+	gluProject(point->x,point->y,point->z,modelview,projection,viewport,&winX,&winY,&winZ);
+	xRel =       winX / m_xRes;
+	yRel = 1.0 - winY / m_yRes;
+	zRel = winZ;
+#endif
+}
+
+void b3RenderView::b3UnprojectInternal(
+	const b3_f64 x,
+	const b3_f64 y,
+	const b3_f64 z,b3_vector *point)
+{
+#ifdef BLZ3_USE_OPENGL
+	GLint    viewport[4];
+	GLdouble modelview[16];
+	GLdouble projection[16];
 	GLdouble posX, posY, posZ;
  
 	glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
 	glGetDoublev( GL_PROJECTION_MATRIX, projection );
 	glGetIntegerv( GL_VIEWPORT, viewport );
  
-	winX = (GLfloat)x;
-	winY = (GLfloat)viewport[3] - (GLfloat)y;
-
-	// We need simply a reference point for generating a ray.
-	winZ = 0.5;
-
-	gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+	gluUnProject( (GLfloat)x, (GLfloat)y, (GLfloat)z, modelview, projection, viewport, &posX, &posY, &posZ);
  
 	point->x = (b3_f32)posX;
 	point->y = (b3_f32)posY;
 	point->z = (b3_f32)posZ;
 #endif
-}
-
-void b3RenderView::b3Unproject(const b3_f64 xRelParam,const b3_f64 yRelParam,b3_vector *point)
-{
-	if (m_ViewMode != B3_VIEW_3D)
-	{
-		b3_f64 xRel = (xRelParam - 0.5) / m_Actual->m_xRelation;
-		b3_f64 yRel = (yRelParam - 0.5) * m_Actual->m_yRelation;
-		
-		switch(m_ViewMode)
-		{
-		case B3_VIEW_TOP:
-			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel + m_ViewInfo.offset.x;
-			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * yRel + m_ViewInfo.offset.y;
-			break;
-		case B3_VIEW_FRONT:
-			point->x = m_Actual->m_Mid.x + m_Actual->m_Size.x * xRel + m_ViewInfo.offset.x;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_ViewInfo.offset.z;
-			break;
-		case B3_VIEW_RIGHT:
-			point->y = m_Actual->m_Mid.y + m_Actual->m_Size.y * xRel + m_ViewInfo.offset.y;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_ViewInfo.offset.z;
-			break;
-		case B3_VIEW_LEFT:
-			point->y = m_Actual->m_Mid.y - m_Actual->m_Size.y * xRel + m_ViewInfo.offset.y;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_ViewInfo.offset.z;
-			break;
-		case B3_VIEW_BACK:
-			point->x = m_Actual->m_Mid.x - m_Actual->m_Size.x * xRel + m_ViewInfo.offset.x;
-			point->z = m_Actual->m_Mid.z - m_Actual->m_Size.z * yRel + m_ViewInfo.offset.z;
-			break;
-		default:
-			break;
-		}
-	}
 }
 
 void b3RenderView::b3Select(

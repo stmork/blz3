@@ -33,9 +33,19 @@
 
 /*
 **	$Log$
+**	Revision 1.111  2005/04/27 13:55:01  sm
+**	- Fixed open/new file error when last path is not accessable.
+**	- Divided base transformation into more general version and
+**	  some special versions for quadric shapes and camera
+**	  projections.
+**	- Optimized noise initialization.
+**	- Added correct picking with project/unproject for all
+**	  view modes. This uses GLU projectton methods.
+**	- Added optimization for first level bounding box intersections.
+**
 **	Revision 1.110  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
-**
+**	
 **	Revision 1.109  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -599,6 +609,7 @@ b3BBox::b3BBox(b3_u32 class_type) : b3Item(sizeof(b3BBox),class_type)
 
 	m_CSGIntersectionCount = 0;
 	m_ShapeCount           = 0;
+	m_Visibility           = B3_BBOX_UNKNOWN;
 }
 
 b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
@@ -625,6 +636,7 @@ b3BBox::b3BBox(b3_u32 *src) : b3Item(src)
 
 	m_CSGIntersectionCount = 0;
 	m_ShapeCount           = 0;
+	m_Visibility           = B3_BBOX_UNKNOWN;
 }
 
 void b3BBox::b3Write()
@@ -696,6 +708,53 @@ b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 	}
 
 	return true;
+}
+
+#define CLIP_LEFT    1
+#define CLIP_RIGHT   2
+#define CLIP_TOP     4
+#define CLIP_BOTTOM  8
+
+void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
+{
+	b3_gl_vertex *glVertex = *glVertexElements;
+	b3_loop       i, visible_count = 0;
+	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP;
+
+	for (i = 0;i < 8;i++)
+	{
+		b3_vector in,out;
+		b3_u32    mask = 0;
+
+		in.x = glVertex[i].v.x;
+		in.y = glVertex[i].v.y;
+		in.z = glVertex[i].v.z;
+
+		projection->b3Project(&in,&out);
+		     if (out.x < -1) mask |= CLIP_LEFT;
+		else if (out.x >  1) mask |= CLIP_RIGHT;
+		     if (out.y < -1) mask |= CLIP_BOTTOM;
+		else if (out.y >  1) mask |= CLIP_TOP;
+
+		if ((mask == 0) || (out.z >= 0))
+		{
+			visible_count++;
+		}
+		flag &= mask;
+	}
+
+	if (visible_count == 8)
+	{
+		m_Visibility = B3_BBOX_VISIBLE;
+	}
+	else if ((flag == 0) || (visible_count > 0))
+	{
+		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
+	}
+	else
+	{
+		m_Visibility = B3_BBOX_INVISIBLE;
+	}
 }
 
 char *b3BBox::b3GetName()
@@ -812,21 +871,6 @@ void b3BBox::b3Update()
 		bbox = (b3BBox *)item;
 		bbox->b3Update();
 	}
-}
-
-void b3BBox::b3ComputeBoxPolar(b3_ray *ray)
-{
-	b3_f64 x = ray->ipoint.x;
-	b3_f64 y = ray->ipoint.y;
-	b3_f64 z = ray->ipoint.z;
-
-	ray->polar.m_BoxPolar.x = (x - m_DimBase.x) / m_DimSize.x;
-	ray->polar.m_BoxPolar.y = (y - m_DimBase.y) / m_DimSize.y;
-	ray->polar.m_BoxPolar.z = (z - m_DimBase.z) / m_DimSize.z;
-
-	ray->polar.m_BBoxOriginal.x = (b3_f32)(x * m_Inverse.m11 + y * m_Inverse.m12 + z * m_Inverse.m13 + m_Inverse.m14);
-	ray->polar.m_BBoxOriginal.y = (b3_f32)(x * m_Inverse.m21 + y * m_Inverse.m22 + z * m_Inverse.m23 + m_Inverse.m24);
-	ray->polar.m_BBoxOriginal.z = (b3_f32)(x * m_Inverse.m31 + y * m_Inverse.m32 + z * m_Inverse.m33 + m_Inverse.m34);
 }
 
 /*************************************************************************

@@ -20,7 +20,7 @@
 
 #include "blz3/b3Config.h"
 
-class b3Wood
+class B3_PLUGIN b3Wood
 {
 protected:
 	b3_matrix         m_Warp;
@@ -47,7 +47,7 @@ public:
 	void   b3CopyWobbled(b3Wood *wood,b3_f64 wobble,b3_f64 fx,b3_f64 fy);
 };
 
-class b3OakPlank : public b3Wood
+class B3_PLUGIN b3OakPlank : public b3Wood
 {
 	b3_f64            m_rxScale;
 	b3_f64            m_ryScale;

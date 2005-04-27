@@ -87,6 +87,7 @@ install-bin:
 #########################################################
 
 uncr:
+	find $(BLZ3_HOME) -name "Makefile.in" -exec $(DOS2UNIX) -k -q -o {} \;
 	find $(BLZ3_HOME) -name "*.cc" -exec $(DOS2UNIX) -k -q -o {} \;
 	find $(BLZ3_HOME)/include $(BLZ3_HOME)/include_unix -name "*.h" -exec $(DOS2UNIX) -k -q -o {} \;
 	@for i in $(SUB_DIRS); do \
