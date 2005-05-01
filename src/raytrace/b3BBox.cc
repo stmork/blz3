@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.112  2005/05/01 12:58:22  sm
+**	- Optimized object visibility.
+**
 **	Revision 1.111  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -42,7 +45,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.110  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -585,8 +588,12 @@ const b3_gl_line b3BBox::m_BBoxIndices[12 * 2] =
 	{ 3,7 }
 };
 
-b3Color b3BBox::m_GridColor(0.4f,0.4f,0.4f,0.0f);
-b3_bool b3BBox::m_GridVisible = true;
+b3Color  b3BBox::m_GridColor(0.4f,0.4f,0.4f,0.0f);
+b3_bool  b3BBox::m_GridVisible = true;
+
+b3_count b3BBox::m_Visible;
+b3_count b3BBox::m_PartiallyVisible;
+b3_count b3BBox::m_Invisible;
 
 void b3BBox::b3Register()
 {
@@ -714,12 +721,13 @@ b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 #define CLIP_RIGHT   2
 #define CLIP_TOP     4
 #define CLIP_BOTTOM  8
+#define CLIP_BACK   16
 
 void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
 {
 	b3_gl_vertex *glVertex = *glVertexElements;
-	b3_loop       i, visible_count = 0;
-	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP;
+	b3_loop       i, visible_count = 0, invisible_count = 0;
+	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
 
 	for (i = 0;i < 8;i++)
 	{
@@ -731,29 +739,45 @@ void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
 		in.z = glVertex[i].v.z;
 
 		projection->b3Project(&in,&out);
-		     if (out.x < -1) mask |= CLIP_LEFT;
-		else if (out.x >  1) mask |= CLIP_RIGHT;
-		     if (out.y < -1) mask |= CLIP_BOTTOM;
-		else if (out.y >  1) mask |= CLIP_TOP;
 
-		if ((mask == 0) || (out.z >= 0))
+		if (out.z <  0)
+		{
+			mask |= CLIP_BACK;
+			     if (out.x < -0) mask |= CLIP_RIGHT;
+			else if (out.x >= 0) mask |= CLIP_LEFT;
+			     if (out.y <  0) mask |= CLIP_TOP;
+			else if (out.y >= 0) mask |= CLIP_BOTTOM;
+		}
+		else
+		{
+			     if (out.x < -1) mask |= CLIP_LEFT;
+			else if (out.x >  1) mask |= CLIP_RIGHT;
+			     if (out.y < -1) mask |= CLIP_BOTTOM;
+			else if (out.y >  1) mask |= CLIP_TOP;
+		}
+
+		if (mask == 0)
 		{
 			visible_count++;
 		}
+
 		flag &= mask;
 	}
 
 	if (visible_count == 8)
 	{
 		m_Visibility = B3_BBOX_VISIBLE;
+		m_Visible++;
 	}
-	else if ((flag == 0) || (visible_count > 0))
+	else if ((flag == 0) || (invisible_count > 0))
 	{
 		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
+		m_PartiallyVisible++;
 	}
 	else
 	{
 		m_Visibility = B3_BBOX_INVISIBLE;
+		m_Invisible++;
 	}
 }
 

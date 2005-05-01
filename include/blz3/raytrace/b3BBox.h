@@ -64,6 +64,10 @@ public:
 	static b3Color   m_GridColor;
 	static b3_bool   m_GridVisible;
 
+	static b3_count  m_Visible;
+	static b3_count  m_PartiallyVisible;
+	static b3_count  m_Invisible;
+	
 public:
 	B3_ITEM_INIT(b3BBox);
 	B3_ITEM_LOAD(b3BBox);

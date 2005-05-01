@@ -39,6 +39,9 @@
 
 /*
 **	$Log$
+**	Revision 1.70  2005/05/01 12:58:22  sm
+**	- Optimized object visibility.
+**
 **	Revision 1.69  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -48,7 +51,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.68  2005/02/02 09:08:25  smork
 **	- Fine tuning of epsilon.
 **	
@@ -625,6 +628,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 {
 	bbox->b3ComputeVisibility((b3CameraProjection *)ptr);
+
 	return bbox->b3PrepareBBox();
 }
 
@@ -773,12 +777,21 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	b3CameraProjection projection(b3GetActualCamera());
 
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
+
+	b3BBox::m_Visible = 0;
+	b3BBox::m_PartiallyVisible = 0;
+	b3BBox::m_Invisible = 0;
+
 	m_PrepareInfo.b3CollectBBoxes(this);
 	if(!m_PrepareInfo.b3Prepare(b3PrepareThread,&projection))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
 	}
+
+	b3PrintF(B3LOG_FULL, "    Visible objects:           %5d\n",b3BBox::m_Visible);
+	b3PrintF(B3LOG_FULL, "    Partially visible objects: %5d\n",b3BBox::m_PartiallyVisible);
+	b3PrintF(B3LOG_FULL, "    Invisible objects:         %5d\n",b3BBox::m_Invisible);
 
 	b3PrintF(B3LOG_FULL,"  preparing global shader...\n");
 	B3_ASSERT(m_Shader != null);
