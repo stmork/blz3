@@ -22,7 +22,6 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include <string.h>
 #include <unistd.h>
 #include <dlfcn.h>
 
@@ -34,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/05/04 09:27:28  mork
+**	- Corrected some string methods in configure script.
+**
 **	Revision 1.13  2005/01/04 15:13:59  smork
 **	- Changed some data types.
-**
+**	
 **	Revision 1.12  2004/11/13 19:47:15  sm
 **	- Corrected some OpenGL exclusions.
 **	

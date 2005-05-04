@@ -24,6 +24,7 @@
 #include "blz3/system/b3Error.h"
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
 
 /*************************************************************************
 **                                                                      **
@@ -33,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/05/04 09:27:28  mork
+**	- Corrected some string methods in configure script.
+**
 **	Revision 1.1  2005/01/21 15:41:06  smork
 **	- Added error code/text preparation.
-**
+**	
 **
 */
 
@@ -48,7 +52,11 @@
 b3Error::b3Error()
 {
 	m_ErrorCode = errno;
+#ifdef HAVE_STRERROR
 	strerror_r(m_ErrorCode,m_ErrorText,sizeof(m_ErrorText));
+#else
+	snprintf(m_ErrorText,sizeof(m_ErrorText),"errno.: %d\n",m_ErrorCode);
+#endif
 }
 
 int b3Error::b3GetError()
@@ -65,5 +73,9 @@ char *b3Error::b3GetErrorText()
 void b3Error::b3RetrieveError()
 {
 	m_ErrorCode = errno;
+#ifdef HAVE_STRERROR
 	strerror_r(m_ErrorCode,m_ErrorText,sizeof(m_ErrorText));
+#else
+	snprintf(m_ErrorText,sizeof(m_ErrorText),"errno.: %d\n",m_ErrorCode);
+#endif
 }

@@ -30,6 +30,7 @@
 #undef HAVE_STRICMP
 #undef HAVE_STRCASECMP
 #undef HAVE_STRLCPY
+#undef HAVE_STRERROR
 #undef HAVE_VALUES_H
 
 #endif

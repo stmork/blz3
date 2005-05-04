@@ -29,23 +29,6 @@ AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III exutable directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
 
-AC_PATH_XTRA
-
-# Checks for header files.
-AC_HEADER_DIRENT
-AC_HEADER_STDC
-
-AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
-
-AC_CHECK_LIB([dl], [main])
-AC_CHECK_LIB([pthread], [main])
-
-AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
-AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
-AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG]) LIBS="$LIBS -lCgGL"])
-AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) DIVXLIBS="$DIVXLIBS -lavi"])
-AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])
-
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[
 #ifndef __linux__
@@ -67,6 +50,28 @@ AC_MSG_CHECKING([for strlcpy])
 AC_TRY_LINK([#include <string.h>],[
 char example[16];strlcpy(example,"Example",sizeof(example));
 ],[AC_DEFINE([HAVE_STRLCPY]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_MSG_CHECKING([for strerror])
+AC_TRY_LINK([#include <string.h>],[
+char msg[1024];strerror_r(0,msg,sizeof(msg)));
+],[AC_DEFINE([HAVE_STRERROR]) AC_MSG_RESULT(yes)],AC_MSG_RESULT(no))
+
+AC_PATH_XTRA
+
+# Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+
+AC_CHECK_HEADERS([fcntl.h float.h limits.h malloc.h memory.h stddef.h stdlib.h string.h strings.h sys/time.h sys/timeb.h unistd.h])
+
+AC_CHECK_LIB([dl], [main])
+AC_CHECK_LIB([pthread], [main])
+
+AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
+AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
+AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG]) LIBS="$LIBS -lCgGL"])
+AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) DIVXLIBS="$DIVXLIBS -lavi"])
+AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])
 
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
 LDFLAGS="$LDFLAGS -L$BLZ3_LIB $X_LIBS"
