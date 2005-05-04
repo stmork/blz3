@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/05/04 10:16:10  mork
+**	- Added some GLenum castings.
+**
 **	Revision 1.4  2004/12/06 15:14:56  smork
 **	- Minor changes
-**
+**	
 **	Revision 1.3  2004/11/21 14:56:57  sm
 **	- Merged VBO development into main trunk.
 **	
@@ -84,15 +87,15 @@ void b3MultiSample::b3Enable(b3_bool enable)
 #ifdef BLZ3_USE_OPENGL
 		if (enable)
 		{
-			glEnable(GL_MULTISAMPLE_ARB);
-			glEnable(GL_SAMPLE_BUFFERS_ARB);
-			glEnable(GL_SAMPLES_EXT);
+			glEnable((GLenum)GL_MULTISAMPLE_ARB);
+			glEnable((GLenum)GL_SAMPLE_BUFFERS_ARB);
+			glEnable((GLenum)GL_SAMPLES_EXT);
 		}
 		else
 		{
-			glDisable(GL_MULTISAMPLE_ARB);
-			glDisable(GL_SAMPLE_BUFFERS_ARB);
-			glDisable(GL_SAMPLES_EXT);
+			glDisable((GLenum)GL_MULTISAMPLE_ARB);
+			glDisable((GLenum)GL_SAMPLE_BUFFERS_ARB);
+			glDisable((GLenum)GL_SAMPLES_EXT);
 		}
 #endif
 	}
@@ -108,8 +111,8 @@ b3_bool b3MultiSample::b3IsEnabled()
 		GLint     sample_buffers = 0;
 		GLboolean multisample;
 		
-		multisample = glIsEnabled(GL_MULTISAMPLE_ARB);
-		glGetIntegerv(GL_SAMPLE_BUFFERS_ARB,&sample_buffers);
+		multisample = glIsEnabled((GLenum)GL_MULTISAMPLE_ARB);
+		glGetIntegerv((GLenum)GL_SAMPLE_BUFFERS_ARB,&sample_buffers);
 
 		enabled = multisample && (sample_buffers == 1);
 	}
