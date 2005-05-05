@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.113  2005/05/05 07:58:03  sm
+**	- BBox visibility computed only for raytracing.
+**
 **	Revision 1.112  2005/05/01 12:58:22  sm
 **	- Optimized object visibility.
-**
+**	
 **	Revision 1.111  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -715,70 +718,6 @@ b3_bool b3BBox::b3PrepareBBox(b3_bool recursive)
 	}
 
 	return true;
-}
-
-#define CLIP_LEFT    1
-#define CLIP_RIGHT   2
-#define CLIP_TOP     4
-#define CLIP_BOTTOM  8
-#define CLIP_BACK   16
-
-void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
-{
-	b3_gl_vertex *glVertex = *glVertexElements;
-	b3_loop       i, visible_count = 0, invisible_count = 0;
-	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
-
-	for (i = 0;i < 8;i++)
-	{
-		b3_vector in,out;
-		b3_u32    mask = 0;
-
-		in.x = glVertex[i].v.x;
-		in.y = glVertex[i].v.y;
-		in.z = glVertex[i].v.z;
-
-		projection->b3Project(&in,&out);
-
-		if (out.z <  0)
-		{
-			mask |= CLIP_BACK;
-			     if (out.x < -0) mask |= CLIP_RIGHT;
-			else if (out.x >= 0) mask |= CLIP_LEFT;
-			     if (out.y <  0) mask |= CLIP_TOP;
-			else if (out.y >= 0) mask |= CLIP_BOTTOM;
-		}
-		else
-		{
-			     if (out.x < -1) mask |= CLIP_LEFT;
-			else if (out.x >  1) mask |= CLIP_RIGHT;
-			     if (out.y < -1) mask |= CLIP_BOTTOM;
-			else if (out.y >  1) mask |= CLIP_TOP;
-		}
-
-		if (mask == 0)
-		{
-			visible_count++;
-		}
-
-		flag &= mask;
-	}
-
-	if (visible_count == 8)
-	{
-		m_Visibility = B3_BBOX_VISIBLE;
-		m_Visible++;
-	}
-	else if ((flag == 0) || (invisible_count > 0))
-	{
-		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
-		m_PartiallyVisible++;
-	}
-	else
-	{
-		m_Visibility = B3_BBOX_INVISIBLE;
-		m_Invisible++;
-	}
 }
 
 char *b3BBox::b3GetName()

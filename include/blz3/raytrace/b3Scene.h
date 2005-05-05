@@ -21,6 +21,7 @@
 #include "blz3/raytrace/b3Base.h"
 #include "blz3/raytrace/b3Light.h"
 #include "blz3/raytrace/b3PrepareInfo.h"
+#include "blz3/raytrace/b3CameraProjection.h"
 #include "blz3/base/b3Procedure.h"
 #include "blz3/base/b3Render.h"
 #include "blz3/image/b3Tx.h"
@@ -214,6 +215,7 @@ public:
 			void            b3CollectActiveBBoxes(b3Array<b3BBox *> *array,b3_bool activation);
 		    void            b3Activate(b3_bool activate=true);
 		    void            b3Transform(b3_matrix *transformation,b3_bool is_affine = true,b3_bool force_action = false);
+	        void            b3ComputeVisibility();
 
 			// camera methods
 		    b3CameraPart   *b3GetFirstCamera(b3_bool must_active = false);

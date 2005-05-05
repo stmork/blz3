@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.71  2005/05/05 07:58:03  sm
+**	- BBox visibility computed only for raytracing.
+**
 **	Revision 1.70  2005/05/01 12:58:22  sm
 **	- Optimized object visibility.
-**
+**	
 **	Revision 1.69  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -627,8 +630,6 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 
 b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
 {
-	bbox->b3ComputeVisibility((b3CameraProjection *)ptr);
-
 	return bbox->b3PrepareBBox();
 }
 
@@ -774,24 +775,13 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	}
 
 	// Init geometry
-	b3CameraProjection projection(b3GetActualCamera());
-
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
-
-	b3BBox::m_Visible = 0;
-	b3BBox::m_PartiallyVisible = 0;
-	b3BBox::m_Invisible = 0;
-
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareThread,&projection))
+	if(!m_PrepareInfo.b3Prepare(b3PrepareThread))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
 	}
-
-	b3PrintF(B3LOG_FULL, "    Visible objects:           %5d\n",b3BBox::m_Visible);
-	b3PrintF(B3LOG_FULL, "    Partially visible objects: %5d\n",b3BBox::m_PartiallyVisible);
-	b3PrintF(B3LOG_FULL, "    Invisible objects:         %5d\n",b3BBox::m_Invisible);
 
 	b3PrintF(B3LOG_FULL,"  preparing global shader...\n");
 	B3_ASSERT(m_Shader != null);
@@ -825,6 +815,8 @@ void b3Scene::b3Raytrace(b3Display *display)
 			b3PrintF(B3LOG_NORMAL,"Cannot initialize raytracing!\n");
 			return;
 		}
+
+		b3ComputeVisibility();
 
 		// Determine CPU count
 		CPUs = b3Runtime::b3GetNumCPUs();

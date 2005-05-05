@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/05/05 07:58:03  sm
+**	- BBox visibility computed only for raytracing.
+**
 **	Revision 1.2  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -40,7 +43,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.1  2004/12/14 07:40:44  smork
 **	- Put scene/bbox traversion methods into their own source file.
 **	
@@ -715,4 +718,110 @@ b3_bool b3BBox::b3BacktraceRecompute(b3BBox *search)
 		}
 	}
 	return false;
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Compute visibility of bboxes for              **
+*                         selected camera                               **
+**                                                                      **
+*************************************************************************/
+
+#define CLIP_LEFT    1
+#define CLIP_RIGHT   2
+#define CLIP_TOP     4
+#define CLIP_BOTTOM  8
+#define CLIP_BACK   16
+
+void b3BBox::b3ComputeVisibility(b3CameraProjection *projection)
+{
+	b3_gl_vertex *glVertex = *glVertexElements;
+	b3_loop       i, visible_count = 0, invisible_count = 0;
+	b3_u32        flag = CLIP_RIGHT | CLIP_LEFT | CLIP_BOTTOM | CLIP_TOP | CLIP_BACK;
+
+	for (i = 0;i < 8;i++)
+	{
+		b3_vector in,out;
+		b3_u32    mask = 0;
+
+		in.x = glVertex[i].v.x;
+		in.y = glVertex[i].v.y;
+		in.z = glVertex[i].v.z;
+
+		projection->b3Project(&in,&out);
+
+		if (out.z <  0)
+		{
+			mask |= CLIP_BACK;
+			     if (out.x < -0) mask |= CLIP_RIGHT;
+			else if (out.x >= 0) mask |= CLIP_LEFT;
+			     if (out.y <  0) mask |= CLIP_TOP;
+			else if (out.y >= 0) mask |= CLIP_BOTTOM;
+		}
+		else
+		{
+			     if (out.x < -1) mask |= CLIP_LEFT;
+			else if (out.x >  1) mask |= CLIP_RIGHT;
+			     if (out.y < -1) mask |= CLIP_BOTTOM;
+			else if (out.y >  1) mask |= CLIP_TOP;
+		}
+
+		if (mask == 0)
+		{
+			visible_count++;
+		}
+
+		flag &= mask;
+	}
+
+	if (visible_count == 8)
+	{
+		m_Visibility = B3_BBOX_VISIBLE;
+		m_Visible++;
+	}
+	else if ((flag == 0) || (invisible_count > 0))
+	{
+		m_Visibility = B3_BBOX_PARTIALLY_VISIBLE;
+		m_PartiallyVisible++;
+	}
+	else
+	{
+		m_Visibility = B3_BBOX_INVISIBLE;
+		m_Invisible++;
+	}
+
+	if (m_Visibility != B3_BBOX_INVISIBLE)
+	{
+		b3Item *item;
+		b3BBox *bbox;
+
+		B3_FOR_BASE(b3GetBBoxHead(),item)
+		{
+			bbox = (b3BBox *)item;
+			bbox->b3ComputeVisibility(projection);
+		}
+	}
+}
+
+void b3Scene::b3ComputeVisibility()
+{
+	b3CameraProjection  projection(b3GetActualCamera());
+	b3Item             *item;
+	b3BBox             *bbox;
+
+	b3PrintF(B3LOG_FULL,"  preparing visibility...\n");
+
+	b3BBox::m_Visible = 0;
+	b3BBox::m_PartiallyVisible = 0;
+	b3BBox::m_Invisible = 0;
+
+	B3_FOR_BASE(b3GetBBoxHead(),item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3ComputeVisibility(&projection);
+	}
+
+	b3PrintF(B3LOG_FULL, "    Visible objects:           %5d\n",b3BBox::m_Visible);
+	b3PrintF(B3LOG_FULL, "    Partially visible objects: %5d\n",b3BBox::m_PartiallyVisible);
+	b3PrintF(B3LOG_FULL, "    Invisible objects:         %5d\n",b3BBox::m_Invisible);
 }

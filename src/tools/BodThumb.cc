@@ -34,9 +34,12 @@
   
 /*
 **	$Log$
+**	Revision 1.3  2005/05/05 07:58:03  sm
+**	- BBox visibility computed only for raytracing.
+**
 **	Revision 1.2  2005/01/16 09:17:46  sm
 **	- Added super sampling to object thumb nails.
-**
+**	
 **	Revision 1.1  2005/01/07 12:38:51  smork
 **	- Bump release.
 **	- Added tool to create object/bbox thumb nails.
@@ -113,7 +116,6 @@ int main(int argc,char *argv[])
 {
 	int   i;
 	char *BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
-	char *BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
 	char *HOME             = getenv("HOME");
 	b3Path                textures;
 	b3Path                pictures;
