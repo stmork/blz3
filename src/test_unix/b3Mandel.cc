@@ -47,12 +47,15 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.7  2005/05/05 16:16:09  sm
+**	- Added time measure to mandelbrot set computing.
+**
 **	Revision 1.6  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
 **	  seems to be broken:-(
 **	- Introduced b3DirAbstract and b3PathAbstract classes
-**
+**	
 **	Revision 1.5  2001/11/04 12:15:15  sm
 **	- Renaming some attributes...
 **	- Taking account to redesign of b3Display
@@ -223,6 +226,8 @@ void b3Mandel::b3Compute(
 	b3_count     CPUs,i;
 	b3Thread    *threads;
 	mandel_info *infos;
+	b3Time       timepoint;
+	b3_f64       tStart,tEnd;
 
 	b3PrintF(B3LOG_NORMAL,"Using following values:\n");
 	b3PrintF(B3LOG_NORMAL,"Width  %f - %f:\n",xMin,xMax);
@@ -253,6 +258,7 @@ void b3Mandel::b3Compute(
 	}
 
 	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
+	tStart = timepoint;
 	for (i = 0;i < CPUs;i++)
 	{
 		infos[i].xSize   = xSize;
@@ -268,6 +274,11 @@ void b3Mandel::b3Compute(
 	{
 		threads[i].b3Wait();
 	}
+
+	timepoint.b3Now();
+	tEnd = timepoint;
+
+	b3PrintF(B3LOG_NORMAL,"Computing took %3.3fs.\n",tEnd - tStart);
 
 	// Free what we have allocated.
 	delete [] threads;
