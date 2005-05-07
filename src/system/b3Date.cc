@@ -47,9 +47,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/05/07 14:48:06  sm
+**	- Searching for correct "latest possible" date on 64 bit machines.
+**
 **	Revision 1.9  2005/05/07 09:40:00  sm
 **	- Changing va-list init to each vxprintf function call.
-**
+**	
 **	Revision 1.8  2003/10/16 08:54:23  sm
 **	- Simpler max date generation.
 **	
@@ -180,13 +183,15 @@ void b3Date::b3LocalTime()
 void b3Date::b3GMTime()
 {
 	struct tm *now;
+	time_t     mask = -1,bit = 1L << (sizeof(time_code) * 8 - 1);
 
 	do
 	{
 		now = gmtime(&time_code);
 		if (now == null)
 		{
-			time_code--;
+			time_code &= (mask ^ bit);
+			bit = bit >> 1;
 		}
 	}
 	while (now == null);
@@ -267,7 +272,6 @@ bool b3Date::b3Y2K_Selftest()
 	bool   success = true;
 	time_t actual  = time_code;
 
-return true;	
 	b3PrintF (B3LOG_DEBUG,"\n");
 	b3PrintF (B3LOG_DEBUG,"### Blizzard III YEAR 2000 Check ###\n");
 	b3PrintF (B3LOG_DEBUG,"###                   +--------- hour\n");
