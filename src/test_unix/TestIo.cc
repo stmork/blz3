@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/05/07 14:06:06  sm
+**	- Corrected va-list handling in Windows version.
+**	- Using correct lib directory on 64 bit architectures.
+**	- Added login script version for (ba)sh.
+**
 **	Revision 1.18  2005/01/05 13:01:25  smork
 **	- Fixed 64 bit problem.
-**
+**	
 **	Revision 1.17  2005/01/04 15:13:59  smork
 **	- Changed some data types.
 **	
@@ -142,9 +147,9 @@ int main(int argc,char *argv[])
 	b3PrintF (B3LOG_NORMAL,"64 bit: %3d  %3d (should be 8)\n",sizeof(b3_u64),sizeof(b3_s64));
 	b3PrintF (B3LOG_NORMAL,"bool:   %3d      (should be 4)\n",sizeof(b3_bool));
 	b3PrintF (B3LOG_NORMAL,"Float:\n");
-	b3PrintF (B3LOG_NORMAL,"32 bit: %3d      (should be  4)\n",sizeof(b3_f32));
-	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be  8)\n",sizeof(b3_f64));
-	b3PrintF (B3LOG_NORMAL,"96 bit: %3d      (should be 12)\n",sizeof(b3_f96));
+	b3PrintF (B3LOG_NORMAL,"32 bit: %3d      (should be  4)\n",       sizeof(b3_f32));
+	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be  8)\n",       sizeof(b3_f64));
+	b3PrintF (B3LOG_NORMAL,"96 bit: %3d      (should be 12 or 16)\n", sizeof(b3_f96));
 	b3PrintF (B3LOG_NORMAL,"\n");
 	b3PrintF (B3LOG_NORMAL,"Pointer size:                     %d bytes.\n",sizeof(ptr));
 	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",

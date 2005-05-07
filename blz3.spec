@@ -44,21 +44,22 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT/usr/bin
 mkdir -p $RPM_BUILD_ROOT/usr/include
-mkdir -p $RPM_BUILD_ROOT/usr/lib
+mkdir -p $RPM_BUILD_ROOT%_libdir
 mkdir -p $RPM_BUILD_ROOT/usr/share/blizzard
 
 make install
 install -m 755 bin/blz3.csh $RPM_BUILD_ROOT/etc/profile.d/blz3.csh
+install -m 755 bin/blz3.sh  $RPM_BUILD_ROOT/etc/profile.d/blz3.sh
 
 test -d $HOME/Blizzard && tar chf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT/usr/share/blizzard
 
-cp -a include/blz3 $RPM_BUILD_ROOT/usr/include
+cp -a include/blz3      $RPM_BUILD_ROOT/usr/include
 cp -a include_unix/blz3 $RPM_BUILD_ROOT/usr/include
-cp -a lib/lib*.a $RPM_BUILD_ROOT/usr/lib
+cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 
-(cd $RPM_BUILD_ROOT; find ./usr/bin               -type f|cut -b2- >/tmp/blz3-file-list; )
-(cd $RPM_BUILD_ROOT; find ./usr/lib ./usr/include -type f|cut -b2- >/tmp/blz3-devel-file-list; )
-(cd $RPM_BUILD_ROOT; find ./usr/share             -type f|cut -b2- >/tmp/blz3-data-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/bin                -type f|cut -b2- >/tmp/blz3-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/lib* ./usr/include -type f|cut -b2- >/tmp/blz3-devel-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/share              -type f|cut -b2- >/tmp/blz3-data-file-list; )
 
 %files -f /tmp/blz3-file-list
 %defattr(-,root,root)
@@ -69,6 +70,7 @@ cp -a lib/lib*.a $RPM_BUILD_ROOT/usr/lib
 %files data -f /tmp/blz3-data-file-list
 %defattr(-,root,root)
 %config /etc/profile.d/blz3.csh
+%config /etc/profile.d/blz3.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT /tmp/blz3*-file-list

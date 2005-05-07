@@ -40,9 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/05/07 14:06:06  sm
+**	- Corrected va-list handling in Windows version.
+**	- Using correct lib directory on 64 bit architectures.
+**	- Added login script version for (ba)sh.
+**
 **	Revision 1.13  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.12  2003/06/15 14:18:18  sm
 **	- Updated item maintain dialog to icons
 **	- Changed b3Log into a singleton
@@ -155,20 +160,27 @@ void b3Log::b3LogFunction (
 		vsnprintf(m_Message,sizeof(m_Message),format,argptr);
 		OutputDebugString(m_Message);
 #endif
+		va_end   (argptr);
+
 		if (m_Out != null)
 		{
+			va_start (argptr,format);
 			vfprintf (m_Out, format,argptr);
 			fflush   (m_Out);
+			va_end   (argptr);
 
+			va_start (argptr,format);
 			vfprintf (stdout,format,argptr);
 			fflush   (stdout);
+			va_end   (argptr);
 		}
 		else
 		{
+			va_start (argptr,format);
 			vfprintf (stderr,format,argptr);
 			fflush   (stderr);
+			va_end   (argptr);
 		}
-		va_end   (argptr);
 
 		// That's it! Let's doing other to make the same...
 		m_LogMutex.b3Unlock();
