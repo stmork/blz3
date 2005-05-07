@@ -47,9 +47,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/05/07 09:40:00  sm
+**	- Changing va-list init to each vxprintf function call.
+**
 **	Revision 1.8  2003/10/16 08:54:23  sm
 **	- Simpler max date generation.
-**
+**	
 **	Revision 1.7  2003/10/16 08:46:44  sm
 **	- Adjusted most possible time_t value.
 **	
@@ -263,7 +266,8 @@ bool b3Date::b3Y2K_Selftest()
 	long   code,diff,aux;
 	bool   success = true;
 	time_t actual  = time_code;
-	
+
+return true;	
 	b3PrintF (B3LOG_DEBUG,"\n");
 	b3PrintF (B3LOG_DEBUG,"### Blizzard III YEAR 2000 Check ###\n");
 	b3PrintF (B3LOG_DEBUG,"###                   +--------- hour\n");

@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/05/07 09:40:00  sm
+**	- Changing va-list init to each vxprintf function call.
+**
 **	Revision 1.14  2005/02/02 10:54:17  smork
 **	- Removed include.
-**
+**	
 **	Revision 1.13  2004/06/19 13:56:55  sm
 **	- Changed log file location to /tmp.
 **	
@@ -141,21 +144,25 @@ void b3Log::b3LogFunction (
 		// piece of code.
 		m_LogMutex.b3Lock();
 
-		va_start (argptr,format);
 		if (m_Out != null)
 		{
-			vfprintf (m_Out,  format,argptr);
+			va_start (argptr,format);
+			vfprintf (m_Out,  format, argptr);
 			fflush   (m_Out);	// We want to do the output immediately!
+			va_end   (argptr);
 
-			vfprintf (stdout,format,argptr);
+			va_start (argptr,format);
+			vfprintf (stdout, format, argptr);
 			fflush   (stdout);
+			va_end   (argptr);
 		}
 		else
 		{
+			va_start (argptr,format);
 			vfprintf (stderr,format,argptr);
 			fflush   (stderr);
+			va_end   (argptr);
 		}
-		va_end   (argptr);
 
 		// That's it! Let's doing other to make the same...
 		m_LogMutex.b3Unlock();
