@@ -4322,6 +4322,7 @@ BEGIN
     IDS_MAT_CAR_PAINT       "Autolack"
     IDS_TITLE_PARALLEL      "Parallel"
     IDS_TITLE_PERPENDICULAR "Senkrecht"
+    IDS_DOC_UPDATE_MATERIAL "Die Materialien werden vorbereitet..."
 END
 
 STRINGTABLE 

@@ -62,6 +62,10 @@
 
 /*
 **	$Log$
+**	Revision 1.109  2005/05/07 19:57:14  sm
+**	- Added comment when initializing materials when after
+**	  loading a document (concrete: a scene).
+**
 **	Revision 1.108  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -71,7 +75,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.107  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -810,7 +814,7 @@ BOOL CAppLinesDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		m_Light = m_Scene->b3GetLight(true);
 		m_Fulcrum.b3Update(b3GetFulcrum());
 
-		b3Prepare(true,false,true);
+		b3Prepare(true, false, true, true);
 		SetModifiedFlag(FALSE);
 		result = TRUE;
 
@@ -992,7 +996,8 @@ void CAppLinesDoc::Dump(CDumpContext& dc) const
 void CAppLinesDoc::b3Prepare(
 	b3_bool geometry_changed,
 	b3_bool structure_changed,
-	b3_bool reorg)
+	b3_bool reorg,
+	b3_bool material_changed)
 {
 	CMainFrame *main = CB3GetMainFrame();
 
@@ -1024,6 +1029,12 @@ void CAppLinesDoc::b3Prepare(
 	{
 		SetModifiedFlag();
 		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+	}
+
+	if (material_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_UPDATE_MATERIAL);
+		m_Scene->b3UpdateMaterial();
 	}
 
 	if (structure_changed)

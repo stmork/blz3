@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by AppLines.rc
 //
 #define IDP_OLE_INIT_FAILED             101
@@ -934,6 +934,7 @@
 #define IDS_MAT_CAR_PAINT               61446
 #define IDS_TITLE_PARALLEL              61447
 #define IDS_TITLE_PERPENDICULAR         61448
+#define IDS_DOC_UPDATE_MATERIAL         61449
 
 // Next default values for new objects
 // 
