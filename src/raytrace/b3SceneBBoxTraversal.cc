@@ -32,9 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/05/09 17:38:09  sm
+**	- Fixed threading problem on Multi CPU machines for
+**	  material initialization.
+**
 **	Revision 1.3  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
-**
+**	
 **	Revision 1.2  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -327,23 +331,37 @@ b3_bool b3BBox::b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 toleran
 
 void b3Scene::b3UpdateMaterial()
 {
+	b3Item  *item;
+	b3BBox  *bbox;
+	
 	b3PrintF(B3LOG_FULL,"    Updating materials...\n");
-	m_PrepareInfo.b3CollectBBoxes(this);
-	m_PrepareInfo.b3Prepare(b3UpdateMaterialThread);
+
+	B3_FOR_BASE(b3GetBBoxHead(), item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3UpdateMaterial();
+	}
 }
 
-b3_bool b3Scene::b3UpdateMaterialThread(b3BBox *bbox,void *ptr)
+void b3BBox::b3UpdateMaterial()
 {
 	b3Item  *item;
 	b3Shape *shape;
+	b3BBox  *bbox;
 
-	bbox->b3UpdateMaterial();
-	B3_FOR_BASE(bbox->b3GetShapeHead(),item)
+	b3RenderObject::b3UpdateMaterial();
+
+	B3_FOR_BASE(b3GetShapeHead(),item)
 	{
 		shape = (b3Shape *)item;
 		shape->b3UpdateMaterial();
 	}
-	return true;
+
+	B3_FOR_BASE(b3GetBBoxHead(), item)
+	{
+		bbox = (b3BBox *)item;
+		bbox->b3UpdateMaterial();
+	}
 }
 
 /*************************************************************************

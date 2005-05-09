@@ -268,7 +268,6 @@ private:
 	static  b3_u32          b3PrepareThread(          b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
 	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
-	static  b3_u32          b3UpdateMaterialThread(   b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);
 	        b3Shape        *b3IsObscured(   b3BBox *bbox,b3_ray *ray);
 

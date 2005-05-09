@@ -89,6 +89,7 @@ public:
 		   void            b3Expand(b3_bool expand=true);
 		   b3_bool         b3IsExpanded();
 	       void            b3Update();
+		   void            b3UpdateMaterial();
 		   void            b3UpdateBBox();
 		   b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper,b3_f64 tolerance);
 		   b3_count        b3Count();
