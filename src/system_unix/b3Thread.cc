@@ -41,10 +41,13 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2005/05/10 15:30:57  sm
+**	- getrusage time correction message added.
+**
 **	Revision 1.21  2005/03/26 09:03:42  sm
 **	- Some rpm spec updates
 **	- Speed up of correct rusage determination.
-**
+**	
 **	Revision 1.20  2005/01/14 14:42:35  smork
 **	- Take into account that getrusage() time measuring was fixed in
 **	  Linux kernel 2.6.9 and later. getrusage() behaves now POSIX conform.
@@ -449,11 +452,10 @@ b3CPU::b3CPU()
 
 #ifdef __linux__
 		struct utsname uinfo;
+		int            a,b,c;
 
 		if (uname(&uinfo) == 0)
 		{
-			int a,b,c;
-
 			if (sscanf(uinfo.release,"%d.%d.%d",&a,&b,&c) == 3)
 			{
 				if ((a * 100000 + b * 1000 + c) < 206009)
@@ -461,6 +463,12 @@ b3CPU::b3CPU()
 					m_CorrectRUsage = false;
 				}
 			}
+		}
+
+		if (!m_CorrectRUsage)
+		{
+			b3PrintF(B3LOG_NORMAL,"Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
+				a,b,c);
 		}
 #endif
 	}
