@@ -936,6 +936,8 @@
 #define IDS_TITLE_PERPENDICULAR         61448
 #define IDS_DOC_UPDATE_MATERIAL         61449
 #define IDS_OP_SHAPE_CREATE             61450
+#define IDS_OP_SHAPE_EDIT               61451
+#define IDS_OP_SHAPE_DELETE             61452
 
 // Next default values for new objects
 // 

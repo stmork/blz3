@@ -4324,6 +4324,8 @@ BEGIN
     IDS_TITLE_PERPENDICULAR "Senkrecht"
     IDS_DOC_UPDATE_MATERIAL "Die Materialien werden vorbereitet..."
     IDS_OP_SHAPE_CREATE     "Körper erzeugen"
+    IDS_OP_SHAPE_EDIT       "Körper ändern"
+    IDS_OP_SHAPE_DELETE     "Körper löschen"
 END
 
 STRINGTABLE 

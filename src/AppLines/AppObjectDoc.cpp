@@ -47,9 +47,14 @@
 
 /*
 **	$Log$
+**	Revision 1.49  2005/05/11 16:13:19  sm
+**	- Added following undo/redo operations for object editor:
+**	  o shape edit
+**	  o shape delete
+**
 **	Revision 1.48  2005/05/11 14:19:28  sm
 **	- Added first Undo operation for object editor.
-**
+**	
 **	Revision 1.47  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -729,94 +734,22 @@ void CAppObjectDoc::OnUpdateSelectedItem(CCmdUI* pCmdUI)
 **                                                                      **
 *************************************************************************/
 
-void CAppObjectDoc::OnObjectEdit() 
-{
-	// TODO: Add your command handler code here
-	b3Item         *selected = m_DlgHierarchy->b3GetSelectedItem();
-	b3ItemEditCall  call;
-
-	if (selected != null)
-	{
-		call = CB3ImageList::b3GetEditCall(selected);
-		if (call != null)
-		{
-			if (call(m_LinesDoc->m_Scene->b3GetClassType(),selected,false) == IDOK)
-			{
-				// Init data
-				m_DlgHierarchy->b3GetData();
-				m_BBox->b3BacktraceRecompute(m_BBox->b3FindParentBBox((b3Shape *)selected));
-				b3ComputeBounds();
-
-				SetModifiedFlag();
-				UpdateAllViews(null,B3_UPDATE_GEOMETRY);
-				m_DlgHierarchy->b3InitTree(this,true);
-				m_DlgHierarchy->b3SelectItem(selected);
-			}
-		}
-	}
-}
-
 void CAppObjectDoc::OnObjectNew() 
 {
 	// TODO: Add your command handler code here
 	b3AddOp(new b3OpShapeCreate(this, m_BBox, m_DlgHierarchy));
 }
 
+void CAppObjectDoc::OnObjectEdit() 
+{
+	// TODO: Add your command handler code here
+	b3AddOp(new b3OpShapeEdit(this, m_BBox, m_DlgHierarchy));
+}
+
 void CAppObjectDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
-	CMainFrame     *main    = CB3GetMainFrame();
-	b3Base<b3Item> *base;
-	b3BBox         *parent;
-	b3Item         *select;
-	b3Item         *selected;
-	int             answere;
-
-	selected = m_DlgHierarchy->b3GetSelectedItem();
-	if (selected != null)
-	{
-		// Security question depending on item type
-		switch(selected->b3GetClass())
-		{
-		case CLASS_BBOX:
-			answere = AfxMessageBox(IDS_ASK_DELETE_OBJECT,MB_ICONQUESTION|MB_YESNO);
-			base    = m_BBox->b3FindBBoxHead((b3BBox *)selected);
-			m_BBox->b3BacktraceRecompute((b3BBox *)selected);
-			break;
-
-		case CLASS_SHAPE:
-		case CLASS_CSG:
-			answere = AfxMessageBox(IDS_ASK_DELETE_SHAPE,MB_ICONQUESTION|MB_YESNO);
-			parent  = m_BBox->b3FindParentBBox((b3Shape *)selected);
-			base    = parent->b3GetShapeHead();
-			m_BBox->b3BacktraceRecompute(parent);
-			break;
-
-		default:
-			answere = IDCANCEL;
-			base    = null;
-			break;
-		}
-
-		// If the user really wants to delete item...
-		if(answere == IDYES)
-		{
-			B3_ASSERT(base != null);
-			select   = (selected->Succ != null ? selected->Succ : selected->Prev);
-
-			main->b3SetStatusMessage(IDS_DOC_BOUND);
-			base->b3Remove(selected);
-			delete selected;
-
-			main->b3SetStatusMessage(IDS_DOC_BOUND);
-			b3ComputeBounds();
-
-			SetModifiedFlag();
-			UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-			m_DlgHierarchy->b3InitTree(this,true);
-			m_DlgHierarchy->b3SelectItem(select);
-		}
-	}
+	b3AddOp(new b3OpShapeDelete(m_BBox, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnUpdateObjectEdit(CCmdUI* pCmdUI) 

@@ -56,4 +56,45 @@ protected:
 	}
 };
 
+class b3OpShapeEdit : public b3OpShape
+{
+	b3Item         *m_Selected;
+	b3Item         *m_Clone;
+	b3Item         *m_InsertAfter;
+	b3Base<b3Item> *m_Base;
+
+public:
+	b3OpShapeEdit(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy);
+
+protected:
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_SHAPE_EDIT;
+	}
+};
+class b3OpShapeDelete : public b3OpShape
+{
+	b3Item         *m_Select;      // Item to select after deletion
+	b3Item         *m_Selected;    // The item to delete
+	b3Item         *m_InsertAfter; // The previous item for undeletion
+	b3Base<b3Item> *m_Base;        // The base where the item to delete belongs to.
+
+public:
+	b3OpShapeDelete(b3BBox *root, CDlgHierarchy *hierarchy);
+
+protected:
+	void b3Undo();
+	void b3Redo();
+	void b3Delete();
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_SHAPE_DELETE;
+	}
+};
+
 #endif
