@@ -84,7 +84,11 @@ public:
 	virtual void       b3StartRaytrace();
 	virtual void       b3StopRaytrace();
 
-	virtual void       b3Prepare(b3_bool geometry_changed,b3_bool structure_changed,b3_bool reorg=false);
+	virtual void       b3Prepare(
+		b3_bool geometry_changed,
+		b3_bool structure_changed,
+		b3_bool reorg=false,
+		b3_bool material_changed=false);
 	virtual void       b3ComputeBounds();
 	virtual void       b3InitTree();
 	virtual void       b3SelectItem(b3Item *item);

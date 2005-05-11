@@ -32,6 +32,8 @@ class b3Shape;
 class b3BBox;
 class b3Scene;
 
+class CAppLinesDoc;
+
 class CAppObjectDoc : public CAppRenderDoc
 {
 	CAppLinesDoc         *m_LinesDoc;
@@ -113,19 +115,25 @@ protected:
 	DECLARE_INTERFACE_MAP()
 
 public:
-	void           b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
-	void           b3ComputeBounds();
-	void           b3InitTree();
-	void           b3HierarchySelectionChanged();
-	b3Shape       *b3GetSelectedShape();
-	void           b3ContextMenu(HTREEITEM item);
-	void           b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
-	b3_bool        b3IsLinesDoc(CAppLinesDoc *LinesDoc);
-	b3_bool        b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
-	const char    *b3GetDocumentName();
-	b3Scene       *b3GetParentScene();
-	b3_u32         b3GetParentShading();
-
+	void             b3EditBBox(CAppLinesDoc *LinesDoc,b3BBox *original);
+	void             b3ComputeBounds();
+	void             b3InitTree();
+	void             b3HierarchySelectionChanged();
+	b3Shape         *b3GetSelectedShape();
+	void             b3ContextMenu(HTREEITEM item);
+	void             b3DropBBox(b3BBox *dragBBox,b3BBox *dropBBox);
+	b3_bool          b3IsLinesDoc(CAppLinesDoc *LinesDoc);
+	b3_bool          b3IsObjectAlreadyOpen(CAppLinesDoc *LinesDoc,b3BBox *bbox);
+	const char      *b3GetDocumentName();
+	b3Scene         *b3GetParentScene();
+	b3_u32           b3GetParentShading();
+	b3RenderContext *b3GetRenderContext();
+	b3_u32           b3GetSceneType();
+	void             b3Prepare(
+		b3_bool geometry_changed,
+		b3_bool structure_changed,
+		b3_bool reorg=false,
+		b3_bool material_changed=false);
 private:
 	void           b3SetBBox(b3BBox *bbox);
 	void           b3ActivateItem(b3Item *item,b3_bool activate=true);

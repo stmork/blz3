@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2005/05/11 14:19:28  sm
+**	- Added first Undo operation for object editor.
+**
 **	Revision 1.25  2004/11/21 16:44:46  sm
 **	- Corrected fulcrum drawing problem: The fulcrum was
 **	  updated before first initialization. And even the initialization
@@ -43,7 +46,7 @@
 **	  The vertex array drawing cannot be combined with
 **	  VBOs due to binding problems. Its likely that any VBO
 **	  is bound so a simple vertex array call should go wrong.
-**
+**	
 **	Revision 1.24  2004/09/24 13:45:35  sm
 **	- Extracted OpenGL extension vector buffer objects into own files.
 **	- Some cleanup for Lines.
@@ -258,7 +261,8 @@ void CAppRenderDoc::b3DrawFulcrum()
 void CAppRenderDoc::b3Prepare(
 	b3_bool geometry_changed,
 	b3_bool structure_changed,
-	b3_bool reorg)
+	b3_bool reorg,
+	b3_bool material_changed)
 {
 }
 

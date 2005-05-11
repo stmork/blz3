@@ -2936,6 +2936,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3UndoShape.cpp">
+			</File>
+			<File
 				RelativePath="b3VectorEdit.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -6732,6 +6735,9 @@
 			</File>
 			<File
 				RelativePath="b3UndoPick.h">
+			</File>
+			<File
+				RelativePath=".\b3UndoShape.h">
 			</File>
 			<File
 				RelativePath="b3VectorEdit.h">

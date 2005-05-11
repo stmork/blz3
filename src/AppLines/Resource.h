@@ -935,6 +935,7 @@
 #define IDS_TITLE_PARALLEL              61447
 #define IDS_TITLE_PERPENDICULAR         61448
 #define IDS_DOC_UPDATE_MATERIAL         61449
+#define IDS_OP_SHAPE_CREATE             61450
 
 // Next default values for new objects
 // 

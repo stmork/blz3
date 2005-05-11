@@ -26,6 +26,8 @@
 #include "AppObjectView.h"
 #include "MainFrm.h"
 
+#include "b3UndoShape.h"
+
 #include "DlgCopyProperties.h"
 #include "DlgItemMaintain.h"
 #include "DlgKnotControl.h"
@@ -45,6 +47,9 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2005/05/11 14:19:28  sm
+**	- Added first Undo operation for object editor.
+**
 **	Revision 1.47  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -54,7 +59,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.46  2005/01/23 20:57:22  sm
 **	- Moved some global static variables into class static ones.
 **	
@@ -566,6 +571,71 @@ void CAppObjectDoc::Dump(CDumpContext& dc) const
 **                                                                      **
 *************************************************************************/
 
+b3RenderContext *CAppObjectDoc::b3GetRenderContext()
+{
+	return m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context;
+}
+
+b3_u32 CAppObjectDoc::b3GetSceneType()
+{
+	return m_LinesDoc->m_Scene->b3GetClassType();
+}
+
+void CAppObjectDoc::b3Prepare(
+	b3_bool geometry_changed,
+	b3_bool structure_changed,
+	b3_bool reorg,
+	b3_bool material_changed)
+{
+	CMainFrame      *main    = CB3GetMainFrame();
+	b3RenderContext *context = b3GetRenderContext();
+
+	if (reorg)
+	{
+		main->b3SetStatusMessage(IDS_DOC_REORG);
+	}
+
+	if (geometry_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_VERTICES);
+		m_BBox->b3SetupVertexMemory(context);
+	}
+
+	if (geometry_changed || structure_changed || reorg)
+	{
+		main->b3SetStatusMessage(IDS_DOC_BOUND);
+		b3ComputeBounds();
+	}
+
+	if (geometry_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_PREPARE);
+		m_BBox->b3Prepare();
+	}
+
+	if (geometry_changed || structure_changed)
+	{
+		SetModifiedFlag();
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+	}
+
+	if (material_changed)
+	{
+		main->b3SetStatusMessage(IDS_DOC_UPDATE_MATERIAL);
+		m_BBox->b3UpdateMaterial();
+	}
+
+	if (structure_changed)
+	{
+		m_DlgHierarchy->b3InitTree(this,true);
+	}
+
+	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", context->glVertexCount);
+	b3PrintF(B3LOG_DEBUG,"# %d triangles\n",context->glPolyCount);
+	b3PrintF(B3LOG_DEBUG,"# %d lines\n",    context->glGridCount);
+	main->b3SetStatusMessage(AFX_IDS_IDLEMESSAGE);
+}
+
 void CAppObjectDoc::b3ComputeBounds()
 {
 	b3Vector::b3InitBound(&m_Lower,&m_Upper);
@@ -689,49 +759,7 @@ void CAppObjectDoc::OnObjectEdit()
 void CAppObjectDoc::OnObjectNew() 
 {
 	// TODO: Add your command handler code here
-	b3BBox         *bbox;
-	b3Shape        *shape;
-	b3ItemEditCall  call;
-	CDlgNewObject   dlg;
-	int             result;
-
-	shape = m_DlgHierarchy->b3GetSelectedShape();
-	bbox  = (shape != null ?
-		m_BBox->b3FindParentBBox(shape) :
-		m_DlgHierarchy->b3GetSelectedBBox());
-	if (bbox != null)
-	{
-		dlg.m_InsertAfter = shape;
-		dlg.m_BBox        = bbox;
-		if ((dlg.DoModal() == IDOK) && (dlg.m_NewItem != null))
-		{
-			// Open edit dialog if available
-			call   = CB3ImageList::b3GetEditCall(dlg.m_NewItem);
-			result = (call != null ? call(m_LinesDoc->m_Scene->b3GetClassType(), dlg.m_NewItem,true) : IDOK);
-			if (result == IDOK)
-			{
-				// Manually insert to prevent uninitialized redraw
-				// of new item.
-				dlg.m_Base->b3Insert(dlg.m_InsertAfter,dlg.m_NewItem);
-
-				// Init data
-				m_DlgHierarchy->b3GetData();
-				m_BBox->b3PrepareBBox(true);
-				m_BBox->b3SetupVertexMemory(m_LinesDoc != null ? &m_LinesDoc->m_Context : &m_Context);
-				m_BBox->b3BacktraceRecompute(bbox);
-				b3ComputeBounds();
-
-				SetModifiedFlag();
-				UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
-				m_DlgHierarchy->b3InitTree(this,true);
-				m_DlgHierarchy->b3SelectItem(dlg.m_NewItem);
-			}
-			else
-			{
-				delete dlg.m_NewItem;
-			}
-		}
-	}
+	b3AddOp(new b3OpShapeCreate(this, m_BBox, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnObjectDelete() 

@@ -4323,6 +4323,7 @@ BEGIN
     IDS_TITLE_PARALLEL      "Parallel"
     IDS_TITLE_PERPENDICULAR "Senkrecht"
     IDS_DOC_UPDATE_MATERIAL "Die Materialien werden vorbereitet..."
+    IDS_OP_SHAPE_CREATE     "Körper erzeugen"
 END
 
 STRINGTABLE 
