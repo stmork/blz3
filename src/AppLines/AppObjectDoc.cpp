@@ -47,9 +47,12 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2005/05/12 20:16:12  sm
+**	- Some more undo/redo surface operations.
+**
 **	Revision 1.50  2005/05/12 12:16:25  sm
 **	- Added surface property editing for undo/redo editing.
-**
+**	
 **	Revision 1.49  2005/05/11 16:13:19  sm
 **	- Added following undo/redo operations for object editor:
 **	  o shape edit
@@ -597,6 +600,7 @@ void CAppObjectDoc::b3Prepare(
 {
 	CMainFrame      *main    = CB3GetMainFrame();
 	b3RenderContext *context = b3GetRenderContext();
+	LPARAM           update  = 0;
 
 	if (reorg)
 	{
@@ -624,18 +628,24 @@ void CAppObjectDoc::b3Prepare(
 	if (geometry_changed || structure_changed)
 	{
 		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		update |= B3_UPDATE_GEOMETRY;
 	}
 
 	if (material_changed)
 	{
 		main->b3SetStatusMessage(IDS_DOC_UPDATE_MATERIAL);
 		m_BBox->b3UpdateMaterial();
+		update |= B3_UPDATE_VIEW;
 	}
 
 	if (structure_changed)
 	{
 		m_DlgHierarchy->b3InitTree(this,true);
+	}
+
+	if (update != 0)
+	{
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
 
 	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", context->glVertexCount);

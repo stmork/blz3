@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/05/12 20:16:12  sm
+**	- Some more undo/redo surface operations.
+**
 **	Revision 1.3  2005/05/12 12:16:25  sm
 **	- Added surface property editing for undo/redo editing.
-**
+**	
 **	Revision 1.2  2005/05/11 16:13:19  sm
 **	- Added following undo/redo operations for object editor:
 **	  o shape edit
@@ -327,11 +330,11 @@ void b3OpShapeSurfaceList::b3Delete()
 b3OpShapeMaterialEditList::b3OpShapeMaterialEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy) :
 	b3OpShapeSurfaceList(root, hierarchy)
 {
-	m_Shape = m_DlgHierarchy->b3GetSelectedShape();
-
 	if (m_Shape != null)
 	{
 		m_Base = m_Shape->b3GetMaterialHead();
+		m_CloneBase.b3InitBase(m_Base->b3GetClass());
+		m_Shape->b3Store();
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
@@ -343,6 +346,18 @@ b3OpShapeMaterialEditList::b3OpShapeMaterialEditList(CAppObjectDoc *pDoc, b3BBox
 			m_UpdateMaterial = true;
 		}
 	}
+}
+
+void b3OpShapeMaterialEditList::b3Undo()
+{
+	b3OpShapeSurfaceList::b3Undo();
+	m_Shape->b3RecomputeMaterial();
+}
+
+void b3OpShapeMaterialEditList::b3Redo()
+{
+	b3OpShapeSurfaceList::b3Redo();
+	m_Shape->b3RecomputeMaterial();
 }
 
 /*************************************************************************
@@ -357,6 +372,8 @@ b3OpShapeBumpEditList::b3OpShapeBumpEditList(CAppObjectDoc *pDoc, b3BBox *root, 
 	if (m_Shape != null)
 	{
 		m_Base = m_Shape->b3GetBumpHead();
+		m_CloneBase.b3InitBase(m_Base->b3GetClass());
+		m_Shape->b3Store();
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
@@ -382,6 +399,8 @@ b3OpShapeConditionEditList::b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BB
 	if (m_Shape != null)
 	{
 		m_Base = m_Shape->b3GetConditionHead();
+		m_CloneBase.b3InitBase(m_Base->b3GetClass());
+		m_Shape->b3Store();
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
@@ -395,6 +414,18 @@ b3OpShapeConditionEditList::b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BB
 	}
 }
 
+void b3OpShapeConditionEditList::b3Undo()
+{
+	b3OpShapeSurfaceList::b3Undo();
+	m_Shape->b3RecomputeIndices();
+}
+
+void b3OpShapeConditionEditList::b3Redo()
+{
+	b3OpShapeSurfaceList::b3Redo();
+	m_Shape->b3RecomputeIndices();
+}
+
 /*************************************************************************
 **                                                                      **
 **                        Undo/Redo surface item edit                   **
@@ -404,8 +435,9 @@ b3OpShapeConditionEditList::b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BB
 b3OpShapeSurfaceItem::b3OpShapeSurfaceItem(b3BBox *root, CDlgHierarchy *hierarchy) :
 	b3OpShape(root, hierarchy)
 {
-	m_Shape       = m_DlgHierarchy->b3GetSelectedShape();
-	m_InsertAfter = null;
+	m_InsertAfter     = null;
+	m_UpdateMaterial  = true;
+	m_PrepareGeometry = false;
 }
 
 void b3OpShapeSurfaceItem::b3Undo()
@@ -448,15 +480,26 @@ b3OpShapeMaterialEdit::b3OpShapeMaterialEdit(
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
 	m_Base     = m_Shape->b3GetMaterialHead();
-	B3_ASSERT(m_Base->b3GetCount() == 1);
 
+	B3_ASSERT(m_Base->b3GetCount() == 1);
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
 	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
 	{
 		b3Initialize();
-		m_UpdateMaterial = true;
 	}
+}
+
+void b3OpShapeMaterialEdit::b3Undo()
+{
+	b3OpShapeSurfaceItem::b3Undo();
+	m_Shape->b3RecomputeMaterial();
+}
+
+void b3OpShapeMaterialEdit::b3Redo()
+{
+	b3OpShapeSurfaceItem::b3Redo();
+	m_Shape->b3RecomputeMaterial();
 }
 
 /*************************************************************************
@@ -475,14 +518,13 @@ b3OpShapeBumpEdit::b3OpShapeBumpEdit(
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
 	m_Base     = m_Shape->b3GetBumpHead();
+	
 	B3_ASSERT(m_Base->b3GetCount() == 1);
-
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
 	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
 	{
 		b3Initialize();
-		m_UpdateMaterial = true;
 	}
 }
 
@@ -502,13 +544,24 @@ b3OpShapeConditionEdit::b3OpShapeConditionEdit(
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
 	m_Base     = m_Shape->b3GetConditionHead();
-	B3_ASSERT(m_Base->b3GetCount() == 1);
 
+	B3_ASSERT(m_Base->b3GetCount() == 1);
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
 	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
 	{
 		b3Initialize();
-		m_UpdateMaterial = true;
 	}
+}
+
+void b3OpShapeConditionEdit::b3Undo()
+{
+	b3OpShapeSurfaceItem::b3Undo();
+	m_Shape->b3RecomputeIndices();
+}
+
+void b3OpShapeConditionEdit::b3Redo()
+{
+	b3OpShapeSurfaceItem::b3Redo();
+	m_Shape->b3RecomputeIndices();
 }

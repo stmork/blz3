@@ -62,10 +62,13 @@
 
 /*
 **	$Log$
+**	Revision 1.110  2005/05/12 20:16:12  sm
+**	- Some more undo/redo surface operations.
+**
 **	Revision 1.109  2005/05/07 19:57:14  sm
 **	- Added comment when initializing materials when after
 **	  loading a document (concrete: a scene).
-**
+**	
 **	Revision 1.108  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -999,7 +1002,8 @@ void CAppLinesDoc::b3Prepare(
 	b3_bool reorg,
 	b3_bool material_changed)
 {
-	CMainFrame *main = CB3GetMainFrame();
+	CMainFrame *main   = CB3GetMainFrame();
+	LPARAM      update = 0;
 
 	if (reorg)
 	{
@@ -1028,18 +1032,24 @@ void CAppLinesDoc::b3Prepare(
 	if (geometry_changed || structure_changed)
 	{
 		SetModifiedFlag();
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		update |= B3_UPDATE_GEOMETRY;
 	}
 
 	if (material_changed)
 	{
 		main->b3SetStatusMessage(IDS_DOC_UPDATE_MATERIAL);
 		m_Scene->b3UpdateMaterial();
+		update |= B3_UPDATE_VIEW;
 	}
 
 	if (structure_changed)
 	{
 		m_DlgHierarchy->b3InitTree(this,true);
+	}
+
+	if (update != 0)
+	{
+		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
 	}
 
 	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);

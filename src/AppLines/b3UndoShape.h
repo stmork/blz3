@@ -116,9 +116,9 @@ protected:
 	b3OpShapeSurfaceList(b3BBox *root, CDlgHierarchy *hierarchy);
 
 protected:
-	void b3Undo();
-	void b3Redo();
-	void b3Delete();
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
 };
 
 class b3OpShapeMaterialEditList : public b3OpShapeSurfaceList
@@ -128,6 +128,9 @@ public:
 	b3OpShapeMaterialEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy);
 
 protected:
+	void b3Undo();
+	void b3Redo();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_SHAPE_MATERIAL_MAINTAIN;
@@ -152,6 +155,9 @@ public:
 	b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy);
 
 protected:
+	void b3Undo();
+	void b3Redo();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_SHAPE_CONDITION_MAINTAIN;
@@ -177,9 +183,9 @@ protected:
 	b3OpShapeSurfaceItem(b3BBox *root, CDlgHierarchy *hierarchy);
 
 protected:
-	void b3Undo();
-	void b3Redo();
-	void b3Delete();
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
 };
 
 class b3OpShapeMaterialEdit : public b3OpShapeSurfaceItem
@@ -189,6 +195,9 @@ public:
 	b3OpShapeMaterialEdit(CAppObjectDoc *pDoc, b3BBox *root, b3Shape *shape, CDlgHierarchy *hierarchy);
 
 protected:
+	void b3Undo();
+	void b3Redo();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_SHAPE_MATERIAL_EDIT;
@@ -213,6 +222,9 @@ public:
 	b3OpShapeConditionEdit(CAppObjectDoc *pDoc, b3BBox *root, b3Shape *shape, CDlgHierarchy *hierarchy);
 
 protected:
+	void b3Undo();
+	void b3Redo();
+
 	inline int  b3GetId()
 	{
 		return IDS_OP_SHAPE_CONDITION_EDIT;
