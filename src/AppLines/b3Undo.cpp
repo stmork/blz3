@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/05/12 12:16:25  sm
+**	- Added surface property editing for undo/redo editing.
+**
 **	Revision 1.7  2003/02/01 12:57:17  sm
 **	- Ready to undo/redo!
-**
+**	
 **	Revision 1.6  2003/01/30 19:49:55  sm
 **	- Further undo/redo history dialog build.
 **	
@@ -137,6 +140,7 @@ b3Operation::b3Operation()
 {
 	m_PrepareGeometry         = true;
 	m_PrepareChangedStructure = false;
+	m_UpdateMaterial          = false;
 }
 
 b3Operation::~b3Operation()
@@ -170,5 +174,7 @@ void b3Operation::b3Prepare(CAppRenderDoc *pDoc)
 {
 	pDoc->b3Prepare(
 		m_PrepareGeometry,
-		m_PrepareChangedStructure);
+		m_PrepareChangedStructure,
+		false,
+		m_UpdateMaterial);
 }

@@ -43,6 +43,7 @@ class b3Operation : public b3UndoOperation
 protected:
 	b3_bool          m_PrepareGeometry;
 	b3_bool          m_PrepareChangedStructure;
+	b3_bool          m_UpdateMaterial;
 
 public:
 	                 b3Operation();

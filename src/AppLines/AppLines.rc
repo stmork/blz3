@@ -4326,11 +4326,21 @@ BEGIN
     IDS_OP_SHAPE_CREATE     "Körper erzeugen"
     IDS_OP_SHAPE_EDIT       "Körper ändern"
     IDS_OP_SHAPE_DELETE     "Körper löschen"
+    IDS_OP_SHAPE_MATERIAL_MAINTAIN "Material verwalten"
+    IDS_OP_SHAPE_MATERIAL_EDIT "Material ändern"
+    IDS_OP_SHAPE_BUMP_MAINTAIN "Struktur verwalten"
 END
 
 STRINGTABLE 
 BEGIN
     IDC_SCAN_PARA           "Stellt die Seiteneinstellungen beim Scannen ein\nSeiteneinstellungen beim Scannen"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_OP_SHAPE_BUMP_EDIT  "Struktur ändern"
+    IDS_OP_SHAPE_CONDITION_MAINTAIN "Stanzung verwalten"
+    IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
 END
 
 #endif    // Deutsch (Deutschland) resources

@@ -476,6 +476,16 @@ public:
 			Last = Right.Last;
 		}
 	}
+
+	inline void b3MoveFrom(b3Base<T> *src)
+	{
+		B3_ASSERT(b3IsEmpty());
+
+		First = src->First;
+		Last  = src->Last;
+		src->First = null;
+		src->Last  = null;
+	}
 };
 
 #endif

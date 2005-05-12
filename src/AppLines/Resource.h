@@ -938,6 +938,13 @@
 #define IDS_OP_SHAPE_CREATE             61450
 #define IDS_OP_SHAPE_EDIT               61451
 #define IDS_OP_SHAPE_DELETE             61452
+#define IDS_OP_SHAPE_MATERIAL_MAINTAIN  61453
+#define IDS_OP_SHAPE_MATERIAL_EDIT      61454
+#define IDS_OP_SHAPE_BUMP_MAINTAIN      61455
+#define IDS_OP_SHAPE_BUMP_EDIT          61456
+#define IDS_OP_SHAPE_CONDITION_MAINTAIN 61457
+#define IDS_OP_SHAPE_MATERIAL_EDIT3     61458
+#define IDS_OP_SHAPE_CONDITION_EDIT     61458
 
 // Next default values for new objects
 // 

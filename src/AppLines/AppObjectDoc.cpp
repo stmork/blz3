@@ -47,11 +47,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2005/05/12 12:16:25  sm
+**	- Added surface property editing for undo/redo editing.
+**
 **	Revision 1.49  2005/05/11 16:13:19  sm
 **	- Added following undo/redo operations for object editor:
 **	  o shape edit
 **	  o shape delete
-**
+**	
 **	Revision 1.48  2005/05/11 14:19:28  sm
 **	- Added first Undo operation for object editor.
 **	
@@ -912,38 +915,23 @@ void CAppObjectDoc::b3UpdateSurface(b3Shape *shape)
 void CAppObjectDoc::OnEditMaterial() 
 {
 	// TODO: Add your command handler code here
-	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
-
-	if (shape != null)
-	{
-		CDlgItemMaintain dlg(this,shape->b3GetMaterialHead());
-
-		if (dlg.DoModal() == IDOK)
-		{
-			b3UpdateSurface(shape);
-		}
-	}
+	b3AddOp(new b3OpShapeMaterialEditList(this, m_BBox, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnEditMaterialDirect() 
 {
 	// TODO: Add your command handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3Item   *item;
-
+	b3Shape *shape = b3GetSelectedShape();
+	
 	if (shape != null)
 	{
 		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
 		{
-			item = shape->b3GetMaterialHead()->First;
-			if (b3Loader::b3GetLoader().b3Edit(item,this))
-			{
-				b3UpdateSurface(shape);
-			}
+			b3AddOp(new b3OpShapeMaterialEdit(this, m_BBox, shape, m_DlgHierarchy));
 		}
 		else
 		{
-			OnEditMaterial();
+			b3AddOp(new b3OpShapeMaterialEditList(this, m_BBox, m_DlgHierarchy));
 		}
 	}
 }
@@ -1109,38 +1097,23 @@ void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI)
 void CAppObjectDoc::OnEditBump() 
 {
 	// TODO: Add your command handler code here
-	b3Shape *shape = m_DlgHierarchy->b3GetSelectedShape();
-
-	if (shape != null)
-	{
-		CDlgItemMaintain dlg(this,shape->b3GetBumpHead());
-
-		if (dlg.DoModal() == IDOK)
-		{
-			b3UpdateSurface(shape);
-		}
-	}
+	b3AddOp(new b3OpShapeBumpEditList(this, m_BBox, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnEditBumpDirect() 
 {
 	// TODO: Add your command handler code here
-	b3Shape  *shape = b3GetSelectedShape();
-	b3Item   *item;
-
+	b3Shape *shape = b3GetSelectedShape();
+	
 	if (shape != null)
 	{
-		if (shape->b3GetBumpHead()->b3GetCount() == 1)
+		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
 		{
-			item = shape->b3GetBumpHead()->First;
-			if (b3Loader::b3GetLoader().b3Edit(item,this))
-			{
-				b3UpdateSurface(shape);
-			}
+			b3AddOp(new b3OpShapeBumpEdit(this, m_BBox, shape, m_DlgHierarchy));
 		}
 		else
 		{
-			OnEditBump();
+			b3AddOp(new b3OpShapeBumpEditList(this, m_BBox, m_DlgHierarchy));
 		}
 	}
 }
