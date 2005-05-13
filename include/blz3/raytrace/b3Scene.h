@@ -257,6 +257,7 @@ public:
 	static  b3Scene        *b3ReadTGF(const char *filename);
 	static  b3_bool         b3CheckTexture(b3Tx **tx,const char *name);
 	static  b3_bool         b3CutTextureName(const char *full_name,char *short_name);
+	static  b3_u32          b3PrepareBBoxThread(b3BBox *bbox,void *ptr);
 
 private:
 	        b3_bool         b3FindObscurer(b3_ray *ray,b3_f64 max = DBL_MAX);
@@ -265,7 +266,6 @@ private:
 	        void            b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs);
 	static  b3_u32          b3RaytraceThread(void *ptr);
 	static  b3_u32          b3RaytraceMotionBlurThread(void *ptr);
-	static  b3_u32          b3PrepareThread(          b3BBox *bbox,void *ptr);
 	static  b3_u32          b3UpdateThread(           b3BBox *bbox,void *ptr);
 	static  b3_u32          b3RecomputeMaterialThread(b3BBox *bbox,void *ptr);
 		    b3Shape        *b3Intersect(    b3BBox *bbox,b3_ray *ray,b3_bool check_visibility);

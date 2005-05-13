@@ -2939,6 +2939,9 @@
 				RelativePath=".\b3UndoShape.cpp">
 			</File>
 			<File
+				RelativePath=".\b3UndoShapeSurface.cpp">
+			</File>
+			<File
 				RelativePath="b3VectorEdit.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -6738,6 +6741,9 @@
 			</File>
 			<File
 				RelativePath=".\b3UndoShape.h">
+			</File>
+			<File
+				RelativePath=".\b3UndoShapeSurface.h">
 			</File>
 			<File
 				RelativePath="b3VectorEdit.h">

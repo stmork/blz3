@@ -27,6 +27,7 @@
 #include "MainFrm.h"
 
 #include "b3UndoShape.h"
+#include "b3UndoShapeSurface.h"
 
 #include "DlgCopyProperties.h"
 #include "DlgItemMaintain.h"
@@ -47,9 +48,12 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2005/05/13 15:33:54  sm
+**	- Tested surface property operations.
+**
 **	Revision 1.51  2005/05/12 20:16:12  sm
 **	- Some more undo/redo surface operations.
-**
+**	
 **	Revision 1.50  2005/05/12 12:16:25  sm
 **	- Added surface property editing for undo/redo editing.
 **	
@@ -621,8 +625,12 @@ void CAppObjectDoc::b3Prepare(
 
 	if (geometry_changed)
 	{
+		b3PrepareInfo prep;
+
 		main->b3SetStatusMessage(IDS_DOC_PREPARE);
-		m_BBox->b3Prepare();
+
+		prep.b3CollectBBoxes(m_BBox);
+		prep.b3Prepare(b3Scene::b3PrepareBBoxThread);
 	}
 
 	if (geometry_changed || structure_changed)

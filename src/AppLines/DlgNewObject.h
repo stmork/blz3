@@ -24,6 +24,7 @@
 // DlgNewObject.h : header file
 //
 
+#include "AppLines.h"
 #include "blz3/raytrace/b3Shape.h"
 #include "b3ImageList.h"
 

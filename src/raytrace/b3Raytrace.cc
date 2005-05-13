@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.72  2005/05/13 15:33:54  sm
+**	- Tested surface property operations.
+**
 **	Revision 1.71  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
-**
+**	
 **	Revision 1.70  2005/05/01 12:58:22  sm
 **	- Optimized object visibility.
 **	
@@ -628,7 +631,7 @@ void b3Scene::b3DoRaytraceMotionBlur(b3Display *display,b3_count CPUs)
 **                                                                      **
 *************************************************************************/
 
-b3_bool b3Scene::b3PrepareThread(b3BBox *bbox,void *ptr)
+b3_bool b3Scene::b3PrepareBBoxThread(b3BBox *bbox,void *ptr)
 {
 	return bbox->b3PrepareBBox();
 }
@@ -777,7 +780,7 @@ b3_bool b3Scene::b3PrepareScene(b3_res xSize,b3_res ySize)
 	// Init geometry
 	b3PrintF(B3LOG_FULL,"  preparing geometry...\n");
 	m_PrepareInfo.b3CollectBBoxes(this);
-	if(!m_PrepareInfo.b3Prepare(b3PrepareThread))
+	if(!m_PrepareInfo.b3Prepare(b3PrepareBBoxThread))
 	{
 		b3PrintF(B3LOG_NORMAL,"Geometry preparation didn't succeed!\n");
 		return false;
