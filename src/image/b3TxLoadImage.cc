@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/05/14 12:27:05  sm
+**	- Corrected scanf format.
+**
 **	Revision 1.19  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.18  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -134,7 +137,7 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 	b3_pkd_color *LongData;
 	HeaderTIFF   *TIFF;
 	HeaderSGI    *HeaderSGI;
-	b3_offset     pos;
+	b3_index      pos;
 	b3_coord      x,y;
 	b3_s32        ppm_type;
 	b3_index      i;
@@ -206,11 +209,11 @@ b3_result b3Tx::b3LoadImage (b3_u08 *buffer,b3_size buffer_size)
 
 
 	// PPM6
-	pos = 0;
-	x   = 0;
-	y   = 0;
+	pos      = 0;
+	x        = 0;
+	y        = 0;
 	ppm_type = 0;
-	i   = sscanf((const char *)buffer,"P%d %ld %ld %*d%n",&ppm_type,&x,&y,&pos);
+	i   = sscanf((const char *)buffer,"P%d %ld %ld %*d%ln",&ppm_type,&x,&y,&pos);
 	b3PrintF (B3LOG_FULL,"PxM (%ld): (%ld,%ld - %ld) %d\n",ppm_type,x,y,i,pos);
 	if (i >= 2)
 	{

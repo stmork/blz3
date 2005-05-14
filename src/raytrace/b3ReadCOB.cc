@@ -38,13 +38,16 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/05/14 12:27:05  sm
+**	- Corrected scanf format.
+**
 **	Revision 1.15  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.14  2004/12/28 15:44:35  sm
 **	- Adjusted compiler settings
 **	- Some 64 bit corrections
@@ -393,7 +396,7 @@ b3_size b3COBReader::b3COB_ParseGrou(
 	b3_count   ver,rev;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
-	sscanf (line,"Grou V%ld.%ld Id %d Parent %d Size %08d",
+	sscanf (line,"Grou V%ld.%ld Id %d Parent %d Size %08ld",
 		&ver,&rev,&id,&parent,&size);
 
 	b3COB_GetLine (line,&buffer[len+1],sizeof(line));
@@ -448,7 +451,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 #endif
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
-	sscanf (line,"PolH V%ld.%ld Id %d Parent %d Size %08d",
+	sscanf (line,"PolH V%ld.%ld Id %d Parent %d Size %08ld",
 		&ver,&rev,&id,&parent,&size);
 
 	if (parent == 0)
@@ -582,7 +585,7 @@ b3_size b3COBReader::b3COB_ParsePolH(
 				rev += 2;
 				for (k = 0,len = 0;k < rev;k++)
 				{
-					sscanf (&line[len],"<%ld,%*d> %n",&read,&index);
+					sscanf (&line[len],"<%ld,%*d> %ln",&read,&index);
 					IDs.b3Add(read);
 					len += index;
 				}
@@ -672,7 +675,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 	b3_f32       ambient = 0,specular = 0,alpha,r,g,b;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
-	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08d",
+	sscanf (line,"Mat1 V%ld.%ld Id %d Parent %d Size %08ld",
 		&ver,&rev,&id,&parent,&size);
 
 #ifdef _DEBUG
@@ -749,7 +752,7 @@ b3_size b3COBReader::b3COB_ParseDummy(const char *buffer)
 	b3_cob_id  id,parent;
 
 	len = b3COB_GetLine (line,buffer,sizeof(line));
-	sscanf (line,"%4s V%ld.%ld Id %d Parent %d Size %08d",
+	sscanf (line,"%4s V%ld.%ld Id %d Parent %d Size %08ld",
 		command,&ver,&rev,&id,&parent,&size);
 
 #ifdef _DEBUG
