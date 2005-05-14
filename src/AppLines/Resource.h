@@ -945,6 +945,7 @@
 #define IDS_OP_SHAPE_CONDITION_MAINTAIN 61457
 #define IDS_OP_SHAPE_MATERIAL_EDIT3     61458
 #define IDS_OP_SHAPE_CONDITION_EDIT     61458
+#define IDS_OP_SHAPE_COPY_PROPERTY      61459
 
 // Next default values for new objects
 // 

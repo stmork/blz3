@@ -31,6 +31,7 @@
 
 class b3Shape;
 class b3BBox;
+class b3CopyPropertyInfo;
 
 class CDlgCopyProperties : public CDialog
 {
@@ -70,10 +71,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	b3_bool b3CopyProperties(b3BBox *bbox,b3Shape *shape);
+	b3_bool b3CopyProperties(b3CopyPropertyInfo *info,b3BBox *bbox, b3Shape *shape);
 
 private:
-	b3_bool b3HandleHead(b3Shape *srcShape,b3Shape *dstShape,b3Base<b3Item> *src,b3Base<b3Item> *dst,int mode,BOOL test_equal,BOOL test_active);
+	static b3_bool b3HandleHead(b3CopyPropertyInfo *info,
+		b3Shape *srcShape,b3Shape *dstShape,
+		b3Base<b3Item> *src,b3Base<b3Item> *dst,
+		int mode,BOOL test_equal,BOOL test_active);
 };
 
 //{{AFX_INSERT_LOCATION}}

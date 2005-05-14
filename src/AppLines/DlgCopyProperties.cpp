@@ -23,6 +23,8 @@
 
 #include "AppLines.h"
 #include "DlgCopyProperties.h"
+#include "b3CopyProperty.h"
+
 #include "blz3/raytrace/b3Shape.h"
 #include "blz3/raytrace/b3BBox.h"
 
@@ -34,11 +36,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/05/14 19:01:24  sm
+**	- Added shape property copy to undo/redo operations
+**
 **	Revision 1.3  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.2  2004/07/02 19:28:03  sm
 **	- Hoping to have fixed ticket no. 21. But the texture initialization is still slow :-(
 **	- Recoupled b3Scene include from CApp*Doc header files to allow
@@ -135,33 +140,51 @@ void CDlgCopyProperties::OnOK()
 	app->WriteProfileInt(CB3ClientString(),"copy properties.active mat", m_ShapeActiveMat);
 }
 
-b3_bool CDlgCopyProperties::b3CopyProperties(b3BBox *bbox,b3Shape *shape)
+b3_bool CDlgCopyProperties::b3CopyProperties(b3CopyPropertyInfo *info,b3BBox *bbox,b3Shape *shape)
 {
 	b3_bool  changed = false;
 	b3Item  *item;
 
 	B3_FOR_BASE(bbox->b3GetBBoxHead(),item)
 	{
-		changed |= b3CopyProperties((b3BBox *)item,shape);
+		changed |= b3CopyProperties(info,(b3BBox *)item,shape);
 	}
 
 	B3_FOR_BASE(bbox->b3GetShapeHead(),item)
 	{
 		b3Shape *dstShape = (b3Shape *)item;
 
-		changed |= b3HandleHead(shape,dstShape,shape->b3GetMaterialHead(), dstShape->b3GetMaterialHead(), m_ModeMat, m_ShapeEqualMat, m_ShapeActiveMat);
-		changed |= b3HandleHead(shape,dstShape,shape->b3GetBumpHead(),     dstShape->b3GetBumpHead(),     m_ModeBump,m_ShapeEqualBump,m_ShapeActiveBump);
-		changed |= b3HandleHead(shape,dstShape,shape->b3GetConditionHead(),dstShape->b3GetConditionHead(),m_ModeCond,m_ShapeEqualCond,m_ShapeActiveCond);
+		// Copy materials
+		changed |= b3HandleHead(
+			info,
+			shape,dstShape,
+			shape->b3GetMaterialHead(), dstShape->b3GetMaterialHead(),
+			m_ModeMat, m_ShapeEqualMat, m_ShapeActiveMat);
+
+		// copy bumps
+		changed |= b3HandleHead(
+			info,
+			shape,dstShape,
+			shape->b3GetBumpHead(),     dstShape->b3GetBumpHead(),
+			m_ModeBump,m_ShapeEqualBump,m_ShapeActiveBump);
+
+		// Copy conditions
+		changed |= b3HandleHead(
+			info,
+			shape,dstShape,
+			shape->b3GetConditionHead(),dstShape->b3GetConditionHead(),
+			m_ModeCond,m_ShapeEqualCond,m_ShapeActiveCond);
 	}
 	return changed;
 }
 
 b3_bool CDlgCopyProperties::b3HandleHead(
-	b3Shape        *srcShape,
-	b3Shape        *dstShape,
-	b3Base<b3Item> *src,
-	b3Base<b3Item> *dst,
-	int mode,BOOL test_equal,BOOL test_active)
+	b3CopyPropertyInfo *info,
+	b3Shape            *srcShape,
+	b3Shape            *dstShape,
+	b3Base<b3Item>     *src,
+	b3Base<b3Item>     *dst,
+	int                 mode,BOOL test_equal,BOOL test_active)
 {
 	b3Item  *srcItem,*dstItem;
 	b3_bool  changed = false;
@@ -215,7 +238,9 @@ b3_bool CDlgCopyProperties::b3HandleHead(
 			int count = 0;
 			int equal = 0;
 
-			for (srcItem = src->First,dstItem = dst->First;(srcItem != null) && (dstItem != null);srcItem = srcItem->Succ,dstItem = dstItem->Succ)
+			for (srcItem = src->First,dstItem = dst->First;
+				(srcItem != null) && (dstItem != null);
+				srcItem = srcItem->Succ,dstItem = dstItem->Succ)
 			{
 				count++;
 				if (srcItem->b3GetClassType() == dstItem->b3GetClassType())
@@ -238,6 +263,7 @@ b3_bool CDlgCopyProperties::b3HandleHead(
 
 	if (changed)
 	{
+#if 0
 		// Store original items
 		srcShape->b3Store();
 
@@ -246,6 +272,10 @@ b3_bool CDlgCopyProperties::b3HandleHead(
 
 		// Clone items
 		b3World::b3CloneBase(src,dst);
+#else
+		info->b3Add(srcShape, src, dst);
+#endif
 	}
+
 	return changed;
 }

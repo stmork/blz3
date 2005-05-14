@@ -4341,6 +4341,7 @@ BEGIN
     IDS_OP_SHAPE_BUMP_EDIT  "Struktur ändern"
     IDS_OP_SHAPE_CONDITION_MAINTAIN "Stanzung verwalten"
     IDS_OP_SHAPE_CONDITION_EDIT "Stanzung ändern"
+    IDS_OP_SHAPE_COPY_PROPERTY "Oberfläche verteilen"
 END
 
 #endif    // Deutsch (Deutschland) resources

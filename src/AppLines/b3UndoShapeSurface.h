@@ -19,6 +19,8 @@
 #define B3UNDOSHAPESURFACE_H
 
 #include "b3UndoShape.h"
+#include "b3CopyProperty.h"
+
 
 /*************************************************************************
 **                                                                      **
@@ -150,6 +152,25 @@ protected:
 	inline int  b3GetId()
 	{
 		return IDS_OP_SHAPE_CONDITION_EDIT;
+	}
+};
+
+class b3OpShapeCopySurface : public b3OpShape
+{
+	b3Shape            *m_Shape;       // This is the materials' shape
+	b3CopyPropertyInfo  m_CopyInfo;
+
+public:
+	b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarchy);
+
+protected:
+	virtual void b3Undo();
+	virtual void b3Redo();
+	virtual void b3Delete();
+
+	inline int  b3GetId()
+	{
+		return IDS_OP_SHAPE_COPY_PROPERTY;
 	}
 };
 

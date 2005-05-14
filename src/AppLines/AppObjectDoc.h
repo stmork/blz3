@@ -140,7 +140,6 @@ private:
 	b3Item        *b3FindItem(b3Base<b3Item> *head,b3_u32 class_type);
 	b3Item        *b3EnsureSingleItem(b3Base<b3Item> *head,b3_u32 class_type);
 	b3_bool        b3CopyMaterialToBump();
-	b3_bool        b3CopyBumpToMaterial();
 	void           b3UpdateSurface(b3Shape *shape);
 	b3SplineShape *b3GetSplineShape();
 };

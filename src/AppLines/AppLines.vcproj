@@ -6638,6 +6638,9 @@
 				RelativePath="b3ControlLDC.h">
 			</File>
 			<File
+				RelativePath=".\b3CopyProperty.h">
+			</File>
+			<File
 				RelativePath=".\b3DocManager.h">
 			</File>
 			<File

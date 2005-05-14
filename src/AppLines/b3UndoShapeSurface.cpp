@@ -25,6 +25,7 @@
 
 #include "AppObjectDoc.h"
 #include "DlgItemMaintain.h"
+#include "DlgCopyProperties.h"
 
 #include "b3UndoShapeSurface.h"
 
@@ -35,7 +36,10 @@
 *************************************************************************/
 
 /*
-**	$Log§
+**	$Log$
+**	Revision 1.2  2005/05/14 19:01:24  sm
+**	- Added shape property copy to undo/redo operations
+**
 **	
 */
 
@@ -342,4 +346,45 @@ void b3OpShapeConditionEdit::b3Redo()
 {
 	b3OpShapeSurfaceItem::b3Redo();
 	m_Shape->b3RecomputeIndices();
+}
+
+/*************************************************************************
+**                                                                      **
+**                        Undo/Redo surface list edit                   **
+**                                                                      **
+*************************************************************************/
+
+b3OpShapeCopySurface::b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarchy) :
+	b3OpShape(root, hierarchy)
+{
+	m_Shape = m_DlgHierarchy->b3GetSelectedShape();
+	if (m_Shape != null)
+	{
+		CDlgCopyProperties dlg;
+
+		if (dlg.DoModal() == IDOK)
+		{
+			dlg.b3CopyProperties(&m_CopyInfo, m_BBox, m_Shape);
+
+			b3Initialize();
+			m_UpdateMaterial = true;
+			m_PrepareGeometry = true;
+			m_PrepareChangedStructure = false;
+		}
+	}
+}
+
+void b3OpShapeCopySurface::b3Undo()
+{
+	m_CopyInfo.b3Undo();
+}
+
+void b3OpShapeCopySurface::b3Redo()
+{
+	m_CopyInfo.b3Redo();
+}
+
+void b3OpShapeCopySurface::b3Delete()
+{
+	m_CopyInfo.b3Delete(b3IsDone());
 }
