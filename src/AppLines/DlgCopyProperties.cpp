@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/05/15 06:53:23  sm
+**	- Tested shape surface property copy operation.
+**
 **	Revision 1.4  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
-**
+**	
 **	Revision 1.3  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -273,7 +276,7 @@ b3_bool CDlgCopyProperties::b3HandleHead(
 		// Clone items
 		b3World::b3CloneBase(src,dst);
 #else
-		info->b3Add(srcShape, src, dst);
+		info->b3Add(srcShape, dstShape, src, dst);
 #endif
 	}
 

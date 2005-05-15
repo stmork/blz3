@@ -1336,6 +1336,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\b3CopyProperty.cpp">
+			</File>
+			<File
 				RelativePath="b3ExampleScene.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">

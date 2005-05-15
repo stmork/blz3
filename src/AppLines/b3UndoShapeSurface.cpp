@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/05/15 06:53:23  sm
+**	- Tested shape surface property copy operation.
+**
 **	Revision 1.2  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
-**
+**	
 **	
 */
 
@@ -364,6 +367,8 @@ b3OpShapeCopySurface::b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarch
 
 		if (dlg.DoModal() == IDOK)
 		{
+			CWaitCursor waiting_for_coffee;
+
 			dlg.b3CopyProperties(&m_CopyInfo, m_BBox, m_Shape);
 
 			b3Initialize();
@@ -376,11 +381,15 @@ b3OpShapeCopySurface::b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarch
 
 void b3OpShapeCopySurface::b3Undo()
 {
+	CWaitCursor wait_for_undo;
+
 	m_CopyInfo.b3Undo();
 }
 
 void b3OpShapeCopySurface::b3Redo()
 {
+	CWaitCursor wait_for_redo;
+
 	m_CopyInfo.b3Redo();
 }
 
