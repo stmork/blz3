@@ -46,7 +46,7 @@ public:
 
 	        void             b3Draw(b3DrawContext *dc);
 	        b3_bool          b3Moved(b3_coord x,b3_coord y);
-	virtual b3UndoOperation *b3GetOperation();
+	virtual b3UndoOperation *b3GetOperation(b3RenderObject *object);
 };
 
 class b3PickDir : public b3PickPoint
@@ -65,7 +65,7 @@ public:
 
 	        void             b3Draw(b3DrawContext *dc);
 	        b3_bool          b3Moved(b3_coord x,b3_coord y);
-	virtual b3UndoOperation *b3GetOperation();
+	virtual b3UndoOperation *b3GetOperation(b3RenderObject *object);
 };
 
 #endif

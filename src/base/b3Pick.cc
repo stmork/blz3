@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/05/15 10:19:27  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.8  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 **	Revision 1.7  2003/01/28 15:58:27  sm
 **	- Added support for undoing/redoing picking
 **	
@@ -132,9 +135,9 @@ b3_bool b3PickBase::b3Up(b3_coord x,b3_coord y)
 	return result;
 }
 
-b3UndoOperation *b3PickBase::b3GetOperation()
+b3UndoOperation *b3PickBase::b3GetOperation(b3RenderObject *object)
 {
-	return m_Selected != null ? m_Selected->b3GetOperation() : null;
+	return m_Selected != null ? m_Selected->b3GetOperation(object) : null;
 }
 
 void b3PickBase::b3Draw(b3DrawContext *dc)
@@ -192,9 +195,4 @@ b3_bool b3Pick::b3Moved(b3_coord x,b3_coord y)
 		m_y = y;
 	}
 	return result;
-}
-
-b3UndoOperation *b3Pick::b3GetOperation()
-{
-	return null;
 }

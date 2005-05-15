@@ -34,9 +34,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.9  2003/02/23 21:15:41  sm
 **	- First shape picking
-**
+**	
 **	Revision 1.8  2003/01/11 12:30:30  sm
 **	- Some additional undo/redo actions
 **	
@@ -122,6 +125,11 @@ public:
 			m_Control->y = 1.0 - (b3_f64)y / (b3_f64)m_yMax;
 		}
 		return result;
+	}
+
+	inline b3UndoOperation *b3GetOperation(b3RenderObject *object)
+	{
+		return null;
 	}
 };
 

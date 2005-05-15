@@ -45,11 +45,14 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.72  2005/01/23 19:54:05  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.71  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -639,7 +642,7 @@ void CAppLinesView::OnMouseMove(UINT nFlags, CPoint point)
 void CAppLinesView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	b3UndoOperation *op = m_PickBaseLight.b3GetOperation();
+	b3UndoOperation *op = m_PickBaseLight.b3GetOperation(null);
 
 	if (!m_PickBaseLight.b3Up(point.x,point.y))
 	{

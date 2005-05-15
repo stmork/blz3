@@ -22,6 +22,8 @@
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3UndoOperation.h"
 
+class b3RenderObject;
+
 class b3Pick : public b3Link<b3Pick>
 {
 protected:
@@ -35,7 +37,7 @@ public:
 	virtual void             b3Update();
 	virtual b3_bool          b3Hit(b3_coord x,b3_coord y);
 	virtual b3_bool          b3Moved(b3_coord x,b3_coord y);
-	virtual b3UndoOperation *b3GetOperation();
+	virtual b3UndoOperation *b3GetOperation(b3RenderObject *object) = 0;
 };
 
 class b3PickBase : public b3Base<b3Pick>
@@ -54,7 +56,7 @@ public:
 	b3_bool          b3Up(b3_coord x,b3_coord y);
 	void             b3Draw(b3DrawContext *dc);
 	void             b3Update();
-	b3UndoOperation *b3GetOperation();
+	b3UndoOperation *b3GetOperation(b3RenderObject *object);
 };
 
 #endif

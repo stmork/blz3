@@ -62,9 +62,12 @@
 
 /*
 **	$Log$
+**	Revision 1.111  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.110  2005/05/12 20:16:12  sm
 **	- Some more undo/redo surface operations.
-**
+**	
 **	Revision 1.109  2005/05/07 19:57:14  sm
 **	- Added comment when initializing materials when after
 **	  loading a document (concrete: a scene).
@@ -1049,7 +1052,7 @@ void CAppLinesDoc::b3Prepare(
 
 	if (update != 0)
 	{
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		UpdateAllViews(NULL,update);
 	}
 
 	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", m_Context.glVertexCount);

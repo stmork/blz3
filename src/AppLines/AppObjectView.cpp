@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.26  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.25  2004/12/11 17:05:01  sm
 **	- Fixed update/draw problem in object editor
-**
+**	
 **	Revision 1.24  2004/10/16 17:00:51  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -256,7 +259,7 @@ void CAppObjectView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 		b3_bool        result;
 
 		result = m_PickList.b3SetShape(pDoc->b3GetSelectedShape());
-			m_PickList.b3SetupVertexMemory(&pDoc->m_Context);
+		m_PickList.b3SetupVertexMemory(&pDoc->m_Context);
 		if (result)
 		{
 			doInvalidate = true;
@@ -466,7 +469,9 @@ void CAppObjectView::OnMouseMove(UINT nFlags, CPoint point)
 void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
-	b3UndoOperation *op = m_PickList.b3GetOperation();
+	CAppObjectDoc *pDoc = GetDocument();
+
+	b3UndoOperation *op = m_PickList.b3GetOperation(pDoc->b3GetSelectedShape());
 
 	if (!m_PickList.b3Up(point.x,point.y))
 	{
@@ -481,9 +486,9 @@ void CAppObjectView::OnLButtonUp(UINT nFlags, CPoint point)
 
 		if (op != null)
 		{
-			GetDocument()->b3AddOp(op);
+			pDoc->b3AddOp(op);
 		}
-		GetDocument()->b3ComputeBounds();
+		pDoc->b3ComputeBounds();
 	}
 }
 

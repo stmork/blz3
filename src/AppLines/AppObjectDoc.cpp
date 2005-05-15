@@ -47,9 +47,12 @@
 
 /*
 **	$Log$
+**	Revision 1.54  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.53  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
-**
+**	
 **	Revision 1.52  2005/05/13 15:33:54  sm
 **	- Tested surface property operations.
 **	
@@ -655,7 +658,7 @@ void CAppObjectDoc::b3Prepare(
 
 	if (update != 0)
 	{
-		UpdateAllViews(NULL,B3_UPDATE_GEOMETRY);
+		UpdateAllViews(NULL,update);
 	}
 
 	b3PrintF(B3LOG_DEBUG,"# %d vertices\n", context->glVertexCount);

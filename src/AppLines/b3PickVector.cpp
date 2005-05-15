@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/05/15 10:19:26  sm
+**	- Fixed picking operations for undo/redo
+**
 **	Revision 1.7  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -41,7 +44,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.6  2003/02/26 16:36:16  sm
 **	- Sorted drawing colors and added configuration support
 **	  to dialog.
@@ -131,9 +134,9 @@ b3_bool b3PickPoint::b3Moved(b3_coord x,b3_coord y)
 	return changed;
 }
 
-b3UndoOperation *b3PickPoint::b3GetOperation()
+b3UndoOperation *b3PickPoint::b3GetOperation(b3RenderObject *object)
 {
-	return new b3OpPickPoint(&m_StartVector,m_Pos);
+	return new b3OpPickPoint(&m_StartVector, m_Pos, object);
 }
 
 /*************************************************************************
@@ -178,7 +181,7 @@ b3_bool b3PickDir::b3Moved(b3_coord x,b3_coord y)
 	return changed;
 }
 
-b3UndoOperation *b3PickDir::b3GetOperation()
+b3UndoOperation *b3PickDir::b3GetOperation(b3RenderObject *object)
 {
-	return new b3OpPickDir(&m_StartVector,m_OrigDir);
+	return new b3OpPickDir(&m_StartVector, m_OrigDir, object);
 }
