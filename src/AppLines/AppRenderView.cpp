@@ -38,11 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2005/05/15 18:52:48  sm
+**	- Corrected pick drawing in object editor.
+**
 **	Revision 1.49  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.48  2005/01/21 20:42:02  sm
 **	- Added error handling to Lines.
 **	- Try to use ChoosePixelFormat for OpenGL context selection.
@@ -571,7 +574,7 @@ void CAppRenderView::OnPaint()
 	stop.b3Now();
 
 	// Flush OpenGL buffer to screen
-	glFinish();
+	glFlush();
 	if (!SwapBuffers(dc))
 	{
 		b3Error error;
@@ -581,6 +584,7 @@ void CAppRenderView::OnPaint()
 			error.b3GetError(),
 			error.b3GetErrorText());
 	}
+	glFinish();
 
 	// Do post drawings using Windows DC
 	b3DrawDC(dc,rect.Width(),rect.Height());

@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2005/05/15 18:52:48  sm
+**	- Corrected pick drawing in object editor.
+**
 **	Revision 1.26  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.25  2004/12/11 17:05:01  sm
 **	- Fixed update/draw problem in object editor
 **	
@@ -338,11 +341,11 @@ void CAppObjectView::b3DrawDC(
 	b3_f64 xOffset,
 	b3_f64 yOffset)
 {
-	CDC   *dc = CDC::FromHandle(hDC);
-	CPen  *old;
+	CDC  *dc = CDC::FromHandle(hDC);
+	CPen *old;
 
 	// Setup view first
-	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
+//	m_RenderView.b3SetupView(xSize,ySize,xOffset,yOffset);
 
 	// Set attributes to DC
 	old = dc->SelectObject(&m_RedDash);
