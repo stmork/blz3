@@ -18,17 +18,19 @@
 #ifndef B3_SYSTEM_SELFTEST_H
 #define B3_SYSTEM_SELFTEST_H
 
+#include "blz3/b3Types.h"
+
 class b3SelfTest
 {
 public:
-	static void b3TestDataSize();
-	static void b3TestMemory();
-	static void b3TestDate();
-	static void b3TestIO();
+	static b3_bool b3TestDataSize();
+	static b3_bool b3TestMemory();
+	static b3_bool b3TestDate();
+	static b3_bool b3TestIO();
 
 private:
-	static void b3TestDir();
-	static void b3TestFile(b3FileAbstract &file);
+	static b3_bool b3TestDir();
+	static b3_bool b3TestFile(b3FileAbstract &file);
 };
 
 #endif

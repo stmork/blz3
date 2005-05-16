@@ -32,9 +32,9 @@
 #define MEM_LOW_MULT       2
 #define MEM_HIGH_MULT    200
 
-void b3SelfTest::b3TestDataSize()
+b3_bool b3SelfTest::b3TestDataSize()
 {
-	void         *ptr;
+	b3_bool         *ptr;
 
 	b3PrintF (B3LOG_NORMAL,"%d-Bit-CPU\n",b3Runtime::b3GetCPUBits());
 
@@ -70,9 +70,10 @@ void b3SelfTest::b3TestDataSize()
 	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",
 		sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
 
+	return true;
 }
 
-void b3SelfTest::b3TestMemory()
+b3_bool b3SelfTest::b3TestMemory()
 {
 	b3_u32    v1,v2;
 	void     *ptr1,*ptr2;
@@ -159,17 +160,19 @@ void b3SelfTest::b3TestMemory()
 	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",v1,v2);
 	B3_PSWAP (&v1,&v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
+	
+	return true;
 }
 
-void b3SelfTest::b3TestDate()
+b3_bool b3SelfTest::b3TestDate()
 {
 	b3Date date;
 
 	b3PrintF (B3LOG_NORMAL,"\ntesting date handling...\n");
-	date.b3Y2K_Selftest();
+	return date.b3Y2K_Selftest();
 }
 
-void b3SelfTest::b3TestDir()
+b3_bool b3SelfTest::b3TestDir()
 {
 	b3Dir        dir;
 	b3Path       name;
@@ -194,12 +197,15 @@ void b3SelfTest::b3TestDir()
 		name.b3Empty();
 	}
 	dir.b3CloseDir ();
+	
+	return true;
 }
 
-void b3SelfTest::b3TestFile(b3FileAbstract &file)
+b3_bool b3SelfTest::b3TestFile(b3FileAbstract &file)
 {
 	b3_path_type code;
 	char         array[1024];
+	b3_bool      success;
 
 	b3PrintF (B3LOG_NORMAL,"File 'Config.tst' opened...\n");
 	file.b3Buffer (2048);
@@ -212,6 +218,7 @@ void b3SelfTest::b3TestFile(b3FileAbstract &file)
 	file.b3Write  (array,1024);
 	b3PrintF (B3LOG_NORMAL,"File Size: %ld (should be 5120 Bytes)\n",file.b3Size());
 	file.b3Close  ();
+	success = file.b3Size() == 5120;
 
 	if (file.b3Open("Config.tst",B_READ))
 	{
@@ -223,7 +230,11 @@ void b3SelfTest::b3TestFile(b3FileAbstract &file)
 		b3PrintF (B3LOG_NORMAL,"Seek4: %4ld (should be 5000)\n",file.b3Seek (   0,B3_SEEK_CURRENT));
 		file.b3Close ();
 	}
-	else b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not opened for reading...\n");
+	else
+	{
+		b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not opened for reading...\n");
+		success = false;
+	}
 
 	code = b3Dir::b3Exists ("Config.tst");
 	switch (code)
@@ -240,32 +251,51 @@ void b3SelfTest::b3TestFile(b3FileAbstract &file)
 
 		default :
 			b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
+			success = false;
 			break;
 	}
+
+	return success;
 }
 
-void b3SelfTest::b3TestIO()
+b3_bool b3SelfTest::b3TestIO()
 {
 	b3File        file;
 	b3FileMem     filemem;
 	b3_path_type  code;
+	b3_bool       success = true;
 
 	b3PrintF (B3LOG_NORMAL,"\ntesting basic i/o handling...\n");
 	b3PrintF(B3LOG_NORMAL,"Disk file: --------------------\n");
 	if (file.b3Open("Config.tst",B_WRITE))
 	{
-		b3TestFile(file);
+		success &= b3TestFile(file);
+	}
+	else
+	{
+		success &= false;
 	}
 
 	b3PrintF(B3LOG_NORMAL,"Memory file: ------------------\n");
 	if (filemem.b3Open(B_WRITE))
 	{
-		b3TestFile(filemem);
+		success &= b3TestFile(filemem);
+	}
+	else
+	{
+		success = false;
 	}
 
 	b3PrintF(B3LOG_NORMAL,"file operations: --------------\n");
-	if (remove ("Config.tst") == 0) b3PrintF (B3LOG_NORMAL,"File 'Config.tst' removed...\n");
-	else b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not removed...\n");
+	if (remove ("Config.tst") == 0)
+	{
+		b3PrintF (B3LOG_NORMAL,"File 'Config.tst' removed...\n");
+	}
+	else
+	{
+		b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not removed...\n");
+		success = false;
+	}
 
 	code = b3Dir::b3Exists ("Config.tst");
 	switch (code)
@@ -282,7 +312,10 @@ void b3SelfTest::b3TestIO()
 
 		default :
 			b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
+			success = false;
 			break;
 	}
-	b3TestDir();
+	success &= b3TestDir();
+
+	return success;
 }
