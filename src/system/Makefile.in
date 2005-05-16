@@ -13,6 +13,7 @@ LIB_SOURCE =\
 	b3LogBase.cc\
 	b3PluginBase.cc\
 	b3Row.cc\
+	b3SelfTest.cc\
 	b3TimeAbstract.cc
 
 LIB_OBJ	=\
@@ -23,6 +24,7 @@ LIB_OBJ	=\
 	b3LogBase.o\
 	b3PluginBase.o\
 	b3Row.o\
+	b3SelfTest.o\
 	b3TimeAbstract.o
 
 all:	$(LIBS)

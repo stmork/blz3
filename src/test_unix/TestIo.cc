@@ -22,13 +22,9 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
-#include "blz3/system/b3Date.h"
-#include "blz3/system/b3Mem.h"
-#include "blz3/system/b3Dir.h"
-#include "blz3/system/b3File.h"
 #include "blz3/base/b3World.h"
-#include "blz3/base/b3FileMem.h"
-#include "blz3/raytrace/b3Raytrace.h"
+#include "blz3/raytrace/b3Scene.h"
+#include "blz3/system/b3SelfTest.h"
 
 /*************************************************************************
 **                                                                      **
@@ -38,11 +34,15 @@
 
 /*
 **	$Log$
+**	Revision 1.20  2005/05/16 07:59:23  sm
+**	- Moved some self testing methods into library to make them usable
+**	  from other applications.
+**
 **	Revision 1.19  2005/05/07 14:06:06  sm
 **	- Corrected va-list handling in Windows version.
 **	- Using correct lib directory on 64 bit architectures.
 **	- Added login script version for (ba)sh.
-**
+**	
 **	Revision 1.18  2005/01/05 13:01:25  smork
 **	- Fixed 64 bit problem.
 **	
@@ -102,112 +102,21 @@
 **                                                                      **
 *************************************************************************/
 
-extern void b3TestMem();
-extern void b3TestFile(b3FileAbstract &file);
-extern void b3TestDir();
-extern void b3TestThread();
-
 int main(int argc,char *argv[])
 {
 	b3_index      i;
-	b3_u32        v1,v2;
-	b3Date        date;
-	b3File        file;
-	b3FileMem     filemem;
 	b3World       world;
 	b3Item       *item;
 	b3Scene      *scene;
-	b3_path_type  code;
-	void         *ptr;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
-	b3PrintF (B3LOG_NORMAL,"%d-Bit-CPU\n",b3Runtime::b3GetCPUBits());
-
-	switch(b3Runtime::b3GetCPUType())
-	{
-	case B3_BIG_ENDIAN:
-		b3PrintF (B3LOG_NORMAL,"Big endian (MC 680x0)\n");
-		break;
-
-	case B3_LITTLE_ENDIAN:
-		b3PrintF (B3LOG_NORMAL,"Little endian (x86)\n");
-		break;
-
-	default:
-		b3PrintF (B3LOG_NORMAL,"Endian type unknown!\n");
-		break;
-	}
-
-	b3PrintF (B3LOG_NORMAL,"size of some basic data types:\n");
-	b3PrintF (B3LOG_NORMAL,"        uns. sgn.\n");
-	b3PrintF (B3LOG_NORMAL,"Integer:\n");
-	b3PrintF (B3LOG_NORMAL," 8 bit: %3d  %3d (should be 1)\n",sizeof(b3_u08),sizeof(b3_s08));
-	b3PrintF (B3LOG_NORMAL,"16 bit: %3d  %3d (should be 2)\n",sizeof(b3_u16),sizeof(b3_s16));
-	b3PrintF (B3LOG_NORMAL,"32 bit: %3d  %3d (should be 4)\n",sizeof(b3_u32),sizeof(b3_s32));
-	b3PrintF (B3LOG_NORMAL,"64 bit: %3d  %3d (should be 8)\n",sizeof(b3_u64),sizeof(b3_s64));
-	b3PrintF (B3LOG_NORMAL,"bool:   %3d      (should be 4)\n",sizeof(b3_bool));
-	b3PrintF (B3LOG_NORMAL,"Float:\n");
-	b3PrintF (B3LOG_NORMAL,"32 bit: %3d      (should be  4)\n",       sizeof(b3_f32));
-	b3PrintF (B3LOG_NORMAL,"64 bit: %3d      (should be  8)\n",       sizeof(b3_f64));
-	b3PrintF (B3LOG_NORMAL,"96 bit: %3d      (should be 12 or 16)\n", sizeof(b3_f96));
-	b3PrintF (B3LOG_NORMAL,"\n");
-	b3PrintF (B3LOG_NORMAL,"Pointer size:                     %d bytes.\n",sizeof(ptr));
-	b3PrintF (B3LOG_NORMAL,"Int size for pointer arithmetics: %d bytes (%s).\n",
-		sizeof(b3_ptr),sizeof(ptr) == sizeof(b3_ptr) ? "OK" : "different - not good");
-
-	b3PrintF (B3LOG_NORMAL,"\n");
-	v1 = 1; v2 = 2;
-	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);
-	B3_SWAP (v1,v2);
-	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
-	v1 = 1; v2 = 2;
-	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",v1,v2);
-	B3_PSWAP (&v1,&v2);
-	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
 
 	try
 	{
-		b3PrintF (B3LOG_NORMAL,"\ntesting date handling...\n");
-		date.b3Y2K_Selftest();
-	
-		b3PrintF (B3LOG_NORMAL,"\ntesting memory handling...\n");
-		b3TestMem();
-
-		b3PrintF (B3LOG_NORMAL,"\ntesting basic i/o handling...\n");
-		b3PrintF(B3LOG_NORMAL,"Disk file: --------------------\n");
-		if (file.b3Open("Config.tst",B_WRITE))
-		{
-			b3TestFile(file);
-		}
-
-		b3PrintF(B3LOG_NORMAL,"Memory file: ------------------\n");
-		if (filemem.b3Open(B_WRITE))
-		{
-			b3TestFile(filemem);
-		}
-
-		b3PrintF(B3LOG_NORMAL,"file operations: --------------\n");
-		if (remove ("Config.tst") == 0) b3PrintF (B3LOG_NORMAL,"File 'Config.tst' removed...\n");
-		else b3PrintF (B3LOG_NORMAL,"File 'Config.tst' not removed...\n");
-
-		code = b3Dir::b3Exists ("Config.tst");
-		switch (code)
-		{
-			case B3_NOT_EXISTANT :
-				b3PrintF (B3LOG_NORMAL,"Config.tst is not existant... (all right)\n");
-				break;
-			case B3_TYPE_DIR :
-				b3PrintF (B3LOG_NORMAL,"Config.tst is a directory...\n");
-				break;
-			case B3_TYPE_FILE :
-				b3PrintF (B3LOG_NORMAL,"Config.tst is a file...\n");
-				break;
-
-			default :
-				b3PrintF (B3LOG_NORMAL,"Config.tst is if unknown file type (code %ld)\n",code);
-				break;
-		}
-		b3TestDir();
+		b3SelfTest::b3TestDataSize();
+		b3SelfTest::b3TestDate();
+		b3SelfTest::b3TestMemory();
+		b3SelfTest::b3TestIO();
 	}
 	catch(b3MemException &m)
 	{

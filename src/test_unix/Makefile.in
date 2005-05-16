@@ -15,11 +15,7 @@ PRGS			= TestIo TestThread Mandel TestData TestUtil TestFilter TestVector TestMa
 
 PRG_SOURCE	=\
 	TestIo.cc\
-	TestMem.cc\
-	TestFile.cc\
 	TestFilter.cc\
-	TestDir.cc\
-	TestThread.cc\
 	Mandel.cc\
 	b3Mandel.cc\
 	TestData.cc\
@@ -27,6 +23,7 @@ PRG_SOURCE	=\
 	TestVector.cc\
 	TestMaterial.cc\
 	TestSampler.cc\
+	TestThread.cc\
 	TestWater.cc\
 	TestWood.cc
 
@@ -36,7 +33,7 @@ TESTSAMPLER_OBJS	= TestSampler.o
 TESTWATER_OBJS		= TestWater.o
 TESTWOOD_OBJS		= TestWood.o
 TESTFILTER_OBJS		= TestFilter.o
-TESTIO_OBJS		= TestIo.o  TestMem.o  TestFile.o  TestDir.o
+TESTIO_OBJS		= TestIo.o
 TESTTHREAD_OBJS		= TestThread.o
 TESTUTIL_OBJS		= TestUtil.o
 TESTVECTOR_OBJS		= TestVector.o
