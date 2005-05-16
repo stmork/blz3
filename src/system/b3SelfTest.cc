@@ -217,13 +217,17 @@ b3_bool b3SelfTest::b3TestFile(b3FileAbstract &file)
 	file.b3Buffer (512);
 	file.b3Write  (array,1024);
 	b3PrintF (B3LOG_NORMAL,"File Size: %ld (should be 5120 Bytes)\n",file.b3Size());
-	file.b3Close  ();
 	success = file.b3Size() == 5120;
+	file.b3Close  ();
 
 	if (file.b3Open("Config.tst",B_READ))
 	{
 		b3PrintF (B3LOG_NORMAL,"File 'Config.tst' opened...\n");
-		if (file.b3Read(array,128) < 128) b3PrintF (B3LOG_NORMAL,"128 not read...\n");
+		if (file.b3Read(array,128) < 128)
+		{
+			b3PrintF (B3LOG_NORMAL,"128 not read...\n");
+			success = false;
+		}
 		b3PrintF (B3LOG_NORMAL,"Seek1: %4ld (should be  128)\n",file.b3Seek ( 512,B3_SEEK_START));
 		b3PrintF (B3LOG_NORMAL,"Seek2: %4ld (should be  512)\n",file.b3Seek ( 512,B3_SEEK_CURRENT));
 		b3PrintF (B3LOG_NORMAL,"Seek3: %4ld (should be 1024)\n",file.b3Seek (-120,B3_SEEK_END));

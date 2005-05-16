@@ -34,10 +34,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2005/05/16 08:18:40  sm
+**	- Some bug fixes...
+**
 **	Revision 1.20  2005/05/16 07:59:23  sm
 **	- Moved some self testing methods into library to make them usable
 **	  from other applications.
-**
+**	
 **	Revision 1.19  2005/05/07 14:06:06  sm
 **	- Corrected va-list handling in Windows version.
 **	- Using correct lib directory on 64 bit architectures.
@@ -108,15 +111,17 @@ int main(int argc,char *argv[])
 	b3World       world;
 	b3Item       *item;
 	b3Scene      *scene;
+	b3_bool       success = false;
 
 	b3Log::b3SetLevel(B3LOG_FULL);
 
 	try
 	{
-		b3SelfTest::b3TestDataSize();
-		b3SelfTest::b3TestDate();
-		b3SelfTest::b3TestMemory();
-		b3SelfTest::b3TestIO();
+		success =
+			b3SelfTest::b3TestDataSize() &&
+			b3SelfTest::b3TestDate() &&
+			b3SelfTest::b3TestMemory() &&
+			b3SelfTest::b3TestIO();
 	}
 	catch(b3MemException &m)
 	{
@@ -130,6 +135,8 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"Unknown exception occured.\n");
 	}
+	
+	b3PrintF(B3LOG_NORMAL,"Tests %s.\n", success ? "successful" : "errornous");
 
 	for (i = 1;i < argc;i++)
 	{
