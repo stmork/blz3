@@ -33,10 +33,10 @@
 #include "AppRaytraceView.h"
 
 #include "blz3/image/b3TxPool.h"
-#include "blz3/system/b3Date.h"
 #include "blz3/system/b3File.h"
 #include "blz3/system/b3FileDialog.h"
 #include "blz3/system/b3Plugin.h"
+#include "blz3/system/b3SelfTest.h"
 #include "blz3/system/b3Version.h"
 #include "blz3/base/b3FileMem.h"
 #include "blz3/raytrace/b3BBox.h"
@@ -60,9 +60,12 @@
 
 /*
 **	$Log$
+**	Revision 1.87  2005/05/16 08:24:30  sm
+**	- Including self test into Lines.
+**
 **	Revision 1.86  2005/01/23 20:57:21  sm
 **	- Moved some global static variables into class static ones.
-**
+**	
 **	Revision 1.85  2005/01/13 20:05:15  sm
 **	- Some Lines bugfixes
 **	
@@ -550,7 +553,6 @@ BOOL CAppLinesApp::InitInstance()
 	CB3ExceptionLogger  init_logging;
 	CString             path;
 	b3Loader           &plugins = b3Loader::b3GetLoader();
-	b3Date              today;
 
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
@@ -585,7 +587,8 @@ BOOL CAppLinesApp::InitInstance()
 		version.b3GetCopyrightString());
 	CB3Version::b3DumpOS();
 #ifdef _DEBUG
-	today.b3Y2K_Selftest();
+	b3SelfTest::b3TestDataSize();
+	b3SelfTest::b3TestDate();
 #endif
 
 	// Default texture search path from HKEY_LOCAL_MACHINE

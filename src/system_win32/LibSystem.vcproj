@@ -1299,6 +1299,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\system\b3SelfTest.cc">
+			</File>
+			<File
 				RelativePath="b3ShowColor.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -1789,6 +1792,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ScrollView.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\system\b3SelfTest.h">
 			</File>
 			<File
 				RelativePath="..\..\include_win32\blz3\system\b3ShowColor.h">

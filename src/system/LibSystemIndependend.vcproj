@@ -299,6 +299,9 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath=".\b3SelfTest.cc">
+			</File>
+			<File
 				RelativePath="b3TimeAbstract.cc"
 				FileType="0">
 			</File>
@@ -338,6 +341,9 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3PluginBase.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\system\b3SelfTest.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3TimeAbstract.h">
