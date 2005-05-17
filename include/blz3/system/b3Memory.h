@@ -52,7 +52,7 @@ class B3_PLUGIN b3Mem : protected b3MemAccess
 	b3_mem_info    *m_SlotPtr;
 	b3_mem_info     m_Slots[B3_MEM_INITIAL_SLOTS];
 
-	static b3Mutex  m_Mutex;
+	b3Mutex         m_Mutex;
 
 public:
 	static b3_count m_Enlargement;

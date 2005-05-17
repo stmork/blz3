@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/05/17 17:49:05  sm
+**	- Using non static mutex for memory management.
+**
 **	Revision 1.2  2005/05/17 13:56:52  smork
 **	- Moved some code into library.
-**
+**	
 **	Revision 1.1  2005/05/17 11:05:18  smork
 **	- New memory management based on array rather than doubly linked lists.
 **	
@@ -47,7 +50,6 @@
 **                                                                      **
 *************************************************************************/
 
-b3Mutex  b3Mem::m_Mutex;
 b3_count b3Mem::m_Enlargement = 0;
 
 b3Mem::~b3Mem()
