@@ -31,10 +31,10 @@ public:
 		return ::GlobalAlloc(GPTR,size);
 	}
 
-	static inline void b3Free(void *ptr)
+	static inline void b3Free(const void *ptr)
 	{
 #ifdef REALLY_FREE
-		::GlobalFree(ptr);
+		::GlobalFree((void *)ptr);
 #endif
 	}
 };

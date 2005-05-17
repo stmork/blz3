@@ -94,18 +94,30 @@ b3_bool b3SelfTest::b3TestMemory()
 #endif
 		buffer[i] = (b3_u08)(v & 0xff);
 	}
+	mem.b3Dump();
+
 	ptr1 = mem.b3Alloc (MEM_MIN);
-	ptr2 = mem.b3Alloc (MEM_MIN);
 	b3PrintF (B3LOG_NORMAL,"ptr1: %p\n",ptr1);
+	mem.b3Dump();
+
+	ptr2 = mem.b3Alloc (MEM_MIN);
 	b3PrintF (B3LOG_NORMAL,"ptr2: %p\n",ptr2);
+	mem.b3Dump();
+
 	mem.b3Free(ptr1);
 	b3PrintF (B3LOG_NORMAL,"ptr1 freed...\n");
+	mem.b3Dump();
+
 	mem.b3Free(NULL);
 	b3PrintF (B3LOG_NORMAL,"NULL-Pointer freed...\n");
+	mem.b3Dump();
+
 	mem.b3Free();
 	b3PrintF (B3LOG_NORMAL,"whole node freed...\n");
+	mem.b3Dump();
 
 	ptr1 = mem.b3Realloc(null,  MEM_MIN * 2);
+	mem.b3Dump();
 	for (i = 0;i < MEM_MIN;i++)
 	{
 		((b3_u08 *)ptr1)[i] = buffer[i];
@@ -115,11 +127,13 @@ b3_bool b3SelfTest::b3TestMemory()
 		ptr1 != null ? "OK" : "wrong");
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
+	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
 		ptr2,ptr1,
 		(ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
 
 	ptr1 = mem.b3Realloc(ptr2,MEM_MIN * MEM_HIGH_MULT);
+	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1,ptr2,
 		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
