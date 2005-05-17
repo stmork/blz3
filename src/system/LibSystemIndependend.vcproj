@@ -291,6 +291,10 @@
 				FileType="0">
 			</File>
 			<File
+				RelativePath="b3Memory.cc"
+				FileType="0">
+			</File>
+			<File
 				RelativePath="b3PluginBase.cc"
 				FileType="0">
 			</File>
