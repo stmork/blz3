@@ -37,6 +37,9 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2005/05/18 10:29:34  smork
+**	- Removed b3Mem from b3Array and b3Noise.
+**
 **	Revision 1.47  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -46,7 +49,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.46  2005/02/02 09:08:25  smork
 **	- Fine tuning of epsilon.
 **	
@@ -323,7 +326,7 @@ b3Noise::b3Noise ()
 	{
 		b3_count i,max = NOISEDIM * NOISESIZE;
 
-		m_NoiseTable = (b3_noisetype *)b3Alloc(max * sizeof(b3_noisetype));
+		m_NoiseTable = (b3_noisetype *)b3MemAccess::b3Alloc(max * sizeof(b3_noisetype));
 		if (m_NoiseTable == null)
 		{
 			B3_THROW(b3NoiseException,B3_NOISE_MEMORY);
@@ -372,7 +375,7 @@ b3Noise::~b3Noise ()
 {
 	if (m_NoiseTable != null)
 	{
-		b3Free(m_NoiseTable);
+		b3MemAccess::b3Free(m_NoiseTable);
 		m_NoiseTable = null;
 	}
 }

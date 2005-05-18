@@ -45,7 +45,7 @@ struct b3_mem_info
 	b3_size  m_Size;
 };
 
-class B3_PLUGIN b3Mem : protected b3MemAccess, protected b3Mutex
+class B3_PLUGIN b3Mem : protected b3Mutex
 {
 	b3_mem_info    *m_SlotPtr;
 	b3_index        m_SlotMax;

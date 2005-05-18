@@ -35,7 +35,7 @@ enum b3_array_error
 
 typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
 
-template <class T> class B3_PLUGIN b3Array : protected b3Mem
+template <class T> class B3_PLUGIN b3Array
 {
 	b3_count  m_Increment;
 	b3_index  m_Index;
@@ -55,6 +55,14 @@ public:
 		m_Buffer    = null;
 	}
 
+	virtual ~b3Array()
+	{
+		if (m_Buffer != null)
+		{
+			b3MemAccess::b3Free(m_Buffer);
+		}
+	}
+
 	inline void b3Add(T element)
 	{
 		T        *buffer;
@@ -62,7 +70,7 @@ public:
 
 		if (m_Index >= m_Max)
 		{
-			buffer = (T *)b3Alloc(max * sizeof(T));
+			buffer = (T *)b3MemAccess::b3Alloc(max * sizeof(T));
 			if (buffer != null)
 			{
 				// Copy old memory (should be done by realloc later!
@@ -70,7 +78,7 @@ public:
 				{
 					B3_ASSERT(m_Buffer != null);
 					memcpy (buffer,m_Buffer,m_Index * sizeof(T));
-					b3Free(m_Buffer);
+					b3MemAccess::b3Free(m_Buffer);
 				}
 
 				// Setup new values
@@ -90,7 +98,10 @@ public:
 		m_Index = 0;
 		if (really_free)
 		{
-			b3Free(m_Buffer);
+			if (m_Buffer != null)
+			{
+				b3MemAccess::b3Free(m_Buffer);
+			}
 			m_Buffer = null;
 			m_Max    = 0;
 		}
@@ -104,6 +115,11 @@ public:
 	inline T *b3GetBuffer()
 	{
 		return m_Buffer;
+	}
+
+	inline void b3SetIncrement(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
+	{
+		m_Increment = increment;
 	}
 
 	inline T & operator [](const b3_index index)

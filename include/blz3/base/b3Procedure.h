@@ -38,7 +38,7 @@ enum b3_noise_error
 
 typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
-class b3Noise : public b3Mem
+class b3Noise
 {
 	static       b3Spline      m_MarbleSpline;
 	static       b3_f32        m_MarbleKnots[16];
