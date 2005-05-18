@@ -22,6 +22,7 @@
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Compare.h"
 
+#define B3_ARRAY_INITIAL            10
 #define B3_ARRAY_DEFAULT_INCREMENT 128
 
 enum b3_array_error
@@ -41,6 +42,7 @@ template <class T> class B3_PLUGIN b3Array
 	b3_index  m_Index;
 	b3_count  m_Max;
 	T        *m_Buffer;
+	T         m_Start[B3_ARRAY_INITIAL];
 
 public:
 	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
@@ -51,13 +53,13 @@ public:
 		}
 		m_Increment = increment;
 		m_Index     = 0;
-		m_Max       = 0;
-		m_Buffer    = null;
+		m_Max       = B3_ARRAY_INITIAL;
+		m_Buffer    = m_Start;
 	}
 
 	inline virtual ~b3Array()
 	{
-		if (m_Buffer != null)
+		if (m_Buffer != m_Start)
 		{
 			b3MemAccess::b3Free(m_Buffer);
 		}
@@ -78,7 +80,10 @@ public:
 				{
 					B3_ASSERT(m_Buffer != null);
 					memcpy (buffer,m_Buffer,m_Index * sizeof(T));
-					b3MemAccess::b3Free(m_Buffer);
+					if (m_Buffer != m_Start)
+					{
+						b3MemAccess::b3Free(m_Buffer);
+					}
 				}
 
 				// Setup new values
@@ -98,7 +103,7 @@ public:
 		m_Index = 0;
 		if (really_free)
 		{
-			if (m_Buffer != null)
+			if (m_Buffer != m_Start)
 			{
 				b3MemAccess::b3Free(m_Buffer);
 			}
