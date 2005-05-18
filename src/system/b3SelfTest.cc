@@ -81,6 +81,7 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3_count  count = 0;
 	b3_u08    buffer[MEM_MIN];
 	b3_bool   equal;
+	b3_bool   result = true;
 	int       i,v;
 
 	// Put some stuff into realloc buffer
@@ -97,22 +98,24 @@ b3_bool b3SelfTest::b3TestMemory()
 	mem.b3Dump();
 
 	ptr1 = mem.b3Alloc (MEM_MIN);
+	result &= (ptr1 != null);
 	b3PrintF (B3LOG_NORMAL,"ptr1: %p\n",ptr1);
 	mem.b3Dump();
 
 	ptr2 = mem.b3Alloc (MEM_MIN);
+	result &= (ptr2 != null);
 	b3PrintF (B3LOG_NORMAL,"ptr2: %p\n",ptr2);
 	mem.b3Dump();
 
-	mem.b3Free(ptr1);
+	result &= mem.b3Free(ptr1);
 	b3PrintF (B3LOG_NORMAL,"ptr1 freed...\n");
 	mem.b3Dump();
 
-	mem.b3Free(NULL);
+	result &= (!mem.b3Free(NULL));
 	b3PrintF (B3LOG_NORMAL,"NULL-Pointer freed...\n");
 	mem.b3Dump();
 
-	mem.b3Free();
+	result &= mem.b3Free();
 	b3PrintF (B3LOG_NORMAL,"whole node freed...\n");
 	mem.b3Dump();
 
@@ -125,23 +128,29 @@ b3_bool b3SelfTest::b3TestMemory()
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p after b3Realloc() (%s)\n",
 		ptr1,
 		ptr1 != null ? "OK" : "wrong");
+	result &= (ptr1 != null);
 
 	ptr2 = mem.b3Realloc(ptr1,  MEM_MIN);
 	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with size reduction (%s)\n",
 		ptr2,ptr1,
 		(ptr1 == ptr2) && (ptr2 != null) ? "OK" : "wrong");
+	result &= ((ptr1 == ptr2) && (ptr2 != null));
 
 	ptr1 = mem.b3Realloc(ptr2,MEM_MIN * MEM_HIGH_MULT);
 	mem.b3Dump();
 	b3PrintF (B3LOG_NORMAL,"ptr1 = %p, ptr2 = %p after b3Realloc() with size enlargement (%s)\n",
 		ptr1,ptr2,
 		(ptr1 != ptr2) && (ptr1 != null) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr1 != null));
+
 	equal = memcmp(buffer,ptr1,MEM_MIN) == 0;
 	b3PrintF (B3LOG_NORMAL,"   Memory buffer is %s\n",
 		equal ? "preserved (OK)" : "corrupted (wrong)");
+
 	if (!equal)
 	{
+		result = false;
 		for (i = 0; i < MEM_MIN;i++)
 		{
 			if ((i & 7) == 0)
@@ -159,23 +168,28 @@ b3_bool b3SelfTest::b3TestMemory()
 	}
 	b3PrintF (B3LOG_NORMAL,"   Rest memory buffer is %s\n",
 		count == 0 ? "zero initialized (OK)" : "garbled (wrong)");
+	result &= (count == 0);
 
 	ptr2 = mem.b3Realloc(ptr1,     0);
 	b3PrintF (B3LOG_NORMAL,"ptr2 = %p, ptr1 = %p after b3Realloc() with zero size allocation (%s)\n",
 		ptr2,ptr1,
 		(ptr1 != ptr2) && (ptr2 == null) ? "OK" : "wrong");
+	result &= ((ptr1 != ptr2) && (ptr2 == null));
 
 	b3PrintF (B3LOG_NORMAL,"\n");
 	v1 = 1; v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"SWAP:  i=%ld k=%ld\n",v1,v2);
 	B3_SWAP (v1,v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
+	result &= ((v1 == 2) && (v2 == 1));
+
 	v1 = 1; v2 = 2;
 	b3PrintF (B3LOG_NORMAL,"PSWAP: i=%ld k=%ld\n",v1,v2);
 	B3_PSWAP (&v1,&v2);
 	b3PrintF (B3LOG_NORMAL,"       i=%ld k=%ld\n",v1,v2);
+	result &= ((v1 == 2) && (v2 == 1));
 	
-	return true;
+	return result;
 }
 
 b3_bool b3SelfTest::b3TestDate()

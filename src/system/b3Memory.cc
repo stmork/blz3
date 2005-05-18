@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/05/18 09:16:55  smork
+**	- More selftest stability.
+**	- Using mutex as base class in b3Mem.
+**
 **	Revision 1.3  2005/05/17 17:49:05  sm
 **	- Using non static mutex for memory management.
-**
+**	
 **	Revision 1.2  2005/05/17 13:56:52  smork
 **	- Moved some code into library.
 **	
@@ -67,10 +71,11 @@ void *b3Mem::b3Alloc(const b3_size size)
 	void     *ptr = b3MemAccess::b3Alloc(size);
 	b3_index  i;
 
-	m_Mutex.b3Lock();
+	b3Lock();
 	i = b3FindIndex(null);
 	if (i >= 0)
 	{
+		// Found empty slot
 		m_SlotPtr[i].m_Ptr  = ptr;
 		m_SlotPtr[i].m_Size = size;
 	}
@@ -78,12 +83,14 @@ void *b3Mem::b3Alloc(const b3_size size)
 	{
 		if (m_SlotMax < m_SlotCount)
 		{
+			// There are enough unused slots available
 			m_SlotPtr[m_SlotMax].m_Ptr  = ptr;
 			m_SlotPtr[m_SlotMax].m_Size = size;
 			m_SlotMax++;
 		}
 		else
 		{
+			// We need more slots...
 			b3_count     max   = m_SlotCount + B3_MEM_ADDITIONAL_SLOTS;
 			b3_mem_info *slots = (b3_mem_info*)b3MemAccess::b3Alloc(max * sizeof(b3_mem_info));
 
@@ -103,9 +110,19 @@ void *b3Mem::b3Alloc(const b3_size size)
 				m_SlotPtr[m_SlotMax].m_Size = size;
 				m_SlotMax++;
 			}
+			else
+			{
+				// If there is no memory for new slots we should better
+				// check really requested memory chunk.
+				if (ptr != null)
+				{
+					b3MemAccess::b3Free(ptr);
+				}
+				ptr = null;
+			}
 		}
 	}
-	m_Mutex.b3Unlock();
+	b3Unlock();
 		
 	return ptr;
 }
@@ -125,7 +142,7 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 			{
 				b3_index i;
 
-				m_Mutex.b3Lock();
+				b3Lock();
 				i = b3FindIndex(old_ptr);
 				if (i >= 0)
 				{
@@ -153,7 +170,7 @@ void *b3Mem::b3Realloc(const void *old_ptr,const b3_size new_size)
 				{
 					// Error!
 				}
-				m_Mutex.b3Unlock();
+				b3Unlock();
 			}
 			else
 			{
@@ -170,7 +187,7 @@ b3_bool b3Mem::b3Free(const void *ptr)
 
 	if (ptr != null)
 	{
-		m_Mutex.b3Lock();
+		b3Lock();
 		i = b3FindIndex(ptr);
 		if (i >= 0)
 		{
@@ -178,7 +195,7 @@ b3_bool b3Mem::b3Free(const void *ptr)
 			m_SlotPtr[i].m_Size = 0;
 			found = true;
 		}
-		m_Mutex.b3Unlock();
+		b3Unlock();
 
 		if (found)
 		{
@@ -193,7 +210,7 @@ b3_bool b3Mem::b3Free()
 {
 	b3_index i;
 
-	m_Mutex.b3Lock();
+	b3Lock();
 	for (i = 0;i < m_SlotMax;i++)
 	{
 		if (m_SlotPtr[i].m_Ptr != null)
@@ -204,7 +221,7 @@ b3_bool b3Mem::b3Free()
 		}
 	}
 	m_SlotMax = 0;
-	m_Mutex.b3Unlock();
+	b3Unlock();
 
 	return true;
 }
@@ -213,12 +230,12 @@ void b3Mem::b3Dump()
 {
 	b3_index i;
 
-	m_Mutex.b3Lock();
+	b3Lock();
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slot max: %d  slot count: %d\n",m_SlotMax,m_SlotCount);
 	b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # slots: %p   initial slots: %p\n",m_SlotPtr, m_Slots);
 	for (i = 0;i < m_SlotMax;i++)
 	{
 		b3PrintF (B3LOG_FULL,"### CLASS: b3Mem  # %3d: %p\n",i,m_SlotPtr[i]);
 	}
-	m_Mutex.b3Unlock();
+	b3Unlock();
 }

@@ -26,7 +26,7 @@
 #define LOOP_INSIDE (b3_ptr(1 << LOOP_B))
 #define LOOP_MASK   (LOOP_INSIDE - 1)
 
-#define B3_MEM_INITIAL_SLOTS       8
+#define B3_MEM_INITIAL_SLOTS       5
 #define B3_MEM_ADDITIONAL_SLOTS  256
 
 enum b3_mem_error
@@ -45,14 +45,12 @@ struct b3_mem_info
 	b3_size  m_Size;
 };
 
-class B3_PLUGIN b3Mem : protected b3MemAccess
+class B3_PLUGIN b3Mem : protected b3MemAccess, protected b3Mutex
 {
-	b3_index        m_SlotCount;
-	b3_index        m_SlotMax;
 	b3_mem_info    *m_SlotPtr;
+	b3_index        m_SlotMax;
+	b3_index        m_SlotCount;
 	b3_mem_info     m_Slots[B3_MEM_INITIAL_SLOTS];
-
-	b3Mutex         m_Mutex;
 
 public:
 	static b3_count m_Enlargement;
