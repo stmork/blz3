@@ -55,7 +55,7 @@ public:
 		m_Buffer    = null;
 	}
 
-	virtual ~b3Array()
+	inline virtual ~b3Array()
 	{
 		if (m_Buffer != null)
 		{
