@@ -2,7 +2,8 @@ Version 2.99.2.16
 - Einführung einer Microsoft-konformen Installation
 
 Version 2.99.2.17
-- Unterstützung für 64 Bit RPMs für Linux.
+- Unterstützung für 64 Bit RPMs unter Linux.
 
 Version 2.99.2.18
 - Unterstützung für Undo/Redo im Objekteditor
+- Beschleunigte Speicherverwaltung
