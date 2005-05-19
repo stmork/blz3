@@ -230,6 +230,16 @@ public:
 		return b3SmoothPulse(e0,e1,e2,e3,fmod(x,period));
 	}
 
+	static inline b3_f64 b3Fade(b3_f64 t)
+	{
+		return t * t * t * (t * (t * 6 - 15) + 10);
+	}
+
+	static inline b3_f64 b3Lerp(b3_f64 t, b3_f64 a, b3_f64 b)
+	{ 
+		return a + t * (b - a);
+	}
+
 	static inline b3_f64 b3FastPow(b3_f64 x,b3_u32 exponent)
 	{
 		b3_f64 result = 1;

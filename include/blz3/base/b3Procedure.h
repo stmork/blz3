@@ -38,7 +38,7 @@ enum b3_noise_error
 
 typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
-class b3Noise
+class B3_PLUGIN b3Noise
 {
 	static       b3Spline      m_MarbleSpline;
 	static       b3_f32        m_MarbleKnots[16];
@@ -59,6 +59,8 @@ class b3Noise
 	static b3Noise             m_Noise;
 	static b3_noisetype       *m_NoiseTable;
 	static b3_f64              epsilon;
+
+	static int                 m_Permutation[512];
 
 	               b3Noise();
 
@@ -88,6 +90,12 @@ public:
 	{
 		return b3FilteredNoiseVector(x,y,z) * 2 - 1;
 	}
+
+	static inline b3_f64        b3ImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z)
+	{
+		return (b3SignedImprovedNoise(x,y,z) + 1) * 0.5;
+	}
+	static        b3_f64  b3SignedImprovedNoise    (b3_f64 x,b3_f64 y,b3_f64 z);
 	
 	static        void          b3NoiseVector         (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
 	static        void          b3FilteredNoiseVector (b3_f64 x,b3_f64 y,b3_f64 z,b3_vector *result);
@@ -101,6 +109,7 @@ public:
 		result->y = result->y * 2 - 1;
 		result->z = result->z * 2 - 1;
 	}
+
 
 	static inline b3_f64  b3Turbulence  (b3_vector *P,b3_count octaves = 10)
 	{
@@ -198,6 +207,15 @@ private:
 
 	static void         b3OldMarble   (b3_vector *P,b3Color &Color);
 	static void         b3MarbleCurve (b3Spline *Spline,b3_vector *result,b3_f64 x);
+
+	static inline b3_f64 b3Grad(int hash, b3_f64 x, b3_f64 y, b3_f64 z)
+	{
+		int    h = hash & 15;                   // CONVERT LO 4 BITS OF HASH CODE
+		b3_f64 u = h<8 ? x : y;                 // INTO 12 GRADIENT DIRECTIONS.
+		b3_f64 v = h<4 ? y : h==12||h==14 ? x : z;
+
+		return ((h&1) == 0 ? u : -u) + ((h&2) == 0 ? v : -v);
+	}
 };
 
 class b3Water
