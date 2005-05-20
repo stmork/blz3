@@ -32,13 +32,16 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/05/20 11:09:20  smork
+**	- Corrected specular color handling in OpenGL.
+**
 **	Revision 1.1  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
 **	- Fixed lighting for scene and simple overview
 **	- Fixed Light cutoff exponent deadloop.
 **	- Corrected OpenGL define (BLZ3_USE_OPENGL)
-**
+**	
 **
 */
 
@@ -110,7 +113,7 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 				// Color
 				b3RenderContext::b3PkdColorToGL(B3_BLACK,    info.gl_ambient);
 				b3RenderContext::b3ColorToGL(light->m_Color, info.gl_diffuse);
-				b3RenderContext::b3PkdColorToGL(B3_GREY,     info.gl_specular);
+				b3RenderContext::b3PkdColorToGL(B3_WHITE,    info.gl_specular);
 
 				// Geometry
 				b3RenderContext::b3VectorToGL(&light->m_Position, info.gl_position);

@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.111  2005/05/20 11:09:20  smork
+**      - Corrected specular color handling in OpenGL.
+**
 **      Revision 1.110  2005/01/13 20:05:15  sm
 **      - Some Lines bugfixes
 **
@@ -1254,7 +1257,12 @@ void b3RenderObject::b3UpdateMaterial()
 		}
 		else
 		{
+#if 0
 			ambient = specular = diffuse;
+#else
+			ambient = diffuse;
+			specular = B3_WHITE;
+#endif
 
 			b3RenderContext::b3ColorToGL(ambient, glAmbient);
 			b3RenderContext::b3ColorToGL(diffuse, glDiffuse);

@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2005/05/20 11:09:20  smork
+**	- Corrected specular color handling in OpenGL.
+**
 **	Revision 1.20  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.19  2005/01/18 11:49:05  smork
 **	- Added support for single buffered OpenGL drawing.
 **	
@@ -371,7 +374,7 @@ void b3RenderContext::b3LightDefault()
 	// Colors
 	b3PkdColorToGL(B3_BLACK, info.gl_ambient);
 	b3PkdColorToGL(B3_WHITE, info.gl_diffuse);
-	b3PkdColorToGL(B3_GREY,  info.gl_specular);
+	b3PkdColorToGL(B3_WHITE, info.gl_specular);
 
 	// Geometry
 	b3VectorToDirectionalGL(&glSimpleLightPosition, info.gl_position);
