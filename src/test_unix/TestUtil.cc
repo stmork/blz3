@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/05/31 19:06:24  sm
+**	- Hash test fix.
+**
 **	Revision 1.5  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.4  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -107,7 +110,7 @@ static void b3Dump(b3HashMap<int,char *> &map,const char *title)
 			int key = (*indices)[i];
 
 			b3PrintF(B3LOG_NORMAL,"%3d: %d -> %s\n",i,
-				key,map.b3Find(key));
+				key,*map.b3Find(key));
 		}
 		delete indices;
 		delete args;

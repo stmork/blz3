@@ -270,7 +270,7 @@ private:
 	{
 		b3_hash hash = m_HashFunc(key);
 
-		if ((hash < 0) || (hash >= B3_MAX_HASH_INDEX))
+		if (hash >= B3_MAX_HASH_INDEX)
 		{
 			B3_THROW(b3HashException,B3_HASH_INVALID);
 		}
