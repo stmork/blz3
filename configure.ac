@@ -71,7 +71,6 @@ AC_CHECK_LIB([CgGL], [main])
 AC_CHECK_HEADER([GL/glut.h],[AC_DEFINE([BLZ3_USE_GLUT]) GLUTLIBS="$GLUTLIBS -lglut" AC_CHECK_LIB([Xmu], [main])])
 AC_CHECK_HEADER([GL/glu.h],[AC_DEFINE([BLZ3_USE_OPENGL]) LIBS="$LIBS -lGLU -lGL"])
 AC_CHECK_HEADER([Cg/cg.h],[AC_DEFINE([BLZ3_USE_CG])])
-AC_CHECK_HEADER([avilib.h],[AC_DEFINE([BLZ3_USE_AVILIB]) DIVXLIBS="$DIVXLIBS -lavi"])
 AC_CHECK_HEADER([encore2.h],[AC_DEFINE([BLZ3_USE_DIVX4LINUX]) DIVXLIBS="$DIVXLIBS -ldivxencore"])
 
 CPPFLAGS="$CPPFLAGS -I$BLZ3_SYSINC -I$BLZ3_INCLUDE"
@@ -105,8 +104,9 @@ AC_CONFIG_FILES([
 	src/icc.make
 	src/system_unix/Makefile
 	src/system/Makefile
-	src/Btiff/Makefile
+	src/Bavi/Makefile
 	src/Bjpeg/Makefile
+	src/Btiff/Makefile
 	src/base/Makefile
 	src/image/Makefile
 	src/raytrace/Makefile

@@ -34,12 +34,10 @@
 
 #endif
 
-#ifdef BLZ3_USE_AVILIB
 extern "C"
 {
 #include "avilib.h"
 }
-#endif
 
 /*************************************************************************
 **                                                                      **
@@ -49,10 +47,13 @@ extern "C"
 
 /*
 **	$Log$
+**	Revision 1.8  2005/05/31 11:15:12  smork
+**	- Extraced avilib into own directory.
+**
 **	Revision 1.7  2005/01/14 08:51:05  smork
 **	- Corrected lens flares to be in front of any object.
 **	- Added start banner to divx tool.
-**
+**	
 **	Revision 1.6  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -117,9 +118,7 @@ int main(int argc,char *argv[])
 	b3_u08       *ptr;
 	b3_pkd_color *data,color;
 	b3_size       size = 0;
-#ifdef BLZ3_USE_AVILIB
 	avi_t        *out;
-#endif
 
 	if (argc <= 1)
 	{
@@ -127,14 +126,12 @@ int main(int argc,char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 
-#ifdef BLZ3_USE_AVILIB
 	out = AVI_open_output_file(argv[1]);
 	if (out == NULL)
 	{
 		fprintf(stderr,"Cannot write %s\n",argv[1]);
 		exit (EXIT_FAILURE);
 	}
-#endif
 
 #ifdef BLZ3_USE_DIVX4LINUX
 	memset(&encoding,0,sizeof(encoding));
@@ -156,8 +153,8 @@ int main(int argc,char *argv[])
 			encoding.bitrate   = RATE_KBYTE(500);
 
 			size               = img.xSize * img.ySize;
-			buffer             = (b3_u08 *)malloc(size * 3);
-			bitstream          = (char *)malloc(size * 6);
+			buffer             = new b3_u08[size * 3];
+			bitstream          = new char[size * 6];
 
 			error = encore(0,ENC_OPT_INIT,&encoding,0);
 			if ((error != ENC_OK) || (encoding.handle == 0))
@@ -168,10 +165,7 @@ int main(int argc,char *argv[])
 			{
 				b3PrintF(B3LOG_DEBUG,"Start encoding...");
 			}
-
-#ifdef BLZ3_USE_AVILIB
 			AVI_set_video(out, img.xSize, img.ySize, encoding.framerate, "DIVX");
-#endif
 		}
 #endif
 
@@ -201,9 +195,7 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
-#ifdef BLZ3_USE_AVILIB
 			AVI_write_frame(out,bitstream,frame.length,0);
-#endif
 			b3PrintF(B3LOG_DEBUG,"\n encoded frame %s (%d bytes)\n",argv[i],frame.length);
 			b3PrintF(B3LOG_NORMAL,".");
 		}
@@ -211,7 +203,7 @@ int main(int argc,char *argv[])
 	}
 
 #ifdef BLZ3_USE_DIVX4LINUX
-	error = encore(encoding.handle,ENC_OPT_RELEASE,0,0);
+	error = encore(encoding.handle, ENC_OPT_RELEASE, 0, 0);
 	if (error != ENC_OK)
 	{
 		fprintf(stderr,"\nERROR CODE: %d (finishing encoding)\nexiting...\n",error);
@@ -220,11 +212,18 @@ int main(int argc,char *argv[])
 	{
 		b3PrintF(B3LOG_NORMAL,"\nDone.\n");
 	}
-#endif
 
-#ifdef BLZ3_USE_AVILIB
-	AVI_close(out);
+	if (bitstream != null)
+	{
+		delete [] bitstream;
+	}
 #endif
+	if (buffer != null)
+	{
+		delete [] buffer;
+	}
+
+	AVI_close(out);
 
 	return EXIT_SUCCESS;
 }

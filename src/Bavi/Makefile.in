@@ -1,0 +1,32 @@
+# Beispiel Makefile
+
+# Optionen
+
+BLZ3_LIB    = @BLZ3_LIB@
+CC			= @CC@
+CPPFLAGS	= @CPPFLAGS@
+LIBS		= libB3avi.o
+
+LIB_SRCS	= avilib.c libxio.c
+
+LIB_OBJS	= avilib.o libxio.o
+
+# Ziele
+
+all:	$(LIBS)
+
+depend:	$(LIB_SRCS)
+	@CPP@ -M  $(LIB_SRCS) $(CPPFLAGS) >.dep
+
+clean:
+	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS)
+
+libB3avi.o:	$(LIB_OBJS)
+	rm -f core
+	$(LD) -r -o $@ $^
+
+libB3avi.a:	$(LIB_OBJS)
+	$(AR) $(ARFLAGS) $@ $^
+	cp $@ $(BLZ3_LIB)
+
+-include .dep

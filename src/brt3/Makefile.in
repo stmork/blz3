@@ -26,6 +26,7 @@ GIF_TRANS_OBJS	= gif_trans.o gif.o
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
+B3_LIB_AVI		= $(BLZ3_LIB)/libB3avi.a
 
 PRGS			= brt3 bimg3 divx gif_info gif_trans gif_movie bconv3 bhc rp
 INSTALL_PRGS	= brt3 bimg3 divx gif_info gif_trans gif_movie
@@ -49,7 +50,7 @@ brt3:	$(BRT3_OBJS) $(B3_LIB_RAYTRACE) $(B3_LIB_BASE)
 bimg3:	$(BIMG3_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS)
 
-divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
+divx:	$(DIVX_OBJS) $(B3_LIB_BASE) $(B3_LIB_AVI)
 	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
 
 gif_info:	$(GIF_INFO_OBJS) $(B3_LIB_BASE) 
