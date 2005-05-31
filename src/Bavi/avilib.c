@@ -459,7 +459,7 @@ static int avi_add_odml_index_entry(avi_t *AVI, unsigned char *tag, long flags, 
 	if (AVI->video_superindex->nEntriesInUse > NR_IXNN_CHUNKS) {
 	    fprintf (stderr, "Internal error in avilib - redefine NR_IXNN_CHUNKS\n");
 	    fprintf (stderr, "[avilib dump] cur_std_idx=%d NR_IXNN_CHUNKS=%d"
-		    "POS=%lld towrite=%lld\n",
+		    "POS=%ld towrite=%ld\n",
 		    cur_std_idx,NR_IXNN_CHUNKS, AVI->pos, towrite);
 	    return -1;
 	}
@@ -3299,7 +3299,7 @@ long AVI_read_audio(avi_t *AVI, char *audbuf, long bytes)
       xio_lseek(AVI->fdes, pos, SEEK_SET);
       if ( (ret = avi_read(AVI->fdes,audbuf+nr,todo)) != todo)
       {
-	 fprintf(stderr, "XXX pos = %lld, ret = %lld, todo = %ld\n", pos, ret, todo);
+	 fprintf(stderr, "XXX pos = %ld, ret = %ld, todo = %ld\n", pos, ret, todo);
          AVI_errno = AVI_ERR_READ;
          return -1;
       }
