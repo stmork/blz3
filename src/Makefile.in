@@ -16,7 +16,6 @@ RANLIB		= @RANLIB@
 SUB_DIRS +=\
 	system_unix\
 	system\
-	Bavi\
 	Bjpeg\
 	Btiff\
 	base\
@@ -24,13 +23,15 @@ SUB_DIRS +=\
 	raytrace\
 	OpenGL\
 	brt3\
+	divx\
 	tools\
 	test_unix
 
 PRGS	=\
-	tools\
 	OpenGL\
-	brt3
+	brt3\
+	divx\
+	tools
 
 all:	$(BLZ3_LIB) $(BLZ3_BIN) libs
 	+@for i in $(PRGS); do \
@@ -128,10 +129,6 @@ $(BLZ3_LIB)/libB3Raytrace.a:	lib_raytrace
 	$(AR) $(ARFLAGS) $@ raytrace/libB3Raytrace.o
 	$(RANLIB) $@
 
-$(BLZ3_LIB)/libB3avi.a:	lib_avi
-	$(AR) $(ARFLAGS) $@ Bavi/libB3avi.o
-	$(RANLIB) $@
-
 lib_system:
 	+@make -C system_unix
 	
@@ -147,13 +144,10 @@ lib_image:
 lib_raytrace:
 	+@make -C raytrace
 
-lib_avi:
-	+@make -C Bavi
-
 lib_jpeg:
 	+@make -C Bjpeg
 
 lib_tiff:
 	+@make -C Btiff
 
-libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3avi.a $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a
+libs:	$(BLZ3_LIB)/libB3System.a $(BLZ3_LIB)/libB3Base.a $(BLZ3_LIB)/libB3Raytrace.a

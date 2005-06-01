@@ -10,14 +10,13 @@ LIBS			= @LIBS@
 prefix			= @prefix@
 exec_prefix		= @exec_prefix@
 
-PRG_SOURCE		= divx.cc avilib.cc libxio.cc
+PRG_SOURCE		= divx.cc avilib.c libxio.c
 
 DIVX_OBJS		= divx.o avilib.o libxio.o
 
 B3_LIB_SYSTEM	= $(BLZ3_LIB)/libB3System.a
 B3_LIB_BASE		= $(BLZ3_LIB)/libB3Base.a
 B3_LIB_RAYTRACE	= $(BLZ3_LIB)/libB3Raytrace.a
-B3_LIB_AVI		= $(BLZ3_LIB)/libB3avi.a
 
 PRGS			= divx
 INSTALL_PRGS	= divx
@@ -35,7 +34,7 @@ clean:
 	rm -f *.o *.bak *~ core $(PRGS) ALL QUIET
 	(cd $(BLZ3_BIN); rm -f $(PRGS); )
 
-divx:	$(DIVX_OBJS) $(B3_LIB_BASE) $(B3_LIB_AVI)
+divx:	$(DIVX_OBJS) $(B3_LIB_BASE)
 	$(LINK.cc) -o $@ $^ $(LIBS) @DIVXLIBS@
 
 -include .dep

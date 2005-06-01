@@ -104,7 +104,6 @@ AC_CONFIG_FILES([
 	src/icc.make
 	src/system_unix/Makefile
 	src/system/Makefile
-	src/Bavi/Makefile
 	src/Bjpeg/Makefile
 	src/Btiff/Makefile
 	src/base/Makefile
@@ -113,6 +112,7 @@ AC_CONFIG_FILES([
 	src/test_unix/Makefile
 	src/OpenGL/Makefile
 	src/brt3/Makefile
+	src/divx/Makefile
 	src/tools/Makefile
 	src/cpuperf/Makefile])
 AC_OUTPUT
