@@ -34,7 +34,7 @@ endif
 # Build image file libraries
 #setenv CFLAGS "-O3 -xM -w"
 #setenv ASMFLAGS "-O3 -w -march=pentiumiii"
-setenv ASMFLAGS "-O3 -xN -ipo_S -w0 -vec_report0"
+setenv ASMFLAGS "-O3 -xP -ipo_S -w0 -vec_report0"
 
 cd @BLZ3_HOME@/src
 
