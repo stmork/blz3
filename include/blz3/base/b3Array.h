@@ -1,7 +1,7 @@
 /*
 **
 **	$Filename:	b3Array.h $
-**	$Release:	Dortmund 2002 $
+**	$Release:	Dortmund 2002, 2005 $
 **	$Revision$
 **	$Date$
 **	$Author$
@@ -9,7 +9,7 @@
 **
 **	Blizzard III - dynamically growing array
 **
-**	(C) Copyright 2002  Steffen A. Mork
+**	(C) Copyright 2002, 2005  Steffen A. Mork
 **	    All Rights Reserved
 **
 **
@@ -18,7 +18,6 @@
 #ifndef B3_BASE_ARRAY_H
 #define B3_BASE_ARRAY_H
 
-#include "blz3/system/b3Mem.h"
 #include "blz3/system/b3Exception.h"
 #include "blz3/base/b3Compare.h"
 
@@ -61,7 +60,7 @@ public:
 	{
 		if (m_Buffer != m_Start)
 		{
-			b3MemAccess::b3Free(m_Buffer);
+			delete [] m_Buffer;
 		}
 	}
 
@@ -72,7 +71,7 @@ public:
 
 		if (m_Index >= m_Max)
 		{
-			buffer = (T *)b3MemAccess::b3Alloc(max * sizeof(T));
+			buffer = new T[max];
 			if (buffer != null)
 			{
 				// Copy old memory (should be done by realloc later!
@@ -82,7 +81,7 @@ public:
 					memcpy (buffer,m_Buffer,m_Index * sizeof(T));
 					if (m_Buffer != m_Start)
 					{
-						b3MemAccess::b3Free(m_Buffer);
+						delete [] m_Buffer;
 					}
 				}
 
@@ -105,7 +104,7 @@ public:
 		{
 			if (m_Buffer != m_Start)
 			{
-				b3MemAccess::b3Free(m_Buffer);
+				delete [] m_Buffer;
 			}
 			m_Buffer = null;
 			m_Max    = 0;
