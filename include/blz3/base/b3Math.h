@@ -20,10 +20,6 @@
 
 #include "blz3/b3Config.h"
 
-#ifndef __ICC
-#endif
-#define FINE_MATH
-
 class b3Math
 {
 	static b3_f64 epsilon;
@@ -33,33 +29,6 @@ public:
 	static inline b3_f64 b3Sqr(b3_f64 value)
 	{
 		return value * value;
-	}
-
-	static inline b3_bool b3IsEqual(b3_f64 a,const b3_f64 b)
-	{
-#ifndef FINE_MATH
-		return b3NearZero(a - b);
-#else
-		return a == b;
-#endif
-	}
-
-	static inline b3_bool b3NearZero(b3_f32 x)
-	{
-#ifndef FINE_MATH
-		return fabs(x) <= FLT_EPSILON;
-#else
-		return x == 0;
-#endif
-	}
-
-	static inline b3_bool b3NearZero(b3_f64 x)
-	{
-#ifndef FINE_MATH
-		return fabs(x) <= FLT_EPSILON;
-#else
-		return x == 0;
-#endif
 	}
 
 	static inline b3_f64 b3GetMu(b3_f64 F0)

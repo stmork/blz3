@@ -31,6 +31,9 @@
 
 /*
 **	$Log$
+**	Revision 1.2  2005/06/01 12:28:55  smork
+**	- Removed some floating point operations.
+**
 **	Revision 1.1  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -40,7 +43,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **
 */
 
@@ -56,7 +59,7 @@ b3_bool b3BaseTransformation::b3Prepare()
 	b3_bool is_zero_volume;
 
 	denom = b3Matrix::b3Det3(&m_Dir1,&m_Dir2,&m_Dir3);
-	is_zero_volume = b3Math::b3NearZero(denom);
+	is_zero_volume = denom == 0;
 	if (!is_zero_volume)
 	{
 		m_Denom        = 1.0 / denom;

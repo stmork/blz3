@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.47  2005/06/01 12:28:55  smork
+**	- Removed some floating point operations.
+**
 **	Revision 1.46  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -44,7 +47,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.45  2005/01/06 10:02:37  smork
 **	- Spline animation fix.
 **	
@@ -410,7 +413,7 @@ b3_f64 b3Sphere::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 
 	// now compute "north pole" - radius is point on equator
-	if (b3Math::b3NearZero(m_Dir.x) && b3Math::b3NearZero(m_Dir.y))
+	if ((m_Dir.x == 0) && (m_Dir.y == 0))
 	{
 		// special case: point on equator is north pole
 		aux.x   = m_Dir.z;
@@ -778,7 +781,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 	EndPoint.y = (BasePoint.y = -BTLine.pos.y) + 1;
 	EndPoint.z = (BasePoint.z = -BTLine.pos.z) + 1;
 
-	if (!b3Math::b3NearZero(BTLine.dir.x))
+	if (BTLine.dir.x != 0)
 	{
 		if ((m = BasePoint.x / BTLine.dir.x) >= b3Scene::epsilon)
 		{
@@ -811,7 +814,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 	}
 
-	if (!b3Math::b3NearZero(BTLine.dir.y))
+	if (BTLine.dir.y != 0)
 	{
 		if ((m = BasePoint.y / BTLine.dir.y) >= b3Scene::epsilon)
 		{
@@ -844,7 +847,7 @@ b3_f64 b3Box::b3Intersect(b3_ray *ray,b3_polar *polar)
 		}
 	}
 
-	if (!b3Math::b3NearZero(BTLine.dir.z))
+	if (BTLine.dir.z != 0)
 	{
 		if ((m = BasePoint.z / BTLine.dir.z) >= b3Scene::epsilon)
 		{
@@ -1528,7 +1531,7 @@ b3_bool b3CSGBox::b3Intersect(
 	EndPoint.y = (BasePoint.y = -BTLine->pos.y) + 1;
 	EndPoint.z = (BasePoint.z = -BTLine->pos.z) + 1;
 
-	if (!b3Math::b3NearZero(BTLine->dir.x))
+	if (BTLine->dir.x != 0)
 	{
 		m = BasePoint.x / BTLine->dir.x;
 		y = m * BTLine->dir.y;
@@ -1557,7 +1560,7 @@ b3_bool b3CSGBox::b3Intersect(
 		}
 	}
 
-	if (!b3Math::b3NearZero(BTLine->dir.y))
+	if (BTLine->dir.y != 0)
 	{
 		m = BasePoint.y / BTLine->dir.y;
 		x = m * BTLine->dir.x;
@@ -1586,7 +1589,7 @@ b3_bool b3CSGBox::b3Intersect(
 		}
 	}
 
-	if (!b3Math::b3NearZero(BTLine->dir.z))
+	if (BTLine->dir.z != 0)
 	{
 		m = BasePoint.z / BTLine->dir.z;
 		y = m * BTLine->dir.y;

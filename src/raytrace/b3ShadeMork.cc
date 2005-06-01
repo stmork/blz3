@@ -33,13 +33,16 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2005/06/01 12:28:55  smork
+**	- Removed some floating point operations.
+**
 **	Revision 1.51  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
 **	  a == b  -> b3Math::b3IsEqual
 **	- Removed some very inlikely fp comparisons
 **	  in intersection methods.
-**
+**	
 **	Revision 1.50  2004/10/15 18:35:22  sm
 **	- Moved illumination loop into base class
 **	
@@ -320,7 +323,7 @@ void b3ShaderMork::b3ShadeSurface(
 	// Refraction
 	if (surface->m_Transparent)
 	{
-		if (b3Math::b3IsEqual(surface->m_Ior, 1.0))
+		if (surface->m_Ior == 1)
 		{
 			surface->m_RefrRay.inside = false;
 			surface->m_ReflRay.inside = false;

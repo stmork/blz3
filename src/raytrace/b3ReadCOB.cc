@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/06/01 12:28:55  smork
+**	- Removed some floating point operations.
+**
 **	Revision 1.16  2005/05/14 12:27:05  sm
 **	- Corrected scanf format.
-**
+**	
 **	Revision 1.15  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
@@ -712,7 +715,7 @@ b3_size b3COBReader::b3COB_ParseMat(const char *buffer)
 			sscanf(line,"texture: %s",name);
 			Mat->m_Diffuse.b3Init(r,g,b);
 		}
-		if (b3Math::b3NearZero(Mat->m_Ior) || b3Math::b3IsEqual(Mat->m_Ior, 1))
+		if ((Mat->m_Ior == 0) || (Mat->m_Ior == 1))
 		{
 			Mat->m_Refraction = 0;
 		}

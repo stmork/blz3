@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/06/01 12:28:55  smork
+**	- Removed some floating point operations.
+**
 **	Revision 1.6  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -41,7 +44,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.5  2005/01/06 10:02:37  smork
 **	- Spline animation fix.
 **	
@@ -82,7 +85,7 @@ b3_bool b3Shape::b3NormalDeriv(b3_ray *ray)
 
 b3_bool b3Sphere::b3NormalDeriv(b3_ray *ray)
 {
-	if (b3Math::b3NearZero(ray->normal.x) && b3Math::b3NearZero(ray->normal.y))
+	if ((ray->normal.x == 0) && (ray->normal.y == 0))
 	{
 		// Gimble lock
 		return b3Shape::b3NormalDeriv(ray);

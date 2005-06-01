@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.75  2005/06/01 12:28:55  smork
+**      - Removed some floating point operations.
+**
 **      Revision 1.74  2005/01/13 20:05:16  sm
 **      - Some Lines bugfixes
 **
@@ -571,7 +574,7 @@ void b3CameraPart::b3Orientate(
 	b3Vector::b3Sub(view,eye,&dir);
 	b3Vector::b3Normalize(&dir,focal_length);
 	b3Vector::b3Add(eye,&dir,&m_ViewPoint);
-	if (b3Math::b3NearZero(dir.x) && b3Math::b3NearZero(dir.y))
+	if ((dir.x == 0) && (dir.y == 0))
 	{
 		b3Vector::b3Init(&up,1,0,0);
 	}
@@ -655,7 +658,7 @@ b3_f64 b3CameraPart::b3GetTwirl()
 	ViewDir.y = m_ViewPoint.y - m_EyePoint.y;
 	ViewDir.z = m_ViewPoint.z - m_EyePoint.z;
 
-	if (b3Math::b3NearZero(ViewDir.x) && b3Math::b3NearZero(ViewDir.y))
+	if ((ViewDir.x == 0) && (ViewDir.y == 0))
 	{
 		return 0;
 	}
@@ -695,7 +698,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	m_ViewPoint.y = m_EyePoint.y + factor * RotLine.dir.y;
 	m_ViewPoint.z = m_EyePoint.z + factor * RotLine.dir.z;
 
-	if (b3Math::b3NearZero(RotLine.dir.x) && b3Math::b3NearZero(RotLine.dir.y))
+	if ((RotLine.dir.x == 0) && (RotLine.dir.y == 0))
 	{
 		m_Width.x =  1;
 		m_Width.y =  0;
@@ -715,7 +718,7 @@ void b3CameraPart::b3SetTwirl(b3_f64 twirl)
 	b3Vector::b3Normalize(&m_Height,height);
 
 	// set to the old twirl
-	if (!b3Math::b3NearZero(twirl))
+	if (twirl != 0)
 	{
 		b3Matrix::b3RotateVector (null,&RotMatrix,&RotLine,-twirl);
 		b3Matrix::b3VMul   (&RotMatrix,&m_Width, &m_Width, false);
