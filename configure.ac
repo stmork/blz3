@@ -29,6 +29,8 @@ AC_SUBST(BLZ3_BIN, "$BLZ3_HOME/bin", [The Blizzard III exutable directory])
 AC_SUBST(GLUTLIBS)
 AC_SUBST(DIVXLIBS)
 
+AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
+
 AC_MSG_CHECKING([wether we compile on Linux])
 AC_TRY_LINK([#include <stdio.h>],[
 #ifndef __linux__
@@ -97,7 +99,6 @@ AC_FUNC_MMAP
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([floor ftime gethostname gettimeofday memset mkdir munmap pow sqrt strchr strerror strstr])
 
 AC_CONFIG_FILES([
 	src/Makefile
