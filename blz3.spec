@@ -19,6 +19,10 @@ Group: Development/Libraries
 Summary: Data for Blizzard III
 Group: Applications/Multimedia
 
+%package divx
+Summary: Tool for creating DivX movies from single frames.
+Group: Applications/Multimedia
+
 %description
 This is a very fast raytracer developed since the early 1990s.
 
@@ -27,6 +31,10 @@ This package proviles C++ header files and libraries of Blizzard III.
 
 %description data
 This package contains Blizzard data files.
+
+%description divx
+This package contains a tool for creating DivX movies from
+single images.
 
 %prep
 %setup -q -n %{name}
@@ -57,9 +65,10 @@ cp -a include/blz3      $RPM_BUILD_ROOT/usr/include
 cp -a include_unix/blz3 $RPM_BUILD_ROOT/usr/include
 cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 
-(cd $RPM_BUILD_ROOT; find ./usr/bin                -type f|cut -b2- >/tmp/blz3-file-list; )
-(cd $RPM_BUILD_ROOT; find ./usr/lib* ./usr/include -type f|cut -b2- >/tmp/blz3-devel-file-list; )
-(cd $RPM_BUILD_ROOT; find ./usr/share              -type f|cut -b2- >/tmp/blz3-data-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/bin                -type f | fgrep -v divx | cut -b2- >/tmp/blz3-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/bin                -type f | fgrep    divx | cut -b2- >/tmp/blz3-divx-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/lib* ./usr/include -type f |                 cut -b2- >/tmp/blz3-devel-file-list; )
+(cd $RPM_BUILD_ROOT; find ./usr/share              -type f |                 cut -b2- >/tmp/blz3-data-file-list; )
 
 %files -f /tmp/blz3-file-list
 %defattr(-,root,root)
@@ -71,6 +80,9 @@ cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 %defattr(-,root,root)
 %config /etc/profile.d/blz3.csh
 %config /etc/profile.d/blz3.sh
+
+%files divx -f /tmp/blz3-divx-file-list
+%defattr(-,root,root)
 
 %clean
 rm -rf $RPM_BUILD_ROOT /tmp/blz3*-file-list
