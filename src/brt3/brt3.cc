@@ -38,9 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.63  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.62  2005/01/21 10:28:59  smork
 **	- Corrected exe banner.
-**
+**	
 **	Revision 1.61  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -336,9 +340,9 @@
 **                                                                      **
 *************************************************************************/
 
-static char BLZ3_EXTENSION[] = ".jpg";
+static char BLZ3_EXTENSION[16] = ".jpg";
 
-static void b3SaveRaytracedImage(
+static b3_bool b3SaveRaytracedImage(
 	b3Display  *display,
 	const char *picture_home,
 	const char *camera_name)
@@ -356,7 +360,7 @@ static void b3SaveRaytracedImage(
 	{
 		imagename.b3Format("%s%s",(const char *)filename,BLZ3_EXTENSION);
 	}
-	display->b3SaveImage(imagename);
+	return display->b3SaveImage(imagename);
 }
 
 static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
@@ -412,6 +416,7 @@ static void b3Banner(const char *command)
 		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
 		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
 		b3PrintF(B3LOG_NORMAL,"  -r  RGB8 image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -p  grey PostScript image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
@@ -518,6 +523,9 @@ int main(int argc,char *argv[])
 				case 'r':
 					strlcpy(BLZ3_EXTENSION,".rgb8",sizeof(BLZ3_EXTENSION));
 					break;
+				case 'p':
+					strlcpy(BLZ3_EXTENSION,".ps",sizeof(BLZ3_EXTENSION));
+					break;
 
 				case 'v' :
 					b3Banner(null);
@@ -614,9 +622,12 @@ int main(int argc,char *argv[])
 							b3PrintF(B3LOG_NORMAL,"Rendering default camera...\n");
 							scene->b3ComputeBounds(&lower,&upper);
 							scene->b3Raytrace(display);
-							b3SaveRaytracedImage(
+							if (!b3SaveRaytracedImage(
 								display,
-								BLZ3_PICTURES,scene->b3GetName());
+								BLZ3_PICTURES,scene->b3GetName()))
+							{
+								b3PrintF(B3LOG_NORMAL, "Cannot save image %s!\n",scene->b3GetName());
+							}
 						}
 
 						if (!force_no_wait)

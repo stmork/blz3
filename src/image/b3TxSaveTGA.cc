@@ -32,13 +32,17 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.8  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
 **	- Added row refresh count into Lines
-**
+**	
 **	Revision 1.7  2002/08/09 13:20:19  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -192,6 +196,8 @@ b3InfoTGA::~b3InfoTGA()
 
 b3_result b3Tx::b3SaveTGA(const char *filename)
 {
+	b3PrintF(B3LOG_FULL, "Saving TGA: %s\n", filename);
+
 	b3InfoTGA info(this,filename);
 	info.b3Write();
 	return B3_OK;

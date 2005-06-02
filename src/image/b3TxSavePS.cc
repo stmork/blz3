@@ -30,12 +30,16 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.3  2001/12/01 17:48:42  sm
 **	- Added raytraced image saving
 **	- Added texture search path configuration
 **	- Always drawing fulcrum and view volume. The
 **	  depth buffer problem persists
-**
+**	
 **	Revision 1.2  2001/11/09 16:15:35  sm
 **	- Image file encoder
 **	- Performance meter for triangles / second added.
@@ -117,6 +121,8 @@ b3InfoPS::~b3InfoPS()
 
 b3_result b3Tx::b3SavePS(const char *filename)
 {
+	b3PrintF(B3LOG_FULL, "Saving PS: %s\n", filename);
+
 	b3InfoPS info(this,filename);
 	info.b3Write();
 	return B3_OK;

@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.20  2005/05/14 12:27:05  sm
 **	- Corrected scanf format.
-**
+**	
 **	Revision 1.19  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
 **	
@@ -68,7 +72,7 @@
 **	- Introduced animation support (Puh!)
 **	
 **	Revision 1.11  2002/08/15 13:56:43  sm
-**	- Introduced B3_THROW macro which supplies filename
+**	- Introduced B3_THROWö macro which supplies filename
 **	  and line number of source code.
 **	- Fixed b3AllocTx when allocating a zero sized image.
 **	  This case is definitely an error!
@@ -488,6 +492,7 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 
 	ext.b3ExtractExt(filename);
 	filetype = b3GetFileType(ext);
+
 	switch(filetype)
 	{
 	case FT_JPEG:
@@ -498,6 +503,11 @@ b3_result b3Tx::b3SaveImage(const char *filename)
 		return b3SaveTGA(filename);
 	case FT_RGB8:
 		return b3SaveRGB8(filename);
+	case FT_PS:
+		return b3SavePS(filename);
+
+	case FT_UNKNOWN:
+		B3_THROW(b3TxException, B3_TX_UNKNOWN_FILETYPE);
 
 	default:
 		return B3_ERROR;

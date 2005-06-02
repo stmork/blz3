@@ -35,9 +35,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.8  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
-**
+**	
 **	Revision 1.7  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -327,6 +331,8 @@ b3_result b3Tx::b3SaveTIFF(const char *nameTx)
 {
 	TIFF        *tiff;
 	b3_tx_error  result = B3_TX_OK;
+
+	b3PrintF(B3LOG_FULL, "Saving TIFF: %s\n", nameTx);
 
 	if ((xSize == 0) || (ySize == 0))
 	{

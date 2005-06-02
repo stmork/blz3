@@ -30,9 +30,13 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.7  2004/12/27 20:44:32  sm
 **	- Corrected some typedefs
-**
+**	
 **	Revision 1.6  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -280,6 +284,8 @@ b3InfoJPEG::~b3InfoJPEG()
 
 b3_result b3Tx::b3SaveJPEG(const char *filename,b3_u32 quality)
 {
+	b3PrintF(B3LOG_FULL, "Saving JPEG: %s, quality %u\n", filename, quality);
+
 	b3InfoJPEG info(this,filename,quality);
 	info.b3Write();
 	return B3_OK;

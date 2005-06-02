@@ -30,10 +30,14 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/02 07:45:44  smork
+**	- Fixed RGB8 image saving in brt3.
+**	- Added PostScript image save.
+**
 **	Revision 1.8  2004/01/01 12:46:43  sm
 **	- Fixed RGB8 image writing
 **	- Added RGB8 image saving to brt3 and display all command line options.
-**
+**	
 **	Revision 1.7  2002/08/15 13:56:43  sm
 **	- Introduced B3_THROW macro which supplies filename
 **	  and line number of source code.
@@ -204,6 +208,8 @@ b3InfoRGB8::~b3InfoRGB8()
 
 b3_result b3Tx::b3SaveRGB8(const char *filename)
 {
+	b3PrintF(B3LOG_FULL, "Saving RGB8: %s\n", filename);
+
 	b3InfoRGB8 info(this,filename);
 	info.b3Write();
 	return B3_OK;
