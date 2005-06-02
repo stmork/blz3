@@ -26,9 +26,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/06/02 13:21:19  smork
+**	- Cleanup.
+**
 **	Revision 1.7  2005/06/02 13:20:01  smork
 **	- Write log file error reason on stderr.
-**
+**	
 **	Revision 1.6  2004/01/18 13:51:58  sm
 **	- Done further security issues.
 **	
@@ -69,10 +72,10 @@ b3_log_level  b3LogBase::m_LogLevel = B3LOG_NORMAL;	// normal version
 b3_log_level  b3LogBase::m_LogLevel = B3LOG_FULL;	// debug version
 #endif
 
-b3LogBase *b3LogBase::m_Logger;
-b3Mutex    b3LogBase::m_LogMutex;
-FILE      *b3LogBase::m_Out = null;
-char       b3LogBase::m_Message[B3_MAX_LOGSIZE];
+b3LogBase    *b3LogBase::m_Logger;
+b3Mutex       b3LogBase::m_LogMutex;
+FILE         *b3LogBase::m_Out = null;
+char          b3LogBase::m_Message[B3_MAX_LOGSIZE];
 
 b3LogBase::b3LogBase()
 {
