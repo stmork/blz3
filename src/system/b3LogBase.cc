@@ -16,6 +16,7 @@
 */
 
 #include "blz3/b3Config.h"
+#include <errno.h>
 
 /*************************************************************************
 **                                                                      **
@@ -25,9 +26,12 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/06/02 13:20:01  smork
+**	- Write log file error reason on stderr.
+**
 **	Revision 1.6  2004/01/18 13:51:58  sm
 **	- Done further security issues.
-**
+**	
 **	Revision 1.5  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -81,21 +85,29 @@ b3LogBase::b3LogBase()
 		snprintf (m_Message,sizeof(m_Message),
 			"*** Blizzard III V%d.%02d # Debug log file ***\n"
 			"Debug file:  %s\n"
-			"Debug level: %d = 0x%x\n\n",
+			"Debug level: %d = 0x%x\n"
+			"*******************************************\n\n",
 			B3_VERSION,B3_REVISION,
 			m_LogFile,
 			m_LogLevel,m_LogLevel);
 
 		// Do output
-		m_Out = fopen (m_LogFile,B3_TAPPEND);
+		m_Out = fopen (m_LogFile, B3_TAPPEND);
 		if (m_Out != null)
 		{
-			fprintf(m_Out,m_Message);
+			fprintf(m_Out, m_Message);
 			fflush (m_Out);
 		}
 		else
 		{
-			fprintf(stderr,m_Message);
+			fprintf(stderr, m_Message);
+			fprintf(stderr, 
+				"Cannot open log file %s\n"
+				"Reason: %s\n"
+				"Errno:  %d\n\n",
+				m_LogFile,
+				strerror(errno),
+				errno);
 			fflush (stderr);
 		}
 	}

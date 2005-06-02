@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/06/02 13:20:01  smork
+**	- Write log file error reason on stderr.
+**
 **	Revision 1.15  2005/05/07 09:40:00  sm
 **	- Changing va-list init to each vxprintf function call.
-**
+**	
 **	Revision 1.14  2005/02/02 10:54:17  smork
 **	- Removed include.
 **	
@@ -123,7 +126,7 @@ void b3Log::b3LogTime(const char *comment)
 		stamp.tv_sec,stamp.tv_usec / 1000,comment ? comment : "-");
 }
 
-/* MPrintF() has got the same proto types as printf(). This routine */
+/* b3PrintF() has got the same proto types as printf(). This routine */
 /* is defined because MS-Windows has got no stdout. So MPrintF() */
 /* makes it possible... */
 /* ---------------------------------------------------------------- */
