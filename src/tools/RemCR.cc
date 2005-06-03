@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3RemDepend.cc $
-**      $Release:       Dortmund 2001 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3RemCR.cc $
+**	$Release:       Dortmund 2001 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - removing dependencies from makefile
+**	Blizzard III - Converting Windows style files to Un*x files.
 **
-**      (C) Copyright 2001  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 */
@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/06/03 13:49:27  smork
+**	- Some cleanup.
+**
 **	Revision 1.5  2005/06/03 13:47:17  smork
 **	- Reactivating RemCR
-**
+**	
 **	Revision 1.3  2002/11/16 15:24:17  sm
 **	- Include cleanups in RemCR
 **	
