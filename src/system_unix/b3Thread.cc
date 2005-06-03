@@ -25,13 +25,8 @@
 
 #include <assert.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
 #include <string.h>
-
-#ifdef __linux__
-#include <sys/utsname.h>
-#endif
+#include <unistd.h>
 
 /*************************************************************************
 **                                                                      **
@@ -41,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2005/06/03 09:00:34  smork
+**	- Moved b3CPU into own file.
+**
 **	Revision 1.22  2005/05/10 15:30:57  sm
 **	- getrusage time correction message added.
-**
+**	
 **	Revision 1.21  2005/03/26 09:03:42  sm
 **	- Some rpm spec updates
 **	- Speed up of correct rusage determination.
@@ -267,8 +265,9 @@ b3_bool b3Event::b3Wait()
 **                                                                      **
 *************************************************************************/
 
-static b3_count   threadCount;
-static b3IPCMutex threadMutex;
+b3_count   b3Thread::m_ThreadCount;
+b3IPCMutex b3Thread::m_ThreadMutex;
+
 static b3_count   threadSuccess;
 static b3_count   threadError;
 
@@ -287,26 +286,26 @@ b3Thread::~b3Thread()
 
 void b3Thread::b3Inc()
 {
-	threadMutex.b3Lock();
+	m_ThreadMutex.b3Lock();
 	if (!m_IsRunning)
 	{
 		m_Span.b3Start();
 		m_IsRunning = true;
-		threadCount++;
+		m_ThreadCount++;
 	}
-	threadMutex.b3Unlock();
+	m_ThreadMutex.b3Unlock();
 }
 
 void b3Thread::b3Dec()
 {
-	threadMutex.b3Lock();
+	m_ThreadMutex.b3Lock();
 	if (m_IsRunning)
 	{
-		threadCount--;
+		m_ThreadCount--;
 		m_IsRunning = false;
 		m_Span.b3Stop();
 	}
-	threadMutex.b3Unlock();
+	m_ThreadMutex.b3Unlock();
 
 }
 
@@ -342,15 +341,15 @@ b3_bool b3Thread::b3Start(
 	}
 	else
 	{
-		threadMutex.b3Lock();
+		m_ThreadMutex.b3Lock();
 		threadError++;
 		b3PrintF(B3LOG_NORMAL,"### CLASS: b3Thrd # Thread (%x) not started!\n",
 			m_Thread);
 		b3PrintF(B3LOG_NORMAL,"    OK/error count: %d/%d\n",
 			threadSuccess,threadError);
 		b3PrintF(B3LOG_NORMAL,"    thread count:   %d\n",
-			threadCount);
-		threadMutex.b3Unlock();
+			m_ThreadCount);
+		m_ThreadMutex.b3Unlock();
 	}
 	return success;
 }
@@ -415,78 +414,3 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 	}
 #endif
 } 
-
-/*************************************************************************
-**                                                                      **
-**                        b3 count CPUs                                 **
-**                                                                      **
-*************************************************************************/
-
-#ifndef _SC_NPROCESSORS_ONLN
-#ifdef  _SC_NPROC_ONLN
-#define _SC_NPROCESSORS_ONLN _SC_NPROC_ONLN
-#endif
-#endif
-
-b3_bool b3CPU::m_CorrectRUsage = true;
-
-b3CPU::b3CPU()
-{
-	if (cpu_count == 0)
-	{
-		long    result;
-
-#ifdef _SC_NPROCESSORS_ONLN
-		result = sysconf(_SC_NPROCESSORS_ONLN);
-#else
-		result = 1;
-#endif
-		if ((result < 1) || (errno == EINVAL))
-		{
-			cpu_count = 1;
-		}
-		else
-		{
-			cpu_count = result;
-		}
-
-#ifdef __linux__
-		struct utsname uinfo;
-		int            a,b,c;
-
-		if (uname(&uinfo) == 0)
-		{
-			if (sscanf(uinfo.release,"%d.%d.%d",&a,&b,&c) == 3)
-			{
-				if ((a * 100000 + b * 1000 + c) < 206009)
-				{
-					m_CorrectRUsage = false;
-				}
-			}
-		}
-
-		if (!m_CorrectRUsage)
-		{
-			b3PrintF(B3LOG_NORMAL,"Found Linux kernel %d.%d.%d with wrong resource usage measurement.\n",
-				a,b,c);
-		}
-#endif
-	}
-}
-
-b3_count b3CPU::b3GetNumThreads()
-{
-	b3_count resuming;
-
-	threadMutex.b3Lock();
-	if (cpu_count > threadCount)
-	{
-		resuming = cpu_count - threadCount;
-	}
-	else
-	{
-		resuming = 1;
-	}
-	threadMutex.b3Unlock();
-	return resuming;
-}

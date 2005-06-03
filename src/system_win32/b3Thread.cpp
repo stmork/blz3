@@ -33,6 +33,9 @@
 
 /*
 **	$Log$
+**	Revision 1.18  2005/06/03 09:00:34  smork
+**	- Moved b3CPU into own file.
+**
 **	Revision 1.17  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -41,7 +44,7 @@
 **	- Removed many global references from raytrace and base lib
 **	- Fixed ticket no. 29: The b3RenderObject::b3Recompute
 **	  method checks the vertex maintainer against a null pointer.
-**
+**	
 **	Revision 1.16  2003/10/16 08:25:55  sm
 **	- Moved CPU bit count into b3CPUBase class
 **	
@@ -355,41 +358,3 @@ void b3Thread::b3AddTimeSpan(b3TimeSpan *span)
 	span->m_sTime += m_Span.m_sTime;
 #endif
 } 
-
-/*************************************************************************
-**                                                                      **
-**                        b3CPU implementation                          **
-**                                                                      **
-*************************************************************************/
-
-b3CPU::b3CPU()
-{
-	if (cpu_count == 0)
-	{
-		SYSTEM_INFO  info;
-
-		GetSystemInfo(&info);
-		cpu_count = info.dwNumberOfProcessors;
-		if (info.dwNumberOfProcessors < 1)
-		{
-			cpu_count = 1;
-		}
-	}
-}
-
-b3_count b3CPU::b3GetNumThreads()
-{
-	b3_count resuming;
-
-	b3Thread::m_ThreadMutex.b3Lock();
-	if (cpu_count > b3Thread::m_ThreadCount)
-	{
-		resuming = cpu_count - b3Thread::m_ThreadCount;
-	}
-	else
-	{
-		resuming = 1;
-	}
-	b3Thread::m_ThreadMutex.b3Unlock();
-	return resuming;
-}

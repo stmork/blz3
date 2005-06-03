@@ -9,6 +9,7 @@ CPPFLAGS		= @CPPFLAGS@
 LIBS			= libB3System.o
 LIB_SOURCE		=\
 	b3Config.cc\
+	b3CPU.cc\
 	b3Dir.cc\
 	b3DisplayView.cc\
 	b3Error.cc\
@@ -20,6 +21,7 @@ LIB_SOURCE		=\
 
 LIB_OBJ			=\
 	b3Config.o\
+	b3CPU.o\
 	b3Dir.o\
 	b3DisplayView.o\
 	b3Error.o\

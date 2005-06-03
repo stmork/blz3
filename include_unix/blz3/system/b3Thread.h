@@ -23,6 +23,20 @@
 #include "blz3/system/b3CPUBase.h"
 #include <pthread.h>
 
+class b3CPU : public b3CPUBase
+{
+	static b3_bool  m_CorrectRUsage;
+
+public:
+	                b3CPU();
+	static b3_count b3GetNumThreads();
+
+	inline static b3_bool  b3HasCorrectRUsage()
+	{
+		return m_CorrectRUsage;
+	}
+};
+
 class b3Mutex
 {
 	pthread_mutex_t mutex;
@@ -71,6 +85,9 @@ protected:
 	volatile b3ThreadProc  m_CallProc;
 	volatile void         *m_CallArg;
 
+	static   b3IPCMutex    m_ThreadMutex;
+	static   b3_count      m_ThreadCount;
+
 public:
 	         b3Thread(const char *task_name = null);
 	        ~b3Thread();
@@ -80,24 +97,13 @@ public:
 	b3_bool  b3Stop();
 	b3_u32   b3Wait();
 	void     b3AddTimeSpan(b3TimeSpan *span);
+
 private:
 	static void *b3Trampoline(void *thread);
 	       void  b3Inc();
 	       void  b3Dec();
-};
 
-class b3CPU : public b3CPUBase
-{
-	static b3_bool  m_CorrectRUsage;
-
-public:
-	                b3CPU();
-	static b3_count b3GetNumThreads();
-
-	inline static b3_bool  b3HasCorrectRUsage()
-	{
-		return m_CorrectRUsage;
-	}
+	friend class b3CPU;
 };
 
 #endif
