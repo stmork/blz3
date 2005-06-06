@@ -150,18 +150,22 @@ public:
 		      b3_vector *vector,
 		const b3_f64     length = 1.0)
 	{
-		register b3_f64 x,y,z,denom,result = 0;
+		b3_f32 *v = &vector->x;
+		b3_f32  denom = 0;
+		b3_f64  result = 0;
 
-		x = vector->x;
-		y = vector->y;
-		z = vector->z;
-		denom = x * x + y * y + z * z;
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			denom += v[i] * v[i];
+		}
 		if (denom > 0)
 		{
 			denom     = length / (result = sqrt(denom));
-			vector->x = (b3_f32)(x * denom);
-			vector->y = (b3_f32)(y * denom);
-			vector->z = (b3_f32)(z * denom);
+
+			for (b3_loop i = 0;i < 3;i++)
+			{
+				v[i] *= denom;
+			}
 		}
 		return result;
 	}
@@ -170,18 +174,22 @@ public:
 		      b3_vector64 *vector,
 		const b3_f64       length = 1.0)
 	{
-		register b3_f64 x,y,z,denom,result = 0;
+		b3_f64 *v      = &vector->x;
+		b3_f64  denom  = 0;
+		b3_f64  result = 0;
 
-		x = vector->x;
-		y = vector->y;
-		z = vector->z;
-		denom = x * x + y * y + z * z;
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			denom += v[i] * v[i];
+		}
 		if (denom > 0)
 		{
 			denom     = length / (result = sqrt(denom));
-			vector->x = x * denom;
-			vector->y = y * denom;
-			vector->z = z * denom;
+
+			for (b3_loop i = 0;i < 3;i++)
+			{
+				v[i] *= denom;
+			}
 		}
 		return result;
 	}
@@ -190,18 +198,22 @@ public:
 		      b3_gl_vector *vector,
 		const b3_f64        length = 1.0)
 	{
-		register b3_f64 x,y,z,denom,result = 0;
+		b3_f32 *v = &vector->x;
+		b3_f32  denom = 0;
+		b3_f64  result = 0;
 
-		x = vector->x;
-		y = vector->y;
-		z = vector->z;
-		denom = x * x + y * y + z * z;
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			denom += v[i] * v[i];
+		}
 		if (denom > 0)
 		{
 			denom     = length / (result = sqrt(denom));
-			vector->x = (b3_f32)(x * denom);
-			vector->y = (b3_f32)(y * denom);
-			vector->z = (b3_f32)(z * denom);
+
+			for (b3_loop i = 0;i < 3;i++)
+			{
+				v[i] *= denom;
+			}
 		}
 		return result;
 	}
@@ -311,9 +323,14 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-		result->x = aVec->x + bVec->x;
-		result->y = aVec->y + bVec->y;
-		result->z = aVec->z + bVec->z;
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
+
+		for(b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = a[i] + b[i];
+		}
 		return result;
 	}
 
@@ -524,12 +541,17 @@ public:
 		const b3_vector *from,
 		const b3_vector *to)
 	{
-		register b3_f64 x,y,z;
+		const b3_f32 B3_ALIGN_16 *a = &from->x;
+		const b3_f32 B3_ALIGN_16 *b = &to->x;
+		      b3_f32 B3_ALIGN_16  d[4];
+		      b3_f32              result = 0;
 
-		x = to->x - from->x;
-		y = to->y - from->y;
-		z = to->z - from->z;
-		return sqrt(x * x + y * y + z * z);
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			d[i]    = b[i] - a[i];
+			result += d[i] * d[i];
+		}
+		return sqrt(result);
 	}
 
 	static inline void b3Scale(b3_vector *vector,const b3_f64 factor)
@@ -904,7 +926,7 @@ public:
 	static b3_matrix *b3MirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 scale);
 	static b3_matrix *b3MirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *base,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
 	static b3_matrix *b3MMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
-	static b3_matrix *b3SMul         (b3_matrix *Src,b3_matrix *Dst,b3_f64     factor);
+	static b3_matrix *b3SMul         (b3_matrix *Src,b3_matrix *Dst,b3_f32     factor);
 	static b3_matrix *b3MAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
 	static b3_matrix *b3Align        (b3_matrix *Dst,const b3_line *axis);
 	static b3_matrix *b3RotateVector (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);

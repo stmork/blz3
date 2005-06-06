@@ -35,12 +35,15 @@
 
 /*
 **	$Log$
+**	Revision 1.31  2005/06/06 12:26:30  smork
+**	- Further optimizations.
+**
 **	Revision 1.30  2004/06/19 12:11:01  sm
 **	- Fixed animation problem by using a thrid dress vector
 **	  which points up. This is a hack because rotating vectors
 **	  inside the xy plane are undefined.
 **	- Added material/bump save support.
-**
+**	
 **	Revision 1.29  2004/06/18 14:49:05  sm
 **	- Some probes concerning the anim rotation problem. Should I use
 **	  quaternions?
@@ -284,6 +287,7 @@ b3_f64 b3Matrix::b3Det4(b3_matrix *Matrix)
 b3_matrix * b3Matrix::b3Unit (b3_matrix *Matrix)
 {
 	memcpy(Matrix,&m_UnitMatrix,sizeof(b3_matrix));
+
 	return Matrix;
 }
 
@@ -291,12 +295,9 @@ b3_matrix * b3Matrix::b3Transport (
 	b3_matrix *From,
 	b3_matrix *To)
 {
-	To->m11 = From->m11; To->m21 = From->m12; To->m31 = From->m13; To->m41 = From->m14;
-	To->m12 = From->m21; To->m22 = From->m22; To->m32 = From->m23; To->m42 = From->m24;
-	To->m13 = From->m31; To->m23 = From->m32; To->m33 = From->m33; To->m43 = From->m34;
-	To->m14 = From->m41; To->m24 = From->m42; To->m34 = From->m43; To->m44 = From->m44;
+	memcpy(To, From, sizeof(b3_matrix));
 
-	return (To);
+	return To;
 }
 
 b3_matrix * b3Matrix::b3Inverse (
@@ -432,35 +433,23 @@ b3_matrix * b3Matrix::b3MMul (
 	Result.m44 = A->m41 * B->m14 + A->m42 * B->m24 + A->m43 * B->m34 + A->m44 * B->m44;
 
 	*C = Result;
-	return (C);
+	return C;
 }
 
 b3_matrix * b3Matrix::b3SMul (
 	b3_matrix *A,
 	b3_matrix *B,
-	b3_f64     Value)
+	b3_f32     Value)
 {
-	B->m11 = (b3_f32)(A->m11 * Value);
-	B->m12 = (b3_f32)(A->m12 * Value);
-	B->m13 = (b3_f32)(A->m13 * Value);
-	B->m14 = (b3_f32)(A->m14 * Value);
+	b3_f32 B3_ALIGN_16 *src = &A->m11;
+	b3_f32 B3_ALIGN_16 *dst = &B->m11;
 
-	B->m21 = (b3_f32)(A->m21 * Value);
-	B->m22 = (b3_f32)(A->m22 * Value);
-	B->m23 = (b3_f32)(A->m23 * Value);
-	B->m24 = (b3_f32)(A->m24 * Value);
+	for (b3_loop i = 0;i < 16;i++)
+	{
+		dst[i] = src[i] * Value;
+	}
 
-	B->m31 = (b3_f32)(A->m31 * Value);
-	B->m32 = (b3_f32)(A->m32 * Value);
-	B->m33 = (b3_f32)(A->m33 * Value);
-	B->m34 = (b3_f32)(A->m34 * Value);
-
-	B->m41 = (b3_f32)(A->m41 * Value);
-	B->m42 = (b3_f32)(A->m42 * Value);
-	B->m43 = (b3_f32)(A->m43 * Value);
-	B->m44 = (b3_f32)(A->m44 * Value);
-
-	return (B);
+	return B;
 }
 
 b3_matrix * b3Matrix::b3MAdd (
@@ -468,25 +457,14 @@ b3_matrix * b3Matrix::b3MAdd (
 	b3_matrix *B,
 	b3_matrix *C)
 {
-	C->m11 = A->m11 + B->m11;
-	C->m12 = A->m12 + B->m12;
-	C->m13 = A->m13 + B->m13;
-	C->m14 = A->m14 + B->m14;
+	b3_f32 B3_ALIGN_16 *aPtr = &A->m11;
+	b3_f32 B3_ALIGN_16 *bPtr = &B->m11;
+	b3_f32 B3_ALIGN_16 *dst  = &C->m11;
 
-	C->m21 = A->m21 + B->m21;
-	C->m22 = A->m22 + B->m22;
-	C->m23 = A->m23 + B->m23;
-	C->m24 = A->m24 + B->m24;
-
-	C->m31 = A->m31 + B->m31;
-	C->m32 = A->m32 + B->m32;
-	C->m33 = A->m33 + B->m33;
-	C->m34 = A->m34 + B->m34;
-
-	C->m41 = A->m41 + B->m41;
-	C->m42 = A->m42 + B->m42;
-	C->m43 = A->m43 + B->m43;
-	C->m44 = A->m44 + B->m44;
+	for (b3_loop i = 0;i < 16;i++)
+	{
+		dst[i] = aPtr[i] + bPtr[i];
+	}
 
 	return C;
 }
@@ -536,10 +514,10 @@ b3_matrix * b3Matrix::b3MoveNegative (
 		A = &m_UnitMatrix;
 	}
 
-	Move     =   m_UnitMatrix;
-	Move.m14 = - (Translation->x);
-	Move.m24 = - (Translation->y);
-	Move.m34 = - (Translation->z);
+	Move     =  m_UnitMatrix;
+	Move.m14 = -Translation->x;
+	Move.m24 = -Translation->y;
+	Move.m34 = -Translation->z;
 
 	return b3MMul (A,&Move,B);
 }
