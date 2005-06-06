@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/06/06 19:56:22  sm
+**	- Some optimizations.
+**
 **	Revision 1.2  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
-**
+**	
 **	Revision 1.1  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -53,6 +56,8 @@
 **                                                                      **
 *************************************************************************/
 
+#define BT_SSEn
+
 b3_bool b3BaseTransformation::b3Prepare()
 {
 	b3_f64  denom;
@@ -64,6 +69,15 @@ b3_bool b3BaseTransformation::b3Prepare()
 	{
 		m_Denom        = 1.0 / denom;
 
+#ifdef BT_SSE
+		b3Vector::b3CrossProduct(&m_Dir2, &m_Dir3, &m_Normals[0]);
+		b3Vector::b3CrossProduct(&m_Dir3, &m_Dir1, &m_Normals[1]);
+		b3Vector::b3CrossProduct(&m_Dir1, &m_Dir2, &m_Normals[2]);
+
+		b3Vector::b3Scale(&m_Normals[0], m_Denom);
+		b3Vector::b3Scale(&m_Normals[1], m_Denom);
+		b3Vector::b3Scale(&m_Normals[2], m_Denom);
+#else
 		m_Normals[0].x = (m_Dir2.y * m_Dir3.z - m_Dir2.z * m_Dir3.y) / denom;
 		m_Normals[0].y = (m_Dir2.z * m_Dir3.x - m_Dir2.x * m_Dir3.z) / denom;
 		m_Normals[0].z = (m_Dir2.x * m_Dir3.y - m_Dir2.y * m_Dir3.x) / denom;
@@ -75,6 +89,7 @@ b3_bool b3BaseTransformation::b3Prepare()
 		m_Normals[2].x = (m_Dir1.y * m_Dir2.z - m_Dir1.z * m_Dir2.y) / denom;
 		m_Normals[2].y = (m_Dir1.z * m_Dir2.x - m_Dir1.x * m_Dir2.z) / denom;
 		m_Normals[2].z = (m_Dir1.x * m_Dir2.y - m_Dir1.y * m_Dir2.x) / denom;
+#endif
 	}
 	else
 	{
@@ -93,6 +108,20 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_line64 *in,
 	b3_line64 *out)
 {
+#ifdef BT_SSE
+	b3_vector64         pos, base;
+	b3_f64 B3_ALIGN_16 *op = &out->pos.x;
+	b3_f64 B3_ALIGN_16 *od = &out->dir.x;
+
+	b3Vector::b3Init(&base, &m_Base);
+	b3Vector::b3Sub(&in->pos, &base, &pos);
+
+	for(b3_loop i = 0;i < 3;i++)
+	{
+		op[i] = b3Vector::b3SMul(&pos, &m_Normals[i]);
+		od[i] = b3Vector::b3SMul(&in->dir, &m_Normals[i]);
+	}
+#else
 	b3_f64 xPos,yPos,zPos;
 	b3_f64 xDir,yDir,zDir;
 
@@ -128,6 +157,7 @@ void b3BaseTransformation::b3BaseTransform(
 		xDir * m_Normals[2].x +
 		yDir * m_Normals[2].y +
 		zDir * m_Normals[2].z;
+#endif
 }
 
 
@@ -135,6 +165,17 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_vector *in,
 	b3_vector *out)
 {
+#ifdef BT_SSE
+	b3_vector pos;
+	b3_f32 B3_ALIGN_16 *o = &out->x;
+
+	b3Vector::b3Sub(in, &m_Base, &pos);
+
+	for(b3_loop i = 0;i < 3;i++)
+	{
+		o[i] = b3Vector::b3SMul(&pos, &m_Normals[i]);
+	}
+#else
 	b3_f64 xPos,yPos,zPos;
 
 	xPos = in->x - m_Base.x;
@@ -153,6 +194,7 @@ void b3BaseTransformation::b3BaseTransform(
 		xPos * m_Normals[2].x +
 		yPos * m_Normals[2].y +
 		zPos * m_Normals[2].z;
+#endif
 }
 
 

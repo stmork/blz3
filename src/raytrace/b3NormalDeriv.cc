@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/06 19:56:22  sm
+**	- Some optimizations.
+**
 **	Revision 1.8  2005/06/06 14:59:41  smork
 **	- More vectorization- More vectorization.
-**
+**	
 **	Revision 1.7  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
 **	
@@ -122,13 +125,8 @@ b3_bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray *ray)
 
 b3_bool b3Shape2::b3NormalDeriv(b3_ray *ray)
 {
-	ray->xDeriv.x = m_Dir1.x;
-	ray->xDeriv.y = m_Dir1.y;
-	ray->xDeriv.z = m_Dir1.z;
-
-	ray->yDeriv.x = m_Dir2.x;
-	ray->yDeriv.y = m_Dir2.y;
-	ray->yDeriv.z = m_Dir2.z;
+	b3Vector::b3Init(&ray->xDeriv, &m_Dir1);
+	b3Vector::b3Init(&ray->yDeriv, &m_Dir2);
 
 	return true;
 }
