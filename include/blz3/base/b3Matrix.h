@@ -941,7 +941,7 @@ public:
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
-			r[i] = a[i] + xFactor * b[i] + yFactor * c[i];
+			r[i] = a[i] + x * b[i] + y * c[i];
 		}
 #else
 		result->x = (b3_f32)(aVec->x + xFactor * bVec->x + yFactor * cVec->x);
@@ -959,24 +959,7 @@ public:
 		const b3_f64       yFactor,
 		      b3_gl_vector *result)
 	{
-#ifdef B3_SSE
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		const b3_f32 *c = &bVec->x;
-		      b3_f32 *r = &result->x;
-		      b3_f32  x = (b3_f32)xFactor;
-		      b3_f32  y = (b3_f32)yFactor;
-
-		for (b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] + xFactor * b[i] + yFactor * c[i];
-		}
-#else
-		result->x = (b3_f32)(aVec->x + xFactor * bVec->x + yFactor * cVec->x);
-		result->y = (b3_f32)(aVec->y + xFactor * bVec->y + yFactor * cVec->y);
-		result->z = (b3_f32)(aVec->z + xFactor * bVec->z + yFactor * cVec->z);
-#endif
-		return result;
+		return (b3_gl_vector *)b3LinearCombine(aVec,bVec,cVec,xFactor,yFactor,(b3_vector *)result);
 	}
 
 	static inline void b3Sort(b3_vector *lower,b3_vector *upper)
