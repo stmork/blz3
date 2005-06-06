@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.8  2005/06/06 14:59:41  smork
+**	- More vectorization- More vectorization.
+**
 **	Revision 1.7  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
-**
+**	
 **	Revision 1.6  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -106,9 +109,7 @@ b3_bool b3ShapeBaseTransformation::b3NormalDeriv(b3_ray *ray)
 
 	b3Vector::b3CrossProduct(&m_Dir1,&m_Dir2,&EquaNormal);
 	b3Vector::b3CrossProduct(&EquaNormal,&ray->normal,&ray->xDeriv);
-	if ((EquaNormal.x * m_Dir3.x +
-	     EquaNormal.y * m_Dir3.y +
-	     EquaNormal.z * m_Dir3.z) < 0)
+	if (b3Vector::b3SMul(&EquaNormal, &m_Dir3) < 0)
 	{
 		b3Vector::b3CrossProduct(&ray->xDeriv,&EquaNormal,&ray->yDeriv);
 	}

@@ -32,10 +32,13 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/06 14:59:41  smork
+**	- More vectorization- More vectorization.
+**
 **	Revision 1.8  2004/04/17 09:40:55  sm
 **	- Splitting b3Raytrace.h into their components for
 **	  better oversightment.
-**
+**	
 **	Revision 1.7  2004/04/11 14:05:11  sm
 **	- Raytracer redesign:
 **	  o The reflection/refraction/ior/specular exponent getter
@@ -84,58 +87,50 @@ void b3Shape::b3Normal(b3_ray *ray)
 
 void b3Sphere::b3Normal(b3_ray *ray)
 {
-	ray->normal.x = ray->ipoint.x - m_Base.x;
-	ray->normal.y = ray->ipoint.y - m_Base.y;
-	ray->normal.z = ray->ipoint.z - m_Base.z;
+	b3_vector64 base;
+
+	b3Vector::b3Init(&base, &m_Base);
+	b3Vector::b3Sub(&ray->ipoint, &base, &ray->normal);
 }
 
 void b3Shape2::b3Normal(b3_ray *ray)
 {
-	ray->normal.x = m_Normal.x;
-	ray->normal.y = m_Normal.y;
-	ray->normal.z = m_Normal.z;
+	b3Vector::b3Init(&ray->normal, &m_Normal);
 }
 
 void b3Cylinder::b3Normal(b3_ray *ray)
 {
-	register double	x,y;
+	b3_f64    x,y;
+	b3_vector normal;
 
 	x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
 	y = m_DirLen[0] * ray->polar.m_ObjectPolar.y;
-	ray->normal.x = x * m_Dir1.x + y * m_Dir2.x;
-	ray->normal.y = x * m_Dir1.y + y * m_Dir2.y;
-	ray->normal.z = x * m_Dir1.z + y * m_Dir2.z;
+
+	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &normal);
+	b3Vector::b3Init(&ray->normal, &normal);
 }
 
 void b3Cone::b3Normal(b3_ray *ray)
 {
-	b3_f64      x,y,Factor;
-	b3_vector64 n1,z3;
+	b3_f64    x,y,Factor;
+	b3_vector n1,z3, normal;
 
 	x     = ray->polar.m_ObjectPolar.x;
 	y     = ray->polar.m_ObjectPolar.y;
-	z3.x  = x * m_Dir1.x + y * m_Dir2.x;
-	z3.y  = x * m_Dir1.y + y * m_Dir2.y;
-	z3.z  = x * m_Dir1.z + y * m_Dir2.z;
+	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &z3);
 
 	x    *= m_DirLen[1];
 	y    *= m_DirLen[0];
-	n1.x  = x * m_Dir1.x + y * m_Dir2.x;
-	n1.y  = x * m_Dir1.y + y * m_Dir2.y;
-	n1.z  = x * m_Dir1.z + y * m_Dir2.z;
+	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &n1);
 
-	Factor = sqrt(
-		(z3.x * z3.x + z3.y * z3.y + z3.z * z3.z) /
-		(n1.x * n1.x + n1.y * n1.y + n1.z * n1.z));
-	n1.x *= Factor;
-	n1.y *= Factor;
-	n1.z *= Factor;
+	Factor = sqrt(b3Vector::b3QuadLength(&z3) / b3Vector::b3QuadLength(&n1));
+	b3Vector::b3Scale(&n1, Factor);
 
 	x = sqrt((n1.x * n1.x + n1.y * n1.y + n1.z * n1.z) / m_DirLen[2]);
 	y = 1 / x;
-	ray->normal.x = x * m_Dir3.x + y * n1.x;
-	ray->normal.y = x * m_Dir3.y + y * n1.y;
-	ray->normal.z = x * m_Dir3.z + y * n1.z;
+
+	b3Vector::b3LinearCombine(&m_Dir3, &n1, x, y, &normal);
+	b3Vector::b3Init(&ray->normal, &normal);
 }
 
 void b3Ellipsoid::b3Normal(b3_ray *ray)
@@ -145,6 +140,7 @@ void b3Ellipsoid::b3Normal(b3_ray *ray)
 	x = m_DirLen[1] * m_DirLen[2] * ray->polar.m_ObjectPolar.x;
 	y = m_DirLen[0] * m_DirLen[2] * ray->polar.m_ObjectPolar.y;
 	z = m_DirLen[0] * m_DirLen[1] * ray->polar.m_ObjectPolar.z;
+
 	ray->normal.x = x * m_Dir1.x + y * m_Dir2.x + z * m_Dir3.x;
 	ray->normal.y = x * m_Dir1.y + y * m_Dir2.y + z * m_Dir3.y;
 	ray->normal.z = x * m_Dir1.z + y * m_Dir2.z + z * m_Dir3.z;
@@ -181,55 +177,50 @@ void b3TriangleShape::b3Normal(b3_ray *ray)
 
 	if (m_Flags & PHONG)
 	{
+		b3_vector dir1, dir2, normal;
+
 		a        = ray->aTriaValue;
 		b        = ray->bTriaValue;
 		P1       = m_Triangles[ray->TriaIndex].P1;
 		P2       = m_Triangles[ray->TriaIndex].P2;
 		P3       = m_Triangles[ray->TriaIndex].P3;
-		ray->normal.x =						m_Vertices[P1].Normal.x  +
-			a * (m_Vertices[P2].Normal.x -	m_Vertices[P1].Normal.x) +
-			b * (m_Vertices[P3].Normal.x -	m_Vertices[P1].Normal.x);
-		ray->normal.y =						m_Vertices[P1].Normal.y  +
-			a * (m_Vertices[P2].Normal.y -	m_Vertices[P1].Normal.y) +
-			b * (m_Vertices[P3].Normal.y -	m_Vertices[P1].Normal.y);
-		ray->normal.z =						m_Vertices[P1].Normal.z  +
-			a * (m_Vertices[P2].Normal.z -	m_Vertices[P1].Normal.z) +
-			b * (m_Vertices[P3].Normal.z -	m_Vertices[P1].Normal.z);
+
+		b3Vector::b3Sub(&m_Vertices[P2].Normal, &m_Vertices[P1].Normal, &dir1);
+		b3Vector::b3Sub(&m_Vertices[P3].Normal, &m_Vertices[P1].Normal, &dir2);
+		b3Vector::b3LinearCombine(&m_Vertices[P1].Normal, &dir1, &dir2, a, b, &normal);
+		b3Vector::b3Init(&ray->normal, &normal);
 	}
 	else
 	{
-		ray->normal.x = m_Triangles[ray->TriaIndex].Normal.x;
-		ray->normal.y = m_Triangles[ray->TriaIndex].Normal.y;
-		ray->normal.z = m_Triangles[ray->TriaIndex].Normal.z;
+		b3Vector::b3Init(&ray->normal, &m_Triangles[ray->TriaIndex].Normal);
 	}
 }
 
 void b3CSGSphere::b3Normal(b3_ray *ray)
 {
-	ray->normal.x = ray->ipoint.x - m_Base.x;
-	ray->normal.y = ray->ipoint.y - m_Base.y;
-	ray->normal.z = ray->ipoint.z - m_Base.z;
+	b3_vector64 base;
+
+	b3Vector::b3Init(&base, &m_Base);
+	b3Vector::b3Sub(&ray->ipoint, &base, &ray->normal);
 }
 
 void b3CSGCylinder::b3Normal(b3_ray *ray)
 {
-	b3_f64 x,y;
+	b3_f64    x,y;
+	b3_vector normal;
 
 	switch(ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
 		x = m_DirLen[1] * ray->polar.m_ObjectPolar.x;
 		y = m_DirLen[0] * ray->polar.m_ObjectPolar.y;
-		ray->normal.x = x * m_Dir1.x + y * m_Dir2.x;
-		ray->normal.y = x * m_Dir1.y + y * m_Dir2.y;
-		ray->normal.z = x * m_Dir1.z + y * m_Dir2.z;
+		b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &normal);
+		b3Vector::b3Init(&ray->normal, &normal);
 		break;
 
 	case B3_CSG_TOP:
 	case B3_CSG_BOTTOM:
-		ray->normal.x = m_Normals[2].x;
-		ray->normal.y = m_Normals[2].y;
-		ray->normal.z = m_Normals[2].z;
+		b3Vector::b3Init(&ray->normal, &m_Normals[2]);
 		break;
 
 	default:
@@ -240,23 +231,19 @@ void b3CSGCylinder::b3Normal(b3_ray *ray)
 
 void b3CSGCone::b3Normal(b3_ray *ray)
 {
-	b3_f64      x,y,Factor;
-	b3_vector64 n1,z3;
+	b3_f64    x,y,Factor;
+	b3_vector n1,z3;
 
 	switch(ray->polar.m_NormalIndex)
 	{
 	case B3_CSG_NORMAL:
 		x     = ray->polar.m_ObjectPolar.x;
 		y     = ray->polar.m_ObjectPolar.y;
-		z3.x  = x * m_Dir1.x + y * m_Dir2.x;
-		z3.y  = x * m_Dir1.y + y * m_Dir2.y;
-		z3.z  = x * m_Dir1.z + y * m_Dir2.z;
+		b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &z3);
 
 		x    *= m_DirLen[1];
 		y    *= m_DirLen[0];
-		n1.x  = x * m_Dir1.x + y * m_Dir2.x;
-		n1.y  = x * m_Dir1.y + y * m_Dir2.y;
-		n1.z  = x * m_Dir1.z + y * m_Dir2.z;
+		b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &n1);
 
 		Factor = sqrt(
 			(z3.x * z3.x + z3.y * z3.y + z3.z * z3.z) /
@@ -273,9 +260,7 @@ void b3CSGCone::b3Normal(b3_ray *ray)
 		break;
 
 	case B3_CSG_BOTTOM:
-		ray->normal.x = m_Normals[2].x;
-		ray->normal.y = m_Normals[2].y;
-		ray->normal.z = m_Normals[2].z;
+		b3Vector::b3Init(&ray->normal, &m_Normals[2]);
 		break;
 
 	default:
