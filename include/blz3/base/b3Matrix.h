@@ -74,8 +74,8 @@ public:
 		      b3_vector   *vec,
 		const b3_vector64 *src)
 	{
-		const b3_f64 *s = &src->x;
-		      b3_f32 *d = &vec->x;
+		const b3_f64 B3_ALIGN_16 *s = &src->x;
+		      b3_f32 B3_ALIGN_16 *d = &vec->x;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -88,8 +88,8 @@ public:
 		      b3_vector64 *vec,
 		const b3_vector   *src)
 	{
-		const b3_f32 *s = &src->x;
-		      b3_f64 *d = &vec->x;
+		const b3_f32 B3_ALIGN_16 *s = &src->x;
+		      b3_f64 B3_ALIGN_16 *d = &vec->x;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -111,10 +111,10 @@ public:
 		const b3_vector *vec1,
 		const b3_vector *vec2)
 	{
-		const b3_f32              *v1 = &vec1->x;
-		const b3_f32              *v2 = &vec2->x;
-		      b3_f32 B3_ALIGN_16   d[4];
-		      b3_f32               result = 0;
+		const b3_f32 B3_ALIGN_16 *v1 = &vec1->x;
+		const b3_f32 B3_ALIGN_16 *v2 = &vec2->x;
+		      b3_f32 B3_ALIGN_16  d[4];
+		      b3_f32              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -126,7 +126,7 @@ public:
 
 	static inline b3_vector *b3Negate(b3_vector *negate)
 	{
-		b3_f32 *n = &negate->x;
+		b3_f32 B3_ALIGN_16 *n = &negate->x;
 		
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -137,7 +137,7 @@ public:
 
 	static inline b3_vector64 *b3Negate(b3_vector64 *negate)
 	{
-		b3_f64 *n = &negate->x;
+		b3_f64 B3_ALIGN_16 *n = &negate->x;
 		
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -150,9 +150,9 @@ public:
 		      b3_vector *vector,
 		const b3_f64     length = 1.0)
 	{
-		b3_f32 *v = &vector->x;
-		b3_f32  denom = 0;
-		b3_f64  result = 0;
+		b3_f32 B3_ALIGN_16 *v      = &vector->x;
+		b3_f32              denom  = 0;
+		b3_f64              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -174,9 +174,9 @@ public:
 		      b3_vector64 *vector,
 		const b3_f64       length = 1.0)
 	{
-		b3_f64 *v      = &vector->x;
-		b3_f64  denom  = 0;
-		b3_f64  result = 0;
+		b3_f64 B3_ALIGN_16 *v      = &vector->x;
+		b3_f64              denom  = 0;
+		b3_f64              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -198,9 +198,9 @@ public:
 		      b3_gl_vector *vector,
 		const b3_f64        length = 1.0)
 	{
-		b3_f32 *v = &vector->x;
-		b3_f32  denom = 0;
-		b3_f64  result = 0;
+		b3_f32 B3_ALIGN_16 *v      = &vector->x;
+		b3_f32              denom  = 0;
+		b3_f64              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -220,9 +220,9 @@ public:
 
 	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32  result = 0;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -233,9 +233,9 @@ public:
 
 	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector64 *bVec)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f64 *b = &bVec->x;
-		      b3_f64  result = 0;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f64              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -251,9 +251,9 @@ public:
 
 	static inline b3_f64 b3SMul(const b3_vector64 *aVec,const b3_vector64 *bVec)
 	{
-		const b3_f64 *a = &aVec->x;
-		const b3_f64 *b = &bVec->x;
-		      b3_f64  result = 0;
+		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f64              result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -264,8 +264,8 @@ public:
 
 	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -279,9 +279,9 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -295,9 +295,9 @@ public:
 		const b3_vector64 *bVec,
 		      b3_vector64 *result)
 	{
-		const b3_f64 *a = &aVec->x;
-		const b3_f64 *b = &bVec->x;
-		      b3_f64 *r = &result->x;
+		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -308,8 +308,8 @@ public:
 
 	static inline b3_gl_vector *b3Add(const b3_gl_vector *aVec,b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -323,9 +323,9 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -336,8 +336,8 @@ public:
 
 	static inline b3_vector *b3Sub(const b3_vector *aVec,b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -351,9 +351,9 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -367,9 +367,9 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -380,8 +380,8 @@ public:
 
 	static inline b3_vector *b3Mul(const b3_vector *aVec,b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -395,9 +395,9 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -408,8 +408,8 @@ public:
 
 	static inline b3_gl_vector *b3Mul(const b3_gl_vector *aVec,b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -423,9 +423,9 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -496,10 +496,17 @@ public:
 		const b3_gl_vector *bVec,
 		      b3_gl_vector *result)
 	{
-		result->x = aVec->y * bVec->z - aVec->z * bVec->y;
-		result->y = aVec->z * bVec->x - aVec->x * bVec->z;
-		result->z = aVec->x * bVec->y - aVec->y * bVec->x;
+		b3_f32 B3_ALIGN_16 *r = &result->x;
+		b3_f32 B3_ALIGN_16  a[4],b[4],c[4],d[4];
 
+		a[Z] = c[Y] = aVec->x; b[Y] = d[Z] = bVec->x;
+		a[X] = c[Z] = aVec->y; b[Z] = d[X] = bVec->y;
+		a[Y] = c[X] = aVec->z; b[X] = d[Y] = bVec->z;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = a[i] * b[i] - c[i] * d[i];
+		}
 		return result;
 	}
 
@@ -515,8 +522,8 @@ public:
 
 	static inline b3_f64 b3QuadLength(const b3_vector *vector)
 	{
-		const b3_f32 *v = &vector->x;
-		      b3_f32  result = 0;
+		const b3_f32 B3_ALIGN_16 *v = &vector->x;
+		      b3_f32              result = 0;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -527,8 +534,8 @@ public:
 
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
-		const b3_f64 *v = &vector->x;
-		      b3_f64  result = 0;
+		const b3_f64 B3_ALIGN_16 *v = &vector->x;
+		      b3_f64              result = 0;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -556,8 +563,8 @@ public:
 
 	static inline void b3Scale(b3_vector *vector,const b3_f64 factor)
 	{
-		b3_f32 *v = &vector->x;
-		b3_f32  f = (b3_f32)factor;
+		b3_f32 B3_ALIGN_16 *v = &vector->x;
+		b3_f32              f = (b3_f32)factor;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -570,9 +577,9 @@ public:
 		const b3_vector *vector,
 		const b3_f64     factor)
 	{
-		const b3_f32 *v = &vector->x;
-		      b3_f32 *r = &result->x;
-		      b3_f32  f = (b3_f32)factor;
+		const b3_f32 B3_ALIGN_16 *v = &vector->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+		      b3_f32              f = (b3_f32)factor;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -583,7 +590,7 @@ public:
 
 	static inline void b3Scale(b3_vector64 *vector,const b3_f64 factor)
 	{
-		b3_f64 *v = &vector->x;
+		b3_f64 B3_ALIGN_16 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -596,8 +603,8 @@ public:
 		const b3_vector64 *vector,
 		const b3_f64       factor)
 	{
-		const b3_f64 *v = &vector->x;
-		      b3_f64 *r = &result->x;
+		const b3_f64 B3_ALIGN_16 *v = &vector->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
 
 		for(b3_loop i = 0;i < 3;i++)
 		{
@@ -608,8 +615,8 @@ public:
 
 	static inline b3_vector *b3MatrixMul3D(const b3_matrix *A,b3_vector *vector)
 	{
-		const b3_f32             *m = &A->m11;
-		      b3_f32             *v = &vector->x;
+		const b3_f32 B3_ALIGN_16 *m = &A->m11;
+		      b3_f32 B3_ALIGN_16 *v = &vector->x;
 		      b3_f32 B3_ALIGN_16  aux[4];
 		      b3_f32              result;
 
@@ -634,8 +641,8 @@ public:
 
 	static inline b3_vector *b3MatrixMul4D(const b3_matrix *A,b3_vector *vector)
 	{
-		const b3_f32             *m = &A->m11;
-		      b3_f32             *v = &vector->x;
+		const b3_f32 B3_ALIGN_16 *m = &A->m11;
+		      b3_f32 B3_ALIGN_16 *v = &vector->x;
 		      b3_f32 B3_ALIGN_16  aux[4];
 		      b3_f32              result;
 
@@ -666,9 +673,9 @@ public:
 
 		if (Denom > 0.0001)
 		{
-			const b3_f32 *v1 = &Vector1->x;
-			const b3_f32 *v2 = &Vector2->x;
-			      b3_f32  result = 0;
+			const b3_f32 B3_ALIGN_16 *v1 = &Vector1->x;
+			const b3_f32 B3_ALIGN_16 *v2 = &Vector2->x;
+			      b3_f32              result = 0;
 
 			for (b3_loop i = 0;i < 3;i++)
 			{
@@ -684,15 +691,15 @@ public:
 		const b3_vector *point1,
 		const b3_vector *point2)
 	{
-		const b3_f32             *b  = &base->x;
-		const b3_f32             *p1 = &point1->x;
-		const b3_f32             *p2 = &point2->x;
+		const b3_f32 B3_ALIGN_16 *b  = &base->x;
+		const b3_f32 B3_ALIGN_16 *p1 = &point1->x;
+		const b3_f32 B3_ALIGN_16 *p2 = &point2->x;
 		      b3_f32 B3_ALIGN_16 aDir[4];
 		      b3_f32 B3_ALIGN_16 bDir[4];
-		      b3_f32 len1 = 0;
-		      b3_f32 len2 = 0;
-		      b3_f64 denom;
-		      b3_f32 result = 0;
+		      b3_f32             len1 = 0;
+		      b3_f32             len2 = 0;
+		      b3_f64             denom;
+		      b3_f32             result = 0;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -721,10 +728,10 @@ public:
 		const b3_f64     factor,
 		      b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
-		      b3_f32  f = (b3_f32)factor;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+		      b3_f32              f = (b3_f32)factor;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -736,17 +743,16 @@ public:
 	static inline b3_gl_vector *b3LinearCombine(
 		const b3_vector    *aVec,
 		const b3_vector    *bVec,
-		const b3_f64        factor,
+		const b3_f32        factor,
 		      b3_gl_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		      b3_f32 *r = &result->x;
-		      b3_f32  f = (b3_f32)factor;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
-			r[i] = a[i] + f * b[i];
+			r[i] = a[i] + factor * b[i];
 		}
 		return result;
 	}
@@ -755,16 +761,14 @@ public:
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_vector *cVec,
-		const b3_f64     xFactor,
-		const b3_f64     yFactor,
+		const b3_f32     x,
+		const b3_f32     y,
 		      b3_vector *result)
 	{
-		const b3_f32 *a = &aVec->x;
-		const b3_f32 *b = &bVec->x;
-		const b3_f32 *c = &bVec->x;
-		      b3_f32 *r = &result->x;
-		      b3_f32  x = (b3_f32)xFactor;
-		      b3_f32  y = (b3_f32)yFactor;
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		const b3_f32 B3_ALIGN_16 *c = &bVec->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -777,8 +781,8 @@ public:
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
 		const b3_vector   *cVec,
-		const b3_f64       xFactor,
-		const b3_f64       yFactor,
+		const b3_f32       xFactor,
+		const b3_f32       yFactor,
 		      b3_gl_vector *result)
 	{
 		return (b3_gl_vector *)b3LinearCombine(aVec,bVec,cVec,xFactor,yFactor,(b3_vector *)result);
@@ -786,9 +790,9 @@ public:
 
 	static inline void b3Sort(b3_vector *lower,b3_vector *upper)
 	{
-		b3_f32 *l = &lower->x;
-		b3_f32 *u = &upper->x;
-		b3_f32  aux;
+		b3_f32 B3_ALIGN_16 *l = &lower->x;
+		b3_f32 B3_ALIGN_16 *u = &upper->x;
+		b3_f32              aux;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -801,9 +805,9 @@ public:
 
 	static inline void b3Sort(b3_vector64 *lower,b3_vector64 *upper)
 	{
-		b3_f64 *l = &lower->x;
-		b3_f64 *u = &upper->x;
-		b3_f64  aux;
+		b3_f64 B3_ALIGN_16 *l = &lower->x;
+		b3_f64 B3_ALIGN_16 *u = &upper->x;
+		b3_f64              aux;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -818,8 +822,8 @@ public:
 		b3_vector *lower,
 		b3_vector *upper)
 	{
-		b3_f32 *l = &lower->x;
-		b3_f32 *u = &upper->x;
+		b3_f32 B3_ALIGN_16 *l = &lower->x;
+		b3_f32 B3_ALIGN_16 *u = &upper->x;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -832,7 +836,7 @@ public:
 		b3_vector *vector,
 		b3_f32     min)
 	{
-		b3_f32 *v = &vector->x;
+		b3_f32 B3_ALIGN_16 *v = &vector->x;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -844,8 +848,8 @@ public:
 		      b3_vector *lower,
 		const b3_vector *point)
 	{
-		      b3_f32 *l = &lower->x;
-		const b3_f32 *p = &point->x;
+		      b3_f32 B3_ALIGN_16 *l = &lower->x;
+		const b3_f32 B3_ALIGN_16 *p = &point->x;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -857,7 +861,7 @@ public:
 		b3_vector *vector,
 		b3_f32     max)
 	{
-		b3_f32 *v = &vector->x;
+		b3_f32 B3_ALIGN_16 *v = &vector->x;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -869,8 +873,8 @@ public:
 		      b3_vector *upper,
 		const b3_vector *point)
 	{
-		      b3_f32 *u = &upper->x;
-		const b3_f32 *p = &point->x;
+		      b3_f32 B3_ALIGN_16 *u = &upper->x;
+		const b3_f32 B3_ALIGN_16 *p = &point->x;
 
 		for (b3_loop i = 0;i < 3; i++)
 		{
@@ -935,8 +939,8 @@ public:
 
 	static inline b3_bool    b3IsUnitMatrix(b3_matrix *test_matrix)
 	{
-		b3_f32 *ptr1 = &test_matrix->m11;
-		b3_f32 *ptr2 = &m_UnitMatrix.m11;
+		b3_f32 B3_ALIGN_16 *ptr1 = &test_matrix->m11;
+		b3_f32 B3_ALIGN_16 *ptr2 = &m_UnitMatrix.m11;
 
 		for (int i = 0;i < 16;i++)
 		{
@@ -966,9 +970,9 @@ public:
 
 	static inline b3_vector *b3VMul  (b3_matrix *A,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
 	{
-		const b3_f32             *m = &A->m11;
-		const b3_f32             *s = &Src->x;
-		      b3_f32             *d = &Dst->x;
+		const b3_f32 B3_ALIGN_16 *m = &A->m11;
+		const b3_f32 B3_ALIGN_16 *s = &Src->x;
+		      b3_f32 B3_ALIGN_16 *d = &Dst->x;
 		      b3_f32 B3_ALIGN_16  aux[4];
 
 		for (b3_loop o = 0;o < 3;o++)
@@ -991,9 +995,9 @@ public:
 
 	static inline b3_vector64 *b3VMul  (b3_matrix *A,b3_vector64 *Src,b3_vector64 *Dst,b3_bool Use4D)
 	{
-		const b3_f32             *m = &A->m11;
-		const b3_f64             *s = &Src->x;
-		      b3_f64             *d = &Dst->x;
+		const b3_f32 B3_ALIGN_16 *m = &A->m11;
+		const b3_f64 B3_ALIGN_16 *s = &Src->x;
+		      b3_f64 B3_ALIGN_16 *d = &Dst->x;
 		      b3_f64 B3_ALIGN_16  aux[4];
 
 		for (b3_loop o = 0;o < 3;o++)

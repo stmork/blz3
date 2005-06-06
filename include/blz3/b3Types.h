@@ -25,7 +25,7 @@
 
 #include "blz3/b3PluginDef.h"
 
-#ifdef __ICC
+#if defined(__ICC) || defined(__GCC__)
 #	include <xmmintrin.h>
 #	define B3_SSE
 
@@ -33,8 +33,6 @@
 #	define B3_ALIGN_32  __declspec(align(32))
 #	define B3_ALIGN_64  __declspec(align(64))
 #else
-#	define B3_SSE
-
 #	define B3_ALIGN_16
 #	define B3_ALIGN_32
 #	define B3_ALIGN_64
