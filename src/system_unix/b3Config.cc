@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/06/07 11:02:37  sm
+**	- Marking math mode in compiler version output.
+**
 **	Revision 1.14  2005/05/04 09:27:28  mork
 **	- Corrected some string methods in configure script.
-**
+**	
 **	Revision 1.13  2005/01/04 15:13:59  smork
 **	- Changed some data types.
 **	
@@ -100,14 +103,19 @@ char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
 	b3_count bits = b3GetCPUBits();
+#ifdef B3_SSE
+	char *math = "SSE";
+#else
+	char *math = "FPU";
+#endif
 
 #ifdef __ICC
-	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit)",__ICC / 100,(__ICC / 10) % 10,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"Intel CC V%d.%d (%ld bit) %s",__ICC / 100,(__ICC / 10) % 10,bits,math);
 #elif __GNUC__
 #	ifdef __GNUC_PATCHLEVEL__
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d.%d (%ld bit) %s",__GNUC__,__GNUC_MINOR__,__GNUC_PATCHLEVEL__,bits,math);
 #	else
-	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit)",__GNUC__,__GNUC_MINOR__,bits);
+	snprintf(m_Compiler,sizeof(m_Compiler),"GCC V%d.%d (%ld bit) %s",__GNUC__,__GNUC_MINOR__,bits,math);
 #	endif
 #else
 	snprintf(m_Compiler,sizeof(m_Compiler),"Unknown compiler");
