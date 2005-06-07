@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.13  2005/06/07 13:27:59  smork
+**	- Found ICC bug.
+**
 **	Revision 1.12  2005/06/07 13:02:54  smork
 **	- Minor change.
-**
+**	
 **	Revision 1.11  2005/06/07 08:56:48  smork
 **	- Some further optimizations.
 **	
@@ -120,7 +123,8 @@ void b3Cylinder::b3Normal(b3_ray *ray)
 
 void b3Cone::b3Normal(b3_ray *ray)
 {
-	b3_f32    x,y,Factor,n1q;
+	b3_f32    x,y;
+	b3_f32    z3q,n1q;
 	b3_vector n1,z3;
 
 	x     = ray->polar.m_ObjectPolar.x;
@@ -131,11 +135,16 @@ void b3Cone::b3Normal(b3_ray *ray)
 	y    *= m_DirLen[0];
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &n1);
 
+	z3q = b3Vector::b3QuadLength(&z3);
 	n1q = b3Vector::b3QuadLength(&n1);
-	Factor = sqrt(b3Vector::b3QuadLength(&z3) / n1q);
-	b3Vector::b3Scale(&n1, Factor);
+	b3Vector::b3Scale(&n1, sqrt(z3q / n1q));
 
+#if 1
+	x = sqrt((n1.x * n1.x + n1.y * n1.y + n1.z * n1.z) / m_DirLen[2]);
+#else
+	// The ICC can't compile this correctly ?!?
 	x = sqrt(n1q / m_DirLen[2]);
+#endif
 	y = 1 / x;
 
 	b3Vector::b3LinearCombine(&m_Dir3, &n1, x, y, &ray->normal);
