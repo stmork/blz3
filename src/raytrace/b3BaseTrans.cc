@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/06/07 14:30:47  smork
+**	- Beautifying.
+**
 **	Revision 1.3  2005/06/06 19:56:22  sm
 **	- Some optimizations.
-**
+**	
 **	Revision 1.2  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
 **	
@@ -113,13 +116,14 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_f64 B3_ALIGN_16 *op = &out->pos.x;
 	b3_f64 B3_ALIGN_16 *od = &out->dir.x;
 
-	b3Vector::b3Init(&base, &m_Base);
-	b3Vector::b3Sub(&in->pos, &base, &pos);
+	pos.x = in->pos.x - m_Base.x;
+	pos.y = in->pos.y - m_Base.y;
+	pos.z = in->pos.z - m_Base.z;
 
-	for(b3_loop i = 0;i < 3;i++)
+	for(b3_loop o = 0;o < 3;o++)
 	{
-		op[i] = b3Vector::b3SMul(&pos, &m_Normals[i]);
-		od[i] = b3Vector::b3SMul(&in->dir, &m_Normals[i]);
+		op[o] = b3Vector::b3SMul(&pos,     &m_Normals[o]);
+		od[o] = b3Vector::b3SMul(&in->dir, &m_Normals[o]);
 	}
 #else
 	b3_f64 xPos,yPos,zPos;
@@ -166,8 +170,8 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_vector *out)
 {
 #ifdef BT_SSE
-	b3_vector pos;
-	b3_f32 B3_ALIGN_16 *o = &out->x;
+	b3_vector              pos;
+	b3_f32    B3_ALIGN_16 *o = &out->x;
 
 	b3Vector::b3Sub(in, &m_Base, &pos);
 
