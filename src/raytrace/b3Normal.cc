@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/06/07 13:02:54  smork
+**	- Minor change.
+**
 **	Revision 1.11  2005/06/07 08:56:48  smork
 **	- Some further optimizations.
-**
+**	
 **	Revision 1.10  2005/06/06 19:56:22  sm
 **	- Some optimizations.
 **	
@@ -128,7 +131,8 @@ void b3Cone::b3Normal(b3_ray *ray)
 	y    *= m_DirLen[0];
 	b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &n1);
 
-	Factor = sqrt(b3Vector::b3QuadLength(&z3) / (n1q = b3Vector::b3QuadLength(&n1)));
+	n1q = b3Vector::b3QuadLength(&n1);
+	Factor = sqrt(b3Vector::b3QuadLength(&z3) / n1q);
 	b3Vector::b3Scale(&n1, Factor);
 
 	x = sqrt(n1q / m_DirLen[2]);
@@ -245,7 +249,8 @@ void b3CSGCone::b3Normal(b3_ray *ray)
 		y    *= m_DirLen[0];
 		b3Vector::b3LinearCombine(&m_Dir1, &m_Dir2, x, y, &n1);
 
-		Factor = sqrt(b3Vector::b3QuadLength(&z3) / (n1q = b3Vector::b3QuadLength(&n1)));
+		n1q = b3Vector::b3QuadLength(&n1);
+		Factor = sqrt(b3Vector::b3QuadLength(&z3) / n1q);
 		b3Vector::b3Scale(&n1, Factor);
 
 		x = sqrt(n1q / m_DirLen[2]);
