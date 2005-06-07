@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.14  2005/06/07 14:16:09  smork
+**	- Compiler fixes.
+**
 **	Revision 1.13  2005/06/07 13:27:59  smork
 **	- Found ICC bug.
-**
+**	
 **	Revision 1.12  2005/06/07 13:02:54  smork
 **	- Minor change.
 **	
@@ -176,7 +179,7 @@ void b3Torus::b3Normal(b3_ray *ray)
 	y     = ray->polar.m_ObjectPolar.y;
 	z     = ray->polar.m_ObjectPolar.z;
 
-	Dist  = sqrt (x * x + y * y);
+	Dist  = sqrt(x * x + y * y);
 	x    -= (m_aRad * x / Dist);
 	y    -= (m_aRad * y / Dist);
 

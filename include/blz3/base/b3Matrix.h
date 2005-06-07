@@ -169,9 +169,8 @@ public:
 		b3_f32 x      = vector->x;
 		b3_f32 y      = vector->y;
 		b3_f32 z      = vector->z;
-		b3_f64 len    = x*x + y*y + z*z;
 		b3_f32 result = 0;
-		b3_f32 denom  = length / (result = sqrt(len));
+		b3_f32 denom  = length / (result = sqrt(x*x + y*y + z*z));
 
 		vector->x *= denom;
 		vector->y *= denom;
@@ -203,9 +202,8 @@ public:
 		b3_f64 x      = vector->x;
 		b3_f64 y      = vector->y;
 		b3_f64 z      = vector->z;
-		b3_f64 len    = x*x + y*y + z*z;
 		b3_f64 result = 0;
-		b3_f64 denom  = length / (result = sqrt(len));
+		b3_f64 denom  = length / (result = sqrt(x*x + y*y + z*z));
 
 		vector->x *= denom;
 		vector->y *= denom;
@@ -237,9 +235,8 @@ public:
 		b3_f32 x      = vector->x;
 		b3_f32 y      = vector->y;
 		b3_f32 z      = vector->z;
-		b3_f64 len    = x*x + y*y + z*z;
 		b3_f32 result = 0;
-		b3_f32 denom  = length / (result = sqrt(len));
+		b3_f32 denom  = length / (result = sqrt(x*x + y*y + z*z));
 
 		vector->x *= denom;
 		vector->y *= denom;
