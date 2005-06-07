@@ -218,7 +218,7 @@ public:
 		return result;
 	}
 
-	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
+	static inline b3_f32 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
 	{
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
@@ -741,7 +741,7 @@ public:
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
-		const b3_f64     factor,
+		const b3_f32     factor,
 		      b3_vector *result)
 	{
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -792,10 +792,28 @@ public:
 	}
 
 	static inline b3_vector64 *b3LinearCombine(
+		const b3_vector   *bVec,
+		const b3_vector   *cVec,
+		const b3_f32       x,
+		const b3_f32       y,
+		      b3_vector64 *result)
+	{
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = x * b[i] + y * c[i];
+		}
+		return result;
+	}
+
+	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector64 *bVec,
 		const b3_vector64 *cVec,
-		const b3_f32     x,
-		const b3_f32     y,
+		const b3_f32       x,
+		const b3_f32       y,
 		      b3_vector64 *result)
 	{
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
@@ -821,6 +839,26 @@ public:
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
 		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = a[i] + x * b[i] + y * c[i];
+		}
+		return result;
+	}
+
+	static inline b3_vector64 *b3LinearCombine(
+		const b3_vector   *aVec,
+		const b3_vector   *bVec,
+		const b3_vector   *cVec,
+		const b3_f32       x,
+		const b3_f32       y,
+		      b3_vector64 *result)
+	{
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
 
 		for (b3_loop i = 0;i < 3;i++)
 		{
@@ -855,14 +893,35 @@ public:
 		}
 	}
 
+	static inline b3_vector64 *b3LinearCombine(
+		const b3_vector   *aVec,
+		const b3_vector   *bVec,
+		const b3_vector   *cVec,
+		const b3_f32       x,
+		const b3_f32       y,
+		const b3_f32       z,
+		      b3_vector64 *result)
+	{
+		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
+		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
+		const b3_f32 B3_ALIGN_16 *c = &cVec->x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = x * a[i] + y * b[i] + z * c[i];
+		}
+		return result;
+	}
+
 	static inline b3_vector *b3LinearCombine(
-		const b3_vector *aVec,
-		const b3_vector *bVec,
-		const b3_vector *cVec,
-		const b3_f32     x,
-		const b3_f32     y,
-		const b3_f32     z,
-		      b3_vector *result)
+		const b3_vector   *aVec,
+		const b3_vector   *bVec,
+		const b3_vector   *cVec,
+		const b3_f32       x,
+		const b3_f32       y,
+		const b3_f32       z,
+		      b3_vector   *result)
 	{
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;

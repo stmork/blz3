@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.48  2005/06/07 08:56:48  smork
+**	- Some further optimizations.
+**
 **	Revision 1.47  2005/06/01 12:28:55  smork
 **	- Removed some floating point operations.
-**
+**	
 **	Revision 1.46  2005/04/27 13:55:01  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -280,11 +283,10 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64    Denom,aValue,bValue,lValue,result = -1;
 	b3_vector Dir,Product;
  
-	Denom = 1.0 / (
-		-m_Normal.x * ray->dir.x
-		-m_Normal.y * ray->dir.y
-		-m_Normal.z * ray->dir.z);
-
+	Denom = -1.0 / (
+		m_Normal.x * ray->dir.x +
+		m_Normal.y * ray->dir.y +
+		m_Normal.z * ray->dir.z);
 	if (((lValue = (
 		m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 		m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
@@ -298,10 +300,7 @@ b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 				* Denom;
 		if (fabs(aValue) <= 1)
 		{
-			bValue = (
-				-m_Dir1.x * Product.x
-				-m_Dir1.y * Product.y
-				-m_Dir1.z * Product.z) * Denom;
+			bValue = -b3Vector::b3SMul(&m_Dir1, &Product) * Denom;
 			if (fabs(bValue) <= 1)
 			{
 				polar->m_Polar.x = polar->m_ObjectPolar.x = aValue;
@@ -323,12 +322,10 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64     Denom,aValue,bValue,lValue;
 	b3_vector  Dir,Product;
  
-	Denom = 1.0 / (
-		-m_Normal.x * ray->dir.x
-		-m_Normal.y * ray->dir.y
-		-m_Normal.z * ray->dir.z);
-
-	// check distance
+	Denom = -1.0 / (
+		m_Normal.x * ray->dir.x +
+		m_Normal.y * ray->dir.y +
+		m_Normal.z * ray->dir.z);
 	if ((lValue = (
 		m_Normal.x * (Dir.x = ray->pos.x - m_Base.x) +
 		m_Normal.y * (Dir.y = ray->pos.y - m_Base.y) +
@@ -354,10 +351,7 @@ b3_f64 b3Disk::b3Intersect(b3_ray *ray,b3_polar *polar)
 	}
 
 	// check y axis
-	bValue = (
-		-m_Dir1.x * Product.x
-		-m_Dir1.y * Product.y
-		-m_Dir1.z * Product.z) * Denom;
+	bValue = -b3Vector::b3SMul(&m_Dir1, &Product) * Denom;
 	if (fabs(bValue) > 1)
 	{
 		return -1;
@@ -695,18 +689,10 @@ b3_f64 b3Ellipsoid::b3Intersect(b3_ray *ray,b3_polar *polar)
 	b3_f64     l1,l2,z,Discriminant,a,p;
 
 	b3BaseTransform (ray,&BTLine);
-	a = 1.0 / (
-		BTLine.dir.x * BTLine.dir.x +
-		BTLine.dir.y * BTLine.dir.y +
-		BTLine.dir.z * BTLine.dir.z);
+	a = 1.0 / b3Vector::b3QuadLength(&BTLine.dir);
 
-	p = (BTLine.dir.x * BTLine.pos.x +
-		 BTLine.dir.y * BTLine.pos.y +
-		 BTLine.dir.z * BTLine.pos.z) * a;
-	if ((Discriminant = p * p -
-		(BTLine.pos.x * BTLine.pos.x +
-		 BTLine.pos.y * BTLine.pos.y +
-		 BTLine.pos.z * BTLine.pos.z - 1) * a) < 0)
+	p = b3Vector::b3SMul(&BTLine.dir, &BTLine.pos) * a;
+	if ((Discriminant = p * p - (b3Vector::b3QuadLength(&BTLine.pos) - 1) * a) < 0)
 	{
 		return -1;
 	}
@@ -1034,26 +1020,16 @@ b3_f64 b3TriangleShape::b3IntersectTriangleList (
 		Triangle = &m_Triangles[Index];
 		info     = &infos[Index];
 
-		denominator = -1.0 / (
-			info->Normal.x * ray->dir.x +
-			info->Normal.y * ray->dir.y +
-			info->Normal.z * ray->dir.z);
+		denominator = -1.0 / b3Vector::b3SMul(&info->Normal, &ray->dir);
 		{
-			lValue = denominator * (
-				info->Normal.x * (aux.x = pos.x - info->O.x) +
-				info->Normal.y * (aux.y = pos.y - info->O.y) +
-				info->Normal.z * (aux.z = pos.z - info->O.z));
+			b3Vector::b3Sub(&pos, &info->O, &aux);
+			lValue = denominator * b3Vector::b3SMul(&info->Normal, &aux);
 			if ((lValue >= e) && (lValue < ray->Q))
 			{
-				if ((aValue = denominator * (
-					info->R2.x * (product.x = aux.y * dir.z - aux.z * dir.y) +
-					info->R2.y * (product.y = aux.z * dir.x - aux.x * dir.z) +
-					info->R2.z * (product.z = aux.x * dir.y - aux.y * dir.x))) >= 0)
+				b3Vector::b3CrossProduct(&aux, &dir, &product);
+				if ((aValue = b3Vector::b3SMul(&info->R2, &product) * denominator) >= 0)
 				{
-					bValue = -denominator * (
-						info->R1.x * product.x +
-						info->R1.y * product.y +
-						info->R1.z * product.z);
+					bValue = -denominator * b3Vector::b3SMul(&info->R1, &product);
 					if ((bValue >= 0) && ((aValue + bValue) <= 1))
 					{
 						if (Index & 1)
@@ -1487,18 +1463,10 @@ b3_bool b3CSGEllipsoid::b3Intersect(
 
 	interval->m_Count = 0;
 	b3BaseTransform (ray,BTLine);
-	a = 1.0 / (
-		BTLine->dir.x * BTLine->dir.x +
-		BTLine->dir.y * BTLine->dir.y +
-		BTLine->dir.z * BTLine->dir.z);
+	a = 1.0 / b3Vector::b3QuadLength(&BTLine->dir);
 
-	p = (BTLine->dir.x * BTLine->pos.x +
-		 BTLine->dir.y * BTLine->pos.y +
-		 BTLine->dir.z * BTLine->pos.z) * a;
-	if ((Discriminant = p * p -
-		(BTLine->pos.x * BTLine->pos.x +
-		 BTLine->pos.y * BTLine->pos.y +
-		 BTLine->pos.z * BTLine->pos.z - 1) * a) >= 0)
+	p = b3Vector::b3SMul(&BTLine->dir, &BTLine->pos) * a;
+	if ((Discriminant = p * p - (b3Vector::b3QuadLength(&BTLine->pos) - 1) * a) >= 0)
 	{
 		z  = sqrt(Discriminant);
 

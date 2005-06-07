@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.53  2005/06/07 08:56:48  smork
+**      - Some further optimizations.
+**
 **      Revision 1.52  2005/06/06 14:59:41  smork
 **      - More vectorization- More vectorization.
 **
@@ -275,6 +278,12 @@
 **
 */
 
+/*************************************************************************
+**                                                                      **
+**                        b3Light implementation                        **
+**                                                                      **
+*************************************************************************/
+
 void b3Light::b3Register()
 {
 	b3PrintF (B3LOG_DEBUG,"Registering light sources...\n");
@@ -487,7 +496,6 @@ inline b3_bool b3Light::b3PointIllumination(
 {
 	b3_light_info Jit;
 	b3_vector     point;
-	b3_vector64   pos;
 	b3_f64        RecLightDist,SpotAngle,q,LightDist;
 
 	if (!m_LightActive)
@@ -497,10 +505,12 @@ inline b3_bool b3Light::b3PointIllumination(
 
 	Jit.m_Distr = 1;
 	Jit.m_Size  = 0;
-
-	Jit.pos = surface->m_Incoming->ipoint;
-	b3Vector::b3Init(&pos, &m_Position);
-	b3Vector::b3Sub(&pos, &surface->m_Incoming->ipoint, &Jit.dir);
+	Jit.pos.x = surface->m_Incoming->ipoint.x;
+	Jit.pos.y = surface->m_Incoming->ipoint.y;
+	Jit.pos.z = surface->m_Incoming->ipoint.z;
+	Jit.dir.x = m_Position.x - surface->m_Incoming->ipoint.x;
+	Jit.dir.y = m_Position.y - surface->m_Incoming->ipoint.y;
+	Jit.dir.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	LightDist    = b3Vector::b3QuadLength(&Jit.dir);
 	RecLightDist = 1.0 / (LightDist = sqrt(LightDist));
@@ -549,7 +559,7 @@ inline b3_bool b3Light::b3AreaIllumination (
 {
 	b3_bool        Edge1, Edge2, LastEdge = false,first = true;
 	b3_light_info  Jit;
-	b3_vector      point, pos;
+	b3_vector      point;
 	b3_f64         Factor,denomLightDist,q;
 	b3_coord       x,y,xs;
 	b3_count       max,Distr;
@@ -563,9 +573,10 @@ inline b3_bool b3Light::b3AreaIllumination (
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;
 
-	Jit.pos = surface->m_Incoming->ipoint;
-	b3Vector::b3Init(&pos, &surface->m_Incoming->ipoint);
-	b3Vector::b3Sub(&m_Position, &pos, &Jit.m_LightView);
+	Jit.pos         = surface->m_Incoming->ipoint;
+	Jit.m_LightView.x = m_Position.x - surface->m_Incoming->ipoint.x;
+	Jit.m_LightView.y = m_Position.y - surface->m_Incoming->ipoint.y;
+	Jit.m_LightView.z = m_Position.z - surface->m_Incoming->ipoint.z;
 
 	// normalizing light axis
 	denomLightDist = b3Vector::b3QuadLength(&Jit.m_LightView);
@@ -678,14 +689,12 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	b3_coord       x,
 	b3_coord       y)
 {
-	b3_vector result;
-	b3_f64    jx,jy,LightDist;
+	b3_f64   jx,jy,LightDist;
 
 	jx = ((b3_f32)x - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
 	jy = ((b3_f32)y - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
 
-	b3Vector::b3LinearCombine(&Jit->m_LightView, &Jit->m_xDir, &Jit->m_yDir, jx, jy, &result);
-	b3Vector::b3Init(&Jit->dir, &result);
+	b3Vector::b3LinearCombine(&Jit->m_LightView, &Jit->m_xDir, &Jit->m_yDir, x, y, &Jit->dir);
 
 	LightDist = b3Vector::b3Normalize(&Jit->dir);
 	shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
