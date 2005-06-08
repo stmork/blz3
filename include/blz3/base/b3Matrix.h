@@ -265,7 +265,9 @@ public:
 		return result;
 	}
 
-	static inline b3_f32 b3SMul(const b3_vector *aVec,const b3_vector *bVec)
+	static inline b3_f32 b3SMul(
+		const b3_vector *aVec,
+		const b3_vector *bVec)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -285,7 +287,9 @@ public:
 #endif
 	}
 
-	static inline b3_f64 b3SMul(const b3_vector *aVec,const b3_vector64 *bVec)
+	static inline b3_f64 b3SMul(
+		const b3_vector *aVec,
+		const b3_vector64 *bVec)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -305,12 +309,16 @@ public:
 #endif
 	}
 
-	static inline b3_f64 b3SMul(const b3_vector64 *aVec,const b3_vector *bVec)
+	static inline b3_f64 b3SMul(
+		const b3_vector64 *aVec,
+		const b3_vector *bVec)
 	{
 		return b3SMul(bVec,aVec);
 	}
 
-	static inline b3_f64 b3SMul(const b3_vector64 *aVec,const b3_vector64 *bVec)
+	static inline b3_f64 b3SMul(
+		const b3_vector64 *aVec,
+		const b3_vector64 *bVec)
 	{
 #ifdef B3_SSE
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
@@ -330,7 +338,9 @@ public:
 #endif
 	}
 
-	static inline b3_vector *b3Add(const b3_vector *aVec,b3_vector *result)
+	static inline b3_vector *b3Add(
+		const b3_vector *aVec,
+		      b3_vector *result)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -375,6 +385,7 @@ public:
 		const b3_vector64 *bVec,
 		      b3_vector64 *result)
 	{
+#ifdef B3_SSE
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f64 B3_ALIGN_16 *r = &result->x;
@@ -383,10 +394,17 @@ public:
 		{
 			r[i] = a[i] + b[i];
 		}
+#else
+		result->x = aVec->x + bVec->x;
+		result->y = aVec->y + bVec->y;
+		result->z = aVec->z + bVec->z;
+#endif
 		return result;
 	}
 
-	static inline b3_gl_vector *b3Add(const b3_gl_vector *aVec,b3_gl_vector *result)
+	static inline b3_gl_vector *b3Add(
+		const b3_gl_vector *aVec,
+		      b3_gl_vector *result)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -397,9 +415,9 @@ public:
 			r[i] += a[i];
 		}
 #else
-		result->x = aVec->x + bVec->x;
-		result->y = aVec->y + bVec->y;
-		result->z = aVec->z + bVec->z;
+		result->x += aVec->x;
+		result->y += aVec->y;
+		result->z += aVec->z;
 #endif
 		return result;
 	}
@@ -426,8 +444,11 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Sub(const b3_vector *aVec,b3_vector *result)
+	static inline b3_vector *b3Sub(
+		const b3_vector *aVec,
+		      b3_vector *result)
 	{
+#ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
@@ -435,6 +456,11 @@ public:
 		{
 			r[i] -= a[i];
 		}
+#else
+		result->x -= aVec->x;
+		result->y -= aVec->y;
+		result->z -= aVec->z;
+#endif
 		return result;
 	}
 
@@ -504,7 +530,9 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Mul(const b3_vector *aVec,b3_vector *result)
+	static inline b3_vector *b3Mul(
+		const b3_vector *aVec,
+		      b3_vector *result)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -544,7 +572,9 @@ public:
 		return result;
 	}
 
-	static inline b3_gl_vector *b3Mul(const b3_gl_vector *aVec,b3_gl_vector *result)
+	static inline b3_gl_vector *b3Mul(
+		const b3_gl_vector *aVec,
+		      b3_gl_vector *result)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
@@ -708,7 +738,7 @@ public:
 #endif
 	}
 
-	static inline b3_f64 b3QuadLength(const b3_vector *vector)
+	static inline b3_f32 b3QuadLength(const b3_vector *vector)
 	{
 #ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *v = &vector->x;
@@ -718,13 +748,13 @@ public:
 		{
 			result += v[i] * v[i];
 		}
+		return result;
 #else
 		return
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z;
 #endif
-		return result;
 	}
 
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
@@ -737,16 +767,16 @@ public:
 		{
 			result += v[i] * v[i];
 		}
+		return result;
 #else
 		return
 			vector->x * vector->x +
 			vector->y * vector->y +
 			vector->z * vector->z;
 #endif
-		return result;
 	}
 
-	static inline b3_f64 b3Distance(
+	static inline b3_f32 b3Distance(
 		const b3_vector *from,
 		const b3_vector *to)
 	{
