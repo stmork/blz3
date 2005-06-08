@@ -26,7 +26,7 @@
 #include "blz3/b3PluginDef.h"
 
 #if defined(__ICC)
-#	define B3_SSE
+#	define B3_SSE2
 #endif
 
 #if defined(__ICC) || defined(__GCC__)

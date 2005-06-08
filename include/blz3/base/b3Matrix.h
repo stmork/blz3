@@ -151,7 +151,7 @@ public:
 
 	static inline b3_vector64 *b3Negate(b3_vector64 *negate)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *n = &negate->x;
 		
 		for (b3_loop i = 0;i < 3;i++)
@@ -203,7 +203,7 @@ public:
 		      b3_vector64 *vector,
 		const b3_f64       length = 1.0)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *v      = &vector->x;
 		b3_f64              denom  = 0;
 		b3_f64              result = 0;
@@ -288,10 +288,10 @@ public:
 	}
 
 	static inline b3_f64 b3SMul(
-		const b3_vector *aVec,
+		const b3_vector   *aVec,
 		const b3_vector64 *bVec)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f64              result = 0;
@@ -320,7 +320,7 @@ public:
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f64              result = 0;
@@ -385,7 +385,7 @@ public:
 		const b3_vector64 *bVec,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f64 B3_ALIGN_16 *r = &result->x;
@@ -491,7 +491,7 @@ public:
 		const b3_vector64 *bVec,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f64 B3_ALIGN_16 *r = &result->x;
@@ -644,7 +644,7 @@ public:
 		const b3_vector   *bVec,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 		b3_f64 B3_ALIGN_16  a[4],b[4],c[4],d[4];
 
@@ -669,7 +669,7 @@ public:
 		const b3_vector64 *bVec,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *r = &result->x;
 		b3_f64 B3_ALIGN_16  a[4],b[4],c[4],d[4];
 
@@ -714,7 +714,7 @@ public:
 		return result;
 	}
 
-	static inline b3_f64 b3Length(const b3_vector *vector)
+	static inline b3_f32 b3Length(const b3_vector *vector)
 	{
 #ifdef B3_SSE
 		return sqrt(b3QuadLength(vector));
@@ -728,7 +728,7 @@ public:
 
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		return sqrt(b3QuadLength(vector));
 #else
 		return sqrt(
@@ -759,7 +759,7 @@ public:
 
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		      b3_f64              result = 0;
 
@@ -802,7 +802,9 @@ public:
 #endif
 	}
 
-	static inline void b3Scale(b3_vector *vector,const b3_f32 factor)
+	static inline void b3Scale(
+		      b3_vector *vector,
+		const b3_f32 factor)
 	{
 #ifdef B3_SSE
 		b3_f32 B3_ALIGN_16 *v = &vector->x;
@@ -839,9 +841,11 @@ public:
 		return result;
 	}
 
-	static inline void b3Scale(b3_vector64 *vector,const b3_f64 factor)
+	static inline void b3Scale(
+		      b3_vector64 *vector,
+		const b3_f64 factor)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *v = &vector->x;
 
 		for(b3_loop i = 0;i < 3;i++)
@@ -860,7 +864,7 @@ public:
 		const b3_vector64 *vector,
 		const b3_f64       factor)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		      b3_f64 B3_ALIGN_16 *r = &result->x;
 
@@ -878,7 +882,7 @@ public:
 
 	static inline b3_vector *b3MatrixMul3D(const b3_matrix *A,b3_vector *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *m = &A->m11;
 		      b3_f32 B3_ALIGN_16 *v = &vector->x;
 		      b3_f32 B3_ALIGN_16  aux[4];
@@ -915,7 +919,7 @@ public:
 
 	static inline b3_vector *b3MatrixMul4D(const b3_matrix *A,b3_vector *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *m = &A->m11;
 		      b3_f32 B3_ALIGN_16 *v = &vector->x;
 		      b3_f32 B3_ALIGN_16  aux[4];
@@ -950,7 +954,7 @@ public:
 		return vector;
 	}
 
-	static inline b3_f64 b3AngleOfVectors(
+	static inline b3_f32 b3AngleOfVectors(
 		const b3_vector *Vector1,
 		const b3_vector *Vector2)
 	{
@@ -975,7 +979,7 @@ public:
 #endif
 	}
 
-	static inline b3_f64 b3AngleOfPoints(
+	static inline b3_f32 b3AngleOfPoints(
 		const b3_vector *base,
 		const b3_vector *point1,
 		const b3_vector *point2)
@@ -1135,11 +1139,11 @@ public:
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector64 *bVec,
 		const b3_vector64 *cVec,
-		const b3_f32       x,
-		const b3_f32       y,
+		const b3_f64       x,
+		const b3_f64       y,
 		      b3_vector64 *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f64 B3_ALIGN_16 *b = &bVec->x;
 		const b3_f64 B3_ALIGN_16 *c = &cVec->x;
 		      b3_f64 B3_ALIGN_16 *r = &result->x;
@@ -1223,9 +1227,9 @@ public:
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
 		const b3_vector   *cVec,
-		const b3_f64       x,
-		const b3_f64       y,
-		const b3_f64       z,
+		const b3_f32       x,
+		const b3_f32       y,
+		const b3_f32       z,
 		      b3_vector64 *result)
 	{
 #ifdef B3_SSE
@@ -1311,7 +1315,7 @@ public:
 
 	static inline void b3Sort(b3_vector64 *lower,b3_vector64 *upper)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		b3_f64 B3_ALIGN_16 *l = &lower->x;
 		b3_f64 B3_ALIGN_16 *u = &upper->x;
 		b3_f64              aux;
@@ -1530,9 +1534,13 @@ public:
 			a->x * c->y * b->z;
 	}
 
-	static inline b3_vector *b3VMul  (b3_matrix *A,b3_vector *Src,b3_vector *Dst,b3_bool Use4D)
+	static inline b3_vector *b3VMul  (
+		b3_matrix *A,
+		b3_vector *Src,
+		b3_vector *Dst,
+		b3_bool    Use4D)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *m = &A->m11;
 		const b3_f32 B3_ALIGN_16 *s = &Src->x;
 		      b3_f32 B3_ALIGN_16 *d = &Dst->x;
@@ -1577,7 +1585,7 @@ public:
 
 	static inline b3_vector64 *b3VMul  (b3_matrix *A,b3_vector64 *Src,b3_vector64 *Dst,b3_bool Use4D)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE2
 		const b3_f32 B3_ALIGN_16 *m = &A->m11;
 		const b3_f64 B3_ALIGN_16 *s = &Src->x;
 		      b3_f64 B3_ALIGN_16 *d = &Dst->x;
