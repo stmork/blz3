@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/06/08 11:18:44  smork
+**	- Some more optimization.
+**
 **	Revision 1.5  2005/06/08 11:09:05  smork
 **	- Base transformation optimized.
-**
+**	
 **	Revision 1.4  2005/06/07 14:30:47  smork
 **	- Beautifying.
 **	
@@ -170,11 +173,13 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_vector *in,
 	b3_vector *out)
 {
-#ifdef BT_SSE
-	b3_vector              pos;
+#ifdef B3_SSE2
+	b3_vector64            pos;
 	b3_f32    B3_ALIGN_16 *o = &out->x;
 
-	b3Vector::b3Sub(in, &m_Base, &pos);
+	pos.x = in->x - m_Base.x;
+	pos.y = in->y - m_Base.y;
+	pos.z = in->z - m_Base.z;
 
 	for(b3_loop i = 0;i < 3;i++)
 	{
