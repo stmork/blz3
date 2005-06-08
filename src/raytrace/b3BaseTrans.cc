@@ -31,9 +31,12 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/06/08 11:09:05  smork
+**	- Base transformation optimized.
+**
 **	Revision 1.4  2005/06/07 14:30:47  smork
 **	- Beautifying.
-**
+**	
 **	Revision 1.3  2005/06/06 19:56:22  sm
 **	- Some optimizations.
 **	
@@ -59,8 +62,6 @@
 **                                                                      **
 *************************************************************************/
 
-#define BT_SSEn
-
 b3_bool b3BaseTransformation::b3Prepare()
 {
 	b3_f64  denom;
@@ -70,9 +71,9 @@ b3_bool b3BaseTransformation::b3Prepare()
 	is_zero_volume = denom == 0;
 	if (!is_zero_volume)
 	{
-		m_Denom        = 1.0 / denom;
+		m_Denom = 1.0 / denom;
 
-#ifdef BT_SSE
+#ifdef B3_SSE
 		b3Vector::b3CrossProduct(&m_Dir2, &m_Dir3, &m_Normals[0]);
 		b3Vector::b3CrossProduct(&m_Dir3, &m_Dir1, &m_Normals[1]);
 		b3Vector::b3CrossProduct(&m_Dir1, &m_Dir2, &m_Normals[2]);
@@ -111,7 +112,7 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_line64 *in,
 	b3_line64 *out)
 {
-#ifdef BT_SSE
+#ifdef B3_SSE2
 	b3_vector64         pos, base;
 	b3_f64 B3_ALIGN_16 *op = &out->pos.x;
 	b3_f64 B3_ALIGN_16 *od = &out->dir.x;

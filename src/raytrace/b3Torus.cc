@@ -32,6 +32,9 @@
 
 /*
 **	$Log$
+**	Revision 1.39  2005/06/08 11:09:05  smork
+**	- Base transformation optimized.
+**
 **	Revision 1.38  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -41,7 +44,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.37  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
@@ -288,9 +291,13 @@ b3Torus::b3Torus(b3_u32 *src) : b3SimpleShape(src)
 
 void b3Torus::b3StoreShape()
 {
-	b3StoreVector(&m_Normals[0]);
-	b3StoreVector(&m_Normals[1]);
-	b3StoreVector(&m_Normals[2]);
+	for (b3_loop i = 0;i < 3;i++)
+	{
+		b3_vector normal;
+
+		b3Vector::b3Init(&normal, &m_Normals[i]);
+		b3StoreVector(&normal);
+	}
 	b3StoreVector(&m_Base);
 	b3StoreVector(&m_Dir1);
 	b3StoreVector(&m_Dir2);

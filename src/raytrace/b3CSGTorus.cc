@@ -32,6 +32,9 @@
 
 /*
 **      $Log$
+**      Revision 1.33  2005/06/08 11:09:05  smork
+**      - Base transformation optimized.
+**
 **      Revision 1.32  2005/04/27 13:55:01  sm
 **      - Fixed open/new file error when last path is not accessable.
 **      - Divided base transformation into more general version and
@@ -253,9 +256,13 @@ b3CSGTorus::b3CSGTorus(b3_u32 *src) : b3CSGShape(src)
 
 void b3CSGTorus::b3StoreShape()
 {
-	b3StoreVector(&m_Normals[0]);
-	b3StoreVector(&m_Normals[1]);
-	b3StoreVector(&m_Normals[2]);
+	for (b3_loop i = 0;i < 3;i++)
+	{
+		b3_vector normal;
+
+		b3Vector::b3Init(&normal, &m_Normals[i]);
+		b3StoreVector(&normal);
+	}
 	b3StoreVector(&m_Base);
 	b3StoreVector(&m_Dir1);
 	b3StoreVector(&m_Dir2);

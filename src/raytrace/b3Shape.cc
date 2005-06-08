@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.65  2005/06/08 11:09:05  smork
+**      - Base transformation optimized.
+**
 **      Revision 1.64  2005/04/27 13:55:02  sm
 **      - Fixed open/new file error when last path is not accessable.
 **      - Divided base transformation into more general version and
@@ -752,9 +755,13 @@ b3Shape3::b3Shape3(b3_u32 *src) : b3SimpleShape(src)
 
 void b3Shape3::b3StoreShape()
 {
-	b3StoreVector(&m_Normals[0]);
-	b3StoreVector(&m_Normals[1]);
-	b3StoreVector(&m_Normals[2]);
+	for (b3_loop i = 0;i < 3;i++)
+	{
+		b3_vector normal;
+
+		b3Vector::b3Init(&normal, &m_Normals[i]);
+		b3StoreVector(&normal);
+	}
 	b3StoreVector(&m_Base);
 	b3StoreVector(&m_Dir1);
 	b3StoreVector(&m_Dir2);

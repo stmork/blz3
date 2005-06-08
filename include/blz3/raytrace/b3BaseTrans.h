@@ -30,7 +30,7 @@
 class B3_PLUGIN b3BaseTransformation
 {
 protected:
-	b3_vector         m_Normals[3];       // cross products
+	b3_vector64       m_Normals[3];       // cross products
 	b3_f64            m_Denom;            // denominator of lin. system
 	b3_f64            m_DirLen[3];        // length of direction vectors
 
