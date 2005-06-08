@@ -35,6 +35,9 @@
 
 /*
 **	$Log$
+**	Revision 1.58  2005/06/08 14:16:24  smork
+**	- Some more vectorization.
+**
 **	Revision 1.57  2005/04/27 13:55:02  sm
 **	- Fixed open/new file error when last path is not accessable.
 **	- Divided base transformation into more general version and
@@ -44,7 +47,7 @@
 **	- Added correct picking with project/unproject for all
 **	  view modes. This uses GLU projectton methods.
 **	- Added optimization for first level bounding box intersections.
-**
+**	
 **	Revision 1.56  2005/01/03 10:34:30  smork
 **	- Rebalanced some floating point comparisons:
 **	  a == 0  -> b3Math::b3NearZero
@@ -330,11 +333,9 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 		incoming_dir->x * Normal->x +
 		incoming_dir->y * Normal->y +
 		incoming_dir->z * Normal->z);
-	refl_dir->x = incoming_dir->x - Factor * Normal->x;
-	refl_dir->y = incoming_dir->y - Factor * Normal->y;
-	refl_dir->z = incoming_dir->z - Factor * Normal->z;
-
+	b3Vector::b3LinearCombine(incoming_dir, Normal, -Factor, refl_dir);
 	b3Vector::b3Normalize(refl_dir);
+
 	surface->m_ReflRay.pos    = surface->m_Incoming->ipoint;
 	surface->m_ReflRay.inside = surface->m_Incoming->inside;
 	surface->m_ReflRay.t      = surface->m_Incoming->t;
@@ -362,11 +363,7 @@ void b3Shader::b3ComputeOutputRays(b3_surface *surface)
 			// Test total reflection
 			if (Factor >= 0)
 			{
-				Factor = sqrt(Factor) + ior * cos_a;
-				refr_dir->x = incoming_dir->x * ior - Factor * Normal->x;
-				refr_dir->y = incoming_dir->y * ior - Factor * Normal->y;
-				refr_dir->z = incoming_dir->z * ior - Factor * Normal->z;
-
+				b3Vector::b3LinearCombine(incoming_dir, Normal, ior, -sqrt(Factor) - ior * cos_a, refr_dir);
 				b3Vector::b3Normalize(refr_dir);
 
 				surface->m_RefrRay.pos    =  surface->m_Incoming->ipoint;
@@ -411,17 +408,10 @@ b3_bool b3Shader::b3Shade(
 	b3BBox      *bbox;
 	b3Shape     *shape;
 	b3_surface   surface;
-	b3_f64       denom;
 	b3_bool      finite;
 
 	// Normalize incoming ray
-	denom = 1.0 / sqrt(
-		ray->dir.x * ray->dir.x +
-		ray->dir.y * ray->dir.y +
-		ray->dir.z * ray->dir.z);
-	ray->dir.x *= denom;
-	ray->dir.y *= denom;
-	ray->dir.z *= denom;
+	b3Vector::b3Normalize(&ray->dir);
 
 	if ((depth_count < m_TraceDepth) && m_Scene->b3Intersect(ray, (b3_bool)(depth_count == 0)))
 	{
@@ -430,9 +420,7 @@ b3_bool b3Shader::b3Shade(
 		surface.m_Incoming = ray;
 
 		// Compute intersection point
-		ray->ipoint.x = ray->pos.x + ray->Q * ray->dir.x;
-		ray->ipoint.y = ray->pos.y + ray->Q * ray->dir.y;
-		ray->ipoint.z = ray->pos.z + ray->Q * ray->dir.z;
+		b3Vector::b3LinearCombine(&ray->pos, &ray->dir, ray->Q, &ray->ipoint);
 
 		// Compute rel. box coordinates
 		bbox->b3ComputeBoxPolar(ray);

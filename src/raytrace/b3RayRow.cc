@@ -36,9 +36,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/06/08 14:16:24  smork
+**	- Some more vectorization.
+**
 **	Revision 1.15  2005/01/14 13:10:44  smork
 **	- Optimized shading call inside b3RayRow handling.
-**
+**	
 **	Revision 1.14  2005/01/14 08:51:05  smork
 **	- Corrected lens flares to be in front of any object.
 **	- Added start banner to divx tool.
@@ -161,17 +164,13 @@ void b3RayRow::b3Raytrace()
 	// Loop one row...
 	for (x = 0;x < m_xSize;x++)
 	{
-		ray.dir.x  = m_preDir.x;
-		ray.dir.y  = m_preDir.y;
-		ray.dir.z  = m_preDir.z;
+		ray.dir    = m_preDir;
 		ray.inside = false;
 		ray.t      = m_t;
 
 		m_buffer[x] = b3Shade(&ray, fx, m_fy);
 
-		m_preDir.x += m_Scene->m_xStepDir.x;
-		m_preDir.y += m_Scene->m_xStepDir.y;
-		m_preDir.z += m_Scene->m_xStepDir.z;
+		b3Vector::b3Add(&m_Scene->m_xStepDir, &m_preDir);
 		fx         += m_fxStep;
 
 	}
@@ -245,18 +244,14 @@ void b3SupersamplingRayRow::b3Raytrace()
 	// Loop one row...
 	for (x = 0;x < m_xSize;x++)
 	{
-		ray.dir.x  = dir.x;
-		ray.dir.y  = dir.y;
-		ray.dir.z  = dir.z;
+		ray.dir    = dir;
 		ray.inside = false;
 		ray.t      = m_t;
 
 		m_ThisResult[x] = b3Shade(&ray,fxRight,m_fy);
 
 		fxRight += m_fxStep;
-		dir.x   += m_Scene->m_xStepDir.x;
-		dir.y   += m_Scene->m_xStepDir.y;
-		dir.z   += m_Scene->m_xStepDir.z;
+		b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
 	}
 
 	m_Scene->m_SamplingMutex.b3Lock();
@@ -373,37 +368,27 @@ inline void b3SupersamplingRayRow::b3Refine(b3_bool this_row)
 		// Do the additional computations...
 		if (add)
 		{
-			ray.dir.x  = (dir.x += m_Scene->m_yHalfDir.x);
-			ray.dir.y  = (dir.y += m_Scene->m_yHalfDir.y);
-			ray.dir.z  = (dir.z += m_Scene->m_yHalfDir.z);
+			ray.dir    = *b3Vector::b3Add(&m_Scene->m_yHalfDir, &dir);
 			ray.inside = false;
 			ray.t      =  m_t;
 
 			m_ThisResult[x] += b3Shade(&ray,fxRight,fyUp);
 
-			ray.dir.x  = (dir.x -= m_Scene->m_xHalfDir.x);
-			ray.dir.y  = (dir.y -= m_Scene->m_xHalfDir.y);
-			ray.dir.z  = (dir.z -= m_Scene->m_xHalfDir.z);
+			ray.dir    = *b3Vector::b3Sub(&m_Scene->m_xHalfDir, &dir);
 			ray.inside = false;
 			ray.t      =  m_t;
 
 			m_ThisResult[x] += b3Shade(&ray,fxLeft,fyUp);
 
-			ray.dir.x  = (dir.x -= m_Scene->m_yHalfDir.x);
-			ray.dir.y  = (dir.y -= m_Scene->m_yHalfDir.y);
-			ray.dir.z  = (dir.z -= m_Scene->m_yHalfDir.z);
+			ray.dir    = *b3Vector::b3Sub(&m_Scene->m_yHalfDir, &dir);
 			ray.inside = false;
 			ray.t      =  m_t;
 
 			m_ThisResult[x]  = (m_ThisResult[x] + b3Shade(&ray,fxLeft,fyDown)) * 0.25f;
 
-			ray.dir.x = (dir.x += m_Scene->m_xHalfDir.x);
-			ray.dir.y = (dir.y += m_Scene->m_xHalfDir.y);
-			ray.dir.z = (dir.z += m_Scene->m_xHalfDir.z);
+			ray.dir = *b3Vector::b3Add(&m_Scene->m_xHalfDir, &dir);
 		}
-		ray.dir.x  = (dir.x += m_Scene->m_xStepDir.x);
-		ray.dir.y  = (dir.y += m_Scene->m_xStepDir.y);
-		ray.dir.z  = (dir.z += m_Scene->m_xStepDir.z);
+		ray.dir    = *b3Vector::b3Add(&m_Scene->m_xStepDir, &dir);
 		fxRight   += m_fxStep;
 		fxLeft    += m_fxStep;
 
@@ -480,17 +465,13 @@ void b3DistributedRayRow::b3Raytrace()
 			sx = *samples++;
 			sy = *samples++;
 
-			ray.dir.x  = m_preDir.x + sx * m_Scene->m_xHalfDir.x + sy * m_Scene->m_yHalfDir.x;
-			ray.dir.y  = m_preDir.y + sx * m_Scene->m_xHalfDir.y + sy * m_Scene->m_yHalfDir.y;
-			ray.dir.z  = m_preDir.z + sx * m_Scene->m_xHalfDir.z + sy * m_Scene->m_yHalfDir.z;
+			b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
 			ray.inside = false;
 			ray.t      = m_t;
 
 			result += b3Shade (&ray,fx + sx,m_fy + sy);
 		}
-		m_preDir.x += m_Scene->m_xStepDir.x;
-		m_preDir.y += m_Scene->m_xStepDir.y;
-		m_preDir.z += m_Scene->m_xStepDir.z;
+		b3Vector::b3Add(&m_Scene->m_xStepDir, &m_preDir);
 		fx         += m_fxStep;
 
 		m_buffer[x] = result / m_SPP;
@@ -570,9 +551,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 				sx = *samples++;
 				sy = *samples++;
 
-				ray.dir.x  = m_preDir.x + sx * m_Scene->m_xHalfDir.x + sy * m_Scene->m_yHalfDir.x;
-				ray.dir.y  = m_preDir.y + sx * m_Scene->m_xHalfDir.y + sy * m_Scene->m_yHalfDir.y;
-				ray.dir.z  = m_preDir.z + sx * m_Scene->m_xHalfDir.z + sy * m_Scene->m_yHalfDir.z;
+				b3Vector::b3LinearCombine(&m_preDir, &m_Scene->m_xHalfDir, &m_Scene->m_yHalfDir, sx, sy, &ray.dir);
 				ray.inside = false;
 				ray.t      = m_t;
 
@@ -585,9 +564,7 @@ void b3MotionBlurRayRow::b3Raytrace()
 			}
 		}
 
-		m_preDir.x += m_Scene->m_xStepDir.x;
-		m_preDir.y += m_Scene->m_xStepDir.y;
-		m_preDir.z += m_Scene->m_xStepDir.z;
+		b3Vector::b3Add(&m_Scene->m_xStepDir, &m_preDir);
 		fx         += m_fxStep;
 	}
 	m_Display->b3PutRow(this);
