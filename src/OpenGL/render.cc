@@ -37,6 +37,9 @@
 
 /*
 **      $Log$
+**      Revision 1.58  2005/06/09 11:00:57  smork
+**      - Call option cleanup.
+**
 **      Revision 1.57  2005/01/24 14:21:00  smork
 **      - Moved some static variables.
 **
@@ -523,6 +526,7 @@ static void b3Banner(const char *command)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-v][-s] BWD-file\n", command);
+		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -v  disable vertex buffer objects\n");

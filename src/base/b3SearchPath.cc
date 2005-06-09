@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.11  2005/06/09 11:00:57  smork
+**	- Call option cleanup.
+**
 **	Revision 1.10  2003/08/31 10:44:07  sm
 **	- Further buffer overflow avoidments.
-**
+**	
 **	Revision 1.9  2002/11/16 15:24:17  sm
 **	- Include cleanups in RemCR
 **	
@@ -102,11 +105,20 @@ b3PathEntry::b3PathEntry(const char *new_path) : b3Link<b3PathEntry>(sizeof(b3Pa
 
 void b3SearchPath::b3AddPath(const char *path)
 {
-	b3PathEntry *path_item = new b3PathEntry(path);
+	if (b3Dir::b3Exists(path) == B3_TYPE_DIR)
+	{
+		b3PathEntry *path_item = new b3PathEntry(path);
 
-	b3PrintF(B3LOG_DEBUG,"Adding search path \"%s\"\n",
-		(const char *)*path_item);
-	m_SearchPath.b3Append(path_item);
+		b3PrintF(B3LOG_DEBUG,"Adding search path \"%s\"\n",
+			(const char *)*path_item);
+		m_SearchPath.b3Append(path_item);
+	}
+#ifdef _DEBUG
+	else
+	{
+		b3PrintF(B3LOG_DEBUG,"Path %s not added.\n",path);
+	}
+#endif
 }
 
 b3SearchPath::b3SearchPath()

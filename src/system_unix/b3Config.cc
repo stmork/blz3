@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/06/09 11:00:57  smork
+**	- Call option cleanup.
+**
 **	Revision 1.16  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
-**
+**	
 **	Revision 1.15  2005/06/07 11:02:37  sm
 **	- Marking math mode in compiler version output.
 **	
@@ -178,4 +181,30 @@ void *b3Runtime::b3GetOpenGLExtension(const char *procedure_name)
 #else
 	return null;
 #endif
+}
+
+int b3Runtime::b3ParseOption(
+	int     argc,
+	char   *argv[],
+	int     i,
+	char   *option,
+	size_t  size)
+{
+	if (strlen(argv[i]) > 2)
+	{
+		strncpy(option,&argv[i][2],size);
+	}
+	else
+	{
+		i++;
+		if (i < argc)
+		{
+			strncpy (option,argv[i],size);
+		}
+		else
+		{
+			option[0] = 0;
+		}
+	}
+	return i;
 }

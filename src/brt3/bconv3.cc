@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/06/09 11:00:57  smork
+**	- Call option cleanup.
+**
 **	Revision 1.3  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
-**
+**	
 **	Revision 1.2  2004/11/29 09:58:00  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -50,27 +53,6 @@
 **	
 **
 */
-
-static int parse_option(int argc,int i,char *argv[],char *option)
-{
-	if (strlen(argv[i]) > 2)
-	{
-		strcpy(option,&argv[i][2]);
-	}
-	else
-	{
-		i++;
-		if (i < argc)
-		{
-			strcpy (option,argv[i]);
-		}
-		else
-		{
-			option[0] = 0;
-		}
-	}
-	return i;
-}
 
 static void convert_tiff(
 	b3Tx       *tx,
@@ -231,7 +213,7 @@ int main(int argc,char *argv[])
 			switch(argv[i][1])
 			{
 			case 'i':
-				i = parse_option(argc,i,argv,in_filename);
+				i = b3Runtime::b3ParseOption(argc, argv, i, in_filename, B3_FILESTRINGLEN);
 
 				// Could be any fileformat
 				tx.b3LoadImage(in_filename);
@@ -242,12 +224,12 @@ int main(int argc,char *argv[])
 				break;
 
 			case 'j':
-				i = parse_option(argc,i,argv,out_filename);
+				i = b3Runtime::b3ParseOption(argc, argv, i, out_filename, B3_FILESTRINGLEN);
 				convert_jpeg(&tx,out_filename,quality,filtered,xNewSize,yNewSize,scale);
 				break;
 
 			case 't':
-				i = parse_option(argc,i,argv,out_filename);
+				i = b3Runtime::b3ParseOption(argc, argv, i, out_filename, B3_FILESTRINGLEN);
 				convert_tiff(&tx,out_filename,filtered,xNewSize,yNewSize,scale);
 				break;
 
@@ -259,7 +241,7 @@ int main(int argc,char *argv[])
 				break;
 
 			case 'g':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				grey = atof(number);
 				if (tx.b3IsLoaded())
 				{
@@ -267,7 +249,7 @@ int main(int argc,char *argv[])
 				}
 				break;
 			case 'r':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				ratio = atof(number);
 				if (tx.b3IsLoaded())
 				{
@@ -275,20 +257,20 @@ int main(int argc,char *argv[])
 				}
 				break;
 			case 'q':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				quality = atoi(number);
 				break;
 
 			case 's':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				scale = atof(number);
 				break;
 			case 'x':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
 				xNewSize = atoi(number);
 				break;
 			case 'y':
-				i = parse_option(argc,i,argv,number);
+				i = b3Runtime::b3ParseOption(argc,argv,i,number, sizeof(number));
 				yNewSize = atoi(number);
 				break;
 			}

@@ -38,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.65  2005/06/09 11:00:57  smork
+**	- Call option cleanup.
+**
 **	Revision 1.64  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
-**
+**	
 **	Revision 1.63  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.
@@ -410,6 +413,7 @@ static void b3Banner(const char *command)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
 		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-j][-i][-g][-r] {Blizzard World Data files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
 		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
 		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
@@ -461,28 +465,17 @@ int main(int argc,char *argv[])
 			b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
 			b3Dir::b3LinkFileName(data,    HOME,"Blizzard/Data");
 			b3Scene::m_TexturePool.b3AddPath(textures);
-			if (BLZ3_TEXTURES != null)
-			{
-				b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
-			}
+			b3Scene::m_TexturePool.b3AddPath(BLZ3_TEXTURES);
 			b3Scene::m_TexturePool.b3AddPath(pictures);
+			b3Scene::m_TexturePool.b3AddPath(BLZ3_PICTURES);
 
 			world->b3AddPath(data);
-			if (BLZ3_DATA != null)
-			{
-				world->b3AddPath(BLZ3_DATA);
-			}
+			world->b3AddPath(BLZ3_DATA);
 		}
 
 		b3RaytracingItems::b3Register();
-		if (BLZ3_BIN != null)
-		{
-			loader.b3AddPath(BLZ3_BIN);
-		}
-		if (BLZ3_PLUGINS != null)
-		{
-			loader.b3AddPath(BLZ3_PLUGINS);
-		}
+		loader.b3AddPath(BLZ3_BIN);
+		loader.b3AddPath(BLZ3_PLUGINS);
 		loader.b3Load();
 
 		if (BLZ3_RENDER_PRIO != null)

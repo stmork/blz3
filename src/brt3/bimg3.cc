@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2005/06/09 11:00:57  smork
+**	- Call option cleanup.
+**
 **	Revision 1.21  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
-**
+**	
 **	Revision 1.20  2005/01/21 10:28:59  smork
 **	- Corrected exe banner.
 **	
@@ -189,12 +192,11 @@ int main(int argc,char *argv[])
 		{
 			b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
 			b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
+
 			texture_pool.b3AddPath(textures);
-			if (BLZ3_TEXTURES != null)
-			{
-				texture_pool.b3AddPath(BLZ3_TEXTURES);
-			}
+			texture_pool.b3AddPath(BLZ3_TEXTURES);
 			texture_pool.b3AddPath(pictures);
+			texture_pool.b3AddPath(BLZ3_PICTURES);
 		}
 
 		for (i = 1;i < argc;i++)

@@ -143,6 +143,7 @@ public:
 	static b3_s32      b3Execute(const char *command, const b3_bool async);
 	static char       *b3GetCompiler();
 	static void       *b3GetOpenGLExtension(const char *procedure_name);
+	static int         b3ParseOption(int argc, char *argv[], int index, char *option, size_t size);
 };
 
 #endif
