@@ -45,9 +45,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/06/09 14:34:25  sm
+**	- Signature fix.
+**
 **	Revision 1.15  2005/06/09 12:10:27  smork
 **	- New TIFF lib 2.7.2
-**
+**	
 **	Revision 1.14  2005/01/24 18:32:34  sm
 **	- Removed some static variables and functions.
 **	
@@ -432,12 +435,12 @@ long b3Tx::b3TIFFDecode(
 
 	if ((depth > 8) && (type != B3_TX_UNDEFINED))
 	{
-		unsigned long  *fPtr,*bPtr;
+		uint32         *fPtr,*bPtr;
 		b3_pkd_color    fSwp, bSwp;
 		b3_count        max;
 
 		max  = xSize * ySize;
-		fPtr = (unsigned long *)data;
+		fPtr = (uint32 *)data;
 		bPtr = fPtr + max;
 		max  = ySize >> 1;
 		if (TIFFReadRGBAImage (tiff,xSize,ySize,fPtr) == 0)
