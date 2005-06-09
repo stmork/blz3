@@ -6,12 +6,8 @@ BLZ3_BIN	= @BLZ3_BIN@
 CC		= @CC@
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= libB3tiff.o
-PRGS		= mkversion mkg3states
-AUTO		= tif_fax3sm.c $(BLZ3_HOME)/include_win32/version.h
-
-ALPHA	= tiff.alpha
-VERSION	= VERSION
-RELEASE = RELEASE-DATE
+PRGS		= mkg3states
+AUTO		= tif_fax3sm.c
 
 LIB_SOURCE	= \
 	mkversion.c\
@@ -19,6 +15,7 @@ LIB_SOURCE	= \
 	tif_aux.c \
 	tif_close.c \
 	tif_codec.c \
+	tif_color.c \
 	tif_compress.c \
 	tif_dir.c \
 	tif_dirinfo.c \
@@ -26,6 +23,7 @@ LIB_SOURCE	= \
 	tif_dirwrite.c \
 	tif_dumpmode.c \
 	tif_error.c \
+	tif_extension.c \
 	tif_fax3.c \
 	tif_getimage.c \
 	tif_jpeg.c \
@@ -33,6 +31,7 @@ LIB_SOURCE	= \
 	tif_luv.c \
 	tif_lzw.c \
 	tif_next.c \
+	tif_ojpeg.c \
 	tif_open.c \
 	tif_packbits.c \
 	tif_pixarlog.c \
@@ -53,6 +52,7 @@ LIB_OBJ	= \
 	tif_aux.o \
 	tif_close.o \
 	tif_codec.o \
+	tif_color.o \
 	tif_compress.o \
 	tif_dir.o \
 	tif_dirinfo.o \
@@ -60,6 +60,7 @@ LIB_OBJ	= \
 	tif_dirwrite.o \
 	tif_dumpmode.o \
 	tif_error.o \
+	tif_extension.o \
 	tif_fax3.o \
 	tif_fax3sm.o \
 	tif_getimage.o \
@@ -68,6 +69,7 @@ LIB_OBJ	= \
 	tif_luv.o \
 	tif_lzw.o \
 	tif_next.o \
+	tif_ojpeg.o \
 	tif_open.o \
 	tif_packbits.o \
 	tif_pixarlog.o \
@@ -92,7 +94,7 @@ depend:	$(AUTO)
 	@CPP@ -M  $(LIB_SOURCE) $(CPPFLAGS) >.dep
 
 clean:
-	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS) $(LIBS) $(AUTO) ALL QUIET version.h
+	rm -f *.o *.a *.bak *~ core libB*.a $(PRGS) $(LIBS) $(AUTO) ALL QUIET
 
 libB3tiff.o: $(LIB_OBJ)
 	rm -f core
@@ -104,17 +106,6 @@ libB3tiff.a:	$(LIB_OBJ)
 
 tif_fax3sm.c:	mkg3states
 	./mkg3states -c const tif_fax3sm.c
-
-tif_version.c:	version.h
-
-$(BLZ3_HOME)/include_win32/version.h:	version.h
-	cp $^ $@
-
-version.h:	mkversion
-	./mkversion -v ${VERSION} -r ${RELEASE} -a ${ALPHA} $@
-
-mkversion:	mkversion.o
-	$(LINK.c) -o $@ $^
 
 mkg3states:	mkg3states.o
 	$(LINK.c) -o $@ $^

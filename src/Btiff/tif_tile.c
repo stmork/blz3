@@ -1,4 +1,4 @@
-/* $Header$ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1991-1997 Sam Leffler
@@ -34,6 +34,10 @@
 static uint32
 summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 {
+	/*
+	 * XXX: We are using casting to uint32 here, bacause sizeof(size_t)
+	 * may be larger than sizeof(uint32) on 64-bit architectures.
+	 */
 	uint32	bytes = summand1 + summand2;
 
 	if (bytes - summand1 != summand2) {
@@ -88,7 +92,7 @@ TIFFComputeTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t s)
 			     xpt*(y/dy) +
 			     x/dx;
 		else
-			tile = (xpt*ypt)*(z/dz) + xpt*(y/dy) + x/dx + s;
+			tile = (xpt*ypt)*(z/dz) + xpt*(y/dy) + x/dx;
 	}
 	return (tile);
 }
@@ -103,24 +107,24 @@ TIFFCheckTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t s)
 	TIFFDirectory *td = &tif->tif_dir;
 
 	if (x >= td->td_imagewidth) {
-		TIFFError(tif->tif_name, "Col %ld out of range, max %lu",
-		    (long) x, (u_long) td->td_imagewidth);
+		TIFFError(tif->tif_name, "%lu: Col out of range, max %lu",
+		    (unsigned long) x, (unsigned long) td->td_imagewidth);
 		return (0);
 	}
 	if (y >= td->td_imagelength) {
-		TIFFError(tif->tif_name, "Row %ld out of range, max %lu",
-		    (long) y, (u_long) td->td_imagelength);
+		TIFFError(tif->tif_name, "%lu: Row out of range, max %lu",
+		    (unsigned long) y, (unsigned long) td->td_imagelength);
 		return (0);
 	}
 	if (z >= td->td_imagedepth) {
-		TIFFError(tif->tif_name, "Depth %ld out of range, max %lu",
-		    (long) z, (u_long) td->td_imagedepth);
+		TIFFError(tif->tif_name, "%lu: Depth out of range, max %lu",
+		    (unsigned long) z, (unsigned long) td->td_imagedepth);
 		return (0);
 	}
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE &&
 	    s >= td->td_samplesperpixel) {
-		TIFFError(tif->tif_name, "Sample %d out of range, max %u",
-		    (int) s, td->td_samplesperpixel);
+		TIFFError(tif->tif_name, "%lu: Sample out of range, max %lu",
+		    (unsigned long) s, (unsigned long) td->td_samplesperpixel);
 		return (0);
 	}
 	return (1);
@@ -186,7 +190,6 @@ TIFFVTileSize(TIFF* tif, uint32 nrows)
 	if (td->td_tilelength == 0 || td->td_tilewidth == 0 ||
 	    td->td_tiledepth == 0)
 		return ((tsize_t) 0);
-#ifdef YCBCR_SUPPORT
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG &&
 	    td->td_photometric == PHOTOMETRIC_YCBCR &&
 	    !isUpSampled(tif)) {
@@ -205,6 +208,10 @@ TIFFVTileSize(TIFF* tif, uint32 nrows)
 					  "TIFFVTileSize"));
 		tsize_t samplingarea =
 		    td->td_ycbcrsubsampling[0]*td->td_ycbcrsubsampling[1];
+		if (samplingarea == 0) {
+			TIFFError(tif->tif_name, "Invalid YCbCr subsampling");
+			return 0;
+		}
 		nrows = TIFFroundup(nrows, td->td_ycbcrsubsampling[1]);
 		/* NB: don't need TIFFhowmany here 'cuz everything is rounded */
 		tilesize = multiply(tif, nrows, rowsize, "TIFFVTileSize");
@@ -213,7 +220,6 @@ TIFFVTileSize(TIFF* tif, uint32 nrows)
 					      "TIFFVTileSize"),
 				     "TIFFVTileSize");
 	} else
-#endif
 		tilesize = multiply(tif, nrows, TIFFTileRowSize(tif),
 				    "TIFFVTileSize");
 	return ((tsize_t)
@@ -255,3 +261,5 @@ _TIFFDefaultTileSize(TIFF* tif, uint32* tw, uint32* th)
 	if (*th & 0xf)
 		*th = TIFFroundup(*th, 16);
 }
+
+/* vim: set ts=8 sts=8 sw=8 noet: */

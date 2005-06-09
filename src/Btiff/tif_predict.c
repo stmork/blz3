@@ -1,4 +1,4 @@
-/* $Header$ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -31,8 +31,6 @@
  */
 #include "tiffiop.h"
 #include "tif_predict.h"
-
-#include <assert.h>
 
 #define	PredictorState(tif)	((TIFFPredictorState*) (tif)->tif_data)
 
@@ -169,30 +167,30 @@ horAcc8(TIFF* tif, tidata_t cp0, tsize_t cc)
 		 * Pipeline the most common cases.
 		 */
 		if (stride == 3)  {
-			u_int cr = cp[0];
-			u_int cg = cp[1];
-			u_int cb = cp[2];
+			unsigned int cr = cp[0];
+			unsigned int cg = cp[1];
+			unsigned int cb = cp[2];
 			do {
 				cc -= 3, cp += 3;
-				cp[0] = (cr += cp[0]);
-				cp[1] = (cg += cp[1]);
-				cp[2] = (cb += cp[2]);
+				cp[0] = (char) (cr += cp[0]);
+				cp[1] = (char) (cg += cp[1]);
+				cp[2] = (char) (cb += cp[2]);
 			} while ((int32) cc > 0);
 		} else if (stride == 4)  {
-			u_int cr = cp[0];
-			u_int cg = cp[1];
-			u_int cb = cp[2];
-			u_int ca = cp[3];
+			unsigned int cr = cp[0];
+			unsigned int cg = cp[1];
+			unsigned int cb = cp[2];
+			unsigned int ca = cp[3];
 			do {
 				cc -= 4, cp += 4;
-				cp[0] = (cr += cp[0]);
-				cp[1] = (cg += cp[1]);
-				cp[2] = (cb += cp[2]);
-				cp[3] = (ca += cp[3]);
+				cp[0] = (char) (cr += cp[0]);
+				cp[1] = (char) (cg += cp[1]);
+				cp[2] = (char) (cb += cp[2]);
+				cp[3] = (char) (ca += cp[3]);
 			} while ((int32) cc > 0);
 		} else  {
 			do {
-				REPEAT4(stride, cp[stride] += *cp; cp++)
+				REPEAT4(stride, cp[stride] = (char) (cp[stride] + *cp); cp++)
 				cc -= stride;
 			} while ((int32) cc > 0);
 		}
@@ -360,7 +358,7 @@ PredictorEncodeTile(TIFF* tif, tidata_t bp0, tsize_t cc0, tsample_t s)
 {
 	TIFFPredictorState *sp = PredictorState(tif);
 	tsize_t cc = cc0, rowsize;
-	u_char* bp = bp0;
+	unsigned char* bp = bp0;
 
 	assert(sp != NULL);
 	assert(sp->pfunc != NULL);
@@ -443,12 +441,15 @@ TIFFPredictorInit(TIFF* tif)
 	 * override parent get/set field methods.
 	 */
 	_TIFFMergeFieldInfo(tif, predictFieldInfo, N(predictFieldInfo));
-	sp->vgetparent = tif->tif_vgetfield;
-	tif->tif_vgetfield = PredictorVGetField;/* hook for predictor tag */
-	sp->vsetparent = tif->tif_vsetfield;
-	tif->tif_vsetfield = PredictorVSetField;/* hook for predictor tag */
-	sp->printdir = tif->tif_printdir;
-	tif->tif_printdir = PredictorPrintDir;	/* hook for predictor tag */
+	sp->vgetparent = tif->tif_tagmethods.vgetfield;
+	tif->tif_tagmethods.vgetfield =
+            PredictorVGetField;/* hook for predictor tag */
+	sp->vsetparent = tif->tif_tagmethods.vsetfield;
+	tif->tif_tagmethods.vsetfield =
+            PredictorVSetField;/* hook for predictor tag */
+	sp->printdir = tif->tif_tagmethods.printdir;
+	tif->tif_tagmethods.printdir =
+            PredictorPrintDir;	/* hook for predictor tag */
 
 	sp->setupdecode = tif->tif_setupdecode;
 	tif->tif_setupdecode = PredictorSetupDecode;
@@ -459,3 +460,5 @@ TIFFPredictorInit(TIFF* tif)
 	sp->pfunc = NULL;			/* no predictor routine */
 	return (1);
 }
+
+/* vim: set ts=8 sts=8 sw=8 noet: */

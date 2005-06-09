@@ -1,4 +1,4 @@
-/* $Header$ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1991-1997 Sam Leffler
@@ -34,6 +34,10 @@
 static uint32
 summarize(TIFF* tif, size_t summand1, size_t summand2, const char* where)
 {
+	/*
+	 * XXX: We are using casting to uint32 here, bacause sizeof(size_t)
+	 * may be larger than sizeof(uint32) on 64-bit architectures.
+	 */
 	uint32	bytes = summand1 + summand2;
 
 	if (bytes - summand1 != summand2) {
@@ -70,8 +74,8 @@ TIFFComputeStrip(TIFF* tif, uint32 row, tsample_t sample)
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE) {
 		if (sample >= td->td_samplesperpixel) {
 			TIFFError(tif->tif_name,
-			    "%u: Sample out of range, max %u",
-			    sample, td->td_samplesperpixel);
+			    "%lu: Sample out of range, max %lu",
+			    (unsigned long) sample, (unsigned long) td->td_samplesperpixel);
 			return ((tstrip_t) 0);
 		}
 		strip += sample*td->td_stripsperimage;
@@ -88,8 +92,7 @@ TIFFNumberOfStrips(TIFF* tif)
 	TIFFDirectory *td = &tif->tif_dir;
 	tstrip_t nstrips;
 
-	nstrips = (td->td_rowsperstrip == (uint32) -1 ?
-	     (td->td_imagelength != 0 ? 1 : 0) :
+	nstrips = (td->td_rowsperstrip == (uint32) -1 ? 1 :
 	     TIFFhowmany(td->td_imagelength, td->td_rowsperstrip));
 	if (td->td_planarconfig == PLANARCONFIG_SEPARATE)
 		nstrips = multiply(tif, nstrips, td->td_samplesperpixel,
@@ -107,7 +110,6 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 
 	if (nrows == (uint32) -1)
 		nrows = td->td_imagelength;
-#ifdef YCBCR_SUPPORT
 	if (td->td_planarconfig == PLANARCONFIG_CONTIG &&
 	    td->td_photometric == PHOTOMETRIC_YCBCR &&
 	    !isUpSampled(tif)) {
@@ -119,13 +121,23 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 		 * horizontal/vertical subsampling area include
 		 * YCbCr data for the extended image.
 		 */
-		tsize_t w =
-		    TIFFroundup(td->td_imagewidth, td->td_ycbcrsubsampling[0]);
-		tsize_t scanline =
-		    TIFFhowmany8(multiply(tif, w, td->td_bitspersample, "TIFFVStripSize"));
-		tsize_t samplingarea =
-		    td->td_ycbcrsubsampling[0]*td->td_ycbcrsubsampling[1];
-		nrows = TIFFroundup(nrows, td->td_ycbcrsubsampling[1]);
+                uint16 ycbcrsubsampling[2];
+                tsize_t w, scanline, samplingarea;
+
+                TIFFGetField( tif, TIFFTAG_YCBCRSUBSAMPLING, 
+                              ycbcrsubsampling + 0, 
+                              ycbcrsubsampling + 1 );
+
+		samplingarea = ycbcrsubsampling[0]*ycbcrsubsampling[1];
+		if (samplingarea == 0) {
+			TIFFError(tif->tif_name, "Invalid YCbCr subsampling");
+			return 0;
+		}
+
+		w = TIFFroundup(td->td_imagewidth, ycbcrsubsampling[0]);
+		scanline = TIFFhowmany8(multiply(tif, w, td->td_bitspersample,
+						 "TIFFVStripSize"));
+		nrows = TIFFroundup(nrows, ycbcrsubsampling[1]);
 		/* NB: don't need TIFFhowmany here 'cuz everything is rounded */
 		scanline = multiply(tif, nrows, scanline, "TIFFVStripSize");
 		return ((tsize_t)
@@ -133,8 +145,28 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 			      multiply(tif, 2, scanline / samplingarea,
 				       "TIFFVStripSize"), "TIFFVStripSize"));
 	} else
-#endif
-		return ((tsize_t) multiply(tif, nrows, TIFFScanlineSize(tif), "TIFFVStripSize"));
+		return ((tsize_t) multiply(tif, nrows, TIFFScanlineSize(tif),
+					   "TIFFVStripSize"));
+}
+
+
+/*
+ * Compute the # bytes in a raw strip.
+ */
+tsize_t
+TIFFRawStripSize(TIFF* tif, tstrip_t strip)
+{
+	TIFFDirectory* td = &tif->tif_dir;
+	tsize_t bytecount = td->td_stripbytecount[strip];
+
+	if (bytecount <= 0) {
+		TIFFError(tif->tif_name,
+			  "%lu: Invalid strip byte count, strip %lu",
+			  (unsigned long) bytecount, (unsigned long) strip);
+		bytecount = (tsize_t) -1;
+	}
+
+	return bytecount;
 }
 
 /*
@@ -226,3 +258,5 @@ TIFFRasterScanlineSize(TIFF* tif)
 					    td->td_samplesperpixel,
 					    "TIFFRasterScanlineSize"));
 }
+
+/* vim: set ts=8 sts=8 sw=8 noet: */

@@ -1,4 +1,4 @@
-/* $Header$ */
+/* $Id$ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -29,25 +29,46 @@
 /*
  * ``Library-private'' definitions.
  */
-/*
- * UNIX systems should run the configure script to generate
- * a port.h file that reflects the system capabilities.
- * Doing this obviates all the dreck done in tiffcomp.h.
- */
-#if defined(unix) || defined(__unix)
-#include "port.h"
-#include "tiffconf.h"
-#else
-#include "tiffconf.h"
-#include "tiffcomp.h"
+
+#include "tif_config.h"
+
+#if HAVE_FCNTL_H
+# include <fcntl.h>
 #endif
+
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
+#if HAVE_STRING_H
+# include <string.h>
+#endif
+
+#if HAVE_ASSERT_H
+# include <assert.h>
+#else
+# define assert(x) 
+#endif
+
 #include "tiffio.h"
 #include "tif_dir.h"
+
+typedef double dblparam_t;
+
+#define GLOBALDATA(TYPE,NAME)	extern TYPE NAME
+
+#define    streq(a,b)      (strcmp(a,b) == 0)
 
 #ifndef TRUE
 #define	TRUE	1
 #define	FALSE	0
 #endif
+
+typedef struct client_info {
+    struct client_info *next;
+    void      *data;
+    char      *name;
+} TIFFClientInfoLink;
 
 /*
  * Typedefs for ``method pointers'' used internally.
@@ -61,9 +82,6 @@ typedef	int (*TIFFPreMethod)(TIFF*, tsample_t);
 typedef	int (*TIFFCodeMethod)(TIFF*, tidata_t, tsize_t, tsample_t);
 typedef	int (*TIFFSeekMethod)(TIFF*, uint32);
 typedef	void (*TIFFPostMethod)(TIFF*, tidata_t, tsize_t);
-typedef	int (*TIFFVSetMethod)(TIFF*, ttag_t, va_list);
-typedef	int (*TIFFVGetMethod)(TIFF*, ttag_t, va_list);
-typedef	void (*TIFFPrintMethod)(TIFF*, FILE*, long);
 typedef	uint32 (*TIFFStripMethod)(TIFF*, uint32);
 typedef	void (*TIFFTileMethod)(TIFF*, uint32*, uint32*);
 
@@ -89,9 +107,11 @@ struct tiff {
 #define	TIFF_STRIPCHOP		0x8000	/* enable strip chopping support */
 	toff_t		tif_diroff;	/* file offset of current directory */
 	toff_t		tif_nextdiroff;	/* file offset of following directory */
+	toff_t*		tif_dirlist;	/* list of offsets to already seen */
+					/* directories to prevent IFD looping */
+	uint16		tif_dirnumber;  /* number of already seen directories */
 	TIFFDirectory	tif_dir;	/* internal rep of current directory */
 	TIFFHeader	tif_header;	/* file's header block */
-        tidata_t        tif_clientdir;  /* client TIFF directory */
 	const int*	tif_typeshift;	/* data type shift counts */
 	const long*	tif_typemask;	/* data type masks */
 	uint32		tif_row;	/* current scanline */
@@ -99,18 +119,19 @@ struct tiff {
 	tstrip_t	tif_curstrip;	/* current strip for read/write */
 	toff_t		tif_curoff;	/* current offset for read/write */
 	toff_t		tif_dataoff;	/* current offset for writing dir */
-#if SUBIFD_SUPPORT
+/* SubIFD support */
 	uint16		tif_nsubifd;	/* remaining subifds to write */
 	toff_t		tif_subifdoff;	/* offset for patching SubIFD link */
-#endif
 /* tiling support */
 	uint32 		tif_col;	/* current column (offset by row too) */
 	ttile_t		tif_curtile;	/* current tile for read/write */
 	tsize_t		tif_tilesize;	/* # of bytes in a tile */
 /* compression scheme hooks */
+	int		tif_decodestatus;
 	TIFFBoolMethod	tif_setupdecode;/* called once before predecode */
 	TIFFPreMethod	tif_predecode;	/* pre- row/strip/tile decoding */
 	TIFFBoolMethod	tif_setupencode;/* called once before preencode */
+	int		tif_encodestatus;
 	TIFFPreMethod	tif_preencode;	/* pre- row/strip/tile encoding */
 	TIFFBoolMethod	tif_postencode;	/* post- row/strip/tile encoding */
 	TIFFCodeMethod	tif_decoderow;	/* scanline decoding routine */
@@ -149,12 +170,9 @@ struct tiff {
 /* tag support */
 	TIFFFieldInfo**	tif_fieldinfo;	/* sorted table of registered tags */
 	int		tif_nfields;	/* # entries in registered tag table */
-	TIFFVSetMethod	tif_vsetfield;	/* tag set routine */
-	TIFFVGetMethod	tif_vgetfield;	/* tag get routine */
-	TIFFPrintMethod	tif_printdir;	/* directory print routine */
-
-	int		tif_decodestatus;
-	int		tif_encodestatus;
+	const TIFFFieldInfo *tif_foundfield;/* cached pointer to already found tag */
+        TIFFTagMethods  tif_tagmethods; /* tag get/set/print routines */
+        TIFFClientInfoLink *tif_clientinfo; /* extra client information. */
 };
 
 #define	isPseudoTag(t)	(t > 0xffff)	/* is tag value normal or pseudo */
@@ -168,7 +186,7 @@ struct tiff {
 #define	TIFFWriteFile(tif, buf, size) \
 	((*(tif)->tif_writeproc)((tif)->tif_clientdata,buf,size))
 #define	TIFFSeekFile(tif, off, whence) \
-	((tif)->tif_seekproc?((*(tif)->tif_seekproc)((tif)->tif_clientdata,(toff_t)(off),whence)):0)
+	((*(tif)->tif_seekproc)((tif)->tif_clientdata,(toff_t)(off),whence))
 #define	TIFFCloseFile(tif) \
 	((*(tif)->tif_closeproc)((tif)->tif_clientdata))
 #define	TIFFGetFileSize(tif) \
@@ -198,6 +216,9 @@ struct tiff {
 #define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
 #define TIFFhowmany8(x) (((x)&0x07)?((uint32)(x)>>3)+1:(uint32)(x)>>3)
 #define	TIFFroundup(x, y) (TIFFhowmany(x,y)*(y))
+
+#define TIFFmax(A,B) ((A)>(B)?(A):(B))
+#define TIFFmin(A,B) ((A)<(B)?(A):(B))
 
 #if defined(__cplusplus)
 extern "C" {
@@ -281,3 +302,5 @@ extern	TIFFCodec _TIFFBuiltinCODECS[];
 }
 #endif
 #endif /* _TIFFIOP_ */
+
+/* vim: set ts=8 sts=8 sw=8 noet: */
