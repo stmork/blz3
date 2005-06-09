@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.16  2005/06/09 09:24:00  smork
+**	- Added image conversion tool to installation.
+**
 **	Revision 1.15  2005/06/07 11:02:37  sm
 **	- Marking math mode in compiler version output.
-**
+**	
 **	Revision 1.14  2005/05/04 09:27:28  mork
 **	- Corrected some string methods in configure script.
 **	
@@ -103,7 +106,9 @@ char      b3Runtime::m_Compiler[256];
 b3Runtime::b3Runtime()
 {
 	b3_count bits = b3GetCPUBits();
-#ifdef B3_SSE
+#if defined(B3_SSE2)
+	char *math = "SSE2";
+#elif defined(B3_SSE)
 	char *math = "SSE";
 #else
 	char *math = "FPU";

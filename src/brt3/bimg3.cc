@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.21  2005/06/09 09:24:00  smork
+**	- Added image conversion tool to installation.
+**
 **	Revision 1.20  2005/01/21 10:28:59  smork
 **	- Corrected exe banner.
-**
+**	
 **	Revision 1.19  2004/11/29 09:58:00  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
@@ -170,6 +173,11 @@ static void load(const char *name)
 
 int main(int argc,char *argv[])
 {
+	char                 *BLZ3_TEXTURES    = getenv("BLZ3_TEXTURES");
+	char                 *BLZ3_PICTURES    = getenv("BLZ3_PICTURES");
+	char                 *HOME             = getenv("HOME");
+	b3Path                textures;
+	b3Path                pictures;
 	b3FileList   list;
 	b3FileEntry *entry;
 	b3Tx        *tx;
@@ -177,24 +185,52 @@ int main(int argc,char *argv[])
 
 	if (argc > 1)
 	{
+		if (HOME != null)
+		{
+			b3Dir::b3LinkFileName(textures,HOME,"Blizzard/Textures");
+			b3Dir::b3LinkFileName(pictures,HOME,"Blizzard/Pictures");
+			texture_pool.b3AddPath(textures);
+			if (BLZ3_TEXTURES != null)
+			{
+				texture_pool.b3AddPath(BLZ3_TEXTURES);
+			}
+			texture_pool.b3AddPath(pictures);
+		}
+
 		for (i = 1;i < argc;i++)
 		{
-			switch(b3Dir::b3Exists(argv[i]))
+			if (argv[i][0] == '-')
 			{
-			case B3_TYPE_DIR:
-				list.b3CreateList(argv[i]);
-				for (entry = list.b3First();entry != null;entry = entry->Succ)
+				switch(argv[i][1])
 				{
-					load(entry->b3Name());
+				case 'd' :
+					b3Log::b3SetLevel(B3LOG_DEBUG);
+					break;
+				case 'f' :
+					b3Log::b3SetLevel(B3LOG_FULL);
+					break;
 				}
-				break;
+			}
+			else
+			{
+				switch(b3Dir::b3Exists(argv[i]))
+				{
+				case B3_TYPE_DIR:
+					list.b3CreateList(argv[i]);
+					for (entry = list.b3First();entry != null;entry = entry->Succ)
+					{
+						load(entry->b3Name());
+					}
+					break;
 
-			case B3_TYPE_FILE:
-				load(argv[i]);
-				break;
+				case B3_TYPE_FILE:
+				case B3_NOT_EXISTANT:
+					load(argv[i]);
+					break;
 
-			default:
-				break;
+				default:
+					break;
+				}
 			}
 		}
 		b3PrintF(B3LOG_NORMAL,"\n");

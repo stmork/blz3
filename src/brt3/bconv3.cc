@@ -32,11 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/06/09 09:24:00  smork
+**	- Added image conversion tool to installation.
+**
 **	Revision 1.2  2004/11/29 09:58:00  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.1  2001/11/06 17:14:02  sm
 **	- Introducing JPEG saving
 **	- Made some library fine tunings on TIFF and JPEG
@@ -173,6 +176,33 @@ static void convert_jpeg(
 	}
 }
 
+static void b3Banner(const char *command)
+{
+	b3PrintF(B3LOG_NORMAL,"Blizzard III Image converter\n");
+	b3PrintF(B3LOG_NORMAL,"Copyright (C) Steffen A. Mork  2001, 2002, 2003, 2004, 2005\n");
+	b3PrintF(B3LOG_NORMAL,"\n");
+	if (command != null)
+	{
+		b3PrintF(B3LOG_NORMAL,
+			"%s -i input-img [-f][-u][g][-r thresh][-s scale]\n"
+			"   [-x width][-y height][-q quality] -j output-jpg|-t output-tiff\n",command);
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -f             filtered scaling\n");
+		b3PrintF(B3LOG_NORMAL,"  -u             unfiltered scaling\n");
+		b3PrintF(B3LOG_NORMAL,"  -g             convert to grey\n");
+		b3PrintF(B3LOG_NORMAL,"  -r threshold   convert to B/W image with threshold\n");
+		b3PrintF(B3LOG_NORMAL,"  -s scale       scaling image\n");
+		b3PrintF(B3LOG_NORMAL,"  -x width       new image width\n");
+		b3PrintF(B3LOG_NORMAL,"  -y height      new image height\n");
+		b3PrintF(B3LOG_NORMAL,"  -q quality     JPEG quality\n");
+		b3PrintF(B3LOG_NORMAL,"  -j filename    save as JPEG\n");
+		b3PrintF(B3LOG_NORMAL,"  -t filename    save as TIFF\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+	}
+	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
+	b3PrintF(B3LOG_NORMAL,"%s\n",b3Runtime::b3GetCompiler());
+}
+
 int main(int argc,char *argv[])
 {
 	b3Tx    tx;
@@ -187,6 +217,12 @@ int main(int argc,char *argv[])
 	b3_u32  quality  =  75;
 	b3_res  xNewSize = 640;
 	b3_res  yNewSize = 480;
+
+	if (argc <= 1)
+	{
+		b3Banner(argv[0]);
+		return EXIT_SUCCESS;
+	}
 
 	for (i = 1;i < argc;i++)
 	{

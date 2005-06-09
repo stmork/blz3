@@ -38,10 +38,13 @@
 
 /*
 **	$Log$
+**	Revision 1.64  2005/06/09 09:24:00  smork
+**	- Added image conversion tool to installation.
+**
 **	Revision 1.63  2005/06/02 07:45:44  smork
 **	- Fixed RGB8 image saving in brt3.
 **	- Added PostScript image save.
-**
+**	
 **	Revision 1.62  2005/01/21 10:28:59  smork
 **	- Corrected exe banner.
 **	
@@ -425,7 +428,7 @@ static void b3Banner(const char *command)
 
 int main(int argc,char *argv[])
 {
-	b3ShapeRenderContext  context; // ???
+	b3ShapeRenderContext  context;
 	b3World              *world;
 	b3Display            *display;
 	b3Scene              *scene;
