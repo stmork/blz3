@@ -382,6 +382,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\tif_color.c">
+			</File>
+			<File
 				RelativePath="tif_compress.c">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -639,6 +642,9 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\tif_extension.c">
 			</File>
 			<File
 				RelativePath="tif_fax3.c">
@@ -935,6 +941,9 @@
 						AdditionalIncludeDirectories=""
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\tif_ojpeg.c">
 			</File>
 			<File
 				RelativePath="tif_open.c">
@@ -1517,10 +1526,10 @@
 				RelativePath="t4.h">
 			</File>
 			<File
-				RelativePath="..\..\include\tif_dir.h">
+				RelativePath="tif_dir.h">
 			</File>
 			<File
-				RelativePath="tif_dir.h">
+				RelativePath="..\..\include\tif_dir.h">
 			</File>
 			<File
 				RelativePath="..\..\include\tif_fax3.h">

@@ -27,11 +27,16 @@
 
 #if defined(__ICC)
 #	define B3_SSE1
+#	define B3_SSE2
+#elif defined(__GNUCC__)
+#	define B3_SSE2
+#elif defined(WIN32)
+#	define B3_SSE1
+#	define B3_SSE2
 #endif
 
 #if defined(__ICC) || defined(__GCC__)
 #	include <xmmintrin.h>
-#	define B3_SSE2
 
 #	define B3_ALIGN_16  __declspec(align(16))
 #	define B3_ALIGN_32  __declspec(align(32))

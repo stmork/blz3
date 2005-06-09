@@ -476,7 +476,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="b3CPU.cpp">
+				RelativePath="b3ControlUnits.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
@@ -517,7 +517,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="b3ControlUnits.cpp">
+				RelativePath="b3CPU.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
@@ -1338,9 +1338,6 @@
 						PreprocessorDefinitions=""
 						CompileAs="2"/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\system\b3SelfTest.cc">
 			</File>
 			<File
 				RelativePath="b3ShowColor.cpp">

@@ -10,7 +10,6 @@ PRGS		= mkg3states
 AUTO		= tif_fax3sm.c
 
 LIB_SOURCE	= \
-	mkversion.c\
 	mkg3states.c\
 	tif_aux.c \
 	tif_close.c \

@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.7  2005/06/09 19:07:24  sm
+**	- Corrected TIFF files
+**	- Enabled SSE optimization
+**
 **	Revision 1.6  2005/06/08 11:18:44  smork
 **	- Some more optimization.
-**
+**	
 **	Revision 1.5  2005/06/08 11:09:05  smork
 **	- Base transformation optimized.
 **	
@@ -116,7 +120,7 @@ void b3BaseTransformation::b3BaseTransform(
 	b3_line64 *out)
 {
 #ifdef B3_SSE2
-	b3_vector64         pos, base;
+	b3_vector64         pos;
 	b3_f64 B3_ALIGN_16 *op = &out->pos.x;
 	b3_f64 B3_ALIGN_16 *od = &out->dir.x;
 
