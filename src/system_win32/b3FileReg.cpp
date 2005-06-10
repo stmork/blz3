@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/06/10 21:31:43  sm
+**	- Vectorization fix for Windows
+**	- Read binary from registry returns null when no
+**	  entry is in registry.
+**
 **	Revision 1.3  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.2  2004/05/09 16:37:59  sm
 **	- Added scaling property page to oak plank material
 **	- Corrected so,e input parameters.
@@ -138,9 +143,12 @@ b3_u08 *b3FileReg::b3ReadBuffer(const char *filename,b3_size &filesize)
 	m_Mode = B_READ;
 	m_FileName = filename;
 
-	b3ReadInternal();
-	filesize = m_Buffer.b3GetCount();
-	return m_Buffer.b3GetBuffer();
+	if (b3ReadInternal())
+	{
+		filesize = m_Buffer.b3GetCount();
+		return m_Buffer.b3GetBuffer();
+	}
+	return null;
 }
 
 b3_size  b3FileReg::b3Write     (const void * write_buffer,const b3_size size)

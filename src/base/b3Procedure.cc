@@ -37,9 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2005/06/10 21:31:42  sm
+**	- Vectorization fix for Windows
+**	- Read binary from registry returns null when no
+**	  entry is in registry.
+**
 **	Revision 1.49  2005/05/19 10:27:33  smork
 **	- Added improved Perlin noise.
-**
+**	
 **	Revision 1.48  2005/05/18 10:29:34  smork
 **	- Removed b3Mem from b3Array and b3Noise.
 **	
@@ -820,7 +825,7 @@ void b3Noise::b3Hell (b3_vector *P,b3Color &Color)
 	b3_f64    t;
 	b3_vector Dir;
 
-	b3Vector::b3Scale(&Dir,P,0.08);
+	b3Vector::b3Scale(&Dir,P,0.08f);
 
 	t = b3Turbulence (&Dir);	
 	if (t >= 1) t = 0.99;

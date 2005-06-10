@@ -39,6 +39,11 @@
 
 /*
 **      $Log$
+**      Revision 1.35  2005/06/10 21:31:43  sm
+**      - Vectorization fix for Windows
+**      - Read binary from registry returns null when no
+**        entry is in registry.
+**
 **      Revision 1.34  2005/01/04 15:13:59  smork
 **      - Changed some data types.
 **
@@ -281,8 +286,9 @@ b3Item *b3World::b3AllocNode(b3_u32 *buffer)
 {
 	b3ItemRegisterEntry *entry;
 	b3Item              *item;
+	b3_u32               class_type = buffer[B3_NODE_IDX_CLASSTYPE];
 
-	entry = b3ItemRegister::b3Find(buffer[B3_NODE_IDX_CLASSTYPE]);
+	entry = b3ItemRegister::b3Find(class_type);
 	if (entry != null)
 	{
 		item = entry->b3Load(buffer);

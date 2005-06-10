@@ -32,10 +32,10 @@
 #endif
 
 #ifndef _DEBUG
-#define B3_MAX_TX_SIZE 128
+#	define B3_MAX_TX_SIZE 128
 #else
-#define B3_MAX_TX_SIZE   8
-#define VERBOSE
+#	define B3_MAX_TX_SIZE   8
+#	define no_VERBOSE
 #endif
 
 /*************************************************************************
@@ -46,6 +46,11 @@
 
 /*
 **      $Log$
+**      Revision 1.112  2005/06/10 21:31:42  sm
+**      - Vectorization fix for Windows
+**      - Read binary from registry returns null when no
+**        entry is in registry.
+**
 **      Revision 1.111  2005/05/20 11:09:20  smork
 **      - Corrected specular color handling in OpenGL.
 **
