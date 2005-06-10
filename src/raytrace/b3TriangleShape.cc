@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.50  2005/06/10 12:40:03  smork
+**      - Some vectorization.
+**
 **      Revision 1.49  2004/09/20 08:16:52  sm
 **      - Removed old triangle grid insertion code.
 **      - Added configurable defines for some str funktions.
@@ -363,17 +366,14 @@ void b3TriangleShape::b3SubdivideIntoGrid(
 			b3_vector P23h;
 			b3_vector P31h;
 
-			P12h.x = (P1->x + P2->x) * 0.5;
-			P12h.y = (P1->y + P2->y) * 0.5;
-			P12h.z = (P1->z + P2->z) * 0.5;
+			b3Vector::b3Add(P1,P2, &P12h);
+			b3Vector::b3Scale(&P12h, 0.5);
 
-			P23h.x = (P2->x + P3->x) * 0.5;
-			P23h.y = (P2->y + P3->y) * 0.5;
-			P23h.z = (P2->z + P3->z) * 0.5;
+			b3Vector::b3Add(P2,P3, &P23h);
+			b3Vector::b3Scale(&P23h, 0.5);
 
-			P31h.x = (P3->x + P1->x) * 0.5;
-			P31h.y = (P3->y + P1->y) * 0.5;
-			P31h.z = (P3->z + P1->z) * 0.5;
+			b3Vector::b3Add(P3,P1, &P31h);
+			b3Vector::b3Scale(&P31h, 0.5);
 
 			// Further subdivision
 			b3SubdivideIntoGrid( P1,  &P12h,&P31h,triangle,max-1);
@@ -460,7 +460,7 @@ void b3TriangleShape::b3FreeTriaRefs()
 
 b3_bool b3TriangleShape::b3Prepare()
 {
-	b3_vector   Start,End,disp;
+	b3_vector   Start,End,disp, diff;
 	b3_index    P1,P2,P3,i,max;
 	b3_f64      Denom;
 	b3_triainfo info;
@@ -481,29 +481,18 @@ b3_bool b3TriangleShape::b3Prepare()
 			P2 = m_Triangles[i].P2;		/* Dir1 */
 			P3 = m_Triangles[i].P3;		/* Dir2 */
 
-			info.O.x  = m_Vertices[P1].Point.x;
-			info.O.y  = m_Vertices[P1].Point.y;
-			info.O.z  = m_Vertices[P1].Point.z;
+			info.O  = m_Vertices[P1].Point;
 
-			info.R1.x = m_Vertices[P2].Point.x - m_Vertices[P1].Point.x;
-			info.R1.y = m_Vertices[P2].Point.y - m_Vertices[P1].Point.y;
-			info.R1.z = m_Vertices[P2].Point.z - m_Vertices[P1].Point.z;
-
-			info.R2.x = m_Vertices[P3].Point.x - m_Vertices[P1].Point.x;
-			info.R2.y = m_Vertices[P3].Point.y - m_Vertices[P1].Point.y;
-			info.R2.z = m_Vertices[P3].Point.z - m_Vertices[P1].Point.z;
-
-			info.Normal.x = info.R1.y * info.R2.z - info.R1.z * info.R2.y;
-			info.Normal.y = info.R1.z * info.R2.x - info.R1.x * info.R2.z;
-			info.Normal.z = info.R1.x * info.R2.y - info.R1.y * info.R2.x;
-
+			b3Vector::b3Sub(&m_Vertices[P2].Point, &m_Vertices[P1].Point, &info.R1);
+			b3Vector::b3Sub(&m_Vertices[P3].Point, &m_Vertices[P1].Point, &info.R2);
+			b3Vector::b3CrossProduct(&info.R1, &info.R2, &info.Normal);
+			
 			m_TriaInfos.b3Add(info);
 
 			if ((m_Flags & NORMAL_FACE_VALID)==0)
 			{
-				disp.x = m_Triangles[i].Normal.x = info.Normal.x;
-				disp.y = m_Triangles[i].Normal.y = info.Normal.y;
-				disp.z = m_Triangles[i].Normal.z = info.Normal.z;
+				disp = m_Triangles[i].Normal = info.Normal;
+
 				if ((m_Flags & NORMAL_VERTEX_VALID)==0)
 				{
 #ifdef NORMAL_NORMALIZED
@@ -537,24 +526,23 @@ b3_bool b3TriangleShape::b3Prepare()
 		m_GridSize = 1;
 #endif
 
-		if (((End.x - Start.x) < 0.1) ||
-		    ((End.y - Start.y) < 0.1) ||
-		    ((End.z - Start.z) < 0.1))
-		{
-			m_GridSize = 1;
-		}
 		Start.x -= 0.1f;
 		Start.y -= 0.1f;
 		Start.z -= 0.1f;
 		End.x   += 0.1f;
 		End.y   += 0.1f;
 		End.z   += 0.1f;
+		b3Vector::b3Sub(&End, &Start, &diff);
+		if ((diff.x < 0.1) ||
+		    (diff.y < 0.1) ||
+		    (diff.z < 0.1))
+		{
+			m_GridSize = 1;
+		}
 
 		Denom    = 1.0 / m_GridSize;
 		m_Base   = Start;
-		m_Size.x = (End.x - Start.x) * Denom;
-		m_Size.y = (End.y - Start.y) * Denom;
-		m_Size.z = (End.z - Start.z) * Denom;
+		b3Vector::b3Scale(&m_Size, &diff, Denom);
 		b3Vector::b3SetMinimum(&m_Size,b3Scene::epsilon);
 
 		max = m_GridSize * m_GridSize * m_GridSize;
