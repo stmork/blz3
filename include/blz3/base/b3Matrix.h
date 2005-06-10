@@ -111,7 +111,7 @@ public:
 		const b3_vector *vec1,
 		const b3_vector *vec2)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE
 		const b3_f32 B3_ALIGN_16 *v1 = &vec1->x;
 		const b3_f32 B3_ALIGN_16 *v2 = &vec2->x;
 		      b3_f32 B3_ALIGN_16  d[4];
@@ -137,7 +137,7 @@ public:
 
 	static inline b3_vector *b3Negate(b3_vector *negate)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		b3_f32 B3_ALIGN_16 *n = &negate->x;
 		
 		for (b3_loop i = 0;i < 4;i++)
@@ -351,7 +351,7 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
@@ -412,7 +412,7 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
@@ -477,7 +477,7 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
@@ -518,7 +518,7 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
@@ -583,7 +583,7 @@ public:
 		const b3_vector *aVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
@@ -604,7 +604,7 @@ public:
 		const b3_vector *bVec,
 		      b3_vector *result)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
 		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
@@ -795,7 +795,7 @@ public:
 
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE
 		return sqrt(b3QuadLength(vector));
 #else
 		return sqrt(
@@ -832,7 +832,7 @@ public:
 
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
-#ifdef B3_SSE2
+#ifdef B3_SSE
 		const b3_f64 B3_ALIGN_16 *v = &vector->x;
 		      b3_f64              result = 0;
 
@@ -885,10 +885,10 @@ public:
 		      b3_vector *vector,
 		const b3_f32 factor)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE1
 		b3_f32 B3_ALIGN_16 *v = &vector->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for(b3_loop i = 0;i < 4;i++)
 		{
 			v[i] *= factor;
 		}
@@ -904,11 +904,11 @@ public:
 		const b3_vector *vector,
 		const b3_f32     factor)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE1
 		const b3_f32 B3_ALIGN_16 *v = &vector->x;
 		      b3_f32 B3_ALIGN_16 *r = &result->x;
 
-		for(b3_loop i = 0;i < 3;i++)
+		for(b3_loop i = 0;i < 4;i++)
 		{
 			r[i] = v[i] * factor;
 		}

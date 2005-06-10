@@ -29,6 +29,7 @@
 #	define B3_SSE1
 #	define B3_SSE2
 #elif defined(__GNUCC__)
+#	define B3_SSE1
 #	define B3_SSE2
 #elif defined(WIN32)
 #	define B3_SSE1
