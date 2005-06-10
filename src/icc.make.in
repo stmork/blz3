@@ -12,9 +12,9 @@ setenv CFLAGS    "@CFLAGS@"
 setenv CXXFLAGS  "$CFLAGS"
 
 # Some global vars
-setenv CC iccbin
-setenv GCC $CC
-setenv CXX iccbin
+setenv CC  icc
+setenv GCC icc
+setenv CXX icpc
 
 # Files and directories
 setenv SRC       "image/*.cc base/*.cc raytrace/*.cc system/*.cc system_unix/*.cc"
@@ -54,6 +54,7 @@ switch ( $1 )
        echo "Build options: $ASMFLAGS"
        echo "Building with -ipo..."
        $CXX $ASMFLAGS @CPPFLAGS@ @LDFLAGS@ $SRC brt3/brt3.cc
+       rm /tmp/icc*.*
        breaksw
 
    case "pgo" :
