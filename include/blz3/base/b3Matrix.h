@@ -1404,6 +1404,52 @@ public:
 		return result;
 	}
 
+	static inline b3_vector64 *b3LinearCombine(
+		const b3_line64   *line,
+		const b3_f64       l,
+		      b3_vector64 *result)
+	{
+#ifdef B3_SSE2
+		const b3_f64 B3_ALIGN_16 *p = &line->pos.x;
+		const b3_f64 B3_ALIGN_16 *d = &line->dir.x;
+		      b3_f64 B3_ALIGN_16 *r = &result->x;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = p[i] + l * d[i];
+		}
+#else
+		result->x = line->pos.x + l * line->dir.x;
+		result->y = line->pos.y + l * line->dir.y;
+		result->z = line->pos.z + l * line->dir.z;
+#endif
+		return result;
+	}
+
+	static inline b3_vector *b3LinearCombine(
+		const b3_line64   *line,
+		const b3_f64       l,
+		const b3_vector   *base,
+		      b3_vector   *result)
+	{
+#ifdef B3_SSE
+		const b3_f64 B3_ALIGN_16 *p = &line->pos.x;
+		const b3_f64 B3_ALIGN_16 *d = &line->dir.x;
+		const b3_f32 B3_ALIGN_16 *b = &base->x;
+		      b3_f32 B3_ALIGN_16 *r = &result->x;
+
+		for (b3_loop i = 0;i < 3;i++)
+		{
+			r[i] = p[i] + l * d[i] - b[i];
+		}
+#else
+		result->x = line->pos.x + l * line->dir.x - base->x;
+		result->y = line->pos.y + l * line->dir.y - base->y;
+		result->z = line->pos.z + l * line->dir.z - base->z;
+#endif
+		return result;
+	}
+
 	static inline void b3Sort(
 		b3_vector *lower,
 		b3_vector *upper)
