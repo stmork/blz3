@@ -278,10 +278,19 @@ public:
 
 class CB3ActionCameraTurn : public CB3CameraRotateAction
 {
+	b3_vector m_ViewDir;
+	b3_vector m_LastDiff;
+
 public:
 	CB3ActionCameraTurn(CAppRenderView *window);
 
+	// Turn
 	void b3LDown(b3_coord x,b3_coord y);
+
+	// Move forward/backward
+	void b3RDown(b3_coord x, b3_coord y);
+	void b3RMove(b3_coord x, b3_coord y);
+	void b3RUp(  b3_coord x, b3_coord y);
 
 	inline b3_bool b3IsCamera()
 	{

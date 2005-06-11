@@ -34,11 +34,14 @@
 
 /*
 **	$Log$
+**	Revision 1.12  2005/06/11 17:47:12  sm
+**	- Moving int o view direction on camera turn (right mouse button)
+**
 **	Revision 1.11  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
 **	- Optimized precompiled header.
-**
+**	
 **	Revision 1.10  2004/11/30 18:51:38  sm
 **	- Corrected affine transformations and scaling which is
 **	  not affine.
@@ -554,6 +557,57 @@ void CB3ActionCameraTurn::b3LDown(b3_coord x,b3_coord y)
 	m_Camera = m_View->m_Camera;
 	m_Center = &m_Camera->m_EyePoint;
 	CB3CameraRotateAction::b3LDown(x,y);
+}
+
+void CB3ActionCameraTurn::b3RDown(b3_coord x,b3_coord y)
+{
+	if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		CAppRenderDoc *pDoc = m_View->GetDocument();
+		b3_f64 unit = pDoc->m_Info->b3ScaleUnitToMM();
+		m_Camera = m_View->m_Camera;
+
+		b3GetRelCoord(x,y,m_xRelStart, m_yRelStart);
+		b3Vector::b3Init(&m_LastDiff);
+		b3Vector::b3Sub(&m_Camera->m_ViewPoint, &m_Camera->m_EyePoint, &m_ViewDir);
+		b3Vector::b3Normalize(&m_ViewDir, 1000.0 / unit );
+	}
+}
+
+void CB3ActionCameraTurn::b3RMove(b3_coord x,b3_coord y)
+{
+	b3_vector diff;
+	b3_matrix inv,activity;
+	b3_f64    xRel,yRel;
+
+	b3GetRelCoord(x,y,xRel,yRel);
+
+	if (m_View->m_RenderView.b3IsViewMode(B3_VIEW_3D))
+	{
+		// Compute delta coefficionts
+		b3_f64 xFactor = xRel - m_xRelStart;
+		b3_f64 yFactor = m_yRelStart - yRel;
+
+		// Compute moving vector;
+		b3Vector::b3Scale(&diff, &m_ViewDir, yFactor);
+
+		if (!b3Vector::b3IsEqual(&diff,&m_LastDiff))
+		{
+			if (b3Matrix::b3Inverse(&m_Transformation,&inv))
+			{
+				m_LastDiff = diff;
+				b3Matrix::b3Move(null,&m_Transformation,&diff);
+				b3Matrix::b3MMul(&inv,&m_Transformation,&activity);
+				m_Camera->b3Transform(&activity);
+				m_Doc->UpdateAllViews(NULL,B3_UPDATE_CAMERA);
+			}
+		}
+	}	
+}
+
+void CB3ActionCameraTurn::b3RUp(b3_coord x,b3_coord y)
+{
+	m_Camera = null;
 }
 
 /*************************************************************************
