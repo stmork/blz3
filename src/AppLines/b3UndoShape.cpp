@@ -36,9 +36,13 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/06/12 11:38:51  sm
+**	- Fix ticket no.30. Surface property changes are reflected
+**	  to document modified changes.
+**
 **	Revision 1.5  2005/05/13 15:33:54  sm
 **	- Tested surface property operations.
-**
+**	
 **	Revision 1.4  2005/05/12 20:16:12  sm
 **	- Some more undo/redo surface operations.
 **	
@@ -62,8 +66,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeCreate::b3OpShapeCreate(CAppObjectDoc *doc, b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeCreate::b3OpShapeCreate(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	b3ItemEditCall  call;
 	CDlgNewObject   dlg;
@@ -82,7 +89,7 @@ b3OpShapeCreate::b3OpShapeCreate(CAppObjectDoc *doc, b3BBox *root, CDlgHierarchy
 		{
 			// Open edit dialog if available
 			call   = CB3ImageList::b3GetEditCall(dlg.m_NewItem);
-			result = (call != null ? call(doc->b3GetSceneType(), dlg.m_NewItem,true) : IDOK);
+			result = (call != null ? call(m_pObjDoc->b3GetSceneType(), dlg.m_NewItem,true) : IDOK);
 			if (result == IDOK)
 			{
 				// Manually insert to prevent uninitialized redraw
@@ -130,8 +137,11 @@ void b3OpShapeCreate::b3Delete()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeEdit::b3OpShapeEdit(CAppObjectDoc *doc, b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeEdit::b3OpShapeEdit(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	b3ItemEditCall  call;
 
@@ -142,7 +152,7 @@ b3OpShapeEdit::b3OpShapeEdit(CAppObjectDoc *doc, b3BBox *root, CDlgHierarchy *hi
 		if (call != null)
 		{
 			m_Clone = b3World::b3Clone(m_Selected);
-			if (call(doc->b3GetSceneType(), m_Clone, false) == IDOK)
+			if (call(m_pObjDoc->b3GetSceneType(), m_Clone, false) == IDOK)
 			{
 				b3BBox *parent;
 
@@ -214,8 +224,11 @@ void b3OpShapeEdit::b3Delete()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeDelete::b3OpShapeDelete(b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeDelete::b3OpShapeDelete(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	b3Base<b3Item> *base;
 	b3BBox         *parent;

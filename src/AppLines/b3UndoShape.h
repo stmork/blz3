@@ -26,12 +26,19 @@ class b3OpShape : public b3Operation
 protected:
 	b3BBox        *m_BBox;
 	CDlgHierarchy *m_DlgHierarchy;
+	CAppObjectDoc *m_pObjDoc;
+	BOOL           m_Modified;
 
 protected:
-	inline b3OpShape(b3BBox *bbox,CDlgHierarchy *hierarchy)
+	inline b3OpShape(
+		b3BBox        *bbox,
+		CAppObjectDoc *pDoc,
+		CDlgHierarchy *hierarchy)
 	{
 		m_BBox         = bbox;
 		m_DlgHierarchy = hierarchy;
+		m_pObjDoc      = pDoc;
+		m_Modified     = pDoc->IsModified();
 	}
 };
 
@@ -43,7 +50,10 @@ class b3OpShapeCreate : public b3OpShape
 	b3Base<b3Item> *m_Base;
 
 public:
-	b3OpShapeCreate(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy);
+	b3OpShapeCreate(
+		b3BBox        *root, 
+		CAppObjectDoc *pDoc,
+		CDlgHierarchy *hierarchy);
 
 protected:
 	void b3Undo();
@@ -64,7 +74,10 @@ class b3OpShapeEdit : public b3OpShape
 	b3Base<b3Item> *m_Base;
 
 public:
-	b3OpShapeEdit(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy);
+	b3OpShapeEdit(
+		b3BBox        *root,
+		CAppObjectDoc *pDoc,
+		CDlgHierarchy *hierarchy);
 
 protected:
 	void b3Undo();
@@ -85,7 +98,10 @@ class b3OpShapeDelete : public b3OpShape
 	b3Base<b3Item> *m_Base;        // The base where the item to delete belongs to.
 
 public:
-	b3OpShapeDelete(b3BBox *root, CDlgHierarchy *hierarchy);
+	b3OpShapeDelete(
+		b3BBox        *root,
+		CAppObjectDoc *pDoc,
+		CDlgHierarchy *hierarchy);
 
 protected:
 	void b3Undo();

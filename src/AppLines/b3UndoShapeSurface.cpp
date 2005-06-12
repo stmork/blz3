@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.4  2005/06/12 11:38:51  sm
+**	- Fix ticket no.30. Surface property changes are reflected
+**	  to document modified changes.
+**
 **	Revision 1.3  2005/05/15 06:53:23  sm
 **	- Tested shape surface property copy operation.
-**
+**	
 **	Revision 1.2  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
 **	
@@ -52,8 +56,11 @@
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeSurfaceList::b3OpShapeSurfaceList(b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeSurfaceList::b3OpShapeSurfaceList(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	m_Shape = m_DlgHierarchy->b3GetSelectedShape();
 }
@@ -88,8 +95,11 @@ void b3OpShapeSurfaceList::b3Delete()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeMaterialEditList::b3OpShapeMaterialEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShapeSurfaceList(root, hierarchy)
+b3OpShapeMaterialEditList::b3OpShapeMaterialEditList(
+	b3BBox *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShapeSurfaceList(root, pDoc, hierarchy)
 {
 	if (m_Shape != null)
 	{
@@ -99,7 +109,7 @@ b3OpShapeMaterialEditList::b3OpShapeMaterialEditList(CAppObjectDoc *pDoc, b3BBox
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
-		CDlgItemMaintain dlg(pDoc,&m_CloneBase);
+		CDlgItemMaintain dlg(m_pObjDoc,&m_CloneBase);
 
 		if (dlg.DoModal() == IDOK)
 		{
@@ -117,12 +127,14 @@ void b3OpShapeMaterialEditList::b3Undo()
 {
 	b3OpShapeSurfaceList::b3Undo();
 	m_Shape->b3RecomputeMaterial();
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeMaterialEditList::b3Redo()
 {
 	b3OpShapeSurfaceList::b3Redo();
 	m_Shape->b3RecomputeMaterial();
+	m_pObjDoc->SetModifiedFlag();
 }
 
 /*************************************************************************
@@ -131,8 +143,11 @@ void b3OpShapeMaterialEditList::b3Redo()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeBumpEditList::b3OpShapeBumpEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShapeSurfaceList(root, hierarchy)
+b3OpShapeBumpEditList::b3OpShapeBumpEditList(
+	b3BBox *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShapeSurfaceList(root, pDoc, hierarchy)
 {
 	if (m_Shape != null)
 	{
@@ -142,7 +157,7 @@ b3OpShapeBumpEditList::b3OpShapeBumpEditList(CAppObjectDoc *pDoc, b3BBox *root, 
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
-		CDlgItemMaintain dlg(pDoc,&m_CloneBase);
+		CDlgItemMaintain dlg(m_pObjDoc,&m_CloneBase);
 
 		if (dlg.DoModal() == IDOK)
 		{
@@ -162,8 +177,11 @@ b3OpShapeBumpEditList::b3OpShapeBumpEditList(CAppObjectDoc *pDoc, b3BBox *root, 
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeConditionEditList::b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShapeSurfaceList(root, hierarchy)
+b3OpShapeConditionEditList::b3OpShapeConditionEditList(
+	b3BBox *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShapeSurfaceList(root, pDoc, hierarchy)
 {
 	if (m_Shape != null)
 	{
@@ -173,7 +191,7 @@ b3OpShapeConditionEditList::b3OpShapeConditionEditList(CAppObjectDoc *pDoc, b3BB
 		b3World::b3CloneBase(m_Base,&m_CloneBase);
 		m_OrigBase.b3InitBase(m_Base->b3GetClass());
 
-		CDlgItemMaintain dlg(pDoc,&m_CloneBase);
+		CDlgItemMaintain dlg(m_pObjDoc, &m_CloneBase);
 
 		if (dlg.DoModal() == IDOK)
 		{
@@ -191,12 +209,14 @@ void b3OpShapeConditionEditList::b3Undo()
 {
 	b3OpShapeSurfaceList::b3Undo();
 	m_Shape->b3RecomputeIndices();
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeConditionEditList::b3Redo()
 {
 	b3OpShapeSurfaceList::b3Redo();
 	m_Shape->b3RecomputeIndices();
+	m_pObjDoc->SetModifiedFlag();
 }
 
 /*************************************************************************
@@ -205,8 +225,11 @@ void b3OpShapeConditionEditList::b3Redo()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeSurfaceItem::b3OpShapeSurfaceItem(b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeSurfaceItem::b3OpShapeSurfaceItem(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	m_InsertAfter     = null;
 	m_UpdateMaterial  = true;
@@ -217,12 +240,14 @@ void b3OpShapeSurfaceItem::b3Undo()
 {
 	m_Base->b3Remove(m_Clone);
 	m_Base->b3Insert(m_InsertAfter, m_Original);
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeSurfaceItem::b3Redo()
 {
 	m_Base->b3Remove(m_Original);
 	m_Base->b3Insert(m_InsertAfter, m_Clone);
+	m_pObjDoc->SetModifiedFlag();
 }
 
 void b3OpShapeSurfaceItem::b3Delete()
@@ -244,11 +269,11 @@ void b3OpShapeSurfaceItem::b3Delete()
 *************************************************************************/
 
 b3OpShapeMaterialEdit::b3OpShapeMaterialEdit(
-	CAppObjectDoc *pDoc,
 	b3BBox        *root,
 	b3Shape       *shape,
+	CAppObjectDoc *pDoc,
 	CDlgHierarchy *hierarchy) :
-		b3OpShapeSurfaceItem(root, hierarchy)
+		b3OpShapeSurfaceItem(root, pDoc, hierarchy)
 {
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
@@ -257,7 +282,7 @@ b3OpShapeMaterialEdit::b3OpShapeMaterialEdit(
 	B3_ASSERT(m_Base->b3GetCount() == 1);
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
-	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
+	if (b3Loader::b3GetLoader().b3Edit(m_Clone, m_pObjDoc))
 	{
 		b3Initialize();
 	}
@@ -271,12 +296,14 @@ void b3OpShapeMaterialEdit::b3Undo()
 {
 	b3OpShapeSurfaceItem::b3Undo();
 	m_Shape->b3RecomputeMaterial();
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeMaterialEdit::b3Redo()
 {
 	b3OpShapeSurfaceItem::b3Redo();
 	m_Shape->b3RecomputeMaterial();
+	m_pObjDoc->SetModifiedFlag();
 }
 
 /*************************************************************************
@@ -286,11 +313,11 @@ void b3OpShapeMaterialEdit::b3Redo()
 *************************************************************************/
 
 b3OpShapeBumpEdit::b3OpShapeBumpEdit(
-	CAppObjectDoc *pDoc,
 	b3BBox        *root,
 	b3Shape       *shape,
+	CAppObjectDoc *pDoc,
 	CDlgHierarchy *hierarchy) :
-		b3OpShapeSurfaceItem(root, hierarchy)
+		b3OpShapeSurfaceItem(root, pDoc, hierarchy)
 {
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
@@ -299,7 +326,7 @@ b3OpShapeBumpEdit::b3OpShapeBumpEdit(
 	B3_ASSERT(m_Base->b3GetCount() == 1);
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
-	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
+	if (b3Loader::b3GetLoader().b3Edit(m_Clone, m_pObjDoc))
 	{
 		b3Initialize();
 	}
@@ -316,11 +343,11 @@ b3OpShapeBumpEdit::b3OpShapeBumpEdit(
 *************************************************************************/
 
 b3OpShapeConditionEdit::b3OpShapeConditionEdit(
-	CAppObjectDoc *pDoc,
 	b3BBox        *root,
 	b3Shape       *shape,
+	CAppObjectDoc *pDoc,
 	CDlgHierarchy *hierarchy) :
-		b3OpShapeSurfaceItem(root, hierarchy)
+		b3OpShapeSurfaceItem(root, pDoc, hierarchy)
 {
 	B3_ASSERT(shape != null);
 	m_Shape    = shape;
@@ -329,7 +356,7 @@ b3OpShapeConditionEdit::b3OpShapeConditionEdit(
 	B3_ASSERT(m_Base->b3GetCount() == 1);
 	m_Original = m_Base->First;
 	m_Clone    = b3World::b3Clone(m_Original);
-	if (b3Loader::b3GetLoader().b3Edit(m_Clone, pDoc))
+	if (b3Loader::b3GetLoader().b3Edit(m_Clone, m_pObjDoc))
 	{
 		b3Initialize();
 	}
@@ -343,12 +370,14 @@ void b3OpShapeConditionEdit::b3Undo()
 {
 	b3OpShapeSurfaceItem::b3Undo();
 	m_Shape->b3RecomputeIndices();
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeConditionEdit::b3Redo()
 {
 	b3OpShapeSurfaceItem::b3Redo();
 	m_Shape->b3RecomputeIndices();
+	m_pObjDoc->SetModifiedFlag();
 }
 
 /*************************************************************************
@@ -357,8 +386,11 @@ void b3OpShapeConditionEdit::b3Redo()
 **                                                                      **
 *************************************************************************/
 
-b3OpShapeCopySurface::b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarchy) :
-	b3OpShape(root, hierarchy)
+b3OpShapeCopySurface::b3OpShapeCopySurface(
+	b3BBox        *root,
+	CAppObjectDoc *pDoc,
+	CDlgHierarchy *hierarchy) :
+		b3OpShape(root, pDoc, hierarchy)
 {
 	m_Shape = m_DlgHierarchy->b3GetSelectedShape();
 	if (m_Shape != null)
@@ -372,8 +404,8 @@ b3OpShapeCopySurface::b3OpShapeCopySurface(b3BBox *root, CDlgHierarchy *hierarch
 			dlg.b3CopyProperties(&m_CopyInfo, m_BBox, m_Shape);
 
 			b3Initialize();
-			m_UpdateMaterial = true;
-			m_PrepareGeometry = true;
+			m_UpdateMaterial          = true;
+			m_PrepareGeometry         = true;
 			m_PrepareChangedStructure = false;
 		}
 	}
@@ -384,6 +416,7 @@ void b3OpShapeCopySurface::b3Undo()
 	CWaitCursor wait_for_undo;
 
 	m_CopyInfo.b3Undo();
+	m_pObjDoc->SetModifiedFlag(m_Modified);
 }
 
 void b3OpShapeCopySurface::b3Redo()
@@ -391,6 +424,7 @@ void b3OpShapeCopySurface::b3Redo()
 	CWaitCursor wait_for_redo;
 
 	m_CopyInfo.b3Redo();
+	m_pObjDoc->SetModifiedFlag();
 }
 
 void b3OpShapeCopySurface::b3Delete()

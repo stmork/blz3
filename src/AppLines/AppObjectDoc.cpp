@@ -47,9 +47,13 @@
 
 /*
 **	$Log$
+**	Revision 1.55  2005/06/12 11:38:51  sm
+**	- Fix ticket no.30. Surface property changes are reflected
+**	  to document modified changes.
+**
 **	Revision 1.54  2005/05/15 10:19:26  sm
 **	- Fixed picking operations for undo/redo
-**
+**	
 **	Revision 1.53  2005/05/14 19:01:24  sm
 **	- Added shape property copy to undo/redo operations
 **	
@@ -763,19 +767,19 @@ void CAppObjectDoc::OnUpdateSelectedItem(CCmdUI* pCmdUI)
 void CAppObjectDoc::OnObjectNew() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeCreate(this, m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeCreate(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnObjectEdit() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeEdit(this, m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeEdit(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnObjectDelete() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeDelete(m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeDelete(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnUpdateObjectEdit(CCmdUI* pCmdUI) 
@@ -938,7 +942,7 @@ void CAppObjectDoc::b3UpdateSurface(b3Shape *shape)
 void CAppObjectDoc::OnEditMaterial() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeMaterialEditList(this, m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeMaterialEditList(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnEditMaterialDirect() 
@@ -950,11 +954,11 @@ void CAppObjectDoc::OnEditMaterialDirect()
 	{
 		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
 		{
-			b3AddOp(new b3OpShapeMaterialEdit(this, m_BBox, shape, m_DlgHierarchy));
+			b3AddOp(new b3OpShapeMaterialEdit(m_BBox, shape, this, m_DlgHierarchy));
 		}
 		else
 		{
-			b3AddOp(new b3OpShapeMaterialEditList(this, m_BBox, m_DlgHierarchy));
+			b3AddOp(new b3OpShapeMaterialEditList(m_BBox, this, m_DlgHierarchy));
 		}
 	}
 }
@@ -1120,7 +1124,7 @@ void CAppObjectDoc::OnUpdateCopyMaterialToBump(CCmdUI* pCmdUI)
 void CAppObjectDoc::OnEditBump() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeBumpEditList(this, m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeBumpEditList(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnEditBumpDirect() 
@@ -1132,11 +1136,11 @@ void CAppObjectDoc::OnEditBumpDirect()
 	{
 		if (shape->b3GetMaterialHead()->b3GetCount() == 1)
 		{
-			b3AddOp(new b3OpShapeBumpEdit(this, m_BBox, shape, m_DlgHierarchy));
+			b3AddOp(new b3OpShapeBumpEdit(m_BBox, shape, this, m_DlgHierarchy));
 		}
 		else
 		{
-			b3AddOp(new b3OpShapeBumpEditList(this, m_BBox, m_DlgHierarchy));
+			b3AddOp(new b3OpShapeBumpEditList(m_BBox, this, m_DlgHierarchy));
 		}
 	}
 }
@@ -1166,7 +1170,7 @@ void CAppObjectDoc::OnUpdateEditBumpDirect(CCmdUI* pCmdUI)
 void CAppObjectDoc::OnCopyProperties() 
 {
 	// TODO: Add your command handler code here
-	b3AddOp(new b3OpShapeCopySurface(m_BBox, m_DlgHierarchy));
+	b3AddOp(new b3OpShapeCopySurface(m_BBox, this, m_DlgHierarchy));
 }
 
 void CAppObjectDoc::OnUpdateCopyProperties(CCmdUI* pCmdUI) 
