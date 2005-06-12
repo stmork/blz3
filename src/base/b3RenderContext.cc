@@ -27,7 +27,7 @@
 #include "blz3/base/b3VectorBufferObjects.h"
 #include "blz3/base/b3MultiSample.h"
 
-#define LOCAL_VIEWER
+#define LOCAL_VIEWER GL_TRUE
 
 /*************************************************************************
 **                                                                      **
@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.22  2005/06/12 12:39:20  sm
+**	- What about GL_LOCAL_VIEWER?
+**
 **	Revision 1.21  2005/05/20 11:09:20  smork
 **	- Corrected specular color handling in OpenGL.
-**
+**	
 **	Revision 1.20  2005/01/23 19:54:06  sm
 **	- Experimented with OpenGL settings for Linux Wine but there
 **	  is no solution for Wine/Windows MDI applications to use OpenGL.
@@ -347,7 +350,7 @@ void b3RenderContext::b3LightReset()
 
 #ifdef BLZ3_USE_OPENGL
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,      GL_TRUE);
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , LOCAL_VIEWER);
 
 #ifdef GL_LIGHT_MODEL_COLOR_CONTROL
 	glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
@@ -431,7 +434,7 @@ void b3RenderContext::b3LightSet(
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightSet(...)\n");
 #endif
 
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , LOCAL_VIEWER);
 	glEnable( light);
 
 	// Colors
