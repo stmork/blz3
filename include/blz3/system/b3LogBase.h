@@ -50,6 +50,8 @@ protected:
 protected:
 	b3LogBase();
 
+	b3_bool b3OpenLogFile();
+
 public:
 	static inline b3_log_level b3SetLevel(const b3_log_level debug_limit)
 	{

@@ -40,11 +40,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/06/13 10:43:41  smork
+**	- Log file moved into home directory.
+**
 **	Revision 1.14  2005/05/07 14:06:06  sm
 **	- Corrected va-list handling in Windows version.
 **	- Using correct lib directory on 64 bit architectures.
 **	- Added login script version for (ba)sh.
-**
+**	
 **	Revision 1.13  2003/08/27 14:54:23  sm
 **	- sprintf changed into snprintf to avoid buffer overflows.
 **	
@@ -162,7 +165,7 @@ void b3Log::b3LogFunction (
 #endif
 		va_end   (argptr);
 
-		if (m_Out != null)
+		if (b3OpenLogFile())
 		{
 			va_start (argptr,format);
 			vfprintf (m_Out, format,argptr);

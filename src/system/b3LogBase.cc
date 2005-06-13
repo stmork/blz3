@@ -26,9 +26,12 @@
 
 /*
 **	$Log$
+**	Revision 1.9  2005/06/13 10:43:41  smork
+**	- Log file moved into home directory.
+**
 **	Revision 1.8  2005/06/02 13:21:19  smork
 **	- Cleanup.
-**
+**	
 **	Revision 1.7  2005/06/02 13:20:01  smork
 **	- Write log file error reason on stderr.
 **	
@@ -79,6 +82,10 @@ char          b3LogBase::m_Message[B3_MAX_LOGSIZE];
 
 b3LogBase::b3LogBase()
 {
+}
+
+b3_bool b3LogBase::b3OpenLogFile()
+{
 	if (m_Out == null)
 	{
 		// Delete old file
@@ -114,6 +121,7 @@ b3LogBase::b3LogBase()
 			fflush (stderr);
 		}
 	}
+	return m_Out != null;
 }
 
 void b3LogBase::b3GetLogFile(char *DebugFile)

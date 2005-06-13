@@ -25,6 +25,8 @@
 
 #include <sys/time.h>
 #include <stdarg.h>
+#include <pwd.h>
+#include <unistd.h>
 
 #include "blz3/b3Config.h"
 
@@ -36,9 +38,12 @@
 
 /*
 **	$Log$
+**	Revision 1.17  2005/06/13 10:43:41  smork
+**	- Log file moved into home directory.
+**
 **	Revision 1.16  2005/06/02 13:20:01  smork
 **	- Write log file error reason on stderr.
-**
+**	
 **	Revision 1.15  2005/05/07 09:40:00  sm
 **	- Changing va-list init to each vxprintf function call.
 **	
@@ -114,6 +119,11 @@ b3Log b3Log::m_Log;
 
 b3Log::b3Log()
 {
+	uid_t          uid    = getuid();
+	struct passwd *pw_ent = getpwuid(uid);
+
+	snprintf(b3LogBase::m_LogFile, sizeof(b3LogBase::m_LogFile), "%s/b3.log", pw_ent->pw_dir);
+
 	m_Logger = &m_Log;
 }
 
@@ -147,7 +157,7 @@ void b3Log::b3LogFunction (
 		// piece of code.
 		m_LogMutex.b3Lock();
 
-		if (m_Out != null)
+		if (b3OpenLogFile())
 		{
 			va_start (argptr,format);
 			vfprintf (m_Out,  format, argptr);
