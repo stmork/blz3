@@ -17,6 +17,7 @@
 
 #include "blz3/b3Config.h"
 #include <errno.h>
+#include <unistd.h>
 
 /*************************************************************************
 **                                                                      **
@@ -26,9 +27,12 @@
 
 /*
 **	$Log$
+**	Revision 1.10  2005/06/14 13:24:08  smork
+**	- Changed remove to truncate.
+**
 **	Revision 1.9  2005/06/13 10:43:41  smork
 **	- Log file moved into home directory.
-**
+**	
 **	Revision 1.8  2005/06/02 13:21:19  smork
 **	- Cleanup.
 **	
@@ -89,7 +93,7 @@ b3_bool b3LogBase::b3OpenLogFile()
 	if (m_Out == null)
 	{
 		// Delete old file
-		remove (m_LogFile);
+		truncate (m_LogFile, 0);
 
 		// Prepare startup message
 		snprintf (m_Message,sizeof(m_Message),
