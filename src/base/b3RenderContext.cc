@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
+**	Revision 1.23  2005/06/16 08:19:00  smork
+**	- Some logging added.
+**
 **	Revision 1.22  2005/06/12 12:39:20  sm
 **	- What about GL_LOCAL_VIEWER?
-**
+**	
 **	Revision 1.21  2005/05/20 11:09:20  smork
 **	- Corrected specular color handling in OpenGL.
 **	
@@ -344,7 +347,7 @@ void b3RenderContext::b3SetAmbient(b3Color &ambient)
 #endif
 }
 
-void b3RenderContext::b3LightReset()
+void b3RenderContext::b3LightReset(b3_pkd_color ambient)
 {
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightReset()\n");
 
@@ -357,7 +360,7 @@ void b3RenderContext::b3LightReset()
 #endif
 
 	// Disable all other lights
-	b3SetAmbient(B3_DARK_GREY);
+	b3SetAmbient(ambient);
 	for (b3_size i = 0;i < (sizeof(glLightNum) / sizeof(GLint));i++)
 	{
 		glDisable(glLightNum[i]);
@@ -365,11 +368,11 @@ void b3RenderContext::b3LightReset()
 #endif
 }
 
-void b3RenderContext::b3LightDefault()
+void b3RenderContext::b3LightDefault(b3_pkd_color ambient)
 {
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightDefault()\n");
 	b3LightNum();
-	b3LightReset();
+	b3LightReset(ambient);
 
 #ifdef BLZ3_USE_OPENGL
 	b3_render_light_info info;
@@ -380,8 +383,8 @@ void b3RenderContext::b3LightDefault()
 	b3PkdColorToGL(B3_WHITE, info.gl_specular);
 
 	// Geometry
-	b3VectorToDirectionalGL(&glSimpleLightPosition, info.gl_position);
-	b3VectorToGL(&glSimpleLightDirection, info.gl_direction);
+	b3VectorToDirectionalGL( &glSimpleLightPosition,  info.gl_position);
+	b3VectorToGL(            &glSimpleLightDirection, info.gl_direction);
 
 	// Spot
 	info.gl_spot_exp    =  20;
@@ -430,9 +433,7 @@ void b3RenderContext::b3LightSet(
 #ifdef BLZ3_USE_OPENGL
 	GLenum light = glLightNum[num];
 
-#ifdef _DEBUG
 	b3PrintF(B3LOG_FULL," b3RenderContext::b3LightSet(...)\n");
-#endif
 
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER , LOCAL_VIEWER);
 	glEnable( light);
@@ -454,6 +455,18 @@ void b3RenderContext::b3LightSet(
 	glLightf (light,GL_CONSTANT_ATTENUATION,  info->gl_Ac);
 	glLightf (light,GL_LINEAR_ATTENUATION,    info->gl_Al);
 	glLightf (light,GL_QUADRATIC_ATTENUATION, info->gl_Aq);
+
+	b3PrintF(B3LOG_FULL," A: %06x D: %06x S: %06x\n",
+		b3GLToPkdColor(info->gl_ambient),
+		b3GLToPkdColor(info->gl_diffuse),
+		b3GLToPkdColor(info->gl_specular));
+	b3PrintF(B3LOG_FULL," P: %1.3f %1.3f %1.3f  D: %1.3f %1.3f %1.3f\n",
+		info->gl_position[0],  info->gl_position[1],  info->gl_position[2],
+		info->gl_direction[0], info->gl_direction[1], info->gl_direction[2]);
+	b3PrintF(B3LOG_FULL," SE: %1.4f   SC: %1.4f\n",
+		info->gl_spot_exp, info->gl_spot_cutoff);
+	b3PrintF(B3LOG_FULL," Ac: %1.4f   Al: %1.4f   Aq: %1.4f\n",
+		info->gl_Ac, info->gl_Al, info->gl_Aq);
 #endif
 }
 

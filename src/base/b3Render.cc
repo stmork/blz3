@@ -1,15 +1,15 @@
 /*
 **
-**      $Filename:      b3Render.cc $
-**      $Release:       Dortmund 2001, 2002 $
-**      $Revision$
-**      $Date$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3Render.cc $
+**	$Release:       Dortmund 2001 - 2005 $
+**	$Revision$
+**	$Date$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Rendering some objects
+**	Blizzard III - Rendering some objects
 **
-**      (C) Copyright 2001, 2002  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright 2001 - 2005  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -46,6 +46,9 @@
 
 /*
 **      $Log$
+**      Revision 1.113  2005/06/16 08:19:00  smork
+**      - Some logging added.
+**
 **      Revision 1.112  2005/06/10 21:31:42  sm
 **      - Vectorization fix for Windows
 **      - Read binary from registry returns null when no

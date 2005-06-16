@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.3  2005/06/16 08:19:00  smork
+**	- Some logging added.
+**
 **	Revision 1.2  2005/05/20 11:09:20  smork
 **	- Corrected specular color handling in OpenGL.
-**
+**	
 **	Revision 1.1  2004/10/16 17:00:52  sm
 **	- Moved lighting into own class to ensure light setup
 **	  after view setup.
@@ -87,7 +90,6 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 	{
 	case B3_LIGHT_SIMPLE:
 	default:
-		b3RenderContext::b3SetAmbient(B3_GREY);
 		context->b3LightDefault();
 		break;
 
@@ -100,9 +102,8 @@ void b3RenderLight::b3SetupLight(b3RenderContext *context)
 			m_Scene->m_ShadowBrightness);
 
 		context->b3LightNum();
-		context->b3LightReset();
+		context->b3LightReset(ambient);
 
-		b3RenderContext::b3SetAmbient(ambient);
 		B3_FOR_BASE(m_Scene->b3GetLightHead(),item)
 		{
 			light = (b3Light *)item;

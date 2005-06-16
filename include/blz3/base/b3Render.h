@@ -83,10 +83,8 @@ public:
 	static  void     b3SetAntiAliasing(b3_bool enable = false);
 	static  void     b3ViewSet(b3_render_view_info *info);
 
-	static  void     b3SetAmbient(b3_pkd_color  ambient);
-	static  void     b3SetAmbient(b3Color      &ambient);
-	static  void     b3LightReset();
-	        void     b3LightDefault();
+	static  void     b3LightReset(  b3_pkd_color color = B3_DARK_GREY);
+	        void     b3LightDefault(b3_pkd_color color = B3_DARK_GREY);
 			void     b3LightNum(b3_index light_num = 0);
 
 	        b3_bool  b3LightAdd(b3_render_light_info *info);
@@ -139,6 +137,14 @@ public:
 		*dst   = 1.0 - ((input & 0xff000000) >> 24) * 0.0039215686;
 	}
 
+	static inline b3_pkd_color b3GLToPkdColor(GLfloat *color)
+	{
+		return
+			(((b3_pkd_color)(color[0] * 255)) << 16) |
+			(((b3_pkd_color)(color[0] * 255)) <<  8) |
+			  (b3_pkd_color)(color[0] * 255);
+	}
+
 	static inline void b3VectorToGL(b3_vector *src,GLfloat *dst)
 	{
 		*dst++ = src->x;
@@ -168,6 +174,10 @@ public:
 		*dst++ = src->z;
 		*dst   = src->w;
 	}
+
+private:
+	static  void     b3SetAmbient(b3_pkd_color  ambient);
+	static  void     b3SetAmbient(b3Color      &ambient);
 #endif
 };
 
