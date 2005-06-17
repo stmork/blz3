@@ -32,9 +32,14 @@
 
 /*
 **	$Log$
+**	Revision 1.15  2005/06/17 10:29:06  smork
+**	- Made some inlining.
+**	- Removed some unnecessary tests.
+**	- Printing CPU message only once.
+**
 **	Revision 1.14  2005/06/07 14:16:09  smork
 **	- Compiler fixes.
-**
+**	
 **	Revision 1.13  2005/06/07 13:27:59  smork
 **	- Found ICC bug.
 **	
@@ -95,10 +100,6 @@
 **                        Implementation                                **
 **                                                                      **
 *************************************************************************/
-
-void b3Shape::b3Normal(b3_ray *ray)
-{
-}
 
 void b3Sphere::b3Normal(b3_ray *ray)
 {

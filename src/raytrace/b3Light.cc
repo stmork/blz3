@@ -33,6 +33,11 @@
 
 /*
 **      $Log$
+**      Revision 1.54  2005/06/17 10:29:05  smork
+**      - Made some inlining.
+**      - Removed some unnecessary tests.
+**      - Printing CPU message only once.
+**
 **      Revision 1.53  2005/06/07 08:56:48  smork
 **      - Some further optimizations.
 **
@@ -462,11 +467,6 @@ void b3Light::b3Dump(b3_count level)
 	b3PrintF(B3LOG_NORMAL,"Light %s, switched %s\n",b3GetName(),b3IsActive() ? "on" : "off");
 }
 
-b3_bool b3Light::b3IsActive()
-{
-	return m_LightActive;
-}
-
 char *b3Light::b3GetName()
 {
 	return m_Name;
@@ -481,10 +481,6 @@ b3_bool b3Light::b3Illuminate(
 	b3Shader   *shader,
 	b3_surface *surface)
 {
-	if (!m_LightActive)
-	{
-		return false;
-	}
 	return (m_SoftShadow ?
 		b3AreaIllumination(shader,surface) :
 		b3PointIllumination(shader,surface));
@@ -497,11 +493,6 @@ inline b3_bool b3Light::b3PointIllumination(
 	b3_light_info Jit;
 	b3_vector     point;
 	b3_f64        RecLightDist,SpotAngle,q,LightDist;
-
-	if (!m_LightActive)
-	{
-		return false;
-	}
 
 	Jit.m_Distr = 1;
 	Jit.m_Size  = 0;
@@ -564,11 +555,6 @@ inline b3_bool b3Light::b3AreaIllumination (
 	b3_coord       x,y,xs;
 	b3_count       max,Distr;
 	b3_bool        equal;				
-
-	if (!m_LightActive)
-	{
-		return false;
-	}
 
 	Jit.m_Distr = m_JitterEdge;
 	Jit.m_Size  = m_Distance * m_Size / (b3_f64)Jit.m_Distr;

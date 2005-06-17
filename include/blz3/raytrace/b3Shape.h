@@ -113,12 +113,15 @@ public:
 	        void        b3BumpNormal(b3_ray *ray);
 	        void        b3ComputeBound(b3_stencil_limit *limit);
 	virtual b3_bool     b3CheckStencil(b3_polar *polar);
-	virtual void        b3Normal(b3_ray *ray);
 	virtual void        b3Transform(b3_matrix *transformation,b3_bool is_affine);
 	virtual b3_bool     b3Prepare();
 	virtual void        b3GetStencilBoundInfo(b3_stencil_bound *info);
 	virtual void        b3SetupPicking(b3PickInfo *pick_info);
 	virtual void        b3SetupGrid(b3PickInfo *pick_info);
+
+	virtual inline void b3Normal(b3_ray *ray)
+	{
+	}
 
 	inline b3Base<b3Item> *b3GetBumpHead()
 	{
@@ -220,7 +223,10 @@ public:
 	B3_ITEM_LOAD(b3SimpleShape);
 
 public:
-	virtual b3_f64      b3Intersect(b3_ray *ray,b3_polar *polar);
+	virtual inline b3_f64 b3Intersect(b3_ray *ray,b3_polar *polar)
+	{
+		return -1;
+	}
 };
 
 /*************************************************************************

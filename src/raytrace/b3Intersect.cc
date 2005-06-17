@@ -35,9 +35,14 @@
 
 /*
 **	$Log$
+**	Revision 1.50  2005/06/17 10:29:05  smork
+**	- Made some inlining.
+**	- Removed some unnecessary tests.
+**	- Printing CPU message only once.
+**
 **	Revision 1.49  2005/06/10 14:22:12  smork
 **	- Some intersection vectorized.
-**
+**	
 **	Revision 1.48  2005/06/07 08:56:48  smork
 **	- Some further optimizations.
 **	
@@ -275,11 +280,6 @@
 **                        Normal shape intersections                    **
 **                                                                      **
 *************************************************************************/
-
-b3_f64 b3SimpleShape::b3Intersect(b3_ray *ray, b3_polar *polar)
-{
-	return -1;
-}
 
 b3_f64 b3Area::b3Intersect(b3_ray *ray,b3_polar *polar)
 {

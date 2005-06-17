@@ -38,9 +38,14 @@
 
 /*
 **	$Log$
+**	Revision 1.66  2005/06/17 10:29:05  smork
+**	- Made some inlining.
+**	- Removed some unnecessary tests.
+**	- Printing CPU message only once.
+**
 **	Revision 1.65  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
-**
+**	
 **	Revision 1.64  2005/06/09 09:24:00  smork
 **	- Added image conversion tool to installation.
 **	
@@ -455,6 +460,7 @@ int main(int argc,char *argv[])
 	b3_bool               force_no_display = false;
 	b3_bool               force_no_wait    = false;
 	b3_index              i;
+	b3_count              CPUs = b3Runtime::b3GetNumCPUs();
 
 	if (argc > 1)
 	{
@@ -483,6 +489,9 @@ int main(int argc,char *argv[])
 			b3Scene::m_RenderPriority = b3Math::b3Limit(atoi(BLZ3_RENDER_PRIO),-2 ,2);
 		}
 
+		b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
+			CPUs,
+			CPUs > 1 ? "'s" : "");
 		for (i = 1;i < argc;i++)
 		{
 			if (argv[i][0] == '-')
@@ -530,11 +539,6 @@ int main(int argc,char *argv[])
 			}
 			else
 			{
-				b3_count CPUs = b3Runtime::b3GetNumCPUs();
-
-				b3PrintF (B3LOG_NORMAL,"\nUsing %d CPU%s.\n",
-					CPUs,
-					CPUs > 1 ? "'s" : "");
 				try
 				{
 					world->b3Read(argv[i]);

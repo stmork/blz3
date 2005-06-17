@@ -93,10 +93,14 @@ public:
 		   void     b3Dump(b3_count level);
 	       b3_bool  b3Illuminate(b3Shader *shader,b3_surface *surface);
 	       b3_bool  b3Prepare();
-	       b3_bool  b3IsActive();
 	       b3_f64   b3ComputeSpotExponent();
 	       char    *b3GetName();
 		   void     b3SetName(const char *name);
+
+	inline b3_bool  b3IsActive()
+	{
+		return m_LightActive;
+	}
 
 private:
 	void         b3InitValues();
