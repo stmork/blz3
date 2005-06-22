@@ -38,11 +38,15 @@
 
 /*
 **	$Log$
+**	Revision 1.67  2005/06/22 11:02:34  smork
+**	- Added new brt3 option.
+**	- Changed example materials.
+**
 **	Revision 1.66  2005/06/17 10:29:05  smork
 **	- Made some inlining.
 **	- Removed some unnecessary tests.
 **	- Printing CPU message only once.
-**
+**	
 **	Revision 1.65  2005/06/09 11:00:57  smork
 **	- Call option cleanup.
 **	
@@ -374,7 +378,10 @@ static b3_bool b3SaveRaytracedImage(
 	return display->b3SaveImage(imagename);
 }
 
-static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
+static b3Display *b3AllocDisplay(
+	b3Scene *scene,
+	b3_bool  force_no_display,
+	b3_res   size)
 {
 	b3Display *display;
 	b3_res     xSize,ySize;
@@ -383,7 +390,36 @@ static b3Display *b3AllocDisplay(b3Scene *scene,b3_bool force_no_display)
 	// Show a small display in every case
 	display = new b3DisplayView(200,150);
 #else
-	if (scene->b3GetDisplaySize(xSize,ySize))
+	if (size > 0)
+	{
+		if (scene->b3GetDisplaySize(xSize,ySize))
+		{
+			if (xSize > ySize)
+			{
+				ySize = size * ySize / xSize;
+				xSize = size;
+			}
+			else
+			{
+				xSize = size * xSize / ySize;
+				ySize = size;
+			}
+		}
+		else
+		{
+			xSize = size;
+			ySize = size * 3 / 4;
+		}
+		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
+		{
+			display = new b3Display(xSize,ySize);
+		}
+		else
+		{
+			display = new b3DisplayView(xSize,ySize);
+		}
+	}
+	else if (scene->b3GetDisplaySize(xSize,ySize))
 	{
 		if ((scene->m_Flags & TP_NO_GFX) || force_no_display)
 		{
@@ -417,18 +453,22 @@ static void b3Banner(const char *command)
 	if (command != null)
 	{
 		b3PrintF(B3LOG_NORMAL,"USAGE:\n");
-		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-j][-i][-g][-r] {Blizzard World Data files}\n",command);
+		b3PrintF(B3LOG_NORMAL,"%s [-d][-f][-a][-n][-w][-s size][-g][-i][-j][-r][-p] {Blizzard World Data files}\n",command);
 		b3PrintF(B3LOG_NORMAL,"\n");
-		b3PrintF(B3LOG_NORMAL,"  -d  debug level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -f  verbose level output\n");
-		b3PrintF(B3LOG_NORMAL,"  -a  disable animation\n");
-		b3PrintF(B3LOG_NORMAL,"  -n  disable display\n");
-		b3PrintF(B3LOG_NORMAL,"  -w  nowait after display output\n");
-		b3PrintF(B3LOG_NORMAL,"  -g  TGA image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -i  TIFF image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -j  JPEG image saving (default)\n");
-		b3PrintF(B3LOG_NORMAL,"  -r  RGB8 image saving\n");
-		b3PrintF(B3LOG_NORMAL,"  -p  grey PostScript image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -d        debug level output\n");
+		b3PrintF(B3LOG_NORMAL,"  -f        verbose level output\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -a        disable animation\n");
+		b3PrintF(B3LOG_NORMAL,"  -n        disable display\n");
+		b3PrintF(B3LOG_NORMAL,"  -w        nowait after display output\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -s size   image size definition\n");
+		b3PrintF(B3LOG_NORMAL,"\n");
+		b3PrintF(B3LOG_NORMAL,"  -g        TGA image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -i        TIFF image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -j        JPEG image saving (default)\n");
+		b3PrintF(B3LOG_NORMAL,"  -r        RGB8 image saving\n");
+		b3PrintF(B3LOG_NORMAL,"  -p        PostScript image saving\n");
 		b3PrintF(B3LOG_NORMAL,"\n");
 	}
 	b3PrintF(B3LOG_NORMAL,"Compile date: %s %s\n",__DATE__,__TIME__);
@@ -461,6 +501,7 @@ int main(int argc,char *argv[])
 	b3_bool               force_no_wait    = false;
 	b3_index              i;
 	b3_count              CPUs = b3Runtime::b3GetNumCPUs();
+	b3_res                size = 0;
 
 	if (argc > 1)
 	{
@@ -494,6 +535,8 @@ int main(int argc,char *argv[])
 			CPUs > 1 ? "'s" : "");
 		for (i = 1;i < argc;i++)
 		{
+			char    number[1024];
+
 			if (argv[i][0] == '-')
 			{
 				switch(argv[i][1])
@@ -515,6 +558,10 @@ int main(int argc,char *argv[])
 				case 'w' :
 					force_no_wait = true;
 					b3PrintF(B3LOG_NORMAL,"Forcing no wait after display output\n");
+					break;
+				case 's':
+					i = b3Runtime::b3ParseOption(argc, argv, i, number, sizeof(number));
+					size = atoi(number);
 					break;
 				case 'i':
 					strlcpy(BLZ3_EXTENSION,".tif",sizeof(BLZ3_EXTENSION));
@@ -564,7 +611,7 @@ int main(int argc,char *argv[])
 							}
 						}
 
-						display = b3AllocDisplay(scene,force_no_display);
+						display = b3AllocDisplay(scene, force_no_display, size);
 						if ((camera = scene->b3GetFirstCamera(false)) != null)
 						{
 							do
