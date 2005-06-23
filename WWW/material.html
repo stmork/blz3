@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Blizzard III</title>
+<title>Blizzard III - Materialien</title>
 <link rel="stylesheet" type="text/css" href="screen.css" media="screen">
 <link rel="stylesheet" type="text/css" href="print.css"  media="print">
 </head>
@@ -25,10 +25,10 @@ Men&uuml;:
 <h2>Materialien</h2>
 
 <p>
+<a href="lines/normal/dlg_material_maintain.jpg"><img id="right" src="lines/small/dlg_material_maintain.jpg"></a>
 Auf diesen Seiten werden die einzelnen Materialien von Blizzard III vorgestellt. Diese Materialien
 werden pro Körper in einer Liste verwaltet. Durch geschickte Wahl bestimmter Materialien kann ein
 Körper so ein komplexes Erscheinungsbild erhalten.
-<a href="lines/normal/dlg_material_maintain.jpg"><img src="lines/small/dlg_material_maintain.jpg"></a>
 </p>
 
 <hr>
@@ -62,11 +62,21 @@ und somit das Aussehen au&szlig;erhalb des Farbverlaufs definieren.
 <h3>Marmor:</h3>
 <p>
 <a href="dlg_material_marble.html"><img src="images/Material_Marble.jpg"></a>
+Marmor wird auf Basis von Perlin-Noise und BSplines erzeugt. Zuerst wird eine Turbulenz
+abhängig einer Skalierung festgelegt. Die so erzeugten Übergänge werden in eine
+vordefinierte, zyklische  BSpline-Funktion eingespeist, die das Ergebnis glätten.
+Der dadurch erzeugte Wert wird zum Mischen zweier Farben verwendet, wie sie
+ähnlicherweise beim Schachbrettmuster verwendet werden.
 </p>
 
 <h3>Granit:</h3>
 <p>
 <a href="dlg_material_granite.html"><img src="images/Material_Granite.jpg"></a>
+Granit wird nur auf Basis von Perlin-Noise erzeugt. Zuerst wird eine Turbulenz
+abhängig einer Skalierung festgelegt. Die so erzeugten Übergänge sind aufgrund
+der fehldenden BSpline-Glättung unruhiger, als beim Marmor.
+Der dadurch erzeugte Wert wird zum Mischen zweier Farben verwendet, wie sie
+ähnlicherweise beim Schachbrettmuster verwendet werden.
 </p>
 
 <h3>Holz:</h3>

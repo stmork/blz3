@@ -8,18 +8,47 @@ a:focus   { font-weight:bold; color:#8000f0; }
 
 img { border:0; };
 
-div#Seite       { text-align:left; width:800px; }
+div#Seite
+{
+	text-align:left;
+	width:800px;
+}
 
-div#Menu        { text-align:left; float:left; }
-div#Menu ul     { list-style-position:outside; background:#e0e0e0; font-weight:bold; text-decoration:underline; padding-top:10px; padding-bottom:10px; font-size:120%; } 
-div#Menu li     { list-style-type:none; list-style-image:url(images/bullet.gif); margin:0; font-weight:normal; }
+div#Menu
+{
+	text-align:left;
+	float:left; width:170;
+}
 
-div#Text        { text-align:justify; margin-left:190px; width:600px}
-div#Text h1     { font-size:200%; }
-div#Text h2     { font-size:150%; }
-div#Text h3     { font-size:110%; text-decoration:underline; top-margin:10px; }
-div#Text p      { font-size:100%; vertical-align:top; }
-div#Text ul     { list-style-type:none; list-style-image:url(images/Textkugel_indigo.gif); font-weight:bold;  }
-div#Text li     { font-weight:normal; vertical-align:bottom; }
-div#Text td     { vertical-align:top; margin-bottom:10px; }
-div#Text img    { vertical-align:top; float:left; }
+div#Menu ul
+{
+	list-style-position:outside;
+	background:#e0e0e0;
+	font-weight:bold;
+	text-decoration:underline;
+	padding-top:10px;
+	padding-bottom:10px;
+	font-size:120%;
+} 
+
+div#Menu li
+{
+	list-style-type:none;
+	list-style-image:url(images/bullet.gif);
+	margin:0;
+	font-weight:normal;
+}
+
+
+
+div#Text           { margin-left:190px; width:600px; float:none; }
+div#Text h1        { font-size:200%; }
+div#Text h2        { font-size:150%; }
+div#Text h3        { font-size:110%; text-decoration:underline; top-margin:10px; }
+div#Text p         { font-size:100%; text-align:justify; }
+div#Text ul        { list-style-type:none; list-style-image:url(images/Textkugel_indigo.gif); font-weight:bold;  }
+div#Text li        { font-weight:normal; vertical-align:bottom; }
+div#Text td        { vertical-align:top; margin-bottom:10px; }
+div#Text img       { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#left  { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#right { float:right;  margin-left:5px; margin-bottom:5px; }

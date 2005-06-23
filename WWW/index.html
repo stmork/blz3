@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Blizzard III</title>
+<title>Blizzard III - Startseite</title>
 <link rel="stylesheet" type="text/css" href="screen.css" media="screen">
 <link rel="stylesheet" type="text/css" href="print.css"  media="print">
 </head>
@@ -22,9 +22,29 @@ Men&uuml;:
 
 <div id="Text">
 <h1>Blizzard III</h1>
+<h2>Startseite</h2>
 
 <p>
-Dies sind die Internet-Seiten des Blizzard-III-Raytracers.
+Blizzard III steht für ein Rendering-Paket, daß sowohl einen Raytracer, einen
+OpenGL-Renderer, als auch unter Windows einen Modellierer (<a href="Lines.html">Lines III</a>)
+enthält. Durch geschicktes Multi-Threading nutzen die Komponenten die
+bestehende Hardware (vor allem die anstehenden Multi-Core-CPUs) geschickt
+aus, um bestmögliche Rechenzeiten zu erzielen. Ferner wurde bei der
+Entwicklung auf Plattformunabhängigkeit geachtet, sodaß die Komponenten
+sowohl unter Linux, Solaris und Windows funktionieren. Einzig bei
+<a href="Lines.html">Lines III</a> wurde die GUI auf MFC festgelegt.
+</p>
+
+<p>
+Aufgrund des objektorientierten Designs ist die Grundstruktur der Geometriedaten
+sehr einfach ausgelegt. Eine Szene enthält spezielle Datensätze (dazu später mehr),
+Lichtquellen und Objekte. Die Objekte können hierarchisch gestaffelt werden
+wodurch sich auch logische Zusammenhänge ergeben. Ein Objekt kann beliebig
+viele geometrische Grundkörper enthalten. Sie sind entweder Standardkörper oder
+CSG-Körper. Körper wiederum können Ausstanzungen, Oberflächenstrukturen und
+Materialien besitzen. Diese Oberflächeneigenschaften sind in Form von
+Listen angeordnet und können beliebig angeordnet werden. Je nach verwendeter
+Eigenschaft ändert sich dadurch das Aussehen des Körpers.
 </p>
 
 </div>
