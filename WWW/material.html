@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>Blizzard III</title>
+<link rel="stylesheet" type="text/css" href="screen.css" media="screen">
+<link rel="stylesheet" type="text/css" href="print.css"  media="print">
+</head>
+
+<body>
+
+<div id="Seite">
+
+<div id="Menu">
+<img src="images/HOME.gif">
+<ul>
+Men&uuml;:
+<li><a href="index.html">Einleitung</a>
+<li><a href="Lines.html">Lines III</a>
+<li><a href="shape.html">Körper und Objekte</a>
+<li><a href="material.html">Material</a>
+</ul>
+</div>
+
+<div id="Text">
+<h1>Blizzard III</h1>
+<h2>Materialien</h2>
+
+<p>
+Auf diesen Seiten werden die einzelnen Materialien von Blizzard III vorgestellt. Diese Materialien
+werden pro Körper in einer Liste verwaltet. Durch geschickte Wahl bestimmter Materialien kann ein
+Körper so ein komplexes Erscheinungsbild erhalten.
+<a href="lines/normal/dlg_material_maintain.jpg"><img src="lines/small/dlg_material_maintain.jpg"></a>
+</p>
+
+<hr>
+
+<h3>Normales Material:</h3>
+<p>
+<a href="dlg_material_normal.html"><img src="images/Material_Normal.jpg"></a>
+Normales Material besteht aus den drei Farben Ambient, Diffus und Spekul&auml;r. Als vier Skalare dienen
+die Werte Verspiegelung, Transparenz, Brechungsindex und der spekul&auml;re Exponent.
+</p>
+
+<h3>Schachbrettmuster:</h3>
+<p>
+<a href="dlg_material_chess.html"><img src="images/Material_Chess.jpg"></a>
+Zu den Materialeinstellungen, die zum normalen Material geh&ouml;ren wird beim Schachbrettmuster ein
+weiteres Material definiert. Das eine symbolisiert das <quote>schwarze</quote> Material das
+andere das <quote>wei&szlig;e</quote>.
+</p>
+
+<h3>Farbverlauf:</h3>
+<p>
+<a href="dlg_material_slide.html"><img src="images/Material_Slide.jpg"></a>
+&Auml;hnlich dem Schachbrettmuster sind die Definitionen des Farbverlaufs. Hier werden auch zwei Farben
+benötigt. Sie markieren Anfang und Ende des Farbverlaufs. Zus&auml;tzlich kann zwischen horizontaler
+und vertikaler Ausrichtung gew&auml;hlt werden. Eine weitere Möglichkeit besteht darin, ob au&szlig;erhalb der
+Grenzen die Farben fortgesetzt werden sollen. Wenn nicht, ist aus Sicht des Farbverlaufs keine Farbe
+definiert.  Damit kann man weitere Materialien in der Liste definieren, die sp&auml;ter in der Liste stehen
+und somit das Aussehen au&szlig;erhalb des Farbverlaufs definieren.
+</p>
+
+<h3>Marmor:</h3>
+<p>
+<a href="dlg_material_marble.html"><img src="images/Material_Marble.jpg"></a>
+</p>
+
+<h3>Granit:</h3>
+<p>
+<a href="dlg_material_granite.html"><img src="images/Material_Granite.jpg"></a>
+</p>
+
+<h3>Holz:</h3>
+<p>
+<a href="dlg_material_wood.html"><img src="images/Material_Wood.jpg"></a>
+Holz wird durch Perlin-Noise simuliert indem mehrere Werte auf die Geometrie des zugrunde
+liegenden Körpers genutzt werden.
+</p>
+
+<h3>Newton-Ringe:</h3>
+<p>
+<a href="dlg_material_newton_rings.html"><img src="images/Material_Newton_Rings.jpg"></a>
+Die Newton-Ringe sind kein Material in eigentlichem Sinne. Sie werden durch einen
+sog. Shader simuliert und stellen dünne Filme dar. Diese entstehen durch Innenreflexion
+an durchsichtigen Materialien. Häufig findet man diese Schattierungen bei Ölfilmen und
+Seifenblasen.
+</p>
+
+<h3>Cook-Torrance:</h3>
+<p>
+<a href="dlg_material_cook_torrance.html"><img src="images/Material_Cook_Torrance.jpg"></a>
+Das Cook-Torrance-Modell ist kein Material in eigentlichem Sinne. Es ist ein sog.
+Shader. Dieser hat die Eigenschaft, nicht nur Werte eines Materials zu liefern,
+sondern diese Werte erst bei der Berechung der Schattierung dazu beizutragen.
+Das wird benötigt, wenn die Werte vom Einfallswinkel abhängen.
+</p>
+
+<h3>Textur:</h3>
+<p>
+<a href="dlg_material_texture.html"><img src="images/Material_Texture.jpg"></a>
+Bei der Textur wird die Farbe durch ein Bild definiert. Die Werte Verspiegelung,
+Transparenz, Brechungsindex und der spekul&auml;re Exponent sing nach wie vor
+vorhanden. Zusätzlich kan man angeben, wie häufig die Texturen in horizontaler
+und vertikaler Richtung wiederholt wird. Eine Skalierung ermöglicht eine
+flexible Größendarstellung und Verteilung auf dem entsprechenden Körper. Außerhalb 
+der Textur ist kein Material vorhanden. Es muß durch weitere Materialeinträge in
+der Liste definiert werden.
+</p>
+
+<h3>Wickeltextur:</h3>
+<p>
+<a href="dlg_material_wraptexture.html"><img src="images/Material_Wraptexture.jpg"></a>
+</p>
+
+</div>
+</div>
+
+</body>
+</html>
