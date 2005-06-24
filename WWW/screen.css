@@ -8,11 +8,10 @@ a:focus   { font-weight:bold; color:#8000f0; }
 
 img { border:0; };
 
-div#Seite
-{
-	text-align:left;
-	width:800px;
-}
+div#Seite    { text-align:left; width:800px; }
+div#Seite h1 { font-size:200%; }
+div#Seite h2 { font-size:150%; }
+div#Seite h3 { font-size:115%; text-decoration:underline; top-margin:10px; }
 
 div#Menu
 {
@@ -29,6 +28,7 @@ div#Menu ul
 	padding-top:10px;
 	padding-bottom:10px;
 	font-size:120%;
+	vertical-align:text-top;
 } 
 
 div#Menu li
@@ -41,15 +41,11 @@ div#Menu li
 
 
 
-div#Text           { margin-left:190px; width:600px; float:none; }
-div#Text h1        { font-size:200%; }
-div#Text h2        { font-size:150%; }
-div#Text h3        { font-size:110%; text-decoration:underline; top-margin:10px; }
-div#Text p         { font-size:100%; text-align:justify; }
-div#Text ul        { list-style-type:none; list-style-image:url(images/Textkugel_indigo.gif); font-weight:bold;  }
-div#Text li        { font-weight:normal; vertical-align:bottom; }
-div#Text td        { vertical-align:top; margin-bottom:10px; }
-div#Text img       { float:left;  margin-right:5px; margin-bottom:5px; }
-div#Text img#left  { float:left;  margin-right:5px; margin-bottom:5px; }
-div#Text img#right { float:right;  margin-left:5px; margin-bottom:5px; }
+div#Text            { margin-left:190px; width:600px; float:none; }
+div#Text p          { font-size:100%; text-align:justify; clear:both; padding-top:1px; }
+div#Text ul         { list-style-type:none; list-style-image:url(images/Textkugel_indigo.gif); font-weight:bold;  }
+div#Text li         { font-weight:normal; vertical-align:text-top; }
+div#Text img        { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#left   { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#right  { float:right;  margin-left:5px; margin-bottom:5px; }
 div#Text center img { float:none; margin-bottom:5px; }

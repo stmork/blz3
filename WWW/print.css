@@ -1,15 +1,17 @@
-body { text-align:justify; }
-img  { border:0; };
+body            { text-align:justify; }
+img             { border:0; };
 
 div#Menu        { display:none; }
 div#Menu ul     { display:none; }
 div#Menu li     { display:none; }
+dev#Menu img    { display:none; }
 
 div#Seite       { text-align:justify; }
 
 div#Text        { text-align:justify; float:none; }
 
-div#Text img       { float:left;  margin-right:5px; margin-bottom:5px; }
-div#Text img#left  { float:left;  margin-right:5px; margin-bottom:5px; }
-div#Text img#right { float:right;  margin-left:5px; margin-bottom:5px; }
+div#Text p          { font-size:100%; text-align:justify; clear:both; padding-top:1px; }
+div#Text img        { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#left   { float:left;  margin-right:5px; margin-bottom:5px; }
+div#Text img#right  { float:right;  margin-left:5px; margin-bottom:5px; }
 div#Text center img { float:none; margin-bottom:5px; }
