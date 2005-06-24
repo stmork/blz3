@@ -52,3 +52,4 @@ div#Text td        { vertical-align:top; margin-bottom:10px; }
 div#Text img       { float:left;  margin-right:5px; margin-bottom:5px; }
 div#Text img#left  { float:left;  margin-right:5px; margin-bottom:5px; }
 div#Text img#right { float:right;  margin-left:5px; margin-bottom:5px; }
+div#Text center img { float:none; margin-bottom:5px; }
