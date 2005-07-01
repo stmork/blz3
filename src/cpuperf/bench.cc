@@ -31,11 +31,14 @@
 
 /*
 **	$Log$
+**	Revision 1.6  2005/07/01 16:27:43  sm
+**	- Format fix.
+**
 **	Revision 1.5  2004/11/29 09:58:01  smork
 **	- Changed exit states to correct defines.
 **	- Added switch for disabling VBO in OpenGL renderer.
 **	- Added switches for logging level in OpenGL renderer as in brt3.
-**
+**	
 **	Revision 1.4  2004/11/23 08:13:32  smork
 **	- Added configure support.
 **	
@@ -332,7 +335,8 @@ int main(int argc,char *argv[])
 	if (argc > 1)
 	{
 		b3_count max = 1;
-		sscanf(argv[1],"%d",&max);
+
+		sscanf(argv[1],"%ld",&max);
 
 		b3Suite suite(max);
 		
