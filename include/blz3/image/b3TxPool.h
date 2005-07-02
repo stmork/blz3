@@ -22,7 +22,7 @@
 #include "blz3/base/b3SearchPath.h"
 #include "blz3/image/b3Tx.h"
 
-class B3_PLUGIN b3TxPool : public b3Mem, public b3SearchPath
+class B3_PLUGIN b3TxPool : public b3SearchPath
 {
 	b3Mutex          m_Mutex;
 	b3Base<b3Tx>     m_Pool;
@@ -32,6 +32,10 @@ public:
 	       b3Tx         *b3LoadTexture(const char *name);
 	       b3Tx         *b3FindTexture(const char *name);
 	       b3Base<b3Tx> *b3GetTxHead();
+
+	       void          b3Dump();
+	       void          b3Free();
+
 private:
 	       b3_bool       b3ReloadTexture(b3Tx *texture,const char *name=null);
 	       b3Tx         *b3FindTextureUnsafe(const char *name);

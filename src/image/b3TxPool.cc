@@ -32,9 +32,12 @@
 
 /*
 **	$Log$
+**	Revision 1.27  2005/07/02 14:59:08  sm
+**	- Some better image pooling.
+**
 **	Revision 1.26  2005/01/02 19:15:25  sm
 **	- Fixed signed/unsigned warnings
-**
+**	
 **	Revision 1.25  2005/01/01 16:43:19  sm
 **	- Fixed some aliasing warnings.
 **	
@@ -266,4 +269,24 @@ b3Tx *b3TxPool::b3LoadTexture(const char *Name)
 	m_Mutex.b3Unlock();
 
 	return tx;
+}
+
+void b3TxPool::b3Dump()
+{
+	b3Tx *tx;
+
+	b3PrintF(B3LOG_NORMAL,"Image pool dump with %d textures.\n",
+		m_Pool.b3GetCount());
+	B3_FOR_BASE(&m_Pool,tx)
+	{
+		b3PrintF(B3LOG_NORMAL,"TX: %5d x %5d - %s\n",
+			tx->xSize,
+			tx->ySize,
+			tx->b3Name());
+	}
+}
+
+void b3TxPool::b3Free()
+{
+	m_Pool.b3Free();
 }
