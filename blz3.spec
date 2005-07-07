@@ -64,8 +64,8 @@ install -m 755 bin/blz3.sh  $RPM_BUILD_ROOT/etc/profile.d/blz3.sh
 
 test -d $HOME/Blizzard && tar chf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT/usr/share/blizzard
 
-cp -a include/blz3      $RPM_BUILD_ROOT/usr/include
-cp -a include_unix/blz3 $RPM_BUILD_ROOT/usr/include
+cp -a include/blz3      $RPM_BUILD_ROOT%_includedir
+cp -a include_unix/blz3 $RPM_BUILD_ROOT%_includedir
 cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 
 (cd $RPM_BUILD_ROOT; find .%_bindir               -type f | fgrep -v divx | cut -b2- >/tmp/blz3-file-list; )
