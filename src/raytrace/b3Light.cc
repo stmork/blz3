@@ -33,6 +33,9 @@
 
 /*
 **      $Log$
+**      Revision 1.55  2005/07/13 19:26:12  sm
+**      - Convert error fixed.
+**
 **      Revision 1.54  2005/06/17 10:29:05  smork
 **      - Made some inlining.
 **      - Removed some unnecessary tests.
@@ -680,7 +683,7 @@ inline b3Shape *b3Light::b3CheckSinglePoint (
 	jx = ((b3_f32)x - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
 	jy = ((b3_f32)y - 0.5 * Jit->m_Distr + B3_FRAN(1.0)) * Jit->m_Size;
 
-	b3Vector::b3LinearCombine(&Jit->m_LightView, &Jit->m_xDir, &Jit->m_yDir, x, y, &Jit->dir);
+	b3Vector::b3LinearCombine(&Jit->m_LightView, &Jit->m_xDir, &Jit->m_yDir, jx, jy, &Jit->dir);
 
 	LightDist = b3Vector::b3Normalize(&Jit->dir);
 	shader->b3FindObscurer(Jit,Jit->m_LightDist / LightDist - b3Scene::epsilon);
