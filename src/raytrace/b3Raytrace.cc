@@ -39,9 +39,12 @@
 
 /*
 **	$Log$
+**	Revision 1.73  2005/07/18 16:15:36  sm
+**	- Updating espilon
+**
 **	Revision 1.72  2005/05/13 15:33:54  sm
 **	- Tested surface property operations.
-**
+**	
 **	Revision 1.71  2005/05/05 07:58:03  sm
 **	- BBox visibility computed only for raytracing.
 **	
@@ -408,7 +411,7 @@ struct b3_rt_info
 
 b3TxPool b3Scene::m_TexturePool;
 b3_s32   b3Scene::m_RenderPriority = -2;
-b3_f64   b3Scene::epsilon          = 0.0004;
+b3_f64   b3Scene::epsilon          = 0.0008;
 
 /*************************************************************************
 **                                                                      **
