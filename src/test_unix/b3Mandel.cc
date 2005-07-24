@@ -47,9 +47,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.8  2005/07/24 14:24:36  sm
+**	- Optimized Mandelbrot set.
+**
 **	Revision 1.7  2005/05/05 16:16:09  sm
 **	- Added time measure to mandelbrot set computing.
-**
+**	
 **	Revision 1.6  2002/08/09 13:20:20  sm
 **	- b3Mem::b3Realloc was a mess! Now fixed to have the same
 **	  behaviour on all platforms. The Windows method ::GlobalReAlloc
@@ -93,9 +96,14 @@ struct mandel_info
 **                                                                      **
 *************************************************************************/
 
+#define X 0
+#define Y 1
+
 // Overload one screen row to compute its pixels
 class b3MandelRow : public b3Row
 {
+	static b3_pkd_color iter_color[64];
+
 	b3_count iter;
 	b3_f64   fx,fy,xStep;
 
@@ -119,21 +127,35 @@ public:
 	{
 		b3_coord     x;
 		b3_count     count;
-		b3_f64       Xval,Yval,Xquad,Yquad;
+		b3_f64       val[2],quad[2],f[2];
 		b3_pkd_color color = 0;
+		b3_loop      k;
 
+		f[Y] = fy;
 		for (x = 0;x < m_xSize;x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
 			count = 0;
-			Xval  = Yval = Xquad = Yquad = 0;
-			while ((count < iter) && (Xquad + Yquad < 4.0))
+
+			// Init
+			for (k = 0;k < 2;k++)
 			{
-				Yval  = 2 * Xval  * Yval  - fy;
-				Xval  =     Xquad - Yquad - fx;
-				Xquad =     Xval  * Xval;
-				Yquad =     Yval  * Yval;
+				val[k] = 0;
+				quad[k] = 0;
+			}
+			f[X] = fx;
+			
+			// Loop
+			while ((count < iter) && ((quad[X] + quad[Y]) < 4.0))
+			{
+				val[Y]  = 2 * val[X]  * val[Y];
+				val[X]  =     quad[X] - quad[Y];
+				for (k = 0;k < 2;k++)
+				{
+					val[k] -= f[k];
+					quad[k] = val[k] * val[k];
+				}
 				count++;
 			}
 			// Snap! --!>
@@ -146,25 +168,7 @@ public:
 			}
 			else
 			{
-				// Compute pixel color from number of iterations
-				switch (count & 0x30)
-				{
-				case 0x00 : /* blue */
-					color = (count & 0x0f) <<  4;
-					break;
-		
-				case 0x10 : /* green */
-					color = (count & 0x0f) << 12;
-					break;
-		
-				case 0x20 : /* red */
-					color = (count & 0x0f) << 20;
-					break;
-		
-				case 0x30 : /* magenta */
-					color = ((count & 0x0f) << 20) | ((count & 0x0f) <<  4);
-					break;
-				}
+				color = iter_color[count & 0x3f];
 			}
 
 			// Fill in color
@@ -172,7 +176,39 @@ public:
 			fx += xStep;
 		}
 	}
+
+public:
+	static void b3InitColor()
+	{
+		b3_pkd_color color;
+
+		for (b3_loop i = 0;i < 64;i++)
+		{
+			// Compute pixel color from number of iterations
+			switch (i & 0x30)
+			{
+			case 0x00 : /* blue */
+				color = (i & 0x0f) <<  4;
+				break;
+		
+			case 0x10 : /* green */
+				color = (i & 0x0f) << 12;
+				break;
+	
+			case 0x20 : /* red */
+				color = (i & 0x0f) << 20;
+				break;
+	
+			case 0x30 : /* magenta */
+				color = ((i & 0x0f) << 20) | ((i & 0x0f) <<  4);
+				break;
+			}
+			iter_color[i] = color;
+		}
+	}
 };
+
+b3_pkd_color b3MandelRow::iter_color[64];
 
 static b3Base<b3Row> rows;
 static b3Mutex       row_mutex;
@@ -259,6 +295,7 @@ void b3Mandel::b3Compute(
 
 	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
 	tStart = timepoint;
+	b3MandelRow::b3InitColor(); 
 	for (i = 0;i < CPUs;i++)
 	{
 		infos[i].xSize   = xSize;
