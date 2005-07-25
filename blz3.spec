@@ -17,6 +17,10 @@ Vendor: MORKNet Dortmund
 Summary: Development environment for Blizzard III
 Group: Development/Libraries
 
+%package doc
+Summary: Documentation of Blizzard III classes
+Group: Development/Libraries
+
 %package data
 Summary: Data for Blizzard III
 Group: Productivity/Graphics/Visualization/Raytracers
@@ -32,6 +36,9 @@ contains some tools for image conversion.
 %description devel
 This package proviles C++ header files and libraries of Blizzard III.
 
+%description doc
+This package contains documentation of the Blizzard III classes.
+
 %description data
 This package contains Blizzard data files.
 
@@ -41,7 +48,7 @@ single images.
 
 %prep
 %setup -q -n %{name}
-./configure\
+./configure BLZ3_DOC=$RPM_BUILD_ROOT%_docdir/blizzard\
 	--prefix=$RPM_BUILD_ROOT\
 	--exec-prefix=$RPM_BUILD_ROOT/usr\
 	--datadir=$RPM_BUILD_ROOT%_datadir/blizzard
@@ -56,13 +63,14 @@ mkdir -p $RPM_BUILD_ROOT/etc/profile.d
 mkdir -p $RPM_BUILD_ROOT%_bindir
 mkdir -p $RPM_BUILD_ROOT%_includedir
 mkdir -p $RPM_BUILD_ROOT%_libdir
-mkdir -p $RPM_BUILD_ROOT%_datadir/blizzard
+mkdir -p $RPM_BUILD_ROOT%_datadir/blizzard/
+mkdir -p $RPM_BUILD_ROOT%_docdir/blizzard/
 
-make install
+make install doc
 install -m 755 bin/blz3.csh $RPM_BUILD_ROOT/etc/profile.d/blz3.csh
 install -m 755 bin/blz3.sh  $RPM_BUILD_ROOT/etc/profile.d/blz3.sh
 
-test -d $HOME/Blizzard && tar chf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT/usr/share/blizzard
+test -d $HOME/Blizzard && tar chf - -C $HOME/Blizzard Data Objects Textures Materials Bumps Conditions|tar xf - -C $RPM_BUILD_ROOT%_datadir/blizzard
 
 cp -a include/blz3      $RPM_BUILD_ROOT%_includedir
 cp -a include_unix/blz3 $RPM_BUILD_ROOT%_includedir
@@ -70,12 +78,16 @@ cp -a lib/lib*.a        $RPM_BUILD_ROOT%_libdir
 
 (cd $RPM_BUILD_ROOT; find .%_bindir               -type f | fgrep -v divx | cut -b2- >/tmp/blz3-file-list; )
 (cd $RPM_BUILD_ROOT; find .%_libdir .%_includedir -type f |                 cut -b2- >/tmp/blz3-devel-file-list; )
-(cd $RPM_BUILD_ROOT; find .%_datadir              -type f |                 cut -b2- >/tmp/blz3-data-file-list; )
+(cd $RPM_BUILD_ROOT; find .%_docdir/blizzard      -type f |                 cut -b2- >/tmp/blz3-doc-file-list; )
+(cd $RPM_BUILD_ROOT; find .%_datadir/blizzard     -type f |                 cut -b2- >/tmp/blz3-data-file-list; )
 
 %files -f /tmp/blz3-file-list
 %defattr(-,root,root)
 
 %files devel -f /tmp/blz3-devel-file-list
+%defattr(-,root,root)
+
+%files doc -f /tmp/blz3-doc-file-list
 %defattr(-,root,root)
 
 %files data -f /tmp/blz3-data-file-list

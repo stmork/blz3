@@ -19,13 +19,14 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src $@
+	rm -rf doc/html Doxyfile
 
 configure:	configure.ac
 	autoconf
 	rm -rf autom4te.cache
 
 config:	configure
-	./configure --prefix=$(PWD)
+	./configure BLZ3_DOC=$(PWD)/doc --prefix=$(PWD)
 
 distclean:
 	bin/clobber.sh $(PWD)
@@ -33,4 +34,11 @@ distclean:
 dist:	distclean configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
+
+doc:	Doxyfile
+	doxygen Doxyfile
+
+Doxyfile:	Doxyfile.in configure
+	./configure BLZ3_DOC=$(PWD)/doc --prefix=$(PWD)
+
 # DO NOT DELETE
