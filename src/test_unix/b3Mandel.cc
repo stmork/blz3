@@ -25,6 +25,7 @@
 
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
+#include "blz3/base/b3Color.h"
 
 #include "b3Mandel.h"
 
@@ -47,9 +48,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.9  2005/07/25 09:49:48  smork
+**	- Some more optimizing.
+**
 **	Revision 1.8  2005/07/24 14:24:36  sm
 **	- Optimized Mandelbrot set.
-**
+**	
 **	Revision 1.7  2005/05/05 16:16:09  sm
 **	- Added time measure to mandelbrot set computing.
 **	
@@ -102,7 +106,9 @@ struct mandel_info
 // Overload one screen row to compute its pixels
 class b3MandelRow : public b3Row
 {
-	static b3_pkd_color iter_color[64];
+	static b3_pkd_color  iter_color[64];
+	static b3Base<b3Row> rows;
+	static b3Mutex       row_mutex;
 
 	b3_count iter;
 	b3_f64   fx,fy,xStep;
@@ -123,20 +129,24 @@ public:
 	}
 
 	// This computes the whole row!
-	void compute()
+	inline void compute()
 	{
-		b3_coord     x;
-		b3_count     count;
-		b3_f64       val[2],quad[2],f[2];
-		b3_pkd_color color = 0;
-		b3_loop      k;
+		b3_coord           x;
+		b3_count           count;
+		b3_pkd_color       color;
+		b3_loop            k;
 
+		b3_f64 B3_ALIGN_16 val[2];
+		b3_f64 B3_ALIGN_16 quad[2];
+		b3_f64 B3_ALIGN_16 f[2];
+		b3_f64 B3_ALIGN_16 sum;
+
+		f[X] = fx;
 		f[Y] = fy;
 		for (x = 0;x < m_xSize;x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
-			count = 0;
 
 			// Init
 			for (k = 0;k < 2;k++)
@@ -144,41 +154,41 @@ public:
 				val[k] = 0;
 				quad[k] = 0;
 			}
-			f[X] = fx;
 			
 			// Loop
-			while ((count < iter) && ((quad[X] + quad[Y]) < 4.0))
+			sum = 0;
+			for (count = 0; (count < iter) && (sum < 4.0); count++)
 			{
-				val[Y]  = 2 * val[X]  * val[Y];
-				val[X]  =     quad[X] - quad[Y];
+				val[Y] *= val[X];
+				val[Y] += val[Y];
+				val[X]  = quad[X] - quad[Y];
+
 				for (k = 0;k < 2;k++)
 				{
 					val[k] -= f[k];
+				}
+
+				for (k = 0;k < 2;k++)
+				{
 					quad[k] = val[k] * val[k];
 				}
-				count++;
+				
+				sum = 0;
+				for (k = 0; k < 2; k++)
+				{
+					sum += quad[k];
+				}
 			}
 			// Snap! --!>
 
-			// now compute color from iterations needed.
-			if (count >= iter)
-			{
-				// The algorithm doesn't converge...
-				color = 0; // black!
-			}
-			else
-			{
-				color = iter_color[count & 0x3f];
-			}
-
 			// Fill in color
-			m_buffer[x] = color;
-			fx += xStep;
+			m_buffer[x] = count >= iter ? B3_BLACK : iter_color[count & 0x3f];
+			f[X] += xStep;
 		}
 	}
 
 public:
-	static void b3InitColor()
+	inline static void b3InitColor()
 	{
 		b3_pkd_color color;
 
@@ -206,46 +216,50 @@ public:
 			iter_color[i] = color;
 		}
 	}
+
+	static b3_u32 compute(void *ptr)
+	{
+		mandel_info *info = (mandel_info *)ptr;
+		b3MandelRow *row;
+		b3_res       xSize;
+		b3_count     iter;
+
+		xSize = info->xSize;
+		iter  = info->iter;
+		do
+		{
+			// Enter critical section
+			row_mutex.b3Lock();
+			if ((row = (b3MandelRow *)rows.First) != null)
+			{
+				rows.b3Remove(row);
+			}
+			row_mutex.b3Unlock();
+			// Leave critical section
+
+			if (row != null)
+			{
+				// We can handle the row for its own!
+				row->compute();
+				info->display->b3PutRow(row);
+				delete row;
+			}
+		}
+		while(row != null);
+
+		// Reach this if the row list ran empty.
+		return 0;
+	}
+
+	inline static void b3Append(b3MandelRow *row)
+	{
+		rows.b3Append(row);
+	}
 };
 
-b3_pkd_color b3MandelRow::iter_color[64];
-
-static b3Base<b3Row> rows;
-static b3Mutex       row_mutex;
-
-static b3_u32 compute(void *ptr)
-{
-	mandel_info *info = (mandel_info *)ptr;
-	b3MandelRow *row;
-	b3_res       xSize;
-	b3_count     iter;
-
-	xSize = info->xSize;
-	iter  = info->iter;
-	do
-	{
-		// Enter critical section
-		row_mutex.b3Lock();
-		if ((row = (b3MandelRow *)rows.First) != null)
-		{
-			rows.b3Remove(row);
-		}
-		row_mutex.b3Unlock();
-		// Leave critical section
-
-		if (row != null)
-		{
-			// We can handle the row for its own!
-			row->compute();
-			info->display->b3PutRow(row);
-			delete row;
-		}
-	}
-	while(row != null);
-
-	// Reach this if the row list ran empty.
-	return 0;
-}
+b3_pkd_color  b3MandelRow::iter_color[64];
+b3Base<b3Row> b3MandelRow::rows;
+b3Mutex       b3MandelRow::row_mutex;
 
 void b3Mandel::b3Compute(
 	b3Display *display,
@@ -289,7 +303,7 @@ void b3Mandel::b3Compute(
 	for (i = 0;i < ySize;i++)
 	{
 		row = new b3MandelRow(i,xSize,xMin,xStep,fy,iter);
-		rows.b3Append(row);
+		b3MandelRow::b3Append(row);
 		fy += yStep;
 	}
 
@@ -302,7 +316,7 @@ void b3Mandel::b3Compute(
 		infos[i].iter    = iter;
 		infos[i].display = display;
 
-		threads[i].b3Start(compute,&infos[i]);
+		threads[i].b3Start(b3MandelRow::compute,&infos[i]);
 	}
 
 	// Wait for completion
