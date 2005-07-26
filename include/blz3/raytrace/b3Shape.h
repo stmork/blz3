@@ -62,6 +62,9 @@
 #define SPLINES_CYL         (CLASS_SHAPE|TYPE_SPLINES_CYL)
 #define SPLINES_RING        (CLASS_SHAPE|TYPE_SPLINES_RING)
 
+/**
+ * This class provides a base transformation including a normal derivation.
+ */
 class B3_PLUGIN b3ShapeBaseTransformation : public b3BaseTransformation
 {
 public:
@@ -80,6 +83,15 @@ struct b3_surface;
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This is a base class for all Blizzard shapes. It provides archive support
+ * via the b3Item class, rendering support through the b3RenderObject class
+ * and activation support from the b3Activation class.
+ *
+ * @see b3Item
+ * @see b3RenderObject
+ * @see b3Activation
+ */
 class B3_PLUGIN b3Shape : public b3Item, public b3RenderObject, public b3Activation
 {
 	static const b3_gl_line    m_BoxGrids[];

@@ -19,7 +19,7 @@ install:
 
 clean:
 	test -f src/Makefile && make -C src $@
-	rm -rf doc/html Doxyfile
+	rm -rf doc/html doc/latex Doxyfile
 
 configure:	configure.ac
 	autoconf
@@ -35,7 +35,7 @@ dist:	distclean configure
 	(cd ..; tar c blz3 | gzip -9 > /tmp/blz3.tar.gz; )
 	cp blz3.spec /tmp/
 
-doc:	Doxyfile
+documentation:	Doxyfile
 	doxygen Doxyfile
 
 Doxyfile:	Doxyfile.in configure
