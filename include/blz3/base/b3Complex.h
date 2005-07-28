@@ -156,13 +156,13 @@ public:
 
 	inline T b3SquareLength()
 	{
-		T len = 0;
+		T B3_ALIGN_16 val[2];
 
 		for(b3_loop i = 0;i < 2;i++)
 		{
-			len += (v[i] * v[i]);
+			val[i] = v[i] * v[i];
 		}
-		return len;
+		return val[Re] + val[Im];
 	}
 
 	inline void b3Square()

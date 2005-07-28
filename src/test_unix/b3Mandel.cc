@@ -49,9 +49,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.11  2005/07/28 14:02:16  smork
+**	- Some statistics.
+**
 **	Revision 1.10  2005/07/28 13:05:18  smork
 **	- Added complex datatype.
-**
+**	
 **	Revision 1.9  2005/07/25 09:49:48  smork
 **	- Some more optimizing.
 **	
@@ -113,10 +116,12 @@ struct mandel_info
 class b3MandelRow : public b3Row
 {
 	static b3_pkd_color  iter_color[64];
+	static b3_u64        iter_counter;
 	static b3Base<b3Row> rows;
 	static b3Mutex       row_mutex;
 
 	b3_count iter;
+	b3_u64   cnt;
 	b3_f64   fx,fy,xStep;
 
 public:
@@ -129,6 +134,7 @@ public:
 		b3_count iterations) : b3Row(y,xSize)
 	{
 		iter        = iterations;
+		cnt         = 0;
 		this->fx    = xStart;
 		this->fy    = fy;
 		this->xStep = xStep;
@@ -164,6 +170,7 @@ public:
 			// Fill in color
 			m_buffer[x] = count >= iter ? B3_BLACK : iter_color[count & 0x3f];
 			f += xStep;
+			cnt += count;
 		}
 	}
 
@@ -197,6 +204,11 @@ public:
 		}
 	}
 
+	inline static void b3Init()
+	{
+		iter_counter = 0;
+	}
+
 	static b3_u32 compute(void *ptr)
 	{
 		mandel_info *info = (mandel_info *)ptr;
@@ -222,6 +234,9 @@ public:
 				// We can handle the row for its own!
 				row->compute();
 				info->display->b3PutRow(row);
+				row_mutex.b3Lock();
+				iter_counter += row->cnt;
+				row_mutex.b3Unlock();
 				delete row;
 			}
 		}
@@ -235,9 +250,15 @@ public:
 	{
 		rows.b3Append(row);
 	}
+
+	inline static b3_count b3GetIterations()
+	{
+		return iter_counter;
+	}
 };
 
 b3_pkd_color  b3MandelRow::iter_color[64];
+b3_u64        b3MandelRow::iter_counter = 0;
 b3Base<b3Row> b3MandelRow::rows;
 b3Mutex       b3MandelRow::row_mutex;
 
@@ -254,15 +275,16 @@ void b3Mandel::b3Compute(
 	b3MandelRow *row;
 	b3_res       xSize,ySize;
 	b3_count     CPUs,i;
+	b3_u64       count;
 	b3Thread    *threads;
 	mandel_info *infos;
 	b3Time       timepoint;
-	b3_f64       tStart,tEnd;
+	b3_f64       tStart,tEnd,tDiff;
 
 	b3PrintF(B3LOG_NORMAL,"Using following values:\n");
-	b3PrintF(B3LOG_NORMAL,"Width  %f - %f:\n",xMin,xMax);
-	b3PrintF(B3LOG_NORMAL,"Height %f - %f:\n",yMin,yMax);
-	b3PrintF(B3LOG_NORMAL,"%lu iterations:\n",iter);
+	b3PrintF(B3LOG_NORMAL,"Width  %f - %f.\n",xMin,xMax);
+	b3PrintF(B3LOG_NORMAL,"Height %f - %f.\n",yMin,yMax);
+	b3PrintF(B3LOG_NORMAL,"Max. %lu iterations per pixel.\n",iter);
 
 	display->b3GetRes(xSize,ySize);
 
@@ -290,6 +312,7 @@ void b3Mandel::b3Compute(
 	b3PrintF (B3LOG_NORMAL,"Starting threads...\n");
 	tStart = timepoint;
 	b3MandelRow::b3InitColor(); 
+	b3MandelRow::b3Init();
 	for (i = 0;i < CPUs;i++)
 	{
 		infos[i].xSize   = xSize;
@@ -307,9 +330,15 @@ void b3Mandel::b3Compute(
 	}
 
 	timepoint.b3Now();
-	tEnd = timepoint;
+	tEnd  = timepoint;
+	tDiff = tEnd - tStart;
+	count = b3MandelRow::b3GetIterations();
 
-	b3PrintF(B3LOG_NORMAL,"Computing took %3.3fs.\n",tEnd - tStart);
+	b3PrintF(B3LOG_NORMAL,"Computing took %3.3fs.\n",tDiff);
+	b3PrintF(B3LOG_NORMAL,"Iterations: %llu\n", count);
+	b3PrintF(B3LOG_NORMAL,"%3.3fM complex ops/s\n",count * 3 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL,"%3.3fM mults/s\n",count * 5 / tDiff / 1000000);
+	b3PrintF(B3LOG_NORMAL,"%3.3fM adds/s\n",count * 6 / tDiff / 1000000);
 
 	// Free what we have allocated.
 	delete [] threads;
