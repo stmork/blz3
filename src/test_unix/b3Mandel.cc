@@ -26,6 +26,7 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Color.h"
+#include "blz3/base/b3Complex.h"
 
 #include "b3Mandel.h"
 
@@ -48,9 +49,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.10  2005/07/28 13:05:18  smork
+**	- Added complex datatype.
+**
 **	Revision 1.9  2005/07/25 09:49:48  smork
 **	- Some more optimizing.
-**
+**	
 **	Revision 1.8  2005/07/24 14:24:36  sm
 **	- Optimized Mandelbrot set.
 **	
@@ -103,6 +107,8 @@ struct mandel_info
 #define X 0
 #define Y 1
 
+#define B3_CMPLX
+
 // Overload one screen row to compute its pixels
 class b3MandelRow : public b3Row
 {
@@ -134,56 +140,30 @@ public:
 		b3_coord           x;
 		b3_count           count;
 		b3_pkd_color       color;
-		b3_loop            k;
 
-		b3_f64 B3_ALIGN_16 val[2];
-		b3_f64 B3_ALIGN_16 quad[2];
-		b3_f64 B3_ALIGN_16 f[2];
-		b3_f64 B3_ALIGN_16 sum;
+		b3Complex<b3_f64>  a = 0;
+		b3Complex<b3_f64>  f = b3Complex<b3_f64>(fx,fy);
 
-		f[X] = fx;
-		f[Y] = fy;
 		for (x = 0;x < m_xSize;x++)
 		{
 			// <!-- Snip!
 			// This is some computation to compute the Mandelbrot set.
-
-			// Init
-			for (k = 0;k < 2;k++)
-			{
-				val[k] = 0;
-				quad[k] = 0;
-			}
-			
+	
 			// Loop
-			sum = 0;
-			for (count = 0; (count < iter) && (sum < 4.0); count++)
+			a     = 0;
+			count = 0;
+			do
 			{
-				val[Y] *= val[X];
-				val[Y] += val[Y];
-				val[X]  = quad[X] - quad[Y];
-
-				for (k = 0;k < 2;k++)
-				{
-					val[k] -= f[k];
-				}
-
-				for (k = 0;k < 2;k++)
-				{
-					quad[k] = val[k] * val[k];
-				}
-				
-				sum = 0;
-				for (k = 0; k < 2; k++)
-				{
-					sum += quad[k];
-				}
+				a.b3Square();
+				a -= f;
+				count++;
 			}
+			while((count <= iter) && (a.b3SquareLength() < 4));
 			// Snap! --!>
 
 			// Fill in color
 			m_buffer[x] = count >= iter ? B3_BLACK : iter_color[count & 0x3f];
-			f[X] += xStep;
+			f += xStep;
 		}
 	}
 
