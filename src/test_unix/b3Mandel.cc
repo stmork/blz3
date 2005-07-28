@@ -49,9 +49,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.12  2005/07/28 14:14:48  smork
+**	- Bug fixing.
+**
 **	Revision 1.11  2005/07/28 14:02:16  smork
 **	- Some statistics.
-**
+**	
 **	Revision 1.10  2005/07/28 13:05:18  smork
 **	- Added complex datatype.
 **	
@@ -107,11 +110,6 @@ struct mandel_info
 **                                                                      **
 *************************************************************************/
 
-#define X 0
-#define Y 1
-
-#define B3_CMPLX
-
 // Overload one screen row to compute its pixels
 class b3MandelRow : public b3Row
 {
@@ -162,6 +160,7 @@ public:
 			{
 				a.b3Square();
 				a -= f;
+
 				count++;
 			}
 			while((count <= iter) && (a.b3SquareLength() < 4));
@@ -234,6 +233,7 @@ public:
 				// We can handle the row for its own!
 				row->compute();
 				info->display->b3PutRow(row);
+
 				row_mutex.b3Lock();
 				iter_counter += row->cnt;
 				row_mutex.b3Unlock();

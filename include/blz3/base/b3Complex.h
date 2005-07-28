@@ -120,7 +120,7 @@ public:
 		return *this;
 	}
 
-	inline b3Complex<T> &operator+(const b3Complex<T> &a)
+	inline b3Complex<T> operator+(const b3Complex<T> &a)
 	{
 		b3Complex<T> result;
 
@@ -131,7 +131,7 @@ public:
 		return result;
 	}
 
-	inline b3Complex<T> &operator-(const b3Complex<T> &a)
+	inline b3Complex<T> operator-(const b3Complex<T> &a)
 	{
 		b3Complex<T> result;
 
@@ -142,7 +142,7 @@ public:
 		return result;
 	}
 
-	inline b3Complex<T> &operator*(const b3Complex<T> &a)
+	inline b3Complex<T> operator*(const b3Complex<T> &a)
 	{
 		return b3Complex<T>(
 			v[Re] * a.v[Re] - v[Im] * a.v[Im],
