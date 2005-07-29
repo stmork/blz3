@@ -26,15 +26,19 @@
 
 enum b3_array_error
 {
-	B3_ARRAY_ERROR = -1,
-	B3_ARRAY_OK    =  0,
-	B3_ARRAY_NO_MEMORY,
-	B3_ARRAY_OUT_OF_BOUNDS,
-	B3_ARRAY_INVALID_INCREMENT
+	B3_ARRAY_ERROR = -1,		//!< General error.
+	B3_ARRAY_OK    =  0,		//!< OK.
+	B3_ARRAY_NO_MEMORY,			//!< Not enough memory available.
+	B3_ARRAY_OUT_OF_BOUNDS,		//!< Array index out of defined bounds.
+	B3_ARRAY_INVALID_INCREMENT	//!< Invalid increment. Increments must be greater than zero.
 };
 
 typedef b3Exception<b3_array_error,'ARR'> b3ArrayException;
 
+/**
+ * This class implements a dynamic sized array of elements. It includes
+ * a base amount of elements to avoid dynamic memory allocation.
+ */
 template <class T> class B3_PLUGIN b3Array
 {
 	b3_count  m_Increment;
@@ -44,6 +48,11 @@ template <class T> class B3_PLUGIN b3Array
 	T         m_Start[B3_ARRAY_INITIAL];
 
 public:
+	/**
+	 * Constructor with default increment.
+	 *
+	 * @param increment The incremental reallocations of memory.
+	 */
 	inline b3Array(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
 		if (increment <= 0)
@@ -56,6 +65,9 @@ public:
 		m_Buffer    = m_Start;
 	}
 
+	/**
+	 * The destructor frees the allocated memory.
+	 */
 	inline virtual ~b3Array()
 	{
 		if (m_Buffer != m_Start)
@@ -64,6 +76,11 @@ public:
 		}
 	}
 
+	/**
+	 * This method adds one element and increases the buffer if necessary.
+	 *
+	 * @param element The new element to add.
+	 */
 	inline void b3Add(T element)
 	{
 		T        *buffer;
@@ -97,6 +114,13 @@ public:
 		m_Buffer[m_Index++] = element;
 	}
 
+	/**
+	 * This method frees the allocated buffer. If the argument is true the
+	 * real memory is freed also. Otherwise only the allocation index is
+	 * set to zero.
+	 *
+	 * @param really_free A flag which indicates if the memory should also be freed.
+	 */
 	inline void b3Clear(b3_bool really_free = false)
 	{
 		m_Index = 0;
@@ -111,16 +135,30 @@ public:
 		}
 	}
 
+	/**
+	 * This method returns the collected amounts of elements.
+	 *
+	 * @return The allocated amount of elements.
+	 */
 	inline b3_count b3GetCount()
 	{
 		return m_Index;
 	}
 
+	/**
+	 * This method returns the allocated buffer as pointer.
+	 *
+	 * @return The allocated buffer with the elements.
+	 */
 	inline T *b3GetBuffer()
 	{
 		return m_Buffer;
 	}
 
+	/**
+	 * This method sets another increment value if there is not enough memory
+	 * to store new elements.
+	 */
 	inline void b3SetIncrement(b3_count increment = B3_ARRAY_DEFAULT_INCREMENT)
 	{
 		m_Increment = increment;
@@ -137,16 +175,34 @@ public:
 		return m_Buffer[index];
 	}
 
+	/**
+	 * This method sorts the array with a custom sorting method.
+	 *
+	 * @param sorter Sorting method.
+	 * @param ptr    Custom pointer for custom information retrieval.
+	 */
 	inline void b3Sort(int (*sorter)(T *a,T *b,const void *ptr),const void *ptr)
 	{
 		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
 	}
 
+	/**
+	 * This method sorts the array with a custom sorting method.
+	 *
+	 * @param sorter Sorting method.
+	 */
 	inline void b3Sort(int (*sorter)(T *a,T *b))
 	{
 		qsort(m_Buffer,b3GetCount(),sizeof(T),(b3QSortFunc)sorter);
 	}
 
+	/**
+	 * This method sorts the array using a comparator class.
+	 *
+	 * @param comparator A comparator class which can compare elements
+	 *                   of this template class.
+	 * @see b3Comparator
+	 */
 	inline void b3Sort(b3Comparator<T> comparator,const void *ptr = null)
 	{
 		qsort(m_Buffer,b3GetCount(),sizeof(T),comparator.b3Sort,ptr);
