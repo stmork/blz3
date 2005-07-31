@@ -283,7 +283,7 @@ public:
 	 * @param a The complex number to divide.
 	 * @return This as result.
 	 */
-	inline b3Complex<T> &operator/=(const b3Complex<T> &a)
+	inline b3Complex<T> operator/(const b3Complex<T> &a)
 	{
 		T B3_ALIGN_16 val[2];
 		T B3_ALIGN_16 den[2];

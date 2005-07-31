@@ -49,9 +49,12 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.13  2005/07/31 10:10:05  sm
+**	- Bug fix.
+**
 **	Revision 1.12  2005/07/28 14:14:48  smork
 **	- Bug fixing.
-**
+**	
 **	Revision 1.11  2005/07/28 14:02:16  smork
 **	- Some statistics.
 **	
@@ -234,9 +237,12 @@ public:
 				row->compute();
 				info->display->b3PutRow(row);
 
+				// count iterations
 				row_mutex.b3Lock();
 				iter_counter += row->cnt;
 				row_mutex.b3Unlock();
+
+				// That's it.
 				delete row;
 			}
 		}
