@@ -37,7 +37,7 @@ template<class T> class B3_PLUGIN b3Complex
 	T B3_ALIGN_16 v[2];
 
 public:
-	enum
+	enum b3_complex_index
 	{
 		Re = 0, //!< Index of real part of complex number
 		Im = 1  //!< Index of imaginary part of complex number

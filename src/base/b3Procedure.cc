@@ -37,11 +37,14 @@
 
 /*
 **	$Log$
+**	Revision 1.51  2005/07/31 19:34:33  sm
+**	- Documentation
+**
 **	Revision 1.50  2005/06/10 21:31:42  sm
 **	- Vectorization fix for Windows
 **	- Read binary from registry returns null when no
 **	  entry is in registry.
-**
+**	
 **	Revision 1.49  2005/05/19 10:27:33  smork
 **	- Added improved Perlin noise.
 **	
@@ -451,19 +454,19 @@ b3_f64 b3Noise::b3SignedImprovedNoise(b3_f64 x, b3_f64 y, b3_f64 z)
 	int BB    = m_Permutation[B+1]+Z;      // THE 8 CUBE CORNERS,
 
 	return
-		b3Math::b3Lerp(w,
-			b3Math::b3Lerp(v,
-				b3Math::b3Lerp(u,
+		b3Math::b3Mix(w,
+			b3Math::b3Mix(v,
+				b3Math::b3Mix(u,
 					b3Grad(m_Permutation[AA  ], x  , y  , z   ),   // AND ADD
 					b3Grad(m_Permutation[BA  ], x-1, y  , z   )),  // BLENDED
-				b3Math::b3Lerp(u,
+				b3Math::b3Mix(u,
 					b3Grad(m_Permutation[AB  ], x  , y-1, z   ),   // RESULTS
 					b3Grad(m_Permutation[BB  ], x-1, y-1, z   ))), // FROM  8
-			b3Math::b3Lerp(v,
-				b3Math::b3Lerp(u,
+			b3Math::b3Mix(v,
+				b3Math::b3Mix(u,
 					b3Grad(m_Permutation[AA+1], x  , y  , z-1 ),   // CORNERS
 					b3Grad(m_Permutation[BA+1], x-1, y  , z-1 )),  // OF CUBE
-				b3Math::b3Lerp(u,
+				b3Math::b3Mix(u,
 					b3Grad(m_Permutation[AB+1], x  , y-1, z-1 ),
 					b3Grad(m_Permutation[BB+1], x-1, y-1, z-1 ))));
 }

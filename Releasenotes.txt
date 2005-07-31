@@ -8,3 +8,6 @@ Version 2.99.2.18
 - Unterstützung für Undo/Redo im Objekteditor
 - Beschleunigte Speicherverwaltung
 - Verbesserte Unterstützung für SSE/SSE2
+
+Version 2.99.2.19
+- Entwicklungsdokumentation

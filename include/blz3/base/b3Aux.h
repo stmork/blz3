@@ -20,6 +20,9 @@
 
 #include "blz3/b3Config.h"
 
+/**
+ * This class represents a RGB color triplet.
+ */
 class B3_PLUGIN b3RGB
 {
 public:
@@ -52,12 +55,26 @@ public:
 			((b3_pkd_color)g <<  8) |
 			 (b3_pkd_color)b);
 	}
+
+	/**
+	 * This method assignes values from a given <em>b3_pkd_color</em> value
+	 * to this class.
+	 *
+	 * \param &color The given color representation.
+	 */
 	inline 	void          operator=(const b3_pkd_color &color)
 	{
 		r = (b3_u08)((color & 0xff0000) >> 16);
 		g = (b3_u08)((color & 0x00ff00) >>  8);
 		b = (b3_u08)((color & 0x0000ff));
 	}
+
+	/**
+	 * This method assignes values from a given <em>b3_color</em> value
+	 * to this class.
+	 *
+	 * \param &color The given color representation.
+	 */
 	inline  void          operator=(const b3_color &color)
 	{
 		r = (color.r > 1.0 ? 255 : (b3_u08)(color.r * 255));
@@ -81,6 +98,9 @@ public:
 #endif
 };
 
+/**
+ * This class represents a rectangle.
+ */
 class B3_PLUGIN b3Rect
 {
 public:
@@ -95,6 +115,9 @@ public:
 	b3_bool b3CheckBound(b3Rect *);
 };
 
+/**
+ * This class represents a single point.
+ */
 class B3_PLUGIN b3Point
 {
 public:
