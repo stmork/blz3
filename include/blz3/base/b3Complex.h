@@ -29,7 +29,7 @@
  * class because it fits best into use of the SSE2 unit of
  * most processors.
  */
-template<class T> class b3Complex
+template<class T> class B3_PLUGIN b3Complex
 {
 	/**
 	 * The value array. We advise to use b3_f64 as template class.

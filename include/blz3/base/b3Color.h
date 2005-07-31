@@ -43,6 +43,11 @@
 #define B3_MARKER      ((b3_pkd_color)0x00ff1144)
 #define B3_TRANSPARENT ((b3_pkd_color)0xff000000)
 
+/**
+ * This class provides color handling. It usses modern command sets
+ * like SSE if the compiler can generate this and the underlying cpu
+ * architecture supports it.
+ */
 class B3_PLUGIN b3Color
 {
 	b3_f32 B3_ALIGN_16 v[4];

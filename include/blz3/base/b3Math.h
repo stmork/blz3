@@ -20,17 +20,32 @@
 
 #include "blz3/b3Config.h"
 
+/**
+ * This class provides useful math helper methods.
+ */
 class b3Math
 {
 	static b3_f64 epsilon;
 	static b3_f64 m_CbrtCoeffs[15];
 
 public:
+	/**
+	 * This method squares a value.
+	 *
+	 * \param value The value to square.
+	 * \return The squared value.
+	 */
 	static inline b3_f64 b3Sqr(b3_f64 value)
 	{
 		return value * value;
 	}
 
+	/**
+	 * This computes a Fresnel term from an input value.
+	 *
+	 * \param F0 
+	 * \return The computed Fresnel term.
+	 */
 	static inline b3_f64 b3GetMu(b3_f64 F0)
 	{
 		b3_f64 sF0 = sqrt(F0);
@@ -38,6 +53,14 @@ public:
 		return (1.0 + sF0) / (1.0 - sF0);
 	}
 
+	/**
+	 * This method computes a Fresnel term from two values. This is
+	 * known as Schlick's hack.
+	 *
+	 * \param phi 
+	 * \param mu 
+	 * \return The fresnel computed value.
+	 */
 	static inline b3_f64 b3GetFresnel(b3_f64 phi,b3_f64 mu)
 	{
 		b3_f64 theta,a,b,c,d;
@@ -56,6 +79,12 @@ public:
 		return 0.5 * (a / b + c / d);
 	}
 
+	/**
+	 * This method limit a value against the bounds [0..1].
+	 *
+	 * \param value The value to limit.
+	 * \return The bound value.
+	 */
 	static inline b3_f64 b3Limit(const b3_f64 value)
 	{
 		if (value < 0)
@@ -69,6 +98,15 @@ public:
 		return value;
 	}
 
+	/**
+	 * This method limits a value against the specified bounds. This is the
+	 * floating point version.
+	 *
+	 * \param value The value to limit.
+	 * \param min The lower limit.
+	 * \param max The upper limit.
+	 * \return The bound value.
+	 */
 	static inline b3_f64 b3Limit(b3_f64 value,const b3_f64 min,const b3_f64 max)
 	{
 		if (value < min)
@@ -82,6 +120,15 @@ public:
 		return value;
 	}
 
+	/**
+	 * This method limits a value against the specified bounds. This is the integer
+	 * version.
+	 *
+	 * \param value The value to limit.
+	 * \param min The lower limit.
+	 * \param max The upper limit.
+	 * \return The bound value.
+	 */
 	static inline b3_s32 b3Limit(b3_s32 value,const b3_s32 min,const b3_s32 max)
 	{
 		if (value < min)
@@ -95,6 +142,13 @@ public:
 		return value;
 	}
 
+	/**
+	 * This method rounds a number by the given precision.
+	 *
+	 * \param x The value to round.
+	 * \param rnd The precision.
+	 * \return The rounded value.
+	 */
 	static inline b3_f64 b3Round(b3_f64 x,b3_f64 rnd)
 	{
 		b3_f64 mul    = floor(0.5 / rnd + 0.5);
@@ -103,6 +157,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method returns the fractional part of the division <em>a/b</em>.
+	 *
+	 * \param a The dividend.
+	 * \param b The divisor.
+	 * \return The fractional part.
+	 */
 	static inline b3_f64 b3Frac(b3_f64 a,b3_f64 b)
 	{
 		b3_s32 n;
@@ -120,16 +181,42 @@ public:
 		}
 	}
 
+	/**
+	 * This method mixes two values with a given mixer value. The mixer
+	 * must be in the range [0..1]. A mixer value of 0 results in a, a
+	 * value of 1 results in b.
+	 *
+	 * \param a The first value to mix.
+	 * \param b The second value to mix.
+	 * \param x The mixer in range [0..1].
+	 * \return The mixed value.
+	 */
 	static inline b3_f64 b3Mix(b3_f64 a,b3_f64 b,b3_f64 x)
 	{
+		B3_ASSERT(x >= 0);
+		B3_ASSERT(x <= 1);
 		return a * (1 - x) + b * x;
 	}
 
+	/**
+	 * This method returns the lower value of a or b.
+	 *
+	 * \param a One value.
+	 * \param b Another value.
+	 * \return The lower value of both given values.
+	 */
 	static inline b3_f64 b3Min(b3_f64 a,b3_f64 b)
 	{
 		return a < b ? a : b;
 	}
 
+	/**
+	 * This method returns the greater value of a or b.
+	 *
+	 * \param a One value.
+	 * \param b Another value.
+	 * \return The greater value of both given values.
+	 */
 	static inline b3_f64 b3Max(b3_f64 a,b3_f64 b)
 	{
 		return a > b ? a : b;
@@ -204,11 +291,13 @@ public:
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
 
-	static inline b3_f64 b3Lerp(b3_f64 t, b3_f64 a, b3_f64 b)
-	{ 
-		return a + t * (b - a);
-	}
-
+	/**
+	 * This funtion is a fast pow() version for high integer exponents.
+	 *
+	 * \param x The base.
+	 * \param exponent The exponent.
+	 * \return The power of x with integer exponent exponent.
+	 */
 	static inline b3_f64 b3FastPow(b3_f64 x,b3_u32 exponent)
 	{
 		b3_f64 result = 1;
@@ -226,6 +315,12 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method is the clamped version of the standard asin function.
+	 *
+	 * \param x The sine value.
+	 * \return The arc sine value.
+	 */
 	static inline b3_f64 b3Asin(b3_f64 x)
 	{
 		if (x <= -1)
@@ -239,6 +334,12 @@ public:
 		return asin(x);
 	}
 
+	/**
+	 * This method is the clamped version of the standard acos function.
+	 *
+	 * \param x The cosine value.
+	 * \return The arc cosine value.
+	 */
 	static inline b3_f64 b3Acos(b3_f64 x)
 	{
 		if (x <= -1)
@@ -253,6 +354,12 @@ public:
 	}
 
 #ifndef CBRT_SYS
+	/**
+	 * This method computes the cubic root from a value.
+	 *
+	 * \param x The value to compute the cubic root from.
+	 * \return The cubic root.
+	 */
 #ifdef  CBRT_SLOW
 	static inline b3_f64 b3Cbrt(b3_f64 x)
 	{

@@ -179,7 +179,8 @@ public:
 	 * This method sorts the array with a custom sorting method.
 	 *
 	 * @param sorter Sorting method.
-	 * @param ptr    Custom pointer for custom information retrieval.
+	 * @param ptr Custom pointer for custom informations inside comparison
+	 *            procedure.
 	 */
 	inline void b3Sort(int (*sorter)(T *a,T *b,const void *ptr),const void *ptr)
 	{
@@ -201,6 +202,8 @@ public:
 	 *
 	 * @param comparator A comparator class which can compare elements
 	 *                   of this template class.
+	 * @param ptr Custom pointer for custom informations inside comparison
+	 *            procedure.
 	 * @see b3Comparator
 	 */
 	inline void b3Sort(b3Comparator<T> comparator,const void *ptr = null)

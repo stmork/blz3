@@ -27,6 +27,11 @@ public:
 public:
 
 	              b3RGB();
+	/**
+	 * This method returns the stored color as a <em>b3_pkd_color</em> type.
+	 *
+	 * \return The color in <em>b3_pkd_color</em> representation.
+	 */
 	inline b3_pkd_color  operator()()
 	{
 		return (
@@ -34,6 +39,12 @@ public:
 			((b3_pkd_color)g <<  8) |
 			 (b3_pkd_color)b);
 	}
+
+	/**
+	 * This method returns the stored color as a <em>b3_pkd_color</em> type.
+	 *
+	 * \return The color in <em>b3_pkd_color</em> representation.
+	 */
 	inline               operator b3_pkd_color()
 	{
 		return (

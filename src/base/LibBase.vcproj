@@ -387,6 +387,9 @@
 				RelativePath="..\..\include\blz3\base\b3Compare.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\base\b3Complex.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\base\b3Cubic.h">
 			</File>
 			<File

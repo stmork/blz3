@@ -65,6 +65,10 @@ public:
 		return ClassType & B3_CLASS_MASK;
 	}
 
+	/**
+	 *
+	 * \return 
+	 */
 	inline b3_u32 b3GetType()
 	{
 		return ClassType & B3_TYPE_MASK;
@@ -116,6 +120,11 @@ public:
 		return Class;
 	}
 
+	/**
+	 * This method returns true if the list is empty.
+	 *
+	 * \return True if list is empty.
+	 */
 	inline b3_bool b3IsEmpty()
 	{
 		return (First == null) && (Last == null);
@@ -148,6 +157,9 @@ public:
 		}
 	}
 
+	/**
+	 * This method removes and deletes all elements from this list.
+	 */
 	inline void b3Free()
 	{
 		T *node,*succ;
@@ -161,6 +173,9 @@ public:
 		Last  = null;
 	}
 
+	/**
+	 * This method only removes all elements from this list.
+	 */
 	inline void b3RemoveAll()
 	{
 		T *node = First,*succ;
@@ -179,6 +194,11 @@ public:
 		}
 	}
 
+	/**
+	 * This method returns the amount of listed elements.
+	 *
+	 * \return The amount of listed elements.
+	 */
 	inline b3_count b3GetCount()
 	{
 		T        *node;
@@ -191,6 +211,11 @@ public:
 		return count;
 	}
 
+	/**
+	 * This element appends the specified element to the list.
+	 *
+	 * \param *ptr The list element to append.
+	 */
 	inline void b3Append(T *ptr)
 	{
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
@@ -214,6 +239,11 @@ public:
 		Last      = ptr;
 	}
 
+	/**
+	 * This element prepends the specified element to the list.
+	 *
+	 * \param *ptr The list element to prepend.
+	 */
 	inline void b3First(T *ptr)
 	{
 		B3_ASSERT((ptr->Succ == null) && (ptr->Prev == null) && (ptr != First) && (ptr != Last));
@@ -237,6 +267,11 @@ public:
 		First     = ptr;
 	}
 
+	/**
+	 * This method removes the specified element from the list.
+	 *
+	 * \param *ptr The element to remove.
+	 */
 	inline void b3Remove(T *ptr)
 	{
 #ifndef B3_NO_CLASS_CHECK
@@ -271,6 +306,11 @@ public:
 		ptr->Prev = null;
 	}
 
+	/**
+	 * This method removes the first element from the list.
+	 *
+	 * \return The removed first element.
+	 */
 	inline T *b3RemoveFirst()
 	{
 		T *removed = First;
@@ -282,6 +322,11 @@ public:
 		return removed;
 	}
 
+	/**
+	 * This method removes the last element from the list.
+	 *
+	 * \return The removed last element.
+	 */
 	inline T *b3RemoveLast()
 	{
 		T *removed = Last;
@@ -293,6 +338,12 @@ public:
 		return removed;
 	}
 
+	/**
+	 * This method inserts an element at a specified position.
+	 *
+	 * \param *pre The element after that the element is inserted.
+	 * \param *ptr The element to insert.
+	 */
 	inline void b3Insert(T *pre,T *ptr)
 	{
 		T *succ;
@@ -340,6 +391,15 @@ public:
 		}
 	}
 
+	/**
+	 * This method selects another element from the list based on the
+	 * given element. This is for reselecting purposes in GUIs if one
+	 * list element should be removed. The specified element is not
+	 * removed.
+	 *
+	 * \param *ptr The element from which reselecting is based on.
+	 * \return The reselected element.
+	 */
 	inline T *b3Reselect(T *ptr)
 	{
 		T *select = null;
@@ -355,6 +415,12 @@ public:
 		return select;
 	}
 
+	/**
+	 * This method returns state information for the given element.
+	 *
+	 * \param *ptr The element
+	 * \return The state of the element.
+	 */
 	inline long b3State(T *ptr)
 	{
 		b3_u32  flags;
@@ -379,8 +445,13 @@ public:
 		return flags;
 	}
 
-	// This is a nice piece of code! An in situ merge sort on
-	// doubly linked list.
+	/**
+	 * This method sorts the elements using a specified sorting method.
+	 * This is a nice piece of code! An in situ merge sort on
+	 * doubly linked list.
+	 *
+	 * \param *func The sorting method.
+	 */
 	inline void b3Sort(int (*func)(T *,T *,const void *),const void *Ptr = null)
 	{
 		b3Base    Right;
@@ -477,6 +548,12 @@ public:
 		}
 	}
 
+	/**
+	 * This method moves all elements from another list into this list. This
+	 * list must be empty before moving.
+	 *
+	 * \param *src The source list where the elements moved from into this list.
+	 */
 	inline void b3MoveFrom(b3Base<T> *src)
 	{
 		B3_ASSERT(b3IsEmpty());
