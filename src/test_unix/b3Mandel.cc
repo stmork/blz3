@@ -24,6 +24,7 @@
 *************************************************************************/
 
 #include "blz3/b3Config.h"
+#include "blz3/system/b3Atomic.h"
 #include "blz3/system/b3Display.h"
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3Complex.h"
@@ -49,9 +50,13 @@ struct mandel_info
 
 /*
 **	$Log$
+**	Revision 1.14  2005/08/01 14:13:02  smork
+**	- Using b3AtomicCounter in Mandelbrot computation.
+**	- Documentation.
+**
 **	Revision 1.13  2005/07/31 10:10:05  sm
 **	- Bug fix.
-**
+**	
 **	Revision 1.12  2005/07/28 14:14:48  smork
 **	- Bug fixing.
 **	
@@ -116,10 +121,10 @@ struct mandel_info
 // Overload one screen row to compute its pixels
 class b3MandelRow : public b3Row
 {
-	static b3_pkd_color  iter_color[64];
-	static b3_u64        iter_counter;
-	static b3Base<b3Row> rows;
-	static b3Mutex       row_mutex;
+	static b3_pkd_color    iter_color[64];
+	static b3AtomicCounter iter_counter;
+	static b3Base<b3Row>   rows;
+	static b3Mutex         row_mutex;
 
 	b3_count iter;
 	b3_u64   cnt;
@@ -238,9 +243,7 @@ public:
 				info->display->b3PutRow(row);
 
 				// count iterations
-				row_mutex.b3Lock();
-				iter_counter += row->cnt;
-				row_mutex.b3Unlock();
+				iter_counter.b3Add(row->cnt);
 
 				// That's it.
 				delete row;
@@ -257,16 +260,16 @@ public:
 		rows.b3Append(row);
 	}
 
-	inline static b3_count b3GetIterations()
+	inline static b3_u64 b3GetIterations()
 	{
 		return iter_counter;
 	}
 };
 
-b3_pkd_color  b3MandelRow::iter_color[64];
-b3_u64        b3MandelRow::iter_counter = 0;
-b3Base<b3Row> b3MandelRow::rows;
-b3Mutex       b3MandelRow::row_mutex;
+b3_pkd_color     b3MandelRow::iter_color[64];
+b3AtomicCounter  b3MandelRow::iter_counter;
+b3Base<b3Row>    b3MandelRow::rows;
+b3Mutex          b3MandelRow::row_mutex;
 
 void b3Mandel::b3Compute(
 	b3Display *display,
@@ -342,6 +345,7 @@ void b3Mandel::b3Compute(
 
 	b3PrintF(B3LOG_NORMAL,"Computing took %3.3fs.\n",tDiff);
 	b3PrintF(B3LOG_NORMAL,"Iterations: %llu\n", count);
+	b3PrintF(B3LOG_NORMAL,"%3.3fM iterations/s\n", (b3_f64)count / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL,"%3.3fM complex ops/s\n",count * 3 / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL,"%3.3fM mults/s\n",count * 5 / tDiff / 1000000);
 	b3PrintF(B3LOG_NORMAL,"%3.3fM adds/s\n",count * 6 / tDiff / 1000000);
