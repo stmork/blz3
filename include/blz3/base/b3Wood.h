@@ -111,6 +111,7 @@ public:
 	 *
 	 * \param *polar The point to compute the wooden oak plank pattern from.
 	 * \param distance Distance from eye point to give a level of detail.
+	 * \param index The used wood instance.
 	 * \return The wooden oak plank pattern.
 	 */
 	b3_f64   b3ComputeOakPlank(b3_vector *polar, b3_f64 distance, b3_index &index);

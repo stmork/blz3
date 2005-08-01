@@ -457,12 +457,18 @@ public:
 typedef b3VectorTemplate<b3_f32,B3_MAX_DIM> b3Vector32;
 typedef b3VectorTemplate<b3_f64,B3_MAX_DIM> b3Vector64;
 
+/**
+ * This structure holds a ray in single precision.
+ */
 struct b3Line32
 {
 	b3Vector32 pos;
 	b3Vector32 dir;
 };
 
+/**
+ * This structure holds a ray in double precision.
+ */
 struct b3Line64
 {
 	b3Vector64 pos;

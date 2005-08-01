@@ -64,8 +64,9 @@ public:
 	virtual b3_f64    b3Integral(b3_f64 x) = 0;
 	
 	/**
+	 * This method integrates over a filter kernel.
 	 *
-	 * \param val 
+	 * \param val The value position to integrate.
 	 * \param throw_exception A flag if throwing an exception on error.
 	 * \return The inverse integral.
 	 */
@@ -94,17 +95,17 @@ public:
 	inline b3_f64 b3Integral(b3_f64 x)
 	{
 		if (x < -1) return 0;
-		if (x >  1) return 1;
-		return (x + 1) * 0.5;
+		else if (x >  1) return 1;
+		else return (x + 1) * 0.5;
 	}
 
-	inline b3_f64 b3InvIntegral(b3_f64 x,b3_bool throw_exception = false)
+	inline b3_f64 b3InvIntegral(b3_f64 val,b3_bool throw_exception = false)
 	{
-		if ((fabs(x) > 1) && throw_exception)
+		if ((fabs(val) > 1) && throw_exception)
 		{
 			B3_THROW(b3FilterException,B3_FILTER_OUT_OF_RANGE);
 		}
-		return x;
+		return val;
 	}
 };
 
@@ -119,8 +120,8 @@ class B3_PLUGIN b3GaussFilter : public b3Filter
 
 public:
 	              b3GaussFilter();
-	b3_f64 b3Func(b3_f64 value);
-	b3_f64 b3Integral(b3_f64 value);
+	b3_f64 b3Func(b3_f64 x);
+	b3_f64 b3Integral(b3_f64 x);
 };
 
 /**
@@ -134,8 +135,8 @@ class B3_PLUGIN b3ShutterFilter : public b3Filter
 
 public:
 	       b3ShutterFilter(b3_f64 max = 0.25);
-	b3_f64 b3Func(b3_f64 value);
-	b3_f64 b3Integral(b3_f64 value);
+	b3_f64 b3Func(b3_f64 x);
+	b3_f64 b3Integral(b3_f64 x);
 };
 
 #endif

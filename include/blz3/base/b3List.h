@@ -37,16 +37,31 @@
 #define B3_CLASS_MASK 0xffff0000
 #define B3_TYPE_MASK  0x0000ffff
 
+/**
+ * This class is one list element. All elements are identified by
+ * the same class part of the elements class type. If the class type
+ * is zero the b3Link is meant as an anonymous list.
+ *
+ * @see b3Base
+ */
 template <class T> class B3_PLUGIN b3Link
 {
 public:
-	T         *Succ;
-	T         *Prev;
+	T         *Succ; //!< The next list element or null if this is the last one.
+	T         *Prev; //!< The previous list element or null if this is the first one.
+
 protected:
-	b3_u32     ClassType;
-	b3_size    Size;
-	b3_offset  Offset;
+	b3_u32     ClassType; //!< The class and type of thie element instance.
+	b3_size    Size;      //!< The size in bytes of this instance.
+	b3_offset  Offset;    //!< The offset to the instance text for serailizing.
+
 public:
+	/**
+	 * This constructor initializes this list element.
+	 *
+	 * @param new_size The class instance size.
+	 * @param new_class The class type for this list item.
+	 */
 	b3Link(b3_size new_size,b3_u32 new_class = 0)
 	{
 		Succ      = null;
@@ -60,25 +75,41 @@ public:
 	{
 	}
 
+	/**
+	 * This method returns the class part of the class type.
+	 *
+	 * @return The class part of the class type.
+	 */
 	inline b3_u32 b3GetClass()
 	{
 		return ClassType & B3_CLASS_MASK;
 	}
 
 	/**
+	 * This method returns the type part of the class type.
 	 *
-	 * \return 
+	 * \return The type part of the class type.
 	 */
 	inline b3_u32 b3GetType()
 	{
 		return ClassType & B3_TYPE_MASK;
 	}
 
+	/**
+	 * This method returns the class type of this list element.
+	 *
+	 * @return The class type of this list element.
+	 */
 	inline b3_u32 b3GetClassType()
 	{
 		return ClassType;
 	}
 
+	/**
+	 * This method returns the class instance size.
+	 *
+	 * @return The class instance size.
+	 */
 	inline b3_size b3GetSize()
 	{
 		return Size;
@@ -89,16 +120,25 @@ public:
 #define B3_FOR_BASE_BACK(b,n)    for((n) = (b)->Last;(n)!= null;(n) = (n)->Prev)
 #define B3_DELETE_BASE(b,n) ((b)->b3Free())
 
+/**
+ * This class is the base container for a doubly linked list. All
+ * elements in the list have got the same class specifier.
+ *
+ * @see b3Link
+ */
 template <class T> class B3_PLUGIN b3Base
 {
 protected:
-	b3_u32  Class;
+	b3_u32  Class; //!< The class specifier.
 
 public:
-	T      *First;
-	T      *Last;
+	T      *First; //!< The first list element.
+	T      *Last;  //!< The last list element.
 
 public:
+	/**
+	 * This constructor initializes the list with the specified class.
+	 */
 	b3Base(b3_u32 new_class = 0)
 	{
 		b3InitBase(new_class);
@@ -108,6 +148,11 @@ public:
 	{
 	}
 
+	/**
+	 * This method initializes the list with the specified class.
+	 * Note that a previously non empty list will loose all its
+	 * elements!
+	 */
 	inline void b3InitBase(b3_u32 new_class = 0)
 	{
 		First = null;
@@ -115,6 +160,11 @@ public:
 		Class = new_class;
 	}
 
+	/**
+	 * Thie method returns the class specifier.
+	 *
+	 * @return The class specifier.
+	 */
 	inline b3_u32 b3GetClass()
 	{
 		return Class;
@@ -130,6 +180,13 @@ public:
 		return (First == null) && (Last == null);
 	}
 
+	/**
+	 * This method appends all list elements from the source list
+	 * to this list.
+	 *
+	 * @param from The source list where all list elements are removed
+	 *             and appended to this list.
+	 */
 	inline void b3Move(b3Base<T> *from)
 	{
 #ifndef B3_NO_CLASS_CHECK
@@ -451,6 +508,7 @@ public:
 	 * doubly linked list.
 	 *
 	 * \param *func The sorting method.
+	 * \param *Ptr A pointer to custom information.
 	 */
 	inline void b3Sort(int (*func)(T *,T *,const void *),const void *Ptr = null)
 	{
