@@ -31,9 +31,13 @@
 
 /*
 **	$Log$
+**	Revision 1.5  2005/08/02 15:02:50  smork
+**	- Optimized b3Mix methods.
+**	- Documentation.
+**
 **	Revision 1.4  2004/06/05 08:07:05  sm
 **	- Corrected b3Color for multiplying colors as filter.
-**
+**	
 **	Revision 1.3  2004/05/28 19:35:39  sm
 **	- Added Mork shader enhancement as new extra shader.
 **	
@@ -82,5 +86,3 @@ b3_f32 B3_ALIGN_16 b3Color::m_Limit_d255[4] =
 	0.0039215686f,
 	0.0039215686f
 };
-
-b3Color B3_ALIGN_16 b3Color::m_Value001 = b3Color(1.0f,1.0f,1.0f,1.0f);

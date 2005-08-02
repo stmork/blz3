@@ -195,7 +195,7 @@ public:
 	{
 		B3_ASSERT(x >= 0);
 		B3_ASSERT(x <= 1);
-		return a * (1 - x) + b * x;
+		return a + x * (b - a);
 	}
 
 	/**
