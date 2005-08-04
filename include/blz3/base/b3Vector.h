@@ -1,16 +1,16 @@
 /*
 **
-**      $Filename:      b3Vector.h $
-**      $Release:       Dortmund 2002 $
-**      $Revision$
-**      $Date$
-**      $Author$
-**      $Developer:     Steffen A. Mork $
+**	$Filename:      b3Vector.h $
+**	$Release:       Dortmund 2002 $
+**	$Revision$
+**	$Date$
+**	$Author$
+**	$Developer:     Steffen A. Mork $
 **
-**      Blizzard III - Vector template
+**	Blizzard III - Vector template
 **
-**      (C) Copyright  Steffen A. Mork
-**          All Rights Reserved
+**	(C) Copyright  Steffen A. Mork
+**	    All Rights Reserved
 **
 **
 **
@@ -24,15 +24,21 @@
 #include <float.h>
 #include "blz3/system/b3Exception.h"
 
+/**
+ * This enumeration lists the first four indices into the vector components.
+ */
 enum b3_vector_index
 {
-	X = 0,
-	Y,
-	Z,
-	W,
-	B3_MAX_DIM
+	X = 0,      //!< The x component.
+	Y,          //!< Thy y component.
+	Z,          //!< The z component.
+	W,          //!< The w (homogenous) component.
+	B3_MAX_DIM  //!< The amount of labeled components.
 };
 
+/**
+ * This enumeration lists all possible vector error states.
+ */
 enum b3_vector_error
 {
 	B3_VECTOR_ERROR = -1,
@@ -42,15 +48,27 @@ enum b3_vector_error
 
 typedef b3Exception<b3_vector_error,'VEC'> b3VectorException;
 
+/**
+ * This is a template class fur use in the b3Spline template class.
+ * It can take a component type and the dimension of the vector space.
+ */
 template<class F,b3_loop dim> class B3_PLUGIN b3VectorTemplate
 {
-	F B3_ALIGN_16 v[dim];
+	F B3_ALIGN_16 v[dim]; //!< The values.
 
 public:
+	/**
+	 * This constructor does simply nothing.
+	 */
 	inline b3VectorTemplate()
 	{
 	}
 
+	/**
+	 * This constructor initializes all vector components with the same value.
+	 *
+	 * @param value The value to initialize.
+	 */ 
 	inline b3VectorTemplate(F value)
 	{
 		b3Value(value);
@@ -368,6 +386,11 @@ public:
 		upper.b3Value(-FLT_MAX);
 	}
 
+	/**
+	 * This method clamps each vector component to a given value.
+	 *
+	 * @param min The lower level to clamp.
+	 */
 	inline void b3SetMinimum(F min)
 	{
 		for (b3_loop i = 0;i < dim;i++)
@@ -376,6 +399,12 @@ public:
 		}
 	}
 
+	/**
+	 * This method adjusts a lower corner with the values of this instance.
+	 * It's a min() function for each component.
+	 *
+	 * @param lower The lower corner to adjust.
+	 */
 	inline void b3CheckLowerBound(const b3VectorTemplate<F,dim> &lower)
 	{
 		for (b3_loop i = 0;i < dim;i++)
@@ -384,6 +413,11 @@ public:
 		}
 	}
 
+	/**
+	 * This method saturates each vector component to a given value.
+	 *
+	 * @param max The upper level to saturate.
+	 */
 	inline void b3SetMaximum(F max)
 	{
 		for (b3_loop i = 0;i < dim;i++)
@@ -392,6 +426,12 @@ public:
 		}
 	}
 
+	/**
+	 * This method adjusts a upper corner with the values of this instance.
+	 * It's a max() function for each component.
+	 *
+	 * @param upper The lower corner to adjust.
+	 */
 	inline void b3CheckUpperBound(const b3VectorTemplate<F,dim> &upper)
 	{
 		for (b3_loop i = 0;i < dim;i++)
@@ -400,6 +440,13 @@ public:
 		}
 	}
 
+	/**
+	 * This function computes the angle between two vectors.
+	 *
+	 * @param Vector1 The first vector.
+	 * @param Vector2 The second vector.
+	 * @return The resulting angle.
+	 */
 	static inline F b3AngleOfVectors(
 		b3VectorTemplate<F,dim> &Vector1,
 		b3VectorTemplate<F,dim> &Vector2)
@@ -414,6 +461,13 @@ public:
 		return 0;
 	}
 
+	/**
+	 * This method adjusts a bounding box specified by a lower and an
+	 * upper corner with this instance.
+	 *
+	 * @param lower The lower corner of the bounding box to adjust.
+	 * @param upper The upper corner of the bounding box to adjust.
+	 */
 	inline void b3AdjustBound(
 		b3VectorTemplate<F,dim> &lower,
 		b3VectorTemplate<F,dim> &upper)
@@ -440,6 +494,12 @@ public:
 		}
 	}
 
+	/**
+	 * This method prints the content of all vector components and adds.
+	 * a specified comment.
+	 *
+	 * @param comment An additional comment.
+	 */
 	inline void b3Print(const char *comment)
 	{
 		if (comment != 0)
