@@ -778,7 +778,7 @@ public:
 		return result;
 	}
 
-	/**
+ 	/**
 	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
 	 *
 	 * @param aVec The first vector.

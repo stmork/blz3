@@ -74,6 +74,14 @@ public:
 		b3Value(value);
 	}
 
+	/**
+	 * This constructor initializes this instance with the given components.
+	 *
+	 * @param x The new x value.
+	 * @param y The new y value.
+	 * @param z The new z value.
+	 * @param w The new w value.
+	 */
 	inline b3VectorTemplate(
 		b3_f32 x,
 		b3_f32 y,
@@ -83,6 +91,14 @@ public:
 		b3Init(x,y,z,w);
 	}
 
+	/**
+	 * This constructor initializes this instance with the given components.
+	 *
+	 * @param x The new x value.
+	 * @param y The new y value.
+	 * @param z The new z value.
+	 * @param w The new w value.
+	 */
 	inline b3VectorTemplate(
 		b3_f64 x,
 		b3_f64 y,
@@ -92,56 +108,118 @@ public:
 		b3Init(x,y,z,w);
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param src The source vector.
+	 */
 	inline b3VectorTemplate(const b3VectorTemplate<b3_f32,B3_MAX_DIM> &src)
 	{
 		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param src The source vector.
+	 */
 	inline b3VectorTemplate(const b3VectorTemplate<b3_f64,B3_MAX_DIM> &src)
 	{
 		for (b3_loop i = 0;i < dim;i++) v[i] = src.v[i];
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param vec The source vector.
+	 */
 	inline b3VectorTemplate(const b3_vector32 &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param vec The source vector.
+	 */
 	inline b3VectorTemplate(const b3_gl_vector &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param vec The source vector.
+	 */
 	inline b3VectorTemplate(const b3_vector64 &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z);
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param vec The source vector.
+	 */
 	inline b3VectorTemplate(const b3_vector32_4D &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z,vec.w);
 	}
 
+	/**
+	 * This copy constructor copies a b3Vector into this instance.
+	 *
+	 * @param vec The source vector.
+	 */
 	inline b3VectorTemplate(const b3_vector64_4D &vec)
 	{
 		b3Init(vec.x,vec.y,vec.z,vec.w);
 	}
 
+	/**
+	 * This method initializes all vector components to zero.
+	 */
 	inline void b3Zero()
 	{
 		b3Value((F)0.0);
 	}
 
+	/**
+	 * This method sets all vector components to a given value.
+	 *
+	 * @param value The components value.
+	 */
 	inline void b3Value(b3_f32 value = 0)
 	{
-		for (b3_loop i = 0;i < dim;i++) v[i] = (F)value;
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] = (F)value;
+		}
 	}
 
+	/**
+	 * This method sets all vector components to a given value.
+	 *
+	 * @param value The components value.
+	 */
 	inline void b3Value(b3_f64 value = 0)
 	{
-		for (b3_loop i = 0;i < dim;i++) v[i] = (F)value;
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] = (F)value;
+		}
 	}
 
+	/**
+	 * This method initialize the vector components with the given values.
+	 *
+	 * @param x The new x value.
+	 * @param y The new y value.
+	 * @param z The new z value.
+	 * @param w The new w value.
+	 */
 	inline void b3Init(
 		b3_f64 x = 0,
 		b3_f64 y = 0,
@@ -154,6 +232,11 @@ public:
 		v[W] = (F)w;
 	}
 
+	/**
+	 * This cast operator returns a b3_vector32 instance.
+	 *
+	 * @return A new b3_vector32 instance.
+	 */
 	inline operator b3_vector32 ()
 	{
 		b3_vector32 result;
@@ -165,6 +248,12 @@ public:
 		return result;
 	}
 
+
+	/**
+	 * This cast operator returns a b3_gl_vector instance.
+	 *
+	 * @return A new b3_gl_vector instance.
+	 */
 	inline operator b3_gl_vector ()
 	{
 		b3_gl_vector result;
@@ -175,6 +264,11 @@ public:
 		return result;
 	}
 
+	/**
+	 * This cast operator returns a b3_vector64 instance.
+	 *
+	 * @return A new b3_vector64 instance.
+	 */
 	inline operator b3_vector64 ()
 	{
 		b3_vector64 result;
@@ -186,6 +280,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This index operator returns a vector component depending on
+	 * the given index.
+	 *
+	 * @param index The component index.
+	 * return The indexed compontent.
+	 */
 	inline F operator [](const b3_vector_index index)
 	{
 #ifdef _DEBUG
@@ -197,112 +298,182 @@ public:
 		return v[index];
 	}
 
+	/**
+	 * This operator adds a specified vector to this instance.
+	 *
+	 * @param a The vector to add.
+	 * @return A reference to this instance.
+	 */
 	inline b3VectorTemplate<F,dim> &operator+=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (b3_loop i = 0;i < dim;i++) v[i] += a.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] += a.v[i];
+		}
 		return *this;
 	}
 
+	/**
+	 * This operator adds a vector to this instance resulting in a new instance.
+	 *
+	 * @param a The vector to add.
+	 * @return A new b3VectorTemplate instance.
+	 */
 	inline b3VectorTemplate<F,dim> operator+(const b3VectorTemplate<F,dim> &a)
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] + (F)a.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = v[i] + (F)a.v[i];
+		}
 		return result;
 	}
 
+	/**
+	 * This operator subtracts a specified vector from this instance.
+	 *
+	 * @param a The vector to subtract.
+	 * @return A reference to this instance.
+	 */
 	inline b3VectorTemplate<F,dim> &operator-=(const b3VectorTemplate<F,dim> &a)
 	{
-		for (b3_loop i = 0;i < dim;i++) v[i] -= a.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] -= a.v[i];
+		}
 		return *this;
 	}
 
+	/**
+	 * This operator subtracts a vector from this instance resulting in a new instance.
+	 *
+	 * @param a The vector to subtract.
+	 * @return A new b3VectorTemplate instance.
+	 */
 	inline b3VectorTemplate<F,dim> operator-(const b3VectorTemplate<F,dim> &a)
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] - (F)a.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = v[i] - (F)a.v[i];
+		}
 		return result;
 	}
 
+	/**
+	 * This method negates this instance into a new one.
+	 *
+	 * @return The resulting negated vector.
+	 */
 	inline b3VectorTemplate<F,dim> operator-()
 	{
 		b3VectorTemplate<F,dim> result;
 
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = -v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = -v[i];
+		}
 		return result;
 	}
 
-	inline b3VectorTemplate<F,dim> &operator*=(const b3VectorTemplate<F,dim> &a)
-	{
-		for (b3_loop i = 0;i < dim;i++) v[i] *= a.v[i];
-		return *this;
-	}
-
-	inline b3VectorTemplate<F,dim> operator*(const b3VectorTemplate<F,dim> &a)
-	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] * a.v[i];
-		return result;
-	}
-
+	/**
+	 * This operator multiplies this instance with a specified value.
+	 *
+	 * @param value The scaling factor.
+	 * @return A reference to this vector.
+	 */
 	inline b3VectorTemplate<F,dim> &operator*=(const b3_f64 value)
 	{
 		b3VectorTemplate<F,dim> prod(value);
 
-		for (b3_loop i = 0;i < dim;i++) v[i] *= prod.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] *= prod.v[i];
+		}
 		return *this;
 	}
 
+	/**
+	 * This operator scales this instance with a specified value resulting in a new instance.
+	 *
+	 * @param value The scaling factor.
+	 * @return The new b3VectorTemplate instance.
+	 */
 	inline b3VectorTemplate<F,dim> operator*(const b3_f64 value)
 	{
 		b3VectorTemplate<F,dim> result,multiplicator(value);
 
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] * multiplicator.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = v[i] * multiplicator.v[i];
+		}
 		return result;
 	}
 
-	inline b3VectorTemplate<F,dim> &operator/=(const b3VectorTemplate<F,dim> &a)
-	{
-		for (b3_loop i = 0;i < dim;i++) v[i] /= a.v[i];
-		return *this;
-	}
-
-	inline b3VectorTemplate<F,dim> operator/(const b3VectorTemplate<F,dim> &a)
-	{
-		b3VectorTemplate<F,dim> result;
-
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] / a.v[i];
-		return result;
-	}
-
+	/**
+	 * This operator divides this instance by a specified divisor.
+	 *
+	 * @param value The divisor.
+	 * @return A reference to this vector.
+	 */
 	inline b3VectorTemplate<F,dim> &operator/=(const b3_f64 value)
 	{
 		b3VectorTemplate<F,dim> prod(value);
 
-		for (b3_loop i = 0;i < dim;i++) v[i] /= prod.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] /= prod.v[i];
+		}
 		return *this;
 	}
 
+	/**
+	 * This operator divides this instance by a specified divisor resulting in a new instance.
+	 *
+	 * @param value The divisor.
+	 * @return The new b3VectorTemplate instance.
+	 */
 	inline b3VectorTemplate<F,dim> operator/(const b3_f64 value)
 	{
 		b3VectorTemplate<F,dim> result,divisor(value);
 
-		for (b3_loop i = 0;i < dim;i++) result.v[i] = v[i] / divisor.v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			result.v[i] = v[i] / divisor.v[i];
+		}
 		return result;
 	}
 
+	/**
+	 * This method negates all components of this vector.
+	 */
 	inline void b3Negate()
 	{
-		for (b3_loop i = 0;i < dim;i++) v[i] = -v[i];
+		for (b3_loop i = 0;i < dim;i++)
+		{
+			v[i] = -v[i];
+		}
 	}
 
+	/**
+	 * This method returns the length of this vector.
+	 * 
+	 * @return The length of this vector.
+	 */
 	inline F b3Length()
 	{
 		return sqrt(b3QuadLength());
 	}
 
+	/**
+	 * This method computes the dot product of two vectors.
+	 *
+	 * @param a The first vector.
+	 * @param b The second vector.
+	 * @return The resulting dot product.
+	 */
 	inline static F b3SMul(
 		const b3VectorTemplate<F,dim> &a,
 		const b3VectorTemplate<F,dim> &b)
@@ -316,6 +487,12 @@ public:
 		return r[0] + r[1] + r[2] + r[3];
 	}
 
+	/**
+	 * This method computes the dot product of two vectors.
+	 *
+	 * @param a The first vector the second one is this instance.
+	 * @return The resulting dot product.
+	 */
 	inline F b3SMul(
 		const b3VectorTemplate<F,dim> &a)
 	{
@@ -328,6 +505,13 @@ public:
 		return result;
 	}
 
+ 	/**
+	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 *
+	 * @param a The first vector.
+	 * @param b The second vector.
+	 * @return The result as a new b3VectorTemplate instance.
+	 */
 	inline static b3VectorTemplate<F,dim> b3CrossProduct(
 		const b3VectorTemplate<F,dim> &a,
 		const b3VectorTemplate<F,dim> &b)
@@ -338,6 +522,12 @@ public:
 			a.v[X] * b.v[Y] - a.v[Y] * b.v[X],(F)0.0);
 	}
 
+ 	/**
+	 * This method computes the cross product from two vectors: <em>result = this x bVec</em>.
+	 *
+	 * @param b The second vector the first vector is this instance.
+	 * @return The result as a new b3VectorTemplate instance.
+	 */
 	inline b3VectorTemplate<F,dim> b3CrossProduct(
 		const b3VectorTemplate<F,dim> &b)
 	{
@@ -347,6 +537,11 @@ public:
 			v[X] * b.v[Y] - v[Y] * b.v[X],(F)0.0);
 	}
 
+	/**
+	 * The method computes the squared length of this vector.
+	 *
+	 * @return The resulting squared vector length.
+	 */
 	inline F b3QuadLength()
 	{
 		F result = 0;
@@ -358,6 +553,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the distance between the two given
+	 * vectors interpreted as points.
+	 *
+	 * @param a   The first point.
+	 * @param b   The second point.
+	 * @return The resulting distance.
+	 */
 	inline static F b3Distance(
 		b3VectorTemplate<F,dim> &a,
 		b3VectorTemplate<F,dim> &b)
@@ -367,6 +570,12 @@ public:
 		return diff.b3Length();
 	}
 
+	/**
+	 * This method normalizes this instance to the given length.
+	 *
+	 * @param len The needed length of the vector.
+	 * @return The old length of the vector.
+	 */
 	inline F b3Normalize(const b3_f64 len = 1.0)
 	{
 		F old = b3Length();
@@ -378,6 +587,13 @@ public:
 		return old;
 	}
 
+	/**
+	 * This method initializes two vectors for bounding box
+	 * computation purposes.
+	 *
+	 * @param lower The lower bound of the bounding box.
+	 * @param upper The upper bound of the bounding box.
+	 */
 	static inline void b3InitBound(
 		b3VectorTemplate<F,dim> &lower,
 		b3VectorTemplate<F,dim> &upper)
@@ -476,6 +692,12 @@ public:
 		upper.b3CheckUpperBound(*this);
 	}
 
+	/**
+	 * This method computes a transformation on of this vector.
+	 *
+	 * @param Mat The transformation matrix.
+	 * @param Use4D If true this vector is a position. Otherwise it is a direction.
+	 */
 	inline void b3MatrixVMul(const b3_matrix *Mat,const b3_bool Use4D)
 	{
 		F x = v[X],y = v[Y],z = v[Z];
@@ -518,21 +740,21 @@ typedef b3VectorTemplate<b3_f32,B3_MAX_DIM> b3Vector32;
 typedef b3VectorTemplate<b3_f64,B3_MAX_DIM> b3Vector64;
 
 /**
- * This structure holds a ray in single precision.
+ * This structure holds a half ray in single precision.
  */
 struct b3Line32
 {
-	b3Vector32 pos;
-	b3Vector32 dir;
+	b3Vector32 pos; //!< The position.
+	b3Vector32 dir; //!< The direction.
 };
 
 /**
- * This structure holds a ray in double precision.
+ * This structure holds a half ray in double precision.
  */
 struct b3Line64
 {
-	b3Vector64 pos;
-	b3Vector64 dir;
+	b3Vector64 pos; //!< The position.
+	b3Vector64 dir; //!< The direction.
 };
 
 #endif
