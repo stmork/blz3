@@ -29,8 +29,8 @@
 class b3IPCMutex : public CMutex, public b3MutexAbstract
 {
 public:
-	bool b3Lock();
-	bool b3Unlock();
+	b3_bool b3Lock();
+	b3_bool b3Unlock();
 };
 
 // To protect critical sections inside threads

@@ -344,10 +344,16 @@
 				RelativePath="..\..\include\blz3\system\b3Memory.h">
 			</File>
 			<File
+				RelativePath="..\..\include\blz3\system\b3MutexAbstract.h">
+			</File>
+			<File
 				RelativePath="..\..\include\blz3\system\b3PluginBase.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3SelfTest.h">
+			</File>
+			<File
+				RelativePath="..\..\include\blz3\system\b3ThreadAbstract.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\system\b3TimeAbstract.h">

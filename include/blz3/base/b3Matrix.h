@@ -2116,7 +2116,6 @@ class b3Matrix
 	static b3_bool    b3NormalizeCol (b3_matrix *Dst,b3_index col_num);
 	static b3_bool    b3NormalizeRow (b3_matrix *Dst,b3_index row_num);
 	static b3_f64     b3Det4         (b3_matrix *Matrix);
-	static b3_matrix *b3Align        (b3_matrix *M,const b3_line *axis);
 
 public:
 	/**
@@ -2319,6 +2318,19 @@ public:
 	 * @return The resulting matrix.
 	 */
 	static b3_matrix *b3MirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *center,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
+
+	/**
+	 * This method creates an alignment transformation to a given half ray. The transformation includes a
+	 * translation towards the position specified in the half ray.
+	 * The alignment vectors needs to be a unit vector. The new y axis lies in the old xy plane. The new
+	 * z axis is the cross product from the new xy plane but if the direction is up or down depends on the
+	 * future flag and the previous alignment vector. The new base lies in the axis' position.
+	 * 
+	 * \param *M The transformation matrix to fill.
+	 * \param *axis The alignment axis.
+	 * \return The input matrix.
+	 */
+	static b3_matrix *b3Align        (b3_matrix *M,const b3_line *axis);
 
 	/**
 	 * This method creates an alignment transformation to a given half ray, multiplies it with an input matrix and stores the 

@@ -33,9 +33,12 @@
 
 /*
 **	$Log$
+**	Revision 1.19  2005/08/05 18:52:56  sm
+**	- Done some integration work.
+**
 **	Revision 1.18  2005/06/03 09:00:34  smork
 **	- Moved b3CPU into own file.
-**
+**	
 **	Revision 1.17  2004/12/30 16:27:39  sm
 **	- Removed assertion problem when starting Lines III: The
 **	  image list were initialized twice due to double calling
@@ -121,13 +124,13 @@
 *************************************************************************/
 
 // Method for entering a critical code section
-bool b3IPCMutex::b3Lock()
+b3_bool b3IPCMutex::b3Lock()
 {
 	return ::WaitForSingleObject(m_hObject,INFINITE) != 0;
 }
 
 // Method for leaving a critical code section
-bool b3IPCMutex::b3Unlock()
+b3_bool b3IPCMutex::b3Unlock()
 {
 	return ::ReleaseMutex(m_hObject) != 0;
 }
