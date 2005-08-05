@@ -2111,39 +2111,275 @@ public:
 class b3Matrix
 {
 	static b3_matrix m_UnitMatrix;
-
-public:
 	static b3_vector m_EmptyVector;
 
 	static b3_bool    b3NormalizeCol (b3_matrix *Dst,b3_index col_num);
 	static b3_bool    b3NormalizeRow (b3_matrix *Dst,b3_index row_num);
 	static b3_f64     b3Det4         (b3_matrix *Matrix);
+	static b3_matrix *b3Align        (b3_matrix *M,const b3_line *axis);
 
+public:
+	/**
+	 * This method initializes the given matrix pointer with the unit matrix.
+	 *
+	 * @param Dst The matrix to initialize with the unit matrix.
+	 * @return The pointer to the initialized unit matrix (= the Dst parameter).
+	 */
 	static b3_matrix *b3Unit         (b3_matrix *Dst);
+
+	/**
+	 * This method computes the inverse transformation from an input matrix.
+	 *
+	 * @param Src The source matrix.
+	 * @param Dst The inverted destination matrix.
+	 * @return The result (= Dst).
+	 */
 	static b3_matrix *b3Inverse      (b3_matrix *Src,b3_matrix *Dst);
+
+	/**
+	 * This method copies the content of one matrix to another.
+	 *
+	 * @param Src The soruce matrix to copy.
+	 * @param Dst The destination matrix.
+	 * @return The result (= Dst).
+	 */
 	static b3_matrix *b3Transport    (b3_matrix *Src,b3_matrix *Dst);
+
+	/**
+	 * This method creates a translation transformation, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Move The translation vector to use to create the translation transformation.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_vector *Move);
+
+	/**
+	 * This method creates a translation transformation, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param x The x component of the translation vector to use to create the translation transformation.
+	 * @param y The y component of the translation vector to use to create the translation transformation.
+	 * @param z The z component of the translation vector to use to create the translation transformation.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3Move         (b3_matrix *Src,b3_matrix *Dst,b3_f64 x,b3_f64 y,b3_f64 z);
+
+	/**
+	 * This method creates a translation transformation in negative direction, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. 
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param MoveNeg The translation vector to use to create the translation transformation.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3MoveNegative (b3_matrix *Src,b3_matrix *Dst,b3_vector *MoveNeg);
+
+	/**
+	 * This method creates a scale transformation, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the scaling center.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The scaling center.
+	 * @param Scale The scaling factor.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Scale);
+
+	/**
+	 * This method creates a scale transformation, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the scaling center.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The scaling center.
+	 * @param x The x component of the scale vector to use to create the translation transformation.
+	 * @param y The y component of the scale vector to use to create the translation transformation.
+	 * @param z The z component of the scale vector to use to create the translation transformation.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3Scale        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 x = 1.0,b3_f64 y = 1.0,b3_f64 z = 1.0);
+
+	/**
+	 * This method creates a rotation transformation around the x axis, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
+	 * uses the thumb rule for the rotation direction.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The scaling center.
+	 * @param angle The rotation angle.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3RotateX      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+
+	/**
+	 * This method creates a rotation transformation around the y axis, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
+	 * uses the thumb rule for the rotation direction.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The scaling center.
+	 * @param angle The rotation angle.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3RotateY      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+
+	/**
+	 * This method creates a rotation transformation around the z axis, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the rotating center. This transformation
+	 * uses the thumb rule for the rotation direction.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The scaling center.
+	 * @param angle The rotation angle.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3RotateZ      (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 angle);
+
+	/**
+	 * This method creates a rotation transformation around a given half ray, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the rotating center specified in the half ray. This transformation
+	 * uses the thumb rule for the rotation direction. The rotation axis may not be a unit vector.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param axis The rotation center and the rotation axis.
+	 * @param angle The rotation angle.
+	 * @return The resulting matrix.
+	 */
+	static b3_matrix *b3RotateVector (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 angle);
+	
+	/**
+	 * This method creates a point mirror transformation around a given center point, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the mirror center.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The mirror center.
+	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3MirrorPoint  (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_f64 scale);
+
+	/**
+	 * This method creates a axis mirror transformation around a given ray, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the mirror center.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param axis The mirror axis including the mirror axis and the mirror center position.
+	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3MirrorAxis   (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,  b3_f64 scale);
-	static b3_matrix *b3MirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *base,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
-	static b3_matrix *b3MMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
-	static b3_matrix *b3SMul         (b3_matrix *Src,b3_matrix *Dst,b3_f32     factor);
-	static b3_matrix *b3MAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
-	static b3_matrix *b3Align        (b3_matrix *Dst,const b3_line *axis);
-	static b3_matrix *b3RotateVector (b3_matrix *Src,b3_matrix *Dst,b3_line   *axis,b3_f64 angle);
+
+	/**
+	 * This method creates a plane mirror transformation around a given plane, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a temporarily translation towards the mirror center.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param center The mirror center.
+	 * @param uDir The first direction vector for spanning the mirror plane.
+	 * @param vDir The second direction vector for spanning the mirror plane.
+	 * @param scale The mirror scaling. This value should be 1 or -1 otherwise it is simple scaling.
+	 * @return The resulting matrix.
+	 */
+	static b3_matrix *b3MirrorPlane  (b3_matrix *Src,b3_matrix *Dst,b3_vector *center,b3_vector *uDir,b3_vector *vDir,b3_f64 scale);
+
+	/**
+	 * This method creates an alignment transformation to a given half ray, multiplies it with an input matrix and stores the 
+	 * resulting transformation matrix into a buffer. The source matrix may be null. Then a unit matrix
+	 * will be assumed. The destination must not be null. The source and the destination matrix may be
+	 * equal. The transformation includes a translation towards the position specified in the half ray.
+	 * The alignment vectors need not to be a unit vector. The new y axis lies in the old xy plane. The new
+	 * z axis is the cross product from the new xy plane but if the direction is up or down depends on the
+	 * future flag and the previous alignment vector. The new base lies in the axis' position.
+	 *
+	 * @param Src The source matrix or null.
+	 * @param Dst The destination matrix.
+	 * @param Center The alignment center.
+	 * @param Dir1 The old alignment direction.
+	 * @param Dir2 The new alignment direction
+	 * @param future controls whether we move forward or backward.
+	 * @return The resulting matrix.
+	 */
 	static b3_matrix *b3Dress        (b3_matrix *Src,b3_matrix *Dst,b3_vector *Center,b3_vector *Dir1,b3_vector *Dir2,b3_bool future);
+
+	/**
+	 * This method multiplies matrix A and B and stores the result. The result pointer may be equal to
+	 * The matrices A or B.
+	 *
+	 * @param A The first matrix.
+	 * @param B The second matrix.
+	 * @param Result The resulting matrix.
+	 * @return The result matrix pointer.
+	 */
+	static b3_matrix *b3MMul         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
+
+	/**
+	 * This method adds matrix A and B and stores the result. The result pointer may be equal to
+	 * The matrices A or B.
+	 *
+	 * @param A The first matrix.
+	 * @param B The second matrix.
+	 * @param Result The resulting matrix.
+	 * @return The result matrix pointer.
+	 */
+	static b3_matrix *b3MAdd         (b3_matrix *A,  b3_matrix *B,  b3_matrix *Result);
+
+	/**
+	 * This method prints the content of the specified matrix with an additional comment.
+	 * This is for debugging purposes.
+	 *
+	 * @param mtx The matrix to dump.
+	 * @param title An additional comment.
+	 * @return The input matrix.
+	 */
 	static b3_matrix *b3Dump         (b3_matrix *mtx,const char *title=null);
 
-	static inline b3_bool    b3IsUnitMatrix(b3_matrix *test_matrix)
+	/**
+	 * This method tests if the given transformation matrix is a unit matrix.
+	 *
+	 * @param A The matrix to test.
+	 * @return True if the given matrix is a unit matrix.
+	 */
+	static inline b3_bool    b3IsUnitMatrix(b3_matrix *A)
 	{
-		b3_f32 B3_ALIGN_16 *ptr1 = &test_matrix->m11;
+		b3_f32 B3_ALIGN_16 *ptr1 = &A->m11;
 		b3_f32 B3_ALIGN_16 *ptr2 = &m_UnitMatrix.m11;
 
 		for (int i = 0;i < 16;i++)
@@ -2156,11 +2392,40 @@ public:
 		return true;
 	}
 
+	/**
+	 * This method computes the 1d determinand from one component. Just for fun :-)
+	 *
+	 * @param a The input component.
+	 * @return The resulting 1d determinand.
+	 */
+	static inline b3_f64 b3Det1(b3_f64 a)
+	{
+		return a;
+	}
+
+	/**
+	 * This method computes the 2d determinand from the four components
+	 * of a 2x2 matrix.
+	 *
+	 * @param a The upper left component.
+	 * @param b The lower left component.
+	 * @param c The upper right component.
+	 * @param d The lower right component.
+	 * @return The resulting determinand.
+	 */
 	static inline b3_f64     b3Det2  (b3_f64 a,b3_f64 b,b3_f64 c,b3_f64 d)
 	{
 		return a * d - b * c;
 	}
 
+	/**
+	 * This method computes the 3d determinand from three input vectors.
+	 *
+	 * @param a The first column.
+	 * @param b The second column.
+	 * @param c The third column.
+	 * @return The resulting determinand.
+	 */
 	static inline b3_f64     b3Det3  (b3_vector *a,b3_vector *b,b3_vector *c)
 	{
 		return
@@ -2172,6 +2437,16 @@ public:
 			a->x * c->y * b->z;
 	}
 
+	/**
+	 * This method computes a transformation on an input vector and stores the result into
+	 * a given result buffer.
+	 *
+	 * @param A The transformation matrix.
+	 * @param Src The vector to transform.
+	 * @param Dst The result vector.
+	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3VMul  (
 		b3_matrix *A,
 		b3_vector *Src,
@@ -2228,6 +2503,16 @@ public:
 		return Dst;
 	}
 
+	/**
+	 * This method computes a transformation on an input vector and stores the result into
+	 * a given result buffer.
+	 *
+	 * @param A The transformation matrix.
+	 * @param Src The vector to transform.
+	 * @param Dst The result vector.
+	 * @param Use4D If true the input vector is a position. Otherwise it is a direction.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3VMul  (b3_matrix *A,b3_vector64 *Src,b3_vector64 *Dst,b3_bool Use4D)
 	{
 #ifdef B3_SSE2

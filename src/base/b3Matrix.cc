@@ -35,9 +35,12 @@
 
 /*
 **	$Log$
+**	Revision 1.32  2005/08/05 12:56:59  smork
+**	- Documentation.
+**
 **	Revision 1.31  2005/06/06 12:26:30  smork
 **	- Further optimizations.
-**
+**	
 **	Revision 1.30  2004/06/19 12:11:01  sm
 **	- Fixed animation problem by using a thrid dress vector
 **	  which points up. This is a hack because rotating vectors
@@ -434,22 +437,6 @@ b3_matrix * b3Matrix::b3MMul (
 
 	*C = Result;
 	return C;
-}
-
-b3_matrix * b3Matrix::b3SMul (
-	b3_matrix *A,
-	b3_matrix *B,
-	b3_f32     Value)
-{
-	b3_f32 B3_ALIGN_16 *src = &A->m11;
-	b3_f32 B3_ALIGN_16 *dst = &B->m11;
-
-	for (b3_loop i = 0;i < 16;i++)
-	{
-		dst[i] = src[i] * Value;
-	}
-
-	return B;
 }
 
 b3_matrix * b3Matrix::b3MAdd (
