@@ -28,21 +28,46 @@
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class handles file IO on a file of a file system.
+ */
 class b3File : public b3FileAbstract, public b3Mem
 {
 	static b3_count  m_OpenFiles;
 
-	b3_u08     *m_Cache;      // cache buffer
-	b3_offset   m_Index;      // index in cache
-	b3_size     m_BufferSize; // size of cache
-	int         m_File;       // fileno
+	b3_u08     *m_Cache;      //!< Cache buffer.
+	b3_offset   m_Index;      //!< Index in cache.
+	b3_size     m_BufferSize; //!< Size of cache.
+	int         m_File;       //!< Fileno.
 public:
+	/**
+	 * This constructor initializes this instance. You need to call b3Open to do
+	 * file IO.
+	 */
 	         b3File      ();
-	         b3File      (const char *file_name,const b3_access_mode mode);
+
+	/**
+	 * This constructor prepares this instance to to file IO. It calls b3Open()
+	 * to do this.
+	 *
+	 * @param filename The file to handle with.
+	 * @param mode The file access mode.
+	 */
+	         b3File      (const char *filename,const b3_access_mode mode);
 	        ~b3File      ();
 
-	b3_bool  b3Open      (const char *file_name,const b3_access_mode mode);
+	b3_bool  b3Open      (const char *filename,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);
+
+	/**
+	 * This method reads the complete content of the specified filename into a
+	 * memory buffer. The memory is allocated by this instance and will be freed
+	 * if this instance will be destroyed.
+	 *
+	 * @param filename The file to read in.
+	 * @param filesize Where to store the resulting buffer size.
+	 * @return The buffer of null if there occured an error.
+	 */
 	b3_u08  *b3ReadBuffer(const char *filename,b3_size &filesize);
 	b3_size  b3Write     (const void * write_buffer,b3_size size);
 	b3_bool  b3Flush     ();

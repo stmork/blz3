@@ -7,7 +7,7 @@
 **	$Author$
 **	$Developer:	Steffen A. Mork $
 **
-**	Blizzard III - SMP cotrol (Un*x)
+**	Blizzard III - Multithreading control
 **
 **	(C) Copyright 2001  Steffen A. Mork
 **	    All Rights Reserved
@@ -18,8 +18,8 @@
 #ifndef B3_SYSTEM_THREAD_H
 #define B3_SYSTEM_THREAD_H
 
-#include "blz3/b3Types.h"
-#include "blz3/system/b3Time.h"
+#include "blz3/system/b3MutexAbstract.h"
+#include "blz3/system/b3ThreadAbstract.h"
 #include "blz3/system/b3CPUBase.h"
 #include <pthread.h>
 
@@ -37,17 +37,39 @@ public:
 	}
 };
 
-class b3Mutex
+/**
+ * This class defines a critical sections where
+ * only one thread can use a resource. This class uses
+ * POSIX threads semantics for multi threading inside
+ * one process. Note that this class cannot be used
+ * as global variables.
+ */
+class b3Mutex : public b3MutexAbstract
 {
 	pthread_mutex_t mutex;
+
 public:
+	/**
+	 * This constructor initializes the mutex.
+	 */
 	         b3Mutex();
+
+	/**
+	 * Ths destructor deinitializes the mutex.
+	 */
 	        ~b3Mutex();
 	b3_bool  b3Lock();
 	b3_bool  b3Unlock();
 };
 
-class b3IPCMutex
+/**
+ * This class defines a critical sections where
+ * only one process can use a resource. This class uses
+ * UNIX semantics for interprocess communications (IPC) between
+ * two processes. Note that this class can be used
+ * as global variables.
+ */
+class b3IPCMutex : public b3MutexAbstract
 {
 	pthread_mutex_t mutex;
 public:
@@ -57,28 +79,36 @@ public:
 	b3_bool  b3Unlock();
 };
 
-class b3Event
+class b3Event : public b3EventAbstract
 {
 	         pthread_cond_t  event;
 	         pthread_mutex_t mutex;
 	volatile b3_bool         pulse;
 
 public:
+	/**
+	 * This constructor initializes this event handler.
+	 */
 	         b3Event();
+
+	/**
+	 * This destructor deinitializes this event handler.
+	 */
 	        ~b3Event();
+
 	void     b3Pulse();
 	b3_bool  b3Wait();
 };
 
-typedef b3_u32 (*b3ThreadProc)(void *);
-
-class b3Thread
+/**
+ * This class implements threading.
+ */
+class b3Thread : public b3ThreadAbstract
 {
-	const char   *m_Name;
-	b3TimeSpan    m_Span;
-	int           m_Prio;
+	         const char   *m_Name;
+	         b3TimeSpan    m_Span;
+	         int           m_Prio;
 
-protected:
 	         pthread_t     m_Thread;
 	volatile b3_bool       m_IsRunning;
 	volatile b3_u32        m_Result;
@@ -89,10 +119,20 @@ protected:
 	static   b3_count      m_ThreadCount;
 
 public:
-	         b3Thread(const char *task_name = null);
+	/**
+	 * This constructor initializes this instance and can name the thread.
+	 *
+	 * @param taskname The new thread name.
+	 */
+	         b3Thread(const char *taskname = null);
+
+	/**
+	 * This destructor terminates a running thread and deinitializes this instance.
+	 */
 	        ~b3Thread();
-	void     b3Name(const char *task_name = null);
-	b3_bool  b3Start(b3ThreadProc,void *,b3_s32 pri=0);
+
+	void     b3Name(const char *taskname = null);
+	b3_bool  b3Start(b3ThreadProc thread, void *ptr, b3_s32 priority=0);
 	b3_bool  b3IsRunning();
 	b3_bool  b3Stop();
 	b3_u32   b3Wait();

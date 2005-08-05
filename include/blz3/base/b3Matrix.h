@@ -24,18 +24,36 @@
 #define b3RelAngleOfScalars(u,v) (atan2((double)v,(double)u) *   0.5 / M_PI + ((v) < 0 ?   1.0 : 0))
 #define b3AngleOfScalars(u,v)    (atan2((double)v,(double)u) * 180.0 / M_PI + ((v) < 0 ? 360.0 : 0))
 
+/**
+ * This class gives some static convenience methods for vector handing.
+ *
+ * @see b3_vector
+ * @see b3_vector64
+ */
 class b3Vector
 {
+	/**
+	 * This enumeration lists the first four indices into the vector components.
+	 */
 	enum b3_vector_index
 	{
-		X = 0,
-		Y,
-		Z,
-		W,
-		B3_MAX_DIM
+		X = 0,      //!< The x component.
+		Y,          //!< Thy y component.
+		Z,          //!< The z component.
+		W,          //!< The w (homogenous) component.
+		B3_MAX_DIM  //!< The amount of labeled components.
 	};
 
 public:
+	/**
+	 * This method initializes a <em>b3_vector</em> structure.
+	 *
+	 * @param vec The b3_vector pointer.
+	 * @param x The new x component.
+	 * @param y The new y component.
+	 * @param z The new z component.
+	 * @return  The vec input parameter.
+	 */
 	static inline b3_vector *b3Init(
 		      b3_vector *vec,
 		const b3_f64     x = 0,
@@ -49,6 +67,15 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method initializes a <em>b3_vector</em> structure.
+	 *
+	 * @param vec The b3_vector pointer.
+	 * @param x The new x component.
+	 * @param y The new y component.
+	 * @param z The new z component.
+	 * @return  The vec input parameter.
+	 */
 	static inline b3_vector64 *b3Init(
 		      b3_vector64 *vec,
 		const b3_f64       x = 0,
@@ -62,6 +89,13 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method copies a vector.
+	 *
+	 * @param vec The destination vector. 
+	 * @param src The source vector.
+	 * @return The result (= vec input).
+	 */
 	static inline b3_vector	*b3Init(
 		      b3_vector   *vec,
 		const b3_vector   *src)
@@ -70,6 +104,13 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method copies a vector.
+	 *
+	 * @param vec The destination vector. 
+	 * @param src The source vector.
+	 * @return The result (= vec input).
+	 */
 	static inline b3_vector *b3Init(
 		      b3_vector   *vec,
 		const b3_vector64 *src)
@@ -84,6 +125,13 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method copies a vector.
+	 *
+	 * @param vec The destination vector. 
+	 * @param src The source vector.
+	 * @return The result (= vec input).
+	 */
 	static inline b3_vector64 *b3Init(
 		      b3_vector64 *vec,
 		const b3_vector   *src)
@@ -98,6 +146,13 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method copies a vector.
+	 *
+	 * @param vec The destination vector. 
+	 * @param src The source vector.
+	 * @return The result (= vec input).
+	 */
 	static inline b3_vector64 *b3Init(
 		      b3_vector64 *vec,
 		const b3_vector64 *src)
@@ -107,6 +162,13 @@ public:
 		return vec;
 	}
 
+	/**
+	 * This method compares two vectors.
+	 *
+	 * @param vec1 The first vector.
+	 * @param vec2 The second vector.
+	 * @return True if both vectors are equal.
+	 */
 	static inline b3_bool b3IsEqual(
 		const b3_vector *vec1,
 		const b3_vector *vec2)
@@ -135,6 +197,12 @@ public:
 #endif
 	}
 
+	/**
+	 * This method negates a vector.
+	 *
+	 * @param negate The vector to negate.
+	 * @return The input param negate.
+	 */
 	static inline b3_vector *b3Negate(b3_vector *negate)
 	{
 #ifdef B3_SSE1
@@ -152,6 +220,12 @@ public:
 		return negate;
 	}
 
+	/**
+	 * This method negates a vector.
+	 *
+	 * @param negate The vector to negate.
+	 * @return The input param negate.
+	 */
 	static inline b3_vector64 *b3Negate(b3_vector64 *negate)
 	{
 #ifdef B3_SSE2
@@ -169,6 +243,13 @@ public:
 		return negate;
 	}
 
+	/**
+	 * This method normalizes the given vector to the given length.
+	 *
+	 * @param vector The vector to normalize.
+	 * @param length The needed length of the vector.
+	 * @return The old length of the vector.
+	 */
 	static inline b3_f32 b3Normalize(
 		      b3_vector *vector,
 		const b3_f32     length = 1.0)
@@ -202,6 +283,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method normalizes the given vector to the given length.
+	 *
+	 * @param vector The vector to normalize.
+	 * @param length The needed length of the vector.
+	 * @return The old length of the vector.
+	 */
 	static inline b3_f64 b3Normalize(
 		      b3_vector64 *vector,
 		const b3_f64       length = 1.0)
@@ -235,6 +323,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method normalizes the given vector to the given length.
+	 *
+	 * @param vector The vector to normalize.
+	 * @param length The needed length of the vector.
+	 * @return The old length of the vector.
+	 */
 	static inline b3_f32 b3Normalize(
 		      b3_gl_vector *vector,
 		const b3_f32        length = 1.0)
@@ -268,6 +363,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the dot product of two vectors.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @return The resulting dot product.
+	 */
 	static inline b3_f32 b3SMul(
 		const b3_vector *aVec,
 		const b3_vector *bVec)
@@ -296,6 +398,13 @@ public:
 #endif
 	}
 
+	/**
+	 * This method computes the dot product of two vectors.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @return The resulting dot product.
+	 */
 	static inline b3_f64 b3SMul(
 		const b3_vector   *aVec,
 		const b3_vector64 *bVec)
@@ -325,6 +434,13 @@ public:
 		return b3SMul(bVec,aVec);
 	}
 
+	/**
+	 * This method computes the dot product of two vectors.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @return The resulting dot product.
+	 */
 	static inline b3_f64 b3SMul(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec)
@@ -347,6 +463,13 @@ public:
 #endif
 	}
 
+	/**
+	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 *
+	 * @param aVec The summand.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3Add(
 		const b3_vector *aVec,
 		      b3_vector *result)
@@ -367,6 +490,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 *
+	 * @param aVec The summand.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3Add(
 		const b3_vector64 *aVec,
 		      b3_vector64 *result)
@@ -387,6 +517,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method adds a vector to a given one: <em>result += aVec</em>.
+	 *
+	 * @param aVec The summand.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
 	static inline b3_gl_vector *b3Add(
 		const b3_gl_vector *aVec,
 		      b3_gl_vector *result)
@@ -407,6 +544,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 *
+	 * @param aVec The first summand.
+	 * @param bVec The second summand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_vector *b3Add(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
@@ -429,6 +574,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 *
+	 * @param aVec The first summand.
+	 * @param bVec The second summand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_vector64 *b3Add(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec,
@@ -451,6 +604,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method adds two vectors to a resulting one: <em>result = aVec + bVec</em>
+	 *
+	 * @param aVec The first summand.
+	 * @param bVec The second summand.
+	 * @param result The sum of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_gl_vector *b3Add(
 		const b3_gl_vector *aVec,
 		const b3_gl_vector *bVec,
@@ -473,6 +634,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method subtracts a vector from a given one: <em>result -= aVec</em>.
+	 *
+	 * @param aVec The minuend.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3Sub(
 		const b3_vector *aVec,
 		      b3_vector *result)
@@ -493,6 +661,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method subtracts a vector from a given one: <em>result -= aVec</em>.
+	 *
+	 * @param aVec The minuend.
+	 * @param result The resulting vector.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3Sub(
 		const b3_vector64 *aVec,
 		      b3_vector64 *result)
@@ -513,6 +688,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 *
+	 * @param aVec The subtrahend.
+	 * @param bVec The minuend.
+	 * @param result The difference of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_vector *b3Sub(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
@@ -535,6 +718,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 *
+	 * @param aVec The subtrahend.
+	 * @param bVec The minuend.
+	 * @param result The difference of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_vector64 *b3Sub(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec,
@@ -557,6 +748,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method subtracts two vectors to a resulting one: <em>result = aVec - bVec</em>
+	 *
+	 * @param aVec The subtrahend.
+	 * @param bVec The minuend.
+	 * @param result The difference of both vectors.
+	 * @return The result (= result input parameter)
+	 */
 	static inline b3_gl_vector *b3Sub(
 		const b3_gl_vector *aVec,
 		const b3_gl_vector *bVec,
@@ -579,90 +778,14 @@ public:
 		return result;
 	}
 
-	static inline b3_vector *b3Mul(
-		const b3_vector *aVec,
-		      b3_vector *result)
-	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] *= a[i];
-		}
-#else
-		result->x *= aVec->x;
-		result->y *= aVec->y;
-		result->z *= aVec->z;
-#endif
-		return result;
-	}
-
-	static inline b3_vector *b3Mul(
-		const b3_vector *aVec,
-		const b3_vector *bVec,
-		      b3_vector *result)
-	{
-#ifdef B3_SSE1
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] * b[i];
-		}
-#else
-		result->x = aVec->x * bVec->x;
-		result->y = aVec->y * bVec->y;
-		result->z = aVec->z * bVec->z;
-#endif
-		return result;
-	}
-
-	static inline b3_gl_vector *b3Mul(
-		const b3_gl_vector *aVec,
-		      b3_gl_vector *result)
-	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] *= a[i];
-		}
-#else
-		result->x *= aVec->x;
-		result->y *= aVec->y;
-		result->z *= aVec->z;
-#endif
-		return result;
-	}
-
-	static inline b3_gl_vector *b3Mul(
-		const b3_gl_vector *aVec,
-		const b3_gl_vector *bVec,
-		      b3_gl_vector *result)
-	{
-#ifdef B3_SSE
-		const b3_f32 B3_ALIGN_16 *a = &aVec->x;
-		const b3_f32 B3_ALIGN_16 *b = &bVec->x;
-		      b3_f32 B3_ALIGN_16 *r = &result->x;
-
-		for(b3_loop i = 0;i < 3;i++)
-		{
-			r[i] = a[i] * b[i];
-		}
-#else
-		result->x = aVec->x * bVec->x;
-		result->y = aVec->y * bVec->y;
-		result->z = aVec->z * bVec->z;
-#endif
-		return result;
-	}
-
+	/**
+	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param result The result.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3CrossProduct(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
@@ -697,6 +820,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param result The result.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3CrossProduct(
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
@@ -731,6 +862,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param result The result.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3CrossProduct(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec,
@@ -756,6 +895,14 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the cross product from two vectors: <em>result = aVec x bVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param result The result.
+	 * @return The result.
+	 */
 	static inline b3_gl_vector *b3CrossProduct(
 		const b3_gl_vector *aVec,
 		const b3_gl_vector *bVec,
@@ -781,6 +928,12 @@ public:
 		return result;
 	}
 
+	/**
+	 * The method computes the length of the given vector.
+	 *
+	 * @param vector The input vector.
+	 * @return The resulting vector length.
+	 */
 	static inline b3_f32 b3Length(const b3_vector *vector)
 	{
 #ifdef B3_SSE
@@ -793,6 +946,12 @@ public:
 #endif
 	}
 
+	/**
+	 * The method computes the length of the given vector.
+	 *
+	 * @param vector The input vector.
+	 * @return The resulting vector length.
+	 */
 	static inline b3_f64 b3Length(const b3_vector64 *vector)
 	{
 #ifdef B3_SSE
@@ -805,6 +964,12 @@ public:
 #endif
 	}
 
+	/**
+	 * The method computes the squared length of the given vector.
+	 *
+	 * @param vector The input vector.
+	 * @return The resulting squared vector length.
+	 */
 	static inline b3_f32 b3QuadLength(const b3_vector *vector)
 	{
 #ifdef B3_SSE
@@ -830,6 +995,12 @@ public:
 #endif
 	}
 
+	/**
+	 * The method computes the squared length of the given vector.
+	 *
+	 * @param vector The input vector.
+	 * @return The resulting squared vector length.
+	 */
 	static inline b3_f64 b3QuadLength(const b3_vector64 *vector)
 	{
 #ifdef B3_SSE
@@ -849,6 +1020,14 @@ public:
 #endif
 	}
 
+	/**
+	 * This method computes the distance between the two given
+	 * vectors interpreted as points.
+	 *
+	 * @param from The first point.
+	 * @param to   The second point.
+	 * @return The resulting distance.
+	 */
 	static inline b3_f32 b3Distance(
 		const b3_vector *from,
 		const b3_vector *to)
@@ -881,6 +1060,12 @@ public:
 #endif
 	}
 
+	/**
+	 * This method scales a vector by the given factor.
+	 *
+	 * @param vector The vector to scale.
+	 * @param factor The scale factor.
+	 */
 	static inline void b3Scale(
 		      b3_vector *vector,
 		const b3_f32 factor)
@@ -899,6 +1084,15 @@ public:
 #endif
 	}
 
+	/**
+	 * This method scales a given vector with a given factor and
+	 * stores the result in a different location.
+	 *
+	 * @param result The result vector.
+	 * @param vector The source vector to scale.
+	 * @param factor The scale factor.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3Scale(
 		      b3_vector *result,
 		const b3_vector *vector,
@@ -920,6 +1114,12 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method scales a vector by the given factor.
+	 *
+	 * @param vector The vector to scale.
+	 * @param factor The scale factor.
+	 */
 	static inline void b3Scale(
 		      b3_vector64 *vector,
 		const b3_f64       factor)
@@ -938,6 +1138,15 @@ public:
 #endif
 	}
 
+	/**
+	 * This method scales a given vector with a given factor and
+	 * stores the result in a different location.
+	 *
+	 * @param result The result vector.
+	 * @param vector The source vector to scale.
+	 * @param factor The scale factor.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3Scale(
 		      b3_vector64 *result,
 		const b3_vector64 *vector,
@@ -959,6 +1168,15 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes transforms a vector with the givven
+	 * transformation matrix. This operation is meant for direction vectors
+	 * because directions cannot be moved.
+	 *
+	 * @param A The transformation matrix.
+	 * @param vector The direction vector to transform.
+	 * @return The vector as result.
+	 */
 	static inline b3_vector *b3MatrixMul3D(const b3_matrix *A,b3_vector *vector)
 	{
 #ifdef B3_SSE2
@@ -996,6 +1214,15 @@ public:
 		return vector;
 	}
 
+	/**
+	 * This method computes transforms a vector with the givven
+	 * transformation matrix. This operation is meant for position vectors
+	 * because positions can be moved.
+	 *
+	 * @param A The transformation matrix.
+	 * @param vector The position vector to transform.
+	 * @return The vector as result.
+	 */
 	static inline b3_vector *b3MatrixMul4D(const b3_matrix *A,b3_vector *vector)
 	{
 #ifdef B3_SSE2
@@ -1033,6 +1260,13 @@ public:
 		return vector;
 	}
 
+	/**
+	 * This method computes the angle between two vectors.
+	 * 
+	 * @param Vector1 The first vector.
+	 * @param Vector2 The second vector.
+	 * @return The resulting angle.
+	 */
 	static inline b3_f32 b3AngleOfVectors(
 		const b3_vector *Vector1,
 		const b3_vector *Vector2)
@@ -1058,6 +1292,15 @@ public:
 #endif
 	}
 
+	/**
+	 * This method computes the angle from three points at the
+	 * base position.
+	 *
+	 * @param base The base position where the angle should be computed.
+	 * @param point1 The first point which defines the first direction.
+	 * @param point2 The second point which defines the second direction.
+	 * @return The resulting angle.
+	 */
 	static inline b3_f32 b3AngleOfPoints(
 		const b3_vector *base,
 		const b3_vector *point1,
@@ -1120,6 +1363,16 @@ public:
 #endif
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + factor * bVec</em>.
+	 *
+	 * @param aVec The first vector of order 0.
+	 * @param bVec The second vector of order 1.
+	 * @param factor The factor for the bVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
@@ -1143,6 +1396,16 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + factor * bVec</em>.
+	 *
+	 * @param aVec The first vector of order 0.
+	 * @param bVec The second vector of order 1.
+	 * @param factor The factor for the bVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec,
@@ -1166,6 +1429,16 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + factor * bVec</em>.
+	 *
+	 * @param aVec The first vector of order 0.
+	 * @param bVec The second vector of order 1.
+	 * @param factor The factor for the bVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_gl_vector *b3LinearCombine(
 		const b3_vector    *aVec,
 		const b3_vector    *bVec,
@@ -1189,6 +1462,17 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = x * bVec + y * cVec</em>.
+	 *
+	 * @param bVec The first vector.
+	 * @param cVec The second vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector *bVec,
 		const b3_vector *cVec,
@@ -1213,6 +1497,17 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = x * bVec + y * cVec</em>.
+	 *
+	 * @param bVec The first vector.
+	 * @param cVec The second vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector   *bVec,
 		const b3_vector   *cVec,
@@ -1237,6 +1532,17 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = x * bVec + y * cVec</em>.
+	 *
+	 * @param bVec The first vector.
+	 * @param cVec The second vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector64 *bVec,
 		const b3_vector64 *cVec,
@@ -1261,6 +1567,18 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
@@ -1287,6 +1605,18 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector64 *aVec,
 		const b3_vector64 *bVec,
@@ -1313,6 +1643,18 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
@@ -1339,17 +1681,42 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = aVec + x * bVec + y * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the bVec parameter.
+	 * @param y The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_gl_vector *b3LinearCombine(
-		const b3_vector   *aVec,
-		const b3_vector   *bVec,
-		const b3_vector   *cVec,
-		const b3_f32       xFactor,
-		const b3_f32       yFactor,
+		const b3_vector    *aVec,
+		const b3_vector    *bVec,
+		const b3_vector    *cVec,
+		const b3_f32        x,
+		const b3_f32        y,
 		      b3_gl_vector *result)
 	{
-		return (b3_gl_vector *)b3LinearCombine(aVec,bVec,cVec,xFactor,yFactor,(b3_vector *)result);
+		return (b3_gl_vector *)b3LinearCombine(aVec,bVec,cVec,x,y,(b3_vector *)result);
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = x * aVec + y * bVec + z * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the aVec parameter.
+	 * @param y The factor for the bVec parameter.
+	 * @param z The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
@@ -1377,6 +1744,19 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = x * aVec + y * bVec + z * cVec</em>.
+	 *
+	 * @param aVec The first vector.
+	 * @param bVec The second vector.
+	 * @param cVec The third vector.
+	 * @param x The factor for the aVec parameter.
+	 * @param y The factor for the bVec parameter.
+	 * @param z The factor for the cVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3LinearCombine(
 		const b3_vector   *aVec,
 		const b3_vector   *bVec,
@@ -1404,6 +1784,15 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = line->pos + l * line->dir</em>.
+	 *
+	 * @param line The ray containing the position and direction vector.
+	 * @param l The factor for the bVec parameter.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector64 *b3LinearCombine(
 		const b3_line64   *line,
 		const b3_f64       l,
@@ -1426,6 +1815,16 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method computes the linear combination of the given input parameters:
+	 * <em>result = line->pos + l * line->dir - base</em>.
+	 *
+	 * @param line The ray containing the position and direction vector.
+	 * @param l The factor for the bVec parameter.
+	 * @param base A base position to subtract.
+	 * @param result The resulting linear combination.
+	 * @return The result.
+	 */
 	static inline b3_vector *b3LinearCombine(
 		const b3_line64   *line,
 		const b3_f64       l,
@@ -1450,6 +1849,13 @@ public:
 		return result;
 	}
 
+	/**
+	 * This method takes two vectors and sorts each component into
+	 * their lower and upper value.
+	 *
+	 * @param lower The sorted lower vector.
+	 * @param upper The sorted upper vector.
+	 */
 	static inline void b3Sort(
 		b3_vector *lower,
 		b3_vector *upper)
@@ -1486,6 +1892,13 @@ public:
 #endif
 	}
 
+	/**
+	 * This method takes two vectors and sorts each component into
+	 * their lower and upper value.
+	 *
+	 * @param lower The sorted lower vector.
+	 * @param upper The sorted upper vector.
+	 */
 	static inline void b3Sort(b3_vector64 *lower,b3_vector64 *upper)
 	{
 #ifdef B3_SSE2
@@ -1519,7 +1932,14 @@ public:
 		}
 #endif
 	}
-	
+
+	/**
+	 * This method initializes two vectors for bounding box
+	 * computation purposes.
+	 *
+	 * @param lower The lower bound of the bounding box.
+	 * @param upper The upper bound of the bounding box.
+	 */
 	static inline void b3InitBound(
 		b3_vector *lower,
 		b3_vector *upper)
@@ -1543,6 +1963,12 @@ public:
 #endif
 	}
 
+	/**
+	 * This method clamps each vector component to a given value.
+	 *
+	 * @param vector The vector to clamp.
+	 * @param min The lower level to clamp.
+	 */
 	static inline void b3SetMinimum(
 		b3_vector *vector,
 		b3_f32     min)
@@ -1563,6 +1989,13 @@ public:
 #endif
 	}
 
+	/**
+	 * This method adjusts a lower corner with the values of this instance.
+	 * It's a min() function for each component.
+	 *
+	 * @param lower The lower corner to adjust.
+	 * @param point The point to compare to.
+	 */
 	static inline void b3CheckLowerBound(
 		      b3_vector *lower,
 		const b3_vector *point)
@@ -1582,6 +2015,12 @@ public:
 #endif
 	}
 
+	/**
+	 * This method saturates each vector component to a given value.
+	 *
+	 * @param vector The vector to saturate.
+	 * @param max The upper level to saturate.
+	 */
 	static inline void b3SetMaximum(
 		b3_vector *vector,
 		b3_f32     max)
@@ -1602,6 +2041,13 @@ public:
 #endif
 	}
 
+	/**
+	 * This method adjusts a upper corner with the values of this instance.
+	 * It's a max() function for each component.
+	 *
+	 * @param upper The lower corner to adjust.
+	 * @param point The point to compare to.
+	 */
 	static inline void b3CheckUpperBound(
 		      b3_vector *upper,
 		const b3_vector *point)
@@ -1621,6 +2067,14 @@ public:
 #endif
 	}
 
+	/**
+	 * This method adjusts a bounding box specified by a lower and an
+	 * upper corner with a point.
+	 *
+	 * @param point The point to compare to.
+	 * @param lower The lower corner of the bounding box to adjust.
+	 * @param upper The upper corner of the bounding box to adjust.
+	 */
 	static inline void b3AdjustBound(
 		const b3_vector *point,
 		      b3_vector *lower,
@@ -1630,6 +2084,14 @@ public:
 		b3CheckUpperBound(upper,point);
 	}
 
+	/**
+	 * This method adjusts a bounding box specified by a lower and an
+	 * upper corner with a point.
+	 *
+	 * @param point The point to compare to.
+	 * @param lower The lower corner of the bounding box to adjust.
+	 * @param upper The upper corner of the bounding box to adjust.
+	 */
 	static inline void b3AdjustBound(
 		const b3_gl_vector *point,
 		      b3_vector    *lower,
@@ -1643,6 +2105,9 @@ public:
 	}
 };
 
+/**
+ * This class provides methods for generating different transformations.
+ */
 class b3Matrix
 {
 	static b3_matrix m_UnitMatrix;

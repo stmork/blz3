@@ -34,21 +34,68 @@
  */
 class B3_PLUGIN b3FileMem : public b3FileAbstract, public b3Mem
 {
-	b3_size    m_BufferPos;  // actual file position
-	b3_size    m_BufferMax;  // buffer size
-	b3_size    m_BufferSize; // file size
-	b3_u08    *m_Buffer;     // buffer itself
-	b3_size    m_BufferInc;  // buffer increment
+	b3_size    m_BufferPos;  //!< Actual file position.
+	b3_size    m_BufferMax;  //!< buffer size.
+	b3_size    m_BufferSize; //!< file size.
+	b3_u08    *m_Buffer;     //!< buffer itself.
+	b3_size    m_BufferInc;  //!< buffer increment.
 
 public:
+	/**
+	 * This constructor initializes the instance.
+	 */
 	         b3FileMem   ();
+
+	/**
+	 * This constructor initializes the instance with the specified access mode.
+	 * only write access is useful with this constructor.
+	 *
+	 * @param mode The access mode.
+	 */
 	         b3FileMem   (const b3_access_mode mode);
+
+	/**
+	 * This constructor opens an existing file for reading or appending. It reads the
+	 * complete content of the file into the cache buffer using the b3ReadBuffer
+	 * method.
+	 *
+	 * @param filename The file to handle.
+	 * @param mode     The access mode.
+	 */
 	         b3FileMem   (const char *filename,const b3_access_mode mode);
+
+	/**
+	 * This destructor cleans up the instance. It calls b3Close().
+	 */
 	        ~b3FileMem   ();
 
+	/**
+	 * This method initializes the instance with the specified access mode.
+	 * only write access is useful with this constructor.
+	 *
+	 * @param mode The access mode.
+	 */
 	b3_bool  b3Open      (const b3_access_mode mode);
+
+	/**
+	 * This method opens an existing file for reading or appending. It reads the
+	 * complete content of the file into the cache buffer using the b3ReadBuffer
+	 * method.
+	 *
+	 * @param filename The file to handle.
+	 * @param mode     The access mode.
+	 * @return True if the file open was successful.
+	 */
 	b3_bool  b3Open      (const char *filename,const b3_access_mode mode);
 	b3_size  b3Read      (void *read_buffer,const b3_size size);
+
+	/**
+	 * This method reads the complete content of the specified file into the
+	 * cache buffer of this instance.
+	 *
+	 * @param filename The file to cache.
+	 * @return True if the operation was successful.
+	 */
 	b3_bool  b3ReadBuffer(const char *filename);
 	b3_size  b3Write     (const void * write_buffer,const b3_size size);
 	b3_bool  b3Flush     ();

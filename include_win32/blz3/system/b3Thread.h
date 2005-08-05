@@ -18,16 +18,15 @@
 #ifndef B3_SYSTEM_THREAD_H
 #define B3_SYSTEM_THREAD_H
 
-#include "blz3/b3Types.h"
+#include "blz3/system/b3MutexAbstract.h"
+#include "blz3/system/b3ThreadAbstract.h"
 #include "blz3/system/b3Time.h"
 #include "blz3/system/b3CPUBase.h"
 #include "stdafx.h"
 #include "afxmt.h"
 
-typedef b3_u32 (*b3ThreadProc)(void *);
-
 // To protect critical sections between processes
-class b3IPCMutex : public CMutex
+class b3IPCMutex : public CMutex, public b3MutexAbstract
 {
 public:
 	bool b3Lock();
@@ -35,7 +34,7 @@ public:
 };
 
 // To protect critical sections inside threads
-class b3Mutex
+class b3Mutex : public b3MutexAbstract
 {
 	CRITICAL_SECTION cs;
 public:
@@ -54,7 +53,7 @@ public:
 };
 
 // Thread handling
-class b3Thread
+class b3Thread : public b3ThreadAbstract
 {
 	static b3_count    m_ThreadCount;
 	static b3IPCMutex  m_ThreadMutex;

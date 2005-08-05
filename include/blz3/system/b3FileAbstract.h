@@ -55,11 +55,16 @@
 **                                                                      **
 *************************************************************************/
 
+/**
+ * These enumerations lists the types of file offset handling.
+ *
+ * @see b3FileAbstract#b3Seek.
+ */
 enum b3_seek_type
 {
-	B3_SEEK_START = 0,
-	B3_SEEK_CURRENT,
-	B3_SEEK_END
+	B3_SEEK_START = 0, //!< File offset is from file start.
+	B3_SEEK_CURRENT,   //!< File offset is from current file position.
+	B3_SEEK_END        //!< File offset is from file end.
 };
 
 /*************************************************************************
@@ -68,14 +73,19 @@ enum b3_seek_type
 **                                                                      **
 *************************************************************************/
 
+/**
+ * These enumerations lists the possible file access methods.
+ *
+ * @see b3FileAbstract#b3Open.
+ */
 enum b3_access_mode
 {
-	B_READ   = 0x6272,
-	T_READ   = 0x7472,
-	B_WRITE  = 0x6277,
-	T_WRITE  = 0x7477,
-	B_APPEND = 0x6261,
-	T_APPEND = 0x7461
+	B_READ   = 0x6272, //!< Binary read.
+	T_READ   = 0x7472, //!< Text read.
+	B_WRITE  = 0x6277, //!< Binary write.
+	T_WRITE  = 0x7477, //!< Text write.
+	B_APPEND = 0x6261, //!< Binary append.
+	T_APPEND = 0x7461  //!< Text append.
 };
 
 /*************************************************************************
@@ -84,15 +94,18 @@ enum b3_access_mode
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists the possible file errors.
+ */
 enum b3_file_error
 {
-	B3_FILE_ERROR = -1,
-	B3_FILE_OK    =  0,
-	B3_FILE_NOT_FOUND,
-	B3_FILE_NOT_READ,
-	B3_FILE_NOT_WRITTEN,
-	B3_FILE_MEMORY,
-	B3_FILE_NOT_OPEN
+	B3_FILE_ERROR = -1,   //!< General file error.
+	B3_FILE_OK    =  0,   //!< File IO is OK.
+	B3_FILE_NOT_FOUND,    //!< File not found.
+	B3_FILE_NOT_READ,     //!< Could not read file.
+	B3_FILE_NOT_WRITTEN,  //!< Could not write file (permissions).
+	B3_FILE_MEMORY,       //!< Not enough memory for file handling.
+	B3_FILE_NOT_OPEN      //!< Could not open file.
 };
 
 typedef b3Exception<b3_file_error,'FIL'> b3FileException;
@@ -103,16 +116,80 @@ typedef b3Exception<b3_file_error,'FIL'> b3FileException;
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This abstract class is an interface to cached file IO.
+ */
 class B3_PLUGIN b3FileAbstract
 {
 public:
-	virtual b3_bool  b3Open      (const char *file_name,const b3_access_mode mode) = 0;
+	/**
+	 * This method opens a file using a filename and an access mode.
+	 *
+	 * @param filename The file name to use.
+	 * @param mode     The access mode.
+	 * @return         True if the file could successfully opened.
+	 */
+	virtual b3_bool  b3Open      (const char *filename,const b3_access_mode mode) = 0;
+
+	/**
+	 * This method reads a specified amount of bytes into a specified buffer. It returns
+	 * how many bytes could really be read. If there are less bytes read than there were
+	 * requested than this need not be an error.
+	 *
+	 * @param read_buffer The buffer where to store the read bytes.
+	 * @param size        The number of bytes to read.
+	 * @return The really number of read bytes.
+	 */
 	virtual b3_size  b3Read      (void *read_buffer,const b3_size size) = 0;
+
+	/**
+	 * This method writes the specified amount of bytes from a buffer. It returns
+	 * the really written amount of bytes. If this number is less than the specified
+	 * amount of bytes it is an indicator for an error.
+	 *
+	 * @param write_buffer The buffer with the bytes to write.
+	 * @param size The number of bytes to write.
+	 * @return The really written number of bytes.
+	 */
 	virtual b3_size  b3Write     (const void * write_buffer,const b3_size size) = 0;
+
+	/**
+	 * This method flushes the write cache.
+	 *
+	 * @see b3Buffer.
+	 */
 	virtual b3_bool  b3Flush     () = 0;
+
+	/**
+	 * This method moves the byte position inside the file. The position can be moved
+	 * from the actual position, from start and from the end of the file.
+	 *
+	 * @param offset The offset to move.
+	 * @param type   The seek type to use.
+	 * @return The old file position from start.
+	 * @see b3_seek_type
+	 */
 	virtual b3_size  b3Seek      (const b3_offset offset,const b3_seek_type type) = 0;
+
+	/**
+	 * This method returns the actual file size.
+	 *
+	 * @return The actual file size.
+	 */
 	virtual b3_size  b3Size      () = 0;
+	
+	/**
+	 * This method resizes the file cache. It calls b3Flush() to write old
+	 * content.
+	 *
+	 * @param new_cache_size The new cache size.
+	 * @return Succes if the cache was resized.
+	 */
 	virtual b3_bool  b3Buffer    (const b3_size new_cache_size) = 0;
+
+	/**
+	 * This method closes the file.
+	 */
 	virtual void     b3Close     () = 0;
 };
 
