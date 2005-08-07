@@ -52,34 +52,112 @@ protected:
 	char m_Path[B3_FILESTRINGLEN];
 
 public:
-			inline b3PathAbstract()
-			{
-			}
+	/**
+	 * This constructor does simply nothing.
+	 */
+	inline b3PathAbstract()
+	{
+	}
 
-	        inline b3PathAbstract(const char *path)
-			{
-				strcpy (m_Path,path);
-			}
+	/**
+	 * This constructor initializes the path with the given filename.
+	 *
+	 * @param path The filename for initialization.
+	 */
+	inline b3PathAbstract(const char *path)
+	{
+		strncpy (m_Path,path, sizeof(m_Path));
+		m_Path[sizeof(m_Path) - 1] = 0;
+	}
 
+	/**
+	 * This method removes any filename in this instance.
+	 */
 	virtual void b3Empty        () = 0;
+
+	/**
+	 * This method concatenates a directory name and a filename and puts
+	 * the result into this instance.
+	 *
+	 * \param *path The directory name component.
+	 * \param *name The filename component.
+	 */
 	virtual void b3LinkFileName (const char *path,const char *name) = 0;
+
+	/**
+	 * This method splits the filename of this instance into the directory
+	 * and filename components. If the path is a directory the filename
+	 * component is set to zero length. The oomponent pointer may be null
+	 * for convenience.
+	 *
+	 * \param *path The directory name component.
+	 * \param *name The filename component.
+	 */
 	virtual void b3SplitFileName(char *path,char *name) = 0;
+
+	/**
+	 * This method removes from the given filename the file extension
+	 * and puts the result into this instance.
+	 *
+	 * \param *filename The filename for removing the extension.
+	 */
 	virtual void b3RemoveExt    (const char *filename) = 0;
+
+	/**
+	 * This method removes the file extension from this instance.
+	 */
 	virtual void b3RemoveExt    () = 0;
+
+	/**
+	 * This method removes from the given file name the filename component
+	 * if any and additionally the directory component to get the parent
+	 * directory. The result is copied into this instance.
+	 *
+	 * @param filename The filename to get the parent directory name.
+	 */
+
 	virtual void b3ParentName   (const char *filename) = 0;
+
+	/**
+	 * This method removes from the actual file name the filename component
+	 * if any and additionally the directory component to get the parent
+	 * directory.
+	 */
 	virtual void b3ParentName   () = 0;
+
+	/**
+	 * This method extracts the file extension from the given filename and
+	 * puts the resulting extension into this instance. The resulting extension
+	 * contains no trailing dot.
+	 *
+	 * \param *filename The filename where to extract the file extension.
+	 */
 	virtual void b3ExtractExt   (const char *filename) = 0;
+
+	/**
+	 * This method extracts the file extension from this instance.
+	 */
 	virtual void b3ExtractExt   () = 0;
 	virtual void b3Correct      (const char *path) = 0;
 	virtual void b3Correct      () = 0;
 	virtual void b3Format       (const char *format,...) = 0;
 	virtual void b3Append       (const char *ext) = 0;
 
+	/**
+	 * This cast operator returns the actual filename.
+	 *
+	 * \return  The actual filename.
+	 */
 	inline operator char * ()
 	{
 		return m_Path;
 	}
 
+	/**
+	 * This cast operator returns the actual filename.
+	 *
+	 * \return  The actual filename.
+	 */
 	inline operator const char *()
 	{
 		return m_Path;
