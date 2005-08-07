@@ -20,12 +20,38 @@
 
 #include "blz3/b3Types.h"
 
+/**
+ * This class constains some self checks.
+ */
 class b3SelfTest
 {
 public:
+	/**
+	 * This method checks for correct data type sizes.
+	 *
+	 * \return Correct data sizes.
+	 */
 	static b3_bool b3TestDataSize();
+	
+	/**
+	 * This method checks correct memory handling.
+	 *
+	 * \return Correct memory handling.
+	 */
 	static b3_bool b3TestMemory();
+
+	/**
+	 * This method checks for correct data handling.
+	 *
+	 * \return Correct data handling.
+	 */
 	static b3_bool b3TestDate();
+
+	/**
+	 * This method checks for correct IO handling.
+	 *
+	 * \return Correct IO handling.
+	 */
 	static b3_bool b3TestIO();
 
 private:

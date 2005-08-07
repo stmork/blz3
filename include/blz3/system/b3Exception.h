@@ -30,6 +30,9 @@ class b3ExceptionBase;
 typedef void         (*b3ExceptionLogger)(const b3ExceptionBase *exception);
 typedef const char * (*b3ExceptionMsgFunc)(const b3_errno ErrNo);
 
+/**
+ * This exception class is a base class for al Blizzard III exceptions.
+ */
 class B3_PLUGIN b3ExceptionBase
 {
 	static char                m_LocalMessageBuffer[512];
@@ -46,23 +49,54 @@ protected:
 	static const char *b3GetMessage(const b3_errno ErrNo);
 
 public:
+	/**
+	 * This method returns the exceptions error code.
+	 *
+	 * \return The exceptions error cod.
+	 */
 	inline b3_errno b3GetError()
 	{
 		return m_ErrorCode;
 	}
 
+	/**
+	 * This method returns the exceptions error message.
+	 *
+	 * \return The exceptions error message.
+	 */
 	inline const char *b3GetErrorMsg()
 	{
 		return m_GetMessage(m_ErrorCode);
 	}
 
+	/**
+	 * This method sets the logger for the exception.
+	 *
+	 * \param logger The new exception logger.
+	 */
 	static void        b3SetLogger(b3ExceptionLogger logger = null);
+
+	/**
+	 * This method sets a procedure for logging the exception.
+	 *
+	 * \param converter The Message converter.
+	 */
 	static void        b3SetMsgFunc(b3ExceptionMsgFunc converter = null);
 };
 
+/**
+ * This template class is the main exception class.
+ */
 template <class T,b3_excno C> class B3_PLUGIN b3Exception : public b3ExceptionBase
 {
 public:
+	/**
+	 * This constructor initializes the exception.
+	 *
+	 * \param error The exception base.
+	 * \param *FileName The modules' file name.
+	 * \param LineNo The line number in the module.
+	 */
 	b3Exception(
 		const T     error,
 		const char *FileName,

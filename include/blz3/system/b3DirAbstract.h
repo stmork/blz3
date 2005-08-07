@@ -21,20 +21,31 @@
 #include "blz3/b3Config.h"
 #include "blz3/system/b3Exception.h"
 
+/**
+ * This enumeration lists the types of a file system item.
+ *
+ * @see b3DirAbstract
+ */
 enum b3_path_type
 {
-	B3_NOT_EXISTANT = 0,
-	B3_TYPE_DIR,
-	B3_TYPE_FILE
+	B3_NOT_EXISTANT = 0, //!< File system item not existant.
+	B3_TYPE_DIR,         //!< File system item is a directory.
+	B3_TYPE_FILE         //!< File system item is a file.
 };
 
+/**
+ * This enumeration lists error states for directory handling.
+ */
 enum b3_dir_error
 {
-	B3_DIR_ERROR = -1,
-	B3_DIR_OK    =  0,
-	B3_DIR_NOT_FOUND
+	B3_DIR_ERROR = -1,   //!< General directory error.
+	B3_DIR_OK    =  0,   //!< Directory handling OK.
+	B3_DIR_NOT_FOUND     //!< Directory not found.
 };
 
+/**
+ * This class handles with paths.
+ */
 class B3_PLUGIN b3PathAbstract
 {
 protected:
@@ -78,11 +89,31 @@ private:
 	static void b3RemoveDelimiter(char *path);
 };
 
+/**
+ * This class handles directory listing.
+ */
 class B3_PLUGIN b3DirAbstract
 {
 public:
-	virtual b3_bool       b3OpenDir(const char *) = 0;
-	virtual b3_path_type  b3DirNext(char *) = 0;
+	/**
+	 * This method opens a directory for listing.
+	 *
+	 * \param *dirname The directory name to list.
+	 * \return True on success.
+	 */
+	virtual b3_bool       b3OpenDir(const char *dirname) = 0;
+
+	/**
+	 * This method retrieves the next directory entry.
+	 *
+	 * \param *direntry The name of the directory entry.
+	 * \return Type of directory entry.
+	 */
+	virtual b3_path_type  b3DirNext(char *direntry) = 0;
+
+	/**
+	 * This method closes this handler for directory listing.
+	 */
 	virtual void          b3CloseDir() = 0;
 };
 
