@@ -20,6 +20,9 @@
 
 #include "blz3/system/b3LogBase.h"
 
+/**
+ * This class provides logging.
+ */
 class B3_PLUGIN b3Log : public b3LogBase
 {
 	static b3Log m_Log;

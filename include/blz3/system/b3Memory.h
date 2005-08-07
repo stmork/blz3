@@ -95,11 +95,11 @@ public:
 
 	/**
 	 * This pointer reallocates a memory buffer. There are four cases:
-	 * 1. oldptr is null: b3Realloc() behaves like b3Alloc().
-	 * 2. oldptr is not null:
-	 * 2a.   newsize is 0: b3Realloc() behaves like b3Free().
-	 * 2b.   newsize is less or equal than the previous memory size: oldptr is returned.
-	 * 2c.   newsize is greater than the previous memory size: It returns a resized memory chunk with the old memory content at the beginning.
+	 * -# oldptr is null: b3Realloc() behaves like b3Alloc().
+	 * -# oldptr is not null:
+	 * -   newsize is 0: b3Realloc() behaves like b3Free().
+	 * -   newsize is less or equal than the previous memory size: oldptr is returned.
+	 * -   newsize is greater than the previous memory size: It returns a resized memory chunk with the old memory content at the beginning.
 	 *
 	 * @param oldptr   The old memory pointer to resize.
 	 * @param newsize  The requested memory size.

@@ -28,15 +28,12 @@
 #if defined(__ICC)
 #	define B3_SSE1
 #	define B3_SSE2
-#elif defined(__GNUCC__)
-#	define B3_SSE1
-#	define B3_SSE2
 #elif defined(WIN32)
 #	define B3_SSE1
 #	define B3_SSE2
 #endif
 
-#if defined(__ICC) || defined(__GCC__)
+#if defined(__ICC)
 #	include <xmmintrin.h>
 
 #	define B3_ALIGN_16  __declspec(align(16))
@@ -49,6 +46,9 @@
 #endif
 
 // Some error codes
+/**
+ * This enumeration shows general error states.
+ */
 enum b3_result
 {
 	B3_ERROR = -1, //!< General error state.
