@@ -184,16 +184,53 @@ protected:
 	b3_u32         *m_StoreBuffer; //!< A temporary store buffer.
 
 public:
-	                        b3Item();
-	                        b3Item(b3_size class_size,b3_u32 class_type);
-	                        b3Item(b3_u32 *buffer);
-	virtual                ~b3Item();
-	static  void            b3Register(
-		b3_item_init_func init_func,
-		b3_item_load_func load_func,
-		b3_u32            class_type,
-		b3_bool           is_class = false);
+	/**
+	 * This constructor initializes the instance with default values and no content.
+	 */
+	b3Item();
 
+	/**
+	 * This constructor is meant for initializing the instance with default values. The
+	 * use is creating a new data item.
+	 *
+	 * @param classsize The instance size.
+	 * @param classtype The class type of the new instance.
+	 */
+	b3Item(b3_size classsize,b3_u32 classtype);
+
+	/**
+	 * This constructor initializes the instance content from a serialization buffer. The
+	 * use is for loading serialized data.
+	 *
+	 * @param buffer The serialization buffer.
+	 */
+	b3Item(b3_u32 *buffer);
+
+	/**
+	 * This destructor deinitializes this instance.
+	 */
+	virtual                ~b3Item();
+
+	/**
+	 * This method registers a class type for the b3ItemRegistry object factory.
+	 *
+	 * @param initfunc The initialization method to fill the b3Item with default values.
+	 * @param loadfunc The load method to fill the b3Item with serialized data.
+	 * @param classtype The class type as key.
+	 * @param isclass The flag wether a class initialization should be used.
+	 */
+	static  void            b3Register(
+		b3_item_init_func initfunc,
+		b3_item_load_func loadfunc,
+		b3_u32            classtype,
+		b3_bool           isclass = false);
+
+	/**
+	 * This method serializes the content of this instance. The header is written
+	 * automatically through the b3Store(9 method. The content is written in the overloaded
+	 * version of this method and
+	 * uses the b3Store* methods described at another position.
+	 */
 	virtual void            b3Write();
 	virtual char           *b3GetName();
 	virtual b3_bool         b3Prepare();
@@ -201,14 +238,38 @@ public:
 	        void            b3DumpSimple(b3_count level = 0,b3_log_level log_level = B3LOG_NORMAL);
 			b3_bool         b3AllocHeads(b3_count head_count);
 
+	/**
+	 * This method writes recursively the content of this b3Item instance. It writes the header
+	 * the list heads and then calls b3Write(). After that the b3Items found in the list heads
+	 * are called for storing. The storing occurs into an internal memory buffer.
+	 *
+	 * @return The overall size in bytes written yet.
+	 */
 	        b3_u32          b3Store();
+	/**
+	 * This method writes recursively the content of this b3Item instance. It writes the header
+	 * the list heads and then calls b3Write(). After that the b3Items found in the list heads
+	 * are called for storing. The storing occurs into a given file.
+	 *
+	 * @param file The file to store into.
+	 * @return The error code for storing.
+	 * @see b3FileAbstract.
+	 */
 	        b3_world_error  b3StoreFile(b3FileAbstract *file);
+
+	/**
+	 * This method computes a checksum of the written content. The checksum is used to determine
+	 * value changes of values that could be stored. You must call b3Store() before checksumming.
+	 *
+	 * @return The computed checksum.
+	 */
 			b3_u32          b3Checksum();
 
 	static  b3_bool         b3IsClass(b3_u32 class_type,b3_u32 class_id);
 	        b3_bool         b3IsClass(b3_u32 class_id);
+
 protected:
-	// Parsing routines
+	////////////////////////////////////////////// Parsing routines
 	/**
 	 * This method initializes the indices for interpreting the b3Item data.
 	 */
@@ -310,7 +371,7 @@ protected:
 	/**
 	 * This method reads back a NURBS instance.
 	 *
-	 * @param spline The b3_nurbs structure pointer which defines the NURBS.
+	 * @param nurbs The b3_nurbs structure pointer which defines the NURBS.
 	 * @param controls The pointer to the NURBS control pointer.
 	 * @param knots The knot vector of the NURBS.
 	 */
@@ -390,28 +451,109 @@ protected:
 	/**
 	 * This method stores one pointer place holder. Note that this
 	 * value is a 32 bit value even on 64 bit machines! This value
-	 * 
+	 * signals only a non null pointer.
+	 *
+	 * @param ptr The pointer.
 	 */
 	void     b3StorePtr     (const void        *ptr);
+
+	/**
+	 * This method stores a three component vector.
+	 *
+	 * @param vec The vector to store.
+	 */
 	void     b3StoreVector  (const b3_vector   *vec = null);
+
+	/**
+	 * This method stores a three component vector.
+	 *
+	 * @param vec The vector to store.
+	 */
 	void     b3StoreVector  (      b3Vector32  &vec);
+
+	/**
+	 * This method stores a four component vector.
+	 *
+	 * @param vec The vector to store.
+	 */
 	void     b3StoreVector4D(const b3_vector4D *vec = null);
+
+	/**
+	 * This method stores a four component vector.
+	 *
+	 * @param vec The vector to store.
+	 */
 	void     b3StoreVector4D(      b3Vector32  &vec);
-	void     b3StoreMatrix  (const b3_matrix   *mat);
+
+	/**
+	 * This method stores a 4x4 matrix.
+	 *
+	 * @param matrix The matrix to store.
+	 */
+	void     b3StoreMatrix  (const b3_matrix   *matrix);
+
+	/**
+	 * This method stores a four component color.
+	 *
+	 * @param col The color.
+	 */
 	void     b3StoreColor   (const b3_color    *col);
+
+	/**
+	 * This method stores a four component color.
+	 *
+	 * @param col The color.
+	 */
 	void     b3StoreColor   (      b3Color     &col);
+
+	/**
+	 * This method stores the contents of a b3_spline structure.
+	 *
+	 * @param spline The spline structure.
+	 */
 	void     b3StoreSpline  (const b3_spline   *spline);
+
+	/**
+	 * This method stores the contents of a b3_nurbs structure.
+	 *
+	 * @param nurbs The NURBS structure.
+	 */
 	void     b3StoreNurbs   (const b3_nurbs    *nurbs);
+
+	/**
+	 * This method stores a text string. The offset is adjusted automatically
+	 * if no previous string storage occured. Note that only more strings
+	 * may be stored.
+	 *
+	 * @param name The text buffer.
+	 * @param len  The size of the text buffer.
+	 */
 	void     b3StoreString  (const char        *name,const b3_size len);
+
+	/**
+	 * This method stores a null pointer. The size of the stored pointer
+	 * is 32 bit even on a 64 bit machine. It is only an indicator to
+	 * a null reference.
+	 */
 	void     b3StoreNull();
+
+	/**
+	 * This method bumps the store index.
+	 */
 	void     b3StoreNOP();
 
 protected:
-	static void b3DumpSpace(b3_count level,b3_log_level log_level = B3LOG_NORMAL);
+	/**
+	 * This method dumps spaces depending on the nesting dump level.
+	 *
+	 * @param level The nesting level.
+	 * @param loglevel The log level used for logging.
+	 */
+	static void            b3DumpSpace(b3_count level,b3_log_level loglevel = B3LOG_NORMAL);
 
 private:
-	void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true);
-	b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
+	       void            b3EnsureStoreBuffer(b3_u32 needed,b3_bool is_data=true);
+	       b3_world_error  b3ParseLinkuage(b3Item **array,b3_u32 node_count,b3_u32 class_limit,b3_count level = 0);
 
 	friend class b3World;
 };
