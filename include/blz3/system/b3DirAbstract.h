@@ -138,9 +138,35 @@ public:
 	 * This method extracts the file extension from this instance.
 	 */
 	virtual void b3ExtractExt   () = 0;
+
+	/**
+	 * This method corrects the syntax of the given filename and stores the result
+	 * into this instance.
+	 *
+	 * @param path the filename to correct.
+	 */
 	virtual void b3Correct      (const char *path) = 0;
+
+	/**
+	 * This method corrects the syntax of the filename of this instance.
+	 */
 	virtual void b3Correct      () = 0;
+
+	/**
+	 * This method creates a printf() format like way to create a filename in a safe
+	 * way without a risk of a buffer overflow.
+	 *
+	 * @param format The format string.
+	 * @param ... The arguments.
+	 */
 	virtual void b3Format       (const char *format,...) = 0;
+
+	/**
+	 * This method appends a string to the filename of this instance in a safe way
+	 * without a risk of a buffer overflow.
+	 *
+	 * @param ext The text to append.
+	 */
 	virtual void b3Append       (const char *ext) = 0;
 
 	/**

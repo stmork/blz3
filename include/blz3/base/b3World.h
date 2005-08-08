@@ -168,20 +168,20 @@ typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 class B3_PLUGIN b3Item : public b3Link<b3Item>, public b3Mem
 {
 protected:
-	b3_u32          m_ItemSize;
-	b3_s32          m_ItemOffset;
-	b3Base<b3Item> *m_Heads;
-	b3_u32          m_HeadCount;
+	b3_u32          m_ItemSize;    //!< The stored size of this item in bytes.
+	b3_s32          m_ItemOffset;  //!< The offset to the text area in this stored b3Item.
+	b3Base<b3Item> *m_Heads;       //!< The list heads.
+	b3_u32          m_HeadCount;   //!< The number of list heads.
 
 	// Attributes for parsing
-	b3_u32         *m_Buffer;
-	b3_u32          m_ParseIndex;
+	b3_u32         *m_Buffer;      //!< This is a memory buffer of an archived b3Item.
+	b3_u32          m_ParseIndex;  //!< This is an index in the memory buffer for parsing the b3Item.
 
 	// Attributes for writing
-	b3_u32          m_StoreIndex;
-	b3_s32          m_StoreOffset;
-	b3_u32          m_StoreSize;
-	b3_u32         *m_StoreBuffer;
+	b3_u32          m_StoreIndex;  //!< The index to a 32 bit unsigned integer of the actual store position.
+	b3_s32          m_StoreOffset; //!< The index to the text area as an index to a 32 bit wide unsigned integer.
+	b3_u32          m_StoreSize;   //!< The number of 32 bit unsigned integers.
+	b3_u32         *m_StoreBuffer; //!< A temporary store buffer.
 
 public:
 	                        b3Item();
@@ -209,33 +209,189 @@ public:
 	        b3_bool         b3IsClass(b3_u32 class_id);
 protected:
 	// Parsing routines
+	/**
+	 * This method initializes the indices for interpreting the b3Item data.
+	 */
 	void     b3Init();
+
+	/**
+	 * This method reads a signed integer value.
+	 *
+	 * @return The signed integer.
+	 */
 	b3_s32   b3InitInt();
+
+	/**
+	 * This methid reads an index.
+	 *
+	 * @return The index.
+	 */
 	b3_index b3InitIndex();
+
+	/**
+	 * This method reads a counter.
+	 *
+	 * @return The counter.
+	 */
 	b3_count b3InitCount();
+
+	/**
+	 * This method reads a single precision floating point value.
+	 *
+	 * @return The float value.
+	 */
 	b3_f32   b3InitFloat();
+
+	/**
+	 * This method reads a boolean value.
+	 *
+	 * @return The boolean value.
+	 */
 	b3_bool  b3InitBool();
+
+	/**
+	 * This method reads a three component vector into the given vector pointer.
+	 *
+	 * @param vec The vector buffer as pointer.
+	 */
 	void     b3InitVector  (b3_vector   *vec = null);
+
+	/**
+	 * This method reads a three component vector into the given vector reference.
+	 *
+	 * @param vec The vector buffer as reference.
+	 */
 	void     b3InitVector  (b3Vector32  &vec);
+
+	/**
+	 * This method reads a four component vector into the given vector pointer.
+	 *
+	 * @param vec The vector buffer as pointer.
+	 */
 	void     b3InitVector4D(b3_vector4D *vec = null);
+
+	/**
+	 * This method reads a four component vector into the given vector reference.
+	 *
+	 * @param vec The vector buffer as reference.
+	 */
 	void     b3InitVector4D(b3Vector32  &vec);
+
+	/**
+	 * This method reads a 4x4 matrix into the given matrix pointer.
+	 *
+	 * @param mat The matrix buffer as pointer.
+	 */
 	void     b3InitMatrix  (b3_matrix   *mat);
+
+	/**
+	 * This method reads a four component color value into the given b3_color pointer.
+	 *
+	 * @param col The color buffer as pointer.
+	 */
 	void     b3InitColor   (b3_color    *col);
+
+	/**
+	 * This method reads a four component color value into the given b3Color pointer.
+	 *
+	 * @param color The color instance as pointer.
+	 */
 	void     b3InitColor   (b3Color     &color);
+
+	/**
+	 * This method reads back a spline instance.
+	 *
+	 * @param spline The b3_spline structure pointer which defines the spline.
+	 * @param controls The pointer to the spline control pointer.
+	 * @param knots The knot vector of the spline.
+	 */
 	void     b3InitSpline  (b3_spline   *spline,b3_vector   *controls = null,b3_f32 *knots = null);
+
+	/**
+	 * This method reads back a NURBS instance.
+	 *
+	 * @param spline The b3_nurbs structure pointer which defines the NURBS.
+	 * @param controls The pointer to the NURBS control pointer.
+	 * @param knots The knot vector of the NURBS.
+	 */
 	void     b3InitNurbs   (b3_nurbs    *nurbs, b3_vector4D *controls = null,b3_f32 *knots = null);
+
+	/**
+	 * This method reads back a string of the given size and corrects the read index.
+	 *
+	 * @param name The text buffer.
+	 * @param len  The size of the text buffer.
+	 */
 	void     b3InitString  (char        *name,b3_size len);
+
+	/**
+	 * This method bumps the read index and returns a null pointer.
+	 *
+	 * @return Null pointer.
+	 */
 	void    *b3InitNull();
+	
+	/**
+	 * This method simply bumps the read index.
+	 */
 	void     b3InitNOP();
 
-	// Storing routines
+
+	////////////////////////////////////////// Storing routines
+	/**
+	 * This method stores one signed integer value.
+	 *
+	 * @param value The signed integer to store.
+	 */
 	void     b3StoreInt     (const b3_s32       value);
+
+	/**
+	 * This method stores one unsigned integer value.
+	 *
+	 * @param value The unsigned integer to store.
+	 */
 	void     b3StoreInt     (const b3_u32       value);
+
+	/**
+	 * This method stores one index value.
+	 *
+	 * @param value The index to store.
+	 */
 	void     b3StoreIndex   (const b3_index     value);
+
+	/**
+	 * This method stores one resolution value.
+	 *
+	 * @param value The resolution value to store.
+	 */
 	void     b3StoreRes     (const b3_res       value);
+
+	/**
+	 * This method stores one counter value.
+	 *
+	 * @param value The counter to store.
+	 */
 	void     b3StoreCount   (const b3_count     value);
+
+	/**
+	 * This method stores one single precision floating point value.
+	 *
+	 * @param value The float value to store.
+	 */
 	void     b3StoreFloat   (const b3_f32       value);
+	/**
+	 * This method stores one boolean value. Note that this value
+	 * is 32 bits wide!
+	 *
+	 * @param value The boolean value to store.
+	 */
 	void     b3StoreBool    (const b3_bool      value);
+
+	/**
+	 * This method stores one pointer place holder. Note that this
+	 * value is a 32 bit value even on 64 bit machines! This value
+	 * 
+	 */
 	void     b3StorePtr     (const void        *ptr);
 	void     b3StoreVector  (const b3_vector   *vec = null);
 	void     b3StoreVector  (      b3Vector32  &vec);
@@ -272,14 +428,36 @@ private:
 class B3_PLUGIN b3FirstItem : public b3Item
 {
 public:
+	/**
+	 * This constructor initializes this instance with default values.
+	 */
 	B3_ITEM_INIT(b3FirstItem);
+
+	/**
+	 * This constructor initializes this instance from a memory buffer.
+	 */
 	B3_ITEM_LOAD(b3FirstItem);
 
+	/**
+	 * This method write recursively the content of this instance.
+	 */
 	void    b3Write();
 
 protected:
+	/**
+	 * This method returns the list head of the content.
+	 *
+	 * @return The content list header.
+	 */
 	b3Base<b3Item> *b3GetHead();
-	void            b3InitBase(b3_u32 class_value = 0);
+
+	/**
+	 * This method initializes the internal list head with the type
+	 * of use.
+	 *
+	 * @param classtype The items class type for the root element.
+	 */
+	void            b3InitBase(b3_u32 classtype = 0);
 
 	friend class b3World;
 };

@@ -19,7 +19,7 @@
 #define B3_SYSTEM_ERRORABSTRACT_H
 
 /**
- * This abstract class handles an error.
+ * This abstract class defines converting an error code into an error message.
  */
 class b3ErrorBase
 {

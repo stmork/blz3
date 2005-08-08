@@ -23,14 +23,34 @@
 #include "blz3/system/b3CPUBase.h"
 #include <pthread.h>
 
+/**
+ * This class provides information about the installed CPUs.
+ */
 class b3CPU : public b3CPUBase
 {
 	static b3_bool  m_CorrectRUsage;
 
 public:
-	                b3CPU();
+	/**
+	 * This constructor initializes information abount the installed CPUs.
+	 */
+	b3CPU();
+
+	/**
+	 * This method returns the active amount of threads.
+	 *
+	 * @return The actually running number of threads.
+	 */
 	static b3_count b3GetNumThreads();
 
+	/**
+	 * This method returns true if the underlying operating system
+	 * provides a correct getrusage() method. Linux has an error
+	 * in that method until kernel version 2.6.9 with incorrect
+	 * time measurement on thread handling.
+	 *
+	 * @return True if getrusage() is correct.
+	 */
 	inline static b3_bool  b3HasCorrectRUsage()
 	{
 		return m_CorrectRUsage;

@@ -20,17 +20,32 @@
 
 #include "blz3/system/b3ErrorAbstract.h"
 
+/**
+ * This class converts an error code into an error message.
+ */
 class b3Error : public b3ErrorBase
 {
 	int   m_ErrorCode;
 	char  m_ErrorText[1024];
 
 public:
+	      /**
+	       * This constructor initializes the error code interpreter.
+	       */
 	      b3Error();
 	char *b3GetErrorText();
+
+	/**
+	 * This method returns the error code.
+	 *
+	 * @return The error code of this instance.
+	 */
 	int   b3GetError();
 
 protected:
+	/**
+	 * This method computes the error message from an error code.
+	 */
 	void  b3RetrieveError();
 };
 

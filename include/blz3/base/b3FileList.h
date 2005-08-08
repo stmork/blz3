@@ -68,6 +68,9 @@ class b3FileList
 {
 	b3Base<b3FileEntry> list;
 public:
+	               /**
+	                * This constructor initializes this instance.
+	                */
 	               b3FileList();
 	               
 	               /**
@@ -76,6 +79,10 @@ public:
 	                * @param dir_name The path.
 	                */
 	               b3FileList(const char *dir_name);
+
+	               /**
+	                * This destructor deinitializes this instance.
+	                */
 	              ~b3FileList();
 	               
 	               /**

@@ -44,8 +44,30 @@ class B3_PLUGIN b3ExceptionBase
 		   const char         *m_FileName;
 
 protected:
+	                   /**
+	                    * This constructor creates an exception instance.
+	                    *
+	                    * @param ErrNo The error code.
+	                    * @param ExcNo A special unique exception code. This can be used for mapping
+	                    *              into a clear text message.
+	                    * @param lineno The line number in the source code where the exception is thrown.
+	                    * @param filename The filename of the source code where the exception is thrown.
+	                    */
 	                   b3ExceptionBase(const b3_errno ErrNo,const b3_excno ExcNo,const b3_count lineno,const char *filename);
+
+	/**
+	 * This method logs an exception.
+	 *
+	 * @param exception The exception to log.
+	 */
 	static void        b3Log(const b3ExceptionBase *exception);
+
+	/**
+	 * This method computes an error message from the given error code.
+	 *
+	 * @param ErrNo The error code.
+	 * @return The resulting error message.
+	 */
 	static const char *b3GetMessage(const b3_errno ErrNo);
 
 public:

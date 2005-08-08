@@ -46,12 +46,30 @@
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This abstract class provides a method for converting a pixel of
+ * type  <em>b3_pkd_pixel</em> into a system specific color value.
+ */
 class b3DisplayPixel
 {
 public:
+	/**
+	 * This method converts a given color value at the given position into
+	 * a native color value.
+	 *
+	 * @param ARGB The color in AARRGGBB nibbles.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The native color value.
+	 */
 	virtual b3_pkd_color b3ARGBtoPixel(b3_pkd_color ARGB,b3_coord x,b3_coord y) = 0;
 };
 
+/**
+ * This class implements the b3Display class for a X11 display.
+ *
+ * @see b3Display
+ */
 class b3DisplayView : public b3Display
 {
 	b3_res          m_xs,m_ys; // This is the max. visible size
@@ -69,9 +87,28 @@ class b3DisplayView : public b3Display
 	GC              m_GC;
 
 public:
+	                    /**
+	                     * This constructor opens a window with the given title in a default resolution.
+	                     *
+	                     * @param title The window title.
+	                     */
 	                    b3DisplayView(const char *title = null);
+
+	                    /**
+	                     * This constructor opens a window with the given resolution and the given window
+	                     * title.
+	                     *
+	                     * @param xSize The window width.
+	                     * @param ySize The window height.
+	                     * @param title The window title.
+	                     */
 	                    b3DisplayView(b3_res xSize,b3_res ySize,const char *title = null);
+
+	                    /**
+	                     * This destructor closes the window.
+	                     */
 	                   ~b3DisplayView();
+
 	void                b3PutPixel(b3_coord x,b3_coord y,b3_pkd_color pixel);
 	void                b3PutRow(b3Row *row);
 	void                b3PutTx(b3Tx *tx);

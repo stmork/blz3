@@ -48,16 +48,23 @@
 #define B3_DT_LOCAL   1
 #define B3_DT_DIFF    2
 
+/**
+ * This enumeration lists error codes for date handling.
+ */
 enum b3_date_error
 {
-	B3_DATE_ERROR = -1,
-	B3_DATE_OK    =  0,
-	B3_DATE_ILLEGAL,
-	B3_DATE_ILLEGAL_MODE
+	B3_DATE_ERROR = -1,   //!< General date error.
+	B3_DATE_OK    =  0,   //!< Date handling is OK.
+	B3_DATE_ILLEGAL,      //!< Input is illegal.
+	B3_DATE_ILLEGAL_MODE  //!< Unknown time zone.
 };
 
 typedef b3Exception<b3_date_error,'DAT'> b3DateException;
 
+/**
+ * This class provides methods for dealing with dates and to
+ * calculate with dates.
+ */
 class B3_PLUGIN b3Date
 {
 	time_t         time_code;
@@ -79,8 +86,20 @@ public:
 	bool           dls;      //!< Daylight saving time.
 
 public:
-	           b3Date();
-			   b3Date(unsigned short day,unsigned short month,unsigned long year);
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3Date();
+
+	/**
+	 * This constructor initializes this instance with a date by
+	 * calling the b3SetDate() method.
+	 *
+	 * @param day   The day to set.
+	 * @param month The month to set.
+	 * @param year  The year to set.
+	 */
+	b3Date(unsigned short day,unsigned short month,unsigned long year);
 
 	/**
 	 * This method sets the date values to the actual time point.

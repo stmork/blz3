@@ -36,13 +36,16 @@
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists display error codes.
+ */
 enum b3_display_error
 {
-	B3_DISPLAY_ERROR = -1,
-	B3_DISPLAY_OK    =  0,
-	B3_DISPLAY_MEMORY,
-	B3_DISPLAY_NO_COLORMAP,
-	B3_DISPLAY_OPEN
+	B3_DISPLAY_ERROR = -1,   //!< General display error.
+	B3_DISPLAY_OK    =  0,   //!< Display is OK.
+	B3_DISPLAY_MEMORY,       //!< Out of memory.
+	B3_DISPLAY_NO_COLORMAP,  //!< Colormap error
+	B3_DISPLAY_OPEN          //!< Unable to open a window.
 };
 
 typedef b3Exception<b3_display_error,'DSP'> b3DisplayException;
@@ -56,7 +59,8 @@ class B3_PLUGIN b3Display : public b3Mem
 {
 	b3_bool               m_OwnTx;
 protected:
-	b3_res                m_xMax,m_yMax; //!< The display resolution.
+	b3_res                m_xMax;        //!< The display width.
+	b3_res                m_yMax;        //!< The display height.
 	b3_res                m_depth;       //!< The real color depth.
 	b3_pkd_color         *m_Buffer;      //!< The color back buffer.
 	b3Mutex               m_Mutex;       //!< A mutex for thread safe display.

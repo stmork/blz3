@@ -42,7 +42,10 @@ protected:
 	static b3_count    cpu_count; //!< Number of usable CPUs.
 
 public:
-	                b3CPUBase();
+	/**
+	 * This constructor initializes information abount the installed CPUs.
+	 */
+	b3CPUBase();
 
 	/**
 	 * This method returns the number of usable CPUs.
