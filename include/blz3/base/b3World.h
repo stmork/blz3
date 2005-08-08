@@ -54,6 +54,9 @@
 #define B3_PARSE_INDEX_VALID ((b3_size)(b3Item::m_ParseIndex << 2) < b3Item::m_ItemSize)
 #define	B3_ASSERT_INDEX      B3_ASSERT(B3_PARSE_INDEX_VALID)
 
+/**
+ * This enumeration lists the b3Item indices for 32 bit unsigned integer reference.
+ */
 enum b3_node_indices
 {
 	B3_NODE_IDX_SUCC = 0,
@@ -65,6 +68,9 @@ enum b3_node_indices
 	B3_NODE_IDX_MIN // Should be 6 (including end of node marker)!
 };
 
+/**
+ * This enumeration lists the b3Base<T> indices for 32 bit unsigned integer reference.
+ */
 enum b3_head_indices
 {
 	B3_HEAD_IDX_CLASS = 0,
@@ -79,19 +85,22 @@ enum b3_head_indices
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists the possible error codes for b3World/b3Item handling.
+ */
 enum b3_world_error
 {
-	B3_WORLD_ERROR = -1,
-	B3_WORLD_OK    =  0,
-	B3_WORLD_OPEN,
-	B3_WORLD_READ,
-	B3_WORLD_MEMORY,
-	B3_WORLD_PARSE,
-	B3_WORLD_WRITE,
-	B3_WORLD_STORAGE_NOT_IMPLEMENTED,
-	B3_WORLD_OUT_OF_ORDER,
-	B3_WORLD_CLASSTYPE_UNKNOWN,
-	B3_WORLD_IMPORT
+	B3_WORLD_ERROR = -1,   //!< General serialization error. 
+	B3_WORLD_OK    =  0,   //!< Serialization OK.
+	B3_WORLD_OPEN,         //!< File open error.
+	B3_WORLD_READ,         //!< Read access denied.
+	B3_WORLD_MEMORY,       //!< Not enough memory for serialization.
+	B3_WORLD_PARSE,        //!< Parse error during load (wrong file format).
+	B3_WORLD_WRITE,        //!< Write error.
+	B3_WORLD_EMPTY1,       //!< Not used.
+	B3_WORLD_OUT_OF_ORDER,       //!< Parse error because of wrong structure size.
+	B3_WORLD_CLASSTYPE_UNKNOWN,  //!< Cannot instanciate because of unknown class type.
+	B3_WORLD_IMPORT              //!< General import error during file conversion.
 };
 
 typedef b3Exception<b3_world_error,'BLZ'> b3WorldException; 
@@ -119,21 +128,73 @@ class B3_PLUGIN b3World : public b3Mem, public b3SearchPath
 	b3FirstItem    *m_Start;
 
 public:
+	/**
+	 * This variable deletes the content on destruction. This is not always
+	 * wanted if the hierarchy should survive the life time of this instance.
+	 * So you can disable auto deletion.
+	 */
 	b3_bool         m_AutoDelete;
 
 public:
-	                b3World();
-	                b3World(const char *world_name);
+	/**
+	 * This constructor initializes this instance.
+	 */
+	b3World();
+
+	/**
+	 * This constructor deserialize the content of the named file.
+	 *
+	 * @param worldname The file to deserialize.
+	 */
+	b3World(const char *worldname);
+
+	/**
+	 * This destructor deinitializes this instance. If the auto deletion is activated
+	 * the b3Item hierarchy is deleted also.
+	 */
 	virtual        ~b3World(); 
 
-	static b3Item  *b3AllocNode(b3_u32 class_value);
+	/**
+	 * This method allocates a b3Item instance from the item registry. If the
+	 * needed class type is not found a null pointer is returned. The new
+	 * instance get the default values via the initfunc call registerd in the
+	 * registry.
+	 *
+	 * @param classtype The needed class type.
+	 * @return The initialized b3Item instance.
+	 */
+	static b3Item  *b3AllocNode(b3_u32  classtype);
+
+	/**
+	 * This method allocates a b3Item instance from the item registry. If the
+	 * needed class type is not found a null pointer is returned. The class type
+	 * is determined from the given serialization buffer. The new
+	 * instance reads back the values from the given serialization buffer
+	 * via the loadfunc call registerd in the registry.
+	 *
+	 * @param buffer The serialization buffer.
+	 * @return The initialized b3Item instance.
+	 */
 	static b3Item  *b3AllocNode(b3_u32 *buffer);
 
-	b3_bool         b3Read (const char *world_name);
-	b3_bool         b3Write(const char *world_name);
-	b3_world_error  b3Read (b3FileAbstract *file_handle);
-	b3_world_error  b3Write(b3FileAbstract *file_handle);
-	b3_bool         b3ReadDump(const char *world_name);
+	/**
+	 * This method deserialize the content of the named file.
+	 *
+	 * @param worldname The file to deserialize.
+	 * @return True on success.
+	 */
+	b3_bool         b3Read (const char *worldname);
+
+	/**
+	 * This method serialize the content of the named file.
+	 *
+	 * @param worldname The file to serialize.
+	 * @return True on success.
+	 */
+	b3_bool         b3Write(const char *worldname);
+	b3_world_error  b3Read (b3FileAbstract *filehandle);
+	b3_world_error  b3Write(b3FileAbstract *filehandle);
+	b3_bool         b3ReadDump(const char *worldname);
 	b3_u32          b3Length();
 	void            b3Dump();
 	b3Item         *b3RemoveFirst();
@@ -232,11 +293,44 @@ public:
 	 * uses the b3Store* methods described at another position.
 	 */
 	virtual void            b3Write();
+
+	/**
+	 * This method returns an instance individual description.
+	 *
+	 * @return The individual instance name.
+	 */
 	virtual char           *b3GetName();
+
+	/**
+	 * This virtual function initializes this class in an implementation specific manner.
+	 *
+	 * @return True on success.
+	 */
 	virtual b3_bool         b3Prepare();
+
+	/**
+	 * This method dumps the content of this instance. This method can be overloaded to
+	 * dump implementation specific information of the overloaded class.
+	 *
+	 * @param level The actual recursion depth.
+	 */
 	virtual void            b3Dump(b3_count level);
-	        void            b3DumpSimple(b3_count level = 0,b3_log_level log_level = B3LOG_NORMAL);
-			b3_bool         b3AllocHeads(b3_count head_count);
+
+	/**
+	 * This method dumps the maintainance information of this class for debugging purposes.
+	 *
+	 * @param level The recursion level.
+	 * @param loglevel The log level.
+	 */
+	void b3DumpSimple(b3_count level = 0,b3_log_level loglevel = B3LOG_NORMAL);
+
+	/**
+	 * This method allocates memory for the specified amount of list heads.
+	 *
+	 * @param headcount The number of heads needed.
+	 * @return True on success.
+	 */
+	b3_bool b3AllocHeads(b3_count headcount);
 
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
@@ -245,7 +339,8 @@ public:
 	 *
 	 * @return The overall size in bytes written yet.
 	 */
-	        b3_u32          b3Store();
+	b3_u32          b3Store();
+
 	/**
 	 * This method writes recursively the content of this b3Item instance. It writes the header
 	 * the list heads and then calls b3Write(). After that the b3Items found in the list heads
@@ -255,7 +350,7 @@ public:
 	 * @return The error code for storing.
 	 * @see b3FileAbstract.
 	 */
-	        b3_world_error  b3StoreFile(b3FileAbstract *file);
+	b3_world_error  b3StoreFile(b3FileAbstract *file);
 
 	/**
 	 * This method computes a checksum of the written content. The checksum is used to determine
@@ -263,10 +358,26 @@ public:
 	 *
 	 * @return The computed checksum.
 	 */
-			b3_u32          b3Checksum();
+	b3_u32          b3Checksum();
 
-	static  b3_bool         b3IsClass(b3_u32 class_type,b3_u32 class_id);
-	        b3_bool         b3IsClass(b3_u32 class_id);
+	/**
+	 * This method returns true if the specified class type is in the same class
+	 * of the given class id.
+	 *
+	 * @param classtype The class type to check.
+	 * @param classid   The class ID.
+	 * @return True if the class type is in the given class.
+	 */
+	static  b3_bool         b3IsClass(b3_u32 classtype,b3_u32 classid);
+
+	/**
+	 * This method returns true if the class type of this instance is in the same class
+	 * of the given class id.
+	 *
+	 * @param classid   The class ID.
+	 * @return True if the class type of this instance  is in the given class.
+	 */
+	b3_bool b3IsClass(b3_u32 classid);
 
 protected:
 	////////////////////////////////////////////// Parsing routines
