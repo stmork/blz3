@@ -39,6 +39,9 @@
 
 /*
 **      $Log$
+**      Revision 1.36  2005/08/08 14:46:31  smork
+**      - Documentation.
+**
 **      Revision 1.35  2005/06/10 21:31:43  sm
 **      - Vectorization fix for Windows
 **      - Read binary from registry returns null when no
@@ -731,11 +734,6 @@ b3_world_error b3World::b3Write(b3FileAbstract *file)
 		error = B3_WORLD_WRITE;
 	}
 	return error;
-}
-
-b3_u32 b3World::b3Length()
-{
-	return 0;
 }
 
 void b3World::b3Dump()

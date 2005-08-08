@@ -192,17 +192,90 @@ public:
 	 * @return True on success.
 	 */
 	b3_bool         b3Write(const char *worldname);
-	b3_world_error  b3Read (b3FileAbstract *filehandle);
-	b3_world_error  b3Write(b3FileAbstract *filehandle);
-	b3_bool         b3ReadDump(const char *worldname);
-	b3_u32          b3Length();
-	void            b3Dump();
-	b3Item         *b3RemoveFirst();
-	b3Item         *b3GetFirst();
-	void            b3SetFirst(b3Item *item);
-	b3Base<b3Item> *b3GetHead(b3_u32 class_value = 0);
 
+	/**
+	 * This method deserialize the content from the given file handle.
+	 *
+	 * @param filehandle The file to deserialize.
+	 * @return True on success.
+	 */
+	b3_world_error  b3Read (b3FileAbstract *filehandle);
+
+	/**
+	 * This method serialize the content into the given file handle.
+	 *
+	 * @param filehandle The file for the serialized data.
+	 * @return The error code.
+	 */
+	b3_world_error  b3Write(b3FileAbstract *filehandle);
+
+	/**
+	 * this method dumps the content of the given file name to show the b3Item
+	 * structure for debugging purposes.
+	 *
+	 * @param worldname The file to dump.
+	 * @return True if the content is correct.
+	 */
+	b3_bool         b3ReadDump(const char *worldname);
+
+	/**
+	 * This method dumps the b3Item hierarchy for debugging purposes.
+	 */
+	void            b3Dump();
+
+	/**
+	 * This method removes the first b3Item from the internal b3FirstItem class
+	 * and returns it.
+	 *
+	 * @return The removed b3Item.
+	 */
+	b3Item         *b3RemoveFirst();
+
+	/**
+	 * This method returns the first b3Item listed in this instance. This is the
+	 * access to the content.
+	 *
+	 * @return The first b3Item.
+	 */
+	b3Item         *b3GetFirst();
+
+	/**
+	 * This method sets the given b3Item as the first b3Item.
+	 *
+	 * @param item The first item to set.
+	 */
+	void            b3SetFirst(b3Item *item);
+
+	/**
+	 * This method returns the base of the first b3Item. The given
+	 * class id must match the initialized class base in the case
+	 * the class id is 0.
+	 *
+	 * @param classid The matching class id.
+	 * @return The base of the first b3Item.
+	 */
+	b3Base<b3Item> *b3GetHead(b3_u32 classid = 0);
+
+	/**
+	 * This method clones the given b3Item. First b3Store is called to serialize
+	 * the content. Then the b3Item is initialized via the b3AllocNode() method
+	 * in the buffer deserialization variant. So the class type of the original
+	 * b3Item must be registered
+	 * in the item registry. The b3Item is cloned completely with his sub items
+	 * using the b3CloneBase() method.
+	 *
+	 * @param original The b3Item to clone.
+	 * @return The cloned b3Item.
+	 */
 	static b3Item  *b3Clone(b3Item *original);
+
+	/**
+	 * This method clones a complete b3Base list. The items must be stored
+	 * via the b3Store() method call.
+	 *
+	 * @param srcBase The source base to clone.
+	 * @param dstBase The destination base which gets the cloned b3Items.
+	 */
 	static void     b3CloneBase(b3Base<b3Item> *srcBase,b3Base<b3Item> *dstBase);
 
 private:
@@ -216,7 +289,14 @@ private:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This defines an initialization function for b3Item initialization with default values.
+ */
 typedef b3Item * (*b3_item_init_func)(b3_u32  class_type);
+
+/**
+ * This defines an initialization function for b3Item initialization from a serialization buffer.
+ */
 typedef b3Item * (*b3_item_load_func)(b3_u32 *src);
 
 #define B3_ITEM_BASE(item_class)  item_class(b3_size class_size,b3_u32 classtype);
