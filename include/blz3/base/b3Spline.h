@@ -52,12 +52,15 @@ typedef b3_knot *b3_knots;
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists spline error codes.
+ */
 enum b3_bspline_error
 {
-	B3_BSPLINE_OK = 0,
-	B3_BSPLINE_TOO_MUCH_CONTROLS,
-	B3_BSPLINE_TOO_FEW_CONTROLS,
-	B3_BSPLINE_TOO_FEW_MAXKNOTS,
+	B3_BSPLINE_OK = 0,                 //!< Spline handling is OK.
+	B3_BSPLINE_TOO_MUCH_CONTROLS,      //!< Not enough memory for spline control points.
+	B3_BSPLINE_TOO_FEW_CONTROLS,       //!< Too few controls for the given spline degree.
+	B3_BSPLINE_TOO_FEW_MAXKNOTS,       //!< Too few knots for the goven spline degree.
 	B3_BSPLINE_TOO_FEW_MAXCONTROLS,
 	B3_BSPLINE_MISSING_KNOTS,
 	B3_BSPLINE_CLOSED,
@@ -71,9 +74,15 @@ enum b3_bspline_error
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This class implements spline vector operations.
+ */
 class B3_PLUGIN b3SplineVector
 {
 public:
+	/**
+	 * This method initializes the given vector to 0.
+	 */
 	static inline void b3Clear(b3_vector *vector)
 	{
 		vector->x =
@@ -81,6 +90,9 @@ public:
 		vector->z = 0;
 	}
 
+	/**
+	 * This method initializes the given vector to 0.
+	 */
 	static inline void b3Clear(b3_vector4D *vector)
 	{
 		vector->x =
@@ -95,7 +107,7 @@ public:
 
 	static inline void b3Homogenize(b3_vector4D *vector)
 	{
-		register b3_f64 w;
+		register b3_f32 w;
 
 		B3_ASSERT(vector->w != 0);
 		w = 1.0 / vector->w;
@@ -130,7 +142,7 @@ public:
 		const b3_vector4D *bVec,
 		      b3_vector4D *result)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE1
 		const b3_f32 *a = &aVec->x;
 		const b3_f32 *b = &bVec->x;
 		      b3_f32 *r = &result->x;
@@ -148,7 +160,7 @@ public:
 	}
 
 	static inline void b3AddScaled(
-		const b3_f64     factor,
+		const b3_f32     factor,
 		const b3_vector *offset,
 		      b3_vector *vector)
 	{
@@ -168,11 +180,11 @@ public:
 	}
 
 	static inline void b3AddScaled(
-		const b3_f64       factor,
+		const b3_f32       factor,
 		const b3_vector4D *offset,
 		      b3_vector4D *vector)
 	{
-#ifdef B3_SSE
+#ifdef B3_SSE1
 		const b3_f32 *o = &offset->x;
 		      b3_f32 *v = &vector->x;
 
@@ -191,7 +203,7 @@ public:
 	static inline void b3LinearCombine(
 		const b3_vector *aVec,
 		const b3_vector *bVec,
-		const b3_f64     b,
+		const b3_f32     b,
 		      b3_vector *result)
 	{
 		result->x = (b3_f32)(aVec->x + b * bVec->x);
@@ -202,34 +214,56 @@ public:
 	static inline void b3LinearCombine(
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
-		const b3_f64       b,
+		const b3_f32       f,
 		      b3_vector4D *result)
 	{
-		result->x = (b3_f32)(aVec->x + b * bVec->x);
-		result->y = (b3_f32)(aVec->y + b * bVec->y);
-		result->z = (b3_f32)(aVec->z + b * bVec->z);
-		result->w = (b3_f32)(aVec->w + b * bVec->w);
+#ifdef B3_SSE1
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
+
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			r[i] = a[i] + f * b[i];
+		}
+#else
+		result->x = (b3_f32)(aVec->x + f * bVec->x);
+		result->y = (b3_f32)(aVec->y + f * bVec->y);
+		result->z = (b3_f32)(aVec->z + f * bVec->z);
+		result->w = (b3_f32)(aVec->w + f * bVec->w);
+#endif
 	}
 
 	static inline void b3Weight(b3_vector *result,
 		const b3_vector *aVec,
 		const b3_vector *bVec,
-		const b3_f64     r)
+		const b3_f32     f)
 	{
-		result->x = (b3_f32)((1-r) * aVec->x + r * bVec->x);
-		result->y = (b3_f32)((1-r) * aVec->y + r * bVec->y);
-		result->z = (b3_f32)((1-r) * aVec->z + r * bVec->z);
+		result->x = aVec->x + f * (bVec->x - aVec->x);
+		result->y = aVec->y + f * (bVec->y - aVec->y);
+		result->z = aVec->z + f * (bVec->z - aVec->z);
 	}
 
 	static inline void b3Weight(b3_vector4D *result,
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
-		const b3_f64       r)
+		const b3_f32       f)
 	{
-		result->x = (b3_f32)((1-r) * aVec->x + r * bVec->x);
-		result->y = (b3_f32)((1-r) * aVec->y + r * bVec->y);
-		result->z = (b3_f32)((1-r) * aVec->z + r * bVec->z);
-		result->w = (b3_f32)((1-r) * aVec->w + r * bVec->w);
+#ifdef B3_SSE1
+		const b3_f32 *a = &aVec->x;
+		const b3_f32 *b = &bVec->x;
+		      b3_f32 *r = &result->x;
+
+		for (b3_loop i = 0;i < 4;i++)
+		{
+			r[i] = a[i] + f * (b[i] - a[i]);
+		}
+#else
+		result->x = aVec->x + f * (bVec->x - aVec->x);
+		result->y = aVec->y + f * (bVec->y - aVec->y);
+		result->z = aVec->z + f * (bVec->z - aVec->z);
+		result->w = aVec->w + f * (bVec->w - aVec->w);
+#endif
 	}
 };
 
@@ -239,6 +273,9 @@ public:
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This structure template defines the basic properties of a spline
+ */
 template<class VECTOR> struct b3_spline_template
 {
 	b3_count        control_num,knot_num;
@@ -253,6 +290,9 @@ template<class VECTOR> struct b3_spline_template
 typedef b3_spline_template<b3_vector>   b3_spline;
 typedef b3_spline_template<b3_vector4D> b3_nurbs;
 
+/**
+ * This template class defines the behaviour of splines.
+ */
 template<class VECTOR> class B3_PLUGIN b3SplineTemplate : public b3_spline_template<VECTOR>
 {
 public:
@@ -579,13 +619,15 @@ public:
 		}
 	}
 
-	// The routine Mansfield computes the basis coefficents for the
-	// appropriate control points and returns the highest index of
-	// the corresponding control point. This routine is independend
-	// of the spline type (e.g. openend or closed).
-	// ------------------------------------------------------------
-	// it:     array where to store the basis function coefficents
-	// qStart: parameter value inside the curve
+	/**
+	 * The routine Mansfield computes the basis coefficents for the
+	 * appropriate control points and returns the highest index of
+	 * the corresponding control point. This routine is independend
+	 * of the spline type (e.g. openend or closed).
+	 *
+	 * @param it     Array where to store the basis function coefficents
+	 * @param qStart Parameter value inside the curve
+	 */
 	b3_index  b3Mansfield(b3_f64 *it,b3_f64 qStart)
 	{
 		b3_index  l,i,j,k;
@@ -638,15 +680,17 @@ public:
 		return i;
 	}
 
-	// This routine computes the real curve point according to the basis
-	// coefficients computed by Mansfield(). The value "i" is the knot
-	// index returned by b3Mansfield(). The start index is like the b3DeBoor-
-	// routines.
-	// ------------------------------------------------------------------
-	// point:  where to store the curve point
-	// it:     basis coefficients computed by b3Mansfield()
-	// i:      knot index returned by b3Mansfield()
-	// index:  start index of control points
+	/**
+	 * This routine computes the real curve point according to the basis
+	 * coefficients computed by Mansfield(). The value "i" is the knot
+	 * index returned by b3Mansfield(). The start index is like the b3DeBoor-
+	 * routines.
+	 *
+	 * @param point  Where to store the curve point
+	 * @param it     Basis coefficients computed by b3Mansfield()
+	 * @param i      Knot index returned by b3Mansfield()
+	 * @param index  Start index of control points
+	 */
 	void b3MansfieldVector(VECTOR *point,b3_f64 *it,b3_index i,b3_index index)
 	{
 		b3_index  l,j;
@@ -875,15 +919,17 @@ public:
 		return true;
 	}
 
-	// This routine inserts control points into a de Boor net. The index between
-	// two net lines is the amount of "ControlOffset". In one line there are
-	// inserted "Mult" knots with value "q". This procedure is repeated "yLines"
-	// times.
-	// -------------------------------------------------------------------------
-	// q:             where to insert inside the knot vector
-	// Mult:          how many insertions to be done
-	// ControlOffset: distance between to curves
-	// yLines:        how many curves where to insert knots
+	/**
+	 * This routine inserts control points into a de Boor net. The index between
+	 * two net lines is the amount of "ControlOffset". In one line there are
+	 * inserted "Mult" knots with value "q". This procedure is repeated "yLines"
+	 * times.
+	 *
+	 * @param q             Where to insert inside the knot vector
+	 * @param Mult          How many insertions to be done
+	 * @param ControlOffset Distance between to curves
+	 * @param yLines       How many curves where to insert knots
+	 */
 	b3_bool b3InsertSurfaceControl(
 		b3_knot    q,
 		b3_count   Mult,
@@ -1180,13 +1226,15 @@ public:
 		return true;
 	}
 private:
-	// This routine computes the first level of the de Boor algorithm. The
-	// computed points are used for the new control points needed for
-	// knot insertion. The control points are put into the o[]-array.
-	// -------------------------------------------------------------------
-	// ins:    O  recreated control points
-	// index:  I  start index of curve
-	// q:      I  curve parameter to be inserted into knot (later)
+	/**
+	 * This routine computes the first level of the de Boor algorithm. The
+	 * computed points are used for the new control points needed for
+	 * knot insertion. The control points are put into the o[]-array.
+	 *
+	 * @param ins   Recreated control points
+	 * @param index Start index of curve
+	 * @param q     Curve parameter to be inserted into knot (later)
+	 */
 	inline b3_index b3InsertDeBoorOpened(
 		VECTOR   *ins,
 		b3_index  index,
@@ -1219,13 +1267,15 @@ private:
 		return i;
 	}
 
-	// This routine computes the first level of the de Boor algorithm. The
-	// computed points are used for the new control points needed for
-	// knot insertion. The control points are put into the o[]-array.
-	// -------------------------------------------------------------------
-	// ins:    O  recreated control points
-	// index:  I  start index of curve
-	// q:      I  curve parameter to be inserted into knot (later)
+	/**
+	 * This routine computes the first level of the de Boor algorithm. The
+	 * computed points are used for the new control points needed for
+	 * knot insertion. The control points are put into the o[]-array.
+	 *
+	 * @paramins Recreated control points
+	 * @param index Start index of curve
+	 * @param q Curve parameter to be inserted into knot (later)
+	 */
 	inline b3_index b3InsertDeBoorClosed (
 		VECTOR   *ins,
 		b3_index  index,
