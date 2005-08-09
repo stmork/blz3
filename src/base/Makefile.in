@@ -19,7 +19,6 @@ LIB_SOURCE =\
 	b3Math.cc\
 	b3Matrix.cc\
 	b3MultiSample.cc\
-	b3Node.cc\
 	b3Pick.cc\
 	b3Procedure.cc\
 	b3Render.cc\
@@ -46,7 +45,6 @@ LIB_OBJ	=\
 	b3Math.o\
 	b3Matrix.o\
 	b3MultiSample.o\
-	b3Node.o\
 	b3Pick.o\
 	b3Procedure.o\
 	b3Render.o\

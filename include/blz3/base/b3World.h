@@ -34,7 +34,6 @@
 #include "blz3/base/b3Color.h"
 #include "blz3/base/b3List.h"
 #include "blz3/base/b3Spline.h"
-#include "blz3/base/b3Nurbs.h"
 #include "blz3/base/b3SearchPath.h"
 #include "blz3/base/b3Vector.h"
 

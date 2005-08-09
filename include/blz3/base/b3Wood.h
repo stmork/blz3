@@ -26,21 +26,22 @@
 class B3_PLUGIN b3Wood
 {
 protected:
-	b3_matrix         m_Warp;
+	b3_matrix         m_Warp; //!< The scaling matrix of object space.
 
 public:
-	b3_f32            m_yRot;
-	b3_f32            m_zRot;
-	b3_f32            m_RingSpacing;
-	b3_f32            m_RingFrequency;
-	b3_f32            m_RingNoise;
+	b3_f32            m_yRot; //!< The trunk rotation around the y axis.
+	b3_f32            m_zRot; //!< The trunk rotation around the z axis.
+
+	b3_f32            m_RingSpacing; //!< Controls the ring spacing.
+	b3_f32            m_RingFrequency; //!< Controls the frequency of ring spacing.
+	b3_f32            m_RingNoise;     //!< Controls how noisy the rings are.
 	b3_f32            m_RingNoiseFrequency;
 	b3_f32            m_TrunkWobble;
 	b3_f32            m_TrunkWobbleFrequency;
 	b3_f32            m_AngularWobble;
 	b3_f32            m_AngularWobbleFrequency;
-	b3_f32            m_GrainFrequency;
-	b3_f32            m_Grainy;
+	b3_f32            m_GrainFrequency; //!< The wood grain frequency.
+	b3_f32            m_Grainy;         //!< The strength of the grain.
 	b3_f32            m_Ringy;
 
 public:
@@ -92,18 +93,26 @@ class B3_PLUGIN b3OakPlank : public b3Wood
 	b3_f64            m_ryTimes;
 
 protected:
-	b3Wood           *m_Planks;
-	b3_count          m_PlankCount;
+	b3Wood           *m_Planks;     //!< The wood array for the planks.
+	b3_count          m_PlankCount; //!< The number of different wood definitions.
 
 public:
-	b3_s32            m_xTimes,m_yTimes; // Used!
-	b3_f32            m_Wobble;
-	b3_f32            m_xScale;
-	b3_f32            m_yScale;
-	b3_f32            m_xOffset;
+	b3_s32            m_xTimes;     //!< The planks in x direction.
+	b3_s32            m_yTimes;     //!< The planks in y direction.
+	b3_f32            m_Wobble;     //!< The wobbling factor between the wood planks.
+	b3_f32            m_xScale;     //!< Scaling factor in x direction.
+	b3_f32            m_yScale;     //!< Scaling factor in y direction.
+	b3_f32            m_xOffset;    //!< The offset in x direction.
 
 public:
+	         /**
+	          * This constructor initializes this instance.
+	          */
 	         b3OakPlank();
+
+	         /**
+	          * This destructor deinitializes this instance.
+	          */
 	virtual ~b3OakPlank();
 
 	/**

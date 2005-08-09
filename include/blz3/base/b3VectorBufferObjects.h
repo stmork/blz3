@@ -30,13 +30,13 @@ class B3_PLUGIN b3VectorBufferObjects
 
 #ifdef BLZ3_USE_OPENGL
 protected:
-	static PFNGLGENBUFFERSARBPROC    glGenBuffersARB;
-	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-	static PFNGLBINDBUFFERARBPROC    glBindBufferARB;
-	static PFNGLBUFFERDATAARBPROC    glBufferDataARB;
-	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;
-	static PFNGLMAPBUFFERARBPROC     glMapBufferARB;
-	static PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;
+	static PFNGLGENBUFFERSARBPROC    glGenBuffersARB;     //!< The corresponding OpenGL procedure.
+	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;  //!< The corresponding OpenGL procedure.
+	static PFNGLBINDBUFFERARBPROC    glBindBufferARB;     //!< The corresponding OpenGL procedure.
+	static PFNGLBUFFERDATAARBPROC    glBufferDataARB;     //!< The corresponding OpenGL procedure.
+	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;  //!< The corresponding OpenGL procedure.
+	static PFNGLMAPBUFFERARBPROC     glMapBufferARB;      //!< The corresponding OpenGL procedure.
+	static PFNGLUNMAPBUFFERARBPROC   glUnmapBufferARB;    //!< The corresponding OpenGL procedure.
 #endif
 
 public:

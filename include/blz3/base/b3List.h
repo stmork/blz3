@@ -42,6 +42,20 @@
  * the same class part of the elements class type. If the class type
  * is zero the b3Link is meant as an anonymous list.
  *
+ * We are using a doubly linked list in the following manner:
+ *
+ *                                                                    +------------+
+ *   b3Base                 b3Link       b3Link       b3Link ...      |            |
+ * +---------+                                                        v            |
+ * |         |              +----+       +----+       +----+       +----+          |
+ * |  First  |------------->|Succ|------>|Succ|------>|Succ|------>|Succ|--> null  |
+ * |         |              |    |       |    |       |    |       |    |          |
+ * |  Last   |--+   null <--|Prev|<------|Prev|<------|Prev|<------|Prev|          |
+ * |         |  |           +----+       +----+       +----+       +----+          |
+ * +---------+  |                                                                  |
+ *              +------------------------------------------------------------------+
+ *                                                                                  
+ *
  * @see b3Base
  */
 template <class T> class B3_PLUGIN b3Link

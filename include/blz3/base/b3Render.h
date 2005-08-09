@@ -25,36 +25,51 @@
 #include "blz3/base/b3VertexBuffer.h"
 #include "blz3/system/b3Mem.h"
 #include "blz3/image/b3Tx.h"
+
 class b3RenderObject;
 
+/**
+ * This structure holds information about a view perspective.
+ */
 struct b3_render_view_info
 {
-	b3_bool   perspective;
-	b3_f64    near_cp,far_cp;
-	b3_f64    width,height;
-	b3_vector eye,look,up,offset;
+	b3_bool   perspective;         //!< A flag whether the perspective is projective.
+	b3_f64    near_cp;             //!< The near clipping plane.
+	b3_f64    far_cp;              //!< The far clipping plane.
+	b3_f64    width;               //!< The viewport width.
+	b3_f64    height;              //!< The viewport height.
+	b3_vector eye;                 //!< The eye point of the camera.
+	b3_vector look;                //!< The view poin of the camera.
+	b3_vector up;                  //!< The up vector of the camera perspective.
+	b3_vector offset;
 };
 
+/**
+ * This structure holds information about an OpenGL light source.
+ */
 struct b3_render_light_info
 {
 #ifdef BLZ3_USE_OPENGL
-	GLfloat gl_position[4];
-	GLfloat gl_direction[4];
-	GLfloat gl_ambient[4];
-	GLfloat gl_diffuse[4];
-	GLfloat gl_specular[4];
+	GLfloat gl_position[4];  //!< The light position.
+	GLfloat gl_direction[4]; //!< The spot light direction.
+	GLfloat gl_ambient[4];   //!< The ambient color.
+	GLfloat gl_diffuse[4];   //!< The diffuse color.
+	GLfloat gl_specular[4];  //!< The specular color.
 
 	// Spot values
-	GLfloat gl_spot_exp;
-	GLfloat gl_spot_cutoff;
+	GLfloat gl_spot_exp;     //!< The light exponent.
+	GLfloat gl_spot_cutoff;  //!< The cut off angle for spot light.
 
 	// Attenuation
-	GLfloat gl_Ac;
-	GLfloat gl_Al;
-	GLfloat gl_Aq;
+	GLfloat gl_Ac;           //!< The constant attenuation.
+	GLfloat gl_Al;           //!< The linear attenuation.
+	GLfloat gl_Aq;           //!< The quadratic attenuation.
 #endif
 };
 
+/**
+ * This class provides a basic context for OpenGL rendering.
+ */
 class b3RenderContext : protected b3Mem
 {
 	       b3_index             glLightCount;
@@ -225,15 +240,74 @@ protected:
 	virtual                ~b3RenderObject();
 public:
 	        void            b3AddCount(b3RenderContext *context);
+
+	/**
+	 * This method call initializes the vertex buffer objects for this render
+	 * object. It calls:
+	 *
+	 * -# b3PreAlloc()
+	 * -# b3AllocVertexMemory() and here in the default implementation:
+	 *    -# b3GetCount()
+	 *    -# b3VectorBufferObjects#b3AllocVertexMemory() of these buffers:
+	 *       - vertices
+	 *       - grid indices
+	 *       - triangle indices
+	 *
+	 * @param context The render context to use.
+	 * @see b3VectorBufferObjects
+	 */
 	virtual void            b3SetupVertexMemory(b3RenderContext *context);
+
+	/**
+	 * This method frees the memory of the participating VBOs.
+	 *
+	 * @see b3VectorBufferObjects
+	 */
 	virtual void            b3FreeVertexMemory();
-	virtual void            b3Draw(b3RenderContext *context);
-	        void            b3Recompute();
-	        void            b3RecomputeIndices();
-	        void            b3RecomputeMaterial();
-	        void            b3Update();
-	        void            b3UpdateMaterial();
-	        b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
+
+	/**
+	 * This method draws this render object in the defined state using
+	 * the given render context.
+	 *
+	 * @param context The render context to use.
+	 */
+	virtual void b3Draw(b3RenderContext *context);
+
+	/**
+	 * This call forces this instance to recompute the geometry. It means
+	 * that the vertices and its indices must be recomputed via the b3Update()
+	 * method call. The b3Update() method call is also done on b3Draw().
+	 */
+	void b3Recompute();
+	void            b3RecomputeIndices();
+
+	/**
+	 * This call forces this instance to recompute the material. It means
+	 * that the material properties must be recomputed via the b3UpdateMaterial()
+	 * method call. The b3UpdateMaterial) method call is also done on b3Draw().
+	 */
+	void            b3RecomputeMaterial();
+
+	/**
+	 * This method updates the geometry if necessary. After updating the
+	 * recomputation is done.
+	 */
+	void b3Update();
+
+	/**
+	 * This method updates the material properties if necessary.
+	 */
+	void b3UpdateMaterial();
+
+	/**
+	 * This method adjusts the given bounding box with the vertices found in this
+	 * render object.
+	 *
+	 * @param lower The lower bounding box corner.
+	 * @param upper The upper bounding box corner.
+	 * @return True on success.
+	 */
+	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
 protected:
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
