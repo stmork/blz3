@@ -234,7 +234,7 @@ public:
 #endif
 	}
 
-	static inline void b3Weight(b3_vector *result,
+	static inline void b3Mix(b3_vector *result,
 		const b3_vector *aVec,
 		const b3_vector *bVec,
 		const b3_f32     f)
@@ -244,7 +244,7 @@ public:
 		result->z = aVec->z + f * (bVec->z - aVec->z);
 	}
 
-	static inline void b3Weight(b3_vector4D *result,
+	static inline void b3Mix(b3_vector4D *result,
 		const b3_vector4D *aVec,
 		const b3_vector4D *bVec,
 		const b3_f32       f)
@@ -1260,7 +1260,7 @@ private:
 			Denom =   (knots[j+degree] - knots[j]);
 			if (Denom != 0) r =     (q - knots[j]) / Denom;
 			else            r =      0;
-			b3SplineVector::b3Weight(&it[l],&it[l+1],&it[l],r);
+			b3SplineVector::b3Mix(&it[l],&it[l+1],&it[l],r);
 			*ins-- = it[l];
 			j--;
 		}
@@ -1312,7 +1312,7 @@ private:
 			Denom =   (knots[j+degree] - knots[j]);
 			if (Denom != 0) r =     (q - knots[j]) / Denom;
 			else            r =      0;
-			b3SplineVector::b3Weight(&it[l],&it[l+1],&it[l],r);
+			b3SplineVector::b3Mix(&it[l],&it[l+1],&it[l],r);
 			*ins--  = it[l];
 			if (--j < 0) /* j = i-l; */
 			{
