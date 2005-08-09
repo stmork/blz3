@@ -20,6 +20,10 @@
 
 #include "blz3/b3Config.h"
 
+/**
+ * This class handles the existance and the usablility
+ * of vector buffer objects.
+ */
 class B3_PLUGIN b3VectorBufferObjects
 {
 	static b3_bool                   glHasVBO;
@@ -36,16 +40,31 @@ protected:
 #endif
 
 public:
-	static b3_bool                   glAllowVBO;
+	static b3_bool                   glAllowVBO; //!< This flags shows if VBOs are allowed to use.
 
 public:
+	/**
+	 * This method checks for the existance of VBOs in the given OpenGL extension string.
+	 *
+	 * @param extension The OpenGL extension string.
+	 */
 	static        void    b3Init(const char *extension);
 
+	/**
+	 * This method returns true if VBOs are available.
+	 *
+	 * @return True if VBOs are available.
+	 */
 	static inline b3_bool b3HasVBO()
 	{
 		return glHasVBO;
 	}
 
+	/**
+	 * This method returns true if VBOs are available and allowed to use.
+	 *
+	 * @return True if VBOs may be usable.
+	 */
 	static inline b3_bool b3AllowVBO()
 	{
 		return glHasVBO && glAllowVBO;
