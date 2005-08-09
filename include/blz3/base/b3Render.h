@@ -91,28 +91,121 @@ public:
 	b3Color                     glBgColor;     //!< The background color.
 
 public:
-	                 b3RenderContext();
-	static  void     b3Init(b3_bool double_buffered = true);
+	/**
+	 * The constructor initializes this instance and initializes the OpenGL background color.
+	 */
+	b3RenderContext();
+
+	/**
+	 * This method dumps some version information and initializes OpenGL
+	 * for Blizzard III rendering purposes.
+	 *
+	 * @param doublebuffered A flag if the render context (GLX or WGL) is double buffered.
+	 */
+	static  void     b3Init(b3_bool doublebuffered = true);
+
+	/**
+	 * This method marks the beginning of render object drawing.
+	 */
 	virtual void     b3StartDrawing();
 
+	/**
+	 * This method sets the anti aliasing drawing mode for wire frames.
+	 *
+	 * @param enable True if anti aliasing should be used.
+	 */
 	static  void     b3SetAntiAliasing(b3_bool enable = false);
+
+	/**
+	 * This method initializes the projection. The model view matrix
+	 * is also loaded with the identity matrix.
+	 *
+	 * @param info The specified projection.
+	 * @see b3_render_view_info
+	 */
 	static  void     b3ViewSet(b3_render_view_info *info);
 
+	/**
+	 * This method resets the lighting with the specified color as ambient color
+	 * using the b3SetAmbient() method. All lights sources are disabled.
+	 *
+	 * @param color The ambient color.
+	 */
 	static  void     b3LightReset(  b3_pkd_color color = B3_DARK_GREY);
-	        void     b3LightDefault(b3_pkd_color color = B3_DARK_GREY);
-			void     b3LightNum(b3_index light_num = 0);
 
-	        b3_bool  b3LightAdd(b3_render_light_info *info);
-	static  void     b3LightSet(b3_index light_num,b3_render_light_info *info);
+	/**
+	 * This method resets the lighting with the specified color as ambient color
+	 * using the b3SetAmbient() method. All lights sources except the first one
+	 * are disabled. 
+	 *
+	 * @param color The ambient color.
+	 */
+	void     b3LightDefault(b3_pkd_color color = B3_DARK_GREY);
 
-	static  b3_bool  b3GetMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
-	static  b3_bool  b3PutMatrix(b3_matrix_mode matrix_mode,b3_matrix *matrix);
+	/**
+	 * This method verifies the given light index if the index can be handled by OpenGL.
+	 * All futher b3LightAdd() method calls use this new light index. Illegal light
+	 * indices are ignored.
+	 *
+	 * @param index The light index to verify.
+	 */
+	void b3LightNum(b3_index index = 0);
 
+	/**
+	 * This method adds a light with the specified light information structure. If
+	 * no more lights are available no light is set. The light information itself
+	 * is converted into OpenGL calls via the b3LightSet() method.
+	 *
+	 * @param info The light information.
+	 * @return True if the light was added.
+	 * @see b3_render_light_info
+	 */
+	b3_bool b3LightAdd(b3_render_light_info *info);
+
+	/**
+	 * This method converts the information from the given information structure
+	 * into a sequence of OpenGL API calls.
+	 *
+	 * @param index The light index.
+	 * @param info The light information structure.
+	 * @see b3_render_light_info
+	 */
+	static void b3LightSet(b3_index index, b3_render_light_info *info);
+
+	/**
+	 * This method sets the given matrix into the specified OpenGL matrix mode.
+	 *
+	 * @param mode The matrix mode to use.
+	 * @param matrix The matrix itself.
+	 * @return True on success.
+	 * @see b3_matrix_mode
+	 */
+	static  b3_bool  b3GetMatrix(b3_matrix_mode mode,b3_matrix *matrix);
+
+	/**
+	 * This method retrieves the current selected matrix in the specified OpenGL matrix mode.
+	 *
+	 * @param mode The used matrix mode.
+	 * @param matrix The matrix to retrieve.
+	 * @return True on success.
+	 */
+	static  b3_bool  b3PutMatrix(b3_matrix_mode mode,b3_matrix *matrix);
+
+	/**
+	 * This method returns the actual selected render object.
+	 *
+	 * @return The selected object.
+	 */
 	inline b3RenderObject  *b3GetSelected()
 	{
 		return glSelectedObject;
 	}
 
+	/**
+	 * This method sets a new render object selection.
+	 *
+	 * @param selected The new selected render object.
+	 */
 	inline void b3SetSelected(b3RenderObject *selected)
 	{
 		glSelectedObject = selected;
@@ -484,9 +577,40 @@ protected:
 	 * @return The resulting specular exponent.
 	 */
 	virtual b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
-	virtual b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
-	virtual b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
-	virtual b3_bool         b3GetImage(b3Tx *image);
+
+	/**
+	 * If this method returns true the referenced values are initialized by the implementation of
+	 * this method with chess values. The default implementation simply returns false indicating
+	 * no chess material.
+	 *
+	 * @param bColor The black color.
+	 * @param wColor The white color.
+	 * @param xRepeat The repitition count in x direction.
+	 * @param yRepeat The repitition count in y direction.
+	 * @return True if the object has a chess material.
+	 */
+	virtual b3_bool b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
+
+	/**
+	 * If the implementation of this method can simply return its texture this method returns this
+	 * texture with the translation and scaling values initialized.
+	 *
+	 * @param xTrans texture translation in x direction.
+	 * @param yTrans texture translation in y direction.
+	 * @param xScale texture translation in x direction.
+	 * @param yScale texture translation in y direction.
+	 * @return The texture to use.
+	 */
+	virtual b3Tx *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
+
+	/**
+	 * If the render object is not a normal material nor a chess board nor a simple texture material the
+	 * material must be sampled into the given image.
+	 *
+	 * @param image The image to which the surface colors are sampled in.
+	 * @return True if sampling was OK.
+	 */
+	virtual b3_bool b3GetImage(b3Tx *image);
 
 	/**
 	 * This method transforms the vertex data with the given transformation.
