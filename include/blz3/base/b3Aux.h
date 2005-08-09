@@ -26,10 +26,16 @@
 class B3_PLUGIN b3RGB
 {
 public:
-	b3_u08 r,g,b;
-public:
+	b3_u08 r; //!< The red component.
+	b3_u08 g; //!< The green component.
+	b3_u08 b; //!< The blue component.
 
-	              b3RGB();
+public:
+	/**
+	 * This constructor initializes the instance with default values.
+	 */
+	b3RGB();
+
 	/**
 	 * This method returns the stored color as a <em>b3_pkd_color</em> type.
 	 *
@@ -60,7 +66,7 @@ public:
 	 * This method assignes values from a given <em>b3_pkd_color</em> value
 	 * to this class.
 	 *
-	 * \param &color The given color representation.
+	 * \param color The given color representation.
 	 */
 	inline 	void          operator=(const b3_pkd_color &color)
 	{
@@ -73,7 +79,7 @@ public:
 	 * This method assignes values from a given <em>b3_color</em> value
 	 * to this class.
 	 *
-	 * \param &color The given color representation.
+	 * \param color The given color representation.
 	 */
 	inline  void          operator=(const b3_color &color)
 	{
@@ -104,15 +110,56 @@ public:
 class B3_PLUGIN b3Rect
 {
 public:
+	/**
+	 * The smaller edge coordinate.
+	 */
 	b3_coord x1,y1;
+
+	/**
+	 * The higher edge coordinate.
+	 */
 	b3_coord x2,y2;
 
 public:
-	        b3Rect();
+	/**
+	 * This constructor initializes this instance to zero values.
+	 */
+	b3Rect();
+
+	/**
+	 * This method returns the rectangle width. This value may
+	 * be negative,
+	 *
+	 * @return The rectangle width.
+	 */
 	b3_res  b3Width();
+
+	/**
+	 * This method returns the rectangle height. This value may
+	 * be negative,
+	 *
+	 * @return The rectangle height.
+	 */
 	b3_res  b3Height();
-	b3_bool b3UpdateBound(b3Rect *);
-	b3_bool b3CheckBound(b3Rect *);
+
+	/**
+	 * This method adjusts the rectangle of this bound so that the
+	 * given ractangle fits into it.
+	 *
+	 * @param rect The rectangle for adjusting.
+	 * @return True if any adjustment occured.
+	 */
+	b3_bool b3UpdateBound(b3Rect *rect);
+
+	/**
+	 * This method adjusts the rectangle of this bound so that the
+	 * given ractangle fits into it. Additionally the coordinates
+	 * are adjusted to at least zero dimension.
+	 *
+	 * @param rect The rectangle for adjusting.
+	 * @return True if any adjustment occured.
+	 */
+	b3_bool b3CheckBound(b3Rect *rect);
 };
 
 /**
@@ -121,9 +168,17 @@ public:
 class B3_PLUGIN b3Point
 {
 public:
-	b3_f64 x,y;
+	b3_f64 x; //!< The x coordinate.
+	b3_f64 y; //!< The y coordinate.
 
 public:
+	/**
+	 * This constructor initializes this instance with the
+	 * given coordinates.
+	 *
+	 * @param x The new x coordinate.
+	 * @param y The new y coordinate.
+	 */
 	inline b3Point(b3_f64 x = 0,b3_f64 y = 0)
 	{
 		this->x = x;

@@ -131,20 +131,42 @@ public:
 	virtual void        b3SetupPicking(b3PickInfo *pick_info);
 	virtual void        b3SetupGrid(b3PickInfo *pick_info);
 
+	/**
+	 * The implementation of this method computes the normal at the intersection point given in the
+	 * ray structure.
+	 *
+	 * @param ray The ray structure which contains all information of the incident
+	 *            ray and the intersection point.
+	 */
 	virtual inline void b3Normal(b3_ray *ray)
 	{
 	}
 
+	/**
+	 * This method returns the list base of the shapes bumps.
+	 *
+	 * @return The bump list.
+	 */
 	inline b3Base<b3Item> *b3GetBumpHead()
 	{
 		return &m_Heads[0];
 	}
 
+	/**
+	 * This method returns the list base of the shapes stencils.
+	 *
+	 * @return The stencil list.
+	 */
 	inline b3Base<b3Item> *b3GetConditionHead()
 	{
 		return &m_Heads[1];
 	}
 
+	/**
+	 * This method returns the list base of the shapes materials.
+	 *
+	 * @return The material list.
+	 */
 	inline b3Base<b3Item> *b3GetMaterialHead()
 	{
 		return &m_Heads[2];
@@ -154,7 +176,7 @@ public:
 
 protected:
 	b3_count        b3GetIndexOverhead(b3_f64 xl,b3_f64 yl);
-	void            b3GetDiffuseColor(b3Color &color);
+	void            b3GetDiffuseColor(b3Color &diffuse);
 	b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
 	b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
 	b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);

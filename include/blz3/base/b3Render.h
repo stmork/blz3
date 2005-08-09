@@ -83,12 +83,12 @@ class b3RenderContext : protected b3Mem
 #endif
 
 public:
-	b3_count                    glVertexCount;
-	b3_count                    glPolyCount;
-	b3_count                    glGridCount;
-	b3_count                    glTextureSize;
-	b3_bool                     glDrawCachedTextures;
-	b3Color                     glBgColor;
+	b3_count                    glVertexCount; //!< The overall vertex count
+	b3_count                    glPolyCount;   //!< The overall triangle count.
+	b3_count                    glGridCount;   //!< The overall line count.
+	b3_count                    glTextureSize; //!< The maximal texture resolution.
+	b3_bool                     glDrawCachedTextures; //!< A flag which specifies if the OpenGL textures should be cached.
+	b3Color                     glBgColor;     //!< The background color.
 
 public:
 	                 b3RenderContext();
@@ -120,6 +120,13 @@ public:
 
 #ifdef BLZ3_USE_OPENGL
 	// Some inlines :-)
+
+	/**
+	 * This method converts a b3Color instance into OpenGL floats.
+	 *
+	 * @param src The b3Color instance to convert.
+	 * @param dst The resulting OpenGL floats.
+	 */
 	static inline void b3ColorToGL(b3Color &src,GLfloat *dst)
 	{
 		*dst++ =       src[b3Color::R];
@@ -128,6 +135,12 @@ public:
 		*dst   = 1.0 - src[b3Color::A];
 	}
 
+	/**
+	 * This method converts a b3Color instance into OpenGL unsigned bytes.
+	 *
+	 * @param src The b3Color instance to convert.
+	 * @param dst The resulting OpenGL unsigned bytes.
+	 */
 	static inline void b3ColorToGL(b3Color &src,GLubyte *dst)
 	{
 		*dst++ = (GLubyte)(src[b3Color::R] * 255);
@@ -136,6 +149,12 @@ public:
 		*dst   = (GLubyte)(src[b3Color::A] * 255) ^ 0xff;
 	}
 
+	/**
+	 * This method converts a b3_pkd_color into OpenGL unsigned bytes.
+	 *
+	 * @param input The b3_pkd_color to convert.
+	 * @param buffer The resulting OpenGL unsigned bytes.
+	 */
 	static inline void b3PkdColorToGL(b3_pkd_color input,GLubyte *buffer)
 	{
 		*buffer++ = (GLubyte)((input & 0x00ff0000) >> 16);
@@ -144,6 +163,12 @@ public:
 		*buffer   = (GLubyte)((input & 0xff000000) >> 24) ^ 0xff;
 	}
 
+	/**
+	 * This method converts a b3_pkd_color into OpenGL floats.
+	 *
+	 * @param input The b3_pkd_color to convert.
+	 * @param dst The resulting OpenGL floats.
+	 */
 	static inline void b3PkdColorToGL(b3_pkd_color input,GLfloat *dst)
 	{
 		*dst++ =       ((input & 0x00ff0000) >> 16) * 0.0039215686;
@@ -152,6 +177,12 @@ public:
 		*dst   = 1.0 - ((input & 0xff000000) >> 24) * 0.0039215686;
 	}
 
+	/**
+	 * This method converts OpenGL floats into a b3_pkd_color.
+	 *
+	 * @param color The OpenGL floats to convert.
+	 * @return The resulting b3_pkd_color.
+	 */
 	static inline b3_pkd_color b3GLToPkdColor(GLfloat *color)
 	{
 		return
@@ -160,6 +191,13 @@ public:
 			  (b3_pkd_color)(color[0] * 255);
 	}
 
+	/**
+	 * This method converts a three component b3_vector into four OpenGL floats.
+	 * The homogenous coordinate w is set to 1.
+	 *
+	 * @param src The b3_vector instance.
+	 * @param dst The resulting OpenGL floats.
+	 */
 	static inline void b3VectorToGL(b3_vector *src,GLfloat *dst)
 	{
 		*dst++ = src->x;
@@ -168,6 +206,13 @@ public:
 		*dst   = 1;
 	}
 
+	/**
+	 * This method copies a b3_vector into OpenGL floats for a direction.
+	 * The direction is normalized for OpenGL.
+	 *
+	 * @param src The b3_vector direction instance.
+	 * @param dst The resulting normalized OpenGL floats representing a direction.
+	 */
 	static inline void b3VectorToDirectionalGL(b3_vector *src,GLfloat *dst)
 	{
 		b3_f32 x,y,z,len;
@@ -182,6 +227,12 @@ public:
 		*dst   = 0;
 	}
 
+	/**
+	 * This method converts a four component b3_vector4D into four OpenGL floats.
+	 *
+	 * @param src The b3_vector4D instance.
+	 * @param dst The resulting OpenGL floats.
+	 */
 	static inline void b3Vector4dToGL(b3_vector4D *src,GLfloat *dst)
 	{
 		*dst++ = src->x;
@@ -205,41 +256,53 @@ class B3_PLUGIN b3RenderObject
 	b3_bool            glInit;
 
 protected:
-	b3VertexElements  *glVertexElements;
-	b3GridElements    *glGridElements;
-	b3PolygonElements *glPolygonElements;
+	b3VertexElements  *glVertexElements;   //!< The vertex data.
+	b3GridElements    *glGridElements;     //!< The line index data.
+	b3PolygonElements *glPolygonElements;  //!< The triangle index data.
 
 #ifdef BLZ3_USE_OPENGL
-	GLuint             glDisplayList;
+	GLuint             glDisplayList;      //!< The display list for defining material properties.
 
 	// Some material values
-	GLfloat            glAmbient[4];
-	GLfloat            glDiffuse[4];
-	GLfloat            glSpecular[4];
-	GLfloat            glShininess;
+	GLfloat            glAmbient[4];       //!< The ambient material color.
+	GLfloat            glDiffuse[4];       //!< The diffuse material color.
+	GLfloat            glSpecular[4];      //!< The specular material color.
+	GLfloat            glShininess;        //!< The specular exponent.
 	
 	// Some texture values
-	GLuint             glTextureId;
-	GLubyte           *glTextureData;
-	b3_res             glTextureSize;
-	b3_res             glTextureSizeX;
-	b3_res             glTextureSizeY;
-	b3_f64             glTextureTransX;
-	b3_f64             glTextureTransY;
-	b3_f64             glTextureScaleX;
-	b3_f64             glTextureScaleY;
+	GLuint             glTextureId;        //!< The OpenGL texture id.
+	GLubyte           *glTextureData;      //!< The bitmap data of the texture.
+	b3_res             glTextureSize;      //!< The bitmap buffer size.
+	b3_res             glTextureSizeX;     //!< The x resolution of the texture.
+	b3_res             glTextureSizeY;     //!< The y resolution of the texture.
+	b3_f64             glTextureTransX;    //!< The texture x translation.
+	b3_f64             glTextureTransY;    //!< The texture y translation.
+	b3_f64             glTextureScaleX;    //!< The x scaling factor of the texture.
+	b3_f64             glTextureScaleY;    //!< The y scaling factor of the texture.
 #endif
 
 public:
-	static b3Color     m_GridColor;
-	static b3Color     m_SelectedColor;
+	static b3Color     m_GridColor;        //!< The grid color.
+	static b3Color     m_SelectedColor;    //!< The grid color in case this object is selected.
 
 protected:
+	/**
+	 * This constructor initializes this render object.
+	 */
+	b3RenderObject();
 
-	                        b3RenderObject();
-	virtual                ~b3RenderObject();
+	/**
+	 * The destructor frees all allocated VBOs, display lists and texture references.
+	 */
+	virtual ~b3RenderObject();
 public:
-	        void            b3AddCount(b3RenderContext *context);
+	/**
+	 * This method adds the amount of vector elements to the overall counter
+	 * stored in the render context. This is only for statistical purposes.
+	 *
+	 * @param context The render context containg the counter.
+	 */
+	void            b3AddCount(b3RenderContext *context);
 
 	/**
 	 * This method call initializes the vertex buffer objects for this render
@@ -275,18 +338,26 @@ public:
 
 	/**
 	 * This call forces this instance to recompute the geometry. It means
-	 * that the vertices and its indices must be recomputed via the b3Update()
-	 * method call. The b3Update() method call is also done on b3Draw().
+	 * that the vertices must be recomputed via the b3Update()
+	 * method call using the b3ComputeVertices() method.
+	 * The b3Update() method call is also done on b3Draw().
 	 */
 	void b3Recompute();
-	void            b3RecomputeIndices();
+
+	/**
+	 * This call forces this instance to recompute the line and triangle indices. It means
+	 * that the indices must be recomputed via the b3Update()
+	 * method call using the b3ComputeIndices() method.
+	 * The b3Update() method call is also done on b3Draw().
+	 */
+	void b3RecomputeIndices();
 
 	/**
 	 * This call forces this instance to recompute the material. It means
 	 * that the material properties must be recomputed via the b3UpdateMaterial()
-	 * method call. The b3UpdateMaterial) method call is also done on b3Draw().
+	 * method call. The b3UpdateMaterial() method call is also done on b3Draw().
 	 */
-	void            b3RecomputeMaterial();
+	void b3RecomputeMaterial();
 
 	/**
 	 * This method updates the geometry if necessary. After updating the
@@ -310,37 +381,120 @@ public:
 	b3_bool         b3ComputeBounds(b3_vector *lower,b3_vector *upper);
 
 protected:
+	/**
+	 * The implementation of this method computes the VBO element counts. If any count is
+	 * initialized to zero a custom initialization is assumed.
+	 *
+	 * @param context The render context.
+	 * @param vertCount The computed vertex count.
+	 * @param gridCount The computed line indexing count.
+	 * @param polyCount The computed polygon indexing count.
+	 */
 	virtual void            b3GetCount(b3RenderContext *context,b3_count &vertCount,b3_count &gridCount,b3_count &polyCount);
+
+	/**
+	 * This method returns the used vertex range. The default implementation
+	 * returns a range between 0 and the number of allocated vertices.
+	 *
+	 * @param start The start index including.
+	 * @param end The end index excluding.
+	 */
 	virtual void            b3GetVertexRange(b3_index &start,b3_index &end);
-	        void            b3PreAlloc();
+
+	/**
+	 * This method sets up the b3VectorBuffer object implementation as needed.
+	 */
+	void b3PreAlloc();
+
+	/**
+	 * The default implementation asks for the needed element counts via the
+	 * b3GetCount() method call and then calls the b3AllocVertexMemory()
+	 * method vor each of the three possible VBO instances.
+	 *
+	 * @param context The used render context.
+	 */
 	virtual void            b3AllocVertexMemory(b3RenderContext *context);
+
+	/**
+	 * The implementation of this method computes the vertices.
+	 */
 	virtual void            b3ComputeVertices();
+
+	/**
+	 * The implementation of this method computes the line indices and the triangle indices.
+	 */
 	virtual void            b3ComputeIndices();
+
+	/**
+	 * This method computes the normals based on the already computed triangle indices and the
+	 * computed vertices. A flag controls if the computed normals should be normalized.
+	 *
+	 * @param normalize The flag if the computed normals shoud be normalized.
+	 */
 	virtual void            b3ComputeNormals(b3_bool normalize=true);
 
-	// Some render overridables
+	/**
+	 * The implementation of this method computes the render mode depending
+	 * on the internal state of this render object. There are three
+	 * possible render modes:
+	 * - B3_RENDER_NOTHING renders nothing.
+	 * - B3_RENDER_LINE renders in wire frame mode.
+	 * - B3_RENDER_SOLID renders with gouraud shaded triangles.
+	 *
+	 * @return The actual render mode.
+	 */
 	virtual inline b3_render_mode  b3GetRenderMode()
 	{
 		return B3_RENDER_LINE;
 	}
 
+	/**
+	 * This method retrieves the wire frame color.
+	 *
+	 * @param color The resulting color.
+	 */
 	virtual inline void b3GetGridColor(b3Color &color)
 	{
 		color = m_GridColor;
 	}
 
+	/**
+	 * This method returns the color in case of a selected object.
+	 *
+	 * @param color The resulting color.
+	 */
 	virtual inline void b3GetSelectedColor(b3Color &color)
 	{
 		color = m_SelectedColor;
 	}
 
-	virtual void            b3GetDiffuseColor(b3Color &diffuse);
+	/**
+	 * The imlementation of this method retrieves the object color.
+	 *
+	 * @param diffuse The resulting color.
+	 */
+	virtual void b3GetDiffuseColor(b3Color &diffuse);
 
+	/**
+	 * The imlementation of this method retrieves the object color components.
+	 *
+	 * @param ambient The resulting ambient color.
+	 * @param diffuse The resulting diffuse color.
+	 * @param specular The resulting specular color.
+	 * @return The resulting specular exponent.
+	 */
 	virtual b3_f64          b3GetColors(b3Color &ambient,b3Color &diffuse,b3Color &specular);
 	virtual b3_bool         b3GetChess(b3Color &bColor,b3Color &wColor,b3_res &xRepeat,b3_res &yRepeat);
 	virtual b3Tx           *b3GetTexture(b3_f64 &xTrans,b3_f64 &yTrans,b3_f64 &xScale,b3_f64 &yScale);
 	virtual b3_bool         b3GetImage(b3Tx *image);
-	        void            b3TransformVertices(b3_matrix *transformation,b3_bool is_affine);
+
+	/**
+	 * This method transforms the vertex data with the given transformation.
+	 *
+	 * @param transformation The transformation matrix.
+	 * @param isAffine If false the normals must be recomputed.
+	 */
+	void b3TransformVertices(b3_matrix *transformation,b3_bool isAffine);
 
 private:
 	        void            b3DefineTexture();
