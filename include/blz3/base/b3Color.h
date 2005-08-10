@@ -110,9 +110,9 @@ public:
 	}
 
 	/**
-	 * This constructor initializes this instance from a b3_color structure.
+	 * This constructor initializes this instance from a ::b3_color structure.
 	 *
-	 * @param color The other b3_color instance to copy.
+	 * @param color The other ::b3_color instance to copy.
 	 */
 	inline b3Color(const b3_color &color)
 	{
@@ -120,9 +120,9 @@ public:
 	}
 
 	/**
-	 * This constructor initializes this instance from a b3_color structure.
+	 * This constructor initializes this instance from a ::b3_color structure.
 	 *
-	 * @param color The other b3_color instance to copy.
+	 * @param color The other ::b3_color instance to copy.
 	 */
 	inline b3Color(const b3_color *color)
 	{
@@ -130,9 +130,9 @@ public:
 	}
 
 	/**
-	 * This constructor initializes this instance from a b3_pkd_color structure.
+	 * This constructor initializes this instance from a ::b3_pkd_color structure.
 	 *
-	 * @param input The other b3_pkd_color instance to copy.
+	 * @param input The other ::b3_pkd_color instance to copy.
 	 */
 	inline b3Color(const b3_pkd_color input)
 	{
@@ -235,14 +235,14 @@ public:
 	}
 
 	/**
-	 * This method initializes a b3_color structure instance.
+	 * This method initializes a ::b3_color structure instance.
 	 *
-	 * @param color The other b3_color instance to copy.
+	 * @param color The other ::b3_color instance to copy.
 	 * @param r The new red channel.
 	 * @param g The new green channel.
 	 * @param b The new blue channel.
 	 * @param a The new alpha channel.
-	 * @return The b3_color instance pointer.
+	 * @return The ::b3_color instance pointer.
 	 */
 	inline static b3_color *b3Init(b3_color *color,
 		b3_f32 r = 0,
@@ -677,9 +677,9 @@ public:
 	}
 
 	/**
-	 * This cast operator returns the color channels as <em>b3_pkd_color</em>.
+	 * This cast operator returns the color channels as ::b3_pkd_color.
 	 *
-	 * @return The color channels as <em>b3_pkd_color</em>.
+	 * @return The color channels as ::b3_pkd_color.
 	 */
 	inline operator b3_pkd_color()
 	{
@@ -715,9 +715,9 @@ public:
 	}
 
 	/**
-	 * This cast operator returns the color channels as <em>b3_color</em>.
+	 * This cast operator returns the color channels as ::b3_color.
 	 *
-	 * @return The color channels as <em>b3_color</em>.
+	 * @return The color channels as ::b3_color.
 	 */
 	inline operator b3_color()
 	{
@@ -792,9 +792,9 @@ public:
 
 #ifdef WIN32
 	/**
-	 * This method returns the color values as COLORREF,
+	 * This method returns the color values as ::COLORREF,
 	 *
-	 * @return The colors as COLORREF.
+	 * @return The colors as ::COLORREF.
 	 */
 	inline COLORREF b3GetColorref()
 	{

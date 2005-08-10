@@ -388,6 +388,7 @@ protected:
 	 * The destructor frees all allocated VBOs, display lists and texture references.
 	 */
 	virtual ~b3RenderObject();
+
 public:
 	/**
 	 * This method adds the amount of vector elements to the overall counter
@@ -395,7 +396,7 @@ public:
 	 *
 	 * @param context The render context containg the counter.
 	 */
-	void            b3AddCount(b3RenderContext *context);
+	void b3AddCount(b3RenderContext *context);
 
 	/**
 	 * This method call initializes the vertex buffer objects for this render
@@ -404,13 +405,14 @@ public:
 	 * -# b3PreAlloc()
 	 * -# b3AllocVertexMemory() and here in the default implementation:
 	 *    -# b3GetCount()
-	 *    -# b3VectorBufferObjects#b3AllocVertexMemory() of these buffers:
+	 *    -# b3VertexBuffer::b3AllocVertexMemory()  of these buffers:
 	 *       - vertices
 	 *       - grid indices
 	 *       - triangle indices
 	 *
 	 * @param context The render context to use.
 	 * @see b3VectorBufferObjects
+	 * @see b3VertexBuffer
 	 */
 	virtual void            b3SetupVertexMemory(b3RenderContext *context);
 
@@ -501,21 +503,34 @@ protected:
 
 	/**
 	 * The default implementation asks for the needed element counts via the
-	 * b3GetCount() method call and then calls the b3AllocVertexMemory()
+	 * b3GetCount() method call and then calls the b3VertexBuffer::b3AllocVertexMemory()
 	 * method vor each of the three possible VBO instances.
 	 *
 	 * @param context The used render context.
+	 * @see b3VectorBufferObjects
+	 * @see b3VertexBuffer
 	 */
 	virtual void            b3AllocVertexMemory(b3RenderContext *context);
 
 	/**
-	 * The implementation of this method computes the vertices.
+	 * The implementation of this method computes the vertices. The vertex buffer is
+	 * already mapped into CPU address space for use. You can access the buffer by
+	 * using using following code snippet:
+\verbatim
+	b3_gl_vertex *Vector = *glVertexElements;
+\endverbatim
 	 */
 	virtual void            b3ComputeVertices();
 
 	/**
 	 * The implementation of this method computes the line indices and the triangle indices.
-	 */
+	 * The index buffers are already mapped into CPU address space for use. You can acces
+	 * the buffers using following code snippet:
+\verbatim
+    b3_gl_line    *gPtr = *glGridElements;
+    b3_gl_polygon *pPtr = *glPolygonElements;
+\endverbatim
+    */
 	virtual void            b3ComputeIndices();
 
 	/**

@@ -194,7 +194,40 @@ private:
 };
 
 /**
- * This class handles directory listing.
+ * This class handles directory listing. An example for scanning a
+ * directory looks like this:
+\verbatim
+
+	b3Path       name;
+	b3Dir        dir;
+	b3_path_type type;
+	b3_bool      loop = true;
+
+	dir.b3OpenDir(startDir);
+	do
+	{
+		type = dir.b3DirNext(name);
+
+		switch (type)
+		{
+		case B3_TYPE_FILE:
+			// name is a file
+			break;
+
+		case B3_TYPE_DIR:
+			// name is a directory
+			break;
+
+		case B3_NOT_EXISTANT:
+		default :
+			// name is undefined
+			loop = false;
+			break;
+		}
+	}
+	while (loop);
+	dir.b3CloseDir();
+\endverbatim
  */
 class B3_PLUGIN b3DirAbstract
 {

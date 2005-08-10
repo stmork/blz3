@@ -29,15 +29,21 @@
 
 typedef b3_f32 b3_noisetype;
 
+/**
+ * Tis enumeration lists some noise error states.
+ */
 enum b3_noise_error
 {
-	B3_NOISE_ERROR = -1,
-	B3_NOISE_OK    =  0,
-	B3_NOISE_MEMORY
+	B3_NOISE_ERROR = -1, //!< General error.
+	B3_NOISE_OK    =  0, //!< Everything is OK.
+	B3_NOISE_MEMORY      //!< Out of memory error.
 };
 
 typedef b3Exception<b3_noise_error,'NOI'> b3NoiseException;
 
+/**
+ * This class provides some procedural texture methods based Perlin Noise.
+ */
 class B3_PLUGIN b3Noise
 {
 	static       b3Spline      m_MarbleSpline;
@@ -67,13 +73,43 @@ class B3_PLUGIN b3Noise
 public:
 	              ~b3Noise();
 
+	/**
+	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [0..1] and is computed from one scalar.
+	 *
+	 * @param x The input value.
+	 * @return The pseudo random value.
+	 */
 	static        b3_f64        b3NoiseScalar (b3_f64 x);
+
+	/**
+	 * This method returns a linear interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [-1..1] and is computed from one scalar.
+	 *
+	 * @param x The input value.
+	 * @return The pseudo random value.
+	 */
 	static inline b3_f64  b3SignedNoiseScalar (b3_f64 x)
 	{
 		return b3NoiseScalar(x) * 2 - 1;
 	}
 	
+	/**
+	 * This method returns a Hermite interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [0..1] and is computed from one scalar.
+	 *
+	 * @param x The input value.
+	 * @return The pseudo random value.
+	 */
 	static        b3_f64        b3FilteredNoiseScalar (b3_f64 x);
+
+	/**
+	 * This method returns an Hermite interpolated pseudo random float based on Perlin noise.
+	 * The result is in range [-1..1] and is computed from one scalar.
+	 *
+	 * @param x The input value.
+	 * @return The pseudo random value.
+	 */
 	static inline b3_f64  b3SignedFilteredNoiseScalar (b3_f64 x)
 	{
 		return b3FilteredNoiseScalar(x) * 2 - 1;

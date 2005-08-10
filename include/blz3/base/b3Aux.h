@@ -37,9 +37,9 @@ public:
 	b3RGB();
 
 	/**
-	 * This method returns the stored color as a <em>b3_pkd_color</em> type.
+	 * This method returns the stored color as a ::b3_pkd_color type.
 	 *
-	 * \return The color in <em>b3_pkd_color</em> representation.
+	 * \return The color in ::b3_pkd_color representation.
 	 */
 	inline b3_pkd_color  operator()()
 	{
@@ -50,9 +50,9 @@ public:
 	}
 
 	/**
-	 * This method returns the stored color as a <em>b3_pkd_color</em> type.
+	 * This method returns the stored color as a ::b3_pkd_color type.
 	 *
-	 * \return The color in <em>b3_pkd_color</em> representation.
+	 * \return The color in ::b3_pkd_color representation.
 	 */
 	inline               operator b3_pkd_color()
 	{
@@ -63,7 +63,7 @@ public:
 	}
 
 	/**
-	 * This method assignes values from a given <em>b3_pkd_color</em> value
+	 * This method assignes values from a given b3_pkd_color value
 	 * to this class.
 	 *
 	 * \param color The given color representation.
@@ -76,7 +76,7 @@ public:
 	}
 
 	/**
-	 * This method assignes values from a given <em>b3_color</em> value
+	 * This method assignes values from a given ::b3_color value
 	 * to this class.
 	 *
 	 * \param color The given color representation.

@@ -46,9 +46,9 @@ class b3Vector
 
 public:
 	/**
-	 * This method initializes a <em>b3_vector</em> structure.
+	 * This method initializes a ::b3_vector structure.
 	 *
-	 * @param vec The b3_vector pointer.
+	 * @param vec The ::b3_vector pointer.
 	 * @param x The new x component.
 	 * @param y The new y component.
 	 * @param z The new z component.
@@ -68,9 +68,9 @@ public:
 	}
 
 	/**
-	 * This method initializes a <em>b3_vector</em> structure.
+	 * This method initializes a ::b3_vector structure.
 	 *
-	 * @param vec The b3_vector pointer.
+	 * @param vec The ::b3_vector pointer.
 	 * @param x The new x component.
 	 * @param y The new y component.
 	 * @param z The new z component.

@@ -50,6 +50,11 @@ enum b3_vbo_mapping
 
 class b3RenderContext;
 
+/**
+ * This class defines the behaviour of VBOs.
+ *
+ * @see b3RenderObject
+ */
 class B3_PLUGIN b3VertexBuffer
 {
 protected:

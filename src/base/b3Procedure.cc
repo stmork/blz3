@@ -37,9 +37,13 @@
 
 /*
 **	$Log$
+**	Revision 1.52  2005/08/10 09:01:37  smork
+**	- Documentation
+**	- Noise improvements.
+**
 **	Revision 1.51  2005/07/31 19:34:33  sm
 **	- Documentation
-**
+**	
 **	Revision 1.50  2005/06/10 21:31:42  sm
 **	- Vectorization fix for Windows
 **	- Read binary from registry returns null when no
@@ -488,7 +492,7 @@ b3_f64 b3Noise::b3NoiseScalar(b3_f64 x)
 	a = m_NoiseTable[ix];
 	b = m_NoiseTable[(ix+1) & NOISEMASK];
 
-	return a * (1.0 - fx) + b * fx;
+	return b3Math::b3Mix(a, b, fx);
 }
 
 b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
@@ -502,7 +506,7 @@ b3_f64 b3Noise::b3FilteredNoiseScalar(b3_f64 x)
 	a = m_NoiseTable[ix];
 	b = m_NoiseTable[(ix+1) & NOISEMASK];
 
-	return a * (1.0 - fx) + b * fx;
+	return b3Math::b3Mix(a, b, fx);
 }
 
 /*
@@ -627,9 +631,6 @@ inline b3_f64 b3Noise::b3Interpolate(
 {
 	b3_noisetype *NoiseTable = &m_NoiseTable[d * NOISESIZE];
 	b3_f32        B3_ALIGN_16 a[4],b[4],c[4];
-	b3_f32        rx = 1.0 - fx;
-	b3_f32        ry = 1.0 - fy;
-	b3_f32        rz = 1.0 - fz;
 	b3_loop       i;
 
 	a[0] = NoiseTable[INDEX3D(ix  ,iy  ,iz  )];
@@ -643,7 +644,7 @@ inline b3_f64 b3Noise::b3Interpolate(
 
 	for (i = 0;i < 4;i++)
 	{
-		c[i] = a[i] * rx + b[i] * fx;
+		c[i] = a[i] + fx * (b[i] - a[i]);
 	}
 
 	a[0] = c[0];
@@ -653,10 +654,10 @@ inline b3_f64 b3Noise::b3Interpolate(
 
 	for (i = 0;i < 2;i++)
 	{
-		c[i] = a[i] * ry + b[i] * fy;
+		c[i] = a[i] + fy * (b[i] - a[i]);
 	}
 
-	return c[0] * rz + c[1] * fz;
+	return c[0] + fz * (c[1] - c[0]);
 }
 
 inline b3_noisetype b3Noise::b3GetDiff(
@@ -688,9 +689,6 @@ inline b3_f64 b3Noise::b3GradNoise (
 	b3_f32   fx = x   - ix;
 	b3_f32   fy = y   - iy;
 	b3_f32   fz = z   - iz;
-	b3_f32   rx = 1.0 - fx;
-	b3_f32   ry = 1.0 - fy;
-	b3_f32   rz = 1.0 - fz;
 	b3_loop  l;
 
 	a[0] = b3GetDiff(ix,iy,iz,i,0);
@@ -704,7 +702,7 @@ inline b3_f64 b3Noise::b3GradNoise (
 
 	for (l = 0;l < 4;l++)
 	{
-		c[l] = a[l] * rx + b[l] * fx;
+		c[l] = a[l] + fx * (b[l] - a[l]);
 	}
 
 	a[0] = c[0];
@@ -714,10 +712,10 @@ inline b3_f64 b3Noise::b3GradNoise (
 
 	for (l = 0;l < 2;l++)
 	{
-		c[l] = a[l] * ry + b[l] * fy;
+		c[l] = a[l] + fy * (b[l] - a[l]);
 	}
 
-	return c[0] * rz + c[1] * fz;
+	return c[0] + fz * (c[1] -c[0]);
 }
 
 void b3Noise::b3NoiseDeriv (
@@ -960,6 +958,7 @@ b3_f64 b3Clouds::b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
 		p     = ray->dir.z * -m_EarthRadius;
 		D     = p * p + m_CloudRadiusSqr - m_EarthRadiusSqr;
 		len   = (-p - sqrt(D)) * m_Scaling;
+
 		Dir.x = ray->pos.x * m_PosScale.x + ray->dir.x * len + m_Anim.x * time;
 		Dir.y = ray->pos.y * m_PosScale.y + ray->dir.y * len + m_Anim.y * time;
 		Dir.z = ray->pos.z * m_PosScale.z + ray->dir.z * len + m_Anim.z * time;
