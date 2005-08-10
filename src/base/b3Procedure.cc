@@ -37,9 +37,12 @@
 
 /*
 **	$Log$
-**	Revision 1.54  2005/08/10 12:49:42  smork
+**	Revision 1.55  2005/08/10 13:20:44  smork
 **	- Documentation.
 **
+**	Revision 1.54  2005/08/10 12:49:42  smork
+**	- Documentation.
+**	
 **	Revision 1.53  2005/08/10 10:32:08  smork
 **	- Documentation.
 **	
@@ -923,7 +926,9 @@ void b3Water::b3PrepareWater()
 	m_Factor = 10 * m_WindFreq;
 }
 
-b3_f64 b3Water::b3ComputeWater(b3_vector *point, b3_f64 time)
+b3_f64 b3Water::b3ComputeWater(
+	const b3_vector *point,
+	const b3_f64     time)
 {
 	b3_vector P;
 	b3_f64    offset,turbulence;
@@ -970,7 +975,10 @@ void b3Clouds::b3PrepareClouds()
 	m_CloudRadiusSqr = Rc * Rc;
 }
 
-b3_f64 b3Clouds::b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time)
+b3_f64 b3Clouds::b3ComputeClouds(
+	const b3_line64 *ray,
+	      b3_f64    &r,
+	const b3_f64     time)
 {
 	b3_f64 sight;
 

@@ -316,11 +316,11 @@ public:
 	 * @see b3NoiseDeriv()
 	 */
 	static inline void b3FractionalBrownianMotion(
-		b3_vector *p,
-		b3_count   octaves,
-		b3_f32     amplification,
-		b3_f32     attenuation,
-		b3_vector *result)
+		const b3_vector *p,
+		const b3_count   octaves,
+		const b3_f32     amplification,
+		const b3_f32     attenuation,
+		      b3_vector *result)
 	{
 		b3_f32 B3_ALIGN_16 v[4];
 		b3_f32 B3_ALIGN_16 factor[4];
@@ -448,18 +448,34 @@ class b3Water
 	b3_f64    m_Factor;
 
 public:
-	b3_f32    m_Km;
-	b3_count  m_Octaves;
-	b3_f32    m_WindAmp;
-	b3_f32    m_WindFreq;
-	b3_f32    m_MinWind;
-	b3_f32    m_ScaleTime;           // time period for wave swing
-	b3_vector m_Anim;
+	b3_count  m_Octaves;    //!< The number of octaves to use for b3Turbulence().
+	b3_f32    m_Km;         //!< A scaling factor for the resulting turbulence.
+	b3_f32    m_WindAmp;    //!< The wind amplitude.
+	b3_f32    m_WindFreq;   //!< The wind frequency
+	b3_f32    m_MinWind;    //!< The minimal wind component.
+	b3_f32    m_ScaleTime;  //!< The wind speed as time scaling.
+	b3_vector m_Anim;       //!< The wind direction.
 
 public:
-	       b3Water();
+	/**
+	 * This constructor initializes this instance with default values.
+	 */
+	b3Water();
+
+	/**
+	 * This method precomputes some calculation invariant values.
+	 */
 	void   b3PrepareWater();
-	b3_f64 b3ComputeWater(b3_vector *point, b3_f64 time);
+
+	/**
+	 * This method returns a water value in range [0..1]. This value
+	 * is a relative height value.
+	 *
+	 * @param point The position in space.
+	 * @param time The time point for animation.
+	 * @return The water height.
+	 */
+	b3_f64 b3ComputeWater(const b3_vector *point, const b3_f64 time);
 };
 
 /**
@@ -499,7 +515,7 @@ public:
 	 * @param time The time point for animation.
 	 * @return The cloudiness.
 	 */
-	b3_f64 b3ComputeClouds(b3_line64 *ray,b3_f64 &r,b3_f64 time);
+	b3_f64 b3ComputeClouds(const b3_line64 *ray,b3_f64 &r, const b3_f64 time);
 };
 
 #endif
