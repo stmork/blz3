@@ -63,16 +63,28 @@
 **                                                                      **
 *************************************************************************/
 
-#define TIFF_INTEL    0x4949
-#define TIFF_MOTOROLA 0x4d4d
-
-struct HeaderTIFF
+/**
+ * This enumeration lists the possible endian version.
+ */
+enum b3_tiff_endian
 {
-	short          TypeCPU;
-	short          VersionTIFF;
-	long           FirstTag;
+	TIFF_INTEL    = 0x4949,
+	TIFF_MOTOROLA = 0x4d4d
 };
 
+/**
+ * This structure defines a TIFF format header.
+ */
+struct HeaderTIFF
+{
+	unsigned short TypeCPU;     //!< The endian version (MM or II).
+	short          VersionTIFF; //!< The version (always 0x2a).
+	long           FirstTag;    //!< The offset to the first TIFF directory.
+};
+
+/**
+ * This structure defines a TIFF tag.
+ */
 struct TagTIFF
 {
 	unsigned short Code;
@@ -86,6 +98,9 @@ struct TagTIFF
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This structure defines the SGI image file format header.
+ */
 struct HeaderSGI
 {
     b3_u16	imagic;		/* stuff saved on disk . . */
@@ -110,13 +125,17 @@ struct HeaderSGI
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists all possible image formats.
+ */
 enum b3_tx_type
 {
 	B3_TX_UNDEFINED = -1,
-	B3_TX_ILBM      =  0,
-	B3_TX_VGA       =  1,
-	B3_TX_RGB4      =  2,
-	B3_TX_RGB8      =  3
+	B3_TX_ILBM      =  0, //!< BW image.
+	B3_TX_VGA       =  1, //!< Palette image.
+	B3_TX_RGB4      =  2, //!< Color channels in true color ARGB nibbles.
+	B3_TX_RGB8      =  3, //!< Color channels in true color AARRGGBB nibbles.
+	B3_TX_FLOAT     =  4  //!< Color channels in floating point true color ARGB.
 };
 
 /*************************************************************************
@@ -125,6 +144,9 @@ enum b3_tx_type
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists all source file formats.
+ */
 enum b3_tx_filetype
 {
 	FT_UNKNOWN		=   0,
@@ -153,6 +175,9 @@ enum b3_tx_filetype
 	FT_PS
 };
 
+/**
+ * This enumeration lists grey to b/w converting modes.
+ */
 enum b3_tx_threshold
 {
 	B3_THRESHOLD_WHITE_RATIO = 0,
@@ -166,6 +191,9 @@ enum b3_tx_threshold
 **                                                                      **
 *************************************************************************/
 
+/**
+ * This enumeration lists all possible immage error codes.
+ */
 enum b3_tx_error
 {
 	B3_TX_ERROR = -1,
@@ -189,11 +217,14 @@ typedef b3Exception<b3_tx_error,'TX'> b3TxException;
 **                                                                      **
 *************************************************************************/
 
-class b3_tx_quad
+/**
+ * This class initializes a lookup table with squared values.
+ */
+class b3TxQuad
 {
-	       b3_pkd_color quad256[512];
+	b3_pkd_color quad256[512];
 	
-	b3_tx_quad()
+	b3TxQuad()
 	{
 		b3_loop i;
 
@@ -207,10 +238,12 @@ class b3_tx_quad
 	friend class b3ColorIndices;
 };
 
-// Auxiliary class for color indexing (private use of class b3Tx)
+/**
+ * This class holds image palette indices.
+ */
 class B3_PLUGIN b3ColorIndices : public b3Mem
 {
-	static b3_tx_quad  m_TxQuad;
+	static b3TxQuad  m_TxQuad;
 
 	       b3_count    num;
 	       b3_count    max;
@@ -221,7 +254,9 @@ public:
 	b3_index  b3ColorIndex   (b3_pkd_color *,b3_pkd_color);
 };
 
-// One single texture point
+/**
+ * This class handles one image reference point.
+ */
 class B3_PLUGIN b3TxPoint
 {
 public:
@@ -236,7 +271,9 @@ public:
 
 #define B3_MEASURE_EDGE 3
 
-// For measuring an image...
+/**
+ * This class is for image measurement.
+ */
 class B3_PLUGIN b3Measure
 {
 public:
@@ -264,7 +301,10 @@ public:
 **                                                                      **
 *************************************************************************/
 
-// one single image and its methods
+/**
+ * This big class represents one image in its best representation.
+ * It has many convenience methods for manipulating the image.
+ */
 class B3_PLUGIN b3Tx : public b3Link<b3Tx>, public b3Mem
 {
 	static const b3_u08  m_Bits[8];
@@ -286,9 +326,12 @@ private:
 	b3Measure         measure;
 
 public:
-	b3_res         xSize,ySize,depth;
+	b3_res         xSize;       //!< The image width;
+	b3_res         ySize;       //!< The image height;
+	b3_res         depth;       //!< The image depth in bit;
 	b3_count       ScanLines;
-	b3_res         xDPI, yDPI;
+	b3_res         xDPI;        //!< The pixel density in x direction.
+	b3_res         yDPI;        //!< The pixel density in y direction.
 
 	               b3Tx           ();
 	               b3Tx           (b3Tx *srcTx);
@@ -308,10 +351,40 @@ public:
 	void           b3GetRow       (b3_pkd_color *row,b3_coord  y);
 	b3_pkd_color   b3GetValue     (b3_coord x,b3_coord  y);
 	b3_bool        b3IsBackground (b3_coord x,b3_coord  y);
+
+	/**
+	 * This method returns true if this instance holds an image.
+	 *
+	 * @return True if this instance holds an image.
+	 */
 	b3_bool        b3IsLoaded     ();
+
+	/**
+	 * This method returns true if this image is black/white.
+	 *
+	 * @return True if this image is b/w.
+	 */
 	b3_bool        b3IsBW         ();
+
+	/**
+	 * This method returns true if this image is true color.
+	 *
+	 * @return True if this image is true color.
+	 */
 	b3_bool        b3IsTrueColor  ();
+
+	/**
+	 * This method returns true if this image is palettized.
+	 *
+	 * @return True if this image is palettized.
+	 */
 	b3_bool        b3IsPalette    ();
+
+	/**
+	 * This method returns true if this image is a palettized grey image.
+	 *
+	 * @return True if this image is a palettized grey image.
+	 */
 	b3_bool        b3IsGreyPalette();
 
 	// b3TxBlit.cc
@@ -328,9 +401,25 @@ public:
 	// b3TxImage.cc
 	void           b3Shrink     (b3_count shrink=1);
 	void           b3RemoveBlackBorder();
+
+	/**
+	 * This method negates the color.
+	 */
 	void           b3Negate     ();
+
+	/**
+	 * This method turns left the image by 90 degrees.
+	 */
 	void           b3TurnLeft   ();
+
+	/**
+	 * This method turns the image upside down.
+	 */
 	void           b3Turn       ();
+
+	/**
+	 * This method turns right the image by 90 degrees.
+	 */
 	void           b3TurnRight  ();
 	b3_bool        b3TxGauss    (
 		b3_coord xPos,b3_coord yPos,
@@ -589,6 +678,9 @@ public:
 	class b3Error {};
 };
 
+/**
+ * This class represents one TIFF image.
+ */
 class b3TIFF_Dir : public b3Link<b3TIFF_Dir>
 {
 	b3Base<b3TIFF_Entry>  tags;
@@ -624,6 +716,9 @@ public:
 
 typedef void (*b3LogTiffFunc)(const char *output,void *ptr);
 
+/**
+ * This class is for TIFF format inspection.
+ */
 class b3TIFF : public b3Link<b3TIFF>, public b3Mem
 {
 	b3Base<b3TIFF_Dir>  dirs;

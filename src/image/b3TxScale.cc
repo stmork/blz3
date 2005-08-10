@@ -60,9 +60,12 @@ struct b3_rect_info
 
 /*
 **	$Log$
+**	Revision 1.23  2005/08/10 18:45:10  sm
+**	- Documentation
+**
 **	Revision 1.22  2005/02/02 08:23:26  smork
 **	- Removed unnecessary malloc.h include.
-**
+**	
 **	Revision 1.21  2005/01/24 14:21:00  smork
 **	- Moved some static variables.
 **	
@@ -190,7 +193,7 @@ struct b3_rect_info
 **                                                                      **
 *************************************************************************/
 
-b3_tx_quad b3ColorIndices::m_TxQuad;
+b3TxQuad b3ColorIndices::m_TxQuad;
 
 b3ColorIndices::b3ColorIndices()
 {
