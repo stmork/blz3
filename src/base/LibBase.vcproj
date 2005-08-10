@@ -323,10 +323,6 @@
 				FileType="0">
 			</File>
 			<File
-				RelativePath="b3Node.cc"
-				FileType="0">
-			</File>
-			<File
 				RelativePath="b3Pick.cc"
 				FileType="0">
 			</File>
@@ -421,12 +417,6 @@
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\base\b3MultiSample.h">
-			</File>
-			<File
-				RelativePath="..\..\include\blz3\base\b3Node.h">
-			</File>
-			<File
-				RelativePath="..\..\include\blz3\base\b3Nurbs.h">
 			</File>
 			<File
 				RelativePath="..\..\include\blz3\base\b3Pick.h">

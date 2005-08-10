@@ -30,7 +30,7 @@
 typedef b3_f32 b3_noisetype;
 
 /**
- * Tis enumeration lists some noise error states.
+ * This enumeration lists some noise error states.
  */
 enum b3_noise_error
 {
